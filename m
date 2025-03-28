@@ -1,98 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7044222094
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018C322094;
+	Fri, 28 Mar 2025 02:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743127269; cv=none; b=NR4TjRk6GHRQbVHj8wXDZdIjYqp12836dgfVMaLE6ekDM8G9VUYf9mOnckt3rv1NwUo3433ygM8Q/LNQS+Z2N3iRGUKEOfneB+gm0L9++EDA7q5pF7O3V+lMFQsLxgvIkcD/IPvDeWMqWFGOT09ta6J2Q+RFa4GBOVUDofgvZkM=
+	t=1743127419; cv=none; b=RPc/s6JVdqOSLiGWhDHWt8AlmKErfLme+uazH+twFVjPfjYvenFXfDiFoROcfMjkz2RWGNugx0EJntGc0GrdCSal3e+8/EYrngkOiSSDijf6MEwfHTYCe9meTsnrbhZBABirflcIojj004+ICeLDBfG2uzD616vHkFEKU/i5B08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743127269; c=relaxed/simple;
-	bh=lS156lXSmbxj9WGPbtOyKYq7PavFbCd34yFZE+Eaxyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t2xfmt5L1TrQFsVpQ2rC10CnQg4X/9gjqp/ZghcQPuAg8aJlcw3uUkJYdclzPqKCyEnBWZgwL2oCvN50umLS4CDG79sEoi9nWWeIsJ4uEpv9lv+uNFzkGszxCnriZtuR8O7He14uMr7gdjxqlhk6elPaXerlM2qJbZSlrIkk0Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0981AC4CEDD;
-	Fri, 28 Mar 2025 02:01:07 +0000 (UTC)
-Date: Thu, 27 Mar 2025 22:01:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Feng Yang <yangfeng@kylinos.cn>, Jiapeng Chong
- <jiapeng.chong@linux.alibaba.com>
-Subject: Re: [GIT PULL] ring-buffer: Updates for v6.15
-Message-ID: <20250327220106.37c921ea@batman.local.home>
-In-Reply-To: <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
-References: <20250327171037.032bf7e7@gandalf.local.home>
-	<CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com>
-	<20250327212447.24e05e7e@batman.local.home>
-	<CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743127419; c=relaxed/simple;
+	bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VRL6+IHixUHlP4UQbEvzE+di5wwGCAi2ubyEauQYHcKIZqd2J+H2gXARV65II4SLytJQgkEw+amRGCIsn8x3DS01CFaXLjhPzjmi+s0663tzYk6LgOTxG+jmX7eRtkqkrX4BtiJrBj6jJnEHVtFrnIjFhBSTVUgQ34LZgKYbD0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LDrzyaAU; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LDrzyaAU"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e90b8d4686so14774386d6.2;
+        Thu, 27 Mar 2025 19:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743127417; x=1743732217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
+        b=LDrzyaAUc0psw02B7YIfqdr1dsPTkA1z3atHaSSqLtQ6j4yFwcgpcasFPJmg5Eqbwz
+         xFQ/1fjC/Fh5E3f63kmxyNv1dqUyWe4VLF0DdbsZ8xkL3W/dvehsZ6m3jkVdEtTsXCXi
+         XebprXEHNnpuC9Q5M/IlQUN+5fFyW4H3oRZPZ0ITWcuookAle3Bawn3MraaYYMVXEaUq
+         /LdGZ3jcdhzHFph1faGeVZGEqEbagXPN+ZvUUhhd+vEL24xjGEyB+pdecl63pg5h9n5+
+         FOe51fZWY+bNeEXyTjSDYhQJUmQc1k2yLWOyBJK96GAgIhl5CiYXmmX4/cnjomak5B34
+         9Vtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743127417; x=1743732217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
+        b=JQQ2XohQjKSNClHC5rKyYRxXcVDNVQFbdvpji3uvRHejBTm9GAb8z00bBDSVWYp5ms
+         kRNlVLpLprcbN5V8Y1sMu1+//5r8F6Hmw9SxFB9wYGmBBXdNCOdHz2Pw60d+Wb2SdNVm
+         x6Kjs2UYScccljwOW0tCMzS3SYKqFbZj1gIP8PptWjuxo3n0u5LLxXv3+cqBDlvTdyHf
+         wu/g5tuKiYyFQOXj/fPHzy3SZcayTNNmM0wC3zhwmej0K/oABdPc7RYaz+qpMcmBvulR
+         8H5DFpfRjBqjelkY1nuLFxzJ3KNvsdTIKk22sjqYx7yd+7YjEWl6F0tW2Ef5poJ+sKAl
+         FjWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmrRDFchcokE4Fvi+zblT+xQEVPajrsavxKLecB60slsRy3O6Eg56Io99UeBqp2MCRTXOaWWaY@vger.kernel.org, AJvYcCWwrL3HSJ3oOZl9eXjJ8RjKJ5huhLJ+uwtlx2+nF+QTFmnyCQc5i3nZMI6LFZHx/Ylisq+SrDT6U1ICCvA4@vger.kernel.org, AJvYcCX+hHSmxInev31HYaTYa1E5E/mtHmoBWP4vehDEkAwFPgHglbsid1f38Uc7J9Nulv72IMA9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHhrfBL54xDcfyYrUd1JnZ7cHR1fXV+mCBOejZ/Kd0xtgSvM7l
+	H5IH/yeIYFNRm2/27/rtSLIwhlV9p5ANvVqHe1TBIsbOVojagCKYHMK6Ye4RV4M3OYpFb7bmBeU
+	DmIyYB/1eBr9zv5x9gtxgdp6ttbY=
+X-Gm-Gg: ASbGnctnryGC9bSGNzHM8sx7C5h69JgS4Wipzt2NqPIXcTT8Rf/0uazNhvC/hRzaasa
+	2m0oDVbDC5XTdtUGsmA3dBqQcioNFVFMthrFkwBvQcYcUFJXDy1DS09UbUYSw9tQeIlPtxW7N3j
+	/hJDADZmwQS5/4XkxlXd0yABivk1Q=
+X-Google-Smtp-Source: AGHT+IGzxGgAcBmkBhgOMEG8X4jJS/vZejCCvST2LV72DuHnUbw7QjxJT9lWLTlmVnO2ggUz5ByBPTpg1hW4cGhpEMw=
+X-Received: by 2002:a05:6214:405:b0:6e8:f4e2:26e1 with SMTP id
+ 6a1803df08f44-6ed238bddc4mr84919466d6.20.1743127416723; Thu, 27 Mar 2025
+ 19:03:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250327012350.1135621-1-jthoughton@google.com>
+ <20250327012350.1135621-4-jthoughton@google.com> <fg5owc6cvx7mkdq64ljc4byc5xmepddgthanynyvfsqhww7wx2@q5op3ltl2nip>
+In-Reply-To: <fg5owc6cvx7mkdq64ljc4byc5xmepddgthanynyvfsqhww7wx2@q5op3ltl2nip>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Fri, 28 Mar 2025 10:03:00 +0800
+X-Gm-Features: AQ5f1JoVOHztbYp2553_bmf4nlPgYHM1EgpaFVKxtX_C6dMD9jJHzJ1OMNJ7RsA
+Message-ID: <CALOAHbD1iNJHB0XRK3GpHePpbX2Ti9vDT4aFDpay6PWUYg-Dcg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] cgroup: selftests: Move cgroup_util into its own library
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: James Houghton <jthoughton@google.com>, Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Yu Zhao <yuzhao@google.com>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Mar 2025 18:31:55 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Thu, Mar 27, 2025 at 5:43=E2=80=AFPM Michal Koutn=C3=BD <mkoutny@suse.co=
+m> wrote:
+>
+> Hello James.
+>
+> On Thu, Mar 27, 2025 at 01:23:48AM +0000, James Houghton <jthoughton@goog=
+le.com> wrote:
+> > KVM selftests will soon need to use some of the cgroup creation and
+> > deletion functionality from cgroup_util.
+>
+> Thanks, I think cross-selftest sharing is better than duplicating
+> similar code.
+>
+> +Cc: Yafang as it may worth porting/unifying with
+> tools/testing/selftests/bpf/cgroup_helpers.h too
 
-> On Thu, 27 Mar 2025 at 18:24, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > The pages are never vmalloc'd, it's only ever vmap()'d on top of
-> > contiguous physical memory or allocated via alloc_page() in the order
-> > given. Thus, we do not support non consecutive physical memory.  
-> 
-> Christ, that just makes it EVEN WORSE.\
-
-Let me explain this better. Yes it uses alloc_page() but that's just an
-intermediate function. What is saved is the page_address(page), as that
-is what is used by the code. That is, the allocation uses alloc_page()
-but then immediately converted to page_address() to use. The page
-itself is just an temp variable to get contiguous memory, as the
-sub-buffers must be contiguous.
-
-> 
-> Just keep track of the actual original physical allocation, then!
-> 
-> By all means vmap it too for whoever wants the virtual allocation, but
-> remember the *real* allocation, and keep it as a 'struct page'
-> together with the order that you already have.
-
-The virtual address needs to be created as that's all the code cares
-about. For the case where the physical memory is passed in, it requires
-a vmap(). The struct page is only needed when the ring buffer is going
-to be mmapped to user space.
-
-> 
-> And then you never use vmalloc_to_page() - or even virt_to_page() - at
-> all, because you actually know your base allocation, and keep it in
-> that form that so much of this code wants in the first place.
-> 
-> Having a a nice reliable 'struct page *' (together with that size
-> order) and keeping it in that form would be *so* much cleaner.
-> 
-> Instead of randomly translating it to (two different!) kinds of
-> virtual kernel addresses and then translating it back when you wanted
-> the original proper format.
-
-By moving the physical mapping of the code into the ring buffer code, I
-can set a flag for the buffer to mark it as being mapped directly, and
-we can save the struct pages for this location (easily found by the
-address). Then to get the page, it could be a simple helper function of:
-
-struct page *rb_get_page(struct trace_buffer *buffer, unsigned long addr)
-{
-	if (buffer->flags & RB_FL_PHYSICAL) {
-		addr -= buffer->vmap_start;
-		addr += buffer->phys_start;
-		return pfn_to_page(addr >> PAGE_SHIFT);
-	}
-	return virt_to_page(addr);
-}
+Thanks for pointing that out=E2=80=94that=E2=80=99s a good suggestion. We s=
+hould also
+consider migrating the bpf cgroup helpers into the new libcgroup.
 
 
+--
+Regards
+Yafang
