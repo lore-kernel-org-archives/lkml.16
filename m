@@ -1,548 +1,225 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4E814F11E;
-	Fri, 28 Mar 2025 05:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8723211285
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 05:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743139982; cv=none; b=fn1vuyxNMjAs2I1IdVM3JvzyZkxNbAPB8lPuEo+ljL+yIUY97qOKnVdTPUUX+JO2QX+idt16Tw3E/P595OaKE5o5lgyTh3500+ok5zjxY01YecQeUHpQD9ov6Xl9qC4/H0/4hEeZlWy7CJWHGjfwLMraaRwqVDouJl2mx5oCT9o=
+	t=1743140061; cv=none; b=pVTn2X1X3WEr5NzrlOBwsU4dcd2SFM7ZaT60HmucHoBxwgQcipsk3N9kaM123XOpS7njX+1uKUDqqp81bIHFtwf3BqZrmOEDbrNQ1xwD8pxYh5dqJeO3ZvVwV7CoxvS+4xnK1zNGN9+FGJlJFGkvfi9juaAbM5p8HNY4OebRYIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743139982; c=relaxed/simple;
-	bh=RL2Z7YD1DzsiJvnhRlccUcfG0NfCAGU9PNtJtj+Katw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=lEmLgOh6UgjInIPHXDDUUw6TPFvoOORHHm+XWAlvdbNrknhqIYTVJ53w9ZXqUJO/eJ7B3fY8NuR2zutuvu+XfuVY1XDMCSdiL50oSDDQo9aO8LKQR2cb4Xq3qWZLaTBheviJUAKZ6BRdaCdywgKC77n/YCwoF8tJ8CL/W+xRPww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JH9AFpj2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743140061; c=relaxed/simple;
+	bh=CbPaDrJ4FeoIlwmsZWy9972ejo3BehiVxWsy5g+KDxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IQZy6E5I9eKghyRY+nPd+ioWtJatJIGX4QutQGp5AO8qddxTL6adGqMgA7dGdczwRDgEiLF/tSQEhwiWB1O1WVszn9EjxYmpF2G1M1J9kjnXltRK6/GfJVs6SvTaVuIhWF5Un84OjpuDtAaXcNPuQTUBacJkM8BE5Ywumcwj6dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iWcIy2WA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JH9AFpj2"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S5V8lK013798;
-	Fri, 28 Mar 2025 05:32:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iWcIy2WA"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S2C9YI023702
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 05:34:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iRARC4bcwxFwSxKlD/vKHJOFtn7u2ru9l7bpSOyiwQI=; b=JH9AFpj22OJ9VIJc
-	+rO4Zxo4+sJFG2hxjg3Qb8km1ZH1v9VqmgGEv7PF8v5nTzVH5B+ff/8nwCOtH7qS
-	BKjevgDFopp+INLJP/OE9Kas3GJSkgCidrNuToXCP7t1YhNCLDrQo431Is4CGQR3
-	K3RtLCE+ljZGMDNmuRf3CZtYbcfqUHp+IfSXY2mrS65U04AFBkPixyF+uUqM6Erj
-	YNXmxdTeZktpNh2Cdio6VQhHVY1Uhl0F0JQsYZFau5Hg/RIycRD0DirIHNMZfI3H
-	iMBVZho7l13AUA7575kwJ75XYt95oxTpQeIfkEd03Vxi9w5DPrMu6WmkIigmnhR5
-	w4kBvQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mffcp6y8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 05:32:41 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52S5WeF0012566
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 05:32:40 GMT
-Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
- 2025 22:32:37 -0700
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-Date: Fri, 28 Mar 2025 13:32:27 +0800
-Subject: [PATCH ath-next v3 4/6] wifi: ath11k: support non-WoWLAN mode
- suspend as well
+	FjBfrj2rWschU4104LLg8r3y5KOZRiF6HP0sk4jVTlY=; b=iWcIy2WADSWLEdWY
+	ygDy0oPZI1ilHOtA+DAp6T3xh5/e4Lh4CcB1fkelt+pNTVtQSVWwN3uDbCiVOUxj
+	VJm+b6ZWGLBA6ymUM12eLG/srpFqriW6cjClUIdZO+KjCWMQMyxxZ72ayuebYxjZ
+	MkihhDZRconTxNXeVEMonwVgfCfqkBMwTKjgz2KNmP9z+tMaSze+PPXn+iaAVeoo
+	OHHLn82zFdMq4aHwnZyhaPPakI3AadO/cHZwOFDbQ1gqzVeLZLKOHZ1NUZYCc9cP
+	gLpp9sLQDn0B8eGfrji66MOKukoCNMv0eg/43+TSYWPCEvzcwLod2brkdDGQZtrC
+	uC1/9Q==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45njsc0cuf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 05:34:18 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2265a09dbfcso51379055ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:34:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743140058; x=1743744858;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FjBfrj2rWschU4104LLg8r3y5KOZRiF6HP0sk4jVTlY=;
+        b=uBnj/EpnNuulS1UcONF5Gqd5UdiKo0eLKSRflgYB/lIT5JEnjg6/kN9H3JeLmBx823
+         dNWWiO4HbRNTPhNSAhWq/kEPOPAOt5PUoGUwmqOhOwvpC7CKEW5m0k9oHLEKppNFCM4e
+         NU1wZ1+Qet8fP/hL3P1mvjT70+UaijlYYDkh0qRkoqseeOrhGEgH4s67OijNCV5/hzcO
+         yjq7crE5CSTK5USnRcBMJ0DKMYwZ1Gbk8Lo+/y0/V8+n1VSxrwE/Tqp5+pFrr8i2aqJ9
+         GqP073IzTfMfJm/CLyDo5rwrxhwdaBYgUUPtt8BVbjcMZAtIq4wrDHBeZOKQmOtjklWJ
+         10Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLA7OhOGfSfgusn+/V1fE3Jc1pWqgukGFr46mNRKl/LApqlrZfKvrUpHTI3xAGrVo8gTAVAILUFhKen9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2721MRitIE5ZchADxJhUZB4op374Da6HW/JUDp29j/7HIb67S
+	LjOsHuotgUO9QplixWDQ87JQ2m1y9zPXVYUpbZNyHqaWRWoQGpzJzgcKy3x1OERUI7C/PF7b+1+
+	hg8AACyR6f1uFKgcNVXf4OQrJc+B7tcebxEGDCFK8+gyNuesMXVJoRX1qYk82AAM=
+X-Gm-Gg: ASbGnct3lWGyUY9B9s4SY8HOvSxBOVJBP4Mz0FN9y0mesg8FX5+yZXOmAqanUVa0cqx
+	++7r1n4WoZxRXZm6/gnGLvTkhI1qPcamUpwHyhIDFAz1avDohSfDuPVYjE2sQnabQLJxIFpMCV2
+	rv7BedOFtzYQUz8w9CrLmoi7geYkH4DMaYf7dta1uKelfsdlCzAkGJ9bVkFZgoSFyFGnaJBMGHm
+	cLNbNINK1zJhRVFTTq6m/ySgBavQ7xwP5GLZRlV27YpHsK90bqSKOitgrtTjTervC5TNa1tKDg2
+	bpsAY+Dw1avOU7KkHA4ZTX9I3KN/Okl+yN84etBYKvPAqA==
+X-Received: by 2002:a17:902:db0a:b0:224:23be:c569 with SMTP id d9443c01a7336-22804845097mr102527895ad.22.1743140057922;
+        Thu, 27 Mar 2025 22:34:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGcD4IHX1W6f3V7a/135vsdoU5XAVFg/3bKjgHWhLDGDdOc4qwiWlsAX+wTGlesaJO8h2QWrQ==
+X-Received: by 2002:a17:902:db0a:b0:224:23be:c569 with SMTP id d9443c01a7336-22804845097mr102527305ad.22.1743140057391;
+        Thu, 27 Mar 2025 22:34:17 -0700 (PDT)
+Received: from [10.92.192.202] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec6f91sm9510475ad.17.2025.03.27.22.34.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 22:34:16 -0700 (PDT)
+Message-ID: <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
+Date: Fri, 28 Mar 2025 11:04:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+ <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
+ <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250328-ath11k-bring-hibernation-back-v3-4-23405ae23431@quicinc.com>
-References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
-In-Reply-To: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
-	<jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Takashi Iwai
-	<tiwai@suse.de>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CdgI5Krl c=1 sm=1 tr=0 ts=67e63479 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=QX4gbG5DAAAA:8 a=COk6AnOGAAAA:8
- a=HvZZpIgW7k5aFFJRxrcA:9 a=QEXdDO2ut3YA:10 a=RVmHIydaz68A:10 a=AbAUZ8qAyYyZVLSsDulk:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: XfjRgXfSdrU1jW1rkbeXx3-LxtwnaHYG
-X-Proofpoint-ORIG-GUID: XfjRgXfSdrU1jW1rkbeXx3-LxtwnaHYG
+X-Authority-Analysis: v=2.4 cv=fJk53Yae c=1 sm=1 tr=0 ts=67e634db cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=wBt9fhMRhOodALO6grUA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: F-Pksyot7O5bRcHTfmg_xhsw9o9Ye1sD
+X-Proofpoint-ORIG-GUID: F-Pksyot7O5bRcHTfmg_xhsw9o9Ye1sD
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-28_02,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0 phishscore=0
- clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503280035
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503280036
 
-Previously commit 166a490f59ac ("wifi: ath11k: support hibernation") was
-reverted due to [1], so currently we only support WoWLAN mode suspend.
-This works well in scenarios where WLAN power is sustained during suspend,
-however breaks in those where power is cut off.
 
-This change basically brings the reverted commit back, but differs in that
-we decide based on the PM policy to choose WoWLAN mode suspend or the
-non-WoWLAN mode. As stated in the previous patch for now the PM policy is
-determined based on machine models. That said we will choose WoWLAN mode
-suspend if we are running on machines listed in ath11k_pm_quirk_table,
-otherwise we choose the other one.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
+On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
+> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
+>> PCIe equalization presets are predefined settings used to optimize
+>> signal integrity by compensating for signal loss and distortion in
+>> high-speed data transmission.
+>>
+>> Based upon the number of lanes and the data rate supported, write
+>> the preset data read from the device tree in to the lane equalization
+>> control registers.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+>>   include/uapi/linux/pci_regs.h                     |  3 ++
+>>   3 files changed, 66 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index dd56cc02f4ef..7c6e6a74383b 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>>   	if (pci->num_lanes < 1)
+>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+>>   
+>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
+>> +	if (ret)
+>> +		goto err_free_msi;
+>> +
+>>   	/*
+>>   	 * Allocate the resource for MSG TLP before programming the iATU
+>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>>   	return 0;
+>>   }
+>>   
+>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
+>> +	u8 *presets;
+>> +	u32 cap;
+>> +	int i;
+>> +
+>> +	if (speed == PCIE_SPEED_8_0GT) {
+>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
+>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
+>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
+>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
+>> +		lane_reg_size = 0x2;
+>> +	} else if (speed == PCIE_SPEED_16_0GT) {
+>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
+>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
+>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
+>> +		lane_reg_size = 0x1;
+>> +	} else {
+> 
+> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
+> controller supports them and if the presets property is defined in DT, then you
+> should apply the preset values.
+> 
+> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
+> safely return.
+> 
+I am fine to add it, but there is no GEN5 or GEN6 controller support
+added in dwc, isn't it best to add when that support is added and
+tested.
 
-Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+- Krishna Chaitanya.
 
-Tested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Tested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
----
- drivers/net/wireless/ath/ath11k/ahb.c  |   4 +-
- drivers/net/wireless/ath/ath11k/core.c | 123 +++++++++++++++++++++++++++++++--
- drivers/net/wireless/ath/ath11k/core.h |   4 ++
- drivers/net/wireless/ath/ath11k/hif.h  |  14 ++--
- drivers/net/wireless/ath/ath11k/mhi.c  |  14 +++-
- drivers/net/wireless/ath/ath11k/mhi.h  |   4 +-
- drivers/net/wireless/ath/ath11k/pci.c  |  44 ++++++++++--
- drivers/net/wireless/ath/ath11k/qmi.c  |   4 +-
- 8 files changed, 187 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index eedba3766ba24430e7034fcbae39bd38b0ac5165..511f5f91da0f36f6dfe81a7824bb8a84b5cee3c2 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -413,7 +413,7 @@ static int ath11k_ahb_power_up(struct ath11k_base *ab)
- 	return ret;
- }
- 
--static void ath11k_ahb_power_down(struct ath11k_base *ab)
-+static void ath11k_ahb_power_down(struct ath11k_base *ab, bool is_suspend)
- {
- 	struct ath11k_ahb *ab_ahb = ath11k_ahb_priv(ab);
- 
-@@ -1280,7 +1280,7 @@ static void ath11k_ahb_remove(struct platform_device *pdev)
- 	struct ath11k_base *ab = platform_get_drvdata(pdev);
- 
- 	if (test_bit(ATH11K_FLAG_QMI_FAIL, &ab->dev_flags)) {
--		ath11k_ahb_power_down(ab);
-+		ath11k_ahb_power_down(ab, false);
- 		ath11k_debugfs_soc_destroy(ab);
- 		ath11k_qmi_deinit_service(ab);
- 		goto qmi_fail;
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index e9077b1c4c522291c0b87f23d6f1fcfffebe7509..e1c0eca773fc0243aa4d159dd8671f6a4084b29a 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -1082,6 +1082,52 @@ static int ath11k_core_suspend_wow(struct ath11k_base *ab)
- 	return 0;
- }
- 
-+static int ath11k_core_suspend_default(struct ath11k_base *ab)
-+{
-+	int ret;
-+
-+	ret = ath11k_dp_rx_pktlog_stop(ab, true);
-+	if (ret) {
-+		ath11k_warn(ab, "failed to stop dp rx (and timer) pktlog during suspend: %d\n",
-+			    ret);
-+		return ret;
-+	}
-+
-+	/* So far only single_pdev_only devices can reach here,
-+	 * so it is valid to handle the first, and the only, pdev.
-+	 */
-+	ret = ath11k_mac_wait_tx_complete(ab->pdevs[0].ar);
-+	if (ret) {
-+		ath11k_warn(ab, "failed to wait tx complete: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = ath11k_dp_rx_pktlog_stop(ab, false);
-+	if (ret) {
-+		ath11k_warn(ab, "failed to stop dp rx pktlog during suspend: %d\n",
-+			    ret);
-+		return ret;
-+	}
-+
-+	ath11k_ce_stop_shadow_timers(ab);
-+	ath11k_dp_stop_shadow_timers(ab);
-+
-+	/* PM framework skips suspend_late/resume_early callbacks
-+	 * if other devices report errors in their suspend callbacks.
-+	 * However ath11k_core_resume() would still be called because
-+	 * here we return success thus kernel put us on dpm_suspended_list.
-+	 * Since we won't go through a power down/up cycle, there is
-+	 * no chance to call complete(&ab->restart_completed) in
-+	 * ath11k_core_restart(), making ath11k_core_resume() timeout.
-+	 * So call it here to avoid this issue. This also works in case
-+	 * no error happens thus suspend_late/resume_early get called,
-+	 * because it will be reinitialized in ath11k_core_resume_early().
-+	 */
-+	complete(&ab->restart_completed);
-+
-+	return 0;
-+}
-+
- int ath11k_core_suspend(struct ath11k_base *ab)
- {
- 	int ret;
-@@ -1090,10 +1136,73 @@ int ath11k_core_suspend(struct ath11k_base *ab)
- 	if (ret <= 0)
- 		return ret;
- 
--	return ath11k_core_suspend_wow(ab);
-+	if (ab->pm_policy == ATH11K_PM_WOW)
-+		return ath11k_core_suspend_wow(ab);
-+
-+	return ath11k_core_suspend_default(ab);
- }
- EXPORT_SYMBOL(ath11k_core_suspend);
- 
-+int ath11k_core_suspend_late(struct ath11k_base *ab)
-+{
-+	int ret;
-+
-+	ret = ath11k_core_continue_suspend_resume(ab);
-+	if (ret <= 0)
-+		return ret;
-+
-+	if (ab->pm_policy == ATH11K_PM_WOW)
-+		return 0;
-+
-+	ath11k_hif_irq_disable(ab);
-+	ath11k_hif_ce_irq_disable(ab);
-+
-+	ath11k_hif_power_down(ab, true);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ath11k_core_suspend_late);
-+
-+int ath11k_core_resume_early(struct ath11k_base *ab)
-+{
-+	int ret;
-+
-+	ret = ath11k_core_continue_suspend_resume(ab);
-+	if (ret <= 0)
-+		return ret;
-+
-+	if (ab->pm_policy == ATH11K_PM_WOW)
-+		return 0;
-+
-+	reinit_completion(&ab->restart_completed);
-+	ret = ath11k_hif_power_up(ab);
-+	if (ret)
-+		ath11k_warn(ab, "failed to power up hif during resume: %d\n", ret);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(ath11k_core_resume_early);
-+
-+static int ath11k_core_resume_default(struct ath11k_base *ab)
-+{
-+	long time_left;
-+	int ret;
-+
-+	time_left = wait_for_completion_timeout(&ab->restart_completed,
-+						ATH11K_RESET_TIMEOUT_HZ);
-+	if (time_left == 0) {
-+		ath11k_warn(ab, "timeout while waiting for restart complete");
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = ath11k_dp_rx_pktlog_start(ab);
-+	if (ret)
-+		ath11k_warn(ab, "failed to start rx pktlog during resume: %d\n",
-+			    ret);
-+
-+	return ret;
-+}
-+
- static int ath11k_core_resume_wow(struct ath11k_base *ab)
- {
- 	int ret;
-@@ -1131,7 +1240,10 @@ int ath11k_core_resume(struct ath11k_base *ab)
- 	if (ret <= 0)
- 		return ret;
- 
--	return ath11k_core_resume_wow(ab);
-+	if (ab->pm_policy == ATH11K_PM_WOW)
-+		return ath11k_core_resume_wow(ab);
-+
-+	return ath11k_core_resume_default(ab);
- }
- EXPORT_SYMBOL(ath11k_core_resume);
- 
-@@ -2266,6 +2378,8 @@ static void ath11k_core_restart(struct work_struct *work)
- 
- 	if (!ab->is_reset)
- 		ath11k_core_post_reconfigure_recovery(ab);
-+
-+	complete(&ab->restart_completed);
- }
- 
- static void ath11k_core_reset(struct work_struct *work)
-@@ -2336,7 +2450,7 @@ static void ath11k_core_reset(struct work_struct *work)
- 	ath11k_hif_irq_disable(ab);
- 	ath11k_hif_ce_irq_disable(ab);
- 
--	ath11k_hif_power_down(ab);
-+	ath11k_hif_power_down(ab, false);
- 	ath11k_hif_power_up(ab);
- 
- 	ath11k_dbg(ab, ATH11K_DBG_BOOT, "reset started\n");
-@@ -2418,7 +2532,7 @@ void ath11k_core_deinit(struct ath11k_base *ab)
- 
- 	mutex_unlock(&ab->core_lock);
- 
--	ath11k_hif_power_down(ab);
-+	ath11k_hif_power_down(ab, false);
- 	ath11k_mac_destroy(ab);
- 	ath11k_core_soc_destroy(ab);
- }
-@@ -2471,6 +2585,7 @@ struct ath11k_base *ath11k_core_alloc(struct device *dev, size_t priv_size,
- 	timer_setup(&ab->rx_replenish_retry, ath11k_ce_rx_replenish_retry, 0);
- 	init_completion(&ab->htc_suspend);
- 	init_completion(&ab->wow.wakeup_completed);
-+	init_completion(&ab->restart_completed);
- 
- 	ab->dev = dev;
- 	ab->hif.bus = bus;
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index df2b0cb2f0b5a700806cd261ffeb31f5da0741f5..7a9354e0eadb58730028217960e5bbfe0056c2fb 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -1055,6 +1055,8 @@ struct ath11k_base {
- 		DECLARE_BITMAP(fw_features, ATH11K_FW_FEATURE_COUNT);
- 	} fw;
- 
-+	struct completion restart_completed;
-+
- #ifdef CONFIG_NL80211_TESTMODE
- 	struct {
- 		u32 data_pos;
-@@ -1256,8 +1258,10 @@ void ath11k_core_free_bdf(struct ath11k_base *ab, struct ath11k_board_data *bd);
- int ath11k_core_check_dt(struct ath11k_base *ath11k);
- int ath11k_core_check_smbios(struct ath11k_base *ab);
- void ath11k_core_halt(struct ath11k *ar);
-+int ath11k_core_resume_early(struct ath11k_base *ab);
- int ath11k_core_resume(struct ath11k_base *ab);
- int ath11k_core_suspend(struct ath11k_base *ab);
-+int ath11k_core_suspend_late(struct ath11k_base *ab);
- void ath11k_core_pre_reconfigure_recovery(struct ath11k_base *ab);
- bool ath11k_core_coldboot_cal_support(struct ath11k_base *ab);
- 
-diff --git a/drivers/net/wireless/ath/ath11k/hif.h b/drivers/net/wireless/ath/ath11k/hif.h
-index 770c39ff99b45e93de65c88c13bdf30e75fa8e64..cd9c4b838246815ecb2a10784732c009a5423b6e 100644
---- a/drivers/net/wireless/ath/ath11k/hif.h
-+++ b/drivers/net/wireless/ath/ath11k/hif.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: BSD-3-Clause-Clear */
- /*
-  * Copyright (c) 2019-2020 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #ifndef _HIF_H_
-@@ -18,7 +18,7 @@ struct ath11k_hif_ops {
- 	int (*start)(struct ath11k_base *ab);
- 	void (*stop)(struct ath11k_base *ab);
- 	int (*power_up)(struct ath11k_base *ab);
--	void (*power_down)(struct ath11k_base *ab);
-+	void (*power_down)(struct ath11k_base *ab, bool is_suspend);
- 	int (*suspend)(struct ath11k_base *ab);
- 	int (*resume)(struct ath11k_base *ab);
- 	int (*map_service_to_pipe)(struct ath11k_base *ab, u16 service_id,
-@@ -68,12 +68,18 @@ static inline void ath11k_hif_irq_disable(struct ath11k_base *ab)
- 
- static inline int ath11k_hif_power_up(struct ath11k_base *ab)
- {
-+	if (!ab->hif.ops->power_up)
-+		return -EOPNOTSUPP;
-+
- 	return ab->hif.ops->power_up(ab);
- }
- 
--static inline void ath11k_hif_power_down(struct ath11k_base *ab)
-+static inline void ath11k_hif_power_down(struct ath11k_base *ab, bool is_suspend)
- {
--	ab->hif.ops->power_down(ab);
-+	if (!ab->hif.ops->power_down)
-+		return;
-+
-+	ab->hif.ops->power_down(ab, is_suspend);
- }
- 
- static inline int ath11k_hif_suspend(struct ath11k_base *ab)
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index fc77eac83e953148b96cad096d26b32222157b24..acd76e9392d31192aca6776319ef0829a1c69628 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: BSD-3-Clause-Clear
- /*
-  * Copyright (c) 2020 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #include <linux/msi.h>
-@@ -454,9 +454,17 @@ int ath11k_mhi_start(struct ath11k_pci *ab_pci)
- 	return 0;
- }
- 
--void ath11k_mhi_stop(struct ath11k_pci *ab_pci)
-+void ath11k_mhi_stop(struct ath11k_pci *ab_pci, bool is_suspend)
- {
--	mhi_power_down(ab_pci->mhi_ctrl, true);
-+	/* During suspend we need to use mhi_power_down_keep_dev()
-+	 * workaround, otherwise ath11k_core_resume() will timeout
-+	 * during resume.
-+	 */
-+	if (is_suspend)
-+		mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
-+	else
-+		mhi_power_down(ab_pci->mhi_ctrl, true);
-+
- 	mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
- }
- 
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.h b/drivers/net/wireless/ath/ath11k/mhi.h
-index 651470091bd5ab60b3fbfb37c1be14b048e877c5..5c5c2b03c81f3ee683d0483aad9118f7126d6fea 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.h
-+++ b/drivers/net/wireless/ath/ath11k/mhi.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: BSD-3-Clause-Clear */
- /*
-  * Copyright (c) 2020 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2022, 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- #ifndef _ATH11K_MHI_H
- #define _ATH11K_MHI_H
-@@ -18,7 +18,7 @@
- #define MHICTRL_RESET_MASK			0x2
- 
- int ath11k_mhi_start(struct ath11k_pci *ar_pci);
--void ath11k_mhi_stop(struct ath11k_pci *ar_pci);
-+void ath11k_mhi_stop(struct ath11k_pci *ar_pci, bool is_suspend);
- int ath11k_mhi_register(struct ath11k_pci *ar_pci);
- void ath11k_mhi_unregister(struct ath11k_pci *ar_pci);
- void ath11k_mhi_set_mhictrl_reset(struct ath11k_base *ab);
-diff --git a/drivers/net/wireless/ath/ath11k/pci.c b/drivers/net/wireless/ath/ath11k/pci.c
-index 412f4a134e4a8bf5f8b7ecfe26197acec48858cc..37f5ed7f74f2f6adb3a6b5e176ed8c0105d235c2 100644
---- a/drivers/net/wireless/ath/ath11k/pci.c
-+++ b/drivers/net/wireless/ath/ath11k/pci.c
-@@ -821,7 +821,7 @@ static int ath11k_pci_power_up(struct ath11k_base *ab)
- 	return 0;
- }
- 
--static void ath11k_pci_power_down(struct ath11k_base *ab)
-+static void ath11k_pci_power_down(struct ath11k_base *ab, bool is_suspend)
- {
- 	struct ath11k_pci *ab_pci = ath11k_pci_priv(ab);
- 
-@@ -832,7 +832,7 @@ static void ath11k_pci_power_down(struct ath11k_base *ab)
- 
- 	ath11k_pci_msi_disable(ab_pci);
- 
--	ath11k_mhi_stop(ab_pci);
-+	ath11k_mhi_stop(ab_pci, is_suspend);
- 	clear_bit(ATH11K_FLAG_DEVICE_INIT_DONE, &ab->dev_flags);
- 	ath11k_pci_sw_reset(ab_pci->ab, false);
- }
-@@ -1161,7 +1161,7 @@ static void ath11k_pci_remove(struct pci_dev *pdev)
- 	ath11k_pci_set_irq_affinity_hint(ab_pci, NULL);
- 
- 	if (test_bit(ATH11K_FLAG_QMI_FAIL, &ab->dev_flags)) {
--		ath11k_pci_power_down(ab);
-+		ath11k_pci_power_down(ab, false);
- 		ath11k_debugfs_soc_destroy(ab);
- 		ath11k_qmi_deinit_service(ab);
- 		goto qmi_fail;
-@@ -1192,7 +1192,7 @@ static void ath11k_pci_shutdown(struct pci_dev *pdev)
- 	struct ath11k_pci *ab_pci = ath11k_pci_priv(ab);
- 
- 	ath11k_pci_set_irq_affinity_hint(ab_pci, NULL);
--	ath11k_pci_power_down(ab);
-+	ath11k_pci_power_down(ab, false);
- }
- 
- static __maybe_unused int ath11k_pci_pm_suspend(struct device *dev)
-@@ -1229,9 +1229,39 @@ static __maybe_unused int ath11k_pci_pm_resume(struct device *dev)
- 	return ret;
- }
- 
--static SIMPLE_DEV_PM_OPS(ath11k_pci_pm_ops,
--			 ath11k_pci_pm_suspend,
--			 ath11k_pci_pm_resume);
-+static __maybe_unused int ath11k_pci_pm_suspend_late(struct device *dev)
-+{
-+	struct ath11k_base *ab = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = ath11k_core_suspend_late(ab);
-+	if (ret)
-+		ath11k_warn(ab, "failed to late suspend core: %d\n", ret);
-+
-+	/* Similar to ath11k_pci_pm_suspend(), we return success here
-+	 * even error happens, to allow system suspend/hibernation survive.
-+	 */
-+	return 0;
-+}
-+
-+static __maybe_unused int ath11k_pci_pm_resume_early(struct device *dev)
-+{
-+	struct ath11k_base *ab = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = ath11k_core_resume_early(ab);
-+	if (ret)
-+		ath11k_warn(ab, "failed to early resume core: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops __maybe_unused ath11k_pci_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(ath11k_pci_pm_suspend,
-+				ath11k_pci_pm_resume)
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(ath11k_pci_pm_suspend_late,
-+				     ath11k_pci_pm_resume_early)
-+};
- 
- static struct pci_driver ath11k_pci_driver = {
- 	.name = "ath11k_pci",
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 4f8b08ed1bbc6ec426da83bd7ce49a73b3a93c0c..47b9d4126d3a9b85b424fe50aaca2bce65045994 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: BSD-3-Clause-Clear
- /*
-  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
-- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #include <linux/elf.h>
-@@ -2887,7 +2887,7 @@ int ath11k_qmi_fwreset_from_cold_boot(struct ath11k_base *ab)
- 	}
- 
- 	/* reset the firmware */
--	ath11k_hif_power_down(ab);
-+	ath11k_hif_power_down(ab, false);
- 	ath11k_hif_power_up(ab);
- 	ath11k_dbg(ab, ATH11K_DBG_QMI, "exit wait for cold boot done\n");
- 	return 0;
-
--- 
-2.34.1
-
+>> +		return;
+>> +	}
+>> +
+>> +	if (presets[0] == PCI_EQ_RESV)
+>> +		return;
+>> +
+>> +	cap = dw_pcie_find_ext_capability(pci, cap_id);
+>> +	if (!cap)
+>> +		return;
+>> +
+>> +	/*
+>> +	 * Write preset values to the registers byte-by-byte for the given
+>> +	 * number of lanes and register size.
+>> +	 */
+>> +	for (i = 0; i < pci->num_lanes * lane_reg_size; i++)
+>> +		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
+>> +}
+>> +
+>> +static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
+>> +
+>> +	/*
+>> +	 * Lane equalization needs to be perfomed for all data rates
+>> +	 * the controller supports and for all supported lanes.
+>> +	 */
+>> +
+>> +	if (speed >= PCIE_SPEED_8_0GT)
+>> +		dw_pcie_program_presets(pp, PCIE_SPEED_8_0GT);
+>> +
+>> +	if (speed >= PCIE_SPEED_16_0GT)
+>> +		dw_pcie_program_presets(pp, PCIE_SPEED_16_0GT);
+> 
+> Add other data rates also.
+> 
+> - Mani
+> 
