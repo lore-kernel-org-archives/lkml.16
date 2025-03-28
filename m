@@ -1,184 +1,195 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760941B415F;
-	Fri, 28 Mar 2025 14:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171841; cv=fail; b=SxnYVwjYNUz73/iUOL6V6FOQvjzbfEHyGXFK+orXfXouoTTtZMXL7JWFMfItpIGwKBa1pd4vJgUUKrTfcChZoI4nne8/nQwVZzOxMapFWpiiNwpJVnC+ap7FM3FjyHel7V0i1AwMJ1o78UzqUuy5pKMFFzMpg1UXcjK32M8xCv8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171841; c=relaxed/simple;
-	bh=a+3HGWPFXhv0KEG4eSGTjFg1Cmh+NUTrr8/VIkD+DuU=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=rdap6uMQF4zJIueS+6+1W3BwC4pY3tk8325fOPDEh3vpiFFHK8UMYoWqBsVFmN/74B5TvE5fce58Yd22TZJ8pGzlNNpbbEZhpc5sMPyZr1TWm0KHqS9iuBNmeBG+7cWvrC4f4rJepSoMY5JYCW841wD93w6tgQQIrlHLN4gNqfA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CEzkNepR; arc=fail smtp.client-ip=40.107.92.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B0717BCE
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743171908; cv=none; b=o1jxDoQ4C18lvKY9e/Sq8hJTS2K/7sU7gkIGAysZIhlKd3Z4cIiJ+n51lLuJOOa9MXGkcrVNYSgS3Te5shgiNovGYHjlLHpidl+3D/tmlKjlwrNYH6UWZy+6DujfVUwrQqyq+Nq6FqGc9u3Ht4eSfeLvfHp7CltcEuxy9q9Td2M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743171908; c=relaxed/simple;
+	bh=yqjLRrrzJxZTT5NXzG3xCiModk9KppYPUkIwr7crgwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tbFRl9JYvr7dyffTaG7h3YO8/9EZZCUvMPuf7/9S7YDxAR7+scOcDwf/0et9hft9qFt/LWcI3KxcVAWZY5QYHqDsehOfcoHMMFDIfOeISX0fmOhlfH5/j8AkJ7SDFk7THPaP275zZcrGPcv65BJg6TpWOZQgGDQM5giywFvSMqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=A9oxizvF; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CEzkNepR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J49gZ33N2Hd8JoNEC0tKVrRFdJFmhVv8mUGmnZ/1/FIx1+f2ZfGMeq+/XkbBwG6HFFxQPtBR3IqIkFmT11IfZcUryTgO0Kc4wVsA+xDSST3RvqZ+UqhzbtY3282Zv/x8991z3euaOtMslYOKPzXmeRC8a8thAkZvsNKSYbZ2+A0pXS4C88NnAassnJuuHq36cf5gw5/hpu5GjPc1NkCghqvYja3XWab+6UJnIwNovycjLIeeYaI+eCFKTLG2Y7Ec72aVee/FkFUHjw3OsA7m3i6Sm/dlR/1nJDrFkfW/rNYX+kguiFf8XF6/uI9b/IuY/o+9PD2f7VrF9YaaNQtTKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hOhR79X1NyJ8oc1XUoRoIk2fk+efWPUTa1z6+GVHwhs=;
- b=ePsXilhBDH+Z3MHtK573Plp3se4WXAD2wOikRGBC9lww9VfjiyudgWEPnJ940wibOFCoj2LaXVurWCn4Ch2I36uj9eMuZ0PPXS2M5bhr6Y7rNVjH/71XTGdUPw+NBwNGFYr6n4ceHI1M9w3RcDwTd9W8dqX8+WjMjbmo4Eb+ui+uu7g+4m3xdm+/q5FGFEFNQJK9Qz9l23ptp8HG0+jxEJ+6RIVJxDvMvfgM/QNmopaK8JRR6sbIUwvtFmcVRGIT3P9oCYAeSwGQAB4L03vR/G31O8gIMS0Jy5PvzWdbhVYVE3nCWLYvMhvTWknpLvPmU28jh/JmWbzLcRYpH9y4/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hOhR79X1NyJ8oc1XUoRoIk2fk+efWPUTa1z6+GVHwhs=;
- b=CEzkNepRsRI/DQ7/5bzIgt4eXlpJmQNdjCSO0xXDy2UMWpSS8t8TfFQCEgelP/JeAMcAxyzWkCAOsB+3EFzEqO/Vz3FBsuDoIKfjv1/H+m2KyAceNfWajh5WN2hMBPwTeN7Gl/LitX+yH9Tyqj5BfvVxN0vqBBpJo/sDLV28XlEbTXoz6K1ynRStO61EeFB/8dvCYcj53NKqhTNA7zSak3p5SXKlwyzV0sdExuYixC3gVXFVGrNZfjKlenl7XFpgVelW6QKCRhwPkjZ87tP4zQPZkD4rpsS7DJ9QEc1kma4O4499UPNCp6qAgoVZeas+mEBT/tieLrAZxhNv8Z5EeA==
-Received: from SJ0PR05CA0210.namprd05.prod.outlook.com (2603:10b6:a03:330::35)
- by PH8PR12MB7448.namprd12.prod.outlook.com (2603:10b6:510:214::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 14:23:54 +0000
-Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
- (2603:10b6:a03:330:cafe::fc) by SJ0PR05CA0210.outlook.office365.com
- (2603:10b6:a03:330::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.27 via Frontend Transport; Fri,
- 28 Mar 2025 14:23:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Fri, 28 Mar 2025 14:23:54 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 28 Mar
- 2025 07:23:50 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 28 Mar
- 2025 07:23:50 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 28 Mar 2025 07:23:49 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc3 review
-In-Reply-To: <20250328074420.301061796@linuxfoundation.org>
-References: <20250328074420.301061796@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="A9oxizvF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743171904;
+	bh=yqjLRrrzJxZTT5NXzG3xCiModk9KppYPUkIwr7crgwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A9oxizvFRVgjOtwLlU6QgIH62TlkTBpPaV2ubbLVCc56L1F78PBv8qVYIeUzKLR+C
+	 f5PJPCzJzEVwT6rCHM1VxQCcRclpao+EK/m4M2iU+ai8fK7PAjodCsTrZu8s2JsVx2
+	 jP0+E+goEIUoWuL2LXMySK9Au7gtY20EbfHBR2J9r5WzITuur5qeqxkrL9YquG9HfG
+	 ofOVi0ykMW7XNUpFO+mn7UqEihfliJQrkAm6ZRDtNE7ftKSbylOGw3ETQBSA/g8duI
+	 u87HoR9ZUxh7kveDU/o3yphbyRXY32YbM6ae5AoLsVuAyXnGWb9ID1JB/rgKWaocbO
+	 giFDX8RzC0hKQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B594A17E0385;
+	Fri, 28 Mar 2025 15:25:03 +0100 (CET)
+Date: Fri, 28 Mar 2025 15:24:58 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] drm/panthor: Display heap chunk entries in
+ DebugFS GEMS file
+Message-ID: <20250328152458.0f2b119b@collabora.com>
+In-Reply-To: <6jrrlbfis3nmd73grbzrtachh3uumgsnxsjpuqcekhcrmm7raj@wavtspjexwzu>
+References: <20250319150953.1634322-1-adrian.larumbe@collabora.com>
+	<20250319150953.1634322-5-adrian.larumbe@collabora.com>
+	<20250319180013.4d0165c1@collabora.com>
+	<6jrrlbfis3nmd73grbzrtachh3uumgsnxsjpuqcekhcrmm7raj@wavtspjexwzu>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <e0a881cf-8a00-418d-a10d-c088bfc1059e@rnnvmail201.nvidia.com>
-Date: Fri, 28 Mar 2025 07:23:49 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|PH8PR12MB7448:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95fc0e45-cf2b-4bfc-42f8-08dd6e042b87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SjU1NEdWcm9hbDRrck9rSmhRY2tPQmhMRi9tek9sZmhIOTFJZnNLbDdZbC8z?=
- =?utf-8?B?SC83UlVMSklWN0JpRWhMMmRPNHV0RVduMHI0N2t4VGVFUUVJaTZZMmdMYlNq?=
- =?utf-8?B?ckttVTRHa0wyODd0UzI2ZFk1U1IxUS9FZFBuNVlJYnRta3AvYUJML29xUGF6?=
- =?utf-8?B?dlJFRFpTOVZOa01pekR3V1RMVjBISExUdXpGTk43Q1orNkk5VE9ocjZnWDJn?=
- =?utf-8?B?YkNiSmJueTZLZEEyNEs1VmlGTU52NnVhV3RsOVhaM0pSYTRndGlHMXRnRU05?=
- =?utf-8?B?Sis4U1pLVjdhK21BWTI1RitvOXk5cWtSVlYrZkVoK1pUWWtLUjNUMXJiNG9L?=
- =?utf-8?B?YVYrOWsraVdsMUhDc20rUzN2RlF5akpDOWhTb2FUaVFadExyRHBmU252Nm1P?=
- =?utf-8?B?R3h5WDlJOGRxSzlOejl5N21xSUw0VkFlZmUrMm51UWZKSkZ6akFDNnd3YUMr?=
- =?utf-8?B?RTBEZWZjVmNYdmdFaEpIc3V3NkhVYmhDTWYydVZCelBVbCtSTmI4bHVRT0dv?=
- =?utf-8?B?N1ZSVHV6V2FQRzQwbEFvRlZSUHo4akI4TTlmNGE3dEVHK0I5K0NKNklKUFJy?=
- =?utf-8?B?Q1FZVHlZVE4yb3BWTzRpbVR2WnVWZ0ljRlgvd1AwNlJ1L0x3bWdjbXJ1UGkz?=
- =?utf-8?B?bDFYZC9uREJpU1daY25XcG9icnRLKzduZTdVaTVqYlRYK01NUjFDdDBCZmhD?=
- =?utf-8?B?QjFPbDFONS9mMm5XN1E0cWRXM1lORzE5THU3ZTNpNTU3VFNuWVhYQW81eFVi?=
- =?utf-8?B?cTYvdlc0UWJGZnp2QUVFejBZdFlNdWdtUkM1N3U3TFU1SlJCUHp1RVpQd2R4?=
- =?utf-8?B?SHZvbGQrSkpkdjZCaXhBUUovSGt5RE1nSjI3b0tJelFsSEdtVWxqVklHQkdT?=
- =?utf-8?B?RjdBcG9iWVhWSGN5bE9FNUdtVzYyQnZDR0dQRTlZcGpwSmd2aENvOGxlQlJ0?=
- =?utf-8?B?K1VNVjRnbHNNNHhhcVJ0bWV1cjh0MG5XMXdaTG9nN2dpTnJ4OWpNVzlYOXRm?=
- =?utf-8?B?S2UvUHdTRkcwbm1BazZmc2d6VzdxKy90b0w5ODM5VTFCWEgvc2RYNWtNUkFy?=
- =?utf-8?B?cDZRekZTbVFmWFZRaThIckI0Z0RJekY4YU5aQ05EWEpuZlRhWmlVeFUxeHAr?=
- =?utf-8?B?Y0JjNVlDRG1BSFJCd0J0MXpSL1BTUEQvbFp6aGFJRHZCaitMMHM2YVIzMlpG?=
- =?utf-8?B?c3ZYVjhIb0FiOFlDejc4M3hWZVUycWs0dXNoZDRkK2xmNll3WWVxRHIyUktn?=
- =?utf-8?B?ZEIzYk4zajRwbWI2TURKZG1DL2tWSnNCQlo1Y2RnVHcrQmpjWUVLUXMrQlp5?=
- =?utf-8?B?bFJSUUNNelNTQ1BYQktwSGVmd3FtRTdNZ0ZVZzZkV09kalZuaWtJSWhmUHRQ?=
- =?utf-8?B?aUkvbmFZbTNSU1FTZWZ4NG1Da1hlb3FpNytUUGZPaDNLZk5TRk5PVExaZVI2?=
- =?utf-8?B?bXhCeWRCTENKRGpsQ2dwaVhLYS83aCtKSlk1dUxKbWxFVVZtWk1FaFNFSmhX?=
- =?utf-8?B?ZnBaa0pDSE9aYjgwcWlYTisxTUZTNjlXeTZmOVZxbjlybGxaZitSYVVSTEF1?=
- =?utf-8?B?U1FXVTJHb09wV1AwM1dHS2EyQWJmd1Y5TjNibDJIWktnNmFpa3NWUjlhUE1q?=
- =?utf-8?B?d09BSlZTUTNPQ0pZRGRiWmhvR3hmS3dZTUJLWU5wbDVtWWNHS2hodTIyc3JK?=
- =?utf-8?B?ZnJnWWo1eHRpaURCemYvcjdTeWpuNFhwQnFXM0dXbFdGbUcvdjVCVXVqTXdw?=
- =?utf-8?B?Vjl3MWxzSE9iWjA1YmgvM0JpM0VSMXZadVNvbzF3NXJ3Y00rMk5HUkh3TGxm?=
- =?utf-8?B?WmJOZ3RPN1FpU0luc3A4L2ZyaVY2YW11a1JJUVN4UnBFVGFnY3E4bmI1ZXh0?=
- =?utf-8?B?bCtkU1FLSmNvci9jaTlhRHlDZVpibnlYbDN1R2l3ZzFic2RZWmhDd1BaVG5S?=
- =?utf-8?B?RkZGRWRHTkxlbUNEYjAvd0xXa3Uyc2VyYUMwb3hzR0hVSGpneHdyeUxMUjMx?=
- =?utf-8?Q?Ja2yqUt6mzudQ8tMnhxQlJM506EaUY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 14:23:54.5375
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95fc0e45-cf2b-4bfc-42f8-08dd6e042b87
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7448
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 28 Mar 2025 08:47:06 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.132 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 30 Mar 2025 07:43:56 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.132-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Thu, 27 Mar 2025 13:18:47 +0000
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-All tests passing for Tegra ...
+> On 19.03.2025 18:00, Boris Brezillon wrote:
+> > On Wed, 19 Mar 2025 15:03:19 +0000
+> > Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+> > =20
+> > > Expand the driver's DebugFS GEMS file to display entries for the heap
+> > > chunks' GEM objects, both those allocated at heap creation time throu=
+gh an
+> > > ioctl(), or in response to a tiler OOM event.
+> > >
+> > > Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> > > ---
+> > >  drivers/gpu/drm/panthor/panthor_gem.c  | 22 +++++++++++-----------
+> > >  drivers/gpu/drm/panthor/panthor_gem.h  |  2 ++
+> > >  drivers/gpu/drm/panthor/panthor_heap.c |  3 +++
+> > >  3 files changed, 16 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/=
+panthor/panthor_gem.c
+> > > index f7eb413d88e7..252979473fdf 100644
+> > > --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> > > +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> > > @@ -22,16 +22,6 @@ static void panthor_gem_debugfs_bo_init(struct pan=
+thor_gem_object *bo)
+> > >  	get_task_comm(bo->gems.creator.process_name, current->group_leader);
+> > >  }
+> > >
+> > > -static void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo)
+> > > -{
+> > > -	struct panthor_device *ptdev =3D  container_of(bo->base.base.dev,
+> > > -						     struct panthor_device, base);
+> > > -
+> > > -	mutex_lock(&ptdev->gems.lock);
+> > > -	list_add_tail(&bo->gems.node, &ptdev->gems.node);
+> > > -	mutex_unlock(&ptdev->gems.lock);
+> > > -}
+> > > -
+> > >  static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
+> > >  {
+> > >  	struct panthor_device *ptdev =3D container_of(bo->base.base.dev,
+> > > @@ -44,10 +34,20 @@ static void panthor_gem_debugfs_bo_rm(struct pant=
+hor_gem_object *bo)
+> > >  	list_del_init(&bo->gems.node);
+> > >  	mutex_unlock(&ptdev->gems.lock);
+> > >  }
+> > > +
+> > > +void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo)
+> > > +{
+> > > +	struct panthor_device *ptdev =3D  container_of(bo->base.base.dev,
+> > > +						     struct panthor_device, base);
+> > > +
+> > > +	mutex_lock(&ptdev->gems.lock);
+> > > +	list_add_tail(&bo->gems.node, &ptdev->gems.node);
+> > > +	mutex_unlock(&ptdev->gems.lock);
+> > > +}
+> > >  #else
+> > >  static void panthor_gem_debugfs_bo_init(struct panthor_gem_object *b=
+o) {}
+> > > -static void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo=
+) {}
+> > >  static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)=
+ {}
+> > > +void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo) {} =20
+> >
+> > Let's just define all these helpers as inline functions in
+> > panthor_gem.h in patch 3. =20
+>=20
+> The only function that can so far be used from a different compilation un=
+it is 'add'.
+> The other two are internal to panthor_gem.c, so I'm incluned to keep them=
+ there as static
+> functions, but move 'add' into the header file as a static inline functio=
+n instead.
 
-Test results for stable-v6.1:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    115 tests:	115 pass, 0 fail
+I'd really prefer if those were defined next to each other, and given
+how short/simple they are, I don't see a good reason to hide them.
 
-Linux version:	6.1.132-rc3-g0c858fc73636
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+>=20
+> > >  #endif
+> > >
+> > >  static void panthor_gem_free_object(struct drm_gem_object *obj)
+> > > diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/=
+panthor/panthor_gem.h
+> > > index 7c896ec35801..e132f14bbef8 100644
+> > > --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> > > +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> > > @@ -132,6 +132,8 @@ panthor_gem_create_with_handle(struct drm_file *f=
+ile,
+> > >  void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char=
+ *label);
+> > >  void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, c=
+onst char *label);
+> > >
+> > > +void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo);
+> > > +
+> > >  static inline u64
+> > >  panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
+> > >  {
+> > > diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm=
+/panthor/panthor_heap.c
+> > > index db0285ce5812..73cf43eb4a7b 100644
+> > > --- a/drivers/gpu/drm/panthor/panthor_heap.c
+> > > +++ b/drivers/gpu/drm/panthor/panthor_heap.c
+> > > @@ -180,6 +180,9 @@ static int panthor_alloc_heap_chunk(struct pantho=
+r_device *ptdev,
+> > >  	heap->chunk_count++;
+> > >  	mutex_unlock(&heap->lock);
+> > >
+> > > +	panthor_gem_kernel_bo_set_label(chunk->bo, "\"Tiler heap chunk\"");
+> > > +	panthor_gem_debugfs_bo_add(to_panthor_bo(chunk->bo->obj)); =20
+> >
+> > I'd be tempted to label all the kernel BOs, not just the heap chunks,
+> > and if we do that, we're probably better off changing the
+> > kernel_bo_create() prototype to pass a label. =20
+>=20
+> I think is a good idea going forward, but in keeping things tight I'd say=
+ doing it now
+> might be an overkill, since the only user of tagged BO's at the moment is=
+ the gem debugfs
+> knob.
+>=20
+> I think if in the future we find new ways of accounting or displaying lab=
+elled kernel BO's
+> other than heap chunks, then we can expand the kernel_bo_create() argumen=
+t list and then
+> tag every single one of them at creation time.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+Yeah, actually I'm questioning the fact we don't register all BOs to
+the debugfs list now. If it's going to be a debugfs interface, I don't
+really see a good reason for hiding some but exposing others.
+important to show.
