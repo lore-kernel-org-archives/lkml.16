@@ -1,448 +1,290 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C4B212D61
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743149229; cv=none; b=ljFKjYzWmvdEusdRBsb+2B/zATUJJnz6bdvfnJRCKTxOKJVx5rHdV5s2kEtwZMfp5yg/pCikxAaRYIXymcamRUWwys12o+mEY03N172vhX7tj+Va1HhSgVVKvLuLuYZ1+2jn11G/Bvv1Ia5jpj0iAkoNbagZt2R2HqeofvTfxYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743149229; c=relaxed/simple;
-	bh=+qESAQJ9IV14RnAbZKlY8ctI+VykprIV0dr9VN1a/1M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cittEFgN4mfOdpPix5Cl/te1DTALGYmul6uPUgDzvn+9pIin9d/Rl8MW/DEqL6ba9NQp8BKhwAjRwmdX4MSFCE9JstndbiplGMckhIxxsubJZ3l0vJmTDJdlA9JKc09ZqPLs09xsghzzCdMGFcPTYAfDh6qHd7bYEBzke/AcQJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dsdU8P+H; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7C3212B18;
+	Fri, 28 Mar 2025 08:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743149251; cv=fail; b=FX66JToCr5BZH94UjtXAaBSDpIOXsuoBGt4UOw8CS+s3jDAQ735Yf9TFSdop9iUP848PVf0RrzxEh/cQs+Asbsd3yqTMs7Mvqdtp9BARBKMytCJ/BFVm6/KNo0HVUbaF1zew8wlETjOAMDsX3nx/f/Ug3JepA2FkKLhRrSftELY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743149251; c=relaxed/simple;
+	bh=iXQEZGT1pypw4ykMBQmu99QyNDJQkosNtw0mrjAH6Ig=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lyx5yFbWDQFkO1G4Ym+jz8/79q1eT2ll1VZM0rn2euyxsYY/Ly9cCBQEciBQ8XlkpguhXA6MaPcXc0ORz2hpTHgtXreiUWjHTJS8PYbV87B1iV6/+wCnWYMZERF4DeuPQfC+1DBziGYOMM5sJgqQ4WZoRqlYQX+3SIY1XUypw/8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPi0Y79b; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsdU8P+H"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso19509056d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743149226; x=1743754026; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+wY265obq3AxeKEaSTSMpckr8Qs8AKd1R/tnH3zAjw=;
-        b=dsdU8P+H6+MAwV152yvjMhJKsd+eglLejlaT6qwNTpWtz/I6s7rmWaQC/foSI7d2sN
-         VjzMqMaSSNQC/8vF4162TtG2L0TcFAo4tQMMyaR1KqlVRZnkTrz1zpcBCFLLQRMRimM7
-         z29yn594A8MmohUr6admTgFRml4oBH8TF6yw+7j5huY4vSXZG2T0nh/zm6jc6O8th0S2
-         T97dzvV6tOCEN55/C6AY5Wn/3pIRVminyoctxTqlu3uogumGhNKr0/ytpV4N6gJ6rEsu
-         wbCng7OlVQWm1zsMZbOyTwmijYkcek2DXXsJMiy/VgMkcsfzsdPvwl5BBL559eAOccwU
-         aNnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743149226; x=1743754026;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S+wY265obq3AxeKEaSTSMpckr8Qs8AKd1R/tnH3zAjw=;
-        b=r++tKwTDxMX8hiW+/mTgWNIWhHH0nE/XBKWpoS8s/lZcQuT3jLEYhXHHABzPbE+q71
-         ljZwChLF1+mEhNUd0MNEb4sgD8zl9QmzmedhezWhpgTgQhj8lmHcOkTJjT9vvDNdwsW1
-         w6zpGbVEhbt1rFc3q+H3ofqDRUHFO+ne6/3MthJMlzBR/QzgAuZU4Sgq2UZLauNq8GE7
-         yn/I2bysu9hm5GkX/FEbHMFcNOGUjTyVBDwPHVeRbMmiL0K1GhOQ47uu74k4DlqiQ6tK
-         8xoAypyBDN2vNtKVPaInu9BmfVaPhfEKByYjx28/vsDuvK5WT5ABlKFbHmwlfBWkJao5
-         C8Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCW519CxAm0I5XpRg4DrRe4jiOtPjwde18CafZlRewpLmwOqqVRMgOKcE8u6yhvT5qU0QxY7dnLUDivnwTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoTrhYDytzc4uiAT3YHgZtuKG9/2Qg8Gwn5tePGqF4t8gtig7p
-	k3FKc/utSwd9S84tt2f7yKUgIfYjIw54IQCXwfaWAzRubiTx1PWlgpL/7zxUkcdTMrxU5A+Qu4E
-	f4cCeKQtlR3iaKOcrV6Y2DapUFQKGZj1KF++D
-X-Gm-Gg: ASbGncupV+9LmY6cEw5s79qSZOfHduK03xpwwUkZO+y/+sOVeuoIJghU2EPDpeuKBnT
-	eGMnOLh+0GFPjSXYbrBgFDH2WADhOv4g8AtwfUqarZNquTss3FUynd4XHm9e+rNbXRhDdVrTexT
-	TAxqeUQ8v0HzYhJRIXYxsoP95TO/zcyg/gwT4UwA==
-X-Google-Smtp-Source: AGHT+IGzUIk/v4ngoHdg/Z6l+1SFfpDik4JMUXQN0rKpviOsqy0lYMG15bjYEY2aKIZJgqol2xEiIx8lx2010LrD9QA=
-X-Received: by 2002:a05:6214:c63:b0:6e8:f464:c9a0 with SMTP id
- 6a1803df08f44-6ed238a860emr95218916d6.13.1743149225867; Fri, 28 Mar 2025
- 01:07:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPi0Y79b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743149250; x=1774685250;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=iXQEZGT1pypw4ykMBQmu99QyNDJQkosNtw0mrjAH6Ig=;
+  b=HPi0Y79be0ULipi394KOl+tKgRX1KQrB6y4u9cBjM2/gzdDOrz+GXtCM
+   Vr0tU4vB/zPJqylv61dW/QUOq6ZU/CCE3DukDb2yD/3UPNV3IWT1GS4bq
+   r+KU//GURT/7F9QAfl1es7dn5nEobCNsRJkJn7cM/V7JOz8KmzO0bXclS
+   8/V5O7wAwJ3SJuIyUmxcL2+D0BZIQd/lb1gn90//fR5IFdovjI5C/lyWI
+   GY9NEDc5aOPN8Bp2XnPf3KfzSX+p1/jW191GCkSyC68d9NSex8rx2+hE2
+   1cvUAwZWw83jrHGqFvOkT1zArXrBJLNxjkIHmumDcMyd42wIZbkVyKlF2
+   A==;
+X-CSE-ConnectionGUID: 24OWR5vTT/m8aMtlGlBLrQ==
+X-CSE-MsgGUID: +P3QA7p1QMmwQUHtVNDnwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44421805"
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="44421805"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 01:07:29 -0700
+X-CSE-ConnectionGUID: TFFRJsCPQGOnKOYRKoKJAA==
+X-CSE-MsgGUID: SilEK0WzSRatol1vo5zKRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="130481481"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 01:07:28 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 28 Mar 2025 01:07:28 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 28 Mar 2025 01:07:28 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 28 Mar 2025 01:07:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R8U0LmwY4FFx8S27Na43Znqj9HCsp1/asPOX8+IAsSWxDZlKWbU+INslvY7W/ph8x4h1yA+nW1+0d8NNI5ik/lSdSd5HLDZdeEHRY+4fGNvTwqjHJlJH4gbkj7CdOIh6T1IZpojG3Jqe6AltxOAg5dCa6u65+WIUiVBcWc8wJlpo5HFolMeACLxEWG5Vq5TKrCBSGxSBLZfcwAIXkACni9+vZ6bMA2zPfkTX0XZtxn7o8o4syoPpkrAxh2FKK7rTEg/7B+b1WLpdzrEavvqb60Ch9bSNH6ra2XVnnzX3adaq+aNy4Vqkcmcl21EBTrjFHy4vDdQi3NIkm8SNbhuoWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iXQEZGT1pypw4ykMBQmu99QyNDJQkosNtw0mrjAH6Ig=;
+ b=nD6b+qqkpQs0CTk5iGZE2oW7v6ccX03RB7OYdmCd2j6YucYQx4mz86qnv9lLgbEEnZxxm+PKGrjq8ZlztEF+Rwff7F7nQwDxb5A89EtQTAWJlK89ZjKDrxH/m5lu/FQBbrQWFmlw8f1o0wEn5ZXv35h9Rz2HHUnqTWEeda+BN+mt+im9L2FLb2sQosr7MjUYfBZ4RzZQxj9CXZF5XC1GDeEfaZAE4XP+0awMsBLQXpcFJGn7DnkH8QHbHay6UWLeRYMJqiD2ZI6yu79CyxVFaFqmvGX5YzPvnZe9mX+7UPucmrOOW3PkzvtRcEcUaQvKBp2ahF8E2RJxmT4PG+0Unw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
+ MW4PR11MB5911.namprd11.prod.outlook.com (2603:10b6:303:16b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
+ 2025 08:07:25 +0000
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a%4]) with mapi id 15.20.8534.040; Fri, 28 Mar 2025
+ 08:07:25 +0000
+From: "Reshetova, Elena" <elena.reshetova@intel.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+CC: "Hansen, Dave" <dave.hansen@intel.com>, "linux-sgx@vger.kernel.org"
+	<linux-sgx@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "Mallick,
+ Asit K" <asit.k.mallick@intel.com>, "Scarlata, Vincent R"
+	<vincent.r.scarlata@intel.com>, "Cai, Chong" <chongc@google.com>, "Aktas,
+ Erdem" <erdemaktas@google.com>, "Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, "bondarn@google.com"
+	<bondarn@google.com>, "Raynor, Scott" <scott.raynor@intel.com>, "Shutemov,
+ Kirill" <kirill.shutemov@intel.com>
+Subject: RE: [PATCH 1/4] x86/sgx: Add total number of EPC pages
+Thread-Topic: [PATCH 1/4] x86/sgx: Add total number of EPC pages
+Thread-Index: AQHbml52rO5WRn4U4UWiUGJJakHgYrN/tmkAgAJ/A3CAA6SegIABR0IQgABobwCAALEwoA==
+Date: Fri, 28 Mar 2025 08:07:24 +0000
+Message-ID: <DM8PR11MB57503621B1D7674404A62004E7A02@DM8PR11MB5750.namprd11.prod.outlook.com>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-2-elena.reshetova@intel.com>
+ <Z98yki-gH4ewlpbP@kernel.org>
+ <DM8PR11MB57508A3681C614C9B185B04EE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-RY8-bL2snpRKTB@kernel.org>
+ <DM8PR11MB575029FAC2C833553CE422CFE7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-XDFDj8Tc5i-GBg@kernel.org>
+In-Reply-To: <Z-XDFDj8Tc5i-GBg@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|MW4PR11MB5911:EE_
+x-ms-office365-filtering-correlation-id: 7969e6e2-34e6-42c3-b346-08dd6dcf931b
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?T2JNRjM2YlJ5NWpMb0NBRGltYkJEN09LSWlwdklINjFBdDAyUDdacDlraTZ4?=
+ =?utf-8?B?VXRPM1l0dnIrSG53a2YvUDZsTzlYcTFjS0szeHZBeHdYS05scldPdUgyME9J?=
+ =?utf-8?B?K1UxVlB4ZDR3KzVhT3FiMnVtUTJaaDhlUmVLajEzQVpnRndtRkt1elZTY1Ir?=
+ =?utf-8?B?aTZEdlpGYUkwYmN5SUtlc1dNeEtQaThVc2tiazAzVGM4RHROR1doWldFQ1RV?=
+ =?utf-8?B?OFQxTldrZ2tFS0RuTmhPamJzZEIzL3Q3Znhib2dxRW05dUNrWGRKV2FWdEhv?=
+ =?utf-8?B?aGdmdDNkcVU4QVNJN0VhR2FLQ1JlanpMQXpzdFlLbnowbzZhV3RTYjdDSDJh?=
+ =?utf-8?B?UkQ4TzMrTUl5aFZsYlk0TFFiNmZ0bm00U2pjc2pSQkxQMlFqR0VIQVRzTnJR?=
+ =?utf-8?B?YnMraW5tL1ZxazlweW8rOU53SWswc2dMb2tUbU52ZHJWRkFhbzROQ0wwL3Zl?=
+ =?utf-8?B?TG1LRDk2UTE5dkZxQ040R0wwR2hWT1N1RGEzZVRBdGNxVXNyQkpkL1BEWGhD?=
+ =?utf-8?B?MWdGMTh2KzM4TFlTUDhSU1NpOHBmdENUS0J0MEhZcVcxWkFhbHA3dkFUS00y?=
+ =?utf-8?B?U3NSa281K2R0emZBVkpGV0U5ajlaYlF6bnRpWlFIeUNRVlZHZU9XWTVoUUEz?=
+ =?utf-8?B?cFNNYVZDVkJGMVR3Rkd3M2RCVkVKeU1WSy91bnFvUEJ5QSt6eDZLeUVqUjNp?=
+ =?utf-8?B?WVM2WHRMSVZkQ2Mwc21lUkZidmJHdmJCMk5aR3F0Nmk5bTlUMFYzL0hpcnpN?=
+ =?utf-8?B?eWk2Y1RndFFaeHpkS01pNlA2dmFVRXVWaE80Q2t4Q0tSTVRxa1Fka09BMVZa?=
+ =?utf-8?B?YW1EcUhsOFhaR1BkQkVGRTMxak9sWjBXV2hKYXRPLzFPZW9tYUFJeE5EWnRt?=
+ =?utf-8?B?Y2psWFU3MmdFNlN3SVh1NjBjdStXUlBqM25oVVEzRUZQbGp5RXByemxCRUJn?=
+ =?utf-8?B?RGxCZk5VbHdGRFRid1FsNHRQY0VjMlRWTG1uK2x0TElhRVlFb0wzWFFKWSto?=
+ =?utf-8?B?ajJwendQR3JqdUVDa25yOU5OdGl0ZEdxM3Qwa1MwTjgrNUgyRUEvYmVMQlVa?=
+ =?utf-8?B?VFIyU1JnZEFpTllpTXdOV2hzR3BLRnozVTI3WlZUY0hBOXNTWTd4ZzM4eTl5?=
+ =?utf-8?B?b3ljbU1UTjV5RDZnU29pTlFhVjM1Vy9WaE41dFNFM3A2cFdOT3hzVEtmQUZL?=
+ =?utf-8?B?QVNkVkcrNUtVajZqOGlkZ3E4R2JyMUZvcnNmay9OdnZPZS9wVEZtanJDdTlY?=
+ =?utf-8?B?U2o3V1lmZytwM3F2V213YVhEeXRtd1lONVhOMmJBalB5a1NtbnA0dXYxOTlK?=
+ =?utf-8?B?UTF4alVKZ3RscnBvSEZmMkNmalpBbXJFQ0VtRDBqSmY2QVV2UU15VGV2Wkxo?=
+ =?utf-8?B?R21KSUtWZUIxaFlmKzZGSy94WWdrYUdzcjBIYWFqRG5RdE11a0xGMzdDOFlD?=
+ =?utf-8?B?cGVEOVU3enRsVFN6cTcvOXBncHkwbjhoNUlwRHlobGs2M2JDdEdNYjFwRWRi?=
+ =?utf-8?B?MVlBQmx3MlpxcmRQbkxJU1NwOUZQanVVYVQzTWlmWHl5SlhxTE1OeFlEZkhL?=
+ =?utf-8?B?M09Ja1ZoWUxiaFU4WnliVit6S2V2OFpzUVAwSUhmSEhyK3QzdUROQWs2d1JP?=
+ =?utf-8?B?R0dQazVNQ2lSbUtHbFdhakNESGNDTm96dmFkam43SlczR1JPdnA4M1RQTUVs?=
+ =?utf-8?B?MEZTd0pyUW44VDFmdEtuenlidExWWUwySllXaEJSUFpyN29wVnNlcDRWYlc4?=
+ =?utf-8?B?R1M3am1EdTRGYTFmalk0SFpwcVZ4VzRoQ3BGREpxTGdxTEQxSSt1eTZpTUNj?=
+ =?utf-8?B?SWVIZ1NmeVFKSXJIMnRkVS9WUFpOZHNSc0Z1RThPektCeUpndzloYi96eGpo?=
+ =?utf-8?B?KzM5eEdGaHZ5VTJFSEgxUmI2MnJkYWlONTlsVmVFbnVRcHc9PQ==?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q2ZPbXhKSlJtTC9CbXFKTTZiV010ZE40WTVrVktCcXlmYWJ5Tmdha0hYOWNt?=
+ =?utf-8?B?a0t2MDd5U2ZCNTJRUHZaVTU1VHVZWGdjVlVWU0RwYW1Db21VSUFpQ1hNQ0Q5?=
+ =?utf-8?B?RGZyU3l2ZnhyV1J6Y0Z6dTU4UlcvUVBzWk1GQUh4K3I3ajNpVW83TzIwZHIw?=
+ =?utf-8?B?anJKdHk3YnVkVVJ4Nmp6S2FrN3o1cHVGa0RoVGdDY2czM2ZzUzVPU3pnV2tF?=
+ =?utf-8?B?RVZDMGR4NHppcnA2bnl4azcxS0F4dlZXNzVlZTI0TENIVTkyWHVFZVc0ODRs?=
+ =?utf-8?B?L3JaZmFsajYwUEpRQnhWTlhJS1IwSmtLWk03ZUtZVXlMSE1CLzZNZE95Nndz?=
+ =?utf-8?B?MHprVWIwbnZsR2ErWFN3M2VaenQrQzhqNFN5SzZIc3FZL2NzNVB3NG9Hc09t?=
+ =?utf-8?B?MjFMR3d1c1dUZ0RLeW0vMkJSYlB2MG9udGlLYnNsR08yL3hRaDAzOG9Obk4y?=
+ =?utf-8?B?N1NtbXBSTmVVcUhPRm84MEtFWVZvK0FCOXk0THVkS0ZDNitrNS9ZcUdBaU94?=
+ =?utf-8?B?K0x4QW01WkJWbFhPWjNjU0NvK055RWdvSFNlV0lCeTZZY21FSmpBMjJhYmtq?=
+ =?utf-8?B?S1Q3MFF3SXZzcTBBcGhMc0tiYmdPRjRadklacFB4TktVVnRwdWRBNlZUQ3ZI?=
+ =?utf-8?B?MnlyQStUdXhUZTNwZFRqWVVneE92WDkxdnhESVNGOEdNMHpWY3Q0RHVKdWho?=
+ =?utf-8?B?ZWEvaVIyZFUybEpYaDQ2T1BwL0M2Sm1xb0JCWkNmRXJwdXJpUCtuZjc5L2hT?=
+ =?utf-8?B?MUhPQ3JSQUJPV3BuQm9vL2Z6azlsc2FQUy9DditjSDYzR2p0d1k4VUl3MDJX?=
+ =?utf-8?B?emZtZDVJTmlJd0kwZU80TmV1TzRXUUh2WnNobGpJQnNxU3Y5RUYrV24rYzVt?=
+ =?utf-8?B?UVg4ZXEyOFZia05HUng3alpZYTI5UW4wN2ZjajBNOWhmcEdiY1JRaEx3bW9J?=
+ =?utf-8?B?Y3hvOU41R0ljZzE0MzJweER6RVg3SDc1bXplWklHdFlZNkorb3pYWDRkVDVK?=
+ =?utf-8?B?ZDFvbDBTVDB2K0dKZ2hpRFVZRnNXL003OTZIak1LN2dRelgwK1R5Vmx4c1Y4?=
+ =?utf-8?B?MUl0SFc3bUozMGhYNUdmN2JMc0JYeGhWSGE3QjNsYm1PeFBqMmZoNGFMWnFS?=
+ =?utf-8?B?WmdUUDlqUXh2elFRSzkzMVVQUmtCa1JqMXJGWXVBcGNRdEJxMWFZV2RZUlB1?=
+ =?utf-8?B?d0R0SStvcXFpSU1nUFZwR1hlV2RjcktjRlR1NlNBUld0anV0UG5QRWZOTWFn?=
+ =?utf-8?B?eHBib0NxREdhbHRaM3BlYlJrSlJUc0tFR2lPYmtUeW9JOW5nOW9rMTBna2Jy?=
+ =?utf-8?B?ckpCWGVsVUJlTHRWcmJPYi94UmZsSFZMaDVXWTM2b2xTRWFXQm8yNSs0RUk2?=
+ =?utf-8?B?a296NHNLOWFRMVhBRHAxalU1STkrcWtxYno3Z1c2NmpOYXRjUEJXN2h3em1o?=
+ =?utf-8?B?UHV1R3QxNlE0UWpqT1lMVS9SUldJQWh5YWFGRFFXWjRtcTFVMFFvZFNzSG1X?=
+ =?utf-8?B?OGFlMjllUDROd2ZSTk1MUXhoT3EwajhTN0RWWUVrWVFselYrQXdJMWNFaGhq?=
+ =?utf-8?B?cjN0aEFNSDBvZERmYUUvVGFWd0RCcVhJSlRVYnl6dXlOTlBEQ2diVzN5dWp3?=
+ =?utf-8?B?Mi9qTUNmUSt6bEFnQmtsaUNLN0Qyb0RqMmorQ0grWWFHeDliTm55aFl1RzZP?=
+ =?utf-8?B?azBOMDFDOC82M0lxeVdxWXU0R1VxTzM3UiswLzdzRndzenpXZTVkaW1DR08r?=
+ =?utf-8?B?cm0zRFVydS9HcU9QU01xSyt4a1dianZyRGdEeEdPeVpJU3J4SkNzNFBzSWc2?=
+ =?utf-8?B?eVJBM1JSZm5CdEtrTEYzSVJrTVBmY0JOU292ZHBlTytjeVkydDRVeFN0RDJV?=
+ =?utf-8?B?Q3dzUkx3a29oelJBWXZjV2JsMDZUNVNkOFB6Wi9MbzllVVlvbkMxTWdPdTVU?=
+ =?utf-8?B?Yjl5QlUyQi9wQTJ3dExQclU5STRhWnovVnZTUHl4VzExSDJPbkRZSGJtTzF6?=
+ =?utf-8?B?YTBMRlNmd3FpMXh2dThpdUkwOWpVdXpjZ3Y2T1h6VmUvVEphNzhkMlRQWCtt?=
+ =?utf-8?B?UDRab3lxOW1CVmV6T0Njbm52KzZzUGFyZ09HckQ0b2QzaWtMbGdEMDVSVi83?=
+ =?utf-8?Q?wyIcB3Tm34WXtUKibCw83QVhI?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <49d57ab512c47f01d6c374d533f1752871ea4246.1743091573.git.geert@linux-m68k.org>
-In-Reply-To: <49d57ab512c47f01d6c374d533f1752871ea4246.1743091573.git.geert@linux-m68k.org>
-From: David Gow <davidgow@google.com>
-Date: Fri, 28 Mar 2025 16:06:52 +0800
-X-Gm-Features: AQ5f1Jr3hZn89B9ROY2nPLdEcgv9EW_VI3KKZ2dFFxe1Po-FS7WLFRntzSls0Z4
-Message-ID: <CABVgOSmxsXEyLVyhhffhXUXf3-QnGmZurXaRhpiK8w894mrwzg@mail.gmail.com>
-Subject: Re: [PATCH/RFC] kunit/rtc: Add real support for very slow tests
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-rtc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000710b850631628ec4"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7969e6e2-34e6-42c3-b346-08dd6dcf931b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 08:07:24.9834
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ERmaC2KOIGPMH467rdVsc37n9zzZYZ8Tjzqvbu5LSKPSh48eR9S8lmpOSFWyggm73iBJp/7Gbj/ouQ67hUJ+0NSrCKSvO5LFwh4fK27dxCo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5911
+X-OriginatorOrg: intel.com
 
---000000000000710b850631628ec4
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Geert,
-
-Thanks for sending this out: I think this raises some good questions
-about exactly how to handle long running tests (particularly on
-older/slower hardware).
-
-I've put a few notes below, but, tl;dr: I think these are all good
-changes, even if there's more we can do to better scale to slower
-hardware.
-
-On Fri, 28 Mar 2025 at 00:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> When running rtc_lib_test ("lib_test" before my "[PATCH] rtc: Rename
-> lib_test to rtc_lib_test") on m68k/ARAnyM:
->
->     KTAP version 1
->     1..1
->         KTAP version 1
->         # Subtest: rtc_lib_test_cases
->         # module: rtc_lib_test
->         1..2
->         # rtc_time64_to_tm_test_date_range_1000: Test should be marked slow (runtime: 3.222371420s)
->         ok 1 rtc_time64_to_tm_test_date_range_1000
->         # rtc_time64_to_tm_test_date_range_160000: try timed out
->         # rtc_time64_to_tm_test_date_range_160000: test case timed out
->         # rtc_time64_to_tm_test_date_range_160000.speed: slow
->         not ok 2 rtc_time64_to_tm_test_date_range_160000
->     # rtc_lib_test_cases: pass:1 fail:1 skip:0 total:2
->     # Totals: pass:1 fail:1 skip:0 total:2
->     not ok 1 rtc_lib_test_cases
->
-> Commit 02c2d0c2a84172c3 ("kunit: Add speed attribute") added the notion
-> of "very slow" tests, but this is further unused and unhandled.
->
-> Hence:
->   1. Introduce KUNIT_CASE_VERY_SLOW(),
-
-Thanks -- I think we want this regardless.
-
->   2. Increase timeout by ten; ideally this should only be done for very
->      slow tests, but I couldn't find how to access kunit_case.attr.case
->      from kunit_try_catch_run(),
-
-
-My feeling for tests generally is:
-- Normal: effectively instant on modern hardware, O(seconds) on
-ancient hardware.
-- Slow: takes O(seconds) to run on modern hardware, O(minutes)..O(10s
-of minutes) on ancient hardware.
-- Very slow: O(minutes) or higher on modern hardware, infeasible on
-ancient hardware.
-
-Obviously the definition of "modern" and "ancient" hardware here is
-pretty arbitrary: I'm using "modern, high-end x86" ~4GHz as my
-"modern" example, and "66MHz 486" as my "ancient" one, but things like
-emulation or embedded systems fit in-between.
-
-Ultimately, I think the timeout probably needs to be configurable on a
-per-machine basis more than a per-test one, but having a 10x
-multiplier (or even a 100x multiplier) for very slow tests would also
-work for me.
-
-I quickly tried hacking together something to pass through the
-attribute and implement this. Diff (probably mangled by gmail) below:
----
-diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-index 7c966a1adbd3..24a29622068b 100644
---- a/include/kunit/try-catch.h
-+++ b/include/kunit/try-catch.h
-@@ -50,6 +50,13 @@ struct kunit_try_catch {
-       void *context;
-};
-
-+struct kunit_try_catch_context {
-+       struct kunit *test;
-+       struct kunit_suite *suite;
-+       struct kunit_case *test_case;
-+};
-+
-+
-void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
-
-void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 146d1b48a096..79d12c0c2d25 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -420,12 +420,6 @@ static void kunit_run_case_cleanup(struct kunit *test,
-       kunit_case_internal_cleanup(test);
-}
-
--struct kunit_try_catch_context {
--       struct kunit *test;
--       struct kunit_suite *suite;
--       struct kunit_case *test_case;
--};
--
-static void kunit_try_run_case(void *data)
-{
-       struct kunit_try_catch_context *ctx = data;
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 92099c67bb21..5f62e393d422 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -34,30 +34,15 @@ static int kunit_generic_run_threadfn_adapter(void *data)
-       return 0;
-}
-
--static unsigned long kunit_test_timeout(void)
-+static unsigned long kunit_test_timeout(struct kunit_try_catch *try_catch)
-{
--       /*
--        * TODO(brendanhiggins@google.com): We should probably have some type of
--        * variable timeout here. The only question is what that timeout value
--        * should be.
--        *
--        * The intention has always been, at some point, to be able to label
--        * tests with some type of size bucket (unit/small, integration/medium,
--        * large/system/end-to-end, etc), where each size bucket would get a
--        * default timeout value kind of like what Bazel does:
--        * https://docs.bazel.build/versions/master/be/common-definitions.html#test.size
--        * There is still some debate to be had on exactly how we do this. (For
--        * one, we probably want to have some sort of test runner level
--        * timeout.)
--        *
--        * For more background on this topic, see:
--        * https://mike-bland.com/2011/11/01/small-medium-large.html
--        *
--        * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
--        * the task will be killed and an oops generated.
--        */
--       // FIXME times ten for KUNIT_SPEED_VERY_SLOW?
--       return 10 * 300 * msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
-+       struct kunit_try_catch_context *ctx = (struct
-kunit_try_catch_context *)try_catch->context;
-+       struct kunit_case *test_case = ctx->test_case;
-+       unsigned long base_timeout = 300 *
-msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
-+       /* VERY_SLOW tests get 10 times the time to execute (50 minutes). */
-+       unsigned long multiplier = (test_case->attr.speed ==
-KUNIT_SPEED_VERY_SLOW) ? 10 : 1;
-+
-+       return multiplier * base_timeout;
-}
-
-void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
-@@ -87,7 +72,7 @@ void kunit_try_catch_run(struct kunit_try_catch
-*try_catch, void *context)
-       wake_up_process(task_struct);
-
-       time_remaining = wait_for_completion_timeout(task_done,
--                                                    kunit_test_timeout());
-+
-kunit_test_timeout(try_catch));
-       if (time_remaining == 0) {
-               try_catch->try_result = -ETIMEDOUT;
-               kthread_stop(task_struct);
-
----
-
-I'll get around to extending this to allow the "base timeout" to be
-configurable as a command-line option, too, if this seems like a good
-way to go.
-
->   3. Mark rtc_time64_to_tm_test_date_range_1000 slow,
->   4. Mark rtc_time64_to_tm_test_date_range_160000 very slow.
-
-Hmm... these are definitely fast enough on my "modern" machine that
-they probably only warrant "slow", not "very slow". But given they're
-definitely causing problems on older machines, I'm happy to go with
-marking the large ones very slow. (I've been waiting for them for
-about 45 minutes so far on my 486.)
-
-Do the time tests in kernel/time/time_test.c also need to be marked
-very slow, or does that run much faster on your setup?
-
-
->
-> Afterwards:
->
->     KTAP version 1
->     1..1
->         KTAP version 1
->         # Subtest: rtc_lib_test_cases
->         # module: rtc_lib_test
->         1..2
->         # rtc_time64_to_tm_test_date_range_1000.speed: slow
->         ok 1 rtc_time64_to_tm_test_date_range_1000
->         # rtc_time64_to_tm_test_date_range_160000.speed: very_slow
->         ok 2 rtc_time64_to_tm_test_date_range_160000
->     # rtc_lib_test_cases: pass:2 fail:0 skip:0 total:2
->     # Totals: pass:2 fail:0 skip:0 total:2
->     ok 1 rtc_lib_test_cases
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-
-Is this causing you enough strife that you want it in as-is, straight
-away, or would you be happy with it being split up and polished a bit
-first -- particularly around supporting the more configurable timeout,
-and shifting the test changes into separate patches? (I'm happy to do
-that for you if you don't want to dig around in the somewhat messy
-KUnit try-catch stuff any further.)
-
-Does anyone else (particularly anyone involved with the rtc tests)
-have thoughts?
-
-Cheers,
--- David
-
->  drivers/rtc/rtc_lib_test.c |  4 ++--
->  include/kunit/test.h       | 11 +++++++++++
->  lib/kunit/try-catch.c      |  3 ++-
->  3 files changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/rtc/rtc_lib_test.c b/drivers/rtc/rtc_lib_test.c
-> index c30c759662e39b48..fd3210e39d37dbc6 100644
-> --- a/drivers/rtc/rtc_lib_test.c
-> +++ b/drivers/rtc/rtc_lib_test.c
-> @@ -85,8 +85,8 @@ static void rtc_time64_to_tm_test_date_range_1000(struct kunit *test)
->  }
->
->  static struct kunit_case rtc_lib_test_cases[] = {
-> -       KUNIT_CASE(rtc_time64_to_tm_test_date_range_1000),
-> -       KUNIT_CASE_SLOW(rtc_time64_to_tm_test_date_range_160000),
-> +       KUNIT_CASE_SLOW(rtc_time64_to_tm_test_date_range_1000),
-> +       KUNIT_CASE_VERY_SLOW(rtc_time64_to_tm_test_date_range_160000),
->         {}
->  };
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 9b773406e01f3c43..4e3c1cae5b41466e 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -183,6 +183,17 @@ static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
->                 { .run_case = test_name, .name = #test_name,    \
->                   .attr.speed = KUNIT_SPEED_SLOW, .module_name = KBUILD_MODNAME}
->
-> +/**
-> + * KUNIT_CASE_VERY_SLOW - A helper for creating a &struct kunit_case
-> + * with the very slow attribute
-> + *
-> + * @test_name: a reference to a test case function.
-> + */
-> +
-> +#define KUNIT_CASE_VERY_SLOW(test_name)                        \
-> +               { .run_case = test_name, .name = #test_name,    \
-> +                 .attr.speed = KUNIT_SPEED_VERY_SLOW, .module_name = KBUILD_MODNAME}
-> +
->  /**
->   * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct kunit_case
->   *
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index 6bbe0025b0790bd2..92099c67bb21d0a4 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -56,7 +56,8 @@ static unsigned long kunit_test_timeout(void)
->          * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
->          * the task will be killed and an oops generated.
->          */
-> -       return 300 * msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
-> +       // FIXME times ten for KUNIT_SPEED_VERY_SLOW?
-> +       return 10 * 300 * msecs_to_jiffies(MSEC_PER_SEC); /* 5 min */
->  }
->
->  void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
-> --
-> 2.43.0
->
-
---000000000000710b850631628ec4
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgzByQRcYnaQenoVp6PPSPaSERQfUC
-Y2kvpHb3/e42Fq0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MzI4MDgwNzA2WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAENVM3tz7uK7WnnOPenb8ndbSNXfYUw+dlmCZg0o588AL5TItjC8+DQOpjjc3Ffkd
-p6Ru68g15xjTr8fM+MDpPmeTApSBiIAVb8tCUtRBEZTvfbceKhwK8zKZtfW0/RV6CeCxgA9s5GM/
-HUce3WieuT88uVbtGuKvw+ifmBf7OhDfjfCeF+0ZIxyTHE7Ti+qDMAZxr+B4Z8GCpGITuhsYAkbm
-+GEfhMp40fWsm7+e5QReajIccOXJCP1K98KQbrDWdyTSveoE/xQ10SIn/UJrkav5zNTP1/0mMGT4
-qjyYKXqkCGIakGinJYdVAymM8UVD13SAcpQQv0gEfuwRdBfaPg==
---000000000000710b850631628ec4--
+DQo+IG9OIFRodSwgTWFyIDI3LCAyMDI1IGF0IDAzOjI5OjUzUE0gKzAwMDAsIFJlc2hldG92YSwg
+RWxlbmEgd3JvdGU6DQo+ID4NCj4gPiA+IE9uIE1vbiwgTWFyIDI0LCAyMDI1IGF0IDEyOjEyOjQx
+UE0gKzAwMDAsIFJlc2hldG92YSwgRWxlbmEgd3JvdGU6DQo+ID4gPiA+ID4gT24gRnJpLCBNYXIg
+MjEsIDIwMjUgYXQgMDI6MzQ6NDBQTSArMDIwMCwgRWxlbmEgUmVzaGV0b3ZhIHdyb3RlOg0KPiA+
+ID4gPiA+ID4gSW4gb3JkZXIgdG8gc3VjY2Vzc2Z1bGx5IGV4ZWN1dGUgRU5DTFNbRVVQREFURVNW
+Tl0sIEVQQyBtdXN0IGJlDQo+ID4gPiBlbXB0eS4NCj4gPiA+ID4gPiA+IFNHWCBhbHJlYWR5IGhh
+cyBhIHZhcmlhYmxlIHNneF9ucl9mcmVlX3BhZ2VzIHRoYXQgdHJhY2tzIGZyZWUNCj4gPiA+ID4g
+PiA+IEVQQyBwYWdlcy4gQWRkIGEgbmV3IHZhcmlhYmxlLCBzZ3hfbnJfdG90YWxfcGFnZXMsIHRo
+YXQgd2lsbCBrZWVwDQo+ID4gPiA+ID4gPiB0cmFjayBvZiB0b3RhbCBudW1iZXIgb2YgRVBDIHBh
+Z2VzLiBJdCB3aWxsIGJlIHVzZWQgaW4gc3Vic2VxdWVudA0KPiA+ID4gPiA+ID4gcGF0Y2ggdG8g
+Y2hhbmdlIHRoZSBzZ3hfbnJfZnJlZV9wYWdlcyBpbnRvIHNneF9ucl91c2VkX3BhZ2VzIGFuZA0K
+PiA+ID4gPiA+ID4gYWxsb3cgYW4gZWFzeSBjaGVjayBmb3IgYW4gZW1wdHkgRVBDLg0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gRmlyc3Qgb2ZmLCByZW1vdmUgImluIHN1YnNlcXVlbnQgcGF0Y2giLg0K
+PiA+ID4gPg0KPiA+ID4gPiBPaw0KPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gV2hhdCBk
+b2VzICJjaGFuZ2Ugc2d4X25yX2ZyZWVfcGFnZXMgaW50byBzZ3hfbnJfdXNlZF9wYWdlcyINCj4g
+bWVhbj8NCj4gPiA+ID4NCj4gPiA+ID4gQXMgeW91IGNhbiBzZWUgZnJvbSBwYXRjaCAyLzQsIEkg
+aGFkIHRvIHR1cm4gYXJvdW5kIHRoZSBtZWFuaW5nIG9mIHRoZQ0KPiA+ID4gPiBleGlzdGluZyBz
+Z3hfbnJfZnJlZV9wYWdlcyBhdG9taWMgY291bnRlciBub3QgdG8gY291bnQgdGhlICMgb2YgZnJl
+ZQ0KPiBwYWdlcw0KPiA+ID4gPiBpbiBFUEMsIGJ1dCB0byBjb3VudCB0aGUgIyBvZiB1c2VkIEVQ
+QyBwYWdlcyAoaGVuY2UgdGhlIGNoYW5nZSBvZiBuYW1lDQo+ID4gPiA+IHRvIHNneF9ucl91c2Vk
+X3BhZ2VzKS4gVGhlIHJlYXNvbiBmb3IgZG9pbmcgdGhpcyBpcyBvbmx5IGFwcGFyZW50IGluDQo+
+IHBhdGNoDQo+ID4gPg0KPiA+ID4gV2h5IHlvdSAqYWJzb2x1dGVseSogbmVlZCB0byBpbnZlcnQg
+dGhlIG1lYW5pbmcgYW5kIGNhbm5vdCBtYWtlDQo+ID4gPiB0aGlzIHdvcmsgYnkgYW55IG1lYW5z
+IG90aGVyd2lzZT8NCj4gPiA+DQo+ID4gPiBJIGRvdWJ0IGhpZ2hseSBkb3VidCB0aGlzIGNvdWxk
+IG5vdCBiZSBkb25lIG90aGVyIHdheSBhcm91bmQuDQo+ID4NCj4gPiBJIGNhbiBtYWtlIGl0IHdv
+cmsuIFRoZSBwb2ludCB0aGF0IHRoaXMgd2F5IGlzIG11Y2ggYmV0dGVyIGFuZCBubyBkYW1hZ2Ug
+dG8NCj4gPiBleGlzdGluZyBsb2dpYyBpcyBkb25lLiBUaGUgc2d4X25yX2ZyZWVfcGFnZXMgY291
+bnRlciB0aGF0IGlzIHVzZWQgb25seSBmb3INCj4gcGFnZSByZWNsYWltaW5nDQo+ID4gYW5kIGNo
+ZWNrZWQgaW4gYSBzaW5nbGUgcGllY2Ugb2YgY29kZS4NCj4gPiBUbyBnaXZlIHlvdSBhbiBpZGVh
+IHRoZSBwcmV2aW91cyBpdGVyYXRpb24gb2YgdGhlIGNvZGUgbG9va2VkIGxpa2UgYmVsb3cuDQo+
+ID4gRmlyc3QsIEkgaGFkIHRvIGRlZmluZSBhIG5ldyB1bmNvbmRpdGlvbmFsIHNwaW5sb2NrIHRv
+IHByb3RlY3QgdGhlIEVQQyBwYWdlDQo+IGFsbG9jYXRpb246DQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC94ODYva2VybmVsL2NwdS9zZ3gvbWFpbi5jDQo+IGIvYXJjaC94ODYva2VybmVsL2Nw
+dS9zZ3gvbWFpbi5jDQo+ID4gaW5kZXggYzhhMjU0MjE0MGExLi40ZjQ0NWMyODkyOWIgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC94ODYva2VybmVsL2NwdS9zZ3gvbWFpbi5jDQo+ID4gKysrIGIvYXJj
+aC94ODYva2VybmVsL2NwdS9zZ3gvbWFpbi5jDQo+ID4gQEAgLTMxLDYgKzMxLDcgQEAgc3RhdGlj
+IERFRklORV9YQVJSQVkoc2d4X2VwY19hZGRyZXNzX3NwYWNlKTsNCj4gPiAgICovDQo+ID4gIHN0
+YXRpYyBMSVNUX0hFQUQoc2d4X2FjdGl2ZV9wYWdlX2xpc3QpOw0KPiA+ICBzdGF0aWMgREVGSU5F
+X1NQSU5MT0NLKHNneF9yZWNsYWltZXJfbG9jayk7DQo+ID4gK3N0YXRpYyBERUZJTkVfU1BJTkxP
+Q0soc2d4X2FsbG9jYXRlX2VwY19wYWdlX2xvY2spOw0KPiANCj4gDQo+IA0KPiA+DQo+ID4gIHN0
+YXRpYyBhdG9taWNfbG9uZ190IHNneF9ucl9mcmVlX3BhZ2VzID0gQVRPTUlDX0xPTkdfSU5JVCgw
+KTsNCj4gPiAgc3RhdGljIHVuc2lnbmVkIGxvbmcgc2d4X25yX3RvdGFsX3BhZ2VzOw0KPiA+IEBA
+IC00NTcsNyArNDU4LDEwIEBAIHN0YXRpYyBzdHJ1Y3Qgc2d4X2VwY19wYWdlDQo+ICpfX3NneF9h
+bGxvY19lcGNfcGFnZV9mcm9tX25vZGUoaW50IG5pZCkNCj4gPiAgIHBhZ2UtPmZsYWdzID0gMDsN
+Cj4gPg0KPiA+ICAgc3Bpbl91bmxvY2soJm5vZGUtPmxvY2spOw0KPiA+ICsNCj4gPiArIHNwaW5f
+bG9jaygmc2d4X2FsbG9jYXRlX2VwY19wYWdlX2xvY2spOw0KPiA+ICAgYXRvbWljX2xvbmdfZGVj
+KCZzZ3hfbnJfZnJlZV9wYWdlcyk7DQo+ID4gKyBzcGluX3VubG9jaygmc2d4X2FsbG9jYXRlX2Vw
+Y19wYWdlX2xvY2spOw0KPiA+DQo+ID4gICByZXR1cm4gcGFnZTsNCj4gPiAgfQ0KPiA+DQo+ID4g
+QW5kIHRoZW4gYWxzbyB0YWtlIHNwaW5sb2NrIGV2ZXJ5IHRpbWUgZXVwZGF0ZXN2biBhdHRlbXB0
+cyB0byBydW46DQo+ID4NCj4gPiBpbnQgc2d4X3VwZGF0ZXN2bih2b2lkKQ0KPiA+ICt7DQo+ID4g
+KyBpbnQgcmV0Ow0KPiA+ICsgaW50IHJldHJ5ID0gMTA7DQo+IA0KPiBSZXZlcnNlIHhtYXMgdHJl
+ZSBvcmRlci4NCj4gDQo+ID4gKw0KPiA+ICsgc3Bpbl9sb2NrKCZzZ3hfYWxsb2NhdGVfZXBjX3Bh
+Z2VfbG9jayk7DQo+IA0KPiBZb3UgY291bGQgdXNlIGd1YXJkIGZvciB0aGlzLg0KPiANCj4gaHR0
+cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjYuMTMuNy9zb3VyY2UvaW5jbHVkZS9saW51
+eC9jbGVhbnVwLmgNCj4gDQo+ID4gKw0KPiA+ICsgaWYgKGF0b21pY19sb25nX3JlYWQoJnNneF9u
+cl9mcmVlX3BhZ2VzKSAhPSBzZ3hfbnJfdG90YWxfcGFnZXMpIHsNCj4gPiArIHNwaW5fdW5sb2Nr
+KCZzZ3hfYWxsb2NhdGVfZXBjX3BhZ2VfbG9jayk7DQo+ID4gKyByZXR1cm4gU0dYX0VQQ19OT1Rf
+UkVBRFk7DQo+IA0KPiBEb24ndCB1c2UgdWFyY2ggZXJyb3IgY29kZXMuDQoNClN1cmUsIHRoYW5r
+cywgSSBjYW4gZml4IGFsbCBvZiB0aGUgYWJvdmUsIHRoaXMgd2FzIGp1c3QgdG8gZ2l2ZSBhbiBp
+ZGVhIGhvdw0KdGhlIG90aGVyIHZlcnNpb24gb2YgdGhlIGNvZGUgd291bGQgbG9vayBsaWtlLiAN
+Cg0KPiANCj4gPiArIH0NCj4gPiArDQo+ID4gKyBkbyB7DQo+ID4gKyByZXQgPSBfX2V1cGRhdGVz
+dm4oKTsNCj4gPiArIGlmIChyZXQgIT0gU0dYX0lOU1VGRklDSUVOVF9FTlRST1BZKQ0KPiA+ICsg
+YnJlYWs7DQo+ID4gKw0KPiA+ICsgfSB3aGlsZSAoLS1yZXRyeSk7DQo+ID4gKw0KPiA+ICsgc3Bp
+bl91bmxvY2soJnNneF9hbGxvY2F0ZV9lcGNfcGFnZV9sb2NrKTsNCj4gPg0KPiA+IFdoaWNoIHdh
+cyBjYWxsZWQgZnJvbSBlYWNoIGVuY2xhdmUgY3JlYXRlIGlvY3RsOg0KPiA+DQo+ID4gQEAgLTE2
+Myw2ICsxNjMsMTEgQEAgc3RhdGljIGxvbmcgc2d4X2lvY19lbmNsYXZlX2NyZWF0ZShzdHJ1Y3Qg
+c2d4X2VuY2wNCj4gKmVuY2wsIHZvaWQgX191c2VyICphcmcpDQo+ID4gICBpZiAoY29weV9mcm9t
+X3VzZXIoJmNyZWF0ZV9hcmcsIGFyZywgc2l6ZW9mKGNyZWF0ZV9hcmcpKSkNCj4gPiAgIHJldHVy
+biAtRUZBVUxUOw0KPiA+DQo+ID4gKyAvKiBVbmxlc3MgcnVubmluZyBpbiBhIFZNLCBleGVjdXRl
+IEVVUERBVEVTVk4gaWYgaW5zdHJ1Y3Rpb24gaXMgYXZhbGlibGUgKi8NCj4gPiArIGlmICgoY3B1
+aWRfZWF4KFNHWF9DUFVJRCkgJiBTR1hfQ1BVSURfRVVQREFURVNWTikgJiYNCj4gPiArICAgICFi
+b290X2NwdV9oYXMoWDg2X0ZFQVRVUkVfSFlQRVJWSVNPUikpDQo+ID4gKyBzZ3hfdXBkYXRlc3Zu
+KCk7DQo+ID4gKw0KPiA+ICAgc2VjcyA9IGttYWxsb2MoUEFHRV9TSVpFLCBHRlBfS0VSTkVMKTsN
+Cj4gPiAgIGlmICghc2VjcykNCj4gPiAgIHJldHVybiAtRU5PTUVNOw0KPiA+DQo+ID4gV291bGQg
+eW91IGFncmVlIHRoYXQgdGhpcyB3YXkgaXQgaXMgbXVjaCB3b3JzZSBldmVuIGNvZGUvbG9naWMt
+d2lzZSBldmVuDQo+IHdpdGhvdXQgYmVuY2htYXJrcz8NCj4gDQo+IFllcyBidXQgb2J2aW91c2x5
+IEkgY2Fubm90IHByb21pc2UgdGhhdCBJJ2xsIGFjY2VwdCB0aGlzIGFzIGl0IGlzDQo+IHVudGls
+IEkgc2VlIHRoZSBmaW5hbCB2ZXJzaW9uDQoNCkFyZSB5b3Ugc2F5aW5nIHlvdSBwcmVmZXIgKnRo
+aXMgdmVyc2lvbiB3aXRoIHNwaW5sb2NrKiB2cy4gDQpzaW1wbGVyIHZlcnNpb24gdGhhdCB1dGls
+aXplcyB0aGUgZmFjdCB0aGF0IHNneF9ucl9mcmVlX3BhZ2VzIGlzIGNoYW5nZWQNCmludG8gdHJh
+Y2tpbmcgb2YgbnVtYmVyIG9mIHVzZWQgcGFnZXM/IA0KDQo+IA0KPiBBbHNvIHlvdSBwcm9iYWJs
+eSBzaG91bGQgdXNlIG11dGV4IGdpdmVuIHRoZSBsb29wIHdoZXJlIHdlIGNhbm5vdA0KPiB0ZW1w
+b3JhcmlseSBleGl0IHRoZSBsb2NrIChsaWtlIGUuZy4gaW4ga2V5cmluZ3MgZ2Mgd2UgY2FuKS4N
+Cg0KTm90IHN1cmUgSSB1bmRlcnN0YW5kIHRoaXMsIGNvdWxkIHlvdSBwbGVhc2UgZWxhYm9yYXRl
+IHdoeSBkbyBJIG5lZWQgYW4NCmFkZGl0aW9uYWwgbXV0ZXggaGVyZT8gT3IgYXJlIHlvdSBzdWdn
+ZXN0aW5nIHN3aXRjaGluZyBzcGlubG9jayB0byBtdXRleD8gDQoNCkJlc3QgUmVnYXJkcywNCkVs
+ZW5hLg0KDQo=
