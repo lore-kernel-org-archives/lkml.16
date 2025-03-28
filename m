@@ -1,125 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DAF216E1B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F4021ABBD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156344; cv=none; b=VY2rU8ZLG6WW5NFTStYjk3bo34CrVo43RUNASmtYMGJvzRg8VHLmirD+vedbCFa5UkSz5jBu4aZs/506Qty6/LlLZOZkgMa9vadBusFuNISk3jv6fCqCwm4qg7IQzxXWpiK3pw9NM5+7FEZI5UHYfXIb27fNio5wlecxdqqmBcs=
+	t=1743156348; cv=none; b=H18yfB4fP0eDMHfHq0d6Iv04nZ7DolGPofwCC4Yy0suTtmOkLnJmgqWh18Gg72zPCS7qiKjQ1DOUsuIiZfb8OV212I+G54AK+fC2T42txR3LAg8PxYYfmfP+njK7PhwNC4YW+RkU8266N0fpRapuGSbMCZPuYNUnTIPTiDy2cuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156344; c=relaxed/simple;
-	bh=RTPbHCVapqKPZx4VaunVDXOxrE1fYfc0fOVp1DVbsyo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jPEt0qaJT73ughpbg2JaaNUzUokuOcdUBpj3nEYuCww5xjA4yoRcpDRn9eltIRPUkEdn3tLvC0hSH18KkUJTak2ioL7oHgVRFNP0sSn8SXBfHZHpWqUo4fZnBeRa15rIvxJKSo460JDVcAMMvKUScr7fYnEmruRvhVNRG83lUks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hrMEmCZm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743156348; c=relaxed/simple;
+	bh=Q0o2ssfPoSfk2eKGd9eiql4gPDexAE3aFwWQnyBXpoc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z5n7TKcuNX7J++MR1nCG8utYiZhdxz0UgTPAyR5kZrcqO6Jcy/Z5Y8vg4QK+rnMz3MEuacTjS1vY9tmT+lFsK4ygGBURY+kgoGDLy3v+SBWTFvaf7N2Tzh7ComEBkChVRlxzceolfSXbtjWySsM83fTsyE3ii397S8iuddrlXdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mX1QPbBL; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrMEmCZm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743156342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=836m3uQYIHpi/fFuQCoe/tuePm2X78qNcz7/OMmLryw=;
-	b=hrMEmCZmEZJpE3+RUDfyqh2Xin1ARgg6DfJ9kza9IChLTj3iGINivrF1supuT6PHkOW4PQ
-	H9poo516dy4eKTtTrg0QorV1BCvG0D8XVSft/fK8aeu+A/3F3PjZC/1rpEHrckA+cMywQ/
-	IPvTYve+Sqs0kH0Vo0jK8McJmNzon+s=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-413-fcIvq0cSM9-O4wVFIAQJSg-1; Fri,
- 28 Mar 2025 06:05:38 -0400
-X-MC-Unique: fcIvq0cSM9-O4wVFIAQJSg-1
-X-Mimecast-MFC-AGG-ID: fcIvq0cSM9-O4wVFIAQJSg_1743156337
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0B52180025C;
-	Fri, 28 Mar 2025 10:05:36 +0000 (UTC)
-Received: from server.redhat.com (unknown [10.72.112.11])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 43D913001D0F;
-	Fri, 28 Mar 2025 10:05:31 +0000 (UTC)
-From: Cindy Lu <lulu@redhat.com>
-To: lulu@redhat.com,
-	jasowang@redhat.com,
-	mst@redhat.com,
-	michael.christie@oracle.com,
-	sgarzare@redhat.com,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v8 8/8] vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
-Date: Fri, 28 Mar 2025 18:02:52 +0800
-Message-ID: <20250328100359.1306072-9-lulu@redhat.com>
-In-Reply-To: <20250328100359.1306072-1-lulu@redhat.com>
-References: <20250328100359.1306072-1-lulu@redhat.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mX1QPbBL"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72179752;
+	Fri, 28 Mar 2025 11:03:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743156235;
+	bh=Q0o2ssfPoSfk2eKGd9eiql4gPDexAE3aFwWQnyBXpoc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mX1QPbBLJEwxALUPzb156MKV7SX+inreNYBm1ScvPWaks58uWu+fV/tcaklVvTsIA
+	 QsMAdJlOTcp43Stn5phQRP81RA6BYehj+ymIfGqdx8MPUTI+sHkXBIq2xHfYbcYmmH
+	 LyDXuwvul+c+1V32lfPmjo2JJLj0GTUU4SBuiiws=
+Message-ID: <5282b9f9-edef-45fd-8228-16096981a11a@ideasonboard.com>
+Date: Fri, 28 Mar 2025 12:05:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/11] drm/fourcc: Add DRM_FORMAT_XV15/XV20
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-2-322a300c6d72@ideasonboard.com>
+ <20250327223449.GA16629@pendragon.ideasonboard.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250327223449.GA16629@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-is disabled, and any attempt to use it will result in failure.
+Hi,
 
-Signed-off-by: Cindy Lu <lulu@redhat.com>
----
- drivers/vhost/Kconfig | 15 +++++++++++++++
- drivers/vhost/vhost.c |  3 +++
- 2 files changed, 18 insertions(+)
+On 28/03/2025 00:34, Laurent Pinchart wrote:
+> Hi Tomi,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Mar 26, 2025 at 03:22:45PM +0200, Tomi Valkeinen wrote:
+>> Add two new pixel formats:
+>>
+>> DRM_FORMAT_XV15 ("XV15")
+>> DRM_FORMAT_XV20 ("XV20")
+>>
+>> The formats are 2 plane 10 bit per component YCbCr, with the XV15 2x2
+>> subsampled whereas XV20 is 2x1 subsampled.
+>>
+>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>> ---
+>>   drivers/gpu/drm/drm_fourcc.c  | 6 ++++++
+>>   include/uapi/drm/drm_fourcc.h | 8 ++++++++
+>>   2 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+>> index 2f5781f5dcda..e101d1b99aeb 100644
+>> --- a/drivers/gpu/drm/drm_fourcc.c
+>> +++ b/drivers/gpu/drm/drm_fourcc.c
+>> @@ -346,6 +346,12 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>>   		{ .format = DRM_FORMAT_P030,            .depth = 0,  .num_planes = 2,
+>>   		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+>>   		  .hsub = 2, .vsub = 2, .is_yuv = true},
+>> +		{ .format = DRM_FORMAT_XV15,		.depth = 0,  .num_planes = 2,
+>> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+>> +		  .hsub = 2, .vsub = 2, .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_XV20,		.depth = 0,  .num_planes = 2,
+>> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+>> +		  .hsub = 2, .vsub = 1, .is_yuv = true },
+> 
+> It appears we can never have too much (or enough) documentation, as
+> reading the format info documentation leaves me with unanswered
+> questions.
+> 
+> Looking at drm_format_info_min_pitch():
+> 
+> uint64_t drm_format_info_min_pitch(const struct drm_format_info *info,
+> 				   int plane, unsigned int buffer_width)
+> {
+> 	if (!info || plane < 0 || plane >= info->num_planes)
+> 		return 0;
+> 
+> 	return DIV_ROUND_UP_ULL((u64)buffer_width * info->char_per_block[plane],
+> 			    drm_format_info_block_width(info, plane) *
+> 			    drm_format_info_block_height(info, plane));
+> }
+> 
+> For the first plane, the function will return `buffer_width * 4 / 3`
+> (rouding up), which I think is right. For the second plane, it will
+> return `buffer_width * 8 / 3`, which I believe is wrong as the format is
+> subsampled by a factor 2 horizontally. It seems that either
+> char_per_block and block_w need to take horizontal subsampling into
+> account (and therefore be 8 and 6 for the second plane), or
+> drm_format_info_min_pitch() should consider .hsub. Or there's something
+> else I'm missing :-)
 
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index b455d9ab6f3d..e5b9dcbf31b6 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -95,3 +95,18 @@ config VHOST_CROSS_ENDIAN_LEGACY
- 	  If unsure, say "N".
- 
- endif
-+
-+config VHOST_ENABLE_FORK_OWNER_IOCTL
-+	bool "Enable IOCTL VHOST_FORK_FROM_OWNER"
-+	default n
-+	help
-+	  This option enables the IOCTL VHOST_FORK_FROM_OWNER, which allows
-+	  userspace applications to modify the thread mode for vhost devices.
-+
-+          By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL` is set to `n`,
-+          meaning the ioctl is disabled and any operation using this ioctl
-+          will fail.
-+          When the configuration is enabled (y), the ioctl becomes
-+          available, allowing users to set the mode if needed.
-+
-+	  If unsure, say "N".
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index fb0c7fb43f78..568e43cb54a9 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2294,6 +2294,8 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 		r = vhost_dev_set_owner(d);
- 		goto done;
- 	}
-+
-+#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL
- 	if (ioctl == VHOST_FORK_FROM_OWNER) {
- 		u8 inherit_owner;
- 		/*inherit_owner can only be modified before owner is set*/
-@@ -2313,6 +2315,7 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 		r = 0;
- 		goto done;
- 	}
-+#endif
- 	/* You must be the owner to do anything else */
- 	r = vhost_dev_check_owner(d);
- 	if (r)
--- 
-2.45.0
+The buffer_width is already divided by the hsub, in 
+drm_format_info_plane_width().
+
+>>   	};
+>>   
+>>   	unsigned int i;
+>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+>> index 81202a50dc9e..1247b814bd66 100644
+>> --- a/include/uapi/drm/drm_fourcc.h
+>> +++ b/include/uapi/drm/drm_fourcc.h
+>> @@ -304,6 +304,14 @@ extern "C" {
+>>   #define DRM_FORMAT_RGB565_A8	fourcc_code('R', '5', 'A', '8')
+>>   #define DRM_FORMAT_BGR565_A8	fourcc_code('B', '5', 'A', '8')
+>>   
+>> +/*
+>> + * 2 plane 10 bit per component YCrCb
+>> + * index 0 = Y plane, [31:0] x:Y2:Y1:Y0 2:10:10:10 little endian
+>> + * index 1 = Cb:Cr plane, [63:0] x:Cr2:Cb2:Cr1:x:Cb1:Cr0:Cb0 2:10:10:10:2:10:10:10 little endian
+> 
+> I believe this is right, but I have a hard time validating it, as I
+> think the corresponding figures in UG1085 are incorrect (they show a
+> 8bpp format as far as I can tell). Do I assume correctly that you've
+> tested the formats ?
+
+Yes. kms++'s master branch has support for all the formats in this series.
+
+  Tomi
 
