@@ -1,238 +1,84 @@
-Received: from mail-io1-f98.google.com (mail-io1-f98.google.com [209.85.166.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B889C1C84C8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2810C1C84C8;
+	Fri, 28 Mar 2025 15:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743176871; cv=none; b=FGm2m8AV2mphuLDVaIE13M5sAonTUYDBTIQHhjJo41U2HKT9etrFknydqHWHM6pWYQi5Rf+7KrufxOC0ldLrV2CDof+f07BUCoWFircaBLMbJyayMI3u5UWsqOtMS9snM7KVnjQ7uYvdcpchN56MvfmIEURjGf4YHWzty5s3FjQ=
+	t=1743176910; cv=none; b=sdWEORBdXxcd1LL+ir4oIWtFkKEWZxf7+xg5i+6/BqAIRpyw6Q7cPrsSZxK/mBVHwBpuq2SaMFDRyoasPnKOWCpuzIwn48WKPLTGUlWZO/VNkRtcM/9MOT0p/lItbCBlebVtsgX7EkSwl66lAKVlbtN39LOoNo8ajoOq2AAhEcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743176871; c=relaxed/simple;
-	bh=yYtWoyv8WbfgloYoO/rNNRvz+4dqKS+a7SoTZFAZSuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AI+M7UgFN7EfnBpb36K9TdANp9rngLO5teAVd0vNbFedDXxa2OyUk2Ky3H1fensGKWpOSx+yQjnJWNNS1HiCbs97g2oeabncLhiDWmbAV8GDoPwUAbGbYB9PpCHZvobg4wBJGJVJfOTTicDx2VGKdL7zE+CFbNVhi0xAlBgQQFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=YbDvoBPv; arc=none smtp.client-ip=209.85.166.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1743176910; c=relaxed/simple;
+	bh=/1EXUcnEzRipk1mkzFu009xvcPfXe0nSr81MdlJpBTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u5l6jgtpi9FsT0dcJJhyBuj4Ug8WWaT/SfAy5bUaKlFIc2gT9abIyqxTFbSdr9uS5FfHLXZ4o8rd8eOuZyILXbwk/8uFgo53euxnWoAVDwu7GPUOg/sCVdaLXTYCP230PNJss/VA/7xsaX7jfxU4+anHkUG5sGKI46Bt8Q4fAn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tHg5laPe; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="YbDvoBPv"
-Received: by mail-io1-f98.google.com with SMTP id ca18e2360f4ac-85da20b2640so9459039f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1743176869; x=1743781669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rvZNgJEOLv7vlUnMHFowwsJc7mv9fgxFUo+rGJDtCw4=;
-        b=YbDvoBPvwxVGErSHBFK5ec+eZhMjiXZ78OEA0dZxg8V0BG2b0aO33aQtZKPoFtdd0X
-         BDDzwLHFwNTXf81d8YoWWc3ket/6YjAtBbcdENnszTXsgkxXyIUUN3Q6zoikOERZa1q8
-         OD2ljfPZVYKQbMk62u4qR+D7HC4BGEAzkLE0X0o/Tzdf/61/2FoQCoAsihByF7hfzGxb
-         l9nd8QyRMs93rySULY2c75GXJ/Da15HrFuRqev84Cq14Dn018fXQCDlWLyDbuyVFiZnf
-         cpDm3S8reN8qXAl0f1HLoFp0KcprJ5OcsjPqdpJvPKLcrN8qv4P4wuuXe5DO4eG5ry9L
-         fzuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743176869; x=1743781669;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rvZNgJEOLv7vlUnMHFowwsJc7mv9fgxFUo+rGJDtCw4=;
-        b=myYU9T1Us37Qv+67/XYwtkfDBl6n7DNHQt8+Ybz/EA9pMQ0Ando60HHklInYWakHZj
-         mhdLkYmhIwZ6LJx/yCrP2JN88l7CyFKJ6kIi13topavX3qTyasXxve66FrE312hjjXm4
-         Kn2kOv45i9IKu3dG0OtarSTLpczJwjMTI1MRyb/r+TDcTvWg7AHSHh13F2kX1M+Zq/Gs
-         wLi3fUIhodAIuuT75TD7bsyXkNVtwXtSP1KCY95uVHEcbBkkxszqY+leoN8pGDkyDX+J
-         vPbzIg5IMiYOcruP2kqVlsGRDSUNHigksU5YuJ34ag2shf3n74hfWjiSYPEL/x55v0LY
-         h6Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUovSULTTNDhpdZm6aMfLWq+AcJBcXBeazh/yrb9uUr8ZwB3pKf6Wn+jhDwWzXTcM5mLQ2K88GIa1fViUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUclCSCf3qfVImc+bUC5h34kzXzxU/fSfqNAOvnkhPGLPUxBiA
-	EAcuB2zwAGxhonck26CMfOMYVHvZ0clKHRQezKn1dcue6Yl6Q/OLY4f9lOraS1QBaxH4LpmZEw1
-	/w0SnHUI9Hq/wmcOnCcKOfPVTiSDT8Q8h
-X-Gm-Gg: ASbGncuhbvuZl9NuMqX1lsLLAhlL4wffKm6U0gwJ4B9cuwEaLkIeRMHjTaIYJnwmiIL
-	//yELUQ4+NzvWO7ozDbQLI5mUZOjYxiCPx0gxe3QJ0hH6M4guDBvn2VLeqCS2ILPjH/6eoGckzO
-	h8ZDR0x5ZAMA/4aXJMTwptXiAxorEtvDTqaGAO9Klkst2gehGvvcwg1qs3uVA7WQpB3F4NUCuVz
-	t9O+4Ib7Godq0Q3lz0ShNE68mntBA6rCJW/3iibwJRGIeEON6X48YsUnkDF6fbGFBQ8U3fjkV+2
-	lV8K8SYn+rw/VLT+/vq/fS7CFXnOf+oSo4ewTNwEeuTe6iZj
-X-Google-Smtp-Source: AGHT+IHZyp/hTQTgBPdjdI/PAGSVR+TwdInUQ4bs/fMWlLnjp1ni0mf8CfgyGlPr5zMbfOYKigzJ9+sGNsfR
-X-Received: by 2002:a05:6602:1691:b0:855:d60d:1104 with SMTP id ca18e2360f4ac-85e83cee041mr242544339f.2.1743176868650;
-        Fri, 28 Mar 2025 08:47:48 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-85e900121a8sm23348939f.11.2025.03.28.08.47.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 08:47:48 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 9515D34018F;
-	Fri, 28 Mar 2025 09:47:47 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 912C3E40A9F; Fri, 28 Mar 2025 09:47:17 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Chaitanya Kulkarni <kch@nvidia.com>,
-	linux-nvme@lists.infradead.org,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v4 3/3] nvme/ioctl: move fixed buffer lookup to nvme_uring_cmd_io()
-Date: Fri, 28 Mar 2025 09:46:47 -0600
-Message-ID: <20250328154647.2590171-4-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250328154647.2590171-1-csander@purestorage.com>
-References: <20250328154647.2590171-1-csander@purestorage.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tHg5laPe"
+Date: Fri, 28 Mar 2025 11:48:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743176896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wY2rJ58CuGhHvpCweL3K5CZDmMKrY2RaGPFz90RJmzg=;
+	b=tHg5laPeCVbttwGqKM8rvmBG8YWbzFkj6NvM98oCXflUk7cfi/rkjdYrF52oBO2ihBHUdQ
+	OtGWM2sJB2h3J/zx1086V7uapv1LccjoUVc6ZTc5lFaQSscnny0iCmq60fN9pAx/I3UcVL
+	RCH5a2B5i7IcOgbcnmWhaSOrOokemcY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-mm@kvack.org, tech-board-discuss@lists.linux.dev
+Subject: Re: [GIT PULL] bcachefs for 6.15, v2...
+Message-ID: <ighuwxny4a3obxwbmfsblz4lzpc2qubqqu4nqf6yvqsttuqffc@hs2tbqrwjo4v>
+References: <wg47lanrvfqkqdospive4b3ymc5snuhqdygcle33q3cxudw3xl@rkllblbmre4v>
+ <5b02fcfedcd006d202d38e2ec16b477919264408.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b02fcfedcd006d202d38e2ec16b477919264408.camel@HansenPartnership.com>
+X-Migadu-Flow: FLOW_OUT
 
-nvme_map_user_request() is called from both nvme_submit_user_cmd() and
-nvme_uring_cmd_io(). But the ioucmd branch is only applicable to
-nvme_uring_cmd_io(). Move it to nvme_uring_cmd_io() and just pass the
-resulting iov_iter to nvme_map_user_request().
+On Wed, Mar 26, 2025 at 04:46:21PM -0400, James Bottomley wrote:
+> On Mon, 2025-03-24 at 14:56 -0400, Kent Overstreet wrote:
+> > The following changes since commit
+> > 1a2b74d0a2a46c219b25fdb0efcf9cd7f55cfe5e:
+> > 
+> >   bcachefs: fix build on 32 bit in get_random_u64_below() (2025-03-14
+> > 19:45:54 -0400)
+> > 
+> > are available in the Git repository at:
+> > 
+> >   git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-03-24
+> > 
+> > for you to fetch changes up to
+> > d8bdc8daac1d1b0a4efb1ecc69bef4eb4fc5e050:
+> > 
+> >   bcachefs: Kill unnecessary bch2_dev_usage_read() (2025-03-24
+> > 09:50:37 -0400)
+> > 
+> > ----------------------------------------------------------------
+> > bcachefs updates for 6.15
+> 
+> I note that the controversial block changes that got NAK'd but which
+> you tried to put into your first pull request are now removed from this
+> v2 pull request, thanks.
+> 
+> I also thought it was time to state more formally what's been
+> circulating around a few maintainers as shared knowledge: any tree you
+> send a pull request for that includes changes outside of bcachefs won't
+> be accepted by Linus.
 
-For NVMe passthru operations with fixed buffers, the fixed buffer lookup
-happens in io_uring_cmd_import_fixed(). But nvme_uring_cmd_io() can
-return -EAGAIN first from nvme_alloc_user_request() if all tags in the
-tag set are in use. This ordering difference is observable when using
-UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table. If
-the NVMe passthru operation is followed by UBLK_U_IO_UNREGISTER_IO_BUF
-to unregister the fixed buffer and the NVMe passthru goes async, the
-fixed buffer lookup will fail because it happens after the unregister.
-
-Userspace should not depend on the order in which io_uring issues SQEs
-submitted in parallel, but it may try submitting the SQEs together and
-fall back on a slow path if the fixed buffer lookup fails. To make the
-fast path more likely, do the import before nvme_alloc_user_request().
-
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
----
- drivers/nvme/host/ioctl.c | 45 +++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index 42dfd29ed39e..400c3df0e58f 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -112,12 +112,11 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
- 	return req;
- }
- 
- static int nvme_map_user_request(struct request *req, u64 ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
--		struct io_uring_cmd *ioucmd, unsigned int flags,
--		unsigned int iou_issue_flags)
-+		struct iov_iter *iter, unsigned int flags)
- {
- 	struct request_queue *q = req->q;
- 	struct nvme_ns *ns = q->queuedata;
- 	struct block_device *bdev = ns ? ns->disk->part0 : NULL;
- 	bool supports_metadata = bdev && blk_get_integrity(bdev->bd_disk);
-@@ -135,28 +134,16 @@ static int nvme_map_user_request(struct request *req, u64 ubuffer,
- 		if (!nvme_ctrl_meta_sgl_supported(ctrl))
- 			dev_warn_once(ctrl->device,
- 				      "using unchecked metadata buffer\n");
- 	}
- 
--	if (ioucmd && (ioucmd->flags & IORING_URING_CMD_FIXED)) {
--		struct iov_iter iter;
--
--		/* fixedbufs is only for non-vectored io */
--		if (flags & NVME_IOCTL_VEC)
--			return -EINVAL;
--
--		ret = io_uring_cmd_import_fixed(ubuffer, bufflen,
--				rq_data_dir(req), &iter, ioucmd,
--				iou_issue_flags);
--		if (ret < 0)
--			return ret;
--		ret = blk_rq_map_user_iov(q, req, NULL, &iter, GFP_KERNEL);
--	} else {
-+	if (iter)
-+		ret = blk_rq_map_user_iov(q, req, NULL, iter, GFP_KERNEL);
-+	else
- 		ret = blk_rq_map_user_io(req, NULL, nvme_to_user_ptr(ubuffer),
- 				bufflen, GFP_KERNEL, flags & NVME_IOCTL_VEC, 0,
- 				0, rq_data_dir(req));
--	}
- 
- 	if (ret)
- 		return ret;
- 
- 	bio = req->bio;
-@@ -194,11 +181,11 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 		return PTR_ERR(req);
- 
- 	req->timeout = timeout;
- 	if (ubuffer && bufflen) {
- 		ret = nvme_map_user_request(req, ubuffer, bufflen, meta_buffer,
--				meta_len, NULL, flags, 0);
-+				meta_len, NULL, flags);
- 		if (ret)
- 			goto out_free_req;
- 	}
- 
- 	bio = req->bio;
-@@ -467,10 +454,12 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
- 	const struct nvme_uring_cmd *cmd = io_uring_sqe_cmd(ioucmd->sqe);
- 	struct request_queue *q = ns ? ns->queue : ctrl->admin_q;
- 	struct nvme_uring_data d;
- 	struct nvme_command c;
-+	struct iov_iter iter;
-+	struct iov_iter *map_iter = NULL;
- 	struct request *req;
- 	blk_opf_t rq_flags = REQ_ALLOC_CACHE;
- 	blk_mq_req_flags_t blk_flags = 0;
- 	int ret;
- 
-@@ -502,10 +491,24 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	d.addr = READ_ONCE(cmd->addr);
- 	d.data_len = READ_ONCE(cmd->data_len);
- 	d.metadata_len = READ_ONCE(cmd->metadata_len);
- 	d.timeout_ms = READ_ONCE(cmd->timeout_ms);
- 
-+	if (d.data_len && (ioucmd->flags & IORING_URING_CMD_FIXED)) {
-+		/* fixedbufs is only for non-vectored io */
-+		if (vec)
-+			return -EINVAL;
-+
-+		ret = io_uring_cmd_import_fixed(d.addr, d.data_len,
-+			nvme_is_write(&c) ? WRITE : READ, &iter, ioucmd,
-+			issue_flags);
-+		if (ret < 0)
-+			return ret;
-+
-+		map_iter = &iter;
-+	}
-+
- 	if (issue_flags & IO_URING_F_NONBLOCK) {
- 		rq_flags |= REQ_NOWAIT;
- 		blk_flags = BLK_MQ_REQ_NOWAIT;
- 	}
- 	if (issue_flags & IO_URING_F_IOPOLL)
-@@ -515,13 +518,13 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 	req->timeout = d.timeout_ms ? msecs_to_jiffies(d.timeout_ms) : 0;
- 
- 	if (d.data_len) {
--		ret = nvme_map_user_request(req, d.addr,
--			d.data_len, nvme_to_user_ptr(d.metadata),
--			d.metadata_len, ioucmd, vec, issue_flags);
-+		ret = nvme_map_user_request(req, d.addr, d.data_len,
-+			nvme_to_user_ptr(d.metadata), d.metadata_len,
-+			map_iter, vec);
- 		if (ret)
- 			goto out_free_req;
- 	}
- 
- 	/* to free bio on completion, as req->bio will be null at that time */
--- 
-2.45.2
-
+We had a situation where the process clearly broke down in -block, and I
+opted to let Linus make the call (knowing he'd already been CC'd on the
+previous thread).
