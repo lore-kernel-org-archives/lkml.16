@@ -1,94 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E0620DF4;
-	Fri, 28 Mar 2025 14:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF49B16BE3A;
+	Fri, 28 Mar 2025 14:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171419; cv=none; b=fevd75+JH0W6opEgpS4pzN8bNwYsKxmjroqcszPlCFLjnvKenC5hAQm0NxIvPkXPvvuWeQm8Vn3CgoVKMfzsHdF4NBzBQrHSkqSmUydKSsavXrzfY/Vzqzk4jtPx0ZExjX/FgmTi0FHoObmO86bfVtIR8JsamZvASdIAMu0RUvQ=
+	t=1743171445; cv=none; b=Zvv/N41GxxSLWNf897Lq914ffrueZvmrB07ViyE+QZ0Wl1OZXNxuwx/SBt+TGWzx8gFNZVX8YeYhQBZl8eyeOMW/Pla6ILYvh1QCxxWRikGnnSAOr45zB/HStkTdxSkVW/yJND7Otlm68WTOBk9zAg2CYUrSTBeyb5oE+/fZFhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171419; c=relaxed/simple;
-	bh=Cvq+aP8CrYzZIA8tAfX7n75QN/jF4x2zO2RFtICsCi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B5Em9YCvRSBec5jBftRCdnToMLddFhEuSs5ZF18P8DuTwqBFUnf3dM9UnGidNyFKJygXbYu0V7Z5fliE643y+3tU+9hQfmXDWDoNSMaNbblN7n1+fkd3LGUxsioY0l4T6zrliEkDuw8dHKgU1C2Bz7NQewe6uiCW3XE5qDe46g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SX/izVvf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743171445; c=relaxed/simple;
+	bh=I/h0j6wRCZ3/U8LjbBitfUiDcjiwHZIxeoGg13dZk4g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=I9GVLEApr4PoCe8U9Wlr1aQwOCs1Vt+9NvVOo2Rahis30WzvCpxLaINTtNaGO4evuMwK5UXBX00SRSSkTuSQ/J0ykLUT6b8FFfIXJ2AplzuJ/Clvwq6mcsnE0wwA/rrbNHeZLkoJ7l4xD6DXL2HGnboW9gzWXYs+bgkGKtA55n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEZvwjBj; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SX/izVvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B46C4CEE4;
-	Fri, 28 Mar 2025 14:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743171418;
-	bh=Cvq+aP8CrYzZIA8tAfX7n75QN/jF4x2zO2RFtICsCi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SX/izVvfQniT9WQGaYVM21JfTy06DcSj86eckxScDfPCjNxrIdZgu/eQUSMkKDcOf
-	 nycCyRQqfTQhnTXAM/vbmxQn6n6YJYbj1F8W8hBZNp+Turzm9izUqOPc875vGPBykx
-	 HnVeY7ctzJbdOlI2Y+EeCfC0Dj+a4zySdmsiHIgqJpcho2HunILqAmBSW6cu6ez6L+
-	 u9JK7os3hh7+LzkHR0dnmK18BwrysT4R6k6j1VZfkP0d/2/5mMDetKS1bSzP/dfA+9
-	 p9nmYInyZtxE5VX13/uCemo9Z//xrgPba/nf4nCSNmHxV5MXCrnsrUNl8k46SqM4f+
-	 OV+fJ+0oR0Wug==
-Date: Fri, 28 Mar 2025 15:16:52 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the s390 tree
-Message-ID: <iphp537xgykfuzwwf2faatglwjh4eejanaucle4f4ew3kmfp2i@23qaverl34ak>
-References: <20250319155410.3cdf01cb@canb.auug.org.au>
- <Z9sgFGya_MDbfSQ6@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEZvwjBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743171444; x=1774707444;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I/h0j6wRCZ3/U8LjbBitfUiDcjiwHZIxeoGg13dZk4g=;
+  b=aEZvwjBjtdvt2rOVP2vPQIss+oFNxZINhemziuADLQvo5GJum2eH1SWf
+   mG0iFz12RSUGhMa7DtPxMy3xyZqHLqwSdOE7f8DAgpehUZjeCOPgx64nz
+   e+dnhIUoKpem3oEDV+meC8LLNEGPnxltVAVKjNePlaNCOrZ7nkewmvXyK
+   EYs8DgEyUYsBk5dNQGY/Iz7jEbaPMfaUTrQqIDxSRPbGUtFCQOYncgeEB
+   HSl62IP09MAy6YrBfDUReIRowIy9vMCoXJ6uiJrcSMZGTZKB+NF3/J7nt
+   I6udGSMHiEu1SihLKPCW4RmTLWue4Ul+sAW791AwFynrlkqmOb9XxWbZ7
+   g==;
+X-CSE-ConnectionGUID: tcqyOxzZTViBB8dUC/9mSA==
+X-CSE-MsgGUID: AWR7TElhRae1ywyMR4IOsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="62067933"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="62067933"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 07:17:23 -0700
+X-CSE-ConnectionGUID: bwTv2nRBQA2GGTmYjm9LvQ==
+X-CSE-MsgGUID: E8svcWs0RAKMOZCRDYfJyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="130159642"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 07:17:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 16:17:17 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 02/12] platform/x86: alienware-wmi-wmax: Refactor
+ is_awcc_thermal_mode()
+In-Reply-To: <20250313-hwm-v6-2-17b57f787d77@gmail.com>
+Message-ID: <be5a2029-a00f-7ed1-fb90-af1122b6f127@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-2-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9sgFGya_MDbfSQ6@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-2100938146-1743171437=:932"
 
-On Wed, Mar 19, 2025 at 08:50:44PM +0100, Ingo Molnar wrote:
-> 
-> * Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
-> > Hi all,
-> > 
-> > Today's linux-next merge of the tip tree got a conflict in:
-> > 
-> >   kernel/sysctl.c
-> > 
-> > between commit:
-> > 
-> >   20de8f8d3178 ("s390: Move s390 sysctls into their own file under arch/s390")
-> > 
-> > from the s390 tree and commit:
-> > 
-> >   c305a4e98378 ("x86: Move sysctls into arch/x86")
-> > 
-> > from the tip tree.
-> > 
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> 
-> Thank you Stephen!
-Indeed. Thanks!!!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Just a quick comment on this conflict:
-1. The conflict is caused because "acpi_video_flags" is after
-   "spin_retry" in the kern_table array. The solution (Which I see in
-   next-20250328) is to remove them both from kernel/sysctl.c
+--8323328-2100938146-1743171437=:932
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-2. This is the exact reason why we are moving these out of
-   kernel/sysctl.c. It is too easy to touch the same region even if they
-   are from different architectures.
+On Thu, 13 Mar 2025, Kurt Borja wrote:
 
-Best
+> Refactor is_awcc_thermal_mode() to use FIELD_GET() instead of bitwise
+> operations. Drop the check for BIT(8) sensor flag and rename it to
+> is_awcc_thermal_profile_id().
+>=20
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 33 +++++++++++++-------=
+------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-wmax.c
+> index ed70e12d73d7fe5d89f3364c5367820bf47e3c1e..80aefba5b22d6b4ac18aeb2ca=
+356f8c911150abd 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -34,7 +34,8 @@
+>  #define AWCC_FAILURE_CODE=09=09=090xFFFFFFFF
+>  #define AWCC_THERMAL_TABLE_MASK=09=09=09GENMASK(7, 4)
+>  #define AWCC_THERMAL_MODE_MASK=09=09=09GENMASK(3, 0)
+> -#define AWCC_SENSOR_ID_MASK=09=09=09BIT(8)
 
--- 
+I'd prefer leaving this in place even if it now becomes unused, or=20
+actually I suggest you move it before the GENMASKs to keep the values in=20
+order, and leave an empty row between failure code and these id related=20
+masks.
 
-Joel Granados
+> +/* Some IDs have a BIT(8) flag that we ignore */
+> +#define AWCC_RESOURCE_ID_MASK=09=09=09GENMASK(7, 0)
+
+(AWCC_THERMAL_TABLE_MASK | AWCC_THERMAL_MODE_MASK) ?
+ =20
+>  static bool force_platform_profile;
+>  module_param_unsafe(force_platform_profile, bool, 0);
+> @@ -168,8 +169,8 @@ enum AWCC_GAME_SHIFT_STATUS_OPERATIONS {
+>  };
+> =20
+>  enum AWCC_THERMAL_TABLES {
+> -=09AWCC_THERMAL_TABLE_LEGACY=09=09=3D 0x90,
+> -=09AWCC_THERMAL_TABLE_USTT=09=09=09=3D 0xA0,
+> +=09AWCC_THERMAL_TABLE_LEGACY=09=09=3D 0x9,
+> +=09AWCC_THERMAL_TABLE_USTT=09=09=09=3D 0xA,
+>  };
+> =20
+>  enum awcc_thermal_profile {
+> @@ -445,20 +446,18 @@ const struct attribute_group wmax_deepsleep_attribu=
+te_group =3D {
+>   * Thermal Profile control
+>   *  - Provides thermal profile control through the Platform Profile API
+>   */
+> -static bool is_awcc_thermal_mode(u32 code)
+> +static bool is_awcc_thermal_profile_id(u8 code)
+>  {
+> -=09if (code & AWCC_SENSOR_ID_MASK)
+> +=09u8 table =3D FIELD_GET(AWCC_THERMAL_TABLE_MASK, code);
+> +=09u8 mode =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, code);
+> +
+> +=09if (mode >=3D AWCC_PROFILE_LAST)
+>  =09=09return false;
+> =20
+> -=09if ((code & AWCC_THERMAL_MODE_MASK) >=3D AWCC_PROFILE_LAST)
+> -=09=09return false;
+> -
+> -=09if ((code & AWCC_THERMAL_TABLE_MASK) =3D=3D AWCC_THERMAL_TABLE_LEGACY=
+ &&
+> -=09    (code & AWCC_THERMAL_MODE_MASK) >=3D AWCC_PROFILE_LEGACY_QUIET)
+> +=09if (table =3D=3D AWCC_THERMAL_TABLE_LEGACY && mode >=3D AWCC_PROFILE_=
+LEGACY_QUIET)
+>  =09=09return true;
+> =20
+> -=09if ((code & AWCC_THERMAL_TABLE_MASK) =3D=3D AWCC_THERMAL_TABLE_USTT &=
+&
+> -=09    (code & AWCC_THERMAL_MODE_MASK) <=3D AWCC_PROFILE_USTT_LOW_POWER)
+> +=09if (table =3D=3D AWCC_THERMAL_TABLE_USTT && mode <=3D AWCC_PROFILE_US=
+TT_LOW_POWER)
+>  =09=09return true;
+> =20
+>  =09return false;
+> @@ -548,7 +547,7 @@ static int awcc_platform_profile_get(struct device *d=
+ev,
+>  =09=09return 0;
+>  =09}
+> =20
+> -=09if (!is_awcc_thermal_mode(out_data))
+> +=09if (!is_awcc_thermal_profile_id(out_data))
+>  =09=09return -ENODATA;
+> =20
+>  =09out_data &=3D AWCC_THERMAL_MODE_MASK;
+> @@ -597,6 +596,7 @@ static int awcc_platform_profile_probe(void *drvdata,=
+ unsigned long *choices)
+>  =09u32 first_mode;
+>  =09u32 out_data;
+>  =09int ret;
+> +=09u8 id;
+> =20
+>  =09ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCR=
+IPTION,
+>  =09=09=09=09       0, (u32 *) &sys_desc);
+> @@ -615,12 +615,13 @@ static int awcc_platform_profile_probe(void *drvdat=
+a, unsigned long *choices)
+>  =09=09if (ret =3D=3D -EBADRQC)
+>  =09=09=09break;
+> =20
+> -=09=09if (!is_awcc_thermal_mode(out_data))
+> +=09=09id =3D FIELD_GET(AWCC_RESOURCE_ID_MASK, out_data);
+> +=09=09if (!is_awcc_thermal_profile_id(id))
+>  =09=09=09continue;
+> =20
+> -=09=09mode =3D out_data & AWCC_THERMAL_MODE_MASK;
+> +=09=09mode =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
+>  =09=09profile =3D awcc_mode_to_platform_profile[mode];
+> -=09=09priv->supported_thermal_profiles[profile] =3D out_data;
+> +=09=09priv->supported_thermal_profiles[profile] =3D id;
+> =20
+>  =09=09set_bit(profile, choices);
+>  =09}
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-2100938146-1743171437=:932--
