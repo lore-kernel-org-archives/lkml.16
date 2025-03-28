@@ -1,152 +1,183 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9818F49
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFE5126BFA
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743135650; cv=none; b=X05W8rm9Yl7ZqSC2JDOV8ZQawaECWpfD3lMsHE1tNrHDoA/0cBJRQdWhVh4zMNUAl6KDkOK7WgdD3/v1O5FSmkPMQFqcGA40mP62pu8py2JaBjliDL9sHg33KM3gD1Zp2Bg+udKIxgYHv6XZekZETwQraK+BdQR9+YqL0ER9edM=
+	t=1743136781; cv=none; b=IUR/ggQEkk3Hmei21JqlS1ukkKmKnbXHcYSaKS1ZX3OEbGmqKSzvz2FqNk5V82athq4Az7IWibq7j94QZffRDm1SpmqUbE5XT8ttChsOI2w+BeRSiQWEBVa2BGRpe/QHOCXzIaPk3h7ZZllM5AgI0iXj9WuKBsIzZT/6yFlrHR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743135650; c=relaxed/simple;
-	bh=4VvG6x9EQmUnaPxos72iekLFHhrDTBgN8+Z3RX8VReY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GiN8xqgjjzFIY06RZ1JZs9XCBObgnaOzCSkSQj9zCkA6TGgjU9L33lp1Oj3oM9JUXmDnXYs3HwJceFnug/a0p7rbKovlqaZhhw9aNaX//UkfA4qndI3CBrdmyVXpRv5l/Z2gax1Vb1vs1Yg6LIwlKXBMnXrECGgjO+mz7317s3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xMt/zlAd; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743136781; c=relaxed/simple;
+	bh=T/AepfTQTjBimqhEAJ3b6sra64TUIKDeYooT8f5Ed44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cMWumtoqc0Pc5tUAu1lQcjMZqqsSYiz9nV72SZXknphbnEcacppkCv9mOZBuQoPDUBw1Ry3GNmQFD5Bf6GWREzsi8y93xJPjM7Kf/MeTPC4S6KKHxd3IgyKZcu+pDuMzXGJPPCkbMB2YIrq8H1XLXYAxh18rihKbZA0X9syd25s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nt2fThxx; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xMt/zlAd"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2242ac37caeso68685ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:20:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nt2fThxx"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22423adf751so33966955ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743135648; x=1743740448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
-        b=xMt/zlAdBdheORVJK5vhKWsABpJg3PfuMivCRVav+JcMFxeefcoNwy3LCMnvPg6wtH
-         URboOSEgDZSF7gUhYfPyaTa9HnxNMWUC319yNP1uVk42zDk2gmcb9NTI+LIaI8Gvg+bs
-         05be0x26cgRwd5g2fZspeY5rJR+a9yCE0ZDnXToHAsKt9Fwu3d4+x+nOxRsvWz7OEXeX
-         4SXLt41Ugyktr+i2kDiJdcUFeKOVhFevteOSez4UXVtzaSPGVnSCkaMR6ezccSv27Sg/
-         bAuGE6kEQ3VF4NN3eJnCacs+B+mywzykIS9YnVs6PWJK74+kdLc1sSqFxJK+ZCJAgQqo
-         NIZQ==
+        d=linaro.org; s=google; t=1743136778; x=1743741578; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=E614to0l/Fhr4eYjOojRNPeEthPbYgBwtIJNCVNwKro=;
+        b=nt2fThxxVKpS1PubslVyhK1ozKizYsPFe2G+8fDSXf21/3oKczsgIdkpBdVRTYcP8Y
+         +dyAcIC+hzaJKgf2BkyJqYnmMmWKZk0tkLWQ4ACqskhA6RR/PBh/ks3xPmOFAdjqFAGI
+         zH9XyNI0vt4EIn+oSCfDBgNuGfoWujRg2M4ZMM7OaQ2zHZkbtt9rFW0nobOl4hfSoxwN
+         ymvchMQb58Cw4vv67Y2LBTTabAA2JuwxBVUhhBPMsvXpBqN54N/dnJ0WRCHq1/Eskm/h
+         wUa81bcjJzRNloy2fiI5SMZheYw33M/GP5s5ALLHn5w8Q5kZK8wVFD8NWIPeXpthCn/L
+         QPyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743135648; x=1743740448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
-        b=AJ+iOohAwkqzVQ4l8nkPbbcOWRJMCHNP0cGSlGQCWUBUk6IekOt3v7LSgzXPSBGpkw
-         mUwlSqO/J++QLwMrl7G5fHeBRhutHocKLHPi0VDEloakzJgB716uNOJIw9eMo6TNpCJL
-         gg6DCpUIARvKHbBUC6e1yzikTYvbrDxfrOTr83e86PUocxoJLhaCHSP/skLh7hZ9D3ov
-         aZG6Cos0bl8B4mwG8T+CwYD6e0U8nlM8biZjGzwQze995moM9WxORvNQbgT7ZsD4A0n7
-         /0KmcPKgaxMydleGekxw3G/NBm0I9R+HGul994O9JOEbBKSGhI69WK682fpeEGwgDGOm
-         r3jg==
-X-Gm-Message-State: AOJu0Yw15sz9586fFQRGl8LkV79cHPeb/bIVBb7xDtkNG8TMt1/YXIYT
-	rvykLmDZBIwRVtlRAiP1T/aIyaIov2XRgHFQLZ8mPKWLpjq2FBr2in4MFmCXq21BwHUf0IWdWmX
-	LmuHma9DAXKRsgtZrFhE1H1wfzIBzhpgjXLYD
-X-Gm-Gg: ASbGncvGAdJKs0s56hd7sEiLrTxUvg17QQThBgSuU9DYVOEFZU6wdoAPJjYemXGh65T
-	4wZj/rT6rdhX7TM2KkxgA5qzu4V5iMMyyYgDxPQAU68voMJyM1B28l1BvoMRDI7RsOuh7dj4HZO
-	3tNqWl/3d2CLDgSq9InOEabgAFFtw=
-X-Google-Smtp-Source: AGHT+IFm9BzGAaqh6rhMTsdvArk8QYfZ4BiD7DS9eqvAjwM3xXPk4D7Y8NsBIWa8UBrfMNcPdTlEOa2Co9SOW5Szdy4=
-X-Received: by 2002:a17:902:ee02:b0:224:6c8:8d84 with SMTP id
- d9443c01a7336-22920ad2e6amr1747645ad.4.1743135647450; Thu, 27 Mar 2025
- 21:20:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743136778; x=1743741578;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E614to0l/Fhr4eYjOojRNPeEthPbYgBwtIJNCVNwKro=;
+        b=hfgxpJAiaKT4BpPn4EQuz6+zzZJ0sM8JU/Q3X/vKfwCw+0/45CCNiANU6R6wjVQIOo
+         aKne66ouvnLzIr/m6hAIbvLzPX8hRDu3Ir7Upp0BXj9q6Sld9ghOCQRZijaLpntjmyFe
+         xXDJD7Y/B7AiJ5fsa+VZZVFaCB9ZxvQ13cBS/JftjWK03jDNZa/qgCBo8YF9BBxu6Anm
+         vQarMU48yL309WDir3yXHyaUfjR+FM7zlD5FN0uyhg42z3j+PUIBbH/uQYASpj8juOYn
+         rK8a+YT3S9r9oXSWUp3Jlg2jIPF0x5XAjiI2hUIl0o5k3Phfcw+DW8E94VzwJhZu7HoP
+         uINg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJwA/49fHqNlOHrMx25ZnolMQO5jKeQycllXfTAgT+WMBhO4x6wBFLR1A6ywsIOuDMVnWMP4o8k18aLKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlr0ZZ5pjqNJVaXGI4FwCHTsZaOi64jU29SsNcOWAB2YudooRP
+	NC1KfatLsxDqcn6vQcWuNSkatKk3ZoBCXllLdiHLJbZPqdqPLwimJ54WtZwRFQ==
+X-Gm-Gg: ASbGncuVJBREsJBAUboRzEBT0ETOrJe4zUlpak88qgEmhln7Cq3AbqlVYnzZzzpcT56
+	XKI0HXtyBumwV7RhCyFATNlyydsFz3cUlxqxCcmDqto54Y5Mbmwi8KpWKRYVXyfaqiGxlzc/hjA
+	arvGAfJeBaCfUbJb2Tnr0NBK2CmuAAwQBwKeKqdZaCgE8dTcOLz9Hq70WqzcKWWJzGHeBYHcXv+
+	xQTC8eBtnoHz53ACdalKW+5ELUneJweQuvlBHhOY0znF+HTGbkfeGgUTDdSFDX7OwXHe69n4gvM
+	AjtQYqjQGY/MzfEAic4Qq7uAssdjSLD3Gz9iMq+KTmjJmtgVAO26izo=
+X-Google-Smtp-Source: AGHT+IFY9i79fMPaQ6JLQr0OH6rfsXENWBpN0c8Wp2VWG10YAwY5cvI8oop04MjE9pxkW0Zly0/7/g==
+X-Received: by 2002:a05:6a00:92aa:b0:736:9e40:13b1 with SMTP id d2e1a72fcca58-739610dcb50mr7891584b3a.23.1743136778392;
+        Thu, 27 Mar 2025 21:39:38 -0700 (PDT)
+Received: from thinkpad ([120.60.68.219])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e22433sm775851b3a.52.2025.03.27.21.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 21:39:38 -0700 (PDT)
+Date: Fri, 28 Mar 2025 10:09:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v8 2/4] PCI: of: Add of_pci_get_equalization_presets() API
+Message-ID: <gl2klkvpkb2vrxrzdqbqjomfis66tldy6witvbqdd2ig3st3rw@jstguoejcofa>
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-2-0703a78cb355@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327225651.642965-1-ctshao@google.com>
-In-Reply-To: <20250327225651.642965-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Mar 2025 21:20:36 -0700
-X-Gm-Features: AQ5f1Jr-scFYaP9RajDzeU_599eda8QGvwnthEF_v8Ujb_R1wC0Ccyq38bdPe6s
-Message-ID: <CAP-5=fWv4=8Uq8jDbqNR3O+JAw-T0OUGoj5o=pMHxyFKsbEDyw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Fix incorrect counts when count the same uncore
- event multiple times
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
-	yeoreum.yun@arm.com, linux@treblig.org, ak@linux.intel.com, 
-	weilin.wang@intel.com, asmadeus@codewreck.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250316-preset_v6-v8-2-0703a78cb355@oss.qualcomm.com>
 
-On Thu, Mar 27, 2025 at 3:56=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> Let's take a look an example, the machine is SKX with 6 IMC devices.
->
->   perf stat -e clockticks,clockticks -I 1000
->   #           time             counts unit events
->        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
->        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
->        2.002649722        988,376,876      uncore_imc_0/clockticks/
->        2.002649722        988,376,141      uncore_imc_0/clockticks/
->        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
->        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
->
-> 1) The events name should not be uniquified.
-> 2) The initial count for the first `clockticks` is doubled.
-> 3) Subsequent count only report for the first IMC device.
->
-> The first patch fixes 1) and 3), and the second patch fixes 2).
->
-> After these fix:
->
->   perf stat -e clockticks,clockticks -I 1000
->   #           time             counts unit events
->        1.001127586      4,126,938,857      clockticks
->        1.001127586      4,121,564,277      clockticks
->        2.001686014      3,953,806,350      clockticks
->        2.001686014      3,953,809,541      clockticks
->        3.003121403      4,137,750,252      clockticks
->        3.003121403      4,137,749,048      clockticks
->
-> I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
-> looks good.
->
-> Ian tested `hybrid-merge` and `hwmon`, all looks good as well.
->
-> Chun-Tse Shao (1):
->   perf test: Add stat uniquifying test
->
-> Ian Rogers (2):
->   perf evlist: Make uniquifying counter names consistent
->   perf parse-events: Use wildcard processing to set an event to merge
->     into
+On Sun, Mar 16, 2025 at 09:39:02AM +0530, Krishna Chaitanya Chundru wrote:
+> PCIe equalization presets are predefined settings used to optimize
+> signal integrity by compensating for signal loss and distortion in
+> high-speed data transmission.
+> 
+> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+> configure lane equalization presets for each lane to enhance the PCIe
+> link reliability. Each preset value represents a different combination
+> of pre-shoot and de-emphasis values. For each data rate, different
+> registers are defined: for 8.0 GT/s, registers are defined in section
+> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+> an extra receiver preset hint, requiring 16 bits per lane, while the
+> remaining data rates use 8 bits per lane.
+> 
+> Based on the number of lanes and the supported data rate,
+> of_pci_get_equalization_presets() reads the device tree property and
+> stores in the presets structure.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/of.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h | 32 +++++++++++++++++++++++++++++++-
+>  2 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 7a806f5c0d20..18691483e108 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -851,3 +851,47 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>  	return slot_power_limit_mw;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> +
+> +/**
+> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
+> + *
+> + * @dev: Device containing the properties.
+> + * @presets: Pointer to store the parsed data.
+> + * @num_lanes: Maximum number of lanes supported.
+> + *
+> + * If the property is present, read and store the data in the @presets structure.
+> + * Else, assign a default value of PCI_EQ_RESV.
+> + *
+> + * Return: 0 if the property is not available or successfully parsed else
+> + * errno otherwise.
+> + */
+> +int of_pci_get_equalization_presets(struct device *dev,
+> +				    struct pci_eq_presets *presets,
+> +				    int num_lanes)
+> +{
+> +	char name[20];
+> +	int ret;
+> +
+> +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
+> +	ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
+> +					 presets->eq_presets_8gts, num_lanes);
+> +	if (ret && ret != -EINVAL) {
+> +		dev_err(dev, "Error reading eq-presets-8gts :%d\n", ret);
 
-Tested-by: Ian Rogers <irogers@google.com>
+'Error reading eq-presets-8gts: %d'
 
-There could be minor conflict with this unreviewed series:
-https://lore.kernel.org/lkml/20250318041442.321230-1-irogers@google.com/
+> +		return ret;
+> +	}
+> +
+> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX - 1; i++) {
+> +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
+> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
+> +		ret = of_property_read_u8_array(dev->of_node, name,
+> +						presets->eq_presets_Ngts[i],
+> +						num_lanes);
+> +		if (ret && ret != -EINVAL) {
+> +			dev_err(dev, "Error reading %s :%d\n", name, ret);
 
-Thanks,
-Ian
+'Error reading %s: %d'
 
->  tools/perf/builtin-record.c                   |   7 +-
->  tools/perf/builtin-top.c                      |   7 +-
->  .../tests/shell/stat+event_uniquifying.sh     |  69 ++++++++
->  tools/perf/util/evlist.c                      |  66 +++++---
->  tools/perf/util/evlist.h                      |   3 +-
->  tools/perf/util/evsel.c                       | 119 ++++++++++++-
->  tools/perf/util/evsel.h                       |  11 +-
->  tools/perf/util/parse-events.c                |  86 +++++++---
->  tools/perf/util/stat-display.c                | 160 ++----------------
->  tools/perf/util/stat.c                        |  40 +----
->  10 files changed, 329 insertions(+), 239 deletions(-)
->  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
->
-> --
-> v2:
->   - Fixes for `hwmon` and `--hybrid-merge`.
->   - Add a test for event uniquifying.
->
-> v1: lore.kernel.org/20250326234758.480431-1-ctshao@google.com
-> 2.49.0.472.ge94155a9ec-goog
->
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..78c9cc0ad8fa 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -9,6 +9,8 @@ struct pcie_tlp_log;
+>  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+>  #define MAX_NR_DEVFNS 256
+>  
+> +#define MAX_NR_LANES 16
+
+Why did you limit to 16?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
