@@ -1,118 +1,186 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA4C84E1C;
-	Fri, 28 Mar 2025 20:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D407B1D61A5;
+	Fri, 28 Mar 2025 20:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743192882; cv=none; b=XWvfWD8Tlxg8VESYmR/3tyoPLQhVWo5Nc4IQE5jcRWzdmmgyc8A5n1So5PTct/DYjiS10klk1o+io6S4+QwY5k9Dk9ezxIJpeZg+zin0RwhGvlDohVcsXt4+BdjBo7+0OSZqp0OQsSAFjcCpW4UgnpiFSebn5DwHNQLD6cLgEAE=
+	t=1743192902; cv=none; b=iHhgzBCfQHi1u0kSJ6WTC4L9BEAjp+NR2PpNL9iKS8kIrmm3EH746bQiHu8Lopbb/YaRx7gbyKiXIG0m4ANCgDI3OZZEWe35agBK7RD5ms2KB/8JczMnNq1n8INZf9luMpyGw9ixBBcCy9FCbdf+V5IdKPlxEHxtPD9oGCKx4q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743192882; c=relaxed/simple;
-	bh=YPtdzJO5oUoFKA0xxSLhX0XNUIPxQzTlPvmDG2M4iVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qmcKzc31ixWZ5aBsoUH28c/+dZjZ+AlO6zJPLdjawSTy6KOLk4r8Wmnvp4Bmc1IvAAPsKbu+jx1kvfrj4lxndyBhBl1HmK1JSK8ebyuawxaKyVe24XHXc09TGlQxXDIhMUMo4lCJSvP3N5cT57p/WhSFnKWAZZ29gEEvDmtLLLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=AQRvdriq; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743192902; c=relaxed/simple;
+	bh=pJMjQjWVDeywadOsaTgmup6GpKyj9JDB+t9KWtcJj/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fwx5isM3jG2baOkhHe9g+z3hKdIoarGMhCqMXQW5asDQuiDbHBIOblD37BP7lbfIPAJ5xD7V+ZUW7OM6KnkpR9PziXXMjb+1+rbw1oar/0y3U9t0nYW0WR1LqgbQeDBWjrmC8EfQepGG1CoGbUHCtrTyP4VUEpaVsPoCMISyfSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gs+u9Eif; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="AQRvdriq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743192866; x=1743797666; i=frank.scheiner@web.de;
-	bh=nqWIo8/jSCRWunTJuSYGCdTz7gW8eNWtG2ieH1TGqXk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=AQRvdriqUuF7KIdO9Ku6Eqp0Vl6law6VvqUZ1sTeCEbPLTtHltx1KgmI+jL/Y8mj
-	 4QgiWr5hJ7fXJEP7yp/WYREVz5w8Iyy90A3+TSywsyFhZe+JRmTRNuP3ckJrrtWR2
-	 vEkvxdyy1Iv5+ZCnqUDCd1Ag0hc3pGXkbDq9btm2GHHmpJLz9FoFUbWmorA1IFaFf
-	 4/Pwm9SDyChmXDvoQ52yonGPF2KdR+umC/HhA3Vj9GUq72IxkICl55vkEoXyVdD0Z
-	 FxyFdhpzunz2ht2WomWAuytJ98+cNQB9cDVlASM2rwH0Ds6HzvRCSfwVny4qB7yDZ
-	 d8U83lGCMs4z5SYwaw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([79.200.211.72]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKB5-1tlyyi3Wvd-00PPSl; Fri, 28
- Mar 2025 21:14:25 +0100
-Message-ID: <0ab0c4f4-c758-4366-a414-c8da5119c1ab@web.de>
-Date: Fri, 28 Mar 2025 21:14:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gs+u9Eif"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227a8cdd241so14354725ad.3;
+        Fri, 28 Mar 2025 13:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743192900; x=1743797700; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ytSt5nyniCNVmizjfTwiWa0OGl8PzPbyb3HIq2epauA=;
+        b=Gs+u9EifaWALQ394eelorQ58pbTnMM3Pj9LOhmFwMekDWgd8U4Cbtrd1k6pOLTvI4A
+         PlkPMIPxmYI7b/HLRifwB6OZrsQw/uEKn/qJyTrkO2mHm6x8Ls69X28OuNmZoBJF+ybe
+         lQlh2t2oU1EohuO90q3Z7nmWyIpUxA96ljkOEvyyNp/MhoSGe/VP2riiXaLQAphBkxJU
+         s1DvUWsHSJww1cfeFs8XYl3RWaxn3p4L+E24W8oTLxbvqKANvSREriaWnx+OXLmC3v43
+         rhA0xTPyuzNk8sWyf1zDFNf5YBV5nZwBi3cjvSFVGs3e6PygDQ9mLiqk5/3gzSNF7M0O
+         2ToQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743192900; x=1743797700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ytSt5nyniCNVmizjfTwiWa0OGl8PzPbyb3HIq2epauA=;
+        b=hiQ4pJKr4+iKR7husi3l/l1EoRuRPXpJz78K3C/Px2p9vDlcsaCA7GVbPCIMBH+MzU
+         ew8Ns9bowotTdVH8KWBFkg1SGOuEHjvva7mcKV9RVSpd0JQlXilQSAwaD0AxQ655wtuH
+         dvkq0Z3MInh6YxrNdHQS84+nNzVJruclK3DR/yCwz0KtJOYNaVdwdzmm5bOrjjl6kWeT
+         7cTioJiB8qTBCa/yLBX8gxqV3EiflcrlpNJbeJ7xV1PR4GCKZJSjMnBfCTD2j4o35Lyt
+         WO+Hhaqp5cK2tA7BmYX+6WffXRfVbw8c4gzotL1+nwqP/pb1mt+x3Ecs8nchgcvCugVd
+         M/Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGRsKB1fIVX4RiC5k2Sak7D1jQgJMjnwmMSUDPhRU5PtWZsEF4Y42Sto4Z5XWUX6X52F1qL+RhfYDsydwz@vger.kernel.org, AJvYcCVbZx6ni00IiKwci3x5R0xJ8cyyC+cXMVsTLXV7lbiuqapRzrW0Xmf47saJza9zfG6+jD0=@vger.kernel.org, AJvYcCViYCYkyQ6uOi/ViV55L26FsEpRcnyN1oUfLEt+WqLMCXVOqHa5UBMm8bbrfKgkN4emyPsGXqupxhw/ZV6e@vger.kernel.org, AJvYcCXomac32AJWxgqwaELqHNcV/h9MtVr3jhlEOE7ybq8occX0JlE1R7CN1Iz8vkUoanY34yGidcGH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7XlzAqPjnjb6+UyOUdh4zVgQQuk9DKBSLXEF/NlhqgGie5IQ2
+	VCa0yDdVg/MhMWxbaE04dMrE6+cJLJgCBci+o7rov0In61doLKbD
+X-Gm-Gg: ASbGncsO3eYvPdaFAqBBi9v7uQiIIfkY7hhJ9KLTUHlV3LDONDNxJMCm8V5Iis2IXr1
+	saY/XS91HOK8sHcvscnJETqRofy6FErj78alLrtJk1Y8YUFHvGBbKvjZlAKNwou3CkUI8nffLaR
+	xcxdp8quHLULT+i1XAjjGQCpVRP6PtK4DUA6a3S06/fgvWlpt1zv3cyqqsp78xuOqatQIjEQzMq
+	ZMvvnCokUmPHXgJ0VwhCgj6Y1aFP5ML7NpxYE1S/7gdivRzhnss2j2+aTJfiWRY2AyqT1r20rs4
+	7IOQSbgyXOdPDsHkgVjuPXxLw9GH0Dv2AQbC1Y3ZvX64kLm68jAcoIAzggDxfqFglwk=
+X-Google-Smtp-Source: AGHT+IG3V62sPzgz2xRNNE+uQm5daMt0XJ7v3b+sinEmZ97UyPC/XNV9Rm0e5/8hmIrydE+Rm3fk9w==
+X-Received: by 2002:a05:6a00:b8c:b0:730:8a5b:6e61 with SMTP id d2e1a72fcca58-7398033a575mr716156b3a.2.1743192899756;
+        Fri, 28 Mar 2025 13:14:59 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:71::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e27b97sm2314410b3a.62.2025.03.28.13.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 13:14:59 -0700 (PDT)
+Date: Fri, 28 Mar 2025 13:14:57 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
+ vhost-vsock-netns device
+Message-ID: <Z+cDQQtp/80V8Tbr@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+ <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
+ <nwksousz7f4pkzwefvrpbgmmq6bt5kimv4icdkvm7n2nlom6yu@e62c5gdzmamg>
+ <Z9yDIl8taTAmG873@devvm6277.cco0.facebook.com>
+ <aqkgzoo2yswmb52x72fwmch2k7qh2vzq42rju7l5puxc775jjj@duqqm4h3rmlh>
+ <Z+NGRX7g2CgV9ODM@devvm6277.cco0.facebook.com>
+ <apvz23rzbbk3vnxfv6n4qcqmofzhb4llas27ygrrvxcsggavnh@rnxprw7erxs3>
+ <Z+bJOsG457Vg/cUu@devvm6277.cco0.facebook.com>
+ <3qjjlbwyso22n4ziylbeunfwpc7gl3rcin6v5qsr2npjfkbfjh@c745sejq6rig>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc3 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- linux-ia64@vger.kernel.org
-References: <20250328074420.301061796@linuxfoundation.org>
-From: Frank Scheiner <frank.scheiner@web.de>
-In-Reply-To: <20250328074420.301061796@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0C/7j4laSJiQHPFO1ub85Z6BCJyRBDuTFkXvVB+dSQ1pEncWXJi
- zZShf3xrW4bMxqQdvzLpE3g7SFK8VvJJ9KM/9l1lvjre64o4yc65inpOyUvCnLj0t85AmjV
- kl/0ZKjueQdZt+a7cGQa/C5mLCaUDEmk5wEmwcwqU+NaZo+W/8rguxJwn3JvP+STal0EnUc
- YgShNV7PsMHyHsOFPTDDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MCNclTEh+/E=;7QvyE0r7d0JI8HkQDGvTPH11JY1
- 5kvlAQFtR7B1jc9qGY22g75foXnnCeqCIKvf6h4Dv1hehDEIQd3Wn0yY9jAUwUeCsF5PqW/K/
- wh7HaWGSn747CWx3YpCjkfaW6ITcNzOxKL9EjDMleuZ2XJhUQqNXpSLjNhC0hIMJR9f1Y+EMk
- OFLt61GYwilEQNBWeqXHQwsT25QWy6NiYEkd7UBP9DqeaCQNkwY7NaS5L7CEE88W2sae7/was
- PKdkkCb7D0HbMoq7NZbfHczqhk8XAblYaavHhdM/838+1dpSyGkjTFCLlbtEn/KM3yj92qF09
- qw9n6mVFEMWSFtXp9esHXYip5mJN3GYxWBeEyC0X1J0g9Epa3Ik/sGKLVfOd8PMISCaZQJh90
- aaV2t5M5HYMWafRASBZ+EQrZHwcIVUe0mnNs71rFYX56bEVEYPamH24E6YEVsohmoWU6wzxSH
- NcB8rkUoMtrhlo/3bZVTWePL66b/tElaMz1qHQGx+xFH2AO2T4p/SYbxLzVcbZp+BMLUnRsKH
- JExfP4WIBdvHDAR/47X+2dzIfNfOzsMik40RolpreU53wYRVvp0ICLnzPdE2crtK7l3wUqRzr
- a2Eb7alf3aBEIK2wz4dStWGw55tQvVuzi88mB3TnqfrmXACjdK0hTLPM+0InAMaJn9U7n3bKE
- ZZC3QRV1KPPuUqyOB69WdNl5Fx+l1pf9D9YX9slH2+AVUqSMkhFOjIZrxonTowajQeg5TuFFp
- rQIz3//W+SU5fFv5WobnybVb355HTSiAH2VuUWN4WoUdAbDbWamEZ3CbKpPCoVh+nyWsvwFbq
- AfBQujiH0kCchyMXvjOtL34P7cnPK3V3S+xPh8OClVKx3XK1xpAB2B+ePu1PzLEcimlqMfiM+
- Nn/SYQpLyuTnzcC1mHlAppvI2xHbfEfMFPbvlJzUv5dio1lxYyNlrnStMbebfTZOYxsBDExRk
- eKtjbdLt4e2CpMj6eAvY7tbwFyyK04k1VmXYSzFHxtJY58ljxkPTkUIn36hLd6VJPsz4wNqys
- 2wE7aewVGOsz8HofhkEKStA8P4qddZft7gpRKF8SzrnQtzHdo5KRNXHsailwEqVGidqs6MT9M
- 7jukE5ARiuKODkhlLbBmOTqz6n2R1ZVXp/ayqjWti1e0iNpqvlOcN5nD8p4QoTm6WccXoQmom
- UsC1T8wGhRX/gqZRPF4pnsCGPfOqp06I7IJNKHpRg9FaowuCie3pHBlZPaDaxup1jE14DZeIr
- Q8V24U31/v49a9jwZ6SvzSI2dWwLgXyYxaI5Yenk98TvomTKmVdbmxh3ZbYXE0txnE6kR8yyr
- ukoh8eHpPM/gTSnEG5ou518WHh+4fYs5waviTugjNR1Sq9QRvqjrZCi0hBYlUcG1/Oog+8aEx
- FzUYQO/vEny/bEXJb8gvLfHgR6OhIW4eddgvc6f2BSdgRwrunSfWTueSpl5GyS58rzCf50VPq
- SYXyyBCAkz7OUI3vkQsM3iu1D7Sy4tgqWhHGlAMJ78y1c5KGm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3qjjlbwyso22n4ziylbeunfwpc7gl3rcin6v5qsr2npjfkbfjh@c745sejq6rig>
 
-On 28.03.25 08:47, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.132 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 30 Mar 2025 07:43:56 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.13=
-2-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi=
-t linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Mar 28, 2025 at 05:19:44PM +0100, Stefano Garzarella wrote:
+> On Fri, Mar 28, 2025 at 09:07:22AM -0700, Bobby Eshleman wrote:
+> > On Thu, Mar 27, 2025 at 10:14:59AM +0100, Stefano Garzarella wrote:
+> > > On Tue, Mar 25, 2025 at 05:11:49PM -0700, Bobby Eshleman wrote:
+> > > > On Fri, Mar 21, 2025 at 11:02:34AM +0100, Stefano Garzarella wrote:
+> > > > > On Thu, Mar 20, 2025 at 02:05:38PM -0700, Bobby Eshleman wrote:
+> > > > > > On Thu, Mar 20, 2025 at 10:08:02AM +0100, Stefano Garzarella wrote:
+> > > > > > > On Wed, Mar 19, 2025 at 10:09:44PM +0100, Paolo Abeni wrote:
+> > > > > > > > On 3/12/25 9:59 PM, Bobby Eshleman wrote:
+> > > > > > > > > @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
+> > > > > > > > >  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
+> > > > > > > > >
+> > > > > > > > >  	vhost_dev_cleanup(&vsock->dev);
+> > > > > > > > > +	if (vsock->net)
+> > > > > > > > > +		put_net(vsock->net);
+> > > > > > > >
+> > > > > > > > put_net() is a deprecated API, you should use put_net_track() instead.
+> > > > > > > >
+> > > > > > > > >  	kfree(vsock->dev.vqs);
+> > > > > > > > >  	vhost_vsock_free(vsock);
+> > > > > > > > >  	return 0;
+> > > > > > > >
+> > > > > > > > Also series introducing new features should also include the related
+> > > > > > > > self-tests.
+> > > > > > >
+> > > > > > > Yes, I was thinking about testing as well, but to test this I think we need
+> > > > > > > to run QEMU with Linux in it, is this feasible in self-tests?
+> > > > > > >
+> > > > > > > We should start looking at that, because for now I have my own ansible
+> > > > > > > script that runs tests (tools/testing/vsock/vsock_test) in nested VMs to
+> > > > > > > test both host (vhost-vsock) and guest (virtio-vsock).
+> > > > > > >
+> > > > > >
+> > > > > > Maybe as a baseline we could follow the model of
+> > > > > > tools/testing/selftests/bpf/vmtest.sh and start by reusing your
+> > > > > > vsock_test parameters from your Ansible script?
+> > > > >
+> > > > > Yeah, my playbooks are here:
+> > > > > https://github.com/stefano-garzarella/ansible-vsock
+> > > > >
+> > > > > Note: they are heavily customized on my env, I wrote some notes on how to
+> > > > > change various wired path.
+> > > > >
+> > > > > >
+> > > > > > I don't mind writing the patches.
+> > > > >
+> > > > > That would be great and very much appreciated.
+> > > > > Maybe you can do it in a separate series and then here add just the
+> > > > > configuration we need.
+> > > > >
+> > > > > Thanks,
+> > > > > Stefano
+> > > > >
+> > > >
+> > > > Hey Stefano,
+> > > >
+> > > > I noticed that bpf/vmtest.sh uses images hosted from libbpf's CI/CD. I
+> > > > wonder if you have any thoughts on a good repo we may use to pull our
+> > > > qcow image(s)? Or a preferred way to host some images, if no repo
+> > > > exists?
+> > > 
+> > > Good question!
+> > > 
+> > > I created this group/repo mainily to keep trak of work, not sure if we can
+> > > reuse: https://gitlab.com/vsock/
+> > > 
+> > > I can add you there if you need to create new repo, etc.
+> > > 
+> > > But I'm also open to other solutions.
+> > > 
+> > 
+> > Sounds good to me. I also was considering using virtme-ng, which would
+> > avoid the need, at the cost of the dependency. What are your thoughts on
+> > that route?
+> 
+> I just saw that Paolo had proposed the same, but his response was off-list
+> by mistake!
+> 
+> So I would say it is an explorable path. I have no experience with it, but
+> it looks like it could do the job!
 
-Cross-builds for ia64/hp-sim and runs fine in Ski ([1]).
+Sounds good! I'm currently prototyping with it, so save for unforeseen
+issues that will likely be what v1 uses.
 
-[1]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/1412943352=
-0#summary-39586577131
-
-Tested-by: Frank Scheiner <frank.scheiner@web.de>
-
-Cheers,
-Frank
+Thanks,
+Bobby
