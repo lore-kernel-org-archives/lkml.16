@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8250F23371C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CCE23372C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168557; cv=none; b=KqXxjdFSD6Bn1i6GUnx5RUGr/yjWXX1oZ7mJiKCJT2Ues7GMC8kNlV0iqHcQw5g9tQcd516MXjSWJl+He+MjYJPuk7sx1DWiQSIkXfWlP7fj6MFZWuI6dSxyqzywv8OmM0OgKH2Ib+FSJAfDAh4byI1+QF02AkOmhaqtZer6N7A=
+	t=1743168558; cv=none; b=jHMjdU0gSSSCUIStOmRIixhc1PBS6rFBIWoEzDlVkM5w9l3vza1beXsvQyrlHLN7fdzvTfmtg12lWuPicDkagZ56SquhheAC/Pn85+MLPT/+nXpa7qlV3KtM2V1nfWYLRdpTo6Z2LgXdsHLorxH+7DMG/R+uGKtouSiTRsJMAv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168557; c=relaxed/simple;
-	bh=2gDW9IOQ/NyyYQR/FZrQrYxoqLiDM7Is5aunFcwYsTw=;
+	s=arc-20240116; t=1743168558; c=relaxed/simple;
+	bh=RtQa43M5Chutv/Mu+hA4RGh+5vaibCz9hJlkWvXMbbA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CImf93FuO95bJ/5mvtCzmTLEYKcSctA4WGAygwiHWieWfOS7jOi4Lg7ZV+LNFzEjGWBV4Owh/s3ExOxt2XO01maqwQdsqsDOR0Dntwx71YsrVv5EkVHe0kLpOWW2/bUdUroMg+HHMrn1qg9qcwWRx1KIjpGHwpkIgOBifUb2rR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g68LkZ7u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pZFJzrscNENqSrNO3HHPKyLlmlYeWFzEkiUe+SYqrJYx0FWc/w1HIxyhjRNH+eVp4ntVaQmMa8OWaZoqWjeTCw3kd3egPk8N0haRc7DJbcc8GstOKKOcy+g8oe+/aL+1yLDV533q1DItSbsOs8BayAqkixAjrrzeVlU6QLAaQCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmIp9oyJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g68LkZ7u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09FD9C4CEE5;
-	Fri, 28 Mar 2025 13:29:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmIp9oyJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CE1C4CEE4;
+	Fri, 28 Mar 2025 13:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168556;
-	bh=2gDW9IOQ/NyyYQR/FZrQrYxoqLiDM7Is5aunFcwYsTw=;
+	s=k20201202; t=1743168558;
+	bh=RtQa43M5Chutv/Mu+hA4RGh+5vaibCz9hJlkWvXMbbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g68LkZ7uXLHD0O04PausL6EMIIkjWGiKWCJ2xJsnDU88uAFBye57h/jFDGW3zxNZr
-	 tXV6wpzAx+7NnH1A+tNkpwBxw9cJP3aeQHgkF9EgI2l9naW1X7fic8J4ELl2NkSM+0
-	 QalDe/kgopmX942rH828bQyM5J/GUAQYaH7kOJUk6KjbK7IePWRtIbSUA9g8nN0LBw
-	 uGPow0UqgkEaFE4ssVlm7gdHbrCzbLcoqgVwJHRSWSTVXfjIjs6L9bPO2DiuJp7/Uw
-	 xBF0Z/x264HtKbzqVAyXXTpK468BsE9IaBQZMiWNYKHvm7pAmRgu+1+ElerGtIk5qb
-	 svqRPD9sehTOA==
+	b=tmIp9oyJk2zx71pJu8YFyPqgJ4zd75Yn4/zbn8+P6KBrLf6TamhKXbtYq3aa2TKnk
+	 ceiETZTefWh8+rdLMZLVxmTmfE/1wMv3EFIXRqap5Tiablm9Aox/cruHNjWg0PydGi
+	 WZD7XPlMbFaPyE5LTjwETqzRESfjGMbskioBAylsTAEHQ/l6RmG3p+zdcOqTFNbzmP
+	 MuCPDHzRMP4OYLTi5oRQD6X8eIEu61Wywt0oLmoNzzKesFZii+jUwn5F7bMMrSUc+O
+	 S4+ZO0RvcaGNKxHVavcm7JhPA2JLFS4ZZeJwBxQN53LhqEEpZqCJUSpla5gzks3rr4
+	 Qq0W3gFV1AmOQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 46/49] x86/alternatives: Move declarations of vmlinux.lds.S defined section symbols to <asm/alternative.h>
-Date: Fri, 28 Mar 2025 14:27:01 +0100
-Message-ID: <20250328132704.1901674-47-mingo@kernel.org>
+Subject: [PATCH 47/49] x86/alternatives: Remove 'smp_text_poke_batch_flush()'
+Date: Fri, 28 Mar 2025 14:27:02 +0100
+Message-ID: <20250328132704.1901674-48-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250328132704.1901674-1-mingo@kernel.org>
 References: <20250328132704.1901674-1-mingo@kernel.org>
@@ -49,49 +49,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move it from the middle of a .c file next to the similar declarations
-of __alt_instructions[] et al.
+It only has a single user left, merge it into smp_text_poke_batch_add()
+and remove the helper function.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/include/asm/alternative.h | 6 ++++++
- arch/x86/kernel/alternative.c      | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/alternative.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 4a37a8bd87fd..ef84739a77f5 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -82,6 +82,12 @@ struct alt_instr {
- 
- extern struct alt_instr __alt_instructions[], __alt_instructions_end[];
- 
-+extern s32 __retpoline_sites[], __retpoline_sites_end[];
-+extern s32 __return_sites[],	__return_sites_end[];
-+extern s32 __cfi_sites[],	__cfi_sites_end[];
-+extern s32 __ibt_endbr_seal[],	__ibt_endbr_seal_end[];
-+extern s32 __smp_locks[],	__smp_locks_end[];
-+
- /*
-  * Debug flag that can be tested to see whether alternative
-  * instructions were patched in already:
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 242c0b1f7e40..df718a4e88c2 100644
+index df718a4e88c2..6de97646b4d6 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -149,12 +149,6 @@ static void add_nop(u8 *buf, unsigned int len)
- 		*buf = INT3_INSN_OPCODE;
+@@ -2831,14 +2831,6 @@ void smp_text_poke_batch_finish(void)
+ 		smp_text_poke_batch_process();
  }
  
--extern s32 __retpoline_sites[], __retpoline_sites_end[];
--extern s32 __return_sites[], __return_sites_end[];
--extern s32 __cfi_sites[], __cfi_sites_end[];
--extern s32 __ibt_endbr_seal[], __ibt_endbr_seal_end[];
--extern s32 __smp_locks[], __smp_locks_end[];
+-static void smp_text_poke_batch_flush(void *addr)
+-{
+-	lockdep_assert_held(&text_mutex);
 -
- /*
-  * Matches NOP and NOPL, not any of the other possible NOPs.
+-	if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || !text_poke_addr_ordered(addr))
+-		smp_text_poke_batch_process();
+-}
+-
+ /**
+  * smp_text_poke_batch_add() -- update instruction on live kernel on SMP, batched
+  * @addr:	address to patch
+@@ -2854,7 +2846,8 @@ static void smp_text_poke_batch_flush(void *addr)
   */
+ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+-	smp_text_poke_batch_flush(addr);
++	if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || !text_poke_addr_ordered(addr))
++		smp_text_poke_batch_process();
+ 	__smp_text_poke_batch_add(addr, opcode, len, emulate);
+ }
+ 
 -- 
 2.45.2
 
