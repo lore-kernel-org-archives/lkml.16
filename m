@@ -1,175 +1,123 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2DF145B27;
-	Fri, 28 Mar 2025 09:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B4A1C36;
+	Fri, 28 Mar 2025 09:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153371; cv=none; b=t7fjs+ugN/28/faa030lMTtUcmRASBkdaw2m/qgJpFTMpyHfrriH6jvcSuawUC4N7zBBZvEeu2Bq3cHVkUKPXRhmSQMu/YbTGALssUcDEO6EIdXEqgcvlPBfojzxe2M9FEVtnaPQXhAdbnoF9jx8QyF8JJsO0nP05M6T6thh/qE=
+	t=1743153437; cv=none; b=Bt6+neWz7hYAythUrqg5JVxFvvdlsc/QrmsFiH7t9Tqa/u6eHwqfsc349tvbeCUwr7jM1prTQgNvDNGv8OMGouvHbsJtt8Q4TWB9QihBm6jMw0jb7hBCaW204QeYSg+gOiOOmCyfmToeReQcB2xodNXmhSfXp8N7AlVivaBq5lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153371; c=relaxed/simple;
-	bh=adf04wGi+9obpoFeO+JGISKn7dPuPF1GbDHgd+fFpNs=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=ZTG6g7ITwJCq8c5IX7HA1md7ujC/P0pGfpwSH/EyX1wBGLPNelmSpsvxGpeHsv1LiOLeqErkqGM26sV9gf3BXc0sdrYtIMilHmGSoxvdFyvpoCiQ9ofaQEuL+30n8S+qDNvdkET3mTr10ewQR7TBDJsFwv8RuDRycwp+eVtFy3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jdh4hzWi; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743153437; c=relaxed/simple;
+	bh=R49xfafOMRZGIS4xB8rrTfPNt5gs5+WCiFiRuZHq/w4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4xyWyvlG+hmWVH4mNNsihAACQ1d2f2TrLxxDE1zNupRkz7bM+xKK/z/nmt/qn5042gqLgQeZg7q+fXLJwmDzafBQredyG1YMLmIDoy8ILAR0bOfkKRmzky6zi/T1ip6BfLNGgbVs2tls1+PWMM+ite/YVWgX0zrdHXbAjcHW6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VcDsR06d; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jdh4hzWi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VcDsR06d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743153435; x=1774689435;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R49xfafOMRZGIS4xB8rrTfPNt5gs5+WCiFiRuZHq/w4=;
+  b=VcDsR06du3n802uR5bGhlSunxTM1JI8f7K5dtu0QdvGYqjjHOpQ2KwDy
+   ljYhFOpd0D9WjsTlyM1W3VZZvRRzNwKOYmJAc2Zenp47x6SGOvZa6eo+j
+   NOu+qRdF04qwaYWqEmlPUH6nn+GwgQwFz+42pgpIEpFkcpVu8XNRyg/2R
+   qz2e3UvuYnCcsh3mt1TnZgt2RR4VbC9PXmkpTXzxwU4RS3etGBsSY5OFP
+   G9tb83+9AUhsrzPvO/zarFiZ4bnBnxgozQWtXlPN0nw1S8nSb33IhVNvd
+   CEXIKdWL2K0tyVUc5f4zfRognyCO1DNLWL0NmG6za5F0etP2sz/ys63M8
+   Q==;
+X-CSE-ConnectionGUID: lg2XpSisTMmYpQBTMA3VuQ==
+X-CSE-MsgGUID: F0IUrmXwS9+30sc45ub+Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44401854"
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="44401854"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 02:17:14 -0700
+X-CSE-ConnectionGUID: X3eEiq/8SWWfStwXYg0ZDw==
+X-CSE-MsgGUID: mHjs0pwVTIaL56iYZ4kG7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="125622129"
+Received: from win-uq4qlp9a0jq.iind.intel.com (HELO madhum.iind.intel.com) ([10.223.138.63])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Mar 2025 02:17:10 -0700
+From: madhu.m@intel.com
+To: gregkh@linuxfoundation.org
+Cc: heikki.krogerus@linux.intel.com,
+	linux-usb@vger.kernel.org,
+	pooja.katiyar@intel.com,
+	dmitry.baryshkov@linaro.org,
+	diogo.ivo@tecnico.ulisboa.pt,
+	lk@c--e.de,
+	linux-kernel@vger.kernel.org,
+	Madhu M <madhu.m@intel.com>
+Subject: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
+Date: Fri, 28 Mar 2025 15:13:05 +0530
+Message-Id: <20250328094305.546724-1-madhu.m@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743153355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1ha8nU9rL2AUrvffeNdwwUmS1zgXHAGS16YD/tF7kY=;
-	b=jdh4hzWiMAci5QoKp8IyisvglFAMbymI7BfycqBa37RoSr1c1Bd8/Mhi6URgIIUP7GSDJH
-	nhF7SSxYW8vsyB0y35ah3NsJMXRvqQcP330aUO0IizqT2l3W1UteNGgdyYtOKelhOXuoRB
-	z5SJSHWTgSlQadm23UA/+DaKxXtndN4=
-Date: Fri, 28 Mar 2025 09:15:53 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <17a3bc7273fac6a2e647a6864212510b37b96ab2@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net v1] net: Fix tuntap uninitialized value
-To: "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
- netdev@vger.kernel.org
-Cc: willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net,
- hawk@kernel.org, john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
- syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com,
- bpf@vger.kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- song@kernel.org, kpsingh@kernel.org, jolsa@kernel.org
-In-Reply-To: <67e5be3c65de3_10636329488@willemb.c.googlers.com.notmuch>
-References: <20250327134122.399874-1-jiayuan.chen@linux.dev>
- <67e5be3c65de3_10636329488@willemb.c.googlers.com.notmuch>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-March 28, 2025 at 05:08, "Willem de Bruijn" <willemdebruijn.kernel@gmail.=
-com> wrote:
+From: Madhu M <madhu.m@intel.com>
 
->=20
->=20Jiayuan Chen wrote:
->=20
->=20>=20
->=20> Then tun/tap allocates an skb, it additionally allocates a prepad s=
-ize
-> >  (usually equal to NET_SKB_PAD) but leaves it uninitialized.
-> >  bpf_xdp_adjust_head() may move skb->data forward, which may lead to =
-an
-> >  issue.
-> >  Since the linear address is likely to be allocated from kmem_cache, =
-it's
-> >  unlikely to trigger a KMSAN warning. We need some tricks, such as fo=
-rcing
-> >  kmem_cache_shrink in __do_kmalloc_node, to reproduce the issue and t=
-rigger
-> >  a KMSAN warning.
-> >=20
->=20>  Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
-> >  Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@goo=
-gle.com/T/
-> >  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>  ---
-> >=20
->=20>  drivers/net/tun.c | 2 ++
-> >=20
->=20>  1 file changed, 2 insertions(+)
-> >=20
->=20>=20=20
->=20>=20
->=20>  diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> >=20
->=20>  index f75f912a0225..111f83668b5e 100644
-> >=20
->=20>  --- a/drivers/net/tun.c
-> >=20
->=20>  +++ b/drivers/net/tun.c
-> >=20
->=20>  @@ -1463,6 +1463,7 @@ static struct sk_buff *tun_alloc_skb(struct =
-tun_file *tfile,
-> >=20
->=20>  if (!skb)
-> >=20
->=20>  return ERR_PTR(err);
-> >=20
->=20>=20=20
->=20>=20
->=20>  + memset(skb->data, 0, prepad);
-> >=20
->=20>  skb_reserve(skb, prepad);
-> >=20
->=20>  skb_put(skb, linear);
-> >=20
->=20>  skb->data_len =3D len - linear;
-> >=20
->=20
-> Is this specific to the tun device?
->=20
->=20This happens in generic (skb) xdp.
->=20
->=20The stackdump shows a napi poll call stack
->=20
->=20 bpf_prog_run_generic_xdp+0x13ff/0x1a30 net/core/dev.c:4782
->=20
->=20 netif_receive_generic_xdp+0x639/0x910 net/core/dev.c:4845
->=20
->=20 do_xdp_generic net/core/dev.c:4904 [inline]
->=20
->=20 __netif_receive_skb_core+0x290f/0x6360 net/core/dev.c:5310
->=20
->=20 __netif_receive_skb_one_core net/core/dev.c:5487 [inline]
->=20
->=20 __netif_receive_skb+0xc8/0x5d0 net/core/dev.c:5603
->=20
->=20 process_backlog+0x45a/0x890 net/core/dev.c:5931
->=20
->=20Since this is syzbot, the skb will have come from a tun device,
->=20
->=20seemingly with IFF_NAPI, and maybe IFF_NAPI_FRAGS.
->=20
->=20But relevant to bpf_xdp_adjust_head is how the xdp metadata
->=20
+Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
+UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
+PD/TypeC debugging capability.
 
-Thanks.
+Signed-off-by: Madhu M <madhu.m@intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/usb/typec/ucsi/debugfs.c | 4 ++++
+ drivers/usb/typec/ucsi/ucsi.h    | 2 ++
+ 2 files changed, 6 insertions(+)
 
-I'm=20wondering if we can directly perform a memset in bpf_xdp_adjust_hea=
-d
-when users execute an expand header (offset < 0).
+diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
+index eae2b18a2d8a..92ebf1a2defd 100644
+--- a/drivers/usb/typec/ucsi/debugfs.c
++++ b/drivers/usb/typec/ucsi/debugfs.c
+@@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
+ 	case UCSI_CONNECTOR_RESET:
+ 	case UCSI_SET_SINK_PATH:
+ 	case UCSI_SET_NEW_CAM:
++	case UCSI_SET_USB:
+ 		ret = ucsi_send_command(ucsi, val, NULL, 0);
+ 		break;
+ 	case UCSI_GET_CAPABILITY:
+ 	case UCSI_GET_CONNECTOR_CAPABILITY:
+ 	case UCSI_GET_ALTERNATE_MODES:
++	case UCSI_GET_CAM_SUPPORTED:
+ 	case UCSI_GET_CURRENT_CAM:
+ 	case UCSI_GET_PDOS:
+ 	case UCSI_GET_CABLE_PROPERTY:
+ 	case UCSI_GET_CONNECTOR_STATUS:
+ 	case UCSI_GET_ERROR_STATUS:
++	case UCSI_GET_PD_MESSAGE:
++	case UCSI_GET_ATTENTION_VDO:
+ 	case UCSI_GET_CAM_CS:
+ 	case UCSI_GET_LPM_PPM_INFO:
+ 		ret = ucsi_send_command(ucsi, val,
+diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+index 3a2c1762bec1..72b9d5a42961 100644
+--- a/drivers/usb/typec/ucsi/ucsi.h
++++ b/drivers/usb/typec/ucsi/ucsi.h
+@@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
+ #define UCSI_GET_CONNECTOR_STATUS		0x12
+ #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
+ #define UCSI_GET_ERROR_STATUS			0x13
++#define UCSI_GET_ATTENTION_VDO			0x16
+ #define UCSI_GET_PD_MESSAGE			0x15
+ #define UCSI_GET_CAM_CS			0x18
+ #define UCSI_SET_SINK_PATH			0x1c
++#define UCSI_SET_USB				0x21
+ #define UCSI_GET_LPM_PPM_INFO			0x22
+ 
+ #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
+-- 
+2.34.1
 
-Although the main purpose of bpf_xdp_adjust_head is to write new headers,
-it's possible that some users might be doing this to read lower-layer
-headers, in which case memset would be inappropriate.
-
-However, I found that when expanding headers, it also involves copying
-data meta forward, which would overwrite padding memory, so maybe I'm
-overthinking this?
-
-In general, since bpf_xdp_adjust_head can access skb->head, it exposes a
-minimum of XDP_PACKET_HEADROOM (256) uninitialized bytes to users, and
-I'm not entirely clear if there are any security implications.
-
-
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 2ec162dd83c4..51f3f0d9b4bb 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3947,6 +3947,8 @@ BPF_CALL_2(bpf_xdp_adjust_head, struct xdp_buff *, =
-xdp, int, offset)
-        if (metalen)
-                memmove(xdp->data_meta + offset,
-                        xdp->data_meta, metalen);
-+       if (offset < 0)
-+               memset(data, 0, -offset);
-        xdp->data_meta +=3D offset;
-        xdp->data =3D data;
