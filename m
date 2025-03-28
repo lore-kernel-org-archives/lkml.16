@@ -1,270 +1,166 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5125219A9B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1FF21ADDB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743162278; cv=none; b=RSY6jx+9YpyWGxrRwpL81vuYfGdzW2BlBuYBYvH3L9lkeJZ+gOPWEtSUQcXURjkOXBv5ceM6Pxf0R4AMi+FHSuYCCBiJZKKP+YzAMSuLNLgebNODoFfCkYt3gbCTYq5Fu5IWj4Hx7tgE+bsvTDk0DjCThwvdMg7qvZP8ZX/Yjm0=
+	t=1743162285; cv=none; b=AP/Ng4tF3rdYCJoNxUXznVp11xOxqahHGOEgpa6meXSuGknIy0iF/6qCgAsJk9NbQLgg/jOxwk8edFnWWOtd3OSbMgOdsZErPNR45YlI6luDHVSLwMWj5cJnWLrpCvQYBXyapwr85VkRCHBU9oj5Fa+80n5a2KgtVMxO59+OWaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743162278; c=relaxed/simple;
-	bh=YwgP5Lj6FSo3mHH2PjhycSpGK3t+yNjAzaGWz6a7Poc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KYrLCJ7JBSRPbKwMHnIsY4nQdGQrISUAah4hMBx01dcfOOSm8EfLQesyWay7M79LWXYR1UW7nEXvfvpN+rih2e7tD5cVRJPktEgXdUwhWz2S1mpQu4ITXBJhHMg6AvbIO17p1Cj+GtuzwcztFQsBHGhyZskdz41FIXXLbxy/Jow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NVvQgbpE; arc=none smtp.client-ip=209.85.222.45
+	s=arc-20240116; t=1743162285; c=relaxed/simple;
+	bh=0eEexOOeT/SY+ca/h/ehqjYRmc5PKPVJnb87Ylg+OO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uwj5dW18cewxzydacM6GnMTYhtLwnJMxbqizwoMf2NAgJDmIdAckWn/3KMfW0xbf68I+DyZ8NKWOi/yt9YlZC4y1/0rdXSDYpVPh+D7JI8SfCaH9MdV7mg+Hef71ry/dGaPqHfuT07a4ygQtqAjg5uxbFtrNyTQV/dJjFiSJpwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aDg9Xopd; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NVvQgbpE"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso3173419241.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:44:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDg9Xopd"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-225477548e1so39667085ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743162275; x=1743767075; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2qqfblrO9ZiItp9BFItmCQdoEnMkY7wNDvK733cLvs=;
-        b=NVvQgbpEZ4XLqLw50tPS1aSzIFEa1oqqFDAxw/2YQ6qczqpGrBShq1FFCgjVndbRq6
-         PPNeQ9+yEFWqMborn60KtYSb+Wm4A5wW+eQ/I+BDur7Jxu/AeKfSUFxZ5kR+sX7Dz2FI
-         wEj02X+D3K7F+MjEu0CX5bhYu1K+ET2H9WNnzH5AvnqD5LVRTZothW0L9Ni7JAh9UPBM
-         HL7CcYxJrvdp2F0giShQxxe17P4XTg2CcnT8MXnnketP0709sUyUnHZOq7Cjr/DbXsCm
-         +Fjbm9P0tiScs9ADB37Rhlat+0DN/xMZ/mX4AEvHZzEgvd84UmY/irG4+QtVnBisNbyP
-         ALYA==
+        d=linaro.org; s=google; t=1743162283; x=1743767083; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jTloo0qHYC+ISZzDRD8m8XjFyQar/rHgRYQcIyveKkQ=;
+        b=aDg9XopdXsHLr9oQLoRbF4J7P4CLv/IV9zcOkRusum40bxoy7Etz/lGb8xWTfnYdJg
+         H16iYc1cTg0rny9SszA6FPkGazFotyfDlStdVI+CjVMiqgmhlxgCnwELps6EyxMMVbBj
+         nwPszkVbmfGr6/UDHnkUzIS84Gcl+0D1T+MVRG447J1vLoYPnwA1AVQRdMzpA5TMKRQH
+         Y/xKg6DDVHjuCDg9ONW7ojipyeCg3qCCoAtO1YE6Nvm5DSid7q9QlKGEl8fNAK87VBdI
+         GwBUwrl8xDm80M8y01zLz83Kd/IHExDMQDChOXrY8EAzk592hNTxCPsZnIiWYFwnRw1c
+         /E6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162275; x=1743767075;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w2qqfblrO9ZiItp9BFItmCQdoEnMkY7wNDvK733cLvs=;
-        b=OXAwVeH+gy1W2WJLZoPbKv7IqE2TyewrDvqYJMPKYv5Jn/8U7xschnmBYbKzu2AOhb
-         kXwMq7W6akJz5V050CFPHT/0g7fO0GEC0apBAcWwkUbkQ+b3xESeuAkjPrpnaDsxmzzF
-         X70y9tNwvfhQQ8bXinMC6FYXgGvMRCr9VEFTG59OxHdZ04xlgBNegIz7vfusPyQcku41
-         vfH03FWP/3FR4QBrHL7mF3oPiXcsZ4ZbBFb+QQAAIDd+1bjjdDOnHd0CFB0PYuR/KEsx
-         zWeevzUN8op8SinkK3vvZa4BzeYnxmd7ymHGUxW9MOytIsoqai/ce0vr5d+MMUdLptvk
-         0xpw==
-X-Forwarded-Encrypted: i=1; AJvYcCXc63PxDrLWck7VRaxs7F3gMGVzm2BE1Gc1xFP8q3M7JDr882oK4OMSiZIk8ggeJK7BncTDFGNTjWVxoY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIH8/xMlIOJ5ItQHkP6exb9/CqBCCkVCVqEj8zaVvVWwGlsROq
-	XSg+8pgIVUay8vaV9BaTnLZTLZHrcZtRnn3zKPizO4igOA0KxzmuQXzdsOghmP3FMNC3G99rd1G
-	rs8JlezRr7ZFXIWUgKAwenW4/nshO5PXq/HJnAA==
-X-Gm-Gg: ASbGncvFoCNKYiMAc6qBtG3JJdBy5GjkfhPwfB0uadyQo/COb3s4zfmZkFd/GOQmQUv
-	wuu+qXLed2SGom6VlumTSlrltjyfruwNPyP/SmD5ssRpAUdlQigmjX5/S5PftaAakUzkffAedrz
-	pujd/f1PVSB3Zmvz5LqKyDarhogeGaBlUDkBEucnrOd3ejzcH263f4pEx1ghk=
-X-Google-Smtp-Source: AGHT+IH5gt1g7W9zzSWKPRy+Vjm/b0NveXSpYYJFrnYWc6QvBz8Ch7D3H4qE7WYa/AwxnGF1KMNk7xnOtPg2RIJG4u0=
-X-Received: by 2002:a67:ed0e:0:b0:4bd:379c:4037 with SMTP id
- ada2fe7eead31-4c6c280d38amr917768137.9.1743162275354; Fri, 28 Mar 2025
- 04:44:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743162283; x=1743767083;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jTloo0qHYC+ISZzDRD8m8XjFyQar/rHgRYQcIyveKkQ=;
+        b=E0ETQ9fn5ZotDRjPsXDCPmh+DArac8idqs9ai3iLYuV9JC5b2g0VrECSM3XSHv1WST
+         fplClBfg218anEvGSpJAEISdJpagsR2mgkNyDqHcTjbPvfO1phKLsftv0M2/ncuhC3Hu
+         nL/FZ4kFT4MeLGoIldek2Qvoah+UrtpPGX1sELHSQjiCBo7IXNEoPqucbNSEfBg7g/hF
+         TEkvSc0eUwbUKQzZBAgHUF9aIXQJIQXbhl5M9vwiNeFm6JV6vjtQ5dP+xDfJMv0pIAff
+         OncyZv/e4NYOsJcpu3PYoz3c3iCWGajdzZZY1mmEp34Ovy9xa+hyAUU/aF44zcT81ZMR
+         eqVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDteWtQeFXkQP632vEvGS3i7kwbXykhGPwjTmSlyaZgAFwz4qSKs8Uc8eA5TxqvBfGg1l8R1fNTzRhjTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfrnoZtcjHdmkuzETx58fOMd4Bl/mlWh0uWpzfzqwc4eW0rgmV
+	6mzuq/lDDZpriqHlZCVH/bAmazvBvpVjclXwWi9YEoN5lpRZ8yGcsI61ZN8RUw==
+X-Gm-Gg: ASbGncvWGplILfIdKHkVc0FJVlh424PiokTXRycdxdc2xZBOKCcW4fkHUnw+BH/vUnD
+	yaMZ0ZR5f6Mj1r13M+gAA1rpsGeZ2x2wX7L31hbM7jsXi7DMky5mrBCvJ++q/+njfytJSRLa+in
+	ILxeWebVW3j2Y2Lchh7fR2PWIr5tPZPYoqDA14QprTucX7MrwZLoXyew/YB6djfelTIer/43f7V
+	9YXd6r2AOuiGB7IoLhf7P6C9kMx9XexqdGX2j+PePG9bXQohuyUzd1n2rIxO8qNeO6X+UNQpurU
+	WwtKuSV3yyrSlUbzegI9lROndZTAXfj7tQlTkm4l2zKIrQRwkMhM5ZE=
+X-Google-Smtp-Source: AGHT+IH4cX76e+Kw6r9q701qOqS2ghJcXD4tXbOLq9WjgRCZlZGCIjtUewxEQ6foaU9Rigl+Wt5/4g==
+X-Received: by 2002:a05:6a20:160f:b0:1f6:6539:e026 with SMTP id adf61e73a8af0-1fea2d70098mr11659053637.15.1743162283310;
+        Fri, 28 Mar 2025 04:44:43 -0700 (PDT)
+Received: from thinkpad ([120.60.68.219])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69ccb0sm1407036a12.24.2025.03.28.04.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 04:44:42 -0700 (PDT)
+Date: Fri, 28 Mar 2025 17:14:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v5 1/7] arm64: dts: qcom: sc7280: Increase config size to
+ 256MB for ECAM feature
+Message-ID: <h6bnt7ti3yy3welkzqwia7kieunspfqtxf6k46t4j4d5tathls@hra2gbpzazep>
+References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
+ <20250309-ecam_v4-v5-1-8eff4b59790d@oss.qualcomm.com>
+ <3332fe69-dddb-439d-884f-2b97845c14e1@oss.qualcomm.com>
+ <0cc247a4-d857-4fb1-8f87-0d52d641eced@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326154346.820929475@linuxfoundation.org>
-In-Reply-To: <20250326154346.820929475@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 28 Mar 2025 17:14:23 +0530
-X-Gm-Features: AQ5f1JrEMR3q_aVnbCTb0wQN7NNnYC69mmmv8o9OofjDoV25fDlFoUyGvppLF6I
-Message-ID: <CA+G9fYuY7iX+3=Yn77JjgiDiZAZNcpe0cW-y_M3sazhFN7dGLw@mail.gmail.com>
-Subject: Re: [PATCH 6.6 00/76] 6.6.85-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Cgroups <cgroups@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0cc247a4-d857-4fb1-8f87-0d52d641eced@oss.qualcomm.com>
 
-On Wed, 26 Mar 2025 at 21:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.85 release.
-> There are 76 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 28 Mar 2025 15:43:33 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, Mar 26, 2025 at 06:56:02PM +0100, Konrad Dybcio wrote:
+> On 3/11/25 12:13 PM, Konrad Dybcio wrote:
+> > On 3/9/25 6:45 AM, Krishna Chaitanya Chundru wrote:
+> >> PCIe ECAM(Enhanced Configuration Access Mechanism) feature requires
+> >> maximum of 256MB configuration space.
+> >>
+> >> To enable this feature increase configuration space size to 256MB. If
+> >> the config space is increased, the BAR space needs to be truncated as
+> >> it resides in the same location. To avoid the bar space truncation move
+> >> config space, DBI, ELBI, iATU to upper PCIe region and use lower PCIe
+> >> iregion entirely for BAR region.
+> >>
+> >> This depends on the commit: '10ba0854c5e6 ("PCI: qcom: Disable mirroring
+> >> of DBI and iATU register space in BAR region")'
+> >>
+> >> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> >> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >> ---
+> > 
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> I took a second look - why are dbi and config regions overlapping?
+> 
 
-Regressions on arm64 devices cpu hotplug tests failed with gcc-13 and
-clang-20 the stable-rc 6.6.85-rc2
+Not just DBI, ELBI too.
 
-These regressions are the same as stable-rc 6.1 cpu hotplug regressions.
+> I would imagine the latter to be at a certain offset
+> 
 
-First seen on the 6.6.85-rc2
-Good: v6.6.83
-Bad: 6.6.85-rc2
+The problem is that for ECAM, we need config space region to be big enough to
+cover all 256 buses. For that reason Krishna overlapped the config region and
+DBI/ELBI. Initially I also questioned this and somehow convinced that there is
+no other way (no other memory). But looking at the internal documentation now,
+I realized that atleast 512MiB of PCIe space is available for each controller
+instance.
 
-* dragonboard 845c
-- selftests: cpu-hotplug: cpu-on-off-test.sh
-- rseq_basic_percpu_ops_mm_cid_test
-- rseq_basic_percpu_ops_test
-- ltp-controllers: cpuset_hotplug_test.sh
+So I just quickly tried this series on SA8775p and by moving the config space
+after the iATU region, I was able to have ECAM working without overlapping
+addresses in DT. Here is the change I did:
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? Yes
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index 3394ae2d1300..e41c8e3dd30c 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -6395,18 +6395,18 @@ arch_timer: timer {
+        pcie0: pcie@1c00000 {
+                compatible = "qcom,pcie-sa8775p";
+                reg = <0x0 0x01c00000 0x0 0x3000>,
+-                     <0x0 0x40000000 0x0 0xf20>,
+-                     <0x0 0x40000f20 0x0 0xa8>,
+-                     <0x0 0x40001000 0x0 0x4000>,
+-                     <0x0 0x40100000 0x0 0x100000>,
++                     <0x4 0x00000000 0x0 0xf20>,
++                     <0x4 0x00000f20 0x0 0xa8>,
++                     <0x4 0x10000000 0x0 0x4000>,
++                     <0x4 0x10004000 0x0 0x10000000>,
+                      <0x0 0x01c03000 0x0 0x1000>;
+                reg-names = "parf", "dbi", "elbi", "atu", "config", "mhi";
+                device_type = "pci";
+ 
+                #address-cells = <3>;
+                #size-cells = <2>;
+-               ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
+-                        <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
++               ranges = <0x01000000 0x0 0x00000000 0x0 0x40000000 0x0 0x100000>,
++                        <0x02000000 0x0 0x40100000 0x0 0x40100000 0x0 0x1ff00000>;
+                bus-range = <0x00 0xff>;
+ 
+                dma-coherent;
+ 
 
-Test regression: arm64 arm cpuhotplug kernel NULL pointer dereference
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Krishna: Could you also try similar change on SC7280 and see if it works?
 
-## Test log
-command: cpuset_hotplug_test.sh
-cpuset_hotplug 1 TINFO: CPUs are numbered continuously starting at 0 (0-7)
-cpuset_hotplug 1 TINFO: Nodes are numbered continuously starting at 0 (0)
-[  607.606520] IRQ118: set affinity failed(-22).
-[  607.606657] IRQ165: set affinity failed(-22).
-[  607.606670] IRQ167: set affinity failed(-22).
-[  607.606764] IRQ206: set affinity failed(-22).
-[  607.606775] IRQ207: set affinity failed(-22).
-[  607.606786] IRQ208: set affinity failed(-22).
-[  607.606797] IRQ209: set affinity failed(-22).
-[  607.606807] IRQ210: set affinity failed(-22).
-[  607.606816] IRQ211: set affinity failed(-22).
-[  607.606825] IRQ212: set affinity failed(-22).
-[  607.610148] psci: CPU1 killed (polled 0 ms)
-cpuset_hotplug 1 TPASS: Cpuset vs CPU hotplug test succeeded.
-[  608.845868] Detected VIPT I-cache on CPU1
-[  608.845955] GICv3: CPU1: found redistributor 100 region 0:0x0000000017a80000
-[  608.846049] CPU1: Booted secondary processor 0x0000000100 [0x517f803c]
-[  609.103460] psci: CPU1 killed (polled 0 ms)
-[  609.149280] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000000
-[  609.162506] Mem abort info:
-[  609.170513]   ESR = 0x0000000096000004
-[  609.177143]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  609.184803]   SET = 0, FnV = 0
-[  609.190745]   EA = 0, S1PTW = 0
-[  609.196414]   FSC = 0x04: level 0 translation fault
-[  609.202957] Data abort info:
-[  609.208001]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  609.215282]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  609.221926]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  609.229042] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000108ec5000
-[  609.238062] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[  609.246582] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-[  609.254427] Modules linked in: ax88179_178a usbnet fuse ip_tables
-x_tables snd_soc_hdmi_codec venus_enc venus_dec videobuf2_dma_contig
-mcp251xfd xhci_pci xhci_pci_renesas lontium_lt9611 can_dev qcom_pon
-qcom_spmi_adc5 snd_soc_sdm845 rtc_pm8xxx ath10k_snoc leds_qcom_lpg
-snd_soc_rt5663 qcom_vadc_common venus_core ath10k_core
-snd_soc_qcom_common snd_soc_rl6231 led_class_multicolor
-qcom_spmi_temp_alarm ath crct10dif_ce qcom_stats v4l2_mem2mem
-soundwire_bus msm qcom_camss videobuf2_dma_sg videobuf2_v4l2
-videobuf2_memops mac80211 ocmem hci_uart gpu_sched phy_qcom_qmp_combo
-btqca drm_dp_aux_bus btbcm reset_qcom_pdc drm_display_helper
-camcc_sdm845 bluetooth qcom_q6v5_mss spi_geni_qcom i2c_qcom_geni typec
-gpi videobuf2_common qcom_rng phy_qcom_qmp_usb coresight_stm stm_core
-qrtr qcrypto cfg80211 qcom_q6v5_pas ufs_qcom phy_qcom_qmp_ufs
-phy_qcom_qmp_pcie lmh rfkill slim_qcom_ngd_ctrl icc_osm_l3
-qcom_pil_info slimbus qcom_wdt qcom_q6v5 pdr_interface
-display_connector llcc_qcom drm_kms_helper qcom_sysmon qcom_common
-[  609.254673]  qcom_glink_smem mdt_loader icc_bwmon drm qmi_helpers
-socinfo backlight rmtfs_mem
-[  609.364260] CPU: 0 PID: 388 Comm: kworker/0:3 Not tainted 6.6.85-rc2 #1
-[  609.373013] Hardware name: Thundercomm Dragonboard 845c (DT)
-[  609.380818] Workqueue: events work_for_cpu_fn
-[  609.387320] pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  609.396471] pc : memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:809
-mm/memcontrol.c:2392)
-[  609.403452] lr : memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:809
-mm/memcontrol.c:2392)
-[  609.410429] sp : ffff80008107bc50
-[  609.415903] x29: ffff80008107bc50 x28: 0000000000000000 x27: ffffad8428896ad8
-[  609.425251] x26: 0000000000000028 x25: ffff60fdbd4a1a58 x24: ffffad842887eb00
-[  609.434605] x23: 0000000000000000 x22: ffffad84288329c0 x21: 0000000000000000
-[  609.443957] x20: ffffb37994c7e000 x19: 0000000000000000 x18: 00000000b8fbaf46
-[  609.453329] x17: 0000000000000000 x16: 000000000000030d x15: 0000000000000049
-[  609.462707] x14: 0000000000000197 x13: ffff800081078000 x12: ffff80008107c000
-[  609.472102] x11: abc96095bed38f00 x10: 0000000000000000 x9 : 0000000000000001
-[  609.481495] x8 : ffff60fd47b4d280 x7 : 000000f2b5503510 x6 : 0000000000300000
-[  609.490872] x5 : 00000000801c0011 x4 : 0000000000000000 x3 : ffff80008107bc00
-[  609.500269] x2 : ffff60fd47b4d280 x1 : ffffad84264a670c x0 : ffff60fdbd4b09c0
-[  609.509655] Call trace:
-[  609.514295] memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:809
-mm/memcontrol.c:2392)
-[  609.520968] cpuhp_invoke_callback (kernel/cpu.c:196)
-[  609.527648] _cpu_down (kernel/cpu.c:0 kernel/cpu.c:980
-kernel/cpu.c:1415 kernel/cpu.c:1476)
-[  609.533283] __cpu_down_maps_locked (kernel/cpu.c:1507)
-[  609.539889] work_for_cpu_fn (kernel/workqueue.c:5644)
-[  609.545882] process_scheduled_works (kernel/workqueue.c:2639
-kernel/workqueue.c:2711)
-[  609.552752] worker_thread (include/linux/list.h:373
-kernel/workqueue.c:841 kernel/workqueue.c:2793)
-[  609.558741] kthread (kernel/kthread.c:390)
-[  609.564193] ret_from_fork (arch/arm64/kernel/entry.S:862)
-[ 609.570006] Code: d51b4235 8b160280 97ffebe0 97f694b5 (f9400269)
-All code
-========
+- Mani
 
-Code starting with the faulting instruction
-===========================================
-[  609.578382] ---[ end trace 0000000000000000 ]---
-
-## Test log 2
-kselftest: Running tests in rseq
-TAP version 13
-1..9
-# timeout set to 0
-# selftests: rseq: basic_test
-# testing current cpu
-# basic_test: basic_test.c:30: test_cpu_pointer: Assertion
-`sched_getcpu() == i' failed.
-# Aborted
-not ok 1 selftests: rseq: basic_test # exit=134
-# timeout set to 0
-# selftests: rseq: basic_percpu_ops_test
-# spinlock
-# Segmentation fault
-not ok 2 selftests: rseq: basic_percpu_ops_test # exit=139
-# timeout set to 0
-# selftests: rseq: basic_percpu_ops_mm_cid_test
-# spinlock
-# Segmentation fault
-not ok 3 selftests: rseq: basic_percpu_ops_mm_cid_test # exit=139
-
-
-## Source
-* Kernel version: 6.6.85-rc2
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* Git sha: 0bf29b955eacbaba63be87642f2b48f8a7c45055
-* Git describe: v6.6.83-244-g0bf29b955eac
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-244-g0bf29b955eac
-
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-244-g0bf29b955eac/testrun/27798819/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp-ada4e7ef482d5d7749a545db62c1f4c97ae5ba4633a23ce654828f2d2e816088/log
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-244-g0bf29b955eac/testrun/27798819/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp-ada4e7ef482d5d7749a545db62c1f4c97ae5ba4633a23ce654828f2d2e816088/history/
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-244-g0bf29b955eac/testrun/27798819/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp-ada4e7ef482d5d7749a545db62c1f4c97ae5ba4633a23ce654828f2d2e816088/
-* Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSrAikljwhAncEhDz6bSva1iJ/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSrAikljwhAncEhDz6bSva1iJ/config
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+மணிவண்ணன் சதாசிவம்
