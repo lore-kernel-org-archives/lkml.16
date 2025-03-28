@@ -1,315 +1,434 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013017.outbound.protection.outlook.com [52.101.67.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6AC17A2E0;
-	Fri, 28 Mar 2025 02:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3925217A2E0;
+	Fri, 28 Mar 2025 02:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743130636; cv=fail; b=pyoA70CPAYltPpHGQP1WKZE98OEdf7lWC4OZWCG4JXXgk6chCiLjAX58P5pOhpWmf0RaWzsOtDtlT2O13juQPRBHxtziwOTfTfLOfu7/xAoBCRBEx3iD9F+Vw6dFIJTT5CtlPR6VSC8ovR0Gi06anNYhngWHjbLhIvBxTAAcezw=
+	t=1743130751; cv=fail; b=p63PE1FOFB7PkJuRY2qTdS8wdA/LQM67JDGGuXKbYgCxXM8RuUNVHlK1qAwacevyFYir0WJtqj7BvqJ0yBaWQAohum0RmmEP+fRfYePb0XjsBzkVfZN0BKD6g/O1/MwR+05/1PTpG6e4UHud2o4YhglHmKMz/BQHgq8/l0P2D+Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743130636; c=relaxed/simple;
-	bh=5MsRlrkvBCIzfEaSY4XXcdS3PL7PtvQnIjuL999TaSw=;
+	s=arc-20240116; t=1743130751; c=relaxed/simple;
+	bh=MTybixd58bihsTifgkpulvnTGkJV9Q/MW7Zwkdkxf2k=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=C1IVSXB3xquqQG41q0zlpwhpXXQ9dStCf1aIsPw1Du+MhJyw6nrYSxLp3Hi3JPOVuSDqUXH0yUSEAb6KtnA3MYbNN025fEOsAByGA5o6V2GEApZa2qE+2Yku01ZUrTTV+keWWYyhjHP0e/rffwTXV2ytGQUUzhxt7PzpKZO/Y1c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lbKwghoi; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=h7lhVLGL; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	 Content-Type:MIME-Version; b=ilN5YzpcIRTn6aunV+YySI2XR2Rq0efmHk5M6Y14G9WeZitvj+elzHFfqzjK9g1q3NNqJ1MsZaxoO0aCbAK2apaZsk6RSg9agqgb1dDlFccmc5FguU4bAyA0QMhLNYBNCczxsO2uUgFSIb4KjZFXuQFo7SKwny3pY1MK+TaEuWA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=FhoAvLfT; arc=fail smtp.client-ip=52.101.67.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lbKwghoi";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="h7lhVLGL"
-X-UUID: 56d3742a0b8011f08eb9c36241bbb6fb-20250328
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=5MsRlrkvBCIzfEaSY4XXcdS3PL7PtvQnIjuL999TaSw=;
-	b=lbKwghoilvdIzCjdai6sjWD3BL+8CnqoIG6+YBfNrGDlr3RUi5avBOsR9a7yakeR0wAqoGWPkScvttFF/XoU11J71gKYxidXobsImoXqL1FDZUPDa5jtyhDLvRxSLPLi+nGeZDauPMq2/N2eHhZJDepVmgzZm/A2Pj6nEM9ZWNo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:403ab2a3-a3c2-41a9-8229-8653ca2b377e,IP:0,UR
-	L:0,TC:0,Content:11,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:11
-X-CID-META: VersionHash:0ef645f,CLOUDID:1a87ed8c-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:4|51,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 56d3742a0b8011f08eb9c36241bbb6fb-20250328
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <paul-pl.chen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1389222371; Fri, 28 Mar 2025 10:57:08 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 28 Mar 2025 10:57:07 +0800
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 28 Mar 2025 10:57:07 +0800
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="FhoAvLfT"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b30uCLzNBDj6w1vZfoUXiFbHqHEnOxWJxw92uSTMMupKPJwB5i5CTE+dSdnWPaWySE53PPB9ai5jU4fOXt3gJf/FFc1209qdf7bIDio+seOBKIzLNxjkrddHp5I1iY+HLX+jBqkKM2QkMidsJNKj8J0o2jwvDXsmQ6dJoHndBwzCLOuNNUGSFX5SKwxMTbCKPnWzOT+y+mKkAQf5HtRG9dU2c9D5O+C2w4zkcS/aNQMucs8joqOqCT1tYbUkuDLcqGbiXA8zvhBdGD3kgQhtKxMlbYgOSoFTpn9bw8129NTxNvGhIIG4WQLAJ6s1zSUWjTATRq7Oc7ruBUJ8Kwdltg==
+ b=hROUwRPqva7aqELQw3AP7p3I7A5gV40P/pAz247FBr5IYGHvcffdCBpFvxOw6lc8iyZ3zQsQa7lHC+1LnX6zfuB44TxwqJbuif6JxwF+xi8H7C0vEPoI/BJJueaQ6hsgUaLwbqjnZac/rp5ATZoBlD7wuapUiSlru7viD5W99QOl4GjYYfsY7sR788oOMcQ3twbuV/AiN9XtOnJexMMgKcLjhIw+Zykj7xuflBy+NskYM86pETcVT6WdE1rrHeDccASe2UxBDqsmBw3BUz/deR20hs+8uTM9ECSpWlPOOVBJCsGMPBWAJ8ArEiwzaMGr+rZVxO/iwsDzB0nYCIcF/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5MsRlrkvBCIzfEaSY4XXcdS3PL7PtvQnIjuL999TaSw=;
- b=QDtCz14Fzuuy+48+o4C4Pk/nfYRmGL2XrBxBItSJRwiY4388ZILOuarvlLVQy0k7socokF8qfeybk1tCs9cqXZD5UsmyxhQlaWgXpqSKy0g+lXV1RJkuAU+9fvm0lfPL29vSuMqKi8GLKPgiwHb7Hq4uKpba+KyTyTEuQ82moM/OU9DPr2w0pLLhPIMd18xmq9GCVksLmapL7R63Lgr15gB6TXN3r/vxl0vYq3FbnjebK03Yhkj/FOYKQ/4VjfFmkuiE7tly62k6F55PYkJ3ySUQH/RiwdauhqBWgqN882CfKwJSE3WS63ZuebQX02QhIspXEEKF8ae7ug5Fcsh7Xg==
+ bh=4ygGvam7ghpG81B56oB7jmejiJ0jY7bnpeCNJ6jEEV4=;
+ b=P+9db5osGrcTRByVI1WUWz9TNZRaX2lBApsVFef6mId1vNuWtF9cJHnUrlCuSK5TwguXP4w4DIT/ynyJIZ0tMn5bTp+ljFUPsNF2DwnfjinaQtZF3o0ldn4SQIbjFikWEXKBsPoae2IBAG+CWVbZQ+ZbMhaKbFetq8SX3eBThhJ4fmmlreVsl3NQ9V/AnicwXPkn1IY6o2lE+xyJiRhH2FC3wJJZTVAm327dnNKNayhFpHscKNQ9VLKKABmpeq911QxNy+vrYIgsF6kkM1zYe/Gg5nGYZuewE7S5Wcn1ySiVrhw/6tp1q/4UmopA2wXDAx1AhkhRANPfOXdSkKHcPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5MsRlrkvBCIzfEaSY4XXcdS3PL7PtvQnIjuL999TaSw=;
- b=h7lhVLGLX63gB1FOZOMNN9NIHcsNM48epZZFCb0kMM5Q+TXAAmS1xbErZhXE1Oc7c4HvAa+xK+HrBr145hXTPfHFoJfI3NRbJinbw6RIZwtbzUKbgMZkNAvNjDMhLg/5JUOxtSfLWcqiyxLhfiv5okX2N7CdIiyuGQdAJwLdhYk=
-Received: from SG2PR03MB6636.apcprd03.prod.outlook.com (2603:1096:4:1b8::6) by
- KU2PPF4EAC9DDBE.apcprd03.prod.outlook.com (2603:1096:d18::411) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8583.27; Fri, 28 Mar 2025 02:57:04 +0000
-Received: from SG2PR03MB6636.apcprd03.prod.outlook.com
- ([fe80::98e8:d61:f404:4052]) by SG2PR03MB6636.apcprd03.prod.outlook.com
- ([fe80::98e8:d61:f404:4052%7]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 02:57:04 +0000
-From: =?utf-8?B?UGF1bC1wbCBDaGVuICjpmbPmn4/pnJYp?= <Paul-pl.Chen@mediatek.com>
-To: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>, "AngeloGioacchino Del
- Regno" <angelogioacchino.delregno@collabora.com>
-CC: =?utf-8?B?U3VubnkgU2hlbiAo5rKI5aeN5aeNKQ==?= <Sunny.Shen@mediatek.com>,
-	=?utf-8?B?U2lyaXVzIFdhbmcgKOeOi+eak+aYsSk=?= <Sirius.Wang@mediatek.com>,
-	=?utf-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
-	=?utf-8?B?WGlhbmRvbmcgV2FuZyAo546L5YWI5YasKQ==?=
-	<Xiandong.Wang@mediatek.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Project_Global_Chrome_Upstream_Group
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	=?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"fshao@chromium.org" <fshao@chromium.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, =?utf-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?=
-	<Singo.Chang@mediatek.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "treapking@chromium.org" <treapking@chromium.org>
-Subject: Re: [PATCH v2 12/15] drm/mediatek: add OUTPROC support for MT8196
-Thread-Topic: [PATCH v2 12/15] drm/mediatek: add OUTPROC support for MT8196
-Thread-Index: AQHbmkTAE/z9NlxMDk60kIlnEPyriLOCAbaAgAXj6QA=
-Date: Fri, 28 Mar 2025 02:57:03 +0000
-Message-ID: <4ab14a55f4ffb36731de65081f0ae618ed6a14a3.camel@mediatek.com>
-References: <20250321093435.94835-1-paul-pl.chen@mediatek.com>
-	 <20250321093435.94835-13-paul-pl.chen@mediatek.com>
-	 <297be0e3f2b5b9cb4d051cfae6e5f5868c3cb7b8.camel@mediatek.com>
-In-Reply-To: <297be0e3f2b5b9cb4d051cfae6e5f5868c3cb7b8.camel@mediatek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
+ bh=4ygGvam7ghpG81B56oB7jmejiJ0jY7bnpeCNJ6jEEV4=;
+ b=FhoAvLfTCYUDahVbA7kaAeSs9qKtz8Trj8wZWssNBmLBCzomqL5rd4qAr6UvEb/OuBDUiDPM+nftxzJHryS3k8IgwPJYDLONIDe2Fo5U0JfyrPPJr8JAlxaYJQxoRf6YftGADCUOkagig7sWDNkhubOFCfFUZcP/AzfSmFuiVD/zHwgBk/Ax52h97e/AxFs11VxTdm5OXsNMc3737JBjMZErLyZtUqtaaPzsMeH8mE7nMaA694Ume4paJAmezZYJmLjjCMFXMihZyQ2TPJc6iqqfKdR3RP0Bng8EQJNOxF1mmH9+OTmoiMZthH3Rc+gPNZrVEB9Qm1PJVbGFbZMEbQ==
+Received: from DU2PR04MB8567.eurprd04.prod.outlook.com (2603:10a6:10:2d6::21)
+ by AM7PR04MB6999.eurprd04.prod.outlook.com (2603:10a6:20b:de::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Fri, 28 Mar
+ 2025 02:59:06 +0000
+Received: from DU2PR04MB8567.eurprd04.prod.outlook.com
+ ([fe80::4db:3dc0:c292:493a]) by DU2PR04MB8567.eurprd04.prod.outlook.com
+ ([fe80::4db:3dc0:c292:493a%6]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 02:59:06 +0000
+From: Luke Wang <ziniu.wang_1@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Bough Chen
+	<haibo.chen@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "linux-mmc@vger.kernel.org"
+	<linux-mmc@vger.kernel.org>, dl-S32 <S32@nxp.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mmc: host: sdhci-esdhc-imx: save tuning value for the
+ card which keep power in suspend
+Thread-Topic: [PATCH] mmc: host: sdhci-esdhc-imx: save tuning value for the
+ card which keep power in suspend
+Thread-Index: AQHbnWozZk/+MZ7EDkizMOiRfP/4QbOHOoMAgACjycA=
+Date: Fri, 28 Mar 2025 02:59:06 +0000
+Message-ID:
+ <DU2PR04MB8567821AC37014A2C2089553EDA02@DU2PR04MB8567.eurprd04.prod.outlook.com>
+References: <20250325094330.2242646-1-ziniu.wang_1@nxp.com>
+ <Z+WFvMXKo8Vg18r3@lizhi-Precision-Tower-5810>
+In-Reply-To: <Z+WFvMXKo8Vg18r3@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: zh-CN
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
+ header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SG2PR03MB6636:EE_|KU2PPF4EAC9DDBE:EE_
-x-ms-office365-filtering-correlation-id: 5fd06c29-5d05-4f90-3e6a-08dd6da4382a
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-traffictypediagnostic: DU2PR04MB8567:EE_|AM7PR04MB6999:EE_
+x-ms-office365-filtering-correlation-id: 3779931c-ef8e-4754-9507-08dd6da480f9
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?TVpoVUcxc3dza0NnWWN0bCtZUmo1MWxHQ21kV0pQTjNDcVc1b2JpWWNZalMx?=
- =?utf-8?B?a0t6R1lUQWVrY1NRdVRBcDZSY0szdFRFQkR3S3dTRHc3K0Vib21DMHdZa3Jm?=
- =?utf-8?B?UTYxVVlGRFpLSFdOUlpRNFBxTmt0SXQySVhqMmp4Tm5vTUxvQ2tpaytJQkE0?=
- =?utf-8?B?ZVFLTlFWb2dSSVNBZk1iNmg4K3hGcU5YNDRFbnZpaXZyREY5eDgxbGxqR1Aw?=
- =?utf-8?B?ZTdETXlpRGgwK2MzMnZvcHpZbkFyWXlqYUNxZU9OQmtUQ1VQb04wOEJhb1dy?=
- =?utf-8?B?eXk2L0NvQWNTSFdRMmhsVDg1ZXFzZmFrS3RuNzFIY21LSHp5RHBIOUNOYjkr?=
- =?utf-8?B?dVFFUDNBVFVCaVlzNkFlMTVDcEZGRngvRktndVFDUXFQVWpUSU5oT2Vuem9S?=
- =?utf-8?B?Q04wZ05IN3AxMUdqMW8zYnAxay95VlpNVU9ud09MZ21LRklNTG9TRzM2M0RL?=
- =?utf-8?B?ZWpZZWhKSnRGTTU4clNwVE56ZFlON1ViWXNjR1ZXMk0zUXdVWDRESHVUcFlD?=
- =?utf-8?B?S0J0S2ZrYlpqcTlzd1dzWForOFlqQmV1QlNJYWZaTDduMUFWRjMzYnhQY1Qz?=
- =?utf-8?B?Rjl5YU9BMTlVWnBYMU5ESkRaK1JGdmkrbm52NHRzeCtoSWZLMkp6VnpMbG5i?=
- =?utf-8?B?eHBZQUdNalFxdm81Ti83SVJYL2w4VWxhS1R6a1pPSmdmWFkraFJxaFMxRWpw?=
- =?utf-8?B?eEJwNjRaS2lxSEFSSUN1UThhRTRYc09hZ09NcXNyczJEQ0xUSmxYVXBBY3VX?=
- =?utf-8?B?NjdxNFo4a2paSW1Qd2EzTzhuNjNmV25jQjRwZ29XOW5FR2pFTHJIVDRqVm4w?=
- =?utf-8?B?WDd0SUNqUytVQUVhMGt2aXlyWHdCNldZWWpQbkh2UnVkMmN2ckxaa3U2Tzcy?=
- =?utf-8?B?ZjljdXE5N0lPakZBRmNxbG9TdmFDM0JWLzVubmdPUHh3am96OXVPZGpQUlVp?=
- =?utf-8?B?M0FyVllYRk81TEZuZ01maFFVYjhIakJqZUhwanlLWGlsYysxMkZydmxzd3FT?=
- =?utf-8?B?QlFJSGIxbG9Rb21IT0RQaUVQR3BBL0NvRk1FcGZwbGdNaHpZa1FDT054YXQ1?=
- =?utf-8?B?bllya1NwaERlYW9yQStuNFZVblJRN0R0RVI3MmdiTTJTSnlDSlRNQkw4eGx4?=
- =?utf-8?B?TVlFcVRzQUJrWjJqVDhQK0VZRmNTMW9tb2NPQ0NCMWRxdjM2ZmdaV0dOT0Q5?=
- =?utf-8?B?RC92amQ2SUNpdW9UZzMyeDBoWmI5T2pwcUpXejJqdURMWVgwMld2N1RtWnRX?=
- =?utf-8?B?aW9jUkQ4dkorclZXaG9hZ0hXbURSWnlmWDVuU0NKMWFrWFYzZVFMNjdxR3da?=
- =?utf-8?B?OXVMZE9XSkRIMER3WkFieG1OSUJJYUdiS2VjWlRNQ25Tb0VQb2RhYWtkU3pE?=
- =?utf-8?B?Wi90Qm92MVNZOFE3dG9WWmFNWThSbzlUZUZObzNxbHVNY2VPd2NHZWw3WU5l?=
- =?utf-8?B?M3JKSWZtcjRrRTNVRlVudDRlNkV3dFhjZ1lSU2FqdFV3T3R3SVp2QkQ5czd2?=
- =?utf-8?B?WnBVRndySzUxS1dYUDkzL3NYRTRhdnRyQUhOSWRxRjV5M0RXcCtDNWZyaWgw?=
- =?utf-8?B?T0V6a2MvQmtvNzVPYkNzVlNuZEgvRmRiTnNHd1o5ZjMyY2NwVjhoeVFoeVpY?=
- =?utf-8?B?QWNHL2hvcTZsZEtjWFV6NGI3emV4Z0ptMGVNeFhSTitlQkozcXFBbWJpWTBl?=
- =?utf-8?B?bHRMVFIrS0U3WHhDVnZJUW5sUnR5THZKUjRSTVhaTWNONFFBakhWRnhEcllV?=
- =?utf-8?B?SGNMcy9EWFFZaEh1Y1V2Snp6cDVtV25ZSFVra21KT24rR1V2VUlSeCsxWTBt?=
- =?utf-8?B?Mys3NitVMWkwVXF0MHc0cWI0NkQ0TytuaUpjbHZJVitObnpQZTdXWElaNndy?=
- =?utf-8?B?eDZCbW8rY1N0WFZNWWpjOWVCTGY2Y21IcFpoYm0xbzJkVHRFVGsra1hnQk40?=
- =?utf-8?B?VHV3TjlyaWVDbkpPQzRaMmUrUjU1eCtWOEU1STMrN0w3TThDTnhXRHVnSVhG?=
- =?utf-8?B?cnV4dlRtVTVRPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR03MB6636.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018|7053199007;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Dper9kOPUcV4a/bXSRj9h7yh0XKcNF3jzXVlaby6pPui4wfm3mJCia9lIjiZ?=
+ =?us-ascii?Q?XD4ZoSoqLsOSBZmkiVDsljkypuq/UyDAEUQ80wppJsZPadw/VkO8aGfu3AUp?=
+ =?us-ascii?Q?vaSAntVk4JNoj+ceA4bLBuWJenr/ijpt8k7QIW7AM/i+Jpyej+/F0fQ+uv2Z?=
+ =?us-ascii?Q?9krYx0IChRF2WqkOW8uNGuXOn7uSL5cwXESnT9hqE9wYZJoigWVmociJSOkK?=
+ =?us-ascii?Q?8DCVDuHhrshE5niyHmbypEnDTpSRXE1owwN8uea2qZsEacSw+59IuFHEdPRh?=
+ =?us-ascii?Q?xdT6Lf8sFnYzcazbxnlUcNZof2FZQ7uXaxAzSeO+hz8loTgm7/KRCm6nPWWC?=
+ =?us-ascii?Q?rVkLGtzu6XpDbF0tUNNVTqweTLlQCwrveaIjZidC21veWZjZdqCTLf2u/k1/?=
+ =?us-ascii?Q?nw81YEd6kz7qrTebvW2KjijvXuOIDTP8Id8SRo2f9zpFOSYxRqw3bo2cimCy?=
+ =?us-ascii?Q?OoS5PggdsynKd3KKTY6AInJd2qkVZ1gh+Zj3c0ckeRT0sUx8upRvEx3PNinW?=
+ =?us-ascii?Q?k9DNRkUFYv+gfAG9nFueXZFU8Izdf9XVplKKD5a130trEDC95UBFoibAFvM9?=
+ =?us-ascii?Q?U6CDNfBP/Map4onUsed9ZJ/3oexC8kZKWz8pE5oYFKguJHXmEL8eUTHKM9br?=
+ =?us-ascii?Q?+IabSyjNt/+SFFYzFmgo/cew/nkQspvpnGkpdraOB6r16fwlmgX/NvrWJOot?=
+ =?us-ascii?Q?XYrnAJDfl6PPc7gPAmjUzZLx6BKKcQT5qSXgXKdpeqBAjxQHmYt8R2ot3oRY?=
+ =?us-ascii?Q?705+lYOy2h1a0JZz2vJEuxJtgr7LgkOOAhNk85BaRyARluwe81WJZqP/S9Pr?=
+ =?us-ascii?Q?W+h+h7vZ6sWzBGkrm7myMyiWT4jBNe1uzRE1SA8PgMb2Nt7Jq1x2NH6z8XlB?=
+ =?us-ascii?Q?o2YETo45qg0rgdWrRKPvJz+VQwHB2WOqB8N/T/R/tslnVqD29OYhk5RYM8qP?=
+ =?us-ascii?Q?Ii2kv+DHN2uMVXjUb9zZUaBBZP0UlyUWj2DHTv/34yTXp6ih2qrLhc12Do2q?=
+ =?us-ascii?Q?8HcFU+1hOZBfT04Z5ihelCoTBtdLTklbTCbkoEPMbqyVeNzjQtCmOeaII68F?=
+ =?us-ascii?Q?VzKa/OY3WtdK90OXp4oVvQf/3pEypQr/7hf89RAG/BeKDfmOL8eVsVxC3zTD?=
+ =?us-ascii?Q?kIKc4/G+oWis9vdMR/Ar50lEM3jjMv+IvUpFm7wRkhCczCBtORwWfiqd9wI1?=
+ =?us-ascii?Q?tiEhfKwYaVabLcAiUYMRKgNcheBRog9FJY55pG6q1fxK4s51zdHRZvU1h/Z0?=
+ =?us-ascii?Q?tNswqPLIAkBWnGkvyFkivwGOD0hwP3ls9+z2fAdLaIWTh0ywH6jS4xFADYbc?=
+ =?us-ascii?Q?ncvAwMrOQv2X0lAyiDjTxR/cvpehP1I5sFtKy62b+9bDRRnvnejPjiEQ3BBR?=
+ =?us-ascii?Q?+RyQj/A/BsIdEIbilREY7ve2NDAj/DaNfUWpZH3Gesmlp/j/g44N8Kdlfhg4?=
+ =?us-ascii?Q?Op6HRvgJoUG89YDQB90TN5SolWlHMGhV?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8567.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cURvOUVxVzM5UTF4cllzZ2dkV3NxdWszYkF6ZHBkUXBoeVlrK1RFVkc4cE56?=
- =?utf-8?B?MWZ4SkRwN2IvclJpamcyQTFtMjlyQ1Q4bVFIZTgrU1NSZTZSL0c0YXRCRXVi?=
- =?utf-8?B?QVIycXhCLzQ4ZUp6dVZUZ3BOVE1wbDN0NXZhUXV0UlE2bE5DQzNoVTRBQ0NU?=
- =?utf-8?B?Sk5ZR3BOcEw0dW9HR2J4Q1dNenVnNHY5UmRubmtBNk1Ua3B1UTBOYlo1bS9a?=
- =?utf-8?B?QVBjRlRtWncyMG5UUTJES0dzMWVDY2didkp2YVJHbzZqZUVSZiszUHM2Qi9X?=
- =?utf-8?B?enptTDR4OEJyT0VDM1JDTm9PTFBGbm9LWWZCd05xUGt3aEFaamR1V0Z6WEdt?=
- =?utf-8?B?N0tDczQ5TkhWaWt2UjYxKy9HWDZ1d2hPTEsvMFQzSVRFVFhidVFvVXVkc1pM?=
- =?utf-8?B?K2ZqdmRvYktTcTRFVDYyZS92MUVOZkJBang1d3ljUHVZVnVyZ0QzTnpBcTJJ?=
- =?utf-8?B?bnROdVc5SWkvVjlsYWhKSmpTSnA0RlRGcmx4RkhObi9pRW1KTzVyK0tOcTBV?=
- =?utf-8?B?L0Fpa0Q4Yk1CbHNjS1oxMjZzaXprZFVHTEI5RU1sdzhjYndPcjVUMjRCQ1A5?=
- =?utf-8?B?UWlhZWNhRlZyTFhxUExyQXRDUzVSOUFFdnRvWW92SjFQcExJQUhiSFVGditl?=
- =?utf-8?B?bUduamMyZk9PUVNYWmZKeURrNEFqR0xSTmJnQVcrVGtsdGRqQWdqNWFPU0NV?=
- =?utf-8?B?bU14VVN4dGFZOEhKL2QzbGR0c293RlJBSEhZLy9TNVg1ZURXUDhlb3Znam54?=
- =?utf-8?B?TnZlWDRGaEh3U3NnZFJXU1FzRTZWY2hiSTVYd0RXK3MvQUVNOWhSQ21WMWdp?=
- =?utf-8?B?MEw2VzVjcmZ6ZVZHUEErNSs4RVhCNnExdVp5a3lxVGFtTjVZVTdxdmJkRGNt?=
- =?utf-8?B?aGJvbklDeGgrM0lGWnJvcDR2UXVVNUYra05wZ1VBbkFWY1Ryc0pHaGFPajZp?=
- =?utf-8?B?V3FOVmlzRGFmV1lwMitlZnlpV093ZTU2UEsxdVMzckJ1cUtBWDBMaFI5TVNI?=
- =?utf-8?B?UWxvRW1tLzBSSTNlUWdkMjQ1MTVWQTJjRGhrVlFZajdYTDNEQWJxV05PK2Fk?=
- =?utf-8?B?Y1pjWFYvdkhzZHFvL21NMm1aS2xrdWpvNVdjTEY2dHhNbzg2MG9sL0k3OHZn?=
- =?utf-8?B?ZXNha3RmdFJ6TUxobys4WDg2RmJKazRUOHBkL1p0c0NFNGhhdlIrUjZ5RkNi?=
- =?utf-8?B?ditjY2FnRnBFWnBIM0RRdEFNT0VlZFBMSlg3OVhQY1RPdWgzdGxoLys3bkVL?=
- =?utf-8?B?NFpZc20yWkFpbUNwZC9YZkFUT2QwWStuQ1kxRjBBTEplTXpncC8zVVIwQlRO?=
- =?utf-8?B?aWVBMG1SQWFoZ2o5MnhMT0M0S0cwbHJrV2I4cjNxZjdIWVB4ZCtzbHk0SUc2?=
- =?utf-8?B?OXRubUhNNUFnc0R2SFhUbkFadTVuSmFHNzErNENaQkdzOExKRmxrL3RzV3My?=
- =?utf-8?B?RWJxbWo5ZzdHUzRteTFMQWhOTkdTYVgxYzM1ZWovMGEvSFJLcDdocURSb1Yx?=
- =?utf-8?B?ZUlXYTUyZWdQd2ptd1Zjdm1BYUpNRTVzRlg4TGkweDU3Z1pzZ250YnhRM2NS?=
- =?utf-8?B?cDNiTHFYemV3RXRacXZBOEtVb1BuYWFHRVI3Zkk1YUYyTzVNb05IeFByQ3Fz?=
- =?utf-8?B?VEgraDFUcnBzM01aS0ltd0ZtYnJTc1J2Q2xJbGZDWjF4NlNha0YxSU11bXUr?=
- =?utf-8?B?WlVZWS9mdVdSZnF2NTd2YndQVTVlam8zZG5PRnU2aDVyblpjd2s3RnFZRG1H?=
- =?utf-8?B?amY2ZVp2SmdORmNvRmFIODBSQzZMUEpPa1hWR2M2NHljUmZQNHMwODdTZC94?=
- =?utf-8?B?UHJCMEZuM1hURklLcUlvWjhGMjA0aXFTWEF1ZkZDTTRVZ0JaVDcvOFdlWmF6?=
- =?utf-8?B?eHhvYlVCbmZUaHZWUENRdEZFbWV2NTFFd2phTjg5aVFUSEp4UlVMcnJDR3hh?=
- =?utf-8?B?eXJwYVJHUzNHR3VDYlAwN3RnbVNpbE1QZW5rYUx0eXZxWjJ6aVZzd1ZKVi81?=
- =?utf-8?B?MGxtYzRYc0QzdmlKTWxDMEpZSlozeWFYZ1hWRGhVdHZOWlo3Y0FhRGNXb3BB?=
- =?utf-8?B?b0Z4dmZ5c2JjTElSeGRWNmdVQlU1UG9qOW82SUx3MGV0ZjMrTzRQZ0ZLUHhH?=
- =?utf-8?B?VnB4TE8yS2NFeDk2WGNiT0VPUC9rSUcvakp0dHNVVW1QNVhpR1YxOGlhZXBT?=
- =?utf-8?B?dGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CDA615457563E24FA64C69EA40476E9D@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?eGZ9bM1xdOjRhNtXQPUCWjy9LJF9nlGVpbuUh79xekmYmStjSge5idPi70Wq?=
+ =?us-ascii?Q?4VIu8u1z+o2zuhuEXXypEwm77yKLlmFvEHWkp8MVq1g7w7lcNZjgZ7cDTB5n?=
+ =?us-ascii?Q?OOKhFt01+EPysq/UKEX7SPi6nhVlGpi5dmxAjSZkuEmh7GitfLfiiTwTPHLo?=
+ =?us-ascii?Q?Zsq/vu+a3qlRdz3tIokZ+j9hXwaYGKuLC/XZEF0wtnoZV4x2L5A2GuCBdmew?=
+ =?us-ascii?Q?3Poy7OY0Va/9XCjEDrV+rGDNy9/q4PX70hQ8ScVgmYdYBxqozVojFX4tx6cP?=
+ =?us-ascii?Q?Q56efFxyo+433/EuV8mtpSxz935pImfAYIJpEztk8jZ/X7Hd6vozw7veB3jm?=
+ =?us-ascii?Q?eQZ8800J606oRA6DBHVRY/ZxjTefl7a1qHRPE2pFLX8mIwL/uY3+jGmZqexE?=
+ =?us-ascii?Q?ogBSI3CvkZ3sTH5LlND/zipWDtF2vAW8ZGX8pphHoPmfA4Z69D3SPHXNobCS?=
+ =?us-ascii?Q?G4n81Bj3o6bBxuvrb1INXXLF096Qiyj7J4yNZcRTBehTsPY2DBwcgxFhLxVf?=
+ =?us-ascii?Q?WRM/fx2KPqES7mFcacUzM8c1sjhPSMlOxPU3o+4nRbWhZp0B2eDtRq8JlEGL?=
+ =?us-ascii?Q?aoDWqm1ilFn0q4f+Qx0aCl9sJHBm8to43cMh6pDMBB8nkagR7F/m4+SLn8Lr?=
+ =?us-ascii?Q?X8/6VG9JO9Hsb9+SHxWABDeLtCRaBZ9+9HUyEyuLEvtEb7nqfl4Cm3fnTJiK?=
+ =?us-ascii?Q?fTZIyxInGll0ZdMbf9zXV56e12tGDSXRpTv6K4xpDRxpM+CvqFt4Je3Ehsg8?=
+ =?us-ascii?Q?Q8MM6cdK9FitPGDbwB+vWIrFH+UMCPJ/qldiv+39VG9f64VX7WsvZjv8uiqy?=
+ =?us-ascii?Q?QKzgWarsqOANeWTeKh+7CVk7zoZF5jJ/aYKiiCJylUdOMheyt7gSK+c/R8Uz?=
+ =?us-ascii?Q?+hNMOx/BKxunRo5jxDFuN2XcYKzMdGh+nvjv9uhVp43Eu4wV4Uy1LKe2GV/O?=
+ =?us-ascii?Q?BTzYqsWZjSxQGHOh4OfCapkCig6jFXKYswGHNT8lVjfzoHvUPWQeGlVJa/V9?=
+ =?us-ascii?Q?DGVNpw0xtSiISn+NFxFNR1ibbHgDXjxDYbkKgPvfFqdDhv0llyKCvgC4raj2?=
+ =?us-ascii?Q?EDOYWRgRdlyrY+x8XpxQbOvkumuTBI6jStGGDw+SZ2QAYHIM4iN8VRI4apcJ?=
+ =?us-ascii?Q?o0W8/UZkIwuCS0/Xc+x/gDWIAYj2oTMnhIBxL6MHrwqGWoD880sKbs1BtAN7?=
+ =?us-ascii?Q?mLhHMpPs3/1G5QrQ06oH8l8h6tjlFVkF3e1oz2ih0R2o0fC87WW23Lylley1?=
+ =?us-ascii?Q?FUNSZfBWgg4ygzpxqJUj7EapX3yECWj+TNNVZzuWSN262Y4Xosfm3R5RK4iI?=
+ =?us-ascii?Q?d6ZQjrcR7AxH8as3JLjHPm0YtZkjEEGrCxiG4j4S8QTLp96ihSbY2c9coZCm?=
+ =?us-ascii?Q?RJBCxoPoAIoDeZSW3vx/eO5M4ny+eu4PivSOX5hedHhRnqilEkRtwe/WSFos?=
+ =?us-ascii?Q?Xo+1Eg+bjsFqaNC6cR1c2Kji2QSXQssvz4x1xpHNG6aH6m5na6DAB4HTf8v9?=
+ =?us-ascii?Q?18EuFlDI45Av0Vc/9ktnoEdm784MdKjpkx5AsUOrqBpVA8Y9ITVCVs3mpNPK?=
+ =?us-ascii?Q?Gw3LakdAljyEDKDJqTkCKXpzbY6sFRU2Mrz1HR0K?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR03MB6636.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fd06c29-5d05-4f90-3e6a-08dd6da4382a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 02:57:04.0322
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8567.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3779931c-ef8e-4754-9507-08dd6da480f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 02:59:06.2113
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NlSJDf12sQiiqFZZ3PPgtMUycYh6cD+I8o1XLbONVeBKgXpgo8X88jXK4OtPUUNtx3G/WMIPfqoA+copi+PXq8m8/y/12C3WjRAoat1XDCY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU2PPF4EAC9DDBE
+X-MS-Exchange-CrossTenant-userprincipalname: gnn/msivl9+b8tD6EfjCgogVTWEBvKkigbou+dMK8BwrFXBKedLUcO2DCUa3/Cb3E3wKZmJYWnif5T8RJb3v6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6999
 
-T24gTW9uLCAyMDI1LTAzLTI0IGF0IDA5OjAwICswMDAwLCBDSyBIdSAo6IOh5L+K5YWJKSB3cm90
-ZToNCj4gT24gRnJpLCAyMDI1LTAzLTIxIGF0IDE3OjMzICswODAwLCBwYXVsLXBsLmNoZW4gd3Jv
-dGU6DQo+ID4gRnJvbTogTmFuY3kgTGluIDxuYW5jeS5saW5AbWVkaWF0ZWsuY29tPg0KPiA+IA0K
-PiA+IE9VVFBST0MgaGFuZGxlcyB0aGUgcG9zdC1zdGFnZSBvZiBwaXhlbCBwcm9jZXNzaW5nIGlu
-DQo+ID4gdGhlIG92ZXJsYXBwaW5nIHByb2NlZHVyZS5PVVRQUk9DIG1hbmFnZXMgcGl4ZWxzIGZv
-cg0KPiA+IGdhbW1hIGNvcnJlY3Rpb24gYW5kIGVuc3VyZXMgdGhhdCBwaXhlbCB2YWx1ZXMgYXJl
-DQo+ID4gd2l0aGluIHRoZSBjb3JyZWN0IHJhbmdlLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IE5hbmN5IExpbiA8bmFuY3kubGluQG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQ
-YXVsLXBsIENoZW4gPHBhdWwtcGwuY2hlbkBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBb
-c25pcF0NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZGlzcF9vdXRwcm9jLmMNCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9v
-dXRwcm9jLmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uYTdjNmQxOTgyYmNhDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdXRwcm9jLmMNCj4gPiBAQCAtMCwwICsxLDI0MiBAQA0K
-PiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+ID4gKy8qDQo+
-ID4gKyAqIENvcHlyaWdodCAoYykgMjAyNSBNZWRpYVRlayBJbmMuDQo+ID4gKyAqLw0KPiA+ICsN
-Cj4gPiArI2luY2x1ZGUgPGRybS9kcm1fZm91cmNjLmg+DQo+ID4gKyNpbmNsdWRlIDxkcm0vZHJt
-X2ZyYW1lYnVmZmVyLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gPiArI2luY2x1
-ZGUgPGxpbnV4L2NvbXBvbmVudC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRk
-cmVzcy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9yZXNldC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVr
-L210ay1jbWRxLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lz
-Lmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAibXRrX2NydGMuaCINCj4gPiArI2luY2x1ZGUgIm10
-a19kZHBfY29tcC5oIg0KPiA+ICsjaW5jbHVkZSAibXRrX2RybV9kcnYuaCINCj4gDQo+IEFscGhh
-YmV0aWMgb3JkZXIuDQo+IA0KPiBPSywgSSB3aWxsIGZpeCB0aGUgQWxwaGFiZXRpYyBvcmRlci4N
-Cj4gDQo+ID4gKyNpbmNsdWRlICJtdGtfZGlzcF9vdXRwcm9jLmgiDQo+ID4gKw0KPiA+ICsjZGVm
-aW5lDQo+ID4gRElTUF9SRUdfT1ZMX09VVFBST0NfSU5URU4JCQkJMHgwMDQNCj4gPiArI2RlZmlu
-ZQ0KPiA+IE9WTF9PVVRQUk9DX0ZNRV9DUExfSU5URU4JCQkJCUJJVCgxKQ0KPiA+ICsjZGVmaW5l
-DQo+ID4gRElTUF9SRUdfT1ZMX09VVFBST0NfSU5UU1RBCQkJCTB4MDA4DQo+ID4gKyNkZWZpbmUN
-Cj4gPiBESVNQX1JFR19PVkxfT1VUUFJPQ19EQVRBUEFUSF9DT04JCQkweDAxMA0KPiA+ICsjZGVm
-aW5lDQo+ID4gT1ZMX09VVFBST0NfREFUQVBBVEhfQ09OX09VVFBVVF9DTEFNUAkJCQlCSVQoMjYp
-DQo+ID4gKw0KPiA+ICsjZGVmaW5lDQo+ID4gRElTUF9SRUdfT1ZMX09VVFBST0NfRU4JCQkJCTB4
-MDIwDQo+ID4gKyNkZWZpbmUNCj4gPiBPVkxfT1VUUFJPQ19PVkxfRU4JCQkJCQlCSVQoMCkNCj4g
-PiArI2RlZmluZQ0KPiA+IERJU1BfUkVHX09WTF9PVVRQUk9DX1JTVAkJCQkweDAyNA0KPiA+ICsj
-ZGVmaW5lDQo+ID4gT1ZMX09VVFBST0NfUlNUCQkJCQkJCUJJVCgwKQ0KPiA+ICsjZGVmaW5lDQo+
-ID4gRElTUF9SRUdfT1ZMX09VVFBST0NfU0hBRE9XX0NUUkwJCQkweDAyOA0KPiA+ICsjZGVmaW5l
-DQo+ID4gT1ZMX09VVFBST0NfQllQQVNTX1NIQURPVwkJCQkJQklUKDIpDQo+ID4gKyNkZWZpbmUN
-Cj4gPiBESVNQX1JFR19PVkxfT1VUUFJPQ19ST0lfU0laRQkJCQkweDAzMA0KPiA+ICsNCj4gPiAr
-c3RydWN0IG10a19kaXNwX291dHByb2Mgew0KPiA+ICsJdm9pZCBfX2lvbWVtCQkqcmVnczsNCj4g
-PiArCXN0cnVjdCBjbGsJCSpjbGs7DQo+ID4gKwl2b2lkCQkJKCp2YmxhbmtfY2IpKHZvaWQgKmRh
-dGEpOw0KPiA+ICsJdm9pZAkJCSp2YmxhbmtfY2JfZGF0YTsNCj4gPiArCWludAkJCWlycTsNCj4g
-PiArCXN0cnVjdCBjbWRxX2NsaWVudF9yZWcJY21kcV9yZWc7DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICt2b2lkIG10a19kaXNwX291dHByb2NfcmVnaXN0ZXJfdmJsYW5rX2NiKHN0cnVjdCBkZXZpY2Ug
-KmRldiwNCj4gPiArCQkJCQkgdm9pZCAoKnZibGFua19jYikodm9pZA0KPiA+ICopLA0KPiA+ICsJ
-CQkJCSB2b2lkICp2YmxhbmtfY2JfZGF0YSkNCj4gPiArew0KPiA+ICsJc3RydWN0IG10a19kaXNw
-X291dHByb2MgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArDQo+ID4gKwlwcml2
-LT52YmxhbmtfY2IgPSB2YmxhbmtfY2I7DQo+ID4gKwlwcml2LT52YmxhbmtfY2JfZGF0YSA9IHZi
-bGFua19jYl9kYXRhOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICt2b2lkIG10a19kaXNwX291dHByb2Nf
-dW5yZWdpc3Rlcl92YmxhbmtfY2Ioc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gKwlz
-dHJ1Y3QgbXRrX2Rpc3Bfb3V0cHJvYyAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+
-ICsNCj4gPiArCXByaXYtPnZibGFua19jYiA9IE5VTEw7DQo+ID4gKwlwcml2LT52YmxhbmtfY2Jf
-ZGF0YSA9IE5VTEw7DQo+ID4gK30NCj4gPiArDQo+ID4gK3ZvaWQgbXRrX2Rpc3Bfb3V0cHJvY19l
-bmFibGVfdmJsYW5rKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiArew0KPiA+ICsJc3RydWN0IG10
-a19kaXNwX291dHByb2MgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArDQo+ID4g
-Kwl3cml0ZWwoT1ZMX09VVFBST0NfRk1FX0NQTF9JTlRFTiwgcHJpdi0+cmVncyArDQo+ID4gRElT
-UF9SRUdfT1ZMX09VVFBST0NfSU5URU4pOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICt2b2lkIG10a19k
-aXNwX291dHByb2NfZGlzYWJsZV92Ymxhbmsoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICt7DQo+
-ID4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3V0cHJvYyAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYp
-Ow0KPiA+ICsNCj4gPiArCXdyaXRlbCgweDAsIHByaXYtPnJlZ3MgKyBESVNQX1JFR19PVkxfT1VU
-UFJPQ19JTlRFTik7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtdGtf
-ZGlzcF9vdXRwcm9jX2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQNCj4gPiAqZGV2X2lkKQ0KPiA+
-ICt7DQo+ID4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3V0cHJvYyAqcHJpdiA9IGRldl9pZDsNCj4gPiAr
-CXUzMiB2YWw7DQo+ID4gKw0KPiA+ICsJdmFsID0gcmVhZGwocHJpdi0+cmVncyArIERJU1BfUkVH
-X09WTF9PVVRQUk9DX0lOVFNUQSk7DQo+ID4gKwlpZiAoIXZhbCkNCj4gPiArCQlyZXR1cm4gSVJR
-X05PTkU7DQo+ID4gKw0KPiA+ICsJd3JpdGVsKDB4MCwgcHJpdi0+cmVncyArIERJU1BfUkVHX09W
-TF9PVVRQUk9DX0lOVFNUQSk7DQo+ID4gKw0KPiA+ICsJaWYgKHByaXYtPnZibGFua19jYikNCj4g
-PiArCQlwcml2LT52YmxhbmtfY2IocHJpdi0+dmJsYW5rX2NiX2RhdGEpOw0KPiA+ICsNCj4gPiAr
-CXJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArdm9pZCBtdGtfZGlzcF9v
-dXRwcm9jX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCB3LA0KPiA+ICsJ
-CQnCoMKgwqDCoCB1bnNpZ25lZCBpbnQgaCwgdW5zaWduZWQgaW50DQo+ID4gdnJlZnJlc2gsDQo+
-ID4gKwkJCcKgwqDCoMKgIHVuc2lnbmVkIGludCBicGMsIHN0cnVjdCBjbWRxX3BrdA0KPiA+ICpj
-bWRxX3BrdCkNCj4gPiArew0KPiA+ICsJc3RydWN0IG10a19kaXNwX291dHByb2MgKnByaXYgPSBk
-ZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArDQo+ID4gKwlkZXZfZGJnKGRldiwgIiVzLXc6JWQs
-IGg6JWRcbiIsIF9fZnVuY19fLCB3LCBoKTsNCj4gPiArDQo+ID4gKwkvL21vdmUgbXRrX2RkcF93
-cml0ZV9tYXNrIHRvIG10a19kZHBfd3JpdGUNCj4gDQo+IEkgdGhpbmsgdGhpcyBjb21tZW50IGlz
-IHJlZHVuZGFudC4NCg0KU3VyZSwgdGhpcyByZWR1bmRhbnQgY29tbWVudCB3aWxsIGJlIHJlbW92
-ZWQgYXQgdGhlIG5leHQgdmVyc2lvbi4NCj4gDQo+ID4gKwltdGtfZGRwX3dyaXRlKGNtZHFfcGt0
-LCBoIDw8IDE2IHwgdywgJnByaXYtPmNtZHFfcmVnLA0KPiA+IHByaXYtPnJlZ3MsDQo+ID4gKwkJ
-wqDCoMKgwqDCoCBESVNQX1JFR19PVkxfT1VUUFJPQ19ST0lfU0laRSk7DQo+ID4gKwltdGtfZGRw
-X3dyaXRlX21hc2soY21kcV9wa3QsDQo+ID4gT1ZMX09VVFBST0NfREFUQVBBVEhfQ09OX09VVFBV
-VF9DTEFNUCwNCj4gPiArCQkJwqDCoCAmcHJpdi0+Y21kcV9yZWcsIHByaXYtPnJlZ3MsDQo+ID4g
-KwkJCcKgwqAgRElTUF9SRUdfT1ZMX09VVFBST0NfREFUQVBBVEhfQ09OLA0KPiA+ICsJCQnCoMKg
-IE9WTF9PVVRQUk9DX0RBVEFQQVRIX0NPTl9PVVRQVVRfQ0xBTVApOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICt2b2lkIG10a19kaXNwX291dHByb2Nfc3RhcnQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-ICt7DQo+ID4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3V0cHJvYyAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0
-YShkZXYpOw0KPiA+ICsJdW5zaWduZWQgaW50IHRtcDsNCj4gPiArDQo+ID4gKwl0bXAgPSByZWFk
-bChwcml2LT5yZWdzICsNCj4gPiBESVNQX1JFR19PVkxfT1VUUFJPQ19TSEFET1dfQ1RSTCk7DQo+
-ID4gKwl0bXAgPSB0bXAgfCBPVkxfT1VUUFJPQ19CWVBBU1NfU0hBRE9XOw0KPiA+ICsJd3JpdGVs
-KHRtcCwgcHJpdi0+cmVncyArDQo+ID4gRElTUF9SRUdfT1ZMX09VVFBST0NfU0hBRE9XX0NUUkwp
-Ow0KPiA+ICsNCj4gPiArCW10a19kZHBfd3JpdGUoTlVMTCwgMCwgJnByaXYtPmNtZHFfcmVnLCBw
-cml2LT5yZWdzLA0KPiA+ICsJCcKgwqDCoMKgwqAgRElTUF9SRUdfT1ZMX09VVFBST0NfSU5UU1RB
-KTsNCj4gPiArCW10a19kZHBfd3JpdGVfbWFzayhOVUxMLCBPVkxfT1VUUFJPQ19PVkxfRU4sICZw
-cml2LQ0KPiA+ID5jbWRxX3JlZywgcHJpdi0+cmVncywNCj4gPiArCQkJwqDCoCBESVNQX1JFR19P
-VkxfT1VUUFJPQ19FTiwNCj4gPiBPVkxfT1VUUFJPQ19PVkxfRU4pOw0KPiANCj4gVXNlIHJlYWRs
-KCkgYW5kIHdyaXRlbCgpLg0KPiANCj4gVW5kZXJzdG9vZCwgSSB3aWxsIHVzZSBgd3JpdGVsYCB0
-byByZXBsYWNlIHRoZcKgJ210a19kZHBfd3JpdGUnLg0KDQo+ID4gK30NCj4gPiArDQo+ID4gK3Zv
-aWQgbXRrX2Rpc3Bfb3V0cHJvY19zdG9wKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiArew0KPiA+
-ICsJc3RydWN0IG10a19kaXNwX291dHByb2MgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsN
-Cj4gPiArDQo+ID4gKwltdGtfZGRwX3dyaXRlX21hc2soTlVMTCwgMCwgJnByaXYtPmNtZHFfcmVn
-LCBwcml2LT5yZWdzLA0KPiA+ICsJCQnCoMKgIERJU1BfUkVHX09WTF9PVVRQUk9DX0VOLA0KPiA+
-IE9WTF9PVVRQUk9DX09WTF9FTik7DQo+ID4gKwltdGtfZGRwX3dyaXRlX21hc2soTlVMTCwgT1ZM
-X09VVFBST0NfUlNULCAmcHJpdi0+Y21kcV9yZWcsDQo+ID4gcHJpdi0+cmVncywNCj4gPiArCQkJ
-wqDCoCBESVNQX1JFR19PVkxfT1VUUFJPQ19SU1QsDQo+ID4gT1ZMX09VVFBST0NfUlNUKTsNCj4g
-PiArCW10a19kZHBfd3JpdGVfbWFzayhOVUxMLCAwLCAmcHJpdi0+Y21kcV9yZWcsIHByaXYtPnJl
-Z3MsDQo+ID4gKwkJCcKgwqAgRElTUF9SRUdfT1ZMX09VVFBST0NfUlNULA0KPiA+IE9WTF9PVVRQ
-Uk9DX1JTVCk7DQo+IA0KPiBVc2UgcmVhZGwoKSBhbmQgd3JpdGVsKCkuDQpVbmRlcnN0b29kLCBJ
-IHdpbGwgdXNlIGB3cml0ZWxgIHRvIHJlcGxhY2UgdGhlICdtdGtfZGRwX3dyaXRlJy4NCj4gDQo+
-ID4gK30NCj4gPiArDQo+ID4gKw0KPiANCj4gDQo+IA0KQmVzdCByZWdhcmRzLCANClBhdWwNCg==
+
+
+> -----Original Message-----
+> From: Frank Li <frank.li@nxp.com>
+> Sent: Friday, March 28, 2025 1:07 AM
+> To: Luke Wang <ziniu.wang_1@nxp.com>
+> Cc: adrian.hunter@intel.com; ulf.hansson@linaro.org; Bough Chen
+> <haibo.chen@nxp.com>; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> kernel@pengutronix.de; festevam@gmail.com; imx@lists.linux.dev; linux-
+> mmc@vger.kernel.org; dl-S32 <S32@nxp.com>; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] mmc: host: sdhci-esdhc-imx: save tuning value for th=
+e
+> card which keep power in suspend
+>=20
+> On Tue, Mar 25, 2025 at 05:43:30PM +0800, ziniu.wang_1@nxp.com wrote:
+> > From: Luke Wang <ziniu.wang_1@nxp.com>
+> >
+> > For some SoCs like imx6ul(l/z) and imx7d, during system PM, usdhc will
+> > totally power off, so the internal tuning status will lost. Here add
+> > save/restore the tuning value for any command after system resume back
+> > when re-tuning hold.
+> >
+> > The tipical case is for the SDIO WIFI which contain flag
+> MMC_PM_KEEP_POWER,
+>=20
+> tipical? most like typo typical, you can run
+> ./scripts/checkpatch.pl -g HEAD --strict --codespell
+>=20
+
+Yes, it's a typo. Will check the spell next time.
+
+>=20
+> > it means this device will keep power during system PM. To save power, W=
+IFI
+> > will switch to 1 bit mode, and switch back to 4 bit mode when resume ba=
+ck.
+> > According to spec, tuning command do not support in 1 bit mode. So when
+> > send cmd52 to switch back to 4 bit mode, need to hold re-tuning. But th=
+is
+> > cmd52 still need a correct sample point, otherwise will meet command CR=
+C
+> > error, so need to keep the previous tuning value.
+>=20
+> AI tuned commit message as reference.
+>=20
+> "For SoCs like i.MX6UL(L/Z) and i.MX7D, USDHC powers off completely durin=
+g
+> system power management (PM), causing the internal tuning status to be lo=
+st.
+> To address this, save and restore the tuning value for any command issued
+> after system resume when re-tuning is held.
+>=20
+> A typical case involves SDIO WiFi devices with the MMC_PM_KEEP_POWER
+> flag,
+> which retain power during system PM. To conserve power, WiFi switches to
+> 1-bit mode and restores 4-bit mode upon resume. As per the specification,
+> tuning commands are not supported in 1-bit mode. When sending CMD52 to
+> restore 4-bit mode, re-tuning must be held. However, CMD52 still requires
+> a correct sample point to avoid CRC errors, necessitating preservation of
+> the previous tuning value."
+>=20
+
+Will update the commit message.
+
+> >
+> > Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
+> > ---
+> >  drivers/mmc/host/sdhci-esdhc-imx.c | 90
+> +++++++++++++++++++++++++++++-
+> >  1 file changed, 88 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhc=
+i-
+> esdhc-imx.c
+> > index ff78a7c6a04c..d3ac5f38a9eb 100644
+> > --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> > +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> > @@ -81,6 +81,9 @@
+> >  #define  ESDHC_TUNE_CTRL_STEP		1
+> >  #define  ESDHC_TUNE_CTRL_MIN		0
+> >  #define  ESDHC_TUNE_CTRL_MAX		((1 << 7) - 1)
+> > +#define ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_MASK
+> 	0x7f000000
+>=20
+> Use GEN_MASK
+
+OK, looks better
+
+>=20
+> > +#define ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_SHIFT	24
+> > +#define ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_SHIFT	8
+> >
+> >  /* strobe dll register */
+> >  #define ESDHC_STROBE_DLL_CTRL		0x70
+> > @@ -235,6 +238,7 @@ struct esdhc_platform_data {
+> >  	unsigned int tuning_step;       /* The delay cell steps in tuning
+> procedure */
+> >  	unsigned int tuning_start_tap;	/* The start delay cell point in tunin=
+g
+> procedure */
+> >  	unsigned int strobe_dll_delay_target;	/* The delay cell for strobe
+> pad (read clock) */
+> > +	unsigned int saved_tuning_delay_cell;	/* save the value of tuning
+> delay cell */
+> >  };
+> >
+> >  struct esdhc_soc_data {
+> > @@ -1057,7 +1061,7 @@ static void esdhc_reset_tuning(struct sdhci_host
+> *host)
+> >  {
+> >  	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> >  	struct pltfm_imx_data *imx_data =3D sdhci_pltfm_priv(pltfm_host);
+> > -	u32 ctrl;
+> > +	u32 ctrl, tuning_ctrl;
+> >  	int ret;
+> >
+> >  	/* Reset the tuning circuit */
+> > @@ -1071,6 +1075,16 @@ static void esdhc_reset_tuning(struct
+> sdhci_host *host)
+> >  			writel(0, host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
+> >  		} else if (imx_data->socdata->flags &
+> ESDHC_FLAG_STD_TUNING) {
+> >  			writel(ctrl, host->ioaddr + ESDHC_MIX_CTRL);
+> > +			/*
+> > +			 * enable the std tuning just in case it cleared in
+> > +			 * sdhc_esdhc_tuning_restore.
+> > +			 */
+> > +			tuning_ctrl =3D readl(host->ioaddr +
+> ESDHC_TUNING_CTRL);
+> > +			if (!(tuning_ctrl & ESDHC_STD_TUNING_EN)) {
+> > +				tuning_ctrl |=3D ESDHC_STD_TUNING_EN;
+> > +				writel(tuning_ctrl, host->ioaddr +
+> ESDHC_TUNING_CTRL);
+> > +			}
+> > +
+> >  			ctrl =3D readl(host->ioaddr +
+> SDHCI_AUTO_CMD_STATUS);
+> >  			ctrl &=3D ~ESDHC_MIX_CTRL_SMPCLK_SEL;
+> >  			ctrl &=3D ~ESDHC_MIX_CTRL_EXE_TUNE;
+> > @@ -1149,7 +1163,8 @@ static void esdhc_prepare_tuning(struct
+> sdhci_host *host, u32 val)
+> >  	reg |=3D ESDHC_MIX_CTRL_EXE_TUNE |
+> ESDHC_MIX_CTRL_SMPCLK_SEL |
+> >  			ESDHC_MIX_CTRL_FBCLK_SEL;
+> >  	writel(reg, host->ioaddr + ESDHC_MIX_CTRL);
+> > -	writel(val << 8, host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
+> > +	writel(val << ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_SHIFT,
+> > +				host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
+>=20
+> FIELD_PREP ?
+
+OK
+
+>=20
+> >  	dev_dbg(mmc_dev(host->mmc),
+> >  		"tuning with delay 0x%x ESDHC_TUNE_CTRL_STATUS
+> 0x%x\n",
+> >  			val, readl(host->ioaddr +
+> ESDHC_TUNE_CTRL_STATUS));
+> > @@ -1569,6 +1584,58 @@ static void sdhci_esdhc_imx_hwinit(struct
+> sdhci_host *host)
+> >  	}
+> >  }
+> >
+> > +static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> > +	struct pltfm_imx_data *imx_data =3D sdhci_pltfm_priv(pltfm_host);
+> > +	u32 reg;
+> > +
+> > +	/*
+> > +	 * SD/eMMC do not need this tuning save because it will re-init
+> > +	 * after system resume back.
+> > +	 * Here save the tuning delay value for SDIO device since it may
+> > +	 * keep power during system PM. And for usdhc, only SDR50 and
+> > +	 * SDR104 mode for SDIO devide need to do tuning, and need to
+> > +	 * save/restore.
+> > +	 */
+> > +	if ((host->timing =3D=3D MMC_TIMING_UHS_SDR50) ||
+> > +			(host->timing =3D=3D MMC_TIMING_UHS_SDR104)) {
+> > +		reg =3D readl(host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
+> > +		reg =3D (reg &
+> ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_MASK) >>
+> > +
+> 	ESDHC_TUNE_CTRL_STATUS_TAP_SEL_PRE_SHIFT;
+>=20
+> FILED_GET?
+
+OK
+
+Thanks Frank
+Luke
+>=20
+> Frank
+>=20
+> > +		imx_data->boarddata.saved_tuning_delay_cell =3D reg;
+> > +	}
+> > +}
+> > +
+> > +static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> > +	struct pltfm_imx_data *imx_data =3D sdhci_pltfm_priv(pltfm_host);
+> > +	u32 reg;
+> > +
+> > +	if ((host->timing =3D=3D MMC_TIMING_UHS_SDR50) ||
+> > +			(host->timing =3D=3D MMC_TIMING_UHS_SDR104)) {
+> > +		/*
+> > +		 * restore the tuning delay value actually is a
+> > +		 * manual tuning method, so clear the standard
+> > +		 * tuning enable bit here. Will set back this
+> > +		 * ESDHC_STD_TUNING_EN in esdhc_reset_tuning()
+> > +		 * when trigger re-tuning.
+> > +		 */
+> > +		reg =3D readl(host->ioaddr + ESDHC_TUNING_CTRL);
+> > +		reg &=3D ~ESDHC_STD_TUNING_EN;
+> > +		writel(reg, host->ioaddr + ESDHC_TUNING_CTRL);
+> > +
+> > +		reg =3D readl(host->ioaddr + ESDHC_MIX_CTRL);
+> > +		reg |=3D ESDHC_MIX_CTRL_SMPCLK_SEL |
+> ESDHC_MIX_CTRL_FBCLK_SEL;
+> > +		writel(reg, host->ioaddr + ESDHC_MIX_CTRL);
+> > +
+> > +		writel(imx_data->boarddata.saved_tuning_delay_cell <<
+> > +
+> 	ESDHC_TUNE_CTRL_STATUS_DLY_CELL_SET_PRE_SHIFT,
+> > +				host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
+> > +	}
+> > +}
+> > +
+> >  static void esdhc_cqe_enable(struct mmc_host *mmc)
+> >  {
+> >  	struct sdhci_host *host =3D mmc_priv(mmc);
+> > @@ -1900,6 +1967,15 @@ static int sdhci_esdhc_suspend(struct device
+> *dev)
+> >  	if (host->tuning_mode !=3D SDHCI_TUNING_MODE_3)
+> >  		mmc_retune_needed(host->mmc);
+> >
+> > +	/*
+> > +	 * For the device need to keep power during system PM, need
+> > +	 * to save the tuning delay value just in case the usdhc
+> > +	 * lost power during system PM.
+> > +	 */
+> > +	if (mmc_card_keep_power(host->mmc) &&
+> > +			(esdhc_is_usdhc(imx_data)))
+> > +		sdhc_esdhc_tuning_save(host);
+> > +
+> >  	ret =3D sdhci_suspend_host(host);
+> >  	if (ret)
+> >  		return ret;
+> > @@ -1916,6 +1992,8 @@ static int sdhci_esdhc_suspend(struct device
+> *dev)
+> >  static int sdhci_esdhc_resume(struct device *dev)
+> >  {
+> >  	struct sdhci_host *host =3D dev_get_drvdata(dev);
+> > +	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> > +	struct pltfm_imx_data *imx_data =3D sdhci_pltfm_priv(pltfm_host);
+> >  	int ret;
+> >
+> >  	ret =3D pinctrl_pm_select_default_state(dev);
+> > @@ -1929,6 +2007,14 @@ static int sdhci_esdhc_resume(struct device
+> *dev)
+> >  	if (ret)
+> >  		return ret;
+> >
+> > +	/*
+> > +	 * restore the saved tuning delay value for the device which keep
+> > +	 * power during system PM.
+> > +	 */
+> > +	if (mmc_card_keep_power(host->mmc) &&
+> > +			(esdhc_is_usdhc(imx_data)))
+> > +		sdhc_esdhc_tuning_restore(host);
+> > +
+> >  	if (host->mmc->caps2 & MMC_CAP2_CQE)
+> >  		ret =3D cqhci_resume(host->mmc);
+> >
+> > --
+> > 2.34.1
+> >
