@@ -1,193 +1,264 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F4021ABBD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156348; cv=none; b=H18yfB4fP0eDMHfHq0d6Iv04nZ7DolGPofwCC4Yy0suTtmOkLnJmgqWh18Gg72zPCS7qiKjQ1DOUsuIiZfb8OV212I+G54AK+fC2T42txR3LAg8PxYYfmfP+njK7PhwNC4YW+RkU8266N0fpRapuGSbMCZPuYNUnTIPTiDy2cuI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156348; c=relaxed/simple;
-	bh=Q0o2ssfPoSfk2eKGd9eiql4gPDexAE3aFwWQnyBXpoc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z5n7TKcuNX7J++MR1nCG8utYiZhdxz0UgTPAyR5kZrcqO6Jcy/Z5Y8vg4QK+rnMz3MEuacTjS1vY9tmT+lFsK4ygGBURY+kgoGDLy3v+SBWTFvaf7N2Tzh7ComEBkChVRlxzceolfSXbtjWySsM83fTsyE3ii397S8iuddrlXdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mX1QPbBL; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D81AA1EC;
+	Fri, 28 Mar 2025 10:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743156407; cv=fail; b=K52Z6+wdBHj5iFvUsAJSNjFsqwHRCs3UPYFc5kQODL9ohurZsjP8sIW3Mk6C2kriILvLABZAaNT/FIo1D2M4V/9Yyi5vjmAIIgDFUc3ap3OHGOtsMLlHSfFbRoo2Wf8bRG6HWqi7moyF7bQOSqrsrgnjsavc17DajrkoU9COiUQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743156407; c=relaxed/simple;
+	bh=p23qkZkuG5kHW5k3P8Y5dgx3VdHcisSbwoYBC6bwWqU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IBf4xAnD8ADML2lKrZPWHf1z05RXkKbuSDfDvVg8cdEVxX45Zr5peevxcZqZb5UwNqhFvIC+YeOB/vttj0L7zpYNMSeqkfeHNGvMCWzZSdkO3eX7aqevpkgC1crs3IkdpicPoedq2ogk7vELA3PIl7/Eb6HiTEJW70Ya19KIqTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=TOhabFhh; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=A2ptIQhN; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mX1QPbBL"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72179752;
-	Fri, 28 Mar 2025 11:03:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743156235;
-	bh=Q0o2ssfPoSfk2eKGd9eiql4gPDexAE3aFwWQnyBXpoc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mX1QPbBLJEwxALUPzb156MKV7SX+inreNYBm1ScvPWaks58uWu+fV/tcaklVvTsIA
-	 QsMAdJlOTcp43Stn5phQRP81RA6BYehj+ymIfGqdx8MPUTI+sHkXBIq2xHfYbcYmmH
-	 LyDXuwvul+c+1V32lfPmjo2JJLj0GTUU4SBuiiws=
-Message-ID: <5282b9f9-edef-45fd-8228-16096981a11a@ideasonboard.com>
-Date: Fri, 28 Mar 2025 12:05:40 +0200
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="TOhabFhh";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="A2ptIQhN"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 2DB25480A54;
+	Fri, 28 Mar 2025 06:00:18 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1743156018;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=fLaSVaGRSzrR9L+/Wsk8D9Ek1dAN1SYYhQQFP98Wewo=;
+ b=TOhabFhhPSz+g5J7VIztDOn9uzYRxZlhhiQYQm11qSDPCO1XEztp3EnDIPpHRzFYlJgr6
+ OmhZPfLv5ZLeNj6CA==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1743156018;
+	cv=none; b=uG2NXlSMN7d8PM8lD7YNHAdI2WdvUeJ06bVunsIsRegNF+zjJNtQcAYP8e79FNBb8mThOYV8on4wr2mYkh+Wh+GcPBIx/mzD6GY9id4qkkjNy7RwGM8xWktnGjXEzhF4Y0dl4lnaw2jS54sX3+L4itlxW0CGTRNh612GlGbcyMeHU5LBavDXbAYmBWP5ffnzEUpOSX3+jTSTPzHQGQ9fugXjHm+AWDyR3kpOSTXVwCl4Uf1lR3nIuXkzjditLh58kJUfJUws6Xk90nTZYcA8CuqTaxVodl68kvN49NXdf3xd6lTo+kbU01Qo8VFE+cvsdN7ylf1eyix2xmxvcPsx6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1743156018; c=relaxed/simple;
+	bh=p23qkZkuG5kHW5k3P8Y5dgx3VdHcisSbwoYBC6bwWqU=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=UzPxSkbgQFxmKqWbDT//FKv6Swc7MrpqpBHENCPCqj/IQwF3E9NB7xJT/HZbG2jEIqcEt/IKIJwDDRk9jH+gID2Y4mZ4N6kR3dUNgDFP/LBLoEpZXv8TEp2o1YT9GpZqie3uhBW5H8qqcQE40gc7k22v+m30GEKlkDyLLvoikzaMHDzA8nRtdJCN511pY+IcGI7Jm4HRhvDBaedkH79FlFEZoC7Yn3zPv+nalwWo4p2QDfuBkq9KJ+1l23wBWfkL8EcSZz44bNoWa51QPxacXk1EcqbFKyN7NkmwKbA/fQQVuRyDsI0X/npoTD2C1OcmVyMqX5fl1kDoMUg8WnMPQg==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1743156018;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=fLaSVaGRSzrR9L+/Wsk8D9Ek1dAN1SYYhQQFP98Wewo=;
+ b=A2ptIQhNBE6xKQc1/czbV7V9i9wMbhUIxeZswrGk4R4XRVpMOV6D6JOWYVKekeqOaDn48
+ O5Flm1+mkGXBd3o5ugJX4WToGyCnZJ/GmFrVM4Lq7sz7Z1ARM4nFD7bKw6BRAc8GdCZeuiz
+ wbKkdk8VbCI5oC+lj5YDXU0o+bjVpmgBmym4NHhBDbnXaKlr8+bLvK5DoXlbJ98yE4GaVIT
+ ErXYCcrmzZZWl/g8YSv276iU+t6DfYb/GhECznpJv7ii8wFTK4+gsqr2roFxtVdGtDzaO5j
+ FiYxsoEE7Aeb2pqixVKMq9hj3XB+FPIwE/vj7cXF5fBShUfv4ZPKgWYF6JZQ==
+Received: by srv8.prv.sapience.com (Postfix) id E9A892801DA;
+	Fri, 28 Mar 2025 06:00:17 -0400 (EDT)
+Message-ID: <81b162e821747d807816673f89a171fbd0a0bba5.camel@sapience.com>
+Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
+ get_direction failed -> missing pinctrl patch
+From: Genes Lists <lists@sapience.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 28 Mar 2025 06:00:17 -0400
+In-Reply-To: <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
+References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+		 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
+		 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
+	 <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-+kRvFnljQR7bmyrjtiXd"
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] drm/fourcc: Add DRM_FORMAT_XV15/XV20
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-2-322a300c6d72@ideasonboard.com>
- <20250327223449.GA16629@pendragon.ideasonboard.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250327223449.GA16629@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 28/03/2025 00:34, Laurent Pinchart wrote:
-> Hi Tomi,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Mar 26, 2025 at 03:22:45PM +0200, Tomi Valkeinen wrote:
->> Add two new pixel formats:
->>
->> DRM_FORMAT_XV15 ("XV15")
->> DRM_FORMAT_XV20 ("XV20")
->>
->> The formats are 2 plane 10 bit per component YCbCr, with the XV15 2x2
->> subsampled whereas XV20 is 2x1 subsampled.
->>
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>   drivers/gpu/drm/drm_fourcc.c  | 6 ++++++
->>   include/uapi/drm/drm_fourcc.h | 8 ++++++++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
->> index 2f5781f5dcda..e101d1b99aeb 100644
->> --- a/drivers/gpu/drm/drm_fourcc.c
->> +++ b/drivers/gpu/drm/drm_fourcc.c
->> @@ -346,6 +346,12 @@ const struct drm_format_info *__drm_format_info(u32 format)
->>   		{ .format = DRM_FORMAT_P030,            .depth = 0,  .num_planes = 2,
->>   		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
->>   		  .hsub = 2, .vsub = 2, .is_yuv = true},
->> +		{ .format = DRM_FORMAT_XV15,		.depth = 0,  .num_planes = 2,
->> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
->> +		  .hsub = 2, .vsub = 2, .is_yuv = true },
->> +		{ .format = DRM_FORMAT_XV20,		.depth = 0,  .num_planes = 2,
->> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
->> +		  .hsub = 2, .vsub = 1, .is_yuv = true },
-> 
-> It appears we can never have too much (or enough) documentation, as
-> reading the format info documentation leaves me with unanswered
-> questions.
-> 
-> Looking at drm_format_info_min_pitch():
-> 
-> uint64_t drm_format_info_min_pitch(const struct drm_format_info *info,
-> 				   int plane, unsigned int buffer_width)
-> {
-> 	if (!info || plane < 0 || plane >= info->num_planes)
-> 		return 0;
-> 
-> 	return DIV_ROUND_UP_ULL((u64)buffer_width * info->char_per_block[plane],
-> 			    drm_format_info_block_width(info, plane) *
-> 			    drm_format_info_block_height(info, plane));
-> }
-> 
-> For the first plane, the function will return `buffer_width * 4 / 3`
-> (rouding up), which I think is right. For the second plane, it will
-> return `buffer_width * 8 / 3`, which I believe is wrong as the format is
-> subsampled by a factor 2 horizontally. It seems that either
-> char_per_block and block_w need to take horizontal subsampling into
-> account (and therefore be 8 and 6 for the second plane), or
-> drm_format_info_min_pitch() should consider .hsub. Or there's something
-> else I'm missing :-)
+--=-+kRvFnljQR7bmyrjtiXd
+Content-Type: multipart/alternative; boundary="=-9CDVEwvVGa3EEGZipMsV"
 
-The buffer_width is already divided by the hsub, in 
-drm_format_info_plane_width().
+--=-9CDVEwvVGa3EEGZipMsV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->>   	};
->>   
->>   	unsigned int i;
->> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->> index 81202a50dc9e..1247b814bd66 100644
->> --- a/include/uapi/drm/drm_fourcc.h
->> +++ b/include/uapi/drm/drm_fourcc.h
->> @@ -304,6 +304,14 @@ extern "C" {
->>   #define DRM_FORMAT_RGB565_A8	fourcc_code('R', '5', 'A', '8')
->>   #define DRM_FORMAT_BGR565_A8	fourcc_code('B', '5', 'A', '8')
->>   
->> +/*
->> + * 2 plane 10 bit per component YCrCb
->> + * index 0 = Y plane, [31:0] x:Y2:Y1:Y0 2:10:10:10 little endian
->> + * index 1 = Cb:Cr plane, [63:0] x:Cr2:Cb2:Cr1:x:Cb1:Cr0:Cb0 2:10:10:10:2:10:10:10 little endian
-> 
-> I believe this is right, but I have a hard time validating it, as I
-> think the corresponding figures in UG1085 are incorrect (they show a
-> 8bpp format as far as I can tell). Do I assume correctly that you've
-> tested the formats ?
+On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wrote:
+> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
+> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists
+> > <lists@sapience.com> said:
+> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
+> > > > ......
+>=20
+> >=20
+> > There are two problems here. The issue you're seeing is fixed in
+> > next but
+> > not in mainline due to my omission. I will send a patch for that.
+> >=20
+> > On the other hand, the pinctrl driver in question should be fixed
+> > too.
+> > Can you try the following change:
+> >=20
+> > diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
+> > b/drivers/pinctrl/intel/pinctrl-intel.c
+> > index d889c7c878e2..0c6925b53d9f 100644
+> > --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> > +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> > @@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(struct
+> > gpio_chip *chip, unsigned int offset)
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin =3D intel_gpio_to_pin(pc=
+trl, offset, NULL, NULL);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pin < 0)
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EINVAL;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 /*
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 * For pins configured to functions other than
+> > GPIO, default
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 * to the safe INPUT value.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return GPIO_LINE_DIRECTION_IN;
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D intel_get_padcfg(pct=
+rl, pin, PADCFG0);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!reg)
+> >=20
+> > ?
+> >=20
+> > FYI: This was uncovered by commit 9d846b1aebbe ("gpiolib: check the
+> > return value of gpio_chip::get_direction()").
+> >=20
+> > Bart
+>=20
+> Hi Bart - I don't see this pincntrl patch in mainline yet - =C2=A0what's
+> your thinking on this?
+>=20
+> thanks!
+>=20
+>=20
 
-Yes. kms++'s master branch has support for all the formats in this series.
+Following up - same question - this patch is not in mainline as of
+today. =C2=A0
 
-  Tomi
+Can you share your thoughts/plans on this one?
 
+thanks.
+
+
+--=20
+Gene
+
+--=-9CDVEwvVGa3EEGZipMsV
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head><body><div>On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wr=
+ote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left=
+:2px #729fcf solid;padding-left:1ex"><div>On Tue, 2025-03-11 at 10:40 -0700=
+, Bartosz Golaszewski wrote:</div><blockquote type=3D"cite" style=3D"margin=
+:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><div>On Tue, 1=
+1 Mar 2025 15:03:59 +0100, Genes Lists &lt;<a href=3D"mailto:lists@sapience=
+.com">lists@sapience.com</a>&gt; said:<br></div><blockquote type=3D"cite" s=
+tyle=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex">=
+<div>On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:<br></div><blockq=
+uote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf soli=
+d;padding-left:1ex"><div>......<br></div></blockquote></blockquote></blockq=
+uote><div><br></div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; b=
+order-left:2px #729fcf solid;padding-left:1ex"><div><br></div><div>There ar=
+e two problems here. The issue you're seeing is fixed in next but<br></div>=
+<div>not in mainline due to my omission. I will send a patch for that.<br><=
+/div><div><br></div><div>On the other hand, the pinctrl driver in question =
+should be fixed too.<br></div><div>Can you try the following change:<br></d=
+iv><div><br></div><div>diff --git a/drivers/pinctrl/intel/pinctrl-intel.c<b=
+r></div><div>b/drivers/pinctrl/intel/pinctrl-intel.c<br></div><div>index d8=
+89c7c878e2..0c6925b53d9f 100644<br></div><div>--- a/drivers/pinctrl/intel/p=
+inctrl-intel.c<br></div><div>+++ b/drivers/pinctrl/intel/pinctrl-intel.c<br=
+></div><div>@@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(stru=
+ct<br></div><div>gpio_chip *chip, unsigned int offset)<br></div><div><br></=
+div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pin =3D intel_gpio_to_p=
+in(pctrl, offset, NULL, NULL);<br></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp; if (pin &lt; 0)<br></div><div>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -EINVAL;<br></=
+div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp; /*<br></div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * For pins configured=
+ to functions other than GPIO, default<br></div><div>+&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * to =
+the safe INPUT value.<br></div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br></div><div>+&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp; return GPIO_LINE_DIRECTION_IN;<br></div><div><br></div><div>&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reg =3D intel_get_padcfg(pctrl, pin, PADC=
+FG0);<br></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!reg)<br=
+></div><div><br></div><div>?<br></div><div><br></div><div>FYI: This was unc=
+overed by commit 9d846b1aebbe ("gpiolib: check the<br></div><div>return val=
+ue of gpio_chip::get_direction()").<br></div><div><br></div><div>Bart</div>=
+</blockquote><div><br></div><div>Hi Bart - I don't see this pincntrl patch =
+in mainline yet - &nbsp;what's your thinking on this?</div><div><br></div><=
+div>thanks!</div><div><br></div><div><br></div><div><span><pre></pre></span=
+></div></blockquote><div><br></div><div>Following up - same question - this=
+ patch is not in mainline as of today. &nbsp;</div><div><br></div><div>Can =
+you share your thoughts/plans on this one?</div><div><br></div><div>thanks.=
+</div><div><br></div><div><br></div><div><span><pre>-- <br></pre><div><span=
+ style=3D"background-color: inherit;">Gene</span></div><div><br></div></spa=
+n></div></body></html>
+
+--=-9CDVEwvVGa3EEGZipMsV--
+
+--=-+kRvFnljQR7bmyrjtiXd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ+ZzMQAKCRA5BdB0L6Ze
+2wJuAP9uub2yOGrvh+9LN5V2kRdG4RdTgqPjFiHcX/GgM/nblwEAtusqJk/k9x9G
+Un35Mv8F9YHoYdzd4IwIIThr01Jk9As=
+=Cs/3
+-----END PGP SIGNATURE-----
+
+--=-+kRvFnljQR7bmyrjtiXd--
