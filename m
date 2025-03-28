@@ -1,194 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889C117A316
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22B917BA3;
+	Fri, 28 Mar 2025 09:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152744; cv=none; b=LM0j2sC8N/Dkwq9kV57YEC8gQufGzfEjLLRGiXfZMcm5D4I51r9vboMcpZD9ZNjJMp5aLN2Jd2AKXk5Uqqx5+DOsHNh+I3ZiEeAzAtT0rIa1LOB9S9ePyeaPrQ7qgPYxToD6PUNNuU7SFpganTHHRSNt7bqmorfrGcZ4jTI/OS0=
+	t=1743152797; cv=none; b=JzSp6d8/lwEQ01icLcn5Duk5CgIvwr2g4kL1LXdlqSGAuzTUpYZRizXiL0g0K1GTJ44ffdLK/F6gdgd+ZCxnk8P/guitESlj48Drw7UfGe9r7bAZLWi3U2lN/SQylYdwgm5jvUOUpku9PVtrTaiXEM5xaLoQTEDxK1SVJ1Xsnnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152744; c=relaxed/simple;
-	bh=cLQBA67Ba0qiIZ5CrnS7UX0rwNAyNLraLvUpiKHqEIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J2mJwlDaTJzqR4RAqsVqusMDSwXSfjBZbgby4QL5aBisSDU+Bdzt/Q7staIE4GPSOtp61sibTsKnb9/FkoVPAheQgAa11saggj1ovd9amAGKcIS9Z1cwOXy4vD1DVteHJtbhB5sQSxm7RRFxTTivWso0Ywb66eFifpXTMlq8gVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxkWA2zF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743152797; c=relaxed/simple;
+	bh=0bBzDSKbEvvFa69CxhVUVwtBwFVzp9lyfRZu0hRQ/TQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UkLRk0USdxuHlqzFY6qGbWpOQmYpi7+zxt1axDsbqHERhIFZOCJstcB5sqZfoNwU8wPsTe5hH1o2Abyej739ImqaLxKKsbpdCOU1pmN+Iq8BeunvfQUGGljRAPtrDiE39039YXWkIY++JRMcKMwbc4anREMQyEXV2vTCoYbAhlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OebNbKYy; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxkWA2zF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E12C4CEE4;
-	Fri, 28 Mar 2025 09:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743152743;
-	bh=cLQBA67Ba0qiIZ5CrnS7UX0rwNAyNLraLvUpiKHqEIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VxkWA2zF3ZXXS/+6CT43xESeRUUFT8bO68NrlXVjIVa2wpiAOn+F5kwVq8FtE9Xfl
-	 Iae0pRL4HS/HYbFbLF6M4old/gy9mgc4x/LKWEUYqJ0kzvYieIoCS9PVzFldB47xpN
-	 0nYyIbJk3btZKVmjD5Tl1aq4DfKneGiK6PONutzBietqq4VwoXTrd4WeS6oH0A5jCz
-	 rWZxiifPaVMcImpfd4tHlS1PzVuF5Oje5sciKbxIBdT+MfXZTTJ4kgPZaCR2+WIOQ3
-	 FEiazV0PVjGHnFEDEWf9JYIET36LSKt1O+hx40QYnGYr2snjRHYQMLRaUWuwBopr/f
-	 tQflHDtcyHaGQ==
-Date: Fri, 28 Mar 2025 10:05:40 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v2 1/4] drm/panel: Add new helpers for refcounted panel
- allocatons
-Message-ID: <20250328-ochre-rattlesnake-of-glamour-e3afea@houat>
-References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
- <20250327-b4-panel-refcounting-v2-1-b5f5ca551f95@redhat.com>
- <20250327-noisy-versed-mosquito-df380a@houat>
- <CAN9Xe3QCL=KwhS0KLfaOaDc_TthQg6Gt-pLf1oEEg=1EBLZE2w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OebNbKYy"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so437584a91.0;
+        Fri, 28 Mar 2025 02:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743152795; x=1743757595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0bBzDSKbEvvFa69CxhVUVwtBwFVzp9lyfRZu0hRQ/TQ=;
+        b=OebNbKYyV10v9RypumzzLNi2Ou9piofyS7p5TmUHCcQ0fh2LkUNAbyYYSN/ZmolVNy
+         73wUjPoL5AwBQVUTv/YXmqQbLhYkZX3k3GTp9zp3gy1sqhxI2KBIlgi+g5eJWLWI8ZXs
+         Ec2xUMyt/aAQXkTFhL1PBcHuSk4XJiPRBQ1haZbEYnwyBfKB18XoD3/GB6q7KtfOBDYN
+         DJKNXpNq0sBp/LVhY6h56ZfITKJ2X3zeuGKRBfXtL5xttXdz248eSYiVxZHtwV1Wx09Z
+         IDZ/UTXSBt3IJjQ7rxeSa2rkROTgVlnF5SEsa6lBLGzxkHGOOfAcIoje8REgtbYZ78Lb
+         YbNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743152795; x=1743757595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0bBzDSKbEvvFa69CxhVUVwtBwFVzp9lyfRZu0hRQ/TQ=;
+        b=bg02nb8xfkjm3RORk429WAFIged7592PUj/Y1MzypCEE38VuYfthOcHjzFcXO15yQy
+         n0gVYM0J7CCRQrZP4X3c4l3Jqlqu1pNu6Q8yzKVVtY0HRe43DaglcZNcu63KQ8RSPhOD
+         GugGy9wKl97betCaXCmcMa9RrrVchRNLrCogOF/Ev6k9aQDLV9tYsacaFtr1KwOQWv5F
+         HiV8809+Ob6oBqoSYek+ivyHV/6GoDpAx1lYTEwDA12IF0ycM/jqPfMqXPUpwCgFVERa
+         M0LACNN8admx/ApjrsYDVvkNItqnhXPUda5zYJV1MCyFx8plHxTueQj3FLB0+j8xOcdQ
+         bTgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4N7kRNjsMWJdaGaBaNsTxw7uQJhoD+srLbxssr+H6XgFNz4hOOA+pZtOZVQ1oaBwNBbpgP5vCOm6Tqxw1HuQ=@vger.kernel.org, AJvYcCXfS6KXrBlJitCv04n629dgTtZ7BAxN0KaEfZdKQBx1MtA1gt5qzW+PYyAV42GedRTrdLD+gmu2xYONQ3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSB4eCCXjh+mb0w1itU2jIgqz4D1rqMv7llMGB0T8cZxfxb1Mi
+	EoLHuL95Uh+AOsDodfuO3g2X2Gb6rQCLXmsKgA3PVzcyOrrAWCS99McS4Aa7N4dUJvGRSwns9rQ
+	dvqKc9HBm9X+WwbZ0WK/3TsYWqF4=
+X-Gm-Gg: ASbGncszSttwgv7fmMIRqvGFZQ14pPCvWir5VZpXTTpgVAfCKmSYb1scfNxXfUjop5F
+	51TtmFXoOp7w4ULeZv19K9lrlwW6mzC8vLsA+rxGPUMvp7jlkf4iIjYljNoMA5FPUgrJ0JnUQzE
+	Ka4rou19zS7EgmZB9/N5LKxANeYA==
+X-Google-Smtp-Source: AGHT+IGIoygOoyq3S/AxJAttswGhPDydP0zM9nr7Nj8c/C372RKes9cQ4gpXwog2lLiJizISmEm7Zggjy61Xyq8lTkE=
+X-Received: by 2002:a17:90b:1d04:b0:2fe:8fa0:e7a1 with SMTP id
+ 98e67ed59e1d1-303b211144dmr3432897a91.2.1743152794867; Fri, 28 Mar 2025
+ 02:06:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="npakimqlc44lqz6i"
-Content-Disposition: inline
-In-Reply-To: <CAN9Xe3QCL=KwhS0KLfaOaDc_TthQg6Gt-pLf1oEEg=1EBLZE2w@mail.gmail.com>
-
-
---npakimqlc44lqz6i
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250321111535.3740332-1-bqe@google.com> <20250321111535.3740332-4-bqe@google.com>
+ <Z92N8dyIE42ROW2t@thinkpad> <CANiq72kYzx7JTVqrJuP0Wo9=1qtaN7s7fqkD5DDcjA59SgMizQ@mail.gmail.com>
+ <CABVgOSkjYFwHhQfbmY83iK7crq9ZN9+93Xe514ndhAm6Me3UwQ@mail.gmail.com>
+In-Reply-To: <CABVgOSkjYFwHhQfbmY83iK7crq9ZN9+93Xe514ndhAm6Me3UwQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 28 Mar 2025 10:06:20 +0100
+X-Gm-Features: AQ5f1Jr-wLdE8wgAsmjLhcOdvkbySbtJv6LsQafWBlALqZPoNu2chMV-ZrC6L2M
+Message-ID: <CANiq72=rbA-Tie7JPY8rj5c5iHBqV0oYZvx5AX7UAJvp1ER7MA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] rust: add bitmap API.
+To: David Gow <davidgow@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/4] drm/panel: Add new helpers for refcounted panel
- allocatons
-MIME-Version: 1.0
 
-On Thu, Mar 27, 2025 at 11:33:15AM -0400, Anusha Srivatsa wrote:
-> On Thu, Mar 27, 2025 at 11:58=E2=80=AFAM Maxime Ripard <mripard@kernel.or=
-g> wrote:
->=20
-> > On Thu, Mar 27, 2025 at 10:55:39AM -0400, Anusha Srivatsa wrote:
-> > > Introduce reference counted allocations for panels to avoid
-> > > use-after-free. The patch adds the macro devm_drm_bridge_alloc()
-> > > to allocate a new refcounted panel. Followed the documentation for
-> > > drmm_encoder_alloc() and devm_drm_dev_alloc and other similar
-> > > implementations for this purpose.
-> > >
-> > > v2: Better documentation for connector_type field - follow drm_panel_=
-init
-> > > documentation. (Luca)
-> > > - Clarify the refcount initialisation in comments.(Maxime)
-> > > - Correct the documentation of the return type (Maxime)
-> > >
-> > > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_panel.c | 25 +++++++++++++++++++++++++
-> > >  include/drm/drm_panel.h     | 23 +++++++++++++++++++++++
-> > >  2 files changed, 48 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > > index
-> > c627e42a7ce70459f50eb5095fffc806ca45dabf..bdeab5710ee324dc1742fbc775822=
-50960556308
-> > 100644
-> > > --- a/drivers/gpu/drm/drm_panel.c
-> > > +++ b/drivers/gpu/drm/drm_panel.c
-> > > @@ -355,6 +355,31 @@ struct drm_panel *of_drm_find_panel(const struct
-> > device_node *np)
-> > >  }
-> > >  EXPORT_SYMBOL(of_drm_find_panel);
-> > >
-> > > +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t
-> > offset,
-> > > +                          const struct drm_panel_funcs *funcs,
-> > > +                          int connector_type)
-> > > +{
-> > > +     void *container;
-> > > +     struct drm_panel *panel;
-> > > +
-> > > +     if (!funcs) {
-> > > +             dev_warn(dev, "Missing funcs pointer\n");
-> > > +             return ERR_PTR(-EINVAL);
-> > > +     }
-> > > +
-> > > +     container =3D devm_kzalloc(dev, size, GFP_KERNEL);
-> > > +     if (!container)
-> > > +             return ERR_PTR(-ENOMEM);
-> > > +
-> > > +     panel =3D container + offset;
-> > > +     panel->funcs =3D funcs;
-> > > +
-> > > +     drm_panel_init(panel, dev, funcs, connector_type);
-> > > +
-> > > +     return container;
-> > > +}
-> > > +EXPORT_SYMBOL(__devm_drm_panel_alloc);
-> > > +
-> > >  /**
-> > >   * of_drm_get_panel_orientation - look up the orientation of the pan=
-el
-> > through
-> > >   * the "rotation" binding from a device tree node
-> > > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > > index
-> > a9c042c8dea1a82ef979c7a68204e0b55483fc28..53251c6b11d78149ede3dad41ffa6=
-a88f3c3c58b
-> > 100644
-> > > --- a/include/drm/drm_panel.h
-> > > +++ b/include/drm/drm_panel.h
-> > > @@ -28,6 +28,7 @@
-> > >  #include <linux/errno.h>
-> > >  #include <linux/list.h>
-> > >  #include <linux/mutex.h>
-> > > +#include <linux/kref.h>
-> > >
-> > >  struct backlight_device;
-> > >  struct dentry;
-> > > @@ -268,6 +269,28 @@ struct drm_panel {
-> > >       bool enabled;
-> > >  };
-> > >
-> > > +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t
-> > offset,
-> > > +                          const struct drm_panel_funcs *funcs,
-> > > +                          int connector_type);
-> > > +
-> > > +/**
-> > > + * devm_drm_panel_alloc - Allocate and initialize an refcounted panel
-> > > + * @dev: struct device of the panel device
-> > > + * @type: the type of the struct which contains struct &drm_panel
-> > > + * @member: the name of the &drm_panel within @type
-> > > + * @funcs: callbacks for this panel
-> > > + * @connector_type: the connector type (DRM_MODE_CONNECTOR_*)
-> > corresponding to
-> > > + * the panel interface
-> > > + * Returns:
-> > > + * Pointer to container structure embedding the panel, ERR_PTR on
-> > failure.
-> > > + * The reference count is initialised to 1 and is automatically  giv=
-en
-> > back
-> > > + * by devm action.
-> >
-> > Sorry, I noticed after the facts, but this can't be in the Returns
-> > section, it needs to be in the main one.
+On Fri, Mar 28, 2025 at 9:51=E2=80=AFAM David Gow <davidgow@google.com> wro=
+te:
 >
-> Maxime, Not really following you. Are you suggesting this explanation
-> needs to be in the helper documentation instead of in returns?
+> KUnit. That being said, I suspect that supporting the "just build this
+> one test module against your existing kernel" case is going to be a
+> bit more of a pain here anyway, as it might end up depending on having
+> exactly the same toolchain/config/etc due to Rust's ABI not being
+> stable. (Am I missing anything here, Miguel?) And, of course, Rust's
+> built-in tests here would get automatically compiled down to KUnit
+> tests if enabled.
 
-This is a general documentation thing, so it needs to be in the main
-documentation section, thus between the argumnts and returned values
-one.
+The ABI is not stable indeed, and modules need to be built with the
+same toolchain.
 
-Maxime
+> So, what I suspect you're looking for here is a separate module /
+> crate which benchmarks the bitmap type. With the way Rust crates are
+> laid out, I suspect this would need to live in a separate directory
+> and look something like samples/rust/rust_minimal.rs?
 
---npakimqlc44lqz6i
-Content-Type: application/pgp-signature; name="signature.asc"
+Yeah, the module Yury mentioned seems like a normal one that calls
+`ktime_get()` etc., so doing something like that in Rust should be
+fine too.
 
------BEGIN PGP SIGNATURE-----
+But, yeah, I was thinking more in terms of having a proper framework
+for those, rather than doing a custom thing per module and even having
+those `ktime_get()` calls manually placed for every test etc.
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+ZmYwAKCRDj7w1vZxhR
-xe9AAQDJ1NtGWXZcg6iEX2wbn7qH42wMVJ4zXo3LlCHZ7pBOYwD/Y1KDZdkdr188
-cPcBYpcQhZVETrVe31/WfeAyYJSlfwY=
-=+hE0
------END PGP SIGNATURE-----
+Thanks for the context!
 
---npakimqlc44lqz6i--
+Cheers,
+Miguel
