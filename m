@@ -1,119 +1,108 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C233BBF2;
-	Fri, 28 Mar 2025 13:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A048D136349;
+	Fri, 28 Mar 2025 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743167925; cv=none; b=sBNFR9eZptbPHSzKqp/L9LZi15WXOAzN63uDKRM6+R31F3oxCafEVGXXuu6cDtZKKt1wTGGtRyL8OeTL61GZuQ9F9BLAh/qskRE3WlzXMWdCI9tFBQ655p6+Qowg98ofiaU7msHF5NQviNyprxP5QWd5kej2FsMZxaJSaTCYNLU=
+	t=1743167996; cv=none; b=rnoEg3Z3zb+bVl7NQsBphT/vBBrle8Vn4aSPe3jhApj+TEubyjFcodb+gxzWqnOvoX812A4Bwg7/1LOBeal2m26Z5CqAddDqBTgJ0lzoVHXGY1NAgIRFIdP7NPFRFiChYsxcqCs6ZRcy4HD4TSc+Df2DhQl5cuoEcUqE3W0KZzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743167925; c=relaxed/simple;
-	bh=HZOUS+PWb7Cr3MGhmbLuaegDSQ0rRmvqM9EEeLCZVCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tW9a37ERW5KkuqqTKfI+76dQGh+gonD4kR/+/PfIriAJ4op2+cyUws2s/2PnEaFrSDuwNnrm9/f1thkaOKizjtBAV+yJ/fo943igYwp+/b2j2I00HHHmE1+1CeE4V7YVmwVjvDzTVFuGo16kAW4NHGUji5ufEYZK7Bc/IrXD/Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso3556909a12.1;
-        Fri, 28 Mar 2025 06:18:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743167920; x=1743772720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I/J2cOgy63HBd3SFmOcX68BhFn1IrtAbwO7Zr3kIoI4=;
-        b=C2KhYGrIHr/JcisPKR/0OwS0zqxR+zXtUY3nPKvvxPIzd3AYgwBhoMMDHCQLlX45mR
-         7F9yXtfOirYpNwKlV8CJvMKvbCTFyPzLvo1BABinWLmOfwIPNhs+aKDSphVkHo/d6/wi
-         Tx5EAPjPQOzwxC6cjRDpzxqZN8H/Y8DeYsFjilAZUImjPhi7wkv/COT68YEtqzIubQxA
-         ckVib19tjywQx7hT77l070WsOT5KI61wL0Ka+108MgPWutqXQ3gDp/dXiWgDnfMZch5k
-         GdE7UtN9W5YgaNTTgKcW7iTlwvB2mT7Lw9nM9WkG9PMEjHU8Z7BuxWZgDGcjK5qntHPR
-         kQ+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUMyH8ntBTJYhMmKmW4aoI4HqKOMvGXsJZJ8C12H3gMx3KiLhMpFL2CnoXBnCHtkemjxMdk87rknVvmFFA=@vger.kernel.org, AJvYcCVFacWXv2JSMI+74KY+iuiehTpkP2JAgh4XF1ZSXTdy8LN5RvTSnHoWR99k2E/Y2wRdFhXbV9zAXEh3@vger.kernel.org, AJvYcCVztgwXWj/VuCUFC2eg9G0tM+xQpj8CiWl9uDwwi86s3Q7gA3tKZJWzS9wLRddp1Nil2FVRzpyuOa/oBeo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqfyEV7hrmpM0u32FpKZuBaBWijJfSmUiy6lr0vx9u/o5+cBdf
-	BhFzbnxIi1L0IG/FxnS7EjezaMwbqQTyPWf5x5aXYT7FQRW10wZh
-X-Gm-Gg: ASbGncs/8UO/hDoY4wv1VqmMhimbyuF2c3f+/pootiWBNSY6v5M8y1a5aFxApWbANK8
-	CpdvACATvTw2eg+BfmvxLhDPUafXavQFPYT/cLhiwKZWo3L/3uQ0GTDfRO4J9b97YE/zgzFy8lr
-	fjUc/bHH/Y0ZBknDGz47XyCpV97DFlIAjBpW/FCgWU0fglwyJfKpa/jy9yjGJOw8eMjHR9yKuZt
-	rfgJWCeTKtg/lWvTA+t89y0i7ci77TC52RAksSmqmPS4G2pyNpEdrR2De1Vxvw2A5xtBdcIRS4j
-	iHvZmsOpUGJCgbSD0UOfrVCxh2+7hh0r5NM=
-X-Google-Smtp-Source: AGHT+IH4nxWj8z2XCECUyRadqO61bkkhsUaebs/NIycC0jeOT18nTHV2isXTdzA0/o7nZufkWNF5iQ==
-X-Received: by 2002:a05:6402:90c:b0:5e7:b011:6c09 with SMTP id 4fb4d7f45d1cf-5ed8e5a5425mr7129028a12.18.1743167919297;
-        Fri, 28 Mar 2025 06:18:39 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:9::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16f12ffsm1398693a12.45.2025.03.28.06.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:18:38 -0700 (PDT)
-Date: Fri, 28 Mar 2025 06:18:36 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Thierry Reding <thierry.reding@gmail.com>, broonie@debian.org
-Cc: Arnd Bergmann <arnd@arndb.de>, jonathanh@nvidia.com,
-	skomatineni@nvidia.com, Mark Brown <broonie@debian.org>,
-	Laxman Dewangan <ldewangan@nvidia.com>, linux-tegra@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rmikey@meta.com, kernel-team@meta.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, noodles@earth.li,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Peter Huewe <peterhuewe@gmx.de>
-Subject: Re: [PATCH 1/3] spi: tegra210-quad: use device_reset_optional()
- instead of device_reset()
-Message-ID: <20250328-cinnamon-mushroom-of-proficiency-a17ba8@leitao>
-References: <fbeca9fd-38a6-49ba-bb5f-6df5302d139d@sirena.org.uk>
- <6cf8af69-634e-40fa-af45-912540b29aac@app.fastmail.com>
- <20250319-aloof-rottweiler-of-perception-4c1ad4@leitao>
- <5doq6itaz6uicvqcn37q2dkaxyzy3etz5qgv6wlsyd5troqlag@yqs6ltjp3gsz>
- <20250319-unbiased-rousing-finch-95ecdf@leitao>
- <ac44uxpojpov7fcdx3qfiif3idhbp2hrrr4efqeat6jazbosv4@uoy72g6u3ibf>
- <20250321-colossal-binturong-of-debate-055aeb@leitao>
- <5dky6i7v2ml3eggy5slmxcw2rqi5xofcan2uqx7alcvh6744cp@el5ybhfevgfg>
- <20250325-delicate-kittiwake-of-emphasis-3eeb6c@leitao>
- <q53apce4sltvnyd75j4o7taatocxiduq56fqsoxp3vrjmaqphk@o5kce2wb3dnz>
+	s=arc-20240116; t=1743167996; c=relaxed/simple;
+	bh=KYahm6JG0YdSuBaXvOJHhPaJFRhvQDkrJRy2sOWzvqM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=EQq6j9GmKQqslTC3oh3lc/syGqSYkSp/V5qE6knHXCqycmBPi1E60fFCC+bufwAaUOGYeIr4szd3QI5pXUFe8s88XzbQDJlDWx+6QCkH5NEyhXNSixv3NXOysPfyxQUrKRjmHCshCS4jHsQH8ffg4fE9+5SXUi278ZtHW+rhfgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QRVsdUjm; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QRVsdUjm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743167982; x=1743772782; i=markus.elfring@web.de;
+	bh=DP88rPq/JYCBhLpHyj7Uu+ctiTC9ho6e5ZWTcc8Bw3Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QRVsdUjma2+1dnIp75j/U9u+t2iVo0DXPSWp4hxiuKRWlqk6Bpw7spBrkW3o2ncd
+	 AgwMLcZyOFXh/yzMD3+GNnZyLvPvsq5kSWjWRj2+CFfhEcdfxMZMcYZm6kVyQOLiM
+	 /dxj5Sq0L+8Xg/PfOeHzDI2EEsiGKCZVFl66Umj3FxCER8Qk6XayU+pm7+TIZdr9c
+	 uORxocmB8fcKv6CZUwYb0Yicu/9DrrbldvtrjtLJfcVoOiCof6Kml4UKuNk0kYw5E
+	 TX49xQZxnNo/FGxAMqtYZQOHGMByyzel3uF3wU01Zkd2BD1abfvkEUb2JYN9pVEuD
+	 RVkrdoRamHhc9JULHA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M2ggX-1tyzdB3EC7-003uVq; Fri, 28
+ Mar 2025 14:19:42 +0100
+Message-ID: <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+Date: Fri, 28 Mar 2025 14:19:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <q53apce4sltvnyd75j4o7taatocxiduq56fqsoxp3vrjmaqphk@o5kce2wb3dnz>
+User-Agent: Mozilla Thunderbird
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+Subject: Re: [PATCH v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:D1NZ9DZicC+HG+7dw0RV49Ulr4osReyhCq4fkq4n5AWuD2f3hEf
+ O8AW59tx/bkU6DXG855XMR/FShgvgFnQgTfzSIt4PTvv/HfxCzZnwgjmdeYDQqOnZU621FC
+ 5/5aEmCtC9aexJcQqoQEB6SkHr6pST6dVCrjEj4VfXis/YBZtT7FlcZaTOkyDrWql6gJDmB
+ plqdGAcGlgAPC5yWyC6kA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UUnc3BLpdwc=;2HmWBbEzTvCxzVkzd7w3vzCQtA2
+ dGrGy5TnXmVcsyDq8Jm/zF3NKOHdVDLVmL8/1H+iuVUTCUuP53GvR4C1dLOcO9NXIkzSxVFoK
+ sd9JfKlHFOLAAbHG8XgTHB/nfqer+TNUucb8xJoGwQzdCAHaH6i/Ps5jke3bXjPRzyN0pL/3e
+ jJCaBMZbTEsmXPYpOJMcUXRSOTr7x3Hy9ct3qd8IKQZePIkufLuirQZiXpF6GRjeZ9mMMYIub
+ RtebDjtQjZCt686TC4Ih1xJpm4oCKVmGwVdl9GpTTyUmu2hv0FBY8xCBQ0STTbDpMCKx70x1b
+ b2I8iqmpeDRVSRNbodKFxb41DwU5VY2fQPfzGDODHo1wfG8GRNYwhHvYSx8IWYD7aaG4gwe7V
+ 3iHrhGg7nyNt53m6DRHTL2gMznhlIpvpcblEpshAp44UhSmxYO+ekOhNUyhscmgryK8+jczSE
+ UcjhW4RWEV8z6KzCcrSPrt4URfjHwW3gdeyUQfpkRa5l50drQXDJaJN44JwharRQ7X8uMDEA3
+ ARnp2eekcSvTe5gHMOypqyxG3d5UGimLhR1nM3JwMu6WPhBbqV/nBv2PLwZkJ2h2oofjyzP76
+ Uro+2uRalPVRQaFgBKHlLWUllZznrrgPueEbGc+ZNZ+31ZwfOeLyJMnZyUF7qFWXe8R2GJ8uX
+ tszXRUo7oC6NnjozCOFmk3l04BO7PyF6TtG8ipH/6LseqOdyScvHsWXlHKPJWrU/nWfSTJpbk
+ E76XFXlWwv6tyTSZpgs76q9WzZStFJTQFB73UyRkARyAtN4cEVvwSsJ+2jxH5ABeyMuxAzJzD
+ sZULWr5xBd+/a0L4nPCKUx3hM7QyTvk1UMwA3djDumxx/J7spzVuQJwBXBFfegmAAjdxtQcaG
+ 09LwVfppReIGVpCdAwGfwlVvJSG4DNC97zJALoytIXJcbjq3GFVfjLUH9dsJ4O3Tj9SY/f2d9
+ blDt2GCiBLuYj1jBvWkgeqdRYFgtv8HEy9AdNAUW+OdIT2XegWe9CTQVVdi9FHvL5RYSZ80jr
+ kVFG7Jv6pW3Pjqzipc//luk9j357oV17xeXCQaixF3+xCIr8BD3JxfTf2OuWEneXyZwuRVvdD
+ 9ruJx1Jp9PnEXXg+i+WzNhnFVSo5pNNvTEMCwit50yk4iBH140gAcGklqEdfBELAb/IMMGABb
+ 3+k6yLAqBkYl0QuGhqM//GJIReW2jR4+8RdqSUo3Co67XTaQD7xZ9rh82m2jV9qUXTPW2ve2N
+ SNE+3NMFpm5hlkqUS3SKcrvUXC6ECSbFG2RNuhGFHRk3grAunB259ifLPqbZHBMBgg9X2pe4h
+ L5DV46toqXxDodtEktSyZWMYTOHi3vMYJKAmiofLJAaPqt6jedWdv9jPrk8Aa135+Ltc5FgL8
+ jiy30UquXyU2Q85K54o1iDAPphuR0lVsi1awwvMBAp2lpsjxgRGFpNtx+Z8R21veJvIyCmXBX
+ qoDoM7YhGhRecODVykv4nWrYLRwZEN9bk85A751DMGWDfd636
 
-On Tue, Mar 25, 2025 at 06:05:28PM +0100, Thierry Reding wrote:
+=E2=80=A6
+> +++ b/drivers/i3c/master/qcom-i3c-master.c
+> @@ -0,0 +1,1107 @@
+=E2=80=A6
+> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
+> +{
+=E2=80=A6
+> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
+> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
+> +	geni_se_abort_m_cmd(&gi3c->se);
+> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
+=E2=80=A6
 
-> > I want to come back to how the driver should behave. We probably want to
-> > distinguish what is the correct behaviour we expect from the driver,
-> > they are (IMO):
-> > 
-> > 1) The reset handlers are NOT optional and the device should fail to
-> >    probe.
-> > 
-> > 2) The reset handlers ARE optional, and we should mark them as such.
-> > 
-> > Can you shed some light on what is the right behaviour we want to
-> > implement?
-> > 
-> > From what I am hearing, we are more inclined towards 2). Is this
-> > correct?
-> 
-> Yes, I think 2) is what I'd be inclined towards. _RST is clearly not
-> available for at least certain firmware releases, so they are de-facto
-> optional.
-> 
-> Even if they are ever implemented, it'd be wise to keep supporting the
-> case where they are not available, so treating them as optional is the
-> right way to go.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(spinlock_irqsave)(&gi3c->irq_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/spinlock.h=
+#L572
 
-Thanks for the clarification, Thierry! 
-
-Do you know if this reset method also optional for device tree devices?
-
-So, these are the options we have now, based on the clarification above:
-
-1) Mark the device_reset() as optional for this device, as proposed in
-   this current patch.
-
-2) Ignore that this is optional completely, and let that "device failed"
-   message to go be displayed every time the device is probed and restarted.
-
-3) Create an "device_reset_optional_on_acpi_but_not_on_dt()" method if
-   this method is only optional on ACPI devices. Waiting on Thierry to
-   clarify this part.
+Regards,
+Markus
