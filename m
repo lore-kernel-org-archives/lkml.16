@@ -1,110 +1,88 @@
-Received: from out.smtpout.orange.fr (out-72.smtpout.orange.fr [193.252.22.72])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97A3153BE8;
-	Fri, 28 Mar 2025 08:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090CF18DB2B
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743150164; cv=none; b=Eg5af1o8ZJBxc6A9byy0NsaFXS90kF5jrP6Ug9sY291a4DCMcvAG3nV3VQCahidAJQ+7Zm0LsOEkEGyi9EVrFIb8Xk/fHI4iD532GZ7x18xrZ5KMcppUByuIbbc7Dic3SFH+KUBl2pSV+JM+k/gej0LDGuGt/iIvP44ZXlRV+mU=
+	t=1743150252; cv=none; b=tY0KkfVdalYJRAFO8Pcor9yxMLlqYVvccrAxrUbNiqfxFp2Bi+PjHFPuGd5qxYiboRTsnQGZ6KmyjBpJme8lLNAw0r3KjWVnsiYSXqMGQJvItGWdJQBOLAKeaP/p3HRp9a5Rji3UZiFr7LQs7fhY70mRKBIdkDln+Ntji3EeIAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743150164; c=relaxed/simple;
-	bh=F6QV+Madps5rfli4msND+iUdjd3G1SNG3npgXMxCHKk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qOMTiOo1qkEhFqBZk4mC2F/ovxUbJcRQa/Z/UoptYP5fvclVyv9h4+UM40AyZ9uzzui72Yjzja5N6FDGBDbFov5w1be3DYPa4jLQT2DrHlHx7iHhxppNV7cyMnK+ZlvHiUPlWzNc+KFpyVA46jhNDIffyElDwt6lst0Str8PpMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Wsqf2ZSb; arc=none smtp.client-ip=193.252.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Wsqf2ZSb"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id y4ytt6H5o4o0iy4yxtRjTi; Fri, 28 Mar 2025 09:22:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743150154;
-	bh=DTDbD/ooJMwFg/YbtZABbAe7VxGrq0KHlq70LD0SD5E=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To;
-	b=Wsqf2ZSbPHdpjIHOgoN2/945gS2i1us5saPSWaHtY66By+j39yPEAshlAIHQ+TkGf
-	 faxd2iqsEp/WH9p5lUHFiO5zzNTz+YjU2KoFQsIIiR+jZB2uCVEPSRBErgThgbcSg7
-	 zsDzA2RqhqWR5/0HN/xv3W+ks4SvBv8W08FOPQOlvxBdkOgU3AlxWY7VAPsFT8+EAa
-	 ey+Wvh3kbID70huZ4lIcg8rg9W5uRd619WDsJx/pqBeOsP0FuuciZgdy+JjXFeZWsb
-	 8r8r7sJgNeBZn/kbU5a6M79Th4FvI3ZrRvfUCm+Vna9uK1NxZ+qUJHBhXNwGrwPd7B
-	 mPiIU1dzXLK9w==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 28 Mar 2025 09:22:34 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <cd6bab58-592b-43de-a0c5-b1c01d99e1c2@wanadoo.fr>
-Date: Fri, 28 Mar 2025 17:22:22 +0900
+	s=arc-20240116; t=1743150252; c=relaxed/simple;
+	bh=3K9E9P/3fJhtWUagyMGSRbT2D5mew/Y9C8iypQyVCXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OP3CQDLVNAxTCtE4xNvhUTPSXkXQaS+mHSy20JouU4hsev0hAAFxDvoIXUwkAZUYsWA+4FLQNmNON7ENS7JJuu4P2JKhQ0d9NulDBfJmVE83TRmXhAs26DkVpbCDShIcF3EPyvfN0AkK1WrJXMWo1tasNiibkUJW7Q5lNv7qy3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:84f5:57a8:7b3b:9088])
+	by laurent.telenet-ops.be with cmsmtp
+	id W8Q32E0051KBnwa018Q3pj; Fri, 28 Mar 2025 09:24:07 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1ty50U-0000000G6nn-2d5Y;
+	Fri, 28 Mar 2025 09:24:03 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1ty50V-00000006N2R-0Qmy;
+	Fri, 28 Mar 2025 09:24:03 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Varadarajan Narayanan <quic_varada@quicinc.com>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: linux-mtd@lists.infradead.org,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] mtd: nand: Drop explicit test for built-in CONFIG_SPI_QPIC_SNAND
+Date: Fri, 28 Mar 2025 09:24:01 +0100
+Message-ID: <99eef91c334f3f2314c2f5671e1eb55211a5ff19.1743150196.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Subject: Re: [PATCH v2] phy: can-transceiver: Re-instate "mux-states" property
- presence check
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- Rob Herring <robh@kernel.org>
-Cc: linux-can@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Marc Kleine-Budde <mkl@pengutronix.de>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Peter Rosin <peda@axentia.se>,
- Aswath Govindraju <a-govindraju@ti.com>,
- Biju Das <biju.das.jz@bp.renesas.com>
-References: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
- <7805e0db-7c17-438d-9985-f4feec644da6@wanadoo.fr>
-Content-Language: en-US
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <7805e0db-7c17-438d-9985-f4feec644da6@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 21/03/2025 at 13:18, Vincent Mailhol wrote:
-> On 21/03/2025 at 00:15, Geert Uytterhoeven wrote:
->> On the Renesas Gray Hawk Single development board:
->>
->>     can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
->>
->> "mux-states" is an optional property for CAN transceivers.  However,
->> mux_get() always prints an error message in case of an error, including
->> when the property is not present, confusing the user.
->>
->> Fix this by re-instating the property presence check (this time using
->> the proper API) in a wrapper around devm_mux_state_get().  When the
->> multiplexer subsystem gains support for optional muxes, the wrapper can
->> just be removed.
->>
->> In addition, propagate all real errors upstream, instead of ignoring
->> them.
-> 
-> I would like to hear Rob's opinion on this. In d02dfd4ceb2e9f34 Rob
-> purposely changed the function to ignore errors other than EPROBE_DEFER.
-> 
-> Right now, I do not see a reason not to propagate the other errors, so
-> I am in favor of this roll back. But maybe we are missing something?
-> 
-> Otherwise, the patch looks good to me. Nice improvement over the v1. I
-> will wait for Rob's comment to give my review tag.
+If CONFIG_SPI_QPIC_SNAND=m, but CONFIG_MTD_NAND_QCOM=n:
 
-One week has gone, and we did not hear back. So let's assume it is OK.
+    ERROR: modpost: "qcom_nandc_unalloc" [drivers/spi/spi-qpic-snand.ko] undefined!
+    ...
 
->> Fixes: d02dfd4ceb2e9f34 ("phy: can-transceiver: Drop unnecessary "mux-states" property presence check")
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fix this by dropping the explicit test for a built-in
+CONFIG_SPI_QPIC_SNAND completely.  Kbuild handles multiple and mixed
+obj-y/obj-m rules for the same object file fine.
 
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503280759.XhwLcV7m-lkp@intel.com/
+Fixes: 7304d1909080ef0c ("spi: spi-qpic: add driver for QCOM SPI NAND flash Interface")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/mtd/nand/Makefile | 3 ---
+ 1 file changed, 3 deletions(-)
 
-(...)
+diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+index db516a45f0c52635..44913ff1bf12cc24 100644
+--- a/drivers/mtd/nand/Makefile
++++ b/drivers/mtd/nand/Makefile
+@@ -3,11 +3,8 @@
+ nandcore-objs := core.o bbt.o
+ obj-$(CONFIG_MTD_NAND_CORE) += nandcore.o
+ obj-$(CONFIG_MTD_NAND_ECC_MEDIATEK) += ecc-mtk.o
+-ifeq ($(CONFIG_SPI_QPIC_SNAND),y)
+ obj-$(CONFIG_SPI_QPIC_SNAND) += qpic_common.o
+-else
+ obj-$(CONFIG_MTD_NAND_QCOM) += qpic_common.o
+-endif
+ obj-y	+= onenand/
+ obj-y	+= raw/
+ obj-y	+= spi/
+-- 
+2.43.0
 
-Yours sincerely,
-Vincent Mailhol
