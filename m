@@ -1,161 +1,134 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C63326289;
-	Fri, 28 Mar 2025 11:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4693226289;
+	Fri, 28 Mar 2025 11:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743162437; cv=none; b=WAzXxFO/3T+UTn35nugh9ibdzg1rMlS1A2CbaHJ61k+rWMZEDTPQygdTKg3HRLe0bwCxfsvK62NDNt2bicHW0OSkANyYhCdW/N8SPisNFhzP3cyL7eVU+vpdWNveTKwW/p23t3BD3SnST1NNHDdr0G0ZqXeOXgN4bPRocp9/vFY=
+	t=1743162491; cv=none; b=TV6lzSIPFq7TuXqpNqxCTdOKCi1OPH8SRJ7vltflPCsJWf/kG/yLBySDuUiHOK+QyFoN7v79H+hrj/nX1c0z7fTjttv1mUpjvV8DO0Kx/1C1YZ26pklf5pJavDO7D4gnekKOGIFLmSK8TVysz+3H0m6SozhxAMWhYZqDH/R30a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743162437; c=relaxed/simple;
-	bh=fSDDLJIg1AIFezqeviZx0z10om+VyB30CEwom2stASw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ri9CZGvcxuYx2V91X8Lq7iW3dfkRfuvzngryncC9ZG7t9LjqS0slLxrisDzXdJGUF5EqGoIlyG19oecHyHHP89GTdy/n188jU/3DzNrMrGS00iJFGW6k4TYejt1eynnpKisYl+0IAzPLaehHDFYH+IMjW6oim+t/jIyPuuGSa00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XzilTukn; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743162491; c=relaxed/simple;
+	bh=zUtebBjH55CnQyB7qOWJh7tG/blA6JzN9MwAUcSs3ds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UWP9vBLMUhuKO3Xpa8y0aUW5fFQsECEZe7lw5cA76iaXXLQAtv7ojm5leTiPVo48s1xfSrAhtqc+iQe+39gbW/G6ybIarcPq4fLK7hyswJSHGuoGaJ2Re0QWZWHwMXt2mPEsBNv2eQP2ET9fXJ/Xq9+DBaOUW/c2/FxKH8lQNiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6E2M6/y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzilTukn"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227cf12df27so30936005ad.0;
-        Fri, 28 Mar 2025 04:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743162434; x=1743767234; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hc/xauRBy7/DMinG+JVri98lUK7sMGQwLWf3P4KYn9g=;
-        b=XzilTukn7q68jnXs2aU9aa+3hKXBh2mYTK2BrwJXTaIZ4aCf7ZRr8lqP8y0vaDuC2M
-         jXUxZ9LxDljJtijqP2LDqoVaEOU37h2GyVNyQ4NA7m+L8fwefPDugEJKUMZsqQ1UsFtI
-         a/42flYwH9n5fzvC92DZ7Vt6GwjNY4PUMMuO91apq37bMhuxrPw4MXu55SfCyALArMe8
-         nrEHNPtWjPM58VGJVkjoqa8p2bCfMtY+Yzwc1IZQUgqBiiRolm6pVd0gcEwMp91WYvp8
-         q5mtT/xPty6Uxg21JCj3DnIM21qFYit6/X0CfSqG907Flo3xCiIg3G/LBpKpLAHWwoGX
-         ej/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162434; x=1743767234;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hc/xauRBy7/DMinG+JVri98lUK7sMGQwLWf3P4KYn9g=;
-        b=fKOUoCnZJ0a9ZeAjwCzoIq25Pvy4z61LOfv4098hGkPcxPGFfmTuOoZpHm3rP9xNtz
-         EShKCdNE/hx7AqBsDJzGBsKdse8Lt0Ae75ZOOlfA+x0Rn/XG0ZGcw14D3OKmMbFYeDG9
-         7ZPDsMILt8/0JQCObwqhPpWDYFGSnjTPo9zHpLiGx2fULOcId/ejDF7prDeHzc7JjGEE
-         B8B/beJ3ZvVOCsrNTyEqQMSvEsfCsST1V+s6OKk7fKEerzBEZvdVr3k9vXpXOTWgvYIZ
-         s9lc1MoNoIHY47uSlQArrgGcBd57CtdP/si74K1/ArNZCiYUHEIfDduciOTyWWWtIXWZ
-         ynFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsJVZoDCvrqDJfjMwCTNPEyO3nG0JccVKsiwG6zJwhqahwcXFFCJc9752rB+f3aGXUmTpUurJ/yJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnHfQMsRtBGdonD9cOk/15HwS9y9CXRMz+bayiqe61JxUsMtWw
-	xbKWTSEazWCLSDWvW1hkEy2sbSqX5+pVt8jrLVbsrMh/dOcPANuc
-X-Gm-Gg: ASbGncuh04aBWDX9nPpH5Dw10by5k4wNH8jyjkEzxN6KUVb5PB4tOnKfch1HH76P2qq
-	DOq64A5lXZyJLH2xraita7txm7um4SEdJ2jQfnZsXXDSPmoI+L+VFB+czaq6+MIACunJ2YF9LiI
-	GFtPw0V53acdsGxZx2yO3HS8+X1iFXPgDlWwvE6EwaWLNxtpWcCGBRmY200UoaqlByUnIlQF4wv
-	9gVh6wVCBu5QQ1sglyGeokNJlIY7FYSg+6BKvta30bHgmHisBRMU4xiFeT7GQthNjtyelS0IHb8
-	wErCBc26NZxXhj7V2g2mDFmDLKGyNvVKH127KD3OsFcG
-X-Google-Smtp-Source: AGHT+IGL+2VkvZUTLK5bh/+zKUx91iBAgtBVleFDA2Cq1ZEhcmX1cqdZcGj78v2l4OVP0YvtefEQjg==
-X-Received: by 2002:a17:902:f68f:b0:224:3610:bef4 with SMTP id d9443c01a7336-22921d5fe82mr37434305ad.25.1743162434071;
-        Fri, 28 Mar 2025 04:47:14 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971091ce4sm1548199b3a.132.2025.03.28.04.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:47:13 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 0409C420A74C; Fri, 28 Mar 2025 18:47:09 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux IOMMU <iommu@lists.linux.dev>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] iommufd: Fix iommu_vevent_header tables markup
-Date: Fri, 28 Mar 2025 18:46:54 +0700
-Message-ID: <20250328114654.55840-1-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6E2M6/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 062A9C4CEE4;
+	Fri, 28 Mar 2025 11:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743162490;
+	bh=zUtebBjH55CnQyB7qOWJh7tG/blA6JzN9MwAUcSs3ds=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M6E2M6/yepb6TFdvsuisCuEmjwXQsBRCZJ1nl52Zt6qkJ5VzU68CQFKy17CmQnIJ2
+	 jHWP+5A5t+glQXYUeCW9EaHsE/lqcbV9qdubvapFYICcndX5qBRD/ZUVvyKvo9okD/
+	 PBU4q0ewdbn8jP1qa+eVo+t4gvQyVclq9W/eekd1qzLEloHg/e9Pvs/5Ep6WrY6J3o
+	 s8FN8uau96AYw7IAZQpsReHlVXo8xrTol+Hw8VI/OcwtE+HEerSrBtRrBz0FD1hhbw
+	 wxaqRHQ+FYEgPNB9u5You+X0TjayNxRfzBZEYM2qXYThdNGeZDGvaggDF1MnOJS4rZ
+	 EKZSjP1/A5amQ==
+Message-ID: <fc4d9a33-2d3f-47e2-b1cf-59962cc54bce@kernel.org>
+Date: Fri, 28 Mar 2025 12:48:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4215; i=bagasdotme@gmail.com; h=from:subject; bh=fSDDLJIg1AIFezqeviZx0z10om+VyB30CEwom2stASw=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDOnPuvfMqq4J+PvAebYEx5WAXL26NXcVNoidV9F3auqz6 Hm/t/pNRykLgxgXg6yYIsukRL6m07uMRC60r3WEmcPKBDKEgYtTACaysJfhn9mW60I9qx4tEbi1 Q1Kg8WKS4MyQN2+Ouf+73JabIWrJ7MTwh/PvpC0zNA/denZUgLmW766oQoGwyHujKcULUw6kxH7 L5wUA
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: soc: ti: bist: Add BIST for K3
+ devices
+To: Neha Malcom Francis <n-francis@ti.com>, nm@ti.com, vigneshr@ti.com,
+ kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, u-kumar1@ti.com
+References: <20250328111439.374748-1-n-francis@ti.com>
+ <20250328111439.374748-2-n-francis@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250328111439.374748-2-n-francis@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Stephen Rothwell reports htmldocs warnings on iommu_vevent_header
-tables:
+On 28/03/2025 12:14, Neha Malcom Francis wrote:
+> +properties:
+> +  compatible:
+> +    const: ti,j784s4-bist
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cfg
+> +      - const: ctrl_mmr
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  ti,bist-under-test:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      the device IDs of the devices under test control of the BIST device, the
 
-Documentation/userspace-api/iommufd:323: ./include/uapi/linux/iommufd.h:1048: CRITICAL: Unexpected section title or transition.
+Still not phandle... What is a "device ID"?
 
-------------------------------------------------------------------------- [docutils]
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -sphinx-version 8.1.3 ./include/uapi/linux/iommufd.h' processing failed with: Documentation/userspace-api/iommufd:323: ./include/uapi/linux/iommufd.h:1048: (SEVERE/4) Unexpected section title or transition.
+> +      number of devices may be more than one. The HW logic will trigger the
+> +      tests on all of these devices at once.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - ti,bist-under-test
+> +
+> +additionalProperties: false
 
--------------------------------------------------------------------------
 
-These are because Sphinx confuses the tables for section headings. Fix
-the table markup to squash away above warnings.
-
-Fixes: e36ba5ab808e ("iommufd: Add IOMMUFD_OBJ_VEVENTQ and IOMMUFD_CMD_VEVENTQ_ALLOC")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/linux-next/20250318213359.5dc56fd1@canb.auug.org.au/
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
----
- include/uapi/linux/iommufd.h | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-index 81c31a36e14a97..fa479700918409 100644
---- a/include/uapi/linux/iommufd.h
-+++ b/include/uapi/linux/iommufd.h
-@@ -1045,21 +1045,26 @@ enum iommu_veventq_flag {
-  *            [0, INT_MAX] where the following index of INT_MAX is 0
-  *
-  * Each iommufd_vevent_header reports a sequence index of the following vEVENT:
-- *  -------------------------------------------------------------------------
-+ *
-+ * +----------------------+-------+----------------------+-------+---+-------+
-  * | header0 {sequence=0} | data0 | header1 {sequence=1} | data1 |...| dataN |
-- *  -------------------------------------------------------------------------
-+ * +----------------------+-------+----------------------+-------+---+-------+
-+ *
-  * And this sequence index is expected to be monotonic to the sequence index of
-  * the previous vEVENT. If two adjacent sequence indexes has a delta larger than
-  * 1, it means that delta - 1 number of vEVENTs has lost, e.g. two lost vEVENTs:
-- *  -------------------------------------------------------------------------
-+ *
-+ * +-----+----------------------+-------+----------------------+-------+-----+
-  * | ... | header3 {sequence=3} | data3 | header6 {sequence=6} | data6 | ... |
-- *  -------------------------------------------------------------------------
-+ * +-----+----------------------+-------+----------------------+-------+-----+
-+ *
-  * If a vEVENT lost at the tail of the vEVENTQ and there is no following vEVENT
-  * providing the next sequence index, an IOMMU_VEVENTQ_FLAG_LOST_EVENTS header
-  * would be added to the tail, and no data would follow this header:
-- *  ---------------------------------------------------------------------------
-+ *
-+ * +--+----------------------+-------+-----------------------------------------+
-  * |..| header3 {sequence=3} | data3 | header4 {flags=LOST_EVENTS, sequence=4} |
-- *  ---------------------------------------------------------------------------
-+ * +--+----------------------+-------+-----------------------------------------+
-  */
- struct iommufd_vevent_header {
- 	__u32 flags;
-@@ -1117,9 +1122,11 @@ struct iommu_vevent_arm_smmuv3 {
-  *
-  * Each vEVENT in a vEVENTQ encloses a struct iommufd_vevent_header followed by
-  * a type-specific data structure, in a normal case:
-- *  -------------------------------------------------------------
-- * || header0 | data0 | header1 | data1 | ... | headerN | dataN ||
-- *  -------------------------------------------------------------
-+ *
-+ * +-+---------+-------+---------+-------+-----+---------+-------+-+
-+ * | | header0 | data0 | header1 | data1 | ... | headerN | dataN | |
-+ * +-+---------+-------+---------+-------+-----+---------+-------+-+
-+ *
-  * unless a tailing IOMMU_VEVENTQ_FLAG_LOST_EVENTS header is logged (refer to
-  * struct iommufd_vevent_header).
-  */
-
-base-commit: 899ddafec3b4adeb324ebda146914980137c1553
--- 
-An old man doll... just what I always wanted! - Clara
-
+Best regards,
+Krzysztof
