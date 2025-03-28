@@ -1,172 +1,65 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5E43594A;
-	Fri, 28 Mar 2025 15:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51287DF58;
+	Fri, 28 Mar 2025 15:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743175876; cv=none; b=in2TwXYb6nIKCgzskKKP3TVBY9paCxxnccvMiTELX5ZOuY5oQ/EOvAGwHv8FwiFLoRiwv1m1CUjaPrTLaEPbPN2/Z1QN2ApYu6ZcjX831pPW+b5YRLMBh7sdNWArkZKm5aAFZeCzecCtCIgUwFVydQCnYd+LA44GWjQ+5zUFb2U=
+	t=1743175969; cv=none; b=Y1gxVzoJI7wqNObd73fCaCcTNNh0nN3urj6b43H6/5bONacCgZxl/37eV0Wgz9+Z6hY04lWQ+skE5WfYLGsDs15pAC1b9jpe8eRCn0oS5Hnfy2ebjV19pTp40e6Lhq/EhI4bXufR4e8t+gE6UzooLu1XCOB/WC5gumkd+zNYni8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743175876; c=relaxed/simple;
-	bh=4vnD+DHEqSBzz+VCa+lT52SFxyofr7XdlrOyU0bKZKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mt0juNASEe2bd0VyTHz6ihbvo77AhxEUjJDFEtHFCAL8sMaEg4i45NDvBb82VasF0hUyOotCxsWYF3/BOaA1G03KQPWyTUOVy4sC0pzIGazAI5pXAD9e9f6SEwSey9qvwlw7TB4l6qY/KDiyCUYY3NutiO1VAh2Pwu3Y7xND//s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8scltAu; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743175969; c=relaxed/simple;
+	bh=nyvXSEqidS12SJhS47TDZr2qHkMFpFzbhcBVfQ56ZAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPdO7uvornajppccf7NtZ76xW0qyjKReKuK0FIitxM+mc+lue8VBrGEn8UB4pmc4yPBUMpcMsCRELeAhov5vHw/RiinUHbkj8JVD0YO9iupcL01x3MG76taoubLWofoLhUP/VwYZsysd3oMkWjFjmRZLyqNXxDgKLuVqkoYLmGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLId2hif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8scltAu"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e636630da89so307977276.3;
-        Fri, 28 Mar 2025 08:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743175874; x=1743780674; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2JEpnnBIQUbskXS0RqEeObZ5p7b6lVMjmPa4eVycTVU=;
-        b=Z8scltAuVpXuYxUuTHlgmATPXKUpOe53JOZE0ATFcLXWRDscOYydr3c5O0NttWaVsv
-         fChgy1CQ/1OFQf0RAUeR1szSXZQxpEvAcn2g6rBrI5qGTcCavlUvn89AbSsJyatQSadQ
-         /J5QceZtq7TcqR4YJgkSNvbtkaqqbjAJgfLxaY6ecSLBh3RyYieKFiB+U2IGdJo/f80h
-         YktxHmGg841azCdgqohasguKE/yFuswkmA8Vo4nXiSzyWUJHJtCl9iroE/9bNkboJ4g1
-         GNmiqVpi2ZqUuNg1Z4VYWrCD3ZDnmlKsNcr/fQZDQZ5UJcMmLTf8bSqklEj615Dy24Ok
-         Bnbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743175874; x=1743780674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2JEpnnBIQUbskXS0RqEeObZ5p7b6lVMjmPa4eVycTVU=;
-        b=pkfAzOOBPV7GgFcJNYe+dniRdZofHTKIo0Pjg/Nm20mgwABUpKT1zSz1dBm5DiHYOa
-         5+sYhPmL1RCWfGcsJ8nHNIu8zwjGrKO9iJbjqn59L4/isqDpYNXqJiJaaClod6HAfbw2
-         eri/wX6MEokg0og9wSnq+LKHIRfY0uAZCwe5+F3Ocd7Ik5jNP5J04Q2llRsRfsf9pF1U
-         6JHKs7LMluFCMUdJheoUXPxkmfznCaWw199zMFlxFGSt4t5X1yAnSPtU9JwidGKS4Bum
-         UD3rya5dJfM0FyHzH9slkq3gorG9R28LHUBeuwaJHSMIPcwal0mNbghDugiw364SeUkP
-         EwpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU952fHR73DrhbotetMzh5nVpyPQccted4vEsmNk5cXXHoHu5mpzAvHetKuj/JCD4gpo7Re59elCrk=@vger.kernel.org, AJvYcCVAuJ9vNLpTYUgJT9hg0M8kbQBCZkFh9QFGijFiCQzzq00YspIwvKjvx1SRks+npgX1sk6Qr/lxAubiPyBO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyulPy6LB3kuCxHZH+iN/U0xzF62PmrXanYlqyD3+3Bp8xsdwQV
-	mSE0gIpH3Uap7s5x3JwkPV5k7pWSO5Zw8dzm+8+BpTDfwxxw8LFDtX7FhffAbc00GBAOYTf8t9Z
-	FU7E8641TAqOObRMIFJqsSh+eCG4=
-X-Gm-Gg: ASbGncu9JlWuOSEpXWJVtc8nDQVYndJMjUDtqKAFB95riECItmnFwUsNqk3kmv5BwCB
-	whWHkB9ct8Q6WBpFhw4Cb26hINFVfisNENU0kOhTjGvTCXy0VA2fKmRTdMDiHVB3pIgiwlgOPAI
-	xK4eO2Nh7OtjNZ0rnlvQHcUsHdmg==
-X-Google-Smtp-Source: AGHT+IEmFYQlbFSKzS7Ov/gG/q6U2el7ppLAitV7rPzJjK8PneAM2r3Vc+d+PwkkA1le/1MwNu8aHgYeP8wjsbOeY9A=
-X-Received: by 2002:a05:6902:4792:b0:e60:974f:a03e with SMTP id
- 3f1490d57ef6-e6945c0ecedmr4065411276.6.1743175873641; Fri, 28 Mar 2025
- 08:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLId2hif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087FCC4CEE4;
+	Fri, 28 Mar 2025 15:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743175968;
+	bh=nyvXSEqidS12SJhS47TDZr2qHkMFpFzbhcBVfQ56ZAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NLId2hif5lVkH94V6V9vUnvvCLmKlIkOmvrtqqMsygWpq54AnfeBmLYJ7Xz2aXCWZ
+	 Q5AcFF7WuT6fZZTawrjRhynWrWJu4y9Y8ALv7b0amIRoe+61+vUn1njvDuz41fY+DD
+	 IWjmCHgjl9zB5PHou9J6yaUCZa0PQQUp0JnHVsHdbXjqUT3zU29hU0wakT4lQv74NW
+	 6riMtv6zDtF7LjRSHWhaTFtT3Eo7/wzd4ucATxaR1T7dRGnlko5Sf6r2/za5zx9eNl
+	 mCHQDcTC3IZ9knr/oInFXPPntO5Nn6+JyTuz75BWUMYC7BeGx38uAi5hndyJJcQ4Xy
+	 DfqNkTaYmZNnQ==
+Date: Fri, 28 Mar 2025 16:32:44 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/nouveau/conn: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-bBHGKTJOs5Ld95@cassiopeiae>
+References: <Z-a4meHAy-t58bcE@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313165049.48305-1-l.rubusch@gmail.com> <20250313165049.48305-5-l.rubusch@gmail.com>
- <Z9ctSODRTxI53jAY@surfacebook.localdomain> <20250317105540.4b4a586f@jic23-huawei>
- <CAHp75Vc=c=0yhtaKuiE4mZTTzQdrPywt89E7A1GuHha9=V=GUQ@mail.gmail.com>
- <CAFXKEHacRWoGz59FYJJyYjOsg5CBTAFYPdwobvmF4jUqZJJAqw@mail.gmail.com> <CAHp75VeNXZB_sbrvLAdo-KunNeq2WwPVpA6AsF7t2P1TiBLB5w@mail.gmail.com>
-In-Reply-To: <CAHp75VeNXZB_sbrvLAdo-KunNeq2WwPVpA6AsF7t2P1TiBLB5w@mail.gmail.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Fri, 28 Mar 2025 16:30:37 +0100
-X-Gm-Features: AQ5f1JqoKbADJZ3Ri2LYCfLFxCDTqU_d6R-Yia0wpFersMD6wGhcpUV3R8wsvCA
-Message-ID: <CAFXKEHbyc5t=v6TiX0vZNgZtJCG9d8-KSDv64UzmtyZU6BnZmA@mail.gmail.com>
-Subject: Re: [PATCH v4 04/14] iio: accel: adxl345: introduce
- adxl345_push_event function
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-a4meHAy-t58bcE@kspp>
 
-Hello Andy & IIO ML
+On Fri, Mar 28, 2025 at 08:56:25AM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/gpu/drm/nouveau/nvif/conn.c:34:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-On Wed, Mar 26, 2025 at 10:33=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Mar 18, 2025 at 11:45=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail.=
-com> wrote:
-> > On Mon, Mar 17, 2025 at 4:52=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Mon, Mar 17, 2025 at 12:56=E2=80=AFPM Jonathan Cameron <jic23@kern=
-el.org> wrote:
-> > > > On Sun, 16 Mar 2025 21:58:00 +0200
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > Thu, Mar 13, 2025 at 04:50:39PM +0000, Lothar Rubusch kirjoitti:
->
-> ...
->
-> > > > > > +   int ret =3D -ENOENT;
-> > >
-> > > Also note, this variable is redundant as far as I can see, just retur=
-n
-> > > the error code directly.
-> >
-> > The pre-initialization of ret is actually needed in the follow up
-> > patches. Anyway, I can return -ENOENT directly here.
->
-> Just do it when it's needed, I mean that this patch can survive
-> without ret variable.
->
-> > Evaluation of the sensor events in follow up patches then uses the
-> > ret. It is also possible that reading sensor events fails, then the
-> > error is returned. It is possible, that no sensor event happened, then
-> > it will fallback to -ENOENT. And, of course, if sensor event happened
-> > and could be handled - no error is returned.
-> >
-> > Is this approach acceptable? Say, if I'd describe it better in the
-> > commit comment? Could you think of a better approach here? I think
-> > returning 'samples' here does not make fully sense, though. First,
-> > 'samples' is not be used outside the called function. Second, I have
-> > to distinguish a case "no event handled" - This covers then all
-> > remaining events like e.g. OVERRUN, DATA READY,... which still need to
-> > have status registers reset, but won't be pushed - currently this is
-> > coveredy by the 'return -ENOENT;' fallback. Third, I need to be able
-> > to return error codes.
->
-> But does the 'samples' contain an error code? Perhaps you should just
-> make it do so...
-
-I'd like to direct you to v5 of the patches. I'm returning 0 now for handle=
-d
-interrupt and/or read FIFO elements, or a negative error code in case of er=
-ror.
-I guess somehow I could not see the problem initially. Nevertheless, when
-preparing v5 it became clear. I did a small adjustement and hope v5 address=
-es
-the issue in a better way.
-
-Thank you, Andy, for pointing this out to me. So, no direct answers here,
-hope it's ok.
-
-Best,
-L
-
-
->
-> > > +   if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
-> > > > > > +           samples =3D adxl345_get_samples(st);
-> > > > > > +           if (samples < 0)
-> > > > >
-> > > > > > +                   return -EINVAL;
-> > > > >
-> > > > > In the original code it makes no difference, but if you are going=
- to share
-> > > > > this, I would expect to see
-> > > > >
-> > > > >                       return samples;
-> > > > >
-> > > > > here. Why the error code is shadowed? If it's trully needed, it h=
-as to be
-> > > > > explained in the comment.
-> >
-> > As said above, 'samples' is just internally used inside this function.
-> > Basic question here also,
-> > since intuitively you'd expect it rather returning a samples number -
-> > should I rename the function
-> > to make it clearer?
->
-> Perhaps renaming helps, but still, I don't see how a negative return
-> value can fit here. I would expect a negative to be a meaningful Linux
-> error code.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Applied to drm-misc-next, thanks!
