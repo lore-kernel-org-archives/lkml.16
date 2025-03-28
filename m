@@ -1,242 +1,261 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-vk1-f201.google.com (mail-vk1-f201.google.com [209.85.221.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AD11E0E1A;
-	Fri, 28 Mar 2025 21:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E35B1EEA5D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743197107; cv=none; b=uVYYEmauRm88ut6F/FWP1JHmfCQmqLZBejt3tWs4v6Xj9SIBuPIvRjqpu9zmaqJQT8ZElOTH+2DeJwsBh+uznCNhqF+InY/2DyWwKP4wu9hpC2W3/XorlMSp7w4Nx01YpJITMGW84/845ltPh4GusC+9vXlSXq7CjSSKMh8LVUQ=
+	t=1743197192; cv=none; b=sexRQpr5QXmMbzw5Ozqa/f6zBBid4QpsBG9gqfoZQZrrUm/VUEWDJn8kKat+c92ByWQcMDy/sG8qIJov2PiwJh9qmg33O/ac/BaUHRCaKqxdHbXc67aIIr7WANLmg91oMmqhfD5fJvCxqgGwfHR5Y+2eP2k2n1DoY5W3aaZFTXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743197107; c=relaxed/simple;
-	bh=iRheyvxIqIYLa9JOCgwHAjEqkd8E/FYkbC7bWI3wxmk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=KoFXjKHZ/sgK6mrY94EW6aRQsK+iYWWImjKjy7FpyaHR75WQnmdshR1paG9gbK/dyhAfTy9iuPmNnpICac/Ov7cznvaSOru0nLIrBmvrMJSfwaNC1snZc7UsqtLWO7i4e5i5FD7Gyy0ZVVFu5T+Vaz+E5n2UYC2krzjzA1MNaM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ElFeKmcG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743197192; c=relaxed/simple;
+	bh=yecGsCrsQo1B4hn5+/Mj4gFgydWrhHzcrGDbHTeB4/o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FG0eKwT+BL7cuZOEIh5EAXAJ5ekH0mo+cFBVFrzI6fGcrTpaPaWQXH2lwwHm/nO7pDWCkAFiNd9ffNK6zLH3llLnQGXqBrEH+U/Nl1nbR8Q9NXqqgN3YU2nvsPnZ55c/UOP13tqKpc6Vdz2cE40DMyOL6fb3JRqkIrA68cvz4Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=29auB3hB; arc=none smtp.client-ip=209.85.221.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElFeKmcG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223f4c06e9fso51394315ad.1;
-        Fri, 28 Mar 2025 14:25:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="29auB3hB"
+Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-523ddfc9788so802126e0c.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:26:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743197105; x=1743801905; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T/oLXnE+vNP3txORzinWauPBUlDD406kUrH1NV2QFjs=;
-        b=ElFeKmcGHfcjH/kPvDmXVWIblXBXAqbwzR0Pv1g+81fTgwoS0rlDqbwCHPwSKLQ995
-         DYwxwsm3BH+VIzAAtjqoRnKTQ56arO2WqxJmUSBrJqwb7sPpnU0OjsDh8cHJgVLUGzXT
-         UalMOmIgFD16rp8gpfmZ/twgnm/Wovu8ugX3z46X/QXPNrexP22GF5u9w2ErbGFiT6M8
-         a7rHack5xR1MTx0Mduq/oa+Uyjt8H2JMaNOM2/N6QtN9i4vZSKBhu1ts1yHrMSgYKHqw
-         A3vmlKvlxWaiNOW7Ye87XYEpZ4+K/o4mptoG+/xjfj3I+gM1HZluBJvTBqHJGFP6yCGn
-         JpdQ==
+        d=google.com; s=20230601; t=1743197189; x=1743801989; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w8m4zXBwsuwd+TpPXsReUYFUJslyYnLsiTdphFGmuAI=;
+        b=29auB3hBnNZwvt2CpP7mpIlJ3yiLPYxnhdknHktsQQP01L9LADwDkTXZLpQdp+4bdC
+         xnKBfiHZj87QEqz244UHmflYnh9TClFQFCjnMONdUWw/3e63JMrgjA0zw3pM0iPZAwNt
+         qMYStrKlodgr+YM5yFEGkAXk0R5pHHZAy39kmxPZlVcaHSN6Hf/tN9jPyf7Xl0Yu58kM
+         yzVn5ZTL1SGs9UVZcQnKHS9Cl+yND0acER7nTgIg549Zm5uz2AyIq/jr/uBvbk/NfNfX
+         dHTklJa2l3mvX2TNt831NOTQSWnwzL1jqMM3BXi32sQFnJ6bcJfAAnNeEf52DXEnDQDI
+         MoaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743197105; x=1743801905;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T/oLXnE+vNP3txORzinWauPBUlDD406kUrH1NV2QFjs=;
-        b=UYR9X44Ll6XWwMaDYvl6WSvkDoFCmhOzDzD3oQ1In+LQ7264CLySOO+UaIL3+3xEQb
-         2EDm/af/u0qDlr7Nvoq7/ISqML5iPSZdYuK5Lkpzi+6NIEVxE8pkfMANc2Rr7+PxyCP0
-         v+c1uWO2DzBw4zqy3LdxDszmwMkfZtHh3hXKJ6BXjrwJeEnuj841TGnO4edgxSc/aqoO
-         2SAp4eKLA07ohKNP/jB7kRtvkWW+pvqm2IHVWPYCES7Bh4nQjWN2uKMxz2Q6tHjJZ2NM
-         zqOBFkoz6BOC5EwS/vBAA4VvgaRuLELCkMcAtV+UwYI6V/UQ7H5CXJDwBc671CCl3mp7
-         ZWRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXXivIfJOqiHMLnylFEGn0y8DbLW6C724oEi88dHtEd0LlPVJpaYsiA8vK2BtlpCh+bfVI1sa3Phb3OghyIil9Qpcgjw==@vger.kernel.org, AJvYcCWYWncIdqQLfBelakvZgBBkhXNl1Rme+PdsXFhk+URKRQ9gRyyKDHAn71fvPgOKlu2AvkWMZQY079jqEQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaxgzEmvY2RYEoPfRvolYuOJlSRX34iXGJAFj7+IMLo7/sQQpH
-	t9WVOc51ewzkuRN+IcyfU7/au7CK0HE3ji0lpvNZICujcPAzJCrv
-X-Gm-Gg: ASbGncuuIdbaibK545oSFPIZNinHt9rRy2OYVBUZbV3AnEEo80VlPstH3WT9uArDk9L
-	TLIpFbcLZt4s3+gkaDhCqRsfebwU0fQV+kpyDfkQLW1T14QHHnkhIwbgm2w3gRd+WeK+M/3rygc
-	5MrPZHjmBuOrDO4DIWlJnId1Dh2LqA/QGhnrHtJVmkKLwHPg80JcJOjkZ97yUZpS1/xfC49kuAu
-	lHEYsIoBEhRI9m81bIuv7pIwXHAFV80XF0Q/Xs+hRVer2R+Z+tYPWkBlqlJksXNgoI1u2GDut59
-	76kUUi++yf8mGK06drfDZbCQi5WM+scRm3mIeKAn+l4670hX
-X-Google-Smtp-Source: AGHT+IHDifrhGdSa6UfqKvi7bvBswPTgtLSONMP+A91RwO8mqnGVzwxmGu1xU3zFHqlNzJQznEL+9A==
-X-Received: by 2002:a17:903:98b:b0:224:7a4:b31 with SMTP id d9443c01a7336-2292ee06c99mr15066435ad.6.1743197105364;
-        Fri, 28 Mar 2025 14:25:05 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee1bd1sm23527565ad.68.2025.03.28.14.25.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 14:25:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743197189; x=1743801989;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w8m4zXBwsuwd+TpPXsReUYFUJslyYnLsiTdphFGmuAI=;
+        b=aXOG63uUeAlt6062kjCvriT48usOW8iVA34TZgum/SELjS9TyfeKAtmeC3nGK3Xsa/
+         Gm8Q1VWWDjou9rrn2NbhJcmxfqe3QcNbg5HLGYvK6HS3PaCIPlz90JAB/sFjtgRaIQ1f
+         zzENfW3m0aDFaVawyfs5WFhG936BiuJXu9RPlnCb0X0O1JrBQvJLJKwtPWBvO/8sLWFf
+         aCnJv8TKa5fOKzc7s8SwCAv287Htu+m7ONFFlY/SzBUMhwPekm2+1GZSRM8QqSD2tWVy
+         jreKiA2NGDb7sy0Xve514lWC4dFj5w/w2bQGXZJbHk8FR8/WDS889+XN591p8DlguWKX
+         1dOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVz5mXHkxNG7/7/vScIPsPiGSvlJh3FUE6bHmgvJndsmNMJ1Pck9wOxJEyjM/AGjzC81cKV0q8+NNSTj5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxuo+JLejUJMQ4/jeOkt8wTTT72zwcEwiFX9yoQ64g/MdsaHr7
+	+lKV3V0owUzWFwk/EFOJxN1Qhu5EjkNq1RDTeKVzWjQxMIfkuxGXD2IjQzxUXyg+8IOmFbPyBv5
+	KtbI1+enWMiuqwY1bVw==
+X-Google-Smtp-Source: AGHT+IHivVsC++z1BFup0tqwkOd7GYrq8moTlRg/GpRhWDoE3Ghyz4O+IMFvuK9BuVDldT8TyVBFOBtgde1ZgIOF
+X-Received: from vkbfs2.prod.google.com ([2002:a05:6122:3b82:b0:523:87b6:c79a])
+ (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6122:328c:b0:523:dd87:fe86 with SMTP id 71dfb90a1353d-5261d46ad97mr1034796e0c.6.1743197189310;
+ Fri, 28 Mar 2025 14:26:29 -0700 (PDT)
+Date: Fri, 28 Mar 2025 21:26:27 +0000
+In-Reply-To: <c04233d3c35e2bad5a864ab72d0f55b3919100f3.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <c04233d3c35e2bad5a864ab72d0f55b3919100f3.camel@redhat.com>
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250328212628.2235898-1-jthoughton@google.com>
+Subject: Re: [PATCH 2/5] KVM: selftests: access_tracking_perf_test: Add option
+ to skip the sanity check
+From: James Houghton <jthoughton@google.com>
+To: mlevitsk@redhat.com
+Cc: axelrasmussen@google.com, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
+	jthoughton@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mkoutny@suse.com, seanjc@google.com, tj@kernel.org, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 28 Mar 2025 18:25:02 -0300
-Message-Id: <D8S7STGMNHO8.FOJPC4C803BI@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 09/12] platform/x86: alienware-wmi-wmax: Add a
- DebugFS interface
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
- <20250313-hwm-v6-9-17b57f787d77@gmail.com>
- <09fb8477-9b41-ceb2-4f0c-bc6477a5874f@linux.intel.com>
-In-Reply-To: <09fb8477-9b41-ceb2-4f0c-bc6477a5874f@linux.intel.com>
 
-On Fri Mar 28, 2025 at 1:18 PM -03, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 13 Mar 2025, Kurt Borja wrote:
+On Fri, Mar 28, 2025 at 12:32=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.co=
+m> wrote:
 >
->> Add a debugfs interface which exposes thermal private data.
->>=20
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 90 +++++++++++++++++++=
-+++++++
->>  1 file changed, 90 insertions(+)
->>=20
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
->> index 823b579260555085ef6ac793b806738a756bb9da..472e6289fec5be0db0a5cb8e=
-76718b750fa558b5 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> @@ -11,6 +11,7 @@
->>  #include <linux/bitfield.h>
->>  #include <linux/bitmap.h>
->>  #include <linux/bits.h>
->> +#include <linux/debugfs.h>
->>  #include <linux/dmi.h>
->>  #include <linux/hwmon.h>
->>  #include <linux/hwmon-sysfs.h>
->> @@ -19,6 +20,7 @@
->>  #include <linux/moduleparam.h>
->>  #include <linux/platform_profile.h>
->>  #include <linux/pm.h>
->> +#include <linux/seq_file.h>
->>  #include <linux/units.h>
->>  #include <linux/wmi.h>
->>  #include "alienware-wmi.h"
->> @@ -1252,6 +1254,92 @@ static int awcc_platform_profile_init(struct wmi_=
-device *wdev)
->>  	return PTR_ERR_OR_ZERO(priv->ppdev);
->>  }
->> =20
->> +/*
->> + * DebugFS
->> + */
->> +static int awcc_debugfs_system_description_read(struct seq_file *seq, v=
-oid *data)
->> +{
->> +	struct device *dev =3D seq->private;
->> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
->> +
->> +	seq_printf(seq, "0x%08x\n", priv->system_description);
->> +
->> +	return 0;
->> +}
->> +
->> +static int awcc_debugfs_hwmon_data_read(struct seq_file *seq, void *dat=
-a)
->> +{
->> +	struct device *dev =3D seq->private;
->> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
->> +	const struct awcc_fan_data *fan;
->> +	unsigned int bit;
->> +
->> +	seq_printf(seq, "Number of fans: %u\n", priv->fan_count);
->> +	seq_printf(seq, "Number of temperature sensors: %u\n\n", priv->temp_co=
-unt);
->> +
->> +	for (u32 i =3D 0; i < priv->fan_count; i++) {
->> +		fan =3D priv->fan_data[i];
->> +
->> +		seq_printf(seq, "Fan %u:\n", i);
->> +		seq_printf(seq, "  ID: 0x%02x\n", fan->id);
->> +		seq_printf(seq, "  Related temperature sensors bitmap: %lu\n",
->> +			   fan->auto_channels_temp);
->> +	}
->> +
->> +	seq_puts(seq, "\nTemperature sensor IDs:\n");
->> +	for_each_set_bit(bit, priv->temp_sensors, AWCC_ID_BITMAP_SIZE)
->> +		seq_printf(seq, "  0x%02x\n", bit);
->> +
->> +	return 0;
->> +}
->> +
->> +static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *dat=
-a)
->> +{
->> +	struct device *dev =3D seq->private;
->> +	struct awcc_priv *priv =3D dev_get_drvdata(dev);
->> +
->> +	seq_printf(seq, "Number of thermal profiles: %u\n\n", priv->profile_co=
-unt);
->> +
->> +	for (u32 i =3D 0; i < PLATFORM_PROFILE_LAST; i++) {
->> +		if (!priv->supported_profiles[i])
->> +			continue;
->> +
->> +		seq_printf(seq, "Platform profile %u:\n", i);
->> +		seq_printf(seq, "  ID: 0x%02x\n", priv->supported_profiles[i]);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void awcc_debugfs_remove(void *data)
->> +{
->> +	struct dentry *root =3D data;
->> +
->> +	debugfs_remove(root);
->> +}
->> +
->> +static void awcc_debugfs_init(struct wmi_device *wdev)
->> +{
->> +	struct dentry *root;
->> +	char name[64];
->> +
->> +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", "alienware-wmi", dev_name(&=
-wdev->dev));
+> On Thu, 2025-03-27 at 01:23 +0000, James Houghton wrote:
+> > From: Maxim Levitsky <mlevitsk@redhat.com>
+> >
+> > Add an option to skip sanity check of number of still idle pages,
+> > and set it by default to skip, in case hypervisor or NUMA balancing
+> > is detected.
+> >
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > Co-developed-by: James Houghton <jthoughton@google.com>
+> > Signed-off-by: James Houghton <jthoughton@google.com>
+> > ---
+> > =C2=A0.../selftests/kvm/access_tracking_perf_test.c | 61 ++++++++++++++=
+++---
+> > =C2=A0.../testing/selftests/kvm/include/test_util.h | =C2=A01 +
+> > =C2=A0tools/testing/selftests/kvm/lib/test_util.c =C2=A0 | =C2=A07 +++
+> > =C2=A03 files changed, 60 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/=
+tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > index 447e619cf856e..0e594883ec13e 100644
+> > --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > @@ -65,6 +65,16 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCP=
+US];
+> > =C2=A0/* Whether to overlap the regions of memory vCPUs access. */
+> > =C2=A0static bool overlap_memory_access;
+> >=20
+> > +/*
+> > + * If the test should only warn if there are too many idle pages (i.e.=
+, it is
+> > + * expected).
+> > + * -1: Not yet set.
+> > + * =C2=A00: We do not expect too many idle pages, so FAIL if too many =
+idle pages.
+> > + * =C2=A01: Having too many idle pages is expected, so merely print a =
+warning if
+> > + * =C2=A0 =C2=A0 too many idle pages are found.
+> > + */
+> > +static int idle_pages_warn_only =3D -1;
+> > +
+> > =C2=A0struct test_params {
+> > =C2=A0 =C2=A0 =C2=A0 /* The backing source for the region of memory. */
+> > =C2=A0 =C2=A0 =C2=A0 enum vm_mem_backing_src_type backing_src;
+> > @@ -177,18 +187,12 @@ static void mark_vcpu_memory_idle(struct kvm_vm *=
+vm,
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* arbitrary; high enough that we ensure most=
+ memory access went through
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* access tracking but low enough as to not m=
+ake the test too brittle
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* over time and across architectures.
+> > - =C2=A0 =C2=A0 =C2=A0*
+> > - =C2=A0 =C2=A0 =C2=A0* When running the guest as a nested VM, "warn" i=
+nstead of asserting
+> > - =C2=A0 =C2=A0 =C2=A0* as the TLB size is effectively unlimited and th=
+e KVM doesn't
+> > - =C2=A0 =C2=A0 =C2=A0* explicitly flush the TLB when aging SPTEs. =C2=
+=A0As a result, more pages
+> > - =C2=A0 =C2=A0 =C2=A0* are cached and the guest won't see the "idle" b=
+it cleared.
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
+> > =C2=A0 =C2=A0 =C2=A0 if (still_idle >=3D pages / 10) {
+> > -#ifdef __x86_64__
+> > - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 TEST_ASSERT(this_cpu_has(X8=
+6_FEATURE_HYPERVISOR),
+> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 TEST_ASSERT(idle_pages_warn=
+_only,
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 "vCPU%d: Too many pages still idle (%lu out of %lu)",
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 vcpu_idx, still_idle, pages);
+> > -#endif
+> > +
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 printf("WARNING: vCPU%=
+d: Too many pages still idle (%lu out of %lu), "
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0"this will affect performance results.\n",
+> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0vcpu_idx, still_idle, pages);
+> > @@ -328,6 +332,31 @@ static void run_test(enum vm_guest_mode mode, void=
+ *arg)
+> > =C2=A0 =C2=A0 =C2=A0 memstress_destroy_vm(vm);
+> > =C2=A0}
+> >=20
+> > +static int access_tracking_unreliable(void)
+> > +{
+> > +#ifdef __x86_64__
+> > + =C2=A0 =C2=A0 /*
+> > + =C2=A0 =C2=A0 =C2=A0* When running nested, the TLB size is effectivel=
+y unlimited and the
+> > + =C2=A0 =C2=A0 =C2=A0* KVM doesn't explicitly flush the TLB when aging=
+ SPTEs. =C2=A0As a result,
+> > + =C2=A0 =C2=A0 =C2=A0* more pages are cached and the guest won't see t=
+he "idle" bit cleared.
+> > + =C2=A0 =C2=A0 =C2=A0*/
+> Tiny nitpick: nested on KVM, because on other hypervisors it might work d=
+ifferently,
+> but overall most of them probably suffer from the same problem,
+> so its probably better to say something like that:
 >
-> You'd need to add include for ARRAY_SIZE() but can't you just use=20
-> sizeof()?
+> 'When running nested, the TLB size might be effectively unlimited,
+> for example this is the case when running on top of KVM L0'
 
-Sure, it's 1 byte anyway. Though I think I use ARRAY_SIZE somewhere
-else so I'll add the include too.
+Added this clarification (see below), thanks!
 
-Thank you so much for your feedback! I'll send v7 this weekend.
-
---=20
- ~ Kurt
+This wording was left as-is from before, but I agree that it could be bette=
+r.
 
 >
->> +	root =3D debugfs_create_dir(name, NULL);
->> +
->> +	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
->> +				    awcc_debugfs_system_description_read);
->> +
->> +	if (awcc->hwmon)
->> +		debugfs_create_devm_seqfile(&wdev->dev, "hwmon_data", root,
->> +					    awcc_debugfs_hwmon_data_read);
->> +
->> +	if (awcc->pprof)
->> +		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
->> +					    awcc_debugfs_pprof_data_read);
->> +
->> +	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
->> +}
->> +
->>  static int alienware_awcc_setup(struct wmi_device *wdev)
->>  {
->>  	struct awcc_priv *priv;
->> @@ -1290,6 +1378,8 @@ static int alienware_awcc_setup(struct wmi_device =
-*wdev)
->>  			return ret;
->>  	}
->> =20
->> +	awcc_debugfs_init(wdev);
->> +
->>  	return 0;
->>  }
->> =20
->>=20
->>=20
+>
+> > + =C2=A0 =C2=A0 if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 puts("Skipping idle page co=
+unt sanity check, because the test is run nested");
+> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1;
+> > + =C2=A0 =C2=A0 }
+> > +#endif
+> > + =C2=A0 =C2=A0 /*
+> > + =C2=A0 =C2=A0 =C2=A0* When NUMA balancing is enabled, guest memory ca=
+n be mapped
+> > + =C2=A0 =C2=A0 =C2=A0* PROT_NONE, and the Accessed bits won't be queri=
+able.
+>
+> Tiny nitpick: the accessed bit in this case are lost, because KVM no long=
+er propagates
+> it from secondary to primary paging, and the secondary mapping might be l=
+ost due to zapping,
+> and the biggest offender of this is NUMA balancing.
 
+Reworded this bit. The current wording is indeed misleading.
+
+> > + =C2=A0 =C2=A0 =C2=A0*/
+> > + =C2=A0 =C2=A0 if (is_numa_balancing_enabled()) {
+> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 puts("Skipping idle page co=
+unt sanity check, because NUMA balancing is enabled");
+> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1;
+> > + =C2=A0 =C2=A0 }
+> > +
+> > + =C2=A0 =C2=A0 return 0;
+> > +}
+>
+> Very good idea of extracting this logic into a function and documenting i=
+t.
+
+:)
+
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+
+Thanks, though I've already included your Signed-off-by. I'll just keep you=
+r
+Signed-off-by and From:.
+
+I'm applying the following diff for the next version:
+
+diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tool=
+s/testing/selftests/kvm/access_tracking_perf_test.c
+index 0e594883ec13e..1770998c7675b 100644
+--- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
++++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+@@ -336,9 +336,10 @@ static int access_tracking_unreliable(void)
+ {
+ #ifdef __x86_64__
+ 	/*
+-	 * When running nested, the TLB size is effectively unlimited and the
+-	 * KVM doesn't explicitly flush the TLB when aging SPTEs.  As a result,
+-	 * more pages are cached and the guest won't see the "idle" bit cleared.
++	 * When running nested, the TLB size may be effectively unlimited (for
++	 * example, this is the case when running on KVM L0), and KVM doesn't
++	 * explicitly flush the TLB when aging SPTEs.  As a result, more pages
++	 * are cached and the guest won't see the "idle" bit cleared.
+ 	 */
+ 	if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
+ 		puts("Skipping idle page count sanity check, because the test is run nes=
+ted");
+@@ -346,8 +347,8 @@ static int access_tracking_unreliable(void)
+ 	}
+ #endif
+ 	/*
+-	 * When NUMA balancing is enabled, guest memory can be mapped
+-	 * PROT_NONE, and the Accessed bits won't be queriable.
++	 * When NUMA balancing is enabled, guest memory will be unmapped to get
++	 * NUMA faults, dropping the Accessed bits.
+ 	 */
+ 	if (is_numa_balancing_enabled()) {
+ 		puts("Skipping idle page count sanity check, because NUMA balancing is e=
+nabled");
