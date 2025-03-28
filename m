@@ -1,72 +1,72 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B546D1C5F36
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CA1212B18
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743147916; cv=none; b=QTSwQx4jVd63vMhPQ2IeY8B140BEcEnU+92/7x7GyaWEQaMn8f+TfFHHft8pXSxtS1bm2tl383GUR/EPQp1d/ALUZPTQgUbq6lploZadyPeQiG6wyHpqfasEKzntEHUlNEJiYv2Wbu5edL+VNcbZepfDWNPc81ti/pXW+CzOPBc=
+	t=1743147948; cv=none; b=e3ZwXUWcUAFP6OvN+YHijDsnvvW/h/PbFEWo7yodcxvlc9BI+OYOq2pq9CZWA0aCWILZxK7WP5kA4CBumxE9K645/eRJlXcmyAn02gtSIlCoQHcDO2SCJ+NvTFsikQehSgEnRntAlL5hhWwJ5o3493KQbfPkLxY0SVsNGOaD9v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743147916; c=relaxed/simple;
-	bh=rHhW4EJhfJ7yNY7e2PyX5y0Z5SfuR3jfuW9uefIR6VA=;
+	s=arc-20240116; t=1743147948; c=relaxed/simple;
+	bh=jhd8eqeLqKtgOMegJHXn9/RBH+p95nA916u23Bs1/xU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSPEfvSomd/nM8LAVgRToykce6OpWmqPBuxN3lfWTOcXxBGoJtgchcWnVGrOKTOysqTY2kc8QTxcctBvwYwDqYMMz+Jajhnn3Lm1HCv2xiQ7gawP2hIAPSlHFJ0KH+SX7ccZVnL3k4vpQrkMUBwTdaQ6uQGVvCGDX8n5CqA6Xl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ybGgDK6e; arc=none smtp.client-ip=209.85.216.41
+	 To:Cc:Content-Type; b=EcSQcJUlH2eIIMJN2YKcDYPMdaRiDJUvJKuqpDc8c2mcdJufIxft21Zgm1jxToaldH1IVBy5K5NlmFz/9txiL24SQjdmgQQO7bbI9eImV8qc5324iCb0NAIElVQNDEjfZ/nw97II/dsJNk5QBq5ujzG0tABaai9Kxtw9s+rDKQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yoQpUS5G; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ybGgDK6e"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-300fefb8e06so2977638a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 00:45:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yoQpUS5G"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223a7065ff8so55477985ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 00:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743147914; x=1743752714; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743147946; x=1743752746; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IESU1cLx8J9+1ppDJfS8syyG1sO20GZa5dzaM+JLDsk=;
-        b=ybGgDK6eUeQRG50hCxFAhTi9uqJguXaP6qOR8k3CD5oeu+BqHDhdpDo5+q7u3wS/mV
-         tWYviy9gGYrz75S8jQHiRcxlOn2F8e2GI4cWzyRSeyjVqBHE8emFCnPS9wDFyhp3QV91
-         OoPjWDb4k9Twr45c8WmPhjRPCvQqnPWxRi5f7hNl3bNFvO61qzoGy0l1gt/MImj6QhUw
-         XY7AhryvGYUCFi+7C3ZWWj1UHj8YQfWp+3bldiV+bnfyweKJ6aB8PgAOTpnRTjaITqSk
-         eO3+OXpq6qFXynENO0tVGhYarrYUbqe7OijQQ7ukhef29t9QcMY3ICYoyBVnQooQforq
-         uhfw==
+        bh=Cju4PP3BDwNUuGXUxlhnczSfO2O+sRFjPqYxZUsY/Fs=;
+        b=yoQpUS5G1WczIvAr6LZUddcvjI2Ojd88Y/vPHrUHg4KODVEnxp4CDjPh5nN/C5lkl6
+         4KHSVb6atT653sH9Vet0J5t6AW/HzeLjLJdE+EBhMzxU/DdQ2q9B72iULBdgU51ZTzjF
+         MjnZu25rtaYV6ksKxvNcHC4jtyHZ09IJjwk+gEnK60g7mTOvzYvw+DoJV9Mo7RwQQFnM
+         GqjPR78lvbPD3S3bAMjUM2cfq4Ibap6ZQMqXPLc1V9swCmoZHXprFEhUKL94KXY/7Qgm
+         EKQL6G4LXXkl5lbhnEJGzxH6eRGeFTlWNUiBp+4yHOTz9ZsS05wU4lN7dzTbXJ1M40+3
+         RUUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743147914; x=1743752714;
+        d=1e100.net; s=20230601; t=1743147946; x=1743752746;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IESU1cLx8J9+1ppDJfS8syyG1sO20GZa5dzaM+JLDsk=;
-        b=js8joXI2jUTz160d64TKWKIhmqofbMbt7sP/IsuzXiJy0vTDAbqFGug+E+MaaBkPMf
-         B7I+rrLfK10lq4CH9RtbPiltNA8/LoJQYOkTcqzDgHyC3dHuJKnZv+FWlyQWBDtKaLfF
-         ug1rjPQOUmNljdHrIoT6/W4FY286q23VC4et5gXkOzzOvaYtQv6LXThTCyTIfPZFiWwZ
-         LXXzqceQX9RNBFGQwz2UUyaEQqLWKcykUCl78wBxJ1GpVOAlDTTVrwDxH9lAM7Kj+wQB
-         Yjp/hXkdJTR1fc0CgbZvloVzhTaeXCuL9qEYASPRRlpM/GT1zcOxMbnzuhX15WhGiWGG
-         r1OA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDrMyVQziIt69rpK5dLjZSFXErgmx47XWxJvra0Rji81pQOX8kB2Pd5srbVbjbPiBSbjkjcER/RY45xQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOf+7OsXEpBqvv+FAPLB+0b49lnFBk63A6RsP27jLjUSnVfIW+
-	Q/Jw4rhLuj6jSbNc+63XS4Vcp5QnI/A2+j4TndSXxWKTsHa2x8DsqQBD/Ph/VIRyfDzr4ByjQY5
-	UShH9IFzNEbj0V6sskY2GssBZGoxqFtAShfYf
-X-Gm-Gg: ASbGnctMpTSLiWqm8e6pyO1IyXbMQX2RUBWqIu2uEpQeBFOUDHlxh8UoL65GdQ2Ab7f
-	qbYBNE0Vy9RqaAHQ7hFMUc81oa7Mb1LuxVPPPQ2rM9HqI79FGrwsY23K6XZTDkWLNZuo85udTz1
-	N/HN6c3FYHO4vFygjmi/en30JCxUx+5NKPNUDEU5C0mjGXbyQQihU2u3m0
-X-Google-Smtp-Source: AGHT+IH6UrNf8k0iIk0UW8yjv9n/nScAByODrny3BYGZJEV9LB+thNungicKZ0bfZ+d7qsqmH1ybo9gXm2eAAWDsTZw=
-X-Received: by 2002:a17:90b:4a4f:b0:2fe:a77b:d97e with SMTP id
- 98e67ed59e1d1-303a7d66285mr10270841a91.11.1743147913645; Fri, 28 Mar 2025
- 00:45:13 -0700 (PDT)
+        bh=Cju4PP3BDwNUuGXUxlhnczSfO2O+sRFjPqYxZUsY/Fs=;
+        b=mH3Uwebf3bMT+yjfiRH/BP39AJ5fMsMq8Bkz1dg4WDqDIOBWt8ugNdE468scHLfqSk
+         AqHB2Ii17GPvQY2lA3Kh44fxMDD7OeURAvi7eylu+Fixm2fVQvWQoG/T/wgZAR2H4aDD
+         YTAjEJllRu+Ubko9GaIa/yL+5l88TfRMbXsjSczbUtwqatYGNSD09k3kkTK236vC2ten
+         xF4L7J+80Xavb9vPmOcW2HQMYyWC1f7xaeMIvjYGmnziyMqYviDynzZf0jyB5kPVFmSL
+         9FlkgPDNcrae7fFwVnMiETWTjz2k5chxM6wq6hExJ27S7MaAeahMiptIT5Xr9PKEnv3o
+         9GgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6BUwqqGArL3VebXdKmHSmCczBfD3hqg1kRLuAC2jeoilYOJ7CEBddYUrWU3HA7718oihO2AcfD9DUHLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTCVHuOYiGs2KwtYW/SDDAYLq/cVX0R30w9UDWd9KQrV9uDfUy
+	xCKqi/qLZ5159IuY4mE//WYkCEeeioIy/xdHnQtQMV3+OP5q1Ynq4g5Svo91V/SXbRxSg7YSQwX
+	DNSPawQfBmnhLDEdzMOzBL3C77r+oeHR0SEwJ
+X-Gm-Gg: ASbGnctBVoXE7zo6nO19VVVY6r3KsvNJEcPuHFGKq1fF+D9dQskSqRu4XmXtnaSnQeq
+	88TADqpEJyi9OAphJ6SbA+eCrNxx3iBvXu+mnEMvd51YWpxFUDXjwQM9ldnJHPAmD9wE7WW0Z1d
+	ZG9tkeV0LkIWOQ0brtuiz8PH2EHh+1qKRBUbTVXa79HA0JVOpf8luO/eGX
+X-Google-Smtp-Source: AGHT+IHOrcw9DisHzvvGCzWpEdMq/2DuAlul4EC/64JuosmYAwms2YN5mduIbPIPWnfzDcFKN8g6PnqvAgOWYqzB4tA=
+X-Received: by 2002:a17:903:41d2:b0:21f:7e12:5642 with SMTP id
+ d9443c01a7336-22804855243mr78114555ad.18.1743147945996; Fri, 28 Mar 2025
+ 00:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319005141.312805-1-quic_wcheng@quicinc.com> <20250319005141.312805-6-quic_wcheng@quicinc.com>
-In-Reply-To: <20250319005141.312805-6-quic_wcheng@quicinc.com>
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com> <20250319005141.312805-5-quic_wcheng@quicinc.com>
+In-Reply-To: <20250319005141.312805-5-quic_wcheng@quicinc.com>
 From: Puma Hsu <pumahsu@google.com>
-Date: Fri, 28 Mar 2025 15:45:00 +0800
-X-Gm-Features: AQ5f1JonoFS3uWyzINSVXYoD9NyFnlP1GUczGkKTm-KX97WAnMBIsmA-S-vI3bg
-Message-ID: <CAGCq0LZJmt3BdEXTvyOBUvsCCzVD1eQE2LQ6Eh_WRs7jYmR6oA@mail.gmail.com>
-Subject: Re: [PATCH v36 05/31] usb: host: xhci: Notify xHCI sideband on
- transfer ring free
+Date: Fri, 28 Mar 2025 15:44:00 +0800
+X-Gm-Features: AQ5f1JrxKR_5At3wbtVqdesBrs5EjD2B83PPzVhOxlnkDOQEImF4VUCzY3fgoP4
+Message-ID: <CAGCq0LYNn6VZwKpvvf=N2ra8ZJcSso80ZDpirByHO9ChBZv3eg@mail.gmail.com>
+Subject: Re: [PATCH v36 04/31] usb: host: xhci-plat: Set XHCI max interrupters
+ if property is present
 To: Wesley Cheng <quic_wcheng@quicinc.com>
 Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz, 
 	conor+dt@kernel.org, dmitry.torokhov@gmail.com, corbet@lwn.net, 
@@ -80,179 +80,35 @@ Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 8:52=E2=80=AFAM Wesley Cheng <quic_wcheng@quicinc.c=
+On Wed, Mar 19, 2025 at 8:54=E2=80=AFAM Wesley Cheng <quic_wcheng@quicinc.c=
 om> wrote:
 >
-> In the case of handling a USB bus reset, the xhci_discover_or_reset_devic=
-e
-> can run without first notifying the xHCI sideband client driver to stop o=
-r
-> prevent the use of the transfer ring.  It was seen that when a bus reset
-> situation happened, the USB offload driver was attempting to fetch the xH=
-CI
-> transfer ring information, which was already freed.
+> Some platforms may want to limit the number of XHCI interrupters allocate=
+d.
+> This is passed to xhci-plat as a device property.  Ensure that this is re=
+ad
+> and the max_interrupters field is set.
 >
 > Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 
 Tested-by: Puma Hsu <pumahsu@google.com>
 
 > ---
->  drivers/usb/host/xhci-sideband.c  | 29 ++++++++++++++++++++++++++++-
->  drivers/usb/host/xhci.c           |  3 +++
->  include/linux/usb/xhci-sideband.h | 30 +++++++++++++++++++++++++++++-
->  3 files changed, 60 insertions(+), 2 deletions(-)
+>  drivers/usb/host/xhci-plat.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/drivers/usb/host/xhci-sideband.c b/drivers/usb/host/xhci-sid=
-eband.c
-> index 742bbc6c2d9b..d49f9886dd84 100644
-> --- a/drivers/usb/host/xhci-sideband.c
-> +++ b/drivers/usb/host/xhci-sideband.c
-> @@ -88,6 +88,30 @@ __xhci_sideband_remove_endpoint(struct xhci_sideband *=
-sb, struct xhci_virt_ep *e
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 3155e3a842da..6dab142e7278 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -267,6 +267,8 @@ int xhci_plat_probe(struct platform_device *pdev, str=
+uct device *sysdev, const s
 >
->  /* sideband api functions */
+>                 device_property_read_u32(tmpdev, "imod-interval-ns",
+>                                          &xhci->imod_interval);
+> +               device_property_read_u16(tmpdev, "num-hc-interrupters",
+> +                                        &xhci->max_interrupters);
+>         }
 >
-> +/**
-> + * xhci_sideband_notify_ep_ring_free - notify client of xfer ring free
-> + * @sb: sideband instance for this usb device
-> + * @ep_index: usb endpoint index
-> + *
-> + * Notifies the xHCI sideband client driver of a xHCI transfer ring free
-> + * routine.  This will allow for the client to ensure that all transfers
-> + * are completed.
-> + *
-> + * The callback should be synchronous, as the ring free happens after.
-> + */
-> +void xhci_sideband_notify_ep_ring_free(struct xhci_sideband *sb,
-> +                                      unsigned int ep_index)
-> +{
-> +       struct xhci_sideband_event evt;
-> +
-> +       evt.type =3D XHCI_SIDEBAND_XFER_RING_FREE;
-> +       evt.evt_data =3D &ep_index;
-> +
-> +       if (sb->notify_client)
-> +               sb->notify_client(sb->intf, &evt);
-> +}
-> +EXPORT_SYMBOL_GPL(xhci_sideband_notify_ep_ring_free);
-> +
->  /**
->   * xhci_sideband_add_endpoint - add endpoint to sideband access list
->   * @sb: sideband instance for this usb device
-> @@ -342,7 +366,9 @@ EXPORT_SYMBOL_GPL(xhci_sideband_interrupter_id);
->   * Return: pointer to a new xhci_sideband instance if successful. NULL o=
-therwise.
->   */
->  struct xhci_sideband *
-> -xhci_sideband_register(struct usb_interface *intf, enum xhci_sideband_ty=
-pe type)
-> +xhci_sideband_register(struct usb_interface *intf, enum xhci_sideband_ty=
-pe type,
-> +                      int (*notify_client)(struct usb_interface *intf,
-> +                                   struct xhci_sideband_event *evt))
->  {
->         struct usb_device *udev =3D interface_to_usbdev(intf);
->         struct usb_hcd *hcd =3D bus_to_hcd(udev->bus);
-> @@ -381,6 +407,7 @@ xhci_sideband_register(struct usb_interface *intf, en=
-um xhci_sideband_type type)
->         sb->vdev =3D vdev;
->         sb->intf =3D intf;
->         sb->type =3D type;
-> +       sb->notify_client =3D notify_client;
->         vdev->sideband =3D sb;
->
->         spin_unlock_irq(&xhci->lock);
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 61950a350432..91e2d6eac8b7 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -20,6 +20,7 @@
->  #include <linux/string_choices.h>
->  #include <linux/dmi.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/usb/xhci-sideband.h>
->
->  #include "xhci.h"
->  #include "xhci-trace.h"
-> @@ -3919,6 +3920,8 @@ static int xhci_discover_or_reset_device(struct usb=
-_hcd *hcd,
->                 }
->
->                 if (ep->ring) {
-> +                       if (ep->sideband)
-> +                               xhci_sideband_notify_ep_ring_free(ep->sid=
-eband, i);
->                         xhci_debugfs_remove_endpoint(xhci, virt_dev, i);
->                         xhci_free_endpoint_ring(xhci, virt_dev, i);
->                 }
-> diff --git a/include/linux/usb/xhci-sideband.h b/include/linux/usb/xhci-s=
-ideband.h
-> index f8722afb8a2d..45288c392f6e 100644
-> --- a/include/linux/usb/xhci-sideband.h
-> +++ b/include/linux/usb/xhci-sideband.h
-> @@ -21,6 +21,20 @@ enum xhci_sideband_type {
->         XHCI_SIDEBAND_VENDOR,
->  };
->
-> +enum xhci_sideband_notify_type {
-> +       XHCI_SIDEBAND_XFER_RING_FREE,
-> +};
-> +
-> +/**
-> + * struct xhci_sideband_event - sideband event
-> + * @type: notifier type
-> + * @evt_data: event data
-> + */
-> +struct xhci_sideband_event {
-> +       enum xhci_sideband_notify_type type;
-> +       void *evt_data;
-> +};
-> +
->  /**
->   * struct xhci_sideband - representation of a sideband accessed usb devi=
-ce.
->   * @xhci: The xhci host controller the usb device is connected to
-> @@ -30,6 +44,7 @@ enum xhci_sideband_type {
->   * @type: xHCI sideband type
->   * @mutex: mutex for sideband operations
->   * @intf: USB sideband client interface
-> + * @notify_client: callback for xHCI sideband sequences
->   *
->   * FIXME usb device accessed via sideband Keeping track of sideband acce=
-ssed usb devices.
->   */
-> @@ -44,10 +59,14 @@ struct xhci_sideband {
->         struct mutex                    mutex;
->
->         struct usb_interface            *intf;
-> +       int (*notify_client)(struct usb_interface *intf,
-> +                            struct xhci_sideband_event *evt);
->  };
->
->  struct xhci_sideband *
-> -xhci_sideband_register(struct usb_interface *intf, enum xhci_sideband_ty=
-pe type);
-> +xhci_sideband_register(struct usb_interface *intf, enum xhci_sideband_ty=
-pe type,
-> +                      int (*notify_client)(struct usb_interface *intf,
-> +                                   struct xhci_sideband_event *evt));
->  void
->  xhci_sideband_unregister(struct xhci_sideband *sb);
->  int
-> @@ -71,4 +90,13 @@ void
->  xhci_sideband_remove_interrupter(struct xhci_sideband *sb);
->  int
->  xhci_sideband_interrupter_id(struct xhci_sideband *sb);
-> +
-> +#if IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND)
-> +void xhci_sideband_notify_ep_ring_free(struct xhci_sideband *sb,
-> +                                      unsigned int ep_index);
-> +#else
-> +static inline void xhci_sideband_notify_ep_ring_free(struct xhci_sideban=
-d *sb,
-> +                                                    unsigned int ep_inde=
-x)
-> +{ }
-> +#endif /* IS_ENABLED(CONFIG_USB_XHCI_SIDEBAND) */
->  #endif /* __LINUX_XHCI_SIDEBAND_H */
+>         /*
 >
