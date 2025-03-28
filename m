@@ -1,36 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2E71CFEC3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4451DB15C;
 	Fri, 28 Mar 2025 17:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743181995; cv=none; b=XTd3ZXZQ3jYc/VrwBtHrenQPQjpB72gnGd5N92pG0WyEEm5haHHjQPb3CoOi2pD9EALwlrJcb/rnTGb7EOZnKPw0cs7qLWhsgmHXslczuml3YqX3cR+bSC/Rz9NGImR+7or9MIIeaTWWnFg28m+VxSLQsA0cbGefHPU7E9M86Tk=
+	t=1743181995; cv=none; b=C/CdaPCo6onZbfiCP7eaSxscgSX/4Lms2e/PS/JPZVSxHwzzjnc+cXIzbBFt25eoIUjc8B2mOGM+A7tsP4aaMzi02ADOw/8jf/Zk+h9E+qPj6KRXSuNnOpotz72XXjbY+PQ8N/pPgS9hQ4EwtfRJZjI4yGp9DAuwBDp/nHKLTcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743181995; c=relaxed/simple;
-	bh=1UEe2ZUUIwJYZI/Wb2iC/iMXfyJTUBGVP1whccfDJoo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E6yupm0ucXh+XNXk2KGmN1SZPG7WQp1neTjVEB4EeXg5FqdmgmejTuMukUdVTIMwUlEi2sQo7F6estehn9VTDgWk7pOSzpKBUdTY6IomcgLaT+7Dm7coC30YNqe7oDPHdQvesKhkn3HbQRHSTnQl3hLzePtjm12YnK7OqU5/Qkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=PS/1Qu+2; arc=none smtp.client-ip=198.137.202.136
+	bh=EhZQkEO8i1deIQ7W9kN9XlPhwqOssT6nAuxmAs5jXz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IQmXL0LfuCSPdaKdiDIBK4bY3Ypg+ToN6p2olGvVzubtfnPP7OS7LnF3WccYw/9RmclH81oNVOiST8H5EoALU36dSgNBMOes45yVVlCNvFBh8rPA8mGf2r6A/QkHJhYmcq/26ZHtd2NYYrwavej5dQVxVso75YlF9QnylbVI1XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=cTnqEBB/; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PS/1Qu+2"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cTnqEBB/"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52SHC6vW2029344
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52SHC6vc2029344
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 10:12:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52SHC6vW2029344
+	Fri, 28 Mar 2025 10:12:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52SHC6vc2029344
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743181934;
-	bh=wrTcXCC95mvMn2X0Ty0Tmz2cq/ZeUYBrBQm9agHaZTk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PS/1Qu+2ThvTaq9rqP4M3CwiEtiNnoqZfbXkf2A79JxJc1zVMLZPxR+4K+vFfk5Sj
-	 3zxqmgtd3Qp/+HG2uGIfOYdWHvzuAiK7KXM5/fh6i4zEu4qo2Vi7JGipvEzKPY9aap
-	 QiZ2t0ws5drIBbj8otPem5QfgVjg/H1+JfzojuJO7+w01zrQTKXtkO7Bbkq49Ib5jM
-	 ndr2Kjc+R/4GfhxFa3n6P0GmaQ2Byskxs6BtL4XCpC6cMeKrRlyceyXtNwTNJFDcM1
-	 P2o0CyGWRed6z/5Vw0QihdbpNOdEnXf5q55EmR8JzWSN2bRID3cGzllI2wi1orN5ZO
-	 d59Y0ZnfW3cHw==
+	s=2025032001; t=1743181939;
+	bh=o2J7w3PKRvGcuJDf1co0d+/I22ZZbd6QrLY11S4WAVw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cTnqEBB/BJah7A89aB4mgOBhlXinldTz7OdPUuc0intRY/Oq0VWKBJUnUKx2z+TV/
+	 B18nn8xnGyHrGIvQuYkLteU/gK5NlsGGVcK5ug6P3ssN2Hp2MnqbASrkKDMJy7gSt5
+	 l0ehtRUj27sb3WLGvWx6wAfFrNY7WyZbRwSOzmSk0FUquh+aGIijDkuoswb6P9ctk2
+	 5juRvZV91InP+zZfAWWU7X+ma/P8N4Ft0GpKGPQlN1X0QiOLzkcFUN0db/kjryubzC
+	 xYrTyrV8fuN1Me4TVwF1dQZmiCTOrHx2g2Pn+YFIoeFbECjbQF6yX892xSUhUWGfl7
+	 0w1dx4AfZct0Q==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -38,125 +39,123 @@ Cc: corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
         chao.gao@intel.com, xin3.li@intel.com
-Subject: [PATCH v4 00/19] Enable FRED with KVM VMX
-Date: Fri, 28 Mar 2025 10:11:46 -0700
-Message-ID: <20250328171205.2029296-1-xin@zytor.com>
+Subject: [PATCH v4 06/19] KVM: VMX: Set FRED MSR interception
+Date: Fri, 28 Mar 2025 10:11:52 -0700
+Message-ID: <20250328171205.2029296-7-xin@zytor.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250328171205.2029296-1-xin@zytor.com>
+References: <20250328171205.2029296-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch set enables the Intel flexible return and event delivery
-(FRED) architecture with KVM VMX to allow guests to utilize FRED.
+From: Xin Li <xin3.li@intel.com>
 
-The FRED architecture defines simple new transitions that change
-privilege level (ring transitions). The FRED architecture was
-designed with the following goals:
+Add FRED MSRs to the VMX passthrough MSR list and set FRED MSRs
+interception.
 
-1) Improve overall performance and response time by replacing event
-   delivery through the interrupt descriptor table (IDT event
-   delivery) and event return by the IRET instruction with lower
-   latency transitions.
+8 FRED MSRs, i.e., MSR_IA32_FRED_RSP[123], MSR_IA32_FRED_STKLVLS,
+MSR_IA32_FRED_SSP[123] and MSR_IA32_FRED_CONFIG, are all safe to
+be passthrough, because they all have a pair of corresponding host
+and guest VMCS fields.
 
-2) Improve software robustness by ensuring that event delivery
-   establishes the full supervisor context and that event return
-   establishes the full user context.
+Both MSR_IA32_FRED_RSP0 and MSR_IA32_FRED_SSP0 are dedicated for
+userspace event delivery only, IOW they are NOT used in any kernel
+event delivery and the execution of ERETS.  Thus KVM can run safely
+with guest values in the 2 MSRs.  As a result, save and restore of
+their guest values are deferred until vCPU context switch and their
+host values are restored upon host returning to userspace.
 
-The new transitions defined by the FRED architecture are FRED event
-delivery and, for returning from events, two FRED return instructions.
-FRED event delivery can effect a transition from ring 3 to ring 0, but
-it is used also to deliver events incident to ring 0. One FRED
-instruction (ERETU) effects a return from ring 0 to ring 3, while the
-other (ERETS) returns while remaining in ring 0. Collectively, FRED
-event delivery and the FRED return instructions are FRED transitions.
+Signed-off-by: Xin Li <xin3.li@intel.com>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Tested-by: Shan Kang <shan.kang@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.h |  2 +-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
 
-Intel VMX architecture is extended to run FRED guests, and the major
-changes are:
-
-1) New VMCS fields for FRED context management, which includes two new
-event data VMCS fields, eight new guest FRED context VMCS fields and
-eight new host FRED context VMCS fields.
-
-2) VMX nested-exception support for proper virtualization of stack
-levels introduced with FRED architecture.
-
-Search for the latest FRED spec in most search engines with this search
-pattern:
-
-  site:intel.com FRED (flexible return and event delivery) specification
-
-Following is the link to the v3 of this patch set:
-https://lore.kernel.org/lkml/20241001050110.3643764-1-xin@zytor.com/
-
-Since several preparatory patches in v3 have been merged, and Sean
-reiterated that it's NOT worth to precisely track which fields are/
-aren't supported [1], v4 patch number is reduced to 19.
-
-Although FRED and CET supervisor shadow stacks are independent CPU
-features, FRED unconditionally includes FRED shadow stack pointer
-MSRs IA32_FRED_SSP[0123], and IA32_FRED_SSP0 is just an alias of the
-CET MSR IA32_PL0_SSP.  IOW, the state management of MSR IA32_PL0_SSP
-becomes an overlap area, and Sean requested that FRED virtualization
-to land after CET virtualization [2].
-
-[1]: https://lore.kernel.org/lkml/Z73uK5IzVoBej3mi@google.com/
-[2]: https://lore.kernel.org/kvm/ZvQaNRhrsSJTYji3@google.com/
-
-
-Xin Li (17):
-  KVM: VMX: Add support for the secondary VM exit controls
-  KVM: VMX: Initialize VM entry/exit FRED controls in vmcs_config
-  KVM: VMX: Disable FRED if FRED consistency checks fail
-  KVM: VMX: Initialize VMCS FRED fields
-  KVM: VMX: Set FRED MSR interception
-  KVM: VMX: Save/restore guest FRED RSP0
-  KVM: VMX: Add support for FRED context save/restore
-  KVM: x86: Add a helper to detect if FRED is enabled for a vCPU
-  KVM: VMX: Virtualize FRED event_data
-  KVM: VMX: Virtualize FRED nested exception tracking
-  KVM: x86: Mark CR4.FRED as not reserved
-  KVM: VMX: Dump FRED context in dump_vmcs()
-  KVM: x86: Allow FRED/LKGS to be advertised to guests
-  KVM: nVMX: Add support for the secondary VM exit controls
-  KVM: nVMX: Add FRED VMCS fields to nested VMX context management
-  KVM: nVMX: Add VMCS FRED states checking
-  KVM: nVMX: Allow VMX FRED controls
-
-Xin Li (Intel) (2):
-  x86/cea: Export per CPU array 'cea_exception_stacks' for KVM to use
-  KVM: x86: Save/restore the nested flag of an exception
-
- Documentation/virt/kvm/api.rst            |  19 ++
- Documentation/virt/kvm/x86/nested-vmx.rst |  19 ++
- arch/x86/include/asm/kvm_host.h           |   8 +-
- arch/x86/include/asm/msr-index.h          |   1 +
- arch/x86/include/asm/vmx.h                |  48 ++++-
- arch/x86/include/uapi/asm/kvm.h           |   4 +-
- arch/x86/kvm/cpuid.c                      |   2 +
- arch/x86/kvm/kvm_cache_regs.h             |  15 ++
- arch/x86/kvm/svm/svm.c                    |   2 +-
- arch/x86/kvm/vmx/capabilities.h           |  26 ++-
- arch/x86/kvm/vmx/nested.c                 | 188 ++++++++++++++++-
- arch/x86/kvm/vmx/nested.h                 |  22 ++
- arch/x86/kvm/vmx/vmcs.h                   |   1 +
- arch/x86/kvm/vmx/vmcs12.c                 |  19 ++
- arch/x86/kvm/vmx/vmcs12.h                 |  38 ++++
- arch/x86/kvm/vmx/vmcs_shadow_fields.h     |   4 +
- arch/x86/kvm/vmx/vmx.c                    | 237 ++++++++++++++++++++--
- arch/x86/kvm/vmx/vmx.h                    |  15 +-
- arch/x86/kvm/x86.c                        |  74 ++++++-
- arch/x86/kvm/x86.h                        |   8 +-
- arch/x86/mm/cpu_entry_area.c              |   7 +
- include/uapi/linux/kvm.h                  |   1 +
- 22 files changed, 727 insertions(+), 31 deletions(-)
-
-
-base-commit: acb4f33713b9f6cadb6143f211714c343465411c
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index ac6aa2d091c3..236fe5428a74 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -176,6 +176,16 @@ static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+ 	MSR_FS_BASE,
+ 	MSR_GS_BASE,
+ 	MSR_KERNEL_GS_BASE,
++	MSR_IA32_FRED_RSP0,
++	MSR_IA32_FRED_RSP1,
++	MSR_IA32_FRED_RSP2,
++	MSR_IA32_FRED_RSP3,
++	MSR_IA32_FRED_STKLVLS,
++	MSR_IA32_FRED_SSP1,
++	MSR_IA32_FRED_SSP2,
++	MSR_IA32_FRED_SSP3,
++	MSR_IA32_FRED_CONFIG,
++	MSR_IA32_FRED_SSP0,		/* Should be added through CET */
+ 	MSR_IA32_XFD,
+ 	MSR_IA32_XFD_ERR,
+ #endif
+@@ -7935,6 +7945,34 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+ 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
+ }
+ 
++static void vmx_set_intercept_for_fred_msr(struct kvm_vcpu *vcpu)
++{
++	bool flag = !guest_cpu_cap_has(vcpu, X86_FEATURE_FRED);
++
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP1, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP2, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP3, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_STKLVLS, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP1, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP2, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP3, MSR_TYPE_RW, flag);
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_CONFIG, MSR_TYPE_RW, flag);
++
++	/*
++	 * IA32_FRED_RSP0 and IA32_PL0_SSP (a.k.a. IA32_FRED_SSP0) are only used
++	 * for delivering events when running userspace, while KVM always runs in
++	 * kernel mode (the CPL is always 0 after any VM exit), thus KVM can run
++	 * safely with guest IA32_FRED_RSP0 and IA32_PL0_SSP.
++	 *
++	 * As a result, no need to intercept IA32_FRED_RSP0 and IA32_PL0_SSP.
++	 *
++	 * Note, save and restore of IA32_PL0_SSP belong to CET supervisor context
++	 * management no matter whether FRED is enabled or not.  So leave its
++	 * state management to CET code.
++	 */
++	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP0, MSR_TYPE_RW, flag);
++}
++
+ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -8007,6 +8045,8 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 
+ 	/* Refresh #PF interception to account for MAXPHYADDR changes. */
+ 	vmx_update_exception_bitmap(vcpu);
++
++	vmx_set_intercept_for_fred_msr(vcpu);
+ }
+ 
+ static __init u64 vmx_get_perf_capabilities(void)
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index d53904db5d1a..f48791cf6aa6 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -356,7 +356,7 @@ struct vcpu_vmx {
+ 	struct lbr_desc lbr_desc;
+ 
+ 	/* Save desired MSR intercept (read: pass-through) state */
+-#define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
++#define MAX_POSSIBLE_PASSTHROUGH_MSRS	26
+ 	struct {
+ 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+ 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
 -- 
 2.48.1
 
