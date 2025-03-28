@@ -1,51 +1,37 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260B01E0DDF;
-	Fri, 28 Mar 2025 18:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA58B1DB55D;
+	Fri, 28 Mar 2025 18:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743186667; cv=none; b=lIPztxYNSlTRso86XPGWTzsfB5UY3lhKhbX1HuRAuIc7yt9Bw2R/ubkluc5jTAwlLO9/9LmPCjLUYphqFwjhoO3U6UZFew777rod5/jbpotQ+AS7Q0F3Y5ObDRXQinjKx3/qNC4slz/OhtigmZ8nUQK5SpKS3xlttLBLTcJvIHw=
+	t=1743186705; cv=none; b=lKV7md1ASXPqosykiB/KGBysl6xc45Q6yue4fha47goQ6Q2frbSOTXotkWSn5fviIilBSYvy0hTGnng2AR313DH22AyX/6lmV1ufI6qXRzbQGqGGkIlcJiN0EEIXP/311Orw/AY2b3TSYM14V0ORiUgxSDspSoxOHPQtgYgPJvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743186667; c=relaxed/simple;
-	bh=6137y1Xw2RpHNL6chJ4AQaAhXntZ5VPTTUSMUoeKTN8=;
+	s=arc-20240116; t=1743186705; c=relaxed/simple;
+	bh=TR1saKRDuDQdblIXdj0A2Q5UIlVFUIL7+Jhfp9MzVnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+s8eW6DsMZjlUm6Jth6UlHSUWjkX+qhyCiScXt5B85Ayfa14db0tbc3zhyPyWqUfF7WFsfZGief5xq+t0yppn1p5pBezQAqZOhi+xpEy9oTWSZbuB8WvoJdttEb78pQWgUTpEvun9c+EHIbbOk9lYT0TB8fXRl/nrGQGbN4ijY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=voAhDDmF; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=avPus6bJ5QfU5SjYhcYFTAqhykcYec2+kyQM0kraHi0Lkfzc7phPSeDpo9VJPXDhTGIZyAiV7bCZ8lFv99mkE+z1HmAmhfP8i6ZpWIziCkp1btG3CHF+Y5v5oZC2zoBTovZdq3cR7E1nLA5Stxsn4EQq0l2CTk1hQfBnt6Wrdak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=L6ecz7+R; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="voAhDDmF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KiZdMQWB/LsyZGPavTpYkl+cafFMzaAm8u3dZnX0TIg=; b=voAhDDmFQUd7Im9imS7sFMtFb2
-	gQicI5Us87m5OL3aZpSiJF7BQn3+6kS+M2bxrKbsje/yWRdIaH/Il/iEvnG8SW6kJzIE4t1tCSZIk
-	qUliprkYscKX+kFLDyWxHNPmGi3F24FvEB38292R1tXrc2ciIsDBcioRKFg7Q1fvjwGk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tyETm-007Nvs-Im; Fri, 28 Mar 2025 19:30:54 +0100
-Date: Fri, 28 Mar 2025 19:30:54 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <b187dd05-2d9d-45d0-81d4-fc619dbba1d9@lunn.ch>
-References: <20250328133544.4149716-1-lukma@denx.de>
- <20250328133544.4149716-2-lukma@denx.de>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="L6ecz7+R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743186691;
+	bh=TR1saKRDuDQdblIXdj0A2Q5UIlVFUIL7+Jhfp9MzVnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L6ecz7+RynIQyM4l/A1T7+hyYkpE7mTX2CJEA8zpsASd3coB46Z0NyNFbWO2uKThr
+	 LC17JcdPaLZOXfQmFtO0PyiHnOAixwGjAROPdqgjhfjdF+ltwn7e1LvlsxVpFXg1dB
+	 wzC0wqgr4Uj6hIvOT4w/VxJrhbR40pu9jiNx3KQs=
+Date: Fri, 28 Mar 2025 19:31:31 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-leds@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+References: <Z-azMlPnP7nPPJrY@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,15 +40,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250328133544.4149716-2-lukma@denx.de>
+In-Reply-To: <Z-azMlPnP7nPPJrY@kspp>
 
-> +                        /* Both PHYs (i.e. 0,1) have the same, single GPIO, */
-> +                        /* line to handle both, their interrupts (AND'ed) */
+Hi Gustavo,
 
-ORed, not ANDed.
+On 2025-03-28 08:33:22-0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+> index 275522b81ea5..6eab0474f52d 100644
+> --- a/drivers/leds/leds-cros_ec.c
+> +++ b/drivers/leds/leds-cros_ec.c
+> @@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+>  				union cros_ec_led_cmd_data *arg)
+>  {
+>  	int ret;
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		union cros_ec_led_cmd_data data;
+> -	} __packed buf = {
+> -		.msg = {
+> -			.version = 1,
+> -			.command = EC_CMD_LED_CONTROL,
+> -			.insize  = sizeof(arg->resp),
+> -			.outsize = sizeof(arg->req),
+> -		},
+> -		.data.req = arg->req
+> -	};
+> -
+> -	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+> +			sizeof(union cros_ec_led_cmd_data));
+> +
+> +	msg->version = 1;
+> +	msg->command = EC_CMD_LED_CONTROL;
+> +	msg->insize  = sizeof(arg->resp);
+> +	msg->outsize = sizeof(arg->req);
+> +	*(struct ec_params_led_control *)msg->data = arg->req;
 
-Often, the interrupt line has a weak pullup resistor, so by default it
-is high. Either PHY can then pull it low, using an open collector,
-which is HI-Z when not driving.
+To be honest this looks really ugly and it's not at all obvious what is
+going on. We have the utility function cros_ec_cmd() which would be the
+nicer alternative. (Without having verified that it avoids the warning).
+While it is slightly more expensive, I don't think it matters.
+And if it does, the helper can be optimized.
 
-	Andrew
+(The same goes for my other cros_ec drivers)
+
+> +
+> +	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	arg->resp = buf.data.resp;
+> +	arg->resp = *(struct ec_response_led_control *)msg->data;
+>  
+>  	return 0;
+>  }
+
+
+Thomas
