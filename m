@@ -1,85 +1,64 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from hosting.gsystem.sk (hosting.gsystem.sk [212.5.213.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EED1E1DED;
-	Fri, 28 Mar 2025 19:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD521E1DED;
+	Fri, 28 Mar 2025 19:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.5.213.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743190452; cv=none; b=NVVG9XPOgjMWoDzbL4QqA67jNTQE+34WemM+oRb09wCbofZXFXpssYaBlEBY4/5wJdelLbQiCdfGNLWCLx/CncQd4mudpZDGFKrNrQ7tGEXXrfPfxoBKzWzrNK4jwLzZTGZCeVycZm/kSmQBQZAC25hnjIowsKyE6Yw0PKI81SU=
+	t=1743190706; cv=none; b=n3W3pspZPAPe1oMtviMgK3AUrLfFp/qjetaX/7WHauIVjXhZUJ2O8Ae1fnAFOUeU2UrMUhTgmh9dBSmzcQG2b6B4qvuaSNFPhBvQG73sbwjk3W8SJlbssaCm3i2lYUWHWcx2RKSrTkrzu0W23vQiei/s92ea+3g3iIfb3LtItNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743190452; c=relaxed/simple;
-	bh=1/nxEu92C/B7RHmWBrd65VDIm9xUVQn7T4ngnAme7Sk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nj8uCVFjCEYesOyLpCBpSrCq+02jwsQ+pEdQlCdMVBtwN/jYY1Oy9W3wqpn1W0lAh4VGCxyi1hFABuVlg+I8doCkleG2o1N8inudVeFcVM05q3xW+gMMWfR3U5LFZk37WQQkPOKRYY2beYfL83Nc8VO9bNWD1ytH6vTuXvihB+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=S6Qg9b5H; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="S6Qg9b5H"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZPW1D1780zlxY2Y;
-	Fri, 28 Mar 2025 19:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1743190446; x=1745782447; bh=1/nxEu92C/B7RHmWBrd65VDI
-	m9xUVQn7T4ngnAme7Sk=; b=S6Qg9b5HVhbyddEbFBaWqDimMITIqHEndsu7g+wA
-	b1lsy8PjXHV3I9TPNdsG525MapviNzjvYtEU48tPsOhMK+gL8StzV1eFnezDPFiQ
-	21F22xBfRIO3FGC1McB1Ik0ZjHXWx7g6UEcfKv4nexQuQOz3HC4/6Al3HUxrz1xz
-	Aso6g1dU89oEqN12CevnIYydZDCqNYPj/OZO0T9O6WthDBITqVo1I/Ce3vvvv/89
-	OOj7Frhm20e9wEmt+7EJ8QhJvWeqLn1tu182SVYXrQI3MB1KXbdGtFwu3jrjBjDC
-	jZzHX31LMLgmntQSVqQGxumojBIHsPCbTP8W3cB8B06hMA==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id jYn4x0wNozQn; Fri, 28 Mar 2025 19:34:06 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
+	s=arc-20240116; t=1743190706; c=relaxed/simple;
+	bh=siqPYrz2788wZ7ex4lg7uV0feLA9b/0wjs+ncyIRvJY=;
+	h=From:To:Subject:Date:Cc:MIME-Version:Content-Disposition:
+	 Content-Type:Message-Id; b=EkFrPmAfs9ja6bgTi9GVCU+HIqXkqVwjfVHGuXFoOHxq14yHqZzGpwyyZMuwRciVUEyEi7IQ7pBI47H0Q+V9VU7rRU7EDuuqV7tmf0jRbs60s+JT5sCx+s+OuIY5RO3fgR6LBsn1076JXfraq1QHZZR2I3B+gDZztlmzJZuTTzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zary.sk; spf=pass smtp.mailfrom=zary.sk; arc=none smtp.client-ip=212.5.213.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zary.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zary.sk
+Received: from [192.168.0.2] (188-167-58-202.dynamic.chello.sk [188.167.58.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZPW1124jxzlscj9;
-	Fri, 28 Mar 2025 19:33:55 +0000 (UTC)
-Message-ID: <5f9c7657-d86b-47a4-ba4c-5445325886bb@acm.org>
-Date: Fri, 28 Mar 2025 12:33:54 -0700
+	by hosting.gsystem.sk (Postfix) with ESMTPSA id A597E7A010F;
+	Fri, 28 Mar 2025 20:28:25 +0100 (CET)
+From: Ondrej Zary <linux@zary.sk>
+To: linux-media@vger.kernel.org
+Subject: [ANNOUNCE] Firmware loader for Samsung TV cameras
+Date: Fri, 28 Mar 2025 20:28:22 +0100
+User-Agent: KMail/1.9.10
+Cc: linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] scsi: ufs: core: Removed
- ufshcd_wb_presrv_usrspc_keep_vcc_on()
-To: Avri Altman <Avri.Altman@sandisk.com>,
- "Bao D. Nguyen" <quic_nguyenb@quicinc.com>,
- "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
- "avri.altman@wdc.com" <avri.altman@wdc.com>,
- "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- open list <linux-kernel@vger.kernel.org>
-References: <9ff613809e88496b5802a2d45984d2a8dddf92dd.1743057420.git.quic_nguyenb@quicinc.com>
- <PH7PR16MB619627C83309BDCE8BCB952FE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <PH7PR16MB619627C83309BDCE8BCB952FE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Disposition: inline
+X-Length: 760
+X-UID: 13
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Message-Id: <202503282028.22292.linux@zary.sk>
 
-On 3/28/25 1:29 AM, Avri Altman wrote:
-> Maybe just change the function name to better describe what it does,
-> e.g. ufshcd_wb_exceed_threshold ?
+Hello,
+I'm announcing samsung-tvcam-fwloader - Firmware loader for Samsung TV cameras that allows Samsung TV cameras to be used in Linux (and possibly other OSs).
 
-I'm also in favor of renaming ufshcd_wb_presrv_usrspc_keep_vcc_on()
-instead of inlining it.
+Samsung used to sell webcams for their smart TVs for the purpose of running Skype. Skype was discontinued on these TVs in 2016 and these cameras became useless.
 
-Thanks,
+Model list:
+CY-STC1100 - 04e8:2058
+VG-STC2000 - 04e8:2059
+VG-STC3000 - 04e8:205c
+VG-STC4000 - 04e8:2061
+VG-STC5000 - 04e8:2065
 
-Bart.
+When connected to a PC, the camera identifies as unknown device or as an UVC webcam but does not work. That's because it's missing firmware. Camera contains only a bootloader and TV uploads firmware to camera's RAM each time it's plugged in.
+
+VG-STC2000, VG-STC4000 and VG-STC5000 are tested to work.
+VG-STC3000 should work as it should use the same code as 4000 and 5000.
+CY-STC1100 is completely different, probably not UVC compatible even with firmware loaded and thus would require a driver.
+
+https://github.com/ondrej-zary/samsung-tvcam-fwloader/
+
+-- 
+Ondrej Zary
