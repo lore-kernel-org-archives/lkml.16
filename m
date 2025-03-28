@@ -1,133 +1,121 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7E320E323;
-	Fri, 28 Mar 2025 02:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915A720DD6B;
+	Fri, 28 Mar 2025 02:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743130163; cv=none; b=MPwq9eVML2WGSmc1HyBy8dKQn10qKElUXhttDunpthUTf4b/D3m0y6Cb6nEcn5JYtyh5X3gkLFTgw//rbI743oRC39QFZ6tPI/M3iGU4knCsfxPV4A2gRYb6zuA10vd2bPKJ2+H213u2SZ1Vw3OUDRZ0sMq1mvfhIAIIfd8JoZ8=
+	t=1743130301; cv=none; b=WtzaXJnZC/h3NcsriYNsheXUm7jVq9FHa9wHn3dFCTZf7hmB+TWTKJqgDTAOlAHEeXk4BqfnsTSkaOhZZQzC/GWwPRyWo75GdGD0SG+Yoi5Q/87LWm/Kxo/uT1t+xnMEVUWKMQbE5J2yBM9s5YG2TvYNliGtFHEPxIP+6R7nDkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743130163; c=relaxed/simple;
-	bh=iJWNsJTPADMcOZPLDPY9tsRmwNLUSzR7d2gKrOxG/ko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=h54FNHlM37m9hhMIU9ZmRDJvzWd2uCjXzeTWbvfGRRdUtm5Vttzzu0f2PjOeTdsxBcSsiF0v6FZON2fIHr5kzYaJ3cKfhR1pis/MGPyo1R5ptnPUrr1ZPdYV8XDEvrw5+DA+L+plj/iu19hA5HInNY7i2FXUS6CHhu8j36wZ87o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZP4jJ4dybz13LNq;
-	Fri, 28 Mar 2025 10:48:52 +0800 (CST)
-Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
-	by mail.maildlp.com (Postfix) with ESMTPS id 941ED1800E4;
-	Fri, 28 Mar 2025 10:49:17 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
- (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 28 Mar
- 2025 10:49:16 +0800
-Message-ID: <2ee12dc5-8170-46ec-a78c-ce0950b9704d@huawei.com>
-Date: Fri, 28 Mar 2025 10:49:16 +0800
+	s=arc-20240116; t=1743130301; c=relaxed/simple;
+	bh=OfSMEoXcKwYz9G/YAO5ukyb0YgaWhOSY50U/Dlz3TLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=CnQW2xU9mAqqc23XXHsuw9snVjnwEQ8hTtExACy5qPAqqoaA9eTkWGjiPQ0bE2fRUVeWX2hcemYVU+ZR44hwJDfB7D1avAQ+uSRrXoh1ktyzJyghHtkTdQfPUzlpcYhhrETzzybCnNkBI1wxBg/RQFtuhREDH2XafwsHDqVuhUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 00000000000800FA.0000000067E60D82.0006A495; Fri, 28 Mar 2025 03:46:26 +0100
+From: Gergo Koteles <soyer@irl.hu>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+  Len Brown <lenb@kernel.org>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Rodrigo Siqueira <siqueira@igalia.com>,
+  Alex Hung <alex.hung@amd.com>,
+  Alex Deucher <alexander.deucher@amd.com>
+Cc: linux-acpi@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
+  stable@vger.kernel.org
+Subject: [PATCH] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
+Date: Fri, 28 Mar 2025 03:44:00 +0100
+Message-ID: <4cef341fdf7a0e877c50b502fc95ee8be28aa811.1743129387.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ext4: Make block validity check resistent to sb bh
- corruption
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-CC: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>, Ritesh Harjani
-	<ritesh.list@gmail.com>, Zhang Yi <yi.zhang@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>, Yang Erkun
-	<yangerkun@huawei.com>
-References: <c434eb50ee5161e23036d58a6166a7e216f6d6a0.1743097281.git.ojaswin@linux.ibm.com>
-Content-Language: en-US
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <c434eb50ee5161e23036d58a6166a7e216f6d6a0.1743097281.git.ojaswin@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg500008.china.huawei.com (7.202.181.45)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-On 2025/3/28 1:48, Ojaswin Mujoo wrote:
-> Block validity checks need to be skipped in case they are called
-> for journal blocks since they are part of system's protected
-> zone.
->
-> Currently, this is done by checking inode->ino against
-> sbi->s_es->s_journal_inum, which is a direct read from the ext4 sb
-> buffer head. If someone modifies this underneath us then the
-> s_journal_inum field might get corrupted. To prevent against this,
-> change the check to directly compare the inode with journal->j_inode.
->
-> **Slight change in behavior**: During journal init path,
-> check_block_validity etc might be called for journal inode when
-> sbi->s_journal is not set yet. In this case we now proceed with
-> ext4_inode_block_valid() instead of returning early. Since systems zones
-> have not been set yet, it is okay to proceed so we can perform basic
-> checks on the blocks.
->
-> Suggested-by: Baokun Li <libaokun1@huawei.com>
-> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Thanks for the patch！Looks good to me, except for the extra indentation
-pointed out by Honza. With that fixed feel free to add:
+Some Lenovo laptops incorrectly return EDID as
+buffer in ACPI package (instead of just a buffer)
+when calling _DDC.
 
-Reviewed-by: Baokun Li <libaokun1@huawei.com>
+Calling _DDC generates this ACPI Warning:
+ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
+found Package, expected Integer/Buffer (20240827/nspredef-254)
 
+Use the first element of the package to get the EDID buffer.
 
-Cheers,
-Baokun
-> ---
->
-> ** Changes since v1 [1] **
->
-> - instead of using an sbi field direction check against jorunal->j_inode
-> - let block validity perform basic checks on journal blocks as well
-> 	during init path
-> - kvm-xfstests quick tests are passing
->
-> [1] https://lore.kernel.org/linux-ext4/d1a9328a41029f6210a1924b192a59afcd3c5cee.1741952406.git.ojaswin@linux.ibm.com/
->
->   fs/ext4/block_validity.c | 5 ++---
->   fs/ext4/inode.c          | 9 +++++----
->   2 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-> index 87ee3a17bd29..e8c5525afc67 100644
-> --- a/fs/ext4/block_validity.c
-> +++ b/fs/ext4/block_validity.c
-> @@ -351,10 +351,9 @@ int ext4_check_blockref(const char *function, unsigned int line,
->   {
->   	__le32 *bref = p;
->   	unsigned int blk;
-> +	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
->   
-> -	if (ext4_has_feature_journal(inode->i_sb) &&
-> -	    (inode->i_ino ==
-> -	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-> +	if (journal && inode == journal->j_inode)
->   		return 0;
->   
->   	while (bref < p+max) {
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 365d31004bd0..8b048be14008 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -384,10 +384,11 @@ static int __check_block_validity(struct inode *inode, const char *func,
->   				unsigned int line,
->   				struct ext4_map_blocks *map)
->   {
-> -	if (ext4_has_feature_journal(inode->i_sb) &&
-> -	    (inode->i_ino ==
-> -	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-> -		return 0;
-> +	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
-> +
-> +	if (journal && inode == journal->j_inode)
-> +			return 0;
-> +
->   	if (!ext4_inode_block_valid(inode, map->m_pblk, map->m_len)) {
->   		ext4_error_inode(inode, func, line, map->m_pblk,
->   				 "lblock %lu mapped to illegal pblock %llu "
+The DSDT:
 
+Name (AUOP, Package (0x01)
+{
+	Buffer (0x80)
+	{
+	...
+	}
+})
+
+...
+
+Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
+{
+	If ((PAID == AUID))
+        {
+		Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
+	}
+	ElseIf ((PAID == IVID))
+	{
+		Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
+	}
+	ElseIf ((PAID == BOID))
+	{
+		Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
+	}
+	ElseIf ((PAID == SAID))
+	{
+		Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
+	}
+
+	Return (Zero)
+}
+
+Cc: stable@vger.kernel.org
+Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+---
+ drivers/acpi/acpi_video.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index efdadc74e3f4..65cf36796506 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -649,6 +649,9 @@ acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length
+ 
+ 	obj = buffer.pointer;
+ 
++	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 1)
++		obj = &obj->package.elements[0];
++
+ 	if (obj && obj->type == ACPI_TYPE_BUFFER) {
+ 		*edid = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
+ 		ret = *edid ? obj->buffer.length : -ENOMEM;
+@@ -658,7 +661,7 @@ acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length
+ 		ret = -EFAULT;
+ 	}
+ 
+-	kfree(obj);
++	kfree(buffer.pointer);
+ 	return ret;
+ }
+ 
+-- 
+2.49.0
 
