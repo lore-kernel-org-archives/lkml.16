@@ -1,146 +1,149 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F2B212B2D;
-	Fri, 28 Mar 2025 08:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DA3212B2D;
+	Fri, 28 Mar 2025 08:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743149604; cv=none; b=AlGUes2mST9cEWFW3/ZFM/3Ha6qOyZeYlDAYjjM/LoN0GNq+Uz0ewA9RJvaatVWnbcuPPdqrvNmzVDL52PtYmF9XA++YXEJNsK9gfusCZauf6+rxd86v/2xZW3AHM+iG+V2hwVA4aBEnI1Kha2ihD0FH/FvPCKfevD5eXjNP30c=
+	t=1743149700; cv=none; b=h5+aSayAtaAbLpuEFbV3oxh02BJGP8YoH6Bxq57f87F+ITn+0aPAbkY6j9PoVPmqqDozO1NZ19Qah3Rf1blhPFV3HEhMGujucqV8MV2CWC3fF9L/OzINseKy9poSzzgNI3IRHhG1K+kpcChxND1QCMkTg+ivVU7uVe7cJVcwHAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743149604; c=relaxed/simple;
-	bh=RyvNWz0sMdrFpEUWP+y0PIBVy1EY5vpDKot95FF/a9w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=P01u7GMPuU1lyZwu7SzFvjiTZoPXWwZh+ewdOFOfeguR0OQ4h43/avOcmqos0fc9N9g9uGDforegpIfDyQ9t6bCwbWkAAivsm+YztUOgmaWz371NqLD0dHP/BDz3Yy7qCcMRcxzAIGABYDW2f57gcgZatouF9VBVicWi+QUwRkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TGw4g1GH; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743149700; c=relaxed/simple;
+	bh=8ZgbTgI+i9iB/QPxGSmX2e5HNl4K3UiwDzivn8gxjQg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XEHMgSSpN6cceWsuuHZpYUOj22wDwQGaq2QoFVdBPfotUgnP/c61VfXR27fzFFRqb1WOJlmt+nehlRQVQQXzcRc7gUgoFCJU58TMaONDYSORbJrJdyp7WXkzesjIBKi/KjEbMkFri3+l2FH2S+HcXJpkbrT3ROLcKRH+zCXRNqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c2pMp3sH; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TGw4g1GH"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C7D1442A4;
-	Fri, 28 Mar 2025 08:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743149594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q1l7rwlWipHxE1nh0I+e9gf68ZY10wQc1Xc25v8rX8k=;
-	b=TGw4g1GHdma+JykKfwDiay4yYSZJ4teJAeb8kc784F4azipDQAmMitNJINtnz6XDoF2NEu
-	Hz+p8bpj+hSPLBOJ+lJVskJXArLoYU2WNQhHJJd0w1n381T/pLSR0ZWJki01G0+jZvwECa
-	Awt6H9sArSI1aCDApuTHDP623C6Ek2I4p4/BO0uH8GyDvhSyjh9h6C31VVfzF6Fu4UDC4Z
-	5oGCRzZgacYonyyplvOS3wPzOlwDxL+4HfrDwVLoosWsJF+/tb1JrKPa7EmSC9gtJ1wmut
-	MnhuCczQqU1+3Vn+vRG2fCua3bB/eBzIyFgbyrc931QyWBMdq7/cUxsNEVujEg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2pMp3sH"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso12880285e9.0;
+        Fri, 28 Mar 2025 01:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743149696; x=1743754496; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZL4qLXS6QYd3HqnhaE47rdilc273GV1+TxxUjMhHCmU=;
+        b=c2pMp3sHVRR5eTIpz6dCS0BQhsPdyMDb2JeDPeW8j5pUaR60Uc/AnWFvstcVT02h94
+         dqqNZ7AUGnLmjSIomF3iHEJi2gmsf4az0APhNO5A0XywWsiM8oWKE7tewW5SBtLDJSwI
+         79WB12iNfSxVt9yjkkId6m1rAni2vb7G0FNPDLu+mpqMkGR8LDw+Wg01hRO7RNEn4L/w
+         tcIcm+GTVWqQdy0JgbdZ9lFjDAGhNieDYN74u9KH8updbVcylpHWm+2pub5Y5LES1T4b
+         cJSFNfyW598Yl4+yuxj0QtyOazVpqbA8wfzRYVbvhGoIooEeUb1LfR65Ohtn6pK9BXjJ
+         7+ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743149696; x=1743754496;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZL4qLXS6QYd3HqnhaE47rdilc273GV1+TxxUjMhHCmU=;
+        b=ifyfN4UqAt/kVI9zhuQkcOGntsuZiFSyUUvjrpu2wyGv0rd5HWlM5XvyeWClIu3i3C
+         VoLnYok2DJpbfCOAEU63B/+STLvQBQm9JJccFyWEDlKcfdWzONF5zTEiSC7gWqCEPYFg
+         ZTQ5RZU5OZylzsEmfpCPsQ3hAFK/XituOtU2M3JGT52UQbaGeermfPajexn02LY5W1b5
+         knaiAI92gRE0h9xP6xPzU7E4Dukd4z46SpdTsMUN8RnrroYx2P/meBHW9iI4CBMzgIgT
+         CWfyO2VQWMs8FJd+oIbrgpiR8VjuVhknumWoCnALPQebTAMYiEjaG/plJVuUqBNHLSav
+         Q8tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHB8dJTiYr76xnPDNJFFgYo2OJxvt3cJZGlUrVM4+w9ftXtUca23vc24hu+Jg7krl4s4Zp6/k5ARSLJA46@vger.kernel.org, AJvYcCXgDodGTnsU9NLPe5aU5nljJyfAueWxXUI1b7rM4FhotHJiBJ3fsd9X5HyITlFSIHbazUmioLtKPCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsRZ090ZeUrm5/wns91RM3Wgw868U5q9k3pMLSClLWZfbsnrWI
+	fO33DHLVVpG3nzXqOlU3If5tKOanBosLqgwJOpDuz1yQvxGUZkJc
+X-Gm-Gg: ASbGncsITdLLOfAJt6kpaYQNzyz1PpVV9Y9oew0OTIBSI5lKln2df1FcrCZug4q7n9/
+	9UsRaQHfDDJlFdWYTpbWm/ndbBQdCllhsus6J4n44jKqQ9PYZbLLLNk6atyJQTH3Qa3DvpqYhtP
+	Jho2oNX+OTdNKrRqsyV95FCLirLrYrwxQhEJ+GVS3VQadhcVqSC29yH0Xl3fN+L05KABK9atlQt
+	JF0OBp4r1hJXYdmSP8o6xN7XJg3ar9MHCNWeGxBREe+xEcjkWudRqfm7eJYEMAWKiLlVjWpt5Wo
+	bo7g5/D1zZYqnZbcbJHRHjpBuEM81ztomeSz5rIEPo+bpIMDao7gm/43uBxdGVd5dNgZxngpCmp
+	+679fl0vZ3mReg5pf/iIFpmCbp9euYg==
+X-Google-Smtp-Source: AGHT+IFeTRFSxmnFQ2RzD6Bjj41XdFTReWZamUx1ibzs3Anho5bP8JCi6PWThMPu6PPG2kzvGAz9Bw==
+X-Received: by 2002:a05:600c:1d82:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-43d8506f1bemr68209395e9.19.1743149695668;
+        Fri, 28 Mar 2025 01:14:55 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4351sm1872979f8f.98.2025.03.28.01.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 01:14:55 -0700 (PDT)
+Message-ID: <88c86ac453ccf968422350d788ab35fd55dd8496.camel@gmail.com>
+Subject: Re: [PATCH 3/4] iio: dac: adi-axi-dac: add data source get
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Michael Hennerich
+ <Michael.Hennerich@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 28 Mar 2025 08:15:12 +0000
+In-Reply-To: <20250321-wip-bl-ad3552r-fixes-v1-3-3c1aa249d163@baylibre.com>
+References: <20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com>
+	 <20250321-wip-bl-ad3552r-fixes-v1-3-3c1aa249d163@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 28 Mar 2025 09:13:12 +0100
-Message-Id: <D8RQYJXP0KMK.3L8A8YVZKID89@bootlin.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
- Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
- <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
- <Z9vydaUguJiVaHtU@smile.fi.intel.com>
- <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
- <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
- <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
- <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
- <D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com>
- <Z-WQAC8Fc90C1Ax6@smile.fi.intel.com>
-In-Reply-To: <Z-WQAC8Fc90C1Ax6@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkv
- ghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
 
-On Thu Mar 27, 2025 at 6:50 PM CET, Andy Shevchenko wrote:
-> On Thu, Mar 27, 2025 at 03:28:08PM +0100, Mathieu Dubois-Briand wrote:
-> > On Wed Mar 26, 2025 at 4:49 PM CET, Andy Shevchenko wrote:
->
-> > > The use of this API is inappropriate here AFAICT. It drops the parent=
- refcount
-> > > and on the second call to it you will have a warning from refcount li=
-brary.
-> > >
-> > > It should be as simple as device_set_node().
-> > >
-> > > >         }
-> > >
-> > > With that, the conditional becomes
-> > >
-> > > 	} else if (is_of_node(fwnode)) {
-> > > 		device_set_node(&pdev->dev, fwnode);
-> > > 	}
-> > >
-> > > where fwnode is something like
-> > >
-> > > 	struct fwnode_handle *fwnode =3D dev_fwnode(parent);
-> >=20
-> > I tried to use device_set_node(), but then I got some other issue: as w=
-e
-> > now have several devices with the same firmware node, they all share th=
-e
-> > same properties. In particular, if we do use pinctrl- properties to
-> > apply some pinmmuxing, all devices will try to apply this pinmuxing and
-> > of course all but one will fail.
-> >=20
-> > And this makes me think again about the whole thing, maybe copying the
-> > fwnode or of_node from the parent is not the way to go.
-> >=20
-> > So today we rely on the parent node for four drivers:
-> > - keypad and rotary, just to ease a bit the parsing of some properties,
-> >   such as the keymap with matrix_keypad_build_keymap(). I can easily do
-> >   it another way.
-> > - PWM and pinctrl drivers, are a bit more complicated, as in both case
-> >   the device tree node associated with the device is used internally. I=
-n
-> >   one case to find the correct PWM device for PWM clients listed in the
-> >   device tree, in the other case to find the pinctrl device when
-> >   applying pinctrl described in the device tree.
-> >=20
-> > So maybe I have to find a better way for have this association. One way
-> > would be to modify the device tree bindings to add a PWM and a pinctrl
-> > node, with their own compatible, so they are associated to the
-> > corresponding device. But maybe there is a better way to do it.
->
-> Okay, so the main question now, why do the device share their properties
-> to begin with? It can be done via fwnode graph or similar APIs (in case
-> it is _really_ needed).
+On Fri, 2025-03-21 at 21:28 +0100, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+>=20
+> Add data source getter.
+>=20
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
+> =C2=A0drivers/iio/dac/adi-axi-dac.c | 27 +++++++++++++++++++++++++++
+> =C2=A01 file changed, 27 insertions(+)
+>=20
+> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.=
+c
+> index
+> 892d770aec69c4259de777058801c9ab33c79923..a6abd828ebdb34800cc08a2151e52a9=
+acda9eba1
+> 100644
+> --- a/drivers/iio/dac/adi-axi-dac.c
+> +++ b/drivers/iio/dac/adi-axi-dac.c
+> @@ -514,6 +514,32 @@ static int axi_dac_data_source_set(struct iio_backen=
+d *back,
+> unsigned int chan,
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static int axi_dac_data_source_get(struct iio_backend *back, unsigned in=
+t chan,
+> +				=C2=A0=C2=A0 enum iio_backend_data_source *data)
+> +{
+> +	struct axi_dac_state *st =3D iio_backend_get_priv(back);
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret =3D regmap_read(st->regmap, AXI_DAC_CHAN_CNTRL_7_REG(chan), &val);
+> +	if (ret)
+> +		return ret;
 
-I wouldn't say the properties are shared: we have a single node in the
-device tree as this is just one device. But as we create several
-(software) devices in the MFD driver, we now have several devices linked
-with a single device tree node.
+Is chan something that we can validate? Do we reliable know max number of c=
+hannels?
 
-One solution would be to create more subnodes in the device tree, one
-for pinctrl and one for PWM, but this feels a bit like describing our
-software implementation in the device tree instead of describing the
-hardware.
+> +
+> +	switch (val) {
+> +	case AXI_DAC_DATA_INTERNAL_TONE:
+> +		*data =3D IIO_BACKEND_INTERNAL_CONTINUOUS_WAVE;
+> +		return 0;
+> +	case AXI_DAC_DATA_DMA:
+> +		*data =3D IIO_BACKEND_EXTERNAL;
+> +		return 0;
+> +	case AXI_DAC_DATA_INTERNAL_RAMP_16BIT:
+> +		*data =3D IIO_BACKEND_INTERNAL_RAMP_16BIT;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+More of a nitpick comment but I would some other error code. This is not re=
+ally an
+"Invalid argument" situation. Maybe -EIO as the HW is giving something unex=
+pected? or
+ENOTSUPP (likely not exactly like this)...
+
+- Nuno S=C3=A1
+
+> =C2=A0	.ddr_disable =3D axi_dac_ddr_disable,
+> =C2=A0	.data_stream_enable =3D axi_dac_data_stream_enable,
+>=20
 
