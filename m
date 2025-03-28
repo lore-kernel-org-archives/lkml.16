@@ -1,77 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82B3C2C9;
-	Fri, 28 Mar 2025 16:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99466C2C9;
+	Fri, 28 Mar 2025 16:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743179479; cv=none; b=ft7cPMmNkcr4svnrhI64k8MDuaBhIS7Ch4LAomTAqbXCWxhId+yWgBszfQqKTxqmOAIkbOdCLIyPtvZZZcSmHRAIAtw2ZPwY+rZAnkZnxt51JfV1tBmMWTW3938GFiJ4zQWzq1/ewjRXcxlYAnKB95vSbAouvqFXgFu6lTxnoeo=
+	t=1743179527; cv=none; b=SVS8puYI/sVkIfG28psgu/LM29vCuUiMYVQjKKji8faBA6WlQzEWmZnm96nfIUl/jgV/wvqg/LfTFFjb+1rjOf+BKRTcQ8lgztskhe97sTES/SzkMRDOuuvoFi2v34LcF3CTMUZNqqCqN2NgDQrru879ByhHxGxK/IuTwur1AvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743179479; c=relaxed/simple;
-	bh=jqvTRmFLhOFgQNBQGPsnJ5VkLJC2Rw6TfFZp8ZKodMI=;
+	s=arc-20240116; t=1743179527; c=relaxed/simple;
+	bh=Z1+7i1vTmCOw5i24VT2mVE304lGnoLubsdk5KvyhnHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGHCKA+AyKdLhu2s0kiU2hW33bZ0wjoQGJspUKlcY2i7OXkjv4bxl7WsMNuwgRiObm652FJcA/v7K02qcKplWosWiRvd6MKwNvzkXWt9wIAMxkCYTBNU5j1bgBU1EeGTB0MfR9Zvj83TTIL05ljBptcbA/TTc4icLLA6q+YyUWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvuGIhvC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFqDLO13Bajx0BYrZA0uVwwNpOEWW/OfNoeLekpc7Xx3ZM2akuxXHRSC+hduFG8RqXrXMz9B9PuXFhIhMlyKFH4bhedB0so9pRhV63KsbZCO8bbQAiZGYGFuLBv368WdetnofI7APQIuQgpFbkqLGLVGGDQmnSMeknPo+/wbsbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FyJpGqmv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvuGIhvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C7A2C4CEE4;
-	Fri, 28 Mar 2025 16:31:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FyJpGqmv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1675C4CEE4;
+	Fri, 28 Mar 2025 16:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743179477;
-	bh=jqvTRmFLhOFgQNBQGPsnJ5VkLJC2Rw6TfFZp8ZKodMI=;
+	s=k20201202; t=1743179527;
+	bh=Z1+7i1vTmCOw5i24VT2mVE304lGnoLubsdk5KvyhnHY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RvuGIhvCT/41/CqHehp1hGqoFwVkuE14OaWaMwzEi9iVjhPdFIlwAwPrUvfBDu2nM
-	 7D27og13oAO1H3Tyswbp1ak6yZJRqCY+BZFxZ2cMoaGfBDx/pABlHDLclRMMzrE4cU
-	 OKd175GPXdry4LjYAc/zKr8A7wdufnyB1SOPe8rdvNnGXae4ytv7sUkrXo7Z+iPyg6
-	 k2NLG1QbC1vjFBv5tPzz5aN2809MaSakJAXgqUA2qyOfhyaGyUk5JtYa/fdDORNIeK
-	 JvLXoRhrgnxmEj5CtzsZYvtHjGDLlZwviZyFV6INpGA8gNET4JrQPMjFR7IkheIklg
-	 784FPb9G/xPVQ==
-Date: Fri, 28 Mar 2025 09:31:15 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [tip:objtool/urgent 9/23] vmlinux.o: warning: objtool:
- cdns_mrvl_xspi_setup_clock: unexpected end of section
- .text.cdns_mrvl_xspi_setup_clock
-Message-ID: <az2awlpfs7wt46kwql7ke3iereryykdroymfuaxawz5gozaxyi@rhlmbjkp3sdg>
-References: <202503282236.UhfRsF3B-lkp@intel.com>
+	b=FyJpGqmvMdcLrvgJ0dJCh+2fFfdQa7vlrfroQdLsOJNj1rRFeSSG8IHYm6prKW+I8
+	 dlO8UkjHpuYxWoXEX6ZQCQIK9OLtXve3Y3ZchyZUxSOmDHDIS+F1tvzjdtN7Ic25p6
+	 kiNbQ/p82fQRztS/PzGeejxiBeURfv1/Uz2I/qG9sA25p/NIN+K3L75YEFco0Yeg5h
+	 i/xjVyVERStzxHJ5WRx3aHJmnMESWh4zaSZsAWBwgFTbJe2Wm9Y5JDHF5c2tZtTMMA
+	 238O6OLNx4or8PcbQfNKGFfMTWo/m5922g/xsSTrkPdifNwnP66YuRvEogsmICzgTF
+	 qSlsvz1pB+Akw==
+Date: Fri, 28 Mar 2025 17:32:03 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] drm/nouveau/outp: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-bPA6S56T0k9JCg@pollux>
+References: <Z-bFsmWjr5yZy6c6@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202503282236.UhfRsF3B-lkp@intel.com>
+In-Reply-To: <Z-bFsmWjr5yZy6c6@kspp>
 
-On Fri, Mar 28, 2025 at 10:49:22PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
-> head:   1c9d28fdf70d4ae3e8dfeadee982461403c6bb50
-> commit: c5995abe15476798b2e2f0163a33404c41aafc8f [9/23] objtool: Improve error handling
-> config: x86_64-randconfig-161-20250327 (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/config)
-> compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/reproduce)
+On Fri, Mar 28, 2025 at 09:52:18AM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202503282236.UhfRsF3B-lkp@intel.com/
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> All warnings (new ones prefixed by >>):
+> So, with these changes, fix the following warning:
 > 
-> >> vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock: unexpected end of section .text.cdns_mrvl_xspi_setup_clock
-> >> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
+> drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Avoid using magic number in if statement. (Danilo)
+>  - Use sizeof() instead of __struct_size().
 
-Hi test robot,
+Good catch -- I guess the original code should have been a bit more obvious by
+passing &args.mthd, rather than &args.
 
-I'm unable to recreate this one:
- 
->> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
-
-Can you rerun with OBJTOOL_VERBOSE=1 added to the make command line (or
-exported)?
-
--- 
-Josh
+Applied to drm-misc-next, thanks!
