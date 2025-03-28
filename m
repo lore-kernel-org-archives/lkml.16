@@ -1,108 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81EFE545;
-	Fri, 28 Mar 2025 20:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18451E545
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 20:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743194745; cv=none; b=XipqZagEMGTeGhnR5Wt1rxW9kzu7AkK6BDGVYHjS3ymRLRbvtWaJwZ53C9eB4mV8jiYDiC3qrnNf+GSg7VI7NNQ1E+izIbBKxE+mu5tEIoMiCQrzyxILxTviXng3OEcjkfpK047gv9LB48o49S6afGCxSotBQ2zI7xCk6P150fg=
+	t=1743194809; cv=none; b=b/N7ISk3ggnxpmMu/sx4MTfPdl1C3sxhlp0nPsTJvd+cwjHxBe4KPow09T7w2knqs1K1BsPJnGJ/5B/h0YwIWP4IyGlqqdtkRsx7P0EZQ/664TiacyZPyc+sSsF/RwlPk/SAyDyY0QSIUxz8SKSuZiLDpYwnIif4A0gj11JQmJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743194745; c=relaxed/simple;
-	bh=gblrgFlqbUDvjkc6YbKVtEGV+5JozaP2AsM/g6GiBvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kl3Ux7pzMISEVEMfaRk17YCwrAAu7Fi2PQxytcgAESRB2INnmanPe/y4vKogt64iyNtlVk6BPF1tCig2kdqeDl1yw9GtPQtZxqsiKyZK0ZTuRasME720FSfsVj5dZXxXhmhiXXPzJTVrYaVVfeeYw+qGWtDAjKvrs/eUNXDBvkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNYh6u8a; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNYh6u8a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48723C4CEE4;
-	Fri, 28 Mar 2025 20:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743194743;
-	bh=gblrgFlqbUDvjkc6YbKVtEGV+5JozaP2AsM/g6GiBvY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=HNYh6u8aXe7NzxiuGLWkVd7JfpTdcAwfLDFDenBFRnFpvI9nGwnXXra+M4dtc+/VF
-	 kMI3osWV5w65F1wzplT047AticbWTBx39lZ/nYQUPTpXgJipijWvoDsrb5zay2bJyE
-	 H2f0QRAM3v71EQ6ThMxQUxTlYy3viUEcNU/QqZnKSEKzmUJ0RwLmbAeg3LZPjwrYz5
-	 IQDI+1Hicm06gagxTWEYwiEd5bKzIYdL+MdDpXQ4+Fbmp0IZ6WEFZD3XTIkmIP/N9f
-	 rgnibdMimTYT/rF5lW6Rx6HjaRvkBmxzRho9VwuXqB7IlV2hxTu6/8/wu+urL7a1Yn
-	 OEPDZhzTcozJw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E5C49CE0889; Fri, 28 Mar 2025 13:45:42 -0700 (PDT)
-Date: Fri, 28 Mar 2025 13:45:42 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, gourry@gourry.net,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	sfr@canb.auug.org.au
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+	s=arc-20240116; t=1743194809; c=relaxed/simple;
+	bh=oohnoraHIkOgNIMvs5qklmJwk57xtUn8v/eYTX8S2kI=;
+	h=Message-ID:Date:MIME-Version:Subject:References:To:From:
+	 In-Reply-To:Content-Type; b=jQUqwSzbK3dw6Dvu6+gY9kAzjnj//gJLsX695fB8s9CKNFqNZtIVKjavPuqYC3LOrNPEmXEPUnCCrOWOVtRbq8nfZuBH3i4+J3LI966D9bJI6F4HfYSIXvo8v3kE6n91JoNrLVKF9aS926w0OT7+LqwO3F2kAPtrsDsJpEzg5co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.139.63) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 28 Mar
+ 2025 23:46:28 +0300
+Message-ID: <8db16fb6-f87e-48dd-8845-0eaac95a6527@omp.ru>
+Date: Fri, 28 Mar 2025 23:46:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: [PATCH 5.10.y] KEYS: asymmetric: properly validate hash_algo and
+ encoding
+Content-Language: en-US
+References: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+In-Reply-To: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
+X-Forwarded-Message-Id: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/28/2025 20:35:21
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 192217 [Mar 28 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
+ 68896fb0083a027476849bf400a331a2d5d94398
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.139.63 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.139.63 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.139.63
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/28/2025 20:38:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/28/2025 6:58:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Fri, Mar 28, 2025 at 01:03:19PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 3/28/25 10:39 AM, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > In next-20250328 and next-20250327, allmodconfig builds get me:
-> > 
-> > ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
-> > 
-> > This file is apparently auto-generated, because when I change the #include
-> > to the more likely linux/uuid.h, my changes are overwritten by the build.
-> > 
-> > Gregory Price noted that something similar has happened recently and been fixed:
-> > 
-> > https://lore.kernel.org/all/70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com/
-> > 
-> > Perhaps someone unfixed it?
-> > 
-> > 								Thanx, Paul
-> 
-> 
-> I can't get the powerpc cross build to build to reproduce the issue from next-20250328. Does the change below address the issue for you?
-> 
-> ---
-> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-> index d6db8984889f..691eeda9c892 100644
-> --- a/include/uapi/cxl/features.h
-> +++ b/include/uapi/cxl/features.h
-> @@ -8,11 +8,7 @@
->  #define _UAPI_CXL_FEATURES_H_
->  
->  #include <linux/types.h>
-> -#ifndef __KERNEL__
-> -#include <uuid/uuid.h>
-> -#else
->  #include <linux/uuid.h>
-> -#endif
->  
->  /*
->   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
+Oops, forgot about LKML...
 
-Thank you, Dave!
+-------- Forwarded Message --------
+Subject: [PATCH 5.10.y] KEYS: asymmetric: properly validate hash_algo and encoding
+Date: Fri, 28 Mar 2025 23:37:26 +0300
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+To: stable@kernel.org, Stefan Berger <stefanb@linux.ibm.com>, Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, Eric Biggers <ebiggers@google.com>, Vitaly Chikunov <vt@altlinux.org>, Jarkko Sakkinen <jarkko@kernel.org>
+CC: lvc-project@linuxtesting.org, Sergey Shtylyov <s.shtylyov@omp.ru>
 
-Please note that I am reproducing this not on powerpc, but instead on
-x86 with a simple allmodconfig build.
+From: Eric Biggers <ebiggers@google.com>
 
-Making the above change got me this:
+[ Upstream commit 590bfb57b2328951d5833979e7ca1d5fde2e609a ]
 
-usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+It is insecure to allow arbitrary hash algorithms and signature
+encodings to be used with arbitrary signature algorithms.  Notably,
+ECDSA, ECRDSA, and SM2 all sign/verify raw hash values and don't
+disambiguate between different hash algorithms like RSA PKCS#1 v1.5
+padding does.  Therefore, they need to be restricted to certain sets of
+hash algorithms (ideally just one, but in practice small sets are used).
+Additionally, the encoding is an integral part of modern signature
+algorithms, and is not supposed to vary.
 
-							Thanx, Paul
+Therefore, tighten the checks of hash_algo and encoding done by
+software_key_determine_akcipher().
+
+Also rearrange the parameters to software_key_determine_akcipher() to
+put the public_key first, as this is the most important parameter and it
+often determines everything else.
+
+[s.shtylyov@omp.ru: removed the ECDSA related code.]
+
+Fixes: 299f561a6693 ("x509: Add support for parsing x509 certs with ECDSA keys")
+Fixes: 215525639631 ("X.509: support OSCCA SM2-with-SM3 certificate verification")
+Fixes: 0d7a78643f69 ("crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm")
+Cc: stable@vger.kernel.org
+Tested-by: Stefan Berger <stefanb@linux.ibm.com>
+Tested-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+
+---
+ crypto/asymmetric_keys/public_key.c |   92 ++++++++++++++++++++++--------------
+ 1 file changed, 58 insertions(+), 34 deletions(-)
+
+Index: linux-stable/crypto/asymmetric_keys/public_key.c
+===================================================================
+--- linux-stable.orig/crypto/asymmetric_keys/public_key.c
++++ linux-stable/crypto/asymmetric_keys/public_key.c
+@@ -59,38 +59,65 @@ static void public_key_destroy(void *pay
+ }
+ 
+ /*
+- * Determine the crypto algorithm name.
++ * Given a public_key, and an encoding and hash_algo to be used for signing
++ * and/or verification with that key, determine the name of the corresponding
++ * akcipher algorithm.  Also check that encoding and hash_algo are allowed.
+  */
+-static
+-int software_key_determine_akcipher(const char *encoding,
+-				    const char *hash_algo,
+-				    const struct public_key *pkey,
+-				    char alg_name[CRYPTO_MAX_ALG_NAME])
++static int
++software_key_determine_akcipher(const struct public_key *pkey,
++				const char *encoding, const char *hash_algo,
++				char alg_name[CRYPTO_MAX_ALG_NAME])
+ {
+ 	int n;
+ 
+-	if (strcmp(encoding, "pkcs1") == 0) {
+-		/* The data wangled by the RSA algorithm is typically padded
+-		 * and encoded in some manner, such as EMSA-PKCS1-1_5 [RFC3447
+-		 * sec 8.2].
++	if (!encoding)
++		return -EINVAL;
++
++	if (strcmp(pkey->pkey_algo, "rsa") == 0) {
++		/*
++		 * RSA signatures usually use EMSA-PKCS1-1_5 [RFC3447 sec 8.2].
+ 		 */
++		if (strcmp(encoding, "pkcs1") == 0) {
++			if (!hash_algo)
++				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
++					     "pkcs1pad(%s)",
++					     pkey->pkey_algo);
++			else
++				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
++					     "pkcs1pad(%s,%s)",
++					     pkey->pkey_algo, hash_algo);
++			return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
++		}
++		if (strcmp(encoding, "raw") != 0)
++			return -EINVAL;
++		/*
++		 * Raw RSA cannot differentiate between different hash
++		 * algorithms.
++		 */
++		if (hash_algo)
++			return -EINVAL;
++	} else if (strcmp(pkey->pkey_algo, "sm2") == 0) {
++		if (strcmp(encoding, "raw") != 0)
++			return -EINVAL;
+ 		if (!hash_algo)
+-			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
+-				     "pkcs1pad(%s)",
+-				     pkey->pkey_algo);
+-		else
+-			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
+-				     "pkcs1pad(%s,%s)",
+-				     pkey->pkey_algo, hash_algo);
+-		return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
+-	}
+-
+-	if (strcmp(encoding, "raw") == 0) {
+-		strcpy(alg_name, pkey->pkey_algo);
+-		return 0;
++			return -EINVAL;
++		if (strcmp(hash_algo, "sm3") != 0)
++			return -EINVAL;
++	} else if (strcmp(pkey->pkey_algo, "ecrdsa") == 0) {
++		if (strcmp(encoding, "raw") != 0)
++			return -EINVAL;
++		if (!hash_algo)
++			return -EINVAL;
++		if (strcmp(hash_algo, "streebog256") != 0 &&
++		    strcmp(hash_algo, "streebog512") != 0)
++			return -EINVAL;
++	} else {
++		/* Unknown public key algorithm */
++		return -ENOPKG;
+ 	}
+-
+-	return -ENOPKG;
++	if (strscpy(alg_name, pkey->pkey_algo, CRYPTO_MAX_ALG_NAME) < 0)
++		return -EINVAL;
++	return 0;
+ }
+ 
+ static u8 *pkey_pack_u32(u8 *dst, u32 val)
+@@ -111,9 +138,8 @@ static int software_key_query(const stru
+ 	u8 *key, *ptr;
+ 	int ret, len;
+ 
+-	ret = software_key_determine_akcipher(params->encoding,
+-					      params->hash_algo,
+-					      pkey, alg_name);
++	ret = software_key_determine_akcipher(pkey, params->encoding,
++					      params->hash_algo, alg_name);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -177,9 +203,8 @@ static int software_key_eds_op(struct ke
+ 
+ 	pr_devel("==>%s()\n", __func__);
+ 
+-	ret = software_key_determine_akcipher(params->encoding,
+-					      params->hash_algo,
+-					      pkey, alg_name);
++	ret = software_key_determine_akcipher(pkey, params->encoding,
++					      params->hash_algo, alg_name);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -328,9 +353,8 @@ int public_key_verify_signature(const st
+ 	BUG_ON(!sig);
+ 	BUG_ON(!sig->s);
+ 
+-	ret = software_key_determine_akcipher(sig->encoding,
+-					      sig->hash_algo,
+-					      pkey, alg_name);
++	ret = software_key_determine_akcipher(pkey, sig->encoding,
++					      sig->hash_algo, alg_name);
+ 	if (ret < 0)
+ 		return ret;
+ 
