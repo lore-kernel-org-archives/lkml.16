@@ -1,138 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7AF2356A3
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A248B19993D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168563; cv=none; b=AZKMba5SGrpMOlJiwvaRQdn6woOZVu26VxrqGX/CPaV45Cs34lKfR6hvu//gqabxz6Vv6bIUXm5CvH4SXJCENmkK9woLhZVbKhpCBJUIjPLeQjhh88zElRbiPpeP1OzM1k1TV7y2m85qxx5g7lgTcBKku4BoNfHYykdGMhrn8CA=
+	t=1743168659; cv=none; b=YeBP48NdqkaZHUeY7s6e3PeCDLNhkkMGEWNyq9kLcfvDfaOdUp+hAFj30sa505EaGVCZrgvoJyR+InsaAcmJZQdpveRDnY4fLZhMazb/XsyQxPmYbe6kU04dRQZ76VtWSjzzwZmZ7QeQ5bVJessHcUq1SZoFayGx0DZZtJKB354=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168563; c=relaxed/simple;
-	bh=WpqYCmjDIdupb8yXwuJg+5H+hsNUqhDNiN1/6wHf950=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AhULqFuI3PtCFmOj219PqRFkWf7CrzmWurN25wo9etuJSt5Fd8RQQIejW2fE4p0NwUkOE6q3OFkJNq7Xkp2obnPsBsmTtCHA4gcWkncNrxbohYGW0bIhsMKip6NH+lGi2xvfQkNb3pJdWMHw9nCLsoIv+3a5huUCbHSBN2dkcUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSEpKWhc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743168659; c=relaxed/simple;
+	bh=/kKGbU72t6bcG/MbYzH1J9IMMY6h3yl6j4n9mpTc+Io=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CkHUlbMGODma0M73A8mgEnV/yD9IJwSxp5mGp2zhJJ07edSADqjKlg8th0CG1HhqTfxcfihsCoN4nceIK5584vPtYsrVg7ILzUGBGBL20Rd/7uoTpAL1+6n0BaJB6S8D3ueApVOMz2Eegq/EwEbCDOdpM7i7RBlUS0bbwmA8Udg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hyKyol9i; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSEpKWhc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 581AAC4CEE4;
-	Fri, 28 Mar 2025 13:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168563;
-	bh=WpqYCmjDIdupb8yXwuJg+5H+hsNUqhDNiN1/6wHf950=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tSEpKWhcFRzT4Luj28SgY5cuzp0xj2CDZ/pD8RxTQvVetsWemdGsMUBrCnIOW0rwY
-	 CXXYqrAwxU4KbYhN8Ntjw2G4m4aI+kCQ18GqWUXRmkWkZ4aSbX7pNlFRFh3ftsgTK0
-	 1klPu8GJDk0KZLhyGlbUy6NVVcAs9kSi2KSXampCSRoOpu7NzMFj1XtKMeY1QMVwZe
-	 GirZNvfh0g963hknGLW9PCCcnuyd+4yPQ43QGm16qdzkvSt1Xn88jYqaaeYa/ciblI
-	 SfdF67C/bUlQ0cVWcI8sy2c04kVHRgzCp0cXx4z3twPSMv8EhVyErIkZS3rw/6/zkm
-	 cc318XdkvUc4w==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 49/49] x86/alternatives: Rename 'apply_relocation()' to 'text_poke_apply_relocation()'
-Date: Fri, 28 Mar 2025 14:27:04 +0100
-Message-ID: <20250328132704.1901674-50-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250328132704.1901674-1-mingo@kernel.org>
-References: <20250328132704.1901674-1-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyKyol9i"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so3960220a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743168654; x=1743773454; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bj8t/d7ZCz8V074ZRQQT4KdwjDhZIZlUROdEW2RBy3s=;
+        b=hyKyol9ijjj+RrmL1I93avp8cuFSZS67KKQ2D/viflQtzvyrSlTZci4wsLN+NmuEZf
+         W03aMMNHATJZUjNKccmwPuTGZsdpbSZfw73FqhJQmPwJ5r5dS1c8Idq5+xZhQKg2wDxm
+         ioWlg5+qIV/OJy2C0BTr/gMmt9Sbdje0s/ajYKEuBJGXAV6GyG6nuWsY1Y2GvJfgxfxZ
+         LaSFtH29lG2NFTI4NLsJX9FBqEDPKPxZ8M/KuLK5kMJzwcFp/ORjZzqtv7Vlg26bthxa
+         DudUFOthi72zo8MOw98E6dn+b5t0qSGbjo4crnhpKIyxVYNDMsRf79Yay+qw4vj03HRz
+         yffg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743168654; x=1743773454;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bj8t/d7ZCz8V074ZRQQT4KdwjDhZIZlUROdEW2RBy3s=;
+        b=LSRZbYLXljKGnOnMFiSnYCpOgIACqEdTr48s3HePa1BN+iia4Vwawf2crS9ZP6ZYVL
+         rqSETOGhxNHuhrWHancXucN/GtV+vgsiHZZ7U3jE34WdoFZGuhVhsq2N5nblgYREbiuB
+         5Uw/wJpM8ixwjnZDdpGBoEIAJ+xMFn1gA0bXn+9hg6eO6EV6Y30dzsG6ES3GRsj7k7rh
+         YZe4S0428yl2Nx2n+/Id7qNqJvyL6BFRNwPin7MBH8cnJGaT9a1Liz/fBkVzOx89GFSx
+         59f2BM5wHTCx9wqzZDek/gvKG/OwfKrFilXuhmaWS+BjTm5/+SE1kNDRDegQr9TT1G+f
+         /qVA==
+X-Forwarded-Encrypted: i=1; AJvYcCX63AtWtDyb0xQ+d2jmTOF9ST8iKDzyLlu46ReCAubUfIbeEqPRd2b5qcd2+9qU1AAFk+NOphZixaJLCY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmdw1TCRBDs1KbB/kaN/CsVbllh8xGWu/Bis4UoJGasYKztlPV
+	awvyK4Q3HPCWzcS6NzhzB/p10e3TD5kHyGdPkCUfBHUP6kBEHYrevy89c2StVUE=
+X-Gm-Gg: ASbGncu6lwImGzgc2GHIG9nf2gc+eJN3N1Fc9ceNcP3TBWVBibZrxlsEgDQJBnM9E+0
+	Kgou/buSEAtfFkkkBFT7WGBXw50ao0Mqa55uCBDji+fi764jfhHUhnmKY+wcDD4+GK/LRvqoSom
+	O2oA0FCMW1X9cLIZ9YifZxDAbaZJl5LUtPiuql92OQb1X/cI5hNKohBjtLS/EkCiisVppFDEVyh
+	p2SXeZypJtoP1Ck3XtP8Qe0BWa+lKrRRTIF5sr9lnjaXF7c3nnT9w++7Jc2Z8sxxbtfZaj9Qu9w
+	4Lz7PgtESt8woPlM5fN0WQAgM10x0dpR9l1MAQdE0u0p5nlKeNT885TugFS72I2Zui/b5iS69RR
+	brcyi+fU5xDAEWipJU08Gw1lp9nhE
+X-Google-Smtp-Source: AGHT+IG5iLE7r81td49W0bBe07yr5W+PK4WyVyGMbJeUq+YUB/jGY98HLwkEVGj4tkqcJ2fbAud1Ig==
+X-Received: by 2002:a05:6402:27ca:b0:5dc:63d:b0c1 with SMTP id 4fb4d7f45d1cf-5ed8f5f7241mr7187353a12.29.1743168653567;
+        Fri, 28 Mar 2025 06:30:53 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e01f7sm1355284a12.79.2025.03.28.06.30.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 06:30:53 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Fri, 28 Mar 2025 13:28:47 +0000
+Subject: [PATCH v2 01/32] dt-bindings: mfd: samsung,s2mps11: add s2mpg10
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250328-s2mpg10-v2-1-b54dee33fb6b@linaro.org>
+References: <20250328-s2mpg10-v2-0-b54dee33fb6b@linaro.org>
+In-Reply-To: <20250328-s2mpg10-v2-0-b54dee33fb6b@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-Join the text_poke_*() API namespace.
+The Samsung S2MPG10 PMIC is similar to the existing PMICs supported by
+this binding.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+It is a Power Management IC for mobile applications with buck
+converters, various LDOs, power meters, RTC, clock outputs, and
+additional GPIOs interfaces.
+
+Unlike other Samsung PMICs, communication is not via I2C, but via the
+Samsung ACPM firmware, it therefore doesn't need a 'reg' property but
+needs to be a child of the ACPM firmware node instead.
+
+S2MPG10 can also act as a system power controller allowing
+implementation of a true cold-reset of the system.
+
+Support for the other components like regulators and power meters will
+be added in subsequent future patches.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+
 ---
- arch/x86/include/asm/text-patching.h | 2 +-
- arch/x86/kernel/alternative.c        | 6 +++---
- arch/x86/kernel/callthunks.c         | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+v2:
+* drop ACPM phandle 'exynos,acpm-ipc', and expect this to be a child
+  node of ACPM directly instead
+* allow, but still don't enforce, regulators subnode, to ease adding it
+  in the future
+* deny 'reg' property, it's incorrect to optionally have it for S2MPG10
+* enforce 'interrupts' or 'interrupts-extended' property. S2MPG10 can
+  not work without. Note this is done as-is using the oneOf, because
+  dtschema's fixups.py doesn't handle this nesting itself
+---
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   | 28 ++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index 53ac94743e5d..335f88b54ed0 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -15,7 +15,7 @@
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
+index ac5d0c149796b6a4034b5d4245bfa8be0433cfab..62d0e9f8a4d39add50a986af1836cfdcf065ad48 100644
+--- a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
++++ b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
+@@ -20,6 +20,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - samsung,s2mpg10-pmic
+       - samsung,s2mps11-pmic
+       - samsung,s2mps13-pmic
+       - samsung,s2mps14-pmic
+@@ -58,16 +59,39 @@ properties:
+       reset (setting buck voltages to default values).
+     type: boolean
  
- extern void text_poke_early(void *addr, const void *opcode, size_t len);
++  system-power-controller: true
++
+   wakeup-source: true
  
--extern void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len);
-+extern void text_poke_apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len);
+ required:
+   - compatible
+-  - reg
+-  - regulators
  
- /*
-  * Clear and restore the kernel write-protection flag on the local CPU.
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index a855db342c6a..cd5b69b6eff8 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -340,7 +340,7 @@ static void __apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen,
- 	}
- }
+ additionalProperties: false
  
--void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
-+void text_poke_apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
- {
- 	__apply_relocation(buf, instr, instrlen, repl, repl_len);
- 	optimize_nops(instr, buf, instrlen);
-@@ -496,7 +496,7 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
- 		for (; insn_buff_sz < a->instrlen; insn_buff_sz++)
- 			insn_buff[insn_buff_sz] = 0x90;
- 
--		apply_relocation(insn_buff, instr, a->instrlen, replacement, a->replacementlen);
-+		text_poke_apply_relocation(insn_buff, instr, a->instrlen, replacement, a->replacementlen);
- 
- 		DUMP_BYTES(ALT, instr, a->instrlen, "%px:   old_insn: ", instr);
- 		DUMP_BYTES(ALT, replacement, a->replacementlen, "%px:   rpl_insn: ", replacement);
-@@ -1981,7 +1981,7 @@ __visible noinline void __init __alt_reloc_selftest(void *arg)
- static noinline void __init alt_reloc_selftest(void)
- {
- 	/*
--	 * Tests apply_relocation().
-+	 * Tests text_poke_apply_relocation().
- 	 *
- 	 * This has a relative immediate (CALL) in a place other than the first
- 	 * instruction and additionally on x86_64 we get a RIP-relative LEA:
-diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
-index 25ae54250112..e016c5780d42 100644
---- a/arch/x86/kernel/callthunks.c
-+++ b/arch/x86/kernel/callthunks.c
-@@ -186,7 +186,7 @@ static void *patch_dest(void *dest, bool direct)
- 	u8 *pad = dest - tsize;
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tsize);
--	apply_relocation(insn_buff, pad, tsize, skl_call_thunk_template, tsize);
-+	text_poke_apply_relocation(insn_buff, pad, tsize, skl_call_thunk_template, tsize);
- 
- 	/* Already patched? */
- 	if (!bcmp(pad, insn_buff, tsize))
-@@ -295,7 +295,7 @@ static bool is_callthunk(void *addr)
- 	pad = (void *)(dest - tmpl_size);
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
--	apply_relocation(insn_buff, pad, tmpl_size, skl_call_thunk_template, tmpl_size);
-+	text_poke_apply_relocation(insn_buff, pad, tmpl_size, skl_call_thunk_template, tmpl_size);
- 
- 	return !bcmp(pad, insn_buff, tmpl_size);
- }
-@@ -313,7 +313,7 @@ int x86_call_depth_emit_accounting(u8 **pprog, void *func, void *ip)
- 		return 0;
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
--	apply_relocation(insn_buff, ip, tmpl_size, skl_call_thunk_template, tmpl_size);
-+	text_poke_apply_relocation(insn_buff, ip, tmpl_size, skl_call_thunk_template, tmpl_size);
- 
- 	memcpy(*pprog, insn_buff, tmpl_size);
- 	*pprog += tmpl_size;
+ allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,s2mpg10-pmic
++    then:
++      properties:
++        reg: false
++        samsung,s2mps11-acokb-ground: false
++        samsung,s2mps11-wrstbi-ground: false
++
++      oneOf:
++        - required: [interrupts]
++        - required: [interrupts-extended]
++
++    else:
++      properties:
++        system-power-controller: false
++
++      required:
++        - reg
++        - regulators
++
+   - if:
+       properties:
+         compatible:
+
 -- 
-2.45.2
+2.49.0.472.ge94155a9ec-goog
 
