@@ -1,533 +1,273 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3611DB933
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743183333; cv=none; b=MTjucswRVc9QRLzfS9XBo0YW/wYCKUFCvaBjrPhhp6XJzwUHA2kNLqYZLgvDDT2nB3YbN+a4Hq11KH+w5PMPEvYgj8SISDD7A1bBjU4+04ZGPjNvG+3wGPsA6zR/u5RkLyV/TNoiVBsJEuFurfmSWzbxnhQUh499ukhDYSAJ7B4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743183333; c=relaxed/simple;
-	bh=Z9Fe2+FVxTOtr+1ZWGqM2uQD2DnWR5j0vKz1i55zxnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJ10uPoGHuwZdKVefVWkFw5OLd/ka5Sj/RlUJ6+nDkeHDN823Dh6/kFhvP8FYhe4nH9gsrmAPLeHOvE3A0iySGW4vn0KqUVEIWknvmZF6pZaXMj9CJZskcz1I2PIQ45XRVyMj8Sob/YB2CppST88Gvtzli6DTQoCkDqwdDCyGxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BYDJTLmY; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9097C1DD0E7;
+	Fri, 28 Mar 2025 17:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743183416; cv=fail; b=ldMVDm7WbgfFPpvwcFhePeDkZ7uGy7qN+Ze85fXcIF/UK+ypsInptCyslsmximOi5sEF+kE0ZL/a1J9VBsHGIe5C+OwurCxLH+YczVeWNaohtTmQkk3oUTjR6hkD4PTLG/69UYneE1VemoFJymMa7vIWPwyEZHy39PkLf1PlLaw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743183416; c=relaxed/simple;
+	bh=IIvFCMubn2H89vnnzvfsOkFwcfMQ+ygmwpp1aMryEOw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gqF2YEfSmLacUNA5S0gz2GCQ9A9w00DJgH+IizwI5Z9HS028bYJWAmwdo0ieyPVhx04hcB4hXagMsZNOqWxmfP9qGVhbqNE+uAySmMrheCwJPDD9IcdobSKm9x4I1+80HliI8RZjH8hCz35Ijt73z14x3NSz7Z62Z7S5ma3fsBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oEJkQKVL; arc=fail smtp.client-ip=40.107.223.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BYDJTLmY"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac298c8fa50so401597866b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743183329; x=1743788129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QCOY/OM3xv2Rdy8rOxicNNUSqGLSD2Kt3rZzPoVTCgs=;
-        b=BYDJTLmYCMmVQqQcuycIH7fOriXxM32BTbphMTA07yJgy9/o1e8WY7l91+Zr9p7VfF
-         uqzIkPN9PvddM9w3+arkaV3xUnZZTEbxavSKAGtlmZ+8zmlOeWTUbeycVWP3A1aoF1Bb
-         vH1kEwgL3XH8K5zuSB1rJ8bThyJR4UPWh2D4NzC7FxakyPOwa+L6NEEDQfPpTk8wnGxT
-         edafZCtEqwxK8teNzbvTe6mu/46q3MfGwPxoY72Z/nZHuU43cpxE6Bo8BU7eGvO/VbwL
-         HTGG/ji9V8Z/hPUc2FqM39TUXI258DdymcT1LyPnCW342d+x/YcLAo3kaAtpdTTq4zF7
-         BaGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743183329; x=1743788129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QCOY/OM3xv2Rdy8rOxicNNUSqGLSD2Kt3rZzPoVTCgs=;
-        b=PipIN5gh+OnwWxGHtTA5LaAIJJVt3/U6pDaKZSfzM84FROkHMkkjgjj7o4WPv0MM9q
-         xBwhyszVzgCrnXlVdA7YLduBMxyzdEL+sxMqbvLg2bxPOmX6W5VG+ARa1JoBX17HAlap
-         GieeCp59dllzth+vyrdpm1FBIYf5NTpz8a2LrtNmMtT9ev9xGdhEpErLRa7AGZdu2wUV
-         +aRUkRwV9BvD6UCre24daOHOM1vBFQ8pGNSw8hk+j10HLIHJVdtAtTkoiR/Bh1+rcRQh
-         X9NhhoBaZtvDqdsML5b+EWgD5r0J0mXBSR/wrJLexHAprQK6ZhFD3OEzJAG/9Zzv9d8F
-         HmLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWbA4xCV+dxBvGoTU9TlrQPlngaooLpmX1p2UnHmIRmRpiVCZ1KIic+p34a/IeMh2mTmd4P5Z/tyFzsA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfez3nUmO8H6Ssrrv8AIClrnEiBdsCg8RMkFXRWlcA/g+dM6PV
-	ubiVdokEHq5hPJy7zCYtv0NVnvmGBmVURbdwV5xyKmYhJVMSiXdIrN1r0sHEJV23uo3ec7RGeJS
-	c2HXTZEo9KkWYzuY8atOEdxORWumgyNP0jZ8ltQ==
-X-Gm-Gg: ASbGnctwcxJKXIBXL5/M9yMY/oLoe5YeMj5ekoi3hn53UhYbxp+zE0ZTQmjWnoGhIR0
-	gdRnMa1C+XpHPhjvAKwy8yENgDbUq/slBj/eozgVj7jzPQ6AdL35+h1rBRBPDim+Zkkk2fB5PO6
-	Tn4F+ep+7GtQEIYT5WVjZgHpTR7NQThmZHMJVf/U+7b4EX6E/8ylezLCabJbk=
-X-Google-Smtp-Source: AGHT+IEdtZ+nRiNksT1ZK+nI3EizfIqfBPMNuSPKc2pMJ6eYrNml/gOglrN0NRjLhGamyyaNY+9z2umM8g59uSBHDZc=
-X-Received: by 2002:a17:907:9693:b0:ac3:45c0:6d08 with SMTP id
- a640c23a62f3a-ac7385b6095mr6897266b.0.1743183329025; Fri, 28 Mar 2025
- 10:35:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oEJkQKVL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tctPSoTf4MjOgf83geRjacm5EGrm69MB69P9k+VQmzIbjaPfSlcOmf2fow9cOeqZVM8SqLvi8Kb5EAjH1MhqIVR1x/Qoj0poZ//FCs6+fpsOKOzE1DhR/zAVOzUZFhFuRT1QE+7ZVxxIxwKTctp2KZLK1omNmP1JK3j4latilxu98xAIzsqghygWIaecaewvivOaRdlB76wnaKe2n+Bd/CKzKPDLFtdav34Mr79yHzQlktVciNYOPmTXgBokzsDEXqGNKiUG/vjvCi7gm/ClOLOjM26zz80alIhBODf8Y4bDTDWz76cHTp4ZmbmHrXgA6K+hEyEyRUu3EdOz3Tk+bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1vVDsiL9+LhKEFkTsIe2dfEs3NkEJMdolkcYT5Bln04=;
+ b=KqGq/XnAbuz6JRrChQjbqRddv3pooHPXg4yW1b2KEGxnBFzqoBpEtEz7kvtc/j0SPBmubNffN1n2JH71NJWGme+1aylsX2B9TxsnNPxT3tP1qc2ZX1h/wVlH+uDw3U7Bwjgn//vGlBGmto9p5cEqUg+gF5kK2MSE9+q1drgILWE2xs9VCoSKZTTCXr+GV/vMhhHnRIf+aAcjx0ddkyZjqZP+vqxsF38153LE9VP3Amf9qK5y2Ph9KhSHqzJxq8U4G26HvQ6Okw8TwucBbd1zErJ4UHBJ/b7Ob2+NgY10gUo9ISyDWX9yrbcNsvEj9xN9Ls421VzF4dLibvax4+Px9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1vVDsiL9+LhKEFkTsIe2dfEs3NkEJMdolkcYT5Bln04=;
+ b=oEJkQKVL0To9+fwNjo+Qfpv2sfslIxtcY9dg5aHHOhqdMGLCwY/i6Oc0MvKYXs8xFBj7L3uVa3LLV9DFgeW4Td45/JwFagnOX8mHRQnUcP0ACzEHdHOvCQVOXWm9OMK3r+7NKMNCo+1UM/4koxeCweKLTuEzhOsjWbJpGp1jMf4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ CH1PR12MB9671.namprd12.prod.outlook.com (2603:10b6:610:2b0::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.47; Fri, 28 Mar 2025 17:36:49 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 17:36:49 +0000
+Message-ID: <3d2aafbc-9655-4795-8faf-bd28511643da@amd.com>
+Date: Fri, 28 Mar 2025 12:36:45 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL
+ errors
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250328170212.GA1508786@bhelgaas>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250328170212.GA1508786@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0032.namprd05.prod.outlook.com
+ (2603:10b6:803:40::45) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com> <cc8f3525-20b7-445b-877b-2add28a160a2@gmail.com>
-In-Reply-To: <cc8f3525-20b7-445b-877b-2add28a160a2@gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Fri, 28 Mar 2025 18:35:17 +0100
-X-Gm-Features: AQ5f1JoTd6oWVQeMRN3V-hTS5jlcvyyynZ90Kl6ULD3non1sxEaNj1v0M7jl2uY
-Message-ID: <CAHVXubjq901KYw+aRmYoNYUpCks87TB2QAu2U_fcx7Wmh_+9gg@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Charlie Jenkins <charlie@rivosinc.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ben Dooks <ben.dooks@codethink.co.uk>, Pasha Bouzarjomehri <pasha@rivosinc.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CH1PR12MB9671:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0099172-c316-4353-cc3f-08dd6e1f1e5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OXQyTW8vdmw2SG9QOW50c0ZIdU1QYVN1Q25UYy9kWkFHM1g0Y3d2YU8vQUx2?=
+ =?utf-8?B?aEV1czhKM3lwUE1yeGNCYmJGQVhDYmw4MHlON3VxeHoyNlp5aFZwZGNCQzhE?=
+ =?utf-8?B?cklUWldpSFlxKzE5ZVpPbm5ZN3N1eUkwMjJucGk4enBCdkNjVk5pQUQwdm5l?=
+ =?utf-8?B?dkhtWVp5SlFjQnNOMGxmR29OWUhBbFJua3NnN2pKLzhHSWVOeUJIVHFiQUtJ?=
+ =?utf-8?B?VXB4bU92N2RXSkdqcXZzNHdoWlc5d3hNMjlQWVJjOTRKQ3k0dDduVWRvcUFK?=
+ =?utf-8?B?ZDF4aldQQnNXNnMwYmVEalQ2c0N1RGU4Y0xoTGtQY0htMFF4OEJoaU9uSFlM?=
+ =?utf-8?B?cEdyemNDTVI2SHV0RGppZ0pBT3kvTWVEUXYrZHgyaGxLamZFd244Z2h6TzRj?=
+ =?utf-8?B?aE1JTGtGOHNmckR2N2loeUlEdnFKYnEyN3lYd2wzYVQxK09ubURTVkI2bDRO?=
+ =?utf-8?B?dGMwT01UY1dFUWEvdU5ia28rNXVkbE9McElYRWgxSG1mb1NaSzFrKzVOVFBY?=
+ =?utf-8?B?RHI4d0xNNkZwR01KY0tjWVY1ejNuUk9jTWJ2Tzk1aWxQY0I0SlZrbk5GRXNK?=
+ =?utf-8?B?aHN1RnRiMjVtSk5ob0RJaFdDeWlBd3dyT2Y1amlXMnhpRUN6RzdQWWNjVllD?=
+ =?utf-8?B?OEVvWmF3WkNBSUU1WWxRbDZmNC9qaTd1Q3R5aVZYMkRXWkx0K2VZWmgxdlZx?=
+ =?utf-8?B?ZTBGdlhldVBtamhzOGNmSlRLdGJqTTRsZy9qRllCaWsxNlZ1aGRSaVk2akRG?=
+ =?utf-8?B?eDVteVVySHlQdTNQbnlVS2F4Qk5ReHV2OE1STkRQN2RzbElEaDZLcmo0emZQ?=
+ =?utf-8?B?bHFBc21wTlcySDFweENvZUlPamZBSXNjYkdLL0pVc29sUGp6cU5ybzhCNDlj?=
+ =?utf-8?B?V3A3RmV3QWhjTmdRUy8wdG0xOGlOcEhQRXNEWE8zQUdUb3hTbjYvSnhDNWo0?=
+ =?utf-8?B?REphaGFXNXJ4QmhwYVNRMTc3TkhtOXBFU3NLbUpZQXQwYzltYjdKUzAzanUr?=
+ =?utf-8?B?QlNCMDh1UU1hYmw0ZFJWN2E4aWFjam5WQlFHM05tbjllYWpxVGFsVUpCZjcx?=
+ =?utf-8?B?cnRQQ0NwQ0p6MkJKdktTclo0Qyt3Y1NKL3EyWkJFb1NxVWg3a0dsVWpkZkVO?=
+ =?utf-8?B?WHZQYnk4aU5KWTJqb1ZEL1lQQWxWeUVhMVY5Tjd3WFBlRGxoNzZqdlV5enUy?=
+ =?utf-8?B?RThtUWdKaHJhWWw5WkJzK3ZrdXZicG1kVWtsWVRvaFh3L05WWEN2Ri9SSThj?=
+ =?utf-8?B?ZGNQYUJjZUN1alFCWkVMdHdDMzdBZlZ3WWFMT3R2OEwzVnY3a1dpWCsrVG00?=
+ =?utf-8?B?TGNLQXRwSFBhc3U0MEVrdlNvVG5tTkZQUnNuOE5wdlAxNGF2dENXV2RTZUJ3?=
+ =?utf-8?B?TWVYcnd0VDNPYTNPVjBxWWlWMlUzcWpJd25ZMVlCSHJzY3BRdFZOQnZhNDY0?=
+ =?utf-8?B?WkJidnFjME9FdDhQVS9adU5Ja3MycnBSeCtGNk9MSStnTnFDd2FFV1RFRW1U?=
+ =?utf-8?B?Z0FUV2ZmUUJ3SjIvamVMd0xKQmJBUFoycWZlRnpML2JyNXdWM2wvS3lEZzQw?=
+ =?utf-8?B?bWRSbUQzK1poZDM5dzBZVVcxTjRGTnRDVThYRXQwWWM0R0ZXcmh5bERUREdE?=
+ =?utf-8?B?dGhCRkdnUTR4TTZsdDFEMGhMeHY3SzJRa3dCMVdacWlUeUxkYWhPMHVvOFQr?=
+ =?utf-8?B?b05PdG9VRHlRRU1aK2ZJVmNpN2I2dzUvMnBxNFJzczRWbmhQZG1NN2R5dEVI?=
+ =?utf-8?B?dHlDd2xnb1JFM0ZWZUpsdHpyR1NNY0xRLzNXbmdYallkZW43cW9VdjRsT3Zi?=
+ =?utf-8?Q?Nmu3QJm2tONZa0/Uhq2nP6S9tOUHP1Yvv6bF0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SlhPYUhIK05rYng2U1liM3RsWXExNVdvSDVBWk9ONjBwdEswUjZIUitSTVN5?=
+ =?utf-8?B?TkVOeHFna0ZxMmNjUEUvVFlGSjhKYnhPVGN0MWEwZGdmOTVnNzZ2aHZiL29s?=
+ =?utf-8?B?TTB1ZTlEQkhITmFERW1BVDBoWDJBSG9EYjVqTk0vMGJZcjZXTUFob3FuVDhE?=
+ =?utf-8?B?NnlydGFVOWdEbUZ2d3l1WXpKdkROZDJ3cWJ0SEZxaE50K0JQNisyWUtFL2g3?=
+ =?utf-8?B?ZUx4V3dIVEhtN28rUjdrR2V0bWtCQmh6bVJBay9OSFZycjh0NDZmRGxRL1Ev?=
+ =?utf-8?B?cmdESTA4eEluODZBOVRoTnVXZmhGUmZGSnkzaDVlaFUveHB3ZkNQVUpsMzl0?=
+ =?utf-8?B?cE95K241dFI2alA2OWQwYUlmcUxvMFlRamtyQ3lzY0cvSlVoZEJUdGpYM3hF?=
+ =?utf-8?B?QjF5R3dPMjAydGhPZEJaQmtsVFdLcmU2K3k0b2xheHVzZWZ5SWNOWkxLcjR4?=
+ =?utf-8?B?SmJ5Q01ZUWJaMjIxUkI0Y3k1bkZ1MHV3djV6c3RMK2h0MFZyQlJ6Tml6T2du?=
+ =?utf-8?B?S085emV3RFdmS1BLYUh2aTRPdTZrNmJqUmV4aGN4WjdCYW0rYVlVUStua0Rq?=
+ =?utf-8?B?bjhBb24zQnEyVHBya0pkeUpVWExUQ3U4REdMZTM2ZE9odU8rZjRld0EwbEM0?=
+ =?utf-8?B?UUM0dDZIbG5uemFPWXRQcWRBZGFzVitFODJObHVnZGJqVEFiZU50aVpmbElw?=
+ =?utf-8?B?UUxKTEVzdit1VEwrbENZbVVkYUcrSmpWaVdNd2l5eXpFaHNaVFpWT0ZadUdx?=
+ =?utf-8?B?WnBjbFZkTk1KeTBwbHVBL1NvTmpnLzFJeklHTTJ1dGtOcTIycUNFcEdZWVJO?=
+ =?utf-8?B?QThBcWh6SWFrVUYraDRWeDNDUkRtRDAwc2RiQnVWYVJuTG04cm9VUVdvN1M4?=
+ =?utf-8?B?Q1A3RW95WU1MQmZGV3VndzRaYnlTaXFOR3NaTkpxNUp5cUhSN2lRdzFtdC96?=
+ =?utf-8?B?aWpFWHZDVS8vaG42RmtJbzBSeVRLRUJTRzBCc2QrbUdSbk1ubFJZNVZ0NEtQ?=
+ =?utf-8?B?d3JETEFDWktWYXNuL2F0M3kxdEFsZHdGcnhxcU5KTkFIL2hmZmF6V21jUytj?=
+ =?utf-8?B?WlZraXdJT0wvVEhKOTd0clhobjlpenhSMktrcTZKa1JybGozTnVxQ0R4aDRS?=
+ =?utf-8?B?R3dkNTd2QVBmbzNKVXM3TENCSUJzZ0lBdFRrdC9jbHNCd1ROcGluS2E4cUwy?=
+ =?utf-8?B?TnBDMFFLTklEK2N1ZkJLbXkrMFh5ZFRHVDY4cFp5R1YwMVlDbUlISmw5ODRZ?=
+ =?utf-8?B?Z2pIMTd3N1A0Wjg5ajR0b2Zub01pdzFNQU02UlFLZlJVWG9zd0l3SHJwKytN?=
+ =?utf-8?B?QzU5cHU4aTUxT28wTklrNWxzVVBYT1VTSXdOVkZ6OGphN0UyZHg2bWx2bVZn?=
+ =?utf-8?B?ZU1GVk9lSmowKzZITzA2T3VKWW5LUGlIR2QzZ3ZyRm1DcXlmUkVuaGdYaGxt?=
+ =?utf-8?B?N3pCcVZURys3dmt2bkNFYytBVUdHanEyWDdQWGlTbWxBakczSkZtM0pKbzR1?=
+ =?utf-8?B?SVoybWJvakcvNzFJekRqUDlENUhFWkVFMlJrbkFlSytWSytDSytuSmNNRDhw?=
+ =?utf-8?B?bHJTYU1sZHYzV3lRbHBTNCsrQlYyWk55T1Zya28wQXhzSEVrMEQ1RXlMdVMw?=
+ =?utf-8?B?MGVWNHBYQzc1S2pPdkZabHJYSkplVXJwMCtGaStsbzNiT2FmT00wTWc4ZVlS?=
+ =?utf-8?B?bmhqQlZLR1c0R3BqUURyeXFodldXRFNpK29CTWN2ekRYaTdNaFh5c0VaMHlX?=
+ =?utf-8?B?djRZMjJrUW9CSDYvUk02M0c1KzJpVXgzZ3ljbStuNkpnWmFtZ0dua2NSR1hp?=
+ =?utf-8?B?eGhqU0xIYmk5WksydW5lakFpZGF5UUNzeFpYNnU2NlQvUjRiY3FzNFRwLytT?=
+ =?utf-8?B?VldQT3NYdjIvT0NpUFQvdHdVNnFqK2V3RHdFMDZjc0RJazVYQWpiaVRoUVd0?=
+ =?utf-8?B?LzNSNTJBdThZdlQ4TEF2aU1FMW1FZVljNlIwekp0eUtieFVwK2IxOWp6MUVw?=
+ =?utf-8?B?ZHl3RG0zSTFlc3NVNnYzRGNMOUU4UGduNXc3Rkp4ZGZUb2Rva0djNTBnTWRp?=
+ =?utf-8?B?OGVOaWRFZFJiRnJQWHljTmozbXkyZG5hOXhsT0JpajZPZElnVlkrV1VjNTBB?=
+ =?utf-8?Q?IbR0+R22brnPbRcmylX3g1MVE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0099172-c316-4353-cc3f-08dd6e1f1e5f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 17:36:49.1106
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qGF3t2cWqWtDjkgj9TloUU0vQYlrC8HMJjfVADb7QRY0qpmnFRLMU2nsFf+gua6ykGiYXavZsPRYSBcuS9P2rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9671
 
-Hi Klara,
 
-On Fri, Mar 28, 2025 at 4:42=E2=80=AFPM Klara Modin <klarasmodin@gmail.com>=
- wrote:
+
+On 3/28/2025 12:02 PM, Bjorn Helgaas wrote:
+> What does this series apply to?  I default to the current -rc1
+> (v6.14-rc1), but this doesn't apply there, and I don't have the
+> base-commit: aae0594a7053c60b82621136257c8b648c67b512 mentioned in the
+> cover letter.
 >
-> Hi,
+> Sometimes things make more sense when I can see everything as applied.
+
+This base commit is from cxl/next and can be found here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=next
+
+Terry
+
+> On Thu, Mar 27, 2025 at 01:12:30PM -0500, Bowman, Terry wrote:
+>> On 3/27/2025 12:08 PM, Bjorn Helgaas wrote:
+>>> On Wed, Mar 26, 2025 at 08:47:04PM -0500, Terry Bowman wrote:
+>>>> CXL error handling will soon be moved from the AER driver into the CXL
+>>>> driver. This requires a notification mechanism for the AER driver to share
+>>>> the AER interrupt details with CXL driver. The notification is required for
+>>>> the CXL drivers to then handle CXL RAS errors.
+>>>>
+>>>> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+>>>> driver will be the sole kfifo producer adding work. The cxl_core will be
+>>>> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+>>>>
+>>>> Add CXL work queue handler registration functions in the AER driver. Export
+>>>> the functions allowing CXL driver to access. Implement the registration
+>>>> functions for the CXL driver to assign or clear the work handler function.
+>>>>
+>>>> Create a work queue handler function, cxl_prot_err_work_fn(), as a stub for
+>>>> now. The CXL specific handling will be added in future patch.
+>>>>
+>>>> Introduce 'struct cxl_prot_err_info'. This structure caches CXL error
+>>>> details used in completing error handling. This avoid duplicating some
+>>>> function calls and allows the error to be treated generically when
+>>>> possible.
+>>>> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+>>>> +			     struct cxl_prot_error_info *err_info)
+>>>> +{
+>> ...
+>>>> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+>>>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
+>>>> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+>>>> +		return -ENODEV;
+>>> Similar.  A pci_warn_once() here seems like a debugging aid during
+>>> development, not necessarily a production kind of thing.
+>>>
+>>> Thanks for printing the type.  I would use "%#x" to make it clear that
+>>> it's hex.  There are about 1900 %X uses compared with 33K
+>>> %x uses, but maybe you have a reason to capitalize it?
+>> Got it "%x". Would you recommend the pci_warn_once() is removed?
+> The dependency on pdev being an endpoint is not clear here, so I would
+> just remove the check altogether or move it to the place that breaks
+> if pdev is not an endpoint.
 >
-> On 3/19/25 19:35, Charlie Jenkins wrote:
-> > Implement the runtime constant infrastructure for riscv. Use this
-> > infrastructure to generate constants to be used by the d_hash()
-> > function.
-> >
-> > This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
-> > constant' support") and commit e3c92e81711d ("runtime constants: add
-> > x86 architecture support").
+>>>> +#if defined(CONFIG_PCIEAER_CXL)
+>>>> +int cxl_register_prot_err_work(struct work_struct *work,
+>>>> +			       int (*_cxl_create_prot_err_info)(struct pci_dev*, int,
+>>>> +								struct cxl_prot_error_info*))
+>>> Ditto.  Rewrap to fit in 80 columns, unindent this function
+>>> pointer decl to make it fit.  Same below in aer.h.
+>> Ok, got it. Without using typedefs, right ?
+> A typedef would be fine with me.
 >
-> This patch causes the following build failure for me:
+>>>> +struct cxl_prot_error_info {
+>>>> +	struct pci_dev *pdev;
+>>>> +	struct device *dev;
+>>>> +	void __iomem *ras_base;
+>>>> +	int severity;
+>>> What does the "prot" in "cxl_prot_error_info" refer to?
+>> Protocol. As in CXL Protocol Error Information. I suppose it needs
+>> to be renamed if it wasn't obvious.
+> Unless there are CXL non-protocol errors that need to be
+> distinguished, I would just omit "prot" altogether.
 >
-> fs/dcache.c: Assembler messages:
-> fs/dcache.c:157: Error: attempt to move .org backwards
-> fs/dcache.c:157: Error: attempt to move .org backwards
-> fs/dcache.c:157: Error: attempt to move .org backwards
-> fs/dcache.c:157: Error: attempt to move .org backwards
-> fs/dcache.c:157: Error: attempt to move .org backwards
-> make[3]: *** [scripts/Makefile.build:203: fs/dcache.o] Error 1
+>>> There's basically no error info here other than "severity".
+>> Correct. It's more accurately "CXL Protocol Error Context" but I didn't
+>> want to re-use 'context' because 'context' is used for thread/process
+>> statefulness. Also, I followed the existing CPER parallel work that uses
+>> a similar kfifo etc. Thoughts on rename?
+> What's the name of the corresponding CPER struct?
 >
-> The value of CONFIG_RISCV_ISA_ZBKB doesn't seem to have an impact.
-> Reverting the patch on top of next-20250328 resolved the issue for me. I
-> attached the generated fs/dcache.s.
-
-Thanks for your report!
-
-Kernel test robot reported the following issue, do you have the same errors=
-?
-
-   fs/dcache.c: Assembler messages:
->> fs/dcache.c:143: Warning: Unrecognized .option directive: arch,+zba
---
->> fs/dcache.c:145: Error: unrecognized opcode `add.uw s1,s1,a5'
->> fs/dcache.c:143: Warning: Unrecognized .option directive: arch,+zba
---
->> fs/dcache.c:145: Error: unrecognized opcode `add.uw a4,a4,a5'
->> fs/dcache.c:143: Warning: Unrecognized .option directive: arch,+zba
---
->> fs/dcache.c:145: Error: unrecognized opcode `add.uw s4,s4,a5'
->> fs/dcache.c:143: Warning: Unrecognized .option directive: arch,+zba
---
->> fs/dcache.c:145: Error: unrecognized opcode `add.uw s1,s1,a5'
->> fs/dcache.c:152: Error: attempt to move .org backwards
->> fs/dcache.c:152: Error: attempt to move .org backwards
->> fs/dcache.c:152: Error: attempt to move .org backwards
->> fs/dcache.c:152: Error: attempt to move .org backwards
-
- If so, I sent a fix, don't hesitate to add your Tested-by:
-https://lore.kernel.org/linux-riscv/c0f425ec-6c76-45b2-b1bc-8d9be028a878@ri=
-vosinc.com/T/#me1469bfb2e6f69e1422a136014b753a6acaa3bc6
-
-Thanks,
-
-Alex
-
-
+>>> I guess "dev" and "pdev" are separate devices (otherwise you would
+>>> just use "&pdev->dev"), but I don't have any intuition about how they
+>>> might be related, which is a little disconcerting.
+>> "pdev" represents a PCIe device: RP, USP, DSP, or EP.  "dev" is the
+>> same device as "pdev" but "dev" is found in CXL topology. "dev" is
+>> discovered through ACPI/platform enumeration and interconnected with
+>> other CXL "devs" using upstream and downstream links. Moving back
+>> and forth between "pdev" and its CXL "dev" requires a search unique
+>> to the device type and point beginning the search.
+> It seems weird to me to have two device pointers here.  Seems like we
+> should use a single pointer to identify the device, and if we need to
+> get from PCI to CXL or vice versa, there should be a pointer somewhere
+> so we don't have to search all the time.
 >
-> Please let me know if there's anything else you need.
+>>> I would have thought that "ras_base" would be a property of "dev"
+>>> (the CXL device) and wouldn't need to be separate.
+>> "ras_base" is a common member of the CXL Port, CXL Downstream Port,
+>> CXL Upstream Port, and CXL EP. If one wants the "ras_base" for a
+>> given CXL "dev" then the "dev" must be converted to CXL Port,
+>> Downstream Port, or Upstream Port.
+> Passing around ras_base seems dodgy to me.  I think it's better to
+> pass around a real entity like a pci_dev or cxl_port or cxl_dport or
+> whatever.  Code that needs to deal with ras_base presumably should
+> know about the internals of the device ras_base belongs to.
 >
-> Regards,
-> Klara Modin
->
-> >
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >   arch/riscv/Kconfig                     |  22 +++
-> >   arch/riscv/include/asm/asm.h           |   1 +
-> >   arch/riscv/include/asm/runtime-const.h | 265 ++++++++++++++++++++++++=
-+++++++++
-> >   arch/riscv/kernel/vmlinux.lds.S        |   3 +
-> >   4 files changed, 291 insertions(+)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 7612c52e9b1e35607f1dd4603a596416d3357a71..c123f7c0579c1aca839e3c0=
-4bdb662d6856ae765 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -783,6 +783,28 @@ config RISCV_ISA_ZBC
-> >
-> >          If you don't know what to do here, say Y.
-> >
-> > +config TOOLCHAIN_HAS_ZBKB
-> > +     bool
-> > +     default y
-> > +     depends on !64BIT || $(cc-option,-mabi=3Dlp64 -march=3Drv64ima_zb=
-kb)
-> > +     depends on !32BIT || $(cc-option,-mabi=3Dilp32 -march=3Drv32ima_z=
-bkb)
-> > +     depends on LLD_VERSION >=3D 150000 || LD_VERSION >=3D 23900
-> > +     depends on AS_HAS_OPTION_ARCH
-> > +
-> > +config RISCV_ISA_ZBKB
-> > +     bool "Zbkb extension support for bit manipulation instructions"
-> > +     depends on TOOLCHAIN_HAS_ZBKB
-> > +     depends on RISCV_ALTERNATIVE
-> > +     default y
-> > +     help
-> > +        Adds support to dynamically detect the presence of the ZBKB
-> > +        extension (bit manipulation for cryptography) and enable its u=
-sage.
-> > +
-> > +        The Zbkb extension provides instructions to accelerate a numbe=
-r
-> > +        of common cryptography operations (pack, zip, etc).
-> > +
-> > +        If you don't know what to do here, say Y.
-> > +
-> >   config RISCV_ISA_ZICBOM
-> >       bool "Zicbom extension support for non-coherent DMA operation"
-> >       depends on MMU
-> > diff --git a/arch/riscv/include/asm/asm.h b/arch/riscv/include/asm/asm.=
-h
-> > index 776354895b81e7dc332e58265548aaf7365a6037..a8a2af6dfe9d2406625ca8f=
-c94014fe5180e4fec 100644
-> > --- a/arch/riscv/include/asm/asm.h
-> > +++ b/arch/riscv/include/asm/asm.h
-> > @@ -27,6 +27,7 @@
-> >   #define REG_ASM             __REG_SEL(.dword, .word)
-> >   #define SZREG               __REG_SEL(8, 4)
-> >   #define LGREG               __REG_SEL(3, 2)
-> > +#define SRLI         __REG_SEL(srliw, srli)
-> >
-> >   #if __SIZEOF_POINTER__ =3D=3D 8
-> >   #ifdef __ASSEMBLY__
-> > diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/includ=
-e/asm/runtime-const.h
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..a23a9bd47903b2765608c75=
-cd83f01ae578dffaa
-> > --- /dev/null
-> > +++ b/arch/riscv/include/asm/runtime-const.h
-> > @@ -0,0 +1,265 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_RISCV_RUNTIME_CONST_H
-> > +#define _ASM_RISCV_RUNTIME_CONST_H
-> > +
-> > +#include <asm/asm.h>
-> > +#include <asm/alternative.h>
-> > +#include <asm/cacheflush.h>
-> > +#include <asm/insn-def.h>
-> > +#include <linux/memory.h>
-> > +#include <asm/text-patching.h>
-> > +
-> > +#include <linux/uaccess.h>
-> > +
-> > +#ifdef CONFIG_32BIT
-> > +#define runtime_const_ptr(sym)                                       \
-> > +({                                                           \
-> > +     typeof(sym) __ret;                                      \
-> > +     asm_inline(".option push\n\t"                           \
-> > +             ".option norvc\n\t"                             \
-> > +             "1:\t"                                          \
-> > +             "lui    %[__ret],0x89abd\n\t"                   \
-> > +             "addi   %[__ret],%[__ret],-0x211\n\t"           \
-> > +             ".option pop\n\t"                               \
-> > +             ".pushsection runtime_ptr_" #sym ",\"a\"\n\t"   \
-> > +             ".long 1b - .\n\t"                              \
-> > +             ".popsection"                                   \
-> > +             : [__ret] "=3Dr" (__ret));                        \
-> > +     __ret;                                                  \
-> > +})
-> > +#else
-> > +/*
-> > + * Loading 64-bit constants into a register from immediates is a non-t=
-rivial
-> > + * task on riscv64. To get it somewhat performant, load 32 bits into t=
-wo
-> > + * different registers and then combine the results.
-> > + *
-> > + * If the processor supports the Zbkb extension, we can combine the fi=
-nal
-> > + * "slli,slli,srli,add" into the single "pack" instruction. If the pro=
-cessor
-> > + * doesn't support Zbkb but does support the Zbb extension, we can
-> > + * combine the final "slli,srli,add" into one instruction "add.uw".
-> > + */
-> > +#define RISCV_RUNTIME_CONST_64_PREAMBLE                              \
-> > +     ".option push\n\t"                                      \
-> > +     ".option norvc\n\t"                                     \
-> > +     "1:\t"                                                  \
-> > +     "lui    %[__ret],0x89abd\n\t"                           \
-> > +     "lui    %[__tmp],0x1234\n\t"                            \
-> > +     "addiw  %[__ret],%[__ret],-0x211\n\t"                   \
-> > +     "addiw  %[__tmp],%[__tmp],0x567\n\t"                    \
-> > +
-> > +#define RISCV_RUNTIME_CONST_64_BASE                          \
-> > +     "slli   %[__tmp],%[__tmp],32\n\t"                       \
-> > +     "slli   %[__ret],%[__ret],32\n\t"                       \
-> > +     "srli   %[__ret],%[__ret],32\n\t"                       \
-> > +     "add    %[__ret],%[__ret],%[__tmp]\n\t"                 \
-> > +
-> > +#define RISCV_RUNTIME_CONST_64_ZBA                           \
-> > +     ".option push\n\t"                                      \
-> > +     ".option arch,+zba\n\t"                                 \
-> > +     "slli   %[__tmp],%[__tmp],32\n\t"                       \
-> > +     "add.uw %[__ret],%[__ret],%[__tmp]\n\t"                 \
-> > +     "nop\n\t"                                               \
-> > +     "nop\n\t"                                               \
-> > +     ".option pop\n\t"                                       \
-> > +
-> > +#define RISCV_RUNTIME_CONST_64_ZBKB                          \
-> > +     ".option push\n\t"                                      \
-> > +     ".option arch,+zbkb\n\t"                                \
-> > +     "pack   %[__ret],%[__ret],%[__tmp]\n\t"                 \
-> > +     "nop\n\t"                                               \
-> > +     "nop\n\t"                                               \
-> > +     "nop\n\t"                                               \
-> > +     ".option pop\n\t"                                       \
-> > +
-> > +#define RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)                        \
-> > +     ".option pop\n\t"                                       \
-> > +     ".pushsection runtime_ptr_" #sym ",\"a\"\n\t"           \
-> > +     ".long 1b - .\n\t"                                      \
-> > +     ".popsection"                                           \
-> > +
-> > +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
-> > +#define runtime_const_ptr(sym)                                        =
-       \
-> > +({                                                                   \
-> > +     typeof(sym) __ret, __tmp;                                       \
-> > +     asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE                      \
-> > +             ALTERNATIVE_2(                                          \
-> > +                     RISCV_RUNTIME_CONST_64_BASE,                    \
-> > +                     RISCV_RUNTIME_CONST_64_ZBA,                     \
-> > +                     0, RISCV_ISA_EXT_ZBA, 1,                        \
-> > +                     RISCV_RUNTIME_CONST_64_ZBKB,                    \
-> > +                     0, RISCV_ISA_EXT_ZBKB, 1                        \
-> > +             )                                                       \
-> > +             RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)                   \
-> > +             : [__ret] "=3Dr" (__ret), [__tmp] "=3Dr" (__tmp));       =
-   \
-> > +     __ret;                                                          \
-> > +})
-> > +#elif defined(CONFIG_RISCV_ISA_ZBA)
-> > +#define runtime_const_ptr(sym)                                        =
-       \
-> > +({                                                                   \
-> > +     typeof(sym) __ret, __tmp;                                       \
-> > +     asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE                      \
-> > +             ALTERNATIVE(                                            \
-> > +                     RISCV_RUNTIME_CONST_64_BASE,                    \
-> > +                     RISCV_RUNTIME_CONST_64_ZBA,                     \
-> > +                     0, RISCV_ISA_EXT_ZBA, 1                         \
-> > +             )                                                       \
-> > +             RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)                   \
-> > +             : [__ret] "=3Dr" (__ret), [__tmp] "=3Dr" (__tmp));       =
-   \
-> > +     __ret;                                                          \
-> > +})
-> > +#elif defined(CONFIG_RISCV_ISA_ZBKB)
-> > +#define runtime_const_ptr(sym)                                        =
-       \
-> > +({                                                                   \
-> > +     typeof(sym) __ret, __tmp;                                       \
-> > +     asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE                      \
-> > +             ALTERNATIVE(                                            \
-> > +                     RISCV_RUNTIME_CONST_64_BASE,                    \
-> > +                     RISCV_RUNTIME_CONST_64_ZBKB,                    \
-> > +                     0, RISCV_ISA_EXT_ZBKB, 1                        \
-> > +             )                                                       \
-> > +             RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)                   \
-> > +             : [__ret] "=3Dr" (__ret), [__tmp] "=3Dr" (__tmp));       =
-   \
-> > +     __ret;                                                          \
-> > +})
-> > +#else
-> > +#define runtime_const_ptr(sym)                                        =
-       \
-> > +({                                                                   \
-> > +     typeof(sym) __ret, __tmp;                                       \
-> > +     asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE                      \
-> > +             RISCV_RUNTIME_CONST_64_BASE                             \
-> > +             RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)                   \
-> > +             : [__ret] "=3Dr" (__ret), [__tmp] "=3Dr" (__tmp));       =
-   \
-> > +     __ret;                                                          \
-> > +})
-> > +#endif
-> > +#endif
-> > +
-> > +#define runtime_const_shift_right_32(val, sym)                       \
-> > +({                                                           \
-> > +     u32 __ret;                                              \
-> > +     asm_inline(".option push\n\t"                           \
-> > +             ".option norvc\n\t"                             \
-> > +             "1:\t"                                          \
-> > +             SRLI " %[__ret],%[__val],12\n\t"                \
-> > +             ".option pop\n\t"                               \
-> > +             ".pushsection runtime_shift_" #sym ",\"a\"\n\t" \
-> > +             ".long 1b - .\n\t"                              \
-> > +             ".popsection"                                   \
-> > +             : [__ret] "=3Dr" (__ret)                          \
-> > +             : [__val] "r" (val));                           \
-> > +     __ret;                                                  \
-> > +})
-> > +
-> > +#define runtime_const_init(type, sym) do {                   \
-> > +     extern s32 __start_runtime_##type##_##sym[];            \
-> > +     extern s32 __stop_runtime_##type##_##sym[];             \
-> > +                                                             \
-> > +     runtime_const_fixup(__runtime_fixup_##type,             \
-> > +                         (unsigned long)(sym),               \
-> > +                         __start_runtime_##type##_##sym,     \
-> > +                         __stop_runtime_##type##_##sym);     \
-> > +} while (0)
-> > +
-> > +static inline void __runtime_fixup_caches(void *where, unsigned int in=
-sns)
-> > +{
-> > +     /* On riscv there are currently only cache-wide flushes so va is =
-ignored. */
-> > +     __always_unused uintptr_t va =3D (uintptr_t)where;
-> > +
-> > +     flush_icache_range(va, va + 4 * insns);
-> > +}
-> > +
-> > +/*
-> > + * The 32-bit immediate is stored in a lui+addi pairing.
-> > + * lui holds the upper 20 bits of the immediate in the first 20 bits o=
-f the instruction.
-> > + * addi holds the lower 12 bits of the immediate in the first 12 bits =
-of the instruction.
-> > + */
-> > +static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi=
-_parcel, unsigned int val)
-> > +{
-> > +     unsigned int lower_immediate, upper_immediate;
-> > +     u32 lui_insn, addi_insn, addi_insn_mask;
-> > +     __le32 lui_res, addi_res;
-> > +
-> > +     /* Mask out upper 12 bit of addi */
-> > +     addi_insn_mask =3D 0x000fffff;
-> > +
-> > +     lui_insn =3D (u32)le16_to_cpu(lui_parcel[0]) | (u32)le16_to_cpu(l=
-ui_parcel[1]) << 16;
-> > +     addi_insn =3D (u32)le16_to_cpu(addi_parcel[0]) | (u32)le16_to_cpu=
-(addi_parcel[1]) << 16;
-> > +
-> > +     lower_immediate =3D sign_extend32(val, 11);
-> > +     upper_immediate =3D (val - lower_immediate);
-> > +
-> > +     if (upper_immediate & 0xfffff000) {
-> > +             /* replace upper 20 bits of lui with upper immediate */
-> > +             lui_insn &=3D 0x00000fff;
-> > +             lui_insn |=3D upper_immediate & 0xfffff000;
-> > +     } else {
-> > +             /* replace lui with nop if immediate is small enough to f=
-it in addi */
-> > +             lui_insn =3D RISCV_INSN_NOP4;
-> > +             /*
-> > +              * lui is being skipped, so do a load instead of an add. =
-A load
-> > +              * is performed by adding with the x0 register. Setting r=
-s to
-> > +              * zero with the following mask will accomplish this goal=
-.
-> > +              */
-> > +             addi_insn_mask &=3D 0x07fff;
-> > +     }
-> > +
-> > +     if (lower_immediate & 0x00000fff) {
-> > +             /* replace upper 12 bits of addi with lower 12 bits of va=
-l */
-> > +             addi_insn &=3D addi_insn_mask;
-> > +             addi_insn |=3D (lower_immediate & 0x00000fff) << 20;
-> > +     } else {
-> > +             /* replace addi with nop if lower_immediate is empty */
-> > +             addi_insn =3D RISCV_INSN_NOP4;
-> > +     }
-> > +
-> > +     addi_res =3D cpu_to_le32(addi_insn);
-> > +     lui_res =3D cpu_to_le32(lui_insn);
-> > +     mutex_lock(&text_mutex);
-> > +     patch_insn_write(addi_parcel, &addi_res, sizeof(addi_res));
-> > +     patch_insn_write(lui_parcel, &lui_res, sizeof(lui_res));
-> > +     mutex_unlock(&text_mutex);
-> > +}
-> > +
-> > +static inline void __runtime_fixup_ptr(void *where, unsigned long val)
-> > +{
-> > +#ifdef CONFIG_32BIT
-> > +             __runtime_fixup_32(where, where + 4, val);
-> > +             __runtime_fixup_caches(where, 2);
-> > +#else
-> > +             __runtime_fixup_32(where, where + 8, val);
-> > +             __runtime_fixup_32(where + 4, where + 12, val >> 32);
-> > +             __runtime_fixup_caches(where, 4);
-> > +#endif
-> > +}
-> > +
-> > +/*
-> > + * Replace the least significant 5 bits of the srli/srliw immediate th=
-at is
-> > + * located at bits 20-24
-> > + */
-> > +static inline void __runtime_fixup_shift(void *where, unsigned long va=
-l)
-> > +{
-> > +     __le16 *parcel =3D where;
-> > +     __le32 res;
-> > +     u32 insn;
-> > +
-> > +     insn =3D (u32)le16_to_cpu(parcel[0]) | (u32)le16_to_cpu(parcel[1]=
-) << 16;
-> > +
-> > +     insn &=3D 0xfe0fffff;
-> > +     insn |=3D (val & 0b11111) << 20;
-> > +
-> > +     res =3D cpu_to_le32(insn);
-> > +     mutex_lock(&text_mutex);
-> > +     patch_text_nosync(where, &res, sizeof(insn));
-> > +     mutex_unlock(&text_mutex);
-> > +}
-> > +
-> > +static inline void runtime_const_fixup(void (*fn)(void *, unsigned lon=
-g),
-> > +                                    unsigned long val, s32 *start, s32=
- *end)
-> > +{
-> > +     while (start < end) {
-> > +             fn(*start + (void *)start, val);
-> > +             start++;
-> > +     }
-> > +}
-> > +
-> > +#endif /* _ASM_RISCV_RUNTIME_CONST_H */
-> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinu=
-x.lds.S
-> > index 002ca58dd998cb78b662837b5ebac988fb6c77bb..61bd5ba6680a786bf1db7dc=
-37bf1acda0639b5c7 100644
-> > --- a/arch/riscv/kernel/vmlinux.lds.S
-> > +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > @@ -97,6 +97,9 @@ SECTIONS
-> >       {
-> >               EXIT_DATA
-> >       }
-> > +
-> > +     RUNTIME_CONST_VARIABLES
-> > +
-> >       PERCPU_SECTION(L1_CACHE_BYTES)
-> >
-> >       .rel.dyn : {
-> >
+> Bjorn
+
