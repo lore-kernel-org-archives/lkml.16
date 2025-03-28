@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A8521ABBB
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D0221B19E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156265; cv=none; b=m/NBCgsxBySLZv7BaU6rcFoep7AQki8YXHbm+LtoTNdycGkhvO+f15fpSDLYQZKpOsbDJ9xhS2eZDdg/eSygZ8+XqKw23v56nTi3XYELOcBptjuX9xwzOLDHMNVAbO4EnzFA+MLe1iYYeM5uMtW8S2Ubm1J8vHFXi4unqAjyI/A=
+	t=1743156272; cv=none; b=cpl+iaCvhdVypDpfuHiK9zG7WoLX9VLyh6cXI2TO4LiIehbxzT4pIiB3mXKsEh9DGWMmrIbdR5NztPDbxRAmLD+Oq62HV9nCsa84SLQrLbMOO2fL2E/KDfMbslbXWZeFcoTiIqpBNIllQhVmGTDvRVEpqEn/+Dao3ubk68tp6Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156265; c=relaxed/simple;
-	bh=YUc7c9MXgNwcjHIY/6Aj5gIGWVEuIKPw42UQXK+Og6M=;
+	s=arc-20240116; t=1743156272; c=relaxed/simple;
+	bh=tcyBwdgr2YlItLRbbxG+qVgq+GW1dlqK36utI5TcPo0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fXpT2RgBksVCgJ9CL3Sq7vFMw6Gw8jKDuTR0HuAtMjoeCx8be1c5ScqkNmQCLeBo9HOtkocBmxZJiXHK6/0pY4MPUkTUSgj5a3RcduKCabJL3GlsfXjT5DmtIGIqHmK+zHWbiWWSitwei4u21aoA6kHDO16yeuyPUgOHO6W/wbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f/p/prc9; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Ez0bpbHbG+9pTo4E4T5nqgxqZx+yXgEXv26T01dNT/Tr+eFq7gm/J11lchOmtMG4FOBH31cn+voVEpED5VPBSQgZrCPYmgj8gUDizwcJF56tPJ2rGYAAMbWFbpBGGRA860tMS32bXhXU4TvM4sgenNrWKKdxVaZrB8UvvRG26wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BQOajvmr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f/p/prc9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQOajvmr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743156262;
+	s=mimecast20190719; t=1743156268;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+Sc1dvTB3dN9eSkDmtrVWCVhuubTwR7VYeyfTnHnq6Y=;
-	b=f/p/prc9ELKI0wOzWBVeN4xV0It0ssXQXyMYclVa7XqsUtLodAsaw+Fpcfm/lmYagZwG37
-	FTJoKBSPhMn//XuK3bCSi2Pq2JIbW54ljWp+4HOc9JaZC20Qda/H+6aNfFXMHLtLDryHJM
-	ZlrpKKqvc73HFurkINl+lJ4yubal02Y=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ePoKzvLFT6RYs8QjlwPr44Qcs7l2YXCu4ibp5I+WQTY=;
+	b=BQOajvmrXh2tiWdQphJY2/VdzY9fsqfJbAU49G7vVDtyF/k3cXoadanF5XdceBYvDGjl1B
+	b2yeJEIW1iTLcd2yYRd0J6W14Fm83IOhZtB8uWP6kFGncX9BeGsHvujUgzUOUmlY2g6Nmx
+	rzTdsF67U8w+mnGLtn4DQeff1i5NqbA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-m6STFpomMGS1OwcxcNGOzA-1; Fri,
- 28 Mar 2025 06:04:21 -0400
-X-MC-Unique: m6STFpomMGS1OwcxcNGOzA-1
-X-Mimecast-MFC-AGG-ID: m6STFpomMGS1OwcxcNGOzA_1743156260
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-8khkCCZeORykc-xtMHZLYQ-1; Fri,
+ 28 Mar 2025 06:04:26 -0400
+X-MC-Unique: 8khkCCZeORykc-xtMHZLYQ-1
+X-Mimecast-MFC-AGG-ID: 8khkCCZeORykc-xtMHZLYQ_1743156265
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E6E8196B36E;
-	Fri, 28 Mar 2025 10:04:20 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB43F18EBE9B;
+	Fri, 28 Mar 2025 10:04:25 +0000 (UTC)
 Received: from server.redhat.com (unknown [10.72.112.11])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB7C330001A1;
-	Fri, 28 Mar 2025 10:04:15 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 37C4A30001A1;
+	Fri, 28 Mar 2025 10:04:20 +0000 (UTC)
 From: Cindy Lu <lulu@redhat.com>
 To: lulu@redhat.com,
 	jasowang@redhat.com,
@@ -51,9 +51,9 @@ To: lulu@redhat.com,
 	linux-kernel@vger.kernel.org,
 	virtualization@lists.linux-foundation.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v8 2/8] vhost: Reintroduce vhost_worker to support kthread
-Date: Fri, 28 Mar 2025 18:02:46 +0800
-Message-ID: <20250328100359.1306072-3-lulu@redhat.com>
+Subject: [PATCH v8 3/8] vhost: Add the cgroup related function
+Date: Fri, 28 Mar 2025 18:02:47 +0800
+Message-ID: <20250328100359.1306072-4-lulu@redhat.com>
 In-Reply-To: <20250328100359.1306072-1-lulu@redhat.com>
 References: <20250328100359.1306072-1-lulu@redhat.com>
 Precedence: bulk
@@ -65,68 +65,77 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add the previously removed function vhost_worker() back
-to support the kthread and rename it to vhost_run_work_kthread_list.
+Add back the previously removed cgroup function to support the kthread
+The biggest change for this part is in vhost_attach_cgroups() and
+vhost_attach_task_to_cgroups().
 
-The old function vhost_worker was change to support task in
+The old function was remove in
 commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads")
-change to xarray in
-commit 1cdaafa1b8b4 ("vhost: replace single worker pointer with xarray")
 
 Signed-off-by: Cindy Lu <lulu@redhat.com>
 ---
- drivers/vhost/vhost.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/vhost/vhost.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
 diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 250dc43f1786..9500e85b42ce 100644
+index 9500e85b42ce..20571bd6f7bd 100644
 --- a/drivers/vhost/vhost.c
 +++ b/drivers/vhost/vhost.c
-@@ -388,6 +388,44 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- 	__vhost_vq_meta_reset(vq);
+@@ -22,6 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/kthread.h>
++#include <linux/cgroup.h>
+ #include <linux/module.h>
+ #include <linux/sort.h>
+ #include <linux/sched/mm.h>
+@@ -620,6 +621,46 @@ long vhost_dev_check_owner(struct vhost_dev *dev)
  }
+ EXPORT_SYMBOL_GPL(vhost_dev_check_owner);
  
-+static int vhost_run_work_kthread_list(void *data)
++struct vhost_attach_cgroups_struct {
++	struct vhost_work work;
++	struct task_struct *owner;
++	int ret;
++};
++
++static void vhost_attach_cgroups_work(struct vhost_work *work)
 +{
-+	struct vhost_worker *worker = data;
-+	struct vhost_work *work, *work_next;
-+	struct vhost_dev *dev = worker->dev;
-+	struct llist_node *node;
++	struct vhost_attach_cgroups_struct *s;
 +
-+	kthread_use_mm(dev->mm);
-+
-+	for (;;) {
-+		/* mb paired w/ kthread_stop */
-+		set_current_state(TASK_INTERRUPTIBLE);
-+
-+		if (kthread_should_stop()) {
-+			__set_current_state(TASK_RUNNING);
-+			break;
-+		}
-+		node = llist_del_all(&worker->work_list);
-+		if (!node)
-+			schedule();
-+
-+		node = llist_reverse_order(node);
-+		/* make sure flag is seen after deletion */
-+		smp_wmb();
-+		llist_for_each_entry_safe(work, work_next, node, node) {
-+			clear_bit(VHOST_WORK_QUEUED, &work->flags);
-+			__set_current_state(TASK_RUNNING);
-+			kcov_remote_start_common(worker->kcov_handle);
-+			work->fn(work);
-+			kcov_remote_stop();
-+			cond_resched();
-+		}
-+	}
-+	kthread_unuse_mm(dev->mm);
-+
-+	return 0;
++	s = container_of(work, struct vhost_attach_cgroups_struct, work);
++	s->ret = cgroup_attach_task_all(s->owner, current);
 +}
 +
- static bool vhost_run_work_list(void *data)
++static int vhost_attach_task_to_cgroups(struct vhost_worker *worker)
++{
++	struct vhost_attach_cgroups_struct attach;
++	int saved_cnt;
++
++	attach.owner = current;
++
++	vhost_work_init(&attach.work, vhost_attach_cgroups_work);
++	vhost_worker_queue(worker, &attach.work);
++
++	mutex_lock(&worker->mutex);
++
++	/*
++	 * Bypass attachment_cnt check in __vhost_worker_flush:
++	 * Temporarily change it to INT_MAX to bypass the check
++	 */
++	saved_cnt = worker->attachment_cnt;
++	worker->attachment_cnt = INT_MAX;
++	__vhost_worker_flush(worker);
++	worker->attachment_cnt = saved_cnt;
++
++	mutex_unlock(&worker->mutex);
++
++	return attach.ret;
++}
++
+ /* Caller should have device mutex */
+ bool vhost_dev_has_owner(struct vhost_dev *dev)
  {
- 	struct vhost_worker *worker = data;
 -- 
 2.45.0
 
