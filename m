@@ -1,148 +1,148 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B281017A316;
-	Fri, 28 Mar 2025 09:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6831D5170;
+	Fri, 28 Mar 2025 09:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152961; cv=none; b=hQULlZFFvZtjjfZq/GtAAiN7+Getayi8bBuwmCRzS0VW6y4a5xFYKeuokOofvBLo/y42vcG6JQJjMUhsd+kTIl/x57iFAfE10+gLLtHb0qUaOXYzW6IjbYNvm9oLHuLfjPkGLJPFhXh93ucKCuk306XYSMCazWhrJ7UtRoJ3R6c=
+	t=1743153007; cv=none; b=neirHMDbvKT3jCfEI+PiIDmrP/rhf7WqOFlgsgZG+B/SIBdVjPPD48VybNgYJ+CMO5TEbwaG7N45k/XrA4B3RnAv1YTI0uiJtsdQNyYJ7vj0OrlGkKk9U68Lp6tSwamnGD1yoKT9E0X9r+1DMOu+jwD0uppStCRajbVDq0qdu2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152961; c=relaxed/simple;
-	bh=BR7g0ASu/yNnK7nf2Wmiz/XplJmovql7aejjne0v12E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mDVKkSyOOum6KsWUd1tr1FIXv82w+cSROeC3/Kmx+z/kOyu7+jYDZybgkXIiRUPWW/BMWgcLcmJf1QMdvf3GBDZgvlqXtlswHl2SQ7u/Ada5GBaL7s9aLd4xy8KMpb/s36VJRtvpvtgtF6nf8t8oi54Gtpu6KlwPuka5ykHqgV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=cW5MKlNV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FoTlAOFw; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1743153007; c=relaxed/simple;
+	bh=CK74oiFd8Lt9pvGCt8PX1xWQ/8O4B+iUVrHW4iQ6Y/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RTjNs5MxF9/PMqgIzdnDkgOc4EceG3kdo/SwS/5jChePfKTUvJaBwJ7lSBEof5T7p/yCaxYtJ5t9liLWloam4uedZ0zDARP5m6dB7RzAelARiqlqsPMOjmZ0tBNZ1bvOV1ETzusOoBUdNUydlgnyp+f47BRzNXfUEuy7yAM+6Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSUANAlK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="cW5MKlNV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FoTlAOFw"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 8F5CB11401E9;
-	Fri, 28 Mar 2025 05:09:17 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 28 Mar 2025 05:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1743152957; x=
-	1743239357; bh=Xu/X6uaYeOMXkYkFaH0iBKWJnV5EiwN6Wkgd8vdiNeM=; b=c
-	W5MKlNVy6JqekUAI+22RaQDlWbPdqtZEry8CaAaf6f4o8B3LFwxuO+biaIE+Mj1c
-	vuXhuyKKeB8YJ9ccRYat+CVBAH7Z1TWDY/anevQ+YzKrkznIx3wvnSWH7vx7Uqjp
-	EWaNpgKVc0L04sjHfVdvFID67S09f8SeBqpqgGSiQYTjf7++Ydrv8amLy+AG6cKl
-	J4Ksr0Rekx5guOVwS26TTjSYVVUp2G3B9TMio6b4YA0Kx799OCy41FOh1tPUytEe
-	Y1S2W2eoQtwjpJNRfsKafYzxrpTsTAV2fhx/TmK8FPN6BVH07S8KDU3+C+vEo8M0
-	Fa73ARrA/LPelm8nDR00w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743152957; x=1743239357; bh=Xu/X6uaYeOMXkYkFaH0iBKWJnV5EiwN6Wkg
-	d8vdiNeM=; b=FoTlAOFwgGPfZ1agdSR4KgEBTmRQz5DjOya8zA9bu0+5O+V+RKF
-	4hd+ZicJGjB4S02gbN9vQCUSY4bZ6fwidgkmwD3WHGSvOyF0ZLwTx+C9vGeikm4T
-	F6LssuAAYjO8aispMxxxQyFZeqsvcYR4Xw5IrKiScKNjVwS8DC9raRHqliAfKkEP
-	RwSf78svX+PcGq3AiekaAZXUqrDREHWxv3DWAG6Tv6mCJL1/6qJ5IOXFoBNQTQEo
-	XNuFeCas9uoYzeOoeGESz+KR8yOFFAyCvrkzi0SnE5PznIEVwh6fmTCJCQiVK0Q7
-	eCQjCOvzPXDBShVRce1pF5r8Lmu6T5bgciw==
-X-ME-Sender: <xms:PGfmZ8sJnBJ8tMCj-8Y5xDkSGRJg0pvZ8LKFMeygCclWAHNmGd2yUA>
-    <xme:PGfmZ5epVnYtKtOXqEBURG1scGYVF2hgbfLJhrCjDi2FReeMi23r0oI_zJo5nH1wi
-    Q3So7KNqAsNZ0P12o8>
-X-ME-Received: <xmr:PGfmZ3w32H_0GrU1jj7pAYyDXNtkgn4tTjncoONZwBAG7hiHOQ7R3JJXUoLZdoyyWS9HOA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepkhhi
-    rhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtth
-    hopehthhhomhgrshdrlhgvnhgurggtkhihsegrmhgurdgtohhmpdhrtghpthhtohepshhr
-    rghithhhrghlsegrmhgurdgtohhmpdhrtghpthhtohepjhgsrghrohhnsegrkhgrmhgrih
-    drtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgt
-    phhtthhopehjphhoihhmsghovgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghrug
-    gssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghr
-    rdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:PGfmZ_NzHKQn73jmOFCtriczZAMEEsIQ1_m118UDFIOnkVUosiysPg>
-    <xmx:PGfmZ890kUpGQWcUWj3MF4eDUOed_ldFlFeVly77CRmfrdELCgf6ww>
-    <xmx:PGfmZ3VSmyAvwQ1WwD0ffAxFo33_KmfCWQwMZyIq72GvMrU3dup4HQ>
-    <xmx:PGfmZ1fLsFrc5KJxaZdQ5Q3ckrt3PPV4BJJspvq-k9v4JORHULGEIA>
-    <xmx:PWfmZ3XsrvlOMCxtaw14ZgGWeshDa2p8nHeHtVS9IIYT2RToyfnLw9gO>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Mar 2025 05:09:12 -0400 (EDT)
-Date: Fri, 28 Mar 2025 11:09:08 +0200
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Aithal, Srikanth" <sraithal@amd.com>, 
-	Jason Baron <jbaron@akamai.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"Roth, Michael" <Michael.Roth@amd.com>
-Subject: Re: linux-next regression: SNP Guest boot hangs with certain cpu/mem
- config combination
-Message-ID: <m4cubsijicsrtq3blyzxeknsuc4cqswg35yz45uk5lipza4lps@yeqq2j5hf4y3>
-References: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com>
- <rar5bkfy7iplfhitsbna3b2dmxbk7nunlaiclwars6kffdetl4@lzm7iualliua>
- <08981771-39ac-af66-e2ec-e8f9bf6aed0a@amd.com>
- <idlcitykk3hxg5by5sltuljyjf7uanmve5fspu6dectubhy5za@mjmv4i5vwyby>
- <ydvzjdcauzyvv7hxtra6l2gh4diz7zp4wx46eqculr7azynjke@z4x6eryq3rqd>
- <4f258a96-42fe-4567-886b-e8e2b949ab1a@akamai.com>
- <xcxcte6tzti7e6gcucf2ylfptie6kkvs2q5edup6mtzo5tenft@d2rm3p2yjoue>
- <20250327110224.68c69c78@gandalf.local.home>
- <2kwzi2qxqualhskbgckk6m7oc6vsgupquceqgfx2gnz5xbkier@rwdrhym7yxhr>
- <vhwle6fj3ifmcouppec5adegqludggsxcsxxveqa43hugtsdgy@pb7vd5cqjmx3>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSUANAlK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3B9CC4CEE4;
+	Fri, 28 Mar 2025 09:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743153006;
+	bh=CK74oiFd8Lt9pvGCt8PX1xWQ/8O4B+iUVrHW4iQ6Y/c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uSUANAlKyjNR9xOUXTB7nXEYjjXGkdghJfc5pBD7aea9EVwgfwz924OL76cCm9Kok
+	 Q28CAraw21zD3eb0ClmeL1T31EvVcDEglLUMQQSVovfZ0Zd0oONWSyRwn9egvsuS4z
+	 uLz6FDozlLEENqxQ2+Xcp7vp62nXB/3KLvY/SwIBilKP+s0bplriQS4lH+4mOyHBoi
+	 13Gf1BfqsbfOgs9WgoDyI5n9Npi3z616kBn9sdKCSR4kKF/1RmGnhf9C6jCewHgXTN
+	 OUxaTTeZLU1zwtpTJ46IqvQlPqkLyvqqBaxom1jC6V7xTUT9wffHBor0Ua/bCTFZfn
+	 gVIoj5bJQKR3g==
+Message-ID: <aaf21b5e-e910-4e03-b9a9-f37b7dd118bb@kernel.org>
+Date: Fri, 28 Mar 2025 10:09:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <vhwle6fj3ifmcouppec5adegqludggsxcsxxveqa43hugtsdgy@pb7vd5cqjmx3>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sa8775p: add QCrypto node
+To: Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250227180817.3386795-1-quic_yrangana@quicinc.com>
+ <ea79cee4-8c47-4054-bd17-2097ada4e583@kernel.org>
+ <b57fa204-d3d2-4b74-8834-3f2d93726a99@quicinc.com>
+ <73ed6108-27ab-43ac-abd3-82656693404d@kernel.org>
+ <4a205725-af49-4f28-ab78-7059451d66c8@quicinc.com>
+ <29f41232-28fc-439d-bb35-7b9cd1e4be16@kernel.org>
+ <6ccf4cad-a99b-4168-b4d7-577112c011e1@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <6ccf4cad-a99b-4168-b4d7-577112c011e1@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 10:28:19AM +0200, Kirill A. Shutemov wrote:
-> On Thu, Mar 27, 2025 at 07:39:22PM +0200, Kirill A. Shutemov wrote:
-> > On Thu, Mar 27, 2025 at 11:02:24AM -0400, Steven Rostedt wrote:
-> > > On Thu, 27 Mar 2025 16:43:43 +0200
-> > > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> > > 
-> > > > > > The only option I see so far is to drop static branch from this path.
-> > > > > > 
-> > > > > > But I am not sure if it the only case were we use static branch from CPU
-> > > > > > hotplug callbacks.
-> > > > > > 
-> > > > > > Any other ideas?  
-> > > > > 
-> > > > > 
-> > > > > Hmmm, didn't take too close a look here, but there is the
-> > > > > static_key_slow_dec_cpuslocked() variant, would that work here? Is the issue
-> > > > > the caller may or may not have the cpu_hotplug lock?  
-> > > > 
-> > > > Yes. This is generic page alloc path and it can be called with and without
-> > > > the lock.
-> > > 
-> > > Note, it's not the static_branch that is an issue, it's enabling/disabling
-> > > the static branch that is. Changing a static branch takes a bit of work as
-> > > it does modify the kernel text.
-> > > 
-> > > Is it possible to delay the update via a workqueue?
-> > 
-> > Ah. Good point. Should work. I'll give it try.
+On 28/03/2025 09:32, Yuvaraj Ranganathan wrote:
 > 
-> The patch below fixes problem for me.
+> 
+> On 3/28/2025 12:47 PM, Krzysztof Kozlowski wrote:
+>> On 28/03/2025 07:04, Yuvaraj Ranganathan wrote:
+>>>>>> Use commit SHA syntax (see submitting patches, checkpatch).
+>>>>>>
+>>>>>>> because of the build warning,
+>>>>>>>
+>>>>>>>   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
+>>>>>>>     ...
+>>>>>>>     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
+>>>>>>
+>>>>>> Not relevant warning.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Best regards,
+>>>>>> Krzysztof
+>>>>>
+>>>>> Are you saying this is not the warning seen at merging?
+>>>> Tell me how it is relevant? Tell me how can I reproduce it.
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>
+>>> Below commands will show the above warnings without the fix,
+>>> make clean && make qcom/qcs9100-ride.dtb CHECK_DTBS=1
+>>> make clean && make qcom/qcs8300-ride.dtb CHECK_DTBS=1
+>>
+>> As I suspected, not possible to reproduce.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> I'm able to reproduce without this fix, I hope you are discussing about
+> this failure only,
+> 
+> 	from schema $id:
+> http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
+I suspect you work on outdated tree. I followed your instructions on my
+tree (you did not specify which) and did not see these errors.
 
-Ah. No, it won't work. We can get there before workqueues are initialized:
-mm_core_init() is called before workqueue_init_early().
+I bet you reply now third time, without any more details claiming the
+same but it's just waste of my time.
 
-We cannot queue a work. :/
-
-Steven, any other ideas?
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Best regards,
+Krzysztof
