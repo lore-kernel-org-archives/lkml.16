@@ -1,213 +1,144 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933EC1E0B67
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EE818FDD2;
+	Fri, 28 Mar 2025 18:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743186608; cv=none; b=ULkloLgkFwPAZZR9jzc5p5OMlfqk39ANPj+fWYkFjbA2zVvUF8IhWpXBJvl4HjyfD0DkVBLVXNLQ8oVj5c4oQjrPRE71KyPqDpdIGIwh3iB61dWyq8c+RIMPew3JeiHZAHxVFIDfT+SuO0hdFMwACSWYuJBmKoQiVBQRoP+LNR8=
+	t=1743186647; cv=none; b=G+5aGuVA0ua0rFE7vLkyUyUXJtYu0S8Lt7+v1b2jk5/xbpBACNnAzqE+TZyYGmrOA2x1lAl1msbeedc702DohSk9QpQWrvJlcotjAEcpPUmL2s7gQwe0YAHVoxJ9+rNM152pSPEGI0azbPI9BSrdx8zU7DlIzBksWEVtIkpr/5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743186608; c=relaxed/simple;
-	bh=0XebXl+Om/rMg+RdS+JY/LjLXtd4q5WCPR44cJdQYUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A1Fb16G8DxGGcgELug8/N6ksobL3wFZn23a7oa6Dg3zjAhxus0W+hQflzMmJwXa36jg8KhVjfAxZxH5MVviZr2myj87m9olwGKpRMxghL4IqTbdeGXfckZUXUn+Gbs99/wHoxspwJAW+o8GD2BwUosui74isrDbLdXGZmopR8x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tyEK7-000000004rg-42PA;
-	Fri, 28 Mar 2025 14:20:55 -0400
-Date: Fri, 28 Mar 2025 14:20:55 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
- Vinay Banakar <vny@google.com>, liuye <liuye@kylinos.cn>, Hugh Dickins
- <hughd@google.com>, Mel Gorman <mgorman@techsingularity.net>, Yu Zhao
- <yuzhao@google.com>, Shakeel Butt <shakeel.butt@linux.dev>
-Subject: [PATCH v2] mm/vmscan: batch TLB flush during memory reclaim
-Message-ID: <20250328142055.313916d1@fangorn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1743186647; c=relaxed/simple;
+	bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MLvT7bkI7bVtNMSbjwFfKZS3jWRy8p5V8ueLF+EV/QIKRhL5ckINXS4W0+/wug2EnDNJBxNBw7WebuG8qZZYQMl2Ih6rFVP67U11my3iWCFn0cIW9iag5brhFWN4GIhflbHBRIWefcIZL8RqsOxOYXNDoy4mYuwW0onEqgr0C0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZGnlSqx; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZGnlSqx"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54991d85f99so3666230e87.1;
+        Fri, 28 Mar 2025 11:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743186644; x=1743791444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
+        b=FZGnlSqx9fxJ7lG+vP/t9H2Q5rd2IFZtPY6S2o8BYAr8fbItAVhtjNmFfHQYaF4fL4
+         DU17thOjgteFW4cdz3+ab9HwkdXe6eSVCi+dQngNlOn6SUitCKUrFZiabph3yDB3o7Sp
+         H+x3wksZm22CtBxO5uZL7VzNt2yOgpljzWFFMNwLzPmks4iA3H+nCDm/RASmF+B8uIwA
+         gXKA8JlAbg5ltnaffFOgTMMCyPAAcg05CWNUUAWjE1qX59HaZ8wZ5+SE+PpAk4i/8uRc
+         GMHUaEcE2eJi9rgF7Lx9Hz2Q7cKdU9B3BA/KSf+OqgLU1N/X77XleXbRa/6kKH/58O0z
+         Z28A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743186644; x=1743791444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
+        b=LJcveduNp5ZTi06kuxEp6ka4vzTBThvbaut7TroGdU3JGLcrzDmsA/5/w6w7zAYAMx
+         VLvUexPSB2i4Ncayv03WU92eZXNpk2QGU0q5cEfC1bkvTG5OWY7Z/VI+ZxnzWyI4Mki2
+         8ymoMy8f0I5Tb2bv/8aUv2z4802+GfnfwEE8s91z+JBw0Cu5MRWHqNdvHINzUiWjzD3z
+         qkEYo0R51eGPTV4DVr575vD7+zgCYYmjM9POBGBa0xMtE8/abIp/Va6Ncmak6N88/l0t
+         6pomKCSFILoUyOVOfybhv0Thx5Z26np52LwwxwQjlLvotyBNDLGeU/nak8WpCTi3D8pq
+         fk5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+r24HcnY8F36e9TZuwYPb4UrRTPLcTWIo3p1+OU1rDG4Gkqda+YLf6OCMKk8+3UM6Zot6KbZaVLVoy6xV@vger.kernel.org, AJvYcCVVwdVKyYdXpcYKSWrmTDL+a8dng/MvIDDYlanrM5HqWX/sccVLmgvz7ExZgpXSvZplce8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc171JCbnf7j+14vI7FtDLSW7JryKxmu+EGP4Nq2USt/C7qtlp
+	uZNb2qHeBsVwM7ceRV6iUPElwJMa3RzvBYtz3JD2RnyrjQTtoSCVAsCg1eFdnm6J/KARpHDWCR0
+	48pScrUX+cf0LC+IU29IKCbsopAQ=
+X-Gm-Gg: ASbGnctnA/vwmgt61YUXRCtdk1tV/hbFJgvr8Am2nvBldNTBpk05V/O+a0YwVqSfJ10
+	EEj9X+q/ANBiqelsmu3FdkF0LttrQKV2bWGH0kdQwmuuFGSzYpyKCwhH5tWRDuhTJ2MfTjRB7zr
+	T/eWFLB8Krzhp/S5TMBnl3RfEXHTHA
+X-Google-Smtp-Source: AGHT+IG8WMab1JJv4PwctVvswElQQEk3CtJtwWMH2HFu53xkAFaHVK4jcuKz2Yn1sEJZPelip91uB1EuozYZEwmDsi8=
+X-Received: by 2002:a2e:bd84:0:b0:30b:c608:22bf with SMTP id
+ 38308e7fff4ca-30ddf7f737dmr2355461fa.9.1743186643528; Fri, 28 Mar 2025
+ 11:30:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: riel@surriel.com
+References: <facda6e2-3655-4f2c-9013-ebb18d0e6972@gmail.com>
+ <Z-HiqG_uk0-f6Ry1@google.com> <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
+ <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com> <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
+In-Reply-To: <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
+From: Ming Lin <minggr@gmail.com>
+Date: Fri, 28 Mar 2025 11:30:30 -0700
+X-Gm-Features: AQ5f1Jq88iPNABeVpuLMSb4SzToojs9keJJVckPlXEcfU-dqZqC42wzY1lmPsJo
+Message-ID: <CAF1ivSaEz0brSGfpv08oKnTjT=h99hs_G0ju0UGPwzoLvOSV8A@mail.gmail.com>
+Subject: Re: pvclock time drifting backward
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Vinay Banakar <vny@google.com>
+On Thu, Mar 27, 2025 at 1:10=E2=80=AFAM David Woodhouse <dwmw2@infradead.or=
+g> wrote:
+>
+> On Wed, 2025-03-26 at 08:54 -0700, Ming Lin wrote:
+> > I applied the patch series on top of 6.9 cleanly and tested it with my
+> > debug tool patch.
+> > But it seems the time drift still increased monotonically.
+> >
+> > Would you help take a look if the tool patch makes sense?
+> > https://github.com/minggr/linux/commit/5284a211b6bdc9f9041b669539558a6a=
+858e88d0
+> >
+> > The tool patch adds a KVM debugfs entry to trigger time calculations
+> > and print the results.
+> > See my first email for more detail.
+>
+> Your first message seemed to say that the problem occurred with live
+> migration. This message says "the time drift still increased
+> monotonically".
 
-The current implementation in shrink_folio_list() performs a full TLB
-flush for every individual folio reclaimed. This causes unnecessary
-overhead during memory reclaim.
+Yes, we discovered this issue in our production environment, where the time
+inside the guest OS slowed down by more than 2 seconds. This problem
+occurred both during live upgrades locally and live migrations remotely.
+However, the issue is only noticeable after the guest OS has been
+running for a long time, typically over 30 days.
+Since 30 days is too long to wait, I wrote a debugfs tool to quickly reprod=
+uce
+the original issue, but now I'm not sure if the tool is working correctly.
 
-The current code:
-1. Clears PTEs and unmaps each page individually
-2. Performs a full TLB flush on every CPU the mm is running on
+>
+> Trying to make sure I fully understand... the time drift between the
+> host's CLOCK_MONOTONIC_RAW and the guest's kvmclock increases
+> monotonically *but* the guest only observes the change when its
+> master_kernel_ns/master_cycle_now are updated (e.g. on live migration)
+> and its kvmclock is reset back to the host's CLOCK_MONOTONIC_RAW?
 
-The new code:
-1. Clears PTEs and unmaps each page individually
-2. Adds each unmapped page to pageout_folios
-3. Flushes the TLB once before procesing pageout_folios
+Yes, we are using the 5.4 kernel and have verified that the guest OS time
+remains correct after live upgrades/migrations, as long as
+master_kernel_ns / master_cycle_now are not updated
+(i.e., if the old master_kernel_ns / master_cycle_now values are retained).
 
-This reduces the number of TLB flushes issued by the memory reclaim
-code by 1/N, where N is the number of mapped folios encountered in
-the batch processed by shrink_folio_list.
+>
+> Is this live migration from one VMM to another on the same host, so we
+> don't have to worry about the accuracy of the TSC itself? The guest TSC
+> remains consistent? And presumably your host does *have* a stable TSC,
+> and the guest's test case really ought to be checking the
+> PVCLOCK_TSC_STABLE_BIT to make sure of that?
 
-[riel: forward port to 6.14, adjust code and naming to match surrounding code]
+The live migration is from one VMM to another on a remote host, and we
+have also observed the same issue during live upgrades on the same host.
 
-Signed-off-by: Vinay Banakar <vny@google.com>
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
-v2: remove folio_test_young that broke some 32 bit builds, since pages should be
-    unmapped when they get to this point anyway, and if somebody mapped them again
-    they are by definition (very) recently accessed
+>
+> If all the above assumptions/interpretations of mine are true, I still
+> think it's expected that your clock will jump on live migration
+> *unless* you also taught your VMM to use the new KVM_[GS]ET_CLOCK_GUEST
+> ioctls which were added in my patch series, specifically to preserve
+> the mathematical relationship between guest TSC and kvmclock across a
+> migration.
+>
 
- mm/vmscan.c | 112 +++++++++++++++++++++++++++++++---------------------
- 1 file changed, 68 insertions(+), 44 deletions(-)
+We are planning to test the patches on a 6.9 kernel (where they can be
+applied cleanly) and modify the live upgrade/migration code to use the new
+KVM_[GS]ET_CLOCK_GUEST ioctls.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c767d71c43d7..286ff627d337 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1086,6 +1086,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 	struct folio_batch free_folios;
- 	LIST_HEAD(ret_folios);
- 	LIST_HEAD(demote_folios);
-+	LIST_HEAD(pageout_folios);
- 	unsigned int nr_reclaimed = 0, nr_demoted = 0;
- 	unsigned int pgactivate = 0;
- 	bool do_demote_pass;
-@@ -1394,51 +1395,10 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 				goto keep_locked;
- 
- 			/*
--			 * Folio is dirty. Flush the TLB if a writable entry
--			 * potentially exists to avoid CPU writes after I/O
--			 * starts and then write it out here.
-+			 * Add to pageout list for batched TLB flushing and IO submission.
- 			 */
--			try_to_unmap_flush_dirty();
--			switch (pageout(folio, mapping, &plug, folio_list)) {
--			case PAGE_KEEP:
--				goto keep_locked;
--			case PAGE_ACTIVATE:
--				/*
--				 * If shmem folio is split when writeback to swap,
--				 * the tail pages will make their own pass through
--				 * this function and be accounted then.
--				 */
--				if (nr_pages > 1 && !folio_test_large(folio)) {
--					sc->nr_scanned -= (nr_pages - 1);
--					nr_pages = 1;
--				}
--				goto activate_locked;
--			case PAGE_SUCCESS:
--				if (nr_pages > 1 && !folio_test_large(folio)) {
--					sc->nr_scanned -= (nr_pages - 1);
--					nr_pages = 1;
--				}
--				stat->nr_pageout += nr_pages;
--
--				if (folio_test_writeback(folio))
--					goto keep;
--				if (folio_test_dirty(folio))
--					goto keep;
--
--				/*
--				 * A synchronous write - probably a ramdisk.  Go
--				 * ahead and try to reclaim the folio.
--				 */
--				if (!folio_trylock(folio))
--					goto keep;
--				if (folio_test_dirty(folio) ||
--				    folio_test_writeback(folio))
--					goto keep_locked;
--				mapping = folio_mapping(folio);
--				fallthrough;
--			case PAGE_CLEAN:
--				; /* try to free the folio below */
--			}
-+			list_add(&folio->lru, &pageout_folios);
-+			continue;
- 		}
- 
- 		/*
-@@ -1549,6 +1509,70 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 	}
- 	/* 'folio_list' is always empty here */
- 
-+	if (!list_empty(&pageout_folios)) {
-+		/*
-+		 * The loop above unmapped the folios from the page tables.
-+		 * One TLB flush takes care of the whole batch.
-+		 */
-+		try_to_unmap_flush_dirty();
-+
-+		while (!list_empty(&pageout_folios)) {
-+			struct folio *folio = lru_to_folio(&pageout_folios);
-+			struct address_space *mapping;
-+			list_del(&folio->lru);
-+
-+			/* Recheck if the page got reactivated */
-+			if (folio_test_active(folio) || folio_mapped(folio))
-+				goto skip_pageout_locked;
-+
-+			mapping = folio_mapping(folio);
-+			switch (pageout(folio, mapping, &plug, &pageout_folios)) {
-+			case PAGE_KEEP:
-+			case PAGE_ACTIVATE:
-+				goto skip_pageout_locked;
-+			case PAGE_SUCCESS:
-+				/*
-+				 * If shmem folio is split when writeback to swap,
-+				 * the tail pages will make their own pass through
-+				 * this loop and be accounted then.
-+				 */
-+				stat->nr_pageout += folio_nr_pages(folio);
-+
-+				if (folio_test_writeback(folio))
-+					goto skip_pageout;
-+				if (folio_test_dirty(folio))
-+					goto skip_pageout;
-+
-+				/*
-+				 * A synchronous write - probably a ramdisk.  Go
-+				 * ahead and try to reclaim the folio.
-+				 */
-+				if (!folio_trylock(folio))
-+					goto skip_pageout;
-+				if (folio_test_dirty(folio) ||
-+				    folio_test_writeback(folio))
-+					goto skip_pageout_locked;
-+				mapping = folio_mapping(folio);
-+				/* try to free the folio below */
-+				fallthrough;
-+			case PAGE_CLEAN:
-+				/* try to free the folio */
-+				if (!mapping ||
-+				    !remove_mapping(mapping, folio))
-+					goto skip_pageout_locked;
-+
-+				nr_reclaimed += folio_nr_pages(folio);
-+				folio_unlock(folio);
-+				continue;
-+			}
-+
-+skip_pageout_locked:
-+			folio_unlock(folio);
-+skip_pageout:
-+			list_add(&folio->lru, &ret_folios);
-+		}
-+	}
-+
- 	/* Migrate folios selected for demotion */
- 	nr_demoted = demote_folio_list(&demote_folios, pgdat);
- 	nr_reclaimed += nr_demoted;
--- 
-2.47.1
+BTW, what is the plan for upstreaming these patches?
 
+Thanks,
+Ming
