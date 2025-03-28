@@ -1,93 +1,118 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217391A262A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A91157A6B;
+	Fri, 28 Mar 2025 01:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743126422; cv=none; b=nGwwmh+aqimtV+YtBScFy3rTpWp0Pd2UqTcXIV25MjAQg+1P8ce8KNKC3+u7N3ztdNsp7+PJDc2FXs2JHLX8OkPkbE7W5lgVFkEgYHa79k9IV5UjmEngZIqsoeNgI54Z7YuQQYv0EDUJOeTCr5g1zlyWIJqoATWqtIqCt96pSnM=
+	t=1743126438; cv=none; b=PqILUP4tnaNydBWy9TwoIurFlyetlYyQq6bJ44/5K6rxyTXHcopNmwTitqCguMHNjO5b5EDKRrbyi7tKTanKuJX+OIf++YeS1cggXDO53uLAuUl22ubGqFGaDTaLlYUo8yJv76V15ub2R+5Qu4S0WcSJnZwmWk8oXlShCsPY+uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743126422; c=relaxed/simple;
-	bh=gD872F4HiXHd0hgxZ9nCLIWr16yhNwUFBf7pVx7VkrM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=SBoGWPkRJazAntRO4+B0wRYRAHfyCN6nh59L+A4BXyrIfOVk7nEtprqrBWQvZLTTJkkb5sS5rOjdjnCMj+bi0ViyI4NacevZZc7FsrPAnfNTGpe0Ee0BoS+OESUf3uAto8cFgpVhjAhkCHVF5BRHL0jAIDFP5Iv5jz8ICVAbP4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=qNfkS4e3; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="qNfkS4e3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743126416; bh=9j5d/J8zcsc5onhRmFuStFe5/dVv8ZloWD0b6T9BVks=;
-	h=From:To:Cc:Subject:Date;
-	b=qNfkS4e38LmjltPkMu4+UOb+3ARzmNSL3esC4tpUjwBmE+58HhzOM/XJIqBzH2i2g
-	 Drc9IUT0sxzYt6ZsSFQJpwkPdQk54N5e0SiEvUCG5wSPDpgTNn+9vU9YDTRdprrR/4
-	 RUUwNFke3VAMtfk6WldxUBYR1Sn+w73inNiCLoMw=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 98D004FD; Fri, 28 Mar 2025 09:38:13 +0800
-X-QQ-mid: xmsmtpt1743125893t1l3naihh
-Message-ID: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
-X-QQ-XMAILINFO: NbgegmlEc3Juz8M7sFYLcR+S2gUYWW88+ryy6gT64V8NCj4docy/xDcvjiPm9M
-	 LSAki3QnsVpmF2d4RcsYT+c/x2BH8fxVtlzpZst4EWiaIe4X4hSvBpE8IPt/NMgSK/wmZxqERESN
-	 EqiReWMHMQf9+6cAYEBtAvWvP72J0BIbcGsowh+jG/F+LXwY/3u57yWDqx2fqMJQzB6BCIFNU5f8
-	 sIUILE1JhEs/Njh/EmDrYTAcVJwHWem+H7LzDdolaLZ0LhW5iAmLnv7676RcZSsli0oOQXDQcfmr
-	 v3fSmvPKSfy/gfVHdwLhmm25Wz7aVwjUx6Bt5ia9HCgUBZSR7QSTHfoIkqVwRTq8KuY3IRosWWlQ
-	 PC4OTrRzOJwf5AszMqVvU1KzKnHFxfKxqmp5rrJUpfOjOcD87SWjGWtDpUEpMLusOQkEglGEsE4X
-	 xOzusL+YKWFqvm47QHjExU+gS431ouvlq9uIctx8w5pWUfATwlVQvaAXupKsEStdhfp4QUby02wn
-	 tLc/dSixNNT0ujJcYq8D9otMEzJ6bNw7Q5KNyRYPHnJoy/9qy0rTjA7Iz9jzncO9jD28W8lEI4Bz
-	 De4eqTMbEGFtrrEjOYTpEnxkhf0Ujg5q/Q+WvsAnphif6sPgOYB2d0DCLfLlAN3TScr0adn8tfcQ
-	 6PTeW2ayTv8zjlWGRub4hKuCkeCkSOPEBsenoz/CC/YPFhYStGPpnVN4re80pg+ozAsIItMG07Jh
-	 25LvylM0mCkcf56tKk/i4G13suZcaYMVG35cXCoA/WwqvH7LsopS0qggE7rU78+wyrE0wTKb9N7S
-	 i9fSvNKASVxzOonYUekX6qFKrJG0ZQb0bHlvUQCR+oHDS6cky0/I10HX7HwvhZeDAnKSfjfr6FuL
-	 ZZwK7JvmswWav5NmcdBzYMi4nmKCkCvkcDtzrad0C6OiOmf5JRlYjNGbkRhun75Bi5r9uzB81iAZ
-	 w+TJl/BpYBnKGCT5gtPib0DPqIF1AURqCD03en7H8=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yaxiong Tian <iambestgod@qq.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v2 0/3] nvme: Add sysfs interface for APST configuration management
-Date: Fri, 28 Mar 2025 09:38:08 +0800
-X-OQ-MSGID: <20250328013808.88688-1-iambestgod@qq.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743126438; c=relaxed/simple;
+	bh=0fG1vjWwRu801A+LB8ALUjJbXxkbE4MyLBH7IZHG3q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sB5OVRSetHccKu+L+Ney7idSgbdDoeC5AyGM1RTItiGiJ7MjLyjvk2R50FgSzUhOh6jNJQQsO0lTt1U4ynW9XRnIAG6o6QFwdrJD5ac+x2AMua+yIxBl8YA4BKoxqvD4rIRSpA7lV7GwVyxSdn8vqCuOy8/9k7VwNvS7ptQp4Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: bizesmtpsz5t1743126386tw23d56
+X-QQ-Originating-IP: tKHlUoSpxt75h6MwjgWYv0l4jZfQJOF2u/XvujKvZ/A=
+Received: from localhost ( [103.233.162.252])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 28 Mar 2025 09:46:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5407386532826325501
+Date: Fri, 28 Mar 2025 09:46:24 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add MUCSE vendor ID to pci_ids.h
+Message-ID: <3DA9F11AA98928B5+20250328014624.GA500031@nic-Precision-5820-Tower>
+References: <1835B10BD36E99AC+20250327112426.GB468890@nic-Precision-5820-Tower>
+ <20250327133757.GA1432088@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250327133757.GA1432088@bhelgaas>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NDtUtlvFer7vl4dEv32+S4lUWKowORwLTaYDBZebED/b0zWh5Hp6L9Q/
+	xowcy0J6ZzErojd7E725CzEjGvALMpn2FdFY7Y0MpJjOcV205Mi+923Hkex+MvpCTSWY1Qw
+	nIf20sA61SzCENrZrSpWgCPX6Jh9ufXUV7kAgWIARH0Dr28633DOyGasUz7Kxjd4do64uMY
+	BLSaapUSpO5aNw/1Ub09n6Mh8RJyMO5TgAeHikDsGd3GyakIbowOJ7t8pVYhKBBXTFEMzx0
+	BdV1h0v/2vlOJ0/v9MejOeZirFY1pDsaeqfEVan4vWtLmJA88qBdTmam4TbxfsY+GvxjRb9
+	dlCtQd/irrDaHYwZnb5aUmzdUcr/RcO9w+iZDhA8eOmrf2vNWjj4cDBhG5fk5XeTG6474uZ
+	4G4FbTonBf8sjI44lRIVaefCzlhaafObv6aTm3Rv5CbBwqeDnFMt4/5sv832+vXsuejq6LH
+	93nwP0MOz0eDkuJVOjvVHlFjhK3bL+KxHLLAbqxuINzjYf/54+hJ0wOwVBxjVmIIV9lI9uD
+	qGfAkdlGWROiwmVac+aYc8KdSNiXh1EAzyYNHMVzozUW/Q8Vp7ih1MhwyFYhGgGukccTBgX
+	kLHJegChjwHRFFX0wjxp/HZgbOp1OeQSY7EMhLLVllXjNfu+4vSTtchBc4BpygkGnSz4ppc
+	rCWE+Ve7XJdS5eYzKqVtxheGOnD+lL+0LEI5RZXEuGsMRlkLUoZkLKgyz3w63ZYgeEj+S3r
+	AjQsoLx1aDkfb/CCOv9B+ZTBQbpciAPDHBV32KvLK1oSLGRFEa2ocXdmyr3NRnH5GuMhHx+
+	zWCwxEG2gdZUe6m0Wk6py4MdGnCJnLkhG2oEWLhbKRbgPngK2qWkNjpcrdquXPX0gkcu72u
+	yuSqGkvPQXkxJ0UiZqpaMkOkxEn7P51MD6Wf++wUF5pyy4VlaLxVJUEUivipmHULO3h5uzq
+	xCu4=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+On Thu, Mar 27, 2025 at 08:37:57AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 27, 2025 at 07:24:26PM +0800, Yibo Dong wrote:
+> > On Wed, Mar 26, 2025 at 11:57:28AM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Mar 25, 2025 at 02:57:18PM +0800, Yibo Dong wrote:
+> > > > Add MUCSE as a vendor ID (0x8848) for PCI devices so we can use
+> > > > the macro for future drivers.
+> > > > 
+> > > > Signed-off-by: Yibo Dong <dong100@mucse.com>
+> > > 
+> > > Please post this in the series where you add the future drivers.
+> > > 
+> > > We don't add new things to pci_ids.h unless they are actually used by
+> > > more than one driver because it complicates life for people who
+> > > backport things (there's a note at the top of the file about this).
+> > 
+> > Thanks for the reminder; the drivers maybe use 'the define' are
+> > netdev drivers, so, I should first send patches to netdev subsystem,
+> > and re-send this patch to pci subsystem after my patches is applied
+> > by netdev subsytem? or I should send this to netdev subsystem along
+> > with the drivers?
+> 
+> Just include it with your netdev series and cc me.  I'll ack it and
+> the whole series can be merged together via netdev.
+> 
 
-This series enhances NVMe APST (Autonomous Power State Transition) support by:
-1. Adding warnings for PST table allocation failures
-2. Exposing APST tables via sysfs for runtime inspection
-3. Providing per-controller sysfs interface for APST configuration
+Ok, I got it, thanks. 
 
-The changes allow better visibility and control of power management settings
-through userspace tools while maintaining the existing functionality.
+> > > > +#define PCI_VENDOR_ID_MUCSE		0x8848
+> > > 
+> > > https://pcisig.com/membership/member-companies?combine=8848 says this
+> > > Vendor ID belongs to:
+> > > 
+> > >   Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd
+> > > 
+> > > I suppose "MUCSE" connects with that somehow.
+> > > 
+> > > It's nice if people can connect PCI_VENDOR_ID_MUCSE with a name used
+> > > in marketing the product.  Maybe "MUCSE" is the name under which
+> > > Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd markets
+> > > products?
+> > 
+> > Yes, MUCSE is just abbreviation for “Wuxi Micro Innovation Integrated Circuit
+> > Design Co.,Ltd”
+> 
+> Perfect.  I see you've already added it to the lspci database along
+> with several devices:
+> 
+>   https://admin.pci-ids.ucw.cz/read/PC/8848
+> 
+> All looks good!  I'll watch for your netdev patches.
+> 
+> Bjorn
+> 
 
-Yaxiong Tian (3):
-  nvme: Add warning for PST table memory allocation failure in
-    nvme_configure_apst
-  nvme: add sysfs interface for APST table updates
-  nvme: add per-controller sysfs interface for APST configuration
-
-Changes Since v1
-
-Add mutex_lock in nvme_set_latency_tolerance() for Potential competition 
-between nvme_set_latency_tolerance() and apst_update_store().
-
-
- drivers/nvme/host/core.c  | 24 ++++++++++------
- drivers/nvme/host/nvme.h  |  6 ++++
- drivers/nvme/host/sysfs.c | 59 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 81 insertions(+), 8 deletions(-)
-
--- 
-2.25.1
-
+Nice, I'm preparing the patches, but it may take some times. 
