@@ -1,141 +1,88 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A61158535;
-	Fri, 28 Mar 2025 00:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743122952; cv=pass; b=ePawTWqZKz/tfLYnrNhWaTw+Hfh42WPxUfhF2mlzK1CowQaBbe6FXR5gIpgxwS1XXsIqHbrD3BffR5aqSuCP4v7TMAvXu67nzCJYvUzK+1sUqg2x3BK/0ViQi6FzYJRfCPwYEpP670BxofwzxVJ3M46n8AO6AQcO29Sr8vt7NZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743122952; c=relaxed/simple;
-	bh=7N0ctl7rs+c5l49JQM46maJNgYefjBztWGyz/Chv56c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DuFHucxHphLanjJriveutUQeNgFwQQir5bxPr88syhclmGtvQpW5D9noqbzNtT4dNgL83DTiTnSMTBUxlASkg+GNb9blu6gLerGf+o50lykPtqGad5Foj3AUqlRS8UdiLdGZuiFS9rNbME+aEte2i8VLmYvzqyDrruzNbQyDBu4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=DtxW+hk0; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A248158535;
+	Fri, 28 Mar 2025 00:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743122970; cv=none; b=IcJ23XSNBblyJdSBrU/Bxf9AqyNhttrRlTF4P/WDi25klTQ02N91uCaMk3mwnYE0ZQXs/5lakgmUr9GZtJ3o5T5Vlsgjjemml/i+dAhSTEjqgeCtyc/d/rhJX/f+9A7wSRl7aIsL4IUswaVJz12lnWhQxB1hQxeaWTdaKSfKT5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743122970; c=relaxed/simple;
+	bh=CDd1GTucEoHrrZlomf52vHn8hPmoPQzITPrNeUXkf+A=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=i+kjxYN8Pmuu7kR3yQ4K/Wwm8eItwrSw2R15qL+xxZ/O47Y9RdFAjF+sGrfw/UUW84b3Lr92j1oX5MiNFEsPZlv8CmpVEBaTFBF4G8aoifKrsGd6Z+PCxIM1Is4K9g1aBkflHpuyvr/DKQeNWMnXa19wRL9EDIVV1nL3NbYp4oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Oo52v3KT; arc=none smtp.client-ip=109.224.244.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="DtxW+hk0"
-ARC-Seal: i=1; a=rsa-sha256; t=1743122927; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IzZR/6eV3eRANWwtaDsVX/tXgsystpLRs4MCOJQyyFvwjM8t4p1XelmrqOJEbuc0Bt+fbmHaeE3tOre1KtzUOsEK8itnIDNuh7g8IEjms5/nuJvB4KUs1kpy/T1IIq7EDjNE3xdz9OpmRQtJY1IWZHkLeE61bOOS8rpmem4wK0M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743122927; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=y4jDLIxxgTPU6S6kjP6W2qy0YbeeCk7wPRc5Aobjd8M=; 
-	b=Nmte/jjj7G01iR2nwqUhdLMHRg+n7VG7CdERbuYd7ANJ9k0UZEu4UQkeGyagX3eRqZDAuHz68CaoyCklRKpot31/s0RfCAz4clsFJOnwQ55xaloi4vk0p7DNxGx2JUcQ6F/D07INAwgkhQT48mM6ybk4+1Hc5vaDvgIeR5kx4so=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743122927;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=y4jDLIxxgTPU6S6kjP6W2qy0YbeeCk7wPRc5Aobjd8M=;
-	b=DtxW+hk0x+nE/5ZN/O4jFoR06MHA4xywBRKT++cphAAK0IL8yZXUakntasdEI4Jg
-	JGZc3Kw+3j2ng4V1AyKeeJSive2GpXY7ZY4yVMilLaiC9n+hbUfg15rtQRkEh86Zi9a
-	s1HNnPjN84Gn0FKEvYHhPlH9wwFBrEXOIjtSKZB0=
-Received: by mx.zohomail.com with SMTPS id 174312292550316.712910908575054;
-	Thu, 27 Mar 2025 17:48:45 -0700 (PDT)
-Message-ID: <f438c1ae-add1-4ff1-b9f3-6996fc441cd9@collabora.com>
-Date: Fri, 28 Mar 2025 03:48:40 +0300
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Oo52v3KT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1743122965; x=1743382165;
+	bh=rk99a3TNP9iPxT1r/wOUmQVVkZw/unTaG0OiNb8uqsU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=Oo52v3KT4XbOFJNmr/FmSIOBGXqQ4NfJtzdTjX41G1M9U7JBNwnqf/lE8DXt1ALlO
+	 va4p//pkXihA85/hhJ1jZ/PIA4CZ9wzckG+KP9D10TKG0d4AN3hMtcO9+rzxIi3H9G
+	 kK9kBmTADxQekUj/rS2r1+EEkVjOiX0aJ/ITMAvvmR1kgDsi3ayrQ6JJWOxQ6oRGE1
+	 gBLmCvmC5xX7TOnWFPfJ02wdYqaJu4DE+TuShp45OliPhad9wzlEx1BjwmRXrobzX/
+	 UQVSy+jBe/bsr8ieX/Va6q4ktpKt2eEuB7muoDM7KAkuKSGiA+X5m+7S6xlDMarpf3
+	 gtTxfv6ORVgdQ==
+Date: Fri, 28 Mar 2025 00:49:21 +0000
+To: Igor Korotin <igor.korotin@yahoo.com>, linux-kernel@vger.kernel.org
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, y86-dev <y86-dev@protonmail.com>
+Subject: Re: [PATCH] rust: macros: Fix macro referencing core and kernel crates
+Message-ID: <D8RHIOTYBFI5.3ETKTDNGZW3FH@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 8b7a0f89dd873e1ab6d9e246ec9d7d70515e6697
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline
- syncobjs
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Rob Clark <robdclark@chromium.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250327213632.7903-1-robdclark@gmail.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250327213632.7903-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 3/28/25 00:36, Rob Clark wrote:
-...
->  static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
-> -					      int fd, int handle)
-> +					      int fd, int handle, u64 point)
->  {
->  	struct dma_fence *fence = sync_file_get_fence(fd);
->  	struct drm_syncobj *syncobj;
-> @@ -755,14 +755,18 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->  		return -ENOENT;
->  	}
->  
-> -	drm_syncobj_replace_fence(syncobj, fence);
-> +	if (point) {
-> +		drm_syncobj_add_point(syncobj, dma_fence_chain_alloc(), fence, point);
+On Wed Mar 26, 2025 at 7:23 PM CET, Igor Korotin wrote:
+> To prevent issues where user-defined modules named `core` or `kernel`
+> could be picked up instead of the standard ones, update macros to use
+> absolute paths, `::core::...` and `::kernel::...`, for core and kernel
+> references.
 
-Nit: check dma_fence_chain_alloc() for ENOMEM
+Please split this sentence up into smaller parts. Also "standard ones"
+sounds weird to me, `core` and `kernel` are crates and not modules.
 
-> +	} else {
-> +		drm_syncobj_replace_fence(syncobj, fence);
-> +	}
+> Suggested-by: y86-dev <y86-dev@protonmail.com>
 
-Nit: checkpath should complain about the unnecessary braces
+Please use my real name and other mail address instead:
+   =20
+    Benno Lossin <benno.lossin@proton.me>
 
->  	dma_fence_put(fence);
->  	drm_syncobj_put(syncobj);
->  	return 0;
->  }
->  
->  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
-> -					int handle, int *p_fd)
-> +					int handle, u64 point, int *p_fd)
->  {
->  	int ret;
->  	struct dma_fence *fence;
-> @@ -772,7 +776,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->  	if (fd < 0)
->  		return fd;
->  
-> -	ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
-> +	ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
->  	if (ret)
->  		goto err_put_fd;
->  
-> @@ -869,6 +873,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->  				   struct drm_file *file_private)
->  {
->  	struct drm_syncobj_handle *args = data;
-> +	unsigned valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
-> +			       DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
-> +	u64 point = 0;
->  
->  	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->  		return -EOPNOTSUPP;
-> @@ -876,13 +883,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->  	if (args->pad)
->  		return -EINVAL;
->  
-> -	if (args->flags != 0 &&
-> -	    args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
-> +	if (args->flags != 0 && (args->flags & ~valid_flags))
->  		return -EINVAL;
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1150
+> Signed-off-by: Igor Korotin <igor.korotin@yahoo.com>
+> ---
+>  rust/ffi.rs                  | 2 +-
+>  rust/kernel/device.rs        | 2 +-
+>  rust/kernel/device_id.rs     | 4 ++--
+>  rust/kernel/kunit.rs         | 8 ++++----
+>  rust/kernel/static_assert.rs | 4 ++--
+>  rust/kernel/str.rs           | 4 ++--
+>  rust/macros/lib.rs           | 6 +++---
+>  scripts/rustdoc_test_gen.rs  | 8 ++++++--
+>  8 files changed, 21 insertions(+), 17 deletions(-)
 
-Nit: args->flags!=0 not needed as (0 & ~valid_flags) is always false,
-same for import
+There are also some occurrences of `kernel::` & `core::` in proc macros,
+for example:
+- rust/macros/kunit.rs:129
+- rust/macros/module.rs:347
+- ...
 
-...
+Could you also add those to the patch? Thanks!
 
+(line numbers after applying your patch to rust-next)
 
--- 
-Best regards,
-Dmitry
+---
+Cheers,
+Benno
+
