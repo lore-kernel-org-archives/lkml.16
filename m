@@ -1,138 +1,159 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4FD21146D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61250211A21;
+	Fri, 28 Mar 2025 07:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743147840; cv=none; b=gTe5u6Sn4Smzp1EmrDaD6EfzwCPyky815Gyltcr8JNAZbWb1t8roDdjxO//H1lHQFNpWZhP+57AGnPsfhMpEg3OE7Max50zrUVFslas13IFiMlcdORAxbIDvY6FjhtcgFsDz8a4ATc7SD82U2d0g6UZk6+H/k5p6S7KmGIO1xHI=
+	t=1743147876; cv=none; b=U9KDvrqKVRfwxl4s+mAzjjeRKWWyfixFss6H28j1z0umRq5oKiTJnLqL2UTe8DzcdeuNkhJE80eXxn+sAmaFOk65OmaRBN96TLnEjqeZxFjq7qAziPuGmpuJrl6R0YUsUEjS93RMqEfvFzB7JY66OYLvYKPRcyakLcddm942GbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743147840; c=relaxed/simple;
-	bh=0/vjERDIJMMC+2dqUKXHIBYUze3YUG3Cb8i8cl8vJSc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C49TTS7qQ2Y53CO6YQm07KA+zRa/ohrgI+ezTcPFCpweLDIOQjXPsocHzg+eIHTkNRrPCzR6o83gG75jzOu0Iqz9st6HIJP+MB2ikpvdABridlmcY9CsvVXHvjHvZQQFGsbFezXlLZp2wycw+THJgYvofHjV36oe/jwoF3xic10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=q6P7ihcN; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743147876; c=relaxed/simple;
+	bh=DrhY9Gh1OreY+2yKI5o/Ho68C4hcLAcK8qj33JiXDdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pLenurIAVuhZTMRkxozBM7nP8zhbFJm3E1q1tqOrc8A+Vj655bG5YkX9D0yB+ml78NRSklWkbBOsmO7S2/Bd0geuJva6f/X//BJ7kUZ62c+q5EpAYmVy2vzVJcWy3K40WYarcnn/rJL/frSBzU0uwqC7twYr8Ng/LXIpF8V9NY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lr7wUDwG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q6P7ihcN"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52S7hZH72657494
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 02:43:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743147815;
-	bh=VteTomVWAYBRvfsVvWo6AoT8N/QhMeFBSeZOBw2+QCU=;
-	h=From:To:CC:Subject:Date;
-	b=q6P7ihcN9BcDL985eHVg22wm/N5x3vUJluhs0YNUjiq7r7aO4rOR+ID3cFVSBVmP9
-	 33H/IGa1hL3MHGfUg0FD+JCHTiE81DJHJlnWeKFATMZsdSFSCtocmbt/Ag2WQSh2Uq
-	 kiqAXnvDXb6ML94FQYpYVo4er8E6hVzYdyax3gfU=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52S7hZ5x079092;
-	Fri, 28 Mar 2025 02:43:35 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 28
- Mar 2025 02:43:35 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 28 Mar 2025 02:43:35 -0500
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.197])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52S7hUZf056206;
-	Fri, 28 Mar 2025 02:43:31 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <tiwai@suse.de>
-CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <13564923607@139.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <baojun.xu@ti.com>,
-        <Baojun.Xu@fpt.com>, <robinchen@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Upgrade calibratd-data writing code to support Alpha and Beta dsp firmware
-Date: Fri, 28 Mar 2025 15:43:26 +0800
-Message-ID: <20250328074326.796-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lr7wUDwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32566C4CEE4;
+	Fri, 28 Mar 2025 07:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743147874;
+	bh=DrhY9Gh1OreY+2yKI5o/Ho68C4hcLAcK8qj33JiXDdk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Lr7wUDwGlPHNPo3QKBOXasr59CeJwgZmw1U40lyquMd2yw7lWyVDHJBBgJg0ZJJok
+	 r2NPVj7PAQWQvcpAZTuyyVSO1vFCKdlM7CCrXmD8/LVPgNL7JUADqmjflCjdbMQxXo
+	 8o1+KoFE0j4kxdGGa/gqQe6g5s9ucXSLLOZFDNObP08S7FkOi8mFVIuVUngLKNUTlT
+	 Hz7O+UKmZyl8aVCWy/CEr5FP/RqNm0ws83VCHVybt01xESLq36X9cWVA+MQM+80IaL
+	 SLtqPcgY7fLyGklTOKwW2IrIJV4ky286gURtZDEqi/51+KO92vVy3XTgb/Y3Ietfpy
+	 Yc9ws2nCZ3tVg==
+Message-ID: <de0f7848-1fe7-451f-b48b-e20fbf3d0c2b@kernel.org>
+Date: Fri, 28 Mar 2025 08:44:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org> <Z-VETFWFT5NksD7J@ninjato>
+ <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org> <Z-WAZ_IlMBB3XbTN@ninjato>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z-WAZ_IlMBB3XbTN@ninjato>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Since 2025, the firmware for tas2781 has been added more audio acoustic
-features, such as non-linear compensation, advanced battery guard,
-rattle-noise suppression, etc. The version was divided into two different
-series. Both series have a slight change on the calibrated data storage
-addresses, which becames flexible instead of fixed. In order to support
-new firwmares in time, the code have some related upgrades.
+On 27/03/2025 17:44, Wolfram Sang wrote:
+> 
+>> You did not object to last discussion about this (a month ago) - neither
+>> to my comments nor to resolution - so this patchset repeating the same
+> 
+> Because I cannot follow every Renesas patch series there is. You are
+> long enough around to know that large companies have different entities,
+> groups whatsoever. It is quite a challenge to streamline this via one
+> group, we need to share work. We do try hard, though, and have a
+> ARM/RISC-V/RENESAS ARCHITECTURE maintainer. Geert does a *hell of a job*
+> getting all these submission into shape, and he surely does not accept
+> code thrown over the wall. And geez, the patch series was just sent
+> yesterday, you didn't give us even time to raise the issue internally.
+> 
+>> pattern from the same folks while ignoring previous talk is
+>> contradicting "not too bad at fixing stuff".
+> 
+> First, being a maintainer myself, I do understand the frustration of
+> patch review not being honored. I can also agree that this series did
+> not work out perfectly. But that does not mean that we don't care, in
+> general.  Despite all imperfection and possibly different opinions, we
+> try hard to be a good citizen and spend considerable time on doing
+> things right. Accusing us of throwing just "code over the wall" because
+> there is an issue somewhere which hasn't been worked on in one month is
+> plain unfair.
+We do not speak about same things. I speak of review being ignored for
+multiple revisions in one patchset and then another patchset sending
+exactly the same pattern.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+Previous patchset receive my review about this. Thierry ignored it and
+send v2 with same code. Then v3 with exactly the same code, but with a
+remark in cover letter "but such a change is out of
+scope for this patchset."
 
----
-v2:
- - revise the subject and description.
-v1:
- - Add updating calibration addresses code into tas2781_apply_calib in
-   case of Alpha and Beta firmware.
----
- sound/pci/hda/tas2781_hda_i2c.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+And now Pabhakar sends the same pattern.
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 9ed49b0dbe6b..29dc4f500580 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -558,28 +558,38 @@ static int tas2563_save_calibration(struct tasdevice_priv *tas_priv)
- 
- static void tas2781_apply_calib(struct tasdevice_priv *tas_priv)
- {
--	static const unsigned char page_array[CALIB_MAX] = {
--		0x17, 0x18, 0x18, 0x13, 0x18,
-+	struct calidata *cali_data = &tas_priv->cali_data;
-+	struct cali_reg *r = &cali_data->cali_reg_array;
-+	unsigned int cali_reg[CALIB_MAX] = {
-+		TASDEVICE_REG(0, 0x17, 0x74),
-+		TASDEVICE_REG(0, 0x18, 0x0c),
-+		TASDEVICE_REG(0, 0x18, 0x14),
-+		TASDEVICE_REG(0, 0x13, 0x70),
-+		TASDEVICE_REG(0, 0x18, 0x7c),
- 	};
--	static const unsigned char rgno_array[CALIB_MAX] = {
--		0x74, 0x0c, 0x14, 0x70, 0x7c,
--	};
--	int offset = 0;
- 	int i, j, rc;
-+	int oft = 0;
- 	__be32 data;
- 
-+	if (tas_priv->dspbin_typ != TASDEV_BASIC) {
-+		cali_reg[0] = r->r0_reg;
-+		cali_reg[1] = r->invr0_reg;
-+		cali_reg[2] = r->r0_low_reg;
-+		cali_reg[3] = r->pow_reg;
-+		cali_reg[4] = r->tlimit_reg;
-+	}
-+
- 	for (i = 0; i < tas_priv->ndev; i++) {
- 		for (j = 0; j < CALIB_MAX; j++) {
- 			data = cpu_to_be32(
--				*(uint32_t *)&tas_priv->cali_data.data[offset]);
-+				*(uint32_t *)&tas_priv->cali_data.data[oft]);
- 			rc = tasdevice_dev_bulk_write(tas_priv, i,
--				TASDEVICE_REG(0, page_array[j], rgno_array[j]),
--				(unsigned char *)&data, 4);
-+				cali_reg[j], (unsigned char *)&data, 4);
- 			if (rc < 0)
- 				dev_err(tas_priv->dev,
- 					"chn %d calib %d bulk_wr err = %d\n",
- 					i, j, rc);
--			offset += 4;
-+			oft += 4;
- 		}
- 	}
- }
--- 
-2.34.1
+Each of these contributors were not changing here anything, it's like
+not their job. It looks like this will never get fixed, because each
+person wants to just get their stuff merged, so let's ignore the
+reviewers comments.
 
+That's not how upstreaming works - you need to change some things, fix
+some stuff, add more code, if you want to add your independent features.
+That is how upstream was always. The easiest example is - one new driver
+for some completely new feature is fine. Second new driver for similar
+new feature receives feedback: please create subsystem to have common
+set/handling of that new thingies.
+
+Best regards,
+Krzysztof
