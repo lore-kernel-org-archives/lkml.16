@@ -1,121 +1,79 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6492116ED
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E0321147B;
+	Fri, 28 Mar 2025 09:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153114; cv=none; b=GofUfDKv811KLn9/bTiPouJPuiLNJhFRviARx8HSTjJSW8mhmHtICT1fAVBfCDJX7eSc8rrmB53B8/vqp/W4UGH7DOfzwQ93Q8fVATBAwdIrEON7Xd7O9i12lzBtVSS3yaU6BsqtVsaGGYu7b2WlisqrfMfDrPt+y5bdymCbF9I=
+	t=1743153113; cv=none; b=USynHTtXOL7rTlZnJHeqQpcpwui+2V4kPEGJ737Fi6GZ1VciPF4Bl5tqu+KH3G91JhJE6iDaMDQy1yirijw2e6nbNjpeF8Xkq0bnCY1biWxCbX/Qs4IzT8Yset39j/M94d4QQY6yR2OuZE8aQ/nJWGzn2ZUOmmIiu7yde/b/FSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153114; c=relaxed/simple;
-	bh=pbIVsVcuNi+0DDbMVyNw26SOB82vpubAP8F0r7NBXg8=;
+	s=arc-20240116; t=1743153113; c=relaxed/simple;
+	bh=2GkOWaiNXqyl/OL1u4jIroUOUPz9+n3zuRyiquvPGmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u8WYxXkRqP/UqDYmtqid6lJwVLOl5xg/G8/q141is3kYffdJEnT6BEY2jZ3e9igX5FVdFNKO4JIQFfNheSFAXQ/mWVoLDVizfh3rd7kWklB3SlV8INiUO22TgecuzsgPi0WzeQGRU0W79lk/mVzKUK7G14ZZIDdTfoDi9wfdRLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1ty5kJ-0005uZ-G0; Fri, 28 Mar 2025 10:11:23 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1ty5kG-0024gm-2N;
-	Fri, 28 Mar 2025 10:11:20 +0100
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 5804A3E86D3;
-	Fri, 28 Mar 2025 09:11:20 +0000 (UTC)
-Date: Fri, 28 Mar 2025 10:11:19 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250328-gentle-dangerous-raptor-2b66fa-mkl@pengutronix.de>
-References: <20250227-spicy-grebe-of-dignity-68c847-mkl@pengutronix.de>
- <CAOoeyxWSsy0Q0Y7iJE8-DZM5Yvcdto8mncFkM8X4BvVMEgfUiQ@mail.gmail.com>
- <20250317-cuttlefish-of-simple-champagne-ee666c-mkl@pengutronix.de>
- <CAOoeyxXSC3rjeB0g5BtHKvKy-Y9Dszd5X9WuHeBeH1bk39d_Eg@mail.gmail.com>
- <20250326-inventive-lavender-carp-1efca5-mkl@pengutronix.de>
- <CAOoeyxXw1x2HVXQYzxc1OuGimn7XPfCjj-aB=jAAfw733b_9OQ@mail.gmail.com>
- <20250327-awesome-mutant-cuscus-0f0314-mkl@pengutronix.de>
- <CAOoeyxWa5sB+YS6W=oG7xUeizXxigkdw3b=7w9aGftCWzWsw2A@mail.gmail.com>
- <20250328-smart-thundering-asp-2536b0-mkl@pengutronix.de>
- <CAOoeyxWy7n32iD03sr+8jPwf5OpHaCe_itkRnzOQK8GC32A9+A@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BI6xfLszU40eiiiLAhLqdt6OfH+Q8Y0FeAE0t5Mn6dTmC39liXP/DfqV3MBQO1S1qsf0F/QBK5gs1awUvJ6RzvkvAIi93bs2D+zitIpd7khxgm4CdremDj7+OZmXPdLZS3UwPNPNStX6vgLpEYJA0OgDEWFKjRV5ZiQqcrbtNf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQGCzkno; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQGCzkno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4433C4CEE4;
+	Fri, 28 Mar 2025 09:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743153113;
+	bh=2GkOWaiNXqyl/OL1u4jIroUOUPz9+n3zuRyiquvPGmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eQGCzknoEr4PqQd5wXayvDTwMH4ZMsCsAgM4+iw8ojYWOXV/VHEw04MoIKPNQMR8V
+	 /o3NDi4KT4lzfAwmBQmbXfEbyY0YFQxF26IL9bnt63oL1fAyRLSEDP2ubvQSNg4XQV
+	 FRELpHNyNgc6iH04qPSLy7KU/6dl1UerO1pmGTI/bnRXrEaf2ltp8T50gYW4bj0RA+
+	 4FsPC/ZwcHRgTLdtlfh5O0HKXuE8kQq+ia0X4RDwT78wLF1EAxp1TIMvVtPrNzmvkQ
+	 6E7xD/R4Gr8BXia6Eb91Xj9vcTX53F04OosWV7O0wvVMk31wv+gQky6vnThmghKeXk
+	 rTbEh2ra6gD5w==
+Date: Fri, 28 Mar 2025 11:11:48 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>,
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>
+Subject: Re: [PATCH 1/4] x86/sgx: Add total number of EPC pages
+Message-ID: <Z-Zn1KkNTNCGvEcj@kernel.org>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-2-elena.reshetova@intel.com>
+ <Z98yki-gH4ewlpbP@kernel.org>
+ <DM8PR11MB57508A3681C614C9B185B04EE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-RY8-bL2snpRKTB@kernel.org>
+ <DM8PR11MB575029FAC2C833553CE422CFE7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-XDFDj8Tc5i-GBg@kernel.org>
+ <DM8PR11MB57503621B1D7674404A62004E7A02@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-Zg5elc0xTwoxat@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tzr33nw7euhn5lwq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOoeyxWy7n32iD03sr+8jPwf5OpHaCe_itkRnzOQK8GC32A9+A@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <Z-Zg5elc0xTwoxat@kernel.org>
 
+On Fri, Mar 28, 2025 at 10:42:18AM +0200, Jarkko Sakkinen wrote:
+> In your code example you had a loop inside spinlock, which was based on
+> a return code of an opcode, i.e. potentially infinite loop.
+> 
+> I'd like to remind you that the hardware I have is NUC7 from 2018 so
+> you really have to nail how things will work semantically as I can
+> only think these things only in theoretical level ;-) [1]
 
---tzr33nw7euhn5lwq
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
+That said, I do execute these in NUC7 but is getting a bit old..
 
-On 28.03.2025 16:57:46, Ming Yu wrote:
-> > > > Does your device support CAN-CC only mode?
-> > >
-> > > It can dynamically switch between CAN-CC and CAN-FD mode when
-> > > trasmitting or receiving, depending on whether the nct6694_can_frame
-> > > passs the flag with NCT6694_CAN_FRAME_FLAG_FD.
-> >
-> > Ok, but what about the receive path? Does the device support CAN-CC only
-> > mode? Will it throw an error, if it receives a CAN-FD frame?
->=20
-> No, it can receive both CAN-CC and CAN-FD frames, if the hardware
-> receives a CAN-FD frame, the firmware will set the
-> NCT6694_CAN_FRAME_FLAG_FD flag.
+Cheapest hardware I've heard is Xeon E-2334 but even that with
+case etc. is like nearing 2k in price.
 
-Ok, then set the CAN-FD ctrl mode static.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---tzr33nw7euhn5lwq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfmZ7UACgkQDHRl3/mQ
-kZwYtQf/c7cT0KfIOS3YnlbxRmDPcKbxtcH25rhCTmL7CvrAnktrR9i0DzB+7vkt
-BwE/PZmyu3XSHeCbvfd/Di0Zddu9NxXyFTe32yXpA3s7uV0UFwWEyi7y20ZT19aL
-r5PeInCTNFIQG88kHekGt/bAO+afweWxvb+iphZpcLZj3PGQlE24S0SSgUqo0tHZ
-oqTgFKC4v/YvEV2qmLQ5966R+L/7cKSRf5QlJfQl/v0pfk+IJ+QuhQhcG4YjQOVQ
-NFBM2ncTGmQWGFeKqJiB5IuvhInT2DukqwaChLbEaqhPFS9PmRvb+YXGxTnd4b4H
-Iob/zMnIE/RmFXwHANoSF/2Sely55Q==
-=2tPP
------END PGP SIGNATURE-----
-
---tzr33nw7euhn5lwq--
+BR, Jarkko
