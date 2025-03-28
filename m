@@ -1,97 +1,96 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC6B213E66
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E973F1D7E21;
+	Fri, 28 Mar 2025 10:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157341; cv=none; b=KdyNw/45uHmzM795E8NpyyilJ34yRbg8o04Pjbj5ZqazLI6wk4Snmo8X0kdcNpEnxroXPpPxY1ISoefI6SIKZJ/V9+vqL6tbpEIvKpevHCCC/81k4vBc2jbV3VCYYqjLW6HG9qAJGzBua8G5X66404s96bOMBluV4tT1Z5A1rIE=
+	t=1743157418; cv=none; b=mW5mCsJzi2wF+MatAqjwXBrbR6bmtdNvedKr68syQfqQkMFWxfvOjTYlFoHNdpfNZFSqZZvYJXgsFKWO8SiJ+wVGXnkIKJjNFbfe3IFNobO7WgK/++vmA5kOThlaLtwzomB0TtlMhNkSwO7eXzpmXBQhGufE1ekVZVtf1UfNjaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157341; c=relaxed/simple;
-	bh=1EvdB14G9dZ9V0d+gy+JSmSb+iAYQGCNgOKmRsIyMfY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QA1pVsBBkYC9I2hahvgKc1fQJbR1YYlei5cHD62ALlYFFc9IjbPYumkr6iSePAE10eCSf7DZWK1xOrWUMIX0vEhhEPnGl0klJl64Wr5F4GakMzMcmEZC7B5zFy/dcLq4bCvZHCs1QRpNb9V465BGumqC3ybAlZ/qOOdiQYyEk9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VIXIVEL3; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743157418; c=relaxed/simple;
+	bh=kfnA0dse3vgZ+fkK7/yQkYuHHTaaxE5askDA+8RMtOI=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=AVxYM9KjYbfkHxDFtNUeP4PBI5wAxqRNi5YTzS5cTG+Y7cRJCs+ycRUnlfBkws3DR8ZMyvY3U372pIcfCxVkH+/Wpe3yp4xMN8wNqRq/hMmgtugEXtbuBQAq5D68+Pv6ucULTeKttL/uS1UkFm/+owIjlCb665craZKfqr1/yCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wzoozC5J; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VIXIVEL3"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e60b75f8723so1429059276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743157339; x=1743762139; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QWcdknvSCYeb4zRihPe/MxApMaJfE7/coMmdm58k8mE=;
-        b=VIXIVEL3iR1pses4SVICAvRQoYKm3GrKW/gGsNf7jjGVM7GkO2q1XQb53KBo/m4Obz
-         r8n5PEm5q9hJ83FrOpNfKyY+W1hwzleT79Dpdl+03WqmAQOrNoUzECTDjRTWhNafhPZ8
-         N30bZ1g04ofeeTnP2keMVD6gndXLWONS1PUE1mYvzOzHDQ5QZhx0kCeJxOfYrv+5Rl3g
-         2q+lXnf+6VsEvLUd1enBmPba+C0VZrxYcxWKm459zsjJeVnmAwko8a1oMPV/dK7aiMWn
-         pazuDogB6I0SkpeuVmXImAI8SNzvjBm8QtiyOEnOnDQ4LxsX1hjYkQKURJi7IeYH4ECr
-         hY3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743157339; x=1743762139;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QWcdknvSCYeb4zRihPe/MxApMaJfE7/coMmdm58k8mE=;
-        b=TUCpuLeU96dc7w1dtdU8/h/9ftmh/0khJlJjUQLmxvEOx+oRSzs8Z4ZNTmuurrnivt
-         AtWRnROeeVvTCLQ6MZFHoT6D682bdRzCrrwW+idOEud67Y7CnbFesn9TQoU0UnrdEOfp
-         7kLf8ldVc5yyHpwTbllchruO5vHnyVBS7Tx/h9KYo+U8ZnlgANcX++ls+p+IJ1dZ91FQ
-         5ELUc73D3oW4O83XuLbJPHUTTHslrRuojr8Y9Xa36HiY/SaxQMLpM+3RDQZ08XOx2xkY
-         zFQPkihOoCqkLPdCNkSF78Y+9Hhtigf7/ZUMN3C4+Am4RWQA17umH0N1CWUySw59jxWi
-         T8VA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhCvJx0HKeXIVWewNH5V+KC4+ZC561WwwZL9hj6FG57+6j6Bz8tRl+CU6GvJT797Yza0KjLSnXsZTxurg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwfmHgjXhaA6vkTiJh5IB8OELFxIuruanA98JFzmOgzLNVxMoN
-	SFG9G3Mg/q5yK29X+5uB2aImpWh/Y8IumRYwOe612KzOQMgrdzWdFelVzDdnvSuS758dHlb53ZH
-	FdyHd+CSCrWJvM6BQfeRWFYmBCSDD8OQqUFV/XA==
-X-Gm-Gg: ASbGncv3Q9ySHwdOJEA1y+DRgFfZqUhzzRIwBLlXCPm6CVcch28jFM/ntbcHZn+TxOq
-	CqNIONyBzN8VCpB5mFLuOMhRXIvXuQ23DASiZrzwZu5HzT2ULYVmfyW212+euqAGNbC2SGvmHsc
-	qaFu3wKdx+uFkGX7zcLnQvwBgY1nQ=
-X-Google-Smtp-Source: AGHT+IF+THyscD1I70Q1OyNT7wZ9pN5Y8ZMr40r0UC0Ra/TZGyedSTAVl7xxm7Ivr+fxGPflDlGfnf1oayC1W3EzhlY=
-X-Received: by 2002:a05:690c:9b08:b0:6fe:bf9d:8cca with SMTP id
- 00721157ae682-70224c5ae42mr93037477b3.0.1743157338910; Fri, 28 Mar 2025
- 03:22:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wzoozC5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743157107; bh=H2OTz8qixQSaNYMYOwPN0zr3Spnwqzfy6K+SC7egpi0=;
+	h=From:To:Cc:Subject:Date;
+	b=wzoozC5J5Zs7kwXxyhsn82cmtx415X86A3m1UJQ6SALiSXk+tCg2tAG5/OUlk/cTK
+	 hf1RNxs9XLy2v4phSGZJKrN7nOJk3q9JbtDmTPfYVs53G6H+SWga/YWgbr7C6fmbDP
+	 WllwYWpoPS9N4hDMQQbrNxfXw1bB2hMETlOjAfyY=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 48F3BC99; Fri, 28 Mar 2025 18:18:15 +0800
+X-QQ-mid: xmsmtpt1743157095tkan4cn01
+Message-ID: <tencent_40B6A6E7C79AEEEFEC79A07DE00724909A05@qq.com>
+X-QQ-XMAILINFO: N+tZcXNNUKPOq0E9fe2tInSMWeGR7AoKa9CfwgyWxam3RDeGnbizC0ptDSI3QN
+	 1ARp8tXQwHqJGGNx+qDidrqn3GSLqIJCA7wf1X+0YEkfLm7aL/J7/GbHzFCgAX68+L+ymbrCu6Up
+	 G8Y5ytwIulU/PbiNmGVLk00ajkY8m5Y/ZPkR0RbMpZuosL6f7Po7OGWgevShtf0uq9dpB1fLNQjK
+	 8CDyNeya8aYkgwxMNHbN3hdrnkn40IGu2hPa0NCP4Ji/pjiloqLrtN3z3xyHmn+16C/48ngaUoV9
+	 N3fCvlYtlTNrjDehAIbuiclypNvAq1NxIeoq6Pvjr7rqQ1AAYl1MpFaPJl63n90BkfKZUMu5zr5Y
+	 OrzcQfeaz0qMFCPTn/uIRAB1STWWI8GlB/N8St2r46paTE1kHD0NUtp+hFKqEqe6AhjFtgh2A3oR
+	 BzuBfKYitBOC6T75WZT6PxizIE0zrj2kCnUG+fNzjoUYAwDBwIIXMFg97w7pER8PrBAcivYcf4cS
+	 XIurcpjMFseJ50nohhEp8iFF8sR9kiPeXD/iR9eVH4OR/rmFeXsXV3C1DR8yQSHPv9bgYBqgyWOe
+	 dkfRbNdrB9qPjqELvi3ycic+w2ZibX5QptwEOK8OthFXo5QlP9X+KoOJOoPONdNiBNRwnGDgbrzg
+	 wbIStjkEno1+nsz6vwRauN28Bn//LoVKIHAl6xNCXImdHvJD4k+A0ww+4nHbA+VTU/T9WjBfTWo0
+	 NwsJgV9F/2OYo3B7indAoG+5fvlCrgqJCz2uIC1wOujf8RP37xCEI+DxK6ucQ9YL7vBXdSqAnHCR
+	 wUtlkb0u4/T/EnRYT6ni/sBocqv0do2htnslkqDWkzYmycG50xX/VZAsA7WU0SqpRe9VmXkIZ97M
+	 J/8Ds09TwQoHpQTaxbHgPn0/BIPV4MkRtWpWuHC3Wf5GuhKknhDuWQ2X2CCLnydza2R8/jKbybnI
+	 CaoXYe34zqCltPvXyB2Oc7j4b4GyrIeJU/YxsEUpGlcV/iN1W2HgMKrzGufcsB
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+Sender: yeking@red54.com
+From: Yeking@Red54.com
+To: linux-sh@vger.kernel.org
+Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Paul Mundt <lethal@linux-sh.org>,
+	Pawel Moll <pawel.moll@st.com>,
+	Stuart Menefy <stuart.menefy@st.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] SH: Kconfig: Fix help text of CMDLINE_EXTEND
+Date: Fri, 28 Mar 2025 10:18:11 +0000
+X-OQ-MSGID: <20250328101811.53017-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-5-ulf.hansson@linaro.org> <PH7PR16MB61960D396B3E5B61571F7F82E5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
-In-Reply-To: <PH7PR16MB61960D396B3E5B61571F7F82E5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 28 Mar 2025 11:21:42 +0100
-X-Gm-Features: AQ5f1Job6rz184fUICiPRY1Ma-qfbAVYw2uwJkaEoJZeRzZpT85dOgBmc4R44BA
-Message-ID: <CAPDyKFreJu8jZXoBJ2J1Mgj+OOAJX5rjzX0D4ZfbTj_uVrPKPw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] mmc: core: Add support for graceful host removal for eMMC
-To: Avri Altman <Avri.Altman@sandisk.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 28 Mar 2025 at 09:13, Avri Altman <Avri.Altman@sandisk.com> wrote:
->
-> > +/*
-> > + * Host is being removed. Free up the current card and do a graceful power-
-> > off.
-> > + */
-> > +static void mmc_remove(struct mmc_host *host) {
-> > +     get_device(&host->card->dev);
-> > +     mmc_remove_card(host->card);
-> > +
-> > +     _mmc_suspend(host, MMC_POWEROFF_UNBIND);
-> Couldn't find how _mmc_suspend handles this new power off flag?
+From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
-Right. You need to look closer at mmc_may_poweroff_notify() as it
-should return false if MMC_POWEROFF_UNBIND, unless
-MMC_CAP2_FULL_PWR_CYCLE.
+It is the bootloader arguments concatenated with the given string,
+not the given string concatenated with the bootloader arguments.
 
-[...]
+Fixes: d724a9c9d572 ("sh: Allow for kernel command line concatenation.")
+Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+---
+ arch/sh/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Kind regards
-Uffe
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 89185af7bcc9..81e5e205416e 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -727,8 +727,8 @@ config CMDLINE_OVERWRITE
+ config CMDLINE_EXTEND
+ 	bool "Extend bootloader kernel arguments"
+ 	help
+-	  Given string will be concatenated with arguments passed in
+-	  by a bootloader.
++	  Arguments passed in by a bootloader will be concatenated
++	  with given string.
+ 
+ config CMDLINE_FROM_BOOTLOADER
+ 	bool "Use bootloader kernel arguments"
+-- 
+2.43.0
+
