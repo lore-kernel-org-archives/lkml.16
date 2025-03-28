@@ -1,354 +1,140 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6487213E66;
-	Fri, 28 Mar 2025 10:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2190214229
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157107; cv=none; b=OPjKBMU/xWyq91BTF0u9B0L0JvRLMgm6y3dplFcM8Lm1lkwqo+u0wjJqDtXnOx7HVGZ/ejQJP5UgbldjQMdMNSDLOPDkTSwTPXGQ4pRkaBKQpcK2E4VSBhQidQJ5UPnV1f0lQFYEEeAnonIJ7QobTmGK9g3sNdFnoif2gJdK67Q=
+	t=1743157162; cv=none; b=bGUNADXdYSPfHcg8szn2zSo+v4+dAurZ+1tM15RcG/ja4iGhw6uxXLFLatOSTf/PtD0QHtGxce7H4xiO75rsX42+2U6DBDW8FK0sIQP2zlHcEfT7TwEQoNbJ3W6Uzw52WBnfWl9aJrslHMAsN/jVcBUSCFS+yJOz/GymzZvHJ80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157107; c=relaxed/simple;
-	bh=gcgr7z5Ippm2KnaPGtAze5iGXSlisr88DVXAquZgt80=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZMZ0qUt6R9nM+Qw4DdymQVzIh+rGkNy/KEWV47dUBy+uBUvKEBYIRVq3qDLI2dOKHUaToFmkjN5VE+DeFePL1kgIVxFjo7KUFWg6z502rXNuzUmyh8FE4tilEJMOW2J+WeUNLzdnmUNFOciBxwhA+Aix4RNsYi+cbXwCyQpTLA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZPGgY5P0Gz6L53b;
-	Fri, 28 Mar 2025 18:18:01 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id 70380140119;
-	Fri, 28 Mar 2025 18:18:21 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 28 Mar 2025 11:18:21 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Fri, 28 Mar 2025 11:18:21 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
-	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
-	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
-	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
-	<gthelen@google.com>, "wschwartz@amperecomputing.com"
-	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
-	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v2 3/8] cxl/edac: Add CXL memory device patrol scrub
- control feature
-Thread-Topic: [PATCH v2 3/8] cxl/edac: Add CXL memory device patrol scrub
- control feature
-Thread-Index: AQHbmcKuLCBs/xi+XkeVn732q30wUbOGMAMAgAESV/A=
-Date: Fri, 28 Mar 2025 10:18:20 +0000
-Message-ID: <d75c574e26d94aa9b398acfca0ecac9d@huawei.com>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
-	<20250320180450.539-4-shiju.jose@huawei.com>
- <67e4ae1cb0cdd_152c29462@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-In-Reply-To: <67e4ae1cb0cdd_152c29462@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1743157162; c=relaxed/simple;
+	bh=jz3aY36o7j1FfklzKk7CT65RWrvPbaWXJsL0lBphTq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m6ENZ3vQtteMFZsgHf5v06NQTIPGwczp3qX6CK1Jv3YCuBzr6Iy7w9CxwKI+hGWwiH4bXcOpQ8edbnO99XbQpuw/BahBVkAg9O9yInlwg8gEOThBhZ7GZBd2ma6qjVztg86DrmVZfYTGB8TJSImO6MMxxsFlGMNbTmN5Eegrx/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=E8GF7uWT; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="E8GF7uWT"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39143200ddaso1244966f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743157158; x=1743761958; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N9MH3GUSx2ijDFw2/8FoaPDcqum1gfQzhI04q7LblUM=;
+        b=E8GF7uWTGxqUjEWMfSmDSS3rJjt3jyH93E+/BM6TVih7IUflhe4ze+rs8vKhgnlnRT
+         QhQ+smgfFQhIbfcdb6bORnzPMQ/wnjHrgkeSILfS+8PGYKUzaREZR0XN9XzHeznFFJxj
+         C/2ASr4umOr6wANC3tFm68v+scibSL/gU3HCAfgcN01iYHIYHfkIqWdnytjzaOwJKy6D
+         ZPXlBoCqwJ27fuxxoC0EWXw1aBEZoBdP2xsXY74rNH95n3LUo7DBunD+VrVioqhILLaM
+         Uisc4A5rSuyE1jUomoo30GN2pJVuU1ctJVATLQEoBacdwDbZiYAVRIHNJZYXD5IvfZud
+         bSIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743157158; x=1743761958;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N9MH3GUSx2ijDFw2/8FoaPDcqum1gfQzhI04q7LblUM=;
+        b=jw0I7FFJT0LRoOp8bJtKcXk2odsQOas3ZQ4Ad8hhCfyoAqHXejGRlR5qbMwqMv2sBr
+         1jA2r3iFP08PGSJL7sh5sRiRI/kQD6qhsLH82hFHC0Gvc/D6nYtYn3EKd/io8nBu1jPf
+         PHma5RCK+ahuKSx9bpb5YClPqY/bdCnheXribd4v8QbZaBKHEio5geVA+oq7h6YrVZ8/
+         +PnF1w9CbSYCkX/z5CIWM0IZYgVw3Qomh8ltTIi1gADDgdJZICYlxah419VAHF3seQds
+         4WzvUeAFWYts24hojqRN3X0XgDAioU9JXeCVRjBxsLwtU4GYxSofBos77dvajIn528Cg
+         17gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWEYdJvY7yxjtjfnaf+EMGfHnl1nA2xmpRCz1JNqiITpUJbDP/W1HhhIive3TXdFbJPGgdvyfy4YLHUG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYdSJnNIPaLZmYGRJR4XVjqJdaBqtrmaqMwer7+h6JAFsVvrlW
+	ob8HuBwNTMNQcfW8a8Xj8Yu4fYXtI23y+Rf5ispOofxqthhYBV5CXMAfQJr1H6k=
+X-Gm-Gg: ASbGnctazACVEZyTKJHpINGFx0yOV3KCeRF94ppCBmnsayK68LAeFHyACb1H3Q4dclI
+	NNejTpm7dl4CWEuby4bqsf/3tUHoTKZbduE3azv95/V2pWnqSvpVWBI2BKWYhf5/DovRC7DBSVZ
+	RLQdt1Pmt1DCMkPYIr5Bm9S7EjujQYc4eYrqZd5KV3brpHdQXq1Bfey1TBzkbJM138vXVPPpLMF
+	sOtXy8rxyjy/0oeQSFnQShxTrHz90nTJKQD2cEzRFSquoRsTCy0lX4Qa4PhHhZSna2mof/TG5FF
+	ZaQFfZTOQgy5b0HW8fg1iAm/n/lPFoNNHdiV+rqTvepcb408Oj3oWoSM+70=
+X-Google-Smtp-Source: AGHT+IGJKr46cfNOSniY/dCUZeCweOop1DoiisSS7BUAqfPuL9uBmcKmHfMWxpVOpa84DymztwUNqg==
+X-Received: by 2002:a5d:59a8:0:b0:391:22a9:4408 with SMTP id ffacd0b85a97d-39ad1749fdfmr7315210f8f.16.1743157158044;
+        Fri, 28 Mar 2025 03:19:18 -0700 (PDT)
+Received: from [10.100.51.161] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe389sm65412055e9.19.2025.03.28.03.19.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 03:19:17 -0700 (PDT)
+Message-ID: <3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com>
+Date: Fri, 28 Mar 2025 11:19:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kbuild: deb-pkg: Add libdw-dev:native to
+ Build-Depends-Arch
+To: WangYuli <wangyuli@uniontech.com>
+Cc: masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ samitolvanen@google.com, zhanjun@uniontech.com, niecheng1@uniontech.com,
+ guanwentao@uniontech.com
+References: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
->-----Original Message-----
->From: Dan Williams <dan.j.williams@intel.com>
->Sent: 27 March 2025 01:47
->To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org;
->dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com
->Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
->mm@kvack.org; linux-kernel@vger.kernel.org; bp@alien8.de;
->tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; leo.duran@amd.com; Yazen.Ghannam@amd.com;
->rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
->erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->gthelen@google.com; wschwartz@amperecomputing.com;
->dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
->nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
-><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
->Subject: Re: [PATCH v2 3/8] cxl/edac: Add CXL memory device patrol scrub
->control feature
->
->shiju.jose@ wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> CXL spec 3.2 section 8.2.10.9.11.1 describes the device patrol scrub
-[...]
->> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c new
->> file mode 100644 index 000000000000..5ec3535785e1
->> --- /dev/null
->> +++ b/drivers/cxl/core/edac.c
->> @@ -0,0 +1,474 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * CXL EDAC memory feature driver.
->> + *
->> + * Copyright (c) 2024-2025 HiSilicon Limited.
->> + *
->> + *  - Supports functions to configure EDAC features of the
->> + *    CXL memory devices.
->> + *  - Registers with the EDAC device subsystem driver to expose
->> + *    the features sysfs attributes to the user for configuring
->> + *    CXL memory RAS feature.
->> + */
->> +
->> +#include <linux/cleanup.h>
->> +#include <linux/edac.h>
->> +#include <linux/limits.h>
->> +#include <cxl/features.h>
->> +#include <cxl.h>
->> +#include <cxlmem.h>
->> +#include "core.h"
->> +
->> +#define CXL_NR_EDAC_DEV_FEATURES 1
->> +
->> +static struct rw_semaphore *cxl_acquire(struct rw_semaphore *rwsem) {
->> +	if (down_read_interruptible(rwsem))
->> +		return NULL;
->> +
->> +	return rwsem;
->> +}
->> +
->> +DEFINE_FREE(cxl_unlock, struct rw_semaphore *, if (_T) up_read(_T))
->
->I know I suggested cxl_acquire() and cxl_unlock(), but this really is a ge=
-neric
->facility.
->
->Let's call it rwsem_read_intr_acquire() and rwsem_read_release(), and I'll
->follow up later with Peter to see if he wants this to graduate from CXL.
->
->Also, go ahead and define it in cxl.h for now as I think other places in t=
-he
->subsystem could benefit from this approach.
+On 3/26/25 18:41, WangYuli wrote:
+> The dwarf.h header, which is included by
+> scripts/gendwarfksyms/gendwarfksyms.h, resides within the libdw-dev
+> package.
+> 
+> This portion of the code is compiled under the condition that
+> CONFIG_GENDWARFKSYMS is enabled.
+> 
+> Consequently, add libdw-dev to Build-Depends-Arch to prevent
+> unforeseen compilation failures.
+> 
+> Fix follow possible error:
+>   In file included from scripts/gendwarfksyms/cache.c:6:
+>   scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
+>       6 | #iIn file included from nscripts/gendwarfksyms/symbols.cc:lude6 :
+>   <dwarf.hscripts/gendwarfksyms/gendwarfksyms.h>:6
+>   :      10| :          ^~~~~~~~~
+>   fatal error: 'dwarf.h' file not found
+>     6 | #include <dwarf.h>
+>       |          ^~~~~~~~~
+> 
+> Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  scripts/package/mkdebian | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> index 0178000197fe..25edee97fff7 100755
+> --- a/scripts/package/mkdebian
+> +++ b/scripts/package/mkdebian
+> @@ -209,7 +209,7 @@ Rules-Requires-Root: no
+>  Build-Depends: debhelper-compat (= 12)
+>  Build-Depends-Arch: bc, bison, flex,
+>   gcc-${host_gnu} <!pkg.${sourcename}.nokernelheaders>,
+> - kmod, libelf-dev:native,
+> + kmod, libdw-dev:native, libelf-dev:native,
+>   libssl-dev:native, libssl-dev <!pkg.${sourcename}.nokernelheaders>,
+>   python3:native, rsync
+>  Homepage: https://www.kernel.org/
 
-Hi Dan,
+If scripts/package/mkdebian is updated in this way then I think
+scripts/package/mkspec -> scripts/package/kernel.spec should be adjusted
+as well for consistency.
 
-Thanks for the comments.
-Sure. should these definitions in cxl.h  require in a separate patch?
+File scripts/package/kernel.spec contains:
+BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
 
->
->> +
->> +/*
->> + * CXL memory patrol scrub control
->> + */
->> +struct cxl_patrol_scrub_context {
->
->I like "patrol_scrub" spelled out here compared to "ps" used everywhere el=
-se.
-Will change.
+elfutils-libelf-devel is for Fedora/RH distros, libelf-devel is for
+(open)SUSE.
 
->
->> +	u8 instance;
->> +	u16 get_feat_size;
->> +	u16 set_feat_size;
->> +	u8 get_version;
->> +	u8 set_version;
->> +	u16 effects;
->> +	struct cxl_memdev *cxlmd;
->> +	struct cxl_region *cxlr;
->> +};
->> +
->> +/**
->> + * struct cxl_memdev_ps_params - CXL memory patrol scrub parameter data
->structure.
->> + * @enable:     [IN & OUT] enable(1)/disable(0) patrol scrub.
->> + * @scrub_cycle_changeable: [OUT] scrub cycle attribute of patrol scrub=
- is
->changeable.
->> + * @scrub_cycle_hrs:    [IN] Requested patrol scrub cycle in hours.
->> + *                      [OUT] Current patrol scrub cycle in hours.
->> + * @min_scrub_cycle_hrs:[OUT] minimum patrol scrub cycle in hours
->supported.
->> + */
->> +struct cxl_memdev_ps_params {
->> +	bool enable;
->> +	bool scrub_cycle_changeable;
->
->This is set but unused. Even if it were to be used I would expect it to be=
- set in the
->cxl_patrol_scrub_context.
-I will add  to cxl_patrol_scrub_context and will add an extra check against=
- this when
-user request to change the scrub rate.
->
->> +	u8 scrub_cycle_hrs;
->> +	u8 min_scrub_cycle_hrs;
->> +};
->
->I do not understand the point of this extra object and would prefer to kee=
-p
->intermediate data structures to a minimum.
->
->It looks like all this does is provide for short lived parsed caching of t=
-he raw
->hardware patrol scrube attributes. Just pass those raw objects around and
->provide helpers to do the conversion.
+If I'm looking correctly, a new dependency to make dwarf.h available for
+both would be:
+BuildRequires: elfutils-devel or libdw-devel
 
-Sure. Will do. Was added to avoid more number of function parameters.=20
->
->The less data structures the less confusion for the next person that has t=
-o read
->this code a few years down the road.
->
->> +
->> +enum cxl_scrub_param {
->> +	CXL_PS_PARAM_ENABLE,
->> +	CXL_PS_PARAM_SCRUB_CYCLE,
->> +};
->
->This seems unforuntate, why not make non-zero scrub rate an implied enable
->and zero to disable? A non-zero sentinel value like U32_MAX can indicate "=
-keep
->scrub rate unchanged".
-
-These  enums can be removed with remove using cxl_memdev_ps_params.
-
->
->> +#define CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK BIT(0)
->
->This CXL_MEMDEV_PS prefix is awkward due to overload with 'struct
->cxl_memdev'. Minimize it to something like:
->
->CXL_SCRUB_CONTROL_CHANGEABLE
->CXL_SCRUB_CONTROL_REALTIME
->CXL_SCRUB_CONTROL_CYCLE_MASK
->CXL_SCRUB_CONTROL_MIN_CYCLE_MASK
-
-Will change.
->
->> +#define CXL_MEMDEV_PS_SCRUB_CYCLE_REALTIME_REPORT_CAP_MASK
->BIT(1)
->> +#define CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK GENMASK(7, 0)
->#define
->> +CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK GENMASK(15, 8) #define
->> +CXL_MEMDEV_PS_FLAG_ENABLED_MASK BIT(0)
->
->CXL_SCRUB_CONTROL_ENABLE
->
->...no need to call it a mask when it is just a single-bit, and when it is =
-both the
->status and the control just call it "enable".
-
-Sure. Will change.
->
->> +
->> +/*
->> + * See CXL spec rev 3.2 @8.2.10.9.11.1 Table 8-222 Device Patrol
->> +Scrub Control
->> + * Feature Readable Attributes.
->> + */
->> +struct cxl_memdev_ps_rd_attrs {
->> +	u8 scrub_cycle_cap;
->> +	__le16 scrub_cycle_hrs;
->
->"hours" is just 2 more characters than "hrs", I think we can afford the ex=
-tra
->bytes.
-
-Will change.
->
->[..]
->> +int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd) {
->> +	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
->> +	int num_ras_features =3D 0;
->> +	u8 scrub_inst =3D 0;
->> +	int rc;
->> +
->> +	rc =3D cxl_memdev_scrub_init(cxlmd, &ras_features[num_ras_features],
->> +				   scrub_inst);
->> +	if (rc < 0 && rc !=3D -EOPNOTSUPP)
->> +		return rc;
->> +
->> +	if (rc !=3D -EOPNOTSUPP)
->> +		num_ras_features++;
->> +
->> +	char *cxl_dev_name __free(kfree) =3D
->> +		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlmd->dev));
->
->if (!cxl_dev_name)
->	return -ENOMEM;
-
-Will add.
->
->> +
->> +	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->> +				 num_ras_features, ras_features); }
->> +EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_register, "CXL");
->> +
->> +int devm_cxl_region_edac_register(struct cxl_region *cxlr) {
->> +	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
->> +	int num_ras_features =3D 0;
->> +	u8 scrub_inst =3D 0;
->> +	int rc;
->> +
->> +	rc =3D cxl_region_scrub_init(cxlr, &ras_features[num_ras_features],
->> +				   scrub_inst);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	num_ras_features++;
->> +
->> +	char *cxl_dev_name __free(kfree) =3D
->> +		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlr->dev));
->> +
->> +	return edac_dev_register(&cxlr->dev, cxl_dev_name, NULL,
->> +				 num_ras_features, ras_features); }
->> +EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index b3260d433ec7..2aa6eb675fdf 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3542,6 +3542,11 @@ static int cxl_region_probe(struct device *dev)
->>  	case CXL_PARTMODE_PMEM:
->>  		return devm_cxl_add_pmem_region(cxlr);
->>  	case CXL_PARTMODE_RAM:
->> +		rc =3D devm_cxl_region_edac_register(cxlr);
->
->Why do only volatile regions get EDAC support? PMEM patrol scrub seems
->equally valid.
-
-Will add devm_cxl_region_edac_register () for PMEM as well.
-
+-- 
 Thanks,
-Shiju
+Petr
