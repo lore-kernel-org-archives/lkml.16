@@ -1,70 +1,64 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010007.outbound.protection.outlook.com [52.101.228.7])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2073.outbound.protection.outlook.com [40.107.100.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DCB19342F;
-	Fri, 28 Mar 2025 00:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EA7E573;
+	Fri, 28 Mar 2025 00:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743122415; cv=fail; b=EcFiZdFuUMM7CWALDg3BAx1LVgEEn7TEaGeHnMfsJhcmQ4X1Kz9SHLDjnbm0+NhACwJ5eufHBdpZsbwxdoHTIaxzC1RWtFvXY1Yn133zl/+87rVHR9uwxuoTnRO7y2TZs2XSR6bL0SScHM82Qh5TZl3lR9BOyFBqnEINWs5jAjY=
+	t=1743122632; cv=fail; b=ixoZHjqYvrIbPIPqMBPQjn/W6Bsl4uGCWAt5t6Edd+VzbZeBIOOpkOqExWTRk2mWp9V1CdJAe1jLcYUV5Ekg8GLzokTHUayzPaAXMkeh9JTFnJAU4nFs2rNatwFlg7GQV5ZU8RRGY2Q+hLf0oWZpv8lf8qFKyOBJpSU3uIcJzQw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743122415; c=relaxed/simple;
-	bh=2jTAzIUFI9c9glKM56Bv5GaIUwbsKdNaZTlSKZ2AGg4=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=iS8mrVLaVck5IbMBdG+HD18NpZV0aY17gI+20c6cGTIYNL18HhekGVAHaB5E6rWD+Y2UXbelooMeOAu3gsYaiaGIg3gwA1BVCJTdgRRofcrEsNbyizmF+VOW7/3lzysJ/JulrbSTRPqac7msdBBhSvrIO/O+lkKwmOIIiryUA/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=AZ53U4eh; arc=fail smtp.client-ip=52.101.228.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	s=arc-20240116; t=1743122632; c=relaxed/simple;
+	bh=PE/u3L9IUY2mzcD3DoucWM25P9AD5VcdsAJADzJTA5M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gRVVrAzhjiWlRSkmC1I/wQo6nP4VlMqrCOnh0MwRCYR8IOB87iwj8W0BEN/Vi2kht0pumPbwiuYNQPAlud0hsOEdiCm/nyDQaIjLGmXhb7NteqI2adpX6m7x47IJfcpcCRULgfguHmN8te9SMGj+DgrfpcsXkD8D/urx2belWs8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R6ZRntET; arc=fail smtp.client-ip=40.107.100.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="AZ53U4eh"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R6ZRntET"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pUWZBzPbviV+Z08xg1wDdv0RRR9colr4vdB/nxtmZrM0s9Pwldn6cBTIQOzju48GPMrc+JLQl0HOUMlhmuWh+kyhQmCPrgISZsFZ2ovStUAIY/35Jt0OrCJ6tqMumfj0jBoFaPCQP5l644b99MHfqINBVU49gVQqLePvtmcjYfj2NLoIbdjFVmm3CENazkbcGO6lsdW99CwvbRJlotCkszRdbDooZnLRmvxH+tnYX52CSQNdgI5JQv70cei+BL2uDa7WvZXLNor0zrbg6mcY/osoSWM6MzxZra8BM9D04O/JcbLeUqNoABHP/qN8iyLIC3QA9rfsf2BBLkGGXt7XhQ==
+ b=cxW/2Poa6QaIy+Uneik+dhAAAk9+1guCJA8ut7BE+7ky0RjNSckdqEfnw83UKlXJGaPUKBSjf4Q/gcs6K/RN3b8UVeOZ9I6SIm3aLbXjfpKE49QnYd7MgOOsu5wLIYRlitnQYiYdoB75EmPRJuc6eN5wbz++VvSD8iXVW/RUmmhCcXzSb6LcUh3OhwxKrIeSWrX3QhN2IOfpMLYrWagmZc99K/ArwbzVQWvgnsqYkJxtYZSpcpco4mNh/auh0gDYiLUgwJK4jGaydg6hctjQkNb5j7CGXlwT6sA2PiJHND0oU2rpgT59efNzYiZQWFrB96jvMdLJb0ZkhAd61rg3lg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gB1y+6rEK1sfsq9sQRul2vx1dcwSkAYJRjGki98xQoY=;
- b=Y8mNniXkJhuUF2psXOnCZIPNYmC+W+RAsiEi9Cph9lrSh+zApnvK2GXJRe9Gvly5kRl9Rl4VNgLXMb/1x2QF8RdpGUAsUlENAoRAZmzIyoGH2Sj+cEbT0b94Vr23AgmZ5ebdGVjHqPb7jj1AijyHyfiVVIzFhv83GQWCCdybsC9LHE0WND2GT3mOjL4Kw5SFBvqqmJ11foZxKKpCVh3JwnnrGszymWKHWCPGVLwPtQEJqK3tryoNiRzUK8OUBdY+97k8VZZFcWSO6IVD7p8fp36tSSzJwZrKaS7HwyGJNfPzdTy+bAhm/OinuBOP9LJA6E06wXrh9bYRQqCIQQHrfg==
+ bh=OgPoNmnVTPJmTIDcScgVs0yDzvWuFLnIzxJFNhox3/w=;
+ b=hZcATgbfpaqZEVapo6c/uyKa2HO8zOdFZSJh3DRhe7mIDbAyp+rN4Rw2tV7Tgkv4eBGSoQ7e+DBYh9TUsiQi75vbMCypi47WSGxNNbv2ldAmKHHxA4h2v1xjI2OEsZJc5N5m+G5rh+Y0d10uSmr0bKw4MuhX2S1poq0ysASQCL7jpHEuVtfd2trGyZIPVK1L3W87FcbT50d775AG4cBMfK2EoYK9DBLmEi1ILMzpPNBnStzjFvQW8EoxhFYCsjkZO5pZb6JRB3zBtpKEAIyndVzc57HCGUcszIpIoMjTqejFcLiWVJkqp/1nWLUf5lw5rf9PemsLCtSnbSDb4ieV3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gB1y+6rEK1sfsq9sQRul2vx1dcwSkAYJRjGki98xQoY=;
- b=AZ53U4ehXzFrQrj16b/hqfGJ+0nBEP99OYaoWgXP9a1mPKHgCfBgxcb2HwH+AqB/Id8oza9Q438EqXltiCGSWcoTGakkkSNCjqgxMY39yXzBYxCjMFuu9P1ZQ6J29BRLz5zZeZLQEDERPobQQJ4XAkUIORUtenjcADk+zJkCddQ=
+ bh=OgPoNmnVTPJmTIDcScgVs0yDzvWuFLnIzxJFNhox3/w=;
+ b=R6ZRntETpJGz/igpAS2Hig5Q4RWkLNRh5nE/kGglbZ/Mb4qR/h+iWJGQbJ2bCvApJwVCWssx9g3KskTwY5GhbJ5WOa9YdONkfWj6ZQmY38tz8UGhXrguDPuZKw7WuOaez7YKT7aypRnD7uQOaDkl0F2rf1a6QB1pHv6ptrCuqx4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by OS3PR01MB8351.jpnprd01.prod.outlook.com
- (2603:1096:604:192::8) with Microsoft SMTP Server (version=TLS1_2,
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA0PR12MB7463.namprd12.prod.outlook.com (2603:10b6:806:24b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 00:40:10 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%5]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 00:40:10 +0000
-Message-ID: <87zfh6yoly.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-usb@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 3/3] usb: renesas_usbhs: Reorder clock handling and power management in probe
-In-Reply-To: <20250327120737.230041-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250327120737.230041-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-	<20250327120737.230041-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Fri, 28 Mar 2025 00:40:09 +0000
-X-ClientProxiedBy: TYCPR01CA0205.jpnprd01.prod.outlook.com
- (2603:1096:405:7a::6) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+ 2025 00:43:47 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 00:43:47 +0000
+Message-ID: <c9f4996a-0091-4649-a7d4-563685a6427c@amd.com>
+Date: Thu, 27 Mar 2025 19:43:45 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/x86: Add AMD ISP platform config for OV05C10
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com
+References: <20250327221423.1248521-1-pratap.nirujogi@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250327221423.1248521-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0136.namprd11.prod.outlook.com
+ (2603:10b6:806:131::21) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,116 +66,549 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS3PR01MB8351:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9437ea68-a3c6-4d6e-f946-08dd6d91182f
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA0PR12MB7463:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fc60314-2955-4cc9-d448-08dd6d9199b0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|366016|376014|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lrGbR/qGrazQopbAsAAUAMOiJZBCjx0zM1et0Y8gk7Se3k18m9uTgpYpY6pF?=
- =?us-ascii?Q?5t5bvHXeZKYFxiBfhfkOW0onASTaCYKVzKpvMghGKIlEKF/ivg9HEJWS06jx?=
- =?us-ascii?Q?F6jbA+GGbehCb2WhUzN3lcE4Rn3wHsS4wTBuCbr7l7wIw7+2EZk7dkDVev7v?=
- =?us-ascii?Q?lrmIS53KQtbHkKLR5aSn6X6N0s2OmA8zD1h+1R+kn84tLLacafHD0RpZkTXg?=
- =?us-ascii?Q?XQc498r5cLkpEHG156h9xwlwXidg8VEqYgYN2v2rK+4pn/XpWlWJkKy59I9N?=
- =?us-ascii?Q?reNJRzG//2ExZEYwxoVjuVrtIM7yCgb8Qij1OoOkQDLqL512yxyQMVv1uNPb?=
- =?us-ascii?Q?iC81p4G1PdkCTwT7X4i7TbZ/Pj5y7gtdkIP4Wc8oJMM4NTJ5s5LzXrwwEIA/?=
- =?us-ascii?Q?DTwfRGqKY5uX6B1EVZRhoZnaTDblB66Wd39PRT+zWYsLHLgKUJHNRpVM6PUk?=
- =?us-ascii?Q?fAlUUYwggbNMMpKdXgLgMiwR7Q2kdL7HK04MJ/vhcrXI8RbHMMHmAHCgmph6?=
- =?us-ascii?Q?Gu7vpni2ov232R/iKNoanfBSL5qJ0ti8WHRopadjeGYt004diUmjylSR9o1w?=
- =?us-ascii?Q?H9Hs8RhvXTKd9n0OhDNMI9wG5TVkyibalgbaG3qGr0BxpmPZDMsMkwYveVKz?=
- =?us-ascii?Q?VdXpG+/MT9rXmEHwehN3uATpofz1Uzu44uvlBH4VFldScWz79qWMuwVoctN1?=
- =?us-ascii?Q?4vEoEY3SxpqUAHVoO+aa/lAXOvRsa7oy2xqYwSErK8YB9jldJACZUgRLnUvz?=
- =?us-ascii?Q?gdYG1KErRu5C3GRVe++puMJG28RXjLBxidGAiapiaEU0op3BQ8NZ6aQ0gc65?=
- =?us-ascii?Q?LRXCEstHg2XXq+SkVLcWqeGgaypdWLgq/fc1zGhuZHd6vtQaqcDRbJwxm25Q?=
- =?us-ascii?Q?j3YZx66pfLB6Ib5Of16jfVYD2u4wriMscZqdCcR5f2MYuo0SnlsLnrg+Jk/l?=
- =?us-ascii?Q?/Wr/Ss/b2GuDetBtvkOSYv6iUdSDYrbxq6M3HPy47Cg20aN+uMkH0E5rtfAZ?=
- =?us-ascii?Q?gjQFrB0jrUo2VsGk26SduQqECzCKOk+Y6jgsfesCjwGffy+dYSTr69+lWZVf?=
- =?us-ascii?Q?P2VPv3DbwyHY7AoeiD1xEZkB1ZxHcU/PZSVj4VXAMPslgUN/EReSiAG2Srqy?=
- =?us-ascii?Q?bgD7zYQZz/iD9plLG3p6WaiFTjOc9E+Zn7aAGf/Xy69cG9gd2MhFeOewV8e/?=
- =?us-ascii?Q?NP/dpWGNyFnKkBfeNxO7zNGBrI91siwKAahzOGNfQIS1kQTJaPWm4i0adM3O?=
- =?us-ascii?Q?wTKmqkyxCQdY6WBWKRy46YPTKUDhAVubVG/lWfcl3DBHO9CHXILHTBxQLi2/?=
- =?us-ascii?Q?zC+tkvdzMMGR0A1mE9rMxURPt1lWiSgTYy3HoS3Ue1R50+FlHJIOewmBQAaJ?=
- =?us-ascii?Q?su338idzMLK1dwf3Sb4HDd/+qK/lJ1eI2n94k3qpoqwKcSyd1aB2XSbrAlES?=
- =?us-ascii?Q?EwzYWiibEuCdKORAxIAcM2JzMwtSVDQK?=
+	=?utf-8?B?NjJuWWNpNnpQczJyTVNhd04yQjdwdEFaYmRKUzdXVy81c3F2ZzlocitLMk52?=
+ =?utf-8?B?R3ljbHJiZ2dSVkFBc2hQa3AvRk01MHJjc1E0c21iWHRXaExFS2tmK0crQlQw?=
+ =?utf-8?B?WEI1UTNIV2xIeUxUY3JCWmR3aXJ3YVE0aHVXTzRWSzdiTmhoSFZBK09NMmFS?=
+ =?utf-8?B?KzNYKzhjbnhHUk1KTTRUY0EzQXMxOUtVNURSY2tkYU0vbkhGZFZLZzB2R0xw?=
+ =?utf-8?B?Z2VZbnFleG5mU0FqMnV1VWtDaGRseHdBdk5zQlkrWlpKbjRnS0haSDJKVDA5?=
+ =?utf-8?B?a2lpTG5xSktYOXZGTER6bU9QdjFCb3dpR3k0NlBmYnhKVmErRXVOdXc0ZUNC?=
+ =?utf-8?B?aGg2czJMZUEwUDh6Lzh4d3M4N1NkVkUvRDdGT09VYTRPaFZOcDNGRDZQYi8x?=
+ =?utf-8?B?enl6NGg4WXEvSnhwU3NjL2VKY1BQZVFWUGcyQTJOU1ZFVWs0QVNTZnAzZUIv?=
+ =?utf-8?B?bGRMdkZLQ0R3cXNLY2tlU2MvMkExdVVUUGhiMThkUzQxSmJ0RGtmbkNQQzQ0?=
+ =?utf-8?B?S0JuTHFzcnExSURqQ21GNGY2dVppUzQ2Y0tVNFF4d1cwaUpsT1lIaFJSZUtn?=
+ =?utf-8?B?dnhVSS9uaGJNOTA3ZUlhS0dLbmFGR2hmRE9malpiMW0rM1JzNjMrODkyVHdo?=
+ =?utf-8?B?c090RytXdEJBVTdNRVRRN2pVZnNsS0FDejUyRThNcFNJblkzRjlYZzFsSGVD?=
+ =?utf-8?B?NlIzNjlHUTVQUkFsbmR0Tkx4QzNVc0RNWlZpWG84WVFkZGc1K0VHRUd5Y3NJ?=
+ =?utf-8?B?TGRPdHBuVmU2Mk1XdG02eFVzUUpNUHRQWXNlZDZjUFB3NnczZ2h5SjZxNXZr?=
+ =?utf-8?B?UUhPdVVXdkxtQjVDeVdwWmRPbWFZL1UzNkJrNTdhbVpzTUhYT1F1N3BuQ01H?=
+ =?utf-8?B?d1hVYVRHdi9hbWdPejhLTG10RGtFc2xNNmVqYm10MUNRaXF0bHFJQ0ZXU1dp?=
+ =?utf-8?B?YmdtOGZGRGg3QlpORXBjcmFCTkliSlNSaUU1WnI4YzdzMnhtT2NPMzlLN3Rn?=
+ =?utf-8?B?clNBZGxtMkpoZUwrbGVid3BpemQ2ZDhteXRpd09CQkx4TFhwQmoveEQ4ODJa?=
+ =?utf-8?B?SDY0VWlzdllpekxaWmpiVFh1M1pUZWtjMVorSFlnSmJXaE1XS0Y5a1FDaXhI?=
+ =?utf-8?B?Ri8rUnRYRllPamxBZW41enVZY2Vha2FTeUN5aDB5RkdXZHVRY1dvMWpDcWJ1?=
+ =?utf-8?B?em12WUVxb1B3Snc4N3Z6U1VPRXNkVkdrenJZTkZoeXhnb3h1WTlRcVhOdDNx?=
+ =?utf-8?B?T2lTWkdnYWJxeFpHQzBpeVAraUJNZ1hqV0lGQnhMdmJKSndLZEF4cnJTbUlu?=
+ =?utf-8?B?bWpJVitWVUhhWmN1dFFZMmNyRGdQdVpWM0ZDSDFTNlN1T09YZ1dyVWpid3N1?=
+ =?utf-8?B?ckw4WFZHVDgzcnVCTEhhM0hnRmprdU4wWHYrRUtva0NwZ0hqcjNrYUVvU3ZV?=
+ =?utf-8?B?U3YrWDdHUGcwZnQ3cmpoVE5kZ3lQaEhVNW9ubTAzc0tvMFljb2dWUDlVYjNj?=
+ =?utf-8?B?N0wwdE9pbklvamQ0N1NpSDR0REw0L3huSnJ2eGlEeWt0R2hPMmduUDlqSkcy?=
+ =?utf-8?B?elJrSnJTVDE2V1dMM1hlTWZIaUJrdkI0TmxBNzF6aTdCbzB1c2NNcTBER2lU?=
+ =?utf-8?B?UHgvbmVrekJpdDRsa3ovUHNtNDZ6b0xTc2hpRzY4WkJzN25sU3Q4TGJqZ2Zk?=
+ =?utf-8?B?L3U3Q09HK1JuR1JNMnhUNW5ERTl6VWlNbkVaeFFQRWxNZVV6L3ozYUxENUo4?=
+ =?utf-8?B?YS9JMjV1SjJId2lrSDJ5ZDlZdUQ5MGdrT1lFeEVPclJMVms2aVI2NkZRNjVr?=
+ =?utf-8?B?Rm05Z0I2UmhjTS9ZN29hemVLZDR4L1BMTlZzc0xMNnhDUGhiMHZHTEt3c1JJ?=
+ =?utf-8?Q?vINmnefPqcV6H?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(366016)(376014)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NIBlNW7tnENnhushCS3wdyMUNH48kWbmA5sKyItCkBYGMm/EmXyEc86JoQB0?=
- =?us-ascii?Q?xWrCtWC2xEN+tB1wOHogt9J405vls/o584ntTe/yi+lo613IV/Wnug9DEbIK?=
- =?us-ascii?Q?xZVMkdFF6HiK5eCZs1+2Q22himOKkpX4xgg1CK5DkpX3X3EW93H3sD46NBg/?=
- =?us-ascii?Q?a7jDbISKsaLuPgw+VfQvAtW33ENDacByEDYt688HqnC/bdzeh1w/JJp5wlsg?=
- =?us-ascii?Q?gxQrPEy3nFoQ5HmKjUZdHTINNYrLhKJ4RdzlMfIlvMuCB7EtEDejmho9WtZF?=
- =?us-ascii?Q?jg/NvpP0Tr/FODXI3XWixMmVEvJEeNJSFG2rdFqTCX29ZoNB5fx6gKdgbB8R?=
- =?us-ascii?Q?MkoovpVcLCercCZyCoQZiedS9Hp6fMUD7R+h5Whm6onQPvqcHsX3ReEFyLkZ?=
- =?us-ascii?Q?eYpkMwJaP7pUqpGSYoKQe4KYT69EoWSgod5BuoNv62wV5q9zAGOjToVKEQn1?=
- =?us-ascii?Q?PqME5V97MDXfIlodV3cXwlh0s64E/5cx8/JumlgN0ETP+Yc2lWcJA8lc3+9w?=
- =?us-ascii?Q?fVEgQj7KBcG2H7Ac9T0NI9gOa5IliiQuoc0Q6koA08qYmBxXtMicF2jHpVTB?=
- =?us-ascii?Q?NYQ04J0v2h97HPcfwWUWc2NO4idLga+pIxHpItAFEsXHE1w90YWH2y4lSe3a?=
- =?us-ascii?Q?sxlb1BPebeGFjLMJh/53oZFAjvywxQRV9t1o/SNJd73aScYtfR8Hfk7oG3OK?=
- =?us-ascii?Q?YudJTbQhovIL67cQeExQVr1d7I1FgrsCskks4hDA5B2NZX8qUIwq6VYktgUT?=
- =?us-ascii?Q?F+NXsxRNRSjyeE7MN7/5lmgURx42ezH+gqpgEMlbptfhLeN9i7pJgdfeRR19?=
- =?us-ascii?Q?KLXbGn/ZKJMDYafFyljYsep30ERcQGkAVvblXbYkLHBco3l8VaXIMjx/Ov8u?=
- =?us-ascii?Q?4apNmQybz11Jql4yvRa3neTPLZ3H8rTGiaPd/j+KPMeceNR19z2U9ENfpBPw?=
- =?us-ascii?Q?QhGkMEBrYmQzBaMhhgLXukebcDDiE8k9P3HuqBdK+fzC6sUor2R4DEKttqtI?=
- =?us-ascii?Q?ZS1rCReIto6ngu1AcWy2zlStqolMMwvlSuFFPkZdG4P9RK57nvkiT85F/0Cl?=
- =?us-ascii?Q?DasYswgUD0b/Q/GmSPq5442vlgebFSbDmkJPBXHWpgS2/O50MFlu+c+R1eos?=
- =?us-ascii?Q?CmkjMwOYtC4A4nuob3n2kjYTR9Nf85+KBDGd9nbDgzOLPKCFeeFY4bqJZTv0?=
- =?us-ascii?Q?3UmrC7o7/8KCulqFJpOo8B/G5bAiAlGbA72UcYTzz+NukWNfz7eT7f5dIFl5?=
- =?us-ascii?Q?rsfdSYNN+bFcEKvnQoUs5y4nfs7BygqHGSQlo1Tj137yTdxJG6/8BFYBxcnX?=
- =?us-ascii?Q?uF0Z9IBvHUeKAUwN0gEqeM7QRTaLNOzJ1yY+U16Chyk9i1IOhQIxswaLz7Tt?=
- =?us-ascii?Q?2m1mDN3xjcRz6VXpIq/+hU4i0qFzd7tcFngB0ceaTAIS4OW7t4q7zQnWPaGF?=
- =?us-ascii?Q?UpIdUFuZ4l33P3urWfkzRX3TubMT8e5zGyXKvAY566qzfWW22wogy2bB2tbG?=
- =?us-ascii?Q?FBCIxJug4zwXaxqj2r6GviiHu0O1US9D/u5ResA1ojzmpy/pf+M09z2kIfRQ?=
- =?us-ascii?Q?p9wRgvRp+mr4ylgRmUPzb/XgNBqkBj1vo0qjkzzHV3wV5tGZH808N2WX2lyl?=
- =?us-ascii?Q?J09wqHpiU7AS6UqSi9IaGcI=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9437ea68-a3c6-4d6e-f946-08dd6d91182f
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+	=?utf-8?B?dWJZNzBjblQrUzB5dWxvNElXY25TZ1hneGYwa1d2SVcrQmRQSXcxWUhLY3Vv?=
+ =?utf-8?B?cjNWbFErQlR6MFplMkZrUWF2TWJkR3k3TjkvSUpUUGd3WmtWWFMwT2I1SDIr?=
+ =?utf-8?B?TTNoM3Y5RW9PUGdHYVlxZHkxOHhkZ0xzbGllZm1GT0Z3dURadFZRWGxEd0xw?=
+ =?utf-8?B?UDhuT3grOU51K3BLRmR3cXBkd2ZQdjNlN0l0Z21LQTE1c2tTR081U2JhaEpp?=
+ =?utf-8?B?WkNxT3NQUGtUR0F1S2w4NEhaTElUcWs0UmlnR0F2ZjB4WmlwL3RSTzFOWVBK?=
+ =?utf-8?B?bzNERUtQOEYvZWc4aXJWZmR2a0wwdnVnU3pmTmp5Zm9YckxUOCsvVmYwVFhv?=
+ =?utf-8?B?VllPSVRPV1Y3SzArK0IwRlU1eG5WMXd5WW9qYTc0QmFFOXl6Vm0yS1lFWC94?=
+ =?utf-8?B?YTV6NWdDMG5MU0lLZlJERnh3am9JY2R4WTNONTJNQndzVUJlakpWN2s3ZGRW?=
+ =?utf-8?B?MXJVYWxzdFhFcEhPaXlnK1lSL29pbWlCeFV5SHNTSlhpTW4rVVJ3RkljVTdp?=
+ =?utf-8?B?dXNpd3ZMMEFvbmoyUTNvU093TGZNOWVPUTZFWk1ZUzNmd093LzFyekdFZFhq?=
+ =?utf-8?B?YlVYYmFVd2dhUXlnbU5VWjhrNEhaUFY2S043WVNrTitNZnB6bVlSZTFhaTNP?=
+ =?utf-8?B?UFdIVmxKcTZwN2hNT0ZQdmU5SmwwQjM4ZlIvOElaTzNVWUk5VFJ0Ym05VzVn?=
+ =?utf-8?B?OEJHZm9ab05Ta2psVmN0bFlBcjQ4ZndXU09yK3VkZlU3Y3k1a0RCUGc4Qmtp?=
+ =?utf-8?B?blhMWnJLOXFuLzZ4TmU1d212dWdycFVUY2VvZVFUdWlDV09PMkpXQjl5V1dx?=
+ =?utf-8?B?TVcvU2k3UTRUWEF4V29LTG5qa1ZiSEg2cWRRaE40UE1nWndMaXpsQjEyUmtv?=
+ =?utf-8?B?bTdNcTBxclVDNDVFZ24zMDF3NjR2TXhiT3Rydy9rT0w2TGJtellsdFd4KzZw?=
+ =?utf-8?B?MTc3M2FDZThCRHNibjNXRlh4cFZWcDUvT3pRb29ZdXJDd3FvSDZHa3U4NER4?=
+ =?utf-8?B?NzJzSHFpTjZjUjJCUmNEN0p6eElWZVhvZmJqWEVqT0E3OGFQMFRRcDRnaFdZ?=
+ =?utf-8?B?Ung0UVNrbWNIdE93TGNPMWxMZ2FZbGlocWJnTm5zVGJpM2Z1a2R2anBwNk0z?=
+ =?utf-8?B?WGpCbUNYKzV1TWcydUVrNUxoaXlPYUgyellPbGg5RG9lVFZ3MWFIWXJZbUNz?=
+ =?utf-8?B?TytqeFdkQ3BJUDlXaXBGbVg1R3cxeDg5aUZEY0Z1aUFVS2hzakVnWmtIeGl0?=
+ =?utf-8?B?QmUvNmJZZXRiTG9nc2hSbGoyWG5WMjEwY1BLYmJ6cnJVbFVCUkZURDNDMTFC?=
+ =?utf-8?B?Y1dtVWp5WVMrYjZ3ejN1RklhVHBkSnZWMlFOVzN0Wmh6WUN6V2krakZqdWky?=
+ =?utf-8?B?VVVtQTVieW85K25vUlBSdEw5aWxvUzJ0THRucWU3WldoR1NhVTNMdEtUOC9k?=
+ =?utf-8?B?L0JJWmFYRmxiZUZOSGlqUGorRU5mRHN2QUNvKzNjYkE0bWVuZi84a1o2YjFO?=
+ =?utf-8?B?M01zZ3g2akVIS2dyVk1uUi9TZGVweVZ2OVErSkIrVGlSTzVOMS9QS3NucjBY?=
+ =?utf-8?B?K2FnOG9tNnNqUjM3eDhIWGxyeG53VXZ1MldmNzlVOTYyM1duZ3JTRFFiMXBH?=
+ =?utf-8?B?MzRjSFVNM1JjU0JYbnl0akQ0elV2TVVGR082U0cxR0ZyUkFIOEhlTjFsZHQz?=
+ =?utf-8?B?TC9EclV4Znl3YzAra3BGa3hzYjAwV0FxNmljL2RRaUFhcnNLUFh6NlQ5UXE5?=
+ =?utf-8?B?elZraVlDMWQ1Zm5CWDBMNWRTTXc0M3pXZEIrTmNhYTJVSGtia0tPRGtJMXN6?=
+ =?utf-8?B?c216KzlBSXIrRytyUUpaWDFTQ2crdTdkdjBoaVo3UFJDK1dta2l2cTI5NEN6?=
+ =?utf-8?B?cjFTeVpPUFhPcUVBcTByb0pIb3VqWUUzdGJqd2JIRzRNaStTWUh3NFdnaTYy?=
+ =?utf-8?B?bUVUM2srS0l2U3lkUG14ZndML3dmdmc1OWpvcjcrL041WjhHejJ6TzA4UnV4?=
+ =?utf-8?B?WjkwVDZ1SEQ5NG9EdXlqOENxdFN1VmtEYUJJN1ozSW94YVAvZUpnQmhCN2cw?=
+ =?utf-8?B?V2ljZmFycTlTeWJaZDVTSlpvNVhoLzZmUUVISDZyMnk2Q1JYTDRYMGdYNGVY?=
+ =?utf-8?Q?3bQ0F+5i7hbxrQBqI9c28b9ph?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fc60314-2955-4cc9-d448-08dd6d9199b0
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 00:40:10.1434
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 00:43:47.4250
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cn8G4ljisJ1Fwc4axROf1R6x7ygdEnG2wH7zlE5pG8jYPFvmWVXxzypMJGpyxz88ZZEtDU1rxEtWEqaSOZs6ctTMe2qU/OgZBnXQYpucktYetFnBK3R0dyu8KIUFcnBj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB8351
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Tiueq4f49vcrhEApbF/WmytTazZ6t0MeL7H8mu4KtlsYHtjNq4eZaEIXzdmJgB6X1OEJXqKa6W9OF/2HjHu1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7463
 
-
-Hi Prabhakark
-
-Thank you for the patch
-
-> Reorder the initialization sequence in `usbhs_probe()` to enable runtime
-> PM before accessing registers, preventing potential crashes due to
-> uninitialized clocks.
+On 3/27/2025 17:11, Pratap Nirujogi wrote:
+> ISP device specific configuration is not available in ACPI. Add
+> swnode graph to configure the missing device properties for the
+> OV05C10 camera device supported on amdisp platform.
 > 
-> Currently, in the probe path, registers are accessed before enabling the
-> clocks, leading to a synchronous external abort on the RZ/V2H SoC.
-> The problematic call flow is as follows:
+> Add support to create i2c-client dynamically when amdisp i2c
+> adapter is available.
 > 
->     usbhs_probe()
->         usbhs_sys_clock_ctrl()
->             usbhs_bset()
->                 usbhs_write()
->                     iowrite16()  <-- Register access before enabling clocks
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
+> ---
+> v2 -> v3:
+> 
+> - Remodelled as ACPI driver to bind the device when matching
+> acpi sensor device is detected. This eliminated the need for
+> dmi checks for platform validation.
+> 
+> - Added software nodes to align with camera device-tree format
+> to capture the camera device properties missing in the ACPI.
+> 
+> - Constructed swnode graph in the below format to successfully
+> parse the endpoint node using v4l2_fwnode_endpoint_alloc_parse().
+> 
+> OMNI5C10 {
+> 	refclk = 24MHz;
+> 	ports {
+> 		port@ {
+> 			endpoint {
+> 				bus-type = 4;
+> 				data-lanes = <1 2>;
+> 				link-frequencies = 925MHz;
+> 				remote-endpoint = &ov05c10_refs;
+> 			};
+> 		};
+> 	};
+> };
+> 
+> - GPIO sensor lookup is moved out of this driver scope, it is taken care
+> in isp driver module init.
+> 
+> - This platform driver is specific to AMD ISP4, hence renamed driver
+> name as "amd-isp4".
+> 
+>   drivers/platform/x86/amd/Kconfig    |  11 +
+>   drivers/platform/x86/amd/Makefile   |   1 +
+>   drivers/platform/x86/amd/amd_isp4.c | 354 ++++++++++++++++++++++++++++
+>   3 files changed, 366 insertions(+)
+>   create mode 100644 drivers/platform/x86/amd/amd_isp4.c
 
-This patch itself is not so bad idea, but basically, we should not assume
-the power/clock was enabled since kernel boot.
-In this driver, register access happen only during power enable <->  power
-disable (except your issue case), and this is good idea. So, the strange
-is usbhs_sys_clock_ctrl() call in usbhs_probe() (without power enable) I
-guess.
+Pratap,
 
-According to the comment, it is just caring boot loader, and
-usbhs_sys_clock_ctrl() itself will be called when usbhsc_power_ctrl() was
-called anyway. And more, if my understanding was correct, Renesas clock
-driver will stop all unused devices clock/power after boot.
-So maybe we can just remove strange usbhs_sys_clock_ctrl() from usbhs_probe() ?
+Overall I like the direction of this improvement.  A few small comments 
+I notice below.
 
-Thank you for your help !!
+> 
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index c3e086ea64fc..4b373edd750d 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -32,3 +32,14 @@ config AMD_WBRF
+>   
+>   	  This mechanism will only be activated on platforms that advertise a
+>   	  need for it.
+> +
+> +config AMD_ISP_PLATFORM
+> +	bool "AMD platform with ISP4 that supports Camera sensor device"
 
-Best regards
----
-Kuninori Morimoto
+Now that this is an ACPI driver this should be tristate because it can 
+now be a module.
+
+> +	depends on I2C && X86_64 && AMD_ISP4
+
+Now that this is an ACPI driver there should be a:
+
+depends on ACPI
+
+> +	help
+> +	  For AMD platform that support Image signal processor generation 4, it
+> +	  is necessary to add platform specific camera sensor module board info
+> +	  which includes the sensor driver device id and the i2c address.
+> +
+> +	  If you have a AMD platform that support ISP4 and with a sensor
+> +	  connected to it, say Y here
+> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+> index c6c40bdcbded..b0e284b5d497 100644
+> --- a/drivers/platform/x86/amd/Makefile
+> +++ b/drivers/platform/x86/amd/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+>   obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+>   obj-$(CONFIG_AMD_PMF)		+= pmf/
+>   obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
+> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+> new file mode 100644
+> index 000000000000..c4dce3779543
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/amd_isp4.c
+> @@ -0,0 +1,354 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * AMD ISP platform driver for sensor i2-client instantiation
+> + *
+> + * Copyright 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device/bus.h>
+> +#include <linux/dmi.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/init.h>
+> +#include <linux/i2c.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/units.h>
+> +
+> +#define AMDISP_OV05C10_I2C_ADDR		0x10
+> +#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
+> +#define AMDISP_OV05C10_HID		"OMNI5C10"
+> +#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
+> +#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
+> +
+> +/*
+> + * AMD ISP platform definition to configure the device properites
+
+properties
+
+> + * missing in the ACPI table.
+> + */
+> +struct amdisp_platform {
+> +	const char *name;
+> +	struct i2c_board_info board_info;
+> +	u8 i2c_addr;
+> +	struct i2c_client *i2c_dev;
+> +	u8 max_num_swnodes;
+> +	struct software_node **swnodes;
+> +};
+> +
+> +static struct amdisp_platform *ov05c10_amdisp;
+> +
+> +/* Top-level OV05C10 camera node property table */
+> +static const struct property_entry ov05c10_camera_props[] __initconst = {
+> +	PROPERTY_ENTRY_U32("refclk", 24 * HZ_PER_MHZ),
+> +	{ }
+> +};
+> +
+> +/* Root AMD ISP OV05C10 camera node definition */
+> +static const struct software_node camera_node = {
+> +	.name = AMDISP_OV05C10_HID,
+> +	.properties = ov05c10_camera_props,
+> +};
+> +
+> +/*
+> + * AMD ISP OV05C10 Ports node definition. No properties defined for
+> + * ports node for OV05C10.
+> + */
+> +static const struct software_node ports = {
+> +	.name = "ports",
+> +	.parent = &camera_node,
+> +};
+> +
+> +/*
+> + * AMD ISP OV05C10 Port node definition. No properties defined for
+> + * port node for OV05C10.
+> + */
+> +static const struct software_node port_node = {
+> +	.name = "port@",
+> +	.parent = &ports,
+> +};
+> +
+> +/*
+> + * Remote endpoint AMD ISP node definition. No properties defined for
+> + * remote endpoint node for OV05C10.
+> + */
+> +static const struct software_node remote_ep_isp_node = {
+> +	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
+> +};
+> +
+> +/*
+> + * Remote endpoint reference for isp node included in the
+> + * OV05C10 endpoint.
+> + */
+> +static const struct software_node_ref_args ov05c10_refs[] __initconst = {
+> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+> +};
+> +
+> +/* OV05C supports one single link frequency */
+> +static const u64 ov05c10_link_freqs[] __initconst = {
+> +	925 * HZ_PER_MHZ,
+> +};
+> +
+> +/* OV05C supports only 2-lane configuration */
+> +static const u32 ov05c10_data_lanes[] __initconst = {
+> +	1,
+> +	2,
+> +};
+> +
+> +/* OV05C10 endpoint node properties table */
+> +static const struct property_entry ov05c10_endpoint_props[] __initconst = {
+> +	PROPERTY_ENTRY_U32("bus-type", 4),
+> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+> +				     ARRAY_SIZE(ov05c10_data_lanes)),
+> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
+> +				     ARRAY_SIZE(ov05c10_link_freqs)),
+> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+> +	{ }
+> +};
+> +
+> +/* AMD ISP endpoint node definition */
+> +static const struct software_node endpoint_node = {
+> +	.name = "endpoint",
+> +	.parent = &port_node,
+> +	.properties = ov05c10_endpoint_props,
+> +};
+> +
+> +/*
+> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
+> + * fixed to align with the structure that v4l2 expects for successful
+> + * endpoint fwnode parsing.
+> + *
+> + * It is only the node property_entries that will vary for each platform
+> + * supporting different sensor modules.
+> + */
+> +#define NUM_SW_NODES 5
+> +
+> +static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
+> +	&camera_node,
+> +	&ports,
+> +	&port_node,
+> +	&endpoint_node,
+> +	&remote_ep_isp_node,
+> +	NULL
+> +};
+> +
+> +/* OV05C10 specific AMD ISP platform configuration */
+> +static const struct amdisp_platform amdisp_ov05c10_platform_config = {
+> +	.name = AMDISP_OV05C10_PLAT_NAME,
+> +	.board_info = {
+> +		.dev_name = "ov05c10",
+> +		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
+> +	},
+> +	.i2c_addr = AMDISP_OV05C10_I2C_ADDR,
+> +	.max_num_swnodes = NUM_SW_NODES,
+> +	.swnodes = (struct software_node **)ov05c10_nodes,
+> +};
+> +
+> +static const struct acpi_device_id amdisp_sensor_ids[] = {
+> +	{ AMDISP_OV05C10_HID },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
+> +
+> +static bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+> +{
+> +	return !strncmp(adap->owner->name, "i2c_designware_amdisp", 48);
+> +}
+> +
+> +static void instantiate_isp_i2c_client(struct i2c_adapter *adap)
+> +{
+> +	struct i2c_board_info *info = &ov05c10_amdisp->board_info;
+> +	struct i2c_client *i2c_dev = ov05c10_amdisp->i2c_dev;
+> +
+> +	if (i2c_dev)
+> +		return;
+> +
+> +	if (!info->addr) {
+> +		dev_err(&adap->dev, "invalid i2c_addr 0x%x detected\n",
+> +			ov05c10_amdisp->i2c_addr);
+> +		return;
+> +	}
+> +
+> +	i2c_dev = i2c_new_client_device(adap, info);
+> +	if (IS_ERR(i2c_dev)) {
+> +		dev_err(&adap->dev, "error %ld registering isp i2c_client\n",
+> +			PTR_ERR(i2c_dev));
+> +		i2c_dev = NULL;
+> +	} else {
+> +		dev_dbg(&adap->dev, "registered amdisp i2c_client on address 0x%02x\n",
+> +			info->addr);
+> +	}
+> +	i2c_put_adapter(adap);
+> +}
+> +
+> +static int isp_i2c_bus_notify(struct notifier_block *nb,
+> +			      unsigned long action, void *data)
+> +{
+> +	struct device *dev = data;
+> +	struct i2c_client *client;
+> +	struct i2c_adapter *adap;
+> +	struct i2c_client *i2c_dev = ov05c10_amdisp->i2c_dev;
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_ADD_DEVICE:
+> +		adap = i2c_verify_adapter(dev);
+> +		if (!adap)
+> +			break;
+> +		if (is_isp_i2c_adapter(adap))
+> +			instantiate_isp_i2c_client(adap);
+> +		break;
+> +	case BUS_NOTIFY_REMOVED_DEVICE:
+> +		client = i2c_verify_client(dev);
+> +		if (!client)
+> +			break;
+> +		if (i2c_dev == client) {
+> +			dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
+> +			i2c_dev = NULL;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block isp_i2c_nb = { .notifier_call = isp_i2c_bus_notify };
+> +
+> +static int release_amdisp_swnode_props(struct software_node **swnodes,
+> +				       u8 num_swnodes)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < num_swnodes; i++) {
+> +		if (swnodes[i] &&
+> +		    !IS_ERR_OR_NULL(swnodes[i]->properties)) {
+> +			property_entries_free(swnodes[i]->properties);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int initialize_ov05c10_swnode_props(struct amdisp_platform *p)
+> +{
+> +	struct software_node *sw_node;
+> +	int ret;
+> +	int i;
+> +
+> +	if (strncmp(p->name, AMDISP_OV05C10_PLAT_NAME,
+> +		    strlen(AMDISP_OV05C10_PLAT_NAME)))
+> +		return -EINVAL;
+> +
+> +	/* Initialize platform specific props for each node */
+> +	for (i = 0; i < p->max_num_swnodes; i++) {
+> +		sw_node = p->swnodes[i];
+> +
+> +		if (sw_node->properties) {
+> +			sw_node->properties = property_entries_dup(sw_node->properties);
+> +			if (IS_ERR(sw_node->properties)) {
+> +				ret = PTR_ERR(sw_node->properties);
+> +				goto error_release_node_props;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +error_release_node_props:
+> +	release_amdisp_swnode_props(p->swnodes, p->max_num_swnodes);
+> +	return ret;
+> +}
+> +
+> +static struct amdisp_platform *prepare_amdisp_platform(const struct amdisp_platform *src)
+> +{
+> +	struct amdisp_platform *isp_ov05c10;
+> +	const struct software_node **sw_nodes;
+> +	const struct software_node *sw_node;
+> +	struct i2c_board_info *info;
+> +	int ret;
+> +
+> +	isp_ov05c10 = kmemdup(src, sizeof(*isp_ov05c10), GFP_KERNEL);
+> +	if (!isp_ov05c10)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret = initialize_ov05c10_swnode_props(isp_ov05c10);
+> +	if (ret)
+> +		goto error_free_platform;
+> +
+> +	info = &isp_ov05c10->board_info;
+> +
+> +	sw_nodes = (const struct software_node **)src->swnodes;
+> +	ret = software_node_register_node_group(sw_nodes);
+> +	if (ret)
+> +		goto error_unregister_sw_node;
+> +
+> +	sw_node = (const struct software_node *)src->swnodes[0];
+> +	info->fwnode = software_node_fwnode(sw_node);
+> +	if (IS_ERR(info->fwnode)) {
+> +		ret = PTR_ERR(info->fwnode);
+> +		goto error_unregister_sw_node;
+> +	}
+> +
+> +	return isp_ov05c10;
+> +
+> +error_unregister_sw_node:
+> +	software_node_unregister_node_group(sw_nodes);
+> +
+> +error_free_platform:
+> +	kfree(isp_ov05c10);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static int amd_isp_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	ov05c10_amdisp = prepare_amdisp_platform(&amdisp_ov05c10_platform_config);
+> +	if (IS_ERR(ov05c10_amdisp)) {
+> +		pr_err("failed to prepare amdisp platform fw node");
+> +		return PTR_ERR(ov05c10_amdisp);
+> +	}
+> +
+> +	/*
+> +	 * Register notifier to instantiate i2c client when AMD ISP adapter
+> +	 * is ready.
+> +	 */
+> +	ret = bus_register_notifier(&i2c_bus_type, &isp_i2c_nb);
+> +	if (ret)
+> +		goto error_free_platform;
+> +
+> +	return ret;
+> +
+> +error_free_platform:
+> +	kfree(ov05c10_amdisp);
+> +	return ret;
+> +}
+> +
+> +static void amd_isp_remove(struct platform_device *pdev)
+> +{
+> +	bus_unregister_notifier(&i2c_bus_type, &isp_i2c_nb);
+> +	i2c_unregister_device(ov05c10_amdisp->i2c_dev);
+> +	release_amdisp_swnode_props(ov05c10_amdisp->swnodes,
+> +				    ov05c10_amdisp->max_num_swnodes);
+> +	software_node_unregister_node_group((const struct software_node **)
+> +					    ov05c10_amdisp->swnodes);
+> +	kfree(ov05c10_amdisp);
+> +}
+> +
+> +static struct platform_driver amd_isp_platform_driver = {
+> +	.driver	= {
+> +		.name			= AMD_ISP_PLAT_DRV_NAME,
+> +		.acpi_match_table	= amdisp_sensor_ids,
+> +	},
+> +	.probe	= amd_isp_probe,
+> +	.remove	= amd_isp_remove,
+> +};
+> +
+> +module_platform_driver(amd_isp_platform_driver);
+> +
+> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
+> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
+> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
+> +MODULE_LICENSE("GPL");
+
