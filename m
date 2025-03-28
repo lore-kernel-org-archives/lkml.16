@@ -1,114 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FCA1EB5FF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8645186294;
+	Fri, 28 Mar 2025 23:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743204192; cv=none; b=tzN6QbV5B27stinftgrJDCpaLVu+vT1n71iWBHbVCvHhcU92Os2jfv+dKRfNzALVy11YeSnnl/wzDfxEX3jI5txjMyXxYKhBnHTh3zmtxX1/QYjs1eYMElAylVyUece9JXox/Ff4Xh5Zdv6lOZnkWI8Dx0+dbdL/QaPrRHtGo1M=
+	t=1743204293; cv=none; b=QQMmE2EJkUktew5eSwNoTMKuUaB0FyNI9AXsFOetpHhr5n30XrQuejUUgjXgRS+8EFEo2HHnkGXIM+BWxZRTFtGb32sxI/C6v+eJTUYtUa8pplkAAEe8G63WOAvF7ehn9PBADUfrFHxW1g49Q+zZIBrTUUbYGCdKOLQLZbyZEjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743204192; c=relaxed/simple;
-	bh=FYCb6jI6gE0zR+3jmwvLvCpodqrhqxP4ovGMxUIe7yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hw1dF9DzlJY4BHMIZ/ESNChAS2HBMM5yeal2eIXf27sm0r49cEuAkVzEhj82JBkLD91/F9wIhNib32VOSkNDaRmge4BFXhOI4CT/Ds+DC9sWayB7KIWWbwTKvXk7zBJ24gMPA6TK1etaJaVGP/4vq0ZpB8BpdwtGQC/4hu8/0cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZeZFHCS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743204293; c=relaxed/simple;
+	bh=JfdSNMYDw9Qg7aDZQJB743RqNGYA8J2GewrataBZi2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iQZMRzL/SH6QNcNct3/YvzHV74WYFsBu3felBvOL7+WT8Hfmy1WbIa6cMhKC/j1focTz6CEVpYBwTL32edW+q0qgxkzNxSinR0k7f+O2sldkqh1WLLs2TRdUYZZyRFNqcaw7Qyq/3HyzJKhpiArfTpBUDfpTddsdkeMGGvJLgH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9MvPAoC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZeZFHCS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D958AC4CEE4;
-	Fri, 28 Mar 2025 23:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9MvPAoC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD6E9C4CEE4;
+	Fri, 28 Mar 2025 23:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743204192;
-	bh=FYCb6jI6gE0zR+3jmwvLvCpodqrhqxP4ovGMxUIe7yE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GZeZFHCSU2iRgXNRV4t94f8mMZmPH3hvO97o8OPEYFbitp0KCur03hz6+ke4tAumn
-	 06ylm1183YhIx7IgWaOKwDqoxocaotAIaxLW7QlfsVqlAcCREQNNFKhXH+vIswg+Km
-	 1I4CBVZr6C4QXzE1WvAXl3Vt4uz+5/t1eddJuBLNNx1LVNKXMNQ7+qvFhZlai7e2aU
-	 qlFNYFyJHP4nhCDrfmDjezKlC9kLdVG4rJI7s7hfTMDEGKoJNKoJ+lGMhqxKNe46UW
-	 aMFOq8OIZSthcA50NotlCBEu1SzfFzOJ3QFV2e6lphMMNUgQ6Y/lrKCUOGzsy+jSt7
-	 +zShGmmdWJQeA==
-Date: Fri, 28 Mar 2025 16:23:11 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "H. Peter Anvin (Intel)" <hpa@zytor.com>
-Cc: Michael Kelley <mhklinux@outlook.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, "Xin Li (Intel)" <xin@zytor.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- Nikolay Borisov <nik.borisov@suse.com>, "x86@kernel.org" <x86@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [tip: x86/core] x86/cpufeatures: Generate the
- <asm/cpufeaturemasks.h> header based on build config
-Message-ID: <20250328162311.08134fa6@kernel.org>
-In-Reply-To: <SN6PR02MB4157D2C2260E6BD529BCF08AD4A52@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250305184725.3341760-3-xin@zytor.com>
-	<174238223959.14745.6970497940010271580.tip-bot2@tip-bot2>
-	<SN6PR02MB415756D1829740F6E8AC11D1D4D82@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<CAHk-=whChrRQ0kuRuZo2+9D+J2BO9Q=1CV2eEk_yjrNi8kdjBg@mail.gmail.com>
-	<SN6PR02MB4157D2C2260E6BD529BCF08AD4A52@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=k20201202; t=1743204293;
+	bh=JfdSNMYDw9Qg7aDZQJB743RqNGYA8J2GewrataBZi2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X9MvPAoCm7WRo1effocyLLurFNuYDXL6yDVbwylQ8Q8Nte+pJQTZcWE8D34coT7Ho
+	 57ceU+SnUtjP+pyefXOpZp0Dgar72NHUZHLKp0W+3q3jKlvrN6ZzSMgcFG6OnkyrSN
+	 4A7fzcVy93FOUiRvXl3BYBXNWwHAUOFoMZOHzPucpBhKm/uNhU0r8eczawpeDq0m0y
+	 s/b5temtGpmMzjs+w88EzwJSQroO8ufDuYgC+28lxQE4W7b3BKP4V9PS4SUR0OuNWW
+	 Xnh/XzfWJlivVqZQ3yZeuD3WD0TPa0uoB5+n8ZTEqC1AIsTHoXOJlcd3IZCIHHrnyk
+	 Q4ZO1Fl/BK6ww==
+Date: Fri, 28 Mar 2025 16:24:49 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [tip:objtool/urgent 9/23] vmlinux.o: warning: objtool:
+ cdns_mrvl_xspi_setup_clock: unexpected end of section
+ .text.cdns_mrvl_xspi_setup_clock
+Message-ID: <20250328232449.GA2955081@ax162>
+References: <202503282236.UhfRsF3B-lkp@intel.com>
+ <az2awlpfs7wt46kwql7ke3iereryykdroymfuaxawz5gozaxyi@rhlmbjkp3sdg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <az2awlpfs7wt46kwql7ke3iereryykdroymfuaxawz5gozaxyi@rhlmbjkp3sdg>
 
-On Sun, 23 Mar 2025 18:06:07 +0000 Michael Kelley wrote:
-> > > With this commit, changing the modified time on .config causes cpufeaturemasks.h
-> > > to be rebuilt, and then all dependencies on cpufeaturemasks.h are also rebuilt. It
-> > > doesn't figure out that nothing has changed in .config. A fair amount of
-> > > unnecessary rebuilding is done.  
+On Fri, Mar 28, 2025 at 09:31:15AM -0700, Josh Poimboeuf wrote:
+> On Fri, Mar 28, 2025 at 10:49:22PM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
+> > head:   1c9d28fdf70d4ae3e8dfeadee982461403c6bb50
+> > commit: c5995abe15476798b2e2f0163a33404c41aafc8f [9/23] objtool: Improve error handling
+> > config: x86_64-randconfig-161-20250327 (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/config)
+> > compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/reproduce)
 > > 
-> > Hmm. Normally it is the tools that *create* the config file that
-> > should notice that it hasn't changed, and not write a new one.
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202503282236.UhfRsF3B-lkp@intel.com/
 > > 
-> > See conf_write() in scripts/kconfig/confdata.c for the particular case
-> > of the regular "make *config*'
-> >   
-> > > I'm seeing this changed behavior specifically with the make-kpkg script on
-> > > Ubuntu 20.04. It's not clear why make-kpkg is updating the modified time
-> > > on .config, but prior to this commit, that update had no negative effect.  
+> > All warnings (new ones prefixed by >>):
 > > 
-> > It sounds like the make-kpkg script should probably be fixed to not
-> > overwrite the config file unconditionally, and do that "make
-> > oldconfig" and friends do, which is to notice when it hasn't changed
-> > and leave it alone.
-> >   
+> > >> vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock: unexpected end of section .text.cdns_mrvl_xspi_setup_clock
+> > >> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
 > 
-> For the record, the problem with make-kpkg is that it does "make syncconfig"
-> multiple times in prepping to build, sometimes passing environment
-> variable ARCH=x86 and sometimes ARCH=x86_64. scripts/kconfig/conf uses
-> that environment variable to decorate the header of the generated .config
-> file, and to force a rebuild in include/config/auto.conf.cmd if the value changes.
-> So flipping between two different values causes a "new" .config to be
-> generated even though nothing of substance has changed.
+> Hi test robot,
 > 
-> I hacked the make-kpkg scripts to consistently use ARCH=x86 and that
-> solves the problem. But this is a private hack as make-kpkg hasn't been
-> updated in years and is no longer supported. In Ubuntu releases, it is
-> deprecated after 20.04.
+> I'm unable to recreate this one:
+>  
+> >> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
+> 
+> Can you rerun with OBJTOOL_VERBOSE=1 added to the make command line (or
+> exported)?
 
-FWIW this also makes netdev CI melt down. Combination of allmodconfig
-insisting on WERROR, us insisting on W=1, and this change insisting on
-full kernel rebuild every time .config is touched :( IOW we do:
+I was able to reproduce this with LLVM 20.1.1 from kernel.org [1]. This
+configuration has full LTO enabled so the build takes some time... it
+also has several UBSAN configurations enabled but turning off UBSAN does
+not resolve it (could be KCOV related?).
 
-	make allmodconfig
-	./scripts/config -d werror
-	make -j W=1
+$ git cite
+ae958b12940b ("objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC")
 
-Could a hack like this fly? I don't see an easy way out ..
+$ curl -LSso .config https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/config
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index a607769a25af..35401572d039 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -276,7 +276,9 @@ cpufeaturemasks.awk := $(srctree)/arch/x86/tools/cpufeaturemasks.awk
- cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
- targets += $(cpufeaturemasks.hdr)
- quiet_cmd_gen_featuremasks = GEN     $@
--      cmd_gen_featuremasks = $(AWK) -f $(cpufeaturemasks.awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
-+      cmd_gen_featuremasks = $(AWK) -f $(cpufeaturemasks.awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@.new; \
-+       if [ -e $@ ] && cmp -s $@ $@.new; then rm $@.new; \
-+       else mv $@.new $@; fi
- 
- $(cpufeaturemasks.hdr): $(cpufeaturemasks.awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
-        $(shell mkdir -p $(dir $@))
+$ make -skj"$(nproc)" ARCH=x86_64 LLVM=1 OBJTOOL_VERBOSE=1 olddefconfig vmlinux
+...
+vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x33e: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x254: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x1d4: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x1b8: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x156: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x13a: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0xda: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0xbe: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x63: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x48: (branch)
+vmlinux.o: warning: objtool:   synaptics_report_mt_data+0x0: <=== (sym)
+./tools/objtool/objtool --hacks=jump_label --hacks=noinstr --static-call --uaccess --noinstr --link vmlinux.o.orig -o vmlinux.o
+
+vmlinux.o.orig is 391MB so probably not too shareable but if there is
+any other information I can give you, I am happy to do so.
+
+[1]: https://mirrors.edge.kernel.org/pub/tools/llvm/
+
+Cheers,
+Nathan
