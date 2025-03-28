@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711BA19AA5D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 20:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A597B19AA5D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 20:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743192507; cv=none; b=Yl4rbPVUeZhHMCesc5YbH1/autI8QP90JlvhhdIsMFCITZWyubVJfaPoNhtG9yWHJmSOpfHVz9l7Hb04R13LfGPgaZLvMAwrZRh4eW4qPZVvw7e8tl0HbEIZkkiKs5DIx7zCegtMpcPiGKmX9p+TTnZdg319CUgi6P5spD4jZUw=
+	t=1743192541; cv=none; b=cZm8wsUu+3tW7gqDMGp4EELrp8ep79oVejP5vgEfRK2jc3FYzMfogVjj26quQ+r3ToJu8m7M9/HPr/uSuEC+L5MzX0Xi2MT1CcvBnGkbKVVe1nUg96hXoLSYZFF8244quTB2zOHbHpT8of7ajLUn3kkhnq0JbOcItjrXZiVUJGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743192507; c=relaxed/simple;
-	bh=dOemWFZ2Ghac8mYDTTZBufb5X/5zUGve8J219pKC55c=;
+	s=arc-20240116; t=1743192541; c=relaxed/simple;
+	bh=a+jLtl2qib7wr1sg2Zn0XQvOlYluA2aNoXcvOUZxZGw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q7+As1Vr59zYv6ohP8fVcVyetdLhsCCQzKSRX61hlh7YMsBA8UQbeBGj+sgpzqGjj9hJ6qlPUKhM2tr7F0uqVYr748lcEFE+VABq8lxk9vmpeFJMeRYL8X0SEJ0qp3tq5FqIVJ7+sqeRNiGMQiKS4+jBZIYS8Pmgpqgqt3NwqXs=
+	 MIME-Version:Content-Type; b=VA7rARGo8mSMRrlhegGlegL3CHk3X1c/lLeI1sKzIVhHX08MWUotMJauxtXXuSx5QV19PCUncxKVdIOwatW/pHwRlYYOFGK3mSyXluzZs+ssv3Y9f/VhRXGJyPIXar1AU+AeOdP9LIovyjTZcfvFlM5HLThUHMwbRgzzEyhqEas=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA77C4CEE4;
-	Fri, 28 Mar 2025 20:08:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0EC3C4CEE4;
+	Fri, 28 Mar 2025 20:08:58 +0000 (UTC)
 From: Catalin Marinas <catalin.marinas@arm.com>
-To: anshuman.khandual@arm.com,
-	david@redhat.com,
-	will@kernel.org,
-	ryan.roberts@arm.com,
+To: will@kernel.org,
 	mark.rutland@arm.com,
-	ardb@kernel.org,
-	yangyicong@hisilicon.com,
-	joey.gouly@arm.com,
-	quic_cgoldswo@quicinc.com,
-	quic_sudaraja@quicinc.com,
-	akpm@linux-foundation.org,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
+	oliver.upton@linux.dev,
+	maz@kernel.org,
+	Jinqian Yang <yangjinqian1@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	quic_tingweiz@quicinc.com
-Subject: Re: [PATCH] arm64: mm: Correct the update of max_pfn
-Date: Fri, 28 Mar 2025 20:08:21 +0000
-Message-Id: <174319246799.4193737.10993641019327469518.b4-ty@arm.com>
+	wangzhou1@hisilicon.com,
+	shameerali.kolothum.thodi@huawei.com,
+	liuyonglong@huawei.com,
+	jiangkunkun@huawei.com,
+	yangjinqian1@huawei.comm,
+	xueshan2@huawei.com
+Subject: Re: [PATCH] arm64: Add support for HIP09 Spectre-BHB mitigation
+Date: Fri, 28 Mar 2025 20:08:56 +0000
+Message-Id: <174319246800.4193737.16068593925893722302.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250321070019.1271859-1-quic_zhenhuah@quicinc.com>
-References: <20250321070019.1271859-1-quic_zhenhuah@quicinc.com>
+In-Reply-To: <20250325141900.2057314-1-yangjinqian1@huawei.com>
+References: <20250325141900.2057314-1-yangjinqian1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,25 +43,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 21 Mar 2025 15:00:19 +0800, Zhenhua Huang wrote:
-> Hotplugged memory can be smaller than the original memory. For example,
-> on my target:
+On Tue, 25 Mar 2025 22:19:00 +0800, Jinqian Yang wrote:
+> The HIP09 processor is vulnerable to the Spectre-BHB (Branch History
+> Buffer) attack, which can be exploited to leak information through
+> branch prediction side channels. This commit adds the MIDR of HIP09
+> to the list for software mitigation.
 > 
-> root@genericarmv8:~# cat /sys/kernel/debug/memblock/memory
->    0: 0x0000000064005000..0x0000000064023fff    0 NOMAP
->    1: 0x0000000064400000..0x00000000647fffff    0 NOMAP
->    2: 0x0000000068000000..0x000000006fffffff    0 DRV_MNG
->    3: 0x0000000088800000..0x0000000094ffefff    0 NONE
->    4: 0x0000000094fff000..0x0000000094ffffff    0 NOMAP
-> max_pfn will affect read_page_owner. Therefore, it should first compare and
-> then select the larger value for max_pfn.
 > 
-> [...]
 
-Applied to arm64 (for-next/core), thanks!
+Applied to arm64 (for-next/core), thanks! Please check that I added it
+in the right place as it was conflicting with the current for-next/core.
 
-[1/1] arm64: mm: Correct the update of max_pfn
-      https://git.kernel.org/arm64/c/89f43e1ce6f6
+[1/1] arm64: Add support for HIP09 Spectre-BHB mitigation
+      https://git.kernel.org/arm64/c/e18c09b204e8
 
 -- 
 Catalin
