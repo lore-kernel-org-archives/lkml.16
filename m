@@ -1,60 +1,61 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D74221ABD1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D10B676;
+	Fri, 28 Mar 2025 11:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743159786; cv=none; b=RSS3iZDvK0qf3n1XWf3kbAOgV8nMAPTyauqGRBt25U7qrsPfrPzV25gr5ux/z21XkK8mNLafuJ8dQHVGw+S2n8DVpFvTVtsLnyrnDupOhihxNAv7cQW5roCkDrUanm0LRfLiQ/Bygs4yzaBG0Yo8LnFvivuxLvDSaYPpri/hLwI=
+	t=1743159996; cv=none; b=hFUUzBxwBwIvj6ROv7gK+XZKE2SCfIi7MPQXT+KZdahvfB2+3eZ8rxWqJttprs48Zb7y6l2NU3NJuoem7a3B+1oD1lUJ2NsIIw6Wpr6hZQ1S1R+slTY0FnTSIg9TqqoPkhdu3GVbB2dEPN5/JSzctLaWNE6CNkQqzyCe3vDI9q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743159786; c=relaxed/simple;
-	bh=FOFWiAYSyx44KVxMf8ZVYfZw2/T0gUlKOs0RhszDu0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ihKc8XIQ3RIMwv5Nn5BpHu4T/NBYqtzlIoHfi7IRoAg9TGtPIEeTQXmG4P0dJ7kuW1lm2NsEVfacwSK29vpxV91G3qwr+KsBuvD2IB0d2h/BFLjLym/HqTC58bLbO5FBQwmfR4rBVHLTVahIVv3XKYbOFKJjO+YXea6lFqObkII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZlXwEPS2; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743159996; c=relaxed/simple;
+	bh=KITmyAiTQTCE6UaFMWxBRg+TpNuFpe6uMazmeLCKXxI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aRQabDILcHINsnIl+8fkOjvYhgBKXUYOJo34TL4knCazUxaN4IQlLw/ZPJgAI3w13NXnn7WmqH05xU5amfQFOAxy7vG2dYX7YGBFwoR/z5EwXkenLEDlYuQ5Gmsf5F/1/IjaeNsrD5+QDaOXJq0JUsk+v69KgT9vlhKg/b1e/+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wr68pL72; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZlXwEPS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743159782;
-	bh=FOFWiAYSyx44KVxMf8ZVYfZw2/T0gUlKOs0RhszDu0U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZlXwEPS2LocAW8WUtqhJFw1KPezF+mBfTVBdGEEnC/X7RlwkpiXvoED8NF3lLRgCN
-	 lEK2uoIj2vCi2WGn8W+fMx/Mh2ZWs/VS3sVvZ7m/WFAVTCEOgjtAcns2mbC1nkrJ+f
-	 LSoIp5NENjVR7E1SSqDMca05i623B7Bk0kyn5RGuv092gDnaxoCXcMBwdLE/ASAvDa
-	 oiRJ1NJkE9CGXNC4+L19DjA8tCLmobN2a5dfLkGQ8+BfQS5UuL280ikwTTPADDdxbv
-	 +V8VwotuDoBe33RBuKm0jL4bgOeO02Xg/NCCncyW4E9N/kijlQi+ZDSeOx7ZxuzOuj
-	 9hszRTdxsHAhA==
-Received: from debian.. (unknown [171.76.87.92])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 46B7F17E1062;
-	Fri, 28 Mar 2025 12:02:59 +0100 (CET)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	lumag@kernel.org,
-	quic_abhinavk@quicinc.com,
-	mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] drm/ci: uprev mesa
-Date: Fri, 28 Mar 2025 16:32:33 +0530
-Message-ID: <20250328110239.993685-4-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250328110239.993685-1-vignesh.raman@collabora.com>
-References: <20250328110239.993685-1-vignesh.raman@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wr68pL72"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743159995; x=1774695995;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KITmyAiTQTCE6UaFMWxBRg+TpNuFpe6uMazmeLCKXxI=;
+  b=Wr68pL723tnJkaJYVxv4lFMrm6Mdr5Kg3UGEU+bB/GTUjLfA7DPytNUT
+   oylWMpypb+8qIyJAyBfaCanelYgrq0OZABrhKsn99meOTYEp9geFmBKbP
+   QQpLga8BNo44sleHbRXP3BQF9OYocXTusccREIDfyqHKHKuVhb+nXqM+L
+   mQuOjBkt5kEA7+8c7KOYvCjZFikBHelUZ2k0TaBtQtUhZ2hK6ksqQ7Pho
+   S8KXjx11F4x9qRf/SPKg3s8I9EJjL5+bIMi7kmNT5XQDjounANevACSKE
+   w7HMh6jmSMoAxGeMm0jxfDw/QO0omFZNZd+jDLQ5gZcEI+JxWwu9nVSYl
+   Q==;
+X-CSE-ConnectionGUID: pTzjOig2SXKb/ESeL8++sw==
+X-CSE-MsgGUID: 1FjDI2PsS6K5Xgbv0c4wDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48175948"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="48175948"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 04:06:34 -0700
+X-CSE-ConnectionGUID: JySGm6xZT/Or262AOtoxow==
+X-CSE-MsgGUID: 3bOImvsSSgavOkKNMedv9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="125644421"
+Received: from win-uq4qlp9a0jq.iind.intel.com (HELO madhum.iind.intel.com) ([10.223.138.63])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Mar 2025 04:06:30 -0700
+From: madhu.m@intel.com
+To: gregkh@linuxfoundation.org
+Cc: heikki.krogerus@linux.intel.com,
+	linux-usb@vger.kernel.org,
+	pooja.katiyar@intel.com,
+	dmitry.baryshkov@linaro.org,
+	diogo.ivo@tecnico.ulisboa.pt,
+	lk@c--e.de,
+	linux-kernel@vger.kernel.org,
+	Madhu M <madhu.m@intel.com>
+Subject: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
+Date: Fri, 28 Mar 2025 17:02:27 +0530
+Message-Id: <20250328113227.554096-1-madhu.m@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,111 +64,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current s3cp implementation does not work anymore after the
-migration, and instead of fixing it and propagating the fix down to us,
-it's simpler to directly use curl. Uprev mesa [1][2] to adapt these
-changes. Also replace broken s3cp command with a curl wrapper call in
-drm-ci.
+From: Madhu M <madhu.m@intel.com>
 
-[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34120
-[2] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34244
+Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
+UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
+PD/TypeC debugging capability.
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+Signed-off-by: Madhu M <madhu.m@intel.com>
 ---
- drivers/gpu/drm/ci/build-igt.sh   | 2 +-
- drivers/gpu/drm/ci/build.sh       | 6 +++---
- drivers/gpu/drm/ci/gitlab-ci.yml  | 6 ++++--
- drivers/gpu/drm/ci/image-tags.yml | 2 +-
- drivers/gpu/drm/ci/lava-submit.sh | 2 +-
- 5 files changed, 10 insertions(+), 8 deletions(-)
+Changes in v1:
+- Removed UCSI_READ_POWER_LEVEL and UCSI_SET_PDOS commands.
+- Modified commit messages.
+---
+ drivers/usb/typec/ucsi/debugfs.c | 4 ++++
+ drivers/usb/typec/ucsi/ucsi.h    | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/ci/build-igt.sh b/drivers/gpu/drm/ci/build-igt.sh
-index eddb5f782a5e..caa2f4804ed5 100644
---- a/drivers/gpu/drm/ci/build-igt.sh
-+++ b/drivers/gpu/drm/ci/build-igt.sh
-@@ -71,4 +71,4 @@ tar -cf artifacts/igt.tar /igt
- # Pass needed files to the test stage
- S3_ARTIFACT_NAME="igt.tar.gz"
- gzip -c artifacts/igt.tar > ${S3_ARTIFACT_NAME}
--ci-fairy s3cp --token-file "${S3_JWT_FILE}" ${S3_ARTIFACT_NAME} https://${PIPELINE_ARTIFACTS_BASE}/${KERNEL_ARCH}/${S3_ARTIFACT_NAME}
-+s3_upload ${S3_ARTIFACT_NAME} https://${PIPELINE_ARTIFACTS_BASE}/${KERNEL_ARCH}/
-diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
-index 284873e94d8d..6fb74c51abe2 100644
---- a/drivers/gpu/drm/ci/build.sh
-+++ b/drivers/gpu/drm/ci/build.sh
-@@ -148,13 +148,13 @@ if [[ "$UPLOAD_TO_MINIO" = "1" ]]; then
+diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
+index eae2b18a2d8a..92ebf1a2defd 100644
+--- a/drivers/usb/typec/ucsi/debugfs.c
++++ b/drivers/usb/typec/ucsi/debugfs.c
+@@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
+ 	case UCSI_CONNECTOR_RESET:
+ 	case UCSI_SET_SINK_PATH:
+ 	case UCSI_SET_NEW_CAM:
++	case UCSI_SET_USB:
+ 		ret = ucsi_send_command(ucsi, val, NULL, 0);
+ 		break;
+ 	case UCSI_GET_CAPABILITY:
+ 	case UCSI_GET_CONNECTOR_CAPABILITY:
+ 	case UCSI_GET_ALTERNATE_MODES:
++	case UCSI_GET_CAM_SUPPORTED:
+ 	case UCSI_GET_CURRENT_CAM:
+ 	case UCSI_GET_PDOS:
+ 	case UCSI_GET_CABLE_PROPERTY:
+ 	case UCSI_GET_CONNECTOR_STATUS:
+ 	case UCSI_GET_ERROR_STATUS:
++	case UCSI_GET_PD_MESSAGE:
++	case UCSI_GET_ATTENTION_VDO:
+ 	case UCSI_GET_CAM_CS:
+ 	case UCSI_GET_LPM_PPM_INFO:
+ 		ret = ucsi_send_command(ucsi, val,
+diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+index 3a2c1762bec1..72b9d5a42961 100644
+--- a/drivers/usb/typec/ucsi/ucsi.h
++++ b/drivers/usb/typec/ucsi/ucsi.h
+@@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
+ #define UCSI_GET_CONNECTOR_STATUS		0x12
+ #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
+ #define UCSI_GET_ERROR_STATUS			0x13
++#define UCSI_GET_ATTENTION_VDO			0x16
+ #define UCSI_GET_PD_MESSAGE			0x15
+ #define UCSI_GET_CAM_CS			0x18
+ #define UCSI_SET_SINK_PATH			0x1c
++#define UCSI_SET_USB				0x21
+ #define UCSI_GET_LPM_PPM_INFO			0x22
  
-     ls -l "${S3_JWT_FILE}"
-     for f in $FILES_TO_UPLOAD; do
--        ci-fairy s3cp --token-file "${S3_JWT_FILE}" /kernel/$f \
--                https://${PIPELINE_ARTIFACTS_BASE}/${DEBIAN_ARCH}/$f
-+        s3_upload /kernel/$f \
-+                https://${PIPELINE_ARTIFACTS_BASE}/${DEBIAN_ARCH}/
-     done
- 
-     S3_ARTIFACT_NAME="kernel-files.tar.zst"
-     tar --zstd -cf $S3_ARTIFACT_NAME install
--    ci-fairy s3cp --token-file "${S3_JWT_FILE}" ${S3_ARTIFACT_NAME} https://${PIPELINE_ARTIFACTS_BASE}/${DEBIAN_ARCH}/${S3_ARTIFACT_NAME}
-+    s3_upload ${S3_ARTIFACT_NAME} https://${PIPELINE_ARTIFACTS_BASE}/${DEBIAN_ARCH}/
- 
-     echo "Download vmlinux.xz from https://${PIPELINE_ARTIFACTS_BASE}/${DEBIAN_ARCH}/vmlinux.xz"
- fi
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index 6850ce99a673..e54e382bf5fb 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -1,6 +1,6 @@
- variables:
-   DRM_CI_PROJECT_PATH: &drm-ci-project-path mesa/mesa
--  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha 82ab58f6c6f94fa80ca7e1615146f08356e3ba69
-+  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha f73132f1215a37ce8ffc711a0136c90649aaf128
- 
-   UPSTREAM_REPO: https://gitlab.freedesktop.org/drm/kernel.git
-   TARGET_BRANCH: drm-next
-@@ -20,8 +20,10 @@ variables:
-           rm download-git-cache.sh
-           set +o xtrace
-   S3_JWT_FILE: /s3_jwt
-+  S3_JWT_HEADER_FILE: /s3_jwt_header
-   S3_JWT_FILE_SCRIPT: |-
-       echo -n '${S3_JWT}' > '${S3_JWT_FILE}' &&
-+      echo -n "Authorization: Bearer ${S3_JWT}" > '${S3_JWT_HEADER_FILE}' &&
-       unset CI_JOB_JWT S3_JWT  # Unsetting vulnerable env variables
-   S3_HOST: s3.freedesktop.org
-   # This bucket is used to fetch the kernel image
-@@ -253,7 +255,7 @@ make git archive:
-     - tar -cvzf ../$CI_PROJECT_NAME.tar.gz .
- 
-     # Use id_tokens for JWT auth
--    - ci-fairy s3cp --token-file "${S3_JWT_FILE}" ../$CI_PROJECT_NAME.tar.gz https://$S3_HOST/${S3_GITCACHE_BUCKET}/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/$CI_PROJECT_NAME.tar.gz
-+    - s3_upload ../$CI_PROJECT_NAME.tar.gz https://$S3_HOST/${S3_GITCACHE_BUCKET}/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/
- 
- 
- # Sanity checks of MR settings and commit logs
-diff --git a/drivers/gpu/drm/ci/image-tags.yml b/drivers/gpu/drm/ci/image-tags.yml
-index c04ba0e69935..53fe34b86578 100644
---- a/drivers/gpu/drm/ci/image-tags.yml
-+++ b/drivers/gpu/drm/ci/image-tags.yml
-@@ -1,5 +1,5 @@
- variables:
--   CONTAINER_TAG: "20250307-mesa-uprev"
-+   CONTAINER_TAG: "20250328-mesa-uprev"
-    DEBIAN_X86_64_BUILD_BASE_IMAGE: "debian/x86_64_build-base"
-    DEBIAN_BASE_TAG: "${CONTAINER_TAG}"
- 
-diff --git a/drivers/gpu/drm/ci/lava-submit.sh b/drivers/gpu/drm/ci/lava-submit.sh
-index f22720359b33..a1e8b34fb2d4 100755
---- a/drivers/gpu/drm/ci/lava-submit.sh
-+++ b/drivers/gpu/drm/ci/lava-submit.sh
-@@ -54,7 +54,7 @@ cp artifacts/ci-common/init-*.sh results/job-rootfs-overlay/
- cp "$SCRIPTS_DIR"/setup-test-env.sh results/job-rootfs-overlay/
- 
- tar zcf job-rootfs-overlay.tar.gz -C results/job-rootfs-overlay/ .
--ci-fairy s3cp --token-file "${S3_JWT_FILE}" job-rootfs-overlay.tar.gz "https://${JOB_ROOTFS_OVERLAY_PATH}"
-+s3_upload job-rootfs-overlay.tar.gz "https://${JOB_ARTIFACTS_BASE}"
- 
- # Prepare env vars for upload.
- section_switch variables "Environment variables passed through to device:"
+ #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
 -- 
-2.47.2
+2.34.1
 
