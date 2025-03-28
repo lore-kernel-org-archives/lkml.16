@@ -1,178 +1,119 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7DA18E743
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF4DDDC5
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 16:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743177211; cv=none; b=PxTxna4ks0fUVAcQcUjw+q/iV3aboCu5ogtilkyzpLbHp5zBCXUk5xfXWD2wb61O+Tiwca3JAQ5nPn5FuZWuZ3kPiuWg1jcnBeMcWH1sUCcEdz6eWVl8grdw/lykBPAVPO+2KaNbnh/OG0t0veA5i6l0DvvuVU7O9maLQXSiJ4A=
+	t=1743177733; cv=none; b=q+4efaF6ygyTz38oq90vHWxsZ5BiHlwLlFLqMRFf8HqdjUfD6QwA9rR3XORD6V9RJ7k2Z55nwaL+S0QfgESB7aMqzOHuDwkGC0qeBwcjAqrWkhD5IK2LEK1OqXg1GmvcF1xgrIBoLQEs1nYcRCnXONWgcZEayEcQaqwljBdltCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743177211; c=relaxed/simple;
-	bh=eU2IFlVcUXhHGCn51zsa+IGEOnlAobgV8IKSyXgb6Jk=;
-	h=Message-ID:Date:MIME-Version:Cc:From:Subject:To:Content-Type; b=MCHImmZTzOMXlTz+cu8VS7sslQO6x4nb9CtX7mHVhhqJrRhLLxn5Vijus/4yJmC3WeSytqtwwEIe4Yi5xgOyMkQo/Q6zT1Qdyg8xzic2AQBscIjmtEtRj9/iT6Y2+Z8L9nbl3BpyxDAcfBfFcV4piHGitVNOTQb2xaorVwpP4+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bAYmg3OH; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743177733; c=relaxed/simple;
+	bh=qYBYMvjeXDPAYzY2e1Wu2w4F6bkztqDcKffiaC3Wj8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=btwaymhByCfbte8uIQ7ht+CyFfS636mYgOSUTPovQuz+tz9bd935nyp3DGyO8wLogNHhwVe4JMjI37IewqwmQ9m72LHC8MYEm4LqwC1tSPjpx4zBHbqyUdL6myOdRkCuXnKcIb3h9m8+eamOoU0Bo/3oKcbtBXQN0FPP0HZVZpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=HR+uczkC; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bAYmg3OH"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso23853155e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:53:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="HR+uczkC"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72bf87b8fcbso657059a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743177208; x=1743782008; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:from:cc:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1743177731; x=1743782531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xH26V306Jr52bnWIfYi5tdVx5/+BWzk4/60gsilP3xo=;
-        b=bAYmg3OHBbr+ATINBDewj6EAtFdUxqY02eJl9iouhdGBZla1JrPNho/DARvx7V8dNf
-         KtxLwisvWUsHwSZaSypHlppCKIXIq1MW0f2iKue/LDgU7P01agBWIsOjxtJsFQ+p+ORE
-         tBMABjCuULZkQJ0PO2Lky8dfWR1vGUeSIst5ECtj//JAaZ8QWKU70nj93aA2OSTp6xNk
-         mriHCdshwrkmV1BXpYFKK3cLYlajfrS/BtHrw/QZv0dpjlMWD6/E0hnkWtO44/fDro5Z
-         lwCcYtZSUyRfAWdsViA/0y4wa5IIz+FMBJWoWv/hAI9KQEEgGdCZbwi1Vdvqqr1w9wm8
-         +MFw==
+        bh=S6G0qiJQGXC3AXOvDxr6xdkIUMr8b4TCV0bYMLRr8pk=;
+        b=HR+uczkCjcBhqkTsBjBMKLMrmLDnxMpSsY2TEEBlKitDM/BLljW6QT8zPtiZz37/2H
+         VXHI0n8RYgX6Nlesm36cGpY/Ficrur33L/oWuSo5VDRAEoZgJm2MOTH5tKHlp/pKdiUZ
+         HFW4mVOIGO+9uZ7VMuFAfP/eeTTIqqls9KBW+QYKZSoozeEWOJz6XFoDbRK1u5BoVB2i
+         PNFgD1fVFQvzhqNYuan9lbfxWGWc3SXBEGbrEbEeOmtwjnw9Iy4B7c5wD51Gaam5f/Lf
+         E5PVMojyI3jek3yE3Mau1D/y3oTdC6iavN18idHENbLHQGLsnS7xk1QewQKv+niHCWNw
+         SkTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743177208; x=1743782008;
-        h=content-transfer-encoding:to:subject:from:cc:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xH26V306Jr52bnWIfYi5tdVx5/+BWzk4/60gsilP3xo=;
-        b=oIKHYF/UFJEWTUKNxyRezJVvU5kgB40VSUxn6P6z6qihCt4+olGdizIyjua1YiHHAL
-         WjatkLJImF9bPilkIyfq36fmam3KMBjObTqRvDqJvxozw+SFb8j+hP86hsIkiXgot4N+
-         w8j2JWH/cqrzd3qWN9RmxjmcNhcDJBL5+2Hth7Vx9WGKbWbluvDTInG8zEFnSV67ju9h
-         T6KP+Mj4zHsJKjJpntMFSSqpZ3FmABydNQKyuwj0T3avc6yQBMrhHjzs3h3f+PXjVSQT
-         g+bKmTvO7FcnnDHwyeT05KBoc0Ibt/ubtoDuIf5L0lU8ow7khx6ZWxZm3FgwMh7wHJmL
-         9cGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUatg/EuqRXgZLFbquk+7CH6j0/ro+UtXVIrueXeMf0CZrX2caRUbjliEHLIXnC0n2e2r+DjwdxIzr9etc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHXUTVWSckvB2+Vy6a8AbwNY3lVwW63f+u5oF1WHf0KaUDo0FG
-	Em71aQ5CZLz/PoT1+Xbg75Qxy8lZ6EwDHw9glpBx7596VQJr6NEf8AQBXUp3qXE=
-X-Gm-Gg: ASbGnct9PcyEHC8OnT9if79DhObQsVSxZYI3gC+lkR5TvBDzDy1dnk3Ox4KpqTeEqAy
-	K+CqILb+UzwIoW6EueGcdWf+7eFZrpaKTSUyGwX2dOrWp7Gy7TbTv8tSSvzIzoOP5XQkYHAGotB
-	Kq2JcgRW78P/cpIftu8yMZ9gnorwNRj4nXkcL17IFJaRALr+33aWogqv7wbXTPPifzuHo3Huzp2
-	aose2ibiBqOpgkhcZfAvtDcOCgKhFQfLlTsh9eZ1XGoJFlEnRDWtAu7MuTL4sI4ESAoVtq0h3d9
-	Oi8yNdwsss9IYiLYzupnIk3YAxrpe1Q9WUzsEMArN7UFagss
-X-Google-Smtp-Source: AGHT+IEcWvB4XH17YKBwR5G/3WuBzltILDk5EXHxrbMYebm02ENTAkVx4A1VRu6HgElE4j5IM048XQ==
-X-Received: by 2002:a5d:584c:0:b0:398:9e96:e798 with SMTP id ffacd0b85a97d-39ad17415a2mr7631510f8f.13.1743177207814;
-        Fri, 28 Mar 2025 08:53:27 -0700 (PDT)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663470sm2972156f8f.27.2025.03.28.08.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 08:53:27 -0700 (PDT)
-Message-ID: <8aaaca23-ed2c-45d8-b9d2-7c8bbd4a27e5@suse.com>
-Date: Fri, 28 Mar 2025 16:53:26 +0100
+        d=1e100.net; s=20230601; t=1743177731; x=1743782531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S6G0qiJQGXC3AXOvDxr6xdkIUMr8b4TCV0bYMLRr8pk=;
+        b=u0mpJwTwHhWp0Vzw6A4kRWhWkqu+XSrjUVPSKSAETPQS/j4ri1hIpjUNmyxGeS8cwK
+         lct2/SWz1oTbRXdNRaFht+7AubWV+xBYT5Vd48PA88EM09lCKd3E35+DAxvqMwoN2jsB
+         UFArmwL9+PZW696RQHinaEuLQTAo6sDi30+UDSVF5fxYqG0PVhIhnOVs+Vo+zZlucNK6
+         TIAarVYdHg9PoibdoHpJl/JANtC+3NoC7aDuFsg9EauyBQtBx+RUHDxXmnzgNUWccq36
+         2ckFnT5Z1hxzKYxaJmTBsGGzHfSnKVDPyIZF8TLsXG/B5styCRbgEB2Xjz+pO1Etdy+G
+         Otww==
+X-Forwarded-Encrypted: i=1; AJvYcCUaztK2e7hDIhVao3Ss6H4HJJSKW3qsGvK3prR8HoY/ZuqYBz/8VchvOFhm6/7stnHjBvEu86QZZkFVuVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz+ShrqM27y/viRJfIC5loPrY2YuzJ9HBC2/GrXE7Wjl68pWKe
+	8aScc4GI4mK01vt0LcpuQ6/epm86OHNz4GB5nJtDhmqwr7efCz1ltFgMi9e5e44VSPaAJsWYHv7
+	SW+NIrJBbO7qwbS6HHecxYhk+mgjqfv/tPl5o
+X-Gm-Gg: ASbGnctbM5Lp9qfPBmyYYEIzh0KmKVQQI3J3bw8YHCWcxWt56dKKqfJ3ee3uFbqwVm+
+	3z54ZEujusRCGzOW8mr5w6AZJTWgIejSQodvv+8OccAaFbVfhsazjEZAbgkwCfMq54e8myizNmm
+	Fz6mhA7lF+hlpKa6e4lCta+GSXoQ==
+X-Google-Smtp-Source: AGHT+IFADzNU03cXbAbhHDbtnSsdcn7VfjDVFkPBYFpuag6zZCgoVTX+CDLsqNcb7YZJQ58Ma4O68Ya7pCE48hLZl6k=
+X-Received: by 2002:a05:6830:4389:b0:727:3a2e:2132 with SMTP id
+ 46e09a7af769-72c4ca57a45mr7687987a34.21.1743177731160; Fri, 28 Mar 2025
+ 09:02:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, Joel Granados <joel.granados@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thorsten Blum <thorsten.blum@linux.dev>
-From: Petr Pavlu <petr.pavlu@suse.com>
-Subject: [GIT PULL] Modules changes for v6.15-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250326074355.24016-1-mowenroot@163.com> <CAHC9VhRUq0yjGLhGf=GstDb8h5uC_Hh8W9zXkJRMXAgbNXQTZA@mail.gmail.com>
+ <20250328050242.7bec73be@kernel.org>
+In-Reply-To: <20250328050242.7bec73be@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 28 Mar 2025 12:02:00 -0400
+X-Gm-Features: AQ5f1JqR6F0XsVs30PNGrh2y9naOsg1JHm34kVbGEXFksP6pfuXuFw3UH1I7hgE
+Message-ID: <CAHC9VhRvrOCqBT-2xRF5zrkeDN3EvShUggOF=Uh47TXFc5Uu1w@mail.gmail.com>
+Subject: Re: [PATCH] netlabel: Fix NULL pointer exception caused by CALIPSO on
+ IPv4 sockets
+To: Jakub Kicinski <kuba@kernel.org>, Debin Zhu <mowenroot@163.com>, Bitao Ouyang <1985755126@qq.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
+On Fri, Mar 28, 2025 at 8:02=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+> On Wed, 26 Mar 2025 15:38:25 -0400 Paul Moore wrote:
+> > For all three function, I'd probably add a single blank line between
+> > the local variable declarations and the code below for the sake of
+> > readability.  I'd probably also drop the comment as the code seems
+> > reasonably obvious (inet6_sk() can return NULL, we can't do anything
+> > with a NULL ptr so bail), but neither are reasons for not applying
+> > this patch, if anything they can be fixed up during the merge assuming
+> > the patch author agrees.
+> >
+> > Anyway, this looks good to me, Jakub and/or other netdev folks, we
+> > should get this marked for stable and sent up to Linus, do you want to
+> > do that or should I?
+>
+> Thanks for the CC! Feel free to take it to Linus if you're happy with
+> it. We don't have the posting on the list so it'd be minor pain to apply.
 
-  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
+Will do.  As long as it gets up to Linus somehow I'm happy.
 
-are available in the Git repository at:
+> As you say the safety check is probably okay, tho, it's unclear from
+> the commit message and comment how we get here with a v4 socket or
+> perhaps not a fullsock..
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git/ tags/modules-6.15-rc1
+Good point about the root-cause/reproducer; there was some discussion
+about this issue on a separate private list and I think we lost some
+of the information along the way.  The initial report was for the
+connect() case, but while looking into the problem I noticed a few
+instances with a similar pattern and since we're only talking about
+one additional NULL check during socket-level ops on a CALIPSO marked
+socket (nothing per-packet), I figured to err on the side of safety.
 
-for you to fetch changes up to 897c0b4e27135132dc5b348c1a3773d059668489:
+Debin Zhu and Bitao Ouyang, considering the other suggested changes to
+the code, would you be able to submit a second revision to the patch
+that incorporates the suggested changes as well as an improved patch
+description which includes your reproducer and notes on testing?  You
+can send the email to the LSM <linux-security-module@vger.kernel.org>
+list while CC'ing the netdev <netdev@vger.kernel.org> list, the
+SELinux <selinux@vger.kernel.org> list, and me directly (just in case
+there is another issue with the mailing lists).  This should also give
+you an opportunity to try posting to the mailing lists again ;)
 
-  MAINTAINERS: Update the MODULE SUPPORT section (2025-03-28 15:08:20 +0100)
-
-----------------------------------------------------------------
-Modules changes for 6.15-rc1
-
-- Use RCU instead of RCU-sched
-
-  The mix of rcu_read_lock(), rcu_read_lock_sched() and preempt_disable()
-  in the module code and its users has been replaced with just
-  rcu_read_lock().
-
-- The rest of changes are smaller fixes and updates.
-
-The changes have been on linux-next for at least 2 weeks, with the RCU
-cleanup present for 2 months. One performance problem was reported with the
-RCU change when KASAN + lockdep were enabled, but it was effectively
-addressed by the already merged ee57ab5a3212 ("locking/lockdep: Disable
-KASAN instrumentation of lockdep.c").
-
-----------------------------------------------------------------
-Joel Granados (1):
-      tests/module: nix-ify
-
-Petr Pavlu (1):
-      MAINTAINERS: Update the MODULE SUPPORT section
-
-Sebastian Andrzej Siewior (27):
-      module: Begin to move from RCU-sched to RCU.
-      module: Use proper RCU assignment in add_kallsyms().
-      module: Use RCU in find_kallsyms_symbol().
-      module: Use RCU in module_get_kallsym().
-      module: Use RCU in find_module_all().
-      module: Use RCU in __find_kallsyms_symbol_value().
-      module: Use RCU in module_kallsyms_on_each_symbol().
-      module: Remove module_assert_mutex_or_preempt() from try_add_tainted_module().
-      module: Use RCU in find_symbol().
-      module: Use RCU in __is_module_percpu_address().
-      module: Allow __module_address() to be called from RCU section.
-      module: Use RCU in search_module_extables().
-      module: Use RCU in all users of __module_address().
-      module: Use RCU in all users of __module_text_address().
-      ARM: module: Use RCU in all users of __module_text_address().
-      arm64: module: Use RCU in all users of __module_text_address().
-      LoongArch/orc: Use RCU in all users of __module_address().
-      LoongArch: ftrace: Use RCU in all users of __module_text_address().
-      powerpc/ftrace: Use RCU in all users of __module_text_address().
-      cfi: Use RCU while invoking __module_address().
-      x86: Use RCU in all users of __module_address().
-      jump_label: Use RCU in all users of __module_address().
-      jump_label: Use RCU in all users of __module_text_address().
-      bpf: Use RCU in all users of __module_text_address().
-      kprobes: Use RCU in all users of __module_text_address().
-      static_call: Use RCU in all users of __module_text_address().
-      bug: Use RCU instead RCU-sched to protect module_bug_list.
-
-Thorsten Blum (3):
-      params: Annotate struct module_param_attrs with __counted_by()
-      module: Replace deprecated strncpy() with strscpy()
-      module: Remove unnecessary size argument when calling strscpy()
-
- MAINTAINERS                              |   4 +-
- arch/arm/kernel/module-plts.c            |   4 +-
- arch/arm64/kernel/ftrace.c               |   7 +-
- arch/loongarch/kernel/ftrace_dyn.c       |   9 ++-
- arch/loongarch/kernel/unwind_orc.c       |   4 +-
- arch/powerpc/kernel/trace/ftrace.c       |   6 +-
- arch/powerpc/kernel/trace/ftrace_64_pg.c |   6 +-
- arch/x86/kernel/callthunks.c             |   3 +-
- arch/x86/kernel/unwind_orc.c             |   4 +-
- include/linux/kallsyms.h                 |   3 +-
- include/linux/module.h                   |   2 +-
- kernel/cfi.c                             |   5 +-
- kernel/jump_label.c                      |  31 +++++----
- kernel/kprobes.c                         |   2 +-
- kernel/livepatch/core.c                  |   4 +-
- kernel/module/internal.h                 |  11 ----
- kernel/module/kallsyms.c                 |  73 ++++++++-------------
- kernel/module/main.c                     | 109 +++++++++++--------------------
- kernel/module/tracking.c                 |   2 -
- kernel/module/tree_lookup.c              |   8 +--
- kernel/module/version.c                  |  14 ++--
- kernel/params.c                          |  29 ++++----
- kernel/static_call_inline.c              |  13 ++--
- kernel/trace/bpf_trace.c                 |  24 +++----
- kernel/trace/trace_kprobe.c              |   9 +--
- lib/bug.c                                |  22 +++----
- lib/tests/module/gen_test_kallsyms.sh    |   2 +-
- 27 files changed, 160 insertions(+), 250 deletions(-)
+--=20
+paul-moore.com
