@@ -1,264 +1,132 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D81AA1EC;
-	Fri, 28 Mar 2025 10:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156407; cv=fail; b=K52Z6+wdBHj5iFvUsAJSNjFsqwHRCs3UPYFc5kQODL9ohurZsjP8sIW3Mk6C2kriILvLABZAaNT/FIo1D2M4V/9Yyi5vjmAIIgDFUc3ap3OHGOtsMLlHSfFbRoo2Wf8bRG6HWqi7moyF7bQOSqrsrgnjsavc17DajrkoU9COiUQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156407; c=relaxed/simple;
-	bh=p23qkZkuG5kHW5k3P8Y5dgx3VdHcisSbwoYBC6bwWqU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IBf4xAnD8ADML2lKrZPWHf1z05RXkKbuSDfDvVg8cdEVxX45Zr5peevxcZqZb5UwNqhFvIC+YeOB/vttj0L7zpYNMSeqkfeHNGvMCWzZSdkO3eX7aqevpkgC1crs3IkdpicPoedq2ogk7vELA3PIl7/Eb6HiTEJW70Ya19KIqTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=TOhabFhh; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=A2ptIQhN; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C546D214A6C;
+	Fri, 28 Mar 2025 10:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743156471; cv=none; b=GFwol/YiNykBeP0JWAdpbnH9NdWwnsVGgssb+yamwN8wqt/Pb/E1j/hxAK71hhYzftUy2bb/1FVCccsSXigeS1u9+NmOUm/8/IVDTNJ5HaPBPMOkB6uQbeohJP3sG+g79PcDZse/4MpWhVYmde0Hacp/hTZaQDJ9yxtpC3/s0hM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743156471; c=relaxed/simple;
+	bh=+1HJvFP+Fnoh7d+9TIk7uMpD7sPCQQnqKb2PNqUmOU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Up+6Fm5jgD+k9THczqf0uqQ5z99Gg4MCLbqWs+1CE63sAwV+GlDcS7IajmsvdSKV+SHlk58ZHc/UbH4w0TJNzkqlHe0qBXh1nB1blxmKUE8p69EXnY8WgKROfHwGM5yfQEI7K4NN+46jSvWONRF1JLuUJ2iZKOblAkuAJd5kJK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lBOmgQAL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="TOhabFhh";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="A2ptIQhN"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 2DB25480A54;
-	Fri, 28 Mar 2025 06:00:18 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1743156018;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=fLaSVaGRSzrR9L+/Wsk8D9Ek1dAN1SYYhQQFP98Wewo=;
- b=TOhabFhhPSz+g5J7VIztDOn9uzYRxZlhhiQYQm11qSDPCO1XEztp3EnDIPpHRzFYlJgr6
- OmhZPfLv5ZLeNj6CA==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1743156018;
-	cv=none; b=uG2NXlSMN7d8PM8lD7YNHAdI2WdvUeJ06bVunsIsRegNF+zjJNtQcAYP8e79FNBb8mThOYV8on4wr2mYkh+Wh+GcPBIx/mzD6GY9id4qkkjNy7RwGM8xWktnGjXEzhF4Y0dl4lnaw2jS54sX3+L4itlxW0CGTRNh612GlGbcyMeHU5LBavDXbAYmBWP5ffnzEUpOSX3+jTSTPzHQGQ9fugXjHm+AWDyR3kpOSTXVwCl4Uf1lR3nIuXkzjditLh58kJUfJUws6Xk90nTZYcA8CuqTaxVodl68kvN49NXdf3xd6lTo+kbU01Qo8VFE+cvsdN7ylf1eyix2xmxvcPsx6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1743156018; c=relaxed/simple;
-	bh=p23qkZkuG5kHW5k3P8Y5dgx3VdHcisSbwoYBC6bwWqU=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=UzPxSkbgQFxmKqWbDT//FKv6Swc7MrpqpBHENCPCqj/IQwF3E9NB7xJT/HZbG2jEIqcEt/IKIJwDDRk9jH+gID2Y4mZ4N6kR3dUNgDFP/LBLoEpZXv8TEp2o1YT9GpZqie3uhBW5H8qqcQE40gc7k22v+m30GEKlkDyLLvoikzaMHDzA8nRtdJCN511pY+IcGI7Jm4HRhvDBaedkH79FlFEZoC7Yn3zPv+nalwWo4p2QDfuBkq9KJ+1l23wBWfkL8EcSZz44bNoWa51QPxacXk1EcqbFKyN7NkmwKbA/fQQVuRyDsI0X/npoTD2C1OcmVyMqX5fl1kDoMUg8WnMPQg==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1743156018;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=fLaSVaGRSzrR9L+/Wsk8D9Ek1dAN1SYYhQQFP98Wewo=;
- b=A2ptIQhNBE6xKQc1/czbV7V9i9wMbhUIxeZswrGk4R4XRVpMOV6D6JOWYVKekeqOaDn48
- O5Flm1+mkGXBd3o5ugJX4WToGyCnZJ/GmFrVM4Lq7sz7Z1ARM4nFD7bKw6BRAc8GdCZeuiz
- wbKkdk8VbCI5oC+lj5YDXU0o+bjVpmgBmym4NHhBDbnXaKlr8+bLvK5DoXlbJ98yE4GaVIT
- ErXYCcrmzZZWl/g8YSv276iU+t6DfYb/GhECznpJv7ii8wFTK4+gsqr2roFxtVdGtDzaO5j
- FiYxsoEE7Aeb2pqixVKMq9hj3XB+FPIwE/vj7cXF5fBShUfv4ZPKgWYF6JZQ==
-Received: by srv8.prv.sapience.com (Postfix) id E9A892801DA;
-	Fri, 28 Mar 2025 06:00:17 -0400 (EDT)
-Message-ID: <81b162e821747d807816673f89a171fbd0a0bba5.camel@sapience.com>
-Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
- get_direction failed -> missing pinctrl patch
-From: Genes Lists <lists@sapience.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lBOmgQAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7EB1C4CEE4;
+	Fri, 28 Mar 2025 10:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743156471;
+	bh=+1HJvFP+Fnoh7d+9TIk7uMpD7sPCQQnqKb2PNqUmOU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBOmgQALXFg199JPQfsWBARuppG7vjLbxg3obc+aOfP+O/QHiuOIDJ83EWhZmDNxz
+	 tPRxf8qp5reEq+l1yyMq5xRA6a4Cu+BfRJESvs0mLNYk7uIlnkokjos0A/AqVHEFJi
+	 CRIpcUH859Nsnb//lxgRjEUbe3VzijMHu75gZaI8=
+Date: Fri, 28 Mar 2025 11:07:48 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: madhu.m@intel.com
+Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
+	pooja.katiyar@intel.com, dmitry.baryshkov@linaro.org,
+	diogo.ivo@tecnico.ulisboa.pt, lk@c--e.de,
 	linux-kernel@vger.kernel.org
-Date: Fri, 28 Mar 2025 06:00:17 -0400
-In-Reply-To: <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
-		 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
-		 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
-	 <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-+kRvFnljQR7bmyrjtiXd"
-User-Agent: Evolution 3.56.0 
+Subject: Re: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
+Message-ID: <2025032833-finale-buffer-2343@gregkh>
+References: <20250328094305.546724-1-madhu.m@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328094305.546724-1-madhu.m@intel.com>
 
+On Fri, Mar 28, 2025 at 03:13:05PM +0530, madhu.m@intel.com wrote:
+> From: Madhu M <madhu.m@intel.com>
+> 
+> Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
+> UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
+> PD/TypeC debugging capability.
+> 
+> Signed-off-by: Madhu M <madhu.m@intel.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/usb/typec/ucsi/debugfs.c | 4 ++++
+>  drivers/usb/typec/ucsi/ucsi.h    | 2 ++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
+> index eae2b18a2d8a..92ebf1a2defd 100644
+> --- a/drivers/usb/typec/ucsi/debugfs.c
+> +++ b/drivers/usb/typec/ucsi/debugfs.c
+> @@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
+>  	case UCSI_CONNECTOR_RESET:
+>  	case UCSI_SET_SINK_PATH:
+>  	case UCSI_SET_NEW_CAM:
+> +	case UCSI_SET_USB:
+>  		ret = ucsi_send_command(ucsi, val, NULL, 0);
+>  		break;
+>  	case UCSI_GET_CAPABILITY:
+>  	case UCSI_GET_CONNECTOR_CAPABILITY:
+>  	case UCSI_GET_ALTERNATE_MODES:
+> +	case UCSI_GET_CAM_SUPPORTED:
+>  	case UCSI_GET_CURRENT_CAM:
+>  	case UCSI_GET_PDOS:
+>  	case UCSI_GET_CABLE_PROPERTY:
+>  	case UCSI_GET_CONNECTOR_STATUS:
+>  	case UCSI_GET_ERROR_STATUS:
+> +	case UCSI_GET_PD_MESSAGE:
+> +	case UCSI_GET_ATTENTION_VDO:
+>  	case UCSI_GET_CAM_CS:
+>  	case UCSI_GET_LPM_PPM_INFO:
+>  		ret = ucsi_send_command(ucsi, val,
+> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+> index 3a2c1762bec1..72b9d5a42961 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.h
+> +++ b/drivers/usb/typec/ucsi/ucsi.h
+> @@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
+>  #define UCSI_GET_CONNECTOR_STATUS		0x12
+>  #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
+>  #define UCSI_GET_ERROR_STATUS			0x13
+> +#define UCSI_GET_ATTENTION_VDO			0x16
+>  #define UCSI_GET_PD_MESSAGE			0x15
+>  #define UCSI_GET_CAM_CS			0x18
+>  #define UCSI_SET_SINK_PATH			0x1c
+> +#define UCSI_SET_USB				0x21
+>  #define UCSI_GET_LPM_PPM_INFO			0x22
+>  
+>  #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
+> -- 
+> 2.34.1
+> 
+> 
 
---=-+kRvFnljQR7bmyrjtiXd
-Content-Type: multipart/alternative; boundary="=-9CDVEwvVGa3EEGZipMsV"
+Hi,
 
---=-9CDVEwvVGa3EEGZipMsV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wrote:
-> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
-> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists
-> > <lists@sapience.com> said:
-> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
-> > > > ......
->=20
-> >=20
-> > There are two problems here. The issue you're seeing is fixed in
-> > next but
-> > not in mainline due to my omission. I will send a patch for that.
-> >=20
-> > On the other hand, the pinctrl driver in question should be fixed
-> > too.
-> > Can you try the following change:
-> >=20
-> > diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
-> > b/drivers/pinctrl/intel/pinctrl-intel.c
-> > index d889c7c878e2..0c6925b53d9f 100644
-> > --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> > +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> > @@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(struct
-> > gpio_chip *chip, unsigned int offset)
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin =3D intel_gpio_to_pin(pc=
-trl, offset, NULL, NULL);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pin < 0)
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /*
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * For pins configured to functions other than
-> > GPIO, default
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * to the safe INPUT value.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return GPIO_LINE_DIRECTION_IN;
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D intel_get_padcfg(pct=
-rl, pin, PADCFG0);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!reg)
-> >=20
-> > ?
-> >=20
-> > FYI: This was uncovered by commit 9d846b1aebbe ("gpiolib: check the
-> > return value of gpio_chip::get_direction()").
-> >=20
-> > Bart
->=20
-> Hi Bart - I don't see this pincntrl patch in mainline yet - =C2=A0what's
-> your thinking on this?
->=20
-> thanks!
->=20
->=20
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Following up - same question - this patch is not in mainline as of
-today. =C2=A0
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-Can you share your thoughts/plans on this one?
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-thanks.
+thanks,
 
-
---=20
-Gene
-
---=-9CDVEwvVGa3EEGZipMsV
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<html><head><style>pre,code,address {
-  margin: 0px;
-}
-h1,h2,h3,h4,h5,h6 {
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-ol,ul {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-blockquote {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-</style><style>pre,code,address {
-  margin: 0px;
-}
-h1,h2,h3,h4,h5,h6 {
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-ol,ul {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-blockquote {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-</style></head><body><div>On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wr=
-ote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left=
-:2px #729fcf solid;padding-left:1ex"><div>On Tue, 2025-03-11 at 10:40 -0700=
-, Bartosz Golaszewski wrote:</div><blockquote type=3D"cite" style=3D"margin=
-:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><div>On Tue, 1=
-1 Mar 2025 15:03:59 +0100, Genes Lists &lt;<a href=3D"mailto:lists@sapience=
-.com">lists@sapience.com</a>&gt; said:<br></div><blockquote type=3D"cite" s=
-tyle=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex">=
-<div>On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:<br></div><blockq=
-uote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf soli=
-d;padding-left:1ex"><div>......<br></div></blockquote></blockquote></blockq=
-uote><div><br></div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; b=
-order-left:2px #729fcf solid;padding-left:1ex"><div><br></div><div>There ar=
-e two problems here. The issue you're seeing is fixed in next but<br></div>=
-<div>not in mainline due to my omission. I will send a patch for that.<br><=
-/div><div><br></div><div>On the other hand, the pinctrl driver in question =
-should be fixed too.<br></div><div>Can you try the following change:<br></d=
-iv><div><br></div><div>diff --git a/drivers/pinctrl/intel/pinctrl-intel.c<b=
-r></div><div>b/drivers/pinctrl/intel/pinctrl-intel.c<br></div><div>index d8=
-89c7c878e2..0c6925b53d9f 100644<br></div><div>--- a/drivers/pinctrl/intel/p=
-inctrl-intel.c<br></div><div>+++ b/drivers/pinctrl/intel/pinctrl-intel.c<br=
-></div><div>@@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(stru=
-ct<br></div><div>gpio_chip *chip, unsigned int offset)<br></div><div><br></=
-div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pin =3D intel_gpio_to_p=
-in(pctrl, offset, NULL, NULL);<br></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp; if (pin &lt; 0)<br></div><div>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -EINVAL;<br></=
-div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp; /*<br></div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * For pins configured=
- to functions other than GPIO, default<br></div><div>+&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * to =
-the safe INPUT value.<br></div><div>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br></div><div>+&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp; return GPIO_LINE_DIRECTION_IN;<br></div><div><br></div><div>&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reg =3D intel_get_padcfg(pctrl, pin, PADC=
-FG0);<br></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!reg)<br=
-></div><div><br></div><div>?<br></div><div><br></div><div>FYI: This was unc=
-overed by commit 9d846b1aebbe ("gpiolib: check the<br></div><div>return val=
-ue of gpio_chip::get_direction()").<br></div><div><br></div><div>Bart</div>=
-</blockquote><div><br></div><div>Hi Bart - I don't see this pincntrl patch =
-in mainline yet - &nbsp;what's your thinking on this?</div><div><br></div><=
-div>thanks!</div><div><br></div><div><br></div><div><span><pre></pre></span=
-></div></blockquote><div><br></div><div>Following up - same question - this=
- patch is not in mainline as of today. &nbsp;</div><div><br></div><div>Can =
-you share your thoughts/plans on this one?</div><div><br></div><div>thanks.=
-</div><div><br></div><div><br></div><div><span><pre>-- <br></pre><div><span=
- style=3D"background-color: inherit;">Gene</span></div><div><br></div></spa=
-n></div></body></html>
-
---=-9CDVEwvVGa3EEGZipMsV--
-
---=-+kRvFnljQR7bmyrjtiXd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ+ZzMQAKCRA5BdB0L6Ze
-2wJuAP9uub2yOGrvh+9LN5V2kRdG4RdTgqPjFiHcX/GgM/nblwEAtusqJk/k9x9G
-Un35Mv8F9YHoYdzd4IwIIThr01Jk9As=
-=Cs/3
------END PGP SIGNATURE-----
-
---=-+kRvFnljQR7bmyrjtiXd--
+greg k-h's patch email bot
