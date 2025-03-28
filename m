@@ -1,130 +1,149 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011060.outbound.protection.outlook.com [52.101.70.60])
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B5F35971;
-	Fri, 28 Mar 2025 13:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025FE2F37;
+	Fri, 28 Mar 2025 13:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.141.245
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743170151; cv=fail; b=oFgtN+7LnVFsclecNerOkBoav2Rb3dBD7r+j+VTvxPieCkiuedToJUSwOemSNXSw3XhvQcvYu2abGlJhEgLynr88pDCFhyUUsj4k9Bz4mICjazZXm1zv0GzFtPdIOrbStynzizlxiNtNChdd6s2bnl2WeCMDkiVIVPvd3+VUCfk=
+	t=1743170164; cv=fail; b=NUoOFHGJJMPv3bh1VWyAUcUAFACanaOJgHDotCghUljHurM+at9oo7VnZRGKhgj9l/D+oNFHzkB5fg55hfCdzBk7Nr9UFgYDTOB+mvOb2j8Ruej0a8BXI0iD9ILEB+AxcJ5p6qXZFdDAumX2ihzebG5UaxcFH5H/Q8Ra2K0q4vQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743170151; c=relaxed/simple;
-	bh=patloW8CaI8w6oNhRtiWw0lpxDJty2t38df94oZJOqo=;
+	s=arc-20240116; t=1743170164; c=relaxed/simple;
+	bh=xQ5yexgrHe3nDjt62HbiqS9dICdu9fPJrHbgEd5MPKU=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=R3sfF68KT9H+7vtQPtIT0oedRgMYZjXmiGaRZClFZvY0pe/mp/rChW2WV6uY44nKDKSUkD+XzTTNnk8Bo2yZMXXJ3wZ+t2TdrAV5A6s9Ci+bMQVlrGB8Lp1JhonHzNxIvo5kGv4nP4RinUiNvaUu+AFAawhULzVDbgNVafNqTs0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=IL0EGQLK; arc=fail smtp.client-ip=52.101.70.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	 Content-Type:MIME-Version; b=NMPJhxteKIihiwSZoFx4KUjns1MDRUBWTCrtlXkah1BK/ZF5vQCQzwfoJPdVGSxVV6JxnLVx7vTcWFuSjfE+kZ32USyPIBBH810urpQptjHuqwpApUXzF+2aNudO5k3oph6xj0gvF61N7zC1zpLSA1iSgtlVG1DcDJa7tr97ZpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=nAz0LE1D; arc=fail smtp.client-ip=68.232.141.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="IL0EGQLK"
+	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="nAz0LE1D"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=sandisk.com; i=@sandisk.com; q=dns/txt;
+  s=dkim.sandisk.com; t=1743170162; x=1774706162;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xQ5yexgrHe3nDjt62HbiqS9dICdu9fPJrHbgEd5MPKU=;
+  b=nAz0LE1D8Bg5j8V3bnoR/vSob0HkeBuOOd+WpQLAtmxN1ntkCXgVz2df
+   C9Pn/RKHzxMjw771ViTEQ7KDKzU+EQc94owyyYlfYpn9WM0oFBE63Cvbi
+   gvCtDMp/8taaDsESJxIjaOEX23BNgRNhbmEGCeGOqi0Jcszgj1Yq3Isd4
+   6CJQEikkDQmQYFrCWP8yvzz+uArR5aTICiY4MJxHuV/cDCHpx+Y/SKWqj
+   jqKiUxiBXmX5agIuLVLH98KBC7XzdPkxW7AqCgRVOV60cpCEd7yanJ/8i
+   +suk5xU+Fh4ZbiVPEkDCc3Hx7yK3Ywv9f3/4mDVsesgDfDcN3VRMtM/2K
+   A==;
+X-CSE-ConnectionGUID: bo4NGCCuQeKDPqe14UTIxg==
+X-CSE-MsgGUID: kuFKAO3OT8CqZ0f1t0dCqg==
+X-IronPort-AV: E=Sophos;i="6.14,283,1736784000"; 
+   d="scan'208";a="62666075"
+Received: from mail-bn8nam12lp2173.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.173])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Mar 2025 21:55:54 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wJjhnvq6UBWi+vo6d6GXb4n9jJWXSbLGokNM9+87LAOmS8qt1YqGlVHWMz0VfxZ5p1hZG+r7jsxmNJfasLVBef3amSNvmQ+F98xKATcRHHvWZjj9kh9VE+3sCyoc96AM+2F3g0lGCNwRsIBH6B5cUlgmF6X/FBOzdgk0WeOV51RpZyoy2c5TSOVW3ezlWxxI6AgmzYVGE/JMLsYSVJoKepSxfvtusfVLQruf3L2kppt2qNae9l+CANnT82iedjApCa+ESW80ieRL/3tTlJLkc2xp0BT/T2ORyUC9uZEKYeCe59ha8/RgpsARwbbkRoeM00fJKTT4GQEOgqIX7QjIlg==
+ b=sXBCGMmlfLgWD098EY2kSAIZwteHmffvv/O5HiKAkMI5IQuvIaBYqtOCtLPQDQo9IIma/8U+3vkKId6UDsKJQiANMH7nTlV1Wb44nXLJQXGgRsjFJia0ODIN0WbtZqMf6Lk0KxdhZVX6OVS2kYLQNawjEj54pXZoDWXEzKsa3kXUmGgMB/lXO8U0rsxTC/kSZBq0qV3rEa0LwgcXdx1FWfiMVQDrTVWz6HayHKvnthNDrSr07BfUJtYmzu+bk/9JjDTZtQe3XI10HDVkEcBjCt3R7rwKRTMcpRNY4FXc2Ia/qx2XbgLWsPIpE0aYfispC39AAXynt+sDDNT3J+4xVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TEPuWA5ecRd0Pj7QkciOeDzCo5eIeiQkeq9yoAKXGjM=;
- b=Lr7AUYkljHFAh8+WKoq461IGrcSRQYCOPJbYHHtcOB38XhaW6tHjeG/jb4Y8C+hOmdcCORvTPJ7VRjgg+zlfj/xl9mCnr8h2D3iJSvqtZXCbjU1axhBiPEh8wgGk44c0TRdZb5eVehnTZlQoE4fB9W7aEATDSbdDkEPKrx5JZhN3PeCd7BGl0UfhQnr7GrOahYaLJE5Ugwt4Zrn/yF9ZNmc+K4wX1c6MIk7xW/97vIAHYV01nBccwcszn2RYVq2Qk39Pcm4XNQ7V89HdJUKg9NZjB+Jsbc1h0m3YQxxl2Hc9qrQy9ERxSnU8UgUSSnQW8qd6VaXVadg4yO6su71awA==
+ bh=RuijMPB3rS3EQIsQzQgvHUdUNaS0ixhjwlOsdPdDfQk=;
+ b=Mb5ve8cuLVbmb4cmQPkamR4yIPitkn0XLptuEz9pykoGE4Sf7olKxmDB6pxZNEZA/3ScbA6xLCoNl+EjUCw0hy/0u/xudh7gGC9fNG3PXryCBYtrnvlmHYfXeI5R086zGFbTxJXipXG/1FpED3RvP/wPcePsLkxbxwYzIOTJsA323FahCi5inD2vEB0TWDp/uXn40V9hL+3QoEFUdTPY4Fn7J00sMs7OynEa7rZprn8g3aPCwODIpj+6h5pjQ9TWUHP0EwKUUml07NFeIWMXclmOqVmgNrxYFuqoGplgPsm7qIMUDlsjhgSiB9dotSY1S3dfv9VS51x/8xbniAmDBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TEPuWA5ecRd0Pj7QkciOeDzCo5eIeiQkeq9yoAKXGjM=;
- b=IL0EGQLKY+YWn70iXqvhEBX8AY6THXY6887XxcBU91mL260WScypn5EY5P/g2qWyA80u75UnqJua8UvbTkpvHW9JQSDTJSSfHklqyDkql6zgOLtfvHqH17aki25Hk5dxU+GqqieE8LkM8X0IgyUIEMxjV6YH7fc0PZWhLQyDHheGSRr9t4TcjZw+4t3rLc9QJbTuUYDNJX5M3tng87mEeP8FJsQk2FNqaEb0ZqMJKrOQH2u1BcBXVM6zUVh7qsS/Xk8bpVfE0u/lEST0Dqgk8D3+K9/wo+7YtAYRWw18x5mKz/7eIr85bhn4zYd0p+IKU9TYNRaiJp+7RhHV3clciA==
-Received: from DB9PR04MB8429.eurprd04.prod.outlook.com (2603:10a6:10:242::19)
- by PA1PR04MB10359.eurprd04.prod.outlook.com (2603:10a6:102:449::13) with
+ smtp.mailfrom=sandisk.com; dmarc=pass action=none header.from=sandisk.com;
+ dkim=pass header.d=sandisk.com; arc=none
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com (2603:10b6:510:312::5)
+ by PH7PR16MB5854.namprd16.prod.outlook.com (2603:10b6:510:301::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 13:55:45 +0000
-Received: from DB9PR04MB8429.eurprd04.prod.outlook.com
- ([fe80::2edf:edc4:794f:4e37]) by DB9PR04MB8429.eurprd04.prod.outlook.com
- ([fe80::2edf:edc4:794f:4e37%5]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 13:55:45 +0000
-From: Sherry Sun <sherry.sun@nxp.com>
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, "marcel@holtmann.org"
-	<marcel@holtmann.org>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>
-CC: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amitkumar
- Karwar <amitkumar.karwar@nxp.com>
-Subject: RE: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing
- the baudrate
-Thread-Topic: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing
- the baudrate
-Thread-Index: AQHbn0VYuH7+rwFwdEOu3zHL2m5J1LOIkt2A
-Date: Fri, 28 Mar 2025 13:55:45 +0000
+ 2025 13:55:52 +0000
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::58f:b34c:373c:5c8d]) by PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::58f:b34c:373c:5c8d%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 13:55:51 +0000
+From: Avri Altman <Avri.Altman@sandisk.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org"
+	<linux-mmc@vger.kernel.org>
+CC: Adrian Hunter <adrian.hunter@intel.com>, Wolfram Sang
+	<wsa+renesas@sang-engineering.com>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/5] mmc: core: Further avoid re-storing power to the eMMC
+ before a shutdown
+Thread-Topic: [PATCH 2/5] mmc: core: Further avoid re-storing power to the
+ eMMC before a shutdown
+Thread-Index: AQHbmaCawHwbneBGskeSsoXKbd915bOInhfA
+Date: Fri, 28 Mar 2025 13:55:51 +0000
 Message-ID:
- <DB9PR04MB8429BC22B2C984ABE68350E492A02@DB9PR04MB8429.eurprd04.prod.outlook.com>
-References: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
-In-Reply-To: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
-Accept-Language: zh-CN, en-US
+ <PH7PR16MB6196C3AC7A7B7CA99A70E7DDE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
+References: <20250320140040.162416-1-ulf.hansson@linaro.org>
+ <20250320140040.162416-3-ulf.hansson@linaro.org>
+In-Reply-To: <20250320140040.162416-3-ulf.hansson@linaro.org>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
+ header.d=none;dmarc=none action=none header.from=sandisk.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB9PR04MB8429:EE_|PA1PR04MB10359:EE_
-x-ms-office365-filtering-correlation-id: 3dd37169-986a-4944-8651-08dd6e003cc4
+x-ms-traffictypediagnostic: PH7PR16MB6196:EE_|PH7PR16MB5854:EE_
+x-ms-office365-filtering-correlation-id: aae5c649-0f0f-450c-5ad4-08dd6e00408f
+wdcipoutbound: EOP-TRUE
+wdcip_bypass_spam_filter_specific_domain_inbound: TRUE
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|7053199007|38070700018;
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?uHKmF6tkqBFUQJS8nWZWtpDfB+gMrZefPO+jcPuaWDivr/t9YUQdDDjDtDJx?=
- =?us-ascii?Q?aPpc6j22CI1U30D7+FOZeTDf9jubmsiNQwGHhY81M7vGgy3taDKw68NfRrRa?=
- =?us-ascii?Q?lqhVQ9Jc6srg8ZRT9Aw1mRHPVDeE3lwZnb3sdTWoTEqRhVk1hus080Ya1yxl?=
- =?us-ascii?Q?jZEDqP49zAC+RHVKD2NKcWF88DFwwnZur/mQlnhpsO3cplWxvh9pM7MW+WZC?=
- =?us-ascii?Q?E1kR3IByyt9SIG3L6m+uN/tSf2u5PjfCNkmLO4b/IDEf6GuYkZHhWjBHWdUp?=
- =?us-ascii?Q?8ggqDwt+rXn/IyR+mpmJkc7tYM2gQu9G9CPwVcTmYt9lbqn0K14sArClGzlK?=
- =?us-ascii?Q?A5Q5blZOgyZgIxXd5fn+7yi/r4PxAgOqAxxtG5+GVqJ8llfqVp2lbsowB1GA?=
- =?us-ascii?Q?51VnY+5L4gho/vfo/C7H9GAMRP3Xrs/eTE2E9ziqcnBPz5dSHEeJUOwtIpVv?=
- =?us-ascii?Q?1W0d+3hwAweN2CnwbBZs4LZpIIE8uhinac7zK4Z7Dhby6mgnkQY4XE3UvJqD?=
- =?us-ascii?Q?ZhgJV3frlkZo5WtAgHgKZq9GWIH0cI2eCl5oeFzav78ZEwYRAGiN09LswIH5?=
- =?us-ascii?Q?KbE/e8IxB7UJwNgvR5XzVEUo0/9DA2JE4B6/sHv6ET/81BurkOZG7T6fqHtd?=
- =?us-ascii?Q?DT4ecy0+3nv/AH3tbZdc0e4/oqPcogQojtPIyMFNHNBVg8wGpcSsaD/Zo96h?=
- =?us-ascii?Q?KzHSEppPRxK9oVEbbrVpzQua0F4od7urR9Izsd6A5acNy81LWwUX4jkCB/MF?=
- =?us-ascii?Q?UcLjpRS2UZpLTF7Mw8+5wY/NpncBEyQWrIwkgezgvAo77BkrS9qIGJsNyLS5?=
- =?us-ascii?Q?cmSa79CzZQYQHm9P32vovqdo/qCpCsz0ZGTx/v0BkpfSwjr3LsoqmurWA8q3?=
- =?us-ascii?Q?YHhHiwGaYXPG534Xc/2wotHWgaQCeEbDZYhXpdkZufHdHQsySPbmTD5AhilE?=
- =?us-ascii?Q?xwikaYZJ+SSEu2zmKWvwdf+euIwDy3ckFwCW5NecnFLYNBiwaTG+YHLXY8tf?=
- =?us-ascii?Q?kkV+tCpD7rlI1GfS4Ye3ILT8YUJW0Ba9xxiv5t0z9i6e696PEkFb6pQYjKsx?=
- =?us-ascii?Q?V62rp7hJFlVoc9fmsZdljJ5hjnFBDwdghAvCyxZyLXH/mMMEHzahS6TdSyR1?=
- =?us-ascii?Q?5e9YM805v8DCX53rvZjKvNx8e2w8TAOf+buO0ZANN+5AmLotGLRbpfRimt+B?=
- =?us-ascii?Q?Fy+yT+nBlreWju4Mig+dEYr7kyHHZ5hi5/KwFMrb5wTsJHVKezBXSirUD83b?=
- =?us-ascii?Q?ivARj/5UeuljOH8gHRdGa5vEoby5O2Hj7NuwqfxX/PMCJpPYkMWCfdGbiK+F?=
- =?us-ascii?Q?0o2ysAA1U55KxvKW3gMm+X4a2Dfqmezc3Ya9WmCabLhSb0QCZXu8VC3yepdU?=
- =?us-ascii?Q?SvEXzm6TTaLCyQjgaxu9xlc9yyte0iDjOJ4gPBCdub8DOqDRk9/bzGUft2gu?=
- =?us-ascii?Q?r4n/m7Sb/S1psed8iD7bPWK05lYBR5+m?=
+ =?us-ascii?Q?GETa6diqgjDMNprSLiJ/lc+bVhOTtpEk9onXuN5nl9z06ga1vEzZB4jV6dWS?=
+ =?us-ascii?Q?nnhWOcCJYEWRK0+f3r51xh90c+j19w3RdYAanl/c8NSMhAOeqIMiTmVNvNt3?=
+ =?us-ascii?Q?CeqkzIi6q+W1du9tzXty9biPVKB7oyY6AKIfV0Ml0OEgRDyTSv1mfdRtlCTb?=
+ =?us-ascii?Q?wzLerohozja1ufjTLjjf60u3sfkJiuzYTzRAUSG2fhGoOFNfccqrZg8BlUEl?=
+ =?us-ascii?Q?bQPyj7StLLfyhkGkLwpQE2yhR8oPklIhCwVCiAoHWQf1O+hc+pcudR88eAqR?=
+ =?us-ascii?Q?OnPxZ0zSG5VzPwmiyKLXsg/te5J9uverh3SlT4GEGjCEqvT7E7mtUTSqvZtR?=
+ =?us-ascii?Q?Mm6IhQftS7kmYOE4hWA/pZ5zOjEOLmh3StPEYIrBJOgXAjHS4IBr3mWIzZqX?=
+ =?us-ascii?Q?BusS5mf4jMGgzhATeDVJlBcSQpTQk0ScXF/hrGAYHZ2tAcxA9YTHfGFXRJwP?=
+ =?us-ascii?Q?pKjdLhqSiwWEmhuraP6bTlc93Im0I5TMdq6aCdwPpFZuwwKB/oOG1JerT/U3?=
+ =?us-ascii?Q?OYI25T7S9Ft5EPIVLVef1ht0V4Pf0NF26bBE1Zb8pWt6FFi4fXMR0hi3OxTm?=
+ =?us-ascii?Q?QLajEnEEQiqmDOLlJgzmkQVJDWHASRfOQOz7LDTE3Gv4JQwxt8rPESi4R99Q?=
+ =?us-ascii?Q?lSBRnzMczGNzwUjfjx5X332bVDUadH6BEbnqvgdx9JnvbzSoHGBAkcxwQcYv?=
+ =?us-ascii?Q?iFYqumM9amX/efYDGrTFoT+upbU0YsCHA7/kI465CzdYVDCQ94DKxCMD/MkK?=
+ =?us-ascii?Q?DGTMrL/lBuAs+/6jbinvl+ouxq9seFtLdTRV3DYrOBY6c6NeFdtVyOlIU73H?=
+ =?us-ascii?Q?w5ZQ5B31aIlMenyery64lK8sa3ircEC7MumoEhZJOiQPEq3JslfbU8nf4CnD?=
+ =?us-ascii?Q?8oySxT+YpMDHWliSVqt7d0otM49ADumACZRbuHjm4QYGl+6/nV4cel0ha0wU?=
+ =?us-ascii?Q?1i6Fvh18o6mDDD/LrmhwAubs2bFbHtsfTRaqKxb/OmZKcCQfMHg/kI4udpnp?=
+ =?us-ascii?Q?rCiVYrpxLo/Fjeh5ZPEF4uSdWQLcVZ9rvRSasRujKUeu7A14CWIk6gTCNXjQ?=
+ =?us-ascii?Q?47o9CwD1yVuXaXNsaHw/ANnXaspdMGzjCevpAM3Hp29v7epNY8mIlRQv0dC/?=
+ =?us-ascii?Q?gR78Rk6u9JgytXF99Fc5GaTJN0v6JWnuNdEs2eOkKiKcqiZ4UBwUezeQzxHn?=
+ =?us-ascii?Q?In0WU5bShzPURH1zQqfWvDLwm/pxRCCDiAZvsz2P1oSrb16H1GtptP119J8G?=
+ =?us-ascii?Q?W7FBI2GLw53yUX1mjKMZtQxZbQjSeNV9sVHwHkrvjwrznnaoOx0O6oVPLD9Z?=
+ =?us-ascii?Q?fk+RTK1LweIKmCLxk3Ln6WPnjd0fxJSgIzAtv3cEjB/9VSv3kJB9Gi0+yN6O?=
+ =?us-ascii?Q?LDcyO8ExdJ5l6wJAiGbEVXJjBdBj6/n/fCiKjR84cVue632bJYwqp8iTWoJS?=
+ =?us-ascii?Q?LeXuakeQw0TuX24YJUd9+oQr44dnLjvW?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8429.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR16MB6196.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7iK+ywIP5Rd0gCiI6DhtWIio4RfN2KFSZmbcYJ0nL9MJorv6k6p2mLQtm62J?=
- =?us-ascii?Q?hHj58RVhO+Ul6tGK/1ubleuWNZcr6G1MxMiKDLy3GpNyiYgLoCZnLhCC8cQS?=
- =?us-ascii?Q?ND0rRSxHpNAKtl3xpzBpgS5WfsY6+IEaMJYMNx3ZsVQ6lL99wLvpIxy0qGTg?=
- =?us-ascii?Q?KRpLUzr7ZFDx+TENqO8mLez1CyHbOOZo1iOvKe9bZWAoipCdw/RoYOqVEGaI?=
- =?us-ascii?Q?QGw4edmnNLw8Cfew4uBqWgx7m3FHrapN/NV3678AX0qlgC6R8TmeSKo7mRiv?=
- =?us-ascii?Q?zY6QDke5inWh9/DabbvxZ9mztmEabnjxpx0R8cFqNwiPxjx4AKkwYhsaQ1ev?=
- =?us-ascii?Q?judtOr2qDq1xnPBoWUvCuPwkViPwY+WU7wF6QoeakFCVHnHz9ONmxy8Bj7KX?=
- =?us-ascii?Q?VscSbdyicJhl2m0wKyMlQ+m49HOUQP+U19XRJw2dyjd0DGP2erNZrZZPwGdN?=
- =?us-ascii?Q?RoDwTqqGAbrDP5FgRm2d9UepGRhWBSQTqoVgfUoB8kanLT6eT+zC8g1t7ClV?=
- =?us-ascii?Q?EsezAovxiaCLa+t6xPylulDrqCS7XJRjLE7K9dkn8yaL7oCOoYTOh/zJxOQR?=
- =?us-ascii?Q?cM4nVCLGPBt3ypENH/K5enegDioWA7NPkPy+AVJWethvHTdLe29mgHrXwL9Q?=
- =?us-ascii?Q?ZLiB7kLjosmFku9D+dF/a07Zm01/qOw6vjwypIZhGfB91fq789ldWXDnSYnC?=
- =?us-ascii?Q?h7rTuowxRCCCwzehrF/pnzmsVlzJhCW2+KI5uS7Peu64YsfPiSV3DVbZARdA?=
- =?us-ascii?Q?UH4nNaQbqB/jOeHBWfmssD0fJLuR6LXxZYQ3RyLYIy1UxGqKYVahyNV/9LFm?=
- =?us-ascii?Q?YUw9HVspfzn2fJxiLPKGKpeO/4Xw9squMnQ37+/I6yY6mKayWon2x5PayhiJ?=
- =?us-ascii?Q?9JBw0MQTRvQcaiEtN1fx8TRHj03kK0jAys0Bt4nzd824pr+Hrr39GGLmSyIp?=
- =?us-ascii?Q?xiUY5iINB78AZ1id5l1OLvyPT8yvcZY8wy1et0wRvaBauAcGCJJ4WCUFHLlk?=
- =?us-ascii?Q?2H+Kj7Y42SyJmAisNCz+/DPbqA2CNZIBvv/c0WWnnBIzhk7JTC29oG3dR4B7?=
- =?us-ascii?Q?5FEyD1Z4nQSq/QKxbtdOnD/xf0ypu3SpM5lXOTJIzWC9Zr66azbZpWuP4Jk7?=
- =?us-ascii?Q?bRnCmdP2R+3sqFCaeQDJu7P0WVcvjdld4tlRD9Bh1wL8pXxOpNWx0H4WvktX?=
- =?us-ascii?Q?9Poq1AU7XAKGTF/YoSEYaiYkIfL3LaNNAr4GB84DKqWxRhmaDWmGtb3PqkHn?=
- =?us-ascii?Q?jByCLDAPnnaLB85WlCfumR68rPPIwjEUXNFOhBHMXhTuzF5yGmUr4brvhWtB?=
- =?us-ascii?Q?RGu6imVeMcIze7bPkbF66U8LRKZnaccHv0N0l3+vgSv1ZlzsrwRqwRpD8erM?=
- =?us-ascii?Q?O7DbOhZ/6MNmqo4VCMA5GN9TPqELWdJ3lZe2RePcB7bY0Yws7S0pTtMbS0UT?=
- =?us-ascii?Q?Lh/aGJkXH2v2bl2a2E3Ekro6LFEL4x/S+tidSGB6897hRXRjlP540pKyc0gJ?=
- =?us-ascii?Q?8AehTlHh2RS6xtxFwddj0cqjscKqndm4hNCX++Rby6PR7wSizh2DFotLqxc0?=
- =?us-ascii?Q?u4EKZaR7S3imuHvGtKQ=3D?=
+ =?us-ascii?Q?MrjOUmtYzWrtDxJJtohM1IzFOvRipV1ZD7hZEeXE6KuaZyCmbwqQ915Mg8Ba?=
+ =?us-ascii?Q?O2s6WwylV+Ys7VwJI1t8KT/uMx6JxlMDI7TITDcTxLLkP/Tc2+T8F041oIpf?=
+ =?us-ascii?Q?qGSrwngkKqHPFV9NhCVOKTh4tGzv7k0wvudIkxa9hLjFGCPBR0YljG2Wrvyi?=
+ =?us-ascii?Q?RJQcSuhyHm3ZzZ6LNDc9648juWryiunAmUZRECAD1ngF7Ff51Gr7tM5MjOJe?=
+ =?us-ascii?Q?an4vWasBl4nEHvqm5Irll9HL7kQ2oh9+ltX6RlcxrTaaUYgGc3lj/9ZStQk3?=
+ =?us-ascii?Q?ZigPASgmtc1ofsVF7JACBEuovuJ7tZ4GQrXW2mcrIP4+/to5MZ/MexDPUfVd?=
+ =?us-ascii?Q?IgkYH/tGSKSrIkCbTPH9cyNUJ2D50aOIMS5BHCpfdOrQYBdd1rUdqku/2eAG?=
+ =?us-ascii?Q?F1T70xAVa3IJJlZKie7uCvYyAY1F/KCRqUKLAWMpWLPq6zBlunHzi7xRhKAy?=
+ =?us-ascii?Q?JvD5q/XRQKVPCbV5gpZH/bmX72tIRmUskIqJL/ZHnk6x+EOXBSnqkmmkQVRb?=
+ =?us-ascii?Q?BwhGnvOZT9aXvOwf3BeCzRUHu5spXoczN2Oz/70xtpmsSkg0S2Vdkzs8+pYU?=
+ =?us-ascii?Q?uOh44N2nRpZCNrQHjEgyPMbVgUg6E9fe5dATu0zr36vMhHpwXzioEqHZbI+l?=
+ =?us-ascii?Q?2V5DyLzHwxelJfM9pxWaJsbwfv60A+0p2ZHJ7yCTvxkMIJmOANw9QYSk7eiF?=
+ =?us-ascii?Q?hMKE3yumQWmA2lCEAwxN7PrkpMjxPayk4ishjuLMiu1HN3uox8K/gmZ+F/2B?=
+ =?us-ascii?Q?ZnMahoZ/HTxiVaOHpzJfK7rma0sS3G8r9Okim77HehTqNIqkyxh4aAkb1gk5?=
+ =?us-ascii?Q?UI/DEJe198fkDXEMHm9oKjhOFrqDIW3LnAu+Q1gjmlOMO5n692cbL2ji+k/i?=
+ =?us-ascii?Q?DjxnNoRgmlcwNxOkJXhrNDSKWYHT9qII8pzeUwj1DfSsjwbe3NsvuFBRvHGx?=
+ =?us-ascii?Q?HCJroP/pzP3S4sNRvmcsZHlHkXAfJqrDrSBzenaJL763H49jGlp7A8rVNVaq?=
+ =?us-ascii?Q?9CRqVMDQlJVKFT7kGzQNcYKFpuowSL6/+E78CTQz6DisReQ1Wd9Ac94IjNB8?=
+ =?us-ascii?Q?D2LAkLajLu739+3CM6tpKV2j3L/btnJnYM6ka2YrcB1J1eBto0stu4V0ZOMN?=
+ =?us-ascii?Q?ndfQT2dwnCthaHluII3TKx29pUCwRROjTBfBvpSN+cWkDmRk3Ul29i+XQfWV?=
+ =?us-ascii?Q?5vy0+ynQ4aUzlRWPJ/RFA03K7uj9UBIpcYJYr0nIgnogdMC025spxUbn01Uy?=
+ =?us-ascii?Q?6k5mxXbt7rDTq/6YEVM4FtM1b5218F98Ln1SxJUO9PmbkcVUHZRT/ETz6nTr?=
+ =?us-ascii?Q?2zFyGn93+nbULS6JeoWHMeil65d8mrAJeT1YrM26W+z2Wt0qVVqJVaN+Iws3?=
+ =?us-ascii?Q?3f5gNz6u2wuvHxOuYlsiqZ/zJU/kOT5yUMAVJR2UpEMOMw19TK2hZD99gUtC?=
+ =?us-ascii?Q?eCK1+ecOOqAkPoS3G47Lb37Ti/dCKo2uB4aUxFfQ9jxYkkEbmvTH5UDf3qdP?=
+ =?us-ascii?Q?i4UZ4fWwhZ0llqIJzu3E+Q8Ahd08lnJoS/pMuG08oLmoDJ4/kUZOSd7ohYmr?=
+ =?us-ascii?Q?49J4XF2kex+iTbDOlnS2Gaua7xOUMWIphVbs1HiS?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -133,73 +152,91 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	vDkICp/VXQVf3c7SYzm78Gb01KOVHqmZONWFCGUtE7eo6oHgM/YA9RwibIe90Y4MrqxRKBF1inBDWYYRlpo/YEwzxv6a9/cxSOznqWZXq0ae9E3sLlbYLet9w1XlGoimQliic1EQoiODmKc2hYV16U23LVswExU0TFSVhji24jhoffHhc3VeCLhrX0raED6k8TIaP2a2E5uRgbB9gn07C63gr9OzkuI5nWnuWE/d89hXgZtSK9IFd1J9TXTLSg6iOvNwnTYdiW7RZqMXkAGKbWRBiJv7FwB5Of7haK2gj+EXd1jrQNWlH0QILbC1u6lhvly4vrCCfZgvPslQsalMxRhs9NGJ8un4TPRoAtzNqkeD2C+yw7L3CcJiApGTT+IRskIrFR5VZNlLoNyZElL4mChrhrZ4SVSOXQ9i/1JjrcFREhA7l8HVe4sr8fu2eJV/fu67vsGwCQSZFlh3V1VPajsOb5Sktbr3kasrt8cP6iVRLs2EyV05KfGNPb+PpSM//19GPE10lck8WdpIdYtGwHNdeNd7Dv22INsC6syldAun1qKwskP6Ebueo5tdBmRzA6dGBqk0m90KPtB6V3GYloE5xBMDhgOpQ1IhkgAVC6TXKZiwPbjeZNUEw98aQ5KTc+NWiB2uLe/X0ySXWsPJ4g==
+X-OriginatorOrg: sandisk.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8429.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd37169-986a-4944-8651-08dd6e003cc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 13:55:45.4763
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR16MB6196.namprd16.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae5c649-0f0f-450c-5ad4-08dd6e00408f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 13:55:51.8621
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 7ffe0ff2-35d0-407e-a107-79fc32e84ec4
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FaN2IB+e+IIy3io+kFiL4cGIFp76zNykE8QQN8pVHtm6zGibG7gcR5sjCZLH8yz51I1fau0IaBTDqww+kkIhbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10359
+X-MS-Exchange-CrossTenant-userprincipalname: D453mPOjN6Qa/C9ZMxb3XCOStPBXkdp8c5wif08ko+/c3N2ZMJcDdXSpOd+UKAAceQ1s+HS6jk8FaPFU3Jropg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR16MB5854
 
-
-
-> -----Original Message-----
-> From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> Sent: Friday, March 28, 2025 2:25 AM
-> To: marcel@holtmann.org; luiz.dentz@gmail.com
-> Cc: linux-bluetooth@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Amitkumar Karwar <amitkumar.karwar@nxp.com>; Neeraj Sanjay Kale
-> <neeraj.sanjaykale@nxp.com>; Sherry Sun <sherry.sun@nxp.com>
-> Subject: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing=
- the
-> baudrate
+> To manage a graceful power-off of the eMMC card during platform shutdown,
+> the preferred option is to use the poweroff-notification command.
 >=20
-> This adds a 100 millisec sleep after change baudrate vendor command.
+> Due to an earlier suspend request the eMMC may already have been properly
+> powered-off, hence we are sometimes leaving the eMMC in its current state=
+.
+> However, in one case when the host has
+> MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+> set we may unnecessarily restore the power to the eMMC, let's avoid this.
 >=20
-> It is observed that when the baudrate change command changes the
-> baudrate from 3000000 to 115200, any immediate HCI command returns an
-> error -22 (Device Busy).
->=20
-> Adding a small delay after the change baudrate command complete event is
-> received helps fix the issue.
->=20
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  drivers/bluetooth/btnxpuart.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mmc/core/mmc.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.=
-c
-> index 5091dea762a0..e26fabe8fb3d 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -1238,6 +1238,8 @@ static int nxp_set_baudrate_cmd(struct hci_dev
-> *hdev, void *data)
->  		if (*status =3D=3D 0) {
->  			serdev_device_set_baudrate(nxpdev->serdev,
-> nxpdev->new_baudrate);
->  			nxpdev->current_baudrate =3D nxpdev->new_baudrate;
-> +			/* Allow sufficiant time for chip to switch to new
-> baudrate */
-> +			sleep(100);
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c index
+> 3424bc9e20c5..400dd0449fec 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -2014,6 +2014,18 @@ static bool mmc_can_poweroff_notify(const
+> struct mmc_card *card)
+>  		(card->ext_csd.power_off_notification =3D=3D
+> EXT_CSD_POWER_ON);  }
+>=20
+> +static bool mmc_may_poweroff_notify(const struct mmc_host *host,
+> +				    bool is_suspend)
+> +{
+> +	if (host->caps2 & MMC_CAP2_FULL_PWR_CYCLE)
+> +		return true;
+> +
+> +	if (host->caps2 & MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND &&
+> is_suspend)
+> +		return true;
+> +
+> +	return !is_suspend;
+> +}
+> +
+>  static int mmc_poweroff_notify(struct mmc_card *card, unsigned int
+> notify_type)  {
+>  	unsigned int timeout =3D card->ext_csd.generic_cmd6_time; @@ -
+> 2124,8 +2136,7 @@ static int _mmc_suspend(struct mmc_host *host, bool
+> is_suspend)
+>  		goto out;
+>=20
+>  	if (mmc_can_poweroff_notify(host->card) &&
+> -	    ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend ||
+> -	     (host->caps2 & MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND)))
+> +	    mmc_may_poweroff_notify(host, is_suspend))
+>  		err =3D mmc_poweroff_notify(host->card, notify_type);
+>  	else if (mmc_can_sleep(host->card))
+>  		err =3D mmc_sleep(host);
+> @@ -2191,7 +2202,7 @@ static int mmc_shutdown(struct mmc_host *host)
+>  	 * before we can shutdown it properly.
+>  	 */
+>  	if (mmc_can_poweroff_notify(host->card) &&
+> -		!(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
+> +	    !mmc_may_poweroff_notify(host, true))
+I guess this deserve some extra documentation because:
+If MMC_CAP2_FULL_PWR_CYCLE is not set but MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEN=
+D is set,
+!mmc_may_poweroff_notify(host, true) will evaluate to false while !(host->c=
+aps2 & MMC_CAP2_FULL_PWR_CYCLE) will evaluate to true.
 
-Hi Neeraj,
+Thanks,
+Avri
 
-Assuming that msleep() should be used here, sleep (100) means 100 seconds o=
-f sleep, too crazy :)
-
-Best Regards
-Sherry
-
-
->  		}
->  		bt_dev_dbg(hdev, "Set baudrate response: status=3D%d,
-> baudrate=3D%d",
->  			   *status, nxpdev->new_baudrate);
+>  		err =3D _mmc_resume(host);
+>=20
+>  	if (!err)
 > --
-> 2.25.1
+> 2.43.0
+>=20
 
