@@ -1,154 +1,110 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC161F4C8C;
-	Fri, 28 Mar 2025 23:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062291FDA8C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743203642; cv=none; b=rA8x2N32joM1t7jPnUryV1NsTaNnkYKjYdJUHFM3ryBaFAlidD9ljZjVT1nFNwwYSrmqbe7f5u/fmzFnIPVFM90hqsdM3I0PAsfPyrOuixesrcOZ5xdC3sExwDozPTZOjNeIEAIu7kwNZgnQeTiLHk6yMQZTPglM0R8/kfLKoR8=
+	t=1743203644; cv=none; b=RHUNSt87jkhnSa0N1Z0N+hu1VTtYZwXbZQyLnRPkgpBB2pVhjIXhddsQ5hON8Hi9V8g+RW9La5xn/CZXZ/CjnjRzRQ7my4fSdmwlXYpeWp5OjSRMWMrfo42jAkAifmbk8gNqeLO08Y14Dy0zTnd7N8p4CvJQ2Er9GOm9okMzAdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743203642; c=relaxed/simple;
-	bh=jiUFZxX8fOBNKQ032WhgeD5jputqOMsHK/RNJfD4P18=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ik+hisnxsG0I+1gvB7ZdzcK+HxZKD8qISXkzfzspQv/7LOj5zDS6SRvCoYp682Q5K7FAWaSlWTj6Am6HYfvjdo3G/S9CUlPLOQyAfitFvyw/oHX2JO1g+FwwCbCClt2GiiPiPMDtC3K01TQkmUOJmL4CwaFZQ8Wg6yVCLnBQkNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Vqm/uMkw; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1743203644; c=relaxed/simple;
+	bh=t94ZB/a5qQUmwcFfEIDjBB2U+w06Wmg9G7OaftUk6+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I2kGJrZMZpzXchtCpqpiiigxyzPXEU86OCD6MTPXJtfdgkeN4PJIlrlTNH5bVO4hgT2oFnYxJYHIIR0DP9px/M2bRP5kVKzRewprHWFbhhi5gX7eZpjxBUCCoa/i5sKiHBrTVRGG4nzOQXz6slrpTDztjSroBRvopayouajcIXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YcPv1t0+; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vqm/uMkw"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SKWEX6024609;
-	Fri, 28 Mar 2025 23:13:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=QtATi
-	J3ap4ihta4UCEGQfu74R6SmTiDRBNn1rLL5vXk=; b=Vqm/uMkwEHIAhJBZF0ONt
-	625uOKD+5zqmRrJJLSQ/yqcF99ETvdh5Jlc3PgZRctZEkLpvzFStkepXEHYdTbq9
-	/qdLaLR0Mcxoj3H1Eo8hm+0A4Mh8mOxD+RLRwIhMosML6S+42pW+Yo8zAeEAQG7F
-	LTC/Y8b1o8dejRhvto/LDXC6lQ5AwMrRnq50Wd+/NqAAvt+GtlcBxz0Z0ikaJZc6
-	Yuu14xp+D6/ZoLLOWCUHA3r05pBfBvydNGaajhwScFJG+z+XBv8pma/Frb+XHC/p
-	yMQExR6lPdLrGUKjXzyywoki+fAqe5mPyBZmpRutDf5t2C0h1VPnmrzPuc8xrHIC
-	g==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hnrsqxjt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Mar 2025 23:13:33 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52SMuIbn008374;
-	Fri, 28 Mar 2025 23:13:32 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jj701k81-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 23:13:32 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52SNDV5w027033;
-	Fri, 28 Mar 2025 23:13:31 GMT
-Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jj701k77-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 28 Mar 2025 23:13:31 +0000
-From: Ross Philipson <ross.philipson@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-Subject: [PATCH v13 13/19] x86/reboot: Secure Launch SEXIT support on reboot paths
-Date: Fri, 28 Mar 2025 16:08:08 -0700
-Message-Id: <20250328230814.2210230-14-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250328230814.2210230-1-ross.philipson@oracle.com>
-References: <20250328230814.2210230-1-ross.philipson@oracle.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YcPv1t0+"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d45875d440so11103835ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 16:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1743203642; x=1743808442; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Yr92lcwq5x0ZFyCbkIww3KuTV12e93SVlPMAsCMg51Q=;
+        b=YcPv1t0+mNWmv3g2d5Of0qd5+ZUd0O2LibiMv34xU/XVep4hJRVk1vzOOmAKq0ua1W
+         Xwx3rTHs/Wpt8ZNyyN7T/fw1EmGAe6gC2Nl/4v+raiwOFnu55XSlonlr0Xs7PKRRWleW
+         TivksR/IyNbOOm/geiZwG/QodpbEoiw5GDWfk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743203642; x=1743808442;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yr92lcwq5x0ZFyCbkIww3KuTV12e93SVlPMAsCMg51Q=;
+        b=WLoGSmyNXFwqNHbMjeDVuhERJVglaTbr1fLT/AQdRb8dmTHHxBx8gn0PCQ8YWHviYY
+         BIy7zn45EHx/4kqj/Nn6pknt7ycJnX8stqT7/IokW+FNqFTYYowiOE5ImonBWZ2g6YYY
+         MoUW7G9s66fGqRZaeYKdtMKQMldwweSyYRrCx3nt4AQBQohgm1Z58tf89mbtxI1PQhYZ
+         fuwvagi3Bwj7xJ7yEAf8lgjqbG0c4yFSXlR+CPelu3J4mi5ifHGWBOvud28PpSrjDiDs
+         a5IBl545NYNYcdedbepHD3mgKF/a+BBCXRj9hHj1ZLjsDRePX1TWa5I7S6mixbG9pij0
+         n60w==
+X-Forwarded-Encrypted: i=1; AJvYcCUnAgxHNatEgvRf9VhBaIXliGeCrHrwWyf9TiIbzxsRiJnhRDJzcx2dizFpTE3CK7lEcdS0DqGRy4h5M7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU0j5y5F6WcH7t/j/5+UjcReG0VtTcbtBGM4D6+KYX390jugra
+	Vz9mJ/ueIzNfMuTc0NpeTCVSL+h66jCHgf7L/tU1heGTmSSEQ0cPrR8eqOiYMZU=
+X-Gm-Gg: ASbGncuVwNuVIeZ3VmxnIDjn7UFpgrNbi5l5LIwrSqlKWaONMVI2hezhDvmc5d3kkYP
+	Wd7ync9Dk3hMURazw9W6euWAnlIEUlXiBt7FVk1MBW8bTYeVkCC/eCOfuvmyQhFRkdfmOBwtJIC
+	gG/DYwh8aVBL1Lyb/1k97VT/wAh6Sj0kV4pXZ+izAAF8TQ1YH3rO2zCAimqwB6xXfrMoiz7Ndbo
+	FafXDlSwnFRktsOZq1FjczviL4dBfC9z1KNoKdEaNXlrgpVYAWRTqFIcV4aRJwnzLsXAtndGcJ5
+	MPAw7T3YEIxdX84gX1H2Lh5RDrUYxJxj9qnLwPqBym/7ezHfoIZG7ow=
+X-Google-Smtp-Source: AGHT+IH70oQnJuM39SPUEueHTkjRUfH10oglLKDNJ/rt0bF923Ls3rYLJLdj2umTWLyd5RtMW24WAw==
+X-Received: by 2002:a92:cda4:0:b0:3d3:fcff:edae with SMTP id e9e14a558f8ab-3d5e08eb18amr15510035ab.3.1743203641817;
+        Fri, 28 Mar 2025 16:14:01 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d5d5a6c6b1sm6921945ab.17.2025.03.28.16.14.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 16:14:01 -0700 (PDT)
+Message-ID: <341f69ce-2af2-4c13-8144-146f1aa9fb07@linuxfoundation.org>
+Date: Fri, 28 Mar 2025 17:14:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_11,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
- phishscore=0 suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503280156
-X-Proofpoint-GUID: IvCBu-NqQRPMYCp3b7pQaaNbQMGzZ1Cy
-X-Proofpoint-ORIG-GUID: IvCBu-NqQRPMYCp3b7pQaaNbQMGzZ1Cy
+User-Agent: Mozilla Thunderbird
+Subject: Re: bug report for
+ linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c
+To: David Binderman <dcb314@hotmail.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "shuah@kernel.org" <shuah@kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <AS8PR02MB10217315060BBFDB21F19643E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <AS8PR02MB10217315060BBFDB21F19643E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If the MLE kernel is being powered off, rebooted or halted,
-then SEXIT must be called. Note that the SEXIT GETSEC leaf
-can only be called after a machine_shutdown() has been done on
-these paths. The machine_shutdown() is not called on a few paths
-like when poweroff action does not have a poweroff callback (into
-ACPI code) or when an emergency reset is done. In these cases,
-just the TXT registers are finalized but SEXIT is skipped.
+On 3/26/25 13:25, David Binderman wrote:
+> Hello there,
+> 
+> Static analyser cppcheck says:
+> 
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:1061:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:1510:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:1523:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:247:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:435:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+>> linux-6.14/tools/testing/selftests/mm/pagemap_ioctl.c:490:11: style: int result is assigned to long long variable. If the variable is long long to avoid loss of information, then you have loss of information. [truncLongCastAssignment]
+> 
+> The source code of the first one is
+> 
+>      mem_size = 10 * page_size;
+> 
+> Maybe better code:
+> 
+>      mem_size = 10ULL * page_size;
+> 
+> Regards
+> 
+> David Binderman
+> 
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
----
- arch/x86/kernel/reboot.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Can you send a patch for us to review?
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 964f6b0a3d68..9069415e0788 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
- #include <linux/kexec.h>
-+#include <linux/slaunch.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -778,6 +779,7 @@ static void native_machine_restart(char *__unused)
- 
- 	if (!reboot_force)
- 		machine_shutdown();
-+	slaunch_finalize(!reboot_force);
- 	__machine_emergency_restart(0);
- }
- 
-@@ -788,6 +790,9 @@ static void native_machine_halt(void)
- 
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- 
-+	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-+	slaunch_finalize(1);
-+
- 	stop_this_cpu(NULL);
- }
- 
-@@ -796,8 +801,12 @@ static void native_machine_power_off(void)
- 	if (kernel_can_power_off()) {
- 		if (!reboot_force)
- 			machine_shutdown();
-+		slaunch_finalize(!reboot_force);
- 		do_kernel_power_off();
-+	} else {
-+		slaunch_finalize(0);
- 	}
-+
- 	/* A fallback in case there is no PM info available */
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- }
-@@ -825,6 +834,7 @@ void machine_shutdown(void)
- 
- void machine_emergency_restart(void)
- {
-+	slaunch_finalize(0);
- 	__machine_emergency_restart(1);
- }
- 
--- 
-2.39.3
-
+thanks,
+-- Shuah
