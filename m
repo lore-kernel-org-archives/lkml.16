@@ -1,109 +1,116 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29FB13D89D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C713D89D;
+	Fri, 28 Mar 2025 02:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743128394; cv=none; b=edmwsCJcXsUtiLHIJ8Ktp0H40z/Ep0V6y202UqgYB7Lh/j3TUjDOEwk2kJgtUI+HS0YGz9L+Fp/9I2B7XR6sqS7zPDRbccR1nF26Li7AZ8L+z2kZNulK5hvYsoMbjJrU6cyUpJva8QNjwzujs0AXfEXKbGBtPYN3DshAC9oZeNs=
+	t=1743128545; cv=none; b=EkqmNOhE09kH5DRifMbH9USERfTKRKU/d6GrscFlf7vdQ5mXTOq5shFxLxYmaq9KFsLxmDC/Tvn1wBkJHP9m63vX6+9mbRdRwW6JPy8m7C0kTHMXd/2U4sahJXk4jaoFVPK6e379y2s/Bvd6OSh6Obb9QwzTGLCAx8qFYHBv7yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743128394; c=relaxed/simple;
-	bh=CC5yY3Y0dl2oEtcOaWKcp+6kyjQ+L9YS3Yf1OeYZKQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IeosVrEo2eu1tmbmUVTM0CQ+kwiWrwQ85IW3a1bR6eRONM1+gqquQs42eSerZRP/EyHkfjMRBJdy3sUKWdIRNsQC/6hAQwc/xW8YNHG6CxAtI5S6CH+slAZt5o1bWh5VKdgJrOHatVUZDImvL+oslppDDUk9LExNe7hbKAuheEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=H3O7WmcZ; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743128545; c=relaxed/simple;
+	bh=rzOiPlsw0Ze9Jrg8kR08chKDFfn1EOEud685m8doOZE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sIhBE9ku9OZ+QTOb+LTN5BTBBp0w68n2cQNK/CKPC0F1vOvs48VqDLYMxU86xdVsYDtUoAbt7ZLCN32bK2QPMDmH2ao7ah27B7abqTEQk1P7sHSz8pUvtO9lKsPotFmstSXO20ncUFIgHJ7fX/4eZOgBs4H9iVjmIhDsTdyaODY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=YEVEFI7I; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="H3O7WmcZ"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3202715a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:19:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YEVEFI7I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743128391; x=1743733191; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YvvXVtbcDyhtrYpmT5uG5VCGRECSZgvrz4n2msclEFE=;
-        b=H3O7WmcZPLpnCQuihDM5u0QUAtHYEeBFvLNv4zr5kqraa0KPRRUWfBtxiJa9qaT8+5
-         xdMKOnwZAgxt0NcMfNRDeGjFsUzZf/KaUt/HlizpZV1haaIpC1zA1bOn4PW3fdiuBzV3
-         bH7d2iQ7qO+om0sKcY7chPI0btJUv+gl2MG0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743128391; x=1743733191;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YvvXVtbcDyhtrYpmT5uG5VCGRECSZgvrz4n2msclEFE=;
-        b=OERz4/G2YVz3wxAvSfgMMJ/lNxRCuXZDJUflTJhwe1ErC6xwDCpNFnRNaZTiPDQEXx
-         KyFm1Z6/BrPkCdaNKB3O8LinvFyRXM2u6bNvW2DctqVenYO2gF4kyrUBEuRmT5UuvMaN
-         kSvEOoZJCDabjq3r/siS1btUEKGGusnnH3fUMll9oK3MqMb64eYfRd6Vgm/WXwVWljSv
-         iwAQbTYrSqwpsyyEB1Ef7zu3mWooNtC601XDycEuYUV/WeEN3XobsWMgRuq9iAftOm5W
-         fACkvblk4tetGsKl69/57H9PI1AV/dJSMgI6fPGMJxtkxSdfAjIf+wXVWXj1Vq2xJ8cp
-         h8Jw==
-X-Gm-Message-State: AOJu0YxI6NBT/G1UgeyzjNvBknzTnFhErpUeM5Y9c76R/ElhF1ra3wUC
-	hx2A+3Mg+W2h7jEX2l7KLbyD3fZf51lCdpSEvoonPQuSv5NFZYmMAf2k/RfrJJvO1Z0bIrBz6gQ
-	05lw=
-X-Gm-Gg: ASbGncv6i+F04v7ZZ6BHxduodIVgziufPJMmgbPx0QafS3ACYoStLIuUB7XfIS/4V5V
-	DYsR4QBRYj+vL8QysUxe01RC7QQwAzWFJiMzbcHtL1J0Ed1INgvmC+oyMkCDSPVfzOzTM0qXCCZ
-	3VPBmqulLkJ4dZID92/1Jn4XosLUjGDlXnv+HpvU5rw79xdCXJTLKmdAKJUDW7d7aX30Ly9VIUh
-	kiT+fYHHVGFiSxesCP3gbMwlqhBqPvkvnQgNFSJDyv7gOgvKCd//7TXrNeoZjgFZSUkN6sW0wWg
-	WoZhNVdn9g22y0F+sSbxBOj0dU+Uejt5LtgSEcxzgtJ6JNmM4BNssLXyrI5HGXL79b/wZ5Z53mb
-	NDN0wQdqD2MH7eAB/XBo=
-X-Google-Smtp-Source: AGHT+IGbEnhIRas1hrh6hIkJH2GSTHDdsop2afVfHu0o7K9NwxzrzVNg/CBFe69oM/GHWngdNkMDSQ==
-X-Received: by 2002:a17:907:3e8d:b0:ac3:cc9b:5b6d with SMTP id a640c23a62f3a-ac6faef9f4cmr483340466b.16.1743128390952;
-        Thu, 27 Mar 2025 19:19:50 -0700 (PDT)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196e954csm81719766b.171.2025.03.27.19.19.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 19:19:50 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so3114587a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:19:50 -0700 (PDT)
-X-Received: by 2002:a05:6402:5106:b0:5e6:17e6:9510 with SMTP id
- 4fb4d7f45d1cf-5ed8e0651bemr6458143a12.6.1743128389795; Thu, 27 Mar 2025
- 19:19:49 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743128544; x=1774664544;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YwI/xbbicptm+UYjp+Km1RDmkr0i6xne+jGkYZTwAPQ=;
+  b=YEVEFI7IfLp+PFwSMUmKng+QLDIVB3DQ6vzAFPldklm++CDaGhXg27m8
+   ijvyUCE4Ar50iPP2Nijte2nTi7Z+ePi9KeDJJ7mgOe4BVe4YTevie0ytY
+   vLKsrWAFjPBavAay2gBnl1dJm33JwLLvRq4cZK+ywdzyMZyHx9oX5vLdL
+   4=;
+X-IronPort-AV: E=Sophos;i="6.14,282,1736812800"; 
+   d="scan'208";a="5251929"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 02:22:19 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:56542]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.55.83:2525] with esmtp (Farcaster)
+ id 0304003b-c2ed-4bc2-ab57-3e91635583f7; Fri, 28 Mar 2025 02:22:18 +0000 (UTC)
+X-Farcaster-Flow-ID: 0304003b-c2ed-4bc2-ab57-3e91635583f7
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 28 Mar 2025 02:22:17 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.35) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 28 Mar 2025 02:22:14 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <i.abramov@mt-integration.ru>
+CC: <aleksander.lobakin@intel.com>, <davem@davemloft.net>,
+	<ebiederm@xmission.com>, <edumazet@google.com>, <horms@kernel.org>,
+	<jdamato@fastly.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<leitao@debian.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in __dev_change_net_namespace()
+Date: Thu, 27 Mar 2025 19:15:00 -0700
+Message-ID: <20250328022204.12804-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250328011302.743860-1-i.abramov@mt-integration.ru>
+References: <20250328011302.743860-1-i.abramov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327171037.032bf7e7@gandalf.local.home> <CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com>
- <20250327212447.24e05e7e@batman.local.home> <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
- <20250327220106.37c921ea@batman.local.home> <CAHk-=wiNLcTj2iiE9waSkmpYpu6VQ_q=Zaqi_WmAMiv_MvH4vQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiNLcTj2iiE9waSkmpYpu6VQ_q=Zaqi_WmAMiv_MvH4vQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 19:19:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjhT_xPdATLmfmdWCM7gKApvTyino_ffko5z1YumJDAHA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqio8bwcg7C9HLER2JPmvSkfgOSeGjmM2sYsQkAL7mKNzqwG8CJcMn3Bcw
-Message-ID: <CAHk-=wjhT_xPdATLmfmdWCM7gKApvTyino_ffko5z1YumJDAHA@mail.gmail.com>
-Subject: Re: [GIT PULL] ring-buffer: Updates for v6.15
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Feng Yang <yangfeng@kylinos.cn>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWB002.ant.amazon.com (10.13.138.97) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Thu, 27 Mar 2025 at 19:17, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> But NO, that is *not* what is used by the code.
->
-> You literally use "struct page *" whenever you want to mmap it.
->
-> If the *only* thing that was used was the virtual address, this
-> wouldn't be a discussion.
 
-Just to clarify: if you don't mmap this into user space, then that's
-fine. Then you can keep just the kernel virtual address.
+> Subject: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in __dev_change_net_namespace()
 
-And I already told you that that is one option: just don't mmap.
+s/__dev_change_net_namespace/netif_change_net_namespace/
 
-But as long as you insist on mmaping the buffer into user space, you
-follow the rules. And the rules are that you don't play games. You do
-this RIGHT, or you don't do it at all.
+Also, please specify the target tree: [PATCH v2 net]
 
-And you don't lie about things and claim that the only thing that is
-used is the kernel virtual address.
 
-Comprende?
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+Date: Fri, 28 Mar 2025 04:12:57 +0300
+> It's pointless to call WARN_ON() in case of an allocation failure in
+> device_rename(), since it only leads to useless splats caused by deliberate
+> fault injections, so avoid it.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Fixes: 8b41d1887db7 ("[NET]: Fix running without sysfs")
 
-                 Linus
+Reported-by: syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/netdev/000000000000a45a92061ce6cc7d@google.com/
+
+
+> Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
+> ---
+>  net/core/dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 2f7f5fd9ffec..14726cc8796b 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -12102,7 +12102,7 @@ int __dev_change_net_namespace(struct net_device *dev, struct net *net,
+
+It applies cleanly but please make sure to use the latest tree.
+
+
+
+>  	dev_set_uevent_suppress(&dev->dev, 1);
+>  	err = device_rename(&dev->dev, dev->name);
+>  	dev_set_uevent_suppress(&dev->dev, 0);
+> -	WARN_ON(err);
+> +	WARN_ON(err && err != -ENOMEM);
+>  
+>  	/* Send a netdev-add uevent to the new namespace */
+>  	kobject_uevent(&dev->dev.kobj, KOBJ_ADD);
+> -- 
+> 2.39.5
