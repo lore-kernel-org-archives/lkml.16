@@ -1,178 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918D421ABB4
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0048421ADC5
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157746; cv=none; b=Vop+LvQuG/8OBp1ZUCyOK1MgeuaXGr/A4FrDzhpLtXtuJldGki4Wv5OECO/XHdsFSruajhbTBoJHKyzrMG99R013ACMqJ+HUE8exY8HZId2BJWemZWOAIS7L4YdYm/58bytzPI4ts1+y8JLZ5Gfo/y+xldlCNYpcx5PmPGs3qDI=
+	t=1743157750; cv=none; b=bxIlMBUnGv+famae8JjJ6LsHulxK0YUf6HyYBrf3W0GohB42Ges7RGgAU6aiMAzBrWnPQI8GpJYZAtT9/v0dVfEDNQ/dlylxI3vyMOjP/w6p5KP3Q/TsmYrSodUbVQwERG/KX1DJk6XiO2dJ7Et/LAzbvLaYc3vVAD55U8DWQgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157746; c=relaxed/simple;
-	bh=3xtlvs1vbdz9Lx9DTGncf10UyrhBPWHbtrA9J6tHahs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WNM9kbCLFY/nODmDnzSA/KA4zD3PGJLx/fML9/vyPhGAQ7nb31J68/VHYSff2zTAIzd6JS4N318uPFMBWNl+VZECkd95WO6+WvD9kiakDeoh7UDVzMSadFpiNK6JuFsTabViWntxNdR1LoY591alWhBHlTCS6RsX/xu4BJm9yPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pV5pup4M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743157750; c=relaxed/simple;
+	bh=K37yE3iyYuruvJeuoMfhV+Q8sLRd6nF2BXd0h3DpmUU=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=cxH9NNbBx3ViUvuzV4FBSujhxgotSerssd8KNlYLP1WKov+nGyKhynJtNevmbJ7fG77CHQuZMJ3msHvQ/+UgRMEL/7LTJBD7DZQ5NmIaIotMlEr/ffUjTEN7DOeWI3QQ3FOEIQOAIHh3qUxzBihvBbHEvZyy6afId3H8DzE5UIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HkJb0hyf; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pV5pup4M"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S6NP2W011014
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:29:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OOCWk2D0zXdlqRt97flBwH+ovhY8VuJGcvABkqQ95gA=; b=pV5pup4Mmye4wiWE
-	riA+ELf6VMimGnr6PEFmbK/OHkV1ZWSY5Kun6KqTs7rKlXdptgaUwrMm9R4MGSsD
-	YglQ1pKMhE65oar/bDlKtdF1zpMe1u12/q+jtPo86kh4ilhFQ9tOA9rD+JD6ryxF
-	tRV9AByl5oWC4+vErii1+75viy1DnJfU0cVWD6/0gymhgjn1SBuRFh44L/M1d5dD
-	i5rLiuxirj+rOo145YOS1qC940wtVI8kMYO57FRg6hxqnSUktnsSLb98y8OTGT9f
-	etOrwXHM1TfieNBB7Rlfchuh6oodLMjpR6uhKoIak69ESH1TKCP8ZSQf/C7MC5wl
-	W1kj+w==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45n0kqm9g5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:29:03 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2254e0b4b85so35362355ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:29:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743157743; x=1743762543;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OOCWk2D0zXdlqRt97flBwH+ovhY8VuJGcvABkqQ95gA=;
-        b=qtdYpnbhpD9SCvt3GIVb2NWXwFtJ//DCngfDWKAGMEM7tS8IcscuWXXbk8C3fhn3Fq
-         WVToVO1vNe3OZsSvRZgVrV0DPCngzkmtgdV2EYRedA6Yl8xWDpi1M/Hk2arNFfNd06yH
-         6WQNQfGSymLNdel5CA5UDROvxeZpIhzSpSVsBQj9HP9gHDNMABhSL6us7kCLUakpOVql
-         HcAhrmWb/LoDJlstzNvOPvkfRzVu1Z64XtkoSqDGf5CtuYr6ufSUmBJIUfn8ETLQ8eQj
-         x/WMom+CAs6FqGNttTgG74Crs/Wqb4U5rsNIUwHq1Bido+OiGOBcLOL0AG/AOyibVKnz
-         HnZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/azS9aajHh02BBjUr3MFHfPdPxQUKyvL8vFOT6TZtn27hUYEOcWUpbrnIRrntLueRp+ZtKIE8JypI7yQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGRZB5Wgql7pQg/y5joTRia3fwiWNaCRHiVYa56wVKoEO8/JWH
-	BhPBIuljrhVwh1dM+UhAlIFnPLwO48RH/+yPVvirS+eKWC/O5nEt7Wk1HGiQay9+778+fl0cQLg
-	ridJoZSWFehhw/lXBMZaypFQEBENXRYvGoIszirJzOcLSOatIMUARZoO0lYnH2fc=
-X-Gm-Gg: ASbGncuL94veupISLG1IjfiCZlwOsbnHto5bdaPqvCyLmAJqOYwkNmNLQkSVJMUOnyt
-	hycoZJzXY8uUHVVMGJXnzTl3VKrZYki4CT9Cnj91agiQxdg+ID2IVZDOhxLIctJDUHoF+Urc7e0
-	fKFkyXzzS6Kx/obdRkfiPpthaM6l14Lv+HOkKwx7K88daRvhHMDhUvuA9xYglst4AgcPoFn+a7r
-	WqrCgZCzgqSSS02PYw4YBkUXRqjwm/vd6XkZH2kF0yffBr4MmA6tuqnFE3BKrNivUsAvXo0fSXM
-	dM04hWDLzachtR5q4LerersjEVkABzT1Mj4y9bVZLHfSk9UOIP8=
-X-Received: by 2002:a17:902:d507:b0:224:24d3:60fb with SMTP id d9443c01a7336-22921cca739mr35292105ad.10.1743157742713;
-        Fri, 28 Mar 2025 03:29:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEOrLiW9qS/wbDey08G3CBHaVs8TzgU0Gb0MlZV7nWK/tlufZpQxHUCI59tzGgvJMc0Iw7Aw==
-X-Received: by 2002:a17:902:d507:b0:224:24d3:60fb with SMTP id d9443c01a7336-22921cca739mr35291635ad.10.1743157742178;
-        Fri, 28 Mar 2025 03:29:02 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee11b7sm14561965ad.86.2025.03.28.03.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 03:29:01 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 28 Mar 2025 15:58:29 +0530
-Subject: [PATCH v9 1/5] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HkJb0hyf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743157743; bh=I2eMAS1QoFOyVHmK1FI/Y9oGcQmoyT9GZd4/d7u4S2Y=;
+	h=From:To:Cc:Subject:Date;
+	b=HkJb0hyflb/1EuJPHQnZWzlka/VTRKvcRRVQgEDJIEs9z3G5AtIyq+zaIQRifSqE9
+	 mTv5O9iZgLZSapSUkFa/12eOiZ6WEfZrJbCMjLgVa9+x4t3bjBqzMkFi7rzZzo/PJl
+	 ZIN/EeahmydpA9k/9+ny0c0Zh38zPftP0UHkUwDw=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id 5179D080; Fri, 28 Mar 2025 18:20:23 +0800
+X-QQ-mid: xmsmtpt1743157223tws36nd57
+Message-ID: <tencent_3E8155B4A33D48D6637F16CFE5ED293F0E08@qq.com>
+X-QQ-XMAILINFO: NQR8mRxMnur9ApmSjGAwIgWVyFsdwRYfpF6XWUljFL9CGWaXb+SYBegsQSuHDa
+	 nI0O7Z+SDmOWqkDMzxaTGO3i7OLfvQtyuwZTtBFzupP2Hhi4/Jw0ie/8c8I+9e9Bz6rOBMDvmpFh
+	 LjGhF4kIEyIHDng1mYjUXoPH/4hAt1ExAxHyDIfOuEOFGTrXsz1GvmEJgWev5InZEOe6XNT7KOfG
+	 i+HZ/Z8zXKp6BCf6dZqzZu88SHg3p70mUuuoE+JaMupi7pDsHUdXqEHfjnuAX0bXY4RfnpDdI+Tt
+	 3Sw1o6aBIdLu/e9hsxnwp8ecxctSB/sw0x8xjmVnfImb9HwPWjXX3ON6RwRge8jWYKHuusMa8QCE
+	 fOJ/7yfeH6Ls7UxIifcVcAHwbZVKQcPbeZTbFFnf6M5GlqlSWispUd5euM/9w7l3l8kjcMHZh2H0
+	 IiXm0GawkZ3AIq37R9Ec3IIvjMhEWkV9E2FTWEoDH9HX4/rkDkwUplHMODNOWqBdAgAMr1k/QgVz
+	 h1KVDcnqTnjgu/3rTRmLBOtdjqcYkaCvD6w4L5KBBTmu5zaaiZ3ZUVFi7KBY7OmDSR4AEUzsYXGc
+	 TBJpGK6KdTXxMYWh/rYT9ZBfLvakVZvrdm8Bp2o7o6Boa3NUhrC0gpBirYS2yYMfJ+mf0E8wgspC
+	 ZZkBLrUnYNo1X0qpepJJBohoWZaRGZQO3Hz7/W+K/nuCV32tdCjA9LEtI+DPfQQd16sdOqXfAAJ2
+	 Nom+TP5uAR4l6SFs8+vfPoKIFsaXqicDrtE/bePN7AHSNRUM08NAOwgGIVFhhGUX5EBpR9Szz+fm
+	 SJ3ijjMWKDtbF9BKHbKYHxbM7noR0mR3er4vNLCs4eqKUIS4BL/6TzKLKoeVBFHAD+O9VY+/oNoE
+	 tdl99IPisRdF7LTjyQ/MrnZzdJDveQYP5gUDYegQ/QIQWOeliZU44VZHgARWnCbF10OfdZzWcDyZ
+	 vN6+jra0REvKMV93KNnddkuFcsX60ue7kGgVMA6s/9mG3jF+u1aw==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Sender: yeking@red54.com
+From: Yeking@Red54.com
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Yuntao Liu <liuyuntao12@huawei.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Dave Vasilevsky <dave@vasilevsky.ca>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Victor Boivie <victor.boivie@sonyericsson.com>,
+	Nicolas Pitre <nico@fluxnic.net>,
+	Oskar Andero <oskar.andero@sonyericsson.com>,
+	Bjorn Andersson <bjorn.andersson@sonyericsson.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: Fix support for CMDLINE_EXTEND
+Date: Fri, 28 Mar 2025 10:20:17 +0000
+X-OQ-MSGID: <20250328102017.53121-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250328-preset_v6-v9-1-22cfa0490518@oss.qualcomm.com>
-References: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
-In-Reply-To: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743157732; l=1925;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=3xtlvs1vbdz9Lx9DTGncf10UyrhBPWHbtrA9J6tHahs=;
- b=8wAQ+IxIsnfUS5TRRIA0pmea3c7X5AZ8Oj0Mp4K7+EVTYxybUsChyeiQcrS+yhnAGbNhnhVHi
- 0rux6SvyIIYDmTWBwvU9bE6kNh5AJI0y6NhEwXLGTtAleVn7wBQ4lAv
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-ORIG-GUID: X1MyZ2rR86_-brkJsK993bu7X8Wv8EBl
-X-Authority-Analysis: v=2.4 cv=FrcF/3rq c=1 sm=1 tr=0 ts=67e679ef cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=TRJGHeO7bdl8qYu8Ap8A:9
- a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: X1MyZ2rR86_-brkJsK993bu7X8Wv8EBl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_05,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- clxscore=1015 suspectscore=0 malwarescore=0 adultscore=0 impostorscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503280071
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
-rates used in lane equalization procedure.
+From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+It should be the default command line appended to the bootloader command
+line, not the bootloader command line appended to the default command
+line.
+
+This will be consistent with the behavior of FDT, EFI, and other
+platforms.
+
+Fixes: 4394c1244249 ("ARM: 6893/1: Allow for kernel command line concatenation")
+Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 ---
-This patch depends on the this dt binding pull request which got recently
-merged: https://github.com/devicetree-org/dt-schema/pull/146
----
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/Kconfig              |  4 ++--
+ arch/arm/kernel/atags_parse.c | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 4936fa5b98ff..9f14dd13d02e 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -3209,6 +3209,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			phys = <&pcie3_phy>;
- 			phy-names = "pciephy";
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 25ed6f1a7c7a..635e4da33fff 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1534,8 +1534,8 @@ config CMDLINE_FROM_BOOTLOADER
+ config CMDLINE_EXTEND
+ 	bool "Extend bootloader kernel arguments"
+ 	help
+-	  The command-line arguments provided by the boot loader will be
+-	  appended to the default kernel command string.
++	  The default kernel command string will be appended to the
++	  command-line arguments provided by the boot loader.
  
-+			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555
-+						     0x5555 0x5555 0x5555 0x5555>;
-+			eq-presets-16gts = /bits/ 8 <0x55 0x55 0x55 0x55 0x55 0x55 0x55 0x55>;
-+
- 			operating-points-v2 = <&pcie3_opp_table>;
+ config CMDLINE_FORCE
+ 	bool "Always use the default kernel command string"
+diff --git a/arch/arm/kernel/atags_parse.c b/arch/arm/kernel/atags_parse.c
+index 4ec591bde3df..bd163f00602e 100644
+--- a/arch/arm/kernel/atags_parse.c
++++ b/arch/arm/kernel/atags_parse.c
+@@ -120,15 +120,15 @@ __tagtable(ATAG_REVISION, parse_tag_revision);
  
- 			status = "disabled";
-@@ -3411,6 +3415,9 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			phys = <&pcie6a_phy>;
- 			phy-names = "pciephy";
- 
-+			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
-+			eq-presets-16gts = /bits/ 8 <0x55 0x55 0x55 0x55>;
-+
- 			status = "disabled";
- 		};
- 
-@@ -3538,6 +3545,8 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			phys = <&pcie5_phy>;
- 			phy-names = "pciephy";
- 
-+			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
-+
- 			status = "disabled";
- 		};
- 
-@@ -3662,6 +3671,8 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			phys = <&pcie4_phy>;
- 			phy-names = "pciephy";
- 
-+			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
-+
- 			status = "disabled";
- 
- 			pcie4_port0: pcie@0 {
-
+ static int __init parse_tag_cmdline(const struct tag *tag)
+ {
+-#if defined(CONFIG_CMDLINE_EXTEND)
+-	strlcat(default_command_line, " ", COMMAND_LINE_SIZE);
+-	strlcat(default_command_line, tag->u.cmdline.cmdline,
+-		COMMAND_LINE_SIZE);
+-#elif defined(CONFIG_CMDLINE_FORCE)
++#if defined(CONFIG_CMDLINE_FORCE)
+ 	pr_warn("Ignoring tag cmdline (using the default kernel command line)\n");
+ #else
+ 	strscpy(default_command_line, tag->u.cmdline.cmdline,
+ 		COMMAND_LINE_SIZE);
++#if defined(CONFIG_CMDLINE_EXTEND)
++	strlcat(default_command_line, " ", COMMAND_LINE_SIZE);
++	strlcat(default_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++#endif
+ #endif
+ 	return 0;
+ }
 -- 
-2.34.1
+2.43.0
 
