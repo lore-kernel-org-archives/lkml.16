@@ -1,87 +1,109 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB667170826
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD76B17A311;
+	Fri, 28 Mar 2025 13:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169573; cv=none; b=a1zQ/O/XEmfcw85xlSXXG/R95TlcTP1WeIQxdfmv7T+yIoadYMA0/Ge21Lm/A3xbp8KJp+fwollIW8KktZQww633FtwrXqb14tDJes5QkH4TCbn5IJOpEs0EQzZJVZbolCvGSMgbv0nM/5HEDzA04gd4Vk9BYUnTDGT2jEbpfNo=
+	t=1743169709; cv=none; b=cgFg5Q+LGoRsIEHu1aNvg7ZAavUxrrfBjMqwRia1ua1By/aycOqEiHqymyQQSlxHTKlffa+fUkeyvSqydi9wlc2G7Hu/HqA3CrR87iaa9fGSm4J62dGTXH6ufFafX5DMnGaWPNMfb/9qITmLRYtfK9Gxhm0rU041CP4pQxSaakw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169573; c=relaxed/simple;
-	bh=9BRPU3SLPzWh1YZglZtMUckHPTeFm2DeHxJjHOAN8xU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKVQGVvwEqqcrkVbStSO+VfwLQ6/wAfbgjELY0mug/3cYxHG8McTY60hSzgGLdNjhuEXCzOs6SNiM9CzePDkG6CexEQOsfmGj8fPmOlkarlTReh6OKfD/OFKjC73tHk5FifS1BKNYTTNlmfzhdUXrPN3ne1voqlsdlQhaW+tjBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iu/iMcap; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743169709; c=relaxed/simple;
+	bh=AQnc0q6XPBSWqp3ObnEGEfmqwiJpfcrXlUDsqPnb9sk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Zu4kS3cTkonx2LWHf+XHRX1miXdFPst0zipCT+4E7YKA1EMYrU3ExLfEYupj+c2WCyQ+ixXO3CSTT8j/FvLvqZFEh0QgzEXZBtNQIM1AqPTuRELUb7rN17zXwPb6Nml5w0LTtdsgMKV/vVTCruBQQV1osYzKrMXFvMt8IOXNYh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WsP1ARtf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z/rpX2Hz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iu/iMcap"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 156D340E021E;
-	Fri, 28 Mar 2025 13:46:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2m_CWlbsjyX2; Fri, 28 Mar 2025 13:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743169559; bh=hPVp/OPa3Ze/KbpWnC5nvMVpALBy036QuWooz7xHvWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iu/iMcapJyIA5/UbUPjAAhbEllpR2Lk03J30TXPx6PNHWhjUyJmdNE4QHA6gRosmk
-	 BGadSuc2D8GVrRcq5NRy3b1peLjalyaLpxdlDG1k8AfziKuQ+IRIKgdlVtR7udxMKJ
-	 48aD9/sCSdP/uwFap8bJGyHjqb1V0hKwYtBp45iEK8iY3gK7qulLBg1brvzi8feudy
-	 2lzXWXIRXA+SGTrj7gCcyTJ70pjnW2w+a/x5+vRBc/z5iDsnpyqUjzykXLealEUJJR
-	 ZuJx9v0QlTdW4rzoflm3uDhvJSTWb4UNHIWL2dXIjtJ8cx9oE7oH2huwvnN4Af1yIw
-	 rX3w8wfWZpQcXTIU+2YblIZrMn1KlyjGrls1MtnJEdh5o2BC/Vc9pwiWlgm/191FyS
-	 F5oKglkygQldptmyHiRyG5owSHRY0nMgFNMekDJWz0VVD+80bO6y9b2YcXOPq/tmt4
-	 wdCYsSQCxtMOECawA5I6PG5vn1VeUKU2SolbS9OIBL7OTgMS8PkBnfGvzKBLhwTb8h
-	 pPLo77KFZet4V+qaSIWIP3WFWw1/0KSWdTTJMInYmDiNY93qD8SWqSOhfqhHSVBY7k
-	 ztc5XwVYJVEAKXfH/LdSfBY6S/+wg1AnLUfHQeLkwNH2NATfZKaxcZfS5tWCixzbxw
-	 9yME1uvK5IvObOfp9Kl79ovw=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B5CE140E015D;
-	Fri, 28 Mar 2025 13:45:51 +0000 (UTC)
-Date: Fri, 28 Mar 2025 14:45:44 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH 0/2] Clear AMD's microcode cache on load failure
-Message-ID: <20250328134544.GAZ-aoCA03g9SygDnW@fat_crate.local>
-References: <20250327210305.1694664-1-boris.ostrovsky@oracle.com>
- <Z-XEPVvEDhC5vzR4@gmail.com>
- <f8ec905f-04d4-46f6-909c-7f79b151c0df@oracle.com>
- <Z-alzhvfSXN4liNE@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WsP1ARtf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z/rpX2Hz"
+Date: Fri, 28 Mar 2025 13:48:18 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743169705;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UR2qqIKg0l9BB5UIDzBKYJaEc6hDV4BtIEufdljkeaY=;
+	b=WsP1ARtf7A+IVepz+zq/47k7ydcbbjlNXnSIy3Dy5YLVjVDNA4+PRrNK30tp8KRHjayRh1
+	D61WCrLNOEmW/sAZO/vZDkxsv6mdm3+ttktKNm9MujrRcNlpgGU1ZSuIoytt/cNOMfNQRo
+	XS5H4YfkVn6gIN7TBGlPeg40D8gASDQ/owzeRVcGtY9ss4lWzcjYy4w7W+bMGuCg0H1lK0
+	zNZC79SDla1fu/SiA6zQUJZYsGvv4V4hVC2MDwRdxAX3BKNuOdJ0+2cY5ZeNKIeC6GeYuC
+	VmVE7e49Q94SIsz7mHHH0zJA5lVSQcqTkiCiDJk7ylpB7tqJMtMugqvgsqgkcg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743169705;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UR2qqIKg0l9BB5UIDzBKYJaEc6hDV4BtIEufdljkeaY=;
+	b=Z/rpX2HzSXkdYX9si0yrMsz2tFMrvMGWT1MGM0KN7AboC+iNq7SwWD+AhnCyWZ4iLfwOWD
+	LrIYQw1CqFnrc6Ag==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/urgent] objtool: Fix NULL printf() '%s' argument in
+ builtin-check.c:save_argv()
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <a814ed8b08fb410be29498a20a5fbbb26e907ecf.1742952512.git.jpoimboe@kernel.org>
+References:
+ <a814ed8b08fb410be29498a20a5fbbb26e907ecf.1742952512.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z-alzhvfSXN4liNE@gmail.com>
+Message-ID: <174316970081.14745.12219421049589784447.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 02:36:14PM +0100, Ingo Molnar wrote:
-> It would be a pretty common usecase to attempt to load the earlier 
-> version if the loading of a new one doesn't succeed, right?
+The following commit has been merged into the objtool/urgent branch of tip:
 
-This is only for late loading and no one should do that anyway.
+Commit-ID:     d9a595c3850ea4383628115df2bb533af3b29f4f
+Gitweb:        https://git.kernel.org/tip/d9a595c3850ea4383628115df2bb533af3b29f4f
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Tue, 25 Mar 2025 18:30:37 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 28 Mar 2025 14:38:09 +01:00
 
-And load failure almost never happens - unless you're a cloud guy doing
-special hackery.
+objtool: Fix NULL printf() '%s' argument in builtin-check.c:save_argv()
 
-So no need to expedite this as a fix - the majority does not care.
+It's probably not the best idea to pass a string pointer to printf()
+right after confirming said pointer is NULL.  Fix the typo and use
+argv[i] instead.
 
-Thx.
+Fixes: c5995abe1547 ("objtool: Improve error handling")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/r/a814ed8b08fb410be29498a20a5fbbb26e907ecf.1742952512.git.jpoimboe@kernel.org
+Closes: https://lore.kernel.org/20250326103854.309e3c60@canb.auug.org.au
+---
+ tools/objtool/builtin-check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 2bdff91..e364ab6 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -238,7 +238,7 @@ static void save_argv(int argc, const char **argv)
+ 	for (int i = 0; i < argc; i++) {
+ 		orig_argv[i] = strdup(argv[i]);
+ 		if (!orig_argv[i]) {
+-			WARN_GLIBC("strdup(%s)", orig_argv[i]);
++			WARN_GLIBC("strdup(%s)", argv[i]);
+ 			exit(1);
+ 		}
+ 	};
