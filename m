@@ -1,159 +1,124 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09112F3B;
-	Fri, 28 Mar 2025 08:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5B0211485
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743150862; cv=none; b=lEl/UXRbRHV7wJPoD3iCWBvXsFEpNuhng2a6Fm0lPNdBTtcB7UdYubA+qs9muxwB7QbK0ajp2Fwfjg16CgXexIBZ69HJQ2Drl1mVuxLZowef+BIDJvlzY723CsGt5tXHjACHhnoyU3BMrsU6ULmEdDNCaCmUzcViC9CCgj+JxmM=
+	t=1743150893; cv=none; b=BbbzptXpqE8PWxzcBaLbztJaYHw0cmevMhuxMffr1fA8jYAisuXI1Uv5q1q1pV3KSxMrbB6nWBtA1LEfH8LxnWdYeL6zLtrfg1sMsJ1uOWU2UGGkxjkczkSb9DCfYVzqKHCHJk3u3jfZIuecThjpBtHNjs2rA2FL+fz21YLbrhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743150862; c=relaxed/simple;
-	bh=ZOjkFZ7BFQi6G4Jqg2uwAw8Twpd0W2wDSgbVpuRDCB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lRgcgowWuDwXI7UfUDkI3n5eJRjwf6bn1UC2sKkLgtIeTH7I7ag2CfSsj3oPBfewr7LwORDRsikz6q+3aBQJlXvHlnhKse4AuVGF3ZL3GK+WsJ7UT2fSV3Z+6xLkQuVUXjwkBs34nhUuIiWh2BQug69dXD9oNF4JCXFv5pXCv8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwY4mibj; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743150893; c=relaxed/simple;
+	bh=bsFPoA2YWIbb2Rn07tJO/SMU2u5dwULxysDy9D2HpsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sBAlNhaYyyHOZ2YyCqOEdGzuLC1+qxTuBpLJsD7HRJ6JHbWBLDnqERSLpYR80mt1yfM1ffbc90f/tYyvU7bIHZwqRFiSWDgaOGc/gZPKP143I/K1urbNPle6imhA+UPQ9kw/HBxfvvc5ehtVdCu4/MMllmDbycpN1+0ChNc6M6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UtrDTjFs; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwY4mibj"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff187f027fso3909327a91.1;
-        Fri, 28 Mar 2025 01:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743150858; x=1743755658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5rxxKtxp1frS/ucj+/vrHXDgykeiYNdM6wlPTF4Db3c=;
-        b=mwY4mibjfRRWtrk0N3JgBmJ7YwrCPUugT5CFXg+qDmcnxMucOM7yoTm307rE1HB8A8
-         +mtpQ9gOncjjSlEODYJK2ownq32cY627runtV2ES32OCaPYgsR5KOsuNNHlq6mrbPFsK
-         lY4OdJwlSRfytLnqdKEj/gPLxZdAFG2n0/kX7YybwQ2WsqEtoMSr6iW+mV96aDvXyw61
-         WEV+aIMyCXktdzAYH2gDF0SFwnti5mokUapTjwygjt9wCzm/whnwI+aa3f2/1/lCQEoQ
-         o40YF+3+RSneLSMZAe/Nfpd6wOWOQpBsdg/4SBhpttH0cG5VaBOUGmmJY/LepvIKqL/X
-         Yt8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743150858; x=1743755658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5rxxKtxp1frS/ucj+/vrHXDgykeiYNdM6wlPTF4Db3c=;
-        b=toh7SN4sVJ5TUXlEHGH5hlx6DPZIM2T+23MtIZiy47/fku1PMaNdDFdnVVt16pH5Tg
-         IXSukjOca+oqGt2rdwnGDWwvN+kIFqcXfXk7pYBic88dSx50oBiFUW/pgZqR9RGgaF6I
-         18ljniw2y0Q5h41mQ0ZvdY6WGzg6AGc791r3hrA0hgGRjLUsk4pzsjs4wQRH5q2qj4pz
-         T8aZ6riD6VWPPxb1r9myyy/Jfh68oPaIUh1gILdmOZ4Up1wZOOJ6U+zmRD1X+Ih4qayz
-         yHXA11a6mFe/v39DvFFeMRiyRp4x+8m2ackwaMfaCZhTFJY4UibezhbzfuuwDfETKGU3
-         LNYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSRIYovmwJqUmdmH3ry6NcWKKL7ACCX1W+3YSHeiwDSmdoho+WdKtZuLo4FU+FSH3pENJszquHt7u6zd4=@vger.kernel.org, AJvYcCVvqlTsXofUmoSGI1oqEPo3VSwVMdTckYhOUuTEsKX0/Q+KI7sdq1eHJwGWFLb6RoSmuADbAixG/qhPdwvF@vger.kernel.org, AJvYcCXZ8HWhfHQE4t5SzhPr8UP6/m7p2ybBYEZO8qI0EGe8evuoyql+UoqAiAANGjIc6RbfDILAvRco/C8Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJsTaoGXsb7awiZkRAa0cW5lJo6gojalFqlM9Y8vRn3/zP9tTj
-	gf5XMkmeM81HDgF4sAv0PH358Az/XZDya3lsiUxZn1/GjFGcM+efh3vDLbqlRGkcb8cP8LMg1OE
-	373kY8iS3Ow/tQq1ES0gGg4ldjPc=
-X-Gm-Gg: ASbGncs6tquxLqCTo5QQV1yIyLF6Fjp3EkWuZmbBWSfRg+JlY/l7/QkdEkrRIteCkuV
-	IXyRko6Rc+35Gc3tsI2cGn7fBDVkcBO8FxcVvIcq+YKrDPYf/6P9wnOhGsHx9nmpH1XSjqIPy2U
-	KA8AuPI92CG1Vu5TPJM97iUaY=
-X-Google-Smtp-Source: AGHT+IF11wwSuNqF7pUfzisNp2o2JHE+e/bTTG2jQulsEtYEXB9Y+0sNfCMi43CBuG1cp6jFC1ouNOKlmRa2RqKP3SE=
-X-Received: by 2002:a17:90b:2f07:b0:2fa:2268:1af4 with SMTP id
- 98e67ed59e1d1-3051c889b0dmr3132648a91.7.1743150857908; Fri, 28 Mar 2025
- 01:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UtrDTjFs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21848443D8;
+	Fri, 28 Mar 2025 08:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743150889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dz1oWfvojiArt+Yj+B47VCngh6+Au88jJB7WCr5hy9s=;
+	b=UtrDTjFswGRPPre34n1lOnVH1Fs2NTgZRW2eYPQYsiGSw9GY0NrtkKzPcn8xodCTNoh2DM
+	YXjm2lXx7CmKtzWzoMzGddInkzOZUL5pv2+RAjCFpe9kYyj9TiBycwczTaPNOS2EBBLfHn
+	rigdJg29vUbhU0hw9ItVNzbx+iPFraGsprvIP3++p/AxIIVQw6WPna2YNVRluM7cA6f3so
+	FrH7Pd/wmXaS5FWpogo/tsnKXyjd+F3fSPgXBFWmZ7pGqDcmxZZUjg/YSr6nZ2rwPBMq9w
+	27HfREA/BCHDfPs0HZM3vuQRrbQ2qv+WvENPkHOB9/ZA7e4mJFb/ty3bRR/h8g==
+Date: Fri, 28 Mar 2025 09:34:46 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] drm/panel: Add new helpers for refcounted panel
+ allocatons
+Message-ID: <20250328093446.48368b57@booty>
+In-Reply-To: <20250327-b4-panel-refcounting-v2-1-b5f5ca551f95@redhat.com>
+References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
+	<20250327-b4-panel-refcounting-v2-1-b5f5ca551f95@redhat.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com> <20250210-8qxp_camera-v3-7-324f5105accc@nxp.com>
-In-Reply-To: <20250210-8qxp_camera-v3-7-324f5105accc@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Fri, 28 Mar 2025 10:35:44 +0200
-X-Gm-Features: AQ5f1JpmDTleDRGa2oBcGXFZnflEOzTPa-iL5lCB0QpwZJnUePwDVEuepPhFb_8
-Message-ID: <CAEnQRZAmCrZ=OmMLWF80mrMih+uFDKMp3dGsEosJe0vCHgEEYw@mail.gmail.com>
-Subject: Re: [PATCH v3 07/12] media: imx8mq-mipi-csi2: Add imx8mq_plat_data
- for different compatible strings
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rui Miguel Silva <rmfrfs@gmail.com>, 
-	Martin Kepplinger <martink@posteo.de>, Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
-	Robert Chiras <robert.chiras@nxp.com>, "Guoniu.zhou" <guoniu.zhou@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
+ hgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, Feb 10, 2025 at 11:02=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
->
-> From: "Guoniu.zhou" <guoniu.zhou@nxp.com>
->
-> Introduce `imx8mq_plat_data` along with enable/disable callback operation=
-s
-> to facilitate support for new chips. No functional changes.
->
-> Signed-off-by: Guoniu.zhou <guoniu.zhou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change from v2 to v3
-> - none
-> change from v1 to v2
-> - remove internal review tags
-> ---
->  drivers/media/platform/nxp/imx8mq-mipi-csi2.c | 60 ++++++++++++++++++++-=
-------
->  1 file changed, 46 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c b/drivers/medi=
-a/platform/nxp/imx8mq-mipi-csi2.c
-> index 1f2657cf6e824..b5eae56d92f49 100644
-> --- a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> +++ b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> @@ -62,6 +62,8 @@
->  #define CSI2RX_CFG_VID_P_FIFO_SEND_LEVEL       0x188
->  #define CSI2RX_CFG_DISABLE_PAYLOAD_1           0x130
->
-> +struct csi_state;
-> +
->  enum {
->         ST_POWERED      =3D 1,
->         ST_STREAMING    =3D 2,
-> @@ -83,11 +85,11 @@ static const char * const imx8mq_mipi_csi_clk_id[CSI2=
-_NUM_CLKS] =3D {
->
->  #define CSI2_NUM_CLKS  ARRAY_SIZE(imx8mq_mipi_csi_clk_id)
->
-> -#define        GPR_CSI2_1_RX_ENABLE            BIT(13)
-> -#define        GPR_CSI2_1_VID_INTFC_ENB        BIT(12)
-> -#define        GPR_CSI2_1_HSEL                 BIT(10)
-> -#define        GPR_CSI2_1_CONT_CLK_MODE        BIT(8)
-> -#define        GPR_CSI2_1_S_PRG_RXHS_SETTLE(x) (((x) & 0x3f) << 2)
-> +struct imx8mq_plat_data {
-> +       const char *name;
-> +       int (*enable)(struct csi_state *state, u32 hs_settle);
-> +       void (*disable)(struct csi_state *state);
-> +};
->
->  /*
->   * The send level configures the number of entries that must accumulate =
-in
-> @@ -106,6 +108,7 @@ static const char * const imx8mq_mipi_csi_clk_id[CSI2=
-_NUM_CLKS] =3D {
->
->  struct csi_state {
->         struct device *dev;
-> +       const struct imx8mq_plat_data *pdata;
->         void __iomem *regs;
->         struct clk_bulk_data clks[CSI2_NUM_CLKS];
->         struct reset_control *rst;
-> @@ -137,6 +140,35 @@ struct csi2_pix_format {
->         u8 width;
+Hello Anusha,
+
+Thanks for your continued effort.
+
+I have a few minor comments. Nothing big, but since Maxime requested a
+change you'll have to send a new iteration, so find my comments below.
+
+On Thu, 27 Mar 2025 10:55:39 -0400
+Anusha Srivatsa <asrivats@redhat.com> wrote:
+
+[...]
+
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index a9c042c8dea1a82ef979c7a68204e0b55483fc28..53251c6b11d78149ede3dad41ffa6a88f3c3c58b 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -28,6 +28,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+> +#include <linux/kref.h>
+
+Minor nit: you don't need this include in patch 1. You should move it
+to patch 2 where it is actually used.
+
+> @@ -268,6 +269,28 @@ struct drm_panel {
+>  	bool enabled;
 >  };
->
-> +/* ---------------------------------------------------------------------=
---------
+>  
+> +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t offset,
+> +			     const struct drm_panel_funcs *funcs,
+> +			     int connector_type);
+> +
+> +/**
+> + * devm_drm_panel_alloc - Allocate and initialize an refcounted panel
+                                                     ^^
+A typo here is certainly not a huge problem, but I think I had already
+reported this should be "a refcounted panel".
 
-I would drop this line. It doesn't make code easier to read.
-> + * i.MX8MQ GPR
+> + * @dev: struct device of the panel device
+> + * @type: the type of the struct which contains struct &drm_panel
+> + * @member: the name of the &drm_panel within @type
+> + * @funcs: callbacks for this panel
+> + * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) corresponding to
+> + * the panel interface
+> + * Returns:
+> + * Pointer to container structure embedding the panel, ERR_PTR on failure.
+> + * The reference count is initialised to 1 and is automatically  given back
+> + * by devm action.
 > + */
 
-Just say: /* i.MX8MQ GPR */
+In addition to Maxime's comment: I think it's a common practice to have
+an empty line after the last @argument and also before the "Returns:"
+line, to improve readability
 
-This pattern happens in a lot of places.
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
