@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BA6230BC6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391AB231A3B
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168548; cv=none; b=ugRwu2e/gm0dO2gTqXzfTH2+lgkv5Ai4ZjsF3FY1zhglvZ34FP2cIP0hlBUm0YEBdIKpBJx/BHvthpd/GEWkTvtobJp7P2NPhVTu4eqdtqQA3QaUAZMWMmaaUHgDj06lSPLPebU/2cLScmS8RVSWE4sClkyBKw3A0pv5Ty5LQog=
+	t=1743168551; cv=none; b=XIsO+QLB1qAA9BiflTWwknk+jT/ni88RjmWHgAMJQwPiDipP8hvl6LQqDDK63okofCPwXpHQGgDcGPEOik6AOWtQCAQ+n/XWJveIiwi6vk+tQZlL9Q5yYEuMYsPMGG3rHQPtY48NAP3RNJ+us50ijCPX6veLbYMG5uaHQ4SZyFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168548; c=relaxed/simple;
-	bh=Tw3+yQ7n3S2FF8XCTvEh5x8oO8/o/42rPxJyFoMdDQQ=;
+	s=arc-20240116; t=1743168551; c=relaxed/simple;
+	bh=+4TEvDCl9pn5l0P3G7gieMO9jEV4OUzziwSnm8xIndY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eASqbAUFCduucNHUAk2QYTx8C45YPePTm1Fn5DGDCMUjY2L51prNXDKtja/m/D5wyI8/uH8w3oWwWeF6tu26T7z1wod953nt+ZRK9vg693wF2A4d+ssVgE6h/d6UdTXiGF1JFi7rTV72++zGq70RO2w08QhBRJS3vJ/4THBaK1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyIWI5QJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XYp48pWFqZZL8wxZI/lwqQ7VLrfXiUuEiBa38SREQUrk7+iwEErQnq2Cp/4iz3mN3kRq6liSFtIRGgDv2GJmR8SZEUdefaimc4mAAfAcZcEx0iTnLaAY4bURK5qI6kHWgyNbbeL5DG5JupFdI53JP4/f+8USS2bQJXAhnGLNtIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtjj+sFz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyIWI5QJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A416AC4CEEA;
-	Fri, 28 Mar 2025 13:29:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtjj+sFz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B87C4CEE5;
+	Fri, 28 Mar 2025 13:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168548;
-	bh=Tw3+yQ7n3S2FF8XCTvEh5x8oO8/o/42rPxJyFoMdDQQ=;
+	s=k20201202; t=1743168551;
+	bh=+4TEvDCl9pn5l0P3G7gieMO9jEV4OUzziwSnm8xIndY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oyIWI5QJNPBzIo4vb6tFbl8GA1Ukku7bS+RZuQG7RjguOTSUfUmDYVkFfLYBUukxz
-	 JUkv1MUVPoO1UI1VNA6xbWs2TYddU7/ze9noLoA2nin6XBwqmQNA3I225ZelaxZfsb
-	 LZ/dI084vKUXVlb7ywphb6cdyK5+HfenyMBB5kvzvkkmB+B9M5DxafjTJCVXDB0aTv
-	 09PktVvdBgsr8T3UH35qmG4glPfF8DXBKZ522wu42GnpMtXjIV0pSl6TBPcJ3xpbSg
-	 pEm4guSPuhWDNXo68p7DXVCCJQ5PgwQMYMdxF4XUXdxHdBRSXDouNDUmLkoMBca5+s
-	 VOHRk5xkpML3A==
+	b=dtjj+sFzGoMZMaZ+Ophyla+bb6OEWlTup/vOmb80V6YTsu62ceX8w8G+TbZdbRfbx
+	 Rq64KeDTZOAghArmp8VwpC0FNLKntR9hcMbYgr4SnDkah6braluIQJTXvkPy9F36id
+	 +l2emSF6GX2byMTJA0WOaKiFTAtFBXU03VB4MSp73zpxRzKS6F8vHoQ1eVeQJ3JHmx
+	 GFkGKvreWE4TGpzvDjFLXnLDJXtONviMhIbrWhxp6apzY1uSIDHoJ1J4yh1HLAfN7C
+	 I/9q8Y3QfuepF8nDZNsOCdMngDMUjI4ZdwoBFMMxDaPavNZ7d4/YC8afqWPvXu00Bj
+	 Vf5qFwsGKC+Ew==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 43/49] x86/alternatives: Rename 'TP_ARRAY_NR_ENTRIES_MAX' to 'TEXT_POKE_ARRAY_MAX'
-Date: Fri, 28 Mar 2025 14:26:58 +0100
-Message-ID: <20250328132704.1901674-44-mingo@kernel.org>
+Subject: [PATCH 44/49] x86/alternatives: Rename 'POKE_MAX_OPCODE_SIZE' to 'TEXT_POKE_MAX_OPCODE_SIZE'
+Date: Fri, 28 Mar 2025 14:26:59 +0100
+Message-ID: <20250328132704.1901674-45-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250328132704.1901674-1-mingo@kernel.org>
 References: <20250328132704.1901674-1-mingo@kernel.org>
@@ -49,38 +49,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Standardize on TEXT_POKE_ namespace for CPP constants too.
+Join the TEXT_POKE_ namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/text-patching.h | 4 ++--
+ arch/x86/kernel/alternative.c        | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 6834e652d26c..53ac94743e5d 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -11,7 +11,7 @@
+  * JUMP_LABEL_NOP_SIZE/RELATIVEJUMP_SIZE, which are 5.
+  * Raise it if needed.
+  */
+-#define POKE_MAX_OPCODE_SIZE	5
++#define TEXT_POKE_MAX_OPCODE_SIZE	5
+ 
+ extern void text_poke_early(void *addr, const void *opcode, size_t len);
+ 
+@@ -82,7 +82,7 @@ static __always_inline int text_opcode_size(u8 opcode)
+ }
+ 
+ union text_poke_insn {
+-	u8 text[POKE_MAX_OPCODE_SIZE];
++	u8 text[TEXT_POKE_MAX_OPCODE_SIZE];
+ 	struct {
+ 		u8 opcode;
+ 		s32 disp;
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 62a6c69184c9..04c536d36765 100644
+index 04c536d36765..d724ae8913da 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2466,10 +2466,10 @@ struct smp_text_poke_loc {
+@@ -2461,7 +2461,7 @@ struct smp_text_poke_loc {
+ 	s32 disp;
+ 	u8 len;
+ 	u8 opcode;
+-	const u8 text[POKE_MAX_OPCODE_SIZE];
++	const u8 text[TEXT_POKE_MAX_OPCODE_SIZE];
+ 	/* see smp_text_poke_batch_process() */
  	u8 old;
  };
- 
--#define TP_ARRAY_NR_ENTRIES_MAX (PAGE_SIZE / sizeof(struct smp_text_poke_loc))
-+#define TEXT_POKE_ARRAY_MAX (PAGE_SIZE / sizeof(struct smp_text_poke_loc))
- 
- static struct smp_text_poke_array {
--	struct smp_text_poke_loc vec[TP_ARRAY_NR_ENTRIES_MAX];
-+	struct smp_text_poke_loc vec[TEXT_POKE_ARRAY_MAX];
- 	int nr_entries;
- } text_poke_array;
- 
-@@ -2863,7 +2863,7 @@ static void smp_text_poke_batch_flush(void *addr)
- {
- 	lockdep_assert_held(&text_mutex);
- 
--	if (text_poke_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !text_poke_addr_ordered(addr))
-+	if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || !text_poke_addr_ordered(addr))
- 		smp_text_poke_batch_process();
- }
+@@ -2653,8 +2653,8 @@ static void smp_text_poke_batch_process(void)
+ 	 * Second step: update all but the first byte of the patched range.
+ 	 */
+ 	for (do_sync = 0, i = 0; i < text_poke_array.nr_entries; i++) {
+-		u8 old[POKE_MAX_OPCODE_SIZE+1] = { text_poke_array.vec[i].old, };
+-		u8 _new[POKE_MAX_OPCODE_SIZE+1];
++		u8 old[TEXT_POKE_MAX_OPCODE_SIZE+1] = { text_poke_array.vec[i].old, };
++		u8 _new[TEXT_POKE_MAX_OPCODE_SIZE+1];
+ 		const u8 *new = text_poke_array.vec[i].text;
+ 		int len = text_poke_array.vec[i].len;
  
 -- 
 2.45.2
