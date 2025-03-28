@@ -1,114 +1,116 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9744A1DD886;
-	Fri, 28 Mar 2025 17:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A53222094
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743183741; cv=none; b=YOG5plB4ci1W6drIDVChl/ouEdGRuXQDHddLYJR8Lcb5of47LXrWOx7nEeK/MYgo/jV7/xsOY4ShMAs/mVUhWdWB3QhwxxeeLv0NOtWuwp6ilfXSLQLEYm1omUA56hHbf4QvXxelKXz77soK9iSRhAfhf5Azf/FozlRftn0KLIU=
+	t=1743183897; cv=none; b=qV4kmn5JT/0XVqp2CikESHV+z8m5UbzOcNs4mPfHZzjCqArZ1+Lf83BPeKObNCzlXg9DFQcj9CTeIIFLSGYnVU/yFDm8wpHUiheNrpUHGnjVjEgE2wlHayfCR50RLd+np982wSIpZIULIpUGZW7WyLJqW++ZKq2xcsvxEyByYj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743183741; c=relaxed/simple;
-	bh=wDLl7q8yCK6sZ1U9VZxBoe7R7a8qDbk2d1jkp5HLTNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ue+eNWKMZ8PCbnVzm5x6qCvq0mWJ821uRPMeFSdtAL/K6340fuXxHo9c428rthZ0TEWcuUpFN17sJKEUTAIC7uKZv4bvOFq+c2repDrCOjJxyTQ/BVrQ6UN7dInwMcvEKkLuSjfgEBfmraOhJfS/9jeDg8Xj+RgaUPEdT/FTZq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227c7e57da2so42449365ad.0;
-        Fri, 28 Mar 2025 10:42:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743183738; x=1743788538;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NKa6jgVmUArcbtiv2yhnL664CVqTmaJqm0HRm05eXh0=;
-        b=jTP+UQGtscEPKynUKHb+jL6W7e+B0MwoQszn30bFGx9DocimlsFQKsOOY67JyYcK6r
-         kFZnTy4rdz0ySmVNfGupgHukm7fTU9KvIw8TcHmdzGfIv72Jjwfj4f96INocskk0ZA9j
-         X/+miP+pqzKAnTuDknf6PSkPRD4To0NJFT+KgjhrCBMQFT8/KfQOgjSM9pqGleJaYbd+
-         TglCvA0iar1A8/Vqi7LufnxtHKAjcqK854z0UMtmFo7UGAmQctttDzTHDOE1/6i29N+7
-         E5EQiIeN4ohYusmizxn04EMe0heYaYXvG1pLXtNGXdu1e9wfZZ4xAo6S9RQ5wi3Sx8J0
-         eaag==
-X-Forwarded-Encrypted: i=1; AJvYcCW5NWqocIijMW1sX2Vu47dhqVrFSAvoDxG6S2N/nSGQwu9VYqbAXklbkkangP+W/j1MwwscgmyeAScfk3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWVFGsGHXePvFgCkKKJGnxkqxYZIrsZxIZ1dP9bJNYgMW4DggJ
-	472CtuCJK0lkbGVcyIIPdiD/VTwtxQ5FhXT0QNZR/W9nCi78ovuDTb7IEVbGLA==
-X-Gm-Gg: ASbGnctBNXm52FOzFtgw+HNNmsCXFW79YOMjuticrmChsBmamykkPhx4eOjg14DARSt
-	z70jI/EbtvyHKMCLQniLlF9GFJxETy2YWTle2lFTY0hFI2zM5QmwerlS8thCHxsooy2APX/S7J0
-	AH0WvDbvlUVriW83JrrJKyc9epDO9E1/Y+EZaFpf1Ev62XZ4Uj8C4EHfYaGgoMzyg7v2q3YC1h+
-	+jZg9ewHKe1xmRc/Bvi3s5nyLFvy2FrLBWsG2p3UsIV1QGf8DXTPe4MMGncuREHe7cwu7SLWS0f
-	x2zZlxmSWG8LSskHgkOTsID6UP5JJ9f28Jurv+fj5BcHlDnommF0RZs=
-X-Google-Smtp-Source: AGHT+IFx1HPfaS5J878pg8fSK4zOF5eNtRQCHmNDON2zvhMySyohRrCp734Wno7L/9vFEF3SB1lMww==
-X-Received: by 2002:a17:903:1107:b0:223:88af:2c30 with SMTP id d9443c01a7336-2292f960b3cmr656895ad.16.1743183737902;
-        Fri, 28 Mar 2025 10:42:17 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291f1cec3esm21096625ad.122.2025.03.28.10.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 10:42:17 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	andrew+netdev@lunn.ch,
-	sdf@fomichev.me,
-	Taehee Yoo <ap420073@gmail.com>
-Subject: [PATCH net] bnxt_en: bring back rtnl lock in bnxt_shutdown
-Date: Fri, 28 Mar 2025 10:42:16 -0700
-Message-ID: <20250328174216.3513079-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1743183897; c=relaxed/simple;
+	bh=nxMJr4IbRtF06Hjyor8w2xYGQsJXLN5afA0RK++UJuM=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=eM6gVTLp2HTGxmmmNVBd1uuqZugcvrhJHMZBzC6FDWA6ANG9HBFHcUh942LJ1h7is7M6GYa1CzSdFS7TfI69vioy9K1Ja0Cy6yH/UjJlLaLeKj33ulG7t4BYWODTU848x2dI2webbbGfcoAKBadXN61BjI+GfWsn8YNeClYs+KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ey568eN6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ey568eN6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743183894;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vBdIklFUQdOQtD+W7fZJginlQqeJFZ4hpEcj5ZkuKHQ=;
+	b=ey568eN6egcdaMxnwfr1aGYvDFdgPTTQGUPI1eRkqJ6Ew2zlDENt1+zQyRSclxKHmEjhpi
+	PIEPdXX6t1bXW38Jme+Y/9hr5FMupOGj0wxyiycN6WiVhhpt72zmYLrDljLnu3yociFiVs
+	IMpLalUkIoiaS+LxZAQy7UTsGsQxrk8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-W0tK-_R9NtO1bYdOkQIHkA-1; Fri,
+ 28 Mar 2025 13:44:50 -0400
+X-MC-Unique: W0tK-_R9NtO1bYdOkQIHkA-1
+X-Mimecast-MFC-AGG-ID: W0tK-_R9NtO1bYdOkQIHkA_1743183889
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7BC7180882E;
+	Fri, 28 Mar 2025 17:44:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D95B719541A5;
+	Fri, 28 Mar 2025 17:44:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+References: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+To: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
+    linux-kernel@vger.kernel.org, marc.dionne@auristor.com,
+    syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid context in __alloc_frozen_pages_noprof
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <85010.1743183886.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Mar 2025 17:44:46 +0000
+Message-ID: <85011.1743183886@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Taehee reports missing rtnl from bnxt_shutdown path:
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
 
-inetdev_event (./include/linux/inetdevice.h:256 net/ipv4/devinet.c:1585)
-notifier_call_chain (kernel/notifier.c:85)
-__dev_close_many (net/core/dev.c:1732 (discriminator 3))
-kernel/locking/mutex.c:713 kernel/locking/mutex.c:732)
-dev_close_many (net/core/dev.c:1786)
-netif_close (./include/linux/list.h:124 ./include/linux/list.h:215
-bnxt_shutdown (drivers/net/ethernet/broadcom/bnxt/bnxt.c:16707) bnxt_en
-pci_device_shutdown (drivers/pci/pci-driver.c:511)
-device_shutdown (drivers/base/core.c:4820)
-kernel_restart (kernel/reboot.c:271 kernel/reboot.c:285)
+commit f34068283e8650ecd7a2f57b0b55aa91e498a470
+Author: David Howells <dhowells@redhat.com>
+Date:   Fri Mar 28 16:46:58 2025 +0000
 
-Bring back the rtnl lock.
+    afs: Fix afs_dynroot_readdir() to not use the RCU read lock
+    =
 
-Link: https://lore.kernel.org/netdev/CAMArcTV4P8PFsc6O2tSgzRno050DzafgqkLA2b7t=Fv_SY=brw@mail.gmail.com/
-Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
-Reported-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 ++
- 1 file changed, 2 insertions(+)
+    afs_dynroot_readdir() uses the RCU read lock to walk the cell list whi=
+lst
+    emitting cell automount entries - but dir_emit() may write to a usersp=
+ace
+    buffer, thereby causing a fault to occur and waits to happen.
+    =
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 934ba9425857..1a70605fad38 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -16698,6 +16698,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
- 	if (!dev)
- 		return;
- 
-+	rtnl_lock();
- 	netdev_lock(dev);
- 	bp = netdev_priv(dev);
- 	if (!bp)
-@@ -16717,6 +16718,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
- 
- shutdown_exit:
- 	netdev_unlock(dev);
-+	rtnl_unlock();
+    Fix afs_dynroot_readdir() to get a shared lock on i_rwsem instead.
+    =
+
+    Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand=
+")
+    Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: Marc Dionne <marc.dionne@auristor.com>
+    cc: linux-afs@lists.infradead.org
+    cc: linux-fsdevel@vger.kernel.org
+
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 691e0ae607a1..61bc8c81c5ca 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
+ct dir_context *ctx)
+ 	}
+ =
+
+ 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
+-		rcu_read_lock();
++		down_read(&file_inode(file)->i_rwsem);
+ 		ret =3D afs_dynroot_readdir_cells(net, ctx);
+-		rcu_read_unlock();
++		up_read(&file_inode(file)->i_rwsem);
+ 	}
+ 	return ret;
  }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.48.1
 
