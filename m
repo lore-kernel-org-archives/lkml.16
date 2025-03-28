@@ -1,205 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74F14409;
-	Fri, 28 Mar 2025 15:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3FC35958;
+	Fri, 28 Mar 2025 15:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174205; cv=none; b=QIU06uJ8gHbhVfV2cIl23Yc4Yn77BlFYxYotI+XfQfjI2kdxGrN0iXaeUw2tI/uCRN9xWl0s4Fxl0vsfuXG+tDFsWnf57Hqg69E+E11Lgtef0xBDU65dNQCBJ6ovFRgO/mh0r9KYIv/VwdcjD2DRIuY4k52nkdeDlU1umy0q2zk=
+	t=1743174320; cv=none; b=TFk92zJgGQZBFHgWw9FFdO8LF/tDr2BymQcRwqcDynTeJ6Ae4+VLtOABxnRLioObkvM4zROuvs51roOVa8vaCkcadXWCMdoaSYdukdYm68WfmdNd+0LiKQNlc/OJyRD04JpEqEDXSTdOualJ0BjpI0X+qXIu65ryBn3R9YB0BC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174205; c=relaxed/simple;
-	bh=ZxMGZHgGzbx9hGs4fxcqQqkbat441pGVdLCi2AfAqIo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CezngC+FkgMS4q1hstHhoqUd/MJFONg2tO3OYAzDpsLRnanpuRay6xXpf6zIKhBYrQa51hcVf4OWCyEvq/uZ8Ll7Zqhea6+ARjwfrL8oSlFuhyd+cBpd7ZzF3YiZN6NjiZHMubiPqSWwkYawJFNUpsQA28kCSMfdTuK1FCG1eEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b/J3eh5/; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743174320; c=relaxed/simple;
+	bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sch9ndKiZHgUJCL3ebfnxveO7eXaYOT4PGEgbXDiEUgfzYujxh2nrdZDFhMW+/IKHVcEsETvqtNC4yz1X7CwqZkTDuec2WpHqxy6Yd4UPON9dPSLju3+JjTweJD4xyEUMaCF9fMPR6ig63pAJThoEx5ojUkfASBb4aFrNzCuTto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4aDHu2q; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b/J3eh5/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743174204; x=1774710204;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZxMGZHgGzbx9hGs4fxcqQqkbat441pGVdLCi2AfAqIo=;
-  b=b/J3eh5/dHXRYwgE5QCUq859bON1xmIgLfxHAOIoFbe6oK1MlmIJVE1C
-   yCVHXYAO0GtROR9BFnAF7JUJ5pWldb0IeDtMLnd1MbwxiusxDVecn8b8a
-   KAD9IH/SubPINy1fdRON3IKghXo3E2t4NeWiUWm/pzIVMhY+gq1F2faED
-   BkHkMX64G8W6n3XSpY2lM5ox1crtd4/xXyGl/otd9aZ/y8gUUE0HdRcn9
-   Wwb69+J5uwnqFR+wDepjRiRO0Rwc50+Ja5WGGQpmaBQLcMEfD51BIpDyN
-   75cST39kODqo5Slqdhy1RDcE1YYFNBTbf1K6G+Sz977I71I0iMmQDMbnM
-   g==;
-X-CSE-ConnectionGUID: NZrSHUI2QxKnvfEjuIiTZA==
-X-CSE-MsgGUID: MEmRim5dSaS96nMogZWXHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="69902101"
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="69902101"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 08:03:23 -0700
-X-CSE-ConnectionGUID: /BsRb/TkRu+wq9tOxexG3w==
-X-CSE-MsgGUID: 1Ied6SmDTx+4LZqahA64MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="125697109"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 08:03:21 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 28 Mar 2025 17:03:18 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 05/12] platform/x86: alienware-wmi-wmax: Improve
- platform profile probe
-In-Reply-To: <20250313-hwm-v6-5-17b57f787d77@gmail.com>
-Message-ID: <a9a21cb9-a0aa-4450-4573-51fbc674c9cc@linux.intel.com>
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-5-17b57f787d77@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4aDHu2q"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abbb12bea54so424152666b.0;
+        Fri, 28 Mar 2025 08:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743174316; x=1743779116; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
+        b=J4aDHu2qh+qL7NlFOsHN9NKI71fx0QIuQCPfNErXBzUg6DJ5YCS0lNP5iyJG0RvsQJ
+         xsRqfDtXxk4dlh4IcjBl+dYwIMOOcOw2qs6UHh+U1ZkJOHc80xzeMbdWojxgyTPQIxvP
+         sPO3tdiCJbvtQsBgDdc7/AcCIwaAUUg0cqTsAsVdulHHyKw/LByOHw4c1kij2TDCQ8pF
+         eryQyjgSXpudxqYqtePVvTroCdYCFsrJu11Y0vkkBR37khY3naZEE5VYE3X5xhcn2cmg
+         KWllNRaLcVSTIym+yJb464TeCvbn+/MYF2dx2VEkrIEauJxSvrvMHd5hTVrJK/IHJ9sy
+         9F0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743174316; x=1743779116;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
+        b=mK6siI69C/Iyytkz2SP6YU4UWJ9RCTktepijFR2bEXZmvvlrvyLVpv+3PEUZxQD1gI
+         WsGidNEMU+Cv3H0+enr5nhdpLHQU+2/I6woMMfrbHTPFD7y58YM6k3O6/EbK0VVPwmsH
+         QjL0ILagepaY3n++4XyigxhjFCHv7A/rc/aErT4IofJ3vCnTGj5DYs+qBoJSV8rRFUKz
+         xpU+R97T9A58iw2LVid3rwvyXXFqpuZNNxpIEQ5kjqL0BI6wpqRFBm8QwQU9K+gHtNJS
+         wwD1Ju6CVBAyk5rePhrcYPWbX6wDGGEm2TEpGmt+1P+rIm2Q2/wZRUkoJlqpDXm02RiE
+         RrCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtqQJtgSEHRKsXt6O5v+wOSLlFseAxQlsB+NfbXqGFbdsnty/VQ0wQ4gnePfedFV8yxWi6+x05McOjXgwYvZI=@vger.kernel.org, AJvYcCVxr2JwUCRVKq5zfMpsmv4ffrEFAXAiw+vAFSlHWF2TDZHv0HOFE8ZjbdkKmSf7de0CalujvH+IxBpT@vger.kernel.org, AJvYcCX6mitfqoB5+pclQtzeSUFbabAPjWNZSZddO8tiVt9chLNKdUOzsOtZlG+tCkgM5ICedAwDPD5jadAK4sY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI/gOyPtKuTNlLBaGQTUQYlwe+kbWthmFrnBlbaC6hjjQxY6t4
+	syIbDOpojbId/hPZLF+j9zloqF7OBeR5JJU/IoKUF4yk16FiZw1o
+X-Gm-Gg: ASbGncuLA5eoveLLjHR65ILIrRVnN5J+vMTFGGyegBqZSNpwa0omirWvdA5k3I4SvGs
+	DVrsh6RrulRd9RNEgW0bgI0iIy33okKn/SwLpo+UgExjEPv8xRjkqnNnPRUJIN0RLeblsZuyrIp
+	QgJOQKLLqXbkH85Xt6AVAWPkgr8fvg1KMYw3P/B6IvPjnu8mR2lDlvJZE3ik+0nKpAhi5WzQyRb
+	7slqCA0rHMa35baTw4Fz7RRkB4gFmdXY8rNz+cO6EzLsuFsFobSU611wTdDwKAXvvDrZ5VKsSeh
+	mNJC9trmDCjTPm7QJC19VckR2YRr7POEleNWPRm5Pse+FiKSGBIKHmF+2E/7GC5Zi4HN9FFGXYA
+	q5xw1XDZVNw==
+X-Google-Smtp-Source: AGHT+IHWk57vx99rlJfgQ42vdU2UnQJlrOL3Q7JbsZWIfDJj2d9tmTOHn7pyRMIDwZcmBZOmNRt2qw==
+X-Received: by 2002:a17:907:3609:b0:ac2:7a6d:c918 with SMTP id a640c23a62f3a-ac6fb157031mr825364666b.57.1743174315568;
+        Fri, 28 Mar 2025 08:05:15 -0700 (PDT)
+Received: from ernest.hoecke-nb (31-10-206-125.static.upc.ch. [31.10.206.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71967fdbbsm171192966b.135.2025.03.28.08.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 08:05:15 -0700 (PDT)
+Date: Fri, 28 Mar 2025 16:05:14 +0100
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Brian Norris <briannorris@chromium.org>, 
+	Francesco Dolcini <francesco@dolcini.it>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH do not merge 4/4] wifi: mwifiex: add iw61x support
+Message-ID: <p5xukavek27sxpploi7wvx6mwew6ubh2wmckwmzqoxnfmal3jy@gfvn2u3af7kb>
+References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
+ <20250326-mwifiex-iw61x-v1-4-ff875ed35efc@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326-mwifiex-iw61x-v1-4-ff875ed35efc@pengutronix.de>
 
-On Thu, 13 Mar 2025, Kurt Borja wrote:
+On Wed, Mar 26, 2025 at 01:18:34PM +0100, Sascha Hauer wrote:
+> This adds iw61x aka SD9177 support to the mwifiex driver. It is named
+> SD9177 in the downstream driver, I deliberately chose the NXP name in
+> the driver.
 
-> Get and store the AWCC system description in alienware_awcc_setup()
-> instead of awcc_platform_profile_probe() and add a check for integer
-> overflows to avoid misbehaviors.
-> 
-> While at it, replace set_bit() with it's non-atomic version __set_bit()
-> because `choices` belong to this thread only.
-> 
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/alienware-wmi-wmax.c | 61 +++++++++++++++++++-------
->  1 file changed, 46 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> index a8a13779793abbcc8d1263474cac6227d524a6f5..0530f25b956f73f47c0354f40dac2910448c894e 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -38,6 +38,9 @@
->  /* Some IDs have a BIT(8) flag that we ignore */
->  #define AWCC_RESOURCE_ID_MASK			GENMASK(7, 0)
->  
-> +/* Arbitrary limit based on supported models */
-> +#define AWCC_MAX_RES_COUNT			16
-> +
->  static bool force_platform_profile;
->  module_param_unsafe(force_platform_profile, bool, 0);
->  MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal profiles without checking if WMI thermal backend is available");
-> @@ -212,6 +215,17 @@ struct wmax_u32_args {
->  
->  struct awcc_priv {
->  	struct wmi_device *wdev;
-> +	union {
-> +		u32 system_description;
-> +		struct {
-> +			u8 fan_count;
-> +			u8 temp_count;
-> +			u8 unknown_count;
-> +			u8 profile_count;
-> +		};
-> +		u8 res_count[4];
-> +	};
-> +
->  	struct device *ppdev;
->  	u8 supported_profiles[PLATFORM_PROFILE_LAST];
->  };
-> @@ -624,37 +638,40 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
->  	enum platform_profile_option profile;
->  	struct awcc_priv *priv = drvdata;
->  	enum awcc_thermal_profile mode;
-> -	u8 sys_desc[4];
-> -	u32 first_mode;
-> +	u8 id, offset = 0;
->  	u32 out_data;
->  	int ret;
-> -	u8 id;
->  
-> -	ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
-> -				       0, (u32 *) &sys_desc);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	first_mode = sys_desc[0] + sys_desc[1];
-> -
-> -	for (u32 i = 0; i < sys_desc[3]; i++) {
-> -		ret = awcc_op_get_resource_id(priv->wdev, i + first_mode, &out_data);
-> +	/*
-> +	 * Thermal profile IDs are listed last at offset
-> +	 *	fan_count + temp_count + unknown_count
-> +	 */
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(priv->res_count) - 1; i++)
-> +		offset += priv->res_count[i];
+Hi Sascha,
 
-Doesn't this change go slightly beyond what its changelog describes, could 
-you please amend the changelog to explain it.
->  
-> +	for (unsigned int i = 0; i < priv->profile_count; i++) {
-> +		ret = awcc_op_get_resource_id(priv->wdev, i + offset, &out_data);
->  		if (ret == -EIO)
->  			return ret;
->  
-> +		/*
-> +		 * Some devices report an incorrect number of thermal profiles
-> +		 * so the resource ID list may end prematurely
-> +		 */
->  		if (ret == -EBADRQC)
->  			break;
->  
->  		id = FIELD_GET(AWCC_RESOURCE_ID_MASK, out_data);
-> -		if (!is_awcc_thermal_profile_id(id))
-> +		if (!is_awcc_thermal_profile_id(id)) {
-> +			dev_dbg(&priv->wdev->dev, "Unmapped thermal profile ID 0x%02x\n", id);
->  			continue;
-> +		}
->  
->  		mode = FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
->  		profile = awcc_mode_to_platform_profile[mode];
->  		priv->supported_profiles[profile] = id;
->  
-> -		set_bit(profile, choices);
-> +		__set_bit(profile, choices);
->  	}
->  
->  	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
-> @@ -664,7 +681,7 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
->  		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =
->  			AWCC_THERMAL_MODE_GMODE;
->  
-> -		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
->  	}
->  
->  	return 0;
-> @@ -695,6 +712,20 @@ static int alienware_awcc_setup(struct wmi_device *wdev)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> +	ret = awcc_thermal_information(wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
-> +				       0, &priv->system_description);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Sanity check */
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(priv->res_count); i++) {
-> +		if (priv->res_count[i] > AWCC_MAX_RES_COUNT) {
-> +			dev_err(&wdev->dev, "Malformed system description: 0x%08x\n",
-> +				priv->system_description);
-> +			return -ENXIO;
-> +		}
-> +	}
-> +
->  	priv->wdev = wdev;
->  	dev_set_drvdata(&wdev->dev, priv);
->  
-> 
-> 
+Thanks for sharing these patches. To test, I applied them to our
+downstream branch based on the NXP BSP 6.6.52-2.2.0 and can confirm that
+the driver works well on our iMX95-based board which uses a ublox
+MAYA-W260 (IW611) for WiFi (SDIO) and BT (UART). Both STA and AP mode
+looked good to me.
 
--- 
- i.
-
+Kind regards,
+Ernest
