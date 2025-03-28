@@ -1,279 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687DE2F3B;
-	Fri, 28 Mar 2025 08:42:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014B32F3B;
+	Fri, 28 Mar 2025 08:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743151377; cv=none; b=pe/Xj8lCDREL6KaQNaSew0OHvo7z19HaSH+cUGD95BymSI4bvn3CMLInQtVC1lJ+JoWxGP48vARW72SJFzAdaP7yVHxjxLHYbK6s9Ckdn81zhoyquyQ2pVbML11zzqu+kbKpEr3gUoUJmaUp/0JoeS9l01xT82724JkNTAaJxRc=
+	t=1743151471; cv=none; b=noMjuZtUJ0ueMneFM0TK3VOOaHsKkEeFI5E7tVCSxcUeGCc7T+l+pb0xof6lx8faEOa2mbNruhTx+k7WM42RvQX88PU767aZLanECyuC8TCcnj/jOEiZAhxmOvxxRJh98UDVeO4RtRtCK/t1dRXVEvZT2Q2kP219eBQlsoJYBcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743151377; c=relaxed/simple;
-	bh=jaBdE82HtRD7nwM1AMEv568HmmOnskrmL0Kbhtzr+do=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xut0asG7OrA9ASZLF4tbDgKG4Cf486NZvkQcISnJAE7OvJYpVA7VroHgYuDZ+0CIg7o6CEYy7R1sPepCn+xoXw0RXz+VvANn+PTmlL3YNNPs/0PVIrXx6IpUMKT9ebynEnf/J/mKESm4tB/DDvgGdqKw10g5PdMInDfHtZomGg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJnlqtmA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743151471; c=relaxed/simple;
+	bh=7wWpNyqwEltt65jw58fWm4t4+DezGpJMXEf4es9UZBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGRXHX85iBOtapWOuynHkRUPQdovIEPFQ0XcrIgNZWs/kz6zSUQE2daCHPjhurKTMldyhTo9rMBKEMCPZEyAbYXXEkfilAY2q0Uht6QYQu3B7SHrs0vqLWDsd7kWSjS9qmc7VnqEhdTJcx1ljukHT6NF2aTkUiKUGRVjDKNMKZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvTNG3yn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJnlqtmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4209C4CEE4;
-	Fri, 28 Mar 2025 08:42:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvTNG3yn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A74C4CEE4;
+	Fri, 28 Mar 2025 08:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743151376;
-	bh=jaBdE82HtRD7nwM1AMEv568HmmOnskrmL0Kbhtzr+do=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MJnlqtmAxabfRFbMqvOTD6GsBieLFQPNOy2FKdciPxVtwwHssRucNElEoKQ0A3E2+
-	 xMg6JpCR4br8y1G0KABP6khJr3jG373yBEnlKcIgrLO+JdA8kBnuoRNGb665obMu3k
-	 2WjFhppIxrafyHNkXc0JuVn3ghlOiwVvwYyzzuoNhRZmEYR7NwS4SHl90GzGZtyFBf
-	 eEohY4G749Szovf8fC+Zb7gY8mRTRdFlBvOKHCNuXJwSosgr5F294kEa3Nmc1kZ1nl
-	 5AKOsJ1aBXitkYxWU6kTpAO49L+TCezIiy7JO20sCYPQS+p4r9viXTNwXgsAn8D3c1
-	 ZGph1MuTkp5LQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1ty5Ir-000000004Nj-1wPA;
-	Fri, 28 Mar 2025 09:43:01 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: x1e80100-hp-x14: drop bogus USB retimer
-Date: Fri, 28 Mar 2025 09:41:54 +0100
-Message-ID: <20250328084154.16759-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1743151470;
+	bh=7wWpNyqwEltt65jw58fWm4t4+DezGpJMXEf4es9UZBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tvTNG3ynFho3DH3Rp+RztQH5CP6x6aaH8VICHj0go9wqjxsHobhsynnpkpPy9WyRt
+	 brtW0jv8aWTkISaBem9nA3B/VxeLrGW5BlfjCgFfnIhHgf4A+rixw8/VAqAaiJYIUG
+	 bzbgSggRp6XRxuKKNjxcHr1yA9g837AW05R3Wk+aQDZMhZ0DMVSkfPqyLKjoUfeiQs
+	 2QzqwyxmTqVMDkqKK/bKpKaouPi0kjmhc3UFv0yzvso7Euz8c+4HpSyCik9ZxYvAYc
+	 /zDcn4l75GL5HD13etXK4nh5tWqove7kr5dMUTXUr78SVy3OTLIVON43SjScQZYX+W
+	 pevz5T/lNZMHw==
+Date: Fri, 28 Mar 2025 10:44:25 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>,
+	"Zhang, Cathy" <cathy.zhang@intel.com>
+Subject: Re: [PATCH 4/4] x86/sgx: Implement ENCLS[EUPDATESVN] and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z-ZhaagOPj8bhCCo@kernel.org>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-5-elena.reshetova@intel.com>
+ <Z983ZaTaWNqFUpYS@kernel.org>
+ <DM8PR11MB575000AEB9CC3A318651AAABE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-RfcpSBAybk-KjG@kernel.org>
+ <DM8PR11MB5750FE25D4C8EC2297952845E7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-XA0oy_r9VBJPHI@kernel.org>
+ <DM8PR11MB57501BCC966906CB02946986E7A02@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB57501BCC966906CB02946986E7A02@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-Jens reported that the sanity checks added to the new ps883x USB retimer
-driver breaks USB and display on the HP X14. Turns out the X14 only has
-a retimer on one of the ports, but this initially went unnoticed due to
-the missing sanity check (and error handling) in the retimer driver.
+On Fri, Mar 28, 2025 at 08:27:51AM +0000, Reshetova, Elena wrote:
+> 
+> > On Thu, Mar 27, 2025 at 03:42:30PM +0000, Reshetova, Elena wrote:
+> > > > > > > +	case SGX_NO_UPDATE:
+> > > > > > > +		pr_debug("EUPDATESVN was successful, but CPUSVN
+> > was not
+> > > > > > updated, "
+> > > > > > > +			"because current SVN was not newer than
+> > > > > > CPUSVN.\n");
+> > > > > > > +		break;
+> > > > > > > +	case SGX_EPC_NOT_READY:
+> > > > > > > +		pr_debug("EPC is not ready for SVN update.");
+> > > > > > > +		break;
+> > > > > > > +	case SGX_INSUFFICIENT_ENTROPY:
+> > > > > > > +		pr_debug("CPUSVN update is failed due to Insufficient
+> > > > > > entropy in RNG, "
+> > > > > > > +			"please try it later.\n");
+> > > > > > > +		break;
+> > > > > > > +	case SGX_EPC_PAGE_CONFLICT:
+> > > > > > > +		pr_debug("CPUSVN update is failed due to
+> > concurrency
+> > > > > > violation, please "
+> > > > > > > +			"stop running any other ENCLS leaf and try it
+> > > > > > later.\n");
+> > > > > > > +		break;
+> > > > > > > +	default:
+> > > > > > > +		break;
+> > > > > >
+> > > > > > Remove pr_debug() statements.
+> > > > >
+> > > > > This I am not sure it is good idea. I think it would be useful for system
+> > > > > admins to have a way to see that update either happened or not.
+> > > > > It is true that you can find this out by requesting a new SGX attestation
+> > > > > quote (and see if newer SVN is used), but it is not the faster way.
+> > > >
+> > > > Maybe pr_debug() is them wrong level if they are meant for sysadmins?
+> > > >
+> > > > I mean these should not happen in normal behavior like ever? As
+> > > > pr_debug() I don't really grab this.
+> > >
+> > > SGX_NO_UPDATE will absolutely happen normally all the time.
+> > > Since EUPDATESVN is executed every time EPC is empty, this is the
+> > > most common code you will get back (because microcode updates are rare).
+> > > Others yes, that would indicate some error condition.
+> > > So, what is the pr_level that you would suggest?
+> > 
+> > Right, got it. That changes my conclusions:
+> > 
+> > So I'd reformulate it like:
+> > 
+> > 	switch (ret) {
+> > 	case 0:
+> > 		pr_info("EUPDATESVN: success\n);
+> > 		break;
+> > 	case SGX_EPC_NOT_READY:
+> > 	case SGX_INSUFFICIENT_ENTROPY:
+> > 	case SGX_EPC_PAGE_CONFLICT:
+> > 		pr_err("EUPDATESVN: error %d\n", ret);
+> > 		/* TODO: block/teardown driver? */
+> > 		break;
+> > 	case SGX_NO_UPDATE:
+> > 		break;
+> > 	default:
+> > 		pr_err("EUPDATESVN: unknown error %d\n", ret);
+> > 		/* TODO: block/teardown driver? */
+> > 		break;
+> > 	}
+> > 
+> > Since when this is executed EPC usage is zero error cases should block
+> > or teardown SGX driver, presuming that they are because of either
+> > incorrect driver state or spurious error code.
+> 
+> I agree with the above, but not sure at all about the blocking/teardown the
+> driver. They are all potentially temporal things and  SGX_INSUFFICIENT_ENTROPY
+> is even outside of SGX driver control and *does not* indicate any error
+> condition on the driver side itself. SGX_EPC_NOT_READY and SGX_EPC_PAGE_CONFLICT
+> would mean we have a bug somewhere because we thought we could go
+> do EUDPATESVN on empty EPC and prevented anyone from creating
+> pages in meanwhile but looks like we missed smth. That said, I dont know if we
+> want to fail the whole system in case we have such a code bug, this is very 
+> aggressive (in case it is some rare edge condition that no one knew about or
+> guessed). So, I would propose to print the pr_err() as you have above but
+> avoid destroying the driver. 
+> Would this work? 
 
-Drop the non-existing retimer from the devicetree to enable the second
-USB port and the display subsystem.
+I think now is the time that you should really roll out a new version in
+the way you see fit and we will revisit that.
 
-Note that this also matches the ACPI tables.
+I already grabbed from your example that I got some of the error codes
+horribly wrong :-) Still I think the draft of error planning I put is
+at least towards right direction.
 
-Fixes: 6f18b8d4142c ("arm64: dts: qcom: x1e80100-hp-x14: dt for HP Omnibook X Laptop 14")
-Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
+> 
+> Best Regards,
+> Elena.
+> 
+> 
+> > 
+> > If this happens, we definitely do not want service, right?
+> > 
+> > I'm not sure of all error codes how serious they are, or are all of them
+> > consequence of incorrectly working driver.
+> > 
+> > BR, Jarkko
 
-The devicetree went upstream before the retimer driver so the display
-would already be broken in 6.14 and there's no need to backport this
-one (but it should go into 6.15).
-
-Note that the SBU mux can be added later when/if someone figures out how
-it is connected.
-
-Johan
-
-
- .../dts/qcom/x1e80100-hp-omnibook-x14.dts     | 146 +-----------------
- 1 file changed, 2 insertions(+), 144 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-index 05ad07d90b97..03bbebff4576 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-@@ -150,15 +150,7 @@ port@1 {
- 					reg = <1>;
- 
- 					pmic_glink_ss1_ss_in: endpoint {
--						remote-endpoint = <&retimer_ss1_ss_out>;
--					};
--				};
--
--				port@2 {
--					reg = <2>;
--
--					pmic_glink_ss1_con_sbu_in: endpoint {
--						remote-endpoint = <&retimer_ss1_con_sbu_out>;
-+						remote-endpoint = <&usb_1_ss1_qmpphy_out>;
- 					};
- 				};
- 			};
-@@ -370,54 +362,6 @@ vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
- 		regulator-boot-on;
- 	};
- 
--	vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_1P15";
--		regulator-min-microvolt = <1150000>;
--		regulator-max-microvolt = <1150000>;
--
--		gpio = <&tlmm 188 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_1p15_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
--	vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_1P8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--
--		gpio = <&tlmm 175 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_1p8_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
--	vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_3P3";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&tlmm 186 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_3p3_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
- 	vreg_vph_pwr: regulator-vph-pwr {
- 		compatible = "regulator-fixed";
- 
-@@ -1027,64 +971,6 @@ eusb3_repeater: redriver@47 {
- 	};
- };
- 
--&i2c7 {
--	clock-frequency = <400000>;
--
--	status = "okay";
--
--	typec-mux@8 {
--		compatible = "parade,ps8830";
--		reg = <0x8>;
--
--		clocks = <&rpmhcc RPMH_RF_CLK4>;
--
--		vdd-supply = <&vreg_rtmr1_1p15>;
--		vdd33-supply = <&vreg_rtmr1_3p3>;
--		vdd33-cap-supply = <&vreg_rtmr1_3p3>;
--		vddar-supply = <&vreg_rtmr1_1p15>;
--		vddat-supply = <&vreg_rtmr1_1p15>;
--		vddio-supply = <&vreg_rtmr1_1p8>;
--
--		reset-gpios = <&tlmm 176 GPIO_ACTIVE_LOW>;
--
--		pinctrl-0 = <&rtmr1_default>;
--		pinctrl-names = "default";
--
--		orientation-switch;
--		retimer-switch;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				reg = <0>;
--
--				retimer_ss1_ss_out: endpoint {
--					remote-endpoint = <&pmic_glink_ss1_ss_in>;
--				};
--			};
--
--			port@1 {
--				reg = <1>;
--
--				retimer_ss1_ss_in: endpoint {
--					remote-endpoint = <&usb_1_ss1_qmpphy_out>;
--				};
--			};
--
--			port@2 {
--				reg = <2>;
--
--				retimer_ss1_con_sbu_out: endpoint {
--					remote-endpoint = <&pmic_glink_ss1_con_sbu_in>;
--				};
--			};
--
--		};
--	};
--};
--
- &i2c8 {
- 	clock-frequency = <400000>;
- 
-@@ -1519,13 +1405,6 @@ wake-n-pins {
- 		};
- 	};
- 
--	rtmr1_default: rtmr1-reset-n-active-state {
--		pins = "gpio176";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
- 	tpad_default: tpad-default-state {
- 		pins = "gpio3";
- 		function = "gpio";
-@@ -1547,27 +1426,6 @@ reset-n-pins {
- 		};
- 	};
- 
--	usb1_pwr_1p15_reg_en: usb1-pwr-1p15-reg-en-state {
--		pins = "gpio188";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	usb1_pwr_1p8_reg_en: usb1-pwr-1p8-reg-en-state {
--		pins = "gpio175";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
--		pins = "gpio186";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
- 	wcd_default: wcd-reset-n-active-state {
- 		pins = "gpio191";
- 		function = "gpio";
-@@ -1670,7 +1528,7 @@ &usb_1_ss1_dwc3_hs {
- };
- 
- &usb_1_ss1_qmpphy_out {
--	remote-endpoint = <&retimer_ss1_ss_in>;
-+	remote-endpoint = <&pmic_glink_ss1_ss_in>;
- };
- 
- &usb_mp {
--- 
-2.48.1
-
+BR, Jarkko
