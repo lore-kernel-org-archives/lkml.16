@@ -1,101 +1,70 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE561482EF;
-	Fri, 28 Mar 2025 19:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5C631C5D4C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743188721; cv=none; b=nCbAq5HFkdU/7i4ma3/TL/bgF+MCfiCJaiqca0t6bBArqsUL6W1GXSDzWvUjlOONY775esMQxWDgMwjGxAHq/dZCaPKzP/3dVQT+rapmzj8TV1t0C4qlcz3DH8fhf9tfpZyywziAXaXgRAV4DArzggk7FzucLTDTZtwVPdH2Q4Y=
+	t=1743188800; cv=none; b=hhmqjgBm9Db5slz+TMcmixHq2AXIcAeF+nPQ9eOvgrB7cC/VytfzNgAlRMKZGxP3Tg7rFN1jzaDwJHrS/X4vh8grVrtYY5upHs27JVB3PCV1ILJf8QwbYX/55XRx8sOmSe5++DawCZThju4kowetV8W2qFzR8Z1X9cV3OM4VG0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743188721; c=relaxed/simple;
-	bh=jOsXkiN4zS8kiwV3cwiwixj57c5f74/Oq2sxAMpeJuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k01/qppbKfA8yXcIigZEMjAC5kh6stxENgKLBP2pgExumMklbwTRlShQTIwQXI7ctPZZIiuBEvVIPOujAXK7x58btVFUcujgIzmpmZJYIPspwYEfQvNpeBDJigFoy/ukvnlYdSa6AoC5EfKR/d8SjgYFi9qq4y/DI46q/pI/ew8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L0QLwyUy; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L0QLwyUy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743188698; x=1743793498; i=markus.elfring@web.de;
-	bh=jOsXkiN4zS8kiwV3cwiwixj57c5f74/Oq2sxAMpeJuM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=L0QLwyUyTR0EqrGx9YUwLuZmfmdlI8Hpb5sG96NM4+zNuDkJNA71s4EeyXxj0wuE
-	 mqWz/z9oeFnd60z/beEb6si2p4BhTtPMaSGlCA4HzivGcGTPwKVxy/BX/lxygsBR9
-	 nzJU6bdh4Puw4ZINNYs4APKD9s/fmzZ2oogYFOYB06DdMv8ldxaQIIc7CyCJp8dtp
-	 nZoXcAVSbftqoFl6Ksh/QOAiHuNo4DYjizjJSZDnfOpHlUGQsp2okXITmVT02OW7P
-	 r4SYk+E1l+AKUGdHZ0Gf1FoUI7mF8ogFxoaK7exgl58LC7bwbWSEwmhMVMvUewOTH
-	 02SIyC8kyDSYEoCoPQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MKdLK-1thgb02RWm-00LIxN; Fri, 28
- Mar 2025 20:04:58 +0100
-Message-ID: <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
-Date: Fri, 28 Mar 2025 20:04:56 +0100
+	s=arc-20240116; t=1743188800; c=relaxed/simple;
+	bh=M64IOLP1uv/J6iWlZ2NVRHsj0q9QuienksfjE1UVi0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H6CE8AmHPnKWmnlj0tA7mKaYyQ3xwKCH4JKi+eBt27as3AzYsntxYQLb0TqraWPJJMMFaJZivXkOhLingU6elna/rOGfW1d5TRurSXFmOWCML5CEbxHA5su8zQZwg0wPQATg+Xwxsx7DIplntcnn57EEspNCRxfqNN4niK9qlho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6642FEC;
+	Fri, 28 Mar 2025 12:06:41 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D96A3F63F;
+	Fri, 28 Mar 2025 12:06:36 -0700 (PDT)
+Date: Fri, 28 Mar 2025 19:06:34 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Angelos Oikonomopoulos <angelos@igalia.com>
+Cc: linux-arm-kernel@lists.infradead.org, will@kernel.org,
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com
+Subject: Re: [PATCH] arm64: Don't call NULL in do_compat_alignment_fixup
+Message-ID: <Z-bzOrF-4lSykkgJ@arm.com>
+References: <20250326133521.13637-1-angelos@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
- <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
- <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:T7u3qxPI3WBz+9O34BuV/2Jv5KTEmCEu3iKfSY+G+o7DSm/aCvE
- pp9v/ic4W/McvGc0YbBtKGV0sx46UwVZOKFTGJtD5tIfv0ZPDXOgFDo7uiGWOhJM1h9BYYt
- rguY95Sbvn/Lp5K9m2BG0uWoqUoHvbAOK6G5a/IoY4JhBPofvSov9N/amDUniGxzNcFPEth
- nM/mqP4koheEiCN9ujjuA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qqse1amEUSE=;K+dmILupNtAQj8PPVB/oOTWLo6J
- NgMcVA52rk2boJxbQv2e7z86py5jTwh1bHYS4fNvLZ2iYoQtPzTaTQe9J0h4zE5j9DEB5T7Qi
- +6pppXVxwy5pL+s5rllEPHZ4faiyNOqBjUmUDY0nQxvdYI8cdonvWVj1VQDEdpRKMVWVU+PLj
- 2yV79OgvPz6W9GOv8kA9rcym6K+ZPObg+ZtBN2jZIeCH6xpMii1t5Qb0vPX8/8DGNKM8PJ6OD
- 0ARGOeA8x3HzLI2gCmG6XqNhILgpVmOmprROMevRHCqEq2TqlMW3afyF5fp+SI2AztUrMZMAF
- j9j4VgJDVVuHRpR+6WAdZRGlZYKgNsPF4cfd4YYU9IhYj6osUMr8iTv1klJGzxsajIQJkZqtj
- FDMBpWGIyFH786GSDaOf9BqLoNiWz8FVxGws/LgLh3m/fkgBhxGkdXqjX8gb8BGBGMqCgG8gd
- xCbjMdekPsthLdBZZP8PuBTBAvBEbzhkheUK83cV4PiT/iZQWIxEE1tk13mtsqa2hoHs20eFY
- JaiSXm85mpSMHNpbf+H8LKC7rku0PThBBEikRL9ioZ1722uXpsAXIlhxNdHIbNhHa5bJnjKfo
- 90IOS3Gu9abBx926bEiT+BL6XgRr6VVAzQ082VpXvBFZTC+QCUyzPWGKoPVM033KSYCt+EAti
- /W0cPAxxBfR1RHQlMw+1qTN9NGBZW96iBpWC8HjR3t98U60IFxz55a6inQ79zKwXpVXuYMyJ1
- vzFQVCgwXCPLzJrrKKuZH2ANUDWD+qkuNiW22mdKNsBiUIp+ZLMR/xDwA4mU77SOmiy7cRNSQ
- 4W8gtZywIgYXXoVK5UCvNVlYHrKX1eJqfGN9lSO17WgN/CQPZPAUqXtNerJg2gBOY8LhlsuPp
- I9udimlR/xi7GidGqEegpdvjxQYYJfMk4Rz07fMlDP1STL+K+VV6tybqrpOmJfhE82kRhx+Yv
- YVK17s2BUbRSaUObPANgSehzpR+Pa7cwAKMYCPcbgMAJcxhwi/dYp2DV/FYr+u/Gu8yu1uqXn
- 5j8kd+/daaRFOovanpki+ON7XlMJLOT5ModkYAaWqN9AW+Sa55W0vBxUGocJRmAtnrt16SsHM
- /KX/spQGB3PU/rE6SSXICgxbzmGWxMP4z0QIovrw8e47jsascIVeH34Ouk+PrmpGSD1GH5nsm
- 9229f8Kh+VacDqjINAyx68IWyXBvgeCpWUPCaL+zsyAFIsLKCA10jdBTw0ybo0OnTTkWgHe2B
- 5RTWq4/Xs3xKi3OqoOuN47MxuzKqhTCA5FKWh5KluAaH46Jz13a1BJfkgRSGjdTLEnSnOd3AX
- mIDx7xO4snEzi5k0KI+hoeCarGCZ4GY6xkjoIUt5UKZCuacH2OqkVKXxrUjmT5mPIxVV4+JWo
- JYxO5cdMTgTufhjZrCEMlFtGeiz+605EOHWdBKrvT8HueRSXD4FOg94L5DoHmWtie9StJN9ze
- lnxz8GpFee7EtwUKM/M2YzplUkIJipmCGICx56NxAFQeiYF5d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326133521.13637-1-angelos@igalia.com>
 
->> Under which circumstances would you become interested to apply a statem=
-ent
->> like =E2=80=9Cguard(spinlock_irqsave)(&gi3c->irq_lock);=E2=80=9D?
-> Didn't get, hence a question.=C2=A0 Do you suggest to use DEFINE_LOCK_GU=
-ARD_1 instead of existing method ?
-I propose to pick further opportunities up for benefits from scope-based r=
-esource management.
+On Wed, Mar 26, 2025 at 02:35:21PM +0100, Angelos Oikonomopoulos wrote:
+> do_alignment_t32_to_handler only fixes up alignment faults for specific
+> instructions; it returns NULL otherwise. When that's the case, signal to
+> the caller that it needs to proceed with the regular alignment fault
+> handling (i.e. SIGBUS).
 
-Regards,
-Markus
+Did you hit this in practice? Which instruction triggered the alignment
+fault that was not handled by do_alignment_t32_to_handler()? Standard
+LDR/STR should not trigger unaligned accesses unless you have some
+device memory mapped in user space.
+
+> Signed-off-by: Angelos Oikonomopoulos <angelos@igalia.com>
+> ---
+>  arch/arm64/kernel/compat_alignment.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/compat_alignment.c b/arch/arm64/kernel/compat_alignment.c
+> index deff21bfa680..76cf1c1b5bc6 100644
+> --- a/arch/arm64/kernel/compat_alignment.c
+> +++ b/arch/arm64/kernel/compat_alignment.c
+> @@ -34,7 +34,7 @@
+>  
+>  #define REGMASK_BITS(i)	(i & 0xffff)
+>  
+> -#define BAD_INSTR 	0xdeadc0de
+> +#define BAD_INSTR	0xdeadc0de
+
+Unrelated change (white space I guess), please drop it, not worth
+fixing.
+
+-- 
+Catalin
