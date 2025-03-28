@@ -1,67 +1,67 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEE521B180
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52211A83ED
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168682; cv=none; b=u83g4X2JKLscUYe8OOg2YaYdF46s52Ul3XBEYzvbYQ7HjeI0R7AWI4FhATxiViZxRVA/MfjwqB2VY0doZTFlIUYyXH5EDawuIVDpWaOvrlyMmJB6T4IgJL4fniurhql8jjJrVXZ333aKHHTksXiz2ee7DAQPvI0/WCsDXn49jhk=
+	t=1743168686; cv=none; b=uYC2yF1QFZq324LZGwHXVDhQEMGYkBu7yo8j+xPU1YZ8FzeN5WGKYxgfle487nK3EivDP+ncI8XvdkQLYvB0/A/ZocMTaTbW15StUTFxHOKlt9suL+TdQlGf/DMr7/BFlBGfZxgZHFph8gDGvn8pl2ksqjLVdN7NQkOjld3y05I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168682; c=relaxed/simple;
-	bh=oM7nIChVy6AnX102peSIS6No2vZfRMNewLZjt/WfrE0=;
+	s=arc-20240116; t=1743168686; c=relaxed/simple;
+	bh=X0QQTgyZyBPIURJ3v2tympUyOwlqSVYuYyMtIMSpfpo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LgoPaL+dJJJLIJOnjcQMOCCrTgm8r063ioVsuL912HctME85yr5o8dBWXHLralbmVxHi2pPSezsWRhFki9uQ89aglCh1ZmmHqs5rVyyQ9pPfUaOmVTJognqc/81OzYvBOM5f7gL9X3q8YJZc6qLgRlBEKOUhy+YRclVpY/H9S94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h/Dz7krH; arc=none smtp.client-ip=209.85.208.45
+	 In-Reply-To:To:Cc; b=q+S3llgJ//i4MoqrcyXIirqm9KNeQEmEOi0Ll9pPVZnA42wewfP0HY5e8NgiI2NWtc5bVHP1Y0JRafj5S14VcZQt8czafCnKq9BL/nOqaEjJ20Mlj/3IHMzblaXNdMRrsTVYCpD/sP/ccB+2HJ5lQOT0t0DG2GD87ORBe9OfiFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=En+/83zz; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h/Dz7krH"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so3986438a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="En+/83zz"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso3340293a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:31:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743168670; x=1743773470; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743168664; x=1743773464; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=31t2yEGURbHN+dYzF9A6q02DZ3VBH6YOfFo8ts0pTFs=;
-        b=h/Dz7krHtN0w9o/IOClhkmZijx7OtzSMyotcInOQrxRodXDX+Qz2ndUVAlGCBevzKK
-         3BZfFMMOvjVJff1X2bNSDFui2vy0AjqY7aa0D2/3GW10OT34B4Li+LcS9t8d29mzC6QL
-         b5S0eRNeldL63/L+8Ui5WXARXi4KvIfr4Znlc5Uvp+JaP7t79hMWzsHvPKP2G4qn6O5/
-         DREiKF4FWVArUSTzB+K0wxm719HutQZU59Np6EpzhPlJfV8pjVD7XkwYseI+BzgxXpAp
-         +xnygv8a/P6u6yb5WauppZ2MQJn7UC5KyMi9ci6hlMJz2+MK+sNyCWKu8BVvinEDQezk
-         0L2A==
+        bh=kV75c5wurwfdiB4LfjbAT+jBLqgbz3xs0SfJTGIePwA=;
+        b=En+/83zz2JnMpQOWtuk2jCDJ+XxaXrWiMelE/N8tSqAWNlQjxSxlMoVEEmE6b33Sfk
+         NTdaOnhFa94eLQmjNm0kQX9LkllxVIDbU0jX95dZG3s26gd0JJk0H2UYYfLo62vvjKjf
+         fnVNqpK0uxH3NSfbnQYY0Cs0UQD3VnK0PRhGQtW99BP2c0ZYhui+pddKFsu6/BbjMEJ8
+         zN5/RQBoIdNDbbIDDtUR2jvqr3ZdbOGfRIpuIAf0rNr3I2aDjSfPDJgoqXvQSULs3eDe
+         SHS86+6HeMQPVvrg6x0rJ2IHK5sir5Tjuqxtqg6lIo4mVJXez7M2lduvv1DNech54jG0
+         6NOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743168670; x=1743773470;
+        d=1e100.net; s=20230601; t=1743168664; x=1743773464;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=31t2yEGURbHN+dYzF9A6q02DZ3VBH6YOfFo8ts0pTFs=;
-        b=DIJK1W8d5Plahq3NJsXrEj6lQ3gUig9bODy4qQEyNaARvZwiZzzSITHJLv2kI4Tr9F
-         e7dK+KIUplFL7ql7V9pxDGfpALR1AqamOrINiCywnY0eGvUqjjySfce/+8KqabP/tn4J
-         2bT4Ocx/9USJllA6kBiFHH8IreHDWmC9OOFZiSDRdLy51P1RX2WxVEbnCzUTQ0163IBd
-         p1a/alPl48YaMMbqsc6Yk3tabbJvO6JHyfd+mocuJRhpEgU1tijOZK+uiaof7c9eApZd
-         OvzefJfGPf3EVU3MPhcFWUaf+Jnk0FfONRp3vN5U4SdcPZIt4/l/lIz/blJUTUk2wIO0
-         6TPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRqRiMweNIALtfzxK0yEdrOYZ2V0CNmeshPoBRPfKF+DJDx/KRI1YXld6HOlKtfIxrKHJVHV5TcuXrzYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkRKz0SuOWcDuWY7oGXo+DxmQ05BNH9kQP9T411tD5uZQ1/nPb
-	Ps0yXiY6Kq3aFGWTz5kX15T6+UXT9yZPbrpNNpwepInu2bzHOhXE5//nB/A+Es0=
-X-Gm-Gg: ASbGncv/NJ+eBXrA6aKSpRJM8wMSkTR8vvyssEJiCD/FFZlSS0a+jCFIRjyUI9KNTIF
-	+W+kBlubGGGUxMqlhAr+y6Y2TGQQt7AqpLIP8qfcFVie1pRE1RkhSxyK/SGJziQOX5yS0lQdmy9
-	ypZzMW8BgCnyHktqm4SU7aBwtApO3Lsp3mNs3bD6sBgnKeU9WfabuNuxAeocXvgb4HhH7tZ9vWx
-	HN87uSWq9zCiLJA9/i64yBFHZwo61xwk1MDBvAQtpSpkzim/1+G70ov+5HsnOb6JxWbsvdooHH1
-	ORH9swjV7jtFzcUIi6qDYdIvYOamHWD2YEqNEmjQzlxDcCu7vuabG+m/47pGzz2VXPIz6D0Ey1M
-	ytob4bOM7vJ8DRr0ZpdMZbtkFTj+v
-X-Google-Smtp-Source: AGHT+IHYdNpE5Oaiy98m+ZWWJjpn0kB8pbikHk0ZcUltpSgeHSv0me+ylZHKLUVEOgvnZGzJh/notA==
-X-Received: by 2002:a05:6402:518d:b0:5e7:b02b:6430 with SMTP id 4fb4d7f45d1cf-5ed8f3fd122mr6775177a12.23.1743168670150;
-        Fri, 28 Mar 2025 06:31:10 -0700 (PDT)
+        bh=kV75c5wurwfdiB4LfjbAT+jBLqgbz3xs0SfJTGIePwA=;
+        b=W/o5NCs14UVbsfIqU2nGSTZ5v6C8qoIipIImgtZ/ZPW5qN8tnvhhU0hTIPsMY7pb43
+         bXLXn7adrY5/p5LiSIHM7lIGW/q9plUsT4LDKT68nIYDxW8I6/5ESeSn6NN7P2mZPVzA
+         5PPo/Y4wCc1uIhjmE3yVUgs6dzLg8XvpNuwXe7qc9zR7MUlfo3IExrX0HT0WxADmNESH
+         R/buHbXkS1IZilX4QBfk1y7OMA5m636V50bXYR04ypK8542KVxlA8TH42hrkdw5LDqdk
+         c5e4VMvGBcfJTF6oAoQnybMowg2k6aKTvVN9fRrRue3Cbb8jHmL440JmNd8/e6hoPOBP
+         GjWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgqTNqZs4/YuhRG6N7uZ/uwNbx2eJj7bluTpGeOz1lDMfURXyXOIaV0GxIdJkH+IF/m7bmV7BhTmwz+I4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHGcysKi3B+gJXRDT+0GXekpQMHdUAoTrP2NvyJn61M0ntO2tD
+	jG91xvcRE+s4SdRwo/MyKsGZrD8ZF4AXpvFUaoyMc8lih3Cy7FI37miBRvIFE/I=
+X-Gm-Gg: ASbGncstLEqKj3JVaBr3r00ZVCAblQOkxPzQ/LaZyEKzjTuf9kRDZzzhUNmMs8igIsK
+	aFfI7FN26zyWCdB/DILs/BR3ji6G7KOHh8UNEOFVZrwAdSyn7r8SpOEV7H2W8Dmy6JbrHwggDod
+	bslWi9G9+5UbXhXIJ4GReXn+mH4jGUS81epmBi4wItyh8plW4T6IHPUpKxvG2Zp8sjCaS9K+liq
+	SH2u+63W3VW0YyymJ/cgBhoa9qkEHTucwNVEq1bWesZ/9zZfU8u/vIvnm+aLJL2oyqczbxPmMlw
+	M8aLXUxqObW4IJfOnOVqtkmvkmm+3Syi/k16+IYT4N20g2epYzOfcIzSPWY3368sJjl7n9sy6Qa
+	W7jQwtd9SqdqKvd1k5mKxJSidQNBu
+X-Google-Smtp-Source: AGHT+IH82jsJ04KqxSx2urRuI126Wc6BqmkR0wyKM63ai8QchgotV1y1Ewu8V3BijV087u2FKOXDPg==
+X-Received: by 2002:a05:6402:26d0:b0:5e5:c637:b69 with SMTP id 4fb4d7f45d1cf-5ed8df6b334mr7910381a12.6.1743168664240;
+        Fri, 28 Mar 2025 06:31:04 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e01f7sm1355284a12.79.2025.03.28.06.31.09
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e01f7sm1355284a12.79.2025.03.28.06.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:31:09 -0700 (PDT)
+        Fri, 28 Mar 2025 06:31:03 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Fri, 28 Mar 2025 13:29:16 +0000
-Subject: [PATCH v2 30/32] rtc: s5m: replace regmap_update_bits with
- regmap_clear/set_bits
+Date: Fri, 28 Mar 2025 13:29:06 +0000
+Subject: [PATCH v2 20/32] mfd: sec: use sizeof(*var), not sizeof(struct
+ type_of_var)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250328-s2mpg10-v2-30-b54dee33fb6b@linaro.org>
+Message-Id: <20250328-s2mpg10-v2-20-b54dee33fb6b@linaro.org>
 References: <20250328-s2mpg10-v2-0-b54dee33fb6b@linaro.org>
 In-Reply-To: <20250328-s2mpg10-v2-0-b54dee33fb6b@linaro.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
@@ -90,44 +90,33 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-The regmap_clear_bits() and regmap_set_bits() helper macros state the
-intention a bit more obviously.
+Using sizeof(*var) is generally preferred over using the size of its
+open-coded type when allocating memory.
 
-Use those.
+This helps avoiding bugs when the variable type changes but the memory
+allocation isn't updated, and it simplifies renaming of the struct if
+ever necessary.
+
+No functional change.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/rtc/rtc-s5m.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/mfd/sec-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-s5m.c b/drivers/rtc/rtc-s5m.c
-index e8e442c503064eb4e570af5bf7dcff6bfa7f4656..fb65a8e439d72d9070751c00f5826a403ac0b416 100644
---- a/drivers/rtc/rtc-s5m.c
-+++ b/drivers/rtc/rtc-s5m.c
-@@ -338,8 +338,8 @@ static int s5m8767_rtc_set_alarm_reg(struct s5m_rtc_info *info)
+diff --git a/drivers/mfd/sec-common.c b/drivers/mfd/sec-common.c
+index 55edeb0f73ff4643f23b9759b115658d3bf03e9a..e8e35f7d5f06b522a953e8f21603e6904401c983 100644
+--- a/drivers/mfd/sec-common.c
++++ b/drivers/mfd/sec-common.c
+@@ -163,7 +163,7 @@ int sec_pmic_probe(struct device *dev, int device_type, unsigned int irq,
+ 	struct sec_pmic_dev *sec_pmic;
+ 	int ret, num_sec_devs;
  
- 	/* On S2MPS13 the AUDR is not auto-cleared */
- 	if (info->device_type == S2MPS13X)
--		regmap_update_bits(info->regmap, info->regs->udr_update,
--				   S2MPS13_RTC_AUDR_MASK, 0);
-+		regmap_clear_bits(info->regmap, info->regs->udr_update,
-+				  S2MPS13_RTC_AUDR_MASK);
+-	sec_pmic = devm_kzalloc(dev, sizeof(struct sec_pmic_dev), GFP_KERNEL);
++	sec_pmic = devm_kzalloc(dev, sizeof(*sec_pmic), GFP_KERNEL);
+ 	if (!sec_pmic)
+ 		return -ENOMEM;
  
- 	return ret;
- }
-@@ -351,10 +351,8 @@ static int s5m_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	int ret;
- 
- 	if (info->regs->read_time_udr_mask) {
--		ret = regmap_update_bits(info->regmap,
--				info->regs->udr_update,
--				info->regs->read_time_udr_mask,
--				info->regs->read_time_udr_mask);
-+		ret = regmap_set_bits(info->regmap, info->regs->udr_update,
-+				      info->regs->read_time_udr_mask);
- 		if (ret) {
- 			dev_err(dev,
- 				"Failed to prepare registers for time reading: %d\n",
 
 -- 
 2.49.0.472.ge94155a9ec-goog
