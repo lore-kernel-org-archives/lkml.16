@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187D01531D5
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A120E00F;
+	Fri, 28 Mar 2025 02:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743129039; cv=none; b=Kv6xiuRdUWt/A9yrhJYqHY5QUBhHxpRp6ZemubZTZLKx3uyXt7pVv9MbPz4XbE2+atR6Gt4sdkdg5IUywfQphBfGUTpfSd70dWSoVcw2/P0QdutNUbBhurdKIPrAu56IANymk3VnymesBlE4ZLkutoTBmPDndIguMpT4IgOriKc=
+	t=1743129041; cv=none; b=Uz7E0YGIuPLLlF3P84pxtLZM7AciHhVP7+7P4yYeblWvtYrQffdO3YjcBpioF2yMv5a9UUF0cXz2SsNGWPYQ5xE1tebTG8MWgq7L8L3lji6LEe5ukw0EVZTX425YauQXCFWN/c1N1KqQAKfUMIXYejElsxbCH4vimPgr6yMhJnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743129039; c=relaxed/simple;
-	bh=ovSUcLh1iue2GVTV25SAEU+2mBZkfnnVxmjD4RAUNTo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nFGQXbIqCdmu51c2Z+8SJPBxQmZ3OxI80dhOODhUrcaco0nKv1pNNET39PAtpYLKq1LBBEjZUBTnlbKt/ILQwRKw+5abQFNo5JAexSQaEiNENCc4W0Y/sugbdVSc72YCgP1TeCMnNe0UNQ4dbCC3ZUfK8RkaptTM8EMn/nsdahU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrbUK6Dc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743129041; c=relaxed/simple;
+	bh=0VtiQ4EFYgr9gJBGY0SElaop9wa03AbmHYms8v1IkEU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hooVJ368JIhzspeykbHkIwB9GG9giCi09iD20PtWc/RmWyncz9UC/ZhM5lf7SdnP93S+FKV0vnEYk9Mmo2wFM9SwC+v+ZfOxlcfp+3V2cp0422oIcnLKCqI3IKcStKlvONXzapdpzU6+l3f86hF1oDGzIthgSEpGRTrukzeGFwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XF6AeWLv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrbUK6Dc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9132AC4CEDD;
-	Fri, 28 Mar 2025 02:30:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XF6AeWLv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F40C4CEEB;
+	Fri, 28 Mar 2025 02:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743129038;
-	bh=ovSUcLh1iue2GVTV25SAEU+2mBZkfnnVxmjD4RAUNTo=;
+	s=k20201202; t=1743129040;
+	bh=0VtiQ4EFYgr9gJBGY0SElaop9wa03AbmHYms8v1IkEU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=nrbUK6DcNE6V7qpnmLDPvUiZlcBiodTH/gpvfaP4iDoeeemvC4+/fvGtJpjNL2Nkv
-	 y6GLsb9V5JDvtyw0JU8Wj6rHmADQ+vCqV9AlQRR+0BqttKNcgo7laE8b+B9O+rdYot
-	 A9PHC5hDkSVl9Lj3gRyV5HDiK3MtT/g36Z/h/rnclQuY7OH9t84str/lgs0f24+jaI
-	 orKM7D+fKRnVwNvTeZ7Uec0/oHvYS80sZb7qYT1Z9ULfMqec0syPlpJCXRMR8RhFia
-	 rZ3Gbv69Q/H2l0gB7NogMPQteDIy5suQ3GtuBgJTQQhpFZohW4JRI/KbDfpPFUv/5u
-	 7p7SGrkkTcQsg==
+	b=XF6AeWLvAXyICt3N4im0X4z7HIMs6UDb93bU6qbz50dljIh3vWLdI/C5M89CfgiqS
+	 RuWbxUpUC4z0sjZXCPGWNzDbO99YMzaMPu8EfSx3MIegvnwStsITLYtLZpJe/mSnzQ
+	 uAA5ccar64S3fHDiJCvPHZc9W7dbY6IizQO67xaHCnsm38rYwKDxjPwMVsnIgtzjVB
+	 6ODpEYFa2gBsYo6f1Sthhzfr2tdrBBli2TJjUdZ7yMF2illonSmQAR1guBocD5jbqB
+	 D6Q1+hWf2WWSk82ny2az96EzU4UBqOZOiAuXkY/NaIkRt4fVSD0bsch8jXAH2Ghw9E
+	 LXoULpAAPiDzQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E4A380AAEB;
-	Fri, 28 Mar 2025 02:31:16 +0000 (UTC)
-Subject: Re: [GIT PULL] printk for 6.15
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D65380AAEB;
+	Fri, 28 Mar 2025 02:31:18 +0000 (UTC)
+Subject: Re: [GIT PULL] livepatching for 6.15
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z-Uvf8YsA6q54hv4@pathway.suse.cz>
-References: <Z-Uvf8YsA6q54hv4@pathway.suse.cz>
+In-Reply-To: <Z-UzRZybK1du6HYM@pathway.suse.cz>
+References: <Z-UzRZybK1du6HYM@pathway.suse.cz>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z-Uvf8YsA6q54hv4@pathway.suse.cz>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.15
-X-PR-Tracked-Commit-Id: f49040c7aaa5532a1f94355ef5073c49e6b32349
+X-PR-Tracked-Message-Id: <Z-UzRZybK1du6HYM@pathway.suse.cz>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git tags/livepatching-for-6.15
+X-PR-Tracked-Commit-Id: d11f0d172a3c2ea9cbe9b07abd47d5b767600ad9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 96050814a3f667eb28dabb78e7b3a7b06e5243e9
-Message-Id: <174312907480.2320867.3692780080428803756.pr-tracker-bot@kernel.org>
-Date: Fri, 28 Mar 2025 02:31:14 +0000
+X-PR-Merge-Commit-Id: dcf9f31c62b3d31c033ee5bce522855c3d7f56b1
+Message-Id: <174312907683.2320867.6977831162850105594.pr-tracker-bot@kernel.org>
+Date: Fri, 28 Mar 2025 02:31:16 +0000
 To: Petr Mladek <pmladek@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 27 Mar 2025 11:59:11 +0100:
+The pull request you sent on Thu, 27 Mar 2025 12:15:17 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.15
+> git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git tags/livepatching-for-6.15
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/96050814a3f667eb28dabb78e7b3a7b06e5243e9
+https://git.kernel.org/torvalds/c/dcf9f31c62b3d31c033ee5bce522855c3d7f56b1
 
 Thank you!
 
