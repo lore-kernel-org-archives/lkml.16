@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3171E1DE4
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E2E1F460D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743184307; cv=none; b=MlD08g3NTgj1IQhmmddTXmAi98og1N4Vprsm5OEkRF0P2bduB1QdIXRot9qT8r/pU0bCHJcoS+A+FvDNgBvpXtOP5kRT7KvL5JhNUwq5456ELwrSzx0EwoQtw8OdjqH9IeYmkn5LSi4dND4DcQYiVG8ePkX48EYHOnrr1UbUL/8=
+	t=1743184307; cv=none; b=l0iF8syOZ8NJBl/fkbHv9tlOUHqz42r54Yq6RK7rwh+u5aA40oPpvAcWXol1Ktj/e+vJukSoJQ7lb0vGMOCBRx0EqKQhqOTRVgQWXXNQBU9/NuGJUU8IMdBWTY7/E2Q+Jyujph7V89Ei8w1y/3VO9EbfdMsCiAGBrJCqEazc1Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743184307; c=relaxed/simple;
-	bh=Vb8Zw2G8yDaioPTnls3nU7UxwtuE80WVgK353Gkw6uQ=;
+	bh=A9swew5sEkfqImlzOyxaOp5UaSlXTXcPjhn/IFm5au4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=kHXikIvvQNPXswHILd2DXjf5ITAn+EAVQ4ftLRtuv++p5IlA7ou1FaijAartyXMY6X7UFF7P0YlMS0Wo1sNU4gHsBPjmH/2ol+26IEJvR0eC4oDoQryl0CtqZ3xqubaFQGpesOZjmYiV4u1XifX16zddP0nlqXcHwjtbQ4SvJgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M3hsMrep; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=IXcdgjpVRhRbq5q+42Z3VlK9LVi7suhOVc0ULBkR/1MMT2cSevQCEf27pUEHAU3/YN/uVsvKalWgLmepPSU02IdRBR7xqRUlIQQ38cOG+gQgJfnGfwzo7dbSCOzgVqd2YoqBRbp6LNn5s8wohAoAnUW0Jnb/iAmCq4ni/EJrubs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VB0QcNPM; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M3hsMrep"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2254e500a73so32580925ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:51:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VB0QcNPM"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so4131947a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:51:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743184296; x=1743789096; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743184298; x=1743789098; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DD+qgAbA2jbLVZa6aUPEYkzjGKc51TnF+sfLKzMQeFc=;
-        b=M3hsMrep6vRfvWrbAqkqb4WvIVmFWUSt1rhbF20uC9D5nbC7dCdVHk1P5vqlvisJlK
-         4WEFT8Y6fPIKfyHAe4NpijQ4rB4jt8O1hG9M8miKPlH6xQVvruNts8oAsdEA96OIRlV+
-         LdkRzhLmahZiJgNsY7xXDjMndb0R3QW47H2ZL2pK8Rb5Hw/MxldtPCvWIKAUxlyJ7sew
-         jsDu78G2hbq5WL2ZRxvV123aEPEsHde76wkr6LqOjc9Xp6Le87e2SV+7mjDwuFsTp/Me
-         Tk98yUxeYvaCxSOYf88ymW8RLdDh6gqzpBArrquRBFiF8l84wY4UA/3EWPirRe6ljkEm
-         Wofg==
+        bh=B9PeRUEXMecnZbPpuWEaRw8SWk1eFbJD5uYJN5nO9W4=;
+        b=VB0QcNPMmtusySFgshuMAgOKow+QHuCDOO8TqxXwFm10uB4E7KoHQaJ0RdGVuc0Elx
+         9KhbJUsGdW+8ePWAq1p7AY5xfD1BWf4mdIZVHerq/4YwyNy07N4COJF6Uhjs16VcCVKD
+         vQQvLaBVl/v/ZrDzfGRj/acmY0azJgIZGzbH0r1iF4eqq0lgz7Bv2rrsq0Iata2xCoxE
+         sw7Q4oedc1OPOZJidS+qF1wg2L6bpP0mwOkXNKqK7K+J2ewH6vAJMZXvg4GBBoUp58dS
+         SuT2QvLJF5dh6BWr9xZ4Uy7sbwLbLqWVEYSz1MrhhsX4995UDX2VqfjZtDNC9k3PvO76
+         MNBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743184296; x=1743789096;
+        d=1e100.net; s=20230601; t=1743184298; x=1743789098;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DD+qgAbA2jbLVZa6aUPEYkzjGKc51TnF+sfLKzMQeFc=;
-        b=VKPZLZhswknH+SFH9vPnuiKl+6IdSQAprcB/iemy8sYuJO30zLSiHx1n6Cp67k2GhV
-         ijlE50T1+2sVU8PWrfY8HB6+MnfDWSKxmJ9pafj1dmOLqU+4FpO8piIgCxdq75pI3JL/
-         ThgwJKLjt5RapnphO0sp8ViUMytKUQXy0iAuQJQ1Kq4nGvCMDo8sAxO8MajEqYz9vxlU
-         Vv3XXWh8hMrV/Sc5p715utA3d80o67hbuiR1N702k/osV+l3FNUAHeBtfwFv+vYH3myl
-         QQL8AuZRn5B7iaq/E6gvvDkf4mToqh0PxqxZssyHGkBXPko3DMDuG+egvPLX/FWiOJLD
-         nAwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzPCUNJREr9dLB8vpOYFkXaGC3EbO2k8KPdKmh2xGLRjyORU3+1mxi/Qghf4Oh5gYiwgwI2+YH+VoNoZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfZtlOPKD6v0PHQHbY6BevuagmaEPq0RJAL4oALcH7IxcXUu2s
-	ciArv2KIf4/eGPs3OZkZ1860bshGmhIzyqN1ZZCkior/BemArEeCjIBPcjQY7X2Ap1+m/WVzk1r
-	2MlWcCA==
-X-Google-Smtp-Source: AGHT+IFsmWWdQTvozkILE//7Ob6SL7BiANQFVN0YKIJqJ1MYj92y0pgJuWlRPXIkhznjT663QT8Nnjef/uc2
-X-Received: from pltm7.prod.google.com ([2002:a17:902:6bc7:b0:223:58e2:570d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea02:b0:221:78a1:27fb
- with SMTP id d9443c01a7336-2292f94499emr1007995ad.11.1743184295682; Fri, 28
- Mar 2025 10:51:35 -0700 (PDT)
-Date: Fri, 28 Mar 2025 10:50:05 -0700
+        bh=B9PeRUEXMecnZbPpuWEaRw8SWk1eFbJD5uYJN5nO9W4=;
+        b=Wiviq62tjLZQocr+QGtxCUXmXx/Q8Uey83n4eINBoRGRvWJb8HmHLvwKIBCpfvRXpy
+         HJnF/jqEzzDVup/bFI0nwx5iJ1L/bf4C9TqJ9wTki60UOMZNIcP+3UjYLYM4bK5C8SUH
+         9621sHZx9cb9r5fnIV2s2e5MkzUzIlj3OrVo5KDYTfWb7fNnSr12GN24AZE28BfUGkHF
+         mXfn7S+avcjiS98MW7Q5LERWKM8FbZJ81E6CzlovB+qgHqN9OieXxWmEhLKIEu2ZTZCu
+         MG4//NU7RptYkyKYCa9yMHCKhpKBlr88NhPunx1giJBuQc027EQb7RyRIf2ntOQc1mNG
+         f6tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbxgYWi5uT6a/SmXwZKeq6ZLYY7g53N2rTNaknWJS0pj/bqY4nAY3dFfPWM2ddddu2cgOmQTjW0mToZYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxazpksB++Oz08Pv/jmlyRlQM5T9UQOYLaTZw7NN/JbDR8qJsVe
+	ZDCMv6JaIql9ZEWrE/PNitPpp5F6Afv4HxoWMxbdWgnOrJ1dtGnC0XtSA/Uhoi9PTmiJ1x19Mc+
+	hDW9TaQ==
+X-Google-Smtp-Source: AGHT+IF0kIUNIu+iFFGAUHN5LWfn76UfsUopRI0ke9vlY10WWBKJY/MZZ3RnnFoMwb3xqA0Uqk9ZNADTiOxq
+X-Received: from pjbqc13.prod.google.com ([2002:a17:90b:288d:b0:2ea:5613:4d5d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d0c:b0:2fe:a77b:d97e
+ with SMTP id 98e67ed59e1d1-30531fa4ea8mr314087a91.11.1743184298118; Fri, 28
+ Mar 2025 10:51:38 -0700 (PDT)
+Date: Fri, 28 Mar 2025 10:50:06 -0700
 In-Reply-To: <20250328175006.43110-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250328175006.43110-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250328175006.43110-35-irogers@google.com>
-Subject: [PATCH v5 34/35] perf vendor events: Update westmereep-dp events
+Message-ID: <20250328175006.43110-36-irogers@google.com>
+Subject: [PATCH v5 35/35] perf vendor events: Update westmereep-dp events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,15 +80,15 @@ memory.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/westmereep-sp/cache.json         | 32 +++++++++++++++
- .../arch/x86/westmereep-sp/other.json         | 40 -------------------
- .../x86/westmereep-sp/virtual-memory.json     |  8 ++++
+ .../pmu-events/arch/x86/westmereex/cache.json | 32 +++++++++++++++
+ .../pmu-events/arch/x86/westmereex/other.json | 40 -------------------
+ .../arch/x86/westmereex/virtual-memory.json   |  8 ++++
  3 files changed, 40 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
-index 90cb367f5798..0cd571472dca 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/cache.json b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+index 9f922370ee8b..2a677d10f688 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
 @@ -119,6 +119,38 @@
          "SampleAfterValue": "100000",
          "UMask": "0x2"
@@ -128,10 +128,10 @@ index 90cb367f5798..0cd571472dca 100644
      {
          "BriefDescription": "All L2 data requests",
          "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/other.json b/tools/perf/pmu-events/arch/x86/westmereex/other.json
 index bcf5bcf637c0..c0cf8bae8074 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
+--- a/tools/perf/pmu-events/arch/x86/westmereex/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/other.json
 @@ -15,46 +15,6 @@
          "SampleAfterValue": "2000000",
          "UMask": "0x1"
@@ -179,11 +179,11 @@ index bcf5bcf637c0..c0cf8bae8074 100644
      {
          "BriefDescription": "Loads that partially overlap an earlier store",
          "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-index e7affdf7f41b..a1b22c82a9bf 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-@@ -128,6 +128,14 @@
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+index 0c3501e6e5a3..1800c6ecbf80 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+@@ -152,6 +152,14 @@
          "SampleAfterValue": "200000",
          "UMask": "0x20"
      },
