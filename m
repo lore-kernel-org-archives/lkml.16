@@ -1,92 +1,158 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C3A18E25
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB6821A94D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743161783; cv=none; b=MU196qco+erRSaVYLkB9+GxTaTfOzfQAWolp7E+PzuLWRE0qZbvA7x8HhYcxXLPWoTOa2Z5mr/UKVngfOG2NEuipZSNnunu6ZEsElygco5HGqLcXZpoSCCbMcD/KvE9+gSTmviX0BzLvnbI7koM5s7Y/XaTb1KplXlpaariueK8=
+	t=1743161811; cv=none; b=oLRY2Z7IUOC12vmYCnDwbWqRmmL1eIXUkAUKB8Q7XrdGR5cYaVyIvIA63T4CfOzt8wIGrknBcfLJ6VXnim+8xnYLxo4O0s1vWn/GsqXVyPUEsZmIeJiEUlhSkUaMfoReNAA8GWZciNalKQKqEXEsK5aTMfGgvqqULQD/UgB+/tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743161783; c=relaxed/simple;
-	bh=ET074EYL50HSsDeaXyGaU0mb+9S3ItW3P13lTFuLZfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U4ZYvfF4ON1BPnLt+gQnRcFbXkb2R6sPfoO4zNm0OAUWloko5CpOjB4MWVNZVWFiHePUXWrm3CVDZ0D2V6vQiDke5pz0vYNpTGByFYUaHo6OJSZOuuGFdb/tfk0l3IegCH1ZzSNxaSQzSkqpySZ2z+8fgNpcRgw80uGYVi9RePk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=KQqEwOom; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1743161811; c=relaxed/simple;
+	bh=7CdE6abmdcbIw4a9HvwViWR/CuAR0UsUHY0bcNpvB9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=co4QrCqBagaqr8ECvF2Fbgiuq7I9f+7Y8qT5lJQh7nyw7PtUJMydT92VQkccEocGmYFvlIKvkm8Tr+0N6I4Is5OvOP7sfv8zU106QnsZATVEBqm5N8J1lK47QrXhyZcLgv/ZnxQcXRZEhIX+XF/36ylSIR+3r7GAXEiSvGuf548=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BMvwXtjr; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="KQqEwOom"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4775ce8a4b0so35076121cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:36:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1743161781; x=1743766581; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ET074EYL50HSsDeaXyGaU0mb+9S3ItW3P13lTFuLZfI=;
-        b=KQqEwOomJ+ZXwBLSwOEI0L6fOJSXh7DjwQn4YvoX6fauK9j0lruVye1iuwbYIZG6R9
-         HG2EJ3psxWLUcYuU0DuZKyeboQaGJgKyMFJe+SLFWTBKSB4Q0an73yg0SqEnHFJJR0Hm
-         CCmMMznZGX+MvdJq/LVSSrxWkgA7fT8hHYYuRiBG9nQgCFj7yTESQ1j92RoTjxwhT9ie
-         EHEJHV0Y6HgZ5W71J7fgjtFfCFkm5eUGWW/1dyR85Zh6ISpDiZkFAIo2kVN/UKUH5eIP
-         y0kdC13hclxn2iqfYR+QOwmGcfmSXYDjOI3/fcYDjIbM0gZDvpvc21tpdIQKF46PuUjc
-         mRXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743161781; x=1743766581;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ET074EYL50HSsDeaXyGaU0mb+9S3ItW3P13lTFuLZfI=;
-        b=bRannTrqpLqaB3GBatkfn8hj1ug9AAY47F1HDcLbUqguP8XzpcwZEKpbjGf3Kfi4SM
-         AxPo6BZTYd1oZAIl1DxN64827vIe8cLRYWu9hQjXzUdaeewiysC76mShrEbgserBFyOy
-         K4y2SGT5pmnC7OLTxew7pWtSsKiO199IRaEcAMwkopOlreIP0qr62IdAkQQURMX902Pm
-         yrXvBOO9GjhJCoXK+h+zoDppSvDav9AvIXThpkMN1VqJxiYMBTCgEix/yYbxX2RfnzrA
-         GL/kpBt/iI51a1/7kfRWbB++fLo/GvPCLvPynePTAx4/vIKWy6iYbb6crWAsLW3eE3W0
-         OcWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiEPSlgA6eqOBUqw4Uu5o+0c7FfzW4iHZ8Tief2pvdyH24jxJnthd4YCXNFbbaGCLPEgVVOTlM/l9ZX94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpSWS+3JKDU7mxlO4cRC+MAKBgXgro/4/pvLL7lvv9WJelDWV/
-	IYGYL9j+DBUAYrRkJshwvyA94VuGdqGtsvyA6n9dTtJH7guG1kNHbWT3I/5Ahs6Vw41rqZDxSNr
-	W3ySq0BfmhJFhvdR8K1gUhr5aVDb4OkOoTafCJg==
-X-Gm-Gg: ASbGncuWNWDH8/RULvnxZq2CLQVcg3a+sTjmrnluwjecUlglw50f5z7HMb9k6rsTuvq
-	hhRnnZ9hRsOXhDCFT6QtVztliSX33qw8Hf7PC0fYUKt+kZG268aJVtD7HRheGNNLNBJUGmjc1GW
-	v8R7/akTufNWrjJS0bwPWPjclC
-X-Google-Smtp-Source: AGHT+IGgZ+mLJodz0D+guvTqMFLeD09dzf+lw+ubZeqocR8L/AGvkeOetdVLhIiwDUZf+RYpUNyNpa4RIYpozR4orO8=
-X-Received: by 2002:a05:622a:2587:b0:477:e07:4c5d with SMTP id
- d75a77b69052e-4776e0b2338mr128707891cf.19.1743161780705; Fri, 28 Mar 2025
- 04:36:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BMvwXtjr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=QO5L
+	8F6Tv6G7jsBGSkmzV4B+MnJEKpypQ7BBXhNe5uo=; b=BMvwXtjrsCO2KFxfDJQj
+	RssVT0PKDnfrEWRxUThKN2A5e9tmgp14gHgIbXgzLpQa4sLafXKdFWGT3OgWNwAd
+	YoCaa5HUgn4TrQ81GK96sGwiia2TCba53RH8wYqXhkr4A5HMjTlAm+DN87GW4ZKG
+	P9Uye3Qd6jJTTfS0qnIlMO3cKq9qe/81rz/X8TjNP8uxRL5ox7HyLl3w46oCIyR9
+	tIgss4JKiwHLUoxVe0Rh6Dh1qWLNWYNOgq8arHYHtT6qJxPuftkftONH1Xy4XUdZ
+	mYIjCFKzz7iC2STfyvVvDYIdO4Yf4awtdQV93K5p9dqx77oraWQvbZlRuHZUoJtm
+	Vw==
+Received: (qmail 226379 invoked from network); 28 Mar 2025 12:36:44 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Mar 2025 12:36:44 +0100
+X-UD-Smtp-Session: l3s3148p1@vogefGUx3T1tKjIj
+Date: Fri, 28 Mar 2025 12:36:43 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Prabhakar <prabhakar.csengg@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
+Message-ID: <Z-aJy23ZyXq9lTrV@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+ <Z-VETFWFT5NksD7J@ninjato>
+ <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
+ <Z-WAZ_IlMBB3XbTN@ninjato>
+ <de0f7848-1fe7-451f-b48b-e20fbf3d0c2b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328110239.993685-1-vignesh.raman@collabora.com> <20250328110239.993685-4-vignesh.raman@collabora.com>
-In-Reply-To: <20250328110239.993685-4-vignesh.raman@collabora.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Fri, 28 Mar 2025 11:36:09 +0000
-X-Gm-Features: AQ5f1JqmEJUT3tv3RAXr6WPZW7InZtdLNYmLZ4c8-tZqyom9CaQS986EPYo3Vgw
-Message-ID: <CAPj87rOPHqLaFn3r4rkeMMrQ=OSRQUJ2LLrQ4ZDE6eA1S6zybw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] drm/ci: uprev mesa
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, 
-	robdclark@gmail.com, guilherme.gallo@collabora.com, 
-	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
-	lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org, 
-	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rbVViYxK8BFEIzsn"
+Content-Disposition: inline
+In-Reply-To: <de0f7848-1fe7-451f-b48b-e20fbf3d0c2b@kernel.org>
 
-Hi Vignesh,
 
-On Fri, 28 Mar 2025 at 11:03, Vignesh Raman <vignesh.raman@collabora.com> wrote:
-> The current s3cp implementation does not work anymore after the
-> migration, and instead of fixing it and propagating the fix down to us,
-> it's simpler to directly use curl. Uprev mesa [1][2] to adapt these
-> changes. Also replace broken s3cp command with a curl wrapper call in
-> drm-ci.
+--rbVViYxK8BFEIzsn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks a lot for fixing this. Sorry the fallout has been so bad.
+Hi Krzysztof,
 
-You can also upgrade ci-templates to get an s3cp which works again.
+> We do not speak about same things. I speak of review being ignored for
+> multiple revisions in one patchset and then another patchset sending
+> exactly the same pattern.
 
-Cheers,
-Daniel
+True, we are talking about two different things...
+
+> Each of these contributors were not changing here anything, it's like
+> not their job. It looks like this will never get fixed, because each
+> person wants to just get their stuff merged, so let's ignore the
+> reviewers comments.
+
+... this is the technical part where you are correct. I am not arguing
+against it and the issue is currently being worked on as I write this
+mail.
+
+Then, there is the communicative part which got me. A response like
+"NAK, I am not applying this until you finally fix the issue. And I am
+getting angry for being ignored the n-th time" is totally fine and clear
+enough. We can escalate that internally. But generalizing Renesas and
+ignoring that there are individual people there, trying to fix way more
+issues than this particular one, is what I percieved from your responses
+and what I considered above the line. And yes, I am aware that you are
+also doing a hell of a job going through all these DT and binding
+patches which I think are difficult to review.
+
+For me, we are entering the space where we can leave it like this and
+maybe discuss details over a drink at the next conference. You are
+invited then!
+
+Happy hacking,
+
+   Wolfram
+
+
+--rbVViYxK8BFEIzsn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfmiccACgkQFA3kzBSg
+KbZDvQ/3XUkMk0S3lualMv9+xB2AAfnJrhcA40zPXXl0VsEhKi2c8C+VsIllpelq
+mKMzoYZIki4mrXjJNSrEyQ/DqMTYeTlW2khVn+2qhGFZlAfbQh4zenvd+XkSGF/u
+JuKaG+IO0lj/rxnodhEPpjgOVODZXj2UhAOWTAGvGLozTkxoOLhCEYbGfhjEwL4N
+6f/G59wpFBYYhTUnYMMNqXZwZC71HZohhoY3hV8EBTKaZCcHV20S3DjEKxhJv0bu
+APNVjQLYlUg2LP+fyzhGqx9cAy6f5cRz4929/assP5Ga819bVxyxt/LOS7H2nn3v
+ma61v1RwaHwCjLx5xPvy+ZQS5FrtaljioWowZ7XNCytGvOtAxsRLQbcOZSc9kkqb
+LNlPqsy8aqdIBoVzwflVAESfYEMyC9Rn2BlJM0hKp1JS6nHqxkwUjanBzRHrXgDw
+Ya+b9vFJs0nImFcwYO3BbZwghcC4s0bs6ATdoUW7qfaeIWrwMb6JpZ05MejO6jIf
+h3xaaDzsw3OeiEYvxV8K4b+Ogor2dKIisgga4jY4D9hR8c10tr5K+khz9DfvXXKg
+zHD/o+2qIk4JRGwYUL/ZG94Et7tGbBn8OMEeTvvgKm2q8idTHkI3e1rowq2tkC9F
+6bJ/F2IIBC7AJy+Gw2WVFwnlD2BLE/HtfixdAHvi9rE5Thnj5A==
+=7p2i
+-----END PGP SIGNATURE-----
+
+--rbVViYxK8BFEIzsn--
