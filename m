@@ -1,141 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D6FE545;
-	Fri, 28 Mar 2025 19:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C5F1537A7;
+	Fri, 28 Mar 2025 19:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743189970; cv=none; b=nVu2mLWWAbe6TTaZBY3VOpLkdRlIf4DSInAM+1EWPHm99G62CYvE0Y3ijynYFh8O5vIel+RQm/fFogYu4x7KUfKLHat3qdaL9eL1/U2BiLt/VEDfMFZKRRErTgB1hEdoSL1KU53ek3VUtCFS7+dsAmnwdBilSzDjSQlgPTGo5z4=
+	t=1743190007; cv=none; b=p9y76pbRODanw7g4vJwXoIacKrvBobhO1Lu2TB0xhiW55TaELMfLdZoXOlk4UjxH2FICX+7xYimV1n+SPzaw7j9c7hYDXTpKXN9KeUc3bQxtsoy4XVFO+X4bw8I61n71Edw7pQJmTX37XwFBk+vmZZsM7jeXS4V+FSn1eh3Cuj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743189970; c=relaxed/simple;
-	bh=hhPunpsntFt6XxabHd1o/+l0RU1HFQRT6+V86ZVI+Mk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cn3jJY7nnWt2XRvNOYuodJPbqrpX29TixdPNmQnebOglj+SJNNWh2zPC3POBCNoyuseWTLclPIfOmNoi+R0P8VU8FBXJy+/zQFWOnygNwoOyQ5zATYq71Aqp23rOSwctrE+Mw4RPSa4MAiGe5by+NkqimLQ8NkskAam/xD+/c7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uB01Ql31; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743190007; c=relaxed/simple;
+	bh=JNRQiP8x2T6lr/cpXu/ktLllk3HPQgUE+Ivnd7EMXUY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O9f2nIHHGOPMk45foFU5cmh8PEozGEWGQmQRBeQR0YWCJ0HlFnia354tUA7Z4Gdu3UTVD5DBai30cMl1JG6fmoXa53u1facFFDfkmOmEOyjcK4cDto6PgDlrI3858xpBQDCEfkkaWkqDSbrU2AyuunZlH+ARKPyxbCc9++ZsUVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qm2LZMxC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uB01Ql31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74152C4CEE4;
-	Fri, 28 Mar 2025 19:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qm2LZMxC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31D4C4CEE4;
+	Fri, 28 Mar 2025 19:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743189970;
-	bh=hhPunpsntFt6XxabHd1o/+l0RU1HFQRT6+V86ZVI+Mk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uB01Ql31T2Fl8DTKJmuhV/cUhmk5OJcBC8/Fh+1AFymKGN6x8XRSha5kd3VwUy6dO
-	 x5JgWLdMFGVqnL7PCqESo1PUJuIqYWb6dUPeMr3h/aUROYtjM8qrl54KScTgHi2AEa
-	 pj2/ozggdtkx8H6YiWfQv2TQId00a4D/o3+Ql/NYowNzySoYJGiym0JJmfqXbm9Bl3
-	 z73gizkN8dcMy9RpAaGkMp2Ct8/42Q8ztKjcahEV0ell6kakoIcCgiDrEsRtzRr+NN
-	 ZvLasxIRUARtFqzxNIYzuk2gsZFGh/hWUP1MKU8VEURZ+RjKm7XcbcMLREJWeKeMkE
-	 xfGQmnc0yvcTQ==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Luca Weiss <luca@lucaweiss.eu>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	=?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Luca Weiss <luca.weiss@fairphone.com>
-Subject: [GIT PULL] remoteproc updates for v6.15
-Date: Fri, 28 Mar 2025 14:26:04 -0500
-Message-ID: <20250328192607.188729-1-andersson@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1743190006;
+	bh=JNRQiP8x2T6lr/cpXu/ktLllk3HPQgUE+Ivnd7EMXUY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qm2LZMxCob/cxdar/2ug+1NYh3kiEDfLszNp9WaeRJkoqi3qaJ+cC+IZzZWDaDQjI
+	 tDqOvypao2tQauzs4T+dCnTUXnlH2gq1lbik+1DG1Rb2A7igT5C6bowwN/P8s14FSs
+	 m25g+6iOdVFN71MxpSCfN0oHY0SHxmNdEmpG+YAA2kKPBJg3hFHd5/XHGVNsTAImbQ
+	 8QPHlOXXzVEVp4XpgPQzmr1eoW8J8i4Pvx0bsR70T06NiYkBNFRBNkCkCWAIRzV1kd
+	 jmd6CGAYk2u4zxMB15hXG+NYPkTKeRdUcul0xeTHOfaB8Q8H3XOTmRcQNyiOo+MBNr
+	 rRyGVLYfxvnRw==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH v3 0/2] Add wcslen()
+Date: Fri, 28 Mar 2025 12:26:30 -0700
+Message-Id: <20250328-string-add-wcslen-for-llvm-opt-v3-0-a180b4c0c1c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOb35mcC/4XNSw7CIBSF4a00jL0G6Is6ch/GQQuXllihgQY1T
+ fcubWKiI4f/GXxnIQG9wUBO2UI8RhOMsynyQ0bk0NoewajUhFNe0pwXEGZvbA+tUvCQYUQL2nk
+ Yx3gHN81Q07JumOoaLilJyORRm+d+cLmmHkyYnX/tf5Ft64cu/9GRAYVOaIZcsloIcb6htzgen
+ e/JZkf+7VV/PZ48Jaqi7bjsNBY/3rqub4znF2gdAQAA
+X-Change-ID: 20250324-string-add-wcslen-for-llvm-opt-705791db92c0
+To: Kees Cook <kees@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ llvm@lists.linux.dev, stable@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2054; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=JNRQiP8x2T6lr/cpXu/ktLllk3HPQgUE+Ivnd7EMXUY=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOnPvn9uVXYOSWxeKTg35IFVnP1z+QXLi2+uP1DC/kzmt
+ 9UTwc3tHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiTesYGTo0g/Sao2fvtdm2
+ zNFSZ9F77oCKvR++64iHnD70euLsKfmMDHc3LqwxUlH3S7df3ZO3deqBE+FeHY/+M//+m2QsGed
+ vwwUA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
+Hi all,
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
+A recent LLVM change [1] introduces a call to wcslen() in
+fs/smb/client/smb2pdu.c through UniStrcat() via
+alloc_path_with_tree_prefix(). Similar to the bcmp() and stpcpy()
+additions that happened in 5f074f3e192f and 1e1b6d63d634, add wcslen()
+to fix the linkage failure.
 
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
+[1]: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d
 
-are available in the Git repository at:
+---
+Changes in v3:
+- During comment shuffle in patch 1, move to standard multi-line comment
+  kernel style (Andy). Carry forward Andy's review.
+- Move nls_types.h include in string.c in patch 2 to a better place
+  alphabetically (Andy).
+- Drop 'extern' from wcslen() declaration in string.h, as external linkage
+  is the default for functions and the coding style explicitly forbids
+  it (Andy).
+- Link to v2: https://lore.kernel.org/r/20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.15
+Changes in v2:
+- Refactor typedefs from nls.h into nls_types.h to make it safe to
+  include in string.h, which may be included in many places throughout
+  the kernel that may not like the other stuff nls.h brings in:
+  https://lore.kernel.org/202503260611.MDurOUhF-lkp@intel.com/
+- Drop libstub change due to the above change, as it is no longer
+  necessary.
+- Move prototype shuffle of patch 2 into the patch that adds wcslen()
+  (Andy)
+- Use new nls_types.h in string.{c,h}
+- Link to v1: https://lore.kernel.org/r/20250325-string-add-wcslen-for-llvm-opt-v1-0-b8f1e2c17888@kernel.org
 
-for you to fetch changes up to e917b73234b02aa4966325e7380d2559bf127ba9:
+---
+Nathan Chancellor (2):
+      include: Move typedefs in nls.h to their own header
+      lib/string.c: Add wcslen()
 
-  remoteproc: qcom_q6v5_pas: Make single-PD handling more robust (2025-03-22 08:42:39 -0500)
+ include/linux/nls.h       | 19 +------------------
+ include/linux/nls_types.h | 26 ++++++++++++++++++++++++++
+ include/linux/string.h    |  2 ++
+ lib/string.c              | 11 +++++++++++
+ 4 files changed, 40 insertions(+), 18 deletions(-)
+---
+base-commit: 78ab93c78fb31c5dfe207318aa2b7bd4e41f8dba
+change-id: 20250324-string-add-wcslen-for-llvm-opt-705791db92c0
 
-----------------------------------------------------------------
-remoteproc updates for v6.15
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
 
-The i.MX8MP DSP remoteproc driver is transitioned to use the reset
-framework for driving the run/stall reset bits.
-
-Support for managing the modem remoteprocessor on the Qualocmm MSM8226,
-MSM8926, and SM8750 platforms is added.
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      remoteproc: sysmon: Update qcom_add_sysmon_subdev() comment
-
-Daniel Baluta (8):
-      dt-bindings: reset: audiomix: Add reset ids for EARC and DSP
-      dt-bindings: dsp: fsl,dsp: Add resets property
-      reset: imx8mp-audiomix: Add prefix for internal macro
-      reset: imx8mp-audiomix: Prepare the code for more reset bits
-      reset: imx8mp-audiomix: Introduce active_low configuration option
-      reset: imx8mp-audiomix: Add support for DSP run/stall
-      imx_dsp_rproc: Use reset controller API to control the DSP
-      remoteproc: imx_dsp_rproc: Document run_stall struct member
-
-Jiri Slaby (SUSE) (1):
-      irqdomain: remoteproc: Switch to of_fwnode_handle()
-
-Konrad Dybcio (1):
-      dt-bindings: remoteproc: Consolidate SC8180X and SM8150 PAS files
-
-Krzysztof Kozlowski (4):
-      dt-bindings: remoteproc: qcom,sm6115-pas: Use recommended MBN firmware format in DTS example
-      dt-bindings: remoteproc: Add SM8750 CDSP
-      dt-bindings: remoteproc: Add SM8750 MPSS
-      remoteproc: qcom: pas: Add SM8750 MPSS
-
-Luca Weiss (7):
-      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Add MSM8926
-      remoteproc: qcom_q6v5_mss: Handle platforms with one power domain
-      remoteproc: qcom_q6v5_mss: Add modem support on MSM8226
-      remoteproc: qcom_q6v5_mss: Add modem support on MSM8926
-      remoteproc: qcom: pas: add minidump_id to SC7280 WPSS
-      remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8226
-      remoteproc: qcom_q6v5_pas: Make single-PD handling more robust
-
-Matti Lehtimäki (4):
-      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Support platforms with one power domain
-      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Add MSM8226
-      dt-bindings: remoteproc: qcom,wcnss-pil: Add support for single power-domain platforms
-      remoteproc: qcom_wcnss: Handle platforms with only single power domain
-
-Peng Fan (2):
-      remoteproc: omap: Add comment for is_iomem
-      remoteproc: core: Clear table_sz when rproc_shutdown
-
- Documentation/devicetree/bindings/dsp/fsl,dsp.yaml |  24 ++-
- .../bindings/remoteproc/qcom,msm8916-mss-pil.yaml  |  64 ++++++-
- .../bindings/remoteproc/qcom,sc8180x-pas.yaml      |  96 -----------
- .../bindings/remoteproc/qcom,sm6115-pas.yaml       |   2 +-
- .../bindings/remoteproc/qcom,sm8150-pas.yaml       |   7 +
- .../bindings/remoteproc/qcom,sm8550-pas.yaml       |  46 +++++-
- .../bindings/remoteproc/qcom,wcnss-pil.yaml        |  45 ++++-
- drivers/remoteproc/imx_dsp_rproc.c                 |  26 ++-
- drivers/remoteproc/imx_rproc.h                     |   2 +
- drivers/remoteproc/omap_remoteproc.c               |   1 +
- drivers/remoteproc/pru_rproc.c                     |   2 +-
- drivers/remoteproc/qcom_q6v5_mss.c                 | 184 ++++++++++++++++++++-
- drivers/remoteproc/qcom_q6v5_pas.c                 |  38 ++++-
- drivers/remoteproc/qcom_sysmon.c                   |   2 +-
- drivers/remoteproc/qcom_wcnss.c                    |  33 +++-
- drivers/remoteproc/remoteproc_core.c               |   1 +
- drivers/reset/reset-imx8mp-audiomix.c              |  78 ++++++---
- include/dt-bindings/reset/imx8mp-reset-audiomix.h  |  13 ++
- 18 files changed, 499 insertions(+), 165 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,sc8180x-pas.yaml
- create mode 100644 include/dt-bindings/reset/imx8mp-reset-audiomix.h
