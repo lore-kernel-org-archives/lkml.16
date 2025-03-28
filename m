@@ -1,126 +1,103 @@
-Received: from mail133-26.atl131.mandrillapp.com (mail133-26.atl131.mandrillapp.com [198.2.133.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-14.pe-a.jellyfish.systems (out-14.pe-a.jellyfish.systems [198.54.127.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF433595A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.133.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2611C8FB4;
+	Fri, 28 Mar 2025 17:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743184007; cv=none; b=l2yeNS4387XoyzPAT0bZBMW5vmP61sUROef5rduvx3s2OAi2xC4IqBLmSizCAiY8lWXZM221tY4UOJOAhMXr/5xXGycfWYmzFt8ufSwaMGKnpazeOwz1BK0egFPOYZRJRNxQUUxtNL+GxIScWSG4Ihdqy9oikP0yh3ODtaC0Rsw=
+	t=1743184138; cv=none; b=t0Uq3BQe7WRfowgzEzAWvR02TbniEeJVGHwLJ7axKm1Qa8ar23x9TDITHro9Ao+WKE6kWMROLuuZI8T/M8/FPUGHexdJfheySeIW3ZQbsx4YSuNhAodY8xwYwJDpYKxcp0Dr2Fz1+HQ9cF8M6fScFcwDCh/5+8QeuqBGLrnBItc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743184007; c=relaxed/simple;
-	bh=+rIsvbDAA+ml4tHgJlOdbfFOhppugGFZ2OZlCpJfgBU=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Date:
-	 MIME-Version:Content-Type; b=DQe14X35WHwju3ZWhHKNby+RSrSnR2FMuL6QOlcZ4ZB5bJ06k906HhjBNYvgMxvpDktnavPMQqgJ5e3CY6YId6oZtI+YVvcl0lmfha1hJQ4PeJuWIuXSHX6ZRBLs8cNWHxUKse7nuypOhqLlmtRp89NCs4BemCQ0ZbdTD8/raiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=sfzF0juk; dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b=NzGJYV7b; arc=none smtp.client-ip=198.2.133.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vates.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
+	s=arc-20240116; t=1743184138; c=relaxed/simple;
+	bh=xOhwYyFo9ZXlh9ZVDAow9mou4lmje9CvxJMegBfgmyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KQ6LIG4uedpEDY+Hwz8ZGmRkGs5IT+yoVDUYG/lw+YSpAWwbNp8aDnmE1eN+lXXfIajFLyapWO/CcUlK7QTopwJOQF4VB5e0ZOm09SxrpXk5Bp14Ap/9gZGitHoZ5A2D+NOq3+8WgrevhBicdRhg3b5BkNJqVtTMRm20n6S6Tvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=FG80R3/X; arc=none smtp.client-ip=198.54.127.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="sfzF0juk";
-	dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b="NzGJYV7b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
-	s=mte1; t=1743184004; x=1743454004;
-	bh=m1WbUotnscR04/ZTJ9CfbRbGTSugA8wABybHup+Azp8=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=sfzF0juklIDTwuKpMoI/ACJLMJw4VAuo8sm64rITrXE3Aw0rqP4Mjl9IP1+ZRMtNJ
-	 Io3gFWmAPbaLv5abswdZIy8Qw0rcLwICtMy0KhUISPLuEuHJx3OCuCaH18t9ZcfzjM
-	 XXJgDn2yTwu92PlXpOhjlxlzn4DsIouZJ7FpZJ4k9IMF92hb3Wb+MzDS5vVROG1x8N
-	 7iWiZmfCLFzDNzy4Caka0wEEU4B3ktjp8zKD3nMrA67XbqveuuVBsj1SUVPujnrET+
-	 UK2mOXIJNipaDwnvmtRD5Q51LxRSghr9IDqY6t/KzIJU0XO2ft/mwb9t3Sh6WFngHM
-	 m3cY1RJLVbYIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
-	t=1743184004; x=1743444504; i=teddy.astie@vates.tech;
-	bh=m1WbUotnscR04/ZTJ9CfbRbGTSugA8wABybHup+Azp8=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=NzGJYV7bo49v/t//9+4ad2eCZY2rVWf3DFB6hmJN6qoko26YABA3HOCcUznMelZob
-	 Ja26L7A2eCBIQIpOP7jb9iByaMQksku5grfY8eZhRhFhigv3qlHvq5jyZJfX49A2JZ
-	 +0coVJiUGUUK8As/awgQXFjRAKAAwOo8lrKTRxsfRwz60aQdeI0v5CgmCrbHutRhMM
-	 lYfb7o0YzQ3OOLNXj0PKxXZcSj7cVPb4dKHTDH0B7LsF4mT2vO0EnGUR58fw0wOR4A
-	 Z3DMYWy9OLkVuxQ4AORN60xkDqi5R19ODvetkiPZqMs+3XmiSGLB90Q+eIMtBKWp8L
-	 oYxezfl/WI8Jw==
-Received: from pmta13.mandrill.prod.atl01.rsglab.com (localhost [127.0.0.1])
-	by mail133-26.atl131.mandrillapp.com (Mailchimp) with ESMTP id 4ZPSdJ6p76zKsbSQb
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:46:44 +0000 (GMT)
-From: "Teddy Astie" <teddy.astie@vates.tech>
-Subject: =?utf-8?Q?Re:=20Allocating=20SEV=20C-bit-cleared=20pages=20(without=20relying=20on=20swiotlb)?=
-Received: from [37.26.189.201] by mandrillapp.com id 91266744662d4376b263ad259028b06c; Fri, 28 Mar 2025 17:46:44 +0000
-X-Bm-Disclaimer: Yes
-X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1743184003761
-Message-Id: <00078e1c-e428-4ad9-8041-54b83f913f9e@vates.tech>
-To: "Michael Kelley" <mhklinux@outlook.com>, linux-kernel@vger.kernel.org, linux-mm@vger.kernel.org
-Cc: Xen-devel <xen-devel@lists.xenproject.org>
-References: <b16ec2d7-4a84-482f-b875-d7c152facab5@vates.tech> <SN6PR02MB4157AFE96ADCA3D504909FFAD4A02@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157AFE96ADCA3D504909FFAD4A02@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Native-Encoded: 1
-X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.91266744662d4376b263ad259028b06c?=
-X-Mandrill-User: md_30504962
-Feedback-ID: 30504962:30504962.20250328:md
-Date: Fri, 28 Mar 2025 17:46:44 +0000
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="FG80R3/X"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZPSgp3gfXz3xFV;
+	Fri, 28 Mar 2025 17:48:54 +0000 (UTC)
+Received: from MTA-14.privateemail.com (unknown [10.50.14.30])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZPSgp2y4lz2Sd0W;
+	Fri, 28 Mar 2025 13:48:54 -0400 (EDT)
+Received: from mta-14.privateemail.com (localhost [127.0.0.1])
+	by mta-14.privateemail.com (Postfix) with ESMTP id 4ZPSgp1Vk4z3hhTs;
+	Fri, 28 Mar 2025 13:48:54 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1743184134;
+	bh=xOhwYyFo9ZXlh9ZVDAow9mou4lmje9CvxJMegBfgmyA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FG80R3/XAGtTrcUwkymPKbx4VPv9sbenK4k4GjUM6HPgC7pNdoYtXfNg5i+FfFPvt
+	 Lw5dMC63MN7xteP83WfvvV7UzJNdST3SLNWINwbQ4Q22xcpkmLjmFiwpU8bWIFjMqA
+	 T+xEv2WQLJGBYhoDHkWykptGrn1eK5sYuA7a1EahmV0/PxprQj+PPFtQA/1yfPkaZp
+	 xSG9e8Y3FNAXUMXEF1/ke+0PFZdo9HgmbZXkrtcPSXX55Ygc0L4xEPfZ6o0E19OzvW
+	 vNQyTs0McpjZ9xbYN1bApAEPGYd/dWH+xP6AWQmlhfD2T8IygJ3Z5o/Le/NYyWwtL9
+	 LqMv/IkEsG58w==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-14.privateemail.com (Postfix) with ESMTPA;
+	Fri, 28 Mar 2025 13:48:39 -0400 (EDT)
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: linux-kernel@vger.kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	antoniu.miclaus@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sam.winchenbach@framepointer.org,
+	bpellegrino@arka.org,
+	Sam Winchenbach <swinchenbach@arka.org>
+Subject: [PATCH v8 0/6] Update auto corner freq calculation
+Date: Fri, 28 Mar 2025 13:48:25 -0400
+Message-ID: <20250328174831.227202-1-sam.winchenbach@framepointer.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Le 28/03/2025 =C3=A0 17:31, Michael Kelley a =C3=A9crit=C2=A0:
-> From: Teddy Astie <teddy.astie@vates.tech> Sent: Thursday, March 27, 2025=
- 7:12 AM
->> To: linux-kernel@vger.kernel.org; linux-mm@vger.kernel.org
->> Cc: Xen-devel <xen-devel@lists.xenproject.org>
->> Subject: Allocating SEV C-bit-cleared pages (without relying on swiotlb)
->>
->> Hello Linux mailing list !
->>
->> For porting Linux code to make it work on Xen with AMD-SEV, I need to
->> change the allocation of some pages to use "shared pages" (C-bit
->> cleared) instead of private pages (C-bit set, which is the default kind)
->> as these pages needs to be shared with the hypervisor/Dom0.
->>
->> Is there a facility to allocate pages with C-bit cleared (and if not
->> running under SEV, just allocate a plain page) ? Current Linux code for
->> SEV seems to only rely on swiotlb as access to shared page is mostly
->> made through DMA-kind devices (e.g virtio or emulated device), but I
->> don't think it is the best approach.
->>
-> 
-> For allocating memory that can be shared with the hypervisor,
-> allocate memory as usual (with alloc_pages(), for example), then
-> call set_memory_decrypted() on that memory. This approach
-> works in general for Confidential Computing (CoCo) VMs,
-> regardless of whether the underlying hardware is AMD SEV-SNP,
-> Intel TDX, or ARM64 CCA.  If you are running in a non-CoCo
-> VM, set_memory_decrypted() is a no-op, so you can call it
-> without having to check whether you are in a CoCo VM.
-> 
-> When freeing the memory, do the reverse. Call
-> set_memory_encrypted() first, then free the memory as
-> usual. Note that if set_memory_encrypted() fails for any
-> reason, just leak the memory instead of freeing it because
-> the encrypted state is unknown after such a failure.
-> 
-> If you search for set_memory_decrypted() in kernel code,
-> you'll find several examples.  See drivers/hv/hv_connection.c
-> as one place where code for running on Hyper-V follows
-> this paradigm. There are several other examples as well.
-> 
-> Michael
+From: Sam Winchenbach <swinchenbach@arka.org>
 
-set_memory_decrypted does the job.
+v1: Initial submission
+v2: Cleaned up wording of commit message
+v3: Add DTS properties to control corner frequency margins
+v4: Fixed wrapping
+    Added maintainers to CC
+v5: Remove magic numbers
+    Break out patches into features
+    Small coding style fixes
+v6: Converted dts property from hz to mhz
+    Removed blank lines in dts binding documentation
+v7: Updated author/sign-off address
+    fixed patch path description
+v8: Added missing Reviewed-By tag in v7
 
-Thanks
-Teddy
+Brian Pellegrino (1):
+  iio: filter: admv8818: Support frequencies >= 2^32
 
+Sam Winchenbach (5):
+  dt-bindings: iio: filter: Add lpf/hpf freq margins
+  iio: filter: admv8818: fix band 4, state 15
+  iio: filter: admv8818: fix integer overflow
+  iio: filter: admv8818: fix range calculation
+  iio: core: Add support for writing 64 bit attrs
 
-Teddy Astie | Vates XCP-ng Developer
+ .../bindings/iio/filter/adi,admv8818.yaml     |  20 ++
+ drivers/iio/filter/admv8818.c                 | 224 +++++++++++++-----
+ drivers/iio/industrialio-core.c               |  12 +
+ 3 files changed, 202 insertions(+), 54 deletions(-)
 
-XCP-ng & Xen Orchestra - Vates solutions
-
-web: https://vates.tech
+-- 
+2.49.0
 
