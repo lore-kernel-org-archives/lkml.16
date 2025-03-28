@@ -1,132 +1,268 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C546D214A6C;
-	Fri, 28 Mar 2025 10:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE9A8F49;
+	Fri, 28 Mar 2025 10:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156471; cv=none; b=GFwol/YiNykBeP0JWAdpbnH9NdWwnsVGgssb+yamwN8wqt/Pb/E1j/hxAK71hhYzftUy2bb/1FVCccsSXigeS1u9+NmOUm/8/IVDTNJ5HaPBPMOkB6uQbeohJP3sG+g79PcDZse/4MpWhVYmde0Hacp/hTZaQDJ9yxtpC3/s0hM=
+	t=1743156529; cv=none; b=ZBlbYLaQJQFeYxX+pkS1nLaXiTDywP1R1IdsAILWMlhwrJ1Isz5bkNSbw3v+v5ylpvxQCH1mBBSLBK2dLCb3lQ9u9ATaK5J6PAPvU2h1LkDf/7S7SA+mApC+IB8h+PwjN43vLBEhAm2Ugb/znAvluSKvAe47+BUx7gg67v7tsPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156471; c=relaxed/simple;
-	bh=+1HJvFP+Fnoh7d+9TIk7uMpD7sPCQQnqKb2PNqUmOU0=;
+	s=arc-20240116; t=1743156529; c=relaxed/simple;
+	bh=IBuL6oupYPuyrk5jIWUB08viJ0WBV7MJZMOTCmCa2fo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Up+6Fm5jgD+k9THczqf0uqQ5z99Gg4MCLbqWs+1CE63sAwV+GlDcS7IajmsvdSKV+SHlk58ZHc/UbH4w0TJNzkqlHe0qBXh1nB1blxmKUE8p69EXnY8WgKROfHwGM5yfQEI7K4NN+46jSvWONRF1JLuUJ2iZKOblAkuAJd5kJK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lBOmgQAL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bg5EI0Lh/eZq4bU9H1NGNJ7S7pwKEXx+YhayR4qlMYgqYuroKBqIP0S55K9KF4tsGhke6SxJ5VSo1JU+aUly0+HsoejoLZ0LgwaI/u2tddifvM1AO5BMio8H1gk5RnNj8RkjtcFGqhvanJaUuZhvCOgF1hao1AtHSBHwY/LpgF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNIRn0zt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lBOmgQAL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7EB1C4CEE4;
-	Fri, 28 Mar 2025 10:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743156471;
-	bh=+1HJvFP+Fnoh7d+9TIk7uMpD7sPCQQnqKb2PNqUmOU0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNIRn0zt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78DD9C4CEE4;
+	Fri, 28 Mar 2025 10:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743156528;
+	bh=IBuL6oupYPuyrk5jIWUB08viJ0WBV7MJZMOTCmCa2fo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBOmgQALXFg199JPQfsWBARuppG7vjLbxg3obc+aOfP+O/QHiuOIDJ83EWhZmDNxz
-	 tPRxf8qp5reEq+l1yyMq5xRA6a4Cu+BfRJESvs0mLNYk7uIlnkokjos0A/AqVHEFJi
-	 CRIpcUH859Nsnb//lxgRjEUbe3VzijMHu75gZaI8=
-Date: Fri, 28 Mar 2025 11:07:48 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: madhu.m@intel.com
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	pooja.katiyar@intel.com, dmitry.baryshkov@linaro.org,
-	diogo.ivo@tecnico.ulisboa.pt, lk@c--e.de,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
-Message-ID: <2025032833-finale-buffer-2343@gregkh>
-References: <20250328094305.546724-1-madhu.m@intel.com>
+	b=iNIRn0ztsmG6A2lCuSoKejY7pCxRjxW00Ehvcn9L9dnuaDlWq8edGfv/DWfGJ66fK
+	 QY6Zq120S2SQW8fSbwN7m0Q7qN0wwh91wc2O3E8y3YLFKJS7uC8ulxnp67fRHuMsYL
+	 amyfdFvSXRFSAbpTz+n+40pEMinlemVFHeTUUKcRdReVmKK4BqoJQ9/3GSoyj7Lkq/
+	 yA732YhNzd/iumvbiDOr5txCLFnfw6QTjCWU1VpHAbG//UlG93cQxdWqRMKSnDOUj3
+	 ZLIeZ6obZW226mKEncxMcuyM/LSZWJv9oGA3u+NWqwiIKCwb4B/bf5BLCKxF3xt0TI
+	 tAplIIU7+vT4Q==
+Date: Fri, 28 Mar 2025 11:08:43 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 4/4] vfs: add filesystem freeze/thaw callbacks for
+ power management
+Message-ID: <20250328-luxus-zinspolitik-835cc75fbad5@brauner>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250328094305.546724-1-madhu.m@intel.com>
+In-Reply-To: <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
 
-On Fri, Mar 28, 2025 at 03:13:05PM +0530, madhu.m@intel.com wrote:
-> From: Madhu M <madhu.m@intel.com>
+On Thu, Mar 27, 2025 at 10:06:13AM -0400, James Bottomley wrote:
+> Introduce a freeze function, which iterates superblocks in reverse
+> order freezing filesystems.  The indicator a filesystem is freezable
+> is either possessing a s_bdev or a freeze_super method.  So this can
+> be used in efivarfs, whether the freeze is for hibernate is also
+> passed in via the new FREEZE_FOR_HIBERNATE flag.
 > 
-> Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
-> UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
-> PD/TypeC debugging capability.
+> Thawing is done opposite to freezing (so superblock traversal in
+> regular order) and the whole thing is plumbed into power management.
+> The original ksys_sync() is preserved so the whole freezing step is
+> optional (if it fails we're no worse off than we are today) so it
+> doesn't inhibit suspend/hibernate if there's a failure.
 > 
-> Signed-off-by: Madhu M <madhu.m@intel.com>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 > ---
->  drivers/usb/typec/ucsi/debugfs.c | 4 ++++
->  drivers/usb/typec/ucsi/ucsi.h    | 2 ++
->  2 files changed, 6 insertions(+)
+>  fs/super.c               | 61 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fs.h       |  5 ++++
+>  kernel/power/hibernate.c | 12 ++++++++
+>  kernel/power/suspend.c   |  4 +++
+>  4 files changed, 82 insertions(+)
 > 
-> diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
-> index eae2b18a2d8a..92ebf1a2defd 100644
-> --- a/drivers/usb/typec/ucsi/debugfs.c
-> +++ b/drivers/usb/typec/ucsi/debugfs.c
-> @@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
->  	case UCSI_CONNECTOR_RESET:
->  	case UCSI_SET_SINK_PATH:
->  	case UCSI_SET_NEW_CAM:
-> +	case UCSI_SET_USB:
->  		ret = ucsi_send_command(ucsi, val, NULL, 0);
->  		break;
->  	case UCSI_GET_CAPABILITY:
->  	case UCSI_GET_CONNECTOR_CAPABILITY:
->  	case UCSI_GET_ALTERNATE_MODES:
-> +	case UCSI_GET_CAM_SUPPORTED:
->  	case UCSI_GET_CURRENT_CAM:
->  	case UCSI_GET_PDOS:
->  	case UCSI_GET_CABLE_PROPERTY:
->  	case UCSI_GET_CONNECTOR_STATUS:
->  	case UCSI_GET_ERROR_STATUS:
-> +	case UCSI_GET_PD_MESSAGE:
-> +	case UCSI_GET_ATTENTION_VDO:
->  	case UCSI_GET_CAM_CS:
->  	case UCSI_GET_LPM_PPM_INFO:
->  		ret = ucsi_send_command(ucsi, val,
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index 3a2c1762bec1..72b9d5a42961 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
->  #define UCSI_GET_CONNECTOR_STATUS		0x12
->  #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
->  #define UCSI_GET_ERROR_STATUS			0x13
-> +#define UCSI_GET_ATTENTION_VDO			0x16
->  #define UCSI_GET_PD_MESSAGE			0x15
->  #define UCSI_GET_CAM_CS			0x18
->  #define UCSI_SET_SINK_PATH			0x1c
-> +#define UCSI_SET_USB				0x21
->  #define UCSI_GET_LPM_PPM_INFO			0x22
+> diff --git a/fs/super.c b/fs/super.c
+> index 76785509d906..b4b0986414b0 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -1461,6 +1461,67 @@ static struct super_block *get_bdev_super(struct block_device *bdev)
+>  	return sb;
+>  }
 >  
->  #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
+> +/*
+> + * Kernel freezing and thawing is only done in the power management
+> + * subsystem and is thus single threaded (so we don't have to worry
+> + * here about multiple calls to filesystems_freeze/thaw().
+> + */
+> +
+> +static int freeze_flags;
+
+Ugh, please don't use a global flag for this.
+
+> +
+> +static void filesystems_freeze_callback(struct super_block *sb)
+> +{
+> +	/* errors don't fail suspend so ignore them */
+> +	if (sb->s_op->freeze_super)
+> +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST
+> +				       | FREEZE_HOLDER_KERNEL
+> +				       | freeze_flags);
+> +	else if (sb->s_bdev)
+> +		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL
+> +			     | freeze_flags);
+> +	else {
+> +		pr_info("Ignoring filesystem %s\n", sb->s_type->name);
+> +		return;
+> +	}
+> +
+> +	pr_info("frozen %s, now syncing block ...", sb->s_type->name);
+> +	sync_blockdev(sb->s_bdev);
+> +	pr_info("done.");
+> +}
+> +
+> +/**
+> + * filesystems_freeze - freeze callback for power management
+> + *
+> + * Freeze all active filesystems (in reverse superblock order)
+> + */
+> +void filesystems_freeze(bool for_hibernate)
+> +{
+> +	freeze_flags = for_hibernate ? FREEZE_FOR_HIBERNATE : 0;
+> +	__iterate_supers_rev(filesystems_freeze_callback);
+> +}
+> +
+> +static void filesystems_thaw_callback(struct super_block *sb)
+> +{
+> +	if (sb->s_op->thaw_super)
+> +		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST
+> +				     | FREEZE_HOLDER_KERNEL
+> +				     | freeze_flags);
+> +	else if (sb->s_bdev)
+> +		thaw_super(sb,	FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL
+> +			   | freeze_flags);
+> +}
+> +
+> +/**
+> + * filesystems_thaw - thaw callback for power management
+> + *
+> + * Thaw all active filesystems (in forward superblock order)
+> + */
+> +void filesystems_thaw(bool for_hibernate)
+> +{
+> +	freeze_flags = for_hibernate ? FREEZE_FOR_HIBERNATE : 0;
+> +	__iterate_supers(filesystems_thaw_callback);
+
+This doesn't work and I've explained in my reply to Luis how this
+doesn't work and what the alternative are:
+
+A concurrent umount() can wipe the filesystem behind your back. So you
+either need an active superblock reference or you need to communicate
+that the superblock is locked through the new flag I proposed (naming
+irrelevant for now).
+
+> +}
+> +
+>  /**
+>   * fs_bdev_freeze - freeze owning filesystem of block device
+>   * @bdev: block device
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index cbbb704eff74..de154e9379ec 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2272,6 +2272,7 @@ extern loff_t vfs_dedupe_file_range_one(struct file *src_file, loff_t src_pos,
+>   * @FREEZE_HOLDER_KERNEL: kernel wants to freeze or thaw filesystem
+>   * @FREEZE_HOLDER_USERSPACE: userspace wants to freeze or thaw filesystem
+>   * @FREEZE_MAY_NEST: whether nesting freeze and thaw requests is allowed
+> + * @FREEZE_FOR_HIBERNATE: set if freeze is from power management hibernate
+>   *
+>   * Indicate who the owner of the freeze or thaw request is and whether
+>   * the freeze needs to be exclusive or can nest.
+> @@ -2285,6 +2286,7 @@ enum freeze_holder {
+>  	FREEZE_HOLDER_KERNEL	= (1U << 0),
+>  	FREEZE_HOLDER_USERSPACE	= (1U << 1),
+>  	FREEZE_MAY_NEST		= (1U << 2),
+> +	FREEZE_FOR_HIBERNATE	= (1U << 3),
+>  };
+>  
+>  struct super_operations {
+> @@ -3919,4 +3921,7 @@ static inline bool vfs_empty_path(int dfd, const char __user *path)
+>  
+>  int generic_atomic_write_valid(struct kiocb *iocb, struct iov_iter *iter);
+>  
+> +void filesystems_freeze(bool for_hibernate);
+> +void filesystems_thaw(bool for_hibernate);
+> +
+>  #endif /* _LINUX_FS_H */
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index 10a01af63a80..fc2106e6685a 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -778,7 +778,12 @@ int hibernate(void)
+>  
+>  	ksys_sync_helper();
+>  
+> +	pr_info("about to freeze filesystems\n");
+> +	filesystems_freeze(true);
+> +	pr_info("filesystem freeze done\n");
+> +
+>  	error = freeze_processes();
+> +	pr_info("process freeze done\n");
+>  	if (error)
+>  		goto Exit;
+>  
+> @@ -788,7 +793,9 @@ int hibernate(void)
+>  	if (error)
+>  		goto Thaw;
+>  
+> +	pr_info("About to create snapshot\n");
+>  	error = hibernation_snapshot(hibernation_mode == HIBERNATION_PLATFORM);
+> +	pr_info("snapshot done\n");
+>  	if (error || freezer_test_done)
+>  		goto Free_bitmaps;
+>  
+> @@ -842,6 +849,8 @@ int hibernate(void)
+>  	}
+>  	thaw_processes();
+>  
+> +	filesystems_thaw(true);
+> +
+>  	/* Don't bother checking whether freezer_test_done is true */
+>  	freezer_test_done = false;
+>   Exit:
+> @@ -939,6 +948,8 @@ int hibernate_quiet_exec(int (*func)(void *data), void *data)
+>  
+>  	thaw_processes();
+>  
+> +	filesystems_thaw(true);
+> +
+>  exit:
+>  	pm_notifier_call_chain(PM_POST_HIBERNATION);
+>  
+> @@ -1041,6 +1052,7 @@ static int software_resume(void)
+>  
+>  	error = load_image_and_restore();
+>  	thaw_processes();
+> +	filesystems_thaw(true);
+>   Finish:
+>  	pm_notifier_call_chain(PM_POST_RESTORE);
+>   Restore:
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 09f8397bae15..34cc5b0c408c 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -544,6 +544,7 @@ int suspend_devices_and_enter(suspend_state_t state)
+>  static void suspend_finish(void)
+>  {
+>  	suspend_thaw_processes();
+> +	filesystems_thaw(false);
+>  	pm_notifier_call_chain(PM_POST_SUSPEND);
+>  	pm_restore_console();
+>  }
+> @@ -581,6 +582,7 @@ static int enter_state(suspend_state_t state)
+>  		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+>  		ksys_sync_helper();
+>  		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
+> +		filesystems_freeze(false);
+>  	}
+>  
+>  	pm_pr_dbg("Preparing system for sleep (%s)\n", mem_sleep_labels[state]);
+> @@ -603,6 +605,8 @@ static int enter_state(suspend_state_t state)
+>  	pm_pr_dbg("Finishing wakeup.\n");
+>  	suspend_finish();
+>   Unlock:
+> +	if (sync_on_suspend_enabled)
+> +		filesystems_thaw(false);
+>  	mutex_unlock(&system_transition_mutex);
+>  	return error;
+>  }
 > -- 
-> 2.34.1
+> 2.43.0
 > 
-> 
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
