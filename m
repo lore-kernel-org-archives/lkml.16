@@ -1,157 +1,254 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B017C225;
-	Fri, 28 Mar 2025 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A4D35976
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169709; cv=none; b=bz1U2Crz+CZyzD6BikGUgr7fRYVvd7aPA6hgh0iJQsj5pPQWq5JYmzeHYBQaWJWF7enUHUfktLkNCEIiPaR2D39MLDGe2CgEwNh63R4/wFRlUaKGtVx36Zcn0I+jKdhUMgBqxjjmIFSDGhXVtE2MAyQZ0PfZEkvUZ+5azDerUYo=
+	t=1743169709; cv=none; b=o0fSykcIpVBhHZ2trbp4l41uLHrjLKa6SQyI2dl/vjzwJ2YTiFacIykwSdzZAMoIKBoLvDes35l8rvsPKxTWFC4aT81eV2Um8aPLW1xwRNFeBvryB4gDS/ak7JTqNCsZTm3lWU9fQLqhGJDztWQp+74Y4j7Ev0KXrT+prJeZAoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743169709; c=relaxed/simple;
-	bh=A4lEWOeHQUYgXZddxDMWiNnsI7HKHKG9xnnHtCg4XgQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=KTPBE62TOmA13+ExsIWYEK3GaskNTTMBtJYAeTd+UH3rk59kegK+8mh4YpzF9fa3ui03SehKTGNy8dw0FLXDa3ll2n5HeTgDJ1RehxoNa2MDmFj3FiED7FlrhbYfeieU1u0QpERMaml/OJaqJ6dAfOfF6Su6ocakYQv50OvDHjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YAFpctMq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8X9hFvGw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=+S8MKQkkSs/8tMleB9wK11MPHYdYhT6bb/fff8/MzIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iq2QiC0sn6iH2nqwyum7+KQmN8Mb1D4Rjbf4bMfjTRq+sjSqOnTMZqHnlUiRz0DFodT/gS/C+NJw1yPNezO3V/UdGlhkVTYJhDi3WleOKl9pEQtdpDXDwAkOi6GWvbqwKkp2TIf6tFejzFbWX4j9cT4dCQbRenO866EdOl2WJj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK0hELz2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YAFpctMq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8X9hFvGw"
-Date: Fri, 28 Mar 2025 13:48:25 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743169706;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK0hELz2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743169706;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OoDqsfdyFwtIrnDdUOO1ZJZxvc9k9417KYe0eB98UGI=;
-	b=YAFpctMqOW2Ku8TrsHXlzOGfNiHY1UX6ohlW9XWVsk4ES3ipxhDQj4y1tpUGJuEY/OOxZr
-	qH26b6fEDPvCUdkJC28cgBPIHtDYMjeKjJHyH/NNmVquNi/Q5iEGSmRD7p3gRUJSYI09HA
-	t+3w4fYDhX4i2KnVjsIpIKlbVXVcvB+hw+LaNYJgeCwAbWAuur1bGIuJECkwJxD3yUmAxc
-	fnchKYlYC+IMwHqFrXd8edxobehL5PxcQ/vTrXpD8Di4/axz3dJpzUrhJ+CsdeCq6NNYRf
-	YO3PWblJym5Y+fJ6h7R2IRQpBu1QKX3gXEHMcLSNM5hn/vvVt6/TnFoQmBtU8g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743169706;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OoDqsfdyFwtIrnDdUOO1ZJZxvc9k9417KYe0eB98UGI=;
-	b=8X9hFvGwAM7/Vwy+ikJsNRxxm3nVY3T9qMZt1KYqh1p/M9RzSC+qvsTAyVKT03kdhBSZRp
-	Z2cvrC1Kd7qoYhAg==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: objtool/urgent] objtool, lkdtm: Obfuscate the do_nothing() pointer
-Cc: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To:
- <30b9abffbddeb43c4f6320b1270fa9b4d74c54ed.1742852847.git.jpoimboe@kernel.org>
-References:
- <30b9abffbddeb43c4f6320b1270fa9b4d74c54ed.1742852847.git.jpoimboe@kernel.org>
+	bh=JPTNrMeu6/Cig+m6oOG7xyDbUSBNSDtp9SZo7fIlG4Y=;
+	b=dK0hELz2wSfsyJbd5dXzPiappXyDNnIyTj56mU2oYGWhcDtzDwfGvaImmKfmw29rsa7C+F
+	CMSJ/N/6sN8yE2BFqZlXqgshKMnsrsuEaWgu93lcreuthfrkj1NNAk2ppt6QrGVSUCkeaC
+	eBYOHfHrcHU8gNIjhNZxVzGToqUajI4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-547-3koJHkGbNHO8KjMNzcxkeg-1; Fri, 28 Mar 2025 09:48:15 -0400
+X-MC-Unique: 3koJHkGbNHO8KjMNzcxkeg-1
+X-Mimecast-MFC-AGG-ID: 3koJHkGbNHO8KjMNzcxkeg_1743169694
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac6caf952d7so64014566b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:48:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743169694; x=1743774494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JPTNrMeu6/Cig+m6oOG7xyDbUSBNSDtp9SZo7fIlG4Y=;
+        b=jDqHz+hoaPA11H9XXDJkxe6Mu9Ui8yYMdMYIJMFdD0cXRqK46eGm9VPaOe/n0lYkZW
+         LSKTRAJO+3O2kjtThBELLEFiiQqXLSIX+6LBTR2cgUHfT8h6Kzw1Ss3moH+zj+0IwJBz
+         IUdWhAVPT7i67YeHTH7Alk+ns4wie+MiJrwfHgIQ/TiCSdM0P3Rkr2LOOIzEikB2bQui
+         XlPDv6j/RutknnJir7xf0HY8vYdjqFiz3oc92UQoZurF119buk5kTsZdx4Bb5OAOZix2
+         naMYu+VFK4VLnZtosEXE0h3b2zdUnOzk84ATpT5l7jz4/VfcOsiRqKefyfbb8uoCdW7g
+         E74A==
+X-Forwarded-Encrypted: i=1; AJvYcCVk30s6MjLwsujidLZhQ4MPcgEa1bwqyA63bA8eQGhKwjkFv8oZid7MxO9r+oSZkFReaQPovE6MDFGn/w0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6zLSYlKWeeklh6fV2aVHdxjch6yLW9DBhoCHw4BOUimd3PE8B
+	FrQanay9QQNkjxbrmEttl0aV5tQQE//qJ691qsDtTbSjdNF5V41P/rbWgNil5Z0e8rwhGDe6sPJ
+	8AIQDkJT2m0rbBPXxOSs0hnAqkZucgP9jJJCpluOwGisJ83oMEcGx96LQqyr8gQ==
+X-Gm-Gg: ASbGncsD8DdUyi+yud/O08Bqi48g9xnaYebcQeurFXAReW218qoKqrxPiTP4VQaOYov
+	11zqbcJQrOcQV69NT1dvTAOzAoECUxw1Vu90z7iBPdH7MlNYdikOM6jO0Qr4WhQEIBO0azujdXq
+	Q+91N/wQu/lT5FKUtMi8bRCGh0ARTcMeIE51KyM1LnMkNN+JYVQ+8S6XY+L0MzEUnaKph4VggjS
+	zwChSxsNK9VfZf5CuWKj+bYlwu+aLN9ukC9RX2QOky6bTV9J5szEszuduSBBPjS2UVQ9sGBg92Q
+	ppf5SRrFvbsGO1DXPKBLBd8iRpPnfJDqdE34bLncCvLV1amqPZ/0cXXj+1vz5zcs
+X-Received: by 2002:a17:906:444:b0:ac7:1be2:1a79 with SMTP id a640c23a62f3a-ac71be221c6mr261203866b.4.1743169693821;
+        Fri, 28 Mar 2025 06:48:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7Do6TwhXVYcLm9d7+oMf8jMoIxW/KsZPz70Fgkxrb6TK+oJV9OIZ2ipHzwvR6fy5R3aM9oQ==
+X-Received: by 2002:a17:906:444:b0:ac7:1be2:1a79 with SMTP id a640c23a62f3a-ac71be221c6mr261200666b.4.1743169693188;
+        Fri, 28 Mar 2025 06:48:13 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719278674sm162698166b.40.2025.03.28.06.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 06:48:12 -0700 (PDT)
+Date: Fri, 28 Mar 2025 14:48:08 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Luigi Leonardi <leonardi@redhat.com>, Michal Luczaj <mhal@rbox.co>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
+Subject: Re: [PATCH net-next v2] vsock/test: Add test for null ptr deref when
+ transport changes
+Message-ID: <bq6hxrolno2vmtqwcvb5bljfpb7mvwb3kohrvaed6auz5vxrfv@ijmd2f3grobn>
+References: <20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com>
+ <85a034b7-a22d-438f-802e-ac193099dbe7@rbox.co>
+ <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
+ <qp67w36nyzgyd45wi7oosxe6syx7dzcifc5s2eg47engirtrnf@ewnk6ngqw7h3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174316970529.14745.224291620616247692.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <qp67w36nyzgyd45wi7oosxe6syx7dzcifc5s2eg47engirtrnf@ewnk6ngqw7h3>
 
-The following commit has been merged into the objtool/urgent branch of tip:
+On Wed, Mar 26, 2025 at 05:21:03PM +0100, Stefano Garzarella wrote:
+>On Wed, Mar 26, 2025 at 04:14:20PM +0100, Luigi Leonardi wrote:
+>>Hi Michal,
+>>
+>>On Wed, Mar 19, 2025 at 01:27:35AM +0100, Michal Luczaj wrote:
+>>>On 3/14/25 10:27, Luigi Leonardi wrote:
+>>>>Add a new test to ensure that when the transport changes a null pointer
+>>>>dereference does not occur[1].
+>>>>
+>>>>Note that this test does not fail, but it may hang on the client side if
+>>>>it triggers a kernel oops.
+>>>>
+>>>>This works by creating a socket, trying to connect to a server, and then
+>>>>executing a second connect operation on the same socket but to a
+>>>>different CID (0). This triggers a transport change. If the connect
+>>>>operation is interrupted by a signal, this could cause a null-ptr-deref.
+>>>
+>>>Just to be clear: that's the splat, right?
+>>>
+>>>Oops: general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN NOPTI
+>>>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
+>>>CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
+>>>Workqueue: vsock-loopback vsock_loopback_work
+>>>RIP: 0010:vsock_stream_has_data+0x44/0x70
+>>>Call Trace:
+>>>virtio_transport_do_close+0x68/0x1a0
+>>>virtio_transport_recv_pkt+0x1045/0x2ae4
+>>>vsock_loopback_work+0x27d/0x3f0
+>>>process_one_work+0x846/0x1420
+>>>worker_thread+0x5b3/0xf80
+>>>kthread+0x35a/0x700
+>>>ret_from_fork+0x2d/0x70
+>>>ret_from_fork_asm+0x1a/0x30
+>>>
+>>
+>>Yep! I'll add it to the commit message in v3.
+>>>>...
+>>>>+static void test_stream_transport_change_client(const struct test_opts *opts)
+>>>>+{
+>>>>+	__sighandler_t old_handler;
+>>>>+	pid_t pid = getpid();
+>>>>+	pthread_t thread_id;
+>>>>+	time_t tout;
+>>>>+
+>>>>+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
+>>>>+	if (old_handler == SIG_ERR) {
+>>>>+		perror("signal");
+>>>>+		exit(EXIT_FAILURE);
+>>>>+	}
+>>>>+
+>>>>+	if (pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid)) {
+>>>>+		perror("pthread_create");
+>>>
+>>>Does pthread_create() set errno on failure?
+>>It does not, very good catch!
+>>>
+>>>>+		exit(EXIT_FAILURE);
+>>>>+	}
+>>>>+
+>>>>+	tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
+>>>
+>>>Isn't 10 seconds a bit excessive? I see the oops pretty much immediately.
+>>Yeah it's probably excessive. I used because it's the default 
+>>timeout value.
+>>>
+>>>>+	do {
+>>>>+		struct sockaddr_vm sa = {
+>>>>+			.svm_family = AF_VSOCK,
+>>>>+			.svm_cid = opts->peer_cid,
+>>>>+			.svm_port = opts->peer_port,
+>>>>+		};
+>>>>+		int s;
+>>>>+
+>>>>+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
+>>>>+		if (s < 0) {
+>>>>+			perror("socket");
+>>>>+			exit(EXIT_FAILURE);
+>>>>+		}
+>>>>+
+>>>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
+>>>>+
+>>>>+		/* Set CID to 0 cause a transport change. */
+>>>>+		sa.svm_cid = 0;
+>>>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
+>>>>+
+>>>>+		close(s);
+>>>>+	} while (current_nsec() < tout);
+>>>>+
+>>>>+	if (pthread_cancel(thread_id)) {
+>>>>+		perror("pthread_cancel");
+>>>
+>>>And errno here.
+>>>
+>>>>+		exit(EXIT_FAILURE);
+>>>>+	}
+>>>>+
+>>>>+	/* Wait for the thread to terminate */
+>>>>+	if (pthread_join(thread_id, NULL)) {
+>>>>+		perror("pthread_join");
+>>>
+>>>And here.
+>>>Aaand I've realized I've made exactly the same mistake elsewhere :)
+>>>
+>>>>...
+>>>>+static void test_stream_transport_change_server(const struct test_opts *opts)
+>>>>+{
+>>>>+	time_t tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
+>>>>+
+>>>>+	do {
+>>>>+		int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
+>>>>+
+>>>>+		close(s);
+>>>>+	} while (current_nsec() < tout);
+>>>>+}
+>>>
+>>>I'm not certain you need to re-create the listener or measure the time
+>>>here. What about something like
+>>>
+>>>	int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
+>>>	control_expectln("DONE");
+>>>	close(s);
+>>>
+>>Just tried and it triggers the oops :)
+>
+>If this works (as I also initially thought), we should check the 
+>result of the first connect() in the client code. It can succeed or 
+>fail with -EINTR, in other cases we should report an error because it 
+>is not expected.
+>
+>And we should check also the second connect(), it should always fail, 
+>right?
+>
+>For this I think you need another sync point to be sure the server is 
+>listening before try to connect the first time:
+>
+>client:
+>    // pthread_create, etc.
+>
+>    control_expectln("LISTENING");
+>
+>    do {
+>        ...
+>    } while();
+>
+>    control_writeln("DONE");
+>
+>server:
+>    int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
+>    control_writeln("LISTENING");
 
-Commit-ID:     05026ea01e95ffdeb0e5ac8fb7fb1b551e3a8726
-Gitweb:        https://git.kernel.org/tip/05026ea01e95ffdeb0e5ac8fb7fb1b551e3a8726
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Mon, 24 Mar 2025 14:56:12 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 28 Mar 2025 14:38:09 +01:00
+We found that this needed to be extended by adding an accept() loop to 
+avoid filling up the backlog of the listening socket.
+But by doing accept() and close() back to back, we found a problem in 
+AF_VSOCK, where connect() in some cases would get stuck until the 
+timeout (default: 2 seconds) returning -ETIMEDOUT.
 
-objtool, lkdtm: Obfuscate the do_nothing() pointer
+Fix is coming.
 
-If execute_location()'s memcpy of do_nothing() gets inlined and unrolled
-by the compiler, it copies one word at a time:
+Thanks,
+Stefano
 
-    mov    0x0(%rip),%rax    R_X86_64_PC32    .text+0x1374
-    mov    %rax,0x38(%rbx)
-    mov    0x0(%rip),%rax    R_X86_64_PC32    .text+0x136c
-    mov    %rax,0x30(%rbx)
-    ...
+>    control_expectln("DONE");
+>    close(s);
+>
+>Thanks,
+>Stefano
 
-Those .text references point to the middle of the function, causing
-objtool to complain about their lack of ENDBR.
-
-Prevent that by resolving the function pointer at runtime rather than
-build time.  This fixes the following warning:
-
-  drivers/misc/lkdtm/lkdtm.o: warning: objtool: execute_location+0x23: relocation to !ENDBR: .text+0x1378
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/30b9abffbddeb43c4f6320b1270fa9b4d74c54ed.1742852847.git.jpoimboe@kernel.org
-Closes: https://lore.kernel.org/oe-kbuild-all/202503191453.uFfxQy5R-lkp@intel.com/
----
- drivers/misc/lkdtm/perms.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index 5b861db..6c24426 100644
---- a/drivers/misc/lkdtm/perms.c
-+++ b/drivers/misc/lkdtm/perms.c
-@@ -29,6 +29,13 @@ static const unsigned long rodata = 0xAA55AA55;
- static unsigned long ro_after_init __ro_after_init = 0x55AA5500;
- 
- /*
-+ * This is a pointer to do_nothing() which is initialized at runtime rather
-+ * than build time to avoid objtool IBT validation warnings caused by an
-+ * inlined unrolled memcpy() in execute_location().
-+ */
-+static void __ro_after_init *do_nothing_ptr;
-+
-+/*
-  * This just returns to the caller. It is designed to be copied into
-  * non-executable memory regions.
-  */
-@@ -65,13 +72,12 @@ static noinline __nocfi void execute_location(void *dst, bool write)
- {
- 	void (*func)(void);
- 	func_desc_t fdesc;
--	void *do_nothing_text = dereference_function_descriptor(do_nothing);
- 
--	pr_info("attempting ok execution at %px\n", do_nothing_text);
-+	pr_info("attempting ok execution at %px\n", do_nothing_ptr);
- 	do_nothing();
- 
- 	if (write == CODE_WRITE) {
--		memcpy(dst, do_nothing_text, EXEC_SIZE);
-+		memcpy(dst, do_nothing_ptr, EXEC_SIZE);
- 		flush_icache_range((unsigned long)dst,
- 				   (unsigned long)dst + EXEC_SIZE);
- 	}
-@@ -267,6 +273,8 @@ static void lkdtm_ACCESS_NULL(void)
- 
- void __init lkdtm_perms_init(void)
- {
-+	do_nothing_ptr = dereference_function_descriptor(do_nothing);
-+
- 	/* Make sure we can write to __ro_after_init values during __init */
- 	ro_after_init |= 0xAA;
- }
