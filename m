@@ -1,103 +1,126 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C771421A458
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8291940A2;
+	Fri, 28 Mar 2025 09:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743155129; cv=none; b=BzgcFnmVscfYjn2j2kSDaJrUqUx85F/yPtO8TjTXe3IlT8QQvh78+sb8CJ5b53n7ZWGrEX5HXcKA16c7h2Cp63v+grYwi+5twR19uSDn0U2FyazT9w4oUDow3u8qwaP4dmmSXBAAzE87Pfkwi+Z/I2DCxs12WKJBshLsI/NAtfw=
+	t=1743155356; cv=none; b=M0+WGstimGfwe8PMOvaQUWY0fUX+EoeE+JynTMYfomxCJuom+896waOphvclatDqt9DQqvv3a4SWtLy2w+Jl/p1RNnUFRBVjN6OZfWHnez5S2oLIRgUoC06scduTZxF2Ry5LrSlOvNYIkA9WIzkX6S12YmtxQdx8XAJ4YI5WA4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743155129; c=relaxed/simple;
-	bh=5Cs1VhxIx23P0yMjASi7V/4dI6H8aliXgmTd9VxuMg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F90Z4A4XKoDAsj7+1iHmrWzdFi8KUAcitR6i4O5inZXROZQlEEDNDJzr9TMq5cQB4YSs9qhpDJUhg8fDYlU8TX9J2lj+pbgh3f0MWeHqajcuF6awiPkRSeZKa0JBPzU3yy21hbz+CxogXNMlmvZ8h3KX0efcOWCYpvmzvRDctlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=T3AQWw9h; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743155356; c=relaxed/simple;
+	bh=olVkdtzrwYPCvjZ+beVjT3d3hxyFMUFor1QaOmihdTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MFZ5R2/jo/X1tf/mcu/ENkP3OGiskyKxY/LQc0pKb4mOk0y0FW9hfJu/srEf5vSaBezZ5orsMbPsnfig0p6/tEFWxvl3PKM+NKE1Mz05y4+/OpXyJblujdYvqLiS5W5wi88+Rg8Uz/BeAcZ3NRIVOKeasnQ9raNLq1NrV1Ihu2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5/GqgpS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="T3AQWw9h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743155108; x=1743759908; i=markus.elfring@web.de;
-	bh=ymBq8lQ1iPd7IBlnK/ub4od+vL6Ja03I0kcTM3LmbH8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=T3AQWw9hwIN7HeOdx41tR+LaLXYd36qtYKmHH2UreaDftKel2rGJJsFeDvbasvn5
-	 qEWdefSZqb/5PRR7Ip+w9bHIquaM6/SJVwzV8n80lsndKL4J7Tslbq4+rBLlZYsVn
-	 w4gxCeWnFX0UiakmfBA2Diukc3Dhp48+RfcJtdl34/nGea6MjUePZ27OyxZsTg7WW
-	 6Lpx37jhtgstmDHUEET5JccRmDTA3WEljmNSZDotzK57l/LT3U6L9rPTS5vDjrmqi
-	 YS1KMKmzjkxPOYDrQotcWzjmmDdg2hV69YloggPr0X8ONc3CkqFae6u1vUKUXNFLi
-	 7cSM30GmSf+ZJNEqUQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3V6G-1txY2b3tPm-000sdG; Fri, 28
- Mar 2025 10:45:07 +0100
-Message-ID: <48e363a6-00d5-4374-8c73-a1a0d9c7c387@web.de>
-Date: Fri, 28 Mar 2025 10:44:19 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5/GqgpS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E3DC4CEE4;
+	Fri, 28 Mar 2025 09:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743155355;
+	bh=olVkdtzrwYPCvjZ+beVjT3d3hxyFMUFor1QaOmihdTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=t5/GqgpSXm5dN7i4JJvB3uRoi5eOc7+cx1n7ZJk8aaDnAADyQnVAbF4+wTs8keM3F
+	 2tYlN+4SypPqThdzaCbag2yWOpoLRdH+aEV7HyVzsiWxwP8QNrUwcM0iXM3YkySf05
+	 kBxXqCBJqt9TVEqU5ecN9sLjSzvWVgGXam05uW7R4+nBPHoUgkd8zDwEnZyDfayVDy
+	 V+LXzKBeCuJdRhrkpdyumi7JHRf2Hj8+Lzmo4e1/qTyk47wAKc3bBSAdEyfPPJfsel
+	 P8BFRu8BobspvCQSBHC6SZdyoZpxjZ0Sa6HJN7mkXrDGaAKBp8NJWroJcnGkrsf1yn
+	 JVCj4kVMRk9eQ==
+Date: Fri, 28 Mar 2025 09:49:04 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sergio Perez <sergio@pereznus.es>
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 1/2] dt-bindings: iio: light: bh1750: Add reset-gpios
+ property
+Message-ID: <20250328094904.06ce0c96@jic23-huawei>
+In-Reply-To: <20250324135920.6802-1-sergio@pereznus.es>
+References: <20250324135920.6802-1-sergio@pereznus.es>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] mm/page_alloc: Consolidate unlikely handling in
- page_expected_state
-To: Ye Liu <liuye@kylinos.cn>, linux-mm@kvack.org
-Cc: Ye Liu <ye.liu@linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Sidhartha Kumar <sidhartha.kumar@oracle.com>
-References: <20250328014757.1212737-1-ye.liu@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250328014757.1212737-1-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:71634MduVWjU36iNjxiNP42rMX5v8YC/4ENU4CvMN43VJ9cDDj8
- M1LS2GugVQiYljsd1Cshs/i+gMCu9EcyP0sdzz0LGDv9/GnCG3KJz0MSu2qOobdnuLYFdcE
- BmuVpv//Tkpku/WWZsIrAUmRZd1RcY1vFtfAQKw8u8PZQechUsISwUpoVzE49SHuI2MVLSd
- q6GK6lzxmBYhzyUM4XdqQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BjKbcwqZCkE=;vNWR6Aw63S3MIyEvu1pUwRewkeF
- ZNOFDZFBiaSOFd5aa2t5Jo+ln2A/fdbgGs0ESnVH9Oxh2oZ4j2r8MebZReIA2QLwj4CbTI3B8
- 25xMR0pae6D4gcCL+0LutAvBHVO94XO614QfEXQj0rwETSgLxLS+a0ZogSrYWrm6sldyqs1U5
- xAFHObykIiw3dZSLnaBrlEoXgcZJtgLrzcHnI6zLr0UOYJ4Gojy7Ph0tWykcoS1TsK4Ay3cSe
- vBICreAvvCI01JwPn62NYvcbnIX5o8HeiDi1gUmK6EzaYnviQ6+4vrIn0vzrDPQ1zw6MH8jAd
- F8km3Ups51HydvjcIIC3eiXFIfC7HiHx1Ct2C+qnElWW+elM/H4Pf87iBGPkf/XcNy8QyC/0f
- cJnS2C9JgkHASIcKGEiW9KMc/W8Aev6vUOHu0V+cSLUowHGeG7Zb2GT1Z3kRkArisG85JbRCo
- UH/LcvimPkaYDikjdQtmvNQ1cCELNfuKoRdZgHBmFJziLpJqz27Te0IAo7m1xO6kMJYXnq1a4
- 7JAXyrTwjeeadPOrpLw7gqUnHiBUyDnG8MRGDZz0iAoag65LtWXoqoQfrQP97QmyF48xVSQ4i
- 8KR+wwJZ3Qb/9p2yCmjhDh16QzBs6Gc/kjQlHM16eNxVfMWH3+Dd9tndD9f5DQAPvpxLG/nk5
- fi8Wui2p/NXLfgCtZSi8vDvWhO4kOICGKK7rFex/zLTKxvYEyUFmOCQZWowKvR/lAsVmDeb8j
- oL7aSSPqMjGsoRxPYhXjEW+6ZMoEIqVGSFmTIhoz9JYeaM/odiyu8eKyCRH6yvb0mEaY3DcwN
- zEX2tqwEiKdt6gAdSuaWbyn+dvt1tlgJCxl2yVV491H4By9bmGUBQXjVfPE104BII8nq3UdWP
- fXkB+n7lOFVFDrwhGU2NpP4YjveXTNyK6JFUw+iz4dAzv9k6SAzEImuE0/c7mKjLjdwJMdXEe
- VDrFfBl72O5pJ5HUUAMgVEn/JmW80V77W65XEKK+0FzmigTr1DSB7TsiSaXB+BqE+0ty8+Bz7
- WZ2Hd5F+iXbk8gjgh2GQ5xNyQr4ByK3MGDhbJcMx2z2QLLBkpRvzR3OPYQM8EaT7wiGbxvG3A
- E9j/WZ2ebvEGJVlI29Iw5+f2xqxTYd/1hG0QMAfCJb96Bi68+uH0mvkirKBTaizgpXaDI2TEL
- u2ZSrP/eMkF8Vra/+5FJl6MvNpNKde85CFk3znev1tEk/PoX19wmLzzPnBii4s4ZTZ96ei6/n
- GSZiz6URTdF30JBzRG1l+xWWFZ7X3F8bnTOSEa00F87uPXF4LeF/4D+dl6UCJi/OcDa3cyyz/
- SOAf3CPiPDdoauVpSQ/0dpKH0Kk4lSqcDg3ZWkFZF8SLZvQ2lYlG0MK313AvPUtWqWSHTdrds
- 5rQb7/sRIB1VcuaksKeRbtSIZZq6DTZlFwY4QunienMbjbpT42yQvcG1PADhGfsLbfKG7kWJG
- 2tFz9PZEeugF63LR3bzc4zztV3wYCj2y/N2S2EWLSvTjfjJJK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
+On Mon, 24 Mar 2025 14:59:19 +0100
+Sergio Perez <sergio@pereznus.es> wrote:
+
+> Some BH1750 sensors require a hardware reset via GPIO before they can
+> be properly detected on the I2C bus. Add a new reset-gpios property
+> to the binding to support this functionality.
+> 
+> The reset-gpios property allows specifying a GPIO that will be toggled
+> during driver initialization to reset the sensor.
+> 
+> Signed-off-by: Sergio Perez <sergio@pereznus.es>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Series applied to the testing branch of iio.git. I'll rebase that
+on rc1 once available and push out as my togreg branch.
+
+Thanks,
+
+Jonathan
+
 > ---
-> V4: =E2=80=A6 and append parentheses to all function names.
-
-Collateral evolution for summary phrases?
-
-
-> V3: Delete 'This patch'.
-> V2: return true instead of false in the PageHWPoison branch.
+> Revision history:
+> v5 => v6:
+>  - Fixed include placement as commented by Krzysztof Kozlowski
+> v4 => v5:
+>  - Update description to reflect "active low" on reset signal as indicated by Krzysztof Kozlowski
+>  - Update description to clarify what pin of sensor is used to do reset (DVI) as mentioned by Krzysztof Kozlowski
+>  - Edit example to be coherent with "active low" as informed by Krzysztof Kozlowski
+>  - Added necessary include on example
+> v3 => v4:
+>  - No changes
+> v2 => v3:
+>  - Split in two patches: dtbinding and code
+>  - Ensure list off mantainers following instructions by Krzysztof Kozlowski
+>  - Delete redundant details on description as suggested by Jonathan Cameron
+>  - Added related example to existing one as suggested by Jonathan Cameron
+> v1 => v2:
+>  - Ensure check tests as commented by Rob Herring
+>  - Fixes some whitespaces and end lines
 > ---
->  mm/page_alloc.c | 24 ++++++++----------------
-=E2=80=A6
+>  Documentation/devicetree/bindings/iio/light/bh1750.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/bh1750.yaml b/Documentation/devicetree/bindings/iio/light/bh1750.yaml
+> index 1a88b3c253d5..9df81c271411 100644
+> --- a/Documentation/devicetree/bindings/iio/light/bh1750.yaml
+> +++ b/Documentation/devicetree/bindings/iio/light/bh1750.yaml
+> @@ -24,6 +24,10 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  reset-gpios:
+> +    description: GPIO connected to the DVI reset pin (active low)
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -32,6 +36,7 @@ additionalProperties: false
+>  
+>  examples:
+>    - |
+> +    #include <dt-bindings/gpio/gpio.h>
+>      i2c {
+>        #address-cells = <1>;
+>        #size-cells = <0>;
+> @@ -39,6 +44,7 @@ examples:
+>        light-sensor@23 {
+>          compatible = "rohm,bh1750";
+>          reg = <0x23>;
+> +        reset-gpios = <&gpio2 17 GPIO_ACTIVE_LOW>;
+>        };
+>      };
+>  
 
-How do you think about to replace repeated marker lines by line breaks?
-
-Regards,
-Markus
