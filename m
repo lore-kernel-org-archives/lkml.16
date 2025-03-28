@@ -1,260 +1,262 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2078.outbound.protection.outlook.com [40.107.241.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D69C214217;
-	Fri, 28 Mar 2025 08:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152376; cv=none; b=YYGoR64ZoFvdlDdm8rwsHO6E7GmHYRC0Fn3NSaktv7URuKfE/4eBGRXtMHDpLOf25/Bi2ugi6vzLMEm3ZLdfNjVojmNQX34PTj9RjZTPUrrkhzXD8YVnOPt29wPTCVZM9ebhfooRSJgN7RrIvEzQPD1rlektGKg84NwRlx2+KH4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152376; c=relaxed/simple;
-	bh=vckH85TCWtlpiEkZsVZxvAiOQglNq7EoGooS+6LrDyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WiX84FEm+9ZFmVlwt1z6z+80ibZXn27t/xRpUEoBehELvqNfz9VOrBMSs64yv/8p6rcZA3OeGJsZfTqxtYlxD2Hub60cEVnBWYXACk0UDdIxQcfD3Q68+RjZLW8GtomlFtL5djOQUeFoljQBZZuCYtrPYmAzElmCxGEUPIDk7ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=bvedlF+W; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0AC214229;
+	Fri, 28 Mar 2025 08:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743152378; cv=fail; b=EHJHNGWUqFR/lPlxgdMLmpq/+FUGRWgwHw8pDREVBmB10o9pqtEkwd6fbfkFpgllPiq2w+Hg05BKTRvDUZJoBjbw5tpgaqNWf0STbeK50AgAAnx9Xtwe8wtrdNlyupvTZv7PkesqowGL0GiZlZM1pBjmfoXZWQDKkYv+5YyND4E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743152378; c=relaxed/simple;
+	bh=4epSgtMbT7lo6XNhxJNMHungnVAYI7hFOVchqOIb7cg=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CpJ2zbeEfcA6j0QleKC3loZvV74VlNl7Q5xu7NsF2DDlEtH3gQryaHDfNN1MtPfo0BmmUpPmZ0g/xvCXXZHp2a714UswNU9hbuosaqEOr3YVlDo1riBUO74DqYdz297viUeF3mH1bt1RW36x76xU40Ig/1D8SFSXhL3POGrEk0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CZu2oL9K; arc=fail smtp.client-ip=40.107.241.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bvedlF+W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+Ed7x22gxcXzy6tcl8aXdoUEVTlRgFGdbAz/YQVnOSg=; b=bvedlF+WLf08RqHjdHuM2tFLzA
-	MsjWFWDHOgXENVACMmNnah6z+UPBsoMYjvBEuhULeR1RI8LPt0xkm8wnT3xLzrjXzJC92r26X/B31
-	UDBmYn5e0emo7eGHGdKNz9sOwdeFFrpI8aPQwbKAOD/3/Heczat6c28LHndYBVD1IZ6SRxn2AEsvb
-	Lsous30maM4v+KKlJZ6UJEH/pqXNcyes4qAlNSelcR88iHyTDRMutMLiMJAitl7d3svDsfJTXUrWV
-	bQLYApvpDKiFHecRUBQdgD9qAzRkkoFeQq1CDbo+aTAizJPXACedv/aEFPhSEcdSLiauDOjUT2gF1
-	xEGrCQAg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48142)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1ty5Yf-0008Dc-0U;
-	Fri, 28 Mar 2025 08:59:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ty5Ya-00073g-2P;
-	Fri, 28 Mar 2025 08:59:16 +0000
-Date: Fri, 28 Mar 2025 08:59:16 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH 3/6] net: phylink: Correctly handle PCS probe
- defer from PCS provider
-Message-ID: <Z-Zk5PPI8M551xti@shell.armlinux.org.uk>
-References: <20250318235850.6411-1-ansuelsmth@gmail.com>
- <20250318235850.6411-4-ansuelsmth@gmail.com>
- <Z9rplhTelXb-oZdC@shell.armlinux.org.uk>
- <67daee6c.050a0220.31556f.dd73@mx.google.com>
- <Z9r4unqsYJkLl4fn@shell.armlinux.org.uk>
- <67db005c.df0a0220.f7398.ba6b@mx.google.com>
- <Z9sbeNTNy0dYhCgu@shell.armlinux.org.uk>
- <67e58cd2.7b0a0220.289480.1e35@mx.google.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CZu2oL9K"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cDLkEjDgKWS99aaQaDJj9C25SmZGmV0+5jhNcawqkTSikEih2fCflb/69utrCDAXNyUis/v0qo6SJWj5/ooE447R1gpGAdUOLLd7mDUw0cHw89r+YgefAPGr0GUna67IwLye+Z9CMlpw3NOD+dRHs74OOUbt5E7Gu2ES5LxmEoGJpktKH7J9xyZA1sTQW/A/ClEg6WRDLCgB5e/ue3egIoNXndIzh1YErgLB8WihSWH7iwVlS8dKVm/4OzVVsp4FcbT1OdmAicAnEBehZtZfD7N1HMNd7hW0650uMOPmGNKhIzF8RTotHQrvbeNa6+Td0lyleW3f3vUvPB6dLeKXgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jr0oOJfRa5+H0ur5dTlXG11g3LYRx5l2Ha42RM8bO7U=;
+ b=m/bHUErbupyesX5nqEw26vvBDrEn/WtqQx5nybHuaeMKYZekGsv6rnslE3fOj1FdqMnsCOIgXR3xRAZc4nPP+YFwJrGQUjvp52Mu4zHmd4UlAK/QoGo+xWzI5ChzG52rUz7K34/MTWvXrV0LS5g1QelhC1LVMStSec4RwGGcLFSZmfFspTMhh2GmH9Q3VfbrDsf7jhKI5dtIznu8ZkZ8+fvccVSk5wtTG73dpN5tvZHL7NMkL3Gr3//AzOMLnUsZT9LzhZKqodn2i4Kh9UGB6AHCYL3m2DkDrjcf1Lcmks5eygtYZs6jukIB2a8sxaTUaPUSBe9GmQ2PGRSLTGPLFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jr0oOJfRa5+H0ur5dTlXG11g3LYRx5l2Ha42RM8bO7U=;
+ b=CZu2oL9KC7R38yv0BhHN8yMXUmNxulyzYpERcqeIpm86wbBfLUtVI75HNJ1nHsMVglXOx5II8GADloPVbdm75w/KuTO9LIbAEWRQYrmY8GlsTMj7WqyHoP62SXuABlciV/6IpSQ0eEB26Oj9leOAojEWT5uIQT64uGWHg48tPEwR2jtQrxFgl8aCrO++DO0UVyzxOrwtZpcrkPyksSxS2M8iLKuKmo5C7ChuQlXLToY229n5hb00sMMZS+v0uaTWyJ7Qq+fHSA99JWKyqMcyx7Xj+oCvVurbdOhqBNLK/qWaY/x3IAgaUKM5yW+vjMdKQXdpfij63CRiwhvMOhdMcQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20)
+ by VI0PR04MB11046.eurprd04.prod.outlook.com (2603:10a6:800:269::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
+ 2025 08:59:34 +0000
+Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
+ ([fe80::7be0:296:768c:e891]) by AM0PR04MB7044.eurprd04.prod.outlook.com
+ ([fe80::7be0:296:768c:e891%3]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 08:59:34 +0000
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] ASoC: fsl_sai: separate set_tdm_slot() for tx and rx
+Date: Fri, 28 Mar 2025 16:57:44 +0800
+Message-Id: <20250328085744.1893434-5-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20250328085744.1893434-1-shengjiu.wang@nxp.com>
+References: <20250328085744.1893434-1-shengjiu.wang@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0009.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::10) To AM0PR04MB7044.eurprd04.prod.outlook.com
+ (2603:10a6:208:191::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67e58cd2.7b0a0220.289480.1e35@mx.google.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB7044:EE_|VI0PR04MB11046:EE_
+X-MS-Office365-Filtering-Correlation-Id: 61a499a9-3020-48ac-efd1-08dd6dd6dc38
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TNCQY8rO6fJw3A9jZcuedmR51hET4bQ36WJOvJ1ikegJCqgx9pEhrC+k//EN?=
+ =?us-ascii?Q?WEvEJcFn91dlKpCgICFCVWwQ9bZNWsfboatifiyNGvovY6fbeieFE/CkJSbE?=
+ =?us-ascii?Q?n5aziTT7vSF8ssNDteuThLLDET603CrNVrOwdB++EOv/f6Y3H+JyoP4Ywvz6?=
+ =?us-ascii?Q?lngg9GEnFs1z2lk/KyIgzH97ixC7W75CVL7aKtwVxmYVDnJE+djmTLkhmaj9?=
+ =?us-ascii?Q?3Kd5w/Vvk4efvQGDQqx/Xj5L6fjxzmHCRefdrBjDzs+uFCShqkeMjwyI8IWS?=
+ =?us-ascii?Q?8dkGghb6ZE1YYe2AnCx0+ZfcF3XC6mzdnmm69uZRUayzASYAApJdHMwHqTum?=
+ =?us-ascii?Q?jsm0IzApSkYSyHq1pMr3j7vx5C2iNKxl7c//8V7JeyV70IawByEXtAl+JPcN?=
+ =?us-ascii?Q?8g9S7ATWbYWrPMGEp7ExUmahXe6VuCYAJvK0KeVJQPcTedwgyycQPUW+Y03U?=
+ =?us-ascii?Q?41kezuGmeIAEVj2Jqznyt4WNChA/HvabdXHsyukyUQDZKf3iTibO+3PFNUv+?=
+ =?us-ascii?Q?+JWW2BXPrYQUbjrS81GiOkO25gETuA3LUGaMJtrTzGr7RkZIKS/XOGui5hT/?=
+ =?us-ascii?Q?8abBHFH1d++U9T9H8kR06ZWejQYLVuIYXUWo9Wh0xH2qZsvscsa/xmtIC8Gx?=
+ =?us-ascii?Q?P7vzPmup9w9MaH/qM/PF8cFl43qYV7hqKucyjVmg/XvPrZkQ1rG54CPKhevc?=
+ =?us-ascii?Q?Zw2Jsb8KD7LMkPv2dgo1wEq5wXB8ePWFTNQ8Ktk6wgLI00E3ALbVtsrBiWX1?=
+ =?us-ascii?Q?Je8rvz+ClBkvymHLZjwOwlvoUxGDSNKQuKlVfiBSTAg9rXoijN7ard3fFrhv?=
+ =?us-ascii?Q?8i1rWxWzFp1EYvB+lKHEgGNs4ju/Ejlgow0hcBHRB353tetlfvI0GfzEXfY+?=
+ =?us-ascii?Q?FEeqTXQOPkSpEGlw40kaiBZr040DhPyq4gDkPJZw2I9fzbCsA6GyoaH7y8w0?=
+ =?us-ascii?Q?9ZCLIIBIa2QxE6+t5vIa/dzqNfM0P/NmihQ1g5c9Gx3uFdaRPtqoWgSHgpql?=
+ =?us-ascii?Q?27b+eBPBT+vmzcuuYfPoZxpYgfn5GpS/ysHqBoMgychCaeUp0RWiCdHcxtY+?=
+ =?us-ascii?Q?pd1clOAd9+/pDWW5FlX9kI5OXefGyW13nU1ZC6tJ4e59IeqWo3OSNUEDZIWE?=
+ =?us-ascii?Q?qKezEs8TMAJ0uq2BOTagnJbwZkQxYJd3yBrsPshC1T5yqtTpCSE7Gx268ZE0?=
+ =?us-ascii?Q?+ZU/a/Zq86UXpclA8oFFZQVR2Lg4TFYagBcTkhHqZq5w4+SQB3AJ+ugGhK22?=
+ =?us-ascii?Q?yI/eHxv+KSHqt/yGfOst0bl+OZhbBQAVUxQXOSGKB3BbkWkyTTKrUa+ZmfLP?=
+ =?us-ascii?Q?BB4v58g6qgDqUvanE7gW65pH31onTBUQXkhY2fSYk6tasqe9ZsM/7ZpZAzZp?=
+ =?us-ascii?Q?/K+QmNxTYtNuiWJezfEgUGO+j0ZD8Ud83VwNuiYbyBAGWIifgVNVlm+WJ7Aj?=
+ =?us-ascii?Q?qc0I7gUJHFXjC0WUVY44PRW3VGCwQzHZ8lXF3aWbs4XhdEOIyn79rA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7044.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?HlWfb2A/16QX9TRi7twUwKArM0HCbQu++7ZPiEaFUc4vAwQQm17pIN/jhUAN?=
+ =?us-ascii?Q?7D5VPGXUI5SjUUwHHxrg/2DoZB+lByXqDqevL3H94Aq57F+WfMlpPbS9I2WB?=
+ =?us-ascii?Q?SIuvsiFGOpxsQDX30sDmicC+g2znElo6hYZ/ubS3U2jw7ILxSJAeUoMYkWep?=
+ =?us-ascii?Q?Kr3DT46u38vRlzdzae1s5SXq8u9bFKtI6koDIQz+IF0hzXlOMQbYF8JTjYTm?=
+ =?us-ascii?Q?5MnZHWOVP7oBkL3J/UFuHGx6YaHHAmAtMMu9RPn32CnZpkWnwrNPNmhVZVlg?=
+ =?us-ascii?Q?yhx3P4UD4UVBs7JNJyGcLnpJJRDg4V5PLcSkM/EpkOsW1UxDGnNRzsytDuyr?=
+ =?us-ascii?Q?nJjHz1XDTTYg+1ZNL+F/4p8ztPfSuwgdrzYn3u0UXKX4OlVMQnjEzilL2XQF?=
+ =?us-ascii?Q?vEjYdimyUxjtd8WK1M/QmdzySIjKtbVY1HMU0f2XORPfuTJDMp+Couxzveaz?=
+ =?us-ascii?Q?7IIn3HvqVIgIBIPYZ27G6pzgwZA3krpi1W4F+NIS10PIXPDe7piQQ/okUz2K?=
+ =?us-ascii?Q?BoM/QMRve7kakpGo+ZUcFOOC4I9KuDYjvWl3J43SAMzteUUmO8LHetxTNvxZ?=
+ =?us-ascii?Q?a0WLVEbPJQzBwHfRa3vC4oOyYgw9SVgddGmZ2Zi/CHPtpmpWvJ95vNw9e6Mw?=
+ =?us-ascii?Q?Ae1jkScp9n8Es4BYqQc1K/rQuQJke4aHalcCMmYcWl32Kge2Dnf969Ru6F/5?=
+ =?us-ascii?Q?9U0C77BLWgB9sLE3UXlEGOwNs2X4YB+QQOpBU1MRZgErAp9g9JD7qAHvCKTM?=
+ =?us-ascii?Q?TvWzEOHc2l/obpdQGe0gq9M2gZ+0blUS/U23Gcuxlj7AoiIpBnzbKbq1da5T?=
+ =?us-ascii?Q?Rh07ZUv/M7b0pYySV7X3EjhT84UAIoYijxZ8ApKEj59Wn5MOqoW0racVn68E?=
+ =?us-ascii?Q?1ESnLrJEnFgN5LFNv13FQ+AfU0iE+qNByFnURmCqyhCFdP7zgjvP04lSF+Ux?=
+ =?us-ascii?Q?zZpbHxTWN5W0XXbFo0drHj2EfS5fd5MLx4NspXq7MFwljoMq/3VyEzhXUVbJ?=
+ =?us-ascii?Q?8SX2rnlc2Ka2WfaypQpsPp69sPHXlESu6sHPzvW6vb2yxD2ntFkyyClFMJTl?=
+ =?us-ascii?Q?Ngqn/X2r0PebhJjMOw+YRGT8RtbBvzvNTBcgq/hIn1s4C5DePcyrJO4HqbGC?=
+ =?us-ascii?Q?PNA7o66YpF8k7sb78jgIP93O2SpG10941Lxohles3pu8NbXj9UJrDFqAKgHg?=
+ =?us-ascii?Q?3hs+gPi68LU8+h++d1BchAzwrXG01D8bLGgb2tdExCTYM81tgsSd1Qc/7M+g?=
+ =?us-ascii?Q?DtbOvR0bMGwdPSrrBPHzlonk9ZgVUa6mEVKt9nqKXSy7cjtqfa5ui/JKp7lf?=
+ =?us-ascii?Q?9WULwzK/vNwhVw92z6kmT0f+1VwQoH6nsxx0itWkLgF8wX2iF9UkkY6nLFu9?=
+ =?us-ascii?Q?wsmlu00gkzuCaTgJgswdI8c/1hSMUpPAGq+OnhmndjrHNtLb3j9Bc5YdJyt4?=
+ =?us-ascii?Q?ER+/yRr05TgmCBgMYN92tWXNc9binNOz7S20A03oVS5occjNt5qHmOjWlR4H?=
+ =?us-ascii?Q?hOfKWQIeBitJBAPqcJVT84alyzUG8qqRihxcaRD/VPTLpftrRwQ+9haSKTPt?=
+ =?us-ascii?Q?HlUjl0lcRDXtzarwAi9r+BtNarHl+GAEn1w8v23a?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61a499a9-3020-48ac-efd1-08dd6dd6dc38
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB7044.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 08:59:34.4458
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XFeyS6L9zbqjEXqyFU/XFjWwyKAq9lmVyu3C9oKs24ZQpE7S0xjo5M+SHcc6mOa8bCjCvhK7e59RoC3KFbHAfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB11046
 
-On Thu, Mar 27, 2025 at 06:37:19PM +0100, Christian Marangi wrote:
-> On Wed, Mar 19, 2025 at 07:31:04PM +0000, Russell King (Oracle) wrote:
-> > If we wish to take something away, then first, it must be
-> > unpublished to prevent new users discovering the resource. Then
-> > existing users need to be dealt with in a safe way. Only at that
-> > point can we be certain that there are no users, and thus the
-> > underlying device begin to be torn down.
-> > 
-> > It's entirely logical!
-> 
-> OK so (I think this was also suggested in the more specific PCS patch)
-> - 1. unpublish the PCS from the provider
-> - 2. put down the link...
-> 
-> I feel point 2 is the big effort here to solve. Mainly your problem is
-> the fact that phylink_major_config should not handle PROBE_DEFER and
-> should always have all the expected PCS available. (returned from
-> mac_select_pcs)
-> 
-> So the validation MUST ALWAYS be done before reaching that code path.
+The transmitter and receiver of SAI can be used for different slot number
+and slot width configuration, so refine fsl_sai_set_dai_tdm_slot(), add
+fsl_sai_set_dai_tdm_slot_tx() for tx and fsl_sai_set_dai_tdm_slot_rx()
+for rx.
 
-Yes, but there's a sting in the tail - e.g. if we take away link modes
-that are advertised on some media by a PCS going away.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_sai.c | 45 ++++++++++++++++++++++++++++++++---------
+ sound/soc/fsl/fsl_sai.h |  4 ++--
+ 2 files changed, 37 insertions(+), 12 deletions(-)
 
-Here's a theoretical situation:
-
-- separate PCS for SGMII and 10GBASE-R with their own drivers, muxed
-  onto the same pins.
-- PHY which switches its host interface between these two modes.
-
-when both PCS are available, the PHY could be advertising 10base-T,
-100base-Tx, 1000base-T and 10000base-T.
-
-If one of these two PCS drivers becomes no longer available, then we
-need to revalidate and update the PHY's advertisement.
-
-> That means that when a PCS is removed, the entire phylink should be
-> refreshed and reevaluated. And at the same time lock userspace from
-> doing anything fancy (as there might be a possibility for
-> phylink_major_config)
-
-Taking the rtnl lock prevents userspace interfering with the interface
-configuration.
-
-> Daniel at some point in the brainstorm process suggested that we might
-> need something like phylink_impair() to lock it while it's getting
-> ""refreshed"". Do you think that might be a good path for this?
-
-Taking the rtnl should be sufficient.
-
-> One of the first implementation of this called phylink_stop (not
-> dev_stop) so maybe I should reconsider keeping everything phylink
-> related. But that wouldn't put the interface down from userspace if I'm
-> not wrong.
-> 
-> It's point 3 (of the old list) "the MAC driver needs to be notified that
-> the PCS pointer it stashed is no longer valid, so it doesn't return it for
-> mac_select_pcs()." my problem. I still feel MAC should not track PCS but
-> only react on the presence (or absence) of them.
-> 
-> And this point is really connected to point 1 so I guess point 1 is the
-> first to handle, before this. (I also feel it will magically solved once
-> point 1 is handled)
-
-I'm wondering whether the mac_select_pcs() interface needs to be
-revised - it's going to be difficult to do because there's many drivers
-that blindly return a PCS irrespective of the interface mode.
-
-I'm thinking that MAC drivers should register a PCS against a set of
-interface modes that it wants to use it for (the interface modes that
-a PCS supports is not necessarily the interface modes a MAC driver
-wants to use it for.) That means we could handle mac_select_pcs()
-entirely within phylink, which avoids storing PCS pointers in the MAC
-driver.
-
-I don't think this fully addresses the issues though.
-
-However..
-
-> > > For point 1, additional entry like available_interface? And gets updated
-> > > once a PCS gets removed??? Or if we don't like the parsing hell we map
-> > > every interface to a PCS pointer? (not worth the wasted space IMHO)
-> > 
-> > At the moment, MAC drivers that I've updated will do things like:
-> > 
-> >                 phy_interface_or(priv->phylink_config.supported_interfaces,
-> >                                  priv->phylink_config.supported_interfaces,
-> >                                  pcs->supported_interfaces);
-> > 
-> > phylink_config.supported_interfaces is the set of interface modes that
-> > the MAC _and_ PCS subsystem supports. It's not just the MAC, it's both
-> > together.
-> > 
-> > So, if a PCS is going away, then clearing the interface modes that the
-> > PCS was providing would make sense - but there's a problem here. What
-> > if the PCS is a bought-in bit of IP where the driver supports many modes
-> > but the MAC doesn't use it for all those modes. So... which interface
-> > modes get cleared is up to the MAC driver to decide.
-
-.. we would then know which modes to clear from
-phylink_config.supported_interfaces.
-
-> Should we add an OP to handle removal of PCS from a MAC? Like
-> .mac_release_pcs ? I might be wrong but isn't that giving too much
-> freedom to the driver?
-> 
-> I need to recheck how the interface validation work and what values are
-> used but with this removal thing on the table, supported_interfaces OR
-> with the PCS supported_interface might be problematic and maybe the
-> original values should be stored somewhere.
-
-That thought also crossed my mind too.
-
-> > > > There's probably a bunch more that needs to happen, and maybe need
-> > > > to consider how to deal with "pcs came back".. but I haven't thought
-> > > > that through yet.
-> > > 
-> > > Current approach supports PCS came back as we check the global provider
-> > > list and the PCS is reachable again there.
-> > > (we tasted various scenario with unbind/bind while the interface was
-> > > up/down)
-> > 
-> > ... because you look up the PCS in the mac_select_pcs() callback which
-> > leads to a different race to what we have today, this time inside the
-> > phylink code which thankfully phylink prints an error which is *NEVER*
-> > supposed to happen.
-> >
-> 
-> I want to make sure tho you are ok with the usage of .mac_select_pcs
-> for re-evaluation task.
-> 
-> Maybe a better approach is to introduce .mac_get_pcs and enforce the
-> usage only on validation phase? (aka in phylink_validate_mac_and_pcs)
-> 
-> AFAIK in that phase .mac_select_pcs can return errors if the requested
-> interface is not possible for one reason or another.
-
-The problem is that the validation phase could happen in the distant
-past in relation to when we actually use the results.
-
-Consider the above case with SGMII + 10GBASE-R. We're running at
-10G speeds, so we're using the 10GBASE-R PCS, and have been running for
-a year. The cabling deteriorates, and the PHY renegotiates switching to
-1G speed now wanting to use the SGMII PCS but someone's removed the
-driver! The validation would've happened before the 10G link came up
-but the use is now a significant time in the future.
-
-In that scenario, if the SGMII PCS driver is available, then switching
-to 1G speed is possible. If the driver isn't available, then the result
-is that the link has gone down. That's the same result if we stop
-advertising the slower speeds - the PHY basically wouldn't be able to
-establish link at a slower speed, so the link has gone down.
-
-So, maybe than re-evaluate phylink, maybe just keep track of which
-PHY interface modes we can no longer support, and if we attempt to
-switch to one of those, force the link down. However, with:
-
-f1ae32a709e0 ("net: phylink: force link down on major_config failure")
-
-we now have the mechanics to do this - if mac_select_pcs returns an
-error for the interface mode at major_config time, we force the link
-down until such time that we do have a successful major configuration.
-Maybe we should just rely on that rather than trying to do a full
-re-evaluation and reprogram things like PHY advertisements.
-
-Maybe in this case, we need a way to inform phylib - if I remember
-correctly, there is a way to get the PHY to signal "remote fault" to
-the link partner, and this kind of situation seems an ideal use, but
-I'd need to check 802.3.
-
-Yes, the MAC driver still needs to be aware of a PCS going away so it
-can properly respond to mac_select_pcs().
-
-Part of the issue here is that phylink wasn't designed from the start
-to cope with PCS as separate drivers - it always assumed that the MAC
-was in control of the PCS and would ensure that the PCS would remain
-available. E.g. through a PCS specific create() method causing a direct
-module relationship without the involvement of the driver model, or the
-PCS driver being built-in to the MAC driver.
-
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 09054e339b31..af1a168d35e3 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -163,17 +163,42 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
+ 	return iret;
+ }
+ 
+-static int fsl_sai_set_dai_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
+-				u32 rx_mask, int slots, int slot_width)
++static int fsl_sai_set_dai_tdm_slot_tx(struct snd_soc_dai *cpu_dai, u32 tx_mask,
++				       u32 rx_mask, int slots, int slot_width)
++{
++	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
++	bool tx = true;
++
++	sai->slots[tx] = slots;
++	sai->slot_width[tx] = slot_width;
++
++	return 0;
++}
++
++static int fsl_sai_set_dai_tdm_slot_rx(struct snd_soc_dai *cpu_dai, u32 tx_mask,
++				       u32 rx_mask, int slots, int slot_width)
+ {
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
++	bool tx = false;
+ 
+-	sai->slots = slots;
+-	sai->slot_width = slot_width;
++	sai->slots[tx] = slots;
++	sai->slot_width[tx] = slot_width;
+ 
+ 	return 0;
+ }
+ 
++static int fsl_sai_set_dai_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
++				    u32 rx_mask, int slots, int slot_width)
++{
++	int ret;
++
++	ret = fsl_sai_set_dai_tdm_slot_tx(cpu_dai, tx_mask, rx_mask, slots, slot_width);
++	if (ret)
++		return ret;
++
++	return fsl_sai_set_dai_tdm_slot_rx(cpu_dai, tx_mask, rx_mask, slots, slot_width);
++}
++
+ static int fsl_sai_xlate_tdm_slot_mask(unsigned int slots,
+ 				       unsigned int *tx_mask, unsigned int *rx_mask)
+ {
+@@ -548,11 +573,11 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 	u32 watermark;
+ 	int ret, i;
+ 
+-	if (sai->slot_width)
+-		slot_width = sai->slot_width;
++	if (sai->slot_width[tx])
++		slot_width = sai->slot_width[tx];
+ 
+-	if (sai->slots)
+-		slots = sai->slots;
++	if (sai->slots[tx])
++		slots = sai->slots[tx];
+ 	else if (sai->bclk_ratio)
+ 		slots = sai->bclk_ratio / slot_width;
+ 
+@@ -939,7 +964,7 @@ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_tx_ops = {
+ 	.set_bclk_ratio	= fsl_sai_set_dai_bclk_ratio,
+ 	.set_sysclk	= fsl_sai_set_dai_sysclk,
+ 	.set_fmt	= fsl_sai_set_dai_fmt_tx,
+-	.set_tdm_slot	= fsl_sai_set_dai_tdm_slot,
++	.set_tdm_slot	= fsl_sai_set_dai_tdm_slot_tx,
+ 	.xlate_tdm_slot_mask = fsl_sai_xlate_tdm_slot_mask,
+ 	.hw_params	= fsl_sai_hw_params,
+ 	.hw_free	= fsl_sai_hw_free,
+@@ -952,7 +977,7 @@ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_rx_ops = {
+ 	.set_bclk_ratio	= fsl_sai_set_dai_bclk_ratio,
+ 	.set_sysclk	= fsl_sai_set_dai_sysclk,
+ 	.set_fmt	= fsl_sai_set_dai_fmt_rx,
+-	.set_tdm_slot	= fsl_sai_set_dai_tdm_slot,
++	.set_tdm_slot	= fsl_sai_set_dai_tdm_slot_rx,
+ 	.xlate_tdm_slot_mask = fsl_sai_xlate_tdm_slot_mask,
+ 	.hw_params	= fsl_sai_hw_params,
+ 	.hw_free	= fsl_sai_hw_free,
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index 3f9357da0d8f..6c917f79c6b0 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -296,8 +296,8 @@ struct fsl_sai {
+ 
+ 	unsigned int mclk_id[2];
+ 	unsigned int mclk_streams;
+-	unsigned int slots;
+-	unsigned int slot_width;
++	unsigned int slots[2];
++	unsigned int slot_width[2];
+ 	unsigned int bclk_ratio;
+ 
+ 	const struct fsl_sai_soc_data *soc_data;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
