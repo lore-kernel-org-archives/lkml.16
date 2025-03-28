@@ -1,196 +1,132 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059F211297
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6A42F30
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743132599; cv=none; b=aEIjWTNYQnxCa1MLW2/uJFcTe3OqUaPgqsNqQh5Ou8IZna1rKC5s1INWwWDwujpd/ZXrFoai2P70Rko+PiX06rB5f/FbNDtbub6M/UWuorjzhr1F8s2LTEaGGAYtrZJNrfr4r9EKJdHcEmOeUrxCmA6SzuaKGrJB2RLRMejujKM=
+	t=1743132983; cv=none; b=hRYaT20UfpY1u/MsR94iZRvL6wZzzeqxGkO7GeCFVwIUum6tcq+Bc9ieFYZuu+dck9W1IB3IBNk/3Vt0p2aTXluEfCrf34rGR102rH/JAvvrSj2AWfMOfeFMCt5srSZHYRVpgVdp9IE73v8AC8zouELCBeMKNhBd55HUO386ydw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743132599; c=relaxed/simple;
-	bh=8/WxSS8N6A7ADDU4kWFIT2nK+URzk2alNowBMmCMsz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gK1Zmqej1WrwNx0eRGB8yBUQf4MRu9UCJUnSsLsiyiGwWdN7qP5GkaURHHRX3x/Hx8FRjTMzzRW0Bgd5L69K4rjoweFlKO/dnyAUXw/L6Xvkp3qoQpHYF1OZOeVfIf+D07BY4Gcxfxm9wnJ8dxXoF+IIHcuMzhtyGB7qXvwUowE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=sqeRiTMn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uife+W1O; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1743132983; c=relaxed/simple;
+	bh=+frlrd9FzA0Y1MLXf/LE9ieO4zWiozcuaEjhCdlsW0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VR59uiu88QHyC8sxHrFJJG4X6ZVPEGOk88kc4xNEcNQEVF4UQgTDcjJw8rbhthX5Y07IEygL7Q51MbJO7e5R/ZOlVDIwaD3a5VsyCACND84XJ8xzfJkkeU62GxbXDywVHq5SkfWcUMDkRmkP/x8RKkJAxCq2yxKOw/UT0L4kMog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Rw0CAJvh; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="sqeRiTMn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uife+W1O"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.stl.internal (Postfix) with ESMTP id DBCA711401C0;
-	Thu, 27 Mar 2025 23:29:54 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Thu, 27 Mar 2025 23:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1743132594; x=1743218994; bh=Cp9lnvxnIv186+PcpNlli
-	pcDG9HTXGIBE5DKPJ+XZwc=; b=sqeRiTMnXfM6jqq8DA3k13Z2gwVf98zn/H135
-	GS8gXTnNMEJ3MKU/LYrcWreGIEKUUwFwcMiZni9IDYqCYZhiAj3ueNWOxAcNMmb7
-	Ukl2I7cZ67Elzju84csRh4YA6sX1eVOYDKtbpT2NAk+B5YRJGx6n6VqqeHdN40dS
-	HidgHMy3sQCRd63X0nK5MTmtriUq0yiors1t/3rUof5zEQSiRLm3nwKoZiacKt2d
-	iLw0oQOErnrrA4rVzc6A+DPcbFxK8JxJdtMiMSuQgFf64ZkKuZXICOlQc4WhNVOy
-	qriyZ4dCHLdSJIquBkhmbJl1hq9Ik+ipiZVHIOBpiAYeHu/ug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743132594; x=1743218994; bh=Cp9lnvxnIv186+PcpNllipcDG9HTXGIBE5D
-	KPJ+XZwc=; b=uife+W1ONSbhjyAYkKtKCHueaVurosYX+/re1nHbnO2HBb/vuIn
-	1FTXGpknr2ycz3RCRjGVfAQWPMZ/srvTeCJsUgCArpalhAHbAfiAS8IOnGu0zTRo
-	V9gFqgrt0+2hW6r3W5uKuARubbHjKmpNFYqERgNUPjeL63CdeJ/U4du9DpIDCdx4
-	IJC7r8BATbq81tr7NYLrOXokyqPrsUEXXPPZHRczZ122mwkiSCfKwAL+ML7cZ+iq
-	SsKvfSue5mzE/woQJG4C9wrSE4EbtJXY6fK28PhDperyE/etyN/bGMbTLKc8bkSz
-	1nDslQ+40Fyg1KFtLK3nBY9qfpT2o15rDUA==
-X-ME-Sender: <xms:shfmZ0ueZmte-UCiLj_sx71Sr2OicFTeql5p0qIqBCVMLU_0_1YoDA>
-    <xme:shfmZxfkAizWkzupd75SCwrdIhPYL9H_qFEoR_wguSR-ayfvcaK9ny6xrVmJA5xj8
-    eid39WO4WUuDqlsddw>
-X-ME-Received: <xmr:shfmZ_wfvIQvzMU-OzolW59hbrShzUKUYBO8Ixc8e6e_u3BA4Z16pxECoNALr0yqvIRWyEhuy1AK-MiRObQ9K1zAemtGImyIirLvbXcrBxnJUnrX>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtvdduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvf
-    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflrghmvghsucfhlhhofigvrhhs
-    uceosgholhgurdiiohhnvgdvfeejfeesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpefhvefgkeeiuddtudfhgefgiedvuefhhedtffejtddtfeekieefieejveet
-    hfegheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhlugdriihonhgvvdefjeefsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthht
-    ohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhrghrrhihrdifvghnth
-    hlrghnugesrghmugdrtghomhdprhgtphhtthhopehsuhhnphgvnhhgrdhlihesrghmugdr
-    tghomhdprhgtphhtthhopehsihhquhgvihhrrgesihhgrghlihgrrdgtohhmpdhrtghpth
-    htoheprghlvgigrghnuggvrhdruggvuhgthhgvrhesrghmugdrtghomhdprhgtphhtthho
-    pegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopegrih
-    hrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhl
-    rdgthhdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorh
-    hgpdhrtghpthhtohepsgholhgurdiiohhnvgdvfeejfeesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:shfmZ3NyCdJM4kDItLzQq4l4PaerQQJfU1PHSdIwvxJs2VqU3G9oIA>
-    <xmx:shfmZ0_RIGPuBdhT93TbFw2L5RHMWtEYYUmC9fJ9flovfKCs4EVGXA>
-    <xmx:shfmZ_W0wKi7BigvzbvCrGgrVa63VstqKsNXKWcPg6NMpLMzuXKMFA>
-    <xmx:shfmZ9e7Grd1sw7Jvos6p3fhNA_7W76JBum0yIg3NekAXL_9jnYMTQ>
-    <xmx:shfmZ-d0gZN4Dit82iKkYe5JQ1c7xde-YhBNjDy9ijbxehNfrdVZRCiw>
-Feedback-ID: ibd7e4881:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Mar 2025 23:29:52 -0400 (EDT)
-From: James Flowers <bold.zone2373@fastmail.com>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	siqueira@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	skhan@linuxfoundation.org
-Cc: James Flowers <bold.zone2373@fastmail.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] drm/amd/display: removed unused function
-Date: Thu, 27 Mar 2025 20:29:02 -0700
-Message-ID: <20250328032942.16264-1-bold.zone2373@fastmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Rw0CAJvh"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so220748566b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743132979; x=1743737779; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gEC8sJ5gvGrjdnR5ogccPiUny6HLYEid0fVwKOPDiYs=;
+        b=Rw0CAJvhAVN62c3qCYiBTJjVW+bukHmIN7E8M93+tUOjLvIKz7gHYPugzB5oeekELz
+         bWBCVz+RwWbAhAbtqGAfU+B9yvozs47ulhCKgYsUacnKUVnBJS8auB1+LcQsXyNNddKu
+         DWFceuvIZqnYDJfBbPG2T6WTybW3mgntx8omU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743132979; x=1743737779;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gEC8sJ5gvGrjdnR5ogccPiUny6HLYEid0fVwKOPDiYs=;
+        b=mQBxd2Vp3eWBpxl+5dQqG8Co1sjbtM7DDUTf18gO+gHpYOFT2ehKCg8CbaTrO0Vrzq
+         LmpGqzk/NVKOvhIHVw33uethPJXMP0IAKu1KNMJvE8z+cT6Xy2S44tR2cOxP7xd+0Ar4
+         OLruFDP8KEEbN4P6g6yuNqA6EMqUeoNnAyaTn5o/Wo+zv8JFY/hsCLtgHNoSMbLbxgqz
+         e+UOdWfooKOfy+WIpyYWzZf3Y01VBb7JBNWEWYDl+xq8j+3wIbxnw+8PmhD9mrV6J1Dm
+         Z+gSXl+CsUgK0fhqc49mJaH4w9nVhxlHJoZFCBH53COwzICk5VAwY9YTdf1G3e8w9qvD
+         BcxQ==
+X-Gm-Message-State: AOJu0Yypym2A9CDKeLWTGZ15hEt9y3U0ypSud+0UoCTshtzRkXSgZgcg
+	dsOwRBunYj6RtW3hg0d7npZuJXSxfCJa/CLBWHj9AiRzzPLvYxbADdLhZmU0ujXribSFUWAcjOu
+	9CcM=
+X-Gm-Gg: ASbGncsSz3genCcsbGJECGvh/jss0VY43y8meZmQ2xVaF1LMVM3VMf2lSyL6ztP50uh
+	hkrj/yU20jV6YNl85YRkTwsdNOfKIpvgMlPoEENM91D988cbrCcsgx3PfMpkfq6k8kKQXcbSjEN
+	NyEzP5TFaBcYnDKTfte42ep8AiIeI4BtL9AjBkOiZkpNMwvi/TBJ58OvH+PMpet68CEOYDMsJE/
+	jvPgFmbWSofetiKMo+okTXZHH0d2sERWrtFunRFFFI0yVc7Z6TN4Hz9V9fqVglBRM2l0wMK+iRF
+	t4rc6MsXQz2jY+/jzbNnVq5YUxwDIU/BOkpGZ52N0CxrrgwFoy1oBsCLjeslWqYltcA5SBP+/ZC
+	Wfnlq+jYPcDLDAcdGtP0=
+X-Google-Smtp-Source: AGHT+IHE1NOKH6E6lZG1iZmN5MxxrucNgK1uei8emYgLT6EtGCC354szJDVMVv36hT6zXnogvsDibQ==
+X-Received: by 2002:a17:907:6ea5:b0:ac3:ccf7:3a11 with SMTP id a640c23a62f3a-ac6fb14591bmr509117466b.44.1743132978597;
+        Thu, 27 Mar 2025 20:36:18 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927af39sm91686266b.44.2025.03.27.20.36.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 20:36:17 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so220747266b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:36:17 -0700 (PDT)
+X-Received: by 2002:a17:907:868c:b0:ac4:169:3664 with SMTP id
+ a640c23a62f3a-ac6faf04132mr477722566b.33.1743132976743; Thu, 27 Mar 2025
+ 20:36:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250327171037.032bf7e7@gandalf.local.home> <CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com>
+ <20250327212447.24e05e7e@batman.local.home> <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
+ <20250327220106.37c921ea@batman.local.home> <CAHk-=wiNLcTj2iiE9waSkmpYpu6VQ_q=Zaqi_WmAMiv_MvH4vQ@mail.gmail.com>
+ <CAHk-=wjhT_xPdATLmfmdWCM7gKApvTyino_ffko5z1YumJDAHA@mail.gmail.com>
+ <20250327230104.660a4b35@batman.local.home> <CAHk-=wh3VnL5Rpuh7tCitOKYDPqWoucFNCh6b3-JR6qZtxCiCw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh3VnL5Rpuh7tCitOKYDPqWoucFNCh6b3-JR6qZtxCiCw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 27 Mar 2025 20:36:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wio-SF6dm+QeBW7HN7TFOK1noEm_EVob2UGyUwRYz=L9Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JryiNvjxwgoALTvZs-teBVM83QHu9Njr2fkTfpyoW5DtDJkGExCdqiy4nU
+Message-ID: <CAHk-=wio-SF6dm+QeBW7HN7TFOK1noEm_EVob2UGyUwRYz=L9Q@mail.gmail.com>
+Subject: Re: [GIT PULL] ring-buffer: Updates for v6.15
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Feng Yang <yangfeng@kylinos.cn>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Removed unused function mpc401_get_3dlut_fast_load_status.
+On Thu, 27 Mar 2025 at 20:19, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, 27 Mar 2025 at 20:01, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > Are you OK with the idea of moving the mapping code into the ring
+> > buffer code (which I think is cleaner) and then keeping track of that
+> > to get to the pages with the helper function?
+> >
+> > struct page *rb_get_page(struct trace_buffer *buffer, unsigned long addr)
+> > {
+> >         if (buffer->flags & RB_FL_PHYSICAL) {
+> >                 addr -= buffer->vmap_start;
+> >                 addr += buffer->phys_start;
+> >                 return pfn_to_page(addr >> PAGE_SHIFT);
+> >         }
+> >         return virt_to_page(addr);
+> > }
+>
+> I think that would have been *enormously* better, yes
 
-Signed-off-by: James Flowers <bold.zone2373@fastmail.com>
----
- drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h     | 17 -----------------
- .../drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c  | 11 -----------
- .../drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h  | 14 --------------
- 3 files changed, 42 deletions(-)
+.. actually, thinking a bit more about it, I think you want another
+level of abstraction to deal with the chunking side (ie I think you
+want to make the subbuf_ids[] thing explicit and the 'page order' as
+well).
 
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-index 3a89cc0cffc1..eaef3899da7b 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-@@ -967,23 +967,6 @@ struct mpc_funcs {
- 	*/
- 
- 	void (*update_3dlut_fast_load_select)(struct mpc *mpc, int mpcc_id, int hubp_idx);
--	/**
--	* @get_3dlut_fast_load_status:
--	*
--	* Get 3D LUT fast load status and reference them with done, soft_underflow and hard_underflow pointers.
--	*
--	* Parameters:
--	* - [in/out] mpc - MPC context.
--	* - [in] mpcc_id
--	* - [in/out] done
--	* - [in/out] soft_underflow
--	* - [in/out] hard_underflow
--	*
--	* Return:
--	*
--	* void
--	*/
--	void (*get_3dlut_fast_load_status)(struct mpc *mpc, int mpcc_id, uint32_t *done, uint32_t *soft_underflow, uint32_t *hard_underflow);
- 
- 	/**
- 	* @populate_lut:
-diff --git a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-index ad67197557ca..98cf0cbd59ba 100644
---- a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-+++ b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-@@ -47,16 +47,6 @@ void mpc401_update_3dlut_fast_load_select(struct mpc *mpc, int mpcc_id, int hubp
- 	REG_SET(MPCC_MCM_3DLUT_FAST_LOAD_SELECT[mpcc_id], 0, MPCC_MCM_3DLUT_FL_SEL, hubp_idx);
- }
- 
--void mpc401_get_3dlut_fast_load_status(struct mpc *mpc, int mpcc_id, uint32_t *done, uint32_t *soft_underflow, uint32_t *hard_underflow)
--{
--	struct dcn401_mpc *mpc401 = TO_DCN401_MPC(mpc);
--
--	REG_GET_3(MPCC_MCM_3DLUT_FAST_LOAD_STATUS[mpcc_id],
--			MPCC_MCM_3DLUT_FL_DONE, done,
--			MPCC_MCM_3DLUT_FL_SOFT_UNDERFLOW, soft_underflow,
--			MPCC_MCM_3DLUT_FL_HARD_UNDERFLOW, hard_underflow);
--}
--
- void mpc401_set_movable_cm_location(struct mpc *mpc, enum mpcc_movable_cm_location location, int mpcc_id)
- {
- 	struct dcn401_mpc *mpc401 = TO_DCN401_MPC(mpc);
-@@ -618,7 +608,6 @@ static const struct mpc_funcs dcn401_mpc_funcs = {
- 	.set_bg_color = mpc1_set_bg_color,
- 	.set_movable_cm_location = mpc401_set_movable_cm_location,
- 	.update_3dlut_fast_load_select = mpc401_update_3dlut_fast_load_select,
--	.get_3dlut_fast_load_status = mpc401_get_3dlut_fast_load_status,
- 	.populate_lut = mpc401_populate_lut,
- 	.program_lut_read_write_control = mpc401_program_lut_read_write_control,
- 	.program_lut_mode = mpc401_program_lut_mode,
-diff --git a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-index ce6fbcf14d7a..8e35ebc603a9 100644
---- a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-+++ b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-@@ -241,23 +241,9 @@ void mpc401_update_3dlut_fast_load_select(
- 	int mpcc_id,
- 	int hubp_idx);
- 
--void mpc401_get_3dlut_fast_load_status(
--	struct mpc *mpc,
--	int mpcc_id,
--	uint32_t *done,
--	uint32_t *soft_underflow,
--	uint32_t *hard_underflow);
--
- void mpc401_update_3dlut_fast_load_select(
- 	struct mpc *mpc,
- 	int mpcc_id,
- 	int hubp_idx);
- 
--void mpc401_get_3dlut_fast_load_status(
--	struct mpc *mpc,
--	int mpcc_id,
--	uint32_t *done,
--	uint32_t *soft_underflow,
--	uint32_t *hard_underflow);
--
- #endif
--- 
-2.49.0
+So you have that 'meta_buffer' thing for the first page, but you also
+have that subbuf_ids[] array with pages chunked by 'order'), and I
+think you need another level of abstraction for those.
 
+IOW, you'd have 'rb_get_meta_buffer_page()' for the first page, and
+then something like 'rb_get_buffer_page()' for the subbuf_id[] thing.
+
+Or something in that direction. I didn't look *too* closely at what
+the code actually needs, I'm just trying to make sure that you don't
+pass random kernel addresses around, but something more structured.
+
+Preferably maybe just the page index *within* the ring buffer,
+perhaps, and have the helper function do the whole "is this the meta
+buffer or one of the subbuf_id things"?
+
+Hmm?
+
+More clear abstraction is what I'm looking for, in other words.
+
+              Linus
