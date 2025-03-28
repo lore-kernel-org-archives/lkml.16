@@ -1,137 +1,66 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5B1145B27;
-	Fri, 28 Mar 2025 11:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EAF219E93;
+	Fri, 28 Mar 2025 11:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743161241; cv=none; b=EQU0MBVrLBG9rsAn5QgAGlq+cBe8olhWAmSMxcZxU9/aU9wEm/EOSLElARrcNBwBqtlB28oP3ESJkVQPzO4U2rV1zS+bPMCBw3/iStDhN1stkHjU4NrPjHH1hs1VNZ6+lifjmCwwhZ6P0F0LSjV61f20MMqe5jnd/rtdXRdrAs0=
+	t=1743161482; cv=none; b=HCjfwd/p5fu2NqVlXAF+tUIRIULj3ok7wxHKEer41ZGdo4IhkU7Bp5W6vCUJ9MkCdE1z5donS6TgcGpI8joPhGKs9FOpuCKvyvJmFPaq82/hf1pEcf+Kq3Ox17ywqmvlV84BLDNhNEPHq2RLnoIe1pWBOEAeS+qoLcCak9q716w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743161241; c=relaxed/simple;
-	bh=2kPJpnTzcGC0XDddPxH/fxFkaBQl1BQPYqmHSzE7kQs=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=dwfrY9ukmFP6h0fJLDJ3Us8KR9bt8CkTHPQQqj8wxkDNPjyStOgPwakN8FjpOi6kOOVetXn9x5O/EC5yJoYCP9+3H1B5hZJn+5hrL+ZLeNfwN/U7mo+vigRggB0DOrz+8XFDZEnLWDz4ccbRuNe2iKV/iYaZ4JnBTf+OFAt35G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3J/oMR+p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=swosjZEx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743161482; c=relaxed/simple;
+	bh=LHa9xz76CIhV2+jLsq3mcF4E3EUSoSeXhvdMAA5/E7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxVSWIKmYhzjzXXQ6+Wp/lKmMggx+FotlJOhsMz2oEM2BoGp5CrhPiIMHIJcIB0076T+MhUcOOsjTOkn2nxbhgHPjA3ccRCfGIuxHFjDPiZ4nY0WJc+NzjH/sH8Pn0vKCSnesPhO+f9kcyTx8SAdA+qnyS91BVsqPNW7PC7G7vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VMZgeRpX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3J/oMR+p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="swosjZEx"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743161237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-	bh=UCv2LYhy+qHjJvbQ43Z92CZSDEUuxtS324OMj+L46D4=;
-	b=3J/oMR+pa/YX7X2Qz3PNt44PyVWqbK5lWB9HfpmmTLuLocDtMccTGw1ZnuxEgNrhTwktHI
-	P1JA0pr0SbVtxtnJMdC6+HmjjFAVjKsrNbKXwMG6HydCUeXQ64+dhacJW1RgkOBY6AvRmL
-	VzSo54F/BOigHn8Zu5It1jtb9R58IXaYn1G5T7TG4vIW1ier5coOgl4Y5Kqn8S9tKlBadb
-	EYHH9r8EUJ/xK48DdbJoHa4/MLma2+/wfcQDsqwLwVSDZhauboQ5szRwktE/QQ3ZocMCu2
-	ASJ7XwtEopb42Hq2aNRfIIm4ZwAuzQ2o8lLlJ6TTaqd1xUlt7dJ5tzTfpT22qw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743161237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-	bh=UCv2LYhy+qHjJvbQ43Z92CZSDEUuxtS324OMj+L46D4=;
-	b=swosjZExrNPYITaGElmQZNNGiyJ01CKqxxnGbV8/w6rYwyx4VSUJNpCxE5UpXpgHYxcDnE
-	mn+asDlrPU7lkACQ==
-To: Wen Xiong <wenxiong@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, gjoyce@linux.ibm.com,
- linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
- linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/1] genirq/msi: Dynamic remove/add stroage adapter hits
- EEH
-In-Reply-To: <8383b17f160bb75dd6ca6b47cd1a0d32@linux.ibm.com>
-Date: Fri, 28 Mar 2025 12:27:16 +0100
-Message-ID: <87wmc9wg2z.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VMZgeRpX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F96C4CEE5;
+	Fri, 28 Mar 2025 11:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743161482;
+	bh=LHa9xz76CIhV2+jLsq3mcF4E3EUSoSeXhvdMAA5/E7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VMZgeRpX3tm3Kr8Dsh0HSvOzxgKr44xetLhJDROMN2yZbplCj/42ncBbw25Lxe0O/
+	 vMP+aZZutnaJFmEm/orUOrTjYoFs7U+/wyu+BLqe2blCJmZbvHOYE2n5bEl3wKwsWY
+	 bnBtOFgMRhGCHDmTesOk1bA1xxF35r9TX5muxpEo=
+Date: Fri, 28 Mar 2025 12:31:19 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: madhu.m@intel.com
+Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
+	pooja.katiyar@intel.com, dmitry.baryshkov@linaro.org,
+	diogo.ivo@tecnico.ulisboa.pt, lk@c--e.de,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
+Message-ID: <2025032818-trash-backpack-5518@gregkh>
+References: <20250328115041.555008-1-madhu.m@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328115041.555008-1-madhu.m@intel.com>
 
-On Thu, Mar 27 2025 at 16:36, Wen Xiong wrote:
-> When secondary adapter doing a reset, we use the same code path as=20
-> removing operation. We can=E2=80=99t free irqs for Secondary adapter sinc=
-e=20
-> kernel has assigned the irqs for Secondary adapter.
->
-> Actually we discussed about "calling pci_free_irq_vectors()" before=20
-> doing bist reset when we trying to fix in device driver.
-> That might cause other problems. It is also not what a user would=20
-> expect. For example, if they disabled irq balance and manually setup irq=
-=20
-> binding and affinity, if we go and free and reallocate the interrupts=20
-> across a reset, this would wipe out those changes, which would not be=20
-> expected.
+On Fri, Mar 28, 2025 at 05:20:41PM +0530, madhu.m@intel.com wrote:
+> From: Madhu M <madhu.m@intel.com>
+> 
+> Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
+> UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
+> PD/TypeC debugging capability.
+> 
+> Signed-off-by: Madhu M <madhu.m@intel.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+> Changes in v1:
+> - Removed UCSI_READ_POWER_LEVEL and UCSI_SET_PDOS commands.
+> - Modified commit messages.
 
-You are completely missing the point. This is not a problem restricted
-to PCI/MSI interrupts.
+I see 3 different v2 patches on the list from you now, which obviously
+is not correct :(
 
-You have interrupts, work, queues and whatever in fully operational
-state. Then you tell the firmware to reset the adapter and swap the
-secondary adapter in. This reset operation brings the hardware temporary
-into an undefined state as you have observed. How is any part of the
-kernel, which can access and operate on this adapter, supposed to deal
-with that correctly?=20
+Please slow down, take a day or so at the least, and work with Heikki to
+submit this properly.  There is no rush here.
 
-You are now focussing solely on papering over the symptom in PCI/MSI
-because that's where you actually observed the fallout.
-
-But as you know curing the symptom is not fixing anything because the
-underlying root cause still persists and will roar its ugly head at some
-other place sooner than later.
-
-So no, instead of sprinkling horrible band-aids all over the place, you
-have to sit down and think about a properly orchestrated mechanism for
-this failover scenario.
-
-I understand that you want to preserve the state of the secondary
-adapter including interrupt numbers and related settings, but for that
-you have to properly freeze _all_ related kernel resources first, then
-let the firmware do the swap and once that's complete unfreeze
-everything again.
-
-That will need support in other subsystems, like the interrupt layer,
-but that needs to be properly designed and integrated so that it works
-with all possible PCI/MSI backend implementations and under all
-circumstances. Setting affinity is not the only way to make this go
-wrong, there are other operations which access the underlying hardware
-and config space. You just haven't triggered them yet, but they exist.
-
-And it's not a problem restricted to the pSeries MSI backend
-implementation either. That's just one way to expose it.
-
-Even if I put the secondary swap problem aside and just look at a single
-instance, __ipr_remove() is already broken in itself. As I pointed out
-to you before:
-
-    __ipr_remove()
-      ipr_initiate_ioa_bringdown()=20
-	// resets device -> undefined state
-	restore_config_space()
-      ....
-      ipr_free_all_resources()
-	free_irqs()
-
-Up to the point where interrupts are freed, they are fully operational
-and exposed to user space. The related functionality can hit the
-undefined state not only via set_affinity() independent of the swap
-problem.
-
-The adapter swap is just a worse variant of the above because it affects
-the secondary side behind its back.
-
-This needs quite some work to resolve properly, but that's the only way
-to fix it once and forever. Proliferating the 'Plug and Pray' approach
-with a lot of handwaving is just helping you to close your ticket, but
-it's not a solution.
-
-Thanks,
-
-        tglx
+greg k-h
