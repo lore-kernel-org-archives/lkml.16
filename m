@@ -1,147 +1,109 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B637E1D5ADB
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25080DDC5;
+	Fri, 28 Mar 2025 14:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172256; cv=none; b=DQfuUbU32faytwqDX6ns04Ybi8BPTap/wl3gTS3h/Um14JZFhQOTyqWAE8mM+fSF6bHqhtO2aKVeWfUL4F814wsXhzxP7taAhZvmoi4oPoCej/thjqwbywrs7dT4Lef5PGcG9WDWiEzv6aEECwbSCJc40PyvLlVLkJrITvOGGwc=
+	t=1743172406; cv=none; b=N87snSCe8194S9Ozv4FObyITezNuOMGMf9hcq6sb2MX8iCv/5qbRfARCVdyIxxVGSfPAK4dfGZ2VSvkjqe7KkNyh/qHXQKR5+20CKf43RF3XK6pkRr/XJj/hJPoEf2OHbvI71HGbvnPFKlMoooXRXX98rN2TwyBQmdGrY4MuYy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743172256; c=relaxed/simple;
-	bh=K8pdPrPH2/V9uEO9ZVDq/4eu4bA60pgngP9tp9BWxSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jc034cRjCCmMbkjCimo+BWrvDTGcnG1x84V40Bm3AKu6eLoaCToaiA4BHXwHpqAikLUyo7NduoPhPin/smE/Jt5Wtbet35z+rozzGcStdwt8KjA63hyfKq8prp4sk0yzeueobjmhfrmI+5Wxtigm+A5C/MvrhrDTpYT2oc7fsbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QWTlLNnK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=78mYvrRR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QWTlLNnK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=78mYvrRR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743172406; c=relaxed/simple;
+	bh=exiAf3JTR79CnexHmDH248L4l9xNspbe/I1gW2NbaE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HUvvvCfqCcRlU+qm5HgGwNNnyEdoPl9NyhF1vykC4X3TzhDBGOiDhukaGIs781xXHvHAfzOWPKBeutj/2VxyWpr8yIZNA1r91PhaHywAB1eOLASJBN8S5M3IxBNI6w+hXVPud6/JB4pKh43cXU69xCsx8g6ZKlfCkQQf01ARrnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQL65rkv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QWTlLNnK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="78mYvrRR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QWTlLNnK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="78mYvrRR"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9CF9A211D1;
-	Fri, 28 Mar 2025 14:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743172246; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6XVCLbyTVqkdwNo0naeJBfFSzYf4PuaJD4ozQH+Q3A=;
-	b=QWTlLNnK7eulyhB+ffKQMPhlAMe2VAp0GnPsP+4ivlmvvyceSlYi4yn8ZLVfh/4cM0A0jZ
-	aK1D7c+K+ntQdH1MbV1ykAxSv9dAVHVr50t3qWPCKrBRqabA/z6dhTtcd1AKHfk5wKW8DM
-	pIeWj0QpZHKQKWCsHe15q/gpu8Dowp0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743172246;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6XVCLbyTVqkdwNo0naeJBfFSzYf4PuaJD4ozQH+Q3A=;
-	b=78mYvrRRRHk9rvw1O+qs5Oa4BaVr9bpaOR5m/80xfKiaJWeWennciTq5E/oBvPG6vBPyT8
-	q2MDOwzylzVUhEAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743172246; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6XVCLbyTVqkdwNo0naeJBfFSzYf4PuaJD4ozQH+Q3A=;
-	b=QWTlLNnK7eulyhB+ffKQMPhlAMe2VAp0GnPsP+4ivlmvvyceSlYi4yn8ZLVfh/4cM0A0jZ
-	aK1D7c+K+ntQdH1MbV1ykAxSv9dAVHVr50t3qWPCKrBRqabA/z6dhTtcd1AKHfk5wKW8DM
-	pIeWj0QpZHKQKWCsHe15q/gpu8Dowp0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743172246;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6XVCLbyTVqkdwNo0naeJBfFSzYf4PuaJD4ozQH+Q3A=;
-	b=78mYvrRRRHk9rvw1O+qs5Oa4BaVr9bpaOR5m/80xfKiaJWeWennciTq5E/oBvPG6vBPyT8
-	q2MDOwzylzVUhEAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8208D139D4;
-	Fri, 28 Mar 2025 14:30:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kG9oH5ay5meUeAAAD6G6ig
-	(envelope-from <ggherdovich@suse.cz>); Fri, 28 Mar 2025 14:30:46 +0000
-From: Giovanni Gherdovich <ggherdovich@suse.cz>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>
-Cc: Len Brown <lenb@kernel.org>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	linux-acpi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQL65rkv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE05C4CEE5;
+	Fri, 28 Mar 2025 14:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743172405;
+	bh=exiAf3JTR79CnexHmDH248L4l9xNspbe/I1gW2NbaE4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZQL65rkvLNsYajUVehOZdQvoqim9PhQFwVSbc+IjFidxLmlBGf1/d31zFcEMgxJ7o
+	 aajh69zIdetdVvULoWVr0kyHctvuaZJO0DE9P2ejYunk1ZnqqfFuLmelBKsbdiwReF
+	 X5NOXtxWWdTjCLJ5uLF6giW/EHDxrpLoQmbzsUpF1llG/rmG8AZ6abK9oMplaQv4WO
+	 McCEVKJwnNz3wOn1iqk3L8QF9AgS4qCWhX5hSLNgvRETmQMfzjNz8gOSbe/ttR2s7x
+	 kFlQO7850P0Sn5wRUUf9Q3FIk1pINtNntM9ZHa6pSnbCcTX8EafV8wzA2r5stPq8ta
+	 X6sI9vy9ViQSQ==
+Date: Fri, 28 Mar 2025 08:33:22 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
-Date: Fri, 28 Mar 2025 15:30:40 +0100
-Message-ID: <20250328143040.9348-2-ggherdovich@suse.cz>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250328143040.9348-1-ggherdovich@suse.cz>
-References: <20250328143040.9348-1-ggherdovich@suse.cz>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-azMlPnP7nPPJrY@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -6.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Since commit 496121c02127e9c460b436244c38260b044cc45a ("ACPI: processor:
-idle: Allow probing on platforms with one ACPI C-state"), the comment
-doesn't reflect the code anymore; remove it.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
+
+So, with these changes, fix the following warning:
+
+drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/acpi/processor_idle.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index b181f7fc2090..2a076c7a825a 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -482,10 +482,6 @@ static int acpi_processor_get_cstate_info(struct acpi_processor *pr)
+diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+index 275522b81ea5..6eab0474f52d 100644
+--- a/drivers/leds/leds-cros_ec.c
++++ b/drivers/leds/leds-cros_ec.c
+@@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+ 				union cros_ec_led_cmd_data *arg)
+ {
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		union cros_ec_led_cmd_data data;
+-	} __packed buf = {
+-		.msg = {
+-			.version = 1,
+-			.command = EC_CMD_LED_CONTROL,
+-			.insize  = sizeof(arg->resp),
+-			.outsize = sizeof(arg->req),
+-		},
+-		.data.req = arg->req
+-	};
+-
+-	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(union cros_ec_led_cmd_data));
++
++	msg->version = 1;
++	msg->command = EC_CMD_LED_CONTROL;
++	msg->insize  = sizeof(arg->resp);
++	msg->outsize = sizeof(arg->req);
++	*(struct ec_params_led_control *)msg->data = arg->req;
++
++	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+ 	if (ret < 0)
+ 		return ret;
  
- 	pr->power.count = acpi_processor_power_verify(pr);
+-	arg->resp = buf.data.resp;
++	arg->resp = *(struct ec_response_led_control *)msg->data;
  
--	/*
--	 * if one state of type C2 or C3 is available, mark this
--	 * CPU as being "idle manageable"
--	 */
- 	for (i = 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
- 		if (pr->power.states[i].valid) {
- 			pr->power.count = i;
+ 	return 0;
+ }
 -- 
 2.43.0
 
