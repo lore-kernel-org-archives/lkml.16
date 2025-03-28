@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567B3182D0;
-	Fri, 28 Mar 2025 07:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1919F11F;
+	Fri, 28 Mar 2025 07:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743146242; cv=none; b=SttaeGgp09BzP/eOR/tK3ILUaRVrOh1NCt1iE6pzAoYpoYldSMesJ6n9G0hKk0vcU3g2tIh4vzvzlTLLwYfSJsdAsslpdkwDMWZ87SSyYROZNwoF+VXArGrgKmM83csQSv9YCCjjvAISubvPchC6GX5AfR9sGpspenz5KrRbegY=
+	t=1743146428; cv=none; b=is8wi1AVznz6/XwCKl3y+/CsbZe/I4cS+bZiQvTwZ84UMtUzp24rxPrqVZfbn8zW55Xmn4AOz2A66L3JCeU8VW+6NHmW9jG4LaSusCEEt5tUx+LS55gg3RTEUroKI/ZDHPHIGdaAGrJ+eP0+MbieASk71monNAauzAzBGfIQbRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743146242; c=relaxed/simple;
-	bh=MN4MJjMm8tN/eZfavT/wygwHtzZXCteiWmj0XJkLR+o=;
+	s=arc-20240116; t=1743146428; c=relaxed/simple;
+	bh=tyNjwTGcUTBr1cGYdYH3l/AqGZbj90ulg1UKuRkqgmQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GoFNEMtyVJivvdzH1UdbCna1Z6oQMOYt7qvtWLoaS8ymw2Fwix8a7IZhReUodDixsym3GX/tfo9emrEC8o9ZbKvBufDnyE0yP5PZP5s00b62VCMMYk4lA2wZ/bzH7SiPd4AfaxKGDQKWgiopvAcznYHM9cJNyjKbN1dfWEqgMy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZBHdeG5; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KPnNHgkTRlRG/3qFCgQ/zYNcr/DE+B2Qgrv7Zn+wrE1omNg7bbuf2bQ168HcvFtmuvGj1OkU2JMUozSFBW9m20JkaXe5MCxeCZYVAMwYaidUbny8lF6wGfT71YU8BtNqPIHbUgQHiTr7VX7IGT+plP2FCqcnTKGlyXKYkxP2RiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfDtM1qf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZBHdeG5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569D6C4CEE4;
-	Fri, 28 Mar 2025 07:17:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfDtM1qf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F984C4CEE4;
+	Fri, 28 Mar 2025 07:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743146241;
-	bh=MN4MJjMm8tN/eZfavT/wygwHtzZXCteiWmj0XJkLR+o=;
+	s=k20201202; t=1743146428;
+	bh=tyNjwTGcUTBr1cGYdYH3l/AqGZbj90ulg1UKuRkqgmQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OZBHdeG5c3OzvINrEPoC7FRNRuh3flLgd/KTxv+38L3KIzt/LdjDBrVOn79AFtJOa
-	 etyIzjUQNlJN5f8RpDNUAuYUySEshAEB2tSw5VDIFpU1wP5Zr0A7x/5NBpMZsc/gYf
-	 IK5LLsP0VTIvvNzoNrOfwU3I3ab+JrIa4IEYRPIKC4WuQpz4cJ/LqgBHXGGYMhiqsK
-	 4gL11uWAyiOsyojLk1DI/bkGG2hwHWwN33OinjZrHgUW0zf9zCqgkcjfSH7SRRHDF3
-	 FheQGy6HOV1qginpnoIqjXXBSnLSgCigvDI4aE6MBYhV6FwVj3ePQM1UPEaAmqKgOi
-	 6RLwA/S0yRgIg==
-Message-ID: <29f41232-28fc-439d-bb35-7b9cd1e4be16@kernel.org>
-Date: Fri, 28 Mar 2025 08:17:16 +0100
+	b=QfDtM1qfZEHlWZ0QKzEtnmzeMvkGjvtS8jdD29cc6g7B4vbT1nxach763FISX4ltW
+	 ciAH1LlzwiOkDKCsSbeTpdyCvIShsie2OTxgoUYPvZOZSD9qMHYePhoufy7GXKGJTt
+	 wBC/eokG58QmidmTb24NzqQjJFT69TdDYpUye/i1OTIvEVdxC/u/Nv9j1VW2vgZP3t
+	 Wqmo6x7mBoe2OLrd3epOkSRFBpE7xrM03RtotDq0ehbhu6PSZHG1x+0uaXgH5oz+Hq
+	 6QVlSiBcWo+g2YlwqciiWnHRL3OcQuV9AsbIhT6gj+8eTuyuUK+wvDSC71lBajl7UB
+	 ypg9gnBZ2n27Q==
+Message-ID: <bf329eeb-62e5-405e-8954-df9d4fc73d63@kernel.org>
+Date: Fri, 28 Mar 2025 08:20:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sa8775p: add QCrypto node
-To: Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250227180817.3386795-1-quic_yrangana@quicinc.com>
- <ea79cee4-8c47-4054-bd17-2097ada4e583@kernel.org>
- <b57fa204-d3d2-4b74-8834-3f2d93726a99@quicinc.com>
- <73ed6108-27ab-43ac-abd3-82656693404d@kernel.org>
- <4a205725-af49-4f28-ab78-7059451d66c8@quicinc.com>
+Subject: Re: [PATCH 1/7] dt-bindings: pci: cadence: Extend compatible for new
+ platform configurations
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Milind Parab <mparab@cadence.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250327111106.2947888-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <6a487a73-3f2d-4373-8e02-ba749181bdfb@kernel.org>
+ <DS0PR07MB1049293A9CDEBA2B3BCCED34DA2A02@DS0PR07MB10492.namprd07.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,37 +98,141 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <4a205725-af49-4f28-ab78-7059451d66c8@quicinc.com>
+In-Reply-To: <DS0PR07MB1049293A9CDEBA2B3BCCED34DA2A02@DS0PR07MB10492.namprd07.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 07:04, Yuvaraj Ranganathan wrote:
->>>> Use commit SHA syntax (see submitting patches, checkpatch).
->>>>
->>>>> because of the build warning,
->>>>>
->>>>>   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
->>>>>     ...
->>>>>     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
->>>>
->>>> Not relevant warning.
->>>>
->>>>
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>> Are you saying this is not the warning seen at merging?
->> Tell me how it is relevant? Tell me how can I reproduce it.
+On 28/03/2025 06:07, Manikandan Karunakaran Pillai wrote:
+>> EXTERNAL MAIL
 >>
->> Best regards,
->> Krzysztof
+>>
+>> On 27/03/2025 12:19, Manikandan Karunakaran Pillai wrote:
+>>> Document the compatible property for the newly added values for PCIe EP
+>> and
+>>> RP configurations. Fix the compilation issues that came up for the existing
+>>> Cadence bindings
+>>
+>> These are two different commits.
 > 
-> Below commands will show the above warnings without the fix,
-> make clean && make qcom/qcs9100-ride.dtb CHECK_DTBS=1
-> make clean && make qcom/qcs8300-ride.dtb CHECK_DTBS=1
+> Ok
+> 
+>>
+>>>
+>>> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+>>> ---
+>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  12 +-
+>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 119 +++++++++++++++---
+>>>  2 files changed, 110 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> index 98651ab22103..aa4ad69a9b71 100644
+>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> @@ -7,14 +7,22 @@ $schema:
+>> https://urldefense.com/v3/__http://devicetree.org/meta-
+>> schemas/core.yaml*__;Iw!!EHscmS1ygiU1lA!CB5lvkvRUKSEDPSjpW7GJoPNyXZ
+>> xMge5SyndD4Z-VVLCZvzLIPDP-BMRjhKZ2UTxi6a18vaodaU$
+>>>  title: Cadence PCIe EP Controller
+>>>
+>>>  maintainers:
+>>> -  - Tom Joseph <tjoseph@cadence.com>
+>>> +  - Manikandan K Pillai <mpillai@cadence.com>
+>>>
+>>>  allOf:
+>>>    - $ref: cdns-pcie-ep.yaml#
+>>>
+>>>  properties:
+>>>    compatible:
+>>> -    const: cdns,cdns-pcie-ep
+>>> +    oneOf:
+>>> +      - const: cdns,cdns-pcie-ep
+>>> +      - const: cdns,cdns-pcie-hpa-ep
+>>
+>> What is hpa? Which soc is that?
+>>
+>> I don't think this should keep growing, but instead use SoC based
+>> compatibles.
+>>
+>> Anyway, that's enum.
+>>
+> 
+> HPA is high performance architecture based controllers. The major difference here in PCIe controllers is that
+> the address map changes. Each of the compatibles defined here have different address maps that allow the driver
+> to support them from the driver using compable property that provides the info from related data "struct of_device_id" in the driver.
 
-As I suspected, not possible to reproduce.
+Just switch to SoC specific compatibles.
+
+> 
+>>> +      - const: cdns,cdns-cix-pcie-hpa-ep
+>>
+>> What is cix? If you want to stuff here soc in the middle, then no, no
+>> no. Please read devicetree spec and writing bindings how the compatibles
+>> are created.
+>>
+> 
+> As mentioned in the earlier sections, cix is another implementation of the PCIe controller where 
+> the address map is changed by our customer
+
+So a SoC. Use SoC compatibles and follow every other recent binding.
+
+> 
+>>> +      - description: PCIe EP controller from cadence
+>>> +        items:
+>>> +          - const: cdns,cdns-pcie-ep
+>>> +          - const: cdns,cdns-pcie-hpa-ep
+>>> +          - const: cdns,cdns-cix-pcie-hpa-ep
+>>
+>> This makes no sense.
+>>
+> Only one of the above compatible is valid for PCIe controllers, which will be defined in the SoC related binding.
+
+That's not how lists are working. Don't explain me what it does, because
+I know that it does nothing good: it's broken code. You can explain me
+what you wanted to achieve, but still this part is just wrong and makes
+no sense. Drop.
+
+
+
+
+> 
+>>>
+>>>    reg:
+>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>> index a8190d9b100f..bb7ffb9ddaf9 100644
+>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>
+>>>  maintainers:
+>>> -  - Tom Joseph <tjoseph@cadence.com>
+>>> +  - Manikandan K Pillai <mpillai@cadence.com>
+>>>
+>>>  allOf:
+>>> -  - $ref: cdns-pcie-host.yaml#
+>>> +  - $ref: cdns-pcie.yaml#
+>>
+>> Why?
+>>
+> 
+> The existing yaml files were throwing out errors and the changes in these files are for fixing them.
+
+Then rather investigate the errors instead of doing random changes.
+
+> 
+>>>
+>>>  properties:
+>>> +  "#size-cells":
+>>> +    const: 2
+>>> +  "#address-cells":
+>>> +    const: 3
+>>
+>> Huh? Why? Nothing here makes sense.
+>>
+>>
+> Compilation error related fixes.
+
+NAK, no point at all.
 
 Best regards,
 Krzysztof
