@@ -1,110 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38527286A9;
-	Fri, 28 Mar 2025 18:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51121D0F5A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743185981; cv=none; b=rX5+ZPrmi/ce0NE7g/PWL0oeOp+WLBAQOtAT9vyx8Cg4mCHnqes6qwyicY4m3Is3ljjkyMwArhq6eh1yJVEXc8gmXY12hL4E5Bg1zvK7N9NlRcdsjoL8rmY9S3LwOUxaqn4CjJ3C/l1h7L7f2qNHbcaBvrj2wxKtFaoZQuwzXrw=
+	t=1743186063; cv=none; b=YGXo2qcU0iQooCwpSbOCVPDF3nSsqR1F2uPsIlLKvay06M5npcxXw8+Js0eKbv0RSt5QJvKwD5/dMrzchVVkKO1CYaCf1vZOZR/wbPlWJi+54PYI4XoOAnqLZE3OPXM9TxwAOyV62YWCoyjgVVmUOAnDI4wTmGy3Ai8rrFd4BWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743185981; c=relaxed/simple;
-	bh=kuN9bj2/FuIAEYupxbfKi1EvsySiDFDN5oiqwFLqYAU=;
+	s=arc-20240116; t=1743186063; c=relaxed/simple;
+	bh=RflAqQK0UiKASqVIdkZflxaWM7HtW92Gh/JZzSfUr6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrC+mstbAApYm+A8DrRf4nRAyQS9u0iwncWCrf3rdF/BPFGY4Hjez0xgyDT7qsQv8Xo6QVJsqAfEBLdIRYbxWqS0fqmGcsEHeI+SY5oLTMKgoj9B7ZVYh82eueASd16lAk7uPCOt/SovWdGiNFWo2h8ZM4MVJVBtxFykLfQFXsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIJW3V49; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IBikeJakoargzpa43hVmdt3TY7IFfq+KhfS2k9oXu5TwyxAj5VIcxAhjfoOkX7RVUWbKCxqCA4+q/wHpYq4ac7dNVzLj1Ai8auO6T0qHzcobavn8RALeAYip7u/wXexlhEWErkqMYZUNACNWDkzzXdonr9YMs4cqf+HBSGiwBHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hmTQgc/+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIJW3V49"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFAEC4CEE4;
-	Fri, 28 Mar 2025 18:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743185980;
-	bh=kuN9bj2/FuIAEYupxbfKi1EvsySiDFDN5oiqwFLqYAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rIJW3V49I9jLbHWMa0w4kTdMtOE1NuGq0BxD57kac4FsGfuJgdz5R18XiwpJ5IY8L
-	 WGGNpdsBG8G1TbHbFqidPFPOLG5BnL80GM/yUkmaHea1eSBsVWfyL+aWANghueq9pX
-	 bfdVldrFdJjDaSAmRUtmAs9jHgg60Mvg/N3vAADlDttzzIHPq3Nmfq9mFnz+GXDD2O
-	 H21R1IAQy+X/EnheoIS0kiB/Blquw4bgU06Jgkp94k+FT7TWvf8qF6ZKNLBCCwRUn3
-	 eInjZCGIETrO9DeVuwSxZ6uL0U5bJ401lCJMlFo72XGHDOUVgQ6HQeOOqzmZMK6lzU
-	 UQ+EyL9MdLoRg==
-Date: Fri, 28 Mar 2025 19:19:37 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, 
-	linux-tip-commits@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
- theoretical divide-by-zero in pwm_mediatek_config()
-Message-ID: <4swgr64qmedmlpsgaf7n4mfssfoxqkjvlveg3xhm7eogh7ae76@t4zd7fw4trxg>
-References: <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
- <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
- <m7pgkp3ueo7iqgqf74upjrihr3mpmb3sqhwegnjxxwsrgx2jsw@dnec5iqiyobh>
- <Z-Uv60sD_S2xYVB1@gmail.com>
- <nzk5uzpwqqkflmdgfe7kwsnsecqnsn6vsyo4ycoaueasnud6ot@pg6cazrf6zuf>
- <Z-XBb_8f6cItnlZN@gmail.com>
- <ivss2v7kmk6ylcojffyxwucsmfcgbbe3kxiasbe3dqijvooy6m@vpkopftglx3a>
- <Z-an4KuB-OQE5ovv@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmTQgc/+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743186060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RflAqQK0UiKASqVIdkZflxaWM7HtW92Gh/JZzSfUr6M=;
+	b=hmTQgc/+zMbynmgA+PPBZDKprkjxot+MsPgdWwslKvYiWPoCnu+9IPbu8a5Vvbwxhfj2Z/
+	L8KZjEe2zvmhACvpsKMp/Dl7qhQNN3KIZIQj8B8KJc0lytQAT6+U7VSPx+68jvwzZPzMqg
+	B9R1y2Nsau0yATxxq+GGHicvWd4We9Q=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-Dw06vJc5P6KLU9A2zMXTdQ-1; Fri,
+ 28 Mar 2025 14:20:57 -0400
+X-MC-Unique: Dw06vJc5P6KLU9A2zMXTdQ-1
+X-Mimecast-MFC-AGG-ID: Dw06vJc5P6KLU9A2zMXTdQ_1743186055
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2029C19560B1;
+	Fri, 28 Mar 2025 18:20:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.25])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 21A4E30001A1;
+	Fri, 28 Mar 2025 18:20:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 28 Mar 2025 19:20:20 +0100 (CET)
+Date: Fri, 28 Mar 2025 19:20:12 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>,
+	asmadeus@codewreck.org, brauner@kernel.org, dhowells@redhat.com,
+	ericvh@kernel.org, jack@suse.cz, jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux_oss@crudebyte.com, lucho@ionkov.net, mjguzik@gmail.com,
+	netfs@lists.linux.dev, swapnil.sapkal@amd.com,
+	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev,
+	viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
+Message-ID: <20250328182011.GE29527@redhat.com>
+References: <20250328144928.GC29527@redhat.com>
+ <67e6be9a.050a0220.2f068f.007f.GAE@google.com>
+ <20250328170011.GD29527@redhat.com>
+ <314522ae-05a4-4dfb-af99-6bb3901a5522@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="f3tl5ltsvr4fcv7q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-an4KuB-OQE5ovv@gmail.com>
+In-Reply-To: <314522ae-05a4-4dfb-af99-6bb3901a5522@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+Hi Prateek,
 
---f3tl5ltsvr4fcv7q
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
- theoretical divide-by-zero in pwm_mediatek_config()
-MIME-Version: 1.0
+On 03/28, K Prateek Nayak wrote:
+>
+> Yours is the right approach.
 
-Hello Ingo,
+OK, thank you, but lets wait for 9p maintainers.
 
-On Fri, Mar 28, 2025 at 02:45:04PM +0100, Ingo Molnar wrote:
-> * Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
->=20
-> > > failures in a single place to not inconvenience randconfig CI=20
-> > > testing efforts, so in that sense it would be nice to send this via=
-=20
-> > > the objtool/urgent tree, but I'll remove it if you insist.
-> >=20
-> > I'm still in the process to determine my opinion on that.
->=20
-> Although Josh's fix looks obviously correct to me, I've removed the=20
-> commit from objtool/urgent, because your indecision about it is=20
-> blocking other fixes.
+but...
 
-This isn't exactly the reaction that I expected, but of course you're
-entitled to do that.
+> If this gets picked, feel free to add:
+>
+> Reviewed-and-tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-> Feel free to pick up the fix in your tree.
+No!
 
-I'd like to understand if there are still more fixes needed similar to
-the pwm-mediatek one. I managed to reproduce that issue and will play
-around with that a bit to check if some more fixes are needed.
+My version is just a slightly updated version of your initial patch.
+It was you who (unless we both are wrong) actually pinpointed the
+problem.
 
-Best regards
-Uwe
+So. If this is acked by maintainers, please-please send the updated patch
+with the changelog, and feel free to add my Reviewed-by or Acked-by.
 
+Oleg.
 
---f3tl5ltsvr4fcv7q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfm6DcACgkQj4D7WH0S
-/k6Idwf+NHG99w3ld8/jj5dIJe41t+wqWNDukkOdVCI9fnEaA2ORiaTXqYDmK0SU
-x1Mzba4AQQxduqqYgYqAaghyNrPWG8IFICvbWETTLMn08YgQQ+L5Y3Jpy34Sgmu2
-CNTHzZf9kIar8Ku4uC/JESe9DvK7QxxYMNGaTwiN25k1J9mKDEF2HMI6/kg9gcgX
-OzSJBOARIGexC3pj5c6f16Y9nMdn1HggXSyXLJfiGLvsf4YmTB9z0GA5KE3EEdqb
-CUozcqKtFBLpQxq3NR3nvu/sbAtJTR6L9hI89s29kEvRGCC1ilgmOW9zglYcCOmy
-dJjCHXk0wk1QYDOjs/7e6McqxGgZzw==
-=zpEw
------END PGP SIGNATURE-----
-
---f3tl5ltsvr4fcv7q--
