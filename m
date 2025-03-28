@@ -1,128 +1,110 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7CD374FF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796EF2F37;
+	Fri, 28 Mar 2025 13:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743166814; cv=none; b=RyRikXqQqv3+/670DP7nlYPYc6EJp9RfYT30EJ9b2yop/1lkwKR6PL8C9eJe8E6JSI/DCT2QQpCr2Ma+xQPkJ2IO8h5mXSLHJ+q/FomOQDFnJ99xuDJvP1/PYkv17YtcWV0uRsROMsKu+XnPEf3VN1aGksS0nnNInk56TDyXOwE=
+	t=1743166819; cv=none; b=nqKdQimGIHSv1i+EPkiDXggC3OU03n7yKkvffptj8h0ZTbdjsdqKV4I4bD4aSsdF4z8UGiLwDZE0iteSHsEvNTaDlzj/4/mHPwuc2t6bwlUNhpDHwyIdObborGPkdoqMNwNQJ0SKiqrRPJ+tlLux4H0U8JHLR0VtlA+6kzGiSc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743166814; c=relaxed/simple;
-	bh=mtrhs0FWYCc+xIyO8l1PClhGbGvAQDUBWAAAWdvfHwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g6nK1UOWyKH8mwVcDK/U8GgK7yPT2BmKdpfHYe4NQLUvvY9EtSAuzzasUH5GwiWB56OYFe3ETBlu13Wg8LDFRi46QjRhlI/1/8Zvtsx0T/tLsFU56W7uKNiILT+99E19APaAF21kv2EJaqcooIew4SBKZuHk7O52OGV+h+silrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E605E442A7;
-	Fri, 28 Mar 2025 13:00:01 +0000 (UTC)
-Message-ID: <26afad1a-bee0-498b-8213-aea87167dedd@ghiti.fr>
-Date: Fri, 28 Mar 2025 14:00:01 +0100
+	s=arc-20240116; t=1743166819; c=relaxed/simple;
+	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jRrvMw4WPUujy17xJcPzfhwitNrk3ixM1BU1JoLsa66+aGJljxrEkhfpT0KzTsBdGupWn0pupP4kud6ttt5Fr2u8prp9QgpbE6/ESfAeLbTYvjQ0RvEnwMQ7IHWQJ2ITJ64zJXhJByhO2KulcGmX3nnHoGdtv+jt7PV3PY3h3S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVmaWdNG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVmaWdNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F02C4CEE5;
+	Fri, 28 Mar 2025 13:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743166817;
+	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cVmaWdNGzBt+DHsJ12cynn4l63wP9k9bT99CeUjiv+/qsOqu9fpwsa4OCI7TvmdyX
+	 GcfP8V3HTqdD1eRWs1iBTOQP8NahsC8ibHW+LzGFERhPpXpw/MiY0whtCWzd69r5ry
+	 6NPZMI66/nP730Oqve6TsCl3Yr+xeGt8eGlEpy5iwD2Zc9nikycUs+RRxo7ABZlwIB
+	 7BRJS2ZQ7COrU2u+DuETf6r8gNpoZPzaKO7FuHkftgn3ummCPD6pE6zfs8DSDJZOqH
+	 xfghiqbA3J5Ubl/cw6iUZ293EpQDpeOz1ZtTNwNQA8nKfyKSY+MddZqfGqNekA9PtX
+	 IlAf/NYkU3JgA==
+Date: Fri, 28 Mar 2025 07:00:15 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] platform/chrome: cros_ec_proto: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z-adX1BB30dcSJ7x@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Make sure toolchain supports zba before using zba
- instructions
-Content-Language: en-US
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: kernel test robot <lkp@intel.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>
-References: <20250328115422.253670-1-alexghiti@rivosinc.com>
- <7352dfbf-51e0-47b0-81e2-264f30989bf1@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <7352dfbf-51e0-47b0-81e2-264f30989bf1@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedufeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeejieeuudejieekveeutdeguefhkeduledugeevhefffeejudeggedufffgleeugfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurdefudgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgp
- dhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 28/03/2025 13:51, Clément Léger wrote:
->
-> On 28/03/2025 12:54, Alexandre Ghiti wrote:
->> Old toolchain like gcc 8.5.0 does not support zba, so we must check that
->> the toolchain supports this extension before using it in the kernel.
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202503281836.8pntHm6I-lkp@intel.com/
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> ---
->>   arch/riscv/Kconfig                     | 8 ++++++++
->>   arch/riscv/include/asm/runtime-const.h | 5 +++--
->>   2 files changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index 0d8def968a7e..ae6303f15b28 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -735,6 +735,14 @@ config TOOLCHAIN_HAS_VECTOR_CRYPTO
->>   	def_bool $(as-instr, .option arch$(comma) +v$(comma) +zvkb)
->>   	depends on AS_HAS_OPTION_ARCH
->>   
->> +config TOOLCHAIN_HAS_ZBA
->> +	bool
->> +	default y
->> +	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
->> +	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
->> +	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
->> +	depends on AS_HAS_OPTION_ARCH
->> +
->>   config RISCV_ISA_ZBA
-> Hi Alex,
->
-> Why not add a "depends on TOOLCHAIN_HAS_ZBA" here so you don't have to
-> check for that config option when using CONFIG_RISCV_ISA_ZBA ? This is
-> done like that for ZBB and ZBC.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Actually Conor changed that for Zbb in 
-https://lore.kernel.org/lkml/20241024-aspire-rectify-9982da6943e5@spud/T/#m89d45ba3cbc6c2f953516c0e9977fecf397809b0 
-which is queued for 6.15.
+So, with these changes, fix the following warnings:
 
-Zba is also used in BPF, so we should not require that the toolchain 
-supports zba but instead just that the platform supports it.
+drivers/platform/chrome/cros_ec_proto.c:143:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_proto.c:761:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Thanks,
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_proto.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-Alex
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 877b107fee4b..586358fbf981 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -139,12 +139,10 @@ static int cros_ec_xfer_command(struct cros_ec_device *ec_dev, struct cros_ec_co
+ 
+ static int cros_ec_wait_until_complete(struct cros_ec_device *ec_dev, uint32_t *result)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		struct ec_response_get_comms_status status;
+-	} __packed buf;
+-	struct cros_ec_command *msg = &buf.msg;
+-	struct ec_response_get_comms_status *status = &buf.status;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_get_comms_status));
++	struct ec_response_get_comms_status *status =
++			(struct ec_response_get_comms_status *)msg->data;
+ 	int ret = 0, i;
+ 
+ 	msg->version = 0;
+@@ -757,16 +755,13 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+ 
+ static int get_next_event(struct cros_ec_device *ec_dev)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		struct ec_response_get_next_event_v3 event;
+-	} __packed buf;
+-	struct cros_ec_command *msg = &buf.msg;
+-	struct ec_response_get_next_event_v3 *event = &buf.event;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_get_next_event_v3));
++	struct ec_response_get_next_event_v3 *event =
++			(struct ec_response_get_next_event_v3 *)msg->data;
+ 	int cmd_version = ec_dev->mkbp_event_supported - 1;
+ 	u32 size;
+ 
+-	memset(msg, 0, sizeof(*msg));
+ 	if (ec_dev->suspended) {
+ 		dev_dbg(ec_dev->dev, "Device suspended.\n");
+ 		return -EHOSTDOWN;
+-- 
+2.43.0
 
-
->
-> Thanks,
->
-> Clément
->
->>   	bool "Zba extension support for bit manipulation instructions"
->>   	default y
->> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
->> index ea2e49c7149c..c07d049fdd5d 100644
->> --- a/arch/riscv/include/asm/runtime-const.h
->> +++ b/arch/riscv/include/asm/runtime-const.h
->> @@ -77,7 +77,8 @@
->>   	".long 1b - .\n\t"					\
->>   	".popsection"						\
->>   
->> -#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
->> +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_TOOLCHAIN_HAS_ZBA)	\
->> +	&& defined(CONFIG_RISCV_ISA_ZBKB)
->
->>   #define runtime_const_ptr(sym)						\
->>   ({									\
->>   	typeof(sym) __ret, __tmp;					\
->> @@ -93,7 +94,7 @@
->>   		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
->>   	__ret;								\
->>   })
->> -#elif defined(CONFIG_RISCV_ISA_ZBA)
->> +#elif defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_TOOLCHAIN_HAS_ZBA)
->>   #define runtime_const_ptr(sym)						\
->>   ({									\
->>   	typeof(sym) __ret, __tmp;					\
