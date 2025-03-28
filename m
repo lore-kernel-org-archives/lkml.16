@@ -1,175 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1703B17CA1B;
-	Fri, 28 Mar 2025 16:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF6819992C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 16:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743179981; cv=none; b=dEdy5bLFeYLu3a+vF+X1EPQB44rR+jeomEO1qh/fl4Q+5xZ/zsx58r2UXipgz7gWLlbRjFPPNbRbPEx1MIsYjnZeGivQZjyBAl4NfDFnISyeXF6q9GWxBPFBaPDIAmTZIo4CUzYlHIRa1m8Hz2LdSJTmG17kKVMPjur4ePi80hY=
+	t=1743179996; cv=none; b=kVrbEpe74aS7lgNF+PVhExeyWwTx6uAY7kZW2LK9SUQe0OMVKUcf1o2fN5aWD5augF3t/2JCNKr6m7Ru2eeDg9BvTHKepq7l6syMu8jeCiRjxyOvtKc8KEQmp34mr3KZuowdos380IcG5IypTuhOp8+wEJhmjBVudxdQM4LoGWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743179981; c=relaxed/simple;
-	bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W7m4xrMefXO8Pe/HWhmmo1N3D4+oZB6gcq6r0K7uBiJ+H/i42yLY5eC4ZNo56IX1h2cgjg71NU94HMw/D2VOxDKTcbCobV9PqbfCQnTzDAIF5casI2/oBY22tkYcfazr2KzdJfM4NUZK7VDGYj6eP8rbEmR4QtLFbZZLm+GA1/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drIDHl70; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743179996; c=relaxed/simple;
+	bh=ZacKuhiyChdsT91YTCJru7KavN6apd7FNn7UGaUQz5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D2poqaEMC7AY2+4GVn42cRNiQ6G35FB0vrvi0Vx0cljG7jl3dViXRlXKuMlpuvHoys1Wa+402G0pYNZCIyIqMoe98nZpLQE3JcEx9+72PHw1B2aMeWOLHqDGQ705L0E1go+8YsbkDsFBwrFcWW6XA96g6CZavS1cJ6lq7rrfJPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A8RtfbLf; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drIDHl70"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743179979; x=1774715979;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
-  b=drIDHl70aQje8jGj8VJ0+3HH1yLa/4FjcBIssRC9Z1/912vw64TXBWvu
-   6777fCVaGO6C/yyw6M+TTBzTM55H4t+9zYVLsU7vDpD9XaUUFE00ZO29u
-   VA3iSRdMXXRTiHyCfJQuIGIzJ/yKeRp6UrEV5g3stZSaySx7YzldnYMPj
-   4SBGzLAInNe2vfHckeg0ZT2O9+Socckx0jD8nN7uZrCY8smeLbNOB02Km
-   PZYhLyna0YIOBkLAj8XOBdadeervCmsV+UllnF1GIvfm6aqHmFHbkQgVm
-   km27i/XNc6NnmMBNqgrnKp/isgCQRgH/qvkh2GuHybrk4Jfklq7utLuKT
-   g==;
-X-CSE-ConnectionGUID: wxdjFixsTRWuA3X9rmtaCg==
-X-CSE-MsgGUID: mO1VY/BqRUKiwhbrbFfcHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="32153172"
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="32153172"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:38 -0700
-X-CSE-ConnectionGUID: sbJ66p1vQY6AxqAT4flbNA==
-X-CSE-MsgGUID: 0ksRt6/wQDu9gNyM9SijuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
-   d="scan'208";a="162724321"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:33 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 28 Mar 2025 18:39:29 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 4/6] PCI/IOV: Check that VF BAR fits within the
- reservation
-In-Reply-To: <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
-Message-ID: <77a5558f-fe6f-cba1-4515-c8597ae3c9bb@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-5-michal.winiarski@intel.com> <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A8RtfbLf"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so4145ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:39:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743179993; x=1743784793; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wcE6ARy1rUfxvRGohneaNEBtA+LaOXSM2dLoJGL3SHA=;
+        b=A8RtfbLfRKDd81WucWtOgHlJs+HbedbQXcX7hiFmL7wzxoPK+Sgqxk687zFCo4+O4t
+         7quOEMHQJ7JbzssikyjeTSsMl3rdPwvuh8gqOnhC9AdN7HiYKqk05LWm9ttM/nuHBvnr
+         pPLk1KwLrN7AZFucopJWG/ZEtgCEl3ulHciLwD8wfSv6XnRjiOxjtFRIpbvelK66pToA
+         VfkVrx3uPDjS9vd4C+eoFmMGKyQ7PYxxi/x+2oQPu+gMcEpu0kPiKRZNBOUm9M7KusGn
+         6QJgwatOtbYAjKs+3eeW6KtbKmxnGqiy7/6HhvP0Wsi/+73YXlaUhRZZsS2ZHGUzWciR
+         mncA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743179993; x=1743784793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wcE6ARy1rUfxvRGohneaNEBtA+LaOXSM2dLoJGL3SHA=;
+        b=jfbsKXEgH2o7BWCO0Haix5F1YOlpGqKm7uQsuW/ZAcvAdCRgkBLkFJAXGCu6x/N0tf
+         7HQJpyZE39UlkLUMxRvBK/mMviePYYW0mD6+Uykku8Z5co1sPbaftrV3adL5IqvVqAY2
+         YW/GMDGvtAUBq+UzhbgJBqSLHkQ3wBCGPXuDKHmhut+9sBYHOzfR9QNL7fR8UXxSauGt
+         ljRHdCWM7GPeBW1l6R4dFPsNBgEq46Izm+P5VUzH2vWygisA3MH4v4qum02/Y13WYLsD
+         sNuHA0MI7U4yoAXvDETMep06APIpNOZy7wH/4P+PiYn3jWFx7whODwZRJ1JBQFobq9v3
+         JHDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKBsGOQg4gxZIZFUoOsEjf1/SuWfTFvookcWevuFoYr1Fiszppnrzqz6mujIzwxojYCwr3002pMhk2zA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXYP0R+1Uvt8Xb6Nz7vHYUTyQJN9suINvQ3lPhe3fCdsa0z+Ok
+	SL9lYsO8+ygOED9XDnN8SK82cCKDNXM73XKraslpgLl/ly4wZwbJaJyIgiTlFBXZBoxG1w4GiqH
+	fhx2hmYXoptxPVpjOwEIDEFtvnquUeS1dUm47
+X-Gm-Gg: ASbGnct1JBwkunHrDZ9azgLTwDAzFVj67qGfD0c2si6U7PT97YumKkybbetV41QS2PG
+	/+Li0kb/jEWaJhV/lyhVqRKijPwgWl42IQbbecw+8epjXviPPq94zXlgBGTGEHkRXDkHhOjkQUF
+	n6TM3H0fwxF9cbjebWpUoUu9Fe6dE=
+X-Google-Smtp-Source: AGHT+IETTkV/cGIS2O59Mcs+/mE1owA30OPhyKUkj7VBuXWdvRUbRDBdmL0g+tZHFqn9h+WIqqqBY/9gRriAXKqSLwk=
+X-Received: by 2002:a17:902:d585:b0:217:8612:b690 with SMTP id
+ d9443c01a7336-22920ad2436mr3317935ad.8.1743179993199; Fri, 28 Mar 2025
+ 09:39:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1549821212-1743179969=:932"
+References: <20250328135221.10274-1-leo.yan@arm.com>
+In-Reply-To: <20250328135221.10274-1-leo.yan@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 28 Mar 2025 09:39:41 -0700
+X-Gm-Features: AQ5f1JoJ2on2fM5C_xTgqBXgthup1ISLyfPcE0FmDBiCkXLSGsQ5w9qhH9dU0Qg
+Message-ID: <CAP-5=fU5y_xKaWnh8tumyjTfJZdr2i+tPUaECyPs_vdhKdYWLg@mail.gmail.com>
+Subject: Re: [PATCH] tools build: Use -fzero-init-padding-bits=all
+To: Leo Yan <leo.yan@arm.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Mar 28, 2025 at 6:52=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> GCC-15 release claims [1]:
+>
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=3Dunions option to
+>   restore old GCC behavior.
+>
+> As a result, this new behaviour might cause unexpected data when we
+> initialize a union with using the '{ 0 }' initializer.
+>
+> Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=3Dall"),
+> the kernel has enabled -fzero-init-padding-bits=3Dall to zero padding bit=
+s
+> in unions and structures.  This commit applies the same option for tools
+> building.
+>
+> The option is not supported neither by any version older than GCC 15 and
+> is also not supported by LLVM, this patch adds the cc-option function to
+> dynamically detect the compiler option.
+>
+> [1] https://gcc.gnu.org/gcc-15/changes.html
+>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>
+> This patch was originally from [1]. After consideration, the top level
+> of the tools directory is a better place to accommodate this option
+> rather than perf folder.
+>
+> [1] https://lore.kernel.org/linux-perf-users/20250320105235.3498106-1-leo=
+.yan@arm.com/
+>
+>  tools/scripts/Makefile.include | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
+ude
+> index 0aa4005017c7..e912a10afd89 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -40,6 +40,19 @@ EXTRA_WARNINGS +=3D -Wwrite-strings
+>  EXTRA_WARNINGS +=3D -Wformat
+>  EXTRA_WARNINGS +=3D -Wno-type-limits
+>
 
---8323328-1549821212-1743179969=:932
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+It'd be nice to bring in the comment for try-run that's in
+./scripts/Makefile.compiler:
+```
+# try-run
+# Usage: option =3D $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+# Exit code chooses option. "$$TMP" serves as a temporary file and is
+# automatically cleaned up.
+```
 
-On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
+> +try-run =3D $(shell set -e;              \
+> +       if ($(1)) >/dev/null 2>&1;      \
+> +       then echo "$(2)";               \
+> +       else echo "$(3)";               \
+> +       fi)
+> +
+> +__cc-option =3D $(call try-run,\
+> +       $(1) -Werror $(2) -c -x c /dev/null -o /dev/null,$(2),)
+> +cc-option =3D $(call __cc-option, $(CC),$(1))
+> +
 
-> On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
->=20
-> > When the resource representing VF MMIO BAR reservation is created, its
-> > size is always large enough to accommodate the BAR of all SR-IOV Virtua=
-l
-> > Functions that can potentially be created (total VFs). If for whatever
-> > reason it's not possible to accommodate all VFs - the resource is not
-> > assigned and no VFs can be created.
-> >=20
-> > The following patch will allow VF BAR size to be modified by drivers at
->=20
-> "The following patch" sounds to be like you're referring to patch that=20
-> follows this description, ie., the patch below. "An upcoming change" is=
-=20
-> alternative that doesn't suffer from the same problem.
->=20
-> > a later point in time, which means that the check for resource
-> > assignment is no longer sufficient.
-> >=20
-> > Add an additional check that verifies that VF BAR for all enabled VFs
-> > fits within the underlying reservation resource.
->=20
-> So this does not solve the case where the initial size was too large to=
-=20
-> fix and such VF BARs remain unassigned, right?
->=20
-> > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> > ---
-> >  drivers/pci/iov.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >=20
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index cbf335725d4fb..861273ad9a580 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -646,8 +646,13 @@ static int sriov_enable(struct pci_dev *dev, int n=
-r_virtfn)
-> > =20
-> >  =09nres =3D 0;
-> >  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> > +=09=09resource_size_t vf_bar_sz =3D
-> > +=09=09=09pci_iov_resource_size(dev,
-> > +=09=09=09=09=09      pci_resource_num_from_vf_bar(i));
->=20
-> Please add int idx =3D pci_resource_num_from_vf_bar(i);
->=20
-> >  =09=09bars |=3D (1 << pci_resource_num_from_vf_bar(i));
-> >  =09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
-> > +=09=09if (vf_bar_sz * nr_virtfn > resource_size(res))
-> > +=09=09=09continue;
->=20
-> Not directly related to this patch, I suspect this could actually try to=
-=20
-> assign an unassigned resource by doing something like this (perhaps in ow=
-n=20
-> patch, it doesn't even need to be part of this series but can be sent=20
-> later if you find the suggestion useful):
->=20
-> =09=09/* Retry assignment if the initial size didn't fit */
-> =09=09if (!res->parent && pci_assign_resource(res, idx))
-> =09=09=09continue;
->=20
-> Although I suspect reset_resource() might have been called for the=20
-> resource and IIRC it breaks the resource somehow but it could have been=
-=20
-> that IOV resources can be resummoned from that state though thanks to=20
-> their size not being stored into the resource itself but comes from iov=
-=20
-> structures.
+I see differences with the ./scripts/Makefile.compiler version of
+these functions:
+```
+# __cc-option
+# Usage: MY_CFLAGS +=3D $(call
+__cc-option,$(CC),$(MY_CFLAGS),-march=3Dwinchip-c6,-march=3Di586)
+__cc-option =3D $(call try-run,\
+       $(1) -Werror $(2) $(3) -c -x c /dev/null -o "$$TMP",$(3),$(4))
 
-I realized reset_resource() will zero the flags so it won't work without=20
-getting rid of reset_resource() calls first which I've not yet completed.=
-=20
+cc-option =3D $(call __cc-option, $(CC),\
+       $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS),$(1),$(2))
+```
+I'm just wondering why as if we need to update these in the future
+it'd be easier if the two were identical.
 
-And once I get the rebar sizes included into bridge window sizing=20
-algorithm, the default size could possibly be shrunk by the resource
-fitting/assignment code so the resource assignment should no longer fail=20
-just because the initial size was too large. So it shouldn't be necessary=
-=20
-after that.
+Thanks,
+Ian
 
-> >  =09=09if (res->parent)
-> >  =09=09=09nres++;
-> >  =09}
-> >=20
->=20
->=20
-
---=20
- i.
-
---8323328-1549821212-1743179969=:932--
+> +# Explicitly clear padding bits with the initializer '{ 0 }'
+> +CFLAGS +=3D $(call cc-option,-fzero-init-padding-bits=3Dall)
+> +
+>  # Makefiles suck: This macro sets a default value of $(2) for the
+>  # variable named by $(1), unless the variable has been set by
+>  # environment or command line. This is necessary for CC and AR
+> --
+> 2.34.1
+>
