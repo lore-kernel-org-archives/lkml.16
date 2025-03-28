@@ -1,155 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD5812C544;
-	Fri, 28 Mar 2025 13:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DDC13DBB1;
+	Fri, 28 Mar 2025 13:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168004; cv=none; b=nTS8WNIDCXsFK0e4piEhk+FzPJWVyGnqh9szB40DXJZJV7EDJo+Xa8av+j6w6CSJ69yqJZZj8FsowPmTNkL///dzxxbpS/LnwJfMeb6W7jY9nrgKGVmOg43FR2e07VJrZ3vejQZhM+IwVTUTyLuesooJJWoyLS/56bCT7ZCb8yU=
+	t=1743168055; cv=none; b=NwhyiqjS74K0/wV6zmoD8MF7WKWo/x/APqI7UM155gwDPb7G96bGEwRwAkNLBiCwmSHW6lMiFOLaEsLvmftnOyhedYRBSckSHjIbOtkE+092n0/c3yB3EEweecLByculX+nz74TbisxZWgJubfbqKROWXfKXLdoEuisgMQjDCgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168004; c=relaxed/simple;
-	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fhMHXXxlMDoOSSCRSi+n6N7C4TGbMtXT+60QNfermDingNv1jZLKFbRR+PE/TDlzdO8xHbumlDb+pbJ3uiiLQ8cikqVm1MVdRouq+6Zh+Tdk6MMuWikOuFXlMVJSXuvODN8lxF7m1/wmnyw4UoqZ7GE3oigNwnvG4+ey80pIj58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyLzW/Me; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743168055; c=relaxed/simple;
+	bh=UhYTpTLxViWjTIx4U2fR+YH2GIQfmU38Fl1+ewcphqg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uD4aPmJo78PHYlT/itDMLSN034P+6TQ4AQh/bbMVE9DuJvAfNwPPFUztYUVIH+oHqKsv2KSursonuKhUJWk3v+F79Lr+/aoDCUU4Ti0t3Un2v9/FqUsHjCrOjuHdMmBHA3v0f5vjvmZN6gO0g+d4bWje2tt4ZvFOH9heYgmqUZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XChseV0c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HQxAMH9P; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyLzW/Me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B836BC4CEE4;
-	Fri, 28 Mar 2025 13:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168003;
-	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZyLzW/MeCbWhIBaIKgKM+VyXR7Ri2ulEOJ2nuHK22872cnvXaQSCdx7A8xiyU8548
-	 AhpqBe8Dp9ZaRxnntSI9ubUuvhmosXs3rRQRdWsPxVz95/KcG6NP1/w4GofNGNMfAW
-	 kajV6c4CsxJcB+pP3v4uAQd3i0KcicOAD9uD0MfU8lZFC+gF+ca9Ib22Q7sujtyFee
-	 CgXuX+2dOPKUWedVn6nzb9jjnNoxr6MjQTiwena84eoD1uhoKaTa3BNYx2t3KH45qz
-	 akbXubZtbtUVXg8dDqwm1hjOsUCgIq7q+DtztXE6bcL1qMuHNK4N5x21U80NQw5t7F
-	 9toMkG0/qWYAg==
-Date: Fri, 28 Mar 2025 07:20:00 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec_debugfs: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-aiAAcIP7sBRtz0@kspp>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XChseV0c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HQxAMH9P"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A991D114019E;
+	Fri, 28 Mar 2025 09:20:51 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Fri, 28 Mar 2025 09:20:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743168051;
+	 x=1743254451; bh=8WS+YUbx2J8hBpzV40D2XS75QbzuBOzvjxGlik91qWw=; b=
+	XChseV0c9/qkhnhlNYlNrP6mNL72jWbwxj8R+II58+E+YQinQRAv5mKMBDdEPeiR
+	qcFV1fd1VLnXHilYNcSzX2t4vwHoIc0c/buXak1RkFNQWrj7BEtcXLQ8SugOW58o
+	PSYNZx41mJTZEBZ4evMcDaQa/p33c6FpKy3F7qvznXNLgukpj0VqnQlG8O8WWTph
+	mQcEi2e4x5OhEKDMxkVzkNd0bPIBzMfZjYkCPd66/rwG7h6OfTU/ib6BL27TEhUe
+	kWGT03+LDs6/TgnzIn9fGXIC43m66+OWrO9qeewCYyLpzcm3Jz7jnMS9j70bq8J2
+	prNBLmJgX4cqtwpVnstjiA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743168051; x=
+	1743254451; bh=8WS+YUbx2J8hBpzV40D2XS75QbzuBOzvjxGlik91qWw=; b=H
+	QxAMH9PXE6htYyOjFD3rRAxzjVif5Ej4mSORf/aPy4mc1X/eZHEhKoVG/2CD0gz/
+	twhUuaY8+G7aZQR/3zWgnoUKgsgtl78jce0IUWMTVUnHXYRie1dplxGGkFdtnfPi
+	51VwYTei+nNSP2mXQTBYZnsH8w3752Z/HT6jtY+3fkErMFcXoR79rw5PUHfBNDrx
+	CID/jOGlly/7kHaSr1GobumDCwTFYg69gUf/ozuYUu5wL1CcE/Yyosaa9odGLkGy
+	HbnICQBmYhoHPWYYy7K41T96rkKoEnjxKBIyUAdG/G8taoTOxRyXqyMzIhEhe+Gv
+	ZDVFIvLtpA+YkCD3T4MhQ==
+X-ME-Sender: <xms:M6LmZ3asNqcHtOR7zjY1UpjhHXmFoQ_JhNh1pjEo_VNJIp6awaYLWA>
+    <xme:M6LmZ2aO9-lTXPaHWHc3UMM2RA99lnMNwl5evKTHvWO5efJcBF0-t9QVxd5shrVE5
+    KQjcdJ-DCaoN3-vRXg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedufeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    vghonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgslhhotghhsehnvhhiughirg
+    drtghomhdprhgtphhtthhopehmohhshhgvsehnvhhiughirgdrtghomhdprhgtphhtthho
+    pehphhgruggurggusehnvhhiughirgdrtghomhdprhgtphhtthhopehtrghrihhqthesnh
+    hvihguihgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:M6LmZ5-dv7m1xeyzM__6dXG9cPiDQV2_DdmQ3Z4Iag7pHSEU8YnTJw>
+    <xmx:M6LmZ9piqrNdGPCSUwauQ1sPGqtrMlPXLctUN0l6QoT1mskiUVSJmA>
+    <xmx:M6LmZyq3l_1V6NccK9JM0JNb7iIbJw_fwChXNXa7tJg-IZzctrsIow>
+    <xmx:M6LmZzRVxw89wLxZ0CjuHwSJT9JJF7DO08ALccwBHEwAAuZyBXp95Q>
+    <xmx:M6LmZx3u5ZohGo0u3mInfwHYw_fWiygbHFVnMAyU4f9NRLTtFnWusV2I>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3D2E52220073; Fri, 28 Mar 2025 09:20:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-ThreadId: T8b2d4b03a137eab5
+Date: Fri, 28 Mar 2025 14:20:30 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jason Gunthorpe" <jgg@ziepe.ca>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Leon Romanovsky" <leon@kernel.org>,
+ "Patrisious Haddad" <phaddad@nvidia.com>, "Mark Bloch" <mbloch@nvidia.com>,
+ "Tariq Toukan" <tariqt@nvidia.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Moshe Shemesh" <moshe@nvidia.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <cdaf0e11-3de2-4979-8112-7865c63c0ffd@app.fastmail.com>
+In-Reply-To: <20250328131513.GB20836@ziepe.ca>
+References: <20250328131022.452068-1-arnd@kernel.org>
+ <20250328131513.GB20836@ziepe.ca>
+Subject: Re: [PATCH] RDMA/mlx5: hide unused code
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Fri, Mar 28, 2025, at 14:15, Jason Gunthorpe wrote:
+> On Fri, Mar 28, 2025 at 02:10:17PM +0100, Arnd Bergmann wrote:
+>
+> IDK, I'm tempted to revert 36e0d433672f ("RDMA/mlx5: Compile fs.c
+> regardless of INFINIBAND_USER_ACCESS config")
+>
+> I don't think that was so well thought out. The entire file was
+> designed to be USER_ACCESS only because it uses all this mechanism.
+>
+> #ifdefing away half the file seems ugly.
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+That sounds better to me, yes. I assumed that a later patch
+required that one, but I don't see such a dependency.
 
-So, with these changes, fix the following warnings:
-
-drivers/platform/chrome/cros_ec_debugfs.c:211:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_debugfs.c:257:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_debugfs.c:279:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec_debugfs.c | 52 +++++++++--------------
- 1 file changed, 20 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index 92ac9a2f9c88..d10f9561990c 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -207,22 +207,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
- 	char read_buf[EC_USB_PD_MAX_PORTS * 40], *p = read_buf;
- 	struct cros_ec_debugfs *debug_info = file->private_data;
- 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
--	struct {
--		struct cros_ec_command msg;
--		union {
--			struct ec_response_usb_pd_control_v1 resp;
--			struct ec_params_usb_pd_control params;
--		};
--	} __packed ec_buf;
--	struct cros_ec_command *msg;
--	struct ec_response_usb_pd_control_v1 *resp;
--	struct ec_params_usb_pd_control *params;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			MAX(sizeof(struct ec_response_usb_pd_control_v1),
-+			    sizeof(struct ec_params_usb_pd_control)));
-+	struct ec_response_usb_pd_control_v1 *resp =
-+			(struct ec_response_usb_pd_control_v1 *)msg->data;
-+	struct ec_params_usb_pd_control *params =
-+			(struct ec_params_usb_pd_control *)msg->data;
- 	int i;
- 
--	msg = &ec_buf.msg;
--	params = (struct ec_params_usb_pd_control *)msg->data;
--	resp = (struct ec_response_usb_pd_control_v1 *)msg->data;
--
- 	msg->command = EC_CMD_USB_PD_CONTROL;
- 	msg->version = 1;
- 	msg->insize = sizeof(*resp);
-@@ -253,17 +246,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
- 
- static bool cros_ec_uptime_is_supported(struct cros_ec_device *ec_dev)
- {
--	struct {
--		struct cros_ec_command cmd;
--		struct ec_response_uptime_info resp;
--	} __packed msg = {};
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_uptime_info));
- 	int ret;
- 
--	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
--	msg.cmd.insize = sizeof(msg.resp);
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->insize = sizeof(struct ec_response_uptime_info);
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
--	if (ret == -EPROTO && msg.cmd.result == EC_RES_INVALID_COMMAND)
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret == -EPROTO && msg->result == EC_RES_INVALID_COMMAND)
- 		return false;
- 
- 	/* Other errors maybe a transient error, do not rule about support. */
-@@ -275,20 +266,17 @@ static ssize_t cros_ec_uptime_read(struct file *file, char __user *user_buf,
- {
- 	struct cros_ec_debugfs *debug_info = file->private_data;
- 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
--	struct {
--		struct cros_ec_command cmd;
--		struct ec_response_uptime_info resp;
--	} __packed msg = {};
--	struct ec_response_uptime_info *resp;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_uptime_info));
-+	struct ec_response_uptime_info *resp =
-+				(struct ec_response_uptime_info *)msg->data;
- 	char read_buf[32];
- 	int ret;
- 
--	resp = (struct ec_response_uptime_info *)&msg.resp;
--
--	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
--	msg.cmd.insize = sizeof(*resp);
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->insize = sizeof(*resp);
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.43.0
-
+     Arnd
