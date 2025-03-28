@@ -1,90 +1,95 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA59E1B4244;
-	Fri, 28 Mar 2025 10:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CAB1A5BAE
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157103; cv=none; b=tFD/uRb2ey66ExYFJ4Rba6/tgw/soBJOOJs2Ab7EDQes11BRZBEzF8BU2HQekFtwc0t40+VoPga6TyRi2AqBoauSP8nJBTs0lQhJ1rTOWWQ879FRhjPYUn46AAEPALnIHPfaq8XzIgTe3W6ivbfcUuM2OZ9NTP5m+pgNlqjJzYY=
+	t=1743157105; cv=none; b=h5DToauK5qrFJQFCw2qp6hvoJGKRMGKxHd5bM5eKcL9bVvucVTtdJdXKDOucTEwxu8UwUsI6QwYmDBwsDRXPJJ9poNFGUKucd0bthp68+CoTrgkhFBCAMMUTpQ2UHNO5lsCiozEuM8LBWUaT3f6+IxMLbPfFozg6qUoOpb/JiK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157103; c=relaxed/simple;
-	bh=LuZQ/VXIC4NAiPg9MT1mlCX4GWeC1O18VNnybzVvySc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hpn4gcgPULfz/9WFT+I5S1cEKvkTdFHcME0TmusNNOxP9Kgq6FcsvWn9pyqKHe+RJiQHylfSXF8z3uLsRCjHoyyybzq4q70la/WZga0CcuWxoxDo/7iw0i0qS4kBtyehQV9JFWnDV02xRikrlt1Edy39+sW++8avzZLyh/n0z18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Z0r5qVOR; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743157105; c=relaxed/simple;
+	bh=jooCdF1JwrrJXjQWuLslEA3Jk/cX46lBROBHZgF7M5c=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=sd/kmyXA9kcvgtTxQJLXHohUBSFGXiUguC1Hqe1n7vHc4lB7gYfW0CQ9daGEzcWKsM8eYoChFruTzHlebw8Ehl2fJ+5dwUIh6MvaEH7wnqrUBCRy8J3jIDu9ACEnKVqEwdhvCpDM1tPJyaQ5eOX/3iFhHNBPG2rxJLT3Y7dfYAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=mZwK/Ben; arc=none smtp.client-ip=203.205.221.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Z0r5qVOR"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3F0421023F59A;
-	Fri, 28 Mar 2025 11:18:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743157092; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=NmL+230093prb2NKvGUaTrcx0iU/raazJ57E3zSIxCg=;
-	b=Z0r5qVOR6BaTO4LUrWVjCwI/84iGjwoYWbx2c4BAKGSdXTzPTMWgoOOKjv8Mz4nC/gd79F
-	EQb7+VE7fnFQCIWEeO4Yy/CbJbC6s6BBMB8Gxqn+ZsL1VCllXzSUcSyUCaXVIqll4s1fvv
-	RXJqsLud4JnN6Oop/rUC7yr4gDhXgTePAa7B7fSKCQZkOnzsBDu6zyXK9WGBEDDIr0294T
-	CiyhXsmLocJ4kCD/v4cKAZ8oLCPNABIsIG7ooJ3gMG8DibJr7T9ixzNVJ1P3vyh5Mi57/L
-	8dWKZXqXu3sGNHoRLy0PHxsj+AB2wXyB5acZQ22t2z9+GksCm7uoaf0fbEGzuw==
-Date: Fri, 28 Mar 2025 11:18:04 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc3 review
-Message-ID: <Z+Z3XMF2FPpJF9kZ@duo.ucw.cz>
-References: <20250328074420.301061796@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mZwK/Ben"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743156795; bh=rR35e+hZRNuo1YA29CMJi0+EW7SiAaMAanzrs8CeOf0=;
+	h=From:To:Cc:Subject:Date;
+	b=mZwK/Ben4aUMZA3Y38igh+BiHwNZ/0D3FAXSXe1APkzcnSDjjkvrCSe4LLBwGWSDE
+	 voA3/rcL9qzv+NMPtNeHNtNkWOhDKa+K8oqWcKOV41sLxaD5rVqutAHLv16yaVMgtn
+	 dtdn8Fat1JhEamjoHF+Mhzj9PNm23FA4HspgncAI=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 34309049; Fri, 28 Mar 2025 18:13:03 +0800
+X-QQ-mid: xmsmtpt1743156783t48ghc6wv
+Message-ID: <tencent_7FAF68BF7A2EAD9BFE869ECFDB837F980309@qq.com>
+X-QQ-XMAILINFO: N/WmRbclY25GMfqh5izIbfJ5xGhYBVKfPatPPzVgDN5d2bv3dImBuc1q+2YO7j
+	 7pMh5QtcK85H3+FQhze+IottobVBgvsqfrz7AWxJ2raOAP1c1QIPDPSzfqu7ObBgmCbkZ4Zdffrl
+	 qqHBvEcBClnSX//AUsoQ6xzwpduPA5xQWTLbxxu1+XosFeQYan9RwBjRf/QiH4pF7TRwb+mFhMAg
+	 14fRj/Sc3q4p/xCLin4p+ZIV0fqSmSMBO8rjh3NpQtC7noXBG6f9XvPwGkHr+rC4/APB9Bgccqsj
+	 CVLw4eOcCFcAIs4Tn4A/VkrqfUL4dJLh5nOm3/nKO8pC4xEqEL2H/0cA/nFtwf2X8RBHMGvJ5J3i
+	 210hgHYPW/7U8rJpgfgZZmHQPMSEHhE9rcQp2uCScBkrDqbgsqCTnMj9BdSqVKiOFLwUCzCFeVSX
+	 AgfFMJJt3CGaU70f0TpEWgA+2rqZ3fxZqk2L8DR5l3r/ymhNooC58DiO6Ku75FhIPuIlw5EGcsFS
+	 1yAWqlf1N/0HN0rN9dDTe7pCJqaqwHaj1nCYlsW+jXv2SWzRhgIgcifbSsP1UXWYkXrcYWwtzUI8
+	 yIMOkakU+Tz9mnqgFUOpgaj2xQ45ZZiaIqVKPJdOhmKJVmi/f7hFmf4Em6+elCrQNbjusJ+4T4jD
+	 C50d5ZN2qMDVh9KpCJNYK1efrVQtpfiTslFtHNe8wFkp7X58zOVp11XD/FDZExT732GlOmyNFIGj
+	 /9ZnA2nPvy4Sf+jMv9VylQdnGuRQyuxq32BzyTOEXI+sawsD4nxf6//5yVv9RZIh8KWHSFr88Sdc
+	 woTqAt16dQfHvLQWONFUx7bD4yDsJor+IcOiYGW1STsM/NheeEXYPQ/BxHXQK0P2LliiwgJ5ACMP
+	 XKmChphvUhtXdsrQOlHjKQI+1uGQJDqhqFGkgnfvX9JbZDO0l50lev0GCZ5iHASEcpjBRzf6Fohr
+	 gpbWfHQfMiiUFVqlHhC9nSsy+7qCTOsb8Rfb7pgrZcUOePBj6nFUVKAFEV6Ia0wJygNfjLcbq83B
+	 r0viZ7CBoGBSpTEfSo
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+Sender: yeking@red54.com
+From: Yeking@Red54.com
+To: loongarch@lists.linux.dev
+Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
+Date: Fri, 28 Mar 2025 10:12:03 +0000
+X-OQ-MSGID: <20250328101203.52765-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8kqYFcOiNCx97xrq"
-Content-Disposition: inline
-In-Reply-To: <20250328074420.301061796@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
---8kqYFcOiNCx97xrq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is the built-in command line appended to the bootloader command line,
+not the bootloader command line appended to the built-in command line.
 
-Hi!
+Fixes: fa96b57c1490 ("LoongArch: Add build infrastructure")
+Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+---
+ arch/loongarch/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> This is the start of the stable review cycle for the 6.1.132 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 7477d5f8d876..067c0b994648 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -388,8 +388,8 @@ config CMDLINE_BOOTLOADER
+ config CMDLINE_EXTEND
+ 	bool "Use built-in to extend bootloader kernel arguments"
+ 	help
+-	  The command-line arguments provided during boot will be
+-	  appended to the built-in command line. This is useful in
++	  The built-in command line will be appended to the command-
++	  line arguments provided during boot. This is useful in
+ 	  cases where the provided arguments are insufficient and
+ 	  you don't want to or cannot modify them.
+ 
+-- 
+2.43.0
 
-CIP testing did not find any problems here:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.1.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---8kqYFcOiNCx97xrq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ+Z3XAAKCRAw5/Bqldv6
-8rjDAKCoJ9GVccacCduZB0htrl9iuNI7PgCeLRVgi6d8QkEIHG+MxnBhRShdjIE=
-=Vcz+
------END PGP SIGNATURE-----
-
---8kqYFcOiNCx97xrq--
