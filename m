@@ -1,138 +1,85 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F9039ACC;
-	Fri, 28 Mar 2025 20:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB89839ACC
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 20:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743193069; cv=none; b=kX7N2Gw9seO+ZrXHwX4iph9a2IwtrXnsStsL5xKkPaIkS+ihNK3awcGmKbshISYiMlDlTpwfVIl5jB/lt/DN+Vwqqhy85kCb5kv5+NRQChQwmga2RrD5agF4jrPvgojbHdtnAH4ww3PNzFMsNLPN77zfLvZPqRxTBuQ63hOv5HE=
+	t=1743193241; cv=none; b=oUEkwYFLo6nWomHalnNZVUVe1Llm3oEk79k+9h3on+C98q3GZJ3jyao5QIO0VQCZ2KyFVNZRunDF4VrNAUiitipYdsCksy+rSnv7uazvATVkOSjiyVfL7wuAMEDrHOk9yKuQ3DEH/TTVodGZnWNYKGHwfuHu1c7vLZI23xVhT/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743193069; c=relaxed/simple;
-	bh=MqVWYq9XS7QtfWpX+vZ6G4Blv+2gHjDVRoYFerJunRU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Alhz3iWwRHD7KCN0gBaSfOpeNu0p8dntNFHlvd7GemTyGD0vL7AfXZ2JZiFjJ2YkVXt1ZPpwHdyygb4mTqRp0x+waEHwuebBucDhNlIijv1CS83SfteASHcpw9lGuYnQv5S94kYJ2vV3QU3cMmTgX0B/6vLrwmumPzgfsYLIWJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UJmZhlih; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743193241; c=relaxed/simple;
+	bh=Dun8URzIUdihCaS0dGvB6zHYpzGMq2w67tiSvH81GDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=H+bW/irsMMgHcgxuCAg8SAoIXQDjqUtBP2Sy8jdd3UePn7JxxweVL6jAZaMkSyUMo+5mg/A8W+JAX7dvBWQN8mtjqIppemfFzuzxxOS/u5xBgRtPUItKkg1jMwv+dPUJNWSu6sYXT3ygiteq2jzgsQahLMr1fdCdpBCdYHYWYRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RGUTUnic; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UJmZhlih"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SDYU4L011698;
-	Fri, 28 Mar 2025 20:17:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=KNDbxc7eyTzbaRuAw1sgdRxe5UOPieXWPxKxPxjqLHY=; b=UJ
-	mZhlih4092KU2CcZ1tROIKCl+yW0XaQA/FQLpEwzIZM8Z4aqnAF6zV/ZTevxn9td
-	j3bzp33cLOzbLHA2Hxjj/0TlRYAdNVuwD03+5+JZEXov7f7umwZ8JerTRkRfJbea
-	gyj8SZFR/dvv4eowRTdIoCKWAN26yKBDXetJyecyPh8z8oVBuW9TkyXXb1FsRwvB
-	pT7b+VKiZQAdSWlgGwumbT8h7OoxkbTjQ+6LMG1TdMzea6n8tkZAglvlo9X+bl40
-	ofIkILjm2ca6W7KjMJ6e24OLcaZMmhPDHEUdS7TzEjCujnf/4jsyGxa3vDCUyiGK
-	Q7A6rbiEDijeDfmqRg2w==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45n0kqny6y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 20:17:23 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52SKHNbu003630
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 20:17:23 GMT
-Received: from stor-berry.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 28 Mar 2025 13:17:22 -0700
-From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-To: <quic_cang@quicinc.com>, <bvanassche@acm.org>, <avri.altman@wdc.com>,
-        <peter.wang@mediatek.com>, <manivannan.sadhasivam@linaro.org>,
-        <minwoo.im@samsung.com>, <adrian.hunter@intel.com>,
-        <martin.petersen@oracle.com>
-CC: <linux-scsi@vger.kernel.org>, "Bao D. Nguyen" <quic_nguyenb@quicinc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/1] scsi: ufs: core: Rename ufshcd_wb_presrv_usrspc_keep_vcc_on()
-Date: Fri, 28 Mar 2025 13:17:11 -0700
-Message-ID: <02ae5e133f6ebf23b54d943e6d1d9de2544eb80e.1743192926.git.quic_nguyenb@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RGUTUnic"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743193240; x=1774729240;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Dun8URzIUdihCaS0dGvB6zHYpzGMq2w67tiSvH81GDw=;
+  b=RGUTUnicX3KgVf4jn8/VtOCD/Jm8bKc57UQb+12ifjIyVaLIAb5C/9rw
+   39XVvqYjrpMxyIVjmUIbRBs3UpQDMlw/Vh0Hp0H9Pw6ou2klxYTfIpMBV
+   gy2asWdSctsKrVm9X6YesHzalX2ToGZCpgxn7X6lksi1YC9TQB81Ktc96
+   ogMimUeFunn1UzyxFCHI/4oxPLBceIv3uBIHkemSRlke8HWtlDddvYa3e
+   bgekRr6EaBhivUHQ95w67rADJFMtLR4dBQ9qHNk0Z9wJxcxQaYgSiAwkY
+   zuWRkaHm81KcxQIrrxQ/Ea+5kDzUTFRRZWgplDzaHOyVdUiiSVGZ4b2Q9
+   A==;
+X-CSE-ConnectionGUID: /bfPz91eRuGMzQlIWMt5OA==
+X-CSE-MsgGUID: J2c98L3iRLWs0oaSbuq04A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="55935012"
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="55935012"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 13:20:39 -0700
+X-CSE-ConnectionGUID: Amahi2BBQWKXCBuAJelPMg==
+X-CSE-MsgGUID: Kts6jgtURRa+HHZURxpZwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="125304729"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 28 Mar 2025 13:20:38 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tyGBv-0007gK-12;
+	Fri, 28 Mar 2025 20:20:35 +0000
+Date: Sat, 29 Mar 2025 04:20:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [tip:WIP.x86/alternatives 31/51] vmlinux.o: warning: objtool:
+ smp_text_poke_int3_trap_handler+0x15: call to try_get_text_poke_array()
+ leaves .noinstr.text section
+Message-ID: <202503290433.IufZBqKJ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ALcpkPORBPoOGiUJNTZgnpQUo5b6QY_l
-X-Authority-Analysis: v=2.4 cv=FrcF/3rq c=1 sm=1 tr=0 ts=67e703d3 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=IMHNDf2ypZXSRH1sUZ0A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: ALcpkPORBPoOGiUJNTZgnpQUo5b6QY_l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_10,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- clxscore=1015 suspectscore=0 malwarescore=0 adultscore=0 impostorscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503280136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The ufshcd_wb_presrv_usrspc_keep_vcc_on() function has deviated
-from its original implementation. The "_keep_vcc_on" part of the
-function name is misleading. Rename the function to
-ufshcd_wb_curr_buff_threshold_check() to improve the
-readability. Also, updated the comments in the function.
-There is no change to the functionality.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/alternatives
+head:   5c21e894a3e5752ac672af6e542775b3914c6668
+commit: 87e9984ae6f497399e1e0a6fc794a166cf8ddbde [31/51] x86/alternatives: Simplify try_get_text_poke_array()
+config: x86_64-buildonly-randconfig-004-20250328 (https://download.01.org/0day-ci/archive/20250329/202503290433.IufZBqKJ-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250329/202503290433.IufZBqKJ-lkp@intel.com/reproduce)
 
-Signed-off-by: Bao D. Nguyen <quic_nguyenb@quicinc.com>
----
-Changes in v2:
-Reverted to original implementation. Only changed the function
-name. Updated the commit message (Avri's and Bart's comments).
----
- drivers/ufs/core/ufshcd.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503290433.IufZBqKJ-lkp@intel.com/
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 4e1e214..310707f 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -6083,7 +6083,7 @@ int ufshcd_wb_toggle_buf_flush(struct ufs_hba *hba, bool enable)
- 	return ret;
- }
- 
--static bool ufshcd_wb_presrv_usrspc_keep_vcc_on(struct ufs_hba *hba,
-+static bool ufshcd_wb_curr_buff_threshold_check(struct ufs_hba *hba,
- 						u32 avail_buf)
- {
- 	u32 cur_buf;
-@@ -6165,15 +6165,13 @@ static bool ufshcd_wb_need_flush(struct ufs_hba *hba)
- 	}
- 
- 	/*
--	 * The ufs device needs the vcc to be ON to flush.
- 	 * With user-space reduction enabled, it's enough to enable flush
- 	 * by checking only the available buffer. The threshold
- 	 * defined here is > 90% full.
- 	 * With user-space preserved enabled, the current-buffer
- 	 * should be checked too because the wb buffer size can reduce
- 	 * when disk tends to be full. This info is provided by current
--	 * buffer (dCurrentWriteBoosterBufferSize). There's no point in
--	 * keeping vcc on when current buffer is empty.
-+	 * buffer (dCurrentWriteBoosterBufferSize).
- 	 */
- 	index = ufshcd_wb_get_query_index(hba);
- 	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-@@ -6188,7 +6186,7 @@ static bool ufshcd_wb_need_flush(struct ufs_hba *hba)
- 	if (!hba->dev_info.b_presrv_uspc_en)
- 		return avail_buf <= UFS_WB_BUF_REMAIN_PERCENT(10);
- 
--	return ufshcd_wb_presrv_usrspc_keep_vcc_on(hba, avail_buf);
-+	return ufshcd_wb_curr_buff_threshold_check(hba, avail_buf);
- }
- 
- static void ufshcd_rpm_dev_flush_recheck_work(struct work_struct *work)
+All warnings (new ones prefixed by >>):
+
+>> vmlinux.o: warning: objtool: smp_text_poke_int3_trap_handler+0x15: call to try_get_text_poke_array() leaves .noinstr.text section
+
 -- 
-2.7.4
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
