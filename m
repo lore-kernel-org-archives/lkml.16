@@ -1,133 +1,131 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EC114A8B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 05:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743139543; cv=none; b=Qcixe9Rb+OHLvoYhlD56mcNsWc/dTs9WL0MzM8Ygh2E+UGT7cqi9Nznfn3zuiJEgs6enJPVvo2ecuxS+y7okg3UaE60M4vOrSYoCIadk0hYebZuVfPuV7MI+Cs1ViGMlLGkvRdDhM3Si2c/2CBHDmAdERRMqSQePW314c/2fr4M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743139543; c=relaxed/simple;
-	bh=QKLjGWpoY6vF1d2h8C/5Hete+LF1GwTt151HrxzTtW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aRW0trQ8LvdrGCbtOzqCuxLYMFmrBBxh/YiwflcP3nS30c7iTv+7Cmm3z/orUGIraglPCOrCW7Y1+YomI3rWLrE2uqhQlB7bgtUmIPQt712+vtE6871qWXEeAH/cZZFPrVxa6bzezKaQ4VV9FdJWoeGPLoGakN8ZjaEdtA2PzMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=K94onynM; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE37C28373;
+	Fri, 28 Mar 2025 05:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743139663; cv=pass; b=AEhsDRC9iUKTOfCnquS5+EibHHuvcw/3XH8wVz2Re2hIHi9yxgS78FeW/TluOP/QofUw9wAJY0vWh7anHFTD8hDRfMLCkchaS7gnrNbDjk5I28S4uqSaCeGOt855PCL3u/7OudnFhg2TTqSUI/REf+OC3oqoax1/d628qQ4+hTg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743139663; c=relaxed/simple;
+	bh=UA/jB0jRtT9MrE0m/chZoZltKCIECcikeSy39MQlrkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j7PUew1aAhmhntzPFeSAXJEnH9ezjiZrW23RiYafQH+OApqfjBQDk5rvzgW2sp/0lV68CvQeawpWj3IcWCmdmNe9imxu29fcLA+4dmNkb/P2A64YNSn9BUwxG/cVhe5Pux0I/NnGSmG0OFN+7WzwdxNZgY5UCRKMyhuJvu/ksY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=XsTA9zfS; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="K94onynM"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 1ECE31C2435
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:25:40 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1743139539; x=
-	1744003540; bh=QKLjGWpoY6vF1d2h8C/5Hete+LF1GwTt151HrxzTtW0=; b=K
-	94onynMcU5Yd6oxaAmfGN0PKkNNzM6CJnLYGsDuU9ZSZvhLehgy2LZvTtAs0Gfdg
-	JVuBBc1cNuFQW5jr9RpxhcX/iYzwjYCm1z/ufxktv3UB3uXu5B4cEQTI/AEu40zy
-	Pi/Ah7bLh93cmLlTiGBN090YHBOTlN1yUQIBn6u9FM=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jHmklzvHMrYU for <linux-kernel@vger.kernel.org>;
-	Fri, 28 Mar 2025 08:25:39 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id B42BE1C242C;
-	Fri, 28 Mar 2025 08:25:25 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Harry Wentland <harry.wentland@amd.com>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Leo Li <sunpeng.li@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@linux.ie>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Alex Hung <alex.hung@amd.com>,
-	Wenjing Liu <wenjing.liu@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Rodrigo Siqueira <rodrigo.siqueira@amd.com>
-Subject: [PATCH 5.10/5.15/6.1] drm/amd/display: Avoid overflow assignment in link_dp_cts
-Date: Fri, 28 Mar 2025 05:25:11 +0000
-Message-ID: <20250328052512.1206068-1-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="XsTA9zfS"
+ARC-Seal: i=1; a=rsa-sha256; t=1743139628; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SNkk3gtNPaXXwdrW6fxgFUV/5Bey7TsGy4tPCrEBB6ffAggQ3W2qc1RBP7BNbBjB2eIRKtT46QJJedOiwPrTMp3R7/QFTd+rhIJer7xpXyPI/Diu5QVxKkpoZ7h1eZ0c4tV+z49+vFzbt7x7w3VSnswzE9czqg2uGZCsKrHRWHU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743139628; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8fm2pR+vn3KKxWHjwpsQpoYtJSPoJCzGUQuWZmtgZF4=; 
+	b=M6nKWV3en9cG17a7BT25zDUHyaiQrcbuzq05N6Hm3rsL08KyooohItgXD7toFOnD2TljvYM1ZLGlA8v1DXIls2/Q3r4WuUBqljR0TIVnfy3ZGn2c2TotR8GNNKsftbdv+HLns4AsM2gVGNeU2gwmp6+RJkMpinGuyWXnm60SWgk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743139628;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=8fm2pR+vn3KKxWHjwpsQpoYtJSPoJCzGUQuWZmtgZF4=;
+	b=XsTA9zfSLisYIt+9lTUsiXcJIOA/gC/jYCxQE5wi/9x8WyiT+abmCx9pUJhlraM6
+	0gYnZbsqu1MFEO9Q2m+g3QxPi4oTn2yz1ZPA27L2g73KmlsqgSq2wJb9pkqREB55cKl
+	O3FDQX75S2LXpaQmWu18VSsVKmncypAdeMVm9f8o=
+Received: by mx.zohomail.com with SMTPS id 1743139625825613.9288733094755;
+	Thu, 27 Mar 2025 22:27:05 -0700 (PDT)
+Message-ID: <f9be4614-95ec-4b63-9cfd-0936a323b131@collabora.com>
+Date: Fri, 28 Mar 2025 08:27:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: SPI transfers in atomic context [Was: Re: [PATCH v1 1/1] mfd:
+ rk8xx: Fix shutdown handler]
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+ Lee Jones <lee@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Urja <urja@urja.dev>, Heiko Stuebner <heiko@sntech.de>,
+ linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com, stable@vger.kernel.org
+References: <20240730180903.81688-1-sebastian.reichel@collabora.com>
+ <20240801131823.GB1019230@google.com>
+ <ih7hiojzuvqzpyipj66mgu5pmcderltabim7s5dnfzm6qpztbh@jqkst5tfw5ra>
+ <sg5kgo5qjqyzfyk5nyjbkpgvbx6sfb7agc67ch6wsdq3etrsbf@h6xbtfs45k4w>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <sg5kgo5qjqyzfyk5nyjbkpgvbx6sfb7agc67ch6wsdq3etrsbf@h6xbtfs45k4w>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-From: Alex Hung <alex.hung@amd.com>
+On 3/20/25 13:10, Uwe Kleine-König wrote:
+> Hi,
+> 
+> On Thu, Aug 01, 2024 at 05:22:24PM +0200, Sebastian Reichel wrote:
+>> On Thu, Aug 01, 2024 at 02:18:23PM GMT, Lee Jones wrote:
+>>>> +	/*
+>>>> +	 * Currently the Rockchip SPI driver always sleeps when doing SPI
+>>>> +	 * transfers. This is not allowed in the SYS_OFF_MODE_POWER_OFF
+>>>> +	 * handler, so we are using the prepare handler as a workaround.
+>>>> +	 * This should be removed once the Rockchip SPI driver has been
+>>>> +	 * adapted.
+>>>> +	 */
+>>>
+>>> So why not just adapt the SPI driver now?
+>>
+>> This patch is simple and thus can easily be backported, so that the
+>> Acer Chromebook shutdown is fixed in the stable kernels. SPI based
+>> rkxx has been using SYS_OFF_MODE_POWER_OFF_PREPARE from the start,
+>> so it's not a regression.
+>>
+>> As far as I could see the SPI framework does not have something
+>> comparable to the I2C .xfer_atomic handler. So fixing up the
+>> Rockchip SPI driver probably involves creating some SPI core
+>> helpers. I'm not yet sure about the best way to deal with this.
+>> But I guess it will be better not having to backport all of the
+>> requires changes to stable.
+>>
+>> In any case I think the next step in this direction is discussing
+>> how to handle this in general for SPI.
+>>
+>>> What's the bet that if accepted, this hack is still here in 5 years time?
+>>
+>> Even if I don't work on this now, I would expect somebody to have
+>> issues with broken shutdown on RK3588 boards before 5 years are
+>> over :)
+> 
+> I'd like to have power-off working on Qnap TS-433 in the next Debian
+> stable. With my Debian Kernel hat on I'd say cherry-picking such a
+> commit (if it's in mainline) is acceptable. Backporting a major
+> extension to the spi framework isn't.
+> 
+> So: Expectation confirmed! And while I agree that hacks are not nice,
+> I prefer a hack now over a machine that doesn't shut down properly over
+> the next five years (if Lee's expectation is also correct).
+> 
+> Can we maybe go forward and do both? Accept this hack patch now and work
+> on spi to make atomic xfers possible?
+> 
+> Mark, are there concerns from your side? 
+> Wolfram, are there things you would recommend to do differently in spi
+> than what you have in i2c?
 
-commit a15268787b79fd183dd526cc16bec9af4f4e49a1 upstream.
+Hi, want let you know that I've started to work recently on atomic SPI
+transfer support to have SPI shutdown working properly with this driver.
+It's in progress.
 
-sampling_rate is an uint8_t but is assigned an unsigned int, and thus it
-can overflow. As a result, sampling_rate is changed to uint32_t.
+Meanwhile this patch should've been merged a year ago because it fixes
+the regression.
 
-Similarly, LINK_QUAL_PATTERN_SET has a size of 2 bits, and it should
-only be assigned to a value less or equal than 4.
+Lee, please apply it for -stable.
 
-This fixes 2 INTEGER_OVERFLOW issues reported by Coverity.
-
-Signed-off-by: Alex Hung <alex.hung@amd.com>
-Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-[ Alexey Nepomnyashih: backport fix dc_link_dp_set_test_pattern()
- to dc_link_dp.c. ]
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 3 ++-
- drivers/gpu/drm/amd/display/dc/dc_dp_types.h     | 2 +-
- drivers/gpu/drm/amd/display/include/dpcd_defs.h  | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 82b747c0ed69..4a70cbd05bd9 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -6159,7 +6159,8 @@ bool dc_link_dp_set_test_pattern(
- 			core_link_read_dpcd(link, DP_TRAINING_PATTERN_SET,
- 					    &training_pattern.raw,
- 					    sizeof(training_pattern));
--			training_pattern.v1_3.LINK_QUAL_PATTERN_SET = pattern;
-+			if (pattern <= PHY_TEST_PATTERN_END_DP11)
-+				training_pattern.v1_3.LINK_QUAL_PATTERN_SET = pattern;
- 			core_link_write_dpcd(link, DP_TRAINING_PATTERN_SET,
- 					     &training_pattern.raw,
- 					     sizeof(training_pattern));
-diff --git a/drivers/gpu/drm/amd/display/dc/dc_dp_types.h b/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
-index 296793d8b2bf..6703be2fc157 100644
---- a/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
-+++ b/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
-@@ -715,7 +715,7 @@ struct dp_audio_test_data_flags {
- struct dp_audio_test_data {
- 
- 	struct dp_audio_test_data_flags flags;
--	uint8_t sampling_rate;
-+	uint32_t sampling_rate;
- 	uint8_t channel_count;
- 	uint8_t pattern_type;
- 	uint8_t pattern_period[8];
-diff --git a/drivers/gpu/drm/amd/display/include/dpcd_defs.h b/drivers/gpu/drm/amd/display/include/dpcd_defs.h
-index b2df07f9e91c..1b073e9e7b11 100644
---- a/drivers/gpu/drm/amd/display/include/dpcd_defs.h
-+++ b/drivers/gpu/drm/amd/display/include/dpcd_defs.h
-@@ -76,6 +76,7 @@ enum dpcd_phy_test_patterns {
- 	PHY_TEST_PATTERN_D10_2,
- 	PHY_TEST_PATTERN_SYMBOL_ERROR,
- 	PHY_TEST_PATTERN_PRBS7,
-+	PHY_TEST_PATTERN_END_DP11 = PHY_TEST_PATTERN_PRBS7,
- 	PHY_TEST_PATTERN_80BIT_CUSTOM,/* For DP1.2 only */
- 	PHY_TEST_PATTERN_CP2520_1,
- 	PHY_TEST_PATTERN_CP2520_2,
 -- 
-2.43.0
-
+Best regards,
+Dmitry
