@@ -1,90 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367D01DFE36
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38527286A9;
+	Fri, 28 Mar 2025 18:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743185709; cv=none; b=oVH7l9NkkeQDu6gamVO32LtfZt/+/gBmuc7DsJKQWycU/AM4C9WRMPe7CrnUJWR9A/YrTS0sfT2akafPYUvFhjfKyd3nKEHYVYGkh8oZb9WCD8N5dL0UnTy1fTThOigXZfaTLUuGsiIf3fxD2TGTwCPmuvoChGR+vL2ExemjQ94=
+	t=1743185981; cv=none; b=rX5+ZPrmi/ce0NE7g/PWL0oeOp+WLBAQOtAT9vyx8Cg4mCHnqes6qwyicY4m3Is3ljjkyMwArhq6eh1yJVEXc8gmXY12hL4E5Bg1zvK7N9NlRcdsjoL8rmY9S3LwOUxaqn4CjJ3C/l1h7L7f2qNHbcaBvrj2wxKtFaoZQuwzXrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743185709; c=relaxed/simple;
-	bh=S/CMxBiATfwIX8u78Ausp4MJO1mSJU8pkpiZjklIqC0=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=pYAM/KLzXiavAuyS8hv9rkr+whnkWJIYXVEWaiTwvB4jD5X6oveq5SAXGCMTX7n3IBLd5SZQgpsltm57AKU/ESf1MK80o7CW9WegjftCF0+zHtnQ+BGhH7DWqp4FIQQAiq1WWdVEi00z6eH9jGUbcZdArwTfVBiBUulv1T4p8fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jHi78glp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743185981; c=relaxed/simple;
+	bh=kuN9bj2/FuIAEYupxbfKi1EvsySiDFDN5oiqwFLqYAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SrC+mstbAApYm+A8DrRf4nRAyQS9u0iwncWCrf3rdF/BPFGY4Hjez0xgyDT7qsQv8Xo6QVJsqAfEBLdIRYbxWqS0fqmGcsEHeI+SY5oLTMKgoj9B7ZVYh82eueASd16lAk7uPCOt/SovWdGiNFWo2h8ZM4MVJVBtxFykLfQFXsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIJW3V49; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jHi78glp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743185707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oGU2c/jU+jROERJKnJ12bX6t4qhq3RiVRF861YZDSA=;
-	b=jHi78glpQibWR2+B5K2JUt0S3WtO4Cq7qQbs02jvhx67+PJJVSES4+ei5b6oaVwW2MlEjt
-	4U2E1TZFODAqCSOPk+NoK41Hb5IcpRQS8SVppjxzlspBW84pVRdhXlSHhkVeIGKbWj3Oju
-	zvh9Fs4fCALv3ryoqylZhxTO7w5puFo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-422-EeBGk180Nuy2ybQ2ywBfvg-1; Fri,
- 28 Mar 2025 14:15:01 -0400
-X-MC-Unique: EeBGk180Nuy2ybQ2ywBfvg-1
-X-Mimecast-MFC-AGG-ID: EeBGk180Nuy2ybQ2ywBfvg_1743185700
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AB79719373DB;
-	Fri, 28 Mar 2025 18:14:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1B54B19560AB;
-	Fri, 28 Mar 2025 18:14:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250323184848.GB14883@redhat.com>
-References: <20250323184848.GB14883@redhat.com> <67dedd2f.050a0220.31a16b.003f.GAE@google.com>
-To: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, Oleg Nesterov <oleg@redhat.com>,
-    brauner@kernel.org, jack@suse.cz, jlayton@kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-    netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com,
-    viro@zeniv.linux.org.uk, K Prateek Nayak <kprateek.nayak@amd.com>,
-    "Sapkal,
- Swapnil" <swapnil.sapkal@amd.com>,
-    Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIJW3V49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFAEC4CEE4;
+	Fri, 28 Mar 2025 18:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743185980;
+	bh=kuN9bj2/FuIAEYupxbfKi1EvsySiDFDN5oiqwFLqYAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rIJW3V49I9jLbHWMa0w4kTdMtOE1NuGq0BxD57kac4FsGfuJgdz5R18XiwpJ5IY8L
+	 WGGNpdsBG8G1TbHbFqidPFPOLG5BnL80GM/yUkmaHea1eSBsVWfyL+aWANghueq9pX
+	 bfdVldrFdJjDaSAmRUtmAs9jHgg60Mvg/N3vAADlDttzzIHPq3Nmfq9mFnz+GXDD2O
+	 H21R1IAQy+X/EnheoIS0kiB/Blquw4bgU06Jgkp94k+FT7TWvf8qF6ZKNLBCCwRUn3
+	 eInjZCGIETrO9DeVuwSxZ6uL0U5bJ401lCJMlFo72XGHDOUVgQ6HQeOOqzmZMK6lzU
+	 UQ+EyL9MdLoRg==
+Date: Fri, 28 Mar 2025 19:19:37 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, 
+	linux-tip-commits@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
+ theoretical divide-by-zero in pwm_mediatek_config()
+Message-ID: <4swgr64qmedmlpsgaf7n4mfssfoxqkjvlveg3xhm7eogh7ae76@t4zd7fw4trxg>
+References: <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
+ <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
+ <m7pgkp3ueo7iqgqf74upjrihr3mpmb3sqhwegnjxxwsrgx2jsw@dnec5iqiyobh>
+ <Z-Uv60sD_S2xYVB1@gmail.com>
+ <nzk5uzpwqqkflmdgfe7kwsnsecqnsn6vsyo4ycoaueasnud6ot@pg6cazrf6zuf>
+ <Z-XBb_8f6cItnlZN@gmail.com>
+ <ivss2v7kmk6ylcojffyxwucsmfcgbbe3kxiasbe3dqijvooy6m@vpkopftglx3a>
+ <Z-an4KuB-OQE5ovv@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <86990.1743185694.1@warthog.procyon.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="f3tl5ltsvr4fcv7q"
+Content-Disposition: inline
+In-Reply-To: <Z-an4KuB-OQE5ovv@gmail.com>
+
+
+--f3tl5ltsvr4fcv7q
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Mar 2025 18:14:54 +0000
-Message-ID: <86991.1743185694@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
+ theoretical divide-by-zero in pwm_mediatek_config()
+MIME-Version: 1.0
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
-.git netfs-fixes
+Hello Ingo,
 
-  There's inconsistency with some wakeups between using rreq->waitq (a pri=
-vate
-  waitqueue) and using clear_and_wake_up_bit() (a shared global waitqueue)=
-.
-  The reason I didn't get round to posting the patches on this branch yet =
-is
-  that they *ought* to fix the problem, but Steve French still sees an
-  occasional hang with cifs - but only in his automated testing thing, and=
- we
-  haven't tracked it down yet.
+On Fri, Mar 28, 2025 at 02:45:04PM +0100, Ingo Molnar wrote:
+> * Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
+>=20
+> > > failures in a single place to not inconvenience randconfig CI=20
+> > > testing efforts, so in that sense it would be nice to send this via=
+=20
+> > > the objtool/urgent tree, but I'll remove it if you insist.
+> >=20
+> > I'm still in the process to determine my opinion on that.
+>=20
+> Although Josh's fix looks obviously correct to me, I've removed the=20
+> commit from objtool/urgent, because your indecision about it is=20
+> blocking other fixes.
 
-  David
+This isn't exactly the reaction that I expected, but of course you're
+entitled to do that.
 
+> Feel free to pick up the fix in your tree.
+
+I'd like to understand if there are still more fixes needed similar to
+the pwm-mediatek one. I managed to reproduce that issue and will play
+around with that a bit to check if some more fixes are needed.
+
+Best regards
+Uwe
+
+
+--f3tl5ltsvr4fcv7q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfm6DcACgkQj4D7WH0S
+/k6Idwf+NHG99w3ld8/jj5dIJe41t+wqWNDukkOdVCI9fnEaA2ORiaTXqYDmK0SU
+x1Mzba4AQQxduqqYgYqAaghyNrPWG8IFICvbWETTLMn08YgQQ+L5Y3Jpy34Sgmu2
+CNTHzZf9kIar8Ku4uC/JESe9DvK7QxxYMNGaTwiN25k1J9mKDEF2HMI6/kg9gcgX
+OzSJBOARIGexC3pj5c6f16Y9nMdn1HggXSyXLJfiGLvsf4YmTB9z0GA5KE3EEdqb
+CUozcqKtFBLpQxq3NR3nvu/sbAtJTR6L9hI89s29kEvRGCC1ilgmOW9zglYcCOmy
+dJjCHXk0wk1QYDOjs/7e6McqxGgZzw==
+=zpEw
+-----END PGP SIGNATURE-----
+
+--f3tl5ltsvr4fcv7q--
