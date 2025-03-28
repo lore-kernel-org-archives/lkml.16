@@ -1,114 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9933D35958;
-	Fri, 28 Mar 2025 15:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6C71BBBD4;
+	Fri, 28 Mar 2025 15:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174343; cv=none; b=kuLYb80K9t/O0dO6+ZSqNNRnsypG/uSRnZ2gOLVVYSn6hdVrdKLKsy3iH4cY8z9QRrihaFs2azdalS6Oz41PyjZ5Lx9yT72pfEXP6ldbzsvewg8AdxJkYoOBAcA27edXAsAVP3WgZXN8rryClGBD+SseXhusetDpIVstCSYSHnc=
+	t=1743174366; cv=none; b=qQufI8SnGQ61+muUAJK2OLfODRJRSj1AuWkMBjQIsJ/Cbk+Y1JyYvhu/kPMlw4OSH9g68KpslFsL6iPe4eoVsrGUErABdBu1YwcZMaNOBjs5ER9JyEqaj1Bzw0JoddtrrOKxKaeNzFWM7vdiSP/YE4mcKIcQypUWIDcFoFB3ywQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174343; c=relaxed/simple;
-	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbhXU4WjfcVSBUd1SPM4lWBFdrrmNW+BZKAiryUmALZz59c/wTadoAsGGexE91Rim9wRZzw2w5OSobc7M1ttzRAGYGzYQ3N4wGQjt6cg7EepZxeZTBSS1oVIyHl84qVdBsdNBfVuwcWnKWhUI6v5kyZPgQz+UcvwfzDnRGf5sNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6J7IYiL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743174366; c=relaxed/simple;
+	bh=4vH685Tb4jxWzrnxI4M3J8jAnCKnkC0Y5Nt7TGHd7oE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ykro8tXKnQhOWGG0TEVJcAWk4vHPSwb2rx9ZzmaP+HxyzN9V2mJn5omq1KTB+ZQ8UlqIs/eRQRUcQndMtfdBbI5Ffv1iAasvcbVrsikmQ172JmE6nFAZ9WF3dI0SbYaJz229B/yk2aojcy7QJuA+cGfhp0ZsRarsCez/+9k6LOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Crxb7MXM; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6J7IYiL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5010FC4CEE4;
-	Fri, 28 Mar 2025 15:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743174343;
-	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c6J7IYiLwYEa8HUpwYBGYRDyIuKnXwG2AIg/IQgkucNhPP7TlZ3NVRsWsoA+kw1GR
-	 AFGsDW3zqA7Y5WXozoKfKFjNwK0AK9hPJZQTeFbRLuOf721qwquNcEwMHcIl/fBiuX
-	 m9eKDJn3BEz7+QM9DG4mft7OcdU7ZhpmWUrhLESEUp7CKwfxTbLkqJ065KFjDIOtdD
-	 Rz414Fe68nmJwmIP24fAuRXdstVNpGWk5HKwp7gkRUCYtI5rCn+xu2nVm+8NcN3uE2
-	 9JHPX1z7eBO7QQtFfxiSeLnTfAI9Z5fA+iyxT0l0bVaquQGxy4vkQI/1HEPB9Kcg+I
-	 P6cDE2SXaOtbQ==
-Date: Fri, 28 Mar 2025 16:05:38 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/nouveau/outp: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-a6wtoIAkDY2ERx@pollux>
-References: <Z-a2DAQmcsHHlyci@kspp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Crxb7MXM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743174363; x=1774710363;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4vH685Tb4jxWzrnxI4M3J8jAnCKnkC0Y5Nt7TGHd7oE=;
+  b=Crxb7MXMdmaoFSsRPFAQ1vQ7mQ8cIZaTUpr/cM4wQnuH5mJ04qmarpXA
+   NbUNpEawBVNLFGmRQiwBHOqSD3jvyW/bvPGG/OnjO3v7GcRnwEgRB8H/B
+   j+qDcXcS/gM8g6MudYe8Gtd+moqsn+s43gcY8kNEKHl1JoPp8vmnZTQwT
+   yVHn2SlKEl/emf/w2D5K51dJbFmNBTRk/T6x85ET7vwcdSyjmGAKtq+d0
+   /T/qlk3dB1BIFeZ6DQYKUdLhKpNyXM0fjR/vCKvseBx1A/I8A6HxqNg9z
+   4t6ior01v7Yt9O0U1//rBqGxOW0b+dWkMryYMmYsJEUYm3r58j0SgnIoi
+   A==;
+X-CSE-ConnectionGUID: orIqwZHwQYSBBatl1YANAA==
+X-CSE-MsgGUID: PuJDPE1eQNiQExLrkKD9ew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="55907940"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="55907940"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 08:06:02 -0700
+X-CSE-ConnectionGUID: Rp8CfLZlRrGJrur5w3IiuA==
+X-CSE-MsgGUID: HKeOa/r6RSW9p2/4u62Hzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="125230667"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 08:06:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 17:05:56 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 06/12] platform/x86: alienware-wmi-wmax: Add support
+ for the "custom" thermal profile
+In-Reply-To: <20250313-hwm-v6-6-17b57f787d77@gmail.com>
+Message-ID: <44ee0740-b47b-0980-e5c7-27cb94a772d9@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-6-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-a2DAQmcsHHlyci@kspp>
+Content-Type: multipart/mixed; boundary="8323328-1614277634-1743174356=:932"
 
-On Fri, Mar 28, 2025 at 08:45:32AM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1614277634-1743174356=:932
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Thu, 13 Mar 2025, Kurt Borja wrote:
+
+> All models with the "AWCC" WMAX device support a "custom" thermal
+> profile. In some models this profile signals user-space that the user
+> wants to manually control the fans, which are always unlocked. In other
+> models it actually unlocks manual fan control.
+>=20
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
 > ---
->  drivers/gpu/drm/nouveau/nvif/outp.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
-> index 6daeb7f0b09b..403cf16d5e84 100644
-> --- a/drivers/gpu/drm/nouveau/nvif/outp.c
-> +++ b/drivers/gpu/drm/nouveau/nvif/outp.c
-> @@ -195,20 +195,18 @@ nvif_outp_dp_aux_pwr(struct nvif_outp *outp, bool enable)
->  int
->  nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
->  {
-> -	struct {
-> -		struct nvif_outp_hda_eld_v0 mthd;
-> -		u8 data[128];
-> -	} args;
-> +	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
->  	int ret;
->  
-> -	if (WARN_ON(size > ARRAY_SIZE(args.data)))
-> +	if (WARN_ON(size > 128))
-
-Seems a bit unfortunate that the size is duplicated here.
-
-Can we have an accessor macro to derive the size for us?
-
-	union {
-		u8 bytes[struct_size_t(type, member, count)];
-		type obj;
-	} name##_u initializer;
-
-Maybe a macro that returns the size difference between bytes and obj?
-
->  		return -EINVAL;
->  
-> -	args.mthd.version = 0;
-> -	args.mthd.head = head;
-> +	mthd->version = 0;
-> +	mthd->head = head;
->  
-> -	memcpy(args.data, data, size);
-> -	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, &args, sizeof(args.mthd) + size);
-> +	memcpy(mthd->data, data, size);
-> +	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, mthd,
-> +			__struct_size(mthd) + size);
->  	NVIF_ERRON(ret, &outp->object, "[HDA_ELD head:%d size:%d]", head, size);
->  	return ret;
+>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 23 +++++++++++++++++++-=
+---
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-wmax.c
+> index 0530f25b956f73f47c0354f40dac2910448c894e..3b37e4456482bc284b8e867c1=
+c5b6255fc6c8ef2 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -29,8 +29,6 @@
+>  #define AWCC_METHOD_THERMAL_CONTROL=09=090x15
+>  #define AWCC_METHOD_GAME_SHIFT_STATUS=09=090x25
+> =20
+> -#define AWCC_THERMAL_MODE_GMODE=09=09=090xAB
+> -
+>  #define AWCC_FAILURE_CODE=09=09=090xFFFFFFFF
+>  #define AWCC_FAILURE_CODE_2=09=09=090xFFFFFFFE
+>  #define AWCC_THERMAL_TABLE_MASK=09=09=09GENMASK(7, 4)
+> @@ -177,6 +175,11 @@ enum AWCC_THERMAL_TABLES {
+>  =09AWCC_THERMAL_TABLE_USTT=09=09=09=3D 0xA,
+>  };
+> =20
+> +enum AWCC_SPECIAL_THERMAL_CODES {
+> +=09AWCC_SPECIAL_PROFILE_CUSTOM=09=09=3D 0x00,
+> +=09AWCC_SPECIAL_PROFILE_GMODE=09=09=3D 0xAB,
+> +};
+> +
+>  enum awcc_thermal_profile {
+>  =09AWCC_PROFILE_USTT_BALANCED,
+>  =09AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
+> @@ -589,9 +592,15 @@ static int awcc_platform_profile_get(struct device *=
+dev,
+>  =09if (ret)
+>  =09=09return ret;
+> =20
+> -=09if (out_data =3D=3D AWCC_THERMAL_MODE_GMODE) {
+> +=09switch (out_data) {
+> +=09case AWCC_SPECIAL_PROFILE_CUSTOM:
+> +=09=09*profile =3D PLATFORM_PROFILE_CUSTOM;
+> +=09=09return 0;
+> +=09case AWCC_SPECIAL_PROFILE_GMODE:
+>  =09=09*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+>  =09=09return 0;
+> +=09default:
+> +=09=09break;
+>  =09}
+> =20
+>  =09if (!is_awcc_thermal_profile_id(out_data))
+> @@ -679,11 +688,17 @@ static int awcc_platform_profile_probe(void *drvdat=
+a, unsigned long *choices)
+> =20
+>  =09if (awcc->gmode) {
+>  =09=09priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =3D
+> -=09=09=09AWCC_THERMAL_MODE_GMODE;
+> +=09=09=09AWCC_SPECIAL_PROFILE_GMODE;
+> =20
+>  =09=09__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>  =09}
+> =20
+> +=09/* Every model supports the "custom" profile */
+> +=09priv->supported_profiles[PLATFORM_PROFILE_CUSTOM] =3D
+> +=09=09AWCC_SPECIAL_PROFILE_CUSTOM;
+> +
+> +=09__set_bit(PLATFORM_PROFILE_CUSTOM, choices);
+> +
+>  =09return 0;
 >  }
-> -- 
-> 2.43.0
-> 
+> =20
+>=20
+>=20
+--8323328-1614277634-1743174356=:932--
