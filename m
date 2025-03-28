@@ -1,147 +1,77 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B81714F11E;
-	Fri, 28 Mar 2025 04:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E69118787F
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743136915; cv=none; b=AsID6vemuEL03BufhiNIa1ND8gynqJ/zxuVIWzK9NJIICF6E1XSjRfrDfIon+RzbPAa56aTLNoqe0bO1UgciO+2dZ8g4ma0/5XCvg671v9wTl/r6+enpK32n5TplEsOyqsLWjq/Eqw4/32EeJUkEl39+NjmCqs4PQ3gW1eHxkfc=
+	t=1743136986; cv=none; b=sLZifcHruNj4a40fb8kOMgurRUgeFkJIUigL1JdqAWpYYnac6hdgVvA3LcCMbF8O5DV26dYF3V0rYsGFXP17s/VEWPA2npXMM3HnzuvfQKto7t3HtfU2s1KPP81MFaXR6dqc51oXJDVYPx/aHvUzKdmm9ruMoF2uKZUpVFxAjg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743136915; c=relaxed/simple;
-	bh=lgjNZxcRDwmASamYFFnxAYYwYKIpdKj9jeglt+wPP8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=POoq4MpXnseaKuBSaRrtnyoegrsIb4fzLIXLRnfaZAtouyned9CVVmUHgqUE9Z4uQ5wBZ9HsFF/29pwmRAXRjHzwAf/0dSVAoVTo8FbnAWCKA5mH7m0m/j16s08pmV4xa8TqGp61rJxGysMSYKHsE+7rZzpk0ErrVF3IaOP66aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fZoRYMww; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZoRYMww"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30332dfc820so2888114a91.2;
-        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743136913; x=1743741713; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
-        b=fZoRYMwwIybkoqJGvfnEMH+aNuclQPnynq09lEY5O5EcDt2Vz1fqk7ZXWIUVzn7aVf
-         Tqi5sCGy1LBP9vl1cyoA/brZfwJkYisx965nytYj7/tz1ZlWTzsLezAb+jiDEqiJb0vm
-         9ScZFGMtzgLKqIxrcph4Ycl0Y3XHli3LBP5aRmuXQ7AYyzWA5SAH6RwY78vErh9Sr4GU
-         zXn29+y6kjqEEg0c9FauefFF3YzzEdn8u1wtYdTjxpX6tsjZmXRk/ZpaULC4VKmx5nF1
-         YG2Aum1bEXocggzmmitzQQAhW8mRYswmESy9xFgD9WW8mNTdP/2HyGebxoXSftVcYcqo
-         0N0Q==
+	s=arc-20240116; t=1743136986; c=relaxed/simple;
+	bh=js7lVUj/SeoCBiYflPxyZS1OX5HQtjm0DSuCarpQVOk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=FOpGK+27XCgVtSFvNm3ORw9TDKIr91hgs07tuYcLxhZSXCdl9kpfW57tnylrBnMAaoJoRu90RgbAICmgAsj1IHwVl9v2fLboHWsnVoPnpfgyU1GVfXX+yTMKQjuzEOc6S2sev0aB72T0PichaZbcHOBsLJGUN5Ly7ncndo6FaBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b418faf73so386963739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:43:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743136913; x=1743741713;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
-        b=rCpMP+Rl9zGxSoKbcWLPBEeXFAB03qwcOWXNQjD3jxl7FGOhEMuwmXC7QU9fsYvFle
-         FnzCdLCTl1fID1zH+YRoJKMpKJ1RKODw8ssqf1DaEsfRFZEHqomwOg1hEAgAxsvVSs1H
-         DzUYaGv2BAPWrM+uO4lPz7vgNVRGk4VaubybvMRgY6+EX5UCgwJRSZWrLwvy9CFPcOcj
-         oWB0xmK3iT+WPREv5Mq3nR2OJzF0fJk0q8DqeFAhv0NNoVAspxHeWivSCJb70dWgJdRO
-         Wt3C88e8fctZpN+HJN1hZDAIGYFJ0dnji7H0n/JyzA/SKOZjsDkQ2GpVMyW+cP+NyQ17
-         1dwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcDRzW+pe/cBRKUEU2WYQSJTyISNL0BsAugGzPEa4JixPd3YjNZMCEkSwGIPS6VSCb9yTV22WS4aWa67Wo3SE=@vger.kernel.org, AJvYcCVujB63vSDH0qRdPFs3NnSDuciiV3q9rlb/YMMVt+8mAfMDblap0Iuvd46ykOMyAqkYt8diIDB87Q92GY4f@vger.kernel.org, AJvYcCXU3OMjLXqu89tNk31aHJ/Fu4V2UfGrkGRdlk5Tb1YM8E+mdO4T/HWXWM74XZZLIsPUDZvl5yxEbWyJ+hBsCm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo+dnoaLSTskr0IiAvk6wyhnHiFs54dLH6ofaAaqTny/YHFNHk
-	uiNIfuyuSTQRzFJQKYu0vsRylJiffdr8W+IJZ+ruAGQSB8hM/Y8B
-X-Gm-Gg: ASbGncvAo+u6p4iJ2YC6FUXniJ7RqwevX3jQWJCdAmsdHdHPN6yImydNTQljDXxbqjj
-	blE+H17a/leHXfVR+kYGFT+ZM2C1fGFyu0uLEHxpDZwLxW9V5ULGgoJ/8w+q9JhUxc1mh6jLxmP
-	x8oJ+t6Po+V194WEyCMtmWm/G8xIYlFBp5+SqqMCXG82avBLpnUyQ1W0dwkHKBvzwKqhFX2YJSq
-	ETcJTybFXVnrMllSqFMBnoGNNnT1vrJtJx4xcVcFfnSvb5ZCZdQ7zepQbWkC6SD/vKGLWVXu5rr
-	i4eHW9INtDTTyzV/lRd74U7rq9irU9X9uTm1EKlmgsgYkgmgkWFKyvlcnGOpPvusaW/0aDI19Im
-	tVbs6lxdTdKI1/4+6/pAGnqL1KDxA
-X-Google-Smtp-Source: AGHT+IFUr871gBbcE/ITOJcpUtX31Ab3GbZp4AbSiOfXeGRHHqZwTYc3dshdaDL7cQBzEkE3cXj8kw==
-X-Received: by 2002:a05:6a20:430e:b0:1ee:e24d:8fe3 with SMTP id adf61e73a8af0-1fea2d90449mr9947884637.10.1743136913094;
-        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69b127sm738649a12.17.2025.03.27.21.41.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 21:41:52 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <3f9fcc7d-931b-446a-b36a-1745f650c6cd@roeck-us.net>
-Date: Thu, 27 Mar 2025 21:41:50 -0700
+        d=1e100.net; s=20230601; t=1743136984; x=1743741784;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5uDB2tY1hUjqwKYCX0GkGa9GQ8Dhnk/SPYhijdcB1Zw=;
+        b=LnQYiVhl+jj41hYj507+1Gp7QFlaH8Mxq7Vi0zb9JTyBcV//daebjUM3HO1dSYiEnI
+         fIAatv/fpPGUeCV0LKeXgzoMnicSDWXTlQtmsVlOgcdYXNf+LJnLEVsg09AYL6TbGYl6
+         p9VdbNONgoT3ET92K+FiOMuviN45vUuTA48E3P1laPDhDFT44RTMuYf6oNV9fKo5K25J
+         +IpdrNFeYzx1GEwVEJREjcNqYNcdaKpwi9j+m3FDaDVmDUTCK3kkDAsNVH1Ulu2UycC+
+         oIryQUdqFJ1eMy0VE6lmbdXl6Uss0anfxQyXpDri5q2mdfEn0ff7IlKRyICqiBsGwgfL
+         qABQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQFKfLGdj5QejBvTOjrl6ADi1ZHJ7ynF92m0eOeOaSUwr0j4PpadVx+X9RWpmAiLNeptq7Q0b9pZMPFGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZJFX8mr46u36WsUdYwKZGY72YBdnL/7PjUf4/SvX7GzoKCy3Q
+	chVRhTmVaq3cVPkZ+amXwv2TAvGUH5DPx3euzIvpzP0S9AXa9fGOvccodmkE7mCxgrEOeYf96N3
+	PRjzK3DXhG6zAoDnBOUYtzxbw//FbXAJTJM2bYvypxihLejwcgKsezkU=
+X-Google-Smtp-Source: AGHT+IGWgZFryTvbQEfzj3JsavMzFoFExpg1aIjajV07MaP4R+0EXVOn6LPyfYjxRCyNxZA4kryrJUyJ/SpS825l7GjAM0x5LOEH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] watchdog: cros-ec: Avoid
- -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lukasz Majczak <lma@chromium.org>, Wim Van Sebroeck
- <wim@linux-watchdog.org>, Benson Leung <bleung@chromium.org>,
- Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-WG6_uhWsy_FCq3@kspp>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <Z-WG6_uhWsy_FCq3@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:174e:b0:3d3:f040:5878 with SMTP id
+ e9e14a558f8ab-3d5cce2c7c9mr76000105ab.21.1743136984504; Thu, 27 Mar 2025
+ 21:43:04 -0700 (PDT)
+Date: Thu, 27 Mar 2025 21:43:04 -0700
+In-Reply-To: <49c26b3c-cab9-4ee6-919d-c734f4de6028@amd.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e628d8.050a0220.2f068f.0057.GAE@google.com>
+Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
+From: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, brauner@kernel.org, dhowells@redhat.com, 
+	ericvh@kernel.org, jack@suse.cz, jlayton@kernel.org, kprateek.nayak@amd.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux_oss@crudebyte.com, lucho@ionkov.net, mjguzik@gmail.com, 
+	netfs@lists.linux.dev, oleg@redhat.com, swapnil.sapkal@amd.com, 
+	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/27/25 10:12, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Hello,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
+Reported-by: syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com
+Tested-by: syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         aaec5a95 pipe_read: don't wake up the writer if the pi..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1285fa4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8d5a2956e94d7972
+dashboard link: https://syzkaller.appspot.com/bug?extid=62262fdc0e01d99573fc
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=121eede4580000
+
+Note: testing is done by a robot and is best-effort only.
