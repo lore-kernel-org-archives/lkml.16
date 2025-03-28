@@ -1,261 +1,133 @@
-Received: from mail-vk1-f201.google.com (mail-vk1-f201.google.com [209.85.221.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E35B1EEA5D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C165C1DF271
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743197192; cv=none; b=sexRQpr5QXmMbzw5Ozqa/f6zBBid4QpsBG9gqfoZQZrrUm/VUEWDJn8kKat+c92ByWQcMDy/sG8qIJov2PiwJh9qmg33O/ac/BaUHRCaKqxdHbXc67aIIr7WANLmg91oMmqhfD5fJvCxqgGwfHR5Y+2eP2k2n1DoY5W3aaZFTXM=
+	t=1743197431; cv=none; b=BZCABfxIXhySnBbGOSuMB9vY5ucNzaDQRoXuL+0hJ+AlhekDh/HRhRzLlKurFGRAsPaHfYW5Ecr1y96vC04xRgJfwxYmMxDavD8EuM6AfLTRKxt17AgiUvHefwYM6/SV3JzEOatkk3RoYabZAuWbBH/0cMIkwZYz6+lQ2rCP6J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743197192; c=relaxed/simple;
-	bh=yecGsCrsQo1B4hn5+/Mj4gFgydWrhHzcrGDbHTeB4/o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FG0eKwT+BL7cuZOEIh5EAXAJ5ekH0mo+cFBVFrzI6fGcrTpaPaWQXH2lwwHm/nO7pDWCkAFiNd9ffNK6zLH3llLnQGXqBrEH+U/Nl1nbR8Q9NXqqgN3YU2nvsPnZ55c/UOP13tqKpc6Vdz2cE40DMyOL6fb3JRqkIrA68cvz4Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=29auB3hB; arc=none smtp.client-ip=209.85.221.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	s=arc-20240116; t=1743197431; c=relaxed/simple;
+	bh=MHGEsogHFFwE7WkNKtSTcvQMn8z0I848+p9Gjn1hx0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Xzbxl4UiCOnA2+i+sn906iJqcOBV2nPRHiLIbTT6Cz4FWCc5E+sb5n65XMuqX0+v/fR/Mzff+xf8U5pXj6WCK6n57Y4FEPTufo9AuPXEoHvv4JiQpbLkYpyb+9JUonvoCwpI6DLdb3bHIi4nOJB7/o+xZEWgfKZHjui51MxeVFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcW6/o9X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="29auB3hB"
-Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-523ddfc9788so802126e0c.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743197189; x=1743801989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w8m4zXBwsuwd+TpPXsReUYFUJslyYnLsiTdphFGmuAI=;
-        b=29auB3hBnNZwvt2CpP7mpIlJ3yiLPYxnhdknHktsQQP01L9LADwDkTXZLpQdp+4bdC
-         xnKBfiHZj87QEqz244UHmflYnh9TClFQFCjnMONdUWw/3e63JMrgjA0zw3pM0iPZAwNt
-         qMYStrKlodgr+YM5yFEGkAXk0R5pHHZAy39kmxPZlVcaHSN6Hf/tN9jPyf7Xl0Yu58kM
-         yzVn5ZTL1SGs9UVZcQnKHS9Cl+yND0acER7nTgIg549Zm5uz2AyIq/jr/uBvbk/NfNfX
-         dHTklJa2l3mvX2TNt831NOTQSWnwzL1jqMM3BXi32sQFnJ6bcJfAAnNeEf52DXEnDQDI
-         MoaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743197189; x=1743801989;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w8m4zXBwsuwd+TpPXsReUYFUJslyYnLsiTdphFGmuAI=;
-        b=aXOG63uUeAlt6062kjCvriT48usOW8iVA34TZgum/SELjS9TyfeKAtmeC3nGK3Xsa/
-         Gm8Q1VWWDjou9rrn2NbhJcmxfqe3QcNbg5HLGYvK6HS3PaCIPlz90JAB/sFjtgRaIQ1f
-         zzENfW3m0aDFaVawyfs5WFhG936BiuJXu9RPlnCb0X0O1JrBQvJLJKwtPWBvO/8sLWFf
-         aCnJv8TKa5fOKzc7s8SwCAv287Htu+m7ONFFlY/SzBUMhwPekm2+1GZSRM8QqSD2tWVy
-         jreKiA2NGDb7sy0Xve514lWC4dFj5w/w2bQGXZJbHk8FR8/WDS889+XN591p8DlguWKX
-         1dOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVz5mXHkxNG7/7/vScIPsPiGSvlJh3FUE6bHmgvJndsmNMJ1Pck9wOxJEyjM/AGjzC81cKV0q8+NNSTj5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxuo+JLejUJMQ4/jeOkt8wTTT72zwcEwiFX9yoQ64g/MdsaHr7
-	+lKV3V0owUzWFwk/EFOJxN1Qhu5EjkNq1RDTeKVzWjQxMIfkuxGXD2IjQzxUXyg+8IOmFbPyBv5
-	KtbI1+enWMiuqwY1bVw==
-X-Google-Smtp-Source: AGHT+IHivVsC++z1BFup0tqwkOd7GYrq8moTlRg/GpRhWDoE3Ghyz4O+IMFvuK9BuVDldT8TyVBFOBtgde1ZgIOF
-X-Received: from vkbfs2.prod.google.com ([2002:a05:6122:3b82:b0:523:87b6:c79a])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6122:328c:b0:523:dd87:fe86 with SMTP id 71dfb90a1353d-5261d46ad97mr1034796e0c.6.1743197189310;
- Fri, 28 Mar 2025 14:26:29 -0700 (PDT)
-Date: Fri, 28 Mar 2025 21:26:27 +0000
-In-Reply-To: <c04233d3c35e2bad5a864ab72d0f55b3919100f3.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcW6/o9X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155BAC4CEE4;
+	Fri, 28 Mar 2025 21:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743197431;
+	bh=MHGEsogHFFwE7WkNKtSTcvQMn8z0I848+p9Gjn1hx0c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LcW6/o9XsSNF5H9y1JykoXtESqeTJzdwLPzhK5GlLVGVKf9C4K5S+aotbx8mpRXU8
+	 Ddn/TahM185DwWjuFNMW39akhJgfaVMJkCX6cJCHAvdFyrShs2jznHix+Eg4SPoxlD
+	 x3JgUHuJ9B2enbh6AxPXpkNgEN6Lvi/wbs0euzRA0aVTMi+FIV90AfxB2z2TfQDoQG
+	 IFTtO41bWc2udpRc3lvCxYp/CQ6JLtaGpZ/fw8nRpxZ9+gsHgP0h+l4Y3VvcdH5pVB
+	 eFKrrlgaWXPhCbMsboh4o2t1jb2IFelZIqnl4Af9Q+Owh5uIqUuAfdCB+HMI4/nu/d
+	 Xxh56LIt77G6g==
+Date: Fri, 28 Mar 2025 22:30:26 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [GIT PULL] x86 fixes and updates
+Message-ID: <Z-cU8qfH1dd7Bmmb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <c04233d3c35e2bad5a864ab72d0f55b3919100f3.camel@redhat.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250328212628.2235898-1-jthoughton@google.com>
-Subject: Re: [PATCH 2/5] KVM: selftests: access_tracking_perf_test: Add option
- to skip the sanity check
-From: James Houghton <jthoughton@google.com>
-To: mlevitsk@redhat.com
-Cc: axelrasmussen@google.com, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	jthoughton@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mkoutny@suse.com, seanjc@google.com, tj@kernel.org, yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 12:32=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.co=
-m> wrote:
->
-> On Thu, 2025-03-27 at 01:23 +0000, James Houghton wrote:
-> > From: Maxim Levitsky <mlevitsk@redhat.com>
-> >
-> > Add an option to skip sanity check of number of still idle pages,
-> > and set it by default to skip, in case hypervisor or NUMA balancing
-> > is detected.
-> >
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > Co-developed-by: James Houghton <jthoughton@google.com>
-> > Signed-off-by: James Houghton <jthoughton@google.com>
-> > ---
-> > =C2=A0.../selftests/kvm/access_tracking_perf_test.c | 61 ++++++++++++++=
-++---
-> > =C2=A0.../testing/selftests/kvm/include/test_util.h | =C2=A01 +
-> > =C2=A0tools/testing/selftests/kvm/lib/test_util.c =C2=A0 | =C2=A07 +++
-> > =C2=A03 files changed, 60 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/=
-tools/testing/selftests/kvm/access_tracking_perf_test.c
-> > index 447e619cf856e..0e594883ec13e 100644
-> > --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> > +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> > @@ -65,6 +65,16 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCP=
-US];
-> > =C2=A0/* Whether to overlap the regions of memory vCPUs access. */
-> > =C2=A0static bool overlap_memory_access;
-> >=20
-> > +/*
-> > + * If the test should only warn if there are too many idle pages (i.e.=
-, it is
-> > + * expected).
-> > + * -1: Not yet set.
-> > + * =C2=A00: We do not expect too many idle pages, so FAIL if too many =
-idle pages.
-> > + * =C2=A01: Having too many idle pages is expected, so merely print a =
-warning if
-> > + * =C2=A0 =C2=A0 too many idle pages are found.
-> > + */
-> > +static int idle_pages_warn_only =3D -1;
-> > +
-> > =C2=A0struct test_params {
-> > =C2=A0 =C2=A0 =C2=A0 /* The backing source for the region of memory. */
-> > =C2=A0 =C2=A0 =C2=A0 enum vm_mem_backing_src_type backing_src;
-> > @@ -177,18 +187,12 @@ static void mark_vcpu_memory_idle(struct kvm_vm *=
-vm,
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* arbitrary; high enough that we ensure most=
- memory access went through
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* access tracking but low enough as to not m=
-ake the test too brittle
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0* over time and across architectures.
-> > - =C2=A0 =C2=A0 =C2=A0*
-> > - =C2=A0 =C2=A0 =C2=A0* When running the guest as a nested VM, "warn" i=
-nstead of asserting
-> > - =C2=A0 =C2=A0 =C2=A0* as the TLB size is effectively unlimited and th=
-e KVM doesn't
-> > - =C2=A0 =C2=A0 =C2=A0* explicitly flush the TLB when aging SPTEs. =C2=
-=A0As a result, more pages
-> > - =C2=A0 =C2=A0 =C2=A0* are cached and the guest won't see the "idle" b=
-it cleared.
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
-> > =C2=A0 =C2=A0 =C2=A0 if (still_idle >=3D pages / 10) {
-> > -#ifdef __x86_64__
-> > - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 TEST_ASSERT(this_cpu_has(X8=
-6_FEATURE_HYPERVISOR),
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 TEST_ASSERT(idle_pages_warn=
-_only,
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 "vCPU%d: Too many pages still idle (%lu out of %lu)",
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 vcpu_idx, still_idle, pages);
-> > -#endif
-> > +
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 printf("WARNING: vCPU%=
-d: Too many pages still idle (%lu out of %lu), "
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0"this will affect performance results.\n",
-> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0vcpu_idx, still_idle, pages);
-> > @@ -328,6 +332,31 @@ static void run_test(enum vm_guest_mode mode, void=
- *arg)
-> > =C2=A0 =C2=A0 =C2=A0 memstress_destroy_vm(vm);
-> > =C2=A0}
-> >=20
-> > +static int access_tracking_unreliable(void)
-> > +{
-> > +#ifdef __x86_64__
-> > + =C2=A0 =C2=A0 /*
-> > + =C2=A0 =C2=A0 =C2=A0* When running nested, the TLB size is effectivel=
-y unlimited and the
-> > + =C2=A0 =C2=A0 =C2=A0* KVM doesn't explicitly flush the TLB when aging=
- SPTEs. =C2=A0As a result,
-> > + =C2=A0 =C2=A0 =C2=A0* more pages are cached and the guest won't see t=
-he "idle" bit cleared.
-> > + =C2=A0 =C2=A0 =C2=A0*/
-> Tiny nitpick: nested on KVM, because on other hypervisors it might work d=
-ifferently,
-> but overall most of them probably suffer from the same problem,
-> so its probably better to say something like that:
->
-> 'When running nested, the TLB size might be effectively unlimited,
-> for example this is the case when running on top of KVM L0'
+Linus,
 
-Added this clarification (see below), thanks!
+Please pull the latest x86/urgent Git tree from:
 
-This wording was left as-is from before, but I agree that it could be bette=
-r.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-28
 
->
->
-> > + =C2=A0 =C2=A0 if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 puts("Skipping idle page co=
-unt sanity check, because the test is run nested");
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1;
-> > + =C2=A0 =C2=A0 }
-> > +#endif
-> > + =C2=A0 =C2=A0 /*
-> > + =C2=A0 =C2=A0 =C2=A0* When NUMA balancing is enabled, guest memory ca=
-n be mapped
-> > + =C2=A0 =C2=A0 =C2=A0* PROT_NONE, and the Accessed bits won't be queri=
-able.
->
-> Tiny nitpick: the accessed bit in this case are lost, because KVM no long=
-er propagates
-> it from secondary to primary paging, and the secondary mapping might be l=
-ost due to zapping,
-> and the biggest offender of this is NUMA balancing.
+   # HEAD: 31ab12df723543047c3fc19cb8f8c4498ec6267f x86/microcode/AMD: Fix __apply_microcode_amd()'s return value
 
-Reworded this bit. The current wording is indeed misleading.
+Merge note, one of the fixes touches core kernel code non-trivially:
 
-> > + =C2=A0 =C2=A0 =C2=A0*/
-> > + =C2=A0 =C2=A0 if (is_numa_balancing_enabled()) {
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 puts("Skipping idle page co=
-unt sanity check, because NUMA balancing is enabled");
-> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1;
-> > + =C2=A0 =C2=A0 }
-> > +
-> > + =C2=A0 =C2=A0 return 0;
-> > +}
->
-> Very good idea of extracting this logic into a function and documenting i=
-t.
+  out-of-topic modifications in x86-urgent-2025-03-28:
+  ------------------------------------------------------
+  include/linux/pgtable.h            # dc84bc2aba85: x86/mm/pat: Fix VM_PAT handl
+  mm/memory.c                        # dc84bc2aba85: x86/mm/pat: Fix VM_PAT handl
+  kernel/fork.c                      # dc84bc2aba85: x86/mm/pat: Fix VM_PAT handl
 
-:)
+Miscellaneous x86 fixes and updates:
 
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+ - Fix a large number of x86 Kconfig dependency and help text accuracy
+   bugs/problems, by Mateusz Jończyk and David Heideberg.
 
-Thanks, though I've already included your Signed-off-by. I'll just keep you=
-r
-Signed-off-by and From:.
+ - Fix a VM_PAT interaction with fork() crash. This also touches
+   core kernel code.
 
-I'm applying the following diff for the next version:
+ - Fix an ORC unwinder bug for interrupt entries
 
-diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tool=
-s/testing/selftests/kvm/access_tracking_perf_test.c
-index 0e594883ec13e..1770998c7675b 100644
---- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
-+++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-@@ -336,9 +336,10 @@ static int access_tracking_unreliable(void)
- {
- #ifdef __x86_64__
- 	/*
--	 * When running nested, the TLB size is effectively unlimited and the
--	 * KVM doesn't explicitly flush the TLB when aging SPTEs.  As a result,
--	 * more pages are cached and the guest won't see the "idle" bit cleared.
-+	 * When running nested, the TLB size may be effectively unlimited (for
-+	 * example, this is the case when running on KVM L0), and KVM doesn't
-+	 * explicitly flush the TLB when aging SPTEs.  As a result, more pages
-+	 * are cached and the guest won't see the "idle" bit cleared.
- 	 */
- 	if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
- 		puts("Skipping idle page count sanity check, because the test is run nes=
-ted");
-@@ -346,8 +347,8 @@ static int access_tracking_unreliable(void)
- 	}
- #endif
- 	/*
--	 * When NUMA balancing is enabled, guest memory can be mapped
--	 * PROT_NONE, and the Accessed bits won't be queriable.
-+	 * When NUMA balancing is enabled, guest memory will be unmapped to get
-+	 * NUMA faults, dropping the Accessed bits.
- 	 */
- 	if (is_numa_balancing_enabled()) {
- 		puts("Skipping idle page count sanity check, because NUMA balancing is e=
-nabled");
+ - Fixes and cleanups.
+
+ - Fix an AMD microcode loader bug that can promote verification failures
+   into success.
+
+ - Add early-printk support for MMIO based UARTs on an x86 board that
+   had no other serial debugging facility and also experienced early
+   boot crashes.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Boris Ostrovsky (1):
+      x86/microcode/AMD: Fix __apply_microcode_amd()'s return value
+
+Chao Gao (1):
+      x86/fpu: Update the outdated comment above fpstate_init_user()
+
+David Hildenbrand (1):
+      x86/mm/pat: Fix VM_PAT handling when fork() fails in copy_page_range()
+
+Denis Mukhin (1):
+      x86/early_printk: Add support for MMIO-based UARTs
+
+Jann Horn (2):
+      x86/entry: Fix ORC unwinder for PUSH_REGS with save_ret=1
+      x86/dumpstack: Fix inaccurate unwinding from exception stacks due to misplaced assignment
+
+Mateusz Jończyk (9):
+      x86/Kconfig: Enable X86_X2APIC by default and improve help text
+      x86/Kconfig: Always enable ARCH_SPARSEMEM_ENABLE
+      x86/Kconfig: Move all X86_EXTENDED_PLATFORM options together
+      x86/Kconfig: Update lists in X86_EXTENDED_PLATFORM
+      x86/Kconfig: Document CONFIG_PCI_MMCONFIG
+      x86/Kconfig: Make CONFIG_PCI_CNB20LE_QUIRK depend on X86_32
+      x86/Kconfig: Document release year of glibc 2.3.3
+      x86/Kconfig: Correct X86_X2APIC help text
+      x86/Kconfig: Fix lists in X86_EXTENDED_PLATFORM help text
+
+Pawan Gupta (1):
+      x86/speculation: Remove the extra #ifdef around CALL_NOSPEC
+
+
+ Documentation/admin-guide/kernel-parameters.txt |  9 ++-
+ arch/x86/Kconfig                                | 83 +++++++++++++++++--------
+ arch/x86/entry/calling.h                        |  2 +
+ arch/x86/include/asm/nospec-branch.h            |  4 --
+ arch/x86/kernel/cpu/microcode/amd.c             |  2 +-
+ arch/x86/kernel/dumpstack.c                     |  5 +-
+ arch/x86/kernel/early_printk.c                  | 45 +++++++++++++-
+ arch/x86/kernel/fpu/core.c                      |  2 +-
+ arch/x86/mm/pat/memtype.c                       | 52 +++++++++-------
+ include/linux/pgtable.h                         | 28 +++++++--
+ kernel/fork.c                                   |  4 ++
+ mm/memory.c                                     | 11 ++--
+ 12 files changed, 172 insertions(+), 75 deletions(-)
