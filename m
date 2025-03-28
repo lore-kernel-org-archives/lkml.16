@@ -1,231 +1,398 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F821CAA9E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14401C1F02;
+	Fri, 28 Mar 2025 21:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196540; cv=none; b=usztvAE1bqH2iF3g0QrJVh78eQ4gQkXkzElHibnfnq8ygt48/zWj3FQrKj9AT8X3KVj3KK6pWH1zkXGqUwixSivnvgiL77YYZvdjh8n+/TLRXroQmjoXuT7BuF+FTh30tsdb6sVGrLY6Hxc0Y/H2826uwNMndKdFLXMyDU5hw9g=
+	t=1743196607; cv=none; b=NnYEH7KUnqiGW0yJcSGfousw7zXsKeW1KDGyDZBuGtMWA/+RLojpdquBmGlr48bmsU9gHhQTQDtWY/DIVs6zPuQ6+vUXvyLitOGgkwVfwlqnBOwLbgUPoAxmKE4qrz5dxCudbZBPfeyTvXsTo7x4cPNRgPSZcOy73ElvVck7Wcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196540; c=relaxed/simple;
-	bh=tZFwzGfSYAuIByw2ZdY1WpwZUroqIUlEQluU1a14x2I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qpfMqT8ZBIZ/JBomeo34y/PEQUhOx0/1vh19sFxkM6RY519lz3acVNN5/iDKf0tWLcsU3LFsH5PnpcAl3QU4/FBIfGKADB0RP2QfrWk7XZPCUOQZUcHAE+CjOB6UJ6csRxyHd81qMu4WkydKA8s9ngs6u18vLQegooarQmW09ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eev4V3bc; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1743196607; c=relaxed/simple;
+	bh=Cq75cGWaNXGgJPlvDR2m7QPBSOCXA3dE6y5mQk9wX50=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=d+h4pyYzuPipf6ThuWUuT1oKT3Z01wITbEnezk6ymIYY2hRkvQaJmeA0BSpmQ3CcH3m5SX+sY3cElrjKsSm1GDAqzYK3L1Ij1ZLV2CGO8BKr3sCPud5mE+FoOG1QOYT3kOeEXc2llS+UufV5eZm2Zjg/XKsLz8Z988Q2Yy809VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hgiu7PIb; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eev4V3bc"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223a7065ff8so17735755ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:15:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hgiu7PIb"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224341bbc1dso52624305ad.3;
+        Fri, 28 Mar 2025 14:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743196538; x=1743801338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743196605; x=1743801405; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qbUbFTWJD7pwB3jiRDiQvtUN69ijb2DE0TXBdNZ7PTw=;
-        b=Eev4V3bcDX5YGIMxMo1tybarkR0JyblsNaazw5uux4w/iLFzan0fRml10hUputx63A
-         dc0o69MykzI2Fg8HdfReCMtqZaOwVw3rwHUA01Aa9ppPD2knCzj6Y/fFO8bT3n145AdY
-         gX1wBfmQvGKslgqSVMCFdvltXOjw5FdYq9ioJxwi6b9qMAARg/auRG4hAUVkm7AKvNgT
-         qn3pHNXkGodFWZ+SqSPi/J+OKXqLDPhXO9KrgrXwYJr0ONHMDBpOTA91PHzo08E82zJB
-         K3Ba3b5yLfVajcvlR6CZHTCLWZzd91LzsZTh3vV3Qupb3RJpycjUnPrpQfHZ2VAeZODm
-         9Ytg==
+        bh=PQdvqWnU1/MoyOl7aQRdpiuixcuM6V34/ep3gwrpUas=;
+        b=Hgiu7PIby6xvuivTy+raej+y7SlOn6+kcmy3LgvQZfO6D/piEEdSC5mtLQYfFA7TV3
+         hVQbX01/UhX49HPeSXVcOVN9v7GCpjvqdhPrQsYQUjAkJ9rpAH4GOQ7Izd4TOjaRY6bj
+         J1JStXPEaa3oxx5j8SzqBOju+vmRm1ri6dPqsFnW2PBGMaxCTyi5kmcbyLw8p+8ydqNQ
+         3akgEFBtWTy2wJncDz1rXgBJ64QdmPBIU9PxIwyjMu0ZancMo4CzYpbiULZ4vEitg+2B
+         NVecoPveGHznTY6gYQQM/PlMGwX4r5oUXXPSnGEKxnICZCNJcMNtroVceWe6ji0ux0YQ
+         6krg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743196538; x=1743801338;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qbUbFTWJD7pwB3jiRDiQvtUN69ijb2DE0TXBdNZ7PTw=;
-        b=GqiFvHLnjQNygYMXqOfC/1r82HR43SGUkYv2N9YRBZ5BOV3HtskTtgVIjAUXhGZ6ua
-         i2cvealiV5OICFwihjH9lAk7LTaGaehOgXE+MUdoC2H+hvEe7IgvqYTzG+tK8QdZEmhe
-         w3WCtoeYxbqECDaq4HCgdd2caq79oGfFwNPf22l4it2Y6KsU8GpocZRDyQ5yPYE9BcHF
-         0+tJsCcRh4FyPEMpStqXey/3drfd5tE/126zXWWDt+9KtB6pwizckdtX6xbW8hVdtkjy
-         l9gKCSj0dzIza8jLYKfBz5zkzssa4Z0BFM9h5d+s0Uly9rkQAsCR1o9IdYZGThLjDbkV
-         3wNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoKqTqnFQIr9qr6L8u44DceYSl7kmB+W+VUml4McCN7hmmwi6HousT3aw+57KTyr6p/F7b1C29B9CK3oI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOwEsB/uXSlwuhoABtCClHzG7OEmc5ZrCl++E75Z9T7gBQVLvZ
-	52NH+RdxWQzw3fcT2e/MFpIMyyNTmzZx+/qwqKusYHcZmg6uCPpb
-X-Gm-Gg: ASbGncthernVW7JJrVRM8+ZUK3oT1Aye4qUlBmyxLKLm/SrFCArw7M8FW4i9CY6ZYGI
-	JgpTRm7m1c3MMMjAfOhatk3v0LJXNXSdDhCuVGgw2F5hGIgeBtf4dMBi+koMqpm4efftp8mA2QF
-	5b8BVbxBacQ9umG3zI0vUrPPDICseSyiBxp1amSJNZLaCc/PJcU8flgZp4ZCYL7CSCbqQvlqDvw
-	B8sGArC0oZRA5j6le5zqHMPrf+M7hLI8yb4z9U6pTpBOpCMh07SI22y+ei0QVEU8nfWI6GfEWdh
-	PSQ4MWTm/icX+J5jxB1m/tqMcjNF1sz0OYTU53xn4p8r0zRsyd/T7GLoNBivYXBBVhM8KNZX/hi
-	4WHtjHQqbacG85w==
-X-Google-Smtp-Source: AGHT+IHDjHmSibHj5GGIUXlXojDC4EIiLsffxfiVyP6HzgNznyb+FNdMvwg2bsWgDhCZDfRyWVRkGw==
-X-Received: by 2002:a17:90b:51c6:b0:2ff:5ed8:83d1 with SMTP id 98e67ed59e1d1-305320af2camr1021006a91.19.1743196537935;
-        Fri, 28 Mar 2025 14:15:37 -0700 (PDT)
-Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-30516d55fbasm2407137a91.15.2025.03.28.14.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 14:15:37 -0700 (PDT)
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Huan Yang <link@vivo.com>,
-	linux-kernel@vger.kernel.org,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [RFC PATCH v2 1/1] mm/vmalloc: Introduce vmap_file()
-Date: Fri, 28 Mar 2025 14:13:49 -0700
-Message-ID: <20250328211349.845857-2-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250328211349.845857-1-vishal.moola@gmail.com>
-References: <20250328211349.845857-1-vishal.moola@gmail.com>
+        d=1e100.net; s=20230601; t=1743196605; x=1743801405;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PQdvqWnU1/MoyOl7aQRdpiuixcuM6V34/ep3gwrpUas=;
+        b=hs5/sLi/Y9JIC5WW4xqZJLwLAabBq8tpCpUN1DozQxRTj5+GXL4gu1RZYzt0ssK8EU
+         bvg60WzoSoYZT54/boOSsN3hLhbwO6XJdQI4j+10sO6SZgyttWC8PvV/Tx9TfbQ3HZhN
+         JOBBFSyaau8GU16rXZc+hwNhq/2WhqNI/GqDqUrqhKuWtJqeN9eqLGg2wFUObCwn2ONz
+         Qh+D/KHKLEcD4cq9QuIvUXft6Zv/C+USPuH6t/CqV+gOAvIlAbXCnvAD/hrr9waEzRqT
+         8AtzDiHDiSWvawDa+Ev3jepKpOtUj8klaKJ1tOk0iqK+ZYagrATLriy9dXplRT0cpr8z
+         8wCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWISYDgiybW20ADy2K7jadYNvpl1z6Od9khimofMPmZZeJZ+yLNkUhHryBOPQ1+zaJFaa1i68n5+c1BzD6aT0laCjrxog==@vger.kernel.org, AJvYcCWJeD8JKzJxTT/oazDEtA2xGr66j5gl1HUhJuLQhktdK72luCkGU3Pi9CKaxK5HNcrJKZidzVYXBDKZTys=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Alm7nZadnpaofAoy6R59AGfsP+Q8ITyqSn9ViL3Ap+YzBdbI
+	xjWFsLGHXT/IcUn9c8jg4ccNKE53U4y76wL6M5pvMYjv1L9jyNTV
+X-Gm-Gg: ASbGncvnLAAio/CHzrI7+/mgO9JOzx3WlfXimyk22XKURKiS0B7txZv+7P7ELnNJfXx
+	i7kaWHsZaTdZFYQLf55iPSWYK50wlcSUhf7/NZxSxo2+d9Z4z6Ke36OPlBrJYP7dqwPxzArZWCB
+	W8//62vtMkzP6foKzK2MaDrdAyzDLaXOKFtIS4YJxAvag1W8Lt0sr0pac5aLgQomGagkQxA7qEV
+	T6WssfBNIO4AAAxn6VOcSJGUl0iCwj8q45MT12jr4zbDJ0a5Ctz6/hsShFfAQSES5mt3ezwAwf/
+	6lqlAQmOpW2/70Ojmq/MwNHu53RsfzvRPMGXKw==
+X-Google-Smtp-Source: AGHT+IEgjthqdq03xySw0fw1gDiZrOK53FoxCuE0evUJbZW8d31nnltpw9rglMXXdHBvIAX76wb3yQ==
+X-Received: by 2002:a17:902:748b:b0:224:2524:3047 with SMTP id d9443c01a7336-2292f97578dmr8231515ad.26.1743196604426;
+        Fri, 28 Mar 2025 14:16:44 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93ba0e4f0sm2104479a12.72.2025.03.28.14.16.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 14:16:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 28 Mar 2025 18:16:41 -0300
+Message-Id: <D8S7MF97YEGI.21PR2NBB42QRS@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
+ <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ "LKML" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 03/12] platform/x86: alienware-wmi-wmax: Improve
+ internal AWCC API
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
+ <20250313-hwm-v6-3-17b57f787d77@gmail.com>
+ <45699e14-6d51-8116-b252-a7a20ffe8e8b@linux.intel.com>
+In-Reply-To: <45699e14-6d51-8116-b252-a7a20ffe8e8b@linux.intel.com>
 
-vmap_file() is effectively an in-kernel equivalent to calling mmap()
-on a file. A user can pass in a file mapping, and vmap_file() will map
-the specified portion of that file directly to kernel virtual space.
+On Fri Mar 28, 2025 at 11:51 AM -03, Ilpo J=C3=A4rvinen wrote:
+> On Thu, 13 Mar 2025, Kurt Borja wrote:
+>
+>> Inline all AWCC WMI helper methods and directly return the newly
+>> introduced __awcc_wmi_command() helper to simplify implementation.
+>>=20
+>> Drop awcc_thermal_control() in favor of awcc_op_activate_profile().
+>>=20
+>> Add awcc_op_get_resource_id(), awcc_op_get_current_profile() and a new
+>> failure code.
+>>=20
+>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 150 +++++++++++++++---=
+-------
+>>  1 file changed, 91 insertions(+), 59 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-wmax.c
+>> index 80aefba5b22d6b4ac18aeb2ca356f8c911150abd..b9dbfdc8096c571722b3c7ac=
+3e73989e235e2eb9 100644
+>> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> @@ -32,6 +32,7 @@
+>>  #define AWCC_THERMAL_MODE_GMODE			0xAB
+>> =20
+>>  #define AWCC_FAILURE_CODE			0xFFFFFFFF
+>> +#define AWCC_FAILURE_CODE_2			0xFFFFFFFE
+>>  #define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
+>>  #define AWCC_THERMAL_MODE_MASK			GENMASK(3, 0)
+>>  /* Some IDs have a BIT(8) flag that we ignore */
+>> @@ -443,8 +444,7 @@ const struct attribute_group wmax_deepsleep_attribut=
+e_group =3D {
+>>  };
+>> =20
+>>  /*
+>> - * Thermal Profile control
+>> - *  - Provides thermal profile control through the Platform Profile API
+>> + * AWCC Helpers
+>>   */
+>>  static bool is_awcc_thermal_profile_id(u8 code)
+>>  {
+>> @@ -463,72 +463,107 @@ static bool is_awcc_thermal_profile_id(u8 code)
+>>  	return false;
+>>  }
+>> =20
+>> -static int awcc_thermal_information(struct wmi_device *wdev, u8 operati=
+on,
+>> -				    u8 arg, u32 *out_data)
+>> +static int __awcc_wmi_command(struct wmi_device *wdev, u32 method_id,
+>> +			      struct wmax_u32_args *args, u32 *out)
+>
+> Why did you put __ into the name?
+>
+> Some people oppose __ prefix altogether, I don't entirely agree with thei=
+r=20
+> stance but I don't really understand what the underscores here signify.
+>
+> Normally I see __ being used in three main cases:
+> - non-__ variant does some locking around the call too the __ func (thoug=
+h=20
+>   many funcs use _locked postfix these days).
+> - func is "dangerous" and caller has to really know what he/she is
+>   doing / be careful for some reason.
+> - non-__ variant exists and somebody cannot come up better name for the
+>   internally called function (not very good use case, IMHO)
 
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
----
- include/linux/vmalloc.h |   2 +
- mm/vmalloc.c            | 113 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
+Oh - I didn't know. Andy also mentioned this prefix is used for
+non-atomic versions of some functions like __set_bit().
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 31e9ffd936e3..d5420985865f 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -192,6 +192,8 @@ extern void vfree_atomic(const void *addr);
- 
- extern void *vmap(struct page **pages, unsigned int count,
- 			unsigned long flags, pgprot_t prot);
-+void *vmap_file(struct address_space *mapping, loff_t start, loff_t end,
-+			unsigned long flags, pgprot_t prot);
- void *vmap_pfn(unsigned long *pfns, unsigned int count, pgprot_t prot);
- extern void vunmap(const void *addr);
- 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3ed720a787ec..b94489032ab5 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3475,6 +3475,119 @@ void *vmap(struct page **pages, unsigned int count,
- }
- EXPORT_SYMBOL(vmap);
- 
-+/**
-+ * vmap_file - map all folios in a file to virtually contiguous space.
-+ * @mapping: The address space to map.
-+ * @start: The starting byte.
-+ * @end: The final byte to map.
-+ * @flags: vm_area->flags.
-+ * @prot: page protection for the mapping.
-+ *
-+ * Maps a file into contiguous kernel virtual space. The caller is expected
-+ * to ensure that the folios caching the file are present and uptodate. The
-+ * folios must remain so until the file is unmapped.
-+ *
-+ * If @start or @end are not PAGE_ALIGNED, vmap_file() will round
-+ * @start down and @end up to encompass the desired pages. The
-+ * address returned is always PAGE_ALIGNED.
-+ *
-+ * Return: the address of the area or %NULL on failure.
-+ */
-+void *vmap_file(struct address_space *mapping, loff_t start, loff_t end,
-+		unsigned long flags, pgprot_t prot)
-+{
-+	struct vm_struct *area;
-+	struct folio *folio;
-+	unsigned long addr, end_addr;
-+	const pgoff_t first = start >> PAGE_SHIFT;
-+	const pgoff_t last = end >> PAGE_SHIFT;
-+	XA_STATE(xas, &mapping->i_pages, first);
-+
-+	unsigned long size = (last - first + 1) << PAGE_SHIFT;
-+
-+	if (WARN_ON_ONCE(flags & VM_FLUSH_RESET_PERMS))
-+		return NULL;
-+
-+	/*
-+	 * Your top guard is someone else's bottom guard. Not having a top
-+	 * guard compromises someone else's mappings too.
-+	 */
-+	if (WARN_ON_ONCE(flags & VM_NO_GUARD))
-+		flags &= ~VM_NO_GUARD;
-+
-+	area = get_vm_area_caller(size, flags, __builtin_return_address(0));
-+	if (!area)
-+		return NULL;
-+
-+	addr = (unsigned long) area->addr;
-+	end_addr = addr + size;
-+
-+	rcu_read_lock();
-+	xas_for_each(&xas, folio, last) {
-+		phys_addr_t map_start;
-+		int map_size, err;
-+		bool pmd_bound, is_first_map;
-+
-+		if (xas_retry(&xas, folio))
-+			continue;
-+		if (!folio || xa_is_value(folio) ||
-+				!folio_test_uptodate(folio))
-+			goto out;
-+
-+		is_first_map = (addr == (unsigned long) area->addr);
-+		map_start = folio_pfn(folio) << PAGE_SHIFT;
-+		map_size = folio_size(folio);
-+
-+		/* We can unconditionally calculate values for the first
-+		 * folio. This lets us handle skipping pages in the first
-+		 * folio without verifying addresses every iteration.
-+		 */
-+		if (is_first_map) {
-+			map_size -= (first - folio->index) << PAGE_SHIFT;
-+			map_start += (first - folio->index) << PAGE_SHIFT;
-+		}
-+
-+		if (addr + map_size > end_addr)
-+			map_size = end_addr - addr;
-+
-+		/* We need to check if this folio will cross the pmd boundary.
-+		 * If it does, we drop the rcu lock to allow for a new page
-+		 * table allocation.
-+		 */
-+
-+		pmd_bound = is_first_map ||
-+			(IS_ALIGNED(addr, PMD_SIZE)) ||
-+			((addr & PMD_MASK) !=
-+			((addr + map_size) & PMD_MASK));
-+
-+		if (pmd_bound) {
-+			xas_pause(&xas);
-+			rcu_read_unlock();
-+		}
-+
-+		err = vmap_range_noflush(addr, addr + map_size,
-+				map_start, prot, PAGE_SHIFT);
-+
-+		if (pmd_bound)
-+			rcu_read_lock();
-+
-+		if (err) {
-+			vunmap(area->addr);
-+			area->addr = NULL;
-+			goto out;
-+		}
-+
-+		addr += map_size;
-+	}
-+
-+out:
-+	rcu_read_unlock();
-+	flush_cache_vmap((unsigned long)area->addr, end_addr);
-+
-+	return area->addr;
-+}
-+EXPORT_SYMBOL_GPL(vmap_file);
-+
- #ifdef CONFIG_VMAP_PFN
- struct vmap_pfn_data {
- 	unsigned long	*pfns;
--- 
-2.48.1
+>
+> I don't see any of those apply here, this looks just an ordinary wrapper=
+=20
+> function, thus the question.
+
+I did it to indicate it's a "private" method, so it's not used directly.
+But ofc that's not the convention here, so I'll drop it.
+
+>
+>>  {
+>> -	struct wmax_u32_args in_args =3D {
+>> +	int ret;
+>> +
+>> +	ret =3D alienware_wmi_command(wdev, method_id, args, sizeof(*args), ou=
+t);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (*out =3D=3D AWCC_FAILURE_CODE || *out =3D=3D AWCC_FAILURE_CODE_2)
+>> +		return -EBADRQC;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static inline int awcc_thermal_information(struct wmi_device *wdev, u8 =
+operation,
+>> +					   u8 arg, u32 *out)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>>  		.operation =3D operation,
+>>  		.arg1 =3D arg,
+>>  		.arg2 =3D 0,
+>>  		.arg3 =3D 0,
+>>  	};
+>> -	int ret;
+>> =20
+>> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION,
+>> -				    &in_args, sizeof(in_args), out_data);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>> -	if (*out_data =3D=3D AWCC_FAILURE_CODE)
+>> -		return -EBADRQC;
+>> -
+>> -	return 0;
+>> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+>>  }
+>> =20
+>> -static int awcc_thermal_control(struct wmi_device *wdev, u8 profile)
+>> +static inline int awcc_game_shift_status(struct wmi_device *wdev, u8 op=
+eration,
+>
+> As a general rule, don't add inline to .c files, we leave figuring=20
+> inlining out to the compiler.
+
+Good to know, thanks!
+
+>
+>> +					 u32 *out)
+>>  {
+>> -	struct wmax_u32_args in_args =3D {
+>> -		.operation =3D AWCC_OP_ACTIVATE_PROFILE,
+>> -		.arg1 =3D profile,
+>> -		.arg2 =3D 0,
+>> -		.arg3 =3D 0,
+>> -	};
+>> -	u32 out_data;
+>> -	int ret;
+>> -
+>> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL,
+>> -				    &in_args, sizeof(in_args), &out_data);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	if (out_data =3D=3D AWCC_FAILURE_CODE)
+>> -		return -EBADRQC;
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation=
+,
+>> -				  u32 *out_data)
+>> -{
+>> -	struct wmax_u32_args in_args =3D {
+>> +	struct wmax_u32_args args =3D {
+>>  		.operation =3D operation,
+>>  		.arg1 =3D 0,
+>>  		.arg2 =3D 0,
+>>  		.arg3 =3D 0,
+>>  	};
+>> -	int ret;
+>> =20
+>> -	ret =3D alienware_wmi_command(wdev, AWCC_METHOD_GAME_SHIFT_STATUS,
+>> -				    &in_args, sizeof(in_args), out_data);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>> -	if (*out_data =3D=3D AWCC_FAILURE_CODE)
+>> -		return -EOPNOTSUPP;
+>> -
+>> -	return 0;
+>> +	return __awcc_wmi_command(wdev, AWCC_METHOD_GAME_SHIFT_STATUS, &args, =
+out);
+>>  }
+>> =20
+>> +/**
+>> + * awcc_op_get_resource_id - Get the resource ID at a given index
+>> + * @wdev: AWCC WMI device
+>> + * @index: Index
+>> + * @out: Value returned by the WMI call
+>> + *
+>> + * Get the resource ID at a given index. Resource IDs are listed in the
+>
+> Use @index to refer to the argument.
+
+Ack
+
+>
+>> + * following order:
+>> + *
+>> + *	- Fan IDs
+>> + *	- Sensor IDs
+>> + *	- Unknown IDs
+>> + *	- Thermal Profile IDs
+>> + *
+>> + * The total number of IDs of a given type can be obtained with
+>> + * AWCC_OP_GET_SYSTEM_DESCRIPTION.
+>> + *
+>> + * Return: 0 on success, -errno on failure
+>> + */
+>> +static inline int awcc_op_get_resource_id(struct wmi_device *wdev, u8 i=
+ndex, u32 *out)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>> +		.operation =3D AWCC_OP_GET_RESOURCE_ID,
+>> +		.arg1 =3D index,
+>> +		.arg2 =3D 0,
+>> +		.arg3 =3D 0,
+>> +	};
+>> +
+>> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+>> +}
+>> +
+>> +static inline int awcc_op_get_current_profile(struct wmi_device *wdev, =
+u32 *out)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>> +		.operation =3D AWCC_OP_GET_CURRENT_PROFILE,
+>> +		.arg1 =3D 0,
+>> +		.arg2 =3D 0,
+>> +		.arg3 =3D 0,
+>> +	};
+>> +
+>> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args=
+, out);
+>> +}
+>> +
+>> +static inline int awcc_op_activate_profile(struct wmi_device *wdev, u8 =
+profile)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>> +		.operation =3D AWCC_OP_ACTIVATE_PROFILE,
+>> +		.arg1 =3D profile,
+>> +		.arg2 =3D 0,
+>> +		.arg3 =3D 0,
+>> +	};
+>> +	u32 out;
+>> +
+>> +	return __awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL, &args, &o=
+ut);
+>> +}
+>> +
+>> +/*
+>> + * Thermal Profile control
+>> + *  - Provides thermal profile control through the Platform Profile API
+>> + */
+>>  static int awcc_platform_profile_get(struct device *dev,
+>>  				     enum platform_profile_option *profile)
+>>  {
+>> @@ -536,10 +571,8 @@ static int awcc_platform_profile_get(struct device =
+*dev,
+>>  	u32 out_data;
+>>  	int ret;
+>> =20
+>> -	ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_CURRENT_PROFI=
+LE,
+>> -				       0, &out_data);
+>> -
+>> -	if (ret < 0)
+>> +	ret =3D awcc_op_get_current_profile(priv->wdev, &out_data);
+>> +	if (ret)
+>>  		return ret;
+>> =20
+>>  	if (out_data =3D=3D AWCC_THERMAL_MODE_GMODE) {
+>> @@ -550,7 +583,7 @@ static int awcc_platform_profile_get(struct device *=
+dev,
+>>  	if (!is_awcc_thermal_profile_id(out_data))
+>>  		return -ENODATA;
+>> =20
+>> -	out_data &=3D AWCC_THERMAL_MODE_MASK;
+>> +	out_data =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, out_data);
+>
+> Should this be part of the earlier patch??
+
+I think I'll leave it in this patch, but I'll move it to
+awcc_op_get_resource_id().
+
+--=20
+ ~ Kurt
+
+>
+>>  	*profile =3D awcc_mode_to_platform_profile[out_data];
+>> =20
+>>  	return 0;
+>> @@ -583,8 +616,8 @@ static int awcc_platform_profile_set(struct device *=
+dev,
+>>  		}
+>>  	}
+>> =20
+>> -	return awcc_thermal_control(priv->wdev,
+>> -				    priv->supported_thermal_profiles[profile]);
+>> +	return awcc_op_activate_profile(priv->wdev,
+>> +					priv->supported_thermal_profiles[profile]);
+>>  }
+>> =20
+>>  static int awcc_platform_profile_probe(void *drvdata, unsigned long *ch=
+oices)
+>> @@ -606,8 +639,7 @@ static int awcc_platform_profile_probe(void *drvdata=
+, unsigned long *choices)
+>>  	first_mode =3D sys_desc[0] + sys_desc[1];
+>> =20
+>>  	for (u32 i =3D 0; i < sys_desc[3]; i++) {
+>> -		ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_RESOURCE_ID,
+>> -					       i + first_mode, &out_data);
+>> +		ret =3D awcc_op_get_resource_id(priv->wdev, i + first_mode, &out_data=
+);
+>> =20
+>>  		if (ret =3D=3D -EIO)
+>>  			return ret;
+>>=20
+>>=20
 
