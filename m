@@ -1,89 +1,206 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A1F17BD9;
-	Fri, 28 Mar 2025 16:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D3E1C9B62;
+	Fri, 28 Mar 2025 16:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743178682; cv=none; b=CQJjq2b6HWxMdSb7E0rrVGX/Uu6jHDPb2o8E52ThYEsnOnNRzfv5n38QYKqCnJ5DA+HeV9h/R0QFv/Gz1JRSCQCNnNhnuwiMy9FjNta6IIEG8KpfnDE3wXWGhMIslsoZGdwcrIn4XLpdHuW3sFp3fWhYe+YGgMla709yImulM3A=
+	t=1743178707; cv=none; b=F59vm5+Z0EfUMNCD2k/lcRPdMbjlToJBVrw6sPdq4GClRLsxYVK+bUBwuFJAlZ+iSau870LYGlY6G4n4/XdTHF0JMqiY07VxOGiR/oJWnhCBSn0zN/IjtkRaIEq974+y+EP4CGvJAlmjYBZ6ppzU67pr9PumdOiia0defHMy0CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743178682; c=relaxed/simple;
-	bh=7qssfR41+fRhRzI4Egm/PD4wIN5YwI6NxzZdxmime6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VSdbbFef69E73CfNxJoAgdMbyKD+890a6WGpSPxBizzNDiCmmk4Ws5WKrLTFnq0qWoYAxCvflorVJk6MsHap9NsF9p1xAGG8XzNH+51EISuz/9tmf6SzHBXyP4QL956VoedPcGCwocsIZLm7oRuAjGMgPmxLm3vtW9CkTULeBh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlW8r0Fk; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743178707; c=relaxed/simple;
+	bh=pLTKHD3ngohPgzIXmaLBRC4/WKu4wHLBTdpsSwKx6Ok=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pcq6PFL5Igrjh5SAu24SrgLAhNsicdpiNKDvhX3Kz/+XrWTJj3DUA1vorxidYFu+Mzab+61OH7J0oyynX6c08qDvlonALUmmEg1odgygOo5NRoFXnSmJ0D7VmnGRi2oKgUB6QiHxpQRX5b6aHWx6RbYbDNMKHPgAt7K+FaGTj0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=akkpTSIj; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlW8r0Fk"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so1961946276.2;
-        Fri, 28 Mar 2025 09:18:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743178680; x=1743783480; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7qssfR41+fRhRzI4Egm/PD4wIN5YwI6NxzZdxmime6A=;
-        b=IlW8r0FkQmI9lZitjWd5r+8IMeH2O5rRWGdGC5U1JX+aGhrsWSTcvj7YQq1bfY4d0F
-         FFI3LwCNH14t6ndrH45bIyMLHMgRkUJWbK0oJEqS/XEzhmYloLESDYOdA9d7QL4aZbnb
-         UO1O7pTPfYavB3HcPfaZ4ASBOAIjF0vvOMg1K5VNlBDCt39+A4EMgmBPFzVyrMThVFZR
-         NU+ZwcmRJZ0sQDAafV9kIbOO3FbI6vvnWuijfJK+swGLDcTlS6Bjv4BnFLPO2SK9uH2u
-         EeBaUmcBLFkXOv+RISSuZqYO2dgBx24ABcV9fPUwbhUrSSEvnbyI6hM6M/piMct41zax
-         fTCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743178680; x=1743783480;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7qssfR41+fRhRzI4Egm/PD4wIN5YwI6NxzZdxmime6A=;
-        b=Nz7nUrBflkxGeIla1NV3mVQcHltLYDeY/unvOq+NQEUZYFpAxKT3MIfvcC9ECZo332
-         /VTxLUP+oCUNXIZ/hYouRQ3QSuMiPFuXDJi7gB+mWMqTGmmI6RzdTaScJD3Chpz6VA3Z
-         PjQz3ozelLZU7bvsi2IYJfUkzCCG4+zUCcvjZe0XadKlfJZx8Hb5DYDp/0hYax6z2A8n
-         Z69PCL+/j06sfzOE+yG55wAnPPD9BlC2LKOqaJpXq45cUWgMMsY+/Gm6ofnWuf3EAKd1
-         Ay2lYTazzmhIVvJmdyAXtmfNuDmlr6LojRhSupkvCUONx6NsJZ8et8oZBS9oOcHT9Ixd
-         3kBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3Wi5alXoBj1NkNTXHdxTR5uDnrkgmlfNXK1Vn0FI6xgVhove5SKpTw9WHN2xtDZRzAyPzhwmS@vger.kernel.org, AJvYcCXz201Kz3kYmx2uTilsmwc6wE3AjYjyTWfKU0WrxIH0PEKGUA5TxZq5HLp+U9LdgHs+buzC4LY/WjxzaTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw650XNcQvexjYRHbtCntYK8OdhBxLQnE1v77Gp4phqfVN4/ixN
-	maUIaZslZXsyugLrYJxr3wQwG1OLNFTfuhnzBeO+dwoLLPGXaA9sZKZpHkp14qFt7bcitn5Hx/x
-	yZHd8axmXv+y8H4c4Uf+GJOnNhA==
-X-Gm-Gg: ASbGncv6U/pVrpvSNpU7wjjgDoBZIIAq024/YP8kn9zLUYl6qffVlkJc5oJ7K9dIr8M
-	BCFIlpsYCLTmpdGOmTNhI+CR+/QSpQ8hLvymIHzejh53XPq4ukUFQ4ChOJy1pjTrry6KvfRe15A
-	ysRzggHq+/58Q0KwYNYQ1wOSRDtPE1SkXgZ8Z+kBswc6sG0onY
-X-Google-Smtp-Source: AGHT+IGN9dsDBzOvJPjL9CD4pSBzKWnHRy/a47xnHG8LXpRh7feIEt+c9x5mBhRHfqeb7a6JUKSU8hmPgkFhnclEYwU=
-X-Received: by 2002:a05:6902:1a44:b0:e6b:808c:5fef with SMTP id
- 3f1490d57ef6-e6b808c7f77mr1002214276.32.1743178679659; Fri, 28 Mar 2025
- 09:17:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="akkpTSIj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743178706; x=1774714706;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=pLTKHD3ngohPgzIXmaLBRC4/WKu4wHLBTdpsSwKx6Ok=;
+  b=akkpTSIj6PPCAa/0377EufLTnrCm4zon04DiKrhEjN4NssK8Cm/tE/s4
+   IWbzJHW+nTrM7uEUmRPVElCmpXZyHHmkTIj40xaMljzt/mpfgFaowpYZc
+   y8KmoTSBs+scQ7fYFmzd9tD1U/AKDJAWrK1FsM6ZTeM2nds/68dp1wm88
+   M8UEbvhLMmvLInQBWBUj0oppa1s/5ItFFwlAkzNV1tvBvdLC5BOKcCePF
+   n9RemAsMUb6XyKlkv6NL9iaXDDrbeX2MW30c5ZSf0bcC6kDJkqc4BTPi5
+   7A3yBs/Mp21ywFLN5wanYdm7Insup4IPCTxoHiuNJrrQbN2oS1NoRR6a+
+   Q==;
+X-CSE-ConnectionGUID: hs4xIvlITRKcuH5saoG19g==
+X-CSE-MsgGUID: OPY0yV3GT7SpFT83/fPLsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="55208000"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="55208000"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:18:25 -0700
+X-CSE-ConnectionGUID: ttme5oBuS9KxO8XuYgom9g==
+X-CSE-MsgGUID: C72/lOYRQPGRp/g/t90X+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="129625691"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:18:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 18:18:19 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 09/12] platform/x86: alienware-wmi-wmax: Add a DebugFS
+ interface
+In-Reply-To: <20250313-hwm-v6-9-17b57f787d77@gmail.com>
+Message-ID: <09fb8477-9b41-ceb2-4f0c-bc6477a5874f@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-9-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313093615.8037-1-rsalvaterra@gmail.com> <2710245b-5c2d-4c1f-93ef-937788c3c21b@intel.com>
- <CALjTZvZYFEqSGZvSfthsTC5sOkVixAFyPg0Jj7eXZ0tac4QS8w@mail.gmail.com> <024fb8ce-adb1-42f8-91f9-ef08868fee01@intel.com>
-In-Reply-To: <024fb8ce-adb1-42f8-91f9-ef08868fee01@intel.com>
-From: Rui Salvaterra <rsalvaterra@gmail.com>
-Date: Fri, 28 Mar 2025 16:17:49 +0000
-X-Gm-Features: AQ5f1JrApo2YnGDkBXpLnZjbWGXS9Ln2yMcMwJBPiJewh-yxz3hSbyyeIbLzIjY
-Message-ID: <CALjTZvbChDaMACCdmubV9hVXWnih2Rx0NRkcj3K_NbW+O-qrbA@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next] igc: enable HW vlan tag
- insertion/stripping by default
-To: Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: Mor Bar-Gabay <morx.bar.gabay@intel.com>, przemyslaw.kitszel@intel.com, 
-	edumazet@google.com, kuba@kernel.org, intel-wired-lan@lists.osuosl.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-Hi again, Tony,
+On Thu, 13 Mar 2025, Kurt Borja wrote:
 
-On Fri, 28 Mar 2025 at 15:52, Tony Nguyen <anthony.l.nguyen@intel.com> wrote:
->
-> Yes, it will be submitted for 6.16.
->
-> Also, please don't top post :)
+> Add a debugfs interface which exposes thermal private data.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 90 ++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> index 823b579260555085ef6ac793b806738a756bb9da..472e6289fec5be0db0a5cb8e76718b750fa558b5 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/bits.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/dmi.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/hwmon-sysfs.h>
+> @@ -19,6 +20,7 @@
+>  #include <linux/moduleparam.h>
+>  #include <linux/platform_profile.h>
+>  #include <linux/pm.h>
+> +#include <linux/seq_file.h>
+>  #include <linux/units.h>
+>  #include <linux/wmi.h>
+>  #include "alienware-wmi.h"
+> @@ -1252,6 +1254,92 @@ static int awcc_platform_profile_init(struct wmi_device *wdev)
+>  	return PTR_ERR_OR_ZERO(priv->ppdev);
+>  }
+>  
+> +/*
+> + * DebugFS
+> + */
+> +static int awcc_debugfs_system_description_read(struct seq_file *seq, void *data)
+> +{
+> +	struct device *dev = seq->private;
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +
+> +	seq_printf(seq, "0x%08x\n", priv->system_description);
+> +
+> +	return 0;
+> +}
+> +
+> +static int awcc_debugfs_hwmon_data_read(struct seq_file *seq, void *data)
+> +{
+> +	struct device *dev = seq->private;
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +	const struct awcc_fan_data *fan;
+> +	unsigned int bit;
+> +
+> +	seq_printf(seq, "Number of fans: %u\n", priv->fan_count);
+> +	seq_printf(seq, "Number of temperature sensors: %u\n\n", priv->temp_count);
+> +
+> +	for (u32 i = 0; i < priv->fan_count; i++) {
+> +		fan = priv->fan_data[i];
+> +
+> +		seq_printf(seq, "Fan %u:\n", i);
+> +		seq_printf(seq, "  ID: 0x%02x\n", fan->id);
+> +		seq_printf(seq, "  Related temperature sensors bitmap: %lu\n",
+> +			   fan->auto_channels_temp);
+> +	}
+> +
+> +	seq_puts(seq, "\nTemperature sensor IDs:\n");
+> +	for_each_set_bit(bit, priv->temp_sensors, AWCC_ID_BITMAP_SIZE)
+> +		seq_printf(seq, "  0x%02x\n", bit);
+> +
+> +	return 0;
+> +}
+> +
+> +static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *data)
+> +{
+> +	struct device *dev = seq->private;
+> +	struct awcc_priv *priv = dev_get_drvdata(dev);
+> +
+> +	seq_printf(seq, "Number of thermal profiles: %u\n\n", priv->profile_count);
+> +
+> +	for (u32 i = 0; i < PLATFORM_PROFILE_LAST; i++) {
+> +		if (!priv->supported_profiles[i])
+> +			continue;
+> +
+> +		seq_printf(seq, "Platform profile %u:\n", i);
+> +		seq_printf(seq, "  ID: 0x%02x\n", priv->supported_profiles[i]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void awcc_debugfs_remove(void *data)
+> +{
+> +	struct dentry *root = data;
+> +
+> +	debugfs_remove(root);
+> +}
+> +
+> +static void awcc_debugfs_init(struct wmi_device *wdev)
+> +{
+> +	struct dentry *root;
+> +	char name[64];
+> +
+> +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", "alienware-wmi", dev_name(&wdev->dev));
 
-I almost never do, sorry about that. :)
-Would it be too much to ask for this to be backported to stable,
-though? I've tested it on the 6.6 and 6.12 series just fine.
+You'd need to add include for ARRAY_SIZE() but can't you just use 
+sizeof()?
 
-Kind regards,
-Rui Salvaterra
+> +	root = debugfs_create_dir(name, NULL);
+> +
+> +	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
+> +				    awcc_debugfs_system_description_read);
+> +
+> +	if (awcc->hwmon)
+> +		debugfs_create_devm_seqfile(&wdev->dev, "hwmon_data", root,
+> +					    awcc_debugfs_hwmon_data_read);
+> +
+> +	if (awcc->pprof)
+> +		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
+> +					    awcc_debugfs_pprof_data_read);
+> +
+> +	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
+> +}
+> +
+>  static int alienware_awcc_setup(struct wmi_device *wdev)
+>  {
+>  	struct awcc_priv *priv;
+> @@ -1290,6 +1378,8 @@ static int alienware_awcc_setup(struct wmi_device *wdev)
+>  			return ret;
+>  	}
+>  
+> +	awcc_debugfs_init(wdev);
+> +
+>  	return 0;
+>  }
+>  
+> 
+> 
+
+-- 
+ i.
+
