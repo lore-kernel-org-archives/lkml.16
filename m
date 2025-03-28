@@ -1,131 +1,143 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE37C28373;
-	Fri, 28 Mar 2025 05:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743139663; cv=pass; b=AEhsDRC9iUKTOfCnquS5+EibHHuvcw/3XH8wVz2Re2hIHi9yxgS78FeW/TluOP/QofUw9wAJY0vWh7anHFTD8hDRfMLCkchaS7gnrNbDjk5I28S4uqSaCeGOt855PCL3u/7OudnFhg2TTqSUI/REf+OC3oqoax1/d628qQ4+hTg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743139663; c=relaxed/simple;
-	bh=UA/jB0jRtT9MrE0m/chZoZltKCIECcikeSy39MQlrkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j7PUew1aAhmhntzPFeSAXJEnH9ezjiZrW23RiYafQH+OApqfjBQDk5rvzgW2sp/0lV68CvQeawpWj3IcWCmdmNe9imxu29fcLA+4dmNkb/P2A64YNSn9BUwxG/cVhe5Pux0I/NnGSmG0OFN+7WzwdxNZgY5UCRKMyhuJvu/ksY0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=XsTA9zfS; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138B028373;
+	Fri, 28 Mar 2025 05:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743139677; cv=none; b=EWr+pEBWU43CTdsJITfI9sAWNJ6AxZ5/b5ZWbXOLgZuMXFl6uEA4wSgnFQrYy1stH2UnU+NJCdH/Tvkkijogk5FrIgh5KjksJk6uSYqjPp+T4VLmLxTAxwjEf51IIzWkmTBmh6jBtGzYSstsi5MPZ9q3DTWl7xhq2dIY+jBXMi8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743139677; c=relaxed/simple;
+	bh=WBme0HkyRRbDQ8Leq+Bd79QqsRz7MTEZD4uciGXbfQQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Czirl+cxcjfuhUcCqMPeF3/E6SLLSxvJVdMZ6xRF732IV/TtooPNmzDsCrRi36z1psjMhS/PFdA2LCw22N8VTPQDuKnnOTbYlkMUS3C3MS9eJmIqjz7/hL51u6XxsxIiHdSy5sYLSgXZG3Q2LyBtL2OSdZCQoqD8Pm4T+/B3QP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IHxKW8M3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="XsTA9zfS"
-ARC-Seal: i=1; a=rsa-sha256; t=1743139628; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SNkk3gtNPaXXwdrW6fxgFUV/5Bey7TsGy4tPCrEBB6ffAggQ3W2qc1RBP7BNbBjB2eIRKtT46QJJedOiwPrTMp3R7/QFTd+rhIJer7xpXyPI/Diu5QVxKkpoZ7h1eZ0c4tV+z49+vFzbt7x7w3VSnswzE9czqg2uGZCsKrHRWHU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743139628; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8fm2pR+vn3KKxWHjwpsQpoYtJSPoJCzGUQuWZmtgZF4=; 
-	b=M6nKWV3en9cG17a7BT25zDUHyaiQrcbuzq05N6Hm3rsL08KyooohItgXD7toFOnD2TljvYM1ZLGlA8v1DXIls2/Q3r4WuUBqljR0TIVnfy3ZGn2c2TotR8GNNKsftbdv+HLns4AsM2gVGNeU2gwmp6+RJkMpinGuyWXnm60SWgk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743139628;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=8fm2pR+vn3KKxWHjwpsQpoYtJSPoJCzGUQuWZmtgZF4=;
-	b=XsTA9zfSLisYIt+9lTUsiXcJIOA/gC/jYCxQE5wi/9x8WyiT+abmCx9pUJhlraM6
-	0gYnZbsqu1MFEO9Q2m+g3QxPi4oTn2yz1ZPA27L2g73KmlsqgSq2wJb9pkqREB55cKl
-	O3FDQX75S2LXpaQmWu18VSsVKmncypAdeMVm9f8o=
-Received: by mx.zohomail.com with SMTPS id 1743139625825613.9288733094755;
-	Thu, 27 Mar 2025 22:27:05 -0700 (PDT)
-Message-ID: <f9be4614-95ec-4b63-9cfd-0936a323b131@collabora.com>
-Date: Fri, 28 Mar 2025 08:27:01 +0300
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IHxKW8M3"
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 789272025649;
+	Thu, 27 Mar 2025 22:27:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 789272025649
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743139674;
+	bh=/2fyyVl7aEx5o80jahY1lO4oF3T0nV2EB9vhYbdzV0Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IHxKW8M3Q3RXYtVWRK5U/MJj/grBs37XoNfaVJalUddmFYUsW37RPPD4AsCLjf6J5
+	 MBnHzeeQCk0UYmtC0SQTIws3aOd6VjcEDPC8RRriYegT1GpIsfyGhvSoJ43rzdogHf
+	 W8z4wZkOA9j7Lte/3NLjaAQthJy7vNmChE06/M0M=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v3 0/2] uio_hv_generic: Fix ring buffer sysfs creation path
+Date: Fri, 28 Mar 2025 10:57:43 +0530
+Message-Id: <20250328052745.1417-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: SPI transfers in atomic context [Was: Re: [PATCH v1 1/1] mfd:
- rk8xx: Fix shutdown handler]
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
- Lee Jones <lee@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Urja <urja@urja.dev>, Heiko Stuebner <heiko@sntech.de>,
- linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com, stable@vger.kernel.org
-References: <20240730180903.81688-1-sebastian.reichel@collabora.com>
- <20240801131823.GB1019230@google.com>
- <ih7hiojzuvqzpyipj66mgu5pmcderltabim7s5dnfzm6qpztbh@jqkst5tfw5ra>
- <sg5kgo5qjqyzfyk5nyjbkpgvbx6sfb7agc67ch6wsdq3etrsbf@h6xbtfs45k4w>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <sg5kgo5qjqyzfyk5nyjbkpgvbx6sfb7agc67ch6wsdq3etrsbf@h6xbtfs45k4w>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-On 3/20/25 13:10, Uwe Kleine-König wrote:
-> Hi,
-> 
-> On Thu, Aug 01, 2024 at 05:22:24PM +0200, Sebastian Reichel wrote:
->> On Thu, Aug 01, 2024 at 02:18:23PM GMT, Lee Jones wrote:
->>>> +	/*
->>>> +	 * Currently the Rockchip SPI driver always sleeps when doing SPI
->>>> +	 * transfers. This is not allowed in the SYS_OFF_MODE_POWER_OFF
->>>> +	 * handler, so we are using the prepare handler as a workaround.
->>>> +	 * This should be removed once the Rockchip SPI driver has been
->>>> +	 * adapted.
->>>> +	 */
->>>
->>> So why not just adapt the SPI driver now?
->>
->> This patch is simple and thus can easily be backported, so that the
->> Acer Chromebook shutdown is fixed in the stable kernels. SPI based
->> rkxx has been using SYS_OFF_MODE_POWER_OFF_PREPARE from the start,
->> so it's not a regression.
->>
->> As far as I could see the SPI framework does not have something
->> comparable to the I2C .xfer_atomic handler. So fixing up the
->> Rockchip SPI driver probably involves creating some SPI core
->> helpers. I'm not yet sure about the best way to deal with this.
->> But I guess it will be better not having to backport all of the
->> requires changes to stable.
->>
->> In any case I think the next step in this direction is discussing
->> how to handle this in general for SPI.
->>
->>> What's the bet that if accepted, this hack is still here in 5 years time?
->>
->> Even if I don't work on this now, I would expect somebody to have
->> issues with broken shutdown on RK3588 boards before 5 years are
->> over :)
-> 
-> I'd like to have power-off working on Qnap TS-433 in the next Debian
-> stable. With my Debian Kernel hat on I'd say cherry-picking such a
-> commit (if it's in mainline) is acceptable. Backporting a major
-> extension to the spi framework isn't.
-> 
-> So: Expectation confirmed! And while I agree that hacks are not nice,
-> I prefer a hack now over a machine that doesn't shut down properly over
-> the next five years (if Lee's expectation is also correct).
-> 
-> Can we maybe go forward and do both? Accept this hack patch now and work
-> on spi to make atomic xfers possible?
-> 
-> Mark, are there concerns from your side? 
-> Wolfram, are there things you would recommend to do differently in spi
-> than what you have in i2c?
+Hi,
+PFB change logs:
 
-Hi, want let you know that I've started to work recently on atomic SPI
-transfer support to have SPI shutdown working properly with this driver.
-It's in progress.
+Changes since v2:
+https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
+Addressed Greg's comments:
+* Split the original patch into two.
+* Updated the commit message to explain the problem scenario.
+* Added comments for new APIs in the kerneldoc format.
+* Highlighted potential race conditions and explained why sysfs should not be created in the
+  driver probe.
 
-Meanwhile this patch should've been merged a year ago because it fixes
-the regression.
+* Made minor changes to how the sysfs_update_group return value is handled.
 
-Lee, please apply it for -stable.
+Changes since v1:
+https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
+* Fixed race condition in setting channel->mmap_ring_buffer by
+  introducing a new variable for visibility of sysfs (addressed Greg's
+  comments)
+* Used binary attribute fields instead of regular ones for initializing attribute_group.
+* Make size of ring sysfs dynamic based on actual ring buffer's size.
+* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
+  mmap functionality, since this is specific to uio_hv_generic driver.
+* Remove spurious warning during sysfs creation in uio_hv_generic probe.
+* Added comments in a couple of places.
 
+Changes since RFC patch:
+https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+* Different approach to solve the problem is proposed (credits to
+  Michael Kelley).
+* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+  drivers where rest of the sysfs attributes for a VMBus channel
+  are defined. (addressed Greg's comments)
+* Used attribute groups instead of sysfs_create* functions, and bundled
+  ring attribute with other attributes for the channel sysfs.  
+
+Error logs:
+
+[   35.574120] ------------[ cut here ]------------
+[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+[   35.574197] Call Trace:
+[   35.574199]  <TASK>
+[   35.574200]  ? show_regs+0x69/0x80
+[   35.574217]  ? __warn+0x8d/0x130
+[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574222]  ? report_bug+0x182/0x190
+[   35.574225]  ? handle_bug+0x5b/0x90
+[   35.574244]  ? exc_invalid_op+0x19/0x70
+[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+[   35.574271]  vmbus_probe+0x3b/0x90
+[   35.574275]  really_probe+0xf4/0x3b0
+[   35.574279]  __driver_probe_device+0x8a/0x170
+[   35.574282]  driver_probe_device+0x23/0xc0
+[   35.574285]  __device_attach_driver+0xb5/0x140
+[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+[   35.574291]  bus_for_each_drv+0x86/0xe0
+[   35.574294]  __device_attach+0xc1/0x200
+[   35.574297]  device_initial_probe+0x13/0x20
+[   35.574315]  bus_probe_device+0x99/0xa0
+[   35.574318]  device_add+0x647/0x870
+[   35.574320]  ? hrtimer_init+0x28/0x70
+[   35.574323]  device_register+0x1b/0x30
+[   35.574326]  vmbus_device_register+0x83/0x130
+[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+[   35.574331]  process_one_work+0x177/0x340
+[   35.574348]  worker_thread+0x2b2/0x3c0
+[   35.574350]  kthread+0xe3/0x1f0
+[   35.574353]  ? __pfx_worker_thread+0x10/0x10
+[   35.574356]  ? __pfx_kthread+0x10/0x10
+
+Regards,
+Naman
+
+Naman Jain (2):
+  uio_hv_generic: Fix sysfs creation path for ring buffer
+  Drivers: hv: Make the sysfs node size for the ring buffer dynamic
+
+ drivers/hv/hyperv_vmbus.h    |   6 ++
+ drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c |  33 ++++------
+ include/linux/hyperv.h       |   6 ++
+ 4 files changed, 143 insertions(+), 21 deletions(-)
+
+
+base-commit: db8da9da41bced445077925f8a886c776a47440c
 -- 
-Best regards,
-Dmitry
+2.34.1
+
