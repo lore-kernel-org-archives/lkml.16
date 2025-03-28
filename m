@@ -1,132 +1,149 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6769A13AA53;
-	Fri, 28 Mar 2025 11:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEF31E1E00
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743162680; cv=none; b=tpjZrlnhXvFmw+nToWVnRwgSchLKvnbcSGuK6iXXQwSsbY38uM9TNdw61R1spbKRjYbPXdPoDu3oXflPkUyLHbP5+UOeu1VbKh8cjE1SSEh1GdnDAGl5E2jZRq5Y5gK2gFYHUCAUJy8Eciumo3kUEnK/7iLkNbIdIt2KqqKD9Co=
+	t=1743162810; cv=none; b=Lod+ZVf+5aEtC+iNUle3SRJFbUiPOwSi7O8gTb7ekK5sFZAOdPIzeXjw7HeIKGxP0ivic4yN5tYLyZ6qjN1gJlgQZ/2mXji7SO5aiugzyQoJNU/ywd5e0uvRSb6TsgqYwWVYEat5HppmAeDTeMle4ia0zcsJRDckXiDaCi2HVCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743162680; c=relaxed/simple;
-	bh=Jpb9L7tOB+WcLXwy+TL2Qj9jqcDnE6O6sSnbX1/QNZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=L4jvauoU3lM3SQaPuNx55yP9duSDLuERiHcX2WutfJsyLxXVsWCekkb9d9aRx/5iAeXVxGBMnJ/hhrZO8SRiYR1MXg3SMqoDLpXG+MgGtI/EN+RBQKVdmatTFqRJmKPVt3xahySFU13NXAHXsGGd4ELceWYuRTTZStX5yOSYoZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fWSqNsIG; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743162810; c=relaxed/simple;
+	bh=+KPaBcdDplqSZzH8Dmz/9Pd2L3Q7Ai/3Z0gwOh8ET40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jD6zqmGXWwxX0ii0yZXzW1kTSvOBLiKARe1xasREIMXB3IZ28ZfiTaLbNCzXWkcZn7gIusXD9zrV9vUG916EThB6ZbPoRGHsiOedeJxW8qN2lfsdy9GjST7N2F1i3x4HSaEXUWmm50BKt3p/OOXltCTCT+EtcWHp2kZ8iBnWpr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rjlh0NLO; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWSqNsIG"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso17636785e9.2;
-        Fri, 28 Mar 2025 04:51:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rjlh0NLO"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2239c066347so47662715ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743162677; x=1743767477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=efsfHNeHy2QYHH3O5LuUBe1aW9V2YVJUeXBo4AvS1/o=;
-        b=fWSqNsIGtiK+OB/L04uQ/C4J2jtGpehspzlSfaSETB5xbePVzpNYe4sD43VpZLflc5
-         RVAU/7Q4QHsAoLzg7N790+y6Jxd97o26XW8V2QfTzDETotCRD/SWEt+PEyECHLavqXRZ
-         4Klxk3o0Ju7TE4cGhjCD6dplYIyMJf2On+f7c1xHZJPFfqiIPIRT9W71z7iOioxDax/9
-         pd9X/9TxW15JfCKFbhjoEOvqxkWRvrFLlGTzrThNpy5C6OkMrAlyi7fz0kv6bIZjZRvx
-         b1EIwyPZwRKBcMA+Ge8KjX4srtYDHTh/28YT7+SrZj9dgft0JVZiWLQEYnOEyKHZs60J
-         wY4w==
+        d=linaro.org; s=google; t=1743162807; x=1743767607; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RbPiP4EbP7eCOnwuLfA9DRinWmfOSHZ00Gjy8hH6OQ4=;
+        b=Rjlh0NLOOrGeZMrG3khcHJskRpcvuN4Fw40qwRoKU07MFXm9WFRLxs05Ig3P3RKGn/
+         0oOJt4OojtZw54WpA2NIyzxlkNftzPRLfyj6GpPmR07C82TJr4oO+7A6CX8Z8oeXAKEJ
+         CFqlkIw63JEO7oOWs24NgVCProYFzRh9hNcGkdn12uubzerz8DANF8Urv541AXxPWLFr
+         +qgcXuuaa7kMrHKPGtgWuabXbzscos6GduZnIUT/g2JNZP3EaeTaapXCSA3w6dqdp0j7
+         M1Rjux+68KbLODoVBovF7WSRQ7WUmw22cZJCjNkomwOqzJQnHGuaH0QLXs3QFgpvrdZK
+         72Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162677; x=1743767477;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=efsfHNeHy2QYHH3O5LuUBe1aW9V2YVJUeXBo4AvS1/o=;
-        b=lSQ7raQR+ROVF05aLI3TmgCfuJbjz/dsnziwwnB2TfBfZkijB34siSwWN543qfH+2d
-         O8Lu4tdiknJWtgMUjR6Z76Qp3M6BOyxjGmd4Ys4YoIBNSHAbIgj1NT0eCoAXI1pHNDyK
-         5SBTgcgeUChBxQgL1pVmbdK3sYavtC9GJS1g0VAW/4SF97qMxh8pAvx3UwgtqzgWcZGd
-         4EkxgCsEAxVWO0TNs+mJJqicc8IbuE1Lgp6A9LR5DrujNYud7tBaMiF+K/TgdhO+YZ7l
-         6AbHH7w8Md/3a/lRF5euHVMq7a8uoHvfPeBwlYlNqLeBkyss7tDPCGLbbCw/fn1zYRkH
-         KaXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDq2j2wFHcV3GT5YXadp4OJo12Q9rJ/xhf/hE87Sti8xp7AUHq4f4cAL/PlSnE+VgVQ6L7EVeBapHOs3U=@vger.kernel.org, AJvYcCUSbxXPMdw3UpNuj/VqvoNVqBuKX20YM+xd+UsrzyzUMYst1hS/PEEvH1N82RthnUzPJN7e00DCqhZP9SL9n0g1hID+7A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP2ayZ33QuRo2DWQzFimNhfXPdVhVd8KLQjmqacT2JjR51AZHF
-	yci6e3Ay3vT3yFN9+iLQDzNv/DjG42Is5EI4JOTewGXPFz2caz4F
-X-Gm-Gg: ASbGncsleqfr+fIEJeaWBmNd7YLKhO8kleK+fEI3jcur4fa8FT6NzKyAkIeCtT1A59Q
-	2dJryLL2UJEG5GBmaqxKJIv8FIcOWqjrrUnzrxs1r79269OPQKdTn0gzO3+jv+WRX2gxlaKokSy
-	dus+KueFzNtCCYEjwJHEMH249Q2V0O5lKtAcAyuzAePIcaJU+rHfh1mjAcJFig3lSyuUgolqncq
-	yNXLvZxc/WdCjTEIiYQtF/abHflz7xT5NW46A1LKZFvXZLLpfYZ7tn2N8vaXGyNkiItg0A9j7xN
-	RAj+rjxznks3KLR0mSucbm4h3Yyjjr1fCH4VT0gHKll+g+ajNQ2y0hMIiHYtvWG53R4=
-X-Google-Smtp-Source: AGHT+IGPGtJIB0r5ChZXDEaqFUPgP1kOPnRpZzpoBsSqtuL8H2qxGtHtjLcOIt14R/M/RhXYn88hMg==
-X-Received: by 2002:a05:600c:4751:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-43d84f5a96bmr64687605e9.4.1743162676378;
-        Fri, 28 Mar 2025 04:51:16 -0700 (PDT)
-Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:201c:d449:8385:aa8a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fbc1889sm25000675e9.16.2025.03.28.04.51.15
+        d=1e100.net; s=20230601; t=1743162807; x=1743767607;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbPiP4EbP7eCOnwuLfA9DRinWmfOSHZ00Gjy8hH6OQ4=;
+        b=FJpBeB+ciThOa4XpPQxacBANxJ6euCbdTsHw3JrGlk//+gjfvAGXsLrqoRpThSgpNY
+         XuYf3gX9wIa77SY+5p9ayzJgsDQ5Uy+1tCO4xFBwFcUVTYXOfYpKucULK9Cgp6Zrv6Wo
+         HQCNLONkS3ORGzgTX+e5X//kbGZwmBs7jN+Hmw8BQcJi/Oe6tlTN3QPd4C6UuZLjU0p3
+         6xfPWq/d5qI5IuHJAXAsXUfY7XzBtq1kb+g50p9WhaS286v3KU/RdAlATxTjHNp+/hQH
+         pHsRCJqw4Qww0lIc8ogqQrI4wmwH4erIlbsUqEpKR3ZBgxqh0yu9JAvVST5BtIASCNZ8
+         Resg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCCFvJjdJOLHXnW5CE3RxSYhU07/S7KYskLWWPw5CbIid1P82nmp5LKJ4YqgV7gjb9HhlKFQgZT+HXQzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU5KlyKtofMOxhb50NraIF2VrwZgkxwJ7ZOlzOFq1n0poxb7h/
+	7F36P3zyziq1TwaiJvssRd7KfSX6bEHHnDN+N3zzf3q9Bl5DBnrcvKkoC9jhSA==
+X-Gm-Gg: ASbGncvwFsgIM0inPehreMUInzXWqBru3Lk/VZP/VkJXeK++Gkq4eFNt3LftaEYsBV0
+	h8E+MGs97ghu3MXCRK5n9y2vRDDrtP9eDxNqsdokrDo+dnUNr37uShU0qLNxEyAs6XmpzX4JHR3
+	ZLkkSTO0Vz5R/PWQSqqSfahInu1/0GBZmk7oPcEEBYz0E5lQ/QfGCiRO9GlhZN+O2nrZmK204Ih
+	joEiIF8RqOD9twYM7uqKXDPCMN4DHquLo1CfKCM/n82fdcpO1ZdRr/kKfm0lApKWd7SEKBvaezX
+	5OE5cy/WzuSVuu9V8jWOI/12JjezEO8Zh0nubLseABg45R8htnoaivw=
+X-Google-Smtp-Source: AGHT+IFz9XDScU1xrQzVvHGClUV+atKcmTEkzNc/q4xgcFCTocrd9IHlXpxqpsSmlXqSqGyqsW46bg==
+X-Received: by 2002:a17:902:ecd1:b0:224:93e:b5d7 with SMTP id d9443c01a7336-2280493165emr104158825ad.34.1743162807333;
+        Fri, 28 Mar 2025 04:53:27 -0700 (PDT)
+Received: from thinkpad ([120.60.68.219])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7dd8sm15699105ad.226.2025.03.28.04.53.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:51:15 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCH v3] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Fri, 28 Mar 2025 12:51:07 +0100
-Message-Id: <20250328115107.110619-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 28 Mar 2025 04:53:26 -0700 (PDT)
+Date: Fri, 28 Mar 2025 17:23:20 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: cros-qcom-dts-watchers@chromium.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, 
+	quic_mrana@quicinc.com, quic_vpernami@quicinc.com, mmareddy@quicinc.com
+Subject: Re: [PATCH v5 4/7] PCI: dwc: Add support for ELBI resource mapping
+Message-ID: <aot5wc5fki7f3scvtp56cdxpli65zpnsj4wr5n3zsa4pc2i5un@p6gnu7gqa5gh>
+References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
+ <20250309-ecam_v4-v5-4-8eff4b59790d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250309-ecam_v4-v5-4-8eff4b59790d@oss.qualcomm.com>
 
-Added entries to unsuported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+On Sun, Mar 09, 2025 at 11:15:26AM +0530, Krishna Chaitanya Chundru wrote:
+> External Local Bus Interface(ELBI) registers are optional registers in
+> dwc which has vendor specific registers.
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+s/dwc which has/DWC IPs having
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..8f8764554 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Asignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
- 
-+		/* performance button triggered by 0x3d  */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
-+
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+> 
+> As these are part of dwc add the mapping support in dwc itself.
+> 
+
+'Since ELBI register space is applicable for all DWC based controllers, move the
+resource get code to DWC core and make it optional.'
+
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 9 +++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h | 1 +
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 145e7f579072..874fd31a6079 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -157,6 +157,15 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>  		}
+>  	}
+>  
+> +	if (!pci->elbi_base) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> +		if (res) {
+> +			pci->elbi_base = devm_ioremap_resource(pci->dev, res);
+> +			if (IS_ERR(pci->elbi_base))
+> +				return PTR_ERR(pci->elbi_base);
+> +		}
+> +	}
+> +
+>  	/* LLDD is supposed to manually switch the clocks and resets state */
+>  	if (dw_pcie_cap_is(pci, REQ_RES)) {
+>  		ret = dw_pcie_get_clocks(pci);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 501d9ddfea16..3248318d3edd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -443,6 +443,7 @@ struct dw_pcie {
+>  	resource_size_t		dbi_phys_addr;
+>  	void __iomem		*dbi_base2;
+>  	void __iomem		*atu_base;
+> +	void __iomem		*elbi_base;
+>  	resource_size_t		atu_phys_addr;
+>  	size_t			atu_size;
+>  	u32			num_ib_windows;
+> 
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
