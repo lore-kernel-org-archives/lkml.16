@@ -1,91 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D38482EF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE561482EF;
+	Fri, 28 Mar 2025 19:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743188514; cv=none; b=HHmRjN+WovZIPwHnf6MIyeJtlE9lsxoTXHriFRJLdMC26mBfs/e+NEVUaPm0xPzgil/onm1AZqFGolbRTZGsoYsplD4NjtZ6Oon17LwzcRjtLmATQSxnDyO40w1XCPSfb0s4VzZMdDYPcVGqF5YCHu9OCpkGwzGpBELC0gFFOVs=
+	t=1743188721; cv=none; b=nCbAq5HFkdU/7i4ma3/TL/bgF+MCfiCJaiqca0t6bBArqsUL6W1GXSDzWvUjlOONY775esMQxWDgMwjGxAHq/dZCaPKzP/3dVQT+rapmzj8TV1t0C4qlcz3DH8fhf9tfpZyywziAXaXgRAV4DArzggk7FzucLTDTZtwVPdH2Q4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743188514; c=relaxed/simple;
-	bh=2cBMWVGWCchoLb9AEch3jY9Z+FdEJvnB3gT3jLkXoas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wp9SlkPG/82LRjLxPv78z6Ux68aeoEhcNraQjd4wIFJJ5hwSq/VwOc3hzM1hMme2Ft67AdKO14jZdRfInMKcm6dyWSq6VHHw6M6NfEHdcoEBrCKkrKKan0Y5kXu/ZzMZhu40cEcUiAOAYSMkoMN9K0CbNVq+KI50BsnQKpFbWBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g/ZisQro; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743188721; c=relaxed/simple;
+	bh=jOsXkiN4zS8kiwV3cwiwixj57c5f74/Oq2sxAMpeJuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k01/qppbKfA8yXcIigZEMjAC5kh6stxENgKLBP2pgExumMklbwTRlShQTIwQXI7ctPZZIiuBEvVIPOujAXK7x58btVFUcujgIzmpmZJYIPspwYEfQvNpeBDJigFoy/ukvnlYdSa6AoC5EfKR/d8SjgYFi9qq4y/DI46q/pI/ew8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L0QLwyUy; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/ZisQro"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743188511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U6g2WKjbAVNgQnHPCX7LsNqMxHBI1GRkByIrxb7zLDc=;
-	b=g/ZisQroDv3LWockxALwoukMvSjQca8a9Pf2tjJ8SJjCp8/I8z5AstA4Cv/2SANalWWgj8
-	MjTkdnMUHAjvycqUM5PZfiQpZnnl2HKuJn5b0PhVelV3Lh6KZWoO8L5En6fV2/EbsjMotx
-	Arfu6gCUehT6Ou6SWfkfFOx74+nVYQE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-466-bOjK8HIlMr6F9CYdPL19uQ-1; Fri,
- 28 Mar 2025 15:01:47 -0400
-X-MC-Unique: bOjK8HIlMr6F9CYdPL19uQ-1
-X-Mimecast-MFC-AGG-ID: bOjK8HIlMr6F9CYdPL19uQ_1743188506
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C093518007E1;
-	Fri, 28 Mar 2025 19:01:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.25])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E976D1808869;
-	Fri, 28 Mar 2025 19:01:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 28 Mar 2025 20:01:11 +0100 (CET)
-Date: Fri, 28 Mar 2025 20:01:05 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>,
-	brauner@kernel.org, jack@suse.cz, jlayton@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com,
-	viro@zeniv.linux.org.uk, K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
-Message-ID: <20250328190105.GG29527@redhat.com>
-References: <20250323184848.GB14883@redhat.com>
- <67dedd2f.050a0220.31a16b.003f.GAE@google.com>
- <86991.1743185694@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L0QLwyUy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743188698; x=1743793498; i=markus.elfring@web.de;
+	bh=jOsXkiN4zS8kiwV3cwiwixj57c5f74/Oq2sxAMpeJuM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=L0QLwyUyTR0EqrGx9YUwLuZmfmdlI8Hpb5sG96NM4+zNuDkJNA71s4EeyXxj0wuE
+	 mqWz/z9oeFnd60z/beEb6si2p4BhTtPMaSGlCA4HzivGcGTPwKVxy/BX/lxygsBR9
+	 nzJU6bdh4Puw4ZINNYs4APKD9s/fmzZ2oogYFOYB06DdMv8ldxaQIIc7CyCJp8dtp
+	 nZoXcAVSbftqoFl6Ksh/QOAiHuNo4DYjizjJSZDnfOpHlUGQsp2okXITmVT02OW7P
+	 r4SYk+E1l+AKUGdHZ0Gf1FoUI7mF8ogFxoaK7exgl58LC7bwbWSEwmhMVMvUewOTH
+	 02SIyC8kyDSYEoCoPQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MKdLK-1thgb02RWm-00LIxN; Fri, 28
+ Mar 2025 20:04:58 +0100
+Message-ID: <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
+Date: Fri, 28 Mar 2025 20:04:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86991.1743185694@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+ <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+ <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T7u3qxPI3WBz+9O34BuV/2Jv5KTEmCEu3iKfSY+G+o7DSm/aCvE
+ pp9v/ic4W/McvGc0YbBtKGV0sx46UwVZOKFTGJtD5tIfv0ZPDXOgFDo7uiGWOhJM1h9BYYt
+ rguY95Sbvn/Lp5K9m2BG0uWoqUoHvbAOK6G5a/IoY4JhBPofvSov9N/amDUniGxzNcFPEth
+ nM/mqP4koheEiCN9ujjuA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qqse1amEUSE=;K+dmILupNtAQj8PPVB/oOTWLo6J
+ NgMcVA52rk2boJxbQv2e7z86py5jTwh1bHYS4fNvLZ2iYoQtPzTaTQe9J0h4zE5j9DEB5T7Qi
+ +6pppXVxwy5pL+s5rllEPHZ4faiyNOqBjUmUDY0nQxvdYI8cdonvWVj1VQDEdpRKMVWVU+PLj
+ 2yV79OgvPz6W9GOv8kA9rcym6K+ZPObg+ZtBN2jZIeCH6xpMii1t5Qb0vPX8/8DGNKM8PJ6OD
+ 0ARGOeA8x3HzLI2gCmG6XqNhILgpVmOmprROMevRHCqEq2TqlMW3afyF5fp+SI2AztUrMZMAF
+ j9j4VgJDVVuHRpR+6WAdZRGlZYKgNsPF4cfd4YYU9IhYj6osUMr8iTv1klJGzxsajIQJkZqtj
+ FDMBpWGIyFH786GSDaOf9BqLoNiWz8FVxGws/LgLh3m/fkgBhxGkdXqjX8gb8BGBGMqCgG8gd
+ xCbjMdekPsthLdBZZP8PuBTBAvBEbzhkheUK83cV4PiT/iZQWIxEE1tk13mtsqa2hoHs20eFY
+ JaiSXm85mpSMHNpbf+H8LKC7rku0PThBBEikRL9ioZ1722uXpsAXIlhxNdHIbNhHa5bJnjKfo
+ 90IOS3Gu9abBx926bEiT+BL6XgRr6VVAzQ082VpXvBFZTC+QCUyzPWGKoPVM033KSYCt+EAti
+ /W0cPAxxBfR1RHQlMw+1qTN9NGBZW96iBpWC8HjR3t98U60IFxz55a6inQ79zKwXpVXuYMyJ1
+ vzFQVCgwXCPLzJrrKKuZH2ANUDWD+qkuNiW22mdKNsBiUIp+ZLMR/xDwA4mU77SOmiy7cRNSQ
+ 4W8gtZywIgYXXoVK5UCvNVlYHrKX1eJqfGN9lSO17WgN/CQPZPAUqXtNerJg2gBOY8LhlsuPp
+ I9udimlR/xi7GidGqEegpdvjxQYYJfMk4Rz07fMlDP1STL+K+VV6tybqrpOmJfhE82kRhx+Yv
+ YVK17s2BUbRSaUObPANgSehzpR+Pa7cwAKMYCPcbgMAJcxhwi/dYp2DV/FYr+u/Gu8yu1uqXn
+ 5j8kd+/daaRFOovanpki+ON7XlMJLOT5ModkYAaWqN9AW+Sa55W0vBxUGocJRmAtnrt16SsHM
+ /KX/spQGB3PU/rE6SSXICgxbzmGWxMP4z0QIovrw8e47jsascIVeH34Ouk+PrmpGSD1GH5nsm
+ 9229f8Kh+VacDqjINAyx68IWyXBvgeCpWUPCaL+zsyAFIsLKCA10jdBTw0ybo0OnTTkWgHe2B
+ 5RTWq4/Xs3xKi3OqoOuN47MxuzKqhTCA5FKWh5KluAaH46Jz13a1BJfkgRSGjdTLEnSnOd3AX
+ mIDx7xO4snEzi5k0KI+hoeCarGCZ4GY6xkjoIUt5UKZCuacH2OqkVKXxrUjmT5mPIxVV4+JWo
+ JYxO5cdMTgTufhjZrCEMlFtGeiz+605EOHWdBKrvT8HueRSXD4FOg94L5DoHmWtie9StJN9ze
+ lnxz8GpFee7EtwUKM/M2YzplUkIJipmCGICx56NxAFQeiYF5d
 
-David,
+>> Under which circumstances would you become interested to apply a statem=
+ent
+>> like =E2=80=9Cguard(spinlock_irqsave)(&gi3c->irq_lock);=E2=80=9D?
+> Didn't get, hence a question.=C2=A0 Do you suggest to use DEFINE_LOCK_GU=
+ARD_1 instead of existing method ?
+I propose to pick further opportunities up for benefits from scope-based r=
+esource management.
 
-I know that I will regret my email tomorrow, but
-
-On 03/28, David Howells wrote:
->
-> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git netfs-fixes
->
->   There's inconsistency with some wakeups between using rreq->waitq (a private
->   waitqueue) and using clear_and_wake_up_bit() (a shared global waitqueue).
-
-Too late for me, I didn't even try to read the "netfs-fixes" changes.
-And if I even tried, I probably wouldn't understand them ;)
-
-But, afaics (I can be easily wrong), the curent logic in net/9p/ doesn't look
-right regardless of any other fixes, no?
-
-Oleg.
-
+Regards,
+Markus
