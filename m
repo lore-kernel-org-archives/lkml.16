@@ -1,100 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC741CAA9E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39AC14375D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743151999; cv=none; b=iLqV85ayjLXz3x0t2Ljguk4kQovlaC4vdXiVi7ym+/dYWpD9xdvBUTOpLJOYdt1sCwrBI+smGBQ/joMe3CLclqOxeUWRYQdbpCLyJV1ztVKflqi+K9NfJGhDlYahazurW9ffrdInuAcOIWssU6dzQCxaOsDgfGG40ZKtfPSgM88=
+	t=1743152037; cv=none; b=I7asEd2+bnSo3EPdvmEBYiIsCS/9ee/hBPisKPGaAbGhJUMFIb8mTz7OTeFSdevB46CQAXvesRu+VkRcZLn1lhYBBYur1xO73SoGwK2KBTin333LGP4Ttb8Niwsa75nvjp7QnEKUh8WLPIk1UGF8lwldoC0slVDOx3kYMzPLv2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743151999; c=relaxed/simple;
-	bh=guCE2WsY9Defy1aDADm8ZYMxyHivzAMoig7lpN2TvHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k4ovwimoQ2uJyL0dTn62xQ86M4t7VlU6B33+9IOah3FVbh9jBAJ6mTuFMWxqdH7jj+YLUalEAOda53a9yiw5VDX2sm3rlvmd1oUMhckd3CBVXZ8Khj6EPfbuHnfX1O/xJewhPttcb7Sn8izwSgWivtlKw9sZARC4e41ljWs+oV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk51dovH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743152037; c=relaxed/simple;
+	bh=LAo80pcze5ABJ2O7FvKaYN+s7oSxqDJ5t2rV079bqoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dUKF+b+u/mP4rCVpH/HrgZxz7WKb4950aCUmqCUhS7Z196ATW3YH2YGtc4PxdPavzLNrzU3hgo9x5y5ObzblxtyGDjKjoCPfQb7FVvnceLuU09hEzZQl/oXuO9CRQbKvP7zcyjzr2UrIWx34Q3Ee4Sa3IxW4cyJHav4M56d2SoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UjsScPIM; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk51dovH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC027C4CEE4;
-	Fri, 28 Mar 2025 08:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743151998;
-	bh=guCE2WsY9Defy1aDADm8ZYMxyHivzAMoig7lpN2TvHs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pk51dovHDmNhzcT3xYaANTDZuyU9eDeLbZNqeF67YixD9tKMIkacoy86cg5Ah3Bam
-	 uAYCG1ShZWfz7VKqky48jc9mI8XFuUsSKTYFP9vTDo6hSQ9Lsgs/2LTZXH/cxz7scH
-	 InrlmCpKroAdw4LkQ0SF9Xkuia/kCdyd64pfPyWY82QVlcuU0AEuqAkoBISHcDpAES
-	 bjZHhvhkZyJbjCRXOcyo6lE/s54EzyQ/cRBSvxnZbHToS3CAXPbDZRYGLgmjo34KUf
-	 ZRRs3W5zB+eFSHbE8RcV1VixwUPhk0CDbcjsZkQdgsLKPURhPAN95weVKhwslSD1sR
-	 0U5UEdxVhUVBQ==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Daniel Maslowski <cyrevolt@googlemail.com>,
-	Li Zhengyu <lizhengyu3@huawei.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH fixes] riscv/purgatory: 4B align purgatory_start
-Date: Fri, 28 Mar 2025 09:53:11 +0100
-Message-ID: <20250328085313.1193815-1-bjorn@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UjsScPIM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9FBE44444E;
+	Fri, 28 Mar 2025 08:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743152033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fq28d+GTVbmTb7BFcdN0DAaSRJZdvQ95irksTrYkEpI=;
+	b=UjsScPIMUY2hMDZZer1kl+ImeWQ/6N6jcfRwapbJBGEb4dpnwL3E/Lmv7K4tSvoEG5X1RF
+	F5FvKMLLhvtWg/+R9jj0bw0Bood6uwfi3G5iqXD5zRgS+kQ4dB+o2IEe01ShTEjvai5lz9
+	e0itmAqJslji7Yb00F7/oJbsdDpx56AZsJzv0AZgdgEctFZnHE4XJKckqiLiG9BYeKdu1U
+	r0sWhIkbuB/DO5Akcbn+nU90+Avu/E6wCdi7xYVRGSKj3Kqhhj39s1FESNpODWe6Wg2Lhn
+	54z8Irz712GoX+SP2bl9zfQL13nJoWBRm76FU1vbaP61UiOqBrbTbS88LjxD+A==
+Date: Fri, 28 Mar 2025 09:53:51 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] drm/panel/panel-simple: Use the new allocation
+ in place of devm_kzalloc()
+Message-ID: <20250328095351.7bac2d4d@booty>
+In-Reply-To: <20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
+References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
+	<20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
+ hgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-From: Björn Töpel <bjorn@rivosinc.com>
+On Thu, 27 Mar 2025 10:55:42 -0400
+Anusha Srivatsa <asrivats@redhat.com> wrote:
 
-When a crashkernel is launched on RISC-V, the entry to purgatory is
-done by trapping via the stvec CSR. From riscv_kexec_norelocate():
+> Start using the new helper that does the refcounted
+> allocations.
+> 
+> v2: check error condition (Luca)
 
-  |  ...
-  |  /*
-  |   * Switch to physical addressing
-  |   * This will also trigger a jump to CSR_STVEC
-  |   * which in this case is the address of the new
-  |   * kernel.
-  |   */
-  |  csrw    CSR_STVEC, a2
-  |  csrw    CSR_SATP, zero
+Here as well, when you resend, move the changelog after the '---' line.
 
-stvec requires that the address is 4B aligned, which was not the case,
-e.g.:
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 
-  | Loaded purgatory at 0xffffc000
-  | kexec_file: kexec_file_load: type:1, start:0xffffd232 head:0x4 flags:0x6
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-The address 0xffffd232 not 4B aligned.
-
-Correct by adding proper function alignment.
-
-With this change, crashkernels loaded with kexec-file will be able to
-properly enter the purgatory.
-
-Fixes: 736e30af583fb ("RISC-V: Add purgatory")
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/purgatory/entry.S | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/riscv/purgatory/entry.S b/arch/riscv/purgatory/entry.S
-index 0e6ca6d5ae4b..c5db2f072c34 100644
---- a/arch/riscv/purgatory/entry.S
-+++ b/arch/riscv/purgatory/entry.S
-@@ -12,6 +12,7 @@
- 
- .text
- 
-+.align	2
- SYM_CODE_START(purgatory_start)
- 
- 	lla	sp, .Lstack
-
-base-commit: acb4f33713b9f6cadb6143f211714c343465411c
 -- 
-2.45.2
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
