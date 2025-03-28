@@ -1,73 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447EC145B27
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8B318E25;
+	Fri, 28 Mar 2025 11:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743161587; cv=none; b=bp873/sat8TLQqv7WTuqmoDJHUCjqICXdDRy0VOTMCqwj5T2irV5um/4l16oTKR58YEe5yBp+sXpsY/TKAAUiaNesditcJn4ajV1hlaROi77zM4/FuQoNFURvF/B4poNjOsxN8f8ALlgcNcNXt+O4kuQ4/zoXksmFByW8IZnlEg=
+	t=1743161690; cv=none; b=QeVIF67bjaXHXj+KOkwez3+fFge1/jUq4nxMDTtmO/oSVlSbMBcI/Nm8EFQWQRs3yyNt+VI6OXk6BkNVwN5KtKx0ZWU/iZBHdQRZ25mLXVRfTgoad/jL/j46z3hCQF4f2VrDWYE2fshWCHBfPnLY7YVz0O+hrKbPpDmj5nVlVPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743161587; c=relaxed/simple;
-	bh=ZmVcFblvwDvGIiJOpIyvSRxBhBv6ZjB/aFH3w9ChoI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=OM/C8t8mi5thG9iXHV0jRntv6a/qt1q4p9j56nbC7ak1HSDg89f9KAtUZI2u7ybGOGOcNaP5DcirFkJuC5c17Pijcd0yZTO+sHtlsvs9yBWay2Yj4lbG15KU8Isdmw81+AeY3vAHwc7mqfk8QaNpj05A8NJGFHxavEQ2I6izRew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxxmfSb8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743161690; c=relaxed/simple;
+	bh=K9wDcef5hQuqNvlnqsblMDwC/g+sNvxrB/xhp3w07Nk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a6b/pl/YjX8MnxYyjyanuz3oKhO/91k7BlygH8eqv2TiSaPQvpuXhjj/rAc31bU3q9Cjt2LE90Yp2y6PXqCiRVBgjuoJ/A5pk7D/ZmcKLtfaik8tCiptxR79AUOauFBFFOgLt3FAvrql6aZD7TgdSFT2g3Y+oYQD2HSRmclMyko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Ta014T2A; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxxmfSb8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54647C4CEE4;
-	Fri, 28 Mar 2025 11:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743161586;
-	bh=ZmVcFblvwDvGIiJOpIyvSRxBhBv6ZjB/aFH3w9ChoI0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GxxmfSb8MD0gOjSU0y3T8PPq9+jCECYr3XYYEvYClD2W3NQA41wAZ3A9Eeuh9YxSh
-	 OqtLNjWrXm0qgHDTWxKZXqd6On9VhoOouCQMDG8k+VaZtopERdy1dnk/JbE7nD1fGH
-	 NJLzjhyeMtpN1KZyZ0A7CFm7at3gHugKw3LpxybYCLDcWPh9HJAf4QrZkMBwLdLfiF
-	 wl0sqODTcCmt5FMMcuwz68XTwk7o1lX8w/vXl3lmbJuRKtjkvCE3OImmBpYymiz/G9
-	 6JiHgzPvsh/J7TGfI9KlgdpRXlS3GioTCRniBV0ouxN3OAfq6RSDNtUCgn4qDKLGZK
-	 dLeyyKNISOS7g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] xenbus: add module description
-Date: Fri, 28 Mar 2025 12:32:59 +0100
-Message-Id: <20250328113302.2632353-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Ta014T2A"
+Received: from [192.168.178.76] (business-24-134-207-61.pool2.vodafone-ip.de [24.134.207.61])
+	(Authenticated sender: g.gottleuber@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 32B732FC007C;
+	Fri, 28 Mar 2025 12:34:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1743161684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YAsIGem07lshqs83/SkIwt2xkkriVMl0E8eIuZX9gEc=;
+	b=Ta014T2AQd1YNRn0CfWQ5kSbTs39uUNfCuma74XWTf4jx4xVg5nzyc6q/cpwrJ8b5MyqTw
+	gwsCXR8UdQfEFUMAmJ6vmejzvVIsFq1w12y9McE6rJRrzjdrdhP+JvqprrTkWClULbJr7t
+	QnRUQv7scsZ4cXtrNPKXovu2Si4xagM=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=g.gottleuber@tuxedocomputers.com smtp.mailfrom=g.gottleuber@tuxedocomputers.com
+Message-ID: <56b22711-1d78-4cc9-8a32-cb4805497ebd@tuxedocomputers.com>
+Date: Fri, 28 Mar 2025 12:34:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: Add device tree for TUXEDO Elite 14
+ Gen1
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Ettore Chimenti <ettore.chimenti@linaro.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Georg Gottleuber <ggo@tuxedocomputers.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ wse@tuxedocomputers.com, cs@tuxedocomputers.com
+References: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
+ <5e72992c-170c-48b9-8df4-2caf31c4ae44@oss.qualcomm.com>
+ <5hvghahezqms6x4pi3acgaujyhiql6mzl2xhzph5phhki2yiyq@oi3xjatj7r64>
+ <129bf442-2505-41c8-9254-ad7cacefab89@tuxedocomputers.com>
+ <l77iickvroov7crzg6s2i7nq3kakqgdtbqki74stavqkiwyjfs@rv2oegbwogxi>
+ <p5dxsjp2xdl5esmpxseqiy4n2xsici5fvow6wtiquhq7ixmlkt@fty3ez75y5ld>
+ <CAO9ioeUSSshmw6gdEhQNzgAUQLh44etHRAsOThwFZ_9mfyJYiA@mail.gmail.com>
+Content-Language: en-US
+From: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>
+In-Reply-To: <CAO9ioeUSSshmw6gdEhQNzgAUQLh44etHRAsOThwFZ_9mfyJYiA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Modules without a description now cause a warning:
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/xen/xenbus/xenbus_probe_frontend.o
+Am 21.03.25 um 16:51 schrieb Dmitry Baryshkov:
+> On Fri, 21 Mar 2025 at 17:49, Ettore Chimenti
+> <ettore.chimenti@linaro.org> wrote:
+>>
+>> Hi Dmitry,
+>>
+>> On Tue, Mar 18, 2025 at 11:36:32PM +0200, Dmitry Baryshkov wrote:
+>>> On Tue, Mar 18, 2025 at 04:24:27PM +0100, Georg Gottleuber wrote:
+>>>> Am 07.03.25 um 07:45 schrieb Dmitry Baryshkov:
+>>>> [...]
+>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..86bdec4a2dd8
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+>>>>>>
+>>>>>>> +&gpu {
+>>>>>>> +       status = "okay";
+>>>>>>> +
+>>>>>>> +       zap-shader {
+>>>>>>> +               firmware-name = "qcom/a740_zap.mbn";
+>>>>>>
+>>>>>> Are the laptop's OEM key/security fuses not blown?
+>>>>>
+>>>>> Can this laptop use "qcom/x1e80100/gen70500_zap.mbn" which is already a
+>>>>> part of linux-firmware?
+>>>>
+>>>> It seems so.
+>>>>
+>>>> Because there were no logs about loading zap.mbn, I activated dyndbg
+>>>> (dyndbg="file drivers/base/firmware_loader/main.c +fmp"). See attachment
+>>>> for dmesg output. But GUI freezes after sddm login.
+>>>
+>>> Does it happen only with this ZAP or does it happen with the ZAP from
+>>> WIndows too? Can you run some simple GPU workload, like kmscube from the
+>>> console?
+>>>
+>>
+>> It seems to work fine changing the `firmware-name` property to
+>> "qcom/x1e80100/gen70500_zap.mbn" and updating to latest mesa on Debian
+>> Sid (25.0.1).
+>>
+>> Also tried with linux-firmware binary blob.
+> 
+> Then please post an updated patch, using firmware & ZAP from linux-firmware.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: change the description as suggested by Jürgen
----
- drivers/xen/xenbus/xenbus_probe_frontend.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm sorry, all our devices are engineering examples (including Ettores).
+The mass production devices will be fused.
 
-diff --git a/drivers/xen/xenbus/xenbus_probe_frontend.c b/drivers/xen/xenbus/xenbus_probe_frontend.c
-index fcb335bb7b18..6d1819269cbe 100644
---- a/drivers/xen/xenbus/xenbus_probe_frontend.c
-+++ b/drivers/xen/xenbus/xenbus_probe_frontend.c
-@@ -513,4 +513,5 @@ static int __init boot_wait_for_devices(void)
- late_initcall(boot_wait_for_devices);
- #endif
- 
-+MODULE_DESCRIPTION("Xen PV-device frontend support");
- MODULE_LICENSE("GPL");
--- 
-2.39.5
 
