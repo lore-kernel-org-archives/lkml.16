@@ -1,126 +1,133 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from out-14.pe-a.jellyfish.systems (out-14.pe-a.jellyfish.systems [198.54.127.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6EC1DE4F8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CAA1DE3AC;
+	Fri, 28 Mar 2025 17:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743184234; cv=none; b=feSRINCtdvxunrJYpopFuGCT7GluDcSqImZlaJ00pkD0meQ8K+4+oDgDHGsmFxrDL7f9LDmvXLRxKfJ+Vw9R508eR7I/8TjbhbXVlNzT1CENoNNpH36cxa7QyHlWMXDyB0f5lJXis842AL/3CqUs2FWTR3lgupPWMM3mtaHDPsY=
+	t=1743184234; cv=none; b=l9Ttf+LKuNkiVDIO6i7vjqeMPkWzerUXn7zRhxDthtHHTd5Tk5ldGOgHN+ai8Z19hxFBBAVcmAOT7CZuYXyMOBr5dR1xihwC+Jj28cQhxms4jUQF3+f6bzDyP8ojhmh6OrMzh2pFz9/uat2moaB52ll0axAuU4FsI3IT7Carqes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743184234; c=relaxed/simple;
-	bh=AffUvX5zCf3cTK5MurocInrFSdTsN2HgHiDhp4hyhbY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=amWe/3LV8Uq3FWborblTENInblCTmIPkzRV+u41YApOYHdGbETJWJI5kWG2WsCShh4LiY4rx5E2YZtOxMdN4/021qGfczDkKUFAIOgVkgANqTTb+5h18ZU3+kQCijV9pYP25F1Xp8ChacpYbbYfIv/Pu/OuZz6kPSnqq6S0fTrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q0TEB1Zb; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	bh=a4wb0o07elSzfnSvnFun1jxLv/nj4dn1gQgFhZ1pABk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SPQAiIUzALKWEQECB2JB6vgQ7icdUVXLenkVQrULICUTBL/wnFlrDMpQJDHzIqjEZA0PLGSFRmw9hwvm/H0VQcOEqxH69iXjGMwblcxc2X158ovG2lTE/26p/snEToUXqNDdNmQMqsBNADTVne9UYwH9Tux+0wp4Oy6uQ8Q1598=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=sojH8WbF; arc=none smtp.client-ip=198.54.127.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q0TEB1Zb"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2255ae39f8fso64197365ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743184231; x=1743789031; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qHRIwyWsa80ZRekjr2RJmtN6YQau949Rv9N62LCMjWs=;
-        b=q0TEB1ZbNLyxzUwrfrO1KZ6k/LdwGuwwYCccAmL06AXsDJ9Q176qPdyS7yNAboryFP
-         VJqejBKG2Lqr8DyRuXCiGE1tk9UoE+AJdAbW/ZECe4FnV3EnD1TW4Dx5Qo4Zi3iZuw66
-         PIkByzlOy/WGkypRGreSx+wmL18ihfhQQKnvLwnaZ0QgIOOxvXJsbC+5fH5iaew2ymeE
-         gZkpeoWG/arrH0vR+wS+39t8UMahDRCtzwjsG4UOaD8Y7jUcNv4occrcmEB3D6wogZds
-         WGR/G/xyUxhbgeaZjmrfkReoyk6EyOPTJHIDWQXQe02pGtCn927+HnYhS+ReXXGwv1q7
-         65Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743184231; x=1743789031;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHRIwyWsa80ZRekjr2RJmtN6YQau949Rv9N62LCMjWs=;
-        b=JLcWkuUez19h+nuG6TtxQ8nnjUk9d9ogKQw1xrvFdv2XxqM8gRjvo+matjsuhhtn0c
-         aA76qm6puiAkUx0IZT+WbGzqMKD6ftLGqJnDIGUnezKOgWIA76lz/KyOejc2IhRjVXYZ
-         s+nPkCHppWc5ghcukXi55D5NyyDrgQ0GZ7q+FjCREDZi93J2YxfJqWrIB32YRUwvWAu4
-         HdGQkoSnVRd8o0XXHcxm8NgWTNuc5fMQqzi721iZs7QGePmqafg+z4MdCv/OHT/+gHhb
-         1aKVCtHv+PorhONxEI4/wJN3bih2cF72SN3/CqKljn8PSbFj716USB6u+7zTUEadYNah
-         B0+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXeMk/v6c56PJdADC3FMNjP54XvYZWqOm2xSbC8yuR/1ZFCoQRFRbbKMclXpcCf/NhiisFKnTcNiVYO+OQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjWGcQMcComCa6IIcrnYYJGv1eGmxfoOTj8eia+7I2EetVDkqz
-	9tn20J24HbiYnk+MlcycgFeg1rkN+mipW/z+TwsJCYPfN/qLDBHOhWna9DvLozLP/dZaAgE3RvX
-	kikIRhA==
-X-Google-Smtp-Source: AGHT+IHXX9CHvyBCwYOYik7gynV31+D+OMm2FocfcuYeVBZQM0k4OAxEWLRIYK9HNo74ifHhLHKlj+raooHJ
-X-Received: from pfwz40.prod.google.com ([2002:a05:6a00:1da8:b0:737:79:e096])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2918:b0:736:5813:8c46
- with SMTP id d2e1a72fcca58-7397271aadcmr6325365b3a.8.1743184231422; Fri, 28
- Mar 2025 10:50:31 -0700 (PDT)
-Date: Fri, 28 Mar 2025 10:49:35 -0700
-In-Reply-To: <20250328175006.43110-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="sojH8WbF"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZPSjg5Z9Sz3xGq;
+	Fri, 28 Mar 2025 17:50:31 +0000 (UTC)
+Received: from MTA-14.privateemail.com (unknown [10.50.14.30])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZPSjg4ykKz2Sd0Q;
+	Fri, 28 Mar 2025 13:50:31 -0400 (EDT)
+Received: from mta-14.privateemail.com (localhost [127.0.0.1])
+	by mta-14.privateemail.com (Postfix) with ESMTP id 4ZPSjg3fP8z3hhVQ;
+	Fri, 28 Mar 2025 13:50:31 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1743184231;
+	bh=a4wb0o07elSzfnSvnFun1jxLv/nj4dn1gQgFhZ1pABk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sojH8WbFRP8Fhm85PrwsdsTjLQJOwxvIejbgV6Ta2AWed4O3iLe0EQbECGPzgzGCL
+	 ZESH2FYChFjvXYJQEkfZ4cYui1FWJEX98BURQpdg3Wct9P57FZhlibXpAsefBkH6hO
+	 XCSi4xiCwMMBfS3iwpI0m5JZX0nkC9n786Q4yi3EFiY2YHH28WN+q9B7q6KGBj5ocT
+	 FC63yssBa89aI2F/ninuAqckq0+vHu/YXD2JWHlQCsFcwkzCQK8R7q5cMHPD8AGHu4
+	 1OoTooaNfxkxNINn1g5z4kIL67ryHfC1cFukqnBRGl3JB4+b98PUEcU0Xk2Fae1knO
+	 m8cPoq7h6jNag==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-14.privateemail.com (Postfix) with ESMTPA;
+	Fri, 28 Mar 2025 13:50:15 -0400 (EDT)
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: linux-kernel@vger.kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	antoniu.miclaus@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sam.winchenbach@framepointer.org,
+	bpellegrino@arka.org,
+	Sam Winchenbach <swinchenbach@arka.org>
+Subject: [PATCH v8 6/6] iio: filter: admv8818: Support frequencies >= 2^32
+Date: Fri, 28 Mar 2025 13:48:31 -0400
+Message-ID: <20250328174831.227202-7-sam.winchenbach@framepointer.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250328174831.227202-1-sam.winchenbach@framepointer.org>
+References: <20250328174831.227202-1-sam.winchenbach@framepointer.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250328175006.43110-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250328175006.43110-5-irogers@google.com>
-Subject: [PATCH v5 04/35] perf vendor events: Update bonnell events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Move DISPATCH_BLOCKED.ANY to the pipeline topic.
+From: Brian Pellegrino <bpellegrino@arka.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+This patch allows writing u64 values to the ADMV8818's high and low-pass
+filter frequencies. It includes the following changes:
+
+- Rejects negative frequencies in admv8818_write_raw.
+- Adds a write_raw_get_fmt function to admv8818's iio_info, returning
+  IIO_VAL_INT_64 for the high and low-pass filter 3dB frequency channels.
+
+Fixes: f34fe888ad05 ("iio:filter:admv8818: add support for ADMV8818")
+Signed-off-by: Brian Pellegrino <bpellegrino@arka.org>
+Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
 ---
- tools/perf/pmu-events/arch/x86/bonnell/other.json    | 8 --------
- tools/perf/pmu-events/arch/x86/bonnell/pipeline.json | 8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/iio/filter/admv8818.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-index 3a55c101fbf7..6e6f64b96834 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-@@ -323,14 +323,6 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x2"
-     },
--    {
--        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
--        "Counter": "0,1",
--        "EventCode": "0x9",
--        "EventName": "DISPATCH_BLOCKED.ANY",
--        "SampleAfterValue": "200000",
--        "UMask": "0x20"
--    },
-     {
-         "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-         "Counter": "0,1",
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-index 9ff032ab11e2..48d3d053a369 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-@@ -211,6 +211,14 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
-+        "Counter": "0,1",
-+        "EventCode": "0x9",
-+        "EventName": "DISPATCH_BLOCKED.ANY",
-+        "SampleAfterValue": "200000",
-+        "UMask": "0x20"
-+    },
-     {
-         "BriefDescription": "Divide operations retired",
-         "Counter": "0,1",
+diff --git a/drivers/iio/filter/admv8818.c b/drivers/iio/filter/admv8818.c
+index 380e119b3cf54..cc8ce0fe74e7c 100644
+--- a/drivers/iio/filter/admv8818.c
++++ b/drivers/iio/filter/admv8818.c
+@@ -402,6 +402,19 @@ static int admv8818_read_lpf_freq(struct admv8818_state *st, u64 *lpf_freq)
+ 	return ret;
+ }
+ 
++static int admv8818_write_raw_get_fmt(struct iio_dev *indio_dev,
++								struct iio_chan_spec const *chan,
++								long mask)
++{
++	switch (mask) {
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
++		return IIO_VAL_INT_64;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int admv8818_write_raw(struct iio_dev *indio_dev,
+ 			      struct iio_chan_spec const *chan,
+ 			      int val, int val2, long info)
+@@ -410,6 +423,9 @@ static int admv8818_write_raw(struct iio_dev *indio_dev,
+ 
+ 	u64 freq = ((u64)val2 << 32 | (u32)val);
+ 
++	if ((s64)freq < 0)
++		return -EINVAL;
++
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+ 		return admv8818_lpf_select(st, freq);
+@@ -571,6 +587,7 @@ static int admv8818_set_mode(struct iio_dev *indio_dev,
+ 
+ static const struct iio_info admv8818_info = {
+ 	.write_raw = admv8818_write_raw,
++	.write_raw_get_fmt = admv8818_write_raw_get_fmt,
+ 	.read_raw = admv8818_read_raw,
+ 	.debugfs_reg_access = &admv8818_reg_access,
+ };
 -- 
-2.49.0.472.ge94155a9ec-goog
+2.49.0
 
