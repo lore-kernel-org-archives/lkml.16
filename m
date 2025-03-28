@@ -1,349 +1,130 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570F01E8356;
-	Fri, 28 Mar 2025 21:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5C014D70E;
+	Fri, 28 Mar 2025 21:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196014; cv=none; b=iEQiXsiSfEwgT+Lj/34sdUnjuD3uExUsjGM7VqBrH0Td9B92+rmgaW/eRkhyfTal7nVSQGMFerI+cSEsLkkujvRXpjE2jNf4829l7bDin3goy15DPTjewMCl46PsnOpofBqFkHs5RgMBQpQYSjKnCpxQsR/PmDINzqEIyFWZ9VU=
+	t=1743196151; cv=none; b=XQFcfVOTHpJuvp3A9DWTu8BiKE15FFBgNTQZupUSmxsvbfFOEVnyUc2q/v1zd65Q8HhLSARQGyel4XdDU/iwbTjPuzYNej1PQEV0e0jy3IO6ph2nZtUZjn0BdwsCSY1EH4/qxiRlYIv44bQQN4BbvgXru4CFWhE+qlxtVq5OYbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196014; c=relaxed/simple;
-	bh=dWj5WtUNWGBAuoTSLlTcYZ9NFO1Id/V8tpllggZZt8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uTxrBOjBlt3Yp3Bv0SNBy8RMsRc+IYsr2jAjsscA7XJDnxg4Vk8gZv3KQTrj3f5zxbDcmLxoen/MfCDOg/XJyq4Ukvea50LKw2c3S/wOw/erthx/X8X5EI7vS1qnKhEKFKUzFvLmGj/YaxupAk+49evfdoraGdKuF5MZ60znET4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=A6Z0qiU/; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="A6Z0qiU/"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id e2f9d5478d8e7019; Fri, 28 Mar 2025 22:06:50 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D4BBE7F0283;
-	Fri, 28 Mar 2025 22:06:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1743196010;
-	bh=dWj5WtUNWGBAuoTSLlTcYZ9NFO1Id/V8tpllggZZt8c=;
-	h=From:Subject:Date;
-	b=A6Z0qiU/TbMbjskv2bL818G3Od8ETUACKtNi+AHIXvvtzO7n0CRwsVvj+2E1Ui/Vr
-	 ixERKIHkJ+tyjjyKYI4C+lQZRjtMTVKJ7iuhAo8XaUqu6zDqyuQzyignyMtKMJwz3T
-	 9K4fCJU7NbnNLZRjKLw/qJmosziGvAcochzNW5XbCTncx7YfPVFSzk6JHaTah9ESZ4
-	 lL39wNpVZXjtSio39y7fk/nYVbbIKVD27yWhGlSkmt5Wb48UaGwPPjHYczo3/z4s+3
-	 az+w8Nop2q08h3olEu0bfnP7sQoIuW3/cCZK4ghEROqn/osKSRXeJQfjirWaK5zuZ6
-	 XvKIjXHoXl8qw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v1 04/10] cpufreq: Add and use cpufreq policy locking guards
-Date: Fri, 28 Mar 2025 21:42:48 +0100
-Message-ID: <8518682.T7Z3S40VBb@rjwysocki.net>
-In-Reply-To: <4651448.LvFx2qVVIh@rjwysocki.net>
-References: <4651448.LvFx2qVVIh@rjwysocki.net>
+	s=arc-20240116; t=1743196151; c=relaxed/simple;
+	bh=Hc3c/0+YJM29iLeoht3DsYlHu7lIMwN9kBvsmSdc5E0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=MjDNnO+uiQuAF7X/fowH7SM2Gexrs4MkqYAtsGnxHFCgLf9VdLVg+DEQ+03L7DvTqICzd1t7hM/O1pyFjRmphqS8ZlXJlIF3t3wZ5b++lfYUVRAM6ZV/IEKk40QR43ZTcrrblvydHjIASC+XfjwQq4xx7oy/Z8Pe6hISdyYtda0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000080649.0000000067E70FF3.0006D659; Fri, 28 Mar 2025 22:09:07 +0100
+From: Gergo Koteles <soyer@irl.hu>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+  Len Brown <lenb@kernel.org>, Alex Hung <alex.hung@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Rodrigo Siqueira <siqueira@igalia.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  Hans de Goede <hdegoede@redhat.com>
+Cc: linux-acpi@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
+  stable@vger.kernel.org
+Subject: [PATCH v2] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
+Date: Fri, 28 Mar 2025 22:08:56 +0100
+Message-ID: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvfedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=54 Fuz1=54 Fuz2=54
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The _DDC method should return a buffer, or an integer in case of an error.
+But some Lenovo laptops incorrectly return EDID as buffer in ACPI package.
 
-Introduce "read" and "write" locking guards for cpufreq policies and use
-them where applicable in the cpufreq core.
+Calling _DDC generates this ACPI Warning:
+ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
+found Package, expected Integer/Buffer (20240827/nspredef-254)
 
-No intentional functional impact.
+Use the first element of the package to get the EDID buffer.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The DSDT:
+
+Name (AUOP, Package (0x01)
+{
+	Buffer (0x80)
+	{
+	...
+	}
+})
+
+...
+
+Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
+{
+	If ((PAID == AUID))
+        {
+		Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
+	}
+	ElseIf ((PAID == IVID))
+	{
+		Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
+	}
+	ElseIf ((PAID == BOID))
+	{
+		Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
+	}
+	ElseIf ((PAID == SAID))
+	{
+		Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
+	}
+
+	Return (Zero)
+}
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extensions/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
+Cc: stable@vger.kernel.org
+Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- drivers/cpufreq/cpufreq.c |  121 ++++++++++++++++++++--------------------------
- include/linux/cpufreq.h   |    6 ++
- 2 files changed, 60 insertions(+), 67 deletions(-)
+Changes in v2:
+ - Added comment
+ - Improved commit message
+ - Link to v1: https://lore.kernel.org/all/4cef341fdf7a0e877c50b502fc95ee8be28aa811.1743129387.git.soyer@irl.hu/
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -987,17 +987,16 @@
- {
- 	struct cpufreq_policy *policy = to_policy(kobj);
- 	struct freq_attr *fattr = to_attr(attr);
--	ssize_t ret = -EBUSY;
+ drivers/acpi/acpi_video.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index efdadc74e3f4..103f29661576 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -649,6 +649,13 @@ acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length
  
- 	if (!fattr->show)
- 		return -EIO;
+ 	obj = buffer.pointer;
  
--	down_read(&policy->rwsem);
-+	guard(cpufreq_policy_read)(policy);
++	/*
++	 * Some buggy implementations incorrectly return the EDID buffer in an ACPI package.
++	 * In this case, extract the buffer from the package.
++	 */
++	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 1)
++		obj = &obj->package.elements[0];
 +
- 	if (likely(!policy_is_inactive(policy)))
--		ret = fattr->show(policy, buf);
--	up_read(&policy->rwsem);
-+		return fattr->show(policy, buf);
- 
--	return ret;
-+	return -EBUSY;
- }
- 
- static ssize_t store(struct kobject *kobj, struct attribute *attr,
-@@ -1005,17 +1004,16 @@
- {
- 	struct cpufreq_policy *policy = to_policy(kobj);
- 	struct freq_attr *fattr = to_attr(attr);
--	ssize_t ret = -EBUSY;
- 
- 	if (!fattr->store)
- 		return -EIO;
- 
--	down_write(&policy->rwsem);
-+	guard(cpufreq_policy_write)(policy);
-+
- 	if (likely(!policy_is_inactive(policy)))
--		ret = fattr->store(policy, buf, count);
--	up_write(&policy->rwsem);
-+		return fattr->store(policy, buf, count);
- 
--	return ret;
-+	return -EBUSY;
- }
- 
- static void cpufreq_sysfs_release(struct kobject *kobj)
-@@ -1167,7 +1165,8 @@
- 	if (cpumask_test_cpu(cpu, policy->cpus))
- 		return 0;
- 
--	down_write(&policy->rwsem);
-+	guard(cpufreq_policy_write)(policy);
-+
- 	if (has_target())
- 		cpufreq_stop_governor(policy);
- 
-@@ -1178,7 +1177,7 @@
- 		if (ret)
- 			pr_err("%s: Failed to start governor\n", __func__);
+ 	if (obj && obj->type == ACPI_TYPE_BUFFER) {
+ 		*edid = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
+ 		ret = *edid ? obj->buffer.length : -ENOMEM;
+@@ -658,7 +665,7 @@ acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length
+ 		ret = -EFAULT;
  	}
--	up_write(&policy->rwsem);
-+
+ 
+-	kfree(obj);
++	kfree(buffer.pointer);
  	return ret;
  }
  
-@@ -1198,9 +1197,10 @@
- 		container_of(work, struct cpufreq_policy, update);
- 
- 	pr_debug("handle_update for cpu %u called\n", policy->cpu);
--	down_write(&policy->rwsem);
-+
-+	guard(cpufreq_policy_write)(policy);
-+
- 	refresh_frequency_limits(policy);
--	up_write(&policy->rwsem);
- }
- 
- static int cpufreq_notifier_min(struct notifier_block *nb, unsigned long freq,
-@@ -1226,11 +1226,11 @@
- 	struct kobject *kobj;
- 	struct completion *cmp;
- 
--	down_write(&policy->rwsem);
--	cpufreq_stats_free_table(policy);
--	kobj = &policy->kobj;
--	cmp = &policy->kobj_unregister;
--	up_write(&policy->rwsem);
-+	scoped_guard(cpufreq_policy_write, policy) {
-+		cpufreq_stats_free_table(policy);
-+		kobj = &policy->kobj;
-+		cmp = &policy->kobj_unregister;
-+	}
- 	kobject_put(kobj);
- 
- 	/*
-@@ -1381,7 +1381,7 @@
- 	unsigned int j;
- 	int ret;
- 
--	down_write(&policy->rwsem);
-+	guard(cpufreq_policy_write)(policy);
- 
- 	policy->cpu = cpu;
- 	policy->governor = NULL;
-@@ -1558,10 +1558,7 @@
- 		goto out_destroy_policy;
- 	}
- 
--out_unlock:
--	up_write(&policy->rwsem);
--
--	return ret;
-+	return 0;
- 
- out_destroy_policy:
- 	for_each_cpu(j, policy->real_cpus)
-@@ -1578,7 +1575,7 @@
- out_clear_policy:
- 	cpumask_clear(policy->cpus);
- 
--	goto out_unlock;
-+	return ret;
- }
- 
- static int cpufreq_online(unsigned int cpu)
-@@ -1726,11 +1723,10 @@
- 		return 0;
- 	}
- 
--	down_write(&policy->rwsem);
-+	guard(cpufreq_policy_write)(policy);
- 
- 	__cpufreq_offline(cpu, policy);
- 
--	up_write(&policy->rwsem);
- 	return 0;
- }
- 
-@@ -1747,33 +1743,29 @@
- 	if (!policy)
- 		return;
- 
--	down_write(&policy->rwsem);
-+	scoped_guard(cpufreq_policy_write, policy) {
-+		if (cpu_online(cpu))
-+			__cpufreq_offline(cpu, policy);
- 
--	if (cpu_online(cpu))
--		__cpufreq_offline(cpu, policy);
-+		remove_cpu_dev_symlink(policy, cpu, dev);
- 
--	remove_cpu_dev_symlink(policy, cpu, dev);
-+		if (!cpumask_empty(policy->real_cpus))
-+			return;
- 
--	if (!cpumask_empty(policy->real_cpus)) {
--		up_write(&policy->rwsem);
--		return;
--	}
-+		/*
-+		 * Unregister cpufreq cooling once all the CPUs of the policy
-+		 * are removed.
-+		 */
-+		if (cpufreq_thermal_control_enabled(cpufreq_driver)) {
-+			cpufreq_cooling_unregister(policy->cdev);
-+			policy->cdev = NULL;
-+		}
- 
--	/*
--	 * Unregister cpufreq cooling once all the CPUs of the policy are
--	 * removed.
--	 */
--	if (cpufreq_thermal_control_enabled(cpufreq_driver)) {
--		cpufreq_cooling_unregister(policy->cdev);
--		policy->cdev = NULL;
-+		/* We did light-weight exit earlier, do full tear down now */
-+		if (cpufreq_driver->offline && cpufreq_driver->exit)
-+			cpufreq_driver->exit(policy);
- 	}
- 
--	/* We did light-weight exit earlier, do full tear down now */
--	if (cpufreq_driver->offline && cpufreq_driver->exit)
--		cpufreq_driver->exit(policy);
--
--	up_write(&policy->rwsem);
--
- 	cpufreq_policy_free(policy);
- }
- 
-@@ -1926,15 +1918,16 @@
- 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
- 	unsigned int ret_freq = 0;
- 
--	if (policy) {
--		down_read(&policy->rwsem);
-+	if (!policy)
-+		return 0;
-+
-+	scoped_guard(cpufreq_policy_read, policy) {
- 		if (cpufreq_driver->get)
- 			ret_freq = __cpufreq_get(policy);
--		up_read(&policy->rwsem);
--
--		cpufreq_cpu_put(policy);
- 	}
- 
-+	cpufreq_cpu_put(policy);
-+
- 	return ret_freq;
- }
- EXPORT_SYMBOL(cpufreq_get);
-@@ -1994,9 +1987,9 @@
- 
- 	for_each_active_policy(policy) {
- 		if (has_target()) {
--			down_write(&policy->rwsem);
--			cpufreq_stop_governor(policy);
--			up_write(&policy->rwsem);
-+			scoped_guard(cpufreq_policy_write, policy) {
-+				cpufreq_stop_governor(policy);
-+			}
- 		}
- 
- 		if (cpufreq_driver->suspend && cpufreq_driver->suspend(policy))
-@@ -2037,9 +2030,9 @@
- 			pr_err("%s: Failed to resume driver: %s\n", __func__,
- 				cpufreq_driver->name);
- 		} else if (has_target()) {
--			down_write(&policy->rwsem);
--			ret = cpufreq_start_governor(policy);
--			up_write(&policy->rwsem);
-+			scoped_guard(cpufreq_policy_write, policy) {
-+				ret = cpufreq_start_governor(policy);
-+			}
- 
- 			if (ret)
- 				pr_err("%s: Failed to start governor for CPU%u's policy\n",
-@@ -2406,15 +2399,9 @@
- 			  unsigned int target_freq,
- 			  unsigned int relation)
- {
--	int ret;
-+	guard(cpufreq_policy_write)(policy);
- 
--	down_write(&policy->rwsem);
--
--	ret = __cpufreq_driver_target(policy, target_freq, relation);
--
--	up_write(&policy->rwsem);
--
--	return ret;
-+	return __cpufreq_driver_target(policy, target_freq, relation);
- }
- EXPORT_SYMBOL_GPL(cpufreq_driver_target);
- 
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -170,6 +170,12 @@
- 	struct notifier_block nb_max;
- };
- 
-+DEFINE_GUARD(cpufreq_policy_write, struct cpufreq_policy *,
-+	     down_write(&_T->rwsem), up_write(&_T->rwsem))
-+
-+DEFINE_GUARD(cpufreq_policy_read, struct cpufreq_policy *,
-+	     down_read(&_T->rwsem), up_read(&_T->rwsem))
-+
- /*
-  * Used for passing new cpufreq policy data to the cpufreq driver's ->verify()
-  * callback for sanitization.  That callback is only expected to modify the min
-
-
+-- 
+2.49.0
 
