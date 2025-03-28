@@ -1,330 +1,257 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB251EB5FB;
-	Fri, 28 Mar 2025 20:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A3F145A05;
+	Fri, 28 Mar 2025 20:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743193626; cv=none; b=jsGsORH2qpjVt9RvL5+43b1ByUoVYqyMcyyMcA6lRTy2lztZZqaaACCkIh2b/0tzKw3CrF1b6HFtBs2gYps7Z57UkSCQZUkKb3j20enprWiZ9vW8pn4vy+M65yoOoB+qiaMJLNOySdZ/nOjZEqsMiWqa60skP5g8ekzc4kQfMGw=
+	t=1743193958; cv=none; b=KzNwXTlrposjleSnzp/RYkj4jMSxlAjQnTTyz2HHVVBfGCaBUeu9yE1WI0X8EmrIKAl8HfJCBdj6ESQwwjTmf3szDnwchxpcwirWMVEqpvT6LoTWE6peedcjcJ3SVOj7/PDZ7c5oD4MXQyX2fN7gdoz3p//aXfucK8PGPLiLHWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743193626; c=relaxed/simple;
-	bh=/d57ZpLOYTQqLIiqxr/lRqUr8zN9zckmszhFDzrwhDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gLr3XOIRAd//8jh9OfYLlVSwitwwLA59pV0oWd4xkuguXVE/hH1d73YYpk/pmoCRZ6AosOZzIHCQ0aXNAj58j9V5GCezm6rU4MPxmhwvYRrxkuOoW6VqqdsvT3MNGpQNY085FwHJGARj9Gxs978eptedw6euMglP1KQXq6lL0vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPPGuiLr; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743193958; c=relaxed/simple;
+	bh=JR1T6u6ASPS7qF80/Nbd4+EZZFIzY6Nzj4O7wQMcGwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgD3tJ9uMCzqqbUM9GpdF78eviLosPowL/x97ZWJ3zM1fPak7+Pujl3BIlbe2Hk7/I18O28V5NBXF4Mw0aLAavH8EZ74x1i/XoSFr8DN5UA7vw7lhQ3vsC1I6wqyZvHknrvynapHbRF4/06tSdz6RiAY4k2BR3Fywhz7Yt0/QTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iRxy0SMm; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPPGuiLr"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30332dfc821so3923200a91.3;
-        Fri, 28 Mar 2025 13:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743193624; x=1743798424; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oGcxYs3R0lRsGezC25hRFVaiQ2rzIPYfN47XjenTT2k=;
-        b=HPPGuiLrtnGdQr75pA/6nFOT9/CDFy6A2U2FK3hZ9BlKT7CPAtZ+ymp5CKukoKEJT1
-         8FUehx6sYp/C1o6M8hGc3P4kkfFc5b7uKO6rnX461qkv1Hwz0E4+TOocGR70FAoYZUlZ
-         BQxenwXIAnvPr2VVYlglWzncLeTRbM4sm4l71r3+p8JsbCfuFVAN52lIJ8KJChTpYZ6n
-         LJ0ieTRn4/Cj0y1gkL7CPTqgyBNeahG2iZc5nxeS9ny34UI06gE2D8IVA632iQPvYdDC
-         1dR/BeynWg9eNTN+BjXC6fEa/xKp61WIU4/ekbjkwWq17cqIZxFtfM6ijfhKc0UJOjzU
-         ygwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743193624; x=1743798424;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oGcxYs3R0lRsGezC25hRFVaiQ2rzIPYfN47XjenTT2k=;
-        b=KRnQAcByyu07OJYKb02xN6MJXSb7lNdDMF3eOgJV887U4p8KGvhEXWRP35IOA98nek
-         6kjkG9+xYzZ7M3J4MniXLiKjjdi2klosbcVuddIvoFL3TMozcZo8ze7y/CEq0ilDXBNx
-         3Y90l3nYuLhqQttztV1HvchEUinkAVEF01ai3AQTG1FhjVfBBJeXAQe2+JEitsKvDUah
-         iGnW8WXk/zdL5ggCUmDNg30l+PJCgAU43oiEX0DCn+iVKqV1lT5wwm4SaKyxSApyBQDF
-         aUxYYhmzQWi2eIWjgvL2e7V4i1YbSm+4SVCL7wvG2cPHtaSG3paHwYKwEjaud3kqZTNt
-         bVQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVa/d19ErH77V/9GCHGnyDfDzl/kTmxGY06+2ZMOEvWqgBPmKXrfFQwSnHgqX3zKDpsyjNinylVMzIJsgM=@vger.kernel.org, AJvYcCVmSEvl27Yat+jKmqK4XQjL4ZCud7V3b5WZF3SUqnbPubErAFYEhKBPDPYufI+foBDkFZLe0CkGHQAxA1v5LQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9LmZCWRB8tfgCtRO7sf7V7GZHzYdNqnNyWTXnsFO6Abo2vArg
-	mJ4sfvzGr1qjD2QAbCdLz1f2mcJGTPlsXeG3YQZsYuRcldopuCok
-X-Gm-Gg: ASbGncvCSkMgJ99Ny8Rj7QQ/PprUid412ychcxQSg58mXFOv7gQiiI2jnjmUyG73SOT
-	7t/8wt7By+yjBXcHpJGOxdURujMVQXsdWRZNYU2ZvLPCOK5GQ/eb80AsZPc3aaD0ojA3racI64l
-	WOUVRTlRbfLOxU8vcO/TttcUYCUU2L7UTYWL4ticpXvo2vmrVrzL29J7oieIiTncAum6hZILMG4
-	Jb+EiEby1W0cG7GYvR1ReuLCG2F+ESr0Afs79UMoSYX1eYUJpUPFf9FhUD0jforDdXIoceAybCV
-	Yt1hqnx00YwdTkHDGkcSDEmjFYb/lqVLrR7dssQ=
-X-Google-Smtp-Source: AGHT+IExtTSIf1vMZSynX2rR3pw6CthqRx+KpmlbbosI99orrbn6b5tGkcsX1dcWkGTOQw8a6yJ7Dg==
-X-Received: by 2002:a17:90b:5686:b0:2fe:a742:51b0 with SMTP id 98e67ed59e1d1-3053216e481mr845962a91.31.1743193623438;
-        Fri, 28 Mar 2025 13:27:03 -0700 (PDT)
-Received: from valdaarhun.. ([2401:4900:1c7e:7fd6:5c7b:30a9:c6b6:f81d])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d62c57sm2358889a91.28.2025.03.28.13.27.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 13:27:02 -0700 (PDT)
-From: Sahil Siddiq <icegambit91@gmail.com>
-X-Google-Original-From: Sahil Siddiq <sahilcdq@proton.me>
-To: jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com
-Cc: sahilcdq@proton.me,
-	linux-openrisc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] openrisc: Add cacheinfo support
-Date: Sat, 29 Mar 2025 01:56:32 +0530
-Message-ID: <20250328202632.72809-4-sahilcdq@proton.me>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250328202632.72809-1-sahilcdq@proton.me>
-References: <20250328202632.72809-1-sahilcdq@proton.me>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iRxy0SMm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743193956; x=1774729956;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JR1T6u6ASPS7qF80/Nbd4+EZZFIzY6Nzj4O7wQMcGwQ=;
+  b=iRxy0SMmI2CGQwxD1f1bIXxZO7uhNRfUG/o5yrDRdD876D8lIh+xfN++
+   pQCY0usMRG7qlFBVIdyVgTU0ADppQCAdTk19MTveMyXVexKXfPj/za9yP
+   9Y6zieJmi8/eaBuD7ANdN0VBaX5Lzq1fQpvsii9AbMalDw+xKmXGRaQoG
+   uJ8Astck75odnEcZIK+5MA+jkLUp+FVkyJHCp4YBQRF9xAj9dU58vGK1Q
+   5f+UqpNpfnEHi/I/eAlt40jxi8VjSDH+luvLQE5Gp87QUf6p6YebyLdMw
+   ab+iCw2S4rmsljwJSyUrvb+sK2Mxg1LUUX+7n1j1GYmWqx9d58GrXXxY3
+   g==;
+X-CSE-ConnectionGUID: fH4DkMB2S1qwk5gYaAsGkg==
+X-CSE-MsgGUID: 6HgFQcwQRNuLZT5zbSlV8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="62098693"
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="62098693"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 13:32:35 -0700
+X-CSE-ConnectionGUID: KdUoDg7YSxmSe+WiiThECg==
+X-CSE-MsgGUID: +aLeyjOnS0CqP3u2F7yERg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="130582759"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 13:32:36 -0700
+Date: Fri, 28 Mar 2025 13:32:33 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Jens Axboe <axboe@kernel.dk>,
+	linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: Re: next-20250327 - lockdep whine and USB issues at boot
+Message-ID: <Z-cHYd4FbZF7CrC0@agluck-desk3>
+References: <8775.1743185453@turing-police>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8775.1743185453@turing-police>
 
-Add cacheinfo support for OpenRISC.
+On Fri, Mar 28, 2025 at 02:10:53PM -0400, Valdis Klētnieks wrote:
+> Saw this during boot on a Dell Inspiron 5559 laptop.  
+> 
+> In addition, the external USB ports all gave up, rendering a USB mouse and a
+> USB external drive totally dead in the water.  May or may not be related, I didn't
+> dig too far into it.
+> 
+> [   40.842033] [    T953] io scheduler bfq registered
+> 
+> [   41.022391] [    T817] ======================================================
+> [   41.103507] [    T817] WARNING: possible circular locking dependency detected
+> [   41.184587] [    T817] 6.14.0-next-20250327 #110 Tainted: G          I     T  
+> [   41.265700] [    T817] ------------------------------------------------------
+> [   41.346832] [    T817] (udev-worker)/817 is trying to acquire lock:
+> [   41.427952] [    T817] ffff93a2c80ae9f0 (&q->elevator_lock){+.+.}-{4:4}, at: elv_iosched_store+0xe1/0x260
+> [   41.830112] [    T817] 
+>                           but task is already holding lock:
+> [   41.912022] [    T817] ffff93a2c80ae460 (&q->q_usage_counter(io)#10){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x11/0x20
+> [   42.394431] [    T817] 
+>                           which lock already depends on the new lock.
+> 
+> [   42.477193] [    T817] 
+>                           the existing dependency chain (in reverse order) is:
+> [   42.559132] [    T817] 
+>                           -> #2 (&q->q_usage_counter(io)#10){++++}-{0:0}:
+> [   43.042361] [    T817]        lock_acquire.part.0+0xbe/0x240
+> [   43.123452] [    T817]        blk_alloc_queue+0x30b/0x350
+> [   43.204547] [    T817]        blk_mq_alloc_queue+0x62/0xd0
+> [   43.285646] [    T817]        scsi_alloc_sdev+0x29c/0x3d0
+> [   43.366744] [    T817]        scsi_probe_and_add_lun+0x1d8/0x2b0
+> [   43.447847] [    T817]        __scsi_add_device+0x114/0x130
+> [   43.528950] [    T817]        ata_scsi_scan_host+0x7a/0x190
+> [   43.610047] [    T817]        async_run_entry_fn+0x24/0xc0
+> [   43.691137] [    T817]        process_one_work+0x21e/0x5a0
+> [   43.772226] [    T817]        worker_thread+0x1d5/0x3c0
+> [   43.853316] [    T817]        kthread+0x114/0x230
+> [   43.934369] [    T817]        ret_from_fork+0x2c/0x50
+> [   44.015453] [    T817]        ret_from_fork_asm+0x1a/0x30
+> [   44.096532] [    T817] 
 
-Currently, a few CPU cache attributes pertaining to OpenRISC processors
-are exposed along with other unrelated CPU attributes in the procfs file
-system (/proc/cpuinfo). However, a few cache attributes remain unexposed.
+I see similar looking lockdep splat on a 2 socket Icelake server.
+Kernel built from this Linus commit:
 
-Provide a mechanism that the generic cacheinfo infrastructure can employ
-to expose these attributes via the sysfs file system. These attributes
-can then be exposed in /sys/devices/system/cpu/cpuX/cache/indexN. Move
-the implementation to pull cache attributes from the processor's
-registers from arch/openrisc/kernel/setup.c with a few modifications.
+acb4f33713b9 ("Merge tag 'm68knommu-for-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu")
 
-This implementation is based on similar work done for MIPS and LoongArch.
 
-Link: https://raw.githubusercontent.com/openrisc/doc/master/openrisc-arch-1.4-rev0.pdf
+[   30.253858] systemd-journald[2054]: Received client request to flush runtime journal.
 
-Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
----
-Changes from v3 -> v4:
-- arch/openrisc/kernel/cacheinfo.c: Fix build warning detected by
-  kernel test robot.
+[   31.187581] ======================================================
+[   31.195139] WARNING: possible circular locking dependency detected
+[   31.202480] 6.14.0+ #32 Not tainted
+[   31.207291] ------------------------------------------------------
+[   31.214922] (udev-worker)/2193 is trying to acquire lock:
+[   31.221796] ff41ee0f1836f4d8 (&q->elevator_lock){+.+.}-{4:4}, at: elv_iosched_store+0xe9/0x260
+[   31.231864]
+               but task is already holding lock:
+[   31.239595] ff41ee0f1836efa8 (&q->q_usage_counter(io)){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x12/0x20
+[   31.250814]
+               which lock already depends on the new lock.
 
-Changes from v2 -> v3:
-- arch/openrisc/kernel/cacheinfo.c:
-  1. Use new functions introduced in patch #2.
-  2. Address review comments regarding coding style.
-- arch/openrisc/kernel/setup.c:
-  (print_cpuinfo): Don't remove detection of UPR register.
+[   31.261167]
+               the existing dependency chain (in reverse order) is:
+[   31.271104]
+               -> #2 (&q->q_usage_counter(io)){++++}-{0:0}:
+[   31.279299]        blk_alloc_queue+0x30e/0x350
+[   31.284432]        blk_mq_alloc_queue+0x62/0xd0
+[   31.290416]        scsi_alloc_sdev+0x280/0x3c0
+[   31.296321]        scsi_probe_and_add_lun+0x223/0x470
+[   31.302846]        __scsi_add_device+0x10d/0x120
+[   31.308927]        ata_scsi_scan_host+0x9c/0x1b0
+[   31.315003]        async_run_entry_fn+0x31/0x130
+[   31.321016]        process_one_work+0x22f/0x5b0
+[   31.326962]        worker_thread+0x1cc/0x3c0
+[   31.332665]        kthread+0xfc/0x240
+[   31.337784]        ret_from_fork+0x31/0x50
+[   31.342252]        ret_from_fork_asm+0x1a/0x30
+[   31.347061]
+               -> #1 (fs_reclaim){+.+.}-{0:0}:
+[   31.353404]        fs_reclaim_acquire+0x9d/0xd0
+[   31.358273]        kmem_cache_alloc_node_noprof+0x59/0x420
+[   31.364083]        scsi_mq_init_request+0x32/0xe0
+[   31.369107]        blk_mq_alloc_and_init_hctx+0x143/0x4d0
+[   31.374826]        blk_mq_realloc_hw_ctxs+0x2f5/0x390
+[   31.380176]        blk_mq_init_allocated_queue+0x17b/0x570
+[   31.385962]        blk_mq_alloc_queue+0x7b/0xd0
+[   31.390795]        scsi_alloc_sdev+0x280/0x3c0
+[   31.395603]        scsi_probe_and_add_lun+0x223/0x470
+[   31.400929]        __scsi_add_device+0x10d/0x120
+[   31.405828]        ata_scsi_scan_host+0x9c/0x1b0
+[   31.410719]        async_run_entry_fn+0x31/0x130
+[   31.415601]        process_one_work+0x22f/0x5b0
+[   31.420396]        worker_thread+0x1cc/0x3c0
+[   31.424997]        kthread+0xfc/0x240
+[   31.428983]        ret_from_fork+0x31/0x50
+[   31.433334]        ret_from_fork_asm+0x1a/0x30
+[   31.438026]
+               -> #0 (&q->elevator_lock){+.+.}-{4:4}:
+[   31.444767]        __lock_acquire+0x1510/0x2630
+[   31.449606]        lock_acquire+0xcb/0x2d0
+[   31.454040]        __mutex_lock+0xca/0xe50
+[   31.458382]        elv_iosched_store+0xe9/0x260
+[   31.463145]        kernfs_fop_write_iter+0x165/0x240
+[   31.468334]        vfs_write+0x2b0/0x540
+[   31.472499]        ksys_write+0x71/0xf0
+[   31.476573]        do_syscall_64+0x95/0x180
+[   31.481122]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   31.486936]
+               other info that might help us debug this:
 
- arch/openrisc/kernel/Makefile    |   2 +-
- arch/openrisc/kernel/cacheinfo.c | 104 +++++++++++++++++++++++++++++++
- arch/openrisc/kernel/setup.c     |  44 +------------
- 3 files changed, 108 insertions(+), 42 deletions(-)
- create mode 100644 arch/openrisc/kernel/cacheinfo.c
+[   31.495922] Chain exists of:
+                 &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)
 
-diff --git a/arch/openrisc/kernel/Makefile b/arch/openrisc/kernel/Makefile
-index 79129161f3e0..e4c7d9bdd598 100644
---- a/arch/openrisc/kernel/Makefile
-+++ b/arch/openrisc/kernel/Makefile
-@@ -7,7 +7,7 @@ extra-y	:= vmlinux.lds
- 
- obj-y	:= head.o setup.o or32_ksyms.o process.o dma.o \
- 	   traps.o time.o irq.o entry.o ptrace.o signal.o \
--	   sys_call_table.o unwinder.o
-+	   sys_call_table.o unwinder.o cacheinfo.o
- 
- obj-$(CONFIG_SMP)		+= smp.o sync-timer.o
- obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
-diff --git a/arch/openrisc/kernel/cacheinfo.c b/arch/openrisc/kernel/cacheinfo.c
-new file mode 100644
-index 000000000000..61230545e4ff
---- /dev/null
-+++ b/arch/openrisc/kernel/cacheinfo.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * OpenRISC cacheinfo support
-+ *
-+ * Based on work done for MIPS and LoongArch. All original copyrights
-+ * apply as per the original source declaration.
-+ *
-+ * OpenRISC implementation:
-+ * Copyright (C) 2025 Sahil Siddiq <sahilcdq@proton.me>
-+ */
-+
-+#include <linux/cacheinfo.h>
-+#include <asm/cpuinfo.h>
-+#include <asm/spr.h>
-+#include <asm/spr_defs.h>
-+
-+static inline void ci_leaf_init(struct cacheinfo *this_leaf, enum cache_type type,
-+				unsigned int level, struct cache_desc *cache, int cpu)
-+{
-+	this_leaf->type = type;
-+	this_leaf->level = level;
-+	this_leaf->coherency_line_size = cache->block_size;
-+	this_leaf->number_of_sets = cache->sets;
-+	this_leaf->ways_of_associativity = cache->ways;
-+	this_leaf->size = cache->size;
-+	cpumask_set_cpu(cpu, &this_leaf->shared_cpu_map);
-+}
-+
-+int init_cache_level(unsigned int cpu)
-+{
-+	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
-+	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-+	int leaves = 0, levels = 0;
-+	unsigned long upr = mfspr(SPR_UPR);
-+	unsigned long iccfgr, dccfgr;
-+
-+	if (!(upr & SPR_UPR_UP)) {
-+		printk(KERN_INFO
-+		       "-- no UPR register... unable to detect configuration\n");
-+		return -ENOENT;
-+	}
-+
-+	if (cpu_cache_is_present(SPR_UPR_DCP)) {
-+		dccfgr = mfspr(SPR_DCCFGR);
-+		cpuinfo->dcache.ways = 1 << (dccfgr & SPR_DCCFGR_NCW);
-+		cpuinfo->dcache.sets = 1 << ((dccfgr & SPR_DCCFGR_NCS) >> 3);
-+		cpuinfo->dcache.block_size = 16 << ((dccfgr & SPR_DCCFGR_CBS) >> 7);
-+		cpuinfo->dcache.size =
-+		    cpuinfo->dcache.sets * cpuinfo->dcache.ways * cpuinfo->dcache.block_size;
-+		leaves += 1;
-+		printk(KERN_INFO
-+		       "-- dcache: %d bytes total, %d bytes/line, %d set(s), %d way(s)\n",
-+		       cpuinfo->dcache.size, cpuinfo->dcache.block_size,
-+		       cpuinfo->dcache.sets, cpuinfo->dcache.ways);
-+	} else
-+		printk(KERN_INFO "-- dcache disabled\n");
-+
-+	if (cpu_cache_is_present(SPR_UPR_ICP)) {
-+		iccfgr = mfspr(SPR_ICCFGR);
-+		cpuinfo->icache.ways = 1 << (iccfgr & SPR_ICCFGR_NCW);
-+		cpuinfo->icache.sets = 1 << ((iccfgr & SPR_ICCFGR_NCS) >> 3);
-+		cpuinfo->icache.block_size = 16 << ((iccfgr & SPR_ICCFGR_CBS) >> 7);
-+		cpuinfo->icache.size =
-+		    cpuinfo->icache.sets * cpuinfo->icache.ways * cpuinfo->icache.block_size;
-+		leaves += 1;
-+		printk(KERN_INFO
-+		       "-- icache: %d bytes total, %d bytes/line, %d set(s), %d way(s)\n",
-+		       cpuinfo->icache.size, cpuinfo->icache.block_size,
-+		       cpuinfo->icache.sets, cpuinfo->icache.ways);
-+	} else
-+		printk(KERN_INFO "-- icache disabled\n");
-+
-+	if (!leaves)
-+		return -ENOENT;
-+
-+	levels = 1;
-+
-+	this_cpu_ci->num_leaves = leaves;
-+	this_cpu_ci->num_levels = levels;
-+
-+	return 0;
-+}
-+
-+int populate_cache_leaves(unsigned int cpu)
-+{
-+	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
-+	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-+	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
-+	int level = 1;
-+
-+	if (cpu_cache_is_present(SPR_UPR_DCP)) {
-+		ci_leaf_init(this_leaf, CACHE_TYPE_DATA, level, &cpuinfo->dcache, cpu);
-+		this_leaf->attributes = ((mfspr(SPR_DCCFGR) & SPR_DCCFGR_CWS) >> 8) ?
-+					CACHE_WRITE_BACK : CACHE_WRITE_THROUGH;
-+		this_leaf++;
-+	}
-+
-+	if (cpu_cache_is_present(SPR_UPR_ICP))
-+		ci_leaf_init(this_leaf, CACHE_TYPE_INST, level, &cpuinfo->icache, cpu);
-+
-+	this_cpu_ci->cpu_map_populated = true;
-+
-+	return 0;
-+}
-diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-index 66207cd7bb9e..a9fb9cc6779e 100644
---- a/arch/openrisc/kernel/setup.c
-+++ b/arch/openrisc/kernel/setup.c
-@@ -113,21 +113,6 @@ static void print_cpuinfo(void)
- 		return;
- 	}
- 
--	if (upr & SPR_UPR_DCP)
--		printk(KERN_INFO
--		       "-- dcache: %4d bytes total, %2d bytes/line, %d set(s), %d way(s)\n",
--		       cpuinfo->dcache.size, cpuinfo->dcache.block_size,
--		       cpuinfo->dcache.sets, cpuinfo->dcache.ways);
--	else
--		printk(KERN_INFO "-- dcache disabled\n");
--	if (upr & SPR_UPR_ICP)
--		printk(KERN_INFO
--		       "-- icache: %4d bytes total, %2d bytes/line, %d set(s), %d way(s)\n",
--		       cpuinfo->icache.size, cpuinfo->icache.block_size,
--		       cpuinfo->icache.sets, cpuinfo->icache.ways);
--	else
--		printk(KERN_INFO "-- icache disabled\n");
--
- 	if (upr & SPR_UPR_DMP)
- 		printk(KERN_INFO "-- dmmu: %4d entries, %lu way(s)\n",
- 		       1 << ((mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTS) >> 2),
-@@ -155,7 +140,6 @@ static void print_cpuinfo(void)
- void __init setup_cpuinfo(void)
- {
- 	struct device_node *cpu;
--	unsigned long iccfgr, dccfgr;
- 	int cpu_id = smp_processor_id();
- 	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[cpu_id];
- 
-@@ -163,20 +147,6 @@ void __init setup_cpuinfo(void)
- 	if (!cpu)
- 		panic("Couldn't find CPU%d in device tree...\n", cpu_id);
- 
--	iccfgr = mfspr(SPR_ICCFGR);
--	cpuinfo->icache.ways = 1 << (iccfgr & SPR_ICCFGR_NCW);
--	cpuinfo->icache.sets = 1 << ((iccfgr & SPR_ICCFGR_NCS) >> 3);
--	cpuinfo->icache.block_size = 16 << ((iccfgr & SPR_ICCFGR_CBS) >> 7);
--	cpuinfo->icache.size =
--	    cpuinfo->icache.sets * cpuinfo->icache.ways * cpuinfo->icache.block_size;
--
--	dccfgr = mfspr(SPR_DCCFGR);
--	cpuinfo->dcache.ways = 1 << (dccfgr & SPR_DCCFGR_NCW);
--	cpuinfo->dcache.sets = 1 << ((dccfgr & SPR_DCCFGR_NCS) >> 3);
--	cpuinfo->dcache.block_size = 16 << ((dccfgr & SPR_DCCFGR_CBS) >> 7);
--	cpuinfo->dcache.size =
--	    cpuinfo->dcache.sets * cpuinfo->dcache.ways * cpuinfo->dcache.block_size;
--
- 	if (of_property_read_u32(cpu, "clock-frequency",
- 				 &cpuinfo->clock_frequency)) {
- 		printk(KERN_WARNING
-@@ -293,14 +263,14 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	unsigned int vr, cpucfgr;
- 	unsigned int avr;
- 	unsigned int version;
-+#ifdef CONFIG_SMP
- 	struct cpuinfo_or1k *cpuinfo = v;
-+	seq_printf(m, "processor\t\t: %d\n", cpuinfo->coreid);
-+#endif
- 
- 	vr = mfspr(SPR_VR);
- 	cpucfgr = mfspr(SPR_CPUCFGR);
- 
--#ifdef CONFIG_SMP
--	seq_printf(m, "processor\t\t: %d\n", cpuinfo->coreid);
--#endif
- 	if (vr & SPR_VR_UVRP) {
- 		vr = mfspr(SPR_VR2);
- 		version = vr & SPR_VR2_VER;
-@@ -319,14 +289,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 		seq_printf(m, "revision\t\t: %d\n", vr & SPR_VR_REV);
- 	}
- 	seq_printf(m, "frequency\t\t: %ld\n", loops_per_jiffy * HZ);
--	seq_printf(m, "dcache size\t\t: %d bytes\n", cpuinfo->dcache.size);
--	seq_printf(m, "dcache block size\t: %d bytes\n",
--		   cpuinfo->dcache.block_size);
--	seq_printf(m, "dcache ways\t\t: %d\n", cpuinfo->dcache.ways);
--	seq_printf(m, "icache size\t\t: %d bytes\n", cpuinfo->icache.size);
--	seq_printf(m, "icache block size\t: %d bytes\n",
--		   cpuinfo->icache.block_size);
--	seq_printf(m, "icache ways\t\t: %d\n", cpuinfo->icache.ways);
- 	seq_printf(m, "immu\t\t\t: %d entries, %lu ways\n",
- 		   1 << ((mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTS) >> 2),
- 		   1 + (mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTW));
--- 
-2.48.1
+[   31.508010]  Possible unsafe locking scenario:
 
+[   31.514353]        CPU0                    CPU1
+[   31.519098]        ----                    ----
+[   31.523833]   lock(&q->q_usage_counter(io));
+[   31.528314]                                lock(fs_reclaim);
+[   31.534183]                                lock(&q->q_usage_counter(io));
+[   31.541178]   lock(&q->elevator_lock);
+[   31.545145]
+                *** DEADLOCK ***
+
+[   31.551676] 5 locks held by (udev-worker)/2193:
+[   31.556420]  #0: ff41ee0f18e77420 (sb_writers#4){.+.+}-{0:0}, at: ksys_write+0x71/0xf0
+[   31.564568]  #1: ff41ee0f1aabbe88 (&of->mutex#2){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x11e/0x240
+[   31.573842]  #2: ff41ee0f0cfefe48 (kn->active#86){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x127/0x240
+[   31.583197]  #3: ff41ee0f1836efa8 (&q->q_usage_counter(io)){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x12/0x20
+[   31.593949]  #4: ff41ee0f1836efe0 (&q->q_usage_counter(queue)){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x12/0x20
+[   31.604967]
+               stack backtrace:
+[   31.609793] CPU: 1 UID: 0 PID: 2193 Comm: (udev-worker) Not tainted 6.14.0+ #32 PREEMPT(voluntary)
+[   31.609797] Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS WLYDCRB1.SYS.0021.P06.2104260458 04/26/2021
+[   31.609800] Call Trace:
+[   31.609803]  <TASK>
+[   31.609807]  dump_stack_lvl+0x6e/0xa0
+[   31.609816]  print_circular_bug.cold+0x178/0x1be
+[   31.609822]  check_noncircular+0x146/0x160
+[   31.609828]  __lock_acquire+0x1510/0x2630
+[   31.609833]  lock_acquire+0xcb/0x2d0
+[   31.609835]  ? elv_iosched_store+0xe9/0x260
+[   31.609842]  __mutex_lock+0xca/0xe50
+[   31.609846]  ? elv_iosched_store+0xe9/0x260
+[   31.609849]  ? elv_iosched_store+0xe9/0x260
+[   31.609853]  ? elv_iosched_store+0xe9/0x260
+[   31.609855]  elv_iosched_store+0xe9/0x260
+[   31.609859]  kernfs_fop_write_iter+0x165/0x240
+[   31.609862]  vfs_write+0x2b0/0x540
+[   31.609868]  ksys_write+0x71/0xf0
+[   31.609871]  do_syscall_64+0x95/0x180
+[   31.609874]  ? lock_acquire+0xcb/0x2d0
+[   31.609875]  ? ktime_get_coarse_real_ts64+0x15/0x70
+[   31.609881]  ? find_held_lock+0x2b/0x80
+[   31.609888]  ? ktime_get_coarse_real_ts64+0x15/0x70
+[   31.609890]  ? file_has_perm+0xa8/0xf0
+[   31.609897]  ? syscall_exit_to_user_mode_prepare+0x21b/0x250
+[   31.609901]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
+[   31.609904]  ? syscall_exit_to_user_mode+0x97/0x290
+[   31.609907]  ? do_syscall_64+0xa1/0x180
+[   31.609908]  ? find_held_lock+0x2b/0x80
+[   31.609911]  ? fd_install+0xa4/0x2c0
+[   31.609917]  ? do_sys_openat2+0xa4/0xe0
+[   31.609918]  ? kmem_cache_free+0x13b/0x460
+[   31.609926]  ? do_sys_openat2+0xa4/0xe0
+[   31.609928]  ? syscall_exit_to_user_mode_prepare+0x21b/0x250
+[   31.609930]  ? lockdep_hardirqs_on_prepare+0xdb/0x190
+[   31.609931]  ? syscall_exit_to_user_mode+0x97/0x290
+[   31.609933]  ? do_syscall_64+0xa1/0x180
+[   31.609935]  ? lock_acquire+0xcb/0x2d0
+[   31.609937]  ? ktime_get+0x22/0x100
+[   31.609940]  ? find_held_lock+0x2b/0x80
+[   31.609942]  ? ktime_get+0x22/0x100
+[   31.609946]  ? sched_clock+0x10/0x30
+[   31.609947]  ? sched_clock_cpu+0xf/0x1f0
+[   31.609951]  ? irqtime_account_irq+0x3e/0xc0
+[   31.609955]  ? handle_softirqs+0x475/0x4d0
+[   31.609960]  ? sched_clock_cpu+0xf/0x1f0
+[   31.609963]  ? clear_bhb_loop+0x15/0x70
+[   31.609966]  ? clear_bhb_loop+0x15/0x70
+[   31.609968]  ? clear_bhb_loop+0x15/0x70
+[   31.609971]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   31.609973] RIP: 0033:0x7fd14baf4484
+[   31.609978] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 80 3d 45 9c 10 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
+[   31.609979] RSP: 002b:00007ffe2d91f6e8 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   31.609982] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fd14baf4484
+[   31.609984] RDX: 0000000000000003 RSI: 00007ffe2d91f9f0 RDI: 000000000000005a
+[   31.609985] RBP: 00007ffe2d91f710 R08: 00007fd14bbf51c8 R09: 00007ffe2d91f7c0
+[   31.609986] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000003
+[   31.609987] R13: 00007ffe2d91f9f0 R14: 000055eccc8f80a0 R15: 00007fd14bbf4e80
+[   31.609992]  </TASK>
+
+-Tony
