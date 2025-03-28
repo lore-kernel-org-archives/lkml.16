@@ -1,130 +1,201 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ECD79E1;
-	Fri, 28 Mar 2025 15:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5AD1C1AB4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174393; cv=none; b=lv7F0hHMJIS9mckreG8w1yP7SmHEB2rklaak6zzsg5jP+IJVnhWWgzDZ3Kuc34/cSp6rjZApnZyDoJgvjG5O97MxLQMezLagvbEAjy4WhZ68XgvSPGd7y6UtS+Bv2AUoWg2Qwf3I9EqfcCvOEzqi7X5Rx87gEdQzsZBzlbck2rM=
+	t=1743174414; cv=none; b=HIm7PkJ7kEkRAA0NJ5F9eH9nTv/UOAu0u/SVjQ77pgm2V2LtYkC0+ihZRfW9+KdlZolmv1g/FDzKTQkJsYL4co+Cp7HUvftFPpsvwMV92c73uESziFUzlii+AO/VuKDI0Hvk0d8Qg02bj8anSvHiazF4NDAk/ur/jFjVhOAu6RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174393; c=relaxed/simple;
-	bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
+	s=arc-20240116; t=1743174414; c=relaxed/simple;
+	bh=FxRwoIaRhHOWAtABieGIFYWFvwY2CLGMTi9i57XVP4w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Exuu49fn4bFGcBxCnl88c9YBBnlcmCcxO2yMO0jJ70bx2wOd4JlHhwSYB198oEcsBT0nuplZkF736LokHC38G9Qf+casw26ZaIVgUQY7gTGtKJs6KpEAbT+yXFPKLYwlKEKmAWreEGVAaqZUR1cm0JKe3mpp3UdjbhqVPu2tXDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgYLGahh; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=GCSc0q8tPWANcPvlW1MAiJcHuiSzicGfqCeKREH/etvBmJ4/cPo/miDrXfjecnTmaeBWg+NNJgpJgugunp1LmeN56+qboLYcJVK8531fMZQFwszb030PsqQKWQzHrnWxkjecy2h+dpEW6XiuNGNWaXTTaQTDADrrRdGv188WUVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=HSo+YrXj; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgYLGahh"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso424360166b.1;
-        Fri, 28 Mar 2025 08:06:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="HSo+YrXj"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e637edaa652so1747958276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743174390; x=1743779190; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1743174411; x=1743779211; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
-        b=UgYLGahhw/yF4pHZqHqZmGHu26jEgGdaE8st8l4Gpj+VfpgD+o0A3BTmrhQ1lcQwPk
-         xT5BZXyOvMWUxZ7RtzPrvwxtVBLWq1SC3kY33tyS0USyZvfyEG+w/kRt7tSVjRXQyTV7
-         UTf/+j+JN6kJtXMH+CRIg9cn8HX5T7f4G8ZN5JXbRS4zzU55UMEh8MS+57lC5b02Viaa
-         CeKblFl8ZuEaAlX2+NIK8VpwNjSDhy+92JxaIoG89UQaNMbwbxIPgrF/v8aGQNAGeBYT
-         gzbgqS//V6tp3HHTyb24J5izYe/6Yi84tKykeH0cB6rMdVOzdmKcG+CPBZkl5VZupVmO
-         txqw==
+        bh=HH8Qh2WxuZKl3SUB4Qk+dn0g0gZz1ge9pCJmoUUxBTU=;
+        b=HSo+YrXjzp2xftqYGjyrIMQHp4ebYNCLmHZpjyO7iPgRmgnoDUdVCzpK0LEkJAY1IF
+         ULHaDtyXNXzBi26Tc9Fy82Ql/R//qU4cCfCdLnnCkGUwMFWuJ/YbsSiclRWktjzqfZ94
+         qzeQ69JjoQGtShJ+h34aWBksvFKAmmS9PA45uMuikJInHnC+5xtmlQxS03KtbmRMlp1J
+         6p2zgsPTAuaBuY4tm0JHYLrgu0eI8aZfeuMaMXORqWahov7Q8fxml+WA0opPNbcX4bCO
+         Kri6ImpJRZqCOflJYmWyCMuy7j3PQ5EwgUwPwkB6zJk7TuGxDKpWiyQUsLQiWeLsPcDV
+         ktzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743174390; x=1743779190;
+        d=1e100.net; s=20230601; t=1743174411; x=1743779211;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Msd4djB5R4l+uchgtEHVjrVjZkqKDfz854vGB8wNEkM=;
-        b=Ea+HdHakX3Lha9feqIfIIEJN7xlQ1oXUuNAtrtciYAX/kEOWeb/ypSvgoL0YD07uCY
-         1fUbCA8iH6jb2FaRTVOo9V8pO+BXPbEgvCa/+cmfl+6P5MLL8Y5mAiBCFWod+WYOrj5Z
-         kV0cs4Yr/rlED2nKdYRBL1+zI8PlXxCCBdJiO/71nhjHRjJ5so2cUOaIZGqDhkuZL7DB
-         1bAn0amSD/8D25AGpMJ3OkJL2I0vKhkvknlYFUMQ7T9mtc31/LjNE6by/m/QLhKeBBBu
-         KncMsfThPYuplF/QP6EFj9c3XVuI1Rpw7BWxq746FuzUtAng1FXr90CTTMES3VvKUdFS
-         sgew==
-X-Forwarded-Encrypted: i=1; AJvYcCU0aUziBrqLXugnjpPcG6dxmm7f3TrfpcWxUUEceZfXTk7OmcRzIEFTFfXw5kxKlUMRHv0rbyZVvA0bYYif@vger.kernel.org, AJvYcCU78BsEvdOiyfMuCbu2GlaTuLsa/Tw1TDz9+ARrq8PPapFk5jjPEdoIxafqXEpMm0QQP0fkSpB6zK5qd2lR2lmThoJ5@vger.kernel.org, AJvYcCUnBhWnzxJ7NUUdLzjoiZbVgBoeAXMhudnSSw/S+GtJc9KF+FNyDdR9rKnDCSnqUtpvmnX/9DtTNZ8sAe0aH7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyABzTWk5LYvnVxYNLylZAEebPVq74FIXvDYGx0KakoMJwSf3BX
-	UMstphhoISDgDiRsLzZkQFWM0+wLxfyvh09QTmRP5fXwy4LjRGFEYCLT/Z885uR50W2GSDrg0mp
-	7BwVq+MUfS0iLiHp4YWQbVExnrM4=
-X-Gm-Gg: ASbGncuI3V8oIWLXYecZSJxiH1waSuk3tf04Les48PJOlN9TyQb49p8jXTbiYJkApzD
-	vDP/OOTjGoeKILzcQ5DZbT8chl0WgEVuKzocdkrUOcsZJyv1p4ApW95nW+YeIcQm5QumEvnn2QT
-	oquDWFkowHaqS1ug1hW+V3UabUVIj/
-X-Google-Smtp-Source: AGHT+IF3awyMowLWcH8PYZtZ0QIKNGeH7GystPt3Pz6u/xIoaX7e+hcV/huIRE3IqTiua+SWdLXB5i53FCvfcvy67/g=
-X-Received: by 2002:a17:907:2ce6:b0:ac3:bd68:24f0 with SMTP id
- a640c23a62f3a-ac6fae6cecemr822946266b.7.1743174389460; Fri, 28 Mar 2025
- 08:06:29 -0700 (PDT)
+        bh=HH8Qh2WxuZKl3SUB4Qk+dn0g0gZz1ge9pCJmoUUxBTU=;
+        b=xLBsEQCiWZw+LkoaMiCAqUP/vm9si2V/OycK7+9Pf6hy1aOoMupImw6aXFNovPLWLM
+         XUZ4sDsmzp7hNFlxZlFeFTXf/epT4hc6mokqqiX6nxbhIq+dJ0ySKcVu0DZ6ESix4Spj
+         GJn38Q98X85qvnyKKsGA+gmCbRSvh5M/TTFk6QkJUHLoXXm1qIXmmU1V2X+4dy0J4GkN
+         hfOOfj2brTi0/7dYxgye0Db3xBEKjkRBiaOsHeowlYaCro4c/5SBgfRbaVtsc2XmTCcF
+         99iWchBdAuyDYk4jP5qczl2OijZfu4Th67q4ifuntwmXvmelQNrc/Q0vtJXQUsFEwkWR
+         c4vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzSRXclfaHcRhq306gBipNK9paFKRBi5PMS7YDyguom7agenGoF0aY3lucvqw32aRxJXWT9P33TOTwneQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqgZD1SS0ahPYh0vrUJdShJvGhBpO5EtuEg32rq88EkFzBQzjf
+	cK1708NhtGnaTMYQMFs37gnQzXHmjO3+J+NqIoPDnfwcNqUebuuB1jJ917Vuy7UWWTTYPbotTZY
+	tn8xmWzO+2U5SkvO81ITUlHL3u9+kqSjclIPH
+X-Gm-Gg: ASbGncvSq7kaOn6XVa07EC5VFkOqcHcV/vn4rueFrm3PNdVmR++0pSlRBSKjQb+G9Yl
+	8PGLh+8AhjJXkN0wy26gq8HjiIuGahQxS50flWZYZaE6cEtTKc9slHNFdX8wLYtJLb/VMQ3HUbv
+	PECfpYdV7T/qaCxydeo23zVSjNWg==
+X-Google-Smtp-Source: AGHT+IHMw63BWStsGWC6XtBakdaJKBp5F0XF/WQXLeBeVCGw/7vjI2CUy7E2vvIjt7xIJuafaZ2suH9QogxDHXv+SGc=
+X-Received: by 2002:a05:6902:6c17:b0:e6b:7158:3772 with SMTP id
+ 3f1490d57ef6-e6b71583be3mr4393588276.39.1743174411267; Fri, 28 Mar 2025
+ 08:06:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
- <Z-KCNy7Qu2vFdwVx@pathway.suse.cz> <Z-apePufuwt19djQ@pathway.suse.cz>
-In-Reply-To: <Z-apePufuwt19djQ@pathway.suse.cz>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 28 Mar 2025 17:05:52 +0200
-X-Gm-Features: AQ5f1Jolt35aKfTTrIroDhj_MxpPPjpfJR6IiTWJztgRTkKXPo6i2wePW3zd0rc
-Message-ID: <CAHp75VeZBUVhGB8mSRFFJ5i70qUxmKRgeEoJzuPtQ5YPWh-MUA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's required
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Kees Cook <kees@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Andy Shevchenko <andy@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+ <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+ <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+ <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
+ <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
+ <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
+ <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
+ <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
+ <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
+ <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
+ <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com>
+ <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
+ <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com> <CAEjxPJ4Np-_LeSQOPxRQggZjWxpJRhZm++XuEwNbMyUkZCvYjw@mail.gmail.com>
+In-Reply-To: <CAEjxPJ4Np-_LeSQOPxRQggZjWxpJRhZm++XuEwNbMyUkZCvYjw@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 28 Mar 2025 11:06:40 -0400
+X-Gm-Features: AQ5f1JpzIC4lZ-S-cK1A8GDPAgnrYWOFQvTvxXVIrri50BN34GjJB_uXefif8BE
+Message-ID: <CAHC9VhS9xYg5_EaX83hyNX4EMr=c4EaDZ7N=+opv6BA6iZo+mg@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeffrey Vander Stoep <jeffv@google.com>, 
+	=?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	"Cameron K. Williams" <ckwilliams.work@gmail.com>, "Kipp N. Davis" <kippndavis.work@gmx.com>, 
+	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 3:51=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrot=
-e:
-> On Tue 2025-03-25 11:15:21, Petr Mladek wrote:
-> > On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
-> > > This whole series started from a simple fix (see the last patch)
-> > > to make GCC (Debian 14.2.0-17) happy when compiling with `make W=3D1`
-> > > (note, that CONFIG_WERROR=3Dy and all warnings break the build!)
-> > > down to a rabbit hole.
-> > >
-> > > However starting from v2 the last patch doesn't require the first
-> > > part, I prefer still to have them since the functions, while being
-> > > _binary_ printf()-like, are still printf()-like. It also puts in alig=
-n
-> > > the tracing stuff with the rest and fixes the wrong parameter value.
-> > >
-> > > These first 4 patches are organised in a strict order and can't be
-> > > reshuffled, otherwise it will produce a warnings in between.
-> > >
-> > > I believe the best route for the series is printk tree with immutable
-> > > tag or branch for the others.
-> > >
-> > > Alternatively the first 4 patches can be applied first as they
-> > > are pretty much straightforward. They also can be squashed to one
-> > > (as the same topic behind), but it all is up to the respective
-> > > maintainers.
+On Fri, Mar 28, 2025 at 9:23=E2=80=AFAM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On Thu, Mar 27, 2025 at 3:40=E2=80=AFPM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 > >
-> > The whole series looks good to me:
+> > On Thu, 27 Mar 2025 at 12:16, Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> > >
+> > > Where could/would we cache that information so that it was accessible
+> > > directly by the VFS layer?
 > >
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > So the VFS layer already does this for various other things. For this
+> > case, the natural thing to do would be to add another IOP_xyzzy flag
+> > in inode->i_opflags.
 > >
-> > I am going to push it via the printk tree. I think about doing
-> > so as a second pull request by the end of this merge window.
+> > That's how we already say things like "this inode has no
+> > filesystem-specific i_op->permission function" (IOP_FASTPERM), so that
+> > we don't even have to follow the "inode->i_op->permission" pointer
+> > chain to see a NULL pointer.
 > >
-> > Anyway, I am going to wait few more days for eventual feedback
-> > or push back.
+> > Yes, the VFS layer is *heavily* optimized like that. It literally does
+> > that IOP_FASTPERM to avoid chasing two pointers - not even the call,
+> > just the "don't even bother to follow pointers to see if it's NULL".
+> > See do_inode_permission().
+> >
+> > And we have 16 bits in that inode->i_opflags, and currently only use 7
+> > of those bits. Adding one bit for a IOP_NO_SECURITY_LOOKUP kind of
+> > logic (feel free to rename that - just throwing a random name out as a
+> > suggestion) would be a complete no-brainer.
+> >
+> > NOTE! The rule for the i_opflags accesses is that *reading* them is
+> > done with no locking at all, but changing them takes the inode
+> > spinlock (and we should technically probably use WRITE_ONCE() and
+> > READ_ONCE(), but we don't).
+> >
+> > And notice that the "no locking at all for reading" means that if you
+> > *change* the bit - even though that involves locking - there may be
+> > concurrent lookups in process that won't see the change, and would go
+> > on as if the lookup still does not need any security layer call. No
+> > serialization to readers at all (although you could wait for an RCU
+> > period after changing if you really need to, and only use the bit in
+> > the RCU lookup).
+> >
+> > That should be perfectly fine - I really don't think serialization is
+> > even needed. If somebody is changing the policy rules, any file
+> > lookups *concurrent* to that change might not see the new rules, but
+> > that's the same as if it happened before the change.
+> >
+> > I just wanted to point out that the serialization is unbalanced: the
+> > spinlock for changing the flag is literally just to make sure that two
+> > bits being changed at the same time don't stomp on each other (because
+> > it's a 16-bit non-atomic field, and we didn't want to use a "unsigned
+> > long" and atomic bitops because the cache layout of the inode is also
+> > a big issue).
+> >
+> > And you can take the IOP_FASTPERM thing as an example of how to do
+> > this: it is left clear initially, and what happens is that during the
+> > permission lookup, if it *isn't* set, we'll follow those
+> > inode->i_io->permission pointers, and notice that we should set it:
+> >
+> >         if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
+> >                 if (likely(inode->i_op->permission))
+> >                         return inode->i_op->permission(idmap, inode, ma=
+sk);
+> >
+> >                 /* This gets set once for the inode lifetime */
+> >                 spin_lock(&inode->i_lock);
+> >                 inode->i_opflags |=3D IOP_FASTPERM;
+> >                 spin_unlock(&inode->i_lock);
+> >         }
+> >
+> > and I think the security layer could take a very similar approach: not
+> > setting that IOP_NO_SECURITY_LOOKUP initially, but *when* a
+> > security_inode_permission() call is made with just MAY_NOT_BLOCK |
+> > MAY_LOOKUP, and the security layer notices that "this inode has no
+> > reason to care", it could set the bit so that *next* time around the
+> > VFS layer won't bother to call into security_inode_permission()
+> > unnecessarily.
+> >
+> > Does that clarify?
 >
-> JFYI, I have pushed the patchset into printk/linux.git,
-> branch for-6.15-printf-attribute.
->
-> I am going to send a pull request the following week
-> if nothing happens in the meantime.
+> Yes, thank you. I think it would be easy enough to make that change to
+> selinux_inode_permission() and to clear that inode flag on file
+> relabels (e.g. in selinux_inode_post_setxattr() and
+> inode_invalidate_secctx()). Not as sure about handling policy reloads
+> / boolean changes at runtime without also caching the policy sequence
+> number in the inode too so that can be compared. Further, I'm unclear
+> on how to implement this in a manner that works with the LSM stacking
+> support, since some other module might disagree about whether we can
+> skip these lookups. Normally I'd just add an extra boolean or flag
+> argument to the underlying ->inode_permission() hook so each module
+> can indicate its decision and
+> security/security.c:security_inode_permission() could compose the
+> result, but I guess that would require switching
+> security_inode_permission() from using call_int_hook() to manually
+> doing the lsm_for_each_hook() loop itself which may have an adverse
+> impact on those calls in general.
 
-Thank you!
-It will make us much closer to the moment when we can enable WERROR=3Dy
-in the CIs for `make W=3D1` on x86 defconfigs (those that are in the
-kernel source tree).
+I'm not sure the VFS flag approach is going to end up being practical
+due to various constraints, but I do have some other ideas that should
+allow us to drop the bulk of the SELinux AVC calls while doing path
+walks that I'm going to try today/soon.  I'll obviously report back if
+it works out.
 
 --=20
-With Best Regards,
-Andy Shevchenko
+paul-moore.com
