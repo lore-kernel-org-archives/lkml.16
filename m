@@ -1,229 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B0384E1C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97201DD525
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743181344; cv=none; b=KtuswyKjYNKTiEqGxpjkJCJiYyfUzhAdgzfPsZJhTz+zNjCr4DA7zy8nvJpVuSMbvb6CRi4GW3I5RrTz70iycpMixBduzwZeReVkbOiJxVbh9gkyQO0023kblL51Nm7bBhw+fc/XaXUr7RqWacbBvPN/t5hpYzDbecXCae6LOBA=
+	t=1743181411; cv=none; b=mkjGHAfOtWuJYBWbiuzrk80WqKTQIlI2mbDlb8ItWU8EXWYbrPLZYkX57nT2csVvfVoovOaYZ2LVTO5KXwcgE1vvHUShm8rb+SP+bAz4tWGTCDhjeZ5cMgrQ6go6+CuvQZboS4dpt9Mp5RMOCehVq0PpUaUPvLVnM7KXz3P5hPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743181344; c=relaxed/simple;
-	bh=kvxvjWfgbBU+S4p0ERJAmOKQrkFFn1vNwKG2HluMuc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=COUZgW7O7b5rtQLMf6bF8rjh9adV6foHp3B2j8glvELzm5uk50sfLRnQF+nVkmu4Z5IYMyvE35SJlQfPkje1nFZGJa6VDss3jiRuilmK/KhIfguIKR6sEV4FXICzhCTpfZREVkF1MMA288fTs8/RG1JmSPrULCAzQo2qNGoZCPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M/S8T/Sb; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743181411; c=relaxed/simple;
+	bh=5VL+nSlr4EcqTMw6hRb9pJpX+24HA7R7EtdOhFmG/0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GAtoAKdHJixpIU1NoNwNCDT9z3UV/ksSQV3FNoBN0pt2ULRHuLGdtPxJ2jF9LUzPJgkMLV0aomQmrW3aSkBKhpGgrHQp8a1j8l/sRif0X6QMEt6hqMt7ZOUOHTI55LZTE5USpIWWxrNyOkfbI4rewqPZ8qpg1CMASVB2+4GIWJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MDN0aaDd; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M/S8T/Sb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MDN0aaDd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743181341;
+	s=mimecast20190719; t=1743181408;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hvNbFLnzJrDma9+r6dzKNIHJ4GD7qovFDxkdkK1j7ug=;
-	b=M/S8T/Sb6AT0fh5KmDj+8M/JIyt8Rvrgq8DBUFLOssiPTydRm6eoutGbEZedOpyOQQdppL
-	O44S3pyny6hBa9QU3cNivRN8JeVhAV6t8aONHB2hGvJgaHzBX3LRy9cZTtmjRLB6JGCi0h
-	lJo3mUJRUu5ATefumRwY0bL6FdTP2rM=
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
- [209.85.221.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9uf0+0Mizn7Wtg468+LZG3Q/0Otqz8lfJO3EiDJY7w4=;
+	b=MDN0aaDd5BB8sFE2d9mV4AeL2Dmu68I8kk3oXy1vbdsGrYiMto1+DUsracAjMmGyBAkCq0
+	heulOM3GNJn07dXmvCmAzWpoDuhVLV28IrsEbWpZrdvpcvVZUGQp7VVppZhHYxrsTvDUys
+	m74fGTea01WwGoYcSRsH0wbgDiCdDsc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-81-GJFgVf5JOkW40Vn9fPEZiA-1; Fri, 28 Mar 2025 13:02:20 -0400
-X-MC-Unique: GJFgVf5JOkW40Vn9fPEZiA-1
-X-Mimecast-MFC-AGG-ID: GJFgVf5JOkW40Vn9fPEZiA_1743181340
-Received: by mail-vk1-f198.google.com with SMTP id 71dfb90a1353d-5240885c731so2006798e0c.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:02:20 -0700 (PDT)
+ us-mta-584-e89uLg8KOGaVyp6hKnbHlw-1; Fri, 28 Mar 2025 13:03:27 -0400
+X-MC-Unique: e89uLg8KOGaVyp6hKnbHlw-1
+X-Mimecast-MFC-AGG-ID: e89uLg8KOGaVyp6hKnbHlw_1743181406
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-abb9b2831b7so332095466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:03:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743181340; x=1743786140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hvNbFLnzJrDma9+r6dzKNIHJ4GD7qovFDxkdkK1j7ug=;
-        b=CfRT2DysLwkHh9x1ZeEzPPL741AazTieC61cp5aEqtXeKfTP7deBCL7nhBbKp5/ahQ
-         Bfe1hgA1tgU9nwRnuuTQ9AWPn/icVeTKRdT2aEnLX9rL6fSiCyUbNP0eDN6knDkqtI1Q
-         +3HuvJyN1K5kuVCk2q+uWxPsCQ1HEANWhnCcOrQDNt2L3St8gwrkIn/PVsal9AUcqew0
-         4MhsTIJBkM9W2jvOWg3S8hBwfCqlfHnvauHa6+588xhMRrFlECpjbXPCP2x0ZtVJR3l3
-         /GebsvZUvbWyOzO7TyjyimA+Byz9ou8sbRBlYWNHo1glAsXBD5eW+yCfdC8iETOYr4rQ
-         tS7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUel0+ObVAyrQbkg06SFuBW905DbtIw1KeZ98OOTFsqRRPNBf7peGKu3LugP5x6XGfhb1F+tbgiJ7bvWOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSCQk9j4JYwqJBxS8l49nxLh93QsWUrbwrfNi2E/q8j0sGgvdt
-	U2vsbUcMeEaXcZPoxrlBZGdSfFiCanUYdVz9gCT9d6JkOCByt6IB5lACSeaKbb0Ae+CV+KRZmIg
-	HoaO2aqCTAWxdgHDudwtupGxAg0ADtWwm/i5eqommbH8PIkya3HSNW7Bfl/vj3xEH2gIme9r2it
-	KVkoxACDSiGbLeKBTMlT/d1sRyDCfzH6Ld+AY+
-X-Gm-Gg: ASbGncsLWp4zs2krcIZH3pdfL5OFIobgDIjH2uCRj134TfBw1pxu56P5dA3nfHa9IB5
-	e3JJ5VSqM4+9y9XQA+Oi5ypt73gZb2q7tccLCrb0nZlOl3+1bnQ1kKidUBdkOz+VyCPH/aGQzYg
-	==
-X-Received: by 2002:a05:6122:3d0e:b0:520:4996:7cf2 with SMTP id 71dfb90a1353d-5261d4e4be8mr193227e0c.10.1743181339306;
-        Fri, 28 Mar 2025 10:02:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEd6hLtMvhq4HNYFNHxAAkTD6XavMmym8TKCPEKvHwtYxwkeFgbJc/fK471eEupFUFa7sF/zVZqhJ21ofGw1UU=
-X-Received: by 2002:a05:6122:3d0e:b0:520:4996:7cf2 with SMTP id
- 71dfb90a1353d-5261d4e4be8mr193156e0c.10.1743181338657; Fri, 28 Mar 2025
- 10:02:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743181406; x=1743786206;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9uf0+0Mizn7Wtg468+LZG3Q/0Otqz8lfJO3EiDJY7w4=;
+        b=ldFxVOJ9eRuLIwgludiXdStStrYJ3E/Omm3lcv9y2YpUMJDP+W7fA60dhv8hS9+5jN
+         G7OdOl5E8gmj+vGepqQ5wVP3zbAQD9GLkEIN1empXyulx3LvarZ+vlHteyenyUqpwhw2
+         p816RyD3WArGYFzL56gRFh2t5Ex8nWhjCJqhVMMbiXUBMWaDBIR2mL+E+d8kX4Kb+6P6
+         sn424rJeCt4kyj7jv2YTZy4u0CCpXs0sxmULg9JCrIPBRRSVpYaaetkiJw+dvcuei7U7
+         gn7tzVemPO1SEGTNgwN9BhEKqix+QDToK8Q8nxh3M2w8YbFHwzHpIs4FsYWK54kbQZDX
+         ke3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3+3wFXS2ZRz/7y8NpBzEnUbw0JbTYbWdm2EdHU8h3ufcOI0bPTk2MnOBILEmZM/1SxYbT9SEtNhUQ0wY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy07B0whsR/eWxdQkbUm0sVCVHLe/1X62FlfyHKMh5G/0v7+5vy
+	gKdlJtn5KczJSRecGnvN4rF1aCKJXtJrO5AInUxVP2HNMwjU7rGYZUXxYqZr6tui1lETl9OP3ch
+	i8NWPbaE6trb2eLQA20Qvr2br/82KCjhyCyegihlMCu5wpBSoKmxuhLA1iYH2FQ==
+X-Gm-Gg: ASbGncvq2u/uEhnhvBwVKUrK470a08scPOThgoKVJg/hhzEquWlF4hGAmgen0KV1jGB
+	6LcHdponK4V2s2UkwOsctYms1NGDfdOOmlzmAsV0qqet5QSqCIv5dd4Rl1HvuwI1BtyU7bMS+UN
+	ny4DlZogJMWYDARFkrSpfgoVEPX8xuWpjZcs42bGNA5xmetKe8I8fVj/DyH8kZ04GvJr+CxGaQg
+	vijWh4uR837Jcly7fqr1NPjn9/OeWj2/uRWgLw/8vzzq7hfQMH+5WFNyO/HxmWt0AuPhsPxtiFR
+	YYpvXeH36we7TUb1m11jaDR/ZRXZe7sJya8CE5T8f6CK9scUAzVcojQkYy4gGWQc
+X-Received: by 2002:a17:906:c115:b0:ac6:e29b:8503 with SMTP id a640c23a62f3a-ac71eac290amr421854666b.1.1743181405020;
+        Fri, 28 Mar 2025 10:03:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGd9u9IUSVtU5cjE8R52KpOjUFspVo6+RZH/1O5CExd6Dpx7I7lN+krtxHcvzE1FAVtm4Ndw==
+X-Received: by 2002:a17:906:c115:b0:ac6:e29b:8503 with SMTP id a640c23a62f3a-ac71eac290amr421844466b.1.1743181404266;
+        Fri, 28 Mar 2025 10:03:24 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b243sm191783266b.69.2025.03.28.10.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 10:03:23 -0700 (PDT)
+Date: Fri, 28 Mar 2025 18:03:19 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>, 
+	Daniel =?utf-8?B?QmVycmFuZ8Op?= <berrange@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327081427.19693-1-johan+linaro@kernel.org> <CAJesf3M-LSS3PqGKBSzM+4SEYgRmqrVmv-kvJLYUZqqU_Vjjuw@mail.gmail.com>
-In-Reply-To: <CAJesf3M-LSS3PqGKBSzM+4SEYgRmqrVmv-kvJLYUZqqU_Vjjuw@mail.gmail.com>
-From: Dennis Gilmore <dgilmore@redhat.com>
-Date: Fri, 28 Mar 2025 12:02:07 -0500
-X-Gm-Features: AQ5f1Jpj60Hl13BHdrN6RSD_2D2y5OHb6ER9AEjwGhHIzzI5_xDfbU8zIfdpjJQ
-Message-ID: <CAJesf3NhrkoE2Sip2XzKNrjVNz0HFqZZYfLLfPxk8yV=RY323g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: x1e78100-t14s: enable SDX62 modem
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
 
-Resending it as plain text so it ends up on the lists. My phone does
-not allow me to send plain text emails. The modem shows up as device
-ID 1eac:1007
+CCing Daniel
 
-Tested-by: Dennis Gilmore <dgilmore@redhat.com>
-
-
-On Fri, Mar 28, 2025 at 7:05=E2=80=AFAM Dennis Gilmore <dgilmore@redhat.com=
-> wrote:
+On Wed, Mar 12, 2025 at 01:59:34PM -0700, Bobby Eshleman wrote:
+>Picking up Stefano's v1 [1], this series adds netns support to
+>vhost-vsock. Unlike v1, this series does not address guest-to-host (g2h)
+>namespaces, defering that for future implementation and discussion.
 >
-> Tested-by: Dennis Gilmore <dgilmore@redhat.com>
+>Any vsock created with /dev/vhost-vsock is a global vsock, accessible
+>from any namespace. Any vsock created with /dev/vhost-vsock-netns is a
+>"scoped" vsock, accessible only to sockets in its namespace. If a global
+>vsock or scoped vsock share the same CID, the scoped vsock takes
+>precedence.
 >
-> It worked fine here, the modem already exists in mhi and the fcc- unlock =
-code is already upstream in ModemManager
->
-> Dennis
->
-> On Thu, 27 Mar 2025, 03:24 Johan Hovold, <johan+linaro@kernel.org> wrote:
->>
->> Enable PCIe5 and the SDX62 modem present on some T14s.
->>
->> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
->> ---
->>
->> I don't have a modem in my T14s, but this is based on the work I did to
->> enable the modem on the CRD reference design and the T14s schematics.
->>
->> I'm hopping Dennis will be able to help out with testing.
->>
->> Note that we may possibly need a new entry for SDX62 in the MHI driver
->> device id table (mhi_pci_id_table) as well. The output of 'lspci -n'
->> will tell.
->>
->> Johan
->>
->>
->>  .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 65 +++++++++++++++++++
->>  1 file changed, 65 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi=
- b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
->> index 962fb050c55c..8b3f715bfc0b 100644
->> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
->> @@ -310,6 +310,22 @@ vph_pwr: regulator-vph-pwr {
->>                 regulator-boot-on;
->>         };
->>
->> +       vreg_wwan: regulator-wwan {
->> +               compatible =3D "regulator-fixed";
->> +
->> +               regulator-name =3D "VCC3B_WAN_RCM";
->> +               regulator-min-microvolt =3D <3300000>;
->> +               regulator-max-microvolt =3D <3300000>;
->> +
->> +               gpio =3D <&tlmm 221 GPIO_ACTIVE_HIGH>;
->> +               enable-active-high;
->> +
->> +               pinctrl-0 =3D <&wwan_sw_en>;
->> +               pinctrl-names =3D "default";
->> +
->> +               regulator-boot-on;
->> +       };
->> +
->>         sound {
->>                 compatible =3D "qcom,x1e80100-sndcard";
->>                 model =3D "X1E80100-LENOVO-Thinkpad-T14s";
->> @@ -1028,6 +1044,25 @@ &pcie4_phy {
->>         status =3D "okay";
->>  };
->>
->> +&pcie5 {
->> +       perst-gpios =3D <&tlmm 149 GPIO_ACTIVE_LOW>;
->> +       wake-gpios =3D <&tlmm 151 GPIO_ACTIVE_LOW>;
->> +
->> +       vddpe-3v3-supply =3D <&vreg_wwan>;
->> +
->> +       pinctrl-0 =3D <&pcie5_default>;
->> +       pinctrl-names =3D "default";
->> +
->> +       status =3D "okay";
->> +};
->> +
->> +&pcie5_phy {
->> +       vdda-phy-supply =3D <&vreg_l3i_0p8>;
->> +       vdda-pll-supply =3D <&vreg_l3e_1p2>;
->> +
->> +       status =3D "okay";
->> +};
->> +
->>  &pcie6a {
->>         perst-gpios =3D <&tlmm 152 GPIO_ACTIVE_LOW>;
->>         wake-gpios =3D <&tlmm 154 GPIO_ACTIVE_LOW>;
->> @@ -1309,6 +1344,29 @@ wake-n-pins {
->>                 };
->>         };
->>
->> +       pcie5_default: pcie5-default-state {
->> +               clkreq-n-pins {
->> +                       pins =3D "gpio150";
->> +                       function =3D "pcie5_clk";
->> +                       drive-strength =3D <2>;
->> +                       bias-pull-up;
->> +               };
->> +
->> +               perst-n-pins {
->> +                       pins =3D "gpio149";
->> +                       function =3D "gpio";
->> +                       drive-strength =3D <2>;
->> +                       bias-disable;
->> +               };
->> +
->> +               wake-n-pins {
->> +                       pins =3D "gpio151";
->> +                       function =3D "gpio";
->> +                       drive-strength =3D <2>;
->> +                       bias-pull-up;
->> +               };
->> +       };
->> +
->>         pcie6a_default: pcie6a-default-state {
->>                 clkreq-n-pins {
->>                         pins =3D "gpio153";
->> @@ -1367,6 +1425,13 @@ wcd_default: wcd-reset-n-active-state {
->>                 bias-disable;
->>                 output-low;
->>         };
->> +
->> +       wwan_sw_en: wwan-sw-en-state {
->> +               pins =3D "gpio221";
->> +               function =3D "gpio";
->> +               drive-strength =3D <4>;
->> +               bias-disable;
->> +       };
->>  };
->>
->>  &usb_1_ss0_hsphy {
->> --
->> 2.48.1
->>
+>If a socket in a namespace connects with a global vsock, the CID becomes
+>unavailable to any VMM in that namespace when creating new vsocks. If
+>disconnected, the CID becomes available again.
 
+I was talking about this feature with Daniel and he pointed out 
+something interesting (Daniel please feel free to correct me):
 
---=20
-Dennis Gilmore
-Senior Manager Systems Enablement OpenShift Development
+     If we have a process in the host that does a listen(AF_VSOCK) in a 
+     namespace, can this receive connections from guests connected to 
+     /dev/vhost-vsock in any namespace?
+
+     Should we provide something (e.g. sysctl/sysfs entry) to disable 
+     this behaviour, preventing a process in a namespace from receiving 
+     connections from the global vsock address space (i.e.  
+     /dev/vhost-vsock VMs)?
+
+I understand that by default maybe we should allow this behaviour in 
+order to not break current applications, but in some cases the user may 
+want to isolate sockets in a namespace also from being accessed by VMs 
+running in the global vsock address space.
+
+Indeed in this series we have talked mostly about the host -> guest path 
+(as the direction of the connection), but little about the guest -> host 
+path, maybe we should explain it better in the cover/commit 
+descriptions/documentation.
+
+Thanks,
+Stefano
+
+>
+>Testing
+>
+>QEMU with /dev/vhost-vsock-netns support:
+>	https://github.com/beshleman/qemu/tree/vsock-netns
+>
+>Test: Scoped vsocks isolated by namespace
+>
+>  host# ip netns add ns1
+>  host# ip netns add ns2
+>  host# ip netns exec ns1 \
+>				  qemu-system-x86_64 \
+>					  -m 8G -smp 4 -cpu host -enable-kvm \
+>					  -serial mon:stdio \
+>					  -drive if=virtio,file=${IMAGE1} \
+>					  -device vhost-vsock-pci,netns=on,guest-cid=15
+>  host# ip netns exec ns2 \
+>				  qemu-system-x86_64 \
+>					  -m 8G -smp 4 -cpu host -enable-kvm \
+>					  -serial mon:stdio \
+>					  -drive if=virtio,file=${IMAGE2} \
+>					  -device vhost-vsock-pci,netns=on,guest-cid=15
+>
+>  host# socat - VSOCK-CONNECT:15:1234
+>  2025/03/10 17:09:40 socat[255741] E connect(5, AF=40 cid:15 port:1234, 16): No such device
+>
+>  host# echo foobar1 | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+>  host# echo foobar2 | sudo ip netns exec ns2 socat - VSOCK-CONNECT:15:1234
+>
+>  vm1# socat - VSOCK-LISTEN:1234
+>  foobar1
+>  vm2# socat - VSOCK-LISTEN:1234
+>  foobar2
+>
+>Test: Global vsocks accessible to any namespace
+>
+>  host# qemu-system-x86_64 \
+>	  -m 8G -smp 4 -cpu host -enable-kvm \
+>	  -serial mon:stdio \
+>	  -drive if=virtio,file=${IMAGE2} \
+>	  -device vhost-vsock-pci,guest-cid=15,netns=off
+>
+>  host# echo foobar | sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+>
+>  vm# socat - VSOCK-LISTEN:1234
+>  foobar
+>
+>Test: Connecting to global vsock makes CID unavailble to namespace
+>
+>  host# qemu-system-x86_64 \
+>	  -m 8G -smp 4 -cpu host -enable-kvm \
+>	  -serial mon:stdio \
+>	  -drive if=virtio,file=${IMAGE2} \
+>	  -device vhost-vsock-pci,guest-cid=15,netns=off
+>
+>  vm# socat - VSOCK-LISTEN:1234
+>
+>  host# sudo ip netns exec ns1 socat - VSOCK-CONNECT:15:1234
+>  host# ip netns exec ns1 \
+>				  qemu-system-x86_64 \
+>					  -m 8G -smp 4 -cpu host -enable-kvm \
+>					  -serial mon:stdio \
+>					  -drive if=virtio,file=${IMAGE1} \
+>					  -device vhost-vsock-pci,netns=on,guest-cid=15
+>
+>  qemu-system-x86_64: -device vhost-vsock-pci,netns=on,guest-cid=15: vhost-vsock: unable to set guest cid: Address already in use
+>
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+>---
+>Changes in v2:
+>- only support vhost-vsock namespaces
+>- all g2h namespaces retain old behavior, only common API changes
+>  impacted by vhost-vsock changes
+>- add /dev/vhost-vsock-netns for "opt-in"
+>- leave /dev/vhost-vsock to old behavior
+>- removed netns module param
+>- Link to v1: https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+>
+>Changes in v1:
+>- added 'netns' module param to vsock.ko to enable the
+>  network namespace support (disabled by default)
+>- added 'vsock_net_eq()' to check the "net" assigned to a socket
+>  only when 'netns' support is enabled
+>- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
+>
+>---
+>Stefano Garzarella (3):
+>      vsock: add network namespace support
+>      vsock/virtio_transport_common: handle netns of received packets
+>      vhost/vsock: use netns of process that opens the vhost-vsock-netns device
+>
+> drivers/vhost/vsock.c                   | 96 +++++++++++++++++++++++++++------
+> include/linux/miscdevice.h              |  1 +
+> include/linux/virtio_vsock.h            |  2 +
+> include/net/af_vsock.h                  | 10 ++--
+> net/vmw_vsock/af_vsock.c                | 85 +++++++++++++++++++++++------
+> net/vmw_vsock/hyperv_transport.c        |  2 +-
+> net/vmw_vsock/virtio_transport.c        |  5 +-
+> net/vmw_vsock/virtio_transport_common.c | 14 ++++-
+> net/vmw_vsock/vmci_transport.c          |  4 +-
+> net/vmw_vsock/vsock_loopback.c          |  4 +-
+> 10 files changed, 180 insertions(+), 43 deletions(-)
+>---
+>base-commit: 0ea09cbf8350b70ad44d67a1dcb379008a356034
+>change-id: 20250312-vsock-netns-45da9424f726
+>
+>Best regards,
+>-- 
+>Bobby Eshleman <bobbyeshleman@gmail.com>
+>
 
