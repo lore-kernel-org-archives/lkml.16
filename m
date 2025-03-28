@@ -1,195 +1,221 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F59922094
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC6FE545
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743187670; cv=none; b=IX9neY1VeUT7SB/v+B5kIDzVKwu2Kik5XrkTRq/Uaq0jP+Alk1lnMkX8tNCwqoeLYYUlDcwmQfmDsnPZgpBsX0UYqwUebQpnyttq9R46lMXqNW99hzhbsOEzrgy+jaosZaxQN0F1ilTYBkBTCf9A+2IkHyzdJFjjSzACj3oQFmo=
+	t=1743187879; cv=none; b=Lw/x0W9oVb2mTDaeRw88bfD8xUCFzZoZdc0+wLCmjtXc7TmZSWo2VYVVXpCkpAChA4PvTQR56VfuL7WMom+BmeR0/EvR+ORRrQQuQgRJNqlDcy/NH7pYXU7ZbRhyylSdOlMBE9pzbYLDBxxYMH+fC5Gv4kyUpZEQ2Pg9cUO42r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743187670; c=relaxed/simple;
-	bh=GHOKahoG9CWMz1lQLck1AhqJdvINwU6zT5Zcdu6eHqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=atvMVOFKAjZJ+Mix7Tn4BCBe4qUFp5jIJZPKPzfL9/vMmImIN6eD9lXVveZZnCj8M9227+Z33s73yD/J/8EYyGj6LQAmNqy11snCMwOGYPYFGx+adznBsZ0/u4TyFKdyt6w2TeHsauJFelJrv/eMMf/CQYXHf6iMeseTEYYaoiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4e1aVBd; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743187879; c=relaxed/simple;
+	bh=MuDL9jpbnGRWlbbqtZxhrmChBseaCyNCOaY81ruoHcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ux/rs8ydm+2ltk+MwqzyARZBL3cJfm1RpvW5uOzkeA721U7pzRqLtkA2NNI/wj3+GeF5ecuXNYy//nNv5j48BwmUe46J9Xq4aGAj++Y4z8YBmI36LUgT/qIiI8akoypE81IRst/By9RH532ToURJG7iyp8ja6HYC+h+QveHrxJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ezYH7Whh; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4e1aVBd"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso640742a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743187669; x=1743792469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ZaBQSGCWBE4y8Yxfb/IZp7h2QC6U5lj6cYuHqPma8Y=;
-        b=S4e1aVBdOFptoGRI5uUu3EUrB+BwVilrg/eBG8h/c099GKxIgCKgCzcDH9d8NjwAwN
-         tJG7+SQ7Xt8+4STIwGrh1WayA3JuEhSn3PGbVEdG2HFpWEljryALk4pV+ERkM1pp6cIR
-         8SsiWlPeTqTkjXhbn8V9t2R0gLbdPZ+ZlTuL9kJZD6k5FvdDUBm0SNHlNbHuGhGx/tzu
-         UGS4AqH9Lo8yGaF2g/vKFBNLUzEmW+kAVEZGzP8AQHr0F36O/lCRnmnKVH7pMCpWYYV6
-         2dUnOdDLX0ehkMnXIMASVhScslDOCAQFHuB447G7lTAoFMaAV6PntTwRMazeHeoXj2tO
-         rffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743187669; x=1743792469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ZaBQSGCWBE4y8Yxfb/IZp7h2QC6U5lj6cYuHqPma8Y=;
-        b=R1bf7W0HKb15ky0uMk9LTVhLiDeLPt7w2ExAxf2mMiDtCdJveraOHvsb8n9lyBE6WU
-         NisL/A0eU114vxeyhjHKiqPDlbFG0ZxDblN2wv9ZVIqf7/EEsDEPJfx+tMi0sbXgqhjT
-         2gYyHD0lI6Z1/ktly8jdfkP7CMNIem+2Me6ByTX7AXy/dIDvIQbHFa1uEOWkgF/aywcW
-         u438Ri8x4Jm4Qpsj0InZZs+NKTqAU9gunnNcfMhHcDxuHNbLITA5SRjWE+hyL65mYXVn
-         +fa3w031lZ8eXAGGnfxTTi6nhd8NEJpGMjarEcas2G64MgcyaqjzGE4lxE054+aJ97se
-         g1Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWS+5CxKAGZ1rbgRUgOoX0GbQ32GcnISbyg4wAF4ObP8lK8nqbF5lEnZ3l9TIy9gdG0025+Lfg8Eb6ydwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4IhptQEQoDVaDgW4Apr/HN69w9gM4otV9/fmVmka+yAQuAZA4
-	JAD5iPoOMkrvLWy3EtIpyekQ2orxYiaMCPvxABZHO8toAP5aUegv+jl2+ggMoU7OsTrqELtU+Zv
-	6mVy64EhLLNEK6LEfxRDl6jF5P6U=
-X-Gm-Gg: ASbGncs4B/+sHTRg2ozegSA1NXXHXKnrxeofmP//2IDFYHqNyRJdoM1WcwZ9UncrtaZ
-	6Pxdh0wGAy/OBgFI+eQKqy24JNitgteGDOq8c7fCb5pmdUjQGeYqg5zah2q6safZGznhgXqqkCo
-	bpbaZhaNK6Ujj8ljC1pb2sKK0YmQ==
-X-Google-Smtp-Source: AGHT+IGged0fiKJixaESzWEycujCFhGP10Um4mqXsySmBso06gxn7OacXwS/hBBtYkJHKWSaCbjdAnUtABiTT1XdSmY=
-X-Received: by 2002:a17:90b:3e8d:b0:301:1c11:aa7a with SMTP id
- 98e67ed59e1d1-305321512bdmr184984a91.3.1743187668589; Fri, 28 Mar 2025
- 11:47:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ezYH7Whh"
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTPS
+	id yAQltPZLnVkcRyEnNtgJAL; Fri, 28 Mar 2025 18:51:09 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id yEnMtMxRKRxIGyEnNtVBag; Fri, 28 Mar 2025 18:51:09 +0000
+X-Authority-Analysis: v=2.4 cv=N/viFH9B c=1 sm=1 tr=0 ts=67e6ef9d
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=0Sr-awb6awCcF8-qK4kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=032/a9sJy8Z71nZgfdWNw/Gr3y2QePofuB4HmHZ/uEI=; b=ezYH7WhhR2SUYYRJGnOFtMAN9c
+	mUOy9U/pOh7AoHZUeyrPMs1Bggfwd1bDPUyfWjcdmTJcOPq8p/H2Rj+Bezz+7EHYAqM2z7KyIMezc
+	mQUhJPksrD76brr/vkRFxakbls7CWHN+XNULYruN/4ZTtjYhgkw0yvO/gXKchCF9eA2S9P2cfSbSJ
+	dAEPYjDm3mlxgYT9jk0rqq7HtGnUC4YfQa6NGzjaYLIU69Ok4ke0LV+AYDwGOLfgCflfFaKpK0leY
+	43Mt5g2dCFpJVA6M9GVsZtL+IGlVOyPTlL3Cnj5GmA1ffh9172BLdvw2nb3pVvXtKmpF1nsulQZP7
+	biBbyhBw==;
+Received: from [201.172.174.147] (port=37342 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tyEnL-00000001zFc-3Su2;
+	Fri, 28 Mar 2025 13:51:07 -0500
+Message-ID: <9a0401f3-fa85-4308-a022-c4205fd7b50f@embeddedor.com>
+Date: Fri, 28 Mar 2025 12:51:02 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328032942.16264-1-bold.zone2373@fastmail.com>
-In-Reply-To: <20250328032942.16264-1-bold.zone2373@fastmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 28 Mar 2025 14:47:36 -0400
-X-Gm-Features: AQ5f1Jq8EA08dieD66Twx8lZwHUaFgRa-kOz_qrrVj6oWZ2bGitqfzj7vLQrjb4
-Message-ID: <CADnq5_M63JAhaqoe4OndwmcQN-Sw2NOYfGsd2wgsix_LqNnnjA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: removed unused function
-To: James Flowers <bold.zone2373@fastmail.com>
-Cc: harry.wentland@amd.com, sunpeng.li@amd.com, siqueira@igalia.com, 
-	alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
-	simona@ffwll.ch, skhan@linuxfoundation.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z-azMlPnP7nPPJrY@kspp>
+ <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1tyEnL-00000001zFc-3Su2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:37342
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMTtZ5m/LPCb4BvzS9P7DJ5JmUfF+DNoG3IGCexd83zi2y32FHm8Uuvuv0Js87/MPw/tq+Fm4uVBc70cz1U8QZSCf20CrA0TW/uq3pGtQQv4/ZBQ//QB
+ oim06U3/rgfSSoT0BnTPKM5QksfOOiYbTXfR/mefhRqOPcoYzE04HBdf82cxdGJV8gy6+I/bIIhgcQN4WkPFiDxmeRQ7inXfS+L9NYKW1tSCKW+fYFd3phhA
 
-Applied.  Thanks!
+Hi!
 
-Alex
+On 28/03/25 12:31, Thomas Weißschuh wrote:
+> Hi Gustavo,
+> 
+> On 2025-03-28 08:33:22-0600, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+>> a flexible structure where the size of the flexible-array member
+>> is known at compile-time, and refactor the rest of the code,
+>> accordingly.
+>>
+>> So, with these changes, fix the following warning:
+>>
+>> drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
+>>   1 file changed, 11 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+>> index 275522b81ea5..6eab0474f52d 100644
+>> --- a/drivers/leds/leds-cros_ec.c
+>> +++ b/drivers/leds/leds-cros_ec.c
+>> @@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+>>   				union cros_ec_led_cmd_data *arg)
+>>   {
+>>   	int ret;
+>> -	struct {
+>> -		struct cros_ec_command msg;
+>> -		union cros_ec_led_cmd_data data;
+>> -	} __packed buf = {
+>> -		.msg = {
+>> -			.version = 1,
+>> -			.command = EC_CMD_LED_CONTROL,
+>> -			.insize  = sizeof(arg->resp),
+>> -			.outsize = sizeof(arg->req),
+>> -		},
+>> -		.data.req = arg->req
+>> -	};
+>> -
+>> -	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+>> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+>> +			sizeof(union cros_ec_led_cmd_data));
+>> +
+>> +	msg->version = 1;
+>> +	msg->command = EC_CMD_LED_CONTROL;
+>> +	msg->insize  = sizeof(arg->resp);
+>> +	msg->outsize = sizeof(arg->req);
+>> +	*(struct ec_params_led_control *)msg->data = arg->req;
+> 
+> To be honest this looks really ugly and it's not at all obvious what is
 
-On Thu, Mar 27, 2025 at 11:37=E2=80=AFPM James Flowers
-<bold.zone2373@fastmail.com> wrote:
->
-> Removed unused function mpc401_get_3dlut_fast_load_status.
->
-> Signed-off-by: James Flowers <bold.zone2373@fastmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h     | 17 -----------------
->  .../drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c  | 11 -----------
->  .../drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h  | 14 --------------
->  3 files changed, 42 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/dr=
-m/amd/display/dc/inc/hw/mpc.h
-> index 3a89cc0cffc1..eaef3899da7b 100644
-> --- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-> +++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-> @@ -967,23 +967,6 @@ struct mpc_funcs {
->         */
->
->         void (*update_3dlut_fast_load_select)(struct mpc *mpc, int mpcc_i=
-d, int hubp_idx);
-> -       /**
-> -       * @get_3dlut_fast_load_status:
-> -       *
-> -       * Get 3D LUT fast load status and reference them with done, soft_=
-underflow and hard_underflow pointers.
-> -       *
-> -       * Parameters:
-> -       * - [in/out] mpc - MPC context.
-> -       * - [in] mpcc_id
-> -       * - [in/out] done
-> -       * - [in/out] soft_underflow
-> -       * - [in/out] hard_underflow
-> -       *
-> -       * Return:
-> -       *
-> -       * void
-> -       */
-> -       void (*get_3dlut_fast_load_status)(struct mpc *mpc, int mpcc_id, =
-uint32_t *done, uint32_t *soft_underflow, uint32_t *hard_underflow);
->
->         /**
->         * @populate_lut:
-> diff --git a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c b/dri=
-vers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-> index ad67197557ca..98cf0cbd59ba 100644
-> --- a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-> +++ b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.c
-> @@ -47,16 +47,6 @@ void mpc401_update_3dlut_fast_load_select(struct mpc *=
-mpc, int mpcc_id, int hubp
->         REG_SET(MPCC_MCM_3DLUT_FAST_LOAD_SELECT[mpcc_id], 0, MPCC_MCM_3DL=
-UT_FL_SEL, hubp_idx);
->  }
->
-> -void mpc401_get_3dlut_fast_load_status(struct mpc *mpc, int mpcc_id, uin=
-t32_t *done, uint32_t *soft_underflow, uint32_t *hard_underflow)
-> -{
-> -       struct dcn401_mpc *mpc401 =3D TO_DCN401_MPC(mpc);
-> -
-> -       REG_GET_3(MPCC_MCM_3DLUT_FAST_LOAD_STATUS[mpcc_id],
-> -                       MPCC_MCM_3DLUT_FL_DONE, done,
-> -                       MPCC_MCM_3DLUT_FL_SOFT_UNDERFLOW, soft_underflow,
-> -                       MPCC_MCM_3DLUT_FL_HARD_UNDERFLOW, hard_underflow)=
-;
-> -}
-> -
->  void mpc401_set_movable_cm_location(struct mpc *mpc, enum mpcc_movable_c=
-m_location location, int mpcc_id)
->  {
->         struct dcn401_mpc *mpc401 =3D TO_DCN401_MPC(mpc);
-> @@ -618,7 +608,6 @@ static const struct mpc_funcs dcn401_mpc_funcs =3D {
->         .set_bg_color =3D mpc1_set_bg_color,
->         .set_movable_cm_location =3D mpc401_set_movable_cm_location,
->         .update_3dlut_fast_load_select =3D mpc401_update_3dlut_fast_load_=
-select,
-> -       .get_3dlut_fast_load_status =3D mpc401_get_3dlut_fast_load_status=
-,
->         .populate_lut =3D mpc401_populate_lut,
->         .program_lut_read_write_control =3D mpc401_program_lut_read_write=
-_control,
->         .program_lut_mode =3D mpc401_program_lut_mode,
-> diff --git a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h b/dri=
-vers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-> index ce6fbcf14d7a..8e35ebc603a9 100644
-> --- a/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-> +++ b/drivers/gpu/drm/amd/display/dc/mpc/dcn401/dcn401_mpc.h
-> @@ -241,23 +241,9 @@ void mpc401_update_3dlut_fast_load_select(
->         int mpcc_id,
->         int hubp_idx);
->
-> -void mpc401_get_3dlut_fast_load_status(
-> -       struct mpc *mpc,
-> -       int mpcc_id,
-> -       uint32_t *done,
-> -       uint32_t *soft_underflow,
-> -       uint32_t *hard_underflow);
-> -
->  void mpc401_update_3dlut_fast_load_select(
->         struct mpc *mpc,
->         int mpcc_id,
->         int hubp_idx);
->
-> -void mpc401_get_3dlut_fast_load_status(
-> -       struct mpc *mpc,
-> -       int mpcc_id,
-> -       uint32_t *done,
-> -       uint32_t *soft_underflow,
-> -       uint32_t *hard_underflow);
-> -
->  #endif
-> --
-> 2.49.0
->
+We can do something like this, instead:
+
+diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+index 275522b81ea5..c7235f4e577b 100644
+--- a/drivers/leds/leds-cros_ec.c
++++ b/drivers/leds/leds-cros_ec.c
+@@ -66,24 +66,24 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+                                 union cros_ec_led_cmd_data *arg)
+  {
+         int ret;
+-       struct {
+-               struct cros_ec_command msg;
+-               union cros_ec_led_cmd_data data;
+-       } __packed buf = {
+-               .msg = {
+-                       .version = 1,
+-                       .command = EC_CMD_LED_CONTROL,
+-                       .insize  = sizeof(arg->resp),
+-                       .outsize = sizeof(arg->req),
+-               },
+-               .data.req = arg->req
+-       };
+-
+-       ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++       DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++                       sizeof(union cros_ec_led_cmd_data));
++       struct ec_params_led_control *req =
++                               (struct ec_params_led_control *)msg->data;
++       struct ec_response_led_control *resp =
++                               (struct ec_response_led_control *)msg->data;
++
++       msg->version = 1;
++       msg->command = EC_CMD_LED_CONTROL;
++       msg->insize  = sizeof(arg->resp);
++       msg->outsize = sizeof(arg->req);
++       *req = arg->req;
++
++       ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+         if (ret < 0)
+                 return ret;
+
+-       arg->resp = buf.data.resp;
++       arg->resp = *resp;
+
+         return 0;
+  }
+
+as in other cases:
+
+https://lore.kernel.org/linux-hardening/Z-a4meHAy-t58bcE@kspp/
+
+-Gustavo
+
+> going on. We have the utility function cros_ec_cmd() which would be the
+> nicer alternative. (Without having verified that it avoids the warning).
+> While it is slightly more expensive, I don't think it matters.
+> And if it does, the helper can be optimized.
+> 
+> (The same goes for my other cros_ec drivers)
+> 
+>> +
+>> +	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> -	arg->resp = buf.data.resp;
+>> +	arg->resp = *(struct ec_response_led_control *)msg->data;
+>>   
+>>   	return 0;
+>>   }
+> 
+> 
+> Thomas
+
