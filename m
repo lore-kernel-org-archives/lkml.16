@@ -1,71 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F11D5AA9;
-	Fri, 28 Mar 2025 17:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED6023CB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743182312; cv=none; b=ShX1LEPrM/nXp9t+2iT+lYJkeDuwdzEiD0NTnKp8UNlwBaiyxZfrU2jpbp/PvGZCQJTFh9Av+YUVU2NhPY10rguEmglIys9E/CzjB0uAJDiWzU1XSs18xgaqUrJjBAThS8EDA0YT7p4GA1nZVo56bPeivKhWXC3KrXvMvJvbtsk=
+	t=1743182669; cv=none; b=GjOrEkZ0riBgmJPzrtu1JTfX/bY5fXtP4/R0qzsuGNcdTK+EvQ0uy0rkOJQBSmSj+vbncNadO7O23fS6saAPMIqmc6NujHmP6sMwdDmWgmHAZ6EaQEVZFsLrRKA3pcYSO32kiJ9MWW7Ondd+dfPfqqTzyNqShUBvm+aWNtybqQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743182312; c=relaxed/simple;
-	bh=IPockx/RNCohP4hRB5I5pM9zVvxUpFQjDkYJkZy0WcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJnxH/q2YF4fsCFbwYq1BN2IRgJdq8shfwm9YGaQpxW8EnJiqCFFJkwoKKFkVylf4FuYSb+VVi+0h58vPMeJbPtYeM+xz1V+2zCyUFkRGIGPmMRYKiJYASlKWEkR8T/YnaOCj1HB8vFSc9QxA7O0lrOG/Df510ETJnD1NtsbDSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T55fnXjy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T55fnXjy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D36DC4CEE4;
-	Fri, 28 Mar 2025 17:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743182310;
-	bh=IPockx/RNCohP4hRB5I5pM9zVvxUpFQjDkYJkZy0WcA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T55fnXjypvkgBZUK6HSeYr1iH74kguXBxtaKkn960mqQ1iZs/kjh/NXaAGU+odmCD
-	 MK0tuizRR4mflEpZIbsUv5ZM0XQPlUMLUi6dRFZ0CSPQQG+h94b6Ex3eUr8lrMP2ia
-	 iR6eA2fO6hSvDPEkrzFc4MLnC0HKs3z4F8ZHxvEuJY9aQ4qxo184vYwKGwcjpPEbHK
-	 k4W2iyG14PRpKixiCU0ZX7KIulXc0tr1gs2t0EWbFVjGVb+zqfs34CBS4nmsdEWWDP
-	 OE2B604ko4fReV39RyOzBLVGW+oO5otU6xvakPiiVwOfYABlRR7IusrBS4NG1TPcTQ
-	 v58K7Me7vprgA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr . David Alan Gilbert" <linux@treblig.org>
-Subject: [GIT PULL] hwspinlock updates for v6.15
-Date: Fri, 28 Mar 2025 12:18:27 -0500
-Message-ID: <20250328171828.188058-1-andersson@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1743182669; c=relaxed/simple;
+	bh=QZxEW9LDKTakhl73Pjm6rjZwrSwT/kw0vBtXbHDY964=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BtKekaF5LpIgj6RnW4gajb5tBCUy2GGR+JFl0vo914ZCH1Kp9UoaEqm2ldTgDe1rjJsUyV3HP0GxmZXPkl5tI0781lcPdtwlKu0NWAUjy5cqTobzh9DUFlsj8z3X3Q1rHdyLWgqUKfZdLBB0NOGOQYWtEA7Qb0ufZ5MX9ieA50s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 873A11691;
+	Fri, 28 Mar 2025 10:24:31 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CD673F63F;
+	Fri, 28 Mar 2025 10:24:26 -0700 (PDT)
+Date: Fri, 28 Mar 2025 17:24:24 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] tools build: Use -fzero-init-padding-bits=all
+Message-ID: <20250328172424.GB195235@e132581.arm.com>
+References: <20250328135221.10274-1-leo.yan@arm.com>
+ <CAP-5=fU5y_xKaWnh8tumyjTfJZdr2i+tPUaECyPs_vdhKdYWLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fU5y_xKaWnh8tumyjTfJZdr2i+tPUaECyPs_vdhKdYWLg@mail.gmail.com>
 
+Hi Ian,
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
+On Fri, Mar 28, 2025 at 09:39:41AM -0700, Ian Rogers wrote:
 
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
+[...]
 
-are available in the Git repository at:
+> It'd be nice to bring in the comment for try-run that's in
+> ./scripts/Makefile.compiler:
+> ```
+> # try-run
+> # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+> # Exit code chooses option. "$$TMP" serves as a temporary file and is
+> # automatically cleaned up.
+> ```
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/hwlock-v6.15
+It is fine for me to reuse the comment from Makefile.compiler and add
+a temporary folder for the try result.
 
-for you to fetch changes up to fec04edb74126f21ac628c7be763c97deb49f69d:
+> > +try-run = $(shell set -e;              \
+> > +       if ($(1)) >/dev/null 2>&1;      \
+> > +       then echo "$(2)";               \
+> > +       else echo "$(3)";               \
+> > +       fi)
+> > +
+> > +__cc-option = $(call try-run,\
+> > +       $(1) -Werror $(2) -c -x c /dev/null -o /dev/null,$(2),)
+> > +cc-option = $(call __cc-option, $(CC),$(1))
+> > +
+> 
+> I see differences with the ./scripts/Makefile.compiler version of
+> these functions:
+> ```
+> # __cc-option
+> # Usage: MY_CFLAGS += $(call
+> __cc-option,$(CC),$(MY_CFLAGS),-march=winchip-c6,-march=i586)
+> __cc-option = $(call try-run,\
+>        $(1) -Werror $(2) $(3) -c -x c /dev/null -o "$$TMP",$(3),$(4))
+> 
+> cc-option = $(call __cc-option, $(CC),\
+>        $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS),$(1),$(2))
+> ```
+> I'm just wondering why as if we need to update these in the future
+> it'd be easier if the two were identical.
 
-  hwspinlock: Remove unused hwspin_lock_get_id() (2025-03-21 17:12:04 -0500)
+Note, I do not see a requirement for passing two options for tools
+building.  In the next spin, I will keep to support only one option.
 
-----------------------------------------------------------------
-hwspinlock updates for v6.15
+Thanks for review!
 
-Drop a few unused functions from the hwspinlock framework.
-
-----------------------------------------------------------------
-Dr. David Alan Gilbert (2):
-      hwspinlock: Remove unused (devm_)hwspin_lock_request()
-      hwspinlock: Remove unused hwspin_lock_get_id()
-
- Documentation/locking/hwspinlock.rst | 57 +---------------------
- drivers/hwspinlock/hwspinlock_core.c | 94 ------------------------------------
- include/linux/hwspinlock.h           | 18 -------
- 3 files changed, 1 insertion(+), 168 deletions(-)
+Leo
