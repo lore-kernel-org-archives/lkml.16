@@ -1,67 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F99A7FBA1;
-	Fri, 28 Mar 2025 12:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF8C3BBF2
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743163363; cv=none; b=MZsmf4qiNQ50KaIAUghNlbMMouSz3CsPYBpypbsyqJOVeavQzGWWA0CdPfjyKjZSKEYl/meIwpdA456sREq15kC74e8RScb4zDMTWdVYmzndQmnuGQrGJfXJQJB6gV7fyrADJuavqAGdzRFMc4ZcYAflK/ssFVlUgtAq5HykGYM=
+	t=1743163839; cv=none; b=BdgGMw+1xw9YLSHZG8hjKx4TWT9CfUTO4wH1NwSolt87L6ZyUH294jBbeZUzftslHHIgSWpTgZ95MCiSsE6249DrfSyPTq2Wv6uJeF6ACbRxZeRiWxkzurMPr4cmsJIGdC2Ns6PFKkys7p2UrFnwWYJlnAdQwK9feqSOh0UKUp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743163363; c=relaxed/simple;
-	bh=WkHvnjBZwMyqtk7FXbtB96R3wlh+AovO1iGTnu0Xn54=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B5TDFV1HLKFJckc/UsHcCQUrLvIf+Tjs6m1Eq1kUA49u0MFGnrAEZoBu0YK6pBlWYLKXf3wi+IL3IXj5mRQDEWe76lGDfJZIQAP1aMt0/wfva6lb8bHd0SALNhE3DI4ivCS1bdKbtOXoWsq8FKetxpT7SHnFLBcbptb7ZUp9ktc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihWfLiOD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743163839; c=relaxed/simple;
+	bh=YsEgAqwxWCjkg5XyBi0RW8U5VcBymAfTASedAi4c+W8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNTNNUykCo+si0Wkyy9LqMWExD1SHUFUi7s/hva00grJ8nVTChApB8b6V/cXJSMIPbFgjvVIJ06R23lczew116IRx6sKxYhKt2YoGU+vCkn3QPX5SwHW7Q5oBX1nDUYJdGHcwjCLmKNX0PRrag3bTcVyyM1lyonggUVrARMUbcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=g8GQpK1Y; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihWfLiOD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8885C4CEE4;
-	Fri, 28 Mar 2025 12:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743163363;
-	bh=WkHvnjBZwMyqtk7FXbtB96R3wlh+AovO1iGTnu0Xn54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ihWfLiODMIlMOtRhLL3ZOqhHgajKSA1d2+sstpiOjTj3iDOlweddEHxks699tGHeK
-	 OYSuvGhcTshlax/61AdS3CJxKFvJ27PoKJ68Zrh7DV8oGqrCdjvQD1oKmGJ/hakcbf
-	 G7criCbjRu5fHrLJF2ROiZJBACv+47P0xICKyMAKwUQkoJf61cZ2FBhQDfXyDoUKmn
-	 5i248cobsB1BwqrQrP8zxUvm9A8LA2juJ005cWkOOqiR+n3dPUO0A48P5YKIsnXalQ
-	 Subh2xIRrIICPjkMrbFsEdwJIRjhwiM7VPQ8AePe09xMxIlFMVMRIADSEugGrpC3IK
-	 QvVGSXN0ifJdQ==
-Date: Fri, 28 Mar 2025 05:02:42 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Debin Zhu
- <mowenroot@163.com>, Bitao Ouyang <1985755126@qq.com>
-Subject: Re: [PATCH] netlabel: Fix NULL pointer exception caused by CALIPSO
- on IPv4 sockets
-Message-ID: <20250328050242.7bec73be@kernel.org>
-In-Reply-To: <CAHC9VhRUq0yjGLhGf=GstDb8h5uC_Hh8W9zXkJRMXAgbNXQTZA@mail.gmail.com>
-References: <20250326074355.24016-1-mowenroot@163.com>
-	<CAHC9VhRUq0yjGLhGf=GstDb8h5uC_Hh8W9zXkJRMXAgbNXQTZA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="g8GQpK1Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743163835;
+	bh=YsEgAqwxWCjkg5XyBi0RW8U5VcBymAfTASedAi4c+W8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g8GQpK1YldVwr/ptBxWOcAiIdLv2O2JM1ZpXcDV3iGsw71MTzb9xjP5G8cWTauNLW
+	 3zAFefKULI3dbZRfbtxOQPKdaUNtIUYrob7N8QIAiFJ8SZaMJLSxk+ANLPg/cEI3oe
+	 txsNJIuagc0INGGg6TwOX3kilU0O/QtG4fXPsGdAP/FGVFUtSbAsLZBzzlmHwgy4SZ
+	 IgGuyoImiH5zywrfRy3po4VzrKACH7Sle59ksl7vnsmrXEMUrJJIlQphVFcXXs5pKE
+	 owXWiD45f/xdycsL53XwIbpsh/YrjYROllLJSvYLNl5YrxI7zhI+57MqdbqnWJCH8k
+	 oZ4ONsleMaXQQ==
+Received: from [192.168.50.250] (unknown [171.76.87.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 14FB517E0B9D;
+	Fri, 28 Mar 2025 13:10:31 +0100 (CET)
+Message-ID: <6da17cd3-77f2-4bf4-86b8-296c2f295960@collabora.com>
+Date: Fri, 28 Mar 2025 17:40:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] drm/ci: check-patch: unshallow repository before
+ fetching
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
+ helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
+ robdclark@gmail.com, guilherme.gallo@collabora.com,
+ sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
+ lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
+ maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250328110239.993685-1-vignesh.raman@collabora.com>
+ <20250328110239.993685-3-vignesh.raman@collabora.com>
+ <CAPj87rNLqMxBgKGTSHMHT39agzu=GY-Dgk6Zma1oM1ztkTch3Q@mail.gmail.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <CAPj87rNLqMxBgKGTSHMHT39agzu=GY-Dgk6Zma1oM1ztkTch3Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 26 Mar 2025 15:38:25 -0400 Paul Moore wrote:
-> For all three function, I'd probably add a single blank line between
-> the local variable declarations and the code below for the sake of
-> readability.  I'd probably also drop the comment as the code seems
-> reasonably obvious (inet6_sk() can return NULL, we can't do anything
-> with a NULL ptr so bail), but neither are reasons for not applying
-> this patch, if anything they can be fixed up during the merge assuming
-> the patch author agrees.
+Hi Daniel,
+
+On 28/03/25 17:05, Daniel Stone wrote:
+> Hi Vignesh,
 > 
-> Anyway, this looks good to me, Jakub and/or other netdev folks, we
-> should get this marked for stable and sent up to Linus, do you want to
-> do that or should I?
+> On Fri, 28 Mar 2025 at 11:03, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+>> Ensure the repository is not shallow before fetching branches in
+>> check-patch job. This prevents issues where git merge-base fails
+>> due to incomplete history. Set the timeout of check-patch job to 1h.
+> 
+> Ouch - an hour is pretty brutal. Is there a way to unshallow only back
+> to the merge base?
 
-Thanks for the CC! Feel free to take it to Linus if you're happy with
-it. We don't have the posting on the list so it'd be minor pain to apply.
+I set it to 1h, but the job is completed in ~15min for
+https://gitlab.freedesktop.org/vigneshraman/linux/-/merge_requests/18 
+which has 486 commits.
 
-As you say the safety check is probably okay, tho, it's unclear from 
-the commit message and comment how we get here with a v4 socket or
-perhaps not a fullsock..
+I will check if we can unshallow only up to the merge base.
+
+Regards,
+Vignesh
+
+> 
+> Cheers,
+> Daniel
+
