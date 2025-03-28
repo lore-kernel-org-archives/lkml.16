@@ -1,258 +1,140 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521CB214A65
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73D215193
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743154861; cv=none; b=JuJ9LSFi6NwXC+V+aLlk7nHH+R5WWjynNQjm9ELnBzqHfi3LtdE5V6aPWZlqTzNC+6ezjQ9W96SJzjJwbatcsTxvJha0dDIAEdZkE/B4hlk6xiucj099lAnEmw7LXLuKrkRecO52noBC72FVjV/fMHtZMeLhF47cNvrz1T8KCtg=
+	t=1743154914; cv=none; b=S+YVcoHp3MkV9D58B894jNbFdXobwUeDs/Th61FY7GxtixOA09EGhVRemfUv4362a6dtoDw3VGPc274cFKpbjwl6xi8kF72C4shmhVSFCiFAFzbQI/K7JILHww7QkaDTISl/nhv0c6Ttk6jahqHwQFKhc1I/1munJXpFLoyZu0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743154861; c=relaxed/simple;
-	bh=L2wZicz84aKDbZU9N8NwXaO+DJOgQtMNqH+z1xR1eMg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NF4tMnOQ6KgJ1h4YL8fXaW2hoUNdwTEIZacZOCBOhtnZNUjzZMFusN1QFwok7pr1JK6+9URVi/I+dIUGBTdcgmtIBVqmqcsXrY6RPhBl9PCVMhE4aGww2N86XLrML/IMKvYmp81Rd8lUZJxlTlFu/QN8Xwf7lNWC8+u9JiwH/dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=YxnjgrqP; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1743154914; c=relaxed/simple;
+	bh=Zun5s4aXGl/09PaE0IgNxFi9M4KhwUChifZd44o3m8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lB8NFDTA8MJ136vOY0vgji1l8ZTHXC0a0fHNQ+OKKGdTnH4VpwnYjSxjnbnyGylfv+t0ctQAxH3gWelajn0V+UwUcACxC8ZHXvEGzd0++RufP9LPNqelWa27XVaokYFvkBcyYK3wKOmzy4/d0fznJnA6VJCfPtU+5817ff8tm64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Nren2MQn; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="YxnjgrqP"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so60075975ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:40:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Nren2MQn"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d30c329f2so1910556241.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:41:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1743154857; x=1743759657; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=sifive.com; s=google; t=1743154909; x=1743759709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d7sLKbM1GxYyyD1I95xtv6zOCj7bHrFx0RiH3FTmLOI=;
-        b=YxnjgrqP2n7SHI8ucDtm079xGpQwPfG8bxXX9wfCfAzcvdJN4b9AXlEDSdmmdP5Gl4
-         jch9Ood9qP6E/NsrqjhkMxYLJIZKd9NgaJMxJB/RWdLDNsoaSY+oVjhQgQRh8kMSVvCY
-         QnlSQG0FFcZfpuXnTy+cuo5T37KsjBDHXmMEFSkCUpmfUkSj2ZXVGDvXe4eg+VxbXc6V
-         x9m1tpUgxGLfNy+amkhwV3yCwb283OGPP3QXmD46gt6v33INeZ5+lObAXww90mv/74/O
-         SW6ZSatbgFD3IRyIQ7seHMRgcI1bOeYaPwAzYIxdYVgXFsz8m5l5LgqJvGQwfgrkWDQc
-         FJ5Q==
+        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
+        b=Nren2MQntzUBLwhRf0HZGBWJKRUerlocQmOPALoBnJebxRqRjkKTlKT4cTNWivvsM2
+         XEiRQCjr9k/FhMk8HIuQ9zXjhnfcUPsUzECR3ucE6i2ZWXZA/s+r84ZK0QQqFfyDKNDf
+         Dgsk9b5wMLIDvP9yg8qGXmyrAcRzRYL6os9rlZOufdzW4P9tVFhACxAqnpMrp8c8vF6+
+         gNMjJAyPcD3gXwsvMsYaDkhafxHDCp4TSe6BsaPFcvv6SHwX2vpIjfV/0kwIqwI11h76
+         IjErwa1+GaTi1x3b+iqct7N3RUU46v1zUCoV1UPbdJLFRxK5G+TVJCZ/jei9KvhVeSDO
+         cung==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743154857; x=1743759657;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743154909; x=1743759709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d7sLKbM1GxYyyD1I95xtv6zOCj7bHrFx0RiH3FTmLOI=;
-        b=e+be431YCieTuZYs1Ove3/IHmRE8Uv1TkX/3fllUYeEoXAaazenHbf47yTgCOgp0sI
-         amQQrkBkD7QDqg3PnY2RBB7h76JybRfbrIthEceRq5iJOjWL2gowJEFdAzx09QidR2cM
-         qgNuVoay/nW1V2yoGSQqeVlcbIS2wkIt3nI24SiVMYzxHAq8MdbYijE1Fq/laqPOonU4
-         6DOoUnNuv3OmxXVOXasRHhTrYlc9bMwuzmUzRxNyQWT5QAwpSL8txmus5em+oC27boBl
-         og2Tfeg6SrbfxCPMC7N2Kp5JpL6Fh6TKND6SQp60XCX3ibL3Yql8PsCm2+uq7w18JZm/
-         J9aw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkTy8HnlnUhM7bRfiJIBAAMct68eESdSiWR3JTMCr67EG4uBR3+QkAxC4CFjXKj0qgT4Y51HlV3HKttqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgNmuhqslyYfTMZVui1uegcfeZAdllcDkQn4fvApom1Of94FhD
-	QnoCkgqrjA5u0CAyzxrlP2hErCBv467GZa5phuQPX74GwQoGn95mEFdAf8nW5sE=
-X-Gm-Gg: ASbGncutDoOU1IK4Iure43qrA/7smZMKnCA39AxhX6L3pk+2RqZ538JlOhxHPeMihl3
-	lBqKxbnGamQNSfD1nqtTOHRKwnUbmq/LbAl8nImaulA1yVLs40sTnXAby4+0ozNMNScQFEN+fmQ
-	MRsAUovWxW/eXuAiVu7rax/6335kOQy4DbdXV16TEhZkNeEFnDH9mzS/IqezcICYS2IIUaLI9Kv
-	kVc6e/B1Xxq7VuYr+cr0F6yfdq7xxco/PubbSERBYFpnrV/Ai+Jsw8JDFZJ3ht6rpERlW4inSA+
-	uLaUHjWWcKoMAdoMUWdvtMdMbjWP2TQLAZcDMo+YDYKTBwqjvoBksZgQCAcDNPJyXWIil/6srHT
-	GGnY=
-X-Google-Smtp-Source: AGHT+IHrCAmD8rW6ulLWjoKzD0DZQFfirZ4O72cN3Wg27gYzM+6Ab11Lts8MO1iP1coA0GbOqOR8Og==
-X-Received: by 2002:a17:902:e748:b0:224:1935:d9a3 with SMTP id d9443c01a7336-228048bb34bmr99905155ad.21.1743154857449;
-        Fri, 28 Mar 2025 02:40:57 -0700 (PDT)
-Received: from zjn.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106c7b7sm1283012b3a.116.2025.03.28.02.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 02:40:57 -0700 (PDT)
-From: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-To: sam@ravnborg.org,
-	neil.armstrong@linaro.org,
-	daniel@ffwll.ch,
-	dianders@google.com,
-	hsinyi@google.com,
-	angelogioacchino.delregno@collabora.com,
-	matthias.bgg@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	knoxchiou@google.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-Subject: [PATCH v9 2/2] arm64: dts: mediatek: Add MT8186 Ponyta Chromebooks
-Date: Fri, 28 Mar 2025 17:40:34 +0800
-Message-Id: <20250328094034.3400233-3-cengjianeng@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250328094034.3400233-1-cengjianeng@huaqin.corp-partner.google.com>
-References: <20250328094034.3400233-1-cengjianeng@huaqin.corp-partner.google.com>
+        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
+        b=sRQ3jK9VNosBUI737wvcKVn7zs65I//mMKKBc06iRAF8ACLms+X5pi+BbbxpETq/2p
+         8NbsW15YPytZQ9wn37oTt59xOvS35arhMnsNlXBO3MBHj76jl9+ei8rpUCXGuMW/3hYm
+         pEqvh3E+SZNYftMXPDQSyY32Y7JXM4akNZrRvHyLd81DJsGIKqt+qXbCROnOuST3heTI
+         7Istw9yJpngFkLqpy7sOFF+p2ts0T0leiE1gXoiO/fOKjkvEKlL4/HlvdtkwwQFY/ZA0
+         24OOp8WW+Q61MhvUa25StfLtqKc7Kco16vTBFLDWa75S7b1sGc6XHrlSN6N0r6r9Uw0k
+         EPHg==
+X-Gm-Message-State: AOJu0YwRQ4wwllQYciFBINE6ZFkRwWXvdhkHZrKA7GcbpdqqJXTphuXz
+	GeDs5JbkNckCM55QG/wecXavK0Impf6BTXN1CharNjIgk8turquXiJKDgRlMdN2Y/J/x+KAzr+/
+	i7/DBoYniY8dEYphXNOq/kdKt0y8HrFVPwRpgSQ==
+X-Gm-Gg: ASbGnct32VYPJnZmFbOn1YmvymGS7dXBSmzkbYETHAzUdmMD/7xoAeNHPXztQkpUcg3
+	eZEGIqPJ6VOHu1wE3Cmp78FqZEOZhCt1qMuP+zpjVLYKkGK9Q5iN6zjerXp/1uRvw7Oh1bGI8/i
+	ZolxAooPvTtRw9LSnn2B55wTEM1Y8B
+X-Google-Smtp-Source: AGHT+IHAfA7U5ABlgiwkdwG5YFKYhP7zz3TIEVTOcbnJ0BCTQpH0ybwGPzt5hi7ByZc+Ofz77emzNeHplbMnGuIyChc=
+X-Received: by 2002:a05:6102:a90:b0:4c3:878:6a62 with SMTP id
+ ada2fe7eead31-4c6c2816727mr954406137.8.1743154908552; Fri, 28 Mar 2025
+ 02:41:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241224093902.1632627-1-nylon.chen@sifive.com> <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
+In-Reply-To: <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
+From: Nylon Chen <nylon.chen@sifive.com>
+Date: Fri, 28 Mar 2025 17:41:37 +0800
+X-Gm-Features: AQ5f1JrdaQFUJm63vOfH9GWXIi95vV8JEVeEsIoDHq3ca33AIZRvXLmLu0ehrcM
+Message-ID: <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
+Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and algorithm
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-MT8186 ponyta, known as huaqin custom label, is a
-MT8186 based laptop. It is based on the "corsola" design.
-It includes LTE, touchpad combinations.
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> =E6=96=BC 2024=E5=B9=
+=B412=E6=9C=8827=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:20=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+>
+> Hello Nylon,
+>
+> On Tue, Dec 24, 2024 at 05:38:58PM +0800, Nylon Chen wrote:
+> > According to the circuit diagram of User LEDs - RGB described in the
+> > manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.p=
+df[1].
+> >
+> > The behavior of PWM is acitve-high.
+> >
+> > According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manu=
+al[2].
+> >
+> > The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period.
+> > The `frac` variable is pulse "inactive" time so we need to invert it.
+>
+> I'm trying to understand that. You're saying that the PWMCMP register
+> holds the inactive time. Looking at the logic diagram (Figure 29) of
+> "SiFive FU740-C000 Manual v1p6" that is because pwms is feed into the
+> comparator after going through that XNOR where the lower input is always
+> 0 (as pwmcmpXcenter is always 0) and so effectively counts backwards,
+> right?
+> In that case the sentence "The output of each comparator is high
+> whenever the value of pwms is greater than or equal to the corresponding
+> pwmcmpX." from the description of the Compare Registers is wrong.
+>
+Hi Uwe, I've contacted the spec's author, and he is willing to correct
+the spec-related error.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
----
-Changes in v9:
-- PATCH 2/2: Add sound model to fix the warning.
-- Link to v8:https://lore.kernel.org/all/20240914063122.1622196-3-cengjianeng@huaqin.corp-partner.google.com/
+Based on your suggestions, I think we have two approaches
+1. First add comments explaining where the spec and implementation
+don't match, then after the spec is corrected, submit another patch to
+remove the comments
+2. No need to add this error explanation part, because the spec will
+be corrected later.
 
-Changes in v8:
-- PATCH 2/2: Change the commit about ponyta.
-- Link to v7:https://lore.kernel.org/all/20240913031505.372868-3-cengjianeng@huaqin.corp-partner.google.com/
-
-Changes in v7:
-- PATCH 2/2: Remove prototype sku.
-- PATCH 2/2: Disable the other trackpad to enable one of them.
-- Link to v5:https://lore.kernel.org/all/20240909023148.1677936-3-cengjianeng@huaqin.corp-partner.google.com/
-
-Changes in v6:
-- No change.
-
-Changes in v5:
-- PATCH 2/2: Remove sku2147483647.
-- Link to v4:https://lore.kernel.org/all/20240906085739.1322676-3-cengjianeng@huaqin.corp-partner.google.com/
-
-Chage since v3:
-- No change.
-
-Changes in v2:
-- PATCH 2/2: Modify the dtb name without rev2.
-- Link to v1:https://lore.kernel.org/all/20240902125502.1844374-1-cengjianeng@huaqin.corp-partner.google.com/
-
----
- arch/arm64/boot/dts/mediatek/Makefile         |  2 +
- .../mediatek/mt8186-corsola-ponyta-sku0.dts   | 18 +++++++
- .../mediatek/mt8186-corsola-ponyta-sku1.dts   | 22 +++++++++
- .../dts/mediatek/mt8186-corsola-ponyta.dtsi   | 49 +++++++++++++++++++
- 4 files changed, 91 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 58484e830063..3aa06476c6c0 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -64,6 +64,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-chinchou-sku16.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393216.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393217.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393218.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-ponyta-sku0.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-ponyta-sku1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-rusty-sku196608.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-starmie-sku0.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-starmie-sku1.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
-new file mode 100644
-index 000000000000..986498af4c70
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-ponyta.dtsi"
-+
-+/ {
-+	model = "Google Ponyta sku0 board";
-+	compatible = "google,ponyta-sku0", "google,ponyta", "mediatek,mt8186";
-+};
-+
-+&i2c2 {
-+	trackpad@15 {
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
-new file mode 100644
-index 000000000000..ff5eea0ddeb4
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-ponyta.dtsi"
-+
-+/ {
-+	model = "Google Ponyta sku1 board";
-+	compatible = "google,ponyta-sku1", "google,ponyta", "mediatek,mt8186";
-+};
-+
-+&i2c2 {
-+	trackpad@2c {
-+		status = "disabled";
-+	};
-+};
-+
-+&usb_c1 {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-new file mode 100644
-index 000000000000..0abf69077089
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-steelix.dtsi"
-+
-+&keyboard_controller {
-+	function-row-physmap = <
-+		MATRIX_KEY(0x00, 0x02, 0)	/* T1 */
-+		MATRIX_KEY(0x03, 0x02, 0)	/* T2 */
-+		MATRIX_KEY(0x02, 0x02, 0)	/* T3 */
-+		MATRIX_KEY(0x01, 0x02, 0)	/* T4 */
-+		MATRIX_KEY(0x03, 0x04, 0)	/* T5 */
-+		MATRIX_KEY(0x02, 0x04, 0)	/* T6 */
-+		MATRIX_KEY(0x01, 0x04, 0)	/* T7 */
-+		MATRIX_KEY(0x00, 0x04, 0)	/* T8 */
-+		MATRIX_KEY(0x00, 0x01, 0)	/* T9 */
-+		MATRIX_KEY(0x02, 0x09, 0)	/* T10 */
-+		MATRIX_KEY(0x01, 0x09, 0)	/* T11 */
-+		MATRIX_KEY(0x01, 0x05, 0)	/* T12 */
-+	>;
-+
-+	linux,keymap = <
-+		CROS_STD_MAIN_KEYMAP
-+		MATRIX_KEY(0x00, 0x02, KEY_BACK)
-+		MATRIX_KEY(0x03, 0x02, KEY_REFRESH)
-+		MATRIX_KEY(0x02, 0x02, KEY_ZOOM)
-+		MATRIX_KEY(0x01, 0x02, KEY_SCALE)
-+		MATRIX_KEY(0x03, 0x04, KEY_SYSRQ)
-+		MATRIX_KEY(0x02, 0x04, KEY_BRIGHTNESSDOWN)
-+		MATRIX_KEY(0x01, 0x04, KEY_BRIGHTNESSUP)
-+		MATRIX_KEY(0x00, 0x04, KEY_PLAYPAUSE)
-+		MATRIX_KEY(0x00, 0x01, KEY_MICMUTE)
-+		MATRIX_KEY(0x02, 0x09, KEY_MUTE)
-+		MATRIX_KEY(0x01, 0x09, KEY_VOLUMEDOWN)
-+		MATRIX_KEY(0x01, 0x05, KEY_VOLUMEUP)
-+	>;
-+};
-+
-+&mt6366codec {
-+	mediatek,dmic-mode = <1>; /* one-wire */
-+};
-+
-+&sound {
-+	model = "mt8186_rt1019_rt5682s";
-+};
-+
--- 
-2.34.1
-
+I don't have a preference, so I wanted to check with you - do you lean
+more toward option 1 or option 2
+> With that assumption there are a few issues with the second patch:
+>
+>  - The Limitations paragraph still says "The hardware cannot generate a
+>    100% duty cycle."
+>  - If pwm_sifive_apply() is called with state->duty_cycle =3D 0 the PWMCM=
+P
+>    register becomes (1U << PWM_SIFIVE_CMPWIDTH) - 1 which results in a
+>    wave form that is active for 1 clock tick each period. That's bogus.
+>    If duty_cycle =3D 0 is requested, either make sure the output is
+>    inactive the whole time, or return an error.
+>  - With the above error in the official documentation, I'd like to have
+>    a code comment that explains the mismatch such that a future reader
+>    of the code has a chance to understand the situation without in
+>    detail review of the manual and the driver.
+>
+> Orthogonal to your patches, I wonder about
+>
+>         frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+>
+> . Round-closest is usually wrong in an .apply() callback. I didn't do
+> the detailed math, but I think you need to round up here.
+>
+> Best regards
+> Uwe
