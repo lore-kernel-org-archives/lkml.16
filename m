@@ -1,81 +1,84 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39AC14375D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA26D14375D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152037; cv=none; b=I7asEd2+bnSo3EPdvmEBYiIsCS/9ee/hBPisKPGaAbGhJUMFIb8mTz7OTeFSdevB46CQAXvesRu+VkRcZLn1lhYBBYur1xO73SoGwK2KBTin333LGP4Ttb8Niwsa75nvjp7QnEKUh8WLPIk1UGF8lwldoC0slVDOx3kYMzPLv2I=
+	t=1743152091; cv=none; b=gXoLDrg1k16KpyKu9uZWJxXFN0WW/h9dpFfDy7Ci+JA5zg0Y5S2zHD7rOz4gmHNhSNpD0JkTNxWth91eKPSfNpuQPAULVrvjXRY0Q2caLNTG6rbw9MSVS6fUy1y3YAbxwWCr38FX17ks5XeyyTgau7jm2EFvVAPfo8rfn4euT78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152037; c=relaxed/simple;
-	bh=LAo80pcze5ABJ2O7FvKaYN+s7oSxqDJ5t2rV079bqoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dUKF+b+u/mP4rCVpH/HrgZxz7WKb4950aCUmqCUhS7Z196ATW3YH2YGtc4PxdPavzLNrzU3hgo9x5y5ObzblxtyGDjKjoCPfQb7FVvnceLuU09hEzZQl/oXuO9CRQbKvP7zcyjzr2UrIWx34Q3Ee4Sa3IxW4cyJHav4M56d2SoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UjsScPIM; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UjsScPIM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9FBE44444E;
-	Fri, 28 Mar 2025 08:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743152033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fq28d+GTVbmTb7BFcdN0DAaSRJZdvQ95irksTrYkEpI=;
-	b=UjsScPIMUY2hMDZZer1kl+ImeWQ/6N6jcfRwapbJBGEb4dpnwL3E/Lmv7K4tSvoEG5X1RF
-	F5FvKMLLhvtWg/+R9jj0bw0Bood6uwfi3G5iqXD5zRgS+kQ4dB+o2IEe01ShTEjvai5lz9
-	e0itmAqJslji7Yb00F7/oJbsdDpx56AZsJzv0AZgdgEctFZnHE4XJKckqiLiG9BYeKdu1U
-	r0sWhIkbuB/DO5Akcbn+nU90+Avu/E6wCdi7xYVRGSKj3Kqhhj39s1FESNpODWe6Wg2Lhn
-	54z8Irz712GoX+SP2bl9zfQL13nJoWBRm76FU1vbaP61UiOqBrbTbS88LjxD+A==
-Date: Fri, 28 Mar 2025 09:53:51 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] drm/panel/panel-simple: Use the new allocation
- in place of devm_kzalloc()
-Message-ID: <20250328095351.7bac2d4d@booty>
-In-Reply-To: <20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
-References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
-	<20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1743152091; c=relaxed/simple;
+	bh=JebWOiMUTSKPMjERSVLm9ceMZPo81CbiCPdA9uYvbAw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=iWNSQDzS8kDlFibn30IupgGg6J9GbzekN4GOz7xQkyNVuoDBx9BtDHSj9y0AJPOb2X2IV4b7H4Xoh/dh6+LhisKBV6Q+HuTnJDTuU7IrlwgPrK1q2b3H3j5iMsyF8iKam8mB++ykDHn4wtabrxh7PEjfGyVcclomyOXeoJzhdqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZPDqM61vZz51SY1;
+	Fri, 28 Mar 2025 16:54:39 +0800 (CST)
+Received: from xaxapp04.zte.com.cn ([10.99.98.157])
+	by mse-fl2.zte.com.cn with SMTP id 52S8sGQZ091550;
+	Fri, 28 Mar 2025 16:54:16 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Fri, 28 Mar 2025 16:54:18 +0800 (CST)
+Date: Fri, 28 Mar 2025 16:54:18 +0800 (CST)
+X-Zmail-TransId: 2afa67e663baffffffff8ae-ad522
+X-Mailer: Zmail v1.0
+Message-ID: <202503281654187495nHLsjr7StdB4BpF27qtC@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
- hgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <maarten.lankhorst@linux.intel.com>
+Cc: <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <zhang.enpei@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBkcm0vdGVncmE6IGRwYXV4OiBVc2UgZGV2X2Vycl9wcm9iZSgp?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 52S8sGQZ091550
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67E663CF.004/4ZPDqM61vZz51SY1
 
-On Thu, 27 Mar 2025 10:55:42 -0400
-Anusha Srivatsa <asrivats@redhat.com> wrote:
+From: Zhang Enpei <zhang.enpei@zte.com.cn>
 
-> Start using the new helper that does the refcounted
-> allocations.
-> 
-> v2: check error condition (Luca)
+Replace the open-code with dev_err_probe() to simplify the code.
 
-Here as well, when you resend, move the changelog after the '---' line.
+Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+---
+ drivers/gpu/drm/tegra/dpaux.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+index 2cd8dcb959c0..e5297ac5c0fc 100644
+--- a/drivers/gpu/drm/tegra/dpaux.c
++++ b/drivers/gpu/drm/tegra/dpaux.c
+@@ -501,14 +501,9 @@ static int tegra_dpaux_probe(struct platform_device *pdev)
 
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+ 	dpaux->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
+ 	if (IS_ERR(dpaux->vdd)) {
+-		if (PTR_ERR(dpaux->vdd) != -ENODEV) {
+-			if (PTR_ERR(dpaux->vdd) != -EPROBE_DEFER)
+-				dev_err(&pdev->dev,
+-					"failed to get VDD supply: %ld\n",
+-					PTR_ERR(dpaux->vdd));
+-
+-			return PTR_ERR(dpaux->vdd);
+-		}
++		if (PTR_ERR(dpaux->vdd) != -ENODEV)
++			return dev_err_probe(&pdev->dev, PTR_ERR(dpaux->vdd),
++					     "failed to get VDD supply\n");
 
+ 		dpaux->vdd = NULL;
+ 	}
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.25.1
