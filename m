@@ -1,105 +1,125 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D72C4C83
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CB014F70;
+	Fri, 28 Mar 2025 01:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743123725; cv=none; b=UWuECMJLElC5PE5PpBr46bZw2ck8GQYAC8RHtGMCLva1AywymTwG8pu300BK86QmO6C1YKgg0byn6hJseE12C6qQZKAzJAnVjubFYmzO1VGLCBVoEanJjisIAZM2J+wE3O5rP73DHTUYNY0yF/2kRKwp3bRa3xSymY+4cdgPSxI=
+	t=1743124136; cv=none; b=WSL4A9HP/4AGzODvyt1OohtuY9G+iV+TnAsnhnnRKz3j75raHZm58fOEY8nBL0mtRMt5LnFRt1eVLHJr+2FJmjJCdp9fCFxxexgHG01Tcn+Rh1zSllM1ChnwyqsB9b6AOqTXBHDxEqibRqxdePHMl0OGwx52Jk+GEFRmIa8F2y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743123725; c=relaxed/simple;
-	bh=4ijHWtF/hQX4sDh+/dNDifJ7F5Gsup7zO72/M9k4cAo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Ts8LudCAo7SiK/G1VvtybDgGiSFPJAVrP9TAbbELqZdm9ygHbyknYxsFYg0lrXBlakibqZNPtaIpabn/VioJvHaa+jSohCaHztsrqOTX4GegLxt341dRCmZOhUjVg8Md1dLPVcmfmp/0wgHOBuoX8viExwJewAz4H0WFEy7IxzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PM/hUbRe; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743124136; c=relaxed/simple;
+	bh=LUHJHhnqVBiwHBE5eSLmgxG3OCJV2W+nHjSRfGSeZ8c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kl1rjdDxop8CM+J5G051WW4PWGX14qeNIQxnvuAfUk68tKAuSkM5ayz1mp2IGvYfBlDE6FY4CQTLdi3wdoJh1aXNk9drPXe38fFsNaOz1G6JvrFILu1jTDPjFQW7uqbF2WibD5Ap2L7bcGfrCt4ZzIVYlR7D2MCLhhh6PrI1Mck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=Unlyh/aj; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PM/hUbRe"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab7430e27b2so309568966b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743123722; x=1743728522; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pCvmfFnfEf5oydk6tsBORoFu01om0VgdooobXp+ffDg=;
-        b=PM/hUbReWS1FBM5CbUzD3NeXJBOZCVFR3luYehDJqyQ0rBcpAh8TpLn7XrLBv0ndL+
-         8mpkr6MR3AORSouQCJWcNeCXZZ69F0SBpk/DpBouuJZVhVFrQocmxJkiPFwc27aU5a4g
-         357IbqBeKCDUQ5spMOp4rSd4rByD+2SSVAi3yC0ZtSVuEDeW4OmBZ6NhRScGGAzrTrhK
-         baRHymwi2zT6ghAceHLruuKclimAdDaQY7oETPXFLg9IcZEdiRGAqqjFoGgx1b9ISWw5
-         W/HgFaKs4l9hLP1en1foKjXNGQj3so27r60VArVbjmP5PmQuQeAAcvHBbDe3pbg5jf0p
-         H57Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743123722; x=1743728522;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pCvmfFnfEf5oydk6tsBORoFu01om0VgdooobXp+ffDg=;
-        b=msfam1ERwDn2Z89VQttlkRkpUaXZs1bV0UA/o7xr1Su8zgJw3TN/pUNod144Gxz2rm
-         7wZsxAYU0BFiVEClp6BtJBtSvNE2wwB9+NqHPUQAa+WtAM0QBDinrtVLC1O+B2znv7ss
-         n7SGEtbeWLztaQItd/EHL7JZHv70M+S3o290luhv9G0MASKv3+nANfBCarPMd0TQ+sAH
-         //f2hI0Sdq1aakt2yVRyoyUKV2BdSRQucDhxzvxZkQQfKJxQKra7jLFHjx9y2pH22bGN
-         qRdhLIdqq03TOI64HCq2B7fVyfJGXou+tB596Lgs0I8LrP4YlCKCw/16w1ix4lrFl38W
-         uCaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrGisVsVXIRVmKI5DX6y8OK0gkyrox9G5uWvQJnpBgUtK6ovo0aGI/Q11v36YcfaqdStPp9bKBMrfr8Is=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUFAFr2ucryp2Vovp6b9la8hk2qOWnWXB02BbufHpFqu17qXpM
-	0fyOos5WdZ64+Ys3u81l6ZFtaS/o81J7k0J231ffKlsJIiZqnYp4
-X-Gm-Gg: ASbGncvmrlW3GckUavcCG1CCVh9VHxwURG6jTR12m3ml+AOlyy380jEkMKBWjnSQTLk
-	Qn5CengvsHsHXNWVgnUSM8audhBfhIpVPkNr99B9pN0LIAusrFFjZidcqtVFbDhrt1urQ8a35Nz
-	+bTwGJEabT3rXEOARokSwBZ6KXiXp2LazyFeAsxCyIqdzx8NsujB7MWP2CHUP1Imp1JO7YAtyZE
-	oewZCRdFSnPymTpc8unpFTxASwhkiju+bHDKDAev/ONoKTfmzdVZkyOls+YZNJy+gXglhaEdtBF
-	GINgbTPO53OzfIBsF2fFvU+jBFcoA2lNnUbc4tlDjcRj
-X-Google-Smtp-Source: AGHT+IFWjbpikg+3hE3SwOFTEC3CKQkxvg5PpQ3SiGlYA8+DmLsKNQUDtga+yVxm0Xcp/vZHY82YfQ==
-X-Received: by 2002:a17:907:6d28:b0:ac4:16a:1863 with SMTP id a640c23a62f3a-ac6faef40e9mr544586966b.26.1743123722150;
-        Thu, 27 Mar 2025 18:02:02 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71922ba63sm76680266b.2.2025.03.27.18.02.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Mar 2025 18:02:01 -0700 (PDT)
-From: Wei Yang <richard.weiyang@gmail.com>
-To: akpm@linux-foundation.org,
-	monstr@monstr.eu
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] microblaze/mm: put mm_cmdline_setup() in .init.text section
-Date: Fri, 28 Mar 2025 01:01:36 +0000
-Message-Id: <20250328010136.13139-1-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="Unlyh/aj"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 314DAC0005;
+	Fri, 28 Mar 2025 04:08:41 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 314DAC0005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1743124121; bh=x1a84lhOoPi7swJh4YdTyk1IokBrEf8C3V5kv5KxOwc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Unlyh/ajz2Lr8bPXMpARp2I6qOa8XzquX1Tl4zVvlD4ASdsSgUKyNF2AIcDFs59R6
+	 Fz0p9zR/O4NoNCubcbMG6HsNXePjOCgmIH5jiVxwanEVFy1GZBaAmG17U3S2LpAIV4
+	 YnXnrwRfmvRqNbVWp40gK1P0bG1pu1H+GtFINmiO7QksWGnV1SKdxhZcSoBYiIAwmt
+	 z0d/hTiygulmyfSIPBeWu52rXsS6nEcGH5OgoPMImYk4YDzN2kbzbDj2Wxcoq8F8fa
+	 9CNtyFzHA/4vlxHu5Tm91ujKskprKL9wLT8ktbO7j25ySfh9QCvCH38sN1BdaSl+KT
+	 j8Dzsj6WYBmhA==
+Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Fri, 28 Mar 2025 04:08:41 +0300 (MSK)
+Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 28 Mar 2025 04:08:40 +0300
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+To: Alexander Aring <alex.aring@gmail.com>
+CC: Ivan Abramov <i.abramov@mt-integration.ru>, Stefan Schmidt
+	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, <linux-wpan@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH 0/3] Avoid calling WARN_ON() on allocation failure in cfg802154_switch_netns()
+Date: Fri, 28 Mar 2025 04:04:24 +0300
+Message-ID: <20250328010427.735657-1-i.abramov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
+ mmail-p-exch01.mt.ru (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, 81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mt-integration.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192175 [Mar 27 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/27 22:37:00 #27871126
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-As reported by lkp, there is a section mismatch of mm_cmdline_setup() and
-memblock. The reason is we don't specify the section of mm_cmdline_setup()
-and gcc put it into .text.unlikely.
+This series was inspired by Syzkaller report on warning in
+cfg802154_switch_netns().
 
-As mm_cmdline_setup() is only used in mmu_init(), which is in .init.text
-section, put mm_cmdline_setup() into it too.
+WARNING: CPU: 0 PID: 5837 at net/ieee802154/core.c:258 cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Modules linked in:
+CPU: 0 UID: 0 PID: 5837 Comm: syz-executor125 Not tainted 6.13.0-rc6-syzkaller-00918-g7b24f164cf00 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Call Trace:
+ <TASK>
+ nl802154_wpan_phy_netns+0x13d/0x210 net/ieee802154/nl802154.c:1292
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:726
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2594
+ ___sys_sendmsg net/socket.c:2648 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2680
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-CC: Masahiro Yamada <masahiroy@kernel.org>
-CC: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503241259.kJV3U7Xj-lkp@intel.com/
----
- arch/microblaze/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This warning is caused by Syzkaller's fault injection, which causes
+kstrdup() in device_rename() to fail, so device_rename() returns -ENOMEM.
 
-diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
-index 4520c5741579..e98cfaf1c62b 100644
---- a/arch/microblaze/mm/init.c
-+++ b/arch/microblaze/mm/init.c
-@@ -143,7 +143,7 @@ int page_is_ram(unsigned long pfn)
- /*
-  * Check for command-line options that affect what MMU_init will do.
-  */
--static void mm_cmdline_setup(void)
-+static void __init mm_cmdline_setup(void)
- {
- 	unsigned long maxmem = 0;
- 	char *p = cmd_line;
+Since practically such failure is not possible, avoid it, additionally
+fixing similar pointless allocation-related warnings.
+
+Ivan Abramov (3):
+  ieee802154: Restore initial state on failed device_rename() in
+    cfg802154_switch_netns()
+  ieee802154: Avoid calling WARN_ON() on -ENOMEM in
+    cfg802154_switch_netns()
+  ieee802154: Remove WARN_ON() in cfg802154_pernet_exit()
+
+ net/ieee802154/core.c | 51 ++++++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 22 deletions(-)
+
 -- 
-2.34.1
+2.39.5
 
