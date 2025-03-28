@@ -1,91 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CC21CAA9E;
-	Fri, 28 Mar 2025 08:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC741CAA9E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743151923; cv=none; b=PaSwQLBJOjqzCJKcFldHfcL0oCevWsnbPTcSi393NO64+mFGEThL0t8bnufyYgZ/2q474Uea7Z13ea3wWQVyXwUU2DCkRy+0jVkzuuNoQH5Cgaf6hF1+TaQttuPQ5P0+zpnkpFAjDKvu9Z7B7uhpteRdBTph/mpkjVdQ70MJXbw=
+	t=1743151999; cv=none; b=iLqV85ayjLXz3x0t2Ljguk4kQovlaC4vdXiVi7ym+/dYWpD9xdvBUTOpLJOYdt1sCwrBI+smGBQ/joMe3CLclqOxeUWRYQdbpCLyJV1ztVKflqi+K9NfJGhDlYahazurW9ffrdInuAcOIWssU6dzQCxaOsDgfGG40ZKtfPSgM88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743151923; c=relaxed/simple;
-	bh=FlC+37ZiGcWL51fch9yxH6KM9+9dpWQkrmsOyOZA0kY=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=gCXIkTdtljcewicd55pgkacqNd86yHxRYWgabROBvSN6yhjBXDwi47wmwPeyNZAwWratxcFugk5pMppyEPLFmSDzob+mPNuE8sX4VRxwwY1bkDhQadu/VwoWlOZM7gWdNL+E9hJ/ZqnEgbfEvrcJBQqsBfyZ66GkWadvym/uSZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XMmvzhZb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743151999; c=relaxed/simple;
+	bh=guCE2WsY9Defy1aDADm8ZYMxyHivzAMoig7lpN2TvHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k4ovwimoQ2uJyL0dTn62xQ86M4t7VlU6B33+9IOah3FVbh9jBAJ6mTuFMWxqdH7jj+YLUalEAOda53a9yiw5VDX2sm3rlvmd1oUMhckd3CBVXZ8Khj6EPfbuHnfX1O/xJewhPttcb7Sn8izwSgWivtlKw9sZARC4e41ljWs+oV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk51dovH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XMmvzhZb"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S1UGE6016879;
-	Fri, 28 Mar 2025 08:51:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FyG8JFZiRbUg5Gq8GBkPclQ3vKTpi36PdswEVszV1z0=; b=XMmvzhZbeXD3MyNe
-	brL+4A9MaV8ToH6/FjdJEXyYUL0ebW2XfzpIZWklfx9+pRxF5iaCIcannoBjNVDl
-	HYH05NzKm/2KaqUzsoTrWxGOgGPWJAKiTePuRu0+w3mMH9FIiMwJ8Y6aAWYrSABR
-	tArGj5P2pF82ttIsiznQVXOX47HE8cfu8GldNoMSXz9mljKdNEUg+eMPDMv5c5UA
-	GbsnuJ8guRb9Pap+DCu8EX5GvpaXO8M7mcsJu5Zp6Ffdpqzp+JFOXQpMPau424gH
-	l8YrHeeFuEBqtZc2A3GHt8nNr+IcnC2yu9LfYQd/cO6hkS4b6VRtNLeOv860kp89
-	XhcLGA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45nj5q94fj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 08:51:58 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52S8pu5M008063
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Mar 2025 08:51:56 GMT
-Received: from [10.218.5.175] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Mar
- 2025 01:51:53 -0700
-Message-ID: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
-Date: Fri, 28 Mar 2025 14:21:44 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk51dovH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC027C4CEE4;
+	Fri, 28 Mar 2025 08:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743151998;
+	bh=guCE2WsY9Defy1aDADm8ZYMxyHivzAMoig7lpN2TvHs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pk51dovHDmNhzcT3xYaANTDZuyU9eDeLbZNqeF67YixD9tKMIkacoy86cg5Ah3Bam
+	 uAYCG1ShZWfz7VKqky48jc9mI8XFuUsSKTYFP9vTDo6hSQ9Lsgs/2LTZXH/cxz7scH
+	 InrlmCpKroAdw4LkQ0SF9Xkuia/kCdyd64pfPyWY82QVlcuU0AEuqAkoBISHcDpAES
+	 bjZHhvhkZyJbjCRXOcyo6lE/s54EzyQ/cRBSvxnZbHToS3CAXPbDZRYGLgmjo34KUf
+	 ZRRs3W5zB+eFSHbE8RcV1VixwUPhk0CDbcjsZkQdgsLKPURhPAN95weVKhwslSD1sR
+	 0U5UEdxVhUVBQ==
+From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org
+Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Daniel Maslowski <cyrevolt@googlemail.com>,
+	Li Zhengyu <lizhengyu3@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH fixes] riscv/purgatory: 4B align purgatory_start
+Date: Fri, 28 Mar 2025 09:53:11 +0100
+Message-ID: <20250328085313.1193815-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <konrad.dybcio@oss.qualcomm.com>
-CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <konradybcio@kernel.org>,
-        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lumag@kernel.org>,
-        <quic_pbrahma@quicinc.com>, <robh@kernel.org>
-References: <c5ead68a-f108-4e73-aea0-d6cb562092ac@oss.qualcomm.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <c5ead68a-f108-4e73-aea0-d6cb562092ac@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QkuncVBr8qHMhrdsP0y3Q50KOBIa1QBh
-X-Proofpoint-ORIG-GUID: QkuncVBr8qHMhrdsP0y3Q50KOBIa1QBh
-X-Authority-Analysis: v=2.4 cv=Gr9C+l1C c=1 sm=1 tr=0 ts=67e6632e cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7tu3_stWU1f-8F5rTL4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- bulkscore=0 clxscore=1015 malwarescore=0 adultscore=0 spamscore=0
- suspectscore=0 mlxlogscore=635 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503280060
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Konrad
+From: Björn Töpel <bjorn@rivosinc.com>
 
-Can you please share any updates from your internal investigation?
-Do you still have concerns or can this be merged?
+When a crashkernel is launched on RISC-V, the entry to purgatory is
+done by trapping via the stvec CSR. From riscv_kexec_norelocate():
 
+  |  ...
+  |  /*
+  |   * Switch to physical addressing
+  |   * This will also trigger a jump to CSR_STVEC
+  |   * which in this case is the address of the new
+  |   * kernel.
+  |   */
+  |  csrw    CSR_STVEC, a2
+  |  csrw    CSR_SATP, zero
+
+stvec requires that the address is 4B aligned, which was not the case,
+e.g.:
+
+  | Loaded purgatory at 0xffffc000
+  | kexec_file: kexec_file_load: type:1, start:0xffffd232 head:0x4 flags:0x6
+
+The address 0xffffd232 not 4B aligned.
+
+Correct by adding proper function alignment.
+
+With this change, crashkernels loaded with kexec-file will be able to
+properly enter the purgatory.
+
+Fixes: 736e30af583fb ("RISC-V: Add purgatory")
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+---
+ arch/riscv/purgatory/entry.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/purgatory/entry.S b/arch/riscv/purgatory/entry.S
+index 0e6ca6d5ae4b..c5db2f072c34 100644
+--- a/arch/riscv/purgatory/entry.S
++++ b/arch/riscv/purgatory/entry.S
+@@ -12,6 +12,7 @@
+ 
+ .text
+ 
++.align	2
+ SYM_CODE_START(purgatory_start)
+ 
+ 	lla	sp, .Lstack
+
+base-commit: acb4f33713b9f6cadb6143f211714c343465411c
 -- 
-Thanks and Regards
-Pratyush Brahma
+2.45.2
 
