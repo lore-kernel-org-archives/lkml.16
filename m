@@ -1,189 +1,236 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652F419259E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744F83C0C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171531; cv=none; b=PdfLe8XEyQvCi20i/Z55un3XdlAyBKGFwoXEKT/50fsJjtkIbqpVLRm3uCqI7cPI8YHmDtWLTC3FC2MqoAzgnIm8VcaKf90hnoQv3PxjDOVdi6HxIRFOuknTS0ZdAd6v6jA7PaIEhlaGzUihRfueVqa/Rl/8PAli6bgHg6VPlYc=
+	t=1743171544; cv=none; b=YWkjkQbLStMGjfnYjyaalq8Lfn0f7uSiHKgkt4zXFW6C9G59/8THYmcQ1f/x/N4/OBwJL/XrjQflm1i0XOLTw5LS6h2lsg0r8d0/uMn49k2i8PwonSqu/nGNUtjMc6YXzaJq1hmfqE4cosAHU7TJvG1kpUdIP6icaRaMt712uIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171531; c=relaxed/simple;
-	bh=aRsjjWJzK8Szt9gdEbaPUx+/TAhrL4HukvLzIArcr1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=pQUoKMJQWVvqAvTBl7ZriVJA5DLkFMHkSNpCCErXC2mXYbJSVwNKwM4uO1gulshmsrXNcu5jHxlJ3ESIuL+oKP9Ma2qs6jX97yYEDtTpJfFhDPzTjjUpUbLLTsy2CAdtEcFW1ylWxSm6KuUrScpY29U0W37EWDbdupcx9wBlGko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LzJ9hYAu; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743171544; c=relaxed/simple;
+	bh=nN0gpJelgd92014adwEpMLZN3nllcaaxAIztxgNBGGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fHs3eVe5kxP78QdmXRJUwNuQWrb4CTftmqxjg6pPeIjClWYMp943vT8kjbwl8VmO17tNEodb37+iewcyasZ52k5KVxhvEcfxjbdluhbLNiOgLvs6sj35dIa/gdx3dMdid+2CpHJCgKUdl3pM7HDUm7dS1N7u1OhQIDsvnXkqbVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2xB1w0lK; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LzJ9hYAu"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250328141842euoutp01d1a792d7400124f541a5d2e800d9050a~w-UOJU1AR2879928799euoutp01d
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:18:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250328141842euoutp01d1a792d7400124f541a5d2e800d9050a~w-UOJU1AR2879928799euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743171522;
-	bh=lO48Yx1dRxN6L1ypDuwiGhfZgN4Rzqi6MuK49Ng7t8Q=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=LzJ9hYAuVORDdpPDNoaAsSxqQPvxAGN70JzbeWTmHFXBBQgApzHABzlGOwL7v/NTq
-	 Bt8Py3MY06YHzpCwrOOD4l40Zl0MQ/FF8ERl5yImACnQCUZssD16PAHT56NCF007wz
-	 90uDi0LLMtuZPUD23/QJMqJdaUkIsTHwBiJmT6tk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250328141841eucas1p1619292970847f923dcfe86bb5c47ab46~w-UNvtGSP2939129391eucas1p1d;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id C6.C6.20821.1CFA6E76; Fri, 28
-	Mar 2025 14:18:41 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250328141841eucas1p246ea46aed1be0fbf2d32f4681bff0ebf~w-UNT_XZY0412104121eucas1p2i;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250328141841eusmtrp2242bde5cbf852d9b3900ec6a0b0bf6da~w-UNS7Wbt0154501545eusmtrp2_;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-8c-67e6afc17b98
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id A7.C7.19920.1CFA6E76; Fri, 28
-	Mar 2025 14:18:41 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250328141839eusmtip22afc9ba3e6f88769393f971c378bbae1~w-ULzCb-Z1176711767eusmtip2M;
-	Fri, 28 Mar 2025 14:18:39 +0000 (GMT)
-Message-ID: <c916a21e-2d95-476d-9895-4d91873fc5d5@samsung.com>
-Date: Fri, 28 Mar 2025 15:18:39 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2xB1w0lK"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so51215e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743171541; x=1743776341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DgKGnlqsv8JBCCBT4cAI1s7V8k61mCMe7HW1WOz7bZk=;
+        b=2xB1w0lK1VJpS8nh/J5aob7Ly1Tj7Y5L0uZhRZXtTlVlM3Q8Ao4z5xBBPv3gsC5d8h
+         06Yn3h2EKrXIELBpFIiL5RJXWk0yIgR0x2ub3dc1BFJ+wMw7N14gG4RZz6bErbSdCZdF
+         38zRn8wVTme6mrr0BpjWUoyNNHnADbWQQCWwjCgiaB/Co/C3PVbJqb/0F4suBt+MlAbc
+         uxbIBta8g92aiKCpgzcWKd6sLjT68j1mPNPpdWFQbS/GeiPrfcii7Im31cLoU6gKOpgE
+         UJGb1t5hnhhmOLWndYGHF9cBv523Q6JlT3zFJBPOiJXVFhQ4Mxhxv2WohZaSQPIAraTf
+         5V8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743171541; x=1743776341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DgKGnlqsv8JBCCBT4cAI1s7V8k61mCMe7HW1WOz7bZk=;
+        b=ZxYW77a4ZPFX5hYa4Zz8WI3tiT5bM/LE7fgfg3OTo6zsdzkcQYIOlSsf+ZlFpJ90mm
+         6AwQP0yRepz+drzlaLflEM8IvpIspScjZ9OSHR+xiwbIQf6CthbU4mwy2ANK5KwqI7NX
+         tjBFIaZ4yUPZniVFSD8Nw3AjteDcSUKKKDwwwbACH217JkJkzn5z09a9k4ZmAtKGoW6N
+         4cPt9nZEYURxuq1DXUdPhkMSpMBeK8t5kaJs7yTehcrZFJTSKnaHv6AJyZ94Iv2//luA
+         pkQbFSK0J6CQwRSycR2VL4yggfVDy04UjE4UWMCv8I/WiHaLHIEFJnBqaOd7ZYfIIb7E
+         xAeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiJKGJQKb5HXOKB9GRDZ8vJLDsMu/byJmulQAhZqjNrVGoNfW0tUMSUnXDgDBGZEhK7rynFrh6HWF1gqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh961wEvQcuYJ3dprvzo0/Qw1eGVsNNOXasbCMzcMFdObsTe5A
+	bB/R2WxWxIDA1xOku+OUTCpL5X2vkoQhyHbbD38wkglIJeuzWJNogwAtdtnx/2SISsSjK1r/abK
+	GE05J
+X-Gm-Gg: ASbGncuWCEVixQ5UeKgWWmXQNA1oxt1jDgklZCoNU7MKxUOBMsY/Ph4rrd5CU+9AYdG
+	q/0uqsxowGgElgQVaSdx11+wguX20sPxq3+6XoOhGgxXp91e5mgM3JCU6MWeMrkVE+MToRIgS5w
+	c1nE4x7xj9C7xKqFgw1sqYNpd4zq/a1CL2BDMOTbpZDrzJgt5uojUsn/57AskiaXNThwJLM4wwm
+	0ZcZEx5jSQQv9CL1JkI+gvA0Cu0iTDHILNv618ISXZIoy53cHldrXY3UShYezC4296IOo9vR9yI
+	n8I/wlaTng5XVgCI41b6gwfhXz30XbG8WEG36Z6rCtl/yJq/s9N5GQY1NnGt0ZaolffHj8J0Lj3
+	YeaF5ZnUdeg==
+X-Google-Smtp-Source: AGHT+IHxOKuumMNh+x8OQRqeAYCAeaAh/X2iaTKV9NNyWp8l9Mpc74sAcjSgUeJ0CBhJSW8k13LnEA==
+X-Received: by 2002:a05:600c:4793:b0:43b:bf3f:9664 with SMTP id 5b1f17b1804b1-43d9182811fmr778435e9.5.1743171540532;
+        Fri, 28 Mar 2025 07:19:00 -0700 (PDT)
+Received: from google.com (28.140.38.34.bc.googleusercontent.com. [34.38.140.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663573sm2853690f8f.33.2025.03.28.07.18.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 07:18:59 -0700 (PDT)
+Date: Fri, 28 Mar 2025 14:18:55 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Quentin Perret <qperret@google.com>
+Cc: catalin.marinas@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, snehalreddy@google.com,
+	sudeep.holla@arm.com, suzuki.poulose@arm.com, vdonnefort@google.com,
+	will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, Andrei Homescu <ahomescu@google.com>
+Subject: Re: [PATCH v4 3/3] KVM: arm64: Release the ownership of the hyp rx
+ buffer to Trustzone
+Message-ID: <Z-avzxyyOiaIk3-C@google.com>
+References: <20250326113901.3308804-1-sebastianene@google.com>
+ <20250326113901.3308804-4-sebastianene@google.com>
+ <Z-Qv4b0vgVql2yOb@google.com>
+ <Z-UcW32Hk6f_cuxc@google.com>
+ <Z-aKgXVjp4nNJcLd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
-	<yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, Randy
-	Dunlap <rdunlap@infradead.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250322004130.GS126678@ziepe.ca>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xTVxzuaW/vvTS2uxYmR6cjqWEPl7Uj2eMsoLJA3DViHHu4jOhYM+8K
-	4aUtdUyTiQRhFiYVZYUWC4yCCAQEZlGUjVZmyxigAzbpamFZqQg0rMg2pWaM9uLGf9/5Hr/v
-	/E4OyRNfwjeQqZnZjDJTni7BBZj5xsOhFy2tHsVLDyakqLK1GUd/LRXjqOlOCY5MeSnI3VMI
-	0IWm77locQGhinI7QAbdFBedNFwkUKn1Z4DqvJcIVFl2CJ1drOOhbscLqKbAhKHhrkocuZqX
-	+KiqfpJAA0YbjjzWLzFkOrGMvE4dhix/uPmoZWYOQ52jeXyU73wF1ZcJYjfSbouRSzcbmwHt
-	GfUAurpdTQ+52jA6v9fLpzsattC11+5x6eEBNd3eeBKn2+dLCdpe7sfoDtMxeqqjAtBXx3Jx
-	uvbUGf5bYUmCmANMeuphRinb9pEgxVVTzz9oF+cUjw2BXFAl0oAQElIvQ1/hKE8DBKSYagDw
-	xm0bPyCIqQUA68oBK9wHUOe/Ax4nbk3cwljTeQAnF5JZkw9AX4WTCAhCahtsah4KTsKoSDhd
-	6uCx/FrYV+EOhp+kIuC4ozzoD6XiYY/5dNATRkngt12nicBQHmUmoH7Kxw0IPCocOtxVQYxT
-	UVDj1eABHELJoLHfxWc9EbDTWxncB1LdAjhWNsJnrx0PB4w/rKwQCqdt3xAs3giXrgSGBgKF
-	AFb7x1cOWgBz7zpWEtHQObi4XEcuVzwPW7tkLP0GvPnnb0SAhpQI3vauZS8hgqVmHY+lhfCL
-	AjHrfgbqbS3/1Vpu/sTTAol+1bvoV62pX7WO/v/eaoA1gnBGrcpQMKqoTOZTqUqeoVJnKqQf
-	Z2W0g+Wf3f+Pbf4yODftk1oBlwRWAEmeJEy4fsStEAsPyD87wiizkpXqdEZlBU+RmCRc+PV3
-	JxRiSiHPZtIY5iCjfKxyyZANudwd+2y1u+b6x/UciSlyZnechJIl1vSqZt3xYW+WvL6Gsz02
-	YSH577vX7Rfn9xr2J3I+3AOjYyzJO1skv86F9l0w+jBfQbT/uPZHTsMnxLqxWUPao63D+4jo
-	Pp9j73ZTI6mNsHlEZnlqvPq+9omchznvlnNadr+2xmI/luY8/JyhbZ1+fCDhF//+9WrzB73Z
-	5DWdKi7JOfn5SIzrq9B3PC5r0YBXTt/Lcm4KGQlXOaHm2d8TwvqV08pXW+OSrh6dLYrdLNqE
-	Py051/P+2WzDoevwvYnJK/NHyrr37Kiwt5XUDmYZNw++/WDnrqPFx21bTxX10ImyzsjzUzmX
-	DdKZR/lTeRJMlSKP2sJTquT/AioQlFtIBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsVy+t/xe7oH1z9LN5hxkc9izvo1bBbf/vew
-	Way+289msaQpw+LJgXZGi5WrjzJZ/PpiYTFzxglGi9nTXzBZdM7ewG4x6dA1Roulb7eyW8yZ
-	Wmgx5ddSZou9t7QtFrYtYbG4vGsOm8W9Nf9ZLeYve8pucXbecTaLZ4d6WSyWtAJZb+9MZ7E4
-	+OEJq8W61+9ZLLZfbWK1aLljarFsKpeDjMeTg/OYPNbMW8Po8ezqM0aPBZtKPc7f28ji0XLk
-	LavH5hVaHov3vGTyuHy21GPTqk42j02fJrF7nJjxm8Vj85J6jxebZzJ67L7ZwOaxuG8ya4BI
-	lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GvYXL
-	WAtOCFX03DzP2MA4n6+LkZNDQsBE4uKDiyxdjFwcQgJLGSVamtqZIBIyEienNbBC2MISf651
-	sUEUvWeUOHNsGSNIglfATmL1mvNgRSwCqhKvJt1ihogLSpyc+YQFxBYVkJe4f2sGO4gtLOAi
-	cWDbRLAaEQEliX27JrKDDGUW2MEucXHXcSaIDc+ZJf52HwLrYBYQl7j1ZD7YSWwChhJdb0HO
-	4OTgFNCXmHf6HitEjZlE19YuRghbXmL72znMExiFZiE5ZBaSUbOQtMxC0rKAkWUVo0hqaXFu
-	em6xoV5xYm5xaV66XnJ+7iZGYJraduzn5h2M81591DvEyMTBeIhRgoNZSYRX8sqTdCHelMTK
-	qtSi/Pii0pzU4kOMpsDQmMgsJZqcD0yUeSXxhmYGpoYmZpYGppZmxkrivG6Xz6cJCaQnlqRm
-	p6YWpBbB9DFxcEo1MFldaJWPjrp8esKyTQs39a9UPna0699GGZvqxVrZ/Os/tK/rO79/ab2J
-	le6Uzt+/AhhsVefceLSfwc2YK/L/qhsbJhX5r/apvuecIXGXNVfrpphdj+vqWS9UbEVy4h+d
-	3tdz9A5zYfifi62yU6vfK7judn5w0HxL9cmj999GxvsVFSzI1Y3945SdYOV8c+HLvHPfmoML
-	ub/+mO0treTxo55p5XXxsB2/whqjhP+eLsgL2tcUedx3oU79lK4bbzka1PjS7TU9NfVnBPuY
-	TZ4n86Bp4enTZSr/Zq7ScXQ4yWjM6u63uHD9G/HCo4t4nQ7yRjFMZ4yT26/+vLKep6HxZe73
-	Nk0v3w9bvGdOc/mrpcRSnJFoqMVcVJwIAGW+P3ncAwAA
-X-CMS-MailID: 20250328141841eucas1p246ea46aed1be0fbf2d32f4681bff0ebf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-References: <cover.1738765879.git.leonro@nvidia.com>
-	<20250220124827.GR53094@unreal>
-	<CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
-	<1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
-	<d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
-	<20250312193249.GI1322339@unreal>
-	<adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
-	<20250319175840.GG10600@ziepe.ca>
-	<1034b694-2b25-4649-a004-19e601061b90@samsung.com>
-	<20250322004130.GS126678@ziepe.ca>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-aKgXVjp4nNJcLd@google.com>
 
-On 22.03.2025 01:41, Jason Gunthorpe wrote:
-> On Fri, Mar 21, 2025 at 12:52:30AM +0100, Marek Szyprowski wrote:
->>> Christoph's vision was to make a performance DMA API path that could
->>> be used to implement any scatterlist-like data structure very
->>> efficiently without having to teach the DMA API about all sorts of
->>> scatterlist-like things.
->> Thanks for explaining one more motivation behind this patchset!
-> Sure, no problem.
->
-> To close the loop on the bigger picture here..
->
-> When you put the parts together:
->
->   1) dma_map_sg is the only API that is both performant and fully
->      functional
->
->   2) scatterlist is a horrible leaky design and badly misued all over
->      the place. When Logan added SG_DMA_BUS_ADDRESS it became quite
->      clear that any significant changes to scatterlist are infeasible,
->      or at least we'd break a huge number of untestable legacy drivers
->      in the process.
->
->   3) We really want to do full featured performance DMA *without* a
->      struct page. This requires changing scatterlist, inventing a new
->      scatterlist v2 and DMA map for it, or this idea here of a flexible
->      lower level DMA API entry point.
->
->      Matthew has been talking about struct-pageless for a long time now
->      from the block/mm direction using folio & memdesc and this is
->      meeting his work from the other end of the stack by starting to
->      build a way to do DMA on future struct pageless things. This is
->      going to be huge multi-year project but small parts like this need
->      to be solved and agreed to make progress.
+On Fri, Mar 28, 2025 at 11:39:45AM +0000, Quentin Perret wrote:
+> On Thursday 27 Mar 2025 at 09:37:31 (+0000), Sebastian Ene wrote:
+> > On Wed, Mar 26, 2025 at 04:48:33PM +0000, Quentin Perret wrote:
+> > > On Wednesday 26 Mar 2025 at 11:39:01 (+0000), Sebastian Ene wrote:
+> > > > Introduce the release FF-A call to notify Trustzone that the hypervisor
+> > > > has finished copying the data from the buffer shared with Trustzone to
+> > > > the non-secure partition.
+> > > >
+> > > > Reported-by: Andrei Homescu <ahomescu@google.com>
+> > > > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > > > ---
+> > > >  arch/arm64/kvm/hyp/nvhe/ffa.c | 9 ++++++---
+> > > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > > index 6df6131f1107..ac898ea6274a 100644
+> > > > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > > @@ -749,6 +749,7 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > > >  	DECLARE_REG(u32, uuid3, ctxt, 4);
+> > > >  	DECLARE_REG(u32, flags, ctxt, 5);
+> > > >  	u32 count, partition_sz, copy_sz;
+> > > > +	struct arm_smccc_res _res;
+> > > >  
+> > > >  	hyp_spin_lock(&host_buffers.lock);
+> > > >  	if (!host_buffers.rx) {
+> > > > @@ -765,11 +766,11 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > > >  
+> > > >  	count = res->a2;
+> > > >  	if (!count)
+> > > > -		goto out_unlock;
+> > > > +		goto release_rx;
+> > > >  
+> > > >  	if (hyp_ffa_version > FFA_VERSION_1_0) {
+> > > >  		/* Get the number of partitions deployed in the system */
+> > > > -		if (flags & 0x1)
+> > > > +		if (flags & PARTITION_INFO_GET_RETURN_COUNT_ONLY)
+> > > >  			goto out_unlock;
+> > > >  
+> > > >  		partition_sz  = res->a3;
+> > > > @@ -781,10 +782,12 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > > >  	copy_sz = partition_sz * count;
+> > > >  	if (copy_sz > KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE) {
+> > > >  		ffa_to_smccc_res(res, FFA_RET_ABORTED);
+> > > > -		goto out_unlock;
+> > > > +		goto release_rx;
+> > > >  	}
+> > > >  
+> > > >  	memcpy(host_buffers.rx, hyp_buffers.rx, copy_sz);
+> > > > +release_rx:
+> > > > +	ffa_rx_release(&_res);
+> > 
+> > Hi,
+> > 
+> > > 
+> > > I'm a bit confused about this release call here. In the pKVM FF-A proxy
+> > > model, the hypervisor is essentially 'transparent', so do we not expect
+> > > EL1 to issue that instead?
+> > 
+> > I think the EL1 should also issue this call irrespective of what the
+> > hypervisor is doing. Sudeep can correct me here if I am wrong, but this
+> > is my take on this.
 
-Again, thanks for another summary!
+> 
+> Agreed, but with the code as it is implemented in this patch, I think
+> that from the host perspective there is a difference in semantic for
+> the release call. W/o pKVM the buffer is essentially 'locked' until
+> the host issues the release call. With pKVM, the buffer is effectively
+> unlocked immediately upon return from the PARTITION_INFO_GET call
+> because the hypervisor happened to have issued the release call
+> behind our back. And there is no way the host to know the difference.
 
->   4) In the immediate moment we still have problems in VFIO, RDMA, and
->      DRM managing P2P transfers because dma_map_resource/page() don't
->      properly work, and we don't have struct pages to use
->      dma_map_sg(). Hacks around the DMA API have been in the kernel for
->      a long time now, we want to see a properly architected solution.
+I understand your point that you are trying to make the hypervisor
+transparent, but it is not behaving in this way. One example is that we still
+enforce a limit on the size of the ffa_descr_buffer for reclaiming memory.
+Letting this aside, I am curios (maybe on another thread) what do we
+gain by trying to keep the same behaviour w/o pkvm ?
 
-What kind of a fix is needed to dma_map_resource()/dma_unmap_resource() 
-API to make it usable with P2P DMA? It looks that this API is closest to 
-the mentioned dma_map_phys() and has little clients, so potentially 
-changing the function signature should be quite easy.
+> 
+> I understand that we can argue the hypervisor-issued call is for the
+> EL2-TZ buffers while the EL1-issued call is for the EL1-EL2 buffers,
+> but that's not quite working that way since pKVM just blindly forwards
+> the release calls coming from EL1 w/o implementing the expected
+> semantic.
+>
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I think blindly-forwarding the release call is problematic and we should
+prevent this from happening. It is wrong from multipple pov: the host is not
+the owner of the hyp_rx buffer and you are asking TZ to release the
+hypervisor RX buffer by forwarding it. Do you agree on that ? I think
+like this patch should include this.
 
+> > I am looking at this as a way of signaling the availability of the rx
+> > buffer across partitions. There are some calls that when invoked, they
+> > place the buffer in a 'locked state'.
+> > 
+> > 
+> > > How is EL1 supposed to know that the
+> > > hypervisor has already sent the release call?
+> > 
+> > It doesn't need to know, it issues the call as there is no hypervisor
+> > in-between, why would it need to know ?
+> 
+> As per the comment above, there is a host-visible difference in semantic
+> with or without pKVM which IMO is problematic.
+
+If we apply what I suggested earlier we won't have an issue with the
+semantic for this call but it would make the code a mess. I don't think
+for this particular call keeping semantics really makes a difference.
+
+> 
+> For example, if the host issues two PARTITION_INFO_GET calls back to
+> back w/o a release call in between, IIUC the expectation from the
+> FF-A spec is for the second one to fail. With this patch applied, the
+> second call would succeed thanks to the implicit release-call issued by
+> pKVM. But it would fail as it is supposed to do w/o pKVM.
+> 
+> I'm not entirely sure if that's gonna cause real-world problem, but it
+> does feel unecessary at best. Are we trying to fix an EL1 bug in the
+> hypervisor here?
+>
+
+This was most likely observed from an issue from the EL1 driver (by not
+calling release explicitly), it was reported by Andrei Homescu
+<ahomescu@google.com>. it appears that we also have to do something
+in the hyp about it and we agreed with Will and Sudeep in the previous version of
+the patch:
+https://lore.kernel.org/all/20250313121559.GB7356@willie-the-truck/
+
+> > > And isn't EL1 going to be
+> > > confused if the content of the buffer is overridden before is has issued
+> > > the release call itself?
+> > 
+> > The hypervisor should prevent changes to the buffer mapped between the
+> > host and itself until the release_rx call is issued from the host.
+> > If another call that wants to make use of the rx buffer sneaks in, we
+> > would have to revoke it with BUSY until rx_release is sent.
+> 
+> Right, exactly, but that's not implemented at the moment. IMO it is much
+> simpler to rely on the host to issue the release call and just not do it
+> from the PARTITION_INFO_GET path in pKVM. And if we're scared about a
+> release call racing with PARTITION_INFO_GET at pKVM level, all we should
+> need to do is forward the release call with the host_buffers.lock held I
+> think. Wdyt?
+>
+
+
+> Thanks,
+> Quentin
