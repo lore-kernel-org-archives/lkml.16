@@ -1,125 +1,123 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A65213232
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917401E833C;
+	Fri, 28 Mar 2025 10:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743159385; cv=none; b=AaNwVHF15lv4mUts0G1o50XCGgmqsAn3zlntVDCswpMv3OqZs/rFVqfnYxNJeUYcJBgb8Ed/8WiBqQAbJEyuCCMyHpisSDv7rWgZi9PosxoEnXkn5FNdwEgi9TIepUcS70A4nl44zeh5qvYQI7bCJuDPqeJIGGiU41MwW7x3GFU=
+	t=1743159416; cv=none; b=nhxKJvhlBBeA9SuNxMW1KrRU7F5VKVhKxgp511hAwfqCVTp7guvfT7/aS6JkDuQhgW3SX0dHbY3+H+o/44OEqksBgr9VG48elKHi/cD8kuGPjPSiEtFHy50iPoMKpx+IgPpBwa/WjxUMQa8zvh5d6hcH+mPkfssOXbDsQndjFLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743159385; c=relaxed/simple;
-	bh=uMI0AbkJYWx6k9EPEVYiA3DOrPTbKHoMPRjf3QRXAbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bzpPwNrVsCf3RaSHHiiY3JBcfyUXLvCC2JeZAubMk+NG0C/NO/0YDuLRjpsXufqliH/Sg86S4SvPKebm8Jll+FF/OB728AHBvCPIkvHJSUkbwYx82t24yih253el6qRPxtVCB7oQZOGkjvIcBHnQMLyR12J285YGh7mznDKSDss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vu2eBr39; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1743159416; c=relaxed/simple;
+	bh=tGvX5t4II0bWdMuGq9vrGzb4pR38dMcf0L54AhhUVUY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=klDx9ei56eA4bAD38Wy86SkqRvmSR8QipFxW9Npx42v7rx6pq1rYH6/22pkh/ySNTTRdVsvdpNol4uw1xhOMnh/0OQM60lM3NJ9DU9HAVu8gtBQ4/HRvDkvbzaS589TrSaWW9wVwln5/yMrASs9uyTPhE1m2s/Jvsvs4LcgVhbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WpDGO+e8; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vu2eBr39"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so2146229e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743159382; x=1743764182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olAaZIH94fzyjQz1l87PqHBxlGfOGj7K9uZAhtIX1OA=;
-        b=Vu2eBr39qL9BMshmdiNmmS/mwhGUz/y7RmgcPl7Uzi32jX/9oJxhZOthKpzByy41r9
-         Vi6/B2U1MGHnk2SiD0QCFaQJwgdTjEBss8XKtS5S1DF0pRTZ7tbRruFM6d78pxjS0zBu
-         UnWBPgFv8GGDfuLgDO/gAQN6RJOyOo/NsyeVXeBv2SLruvSynYBohnCCac35XchCfmTA
-         aL/LFH/7FvrxfgI8Dazws0iYu8ZzOazp2qIor0DuzldVMeGaD66DM8ZOAzyXGDCH3HKL
-         Ptfh463M6V2ipLKO9g4d9tOI6B0Oz9K12iZZWaHCp82t7Mrr4GNN8Ih0G3vB0cp40bS7
-         ckMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743159382; x=1743764182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=olAaZIH94fzyjQz1l87PqHBxlGfOGj7K9uZAhtIX1OA=;
-        b=KBOQKgm08ofF7MNaTLlgFp8hAhak3ecMrK0h/BMATqK/uhcOpZpPOG8dAjUJukzlDV
-         FFt+VcrKk2O1n/ABE2P0aD4jeBpB2pSIXvp724IOD5p+mCUh+UNV4O5V+TScegn2ekfe
-         vT2pVy8gC6I1KHVs8iDKhLfxJVPqlHJuZhvBvnyewzB9rsfO75aM0T4oUXQjJUzxOorV
-         YVbKGBlBCnU6Dy5EQ4g7+Rot0dUtlfoTVQUzGmXiXnyJrp0oW9amQU9jAxiiaPpD6IcG
-         q82Z4i5j5czjg5HaGNBOwqM/QBQOEuVliArf5rRArxHHllSc9sHaEgpmg+TCWsK1W6nO
-         vWkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfxsRqD49VIj/f+/ikEiYNvFzRmOmn//GZfiSygx60ywqiTV2mRk5xMv0oqP4Lo1rC5eu3rX/AjEXLxUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzFZQQuAh4raPYHiu2D20Ihgckz0TXJBAEh3NE1jwOqxrM76Fc
-	XGTv6XTWavZ+yXbuqjE8cERerwJowj6UHxLLC6n/YZPb6eGYP7LHE8IMCrCEYkyrpBoyUGWOuj1
-	YuFz0zK7UyZwYgMHsc2bVg7oI7hCH4FKtYEpt0g==
-X-Gm-Gg: ASbGncuzVne4VF7jI8WC6gHjbzyxKJptrfAlXosb6wYiRDnYMWFVdx6mLM6cDyFp7kd
-	xjpmRJgtoK9tTSr0e41KeUNdmqSrMCOr+Z4GRda6DzNg3fp6XTA/17ipQFKakfst3dhzxc1j60L
-	hmRl4SJ0e1eteSv9EP57WS2M0jICSE/X/OHfXTkTVB2vzlJ3lhxXfDAfznlA==
-X-Google-Smtp-Source: AGHT+IG6qEMn4qg6ENDbUAQbjwJMxqKnwp8APlPJPAz0/cgb1CSsy8tzKsGCpNTUBhVUaoe/8Dw3udJ1/fjM116S5qg=
-X-Received: by 2002:a05:6512:ba8:b0:545:f1d:6f2c with SMTP id
- 2adb3069b0e04-54b011d5675mr2814281e87.18.1743159381664; Fri, 28 Mar 2025
- 03:56:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WpDGO+e8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743159403; x=1743764203; i=markus.elfring@web.de;
+	bh=BsTjFY2jj2A4o4aQeM1yn18m5VjBspLLRgGpCLGwkew=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WpDGO+e8Pafgapt3mOamCiKLPrbULpkroAnOl9ooxFPHR/fNPkuOhNO9D+NtGlSc
+	 xwKVjPgp4XRZD4AwPykZImwZC2GGBlimJl1TBZHurMmiQ/5Qpeo7FwZW84LXuqYV5
+	 RXzHRoMTgT9gPICdplbHT/gZPUknsuCrQe1eQ0jsiNjiKL8Gh1C4Qcoh0Lh44EePv
+	 M1vZoKHqe/CTPjYmOv9mCUEpvI5z/+s0PXnQXuDfyC0HDAil/oRTCYT6BTzMa23hC
+	 WskAS67FlspXcYxb3ZBtukPpU5uvgs9985JRjjvOYQ7YRCUyepj1u/fOKDMwC0lZH
+	 ougAWFN2c0fEYLUkzg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MD5jv-1tpd3y19nd-008p2m; Fri, 28
+ Mar 2025 11:56:43 +0100
+Message-ID: <4a17d0e2-bed9-43e5-a867-a501b991e6e7@web.de>
+Date: Fri, 28 Mar 2025 11:56:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=MdO=vPrvvonJPJ=1Lp0vFTRBtsEBUS5aqWp4yMqUtgfzw@mail.gmail.com>
- <20250326165907.GC1243@sol.localdomain>
-In-Reply-To: <20250326165907.GC1243@sol.localdomain>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Mar 2025 11:56:09 +0100
-X-Gm-Features: AQ5f1JrrVuMT4qoT68KP0RJ1gGvhtPtOME7bP16opGo20S2NgsR2FHybwv0v3Bw
-Message-ID: <CAMRc=Mfse2N-X9CNnpct211nfDNu4FewQ9qqnNQeqK=eQXoZGw@mail.gmail.com>
-Subject: Re: Extending the kernel crypto uAPI to support decryption into
- secure buffers
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Kees Cook <kees@kernel.org>, 
-	Jens Wiklander <jens.wiklander@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, 
-	"open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Daniel Perez-Zoghbi <dperezzo@quicinc.com>, 
-	Gaurav Kashyap <gaurkash@qti.qualcomm.com>, Udit Tiwari <utiwari@qti.qualcomm.com>, 
-	Md Sadre Alam <mdalam@qti.qualcomm.com>, Amirreza Zarrabi <quic_azarrabi@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+References: <20250327231146.6388-1-qasdev00@gmail.com>
+Subject: Re: [PATCH] HID: thrustmaster: fix memory leak in
+ thrustmaster_interrupts()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250327231146.6388-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8213H3JxfzTQowCs9fcHxElSgWiDoD0E+Gg1w0tPtaSuYYTPPy9
+ Kja4WkXD0/LkPpj/SAN+o1cRvBrVIFNXeNoKNsCMK0WjzCgs3YKslikuiI0UZx13eRX9MH4
+ jqCUzTqRMrmmV3twB+FRXb44dbQdb+GtVqlJTGwT8h6V67i1S3QRaZiQZPatWV3J3cC5g+f
+ 8NkN62sPnQKhAE8Z1UPvQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+fwmZpPe2Zw=;w07p3cdLwi1BKzk99WXBuwFWIa5
+ DCS74iZOzPB9xdCYFqGs0rThXtHxIFybDbMmhw/OG6CirzS79/QbgubWy8g75m5489HRYJW5O
+ Ncjs/2cwJsldbhl4KkJElVIWNqN5EITI10GrD/eylok90s9KQC/VkFnmmacq21ErL1y2Kojo8
+ +aiXIglCI0rFA4w+9LjIr7u7n7UmWk9O3TpxNippid/G+i+H9By1I7rG5AkzgP2Muxv32I+6v
+ X9W6HTH+dRQrkVJW+f5YxZ/XW73Jf0yFxvIIbzA5VrwO43GFJhmPbxcFRQcYyT51dgwXLZWFw
+ qA8ppHE6tPTiIE4T5+DhKeqhnvWzlIXFQkI6Md3vhLOea0/Z8fDwLY3t8eS9zBBomD2vOUTlI
+ WgwP2DnbN8tkQFsvZDoB0D//ucMFswJ7c30GSlR4FrvTPCNDdHMnZxkransQC5jURDrRHdllM
+ jTb8udFVCbhxNgNJf/ke/bRSjHfav4itVJuFUDBdeyUWhe47KPBYyPpx3K4M5xoD1/YSmjOIG
+ 76bbnDhZlWNygnAXgPRhJAF5/Oa0y4B/gmORF3l6njcPUoxzUXApDPsdRa4KZ+O3EwFCNAGD3
+ cTGsAqMv8ceJQbViT1clB3i0u8wYrd6zIVZ+KIYa38ZW49uqMcWJPZVYNodwhcqXbmqzqLw2m
+ /37ayWoiMt1uzjORW+PEbeHl5g6M0H+3WMdDCih1HG9oPE9TucBVcCmseAXFsuG+iOWb2kPAQ
+ o9AF9qRXBLvNvCP7bIOOnRgz5DgM4Iflb815VUMd0Cls0TGy5wFsAxPQEDI19gb54R1v6r9tD
+ ngQmac0FpdZzYRcoAB5Zp9CuXE7oWOyr2i6Fy8lahJciqxGKW9jTyf3fzSHPoe1NK1OR9BPqz
+ HW8DDJwQsPv+8UpmAG8emYw/80uBhnRo0/rWzPe4b5fDiBg9mU9fz0qeWBxJlOJgHcWhwDO76
+ s/kgQlq41QPi9KUfG9rdrzFxxX56RQnYjRbS/VLgm8yMvrMSBggr8Cmu8JgiO9WR98Db2c3/2
+ EFuBz8eO4h5mi0StywHTNPig6QgVg1mZFPlB4hIFBvsw+KstCM14rojQb1TFAJvVVQQIyChTt
+ OHwuhS0NdOSM99lntvc2N05xI9AG+qOKKQUD50TNWylkXMcOk0l0xCrTkW1d4LceWQ+ers7c8
+ WE9aVL7SvoX1oikayk23bOUHsA8ofxy96MHRyq0YQDrqXQ5WeSHLEElefy8Wn2jOLylRvBO+L
+ jXLHR3gwXK4lyieiU96YfTyOmKtB3awooEhgN54U/3TJkjThRRXtogRVJT9vp6EcrPqdsAnLs
+ dWNFJHDJq2lFv+eUjLEwKc/4f+vVSWAJu5piBgIb2X4q8xLfxLCujJ+gQYQFy9OHioyqxduzl
+ LJq6au7bIavcDFGHr6ZhWrgCPcsPGdAkWgiBfbM10HeGrr36/fN6Egk3VjiqGSeNCvA+0SFm1
+ xSgg9q/93WbnUMcBKUWZ32vRADVjKg/xxOCHJyCweia8Js6cteqAC/8hvsZgAnzZtKJ6grw==
 
-On Wed, Mar 26, 2025 at 5:59=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
-wrote:
+> In thrustmaster_interrupts(), the allocated send_buf is not
+> freed if the usb_check_int_endpoints() check fails, leading
+> to a memory leak.
+=E2=80=A6
+
+I imagine that word wrapping can occasionally become a bit nicer
+for text lines which may be longer than 59 characters.
+
+
+=E2=80=A6
+> +++ b/drivers/hid/hid-thrustmaster.c
+> @@ -174,6 +174,7 @@ static void thrustmaster_interrupts(struct hid_devic=
+e *hdev)
+>  	u8 ep_addr[2] =3D {b_ep, 0};
 >
-> On Tue, Mar 25, 2025 at 09:23:09PM +0100, Bartosz Golaszewski wrote:
-> >
-> > There are many out-of-tree implementations of DRM stacks (Widevine or
-> > otherwise) by several vendors out there but so far there's none using
-> > mainline kernel exclusively.
-> >
-> > Now that Jens' work[1] on restricted DMA buffers is pretty far along
-> > as is the QTEE implementation from Amirreza, most pieces seem to be
-> > close to falling into place and I'd like to tackl
-> > e the task of implementing Widevine for Qualcomm platforms on linux.
-> >
-> > I know that talk is cheap but before I show any actual code, I'd like
-> > to first discuss the potential extensions to the kernel crypto uAPI
-> > that this work would require.
-> >
->
-> What would you get out of building this on top of AF_ALG, vs. building a =
-new
-> UAPI from scratch?  There seem to be an awful lot of differences between =
-what
-> this needs and what AF_ALG does.
->
+>  	if (!usb_check_int_endpoints(usbif, ep_addr)) {
+> +		kfree(send_buf);
+>  		hid_err(hdev, "Unexpected non-int endpoint\n");
+>  		return;
+>  	}
 
-I don't have much against building it from scratch. If anything, I
-would love me a green-field kernel development instead of tweaking
-existing code, it would probably make the work much more enjoyable.
+* You may avoid such repeated function calls by using another label instea=
+d.
+  https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+=
+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resou=
+rces#MEM12C.Considerusingagotochainwhenleavingafunctiononerrorwhenusingand=
+releasingresources-CompliantSolution(copy_process()fromLinuxkernel)
 
-But if I'm being honest, it's hard to tell whether there are more
-differences than similarities. A big part of the existing crypto code
-- especially the driver boiler-plate - could potentially be reused as
-could the existing netlink infrastructure for setsockopt() and
-write().
+* How do you think about to benefit any more from the application of the a=
+ttribute =E2=80=9C__free=E2=80=9D?
+  https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/cleanup.=
+h#L144
 
-That being said: if I were to design a new interface for this, I would
-probably not go with netlink and instead provide a regular character
-device (let's say: /dev/secure_crypto) with a set of ioctls() for key,
-cipher and general management and support for write() for data
-decryption. IMO socket() interface is so much more clunky than
-chardev.
 
-Bartosz
+Regards,
+Markus
