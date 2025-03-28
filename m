@@ -1,102 +1,152 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715C04A21;
-	Fri, 28 Mar 2025 04:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9818F49
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743135591; cv=none; b=Npi2zoN83e7+jcXTNsZNg6sDgdGGu05oTTKU8+8pL7mxyoCC+1MPjpC3Myr7PGD1CF5kxsgs2Rrdr74TosVVnWv++W/gjoGeBenOaus8FW7UvaEsDBHpRct0TKFUWvnplLG2TGAIxO1r/8TnomdvwVbQaRCvS8d10WifsdByVNM=
+	t=1743135650; cv=none; b=X05W8rm9Yl7ZqSC2JDOV8ZQawaECWpfD3lMsHE1tNrHDoA/0cBJRQdWhVh4zMNUAl6KDkOK7WgdD3/v1O5FSmkPMQFqcGA40mP62pu8py2JaBjliDL9sHg33KM3gD1Zp2Bg+udKIxgYHv6XZekZETwQraK+BdQR9+YqL0ER9edM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743135591; c=relaxed/simple;
-	bh=CX8hHtZC3zHqhzfOkrbwnsalwwY4TaonL3D5GHpHHqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SvKISxkLBHO3Yiv7j+NznTYkyL4jAMDkKwySwWlsD/otO5njQ52DuuPMavwK1aIjaGT3lN4KVEiePdihkjXTg/IUtqpUIT7vt7/mjNnmsUKwZ6KScbkoSYbNyoWvrNMsCvzPJCH2hnlwnKPSDapRBS1XKOFbCFfsILedCbHX4Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jnpzymAv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1743135650; c=relaxed/simple;
+	bh=4VvG6x9EQmUnaPxos72iekLFHhrDTBgN8+Z3RX8VReY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GiN8xqgjjzFIY06RZ1JZs9XCBObgnaOzCSkSQj9zCkA6TGgjU9L33lp1Oj3oM9JUXmDnXYs3HwJceFnug/a0p7rbKovlqaZhhw9aNaX//UkfA4qndI3CBrdmyVXpRv5l/Z2gax1Vb1vs1Yg6LIwlKXBMnXrECGgjO+mz7317s3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xMt/zlAd; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jnpzymAv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1743135584;
-	bh=1JI8Spr8CQJwiv/5zUbjBL/c6fAB1sqcE9kasiVrFP4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jnpzymAv1zAA0RWvb91quB+H+w3pYz1u+Sk3y4FjosfTjwqwQlnBkbPffP/iBFpn/
-	 tyUK+2MnYG6l6Zxv8W5d6Yw/rCzNgaJf5CMFE4YglDxJZeRQyvAQX0BxHn6ZParBwZ
-	 nuPEwuimk0eEzaTAZIA0ts9y/6N1DbO2Q292dD1rCbCUAxidj6jJuo4yJtA4cA3bUh
-	 lGqyPrBvNpX2q1ECH7Nkc8iHNKMhvS0Zuqi8RahKvGBg5xLluuBJLxmq5EAcGjan4P
-	 9vMR5Em0kNGdLu1DqPNJw1fudx1tuf5QY80hnWp3EgU01DYUG6edINd/wHUo0JB5jq
-	 szsfPUiVCJh5A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZP6k74mgmz4x2c;
-	Fri, 28 Mar 2025 15:19:43 +1100 (AEDT)
-Date: Fri, 28 Mar 2025 15:19:42 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Juergen Gross <jgross@suse.com>, Konrad Rzeszutek Wilk
- <konrad.wilk@oracle.com>, Stefano Stabellini <sstabellini@kernel.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, Xen Devel
- <xen-devel@lists.xenproject.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the xen-tip tree
-Message-ID: <20250328151942.4f7010c0@canb.auug.org.au>
-In-Reply-To: <20250326090310.4f162838@canb.auug.org.au>
-References: <20250326090310.4f162838@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xMt/zlAd"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2242ac37caeso68685ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743135648; x=1743740448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
+        b=xMt/zlAdBdheORVJK5vhKWsABpJg3PfuMivCRVav+JcMFxeefcoNwy3LCMnvPg6wtH
+         URboOSEgDZSF7gUhYfPyaTa9HnxNMWUC319yNP1uVk42zDk2gmcb9NTI+LIaI8Gvg+bs
+         05be0x26cgRwd5g2fZspeY5rJR+a9yCE0ZDnXToHAsKt9Fwu3d4+x+nOxRsvWz7OEXeX
+         4SXLt41Ugyktr+i2kDiJdcUFeKOVhFevteOSez4UXVtzaSPGVnSCkaMR6ezccSv27Sg/
+         bAuGE6kEQ3VF4NN3eJnCacs+B+mywzykIS9YnVs6PWJK74+kdLc1sSqFxJK+ZCJAgQqo
+         NIZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743135648; x=1743740448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
+        b=AJ+iOohAwkqzVQ4l8nkPbbcOWRJMCHNP0cGSlGQCWUBUk6IekOt3v7LSgzXPSBGpkw
+         mUwlSqO/J++QLwMrl7G5fHeBRhutHocKLHPi0VDEloakzJgB716uNOJIw9eMo6TNpCJL
+         gg6DCpUIARvKHbBUC6e1yzikTYvbrDxfrOTr83e86PUocxoJLhaCHSP/skLh7hZ9D3ov
+         aZG6Cos0bl8B4mwG8T+CwYD6e0U8nlM8biZjGzwQze995moM9WxORvNQbgT7ZsD4A0n7
+         /0KmcPKgaxMydleGekxw3G/NBm0I9R+HGul994O9JOEbBKSGhI69WK682fpeEGwgDGOm
+         r3jg==
+X-Gm-Message-State: AOJu0Yw15sz9586fFQRGl8LkV79cHPeb/bIVBb7xDtkNG8TMt1/YXIYT
+	rvykLmDZBIwRVtlRAiP1T/aIyaIov2XRgHFQLZ8mPKWLpjq2FBr2in4MFmCXq21BwHUf0IWdWmX
+	LmuHma9DAXKRsgtZrFhE1H1wfzIBzhpgjXLYD
+X-Gm-Gg: ASbGncvGAdJKs0s56hd7sEiLrTxUvg17QQThBgSuU9DYVOEFZU6wdoAPJjYemXGh65T
+	4wZj/rT6rdhX7TM2KkxgA5qzu4V5iMMyyYgDxPQAU68voMJyM1B28l1BvoMRDI7RsOuh7dj4HZO
+	3tNqWl/3d2CLDgSq9InOEabgAFFtw=
+X-Google-Smtp-Source: AGHT+IFm9BzGAaqh6rhMTsdvArk8QYfZ4BiD7DS9eqvAjwM3xXPk4D7Y8NsBIWa8UBrfMNcPdTlEOa2Co9SOW5Szdy4=
+X-Received: by 2002:a17:902:ee02:b0:224:6c8:8d84 with SMTP id
+ d9443c01a7336-22920ad2e6amr1747645ad.4.1743135647450; Thu, 27 Mar 2025
+ 21:20:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VaLoMydcT4kXtExIf_CvhVI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/VaLoMydcT4kXtExIf_CvhVI
-Content-Type: text/plain; charset=US-ASCII
+References: <20250327225651.642965-1-ctshao@google.com>
+In-Reply-To: <20250327225651.642965-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 27 Mar 2025 21:20:36 -0700
+X-Gm-Features: AQ5f1Jr-scFYaP9RajDzeU_599eda8QGvwnthEF_v8Ujb_R1wC0Ccyq38bdPe6s
+Message-ID: <CAP-5=fWv4=8Uq8jDbqNR3O+JAw-T0OUGoj5o=pMHxyFKsbEDyw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Fix incorrect counts when count the same uncore
+ event multiple times
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	yeoreum.yun@arm.com, linux@treblig.org, ak@linux.intel.com, 
+	weilin.wang@intel.com, asmadeus@codewreck.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Stephen,
-
-On Wed, 26 Mar 2025 09:03:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Thu, Mar 27, 2025 at 3:56=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
 >
-> The following commits are also in Linus Torvalds' tree as different
-> commits (but the same patches):
->=20
->   d9f2164238d8 ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain f=
-lag")
->   cae5129fccb1 ("PCI: vmd: Disable MSI remapping bypass under Xen")
->=20
-> These are commits
->=20
->   c3164d2e0d18 ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain f=
-lag")
->   6c4d5aadf5df ("PCI: vmd: Disable MSI remapping bypass under Xen")
->=20
-> in Linus' tree.
+> Let's take a look an example, the machine is SKX with 6 IMC devices.
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
+>        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
+>        2.002649722        988,376,876      uncore_imc_0/clockticks/
+>        2.002649722        988,376,141      uncore_imc_0/clockticks/
+>        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
+>        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
+>
+> 1) The events name should not be uniquified.
+> 2) The initial count for the first `clockticks` is doubled.
+> 3) Subsequent count only report for the first IMC device.
+>
+> The first patch fixes 1) and 3), and the second patch fixes 2).
+>
+> After these fix:
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127586      4,126,938,857      clockticks
+>        1.001127586      4,121,564,277      clockticks
+>        2.001686014      3,953,806,350      clockticks
+>        2.001686014      3,953,809,541      clockticks
+>        3.003121403      4,137,750,252      clockticks
+>        3.003121403      4,137,749,048      clockticks
+>
+> I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
+> looks good.
+>
+> Ian tested `hybrid-merge` and `hwmon`, all looks good as well.
+>
+> Chun-Tse Shao (1):
+>   perf test: Add stat uniquifying test
+>
+> Ian Rogers (2):
+>   perf evlist: Make uniquifying counter names consistent
+>   perf parse-events: Use wildcard processing to set an event to merge
+>     into
 
-This is now causing an unnecessary conflict.
+Tested-by: Ian Rogers <irogers@google.com>
 
---=20
-Cheers,
-Stephen Rothwell
+There could be minor conflict with this unreviewed series:
+https://lore.kernel.org/lkml/20250318041442.321230-1-irogers@google.com/
 
---Sig_/VaLoMydcT4kXtExIf_CvhVI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
+Ian
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfmI14ACgkQAVBC80lX
-0Gzh/Af9FOi+c8QohCH1jPO+K+gzuS9jsyRS/J5hUklhzkTeytANSpuw+zJSBLzX
-QlxsbuMb7jmDQMRSZZzVT12rOirCjiUheNFWv+zW3Tu6BfUaIzLWmM3+fA9QIVef
-mfvZZxKhsY7WTCM90A4s0bPYMbT34GpNFL2NKkODmtxHzr+y0rEzCYPByhuceyaL
-ID7dpaXk9yMDiyqu+0ngRUV4D4Yihns/f5aqnePlI9vRUxU9fdqqZZTeahU9YEvl
-DbBKy42zaBWxn/m6FpND3y1XmMEEPsAIGK/howEm9d4vfPb6K6utCbkDURhApB+9
-JH0+nKQglk9ZowFvG86GBX1ljWfGHQ==
-=EJ1Z
------END PGP SIGNATURE-----
-
---Sig_/VaLoMydcT4kXtExIf_CvhVI--
+>  tools/perf/builtin-record.c                   |   7 +-
+>  tools/perf/builtin-top.c                      |   7 +-
+>  .../tests/shell/stat+event_uniquifying.sh     |  69 ++++++++
+>  tools/perf/util/evlist.c                      |  66 +++++---
+>  tools/perf/util/evlist.h                      |   3 +-
+>  tools/perf/util/evsel.c                       | 119 ++++++++++++-
+>  tools/perf/util/evsel.h                       |  11 +-
+>  tools/perf/util/parse-events.c                |  86 +++++++---
+>  tools/perf/util/stat-display.c                | 160 ++----------------
+>  tools/perf/util/stat.c                        |  40 +----
+>  10 files changed, 329 insertions(+), 239 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+>
+> --
+> v2:
+>   - Fixes for `hwmon` and `--hybrid-merge`.
+>   - Add a test for event uniquifying.
+>
+> v1: lore.kernel.org/20250326234758.480431-1-ctshao@google.com
+> 2.49.0.472.ge94155a9ec-goog
+>
