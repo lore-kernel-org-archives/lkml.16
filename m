@@ -1,144 +1,133 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84242212FBF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8B212FBF;
+	Fri, 28 Mar 2025 08:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743150633; cv=none; b=j/rdnHwVASFdSIxTXUsscK45Q0/dMtZf8CJxR/g3D8GH+pqiezvf38MQNXpbhRBhViSlxJz4aez7I9B5Al8WCBzg4e7/yjpfnfXve2ald4Oc6rSmJb9XDIk6kX9yUCYG7B0js+tHsIGXiYNGbM4NTET1N9Q7cfTuN8glaWBLvdA=
+	t=1743150638; cv=none; b=ssjzEcHNAtQdDJsk9YceI0YtTbpIwvkrU8uSStGSEVag4/ku59faMUa0jE57Wl9mii2aCrhXRYTIb6Bgx0zpdVSIhDt3oC4mPIPMUQbSR0A9ahKZW4M/qZMpAY3ys/n1Vs2yACTGVGFBe+Rw1arZecI+kBgpNdp/JoWBYrdZHlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743150633; c=relaxed/simple;
-	bh=9HztVfNSSbsFpEOdHla0tUCKIZ0HhA//ZtU7g1Uu4gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LqKtIIZf8bJdceELuLIxJOUancBpSjzgZmQBUhKkTncWCrhZUTZZlDR+Towwvr0N7FmWNU77C9Z5nFsxBXEEp1No6qJ48qNLPrVyBbzcvc3fehpFMBzbH7A/o0boaCVzTNtpwPn9ak4lw7W7KmIni4VUYMPTfUS2JhozaSlvSJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AKpHAygl; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743150638; c=relaxed/simple;
+	bh=DTcedE6KspyD0WF2+HMkGLOGGYHnEJsoVr5IaBC0H1I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZBFTW/q/NQ7iLiXO/pE219xZNeYQR+P4aw0sebuieDxrzDKY+rBLoUqyX+rvehM/vX5kNxa/ukI/i2mrdAYJ7zldOD5zd0aHIcop3rko4TFrnhxFeGzNz9ZyLOQfzOiVUhwyYHsdQBRZPV5HnNaQ9eqKz5r63f3zUKhsiKFvrUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORm0QcCy; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AKpHAygl"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so58695645ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:30:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORm0QcCy"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-51eb18130f9so928928e0c.3;
+        Fri, 28 Mar 2025 01:30:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743150631; x=1743755431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743150635; x=1743755435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=makVc1Wy6ZWe2mpSuhAdO4nGFknj+sYe3vzqlSz4ovw=;
-        b=AKpHAyglQ5GwCvP0JBrEKMo1yEDUvnrb5aMh5StABE7/xquBFaQt0BOqTEDWcVvV5Y
-         OUPmUpIZnbNBNphk3pcVLyD/CkvgRTKQQYzULjBRdcirFkiQXdowDgBmFexyflu7B0gI
-         1YTPXhTx2cpr2E1qvZPNI6XeOmI5kKQbZXVIo=
+        bh=wCz69q91HFfvhGoJrcN7iTaAaXUD5silbw3K2qhF6HQ=;
+        b=ORm0QcCyYHE88TApOCi8jN7/pgRrfidzwxJ90Kgn/rDoKPW/cpJpvXDTNa3K4bBEQf
+         J9W2rSQmBEdnAZ/cv360sy+CVWbfU2iK4YM/TqjgAgkZlcQ9n3iA9YIn9F42y9w9hjo1
+         QltX8cGtW3t/hnc0E40DRcNSwVqRpSWLuIxRPhzNYdClOBFFXqjMM/uovzDWxIUdBMld
+         tTLGdsylxy21Is42Yx98+F6/xDkOJ/QtZXPsJNgAerd8QZxd4IdAw5DrrfcDeKE0UvB/
+         Zj9G+gqV7S4AwZ/tXd+92oESXpH7/yv0e/JSIX9E7+9PxkbAuvBQJLZczMAr2NxXOV3g
+         m11g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743150631; x=1743755431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743150635; x=1743755435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=makVc1Wy6ZWe2mpSuhAdO4nGFknj+sYe3vzqlSz4ovw=;
-        b=VJPtI72RJr67guoWEaU1fYSQnJNnhSTubaje2K6POa8mdllSB0PccOyRxPl/N9RuFu
-         Of3QZBID4h/folfvkosmWdOgSsbB/wQqOJfKsZuviz2xza6IEfLh/TP7F/yG2UwLhJHh
-         MUjBr3mJFgZQW4rDVcQHy2L3/rd04NPe+G/zkhF4/LKQTnuuqA/1bkcVzdDuf3JQe06B
-         j/4kCp3PKTOO01w2uuAABQCCKH38tJCpjb6+7scHGjYW9qIsRe7QaVIHugc9nPR/YHbG
-         89ZVgeRCy0Lc/8zyXX9AvtdLN5eC4/0vpTD1lofBxM4Vhal/yHmIbkCr5g3d+MX6jCdN
-         jxIg==
-X-Gm-Message-State: AOJu0Yy69+bWyalOwpq8vnJWgIISbBwMYV8FH7gXLfsC0ETLp+nlUOcM
-	+vYbYJ78S4ayWnrq9PQbmK4SJ4OCJD8woxBe/Hr6uMQgEvcQGgfsN9oo7E0OSw==
-X-Gm-Gg: ASbGncuvo98IGneit/6PIgnWnTFybMUequOUqpipM42YQULx5snzEO4emBmWVjechty
-	+aorTYRuXjzwpLeZj3QucCcylAHcB2dw+u6ybRckM/McXt42AGqWliFoszmji7a2DxScMuBPFJl
-	gYR8ukIQJ6FhMng38Z+cBQRHTXk6IGUP2NHDrzzf/5SV2tsG9Y0cgosufCnYf8CBvM14JW3GO0r
-	40IAOxSd0a+dDFEnDI/AGkpawYNIr1mp33J51RGVoWZRzMFE2t3C/BdTUMm9zzjdYpkP58aympT
-	AwmDh2gtRbGufZigORbDSySYq2D2QrNfZrq8afjkhPKAdKcqSIO7Tsi0PHg+qZzdEw==
-X-Google-Smtp-Source: AGHT+IH2qRVjHIYQ63E+yeqheYOjTukGTZ19Dk/wXORZYgbt+7wPPWlRjGtmaSz0/LvLJcESsokEfw==
-X-Received: by 2002:a17:902:d483:b0:224:256e:5e3f with SMTP id d9443c01a7336-228048c7c17mr112158025ad.25.1743150625904;
-        Fri, 28 Mar 2025 01:30:25 -0700 (PDT)
-Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:9004:7029:99b:276])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1ef62asm12283775ad.217.2025.03.28.01.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 01:30:25 -0700 (PDT)
-From: Pin-yen Lin <treapking@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Kaehlcke <mka@chromium.org>
-Cc: linux-kernel@vger.kernel.org,
-	Stephen Boyd <swboyd@chromium.org>,
-	linux-usb@vger.kernel.org,
-	Pin-yen Lin <treapking@chromium.org>,
-	devicetree@vger.kernel.org
-Subject: [PATCH 2/2] usb: misc: onboard_usb_dev: Add Parade PS5511 hub support
-Date: Fri, 28 Mar 2025 16:28:46 +0800
-Message-ID: <20250328082950.1473406-2-treapking@chromium.org>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-In-Reply-To: <20250328082950.1473406-1-treapking@chromium.org>
-References: <20250328082950.1473406-1-treapking@chromium.org>
+        bh=wCz69q91HFfvhGoJrcN7iTaAaXUD5silbw3K2qhF6HQ=;
+        b=IzHY4hcshxNjfdB/XABmSzDXNopvem2c9KBpjXhoP1Ehxj0UbiQ+U9FVQf2tLGOwek
+         ej8JDfnEny8VT3FALp+3uxhtMRL0oA9DpV86XBr5ftC4TxZAfHcMCOGaJMv6LNMsQPNK
+         y7tUmS5dAkihs5IENeUEJcKLUiZbiqVJF5K2GUwWstNxzZ0PtK+TpuYzbxhNxZFNI/ZX
+         to6OQhIWs61QQM5RS68lCQe/W7sAVuyTybgJJNcgO/oMvUHW8NCoYfYs/GY+ejZ1y/Qr
+         uFBIPr+tQxX/KLSwAfIxKNVXmwPZz4nmGufnE0OvL0LW4vE3FynZfXuv0+10jJhfiF4/
+         GMmA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFzg4L5MedjkS7cPiXrr/SPLUw949dgaJoYk0h/jzt1B4zp4mo5r2Ap2r05qJkiSEbbTv3VS3DHVeQbLtAheQItQg=@vger.kernel.org, AJvYcCUzp9Kig5yTQOSYu4Ou4fSo9bUj83TELR81DzMrKoe6+oIWWHZUjF0ftHw21uWyS6Mkafsp0E5uJP//uiw=@vger.kernel.org, AJvYcCX6upC/tXaz1ZKUTHIEdHJt3nc4+MmZMbtOrxhcNjFmIvlek3VJ6Bh5iyl3zZ2XBXRvOagBYh+Vu39s@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA5FeE25qBa8MWhYNJO9l6ac9OT7VqOLZ8HxTUALiOfYXbxsnK
+	4sm7UDo4Qcudu/A40dEUJQVzrgwI/oreLYSXQkpx52d5tKeUei3SfBaJnEYyXmFtf7Xomzsbg35
+	Wo7rjeCuit1k7t4oDJg4J9u330lU=
+X-Gm-Gg: ASbGncuZH0gRBj+SsHcsOe45urtm27AV2wRdarYOoJblRyrWcW3WQPNffo/BKYH5/9J
+	PNk7LWS6OQ/Iuj3MHO/oowGZJE2IcIWbk/fGYG9uZo/4uNiC5l0dpaDyg2dVM3xQeq7/prYxsGI
+	tTfYy2jeXEKv8fbwZG8eGUNytxMg==
+X-Google-Smtp-Source: AGHT+IFIZReqhwYH+e0OINTV0TbFc9HMOCFT2KPlEmIJBSBf3GP/kFOfHmgaEfx6fm/rrHXFKMQCWubhlgeX8F1T68s=
+X-Received: by 2002:a05:6122:887:b0:520:9b05:4cb6 with SMTP id
+ 71dfb90a1353d-52600719492mr4729899e0c.0.1743150635039; Fri, 28 Mar 2025
+ 01:30:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250327120737.230041-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250327120737.230041-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <8734ey10dp.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <8734ey10dp.wl-kuninori.morimoto.gx@renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 28 Mar 2025 08:30:08 +0000
+X-Gm-Features: AQ5f1JrdoiuRzwfKuayvqqi9Zb-yH-FlHzUYFciOjeCux00RWQ8VspRuF2eowtU
+Message-ID: <CA+V-a8sk_SU4-2tq6ZdOsMeZY41NeFhVbAq_NZQ7YgUWuMkACw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] usb: renesas_usbhs: Correct function reference in comment
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-usb@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Parade PS5511 is 4+1 port USB 3.2 gen 1 hub with a reset pin and two power
-supplies (3V3 and 1V1).
+Hi Kuninori san,
 
-Add the support for this hub for the reset pin control and power supply.
+Thank you for the review.
 
-Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+On Fri, Mar 28, 2025 at 12:09=E2=80=AFAM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+>
+> Hi Prabhakar
+>
+> Thank you for your patch
+>
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Update the comment to reference `usbhs_mod_probe` instead of
+> > `usbhs_mod_init`, as `usbhs_mod_probe` is the correct function
+> > used in this context.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/usb/renesas_usbhs/common.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_u=
+sbhs/common.c
+> > index 4b35ef216125..15ef246a1245 100644
+> > --- a/drivers/usb/renesas_usbhs/common.c
+> > +++ b/drivers/usb/renesas_usbhs/common.c
+> > @@ -698,7 +698,7 @@ static int usbhs_probe(struct platform_device *pdev=
+)
+> >       if (ret < 0)
+> >               goto probe_end_fifo_exit;
+> >
+> > -     /* dev_set_drvdata should be called after usbhs_mod_init */
+> > +     /* dev_set_drvdata should be called after usbhs_mod_probe */
+> >       platform_set_drvdata(pdev, priv);
+>
+> If you want to care about context, it seems we want to care "dev_set_drvd=
+ata"
+> and "platform_set_drvdata" too :)
+> And, it is easy to understand that it indicates function if it has ().
+> like below
+>
+> -       /* dev_set_drvdata should be called after usbhs_mod_init */
+> +       /* platform_set_drvdata() should be called after usbhs_mod_probe(=
+) */
+>         platform_set_drvdata(pdev, priv);
+>
+Ok, I'll update it as above in v2.
 
----
-
- drivers/usb/misc/onboard_usb_dev.c | 3 +++
- drivers/usb/misc/onboard_usb_dev.h | 9 +++++++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index 75ac3c6aa92d0d..91b49e58664d6b 100644
---- a/drivers/usb/misc/onboard_usb_dev.c
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -490,6 +490,7 @@ static struct platform_driver onboard_dev_driver = {
- #define VENDOR_ID_CYPRESS	0x04b4
- #define VENDOR_ID_GENESYS	0x05e3
- #define VENDOR_ID_MICROCHIP	0x0424
-+#define VENDOR_ID_PARADE	0x1da0
- #define VENDOR_ID_REALTEK	0x0bda
- #define VENDOR_ID_TI		0x0451
- #define VENDOR_ID_VIA		0x2109
-@@ -580,6 +581,8 @@ static const struct usb_device_id onboard_dev_id_table[] = {
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2517) }, /* USB2517 USB 2.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2744) }, /* USB5744 USB 2.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x5744) }, /* USB5744 USB 3.0 HUB */
-+	{ USB_DEVICE(VENDOR_ID_PARADE, 0x5511) }, /* PS5511 USB 3.2 */
-+	{ USB_DEVICE(VENDOR_ID_PARADE, 0x55a1) }, /* PS5511 USB 2.0 */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0411) }, /* RTS5411 USB 3.1 HUB */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x5411) }, /* RTS5411 USB 2.1 HUB */
- 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0414) }, /* RTS5414 USB 3.2 HUB */
-diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-index 933797a7e0841c..2963689958fc2a 100644
---- a/drivers/usb/misc/onboard_usb_dev.h
-+++ b/drivers/usb/misc/onboard_usb_dev.h
-@@ -38,6 +38,13 @@ static const struct onboard_dev_pdata microchip_usb5744_data = {
- 	.is_hub = true,
- };
- 
-+static const struct onboard_dev_pdata parade_ps5511_data = {
-+	.reset_us = 500,
-+	.num_supplies = 2,
-+	.supply_names = { "vddd11", "vdd33"},
-+	.is_hub = true,
-+};
-+
- static const struct onboard_dev_pdata realtek_rts5411_data = {
- 	.reset_us = 0,
- 	.num_supplies = 1,
-@@ -122,6 +129,8 @@ static const struct of_device_id onboard_dev_match[] = {
- 	{ .compatible = "usbbda,5411", .data = &realtek_rts5411_data, },
- 	{ .compatible = "usbbda,414", .data = &realtek_rts5411_data, },
- 	{ .compatible = "usbbda,5414", .data = &realtek_rts5411_data, },
-+	{ .compatible = "usb1da0,5511", .data = &parade_ps5511_data, },
-+	{ .compatible = "usb1da0,55a1", .data = &parade_ps5511_data, },
- 	{ .compatible = "usb2109,817", .data = &vialab_vl817_data, },
- 	{ .compatible = "usb2109,2817", .data = &vialab_vl817_data, },
- 	{ .compatible = "usb20b1,0013", .data = &xmos_xvf3500_data, },
--- 
-2.49.0.472.ge94155a9ec-goog
-
+Cheers,
+Prabhakar
