@@ -1,169 +1,77 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010000.outbound.protection.outlook.com [52.103.10.0])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949542AEED
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 16:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743179463; cv=fail; b=eDpOCV2bENNt8S1DpHKYhUQ5RpuVp/5fg1J6dk6pid0tTH4B6ysk9KAObJEv0x06t28LFpKKWma8Q/uAnmlQwwOlLKBZ6RXxfRNEkEexhkgccXf4ueUz0Ctm+0eLq9LKa6uR6prvh/2GBY20/0UFZvRZmQ3cwQfbtG+EK3i4/Vk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743179463; c=relaxed/simple;
-	bh=oyGA/Rdp3o29wdjh8f066pvb2joifA+MjP2/feNbVHM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NkbjWCbtgXzxEsO+8f9iNeBsypsnDBG/vdp8TfpEh2cNkja+IafC5gmht/P33FUn8d8kjv276sxg4DcmZddHOYbDoWjD2R7h11fkuaSE0utMmMjimKquSmEIyjSt3WQDD9pqi0rBRYTegv/jyaiwrZ9gFuBnz9xHsRbiMmEDJ9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=qwMZkS4u; arc=fail smtp.client-ip=52.103.10.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82B3C2C9;
+	Fri, 28 Mar 2025 16:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743179479; cv=none; b=ft7cPMmNkcr4svnrhI64k8MDuaBhIS7Ch4LAomTAqbXCWxhId+yWgBszfQqKTxqmOAIkbOdCLIyPtvZZZcSmHRAIAtw2ZPwY+rZAnkZnxt51JfV1tBmMWTW3938GFiJ4zQWzq1/ewjRXcxlYAnKB95vSbAouvqFXgFu6lTxnoeo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743179479; c=relaxed/simple;
+	bh=jqvTRmFLhOFgQNBQGPsnJ5VkLJC2Rw6TfFZp8ZKodMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SGHCKA+AyKdLhu2s0kiU2hW33bZ0wjoQGJspUKlcY2i7OXkjv4bxl7WsMNuwgRiObm652FJcA/v7K02qcKplWosWiRvd6MKwNvzkXWt9wIAMxkCYTBNU5j1bgBU1EeGTB0MfR9Zvj83TTIL05ljBptcbA/TTc4icLLA6q+YyUWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvuGIhvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="qwMZkS4u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U6JmUu/Hqs+frGhi/fJ3DguzQY3OpEsdgo/1IlK+Q3XsoaspjPWB6FD2ETktWRSQ/sU0nRJNoevv1Z5YVhBxV+9ToDDHyZ1ht2siY7LKS0Hyv5CFX9u+E3AYXfHEmTeKJZYBS1x4lrM0mlUvZeodrEUqL+f89xbjYntqrX68lk8YnXz+kgaT/tmejJRuDqPTOsFRIhTKS/lpAp7t5N4ltPifgMHEtDUoEy9I5Fwm+BSvJGUot7P0Zmq0ZWT59OTncK2p9bfvM2pOjZr49nY9yejIL7X7i8PenEAqgXwDIimxbOjRo/R2awsrIxEZ1hhDTcy3CsAxRHY+Zeq9Yfhxlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eKfPkJWqqtna9YgBxWWb70kH76Gv5EB8a2uCVkpzmGM=;
- b=xEpPeBj3yVGPrS4HjlK9JbVoQGFxsWTJeMJL/u0YKoQDpAzaixddVJz80UI5h1FMVDl2BXsdelHBhuQl+4YeSqTqL5RQ2A+e4OtTM2bQ1hx4zr9WjSc9CxZB09+KuifXVkqnjz0DVdqzW6GoKXe8fK1uDCU20lieJazFRI/CzTSsBmP7FzioirSB2dacELAhOsYM0cx0gU8pMcQcBycrhSBm9sd/b9CNnPkB2bWAe6TI6nyCN8w981gv8KZav7HpF8DsiPTJumJ7WkH9V78fNJu8DRLMsWIZdb0vxJ7YeP+q0IFaQK77SJHoU8YfyZkv/adUthZrf1vZx+0LXYixlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eKfPkJWqqtna9YgBxWWb70kH76Gv5EB8a2uCVkpzmGM=;
- b=qwMZkS4uT4BA7NOVwrkrlP62A0H8/nWVVUQgjsnwMjZNJKsiQh5kVdfHfQYBZRF0iaGDmxKBWBY2z9DXi79581b3dm5zUE3520UIpeXlisGYJmWSqFmX5JvVQs/QeTN/KD/oo+/Dsr8LFko57VO+fig6goB/sg4xzAhM9emNY10HuKgNIJN+Pt54mt+S9FCxepaTGoo6QzujVD3alf72VjcZkYGzlQwuu8a1VI8KP5dFR0A7zM721oDrefzRwHkkXWAxxc9RpKWtai6pTjOSn2jISz2cGjp+EfErgCBsYTEh1NDtI3nSA3qL3vZ9Be7mcxFJ8sHKx+XIu6th/XMXXg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by LV3PR02MB10209.namprd02.prod.outlook.com (2603:10b6:408:21e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 16:30:57 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 16:30:57 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Teddy Astie <teddy.astie@vates.tech>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@vger.kernel.org"
-	<linux-mm@vger.kernel.org>
-CC: Xen-devel <xen-devel@lists.xenproject.org>
-Subject: RE: Allocating SEV C-bit-cleared pages (without relying on swiotlb)
-Thread-Topic: Allocating SEV C-bit-cleared pages (without relying on swiotlb)
-Thread-Index: AQHbnyKPeCLT8FgtS0qlE8WmAsket7OIu/hA
-Date: Fri, 28 Mar 2025 16:30:57 +0000
-Message-ID:
- <SN6PR02MB4157AFE96ADCA3D504909FFAD4A02@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <b16ec2d7-4a84-482f-b875-d7c152facab5@vates.tech>
-In-Reply-To: <b16ec2d7-4a84-482f-b875-d7c152facab5@vates.tech>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10209:EE_
-x-ms-office365-filtering-correlation-id: 25cbc120-57c0-4dd9-a8c8-08dd6e15eb5b
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|8062599003|8060799006|15080799006|461199028|440099028|3412199025|12091999003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?O1DDhA1dGv5CV/809zFqC40jwS6IHbERt5RRaO/HQl6tEjZuCoZd/Bp7+tI7?=
- =?us-ascii?Q?E04lscUt7jIszTZKwlZyY+VZewNRaoTTeHiLcX3NFV/TV8zl0f4A0mvRR/wm?=
- =?us-ascii?Q?6sa4/tqsHYh4SvMqufU1UzUK30Jp1AgiadL/UpHQpmxytWDPM2cwM9MXaHXg?=
- =?us-ascii?Q?lNIj739AMiDE6szoVNUwDK+t1i9G8rqMj8+LokKlmjT4VrLmY77/m69/pAu8?=
- =?us-ascii?Q?6+SVli7HxE2EY1yfncf7yl9f2D3MNTPq1Z7fC4fl3xjYklaGvs8xDZ0nkdTl?=
- =?us-ascii?Q?O+OmAsuHcewFXfJ7auWol5sTnlSJPIZlU1FTtQRnQih02YyO8FU5N61QHrkV?=
- =?us-ascii?Q?duGmhx7sY3dsJPwrR5/YnT8fmbZuJ/3dYld+YjQPMsvgrHGXcMBfy/+MvG1w?=
- =?us-ascii?Q?TfGL5AruIhyRYuLKvsn9oXS4jVH10W6dPstxOFyvrbau6kMWwiHB4WS9zw43?=
- =?us-ascii?Q?Tv4FhV6RtTGlLjGY66nd/MhGjBfQHZwPhQ8fi2JlX2Zf9H1PTiR2/tRNFFnw?=
- =?us-ascii?Q?TM7zOwrDdslfES2sDjlD8FZ/ttcgCJ+7iuUsyQQNBD+LiHEPZPIoobewmOVF?=
- =?us-ascii?Q?j3bhbC1hAPCB+D6JNksf2fN9DymsNJPvxC5sVvv0BqyU+5ZYNAkY+MdqFh0u?=
- =?us-ascii?Q?92mU6heOjXTgn0bWR0NDxaL6/FR8GF3ZRZojIreY3EDq3nTKgxtGR6paDwAs?=
- =?us-ascii?Q?0lZ/paWIyTTQHXqVM+LNdPHe3h4IMZ7GUt/T1ph15X7c5Blab+MnYjWtS0Cw?=
- =?us-ascii?Q?krDMuup6SKa45VCQ5L0tWvkJCkJHW+paWqDjGJ+BsIty3C+Jw62Dtrf3pwdI?=
- =?us-ascii?Q?UeEBlKj8HqbRyZC1cmt6GloA9QBt8U2V+Ehufrok1zAhEGjQurk4+w4aq552?=
- =?us-ascii?Q?wgBrEH4bzdr60F2LJI3B8Y4pgMBmskRkVZxdHSngWpSHeudyQpwgHWdtMz3L?=
- =?us-ascii?Q?O03uQZgJOmfXP/SzQ6iLJ5/7uklXblfydmVZEmlwn+PkK2T0U4k+mHg7DYh7?=
- =?us-ascii?Q?VKAN1IzoXFFSVG7sclXhY9rMFzCZX8n2qQYyjgdPdfGtBx6uqnDq3ShbVFsp?=
- =?us-ascii?Q?F2XCL6trQBgU4xCV15iYIB9yeBzBkkK8LbcEdLh+87+vwZwa2j34EZWP1ZFU?=
- =?us-ascii?Q?UVtSMumlJ9yo?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?QauGjtUi7yRbM5De0W5mbr7xev2SJvEcOhT63ic8DU+EH487u1Gv+vD5pw0Y?=
- =?us-ascii?Q?NE94xoxux554nOg/p4+MPS2QCvrl8H4YimSTqF7sI6r9mulxIRJCRtmg2haE?=
- =?us-ascii?Q?SXEhRcKSf+DIalnwJ+sudX0kZ5XYBtJtyBWH9cLGJL2cIG/yFdxRKNgDdxd2?=
- =?us-ascii?Q?7jXnRKPUOmKejQNLcDgu/N+w7d4vxBDHwWbRzVX8nc6VJGk5vmIyjT9aahwE?=
- =?us-ascii?Q?JJQUQ7uxeCV8dtnyj122riqGbbZtSccm1dgSXnnO9s4rNOXIoPUl5SimpgdV?=
- =?us-ascii?Q?vD5mEK9hMI3sPbXuaqurm9PfqO7wpBZyJVT6gz5etO5TdiscqYMtHtvulIa5?=
- =?us-ascii?Q?trbDl3OGpClW5LUtPkG3VMUEvJlbNFOq8ZtWs+WcWp28t9NhxYYGwZ6RuCdt?=
- =?us-ascii?Q?CP4LUYVwo6/K0Wx2vOP45X3QBFcN98BIDqwPE+eZDOFu6iw25gRgzkCGx7hB?=
- =?us-ascii?Q?FdrmdIlXTwEIND/VncnGDbqBPbXZ5G+QBJQx4kVm+tolaTFBmWK9HGthW+cl?=
- =?us-ascii?Q?T/yfp1RuoNahIfSg5LjThaFoh9ydwkWQFPx0RJw0vvqORHJIwosvhNbJqW4l?=
- =?us-ascii?Q?by6SrgxiMgZ4gl49Kqov0Pa7Uo+O47Ru7K9LFL8tiyrr5SoAy85o8BbtDdUx?=
- =?us-ascii?Q?tMjHVg8zgImrcG1tEhtfFaE0p7XTU9cWS2re36YPfLWYiSkz+j+/jfzu2+cl?=
- =?us-ascii?Q?hsRttIVXwD8DZf3oX6aN9lTSjJfuCa1KvP0QDwsdpe5nrGTt1+xqPSBTYJ2z?=
- =?us-ascii?Q?ju770j03cm0+FLagfaFD77BMMHYofA9sJeOiKNT1HrrFPekkV7oZk+EPU/XY?=
- =?us-ascii?Q?0k5koUBCJasnY8l7OONCkIW+yWyxIKyTT8J0LykS//J/f69XZ0JNTAeAB+Ad?=
- =?us-ascii?Q?itq+Bk0Q+ryQtPl50+aMcr8Nzev2C2LEVw7lmlZ0L2pRYtrkmHFGA3BxoszH?=
- =?us-ascii?Q?25s+o2L7rSy538hHj+ejdLBmQURJ/dHnI55pU9nITfnssY+HpoTiqwTnbo3X?=
- =?us-ascii?Q?uUy0zifqJ70GjCRmUy0RAM/ST9mTocsrR+/xtIRcC3ivocGLFSdeXOqY/ltf?=
- =?us-ascii?Q?jM+7I+hBIq4uhLLQSh1Aw4RlMnz8EGKIrnzZuEtxLfislqI0Qrrk+BXzpyqd?=
- =?us-ascii?Q?HqIeFmstivfvN80/OvzLyqxNpeHOo2gsr82fWH+lsx3C0Y0njpzCugrLmTUg?=
- =?us-ascii?Q?gHVEhe0R17j7oV3zINvnjKKr23pxFkM6DAN73/iP3/kVewPFtHnhyrFprFQ?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvuGIhvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C7A2C4CEE4;
+	Fri, 28 Mar 2025 16:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743179477;
+	bh=jqvTRmFLhOFgQNBQGPsnJ5VkLJC2Rw6TfFZp8ZKodMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RvuGIhvCT/41/CqHehp1hGqoFwVkuE14OaWaMwzEi9iVjhPdFIlwAwPrUvfBDu2nM
+	 7D27og13oAO1H3Tyswbp1ak6yZJRqCY+BZFxZ2cMoaGfBDx/pABlHDLclRMMzrE4cU
+	 OKd175GPXdry4LjYAc/zKr8A7wdufnyB1SOPe8rdvNnGXae4ytv7sUkrXo7Z+iPyg6
+	 k2NLG1QbC1vjFBv5tPzz5aN2809MaSakJAXgqUA2qyOfhyaGyUk5JtYa/fdDORNIeK
+	 JvLXoRhrgnxmEj5CtzsZYvtHjGDLlZwviZyFV6INpGA8gNET4JrQPMjFR7IkheIklg
+	 784FPb9G/xPVQ==
+Date: Fri, 28 Mar 2025 09:31:15 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [tip:objtool/urgent 9/23] vmlinux.o: warning: objtool:
+ cdns_mrvl_xspi_setup_clock: unexpected end of section
+ .text.cdns_mrvl_xspi_setup_clock
+Message-ID: <az2awlpfs7wt46kwql7ke3iereryykdroymfuaxawz5gozaxyi@rhlmbjkp3sdg>
+References: <202503282236.UhfRsF3B-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25cbc120-57c0-4dd9-a8c8-08dd6e15eb5b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 16:30:57.7903
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10209
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202503282236.UhfRsF3B-lkp@intel.com>
 
-From: Teddy Astie <teddy.astie@vates.tech> Sent: Thursday, March 27, 2025 7=
-:12 AM
-> To: linux-kernel@vger.kernel.org; linux-mm@vger.kernel.org
-> Cc: Xen-devel <xen-devel@lists.xenproject.org>
-> Subject: Allocating SEV C-bit-cleared pages (without relying on swiotlb)
->=20
-> Hello Linux mailing list !
->=20
-> For porting Linux code to make it work on Xen with AMD-SEV, I need to
-> change the allocation of some pages to use "shared pages" (C-bit
-> cleared) instead of private pages (C-bit set, which is the default kind)
-> as these pages needs to be shared with the hypervisor/Dom0.
->=20
-> Is there a facility to allocate pages with C-bit cleared (and if not
-> running under SEV, just allocate a plain page) ? Current Linux code for
-> SEV seems to only rely on swiotlb as access to shared page is mostly
-> made through DMA-kind devices (e.g virtio or emulated device), but I
-> don't think it is the best approach.
->=20
+On Fri, Mar 28, 2025 at 10:49:22PM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
+> head:   1c9d28fdf70d4ae3e8dfeadee982461403c6bb50
+> commit: c5995abe15476798b2e2f0163a33404c41aafc8f [9/23] objtool: Improve error handling
+> config: x86_64-randconfig-161-20250327 (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/config)
+> compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503282236.UhfRsF3B-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock: unexpected end of section .text.cdns_mrvl_xspi_setup_clock
+> >> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
 
-For allocating memory that can be shared with the hypervisor,
-allocate memory as usual (with alloc_pages(), for example), then
-call set_memory_decrypted() on that memory. This approach
-works in general for Confidential Computing (CoCo) VMs,
-regardless of whether the underlying hardware is AMD SEV-SNP,
-Intel TDX, or ARM64 CCA.  If you are running in a non-CoCo
-VM, set_memory_decrypted() is a no-op, so you can call it
-without having to check whether you are in a CoCo VM.
+Hi test robot,
 
-When freeing the memory, do the reverse. Call
-set_memory_encrypted() first, then free the memory as
-usual. Note that if set_memory_encrypted() fails for any
-reason, just leak the memory instead of freeing it because
-the encrypted state is unknown after such a failure.
+I'm unable to recreate this one:
+ 
+>> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
 
-If you search for set_memory_decrypted() in kernel code,
-you'll find several examples.  See drivers/hv/hv_connection.c
-as one place where code for running on Hyper-V follows
-this paradigm. There are several other examples as well.
+Can you rerun with OBJTOOL_VERBOSE=1 added to the make command line (or
+exported)?
 
-Michael
+-- 
+Josh
