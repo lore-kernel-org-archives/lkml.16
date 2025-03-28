@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ECA49620
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8968B49620
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171057; cv=none; b=q2UKSqykoyTWmKUyA4WGrhfmaS5jC2haTrEchn4JHbBhZ47dKF1817QU1uQmmONqMvcw3bll2hhEO3dlqJIgpLHuP7Y3XjUzh+YWD/7H1vHPjgUpB2WMikFOxQSRR2Cz5ZDsyw5cTcrXk3ruiZ4lUVu4RkP7isZBnMoLnTwcHUg=
+	t=1743171140; cv=none; b=J/rz4uilbnme89++pnbd8fOH333BaVLgXae02aeChglXWsglsm0+pgWCUXTadxONbhJoLKVtU9H4jpVyP2KlrYytpLXy5zSdHoVfuqCAf1YAgdRiiO1v90hGLCN6DrXIpoYEOiu1ra3+M4C3ywVVUg7mFYAE+j2jzuzwyBzLCNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171057; c=relaxed/simple;
-	bh=fWclp7nJB2VTYDvbnpx4IhPZk05Kk8swRynjIbvzJFM=;
+	s=arc-20240116; t=1743171140; c=relaxed/simple;
+	bh=yh/UqcAoRS4y6zo1sspu+BI0TwR5cyGVKO1hjw8ze5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pqwfA3QsFZnh9E7H+tedBy7OrXKU8ufRJyGzouF1OP3JentllsGRrs6cLyTVr1vUJG3jWs5Ovty7TLPeUhCZhNtRQlwRe+JuILJojjm0t7Rf6f/9wMQiE75CdwHBVLUyJUGD3ZXWe4OzwNedd+r3z2hZ0JJvGnitOynKXsEFF3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzpWi9af; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=cqjlmc+f9H45HWRuOobeZIwlyU5XLNq3twySOZQljfCQmlVIL7yLwCLH5+nAAtdI2Kh255Ng24fTGk5LD2xc/D+Q6/5eA1ChElBqI9j/Jndcp/OwNdUpdWwE34G0cwSr8h3w68iS7daTv3qnfsJ6aKh0dQ9U4Pot7vqfJPOIago=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAfiXo0i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzpWi9af"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E99C4CEE5;
-	Fri, 28 Mar 2025 14:10:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAfiXo0i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D86FC4CEE4;
+	Fri, 28 Mar 2025 14:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743171057;
-	bh=fWclp7nJB2VTYDvbnpx4IhPZk05Kk8swRynjIbvzJFM=;
+	s=k20201202; t=1743171140;
+	bh=yh/UqcAoRS4y6zo1sspu+BI0TwR5cyGVKO1hjw8ze5A=;
 	h=Date:From:To:Cc:Subject:From;
-	b=pzpWi9afM4tzbQwGQoFU+Lyizoos/crBtUt0bzNl7pIn91Vl8haYBQDWK4L5q774k
-	 X10hKdFW58ZHRzziUs21z0HMOVGSpC+ZhkO6qEF/I+oeN04WRKHRNKJ8+2vVbhbBf7
-	 tJP2j2S4bNKTMvzVSBZ2QaZMzErvPK3nZAWP37OyOf7f1ihWg984Yqhnm2Zk6dVTS2
-	 Y5vZp5rvGKSmH7U2bgoO0fktIPVhdoiva7QOpItVHDeyKuy/8VKZ9X7S81QPHqK+in
-	 0xlUTgT4yOmgTiQZIpWbLkmFZd+9t0Yz4wCUkOqbB3h0hEG8QjEEUCGsweoYltKSwu
-	 AlvpNpfmWMhlg==
-Date: Fri, 28 Mar 2025 14:10:50 +0000
+	b=QAfiXo0i7gQcdRWTmVdL0XC6DmlJgSK0Fd2XFqUwH0VvR7hrjXq/F+QHbIjud7qXQ
+	 eyyqmA1a0Vrwx6aNIo7nhmtpejk73yZuvy9rVd5lWnHHzq4/o4PPH5k3j89AkOAPG1
+	 AdONrzqGVGrqmL3YRU4jLW8d+y8K4agfCgRL3a3Q38WRaMt/9MekrQeDnGgc9Qx0tf
+	 j2VYOaYg5LRqrWbuEadN+dZF3gTh2AXUyEL/exozABjzVXFUKjb4m/qtSKKJtbhPhH
+	 RUycPYBlqjo8BpeuyDcixXh5jQI0GY2dkYT6SjZ6ZlXg7+4jPuDxT5Up29pwLPqKDX
+	 VKDZsC8oBZORw==
+Date: Fri, 28 Mar 2025 14:12:15 +0000
 From: Lee Jones <lee@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Pavel Machek <pavel@ucw.cz>
-Subject: [GIT PULL] LEDs for v6.15
-Message-ID: <20250328141050.GB7190@google.com>
+	Daniel Thompson <danielt@kernel.org>
+Subject: [GIT PULL] Backlight for v6.15
+Message-ID: <20250328141215.GC7190@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,144 +51,94 @@ The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
 are available in the Git repository at:
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/leds.git tags/leds-next-6.15
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git tags/backlight-next-6.15
 
-for you to fetch changes up to 161e3bea8fa5ba34b2291e5cfeb3e533cf991613:
+for you to fetch changes up to dfc034a0494b8fb8ea881aeb41a0c4e2619ff1e4:
 
-  leds: nic78bx: Tidy up ACPI ID table (2025-03-21 09:49:37 +0000)
-
-----------------------------------------------------------------
-  * pca955x: Add HW blink support, utilizing PWM0. It supports one frequency
-    across all blinking LEDs and falls back to software blink if different
-    frequencies are requested.
-
-  * trigger: netdev: Allow configuring LED blink interval via .blink_set
-    even when HW offload (.hw_control) is enabled.
-  * led-core: Fix a race condition where a quick LED_OFF followed by another
-    brightness set could leave the LED off incorrectly, especially
-    noticeable after the introduction of the ordered workqueue.
-  * qcom-lpg: Add support for 6-bit PWM resolution alongside the existing
-    9-bit support.
-  * qcom-lpg: Fix PWM value capping to respect the selected resolution
-    (6-bit or 9-bit) for normal PWMs.
-  * qcom-lpg: Fix PWM value capping to respect the selected resolution for
-    Hi-Res PWMs.
-  * qcom-lpg: Fix calculation of the best period for Hi-Res PWMs to prevent
-    requested duty cycles from exceeding the maximum allowed by the
-    selected resolution.
-  * st1202: Add a check for the error code returned by devm_mutex_init().
-  * pwm-multicolor: Add a check for the return value of
-    fwnode_property_read_u32().
-  * st1202: Ensure hardware initialization (st1202_setup) happens before DT
-    node processing (st1202_dt_init).
-  * Kconfig: leds-st1202: Add select LEDS_TRIGGER_PATTERN as it's required
-    by the driver.
-
-  * lp8860: Drop unneeded explicit assignment to REGCACHE_NONE.
-  * pca955x: Refactor code with helper functions and rename some
-    functions/variables for clarity.
-  * pca955x: Pass driver data pointers instead of the I2C client to helper
-    functions.
-  * pca955x: Optimize probe LED selection logic to reduce I2C operations.
-  * pca955x: Revert the removal of pca95xx_num_led_regs() (renaming it to
-    pca955x_num_led_regs) as it's needed for HW blink support.
-  * st1202: Refactor st1202_led_set() to use the !! operator for boolean
-    conversion.
-  * st1202: Minor spacing and proofreading edits in comments.
-  * Directory Rename: Rename the drivers/leds/simple directory to
-    drivers/leds/simatic as the drivers within are not simple.
-  * mlxcpld: Remove unused include of acpi.h.
-  * nic78bx: Tidy up the ACPI ID table (remove ACPI_PTR, use
-    mod_devicetable.h, remove explicit driver_data initializer).
-
-  * tlc591xx: Convert text binding to YAML format, add child node
-    constraints, and fix typos/formatting in the example.
-  * qcom-lpg: Document the qcom,pm8937-pwm compatible string as a
-    fallback for qcom,pm8916-pwm.
+  backlight: pcf50633-backlight: Remove unused driver (2025-03-14 11:36:33 +0000)
 
 ----------------------------------------------------------------
-Abel Vesa (3):
-      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for normal PWMs
-      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for Hi-Res PWMs
-      leds: rgb: leds-qcom-lpg: Fix calculation of best period Hi-Res PWMs
+  * Apple DWI Backlight:
+  * Added devicetree bindings for backlight controllers on Apple's
+    DWI interface.
+  * Added a new driver (apple_dwi_bl) for these controllers found
+    on some Apple mobile devices.
+  * Added MAINTAINERS entries for the new driver.
 
-Andy Shevchenko (3):
-      leds: lp8860: Drop unneeded assignment for cache_type
-      leds: mlxcpld: Remove unused ACPI header inclusion
-      leds: nic78bx: Tidy up ACPI ID table
+  * led_bl: Fixed a locking issue by holding the led_access lock
+    when calling led_sysfs_disable() during device removal to
+    prevent potential warnings.
 
-Anjelique Melendez (1):
-      leds: rgb: leds-qcom-lpg: Add support for 6-bit PWM resolution
+  * Removed unnecessary <linux/fb.h> includes from a bunch of
+    drivers.
+  * tdo24m: Removed redundant whitespace in Kconfig description.
 
-Barnabás Czémán (1):
-      dt-bindings: leds: qcom-lpg: Document PM8937 PWM compatible
+  * pcf50633-backlight: Removed the driver as the underlying
+    pcf50633 MFD and s3c24xx platform support were removed.
 
-Eddie James (5):
-      leds: pca955x: Refactor with helper functions and renaming
-      leds: pca955x: Use pointers to driver data rather than I2C client
-      leds: pca955x: Optimize probe LED selection
-      leds: pca955x: Add HW blink support
-      Revert "leds-pca955x: Remove the unused function pca95xx_num_led_regs()"
+----------------------------------------------------------------
+Dr. David Alan Gilbert (1):
+      backlight: pcf50633-backlight: Remove unused driver
 
-Frank Li (1):
-      dt-bindings: leds: Convert leds-tlc591xx.txt to yaml format
+Herve Codina (1):
+      backlight: led_bl: Hold led_access lock when calling led_sysfs_disable()
 
-Lee Jones (1):
-      leds: Rename simple directory to simatic
+Nick Chan (3):
+      dt-bindings: leds: backlight: apple,dwi-bl: Add Apple DWI backlight
+      backlight: apple_dwi_bl: Add Apple DWI backlight driver
+      MAINTAINERS: Add entries for Apple DWI backlight controller
 
-Manuel Fombuena (3):
-      leds: leds-st1202: Initialize hardware before DT node child operations
-      leds: leds-st1202: Spacing and proofreading editing
-      leds: Kconfig: leds-st1202: Add select for required LEDS_TRIGGER_PATTERN
+Thomas Zimmermann (16):
+      backlight: 88pm860x_bl: Do not include <linux/fb.h>
+      backlight: adp5520_bl: Do not include <linux/fb.h>
+      backlight: adp8860_bl: Do not include <linux/fb.h>
+      backlight: adp8870_bl: Do not include <linux/fb.h>
+      backlight: as3711_bl: Do not include <linux/fb.h>
+      backlight: bd6107_bl: Do not include <linux/fb.h>
+      backlight: da903x_bl: Do not include <linux/fb.h>
+      backlight: da9052_bl: Do not include <linux/fb.h>
+      backlight: ep93xx_bl: Do not include <linux/fb.h>
+      backlight: hp680_bl: Do not include <linux/fb.h>
+      backlight: locomolcd: Do not include <linux/fb.h>
+      backlight: lv5207lp: Do not include <linux/fb.h>
+      backlight: max8925_bl: Do not include <linux/fb.h>
+      backlight: tps65217_bl: Do not include <linux/fb.h>
+      backlight: vgg2432a4: Do not include <linux/fb.h>
+      backlight: wm831x_bl: Do not include <linux/fb.h>
 
-Marek Vasut (1):
-      leds: trigger: netdev: Configure LED blink interval for HW offload
+WangYuli (1):
+      backlight: tdo24m: Eliminate redundant whitespace
 
-Pei Xiao (1):
-      leds: st1202: Refactor st1202_led_set() to use !! operator for boolean conversion
-
-Remi Pommarel (1):
-      leds: Fix LED_OFF brightness race
-
-Thomas Weißschuh (1):
-      leds: st1202: Check for error code from devm_mutex_init() call
-
-Yuanjun Gong (1):
-      leds: pwm-multicolor: Add check for fwnode_property_read_u32
-
- .../devicetree/bindings/leds/leds-qcom-lpg.yaml    |   4 +
- .../devicetree/bindings/leds/leds-tlc591xx.txt     |  40 ---
- .../devicetree/bindings/leds/ti,tlc59116.yaml      |  90 ++++++
- drivers/leds/Kconfig                               |   8 +-
- drivers/leds/Makefile                              |   4 +-
- drivers/leds/led-core.c                            |  22 +-
- drivers/leds/leds-lp8860.c                         |   2 -
- drivers/leds/leds-mlxcpld.c                        |   1 -
- drivers/leds/leds-nic78bx.c                        |  16 +-
- drivers/leds/leds-pca955x.c                        | 359 ++++++++++++++-------
- drivers/leds/leds-st1202.c                         |  21 +-
- drivers/leds/rgb/leds-pwm-multicolor.c             |   5 +-
- drivers/leds/rgb/leds-qcom-lpg.c                   |  23 +-
- drivers/leds/{simple => simatic}/Kconfig           |   0
- drivers/leds/{simple => simatic}/Makefile          |   0
- .../simatic-ipc-leds-gpio-apollolake.c             |   0
- .../simatic-ipc-leds-gpio-core.c                   |   0
- .../simatic-ipc-leds-gpio-elkhartlake.c            |   0
- .../simatic-ipc-leds-gpio-f7188x.c                 |   0
- .../{simple => simatic}/simatic-ipc-leds-gpio.h    |   0
- .../leds/{simple => simatic}/simatic-ipc-leds.c    |   0
- drivers/leds/trigger/ledtrig-netdev.c              |  16 +-
- 22 files changed, 418 insertions(+), 193 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
- create mode 100644 Documentation/devicetree/bindings/leds/ti,tlc59116.yaml
- rename drivers/leds/{simple => simatic}/Kconfig (100%)
- rename drivers/leds/{simple => simatic}/Makefile (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-apollolake.c (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-core.c (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-elkhartlake.c (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-f7188x.c (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio.h (100%)
- rename drivers/leds/{simple => simatic}/simatic-ipc-leds.c (100%)
+ .../bindings/leds/backlight/apple,dwi-bl.yaml      |  57 ++++++++
+ MAINTAINERS                                        |   2 +
+ drivers/video/backlight/88pm860x_bl.c              |   1 -
+ drivers/video/backlight/Kconfig                    |  20 +--
+ drivers/video/backlight/Makefile                   |   2 +-
+ drivers/video/backlight/adp5520_bl.c               |   1 -
+ drivers/video/backlight/adp8860_bl.c               |   1 -
+ drivers/video/backlight/adp8870_bl.c               |   1 -
+ drivers/video/backlight/apple_dwi_bl.c             | 123 ++++++++++++++++
+ drivers/video/backlight/as3711_bl.c                |   1 -
+ drivers/video/backlight/bd6107.c                   |   1 -
+ drivers/video/backlight/da903x_bl.c                |   1 -
+ drivers/video/backlight/da9052_bl.c                |   1 -
+ drivers/video/backlight/ep93xx_bl.c                |   1 -
+ drivers/video/backlight/hp680_bl.c                 |   1 -
+ drivers/video/backlight/led_bl.c                   |   5 +-
+ drivers/video/backlight/locomolcd.c                |   1 -
+ drivers/video/backlight/lv5207lp.c                 |   1 -
+ drivers/video/backlight/max8925_bl.c               |   1 -
+ drivers/video/backlight/pcf50633-backlight.c       | 154 ---------------------
+ drivers/video/backlight/tps65217_bl.c              |   1 -
+ drivers/video/backlight/vgg2432a4.c                |   1 -
+ drivers/video/backlight/wm831x_bl.c                |   1 -
+ include/linux/mfd/pcf50633/backlight.h             |  42 ------
+ include/linux/mfd/pcf50633/core.h                  |   3 -
+ 25 files changed, 199 insertions(+), 225 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/apple,dwi-bl.yaml
+ create mode 100644 drivers/video/backlight/apple_dwi_bl.c
+ delete mode 100644 drivers/video/backlight/pcf50633-backlight.c
+ delete mode 100644 include/linux/mfd/pcf50633/backlight.h
 
 -- 
 Lee Jones [李琼斯]
