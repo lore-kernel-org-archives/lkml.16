@@ -1,184 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2077.outbound.protection.outlook.com [40.107.247.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2630C213255;
-	Fri, 28 Mar 2025 08:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152297; cv=none; b=RQbRcikppCQxRJ7e7nLXALlDaf2NxBLEA3ZTnLjY4ewvDaDKlTMhwjRkAANV7MSCK5n8rhDbwb97Vr8xEqmiZLFi8hYvfrEvT/cSAOuOLl6FNYXlrtfbD0dKLgqXZxvragU41VH2HJHX/HrfazsgcKsy8OfJlNex03eL+OkyM/k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152297; c=relaxed/simple;
-	bh=iG2vQX9C9wvH1r4TQLc3s9WUefTjRwU/KWarh7bNpaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ERlnBp0zm9xfTGobLUbVI8ar6att2OhYxb2T8qizYigYUvx4v+8hIQXl+aG2Z/l2+o8VcKbjmvqlKxYuZ4n3AydpKMugrFu5iwAga5SbbOiG9YulRP8Ht8Gy02JuDMnIUHffWd/JvF5IjcnRFWKspSQ5pcYFIwZHeB09NXbX8a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqZ8b8Ox; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04EF188A0E;
+	Fri, 28 Mar 2025 08:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743152365; cv=fail; b=u6nIRSIsd00VHPiqlxmYCXcRDw0Q9knC1d5kkoMDA7r4RECYIdQblgFOwTWp1X+4WaTY6CHV2xdEaaYprmaxzoOBLUd4mS2wzGOJK/lxCdhPwZR690S4PBUb2l70sGMUZ1ae+OesXDAYL3H2rxzy4sq9IkaAJ6hOyf3j4zPtFJM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743152365; c=relaxed/simple;
+	bh=fGx2V0QzLtdAk9m0PYRFtMGnjguqmS6x6AWCJzYAZWs=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sVhy/hOE/kJOofR0+7ySHZSBLQtgJMGHFD1V/QbDyLLvaCHZnHFdlPN25C+sCLHkX3YkJJFfm19z0aEk2hAFyA/hlg47sQk5AzMQO7fsBOksMeQgHBRSiqkvNcmYe7VXj51h8Xv3EyTQr2r33KJ3Del3ocWcqIpbMVyOEbuhL70=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Fvbq6Hf4; arc=fail smtp.client-ip=40.107.247.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqZ8b8Ox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D869C4CEE4;
-	Fri, 28 Mar 2025 08:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743152296;
-	bh=iG2vQX9C9wvH1r4TQLc3s9WUefTjRwU/KWarh7bNpaE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QqZ8b8OxhMkKPGJYVT3jTlU0Y6kwOa3pDiGB0hhZ7KDzJg7Q5tukQ0ZHW0XlGpgq7
-	 hYu9kyftSQytjOy6wDDv2xDA0blQwdpSxNY9ShnhpELtSXOomlNeh5BJvQFJYBpiad
-	 cPg2CrP6R8n5Wwm/BDU5S5IVCCwRxlFwvccCejRke8/EPo8vCvwVwgnbKSf/f0P1AT
-	 0k4WE61puykFACM/TYbYOk3VAmmTfPz1K6GmmG5sOugtItf5KrWIfQHrPRClJ1d1CE
-	 lOCsKWFOU/TwK+ja+imkcz7AR5nqbPLTXljv6YOw4l8dqhw2fq0Q7zEHtChxX7sgUL
-	 JMppIe29k8GNA==
-Date: Fri, 28 Mar 2025 08:58:05 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Kim Seer Paller <kimseer.paller@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] iio: dac: ad3530r: Add ABI file for the AD3530R
- DAC
-Message-ID: <20250328085805.44122c63@jic23-huawei>
-In-Reply-To: <20250324-togreg-v2-2-f211d781923e@analog.com>
-References: <20250324-togreg-v2-0-f211d781923e@analog.com>
-	<20250324-togreg-v2-2-f211d781923e@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fvbq6Hf4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bSUspfh2tkNyay/18fvmN9ZQ041IhlAnFTbGWqkkhdhXRC1pZddsodjyXnZuw0EgDLFvA/kw7tcjeMDWS/SKcSG3/tJU+QmH55t0xxaXd9CMyvqMBrn6wXuBzo3yjbNxiy4oGQzljytEDFtuO/Ps2h/rzWXg1E4YCrSRoFq3ihQbytJkVNHXzOC+NMNn8h+zhVjrQ1rv88BMvu/bbFnFqKOfEXlp1fBd2lrT0vgqcloxWSb+A8Ankt+r4ZJ2Jj4HmLQysDPsHmXbM/2izaIXWh50+m4DtdxVQb3z7mCcwkU9zQU7c/UXZO5fGtwsiKjFvR0joKADOaDSh6fpzrZb1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=criywvnVcXaw3T7TccJfW4N8p0Pg9JlC7dN7/Fl2/8A=;
+ b=auHNpuvs6bcijT7N3iX5r3KtEo61l+unUuoqwetiRZZK1UaxHBRY0W0ajAJqgsL/bSjFIrallfqms3jBF4jZXcHLYs6xrZ8v34hxzNoPvgAnSAEfSxY+3QMIb8F8UJZ600Z7l1YywLyGW9jQsCpOaZIbgFk9AME8+q1mnov/LJQ1GuOuGHkvYxUcTQlvkmTM1nI1I2iJpi7Yy4nXwL1AbXOPKWHLG2XTKChK0FYUTWY/N1iUC97+w49Rd38vG7UE2qXbN+GOfWWjB6M1JkWFN7ozNy+77ucqGAdChhUS2S7z+vw9Bxo3NDg1n3HICgZvK11RKMGmVrhLGJS+Z0eOmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=criywvnVcXaw3T7TccJfW4N8p0Pg9JlC7dN7/Fl2/8A=;
+ b=Fvbq6Hf4AgJpgS2VQi1E/rCNgrGMfTOwYvt8z//1ssCkUCCd8cpkOFYM8u7JeGl/3XlDNmKnp4sr/gpJ4IdeUbyl+uo/MMOimsLriTzTrcjWf/vAtmlZp/BjxvWc6SwUE0x3py5mPAKK36WP/ntq7wTpSG7GpX0pBzZDYZuGSq6vVlMuwsZclRgfnsNXS3KSvF7zGCVqMgu7hTymdphp9pfBJeSG+772eb54T8sem8aIY3tYt3kbBs7vF7O1XWj4OZa4YwZDkTEfQRbn7l8hhlaupvV1s9HGLTatZH3YGfW75gKeizKW/S2o7Ogi8KnMYk7z9HrJnQkQLjM9MF9Xww==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20)
+ by VI0PR04MB11046.eurprd04.prod.outlook.com (2603:10a6:800:269::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
+ 2025 08:59:20 +0000
+Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
+ ([fe80::7be0:296:768c:e891]) by AM0PR04MB7044.eurprd04.prod.outlook.com
+ ([fe80::7be0:296:768c:e891%3]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 08:59:20 +0000
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] ASoC: fsl_sai: add several improvements
+Date: Fri, 28 Mar 2025 16:57:40 +0800
+Message-Id: <20250328085744.1893434-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0009.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::10) To AM0PR04MB7044.eurprd04.prod.outlook.com
+ (2603:10a6:208:191::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB7044:EE_|VI0PR04MB11046:EE_
+X-MS-Office365-Filtering-Correlation-Id: 292a33d9-43f0-4238-49b5-08dd6dd6d395
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cZWkiQfTYdmW+TLgaFKjviug+7YxmIc4qrXizQJpD56DDnw/3eGB3M59KEF+?=
+ =?us-ascii?Q?C4oxuZRYwmtZTHcMbgPtZ+C6RyKO851WBfzd+u852GbUBdX+rSQXSvc3R0WV?=
+ =?us-ascii?Q?cKxPjc+1WptoN5jaeUx2wDr+zzaZvnArog7gPC/fGChftD5YmsApoK9/tn4M?=
+ =?us-ascii?Q?g0K9xkMeoyFCAWtYLtt3JXwvYa/aDofxF7jssrx4rcY6ef93F5J3EDf6uwFD?=
+ =?us-ascii?Q?TJNkGOlYnP+Hx68llnPTbWBKagzzqjo8mMZYB0SROqXaRySsXFrfDJ/1tCah?=
+ =?us-ascii?Q?+jrT/UTB/S3KB2isIoZZo++NWwmR9/9wxrz122egFIidn/J2v1pXm/6e7xLb?=
+ =?us-ascii?Q?/nkd1ilgrhwUfA5x32rIQRyLa2mVS2ab0QbWqCYgB/dmWb49m9z6wB1tYG64?=
+ =?us-ascii?Q?VurtAjoeOB1oVhIhQeyjBz3QfsKfhyuiay3jNvOyTVnlzoZ1lBmmaH2Wih4i?=
+ =?us-ascii?Q?BkoZw6sAKGFexszj3v3GLaAfNVc8jvFJS8SRUNsRlh2elv9ahFqWr1OPVbJx?=
+ =?us-ascii?Q?ZWaSmreqr7I790CvdGou8leCp1/BHm/scqn72jaBWVRK5SvxoLCII4SzM1au?=
+ =?us-ascii?Q?PMFr0Y/MwXosln1wBU4U7i11LWh6uK/DQqYKcJoRaqlSqQFaNJI0quXs1YMg?=
+ =?us-ascii?Q?XJnvWqTeXRDymOCl6P8guzh3ftCRWBpud4fOPteClPoNt0d42Xit4HZi5bM2?=
+ =?us-ascii?Q?v4yfXQBDLXIMQoScG1+/s6IRf66IF35x5qrzX9SkG/mD/jLRLY29ynIeftRl?=
+ =?us-ascii?Q?P1lzANZE77qyYWrFdlmR/wrgkoAsk7Jq8Gy2nxOooRM/kVYWHws8YiFtdfKZ?=
+ =?us-ascii?Q?sCkVeBmwTrkxaIG+f3MkjZIVCpAaxiOQXQNVIccSYYXU6dPwzYeqPDyKkRpR?=
+ =?us-ascii?Q?2ehHELW6lwv2Btr3lRt72hDBezSYfPLDSqiyi3egYb5fRjj3OFpuGxVnz3SS?=
+ =?us-ascii?Q?o0PpHNGKcUhiubPCJyutKc8CpSvBvSZI1ZNtmce/q4jeR14HJ0aziMipaQzu?=
+ =?us-ascii?Q?ncR/FbxqU/SwaCQM3LAmqVjPJxtMHNYSNO6tYwGyzmvNYhwgpcmmEU+0Sg0e?=
+ =?us-ascii?Q?lE+3yZM8kzbQEucjkEc9dLNa7YGwj4eWNc8YqvWu9Y9s2U4l6/qJPiDhiEh2?=
+ =?us-ascii?Q?6WqSpql2APap9WjY7MC4jz1XABN6+07MdRkPRu/zc8TzC1bdF8oglYKs01SF?=
+ =?us-ascii?Q?vNdE0HTha6K6Z4wxhvNQstkYz2oEA/RBhT4i526hLMbTAZ+FUtkQewQ/4iBX?=
+ =?us-ascii?Q?l+ydPm/YHQRAB1OCxw3SCSkR7Bx+lu67y0/CABk05jB5W2kMkr/hFFBp6x6q?=
+ =?us-ascii?Q?TJ8p3ILz1+z2kitfVatroRhxTUx57pb7GQD3XPV8cuuxDsMdwGHjcSVPCqxp?=
+ =?us-ascii?Q?XUVpNE4mDeX8AEaina+da81wbrU9oQkfHyTqDjreBIXfpL7oWUcwTlYME6HJ?=
+ =?us-ascii?Q?3/YtGIvnUKciu595DBbDAZ9HEINhe1FL?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7044.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?XAEmO0dZ8ebq3he8jShvIVwckI4a+jKk2OH4KGpM03zhf66GV/BdLfH31fVQ?=
+ =?us-ascii?Q?f3ZeFizROvLrrG8tdk8R5hQyBnW+yp0+Xd1DBPgleCL1gqXiHSSGsVjctjsY?=
+ =?us-ascii?Q?io0F05vPqUAM0XlKG1LHikK21eoHvHmYumF+v2bBaeCCeGuJvtYYjlyjMgc8?=
+ =?us-ascii?Q?YaOYz8c+DOYGTn3SX1XROy2nbgTLQano8Z9WqOYwsyfe2azv8WWxJhkfhKpj?=
+ =?us-ascii?Q?+bwMdkeLGQOkntebo1wzkk+IgIkJkuAA1vNHW5Ofqzkw+9gxBCXEto63TsgV?=
+ =?us-ascii?Q?Dfl3QqAJTeQDMkIY++X2s2swFsFfvwoqgEi2Vs5yj5GLmPzdgcaEWCIvYV4w?=
+ =?us-ascii?Q?SvBQuaYC95qW6R2nmG24URi21N2+RdZYk5d054s8P9f5xe9AnOG5w0i4JYkL?=
+ =?us-ascii?Q?LuB7Am2r3EgMR0DIY2XQ4377cd76/RmExxKTCHDgU1MHBzDrSe+Hhc7XlV3g?=
+ =?us-ascii?Q?Y8Q6TSqPfzmbu3qB86NANKiSf6dWsE37IRxIedJ+GvpAo3A2Dmt636sHKj3E?=
+ =?us-ascii?Q?A1SSsbyPmBPVRn+lP10mU3nPfNeutzvzfhWqOBRV3sk8ZD9mnhNYyA4HjIHU?=
+ =?us-ascii?Q?TihS/pMG9MaPSprSc+XfbKAQkdcSA0jsxvgtlPuX226CWsxmloCacpzzwe5H?=
+ =?us-ascii?Q?McJT82/QFGi/AmdGMj1XnAt7qOx7XTbJQAUfBU8bJKmvTy35l2pHaakH0unG?=
+ =?us-ascii?Q?FxoTu0qvuq2YlaJ44dWrjPEjZ5wci8zKnPo+yP9eqN1wes5iSg0ad4NvhyhM?=
+ =?us-ascii?Q?hPnAs61z3mZuqUuTzUcwCQuThI8M4lJk/liSlaYZl+FhndVlGb6Dbr4f80wQ?=
+ =?us-ascii?Q?XwlN6H5dlCBoyHV/MzzNb+6irWLeQ2b7PcITirmqp3p56TnBOSngLdHHvE4z?=
+ =?us-ascii?Q?2wMRAQ5t0TxSmpKPHdy8nE8pxfHUa0JEYs/AzZ1lUuxP5xIH65/L2TZzaANO?=
+ =?us-ascii?Q?Sjhu4sVhrHXY1/vrt43lsE3rwmTFkxl8SuwgG7Pd4IzPjILd3yq9zy3AUER1?=
+ =?us-ascii?Q?PdLJVQRjM+AlGUC2CqN8ToKwrm0XHKdb/5npSx56q6nZQvjyuT45lnAilhm9?=
+ =?us-ascii?Q?vp5GeGxFKlWeljfwOzUZTxOxwRKeSqJMAMVMjqFBbxrTlCuwXmOJHy8lLa3r?=
+ =?us-ascii?Q?BJQ5FwIAGaEINnLHU6UlWbkKtLXlI0szXOMNNGA1DuoNlvNPWppo/UTfpdxg?=
+ =?us-ascii?Q?8ytHwDTHHS1UkIcCOTj4MGQKVCiF5AcHWGe2Ok+EOtXVJ5WmOulfT+aMpjfb?=
+ =?us-ascii?Q?CgsD3SP8qdAQEbXF1Q5Z1mQFvonQFKeQ6HhtvBlezQo2Za77kBw++aBnoV1X?=
+ =?us-ascii?Q?GKd4eVs6/9SK7otwC8vLHmFWrPPJWr1P8kcwmqJi0tLzms3zVvjOa0jv07RR?=
+ =?us-ascii?Q?RFHlHwj9HFNDeAp+3Ehwa19B44gUQFU66VZkbLiO/lec8IQuzffcboMxcRxt?=
+ =?us-ascii?Q?oXYiCVAWzT4+W6ccK5lUPNfqvzJV1xkUp/xcY4EXSu8IgSgbeXWrhod3F8uF?=
+ =?us-ascii?Q?mkOR2ZORehnXX1PvlljZ+tzxxc8HfyWQHEDg8JF+FnfJWslSx46iIpEkVgbg?=
+ =?us-ascii?Q?Wt2Y+KtiP9otTqCUUPZzjoFZ2wqJHUR5EQXk+gTV?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292a33d9-43f0-4238-49b5-08dd6dd6d395
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB7044.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 08:59:19.9999
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C4/U+pxp44Xqdw6Gc8rH+52CoFdPUc0OkZUpaMuwX5T5iVr+zYorjLR3CUgrn3SQcy6X5VRowyg5NsfNvCbM1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB11046
 
-On Mon, 24 Mar 2025 19:22:56 +0800
-Kim Seer Paller <kimseer.paller@analog.com> wrote:
+Add several improvements for the sai interface.
+1.allow to set mclk rate with zero clk_id for master mode
+2.add xlate_tdm_slot_mask() callback to avoid channel constrain
+3.separate 'is_dsp_mode' for tx and rx
+4.separate set_tdm_slot() for tx and rx 
 
-> Define muxout_select and muxout_select_available sysfs interface for the
-> AD3530R and AD3531R DAC.
->=20
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> ---
->  .../ABI/testing/sysfs-bus-iio-dac-ad3530r          | 68 ++++++++++++++++=
-++++++
->  MAINTAINERS                                        |  7 +++
->  2 files changed, 75 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-ad3530r b/Docume=
-ntation/ABI/testing/sysfs-bus-iio-dac-ad3530r
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..9d3126952fd1c5214afb895c4=
-972dc4a891ed7d4
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-ad3530r
-> @@ -0,0 +1,68 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/muxout_select
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Selects which of the multiplexer's input signals will be
-> +		monitored on the MUX_OUT pin.
-Hi Kim,
+Shengjiu Wang (4):
+  ASoC: fsl_sai: allow to set mclk rate with zero clk_id
+  ASoC: fsl_sai: add xlate_tdm_slot_mask() callback
+  ASoC: fsl_sai: separate 'is_dsp_mode' for tx and rx
+  ASoC: fsl_sai: separate set_tdm_slot() for tx and rx
 
-Do we have a use case where the monitoring would not be by an ADC attached
-to the host CPU? (i.e. using a channel on an ADC that has it's own IIO driv=
-er)
+ sound/soc/fsl/fsl_sai.c | 90 ++++++++++++++++++++++++++++-------------
+ sound/soc/fsl/fsl_sai.h |  6 +--
+ 2 files changed, 65 insertions(+), 31 deletions(-)
 
-If no other use case, then support this as a consumer of an ADC channel from
-another device with all these exposed as different channels when a read is =
-requested.
-There are quite a few drivers doing this already.
-
-The source vs sink thing may need to be done via labels as it isn't a conce=
-pt
-that maps directly to ADC channel characteristics.
-
-If this is being routed to some external hardware monitoring then most like
-this should be in device tree as doesn't make sense to switch dynamically in
-any cases that I recall from previous similar drivers.
-
-Jonathan
-
-> +		* powered_down - MUX_OUT pin is powered down. An 80k=CE=A9 impedance
-> +				 can be seen at the MUX_OUT pin.
-> +		* vout0 - Voltage representation of VOUT0.
-> +		* iout0_source - Voltage representation of IOUT0 (source mode).
-> +		* iout0_sink - Voltage representation of IOUT0 (sink mode).
-> +		* vout1 - Voltage representation of VOUT1.
-> +		* iout1_source - Voltage representation of IOUT1 (source mode).
-> +		* iout1_sink - Voltage representation of IOUT1 (sink mode).
-> +		* vout2 - Voltage representation of VOUT2.
-> +		* iout2_source - Voltage representation of IOUT2 (source mode).
-> +		* iout2_sink - Voltage representation of IOUT2 (sink mode).
-> +		* vout3 - Voltage representation of VOUT3
-> +		* iout3_source - Voltage representation of IOUT3 (source mode).
-> +		* iout3_sink - Voltage representation of IOUT3 (sink mode).
-> +		* vout4 - Voltage representation of VOUT4.
-> +		* iout4_source - Voltage representation of IOUT4 (source mode).
-> +		* iout4_sink - Voltage representation of IOUT4 (sink mode).
-> +		* vout5 - Voltage representation of VOUT5.
-> +		* iout5_source - Voltage representation of IOUT5 (source mode).
-> +		* iout5_sink - Voltage representation of IOUT5 (sink mode).
-> +		* vout6 - Voltage representation of VOUT6.
-> +		* iout6_source - Voltage representation of IOUT6 (source mode).
-> +		* iout6_sink - Voltage representation of IOUT6 (sink mode).
-> +		* vout7 - Voltage representation of VOUT7.
-> +		* iout7_source - Voltage representation of IOUT7 (source mode).
-> +		* iout7_sink - Voltage representation of IOUT7 (sink mode).
-> +		* die_temp - Voltage representation of internal die temperature.
-> +		* agnd - MUX_OUT pin internally tied to AGND.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/muxout_select_available
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Reading this returns the valid values that can be written to the
-> +		muxout_select attribute:
-> +		* powered_down
-> +		* vout0
-> +		* iout0_source
-> +		* iout0_sink
-> +		* vout1
-> +		* iout1_source
-> +		* iout1_sink
-> +		* vout2
-> +		* iout2_source
-> +		* iout2_sink
-> +		* vout3
-> +		* iout3_source
-> +		* iout3_sink
-> +		* vout4
-> +		* iout4_source
-> +		* iout4_sink
-> +		* vout5
-> +		* iout5_source
-> +		* iout5_sink
-> +		* vout6
-> +		* iout6_source
-> +		* iout6_sink
-> +		* vout7
-> +		* iout7_source
-> +		* iout7_sink
-> +		* die_temp
-> +		* agnd
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ffdb3f21fc4fb35b349449afbb30fecd4fe72978..2d3c31c74594ca1934c67e7aa=
-d0a179feeaa39bf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1289,6 +1289,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/g=
-it/netdev/net.git
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
->  F:	drivers/net/amt.c
-> =20
-> +ANALOG DEVICES INC AD3530R DRIVER
-> +M:	Kim Seer Paller <kimseer.paller@analog.com>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Supported
-> +W:	https://ez.analog.com/linux-software-drivers
-> +F:	Documentation/ABI/testing/sysfs-bus-iio-dac-ad3530r
-> +
->  ANALOG DEVICES INC AD3552R DRIVER
->  M:	Nuno S=C3=A1 <nuno.sa@analog.com>
->  L:	linux-iio@vger.kernel.org
->=20
+-- 
+2.34.1
 
