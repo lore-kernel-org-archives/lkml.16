@@ -1,124 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C792186294;
-	Fri, 28 Mar 2025 21:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686024A05;
+	Fri, 28 Mar 2025 22:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743199080; cv=none; b=R1uZQJYobWL5worG2QvghzW5RDB3mjr/Btck/GV25nCNUkOhMBzRS1b/gy46IT9YZ3t+Dx5Oss2coh+wAw2ujsRhN6Mv1nEZ/GNeM/pqy92gtplu0VS5Lxt7RlLc+rl1RHlE+cDA7r95CUMxoFrZbp2Jv4r103+d4edmi/3HoT0=
+	t=1743199305; cv=none; b=dBJbcTxveElUpgCVm8PKrZg+0Efq6cous5XkLy9hnheqe6qEvPWPUrtP//jKm4o14/qy6K5fFFZqVdIrCsHPuS8C3NSatYm00mCSOb9G1H+otytJ1Qpphnkr2gWSv1K0hBX8nWpLD2EoPji9ch66cHO7ezG0lH4mSQXqtTXlyk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743199080; c=relaxed/simple;
-	bh=OxznrNYf3lSirHy91oukZ5v3RIBmVhPpxY1KFo5KKW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgeenlEg3dI2QgHyv048owOd+2SJUKX02cieS3KQXJWKKikyt6jpi00NSb/N3F5W01iZ10Me2iVzEnV6sOj7/JEMulOX14I/nWh07h+d02RyHIUIYSKSF/KH+D2JlOSPj7AHaIZgL21c0CR7gzzks+edbVZRczoanZIG6eXS1WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIvW+7iD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743199305; c=relaxed/simple;
+	bh=SSH6fnOtoT1ysxQcZHp9njNCoc5fKETBZvRU3SyCI/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kZCNhC8d03MYw7/Y3EueIyecBF++XOFooNwH3AfCRi1SStsQDGYGB3SpCND4r6UWWbh4pCZyy28dG9tEWsaaDkpOaWFHdCGoSkf7CQ5VDq8RGzv0iPtrKn7Vn4Mr586N5v8oqeid4thXXsBlo6rIkl486u8sZFxWKe6QP/elS2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ffg02hjy; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIvW+7iD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C951C4CEE4;
-	Fri, 28 Mar 2025 21:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743199079;
-	bh=OxznrNYf3lSirHy91oukZ5v3RIBmVhPpxY1KFo5KKW0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=uIvW+7iDcLahy75y/CjDDpOCE9/9cOE52rkwzvs7XBQXtgBSqsyaVeqqJOgj+qH5C
-	 DsR3QsyvodbV2ZN2XOc58ZoIvs0oUZXOcEJ6JkDobOOonNxkSpPPGT5oX3FwsHItKH
-	 +fSj2LBJp3FTi/DHUTF05QoiixB8ad0XO6feuFycl3+LndRG4JuBrxUnObneNBkE+d
-	 naIaZUEVgWkZ7B4CmkrMmuvwYuB/eu19tmz0DfdNGGaUKdyDU5vzkOWqqg9Ioz9Zws
-	 W3DsY41BaLGbOcN3VJ8vNH2TxqX8OR2VGhwYK3xUEeoks1M6SxYcP+5h0WRxntAoJy
-	 64/xPLOQFopjA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 21C75CE0889; Fri, 28 Mar 2025 14:57:59 -0700 (PDT)
-Date: Fri, 28 Mar 2025 14:57:59 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, gourry@gourry.net,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	sfr@canb.auug.org.au
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
- <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
- <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ffg02hjy"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2260c91576aso46654755ad.3;
+        Fri, 28 Mar 2025 15:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743199303; x=1743804103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/IVrZIj5NwvolOp7P5/XK/Tk+P2OhfakRiW9sxSIYFs=;
+        b=Ffg02hjybBYIU2aF315dGuF40DRNdUj/VLfPTvCkOPh2N3h6DqibexjUc06F4r3yka
+         nPPjEZifHK67UiVxATkZaNWTGjEwQbVhbUnzYfgehZ3SacZCaov5nraeRTF2JhN0ISa0
+         xaY8AwyFt0fdmwzebBv6cg70gobV4VL642wU0HzCaRRzP/GoID/Hf0nsYJKyIKZHTYP0
+         /jwpgm7GSRV0nB8/AJKwGIVUAFkuZjx096KwHKfPBkuuEWtBb093P+bb3jWutawmR4xy
+         Hasp5BlNZdtkj6Piv0a4Bm3ciycbjou2bPGhbj7IiXl+vGnH4wfTCTdIif+YGp4X1ign
+         XJ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743199303; x=1743804103;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/IVrZIj5NwvolOp7P5/XK/Tk+P2OhfakRiW9sxSIYFs=;
+        b=CT+tWBGHcsjbq2tt2g8I2E7egu828YvjXMIvGxB2ToI+bUirDEOgHGvv1gT+B/jv3Q
+         uezT2ctma6RFO06R+ZYJQ+XBfWgSUgPkOAyA1qdfMj+5QSMh/Wewd3xgQ7PkQhY75/wU
+         oOX3XLICGNwnrOGZyu7HlhMAcwsbbmvqZXFLwN0yVlwzKzaO7dzaN7dP6VUcayn7yD+I
+         ooyf8l4OYZZMci0pUgY0DclQ49R+qSAoo5/jE7QAiSizyN4wlMo70gOwCBDoLVB61pDs
+         Ksig64UAVwMk4oGsmSfOHTdUSlNUsPthyZ6HPIJgi2pgWlgxA/fTxVnB8GJZGDUeyYSO
+         xMFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtoTirXxPEoSducUn7IMusf1n5NmG9jLHpPHTc+2QJ5ttk5GOnQSr1+bJO9xpFoEM43Otq49BtgG73SVjgCSWY@vger.kernel.org, AJvYcCWJGikblEcwYkRHaWUt6LKSVzIb/Vhxefj3b6+tTj2sjUULrDwyrnpnxXU/jdqyQ+3VnnsY59FYTDNXPJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIsQic44I7hc8tnz2nA6OY8ZMY2SSRgf1MiAlSRq6QSyuZ6m1a
+	y7fYMpP9IFzGVmUWOJJ5I+jGD4Piz2NbEAQaZk+yRa/WItCWS7lQ
+X-Gm-Gg: ASbGnctS3AIGaJcjmvVZA+rzZ0g6KXNkZSqT9tQrzdkgoLB/+/ei7cFisNoi0QbOjy+
+	Jj7PW0prpGXwJtH747VVq7uxUX3ht3hu4byZtSSHf/UqkpTxaDv+oURhOaBjQpyMe3TYUOpmxXP
+	FnimGWoBpxp7zcKMNCfka86puAc27sf7UxOTVoesJJY4KMOTDBlSh8LUqwMc+8aGTsMC0hF1vuG
+	NTu0oY0V4MRYxPJoIb5oFfFNnHbdIkCiVEc6HASp3hu68w1FAcTT6at/3ZaINnrOOUYREmsg10i
+	F7xCWJEaS4HlFp2NfpZWVNgVJ0+TOUDenH58mdc01ltv7sfyCfcK2NpWv4UPh9va
+X-Google-Smtp-Source: AGHT+IGJyrofPtYjcdwJFJMViyQI/JadXUdxW2feSLnMyP0HVI8yOQ2zIl58vUTrfxBzH7KUhYJ53Q==
+X-Received: by 2002:a05:6a00:1784:b0:736:8c0f:7758 with SMTP id d2e1a72fcca58-7398038028cmr1140094b3a.10.1743199303271;
+        Fri, 28 Mar 2025 15:01:43 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.231.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710d4761sm2318154b3a.167.2025.03.28.15.01.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 15:01:42 -0700 (PDT)
+From: Siddarth G <siddarthsgml@gmail.com>
+To: shuah@kernel.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	Siddarth G <siddarthsgml@gmail.com>,
+	David Binderman <dcb314@hotmail.com>
+Subject: [PATCH] selftests/mm: Fix loss of information warnings
+Date: Sat, 29 Mar 2025 03:30:37 +0530
+Message-ID: <20250328220037.149763-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
 
-On Fri, Mar 28, 2025 at 02:22:21PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 3/28/25 1:45 PM, Paul E. McKenney wrote:
-> > On Fri, Mar 28, 2025 at 01:03:19PM -0700, Dave Jiang wrote:
-> >>
-> >>
-> >> On 3/28/25 10:39 AM, Paul E. McKenney wrote:
-> >>> Hello!
-> >>>
-> >>> In next-20250328 and next-20250327, allmodconfig builds get me:
-> >>>
-> >>> ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
-> >>>
-> >>> This file is apparently auto-generated, because when I change the #include
-> >>> to the more likely linux/uuid.h, my changes are overwritten by the build.
-> >>>
-> >>> Gregory Price noted that something similar has happened recently and been fixed:
-> >>>
-> >>> https://lore.kernel.org/all/70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com/
-> >>>
-> >>> Perhaps someone unfixed it?
-> >>>
-> >>> 								Thanx, Paul
-> >>
-> >>
-> >> I can't get the powerpc cross build to build to reproduce the issue from next-20250328. Does the change below address the issue for you?
-> >>
-> >> ---
-> >> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-> >> index d6db8984889f..691eeda9c892 100644
-> >> --- a/include/uapi/cxl/features.h
-> >> +++ b/include/uapi/cxl/features.h
-> >> @@ -8,11 +8,7 @@
-> >>  #define _UAPI_CXL_FEATURES_H_
-> >>  
-> >>  #include <linux/types.h>
-> >> -#ifndef __KERNEL__
-> >> -#include <uuid/uuid.h>
-> >> -#else
-> >>  #include <linux/uuid.h>
-> >> -#endif
-> >>  
-> >>  /*
-> >>   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
-> > 
-> > Thank you, Dave!
-> > 
-> > Please note that I am reproducing this not on powerpc, but instead on
-> > x86 with a simple allmodconfig build.
-> > 
-> > Making the above change got me this:
-> > 
-> > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
-> 
-> I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
+Cppcheck reported a style warning:
+int result is assigned to long long variable. If the variable is long long
+to avoid loss of information, then you have loss of information.
 
-make clean
-make allmodconfig
-make -j$N
+Changing the type of page_size from 'unsigned int' to 'unsigned long long'
+was considered. But that might cause new conversion issues in other
+parts of the code where calculations involving 'page_size' are assigned
+to int variables. So we approach by appending ULL suffixes
 
-Though encapsulated as follows:
+Reported-by: David Binderman <dcb314@hotmail.com>
+Closes: https://lore.kernel.org/all/AS8PR02MB10217315060BBFDB21F19643E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com/
+Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+---
+ tools/testing/selftests/mm/pagemap_ioctl.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
+diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+index 57b4bba2b45f..f3b12402ca89 100644
+--- a/tools/testing/selftests/mm/pagemap_ioctl.c
++++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+@@ -244,7 +244,7 @@ int sanity_tests_sd(void)
+ 	long walk_end;
+ 
+ 	vec_size = num_pages/2;
+-	mem_size = num_pages * page_size;
++	mem_size = num_pages * (long long)page_size;
+ 
+ 	vec = malloc(sizeof(struct page_region) * vec_size);
+ 	if (!vec)
+@@ -432,7 +432,7 @@ int sanity_tests_sd(void)
+ 	free(vec2);
+ 
+ 	/* 8. Smaller vec */
+-	mem_size = 1050 * page_size;
++	mem_size = 1050ULL * page_size;
+ 	vec_size = mem_size/(page_size*2);
+ 
+ 	vec = malloc(sizeof(struct page_region) * vec_size);
+@@ -487,7 +487,7 @@ int sanity_tests_sd(void)
+ 	total_pages = 0;
+ 
+ 	/* 9. Smaller vec */
+-	mem_size = 10000 * page_size;
++	mem_size = 10000ULL * page_size;
+ 	vec_size = 50;
+ 
+ 	vec = malloc(sizeof(struct page_region) * vec_size);
+@@ -1058,7 +1058,7 @@ int sanity_tests(void)
+ 	char *tmp_buf;
+ 
+ 	/* 1. wrong operation */
+-	mem_size = 10 * page_size;
++	mem_size = 10ULL * page_size;
+ 	vec_size = mem_size / page_size;
+ 
+ 	vec = malloc(sizeof(struct page_region) * vec_size);
+@@ -1507,7 +1507,7 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	sanity_tests_sd();
+ 
+ 	/* 2. Normal page testing */
+-	mem_size = 10 * page_size;
++	mem_size = 10ULL * page_size;
+ 	mem = mmap(NULL, mem_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+ 	if (mem == MAP_FAILED)
+ 		ksft_exit_fail_msg("error nomem\n");
+@@ -1520,7 +1520,7 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	munmap(mem, mem_size);
+ 
+ 	/* 3. Large page testing */
+-	mem_size = 512 * 10 * page_size;
++	mem_size = 512ULL * 10 * page_size;
+ 	mem = mmap(NULL, mem_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+ 	if (mem == MAP_FAILED)
+ 		ksft_exit_fail_msg("error nomem\n");
+-- 
+2.43.0
 
-							Thanx, Paul
