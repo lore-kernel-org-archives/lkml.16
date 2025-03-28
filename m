@@ -1,121 +1,126 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47108171092
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61263171092;
+	Fri, 28 Mar 2025 15:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743175076; cv=none; b=pXSENA+k1l9kNGbqeBLREQt8vCxxlfRdVamVXXrZmf/KV3A8cNARMFTUTIv9IEuU5RvwJjb/MQUhNfV4F+jqyWTRoY24ZDyyvg0r3goiaUysE07L9/JjEP/5Rj66fiIPoaJWd0huuqbamKpe0nrw0VcGUMX5YRVQYInbigo8oqY=
+	t=1743175102; cv=none; b=pNqqQa4N4bVT2A+NeLIEpC9RMpZxwDE98UVjNbh+FJhTakIYQjJ94yZIaanXE0idZyny+fNSDNzlXZQVFuDBS2ZLKNkVlNqo/+nmISNSUbSUalAqBn/o6uVvyP15SPy2aTZIM01Clol9nmM0KM7LtFPolaFYrhwt/rvdT0QnJLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743175076; c=relaxed/simple;
-	bh=jEhtVTn1QWFoySaUXbkHkCIjovKC7NhTpAQFfzMoxEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gc9C7Hq90apUSapcD+Edue/OXS0O6fKxdkHV7cunoLoRG8lRZEG30k9QuppsCweHf3I433z2Klpe6mjGUHyUjJuRGZdXyZmpLQ1nL7vWbl7iE3UhguDy241NaCVx1ZwNLwtYfQPV54/NEa1G7VDIdKZ2TlBHBkysTFuxzQ63rpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+GsAMeU; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+GsAMeU"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so2030369241.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743175074; x=1743779874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Jn0e09I6pw9OL2TVwRIfefTbq7C/d6a62JusO5U0Kc=;
-        b=Q+GsAMeUU7rxujJZW5HlZcidmoJGTmqztWqEmMhYlOiKgO2nbvkCR33/1mF4b3PbTU
-         Qk5rGr1lxUDQAYA1DJkkPQK1c/IonSOj/mwXaDGAeFn2CWnvMLInQ4yKBmkoPrvZzkj8
-         Pz9J6OX9sjFqQmTxbfXHgHbiPyema/fHMwr3xA1jGMSVIBJ8TrxPbYi79KMqsDzp28s0
-         dLv734kL4k7jg9RYaRQ3D/GiXx0dukNvPfJgzqE649hDdmIut7WdDYjsdI0+LQld1K+/
-         NpEXuHcGj0QKtJ2fuKs2u6BnVqloTemnyzhMgGA51i2VsONnV15yKD5ipRl1/SrjOdO3
-         VZKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743175074; x=1743779874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Jn0e09I6pw9OL2TVwRIfefTbq7C/d6a62JusO5U0Kc=;
-        b=dCaXMoMNFrpO9D9H+TtWdxrg1Osp+y6cXqABvxiH5apnuYNEGqqTDUwENFoperCVE6
-         OSBH6ZYmMQEYPKuO4CPHkhN0aPh+e29AZSjWG1hTG7pCh40cvCPdW1q5AXfqzJn5+wiM
-         UF/k+IjQM7mZ5fZngeeA2KOoj7Ah2tqndAikY830IFJQ9EHa8k4yjE5Ievbpmxi2A/5B
-         dqZHXPkFnUPgCiyCEDSjaJPOwVTeUQbCclwFn7QfJNZqsFgwyfzEApVBldZ0leyEa8up
-         mclKKRV22x2XG2iSAVbmk0dh83J1RCV9lUmuyGWfiGJ0b8vHUQqK8k9XQ8DE9MyZBVXB
-         G6ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVO7qwYk777xiY5yKj9iORZtVWJnYCzjB9hqfZsx3lq7pMY2f6MLbZl9xoJdhtYBIDnxvCnTv3ZpB3EZk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhqmQIpnFUyQ+xXzKnaW09JTsrhDvjMm0+Ac0Qjvmvjmnl9Zve
-	Wzzi789ERONlB9OrgM13/l2g2lkoCIFBiiRi121ThZIUNd5ri8m2uUmxEKcNBcpY7cxcKROOy/7
-	ZLMoSspCd5HTemNPHZD2nvyA5ScE=
-X-Gm-Gg: ASbGnctvBkLSsx3sIPz6Q2eP8p492ECS6DQFA2taHpiZUy8qJYiR6pnaM1FxcWejjFo
-	qkDhX1ty3RjI9Wvb4QFdUogHT9XXDSFgXu6uroQDvXfBztQ+n7hwRH0SG3bF126ZeIRP0nvWR5q
-	ddHZmQMZgNj7+6z3Qfk8oZjIIwRzw=
-X-Google-Smtp-Source: AGHT+IEqrBEH5TDL81Y5j3ZIzOBqupeT+igPlWE2szhh0MEQKTWwtxcEL2xqXu4qp0Tz0FWhtqAPB67lgvSSjeeodZY=
-X-Received: by 2002:a05:6122:889:b0:50d:39aa:7881 with SMTP id
- 71dfb90a1353d-52610fc715cmr2676350e0c.0.1743175073764; Fri, 28 Mar 2025
- 08:17:53 -0700 (PDT)
+	s=arc-20240116; t=1743175102; c=relaxed/simple;
+	bh=I2diJ459zHAbnnXSfI/pe1+iVztBYA6fJv1PmJ0w2F0=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=jke+AZEUXe555Fm+FbJ5TdhIQOfyWDW9dqfMPjB0uo57teAVaIhuFO9ynq82tE2JKUZhyymuTw1l2kwhGFj2gqSN8LDrp0o7YDthE/+8jiYKWx2yeagHV/uyIN7Yj/EML5aGY4Tu5jqK8L4jRJw7tGj/7MngguOvwyFNvcFsTn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:38962)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tyAXL-000vaD-9v; Fri, 28 Mar 2025 08:18:19 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:32850 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tyAXK-00AuMC-5N; Fri, 28 Mar 2025 08:18:18 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: <i.abramov@mt-integration.ru>,  <aleksander.lobakin@intel.com>,
+  <davem@davemloft.net>,  <edumazet@google.com>,  <horms@kernel.org>,
+  <jdamato@fastly.com>,  <kuba@kernel.org>,  <leitao@debian.org>,
+  <linux-kernel@vger.kernel.org>,  <lvc-project@linuxtesting.org>,
+  <netdev@vger.kernel.org>,  <pabeni@redhat.com>,
+  <syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com>
+References: <20250328011302.743860-1-i.abramov@mt-integration.ru>
+	<20250328022204.12804-1-kuniyu@amazon.com>
+Date: Fri, 28 Mar 2025 09:17:42 -0500
+In-Reply-To: <20250328022204.12804-1-kuniyu@amazon.com> (Kuniyuki Iwashima's
+	message of "Thu, 27 Mar 2025 19:15:00 -0700")
+Message-ID: <875xjtb5o9.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743163800.git.abrahamadekunle50@gmail.com>
- <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com>
- <21e624e7-c18f-6aa2-2a16-7cd46e706d47@inria.fr> <CADYq+fZd=C-EydjBmkP6Rh6XAJS6Kg1nM7zGhyLrGYiLGkZ8mw@mail.gmail.com>
- <acd2df4b-6865-d2c0-7bc2-babcc930d03d@inria.fr>
-In-Reply-To: <acd2df4b-6865-d2c0-7bc2-babcc930d03d@inria.fr>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Fri, 28 Mar 2025 16:17:44 +0100
-X-Gm-Features: AQ5f1JoIf6U6Zu3AD1_fwccY3uYCCIVmv3RFHYcdBK_5pT0_ajsEDqFotfNCPoc
-Message-ID: <CADYq+fY-UNbpWeefGuo_Y5OG98AQRu1=uZYu2cqpONOTpar4YA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] staging: rtl8723bs: modify variable names to comply
- with kernel naming convention
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1tyAXK-00AuMC-5N;;;mid=<875xjtb5o9.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18L2PoLqjUlh8oy7IsTTArm4NLnXlSHfRs=
+X-Spam-Level: **
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4810]
+	*  0.7 XMSubLong Long Subject
+	*  1.0 XMSlimDrugH Weight loss drug headers
+	*  0.5 XMGappySubj_01 Very gappy subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.0 T_TooManySym_02 5+ unique symbols in subject
+	*  0.2 XM_B_SpammyWords One or more commonly used spammy words
+	*  0.0 T_TooManySym_03 6+ unique symbols in subject
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Kuniyuki Iwashima <kuniyu@amazon.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 411 ms - load_scoreonly_sql: 0.03 (0.0%),
+	signal_user_changed: 9 (2.2%), b_tie_ro: 8 (1.9%), parse: 0.89 (0.2%),
+	extract_message_metadata: 12 (3.0%), get_uri_detail_list: 1.35 (0.3%),
+	tests_pri_-2000: 24 (5.9%), tests_pri_-1000: 2.6 (0.6%),
+	tests_pri_-950: 1.26 (0.3%), tests_pri_-900: 1.01 (0.2%),
+	tests_pri_-90: 101 (24.5%), check_bayes: 99 (24.0%), b_tokenize: 7
+	(1.7%), b_tok_get_all: 7 (1.8%), b_comp_prob: 2.5 (0.6%),
+	b_tok_touch_all: 78 (18.9%), b_finish: 0.96 (0.2%), tests_pri_0: 245
+	(59.5%), check_dkim_signature: 0.75 (0.2%), check_dkim_adsp: 3.4
+	(0.8%), poll_dns_idle: 1.29 (0.3%), tests_pri_10: 2.1 (0.5%),
+	tests_pri_500: 9 (2.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in
+ __dev_change_net_namespace()
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com, pabeni@redhat.com, netdev@vger.kernel.org, lvc-project@linuxtesting.org, linux-kernel@vger.kernel.org, leitao@debian.org, kuba@kernel.org, jdamato@fastly.com, horms@kernel.org, edumazet@google.com, davem@davemloft.net, aleksander.lobakin@intel.com, i.abramov@mt-integration.ru, kuniyu@amazon.com
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
 
-On Fri, Mar 28, 2025 at 4:13=E2=80=AFPM Julia Lawall <julia.lawall@inria.fr=
-> wrote:
->
->
->
-> On Fri, 28 Mar 2025, Samuel Abraham wrote:
->
-> > On Fri, Mar 28, 2025 at 3:55=E2=80=AFPM Julia Lawall <julia.lawall@inri=
-a.fr> wrote:
-> > >
-> > >
-> > >
-> > > On Fri, 28 Mar 2025, Abraham Samuel Adekunle wrote:
-> > >
-> > > > The variable names use the camelCase naming convention which is not=
- consistent
-> > > > with Linux kernel naming convention.
-> > > >
-> > > > Modify the names to use snake_case in adherence to the Linux kernel=
- approved
-> > > > naming convention for consistency with the codebase.
-> > >
-> > > There is another naming issue that checkpatch perhaps doesn't warn ab=
-out
-> > > which is the encoding of types in variable names.  You can see some
-> > > variables with names that start with b for boolean and p for pointer.
-> > > Those letters shouldn't be used in kernel code.
-> > >
-> > > julia
-> >
-> > Hello, and thank you very much for your review
-> > Do I send that as a different standalone patch?
-> > Or should I send a v2 after attaching the patch to the patchset?
->
-> Perhaps find some different files than the ones affected by your patchset
-> and send a standalone patch.
->
-> julia
+Kuniyuki Iwashima <kuniyu@amazon.com> writes:
 
-Okay noted.
-Thanks
+>> Subject: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in __dev_change_net_namespace()
+>
+> s/__dev_change_net_namespace/netif_change_net_namespace/
+>
+> Also, please specify the target tree: [PATCH v2 net]
+>
+>
+> From: Ivan Abramov <i.abramov@mt-integration.ru>
+> Date: Fri, 28 Mar 2025 04:12:57 +0300
+>> It's pointless to call WARN_ON() in case of an allocation failure in
+>> device_rename(), since it only leads to useless splats caused by deliberate
+>> fault injections, so avoid it.
 
-Adekunle.
+No.  It is not pointless.  The WARN_ON is there because the code can not
+rollback if device_rename fails in
+__dev_change_net_namespace/netif_change_net_namespace.
+
+If device_rename fails it means that the kernel's device tree
+are inconsistent with the actual network devices.
+
+If anything we need a way to guarantee that the device_rename will
+succeed, so that all of the parts that may fail may be performed
+before we commit ourselves by notifying userspace that the device
+is being renamed.
+
+As for Breno Leitao <leitao@debian.org>'s question should we fail
+immediately.  That will put us in a far worse state.
+
+As I recall the WARN_ON exists there because someone at the last minute
+stuffed network devices into sysfs, and no one has taken the time to
+handle the practically impossible case of a device_rename failure.
+
+If you are going to do something with this logic please figure out how
+to handle a failure instead just shutting up the error message that
+let's you know something bad is wrong in the kernel.
+
+Eric
+
