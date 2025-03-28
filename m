@@ -1,381 +1,139 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEB21E47A8;
-	Fri, 28 Mar 2025 19:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3AEE545
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743190823; cv=none; b=scEtpgEX1BovSKC90xynQzGh+hwWDRDffQC2i58uLsHZHoDo4ZHNGgM+yZqzteeCUS3oUxcngHLCo/CwfqqW+Nd5ysaZBhj/Xz3tOqTxYb9AwWLHowxjUk8wUIChMg/KZzuHOebVGjAdR8vqg4WMyCBOeZQRsUl97RY/wpecU1o=
+	t=1743190963; cv=none; b=I5SxTAkNYMcCAEp0gp7AchTMCz1sQjEfHUndLyyQhI8QvxoGlg+4zJvlfew9IedvmaivHRBVbY6c5VXy0XxvzLz3BOBngio1SBleiTKpbIwhFFqkg/YT+o28pd+qJURmpsu9Wh3uvSuvqXNvnLo1jXH2c5X3wWk0lVDNwI7nsLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743190823; c=relaxed/simple;
-	bh=KKsyUxQ4/2JEE6+ClC2SNHy3GGNOF2LGSwEg6SNrX+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P/OvwupEtFj5JAa3m5YvIFOHGRKnGkOUtgFEiGSUNRm8yBhBiN3+o3dp5UuL8C6RXEPczEqsvI0GjtWzZTmvG0zc1t7+wYHEd4Cig8Bf/tWZ3VX0YfbClKMCR0/kYca26Qdx5hmR7pT7MkmaYL7Vvv+dWtTFLCHpPxTxcbYfkRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEYrYeAz; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743190963; c=relaxed/simple;
+	bh=IIFz4j2C2Eh7fAQD0vF3myZwWOH3MPOPveM/pvRkH1c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YOyMsqfvrQGZJS5rGUC00roqZ09k0rOiV6soIzmuMt2q1YG5mLKr06udzldNgoSvxv3rzwV9/vza3CUpGrUwwlNmCPNgPX9Y5QdaaF+i121OP/YonxuMtGEPHhI0ZtrpUyzKHxw2w6QaeKTQ+qKET9wt/Q+34X9aK7ut6CBRlCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dcPP/t60; arc=none smtp.client-ip=209.85.219.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEYrYeAz"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22622ddcc35so15508505ad.2;
-        Fri, 28 Mar 2025 12:40:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dcPP/t60"
+Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-6e8ff1b051dso3830486d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743190821; x=1743795621; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+1j76gMNeF+UKc3KMqp9AFFWx61AcVlZYyQ1Yks6V18=;
-        b=ZEYrYeAzruyRqrqEmnzt9J2N5+dHKb/O5m0gwjDY5R9+RU5IBYdCNOy80OLrHVq468
-         8konMbq5dUr4sbuDRhpzxdpkrUvckanvRfg0q9Hj/eU+9lCLP4VutZr3ZFWEJY2+t2Te
-         7fkauQXhGY804EqpVKSOIaerA3fTjFcM6Ede9Z1WdZO06zwcDRflw5v5pga1HdhLpItB
-         NB63PXnAlinT6BENU6s/QUhwLgEdZuZVAaMr265UOpHHcorNEwsroYfogWGMh66RahXI
-         8g56MlFDv/6NFTSPYoRlojDD5GaTpiRrFYWRdQIO1cvz8clBTk3CHTwj1B1QAoZgNSDG
-         nkXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743190821; x=1743795621;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=purestorage.com; s=google2022; t=1743190961; x=1743795761; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+1j76gMNeF+UKc3KMqp9AFFWx61AcVlZYyQ1Yks6V18=;
-        b=u6HHIl43Ppk7DD6pvmpzLWnvBQKvzXuW37tKH/dvl9qD8+gp1EtzJoWIqDYvua5ZDZ
-         IKF3gkxEJzuhH/wen7Bskuh79RyaVbVl6cfqWV1NLH9SljDy1P70d+mFXYIFZq9NMxFj
-         sVjGSkR0KL8PuBBYSRPln1GHKIWsVAwvJRTIICbr7KeSDMiNyMuFK9S9YMuNewnUa45y
-         gXMkfUw03ETNsaSXodPJr8/pQNcC1Lu28frDlKfYH/6o0mAMe0LPy6Sq1fFL36cFyMpO
-         J41xMo+CvvRAi/3bpeIOLgdwZxSO8rw5FmeZNghLTQe2N4P1+VMfhPwKtG1UR7Bf5Ue8
-         QGpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVO7N20QlP97bsF3aDzZ6BrSC6loADWJdnFOx3uqDqQWZ2A+ru4dCid8BherXlyFt3hmuvavvR6XaFr4oI=@vger.kernel.org, AJvYcCWd1owRoyq5e23I97xPubLvpSQh4/MmPUZb+tuhVKJD+ys0iOpbdIzbOr/w6EWUS8RPaLyC0tfV0N8/wp88FtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuhbC/4wv9KMOAeGTK+noX438A1usDP6BvkebtsUZn9WDxYg4d
-	tNJpdvFr4Lh0gOiawqLGYM4nLKFQPKtthqhvQiYBRPxEcTaSSxKKoo3qLA==
-X-Gm-Gg: ASbGncv0F3fRaburfFkssPSz8djj9GXDO6ZaIxFiYriyLD9MLg9a0QCIDzar2KcsAx8
-	x50/eQ4Oj2qKI9+b0ciBZ4htejDoxa7N10WmAXcR//FkDUuYUdN9P+CJwAi74saNysS//qwRALL
-	REBa2BYTpbLQPHIAZAolQIMwQCOn3Lnv3xAPOKqmTN6bbEJFeyHp3nfTCowQM1i3nFOl9f7sIfz
-	ehTSwInB4NggwjC/7y7wsM+U0rtYVCEsTdTTDTEGwMuavE9uE037pT8UjRfc0ZOfSYW8lME5ch7
-	rBXVoQ+qy06TJ6D4sHmwcuCU9ovr3QtYzANJGmw/3Qgc/qZIeEzzrQWUUfIj4iHLVBLzY7jpRih
-	4kUEIGN/xabNg
-X-Google-Smtp-Source: AGHT+IEmpk3kF1M9aSJxpWUx5foJSOKCpx3QH1t670AMmybb2Xyokz9GqYU6LbfCz/yHw8PYjMX5Ww==
-X-Received: by 2002:a17:903:240a:b0:223:65a9:ab86 with SMTP id d9443c01a7336-2292f9547e3mr8082045ad.12.1743190820622;
-        Fri, 28 Mar 2025 12:40:20 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1c7e:7fd6:5c7b:30a9:c6b6:f81d? ([2401:4900:1c7e:7fd6:5c7b:30a9:c6b6:f81d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f8badsm22325135ad.246.2025.03.28.12.40.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 12:40:20 -0700 (PDT)
-Message-ID: <5a62c225-243e-49c6-b1ea-c30fef2313b9@gmail.com>
-Date: Sat, 29 Mar 2025 01:10:15 +0530
+        bh=lLazX2sR1QiGKeTx3lHr1mcmdxpFqxEOFWM2x5oC3Fg=;
+        b=dcPP/t60EJ04nWA4KNJSsA28QsWcIhbE+btJeaFWjL8RBB9EWMcwDo7Jrw3pJ0a6Uy
+         OUhC42H5kJO3/3DtTC+OXjC963gJ5P3BfRtSvJ9BVfZdq4EIToMyLzU1MClaCAhc10qp
+         xpNSJ3Cq59ANj2a+VWs4SM18EBFgaM35wCrAB1PG1XZxXOpEPWt3iJ2aXGneAIiwhqrJ
+         z3FJA8V4LTgpMvSjhokkSeZYcTaM6eamUnAwMZRf/nkOnNjcfUb2KmXip3e12QRLtfSG
+         YMJ7LFo+ZE6aTGjH+xqiRcMq47/kYEOogqoLH+sTsIuP/xHQgktgLq+s3usLAuVQwJdS
+         PlaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743190961; x=1743795761;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lLazX2sR1QiGKeTx3lHr1mcmdxpFqxEOFWM2x5oC3Fg=;
+        b=b0C2/cHqCSwNrHFzTUHXRcIlBDetJOh8FgrTj5zQgF8T94k7hgCnZIldZCQFUQe2T9
+         Tv0M9whDq2hw1tx5fdX3c3ZVOBFI6rGXJbTp/4CunwMB1L4YdPk4QT47c+C1Ux2aUcat
+         WzLqZsn/aXD7QRoh8nVMZhOnj/Kp3f81yBTT2Lqr5piWVVh4KwV+BFRpF5SN0akMGdAk
+         sz5rYMZN39nva02NfwKBCYgIY0g3OeLPlTYOl9n9BPKN9BelO8/7QOrUxuTTiLYXSfKM
+         smIsQ0s2u5Mg/LOLA9zqSusT8NBDTmhXlGWA4miOHgJD1w/NaJSv2m862InBP3xaFrRl
+         RAgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPoXAOGgv5sUgRHSkF8OsQLhuRxu/t/GVBEmXSNVq6MLsO1BudotrfmHzl7rM+toYthKo7i2w7o9LQ/do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhVjBINmy2ky3mrhzJ2Fp2L7ycIR1DWAuRFl9rW534UrSAoF9z
+	v7RAbe8fIMSw3UwskVnM82+eMEDpGEurBdk47/hVLglJpKabNVYQ/0jX9TTGJgGVYPB/L92AZiO
+	9spT5z5DnacMlWZhfixmOI5ogvHTf/MUG
+X-Gm-Gg: ASbGnctfE/NyJOXLV4gHVnhUcJk5mdrk/4WH33mDbU31+9VOe8859i2veloga67zm8m
+	GIr+neliG8bcr6RJC0rN3KxuKcYSr6JStWsUdulIon2oTIn9Wvt0GGb4g3tcIzfMusrWCcce9L8
+	ImfBOr9AtmgarTMa7Yy7zoGNR+lUEkYneZta6y90OKsFRDw+/N/qNlcDvsZIS2/2fHkM//jCU3A
+	oPFv01tJHE45Nvi9Ufl93NoQ7nzN+KDw08evK33H7RghHYm/B/9zSQWDrsbaOnMoU3Pc5W/hHz+
+	CVPLTgei2UzsWr1FbJZejvVxJxnBzE9pg7j3LH1zK1DUGEGz
+X-Google-Smtp-Source: AGHT+IGTVuJ9wsa8D0YOPf/IR0bLXPoK/A+oaStmp2cHkFUKuudrLMCf9S4wmCfByWcdBV5jz2al3JueEfox
+X-Received: by 2002:a05:622a:110f:b0:474:e996:197a with SMTP id d75a77b69052e-477ed7b2291mr3086091cf.10.1743190960620;
+        Fri, 28 Mar 2025 12:42:40 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id d75a77b69052e-47782a2849asm2198541cf.6.2025.03.28.12.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 12:42:40 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 8A3F73402DD;
+	Fri, 28 Mar 2025 13:42:39 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 8669BE40DF3; Fri, 28 Mar 2025 13:42:39 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH 1/2] ublk: specify io_cmd_buf pointer type
+Date: Fri, 28 Mar 2025 13:42:29 -0600
+Message-ID: <20250328194230.2726862-2-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250328194230.2726862-1-csander@purestorage.com>
+References: <20250328194230.2726862-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] openrisc: Introduce new utility functions to flush
- and invalidate caches
-To: Stafford Horne <shorne@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
- sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250323195544.152948-1-sahilcdq@proton.me>
- <20250323195544.152948-3-sahilcdq@proton.me> <Z-Q1XChWkZjrt_6t@antec>
-Content-Language: en-US
-From: Sahil Siddiq <icegambit91@gmail.com>
-Autocrypt: addr=icegambit91@gmail.com; keydata=
- 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
- rPgMe6IIvn24UuW2f6fIt0AaqOWq
-In-Reply-To: <Z-Q1XChWkZjrt_6t@antec>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+io_cmd_buf points to an array of ublksrv_io_desc structs but its type is
+char *. Indexing the array requires an explicit multiplication and cast.
+The compiler also can't check the pointer types.
 
-Thank you for the review.
+Change io_cmd_buf's type to struct ublksrv_io_desc * so it can be
+indexed directly and the compiler can type-check the code.
 
-On 3/26/25 10:41 PM, Stafford Horne wrote:
-> On Mon, Mar 24, 2025 at 01:25:43AM +0530, Sahil Siddiq wrote:
->> According to the OpenRISC architecture manual, the dcache and icache may
->> not be present. When these caches are present, the invalidate and flush
->> registers may be absent. The current implementation does not perform
->> checks to verify their presence before utilizing cache registers, or
->> invalidating and flushing cache blocks.
->>
->> Introduce new functions to detect the presence of cache components and
->> related special-purpose registers.
->>
->> There are a few places where a range of addresses have to be flushed or
->> invalidated and the implementation is duplicated. Introduce new utility
->> functions and macros that generalize this implementation and reduce
->> duplication.
->>
->> Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
->> ---
->> Changes from v2 -> v3:
->> - arch/openrisc/include/asm/cacheflush.h: Declare new functions and macros.
->> - arch/openrisc/include/asm/cpuinfo.h: Implement new functions.
->>    (cpu_cache_is_present):
->>    1. The implementation of this function was strewn all over the place in
->>       the previous versions.
->>    2. Fix condition. The condition in the previous version was incorrect.
->>    (cb_inv_flush_is_implemented): New function.
->> - arch/openrisc/kernel/dma.c: Use new functions.
->> - arch/openrisc/mm/cache.c:
->>    (cache_loop): Extend function.
->>    (local_*_page_*): Use new cache_loop interface.
->>    (local_*_range_*): Implement new functions.
->> - arch/openrisc/mm/init.c: Use new functions.
->>
->>   arch/openrisc/include/asm/cacheflush.h | 17 +++++++++
->>   arch/openrisc/include/asm/cpuinfo.h    | 42 +++++++++++++++++++++
->>   arch/openrisc/kernel/dma.c             | 18 ++-------
->>   arch/openrisc/mm/cache.c               | 52 ++++++++++++++++++++++----
->>   arch/openrisc/mm/init.c                |  5 ++-
->>   5 files changed, 110 insertions(+), 24 deletions(-)
->>
->> diff --git a/arch/openrisc/include/asm/cacheflush.h b/arch/openrisc/include/asm/cacheflush.h
->> index 984c331ff5f4..0e60af486ec1 100644
->> --- a/arch/openrisc/include/asm/cacheflush.h
->> +++ b/arch/openrisc/include/asm/cacheflush.h
->> @@ -23,6 +23,9 @@
->>    */
->>   extern void local_dcache_page_flush(struct page *page);
->>   extern void local_icache_page_inv(struct page *page);
->> +extern void local_dcache_range_flush(unsigned long start, unsigned long end);
->> +extern void local_dcache_range_inv(unsigned long start, unsigned long end);
->> +extern void local_icache_range_inv(unsigned long start, unsigned long end);
->>   
->>   /*
->>    * Data cache flushing always happen on the local cpu. Instruction cache
->> @@ -38,6 +41,20 @@ extern void local_icache_page_inv(struct page *page);
->>   extern void smp_icache_page_inv(struct page *page);
->>   #endif /* CONFIG_SMP */
->>   
->> +/*
->> + * Even if the actual block size is larger than L1_CACHE_BYTES, paddr
->> + * can be incremented by L1_CACHE_BYTES. When paddr is written to the
->> + * invalidate register, the entire cache line encompassing this address
->> + * is invalidated. Each subsequent reference to the same cache line will
->> + * not affect the invalidation process.
->> + */
->> +#define local_dcache_block_flush(addr) \
->> +	local_dcache_range_flush(addr, addr + L1_CACHE_BYTES)
->> +#define local_dcache_block_inv(addr) \
->> +	local_dcache_range_inv(addr, addr + L1_CACHE_BYTES)
->> +#define local_icache_block_inv(addr) \
->> +	local_icache_range_inv(addr, addr + L1_CACHE_BYTES)
->> +
->>   /*
->>    * Synchronizes caches. Whenever a cpu writes executable code to memory, this
->>    * should be called to make sure the processor sees the newly written code.
->> diff --git a/arch/openrisc/include/asm/cpuinfo.h b/arch/openrisc/include/asm/cpuinfo.h
->> index 82f5d4c06314..7839c41152af 100644
->> --- a/arch/openrisc/include/asm/cpuinfo.h
->> +++ b/arch/openrisc/include/asm/cpuinfo.h
->> @@ -15,6 +15,9 @@
->>   #ifndef __ASM_OPENRISC_CPUINFO_H
->>   #define __ASM_OPENRISC_CPUINFO_H
->>   
->> +#include <asm/spr.h>
->> +#include <asm/spr_defs.h>
->> +
->>   struct cache_desc {
->>   	u32 size;
->>   	u32 sets;
->> @@ -34,4 +37,43 @@ struct cpuinfo_or1k {
->>   extern struct cpuinfo_or1k cpuinfo_or1k[NR_CPUS];
->>   extern void setup_cpuinfo(void);
->>   
->> +/*
->> + * Check if the cache component exists.
->> + */
->> +static inline bool cpu_cache_is_present(const unsigned int cache_type)
->> +{
->> +	unsigned long upr = mfspr(SPR_UPR);
->> +
->> +	return !!(upr & (SPR_UPR_UP | cache_type));
->> +}
->> +
->> +/*
->> + * Check if the cache block flush/invalidate register is implemented for the
->> + * cache component.
->> + */
->> +static inline bool cb_inv_flush_is_implemented(const unsigned int reg,
->> +					       const unsigned int cache_type)
->> +{
->> +	unsigned long cfgr;
->> +
->> +	if (cache_type == SPR_UPR_DCP) {
->> +		cfgr = mfspr(SPR_DCCFGR);
->> +		if (reg == SPR_DCBFR)
->> +			return !!(cfgr & SPR_DCCFGR_CBFRI);
->> +
->> +		if (reg == SPR_DCBIR)
->> +			return !!(cfgr & SPR_DCCFGR_CBIRI);
->> +	}
->> +
->> +	/*
->> +	 * The cache block flush register is not implemented for the instruction cache.
->> +	 */
->> +	if (cache_type == SPR_UPR_ICP) {
->> +		cfgr = mfspr(SPR_ICCFGR);
->> +		return !!(cfgr & SPR_ICCFGR_CBIRI);
->> +	}
->> +
->> +	return false;
->> +}
-> 
-> Could these 2 functions move to cache.c?
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+---
+ drivers/block/ublk_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Sure, I'll do that.
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 355a59c78539..ed73e2ffdf09 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -153,11 +153,11 @@ struct ublk_queue {
+ 	int q_id;
+ 	int q_depth;
+ 
+ 	unsigned long flags;
+ 	struct task_struct	*ubq_daemon;
+-	char *io_cmd_buf;
++	struct ublksrv_io_desc *io_cmd_buf;
+ 
+ 	bool force_abort;
+ 	bool timeout;
+ 	bool canceling;
+ 	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
+@@ -701,15 +701,15 @@ static inline bool ublk_rq_has_data(const struct request *rq)
+ }
+ 
+ static inline struct ublksrv_io_desc *ublk_get_iod(struct ublk_queue *ubq,
+ 		int tag)
+ {
+-	return (struct ublksrv_io_desc *)
+-		&(ubq->io_cmd_buf[tag * sizeof(struct ublksrv_io_desc)]);
++	return &ubq->io_cmd_buf[tag];
+ }
+ 
+-static inline char *ublk_queue_cmd_buf(struct ublk_device *ub, int q_id)
++static inline struct ublksrv_io_desc *
++ublk_queue_cmd_buf(struct ublk_device *ub, int q_id)
+ {
+ 	return ublk_get_queue(ub, q_id)->io_cmd_buf;
+ }
+ 
+ static inline int __ublk_queue_cmd_buf_size(int depth)
+-- 
+2.45.2
 
->>   #endif /* __ASM_OPENRISC_CPUINFO_H */
->> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
->> index b3edbb33b621..3a7b5baaa450 100644
->> --- a/arch/openrisc/kernel/dma.c
->> +++ b/arch/openrisc/kernel/dma.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/pagewalk.h>
->>   
->>   #include <asm/cpuinfo.h>
->> +#include <asm/cacheflush.h>
->>   #include <asm/spr_defs.h>
->>   #include <asm/tlbflush.h>
->>   
->> @@ -24,9 +25,6 @@ static int
->>   page_set_nocache(pte_t *pte, unsigned long addr,
->>   		 unsigned long next, struct mm_walk *walk)
->>   {
->> -	unsigned long cl;
->> -	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
->> -
->>   	pte_val(*pte) |= _PAGE_CI;
->>   
->>   	/*
->> @@ -36,8 +34,7 @@ page_set_nocache(pte_t *pte, unsigned long addr,
->>   	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
->>   
->>   	/* Flush page out of dcache */
->> -	for (cl = __pa(addr); cl < __pa(next); cl += cpuinfo->dcache_block_size)
->> -		mtspr(SPR_DCBFR, cl);
->> +	local_dcache_range_flush(__pa(addr), __pa(next));
->>   
->>   	return 0;
->>   }
->> @@ -98,21 +95,14 @@ void arch_dma_clear_uncached(void *cpu_addr, size_t size)
->>   void arch_sync_dma_for_device(phys_addr_t addr, size_t size,
->>   		enum dma_data_direction dir)
->>   {
->> -	unsigned long cl;
->> -	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
->> -
->>   	switch (dir) {
->>   	case DMA_TO_DEVICE:
->>   		/* Flush the dcache for the requested range */
->> -		for (cl = addr; cl < addr + size;
->> -		     cl += cpuinfo->dcache_block_size)
->> -			mtspr(SPR_DCBFR, cl);
->> +		local_dcache_range_flush(addr, addr + size);
->>   		break;
->>   	case DMA_FROM_DEVICE:
->>   		/* Invalidate the dcache for the requested range */
->> -		for (cl = addr; cl < addr + size;
->> -		     cl += cpuinfo->dcache_block_size)
->> -			mtspr(SPR_DCBIR, cl);
->> +		local_dcache_range_inv(addr, addr + size);
->>   		break;
->>   	default:
->>   		/*
->> diff --git a/arch/openrisc/mm/cache.c b/arch/openrisc/mm/cache.c
->> index eb43b73f3855..aca64c5a20b3 100644
->> --- a/arch/openrisc/mm/cache.c
->> +++ b/arch/openrisc/mm/cache.c
->> @@ -14,31 +14,67 @@
->>   #include <asm/spr_defs.h>
->>   #include <asm/cache.h>
->>   #include <asm/cacheflush.h>
->> +#include <asm/cpuinfo.h>
->>   #include <asm/tlbflush.h>
->>   
->> -static __always_inline void cache_loop(struct page *page, const unsigned int reg)
->> +static __always_inline void cache_loop(struct page *page, unsigned long *start,
->> +				       unsigned long *end, const unsigned int reg,
->> +				       const unsigned int cache_type)
->>   {
->> -	unsigned long paddr = page_to_pfn(page) << PAGE_SHIFT;
->> -	unsigned long line = paddr & ~(L1_CACHE_BYTES - 1);
->> +	unsigned long paddr, next;
->>   
->> -	while (line < paddr + PAGE_SIZE) {
->> -		mtspr(reg, line);
->> -		line += L1_CACHE_BYTES;
->> +	if (!cpu_cache_is_present(cache_type))
->> +		return;
->> +
->> +	if (!cb_inv_flush_is_implemented(reg, cache_type))
->> +		return;
-> 
-> This check may be a bit overkill, but OK.
-
-I thought I would implement this because I was not sure of what would happen
-when attempting to read from these registers in a processor that didn't have
-them.
-
->> +	if (page) {
->> +		paddr = page_to_pfn(page) << PAGE_SHIFT;
->> +		next = paddr + PAGE_SIZE;
->> +		paddr &= ~(L1_CACHE_BYTES - 1);
->> +	} else if (start && end) {
->> +		paddr = *start;
->> +		next = *end;
-> 
-> Overloading the one function with page and start/end seems a bit messy.
-> 
-> It may be nicer to have 2 functions:
-> 
->    cache_loop_page(page, reg, cache_type) {
->       unsigned long paddr = page_to_pfn(page) << PAGE_SHIFT;
->       unsiogned long end = paddr + PAGE_SIZE;
->       paddr &= ~(L1_CACHE_BYTES - 1);
->       cache_loop(paddr, end, reg, cache_type);
->    }
-> 
->    cache_loop(start, end, reg, cache_type)
-> 
->> +	} else {
->> +		printk(KERN_ERR "Missing start and/or end address.\n");
->> +		return;
-> 
-> Then this could be removed.
-
-I agree. This is cleaner. I'll make the relevant changes.
-
-Thanks,
-Sahil
