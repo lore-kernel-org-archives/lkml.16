@@ -1,173 +1,208 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0031BE86E;
-	Fri, 28 Mar 2025 21:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E341EDA10;
+	Fri, 28 Mar 2025 21:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196166; cv=none; b=CRP8QTN/o0scrVFIncv1DgUGX/fA9L4ckFoGTVCw3CYuS4WdNjF7zYUB4t2xkP49puiixyWC0qd00rOjJZGVWzLy1tvFUkDG5CV/E4Za5CP7i0G0mkO/dJl7XYK+ruvsnRZdDtg6DVVRfW/JG2FF5DVecwDOauqvAHTi65sgr/s=
+	t=1743196208; cv=none; b=iZtQyai6Im/O9PHOq+GHOP2sGU4TcErRsTqtizW9VFNaNzxd4bIHuMihZmSGfAy4Bg+rY9mdYGN4hTvx3gkdbKlycpRNv4szRIKEG4LajyTsCUKr0P5skej9mogmk4mSzQ61zvkn69RBIvq1ylNoXWBLOaUhxTG4rpDueJ8alKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196166; c=relaxed/simple;
-	bh=LboS8TQ6QkgeY6sglCIVCClzvsM5P58IqfwxTUiDJv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbMlN58SrpBiaia70GKNK9N+KvoGEwWsfmVxvn6ze9gUefZdhp5P2tR82OO2OVB7b5THPDRnpXk7NqcXkNQLnjh46CvzGX6R1Mlyy6+KA0VT2EU+f0oVqYM29ap8lutEekqZP2jolxTGAanofG+jDIU6MGAB97e7UMRweSjPvjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geX4sRzp; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743196208; c=relaxed/simple;
+	bh=++2rvVuivnu/sxuWqJDDn9O3RKew/CIMlKMDDwQyZa4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p4EgAHFaZOkvfeo8GHnZs6IAMNHWgzL7AXMUHgwAI0tujlyDgHyZANTpLlj+GmCfRs+90OcFTYi2sYW41BGXP6Yzy7zkHtuBVtudj6l0TQqKIatO1VxScU4qktoX+chBbA5bDaPuRN83d0KLdYwry75xLzh9hSy53tlvQMnKL+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIAVP/Hh; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geX4sRzp"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22409077c06so79777705ad.1;
-        Fri, 28 Mar 2025 14:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743196164; x=1743800964; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hwl4NdWNLA+WiZCnf70iMDLkFwdpvil0W/uJAOBiirY=;
-        b=geX4sRzpEDdszyAsaG1bRpY5qEHZfU+wZNBj6IMHNfRxD3nKgx20WcAZt74dgbQNwt
-         5zfm2bT8ZwrOY3JyEaeJSZCZ0ApsNHELI0rIJWJNSZ5kflqfK6gEHzPqX/Y6t5OOxaRm
-         t8P7v/bx51taN+YBpnSP5ciDeI52qN8nnIuk13XOVhWq88oEineO6YisZmy+ZiXzZEs7
-         LxufmHHDqtUefA5mvUjUEcjjE1OOVk9foDUkrY9UGTKZVpW0iZe3MuxzEr5cKj/RAIX/
-         ltClcQfpNUrrdclWk8ghd9LUu2+pBfH32mUE2WXr9ecKIsq5ZzGzIoPVMymMF7Jbod3D
-         GBFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743196164; x=1743800964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hwl4NdWNLA+WiZCnf70iMDLkFwdpvil0W/uJAOBiirY=;
-        b=SID62Pq0QOEWdsfTS+ZBje4n22u0TMIJQDBGz0QlMAJ5hKFBbOqRqanM5hSo7UtPp6
-         i0hcpjaSLn9Zvu7zUeRMHiu+y6yRjj1oL6Rm9OZbaZZr61Gc8QjmhuMY+UVuBcfJ4Zwu
-         CShSCLpOSpji/Ub2bkLBbiDb3VXiLP18ghVorR2uddvjAJZ77hV8sPRySzvg4o+p9Z7g
-         ej8INeOxzGyZ37+UPla48m6Lj5ZFx6fFeBEXOWUYotxLxPIaoGi6n+ETsOhnew6Y8o6F
-         Dl4pamPMMvJD7wN4LuzP90UWboTpjHG+Wsq4grl8pt0J8bjS34STs8CqZ/Q046cb2Jhf
-         sMSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAzjawwQdAiN9BjfmkXzBr/c1ORRpyqwUW491tXefanqVx+IcMEDAYfVsGTLbb81EgmT0weITNk0OvFPoZOGQL@vger.kernel.org, AJvYcCVxGGKJG3IQE01ZQa5yIf6KEht5G5+OCbq5fjLVRjvTZR5cLPDwCTK4ha1fgEHGZupGvxQf4A069agkmLs=@vger.kernel.org, AJvYcCW2sbP+RCglBXFOkH6AUbeb2g2BEn1x7BfL87K3VvrvQSGGbZlDaPPNnXbqUGbC+tMC6bhK+kYZu00r570=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpDBt/OU/YEZblq/L82uXm7++TyNAxCODtukkFmTdXzRDfKPtx
-	ncHM0g9yMk2cBlRA8s0SmL5Xabv/H+Yqz4uCe/qbKsFrLOoWVHlI
-X-Gm-Gg: ASbGnctC90RbJ3Uv2G4kvF8qibiK9MydutHBiZsiHS8TR9dN7mT/aOuplGMKhENz214
-	BEEKRaoBAA1UbqBbXUS2oKej1ahSxNIXHWUnAGnjWsPOi0UgAqxNAGf8tb4358dVf50a0qiUmM/
-	ppsufGnQlXcwovS0Ab6XpTmsvZYjYmR0jD45eUs8ABcbOGUKED0WQXQEu1n+uMcH384xelq3H7A
-	atX9wIt43Bh2P3kzn4XHDy89zFGORdnNF+PhhvDMEZYv46xLR4pbxZP0csbnlWmXxxRbzgZcCGZ
-	oMb85BdtAwftjxc08+c+963h40CcZninqWN3YJJi3jZIXmvrPnI2k3JEWj9FCq+XXKZDoLCJf/m
-	Y
-X-Google-Smtp-Source: AGHT+IHd9fQtVFVVgph9WnMxD+yvA2cH9ftmKIA/aV/HJRnRVCXLI90/TItx7A2zuPaJnIRPAtH+Uw==
-X-Received: by 2002:a17:903:2ce:b0:220:e5be:29c7 with SMTP id d9443c01a7336-2292f9f64fbmr10191425ad.39.1743196164150;
-        Fri, 28 Mar 2025 14:09:24 -0700 (PDT)
-Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee22a2sm23351755ad.81.2025.03.28.14.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 14:09:23 -0700 (PDT)
-Date: Fri, 28 Mar 2025 14:09:20 -0700
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: Huan Yang <link@vivo.com>
-Cc: bingbu.cao@linux.intel.com, Matthew Wilcox <willy@infradead.org>,
-	Christoph Hellwig <hch@lst.de>, Gerd Hoffmann <kraxel@redhat.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	opensource.kernel@vivo.com
-Subject: Re: [RFC PATCH 0/6] Deep talk about folio vmap
-Message-ID: <Z-cQAIsh3dAhaT6s@fedora>
-References: <20250327092922.536-1-link@vivo.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIAVP/Hh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743196206; x=1774732206;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=++2rvVuivnu/sxuWqJDDn9O3RKew/CIMlKMDDwQyZa4=;
+  b=HIAVP/HhYKYEiBWoGuMdtMhTwOYg2u7xkJV+lzJaY3dhdnQ1mEwST5WW
+   afAbivCg5XfJyTX92y02VlNQSQtx9iSK++Er+dL5JyKGYfbo8AT5/1DyH
+   iz6X6ZZywgzqCrR3Y63k4DpZbqehVO3B260mvi5vvavsw7Qw8Y8fBBZTb
+   Cs+f/8h00WrvYvjCRrwbZaWz2/h50ts4zRQ/o3HzWK/dRS9iWdOSqfqlX
+   sPZTCpPaS8eFrGUJj2T26+/11UbqaLa1c4bL0+YOlxq4TtZDEa39ePtn7
+   3V6oDYYj2qXd40olNpI5p0c4feOUward4qH0XRiHkfKVP8Fuk8uh4HCSI
+   w==;
+X-CSE-ConnectionGUID: lZIrBFv1T7eLOMxTlSER5g==
+X-CSE-MsgGUID: 98HA7bTxRzKYiiZ/tV3+PA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44464333"
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="44464333"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 14:10:04 -0700
+X-CSE-ConnectionGUID: tK1MpVj5QC+ydFDFL5eukg==
+X-CSE-MsgGUID: iedfHOjgSOSJ6yaOWcznDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="125781524"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.185]) ([10.125.108.185])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 14:10:02 -0700
+Message-ID: <ae1e1b6f-3435-44f6-890b-7c7bd013113a@intel.com>
+Date: Fri, 28 Mar 2025 14:10:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327092922.536-1-link@vivo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low
+ Mem Hole
+To: Robert Richter <rrichter@amd.com>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <Z91Au5en7r6D7IsW@rric.localdomain> <3301434.hkbZ0PkbqX@fdefranc-mobl3>
+ <Z-Zlrm8emmOtQjhu@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z-Zlrm8emmOtQjhu@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 05:28:27PM +0800, Huan Yang wrote:
-> Bingbu reported an issue in [1] that udmabuf vmap failed and in [2], we
-> discussed the scenario of folio vmap due to the misuse of vmap_pfn
-> in udmabuf.
-> 
-> We reached the conclusion that vmap_pfn prohibits the use of page-based
-> PFNs:
-> Christoph Hellwig : 'No, vmap_pfn is entirely for memory not backed by
-> pages or folios, i.e. PCIe BARs and similar memory.  This must not be
-> mixed with proper folio backed memory.'
-> 
-> But udmabuf still need consider HVO based folio's vmap, and need fix
-> vmap issue. This RFC code want to show the two point that I mentioned
-> in [2], and more deep talk it:
-> 
-> Point1. simple copy vmap_pfn code, don't bother common vmap_pfn, use by
-> itself and remove pfn_valid check.
-> 
-> Point2. implement folio array based vmap(vmap_folios), which can given a
-> range of each folio(offset, nr_pages), so can suit HVO folio's vmap.
-> 
-> Patch 1-2 implement point1, and add a test simple set in udmabuf driver.
-> Patch 3-5 implement point2, also can test it.
-> 
-> Kasireddy also show that 'another option is to just limit udmabuf's vmap()
-> to only shmem folios'(This I guess folio_test_hugetlb_vmemmap_optimized
-> can help.)
-> 
-> But I prefer point2 to solution this issue, and IMO, folio based vmap still
-> need.
-> 
-> Compare to page based vmap(or pfn based), we need split each large folio
-> into single page struct, this need more large array struct and more longer
-> iter. If each tail page struct not exist(like HVO), can only use pfn vmap,
-> but there are no common api to do this.
-> 
-> In [2], we talked that udmabuf can use hugetlb as the memory
-> provider, and can give a range use. So if HVO used in hugetlb, each folio's
-> tail page may freed, so we can't use page based vmap, only can use pfn
-> based, which show in point1.
-> 
-> Further more, Folio based vmap only need record each folio(and offset,
-> nr_pages if range need). For 20MB vmap, page based need 5120 pages(40KB),
-> 2MB folios only need 10 folio(80Byte).
-> 
-> Matthew show that Vishal also offered a folio based vmap - vmap_file[3].
-> This RFC patch want a range based folio, not only a full folio's map(like
-> file's folio), to resolve some problem like HVO's range folio vmap.
 
-Hmmm, I should've been more communicative, sorry about that. V1 was
-poorly implemented, and I've had a V2 sitting around that does Exactly
-what you want.
 
-I'll send V2 to the mailing list and you can take a look at it;
-preferrably you integrate that into this patchset instead (it would
-make both the udma and vmalloc code much neater).
+On 3/28/25 2:02 AM, Robert Richter wrote:
+> On 25.03.25 17:13:50, Fabio M. De Francesco wrote:
+>> On Friday, March 21, 2025 11:34:35 AM Central European Standard Time Robert Richter wrote:
+>>> Fabio,
+>>>
+>>> On 14.03.25 12:36:29, Fabio M. De Francesco wrote:
+>>>> The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+>>>> Physical Address (HPA) windows that are associated with each CXL Host
+>>>> Bridge. Each window represents a contiguous HPA that may be interleaved
+>>>> with one or more targets (CXL v3.1 - 9.18.1.3).
+>>>>
+>>>> The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+>>>> memory to which systems cannot send transactions. On those systems, BIOS
+>>>> publishes CFMWS which communicate the active System Physical Address (SPA)
+>>>> ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+>>>> SPA range trims out the hole, and capacity in the endpoint is lost with no
+>>>> SPA to map to CXL HPA in that hole.
+>>>>
+>>>> In the early stages of CXL Regions construction and attach on platforms
+>>>> with Low Memory Holes, the driver fails and returns an error because it
+>>>> expects that the CXL Endpoint Decoder range is a subset of the Root
+>>>> Decoder's (SPA >= HPA). On x86 with LMH's, it happens that SPA < HPA.
+>>>>
+>>>> Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+>>>> Decoders or already made CXL Regions and Decoders to allow the
+>>>> construction of new CXL Regions and the attachment of Endpoint Decoders,
+>>>> even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Decoder
+>>>> range end to match Root Decoder's.
+>>>>
+>>>> - Patch 1/4 changes the calling conventions of three match_*_by_range()
+>>>>   helpers in preparation of 3/4.
+>>>> - Patch 2/4 Introduces helpers to detect LMH's and also one to adjust
+>>>>   the HPA range end for CXL Regions construction.
+>>>> - Patch 3/4 enables CXL Regions construction and Endpoint Decoders
+>>>>   attachment by matching Root Decoders or Regions with Endpoint
+>>>>   Decoders, adjusting Endpoint Decoders HPA range end, and relaxing
+>>>>   constraints while Endpoints decoders' attachment.
+>>>> - Patch 4/4 simulates a LMH for the CXL tests on patched CXL driver.
+>>>>
+>>>> Many thanks to Alison, Dan, and Ira for their help and for their reviews
+>>>> of my RFC on Intel's internal ML.
+>>>>
+>>>> Commenting on v1, Alison wrote a couple of observations on what users
+>>>> will see. I suggest anyone interested to see how this series affect
+>>>> users to take a look at her observations.[0] Thank you!
+>>>>
+>>>> Changes for v3:
+>>>>
+>>>>   Re-base the series on cxl/next.
+>>>>
+>>>>   1/4 - 2/4:
+>>>> 	Constify local variables.
+>>>>   3/4:
+>>>> 	Call arch_match_region() from region_res_match_cxl_range().
+>>>>   4/4:
+>>>> 	arch_match_region() - Check that region end is under start + 4G;
+>>>> 	arch_match_spa() - Check that SPA range start is cfmws_range_start.
+>>>
+>>> I have sent comments for version 1 and suggested a simpler approach
+>>> for this to implement.
+>>>
+>> I replied to your comments for version 1. Please find my message at 
+>> https://lore.kernel.org/linux-cxl/9930375.eNJFYEL58v@fdefranc-mobl3/.
+> 
+> The outcome was "I'll think about it.".
+> 
+>>>
+>>> My comments haven't been addressed yet,
+>>>
+>> I think it's not possible to detect an LMH while still in cxl_port_add().
+> 
+> Why is that not possible? I have outlined a solution before: Implement
+> a function to run platform specific port setup. Run a platform check.
+> Enable a platform dependend callback. Setup the port using platform
+> specifics.
+> 
+>> Therefore, I think that this is the best way to go. It works to prevent
+>> the driver to fail to create Regions and attach Endpoint Decoders on x86
+>> with Low Memory Holes, provided that the lower SPA range starts at 0x0.
+> 
+> An alternative works as well, that is not an argument.
+> 
+>>
+>> On platforms with other kind of holes, the driver will continue to fail
+>> as it currently does. 
+> 
+> And those platform will then add more specific code and more
+> complexity in the main path other need to run? See, the code needs to
+> be encapsulated.
+> 
+>>>
+>>> but we
+>>> need better isolation to reduce interference with other platforms and
+>>> archs. Please take a look again.
+>>>
+>> Interference? Do you mean that this series would make the driver fail on 
+>> other platforms? 
+> 
+> No, other platforms must deal with that specific code and constrains.
+> 
+>>
+>> Of course I don't want anything like that. I'm not clear about it...
+>> Would you please describe how would this series interfere and what
+>> would happen on other platforms?
+> 
+> Other platforms should not care about platform-specifics of others. So
+> again, use a platform check and only enable that code there necessary.
+> And this requires a well defined interface to common code.
 
-> Please give me more suggestion.
+Hi Robert,
+Can you please share more on the background information and/or your specific concerns on the possible memory holes in the other platforms that need to be considered and not covered by Fabio's code? Let's all get on the same page of what specifics we need to consider to make this work. Preferably I want to avoid arch and platform specific code in CXL if possible. Of course that may not always be possible. Would like see if we can avoid a bunch of #ifdef X86/ARM/INTEL/AMD and do it more cleanly. But fully understand the situation first would be helpful to determine that. Thank you!
+
+DJ
+
 > 
-> Test case:
-> //enable/disable HVO
-> 1. echo [1|0] > /proc/sys/vm/hugetlb_optimize_vmemmap
-> //prepare HUGETLB
-> 2. echo 10 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
-> 3. ./udmabuf_vmap
-> 4. check output, and dmesg if any warn.
+> Thanks,
 > 
-> [1] https://lore.kernel.org/all/9172a601-c360-0d5b-ba1b-33deba430455@linux.intel.com/
-> [2] https://lore.kernel.org/lkml/20250312061513.1126496-1-link@vivo.com/
-> [3] https://lore.kernel.org/linux-mm/20250131001806.92349-1-vishal.moola@gmail.com/
+> -Robert
 > 
-> Huan Yang (6):
->   udmabuf: try fix udmabuf vmap
->   udmabuf: try udmabuf vmap test
->   mm/vmalloc: try add vmap folios range
->   udmabuf: use vmap_range_folios
->   udmabuf: vmap test suit for pages and pfns compare
->   udmabuf: remove no need code
-> 
->  drivers/dma-buf/udmabuf.c | 29 +++++++++-----------
->  include/linux/vmalloc.h   | 57 +++++++++++++++++++++++++++++++++++++++
->  mm/vmalloc.c              | 47 ++++++++++++++++++++++++++++++++
->  3 files changed, 117 insertions(+), 16 deletions(-)
-> 
-> --
-> 2.48.1
-> 
+>>
+>> Thanks,
+>>
+>> Fabio
+>>>
+>>> Many thanks,
+>>>
+>>> -Robert
+>>>
+>>
+>>
+>>
+>>
+
