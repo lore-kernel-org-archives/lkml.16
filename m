@@ -1,78 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6418B21ADBC;
-	Fri, 28 Mar 2025 12:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549121ADBC;
+	Fri, 28 Mar 2025 12:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743164824; cv=none; b=m1hYGKfDYJGgbTGsnM+k/WYxG1BSwnDaaL8YBBCq9Y+8gzDZ0oenWIdujv/PkhdTdNHTeWCI69LsyuaIX8kzrl+Pi3daGdAmS3OTike9Q7903vQcLiktw/PRuPUz/LUkuEcKYTEU9ihfrmj38qrVRktxKhlpi8PSr2EIYs132sA=
+	t=1743164974; cv=none; b=gxzPAXkAyDjd1DTK/+Crzl5MysEiAEgy1BwRyKXFc+DAEIWz4dde4JLpJeOjnFMTlAsbj44kOB6lnrLxBhVSVpWKEN8+OLg/u3RBMxJFdi51XxwDR3wjh1/t1IZj7T207DKDFjhhX3guBefwWW1gKbfkYVSvehGl3MY+3FKlZCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743164824; c=relaxed/simple;
-	bh=4A51r4J4k6fvL8K9vhlNLWy+yBPtoZPbbeUliBdFZmQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jptIqgbC/gY6VS0GyQlyaI/z8p2X86jrgIfnrdjXkVX5emMJoAAhiahHUKjQcw9L1dzxdXgAcg4EnkTkAa95XtQSgkT6H1d43aQ/oXIoRxPmBDNNgS7QGwMndxD0s2vi6bDIbbDH7VB1Wu1O3zbyZYJaNcB5wUxGBiRmBeA/DF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D585169C;
-	Fri, 28 Mar 2025 05:27:06 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D64E3F58B;
-	Fri, 28 Mar 2025 05:27:00 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH 2/2] perf hist: Refine signed integer checking
-Date: Fri, 28 Mar 2025 12:26:44 +0000
-Message-Id: <20250328122644.2383698-3-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250328122644.2383698-1-leo.yan@arm.com>
-References: <20250328122644.2383698-1-leo.yan@arm.com>
+	s=arc-20240116; t=1743164974; c=relaxed/simple;
+	bh=NC71RCgKx1VzfATo4SMybFVbIZBLe1wK7psQL34+xRs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=RBBwa0D8zlQ6Ndh4RQwFzGkyPvIdv7oMAztuvqJiXfB8Nf+UebK9OJkaGLuBV71bL7jDqExi6ZEnoJWKX7efqncuKxnxdZbeVKoemUnqtN6cm6FTuL/pCyOQiYjA9yIBMTc7UpR/pYTS+L1T0dlrDFre2uM7MLaUMlG+DFt0F5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cf1eAIlL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/6ymHg8O; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cf1eAIlL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/6ymHg8O"
+Date: Fri, 28 Mar 2025 12:29:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743164970;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nLxxtQfWt8F1cTUmw8yduUelufCDQn4P8udW6pGvP/k=;
+	b=Cf1eAIlL/K5XY/cc7tODr7B6wDput7sEFib/bZBdM4E2ZupjgMh+23xOqLIOwGxzLFbaLo
+	nMoklVDW+4Ikbh+3h6qUd5v6zZA730wgtB6BygegTSQ01+V42LlHe6eelcpk+vuwHrj6ij
+	hJXemRJdbLUnDsWXHRKCdIezv7L83sXAnP16GayskgIaEOTtuK+vUD2+41ZIjSEgcfUIqK
+	vvCC+Am6PSWtcr52MP3pbhXfiF4Ky/VhvgxVFB8AVWsyutVS2k+OZrBZLbVKCHlw+zKJGm
+	C/bPr/73KzQQ6WUaCfbINGqFkgJhbWfcm309QcM/NPam6uRN/H7xy199VtowIQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743164970;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nLxxtQfWt8F1cTUmw8yduUelufCDQn4P8udW6pGvP/k=;
+	b=/6ymHg8OCEXLmslxA8iFXtfmrc2dhH5zyeTgTqQkwz3gKjkz4sHU2tKYcFUrxSxwaz+8Sv
+	uuAf1YIxHDubRgDA==
+From: "tip-bot2 for Boris Ostrovsky" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/microcode/AMD: Fix __apply_microcode_amd()'s
+ return value
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250327230503.1850368-2-boris.ostrovsky@oracle.com>
+References: <20250327230503.1850368-2-boris.ostrovsky@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174316496492.14745.16906685061384112632.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-To avoid any issues caused by overflow in a signed integer, and since
-the limit to USHRT_MAX is not necessary, this patch simply decrements
-the signed integer and checks that it is greater than 0.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+Commit-ID:     31ab12df723543047c3fc19cb8f8c4498ec6267f
+Gitweb:        https://git.kernel.org/tip/31ab12df723543047c3fc19cb8f8c4498ec6267f
+Author:        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+AuthorDate:    Thu, 27 Mar 2025 19:05:02 -04:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 28 Mar 2025 12:49:02 +01:00
+
+x86/microcode/AMD: Fix __apply_microcode_amd()'s return value
+
+When verify_sha256_digest() fails, __apply_microcode_amd() should propagate
+the failure by returning false (and not -1 which is promoted to true).
+
+Fixes: 50cef76d5cb0 ("x86/microcode/AMD: Load only SHA256-checksummed patches")
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20250327230503.1850368-2-boris.ostrovsky@oracle.com
 ---
- tools/perf/ui/stdio/hist.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/kernel/cpu/microcode/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 7ac4b98e28bc..6da624309fab 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <linux/string.h>
-@@ -25,10 +24,7 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
- 	int i;
- 	int ret = fprintf(fp, "            ");
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 138689b..b61028c 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -600,7 +600,7 @@ static bool __apply_microcode_amd(struct microcode_amd *mc, u32 *cur_rev,
+ 	unsigned long p_addr = (unsigned long)&mc->hdr.data_code;
  
--	if (left_margin > USHRT_MAX)
--		left_margin = USHRT_MAX;
--
--	for (i = 0; i < left_margin; i++)
-+	for (i = left_margin; i > 0; i--)
- 		ret += fprintf(fp, " ");
+ 	if (!verify_sha256_digest(mc->hdr.patch_id, *cur_rev, (const u8 *)p_addr, psize))
+-		return -1;
++		return false;
  
- 	return ret;
--- 
-2.34.1
-
+ 	native_wrmsrl(MSR_AMD64_PATCH_LOADER, p_addr);
+ 
