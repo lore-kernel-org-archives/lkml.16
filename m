@@ -1,90 +1,144 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DC3214205;
-	Fri, 28 Mar 2025 11:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B3321ABBD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743160493; cv=none; b=CZhzz5WG65pOluKaFZl8b+81l59475nvQGcx9uCdh9l4vob6MjS9sO81eYorG62ybfCuxsyBnju1T/9Gqf6MxmOwW7c5Xu1cs8D7etWYUSAM6/nPpvVI/1dWFRcUlemOVaDdOch3JqgkazO9p5/qmhYt6Ez6H539gFWaSzrXuAw=
+	t=1743160497; cv=none; b=G/v5AktdfkE7Ces0TD1iJmjn04ZjWpEjLqtktsTthEYK2CvcoqybnUA1JgAZQZXUFldkgWvkGIByeMJOjgTKPYv1vePuH73++cJusB6gzDLZDbN+HLRImVhXXDuO0dG3UhYrOS5a5sbvQwhGP/Gfu7aHtohy2IZnp59k7GRgoFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743160493; c=relaxed/simple;
-	bh=1T51feJFPE7kZM0F6IZyMUjawj05EKro+rczGe7vhBw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XdtGha4Qctx0g+He//6Isuo27Nr7CLR+/jtt/YitiL/Gk3987skwaWzvQTjYyiZXdK6EA1sCJao5zK0ycqCmroTzxJRPMy+E7sQ3zSnGn3rGck55lCAFIqZZdgMYQOUR3pEyhBqzL5/aNmjLqJoGMgIIzLvuEDLpo8ggx+9N2+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wEIxN62M; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743160497; c=relaxed/simple;
+	bh=HNdCrYO0ofr01KbowJ1S3NSmlOlAaoQA+PA9qREwNBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dmz5AfnzNiZ7aA73lijTVswZ/P2zZJwJRDN0rbLsWGjIGaE0ywz88lPo2ddw62EYajzj4K9ibVtJ0AVUTYIvkjS1M7yaPqIP6me35hce+h2KcqTsO/gBYwxoV0W5jzDvl2EwNinYPZQp7+bdrkCyWGdxcrBqlpp441pXEBwdlV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cuDgzPjV; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wEIxN62M"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52SBEiXE2102971
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Mar 2025 06:14:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743160484;
-	bh=9ghP861EMT1qEkNnFXGo6eMHzjXYl6QYHOQmMTm96Dg=;
-	h=From:To:CC:Subject:Date;
-	b=wEIxN62MNZCLPjpLloMEWvliQYbyAcGhX2cFCh9s2MtM6NzhK7cdOxPftr0jFlDse
-	 mAB4H/TCnpBEBX6aC2G804RPsPldhuEVQm1zfcX2kM53Jp/ipUPWhNppv50CVcFtRL
-	 IJgYIwVPn5C0f3wl7tr/Ww0QzAi2mRC3ILM1DhNs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52SBEicU013878
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 28 Mar 2025 06:14:44 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 28
- Mar 2025 06:14:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 28 Mar 2025 06:14:43 -0500
-Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [10.24.69.37] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52SBEeIp029420;
-	Fri, 28 Mar 2025 06:14:40 -0500
-From: Neha Malcom Francis <n-francis@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <n-francis@ti.com>
-Subject: [PATCH v2 0/2] Add support for K3 BIST
-Date: Fri, 28 Mar 2025 16:44:37 +0530
-Message-ID: <20250328111439.374748-1-n-francis@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cuDgzPjV"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S3IOuH001394;
+	Fri, 28 Mar 2025 11:14:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=tBdNgC
+	TiH0JzSJs0sxReFO7ivUNoEUckmfZfBH5iVow=; b=cuDgzPjVYpV2Z8Dn7zTb+B
+	nU1DDJao0o9XjzDfcOvIA7SUN2UNhuqvdE3bo7mg6Aq0ZU4+n9mIoZ9HbM3gl4Db
+	9zu9zmgOIjGTtWdoLrWXWM+ZqIYyQTV2zXd3NnWNWM4Q3ikkGsi1PXu7zbO+bVyn
+	PZT7IMyZokLm75gi9NWwCDp8Ag626nl3dIvNrngOTm7zBp3hy+JPJqRSSl6zMVJ0
+	wB4OXVAzufJy7ArQ2iVx6zBq6RILqO2n4l8SzddJKsb10tUuo0Hqntv9DvRpXAge
+	1zcjvUzOCKz9xU45wI9dzkEjgpOHgs5A8Ki+nETpUvjr+TLXF4SQXEHPFsCgjsIw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45naux4e6r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 11:14:48 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52S8Ewv5025462;
+	Fri, 28 Mar 2025 11:14:48 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j7x0j7f4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 11:14:47 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52SBEl1630474988
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Mar 2025 11:14:47 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2C6658054;
+	Fri, 28 Mar 2025 11:14:46 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 540915803F;
+	Fri, 28 Mar 2025 11:14:44 +0000 (GMT)
+Received: from [9.43.60.59] (unknown [9.43.60.59])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 28 Mar 2025 11:14:43 +0000 (GMT)
+Message-ID: <e18df940-bb30-44c9-9384-7325e8d02d25@linux.ibm.com>
+Date: Fri, 28 Mar 2025 16:44:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [main-line]Build warnings on PowerPC system
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
+ <8797a1c4-dc58-4a85-bc51-a3d4131e7930@linux.ibm.com>
+ <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
+ <38653c58-a5c4-496f-9b52-e7bc3e447423@linux.ibm.com>
+ <516febac-b2ba-48a0-83a4-ab259e972541@linux.ibm.com>
+ <b37c7a1a-9ec8-417e-9d9d-adeffe409df8@csgroup.eu>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <b37c7a1a-9ec8-417e-9d9d-adeffe409df8@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Z3XN_wktqKTys0rekGKUEFQOIFCvRnL8
+X-Proofpoint-ORIG-GUID: Z3XN_wktqKTys0rekGKUEFQOIFCvRnL8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-28_05,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503280075
 
-BIST (Built-In Self Test) is an IP responsible for triggering hardware
-circuitry tests on both logic as well as memory blocks. This driver is
-currently being upstreamed in U-Boot [1] and triggers these tests on
-cores. This patch series adds the dt-binding as well as a node for BIST
-on J784S4.
 
-Changes since v1:
-https://lore.kernel.org/all/20241128140825.263216-1-n-francis@ti.com/
-- Krzysztof
-    - move from misc/ to soc/ti/
-    - minor property changes
-    - drop ti,bist-instance and instead opt for ti,bist-under-test
-    - correct example dt
+>>> diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+>>> index 1db60fe13802..09ceb5a42d81 100755
+>>> --- a/arch/powerpc/boot/wrapper
+>>> +++ b/arch/powerpc/boot/wrapper
+>>> @@ -235,7 +235,7 @@ fi
+>>>   # suppress some warnings in recent ld versions
+>>>   nowarn="-z noexecstack"
+>>>   if ! ld_is_lld; then
+>>> -       if [ "$LD_VERSION" -ge "$(echo 2.39 | ld_version)" ]; then
+>>> +       if [ "$LD_VERSION" -ge "$(echo 2.35 | ld_version)" ]; then
+>>>                  nowarn="$nowarn --no-warn-rwx-segments"
+>>>          fi
+>>>   fi
+>> Above change fixes the issue. No warnings observed. Thank you!!
+> 
+> Take care, this must be a special version of binutils.
+> 
+> With regular 2.36.1 I get following error:
+> 
+> $ /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld --version
+> GNU ld (GNU Binutils) 2.36.1
+> Copyright (C) 2021 Free Software Foundation, Inc.
+> This program is free software; you may redistribute it under the terms of
+> the GNU General Public License version 3 or (at your option) a later version.
+> This program has absolutely no warranty.
+> 
+> $ /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld --no-warn-rwx-segments test.o
+> /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld: unrecognized option '--no-warn-rwx-segments'
+> /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld: use the --help option for usage information
+> 
 
-[1] https://lore.kernel.org/all/20250204123147.939917-1-n-francis@ti.com/
+Nice catch. Thanks Christophe.
 
-Neha Malcom Francis (2):
-  dt-bindings: soc: ti: bist: Add BIST for K3 devices
-  arm64: dts: ti: k3-j784s4-main: Add PBIST_14 node
+May be we need to handle this special/specific case with an
+additional check
 
- .../bindings/soc/ti/ti,j784s4-bist.yaml       | 67 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 11 +++
- 2 files changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,j784s4-bist.yaml
+diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+index 1db60fe13802..d3779c20e548 100755
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -237,6 +237,8 @@ nowarn="-z noexecstack"
+ if ! ld_is_lld; then
+        if [ "$LD_VERSION" -ge "$(echo 2.39 | ld_version)" ]; then
+                nowarn="$nowarn --no-warn-rwx-segments"
++        elif [ "$LD_VERSION" -eq "235020000" ]; then
++                nowarn="$nowarn --no-warn-rwx-segments"
+        fi
+ fi
 
--- 
-2.34.1
-
+ 
+Maddy
