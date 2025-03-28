@@ -1,139 +1,68 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8348012CDA5;
-	Fri, 28 Mar 2025 11:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE3A26289;
+	Fri, 28 Mar 2025 11:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743162552; cv=none; b=uOPfd7sagZuHk253Jm+CRfBw3sjqbfMFBMzqCOKsQ6U3JptWOHclhqdT37yORaybdXEoFAESdo0MfgQwcRKJQ5gTmeAPyTVGUnLzZbMPDKDqDU/ryuQZTK3B8IuLGzg3qPZ0Yh7m7TAJ9MgE+UQFoHHOHhDP5xiRzhtumsMY098=
+	t=1743162560; cv=none; b=VgrkpBb7WqrorkPZQH+JT6JQk8RsjDePZxvIYdfVz3OVdHmSjsSs1ChrwNp8Dk9uYPTIw/U03Z69w/H1pADWZrotwmt2qf1g5F3Kxtki3E82UgoUsPCxi1s2Yx0vs+m4I/lNUjMM4il6Bt0OdvIryDU1oJHTplmlJ1IHKMElk84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743162552; c=relaxed/simple;
-	bh=0zEkKMKBraCYtb5mtSN+uT7ZBhwEIcNCzdAPtVcplng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C0yP4cd8G6GATUlYmM5q7CJoKzrpKnht7taPJWaXjTjH2DeUoh6ZL3KSUgZgYSc4043mhdVkTa8gsTD3yMN0urLip/dK5gVqe/25tGSqcs8PiGT0Hs2kzIA4kQMREsgxi+NqZaGkcaxoNn/uucDsrf6HMP/55H38OgixbRwgXqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8Q6i91f; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743162560; c=relaxed/simple;
+	bh=h6ydLoR1ygT6038JNkdaPynVrS5SsAM4iLsC0fD3s54=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E+zbNgpJCE8X6QPvs1nZxlqDb9MvwGxeVKgOBl60J1P1eBGmQ/D0OwEGUK//lqmMgBxr5UkyS5jzbnPV9Wb9rHfpU5ZQlt70pDdxfIW2CBezoobVH8p/zJQ1d2LVXbXl+MsWHzvW3AsCx9Df6uL185w9upD1zF58UjuiUF0jvVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWFq4ERN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8Q6i91f"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fd89d036so46559495ad.1;
-        Fri, 28 Mar 2025 04:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743162551; x=1743767351; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gmCEfmKtu69bI3FAW2+d7YTQS71wGEca1RL8cb9p8b4=;
-        b=T8Q6i91fpuSH9PjstdfHjmuofjx+obmcY4OYYspdqDZhPYQHTteJcHAIzG3YPr8lxu
-         NiraXJk9ECrmPzxABoEpp/a4tm+WXV1KEQv2HM/k5Z7c86CdDUEqiyPKz7SVQORUrraG
-         m14oIXy/MKuIB/Z0DQlrH06i2slKB3nEzk+DiinOgbUkaXebNSgMf1lQqTaPdmlFa3sr
-         cie3JTUzLVeQ/EuDy+4q7X7SvKTO6tHJAi9fV7yvutSqHoYzGZWxl+9/V5Dc1c8YamuY
-         yqeZJw4hbk7cO0WbWdprDhdzrk1jYmiUHoCpUsIfmFrIrlZr2bwYTpoO4+j+XPiGuoLN
-         f12Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162551; x=1743767351;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gmCEfmKtu69bI3FAW2+d7YTQS71wGEca1RL8cb9p8b4=;
-        b=rBlygtjHosFUseFujWNHrKo13QQ73C4xaM92DxEJKoJ8km771lQywIuWOLTb9sZd27
-         WqJpCORRWHYtDX4ta75dGtOk4E12oWhTLhU37+Pm8IgIMsnp1sOmwf2CzdblC7FFSKMo
-         ogAGyBRuHdktOCBU8LYqWtmktkxEexew9Wn7xfn8bz/Qb6A3CJh2p2zh5jPFxIiefFqk
-         rqpyC5b2mEFDNLZdG7u0K9Gu0J5BaCgs3xhLQpe/gJJbsSvG5d79ajsXDgm88KV0qnVb
-         FroE74BIJyC4KKsCBtd5yvAIM8VRVRu5I6ISKA0t7Xhpeh7bpGaxZmId9F0//2igCTFU
-         GqRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIOcmIW3LbwwkWvH1LTJgEZx244M0/ysMJsHiUNZSRGnZUEwd/C78aZEQhS0SNq0CMW92j4yleYHUIcg==@vger.kernel.org, AJvYcCWkxRQDuh7DCxwqiSQH1u/125NZaeNs5ulviI0F/eCFIyTUZYZYp1pFrm3jNlcO5KrsyLbqKnmTALye8Ao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjlQ0AgOqAvuX8vNBuXUENKoaPJOu7NsUYV5O2XLLWbqhkW0bK
-	w1o1mTgaXCwR0YSN7JNwWzxYL8EKLIrgP+ABwEiUzjum1QRIrKlP4W3Bkg==
-X-Gm-Gg: ASbGncug+mDr23gti2cbSNXLfdt1f6GNKy79KGhgSHZAOIK12hAO8p64P0KqM3sw+Uo
-	iLtsYW6ma9oaQd6RI7UBM6kVIor4ZiyOYpTtcDGBav/97DX9WmZDTEKbEGXVyI1YfiNezISJWvx
-	OItphYn6fMD0j1Kf5/XNyWKRybJgkGLct8IraWXpjs22t5bAcnbc1DmME5BifZTjwZ89Cmbkhhg
-	4UGEK7Ih0d65ZTI7IbWunIWFW4of3+Vlj5/hVhSkPu5r8ySHLhAaLuI7AKMYEMx2Lxu4yEPMpYK
-	sfUgUnvxqErJ9B1CGLm9szBsC/vk6ebZ/5oYpgvb9yMu
-X-Google-Smtp-Source: AGHT+IFFQaOmCK0iCTHGrRWzTWyXgcqukYghNfKOZ9vdJoDmptQQcXqn262rau+jeEOIhHNu2IkQaA==
-X-Received: by 2002:a17:902:f646:b0:224:f12:3735 with SMTP id d9443c01a7336-228048c8674mr125053825ad.31.1743162550503;
-        Fri, 28 Mar 2025 04:49:10 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cfb2asm15676575ad.141.2025.03.28.04.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:49:09 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id F028B420A74C; Fri, 28 Mar 2025 18:49:06 +0700 (WIB)
-Date: Fri, 28 Mar 2025 18:49:06 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the iommufd tree
-Message-ID: <Z-aMsk148w8zgaRQ@archie.me>
-References: <20250318213359.5dc56fd1@canb.auug.org.au>
- <20250328175745.7ecfee87@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWFq4ERN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206FAC4CEE4;
+	Fri, 28 Mar 2025 11:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743162559;
+	bh=h6ydLoR1ygT6038JNkdaPynVrS5SsAM4iLsC0fD3s54=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bWFq4ERNXyE1g0r7zL3P6oqwYus2CfOtKHDKeQIqShIHk7imIxtVfMEnBDYlxG9hh
+	 Me/ObyC4e9KrM/4vMWW+x0LK0Q4oy8zFeZ8hD8OU91gi3ea7Ax9j8Fw4oTN+YW6w7p
+	 5n4rUtuwzte9qWoFovaiNRIeD1brIw/PO5ZosJfs/lMMGvvudQWJ5yz+IjJdc38V0v
+	 VkL1eOUqqdYBzFSX1CgAhWey7aT0xvNYmLC9U5PxJ5naDCvOZTWRs6IU4IXddjGlLt
+	 NH7ExgDqQnbIPFr21dEcfGQE5kcKonjrg9wM6vSxeEtOWczoupREo2rAzLiKP8nupv
+	 T86ZNI49XDPXA==
+Date: Fri, 28 Mar 2025 04:49:18 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Michael Klein <michael@fossekall.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next v5 0/4] net: phy: realtek: Add support for PHY LEDs
+ on
+Message-ID: <20250328044918.1082fccb@kernel.org>
+In-Reply-To: <20250326212125.100218-1-michael@fossekall.de>
+References: <20250326212125.100218-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eiW7nh+I1UK1dOHA"
-Content-Disposition: inline
-In-Reply-To: <20250328175745.7ecfee87@canb.auug.org.au>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 26 Mar 2025 22:21:21 +0100 Michael Klein wrote:
+> Changes in V5:
+> - Split cleanup patch and improve code formatting
 
---eiW7nh+I1UK1dOHA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+## Form letter - net-next-closed
 
-On Fri, Mar 28, 2025 at 05:57:45PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> On Tue, 18 Mar 2025 21:33:59 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > After merging the iommufd tree, today's linux-next build (htmldocs)
-> > produced this warning:
-> >=20
-> > Documentation/userspace-api/iommufd:323: include/uapi/linux/iommufd.h:1=
-033: CRITICAL: Unexpected section title or transition.
-> >=20
-> > -----------------------------------------------------------------------=
--- [docutils]
-> > WARNING: kernel-doc 'scripts/kernel-doc -rst -enable-lineno include/uap=
-i/linux/iommufd.h' processing failed with: Documentation/userspace-api/iomm=
-ufd:323: include/uapi/linux/iommufd.h:1033: (SEVERE/4) Unexpected section t=
-itle or transition.
-> >=20
-> > -----------------------------------------------------------------------=
---
-> >=20
-> > Introduced by commit
-> >=20
-> >   50c842dd6cd3 ("iommufd: Add IOMMUFD_OBJ_VEVENTQ and IOMMUFD_CMD_VEVEN=
-TQ_ALLOC")
->=20
-> Any progress on this?
+Linus already pulled net-next material v6.15 and therefore net-next is closed
+for new drivers, features, code refactoring and optimizations. We are currently
+accepting bug fixes only.
 
-Should've been fixed by [1].
+Please repost when net-next reopens after Apr 7th.
 
-Thanks.
+RFC patches sent for review only are obviously welcome at any time.
 
-[1]: https://lore.kernel.org/linux-doc/20250328114654.55840-1-bagasdotme@gm=
-ail.com/
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+-- 
+pw-bot: defer
+pv-bot: closed
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---eiW7nh+I1UK1dOHA
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ+aMsgAKCRD2uYlJVVFO
-o9YzAQDn1v3TNYpnKgI8UEekDsYLDjef3OrEiJ2fES/KcXCpSgEAqXDhWHOlgqby
-6VzlrRXLBT9DsXWNBh79cIwjlpTDWAA=
-=6llm
------END PGP SIGNATURE-----
-
---eiW7nh+I1UK1dOHA--
