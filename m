@@ -1,144 +1,197 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EE818FDD2;
-	Fri, 28 Mar 2025 18:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0114118FDD2
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743186647; cv=none; b=G+5aGuVA0ua0rFE7vLkyUyUXJtYu0S8Lt7+v1b2jk5/xbpBACNnAzqE+TZyYGmrOA2x1lAl1msbeedc702DohSk9QpQWrvJlcotjAEcpPUmL2s7gQwe0YAHVoxJ9+rNM152pSPEGI0azbPI9BSrdx8zU7DlIzBksWEVtIkpr/5U=
+	t=1743186654; cv=none; b=SisuxasGF2PE/p/qn5dw2rfvO2xOzj0bBAC1Z5ljyesQUSh9ev/48YcIXHL87qsnXiX+DIAKVZo6yFNa6TvdQ0J+DwV/+lVx8HWF4YuaFoPS3MkRaoCmws8nXg5irz66iX+Y2CRc9y08hcYn8s7YGYOWdxE8k2B8OGM9Fk9xsus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743186647; c=relaxed/simple;
-	bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MLvT7bkI7bVtNMSbjwFfKZS3jWRy8p5V8ueLF+EV/QIKRhL5ckINXS4W0+/wug2EnDNJBxNBw7WebuG8qZZYQMl2Ih6rFVP67U11my3iWCFn0cIW9iag5brhFWN4GIhflbHBRIWefcIZL8RqsOxOYXNDoy4mYuwW0onEqgr0C0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZGnlSqx; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743186654; c=relaxed/simple;
+	bh=QlSA9hiBOJwtGTvv3d+KZKqMIR80gc0bbwPQ1YpYN8Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ieyzBpF0nsat4mh2XVKZWf22IK2ECSOAkYhKnFUYCfq2IrAjdA18J4WIv441FpOeVll1zUgaMNT+c+EEWWUUZ4066OKPPjw9s/6cWxy6cpAHgv1+zwDG7dHZ84RCca7p9D1vsJfIStEOAPEs70El0mzlAgTV3ne945DWXlcTJXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CXzNh4Yg; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZGnlSqx"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54991d85f99so3666230e87.1;
-        Fri, 28 Mar 2025 11:30:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CXzNh4Yg"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-227ea16b03dso64966345ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743186644; x=1743791444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
-        b=FZGnlSqx9fxJ7lG+vP/t9H2Q5rd2IFZtPY6S2o8BYAr8fbItAVhtjNmFfHQYaF4fL4
-         DU17thOjgteFW4cdz3+ab9HwkdXe6eSVCi+dQngNlOn6SUitCKUrFZiabph3yDB3o7Sp
-         H+x3wksZm22CtBxO5uZL7VzNt2yOgpljzWFFMNwLzPmks4iA3H+nCDm/RASmF+B8uIwA
-         gXKA8JlAbg5ltnaffFOgTMMCyPAAcg05CWNUUAWjE1qX59HaZ8wZ5+SE+PpAk4i/8uRc
-         GMHUaEcE2eJi9rgF7Lx9Hz2Q7cKdU9B3BA/KSf+OqgLU1N/X77XleXbRa/6kKH/58O0z
-         Z28A==
+        d=google.com; s=20230601; t=1743186652; x=1743791452; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=S5XkgDAXtfNhaslF4bnTqMQ8YiZ2dz7Mj1Z8vySNZRM=;
+        b=CXzNh4Ygi1HjkphcAJ8FQ/OciFDis1PNM5Mwfb6ZG5OKukq1yKvis2C++NMf5i1GLW
+         ZxhHW3LeRZ5/Chu+C/Kjj91QVl0w43b88nYAfACYDGJqTOsFVxNxEoUCmmCGRLqtnMO7
+         XTAsPu7B7iM6/RLQs2iRGAxuymPxB9WszbmITaus1Cx3NZ2Jv4eAnjtFv134TfR92Tbr
+         RlQeOcFZdlc1Rt7CdJ52ZIKLrtS6n0bGeq72agPX9rlyv76fWUnJOKOatU14oWvbyyXk
+         yzrYPCkSeBj0wBFBfeflONhBF7g1MUccQMTUHSUSQIBmdqB43pNlNpROsyjRMpGk5EuI
+         E3rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743186644; x=1743791444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9XTj0tQhvYxAAdsXUfuCQwK5MFHkVzti01U9d2paLt8=;
-        b=LJcveduNp5ZTi06kuxEp6ka4vzTBThvbaut7TroGdU3JGLcrzDmsA/5/w6w7zAYAMx
-         VLvUexPSB2i4Ncayv03WU92eZXNpk2QGU0q5cEfC1bkvTG5OWY7Z/VI+ZxnzWyI4Mki2
-         8ymoMy8f0I5Tb2bv/8aUv2z4802+GfnfwEE8s91z+JBw0Cu5MRWHqNdvHINzUiWjzD3z
-         qkEYo0R51eGPTV4DVr575vD7+zgCYYmjM9POBGBa0xMtE8/abIp/Va6Ncmak6N88/l0t
-         6pomKCSFILoUyOVOfybhv0Thx5Z26np52LwwxwQjlLvotyBNDLGeU/nak8WpCTi3D8pq
-         fk5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU+r24HcnY8F36e9TZuwYPb4UrRTPLcTWIo3p1+OU1rDG4Gkqda+YLf6OCMKk8+3UM6Zot6KbZaVLVoy6xV@vger.kernel.org, AJvYcCVVwdVKyYdXpcYKSWrmTDL+a8dng/MvIDDYlanrM5HqWX/sccVLmgvz7ExZgpXSvZplce8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc171JCbnf7j+14vI7FtDLSW7JryKxmu+EGP4Nq2USt/C7qtlp
-	uZNb2qHeBsVwM7ceRV6iUPElwJMa3RzvBYtz3JD2RnyrjQTtoSCVAsCg1eFdnm6J/KARpHDWCR0
-	48pScrUX+cf0LC+IU29IKCbsopAQ=
-X-Gm-Gg: ASbGnctnA/vwmgt61YUXRCtdk1tV/hbFJgvr8Am2nvBldNTBpk05V/O+a0YwVqSfJ10
-	EEj9X+q/ANBiqelsmu3FdkF0LttrQKV2bWGH0kdQwmuuFGSzYpyKCwhH5tWRDuhTJ2MfTjRB7zr
-	T/eWFLB8Krzhp/S5TMBnl3RfEXHTHA
-X-Google-Smtp-Source: AGHT+IG8WMab1JJv4PwctVvswElQQEk3CtJtwWMH2HFu53xkAFaHVK4jcuKz2Yn1sEJZPelip91uB1EuozYZEwmDsi8=
-X-Received: by 2002:a2e:bd84:0:b0:30b:c608:22bf with SMTP id
- 38308e7fff4ca-30ddf7f737dmr2355461fa.9.1743186643528; Fri, 28 Mar 2025
- 11:30:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743186652; x=1743791452;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S5XkgDAXtfNhaslF4bnTqMQ8YiZ2dz7Mj1Z8vySNZRM=;
+        b=dRnbNHo9zqntPKNmlPnWvx9SIhELuavbCfx7IrUoTZAm+ueqLj2HmYQUhgVO0O8h54
+         5h7NRMq0bUlmcWkyc9T2Srox8GEAaZAsfx0IByOmaj486Wl2R1zrHthKmsr+cztk+u2w
+         PFWEPWVHhKIBoRV8c+hJinpHrBs7rBDSRZTEkeJHl9bnQx9P2T9gHB7DdeGwSqs0Itvg
+         ci2rLWYmUrU75CjbPWGUzdJs3R87fDiGKKnUPq4NwaL4c1pk6bNWr20tzuRxpuBpezmR
+         +D4+oZlHvSSDFuUL/K4Nz4p50CTEkD+LIt6Y6eLApP5mqYpDlQBoK/Uh59+f924Egq/2
+         XIfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3FNKKxegibT5W/3VnSTdWSVj9Akk5ZLlnqq/QeoVebJIMUrGt1yqDGhMgKgsbQ4bgGpdIt2Q0DihYzHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyklGd+XYcr59f29QOFRSgU4JPliS2bqRYl2H/epU+VJA1gNj4V
+	1rCCNRSN5KBitHQqQqllor0sOzYiz/zsptK9fJXAoDfbJGzymqfbHJeHOVQkugyKFiWsD5JGZPr
+	JRjA3R8oLJA==
+X-Google-Smtp-Source: AGHT+IFqMcmkQpb/45N2xHdJ5aJZJhkXbmjyHxZPwm9DA2WaQFXT/ONnoxMUUEDtuGLd5HfQUSPJx5J0NUGdEA==
+X-Received: from pgac13.prod.google.com ([2002:a05:6a02:294d:b0:af2:5aab:ff5c])
+ (user=ipylypiv job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:6b0c:b0:1f5:a3e8:64c8 with SMTP id adf61e73a8af0-2009f79453emr587875637.36.1743186652206;
+ Fri, 28 Mar 2025 11:30:52 -0700 (PDT)
+Date: Fri, 28 Mar 2025 11:30:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <facda6e2-3655-4f2c-9013-ebb18d0e6972@gmail.com>
- <Z-HiqG_uk0-f6Ry1@google.com> <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
- <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com> <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
-In-Reply-To: <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
-From: Ming Lin <minggr@gmail.com>
-Date: Fri, 28 Mar 2025 11:30:30 -0700
-X-Gm-Features: AQ5f1Jq88iPNABeVpuLMSb4SzToojs9keJJVckPlXEcfU-dqZqC42wzY1lmPsJo
-Message-ID: <CAF1ivSaEz0brSGfpv08oKnTjT=h99hs_G0ju0UGPwzoLvOSV8A@mail.gmail.com>
-Subject: Re: pvclock time drifting backward
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250328183047.2132370-1-ipylypiv@google.com>
+Subject: [PATCH] ata: libata-scsi: Set INFORMATION sense data field consistently
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Igor Pylypiv <ipylypiv@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 1:10=E2=80=AFAM David Woodhouse <dwmw2@infradead.or=
-g> wrote:
->
-> On Wed, 2025-03-26 at 08:54 -0700, Ming Lin wrote:
-> > I applied the patch series on top of 6.9 cleanly and tested it with my
-> > debug tool patch.
-> > But it seems the time drift still increased monotonically.
-> >
-> > Would you help take a look if the tool patch makes sense?
-> > https://github.com/minggr/linux/commit/5284a211b6bdc9f9041b669539558a6a=
-858e88d0
-> >
-> > The tool patch adds a KVM debugfs entry to trigger time calculations
-> > and print the results.
-> > See my first email for more detail.
->
-> Your first message seemed to say that the problem occurred with live
-> migration. This message says "the time drift still increased
-> monotonically".
+Populate the INFORMATION field with ATA LBA when sense data is obtained
+by the ata_eh_request_sense(). Kernel already populates the INFORMATION
+field when sense data is reported via autosense or when it is generated
+by the ata_gen_ata_sense().
 
-Yes, we discovered this issue in our production environment, where the time
-inside the guest OS slowed down by more than 2 seconds. This problem
-occurred both during live upgrades locally and live migrations remotely.
-However, the issue is only noticeable after the guest OS has been
-running for a long time, typically over 30 days.
-Since 30 days is too long to wait, I wrote a debugfs tool to quickly reprod=
-uce
-the original issue, but now I'm not sure if the tool is working correctly.
+ATA PASS-THROUGH commands, unlike regular ATA commands, populate
+the INFORMATION field with ATA ERROR, STATUS, DEVICE, and COUNT(7:0)
+fields thus setting ATA LBA into the INFORMATION field is incorrect.
 
->
-> Trying to make sure I fully understand... the time drift between the
-> host's CLOCK_MONOTONIC_RAW and the guest's kvmclock increases
-> monotonically *but* the guest only observes the change when its
-> master_kernel_ns/master_cycle_now are updated (e.g. on live migration)
-> and its kvmclock is reset back to the host's CLOCK_MONOTONIC_RAW?
+Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+---
+ drivers/ata/libata-sata.c |  2 --
+ drivers/ata/libata-scsi.c | 40 ++++++++++++++++++++++-----------------
+ drivers/ata/libata.h      |  3 ---
+ 3 files changed, 23 insertions(+), 22 deletions(-)
 
-Yes, we are using the 5.4 kernel and have verified that the guest OS time
-remains correct after live upgrades/migrations, as long as
-master_kernel_ns / master_cycle_now are not updated
-(i.e., if the old master_kernel_ns / master_cycle_now values are retained).
+diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+index ba300cc0a3a3..b01b52e95352 100644
+--- a/drivers/ata/libata-sata.c
++++ b/drivers/ata/libata-sata.c
+@@ -1644,8 +1644,6 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 		if (ata_scsi_sense_is_valid(sense_key, asc, ascq)) {
+ 			ata_scsi_set_sense(dev, qc->scsicmd, sense_key, asc,
+ 					   ascq);
+-			ata_scsi_set_sense_information(dev, qc->scsicmd,
+-						       &qc->result_tf);
+ 			qc->flags |= ATA_QCFLAG_SENSE_VALID;
+ 		}
+ 	}
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 2796c0da8257..7e93581439b2 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -216,17 +216,30 @@ void ata_scsi_set_sense(struct ata_device *dev, struct scsi_cmnd *cmd,
+ 	scsi_build_sense(cmd, d_sense, sk, asc, ascq);
+ }
+ 
+-void ata_scsi_set_sense_information(struct ata_device *dev,
+-				    struct scsi_cmnd *cmd,
+-				    const struct ata_taskfile *tf)
++/**
++ *	ata_scsi_set_sense_information - Populate INFORMATION field
++ *	@qc: ATA command
++ *
++ *	Populates the INFORMATION field with ATA LBA.
++ *
++ *	LOCKING:
++ *	None.
++ */
++static void ata_scsi_set_sense_information(struct ata_queued_cmd *qc)
+ {
+ 	u64 information;
+ 
+-	information = ata_tf_read_block(tf, dev);
++	if (!(qc->flags & ATA_QCFLAG_RTF_FILLED)) {
++		ata_dev_dbg(qc->dev,
++			    "missing result TF: can't set INFORMATION sense field\n");
++		return;
++	}
++
++	information = ata_tf_read_block(&qc->result_tf, qc->dev);
+ 	if (information == U64_MAX)
+ 		return;
+ 
+-	scsi_set_sense_information(cmd->sense_buffer,
++	scsi_set_sense_information(qc->scsicmd->sense_buffer,
+ 				   SCSI_SENSE_BUFFERSIZE, information);
+ }
+ 
+@@ -971,8 +984,7 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+  *	ata_gen_ata_sense - generate a SCSI fixed sense block
+  *	@qc: Command that we are erroring out
+  *
+- *	Generate sense block for a failed ATA command @qc.  Descriptor
+- *	format is used to accommodate LBA48 block address.
++ *	Generate sense block for a failed ATA command @qc.
+  *
+  *	LOCKING:
+  *	None.
+@@ -982,8 +994,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 	struct ata_device *dev = qc->dev;
+ 	struct scsi_cmnd *cmd = qc->scsicmd;
+ 	struct ata_taskfile *tf = &qc->result_tf;
+-	unsigned char *sb = cmd->sense_buffer;
+-	u64 block;
+ 	u8 sense_key, asc, ascq;
+ 
+ 	if (ata_dev_disabled(dev)) {
+@@ -1014,12 +1024,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 		ata_scsi_set_sense(dev, cmd, ABORTED_COMMAND, 0, 0);
+ 		return;
+ 	}
+-
+-	block = ata_tf_read_block(&qc->result_tf, dev);
+-	if (block == U64_MAX)
+-		return;
+-
+-	scsi_set_sense_information(sb, SCSI_SENSE_BUFFERSIZE, block);
+ }
+ 
+ void ata_scsi_sdev_config(struct scsi_device *sdev)
+@@ -1679,8 +1683,10 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
+ 		ata_scsi_set_passthru_sense_fields(qc);
+ 		if (is_ck_cond_request)
+ 			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
+-	} else if (is_error && !have_sense) {
+-		ata_gen_ata_sense(qc);
++	} else if (is_error) {
++		if (!have_sense)
++			ata_gen_ata_sense(qc);
++		ata_scsi_set_sense_information(qc);
+ 	}
+ 
+ 	ata_qc_done(qc);
+diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
+index 0337be4faec7..ce5c628fa6fd 100644
+--- a/drivers/ata/libata.h
++++ b/drivers/ata/libata.h
+@@ -141,9 +141,6 @@ extern int ata_scsi_offline_dev(struct ata_device *dev);
+ extern bool ata_scsi_sense_is_valid(u8 sk, u8 asc, u8 ascq);
+ extern void ata_scsi_set_sense(struct ata_device *dev,
+ 			       struct scsi_cmnd *cmd, u8 sk, u8 asc, u8 ascq);
+-extern void ata_scsi_set_sense_information(struct ata_device *dev,
+-					   struct scsi_cmnd *cmd,
+-					   const struct ata_taskfile *tf);
+ extern void ata_scsi_media_change_notify(struct ata_device *dev);
+ extern void ata_scsi_hotplug(struct work_struct *work);
+ extern void ata_scsi_dev_rescan(struct work_struct *work);
+-- 
+2.49.0.472.ge94155a9ec-goog
 
->
-> Is this live migration from one VMM to another on the same host, so we
-> don't have to worry about the accuracy of the TSC itself? The guest TSC
-> remains consistent? And presumably your host does *have* a stable TSC,
-> and the guest's test case really ought to be checking the
-> PVCLOCK_TSC_STABLE_BIT to make sure of that?
-
-The live migration is from one VMM to another on a remote host, and we
-have also observed the same issue during live upgrades on the same host.
-
->
-> If all the above assumptions/interpretations of mine are true, I still
-> think it's expected that your clock will jump on live migration
-> *unless* you also taught your VMM to use the new KVM_[GS]ET_CLOCK_GUEST
-> ioctls which were added in my patch series, specifically to preserve
-> the mathematical relationship between guest TSC and kvmclock across a
-> migration.
->
-
-We are planning to test the patches on a 6.9 kernel (where they can be
-applied cleanly) and modify the live upgrade/migration code to use the new
-KVM_[GS]ET_CLOCK_GUEST ioctls.
-
-BTW, what is the plan for upstreaming these patches?
-
-Thanks,
-Ming
