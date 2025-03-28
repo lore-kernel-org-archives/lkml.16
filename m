@@ -1,260 +1,184 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18451E545
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 20:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6453E545;
+	Fri, 28 Mar 2025 20:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743194809; cv=none; b=b/N7ISk3ggnxpmMu/sx4MTfPdl1C3sxhlp0nPsTJvd+cwjHxBe4KPow09T7w2knqs1K1BsPJnGJ/5B/h0YwIWP4IyGlqqdtkRsx7P0EZQ/664TiacyZPyc+sSsF/RwlPk/SAyDyY0QSIUxz8SKSuZiLDpYwnIif4A0gj11JQmJA=
+	t=1743194953; cv=none; b=CELGQqq/OvH9FYjwsQTty9hhOSVqP3JShF/mQDk+rsmCNt51P+bQ6xulB0pUSTDUG6KgWFvanTTdLCmVzQm5a/NNc+6sM5OduWzsOzWSw+2rmWX809rv2MVqDVvLjVwQSQlpoBbk/chN+3VWGVRMoL6gjCT37yB34YazgKoNPrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743194809; c=relaxed/simple;
-	bh=oohnoraHIkOgNIMvs5qklmJwk57xtUn8v/eYTX8S2kI=;
-	h=Message-ID:Date:MIME-Version:Subject:References:To:From:
-	 In-Reply-To:Content-Type; b=jQUqwSzbK3dw6Dvu6+gY9kAzjnj//gJLsX695fB8s9CKNFqNZtIVKjavPuqYC3LOrNPEmXEPUnCCrOWOVtRbq8nfZuBH3i4+J3LI966D9bJI6F4HfYSIXvo8v3kE6n91JoNrLVKF9aS926w0OT7+LqwO3F2kAPtrsDsJpEzg5co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.139.63) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 28 Mar
- 2025 23:46:28 +0300
-Message-ID: <8db16fb6-f87e-48dd-8845-0eaac95a6527@omp.ru>
-Date: Fri, 28 Mar 2025 23:46:27 +0300
+	s=arc-20240116; t=1743194953; c=relaxed/simple;
+	bh=g7RMliEMabcpLtBmo+l3wn5Zu7NC8J3yDDeIBr9ndeY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IgeWNcPUYH7QU8XEHomuDmJ6L14n/1cWKwkd5F8bwDZ8GHg2MoaTwDNarvKKzdqJqX6L1TqA2xJ5D9tjPUcdqb5jf3OnPDfubwQ7j1BOPtBTJ0S9UCRfJ03Fd1cn/eTUX5W1jczt8Uzes+d25jtuL9B+6mfwTcJB6q2OfM/rxhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ti0CLPod; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ti0CLPod"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id 039c0c9098c45059; Fri, 28 Mar 2025 21:49:03 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id A773A7F0283;
+	Fri, 28 Mar 2025 21:49:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1743194943;
+	bh=g7RMliEMabcpLtBmo+l3wn5Zu7NC8J3yDDeIBr9ndeY=;
+	h=From:Subject:Date;
+	b=Ti0CLPodRIt+kE2BvX8FZSkAjmzkNidp/ZhgXbAqYyd/Nie47grB1VI6SQPkGEbyk
+	 zZ2daP9YY7GesWWKIq1nnMEKprUFfX06n+Ht6cC30K7kRiWCz4LlTLlkFyfO0oSS2f
+	 wX/5Hg5Vs3i/Xl/4j1E3XcbtL3sr2/P8sXmKBVNTpZaQ86ef600QtMGEhDS6h4h4ih
+	 Go6N0PJ7fuZ2CMbva+8zLaCK553cP1n0PWsk/jzK/oCaKcFz+xrPfmN0HIqUcBqZLi
+	 d/LcZzUELCwatBMb0iDKtKuPmpMUBXJUjQ0W2ZpIgtPuvuaHC4dlNeNI2P3RpCGsDg
+	 sQpBP9yNNhOuw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v1 10/10] cpufreq: Pass policy pointer to ->update_limits()
+Date: Fri, 28 Mar 2025 21:48:54 +0100
+Message-ID: <8560367.NyiUUSuA9g@rjwysocki.net>
+In-Reply-To: <4651448.LvFx2qVVIh@rjwysocki.net>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Fwd: [PATCH 5.10.y] KEYS: asymmetric: properly validate hash_algo and
- encoding
-Content-Language: en-US
-References: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-In-Reply-To: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
-X-Forwarded-Message-Id: <c57a86ed-42c4-4705-b8d5-f9f23eb3e7df@omp.ru>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/28/2025 20:35:21
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 192217 [Mar 28 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.139.63 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.139.63 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.139.63
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/28/2025 20:38:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/28/2025 6:58:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-Oops, forgot about LKML...
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
--------- Forwarded Message --------
-Subject: [PATCH 5.10.y] KEYS: asymmetric: properly validate hash_algo and encoding
-Date: Fri, 28 Mar 2025 23:37:26 +0300
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-To: stable@kernel.org, Stefan Berger <stefanb@linux.ibm.com>, Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, Eric Biggers <ebiggers@google.com>, Vitaly Chikunov <vt@altlinux.org>, Jarkko Sakkinen <jarkko@kernel.org>
-CC: lvc-project@linuxtesting.org, Sergey Shtylyov <s.shtylyov@omp.ru>
+Since cpufreq_update_limits() obtains a cpufreq policy pointer for the
+given CPU and reference counts the corresponding policy object, it may
+as well pass the policy pointer to the cpufreq driver's ->update_limits()
+callback which allows that callback to avoid invoking cpufreq_cpu_get()
+for the same CPU.
 
-From: Eric Biggers <ebiggers@google.com>
+Accordingly, redefine ->update_limits() to take a policy pointer instead
+of a CPU number and update both drivers implementing it, intel_pstate
+and amd-pstate, as needed.
 
-[ Upstream commit 590bfb57b2328951d5833979e7ca1d5fde2e609a ]
-
-It is insecure to allow arbitrary hash algorithms and signature
-encodings to be used with arbitrary signature algorithms.  Notably,
-ECDSA, ECRDSA, and SM2 all sign/verify raw hash values and don't
-disambiguate between different hash algorithms like RSA PKCS#1 v1.5
-padding does.  Therefore, they need to be restricted to certain sets of
-hash algorithms (ideally just one, but in practice small sets are used).
-Additionally, the encoding is an integral part of modern signature
-algorithms, and is not supposed to vary.
-
-Therefore, tighten the checks of hash_algo and encoding done by
-software_key_determine_akcipher().
-
-Also rearrange the parameters to software_key_determine_akcipher() to
-put the public_key first, as this is the most important parameter and it
-often determines everything else.
-
-[s.shtylyov@omp.ru: removed the ECDSA related code.]
-
-Fixes: 299f561a6693 ("x509: Add support for parsing x509 certs with ECDSA keys")
-Fixes: 215525639631 ("X.509: support OSCCA SM2-with-SM3 certificate verification")
-Fixes: 0d7a78643f69 ("crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm")
-Cc: stable@vger.kernel.org
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Tested-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Vitaly Chikunov <vt@altlinux.org>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- crypto/asymmetric_keys/public_key.c |   92 ++++++++++++++++++++++--------------
- 1 file changed, 58 insertions(+), 34 deletions(-)
+ drivers/cpufreq/amd-pstate.c   |    7 ++-----
+ drivers/cpufreq/cpufreq.c      |    2 +-
+ drivers/cpufreq/intel_pstate.c |   29 ++++++++++++++++++-----------
+ include/linux/cpufreq.h        |    2 +-
+ 4 files changed, 22 insertions(+), 18 deletions(-)
 
-Index: linux-stable/crypto/asymmetric_keys/public_key.c
-===================================================================
---- linux-stable.orig/crypto/asymmetric_keys/public_key.c
-+++ linux-stable/crypto/asymmetric_keys/public_key.c
-@@ -59,38 +59,65 @@ static void public_key_destroy(void *pay
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -821,19 +821,16 @@
+ 	schedule_work(&sched_prefcore_work);
  }
  
- /*
-- * Determine the crypto algorithm name.
-+ * Given a public_key, and an encoding and hash_algo to be used for signing
-+ * and/or verification with that key, determine the name of the corresponding
-+ * akcipher algorithm.  Also check that encoding and hash_algo are allowed.
-  */
--static
--int software_key_determine_akcipher(const char *encoding,
--				    const char *hash_algo,
--				    const struct public_key *pkey,
--				    char alg_name[CRYPTO_MAX_ALG_NAME])
-+static int
-+software_key_determine_akcipher(const struct public_key *pkey,
-+				const char *encoding, const char *hash_algo,
-+				char alg_name[CRYPTO_MAX_ALG_NAME])
+-static void amd_pstate_update_limits(unsigned int cpu)
++static void amd_pstate_update_limits(struct cpufreq_policy *policy)
  {
- 	int n;
+-	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpu);
+ 	struct amd_cpudata *cpudata;
+ 	u32 prev_high = 0, cur_high = 0;
+ 	bool highest_perf_changed = false;
++	unsigned int cpu = policy->cpu;
  
--	if (strcmp(encoding, "pkcs1") == 0) {
--		/* The data wangled by the RSA algorithm is typically padded
--		 * and encoded in some manner, such as EMSA-PKCS1-1_5 [RFC3447
--		 * sec 8.2].
-+	if (!encoding)
-+		return -EINVAL;
-+
-+	if (strcmp(pkey->pkey_algo, "rsa") == 0) {
-+		/*
-+		 * RSA signatures usually use EMSA-PKCS1-1_5 [RFC3447 sec 8.2].
- 		 */
-+		if (strcmp(encoding, "pkcs1") == 0) {
-+			if (!hash_algo)
-+				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
-+					     "pkcs1pad(%s)",
-+					     pkey->pkey_algo);
-+			else
-+				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
-+					     "pkcs1pad(%s,%s)",
-+					     pkey->pkey_algo, hash_algo);
-+			return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
-+		}
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
-+		/*
-+		 * Raw RSA cannot differentiate between different hash
-+		 * algorithms.
-+		 */
-+		if (hash_algo)
-+			return -EINVAL;
-+	} else if (strcmp(pkey->pkey_algo, "sm2") == 0) {
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
- 		if (!hash_algo)
--			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
--				     "pkcs1pad(%s)",
--				     pkey->pkey_algo);
--		else
--			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
--				     "pkcs1pad(%s,%s)",
--				     pkey->pkey_algo, hash_algo);
--		return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
--	}
+ 	if (!amd_pstate_prefcore)
+ 		return;
+ 
+-	if (!policy)
+-		return;
 -
--	if (strcmp(encoding, "raw") == 0) {
--		strcpy(alg_name, pkey->pkey_algo);
--		return 0;
-+			return -EINVAL;
-+		if (strcmp(hash_algo, "sm3") != 0)
-+			return -EINVAL;
-+	} else if (strcmp(pkey->pkey_algo, "ecrdsa") == 0) {
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
-+		if (!hash_algo)
-+			return -EINVAL;
-+		if (strcmp(hash_algo, "streebog256") != 0 &&
-+		    strcmp(hash_algo, "streebog512") != 0)
-+			return -EINVAL;
-+	} else {
-+		/* Unknown public key algorithm */
-+		return -ENOPKG;
- 	}
--
--	return -ENOPKG;
-+	if (strscpy(alg_name, pkey->pkey_algo, CRYPTO_MAX_ALG_NAME) < 0)
-+		return -EINVAL;
-+	return 0;
+ 	if (amd_get_highest_perf(cpu, &cur_high))
+ 		return;
+ 
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2741,7 +2741,7 @@
+ 		return;
+ 
+ 	if (cpufreq_driver->update_limits)
+-		cpufreq_driver->update_limits(cpu);
++		cpufreq_driver->update_limits(policy);
+ 	else
+ 		cpufreq_policy_refresh(policy);
+ }
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1353,14 +1353,9 @@
+ 		cpufreq_update_policy(cpu);
  }
  
- static u8 *pkey_pack_u32(u8 *dst, u32 val)
-@@ -111,9 +138,8 @@ static int software_key_query(const stru
- 	u8 *key, *ptr;
- 	int ret, len;
+-static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
++static void __intel_pstate_update_max_freq(struct cpufreq_policy *policy,
++					   struct cpudata *cpudata)
+ {
+-	struct cpufreq_policy *policy __free(put_cpufreq_policy);
+-
+-	policy = cpufreq_cpu_get(cpudata->cpu);
+-	if (!policy)
+-		return false;
+-
+ 	guard(cpufreq_policy_write)(policy);
  
--	ret = software_key_determine_akcipher(params->encoding,
--					      params->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, params->encoding,
-+					      params->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
+ 	if (hwp_active)
+@@ -1370,16 +1365,28 @@
+ 			cpudata->pstate.max_freq : cpudata->pstate.turbo_freq;
  
-@@ -177,9 +203,8 @@ static int software_key_eds_op(struct ke
+ 	refresh_frequency_limits(policy);
++}
++
++static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
++{
++	struct cpufreq_policy *policy __free(put_cpufreq_policy);
++
++	policy = cpufreq_cpu_get(cpudata->cpu);
++	if (!policy)
++		return false;
++
++	__intel_pstate_update_max_freq(policy, cpudata);
  
- 	pr_devel("==>%s()\n", __func__);
+ 	return true;
+ }
  
--	ret = software_key_determine_akcipher(params->encoding,
--					      params->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, params->encoding,
-+					      params->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
+-static void intel_pstate_update_limits(unsigned int cpu)
++static void intel_pstate_update_limits(struct cpufreq_policy *policy)
+ {
+-	struct cpudata *cpudata = all_cpu_data[cpu];
++	struct cpudata *cpudata = all_cpu_data[policy->cpu];
++
++	__intel_pstate_update_max_freq(policy, cpudata);
  
-@@ -328,9 +353,8 @@ int public_key_verify_signature(const st
- 	BUG_ON(!sig);
- 	BUG_ON(!sig->s);
+-	if (intel_pstate_update_max_freq(cpudata))
+-		hybrid_update_capacity(cpudata);
++	hybrid_update_capacity(cpudata);
+ }
  
--	ret = software_key_determine_akcipher(sig->encoding,
--					      sig->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, sig->encoding,
-+					      sig->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
+ static void intel_pstate_update_limits_for_all(void)
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -399,7 +399,7 @@
+ 	unsigned int	(*get)(unsigned int cpu);
  
+ 	/* Called to update policy limits on firmware notifications. */
+-	void		(*update_limits)(unsigned int cpu);
++	void		(*update_limits)(struct cpufreq_policy *policy);
+ 
+ 	/* optional */
+ 	int		(*bios_limit)(int cpu, unsigned int *limit);
+
+
+
