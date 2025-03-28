@@ -1,72 +1,42 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3FC35958;
-	Fri, 28 Mar 2025 15:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9933D35958;
+	Fri, 28 Mar 2025 15:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174320; cv=none; b=TFk92zJgGQZBFHgWw9FFdO8LF/tDr2BymQcRwqcDynTeJ6Ae4+VLtOABxnRLioObkvM4zROuvs51roOVa8vaCkcadXWCMdoaSYdukdYm68WfmdNd+0LiKQNlc/OJyRD04JpEqEDXSTdOualJ0BjpI0X+qXIu65ryBn3R9YB0BC4=
+	t=1743174343; cv=none; b=kuLYb80K9t/O0dO6+ZSqNNRnsypG/uSRnZ2gOLVVYSn6hdVrdKLKsy3iH4cY8z9QRrihaFs2azdalS6Oz41PyjZ5Lx9yT72pfEXP6ldbzsvewg8AdxJkYoOBAcA27edXAsAVP3WgZXN8rryClGBD+SseXhusetDpIVstCSYSHnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174320; c=relaxed/simple;
-	bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
+	s=arc-20240116; t=1743174343; c=relaxed/simple;
+	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sch9ndKiZHgUJCL3ebfnxveO7eXaYOT4PGEgbXDiEUgfzYujxh2nrdZDFhMW+/IKHVcEsETvqtNC4yz1X7CwqZkTDuec2WpHqxy6Yd4UPON9dPSLju3+JjTweJD4xyEUMaCF9fMPR6ig63pAJThoEx5ojUkfASBb4aFrNzCuTto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4aDHu2q; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XbhXU4WjfcVSBUd1SPM4lWBFdrrmNW+BZKAiryUmALZz59c/wTadoAsGGexE91Rim9wRZzw2w5OSobc7M1ttzRAGYGzYQ3N4wGQjt6cg7EepZxeZTBSS1oVIyHl84qVdBsdNBfVuwcWnKWhUI6v5kyZPgQz+UcvwfzDnRGf5sNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6J7IYiL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4aDHu2q"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abbb12bea54so424152666b.0;
-        Fri, 28 Mar 2025 08:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743174316; x=1743779116; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
-        b=J4aDHu2qh+qL7NlFOsHN9NKI71fx0QIuQCPfNErXBzUg6DJ5YCS0lNP5iyJG0RvsQJ
-         xsRqfDtXxk4dlh4IcjBl+dYwIMOOcOw2qs6UHh+U1ZkJOHc80xzeMbdWojxgyTPQIxvP
-         sPO3tdiCJbvtQsBgDdc7/AcCIwaAUUg0cqTsAsVdulHHyKw/LByOHw4c1kij2TDCQ8pF
-         eryQyjgSXpudxqYqtePVvTroCdYCFsrJu11Y0vkkBR37khY3naZEE5VYE3X5xhcn2cmg
-         KWllNRaLcVSTIym+yJb464TeCvbn+/MYF2dx2VEkrIEauJxSvrvMHd5hTVrJK/IHJ9sy
-         9F0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743174316; x=1743779116;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yBAnWmBAgw5MP+8CrbHdbxviKnFNTXsTwW8n9ca0eQU=;
-        b=mK6siI69C/Iyytkz2SP6YU4UWJ9RCTktepijFR2bEXZmvvlrvyLVpv+3PEUZxQD1gI
-         WsGidNEMU+Cv3H0+enr5nhdpLHQU+2/I6woMMfrbHTPFD7y58YM6k3O6/EbK0VVPwmsH
-         QjL0ILagepaY3n++4XyigxhjFCHv7A/rc/aErT4IofJ3vCnTGj5DYs+qBoJSV8rRFUKz
-         xpU+R97T9A58iw2LVid3rwvyXXFqpuZNNxpIEQ5kjqL0BI6wpqRFBm8QwQU9K+gHtNJS
-         wwD1Ju6CVBAyk5rePhrcYPWbX6wDGGEm2TEpGmt+1P+rIm2Q2/wZRUkoJlqpDXm02RiE
-         RrCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtqQJtgSEHRKsXt6O5v+wOSLlFseAxQlsB+NfbXqGFbdsnty/VQ0wQ4gnePfedFV8yxWi6+x05McOjXgwYvZI=@vger.kernel.org, AJvYcCVxr2JwUCRVKq5zfMpsmv4ffrEFAXAiw+vAFSlHWF2TDZHv0HOFE8ZjbdkKmSf7de0CalujvH+IxBpT@vger.kernel.org, AJvYcCX6mitfqoB5+pclQtzeSUFbabAPjWNZSZddO8tiVt9chLNKdUOzsOtZlG+tCkgM5ICedAwDPD5jadAK4sY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI/gOyPtKuTNlLBaGQTUQYlwe+kbWthmFrnBlbaC6hjjQxY6t4
-	syIbDOpojbId/hPZLF+j9zloqF7OBeR5JJU/IoKUF4yk16FiZw1o
-X-Gm-Gg: ASbGncuLA5eoveLLjHR65ILIrRVnN5J+vMTFGGyegBqZSNpwa0omirWvdA5k3I4SvGs
-	DVrsh6RrulRd9RNEgW0bgI0iIy33okKn/SwLpo+UgExjEPv8xRjkqnNnPRUJIN0RLeblsZuyrIp
-	QgJOQKLLqXbkH85Xt6AVAWPkgr8fvg1KMYw3P/B6IvPjnu8mR2lDlvJZE3ik+0nKpAhi5WzQyRb
-	7slqCA0rHMa35baTw4Fz7RRkB4gFmdXY8rNz+cO6EzLsuFsFobSU611wTdDwKAXvvDrZ5VKsSeh
-	mNJC9trmDCjTPm7QJC19VckR2YRr7POEleNWPRm5Pse+FiKSGBIKHmF+2E/7GC5Zi4HN9FFGXYA
-	q5xw1XDZVNw==
-X-Google-Smtp-Source: AGHT+IHWk57vx99rlJfgQ42vdU2UnQJlrOL3Q7JbsZWIfDJj2d9tmTOHn7pyRMIDwZcmBZOmNRt2qw==
-X-Received: by 2002:a17:907:3609:b0:ac2:7a6d:c918 with SMTP id a640c23a62f3a-ac6fb157031mr825364666b.57.1743174315568;
-        Fri, 28 Mar 2025 08:05:15 -0700 (PDT)
-Received: from ernest.hoecke-nb (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71967fdbbsm171192966b.135.2025.03.28.08.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 08:05:15 -0700 (PDT)
-Date: Fri, 28 Mar 2025 16:05:14 +0100
-From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Brian Norris <briannorris@chromium.org>, 
-	Francesco Dolcini <francesco@dolcini.it>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH do not merge 4/4] wifi: mwifiex: add iw61x support
-Message-ID: <p5xukavek27sxpploi7wvx6mwew6ubh2wmckwmzqoxnfmal3jy@gfvn2u3af7kb>
-References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
- <20250326-mwifiex-iw61x-v1-4-ff875ed35efc@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6J7IYiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5010FC4CEE4;
+	Fri, 28 Mar 2025 15:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743174343;
+	bh=DFlgmDbfFVNEIC8CuMgkRVk9uaSaT4iLRwL3bDdyVjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c6J7IYiLwYEa8HUpwYBGYRDyIuKnXwG2AIg/IQgkucNhPP7TlZ3NVRsWsoA+kw1GR
+	 AFGsDW3zqA7Y5WXozoKfKFjNwK0AK9hPJZQTeFbRLuOf721qwquNcEwMHcIl/fBiuX
+	 m9eKDJn3BEz7+QM9DG4mft7OcdU7ZhpmWUrhLESEUp7CKwfxTbLkqJ065KFjDIOtdD
+	 Rz414Fe68nmJwmIP24fAuRXdstVNpGWk5HKwp7gkRUCYtI5rCn+xu2nVm+8NcN3uE2
+	 9JHPX1z7eBO7QQtFfxiSeLnTfAI9Z5fA+iyxT0l0bVaquQGxy4vkQI/1HEPB9Kcg+I
+	 P6cDE2SXaOtbQ==
+Date: Fri, 28 Mar 2025 16:05:38 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/nouveau/outp: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-a6wtoIAkDY2ERx@pollux>
+References: <Z-a2DAQmcsHHlyci@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,20 +45,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250326-mwifiex-iw61x-v1-4-ff875ed35efc@pengutronix.de>
+In-Reply-To: <Z-a2DAQmcsHHlyci@kspp>
 
-On Wed, Mar 26, 2025 at 01:18:34PM +0100, Sascha Hauer wrote:
-> This adds iw61x aka SD9177 support to the mwifiex driver. It is named
-> SD9177 in the downstream driver, I deliberately chose the NXP name in
-> the driver.
+On Fri, Mar 28, 2025 at 08:45:32AM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/nvif/outp.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
+> index 6daeb7f0b09b..403cf16d5e84 100644
+> --- a/drivers/gpu/drm/nouveau/nvif/outp.c
+> +++ b/drivers/gpu/drm/nouveau/nvif/outp.c
+> @@ -195,20 +195,18 @@ nvif_outp_dp_aux_pwr(struct nvif_outp *outp, bool enable)
+>  int
+>  nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
+>  {
+> -	struct {
+> -		struct nvif_outp_hda_eld_v0 mthd;
+> -		u8 data[128];
+> -	} args;
+> +	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
+>  	int ret;
+>  
+> -	if (WARN_ON(size > ARRAY_SIZE(args.data)))
+> +	if (WARN_ON(size > 128))
 
-Hi Sascha,
+Seems a bit unfortunate that the size is duplicated here.
 
-Thanks for sharing these patches. To test, I applied them to our
-downstream branch based on the NXP BSP 6.6.52-2.2.0 and can confirm that
-the driver works well on our iMX95-based board which uses a ublox
-MAYA-W260 (IW611) for WiFi (SDIO) and BT (UART). Both STA and AP mode
-looked good to me.
+Can we have an accessor macro to derive the size for us?
 
-Kind regards,
-Ernest
+	union {
+		u8 bytes[struct_size_t(type, member, count)];
+		type obj;
+	} name##_u initializer;
+
+Maybe a macro that returns the size difference between bytes and obj?
+
+>  		return -EINVAL;
+>  
+> -	args.mthd.version = 0;
+> -	args.mthd.head = head;
+> +	mthd->version = 0;
+> +	mthd->head = head;
+>  
+> -	memcpy(args.data, data, size);
+> -	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, &args, sizeof(args.mthd) + size);
+> +	memcpy(mthd->data, data, size);
+> +	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, mthd,
+> +			__struct_size(mthd) + size);
+>  	NVIF_ERRON(ret, &outp->object, "[HDA_ELD head:%d size:%d]", head, size);
+>  	return ret;
+>  }
+> -- 
+> 2.43.0
+> 
