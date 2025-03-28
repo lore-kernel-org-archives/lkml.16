@@ -1,75 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4401F1C860C;
-	Fri, 28 Mar 2025 15:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D641C860C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174825; cv=none; b=CwJWJiH5Lx1kAE0yU9AER2nH3e1loV9E8FBid/UFOmK3H1wAJCX6Mh4agr5NHqJEVuTxzPPvJc26TfJPi6UJOHGL2maheGOkhk7ecK/qOOHGlKpObH04rlCrHgZJ5zm3XmIOCb6L9IazwzjH9rhlKZZUKna+p2WHwopzaEebLDA=
+	t=1743174831; cv=none; b=R2pmtmAH8Wqmr0RiHW8WSnwrUQ5HukDd81t0MVqp3nk75Bjo1n6cxieM27/qEwbU0viyxMueUhQ4SqAMXHRsjbK7X/jMDn6f63qhobqFOA6nhgWXfojwxKPhTcMdKwC3OUxJmJlkR6FKsfFetYKk7zdNSYyXnFITgJ2uc+f6ob0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174825; c=relaxed/simple;
-	bh=Dtnjl7os46EKSTPdEv2lx+mACntQjIU6u4CtZiCQQME=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UVcZiOyIwKOt4pG4roMe4zp8zn7fAdRrwylTt6bNcnb3n/h+ZfG+mc+I0lOPBYpS40CRy6NxXtBPV8lkn8hucA5nmSvadmJ7AJR3Dm9T/URMHr+jvSNeNIvwszvdhP8RkMiPI0Mu5hpQK8XYYC3dEhQLlXYXFRVTq3GuhXLlzvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KU1uKX31; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743174831; c=relaxed/simple;
+	bh=/MWcKXPXZBHCkUeZbUbXxhAaTdNtWBMw+Aqv7bq2O7k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ibT2ouox2qdjJQa3TdkJSnqfG6ITe6mhz7otm22LZUr2nqstkcI02/OLKPuPIYI8scIYshEuhGszK3nuM0+vAYIr7J10rFvnhhATb3QxBGzHJoceVqyGLAHJhvkbuS9a6M6gmBY+wghYF1mWjSJ4hwb/GdlG2Nslt14anOhYOh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=C0uBOsKx; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KU1uKX31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FBCBC4CEE4;
-	Fri, 28 Mar 2025 15:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743174824;
-	bh=Dtnjl7os46EKSTPdEv2lx+mACntQjIU6u4CtZiCQQME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KU1uKX31NIaglimesxqTFb0KuT4jfPg992rwxEwDDBRmZo4e+KcWh7jK3uM6wRR0O
-	 XivE8gGp99t/FKqhRCGrTvMNsGS36IXO6G35woETJXQ6FLPnjuSmri5dVj15LxPF6U
-	 3RkABxexXyg2Px6CkfnzwVf26HKwK7gZG1IHwv1nC8FAjSPYGPf3lkGwDpLLy0vo7W
-	 wtw7BQyiXoAZej8iX30/hKYam2qPSM0+im66TREcruDoWcrEfgqYIbc8PyJB7J59qO
-	 7M84zHKKHia5fYP/gf+79wS1rdLaN7pWVRXRDnWxiscYqkTwHZXmdwkdwXuqp+l354
-	 lljSM9ycVccIQ==
-Date: Fri, 28 Mar 2025 10:13:43 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot
- module
-Message-ID: <20250328151343.GA1505019@bhelgaas>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="C0uBOsKx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=skXxQghNrPMcq7AjXNel2fgneVU1MxGzFFP/8gDVgNo=;
+  b=C0uBOsKxwzc7r3mAT3ZE5x7FImeNper5Ge3QuKTpWSSPr7vQg28/8TwN
+   qDKNc6iDixUeLFl4oc+WJFs7V5GaUSV5KihMfI9TLNzPZtrfjZxJyrUSF
+   czj0K8fMGmTcV3W8d2PZJcgbLqIIICj0Qr1OczKZZNVjg5/p22zgNuJH8
+   8=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.14,283,1736809200"; 
+   d="scan'208";a="215321499"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 16:13:41 +0100
+Date: Fri, 28 Mar 2025 16:13:41 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Samuel Abraham <abrahamadekunle50@gmail.com>
+cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] staging: rtl8723bs: modify variable names to comply
+ with kernel naming convention
+In-Reply-To: <CADYq+fZd=C-EydjBmkP6Rh6XAJS6Kg1nM7zGhyLrGYiLGkZ8mw@mail.gmail.com>
+Message-ID: <acd2df4b-6865-d2c0-7bc2-babcc930d03d@inria.fr>
+References: <cover.1743163800.git.abrahamadekunle50@gmail.com> <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com> <21e624e7-c18f-6aa2-2a16-7cd46e706d47@inria.fr>
+ <CADYq+fZd=C-EydjBmkP6Rh6XAJS6Kg1nM7zGhyLrGYiLGkZ8mw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328143646.27678-2-johan+linaro@kernel.org>
+Content-Type: multipart/mixed; boundary="8323329-356947522-1743174821=:4458"
 
-On Fri, Mar 28, 2025 at 03:36:43PM +0100, Johan Hovold wrote:
-> Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
-> 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
-> renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
-> 
-> Rename also the Kconfig symbols so that they reflect the new name while
-> adding entries for the deprecated ones. The old symbols can be removed
-> once everything that depends on them has been updated.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I considered changing the Kconfig symbols at the time, but didn't do
-it because I didn't want to break existing .config files.  Is that not
-a concern?  Or do you think the long-term benefit is worth having
-users re-answer these config questions?
+--8323329-356947522-1743174821=:4458
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-We have lots of Kconfig symbols that are not what we would choose
-today, e.g., my misguided suggestion years ago to use "CONFIG_PCI_*"
-instead of "CONFIG_PCIE_*" for PCIe controller drivers that didn't
-have any PCIe content.
 
-If we do want this, I would think we should squash all these so we
-don't have breakage between this patch and the following ones.
 
-Bjorn
+On Fri, 28 Mar 2025, Samuel Abraham wrote:
+
+> On Fri, Mar 28, 2025 at 3:55 PM Julia Lawall <julia.lawall@inria.fr> wrote:
+> >
+> >
+> >
+> > On Fri, 28 Mar 2025, Abraham Samuel Adekunle wrote:
+> >
+> > > The variable names use the camelCase naming convention which is not consistent
+> > > with Linux kernel naming convention.
+> > >
+> > > Modify the names to use snake_case in adherence to the Linux kernel approved
+> > > naming convention for consistency with the codebase.
+> >
+> > There is another naming issue that checkpatch perhaps doesn't warn about
+> > which is the encoding of types in variable names.  You can see some
+> > variables with names that start with b for boolean and p for pointer.
+> > Those letters shouldn't be used in kernel code.
+> >
+> > julia
+>
+> Hello, and thank you very much for your review
+> Do I send that as a different standalone patch?
+> Or should I send a v2 after attaching the patch to the patchset?
+
+Perhaps find some different files than the ones affected by your patchset
+and send a standalone patch.
+
+julia
+--8323329-356947522-1743174821=:4458--
