@@ -1,176 +1,350 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D0C1C84B4
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A334D1C1AB4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743173634; cv=none; b=ENCZPc84YFbUcJ5C+bLNTnKkZ9rgwKkQy0JEMemnacaud1tsaGOTBVLDp0qmI68rdrZ7N+n99hmj3FcZGjFeRVprFR6rSkJfvj5JDzEvgykbRWRr7fq8BhHlGU+H9k/XFTiWnmH63LNOs4caHFuh6nB4OJxHYfxr2B7z+zZ7FqA=
+	t=1743173712; cv=none; b=vCCHy9Tw9mbJT3n2gFx4CxrNEddw8f+gVpYva8boRtbMOAHNlx0QGE0Yh6MVlklq/aFhGEFNlZCZXLX/sEMqVDS0HvuCvT5wl8Vufko+ZKL5vNt7f/b2AZ/XOjj4N1Qe/NqPS65YnrZgv2vc4HS4NYN1fTb3mACSeThjVml9xH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743173634; c=relaxed/simple;
-	bh=5oAHlbTAcauldOWi9cMUgYioWN6gScafeHZfYPLkyRw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l6egzhqSfiwbKX6wbrzotSlmOI6D5PbB3yWXO+8RZAXVyZQA9p4y5HJvf9Mx3b6lCNArSA0r246mrec+G7ttaw5Pbdy8uWiU47c9Zb3AXlnESibX/pP6kgGFyKjl8oaWgwcdse2VykrghesUsYiPh3dJIkMPs9RoFV+9ibDJRas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=okOKEWfn; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743173712; c=relaxed/simple;
+	bh=wWAAGIvnE3QpTr0giTRFZtAHNXL1x33FV5Dckbd6WfY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Is6CZxFqYuPeMwTLf85DO1lZYlsB7eKoyIF9O2uMpq+5ISfLMrSQnxZVIr7T//bdBch33YHMWJH/RJqu8Zz5Vs6HDvg0utIQMH9x7ASkskolProFG0mpbmIEtUbz0pl8k9tWcgfhhK0Nhc/jVVFzVyPzkzSRKOXG888QYWqJYhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=kC9ysh4t; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="okOKEWfn"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso16665115e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:53:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="kC9ysh4t"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743173629; x=1743778429; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=om5WJnI/3Srzz6KnBz+MWEytyGjHkNFH1uylSroKmIg=;
-        b=okOKEWfnhIchaZtaYWp60UK0xpayqqgpB5D4b0i+I8ukqG/Sk8+XjXnMU5ZSXHHiWz
-         d+g2HYuLBHn4gdO1t99+6/VlFsAG8+rpBzFqtPiXz5SGk2/0i6RQ1rOOCbJs6bsuyxoH
-         7gtOPvckR+YJzU57+nMxEPPLKbxmeXtFd8F9IRCpGI9uhEZKSdJYU4vSQ1ALG/1LTIUc
-         WhR9jfS0yWdziivczKntuGWlNSgvLfHnMrkbxpcZBZmjrR7HCUOqGoQesHaKT6AysUTz
-         MTF2me2ZBw9HO20Hs6nTz1Rjm51UQmvK5r0MSnTi7suVo1vwTrdOlNyekhXtbPISj2Pp
-         7N9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743173629; x=1743778429;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=om5WJnI/3Srzz6KnBz+MWEytyGjHkNFH1uylSroKmIg=;
-        b=g6P+BbDmcyWKOka9mRG296ftEIOeDG5nmVkL6pL/8t0ch+gZCafEj/5pJDs1M68zAa
-         4sVNBpb8M80YPFGiZ+chtot1bFDqbpYorREIpOelj6p23s2JSSeer86Xcyu9qYTkzXQj
-         D4UNf8EnymJ63PJ8vVTTyt4bRCmd2EmyHiXdQbJ552XpgxnxI4ha27+0p2N+AY5/Rb3e
-         R1KkLXnXkmk7R2nb1KKuNh/PaNkXyZYksRAMaExQTuP8eF+Y4RjkWZ1dictho9j8A9JG
-         YuwwkDlIg6Bj7PrKpnXRqugv1M+B3LHbMTxmDM+blLAE+3vDBXYpL9kHRXl/fx+dUMdG
-         Nzvw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Asge2GypxQv5uuBklEWPKDwucCFjKlNhcaoxt0GV+Ygzddi6qeYfGma5LcGYxfHS8lDW0dWbcwEML84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2YylAfiYQij5cKGQKn5d2UQeJ7jGq6tcnKd+tbKuH27nUx2+G
-	aW24VKpVbDAmt2c9Pt0NVpDVlGiDuGB6sSJaabnLBSAMptGSkr/7MPPd5pfRCNU=
-X-Gm-Gg: ASbGnctVYzrNSgj23njPgTM+/w6VVUZvH3JDyby5JHwh4fbtMYVdVSXD5OLR1RV8IOF
-	QH3pyvN51L1YCSjQrctMYZzGu8IyUPrCTsCGkpKNCpQJkFPNKy7sfaaMTHXyDdx7Xz2uOXlrmLT
-	MYPAS/ZN7hLnHZdZm/yi7lDgOVQNaVWqmLJHi32GTjHvy9vt+PXUCq+TIkQITA4HW7e4z+Yy772
-	N3o/cioSeC2OUp4sV0z/qO9SVN0LQkYG2EEpwE9zReoEIloGXgNnhoeDkraHB6jMIkRgC8lC+Cb
-	3sZiciSbdot0n0wP3o3HCLi3us5f8/4tTRUnj7IBcHQl9my4PDjDw8YdmS4=
-X-Google-Smtp-Source: AGHT+IHxpmdIjzZ3NBy6ZKDeIo2oJ9uzZLQK6IFavRFuRv86Y+8cRv+dnKeq1VLQiY8bi9c3dCFsFQ==
-X-Received: by 2002:a05:6000:22c7:b0:391:4889:503e with SMTP id ffacd0b85a97d-39ad17503e8mr8632876f8f.33.1743173629528;
-        Fri, 28 Mar 2025 07:53:49 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:70c0:edf6:6897:a3f8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d8314e110sm75219615e9.39.2025.03.28.07.53.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 07:53:49 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 28 Mar 2025 15:53:43 +0100
-Subject: [PATCH 2/2] PCI: endpoint: pci-epf-vntb: simplify ctrl/spad space
- allocation
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OdjsjzVTff9n5mM0sggjRtyY+7xARLMR5lQ3pqLEXaU=;
+  b=kC9ysh4tm1JPWmcaF9IOPlahKR3LvJrG6Xgkokj1jrQiLhFFk+N1C+3+
+   1a8SZTxI5Y2krSbj1Q0PxhKRf3+uSrz0X9cBxeFede81C0QaB6a9Ih17b
+   u2ydvvepv7QXFFwi4QD/JiQnXOD5RzTk/X3zwbL8IFPrdN38ZUR/8ntJb
+   I=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.14,283,1736809200"; 
+   d="scan'208";a="112883127"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 15:55:01 +0100
+Date: Fri, 28 Mar 2025 15:55:00 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] staging: rtl8723bs: modify variable names to comply
+ with kernel naming convention
+In-Reply-To: <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com>
+Message-ID: <21e624e7-c18f-6aa2-2a16-7cd46e706d47@inria.fr>
+References: <cover.1743163800.git.abrahamadekunle50@gmail.com> <dd32dfe6c837d88dd13a546aadcb0bc207b997d6.1743163801.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250328-pci-ep-size-alignment-v1-2-ee5b78b15a9a@baylibre.com>
-References: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
-In-Reply-To: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Jon Mason <jdmason@kudzu.us>, 
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, ntb@lists.linux.dev, 
- Jerome Brunet <jbrunet@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2533; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=5oAHlbTAcauldOWi9cMUgYioWN6gScafeHZfYPLkyRw=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBn5rf5tteiMGeKSx358xJ2+154PVr7k7RAJ8OqE
- x2hmwLHlNeJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ+a3+QAKCRDm/A8cN/La
- hX1yD/sHaWYMETTJwDgxrGxRlNsQF+Rc9Q5oMX73ZbvDomTMBb5/EiuCjNA+WGqvLAaxZPnInYb
- gbgbOiq3WmzHn+nEp/DGRjxo8UlUCwJEE0w+E+D89smicnQpIelt4t7+C/M+ImfP/AUC7bxZfiJ
- aJqVUT1ya+PnF0xTs2X1txWYxCtLvr1ez3Zpq7tWgPbvlZzrQgQX1Gs5NkYGemnRj4CdKAwWwc/
- WdPQ6RD2QjKbsur4fqR5Mm5Ykd+yveBedPVUDb2otNDQSi+P+8ACxZ9wn2ZpFbQeSdWa/wrxgFS
- uaKxglM4i8uT7qLrWJWP5we/cAKLPVTI3n11V36Zs8g2ppjfZgAwIhZckxcPGaBFNStjI3em2DX
- y1oAkpi56w/B7itaLGgQ2OnANTCeZ74U/9RJe80a4dq7rHsZcbs8yeIxhhnIWjN/fRvO4nqpH09
- B/XqYI18bYdgYLJ4zPvixPbtVhvoAxCpY7xJPyOhrJR27m0njeWb/dugQjI+03LABwI5PstLYYl
- qtDWRm0pg2/TA/v5JTTzpqK2BbEG2ST+9Htlt/UeGLN54VADr9qtKB/C4PCkqs0HoHNRJpX6ufm
- 2UoJI+sD12dRMYYnCviwxrBt7KSVPuWTN5lnUmnHqTOFDl6WfqoPgNvu3mAsPJfqPMpvduOzCNN
- hJsCtJfdABnSOEg==
-X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
- fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
+Content-Type: text/plain; charset=US-ASCII
 
-When allocating the shared ctrl/spad space, epf_ntb_config_spad_bar_alloc()
-should not try to handle the size quirks for the underlying BAR, whether it
-is fixed size or alignment. This is already handled by
-pci_epf_alloc_space().
 
-Also, when handling the alignment, this allocate more space than necessary.
-For example, with a spad size of 1024B and a ctrl size of 308B, the space
-necessary is 1332B. If the alignment is 1MB,
-epf_ntb_config_spad_bar_alloc() tries to allocate 2MB where 1MB would have
-been more than enough.
 
-Just drop all the handling of the BAR size quirks and let
-pci_epf_alloc_space() handle that.
+On Fri, 28 Mar 2025, Abraham Samuel Adekunle wrote:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+> The variable names use the camelCase naming convention which is not consistent
+> with Linux kernel naming convention.
+>
+> Modify the names to use snake_case in adherence to the Linux kernel approved
+> naming convention for consistency with the codebase.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 874cb097b093ae645bbc4bf3c9d28ca812d7689d..c20a60fcb99e6e16716dd78ab59ebf7cf074b2a6 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -408,11 +408,9 @@ static void epf_ntb_config_spad_bar_free(struct epf_ntb *ntb)
-  */
- static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- {
--	size_t align;
- 	enum pci_barno barno;
- 	struct epf_ntb_ctrl *ctrl;
- 	u32 spad_size, ctrl_size;
--	u64 size;
- 	struct pci_epf *epf = ntb->epf;
- 	struct device *dev = &epf->dev;
- 	u32 spad_count;
-@@ -422,31 +420,13 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- 								epf->func_no,
- 								epf->vfunc_no);
- 	barno = ntb->epf_ntb_bar[BAR_CONFIG];
--	size = epc_features->bar[barno].fixed_size;
--	align = epc_features->align;
--
--	if ((!IS_ALIGNED(size, align)))
--		return -EINVAL;
--
- 	spad_count = ntb->spad_count;
- 
- 	ctrl_size = sizeof(struct epf_ntb_ctrl);
- 	spad_size = 2 * spad_count * sizeof(u32);
- 
--	if (!align) {
--		ctrl_size = roundup_pow_of_two(ctrl_size);
--		spad_size = roundup_pow_of_two(spad_size);
--	} else {
--		ctrl_size = ALIGN(ctrl_size, align);
--		spad_size = ALIGN(spad_size, align);
--	}
--
--	if (!size)
--		size = ctrl_size + spad_size;
--	else if (size < ctrl_size + spad_size)
--		return -EINVAL;
--
--	base = pci_epf_alloc_space(epf, size, barno, epc_features, 0);
-+	base = pci_epf_alloc_space(epf, ctrl_size + spad_size,
-+				   barno, epc_features, 0);
- 	if (!base) {
- 		dev_err(dev, "Config/Status/SPAD alloc region fail\n");
- 		return -ENOMEM;
+There is another naming issue that checkpatch perhaps doesn't warn about
+which is the encoding of types in variable names.  You can see some
+variables with names that start with b for boolean and p for pointer.
+Those letters shouldn't be used in kernel code.
 
--- 
-2.47.2
+julia
 
+>
+> Reported by checkpatch:
+>
+> CHECK: Avoid camelCase:
+>
+> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_cmd.c      | 22 +++++-----
+>  drivers/staging/rtl8723bs/core/rtw_efuse.c    | 42 +++++++++----------
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  8 ++--
+>  drivers/staging/rtl8723bs/core/rtw_pwrctrl.c  | 14 +++----
+>  .../staging/rtl8723bs/core/rtw_wlan_util.c    | 18 ++++----
+>  5 files changed, 52 insertions(+), 52 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> index ad949b0e2b97..ae22b2bf5446 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+> @@ -1132,10 +1132,10 @@ static void collect_traffic_statistics(struct adapter *padapter)
+>
+>  u8 traffic_status_watchdog(struct adapter *padapter, u8 from_timer)
+>  {
+> -	u8 bEnterPS = false;
+> -	u16 BusyThresholdHigh = 25;
+> -	u16 BusyThresholdLow = 10;
+> -	u16 BusyThreshold = BusyThresholdHigh;
+> +	u8 b_enter_ps = false;
+> +	u16 busy_threshold_high = 25;
+> +	u16 busy_threshold_low = 10;
+> +	u16 busy_threshold = busy_threshold_high;
+>  	u8 bBusyTraffic = false, bTxBusyTraffic = false, bRxBusyTraffic = false;
+>  	u8 bHigherBusyTraffic = false, bHigherBusyRxTraffic = false, bHigherBusyTxTraffic = false;
+>  	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+> @@ -1149,10 +1149,10 @@ u8 traffic_status_watchdog(struct adapter *padapter, u8 from_timer)
+>  		/*&& !MgntInitAdapterInProgress(pMgntInfo)*/) {
+>  		/*  if we raise bBusyTraffic in last watchdog, using lower threshold. */
+>  		if (pmlmepriv->LinkDetectInfo.bBusyTraffic)
+> -			BusyThreshold = BusyThresholdLow;
+> +			busy_threshold = busy_threshold_low;
+>
+> -		if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > BusyThreshold ||
+> -			pmlmepriv->LinkDetectInfo.NumTxOkInPeriod > BusyThreshold) {
+> +		if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > busy_threshold ||
+> +			pmlmepriv->LinkDetectInfo.NumTxOkInPeriod > busy_threshold) {
+>  			bBusyTraffic = true;
+>
+>  			if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > pmlmepriv->LinkDetectInfo.NumTxOkInPeriod)
+> @@ -1175,7 +1175,7 @@ u8 traffic_status_watchdog(struct adapter *padapter, u8 from_timer)
+>  		/*  check traffic for  powersaving. */
+>  		if (((pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod + pmlmepriv->LinkDetectInfo.NumTxOkInPeriod) > 8) ||
+>  			(pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod > 2)) {
+> -			bEnterPS = false;
+> +			b_enter_ps = false;
+>
+>  			if (bBusyTraffic) {
+>  				if (pmlmepriv->LinkDetectInfo.TrafficTransitionCount <= 4)
+> @@ -1193,11 +1193,11 @@ u8 traffic_status_watchdog(struct adapter *padapter, u8 from_timer)
+>  				pmlmepriv->LinkDetectInfo.TrafficTransitionCount = 0;
+>
+>  			if (pmlmepriv->LinkDetectInfo.TrafficTransitionCount == 0)
+> -				bEnterPS = true;
+> +				b_enter_ps = true;
+>  		}
+>
+>  		/*  LeisurePS only work in infra mode. */
+> -		if (bEnterPS) {
+> +		if (b_enter_ps) {
+>  			if (!from_timer)
+>  				LPS_Enter(padapter, "TRAFFIC_IDLE");
+>  		} else {
+> @@ -1227,7 +1227,7 @@ u8 traffic_status_watchdog(struct adapter *padapter, u8 from_timer)
+>  	pmlmepriv->LinkDetectInfo.bHigherBusyRxTraffic = bHigherBusyRxTraffic;
+>  	pmlmepriv->LinkDetectInfo.bHigherBusyTxTraffic = bHigherBusyTxTraffic;
+>
+> -	return bEnterPS;
+> +	return b_enter_ps;
+>
+>  }
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_efuse.c b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> index 62a2919086f3..6a2fc4dfa07e 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> @@ -10,21 +10,21 @@
+>
+>
+>  /* Define global variables */
+> -u8 fakeEfuseBank;
+> -u32 fakeEfuseUsedBytes;
+> -u8 fakeEfuseContent[EFUSE_MAX_HW_SIZE] = {0};
+> -u8 fakeEfuseInitMap[EFUSE_MAX_MAP_LEN] = {0};
+> -u8 fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN] = {0};
+> -
+> -u32 BTEfuseUsedBytes;
+> -u8 BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+> -u8 BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN] = {0};
+> -u8 BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN] = {0};
+> -
+> -u32 fakeBTEfuseUsedBytes;
+> -u8 fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+> -u8 fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN] = {0};
+> -u8 fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN] = {0};
+> +u8 fake_efuse_bank;
+> +u32 fake_efuse_used_bytes;
+> +u8 fake_efuse_content[EFUSE_MAX_HW_SIZE] = {0};
+> +u8 fake_efuse_init_map[EFUSE_MAX_MAP_LEN] = {0};
+> +u8 fake_efuse_modified_map[EFUSE_MAX_MAP_LEN] = {0};
+> +
+> +u32 bte_fuse_used_bytes;
+> +u8 bte_fuse_content[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+> +u8 bte_use_init_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+> +u8 bte_use_modified_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+> +
+> +u32 fakebte_fuse_used_bytes;
+> +u8 fakebte_fuse_content[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+> +u8 fakebte_use_init_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+> +u8 fakebte_use_modified_map[EFUSE_BT_MAX_MAP_LEN] = {0};
+>
+>  #define REG_EFUSE_CTRL		0x0030
+>  #define EFUSE_CTRL			REG_EFUSE_CTRL		/*  E-Fuse Control. */
+> @@ -33,10 +33,10 @@ static bool Efuse_Read1ByteFromFakeContent(u16 Offset, u8 *Value)
+>  {
+>  	if (Offset >= EFUSE_MAX_HW_SIZE)
+>  		return false;
+> -	if (fakeEfuseBank == 0)
+> -		*Value = fakeEfuseContent[Offset];
+> +	if (fake_efuse_bank == 0)
+> +		*Value = fake_efuse_content[Offset];
+>  	else
+> -		*Value = fakeBTEfuseContent[fakeEfuseBank - 1][Offset];
+> +		*Value = fakebte_fuse_content[fake_efuse_bank - 1][Offset];
+>  	return true;
+>  }
+>
+> @@ -44,10 +44,10 @@ static bool Efuse_Write1ByteToFakeContent(u16 Offset, u8 Value)
+>  {
+>  	if (Offset >= EFUSE_MAX_HW_SIZE)
+>  		return false;
+> -	if (fakeEfuseBank == 0)
+> -		fakeEfuseContent[Offset] = Value;
+> +	if (fake_efuse_bank == 0)
+> +		fake_efuse_content[Offset] = Value;
+>  	else
+> -		fakeBTEfuseContent[fakeEfuseBank - 1][Offset] = Value;
+> +		fakebte_fuse_content[fake_efuse_bank - 1][Offset] = Value;
+>  	return true;
+>  }
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> index 183c3046ca1f..90966b7034ab 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> @@ -3579,7 +3579,7 @@ void issue_action_BA(struct adapter *padapter, unsigned char *raddr, unsigned ch
+>  	dump_mgntframe(padapter, pmgntframe);
+>  }
+>
+> -static void issue_action_BSSCoexistPacket(struct adapter *padapter)
+> +static void issue_action_bss_coexist_packet(struct adapter *padapter)
+>  {
+>  	struct list_head		*plist, *phead;
+>  	unsigned char category, action;
+> @@ -3901,9 +3901,9 @@ void site_survey(struct adapter *padapter)
+>  			pmlmeext->chan_scan_time = SURVEY_TO;
+>  			pmlmeext->sitesurvey_res.state = SCAN_DISABLE;
+>
+> -			issue_action_BSSCoexistPacket(padapter);
+> -			issue_action_BSSCoexistPacket(padapter);
+> -			issue_action_BSSCoexistPacket(padapter);
+> +			issue_action_bss_coexist_packet(padapter);
+> +			issue_action_bss_coexist_packet(padapter);
+> +			issue_action_bss_coexist_packet(padapter);
+>  		}
+>  	}
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+> index 84109e338c86..75ce5f15f996 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+> @@ -406,14 +406,14 @@ void rtw_set_ps_mode(struct adapter *padapter, u8 ps_mode, u8 smart_ps, u8 bcn_a
+>  s32 LPS_RF_ON_check(struct adapter *padapter, u32 delay_ms)
+>  {
+>  	unsigned long start_time;
+> -	u8 bAwake = false;
+> +	u8 b_awake = false;
+>  	s32 err = 0;
+>
+>
+>  	start_time = jiffies;
+>  	while (1) {
+> -		rtw_hal_get_hwreg(padapter, HW_VAR_FWLPS_RF_ON, &bAwake);
+> -		if (bAwake)
+> +		rtw_hal_get_hwreg(padapter, HW_VAR_FWLPS_RF_ON, &b_awake);
+> +		if (b_awake)
+>  			break;
+>
+>  		if (padapter->bSurpriseRemoved) {
+> @@ -558,11 +558,11 @@ void LPS_Leave_check(struct adapter *padapter)
+>  {
+>  	struct pwrctrl_priv *pwrpriv;
+>  	unsigned long	start_time;
+> -	u8 bReady;
+> +	u8 b_ready;
+>
+>  	pwrpriv = adapter_to_pwrctl(padapter);
+>
+> -	bReady = false;
+> +	b_ready = false;
+>  	start_time = jiffies;
+>
+>  	cond_resched();
+> @@ -573,11 +573,11 @@ void LPS_Leave_check(struct adapter *padapter)
+>  		if (padapter->bSurpriseRemoved ||
+>  		    !(padapter->hw_init_completed) ||
+>  		    (pwrpriv->pwr_mode == PS_MODE_ACTIVE))
+> -			bReady = true;
+> +			b_ready = true;
+>
+>  		mutex_unlock(&pwrpriv->lock);
+>
+> -		if (bReady)
+> +		if (b_ready)
+>  			break;
+>
+>  		if (jiffies_to_msecs(jiffies - start_time) > 100)
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> index 73c70b016f00..06e7677b5e3a 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+> @@ -223,16 +223,16 @@ void UpdateBrateTblForSoftAP(u8 *bssrateset, u32 bssratelen)
+>
+>  void Save_DM_Func_Flag(struct adapter *padapter)
+>  {
+> -	u8 bSaveFlag = true;
+> +	u8 b_save_flag = true;
+>
+> -	rtw_hal_set_hwreg(padapter, HW_VAR_DM_FUNC_OP, (u8 *)(&bSaveFlag));
+> +	rtw_hal_set_hwreg(padapter, HW_VAR_DM_FUNC_OP, (u8 *)(&b_save_flag));
+>  }
+>
+>  void Restore_DM_Func_Flag(struct adapter *padapter)
+>  {
+> -	u8 bSaveFlag = false;
+> +	u8 b_save_flag = false;
+>
+> -	rtw_hal_set_hwreg(padapter, HW_VAR_DM_FUNC_OP, (u8 *)(&bSaveFlag));
+> +	rtw_hal_set_hwreg(padapter, HW_VAR_DM_FUNC_OP, (u8 *)(&b_save_flag));
+>  }
+>
+>  void Switch_DM_Func(struct adapter *padapter, u32 mode, u8 enable)
+> @@ -1502,7 +1502,7 @@ void update_capinfo(struct adapter *Adapter, u16 updateCap)
+>  {
+>  	struct mlme_ext_priv *pmlmeext = &Adapter->mlmeextpriv;
+>  	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
+> -	bool		ShortPreamble;
+> +	bool		short_preamble;
+>
+>  	/*  Check preamble mode, 2005.01.06, by rcnjko. */
+>  	/*  Mark to update preamble value forever, 2008.03.18 by lanhsin */
+> @@ -1511,16 +1511,16 @@ void update_capinfo(struct adapter *Adapter, u16 updateCap)
+>  		if (updateCap & cShortPreamble) {
+>  			/*  Short Preamble */
+>  			if (pmlmeinfo->preamble_mode != PREAMBLE_SHORT) { /*  PREAMBLE_LONG or PREAMBLE_AUTO */
+> -				ShortPreamble = true;
+> +				short_preamble = true;
+>  				pmlmeinfo->preamble_mode = PREAMBLE_SHORT;
+> -				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
+> +				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&short_preamble);
+>  			}
+>  		} else {
+>  			/*  Long Preamble */
+>  			if (pmlmeinfo->preamble_mode != PREAMBLE_LONG) { /*  PREAMBLE_SHORT or PREAMBLE_AUTO */
+> -				ShortPreamble = false;
+> +				short_preamble = false;
+>  				pmlmeinfo->preamble_mode = PREAMBLE_LONG;
+> -				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&ShortPreamble);
+> +				rtw_hal_set_hwreg(Adapter, HW_VAR_ACK_PREAMBLE, (u8 *)&short_preamble);
+>  			}
+>  		}
+>  	}
+> --
+> 2.34.1
+>
+>
