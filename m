@@ -1,117 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail133-26.atl131.mandrillapp.com (mail133-26.atl131.mandrillapp.com [198.2.133.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B6D3595A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF433595A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.133.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743183994; cv=none; b=acJt+Sc6uAPyS4pf8k8Ltus6IaEdaL6iWjd5ph3gMxA139BEgPWDaD7IFdXJ2vaUjIaVXJAghF9LF6nmsnrAOUCoS7oLOl+ShQz+fCIExgXVA4BkjMlAh/ix8fFc3289NXkURBP5EatDJpYn5nTRomstilN/p3XtDsx4YMZHWfs=
+	t=1743184007; cv=none; b=l2yeNS4387XoyzPAT0bZBMW5vmP61sUROef5rduvx3s2OAi2xC4IqBLmSizCAiY8lWXZM221tY4UOJOAhMXr/5xXGycfWYmzFt8ufSwaMGKnpazeOwz1BK0egFPOYZRJRNxQUUxtNL+GxIScWSG4Ihdqy9oikP0yh3ODtaC0Rsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743183994; c=relaxed/simple;
-	bh=nxMJr4IbRtF06Hjyor8w2xYGQsJXLN5afA0RK++UJuM=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=bMIwmVezSH/9CYJhfYWmt3XvQqYroEEw/sMDaVzuCcxvHX0SWs0WN8l5jNLCjONPs5j5bxr8Y65ArIN7mae/sO+JzWCSNvNaosJANzpFoveNeGZDGiuKb6it9wdNznNiav7v+adsaWQdFWiV0LWOFcUL1vSki3tlOCvVczYKMbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nku3FvV2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743184007; c=relaxed/simple;
+	bh=+rIsvbDAA+ml4tHgJlOdbfFOhppugGFZ2OZlCpJfgBU=;
+	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Date:
+	 MIME-Version:Content-Type; b=DQe14X35WHwju3ZWhHKNby+RSrSnR2FMuL6QOlcZ4ZB5bJ06k906HhjBNYvgMxvpDktnavPMQqgJ5e3CY6YId6oZtI+YVvcl0lmfha1hJQ4PeJuWIuXSHX6ZRBLs8cNWHxUKse7nuypOhqLlmtRp89NCs4BemCQ0ZbdTD8/raiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=sfzF0juk; dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b=NzGJYV7b; arc=none smtp.client-ip=198.2.133.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vates.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nku3FvV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743183989;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBdIklFUQdOQtD+W7fZJginlQqeJFZ4hpEcj5ZkuKHQ=;
-	b=Nku3FvV2/lP513uC4mkkxaLNfNxJXIVPNOwZG4lYJIGCcGdBjAOEczOVh3AZpzWXacXVL5
-	ao4VVVxThRBOt16a3QY+XhJmGRSRWCD0CFyrNLIfItqRPd9inLUGV9fDCM9LuXb6eBsAb0
-	G/WCy19+uaIsF1j5+/1YYj6AKuKQQ8w=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-275-SZcbH0u9PUa58bCZtD7zFw-1; Fri,
- 28 Mar 2025 13:46:27 -0400
-X-MC-Unique: SZcbH0u9PUa58bCZtD7zFw-1
-X-Mimecast-MFC-AGG-ID: SZcbH0u9PUa58bCZtD7zFw_1743183986
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B8A121933B57;
-	Fri, 28 Mar 2025 17:46:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF123180B486;
-	Fri, 28 Mar 2025 17:46:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <67e57c6c.050a0220.2f068f.0036.GAE@google.com>
-References: <67e57c6c.050a0220.2f068f.0036.GAE@google.com>
-To: syzbot <syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, almaz.alexandrovich@paragon-software.com,
-    linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-    marc.dionne@auristor.com, ntfs3@lists.linux.dev,
-    syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] [ntfs3?] BUG: sleeping function called from invalid context in ovl_cache_entry_new
+	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="sfzF0juk";
+	dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b="NzGJYV7b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
+	s=mte1; t=1743184004; x=1743454004;
+	bh=m1WbUotnscR04/ZTJ9CfbRbGTSugA8wABybHup+Azp8=;
+	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
+	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
+	 Subject:From;
+	b=sfzF0juklIDTwuKpMoI/ACJLMJw4VAuo8sm64rITrXE3Aw0rqP4Mjl9IP1+ZRMtNJ
+	 Io3gFWmAPbaLv5abswdZIy8Qw0rcLwICtMy0KhUISPLuEuHJx3OCuCaH18t9ZcfzjM
+	 XXJgDn2yTwu92PlXpOhjlxlzn4DsIouZJ7FpZJ4k9IMF92hb3Wb+MzDS5vVROG1x8N
+	 7iWiZmfCLFzDNzy4Caka0wEEU4B3ktjp8zKD3nMrA67XbqveuuVBsj1SUVPujnrET+
+	 UK2mOXIJNipaDwnvmtRD5Q51LxRSghr9IDqY6t/KzIJU0XO2ft/mwb9t3Sh6WFngHM
+	 m3cY1RJLVbYIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
+	t=1743184004; x=1743444504; i=teddy.astie@vates.tech;
+	bh=m1WbUotnscR04/ZTJ9CfbRbGTSugA8wABybHup+Azp8=;
+	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
+	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
+	 Subject:From;
+	b=NzGJYV7bo49v/t//9+4ad2eCZY2rVWf3DFB6hmJN6qoko26YABA3HOCcUznMelZob
+	 Ja26L7A2eCBIQIpOP7jb9iByaMQksku5grfY8eZhRhFhigv3qlHvq5jyZJfX49A2JZ
+	 +0coVJiUGUUK8As/awgQXFjRAKAAwOo8lrKTRxsfRwz60aQdeI0v5CgmCrbHutRhMM
+	 lYfb7o0YzQ3OOLNXj0PKxXZcSj7cVPb4dKHTDH0B7LsF4mT2vO0EnGUR58fw0wOR4A
+	 Z3DMYWy9OLkVuxQ4AORN60xkDqi5R19ODvetkiPZqMs+3XmiSGLB90Q+eIMtBKWp8L
+	 oYxezfl/WI8Jw==
+Received: from pmta13.mandrill.prod.atl01.rsglab.com (localhost [127.0.0.1])
+	by mail133-26.atl131.mandrillapp.com (Mailchimp) with ESMTP id 4ZPSdJ6p76zKsbSQb
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:46:44 +0000 (GMT)
+From: "Teddy Astie" <teddy.astie@vates.tech>
+Subject: =?utf-8?Q?Re:=20Allocating=20SEV=20C-bit-cleared=20pages=20(without=20relying=20on=20swiotlb)?=
+Received: from [37.26.189.201] by mandrillapp.com id 91266744662d4376b263ad259028b06c; Fri, 28 Mar 2025 17:46:44 +0000
+X-Bm-Disclaimer: Yes
+X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
+X-Bm-Transport-Timestamp: 1743184003761
+Message-Id: <00078e1c-e428-4ad9-8041-54b83f913f9e@vates.tech>
+To: "Michael Kelley" <mhklinux@outlook.com>, linux-kernel@vger.kernel.org, linux-mm@vger.kernel.org
+Cc: Xen-devel <xen-devel@lists.xenproject.org>
+References: <b16ec2d7-4a84-482f-b875-d7c152facab5@vates.tech> <SN6PR02MB4157AFE96ADCA3D504909FFAD4A02@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157AFE96ADCA3D504909FFAD4A02@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-Native-Encoded: 1
+X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.91266744662d4376b263ad259028b06c?=
+X-Mandrill-User: md_30504962
+Feedback-ID: 30504962:30504962.20250328:md
+Date: Fri, 28 Mar 2025 17:46:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <85068.1743183981.1@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Mar 2025 17:46:21 +0000
-Message-ID: <85069.1743183981@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
+Le 28/03/2025 =C3=A0 17:31, Michael Kelley a =C3=A9crit=C2=A0:
+> From: Teddy Astie <teddy.astie@vates.tech> Sent: Thursday, March 27, 2025=
+ 7:12 AM
+>> To: linux-kernel@vger.kernel.org; linux-mm@vger.kernel.org
+>> Cc: Xen-devel <xen-devel@lists.xenproject.org>
+>> Subject: Allocating SEV C-bit-cleared pages (without relying on swiotlb)
+>>
+>> Hello Linux mailing list !
+>>
+>> For porting Linux code to make it work on Xen with AMD-SEV, I need to
+>> change the allocation of some pages to use "shared pages" (C-bit
+>> cleared) instead of private pages (C-bit set, which is the default kind)
+>> as these pages needs to be shared with the hypervisor/Dom0.
+>>
+>> Is there a facility to allocate pages with C-bit cleared (and if not
+>> running under SEV, just allocate a plain page) ? Current Linux code for
+>> SEV seems to only rely on swiotlb as access to shared page is mostly
+>> made through DMA-kind devices (e.g virtio or emulated device), but I
+>> don't think it is the best approach.
+>>
+> 
+> For allocating memory that can be shared with the hypervisor,
+> allocate memory as usual (with alloc_pages(), for example), then
+> call set_memory_decrypted() on that memory. This approach
+> works in general for Confidential Computing (CoCo) VMs,
+> regardless of whether the underlying hardware is AMD SEV-SNP,
+> Intel TDX, or ARM64 CCA.  If you are running in a non-CoCo
+> VM, set_memory_decrypted() is a no-op, so you can call it
+> without having to check whether you are in a CoCo VM.
+> 
+> When freeing the memory, do the reverse. Call
+> set_memory_encrypted() first, then free the memory as
+> usual. Note that if set_memory_encrypted() fails for any
+> reason, just leak the memory instead of freeing it because
+> the encrypted state is unknown after such a failure.
+> 
+> If you search for set_memory_decrypted() in kernel code,
+> you'll find several examples.  See drivers/hv/hv_connection.c
+> as one place where code for running on Hyper-V follows
+> this paradigm. There are several other examples as well.
+> 
+> Michael
 
-commit f34068283e8650ecd7a2f57b0b55aa91e498a470
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Mar 28 16:46:58 2025 +0000
+set_memory_decrypted does the job.
 
-    afs: Fix afs_dynroot_readdir() to not use the RCU read lock
-    =
+Thanks
+Teddy
 
-    afs_dynroot_readdir() uses the RCU read lock to walk the cell list whi=
-lst
-    emitting cell automount entries - but dir_emit() may write to a usersp=
-ace
-    buffer, thereby causing a fault to occur and waits to happen.
-    =
 
-    Fix afs_dynroot_readdir() to get a shared lock on i_rwsem instead.
-    =
+Teddy Astie | Vates XCP-ng Developer
 
-    Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand=
-")
-    Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: Marc Dionne <marc.dionne@auristor.com>
-    cc: linux-afs@lists.infradead.org
-    cc: linux-fsdevel@vger.kernel.org
+XCP-ng & Xen Orchestra - Vates solutions
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 691e0ae607a1..61bc8c81c5ca 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
-ct dir_context *ctx)
- 	}
- =
-
- 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
--		rcu_read_lock();
-+		down_read(&file_inode(file)->i_rwsem);
- 		ret =3D afs_dynroot_readdir_cells(net, ctx);
--		rcu_read_unlock();
-+		up_read(&file_inode(file)->i_rwsem);
- 	}
- 	return ret;
- }
+web: https://vates.tech
 
