@@ -1,123 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B4A1C36;
-	Fri, 28 Mar 2025 09:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20FB1C36;
+	Fri, 28 Mar 2025 09:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153437; cv=none; b=Bt6+neWz7hYAythUrqg5JVxFvvdlsc/QrmsFiH7t9Tqa/u6eHwqfsc349tvbeCUwr7jM1prTQgNvDNGv8OMGouvHbsJtt8Q4TWB9QihBm6jMw0jb7hBCaW204QeYSg+gOiOOmCyfmToeReQcB2xodNXmhSfXp8N7AlVivaBq5lE=
+	t=1743153449; cv=none; b=m0xDZEdfNlL18LJ0VAsm+Qix9S3GR0rPPJP1OeWHGCIi73WnNCSw0EZyOdLN0HrqGmbXl4tnCtDQ4+RddnfjkzekgnyopNVFfwkZkJG/C5HZ2ZmCM9ORUxZOjzGyV0rOduJKcwoAnxAGpXFKWJ8aMFYcYV/oweX2RLY6nhOKeLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153437; c=relaxed/simple;
-	bh=R49xfafOMRZGIS4xB8rrTfPNt5gs5+WCiFiRuZHq/w4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4xyWyvlG+hmWVH4mNNsihAACQ1d2f2TrLxxDE1zNupRkz7bM+xKK/z/nmt/qn5042gqLgQeZg7q+fXLJwmDzafBQredyG1YMLmIDoy8ILAR0bOfkKRmzky6zi/T1ip6BfLNGgbVs2tls1+PWMM+ite/YVWgX0zrdHXbAjcHW6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VcDsR06d; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743153449; c=relaxed/simple;
+	bh=x3NZvRcTwn5V3UNaJOHVOZoRrWFFeJumVFdMrcbedTY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UPVumygXJOn9xFcKybBh5sduRHQi6ADQuypRkRwVog8r2o3vfADenKKVLbYKSinrb0a/nHgemsenUbHiB827bb/kJK0byI3YkUpuLgGOifh4Wa+cEFTGmcngSAn0ypqS6Z8VhaAYQ+8IJb/3s13V5528Dhjb03jh7qtGJ/u2N6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcacrj5o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VcDsR06d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743153435; x=1774689435;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=R49xfafOMRZGIS4xB8rrTfPNt5gs5+WCiFiRuZHq/w4=;
-  b=VcDsR06du3n802uR5bGhlSunxTM1JI8f7K5dtu0QdvGYqjjHOpQ2KwDy
-   ljYhFOpd0D9WjsTlyM1W3VZZvRRzNwKOYmJAc2Zenp47x6SGOvZa6eo+j
-   NOu+qRdF04qwaYWqEmlPUH6nn+GwgQwFz+42pgpIEpFkcpVu8XNRyg/2R
-   qz2e3UvuYnCcsh3mt1TnZgt2RR4VbC9PXmkpTXzxwU4RS3etGBsSY5OFP
-   G9tb83+9AUhsrzPvO/zarFiZ4bnBnxgozQWtXlPN0nw1S8nSb33IhVNvd
-   CEXIKdWL2K0tyVUc5f4zfRognyCO1DNLWL0NmG6za5F0etP2sz/ys63M8
-   Q==;
-X-CSE-ConnectionGUID: lg2XpSisTMmYpQBTMA3VuQ==
-X-CSE-MsgGUID: F0IUrmXwS9+30sc45ub+Fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44401854"
-X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
-   d="scan'208";a="44401854"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 02:17:14 -0700
-X-CSE-ConnectionGUID: X3eEiq/8SWWfStwXYg0ZDw==
-X-CSE-MsgGUID: mHjs0pwVTIaL56iYZ4kG7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
-   d="scan'208";a="125622129"
-Received: from win-uq4qlp9a0jq.iind.intel.com (HELO madhum.iind.intel.com) ([10.223.138.63])
-  by fmviesa008.fm.intel.com with ESMTP; 28 Mar 2025 02:17:10 -0700
-From: madhu.m@intel.com
-To: gregkh@linuxfoundation.org
-Cc: heikki.krogerus@linux.intel.com,
-	linux-usb@vger.kernel.org,
-	pooja.katiyar@intel.com,
-	dmitry.baryshkov@linaro.org,
-	diogo.ivo@tecnico.ulisboa.pt,
-	lk@c--e.de,
-	linux-kernel@vger.kernel.org,
-	Madhu M <madhu.m@intel.com>
-Subject: [PATCH v2] usb: typec: ucsi: Add the UCSI commands in debugfs
-Date: Fri, 28 Mar 2025 15:13:05 +0530
-Message-Id: <20250328094305.546724-1-madhu.m@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcacrj5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17ACAC4CEEF;
+	Fri, 28 Mar 2025 09:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743153449;
+	bh=x3NZvRcTwn5V3UNaJOHVOZoRrWFFeJumVFdMrcbedTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Hcacrj5oLcZNctvxWb2JkytmbNpy16GrQDazYdb3U13vQtlqbiTurPeagMX2EmSot
+	 c9YQWuUlC7J5fFaYf3S9pMKcYm8GrhJ2rysiCdWnltJXIcprJLlfor6ghXRombxg1g
+	 5GV6uwO+vMxySN/wU371tF0nC52XhM7SOTJrV0uDQOSpHmcn6zjlhkC7zmQFqMccsd
+	 sOZ7ne+0ka8+QNzSOzvKJQGFcFV6hYTEdEJlauvZ9H4hsVjRG3uaqKk64Z9bDi7z6r
+	 i/vjd6EaWTMTTtByHjlio+lBQf/DoNAvj8b09aOzA26jLaznZlKaEFoxTOEVQuhWGY
+	 dNdLozlmlBoJQ==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5499614d3d2so2166267e87.3;
+        Fri, 28 Mar 2025 02:17:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVRgdiUjTz4vDiQqks3dTvrCtH6pa17ya8XUmA9kG7QlpJy7XouP2Ut5Xz3VGuuRdb7HGo4Oh6dWGXEezE=@vger.kernel.org, AJvYcCVUYWiT06UjUFwtO9Y0AypFNQKleMXNJujEr6VHm0wnFWNpXP47InZcRWRPa1+CQKhojFSEdYbZ6WleAw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Q9DIyNEkWwD1+4RfYMBtORdxgWOl+Q2tf/uHdneZY7laq2Jz
+	M7XPfF3H6SdP5AfE3RX6KIBNGXYuiKV+t1z8jG+McJuEOanJqseEUhCrOJt2L8tfJXMIHQZKcsy
+	vDAa86EagKku2KUN5g9lLyPsuef0=
+X-Google-Smtp-Source: AGHT+IGGL5mo+8gl975uX9YbeSFfQJTYPPBcfIX724FcwKqMBD1e0YNf3sTbZdbZh4dqUchfGKzQdax50C3WfiheG4A=
+X-Received: by 2002:a05:6512:1094:b0:549:7145:5d28 with SMTP id
+ 2adb3069b0e04-54b011dca5fmr2331245e87.25.1743153447420; Fri, 28 Mar 2025
+ 02:17:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com> <rar5bkfy7iplfhitsbna3b2dmxbk7nunlaiclwars6kffdetl4@lzm7iualliua>
+ <08981771-39ac-af66-e2ec-e8f9bf6aed0a@amd.com> <idlcitykk3hxg5by5sltuljyjf7uanmve5fspu6dectubhy5za@mjmv4i5vwyby>
+ <ydvzjdcauzyvv7hxtra6l2gh4diz7zp4wx46eqculr7azynjke@z4x6eryq3rqd>
+ <4f258a96-42fe-4567-886b-e8e2b949ab1a@akamai.com> <xcxcte6tzti7e6gcucf2ylfptie6kkvs2q5edup6mtzo5tenft@d2rm3p2yjoue>
+ <20250327110224.68c69c78@gandalf.local.home> <2kwzi2qxqualhskbgckk6m7oc6vsgupquceqgfx2gnz5xbkier@rwdrhym7yxhr>
+ <vhwle6fj3ifmcouppec5adegqludggsxcsxxveqa43hugtsdgy@pb7vd5cqjmx3> <m4cubsijicsrtq3blyzxeknsuc4cqswg35yz45uk5lipza4lps@yeqq2j5hf4y3>
+In-Reply-To: <m4cubsijicsrtq3blyzxeknsuc4cqswg35yz45uk5lipza4lps@yeqq2j5hf4y3>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 28 Mar 2025 10:17:16 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGLWYrfEzdDXy1wriBycx0DPQ_kL==Jkw_sDW5f0KxEHw@mail.gmail.com>
+X-Gm-Features: AQ5f1JpU6H6LooyOgp5MxGSUplJ1Di55u9wZFLS5uZLKj7Nvk3hVgSh4D1Gok6Y
+Message-ID: <CAMj1kXGLWYrfEzdDXy1wriBycx0DPQ_kL==Jkw_sDW5f0KxEHw@mail.gmail.com>
+Subject: Re: linux-next regression: SNP Guest boot hangs with certain cpu/mem
+ config combination
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	"Aithal, Srikanth" <sraithal@amd.com>, Jason Baron <jbaron@akamai.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"Roth, Michael" <Michael.Roth@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Madhu M <madhu.m@intel.com>
+On Fri, 28 Mar 2025 at 10:09, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Fri, Mar 28, 2025 at 10:28:19AM +0200, Kirill A. Shutemov wrote:
+> > On Thu, Mar 27, 2025 at 07:39:22PM +0200, Kirill A. Shutemov wrote:
+> > > On Thu, Mar 27, 2025 at 11:02:24AM -0400, Steven Rostedt wrote:
+> > > > On Thu, 27 Mar 2025 16:43:43 +0200
+> > > > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
+> > > >
+> > > > > > > The only option I see so far is to drop static branch from this path.
+> > > > > > >
+> > > > > > > But I am not sure if it the only case were we use static branch from CPU
+> > > > > > > hotplug callbacks.
+> > > > > > >
+> > > > > > > Any other ideas?
+> > > > > >
+> > > > > >
+> > > > > > Hmmm, didn't take too close a look here, but there is the
+> > > > > > static_key_slow_dec_cpuslocked() variant, would that work here? Is the issue
+> > > > > > the caller may or may not have the cpu_hotplug lock?
+> > > > >
+> > > > > Yes. This is generic page alloc path and it can be called with and without
+> > > > > the lock.
+> > > >
+> > > > Note, it's not the static_branch that is an issue, it's enabling/disabling
+> > > > the static branch that is. Changing a static branch takes a bit of work as
+> > > > it does modify the kernel text.
+> > > >
+> > > > Is it possible to delay the update via a workqueue?
+> > >
+> > > Ah. Good point. Should work. I'll give it try.
+> >
+> > The patch below fixes problem for me.
+>
+> Ah. No, it won't work. We can get there before workqueues are initialized:
+> mm_core_init() is called before workqueue_init_early().
+>
+> We cannot queue a work. :/
+>
+> Steven, any other ideas?
+>
 
-Added the UCSI commands UCSI_GET_CAM_SUPPORTED, UCSI_GET_PD_MESSAGE,
-UCSI_GET_ATTENTION_VDO and UCSI_SET_USB support in debugfs to enhance
-PD/TypeC debugging capability.
-
-Signed-off-by: Madhu M <madhu.m@intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/usb/typec/ucsi/debugfs.c | 4 ++++
- drivers/usb/typec/ucsi/ucsi.h    | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/usb/typec/ucsi/debugfs.c b/drivers/usb/typec/ucsi/debugfs.c
-index eae2b18a2d8a..92ebf1a2defd 100644
---- a/drivers/usb/typec/ucsi/debugfs.c
-+++ b/drivers/usb/typec/ucsi/debugfs.c
-@@ -34,16 +34,20 @@ static int ucsi_cmd(void *data, u64 val)
- 	case UCSI_CONNECTOR_RESET:
- 	case UCSI_SET_SINK_PATH:
- 	case UCSI_SET_NEW_CAM:
-+	case UCSI_SET_USB:
- 		ret = ucsi_send_command(ucsi, val, NULL, 0);
- 		break;
- 	case UCSI_GET_CAPABILITY:
- 	case UCSI_GET_CONNECTOR_CAPABILITY:
- 	case UCSI_GET_ALTERNATE_MODES:
-+	case UCSI_GET_CAM_SUPPORTED:
- 	case UCSI_GET_CURRENT_CAM:
- 	case UCSI_GET_PDOS:
- 	case UCSI_GET_CABLE_PROPERTY:
- 	case UCSI_GET_CONNECTOR_STATUS:
- 	case UCSI_GET_ERROR_STATUS:
-+	case UCSI_GET_PD_MESSAGE:
-+	case UCSI_GET_ATTENTION_VDO:
- 	case UCSI_GET_CAM_CS:
- 	case UCSI_GET_LPM_PPM_INFO:
- 		ret = ucsi_send_command(ucsi, val,
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index 3a2c1762bec1..72b9d5a42961 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -123,9 +123,11 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num);
- #define UCSI_GET_CONNECTOR_STATUS		0x12
- #define UCSI_GET_CONNECTOR_STATUS_SIZE		152
- #define UCSI_GET_ERROR_STATUS			0x13
-+#define UCSI_GET_ATTENTION_VDO			0x16
- #define UCSI_GET_PD_MESSAGE			0x15
- #define UCSI_GET_CAM_CS			0x18
- #define UCSI_SET_SINK_PATH			0x1c
-+#define UCSI_SET_USB				0x21
- #define UCSI_GET_LPM_PPM_INFO			0x22
- 
- #define UCSI_CONNECTOR_NUMBER(_num_)		((u64)(_num_) << 16)
--- 
-2.34.1
-
+Why is the use of a static key required here?
