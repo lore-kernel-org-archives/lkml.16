@@ -1,302 +1,213 @@
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BA417C77;
-	Fri, 28 Mar 2025 08:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743150560; cv=fail; b=E5iN4mVWjwkNQ5An2aDnHRkm22qY1YBYJ63cSbMGFWqbg5LjRGQJANvkuGlOABXnbwNOURasYPqr/rYHbPMmiZgAdMIfnHC4GFTUTgTQl+xnAg8ApV/nU2qhZwLaihUxriUuJ+3h8fGmDNLV6ErDjgmw0Z/3yq+SCW4BZzc4phk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743150560; c=relaxed/simple;
-	bh=Ol7m0o67xF+0VqOH0eSzrC5rlLXB5wN/lDvdZa7P6Wk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Hj/TuPKq7ALF1neILBlskso4Rzwi7jIk7kkfbjacY8ZQ3xjOYcs4X/3i6kQ9/gI4jAsgT4kN/yui+otZbsOmYx3+3qz56lPAepYD4qIBWgvEdn97FypUmfI5Ji2faAu+eO3fbf0iRA46xvH+w/JrTF6JuKEHvfAmUHwUMzGMZww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=V7BtUpxV; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27A42F30;
+	Fri, 28 Mar 2025 08:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743150580; cv=none; b=hSBY054qWERLpgiIQb0D9Nw8KYMCpNamnjJw34nC1SX4v6f3HFZl9dQdeDYKIQ1LeDaFZTHurtBpVbxEhZiS7991NV9zhAKRK8QRs/MDV10RCKVrXsfG5c79EIkx3ji1VLbLphGRKcgOsk/IiE4Oy4tFL46c2RgFuAs0L06cnvk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743150580; c=relaxed/simple;
+	bh=pDffGY4oyd0PxQ/KRiEepC6qUycajp4F52W0w2SZ/tM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YUz979ApfrtfTsnLVjdZpjGwq3U5ZV9OMRR3cnQBMsRcPwTHsAgxVhTqMfQoCQgLRA65HHDlCZjFL2QbAZ7Wxg51mYNU+3nIcobWXeAlrNkecTSA1DV9PJ7gWGzReapMfT9xU2tv/Hz/Ouq82MUxUYIymr6UlG0C1HYWp7dwMzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3vHdw2T; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="V7BtUpxV"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=sandisk.com; i=@sandisk.com; q=dns/txt;
-  s=dkim.sandisk.com; t=1743150558; x=1774686558;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Ol7m0o67xF+0VqOH0eSzrC5rlLXB5wN/lDvdZa7P6Wk=;
-  b=V7BtUpxVXj5I0x9bKMGmuOAbVx5dsZD9PlzhRjXvYleqjfEebQNTR1BH
-   PQa69joXSXRCWtWRIacAgMuhWuhtFlIbhf24flBVO/KoiQHb1HtwlkosK
-   +Q5irU1y4oR9OoBbKeJqMRzbnSxztl8vjQQkt81NItpSi4DluaHvTus43
-   g0lm+ys2yO5fmC3AQ55YMHICmRwdnHpnW090kbsNcIGWOE3xD4e+NvQyA
-   Dmvw0YrhvNGL07Toa9L3E6bhArWprIC4S6x8wxgPF4uuQUGCcMlurhxqt
-   ZKI5UKTDM+tGPDTUac4c5I+GSa0k6Rc4Rw9ztVF/GQo9zk3zu/TKihASG
-   A==;
-X-CSE-ConnectionGUID: IJctyserSrGZOwJzn84Row==
-X-CSE-MsgGUID: cZ3wIvHoSBeH7yz5hM1sUg==
-X-IronPort-AV: E=Sophos;i="6.14,282,1736784000"; 
-   d="scan'208";a="66700200"
-Received: from mail-dm6nam10lp2043.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.43])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Mar 2025 16:29:15 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MADsWpFhmT3zsh0b7mK8Fjx65Cryz6ZYKudopb5lvj6EIGU5jt2gd/FO0nv0vN8H+ArcYCCSxdfGAxjaOS1LCakyXSm74jfoQ48eGuO3HRBYQ4amKsVS38UKTPzD77NVakV03b+vngwUxdPZt5ONKbai4QnHZdLvq1OHYonL4754OVIz1931NtbV0PGWbcC5vYMXvE8NAJ0YWO0FTHWMR4381d7FqZlDsVXKlmIe8hGX4O8rZhNoF2cpa+lod9zyq27p2DFd6WFStVCntn0+ncrgSgq93fFTr/RTrzg8I/uoZ9W1O9OhuaeuP931aOm1+099ItFuYVcEP3fyNpfn4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JY/qP64+mxWmERmiTxk8fH8jqyOzby/zwhdn1Q1aoP0=;
- b=wGq2xCz5rjD+8+O9Y/bqbuExA1Dfv0JdRbwBg8iXB4sgg9yhtBI9INQxBxx8AhBsTaQ/Pdd3CtWHPKDvylxGV1cg2rEiTiJ4ubAVFMsQ/1LgLDOqIF9o9nYmem2xppv1JgnrELxxf0dISQ0rjSfrCuOcjwXtOW+C2LeZp6nsPxB2k9NjAS4DdlxDwa58gEVjG0ExijUhtWojffwvwzgoPER4Jjo5nqA6Ns+aAt3A2YYRz5PCXENfndAYqh7fQrvBkR/bv8nk66leUQDdSgzJTdUEd6qem/TUNc5LPpJhpjxreUk/+oE13QaqE2L9DwVtSL8RZ66KcqtrGrLlA+HNoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sandisk.com; dmarc=pass action=none header.from=sandisk.com;
- dkim=pass header.d=sandisk.com; arc=none
-Received: from PH7PR16MB6196.namprd16.prod.outlook.com (2603:10b6:510:312::5)
- by IA1PR16MB5334.namprd16.prod.outlook.com (2603:10b6:208:453::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 08:29:14 +0000
-Received: from PH7PR16MB6196.namprd16.prod.outlook.com
- ([fe80::58f:b34c:373c:5c8d]) by PH7PR16MB6196.namprd16.prod.outlook.com
- ([fe80::58f:b34c:373c:5c8d%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 08:29:13 +0000
-From: Avri Altman <Avri.Altman@sandisk.com>
-To: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>, "quic_cang@quicinc.com"
-	<quic_cang@quicinc.com>, "bvanassche@acm.org" <bvanassche@acm.org>,
-	"avri.altman@wdc.com" <avri.altman@wdc.com>, "peter.wang@mediatek.com"
-	<peter.wang@mediatek.com>, "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>, "minwoo.im@samsung.com"
-	<minwoo.im@samsung.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 1/1] scsi: ufs: core: Removed
- ufshcd_wb_presrv_usrspc_keep_vcc_on()
-Thread-Topic: [PATCH v1 1/1] scsi: ufs: core: Removed
- ufshcd_wb_presrv_usrspc_keep_vcc_on()
-Thread-Index: AQHbnuL98BqRKlKSWUWxtjK27BqB37OIOJWw
-Date: Fri, 28 Mar 2025 08:29:13 +0000
-Message-ID:
- <PH7PR16MB619627C83309BDCE8BCB952FE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
-References:
- <9ff613809e88496b5802a2d45984d2a8dddf92dd.1743057420.git.quic_nguyenb@quicinc.com>
-In-Reply-To:
- <9ff613809e88496b5802a2d45984d2a8dddf92dd.1743057420.git.quic_nguyenb@quicinc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=sandisk.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR16MB6196:EE_|IA1PR16MB5334:EE_
-x-ms-office365-filtering-correlation-id: ab17a195-9d26-4a88-f7fc-08dd6dd29f49
-wdcipoutbound: EOP-TRUE
-wdcip_bypass_spam_filter_specific_domain_inbound: TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?YbE43bbVbXigcc+waAFAG1y+W8CLLw2k2sntGzVIcJ9r6upMuP0NBqFDp12l?=
- =?us-ascii?Q?GehbdVbB1zDCy3q72NO/N3RuE8XonRq7MQS1lc6rcARLBbaE4hTziizw6zS/?=
- =?us-ascii?Q?J86B0vLGqnr5Z6/B+3qSv5TEXltbbfozHLPhEwuI3fz7qV2AKNvVpzsrIXxV?=
- =?us-ascii?Q?R53PtE5vG/EhepOIQeHgDmlwZ8iqho1DP36SgqAb5arHgl6H7MrXCK67aGDG?=
- =?us-ascii?Q?s/PBNWB8j0d5VooX4YXkWzooNB7c0OsgVoIqF9ebtnhWhzt5Z6nDpjktNxiP?=
- =?us-ascii?Q?M0xy4UusCKs/g/AnjiZuja1oFdFP3RF4J5b827ACwHpe40ZmahWBX0n5g6E8?=
- =?us-ascii?Q?zb+/eWHn16z5lDCGLuLU9pcYEJiLaTC3mG3Uv9qbQc/8jUkxn6pVyVh4X0Cw?=
- =?us-ascii?Q?LPseZSyOXRUeX1ErbRDTgTw16A94YHD6AE415zLm6G+9wdCmU8KwevQiYR5k?=
- =?us-ascii?Q?iEz66zq3RKn+5VCkfh/AvHkDRDGVPl6YD1ACEqo8HL3OyxIH257J2eRtgN4P?=
- =?us-ascii?Q?xmxTSfwLm6aT1mpSmpGiTS3s50Z3OjGXnD1jwYyRnyEEnGT4FVhLv7ZdK3W4?=
- =?us-ascii?Q?roPCPwwWzcZb6nwkBTPn1IL9BowO1MYOoJydaEnJxFiB2EDdLXqbQiuAuCxN?=
- =?us-ascii?Q?xQXELTVVxm1wEo32exRH7ZXXIBNfc8qErjTwxq7lAi6VjrwIlahQZIOIK5wL?=
- =?us-ascii?Q?TVUN5cHLnQGfM5V5wE1GDwixPLj5KIJ/+lgBuOBn71datHPmrQCdXKolb2BE?=
- =?us-ascii?Q?dFFoEJ7rKCgT2TzxhO5+PxyRugeWFpIcMFBLO4QO7182pWpIQv6XUkIKfROn?=
- =?us-ascii?Q?hBKn/ayhuL7vldttvOKu7i3adP2AB/9DL92BEItL4HM9pOflqHQZWiDCatiV?=
- =?us-ascii?Q?r/HvyXuOJZq+Hu9n2zoHCuQwDv1+A5v1tlE/kJjLKY1PSGYdFyfREVZ8gTn5?=
- =?us-ascii?Q?/JDtbu/1Jq5LN40RN05hSFpYARU53/5CgK11yaqLP28sB1ymto+kdV8B1jpp?=
- =?us-ascii?Q?USyPww77dQp6Zh9bEzPhFvVMxns4HKz7xfmrTvOVwajW5kZPWwVvCni+DxKq?=
- =?us-ascii?Q?zpWYVEZ7/ct+D3t9N9mSBqJNF7RkrwkeOUuaYKSRwyJBTV025juccGy7kztc?=
- =?us-ascii?Q?r9dyEupC+F9LAEEiMwWYzymtj34IdeYUo8PCjtnl4RjKxwATVxPb/7Nhrldh?=
- =?us-ascii?Q?IyQqLYLjnF3C8I4WyXe5L4r7xjK4+zIGF6Qe6Tb4xGQetvIr4AXYqsbGHFxM?=
- =?us-ascii?Q?i6H10UMAVBWjuyuWCw7Wdj7Qcuqp++AJOHM4PR16ZaQmdks+nYF0jOuN/Q4H?=
- =?us-ascii?Q?4HY+LhjV6g0Ky7e2JJahBVtGmmMwR7ymQHmFOxJuIamGj1rXaWlDXW1qN84Y?=
- =?us-ascii?Q?8Xds9sCLd3gYupV6qYbnMeEXa03ThcBA2xyyyQRkPyoYZ/ETe48+6PaWAyJs?=
- =?us-ascii?Q?wcC9dWO0g+pETHqv1xZwNrEnhCdcsIKt?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR16MB6196.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(10070799003)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?yeJY7qY5Kks/kKvrNpT9/Z+cQravqTrKAyq8D6BqvoGawx+KPzx3xJbVXAas?=
- =?us-ascii?Q?762CdW87xAaf4gtn9gq2XzZsA3WTxW6StC7bZyL6qzI3hSsaYjojD4Tt6seR?=
- =?us-ascii?Q?aR1pp+mpC7eT3WrDAOQxQrAEi/pGYetGFaKOZJpJemz0vpqfrohasiWKEs8Q?=
- =?us-ascii?Q?GDL0lB3oFgd3dFMu8C9jXQQHz+/f/yvSpbPZ5me3E2ZX5x01ErexiFfROO73?=
- =?us-ascii?Q?njAQ7jrR3rsDrhmJqaQ07dua4H8Z1gxDVA432t4ohGpLfDeIAo5VHN0X06oo?=
- =?us-ascii?Q?Djxrf6xUaW/rVC2uM2McmaUm2DVXdm1qVwX58Zu4XrqGilu9rpbZiSClXhCq?=
- =?us-ascii?Q?P1DGwVt7nfqfIbfICr2sSJL9DVSE4eSGihx06V+YloKO2vyQMHIGUdq4I9L7?=
- =?us-ascii?Q?oa4cSjIKV8Flj0e+b0X8INBgd3tSJcBav/RlThKRgaGZdfPZN9vN64GD6gSR?=
- =?us-ascii?Q?tEbSd6lp+35zUerb12knWNEzKPH/IrrgXnxyUDkA2HDZrHvlp3evE3Q3sOuy?=
- =?us-ascii?Q?Bl6vSDJsrs4dt7OOeN+8WcQpeMzeDfYOe7Y/wnzPXpWxh2LJ38U0Ywy4hnlN?=
- =?us-ascii?Q?aUbKG/3A6qTlvDZnJ0ejUnXhRLeKHiOlCqKAGYTtuG9Uzlfo8Hk941dEt9Wc?=
- =?us-ascii?Q?yml6Mbi5jgs+RFQkMtQI2k/GyQNIblZYU+KS/2Gf3SUMvlempvlITdDfL6T6?=
- =?us-ascii?Q?9vqWcTW7OS3yU1Z9SWUsSd+O4klA0xIuwFv9j7C39O+u48NghYEWyfTp6msQ?=
- =?us-ascii?Q?51KD8OYUHugOJulNM3kuj++DWZu0ccs0gi9IRS4oEJnFlSTIyTWhCaNxRI/p?=
- =?us-ascii?Q?pV0qrzbh6o6DWnRfJKqYq61ukQBOw92FTXDyAqEvXTLtJhQo1wSKKGEzfOLQ?=
- =?us-ascii?Q?eMIEvAkg7eZsd84GZ+qHfa4NRF/gIap4cav+LKG2tX+l9zHdoMkSNSH2xiXx?=
- =?us-ascii?Q?q5MUABzr5sRWhE3SGMtKz217OLmU4qI0exlPLHptBW45qPCQXMOX58OlZqUs?=
- =?us-ascii?Q?sySKnFnU5mZIJgPnEHmS+WFnrCgl27p1ussbxAy4zYdmse4WpXcUpjiZQqGG?=
- =?us-ascii?Q?6N/gSVY8Gi7xSn8V+yy5/m79mm3wQZpLwP0K5A5mFkTz01p0fppGRcGLO8p0?=
- =?us-ascii?Q?jnduYA+B4z46t3wkIUHMvLNoFflhMDIqkWXJZ/suVh6LjShTcvJqxwhs2u3y?=
- =?us-ascii?Q?E8SJtChU0mUV9BZ0bQo8z+ccfC3tOat6AvR+JlNIxQhLHVlMU+day0BzahcW?=
- =?us-ascii?Q?IrWPnBiP79o3AKgS8vISiLwaOR4NrHoC0l3yBNkwRKK3CkDZEgywbxbho+gI?=
- =?us-ascii?Q?emP+di193HPbrgLToRJkaEMcJe10fKnlMTYtcM/jhQs/nWtASKpllf0R7rLk?=
- =?us-ascii?Q?sqbYJyEVvDGy2bPGJMbZoZ6/Lkpi8p5FU7HAVSnxRJomgD50xgMnLW7+wvf5?=
- =?us-ascii?Q?NxLYRfwMd6EKnKZAI1uI6oMSR2xfM2JLNp011ibxrGn5MntdtPfsu8ou++cn?=
- =?us-ascii?Q?MiLYD3X5t3zrpZGzsFVC2n8K5u/0CBKR9pPVDKzQlBcRHsLLEHUc7piAWG6t?=
- =?us-ascii?Q?PBaTz3OgnEgfACdSnrvMvdmpHftUV9A7GYwHP/gXKkaBPYUjnMouPiy6UmWZ?=
- =?us-ascii?Q?O1oqKGiNo7Am5Mn7OGuXW9K8fJ6mhQwh6fgc9U1DPiAt?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3vHdw2T"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso1954403e0c.1;
+        Fri, 28 Mar 2025 01:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743150577; x=1743755377; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d30QttJ3kFYJy8HLYJ11ejVcMVaRpYa8Jw/DEhp7CDE=;
+        b=K3vHdw2ToI/3KkME74ZrWriaWSOxfVvpVOggJzJxJXN7+KZXYMdw3xEBfR5snOIYie
+         +vwf1MJq+lAfYQihGvI7NjAcUgWMxEJxztRp9lrw4C/D0KAT29Ivhsi/OhBWsvwlY76m
+         5pHmRDYyGP3P7dz+BgHRvZnq1TaK+QXuWDzuLe1zB5xyjuWpqyeqFJSUVW5OKNRwZYTe
+         BlqGLDFg45RvIReYBDru3hO+diLznKyECmUiBm/hJZtgoZaZ9K82Z2YRyhBYWeIPqCtT
+         /byHGlLvZvr5NwoALKgVXx0WYJT63jiDTBrSRf3aPI/ZVD2qi/+/A3WSnlAHE9q/eqzZ
+         RPrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743150577; x=1743755377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d30QttJ3kFYJy8HLYJ11ejVcMVaRpYa8Jw/DEhp7CDE=;
+        b=WnNhdMaNjXCzzP7cx4ijwq62FK4a4tFPm1u8a+071TXgWRV97Vjb1H43TwcmIXIhje
+         PSG9pQK/Pt5aqjm/2gj1Ihom3+NGG+8+/H+SnzAzbJfjspMUy5X5pBSxHKVOZT+lU90R
+         iAXnH9ZywTFCh0wBvM0g7/KvlAagvmmKnx4vkp4bQp+c9qprRbYTx5xpKdfv7iGFGL7p
+         D5fIlZv9gT26DHEZUjuBuppH4UCUWnMBcWtyT1jCo7gYHO/qhW9xBZhaDxPiXz9veUG4
+         sOs34IPGoaKR5ggdXuY9PHh8ifpuf7GwmivP8vKQjp0jI5THk3GyaiJxVXINrGUKDrR5
+         /K5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWRDzCftlQWrIT11YJvH8563qJtn42YEJGaHMMRZ5KYErTxnXeN6wgwpLFJMJI0FaTCvZGYiKfUyAdW@vger.kernel.org, AJvYcCWyiinilmubQuLoStquIb+a6+tVQy8wuxD5a6+Ov8sqkNU+KfFzrJ26rBKMg7bk/3UbGCn/7vTViBW67II=@vger.kernel.org, AJvYcCXAc47ia1LZ8ODoEy9QKLAD3aR/T2xoy0zC8YLSuJATrTiua37Bazs9WphBOxl9bRJE73IyRTuQjQ4/DGLBwIaMp9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrv9+MWmolcJaF2NX5fzgd6LnN4ae9DWNBou19fITCI2VGxew3
+	nC8XNHa9VuENJzr/pKHPY6jOd6on0kKXngZWZndgX6lHw96ONI4IvaJHmRu27e6+EULkk/UmP3U
+	uPYF3oulr966ht8FR9YIrU0+tfdg=
+X-Gm-Gg: ASbGncvTodvN1TRFNOQI/rA9L9eJXLk7nYVo/SV9uisDf8EASrO+7CnRbRIDUg0HNfz
+	nZ89ZMPZL20BNnYS7MQuMUrnSQpb9duOG5izw2/7n4S5ACijptYJfyVmGg5OvT29Q+Lmv6SVpCo
+	Ef3+y3BkuksqG2egfTHegiBTPO4A==
+X-Google-Smtp-Source: AGHT+IGZ77jAnCPj58lcIOJ2aeLE8UITLEP4sbFyGAVQzdIYVYm+ol7wyVpnwzDXQjsf77RFfGZI0POt5vvPr0pP8OI=
+X-Received: by 2002:a05:6122:3229:b0:523:a88b:9ac5 with SMTP id
+ 71dfb90a1353d-52600a8064dmr6686071e0c.9.1743150577435; Fri, 28 Mar 2025
+ 01:29:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	gLdc9e7r4Gw1dMUMYho5hIkhDeVIhDcim/zoNgWEUdR48EQPxAmgE6LKcXXqL6uZDFa6f/YM42qfqF2nj9e5FE6MjgHdxinfCalYafoejOtMBPD4krPFn1TKD0bXV4QbagmO+d4mpkQpRCF5Zkp7v6611ybi+kWldwlocqv5KiduebXZsnUfUzyQoaSuivU5f9I7ueZ7dfxIESMWQR0fXzv5Qg9tdR5yGud0TTpI1/J+jBauQP8A8MRte8KdqGCLGqh5qwScb0O0KEUp4bBrANmwQBVdipJNR5ewNqBAQqR2vUy7cayebxW2MS8pW0K0jxOCcAuEaDrWaKBdjmWZ0AkWNgIUWOfR0BN96wDt30VdboYifPTo+BZf7rM+a4uE0DXWnnrqBFvbFkQ2o58w4TVfwexTx6d1dju+HLB5FIp5cgkmFyNDQlRxupftHMjDTaLmCRPdpxc0KPe86Qzbz7kDgqSwZHPlN+scv/UD04rQ4eqf2Z2fgl1PkHe+VUcOopS/AkApYQFZC4TbaRzPysSAFZzlhDUsu9oh2FwjhG7TEgBzUsZEX41NgQJRnjJdZSpRdleEf/05lR9H9EzAanJfpmAVv8+pXrZuay0MUSYxI5hy8wqy0OIA6v0cyT+3T8cyj9pXnscou4hupzzehg==
-X-OriginatorOrg: sandisk.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR16MB6196.namprd16.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab17a195-9d26-4a88-f7fc-08dd6dd29f49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 08:29:13.9127
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ffe0ff2-35d0-407e-a107-79fc32e84ec4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jO04pOUiisdOg0YfgwUfaPqDIZydb6gsDS5SDrbRagf9dAgGbPVDAjWYTjNmY6vlS647tT6HNUqbemT1EXz2NQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR16MB5334
+References: <20250327120737.230041-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250327120737.230041-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <87zfh6yoly.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87zfh6yoly.wl-kuninori.morimoto.gx@renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 28 Mar 2025 08:29:11 +0000
+X-Gm-Features: AQ5f1Joz0Yl2NwlX4vM3SMZ2TTdDb4hpY-z18HKFBqEEH80xIsYDqhUbtNNTT8w
+Message-ID: <CA+V-a8uwJasrQZ+3Y1vgTKz+b_SBULXpXdGYxULUOpPkZgXjFg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] usb: renesas_usbhs: Reorder clock handling and power
+ management in probe
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-usb@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Merge the ufshcd_wb_presrv_usrspc_keep_vcc_on() function into
-> ufshcd_wb_need_flush(). The "_keep_vcc_on" part of the function name is
-> misleading. The function definition may be deviated from its original int=
-ention.
-> This is a small function only invoked by the ufshcd_wb_need_flush(). To
-> improve the readability, remove this function and merge its content into =
-its
-> caller. There is no change to the functionality.
->=20
-> Signed-off-by: Bao D. Nguyen <quic_nguyenb@quicinc.com>
-> ---
->  drivers/ufs/core/ufshcd.c | 53 +++++++++++++++++++----------------------=
-----
-> --
->  1 file changed, 21 insertions(+), 32 deletions(-)
->=20
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c index
-> 4e1e214..b9272b1 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -6083,32 +6083,6 @@ int ufshcd_wb_toggle_buf_flush(struct ufs_hba
-> *hba, bool enable)
->  	return ret;
->  }
->=20
-> -static bool ufshcd_wb_presrv_usrspc_keep_vcc_on(struct ufs_hba *hba,
-> -						u32 avail_buf)
-Maybe just change the function name to better describe what it does,
-e.g. ufshcd_wb_exceed_threshold ?
+Hi Kuninori san,
 
-Thanks,
-Avri
+Thank you for the review.
 
-> -{
-> -	u32 cur_buf;
-> -	int ret;
-> -	u8 index;
-> -
-> -	index =3D ufshcd_wb_get_query_index(hba);
-> -	ret =3D ufshcd_query_attr_retry(hba,
-> UPIU_QUERY_OPCODE_READ_ATTR,
-> -
-> QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE,
-> -					      index, 0, &cur_buf);
-> -	if (ret) {
-> -		dev_err(hba->dev, "%s: dCurWriteBoosterBufferSize read
-> failed %d\n",
-> -			__func__, ret);
-> -		return false;
-> -	}
-> -
-> -	if (!cur_buf) {
-> -		dev_info(hba->dev, "dCurWBBuf: %d WB disabled until free-
-> space is available\n",
-> -			 cur_buf);
-> -		return false;
-> -	}
-> -	/* Let it continue to flush when available buffer exceeds threshold */
-> -	return avail_buf < hba->vps->wb_flush_threshold;
-> -}
-> -
->  static void ufshcd_wb_force_disable(struct ufs_hba *hba)  {
->  	if (ufshcd_is_wb_buf_flush_allowed(hba))
-> @@ -6152,9 +6126,9 @@ static bool
-> ufshcd_is_wb_buf_lifetime_available(struct ufs_hba *hba)
->=20
->  static bool ufshcd_wb_need_flush(struct ufs_hba *hba)  {
-> -	int ret;
-> -	u32 avail_buf;
-> +	u32 avail_buf, cur_buf;
->  	u8 index;
-> +	int ret;
->=20
->  	if (!ufshcd_is_wb_allowed(hba))
->  		return false;
-> @@ -6165,15 +6139,13 @@ static bool ufshcd_wb_need_flush(struct
-> ufs_hba *hba)
->  	}
->=20
->  	/*
-> -	 * The ufs device needs the vcc to be ON to flush.
->  	 * With user-space reduction enabled, it's enough to enable flush
->  	 * by checking only the available buffer. The threshold
->  	 * defined here is > 90% full.
->  	 * With user-space preserved enabled, the current-buffer
->  	 * should be checked too because the wb buffer size can reduce
->  	 * when disk tends to be full. This info is provided by current
-> -	 * buffer (dCurrentWriteBoosterBufferSize). There's no point in
-> -	 * keeping vcc on when current buffer is empty.
-> +	 * buffer (dCurrentWriteBoosterBufferSize).
->  	 */
->  	index =3D ufshcd_wb_get_query_index(hba);
->  	ret =3D ufshcd_query_attr_retry(hba,
-> UPIU_QUERY_OPCODE_READ_ATTR, @@ -6188,7 +6160,24 @@ static bool
-> ufshcd_wb_need_flush(struct ufs_hba *hba)
->  	if (!hba->dev_info.b_presrv_uspc_en)
->  		return avail_buf <=3D UFS_WB_BUF_REMAIN_PERCENT(10);
->=20
-> -	return ufshcd_wb_presrv_usrspc_keep_vcc_on(hba, avail_buf);
-> +	index =3D ufshcd_wb_get_query_index(hba);
-> +	ret =3D ufshcd_query_attr_retry(hba,
-> UPIU_QUERY_OPCODE_READ_ATTR,
-> +				      QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE,
-> +				      index, 0, &cur_buf);
-> +	if (ret) {
-> +		dev_err(hba->dev, "%s: dCurWriteBoosterBufferSize read
-> failed %d\n",
-> +			__func__, ret);
-> +		return false;
-> +	}
-> +
-> +	if (!cur_buf) {
-> +		dev_info(hba->dev, "dCurWBBuf: %d WB disabled until free-
-> space is available\n",
-> +			 cur_buf);
-> +		return false;
-> +	}
-> +
-> +	/* Let it continue to flush when available buffer exceeds threshold */
-> +	return avail_buf < hba->vps->wb_flush_threshold;
->  }
->=20
->  static void ufshcd_rpm_dev_flush_recheck_work(struct work_struct *work)
-> --
-> 2.7.4
+On Fri, Mar 28, 2025 at 12:40=E2=80=AFAM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+>
+> Hi Prabhakark
+>
+> Thank you for the patch
+>
+> > Reorder the initialization sequence in `usbhs_probe()` to enable runtim=
+e
+> > PM before accessing registers, preventing potential crashes due to
+> > uninitialized clocks.
+> >
+> > Currently, in the probe path, registers are accessed before enabling th=
+e
+> > clocks, leading to a synchronous external abort on the RZ/V2H SoC.
+> > The problematic call flow is as follows:
+> >
+> >     usbhs_probe()
+> >         usbhs_sys_clock_ctrl()
+> >             usbhs_bset()
+> >                 usbhs_write()
+> >                     iowrite16()  <-- Register access before enabling cl=
+ocks
+>
+> This patch itself is not so bad idea, but basically, we should not assume
+> the power/clock was enabled since kernel boot.
+> In this driver, register access happen only during power enable <->  powe=
+r
+> disable (except your issue case), and this is good idea. So, the strange
+> is usbhs_sys_clock_ctrl() call in usbhs_probe() (without power enable) I
+> guess.
+>
+> According to the comment, it is just caring boot loader, and
+> usbhs_sys_clock_ctrl() itself will be called when usbhsc_power_ctrl() was
+> called anyway. And more, if my understanding was correct, Renesas clock
+> driver will stop all unused devices clock/power after boot.
+> So maybe we can just remove strange usbhs_sys_clock_ctrl() from usbhs_pro=
+be() ?
+>
 
+After dropping usbhs_sys_clock_ctrl and removing the clock enabling
+done in this patch and with  `CONFIG_USB_G_SERIAL=3Dy` I hit the same
+issue.
+
+[14.318626] g_serial gadget.0: g_serial ready
+[14.323923] Internal error: synchronous external abort:
+0000000096000010 [#1] PREEMPT SMP
+[14.332107] Modules linked in: rzg2l_mipi_dsi rcar_fcp
+renesas_usbhs(+) drm_shmem_helper display_connector gpu_sched
+drm_kms_helper fuse drm backlight ipv6
+[14.346025] CPU: 1 UID: 0 PID: 187 Comm: (udev-worker) Not tainted
+6.14.0-rc7+ #99
+[14.353578] Hardware name: Renesas RZ/V2H EVK Board based on r9a09g057h44 (=
+DT)
+[14.360775] pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=3D-=
+-)
+[14.367711] pc : usbhs_sys_function_pullup+0x10/0x40 [renesas_usbhs]
+[14.374082] lr : usbhsg_update_pullup+0x58/0x68 [renesas_usbhs]
+[14.374107] sp : ffff80008278b460
+[14.374110] x29: ffff80008278b460 x28: ffff800079a355f0 x27: 00000000000000=
+0a
+[14.374122] x26: ffff800079a35d00 x25: ffff0000c3c26b40 x24: ffff8000817bb1=
+c0
+[14.374131] x23: ffff0000c33cd800 x22: ffff0000c221e480 x21: ffff0000c221e5=
+40
+[14.374140] x20: 0000000000000001 x19: ffff0000c221e480 x18: 00000000000000=
+00
+[14.374148] x17: 0000000000000000 x16: 0000000000000000 x15: 00000000000000=
+00
+[14.374156] x14: 0000000000000074 x13: ffff0000c33ac680 x12: 00000000000000=
+00
+[14.374164] x11: ffff0000c33ac680 x10: 0000000000000aa0 x9 : ffff80008278b1=
+60
+[14.374172] x8 : ffff0000c33ad100 x7 : 0000000002307a83 x6 : 00000000000003=
+2c
+[14.374180] x5 : ffff0003fdfb4388 x4 : 0000000000000000 x3 : 00000000000000=
+00
+[14.374187] x2 : 0000000000000010 x1 : ffff8000825a0000 x0 : ffff0000c221e4=
+80
+[14.374197] Call trace:
+[14.374200]  usbhs_sys_function_pullup+0x10/0x40 [renesas_usbhs] (P)
+[14.374220]  usbhsg_pullup+0x54/0x78 [renesas_usbhs]
+[14.374236]  usb_gadget_connect_locked+0x44/0x8c
+[14.374249]  gadget_bind_driver+0x198/0x284
+[14.374256]  really_probe+0xbc/0x2c0
+[14.374266]  __driver_probe_device+0x78/0x120
+[14.374272]  driver_probe_device+0x3c/0x154
+[14.374278]  __device_attach_driver+0xb8/0x140
+[14.374285]  bus_for_each_drv+0x88/0xe8
+[14.374292]  __device_attach+0xa0/0x190
+[14.374299]  device_initial_probe+0x14/0x20
+[14.374306]  bus_probe_device+0xb4/0xc0
+[14.374312]  device_add+0x5c4/0x7a0
+[14.374318]  usb_add_gadget+0x198/0x220
+[14.374324]  usb_add_gadget_udc+0x68/0xa0
+[14.374330]  usbhs_mod_gadget_probe+0x218/0x2c4 [renesas_usbhs]
+[14.374347]  usbhs_mod_probe+0x30/0xc0 [renesas_usbhs]
+[14.374363]  usbhs_probe+0x208/0x5a0 [renesas_usbhs]
+[14.374378]  platform_probe+0x68/0xdc
+[14.374387]  really_probe+0xbc/0x2c0
+[14.374394]  __driver_probe_device+0x78/0x120
+[14.374400]  driver_probe_device+0x3c/0x154
+[14.374407]  __driver_attach+0x90/0x1a0
+[14.374413]  bus_for_each_dev+0x7c/0xe0
+[14.374419]  driver_attach+0x24/0x30
+[14.374425]  bus_add_driver+0xe4/0x208
+[14.374432]  driver_register+0x68/0x130
+[14.374438]  __platform_driver_register+0x24/0x30
+[14.374446]  renesas_usbhs_driver_init+0x20/0x1000 [renesas_usbhs]
+[14.374462]  do_one_initcall+0x60/0x1d4
+[14.374474]  do_init_module+0x54/0x1f8
+[14.374484]  load_module+0x1754/0x1c98
+[14.374492]  init_module_from_file+0x88/0xcc
+[14.374499]  __arm64_sys_finit_module+0x1c4/0x328
+[14.374506]  invoke_syscall+0x48/0x104
+[14.374516]  el0_svc_common.constprop.0+0xc0/0xe0
+[14.374524]  do_el0_svc+0x1c/0x28
+[14.374530]  el0_svc+0x30/0xcc
+[14.374539]  el0t_64_sync_handler+0x10c/0x138
+[14.374546]  el0t_64_sync+0x198/0x19c
+[14.374558] Code: 7100003f 1a9f07e2 f9400001 531c6c42 (79400021)
+[14.374564] ---[ end trace 0000000000000000 ]---
+
+
+Cheers,
+Prabhakar
