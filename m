@@ -1,102 +1,85 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018C322094;
-	Fri, 28 Mar 2025 02:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5656822094
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743127419; cv=none; b=RPc/s6JVdqOSLiGWhDHWt8AlmKErfLme+uazH+twFVjPfjYvenFXfDiFoROcfMjkz2RWGNugx0EJntGc0GrdCSal3e+8/EYrngkOiSSDijf6MEwfHTYCe9meTsnrbhZBABirflcIojj004+ICeLDBfG2uzD616vHkFEKU/i5B08=
+	t=1743127447; cv=none; b=u3rV8uer6zwnXGW+RBVrYtwzffAvztw8wr2aPX4lclTM1d94rex1Kdlls8b2xD1xVr+VE30cca9ZXzBoNlcYJ2g/OyZrP01mgbkG/diEMMGJPPDZO/yisLdIGdnr01YkobetrOkCHR/EqLdFv4bRWzTLwTXenS+zOE2+iYMWYaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743127419; c=relaxed/simple;
-	bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VRL6+IHixUHlP4UQbEvzE+di5wwGCAi2ubyEauQYHcKIZqd2J+H2gXARV65II4SLytJQgkEw+amRGCIsn8x3DS01CFaXLjhPzjmi+s0663tzYk6LgOTxG+jmX7eRtkqkrX4BtiJrBj6jJnEHVtFrnIjFhBSTVUgQ34LZgKYbD0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LDrzyaAU; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743127447; c=relaxed/simple;
+	bh=ydAfFR2QyoIlAay2PemZpZg7AC2VjaggoCXfQdMnP40=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aJhXwvTgxOEYrPVF9XXv01+T2bnPENZLUhNRNu00yj2wiBPaot+YzCefdjXVjJ5aVh9cXXoDbD4BdnqSSswRu7Rspy72XYl8BwOGaHhDOrDL4KdlDwDoWpImBRsHjk2gI+l/hfSFjqYMz/70NwBLMAm5z7rkvFPWpy+ZJ/G2XZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AI6hOgWt; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LDrzyaAU"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e90b8d4686so14774386d6.2;
-        Thu, 27 Mar 2025 19:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743127417; x=1743732217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
-        b=LDrzyaAUc0psw02B7YIfqdr1dsPTkA1z3atHaSSqLtQ6j4yFwcgpcasFPJmg5Eqbwz
-         xFQ/1fjC/Fh5E3f63kmxyNv1dqUyWe4VLF0DdbsZ8xkL3W/dvehsZ6m3jkVdEtTsXCXi
-         XebprXEHNnpuC9Q5M/IlQUN+5fFyW4H3oRZPZ0ITWcuookAle3Bawn3MraaYYMVXEaUq
-         /LdGZ3jcdhzHFph1faGeVZGEqEbagXPN+ZvUUhhd+vEL24xjGEyB+pdecl63pg5h9n5+
-         FOe51fZWY+bNeEXyTjSDYhQJUmQc1k2yLWOyBJK96GAgIhl5CiYXmmX4/cnjomak5B34
-         9Vtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743127417; x=1743732217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v0xbqSPQQKaqZGLToyeLFsOvg4EAX8pOEEyfKlpu5EA=;
-        b=JQQ2XohQjKSNClHC5rKyYRxXcVDNVQFbdvpji3uvRHejBTm9GAb8z00bBDSVWYp5ms
-         kRNlVLpLprcbN5V8Y1sMu1+//5r8F6Hmw9SxFB9wYGmBBXdNCOdHz2Pw60d+Wb2SdNVm
-         x6Kjs2UYScccljwOW0tCMzS3SYKqFbZj1gIP8PptWjuxo3n0u5LLxXv3+cqBDlvTdyHf
-         wu/g5tuKiYyFQOXj/fPHzy3SZcayTNNmM0wC3zhwmej0K/oABdPc7RYaz+qpMcmBvulR
-         8H5DFpfRjBqjelkY1nuLFxzJ3KNvsdTIKk22sjqYx7yd+7YjEWl6F0tW2Ef5poJ+sKAl
-         FjWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmrRDFchcokE4Fvi+zblT+xQEVPajrsavxKLecB60slsRy3O6Eg56Io99UeBqp2MCRTXOaWWaY@vger.kernel.org, AJvYcCWwrL3HSJ3oOZl9eXjJ8RjKJ5huhLJ+uwtlx2+nF+QTFmnyCQc5i3nZMI6LFZHx/Ylisq+SrDT6U1ICCvA4@vger.kernel.org, AJvYcCX+hHSmxInev31HYaTYa1E5E/mtHmoBWP4vehDEkAwFPgHglbsid1f38Uc7J9Nulv72IMA9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHhrfBL54xDcfyYrUd1JnZ7cHR1fXV+mCBOejZ/Kd0xtgSvM7l
-	H5IH/yeIYFNRm2/27/rtSLIwhlV9p5ANvVqHe1TBIsbOVojagCKYHMK6Ye4RV4M3OYpFb7bmBeU
-	DmIyYB/1eBr9zv5x9gtxgdp6ttbY=
-X-Gm-Gg: ASbGnctnryGC9bSGNzHM8sx7C5h69JgS4Wipzt2NqPIXcTT8Rf/0uazNhvC/hRzaasa
-	2m0oDVbDC5XTdtUGsmA3dBqQcioNFVFMthrFkwBvQcYcUFJXDy1DS09UbUYSw9tQeIlPtxW7N3j
-	/hJDADZmwQS5/4XkxlXd0yABivk1Q=
-X-Google-Smtp-Source: AGHT+IGzxGgAcBmkBhgOMEG8X4jJS/vZejCCvST2LV72DuHnUbw7QjxJT9lWLTlmVnO2ggUz5ByBPTpg1hW4cGhpEMw=
-X-Received: by 2002:a05:6214:405:b0:6e8:f4e2:26e1 with SMTP id
- 6a1803df08f44-6ed238bddc4mr84919466d6.20.1743127416723; Thu, 27 Mar 2025
- 19:03:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AI6hOgWt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743127447; x=1774663447;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=ydAfFR2QyoIlAay2PemZpZg7AC2VjaggoCXfQdMnP40=;
+  b=AI6hOgWtotaR/FvTKxdnMd7a42G9Toypsx3Q5ksd5B98Eh8eRhQdB9Fn
+   iiNB6M+SB2Es0lXoQUE+4mx1UfI3QCgiV3Xl1gikEffjy15SmMA4l3KIA
+   phHKxHrPOCKAeYAfB0QSKixPJDulIHmFlG4FmG0AsbrBY1rgVCo6jVhg0
+   RJhsjha2LtrQSez3RWBJpUOnPi04hVhE3MvJp3l/OEAT8WzwA0FGfT/50
+   frIcxGOzSBMFiZiNfy29h6NJuEk9GBbGbf1JKA8H30lT0LKz1C/zz4+UC
+   4h3LToUey2LYSHpo5q1fEl1stD9KEjlgFgDFLWZI0MjiohRpr95zWkHaJ
+   g==;
+X-CSE-ConnectionGUID: xgfGkAU8RrS9YOH6uSMEGg==
+X-CSE-MsgGUID: VE51xInJR3Cd6WA4xtBh1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48141010"
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="48141010"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 19:04:06 -0700
+X-CSE-ConnectionGUID: rCG89HRRQYWssfxLOo+tEw==
+X-CSE-MsgGUID: NJ6XsOe1RpOKop/9tTD5PQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
+   d="scan'208";a="126125279"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 27 Mar 2025 19:04:04 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1txz4d-00074x-1F;
+	Fri, 28 Mar 2025 02:03:57 +0000
+Date: Fri, 28 Mar 2025 10:02:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [tip:WIP.x86/alternatives 32/43] vmlinux.o: warning: objtool:
+ text_poke_int3_handler+0x15: call to try_get_tp_array() leaves .noinstr.text
+ section
+Message-ID: <202503280943.gnyusUlI-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327012350.1135621-1-jthoughton@google.com>
- <20250327012350.1135621-4-jthoughton@google.com> <fg5owc6cvx7mkdq64ljc4byc5xmepddgthanynyvfsqhww7wx2@q5op3ltl2nip>
-In-Reply-To: <fg5owc6cvx7mkdq64ljc4byc5xmepddgthanynyvfsqhww7wx2@q5op3ltl2nip>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Fri, 28 Mar 2025 10:03:00 +0800
-X-Gm-Features: AQ5f1JoVOHztbYp2553_bmf4nlPgYHM1EgpaFVKxtX_C6dMD9jJHzJ1OMNJ7RsA
-Message-ID: <CALOAHbD1iNJHB0XRK3GpHePpbX2Ti9vDT4aFDpay6PWUYg-Dcg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] cgroup: selftests: Move cgroup_util into its own library
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: James Houghton <jthoughton@google.com>, Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Yu Zhao <yuzhao@google.com>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Mar 27, 2025 at 5:43=E2=80=AFPM Michal Koutn=C3=BD <mkoutny@suse.co=
-m> wrote:
->
-> Hello James.
->
-> On Thu, Mar 27, 2025 at 01:23:48AM +0000, James Houghton <jthoughton@goog=
-le.com> wrote:
-> > KVM selftests will soon need to use some of the cgroup creation and
-> > deletion functionality from cgroup_util.
->
-> Thanks, I think cross-selftest sharing is better than duplicating
-> similar code.
->
-> +Cc: Yafang as it may worth porting/unifying with
-> tools/testing/selftests/bpf/cgroup_helpers.h too
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/alternatives
+head:   89555c4754bde7a509d7992c1ecefeb00229fac9
+commit: 2559956f36daa294cc4c3beef0a2853cfe02f230 [32/43] x86/alternatives: Simplify try_get_tp_array()
+config: x86_64-buildonly-randconfig-004-20250328 (https://download.01.org/0day-ci/archive/20250328/202503280943.gnyusUlI-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503280943.gnyusUlI-lkp@intel.com/reproduce)
 
-Thanks for pointing that out=E2=80=94that=E2=80=99s a good suggestion. We s=
-hould also
-consider migrating the bpf cgroup helpers into the new libcgroup.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503280943.gnyusUlI-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
---
-Regards
-Yafang
+>> vmlinux.o: warning: objtool: text_poke_int3_handler+0x15: call to try_get_tp_array() leaves .noinstr.text section
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
