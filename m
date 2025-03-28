@@ -1,154 +1,118 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021087.outbound.protection.outlook.com [52.101.129.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6261B87FD;
-	Fri, 28 Mar 2025 08:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743151793; cv=fail; b=gZ4phfV6+mc+HyKFVntUvCsowDMxaO74rKk8CTZ4A7EG+yQ4OTLrsEqCbWOy8MlpP/oR4gBearFqBv6Nt3qifUhU7zwFyujhJTVMdNRtBvm/4iXu5Q4Tew7UOce/pbQAeFw4cN1IR+mDdayOlDKLA8fA1M33HR8WtsMKTm2mZ7E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743151793; c=relaxed/simple;
-	bh=nQBDVjCD2rm85Y8CKiKwjekhbLDNfrJQvyyhcYjno+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJTGegBXiwgR5SfcyXzz6ULU5ug/TAnIi2zYebhT3JArO3/OVmnZddn0AT6iHc4er6JQJlseF/JDCgJzKZ8el2Wgh4UJ+GZV+DGlj8zJOqyFPNr+67wYB3TNRNBv33nBc/d67HqSfBssntK6+aQ3S71ywuTttGJ0FohF/Ve+d3s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dZxR2RGMlcUHcxZ1rzpIVZNWSKMVr3DME8Vog83H5v69JyEsfDhI64ykBFakbqiZxLIqgBvnO9sQpHtASgFHPU+TpmhWqXG4+DYH7O6iLIwrBRtnqZVcD4B95RoBMYzWUjLaCGVLHQ6lfq1wW7noLrmLSQhscP+4culCcgczy//dXSFdWxrbY3BpOjPYKLAuGBlWvGoX0QXNnFFFf0EIEL1gOh4G6wIcSrW3ljtmqrRTIT0VjnnqT8ibEDOSx/OPQ55+p2AfxJR1906HcDGq6Cn9h2qVn8q60LG0GNWP3fOEN4OzgGVck1yEwmYuMdPg9LC0Sreuc2N/gpbdF6Idrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+hkPwW5chCFvMZOAS6ndTbOvxFLENI/xQRpf5tJLm08=;
- b=SMXU9m3pe5mSD3DeGDIoMYlgAi1mK12KzIlWHvcenYQEPVZ0KwXW9Wh9i4t/wUTWlORMTMAy+C2vbOUL0UaOlRfe7LzC/awdFgfXuc0Jheoe50pfM0eK564TfDLISsJWN2vFgn2pS79nbw361E3CbhK22hWswwwKQpgk2+Z6sCgh3FNBIX52IW5VDGAGsKsI83M1pNscRc6iGdBjZ4gGiN6n3IcJNrJxBUkTQ3v3kOZZxQxttEVmU6yZk4PHtz75VJCjdSyKmqQntHKYa0U780l0DAoZjNLTGzJaEHUtqY9EoYvBRo3EL0aH6ZG8ytB0oDhXjDK1IpUGspqruwdlAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR02CA0015.apcprd02.prod.outlook.com (2603:1096:3:17::27) by
- SG2PR06MB5105.apcprd06.prod.outlook.com (2603:1096:4:1c8::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Fri, 28 Mar 2025 08:49:48 +0000
-Received: from SG1PEPF000082E2.apcprd02.prod.outlook.com
- (2603:1096:3:17:cafe::8) by SG2PR02CA0015.outlook.office365.com
- (2603:1096:3:17::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.46 via Frontend Transport; Fri,
- 28 Mar 2025 08:49:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E2.mail.protection.outlook.com (10.167.240.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Fri, 28 Mar 2025 08:49:47 +0000
-Received: from gchen (unknown [172.20.64.84])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 111F14160CA0;
-	Fri, 28 Mar 2025 16:49:47 +0800 (CST)
-Date: Fri, 28 Mar 2025 08:49:45 +0000
-From: Guomin chen <guomin.chen@cixtech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, cix-kernel-upstream@cixtech.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: add cix,sky1-mbox
-Message-ID: <Z+ZiqTDhVXoBfjIe@gchen>
-References: <20250325101807.2202758-1-guomin.chen@cixtech.com>
- <20250325101807.2202758-2-guomin.chen@cixtech.com>
- <77f94763-5604-484f-93c8-dc018c166b37@kernel.org>
- <Z+YT4XroHJ3OjiBX@gchen>
- <815412a2-8537-4641-b528-30ad564c6dc1@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90FA1CAA9E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743151813; cv=none; b=JqP6zCk8lno2nIjH1yxU/poZFZG2nndF7Tcr3mvBerZd7WNToZ5wioj9Ljk2Qch1DdRy6ejSNy1P+ZM130ZH5H+OxPohCe2qOpXZ7pux5E8+lBhjBXx4H0JdQ/bdGRiKjhms4RAR1HzkrR5zujn8CPZAbYvIgukbXRnwB6ulYcc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743151813; c=relaxed/simple;
+	bh=+L94eFi2uDp+TIXCc3hnZ2vtGNEe9Tc6lJ4xzdwbfVw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I9cAiFyCnwRZHiVqekUVKEQSA8XaaUS1CUPbfXr3lMVDoooEvUDoESTEENEXZznHzfebW3LQTBrYjqy2XqdNvBzFo9soW70PiYJ7KTk+C6HCXOVNlF19CV2UMspy9JO9MCNozcenkaTkQhxkodUJV5AcpE0bsmOXmdezxN7Wtws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86715793b1fso848730241.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:50:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743151810; x=1743756610;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YpAT1tp71GtIV4y+dKOaxRDAz6+mZM4xo94aujVs+Xw=;
+        b=rp8fzsRtLSVDoMidnYjbaoevA4o76nWAizWPUj1FRL7+LsCjrcnlMyFJ3stk2eFVo2
+         kTD77IO3c33iABgeYbdcWnsKlMDrcVUbzgfG052DVHz2fMc6xDepqSSzGJyKc1ozo4yw
+         yQEPo94G7EeIs0PmErb6gEvjH9u/MLYHHIrNwSuDHaiv39nsqCTqhyMol7T1dvQtgADq
+         1Ft13MxQ0EdMcynAKLRt7fPISt3YEN/2JbbnVEH4cUvvyBU/NWgIBxXwjdh+FOCTF3HK
+         QE0GtSftgQ9i2C63JgmAgAeKRgCW46Upyd+0zNcd7f7AuDPBKY2PJHctE/Hu+krdm2yq
+         A9gA==
+X-Forwarded-Encrypted: i=1; AJvYcCVV/F0Bqg3JHqRNeW9nWvIYm+hkNzAQdQmOCov5E624wPD0s0SH1lPOZi5fuEwvKqpnNZpEdwR1tq0ylIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzneJetoBN0sQRwPomOF2A2tZuEL1V4hMPdcuLsfLPw8yfrNMoa
+	/YG6MD9Sd7/hMSpdDC0LtH4LSTPbd2fvxhpL0QQ0QFzYVwFyrICDVXhfNvXm
+X-Gm-Gg: ASbGncvDeevF7UOqyUCrtjX+WEcxqd7zFogccu3VsbXE8QaWD3wz5z3p7PH+2EvvSc5
+	xyhyjTaaFmAF2TSLeIKHLHHFr3pYyOKcv50GynF4QDC6GlpJWWdzpigzhcnJDiViNS1cdV20QOZ
+	BDqKpH3QgWYGRwd942sI8No9BZ6rwVeIuEFmx8Urxz8jc6DM6MhldvR6xyUv1gFFHs+PI+5wnaf
+	Vzl9rqtSY9r9Z4WU9S9f5dw6Yvsg30R6UI/ltwpjtWAu1DO8hMue+mtJDz033iAQDZ0RNr4YgI/
+	hkKOOrkWuFq9WRHt4dx+bAA8KRlh3r8fAREF0co1VcnMSDNDJDk9U68ipgZHABZSpi+qo21ABu9
+	3+JJQz0Y=
+X-Google-Smtp-Source: AGHT+IFHRa/H5t5p+xLu1jeFtGiZoaqCOXezRyqNZf8cHj8L2IQRr/i709FCGxIZD0Kqi1wFl2kbng==
+X-Received: by 2002:a67:e70b:0:b0:4c1:8e95:24f3 with SMTP id ada2fe7eead31-4c5870bfcf2mr6581990137.24.1743151809821;
+        Fri, 28 Mar 2025 01:50:09 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c6bfe5410bsm304656137.25.2025.03.28.01.50.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 01:50:09 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86715793b1fso848723241.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:50:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSPqdQYAW5dYaEZ6Qk9UHZh/Ja4BW5IE1B4blN1OKPkUUj1BsPgStqiuKrwtIpBqDLq0N3Dt4C9oDfdpo=@vger.kernel.org
+X-Received: by 2002:a05:6102:3e16:b0:4c1:93df:e838 with SMTP id
+ ada2fe7eead31-4c5870b7dd5mr6510011137.23.1743151809258; Fri, 28 Mar 2025
+ 01:50:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <815412a2-8537-4641-b528-30ad564c6dc1@kernel.org>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E2:EE_|SG2PR06MB5105:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12a666b8-590c-4d86-80ff-08dd6dd57edd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Pfucz8DxLv6zYa7CwecTBqAhp5FIx07u2Ri41AIloBwqwSo+v7NYsv9i1Q69?=
- =?us-ascii?Q?oALKeBymgYbz5u4As9Q7EyPMMFw12eGsVMK1R0HkfSjyEt8Y8LEID5Q2lygD?=
- =?us-ascii?Q?9k2VzmSOOPlUwqvWUg4GOSAr/oPe960SnjmZIOFFd5R1e+QlZYXemYr02xke?=
- =?us-ascii?Q?3v6VHKtwuD7ESP3dSgR9WjlMZrd8XFSiJZJilz+4ILOq6z8ZMq8QIkrI9smN?=
- =?us-ascii?Q?llrSZv1jolhYDsrjkkiEzs8P+59o2tdXDCVi5cvrHJnee5xmbPaZSInaAhO+?=
- =?us-ascii?Q?y1GdfFkYxmclybi7KpR16wh+lzaaQIjBwWa8mGsliI99YnZVWFlKiTEMFG7z?=
- =?us-ascii?Q?4G6PtyzYt/lFzaEF724EpD/eE5yw/r9Kv8pA+RlwDg2Nk812VqRPOD8RgE/L?=
- =?us-ascii?Q?oqJCiGggvEueF9iTZXipqFDysQlNSzdXobpvz1LemVJ1tAkYh2My4k9j/w4O?=
- =?us-ascii?Q?FfnqLSPo/k65glCmICs2ouRF3SH1HA5qE6gFY55KogQvoeJnNRiV9G5/dZk7?=
- =?us-ascii?Q?DCrO3iOIYiWDWsmz8YJrxDCT2rFnNL4HLpiVYYmPzCDIMQmCqHkZmUhWzlRN?=
- =?us-ascii?Q?jppsc960sRtsjWGx6ORvP90FkLc0N8JA9aKz6XbTbxoapbnCG3NdCsssKsEI?=
- =?us-ascii?Q?EciZ3IJ+VZeiXJDdTaEsNgDAMDaPYsk67ZPTnV8AcjbnU+eVJF75actlkMLt?=
- =?us-ascii?Q?pUAFFjzRVgisp6+5J4FSIXMvyW9Zslm4RVoF3Uwc4DVzUDbEF6ZKnKZY0QiY?=
- =?us-ascii?Q?sxnO43Q0xIdour79SCxD52UKevs2u+vA/eXDFAI7/iq8a4B3oGNAvdCVPrSy?=
- =?us-ascii?Q?oXF+3Nfj3wAXJS6beuh97N9lHsfeSCli0QIfpYh44aqCL3J+NvTyaCuwMCtm?=
- =?us-ascii?Q?3JRPZVU7EPB7dpBdiySd/IpeVC1gqwOur54kP8Azy8H90eE4NqMek0Mhld7t?=
- =?us-ascii?Q?aWwnf6a8PVceAmjqm5WpkEHlEKEInosfC6xnrMLQn/szMibuse2NelbOx7Tb?=
- =?us-ascii?Q?GCu1Hx4qoPOHQgaDC7oWUwVSyZg3qWXsL9odMLJK7qYmNLxRmzc9QSTXMmWY?=
- =?us-ascii?Q?3pPnk3WLuFLO+lnuZYN5oJNYTW/tJitFIWqJbLc+HZCCk34VFm/Ktr4IBu/N?=
- =?us-ascii?Q?hts0Q233Q8iuNhypScenvyWIpRf0+lJ/BWgNCDXpYeml61k1qO8yYAooqvX7?=
- =?us-ascii?Q?sJw+SzCWHGarq450KxSuENHP0eylOwq5WuLPJaNi1bgJOzm2ZB+yDl96NeEe?=
- =?us-ascii?Q?OXJTHQ9IOOCrruTvSJZ5u1hfLSudNsB5TVzNRlkbsGN+HQ5XFcHPbDqulnrh?=
- =?us-ascii?Q?zTgt0E6fUuncF3V6x0RjR4imeKsw1AemVoKLnu8cx9CKXsPyJg2I+xAa9JXz?=
- =?us-ascii?Q?xdny7WUGgcKNpRiuUDTE0QOSXcvd2ONGORAelVnyc/MKAryqDfEmBKozizX9?=
- =?us-ascii?Q?M2piM+sXXJkaEOlru2RqPt+g4WhKSwWJoJS8uX6vK6Ptd0HtDSOChiDSNxHk?=
- =?us-ascii?Q?s089ga6/VgjNBsU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 08:49:47.8668
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12a666b8-590c-4d86-80ff-08dd6dd57edd
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E2.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5105
+References: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org>
+In-Reply-To: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 28 Mar 2025 09:49:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com>
+X-Gm-Features: AQ5f1JogoBv3k8B-Hk6th8seQNyRgUeRzbavl9KEknZeWimUvBFTQJUJQ3kzQ_s
+Message-ID: <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com>
+Subject: Re: [PATCH] m68k/mvme147: Don't unregister boot console needlessly
+To: Finn Thain <fthain@linux-m68k.org>
+Cc: Daniel Palmer <daniel@0x0f.com>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 28, 2025 at 08:12:58AM +0100, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
-> 
-> On 28/03/2025 04:13, Guomin chen wrote:
-> >>> +> +  cix,mbox-dir:
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    description: Direction of the mailbox (0:TX or 1:RX)
-> >>> +    enum: [0, 1]
-> >>
-> >> Respond to comments or implement them. Previous discussion was not
-> >> resolved - you did not respond. Sending the same with unfinished
-> >> discussion is not way to convince maintainer. Opposite: you will get
-> >> NAKed because you try to finish discussion and push your patch over the
-> >> wall.
-> >>
-> > Sorry, about your previous comments.
-> >
-> > As previously mentioned, each Cixtech mailbox controller is unidirectional.
-> > Each mailbox supports 11 channels, which differ only in their transmission
-> > methods (e.g., FIFO, REG, doorbell). However, the transmission direction of
-> > all channels within the same mailbox is fixed and determined by the mailbox
-> > controller itself.
-> >
-> > The Sky1 SoC contains 4 pairs (8 total) mailbox controllers. To identify
-> > whether a controller is TX or RX relative to the AP, the driver introduces
-> > the 'mbox-dir' property in DTS.
-> 
-> OK, that's fine, but as pointed in example - use strings 'rx' and 'tx',
-> not numbers.
-> 
-thank you for your suggestion. 
-I will use the strings 'rx' and 'tx' instead of numbers.
+Hi Finn,
 
-Best regards,
-Guomin Chen
+On Thu, 27 Mar 2025 at 23:39, Finn Thain <fthain@linux-m68k.org> wrote:
+> When MACH_IS_MVME147, the boot console calls mvme147_scc_write() to
+> generate console output. That will continue to work even after
+> debug_cons_nputs() becomes unavailable so there's no need to
+> unregister the boot console.
+>
+> Cc: Daniel Palmer <daniel@0x0f.com>
+> Fixes: 077b33b9e283 ("m68k: mvme147: Reinstate early console")
+> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+
+Thanks for your patch!
+
+> --- a/arch/m68k/kernel/early_printk.c
+> +++ b/arch/m68k/kernel/early_printk.c
+> @@ -60,7 +60,7 @@ early_param("earlyprintk", setup_early_printk);
+>
+>  static int __init unregister_early_console(void)
+>  {
+> -       if (!early_console || MACH_IS_MVME16x)
+> +       if (!early_console || MACH_IS_MVME147 || MACH_IS_MVME16x)
+>                 return 0;
+>
+>         return unregister_console(early_console);
+
+Perhaps the whole function and the late_initcall() can just be removed?
+
+When the real console kicks in, it usually replaces the early console
+(unless "keep_bootcon" is specified on the kernel command line, which
+causes all kernel messages to be printed to both the early and normal
+console (and thus may cause duplication, if they are the same device)).
+
+Or does that apply only to earlycon early consoles, and not to
+earlyprintk?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
