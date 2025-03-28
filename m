@@ -1,104 +1,138 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112171E1DE8;
-	Fri, 28 Mar 2025 05:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0B43010C;
+	Fri, 28 Mar 2025 05:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743139683; cv=none; b=sQ284bhsmCoJcBajxT6BAmc1Cf9ayPqctzLm1d77zE8n4qG94soVV+MCuNjGkfYPE8lGpmAHYbAmQPZVYZSzuJeSpuaakuvjgrezhLHseqxow1Bd5PSHYe7Q7/MRhVZWB2o4rtEErEr9ZOqlXOhVmMAT2Pze1CEhoFkndRAb78o=
+	t=1743139982; cv=none; b=W6RzihxkTg35HxFlX6calZxj4WG0gr/1J+9JdGCVC+KvpbqGtJt7kFc/mkGk8oxX64pFSQLnyu3hcfV28eH8pK9V3xtD1W38XQMS7CQjwGsaQPMYEtR9haNb0qzUsI6XZAgH0btO6lVTo+kExizo9UrkAz9S/NVVND+EaL3wqbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743139683; c=relaxed/simple;
-	bh=R5wbeoQym1xBQc9PLi+RBTjtBEJc9COul6VDmElbiUs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P19T7+kHUTpbeoFUMyHVEAvFF2DbaMhmADlEkx+2zCBt6JNvV5dfURIVZAXan5/KVOR6EQFkLBOKMeDogEG3OIzh2qrLF04TvP/4h8OWqVuVtDTXRkJf0FeseVmvkFoAA9vJW6vvA0b+PojvV5StdDO1fRn8iuo4ceU1AlvJY7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M8ersrKB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1743139982; c=relaxed/simple;
+	bh=qt8PY45Cl81DHqF1d3Qk1WBcDovPTn6HWvng0hm39qM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=A+cW0BibrhZZxLhh66Ua9iqrKPY6axek9swCkpJmQ7nRfcDNp3p1k1ucTFaP/iYO2IeaTaFf6bCHlsJuOU6GLhkiHAw1aWQwjwkWFmvsWRN+wKwEXmDYlkjhdGW7iQP1EbHZ84QT64DWgrbNxBpGl9O8J7AugGw4RHYzyRYCbMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Aya2f6Q/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M8ersrKB"
-Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9F6E8202564B;
-	Thu, 27 Mar 2025 22:27:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9F6E8202564B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743139681;
-	bh=WMsAqOqY2QM6fWwHfYgf3OxZGqcbrF7fiheOMYN5O50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M8ersrKBSBWPT7mPwm8FSmMNPw5R0Kbl3YZ1v3sIXS+ZcoG0Uf6HBPHhVN1RlhawU
-	 tO16TSyi45ILkFuMKvnMmOWCTzquP02BsWTeqfS0O+eqqKWQds7pPMTTrBM8KYi/r2
-	 JWFVmTie/5GAiVPUgOAxYYd/G52/dv6oigMHaIi0=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stephen Hemminger <stephen@networkplumber.org>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Naman Jain <namjain@linux.microsoft.com>
-Subject: [PATCH v3 2/2] Drivers: hv: Make the sysfs node size for the ring buffer dynamic
-Date: Fri, 28 Mar 2025 10:57:45 +0530
-Message-Id: <20250328052745.1417-3-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250328052745.1417-1-namjain@linux.microsoft.com>
-References: <20250328052745.1417-1-namjain@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Aya2f6Q/"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S5STZ3022968;
+	Fri, 28 Mar 2025 05:32:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uBSvxRPcw/xnwz8y+vImXfZ6qAVyJphQQgzEpUgpc+s=; b=Aya2f6Q/BSdpbnsA
+	H+FLcODO3z5xw5aSDc9IP+t+Vf7swx/atfRAnATGHuPbdUuUF6IfIFtdX1zTt2n9
+	yLKgtsG70bHg3wxtPbwTFXKoLccWAOJY2wOWbAE+r3zDsvW7iT3lw7A1A6QtwHKP
+	sD76LflJfDTCdyI8iBLzHDbcHr9ML5nWCWa47aeSleGDdPOxJEsw7YPd7gATufBm
+	EZ7pwuWqGW23OVh9Yb14j0AXMfNBl8Y/YlcQs3QNdf3FFEbopqBQyca9ucXMadxZ
+	G435wZ44+WTGMHUQ0xMuZVU5j0UnKr2o+2vp5T3iJNJqJCxX903Bep+tIt5XdblD
+	OEsq1w==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9my0sw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 05:32:45 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52S5WinE032035
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 05:32:44 GMT
+Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
+ 2025 22:32:42 -0700
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+Date: Fri, 28 Mar 2025 13:32:29 +0800
+Subject: [PATCH ath-next v3 6/6] Reapply "wifi: ath11k: restore country
+ code during resume"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250328-ath11k-bring-hibernation-back-v3-6-23405ae23431@quicinc.com>
+References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
+In-Reply-To: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson
+	<jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Baochen Qiang <quic_bqiang@quicinc.com>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Takashi Iwai
+	<tiwai@suse.de>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e6347d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=QX4gbG5DAAAA:8 a=COk6AnOGAAAA:8 a=RoHt8tvvRc4mp1QopSkA:9
+ a=QEXdDO2ut3YA:10 a=AbAUZ8qAyYyZVLSsDulk:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ZwPYu9WncyOpZ-7eai7aFP_bfbwSNi_V
+X-Proofpoint-ORIG-GUID: ZwPYu9WncyOpZ-7eai7aFP_bfbwSNi_V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-28_02,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=847 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503280036
 
-The ring buffer size varies across VMBus channels. The size of sysfs
-node for the ring buffer is currently hardcoded to 4 MB. Userspace
-clients either use fstat() or hardcode this size for doing mmap().
-To address this, make the sysfs node size dynamic to reflect the
-actual ring buffer size for each channel. This will ensure that
-fstat() on ring sysfs node always return the correct size of
-ring buffer.
+This reverts commit d3e154d7776ba57ab679fb816fb87b627fba21c9.
 
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+With non-WoWLAN suspend support brought back, commit 7f0343b7b871 ("wifi:
+ath11k: restore country code during resume") needs to be brought back
+as well.
+
+Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+
+Tested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Tested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
 ---
- drivers/hv/vmbus_drv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath11k/core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 66f1c21050d4..c7be85606031 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1820,7 +1820,6 @@ static struct bin_attribute chan_attr_ring_buffer = {
- 		.name = "ring",
- 		.mode = 0600,
- 	},
--	.size = 2 * SZ_2M,
- 	.mmap = hv_mmap_ring_buffer_wrapper,
- };
- static struct attribute *vmbus_chan_attrs[] = {
-@@ -1880,11 +1879,21 @@ static umode_t vmbus_chan_bin_attr_is_visible(struct kobject *kobj,
- 	return attr->attr.mode;
- }
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index cde009c3bdaf1e7a4f64a10df61029ef83408cd0..3f0e8e65e8e907d70705634b62909886a09b3b70 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -1185,6 +1185,7 @@ EXPORT_SYMBOL(ath11k_core_resume_early);
  
-+static size_t vmbus_chan_bin_size(struct kobject *kobj,
-+				  const struct bin_attribute *bin_attr, int a)
-+{
-+	const struct vmbus_channel *channel =
-+		container_of(kobj, struct vmbus_channel, kobj);
-+
-+	return channel->ringbuffer_pagecount << PAGE_SHIFT;
-+}
-+
- static const struct attribute_group vmbus_chan_group = {
- 	.attrs = vmbus_chan_attrs,
- 	.bin_attrs = vmbus_chan_bin_attrs,
- 	.is_visible = vmbus_chan_attr_is_visible,
- 	.is_bin_visible = vmbus_chan_bin_attr_is_visible,
-+	.bin_size = vmbus_chan_bin_size,
- };
+ static int ath11k_core_resume_default(struct ath11k_base *ab)
+ {
++	struct ath11k *ar;
+ 	long time_left;
+ 	int ret;
  
- static const struct kobj_type vmbus_chan_ktype = {
+@@ -1195,6 +1196,20 @@ static int ath11k_core_resume_default(struct ath11k_base *ab)
+ 		return -ETIMEDOUT;
+ 	}
+ 
++	/* So far only single_pdev_only devices can reach here,
++	 * so it is valid to handle the first, and the only, pdev.
++	 */
++	ar = ab->pdevs[0].ar;
++	if (ab->hw_params.current_cc_support &&
++	    ar->alpha2[0] != 0 && ar->alpha2[1] != 0) {
++		ret = ath11k_reg_set_cc(ar);
++		if (ret) {
++			ath11k_warn(ab, "failed to set country code during resume: %d\n",
++				    ret);
++			return ret;
++		}
++	}
++
+ 	ret = ath11k_dp_rx_pktlog_start(ab);
+ 	if (ret)
+ 		ath11k_warn(ab, "failed to start rx pktlog during resume: %d\n",
+
 -- 
 2.34.1
 
