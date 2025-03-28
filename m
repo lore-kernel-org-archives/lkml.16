@@ -1,127 +1,106 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CDB2F37
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAEE4171092
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169918; cv=none; b=qAhtfgk9+pJSYvY7h9D0odO3YV6TYmaXFgRdDTcQ0Svdp/vcWuiHQkWUe7cZ3hEZP5fg4KEjArzm64J/TCWvfG+n7AfElWYMSOjof1bT9kEmI6l5Fv+xvLIccJUoidYbtv5jmzleKIGDjHKUvBckDIwQc+a35DhP40TqyuIa6uU=
+	t=1743169952; cv=none; b=cjiBC9MKsUM9zc6SK6aXSP+rT/qzt87cKCJ+fO3k8HLE6U/OIsaNrIlot6/FcwJ0Y5Y8/A7yJN7GEnQBMQz3dcpDo91cZAq4u8kLOuUGqvv9geltLQxlgrUGu4PFJVUqD51GLEuEHUi6+URyctaT858t2PLI9Sixs3DZZhU4VAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169918; c=relaxed/simple;
-	bh=7keX5FQHfuj5criWs662qvX5Y0mvZuQ+wEIWA+09qU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TiPnTfPgzdwJwBaiLzJICRSVQ0s2Dn0tH5/w3UkXniCJLda+3N/RR9lR3GyvrTrJmtheYbRwV9NyHfI//HawbtnMUCM20N9JBa2FpF2yid2wUcKwQJTsKIyfpV34EtTT3VmbXSgTWzf5p3Y1WimxOG4XRjs2NH4ELuQEU2xa0DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ri52rTuY; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ri52rTuY"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-391342fc0b5so1689595f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743169915; x=1743774715; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
-        b=Ri52rTuY+auIlCiZoHCuVbwfsheeZHWQ1FjX+m0j7RQjXBzvmnDcfAW0Twomki44QH
-         H/AY0m5enj43ba3w/UsyeJ9GYkolrQRZTj0eV53UxSJsBSqPM4ByLvPe0KqN2P6DMHRg
-         MWFEjTiDp/OlbsZTBU1YrK/kxKLpkYT0M+O+QQrGU3FLG/EVTbYnGYumiplgEAWrlTas
-         8ZiXqcstegbn4gbJHY/us/tanKGWOsdXyaTqBSbkLY+N8nQm0iA34YdQC/PAv17XtEBL
-         o8WhJH1ljNGuYE0dLHBm937FxgfZr23qPQxOsi8XGvRb2KcmtiyRk75tfmlTD9gWb8bm
-         SUbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743169915; x=1743774715;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olQvXU3SlpssZcd54ZBPK/yHAsySM9j/3+8owqmZXYk=;
-        b=CuggcjraziSYS/+vmOmK7ljCx4mgGdV5QoTVvNIDzGk+KywQMuZGELY1N3NTSQ7qIH
-         77EBbg/CNEmX9ApHJve27+74DTm2jFYaJiAqTxnZ8mNf1RRrv9UYFS8QcFVtn3nSz+U5
-         rHaov1rCajQdu/wWbZ980fazektARUSdVNBl9LecAUH5DLZ2o6BxDy/MmM+kNNRvxRjF
-         84oGjguDeLm3JQPHinbfI/h0wv9B4QjE9NX1SZ24A+Z/k3HZ7FsA4snvQd9I0Nfifcsn
-         xCRsXBI9yYI6Y6uIdGd4Jn5vnoIkNP2qUvds01W/3wiPTpju6DsKXoJoPEHRR09IeEFv
-         uTQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJy6JcgGjwQQyuDwx6dLMVRKlJ5NqOfas1Se1JY5cB5/eQj+olTmR1tngIlyJpAuEFR6ccSWhu0dxh48E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycgFwV5T0vQkFi1rNUsydP8xFb+/RYBYggyTOC2PlfttWGNu+O
-	J9dNfJddeDGjaJZzu+jdFVqLNSqVVeSAzQzAN0OtHTNjqi+NHx9xQUj6SiJdclQ=
-X-Gm-Gg: ASbGncvGeHpwCIuOv8huEv5+g+7Cdn+/s7Wq+MfS94UlwP2umJqwdW+ZkL4XXbMmCK6
-	m+cIr93zHsd2RTwO3f7JgcATZRxHxud5NnmuOvNcYcQOyPvN0u0HXNhInW7Rnnyx378cl75hEKs
-	UI4/LyEdcQH7xQSIT6dvjelphrlSo/URGuAXuLopLNF+SYH8OAqMGLSEzD+dLNhCPrGCCtQutsY
-	59QbFzXRRs5KBPS2NlnhiSLIiEUxRfeTqKD4GJ8fYFJ0fF5Tp+0doCfJXcD2Nn3EFfAR7Oam9Qk
-	BXOmV8PRViFuUvULCKEytbPvzqrPPC4CXE9sag8AMQ0tvNA=
-X-Google-Smtp-Source: AGHT+IHbfndbuHfkuasI/Cf4p6r8nuRFhsT5d5n30IcceIH6HCihEcayWTwO3EYsoj8rQdERKU6JoQ==
-X-Received: by 2002:a5d:47a2:0:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39ad1719a55mr6958877f8f.0.1743169915024;
-        Fri, 28 Mar 2025 06:51:55 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba4b4fsm29091505e9.1.2025.03.28.06.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:51:54 -0700 (PDT)
-Date: Fri, 28 Mar 2025 14:51:52 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's
- required
-Message-ID: <Z-apePufuwt19djQ@pathway.suse.cz>
-References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
- <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
+	s=arc-20240116; t=1743169952; c=relaxed/simple;
+	bh=+yjkcF4b2dcbI70nQ0EilJ8oLkBOd7kK7kf6pKkeuFI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gw/YipU/YGz62O34cZwKkODExKzlMRa/1lNaywAyPPhC3+IHdQuo4oaWV1sIq9iuQZvpcHl02k6+DqL422/HvoY3oVS+qpeij2d1um41ju9xSc0/Y6DeadJLrXWNQEyKEh0caMSthHmK7D3egfzlv0vbiQPlpwsYV4vDsDo80Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D1481691;
+	Fri, 28 Mar 2025 06:52:35 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 81EE83F58B;
+	Fri, 28 Mar 2025 06:52:28 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Kees Cook <kees@kernel.org>
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] tools build: Use -fzero-init-padding-bits=all
+Date: Fri, 28 Mar 2025 13:52:21 +0000
+Message-Id: <20250328135221.10274-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
+Content-Transfer-Encoding: 8bit
 
-On Tue 2025-03-25 11:15:21, Petr Mladek wrote:
-> On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
-> > This whole series started from a simple fix (see the last patch)
-> > to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
-> > (note, that CONFIG_WERROR=y and all warnings break the build!)
-> > down to a rabbit hole.
-> > 
-> > However starting from v2 the last patch doesn't require the first
-> > part, I prefer still to have them since the functions, while being
-> > _binary_ printf()-like, are still printf()-like. It also puts in align
-> > the tracing stuff with the rest and fixes the wrong parameter value.
-> > 
-> > These first 4 patches are organised in a strict order and can't be
-> > reshuffled, otherwise it will produce a warnings in between.
-> > 
-> > I believe the best route for the series is printk tree with immutable
-> > tag or branch for the others.
-> > 
-> > Alternatively the first 4 patches can be applied first as they
-> > are pretty much straightforward. They also can be squashed to one
-> > (as the same topic behind), but it all is up to the respective
-> > maintainers.
-> 
-> The whole series looks good to me:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> 
-> I am going to push it via the printk tree. I think about doing
-> so as a second pull request by the end of this merge window.
-> 
-> Anyway, I am going to wait few more days for eventual feedback
-> or push back.
+GCC-15 release claims [1]:
 
-JFYI, I have pushed the patchset into printk/linux.git,
-branch for-6.15-printf-attribute.
+  {0} initializer in C or C++ for unions no longer guarantees clearing
+  of the whole union (except for static storage duration initialization),
+  it just initializes the first union member to zero. If initialization
+  of the whole union including padding bits is desirable, use {} (valid
+  in C23 or C++) or use -fzero-init-padding-bits=unions option to
+  restore old GCC behavior.
 
-I am going to send a pull request the following week
-if nothing happens in the meantime.
+As a result, this new behaviour might cause unexpected data when we
+initialize a union with using the '{ 0 }' initializer.
 
-Best Regards,
-Petr
+Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
+the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
+in unions and structures.  This commit applies the same option for tools
+building.
+
+The option is not supported neither by any version older than GCC 15 and
+is also not supported by LLVM, this patch adds the cc-option function to
+dynamically detect the compiler option.
+
+[1] https://gcc.gnu.org/gcc-15/changes.html
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+
+This patch was originally from [1]. After consideration, the top level
+of the tools directory is a better place to accommodate this option
+rather than perf folder.
+
+[1] https://lore.kernel.org/linux-perf-users/20250320105235.3498106-1-leo.yan@arm.com/
+
+ tools/scripts/Makefile.include | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 0aa4005017c7..e912a10afd89 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -40,6 +40,19 @@ EXTRA_WARNINGS += -Wwrite-strings
+ EXTRA_WARNINGS += -Wformat
+ EXTRA_WARNINGS += -Wno-type-limits
+ 
++try-run = $(shell set -e;		\
++	if ($(1)) >/dev/null 2>&1;	\
++	then echo "$(2)";		\
++	else echo "$(3)";		\
++	fi)
++
++__cc-option = $(call try-run,\
++	$(1) -Werror $(2) -c -x c /dev/null -o /dev/null,$(2),)
++cc-option = $(call __cc-option, $(CC),$(1))
++
++# Explicitly clear padding bits with the initializer '{ 0 }'
++CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
++
+ # Makefiles suck: This macro sets a default value of $(2) for the
+ # variable named by $(1), unless the variable has been set by
+ # environment or command line. This is necessary for CC and AR
+-- 
+2.34.1
+
