@@ -1,103 +1,129 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9CA14AD29;
-	Fri, 28 Mar 2025 13:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE52A1BF58
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168317; cv=none; b=cFNYKebmC6uH1OI3fq68PYwMPXThyIWgAhjKklsBi3YMOdTZ2+1GxkOl0Z8tAOxqJiIs6kmhSMIwTVwTkPIowHhPEuz/eWjPOKpd8Om/qvm/Q9tOj/AaZFw1EU5iQ+kBgoFLJYyJy7STWF6x+W/GB4snadMUxSgAd9QWIj/IIzA=
+	t=1743168382; cv=none; b=potnjO2RReQlW930s7FOgCuhYlLSJ+5+rzMYyJvtCSJiaMWp5zI6KdAOXiGa6Dkf5Ou0hy8r79r8Nc8tdkLZdJme49MGKNdqK9V9pttFI7rR442awxVBfv1Jg2cWbUnRU4FzEop2lJpgwKPFnVOmc/xyyLe1N8q/3z+tvQAx2aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168317; c=relaxed/simple;
-	bh=QEU3qP7xBFmNSOwZI8ArIPeXl8beJzBZsv3FjIIhwXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRmDjoNYvb8Zan41QCmvJncg9/kSjvMwiXLzZv6pxq3MzvpYY3rvm0cWFaZ4Dnq8NhCXr8U8oY5kQLpySeSACtw/KzxlIgOVcZ95syTX2v3Sjc3lue5E/Fq/OBk127bIuCSOcaUMjgpOs+5O0DWXE4XFN8u68SEh+GP5sl735oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso325664666b.1;
-        Fri, 28 Mar 2025 06:25:15 -0700 (PDT)
+	s=arc-20240116; t=1743168382; c=relaxed/simple;
+	bh=ZjPEwmC8d6yJXPD/Af2mmAD/CXzsaS4nGWUuqYQ2klA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a9WFkg702lvzXnKdXjAfK13FA5ULLqV+51J24Had9hhgxWZevANrX68BnTF5aJNBJ8eaJ6oWtbdyUc2ozu7OnB7ClhlhqyPf0VcUhjENzz2+lLCNFH+nUqDvl4D8f2pTm/FZzKqM5udFHZKKhTnTyoG5v3X1RnAjZxOQ1++giVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PmYIas4L; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PmYIas4L"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso3569238a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743168379; x=1743773179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x92zjhfd2x6noSpfStll/xqcTYe/rT8zkKTNHbnXK/I=;
+        b=PmYIas4LH8O/EEOvr9KFy5oceDv+6EM9YEbtfz3lQ4AYUXId/yftUdyzP9hv5LOrjS
+         VfxmoqockuVO2gpVfJi8+cOTSc+tx8Mv+/4ogUNus6Bbycs+ggKTsiobm8L5DXx9a4bN
+         6nbniHTTPqDTf+aQXhCF6/PqcsM2y1GBlAkdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743168314; x=1743773114;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2jE6wfGvalw6lmInB5D0RDV8sjg9mzE1CqGAw4Fmt5c=;
-        b=jwDlq5m69DmpbDZcVe6AHGNh/+q0hDBVAQHUNHhWLcJws72PiIuPdhOPJH5MeNta1z
-         N3XfqjYdzIyD+lYU0bOOolZUqZ73PzOnV/qhJxtwsFz5qeytiWVCSMC+fS+EI/X+O8dc
-         gdHdogXK/QtgHzkxZ29kddKam0V0q7XjqhOUTXAnoWMzKHjOlpXMi+RCafJtvDzy8fM+
-         Y+LzMtLSNx7o4MK/E35Yxg36t7FgFco3oVdzeclkAHUxj1n1Af7FcVWRWO9K65ohpkDs
-         BRlrC4mmbxeR35EC6MsHIZhajPNO3QrQS/S2qx4u7EfOv/J+bganFHgUqVpJc4hyqcjz
-         aeog==
-X-Forwarded-Encrypted: i=1; AJvYcCUjBfIi7HZwZgm5/fnavajJ0xnbDSykJLFN7t4YJJonineY1n6S/diNJnEdi9oRFdN2b7c9OmCL@vger.kernel.org, AJvYcCXZPOZcxGVU4M5YY+ZN9VBb1XD9Nb0Fbzf589GTYN61ZoDtfq7I82FVYPNRHlYVa+Eyd81n84Xy7w25Hog=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+HxNe/1swDRHPKPvDVh3Gr9H8IsKWTbbacI3PExLsxottbAa1
-	4YYuXsq1pm0qcO5FG89lh4ILoHB3FXl2HCiP8qsXPe7DBqtaUnkP
-X-Gm-Gg: ASbGncsFYwqmVLh0nmndCVXiuJRkPxBLLEKkO2bSRtziEwBlDvWdNLoHmSbcploexL6
-	6pVtNgGR7OIIsNvZNGLAYimwsF7xweqd0tvDayEAsSmboWhBEyKDh8lTXIPdwjdECDfU3PFMHt0
-	LskIHEDjazhL8nGdfEsg2oZskhhOhD8gtID2PeJkfzqxVYW8B5t9ANRE4LIFDU92dy/8SNiCW84
-	7RRzeKHmszyEm1Pr/SL5GEInveob9Kf0/OmvhA1t1zzDq/s/ckQEbBMnZ8jP5pBykDntqcYfR/1
-	KHlQwvW8kLnFPWm9qMFS6+ctCGVFg9mwPOc=
-X-Google-Smtp-Source: AGHT+IFXGwAU9n1xb603UH5lCv05YvwrWsrQGLx1xmvw8N9JhQ8l280OHFMZl9TiNuWEQKARzpgZFA==
-X-Received: by 2002:a17:906:eb4e:b0:ac7:30a2:696c with SMTP id a640c23a62f3a-ac730a26a0bmr44412366b.16.1743168313556;
-        Fri, 28 Mar 2025 06:25:13 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:1::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961fd76sm156872066b.110.2025.03.28.06.25.12
+        d=1e100.net; s=20230601; t=1743168379; x=1743773179;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x92zjhfd2x6noSpfStll/xqcTYe/rT8zkKTNHbnXK/I=;
+        b=wbkY8EGprv0X/rq0+5u+qmdFhmS+d/Q3FTEW4/S1Y4Eqqy7y6dJfWDk/S8v8bIwwvg
+         79E4FaDi0d9VdNQMGnH9BMHx8v0x8te2MzQuV4OqlfukMvL26SduPsdrzpnHiKxcBC2n
+         uXnmXRMMYYojIu8M3hnAAAzMyZyeE9FlDO/+6ZF1uUSFFvRQg/HSYvcIvyIhWVSGjSSb
+         9TVmH6VgPpDrWuMgV7o5fM6zZPFMZ+WemEykA5f748+dPX8x3tS3Rb+CQGpRc7rjAbxn
+         4mW157J5Kntq1rn1VLoYufnlDq9qUimUcyVLebXYuJV9gpfLGYqmqh2/r3pe4YoW26w+
+         ob1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXvfPVpugq8Wlrq1xmbXv84R2U5fnvNORTm2A2BLCzSk9h416hSrEJpFYQ/f6rq2D4ELVUj0HszlA0AjPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9VONvxj1t2sXRpCo9c96BXKijjY+V5UWWC+6gc+BA3vMnpCM9
+	V+DDaBblmjkcQcrxk4tKHX0bxgCuWmqr/T99XXCdrVwyjYRLO8hEnyF+EdFHmw==
+X-Gm-Gg: ASbGnctlsrJ0C1xsDm2Nc9chUCQ6bLqV7fKYGIdbQPh5Q8L4mXpXPO0r/Ce3RIvmZIX
+	pi/hVzKG+HoAfh2bBOAVAyXQdVxqlsqy7M43320Kwfqq+YNP1AZxjhEnWrjq5QDD5gqDxtAhxuj
+	2q638rYYWgAYV34HptMlXSnY1TKtjOPXWBryZmNgqh0Qr2o73K96lS9MYXYKg8AWCGyDvDYPeZ0
+	wp2OVLHp1WyvpeDqGrJM9BjO++qfzepsvLPQ/8WGzEfgZI/R4RX9NVaC2FzgbBlhAWA6N5Qro/9
+	Yd8UTvkBseA8QuSju+HJvutO6Xpsrg2qSVP6KqAEa1ih8E3v87KBdh0dqYioLomroet4zmNXc5S
+	unZdqhgCqU+/WTeZW16Inorb1e16YTOc7LQ==
+X-Google-Smtp-Source: AGHT+IGZz7/5rdEd+k2LnpfWVd2CubAVWU4pOV0U+4t4bZFMZn0KMjyPhCW1xU9L8mZ2Wc+waAiwmg==
+X-Received: by 2002:a05:6402:270b:b0:5e5:bcd6:4ad8 with SMTP id 4fb4d7f45d1cf-5ed8e28ae2dmr7247798a12.9.1743168378947;
+        Fri, 28 Mar 2025 06:26:18 -0700 (PDT)
+Received: from srosek-gl03.c.googlers.com.com (157.250.32.34.bc.googleusercontent.com. [34.32.250.157])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16eda94sm1413457a12.33.2025.03.28.06.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:25:13 -0700 (PDT)
-Date: Fri, 28 Mar 2025 06:25:10 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Ivan Abramov <i.abramov@mt-integration.ru>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in
- __dev_change_net_namespace()
-Message-ID: <20250328-electric-buzzard-of-completion-bedfc5@leitao>
-References: <20250328011302.743860-1-i.abramov@mt-integration.ru>
+        Fri, 28 Mar 2025 06:26:18 -0700 (PDT)
+From: Slawomir Rosek <srosek@chromium.org>
+To: Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ukaszb@chromium.org,
+	Slawomir Rosek <srosek@chromium.org>
+Subject: [PATCH v1] platform/chrome: cros_ec_proto: allow to build as module
+Date: Fri, 28 Mar 2025 13:26:12 +0000
+Message-ID: <20250328132612.511471-1-srosek@chromium.org>
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328011302.743860-1-i.abramov@mt-integration.ru>
+Content-Transfer-Encoding: 8bit
 
-Hello Ivan,
+This allows to build ChromeOS EC communication protocol helpers as
+kernel module which is particularly useful for Android GKI (Generic
+Kernel Image) configuration. With this change the ChromeOS Platform
+(CONFIG_CHROME_PLATFORMS=y) can be enabled directly from the vendor
+kconfig fragment whithout additional configuration in gki_defconfig.
 
-On Fri, Mar 28, 2025 at 04:12:57AM +0300, Ivan Abramov wrote:
-> It's pointless to call WARN_ON() in case of an allocation failure in
-> device_rename(), since it only leads to useless splats caused by deliberate
-> fault injections, so avoid it.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Fixes: 8b41d1887db7 ("[NET]: Fix running without sysfs")
-> Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
-> ---
->  net/core/dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 2f7f5fd9ffec..14726cc8796b 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -12102,7 +12102,7 @@ int __dev_change_net_namespace(struct net_device *dev, struct net *net,
->  	dev_set_uevent_suppress(&dev->dev, 1);
->  	err = device_rename(&dev->dev, dev->name);
->  	dev_set_uevent_suppress(&dev->dev, 0);
-> -	WARN_ON(err);
-> +	WARN_ON(err && err != -ENOMEM);
+Signed-off-by: Slawomir Rosek <srosek@chromium.org>
+---
+ drivers/platform/chrome/Kconfig         | 2 +-
+ drivers/platform/chrome/Makefile        | 3 ++-
+ drivers/platform/chrome/cros_ec_proto.c | 3 +++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 1b2f2bd09662..f523ae3d3be0 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -155,7 +155,7 @@ config CROS_EC_LPC
+ 	  module will be called cros_ec_lpcs.
+ 
+ config CROS_EC_PROTO
+-	bool
++	tristate
+ 	help
+ 	  ChromeOS EC communication protocol helpers.
+ 
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index 1a5a484563cc..b981a1bb5bd8 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -25,7 +25,8 @@ endif
+ obj-$(CONFIG_CROS_EC_TYPEC)		+= cros-ec-typec.o
+ 
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+-obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
++cros-ec-proto-objs			:= cros_ec_proto.o cros_ec_trace.o
++obj-$(CONFIG_CROS_EC_PROTO)		+= cros-ec-proto.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+ obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 877b107fee4b..f90d2e7b616c 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -1157,3 +1157,6 @@ int cros_ec_get_cmd_versions(struct cros_ec_device *ec_dev, u16 cmd)
+ 		return resp.version_mask;
+ }
+ EXPORT_SYMBOL_GPL(cros_ec_get_cmd_versions);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS EC communication protocol helpers");
+-- 
+2.49.0.472.ge94155a9ec-goog
 
-I am curious if we shouldn't skip the rest of that function if
-device_rename failed. Something as:
-
-	if (WARN_ON(err && err != -ENOMEM))
-		goto out;
