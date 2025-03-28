@@ -1,113 +1,103 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFBA1922D4
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 22:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5891922D4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 22:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743200624; cv=none; b=j6tV/w8IVAlHnpdFVylgrqOvd9nGdY5a04i9DZ1UnSyS4ewWMI3ELOMnju1cyHTyf4hfa9bJh1COVebpsIDZYqw34VxFL1mnC6BuzTZjR83wgNJqFZ7O5DJUxegsYeMW/foiRlAkrx88imOGmSn4DTkzm7tNOVbHkFqTlrXqADs=
+	t=1743200728; cv=none; b=X6L88ahk84keiuJZfv9rpeZq0sRhwLCkIEnbazgkPEEGGYGypixWIWn5ZN1Sp6xMNaw69xLfEJWy91WI7eR8jiUPDQiMdFSid0YO0sICETu7aGNXjAWYbk9VhuOu04BukLLdQokQiQdIdvCXCyjczQAYpx5cLhEk+CtoQP60e2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743200624; c=relaxed/simple;
-	bh=PBsm90GoR7tViYFpdI3XnG8Uw+mKc6knBg1pKxFjQyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ePs6wIbZYQNZO6rsnHXrenEdwuOsATkw2HMg564YCJT+DtW5p17LYktw8gDbns0VUi44cQXrqjZ5qoRHg2eD2a/cPgDHjyrYKFb/kTXbX2Ly2cxrKj0qJNxZ5tjlYe5+puSJduSZR/O1btoszB9c2QyNR8MO2r10hn2vqcAmylQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hQM0nIaY; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743200728; c=relaxed/simple;
+	bh=RmbnE6dGkEyy0e7t6qDoqc6F/Sp1/EoAlKg80SGoiI4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VhoBMDDHeVXc6uLvO+zZ+xii8SkSZF+SVCuXp5I2sVH7iAu6sUvX/43B6QwtGw5KJoXbYWyZQQdq7Hye3R4cqNBwn6iWyQBil/OBqk9ze+dOM7mjZJ7Tz3bO+PeUEfEpSVR8zE0Hb0oKInjxMHYYASHoKqH7532cyl950d6WngU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oNT/8TrM; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hQM0nIaY"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f556b90790so840391b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1743200621; x=1743805421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VoQ3CY/UbCxQ1vfYn/wDbcVOfLwRr7UamsFPY0WiHL8=;
-        b=hQM0nIaYzPPhuQF3wK334OCbFCe3x3SqOuJaMsXb0tMhcmh6ulUI69Y0wgmsUv9lh5
-         5KfxARtEWWE6EizApEMKsSPZ657myd8AGWRLgImqQe4rLH0WFO+ADqkwxBbAvZV2idl7
-         fA2szaiHHAaM0vbJ223VkJBBtxSAcYQAiYac8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743200621; x=1743805421;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VoQ3CY/UbCxQ1vfYn/wDbcVOfLwRr7UamsFPY0WiHL8=;
-        b=QX2w/AsHQ+7y5nFp2DvCm15I3C2JxhwXEIC9ECb06m9SpyrmGv6r+UxHi5wPJVxvSK
-         ys5gtttco+egg5uhDg0QLMZGbJpF37Tayll2vIKNyzT+YQwFNbe2/i0nxFUBqrRRzHnQ
-         WT8VySdnNFuW5Yd+EuvLnDX1sKyqWXyB6salk+iuY4bwBvobU1vVkCgxeqprFWmGViaB
-         Nlu5NGH6YZDk9bm10CY7grmy0RG1juwE/O1yqYclBfhbS/K7E5ELOfu0dQyubZpJRIhY
-         YQqi6K37AekhmMqroR7TH1EbJak2ag9hBkoWsLn7eWs17ouCrT/iaj36gtuIWSPwFfU+
-         fljA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTg/IvSeuAtCCM9srbYNj0QPplWssl7AUMYvCIRw2MRtF7DD4TUrJQiuNcM6psG+3xEUQj4MmlzdhS8+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG4Knn81z9JG9zxXTkynqt7yhOdv3TQKqhtXgE38YfNIP2pzBk
-	UbZWS17j7HSmuY1Q2E2Tms8xEQQN2nKvvfp3VEcY22uj04TNDXS5Hd2IO03uBnk=
-X-Gm-Gg: ASbGnctizvMdtQVNcAYMaNNdsrwOZa9d1JfViS43qdCpLMbLkrL1kZcmCvhjAuoV0Jq
-	Qh5GfxFofbIR6rQqUpEmKFfPFM600+ssEvjt/jKDIF4vitF9WrNbke2xkTluoXQZIZNJFD+yFH3
-	xYu+QLPUQp4sYbt4R7Kly6O6OW71LV+lhBjhprxqi6wF4SVa1BAkxGS/X8NmE3c5IDqSskG2pkF
-	xHEckqo88yi2VOoSL5Zq5qSTC9MAqPybmE8IRYH1B9eS689qsTgquumiB/+usZ67jmGJDR2Yncf
-	xXOZn+xCypJHib+LIbPIYe4zoHbKtjYNAPNjtqpNfa6x8ctLCJ5iKbjQ+NqNa55k3g==
-X-Google-Smtp-Source: AGHT+IHIHEUmNn+Ej+d4DBj6F1dLhdjYv2M3oXqEOqrgsaGxua6hF4SIr5R7CXRXG+xJlFnyff5Nwg==
-X-Received: by 2002:a05:6808:14cc:b0:3fa:bead:68 with SMTP id 5614622812f47-3ff0f3cfd8fmr535368b6e.0.1743200620648;
-        Fri, 28 Mar 2025 15:23:40 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3ff052799b6sm513053b6e.37.2025.03.28.15.23.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 15:23:40 -0700 (PDT)
-Message-ID: <76eb91c8-4c66-4e2a-8d32-f2e5d545bb74@linuxfoundation.org>
-Date: Fri, 28 Mar 2025 16:23:38 -0600
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oNT/8TrM"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 0E8B613833E1;
+	Fri, 28 Mar 2025 18:25:25 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Fri, 28 Mar 2025 18:25:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743200725; x=1743287125; bh=iILOKpx8HQDRieoVLBVus3RkWjr4hi7ARLj
+	1oIRPGEY=; b=oNT/8TrMgKqdmZEXbtWHvOAQRmrdyeA/UVKvtT5qqkoI00StbGw
+	4xl20gXBkabiIFcKGiHiH0n3mYbf+lNlw97Dlvh+gGYfrtkHrmO5wQaTquKmZjGB
+	QCU1MdtgYrCUCtXQb6HcSZJbbV9KzySLiogBok7skFYBsJ/d5k0UIUIBVo0evsWm
+	vm+Gt6eDVe4+RtB4utZUmPk3JycLxrGOLXI54QnWlR3n28NqYo9gWUsq1MtkEN+I
+	07CjFFzHVoC5SZ2up8WWFyVdivL2V1k1X+fms7I462TWyiRrK43aMWlW9ZlvwkMz
+	juO5XnRV6C5/DbWZtsSYYZ/mjzweYiM4WwQ==
+X-ME-Sender: <xms:1CHnZ57gjS_2ChBQs9f_uDyxvbNVbBLERANQANxPHaNLrjYkz1Z0Lg>
+    <xme:1CHnZ26z1BQtxIRqtRGxYE4daMUxq3UMV4aBpxcHlGxGqsqEs-MlBXOLkPoblzY-j
+    m6fkkGka1HeLOi_R3E>
+X-ME-Received: <xmr:1CHnZweSjbwspc7pAQkqGQEOZqwc6qyQckPHIRLuee-IEzkE2RA_jTUeVNFUgyGzzv3JHbrU6VdrvP7omOfpubM0n3DxBoQn1bg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvgeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
+    necuhfhrohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheike
+    hkrdhorhhgqeenucggtffrrghtthgvrhhnpeelueehleehkefgueevtdevteejkefhffek
+    feffffdtgfejveekgeefvdeuheeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgpdhn
+    sggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehgvggvrh
+    htsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopegurghnihgvlhestdigtdhf
+    rdgtohhmpdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqd
+    hmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:1CHnZyLj0G6hAP1Zuj19_ADRpp1kuGa5ad2SNUShyeOCNEOGgv_VCg>
+    <xmx:1CHnZ9IFnfbnk7aZ4R0BQhAVYMaYn-NFVkCCBOOG1gR_BWGRE-0y5Q>
+    <xmx:1CHnZ7zClA4h46yJJDiJkMwLk53_TXd6ccHMkSQnIf0LvSHRWGH2Xg>
+    <xmx:1CHnZ5JjOdxzSf1pVxwZ7feULHJejJ9Sv1mahTY7alyscrngZyLgpw>
+    <xmx:1SHnZ91D9BRmwvQz9ZpRKucTiTUa3IaTkzfjPw2r5e_unm00Bng8Rkl7>
+Feedback-ID: i58a146ae:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 28 Mar 2025 18:25:21 -0400 (EDT)
+Date: Sat, 29 Mar 2025 09:25:28 +1100 (AEDT)
+From: Finn Thain <fthain@linux-m68k.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+cc: Daniel Palmer <daniel@0x0f.com>, linux-m68k@lists.linux-m68k.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] m68k/mvme147: Don't unregister boot console needlessly
+In-Reply-To: <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com>
+Message-ID: <b8150223-8bce-32fb-c146-e14bcaa91134@linux-m68k.org>
+References: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org> <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/nolibc: drop unnecessary sys/io.h include
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250324-nolibc-ioperm-v1-1-8a7cfb2876ae@weissschuh.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250324-nolibc-ioperm-v1-1-8a7cfb2876ae@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 
-On 3/24/25 16:01, Thomas Weißschuh wrote:
-> The include of sys/io.h is not necessary anymore since
-> commit 67eb617a8e1e ("selftests/nolibc: simplify call to ioperm").
-> It's existence is also problematic as the header does not exist on all
-> architectures.
-> 
-> Reported-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
->   tools/testing/selftests/nolibc/nolibc-test.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-> index 5884a891c491544050fc35b07322c73a1a9dbaf3..7a60b6ac1457e8d862ab1a6a26c9e46abec92111 100644
-> --- a/tools/testing/selftests/nolibc/nolibc-test.c
-> +++ b/tools/testing/selftests/nolibc/nolibc-test.c
-> @@ -16,7 +16,6 @@
->   #ifndef _NOLIBC_STDIO_H
->   /* standard libcs need more includes */
->   #include <sys/auxv.h>
-> -#include <sys/io.h>
->   #include <sys/ioctl.h>
->   #include <sys/mman.h>
->   #include <sys/mount.h>
-> 
-> ---
-> base-commit: bceb73904c855c78402dca94c82915f078f259dd
-> change-id: 20250324-nolibc-ioperm-155646560b95
-> 
-> Best regards,
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+On Fri, 28 Mar 2025, Geert Uytterhoeven wrote:
 
-thanks,
--- Shuah
+> > --- a/arch/m68k/kernel/early_printk.c
+> > +++ b/arch/m68k/kernel/early_printk.c
+> > @@ -60,7 +60,7 @@ early_param("earlyprintk", setup_early_printk);
+> >
+> >  static int __init unregister_early_console(void)
+> >  {
+> > -       if (!early_console || MACH_IS_MVME16x)
+> > +       if (!early_console || MACH_IS_MVME147 || MACH_IS_MVME16x)
+> >                 return 0;
+> >
+> >         return unregister_console(early_console);
+> 
+> Perhaps the whole function and the late_initcall() can just be removed?
+> 
+
+A comment in arch/m68k/kernel/early_printk.c gives the reason why that 
+code exists: debug_cons_nputs() lives in .init.text. Platforms like MVME 
+which don't use that function to implement earlyprintk don't have to worry 
+about this.
+
+I suppose MACH_IS_FOO is not a great way to encode that requirement. But 
+it don't think it has to be self-documenting. It does have to be 
+consistent with the conditionals in head.S.
