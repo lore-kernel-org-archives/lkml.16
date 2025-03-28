@@ -1,91 +1,100 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E3517548
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317BD157E6B;
+	Fri, 28 Mar 2025 14:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743173067; cv=none; b=CD8IuBdpJa/xbcDvz0KL1KOEulW6JRLawQJfxqgJ+qBd5XZr1ZfYSohC/HS1QWLX9d2J3p/Td8sKzbyWX217iBM/Kdph/TgZ+gtB9pHa/8UOoe1JYgxSjaOxmPvml4WrKQidLPyuh7axrgA45ZscUrJ4mJ5NDGQm1nkpZZaAVDU=
+	t=1743173136; cv=none; b=sBYS8td6jwn0sVlJze4qXWTtCEHGKxsq0o1QfIVonzEJ1juwGd0hfLuan3TNh7vJSbg3uuq8jpgEhCr2/oIKaqeeUyIsBePk9oSyB7E11wzaymukCQjNkEuWUf2y6k0DIVVMlHagrS3Y8pi38fOQBXf0+VIkg3DgnotkGge5hQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743173067; c=relaxed/simple;
-	bh=Ka8K++80PGmWrsBk+v+n2UkZJCnwOU08Id2ETG8hiVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiOyjhqPz8uLoMRtW1gENN9nyzUuvHp1TP7r05w7FPzThF5qXeh7DS30MBKFfH5ZtCrHdPeTlZzBx6U5I4UHmgNUShY+HBypOTLqtWEZx4xunlsZOhMT4sjC0OVzY7tR9JdRs9TMYh383y5pC0Gs0/COHRXoYVLADk61WvLBna0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=crqC87Qo; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743173136; c=relaxed/simple;
+	bh=7qGrXEoUERdDE37I+v3l/CeEtOIhffhKARqqG2bFKTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Bz0jlJ3Eu4omiaqlU89LDWYx3NM6v8YcrtyScCnhFJSB5huUhkpaI+O1Na13vYSLDeSYI0pjkafqLb97vaI2CIeUjB97ivAljA2Z1qvSgYIOuLuNi10G7Y3tUcVXAMV/bKTCu2TdBn00g21CWEgODTq3xNyrAK+C4wKVG2fExPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGHjYwng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="crqC87Qo"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3879B40E021E;
-	Fri, 28 Mar 2025 14:44:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QoMtSvIc_kxj; Fri, 28 Mar 2025 14:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743173053; bh=z5I0u/vThJ/UKCs/ij+/X+6NUe0tDz9FKBXBlxKiDpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=crqC87Qo6UPK7Go/uP0I7c5mf3t2M0FkyMOuVaQRMvSa0M5+LvuHt0ONoWb8pRsyN
-	 P4jZaJwjiXNz/lwtwPnE43siYElpwixjvuwrfLXlIFRvacDKOED25zHX9AA11GOlKX
-	 Mq8bn2dBekOYB/1kd6LLwpDlj0blh/2v4pQH64cxIx+qXIUinFxE+cbaAdm0bvlehM
-	 uWHDdGl5ogZSfJ5sz6JkIgldV7doTzZm4pUsgLJlCCiypUn2Hw0wzPRfiH4SgvrGnE
-	 EcCQJ6MbutVF+LkQYYhu10HrtTqDmMayfo2ttpoyAvvNz4crKqbxwbZiwVAEDITdJ/
-	 8JhOtye/uO8ipxHBc1sFbX5WioBkCV0bqcUVl6M7RxPYegYu59oGrhJywihU+Whqev
-	 QFp/iXgnvHhd9XvtPXizVmsFvf8UJG5NBj5Fj/04zp1dyEGDoIERp05iN1DR8uKjGf
-	 +nlgMio4/wDxMY4vhKO+IjouH1mvuvOeHUT13tzMs7q7LTNwHjCaFHiI8qK6NCXCO/
-	 ce7Ygv+q/dwRuB9bfcwR/eJ5mGC2rhpg0NqhDftxmbVaqhIAESWB/PUn1IpEm5Q8tm
-	 +3tLfccob2lxgfAQ9c0DV8Ut/aVhyBFZuDkkqIFIbGnAQlHC40lSO6Dmbb14FeP+4l
-	 Y/djdb67zzN56NzKJnYwTYEU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 16D3040E0215;
-	Fri, 28 Mar 2025 14:44:05 +0000 (UTC)
-Date: Fri, 28 Mar 2025 15:43:59 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH 0/2] Clear AMD's microcode cache on load failure
-Message-ID: <20250328144359.GBZ-a1r77uFgyWsI9E@fat_crate.local>
-References: <20250327210305.1694664-1-boris.ostrovsky@oracle.com>
- <Z-XEPVvEDhC5vzR4@gmail.com>
- <f8ec905f-04d4-46f6-909c-7f79b151c0df@oracle.com>
- <Z-alzhvfSXN4liNE@gmail.com>
- <20250328134544.GAZ-aoCA03g9SygDnW@fat_crate.local>
- <Z-apwoVEQkwCH-Y2@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGHjYwng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B64C4CEE4;
+	Fri, 28 Mar 2025 14:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743173135;
+	bh=7qGrXEoUERdDE37I+v3l/CeEtOIhffhKARqqG2bFKTg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YGHjYwngkfoyxnQor0tqAGGqzrL1qZP6Y8DipI/P3wXV0okkGj+rV1pBOJ4y0uslY
+	 EPUGbFfFqqqFgVv56h+ztrJZ+5Mq9Vksy5ZPLfXFtfTpFveGDGi4hU8zFqynvxpnpL
+	 MWL/zLNmUu4or5WkVj3NuFr842EYQUm6tXZDRbZ7bDwGjqM2T7cVYbMyzdhekaa9b1
+	 /uVS7eiK51z71h/RkRrEdhqNvebahTxhRgI02Me6Q5BSMv3+knSro6ef3qHTM1tan6
+	 RG3rJ8tm33elXoTdvYPhoA72WtxIrvs64QG+qmx9jdw2rgUk6p2bMGl0XiDgF+e22N
+	 Y37qbE260PYSw==
+Date: Fri, 28 Mar 2025 08:45:32 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau/outp: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-a2DAQmcsHHlyci@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-apwoVEQkwCH-Y2@gmail.com>
 
-On Fri, Mar 28, 2025 at 02:53:06PM +0100, Ingo Molnar wrote:
-> Well, it's a regression over previous behavior,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-It is not a regression from a previous behavior because this has always been
-this way.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-> so it is a regression fix for an upstream change that is only a few weeks
-> old,
+So, with these changes, fix the following warning:
 
-The late loading is not a few weeks old.
+drivers/gpu/drm/nouveau/nvif/outp.c:199:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Sounds like you're confused. Find me on IRC and we can discuss it.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nvif/outp.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-Thx.
-
+diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
+index 6daeb7f0b09b..403cf16d5e84 100644
+--- a/drivers/gpu/drm/nouveau/nvif/outp.c
++++ b/drivers/gpu/drm/nouveau/nvif/outp.c
+@@ -195,20 +195,18 @@ nvif_outp_dp_aux_pwr(struct nvif_outp *outp, bool enable)
+ int
+ nvif_outp_hda_eld(struct nvif_outp *outp, int head, void *data, u32 size)
+ {
+-	struct {
+-		struct nvif_outp_hda_eld_v0 mthd;
+-		u8 data[128];
+-	} args;
++	DEFINE_RAW_FLEX(struct nvif_outp_hda_eld_v0, mthd, data, 128);
+ 	int ret;
+ 
+-	if (WARN_ON(size > ARRAY_SIZE(args.data)))
++	if (WARN_ON(size > 128))
+ 		return -EINVAL;
+ 
+-	args.mthd.version = 0;
+-	args.mthd.head = head;
++	mthd->version = 0;
++	mthd->head = head;
+ 
+-	memcpy(args.data, data, size);
+-	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, &args, sizeof(args.mthd) + size);
++	memcpy(mthd->data, data, size);
++	ret = nvif_mthd(&outp->object, NVIF_OUTP_V0_HDA_ELD, mthd,
++			__struct_size(mthd) + size);
+ 	NVIF_ERRON(ret, &outp->object, "[HDA_ELD head:%d size:%d]", head, size);
+ 	return ret;
+ }
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
