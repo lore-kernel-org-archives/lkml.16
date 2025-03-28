@@ -1,102 +1,99 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31632222C7;
-	Fri, 28 Mar 2025 13:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFCE21C176
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168513; cv=none; b=SFGz4ur9oJLm2ekkZGLUSX9hUp1yEdK7gkb8kNHTJoYf14FepacRGPkjy1flRBz6+ZbRSon6yjguMeFI5kwbi1IW1jBsgrkaqPIk6xrUiK5Iz4bsiwqmW3niudd7RRpy25seeJFBHrjcX7lSSgG6HJ+rWHoJuTSmx2CXFJFMQcM=
+	t=1743168514; cv=none; b=giMtvWWu7UZglkEsp77kHG3/Rsol3Hwlvgm7FepGaBRe+GveNZ/erICMJuGR3+gqYVxIOn3zfayeoQkspenCfqYQVtEB+UTSRP/wu3jt0MVnlMN8CncYIZ+bAjwP5XIv4CIlrLguBjcbRvv8+TJci9xMbDmtZj9ZU8Mkk+GEOQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168513; c=relaxed/simple;
-	bh=AmiIbt/wN7iOY/s7foyX8kzAk2TSDj8J5sMRc0KGCao=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=EnKoUnHmXU1NpmlA/MOw4VsKGn+PbJYWxi/qe3/58Tk83j+3J39QXkg/L+aIw3uE9r7CbeAnTo9MR8sWea58IXfgOzRNroD0cnYm6sYy7uplr4OpYF+QpDyrg0Wz48JsLNklTHVrCXDGNdyYpyCdfcCtcA46yJs0Hl144T70Wxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=V+ct6d2a; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743168514; c=relaxed/simple;
+	bh=Xa2f3D7B4w1wZ6w2TtyrZD+X50/h41Gn+1E7MilGMBY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WaO25Zk1IKvfbSCO/kkl5w/hAasNdTIZAYgSxJch12UMscRa+dw2A5fUCaYA+IiHU/gnKHu7dhsBSaihBkzcOxlJTRCMCI7XHiX5mRkOXZDsbHHoT9iXvtGU57V4dWKnJo7lvOmnIUw4ssvvbCqfkjb1rBDlc7o4yjSNbn9kkXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcDYX5zQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V+ct6d2a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743168496; x=1743773296; i=markus.elfring@web.de;
-	bh=IpfDNgazgXXBhb3QCNRjJJD4rFulvC5l9bpTYHKG/4I=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=V+ct6d2aiYPipLyNzTJIGp5xE3blwGV4MJzi71wDjLMjqIfaEpauAS4lUBBc5IKw
-	 PesrvwSg3KCuHnHl8neZQscEK+QbLdvVIAUvuB5OZUf/URsJbSYX1TkJpUMe1FA99
-	 0R6TwfI5+RTbgePAExWvKb0Re2vN8hGvn4fJ76nqPyJGRGVhU4aCwZ469b3bX5mrU
-	 SkgVnvlZKcZVFVcl9DMGo99gU8qW6MVw3CccwZCHB3CxT+EhkvVhSngO8uVstH1qC
-	 vEhRT7Zc9nYWmEGvlCqNwXaYlxyg+AB9AdIY0skgqo/g1GieSj9mdujNl/kM0mDWV
-	 2/tQyNylINfPRKsyIg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MeDMb-1tNRlH03Md-00b2Hg; Fri, 28
- Mar 2025 14:28:16 +0100
-Message-ID: <06545fa2-7f82-4154-a882-faddb53df4d9@web.de>
-Date: Fri, 28 Mar 2025 14:28:13 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcDYX5zQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367F9C4CEE4;
+	Fri, 28 Mar 2025 13:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743168514;
+	bh=Xa2f3D7B4w1wZ6w2TtyrZD+X50/h41Gn+1E7MilGMBY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BcDYX5zQVMUyRCOITCnSsJ2LtnNoULUVn1tKRRhETxoJSGS4tAcnpAl6sQ9FrGGPH
+	 kWNVIXIrVsrfk38ktzrqVY0IiyA3JlGcZngCFH50SxdAhTjhFmc07CqZkv0EHATGpb
+	 FK9HGIMG7t/xdneLlJoQVfqqaqCVbsSydaY/Sm4RLMs1/qmLXcrQa5mSr/bgP6pgXp
+	 BEfmZ7m1hC/DJnpEaOWC5DinZ+voYJK/YPpCBDnECqv1P9Gsjzy43le4DEbxkuIuBM
+	 +MS8VMefLUr6cU6QDqKjJ7o1mwuLS9tVYMXVEy7MbLI4Xxte/HVryAIWXr1dTxb30W
+	 /z1hywaO6RCTQ==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 29/49] x86/alternatives: Simplify try_get_text_poke_array()
+Date: Fri, 28 Mar 2025 14:26:44 +0100
+Message-ID: <20250328132704.1901674-30-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250328132704.1901674-1-mingo@kernel.org>
+References: <20250328132704.1901674-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
-Subject: Re: [PATCH v2 2/3] i3c: master: Add Qualcomm I3C controller driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cT4tjGtvJXvSRL+OUV0lx2UA5LnpeNz7q6/InzNnyiHEeviRrrT
- J5NFpTF815mDYWMO4nPeGSD+QWvucLhYGTqXjab/uxjKLQs+S+00/gVECE65Ll0VkcaBJ13
- 3O69z7LlI/4kiHqQB0J/15AuLEWqpqTotzAjYKo7DSXrGgpATtje3q3pelLnJc74ZIWTwWK
- 5bbY3ik9lh+qlhh2hkwCA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VOlzgvrPiWw=;l+7eWe+iFzWKRZ3mRi7dimYU2oq
- grhkx9vsw/VEsjtCEXy54VQHpRClnNXV+HsR9CxvgANjp4EF3yKVRZOHULbMauoT8pJnnaooT
- 26PitrDifSc990DwYDszXFag//F4MEJqvQFvQATnpP63nvBnufBWMaJ9lAfeD/W8HqNNa9QFp
- Wv4UUqLu5ospDIjmuWKH1ztIa6nRdFA4aSH77Cfrrea7EFQC4Yfhq99WXoI04ntItmb5LpWwr
- p3XiEo5ga1keYYYM5/g8ystw+oZWrIzac4taLPppQQSZMkXHg1i1a0I7+0ZLUpbrUgJcZLzXO
- 5tR5w7hc6ierey3WTEXDSwEmn4G/LrevpBdHbCPbdq9ZF0BVnaHyjnK5HVXVdUcpW2xigWnaw
- /aWWZ3N9Q8lx1wUhvCcpdlULI+BdHafdtv5DttCKdGPvXn3bSGNpisCZk1eRvXCQTSo9AD3X3
- iJvTzfdgV3N7fU9fpJbvExMIQQKfMqApC+aXhE/u/hI8w9MBvl9UKh7zxk0rfN1mRKrGPD3Ay
- LBOpYj36D536AY0oUl/iVwgBiwI+uCMvO5/rRMbcTcRO6OwAPl0cit1RTyOQTnp7Zxcu38VHX
- 9a2x3tvW6MnCiRVtLm63UNVzza4gPL7tLr1g/JNC1BPO+xNfEW7HV6JttUvUminTVKYw4WT6F
- kM+VnT++9dayUzuzO0zugVmwl02ktS7qWjNhFKFQwfHVh4Z1dDiCK40teZbGA57CREoYXPD0s
- PaswK4GWhPRj2JijkOdxI+cyIDafIfVblEzE2bJMQ4X78MOmp5yKFT/vl0AGp9Bts8kBZENLg
- sN38PcnpJXVZsAGGODKy+sKtRsCd6VPdO7L5GeKe6qUTwsaSNyTux6jZTZpMtxHSHPgwI0dJq
- 1ucUB5aSYQ39vjc7k/LrH8GeHQMdeyoJjGsLFqxrEpAAV6mzM/S0asiXAVjsGdZ2P0zR1y2AZ
- PmYGR6kidtZy+1PlaFWBaG/XZLzz4XwvOqxJukKRxEscdnaRypUufwnfWXeJtOH8vn+t+99C/
- E4YuQq7a93OA3XFC6Sv5MRzbFjLN9jluFbuWR6iYF4bHvQiERfh80Tom2mhKwm9ED8NuBrxvu
- 7oIPpZ7UgcGx8mwYDi6A39hw4JojweAt+HoBteW4kYoHRDIZvoMtzG/d7gMZbZo+f7Kq+BQCH
- wmSjV6WcqsG6r7vSt0ApWNjislltguxytljGvqGFIX7RBLDOk8D3Rg6SEtFkCrGf7NOJnhUPo
- d/kKoneAZ6TfdgqD7vZbRvfgdrWJcIo6AHRt7E5IM802j0a8Ndylp7MNeKh8ERifVzWx5GOTS
- tHV5e2/sh04YF//+YEfFTL/TvC8N51HOE4W+TAcQLQ3VeEMnI2OF2Y37YeqHmPWgFbMLnnti5
- toB+RCOs+2qe5s7SPYCbAuSfxuRtNcZZvsR7b9t5BY6kLbYjfTtw39fGX33e4aN9eB4L34HC/
- FIAzafpxCJg0qAp0Lsa25iy08tYcpQ0T3C0242WpeAmb4Aao4
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> +++ b/drivers/i3c/master/qcom-i3c-master.c
-> @@ -0,0 +1,1107 @@
-=E2=80=A6
-> +/* M_CMD OP codes for I2C/I3C */
-> +#define I3C_READ_IBI_HW          0
-> +#define I2C_WRITE                1
-> +#define I2C_READ                 2
-=E2=80=A6
+There's no need to return a pointer on success - it's always
+the same pointer.
 
-Can an enumeration become helpful here?
+Return a bool instead.
 
-Regards,
-Markus
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/alternative.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 202720228c98..12f0fd35773d 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2475,15 +2475,14 @@ static struct smp_text_poke_array {
+ 
+ static DEFINE_PER_CPU(atomic_t, int3_refs);
+ 
+-static __always_inline
+-struct smp_text_poke_array *try_get_text_poke_array(void)
++static bool try_get_text_poke_array(void)
+ {
+ 	atomic_t *refs = this_cpu_ptr(&int3_refs);
+ 
+ 	if (!raw_atomic_inc_not_zero(refs))
+-		return NULL;
++		return false;
+ 
+-	return &text_poke_array;
++	return true;
+ }
+ 
+ static __always_inline void put_text_poke_array(void)
+@@ -2530,9 +2529,9 @@ noinstr int smp_text_poke_int3_trap_handler(struct pt_regs *regs)
+ 	 */
+ 	smp_rmb();
+ 
+-	desc = try_get_text_poke_array();
+-	if (!desc)
++	if (!try_get_text_poke_array())
+ 		return 0;
++	desc = &text_poke_array;
+ 
+ 	WARN_ON_ONCE(desc->vec != text_poke_array.vec);
+ 
+-- 
+2.45.2
+
