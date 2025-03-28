@@ -1,277 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907C415A87C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D5C35972;
+	Fri, 28 Mar 2025 19:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743190365; cv=none; b=BqXxi+6R6QVR28G34f8Q7luqUzdoFiE0JnQhzYliLf4mFluneBNbuFaWT40r4twIr3BENbxsHsYOKrd+vE9qGNs3GjVf2TLVRk5dFoi5Z9pVJenSczI5kvqy9pYvQjMtXDqq5OSos6YDUdbx8ZEd5Pn/3qMdH1kkAjwCZriMKKM=
+	t=1743190385; cv=none; b=J5n3sK3yatePf3n/fW5V84Q5PB+qX3XmU4e0/nCD5suD0xFMkYE8IgKLx/OAciRMQyP/ngnDuFcndb1kStlZK17x3pNfD/LEox+wIFtJiCbxSbZohgU+6KAuGJ5mVmcC1/hoQhhqn7f1JY0hULKLKdiK2De/v1VXUc9dDOoPBvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743190365; c=relaxed/simple;
-	bh=P3RoBtnRTWh0+Qe3N0FkyP1eVcCc9ZdIc/pM9bs+Z/8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aoH4cFZr9KJqoxpaqR0t7U6xMCCElTPzKbpqopFYLZRgliCd5g7mZgIxvX3JvWJFPNAfxwq7o/XBA0p+Eo2i9IlUJuLR7qjcIGt1LRn5rEWpK5UScZ8IFgYiN+ADjVOFXn8wF6K1g6ZF7t3Sh7zLHJ9nyCdkZA0/YK8veR4feR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Abk/1qNK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743190385; c=relaxed/simple;
+	bh=sezMGADMbesTGuGXfIbnNncPeM4zIsAZQfZWIjOPu6c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C9LbNqE82rd0IBKw8BbusgVd73+d+MMwuZMBX15p1gePjNBzivny6RGTo5+EE8eN6wC2qtV+G4gTOvj/x3tMKibgdHxqGsx9ifwUu6pOkEmEtFCKUl1rTFdzSi1YekcYBmGG4Bu6mGo/jTLhtKZysXt8QmuZ6fOHbF/3uDaiusI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byxXT6+Z; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Abk/1qNK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743190362;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mOrICwGOkzKQ/+jrTMKKxHEEgn8NmGcpycUWQdIHE6U=;
-	b=Abk/1qNKKK6tlMxsuD17mtxrO2LSQFyv080wQi8tksY73SclMvWtoBUs0krvFJbsDgtTYa
-	XYfeghZtOdI1ofeSaiPTRoEcUclfrhMfHrAcFjY6vBOqkWDV0UD0h9GJK8QS25KqvwjUgZ
-	Y+tlJWFiV3Vt0PrLiaIGewSCJZbGfec=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-C_xWpp7MN4mxFb6EHiUpKA-1; Fri, 28 Mar 2025 15:32:41 -0400
-X-MC-Unique: C_xWpp7MN4mxFb6EHiUpKA-1
-X-Mimecast-MFC-AGG-ID: C_xWpp7MN4mxFb6EHiUpKA_1743190361
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c3c8f8ab79so373554885a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:32:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byxXT6+Z"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2279915e06eso57734075ad.1;
+        Fri, 28 Mar 2025 12:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743190383; x=1743795183; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wmzzK5wrB1TwLnmdvaDnS9IoMKPVneQIzyzg2Urwedk=;
+        b=byxXT6+ZJzGrpaRZeM2lOKvL+2IMlNJ+FwvKeGw9l+R+ruvZqD7uxDw5lYmWEsmVhn
+         pvdEY7yOauyUlNc7SBQzIgeWhWL4iXYw8lyZnymsIsnKLjvS1uQYDAL9/TdXV6JF16a6
+         eycV1/RokmCKO4t5w67qZeFGgoufvsRWVlMyL6AjNuyXDpCwCoKl9uxrLmmU3lNI4lib
+         5CEc/xC8Qhf9mGNTTO236e3mUrHQUDDslBVWVRJnDvr/4dMV9JXCQNb21ukI4gUyPX/I
+         r+WqxgIAk6lciiItCuF8la1pPwpBR99ksYcIqcwVqz0zw61pukkbmrZ41S+Q5lnvfoCV
+         8gvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743190360; x=1743795160;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mOrICwGOkzKQ/+jrTMKKxHEEgn8NmGcpycUWQdIHE6U=;
-        b=sb39U6wNPMms8ArHH49SPKgIOmZa+LgYhfYYbKTIfP3TZS1jicOe8vG4gGqtSyTuMw
-         yqfmuesGkwNmzvPKMGH7xxQypG3+IU7BWrDxgQ7rrEjOp32gw7E97b96715vDS28iMbZ
-         2N0BFdv0GWuQbCu14yNJ8Mj76qAI4v1P858Sz4R6VYJGincE4V3wbKdlEscm3cj3qu1W
-         4imcXsFZg3Zz/q39aiEDPA0GhvUf563tgCr4E/sLpnWiK7++o3Vk4zHfjNCJCeWip9HN
-         0q75N+qdg5NpGxzOhOv4gz3V8iV5HVqeOeK77Dbnxon78tIGITJekpsoQYcXH+kf7cd9
-         ZCew==
-X-Forwarded-Encrypted: i=1; AJvYcCV3DwN5TiVec6la+yurYHJdfePUA5R00Mmtcoa1DbrJGvXXHNnFfmuLGqLWcl+Ex0AB8ix4eer1Gttj8nE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrXM0SNOgCR/S3i+vhMG4LiEYSqVD9oxrcCXC8xyF26TI6FBk2
-	GA8i0/Ahc++FsyJvVHwzEspLf2793VSOkG/I466ItjKcAYkmokI+JSAkORctVidyS8IkDBq1+Gy
-	YL1DTYKEE8hbrRsYB7vZhZHEjx2XZFn0IOSzKY75YKbBbnvtSxJC2JFi8CFUL3ZBhfG10Fw==
-X-Gm-Gg: ASbGncvfiaxGq1vB6tSjoaipFXGgB2f7OOvra1IfMBks1oIHI1SBkX0xTADKxBSN0eA
-	8Xg1yutQzhZ+ckXRXXW+//2r0jgcpcpEeStnTkRziGeSgzPYxPGs2SvOaWwgckDcetFPECn0P+a
-	f+4pI9EBjCMay/lT8/z8V+ctiZpCR9mxnG51rlysDTKWPWbGQWMTolimg4VIlt0V5RpfXj2D3Ig
-	jHFT5t9QT2VTd57GaOX9hFPRf+hGkL1vzoQVH6I50R9bwob7xUNKjod8fJ4VUMXJgGIpbQLO9Ht
-	zsLmu78YHvLLgKk=
-X-Received: by 2002:a05:620a:28cc:b0:7c0:bb3f:e285 with SMTP id af79cd13be357-7c690733764mr41925485a.24.1743190360490;
-        Fri, 28 Mar 2025 12:32:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmxAH9Bkj6EcEA5G5CNFC/EUweXAoFqmSdTdkpGvOkNntLjjGVyjFGykTnKnzw0NPHOYaRNQ==
-X-Received: by 2002:a05:620a:28cc:b0:7c0:bb3f:e285 with SMTP id af79cd13be357-7c690733764mr41921485a.24.1743190359985;
-        Fri, 28 Mar 2025 12:32:39 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f765f9e8sm156980985a.12.2025.03.28.12.32.39
+        d=1e100.net; s=20230601; t=1743190383; x=1743795183;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wmzzK5wrB1TwLnmdvaDnS9IoMKPVneQIzyzg2Urwedk=;
+        b=XzZ09Ei7hBEDkeQzpI9J3xdVHnJwhRnti0T4hDOZo7GbjUaByn0WJX0iUu2pk8z9ar
+         +Y4FlCQslYApbwKfx7NfJuXfIX/VQtvhWRbZHncRFc90QSxj9yS0aGYMrmIyJwR6K03r
+         l5kEvqJthEGm8w7nJ//KmfJuILY2wPThX8oiL9Xq3u7/OKTQcaxMezu/yWQcdWjaeC4g
+         /WB6BaILmM5iLA9ORH+pIk50j2qa4ilQmBr+FTBLGk0oBONa4WgWHSc06KFU0KFk8eiG
+         pvTKMgfTNoEUWhxpN7xrxSfMgZCjoQS49oeZKCjJZJ8QuzLZl4x4NxItCLMP2PcKY7fN
+         Rz0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWPps9aO8yQvyCnNR2Gc6nVaOnCoUyD+nVCcDyX0IQcecrw31cW9eRCExAgnnX4MznRtmW+Vqj4W6ym1Zy3@vger.kernel.org, AJvYcCXkix8iv8LWxtg6EeKKKFnHHouJXPwRtqAQccnXGoZ9jMaVD4EEtDos7Lh0NG3tl3NBQ15J8/eSD18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8BkYLg1Ci9C1kPKo9zALXYCVARGOQFdGYjuH+8x+Nd32zDLii
+	9bCuiuGvqLD6BExi10ZAWo+5lXaQBV+ZvBSAwRYTwHqnxJY1nso4bYaU10g2
+X-Gm-Gg: ASbGncs7N3gFXw6PoAWM6FU12ureZSU8X9APbzWiZueg/SRP8BqZRPPFpparxO6In9z
+	cv8c57Ew7MGMshZ9Qfq3bfRrTZyzFV+sSotqNYWLEb0ipNHg37ZqLXF4aP9Du5fDubQnx7bXf8y
+	Uu5KmIdW6Z1DBk/jyS848BZhcE19l3MCkHGB7Peg8s5k7blwCO7/f70XHq33zNSlB72tIcATRTw
+	x41ZlENCv8N821sIXbV13JSkdqKZAQasv3eVAxZbY6yvEq6C3c1J12q+2y+bNIzsPDGpZvSVnZI
+	gQIglgbiQbJeafUoeFEUSPBYKXpg+hTRXkMhTPKRak5CwJL68xSKLfZD9xB2SKY1pqYmZ4q/SUW
+	gPnmr2MnCvHBOWiILvdrxKKit2LE4au3vUetc3CCf4Q==
+X-Google-Smtp-Source: AGHT+IEAwgqjiuXz9FuLi799X51Qq+5hLQo/k1P1Mp5I5BJ5OT75oDBzsl1hH9SjLgr3KKLNdley9Q==
+X-Received: by 2002:a05:6a00:18aa:b0:736:3c77:31fd with SMTP id d2e1a72fcca58-73980473887mr498675b3a.23.1743190383020;
+        Fri, 28 Mar 2025 12:33:03 -0700 (PDT)
+Received: from elbadrym.c.googlers.com.com (34.125.168.34.bc.googleusercontent.com. [34.168.125.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710da6b9sm2258882b3a.174.2025.03.28.12.33.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 12:32:39 -0700 (PDT)
-Message-ID: <c04233d3c35e2bad5a864ab72d0f55b3919100f3.camel@redhat.com>
-Subject: Re: [PATCH 2/5] KVM: selftests: access_tracking_perf_test: Add
- option to skip the sanity check
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: James Houghton <jthoughton@google.com>, Sean Christopherson
-	 <seanjc@google.com>, kvm@vger.kernel.org
-Cc: Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
- Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yu Zhao
- <yuzhao@google.com>, cgroups@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 28 Mar 2025 15:32:38 -0400
-In-Reply-To: <20250327012350.1135621-3-jthoughton@google.com>
-References: <20250327012350.1135621-1-jthoughton@google.com>
-	 <20250327012350.1135621-3-jthoughton@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+        Fri, 28 Mar 2025 12:33:02 -0700 (PDT)
+From: mohammed.0.elbadry@gmail.com
+To: 
+Cc: Tali Perry <tali.perry1@gmail.com>,
+	Mohammed Elbadry <mohammed.0.elbadry@gmail.com>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Patrick Venture <venture@google.com>,
+	Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	openbmc@lists.ozlabs.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] i2c: npcm: Add clock toggle recovery
+Date: Fri, 28 Mar 2025 19:32:50 +0000
+Message-ID: <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+In-Reply-To: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
+References: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-03-27 at 01:23 +0000, James Houghton wrote:
-> From: Maxim Levitsky <mlevitsk@redhat.com>
-> 
-> Add an option to skip sanity check of number of still idle pages,
-> and set it by default to skip, in case hypervisor or NUMA balancing
-> is detected.
-> 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Co-developed-by: James Houghton <jthoughton@google.com>
-> Signed-off-by: James Houghton <jthoughton@google.com>
-> ---
->  .../selftests/kvm/access_tracking_perf_test.c | 61 ++++++++++++++++---
->  .../testing/selftests/kvm/include/test_util.h |  1 +
->  tools/testing/selftests/kvm/lib/test_util.c   |  7 +++
->  3 files changed, 60 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> index 447e619cf856e..0e594883ec13e 100644
-> --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> @@ -65,6 +65,16 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
->  /* Whether to overlap the regions of memory vCPUs access. */
->  static bool overlap_memory_access;
->  
-> +/*
-> + * If the test should only warn if there are too many idle pages (i.e., it is
-> + * expected).
-> + * -1: Not yet set.
-> + *  0: We do not expect too many idle pages, so FAIL if too many idle pages.
-> + *  1: Having too many idle pages is expected, so merely print a warning if
-> + *     too many idle pages are found.
-> + */
-> +static int idle_pages_warn_only = -1;
-> +
->  struct test_params {
->  	/* The backing source for the region of memory. */
->  	enum vm_mem_backing_src_type backing_src;
-> @@ -177,18 +187,12 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
->  	 * arbitrary; high enough that we ensure most memory access went through
->  	 * access tracking but low enough as to not make the test too brittle
->  	 * over time and across architectures.
-> -	 *
-> -	 * When running the guest as a nested VM, "warn" instead of asserting
-> -	 * as the TLB size is effectively unlimited and the KVM doesn't
-> -	 * explicitly flush the TLB when aging SPTEs.  As a result, more pages
-> -	 * are cached and the guest won't see the "idle" bit cleared.
->  	 */
->  	if (still_idle >= pages / 10) {
-> -#ifdef __x86_64__
-> -		TEST_ASSERT(this_cpu_has(X86_FEATURE_HYPERVISOR),
-> +		TEST_ASSERT(idle_pages_warn_only,
->  			    "vCPU%d: Too many pages still idle (%lu out of %lu)",
->  			    vcpu_idx, still_idle, pages);
-> -#endif
-> +
->  		printf("WARNING: vCPU%d: Too many pages still idle (%lu out of %lu), "
->  		       "this will affect performance results.\n",
->  		       vcpu_idx, still_idle, pages);
-> @@ -328,6 +332,31 @@ static void run_test(enum vm_guest_mode mode, void *arg)
->  	memstress_destroy_vm(vm);
->  }
->  
-> +static int access_tracking_unreliable(void)
-> +{
-> +#ifdef __x86_64__
-> +	/*
-> +	 * When running nested, the TLB size is effectively unlimited and the
-> +	 * KVM doesn't explicitly flush the TLB when aging SPTEs.  As a result,
-> +	 * more pages are cached and the guest won't see the "idle" bit cleared.
-> +	 */
-Tiny nitpick: nested on KVM, because on other hypervisors it might work differently,
-but overall most of them probably suffer from the same problem,
-so its probably better to say something like that:
+From: Tali Perry <tali.perry1@gmail.com>
 
-'When running nested, the TLB size might be effectively unlimited, 
-for example this is the case when running on top of KVM L0'
+During init of the bus, the module checks that the bus is idle.
+If one of the lines are stuck try to recover them first before failing.
+Sometimes SDA and SCL are low if improper reset occurs (e.g., reboot).
 
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Signed-off-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
+---
+ drivers/i2c/busses/i2c-npcm7xx.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-> +	if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
-> +		puts("Skipping idle page count sanity check, because the test is run nested");
-> +		return 1;
-> +	}
-> +#endif
-> +	/*
-> +	 * When NUMA balancing is enabled, guest memory can be mapped
-> +	 * PROT_NONE, and the Accessed bits won't be queriable.
-
-Tiny nitpick: the accessed bit in this case are lost, because KVM no longer propagates
-it from secondary to primary paging, and the secondary mapping might be lost due to zapping,
-and the biggest offender of this is NUMA balancing.
-
-> +	 */
-> +	if (is_numa_balancing_enabled()) {
-> +		puts("Skipping idle page count sanity check, because NUMA balancing is enabled");
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Very good idea of extracting this logic into a function and documenting it.
-
-> +
->  static void help(char *name)
->  {
->  	puts("");
-> @@ -342,6 +371,12 @@ static void help(char *name)
->  	printf(" -v: specify the number of vCPUs to run.\n");
->  	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
->  	       "     them into a separate region of memory for each vCPU.\n");
-> +	printf(" -w: Control whether the test warns or fails if more than 10%\n"
-> +	       "     of pages are still seen as idle/old after accessing guest\n"
-> +	       "     memory.  >0 == warn only, 0 == fail, <0 == auto.  For auto\n"
-> +	       "     mode, the test fails by default, but switches to warn only\n"
-> +	       "     if NUMA balancing is enabled or the test detects it's running\n"
-> +	       "     in a VM.\n");
->  	backing_src_help("-s");
->  	puts("");
->  	exit(0);
-> @@ -359,7 +394,7 @@ int main(int argc, char *argv[])
->  
->  	guest_modes_append_default();
->  
-> -	while ((opt = getopt(argc, argv, "hm:b:v:os:")) != -1) {
-> +	while ((opt = getopt(argc, argv, "hm:b:v:os:w:")) != -1) {
->  		switch (opt) {
->  		case 'm':
->  			guest_modes_cmdline(optarg);
-> @@ -376,6 +411,11 @@ int main(int argc, char *argv[])
->  		case 's':
->  			params.backing_src = parse_backing_src_type(optarg);
->  			break;
-> +		case 'w':
-> +			idle_pages_warn_only =
-> +				atoi_non_negative("Idle pages warning",
-> +						  optarg);
-> +			break;
->  		case 'h':
->  		default:
->  			help(argv[0]);
-> @@ -388,6 +428,9 @@ int main(int argc, char *argv[])
->  		       "CONFIG_IDLE_PAGE_TRACKING is not enabled");
->  	close(page_idle_fd);
->  
-> +	if (idle_pages_warn_only == -1)
-> +		idle_pages_warn_only = access_tracking_unreliable();
-> +
->  	for_each_guest_mode(run_test, &params);
->  
->  	return 0;
-> diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-> index 77d13d7920cb8..c6ef895fbd9ab 100644
-> --- a/tools/testing/selftests/kvm/include/test_util.h
-> +++ b/tools/testing/selftests/kvm/include/test_util.h
-> @@ -153,6 +153,7 @@ bool is_backing_src_hugetlb(uint32_t i);
->  void backing_src_help(const char *flag);
->  enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name);
->  long get_run_delay(void);
-> +bool is_numa_balancing_enabled(void);
->  
->  /*
->   * Whether or not the given source type is shared memory (as opposed to
-> diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-> index 3dc8538f5d696..03eb99af9b8de 100644
-> --- a/tools/testing/selftests/kvm/lib/test_util.c
-> +++ b/tools/testing/selftests/kvm/lib/test_util.c
-> @@ -176,6 +176,13 @@ size_t get_trans_hugepagesz(void)
->  	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
->  }
->  
-> +bool is_numa_balancing_enabled(void)
-> +{
-> +	if (!test_sysfs_path("/proc/sys/kernel/numa_balancing"))
-> +		return false;
-> +	return get_sysfs_val("/proc/sys/kernel/numa_balancing") == 1;
-> +}
-> +
->  size_t get_def_hugetlb_pagesz(void)
->  {
->  	char buf[64];
-
-
-
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-Best regards,
-	Maxim Levitsky
+diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
+index 2fe68615942e..caf9aa1e6319 100644
+--- a/drivers/i2c/busses/i2c-npcm7xx.c
++++ b/drivers/i2c/busses/i2c-npcm7xx.c
+@@ -1967,10 +1967,14 @@ static int npcm_i2c_init_module(struct npcm_i2c *bus, enum i2c_mode mode,
+ 
+ 	/* Check HW is OK: SDA and SCL should be high at this point. */
+ 	if ((npcm_i2c_get_SDA(&bus->adap) == 0) || (npcm_i2c_get_SCL(&bus->adap) == 0)) {
+-		dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
+-		dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
+-			npcm_i2c_get_SCL(&bus->adap));
+-		return -ENXIO;
++		dev_warn(bus->dev, " I2C%d SDA=%d SCL=%d, attempting to recover\n", bus->num,
++				 npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
++		if (npcm_i2c_recovery_tgclk(&bus->adap)) {
++			dev_err(bus->dev, "I2C%d init fail: SDA=%d SCL=%d\n",
++				bus->num, npcm_i2c_get_SDA(&bus->adap),
++				npcm_i2c_get_SCL(&bus->adap));
++			return -ENXIO;
++		}
+ 	}
+ 
+ 	npcm_i2c_int_enable(bus, true);
+-- 
+2.49.0.472.ge94155a9ec-goog
 
