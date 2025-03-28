@@ -1,42 +1,48 @@
-Received: from smtp.cecloud.com (unknown [1.203.97.246])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CAF51D63FD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CC21CAA9E;
+	Fri, 28 Mar 2025 08:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743151899; cv=none; b=OLX9oGmfi3TJ/hL0etn2yrVBLoL5XdhDyDfp7+A1F3RQMEKMWKyidh9A9FYxFkk3C9616I+RGicni92eWcj2nKgQ4NhTAnnr2ZGWYmWiyr2e9l1MbL8gB9w+PScM5eEz4yhCQVSssHiXFQawnrIaZhtSsf808uA73UsNEkKYzz0=
+	t=1743151923; cv=none; b=PaSwQLBJOjqzCJKcFldHfcL0oCevWsnbPTcSi393NO64+mFGEThL0t8bnufyYgZ/2q474Uea7Z13ea3wWQVyXwUU2DCkRy+0jVkzuuNoQH5Cgaf6hF1+TaQttuPQ5P0+zpnkpFAjDKvu9Z7B7uhpteRdBTph/mpkjVdQ70MJXbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743151899; c=relaxed/simple;
-	bh=JODUdJq8p4C9uTfSwF+8bHy0HCxTPX9OUYOgaU6ceOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DpX07NYE83wpvXWcfrkx1x02B0E10fv3fmOTcyahG3c+/SCL4LdzQBTi4utZlzhRnqiOwdHcYtPr4JIF7eRXu8xGDB8PXnBNTHMng+12SNHww3JBWElNJPb3Op5DB3+eRwTxL86a8TIqKrDNiSbp85XCIzfpbiWoMbC727s7/5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.cecloud.com (Postfix) with ESMTP id 2FF0D7C0112;
-	Fri, 28 Mar 2025 16:51:27 +0800 (CST)
-X-MAIL-GRAY:0
-X-MAIL-DELIVERY:1
-X-SKE-CHECKED:1
-X-ABS-CHECKED:1
-X-ANTISPAM-LEVEL:2
-Received: from [10.32.170.7] (unknown [111.48.58.12])
-	by smtp.cecloud.com (postfix) whith ESMTP id P1609374T281456915968368S1743151883941832_;
-	Fri, 28 Mar 2025 16:51:26 +0800 (CST)
-X-IP-DOMAINF:1
-X-RL-SENDER:shaopeijie@cestc.cn
-X-SENDER:shaopeijie@cestc.cn
-X-LOGIN-NAME:shaopeijie@cestc.cn
-X-FST-TO:david.laight.linux@gmail.com
-X-RCPT-COUNT:10
-X-LOCAL-RCPT-COUNT:2
-X-MUTI-DOMAIN-COUNT:0
-X-SENDER-IP:111.48.58.12
-X-ATTACHMENT-NUM:0
-X-UNIQUE-TAG:<0c713a00741ca5df5945f2cc684f6b26>
-X-System-Flag:0
-Message-ID: <1f55b71d-8e28-4eac-b14e-d32a7e704578@cestc.cn>
-Date: Fri, 28 Mar 2025 16:51:23 +0800
+	s=arc-20240116; t=1743151923; c=relaxed/simple;
+	bh=FlC+37ZiGcWL51fch9yxH6KM9+9dpWQkrmsOyOZA0kY=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=gCXIkTdtljcewicd55pgkacqNd86yHxRYWgabROBvSN6yhjBXDwi47wmwPeyNZAwWratxcFugk5pMppyEPLFmSDzob+mPNuE8sX4VRxwwY1bkDhQadu/VwoWlOZM7gWdNL+E9hJ/ZqnEgbfEvrcJBQqsBfyZ66GkWadvym/uSZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XMmvzhZb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XMmvzhZb"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S1UGE6016879;
+	Fri, 28 Mar 2025 08:51:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FyG8JFZiRbUg5Gq8GBkPclQ3vKTpi36PdswEVszV1z0=; b=XMmvzhZbeXD3MyNe
+	brL+4A9MaV8ToH6/FjdJEXyYUL0ebW2XfzpIZWklfx9+pRxF5iaCIcannoBjNVDl
+	HYH05NzKm/2KaqUzsoTrWxGOgGPWJAKiTePuRu0+w3mMH9FIiMwJ8Y6aAWYrSABR
+	tArGj5P2pF82ttIsiznQVXOX47HE8cfu8GldNoMSXz9mljKdNEUg+eMPDMv5c5UA
+	GbsnuJ8guRb9Pap+DCu8EX5GvpaXO8M7mcsJu5Zp6Ffdpqzp+JFOXQpMPau424gH
+	l8YrHeeFuEBqtZc2A3GHt8nNr+IcnC2yu9LfYQd/cO6hkS4b6VRtNLeOv860kp89
+	XhcLGA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45nj5q94fj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 08:51:58 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52S8pu5M008063
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 08:51:56 GMT
+Received: from [10.218.5.175] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Mar
+ 2025 01:51:53 -0700
+Message-ID: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
+Date: Fri, 28 Mar 2025 14:21:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,69 +50,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvmet: Replace sock_create with sock_create_kern
-To: David Laight <david.laight.linux@gmail.com>,
- Keith Busch <kbusch@kernel.org>, Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- zhang.guanghui@cestc.cn, gechangzhong@cestc.cn
-References: <20250324031708.1687164-1-shaopeijie@cestc.cn>
- <20250324210421.526c1729@pumpkin>
+To: <konrad.dybcio@oss.qualcomm.com>
+CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <konradybcio@kernel.org>,
+        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lumag@kernel.org>,
+        <quic_pbrahma@quicinc.com>, <robh@kernel.org>
+References: <c5ead68a-f108-4e73-aea0-d6cb562092ac@oss.qualcomm.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
 Content-Language: en-US
-From: Peijie Shao <shaopeijie@cestc.cn>
-In-Reply-To: <20250324210421.526c1729@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <c5ead68a-f108-4e73-aea0-d6cb562092ac@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QkuncVBr8qHMhrdsP0y3Q50KOBIa1QBh
+X-Proofpoint-ORIG-GUID: QkuncVBr8qHMhrdsP0y3Q50KOBIa1QBh
+X-Authority-Analysis: v=2.4 cv=Gr9C+l1C c=1 sm=1 tr=0 ts=67e6632e cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7tu3_stWU1f-8F5rTL4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-28_04,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ bulkscore=0 clxscore=1015 malwarescore=0 adultscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=635 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503280060
 
-On 3/25/2025 5:04 AM, David Laight wrote:
-> On Mon, 24 Mar 2025 11:17:08 +0800
-> shaopeijie@cestc.cn wrote:
-> 
->> From: Peijie Shao <shaopeijie@cestc.cn>
->>
->> Replacing sock_create() with sock_create_kern()
->> changes the socket object's label to kernel_t,
->> thereby bypassing unnecessary SELinux permission
->> checks. It also helps to avoid copy and paste bugs.
-> 
-> Does sock_create_kern() hold a reference on the namespace?
-> It hadn't used to and sock_create() will take one.
-> 
-> 	David
-> 
->>
->> Signed-off-by: Peijie Shao <shaopeijie@cestc.cn>
->> ---
->>   drivers/nvme/target/tcp.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
->> index 4f9cac8a5abe..216afacc8179 100644
->> --- a/drivers/nvme/target/tcp.c
->> +++ b/drivers/nvme/target/tcp.c
->> @@ -2049,7 +2049,8 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
->>   	if (port->nport->inline_data_size < 0)
->>   		port->nport->inline_data_size = NVMET_TCP_DEF_INLINE_DATA_SIZE;
->>   
->> -	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
->> +	ret = sock_create_kern(current->nsproxy->net_ns,
->> +				port->addr.ss_family, SOCK_STREAM,
->>   				IPPROTO_TCP, &port->sock);
->>   	if (ret) {
->>   		pr_err("failed to create a socket\n");
-> 
-> 
-> 
+Hi Konrad
 
-Thanks for reviewing. Indeed, there is a netns UAF issue. The call path 
-sock_create() -> __sock_create() -> inet_create() -> sk_alloc() takes a 
-reference of the given netns, however sock_create_kern() doesn't perform 
-this step.
+Can you please share any updates from your internal investigation?
+Do you still have concerns or can this be merged?
 
-Sorroy the patch for the host side '[PATCH] nvme-tcp: fix selinux denied 
-when calling sock_sendmsg' has the same problem.
-
-I will send a v2 patch to fix both host and target side soon, thanks.
-
-
+-- 
+Thanks and Regards
+Pratyush Brahma
 
