@@ -1,106 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAEE4171092
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755A1158538
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169952; cv=none; b=cjiBC9MKsUM9zc6SK6aXSP+rT/qzt87cKCJ+fO3k8HLE6U/OIsaNrIlot6/FcwJ0Y5Y8/A7yJN7GEnQBMQz3dcpDo91cZAq4u8kLOuUGqvv9geltLQxlgrUGu4PFJVUqD51GLEuEHUi6+URyctaT858t2PLI9Sixs3DZZhU4VAM=
+	t=1743169992; cv=none; b=HmF9b+T+tki18INgeUYOWX6GnHdDxIC/imFleu+0nGdSkB2xJskd8FcXjNSZ2JShAL5eHa6kPMG3y1mqBW5x1mC9sFIJKKA/z31v+U11fDqk5083N+bW1nu7z6a16yO9XZuXqJ6jIbxGp4n5FfGJAnC+h8o+yyeCx8R8/kyyfDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169952; c=relaxed/simple;
-	bh=+yjkcF4b2dcbI70nQ0EilJ8oLkBOd7kK7kf6pKkeuFI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gw/YipU/YGz62O34cZwKkODExKzlMRa/1lNaywAyPPhC3+IHdQuo4oaWV1sIq9iuQZvpcHl02k6+DqL422/HvoY3oVS+qpeij2d1um41ju9xSc0/Y6DeadJLrXWNQEyKEh0caMSthHmK7D3egfzlv0vbiQPlpwsYV4vDsDo80Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D1481691;
-	Fri, 28 Mar 2025 06:52:35 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 81EE83F58B;
-	Fri, 28 Mar 2025 06:52:28 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Kees Cook <kees@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] tools build: Use -fzero-init-padding-bits=all
-Date: Fri, 28 Mar 2025 13:52:21 +0000
-Message-Id: <20250328135221.10274-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743169992; c=relaxed/simple;
+	bh=QpQXk4zm5AZSqDMomscvAL2yt23D5+PTjvZd0kqYvwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tloacdIKfsLrMvP2/PnujrSpVkDe/tT5z3egy1/TC9dVZ6mis2LW0YihSR5Gj6u1uu+QiFPJxd+ml0/Dyfyp7k7UXU6jehg6b8pMcCKxQl0DMZaWWPFRoEcAccq/MaxjO6qFDqVoSyYjui5N4/tAO/g4Jp3CVHKfopdvp9A5dPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHn2qnfH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHn2qnfH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BC0C4CEE4;
+	Fri, 28 Mar 2025 13:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743169990;
+	bh=QpQXk4zm5AZSqDMomscvAL2yt23D5+PTjvZd0kqYvwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UHn2qnfHPf3NAnfDLwKcyuVBuHJjBRnNryMGE7Tko7GQBnb9SmfH7BjvSDgMCxV6P
+	 jMvcTvpErsqrTvoKnQBzutWoM57B/KzffAb78MwDhBJ6H+q3IuD+/7vFGb7FMt9sA8
+	 KP17F+mDF8F5zj+4Z0z3bvoJB+BJr1mqurhvBJ2phbgqih1lKmt0kfYcgeHmXzpmcV
+	 P+g477Ybxm5xT0ZXcQOuUMF7KWJJXZ/eRRlChgDDCR8IsMHagm2174wMBxLreS0Ov6
+	 vWj4F1Phfiv0CSpoo6sBXfcLcmJtVBHSylIMybut5ZcrDRPZHn41ZOgTDr4/D5zM2I
+	 BpFAMHHRFFLYA==
+Date: Fri, 28 Mar 2025 14:53:06 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com
+Subject: Re: [PATCH 0/2] Clear AMD's microcode cache on load failure
+Message-ID: <Z-apwoVEQkwCH-Y2@gmail.com>
+References: <20250327210305.1694664-1-boris.ostrovsky@oracle.com>
+ <Z-XEPVvEDhC5vzR4@gmail.com>
+ <f8ec905f-04d4-46f6-909c-7f79b151c0df@oracle.com>
+ <Z-alzhvfSXN4liNE@gmail.com>
+ <20250328134544.GAZ-aoCA03g9SygDnW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328134544.GAZ-aoCA03g9SygDnW@fat_crate.local>
 
-GCC-15 release claims [1]:
 
-  {0} initializer in C or C++ for unions no longer guarantees clearing
-  of the whole union (except for static storage duration initialization),
-  it just initializes the first union member to zero. If initialization
-  of the whole union including padding bits is desirable, use {} (valid
-  in C23 or C++) or use -fzero-init-padding-bits=unions option to
-  restore old GCC behavior.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-As a result, this new behaviour might cause unexpected data when we
-initialize a union with using the '{ 0 }' initializer.
+> On Fri, Mar 28, 2025 at 02:36:14PM +0100, Ingo Molnar wrote:
+> > It would be a pretty common usecase to attempt to load the earlier 
+> > version if the loading of a new one doesn't succeed, right?
+> 
+> This is only for late loading and no one should do that anyway.
+> 
+> And load failure almost never happens - unless you're a cloud guy doing
+> special hackery.
+> 
+> So no need to expedite this as a fix - the majority does not care.
 
-Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
-the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
-in unions and structures.  This commit applies the same option for tools
-building.
+Well, it's a regression over previous behavior, so it is a regression 
+fix for an upstream change that is only a few weeks old, and it's an 
+overall quality-of-life fix for those users that are affected. There's 
+no exception to the expected upstreaming of regression fixes just 
+because there's few users affected.
 
-The option is not supported neither by any version older than GCC 15 and
-is also not supported by LLVM, this patch adds the cc-option function to
-dynamically detect the compiler option.
+Given how simple the fix looks, and how fresh the recent big microcode 
+loading changes are to begin with, I think we should apply it to 
+x86/urgent and then (maybe) it can be forwarded to -stable in a few 
+weeks if there's no problems. (Or not.)
 
-[1] https://gcc.gnu.org/gcc-15/changes.html
+Ie. my main point is that delaying it to v6.16 is not justified IMHO.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
+Thanks,
 
-This patch was originally from [1]. After consideration, the top level
-of the tools directory is a better place to accommodate this option
-rather than perf folder.
-
-[1] https://lore.kernel.org/linux-perf-users/20250320105235.3498106-1-leo.yan@arm.com/
-
- tools/scripts/Makefile.include | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 0aa4005017c7..e912a10afd89 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -40,6 +40,19 @@ EXTRA_WARNINGS += -Wwrite-strings
- EXTRA_WARNINGS += -Wformat
- EXTRA_WARNINGS += -Wno-type-limits
- 
-+try-run = $(shell set -e;		\
-+	if ($(1)) >/dev/null 2>&1;	\
-+	then echo "$(2)";		\
-+	else echo "$(3)";		\
-+	fi)
-+
-+__cc-option = $(call try-run,\
-+	$(1) -Werror $(2) -c -x c /dev/null -o /dev/null,$(2),)
-+cc-option = $(call __cc-option, $(CC),$(1))
-+
-+# Explicitly clear padding bits with the initializer '{ 0 }'
-+CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
-+
- # Makefiles suck: This macro sets a default value of $(2) for the
- # variable named by $(1), unless the variable has been set by
- # environment or command line. This is necessary for CC and AR
--- 
-2.34.1
-
+	Ingo
