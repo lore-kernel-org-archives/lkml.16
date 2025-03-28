@@ -1,96 +1,154 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E973F1D7E21;
-	Fri, 28 Mar 2025 10:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E365521018A;
+	Fri, 28 Mar 2025 10:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157418; cv=none; b=mW5mCsJzi2wF+MatAqjwXBrbR6bmtdNvedKr68syQfqQkMFWxfvOjTYlFoHNdpfNZFSqZZvYJXgsFKWO8SiJ+wVGXnkIKJjNFbfe3IFNobO7WgK/++vmA5kOThlaLtwzomB0TtlMhNkSwO7eXzpmXBQhGufE1ekVZVtf1UfNjaA=
+	t=1743157436; cv=none; b=gpRdGB1i0J8TofN8L4ryn1/blsof2D6oBjWQJBeyiwgiZJFJYo6fjgc+ymmHZu4yq2/kW+31yTT210xwsrTUzdXCFR+T6M99W7HzWPqwsbDcVdVjLFYgYgbX8kR/bE6PcdVT3V9ym6DfyHy0WXRqR3MdvTMiTZ2f/w1xa3ET16I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157418; c=relaxed/simple;
-	bh=kfnA0dse3vgZ+fkK7/yQkYuHHTaaxE5askDA+8RMtOI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=AVxYM9KjYbfkHxDFtNUeP4PBI5wAxqRNi5YTzS5cTG+Y7cRJCs+ycRUnlfBkws3DR8ZMyvY3U372pIcfCxVkH+/Wpe3yp4xMN8wNqRq/hMmgtugEXtbuBQAq5D68+Pv6ucULTeKttL/uS1UkFm/+owIjlCb665craZKfqr1/yCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wzoozC5J; arc=none smtp.client-ip=203.205.221.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
+	s=arc-20240116; t=1743157436; c=relaxed/simple;
+	bh=C/U+S652qlm2r87tvW9anppsOwBr8Xm8n/aC5Qkp9Hs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=t1hdawoCzTrC9NIDAYavP1ckoRBj4X+p0XrfOet6GSeYlNqde7l5oVF874R2pmNaUZUQbP4IxDYtT2Q1ld2s4gNynJms2sLLTlUBYHte7RlgkwiQoX4T1qRKdK90ICyYtDK7WBduXKFIfQ81OXf8KKmnFpdMiSOG5W3mTMETJtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oltVO8Io; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wzoozC5J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743157107; bh=H2OTz8qixQSaNYMYOwPN0zr3Spnwqzfy6K+SC7egpi0=;
-	h=From:To:Cc:Subject:Date;
-	b=wzoozC5J5Zs7kwXxyhsn82cmtx415X86A3m1UJQ6SALiSXk+tCg2tAG5/OUlk/cTK
-	 hf1RNxs9XLy2v4phSGZJKrN7nOJk3q9JbtDmTPfYVs53G6H+SWga/YWgbr7C6fmbDP
-	 WllwYWpoPS9N4hDMQQbrNxfXw1bB2hMETlOjAfyY=
-Received: from mail.red54.com ([139.99.8.57])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 48F3BC99; Fri, 28 Mar 2025 18:18:15 +0800
-X-QQ-mid: xmsmtpt1743157095tkan4cn01
-Message-ID: <tencent_40B6A6E7C79AEEEFEC79A07DE00724909A05@qq.com>
-X-QQ-XMAILINFO: N+tZcXNNUKPOq0E9fe2tInSMWeGR7AoKa9CfwgyWxam3RDeGnbizC0ptDSI3QN
-	 1ARp8tXQwHqJGGNx+qDidrqn3GSLqIJCA7wf1X+0YEkfLm7aL/J7/GbHzFCgAX68+L+ymbrCu6Up
-	 G8Y5ytwIulU/PbiNmGVLk00ajkY8m5Y/ZPkR0RbMpZuosL6f7Po7OGWgevShtf0uq9dpB1fLNQjK
-	 8CDyNeya8aYkgwxMNHbN3hdrnkn40IGu2hPa0NCP4Ji/pjiloqLrtN3z3xyHmn+16C/48ngaUoV9
-	 N3fCvlYtlTNrjDehAIbuiclypNvAq1NxIeoq6Pvjr7rqQ1AAYl1MpFaPJl63n90BkfKZUMu5zr5Y
-	 OrzcQfeaz0qMFCPTn/uIRAB1STWWI8GlB/N8St2r46paTE1kHD0NUtp+hFKqEqe6AhjFtgh2A3oR
-	 BzuBfKYitBOC6T75WZT6PxizIE0zrj2kCnUG+fNzjoUYAwDBwIIXMFg97w7pER8PrBAcivYcf4cS
-	 XIurcpjMFseJ50nohhEp8iFF8sR9kiPeXD/iR9eVH4OR/rmFeXsXV3C1DR8yQSHPv9bgYBqgyWOe
-	 dkfRbNdrB9qPjqELvi3ycic+w2ZibX5QptwEOK8OthFXo5QlP9X+KoOJOoPONdNiBNRwnGDgbrzg
-	 wbIStjkEno1+nsz6vwRauN28Bn//LoVKIHAl6xNCXImdHvJD4k+A0ww+4nHbA+VTU/T9WjBfTWo0
-	 NwsJgV9F/2OYo3B7indAoG+5fvlCrgqJCz2uIC1wOujf8RP37xCEI+DxK6ucQ9YL7vBXdSqAnHCR
-	 wUtlkb0u4/T/EnRYT6ni/sBocqv0do2htnslkqDWkzYmycG50xX/VZAsA7WU0SqpRe9VmXkIZ97M
-	 J/8Ds09TwQoHpQTaxbHgPn0/BIPV4MkRtWpWuHC3Wf5GuhKknhDuWQ2X2CCLnydza2R8/jKbybnI
-	 CaoXYe34zqCltPvXyB2Oc7j4b4GyrIeJU/YxsEUpGlcV/iN1W2HgMKrzGufcsB
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-Sender: yeking@red54.com
-From: Yeking@Red54.com
-To: linux-sh@vger.kernel.org
-Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Paul Mundt <lethal@linux-sh.org>,
-	Pawel Moll <pawel.moll@st.com>,
-	Stuart Menefy <stuart.menefy@st.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] SH: Kconfig: Fix help text of CMDLINE_EXTEND
-Date: Fri, 28 Mar 2025 10:18:11 +0000
-X-OQ-MSGID: <20250328101811.53017-1-Yeking@Red54.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oltVO8Io"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52SAN9k72125479
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Mar 2025 05:23:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743157389;
+	bh=C54Jp/OXwn6pBr69apSdFNlJcGXa//mpbe0LaniyLCY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=oltVO8IoBMg/hUAlimth67nyXuBFiEonnp1jULNpxyW40Wm+qowPdOv4DT3pU2cLV
+	 WGQMw9m4nXvVEOm4233Sts4Z1FxRuSERUMzAU7oW6LkMW67wKjQPtRPvqJiT9geqjO
+	 ZwYwTkXOxYduZP+fWoAc3ImHSPwRnGvagP6fBo3k=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52SAN9k6015681
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 28 Mar 2025 05:23:09 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 28
+ Mar 2025 05:23:08 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 28 Mar 2025 05:23:08 -0500
+Received: from [10.249.140.156] ([10.249.140.156])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52SAN2I7002993;
+	Fri, 28 Mar 2025 05:23:03 -0500
+Message-ID: <de68dc95-25e3-4bed-a2ab-4736a83867a2@ti.com>
+Date: Fri, 28 Mar 2025 15:53:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH net-next v2 3/3] net: ti: icss-iep: Fix
+ possible NULL pointer dereference for perout request
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Jakub Kicinski <kuba@kernel.org>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <kory.maincent@bootlin.com>, <javier.carrasco.cruz@gmail.com>,
+        <diogo.ivo@siemens.com>, <jacob.e.keller@intel.com>,
+        <horms@kernel.org>, <john.fastabend@gmail.com>, <hawk@kernel.org>,
+        <daniel@iogearbox.net>, <ast@kernel.org>, <srk@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Roger
+ Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
+References: <20250321081313.37112-1-m-malladi@ti.com>
+ <20250321081313.37112-4-m-malladi@ti.com>
+ <20250325104801.632ff98d@kernel.org>
+ <0799d2f6-3777-45f6-a6b6-9ca3f145d611@ti.com>
+ <326ebaa2-7b8f-455c-bf22-12e95f32b71a@stanley.mountain>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <326ebaa2-7b8f-455c-bf22-12e95f32b71a@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
-It is the bootloader arguments concatenated with the given string,
-not the given string concatenated with the bootloader arguments.
 
-Fixes: d724a9c9d572 ("sh: Allow for kernel command line concatenation.")
-Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
----
- arch/sh/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 3/28/2025 1:32 PM, Dan Carpenter wrote:
+> On Fri, Mar 28, 2025 at 11: 46: 49AM +0530, Malladi, Meghana wrote: > > 
+>  > On 3/25/2025 11: 18 PM, Jakub Kicinski wrote: > > On Fri, 21 Mar 2025 
+> 13: 43: 13 +0530 Meghana Malladi wrote: > > > Whenever there is a perout 
+> request
+> ZjQcmQRYFpfptBannerStart
+> This message was sent from outside of Texas Instruments.
+> Do not click links or open attachments unless you recognize the source 
+> of this email and know the content is safe.
+> Report Suspicious
+> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
+> uldqfVdF3CcxCkXE1pKJH1UXrlua- 
+> GvI0DSoHvw1l5Yyu6xCbgDWX8PlhMSuV5lCv48fT7ChvXbQ105c6PHChn2lWCWZMsMcoHjvVwM$>
+> ZjQcmQRYFpfptBannerEnd
+> 
+> On Fri, Mar 28, 2025 at 11:46:49AM +0530, Malladi, Meghana wrote:
+>> 
+>> 
+>> On 3/25/2025 11:18 PM, Jakub Kicinski wrote:
+>> > On Fri, 21 Mar 2025 13:43:13 +0530 Meghana Malladi wrote:
+>> > > Whenever there is a perout request from the user application,
+>> > > kernel receives req structure containing the configuration info
+>> > > for that req.
+>> > 
+>> > This doesn't really explain the condition under which the bug triggers.
+>> > Presumably when user request comes in req is never NULL?
+>> > 
+>> 
+>> You are right, I have looked into what would trigger this bug but seems like
+>> user request can never be NULL, but the contents inside the req can be
+>> invalid, but that is already being handled by the kernel. So this bug fix
+>> makes no sense and I will be dropping this patch for v3. Thanks.
+>> 
+> 
+> I don't remember bug reports for more than a few hours so I had to dig
+> this up on lore:
+> 
+> https://urldefense.com/v3/__https://lore.kernel.org/ 
+> all/7b1c7c36-363a-4085-b26c-4f210bee1df6@stanley.mountain/__;!!G3vK! 
+> XPLUWNuB49W9FXpnac95FM8thR9_zMOBwt7JgYy8Yaf72LIm4Xt-3Yc8h1sEti5uVdguSWQhcfsnC1_ymQIMTg$ <https://urldefense.com/v3/__https://lore.kernel.org/all/7b1c7c36-363a-4085-b26c-4f210bee1df6@stanley.mountain/__;!!G3vK!XPLUWNuB49W9FXpnac95FM8thR9_zMOBwt7JgYy8Yaf72LIm4Xt-3Yc8h1sEti5uVdguSWQhcfsnC1_ymQIMTg$>
+> 
+> This is definitely still a real bug on today's linux-next but yes, the
+> fix is bad.
+> 
+> drivers/net/ethernet/ti/icssg/icss_iep.c
+>     814  int icss_iep_exit(struct icss_iep *iep)
+>     815  {
+>     816          if (iep->ptp_clock) {
+>     817                  ptp_clock_unregister(iep->ptp_clock);
+>     818                  iep->ptp_clock = NULL;
+>     819          }
+>     820          icss_iep_disable(iep);
+>     821
+>     822          if (iep->pps_enabled)
+>     823                  icss_iep_pps_enable(iep, false);
+>     824          else if (iep->perout_enabled)
+>     825                  icss_iep_perout_enable(iep, NULL, false);
+>                                                      ^^^^
+> A better fix probably to delete this function call instead of
+> turning it into a no-op.
 
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 89185af7bcc9..81e5e205416e 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -727,8 +727,8 @@ config CMDLINE_OVERWRITE
- config CMDLINE_EXTEND
- 	bool "Extend bootloader kernel arguments"
- 	help
--	  Given string will be concatenated with arguments passed in
--	  by a bootloader.
-+	  Arguments passed in by a bootloader will be concatenated
-+	  with given string.
- 
- config CMDLINE_FROM_BOOTLOADER
- 	bool "Use bootloader kernel arguments"
--- 
-2.43.0
+Yes agreed, current bug fix is bad. Will have a fix similar to this and 
+post it soon. Thanks.
+
+> 
+>     826
+>     827          return 0;
+>     828  }
+> 
+> regards,
+> dan carpenter
+> 
 
