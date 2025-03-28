@@ -1,109 +1,139 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F26E21ABD1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8348012CDA5;
+	Fri, 28 Mar 2025 11:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743162494; cv=none; b=C04FobU3/X0AWB8LBH2FrHwIWms92Jad8skHvSg3rUMfUF8BB982znwTStEkihHIA2UL9LxjXd4E+5m43c3bEe11e4wzDJK17JuWP1Z1htg7z1qqwrC9z0OJ4MZVCTEmJt044F318FWm/9Zddff8dwswSA2dlck2CU0GB3yR8l4=
+	t=1743162552; cv=none; b=uOPfd7sagZuHk253Jm+CRfBw3sjqbfMFBMzqCOKsQ6U3JptWOHclhqdT37yORaybdXEoFAESdo0MfgQwcRKJQ5gTmeAPyTVGUnLzZbMPDKDqDU/ryuQZTK3B8IuLGzg3qPZ0Yh7m7TAJ9MgE+UQFoHHOHhDP5xiRzhtumsMY098=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743162494; c=relaxed/simple;
-	bh=cE16fnSOvZivKFHC4zQdYYvzlgv6Zjj6Dj+eXgi5qGE=;
+	s=arc-20240116; t=1743162552; c=relaxed/simple;
+	bh=0zEkKMKBraCYtb5mtSN+uT7ZBhwEIcNCzdAPtVcplng=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JRKKXHbf4HL7y5wWQqByaJXjPRMKU36Y31VpoCT3fIU9zrA+v5gKejIvAftosdwd/d/fmXGf13V1yngZ1hG0vjzBbZAPaarfydYQDc2sJ8ATjSEJNkTXrffaSaaeT4GhkEgF+a1nqD61bfqi0c6p/CibhOKsWMeQTZA4853nQF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qerq+QpF; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0yP4cd8G6GATUlYmM5q7CJoKzrpKnht7taPJWaXjTjH2DeUoh6ZL3KSUgZgYSc4043mhdVkTa8gsTD3yMN0urLip/dK5gVqe/25tGSqcs8PiGT0Hs2kzIA4kQMREsgxi+NqZaGkcaxoNn/uucDsrf6HMP/55H38OgixbRwgXqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8Q6i91f; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qerq+QpF"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so3682207a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8Q6i91f"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fd89d036so46559495ad.1;
+        Fri, 28 Mar 2025 04:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743162492; x=1743767292; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Td2A/QQBRN6mIkZVEPKhOMec4rSaELJjaXeK/AIS/TM=;
-        b=Qerq+QpFPNuq3OG7h2+SDzsnOb0G7P+pejPEpDfFIPlVNFlBhoxyedQK92JbQNC/1g
-         +N4rXb5M9ZCVaM+4zYnWlgjsElM3lFnooZVkkcS62Ux7hKCH4yS5XYi96axk1NQTvQaD
-         0o6XmRMAHt9Msoz+j7iava6YOfUEuH4EoV3IP2H6BVDkRl+wrYB/6UMfWiH8d1UecpXX
-         J/Ce660t8RZmKihGNJBKsG+JsrPi1Tds2belHNHfm0K0+SLMNUSzijgwMb15p0uMCarF
-         ipvWwievVPzTmU4+MStRK36IClIYI8yi8w49D59vkCcnpfwCI0iM4SGBuQp8OUzrI7Yy
-         AtJA==
+        d=gmail.com; s=20230601; t=1743162551; x=1743767351; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gmCEfmKtu69bI3FAW2+d7YTQS71wGEca1RL8cb9p8b4=;
+        b=T8Q6i91fpuSH9PjstdfHjmuofjx+obmcY4OYYspdqDZhPYQHTteJcHAIzG3YPr8lxu
+         NiraXJk9ECrmPzxABoEpp/a4tm+WXV1KEQv2HM/k5Z7c86CdDUEqiyPKz7SVQORUrraG
+         m14oIXy/MKuIB/Z0DQlrH06i2slKB3nEzk+DiinOgbUkaXebNSgMf1lQqTaPdmlFa3sr
+         cie3JTUzLVeQ/EuDy+4q7X7SvKTO6tHJAi9fV7yvutSqHoYzGZWxl+9/V5Dc1c8YamuY
+         yqeZJw4hbk7cO0WbWdprDhdzrk1jYmiUHoCpUsIfmFrIrlZr2bwYTpoO4+j+XPiGuoLN
+         f12Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162492; x=1743767292;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Td2A/QQBRN6mIkZVEPKhOMec4rSaELJjaXeK/AIS/TM=;
-        b=D+156ot6Sx3O8Jeuok0/rWX8kYMA/JUD5BTZ/+7GaHwtNkkA7H8vmgh3FveZuyrKjm
-         EcVoN8gSyn4RJPbdSupMWGmM3BJGSgG/QAFT+2Fin+ckiBlJfpXg3b2+y/cUPw0G5zbD
-         VO0N054UJyyitqMU5oVm/oo++NR/74cVid6gzLfhR1lcGi+gPPm0VMXUnGhO8FrtvmWy
-         TFUSMLLGJM6GSK0HVWadJDewyb7wDs2PhfW7klUyjoQfl+SJzT3iReVboFmoyqPtuXry
-         9DmUoXCJat7m/C9l89Iy+FFqqIORH5at1w6j10ZsgBISMHM0Qt6Kdmbx6vGTOHpJOxmA
-         pO5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUIXqZmqeD+u/xU1xTzT/qKemE3FnddqCuhLog2m4ErROoZoohsx1qAhNNAlq76h5zScLx1Xe8VJ5qZ8Co=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwplbhIfxPieAFtBQajFJtusE9FGxqeclvUpq6WNNo67HpqUz2W
-	gnwLyNFWMZash+STQfF/HiHyWr7SVoUy9FaYvnmBBDZqIoPQDigGRQ+HeczPHg==
-X-Gm-Gg: ASbGnct4dqTQdfTdpjwlk6j6eWMarrUotGwDFutrN1iXOb6jXxn1U+0dwqdgwUgj7KU
-	VdQVQ66+v4DDj6zG+XFzhqDbKJYmdfgwnRMc8Tfzc+kzTWNfcIo71ObrF5aq/xKZhfb/nfKDeyf
-	J5n41Pbw5IVp57Abs4vQ4yABxVAlWNMJJ37vXYIcN1hTagqWJfE/JRi8BSv4Dljai1I/bwesnNx
-	9Ti72qyvf9Zt2onQgoo4Itr8CRfwaIRX/bGE/a92LGDV2w29A2cbQbLPvG2qbZV/EC5iBPvBEyq
-	swV7RS1wDBmF2FpWp9Wub9t+tF/GCAgqCjzoGGqmEnKdtAjk14dX2uV+/ZTTJ9vdBA==
-X-Google-Smtp-Source: AGHT+IHkFyrQLO8ThGmZA+vIQj3/oOedMM4lGeaL5SeGczjykX6lPC7XrgIdUY3TMx68guIRyMVfjw==
-X-Received: by 2002:a17:90b:1ccd:b0:2ee:b875:6d30 with SMTP id 98e67ed59e1d1-303a7d73279mr11051363a91.9.1743162491754;
-        Fri, 28 Mar 2025 04:48:11 -0700 (PDT)
-Received: from thinkpad ([120.60.68.219])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f1d4ba4sm3942816a91.31.2025.03.28.04.48.05
+        d=1e100.net; s=20230601; t=1743162551; x=1743767351;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gmCEfmKtu69bI3FAW2+d7YTQS71wGEca1RL8cb9p8b4=;
+        b=rBlygtjHosFUseFujWNHrKo13QQ73C4xaM92DxEJKoJ8km771lQywIuWOLTb9sZd27
+         WqJpCORRWHYtDX4ta75dGtOk4E12oWhTLhU37+Pm8IgIMsnp1sOmwf2CzdblC7FFSKMo
+         ogAGyBRuHdktOCBU8LYqWtmktkxEexew9Wn7xfn8bz/Qb6A3CJh2p2zh5jPFxIiefFqk
+         rqpyC5b2mEFDNLZdG7u0K9Gu0J5BaCgs3xhLQpe/gJJbsSvG5d79ajsXDgm88KV0qnVb
+         FroE74BIJyC4KKsCBtd5yvAIM8VRVRu5I6ISKA0t7Xhpeh7bpGaxZmId9F0//2igCTFU
+         GqRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIOcmIW3LbwwkWvH1LTJgEZx244M0/ysMJsHiUNZSRGnZUEwd/C78aZEQhS0SNq0CMW92j4yleYHUIcg==@vger.kernel.org, AJvYcCWkxRQDuh7DCxwqiSQH1u/125NZaeNs5ulviI0F/eCFIyTUZYZYp1pFrm3jNlcO5KrsyLbqKnmTALye8Ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjlQ0AgOqAvuX8vNBuXUENKoaPJOu7NsUYV5O2XLLWbqhkW0bK
+	w1o1mTgaXCwR0YSN7JNwWzxYL8EKLIrgP+ABwEiUzjum1QRIrKlP4W3Bkg==
+X-Gm-Gg: ASbGncug+mDr23gti2cbSNXLfdt1f6GNKy79KGhgSHZAOIK12hAO8p64P0KqM3sw+Uo
+	iLtsYW6ma9oaQd6RI7UBM6kVIor4ZiyOYpTtcDGBav/97DX9WmZDTEKbEGXVyI1YfiNezISJWvx
+	OItphYn6fMD0j1Kf5/XNyWKRybJgkGLct8IraWXpjs22t5bAcnbc1DmME5BifZTjwZ89Cmbkhhg
+	4UGEK7Ih0d65ZTI7IbWunIWFW4of3+Vlj5/hVhSkPu5r8ySHLhAaLuI7AKMYEMx2Lxu4yEPMpYK
+	sfUgUnvxqErJ9B1CGLm9szBsC/vk6ebZ/5oYpgvb9yMu
+X-Google-Smtp-Source: AGHT+IFFQaOmCK0iCTHGrRWzTWyXgcqukYghNfKOZ9vdJoDmptQQcXqn262rau+jeEOIhHNu2IkQaA==
+X-Received: by 2002:a17:902:f646:b0:224:f12:3735 with SMTP id d9443c01a7336-228048c8674mr125053825ad.31.1743162550503;
+        Fri, 28 Mar 2025 04:49:10 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cfb2asm15676575ad.141.2025.03.28.04.49.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:48:11 -0700 (PDT)
-Date: Fri, 28 Mar 2025 17:18:03 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, 
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com, mmareddy@quicinc.com
-Subject: Re: [PATCH v5 2/7] dt-bindings: PCI: qcom,pcie-sc7280: Make elbi
- register as an optional
-Message-ID: <23cjiqtpyzuprvhezrrrbayxweahazlnelswkv4axrc772lpra@tgegltyd2355>
-References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
- <20250309-ecam_v4-v5-2-8eff4b59790d@oss.qualcomm.com>
+        Fri, 28 Mar 2025 04:49:09 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id F028B420A74C; Fri, 28 Mar 2025 18:49:06 +0700 (WIB)
+Date: Fri, 28 Mar 2025 18:49:06 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the iommufd tree
+Message-ID: <Z-aMsk148w8zgaRQ@archie.me>
+References: <20250318213359.5dc56fd1@canb.auug.org.au>
+ <20250328175745.7ecfee87@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eiW7nh+I1UK1dOHA"
+Content-Disposition: inline
+In-Reply-To: <20250328175745.7ecfee87@canb.auug.org.au>
+
+
+--eiW7nh+I1UK1dOHA
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250309-ecam_v4-v5-2-8eff4b59790d@oss.qualcomm.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 09, 2025 at 11:15:24AM +0530, Krishna Chaitanya Chundru wrote:
-> ELBI regitsers are optional registers and not been using in this
-> platform. Having this register as required is not allowing to enable
-> ECAM feature of the PCIe cleanly. ECAM feature needs to do single
-> remap of entire 256MB which includes DBI and ELBI. Having optional
-> ELBI registers in the devicetree and binding is causing resorce
-> conflicts when enabling ECAM feature.
-> 
-> So, make ELBI registers as optional one.
-> 
-> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Fri, Mar 28, 2025 at 05:57:45PM +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> On Tue, 18 Mar 2025 21:33:59 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > After merging the iommufd tree, today's linux-next build (htmldocs)
+> > produced this warning:
+> >=20
+> > Documentation/userspace-api/iommufd:323: include/uapi/linux/iommufd.h:1=
+033: CRITICAL: Unexpected section title or transition.
+> >=20
+> > -----------------------------------------------------------------------=
+-- [docutils]
+> > WARNING: kernel-doc 'scripts/kernel-doc -rst -enable-lineno include/uap=
+i/linux/iommufd.h' processing failed with: Documentation/userspace-api/iomm=
+ufd:323: include/uapi/linux/iommufd.h:1033: (SEVERE/4) Unexpected section t=
+itle or transition.
+> >=20
+> > -----------------------------------------------------------------------=
+--
+> >=20
+> > Introduced by commit
+> >=20
+> >   50c842dd6cd3 ("iommufd: Add IOMMUFD_OBJ_VEVENTQ and IOMMUFD_CMD_VEVEN=
+TQ_ALLOC")
+>=20
+> Any progress on this?
 
-Wait... I never suggested to make ELBI optional in the binding. So this tag is
-completely wrong.
+Should've been fixed by [1].
 
-And the change itself is not correct since ELBI is indeed present in the hw. So
-we cannot just drop it from the binding because the driver is not using it
-currently.
+Thanks.
 
-- Mani
+[1]: https://lore.kernel.org/linux-doc/20250328114654.55840-1-bagasdotme@gm=
+ail.com/
 
--- 
-மணிவண்ணன் சதாசிவம்
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--eiW7nh+I1UK1dOHA
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ+aMsgAKCRD2uYlJVVFO
+o9YzAQDn1v3TNYpnKgI8UEekDsYLDjef3OrEiJ2fES/KcXCpSgEAqXDhWHOlgqby
+6VzlrRXLBT9DsXWNBh79cIwjlpTDWAA=
+=6llm
+-----END PGP SIGNATURE-----
+
+--eiW7nh+I1UK1dOHA--
