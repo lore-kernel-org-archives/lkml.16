@@ -1,220 +1,117 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0A314D70E;
-	Fri, 28 Mar 2025 21:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5AE14D70E;
+	Fri, 28 Mar 2025 21:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196244; cv=none; b=fzFbqWHFoKiUAjHUwqxv36HjQM3wRR/HoccFQVb2eXV2xolsDgZ0dRjCgDLE9lN2uKBSQUWHID0F3darNrsKBHl9sZgoGoEQzdnoW7RkUI1qXVFTIuAMViE9yjiQPppUNWOowVZdFBHZ3P+TY13szyuPn1uGXeY3Ev+iWz8R/S0=
+	t=1743196433; cv=none; b=vCwyTYkj3duz+9+nd70TrWLrPK4A/Gsh5ysQbeKiWBAqox4RknzSn32m/2764dbarZEnmoHxykGJDsqaXPcHrrumSppPp4MkIdvUvupYgUYcR1+ZYdxKuu4edsn1A9JZCPDKVuNgHR2Ije2PKYRhF4oVN6llMVpffsNyOw1bscs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196244; c=relaxed/simple;
-	bh=/ibwAnYUQ4lPbNyTOX1GSLSiMDUHzVgDMTvzd1ydY8g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=c3F0ZC/iYzic8kiCmZoewnT5yKlAezZwDoDsTX7GUCU8IE+5zvMkzfJqX/UU34CD0pxthqra1M7+Zo6JCSVNVDeF558tIWpDoDojeTC57KeCxcIolM9gJ+0ot551izbIzAz7HoGdaJjdekTdyVwP+jWy/GaCm+euJHee1wAFznA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8deutnq; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743196433; c=relaxed/simple;
+	bh=p5Df4PURRw65SjKz6+ZMGwypp6nJFyA5a6I6Dzb3x8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qahsL6sFuhTE69Le6FLSladAAZnlQDCF9WIUEKyM6jPQFGunzWb5hipyXydMDWIKJ/HSHjL6BA2PXhuObr2lQOjVE8KNcB03lj+tIJAzoi0YFDvGkQKmMfeWjSNEnwZ2kmkQLTCfonE+TWf6HTUwyZZshJ2QstkElsKMAzEPWAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=G6+ixo2L; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8deutnq"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22435603572so54058695ad.1;
-        Fri, 28 Mar 2025 14:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743196242; x=1743801042; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cfLYlVON29j1ltLuYPXQpIO/gVdYegJiNrWhGqgsDnY=;
-        b=e8deutnq81wzBXL/H03M/uYbtp3xO3xKBpU6wWT3cTia8LklzM7P9byVtvsTFVC/97
-         9/IA3VqW1kYQevhpD5HveBt6EkHWBcYQ9mzk9TUA12UnpjOXNGrmY7P8u6Gcx9aIxQox
-         Kk+Tonv3mY1vkVCowkqAVTZYVxGciNFl6u6LNfZc5DsHsH/pnU6FOpNf0shZnc2cBui0
-         BV8PA2goWwh4ByveZTOYXQ6W6yOO6GxIxlnlNvDlKWoPDC0zqR7/iGlctE7KRl41/g2c
-         QK0kg9VBNGhyaDWWijeqw43j8ND7friAFBTMyPrp5DqVckJu6v6NVpLRq8h0/MXK4PF6
-         RmpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743196242; x=1743801042;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cfLYlVON29j1ltLuYPXQpIO/gVdYegJiNrWhGqgsDnY=;
-        b=Tg64pmg4cYfGXApsKkJ02xMQO8HUPOdtcf65KH3dttrpDM6MNom/vyYd/sliNauZV1
-         Balb3kYBedrnl76LuduGSrbD2Ihi/j32hcUmO7KviNTfWKA9cfGhXIvB42xgfrOB+Sju
-         p5eH1xjUovbO+aG4i7WfJvB1FyN14ZIQjU/IGqoKcCo+DGvbK1VkxvgNq83en9hXr0wV
-         ex2dBniafc8SkmkDxhObL/ECrXJGTacot1LE50rv8x6pbLokG2WJsa1s4KuSXEx/KSPQ
-         sgII4JOZLNXQpEDfc3zovoCdZjWEHpkuRXqI5PgsuS9xL/ATI7/EL8ZE3ZU6S801nUtT
-         eN7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUkVJ9Jkzh+gPZ6rjce3gjLeI32CMju1zIy56yi3KsHN1fsMxNhJGm45xljQw8zUjFk3+tNTmcwdRrOUYM=@vger.kernel.org, AJvYcCVhUPdrTVx0Nvnoap0gKTm2Rl7ZMHVDYrOa8FmvCuiUU5W7eOV9OgkfFmzrMU2uuaKOAF/7ht3WJlVW4hYYqrgTBjWjZw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRf8JZ2Bouc9InmimFnRfnnAw6PN3o3R0UM18ckCM6MFbVNqc2
-	9B82IaczwMVf1VbCr4rw7kPUqWLk82diWKfxHX6CN3NInMJWP+iN
-X-Gm-Gg: ASbGncuQhcTxypu4MYT1ZRzpVN+nyXekYPRMQtPnh+L29tfUJaFCICFBYXMIr5bYw90
-	CJ3XrUFG6d3/bmfjx0u1YysPt0U9557Lqr2cpluS/xmEh8QdjUTb/rF7gPGTYCtlqdbvYazPAMA
-	Gg/aKtpKslELiqu1tTklq2GBViAmuBa1Z4T/F9AdZtB9+3yfKpR0GfrI+2kgyRlHjjf/ZaCmZPB
-	9d+iDzzGfO3hhsnM39kZnjjCOUA8pRRLOqlpUX1TQ8nALM1nldvCGdzEGhTg5T7nZW9e+HHXeXS
-	Qq347od/6f3E+S+tO7rcNfG0XjqXhUuwFdKuEg==
-X-Google-Smtp-Source: AGHT+IFKk2aZFdHQrPsMaG2vuH+8BButCOW51T00SFLOVDp2+VvvgAFXqAtg8ClAaESuXx4Z02/Hww==
-X-Received: by 2002:a17:903:181:b0:221:7e36:b13e with SMTP id d9443c01a7336-2292f960d81mr9237725ad.12.1743196241966;
-        Fri, 28 Mar 2025 14:10:41 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f8b4dsm22951505ad.237.2025.03.28.14.10.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 14:10:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="G6+ixo2L"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id fa18045ec01f91f2; Fri, 28 Mar 2025 22:13:49 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id BA98F7F0283;
+	Fri, 28 Mar 2025 22:13:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1743196429;
+	bh=p5Df4PURRw65SjKz6+ZMGwypp6nJFyA5a6I6Dzb3x8o=;
+	h=From:Subject:Date;
+	b=G6+ixo2L7lnvqtOZ8WRbaRDTreD/aiVeBzEaec1kIqz42vsfcnR1ri3hy1D/1Irdc
+	 8TqxoLXiT72PFHw5wFiDGNdwlYeCOhrorTtVMYGhIP03NjK7ISwrs4lfU2d9950UAn
+	 t2waw+TsV+MLsDJman8kP9vCEMmfNyF/gk+Tj8fEfpgjFwuvYfur0dause59kTwZ+x
+	 1o0fxqGvHOdNINc2F58qbus0ZwYcb5iDUIUOdVV6gBFYLLSvF5UP0deussJk1rsJcY
+	 o90HnguHYqP8lbWvbd8NT0kGTSoYQFC416w7foe9Ph7sGC4e2+wA7usWZfxo2Q/0Kq
+	 awYCOSGv4YbXw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v1 02/10] cpufreq: Consolidate some code in cpufreq_online()
+Date: Fri, 28 Mar 2025 21:40:43 +0100
+Message-ID: <13741234.uLZWGnKmhe@rjwysocki.net>
+In-Reply-To: <4651448.LvFx2qVVIh@rjwysocki.net>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 28 Mar 2025 18:10:39 -0300
-Message-Id: <D8S7HSW86YNX.10MBR87MGJUPG@gmail.com>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 02/12] platform/x86: alienware-wmi-wmax: Refactor
- is_awcc_thermal_mode()
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
- <20250313-hwm-v6-2-17b57f787d77@gmail.com>
- <be5a2029-a00f-7ed1-fb90-af1122b6f127@linux.intel.com>
-In-Reply-To: <be5a2029-a00f-7ed1-fb90-af1122b6f127@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=72 Fuz1=72 Fuz2=72
 
-On Fri Mar 28, 2025 at 11:17 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 13 Mar 2025, Kurt Borja wrote:
->
->> Refactor is_awcc_thermal_mode() to use FIELD_GET() instead of bitwise
->> operations. Drop the check for BIT(8) sensor flag and rename it to
->> is_awcc_thermal_profile_id().
->>=20
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 33 +++++++++++++------=
--------
->>  1 file changed, 17 insertions(+), 16 deletions(-)
->>=20
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
->> index ed70e12d73d7fe5d89f3364c5367820bf47e3c1e..80aefba5b22d6b4ac18aeb2c=
-a356f8c911150abd 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> @@ -34,7 +34,8 @@
->>  #define AWCC_FAILURE_CODE			0xFFFFFFFF
->>  #define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
->>  #define AWCC_THERMAL_MODE_MASK			GENMASK(3, 0)
->> -#define AWCC_SENSOR_ID_MASK			BIT(8)
->
-> I'd prefer leaving this in place even if it now becomes unused, or=20
-> actually I suggest you move it before the GENMASKs to keep the values in=
-=20
-> order, and leave an empty row between failure code and these id related=
-=20
-> masks.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Sure, I'll move it to the top.
+Notice that the policy->cpu update in cpufreq_policy_alloc() can be
+moved to cpufreq_online() and then it can be carried out under the
+policy rwsem, along with the clearing of policy->governor (unnecessary
+in the "new policy" code branch, but also not harmful).  If this is
+done, the bottom parts of the "if (policy)" branches become identical
+and they can be collapsed and moved below the conditional.
 
->
->> +/* Some IDs have a BIT(8) flag that we ignore */
->> +#define AWCC_RESOURCE_ID_MASK			GENMASK(7, 0)
->
-> (AWCC_THERMAL_TABLE_MASK | AWCC_THERMAL_MODE_MASK) ?
+Modify the code accordingly which makes it somewhat easier to follow.
 
-I prefer not to go for this because AWCC_RESOURCE_ID_MASK will be used
-for all IDs in the following patches, not just thermal ones.
+No intentional functional impact.
 
-I'm doing this because I found that Alienware Aurora desktops also used
-the BIT(8) flag for thermal profile IDs, not just sensors.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/cpufreq.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->  =20
->>  static bool force_platform_profile;
->>  module_param_unsafe(force_platform_profile, bool, 0);
->> @@ -168,8 +169,8 @@ enum AWCC_GAME_SHIFT_STATUS_OPERATIONS {
->>  };
->> =20
->>  enum AWCC_THERMAL_TABLES {
->> -	AWCC_THERMAL_TABLE_LEGACY		=3D 0x90,
->> -	AWCC_THERMAL_TABLE_USTT			=3D 0xA0,
->> +	AWCC_THERMAL_TABLE_LEGACY		=3D 0x9,
->> +	AWCC_THERMAL_TABLE_USTT			=3D 0xA,
->>  };
->> =20
->>  enum awcc_thermal_profile {
->> @@ -445,20 +446,18 @@ const struct attribute_group wmax_deepsleep_attrib=
-ute_group =3D {
->>   * Thermal Profile control
->>   *  - Provides thermal profile control through the Platform Profile API
->>   */
->> -static bool is_awcc_thermal_mode(u32 code)
->> +static bool is_awcc_thermal_profile_id(u8 code)
->>  {
->> -	if (code & AWCC_SENSOR_ID_MASK)
->> +	u8 table =3D FIELD_GET(AWCC_THERMAL_TABLE_MASK, code);
->> +	u8 mode =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, code);
->> +
->> +	if (mode >=3D AWCC_PROFILE_LAST)
->>  		return false;
->> =20
->> -	if ((code & AWCC_THERMAL_MODE_MASK) >=3D AWCC_PROFILE_LAST)
->> -		return false;
->> -
->> -	if ((code & AWCC_THERMAL_TABLE_MASK) =3D=3D AWCC_THERMAL_TABLE_LEGACY =
-&&
->> -	    (code & AWCC_THERMAL_MODE_MASK) >=3D AWCC_PROFILE_LEGACY_QUIET)
->> +	if (table =3D=3D AWCC_THERMAL_TABLE_LEGACY && mode >=3D AWCC_PROFILE_L=
-EGACY_QUIET)
->>  		return true;
->> =20
->> -	if ((code & AWCC_THERMAL_TABLE_MASK) =3D=3D AWCC_THERMAL_TABLE_USTT &&
->> -	    (code & AWCC_THERMAL_MODE_MASK) <=3D AWCC_PROFILE_USTT_LOW_POWER)
->> +	if (table =3D=3D AWCC_THERMAL_TABLE_USTT && mode <=3D AWCC_PROFILE_UST=
-T_LOW_POWER)
->>  		return true;
->> =20
->>  	return false;
->> @@ -548,7 +547,7 @@ static int awcc_platform_profile_get(struct device *=
-dev,
->>  		return 0;
->>  	}
->> =20
->> -	if (!is_awcc_thermal_mode(out_data))
->> +	if (!is_awcc_thermal_profile_id(out_data))
->>  		return -ENODATA;
->> =20
->>  	out_data &=3D AWCC_THERMAL_MODE_MASK;
->> @@ -597,6 +596,7 @@ static int awcc_platform_profile_probe(void *drvdata=
-, unsigned long *choices)
->>  	u32 first_mode;
->>  	u32 out_data;
->>  	int ret;
->> +	u8 id;
->> =20
->>  	ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCRI=
-PTION,
->>  				       0, (u32 *) &sys_desc);
->> @@ -615,12 +615,13 @@ static int awcc_platform_profile_probe(void *drvda=
-ta, unsigned long *choices)
->>  		if (ret =3D=3D -EBADRQC)
->>  			break;
->> =20
->> -		if (!is_awcc_thermal_mode(out_data))
->> +		id =3D FIELD_GET(AWCC_RESOURCE_ID_MASK, out_data);
->> +		if (!is_awcc_thermal_profile_id(id))
->>  			continue;
->> =20
->> -		mode =3D out_data & AWCC_THERMAL_MODE_MASK;
->> +		mode =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
->>  		profile =3D awcc_mode_to_platform_profile[mode];
->> -		priv->supported_thermal_profiles[profile] =3D out_data;
->> +		priv->supported_thermal_profiles[profile] =3D id;
->> =20
->>  		set_bit(profile, choices);
->>  	}
->
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1306,7 +1306,6 @@
+ 	init_waitqueue_head(&policy->transition_wait);
+ 	INIT_WORK(&policy->update, handle_update);
+ 
+-	policy->cpu = cpu;
+ 	return policy;
+ 
+ err_min_qos_notifier:
+@@ -1394,17 +1393,18 @@
+ 
+ 		/* This is the only online CPU for the policy.  Start over. */
+ 		new_policy = false;
+-		down_write(&policy->rwsem);
+-		policy->cpu = cpu;
+-		policy->governor = NULL;
+ 	} else {
+ 		new_policy = true;
+ 		policy = cpufreq_policy_alloc(cpu);
+ 		if (!policy)
+ 			return -ENOMEM;
+-		down_write(&policy->rwsem);
+ 	}
+ 
++	down_write(&policy->rwsem);
++
++	policy->cpu = cpu;
++	policy->governor = NULL;
++
+ 	if (!new_policy && cpufreq_driver->online) {
+ 		/* Recover policy->cpus using related_cpus */
+ 		cpumask_copy(policy->cpus, policy->related_cpus);
 
-Thanks!
 
---=20
- ~ Kurt
+
