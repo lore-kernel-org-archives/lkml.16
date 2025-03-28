@@ -1,95 +1,59 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7851DB131;
-	Fri, 28 Mar 2025 17:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B721DB131;
+	Fri, 28 Mar 2025 17:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743182111; cv=none; b=HULMEUOuEycEl6wfxyrCOF00poUseuipVsg2FrdnscccB/rz1cBLGW5xyckjsOb/x7YBekPoQLkmp6tlG42kTrfAe/AdeEO7d6ItPJapLi9TmKzOOKCCjABxm8rDx6XicBrkH5zfiC+5ZTjONhM1+dePcXC+jDnpy0LfS7BHl6w=
+	t=1743182186; cv=none; b=RiOlw6bdjEwN3DsBiiuFGRFLqqJbsMdN6pmIVX3Gp+rHBmxwmDDAE2uBXkMf2EjHm5HqgMnQyKmJ7UrDiN8k5XYz0Xvg7O7e+5lZa1nhptfbsNMGkLWpWOrlJtfMtbJFV6/TXC5InO5JR2Q76cc0Gu+O2Z1ZhoSxlHv45bT0o1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743182111; c=relaxed/simple;
-	bh=da7sHPFNtbq2W4cYMJ0iJEuTAgjeSMbHDG0WJspHRso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iAzqZc2W6aQGNN3ivA/CSfNbawLkN01m+qYzt4ryV1KJV8nAY/9flYWyjTycB1xYZXVb5s45Nvrh+0k6LlyohewtmSLhZzClXHSOuhyuQxA7O0K+6RY7CDTn6MhnBOqCiPe/92hpiPyvaIEMqLJg5rYIIOM8Hi+qhnyiOCiZd+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=j9jUbA+Y; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="j9jUbA+Y"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZPRwk4ttvzlmm8f;
-	Fri, 28 Mar 2025 17:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1743182101; x=1745774102; bh=+EK6tmoFiYgHeuEyYxLkyu/8
-	1AguotCIY7k04YXofmY=; b=j9jUbA+Y5cBItNjvfQ+hyeUC2A02jumLj99vu9Ep
-	QoIt9B0pGDaEXn3Eb4C7JI157palYsortj0m/1bHm0df6yx4Z9p98StjSZ7AN8UP
-	OpfdWX7smPS95pZ0DGo0aKD0qc0PcwQ+VfM2ddlusFp6Oa0NFz7EauHnzZowFipv
-	gSiztiM1f2lE2yD4gzixI5WBTs1+I4Tyr/aqGOg4Zt4vugPDb6ab1ecFYiB1xtf2
-	grgmz+nykuAAjJy36yBnxETKZnHETu5yylDQMXZvxq35/bowSUCYW9tBflsK06Zi
-	rFgyjVEFeHBrz3ALs7xayo7LCpf4GILzWbE/tjPd/+lT4A==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id fvm9X_Lqj2Gh; Fri, 28 Mar 2025 17:15:01 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZPRwb0J4fzlv768;
-	Fri, 28 Mar 2025 17:14:53 +0000 (UTC)
-Message-ID: <2ef77956-3e09-4315-8e3d-2046830f9227@acm.org>
-Date: Fri, 28 Mar 2025 10:14:52 -0700
+	s=arc-20240116; t=1743182186; c=relaxed/simple;
+	bh=ilWIASvvPY2byFQFQbMiPFgc7p8unwgqRQG/r4nZbR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pn4QSXv8Zp0qOE8SVro+mDRTWJrOuSgZqOB1gOJdgcYNG+rtaJ6axIj4aQQSHIvNUZse8NMpDNKuQ1pO+08U3yIObnK4gFtgA/VbELAHaU3yhp9nIl4wEAA3DYpq9UDu1940di9+B3JnR6MZU5bA67qRH1/au8kq8s/FVbnvZck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 616952B;
+	Fri, 28 Mar 2025 10:16:23 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB2B3F63F;
+	Fri, 28 Mar 2025 10:16:17 -0700 (PDT)
+Date: Fri, 28 Mar 2025 17:16:16 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] perf build: Remove unused LIBPERF_CLFAGS
+Message-ID: <20250328171616.GA195235@e132581.arm.com>
+References: <20250328122644.2383698-1-leo.yan@arm.com>
+ <20250328122644.2383698-2-leo.yan@arm.com>
+ <CA+JHD90hqsAQn8FcwdBnzU8aPOmey76MrUkGitu9E4i2sC2bWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 2/2] ufs: core: delegate the interrupt service
- routine to a threaded irq handler
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
- <20250326-topic-ufs-use-threaded-irq-v2-2-7b3e8a5037e6@linaro.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250326-topic-ufs-use-threaded-irq-v2-2-7b3e8a5037e6@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+JHD90hqsAQn8FcwdBnzU8aPOmey76MrUkGitu9E4i2sC2bWw@mail.gmail.com>
 
-On 3/26/25 1:36 AM, Neil Armstrong wrote:
-> +static irqreturn_t ufshcd_intr(int irq, void *__hba)
-> +{
-> +	struct ufs_hba *hba = __hba;
-> +
-> +	/*
-> +	 * Move interrupt handling to thread when MCQ is not supported
-> +	 * or when Interrupt Aggregation is not supported, leading to
-> +	 * potentially longer interrupt handling.
-> +	 */
-> +	if (!is_mcq_supported(hba) || !ufshcd_is_intr_aggr_allowed(hba))
-> +		return IRQ_WAKE_THREAD;
-> +
-> +	/* Directly handle interrupts since MCQ handlers does the hard job */
-> +	return ufshcd_sl_intr(hba, ufshcd_readl(hba, REG_INTERRUPT_STATUS) &
-> +				   ufshcd_readl(hba, REG_INTERRUPT_ENABLE));
-> +}
+On Fri, Mar 28, 2025 at 01:47:39PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 28, 2025, 9:27 AM Leo Yan <leo.yan@arm.com> wrote:
+> 
+> > Since commit 91009a3a9913 ("perf build: Install libperf locally when
+> > building"), the LIBPERF_CFLAGS flag is never
+> 
+> 
+> I'll fix the summary, should be CFLAGS,
 
-Calling ufshcd_is_intr_aggr_allowed() from the above interrupt handler
-seems wrong to me. I think you want to check whether or not ESI has been
-disabled since only if ESI is disabled all I/O completions are handled
-by a single interrupt if MCQ is enabled.
+Sure.  Thanks for fixing up!
 
 Thanks,
-
-Bart.
+Leo
