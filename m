@@ -1,77 +1,119 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFAB1AF0D6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F6E1AF0D6;
+	Fri, 28 Mar 2025 13:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169745; cv=none; b=ckuV8AumDxl/9JPhorHQ4ZmpF1B0eYhYXVk4y59pop1r4mT5nIkEUUBAW7IYJdAoe5Bkff3vdihwDxVV14qIsEJ3G5BAvNpdR6fwTHRblVuYvtzesDZUHm8P92VoRU9rwwGbwXqPdpIz/H7HvJ3YQABzvh8S8YJ3ZDcZG/oyc5U=
+	t=1743169754; cv=none; b=epwBIS/ULEvSV3uorlCstWratL56dwQWtc8xPM/edTkDThBBxerzakdrY4Cv8Js0P7+z3wNJNujKaPQ9rSMB+Udy4bYEyMGEfzhRLYUtGLT8aB8cfoyRJzQ/f4QjYa8o0oO74C0g0mRqOaYYprcIB+dCj6chuHPQhSHeXXmjjG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169745; c=relaxed/simple;
-	bh=ksFQUOP3EzZfL9D4/0O2XSC5+UR6AEx8dV1lPhH8BeA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jDJj0jzXEHX5fzZggtDWnMbLdi5gnzcQhxSwZNuis+1a+03t7MpOdDeUlGtMG+uQM+dA2CAGXvSGn0RkFP129lXlSoR9UaFE9tpC9G5TowzgITrcJcgnYPHbBDC4YI6In/9yjn42YcwX5LkgDKwEmQgdzlfyTHvZfeRtkqsmpj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d585d76b79so18987775ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:49:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743169742; x=1743774542;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZccP94vSlfyk6BXUvEnclbkKMxBWU/FoFWjWqAr+xSc=;
-        b=Z5GUtchbLGh7+benCtqzfmBvVWrND3sYLKZwe2jQQ3OvJIzMI90dpgp/uEBRC5JGOH
-         6NgyK4/DRZoh3ghth3rTSTlJmuzPnL9f4byLvbCqSrSxpQdj9s2uPbxWqfPZXHuJ3SOI
-         PZLRXln4J1f4hwKPyvwgaSF5nCKwBl0/OSkErbjTs5L5QqWBNpu6J0sTxgP0/an67h14
-         FK37TrYIbK7+clHUFhXh7ztpFzxaCw98vOC4oCEYvzzb1ke/Hj17rzOcrDlqrm2Fxx0I
-         W/wpVvX0W+VaTn4Or1+OTsx6ShVblvTbmWGfwB3yGXRy37A5rjylXehx64itQKo/Q20H
-         OiYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxdrQrXGB9Yun8S23CQZUSOJDzIfXp6Ih+xGnNt2QAmXxIesdeSgW507Axi4R1FZvJ1I9NrxTbXmKxvgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKx2/6H0sccEMtAviupbHaG7K9BmbAOJyiNoWBYCFaHqqdn9vy
-	RQq761934hEYyO2KRknGsYKEv50ipX0pxwnTWVDZ7+KBaI1kGRO8xfgijNz6P+kFEOmyrpXb/5/
-	hmk7toj4Cg5yGD09+xnAh1/ow+KaTSZX23ACll8RwTlZIU052w5WCEi8=
-X-Google-Smtp-Source: AGHT+IGwRYua1iETzdd0MEmIL3HDNfodpZ6kzAALmumare+moQZbATVg3Tb/phYquDGYuvTGiVbb0t0/KM3tnAOm1426Ww8zs2hT
+	s=arc-20240116; t=1743169754; c=relaxed/simple;
+	bh=3lILFWgnhkstxB3o9g5m0XIUuZylKnf8J5zc5fKNkJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Aebfc4UOw3n8HrrCWDAYdGDX78xiFRa4P2pUpWhaqZX2HRZLOGLU0OAZbjjXltxaOzyrMCoIWEF+gTMmExieYKkYfgr6J0sgcatpLTzWqGugGHmeB+KmEl6kTsewOj+3zWNoXgm8pJDAr+WqZY394LSA72CHHWc7zLbAh1UElpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=XQ83om8/; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="XQ83om8/"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 81C34101DC310;
+	Fri, 28 Mar 2025 14:49:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1743169749; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=JVwkVrfyGE5jNI5m8RpdSOR/P9iTL3WO9FAc4h/G4jI=;
+	b=XQ83om8/DM3sqB2fArlp7DnJFKCtr2Gv2USp+87UVmuQ26qoHiAtMU4VoXbxqSMa/BMI8G
+	6E7oPPbILVMKplyRByzgDl6FaaOGsJj4zF7ld87uApL5820/mxGdsyo/gTMPDMocEZzJ8B
+	NhGlrd70IfV/Yrpq62xkDJnxPwE8czJOJwBm9/86EtEvORK0Iu3+XynIuRYIPovnD6uxYh
+	u+XwWufYnUG/isY0d/u6RIcJv+/T5AipbHYcRrcVlUT/5k2D79jpJkLb3UKmDlMX+kHPok
+	KXs+o4ip3Xx6GIpPMrc0WD5+CP5fZ3DURVSnMDQRResDTf8pyq3+XM9kqbk49A==
+Date: Fri, 28 Mar 2025 14:49:06 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/4] net: mtip: Add support for MTIP imx287 L2 switch
+ driver
+Message-ID: <20250328144906.62323a6b@wsk>
+In-Reply-To: <20250328064353.33828cd2@kernel.org>
+References: <20250328133544.4149716-1-lukma@denx.de>
+	<20250328064353.33828cd2@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1689:b0:3d4:28c0:1692 with SMTP id
- e9e14a558f8ab-3d5ccdc1e0bmr85604945ab.5.1743169742505; Fri, 28 Mar 2025
- 06:49:02 -0700 (PDT)
-Date: Fri, 28 Mar 2025 06:49:02 -0700
-In-Reply-To: <20250328132557.GB29527@redhat.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e6a8ce.050a0220.2f068f.0077.GAE@google.com>
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
-From: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, brauner@kernel.org, dhowells@redhat.com, 
-	ericvh@kernel.org, jack@suse.cz, jlayton@kernel.org, kprateek.nayak@amd.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, mjguzik@gmail.com, 
-	netfs@lists.linux.dev, oleg@redhat.com, swapnil.sapkal@amd.com, 
-	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/lpezb_=T1N_DAZZjyrP30mM";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hello,
+--Sig_/lpezb_=T1N_DAZZjyrP30mM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Hi Jakub,
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+> On Fri, 28 Mar 2025 14:35:40 +0100 Lukasz Majewski wrote:
+> > This patch series adds support for More Than IP's L2 switch driver
+> > embedded in some NXP's SoCs. =20
+>=20
+> ## Form letter - net-next-closed
+>=20
+> Linus already pulled net-next material v6.15 and therefore net-next
+> is closed for new drivers, features, code refactoring and
+> optimizations. We are currently accepting bug fixes only.
+>=20
+> Please repost when net-next reopens after Apr 7th.
+>=20
+
+:-/
+
+> RFC patches sent for review only are obviously welcome at any time.
+>=20
+
+I hope, that I will receive some feedback regarding this driver, so I
+can repost (hopefully) final version at 07.04.2025.
+
+> See:
+> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#devel=
+opment-cycle
 
 
-Tested on:
 
-commit:         acb4f337 Merge tag 'm68knommu-for-v6.15' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16bab804580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=95c3bbe7ce8436a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=62262fdc0e01d99573fc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=146b9bb0580000
 
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/lpezb_=T1N_DAZZjyrP30mM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfmqNIACgkQAR8vZIA0
+zr39+gf+PnMP4baRM3Pye2pJkO6dcXzrP69VEz0RJFuksfJE+oZrtyLeel3iEdjs
+D4fsoDvxwgFjX11+7ggdUVjUgwHW0bxDsuAr1FLBrIh4hrzlzLkfdX4k2URWKoxk
+0bPF7IJpjD8/eCtKh9nX+FhYdjogrfre1npCwxixcC2i3jxnjwCqEOgLbKkiADfq
+M2SVJvq+An+OJwAVnKxmzKjEkKSkB6DIcyKIWae9g8lcnRkzuAcraSpOgUdOOU+6
+E7fMyIkYSy5R6cWSRzYQZDfyifH6GrIM1aTyqwgHrKHOCjJvqNM536fwrhrVYxpi
+GcFqr75XS4DhdMUvefB9aZ6Dkn80rg==
+=33fD
+-----END PGP SIGNATURE-----
+
+--Sig_/lpezb_=T1N_DAZZjyrP30mM--
