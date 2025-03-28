@@ -1,106 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31B7186294;
-	Fri, 28 Mar 2025 21:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C792186294;
+	Fri, 28 Mar 2025 21:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743198999; cv=none; b=mLYRDno6+jb1waniPXXFj/U+ddmYz1R1bnQUVlqFum/s/UhOjTMP3Q6aAR6kclhu8F7R0P4FZaV9MCtrmKS2qBdbDYuH/jGTuVVpsn0jNNReGiAFipZWsYvN7XRn6KYt6cvf+p+9iYKQk5dOIzQCDQji1HE8pGm42giQhxe6c88=
+	t=1743199080; cv=none; b=R1uZQJYobWL5worG2QvghzW5RDB3mjr/Btck/GV25nCNUkOhMBzRS1b/gy46IT9YZ3t+Dx5Oss2coh+wAw2ujsRhN6Mv1nEZ/GNeM/pqy92gtplu0VS5Lxt7RlLc+rl1RHlE+cDA7r95CUMxoFrZbp2Jv4r103+d4edmi/3HoT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743198999; c=relaxed/simple;
-	bh=Gujb+m320PuDNxTY4YhXq/uG35BHF0Afxmnbfk9Bu9k=;
+	s=arc-20240116; t=1743199080; c=relaxed/simple;
+	bh=OxznrNYf3lSirHy91oukZ5v3RIBmVhPpxY1KFo5KKW0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTIA8gQbvCSVWyDuJY0i/kXA2T9fyd31u3R6H87y59ipHydLLhL8Xj2dMwrJE2jZurvBNiCrQMDcB0noV7FoXDk1T7o9LokbJHZCzRxe2cb8vCbalanMoZ6xv8JgwH0eAKK8T6s4h4NX3JIEDbAArczmOuaguUc7Ynjlq8jbFGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8jDHRHK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgeenlEg3dI2QgHyv048owOd+2SJUKX02cieS3KQXJWKKikyt6jpi00NSb/N3F5W01iZ10Me2iVzEnV6sOj7/JEMulOX14I/nWh07h+d02RyHIUIYSKSF/KH+D2JlOSPj7AHaIZgL21c0CR7gzzks+edbVZRczoanZIG6eXS1WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIvW+7iD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8jDHRHK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC61C4CEE4;
-	Fri, 28 Mar 2025 21:56:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIvW+7iD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C951C4CEE4;
+	Fri, 28 Mar 2025 21:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743198998;
-	bh=Gujb+m320PuDNxTY4YhXq/uG35BHF0Afxmnbfk9Bu9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W8jDHRHK77Tf0PUisoKII5myboATQe+eIbYIVfQPfRASmhaljzqGedNhFAsIDxTVh
-	 lZfsYe4nsA4LZ2eZBwF/ht63fX42VZreFe04Wp5hAKR44qsOuiIouNU9l7QLgqYCnF
-	 0887CK5ruEO48GJ4OIx65kIxDhKyU/VSs3AsNJX510d0lrri9o0DxULbStpmt7/EVV
-	 RgjTnd+485dl84gj3+8G93Nh2uEFmD6T+Wh/M/MDE8hyfRXz3znxBqPB6pPpMmYHKs
-	 yCy7uAa7jpl0m9jIyiFuuJtXEFegnifZJGWBiEaqqcw3DDbHXGofWtvclpTHMyKTVu
-	 P6+Cw5oWbY8FA==
-Date: Fri, 28 Mar 2025 22:56:33 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, David Gow <davidgow@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>, x86@kernel.org,
-	Rae Moar <rmoar@google.com>,
-	Sergio =?iso-8859-1?Q?Gonz=E1lez?= Collado <sergio.collado@gmail.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	KUnit Development <kunit-dev@googlegroups.com>
-Subject: Re: [PATCH] x86/tools: Drop unlikely definition from
- insn_decoder_test
-Message-ID: <Z-cbEbqwree_EgVP@gmail.com>
-References: <20250318-x86-decoder-test-fix-unlikely-redef-v1-1-74c84a7bf05b@kernel.org>
- <Z9spq9OccwK7vKj7@gmail.com>
- <b26a2a43-3c55-4086-88e2-64e65dcfbeb2@linuxfoundation.org>
+	s=k20201202; t=1743199079;
+	bh=OxznrNYf3lSirHy91oukZ5v3RIBmVhPpxY1KFo5KKW0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=uIvW+7iDcLahy75y/CjDDpOCE9/9cOE52rkwzvs7XBQXtgBSqsyaVeqqJOgj+qH5C
+	 DsR3QsyvodbV2ZN2XOc58ZoIvs0oUZXOcEJ6JkDobOOonNxkSpPPGT5oX3FwsHItKH
+	 +fSj2LBJp3FTi/DHUTF05QoiixB8ad0XO6feuFycl3+LndRG4JuBrxUnObneNBkE+d
+	 naIaZUEVgWkZ7B4CmkrMmuvwYuB/eu19tmz0DfdNGGaUKdyDU5vzkOWqqg9Ioz9Zws
+	 W3DsY41BaLGbOcN3VJ8vNH2TxqX8OR2VGhwYK3xUEeoks1M6SxYcP+5h0WRxntAoJy
+	 64/xPLOQFopjA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 21C75CE0889; Fri, 28 Mar 2025 14:57:59 -0700 (PDT)
+Date: Fri, 28 Mar 2025 14:57:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, gourry@gourry.net,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	sfr@canb.auug.org.au
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Message-ID: <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
+ <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+ <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
+ <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b26a2a43-3c55-4086-88e2-64e65dcfbeb2@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
 
-
-* Shuah Khan <skhan@linuxfoundation.org> wrote:
-
-> On 3/19/25 14:31, Ingo Molnar wrote:
-> > 
-> > * Nathan Chancellor <nathan@kernel.org> wrote:
-> > 
-> > > After commit c104c16073b7 ("Kunit to check the longest symbol length"),
-> > > there is a warning when building with clang because there is now a
-> > > definition of unlikely from compiler.h in tools/include/linux, which
-> > > conflicts with the one in the instruction decoder selftest.
-> > > 
-> > >    arch/x86/tools/insn_decoder_test.c:15:9: warning: 'unlikely' macro redefined [-Wmacro-redefined]
-> > >       15 | #define unlikely(cond) (cond)
-> > >          |         ^
-> > >    tools/include/linux/compiler.h:128:10: note: previous definition is here
-> > >      128 | # define unlikely(x)            __builtin_expect(!!(x), 0)
-> > >          |          ^
-> > >    1 warning generated.
-> > > 
-> > > Remove the second unlikely definition, as it is no longer necessary,
-> > > clearing up the warning.
-> > > 
-> > > Fixes: c104c16073b7 ("Kunit to check the longest symbol length")
-> > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> > > ---
-> > >   arch/x86/tools/insn_decoder_test.c | 2 --
-> > >   1 file changed, 2 deletions(-)
-> > 
-> > I suppose this should be merged into the Kunit tree? The c104c16073b7
-> > commit is in -next currently.
-> > 
-> > Anyway:
-> > 
-> >    Acked-by: Ingo Molnar <mingo@kernel.org>
-> > 
+On Fri, Mar 28, 2025 at 02:22:21PM -0700, Dave Jiang wrote:
 > 
-> Thanks Ingo.
 > 
-> David/Brendan, Okay to apply this for the next rc?
+> On 3/28/25 1:45 PM, Paul E. McKenney wrote:
+> > On Fri, Mar 28, 2025 at 01:03:19PM -0700, Dave Jiang wrote:
+> >>
+> >>
+> >> On 3/28/25 10:39 AM, Paul E. McKenney wrote:
+> >>> Hello!
+> >>>
+> >>> In next-20250328 and next-20250327, allmodconfig builds get me:
+> >>>
+> >>> ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
+> >>>
+> >>> This file is apparently auto-generated, because when I change the #include
+> >>> to the more likely linux/uuid.h, my changes are overwritten by the build.
+> >>>
+> >>> Gregory Price noted that something similar has happened recently and been fixed:
+> >>>
+> >>> https://lore.kernel.org/all/70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com/
+> >>>
+> >>> Perhaps someone unfixed it?
+> >>>
+> >>> 								Thanx, Paul
+> >>
+> >>
+> >> I can't get the powerpc cross build to build to reproduce the issue from next-20250328. Does the change below address the issue for you?
+> >>
+> >> ---
+> >> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+> >> index d6db8984889f..691eeda9c892 100644
+> >> --- a/include/uapi/cxl/features.h
+> >> +++ b/include/uapi/cxl/features.h
+> >> @@ -8,11 +8,7 @@
+> >>  #define _UAPI_CXL_FEATURES_H_
+> >>  
+> >>  #include <linux/types.h>
+> >> -#ifndef __KERNEL__
+> >> -#include <uuid/uuid.h>
+> >> -#else
+> >>  #include <linux/uuid.h>
+> >> -#endif
+> >>  
+> >>  /*
+> >>   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
+> > 
+> > Thank you, Dave!
+> > 
+> > Please note that I am reproducing this not on powerpc, but instead on
+> > x86 with a simple allmodconfig build.
+> > 
+> > Making the above change got me this:
+> > 
+> > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+> 
+> I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
 
-Since the original commit is now upstream, I've picked up this fix for 
-x86/urgent and we'll send it to Linus in a day or two.
+make clean
+make allmodconfig
+make -j$N
 
-I've added your Ack:
+Though encapsulated as follows:
 
-  Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
 
-if that's OK to you.
-
-Thanks,
-
-	Ingo
+							Thanx, Paul
