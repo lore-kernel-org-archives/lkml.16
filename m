@@ -1,64 +1,116 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCF41B4244
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6361B4235;
+	Fri, 28 Mar 2025 14:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172188; cv=none; b=NOaGLTFFxDmrpwiXJM/h/bHEarsEizwCv4bsKbg4z7JOOAw9CI4t/rqgZyqwoPrKCxM60CFdJEus1RcnW90C8GMPNW2aSzdJdOY+6jph8EJ6w0DO9HWG8MubL+CElvXJSS+i92KIid/OEJrjiAIHESx7v/nilMZX1b489Sz7P9s=
+	t=1743172188; cv=none; b=VitagVHpjvbnefeG8qTnRfF94IPhJ0dBhFM4hdn403tp3C1qDwP9WieXZXRM69Kt0mebfGk12lZ0oRvS8BmemfrrAyiYBCfYsQCgw06f+9Sl3UDjBaHA2kPM4a5UdN/+3PNGYAVQ134cFcu3VNwJXzf+HlP5snH57wWKrwP3a2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743172188; c=relaxed/simple;
-	bh=SVUJXDnk8Q1w8arn6lpxufraWiABsdUivt1gzYkKQBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QlS0/W2sG9sfh4Gons4j+8QYIi5VBTOGN3eS9oSxh3SjHjIujiEIRKZfs2+opg5yAJ4aCvK4ED1NpLFJbRw1cDeXCwFO7BTY/suiblubpuwBb4xOurX4aCSGcH8+PDgo3rwD+Tc1XwCBusOxbGHVDjXetQZwSysa1Ci3reijUyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JxOb0ekQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	bh=Y/exLLDHCX3Z8sjPzo+Tq7ukas5heEz+KHU1McNFDdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EPFZWqq6Sho1FtNSE6pUmQFhFtSmtxlJo3IwP2pJrJL/NWY5Lvyobz3KN1lj8z/xv6dtKL3n6/JAlzGyo0SmrJJObFLmM+iWCZ9hhtZUH2vncvO0a5B1WIteu4kZWtYiWVlDF+es/SVsrqQMQTgjD8V4hZbzg1IqyVU7Q7Z69e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UW9FKCgJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JxOb0ekQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tyt/ZAKoHxN92NT1NO7qDEoIvsrs/XPq4582kbmb4HI=; b=JxOb0ekQafhxhp449WSOz+GRZu
-	xvKVTQUQP/vQiCcUD8BcLjxaL6zSErgpG0VREOjBPkCiIczsN2RmExgUwuDJawhX1Tm9pRCq9zFoH
-	A5hlOpaewWLSQtm8dmkZiBOcEtum38lgwPvip55zVKjMeu2guFT8KHEJ+uFHrDziL5DuoBe00jt/F
-	8cA02Ro37jX3N2+XZLyLYVMsrEHcl0IK9GGr+GU9M5Sea5lzDkGQEewgyxZ7Ln2dE11nGpe+n0LiR
-	wnJAtebomUO9wO/lXV0WNWrrzpUmZiFY+vvkkZQVpQJ7RzM2swHBM90YUoz8O8hGa/FNgBg0s35KW
-	dXT73p0A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tyAiE-00000003TQ9-0q61;
-	Fri, 28 Mar 2025 14:29:34 +0000
-Date: Fri, 28 Mar 2025 14:29:34 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
-	Ye Liu <liuye@kylinos.cn>,
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v4] mm/page_alloc: Consolidate unlikely handling in
- page_expected_state
-Message-ID: <Z-ayTt8o656AkGfz@casper.infradead.org>
-References: <20250328014757.1212737-1-ye.liu@linux.dev>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UW9FKCgJ"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S856HH011218;
+	Fri, 28 Mar 2025 14:29:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6NGIQHY4CqP2+W4rV15kcCHVC1zi2EcPSvd5Z1AwSd0=; b=UW9FKCgJL5kkIYZF
+	n5oj3AtSdAjSiJUXa4bN8JBZ+yaGEqIEUygGTtq2hXTl6YKD9wkrGklEhPLoE3GJ
+	FjqyMDCzC+EehrtyUprAOdQrKgUH3ICkSZVHGvzIMqsEJ5v9oUEzSJ8z5sfT84P7
+	6Aso+W+eNNOZS6ig3GSB3VZwtvu6JzXNnWmpanVCtYUbhXREqAxDAMZxotI98D4X
+	y2OYdERVhwawaJW41hRJXE0fvke6ntNVj48hZbymH+LnYLroij2YGchB8eEizPzE
+	fJ6YJHUycrMxbS71aJV1RvG5wZsRr0A48KfSr/ijY/XsCm3YYJfhWp+Ui6GQ0+Rh
+	LPFaoQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45nqxuh51s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 14:29:40 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52SETdD8012326
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Mar 2025 14:29:39 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Mar
+ 2025 07:29:36 -0700
+Message-ID: <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+Date: Fri, 28 Mar 2025 19:59:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328014757.1212737-1-ye.liu@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+To: Markus Elfring <Markus.Elfring@web.de>, <linux-i3c@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+CC: LKML <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jarkko Nikula
+	<jarkko.nikula@linux.intel.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+ <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: SrTjOU1G05fnxYXje6cxzk331-0KmyQh
+X-Authority-Analysis: v=2.4 cv=e7QGSbp/ c=1 sm=1 tr=0 ts=67e6b254 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=P-IC7800AAAA:8 a=6vbhIhILFGkt50-TBsEA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-GUID: SrTjOU1G05fnxYXje6cxzk331-0KmyQh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-28_07,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503280100
 
-On Fri, Mar 28, 2025 at 09:47:57AM +0800, Ye Liu wrote:
-> Consolidate the handling of unlikely conditions in the 
-> page_expected_state() function to reduce code duplication and improve 
-> readability.
+Thanks Markus for review and suggestion !
 
-I don't think this is an equivalent transformation.
+On 3/28/2025 6:49 PM, Markus Elfring wrote:
+> …
+>> +++ b/drivers/i3c/master/qcom-i3c-master.c
+>> @@ -0,0 +1,1107 @@
+> …
+>> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
+>> +{
+> …
+>> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
+>> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
+>> +	geni_se_abort_m_cmd(&gi3c->se);
+>> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
+> …
+> 
+> Under which circumstances would you become interested to apply a statement
+> like “guard(spinlock_irqsave)(&gi3c->irq_lock);”?
+Didn't get, hence a question.  Do you suggest to use DEFINE_LOCK_GUARD_1 
+instead of existing method ?
+> https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/spinlock.h#L572
+> 
+> Regards,
+> Markus
+> 
 
-Please, stop with these tweaky patches to incredibly sensitive core code.
-Fix a problem, or leave it alone.  We are primarily short of reviewer
-bandwidth.  You could help with that by reviewing other people's patches.
-Sending patches of your own just adds to other people's workload.
