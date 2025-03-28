@@ -1,96 +1,141 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B6D22094
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D6FE545;
+	Fri, 28 Mar 2025 19:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743189664; cv=none; b=PrbQkzPZjq1xHdrBsNf6fnqEH9Y+b/OB8piFvrx8ItuTPU3uafUJLMOtKWQj8Xocoqy+eHN5sTybp+/UnM9rM3Iw4ES5Sw3dzYuT8gz9v30zyHwrS1MLfnsbCoI3rIKPvZPJuyu8Y4XUV3dWDemrIy0eTrRwehqJO2bRY1GBfbg=
+	t=1743189970; cv=none; b=nVu2mLWWAbe6TTaZBY3VOpLkdRlIf4DSInAM+1EWPHm99G62CYvE0Y3ijynYFh8O5vIel+RQm/fFogYu4x7KUfKLHat3qdaL9eL1/U2BiLt/VEDfMFZKRRErTgB1hEdoSL1KU53ek3VUtCFS7+dsAmnwdBilSzDjSQlgPTGo5z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743189664; c=relaxed/simple;
-	bh=9Esyej47MXyXzcSAmIJ4EgIKMmSjGEuUuaT0dcSkzJA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BtAgF7YkJbAhXKR+EhCpu+D/5aKLX/EQd3oz7zpHUjZOH7Yz8ei0/lfY4NhfY1m9cAPL/6mVCYyBIijuvWJV5MdERq44+iqGY8l2+xWvMqrAuHbP4IJUkwmxH2CjM6cOwKg6s/s2GNe+FrXo0NAhoIVHbqbzXEiDXxCk26EHbiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=AimN/x+5; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743189970; c=relaxed/simple;
+	bh=hhPunpsntFt6XxabHd1o/+l0RU1HFQRT6+V86ZVI+Mk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cn3jJY7nnWt2XRvNOYuodJPbqrpX29TixdPNmQnebOglj+SJNNWh2zPC3POBCNoyuseWTLclPIfOmNoi+R0P8VU8FBXJy+/zQFWOnygNwoOyQ5zATYq71Aqp23rOSwctrE+Mw4RPSa4MAiGe5by+NkqimLQ8NkskAam/xD+/c7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uB01Ql31; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="AimN/x+5"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85e15dc801aso207408539f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743189661; x=1743794461; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lG9dZo5ZH0RsJOu3eXzt0yKhbFMrsHY9cwC7gax1O9I=;
-        b=AimN/x+5ziwROVNt0fmrXcdrtEuJoi4GAeJapo9cMWnYOoVOlbw72/E2K6gYnFg4TJ
-         xI/DdxHRN/Cl15FNXmcisNrSbC7q+vFcjujQumg/DOIkAp1W2i2iaNr8KKwflf8hLeNG
-         M+nH9vjsVPWmOPrjNJvrK94bnmZ49AYj7lSDvZbiQavOvf5AMAK1DdcUflKMAnIoxc4q
-         Aexu6PEG8P9+3yb9jyE28XSUb7Q71TG85tH2Jk3N+G01REEjeD+nK6DIpcMc77L/p8EK
-         MgfWHrV6WdIOF6QeDVPXbSr+UOz5EeOsjxTf+1Gj3H7YG4bNyLvyu6Yf1TTvHnuckC0o
-         ihgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743189661; x=1743794461;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lG9dZo5ZH0RsJOu3eXzt0yKhbFMrsHY9cwC7gax1O9I=;
-        b=waCgD8KVc3/UnIW0Oo/TJ/CB3q5/J1q0qhhZlZyQgm+0T67rEti0iB580Ofb9YPhXJ
-         ur41L89PDrCqHEAqVBVP2AXkj4sVJAOeXn1w7+/V3RwWMIMK66yFoexmZVzIH8zYWvMz
-         9rFxLmG5rMGCEETl3Zhdiu7to031G/zdFmW//HIV3se6kww4FJDr6k10apLZR3wMLJD7
-         mtqj7lzVHMeRRXTyI7ETLe/WmUbq04YSQlDAcDdnwiO35Lse2GWDIdL1LkWIn12mEbln
-         j7C5Lgx+RvWd77+AAZKO+luP9VC1caUrLUn6aN9oytsm3YywcxeLah3x4v56UFB8a4u4
-         Wxxw==
-X-Forwarded-Encrypted: i=1; AJvYcCU77OWUcaphJFN82wIo/WcKF0jiOan39oeNVAzaotAIgNq7EL+6fWhmjUXYP9oUALY5lHkQVoA6WDDXzrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8U4Vu5iEA4mek+htvi04VmLg97z5JQS26aHwAzTZ08Kf+Fy9U
-	k5yM9laeEaiNBPHPC7SUzUXn6catOHtWAmLxD4bzWlc9cpz/7jP7VZCBRE42jyA=
-X-Gm-Gg: ASbGncv8Ap1/7P9zoRFLJDnEqlZddTJrO2cLzMcVJQHUOXEqD6+8r2yPi1N5CrfxZ6g
-	0IWdH3zdVDf/SRECFp/xANRuXalsSjsuIVj/Hn3uYe+exziaBc0nUYZ6BhYTb+jmf3M5tldA2Aa
-	WzCOXxfOIls2PsOqPMdAbfCcMJ4bXHeZ5p8OPLdAugCAsQJlolGjf9wxUh1od7a8qPQEuRhYiWl
-	F3XqwJSZDCM0hkp3sXMpjVOcWGEWy+o52masLXF66TuBgZadjh7QAJmx7hTnr7oedhViXNWamKE
-	WnePB71csb9xzDyopD9j16srRnZ0VNGT7ERn+psexw==
-X-Google-Smtp-Source: AGHT+IEdoUiqLHpxteaAmvVOy+f9e6FFbOsTplCGfV+RJGis2sI0S3KCmLvvUpHS294ydDErNHXdkQ==
-X-Received: by 2002:a05:6602:358a:b0:85b:5564:2d51 with SMTP id ca18e2360f4ac-85e9e90b88amr75155739f.11.1743189661154;
-        Fri, 28 Mar 2025 12:21:01 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f46470fcfdsm577183173.24.2025.03.28.12.21.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 12:21:00 -0700 (PDT)
-Message-ID: <31fe911c-7340-4687-a384-c67cfc4b6380@kernel.dk>
-Date: Fri, 28 Mar 2025 13:20:59 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uB01Ql31"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74152C4CEE4;
+	Fri, 28 Mar 2025 19:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743189970;
+	bh=hhPunpsntFt6XxabHd1o/+l0RU1HFQRT6+V86ZVI+Mk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uB01Ql31T2Fl8DTKJmuhV/cUhmk5OJcBC8/Fh+1AFymKGN6x8XRSha5kd3VwUy6dO
+	 x5JgWLdMFGVqnL7PCqESo1PUJuIqYWb6dUPeMr3h/aUROYtjM8qrl54KScTgHi2AEa
+	 pj2/ozggdtkx8H6YiWfQv2TQId00a4D/o3+Ql/NYowNzySoYJGiym0JJmfqXbm9Bl3
+	 z73gizkN8dcMy9RpAaGkMp2Ct8/42Q8ztKjcahEV0ell6kakoIcCgiDrEsRtzRr+NN
+	 ZvLasxIRUARtFqzxNIYzuk2gsZFGh/hWUP1MKU8VEURZ+RjKm7XcbcMLREJWeKeMkE
+	 xfGQmnc0yvcTQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Luca Weiss <luca@lucaweiss.eu>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	=?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: [GIT PULL] remoteproc updates for v6.15
+Date: Fri, 28 Mar 2025 14:26:04 -0500
+Message-ID: <20250328192607.188729-1-andersson@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Minor ublk optimizations
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250328180411.2696494-1-csander@purestorage.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250328180411.2696494-1-csander@purestorage.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/28/25 12:04 PM, Caleb Sander Mateos wrote:
-> A few cleanups on top of Ming's recent patch set that implemented
-> ->queue_rqs() for ublk:
-> https://lore.kernel.org/linux-block/20250327095123.179113-1-ming.lei@redhat.com/T/#u
-> 
-> Caleb Sander Mateos (5):
->   ublk: remove unused cmd argument to ublk_dispatch_req()
->   ublk: skip 1 NULL check in ublk_cmd_list_tw_cb() loop
->   ublk: get ubq from pdu in ublk_cmd_list_tw_cb()
->   ublk: avoid redundant io->cmd in ublk_queue_cmd_list()
->   ublk: store req in ublk_uring_cmd_pdu for ublk_cmd_tw_cb()
 
-All look like reasonable cleanups to me.
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
--- 
-Jens Axboe
+  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git tags/rproc-v6.15
+
+for you to fetch changes up to e917b73234b02aa4966325e7380d2559bf127ba9:
+
+  remoteproc: qcom_q6v5_pas: Make single-PD handling more robust (2025-03-22 08:42:39 -0500)
+
+----------------------------------------------------------------
+remoteproc updates for v6.15
+
+The i.MX8MP DSP remoteproc driver is transitioned to use the reset
+framework for driving the run/stall reset bits.
+
+Support for managing the modem remoteprocessor on the Qualocmm MSM8226,
+MSM8926, and SM8750 platforms is added.
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      remoteproc: sysmon: Update qcom_add_sysmon_subdev() comment
+
+Daniel Baluta (8):
+      dt-bindings: reset: audiomix: Add reset ids for EARC and DSP
+      dt-bindings: dsp: fsl,dsp: Add resets property
+      reset: imx8mp-audiomix: Add prefix for internal macro
+      reset: imx8mp-audiomix: Prepare the code for more reset bits
+      reset: imx8mp-audiomix: Introduce active_low configuration option
+      reset: imx8mp-audiomix: Add support for DSP run/stall
+      imx_dsp_rproc: Use reset controller API to control the DSP
+      remoteproc: imx_dsp_rproc: Document run_stall struct member
+
+Jiri Slaby (SUSE) (1):
+      irqdomain: remoteproc: Switch to of_fwnode_handle()
+
+Konrad Dybcio (1):
+      dt-bindings: remoteproc: Consolidate SC8180X and SM8150 PAS files
+
+Krzysztof Kozlowski (4):
+      dt-bindings: remoteproc: qcom,sm6115-pas: Use recommended MBN firmware format in DTS example
+      dt-bindings: remoteproc: Add SM8750 CDSP
+      dt-bindings: remoteproc: Add SM8750 MPSS
+      remoteproc: qcom: pas: Add SM8750 MPSS
+
+Luca Weiss (7):
+      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Add MSM8926
+      remoteproc: qcom_q6v5_mss: Handle platforms with one power domain
+      remoteproc: qcom_q6v5_mss: Add modem support on MSM8226
+      remoteproc: qcom_q6v5_mss: Add modem support on MSM8926
+      remoteproc: qcom: pas: add minidump_id to SC7280 WPSS
+      remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8226
+      remoteproc: qcom_q6v5_pas: Make single-PD handling more robust
+
+Matti Lehtimäki (4):
+      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Support platforms with one power domain
+      dt-bindings: remoteproc: qcom,msm8916-mss-pil: Add MSM8226
+      dt-bindings: remoteproc: qcom,wcnss-pil: Add support for single power-domain platforms
+      remoteproc: qcom_wcnss: Handle platforms with only single power domain
+
+Peng Fan (2):
+      remoteproc: omap: Add comment for is_iomem
+      remoteproc: core: Clear table_sz when rproc_shutdown
+
+ Documentation/devicetree/bindings/dsp/fsl,dsp.yaml |  24 ++-
+ .../bindings/remoteproc/qcom,msm8916-mss-pil.yaml  |  64 ++++++-
+ .../bindings/remoteproc/qcom,sc8180x-pas.yaml      |  96 -----------
+ .../bindings/remoteproc/qcom,sm6115-pas.yaml       |   2 +-
+ .../bindings/remoteproc/qcom,sm8150-pas.yaml       |   7 +
+ .../bindings/remoteproc/qcom,sm8550-pas.yaml       |  46 +++++-
+ .../bindings/remoteproc/qcom,wcnss-pil.yaml        |  45 ++++-
+ drivers/remoteproc/imx_dsp_rproc.c                 |  26 ++-
+ drivers/remoteproc/imx_rproc.h                     |   2 +
+ drivers/remoteproc/omap_remoteproc.c               |   1 +
+ drivers/remoteproc/pru_rproc.c                     |   2 +-
+ drivers/remoteproc/qcom_q6v5_mss.c                 | 184 ++++++++++++++++++++-
+ drivers/remoteproc/qcom_q6v5_pas.c                 |  38 ++++-
+ drivers/remoteproc/qcom_sysmon.c                   |   2 +-
+ drivers/remoteproc/qcom_wcnss.c                    |  33 +++-
+ drivers/remoteproc/remoteproc_core.c               |   1 +
+ drivers/reset/reset-imx8mp-audiomix.c              |  78 ++++++---
+ include/dt-bindings/reset/imx8mp-reset-audiomix.h  |  13 ++
+ 18 files changed, 499 insertions(+), 165 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,sc8180x-pas.yaml
+ create mode 100644 include/dt-bindings/reset/imx8mp-reset-audiomix.h
