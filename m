@@ -1,165 +1,210 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E7C171092;
-	Fri, 28 Mar 2025 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CEC1A0BF1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171266; cv=none; b=SbRyIxBJVpSmCxBhIijYTpR7K37xHbWgg7s1gv0lwpgkrloq6M0xKG6LADFJJzhOyUopUb/p/nsx732eeEWLDv5tfXqhd4yQ4pyKzDayHUeLYGHihptz5yU51mBwGoyYWrTXWVYFSUM+lBz1A7hS1DI3aO3WuNtmJeEhqBnjMmg=
+	t=1743171288; cv=none; b=T2hFTcnuY+ham60FlbwUWpFU6XMlPg6RfIxhpoXWqz5W4J3BNvNjxcmZCGhV9/M3WSiv+O6BdBIG7e2zOaVca9DCPedZQBkadgkotmZJOQYyy79eS/VwXH3IDkv9D/EtjzHQcERoI2ljUpXVOmH1/pzCPf+JZEa3s+VBxhmpDG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171266; c=relaxed/simple;
-	bh=MlqYufFY1I8WuOKTmU+SdoVXB/Z8BkWl+fhXZZ3vDlI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aYc4qbfSj5+5ixa9DNrhoEjk++rvRUvTo3UJf+3nLFcsfET/6ZTDTiXongKnsImuHmZhOTnXXtrpQcfK6p3CcIqs3FN/a4Po2Qs6+oNNehywJiJpXWTeQ0wB7rFZ2I1A1rgR1CYrQOA8I0/ERVvTRV8LXSGEue2X9XKPtoBzvF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=Qr+zHpsQ; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1743171288; c=relaxed/simple;
+	bh=wK1ehaq6dNRFnlziHcAibzSUwhMDWmID5TaLHziYYos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9MQlu7gQxMKUODvO47sFgh1I2hlI8GXtk0ZR+oOpjerjA6hzT9FaeRqB3KzEqNsR5zL7IwGvRJslozxwoC9Orku8PdGMYGjldd358erEdrgfwCbUSDT3+OqiSvCnZLADQ7GseiaLBf4mC3mWzJtX4CLGdR1UOgq/4NvTQJIbXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LBya6JHU; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Qr+zHpsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1743171263;
-	bh=MlqYufFY1I8WuOKTmU+SdoVXB/Z8BkWl+fhXZZ3vDlI=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=Qr+zHpsQZRgcvJr4diTCdw/SHs2VwowM+Ax7COvirluAkRZkD9stnD6LTs0D7cJUh
-	 fgnC71g4x7J8/+sFKITpqw3RAMga1qF4u/TInl+znzRDaFWomWmFADlCUwEN/pHZvV
-	 oxEjL+Vo/yuhZasAEJt+FJ4uzDpFdxK34IKmnFNg=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id A66EE1C0022;
-	Fri, 28 Mar 2025 10:14:22 -0400 (EDT)
-Message-ID: <cd5c3d8aab9c5fb37fa018cb3302ecf7d2bdb140.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH 4/4] vfs: add filesystem freeze/thaw callbacks for
- power management
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com, 
- rafael@kernel.org, djwong@kernel.org, pavel@kernel.org,
- peterz@infradead.org,  mingo@redhat.com, will@kernel.org,
- boqun.feng@gmail.com
-Date: Fri, 28 Mar 2025 10:14:22 -0400
-In-Reply-To: <20250328-luxus-zinspolitik-835cc75fbad5@brauner>
-References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
-	 <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
-	 <20250328-luxus-zinspolitik-835cc75fbad5@brauner>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LBya6JHU"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22580c9ee0aso47100705ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743171285; x=1743776085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1Dba98BGDtjOM6DFuWR/X88tWcqFq5izur1ZVd2H9o=;
+        b=LBya6JHUMqQiG/uA7qZhsio08qt59TLjRGBuPf7N6qf0m2Z7Z0Fal1B9OVpFnMDDtO
+         OrEBf1lWND7Wshxa/ytnK7gBUfW0SlOtm4670/W7MnqRRczX3XWo21AzN53ABH3+rJQW
+         7+V3d3HIX5IqZKaFdH5dsFiOgW4br7wls+aH4PvA93pnhi5xgRxUhltaNl/Jpe639ce7
+         r4sp+GSHbT+i+sRHf32N5gH4+8bynPkblVm8pn825+ynQ+xu0aXumC+YQ5OnqbOPEHxO
+         dAtUllwX07+x0oMVgDC/DzMwTN4SJARvrm3LBGnbPxl7l9l5NtSKjBAJtzVRF1ABWuQF
+         XFig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743171285; x=1743776085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1Dba98BGDtjOM6DFuWR/X88tWcqFq5izur1ZVd2H9o=;
+        b=PpGh0lFOIcMZzVspW6fc3HVuloXUpusndCcLGFiN61OJcZIjLde38tnWzanV/plW/a
+         jozDWzrS7RIQhM2wqHfrEBC2qvkceoB027WDXQhmddtxC910wL6L4t8Q62dlRK9BC1OX
+         mTEy9L9u+Dk4bzTvEJryfcbmgpMhNra6Gy1sEWyUg86UF3ntftcZGuOfzZejm+r+CBPo
+         SFpOrpQogFZFerEzQQPjgtA/xU+Jtn710e0bQRSGzwYnroBvtVXkF0jXLgIcxuKVhgLF
+         QaIjxIoxWRbDor/WE1zpk5g0NS7Vu20UmkHEnwXVLsK94gdFqXQQCw8VOabeO8yxUhPa
+         p1zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzf/4LInQS3bCPohax/QdAcQGcptRvm/f+OO+OjGWP9IqioPh1J3ySZlzX4bWzHW0db4Woaqk3bSU4vTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeRRdsrSFCBqsVaOGmw/nz3S1lZUtPqS9dgHomXqcsdzACBTAA
+	TzapbP7GA+mDlZP0KCpHp0qnOHSd8MCZSLiGdwEQaA5fllngwgRL4ROUtqkCwyk=
+X-Gm-Gg: ASbGncvkOhUo2g+SDraBb2mlUgLLmcZCubfFbgJX5KmVRwWa26HT6ryFP0zNcPy4Nbz
+	NTqpZr9PoNbV5Hvs9I1Hquvn8Sr8v9IZ5g6icAfyuMS7Qd7wWocMC7LVDVj3vgguk9AH3rfIqov
+	ohXnmbaKHUZmgTsAjA3P8GfVT9hkH/TSsu65gMeZp/UvAzW4VI+v5tMiqEFbf6tLVYrhPXMrv6f
+	iEAiSOMspBVIxGw67GS8kEIOTkUCcn+XXfMM30yybIbRinWF3wEh53AgM0F9K0MECb3JGMFdCbf
+	+nWrDFLFlzEX5cyjpfSNkpod/SO8yc0YoyupCdFX55wBF56b
+X-Google-Smtp-Source: AGHT+IF17jm/aOy3NYW0QP5xv6XJ1PCIMLt8q2Ltl9RkvCkoD6TGYQloEUiZwe2IUvEbX4ZJHZIvIg==
+X-Received: by 2002:a17:902:d2ce:b0:224:1005:7280 with SMTP id d9443c01a7336-228048edd4bmr130359545ad.38.1743171284780;
+        Fri, 28 Mar 2025 07:14:44 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:5113:c488:efca:b73c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec52cbsm18344015ad.37.2025.03.28.07.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 07:14:44 -0700 (PDT)
+Date: Fri, 28 Mar 2025 08:14:41 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+	"open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V2] remoteproc: core: Clear table_sz when rproc_shutdown
+Message-ID: <Z-au0USkvoDYTF7A@p14s>
+References: <20250326020215.3689624-1-peng.fan@oss.nxp.com>
+ <Z-WO-fhDJKyG7hn2@p14s>
+ <20250328045012.GA16723@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328045012.GA16723@nxa18884-linux>
 
-On Fri, 2025-03-28 at 11:08 +0100, Christian Brauner wrote:
-> On Thu, Mar 27, 2025 at 10:06:13AM -0400, James Bottomley wrote:
-[...]
-> > +
-> > +static void filesystems_freeze_callback(struct super_block *sb)
-> > +{
-> > +	/* errors don't fail suspend so ignore them */
-> > +	if (sb->s_op->freeze_super)
-> > +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | FREEZE_HOLDER_KERNEL
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | freeze_flags);
-> > +	else if (sb->s_bdev)
-> > +		freeze_super(sb, FREEZE_MAY_NEST |
-> > FREEZE_HOLDER_KERNEL
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0 | freeze_flags);
-> > +	else {
-> > +		pr_info("Ignoring filesystem %s\n", sb->s_type-
-> > >name);
-> > +		return;
-> > +	}
-> > +
-> > +	pr_info("frozen %s, now syncing block ...", sb->s_type-
-> > >name);
-> > +	sync_blockdev(sb->s_bdev);
-> > +	pr_info("done.");
-> > +}
-> > +
-> > +/**
-> > + * filesystems_freeze - freeze callback for power management
-> > + *
-> > + * Freeze all active filesystems (in reverse superblock order)
-> > + */
-> > +void filesystems_freeze(bool for_hibernate)
-> > +{
-> > +	freeze_flags =3D for_hibernate ? FREEZE_FOR_HIBERNATE : 0;
-> > +	__iterate_supers_rev(filesystems_freeze_callback);
-> > +}
-> > +
-> > +static void filesystems_thaw_callback(struct super_block *sb)
-> > +{
-> > +	if (sb->s_op->thaw_super)
-> > +		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 | FREEZE_HOLDER_KERNEL
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 | freeze_flags);
-> > +	else if (sb->s_bdev)
-> > +		thaw_super(sb,	FREEZE_MAY_NEST |
-> > FREEZE_HOLDER_KERNEL
-> > +			=C2=A0=C2=A0 | freeze_flags);
-> > +}
-> > +
-> > +/**
-> > + * filesystems_thaw - thaw callback for power management
-> > + *
-> > + * Thaw all active filesystems (in forward superblock order)
-> > + */
-> > +void filesystems_thaw(bool for_hibernate)
-> > +{
-> > +	freeze_flags =3D for_hibernate ? FREEZE_FOR_HIBERNATE : 0;
-> > +	__iterate_supers(filesystems_thaw_callback);
->=20
-> This doesn't work and I've explained in my reply to Luis how this
-> doesn't work and what the alternative are:
->=20
-> A concurrent umount() can wipe the filesystem behind your back. So
-> you either need an active superblock reference or you need to
-> communicate that the superblock is locked through the new flag I
-> proposed (naming irrelevant for now).
+On Fri, Mar 28, 2025 at 12:50:12PM +0800, Peng Fan wrote:
+> On Thu, Mar 27, 2025 at 11:46:33AM -0600, Mathieu Poirier wrote:
+> >Hi,
+> >
+> >On Wed, Mar 26, 2025 at 10:02:14AM +0800, Peng Fan (OSS) wrote:
+> >> From: Peng Fan <peng.fan@nxp.com>
+> >> 
+> >> There is case as below could trigger kernel dump:
+> >> Use U-Boot to start remote processor(rproc) with resource table
+> >> published to a fixed address by rproc. After Kernel boots up,
+> >> stop the rproc, load a new firmware which doesn't have resource table
+> >> ,and start rproc.
+> >>
+> >
+> >If a firwmare image doesn't have a resouce table, rproc_elf_load_rsc_table()
+> >will return an error [1], rproc_fw_boot() will exit prematurely [2] and the
+> >remote processor won't be started.  What am I missing?
+> 
+> STM32 and i.MX use their own parse_fw implementation which allows no resource
+> table:
+> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/remoteproc/stm32_rproc.c#L272
+> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/remoteproc/imx_rproc.c#L598
 
-Since this is a hybrid thread between power management and VFS, could I
-just summarize what I think the various superblock locks are before
-discussing the actual problem (important because the previous threads
-always gave the impression of petering out for fear of vfs locking).
+Ok, that settles rproc_fw_boot() but there is also rproc_find_loaded_rsc_table()
+that will return NULL if a resource table is not found and preventing the
+memcpy() in rproc_start() from happening:
 
-s_count: outermost of the superblock locks refcounting the superblock
-structure itself, making no guarantee that any of the underlying
-filesystem superblock structures are attached (i.e. kill_sb() may have
-been called).  Taken by incrementing under the global sb_lock and
-decremented using a put_super() variant.
+https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_core.c#L1288
 
-s_active: an atomic reference counting the underlying filesystem
-specific superblock structures.  if you hold s_active, kill_sb cannot
-be called.  Acquired by atomic_inc_not_zero() with a possible failure
-if it is zero and released by deactivate_super() and its variants.
-
-s_umount: rwsem and innermost of the superblock locks. Used to protect
-various operations from races.  Taken exclusively with down_write and
-shared with down_read. Private functions internal to super.c wrap this
-with grab_super and super_lock_shared/excl() wrappers.
-
-The explicit freeze/thaw_super() functions require the s_umount rwsem
-in down_write or exclusive mode and take it as the first step in their
-operation.  Looking at the locking in fs_bdev_freeze/thaw() implies
-that the super_operations freeze_super/thaw_super *don't* need this
-taken (presumably they handle it internally).
-
-Regards,
-
-James
-
+> 
+> Thanks,
+> Peng
+> 
+> >
+> >[1]. https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_elf_loader.c#L338
+> >[2]. https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_core.c#L1411 
+> >
+> >> When starting rproc with a firmware not have resource table,
+> >> `memcpy(loaded_table, rproc->cached_table, rproc->table_sz)` will
+> >> trigger dump, because rproc->cache_table is set to NULL during the last
+> >> stop operation, but rproc->table_sz is still valid.
+> >> 
+> >> This issue is found on i.MX8MP and i.MX9.
+> >> 
+> >> Dump as below:
+> >> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> >> Mem abort info:
+> >>   ESR = 0x0000000096000004
+> >>   EC = 0x25: DABT (current EL), IL = 32 bits
+> >>   SET = 0, FnV = 0
+> >>   EA = 0, S1PTW = 0
+> >>   FSC = 0x04: level 0 translation fault
+> >> Data abort info:
+> >>   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> >>   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> >>   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> >> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010af63000
+> >> [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+> >> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> >> Modules linked in:
+> >> CPU: 2 UID: 0 PID: 1060 Comm: sh Not tainted 6.14.0-rc7-next-20250317-dirty #38
+> >> Hardware name: NXP i.MX8MPlus EVK board (DT)
+> >> pstate: a0000005 (NzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> >> pc : __pi_memcpy_generic+0x110/0x22c
+> >> lr : rproc_start+0x88/0x1e0
+> >> Call trace:
+> >>  __pi_memcpy_generic+0x110/0x22c (P)
+> >>  rproc_boot+0x198/0x57c
+> >>  state_store+0x40/0x104
+> >>  dev_attr_store+0x18/0x2c
+> >>  sysfs_kf_write+0x7c/0x94
+> >>  kernfs_fop_write_iter+0x120/0x1cc
+> >>  vfs_write+0x240/0x378
+> >>  ksys_write+0x70/0x108
+> >>  __arm64_sys_write+0x1c/0x28
+> >>  invoke_syscall+0x48/0x10c
+> >>  el0_svc_common.constprop.0+0xc0/0xe0
+> >>  do_el0_svc+0x1c/0x28
+> >>  el0_svc+0x30/0xcc
+> >>  el0t_64_sync_handler+0x10c/0x138
+> >>  el0t_64_sync+0x198/0x19c
+> >> 
+> >> Clear rproc->table_sz to address the issue.
+> >> 
+> >> While at here, also clear rproc->table_sz when rproc_fw_boot and
+> >> rproc_detach.
+> >> 
+> >> Fixes: 9dc9507f1880 ("remoteproc: Properly deal with the resource table when detaching")
+> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> >> ---
+> >> 
+> >> V2:
+> >>  Clear table_sz when rproc_fw_boot and rproc_detach per Arnaud
+> >> 
+> >>  drivers/remoteproc/remoteproc_core.c | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >> 
+> >> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> >> index c2cf0d277729..1efa53d4e0c3 100644
+> >> --- a/drivers/remoteproc/remoteproc_core.c
+> >> +++ b/drivers/remoteproc/remoteproc_core.c
+> >> @@ -1442,6 +1442,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> >>  	kfree(rproc->cached_table);
+> >>  	rproc->cached_table = NULL;
+> >>  	rproc->table_ptr = NULL;
+> >> +	rproc->table_sz = 0;
+> >>  unprepare_rproc:
+> >>  	/* release HW resources if needed */
+> >>  	rproc_unprepare_device(rproc);
+> >> @@ -2025,6 +2026,7 @@ int rproc_shutdown(struct rproc *rproc)
+> >>  	kfree(rproc->cached_table);
+> >>  	rproc->cached_table = NULL;
+> >>  	rproc->table_ptr = NULL;
+> >> +	rproc->table_sz = 0;
+> >>  out:
+> >>  	mutex_unlock(&rproc->lock);
+> >>  	return ret;
+> >> @@ -2091,6 +2093,7 @@ int rproc_detach(struct rproc *rproc)
+> >>  	kfree(rproc->cached_table);
+> >>  	rproc->cached_table = NULL;
+> >>  	rproc->table_ptr = NULL;
+> >> +	rproc->table_sz = 0;
+> >>  out:
+> >>  	mutex_unlock(&rproc->lock);
+> >>  	return ret;
+> >> -- 
+> >> 2.37.1
+> >> 
+> >
