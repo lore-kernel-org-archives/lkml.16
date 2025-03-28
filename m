@@ -1,379 +1,261 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AAB1E04B9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EEE1E1DF9;
+	Fri, 28 Mar 2025 17:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743184246; cv=none; b=bME4FlEZm/Q/L/F6V7lFDDXgG/pfYI2KgdImWzc9sBPlIxSkem1ur569ai/4tG1kbCWOMhN2ABcjoqXd8H+98g6osA7c3Dz8v49hnbUw69nmipbqyD/LsvwEMYREI3jzazaQ673h5iP3dSh4omTLxOHl9DHIJGl/L1kaQhjRGro=
+	t=1743184249; cv=none; b=ZqYGyNRUuoN9Z0Bvjg3VDdWlTNTqdN/BD+XGOlRfD9SDUV2KbqAYjKfPae+zgp9O2Vm6DXsHNgKgvEL+J47Abn/zuje6yN31alKn+AuAJHO/JhPAs6XctJh+MZ5zuDgSta9noD3OODvlyxaMEuXLP1dPhADuUEjkVWFZljb7tgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743184246; c=relaxed/simple;
-	bh=+xJ+qKPbgUXdDO+AUiNHm01I/HedJpQNqwkqFEOIwww=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=jwD3/VOI4Nsp6fhSkYicyymiTKYqTDX6lyOQSr42MMCOVhoj+FlErtKQx9ELr8XPSuIR6FIV5vrwXBXYzUM1TdpG/SaBUR+NiTrpBT63Zt4h8BEKFHLYyJfqPSsQ974x5IIrwAP9ur+ziUcDN86tosasFt1quSigphGOei+rjFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pp+B9CW2; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1743184249; c=relaxed/simple;
+	bh=op3+AAIYXvlFsPil8RChqFwsSZhSrZvw+UsKo54/4IU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB7T0t2Vlwhtl+bBEv4QZwcByHAHUQIV367+egeIBVwInGH/4XdtFGQWyyEyxoOCzSXqw8H93chs6NEByGMhtDT9eyxXNEtYfeKz9omxIjjobtZGEpGUSAI2oJ0s78ghBc2ohJUhS+RCZvDX3h0hJMaYjQyi/cxjNf8zq1t2wSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CF058XN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pp+B9CW2"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225429696a9so65378685ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743184242; x=1743789042; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OrejIaQiYbMAiCXOQcwPJT0mKEc7KANFMGJ2WDrEAWY=;
-        b=pp+B9CW2aCn0q2vPsNxlK0TFpM4VFKfGWvCCSilG/AaPjPWWjoNWx+IE/eAdHprERt
-         B+kvV9KbQqbAE/wPUb0PPPD1XXP6xwHLoDgr3o79QgeCbl+osmEf6//XJRw5asu1FzJe
-         NGARkMSJjrjIKP3SssC27hbxBNf3DCwomODocjIFpNj2ymGodljxqFkoLXy2fkOJr+Oj
-         RKKGZnQnY8wPsezyt8AhQNH+I9EqScC1ehgfefiNEJHUcZQHXxHHkHC4wLFe0jQnRRXc
-         9gAjpRySYMBAe//PHC2xAue4Exm9rXZpRnHmqo0hy1MtDnAlsC+WbqXBTSrGWY+n8f5V
-         kqtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743184242; x=1743789042;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OrejIaQiYbMAiCXOQcwPJT0mKEc7KANFMGJ2WDrEAWY=;
-        b=IIgBJ21RRS5DKQ9T0GFaNbPMpLnbx65x8ZP9RnWXJy5o2PO1jtLN49NYT02SGohs2K
-         PLd1IsYJJWcZK0M2+1MSf18n1ohebx+S/uw9Y7SxDcUmgYgCHvDLWLQHSb8xgLkk/GCz
-         JZHxCBO1Bxgo/hu8dm5nkR0I4M7+PbYkyTkRIn3pnGLMn2MxExQOzAKsyvoAA7FxlmNV
-         4U9m+VtFb3V/hCHJ92dFKIR1zSlx+DNS2mmLsh2kqZbAPbbf9w+oBYNLgaS61QmaOa0f
-         JomEifY0zfoJy782Zl3TAEuGVJvGpteMcd8lMbUUcFg5vpY8ZwpKubNOpFyqoginOWr2
-         gBYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSZ7r2wqr9JCj/ssd66a6F6YXELuhETehViuGOdSIo9tOf4FzSc2EAnQxKVQQzGKr8RfqD6srz2j1EfzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVHnPdFi5ZH/YqD9vSLUYJqD0R+LtqK5645N+fPaNT6DF0wdkA
-	rkP2yeum+zQrXe5zIeYA8KsXPoEwzoOScdFylbZKNecSMy/PX+14/PDQRInep6qz0zIB4PbmUio
-	HPuDejQ==
-X-Google-Smtp-Source: AGHT+IFQup1jcFqrjKxnEWn2651+5qNyoY5M9VDSZ0+TcGTxXmT9fRvuOr3d7DCeuswrtwU64XyYtIBkNVPW
-X-Received: from pllb6.prod.google.com ([2002:a17:902:e946:b0:226:3efa:da86])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a24:b0:226:252e:b6ef
- with SMTP id d9443c01a7336-2292f941644mr1231895ad.7.1743184242522; Fri, 28
- Mar 2025 10:50:42 -0700 (PDT)
-Date: Fri, 28 Mar 2025 10:49:40 -0700
-In-Reply-To: <20250328175006.43110-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CF058XN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D38F9C19421;
+	Fri, 28 Mar 2025 17:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743184248;
+	bh=op3+AAIYXvlFsPil8RChqFwsSZhSrZvw+UsKo54/4IU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CF058XN2awHuVvXzRJZsGMXh+Ps6Cc7duoNCMsHRRznbRzkedacuit4fJSVz4Wq4I
+	 SwsuXk9ZOrBMCe9Gc1LpAFuYDQLIiBUnz8JKEKCspzpit5u1UBAnYJiC3UnQCtpTyb
+	 ALQ03fvmk2MUl0MzS7PyTKD0YpyytrXSB1f0YAy6/pF8bXEBHtjO5RvYzs8gqorK0m
+	 my59Cqfx1f+WUVnEFDUDfqsFZW32bKUVQu9P1xjcaczd4D88ywGRcR2Zqo1xtDN9NP
+	 k0r6IOpJr73rIzxcA9Wud+PkbAAf1Ee6/dEUpLIowd9Jd5wZm5BINCcezounEQxhm5
+	 MW9PNU0rczmPQ==
+Date: Fri, 28 Mar 2025 19:50:43 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
+	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z-bhczXA6aHdCYHq@kernel.org>
+References: <20250328125859.73803-1-elena.reshetova@intel.com>
+ <20250328125859.73803-3-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250328175006.43110-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250328175006.43110-10-irogers@google.com>
-Subject: [PATCH v5 09/35] perf vendor events: Update clearwaterforest events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328125859.73803-3-elena.reshetova@intel.com>
 
-Update event topic of OCR.DEMAND_DATA_RD.ANY_RESPONSE and
-OCR.DEMAND_RFO.ANY_RESPONSE to be cache. Add PDIST counter into
-descriptions.
+On Fri, Mar 28, 2025 at 02:57:41PM +0200, Elena Reshetova wrote:
+> SGX architecture introduced a new instruction called EUPDATESVN
+> to Ice Lake. It allows updating security SVN version, given that EPC
+> is completely empty. The latter is required for security reasons
+> in order to reason that enclave security posture is as secure as the
+> security SVN version of the TCB that created it.
+> 
+> Additionally it is important to ensure that while ENCLS[EUPDATESVN]
+> runs, no concurrent page creation happens in EPC, because it might
+> result in #GP delivered to the creator. Legacy SW might not be prepared
+> to handle such unexpected #GPs and therefore this patch introduces
+> a locking mechanism to ensure no concurrent EPC allocations can happen.
+> 
+> It is also ensured that ENCLS[EUPDATESVN] is not called when running
+> in a VM since it does not have a meaning in this context (microcode
+> updates application is limited to the host OS) and will create
+> unnecessary load.
+> 
+> This patch is based on previous submision by Cathy Zhang
+> https://lore.kernel.org/all/20220520103904.1216-1-cathy.zhang@intel.com/
+> 
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> ---
+>  arch/x86/include/asm/sgx.h      | 41 +++++++++++++--------
+>  arch/x86/kernel/cpu/sgx/encls.h |  6 ++++
+>  arch/x86/kernel/cpu/sgx/main.c  | 63 ++++++++++++++++++++++++++++++++-
+>  arch/x86/kernel/cpu/sgx/sgx.h   |  1 +
+>  4 files changed, 95 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> index 6a0069761508..5caf5c31ebc6 100644
+> --- a/arch/x86/include/asm/sgx.h
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -26,23 +26,26 @@
+>  #define SGX_CPUID_EPC_SECTION	0x1
+>  /* The bitmask for the EPC section type. */
+>  #define SGX_CPUID_EPC_MASK	GENMASK(3, 0)
+> +/* EUPDATESVN presence indication */
+> +#define SGX_CPUID_EUPDATESVN	BIT(10)
+>  
+>  enum sgx_encls_function {
+> -	ECREATE	= 0x00,
+> -	EADD	= 0x01,
+> -	EINIT	= 0x02,
+> -	EREMOVE	= 0x03,
+> -	EDGBRD	= 0x04,
+> -	EDGBWR	= 0x05,
+> -	EEXTEND	= 0x06,
+> -	ELDU	= 0x08,
+> -	EBLOCK	= 0x09,
+> -	EPA	= 0x0A,
+> -	EWB	= 0x0B,
+> -	ETRACK	= 0x0C,
+> -	EAUG	= 0x0D,
+> -	EMODPR	= 0x0E,
+> -	EMODT	= 0x0F,
+> +	ECREATE		= 0x00,
+> +	EADD		= 0x01,
+> +	EINIT		= 0x02,
+> +	EREMOVE		= 0x03,
+> +	EDGBRD		= 0x04,
+> +	EDGBWR		= 0x05,
+> +	EEXTEND		= 0x06,
+> +	ELDU		= 0x08,
+> +	EBLOCK		= 0x09,
+> +	EPA		= 0x0A,
+> +	EWB		= 0x0B,
+> +	ETRACK		= 0x0C,
+> +	EAUG		= 0x0D,
+> +	EMODPR		= 0x0E,
+> +	EMODT		= 0x0F,
+> +	EUPDATESVN	= 0x18,
+>  };
+>  
+>  /**
+> @@ -73,6 +76,11 @@ enum sgx_encls_function {
+>   *				public key does not match IA32_SGXLEPUBKEYHASH.
+>   * %SGX_PAGE_NOT_MODIFIABLE:	The EPC page cannot be modified because it
+>   *				is in the PENDING or MODIFIED state.
+> + * %SGX_INSUFFICIENT_ENTROPY:	Insufficient entropy in RNG.
+> + * %SGX_EPC_NOT_READY:		EPC is not ready for SVN update.
+> + * %SGX_NO_UPDATE:		EUPDATESVN was successful, but CPUSVN was not
+> + *				updated because current SVN was not newer than
+> + *				CPUSVN.
+>   * %SGX_UNMASKED_EVENT:		An unmasked event, e.g. INTR, was received
+>   */
+>  enum sgx_return_code {
+> @@ -81,6 +89,9 @@ enum sgx_return_code {
+>  	SGX_CHILD_PRESENT		= 13,
+>  	SGX_INVALID_EINITTOKEN		= 16,
+>  	SGX_PAGE_NOT_MODIFIABLE		= 20,
+> +	SGX_INSUFFICIENT_ENTROPY	= 29,
+> +	SGX_EPC_NOT_READY		= 30,
+> +	SGX_NO_UPDATE			= 31,
+>  	SGX_UNMASKED_EVENT		= 128,
+>  };
+>  
+> diff --git a/arch/x86/kernel/cpu/sgx/encls.h b/arch/x86/kernel/cpu/sgx/encls.h
+> index 99004b02e2ed..3d83c76dc91f 100644
+> --- a/arch/x86/kernel/cpu/sgx/encls.h
+> +++ b/arch/x86/kernel/cpu/sgx/encls.h
+> @@ -233,4 +233,10 @@ static inline int __eaug(struct sgx_pageinfo *pginfo, void *addr)
+>  	return __encls_2(EAUG, pginfo, addr);
+>  }
+>  
+> +/* Update CPUSVN at runtime. */
+> +static inline int __eupdatesvn(void)
+> +{
+> +	return __encls_ret_1(EUPDATESVN, "");
+> +}
+> +
+>  #endif /* _X86_ENCLS_H */
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index b61d3bad0446..24563110811d 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -32,6 +32,11 @@ static DEFINE_XARRAY(sgx_epc_address_space);
+>  static LIST_HEAD(sgx_active_page_list);
+>  static DEFINE_SPINLOCK(sgx_reclaimer_lock);
+>  
+> +/* This lock is held to prevent new EPC pages from being created
+> + * during the execution of ENCLS[EUPDATESVN].
+> + */
+> +static DEFINE_SPINLOCK(sgx_epc_eupdatesvn_lock);
+> +
+>  static atomic_long_t sgx_nr_used_pages = ATOMIC_LONG_INIT(0);
+>  static unsigned long sgx_nr_total_pages;
+>  
+> @@ -457,7 +462,17 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
+>  	page->flags = 0;
+>  
+>  	spin_unlock(&node->lock);
+> -	atomic_long_inc(&sgx_nr_used_pages);
+> +
+> +	if (!atomic_long_inc_not_zero(&sgx_nr_used_pages)) {
+> +		spin_lock(&sgx_epc_eupdatesvn_lock);
+> +		/* Only call sgx_updatesvn() once the first enclave's
+> +		 * page is allocated from EPC
+> +		 */
+> +		if (atomic_long_read(&sgx_nr_used_pages) == 0)
+> +			sgx_updatesvn();
+> +		atomic_long_inc(&sgx_nr_used_pages);
+> +		spin_unlock(&sgx_epc_eupdatesvn_lock);
+> +	}
+>  
+>  	return page;
+>  }
+> @@ -970,3 +985,49 @@ static int __init sgx_init(void)
+>  }
+>  
+>  device_initcall(sgx_init);
+> +
+> +/**
+> + * sgx_updatesvn() - Issue ENCLS[EUPDATESVN]
+> + * If EPC is ready, this instruction will update CPUSVN to the currently
+> + * loaded microcode update SVN and generate new cryptographic assets.
+> + */
+> +void sgx_updatesvn(void)
+> +{
+> +	int retry = 10;
+> +	int ret;
+> +
+> +	lockdep_assert_held(&sgx_epc_eupdatesvn_lock);
+> +
+> +	if (!(cpuid_eax(SGX_CPUID) & SGX_CPUID_EUPDATESVN))
+> +		return;
+> +
+> +	/* Do not execute ENCLS[EUPDATESVN] if running in a VM since
+> +	 * microcode updates are only meaningful to be applied on the host.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> +		return;
+> +
+> +	do {
+> +		ret = __eupdatesvn();
+> +		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> +			break;
+> +
+> +	} while (--retry);
+> +
+> +	switch (ret) {
+> +	case 0:
+> +		pr_info("EUPDATESVN: success\n");
+> +		break;
+> +	case SGX_EPC_NOT_READY:
+> +	case SGX_INSUFFICIENT_ENTROPY:
+> +	case SGX_EPC_PAGE_CONFLICT:
+> +		pr_err("EUPDATESVN: error %d\n", ret);
+> +		break;
+> +	case SGX_NO_UPDATE:
+> +		break;
+> +	default:
+> +		pr_err("EUPDATESVN: unknown error %d\n", ret);
+> +		break;
+> +	}
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/clearwaterforest/cache.json      | 35 +++++++++++++++++++
- .../arch/x86/clearwaterforest/memory.json     |  2 ++
- .../arch/x86/clearwaterforest/other.json      | 22 ------------
- .../arch/x86/clearwaterforest/pipeline.json   |  6 ++--
- 4 files changed, 41 insertions(+), 24 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.j=
-son
+Overall, I think you're right in that "inversion" does make sense,
+now that other stuff is better aligned.
 
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json b/t=
-ools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-index 875361b30f1d..ecb7dc252208 100644
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-@@ -22,6 +22,7 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
-+        "PublicDescription": "Counts the number of load ops retired. Avail=
-able PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x81"
-     },
-@@ -30,6 +31,7 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
-+        "PublicDescription": "Counts the number of store ops retired. Avai=
-lable PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x82"
-     },
-@@ -40,6 +42,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x400",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -50,6 +53,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x80",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -60,6 +64,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x10",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -70,6 +75,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x800",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -80,6 +86,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x100",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -90,6 +97,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x20",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -100,6 +108,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x4",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -110,6 +119,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x200",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -120,6 +130,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x40",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -130,6 +141,7 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x8",
-+        "PublicDescription": "Counts the number of tagged load uops retire=
-d that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD=
- - Only counts with PEBS enabled. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -138,7 +150,30 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
-+        "PublicDescription": "Counts the number of  stores uops retired sa=
-me as MEM_UOPS_RETIRED.ALL_STORES Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "PublicDescription": "Counts demand data reads that have any type =
-of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
-y type of response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json b/=
-tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
-index f5007e56f39b..58e543550279 100644
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
-@@ -6,6 +6,7 @@
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-         "MSRIndex": "0x1a6,0x1a7",
-         "MSRValue": "0x33FBFC00001",
-+        "PublicDescription": "Counts demand data reads that were not suppl=
-ied by the L3 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-@@ -16,6 +17,7 @@
-         "EventName": "OCR.DEMAND_RFO.L3_MISS",
-         "MSRIndex": "0x1a6,0x1a7",
-         "MSRValue": "0x33FBFC00002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were n=
-ot supplied by the L3 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json b/t=
-ools/perf/pmu-events/arch/x86/clearwaterforest/other.json
-deleted file mode 100644
-index 80454e497f83..000000000000
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
-+++ /dev/null
-@@ -1,22 +0,0 @@
--[
--    {
--        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
-y type of response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    }
--]
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json =
-b/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
-index 6a5faa704b85..26bd12fefa3d 100644
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
-@@ -4,7 +4,7 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
--        "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for.",
-+        "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for. Available PDIST counters: 0,1",
-         "SampleAfterValue": "1000003"
-     },
-     {
-@@ -12,7 +12,7 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
--        "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path.",
-+        "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path. Available PDIST count=
-ers: 0,1",
-         "SampleAfterValue": "1000003"
-     },
-     {
-@@ -63,6 +63,7 @@
-         "BriefDescription": "Fixed Counter: Counts the number of instructi=
-ons retired.",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
-+        "PublicDescription": "Fixed Counter: Counts the number of instruct=
-ions retired. Available PDIST counters: 32",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-@@ -71,6 +72,7 @@
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0xc0",
-         "EventName": "INST_RETIRED.ANY_P",
-+        "PublicDescription": "Counts the number of instructions retired. A=
-vailable PDIST counters: 0,1",
-         "SampleAfterValue": "1000003"
-     },
-     {
---=20
-2.49.0.472.ge94155a9ec-goog
+At least when there is spurious error, I think ioctl's should stop
+responding and driver should not do anything useful anymore. I.e.,
+it should go out-of-service.
 
+I don't think the driver should tear-down, just stop servicing
+VM's and responding ioctl's.
+
+Possibly thish should be also right action for other errors than
+"insufficient entropy" but I'm open for comments for this.
+
+BR, Jarkko
