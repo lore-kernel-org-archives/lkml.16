@@ -1,69 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F642AEED;
-	Fri, 28 Mar 2025 16:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1703B17CA1B;
+	Fri, 28 Mar 2025 16:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743179904; cv=none; b=S/qLiclm5jIVVpZ+uCJHIg00BAyHh32tepytc7s8dSrHoPGsI9KWdcwagNoAF+BSeQ1yP1j7byf/9nIWzm/P14GgvyIt/lBLP+JFyI8lSzQ+0PInQlqR7l2deskYeKgNKxfaiFz1hjKrVe1NnDlwEBzQ1IzU83N+x7q4mkiYUes=
+	t=1743179981; cv=none; b=dEdy5bLFeYLu3a+vF+X1EPQB44rR+jeomEO1qh/fl4Q+5xZ/zsx58r2UXipgz7gWLlbRjFPPNbRbPEx1MIsYjnZeGivQZjyBAl4NfDFnISyeXF6q9GWxBPFBaPDIAmTZIo4CUzYlHIRa1m8Hz2LdSJTmG17kKVMPjur4ePi80hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743179904; c=relaxed/simple;
-	bh=+wK2eUITZVc9tdHtbzul7Y3+LJaTyu/T6awkWEcmYpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=timVagcJf1xT84W34+kdCFEolGF/jNh7gu1H+3deK3AaoGA8T0MxT5u3GwiP9xvoW/z7/4NrsEwV/4XMLqiBT4TAZTrq2Jef0B2YNznOj0ZdEpLKc8u4u97z7oqLEOsQyk+LmkvrA1htEZ4dywmzCgFMTJEa3F15OzRh0sF4sRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogWnfSoM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743179981; c=relaxed/simple;
+	bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W7m4xrMefXO8Pe/HWhmmo1N3D4+oZB6gcq6r0K7uBiJ+H/i42yLY5eC4ZNo56IX1h2cgjg71NU94HMw/D2VOxDKTcbCobV9PqbfCQnTzDAIF5casI2/oBY22tkYcfazr2KzdJfM4NUZK7VDGYj6eP8rbEmR4QtLFbZZLm+GA1/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drIDHl70; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogWnfSoM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A044AC4CEE4;
-	Fri, 28 Mar 2025 16:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743179902;
-	bh=+wK2eUITZVc9tdHtbzul7Y3+LJaTyu/T6awkWEcmYpg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ogWnfSoMKq2jVCNQfPQ21eiyjSEvEgAboLN0LumziA1CRLCCfEVJX+Fbm5R1uxWJ7
-	 x48rgsUu+2DcXdqoRFxZKC4l+otVixx0o+EO16fhLnPE9SyTvHznlrwWZ+IXB/dwot
-	 J3+7ZasZ2zquo60E7sH3prgZIce1GaHkWgHQr/QovL4cI0zAAsu1pgRiJoLR0xxo0C
-	 y38IvrFFxjPmuWitw52rdpRq2BonxjWQg+DAnOvz6iB889+LoV9QIytmEjovxDoiqw
-	 o8gCR6r09tbwns+Vwq9SeouvVNpiyqwQZazfWPwi/JM0NioDhHilMpN7jI19Mc/vvy
-	 925MTySUCeR1Q==
-Date: Fri, 28 Mar 2025 09:38:21 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	David Binderman <dcb314@hotmail.com>
-Subject: [GIT PULL] CRC fixes for 6.15
-Message-ID: <20250328163821.GA148488@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drIDHl70"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743179979; x=1774715979;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
+  b=drIDHl70aQje8jGj8VJ0+3HH1yLa/4FjcBIssRC9Z1/912vw64TXBWvu
+   6777fCVaGO6C/yyw6M+TTBzTM55H4t+9zYVLsU7vDpD9XaUUFE00ZO29u
+   VA3iSRdMXXRTiHyCfJQuIGIzJ/yKeRp6UrEV5g3stZSaySx7YzldnYMPj
+   4SBGzLAInNe2vfHckeg0ZT2O9+Socckx0jD8nN7uZrCY8smeLbNOB02Km
+   PZYhLyna0YIOBkLAj8XOBdadeervCmsV+UllnF1GIvfm6aqHmFHbkQgVm
+   km27i/XNc6NnmMBNqgrnKp/isgCQRgH/qvkh2GuHybrk4Jfklq7utLuKT
+   g==;
+X-CSE-ConnectionGUID: wxdjFixsTRWuA3X9rmtaCg==
+X-CSE-MsgGUID: mO1VY/BqRUKiwhbrbFfcHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="32153172"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="32153172"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:38 -0700
+X-CSE-ConnectionGUID: sbJ66p1vQY6AxqAT4flbNA==
+X-CSE-MsgGUID: 0ksRt6/wQDu9gNyM9SijuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="162724321"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 18:39:29 +0200 (EET)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v6 4/6] PCI/IOV: Check that VF BAR fits within the
+ reservation
+In-Reply-To: <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
+Message-ID: <77a5558f-fe6f-cba1-4515-c8597ae3c9bb@linux.intel.com>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-5-michal.winiarski@intel.com> <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/mixed; boundary="8323328-1549821212-1743179969=:932"
 
-The following changes since commit 1e26c5e28ca5821a824e90dd359556f5e9e7b89f:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-  Merge tag 'media/v6.15-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media (2025-03-25 21:00:31 -0700)
+--8323328-1549821212-1743179969=:932
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-are available in the Git repository at:
+On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/crc-for-linus
+> On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
+>=20
+> > When the resource representing VF MMIO BAR reservation is created, its
+> > size is always large enough to accommodate the BAR of all SR-IOV Virtua=
+l
+> > Functions that can potentially be created (total VFs). If for whatever
+> > reason it's not possible to accommodate all VFs - the resource is not
+> > assigned and no VFs can be created.
+> >=20
+> > The following patch will allow VF BAR size to be modified by drivers at
+>=20
+> "The following patch" sounds to be like you're referring to patch that=20
+> follows this description, ie., the patch below. "An upcoming change" is=
+=20
+> alternative that doesn't suffer from the same problem.
+>=20
+> > a later point in time, which means that the check for resource
+> > assignment is no longer sufficient.
+> >=20
+> > Add an additional check that verifies that VF BAR for all enabled VFs
+> > fits within the underlying reservation resource.
+>=20
+> So this does not solve the case where the initial size was too large to=
+=20
+> fix and such VF BARs remain unassigned, right?
+>=20
+> > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> > ---
+> >  drivers/pci/iov.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index cbf335725d4fb..861273ad9a580 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -646,8 +646,13 @@ static int sriov_enable(struct pci_dev *dev, int n=
+r_virtfn)
+> > =20
+> >  =09nres =3D 0;
+> >  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
+> > +=09=09resource_size_t vf_bar_sz =3D
+> > +=09=09=09pci_iov_resource_size(dev,
+> > +=09=09=09=09=09      pci_resource_num_from_vf_bar(i));
+>=20
+> Please add int idx =3D pci_resource_num_from_vf_bar(i);
+>=20
+> >  =09=09bars |=3D (1 << pci_resource_num_from_vf_bar(i));
+> >  =09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
+> > +=09=09if (vf_bar_sz * nr_virtfn > resource_size(res))
+> > +=09=09=09continue;
+>=20
+> Not directly related to this patch, I suspect this could actually try to=
+=20
+> assign an unassigned resource by doing something like this (perhaps in ow=
+n=20
+> patch, it doesn't even need to be part of this series but can be sent=20
+> later if you find the suggestion useful):
+>=20
+> =09=09/* Retry assignment if the initial size didn't fit */
+> =09=09if (!res->parent && pci_assign_resource(res, idx))
+> =09=09=09continue;
+>=20
+> Although I suspect reset_resource() might have been called for the=20
+> resource and IIRC it breaks the resource somehow but it could have been=
+=20
+> that IOV resources can be resummoned from that state though thanks to=20
+> their size not being stored into the resource itself but comes from iov=
+=20
+> structures.
 
-for you to fetch changes up to d48b663f410f8b35b8ba9bd597bafaa00f53293b:
+I realized reset_resource() will zero the flags so it won't work without=20
+getting rid of reset_resource() calls first which I've not yet completed.=
+=20
 
-  arm64/crc-t10dif: fix use of out-of-scope array in crc_t10dif_arch() (2025-03-26 14:04:43 -0700)
+And once I get the rebar sizes included into bridge window sizing=20
+algorithm, the default size could possibly be shrunk by the resource
+fitting/assignment code so the resource assignment should no longer fail=20
+just because the initial size was too large. So it shouldn't be necessary=
+=20
+after that.
 
-----------------------------------------------------------------
+> >  =09=09if (res->parent)
+> >  =09=09=09nres++;
+> >  =09}
+> >=20
+>=20
+>=20
 
-Fix out-of-scope array bugs in arm and arm64's crc_t10dif_arch().
+--=20
+ i.
 
-----------------------------------------------------------------
-Eric Biggers (2):
-      arm/crc-t10dif: fix use of out-of-scope array in crc_t10dif_arch()
-      arm64/crc-t10dif: fix use of out-of-scope array in crc_t10dif_arch()
-
- arch/arm/lib/crc-t10dif-glue.c   | 4 +---
- arch/arm64/lib/crc-t10dif-glue.c | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+--8323328-1549821212-1743179969=:932--
