@@ -1,139 +1,351 @@
-Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3AEE545
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787F01E32D5
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743190963; cv=none; b=I5SxTAkNYMcCAEp0gp7AchTMCz1sQjEfHUndLyyQhI8QvxoGlg+4zJvlfew9IedvmaivHRBVbY6c5VXy0XxvzLz3BOBngio1SBleiTKpbIwhFFqkg/YT+o28pd+qJURmpsu9Wh3uvSuvqXNvnLo1jXH2c5X3wWk0lVDNwI7nsLE=
+	t=1743190979; cv=none; b=tQwdrWmhEqwPMbm+yvGf6PQuQ97AGr2jUcGe6kiCpCE+OY50xJkGqVuFJ4lHwnoTjBE7XbLMxsUdBzL6H9dFn/JhIHIEJo1CO1xUBLAv+X0Iy2c7V5g9+FDiIJ+RRz93kiP3NvF6uHyA2WckGYej9qqDwuR6U2KV3ssB0NyoEBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743190963; c=relaxed/simple;
-	bh=IIFz4j2C2Eh7fAQD0vF3myZwWOH3MPOPveM/pvRkH1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YOyMsqfvrQGZJS5rGUC00roqZ09k0rOiV6soIzmuMt2q1YG5mLKr06udzldNgoSvxv3rzwV9/vza3CUpGrUwwlNmCPNgPX9Y5QdaaF+i121OP/YonxuMtGEPHhI0ZtrpUyzKHxw2w6QaeKTQ+qKET9wt/Q+34X9aK7ut6CBRlCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dcPP/t60; arc=none smtp.client-ip=209.85.219.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1743190979; c=relaxed/simple;
+	bh=7Nstma/QyJOTLkQP6CMCqb15xpuG2APAgK/ZzZOCFz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eKepSs9Id7pkD5JmjYxVNR+Y9EvufnZrMaYY0pDfUJ+Y7FSJwauYww9tCdw17vlUMaK/+rZVkG8jikKF4f2Q2hUvq5r54OuJRdknGqsaN32xsWSRddXaJEZmsUXSiZl0oQrv3H7wMVTB9AViAQJp2PYIOt3ArsICL7Qpa44V8tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TGQyvVIY; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dcPP/t60"
-Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-6e8ff1b051dso3830486d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:42:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TGQyvVIY"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3913b539aabso1511856f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:42:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1743190961; x=1743795761; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lLazX2sR1QiGKeTx3lHr1mcmdxpFqxEOFWM2x5oC3Fg=;
-        b=dcPP/t60EJ04nWA4KNJSsA28QsWcIhbE+btJeaFWjL8RBB9EWMcwDo7Jrw3pJ0a6Uy
-         OUhC42H5kJO3/3DtTC+OXjC963gJ5P3BfRtSvJ9BVfZdq4EIToMyLzU1MClaCAhc10qp
-         xpNSJ3Cq59ANj2a+VWs4SM18EBFgaM35wCrAB1PG1XZxXOpEPWt3iJ2aXGneAIiwhqrJ
-         z3FJA8V4LTgpMvSjhokkSeZYcTaM6eamUnAwMZRf/nkOnNjcfUb2KmXip3e12QRLtfSG
-         YMJ7LFo+ZE6aTGjH+xqiRcMq47/kYEOogqoLH+sTsIuP/xHQgktgLq+s3usLAuVQwJdS
-         PlaA==
+        d=linaro.org; s=google; t=1743190975; x=1743795775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oGPZIH+SORfb56w3DneXQkNE6QvEHzvRmk0/Th5mBUE=;
+        b=TGQyvVIYryLNWFGZQBNpw0nu7amyvQfPqpCmbPfdl8WeI6AbOLhRK2+3v9xeoiqPC9
+         iHeZn7MyJ1aSLG936pbLfUl5+JP2xbIY0ivLwcwsiUknnk70sUqc3+AusCtnUqOVPrhj
+         OBX8KdvZtx4O7DDSNQo3w/2r9BvF5/QNY9XwbNF5VYiSDUBnoxGdiOTAnlE+oQX5aFak
+         b55f1AIgUPEt89eRN48JyXw21NfjrKdZTjsBX2LN04k+dHzUNIclCwUF/3MBKto2zPRT
+         c45pxbG+NWBLw1kqLd0bZ7A3WZ8zk9N7DfxUBg/xh6GyJc34v2hFb5tr+MYnlq8DMjx1
+         Tl2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743190961; x=1743795761;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lLazX2sR1QiGKeTx3lHr1mcmdxpFqxEOFWM2x5oC3Fg=;
-        b=b0C2/cHqCSwNrHFzTUHXRcIlBDetJOh8FgrTj5zQgF8T94k7hgCnZIldZCQFUQe2T9
-         Tv0M9whDq2hw1tx5fdX3c3ZVOBFI6rGXJbTp/4CunwMB1L4YdPk4QT47c+C1Ux2aUcat
-         WzLqZsn/aXD7QRoh8nVMZhOnj/Kp3f81yBTT2Lqr5piWVVh4KwV+BFRpF5SN0akMGdAk
-         sz5rYMZN39nva02NfwKBCYgIY0g3OeLPlTYOl9n9BPKN9BelO8/7QOrUxuTTiLYXSfKM
-         smIsQ0s2u5Mg/LOLA9zqSusT8NBDTmhXlGWA4miOHgJD1w/NaJSv2m862InBP3xaFrRl
-         RAgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPoXAOGgv5sUgRHSkF8OsQLhuRxu/t/GVBEmXSNVq6MLsO1BudotrfmHzl7rM+toYthKo7i2w7o9LQ/do=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhVjBINmy2ky3mrhzJ2Fp2L7ycIR1DWAuRFl9rW534UrSAoF9z
-	v7RAbe8fIMSw3UwskVnM82+eMEDpGEurBdk47/hVLglJpKabNVYQ/0jX9TTGJgGVYPB/L92AZiO
-	9spT5z5DnacMlWZhfixmOI5ogvHTf/MUG
-X-Gm-Gg: ASbGnctfE/NyJOXLV4gHVnhUcJk5mdrk/4WH33mDbU31+9VOe8859i2veloga67zm8m
-	GIr+neliG8bcr6RJC0rN3KxuKcYSr6JStWsUdulIon2oTIn9Wvt0GGb4g3tcIzfMusrWCcce9L8
-	ImfBOr9AtmgarTMa7Yy7zoGNR+lUEkYneZta6y90OKsFRDw+/N/qNlcDvsZIS2/2fHkM//jCU3A
-	oPFv01tJHE45Nvi9Ufl93NoQ7nzN+KDw08evK33H7RghHYm/B/9zSQWDrsbaOnMoU3Pc5W/hHz+
-	CVPLTgei2UzsWr1FbJZejvVxJxnBzE9pg7j3LH1zK1DUGEGz
-X-Google-Smtp-Source: AGHT+IGTVuJ9wsa8D0YOPf/IR0bLXPoK/A+oaStmp2cHkFUKuudrLMCf9S4wmCfByWcdBV5jz2al3JueEfox
-X-Received: by 2002:a05:622a:110f:b0:474:e996:197a with SMTP id d75a77b69052e-477ed7b2291mr3086091cf.10.1743190960620;
-        Fri, 28 Mar 2025 12:42:40 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id d75a77b69052e-47782a2849asm2198541cf.6.2025.03.28.12.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 12:42:40 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 8A3F73402DD;
-	Fri, 28 Mar 2025 13:42:39 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 8669BE40DF3; Fri, 28 Mar 2025 13:42:39 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 1/2] ublk: specify io_cmd_buf pointer type
-Date: Fri, 28 Mar 2025 13:42:29 -0600
-Message-ID: <20250328194230.2726862-2-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250328194230.2726862-1-csander@purestorage.com>
-References: <20250328194230.2726862-1-csander@purestorage.com>
+        d=1e100.net; s=20230601; t=1743190975; x=1743795775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oGPZIH+SORfb56w3DneXQkNE6QvEHzvRmk0/Th5mBUE=;
+        b=eOne1lEIlkLH+ZO40ZU4g4Y04ISHhBvkZZ8sXfKsFM9VaV+RqQBbY12TUUq9pzFm2X
+         mWWnYKbiKexrzyXJKdnrQPQ+s1ek1eGPxz1m5h8EDkGbB2frqo+nH+9+mY3vtie3zLZA
+         OOoXcEk9IxLHDoqSw6MbkasUbKrs/3g5+in1cHuxcHo3l/qD6BgLy8MTkCRDPWQCRm8S
+         wEZk1LuHDD0llQNQL7EtSDIwRfCDs9XLgPSfPIVuPLvl9EGgsMxe01kzmt+0FJoGqXCF
+         L7ZAjdknWjkV2RbnPBLysfjSNrKlXJNbV99BOwxE2EglM2XJGwEI581zCy/lFKbZebAN
+         uRow==
+X-Forwarded-Encrypted: i=1; AJvYcCXjJ3tldX9nXbXhxKSBmrHxjiGFq2mmdDGvvAEmVDFuluvtrd1R1mmAdLw/RP0XDTTU7OT1Lb0j9C+LdWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsc2uuzodcczAbLxAyrHj6/DbuNvZPdspMUIMojeeuAtj6BQ12
+	9lACartZg7qs/K69Et8xaYnw/VLrGiRfwmV0zaE9VH6WITMPEqPtwxIdSONEpQI=
+X-Gm-Gg: ASbGncvDF5AthNGS1T0oYC6KEBziZv0vX/wbqyZEqS4i7MQ/pkZ0Zt4cUK4J3/IUEmA
+	rLVkIGw3I88/w0tRPe1IGVxa2EnwWBFCtPbam54K3Ixgr7Ns2tYHWTFkMpiEcaInUYXUQCuZHTX
+	YUXB3ejcG8lQhQNVcRB1+0BlgNuod5kfkNAqpFZ0xBqBDG5sqcI+t9APOtTzU/RtW6y5GiKu43+
+	rXZo5I9nDnLXnFgvNEijsZPLBVmIozxwI5xMEC3LXs7hcm16WVdIGPEyc5LM+PwqBQ0oFbd/NCF
+	ZLaxPh2AMLq86lQSomFB3b0/n/7CkR8wXpol72GoMJ2QTATm3Q/FRFtzsZC8hhXEL9aWudM0MOG
+	Oau6RuZMP
+X-Google-Smtp-Source: AGHT+IGwYxowMvQi3jrYDALsf5EWTbXVqrgowY/8/qcxb5RTVXlsrii2XQKX3Yk2A2/4M4G1bKtxwQ==
+X-Received: by 2002:a5d:5f85:0:b0:391:39fc:6664 with SMTP id ffacd0b85a97d-39c120c7cb6mr335396f8f.6.1743190974607;
+        Fri, 28 Mar 2025 12:42:54 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c0b663623sm3551473f8f.35.2025.03.28.12.42.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 12:42:53 -0700 (PDT)
+Message-ID: <03f65f72-4727-44c7-90cb-6d251f360c85@linaro.org>
+Date: Fri, 28 Mar 2025 20:42:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] watchdog: Add the Software Watchdog Timer for the NXP
+ S32 platform
+To: Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+ S32@nxp.com, Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Thomas Fossati <thomas.fossati@linaro.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+ <20250328151516.2219971-2-daniel.lezcano@linaro.org>
+ <a7c9715f-b912-49dd-a664-7b5e6017d0fa@roeck-us.net>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <a7c9715f-b912-49dd-a664-7b5e6017d0fa@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-io_cmd_buf points to an array of ublksrv_io_desc structs but its type is
-char *. Indexing the array requires an explicit multiplication and cast.
-The compiler also can't check the pointer types.
 
-Change io_cmd_buf's type to struct ublksrv_io_desc * so it can be
-indexed directly and the compiler can type-check the code.
+Hi Guenter,
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- drivers/block/ublk_drv.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+thanks for your review
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 355a59c78539..ed73e2ffdf09 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -153,11 +153,11 @@ struct ublk_queue {
- 	int q_id;
- 	int q_depth;
- 
- 	unsigned long flags;
- 	struct task_struct	*ubq_daemon;
--	char *io_cmd_buf;
-+	struct ublksrv_io_desc *io_cmd_buf;
- 
- 	bool force_abort;
- 	bool timeout;
- 	bool canceling;
- 	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
-@@ -701,15 +701,15 @@ static inline bool ublk_rq_has_data(const struct request *rq)
- }
- 
- static inline struct ublksrv_io_desc *ublk_get_iod(struct ublk_queue *ubq,
- 		int tag)
- {
--	return (struct ublksrv_io_desc *)
--		&(ubq->io_cmd_buf[tag * sizeof(struct ublksrv_io_desc)]);
-+	return &ubq->io_cmd_buf[tag];
- }
- 
--static inline char *ublk_queue_cmd_buf(struct ublk_device *ub, int q_id)
-+static inline struct ublksrv_io_desc *
-+ublk_queue_cmd_buf(struct ublk_device *ub, int q_id)
- {
- 	return ublk_get_queue(ub, q_id)->io_cmd_buf;
- }
- 
- static inline int __ublk_queue_cmd_buf_size(int depth)
+On 28/03/2025 19:10, Guenter Roeck wrote:
+> On 3/28/25 08:15, Daniel Lezcano wrote:
+>> The S32 platform has several Software Watchdog Timer available and
+> 
+> Why "Software" ? This is a hardware watchdog, or am I missing something ?
+
+I have no idea why it is called 'Software' because it is indeed a 
+hardware watchdog. It is how NXP called it in their technical reference 
+manual.
+
+>> tied with a CPU. The SWT0 is the only one which directly asserts the
+>> reset line, other SWT require an external setup to configure the reset
+>> behavior which is not part of this change.
+>>
+>> The maximum watchdog value depends on the clock feeding the SWT
+>> counter which is 32bits wide. On the s32g274-rb2, the clock has a rate
+>> of 51MHz which lead to 83 seconds maximum timeout.
+>>
+>> The timeout can be specified via the device tree with the usual
+>> existing bindings 'timeout-sec' or via the module param timeout.
+>>
+>> The watchdog can be loaded with the 'nowayout' option, preventing the
+>> watchdog to be stopped.
+>>
+>> The watchdog can be started at boot time with the 'early-enable'
+>> option, thus letting the watchdog framework to service the watchdog
+>> counter.
+>>
+>> the watchdog support the magic character to stop when the userspace
+>> releases the device.
+>>
+>> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+
+[ ... ]
+
+>> --- /dev/null
+>> +++ b/drivers/watchdog/s32g_wdt.c
+>> @@ -0,0 +1,362 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * Watchdog driver for S32G SoC
+>> + *
+>> + * Copyright (C) 2014 Freescale Semiconductor, Inc.
+>> + * Copyright 2017-2019, 2021-2025 NXP.
+> 
+> Does this originate from out-of-tree code ?
+> If so, a reference would be helpful.
+
+Well, I kept the copyright but this implementation is mostly from scratch.
+
+>> +#include <linux/debugfs.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/moduleparam.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/watchdog.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+> 
+> Alphabetic include file order, please.
+> 
+>> +
+>> +#define DRIVER_NAME "s32g-wdt"
+>> +
+>> +#define S32G_SWT_CR(__base)    (__base + 0x00)        /* Control 
+>> Register offset    */
+> 
+> checkpatch:
+>      CHECK: Macro argument '__base' may be better as '(__base)' to avoid 
+> precedence issues
+
+I'm not sure to get this one.
+
+>> +#define S32G_SWT_CR_SM        BIT(9) | BIT(10)    /* -> Service 
+>> Mode        */
+> 
+> checkpatch:
+>      ERROR: Macros with complex values should be enclosed in parentheses
+> 
+> I am not going to comment on the other issues reported by checkpatch,
+> but I expect them to be fixed in the next version. I would strongly suggest
+> to run "checkpatch o--strict" on the patch and fix what it reports.
+
+Sure, I will do that, thanks
+
+[ ... ]
+
+>> +static void s32g_wdt_debugfs_init(struct device *dev, struct 
+>> s32g_wdt_device *wdev)
+>> +{
+>> +    struct debugfs_regset32 *regset;
+>> +    static struct dentry *dentry = NULL;
+>> +
+>> +    if (!dentry)
+>> +        dentry = debugfs_create_dir("watchdog", NULL);
+> 
+> That is a terribly generic debugfs directory name. That is unacceptable.
+> Pick a name that is driver specific.
+
+Why is it terrible ? We end up with:
+
+watchdog/40100000.watchdog
+
+There are 7 watchdogs on the platform, the directory is there to group 
+them all. It seems to me it is self-explanatory, no ?
+
+>> +
+>> +    dentry = debugfs_create_dir(dev_name(dev), dentry);
+>> +
+> 
+> Where is this removed if the driver is unloaded ?
+
+Oh right, I missed it. Thanks for pointing this out.
+
+> Also, if the driver is built into the kernel, it seems to me that a second
+> instance will create a nested directory. That seems odd.
+
+No, because there is the test above if (!dentry) which is a static variable.
+
+[ ... ]
+
+>> +static int s32g_wdt_set_timeout(struct watchdog_device *wdog, 
+>> unsigned int timeout)
+>> +{
+>> +    struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+>> +
+>> +    __raw_writel(wdog_sec_to_count(wdev, timeout), S32G_SWT_TO(wdev- 
+>> >base));
+>> +
+>> +    /*
+>> +     * Conforming to the documentation, the timeout counter is
+>> +     * loaded when servicing is operated or when the counter is
+>> +     * enabled. In case the watchdog is already started it must be
+>> +     * stopped and started again to update the timeout
+>> +     * register. Here we choose to service the watchdog for
+>> +     * simpler code.
+>> +     */
+>> +    return s32g_wdt_ping(wdog);
+> 
+> Either check if the watchdog is running, or add a note explaining that a 
+> ping
+> on a stopped watchdog does not have adverse effect.
+
+Ok, I think the comment is unclear. I'll provide a clarified version 
+based on the documentation.
+
+>> +}
+>> +
+>> +static unsigned int s32g_wdt_get_timeleft(struct watchdog_device *wdog)
+>> +{
+>> +    struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+>> +    unsigned long val, counter;
+>> +
+>> +    /*
+>> +     * The counter output can be read only if the SWT is
+>> +     * disabled. Given the latency between the internal counter
+>> +     * and the counter output update, there can be very small
+>> +     * difference. However, we can accept this matter of fact
+>> +     * given the resolution is a second based unit for the output.
+>> +     */
+>> +    val = __raw_readl(S32G_SWT_CR(wdev->base));
+>> +
+>> +    if (test_bit(S32G_SWT_CR_WEN, &val))
+>> +        s32g_wdt_stop(wdog);
+> 
+> The watchdog core provides wdt_is_running() which would avoid the
+> extra i/o access.
+
+Ok, thanks for the suggestion
+
+>> +
+>> +    counter = __raw_readl(S32G_SWT_CO(wdev->base));
+>> +
+>> +    if (test_bit(S32G_SWT_CR_WEN, &val))
+>> +        s32g_wdt_start(wdog);
+>> +
+>> +    return counter / wdev->rate;
+>> +}
+>> +
+>> +static const struct watchdog_ops s32g_wdt_ops = {
+>> +    .owner        = THIS_MODULE,
+>> +    .start        = s32g_wdt_start,
+>> +    .stop        = s32g_wdt_stop,
+>> +    .ping        = s32g_wdt_ping,
+>> +    .set_timeout    = s32g_wdt_set_timeout,
+>> +    .get_timeleft    = s32g_wdt_get_timeleft,
+>> +};
+>> +
+>> +static void s32g_wdt_init(struct s32g_wdt_device *wdev)
+>> +{
+>> +    unsigned long val;
+>> +
+>> +    /* Set the watchdog's Time-Out value */
+>> +    val = wdog_sec_to_count(wdev, wdev->wdog.timeout);
+>> +
+>> +    __raw_writel(val, S32G_SWT_TO(wdev->base));
+>> +
+>> +    /*
+>> +     * Get the control register content. We are at init time, the
+>> +     * watchdog should not be started.
+>> +     */
+>> +    val = __raw_readl(S32G_SWT_CR(wdev->base));
+>> +
+>> +    /*
+>> +     * We want to allow the watchdog timer to be stopped when
+>> +     * device enters debug mode.
+>> +     */
+>> +    val |= S32G_SWT_CR_FRZ;
+>> +
+>> +    /*
+>> +     * However, when the CPU is in WFI or suspend mode, the
+>> +     * watchdog must continue. The documentation refers it as the
+>> +     * stopped mode.
+>> +     */
+>> +    val &= ~S32G_SWT_CR_STP;
+>> +
+>> +    /*
+>> +     * Use Fixed Service Sequence to ping the watchdog which is
+>> +     * 0x00 configuration value for the service mode. It should be
+>> +     * already set because it is the default value but we reset it
+>> +     * in case.
+>> +     */
+>> +    val &= ~S32G_SWT_CR_SM;
+>> +
+>> +    __raw_writel(val, S32G_SWT_CR(wdev->base));
+>> +
+>> +    /*
+>> +     * The watchdog must be started when the module is loaded,
+>> +     * leading to getting ride of the userspace control. The
+> 
+> ride ? And why does it _have_ to be started when the module is loaded ?
+
+The comment is misleading. I meant when the 'early_enable' option is 
+set, then the watchdog must be started.
+
+>> +     * watchdog framework will handle the pings. It is especially
+>> +     * handy for kernel development.
+>> +     */
+>> +    if (early_enable) {
+>> +        s32g_wdt_start(&wdev->wdog);
+>> +        set_bit(WDOG_HW_RUNNING, &wdev->wdog.status);
+>> +    }
+>> +}
+>> +
+
+[ ... ]
+
+Thanks
+
+   -- Daniel
+
+
 -- 
-2.45.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
