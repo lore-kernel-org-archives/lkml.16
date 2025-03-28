@@ -1,163 +1,124 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3497279E1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92F81A9B5D;
+	Fri, 28 Mar 2025 15:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743174537; cv=none; b=OtVB6TBcLfTMi3sWVRwGpwKt4o0N5BLxwI/lDMBdL+qzynDBFvRcshGt6aCWQ+6AFZlz+WH/P1BI+i2Xg3+UE09/ldxcjoD39Fh1pgpl26thvcxXm4InAM/yoLtkNY2Vj+Dvodb4OzayhFK0hUMjcTHD9U9YUPKVwiKR2C6ttRs=
+	t=1743174599; cv=none; b=dQCRNr0nB5BTjzSR24lW2ZcjBXdTjijn80c+yptxSoJnitvCsyBRzsCkEme2VdL/eBcRH2bwj762FLOvPD5d3WEM0DrDVDWN8otqVxV24EXX8vcDOnqisuMiqNIELV60VzUIqJnMWyfqTTEl3PxBdpzsIX/Ad3wEvGRSF4zLqyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743174537; c=relaxed/simple;
-	bh=StGCXn6Q8hmtPiPLtbd9V7qnrY5CuWKQW0TMy5z7sY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lnrlp2fCRB4ShSfAoJNFEHfVl15IwpqRt63FgcPYVg7mADnSvB5FqJsTIJ02ITBHSrsqjTiCVOKjUtb/zE8Zx2c9tms3caFaAv6yTLVzPfHvmo4/cHDS12XY+SzncaV7e0zVpf8OAcrcIyo+1VhVwLRCaXxYPIEFQJr/dIlcQ54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bKYDBp7c; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743174599; c=relaxed/simple;
+	bh=ah3hu0AHfgkkvSk7ohighiuYRZJ2eQBgx9wMy2atfE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CWj5/ZuSM9jUS4WaWlqbjfAYF5eghbHMdVt+aNHZouWnlxRb3PIApixP5uzoogwRE9LPeXOIXspMZEAAXdPycC2G/W7X3hIkfsCRFOK1Gmz20rwvxqUX7L7ZdBaM2n4V2iJ2sDxj1rv9TQ4q4nO3bj8jQTBDI1xFzcVtbASkuZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHLVAD+L; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bKYDBp7c"
-Date: Fri, 28 Mar 2025 11:08:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743174531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+JcTDIF1D1whwm3m0rSlf3wwI+qx1BQ2PLx1jlmj+k=;
-	b=bKYDBp7cyQEciWY53PTMe3INOfwvqwg/oL/DsxxJpzcoldXcHAwPAqlwEWR/YqtSjkYwLP
-	YqYScPAngrFF0xMcKHEj76QVSQm0joZPfG/bp9jdnKTm5qtBEjYoTnf8zGXuaE0zMuo96B
-	f/G4EONCmxl0MtOLS/gwCT5Av6XOwbs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the mm tree
-Message-ID: <cgsr5a447pxqomc4gvznsp5yroqmif4omd7o5lsr2swifjhoic@yzjjrx2bvrq7>
-References: <20250328174654.06495cf9@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHLVAD+L"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476b4c9faa2so30278521cf.3;
+        Fri, 28 Mar 2025 08:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743174594; x=1743779394; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHMi97rW5XnYmsHSdrUIP8vR+FvAoZCe/aUt1UwDlcM=;
+        b=FHLVAD+L6FJ+TMxJVfnj+uKJ8j8MiRsOgoZk/Z7nZiC2SoD3TS2zw+d7GDp0ZWhwaA
+         UyLlP8WCPvmEnOKB+LFgHi+19fiUSVwW3FObjtWAocAxXsLHiLJuUwZYwohVuGnyluze
+         0fyxaGCXZOjXSZbWrDQekCvAuyStvLRZAgDSoCpTy1NoER9e+47v0ifO63a0FtSwJab7
+         flBt+5/GswLgGEQQ2GyfVfgVuj4+a++0iaUz4fIIVWXlj/JZ4PUZ0pa3hiVNqbxKDbrv
+         vIsOuGZBD+bz+F26qVn/nvb6wvtonysnYL3gE9k0vxQN1NbN72R3ENi/5sTmIntJC83B
+         hvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743174594; x=1743779394;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cHMi97rW5XnYmsHSdrUIP8vR+FvAoZCe/aUt1UwDlcM=;
+        b=d5wLI3vhHM6mgjS+YYCbdm1EKEFXl76Sxo5lLOGXdrDa2Y3igN+O+Xx7F+DDS+yQOS
+         suwIC7myMqsk60txl1e2armLcOBww9oN0uEZQPSzeX1wuRY4RIUa09zlUIr443/8hJSV
+         hhpXVXzR3d2eCAbP9OIloCO+sfdfwNuD4QNYogbu6BgCJa07wx6K4PKU/NQ1qO+L0ZO3
+         2EW7PRH4aLKnhocuedPdMJtH7IAQMx3WL85L1erjksoHNKuLMmgaAnbMlasPin4Nv2Ca
+         KplwA0qa+CYoQtzVeXgcUBskVBZDq1ck2IVqfP2Gkee5AeOIVDAFmQ03QZn28/W4y90L
+         wi/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQHjnqiXQFXGT1ATOmemmUzX4imCM7AtNWk/NH1y3gUu9nA9LlorcSjOQ639Jjw7dLE1pH+YID5+uB@vger.kernel.org, AJvYcCW0TjCmEtPTDftIgDYU86jo45b8jtLtnPifLsrLOQAaEBhY6BpUS7PpNpRAPIfaLJVDpGyYveElrCPf@vger.kernel.org, AJvYcCWBXWZ1mSf8c0n4KVB/z5nYg4iWWyDStZkVvy6/xmrPbCYv0JQWyxtAmDaUxzPbH8k/Q++nJ613tZuAyba9@vger.kernel.org, AJvYcCWHB+sCY+l3BS/OSL4m0YLxuysErqQzm9lglTzTjyEgVYj+vkjXneit/aYOyzFs0/GLbc8MhG20TM049A==@vger.kernel.org, AJvYcCXMNhrz7t4pWfoIqZiADf+8EbU2lr+WyJ0gR/Bf+0b3lNm9AAKdqbEjC5lnaU/7+PLKvBTSzX1iq7X9LKiI@vger.kernel.org, AJvYcCXUIJ2/ugWvsbgDJsyHnxUH5A4H3eVAo1j5Oa09fF1wAYsE8k2xMSOZGHFQvts46VRGd1/8aVHazqzk@vger.kernel.org, AJvYcCXhyStjkeOs/BJCk3WahDm8wIEV2LMtGMQz49SRZaduktziZaLISJmQss5GPFNT+Q+/led+9DTENgfJBOl57+Xt1oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG32a+CugVQugGqzVQKta+XQwWfSWSBorp8Nj9XL03uL9viayy
+	wAVYqvOsCkFJK0eMX+DR3bQ+SyFaf2VEMiAGkH9B6UOtbrtCc4u0A2a/Q8qBiehKRzdAoUUWVG1
+	V7V07e12X6GkqbbpY4yqYhAFG/4g=
+X-Gm-Gg: ASbGnct4K+/9UAQNiSZBfGDbIi4p9G2OAmo4QObrl8CQ/PB7hIKVGlRTdJan+RMjD3H
+	XZA0jCup/hIgRlaJwc67xv9/pXnFQGzQUzdJCn5aTsn6VGGHfcXpWD23UY8ExZBC8Z/ae/ZQ03p
+	/q/ytbRFaamVyZO+KYpsd5pebMG1BQ32XP7XjyWMVhXa5jnK72qVM/SVhM
+X-Google-Smtp-Source: AGHT+IG4QqpaNQDy731U58i3bQqCRBN4wxgf2WnACwyQB2g5h8HohI9uM8ZQbNABaLBYgrNgY/+RPwYvoW7m6YupGso=
+X-Received: by 2002:a05:622a:580c:b0:476:b3f0:a905 with SMTP id
+ d75a77b69052e-4776e07acccmr119111651cf.8.1743174594347; Fri, 28 Mar 2025
+ 08:09:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328174654.06495cf9@canb.auug.org.au>
-X-Migadu-Flow: FLOW_OUT
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com> <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+In-Reply-To: <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 28 Mar 2025 15:09:28 +0000
+X-Gm-Features: AQ5f1JorkyU3M-MDsNZEjTYwlCJiHquCQUVcPMiTcuQthITmDLDNSbYjZqb0KuM
+Message-ID: <CA+V-a8sT3sV4D-i84G8D1q1s_PBGCQagc=YGSvTfTWVYJsHoeA@mail.gmail.com>
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 05:46:54PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the mm tree, today's linux-next build (htmldocs) produced
-> this warning:
-> 
-> lib/sort.c:222: warning: expecting prototype for sort_r(). Prototype was for __sort_r() instead
-> lib/sort.c:1: warning: no structured comments found
-> 
-> Introduced by commit
-> 
->   f79965d13aa1 ("lib/sort.c: add _nonatomic() variants with cond_resched()")
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Hi Krzysztof,
 
+Thank you for the review.
 
-Andrew - here's a fixup:
+On Thu, Mar 27, 2025 at 7:43=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 26/03/2025 15:39, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
+> > defconfig.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
+g
+> > index 11e7d0ad8656..c7b41f86c128 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=3Dy
+> >  CONFIG_ARCH_R9A08G045=3Dy
+> >  CONFIG_ARCH_R9A09G011=3Dy
+> >  CONFIG_ARCH_R9A09G047=3Dy
+> > +CONFIG_ARCH_R9A09G056=3Dy
+>
+> So the pattern will keep growing and none of you will ever bother to fix
+> it, because you have your patchset to throw over the wall.
+>
+We are working on this internally, upon approval this change won't be
+needed anymore for the new Renesas SoCs.
 
-From d72340d676cbe7aa605db09a5d6b6213733a0120 Mon Sep 17 00:00:00 2001
-From: Kent Overstreet <kent.overstreet@linux.dev>
-Date: Fri, 28 Mar 2025 11:07:39 -0400
-Subject: [PATCH] fixup! lib/sort.c: Add _nonatomic() variants with
- cond_resched()
-
-
-diff --git a/lib/sort.c b/lib/sort.c
-index 60b51dac00ec..52363995ccc5 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -188,32 +188,6 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
- 
- #include <linux/sched.h>
- 
--/**
-- * sort_r - sort an array of elements
-- * @base: pointer to data to sort
-- * @num: number of elements
-- * @size: size of each element
-- * @cmp_func: pointer to comparison function
-- * @swap_func: pointer to swap function or NULL
-- * @priv: third argument passed to comparison function
-- *
-- * This function does a heapsort on the given array.  You may provide
-- * a swap_func function if you need to do something more than a memory
-- * copy (e.g. fix up pointers or auxiliary data), but the built-in swap
-- * avoids a slow retpoline and so is significantly faster.
-- *
-- * The comparison function must adhere to specific mathematical
-- * properties to ensure correct and stable sorting:
-- * - Antisymmetry: cmp_func(a, b) must return the opposite sign of
-- * cmp_func(b, a).
-- * - Transitivity: if cmp_func(a, b) <= 0 and cmp_func(b, c) <= 0, then
-- * cmp_func(a, c) <= 0.
-- *
-- * Sorting time is O(n log n) both on average and worst-case. While
-- * quicksort is slightly faster on average, it suffers from exploitable
-- * O(n*n) worst-case behavior and extra memory requirements that make
-- * it less suitable for kernel use.
-- */
- static void __sort_r(void *base, size_t num, size_t size,
- 		     cmp_r_func_t cmp_func,
- 		     swap_r_func_t swap_func,
-@@ -300,6 +274,32 @@ static void __sort_r(void *base, size_t num, size_t size,
- 		do_swap(base, base + size, size, swap_func, priv);
- }
- 
-+/**
-+ * sort_r - sort an array of elements
-+ * @base: pointer to data to sort
-+ * @num: number of elements
-+ * @size: size of each element
-+ * @cmp_func: pointer to comparison function
-+ * @swap_func: pointer to swap function or NULL
-+ * @priv: third argument passed to comparison function
-+ *
-+ * This function does a heapsort on the given array.  You may provide
-+ * a swap_func function if you need to do something more than a memory
-+ * copy (e.g. fix up pointers or auxiliary data), but the built-in swap
-+ * avoids a slow retpoline and so is significantly faster.
-+ *
-+ * The comparison function must adhere to specific mathematical
-+ * properties to ensure correct and stable sorting:
-+ * - Antisymmetry: cmp_func(a, b) must return the opposite sign of
-+ * cmp_func(b, a).
-+ * - Transitivity: if cmp_func(a, b) <= 0 and cmp_func(b, c) <= 0, then
-+ * cmp_func(a, c) <= 0.
-+ *
-+ * Sorting time is O(n log n) both on average and worst-case. While
-+ * quicksort is slightly faster on average, it suffers from exploitable
-+ * O(n*n) worst-case behavior and extra memory requirements that make
-+ * it less suitable for kernel use.
-+ */
- void sort_r(void *base, size_t num, size_t size,
- 	    cmp_r_func_t cmp_func,
- 	    swap_r_func_t swap_func,
-@@ -309,6 +309,18 @@ void sort_r(void *base, size_t num, size_t size,
- }
- EXPORT_SYMBOL(sort_r);
- 
-+/**
-+ * sort_r_nonatomic - sort an array of elements, with cond_resched
-+ * @base: pointer to data to sort
-+ * @num: number of elements
-+ * @size: size of each element
-+ * @cmp_func: pointer to comparison function
-+ * @swap_func: pointer to swap function or NULL
-+ * @priv: third argument passed to comparison function
-+ *
-+ * Same as sort_r, but preferred for larger arrays as it does a periodic
-+ * cond_resched().
-+ */
- void sort_r_nonatomic(void *base, size_t num, size_t size,
- 		      cmp_r_func_t cmp_func,
- 		      swap_r_func_t swap_func,
+Cheers,
+Prabhakar
