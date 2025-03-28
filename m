@@ -1,140 +1,99 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7264221149C;
-	Fri, 28 Mar 2025 09:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C92213E61
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153736; cv=none; b=uOqPaaVYDG+0Oy4fkLAQy9AQB6Q1UAzqtroiJ0db6zuOIBzPiMoGRUj9qnO2sVxBpImV/ZHUq9RkR0oBYK94y2ESnVb/gk+v+MH/f689EBZvHpmmIi33uycCunx/u+yljQJK2fXIu/XjQauT1YNW7hPZ3FPVocZf4XuQiVL/nto=
+	t=1743153738; cv=none; b=AkNSc0VigC7sn/KnZwRTeuhzP6m+Zuj+4qAruDhg1I9JxskSUa6Azg4rIfcPPcZHIVJBRIeQsbl+d3paTIXWQYDJ276X4JNz38SH096VrWwD3hayHsrGwMl+u6Ngs0wrnvT/WoFKvivUExsdevKAVre5/QIji4cvXbZP47evdBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153736; c=relaxed/simple;
-	bh=o0bgkl2VtmX892uUzGSAN8EBLvxFiy9rSZNcjph0/Io=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g4g0BI318oRF2z1bwWiOXChW/XlBwMk1fKVwXn7P91YB2emTtlVC3CfYTvLhb/ujH7DHlUDP72OhhPxYQosrRaXyXLYsKB5kALBmBvyRCXfG3leQ39niaUMa7CC1kp3l7KLHh5LH9+0dfg2yREgJsJfyVYcVb2Q0cPUJXzyUI4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwC3Rsk0auZnbk4hDw--.1979S2;
-	Fri, 28 Mar 2025 17:21:56 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwB3e4cuauZn2txYAA--.2899S3;
-	Fri, 28 Mar 2025 17:21:52 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	rppt@kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	akpm@linux-foundation.org,
-	alison.schofield@intel.com,
-	rrichter@amd.com,
-	bfaccini@nvidia.com,
-	haibo1.xu@intel.com,
-	david@redhat.com
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Date: Fri, 28 Mar 2025 17:21:32 +0800
-Message-Id: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743153738; c=relaxed/simple;
+	bh=3n5NcSWbMxNV65pkiH8xO7XiulAHfo9FuvZJ/52Zbn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kvSdjuDv/koxQUDBsYLqffhPw1Md8LPnDmOPLcqAXhWcI087DMpUO9UKgLX7ykiAtKBgG2pS0vrqkpPXsjjqAp/aw5UqzZfpiOItyaQC2+GMSPSP9JHjc9qSjflC5C6s72tZJglXbd1hY+4d4jnyCdMJjb6swDXa+s0y4FmKeFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nw6sNeId; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nw6sNeId"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3699304a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743153734; x=1743758534; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=S8F6/Mi5t6CvVa6NbJV7qdkNj8IUB4iUseQrodXPdQU=;
+        b=Nw6sNeIdeMenm31Ozp9zvLFT4ZPDxWlDC0/xuDM4AlHNphNItUXe8s+cE5Ten/Jf69
+         lTK8JwKSd7JXPFYmWERLVFTRRn4LGyUbgnkKXaiqaazYrFgvrwzKyuMEgiz7m4chXGAU
+         5N20ifyoLnKHscaGLth7Y9yFv7HumouRleXmhuRc3yhhJm67NE7tijwNiHeOd0tn6u1m
+         cdkjp+A+a7jA0ktPZ+DV5kX0+hXu5Ro1/0OA0mc17+iwFk06Vb4P88Lv703IcLwJn/NQ
+         PYqvyMTjeJIf+TChxT+uTbJDOvMEFRCW4YwP41mlxLSPqR+XHMWjY0UjmkRJjKKqbAMQ
+         b3gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743153734; x=1743758534;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8F6/Mi5t6CvVa6NbJV7qdkNj8IUB4iUseQrodXPdQU=;
+        b=E/lfkPxj2SY4KwGh6mamHU2mKQ6DyIQo6UN31XaeSzQ1fEYCAbFqJ/XyYLIIZMTljl
+         4H/Apu9Ku+WCwwzbdJrQDfjl8SrLDGQvm7efTzNU2N8vdW+784wIzE/NdxjKukk/t/Rt
+         wvoHBZff+cgJd+x1a1h2px0UyDc2hjv6Pz2wCLOqaT586VUBvuAsjgtSUVuuXk39a6SI
+         tlQ6Ay0M7dEwSM6mqOyhZyXqjv4BzBS9+H958i0rzYEH3Tn4wOe2yypdRsFFslNdvnxu
+         K3cT/uwoI6eH2AWwv8XLQahLmv1X4L8J0UKyv3KnOMh3NXxX/whz7oXNaYf+oKHhwgie
+         4kOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXahW8ZgzOpXXgd4o1PeKG7jWW1aKrf6gwJ2ideW8+lv7Y1SQORhppPe31qU7g1gzsXmU0fKE9XNngmdl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaIBJ5iriAcOBl74Aw9NRai6ShMq/yvp3MIplZS5Drhz4ACH9F
+	Sq5icl5DVq3OryioVZJfaCHbT0udIwUloBPHvIt+eP+V55cFxpHasHx2910N+BU=
+X-Gm-Gg: ASbGncsHTRBMGweJhR3/OYM9qDsBKVymis6HUvbfEIewSDO0eFq8Aeo/hSRpxOXwo09
+	rUQcfI39roJllAQ7XCalRGCd1/WWmomcWUBEVmsdGC3NANhdLfDTdKZfIfV1KLotVgX4/5n9w7C
+	aNXbt0fbumrTFfE7Q22518gesTFSgCuGS94FfTojQpOpvQqnf8auDMf59O62sEbO+49rKyMHZ90
+	vIsbdXiTno8atTjpEgePE67l11GIudTuVw29Oucvb2WfFQmFPGva4yq/fTXCHk3k9lyHNmSDYZF
+	mXGz6PxdnUz1jQ03JnrT2rEfaEviOJIgJqDa7I7yrA==
+X-Google-Smtp-Source: AGHT+IGqVO5GOBdKSR0UHnmKwqXfKTUeeVTD7NtsjeXDRVx37M2iiHUK4xT403SV1qcakAEOpZYu7A==
+X-Received: by 2002:a17:906:c153:b0:ac3:4227:139c with SMTP id a640c23a62f3a-ac6faf2eefemr758055966b.24.1743153734352;
+        Fri, 28 Mar 2025 02:22:14 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71971bf3fsm126205666b.182.2025.03.28.02.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 02:22:13 -0700 (PDT)
+Date: Fri, 28 Mar 2025 11:22:11 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-hp-x14: drop bogus USB retimer
+Message-ID: <Z+ZqQ4pU/YHEI2M5@linaro.org>
+References: <20250328084154.16759-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwB3e4cuauZn2txYAA--.2899S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQADAWflrrMJuQABst
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCFyxZFyUXrW7Jw1xCFyUWrg_yoW5Zw18pa
-	yUG3Z8XayxGr1xGw1xuryj9w1S93Z5KF1DGFZrGr43ZF4rWry2vr4jyFnxZr1DtrW7ur1r
-	Wr4vy3W5uw1rAFUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328084154.16759-1-johan+linaro@kernel.org>
 
-With numa_add_reserved_memblk(), kernel could add numa_memblk into
-numa_reserved_meminfo directly.
-
-acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-with the expectation that numa_cleanup_meminfo moves them to
-numa_reserved_meminfo. There is no need for that indirection when it is
-known in advance that these unpopulated ranges are meant for
-numa_reserved_meminfo in suppot of future hotplug / CXL provisioning.
-
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
-
-Changes in v2 (Thanks to Dan):
-- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-- Add comments to describe the usage of numa_add_reserved_memblk()
-- Provide a more explicit commit message
-
- drivers/acpi/numa/srat.c     |  2 +-
- include/linux/numa_memblks.h |  1 +
- mm/numa_memblks.c            | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 00ac0d7bb8c9..70f1a7c6b54a 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -458,7 +458,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
+On 25-03-28 09:41:54, Johan Hovold wrote:
+> Jens reported that the sanity checks added to the new ps883x USB retimer
+> driver breaks USB and display on the HP X14. Turns out the X14 only has
+> a retimer on one of the ports, but this initially went unnoticed due to
+> the missing sanity check (and error handling) in the retimer driver.
+> 
+> Drop the non-existing retimer from the devicetree to enable the second
+> USB port and the display subsystem.
+> 
+> Note that this also matches the ACPI tables.
+> 
+> Fixes: 6f18b8d4142c ("arm64: dts: qcom: x1e80100-hp-x14: dt for HP Omnibook X Laptop 14")
+> Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
  
--	if (numa_add_memblk(node, start, end) < 0) {
-+	if (numa_add_reserved_memblk(node, start, end) < 0) {
- 		/* CXL driver must handle the NUMA_NO_NODE case */
- 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
- 			node, start, end);
-diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-index dd85613cdd86..991076cba7c5 100644
---- a/include/linux/numa_memblks.h
-+++ b/include/linux/numa_memblks.h
-@@ -22,6 +22,7 @@ struct numa_meminfo {
- };
- 
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
- void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
- 
- int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-index ff4054f4334d..541a99c4071a 100644
---- a/mm/numa_memblks.c
-+++ b/mm/numa_memblks.c
-@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
- }
- 
-+/**
-+ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end: End address of the new memblk
-+ *
-+ * Add a new memblk to the numa_reserved_meminfo.
-+ *
-+ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-+ * against memblock_type information and moves any that intersect reserved
-+ * ranges to numa_reserved_meminfo. However, when that information is known
-+ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-+ * to numa_reserved_meminfo directly.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-+{
-+	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-+}
-+
- /**
-  * numa_cleanup_meminfo - Cleanup a numa_meminfo
-  * @mi: numa_meminfo to clean up
--- 
-2.34.1
-
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
