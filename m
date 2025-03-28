@@ -1,177 +1,119 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1937E42A97;
-	Fri, 28 Mar 2025 09:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6302021771D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743155979; cv=none; b=HW8+vXFPzkGQ+LxuMgf8wrRv0MOAobU981t3pVes/FRu5Wh9y57k3k2IYnmNJU1CNzvLnz3eG/ImcX4E+KpSHdSynyvZpyrufunxQ4ZYZOoqdBqeLIBB6WEp5K+X1qHZapqqxuMSed2Xzyj2y4pT3BMt9BPZZrjVa/X5tmcaHjw=
+	t=1743156020; cv=none; b=GOLco+piJgD3F+nUA7AFTkIi8SrFw8g6ZD+EmMy6Ox1xpKRDCpZ1iCqRFE1s6LUmScOTgLn896ETl4iawblJl3d0SZVQrhMyW+geDScbqUItloxu+sTQ6C34Q7pl0FPIRELxBoAbNfA0VlV+k2pFShHu92os+PsaUVS02T/DHaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743155979; c=relaxed/simple;
-	bh=hNNA/d/v3lN7oYWEV0sFTmuJdeaOkQ/iC+Hv1NB56PI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=l9cqXMvu5coiOPcLV0djzIS0d5RJZ6wuT+J5sy5zpL+SwISeELBvT+xpNvSVD39TEP03nFd8kFNJdS035CDaIG4HrIYay7c31v4YQcOkZ4BdLI2EmvIVtzaYwHJos4N3iPdund1gYBMXOk5SrEXOPW/M1tYkKAf8r1N2/xxtX/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CyNQntcA; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743156020; c=relaxed/simple;
+	bh=VAxMnppZDd0EsjFlPAHPDvkheirt5PDlBP3XZemzIlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J9htAtb4yGUnd8HHCXsKbeDoBpvQEKb6CdWQgsc5HQPdVMN6olXvuw7AfUDiPdrMWGpHu5wnYk9kP1txOt3Oh7nxkLX8709DwBKWBh9CmaCw7JEsosE+xsJD4uAAMPr8XfJcecJEueAA7+hfwpbzUqJCjNq9Y9//2NvbWE/tgwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gRjdAwiz; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CyNQntcA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF75D441FE;
-	Fri, 28 Mar 2025 09:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743155975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZzPCpChQK+Tk3U5esg1UPETkUAwKsnZ9Cr/dBBfydlo=;
-	b=CyNQntcAaPHSO6/SH4mvZIv2j+Y0AZCWZ4upqISbI94iBXhOM6/N7ZPqagBLP9011ua/Bu
-	HTfuhW1nWTzjiBwhxYTsXo+5tRT7+Hwk8RhwPDqim0i9bdh4/A96CUHU9fGFmawL4da1ZJ
-	91vS+vnD6cc79baEy0NbSDO61LLP5bBbTDsyhKmKeebRBEx7cBPw+E71ge0zgqqWUButef
-	K4SCrhavecisuxkOmPDsh0sk3XsdPL71P8id3WRYodKfU+wW4x4mValg4JyEh/r65czOTq
-	DlCN4vMTl4o13Y27JPV4W0wJlUjuVoW1QGXHX0YijQ9C+p3r5k7WbntjY+mG0g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>,  Len Brown <len.brown@intel.com>,  Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,  Danilo Krummrich
- <dakr@kernel.org>,  Michael Turquette <mturquette@baylibre.com>,  Stephen
- Boyd <sboyd@kernel.org>,  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-  linux-pm@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-clk@vger.kernel.org,  Chen-Yu Tsai <wenst@chromium.org>,  Lucas
- Stach <l.stach@pengutronix.de>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>,  Marek Vasut <marex@denx.de>,  Ulf
- Hansson <ulf.hansson@linaro.org>,  Kevin Hilman <khilman@kernel.org>,
-  Fabio Estevam <festevam@denx.de>,  Jacky Bai <ping.bai@nxp.com>,  Peng
- Fan <peng.fan@nxp.com>,  Shawn Guo <shawnguo@kernel.org>,  Shengjiu Wang
- <shengjiu.wang@nxp.com>,  linux-imx@nxp.com,  Ian Ray
- <ian.ray@gehealthcare.com>,  =?utf-8?Q?Herv=C3=A9?= Codina
- <herve.codina@bootlin.com>,
-  Luca Ceresoli <luca.ceresoli@bootlin.com>,  Saravana Kannan
- <saravanak@google.com>
-Subject: Re: [PATCH RFC 01/10] PM: runtime: Add helpers to resume consumers
-In-Reply-To: <CAJZ5v0gFER-nbWpZK6FMDJCXA+iPQUm5DZDAiRY3ahugR2MM=g@mail.gmail.com>
-	(Rafael J. Wysocki's message of "Wed, 26 Mar 2025 20:18:03 +0100")
-References: <20250326-cross-lock-dep-v1-0-3199e49e8652@bootlin.com>
-	<20250326-cross-lock-dep-v1-1-3199e49e8652@bootlin.com>
-	<CAJZ5v0gFER-nbWpZK6FMDJCXA+iPQUm5DZDAiRY3ahugR2MM=g@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Mar 2025 10:59:33 +0100
-Message-ID: <874izdlblm.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gRjdAwiz"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39727fe912cso635706f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743156016; x=1743760816; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMHy4UXVXze7CguX+fTXXYQovkguTPZAbEfyyQdz7+s=;
+        b=gRjdAwizbI2GB3mpJ0tuxllHhWl0gs/tAULTfZ2mfewHdZpDlIOeDma/iytqf1UzxN
+         ocf+uk72V3eRFg4BWf5h9pgVtsojIXJMWaueALkbX53tK3GmFoW6C27xzQSrVGUSkQ3c
+         NdU9FgGqxpTr8LluBHUXTwl6+jIuGlzWW+wB3vW1VHrQU2EhReQhMYiGigPb8Sx9itqp
+         bq4jidTcD/JdMVKxBEiGUsmDFn1yFsAo3mooRgLvXEoM2niY+RO8KYvdnpvV5lpnNGGT
+         KgkJGYqa+sZjGKKH/y+BUhty9ueYFPUr23INntKMp0GkHj0x+7rZ8RKoQ9SgSVKVuDaW
+         sdcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743156016; x=1743760816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uMHy4UXVXze7CguX+fTXXYQovkguTPZAbEfyyQdz7+s=;
+        b=mqCf+rzGqlyU7N3oKkQV9OTyQovlVUGRsp3c4MPQZJW6YwKq9PTJa9r4QkxR2zs4Kx
+         BPMtKSE6lGNb+4CjikGsZKJrn2jJYkXTElvPLcWj/hQQ3g5XkintPPPwve76MNl8ddDl
+         BhU3Myv58P2FZFnm2evSU6eS1rwlDzzznHCtO9DMZv23zFwO+zdjubUw2qQDuI+XQ5+G
+         xsYrZOlu1rI7w7xRlITJJckl7b7ZepgS/FnrEtIETRgTozUY9dBEkVWQPcHDFPeAIVDR
+         dW9lK3aOYSW+w1LXaFW3KBRP8t3EsUC+X+x6T3/ggQ0ckVS/TTu0Nh2Q3NV5MBrhvXxx
+         8m2A==
+X-Gm-Message-State: AOJu0YxPkSYDlhulf6UZ0fGi/mKfsNbWQehArX91nNlXSod4zmEMKZdu
+	pE7vpPExizGE26lM/PtjkaI4MqN2yjQnllLEVjqfSJPkg2QqP4Gu4CzLMzFOIg0=
+X-Gm-Gg: ASbGncsyVnICYdyP7lWlVm6/6iCuL3cYjCLRQ+auYu1ygAjVpY200g+Z9/vthRQQIuN
+	c7AP+9HeKTLloTZuxMsWMblNMlFkMVePSPAQxpnz+9YvWR7Hl9WF5e6YnCWQsUKEIHMG5z30Ow/
+	eJPV+LyTBqYC6gyUqUHyY6TM489Ke6ELz4cyDMGq+Ie7Ks/n09KxSvqVXWxHA/ljUJ/qb+j+C/M
+	K640ILqqsd6YtOZnPjMvnnohm1dGuVZ4dG5aKT+dssbH2l0sO24TmV+1qgCwoAGeMNzSS3JqTr6
+	BIWLJ+twVV4NOhZ9ovW3ugrOgTknPWwQIH3LWFcivTrqjJ0lEIsX3lOTuzAZ
+X-Google-Smtp-Source: AGHT+IGj9pQvphUGd9QRvl74y+vh1brVfy4aIv4DoMY75sWkzHFUx8Bt1I9v28FP8We3YasMPehrOQ==
+X-Received: by 2002:a05:6000:1fa9:b0:399:71d4:b8 with SMTP id ffacd0b85a97d-39ad17505efmr6306834f8f.23.1743156015550;
+        Fri, 28 Mar 2025 03:00:15 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d8fccfe2fsm22243795e9.22.2025.03.28.03.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 03:00:15 -0700 (PDT)
+Date: Fri, 28 Mar 2025 13:00:13 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Nishanth Menon <nm@ti.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V2 09/10] scsi: ufs: qcom: Remove the MSI descriptor abuse
+Message-ID: <f0df759f-42b2-450c-90c6-25953093e244@stanley.mountain>
+References: <20250313130212.450198939@linutronix.de>
+ <20250313130321.963504017@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghvvghlsehutgifrdgtiidprhgtphhtthhopehlvghnrdgsrhhofihnsehinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepshgsohihugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313130321.963504017@linutronix.de>
 
-Hello Rafael,
+On Thu, Mar 13, 2025 at 02:03:51PM +0100, Thomas Gleixner wrote:
+> @@ -1799,8 +1803,7 @@ static irqreturn_t ufs_qcom_mcq_esi_hand
+>  static int ufs_qcom_config_esi(struct ufs_hba *hba)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct msi_desc *desc;
+> -	struct msi_desc *failed_desc = NULL;
+> +	struct ufs_qcom_irq *qi;
+>  	int nr_irqs, ret;
+>  
+>  	if (host->esi_enabled)
+> @@ -1811,47 +1814,47 @@ static int ufs_qcom_config_esi(struct uf
+>  	 * 2. Poll queues do not need ESI.
+>  	 */
+>  	nr_irqs = hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
+> +	qi = devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
+> +	if (qi)
 
->> The runtime PM core currently allows to runtime resume/suspend a device,
->> or its suppliers.
->>
->> Let's make it also possible to runtime resume/suspend consumers.
->>
->> Consumers and suppliers are seen here through the description made by
->> device_links.
->
-> It would be good to explain why all of this is needed.
->
-> I gather that it is used for resolving some synchronization issues in
-> the clk framework, but neither the cover letter nor this changelog
-> explains how it is used.
+This NULL check is reversed.  Missing !.
 
-The explanation is quite long, there have been already 3 full threads
-from people attempting to fix a problem that resides in the clock
-subsystem (but that may also be probably problematic in others, just
-uncovered so far). I don't know if you took the time to read the cover
-letter:
-https://lore.kernel.org/linux-clk/20250326-cross-lock-dep-v1-0-3199e49e8652=
-@bootlin.com/
-It tries to explain the problem and the approach to fix this problem,
-but let me try to give a runtime PM focused view of it here.
+regards,
+dan carpenter
 
-[Problem]
+> +		return -ENOMEM;
+> +
+>  	ret = platform_device_msi_init_and_alloc_irqs(hba->dev, nr_irqs,
+>  						      ufs_qcom_write_msi_msg);
 
-We do have an ABBA locking situation between clk and any other subsystem
-that might be in use during runtime_resume() operations, provided that
-these subsystems also make clk calls at some point. The usual suspect
-here are power domains.
-
-There are different approaches that can be taken but the one that felt
-the most promising when we discussed it during last LPC (and also the
-one that was partially implemented in the clk subsystem already for a
-tiny portion of it) is the rule that "subsystem locks should not be kept
-acquired while calling in some other subsystems".
-
-Typically in the clk subsystem the logic is:
-
-func() {
-        mutex_lock(clk);
-        runtime_resume(clk);
-        ...
-}
-
-Whereas what would definitely work without locking issues is the
-opposite:
-
-func() {
-        runtime_resume(clk);
-        mutex_lock(clk);
-        ...
-}
-
-Of course life is not so simple, and the clock core is highly
-recursive, which means inverting the two calls like I hinted above
-simply does not work as we go deeper in the subcalls. As a result, we
-need to runtime resume *all* the relevant clocks in advance, before
-calling functions recursively (the lock itself is allowed to re-enter
-and is not blocking in this case).
-
-I followed all possible paths in the clock subsystem and identified 3
-main categories. The list of clocks we need to runtime resume in advance
-can either be:
-1- the parent clocks
-2- the child clocks
-3- the parent and child clocks
-4- all the clocks (typically for debugfs/sysfs purposes).
-
-[Solution 1: discarded]
-
-The first approach to do that was do to some guessing based on the clock
-tree topology. Unfortunately this approach does not stand because it is
-virtually unbounded. In order to know the clock topology we must acquire
-the clock main lock. In order to runtime resume we must release it. As a
-result, this logic is virtually unbounded (even though in practice we
-would converge at some point). So this approach was discarded by Steven.
-
-[Solution 2: this proposal]
-
-After the LPC discussion with Steven, I also discussed with Saravana
-about this and he pointed that since we were using fw_devlink=3Drpm by
-default now, all providers -including clock controllers of course- would
-already be runtime resumed the first time we would make a
-runtime_resume(clk), and thus all the nested calls were no longer
-needed. This native solution was already addressing point #1 above (and
-partially point #3) and all I had to do was to make a similar function
-for point #2.
-
-And here we are, trying to resume all consumers (from a device link
-perspective) which include, but is not limited to, consumer clocks.
-
-I hope this explanation will help understanding this patch and why it is
-needed for this series. As stated in the cover letter, I've tried to
-keep the changes here to their minimum. Maybe there are other/better
-ways to do that and we can discuss them. My priority is however to get
-this possible ABBA deadlock situation sorted out.
-
-I can further expand the commit log with these details if you want.
-
-Thanks,
-Miqu=C3=A8l
