@@ -1,108 +1,155 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A048D136349;
-	Fri, 28 Mar 2025 13:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD5812C544;
+	Fri, 28 Mar 2025 13:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743167996; cv=none; b=rnoEg3Z3zb+bVl7NQsBphT/vBBrle8Vn4aSPe3jhApj+TEubyjFcodb+gxzWqnOvoX812A4Bwg7/1LOBeal2m26Z5CqAddDqBTgJ0lzoVHXGY1NAgIRFIdP7NPFRFiChYsxcqCs6ZRcy4HD4TSc+Df2DhQl5cuoEcUqE3W0KZzQ=
+	t=1743168004; cv=none; b=nTS8WNIDCXsFK0e4piEhk+FzPJWVyGnqh9szB40DXJZJV7EDJo+Xa8av+j6w6CSJ69yqJZZj8FsowPmTNkL///dzxxbpS/LnwJfMeb6W7jY9nrgKGVmOg43FR2e07VJrZ3vejQZhM+IwVTUTyLuesooJJWoyLS/56bCT7ZCb8yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743167996; c=relaxed/simple;
-	bh=KYahm6JG0YdSuBaXvOJHhPaJFRhvQDkrJRy2sOWzvqM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=EQq6j9GmKQqslTC3oh3lc/syGqSYkSp/V5qE6knHXCqycmBPi1E60fFCC+bufwAaUOGYeIr4szd3QI5pXUFe8s88XzbQDJlDWx+6QCkH5NEyhXNSixv3NXOysPfyxQUrKRjmHCshCS4jHsQH8ffg4fE9+5SXUi278ZtHW+rhfgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QRVsdUjm; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743168004; c=relaxed/simple;
+	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fhMHXXxlMDoOSSCRSi+n6N7C4TGbMtXT+60QNfermDingNv1jZLKFbRR+PE/TDlzdO8xHbumlDb+pbJ3uiiLQ8cikqVm1MVdRouq+6Zh+Tdk6MMuWikOuFXlMVJSXuvODN8lxF7m1/wmnyw4UoqZ7GE3oigNwnvG4+ey80pIj58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyLzW/Me; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QRVsdUjm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743167982; x=1743772782; i=markus.elfring@web.de;
-	bh=DP88rPq/JYCBhLpHyj7Uu+ctiTC9ho6e5ZWTcc8Bw3Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QRVsdUjma2+1dnIp75j/U9u+t2iVo0DXPSWp4hxiuKRWlqk6Bpw7spBrkW3o2ncd
-	 AgwMLcZyOFXh/yzMD3+GNnZyLvPvsq5kSWjWRj2+CFfhEcdfxMZMcYZm6kVyQOLiM
-	 /dxj5Sq0L+8Xg/PfOeHzDI2EEsiGKCZVFl66Umj3FxCER8Qk6XayU+pm7+TIZdr9c
-	 uORxocmB8fcKv6CZUwYb0Yicu/9DrrbldvtrjtLJfcVoOiCof6Kml4UKuNk0kYw5E
-	 TX49xQZxnNo/FGxAMqtYZQOHGMByyzel3uF3wU01Zkd2BD1abfvkEUb2JYN9pVEuD
-	 RVkrdoRamHhc9JULHA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M2ggX-1tyzdB3EC7-003uVq; Fri, 28
- Mar 2025 14:19:42 +0100
-Message-ID: <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
-Date: Fri, 28 Mar 2025 14:19:39 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyLzW/Me"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B836BC4CEE4;
+	Fri, 28 Mar 2025 13:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743168003;
+	bh=PbE3P7d+0IgWJs59aXFiaqzoZImTTdZogccba+32FoA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZyLzW/MeCbWhIBaIKgKM+VyXR7Ri2ulEOJ2nuHK22872cnvXaQSCdx7A8xiyU8548
+	 AhpqBe8Dp9ZaRxnntSI9ubUuvhmosXs3rRQRdWsPxVz95/KcG6NP1/w4GofNGNMfAW
+	 kajV6c4CsxJcB+pP3v4uAQd3i0KcicOAD9uD0MfU8lZFC+gF+ca9Ib22Q7sujtyFee
+	 CgXuX+2dOPKUWedVn6nzb9jjnNoxr6MjQTiwena84eoD1uhoKaTa3BNYx2t3KH45qz
+	 akbXubZtbtUVXg8dDqwm1hjOsUCgIq7q+DtztXE6bcL1qMuHNK4N5x21U80NQw5t7F
+	 9toMkG0/qWYAg==
+Date: Fri, 28 Mar 2025 07:20:00 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] platform/chrome: cros_ec_debugfs: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z-aiAAcIP7sBRtz0@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
-Subject: Re: [PATCH v2 2/3] i3c: master: Add Qualcomm I3C controller driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D1NZ9DZicC+HG+7dw0RV49Ulr4osReyhCq4fkq4n5AWuD2f3hEf
- O8AW59tx/bkU6DXG855XMR/FShgvgFnQgTfzSIt4PTvv/HfxCzZnwgjmdeYDQqOnZU621FC
- 5/5aEmCtC9aexJcQqoQEB6SkHr6pST6dVCrjEj4VfXis/YBZtT7FlcZaTOkyDrWql6gJDmB
- plqdGAcGlgAPC5yWyC6kA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UUnc3BLpdwc=;2HmWBbEzTvCxzVkzd7w3vzCQtA2
- dGrGy5TnXmVcsyDq8Jm/zF3NKOHdVDLVmL8/1H+iuVUTCUuP53GvR4C1dLOcO9NXIkzSxVFoK
- sd9JfKlHFOLAAbHG8XgTHB/nfqer+TNUucb8xJoGwQzdCAHaH6i/Ps5jke3bXjPRzyN0pL/3e
- jJCaBMZbTEsmXPYpOJMcUXRSOTr7x3Hy9ct3qd8IKQZePIkufLuirQZiXpF6GRjeZ9mMMYIub
- RtebDjtQjZCt686TC4Ih1xJpm4oCKVmGwVdl9GpTTyUmu2hv0FBY8xCBQ0STTbDpMCKx70x1b
- b2I8iqmpeDRVSRNbodKFxb41DwU5VY2fQPfzGDODHo1wfG8GRNYwhHvYSx8IWYD7aaG4gwe7V
- 3iHrhGg7nyNt53m6DRHTL2gMznhlIpvpcblEpshAp44UhSmxYO+ekOhNUyhscmgryK8+jczSE
- UcjhW4RWEV8z6KzCcrSPrt4URfjHwW3gdeyUQfpkRa5l50drQXDJaJN44JwharRQ7X8uMDEA3
- ARnp2eekcSvTe5gHMOypqyxG3d5UGimLhR1nM3JwMu6WPhBbqV/nBv2PLwZkJ2h2oofjyzP76
- Uro+2uRalPVRQaFgBKHlLWUllZznrrgPueEbGc+ZNZ+31ZwfOeLyJMnZyUF7qFWXe8R2GJ8uX
- tszXRUo7oC6NnjozCOFmk3l04BO7PyF6TtG8ipH/6LseqOdyScvHsWXlHKPJWrU/nWfSTJpbk
- E76XFXlWwv6tyTSZpgs76q9WzZStFJTQFB73UyRkARyAtN4cEVvwSsJ+2jxH5ABeyMuxAzJzD
- sZULWr5xBd+/a0L4nPCKUx3hM7QyTvk1UMwA3djDumxx/J7spzVuQJwBXBFfegmAAjdxtQcaG
- 09LwVfppReIGVpCdAwGfwlVvJSG4DNC97zJALoytIXJcbjq3GFVfjLUH9dsJ4O3Tj9SY/f2d9
- blDt2GCiBLuYj1jBvWkgeqdRYFgtv8HEy9AdNAUW+OdIT2XegWe9CTQVVdi9FHvL5RYSZ80jr
- kVFG7Jv6pW3Pjqzipc//luk9j357oV17xeXCQaixF3+xCIr8BD3JxfTf2OuWEneXyZwuRVvdD
- 9ruJx1Jp9PnEXXg+i+WzNhnFVSo5pNNvTEMCwit50yk4iBH140gAcGklqEdfBELAb/IMMGABb
- 3+k6yLAqBkYl0QuGhqM//GJIReW2jR4+8RdqSUo3Co67XTaQD7xZ9rh82m2jV9qUXTPW2ve2N
- SNE+3NMFpm5hlkqUS3SKcrvUXC6ECSbFG2RNuhGFHRk3grAunB259ifLPqbZHBMBgg9X2pe4h
- L5DV46toqXxDodtEktSyZWMYTOHi3vMYJKAmiofLJAaPqt6jedWdv9jPrk8Aa135+Ltc5FgL8
- jiy30UquXyU2Q85K54o1iDAPphuR0lVsi1awwvMBAp2lpsjxgRGFpNtx+Z8R21veJvIyCmXBX
- qoDoM7YhGhRecODVykv4nWrYLRwZEN9bk85A751DMGWDfd636
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-=E2=80=A6
-> +++ b/drivers/i3c/master/qcom-i3c-master.c
-> @@ -0,0 +1,1107 @@
-=E2=80=A6
-> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
-> +{
-=E2=80=A6
-> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
-> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
-> +	geni_se_abort_m_cmd(&gi3c->se);
-> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
-=E2=80=A6
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(spinlock_irqsave)(&gi3c->irq_lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/spinlock.h=
-#L572
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Regards,
-Markus
+So, with these changes, fix the following warnings:
+
+drivers/platform/chrome/cros_ec_debugfs.c:211:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_debugfs.c:257:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_debugfs.c:279:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_debugfs.c | 52 +++++++++--------------
+ 1 file changed, 20 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+index 92ac9a2f9c88..d10f9561990c 100644
+--- a/drivers/platform/chrome/cros_ec_debugfs.c
++++ b/drivers/platform/chrome/cros_ec_debugfs.c
+@@ -207,22 +207,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+ 	char read_buf[EC_USB_PD_MAX_PORTS * 40], *p = read_buf;
+ 	struct cros_ec_debugfs *debug_info = file->private_data;
+ 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_response_usb_pd_control_v1 resp;
+-			struct ec_params_usb_pd_control params;
+-		};
+-	} __packed ec_buf;
+-	struct cros_ec_command *msg;
+-	struct ec_response_usb_pd_control_v1 *resp;
+-	struct ec_params_usb_pd_control *params;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			MAX(sizeof(struct ec_response_usb_pd_control_v1),
++			    sizeof(struct ec_params_usb_pd_control)));
++	struct ec_response_usb_pd_control_v1 *resp =
++			(struct ec_response_usb_pd_control_v1 *)msg->data;
++	struct ec_params_usb_pd_control *params =
++			(struct ec_params_usb_pd_control *)msg->data;
+ 	int i;
+ 
+-	msg = &ec_buf.msg;
+-	params = (struct ec_params_usb_pd_control *)msg->data;
+-	resp = (struct ec_response_usb_pd_control_v1 *)msg->data;
+-
+ 	msg->command = EC_CMD_USB_PD_CONTROL;
+ 	msg->version = 1;
+ 	msg->insize = sizeof(*resp);
+@@ -253,17 +246,15 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+ 
+ static bool cros_ec_uptime_is_supported(struct cros_ec_device *ec_dev)
+ {
+-	struct {
+-		struct cros_ec_command cmd;
+-		struct ec_response_uptime_info resp;
+-	} __packed msg = {};
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_uptime_info));
+ 	int ret;
+ 
+-	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
+-	msg.cmd.insize = sizeof(msg.resp);
++	msg->command = EC_CMD_GET_UPTIME_INFO;
++	msg->insize = sizeof(struct ec_response_uptime_info);
+ 
+-	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
+-	if (ret == -EPROTO && msg.cmd.result == EC_RES_INVALID_COMMAND)
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	if (ret == -EPROTO && msg->result == EC_RES_INVALID_COMMAND)
+ 		return false;
+ 
+ 	/* Other errors maybe a transient error, do not rule about support. */
+@@ -275,20 +266,17 @@ static ssize_t cros_ec_uptime_read(struct file *file, char __user *user_buf,
+ {
+ 	struct cros_ec_debugfs *debug_info = file->private_data;
+ 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+-	struct {
+-		struct cros_ec_command cmd;
+-		struct ec_response_uptime_info resp;
+-	} __packed msg = {};
+-	struct ec_response_uptime_info *resp;
++	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
++			sizeof(struct ec_response_uptime_info));
++	struct ec_response_uptime_info *resp =
++				(struct ec_response_uptime_info *)msg->data;
+ 	char read_buf[32];
+ 	int ret;
+ 
+-	resp = (struct ec_response_uptime_info *)&msg.resp;
+-
+-	msg.cmd.command = EC_CMD_GET_UPTIME_INFO;
+-	msg.cmd.insize = sizeof(*resp);
++	msg->command = EC_CMD_GET_UPTIME_INFO;
++	msg->insize = sizeof(*resp);
+ 
+-	ret = cros_ec_cmd_xfer_status(ec_dev, &msg.cmd);
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
+2.43.0
+
