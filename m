@@ -1,321 +1,320 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4731F18FDAF;
-	Fri, 28 Mar 2025 14:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062E517A2EE
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743170962; cv=none; b=qkffzI975EP3oDySRPuNg2gXJs+5ynQooVrw7jXihztECavFGIVJe6mCksHJi7omwdoxLWEdanQ0am9ZdRwvYVQGt7TWCs7dvk3HIehPYtkoc7aCDbCEu2I4YSeJhYljHw9lfOJi7HVhHZrsOgz1P4A/cC9F+mciQSWm6iHGrFk=
+	t=1743170984; cv=none; b=pQx6Jydz2V0JHdzxv8JTBYQkp4FOOxGgayZDpO4IwBOoNthtVmzkXcTz6WF55IF5ghAceiMBEM6zilyEYd7sInYxAKkefCot72je7hxFNaYD88AfpJgTAnPe3sxnQrtPRQOAp6/eTi+gPWNRFaWC+RIRqqH2BkHxHfz9bOya0Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743170962; c=relaxed/simple;
-	bh=tXCqTGn/bYispaGD35awccbnSyOSYc7UdrJ7NfU9JU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CZT13Mgjdl+Uj0VJ0r8PrgJtYxcoNaj14sOwgUjT9q4H1qKNRjp8BLXgg5eBLLaFNg1GnIc2htWEgGe5w0ZIcMXbJuWjVI+TfSu4M1JSSHAg7Bo/I5vxFNzSjfhlPPdy7Z8RPskvnmiy1MtZhhC84oJxv2icGnxYfOubSlKB8BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CqLEGb7F; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743170984; c=relaxed/simple;
+	bh=eiDoFa9jIGXP/ujFM85IxpiZdP0vpmnosAiuEPBIGqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=R5mDJm4cadB+sC+BUiT8XpPk9o+OzJzFgvYgxYI/+8ZYoyIWOfMrfSfRyQXKhzrua0m+dJPpKMPBZGIf4QzPjVso/jZvIEpmKAccRtqyM0JUCTTNBtDKR2GT58FxOMH5YvgMBjlkWSRbY31rp0PA9cBbVu6OauClkRRDGoAqYQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avM+QGso; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqLEGb7F"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so3614962a12.0;
-        Fri, 28 Mar 2025 07:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743170958; x=1743775758; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ZsOuifdSx5C6zG54VnSZPZcGikHAgTXK/kBvDrJLmc=;
-        b=CqLEGb7F22DNYtU3eg/mAMQt+QSwpTTmJCQHNkw1AvCPymWCTGzk/Stki/Lpj/8Sjw
-         6XD9Y6n1BodYE53qgIwRz3ELAeSVv1z5b2tsUuBxyeOopXmgfszgIMwxMEwbXNiF4YtV
-         19w5adfstOEBPdF34H/tB05VZgy3j8pPelOikQyZx0J+YF4tghq63S1Iy88pFpGEx3s9
-         VqyAmPgnxWnJ5Q+CK5aI80x35EBtgyNgpo4TlzmRrA58f/EYSTLclj5ODzXLB3go4ubp
-         qVsVmEOwrwBX9LS6jw9HsSwSK2z4YJ8DyjXB2+nqXhPXQ8gpa1KxEbLd5Hzqh4bQ4ChR
-         EwbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743170958; x=1743775758;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ZsOuifdSx5C6zG54VnSZPZcGikHAgTXK/kBvDrJLmc=;
-        b=iEWFOqulACE0Le2PR0KTc5Za5YwyFzGuBeJDrStxr7k0Og3ino9FZkSbhjZ0mwkoOF
-         gzDL/gsm7in9IhG7ku41L/r6+9YnQ9UVaThMBtP6HH4YEERZee2kVFqZLcawq9SCitXi
-         wAG1LjD7ryp8cdMSQPFZeT7TT/1V7TFLl2T+Zh+1DCgoWBvr7ucPSWXmBlfNAO3x4LAB
-         igXIQ4zsK6b2/Nv+ffEs/XwSpTijab/R85LHuqCr4QHkTy24u4cDRvBrNOxdAAQPxQMd
-         d4cD9IdnwjKNhQo2KOJtnzONw6CRweGQHCA/8GIlPFOUrbVWzkFDNQ7V2tnqYYBcp4dp
-         IR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUeEndVMFA0urS85HYxz6KwV7U1m0d8xOnUSwusQbAZMoy5VlU7EwfXLfG05nre0H4hTNLYYUZ7wNH2@vger.kernel.org, AJvYcCUjxAjtdHPrKr1ZXJX/e5gPEkqwyGaGm+LcfB2Fvbh1YsEyaKf14UV9dmPpjDnwJ2/EXLFejr7FAA8=@vger.kernel.org, AJvYcCUm3/vUisLsi5WlLgJYlKub6DTFlGJ4g1q4XLgBIKqEMfTwC/iiwXPN7UZjyhOK4/N2xdKnICYntbWLkTVH@vger.kernel.org, AJvYcCVISM0Iby05unvWuAZKQ7k5oIqobSZzE6fRLd8JB+CUkG02zjTR69J4vPm9cL9uGGbODjnXU+OeZRS9Do7AjL8IAbowFAJt@vger.kernel.org, AJvYcCVKPnSf5k8RCx3Se3aiNbT380eHelUDf9X+B6AZhga7+NjO2ybleFhIcMFltAxn5v/fJzJNOyOUUg==@vger.kernel.org, AJvYcCVflDAg7fcXg1qGnIcyu932WgPhNbVf7b45AExqF2XQXz3AOCGGo+LXUKDmVWDO7y1ZeircoWKdEKcRYPH5@vger.kernel.org, AJvYcCW1kZAMx7Yp32YHQfC6XlzKXIQe9WbMxsr5JBfbHQRktp7inLni0TShUpzaJtLPb9XyUKOyoIYeMU9F@vger.kernel.org, AJvYcCW3H9DEcCh+WFK/nTwh5iMuSgSNEeepe2Tk38dCl+CIlHLl5Bp7mHMVkZbzdEoqLcuvjo3nVhsbMjRT7w==@vger.kernel.org, AJvYcCWMrfvtwHD2JRyZ4pSR/H8r/eMvVUzDR+MzwJU9OFyZA5HMTvoi0YLvWiP0U6tsVRC3X5EWCogpQRQiUjmEOQ==@vger.kernel.org, AJvYcCXGn2pmK8qJl91vemLytJGZKQXGBh46wB22RTJuKQLI6uVYU6wxA9G3/1JrjV1ld7StGK2puPOjrPYzcw==@vger.kernel.org, AJvYcCXbf6zb6yKA0Zr8lIRe07a+7OOhrhNNCms0Rk5cLFwWSMgp/tyM6k10XfNv7tu5y56u2TqpiUGFxIoIXw==@vger.kernel.org, AJvYcCXnJnV7c+toLb7p8Z8XpJfqZMQiuUP7ZIXtR45e22YIrYD2ODMIupe11pJcptZEYGJMpMpi06I4NhRkXA==@vger.kernel.org, AJvYcCXu91M72oCKSliVFKXJc2MC3WhGH2mtQFe3U5gMNZShbfMRJG6iqvJcgThNc2SrN/T5tL5VDkZDB0w26Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTM/JQrXFnBS7h8VUVGdier22ne7ATe7GV/Wgz97pRVxGiYU1H
-	/wmNCE87Ot6ggg/8Sh5j+wWhRxOHo2SyYg2UEn4i3sre+JCLeDMio3lUdhHqAts24k/foo6zoCj
-	oEa11Los4L9qgKbkQPPVU1hbsEdM=
-X-Gm-Gg: ASbGncsDF/PASL58mHhjfO8lGtYBdFTCcGpuxDlWipccgefWrBtyMhDpprxG8FnZMfb
-	r2Nnmr5tcqgl8cCMN/+mkFWYw9GD8ofRGk7DQ8czP2aDHApYogxOt3DyEg3P0Xto6MK8erecuq4
-	e2koY0Q6cueBFaFDEvWbE712RFjg==
-X-Google-Smtp-Source: AGHT+IHR2ixT+t94BjkZr/w2qrKr8vCyOHZOQeJuHGHNo/LQshrJ8a3gU3C5jc0FaYRkpYxsuH9rvd/3gEooPk/WaTY=
-X-Received: by 2002:a17:906:f587:b0:ac6:f6f4:adad with SMTP id
- a640c23a62f3a-ac6fb145b61mr858589366b.45.1743170957819; Fri, 28 Mar 2025
- 07:09:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avM+QGso"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A0EC4CEE4;
+	Fri, 28 Mar 2025 14:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743170983;
+	bh=eiDoFa9jIGXP/ujFM85IxpiZdP0vpmnosAiuEPBIGqI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=avM+QGsox9PWYkDQ/HDW51OZuF+9a63re2tZrlP+GFgXYGaGbOnlVgnGUtW46rDJd
+	 f71LHj/mgPLxCx5b7uBHeZ4TEjq5yK96CUYtQDmtAfj9PzROvBtZ8VU0aXv0mf68zW
+	 1Q5U4OWtervfyjmYemYaIz7GWtCFOnxvBlPG+PoxxAN+wmgDdAbqkg7s+NkmqLNCjy
+	 e0zdhK2LkqFECKnqeHhkM0+hHnFAsTuXKAzFF5p6p28QHYmfB6MqdEJa4bgNqRUJbX
+	 ZZcEvt8713hsty78cNGXE2t4ErW1ldDuuwHNuxgfI07Pv4n6NTjjHk/jJXRmWqHqmW
+	 bwulY8ufwlgog==
+Date: Fri, 28 Mar 2025 14:09:37 +0000
+From: Lee Jones <lee@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] MFD for v6.15
+Message-ID: <20250328140937.GA7190@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <CAOQ4uxjQDUg8HFG+mSxMkR54zen7nC2jttzOKqh13Bx-uosh3Q@mail.gmail.com>
- <20250323103234.2mwhpsbigpwtiby4@pali> <CAOQ4uxiTKhGs1H-w1Hv-+MqY284m92Pvxfem0iWO+8THdzGvuA@mail.gmail.com>
- <20250327192629.ivnarhlkfbhbzjcl@pali> <CAOQ4uxhJ53h+1AjtF4B64onqvRfZsJ3n1OFikyJpXAPTyX45iQ@mail.gmail.com>
- <20250327211301.kdsohqou3s242coa@pali>
-In-Reply-To: <20250327211301.kdsohqou3s242coa@pali>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 28 Mar 2025 15:09:06 +0100
-X-Gm-Features: AQ5f1JpNweOw-d_V1vidFC1VFgAIx6VvCKUFr5FxsVRcprjnxwDwW9vgqTHuYto
-Message-ID: <CAOQ4uxiBh42oGyqtc3ekO+jCqtQz85ZWrwFZ9eS0=C8Zq+hPPg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] fs: introduce getfsxattrat and setfsxattrat syscalls
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-arch@vger.kernel.org, selinux@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 10:13=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> =
-wrote:
->
-> On Thursday 27 March 2025 21:57:34 Amir Goldstein wrote:
-> > On Thu, Mar 27, 2025 at 8:26=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.or=
-g> wrote:
-> > >
-> > > On Thursday 27 March 2025 12:47:02 Amir Goldstein wrote:
-> > > > On Sun, Mar 23, 2025 at 11:32=E2=80=AFAM Pali Roh=C3=A1r <pali@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Sunday 23 March 2025 09:45:06 Amir Goldstein wrote:
-> > > > > > On Fri, Mar 21, 2025 at 8:50=E2=80=AFPM Andrey Albershteyn <aal=
-bersh@redhat.com> wrote:
-> > > > > > >
-> > > > > > > This patchset introduced two new syscalls getfsxattrat() and
-> > > > > > > setfsxattrat(). These syscalls are similar to FS_IOC_FSSETXAT=
-TR ioctl()
-> > > > > > > except they use *at() semantics. Therefore, there's no need t=
-o open the
-> > > > > > > file to get an fd.
-> > > > > > >
-> > > > > > > These syscalls allow userspace to set filesystem inode attrib=
-utes on
-> > > > > > > special files. One of the usage examples is XFS quota project=
-s.
-> > > > > > >
-> > > > > > > XFS has project quotas which could be attached to a directory=
-. All
-> > > > > > > new inodes in these directories inherit project ID set on par=
-ent
-> > > > > > > directory.
-> > > > > > >
-> > > > > > > The project is created from userspace by opening and calling
-> > > > > > > FS_IOC_FSSETXATTR on each inode. This is not possible for spe=
-cial
-> > > > > > > files such as FIFO, SOCK, BLK etc. Therefore, some inodes are=
- left
-> > > > > > > with empty project ID. Those inodes then are not shown in the=
- quota
-> > > > > > > accounting but still exist in the directory. This is not crit=
-ical but in
-> > > > > > > the case when special files are created in the directory with=
- already
-> > > > > > > existing project quota, these new inodes inherit extended att=
-ributes.
-> > > > > > > This creates a mix of special files with and without attribut=
-es.
-> > > > > > > Moreover, special files with attributes don't have a possibil=
-ity to
-> > > > > > > become clear or change the attributes. This, in turn, prevent=
-s userspace
-> > > > > > > from re-creating quota project on these existing files.
-> > > > > > >
-> > > > > > > Christian, if this get in some mergeable state, please don't =
-merge it
-> > > > > > > yet. Amir suggested these syscalls better to use updated stru=
-ct fsxattr
-> > > > > > > with masking from Pali Roh=C3=A1r patchset, so, let's see how=
- it goes.
-> > > > > >
-> > > > > > Andrey,
-> > > > > >
-> > > > > > To be honest I don't think it would be fair to delay your sysca=
-lls more
-> > > > > > than needed.
-> > > > >
-> > > > > I agree.
-> > > > >
-> > > > > > If Pali can follow through and post patches on top of your sysc=
-alls for
-> > > > > > next merge window that would be great, but otherwise, I think t=
-he
-> > > > > > minimum requirement is that the syscalls return EINVAL if fsx_p=
-ad
-> > > > > > is not zero. we can take it from there later.
-> > > > >
-> > > > > IMHO SYS_getfsxattrat is fine in this form.
-> > > > >
-> > > > > For SYS_setfsxattrat I think there are needed some modifications
-> > > > > otherwise we would have problem again with backward compatibility=
- as
-> > > > > is with ioctl if the syscall wants to be extended in future.
-> > > > >
-> > > > > I would suggest for following modifications for SYS_setfsxattrat:
-> > > > >
-> > > > > - return EINVAL if fsx_xflags contains some reserved or unsupport=
-ed flag
-> > > > >
-> > > > > - add some flag to completely ignore fsx_extsize, fsx_projid, and
-> > > > >   fsx_cowextsize fields, so SYS_setfsxattrat could be used just t=
-o
-> > > > >   change fsx_xflags, and so could be used without the preceding
-> > > > >   SYS_getfsxattrat call.
-> > > > >
-> > > > > What do you think about it?
-> > > >
-> > > > I think all Andrey needs to do now is return -EINVAL if fsx_pad is =
-not zero.
-> > > >
-> > > > You can use this later to extend for the semantics of flags/fields =
-mask
-> > > > and we can have a long discussion later on what this semantics shou=
-ld be.
-> > > >
-> > > > Right?
-> > > >
-> > > > Amir.
-> > >
-> > > It is really enough?
-> >
-> > I don't know. Let's see...
-> >
-> > > All new extensions later would have to be added
-> > > into fsx_pad fields, and currently unused bits in fsx_xflags would be
-> > > unusable for extensions.
-> >
-> > I am working under the assumption that the first extension would be
-> > to support fsx_xflags_mask and from there, you could add filesystem
-> > flags support checks and then new flags. Am I wrong?
-> >
-> > Obviously, fsx_xflags_mask would be taken from fsx_pad space.
-> > After that extension is implemented, calling SYS_setfsxattrat() with
-> > a zero fsx_xflags_mask would be silly for programs that do not do
-> > the legacy get+set.
-> >
-> > So when we introduce  fsx_xflags_mask, we could say that a value
-> > of zero means that the mask is not being checked at all and unknown
-> > flags in set syscall are ignored (a.k.a legacy ioctl behavior).
-> >
-> > Programs that actually want to try and set without get will have to set
-> > a non zero fsx_xflags_mask to do something useful.
->
-> Here we need to also solve the problem that without GET call we do not
-> have valid values for fsx_extsize, fsx_projid, and fsx_cowextsize. So
-> maybe we would need some flag in fsx_pad that fsx_extsize, fsx_projid,
-> or fsx_cowextsize are ignored/masked.
->
-> > I don't think this is great.
-> > I would rather that the first version of syscalls will require the mask
-> > and will always enforce filesystems supported flags.
->
-> It is not great... But what about this? In a first step (part of this
-> syscall patch series) would be just a check that fsx_pad is zero.
-> Non-zero will return -EINVAL.
->
-> In next changes would added fsx_filter bit field, which for each
-> fsx_xflags and also for fsx_extsize, fsx_projid, and fsx_cowextsize
-> fields would add a new bit flag which would say (when SET) that the
-> particular thing has to be ignored.
+Good afternoon Linus,
 
-1. I don't like the inverse mask. statx already has the stx_mask
-    and stx_attributes_mask, so I rather stick to same semantics
-    because some of those attributes are exposed via statx as well
-2. fsx_*extsize already have a bit that says if that the particular
-    attribute is valid or not, so setting a zero fsx_cowextsize with the
-    flag FS_XFLAG_COWEXTSIZE has no effect in xfs:
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-        /*
-         * Only set the extent size hint if we've already determined that t=
-he
-         * extent size hint should be set on the inode. If no extent size f=
-lags
-         * are set on the inode then unconditionally clear the extent size =
-hint.
-         */
-        if (ip->i_diflags & (XFS_DIFLAG_EXTSIZE | XFS_DIFLAG_EXTSZINHERIT))
-                ip->i_extsize =3D XFS_B_TO_FSB(mp, fa->fsx_extsize);
-        else
-                ip->i_extsize =3D 0;
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-        if (xfs_has_v3inodes(mp)) {
-                if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
-                        ip->i_cowextsize =3D XFS_B_TO_FSB(mp, fa->fsx_cowex=
-tsize);
-                else
-                        ip->i_cowextsize =3D 0;
-        }
+are available in the Git repository at:
 
-I think we need to enforce this logic in fileattr_set_prepare()
-and I think we need to add a flag FS_XFLAG_PROJID
-that will be set in GET when fsx_projid !=3D 0 and similarly
-required when setting fsx_projid !=3D 0.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-6.15
 
-Probably will need to add some backward compat glue for this
-flag in GET ioctl to avoid breaking out of tree fs and fuse.
+for you to fetch changes up to a8d1376568619d5b7fb867929b01eeaa59bb9097:
 
->
-> So when fsx_pad is all-zeros then fsx_filter (first field in fsx_pad)
-> would say that nothing in fsx_xflags, fsx_extsize, fsx_projid, and
-> fsx_cowextsize is ignored, and hence behave like before.
->
-> And when something in fsx_pad/fsx_filter is set then it says which
-> fields are ignored/filtered-out.
->
-> > If you can get those patches (on top of current series) posted and
-> > reviewed in time for the next merge window, including consensus
-> > on the actual semantics, that would be the best IMO.
->
-> I think that this starting to be more complicated to rebase my patches
-> in a way that they do not affect IOCTL path but implement it properly
-> for new syscall path. It does not sounds like a trivial thing which I
-> would finish in merge window time and having proper review and consensus
-> on this.
->
+  mfd: cgbc-core: Add support for conga-SA8 (2025-03-21 11:34:08 +0000)
 
-Yes, it is better to separate the two efforts.
+----------------------------------------------------------------
+  * Maxim MAX77705:
+    * Added core MFD driver.
+    * Added charger driver.
+    * Added devicetree bindings for the charger and MFD core.
+    * Added Haptic controller support via the input subsystem.
+    * Added LED support.
+    * Added support to simple-mfd-i2c for fuel gauge and hwmon.
+  * Samsung S2MPU05 (Exynos7870 PMIC):
+    * Added core MFD support.
+    * Added Regulator support for 21 LDOs and 5 BUCKs.
+    * Added devicetree bindings for regulators and the PMIC core.
+  * TI TPS65215 & TPS65214:
+    * Added support to the existing TPS65219 driver.
+    * Added devicetree bindings.
+  * STMicroelectronics STM32MP25:
+    * Added support to the stm32-timers MFD driver.
+    * Added devicetree bindings.
+  * Congatec Board Controller (CGBC):
+    * Added HWMON support for internal sensors.
+    * Added support for the conga-SA8 module.
+  * Microchip LAN969X:
+    * Enabled the at91-usart MFD driver for this architecture.
+  * MediaTek MT6359:
+    * Added mfd_cell for mt6359-accdet to allow its driver to probe.
 
-wrt erroring on unsupported SET flags, all fs other than xfs already
-have some variant of fileattr_has_fsx(), so xfs is the only filesystem
-that requires special care with the new syscalls.
-It's easier to write a patch than it is to explain what I mean, so
-I'll try to write a patch.
+  * AXP20X (AXP717): Added AXP717_TS_PIN_CFG register to writeable
+    regs for temperature sensor configuration.
+  * SM501: Switched to using BIT() macro to mitigate potential
+    integer overflows in GPIO functions.
+  * ENE KB3930: Added a NULL pointer check for off_gpios during
+    probe to prevent potential dereference.
+  * SYSCON: Added a check for invalid resource size to prevent
+    issues from DT misconfiguration.
+  * CGBC: Corrected signedness issues in cgbc_session_request.
 
-Thanks,
-Amir.
+  * intel_soc_pmic_chtdc_ti / intel_soc_pmic_crc: Removed unneeded
+    explicit assignment to REGCACHE_NONE.
+  * ipaq-micro / tps65010: Switched to using str_enable_disable()
+    helpers for clarity and potential size reduction.
+  * upboard-fpga: Removed unnecessary ACPI_PTR() annotation.
+  * max8997: Removed unused max8997_irq_exit() function, using
+    devm_* helpers instead.
+  * lp3943: Dropped unused #include <linux/pwm.h> from the header
+    file.
+  * db8500-prcmu: Removed needless return statements in void APIs.
+  * qnap-mcu: Replaced commas with semicolons between expressions
+    for correctness.
+
+  * STA2X11: Removed the core MFD driver as the underlying
+    platform support was removed.
+  * EZX-PCAP: Removed the unused pcap_adc_sync function.
+  * PCF50633 (OpenMoko PMIC): Removed the entire driver (core, adc,
+    gpio, irq) as the underlying s3c24xx platform support was removed.
+
+  * Converted fsl,mcu-mpc8349emitx binding to YAML.
+  * Added qcom,msm8937-tcsr compatible.
+  * Added microchip,sama7d65-flexcom compatible.
+  * Added rockchip,rk3528-qos syscon compatible.
+  * Added airoha,en7581-pbus-csr syscon compatible.
+  * Added microchip,sama7d65-ddr3phy syscon compatible.
+  * Added microchip,sama7d65-sfrbu syscon compatible.
+
+----------------------------------------------------------------
+Aaron Kling (1):
+      mfd: max77620: Allow building as a module
+
+Andrew Perepech (1):
+      mfd: mt6397-core: Add mfd_cell for mt6359-accdet
+
+Andy Shevchenko (3):
+      mfd: intel_soc_pmic_chtdc_ti: Drop unneeded assignment for cache_type
+      mfd: intel_soc_pmic_crc: Drop unneeded assignment for cache_type
+      mfd: upboard-fpga: Remove ACPI_PTR() annotation
+
+Barnabás Czémán (1):
+      dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8937
+
+Chen Ni (1):
+      mfd: qnap-mcu: Convert commas to semicolons in qnap_mcu_exec()
+
+Chenyuan Yang (1):
+      mfd: ene-kb3930: Fix a potential NULL pointer dereference
+
+Chris Morgan (1):
+      mfd: axp20x: AXP717: Add AXP717_TS_PIN_CFG to writeable regs
+
+Chukun Pan (1):
+      dt-bindings: mfd: syscon: Add rk3528 QoS register compatible
+
+Dan Carpenter (1):
+      mfd: cgbc-core: Cleanup signedness in cgbc_session_request()
+
+Dharma Balasubiramani (1):
+      dt-bindings: mfd: atmel,sama5d2-flexcom: Add microchip,sama7d65-flexcom
+
+Dr. David Alan Gilbert (5):
+      mfd: ezx-pcap: Remove unused pcap_adc_sync
+      mfd: pcf50633-adc: Remove unused driver
+      mfd: pcF50633-gpio: Remove unused driver
+      mfd: pcf50633: Remove unused platform IRQ code
+      mfd: pcf50633: Remove remaining PCF50633 support
+
+Dzmitry Sankouski (7):
+      dt-bindings: power: supply: add maxim,max77705 charger
+      dt-bindings: mfd: Add maxim,max77705
+      power: supply: max77705: Add charger driver for Maxim 77705
+      mfd: simple-mfd-i2c: Add MAX77705 support
+      mfd: Add new driver for MAX77705 PMIC
+      Input: max77693 - add max77705 haptic support
+      leds: max77705: Add LEDs support
+
+Eder Zulian (1):
+      mfd: syscon: Add check for invalid resource size
+
+Fabrice Gasnier (2):
+      dt-bindings: mfd: stm32-timers: Add support for stm32mp25
+      mfd: stm32-timers: Add support for stm32mp25
+
+J. Neuschäfer (1):
+      dt-bindings: mfd: Convert fsl,mcu-mpc8349emitx binding to YAML
+
+Kaustabh Chakraborty (4):
+      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
+      mfd: sec: Add support for S2MPU05 PMIC
+      regulator: s2mps11: Add support for S2MPU05 regulators
+      dt-bindings: mfd: samsung,s2mps11: Add compatible for s2mpu05-pmic
+
+Krzysztof Kozlowski (1):
+      mfd: ipaq-micro/tps65010: Use str_enable_disable-like helpers
+
+Lee Jones (2):
+      Merge branches 'ib-mfd-input-leds-power-6.15', 'ib-mfd-power-6.15' and 'ib-mfd-regulator-6.15' into ibs-for-mfd-merged
+      mfd: max8997: Remove unused function max8997_irq_exit()
+
+Lorenzo Bianconi (1):
+      dt-bindings: mfd: syscon: Add the pbus-csr node for Airoha EN7581 SoC
+
+Lukas Bulwahn (1):
+      mfd: Remove STA2x11 core driver
+
+Nikita Zhandarovich (1):
+      mfd: sm501: Switch to BIT() to mitigate integer overflows
+
+Robert Marko (1):
+      mfd: at91-usart: Make it selectable for ARCH_LAN969X
+
+Ryan Wanner (2):
+      dt-bindings: mfd: syscon: Add microchip,sama7d65-ddr3phy
+      dt-bindings: mfd: syscon: Add microchip,sama7d65-sfrbu
+
+Shree Ramamoorthy (5):
+      dt-bindings: regulator: Add TI TPS65215 PMIC bindings
+      dt-bindings: regulator: Add TI TPS65214 PMIC bindings
+      mfd: tps65219: Remove TPS65219_REG_TI_DEV_ID check
+      mfd: tps65219: Add support for TI TPS65215 PMIC
+      mfd: tps65219: Add support for TI TPS65214 PMIC
+
+Thomas Richard (2):
+      mfd: cgbc: Add support for HWMON
+      mfd: cgbc-core: Add support for conga-SA8
+
+Uwe Kleine-König (1):
+      mfd: lp3943: Drop #include <linux/pwm.h> from header
+
+Zijun Hu (1):
+      mfd: db8500-prcmu: Remove needless return in three void APIs
+
+ .../bindings/mfd/atmel,sama5d2-flexcom.yaml        |   9 +-
+ .../bindings/mfd/fsl,mcu-mpc8349emitx.yaml         |  53 ++
+ .../devicetree/bindings/mfd/maxim,max77705.yaml    | 158 +++++
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml         |   1 +
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   |  13 +
+ .../devicetree/bindings/mfd/st,stm32-timers.yaml   |  18 +-
+ Documentation/devicetree/bindings/mfd/syscon.yaml  |   8 +
+ .../bindings/power/supply/maxim,max77705.yaml      |  50 ++
+ .../bindings/powerpc/fsl/mcu-mpc8349emitx.txt      |  17 -
+ .../bindings/regulator/samsung,s2mpu05.yaml        |  47 ++
+ .../devicetree/bindings/regulator/ti,tps65219.yaml |  27 +-
+ MAINTAINERS                                        |   4 +
+ arch/mips/configs/ip27_defconfig                   |   3 -
+ drivers/input/misc/Kconfig                         |   6 +-
+ drivers/input/misc/max77693-haptic.c               |  13 +-
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-max77705.c                       | 275 +++++++++
+ drivers/mfd/Kconfig                                |  47 +-
+ drivers/mfd/Makefile                               |   6 +-
+ drivers/mfd/axp20x.c                               |   1 +
+ drivers/mfd/cgbc-core.c                            |  10 +-
+ drivers/mfd/ene-kb3930.c                           |   2 +-
+ drivers/mfd/ezx-pcap.c                             |  33 --
+ drivers/mfd/intel_soc_pmic_chtdc_ti.c              |   1 -
+ drivers/mfd/intel_soc_pmic_crc.c                   |   1 -
+ drivers/mfd/ipaq-micro.c                           |   3 +-
+ drivers/mfd/max77620.c                             |   5 +
+ drivers/mfd/max77705.c                             | 182 ++++++
+ drivers/mfd/max8997-irq.c                          |  15 +-
+ drivers/mfd/mt6397-core.c                          |  12 +
+ drivers/mfd/pcf50633-adc.c                         | 255 --------
+ drivers/mfd/pcf50633-core.c                        | 304 ----------
+ drivers/mfd/pcf50633-gpio.c                        |  92 ---
+ drivers/mfd/pcf50633-irq.c                         | 312 ----------
+ drivers/mfd/qnap-mcu.c                             |   6 +-
+ drivers/mfd/sec-core.c                             |  12 +
+ drivers/mfd/sec-irq.c                              |  34 ++
+ drivers/mfd/simple-mfd-i2c.c                       |  11 +
+ drivers/mfd/sm501.c                                |   6 +-
+ drivers/mfd/sta2x11-mfd.c                          | 645 ---------------------
+ drivers/mfd/stm32-timers.c                         |  31 +-
+ drivers/mfd/syscon.c                               |   9 +-
+ drivers/mfd/tps65010.c                             |  13 +-
+ drivers/mfd/tps65219.c                             | 279 ++++++++-
+ drivers/mfd/upboard-fpga.c                         |   3 +-
+ drivers/power/supply/Kconfig                       |   6 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/max77705_charger.c            | 581 +++++++++++++++++++
+ drivers/regulator/Kconfig                          |   4 +-
+ drivers/regulator/s2mps11.c                        |  92 ++-
+ include/linux/mfd/axp20x.h                         |   1 +
+ include/linux/mfd/dbx500-prcmu.h                   |   6 +-
+ include/linux/mfd/ezx-pcap.h                       |   1 -
+ include/linux/mfd/lp3943.h                         |   1 -
+ include/linux/mfd/max77693-common.h                |   4 +-
+ include/linux/mfd/max77705-private.h               | 195 +++++++
+ include/linux/mfd/max8997-private.h                |   1 -
+ include/linux/mfd/pcf50633/adc.h                   |  69 ---
+ include/linux/mfd/pcf50633/gpio.h                  |  48 --
+ include/linux/mfd/pcf50633/mbc.h                   | 130 -----
+ include/linux/mfd/pcf50633/pmic.h                  |  68 ---
+ include/linux/mfd/samsung/core.h                   |   1 +
+ include/linux/mfd/samsung/irq.h                    |  44 ++
+ include/linux/mfd/samsung/s2mpu05.h                | 183 ++++++
+ include/linux/mfd/sta2x11-mfd.h                    | 506 ----------------
+ include/linux/mfd/stm32-timers.h                   |   9 +
+ include/linux/mfd/tps65219.h                       | 136 ++++-
+ include/linux/power/max77705_charger.h             | 195 +++++++
+ 69 files changed, 2724 insertions(+), 2599 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl,mcu-mpc8349emitx.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/maxim,max77705.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max77705.yaml
+ delete mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mcu-mpc8349emitx.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/samsung,s2mpu05.yaml
+ create mode 100644 drivers/leds/leds-max77705.c
+ create mode 100644 drivers/mfd/max77705.c
+ delete mode 100644 drivers/mfd/pcf50633-adc.c
+ delete mode 100644 drivers/mfd/pcf50633-core.c
+ delete mode 100644 drivers/mfd/pcf50633-gpio.c
+ delete mode 100644 drivers/mfd/pcf50633-irq.c
+ delete mode 100644 drivers/mfd/sta2x11-mfd.c
+ create mode 100644 drivers/power/supply/max77705_charger.c
+ create mode 100644 include/linux/mfd/max77705-private.h
+ delete mode 100644 include/linux/mfd/pcf50633/adc.h
+ delete mode 100644 include/linux/mfd/pcf50633/gpio.h
+ delete mode 100644 include/linux/mfd/pcf50633/mbc.h
+ delete mode 100644 include/linux/mfd/pcf50633/pmic.h
+ create mode 100644 include/linux/mfd/samsung/s2mpu05.h
+ delete mode 100644 include/linux/mfd/sta2x11-mfd.h
+ create mode 100644 include/linux/power/max77705_charger.h
+
+-- 
+Lee Jones [李琼斯]
