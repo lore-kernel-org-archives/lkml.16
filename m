@@ -1,120 +1,90 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3A41E0E0A;
-	Fri, 28 Mar 2025 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367D01DFE36
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743185709; cv=none; b=duIV+zivCTAx8jYSPvu//Mkt4qb2uozHtKGJoXb9vO3eL2u9dV2qlaQpSmxmymLNDLIRU2TD7JmCrxVdPmQ5WTjn7gxMe+Ya53scqyiFrjjqhFlRLwMplLQ0C4Occa3J6ztBATL57J5YfHAh8FpQK1sjIFyoyRoBkfAmbV3Op70=
+	t=1743185709; cv=none; b=oVH7l9NkkeQDu6gamVO32LtfZt/+/gBmuc7DsJKQWycU/AM4C9WRMPe7CrnUJWR9A/YrTS0sfT2akafPYUvFhjfKyd3nKEHYVYGkh8oZb9WCD8N5dL0UnTy1fTThOigXZfaTLUuGsiIf3fxD2TGTwCPmuvoChGR+vL2ExemjQ94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743185709; c=relaxed/simple;
-	bh=1WYiVC9lV01fMmGdapZKojKijVkt+J+BAamM/QLu8+0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sa/dujznL6QsEOc23HX/3PR3Tmd49c2tPUFRAV0obGEDO2WV8JMIZm2UKYZYhiOFhD7/G92C9uQwcsFt5zk66NBHPCnVztyEnPLGSLDg2ig5VI9r/9rbsYH47WixOfevCfVzypNCD5uiC/3duKk89G1KvY+pyYBJ+WHjCyYlOEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PnPyRRye; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=S/CMxBiATfwIX8u78Ausp4MJO1mSJU8pkpiZjklIqC0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=pYAM/KLzXiavAuyS8hv9rkr+whnkWJIYXVEWaiTwvB4jD5X6oveq5SAXGCMTX7n3IBLd5SZQgpsltm57AKU/ESf1MK80o7CW9WegjftCF0+zHtnQ+BGhH7DWqp4FIQQAiq1WWdVEi00z6eH9jGUbcZdArwTfVBiBUulv1T4p8fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jHi78glp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnPyRRye"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22401f4d35aso54978495ad.2;
-        Fri, 28 Mar 2025 11:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743185706; x=1743790506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qtZna3j+CxXjkNh4wGSlYeGcWJMOvvSqD8UdEcRuHkA=;
-        b=PnPyRRyec5/KHcMuw5SJjzEh/nrVmcj/66wA5DKHzk0WI9uqjJm9Aj6tQDChD04xyL
-         5Jj2l4AjS/kFgSdAARSvVeJ19jmY8XLXUV3PsiH9d7pCYXW+UGrOvLhF5GZYc4ca2Kfz
-         bfwlom5o8cKhDskQQrj/T4i5Fq9c4ZjhIw0Z2VBXwH/xn/ukGpZL24AhJs1xObtiOats
-         i8oaa9iT/8m3P2kJdr7H9HshMACjuXezQ7aSJ8OgbLrtE63Y633B0m3cmnn015WzvKPH
-         8ya8LMX9Cc5hIyo6QTZr7Nw3J108DgdoW4KfIyFJ1MmPx/IHNGuTPSjNGvry8nBcRpoK
-         yADg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743185706; x=1743790506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qtZna3j+CxXjkNh4wGSlYeGcWJMOvvSqD8UdEcRuHkA=;
-        b=ABN9o5IPTL4aXOClAATOZ19tO2pgAm6HCRPfaLVOXmOa8VMFKLpi9texkAuBmPyodT
-         GUdEBn9RTjoEHmCuBKbaSEVMz/ye3IcegisKVcNGkt2fkLWhCwAEaji3qyxI+jt6fo+8
-         +0gJdzHbexrZyJyESjoTt2T75qWlfc8vgUd2JObgeeYdbYGvk4AdYzrc4rW6Zk94tz9O
-         bhGTEwa6HNY4qJ4rCaWhK671kZi1tsVl1aMBpz+86H4eFK7LzLUDx6fhpbTb1EBUrLpc
-         qLqq5G4Tl7jPjYKxDWtW6dGmBi7I8keDcFZKQFrM+xpkxnscDDMCx/75mP8/Ai3/sgB+
-         mYGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGgjLPEakiIGTB7lx4qgCIvL3roDQuKLUzCcfm0UreNPZRWP4E84ejaQ+swaR8cUD5BQPnjV3ZxX1XpaIx@vger.kernel.org, AJvYcCWgd57DnSas1luqPL0UC26R1J0os1OqwSotlcsaCVCcTYgZMGoYVyy/BhblSUaUzDX8/Pc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS/buDj9H5BYzCEJNk+UD1EwyGuvYq2wa3SADPpxJI6c6Swv4c
-	K3vQIJsuh3IPCBxYbBo1XrZM8t/UV6O7LCVPYjqrK+Q2q/zdA8TPrWBPCX7BpMaWu+Zy9vEgLZx
-	FYaRm9jQ+UMT8fTmeWv4bVP8+X8w=
-X-Gm-Gg: ASbGncuS96fFngqJIc5TITD/K7KAEFOevMszfc9MUpaweAIq1qUlNcnhRvBW0dvkoZr
-	Mt3muyBcJ6gVW9Vtk8TU9ExE8I2obH6tN92pqcQtMTUshRlhxEX7OYw22gvJB2s1I6k0YbupIar
-	/ThLTou7ZyFlHQSXFb/uJqdGY/Pqgw+nBYny2q5apBUg==
-X-Google-Smtp-Source: AGHT+IG81uHsTF1SmbTmqfeZfF2y8cAKyyTuAwJ00cXTfliqE094GzCzpT3QEUiEyyq8LL1/096MKesgfew1kCQEDm4=
-X-Received: by 2002:a05:6a21:9188:b0:1f5:591b:4f73 with SMTP id
- adf61e73a8af0-2009f7537ddmr511099637.34.1743185706054; Fri, 28 Mar 2025
- 11:15:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jHi78glp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743185707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2oGU2c/jU+jROERJKnJ12bX6t4qhq3RiVRF861YZDSA=;
+	b=jHi78glpQibWR2+B5K2JUt0S3WtO4Cq7qQbs02jvhx67+PJJVSES4+ei5b6oaVwW2MlEjt
+	4U2E1TZFODAqCSOPk+NoK41Hb5IcpRQS8SVppjxzlspBW84pVRdhXlSHhkVeIGKbWj3Oju
+	zvh9Fs4fCALv3ryoqylZhxTO7w5puFo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-422-EeBGk180Nuy2ybQ2ywBfvg-1; Fri,
+ 28 Mar 2025 14:15:01 -0400
+X-MC-Unique: EeBGk180Nuy2ybQ2ywBfvg-1
+X-Mimecast-MFC-AGG-ID: EeBGk180Nuy2ybQ2ywBfvg_1743185700
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AB79719373DB;
+	Fri, 28 Mar 2025 18:14:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1B54B19560AB;
+	Fri, 28 Mar 2025 18:14:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250323184848.GB14883@redhat.com>
+References: <20250323184848.GB14883@redhat.com> <67dedd2f.050a0220.31a16b.003f.GAE@google.com>
+To: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, Oleg Nesterov <oleg@redhat.com>,
+    brauner@kernel.org, jack@suse.cz, jlayton@kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com,
+    viro@zeniv.linux.org.uk, K Prateek Nayak <kprateek.nayak@amd.com>,
+    "Sapkal,
+ Swapnil" <swapnil.sapkal@amd.com>,
+    Mateusz Guzik <mjguzik@gmail.com>
+Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327100733.27881-1-bieganski.gm@gmail.com>
-In-Reply-To: <20250327100733.27881-1-bieganski.gm@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 28 Mar 2025 11:14:54 -0700
-X-Gm-Features: AQ5f1JrxQO7vNdRNIPLHPjjjCjV7pZecdsfPt9dmHqa6XA3pw7LkEL7us8LNGAw
-Message-ID: <CAEf4BzbGbfhdanY0yZtRoRTZaiMG4ML1PYUz1m4QbG-Kw2tNtA@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: fix multi-uprobe attach not working with dynamic symbols
-To: Mateusz Bieganski <bieganski.gm@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "open list:BPF [LIBRARY] (libbpf)" <bpf@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <86990.1743185694.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Mar 2025 18:14:54 +0000
+Message-ID: <86991.1743185694@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Thu, Mar 27, 2025 at 3:08=E2=80=AFAM Mateusz Bieganski
-<bieganski.gm@gmail.com> wrote:
->
-> ENOENT is incorrectly propagated to caller, if requested symbol is
-> present in dynamic linker symbol table and not present in symbol table.
->
-> Signed-off-by: Mateusz Bieganski <bieganski.gm@gmail.com>
-> ---
->  tools/lib/bpf/elf.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/lib/bpf/elf.c b/tools/lib/bpf/elf.c
-> index 823f83ad819c..41839ef5bc97 100644
-> --- a/tools/lib/bpf/elf.c
-> +++ b/tools/lib/bpf/elf.c
-> @@ -439,8 +439,10 @@ int elf_resolve_syms_offsets(const char *binary_path=
-, int cnt,
->                 struct elf_sym *sym;
->
->                 err =3D elf_sym_iter_new(&iter, elf_fd.elf, binary_path, =
-sh_types[i], st_type);
-> -               if (err =3D=3D -ENOENT)
-> +               if (err =3D=3D -ENOENT) {
-> +                       err =3D 0;
->                         continue;
-> +               }
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
+.git netfs-fixes
 
-Don't we have the same problem in elf_resolve_pattern_offsets() as
-well? Can you please fix both issues in one go?
+  There's inconsistency with some wakeups between using rreq->waitq (a pri=
+vate
+  waitqueue) and using clear_and_wake_up_bit() (a shared global waitqueue)=
+.
+  The reason I didn't get round to posting the patches on this branch yet =
+is
+  that they *ought* to fix the problem, but Steve French still sees an
+  occasional hang with cifs - but only in his automated testing thing, and=
+ we
+  haven't tracked it down yet.
 
-It seems it's only elf_find_func_offset() that do want to preserve
-that -ENOENT, all others are just error-prone implementations.
+  David
 
-pw-bot: cr
-
->                 if (err)
->                         goto out;
->
-> --
-> 2.39.5
->
