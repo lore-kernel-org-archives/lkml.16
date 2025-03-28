@@ -1,185 +1,241 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010008.outbound.protection.outlook.com [52.103.68.8])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2067.outbound.protection.outlook.com [40.107.21.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B5421B9C4;
-	Fri, 28 Mar 2025 14:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2351F94A;
+	Fri, 28 Mar 2025 14:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.67
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172019; cv=fail; b=DvQSFn8o2f+wNzULiyh7h4Fj6XO6LtHOuHn7yPO45bCSg7ZFk+uMbDIRHH73/VFBasLCnT1IipDGfBOWry/PrTAS3CBYdnRwT9KkJfu1+fBip7YXZ4yIFzk6/NgRfQGvfjmfXgcUMskH7tvj4wLHUsBzzihwnNwGzTcubYrsnS0=
+	t=1743172067; cv=fail; b=cUKKk6h/nDsEYrl3Rq3i+DHagas0DO3jovaLymweGklfdoACMS8Uj8OhtcRQNl6MyHHxWfRqhaHBkx/c9O/ippiGBHoF7GGL7VfQVnG4SLLrf1zqCif58kfLEujH9gkfxcK8FXBfYNuADfwInqz9WlNd0ND1I38FJprr3FAuPko=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743172019; c=relaxed/simple;
-	bh=4GRrAptYOXIh5D8xjGYTRfzkBuX/XYyBdHgMW453hmA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TJ2r4RjEm4i97UbbGWnko8euDCxnbal39ZRsechFD/PAClwvoTFBWODqSIRrbsTx8u/yPMX+rvdLxBjP9Dd47waXCnRfIJ8YScJOw9JwE3vrFlqNoftQi1pO/oGe8h0qLozA6ZN/wB0nvxfu0ZhPalrEgLEnRpW1UllC0Ph2MyY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=jAfwJsJ5; arc=fail smtp.client-ip=52.103.68.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	s=arc-20240116; t=1743172067; c=relaxed/simple;
+	bh=rwoM6UvtR7uvFtFpQSq0rZ9NK/hXwikiR4WkWKSyRV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Q1BrQ04J0xZIyZ8T53x4M9ELmEa25yfmCaY0rqY4OZdaW6UkaGEE50e2+2KSGkPkWpQ2wtJl+0O3iyKUxpBsrLYAgMjaf0SdpiGBQ0+TE7ygYSO7hxtECygCh/WrGRSO4FD8uBppw4vqYn9xqlhB9yk45K47HRmSpAi9pFyARHw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KUZ0DwY+; arc=fail smtp.client-ip=40.107.21.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="jAfwJsJ5"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KUZ0DwY+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cnnb56BSJ4PAgT2bupsiU2uCchbYd8ZIn+ZQcE7Uv3AirtxNPCiLyZllq6cFyPxb/eu+dgxMQvYFyuFXsBNRIjUTkcCjq5gcg+VMjy28UP87ZhQvgMS/p8YNadvJYgbaDsAcq9EupS6EdQCg0C9IBFXGmTvwPRWkcBTGFmjPnLnOwgNa78GLmNAxDrPHl3bxt6U1+ncjaBBojQ+w02HWaCrte3WHaHOJYCRKKNAAqc6hWwceyN1JmhWDhrRRCRPOm+dPeBcwWN6Y4ZMjWkRZSVHq4axUBwbxYlUpRdLlIhMPoBmN1xXDUmJkYOld0ACWaF78nUt7ViGvxZbG6idC6Q==
+ b=DTv4D9qgZD0JETxHGLVOLsLN/8ksacWGAYSapzqA4YtdRD3HML3gvdTF3YXkbMLpyNVFfKZsR0i0Q5F5uS/wyKd4RfTwYpOP7qZly35da12LvRHrbrSDKTtBr+lzDT0C3c2lWDMNeP7eC20piaGh8dk9QeBVKNs/IvCwtL24VQ00K75U0NTHzC2XvDwg/p6pRwk6UrSNYUxfYHq2E0Ah+anVo1M2ZGedezlW+z/FHam9hyxt2KDMDvCJJ19TQmt/cdrjrygb128sxR4r+yMAlFEdTvelKOlDsfCFOhKTZzeC1TaYdnVK0q7fhNm2SV+MIcauMzP3KZPEiXl0CF3IAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mic8xoczLuvnAcXZA3HGUYaPNZVaxjhHyNgf2obqsLk=;
- b=ubquygKXFRPVInf2NnMLHEKNpMPMmdCeZj1ir+WN8n+Y1K6z0juA2s4jdgVyq8ZWcBatIDo0benm9wQrsQBe5+wl3ErnMJRnzUjJ+7qMfQnHtIAGpHSeGAttuIfTZ5nDNxvCjmzvAMCZUFaqL0pRpqCxN4XBCPgIoNxFEj7UaCx3Vs3tz/0ZQB9uYvw55FgPVeHUFzGikHeNLMC6fDnIi1IJYMKZAKUnxpB9asTlgyMoWriHfSOGeieg+wdAEykObkcETNXFF1S88ux6KIwrGVDBBmSwwrLdhLGV1XbJLlpMNJ7yxJfI1F5v90wQoWNrO8K8CD6hdoJ+g5NDHtX2Yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ bh=iELxCYFRc4Q74J0m4zLgXNZgCSZUU1z5Fp0746ehTKI=;
+ b=TaaLV6Sg8/JM7ivl4x3XxkpuVGlkE+y4VCBlSFVATUiyWyHWYBzpCwRKSG3PVF2IKwmN8Cw6qEtdkGwoBeD52dxnEo0EJiXA1tHFO+XUA4mzh4oMzPq5YN1McfU4R+ria7OzVzdJHTOi6xKhEzaB5rt+cKzXSzXP7BM8GgAO+eFRJZgJcwAQI//L3q/n0E40e+kvvJ2HIaiOVlhlPv51Rav4K1bskQqJ4udvrqYm8G37HaXzpB9c5LKCWqFa2sFW//fkw/KgmgUOuLppkK6h89MN9/5VPXTwFV0HDizvGOluxYfNfXRKqG/xl2Vy8O3DsS/c19rQxegHxr2VfK1T7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mic8xoczLuvnAcXZA3HGUYaPNZVaxjhHyNgf2obqsLk=;
- b=jAfwJsJ5TljCv0tQqzq1cecnmEOeQojs2ZYXIXqmtGUrCbyQDFS24zLwQmgjBPKhMSb7pje3KegvntkgMPANl7aTq9Fslj1Y1wGQfASH/qOcoqyqnwxh0zRZSvJl8guG9Bv3F17mwFCYZNaRDHtSrPIW4Pd4R5TV/migJ1XPqHoOCq4RXA8OFsDvANdk66yYw6sJbDQGr5Xv75uiIocUUS7mQdj3TCffPBW9+wJ9H23UWp7M7vfEW/1vfQlIo+54rG5PEQI67DI9uTdx1vnLAsxKsIrsVgQ3HWMMV0/QMajxFwYemsPkePc7pp2Ozc2xytzTb/7yWFdYV5yDstAP4A==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN0PR01MB9447.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:10f::8) with
+ bh=iELxCYFRc4Q74J0m4zLgXNZgCSZUU1z5Fp0746ehTKI=;
+ b=KUZ0DwY+CdZh2eFp6HHSZbj1zoAhgECswoFRVR/yI78x+q/K0IlFAPa2Nn38sIgOqs5tiHjqQNsnXBlvd5R2Adps2CGdb5OhVw9+ltAQfOq+ru8gmO+5S2AYLqDTG4Tskm6WFLpzC5ANkVrJOW9uLbNISfwtZfHkTA4kKwqrr7dTKEGOI2vhh60od5SK9ONqYnKhS2XQ5GRizihwA+L+tsIdtC4ZDcL6wMICC4X00o1uMglLeukDStQ8ulTTSR5jqfZQWCs9YgTW9TAZvFXLhDy4JMrrFanNiyTTl45XwInWlpCXVk3F6vnGZH3DtHbKLty/2olbDctkwW4imRsTzA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by DB9PR04MB8431.eurprd04.prod.outlook.com (2603:10a6:10:24e::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 14:26:51 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 14:26:51 +0000
-From: gargaditya08@live.com
-To: jikos@kernel.org,
-	jkosina@suse.com,
-	bentiss@kernel.org,
-	benjamin.tissoires@redhat.com
-Cc: g.sokol99@g-sokol.info,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	Aditya Garg <adityagarg1208@gmail.com>,
-	Aditya Garg <gargaditya08@live.com>
-Subject: [PATCH v4 5/5] HID: apple: Add Apple Magic Keyboard A3119 USB-C support
-Date: Fri, 28 Mar 2025 19:48:27 +0530
-Message-ID:
- <PN3PR01MB9597E15D1B5ED64DE45F4343B8A02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250328142625.12980-1-gargaditya08@live.com>
-References: <20250328142625.12980-1-gargaditya08@live.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BMXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::27) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <20250328142625.12980-6-gargaditya08@live.com>
+ 2025 14:27:40 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
+ 14:27:40 +0000
+Date: Fri, 28 Mar 2025 10:27:31 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] media: imx-jpeg: Enhance error handling in buffer
+ allocation
+Message-ID: <Z+ax0z5ejjI12uJn@lizhi-Precision-Tower-5810>
+References: <20250328063056.762-1-ming.qian@oss.nxp.com>
+ <20250328063056.762-2-ming.qian@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328063056.762-2-ming.qian@oss.nxp.com>
+X-ClientProxiedBy: BY5PR20CA0012.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::25) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB9447:EE_
-X-MS-Office365-Filtering-Correlation-Id: fa685f2d-ab4b-464a-f423-08dd6e049498
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DB9PR04MB8431:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57e2fb33-0fe7-44b9-c6ef-08dd6e04b178
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|461199028|19110799003|8060799006|7092599003|5072599009|440099028|3412199025|1710799026;
+	BCL:0;ARA:13230040|7416014|376014|52116014|1800799024|366016|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HT9EygxCnXm6uow2TrxHgtyoeLSt1A6huwU8l4DvOPNWalUHMSkuiDHKdvEF?=
- =?us-ascii?Q?Z+EzPWzoZF1X5yHw9jlMuzpDv+MySYf+BR0SEkiuP9H/Q2D8QWjYVTd8Nh2x?=
- =?us-ascii?Q?HE/xlRgLK7D7a0ZPzZdj2kMTIHRmPV4UGOyTGV036+NefarstWtubQ8ecvU6?=
- =?us-ascii?Q?n2kBBexCdJm5y6QSzPy4UgsNrezz3ma8lUVXTM6m7dwPU9xF9sWZgy3VXFtv?=
- =?us-ascii?Q?Q19CqZovOsYAqrEDPgVRYwy7mlzbAAM3znpEjF76JHt88mxQCMr5LSk4M8xg?=
- =?us-ascii?Q?QW/Jh0mllzenDXqxci4/bJ1ITwwr4ekwlKB37l4TU0k8K/Bbqua5BVkZ8mBF?=
- =?us-ascii?Q?YZnuUbM+5QpPrANCyDFpwhrpAT2R5oNYqkMH1WjxpR9gwawKMiBNReSnfKPF?=
- =?us-ascii?Q?kzV8rieXNu1xrkC8zymvND5CXal4qEeEuUWFGGQ+JEitBzRwEMv4W5J8kYKm?=
- =?us-ascii?Q?N4h5kpO/veI6g4mkGBN+y9AbatoTODvUVMUY+Gel+DUj8ud0iVfWKu+XX7Ov?=
- =?us-ascii?Q?gPvUiv7eSWRln5ONG2UZtpuEcCnaqcuzPu7joEY3KNqPnAZJrc/uVUuCxe0Y?=
- =?us-ascii?Q?KQZosFOpotChlod+fstiyMQHLuCWTdJdnCLS71l36uzJnGmEvtE/rMBpdsyg?=
- =?us-ascii?Q?zoABTJS2UtOQmauMPdM9P3vezOyLa24K2eBuGkBGPvQp0lPyMK5QFfnVYojk?=
- =?us-ascii?Q?c0bBILgzJEAFKnTsNUdMlT/B+gZjy4qv5I3GF38xnBUIsZdKTfmWJ920XkVf?=
- =?us-ascii?Q?zTDIwJevLieTIgPpvR0MPR5RKqCO4V+wW8XzdnkwAzERYpJr9eameZyGAqbY?=
- =?us-ascii?Q?r0wME5ZafUZRX7khfU6tHf8/NDc98DvOqXm5GE343NFVOXK8uVynYkd4goxq?=
- =?us-ascii?Q?e6UoPQsdKzVsZmF/EITy4Wf2vOPWNvFwH6wxa8Gt8Sy6XE/xApJhM8Oi47fE?=
- =?us-ascii?Q?wZbAaMw4uzd6nmw3tmVcG4u3lPrIKDdsHej/QLEuiSMyCJ4MDdReXu46+e6+?=
- =?us-ascii?Q?hssKAigmhF+2f0Q8OMCcQzsdHcEFPFt39zRuIqNeGCoo4knyVigHnlKBFSPj?=
- =?us-ascii?Q?I+ui9b/n9rXJb2lsG3y8fmYfNC5AM8UIUbo000IeEBytBH/IEATxQ+wJqy4p?=
- =?us-ascii?Q?3t7ZR265tplfkQRG1z9nvjkslPYlZH3CGg=3D=3D?=
+	=?us-ascii?Q?qHBRH7gOLaKpw46oIjg+a4+z52w2KqtND1W9Y2exRFsNlv+14YCzZXu/WhYc?=
+ =?us-ascii?Q?IatvKexWBGROthnY+V/qoV4lOVXfTKlVs0jgP7vWZQUemi0aRm2Ay0UDGjxh?=
+ =?us-ascii?Q?b07l6p17vI+sQ79aGnGLMG1eHbrwXFJYcdu1EWO7tB4AkQJX5h0VYhd8zTjK?=
+ =?us-ascii?Q?kJHgxV4d6HeD6jZX+iw6rPqbssV+WIX77O5VvqPwcBzUPGiYdTfXJm9b4C9J?=
+ =?us-ascii?Q?W4xNnzDLd9ApwkeNqXV5fh+wikHQRib4CQu6vAzUaC5uZsjaEgoj94b+5UBn?=
+ =?us-ascii?Q?E/kODcM1MaSEwfjkgbNhUrAiVqOXUrsoQHqOJWV8pYewaBu4tzqP/760kIJx?=
+ =?us-ascii?Q?nIxtQOJy1SpHbZ2FxCxX5ylcJecQAXg40Rcb4WIdnIhLLZVu8AGSaL+NMNuQ?=
+ =?us-ascii?Q?gO3oOVrvfR1/ApHsAwerIDBur9oUnQ1o2MVDOnr92QjUpvuCSnpSFCDy0D/g?=
+ =?us-ascii?Q?xUoLyzGgNjzqtn+jnJ8IMF8Ah1PezlECkFLNiYNSobwJfrbbEuHjiDULQ4pr?=
+ =?us-ascii?Q?Qs1+t7yfRnWuMH0BYHk8sEYRaBy1yH7vYOvfZebA6uOwTJOoQaiNbJLGtzps?=
+ =?us-ascii?Q?r46QPlhK9boJBnFneyjW1uLvNoPWCwrexJG4mNjhgjiZ2ZQRzpCwHESPhicL?=
+ =?us-ascii?Q?XIumIKMtR2cdV494Xciz1suZwJwYYF8HGLThRlyrTlU8NbjIUAPAzdrBYQQD?=
+ =?us-ascii?Q?x123BPoxjgfqnU+jh4KDjxzDahQ5QBEbNNtPegVhqQL+ytwUC507I3F7DezN?=
+ =?us-ascii?Q?PEHVd1Yh+JYa/izcZhnOufvBFiYDmKqnFzTOvxsqbLkJc1h6UuYd0e4LXEG/?=
+ =?us-ascii?Q?DjcfRO5+Qh+opZVwmfV2B4uWI2fkCikopjFZuNzZoLmaMwwUFCSebj5twQVA?=
+ =?us-ascii?Q?uhm1uZWX5IrbfumJijcpBMKtick4S8fRozhmyxBWd1m/9szz4KIszqnjEwN8?=
+ =?us-ascii?Q?rBUFzsaS+M4AdcFNvlz8zcZsmK3t03XnTJPwxhI/Yxe08b3Pr9ZeGYF2CUEq?=
+ =?us-ascii?Q?O0/Eu8+S2lYGcqRQgtiGAw51Q1aKddnEgPsufuxDbzkwnbaupAFSgPTLt93Q?=
+ =?us-ascii?Q?BsEVFpIct1thw4+TGwKa/Ux2pHTaKZNUOzQHY9lCm8dyTYp4h7bg13uaH3Yh?=
+ =?us-ascii?Q?1jSuYrHSoUx8t6kGbD0YFYqaKGe+s1hp7o7ngrODB3WdPDzhHz91fS5wh07q?=
+ =?us-ascii?Q?3MCEv9cHRaNBg4v8jmxf9pDH6Y6rp+XNuyXdPqIum4CNp9ancd1nOFQ1lled?=
+ =?us-ascii?Q?AdOMLHaTnsHKGAcQl0XMBaLclfoHapb+Z1JPyuLmReehPK3ot1Oy+9j2TH16?=
+ =?us-ascii?Q?beFT/ORhzHeoYXfOv35ss97SdAp1WnYVP7QQO42iD1d9BV0rynbDjSAxcLR0?=
+ =?us-ascii?Q?7Jl6xkTtMzhDo1aFemkulu0AXEoE0knUifnB0solfFVShy+K5osREUDbmqK/?=
+ =?us-ascii?Q?DL8oWi0IznGrWlpWGB0hz4GXv5fqKI6dWbdswou5qBNVagwL74M68A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?J7bBWqMcLW7rdGkgJ8gep1wvmYV81UGP3HxtGWS0vxvaDzrY8c2WRPrZ566u?=
- =?us-ascii?Q?Xont5FesyKz33JrEAW8Y3VHaz+Ytr80H+j1hWe0R18UJScuGafBMrjaUGlrC?=
- =?us-ascii?Q?Af5qV+cbp9Cgc2thiRmEPCdpoxsT9lNFZN+1JCE/8j8IJAJzM/YcG7D7Me4W?=
- =?us-ascii?Q?Uhy2BiOFWLBujw6yMzpabvmKbkffBMy05kKBhV8F6hkLQene9yI9LnU7EDeL?=
- =?us-ascii?Q?L+pYFf5RR0wQF9oOY++AIglb1NWAFtWX3xpbiKsha18uZHdnmiNIprh8OBYJ?=
- =?us-ascii?Q?K/C+0otXRTFxrS5LAsDlpkDdk5mfH2u5TutaMf+pS3u7OOtgKl+r6TXo+X7N?=
- =?us-ascii?Q?gqiQ2GpUwFT+1dnxv8z8omOFrXRDuKDmbAc1FbZ2QHkbjDI+/4vQv5qwOlJd?=
- =?us-ascii?Q?GMv3uxU03MRTAhfTzKhePnMoeoqQPEkn3Nt+7asPuvS6AO36pZSmGDG6WdTR?=
- =?us-ascii?Q?ggsvG7MdnprIukopbKanHq8z3GpaXBfBlJKMG2WVy/8rHTq67tZup5JEh9x7?=
- =?us-ascii?Q?9WrKXBEQZo3/ptNwZ8CkMNSki8Davy8DE8SUm7E73kIY9Hfzg0ivhS7ycuqj?=
- =?us-ascii?Q?1fQDqCV7zT3dGrxfuYs5Y29lcoC1e7m1FgAg8VoOijzrN8aT7XS93mKjE52C?=
- =?us-ascii?Q?/G8rPKdtFv013iBtsqzvCJatQkVoWp0aRx3qwcuAUyyZQV6N38WW5Lr14MyF?=
- =?us-ascii?Q?Eu0G0wHjXHsRoNOacKbuE8l3kqHIGPCaZurTHaYVXAkLIpNKUya6tJGvcetE?=
- =?us-ascii?Q?IysBvCen4Sf1XZFWMU0ljQzk4xhS8AQCFRzMCcKCFCuVaK/tsKqvxf6+p/MZ?=
- =?us-ascii?Q?JSIqNl+Fo8qHkstLwJShlKu0YPjCa0wHScthUok5mKbArpGbRMaeB6RgRYSU?=
- =?us-ascii?Q?4HevHFsb7Sp1EtsnG3pT1CXOA6k9f4Z2DJUceSD0MWsY6Nn2kF9CXkrqwHxa?=
- =?us-ascii?Q?mS+g/tCqVGYJhKR+wKyGNFUFyWfKx9VpWhuOsYAwhb4Zu7xtefZwrXxNYQVM?=
- =?us-ascii?Q?E+OEaG3Bcmdcic4w6aq352HMU5ZvTt5Qxueviyo7SvfLHJH8YCkYvboCOxyQ?=
- =?us-ascii?Q?8CeQbPj3rnuv1r6ALzdih25tHGI8oN51oAZTNim9ZkrWR6vCgfkkc7g3E4Ew?=
- =?us-ascii?Q?s4GKUZYYsaSc27m3G8/WhWVqOPnKQMJ368LDJANn2RxYycj3r2hi0ZC3mGoG?=
- =?us-ascii?Q?7TwAfZBr1rVnlPAZqQkC1mIxt+sTKUFPvEOyLQMjXAXe0RkXBodHzvb2WwQf?=
- =?us-ascii?Q?YR/YkkmeNeoyt6BcfVNd4yumH0fwTUAZZIFsIAGX99pc5BJ0S1A5V36PUb9y?=
- =?us-ascii?Q?480=3D?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa685f2d-ab4b-464a-f423-08dd6e049498
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+	=?us-ascii?Q?NCIaO4OyskBcD1bUIWQ8ykqtT2kuc2zPufTb9F7SQY3Z37PO4lQaQ9zzWE/T?=
+ =?us-ascii?Q?dc7YrZUyfu/5Nsg/5dm7okJ0y2oU6APpCrpiIINJeWMFIpWcEnkVwxKy76JO?=
+ =?us-ascii?Q?L3wVRijX16SjCvF9JoHrjMRVPEH+DOCkKMXsj9oc/9h/MTMEbPGl+GVoURgh?=
+ =?us-ascii?Q?bOfwCSpg9QC62rLOJIV5y8XXyJoeKK4UgzFSlyV2/pa62WQ39VeOEi7tcyRl?=
+ =?us-ascii?Q?UTL13By03ZZVGWRMt5h7Sfb1hmpkSDl8kmkETW34TMefoMiNKpKTW7a9GBs5?=
+ =?us-ascii?Q?hU2FbNpa/tGESNz/qzHtfhGJAC0NOyLaV36d/AoZ+yh7xqKS7fp58JS2j6U5?=
+ =?us-ascii?Q?IDXJ7ysvhDlGQQ2rBW9n3yqqYjuqVD/fx9X7bcjfE1ekYdbP6ePFBm8GpM87?=
+ =?us-ascii?Q?znk8VXUtlGBR5tGSSHMrTNGrOABmc8udodDkNbz/58hDj2A/MB9nEAmG7S64?=
+ =?us-ascii?Q?vVvFw250rymokMlW95dBSBYMAykNwrSrsgCiqoc9ZACnTHCQOatERqoQZM7c?=
+ =?us-ascii?Q?u6gOTbsBG54DzQ8iGF5WAuZjb+xCcXdthc9p7QeLzoq+yfzo1ZtcfmcXIJKF?=
+ =?us-ascii?Q?URVzEJQvGN3IYKjfwOwN3oByif5jUpeggy+vyqus+9B8Vsbu9eSXs0PFZ/hm?=
+ =?us-ascii?Q?ynr1kCL17DCX90wTjOrBVcwfYwtTKoB+APsrIvEedGMjxDAsK3cDsCt/Hb9n?=
+ =?us-ascii?Q?Zzg4sCRli1siXAfuIhqyz6+m+2Fa1iKci/8YWooo1vWYNQt7O1WNANUr0E/N?=
+ =?us-ascii?Q?WNLRugfnv5esh8nymjwKh8Ay8eep0cxCvd3EwK0n9m6g7diUGjaV0rcEkDIf?=
+ =?us-ascii?Q?D8q5KymR4bShV6hdZcOIm65hMyAGQfkS6vqlcgD3iJ04Bc3Z3YDI60Fk3sUi?=
+ =?us-ascii?Q?S9CG5iVCWz3SshNE7Sx0L9N1c68m+QyidWoW153hRkRKfJlgRGzRANnhAwUq?=
+ =?us-ascii?Q?aQEjlFVVRJY/JGgw0L7rMrW6/sdnuOlcN6hMQ3nBJD4/2nyXkFMrwhBVNTfo?=
+ =?us-ascii?Q?7N4xOrCJ2nVJsg/jjhmzslOKL84yKdOzfJ69NwDFjNUkGA9BS44KS9olCzzB?=
+ =?us-ascii?Q?IG0G39MJ0yBIO4gRaQqN1wHspZwQlQYQSAIxiDCXjGv4K1lOjr9IkV2hqAml?=
+ =?us-ascii?Q?ZWOJePur1tTTsVei09t3O6aEPU5uUAodJC3dD+JXPIqh4vIDOa+Qa3RC0bTy?=
+ =?us-ascii?Q?DCCf7TLVLd4CdWjxpMFR9auEvJIjihiZJHCCHCuF2i+GL/EInrVyk/ssXMm5?=
+ =?us-ascii?Q?ut3O6Kwmz+Q7nPRiLmz7tcB5KsaQwksFgwAmtaowlbY3PJEcRaZARBjsbypF?=
+ =?us-ascii?Q?W+0oiilAjjuMtfWqfal3n/mklklWVlw+fGtY4EYnJ+ibr6MKv3vbkaAlI63f?=
+ =?us-ascii?Q?Z1iTW+2efbqOMGJz0ybF3KvCQTr44r5yq9P6qvu+I9D9ocVzg31IkrneESl6?=
+ =?us-ascii?Q?n+AdmPUIea2MZXYLeRNRdzNtDQZWzT9nQ3x83JZCpqWofSvA9QcNcvoB+3As?=
+ =?us-ascii?Q?8pM+6h3erh32DY/yktmUIJluEY11PqJSeqrToL06wdCdDb1MGjGFnfFy2BYa?=
+ =?us-ascii?Q?4iavnKEX4WPPHgZlAwShLu0GEhqd0Cca5zv0RpI2?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57e2fb33-0fe7-44b9-c6ef-08dd6e04b178
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 14:26:51.1461
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 14:27:39.9018
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB9447
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jrVxNYuOUBEGO8W7zSShO+o0Rb4kcyQYPYSLMdo6aj5N8dGlDuzV4h5tsKtpYacrfJc3VaiNR6mEPRzNn3Grzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8431
 
-From: Aditya Garg <adityagarg1208@gmail.com>
+On Fri, Mar 28, 2025 at 02:30:50PM +0800, ming.qian@oss.nxp.com wrote:
+> From: Ming Qian <ming.qian@oss.nxp.com>
+>
+> In function mxc_jpeg_alloc_slot_data, driver will allocate some dma
+> buffer, but only return error if certain allocation failed.
+>
+> Without cleanup the allocation failure, the next time it will return
+> success directly, but let some buffer be uninitialized.
+> It may result in accessing a null pointer.
+>
+> Clean up if error occurs in the allocation.
+>
+> Fixes: 2db16c6ed72c ("media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder")
+> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
 
-Add Apple Magic Keyboard 2024 with Touch ID and Numeric Keypad device ID
-(05ac:0322) to those recognized by the hid-apple driver. Keyboard is
-otherwise compatible with the existing implementation for its earlier
-2021 model.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
- drivers/hid/hid-apple.c | 5 +++++
- drivers/hid/hid-ids.h   | 1 +
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index e95a54113..0524893f7 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -486,6 +486,7 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021:
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024:
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024:
-+		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024:
- 			table = magic_keyboard_2021_and_2024_fn_keys;
- 			break;
- 		case USB_DEVICE_ID_APPLE_WELLSPRINGT2_J132:
-@@ -1182,6 +1183,10 @@ static const struct hid_device_id apple_devices[] = {
- 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
- 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024),
- 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024),
-+		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
-+	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024),
-+		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_TOUCHBAR_BACKLIGHT),
- 		.driver_data = APPLE_MAGIC_BACKLIGHT },
- 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 8682e1b11..4925bfd08 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -167,6 +167,7 @@
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021   0x029f
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024   0x0320
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024   0x0321
-+#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024   0x0322
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_ANSI	0x0290
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_ISO	0x0291
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_JIS	0x0292
--- 
-2.43.0
-
+> ---
+> v2
+> - Add the Fixes tag
+>
+>  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 47 +++++++++++--------
+>  1 file changed, 27 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> index 0e6ee997284b..12661c177f5a 100644
+> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> @@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_data *slot_data)
+>  	return -1;
+>  }
+>
+> +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+> +{
+> +	/* free descriptor for decoding/encoding phase */
+> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> +			  jpeg->slot_data.desc,
+> +			  jpeg->slot_data.desc_handle);
+> +	jpeg->slot_data.desc = NULL;
+> +	jpeg->slot_data.desc_handle = 0;
+> +
+> +	/* free descriptor for encoder configuration phase / decoder DHT */
+> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> +			  jpeg->slot_data.cfg_desc,
+> +			  jpeg->slot_data.cfg_desc_handle);
+> +	jpeg->slot_data.cfg_desc_handle = 0;
+> +	jpeg->slot_data.cfg_desc = NULL;
+> +
+> +	/* free configuration stream */
+> +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+> +			  jpeg->slot_data.cfg_stream_vaddr,
+> +			  jpeg->slot_data.cfg_stream_handle);
+> +	jpeg->slot_data.cfg_stream_vaddr = NULL;
+> +	jpeg->slot_data.cfg_stream_handle = 0;
+> +
+> +	jpeg->slot_data.used = false;
+> +}
+> +
+>  static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+>  {
+>  	struct mxc_jpeg_desc *desc;
+> @@ -794,30 +820,11 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+>  	return true;
+>  err:
+>  	dev_err(jpeg->dev, "Could not allocate descriptors for slot %d", jpeg->slot_data.slot);
+> +	mxc_jpeg_free_slot_data(jpeg);
+>
+>  	return false;
+>  }
+>
+> -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+> -{
+> -	/* free descriptor for decoding/encoding phase */
+> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> -			  jpeg->slot_data.desc,
+> -			  jpeg->slot_data.desc_handle);
+> -
+> -	/* free descriptor for encoder configuration phase / decoder DHT */
+> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> -			  jpeg->slot_data.cfg_desc,
+> -			  jpeg->slot_data.cfg_desc_handle);
+> -
+> -	/* free configuration stream */
+> -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+> -			  jpeg->slot_data.cfg_stream_vaddr,
+> -			  jpeg->slot_data.cfg_stream_handle);
+> -
+> -	jpeg->slot_data.used = false;
+> -}
+> -
+>  static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ctx *ctx,
+>  					       struct vb2_v4l2_buffer *src_buf,
+>  					       struct vb2_v4l2_buffer *dst_buf)
+> --
+> 2.43.0-rc1
+>
