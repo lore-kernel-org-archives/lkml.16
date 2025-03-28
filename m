@@ -1,254 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A4D35976
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66001AF0D6;
+	Fri, 28 Mar 2025 13:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169709; cv=none; b=o0fSykcIpVBhHZ2trbp4l41uLHrjLKa6SQyI2dl/vjzwJ2YTiFacIykwSdzZAMoIKBoLvDes35l8rvsPKxTWFC4aT81eV2Um8aPLW1xwRNFeBvryB4gDS/ak7JTqNCsZTm3lWU9fQLqhGJDztWQp+74Y4j7Ev0KXrT+prJeZAoU=
+	t=1743169725; cv=none; b=WoBdql5J7IPQGrD2j1RretYlRqXi/sDy5fepYJAaGJFXSL+Irc/oYJV2jkjeVOWbTxyaotq1M4JKkC5AjgldExFA81b49LesrxOvCzBJ2yyVe8lpE4RJL/ngKNLxTba5QTWrdTS9CCitZLpg3GhfFKCowlneHeNz+eARjkst7Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169709; c=relaxed/simple;
-	bh=+S8MKQkkSs/8tMleB9wK11MPHYdYhT6bb/fff8/MzIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iq2QiC0sn6iH2nqwyum7+KQmN8Mb1D4Rjbf4bMfjTRq+sjSqOnTMZqHnlUiRz0DFodT/gS/C+NJw1yPNezO3V/UdGlhkVTYJhDi3WleOKl9pEQtdpDXDwAkOi6GWvbqwKkp2TIf6tFejzFbWX4j9cT4dCQbRenO866EdOl2WJj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK0hELz2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743169725; c=relaxed/simple;
+	bh=q0K01qJsYFOFiG0iZ2m4U1klsVF646bLGLD1xDAPFPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PZLfcAy2Gp4lV5Ci0mOS8bYMnByukH6sIuY3cNypEqs+OI5G6UsfqmNb+KWt248AR6Ia6YFjxoSha5vQQWZWnk6VczmJ3ptJru3PAjYsBKuPe7vM8oBa/PGHRJ4X+QOPcYlwmEHOHi2/Qb3hulfWL5FSEA62ncG+AtLdV4Vr+Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=Q+rQeu7L; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=Q+rQeu7L; arc=none smtp.client-ip=46.255.227.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK0hELz2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743169706;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JPTNrMeu6/Cig+m6oOG7xyDbUSBNSDtp9SZo7fIlG4Y=;
-	b=dK0hELz2wSfsyJbd5dXzPiappXyDNnIyTj56mU2oYGWhcDtzDwfGvaImmKfmw29rsa7C+F
-	CMSJ/N/6sN8yE2BFqZlXqgshKMnsrsuEaWgu93lcreuthfrkj1NNAk2ppt6QrGVSUCkeaC
-	eBYOHfHrcHU8gNIjhNZxVzGToqUajI4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-3koJHkGbNHO8KjMNzcxkeg-1; Fri, 28 Mar 2025 09:48:15 -0400
-X-MC-Unique: 3koJHkGbNHO8KjMNzcxkeg-1
-X-Mimecast-MFC-AGG-ID: 3koJHkGbNHO8KjMNzcxkeg_1743169694
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac6caf952d7so64014566b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:48:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743169694; x=1743774494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JPTNrMeu6/Cig+m6oOG7xyDbUSBNSDtp9SZo7fIlG4Y=;
-        b=jDqHz+hoaPA11H9XXDJkxe6Mu9Ui8yYMdMYIJMFdD0cXRqK46eGm9VPaOe/n0lYkZW
-         LSKTRAJO+3O2kjtThBELLEFiiQqXLSIX+6LBTR2cgUHfT8h6Kzw1Ss3moH+zj+0IwJBz
-         IUdWhAVPT7i67YeHTH7Alk+ns4wie+MiJrwfHgIQ/TiCSdM0P3Rkr2LOOIzEikB2bQui
-         XlPDv6j/RutknnJir7xf0HY8vYdjqFiz3oc92UQoZurF119buk5kTsZdx4Bb5OAOZix2
-         naMYu+VFK4VLnZtosEXE0h3b2zdUnOzk84ATpT5l7jz4/VfcOsiRqKefyfbb8uoCdW7g
-         E74A==
-X-Forwarded-Encrypted: i=1; AJvYcCVk30s6MjLwsujidLZhQ4MPcgEa1bwqyA63bA8eQGhKwjkFv8oZid7MxO9r+oSZkFReaQPovE6MDFGn/w0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6zLSYlKWeeklh6fV2aVHdxjch6yLW9DBhoCHw4BOUimd3PE8B
-	FrQanay9QQNkjxbrmEttl0aV5tQQE//qJ691qsDtTbSjdNF5V41P/rbWgNil5Z0e8rwhGDe6sPJ
-	8AIQDkJT2m0rbBPXxOSs0hnAqkZucgP9jJJCpluOwGisJ83oMEcGx96LQqyr8gQ==
-X-Gm-Gg: ASbGncsD8DdUyi+yud/O08Bqi48g9xnaYebcQeurFXAReW218qoKqrxPiTP4VQaOYov
-	11zqbcJQrOcQV69NT1dvTAOzAoECUxw1Vu90z7iBPdH7MlNYdikOM6jO0Qr4WhQEIBO0azujdXq
-	Q+91N/wQu/lT5FKUtMi8bRCGh0ARTcMeIE51KyM1LnMkNN+JYVQ+8S6XY+L0MzEUnaKph4VggjS
-	zwChSxsNK9VfZf5CuWKj+bYlwu+aLN9ukC9RX2QOky6bTV9J5szEszuduSBBPjS2UVQ9sGBg92Q
-	ppf5SRrFvbsGO1DXPKBLBd8iRpPnfJDqdE34bLncCvLV1amqPZ/0cXXj+1vz5zcs
-X-Received: by 2002:a17:906:444:b0:ac7:1be2:1a79 with SMTP id a640c23a62f3a-ac71be221c6mr261203866b.4.1743169693821;
-        Fri, 28 Mar 2025 06:48:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7Do6TwhXVYcLm9d7+oMf8jMoIxW/KsZPz70Fgkxrb6TK+oJV9OIZ2ipHzwvR6fy5R3aM9oQ==
-X-Received: by 2002:a17:906:444:b0:ac7:1be2:1a79 with SMTP id a640c23a62f3a-ac71be221c6mr261200666b.4.1743169693188;
-        Fri, 28 Mar 2025 06:48:13 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719278674sm162698166b.40.2025.03.28.06.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:48:12 -0700 (PDT)
-Date: Fri, 28 Mar 2025 14:48:08 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <leonardi@redhat.com>, Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
-Subject: Re: [PATCH net-next v2] vsock/test: Add test for null ptr deref when
- transport changes
-Message-ID: <bq6hxrolno2vmtqwcvb5bljfpb7mvwb3kohrvaed6auz5vxrfv@ijmd2f3grobn>
-References: <20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com>
- <85a034b7-a22d-438f-802e-ac193099dbe7@rbox.co>
- <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
- <qp67w36nyzgyd45wi7oosxe6syx7dzcifc5s2eg47engirtrnf@ewnk6ngqw7h3>
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="Q+rQeu7L";
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="Q+rQeu7L"
+Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 18355200BC3F;
+	Fri, 28 Mar 2025 14:46:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1743169600; bh=UlBw9/qeUcHj0FTkB0/+Oy9DVtY5u5gfvTikwDv089U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q+rQeu7LkRj/WcLfDzbrUmXEM+X1OkkobVwoAT3cCsIxI+ZzJAenX3wQlvJrwsDBJ
+	 bHPz43aR6yAbeuKCaFTbLxSrhvbVMXPYtAsZP1LXjXl8Fu40VOwVDPBKkj4oATP8f7
+	 cWTqdbyOl1aryGdAEs8oW8GLS5ZTCDpJ1dKsJ4OE=
+Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id 150C31B4;
+	Fri, 28 Mar 2025 14:46:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1743169600; bh=UlBw9/qeUcHj0FTkB0/+Oy9DVtY5u5gfvTikwDv089U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q+rQeu7LkRj/WcLfDzbrUmXEM+X1OkkobVwoAT3cCsIxI+ZzJAenX3wQlvJrwsDBJ
+	 bHPz43aR6yAbeuKCaFTbLxSrhvbVMXPYtAsZP1LXjXl8Fu40VOwVDPBKkj4oATP8f7
+	 cWTqdbyOl1aryGdAEs8oW8GLS5ZTCDpJ1dKsJ4OE=
+Received: from antispam32.centrum.cz (antispam32.cent [10.30.208.32])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id B2106D9;
+	Fri, 28 Mar 2025 14:46:39 +0100 (CET)
+X-CSE-ConnectionGUID: pyp5bXrhQ7eAqW///7xMxg==
+X-CSE-MsgGUID: VNyVFBIfT1OE2CfFrsGxcQ==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2FIAADPp+Zn/0vj/y5aGgEBAQEBAQEBAQEDAQEBARIBA?=
+ =?us-ascii?q?QEBAgIBAQEBQAmBSoM0gXGEVZFyi3mGM4EgjEgPAQEBAQEBAQEBCUQEAQE+A?=
+ =?us-ascii?q?YRIiygnOBMBAgQBAQEBAwIDAQEBAQEBAQEBDQEBBgEBAQEBAQYGAQKBHYU1U?=
+ =?us-ascii?q?4JiAYQpDwFGKA0CJgJfEoMCgjABAzGwEoEyGgJlhHzXdAJJBVVkgSmBGi4Bi?=
+ =?us-ascii?q?E8BhHyGKYINhH2ECoEGgw6CRyIEhk2BDIwghDSES4UxgnGCJ4tRSIEFHANZL?=
+ =?us-ascii?q?AFVEw0KCwcFgWwDKgsMCxIcFYFFe4I9aUk6Ag0CNYIbJFiCKIROgQeDN4RDh?=
+ =?us-ascii?q?VCCEYIEiSeEYC1Pg0AdQAMLGA1IESw3FBsGPQFuB6MaOoNTUSBaNFuVH7NFh?=
+ =?us-ascii?q?CWETZx7GjOXUh4DkmMBhTyTQiKkKYRogX6BfzMiMIMiUhnaQ3c8AgcBCgEBA?=
+ =?us-ascii?q?wmCO40tNIFLAQE?=
+IronPort-PHdr: A9a23:TH+bRBbQ+o96Y7pSy2ME0bv/LTH414qcDmcuAnoPtbtCf+yZ8oj4O
+ wSHvLMx1wWPBd2Qsq0d17GempujcFJDyK7JiGoFfp1IWk1NouQttCtkLei7TGbWF7rUVRE8B
+ 9lIT1R//nu2YgB/Ecf6YEDO8DXptWZBUhrwOhBoKevrB4Xck9q41/yo+53Ufg5EmCexbal9I
+ Ri4swndrNUajZdtJqosyBbFv3RFdupLzm50OFyfmArx6ci38JN/6Spbpugv99RHUaX0fqQ4S
+ aJXATE7OG0r58PlqAfOQxKX6nUTSmsZnQNEDhbK4h/nRpv+vTf0ueR72CmBIM35Vqs0Vii47
+ 6dqUxDnliEKPCMk/W7Ni8xwiKVboA+9pxF63oXZbp2ZOOZ4c6jAZt4RW3ZPUdhNWCxAGoO8b
+ pUAD+wdPeZDsoLxo0ICoQaiCQWwAe/izCJDiH3r0q0gy+kvER/I0RI9EdwAs3raq9r6O7sdX
+ +2u0KnFzi/OY+9M1Dvh6oXFdA0qr/GWXbJ3dMrc0VMhGB3ZjlWKtIfqMCma1uITtmiY8uFtU
+ vigi3Qkqw5rpzig3N0sh5LTiYIJzlDL7z55zJwpKty5UUN2Z8OvH5RMuS+ALYR2Xt8iTH9yu
+ CY80rALpYK3cSwUxZg6xxPSZeCKfomG7x79SuufLjl2iW97dL6imxu/81Wtx/D+W8S10VtHr
+ yhIn9jRun0N2BHe98mKR/1g9UmiwTaCzw/e5+BeLUwqlafWK4QtzqAumpcRq0jOHC/7lF3og
+ KOLeEgo4Pak5/r7brn8uJOROJN4hhv6P6kvnMG0HP42PRIUX2eB/OSxzLjj/UrkT7pUlvA2i
+ azZsIzCJcQcu665HxdZ0oY95Ba7CDeryNsYnXweIFJefRKHk5DpN0zTLPziEfiwnVKskCtxx
+ /DbO73tGInCL3nbnLfge7Zy9VJcxRI8wN1e/Z5YFLEMLfLpVkPvqtDVDAU1Pg60zur/DdVyz
+ IIeWWaBAq+DN6PStEeF6fg1I+mPfoAVvSzyK+I+6vH0kX85nUUSfbKz0ZQLaXG0Bu5mLFmBY
+ XrwntcBFn8HsRAkTOzpklKCVCRcZ2ypUq0m+jE7DJipDZzZSo+xgb2NxD27EYFOZmBaFlCMF
+ m/leJ+LWvgXbyKdPNRskj8aWri7TY8uyxWuuBXnxLpkNubU4DEXtYr/1Nhp4O3ejRUy9T1yD
+ 8SA3GCBVnx7nmQUSDItwqB/rlJyyk2Z3ah7nfNYD9pT6O1NUgsgMp7c1eN6B8joWg3dZteJV
+ EqmQtK+DDE1T9IxxcIOYklkF9WhkB/DxSyqDKERl7GQGpw0/bzT32LrK8Z+1XnGzq8hgEciQ
+ sdVMm2mnKF/+xDVB4HSi0qZjbqldbwA3C7R82eO1WWDsFlFXw5zUKXFWGgSaFPZo9v3+E3MU
+ 6OjB7I/PgRczM6NMLFKZcHxgFteXfntINvQb3qqm2eoCxaF3quCYpPydWsSj23hDx0AkgYO7
+ TOFOBI4CyOJvW3TFnptGEjpbkeq9vNx7Du/T0kp30SGaEZJybW44FgWiOaaRvdV2agL6wk7r
+ DAhJFuhxZroAtwjpEI1db9faNY0+n9OyWbQrEp2LMrzfOhZmlcCflEv7AvV3BJtB9AFyJByx
+ E4=
+IronPort-Data: A9a23:wVeOYK8h5u3FglkGFVm9DrUDhH+TJUtcMsCJ2f8bNWPcYEJGY0x3n
+ WoeX23UPamDNDfxfYp+YY3k90gCu5PTzt9hHAZt+39EQiMRo6IpJzg4wmQcnc+2BpeeJK6yx
+ 5xGMrEsFOhtEzmB4E7rauW8xZVF/fngbqLmD+LZMTxGSwZhSSMw4TpugOdRbrRA2LBVOCvT/
+ 4quyyHjEAX9gWMsaThEs/jrRC5H5ZwehhtJ4zTSWtgU5Dcyp1FNZLoDKKe4KWfPQ4U8NoaSW
+ +bZwbilyXjS9hErB8nNuu6TnpoiH9Y+lSDX4pZnc/DKbipq/0Te4Y5nXBYoUnq7vh3S9zxH4
+ I4U6cHvE1dB0prkw4zxWzEAe8130DYvFLXveRBTuuTLp6HKnueFL1yDwyjaMKVBktubD12i+
+ tQAOShQZCCZh9vpzZuida4rwZszCdnkadZ3VnFIlVk1DN4pRNXYRrnSvIYe1zo2mtpTGLDVd
+ aL1axIzMlKaPkAJYA1ITs1j9AurriCXnzlwoUiWrK8++UDa0Ah4y/7mIrI5f/TTHZQPzhzD+
+ D2uE2LRPDcLCvK16DS5q1WB3MTBszngd5IZLejtnhJtqBjJroAJMzUfT1iypPCjokeiX9tEb
+ UcGkgInvaI1+WSoQ8P7Uhn+rH3slhodXcdAVuE94ymTxafOpQWUHG4JSnhGctNOnMs3QyE6k
+ 1yEhdXkARRxv7CPD3GQ7LGZqXW1Iyd9EIMZTXNaC1FYvp+5+t510U+nostfLZNZR+bdQVnYq
+ w1mZgBl3t3/UeZjO32HwG36
+IronPort-HdrOrdr: A9a23:CDIFkqxJmmhhjxqnCTv4KrPwPb1zdoMgy1knxilNoNJuHvBw8P
+ re+cjztCWE6gr5N0tPpTntAsO9qBDnhP1ICOsqXItKNTOO0ACVxepZgrcKrQeMJ8SHzI5g6Z
+ s=
+X-Talos-CUID: 9a23:PnKBvGNZraC33O5DQDh/qUQkAMAcLXD01UiXZAjnGUN5R+jA
+X-Talos-MUID: 9a23:0eXJswhOdhHuE1uNq5Kh98MpCuF53YqEKU4xyLIr4eKKGzZrFCeWtWHi
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.14,283,1736809200"; 
+   d="scan'208";a="109282367"
+Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
+  by antispam32.centrum.cz with ESMTP; 28 Mar 2025 14:46:34 +0100
+Received: from localhost.localdomain (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id 322BB100AE2A3;
+	Fri, 28 Mar 2025 14:46:34 +0100 (CET)
+From: =?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+To: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>,
+	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+Subject: [PATCH] Documentation: fix typo in root= kernel parameter description
+Date: Fri, 28 Mar 2025 14:46:21 +0100
+Message-ID: <20250328134622.15917-1-arkamar@atlas.cz>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <qp67w36nyzgyd45wi7oosxe6syx7dzcifc5s2eg47engirtrnf@ewnk6ngqw7h3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 05:21:03PM +0100, Stefano Garzarella wrote:
->On Wed, Mar 26, 2025 at 04:14:20PM +0100, Luigi Leonardi wrote:
->>Hi Michal,
->>
->>On Wed, Mar 19, 2025 at 01:27:35AM +0100, Michal Luczaj wrote:
->>>On 3/14/25 10:27, Luigi Leonardi wrote:
->>>>Add a new test to ensure that when the transport changes a null pointer
->>>>dereference does not occur[1].
->>>>
->>>>Note that this test does not fail, but it may hang on the client side if
->>>>it triggers a kernel oops.
->>>>
->>>>This works by creating a socket, trying to connect to a server, and then
->>>>executing a second connect operation on the same socket but to a
->>>>different CID (0). This triggers a transport change. If the connect
->>>>operation is interrupted by a signal, this could cause a null-ptr-deref.
->>>
->>>Just to be clear: that's the splat, right?
->>>
->>>Oops: general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN NOPTI
->>>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
->>>CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
->>>Workqueue: vsock-loopback vsock_loopback_work
->>>RIP: 0010:vsock_stream_has_data+0x44/0x70
->>>Call Trace:
->>>virtio_transport_do_close+0x68/0x1a0
->>>virtio_transport_recv_pkt+0x1045/0x2ae4
->>>vsock_loopback_work+0x27d/0x3f0
->>>process_one_work+0x846/0x1420
->>>worker_thread+0x5b3/0xf80
->>>kthread+0x35a/0x700
->>>ret_from_fork+0x2d/0x70
->>>ret_from_fork_asm+0x1a/0x30
->>>
->>
->>Yep! I'll add it to the commit message in v3.
->>>>...
->>>>+static void test_stream_transport_change_client(const struct test_opts *opts)
->>>>+{
->>>>+	__sighandler_t old_handler;
->>>>+	pid_t pid = getpid();
->>>>+	pthread_t thread_id;
->>>>+	time_t tout;
->>>>+
->>>>+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
->>>>+	if (old_handler == SIG_ERR) {
->>>>+		perror("signal");
->>>>+		exit(EXIT_FAILURE);
->>>>+	}
->>>>+
->>>>+	if (pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid)) {
->>>>+		perror("pthread_create");
->>>
->>>Does pthread_create() set errno on failure?
->>It does not, very good catch!
->>>
->>>>+		exit(EXIT_FAILURE);
->>>>+	}
->>>>+
->>>>+	tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
->>>
->>>Isn't 10 seconds a bit excessive? I see the oops pretty much immediately.
->>Yeah it's probably excessive. I used because it's the default 
->>timeout value.
->>>
->>>>+	do {
->>>>+		struct sockaddr_vm sa = {
->>>>+			.svm_family = AF_VSOCK,
->>>>+			.svm_cid = opts->peer_cid,
->>>>+			.svm_port = opts->peer_port,
->>>>+		};
->>>>+		int s;
->>>>+
->>>>+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
->>>>+		if (s < 0) {
->>>>+			perror("socket");
->>>>+			exit(EXIT_FAILURE);
->>>>+		}
->>>>+
->>>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
->>>>+
->>>>+		/* Set CID to 0 cause a transport change. */
->>>>+		sa.svm_cid = 0;
->>>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
->>>>+
->>>>+		close(s);
->>>>+	} while (current_nsec() < tout);
->>>>+
->>>>+	if (pthread_cancel(thread_id)) {
->>>>+		perror("pthread_cancel");
->>>
->>>And errno here.
->>>
->>>>+		exit(EXIT_FAILURE);
->>>>+	}
->>>>+
->>>>+	/* Wait for the thread to terminate */
->>>>+	if (pthread_join(thread_id, NULL)) {
->>>>+		perror("pthread_join");
->>>
->>>And here.
->>>Aaand I've realized I've made exactly the same mistake elsewhere :)
->>>
->>>>...
->>>>+static void test_stream_transport_change_server(const struct test_opts *opts)
->>>>+{
->>>>+	time_t tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
->>>>+
->>>>+	do {
->>>>+		int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->>>>+
->>>>+		close(s);
->>>>+	} while (current_nsec() < tout);
->>>>+}
->>>
->>>I'm not certain you need to re-create the listener or measure the time
->>>here. What about something like
->>>
->>>	int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->>>	control_expectln("DONE");
->>>	close(s);
->>>
->>Just tried and it triggers the oops :)
->
->If this works (as I also initially thought), we should check the 
->result of the first connect() in the client code. It can succeed or 
->fail with -EINTR, in other cases we should report an error because it 
->is not expected.
->
->And we should check also the second connect(), it should always fail, 
->right?
->
->For this I think you need another sync point to be sure the server is 
->listening before try to connect the first time:
->
->client:
->    // pthread_create, etc.
->
->    control_expectln("LISTENING");
->
->    do {
->        ...
->    } while();
->
->    control_writeln("DONE");
->
->server:
->    int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->    control_writeln("LISTENING");
+Fixes a typo in the root= parameter description, changing
+"this a a" to "this is a".
 
-We found that this needed to be extended by adding an accept() loop to 
-avoid filling up the backlog of the listening socket.
-But by doing accept() and close() back to back, we found a problem in 
-AF_VSOCK, where connect() in some cases would get stuck until the 
-timeout (default: 2 seconds) returning -ETIMEDOUT.
+Fixes: c0c1a7dcb6f5 ("init: move the nfs/cifs/ram special cases out of name_to_dev_t")
+Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fix is coming.
-
-Thanks,
-Stefano
-
->    control_expectln("DONE");
->    close(s);
->
->Thanks,
->Stefano
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 5e351ac52cca..6049a2f30baf 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6224,7 +6224,7 @@
+ 			port and the regular usb controller gets disabled.
+ 
+ 	root=		[KNL] Root filesystem
+-			Usually this a a block device specifier of some kind,
++			Usually this is a block device specifier of some kind,
+ 			see the early_lookup_bdev comment in
+ 			block/early-lookup.c for details.
+ 			Alternatively this can be "ram" for the legacy initial
+-- 
+2.48.1
 
