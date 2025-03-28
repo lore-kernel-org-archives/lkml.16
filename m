@@ -1,140 +1,81 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73D215193
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73713213E74;
+	Fri, 28 Mar 2025 09:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743154914; cv=none; b=S+YVcoHp3MkV9D58B894jNbFdXobwUeDs/Th61FY7GxtixOA09EGhVRemfUv4362a6dtoDw3VGPc274cFKpbjwl6xi8kF72C4shmhVSFCiFAFzbQI/K7JILHww7QkaDTISl/nhv0c6Ttk6jahqHwQFKhc1I/1munJXpFLoyZu0w=
+	t=1743154930; cv=none; b=ILflX1HFHIJh5cX9fhO+BZUGEsF1ongw3OQgNw2KBwg4RMQHOd2Y2hUX5+sjOs6oyl40Dh3z/rG734KF0Pjsx8Oqv48i60Of2BCdLacXFRZX6DZa8C9g/UPEephz6VjIYqxxhk/+48aLTi7KK85ODAfOi+4LLhnFTK3CLYM27/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743154914; c=relaxed/simple;
-	bh=Zun5s4aXGl/09PaE0IgNxFi9M4KhwUChifZd44o3m8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lB8NFDTA8MJ136vOY0vgji1l8ZTHXC0a0fHNQ+OKKGdTnH4VpwnYjSxjnbnyGylfv+t0ctQAxH3gWelajn0V+UwUcACxC8ZHXvEGzd0++RufP9LPNqelWa27XVaokYFvkBcyYK3wKOmzy4/d0fznJnA6VJCfPtU+5817ff8tm64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Nren2MQn; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1743154930; c=relaxed/simple;
+	bh=1tOm1RRKmLyexiYQKGJ5XtYsSWNwz4bNWr8NW7Dxk68=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZNR/gcQD5HdtO8weDi8wzrLjx7XjYs2hVeEA2qtg1hJ+QaTYKJFV2cFsRhukW06JrXU2jhBh2U5RW/z+banLYH9IoFK0Hwea1QmUJ6gaTnqt5fWWCANU7/2YxLmJjtAtHN3T1kBRk9OAz35BIwOko8OM6r17OqOkgykFyibneCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PSF77Uf5; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Nren2MQn"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d30c329f2so1910556241.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 02:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1743154909; x=1743759709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
-        b=Nren2MQntzUBLwhRf0HZGBWJKRUerlocQmOPALoBnJebxRqRjkKTlKT4cTNWivvsM2
-         XEiRQCjr9k/FhMk8HIuQ9zXjhnfcUPsUzECR3ucE6i2ZWXZA/s+r84ZK0QQqFfyDKNDf
-         Dgsk9b5wMLIDvP9yg8qGXmyrAcRzRYL6os9rlZOufdzW4P9tVFhACxAqnpMrp8c8vF6+
-         gNMjJAyPcD3gXwsvMsYaDkhafxHDCp4TSe6BsaPFcvv6SHwX2vpIjfV/0kwIqwI11h76
-         IjErwa1+GaTi1x3b+iqct7N3RUU46v1zUCoV1UPbdJLFRxK5G+TVJCZ/jei9KvhVeSDO
-         cung==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743154909; x=1743759709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
-        b=sRQ3jK9VNosBUI737wvcKVn7zs65I//mMKKBc06iRAF8ACLms+X5pi+BbbxpETq/2p
-         8NbsW15YPytZQ9wn37oTt59xOvS35arhMnsNlXBO3MBHj76jl9+ei8rpUCXGuMW/3hYm
-         pEqvh3E+SZNYftMXPDQSyY32Y7JXM4akNZrRvHyLd81DJsGIKqt+qXbCROnOuST3heTI
-         7Istw9yJpngFkLqpy7sOFF+p2ts0T0leiE1gXoiO/fOKjkvEKlL4/HlvdtkwwQFY/ZA0
-         24OOp8WW+Q61MhvUa25StfLtqKc7Kco16vTBFLDWa75S7b1sGc6XHrlSN6N0r6r9Uw0k
-         EPHg==
-X-Gm-Message-State: AOJu0YwRQ4wwllQYciFBINE6ZFkRwWXvdhkHZrKA7GcbpdqqJXTphuXz
-	GeDs5JbkNckCM55QG/wecXavK0Impf6BTXN1CharNjIgk8turquXiJKDgRlMdN2Y/J/x+KAzr+/
-	i7/DBoYniY8dEYphXNOq/kdKt0y8HrFVPwRpgSQ==
-X-Gm-Gg: ASbGnct32VYPJnZmFbOn1YmvymGS7dXBSmzkbYETHAzUdmMD/7xoAeNHPXztQkpUcg3
-	eZEGIqPJ6VOHu1wE3Cmp78FqZEOZhCt1qMuP+zpjVLYKkGK9Q5iN6zjerXp/1uRvw7Oh1bGI8/i
-	ZolxAooPvTtRw9LSnn2B55wTEM1Y8B
-X-Google-Smtp-Source: AGHT+IHAfA7U5ABlgiwkdwG5YFKYhP7zz3TIEVTOcbnJ0BCTQpH0ybwGPzt5hi7ByZc+Ofz77emzNeHplbMnGuIyChc=
-X-Received: by 2002:a05:6102:a90:b0:4c3:878:6a62 with SMTP id
- ada2fe7eead31-4c6c2816727mr954406137.8.1743154908552; Fri, 28 Mar 2025
- 02:41:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PSF77Uf5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=EOYaYwk+UihroShXmru2lDzirG7g3AnPW3s/+OsmehU=;
+	b=PSF77Uf5Xl6x3/wlxeAGJmzQ4WF8w60Y/gkCyBXt+Ga8U5Z+ulT0mjbnr/EIW/
+	TSwH/ObGiSopA7EJG3dGlrdRLFFmH23ev6ltZrsNXPE1SWVbu6NoJLAJRTpx7guE
+	U5GiX+xLVhKDp5y+HoeXWBMnYbaaPbOi5BNin3Swvsn7M=
+Received: from [192.168.60.52] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgCXJl65buZnZnI1Ag--.13974S2;
+	Fri, 28 Mar 2025 17:41:17 +0800 (CST)
+Message-ID: <3ab30a8f-0dca-42cd-a79c-2e6f660a0999@163.com>
+Date: Fri, 28 Mar 2025 17:41:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241224093902.1632627-1-nylon.chen@sifive.com> <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
-In-Reply-To: <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Fri, 28 Mar 2025 17:41:37 +0800
-X-Gm-Features: AQ5f1JrdaQFUJm63vOfH9GWXIi95vV8JEVeEsIoDHq3ca33AIZRvXLmLu0ehrcM
-Message-ID: <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
-Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and algorithm
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v6 1/5] PCI: Introduce generic capability search functions
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250323164852.430546-1-18255117159@163.com>
+ <20250323164852.430546-2-18255117159@163.com>
+ <xvu4vmk5gxhf5gkftgiycm5ler3vawesgw6zirw5bhba2kqxzt@sytribs5ir6u>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <xvu4vmk5gxhf5gkftgiycm5ler3vawesgw6zirw5bhba2kqxzt@sytribs5ir6u>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgCXJl65buZnZnI1Ag--.13974S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GryrurW3Gw1xGF1fJF18Xwb_yoW3ZrbE93
+	4j9F13AFyq9Fy2kr1YyrsYvFyYk3WDWw4vgayktas3Za4Fqr1aga48ZFWYvw17Ja15JrnI
+	v3y0yF48uFyj9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjdgA7UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw8eo2fmaxpo2QAAs8
 
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> =E6=96=BC 2024=E5=B9=
-=B412=E6=9C=8827=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:20=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> Hello Nylon,
->
-> On Tue, Dec 24, 2024 at 05:38:58PM +0800, Nylon Chen wrote:
-> > According to the circuit diagram of User LEDs - RGB described in the
-> > manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.p=
-df[1].
-> >
-> > The behavior of PWM is acitve-high.
-> >
-> > According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manu=
-al[2].
-> >
-> > The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period.
-> > The `frac` variable is pulse "inactive" time so we need to invert it.
->
-> I'm trying to understand that. You're saying that the PWMCMP register
-> holds the inactive time. Looking at the logic diagram (Figure 29) of
-> "SiFive FU740-C000 Manual v1p6" that is because pwms is feed into the
-> comparator after going through that XNOR where the lower input is always
-> 0 (as pwmcmpXcenter is always 0) and so effectively counts backwards,
-> right?
-> In that case the sentence "The output of each comparator is high
-> whenever the value of pwms is greater than or equal to the corresponding
-> pwmcmpX." from the description of the Compare Registers is wrong.
->
-Hi Uwe, I've contacted the spec's author, and he is willing to correct
-the spec-related error.
 
-Based on your suggestions, I think we have two approaches
-1. First add comments explaining where the spec and implementation
-don't match, then after the spec is corrected, submit another patch to
-remove the comments
-2. No need to add this error explanation part, because the spec will
-be corrected later.
 
-I don't have a preference, so I wanted to check with you - do you lean
-more toward option 1 or option 2
-> With that assumption there are a few issues with the second patch:
->
->  - The Limitations paragraph still says "The hardware cannot generate a
->    100% duty cycle."
->  - If pwm_sifive_apply() is called with state->duty_cycle =3D 0 the PWMCM=
-P
->    register becomes (1U << PWM_SIFIVE_CMPWIDTH) - 1 which results in a
->    wave form that is active for 1 clock tick each period. That's bogus.
->    If duty_cycle =3D 0 is requested, either make sure the output is
->    inactive the whole time, or return an error.
->  - With the above error in the official documentation, I'd like to have
->    a code comment that explains the mismatch such that a future reader
->    of the code has a chance to understand the situation without in
->    detail review of the manual and the driver.
->
-> Orthogonal to your patches, I wonder about
->
->         frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
->
-> . Round-closest is usually wrong in an .apply() callback. I didn't do
-> the detailed math, but I think you need to round up here.
->
-> Best regards
-> Uwe
+On 2025/3/28 00:57, Manivannan Sadhasivam wrote:
+>> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+>> index 9800b7681054..0020a892a55b 100644
+>> --- a/drivers/pci/controller/Kconfig
+>> +++ b/drivers/pci/controller/Kconfig
+>> @@ -132,6 +132,23 @@ config PCI_HOST_GENERIC
+>>   	  Say Y here if you want to support a simple generic PCI host
+>>   	  controller, such as the one emulated by kvmtool.
+>>   
+>> +config PCI_HOST_HELPERS
+>> +	bool
+>> +	prompt "PCI Host Controller Helper Functions" if EXPERT
+> 
+> User is not required to select this Kconfig option so that his driver can build.
+> Please make this symbol invisible to user and make it selected by the required
+> controller drivers only.
+> 
+
+Hi Mani,
+
+Thanks your for reply. Will change.
+
+Best regards,
+Hans
+
