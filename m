@@ -1,210 +1,140 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CEC1A0BF1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280F535972
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171288; cv=none; b=T2hFTcnuY+ham60FlbwUWpFU6XMlPg6RfIxhpoXWqz5W4J3BNvNjxcmZCGhV9/M3WSiv+O6BdBIG7e2zOaVca9DCPedZQBkadgkotmZJOQYyy79eS/VwXH3IDkv9D/EtjzHQcERoI2ljUpXVOmH1/pzCPf+JZEa3s+VBxhmpDG8=
+	t=1743171344; cv=none; b=bii+ItFkjPXAfDs3Lo6PQZa6O8tiGz4WefC2MFpNFqQqfCcygXxZIulfa5cY/emW68617bBbcJ8z1gIe69Cilv+ZZs95+nvCG3MZY+0OFWO2fJaklVs4Ixa3jqvFcbofmALLKwJXUNm9IYii7r//cqgXTStl8/KlxK5NRxkk/Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171288; c=relaxed/simple;
-	bh=wK1ehaq6dNRFnlziHcAibzSUwhMDWmID5TaLHziYYos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E9MQlu7gQxMKUODvO47sFgh1I2hlI8GXtk0ZR+oOpjerjA6hzT9FaeRqB3KzEqNsR5zL7IwGvRJslozxwoC9Orku8PdGMYGjldd358erEdrgfwCbUSDT3+OqiSvCnZLADQ7GseiaLBf4mC3mWzJtX4CLGdR1UOgq/4NvTQJIbXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LBya6JHU; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743171344; c=relaxed/simple;
+	bh=FRgwR9NVLePyoA/jx/Us5P4QY3HAIJ4YkA7LAoces9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EWYdYfK0JO+1NVXnlk8paYGPHxAi5xhEWU9clytniLAW/pzHnIB70BMI79dCNQrOvKWwVIIiJ/xycXFYME0BENyT4M0Th4M2x/04SRv9sTfbNK1qSHVesmv7EjpQ9p4qRvu+whkX+OuN/DjtafM2GdAT0LGkxKJGQ9QaAlwz0e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OKj4dMHQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LBya6JHU"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22580c9ee0aso47100705ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743171285; x=1743776085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1Dba98BGDtjOM6DFuWR/X88tWcqFq5izur1ZVd2H9o=;
-        b=LBya6JHUMqQiG/uA7qZhsio08qt59TLjRGBuPf7N6qf0m2Z7Z0Fal1B9OVpFnMDDtO
-         OrEBf1lWND7Wshxa/ytnK7gBUfW0SlOtm4670/W7MnqRRczX3XWo21AzN53ABH3+rJQW
-         7+V3d3HIX5IqZKaFdH5dsFiOgW4br7wls+aH4PvA93pnhi5xgRxUhltaNl/Jpe639ce7
-         r4sp+GSHbT+i+sRHf32N5gH4+8bynPkblVm8pn825+ynQ+xu0aXumC+YQ5OnqbOPEHxO
-         dAtUllwX07+x0oMVgDC/DzMwTN4SJARvrm3LBGnbPxl7l9l5NtSKjBAJtzVRF1ABWuQF
-         XFig==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKj4dMHQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743171341;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xooqL8JNylDfTCuXDGiM3ZS3m3cKnxP7jiQvva2sy6M=;
+	b=OKj4dMHQSdJUFLov+LRpTk6q8lQi9MquPc3on0NMVWEGZL46H16Itoqz+fYhUyPOB29Fmd
+	tAsa5Dn4ZIC9bIeW6bINc3sm4PBt6MrhiXWhMEUPj6GX/aLGu78hxbuFezGBlpQo73WMk4
+	Jtr3EUkha21ysJqZiGH4kdR6SKEZjPw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-qa3c_mVQMMeokaw_pqvN9A-1; Fri, 28 Mar 2025 10:15:40 -0400
+X-MC-Unique: qa3c_mVQMMeokaw_pqvN9A-1
+X-Mimecast-MFC-AGG-ID: qa3c_mVQMMeokaw_pqvN9A_1743171339
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac2bb3ac7edso62633566b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:15:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743171285; x=1743776085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n1Dba98BGDtjOM6DFuWR/X88tWcqFq5izur1ZVd2H9o=;
-        b=PpGh0lFOIcMZzVspW6fc3HVuloXUpusndCcLGFiN61OJcZIjLde38tnWzanV/plW/a
-         jozDWzrS7RIQhM2wqHfrEBC2qvkceoB027WDXQhmddtxC910wL6L4t8Q62dlRK9BC1OX
-         mTEy9L9u+Dk4bzTvEJryfcbmgpMhNra6Gy1sEWyUg86UF3ntftcZGuOfzZejm+r+CBPo
-         SFpOrpQogFZFerEzQQPjgtA/xU+Jtn710e0bQRSGzwYnroBvtVXkF0jXLgIcxuKVhgLF
-         QaIjxIoxWRbDor/WE1zpk5g0NS7Vu20UmkHEnwXVLsK94gdFqXQQCw8VOabeO8yxUhPa
-         p1zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzf/4LInQS3bCPohax/QdAcQGcptRvm/f+OO+OjGWP9IqioPh1J3ySZlzX4bWzHW0db4Woaqk3bSU4vTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeRRdsrSFCBqsVaOGmw/nz3S1lZUtPqS9dgHomXqcsdzACBTAA
-	TzapbP7GA+mDlZP0KCpHp0qnOHSd8MCZSLiGdwEQaA5fllngwgRL4ROUtqkCwyk=
-X-Gm-Gg: ASbGncvkOhUo2g+SDraBb2mlUgLLmcZCubfFbgJX5KmVRwWa26HT6ryFP0zNcPy4Nbz
-	NTqpZr9PoNbV5Hvs9I1Hquvn8Sr8v9IZ5g6icAfyuMS7Qd7wWocMC7LVDVj3vgguk9AH3rfIqov
-	ohXnmbaKHUZmgTsAjA3P8GfVT9hkH/TSsu65gMeZp/UvAzW4VI+v5tMiqEFbf6tLVYrhPXMrv6f
-	iEAiSOMspBVIxGw67GS8kEIOTkUCcn+XXfMM30yybIbRinWF3wEh53AgM0F9K0MECb3JGMFdCbf
-	+nWrDFLFlzEX5cyjpfSNkpod/SO8yc0YoyupCdFX55wBF56b
-X-Google-Smtp-Source: AGHT+IF17jm/aOy3NYW0QP5xv6XJ1PCIMLt8q2Ltl9RkvCkoD6TGYQloEUiZwe2IUvEbX4ZJHZIvIg==
-X-Received: by 2002:a17:902:d2ce:b0:224:1005:7280 with SMTP id d9443c01a7336-228048edd4bmr130359545ad.38.1743171284780;
-        Fri, 28 Mar 2025 07:14:44 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:5113:c488:efca:b73c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec52cbsm18344015ad.37.2025.03.28.07.14.43
+        d=1e100.net; s=20230601; t=1743171339; x=1743776139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xooqL8JNylDfTCuXDGiM3ZS3m3cKnxP7jiQvva2sy6M=;
+        b=EgqMOWqtl686myNfz3CDWHmQ8IgctjfPpnP73dVVUaTd3GUprsclGOXzgCgqbrk7NO
+         ZrZkkelyPMHRrlNuNTD9Nm6joUMF36rGH06Bn3ndpCr5R84G/PIPzDPsxIBGKLuZQfZd
+         5q2VjWfkfYoww2aZ3v1tynsfyZiBxmhfQCelxIx7xKhxQh+YUiWZPkNmOVDnR35ws1Jk
+         nsi9rk/uAg5cVJi/WUXsrlP398zkbmmVObQ/AXoNzKaWs5U8/89y8+g6cQeT3qSuEIWP
+         8YGT+ftJsxvBCjbPo63tW4TN+yTWic2tt4/wSxrlU8QXW091R6SezQpAJgMW6Vi2oO00
+         Z16g==
+X-Forwarded-Encrypted: i=1; AJvYcCW0f2mbOip4sNHnFBQ9nhLyuPO0ZbAfa2NYSMaPz3k+En/5SMp/tIitUtTj11pWv5n8mtTeuR3ZAaQzi7A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG4iGiuNbwtdId5qjwde43jfakIwYNVGqjI688kj3BNBSyGlqX
+	lsVy8Hej/s2xs9arbFRfI+6risFqaDMuwVKIc7XAbEVt72mp8XvraIcm170idoZK9NYn8+IIP2s
+	vNWgOq75tnHD7qEXruB/WVti9GBgXxUVVb6fSfs+SkBFbwU0wouEEfVS0uvi3uQ==
+X-Gm-Gg: ASbGncviTuSg7mCDWJiBMMjWeRJH9BX4Z1WxOLlNbSXWPFjq/V4llSitSxFkz6heRuz
+	nLXNpb+BoL5i72Kk6xqGC7wToO0iGnikA5iDlsRCLJbmZoZlnZIVq+osR01w7SY/6l7qkGPbDpH
+	BHmPvseC8Tp2d+TI8Ba8qlyR8+Ht26j6Yk6dlnvkYFmFKL5hPRHgoILMqnoW0RcWs4O3ERsT7FT
+	KOppicPZi2yXgauhCT8V15Rw5f4satNNSSDpCVoSNmMoF11JMur0ihreJZDFQCa8SnmeiMXpzR2
+	rRRaKgrOW87Pjnr1BWveHG9sv3sw8yrEpQT2MRtyOdPPUePAvzAMU9t/kDA3pXxS/R8cU/oi
+X-Received: by 2002:a17:907:6091:b0:abf:750b:93b8 with SMTP id a640c23a62f3a-ac6faeb60camr729516166b.22.1743171338908;
+        Fri, 28 Mar 2025 07:15:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHF1MvdaI0gZUTJ8fsf5IgoIHUlwoojKm+uMy9J1qv93tB206JFCOV8hdYvaYSnFXxyhmZ7Zg==
+X-Received: by 2002:a17:907:6091:b0:abf:750b:93b8 with SMTP id a640c23a62f3a-ac6faeb60camr729508066b.22.1743171338172;
+        Fri, 28 Mar 2025 07:15:38 -0700 (PDT)
+Received: from localhost.localdomain (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f8fbsm166142266b.107.2025.03.28.07.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 07:14:44 -0700 (PDT)
-Date: Fri, 28 Mar 2025 08:14:41 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-	"open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V2] remoteproc: core: Clear table_sz when rproc_shutdown
-Message-ID: <Z-au0USkvoDYTF7A@p14s>
-References: <20250326020215.3689624-1-peng.fan@oss.nxp.com>
- <Z-WO-fhDJKyG7hn2@p14s>
- <20250328045012.GA16723@nxa18884-linux>
+        Fri, 28 Mar 2025 07:15:37 -0700 (PDT)
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Michal Luczaj <mhal@rbox.co>,
+	Paolo Abeni <pabeni@redhat.com>,
+	George Zhang <georgezhang@vmware.com>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Andy King <acking@vmware.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Dmitry Torokhov <dtor@vmware.com>,
+	Simon Horman <horms@kernel.org>,
+	Luigi Leonardi <leonardi@redhat.com>
+Subject: [PATCH net] vsock: avoid timeout during connect() if the socket is closing
+Date: Fri, 28 Mar 2025 15:15:28 +0100
+Message-ID: <20250328141528.420719-1-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328045012.GA16723@nxa18884-linux>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 12:50:12PM +0800, Peng Fan wrote:
-> On Thu, Mar 27, 2025 at 11:46:33AM -0600, Mathieu Poirier wrote:
-> >Hi,
-> >
-> >On Wed, Mar 26, 2025 at 10:02:14AM +0800, Peng Fan (OSS) wrote:
-> >> From: Peng Fan <peng.fan@nxp.com>
-> >> 
-> >> There is case as below could trigger kernel dump:
-> >> Use U-Boot to start remote processor(rproc) with resource table
-> >> published to a fixed address by rproc. After Kernel boots up,
-> >> stop the rproc, load a new firmware which doesn't have resource table
-> >> ,and start rproc.
-> >>
-> >
-> >If a firwmare image doesn't have a resouce table, rproc_elf_load_rsc_table()
-> >will return an error [1], rproc_fw_boot() will exit prematurely [2] and the
-> >remote processor won't be started.  What am I missing?
-> 
-> STM32 and i.MX use their own parse_fw implementation which allows no resource
-> table:
-> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/remoteproc/stm32_rproc.c#L272
-> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/remoteproc/imx_rproc.c#L598
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-Ok, that settles rproc_fw_boot() but there is also rproc_find_loaded_rsc_table()
-that will return NULL if a resource table is not found and preventing the
-memcpy() in rproc_start() from happening:
+When a peer attempts to establish a connection, vsock_connect() contains
+a loop that waits for the state to be TCP_ESTABLISHED. However, the
+other peer can be fast enough to accept the connection and close it
+immediately, thus moving the state to TCP_CLOSING.
 
-https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_core.c#L1288
+When this happens, the peer in the vsock_connect() is properly woken up,
+but since the state is not TCP_ESTABLISHED, it goes back to sleep
+until the timeout expires, returning -ETIMEDOUT.
 
-> 
-> Thanks,
-> Peng
-> 
-> >
-> >[1]. https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_elf_loader.c#L338
-> >[2]. https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/remoteproc/remoteproc_core.c#L1411 
-> >
-> >> When starting rproc with a firmware not have resource table,
-> >> `memcpy(loaded_table, rproc->cached_table, rproc->table_sz)` will
-> >> trigger dump, because rproc->cache_table is set to NULL during the last
-> >> stop operation, but rproc->table_sz is still valid.
-> >> 
-> >> This issue is found on i.MX8MP and i.MX9.
-> >> 
-> >> Dump as below:
-> >> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> >> Mem abort info:
-> >>   ESR = 0x0000000096000004
-> >>   EC = 0x25: DABT (current EL), IL = 32 bits
-> >>   SET = 0, FnV = 0
-> >>   EA = 0, S1PTW = 0
-> >>   FSC = 0x04: level 0 translation fault
-> >> Data abort info:
-> >>   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> >>   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> >>   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> >> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010af63000
-> >> [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-> >> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> >> Modules linked in:
-> >> CPU: 2 UID: 0 PID: 1060 Comm: sh Not tainted 6.14.0-rc7-next-20250317-dirty #38
-> >> Hardware name: NXP i.MX8MPlus EVK board (DT)
-> >> pstate: a0000005 (NzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> >> pc : __pi_memcpy_generic+0x110/0x22c
-> >> lr : rproc_start+0x88/0x1e0
-> >> Call trace:
-> >>  __pi_memcpy_generic+0x110/0x22c (P)
-> >>  rproc_boot+0x198/0x57c
-> >>  state_store+0x40/0x104
-> >>  dev_attr_store+0x18/0x2c
-> >>  sysfs_kf_write+0x7c/0x94
-> >>  kernfs_fop_write_iter+0x120/0x1cc
-> >>  vfs_write+0x240/0x378
-> >>  ksys_write+0x70/0x108
-> >>  __arm64_sys_write+0x1c/0x28
-> >>  invoke_syscall+0x48/0x10c
-> >>  el0_svc_common.constprop.0+0xc0/0xe0
-> >>  do_el0_svc+0x1c/0x28
-> >>  el0_svc+0x30/0xcc
-> >>  el0t_64_sync_handler+0x10c/0x138
-> >>  el0t_64_sync+0x198/0x19c
-> >> 
-> >> Clear rproc->table_sz to address the issue.
-> >> 
-> >> While at here, also clear rproc->table_sz when rproc_fw_boot and
-> >> rproc_detach.
-> >> 
-> >> Fixes: 9dc9507f1880 ("remoteproc: Properly deal with the resource table when detaching")
-> >> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> >> ---
-> >> 
-> >> V2:
-> >>  Clear table_sz when rproc_fw_boot and rproc_detach per Arnaud
-> >> 
-> >>  drivers/remoteproc/remoteproc_core.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >> 
-> >> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> >> index c2cf0d277729..1efa53d4e0c3 100644
-> >> --- a/drivers/remoteproc/remoteproc_core.c
-> >> +++ b/drivers/remoteproc/remoteproc_core.c
-> >> @@ -1442,6 +1442,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
-> >>  	kfree(rproc->cached_table);
-> >>  	rproc->cached_table = NULL;
-> >>  	rproc->table_ptr = NULL;
-> >> +	rproc->table_sz = 0;
-> >>  unprepare_rproc:
-> >>  	/* release HW resources if needed */
-> >>  	rproc_unprepare_device(rproc);
-> >> @@ -2025,6 +2026,7 @@ int rproc_shutdown(struct rproc *rproc)
-> >>  	kfree(rproc->cached_table);
-> >>  	rproc->cached_table = NULL;
-> >>  	rproc->table_ptr = NULL;
-> >> +	rproc->table_sz = 0;
-> >>  out:
-> >>  	mutex_unlock(&rproc->lock);
-> >>  	return ret;
-> >> @@ -2091,6 +2093,7 @@ int rproc_detach(struct rproc *rproc)
-> >>  	kfree(rproc->cached_table);
-> >>  	rproc->cached_table = NULL;
-> >>  	rproc->table_ptr = NULL;
-> >> +	rproc->table_sz = 0;
-> >>  out:
-> >>  	mutex_unlock(&rproc->lock);
-> >>  	return ret;
-> >> -- 
-> >> 2.37.1
-> >> 
-> >
+If the socket state is TCP_CLOSING, waiting for the timeout is pointless.
+vsock_connect() can return immediately without errors or delay since the
+connection actually happened. The socket will be in a closing state,
+but this is not an issue, and subsequent calls will fail as expected.
+
+We discovered this issue while developing a test that accepts and
+immediately closes connections to stress the transport switch between
+two connect() calls, where the first one was interrupted by a signal
+(see Closes link).
+
+Reported-by: Luigi Leonardi <leonardi@redhat.com>
+Closes: https://lore.kernel.org/virtualization/bq6hxrolno2vmtqwcvb5bljfpb7mvwb3kohrvaed6auz5vxrfv@ijmd2f3grobn/
+Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ net/vmw_vsock/af_vsock.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 7e3db87ae433..fc6afbc8d680 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -1551,7 +1551,11 @@ static int vsock_connect(struct socket *sock, struct sockaddr *addr,
+ 	timeout = vsk->connect_timeout;
+ 	prepare_to_wait(sk_sleep(sk), &wait, TASK_INTERRUPTIBLE);
+ 
+-	while (sk->sk_state != TCP_ESTABLISHED && sk->sk_err == 0) {
++	/* If the socket is already closing or it is in an error state, there
++	 * is no point in waiting.
++	 */
++	while (sk->sk_state != TCP_ESTABLISHED &&
++	       sk->sk_state != TCP_CLOSING && sk->sk_err == 0) {
+ 		if (flags & O_NONBLOCK) {
+ 			/* If we're not going to block, we schedule a timeout
+ 			 * function to generate a timeout on the connection
+-- 
+2.49.0
+
