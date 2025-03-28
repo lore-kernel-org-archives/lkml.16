@@ -1,124 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45A320DF4;
-	Fri, 28 Mar 2025 14:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BA320DF4;
+	Fri, 28 Mar 2025 14:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171643; cv=none; b=GYznc3a6x/aTo9FEHyVgyIKR9RyJ2do9gOTcgRAXOc7zh6ogZJntX5T+ZOmBuWaHIDucRxVlHAE/iHsuv3VoUNBJOPBOiwdhwP8d7GWlohVx7FnxC8HCi4R817AJCnSHSVXAgTbv3vPJ15nr45TtC+8FrDztD/A+Gg5i4HJYzSs=
+	t=1743171667; cv=none; b=bPV8C7d+sRiapLZ5PMR+H5PzZgKhyhcGoRZ0C4Y0bNXNUvwbmH0VlN+Rd2W5UXTQND3l9E3qi/KJ0S7AOP4UffeDhoQ62sdJUtLj5KgZZVf5qTew2r+n3Sn1QRHMC+zRiAye0/ym8S8Ep1bEroJvZVSHwVRwmSe2J+TI0eTCPcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171643; c=relaxed/simple;
-	bh=52BY8RWxqGI39nW50Uzq7mTE1cOGjvlmsJ2EgrcA9Ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyIZ4ksWzfXecLRpI5w96HRhKym3gE31WGakAx4FqyNw4tRSn+V7yS+Dz0zD+s0Up40zBLqGVgxfv837chs9+RjiaVJNqpUF30f0AfYGM2HTZ8ewlQ1IdRg1J5Dn8vWXQEUYhAXvpWj72TqdPh42uqoexrZLGXMzNpMeYna6ajA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaOtsJF9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743171667; c=relaxed/simple;
+	bh=cLmTnPh0Z5NPWZMG0NKNdgnST47tDlnTp2qQmBP0SWA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bn3k+aGA54uzO5LVzyqXzME9U+S+xf5UHJeY+55QQAAp0iG39pFKhVvXUcNh4yniUehOaIBOsC6uQXwJjBmAfCv+Mx/JP6niBdSGEKc/Ubx8dOAfDM78yIY41aUzrK3D7GnzRWJfegzpKBxIKU4s9CE99GkMUWgkcB1loOZecuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=JhE8/8d5; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaOtsJF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DECC4CEE4;
-	Fri, 28 Mar 2025 14:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743171643;
-	bh=52BY8RWxqGI39nW50Uzq7mTE1cOGjvlmsJ2EgrcA9Ec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IaOtsJF9a/s3cBIUbR9Tqvn77dZbDpoeNbSKE+9o5W+xe5prQl6V2XimIGQqSPRYd
-	 5VfjWfPhjXQLQfEz78hahUx8cEJL7qeI4fFnehitos4eSBhlzGDfRRklcoYjvM/zc3
-	 wbOkObSERHHtODK1mOYAW8F2H76k54tegqVkAAw/dIGbiwRQ5/s/wDw9UA3HpXwpf8
-	 0B2Nl82gf//PCjWjulAvtdo/KBcAQt6O9NX5qL98eSrWMUgTqOVgFni+sgSnln2Z/C
-	 cQUX/fNo/MyENG5iKFB3pgZGXINNHdL08ZXVTjV4NCT5SQEjBauHzWcBKsahMmFGDS
-	 lPH6H7hIUumIA==
-Date: Fri, 28 Mar 2025 15:20:40 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Kees Cook <kees@kernel.org>, 
-	Alessandro Carminati <acarmina@redhat.com>, linux-kselftest@vger.kernel.org, 
-	David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
-	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Guenter Roeck <linux@roeck-us.net>, Alessandro Carminati <alessandro.carminati@gmail.com>, 
-	Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-ID: <20250328-visionary-archetypal-caiman-77dedc@houat>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <202503131016.5DCEAEC945@keescook>
- <20250313-abiding-vivid-robin-159dfa@houat>
- <20250328.sah9oog5ahSh@digikod.net>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="JhE8/8d5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1743171664;
+	bh=cLmTnPh0Z5NPWZMG0NKNdgnST47tDlnTp2qQmBP0SWA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=JhE8/8d5ozK9aaRRhqzyJgC3WeF1FMu01qTJQntH/8tdTsboZo69mztmD1pU9bTzF
+	 y7aGXdGGjNCPoY59OlzSqlmZRuUmhxDnNhiS1nmtCjA9paPTAs0i18Z32uu8En+Uyq
+	 w0e8Gt/3MogO/5E3+o/SFh6+kM/89wX3if6JQFtk=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 3906D1C02A5;
+	Fri, 28 Mar 2025 10:21:04 -0400 (EDT)
+Message-ID: <0104e4918cc9d1cd7e991699292cf3e7379b2291.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH 4/4] vfs: add filesystem freeze/thaw callbacks for
+ power management
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com,
+ rafael@kernel.org,  djwong@kernel.org, pavel@kernel.org,
+ peterz@infradead.org, mingo@redhat.com,  will@kernel.org,
+ boqun.feng@gmail.com
+Date: Fri, 28 Mar 2025 10:21:03 -0400
+In-Reply-To: <zcxwcu2ty5fmkqt7dnpwdmohkp6pi7hfhltlxgpnx2xhsutgoc@gkixsx4map3o>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+	 <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
+	 <zcxwcu2ty5fmkqt7dnpwdmohkp6pi7hfhltlxgpnx2xhsutgoc@gkixsx4map3o>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
+	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
+	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
+	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
+	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
+	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
+	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
+	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="paxtxmnckc7vplgu"
-Content-Disposition: inline
-In-Reply-To: <20250328.sah9oog5ahSh@digikod.net>
 
-
---paxtxmnckc7vplgu
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-MIME-Version: 1.0
-
-On Fri, Mar 28, 2025 at 11:38:23AM +0100, Micka=EBl Sala=FCn wrote:
-> On Thu, Mar 13, 2025 at 06:24:25PM +0100, Maxime Ripard wrote:
-> > Hi,
+On Thu, 2025-03-27 at 19:20 +0100, Jan Kara wrote:
+> On Thu 27-03-25 10:06:13, James Bottomley wrote:
+> > Introduce a freeze function, which iterates superblocks in reverse
+> > order freezing filesystems.=C2=A0 The indicator a filesystem is
+> > freezable is either possessing a s_bdev or a freeze_super method.=C2=A0
+> > So this can be used in efivarfs, whether the freeze is for
+> > hibernate is also passed in via the new FREEZE_FOR_HIBERNATE flag.
 > >=20
-> > On Thu, Mar 13, 2025 at 10:17:49AM -0700, Kees Cook wrote:
-> > > On Thu, Mar 13, 2025 at 11:43:15AM +0000, Alessandro Carminati wrote:
-> > > > Some unit tests intentionally trigger warning backtraces by passing=
- bad
-> > > > parameters to kernel API functions. Such unit tests typically check=
- the
-> > > > return value from such calls, not the existence of the warning back=
-trace.
-> > >=20
-> > > Thanks for picking this series back up! I honestly thought this had
-> > > already landed. :)
-> > >=20
-> > > > With CONFIG_KUNIT enabled, image size increase with this series app=
-lied is
-> > > > approximately 1%. The image size increase (and with it the function=
-ality
-> > > > introduced by this series) can be avoided by disabling
-> > > > CONFIG_KUNIT_SUPPRESS_BACKTRACE.
-> > >=20
-> > > Yeah, as with my prior review, I'm a fan of this. It makes a bunch of=
- my
-> > > very noisy tests much easier to deal with.
+> > Thawing is done opposite to freezing (so superblock traversal in
+> > regular order) and the whole thing is plumbed into power
+> > management.
+> > The original ksys_sync() is preserved so the whole freezing step is
+> > optional (if it fails we're no worse off than we are today) so it
+> > doesn't inhibit suspend/hibernate if there's a failure.
 > >=20
-> > And for the record, we're also affected by this in DRM and would very
-> > much like to get it merged in one shape or another.
+> > Signed-off-by: James Bottomley
+> > <James.Bottomley@HansenPartnership.com>
 >=20
-> Here is another case:
-> https://lore.kernel.org/all/20250328.Ahc0thi6CaiJ@digikod.net/
+> OK, I've seen you are setting the new FREEZE_FOR_HIBERNATE flag but I
+> didn't find anything using that flag. What do you plan to use it for?
+> Does you efivars usecase need it? I find passing down this detail
+> about the caller down to all filesystems a bit awkward. Isn't it
+> possible to extract the information "hibernate is ongoing" from PM
+> subsystem?
+
+That's right.  I'm happy to post my patch below, but it depends on Al
+accepting the simple_next_child() proposal, so it doesn't apply to any
+tree.
+
+> > +/*
+> > + * Kernel freezing and thawing is only done in the power
+> > management
+> > + * subsystem and is thus single threaded (so we don't have to
+> > worry
+> > + * here about multiple calls to filesystems_freeze/thaw().
+> > + */
+> > +
+> > +static int freeze_flags;
 >=20
-> It would be very useful to have this feature merged.  Without it, we may
-> need to remove useful tests.
+> Frankly, the global variable to propagate flags is pretty ugly... If
+> we really have to propagate some context into the iterator callback,
+> rather do it explicitly like iterate_supers() does it.
 
-AFAIK, it's been merged in next a couple of weeks ago, so it should be
-in 6.15.
+Christian said the same thing.  I can do it, but if you look in the
+power management subsystem, it relies on single threading and has a lot
+of global variables like this, so I thought of this as a
+simplification.
 
-Maxime
+> > +static void filesystems_freeze_callback(struct super_block *sb)
+> > +{
+> > +	/* errors don't fail suspend so ignore them */
+> > +	if (sb->s_op->freeze_super)
+> > +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | FREEZE_HOLDER_KERNEL
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | freeze_flags);
+> > +	else if (sb->s_bdev)
+> > +		freeze_super(sb, FREEZE_MAY_NEST |
+> > FREEZE_HOLDER_KERNEL
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0 | freeze_flags);
+>=20
+> Style nit - braces around above blocks would be IMHO appropriate.
+>=20
+> > +	else {
+> > +		pr_info("Ignoring filesystem %s\n", sb->s_type-
+> > >name);
+> > +		return;
+> > +	}
+> > +
+> > +	pr_info("frozen %s, now syncing block ...", sb->s_type-
+> > >name);
+> > +	sync_blockdev(sb->s_bdev);
+> > +	pr_info("done.");
+> > +}
+>=20
+> Generally this callback is not safe because it can race with
+> filesystem unmount and calling ->freeze_super() after the
+> filesystem's ->put_super() was called may have all sorts of
+> interesting effects (freeze_super() itself will just bail with a
+> warning, which is better but not great either).
+>=20
+> The cleanest way I see how to make the iteration safe is to grab
+> active sb reference (like grab_super() does it) for the duration of
+> freeze_super() calls. Another possibility would be to grab sb-
+> >s_umount rwsem exclusively as Luis does it in his series but that
+> requires a bit of locking surgery and ->freeze_super() handlers make
+> this particularly nasty these days so I think active sb reference is
+> going to be nicer these days.
 
---paxtxmnckc7vplgu
-Content-Type: application/pgp-signature; name="signature.asc"
+Before getting into the how of this, could you just confirm my
+understanding of what the various locks do:
 
------BEGIN PGP SIGNATURE-----
+https://lore.kernel.org/cd5c3d8aab9c5fb37fa018cb3302ecf7d2bdb140.camel@Hans=
+enPartnership.com
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+awOAAKCRDj7w1vZxhR
-xbs6AP9BZSaotqaSUmBTtc4k3Uj9az+ck0f+76K8QNHFnxjslgD/XFEDSUboHQ6N
-QI2urzu11I1VyDIFnSJoU7c57HPzZQ0=
-=XSrM
------END PGP SIGNATURE-----
+Is correct?
 
---paxtxmnckc7vplgu--
+Regards,
+
+James
+
