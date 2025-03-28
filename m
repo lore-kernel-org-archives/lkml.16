@@ -1,183 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497E01D61A5
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 16:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BE0C2F2;
+	Fri, 28 Mar 2025 16:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743178798; cv=none; b=gk9N2mvBe/Whh2Gl08+0DgGFkj0CgpqzkKE1IWTRlUxiARE8Nz9J0BdA9rWsFYKl07xKxNDjjCdr1lnkbhLXKr35fOav0O7AfI2ovV7Y1OXY49ljMIkbQN6iaRQ+XcpbyNxMYa9vPXqHIgbvEg/ZmTD8vNN3Zh2jkMt9SHBbWO4=
+	t=1743178979; cv=none; b=Ss7fr+iMq7UrqChkxDfaHAK7XLz3HNu/pI6aCNUw7YYV517Fb/VwsoXFsvo1LQV2E9iauNXd23qBuG9a29EybXFgIf+s9xVa89gpiGVeqtbEAAvQYpG4PoAYJBszHlqhfJKgZ4h+9UkkN0YDOrbX/+HA16yuIaHfnr1grK2+sHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743178798; c=relaxed/simple;
-	bh=Whw68NHJ0hBotbZLWHPLaLlBo9SwCWGnXSqmyMoyaU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bO/e6ynR31Da2lHGEhF/iF/itm2DCfaiE42V81wcZ5YNnv+pI11c1qVp6bPAT55NqCKwLU/Hv86abR2htzlxCdRDEpo+wmWFxK7HOF5dIhdRvMXlkfSbaqm9QPLlczyBuoZNvfj3ekNWYLFQPdQHEFPM+N17xHfv5gzS6ClaATg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T9lMybHR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743178979; c=relaxed/simple;
+	bh=Ef5PBwKT4P+oC4XdvM7k/alPCz0kN/qqknbPORNtAZg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=B3IAZCcLFa9bCHGQ+7Xi+6SLgzorKmreAq+ZcRUTjkTdxGVYjGghD3BUTXCRSp53Bh6xXmRN09MtwLLlYGoemB+OhUhXsi34o50N6iOsja9v8UNCef4XggSOTpTqO4bkWS/LWlkoj31NFSUchmXXvtJHAlRpTE3rDNa36qq8yNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k11RaNE9; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9lMybHR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743178794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1bv4vSlZ+ZgT91/khCHsXspSBzkGUyxwvtb8olODOX8=;
-	b=T9lMybHRzD1OqTM5jHrDsY40ZnY8lcUaxGUAUmXTzjl7IBPG9ji5TpC7wHI5tf4fA6hhBc
-	vUSkNuX2Mu4Qk4CoDyHZaWmJSwZ4xREc6nOObqoIlU4IHj4JhMclkRmIfNILcBGhD+RusB
-	2OtvSAZXloEQEMsCk7awqTXz1bWS+ZU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-121--4Fz17TiMiiZBYBcRD51mA-1; Fri, 28 Mar 2025 12:19:53 -0400
-X-MC-Unique: -4Fz17TiMiiZBYBcRD51mA-1
-X-Mimecast-MFC-AGG-ID: -4Fz17TiMiiZBYBcRD51mA_1743178792
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ab68fbe53a4so276910266b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 09:19:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743178792; x=1743783592;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1bv4vSlZ+ZgT91/khCHsXspSBzkGUyxwvtb8olODOX8=;
-        b=eScGx1Hn1PvqYaGLyAuFxem36KS0ilf0bCUQGcQBaiW6PtVuo/2dc9kiC3kdM3xZX9
-         OLz6eGt01dSxvelk5Whgp/oQ51hC5xm2MdgRpEZiA4fwpUHQ2XTl020tLxDoIUJlvozG
-         2yviqSKeA5+uJV1i8SyMRZK/TEmWXjAF7mJdiJG/as5JQZd0Br4oSugKf6HrYgKooAqp
-         myd8FZAYFChs8PSWTLn5he/it0f8ZJvMdwzWDlOqFY1hMter4lo5ZydqC6Xhc66ULbpT
-         d5idTDdFWOk7DdbNWYn5gyT7FF67rTclXxxP4RQ+uR8AfO73RzHMephVZHzlZQdLB98P
-         FgpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuH9wpxzjxPX6qdJnihV5pxt+9++fuQcYwd2vTW8FjYWt4gIzf8VZZe/r0gpI+RZ3ohuNGwk+T3HJpdSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA4MCWgzavyG4FkboTM/WXpYyl1xAWnZPKD/QYIZ2a9TxvjqXZ
-	zECC1k0QW7aTRg0bRxWYrCHc77/wb4fjkeOOomL5sSAldyZnW7R9VkGrsjzVnoVxmvTuyGxAlEj
-	l69zxzRgyQNlG8MBwqKQSHQYi3oNTdv3j2sjNa/0T/Ji7RmVZ7JY+ZYVFpUOLsg==
-X-Gm-Gg: ASbGncv0o3EhilpsLyYHvybaoeVsALl/9AlHpN/EFc8VlN6g2eZB821YFjqtpE0pKbs
-	pMphEahDXaPgOS4xye888A7Bmq/IWNFmrrusl8KL3scy5rLxvQYYb7dilpJlXmfzuFBOVwhNvNe
-	V5+VGRDGJh5lWLJJDevZZShcNXiVoOZj/Is14DhGi0j9oZedkZ6ToKwogZF71e+ays15VVQUuR0
-	LHZmmPzHWxc+HxzUFmnWGsEjskey9U68SYcLLgAfNnAsoo1JvZiziH10OBlie9kx/YbhA8dhBjY
-	AiprF/LKlHkZ2tM3yEwxbetAQQZfEtsC92tDCSLg4UwoTvCXhsU0k8IYJJS3Mh8o
-X-Received: by 2002:a17:906:f5a4:b0:ac3:b50c:c95b with SMTP id a640c23a62f3a-ac6fb15674amr880699666b.56.1743178791628;
-        Fri, 28 Mar 2025 09:19:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOVwDFv2G5whldI68ZF2fstheYGaVbwdj4Strjz0nJgWz5XlzWG1eNLgBEm3hj5FiuUFxS2g==
-X-Received: by 2002:a17:906:f5a4:b0:ac3:b50c:c95b with SMTP id a640c23a62f3a-ac6fb15674amr880694966b.56.1743178790938;
-        Fri, 28 Mar 2025 09:19:50 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71971b700sm180408966b.181.2025.03.28.09.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 09:19:50 -0700 (PDT)
-Date: Fri, 28 Mar 2025 17:19:44 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
-	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
- vhost-vsock-netns device
-Message-ID: <3qjjlbwyso22n4ziylbeunfwpc7gl3rcin6v5qsr2npjfkbfjh@c745sejq6rig>
-References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
- <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
- <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
- <nwksousz7f4pkzwefvrpbgmmq6bt5kimv4icdkvm7n2nlom6yu@e62c5gdzmamg>
- <Z9yDIl8taTAmG873@devvm6277.cco0.facebook.com>
- <aqkgzoo2yswmb52x72fwmch2k7qh2vzq42rju7l5puxc775jjj@duqqm4h3rmlh>
- <Z+NGRX7g2CgV9ODM@devvm6277.cco0.facebook.com>
- <apvz23rzbbk3vnxfv6n4qcqmofzhb4llas27ygrrvxcsggavnh@rnxprw7erxs3>
- <Z+bJOsG457Vg/cUu@devvm6277.cco0.facebook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k11RaNE9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743178978; x=1774714978;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Ef5PBwKT4P+oC4XdvM7k/alPCz0kN/qqknbPORNtAZg=;
+  b=k11RaNE9FdzSwyBXbAMk+dKBIg4G+RrQedS7loJJVVZvI7BzmH151f3M
+   VvRpfqk4TmSnLe1GyZKsjtA/4rk4sqLZdqFlpwZsw3jpac6DYfI/oJllh
+   TB2Ykl/dsLO9xQggkVC6RFK6eERXxklhFPLs1exI0g22Z0CJ/peYFjI0z
+   jbVkZ1BM03NXR0Jh8iGZhsuUIZBNq+hO/TMA/yLqnqvqUMdF4Z53/SLIF
+   DapjAiGRpRSdpgzZVMAYXWwUwAAdaBOuXSoZMvTUIIHBWQEGSC8TlzV3x
+   KtIwQr4YQQHtpW1nxeOrNNIt/nDXzcGN0rzLPVLcLXeCimokuFUj2+iiS
+   g==;
+X-CSE-ConnectionGUID: VBs6lPClSJO7gTg6R8/1Eg==
+X-CSE-MsgGUID: BaiV7YcsSHWrnJNeoZY+Cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44729264"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="44729264"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:22:56 -0700
+X-CSE-ConnectionGUID: iGboJiWaTOm3ySUxyixaRw==
+X-CSE-MsgGUID: 81RXJ6tgQZGs921wgMeNUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="125382635"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:22:54 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 18:22:50 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 11/12] Documentation: admin-guide: laptops: Add
+ documentation for alienware-wmi
+In-Reply-To: <20250313-hwm-v6-11-17b57f787d77@gmail.com>
+Message-ID: <0d6f1ec1-be44-4362-c574-064dd446873d@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-11-17b57f787d77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z+bJOsG457Vg/cUu@devvm6277.cco0.facebook.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Mar 28, 2025 at 09:07:22AM -0700, Bobby Eshleman wrote:
->On Thu, Mar 27, 2025 at 10:14:59AM +0100, Stefano Garzarella wrote:
->> On Tue, Mar 25, 2025 at 05:11:49PM -0700, Bobby Eshleman wrote:
->> > On Fri, Mar 21, 2025 at 11:02:34AM +0100, Stefano Garzarella wrote:
->> > > On Thu, Mar 20, 2025 at 02:05:38PM -0700, Bobby Eshleman wrote:
->> > > > On Thu, Mar 20, 2025 at 10:08:02AM +0100, Stefano Garzarella wrote:
->> > > > > On Wed, Mar 19, 2025 at 10:09:44PM +0100, Paolo Abeni wrote:
->> > > > > > On 3/12/25 9:59 PM, Bobby Eshleman wrote:
->> > > > > > > @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
->> > > > > > >  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
->> > > > > > >
->> > > > > > >  	vhost_dev_cleanup(&vsock->dev);
->> > > > > > > +	if (vsock->net)
->> > > > > > > +		put_net(vsock->net);
->> > > > > >
->> > > > > > put_net() is a deprecated API, you should use put_net_track() instead.
->> > > > > >
->> > > > > > >  	kfree(vsock->dev.vqs);
->> > > > > > >  	vhost_vsock_free(vsock);
->> > > > > > >  	return 0;
->> > > > > >
->> > > > > > Also series introducing new features should also include the related
->> > > > > > self-tests.
->> > > > >
->> > > > > Yes, I was thinking about testing as well, but to test this I think we need
->> > > > > to run QEMU with Linux in it, is this feasible in self-tests?
->> > > > >
->> > > > > We should start looking at that, because for now I have my own ansible
->> > > > > script that runs tests (tools/testing/vsock/vsock_test) in nested VMs to
->> > > > > test both host (vhost-vsock) and guest (virtio-vsock).
->> > > > >
->> > > >
->> > > > Maybe as a baseline we could follow the model of
->> > > > tools/testing/selftests/bpf/vmtest.sh and start by reusing your
->> > > > vsock_test parameters from your Ansible script?
->> > >
->> > > Yeah, my playbooks are here:
->> > > https://github.com/stefano-garzarella/ansible-vsock
->> > >
->> > > Note: they are heavily customized on my env, I wrote some notes on how to
->> > > change various wired path.
->> > >
->> > > >
->> > > > I don't mind writing the patches.
->> > >
->> > > That would be great and very much appreciated.
->> > > Maybe you can do it in a separate series and then here add just the
->> > > configuration we need.
->> > >
->> > > Thanks,
->> > > Stefano
->> > >
->> >
->> > Hey Stefano,
->> >
->> > I noticed that bpf/vmtest.sh uses images hosted from libbpf's CI/CD. I
->> > wonder if you have any thoughts on a good repo we may use to pull our
->> > qcow image(s)? Or a preferred way to host some images, if no repo
->> > exists?
->>
->> Good question!
->>
->> I created this group/repo mainily to keep trak of work, not sure if we can
->> reuse: https://gitlab.com/vsock/
->>
->> I can add you there if you need to create new repo, etc.
->>
->> But I'm also open to other solutions.
->>
->
->Sounds good to me. I also was considering using virtme-ng, which would
->avoid the need, at the cost of the dependency. What are your thoughts on
->that route?
+On Thu, 13 Mar 2025, Kurt Borja wrote:
 
-I just saw that Paolo had proposed the same, but his response was 
-off-list by mistake!
+> Add driver admin-guide documentation for the alienware-wmi driver.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  .../admin-guide/laptops/alienware-wmi.rst          | 128 +++++++++++++++++++++
+>  Documentation/admin-guide/laptops/index.rst        |   1 +
+>  MAINTAINERS                                        |   1 +
+>  3 files changed, 130 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/laptops/alienware-wmi.rst b/Documentation/admin-guide/laptops/alienware-wmi.rst
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fe7dec73706f8ec85040dc1cbaec38ffda70b563
+> --- /dev/null
+> +++ b/Documentation/admin-guide/laptops/alienware-wmi.rst
+> @@ -0,0 +1,128 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +====================
+> +Alienware WMI Driver
+> +====================
+> +
+> +Kurt Borja <kuurtb@gmail.com>
+> +
+> +This is a driver for the "WMAX" WMI device, which is found in most Dell gaming
+> +laptops and controls various special features.
+> +
+> +Before the launch of M-Series laptops (~2018), the "WMAX" device controlled
+> +basic RGB lighting, deep sleep mode, HDMI mode and amplifier status.
+> +
+> +Later, this device was completely repurpused. Now it mostly deals with thermal
 
-So I would say it is an explorable path. I have no experience with it, 
-but it looks like it could do the job!
+repurposed
 
-Thanks,
-Stefano
+> +profiles, sensor monitoring and overclocking. This interface is named "AWCC" and
+> +is known to be used by the AWCC OEM application to control these features.
+> +
+> +The alienware-wmi driver controls both interfaces.
+> +
+> +AWCC Interface
+> +==============
+> +
+> +WMI device documentation: Documentation/wmi/devices/alienware-wmi.rst
+> +
+> +Supported devices
+> +-----------------
+> +
+> +- Alienware M-Series laptops
+> +- Alienware X-Series laptops
+> +- Alienware Aurora Desktops
+> +- Dell G-Series laptops
+> +
+> +If you believe your device supports the AWCC interface and you don't have any of
+> +the features described in this document, try the following alienware-wmi module
+> +parameters:
+> +
+> +- ``force_platform_profile=1``: Forces probing for platform profile support
+> +- ``force_hwmon=1``: Forces probing for HWMON support
+> +
+> +If the module loads successfully with these parameters, consider submitting a
+> +patch adding your model to the ``awcc_dmi_table`` located in
+> +``drivers/platform/x86/dell/alienware-wmi-wmax.c`` or contacting the maintainer
+> +for further guidance.
+> +
+> +Status
+> +------
+> +
+> +The following features are currently supported:
+> +
+> +- :ref:`Platform Profile <platform-profile>`:
+> +
+> +  - Thermal profile control
+> +
+> +  - G-Mode toggling
+> +
+> +- :ref:`HWMON <hwmon>`:
+> +
+> +  - Sensor monitoring
+> +
+> +  - Manual fan control
+> +
+> +.. _platform-profile:
+> +
+> +Platform Profile
+> +----------------
+> +
+> +The AWCC interface exposes various firmware defined thermal profiles. We expose
 
+Please don't use "We".
+
+-- 
+ i.
+
+> +these profiles to user-space through the Platform Profile class interface.
+> +Refer to
+> +:ref:`sysfs-class-platform-profile <abi_file_testing_sysfs_class_platform_profile>`
+> +for more information.
+> +
+> +The name of the platform-profile class device exported by this driver is
+> +"alienware-wmi" and it's path can be found with:
+> +
+> +::
+> +
+> + grep -l "alienware-wmi" /sys/class/platform-profile/platform-profile-*/name | sed 's|/[^/]*$||'
+> +
+> +If the device supports G-Mode, it is also toggled when selecting the
+> +``performance`` profile.
+> +
+> +.. note::
+> +   You may set the ``force_gmode`` module parameter to always try to toggle this
+> +   feature, without checking if your model supports it.
+> +
+> +.. _hwmon:
+> +
+> +HWMON
+> +-----
+> +
+> +The AWCC interface also supports sensor monitoring and manual fan control. Both
+> +of these features are exposed to user-space through the HWMON interface.
+> +
+> +The name of the hwmon class device exported by this driver is "alienware_wmi"
+> +and it's path can be found with:
+> +
+> +::
+> +
+> + grep -l "alienware_wmi" /sys/class/hwmon/hwmon*/name | sed 's|/[^/]*$||'
+> +
+> +Sensor monitoring is done through the standard HWMON interface. Refer to
+> +:ref:`sysfs-class-hwmon <abi_file_testing_sysfs_class_hwmon>` for more
+> +information.
+> +
+> +Manual fan control on the other hand, is not exposed directly by the AWCC
+> +interface. Instead it let's us control a fan `boost` value. This `boost` value
+> +has the following aproximate behavior over the fan pwm:
+> +
+> +::
+> +
+> + pwm = pwm_base + (fan_boost / 255) * (pwm_max - pwm_base)
+> +
+> +Due to the above behavior, we expose the fan `boost` control to user-space
+> +through the following, custom hwmon sysfs attribute:
+> +
+> +=============================== ======= =======================================
+> +Name				Perm	Description
+> +=============================== ======= =======================================
+> +fan[1-4]_boost			RW	Fan boost value.
+> +
+> +					Integer value between 0 and 255
+> +=============================== ======= =======================================
+> +
+> +.. note::
+> +   In some devices, manual fan control only works reliably if the ``custom``
+> +   platform profile is selected.
+> diff --git a/Documentation/admin-guide/laptops/index.rst b/Documentation/admin-guide/laptops/index.rst
+> index e71c8984c23e43ca7cd6373b88803354dff6bc60..db842b629303c1bcf02646204d51938f9bd4043e 100644
+> --- a/Documentation/admin-guide/laptops/index.rst
+> +++ b/Documentation/admin-guide/laptops/index.rst
+> @@ -7,6 +7,7 @@ Laptop Drivers
+>  .. toctree::
+>     :maxdepth: 1
+>  
+> +   alienware-wmi
+>     asus-laptop
+>     disk-shock-protection
+>     laptop-mode
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1afd30d00aecf9a48f8c71e156affd5f329539bd..c609bc321b8dc3ab0e8d92b04e42483be8cc171c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -796,6 +796,7 @@ M:	Kurt Borja <kuurtb@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  L:	Dell.Client.Kernel@dell.com
+>  S:	Maintained
+> +F:	Documentation/admin-guide/laptops/alienware-wmi.rst
+>  F:	Documentation/wmi/devices/alienware-wmi.rst
+>  F:	drivers/platform/x86/dell/alienware-wmi*
+>  
+> 
+> 
