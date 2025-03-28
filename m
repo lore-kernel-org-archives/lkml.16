@@ -1,95 +1,132 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB01217651
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A8521ABBB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743156264; cv=none; b=PaF91ekENga0PnqLIsI0wrscurNzp7ETznOSH65hGVxTyn+c7U5oJnKnOP8fOVF2YCeATlkaRItNAry8c7iZ8xs20FmF13W2iLFiW+O4smLuUX3oND38Exrz5zw2FbmttXRykzaXl7ZE7YfbA7tmpauuR3yoLKA1r/63Z77arkI=
+	t=1743156265; cv=none; b=m/NBCgsxBySLZv7BaU6rcFoep7AQki8YXHbm+LtoTNdycGkhvO+f15fpSDLYQZKpOsbDJ9xhS2eZDdg/eSygZ8+XqKw23v56nTi3XYELOcBptjuX9xwzOLDHMNVAbO4EnzFA+MLe1iYYeM5uMtW8S2Ubm1J8vHFXi4unqAjyI/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743156264; c=relaxed/simple;
-	bh=yVEU9Z9Cc8B9W4xNNyEcyh6tlvqC6ybG2jaMWegweJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R8d1dTaV+qLS35YUVOu6Is8OmT4CajDBKVP3reHqEw4RcOrFUGQ+YX3o/kMz40X/Kt9rUDq/vap3gIqiP99BW7iPsNjm+ozVVzNbeqCHcAoyixH7V0r+GhNkqAeW6W8TEIxZnSv8pms1noXr+riADik3ZBVc2J+SkZ0RnJJ6ivg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g8t9rbZG; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743156265; c=relaxed/simple;
+	bh=YUc7c9MXgNwcjHIY/6Aj5gIGWVEuIKPw42UQXK+Og6M=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fXpT2RgBksVCgJ9CL3Sq7vFMw6Gw8jKDuTR0HuAtMjoeCx8be1c5ScqkNmQCLeBo9HOtkocBmxZJiXHK6/0pY4MPUkTUSgj5a3RcduKCabJL3GlsfXjT5DmtIGIqHmK+zHWbiWWSitwei4u21aoA6kHDO16yeuyPUgOHO6W/wbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f/p/prc9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g8t9rbZG"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54993c68ba0so2060481e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743156260; x=1743761060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yVEU9Z9Cc8B9W4xNNyEcyh6tlvqC6ybG2jaMWegweJs=;
-        b=g8t9rbZGbrlXB5llJq+BBLRV1NBe7VglGZujVNaqfal49bofcjambfiTuvBE70ELRp
-         WlnYHFfMzszO9OYPcv40VYrCAPExxm/O/8sYGu+1rmnUXkCeu6E0bbSjZ6hiefUfghru
-         qb5Vfx9dI3f0xNMQqXTRVB4WSVLHkbaqs7Gw0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743156260; x=1743761060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yVEU9Z9Cc8B9W4xNNyEcyh6tlvqC6ybG2jaMWegweJs=;
-        b=Lkw3gu5uLVW8bll9e9dQe1rGTEuDQccSiGZ+9sXZolb09Icf5i08G8BJTGEKaBYs2M
-         9Zn0X1i4aexuP0r5LQnf3u/4U2quZv0vmddSaWNfbvwdN8UYTWkn+zYgMhbHO+uChziK
-         WptMu1s497cDhtD2+Zt02IY8VPs5Y26gxnNQnJXSZpUQXJVe4gPio1F1QtyFEef+h3dC
-         jcxOWik5tPC3u3oDjL7cv7bAJu3ZEcETy5Yn5FV+1TagEe0N3oqQxMCiSzn9e0wYlVvC
-         mf9ksYTFwbPqRdn/cChI4fKPygiG9+eFaF0F1JmGd4CV9esFj5nq43CojVhKFCleUOPq
-         51wg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4lvTRNsj1y+WqyCofqvfFyT2dcn15/z3tccev4cfLKlotrWNgp09ZBeRLqeItYM5RDGDWu6UbJMrdW6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyocDNhePaOJ+HnMsDwGYeeTRMAaoFFX41cDSn+Y1oHlC+hNU6K
-	EVj6dPyujqdpPzNd0nAWCAXoM1n8jO/glzN1Xw2Qk4U24+1hHIQltyujGRgRTxUTrRp3iQ30eMy
-	fZtnM/M9src1UVdt4dXvDNhNMMblwiMXKAXhL
-X-Gm-Gg: ASbGncsTY179paKqvKhSvWo8EWVH+AIBlc9sLO7OwIw1LT6dAx6IyiVQx2/blZtISHj
-	TY9bovzwITe0mqJzgHrbJNVxY05FDORgWSUNZcU1RgWvw1tyxN+VDXS6EMNuzDKiMUTlZWncghz
-	Y+MUV6IMODgGpOc3ZyjBwavBCou4bAf6YNcMUOQYC90lkB1FKc12SD7A==
-X-Google-Smtp-Source: AGHT+IHePVtXJ1qJQdbP4+JraAsng3JxPcp8ln2qAoF7z/+m2DWfYuVxIC5W1TfslB1L3LezP+QcBUJ4Mmt/gRVxkjw=
-X-Received: by 2002:ac2:4e16:0:b0:549:7145:5d2f with SMTP id
- 2adb3069b0e04-54b01221f44mr2788893e87.33.1743156260501; Fri, 28 Mar 2025
- 03:04:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f/p/prc9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743156262;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+Sc1dvTB3dN9eSkDmtrVWCVhuubTwR7VYeyfTnHnq6Y=;
+	b=f/p/prc9ELKI0wOzWBVeN4xV0It0ssXQXyMYclVa7XqsUtLodAsaw+Fpcfm/lmYagZwG37
+	FTJoKBSPhMn//XuK3bCSi2Pq2JIbW54ljWp+4HOc9JaZC20Qda/H+6aNfFXMHLtLDryHJM
+	ZlrpKKqvc73HFurkINl+lJ4yubal02Y=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-m6STFpomMGS1OwcxcNGOzA-1; Fri,
+ 28 Mar 2025 06:04:21 -0400
+X-MC-Unique: m6STFpomMGS1OwcxcNGOzA-1
+X-Mimecast-MFC-AGG-ID: m6STFpomMGS1OwcxcNGOzA_1743156260
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E6E8196B36E;
+	Fri, 28 Mar 2025 10:04:20 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.11])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB7C330001A1;
+	Fri, 28 Mar 2025 10:04:15 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v8 2/8] vhost: Reintroduce vhost_worker to support kthread
+Date: Fri, 28 Mar 2025 18:02:46 +0800
+Message-ID: <20250328100359.1306072-3-lulu@redhat.com>
+In-Reply-To: <20250328100359.1306072-1-lulu@redhat.com>
+References: <20250328100359.1306072-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-fix-mtk-iommu-error-v1-1-df969158e752@collabora.com>
-In-Reply-To: <20250327-fix-mtk-iommu-error-v1-1-df969158e752@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Fri, 28 Mar 2025 18:04:09 +0800
-X-Gm-Features: AQ5f1JruRldxLi3oN3F4vGRjnP_jRoig-8O423pVAOXUeHgChYU13ECJHzNzG14
-Message-ID: <CAGXv+5HAa0-AXg6=htNappreR5-9sPHNp7L9ByEBq4XZxADBXw@mail.gmail.com>
-Subject: Re: [PATCH] iommu/mediatek: Fix NULL pointer deference in mtk_iommu_device_group
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"Rob Herring (Arm)" <robh@kernel.org>, kernel@collabora.com, Joerg Roedel <jroedel@suse.de>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, Mar 27, 2025 at 6:48=E2=80=AFPM Louis-Alexis Eyraud
-<louisalexis.eyraud@collabora.com> wrote:
->
-> Currently, mtk_iommu calls during probe iommu_device_register before
-> the hw_list from driver data is initialized. Since iommu probing issue
-> fix, it leads to NULL pointer dereference in mtk_iommu_device_group when
-> hw_list is accessed with list_first_entry (not null safe).
->
-> So, change the call order to ensure iommu_device_register is called
-> after the driver data are initialized.
->
-> Fixes: 9e3a2a643653 ("iommu/mediatek: Adapt sharing and non-sharing pgtab=
-le case")
-> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe pa=
-th")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Add the previously removed function vhost_worker() back
+to support the kthread and rename it to vhost_run_work_kthread_list.
 
-Tested-by: Chen-Yu Tsai <wenst@chromium.org> # MT8183 Juniper, MT8186 Tenta=
-cruel
+The old function vhost_worker was change to support task in
+commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads")
+change to xarray in
+commit 1cdaafa1b8b4 ("vhost: replace single worker pointer with xarray")
+
+Signed-off-by: Cindy Lu <lulu@redhat.com>
+---
+ drivers/vhost/vhost.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 250dc43f1786..9500e85b42ce 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -388,6 +388,44 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+ 	__vhost_vq_meta_reset(vq);
+ }
+ 
++static int vhost_run_work_kthread_list(void *data)
++{
++	struct vhost_worker *worker = data;
++	struct vhost_work *work, *work_next;
++	struct vhost_dev *dev = worker->dev;
++	struct llist_node *node;
++
++	kthread_use_mm(dev->mm);
++
++	for (;;) {
++		/* mb paired w/ kthread_stop */
++		set_current_state(TASK_INTERRUPTIBLE);
++
++		if (kthread_should_stop()) {
++			__set_current_state(TASK_RUNNING);
++			break;
++		}
++		node = llist_del_all(&worker->work_list);
++		if (!node)
++			schedule();
++
++		node = llist_reverse_order(node);
++		/* make sure flag is seen after deletion */
++		smp_wmb();
++		llist_for_each_entry_safe(work, work_next, node, node) {
++			clear_bit(VHOST_WORK_QUEUED, &work->flags);
++			__set_current_state(TASK_RUNNING);
++			kcov_remote_start_common(worker->kcov_handle);
++			work->fn(work);
++			kcov_remote_stop();
++			cond_resched();
++		}
++	}
++	kthread_unuse_mm(dev->mm);
++
++	return 0;
++}
++
+ static bool vhost_run_work_list(void *data)
+ {
+ 	struct vhost_worker *worker = data;
+-- 
+2.45.0
+
