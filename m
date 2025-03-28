@@ -1,57 +1,93 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F52F1F583D;
-	Fri, 28 Mar 2025 10:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579A32192E1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743159321; cv=none; b=fWt8LgcgfUl0ShRLl844CdxnftkDheH/QN663VaJiWM7VxbHQ9AgfMU88Hut4nEZ30h038QW2G+BFovAxJ1vZtNW3brxRR9X8WaErjBSOZcnxVGOxttibaIwKn2O7bubd++/astseSrRKm/khojU4rsSL6TU1JOXEeQZDbjzTEM=
+	t=1743159327; cv=none; b=NRmW2KH2IvjtrJUF07WUTL9aWP/ky2TrXHgk33xUbs2cJUQ4Hn7fYNOUTBNm3jYJlWk1RToYRlQUxnFZhNmULpvM0r/fb0E4fjPRg0ffbFCBffCljkPn2PdNzI0ZqcQlChzubZjPx6lOb3s8J1OlEfiUvucAjtmlkChdH9MxTac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743159321; c=relaxed/simple;
-	bh=FOllFKRqF5bBq2cR+69jE9OQJJq3gVw/gnpRvT34u3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qznWQWXY42X7Ea2V9L93m3WtpNG2o/ZI1+/xkqAjJ4rcd45dFyLU6lm5ZiIv4iKBhVwU2TtzHplEC19v2ngD8Te3QMVSKv2C7IkrooaaWMCgV+EiVYjoqJaOKRyTx9/A2cw3Vby7ZwH5CHVDet9vNu1SYaNsP+eHWZcDudFC0fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A73a8cFT; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1743159327; c=relaxed/simple;
+	bh=DXP3pS79yJALTkJG+u4bhLLZQG0D51CRvHOTuzkiMYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OVl3+kgBZYkipnbRIdQSnMiTAjEOvWjZhyxk8ZuWVeoIOhiEPwd+nKF7g0xdoh/80P8g8wXRCzy+wPo4Eh9rvuU0JcWkQzcDAaX4MBySSULpxv4EWimWuKMzGLUK0lQ/LXwi8h0SmhP9OvfS/bXKC8t4Bxobbtc90bRqt/a6s3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ALzKf/re; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A73a8cFT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JbS8da8AxoXIq0TnjhuaWcxM7AcovnYAibDqa/WW/GE=; b=A73a8cFTgja0rTt+bwsiuXHMah
-	MSo5fz48Pcca4ncUIm+L9F58YvCMxFjj/4kxLrQM0yELBwHpcukBWE0n7sU0trsiJwGb4ner9TTbL
-	L9tnZJFFC3xobtAZ4bCOgv3H6CaTMjL4fVVeonUkJuP5q4MPmhFeDNxhP/2V3eaySJr8fcQgu2HZt
-	nzM2a2/Zq+qQyxxJP4AVnr9twqXd19FdnUpS8Atn2qrK+YnkejoZQWakaSvfXbYs2ruTmYU85Y5j9
-	knp007yARnsYD1PowgGFtePDcD4NQAGeA5JjUr1hKV0GhNVs0W2r2GQjPPSmQH6LpxVSLAGSBJb7e
-	l/9sFMHg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1ty7Ms-0000000DBIe-0bhL;
-	Fri, 28 Mar 2025 10:55:18 +0000
-Date: Fri, 28 Mar 2025 03:55:18 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Fanhui Meng <mengfanhui@kylinos.cn>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: optimize sq_hctx assignment
-Message-ID: <Z-aAFkOm0KtFp9b6@infradead.org>
-References: <20250328031321.790317-1-mengfanhui@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ALzKf/re"
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 6111958B2C9
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 08:51:31 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ADF5F44547;
+	Fri, 28 Mar 2025 08:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743151884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oFQ7PZL1h9qL+Irw3U4MMBjb7+8PcdHPToDJ/rFYo44=;
+	b=ALzKf/reiAnA5HFYCdX+aY4L146ukU7V5XIj7uuuBOHPA0QweJBK86NKLOt299/rm+aGDg
+	ywc54C/l9iD2Kowzc4+Z2/0OcOUGRiTMwVtiyize4AWMZGxnoVEWryO2ued7dQ5+ph2lGg
+	+o0e2LyKXBm0m8EpXXanUwTScaIVGtNoHp8CdxImD9vdbgBrvcmHKvPTTFD6AP1jBmCyfn
+	crizztmB8/387sBWrn6bZslvNRyZZ7fELqi7N9ROu6nvTre4U0CSvHab3uTMX7qk+e4u5e
+	fkN61S0Y3W8UBZnykiW6eU8pkl8IcbTcHQeZohBg4l98AI+dnMMek4A7qDrMFw==
+Date: Fri, 28 Mar 2025 09:51:21 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] drm/panel: deprecate old-style panel allocation
+Message-ID: <20250328095121.7a21e1f8@booty>
+In-Reply-To: <20250327-b4-panel-refcounting-v2-3-b5f5ca551f95@redhat.com>
+References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
+	<20250327-b4-panel-refcounting-v2-3-b5f5ca551f95@redhat.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328031321.790317-1-mengfanhui@kylinos.cn>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedtkeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
+ hgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, Mar 28, 2025 at 11:13:21AM +0800, Fanhui Meng wrote:
-> Optimizing code for greater standardization.
+On Thu, 27 Mar 2025 10:55:41 -0400
+Anusha Srivatsa <asrivats@redhat.com> wrote:
 
-not sure what is an optimization here.  I personally really like
-initializing variables at declaration time, but it's not an optimization
-and without other changes it the area this really just feels like churn.
+> Start moving to the new refcounted allocations using
+> the new API devm_drm_panel_alloc(). Deprecate any other
+> allocation.
+> 
+> v2: make the documentation changes in v1 more precise (Maxime)
 
+Note that the changelog (list of changes since previous versions)
+should be...
+
+> 
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> ---
+
+...here, just after the '---' line. In such way it will not be applied
+by 'git am' and similar tools and will not appear in the final commit
+when your patch is applied. The patch history is not needed in the
+final commit.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
