@@ -1,148 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6891922D4;
-	Fri, 28 Mar 2025 22:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFBA1922D4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 22:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743200530; cv=none; b=LFHVwWKfLQhoVWPetYdAXnTcwCJPZXUySbpac/WsPftzYvgbBPfjqMJp3mIB6FlzIsprBm5h6XPDgYyiW4OuzhLKbddd0zcrrqSIls22F+APl2SMCuL4X2OlyBrhKf4syi7EBdMlcWvq1OMJu2NAvSXeY3EXviy/goIfzU4WAac=
+	t=1743200624; cv=none; b=j6tV/w8IVAlHnpdFVylgrqOvd9nGdY5a04i9DZ1UnSyS4ewWMI3ELOMnju1cyHTyf4hfa9bJh1COVebpsIDZYqw34VxFL1mnC6BuzTZjR83wgNJqFZ7O5DJUxegsYeMW/foiRlAkrx88imOGmSn4DTkzm7tNOVbHkFqTlrXqADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743200530; c=relaxed/simple;
-	bh=G98Z3WGYvhW2A7hi2E5Ks/YG6A7og48XM823kzIjspc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guZ0JwXMT1fWLnIDKb4Mm0bBTJScmVA0t0XwRRjSBakrEkHX7PWYFRY2UTWcRi7yEHwXaXc+PiejU/HUh25H3QSIUcTJg85eNXNy14pbW8mxNShU98Xlx4bB1UzjS8Va4oJQt73pKsGvFAU3wOuNdMilUquzqiYSZIEz96p9zJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AbaRMvsh; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743200624; c=relaxed/simple;
+	bh=PBsm90GoR7tViYFpdI3XnG8Uw+mKc6knBg1pKxFjQyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ePs6wIbZYQNZO6rsnHXrenEdwuOsATkw2HMg564YCJT+DtW5p17LYktw8gDbns0VUi44cQXrqjZ5qoRHg2eD2a/cPgDHjyrYKFb/kTXbX2Ly2cxrKj0qJNxZ5tjlYe5+puSJduSZR/O1btoszB9c2QyNR8MO2r10hn2vqcAmylQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hQM0nIaY; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AbaRMvsh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743200529; x=1774736529;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G98Z3WGYvhW2A7hi2E5Ks/YG6A7og48XM823kzIjspc=;
-  b=AbaRMvshAIw3RLT6aUctkyKTdI8Hd8VjtbAa0GjRG0dPvFV8nmTuqMGW
-   UVkUakuQB+cpQAiYxAB79pdCYvJ5TWdC8X/NfCkCJLFAXM6wsQfs08VBc
-   9gLeNfA6gpPGGj4aIkUJjD0PYmF106HY19dXjZLLv8YtbKETTlY1yiIQ+
-   W9/BUEM02oBCmQ8EwVziJgM1riMDa/+Qpcid+Qwo0Q56d9MebuaVlHLyT
-   UtK0lg4WT/9UBFdwVQSazq8r7w9EEVed/oi4lkqXT4qGpwNSCeEf0DkDl
-   IM/YQCLuMu2WpE0Sb5P4SoZYsz5faCyeG+luAeENim0CJOH7JYteGUwXT
-   Q==;
-X-CSE-ConnectionGUID: /SbMZ5nrRWSMqeHDfor1+Q==
-X-CSE-MsgGUID: Pl5+x5pDRD6rZCn2kOxuRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="54771485"
-X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
-   d="scan'208";a="54771485"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 15:22:09 -0700
-X-CSE-ConnectionGUID: KYawj+qMRMyHBjjedYu1Iw==
-X-CSE-MsgGUID: ZOy7Bdi5RhSgFN2XMyjDdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
-   d="scan'208";a="156553352"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Mar 2025 15:22:04 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tyI5R-0007ju-2g;
-	Fri, 28 Mar 2025 22:22:01 +0000
-Date: Sat, 29 Mar 2025 06:21:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Subject: Re: [PATCH v3 08/11] tee: add Qualcomm TEE driver
-Message-ID: <202503290620.2KJEcZM6-lkp@intel.com>
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-8-7f457073282d@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hQM0nIaY"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f556b90790so840391b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 15:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1743200621; x=1743805421; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VoQ3CY/UbCxQ1vfYn/wDbcVOfLwRr7UamsFPY0WiHL8=;
+        b=hQM0nIaYzPPhuQF3wK334OCbFCe3x3SqOuJaMsXb0tMhcmh6ulUI69Y0wgmsUv9lh5
+         5KfxARtEWWE6EizApEMKsSPZ657myd8AGWRLgImqQe4rLH0WFO+ADqkwxBbAvZV2idl7
+         fA2szaiHHAaM0vbJ223VkJBBtxSAcYQAiYac8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743200621; x=1743805421;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VoQ3CY/UbCxQ1vfYn/wDbcVOfLwRr7UamsFPY0WiHL8=;
+        b=QX2w/AsHQ+7y5nFp2DvCm15I3C2JxhwXEIC9ECb06m9SpyrmGv6r+UxHi5wPJVxvSK
+         ys5gtttco+egg5uhDg0QLMZGbJpF37Tayll2vIKNyzT+YQwFNbe2/i0nxFUBqrRRzHnQ
+         WT8VySdnNFuW5Yd+EuvLnDX1sKyqWXyB6salk+iuY4bwBvobU1vVkCgxeqprFWmGViaB
+         Nlu5NGH6YZDk9bm10CY7grmy0RG1juwE/O1yqYclBfhbS/K7E5ELOfu0dQyubZpJRIhY
+         YQqi6K37AekhmMqroR7TH1EbJak2ag9hBkoWsLn7eWs17ouCrT/iaj36gtuIWSPwFfU+
+         fljA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTg/IvSeuAtCCM9srbYNj0QPplWssl7AUMYvCIRw2MRtF7DD4TUrJQiuNcM6psG+3xEUQj4MmlzdhS8+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG4Knn81z9JG9zxXTkynqt7yhOdv3TQKqhtXgE38YfNIP2pzBk
+	UbZWS17j7HSmuY1Q2E2Tms8xEQQN2nKvvfp3VEcY22uj04TNDXS5Hd2IO03uBnk=
+X-Gm-Gg: ASbGnctizvMdtQVNcAYMaNNdsrwOZa9d1JfViS43qdCpLMbLkrL1kZcmCvhjAuoV0Jq
+	Qh5GfxFofbIR6rQqUpEmKFfPFM600+ssEvjt/jKDIF4vitF9WrNbke2xkTluoXQZIZNJFD+yFH3
+	xYu+QLPUQp4sYbt4R7Kly6O6OW71LV+lhBjhprxqi6wF4SVa1BAkxGS/X8NmE3c5IDqSskG2pkF
+	xHEckqo88yi2VOoSL5Zq5qSTC9MAqPybmE8IRYH1B9eS689qsTgquumiB/+usZ67jmGJDR2Yncf
+	xXOZn+xCypJHib+LIbPIYe4zoHbKtjYNAPNjtqpNfa6x8ctLCJ5iKbjQ+NqNa55k3g==
+X-Google-Smtp-Source: AGHT+IHIHEUmNn+Ej+d4DBj6F1dLhdjYv2M3oXqEOqrgsaGxua6hF4SIr5R7CXRXG+xJlFnyff5Nwg==
+X-Received: by 2002:a05:6808:14cc:b0:3fa:bead:68 with SMTP id 5614622812f47-3ff0f3cfd8fmr535368b6e.0.1743200620648;
+        Fri, 28 Mar 2025 15:23:40 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3ff052799b6sm513053b6e.37.2025.03.28.15.23.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 15:23:40 -0700 (PDT)
+Message-ID: <76eb91c8-4c66-4e2a-8d32-f2e5d545bb74@linuxfoundation.org>
+Date: Fri, 28 Mar 2025 16:23:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-8-7f457073282d@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/nolibc: drop unnecessary sys/io.h include
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Sebastian Andrzej Siewior <sebastian@breakpoint.cc>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250324-nolibc-ioperm-v1-1-8a7cfb2876ae@weissschuh.net>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250324-nolibc-ioperm-v1-1-8a7cfb2876ae@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Amirreza,
+On 3/24/25 16:01, Thomas Weißschuh wrote:
+> The include of sys/io.h is not necessary anymore since
+> commit 67eb617a8e1e ("selftests/nolibc: simplify call to ioperm").
+> It's existence is also problematic as the header does not exist on all
+> architectures.
+> 
+> Reported-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+>   tools/testing/selftests/nolibc/nolibc-test.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+> index 5884a891c491544050fc35b07322c73a1a9dbaf3..7a60b6ac1457e8d862ab1a6a26c9e46abec92111 100644
+> --- a/tools/testing/selftests/nolibc/nolibc-test.c
+> +++ b/tools/testing/selftests/nolibc/nolibc-test.c
+> @@ -16,7 +16,6 @@
+>   #ifndef _NOLIBC_STDIO_H
+>   /* standard libcs need more includes */
+>   #include <sys/auxv.h>
+> -#include <sys/io.h>
+>   #include <sys/ioctl.h>
+>   #include <sys/mman.h>
+>   #include <sys/mount.h>
+> 
+> ---
+> base-commit: bceb73904c855c78402dca94c82915f078f259dd
+> change-id: 20250324-nolibc-ioperm-155646560b95
+> 
+> Best regards,
 
-kernel test robot noticed the following build warnings:
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-[auto build test WARNING on db8da9da41bced445077925f8a886c776a47440c]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250328-104950
-base:   db8da9da41bced445077925f8a886c776a47440c
-patch link:    https://lore.kernel.org/r/20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-8-7f457073282d%40oss.qualcomm.com
-patch subject: [PATCH v3 08/11] tee: add Qualcomm TEE driver
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250329/202503290620.2KJEcZM6-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250329/202503290620.2KJEcZM6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503290620.2KJEcZM6-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/tee/qcomtee/core.c:310: warning: Function parameter or struct member 'oic' not described in 'qcomtee_object_qtee_init'
-
-
-vim +310 drivers/tee/qcomtee/core.c
-
-   298	
-   299	/**
-   300	 * qcomtee_object_qtee_init() - Initialize an object for QTEE.
-   301	 * @object: object returned.
-   302	 * @object_id: object ID received from QTEE.
-   303	 *
-   304	 * Return: On failure, returns < 0 and sets @object to %NULL_QCOMTEE_OBJECT.
-   305	 *         On success, returns 0
-   306	 */
-   307	static int qcomtee_object_qtee_init(struct qcomtee_object_invoke_ctx *oic,
-   308					    struct qcomtee_object **object,
-   309					    unsigned int object_id)
- > 310	{
-   311		int ret = 0;
-   312	
-   313		switch (qcomtee_object_type(object_id)) {
-   314		case QCOMTEE_OBJECT_TYPE_NULL:
-   315			*object = NULL_QCOMTEE_OBJECT;
-   316	
-   317			break;
-   318		case QCOMTEE_OBJECT_TYPE_CB:
-   319			*object = qcomtee_local_object_get(object_id);
-   320			if (*object == NULL_QCOMTEE_OBJECT)
-   321				ret = -EINVAL;
-   322	
-   323			break;
-   324	
-   325		default: /* QCOMTEE_OBJECT_TYPE_TEE */
-   326			*object = qcomtee_qtee_object_alloc(oic, object_id);
-   327			if (*object == NULL_QCOMTEE_OBJECT)
-   328				ret = -ENOMEM;
-   329	
-   330			break;
-   331		}
-   332	
-   333		return ret;
-   334	}
-   335	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+thanks,
+-- Shuah
