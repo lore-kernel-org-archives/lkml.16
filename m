@@ -1,101 +1,86 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FAE2F30
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A957A18035
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 03:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743133409; cv=none; b=eGz4Q73Hq9ZusHYhW8aF4O5gd5BtdifogaSD2yyukEusMYfvrYOVGQ9+kga+hsgUs1Q3iSLxa5Ert/7soKHOv72ySqdnIDaVO6NVzAZRhYrJkcXJqS6EuzKca5ls+BrRK2WECclhljMC6n9y1tF7XFCslDlR8o9ZUCB5pBwI2cg=
+	t=1743134272; cv=none; b=DQiiyfQFHtmH/PkVp/nQWINh2QqXoifBq2tNzPbyfb0eGkh8+ODFlHlTRKRLfpZoEeDaEO8N4WHpH2GhG37xBD/GsHTp5P7dmssvVh6A8NGXkkvWlORxagmDDTnA/tucZ6qpSBWUMAeEPpWneZkg4G8AS8vGWbue4RB8ydHzTgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743133409; c=relaxed/simple;
-	bh=5KizG9U+nymCL1zxruIsU1WfoyjYbMQzPHIHfuQOoLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A1nrzuyQgSNYNoqLtWGWREduTPIQYh3oHdYm5Ri0svz9G1qzTaqn7MsX8pVht6PDY3MHf5uXnu1JKo+wYP33cmW3vMV+ZYCtF5ndUM69t+q7Pr6RXbdORkDG8dxh/sopSCva4BT8tXkWmgFOlW/T1rrZshqKbwqgq9q7EQ4LOZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LCSxs9ji; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743134272; c=relaxed/simple;
+	bh=nQsk9tASXs49hoe3W1eAIkv9OvcSVNgsdXt1lO20asI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sp5vYbVnu4qEcZjNfXiWS9vlcVYIBT8UfyEZvhW0WPQv6FhbQubqB6VDpWjPdt3qMnTjDvIsuQ8jugrMKDzslI9y5OoTwKaJd5mo8FDzN3+r1DyKmvtorDM8YwNAQ05tDuurVJL4+fc4UOrgEK/Bap0q1u1si82wOOT1K1d0l2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fwns4Gno; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LCSxs9ji"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab771575040so546073566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743133405; x=1743738205; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=15SzzbPNLw8wKjBJ1OqnK0PG+zgLlP/9UcbfuOzMaPQ=;
-        b=LCSxs9jip+KgPY8NqzpgCpm9kXeL3GBaIscYpBsCQUw23uIZxV6GR6sMhBl76Qn3z5
-         5R6yf0YiPHNitR1OxCx9eQhcwE7oFcOZWX1XZf4cE0ThTeT4GcDus4cUxuAldxUJjFtt
-         LBzG7f8ZOHZIDR1v9MneOHM9QAQWHDxU6y36c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743133405; x=1743738205;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=15SzzbPNLw8wKjBJ1OqnK0PG+zgLlP/9UcbfuOzMaPQ=;
-        b=E+GvXE/Nm83rBxu2pP6rxYEMAJCsRlIasTtq2bqvZfkoRPMNip5g5G9Jgh5/mTNd5W
-         R+8oVfvOoUNMYvph76+VDyC+JqfbZUS4NjE7L5BrAmjannR6TQ4pPMUvvT8fW4ynoyvK
-         B8tIL9C92eoteLyzK8FLTC+b8DZ15ZjonDSWN3Ga7iBhrUfD0e7QaRwy1E2A0vchMXlr
-         fhD8vdH1lNA9s25nT+P2Nmrl8N3xKvGMo+7V2ExRMMl5o+NRVg4ViDNvi6AKt8FMh5dZ
-         C3LZSBkjJpWTIsqTNg9trREO2ee3nBgads5YJBSEPbLQ+ytt7z85RQTzWgsSQi5DS/48
-         bm4g==
-X-Gm-Message-State: AOJu0YwlBjUtxn2fIuBr3qjwEUf10Frb5N9GhQp2Qbv8x6V7Tq5fbmHN
-	1PxApAOpbhuyatICKMmVSsF6PcLmoYVp/HdIbvKyEau5pOOPNCbhfmOWMNVj6quHiOwYORuXH6d
-	Xrzk=
-X-Gm-Gg: ASbGnct1Rkfvt2mlaLveGX2ddTKH0fqa1cieLdVBXZEPFvwP74SWf5S0lO9vZP526sj
-	NSYeA3vXSQSZDsCzFze0Zu3oFm+HRd1wgfSDVZ/tRXDts4C8cV7WSTuWvaGhmJtbUbdGgkoTUGC
-	fpiQ8KJO3YMzXxax9Dy8vlnLlnVhgbMBMWQPL+8NxkOpPcOw06Y++I3MxXE9Ay1Q8ljJHuFanlD
-	xcJV+2tJMzEhV4E9neRRyP0lOxJlYmWhzYr8dTgkCcvo+BbWtliU1JMECzza1FI87c6L85YrWqS
-	1wur9W4JUufcNKeuBbC5sDlkLDNHlVwPRjT2wvV/NdUbmv/R4/iI35LF8wn5sOUMpBDJrlUUXS9
-	d4Mo8fS/Z5x+0RrVrFY4=
-X-Google-Smtp-Source: AGHT+IEVOQXSgHW1PIpM0wkaF8GPKD5dUgYu3zPJdVrQvPqXSRXfV9n/sqW65fOkougolGhGkM0TKQ==
-X-Received: by 2002:a17:907:3e8c:b0:ac6:f5ad:e96a with SMTP id a640c23a62f3a-ac71f4e4116mr88697666b.24.1743133404781;
-        Thu, 27 Mar 2025 20:43:24 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196f56a9sm91257366b.173.2025.03.27.20.43.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 20:43:24 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso307506466b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:43:24 -0700 (PDT)
-X-Received: by 2002:a17:907:7e86:b0:ac3:8895:2775 with SMTP id
- a640c23a62f3a-ac71f47b90bmr99969866b.13.1743133403881; Thu, 27 Mar 2025
- 20:43:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fwns4Gno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77721C4CEE4;
+	Fri, 28 Mar 2025 03:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743134272;
+	bh=nQsk9tASXs49hoe3W1eAIkv9OvcSVNgsdXt1lO20asI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fwns4GnoMUICGX78rpEJfR9TO+qK9kRb9SNCRRPirlhZSPkp0fv1wdX1pAGtTFjxM
+	 8QE8aj/loeXz2dG8iII+IhTYZSD++holamf3gGIhI3uhrmppUtmdumguKCtbmYxRD6
+	 2W42pgaFdOPCyz2brqGcOJNN3y20Fg2k6ViTppd3qcOENWAj2uZiCKc9clMz7zKKoG
+	 EsEfoDu11Oeq3SN0e+x2ACmsMR1JsVkxnDT6moktQ+AK+lOg840SrAzzmavGSfWH8T
+	 Gpx3HqobW3cDmVmRveOlMit3J5a9/wLz8kHAuiE7CrZcncmxjhDGbzzZGMIleyR6g+
+	 RLwpeCupR8dVA==
+Date: Thu, 27 Mar 2025 20:57:49 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: objtool crash processing drivers/gpu/drm/vmwgfx/vmwgfx_msg.o
+Message-ID: <grnfthlwv6jozl4psujzqyj7mwnsyugpwr5tcy72n4qermqpyp@mabr2g2dbt2g>
+References: <d86b4cc6-0b97-4095-8793-a7384410b8ab@app.fastmail.com>
+ <Z-V_rruKY0-36pqA@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327171037.032bf7e7@gandalf.local.home> <CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com>
- <20250327212447.24e05e7e@batman.local.home> <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
- <20250327220106.37c921ea@batman.local.home> <CAHk-=wiNLcTj2iiE9waSkmpYpu6VQ_q=Zaqi_WmAMiv_MvH4vQ@mail.gmail.com>
- <20250327224400.304bc106@batman.local.home> <CAHk-=whzQAYKuoFm9WGOE-QJJ47xvh0VN+RW1EEPCHTERQntQA@mail.gmail.com>
- <20250327232729.031be0b4@batman.local.home>
-In-Reply-To: <20250327232729.031be0b4@batman.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 20:43:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjZ_OyyvRFuMkW8RPR_Hehm=sX5dYs1R_uF3F6Y4MnXow@mail.gmail.com>
-X-Gm-Features: AQ5f1JrMz-QJuBaiUde5oeEJk6ZOiChQp9WMYsqHihHXrbvpYki3hAphtksoqt0
-Message-ID: <CAHk-=wjZ_OyyvRFuMkW8RPR_Hehm=sX5dYs1R_uF3F6Y4MnXow@mail.gmail.com>
-Subject: Re: [GIT PULL] ring-buffer: Updates for v6.15
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Feng Yang <yangfeng@kylinos.cn>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z-V_rruKY0-36pqA@gmail.com>
 
-On Thu, 27 Mar 2025 at 20:27, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> So you are saying that you want this to save the page struct directly
-> then. My only concern with that is the added memory to save the
-> structure when it could be easily calculated.
+On Thu, Mar 27, 2025 at 05:41:18PM +0100, Ingo Molnar wrote:
+> 
+> * Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > I saw this on one randconfig build failing today with yesterday's
+> > next-20250326 (with a couple of patches on top), using gcc-14.2
+> > and the attached config I assume this is a rare configuration:
+> > 
+> > ./tools/objtool/objtool --hacks=jump_label --hacks=noinstr --sls --stackval --static-call --uaccess   --module drivers/gpu/drm/vmwgfx/vmwgfx_msg.o
+> > Segmentation fault
+> > 
+> > I have not tried to analyze it any further, but I would guess that
+> > this is a rare configuration, not a recent regression.
+> 
+> I can reproduce this now too, not with a randconfig but with a distro 
+> DEB package build:
 
-I think with the right amount of clean abstraction work, you can
-probably salvage this without having to do the double accounting.
+Thanks, I was able to reproduce with both configs.  The below fixes it,
+which then results in another warning:
 
-Because I did like your rb_get_page() concept at least in that pseudo-code form.
+  drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_recv_msg.cold+0x0: unreachable instruction
+  drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_recv_msg.cold+0x3: unreachable instruction
+  drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_recv_msg.cold+0x6: skipping duplicate warning(s)
 
-I don't know what the actual tested end result looks like, maybe there
-ends up being problems with it..
+Which is another easy fix.  I'll send patches.
 
-         Linus
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3bf29923d5c0..29de1709ea00 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -4037,7 +4037,7 @@ static bool ignore_unreachable_insn(struct objtool_file *file, struct instructio
+ 	 * It may also insert a UD2 after calling a __noreturn function.
+ 	 */
+ 	prev_insn = prev_insn_same_sec(file, insn);
+-	if (prev_insn->dead_end &&
++	if (prev_insn && prev_insn->dead_end &&
+ 	    (insn->type == INSN_BUG ||
+ 	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
+ 	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
