@@ -1,89 +1,132 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92091ACECB;
-	Sat, 29 Mar 2025 09:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F03597B
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743241795; cv=none; b=pcub4uC+CWv6TyN0qCtM2Et1iYA38vWa41ioe7mmPop2jtkBIhwrcH4tzL1kKsOBqivW9fSY3dpxVV+mjDFg+Ik6HQhs4e2RaZupMiEQSYqwLCaxLfkQqA09S+KFdSo6dVkn6PwXwwnSYbnVlGj511yUWFLlwYzRWyz4ko7UzPk=
+	t=1743241876; cv=none; b=BK7/XCcaTKF1s/jPLz5bialC5QZZ97tjMfn8zneTdNLwQESqNKUvmVkVWe9KFQzYPcuuKooPJILWc1i6R/Oh5T2PNVRYOfxbBHAd9mcIE0q6xEpgrxXCz2O6f4cP8shqIYZKEPeCD9FzDo/b//ZEetBogschGJjvHQx1KExeghM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743241795; c=relaxed/simple;
-	bh=2G2NsAwlFU3vIghi+zrQF9XHVA+fpjd8DdexKeUhLQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fqpKGPGg3RN7FasmE2tGmOJBkk5zGiM0f0R81vjgPh6H4auD99MKInDYIcwXQrv34ExArHX+zDW8c/T4NlYXdChXbQWkF+M3Xi6YI8p6YjJEndtpU+F+h75V6bj9bJ4WRJ1zmouqhn2swCBkC4ug+rtKx55pqESrurGROuplQKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZPswJ1tFDzCsKk;
-	Sat, 29 Mar 2025 17:46:08 +0800 (CST)
-Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id 86FEA140146;
-	Sat, 29 Mar 2025 17:49:48 +0800 (CST)
-Received: from [10.67.120.108] (10.67.120.108) by
- kwepemg100017.china.huawei.com (7.202.181.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 29 Mar 2025 17:49:47 +0800
-Message-ID: <e5ab4e5a-33d0-6102-1c5c-f1f83a752346@huawei.com>
-Date: Sat, 29 Mar 2025 17:49:47 +0800
+	s=arc-20240116; t=1743241876; c=relaxed/simple;
+	bh=Hm76tCl9ilWngFmfkw+iG2Wu/U+wxdlTrtWeyLRkS6g=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=aQPSioVyXCWjpSnZHfcvejTbFNJToDhTtj/ir4ZSmQ8Vri1I/5Zqf0frKrCgtiWygMGvw5JFWkZosuz31+nYrtl6yFryw8zDdQbX5PMgjtek5h8E4VvQHCm/9YJNSN765n3okseGxg0W4lnn5gwj1Z8jkq3h7WWKP9yRekjh3cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=unk2RVen; arc=none smtp.client-ip=203.205.221.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="unk2RVen"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743241562; bh=b1kP6fo7YCLc//pUy3ZCYbT6o0OhYwIaebDSXUFjhr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=unk2RVenF9ZK7AX6KcMh5WRu61lXGJUlWcOYeopV1eKZIUWnuWvQVdE2qhCHr3w2x
+	 4FjU3qSZsn4emcE5n1EUyRCzTfn81kK8Uokj7UqxtPkojOsDna7ZUioo5dvTRCK2pi
+	 4rvHeiHtPyKPFzWNoQCmycwSlT+lhEjYbiB4Flms=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 9F2276B9; Sat, 29 Mar 2025 17:39:50 +0800
+X-QQ-mid: xmsmtpt1743241190toeuj4j4v
+Message-ID: <tencent_FA76EF66A63CD7369E971636784A0074D509@qq.com>
+X-QQ-XMAILINFO: NvgtgL4Jzwx/TMX3ybtJp5XxQxzC5BjbKPb//QMiOAXsXzQEnLywp8Y/mubPaj
+	 qhJKvczdmWWB8NHuUdVAtins64sBrMak5LRe3SIdQpl6dAeoXixzbSRCnrl9L26EY7au1P6GOTbG
+	 Z3Hdyxs4/PJjob3V3PDvjSXgQmCJOGOC9d1hMHIisuoVf2JtbamrIulVPvbhlj1MYfpd4UHSMo8V
+	 6rKEVMEWXG+TD21Ieg8sQqQ4tEyezLrMBgd3lbXoBh5C3vyqu7w6gd1G41Z/lsMBjpgMMX4oqTOU
+	 ps1rcUxQ5zo4PFCkPst5JiduZ6B5z8UPpz5SdoKxNjsOJA3ZtzfAJL2JfT3/5LPPRAcd8nOOyBD7
+	 T7qCWcGMi0tv74jpeDW0IbArU9HsQbyc/WKLa/z2gcpqugZeVyJj+CB/kzbyyNWN6MdDwZGxJ0Se
+	 arPacZ1MyAvvsiqJrWbeyTN099kuEJYuGdLJH0uzyzf74BxAr8TvBoOH0SADgcZArVfQlTyg0OwY
+	 yOjjyh6agwWnpQG0RD0ph7AJeyoE1lBJn0nY0fwvyjJIf+PzP2rHopIZNGlqA8tanhFIMI8UHazb
+	 W6Mf+JsJSb6cwJbSqboehtoulVs4Qlt8hJbJmuTSerBqKT33j/62tXWmTnOrNU6oZbvjoOzkKDbQ
+	 nHtJuNCSLRmrkuIzZ3X1Xx5pNeqaDYK8yG9u3SQTyXnOEDQCqJA+CIBpEjy26SFOXCUzbQmBS1ug
+	 PdikEU9ki0tppuu0CTebXVo4c0XpGJwAjDkyk8nH2qSpW3F7NIoHVqq6/Hhs4IoIATVhFNuvg+Ra
+	 uwP1oxfzcnkHMJ9tjOpFVSM+pDnZdJkWfVYj0SeW7jZpRVaokRVsXtLRW8GXAFZXnBFaK6sDvu3k
+	 NGVQQF0sBiexK/AfK8uDsD5ij9vGC9OM3SVLGyAjqc5bbRkdRzqAc=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid context in __alloc_frozen_pages_noprof
+Date: Sat, 29 Mar 2025 17:39:51 +0800
+X-OQ-MSGID: <20250329093950.3801135-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+References: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 1/5] scsi: hisi_sas: Add host_tagset_enable module param
- for v3 hw
-Content-Language: en-CA
-To: John Garry <john.g.garry@oracle.com>, Yihang Li <liyihang9@huawei.com>,
-	<martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <liuyonglong@huawei.com>, <prime.zeng@hisilicon.com>,
-	<"linux-ide@"@vger.kernel.org>
-References: <20250329073236.2300582-1-liyihang9@huawei.com>
- <20250329073236.2300582-2-liyihang9@huawei.com>
- <f53505e6-9bfa-4553-91cc-497512a6977f@oracle.com>
-From: yangxingui <yangxingui@huawei.com>
-In-Reply-To: <f53505e6-9bfa-4553-91cc-497512a6977f@oracle.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepemh500012.china.huawei.com (7.202.181.145) To
- kwepemg100017.china.huawei.com (7.202.181.58)
 
-Hi，John
+#syz test: upstream 1d0b929fc070b4115403a0a6206a0c6a62dd61f5
 
-On 2025/3/29 16:50, John Garry wrote:
-> On 29/03/2025 07:32, Yihang Li wrote:
-> 
-> +
-> 
->> From: Xingui Yang<yangxingui@huawei.com>
->>
->> After driver exposes all HW queues and application submits IO to multiple
->> queues in parallel, if NCQ and non-NCQ commands are mixed to sata disk,
->> ata_qc_defer() causes non-NCQ commands to be requeued and possibly 
->> repeated
->> forever.
-> 
-> I don't think that it is a good idea to mask out bugs with module 
-> parameters.
-> 
-> Was this the same libata/libsas issue reported some time ago?
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index eb20e231d7ac..8d640f6537fc 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -286,12 +286,16 @@ static int afs_dynroot_readdir_cells(struct afs_net *net, struct dir_context *ct
+ 
+ 	_enter("%llu", ctx->pos);
+ 
++	rcu_read_lock();
+ 	for (;;) {
+ 		unsigned int ix = ctx->pos >> 1;
++		u8 name_len;
++		char *name;
++		unsigned int dynroot_ino;
+ 
+ 		cell = idr_get_next(&net->cells_dyn_ino, &ix);
+ 		if (!cell)
+-			return 0;
++			goto unlock;
+ 		if (READ_ONCE(cell->state) == AFS_CELL_FAILED ||
+ 		    READ_ONCE(cell->state) == AFS_CELL_REMOVED) {
+ 			ctx->pos += 2;
+@@ -305,19 +309,29 @@ static int afs_dynroot_readdir_cells(struct afs_net *net, struct dir_context *ct
+ 
+ 		_debug("pos %llu -> cell %u", ctx->pos, cell->dynroot_ino);
+ 
++		name_len = cell->name_len;
++		name = cell->name;
++		dynroot_ino = cell->dynroot_ino;
+ 		if ((ctx->pos & 1) == 0) {
+-			if (!dir_emit(ctx, cell->name, cell->name_len,
+-				      cell->dynroot_ino, DT_DIR))
+-				return 0;
++			rcu_read_unlock();
++			if (!dir_emit(ctx, name, name_len,
++				      dynroot_ino, DT_DIR))
++				goto out;
++			rcu_read_lock();
+ 			ctx->pos++;
+ 		}
+ 		if ((ctx->pos & 1) == 1) {
+-			if (!dir_emit(ctx, cell->name - 1, cell->name_len + 1,
+-				      cell->dynroot_ino + 1, DT_DIR))
+-				return 0;
++			rcu_read_unlock();
++			if (!dir_emit(ctx, name - 1, name_len + 1,
++				      dynroot_ino + 1, DT_DIR))
++				goto out;
++			rcu_read_lock();
+ 			ctx->pos++;
+ 		}
+ 	}
++unlock:
++	rcu_read_unlock();
++out:
+ 	return 0;
+ }
+ 
+@@ -347,9 +361,7 @@ static int afs_dynroot_readdir(struct file *file, struct dir_context *ctx)
+ 	}
+ 
+ 	if ((unsigned long long)ctx->pos <= AFS_MAX_DYNROOT_CELL_INO) {
+-		rcu_read_lock();
+ 		ret = afs_dynroot_readdir_cells(net, ctx);
+-		rcu_read_unlock();
+ 	}
+ 	return ret;
+ }
 
-Yeah，related to this issue: 
-https://lore.kernel.org/linux-block/eef1e927-c9b2-c61d-7f48-92e65d8b0418@huawei.com/
-
-And, Niklas tried to help fix this problem: 
-https://lore.kernel.org/linux-scsi/ZynmfyDA9R-lrW71@ryzen/
-
-Considering that there is no formal solution yet. And our users rarely 
-use SATA disks and SAS disks together on a single machine. For this 
-reason, they can flexibly turn off the exposure of multiple queues in 
-the scenario of using only SATA disks. In addition, it is also 
-convenient to conduct performance comparison tests to expose multiple 
-hardware queues and single queues.
-
-Thanks,
-Xingui
