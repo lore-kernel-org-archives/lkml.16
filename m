@@ -1,99 +1,97 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE8446BF;
-	Sat, 29 Mar 2025 12:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC15123774;
+	Sat, 29 Mar 2025 12:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743249853; cv=none; b=cEI3bvex3bJLXFrepWSmFTZRNMMnrOJZ4E+jUw9a9CgwHoMPZLhhMitmtDF6nRvQNuqPUO+RmKyGLpBwvdtJySNjPXGJOp9wzKaAuRAOsvnOtE5Ev3JZxtfcX+myx5x6nybGxbBLBW6SLwsZpixllEQAuD+8gz4yg3QvPubOB0c=
+	t=1743249891; cv=none; b=lEWyzjzYX0PyZRSuw0Z4NqynzpiFDtaN0MkvILVMT8lTJISf4GY+asNyoSNxEDnPs4kNZ+gL97Juq8F9qVVHb5yzedJm1JdEvCTMxe//yXmYFDHGqJ1YHzJw2yHTNFdAP/AIrDDJOhohIJRPGrTz1EhhVuLhCkPY6ipiFQmuWes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743249853; c=relaxed/simple;
-	bh=foVOhtggnqD4ONcVCGGDPWx4qT+/OJsSM6LaDhuP6lw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=gkpG1rqVlR7XEHW96eH/QRxJbiAdgyOL6aoHqxMLBJn/8/VdsSzzHz92reQSPUDhxt++fmWbpN1CK5bWPQVPrJi5A4CnCJty9DY9N/2/zF2+cxDVNgaOclgDXEv9sf6QoNf3BMdXqykziiLz97IaA4o4qz4ptw1rE9ER6xeaqFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=eOwdZrhi; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743249891; c=relaxed/simple;
+	bh=wdGfX1nkkaOW4O4ujEOaMydVXl5u/twkpDKmuOuz89c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aoVTyHNP65bDe1IRvjM03WYAl+iw5rCCmainpOvM+gmWNzTu2V4f5isYI4kHpSaxGvTePswNXzFrCEYWMgFPoDm9va9IAV3/yjWxJ7jLAbOIUVcFV6+pBaNJtEkwI8XHk0kYuBo+7lMZW/4+/sqxrICncWl7F+eIj00zbsGGqDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xq/sPumm; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="eOwdZrhi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743249846; x=1743854646; i=markus.elfring@web.de;
-	bh=HZkx3dMp2nbAoF8G25sq9b0XDun5vv+bWlF5hk0ziOc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=eOwdZrhi+R5jFfPJmeVDNbSkIyGhoBxM/8Tokz8HFeKRIGx9KAlVgMkjTi/2EHyM
-	 +S4y9x8oaxjynMRNd3BuTRfGya93bS7WypxQsBFJ4/SIRdo5qDhRigK1IaLsoCw5H
-	 1T9Dj/jn5+knOim942TZAZILw9lG3fVloqXnyznAeAms/xqkelBJO2KmFeChgdvyM
-	 a79xnoU3wbY72Zjff97qQ7M3pGz1jkXD2QevFD/zA8Z8LpEDiSVW2Cg9xZIFAWWkU
-	 RBPReYTjwExnqi7s36XoLYsE0x0kQLOQRB2+wf8QP0PRLxVFf85bDXXwRVwWV+bXm
-	 xNtzUSxdycIncnjfkQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mcpuy-1tOc8S1Gok-00aDc5; Sat, 29
- Mar 2025 13:04:06 +0100
-Message-ID: <94993789-8637-4b93-b30a-194e9078adcf@web.de>
-Date: Sat, 29 Mar 2025 13:04:05 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq/sPumm"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff5f2c5924so665133a91.2;
+        Sat, 29 Mar 2025 05:04:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743249889; x=1743854689; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wdGfX1nkkaOW4O4ujEOaMydVXl5u/twkpDKmuOuz89c=;
+        b=Xq/sPumm8MI92xzjYEbflbWpmBDnGCbVH2ZEDM6ZbFc5lVZ+fCbwfi4B7fPHlRMnrP
+         TMZIp7xLJgn96WIdHWW8b6WeQ2ckRfENk/Fy507TUwZPMlGO3P7sLUY7mNyDpuoWJinQ
+         8fpdSpfIDez91MtuXpCjYHiiac/vBvA9exvMGdBwaGC/2XzrprYGBlekW8SiSZE2T2fc
+         Kr7LNGseghsRhKn2d4jsnco07hw/hI/W8MG3UnXyeBqr7ir/HN31JAVveop38nzDYffX
+         7dBY6WFIZqwQHJ83KtoQh1B0ltc5D1hudFpsWH0oeqGDnlpYFrwtwFW0pPfWe9VM2g+4
+         /51A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743249889; x=1743854689;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wdGfX1nkkaOW4O4ujEOaMydVXl5u/twkpDKmuOuz89c=;
+        b=nmoZCSfe4LF/4eQ0Caw4lxmK/SUyNQ9Tn09KXJKXw4eIFz1XhaWjpEZ56B0FNhkOKN
+         0xTKYPnEuZyHzFRHGnmj++Rn41t7iqS2MLKTwDSmvnQxmI827+w+rfxfkFZ4aczP6hC+
+         v2X+u9FNfQb18UzhzOjJSwYFCb0Gy8YEVdGc5I/4hhVxqSc0WhnsUFSc8qywUaXXkz01
+         UjQ4G53wnexPnSv0A5fnZt9ui/AQOuTHGkJFP8hh1LQDiF2qDIEFnWaE8SdDxqXjvQc5
+         591b4YCokzb80uqGhvYqi8RU86248BCgfgQQhOSfCU/1qXHnv2pIa3XNm81lv3hMCS2Z
+         yn+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdbabJa37UI3/9N2lHNvAhkbglGvpqeKrCeWLLaPp4XVufLRD8gpyHXpVdlDDIvCPzT3PGHxK+RIr/1NU=@vger.kernel.org, AJvYcCXsBuUukvn9ohAYRumMqVP4qIN3MZs+x4HydN2CBMCNZ2z/vE0FG+ZWG67NjZ4RCpW6FvdEmio4I6cIbtAxMhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG05Tq3enChuFW9eHNqfLz43LCcnv95nqpfMrxQZ1GC//aqZan
+	xe/KW9PwlEd5cxMWnjRGAlqvH/yOqfXAzXx72eE6yW/wO296W6GFCin5P0QqVQSJ1xxdHPoYngv
+	Qul+aQFmgq1KbPqbgJ9gwxgh90eM=
+X-Gm-Gg: ASbGncuUhwKQQRS3q2mSqxabB4btOO4xS+EKiJXGWJUZwOK2rpps+D7Kd9Wt7L25StG
+	5Ma47W1q2/ur0iG92HRoQUBifc6VbdJ6gAp0/63EPyjT/VzCyWJwuP+9/IczgJV3L9/ItSN2Lwc
+	PHRAM3sbsAHGglsnRFgwyjrNv0RQ==
+X-Google-Smtp-Source: AGHT+IFo2UW5T+sFxhmwqIg+9PDnfH9AlwSZ2JIdsgHYNVzUvdlOAsTTCFjCh8UvJiZBM9onqJ46wvoqPc/VqkxO740=
+X-Received: by 2002:a17:90b:390f:b0:2ff:4be6:c5e2 with SMTP id
+ 98e67ed59e1d1-3053216fadamr1374643a91.7.1743249889149; Sat, 29 Mar 2025
+ 05:04:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Jason Gerecke <jason.gerecke@wacom.com>, Jiri Kosina <jikos@kernel.org>,
- Ping Cheng <ping.cheng@wacom.com>
-References: <20250329002042.36967-1-qasdev00@gmail.com>
-Subject: Re: [PATCH] HID: wacom: fix memory leak on size mismatch in
- wacom_wac_queue_flush()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250329002042.36967-1-qasdev00@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20250325212823.669459-1-lyude@redhat.com> <20250325212823.669459-2-lyude@redhat.com>
+ <87wmcc6ppo.fsf@intel.com> <4a7f76493305b0afc6ae8d14cfd7bc031316b3d0.camel@redhat.com>
+In-Reply-To: <4a7f76493305b0afc6ae8d14cfd7bc031316b3d0.camel@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 29 Mar 2025 13:04:36 +0100
+X-Gm-Features: AQ5f1Jqbd9HZU2nzqFw8nwbypmV9t7OkAeLVo0-UYJymAEYKQwYKoPABHjKi-rQ
+Message-ID: <CANiq72n_PJWF=2Duxt_bTzzH2opAcNMRt+31WcDLuu1Qx2Nz2A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/edid: Use unsigned int in drm_add_modes_noedid()
+To: Lyude Paul <lyude@redhat.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"open list:RUST:Keyword:b(?i:rust)b" <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bKfd2dmb4ofIP2kSV0Ni+ZM5NDCMwC0XAVrOGLzAqfUuwbWxpcH
- HQ5JaJPjj5lRa2LfzGKZmqw4AWWyIEaQ+CucMFEA0numkJG6luy+kBmOzCUoiL9Qy0aFMXn
- 8WQ0FFO85be3PEyMP7YV7n1AT2IBFQ0O0dOunOIsJ0zM7QrDdgPX0vNAjI9HGAx98lOAC6s
- h9+FEtumYMKEt0b5nZuBw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mSz1uQrdi9o=;5qy7hO3CxgdT5/xO1OyRqePq4Cg
- Iu1ZJgjAjNalm3jLAa3qlZYkoJ0+HXIN4S1o3r/Ry+63WVIS08YefPYjZVGscyHQc8NkAIJzU
- RnrjWcr3Tg/8ednRGsGWnvWS213K3kzz4dcG1XwH2TDyc1nBNSYvN0/yl5NC6dsD36C4UZtFy
- CWIJQhLvMAmvprvs9NoXOj1cLJH9l5H0Zr8qxWAIxE5hzVUq1acAHjElHl2uDXBMxSBRJfvjJ
- jNfA2ebSewi1B1WuQTtznVYNZLy8PCMUse3P1o78m7/vjVCaySaNyreNeoLYL0ILKIgqmk8bC
- s8yGv8i5pABD8jxUH6iyFOWrQZIvt0mcIyme9MoBcyG/5fE/45s2a+RR6XzWNau9Vc3KgkpLf
- KIjnsZVoD5jRxYEWIkYGtqJERU4WxPPSnljo+YN22Eu4tqvHoC7LMUJ1A/1rOlMq+T9xg45i+
- 5dE4Gl4AfftXN9ymgNWQHF5tDWii+sG9pGg+TAcKtuvwXMHP+jMbVpwjGUcfxgOfuoxroOFYh
- nNt58mJq6hbKhP63AsVS3PUUvwR/zhFRJZyGY3ZV9e/NrLBHD2TS083T4yvTP94nuRxfBnGKP
- 8aVG7clWeVxI2mWk9lU+BBRpxdHBhrKUrrfjQvXEEzpxsbJD6dGmMwBX/3uHnqso07t7TXZNv
- r/5kKIi5rWGd07Dh+K0nXC31ChNgfA2jkR+prJTAcD3n4sP23C5DxbIhwHQiWiHZXsRRnL45f
- G7VIrUV+VBx/8F6zmV6qQf1GCfegiSQ9asfA1A1SJkH/F44SgRHh31jwJRW7FDIMM29UenZaK
- uErzBdHSv4KZB1iuE/b7vc7Ew9DtP7phPnck4SBQBJrU6UczLWSMX3IiUGymIPw6igYBfy4wt
- dV0hmaLPT4+Ii0tI9ZbHr3BSsONyC3HVwQrEIufdtV0AmtN9ybfzFD55Y1fjDXcaxEILTNnWY
- gnwkTetXJL+6nNpilUZCsjMuI78ERmrZY89CMb+fTeyiXybr8sso9/FHfEIqwqs2pA0RxeirC
- jTdP4SPJ20xyLN8+eXCabQow9x7URoLoJIY8egzmKEfvYzeo25K6a/cU6k94pAz5okbjrNV1N
- 3c+yNAlx9rDstzjLM/5tk6gBVvxSdnX/P00QMIONeb1Hvwemp7XyuD3ZfJ3cCt3xn3cXhoQM0
- fjtcNSDBAFA9smKSELsUuIqT6GYD43K13qlrtJZ9eZFdcERPzu3vVxpQokalxvS8/DGxXQE7J
- xNaYh6xsTfFIzBwO5gvyqZJqYacZOGPQJnRBQbC8hF25DmaGIXejQLbc4ee2NR7fndCD5uhiO
- 0pli+Vtw5hT+cckADX/5Z+1Wv7kKTVIlQIUdl13q2GQhdVYc286nI2oQa1VjZmvAD1mgaEjuA
- mlfeNKgr4JLeIDzdbExiwp+mNJYTPGAIgzB4h2/KVU9/s1hDHOL+nRJmCwp8t3KcTKtnO/gEx
- TDjCx42PN3FST191PTcnsMbsOd9urnEIV0fUkuO3C3r+jL8x8
 
-=E2=80=A6
-> number of elements it has copied. The code checks if the number
-> of copied elements does not equal the size of the fifo record,
-=E2=80=A6
-                     is?
+On Fri, Mar 28, 2025 at 11:27=E2=80=AFPM Lyude Paul <lyude@redhat.com> wrot=
+e:
+>
+> So - it actually does protect us to a limited extent on the rust side of
+> things. With CONFIG_RUST_OVERFLOW_CHECKS=3Dy, arithematic checks are buil=
+tin to
+> the language. This isn't the default config of course, but it's better th=
+en
+> nothing.
 
-Under which circumstances would you dare to use text lines
-which would be longer than 63 characters?
+It is the default! :)
 
-
-Can a patch series be more appropriate for the affected software module?
-
-Regards,
-Markus
+Cheers,
+Miguel
