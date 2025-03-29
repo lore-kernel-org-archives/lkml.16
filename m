@@ -1,118 +1,182 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E4D134BD
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 18:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB681BF58;
+	Sat, 29 Mar 2025 18:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743274359; cv=none; b=dF1vufELLOUkMpbHFOBHyEjOOHAVB9zTWC2dVyogboFgZRUVPJMapQqVDVhIPPD96uvo5cfoa1FFttW5I4pQfGzzEbi9hJRfdG5+elsQ8YU8SYAaCaAmMHFG2q+aNdVhz03BMJvanv8Kzd2Kb/88HL8OURuAFMBmEmgI/FoPo4A=
+	t=1743274404; cv=none; b=QLS5XxYRWIymDMr75mVPX6XZV8hmkFY4FDfMf1KLTzyAODzEXEdELZrMzuYaAQfUDmuBSnCm5+acevYbt74bbpV75f9PjA0Pz77sPY2Ls+9GLsnJPUh5hvl2wlPUBy/DQ2RE2pVM4MwHTDO+VYspbRrTBMPk+kfjiou1t/Ru8k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743274359; c=relaxed/simple;
-	bh=wIQzIZgH3WeVOOSe4apoCqE2KGja3fV/2QqK9w9GFyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UT/JVgnx/eYlM7wCnih1/Vw7wZVXxUregNzmqPJmjhBez2KbApM1aiWKEdlmhRo2N873jo3RDcViX1fY3h07ynAulC3buNtkaRXhIDMSC7bGAW9Xs5LRa9uMViQ3UH6carId2EemykJyTOVodOOhtGr71pHWSQV/5OMD68nxM1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TE7c8pcA; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743274404; c=relaxed/simple;
+	bh=/unm9wPXKMPXsDJfs4AAPZDeDhmCaqHAxiaM6PnHmjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+f4Pr1G22m4knm2+5MGW7ugPCPPX1Kuceuk9OlpQE6Dd5SQiXecgFFnTNYHN59zuQPVl83Mt7iS/AvPWTueAY9415zFdZDNydjqT8w4gK7vf3aH5mNcG5P9z0ibqcRDwwIbxTnsK/IoN2UzhV3B1QzkkhkyT7GagFxWiJ3+OrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWJiILj9; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TE7c8pcA"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac41514a734so535349466b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743274355; x=1743879155; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=act5dliCYf1Xte3jD8zN9vIyZot+EgA+rw0oWDLbeUA=;
-        b=TE7c8pcAXo2akEqb3W0nJJeoZBujTMXC1tc6N43Tk/LYJBUJ9X6/3ckeY0xL+jPXcn
-         zfSqA+L8gr/VBVUuto1RuoGXJ41eK7X9A7Dye/gJkeTLmF4aFtcs9D1clIHPwB794RZW
-         4aklMa2+a7eBneFgl24J/9D8WfsI0Ef+AdyaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743274355; x=1743879155;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=act5dliCYf1Xte3jD8zN9vIyZot+EgA+rw0oWDLbeUA=;
-        b=FE8jIoHZUElVvLp7pW2NL8/2lxUYpa5HzEReMU5QoCp2bzasSP2CNU4vIa2jYHcmh9
-         hKlf2nkCd6wnqV6SMJ3p0wmRPZktqtwJpsLqE9SDFow2N5Y64KZ26Xe99/5DGaEsdqf7
-         Frqcb8ppde7bOU7lDo77Qu+4HRWCKXo4gQegiXJAZd+dMAPN87OdM8hPaZpuDKPxo2m8
-         ZMG5epWavWddqR65QlFjeYQO5WC00WfTbmVvUPgiWsNNZDLEZx6/GQA15P9mhyCFfgCO
-         hpYnRUJZK065Vsv8gvxptQSJy5r3FhIesv0/ymt1F1VSdRc7lnZjuJNBKV/gE81KS/8M
-         YfuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/X/cpguL8c0Ot3sQ4694I3wptzvZxWJXopAnfMWIwsJ5GPjFhpPejwbpihzfIE0P9OLDjP6FWSERsh74=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAqp/oSIMAHso/BkAPypK8tw4fkSVVVs36CISplyNzUeM+nIHh
-	CVIgz2pUAqv6xhe147gstGiWk2bR5bNBem4u+dOiZysYlTCBuDdxz5qK5piR9zRpCBX2C+On4qI
-	E3ek=
-X-Gm-Gg: ASbGncs8iD1wvoTy3aGpEwTh/gU1zbCe/IVHsjIxDY3E2qJVEH480afA4jT9XmqJlRt
-	kZRheBdHe+Hj7lqcm8RXrc/wwhX6zzDY/Wkuv8Xv5E7JNWdbgbAH8ojhoEGLk3RSbgR9fhQLIET
-	B+0BS4I65jzhwluBeiG2jUQmbAVsaTecQIbU4upKF5f5ka1BzEy6QhK1dbfrL5iaQhgiKAw86Gb
-	Wricr8w3lkTaY1X3TCgilDazAYgtbUSPS68/BjyIbmoMtpROv4xG+F0xR1tjKQ1Xj0z+xRfnyGA
-	DvSoDWd8zsNHk4ZDA2Bb70XDxwLFtP4mJlZs5spCXshikPBvabujAAPbm1mvQDkX4Nqq1xTFh5p
-	yjWEh/jyTe3I9EdEWMlpDM+Z9+PEvjQ==
-X-Google-Smtp-Source: AGHT+IEcfLHeHGaWchoyJN5YtWjJzG13bF/rfi1P7Znp8zJqqmwzeAQynW9RpvB1ZGbuYtak6KHWYA==
-X-Received: by 2002:a17:907:60d0:b0:ac7:3323:cfd8 with SMTP id a640c23a62f3a-ac7389e49b5mr315338566b.16.1743274354634;
-        Sat, 29 Mar 2025 11:52:34 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719223e42sm369308166b.22.2025.03.29.11.52.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 11:52:34 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso511148666b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:52:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXYcdCMAAyEi7PA5+iYzx0Zka/p93EFoxVeBjbFNSfmG4A2XgQKjKD59JHANkEzDh76oZn0r2C7cPxGmeU=@vger.kernel.org
-X-Received: by 2002:a17:907:1b27:b0:ac2:49de:3969 with SMTP id
- a640c23a62f3a-ac738ba8dc9mr254702466b.47.1743274353618; Sat, 29 Mar 2025
- 11:52:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWJiILj9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743274403; x=1774810403;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/unm9wPXKMPXsDJfs4AAPZDeDhmCaqHAxiaM6PnHmjU=;
+  b=AWJiILj9n50XIRtsT334YSqwvsFxsO7au8BP2M/U1X6y1yyRL1Jeuoru
+   AHBOjt/WzYFR/cDP5lPLmBnmlOmIpAbPDobR/1Az7zGFoUyIuGqdW1kYA
+   i5dHak3mX4xHBj36WV300FQ3GaJ34v/R20UHmaaU7ylhnCcaCe+0iys1B
+   5jzFl9CqZ6NqkKrq3cYwjXc/4zZogZkTc/QBa90kVNg54rx2nv97BcPA6
+   dMdZ2k7YXJQyfV8S3T90QvTxbx2pTne29J5H56IlAt0j6TapE4JtOX5Zq
+   ARK++0QwXU2Td9/Im8K31c+/rkBlL3EC51e0P0/rRk+rf8oP6VJXGEeXw
+   A==;
+X-CSE-ConnectionGUID: 9ZzXevnuTg6C9+JXQGN+Lw==
+X-CSE-MsgGUID: 5i873txqTbulN0zxShTN5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="44498996"
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="44498996"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 11:53:22 -0700
+X-CSE-ConnectionGUID: Cu+QujXWRCCqGMGpip+qMg==
+X-CSE-MsgGUID: dpiqVix1Qq+ihM7rXO0Jmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="148902244"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 29 Mar 2025 11:53:18 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tybHo-0008Is-1J;
+	Sat, 29 Mar 2025 18:52:32 +0000
+Date: Sun, 30 Mar 2025 02:51:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org
+Subject: Re: [net-next PATCH 1/2] net: phy: Add support for new Aeonsemi PHYs
+Message-ID: <202503300205.g0FCozVG-lkp@intel.com>
+References: <20250323225439.32400-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZpkdZopjF9/9/Njx@gondor.apana.org.au> <ZuetBbpfq5X8BAwn@gondor.apana.org.au>
- <ZzqyAW2HKeIjGnKa@gondor.apana.org.au> <Z5Ijqi4uSDU9noZm@gondor.apana.org.au>
- <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au> <20250325152541.GA1661@sol.localdomain>
- <CAHk-=whoeJQqyn73_CQVVhMXjb7-C_atv2m6s_Ssw7Ln9KfpTg@mail.gmail.com>
- <20250329180631.GA4018@sol.localdomain> <CAHk-=wi5Ebhdt=au6ymV--B24Vt95Y3hhBUG941SAZ-bQB7-zA@mail.gmail.com>
- <CAHk-=wiA0ioL0fonntfEXtxZ7BQuodAUsxaJ_VKdxPrnKx+DAg@mail.gmail.com> <20250329183820.GB4018@sol.localdomain>
-In-Reply-To: <20250329183820.GB4018@sol.localdomain>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 29 Mar 2025 11:52:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgp-fOSsZsYrbyzqCAfEvrt5jQs1jL-97Wc4seMNTUyng@mail.gmail.com>
-X-Gm-Features: AQ5f1JrM_HFkzUSwzDgwQhKmnl8eHsLngYM7ql_facXoYoScNqXR7VePFMkP0dk
-Message-ID: <CAHk-=wgp-fOSsZsYrbyzqCAfEvrt5jQs1jL-97Wc4seMNTUyng@mail.gmail.com>
-Subject: Re: [GIT PULL] Crypto Update for 6.15
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250323225439.32400-1-ansuelsmth@gmail.com>
 
-On Sat, 29 Mar 2025 at 11:38, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> Yes.  Those cases were just a single algorithm, though, so of course the library
-> was simpler.
+Hi Christian,
 
-Yeah, I realize.  It's the extreme case of "using the generic crypto
-infrastructure is just silly to the point of being stupid".
+kernel test robot noticed the following build warnings:
 
-I just think that there's a continuum of that situation.
+[auto build test WARNING on net-next/main]
 
-There are cases where you *obviously* want to use the crypto
-infrastructure, because you really have lots of different users, and
-you actually need the flexibility (and in the extreme case you do have
-the whole external async crypto engine case even if I can't for the
-life of me see the point).
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/dt-bindings-net-Document-support-for-Aeonsemi-PHYs/20250324-065920
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250323225439.32400-1-ansuelsmth%40gmail.com
+patch subject: [net-next PATCH 1/2] net: phy: Add support for new Aeonsemi PHYs
+config: riscv-randconfig-r072-20250329 (https://download.01.org/0day-ci/archive/20250330/202503300205.g0FCozVG-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
 
-And there are the cases where it's just stupid to do it, because you
-have one single hash you are doing and the flexibility is only pure
-pointless overhead and it makes the code bigger, slower, and harder to
-understand.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503300205.g0FCozVG-lkp@intel.com/
 
-But I think then there are the middle grounds.
+smatch warnings:
+drivers/net/phy/as21xxx.c:744 as21xxx_led_hw_control_get() warn: unsigned 'val' is never less than zero.
+drivers/net/phy/as21xxx.c:775 as21xxx_led_hw_control_set() error: uninitialized symbol 'val'.
+drivers/net/phy/as21xxx.c:802 as21xxx_led_polarity_set() error: uninitialized symbol 'led_active_low'.
 
-The cases where you may well just say "this is the common case that I
-want to optimize for, and I know it's more efficient if I just do two
-blocks in parallel and I'll do that case directly, and fall back to
-the generic code for any odd cases".
+vim +/val +744 drivers/net/phy/as21xxx.c
 
-               Linus
+   733	
+   734	static int as21xxx_led_hw_control_get(struct phy_device *phydev, u8 index,
+   735					      unsigned long *rules)
+   736	{
+   737		u16 val;
+   738		int i;
+   739	
+   740		if (index > AEON_MAX_LDES)
+   741			return -EINVAL;
+   742	
+   743		val = phy_read_mmd(phydev, MDIO_MMD_VEND1, VEND1_LED_REG(index));
+ > 744		if (val < 0)
+   745			return val;
+   746	
+   747		val &= VEND1_LED_REG_A_EVENT;
+   748		for (i = 0; i < ARRAY_SIZE(as21xxx_led_supported_pattern); i++)
+   749			if (val == as21xxx_led_supported_pattern[i].val) {
+   750				*rules = as21xxx_led_supported_pattern[i].pattern;
+   751				return 0;
+   752			}
+   753	
+   754		/* Should be impossible */
+   755		return -EINVAL;
+   756	}
+   757	
+   758	static int as21xxx_led_hw_control_set(struct phy_device *phydev, u8 index,
+   759					      unsigned long rules)
+   760	{
+   761		u16 val;
+   762		int i;
+   763	
+   764		if (index > AEON_MAX_LDES)
+   765			return -EINVAL;
+   766	
+   767		for (i = 0; i < ARRAY_SIZE(as21xxx_led_supported_pattern); i++)
+   768			if (rules == as21xxx_led_supported_pattern[i].pattern) {
+   769				val = as21xxx_led_supported_pattern[i].val;
+   770				break;
+   771			}
+   772	
+   773		return phy_modify_mmd(phydev, MDIO_MMD_VEND1,
+   774				      VEND1_LED_REG(index),
+ > 775				      VEND1_LED_REG_A_EVENT, val);
+   776	}
+   777	
+   778	static int as21xxx_led_polarity_set(struct phy_device *phydev, int index,
+   779					    unsigned long modes)
+   780	{
+   781		bool led_active_low;
+   782		u16 mask, val = 0;
+   783		u32 mode;
+   784	
+   785		if (index > AEON_MAX_LDES)
+   786			return -EINVAL;
+   787	
+   788		for_each_set_bit(mode, &modes, __PHY_LED_MODES_NUM) {
+   789			switch (mode) {
+   790			case PHY_LED_ACTIVE_LOW:
+   791				led_active_low = true;
+   792				break;
+   793			case PHY_LED_ACTIVE_HIGH: /* default mode */
+   794				led_active_low = false;
+   795				break;
+   796			default:
+   797				return -EINVAL;
+   798			}
+   799		}
+   800	
+   801		mask = VEND1_GLB_CPU_CTRL_LED_POLARITY(index);
+ > 802		if (led_active_low)
+   803			val = VEND1_GLB_CPU_CTRL_LED_POLARITY(index);
+   804	
+   805		return phy_modify_mmd(phydev, MDIO_MMD_VEND1,
+   806				      VEND1_GLB_REG_CPU_CTRL,
+   807				      mask, val);
+   808	}
+   809	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
