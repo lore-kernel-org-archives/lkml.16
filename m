@@ -1,132 +1,95 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F03597B
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B363597B;
+	Sat, 29 Mar 2025 09:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743241876; cv=none; b=BK7/XCcaTKF1s/jPLz5bialC5QZZ97tjMfn8zneTdNLwQESqNKUvmVkVWe9KFQzYPcuuKooPJILWc1i6R/Oh5T2PNVRYOfxbBHAd9mcIE0q6xEpgrxXCz2O6f4cP8shqIYZKEPeCD9FzDo/b//ZEetBogschGJjvHQx1KExeghM=
+	t=1743241911; cv=none; b=Yg0rMuAjIK37V4bhYGl2M0ldPSIS9ZHQheC07WK2NUGVlJto61KkRoUmopahMiSzpApphHiLR1Dj8F3sQ8TSgHjCkCUvxZIUC/BOEYanZRwDtA+0MGlRHSikz719ZDgwi6p8/KW6506sUb4QnEffzbojHlt2zSvghRjjryD2SVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743241876; c=relaxed/simple;
-	bh=Hm76tCl9ilWngFmfkw+iG2Wu/U+wxdlTrtWeyLRkS6g=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=aQPSioVyXCWjpSnZHfcvejTbFNJToDhTtj/ir4ZSmQ8Vri1I/5Zqf0frKrCgtiWygMGvw5JFWkZosuz31+nYrtl6yFryw8zDdQbX5PMgjtek5h8E4VvQHCm/9YJNSN765n3okseGxg0W4lnn5gwj1Z8jkq3h7WWKP9yRekjh3cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=unk2RVen; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1743241911; c=relaxed/simple;
+	bh=emnL5YrggIqYqC8E+OKm6HsIBhJSJimByrZY+7rtUkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLBTilzrj6GW9/rDrcNbkoPJdtxD5j9cjzSAUA/inwM76RUtj/BmdfiFiByb1tKN8lLSLzqGjb7lbCbo1yZ3g5oY9Qz4kMGBc7oEw+RKlq7etGP1uwodIhDLA7MR9u/g/ch1juqTsyHdqNDrYIw6hmRVZhWYDXfwXuiGdDj9JH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NT7Nzq/c; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="unk2RVen"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743241562; bh=b1kP6fo7YCLc//pUy3ZCYbT6o0OhYwIaebDSXUFjhr0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=unk2RVenF9ZK7AX6KcMh5WRu61lXGJUlWcOYeopV1eKZIUWnuWvQVdE2qhCHr3w2x
-	 4FjU3qSZsn4emcE5n1EUyRCzTfn81kK8Uokj7UqxtPkojOsDna7ZUioo5dvTRCK2pi
-	 4rvHeiHtPyKPFzWNoQCmycwSlT+lhEjYbiB4Flms=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 9F2276B9; Sat, 29 Mar 2025 17:39:50 +0800
-X-QQ-mid: xmsmtpt1743241190toeuj4j4v
-Message-ID: <tencent_FA76EF66A63CD7369E971636784A0074D509@qq.com>
-X-QQ-XMAILINFO: NvgtgL4Jzwx/TMX3ybtJp5XxQxzC5BjbKPb//QMiOAXsXzQEnLywp8Y/mubPaj
-	 qhJKvczdmWWB8NHuUdVAtins64sBrMak5LRe3SIdQpl6dAeoXixzbSRCnrl9L26EY7au1P6GOTbG
-	 Z3Hdyxs4/PJjob3V3PDvjSXgQmCJOGOC9d1hMHIisuoVf2JtbamrIulVPvbhlj1MYfpd4UHSMo8V
-	 6rKEVMEWXG+TD21Ieg8sQqQ4tEyezLrMBgd3lbXoBh5C3vyqu7w6gd1G41Z/lsMBjpgMMX4oqTOU
-	 ps1rcUxQ5zo4PFCkPst5JiduZ6B5z8UPpz5SdoKxNjsOJA3ZtzfAJL2JfT3/5LPPRAcd8nOOyBD7
-	 T7qCWcGMi0tv74jpeDW0IbArU9HsQbyc/WKLa/z2gcpqugZeVyJj+CB/kzbyyNWN6MdDwZGxJ0Se
-	 arPacZ1MyAvvsiqJrWbeyTN099kuEJYuGdLJH0uzyzf74BxAr8TvBoOH0SADgcZArVfQlTyg0OwY
-	 yOjjyh6agwWnpQG0RD0ph7AJeyoE1lBJn0nY0fwvyjJIf+PzP2rHopIZNGlqA8tanhFIMI8UHazb
-	 W6Mf+JsJSb6cwJbSqboehtoulVs4Qlt8hJbJmuTSerBqKT33j/62tXWmTnOrNU6oZbvjoOzkKDbQ
-	 nHtJuNCSLRmrkuIzZ3X1Xx5pNeqaDYK8yG9u3SQTyXnOEDQCqJA+CIBpEjy26SFOXCUzbQmBS1ug
-	 PdikEU9ki0tppuu0CTebXVo4c0XpGJwAjDkyk8nH2qSpW3F7NIoHVqq6/Hhs4IoIATVhFNuvg+Ra
-	 uwP1oxfzcnkHMJ9tjOpFVSM+pDnZdJkWfVYj0SeW7jZpRVaokRVsXtLRW8GXAFZXnBFaK6sDvu3k
-	 NGVQQF0sBiexK/AfK8uDsD5ij9vGC9OM3SVLGyAjqc5bbRkdRzqAc=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid context in __alloc_frozen_pages_noprof
-Date: Sat, 29 Mar 2025 17:39:51 +0800
-X-OQ-MSGID: <20250329093950.3801135-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
-References: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NT7Nzq/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743241907;
+	bh=emnL5YrggIqYqC8E+OKm6HsIBhJSJimByrZY+7rtUkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NT7Nzq/cc/96FJDVDFFIzPg1/I+8zS4JgseMhhrn6m3g+LgBIt7jrCLWiDFv7JDdL
+	 y0Wj4Ddp0Ll4jmZA6YfQTeVcI/3W+YYGkw9VLQ+nyKPh1U73PmjGRrp8ZerC2oGyUi
+	 zzcoILwQ8zZFq7H66I6+aqsljNms334iBgLMZF6U=
+Date: Sat, 29 Mar 2025 10:51:47 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] tools/nolibc: MIPS: entrypoint cleanups and
+ N32/N64 ABIs
+Message-ID: <7fef431b-1b68-4967-8f8a-d2b49e403578@t-8ch.de>
+References: <20250225-nolibc-mips-n32-v2-0-664b47d87fa0@weissschuh.net>
+ <20250326205434.bPx_kVUx@breakpoint.cc>
+ <60e78caf-49e5-42ad-900c-9813518d838b@t-8ch.de>
+ <20250326220430._IkF6-zy@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250326220430._IkF6-zy@breakpoint.cc>
 
-#syz test: upstream 1d0b929fc070b4115403a0a6206a0c6a62dd61f5
+On 2025-03-26 23:04:30+0100, Sebastian Andrzej Siewior wrote:
+> On 2025-03-26 22:51:54 [+0100], Thomas Weißschuh wrote:
+> > > mips32le works as-is.
+> > > For mips64le I had to s/-march=mips64r6/-march=mips64r2 to match the
+> > > ABI. Which makes me wonder: Why do do we need to pass -march here and
+> > > can't rely on toolchain defaults?
+> > 
+> > The goal here is to have an as-wide-as-possible test matrix for
+> > nolibc-test, which will mostly be running on QEMU anyways.
+> > Also we need to run the correct QEMU user variant; by fixing the
+> > architecture this is easy to do.
+> 
+> I would prefer to make distro users as in real hardware first class
+> citizen and not QEMU users. If you run qemu you can specify the ABI
+> anyway.
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index eb20e231d7ac..8d640f6537fc 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -286,12 +286,16 @@ static int afs_dynroot_readdir_cells(struct afs_net *net, struct dir_context *ct
- 
- 	_enter("%llu", ctx->pos);
- 
-+	rcu_read_lock();
- 	for (;;) {
- 		unsigned int ix = ctx->pos >> 1;
-+		u8 name_len;
-+		char *name;
-+		unsigned int dynroot_ino;
- 
- 		cell = idr_get_next(&net->cells_dyn_ino, &ix);
- 		if (!cell)
--			return 0;
-+			goto unlock;
- 		if (READ_ONCE(cell->state) == AFS_CELL_FAILED ||
- 		    READ_ONCE(cell->state) == AFS_CELL_REMOVED) {
- 			ctx->pos += 2;
-@@ -305,19 +309,29 @@ static int afs_dynroot_readdir_cells(struct afs_net *net, struct dir_context *ct
- 
- 		_debug("pos %llu -> cell %u", ctx->pos, cell->dynroot_ino);
- 
-+		name_len = cell->name_len;
-+		name = cell->name;
-+		dynroot_ino = cell->dynroot_ino;
- 		if ((ctx->pos & 1) == 0) {
--			if (!dir_emit(ctx, cell->name, cell->name_len,
--				      cell->dynroot_ino, DT_DIR))
--				return 0;
-+			rcu_read_unlock();
-+			if (!dir_emit(ctx, name, name_len,
-+				      dynroot_ino, DT_DIR))
-+				goto out;
-+			rcu_read_lock();
- 			ctx->pos++;
- 		}
- 		if ((ctx->pos & 1) == 1) {
--			if (!dir_emit(ctx, cell->name - 1, cell->name_len + 1,
--				      cell->dynroot_ino + 1, DT_DIR))
--				return 0;
-+			rcu_read_unlock();
-+			if (!dir_emit(ctx, name - 1, name_len + 1,
-+				      dynroot_ino + 1, DT_DIR))
-+				goto out;
-+			rcu_read_lock();
- 			ctx->pos++;
- 		}
- 	}
-+unlock:
-+	rcu_read_unlock();
-+out:
- 	return 0;
- }
- 
-@@ -347,9 +361,7 @@ static int afs_dynroot_readdir(struct file *file, struct dir_context *ctx)
- 	}
- 
- 	if ((unsigned long long)ctx->pos <= AFS_MAX_DYNROOT_CELL_INO) {
--		rcu_read_lock();
- 		ret = afs_dynroot_readdir_cells(net, ctx);
--		rcu_read_unlock();
- 	}
- 	return ret;
- }
+Does the following work for you when running kust "make nolibc-test"?
 
+diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
+index 58bcbbd029bc..27d5ceb20858 100644
+--- a/tools/testing/selftests/nolibc/Makefile
++++ b/tools/testing/selftests/nolibc/Makefile
+@@ -174,10 +174,13 @@ CFLAGS_s390x = -m64
+ CFLAGS_s390 = -m31
+ CFLAGS_mips32le = -EL -mabi=32 -fPIC
+ CFLAGS_mips32be = -EB -mabi=32
++ifeq ($(origin XARCH),command line)
++CFLAGS_ARCH = $(CFLAGS_$(XARCH))
++endif
+ CFLAGS_STACKPROTECTOR ?= $(call cc-option,-mstack-protector-guard=global $(call cc-option,-fstack-protector-all))
+ CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables -std=c89 -W -Wall -Wextra \
+                $(call cc-option,-fno-stack-protector) $(call cc-option,-Wmissing-prototypes) \
+-               $(CFLAGS_$(XARCH)) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
++               $(CFLAGS_ARCH) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
+ LDFLAGS :=
+
+ LIBGCC := -lgcc
+@@ -232,7 +235,7 @@ all: run
+
+ sysroot: sysroot/$(ARCH)/include
+
+-sysroot/$(ARCH)/include: | defconfig
++sysroot/$(ARCH)/include:
+        $(Q)rm -rf sysroot/$(ARCH) sysroot/sysroot
+        $(QUIET_MKDIR)mkdir -p sysroot
+        $(Q)$(MAKE) -C $(srctree) outputmakefile
