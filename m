@@ -1,173 +1,153 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0F1208D0;
-	Sat, 29 Mar 2025 10:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECCE0DDBC;
+	Sat, 29 Mar 2025 10:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743242787; cv=none; b=UcGokAuLmcGjJluQiAUKJfUJUkXfuUmU+7/B6n8yu/ajeqaM2SsYihkvJeVI1qyNVj6lnHbQ1XDc/acUFjDKNi7ZmOjok+7p8tSId/81xtdlrX4Sa70WOa4lOn6wxyZ7pASUPShm0Dmz9I3GvVV9wI0BDIRJT+vknlVFSghMdig=
+	t=1743242886; cv=none; b=S6eD5rk3ZfaetI0Zf7to+KquVivJlr/A4G1wQHtLSXLsGIAUYshH+Vmmm2/544+yCwp+RTsZwTY9GyCQHTBkCQY2FVtXelcwOXSSDtRBalKePMCuYfaB1gcOh/Vd38Hwufd3xI8zYHa1xWeSABJ5kf1/7mEdhafSpsUfbpcTE1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743242787; c=relaxed/simple;
-	bh=pC4yT71Ib0ckoDWBir7IsgDkdHvt1zvX0i+HOKnOltk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oD8SR0FhhOSmua7bKRVpgVta6UGXMO9whU6S610y7F8L6hcTLqlPgEDCTkAv6zAmObFKD+JD92/oBqxbSAuGBgafiJSLbbvta4Wlc3IVvJTUDNoanleWZWfKcduyaDoW3tVm4621fWjpmb+nie+9jSW1l+lz4kLQBkWwjXDfqsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tyT54-0005YC-00; Sat, 29 Mar 2025 11:06:22 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 77697C00F0; Sat, 29 Mar 2025 11:06:16 +0100 (CET)
-Date: Sat, 29 Mar 2025 11:06:16 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: torvalds@linux-foundation.org
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MIPS changes for v6.15
-Message-ID: <Z-fGGOyv_5IafH71@alpha.franken.de>
+	s=arc-20240116; t=1743242886; c=relaxed/simple;
+	bh=geHv+XKbUv8yf942M+ooDuuafZKdJCTWjjk1ign4pLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hykEiUdA0PICqmaMTKSp5CxhAtha58/i1W6YgDP9Xp9Hw8dpgt0CXHIIECm2dJGpFGFmWaMAXWXmLGkABa9ZlgQ990dBnyEkQCZ7KN/nZyGl4dU6upNBoYBPUTAT4xC8/9C7xmMbNkkPv1E149C5Q9/SvPMGTOmINezedXX4fYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6505D152B;
+	Sat, 29 Mar 2025 03:08:07 -0700 (PDT)
+Received: from [10.57.87.112] (unknown [10.57.87.112])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BA713F694;
+	Sat, 29 Mar 2025 03:08:01 -0700 (PDT)
+Message-ID: <ee11907a-5bd7-44ec-844c-8f10ff406b46@arm.com>
+Date: Sat, 29 Mar 2025 10:07:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec
+ memory
+Content-Language: en-GB
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Kalesh Singh <kaleshsingh@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250327160700.1147155-1-ryan.roberts@arm.com>
+ <Z-WAbWfZzG1GA-4n@casper.infradead.org>
+ <5131c7ad-cc37-44fc-8672-5866ecbef65b@arm.com>
+ <Z-b1FmZ5nHzh5huL@casper.infradead.org>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Z-b1FmZ5nHzh5huL@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
+On 28/03/2025 15:14, Matthew Wilcox wrote:
+> On Thu, Mar 27, 2025 at 04:23:14PM -0400, Ryan Roberts wrote:
+>> + Kalesh
+>>
+>> On 27/03/2025 12:44, Matthew Wilcox wrote:
+>>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
+>>>> So let's special-case the read(ahead) logic for executable mappings. The
+>>>> trade-off is performance improvement (due to more efficient storage of
+>>>> the translations in iTLB) vs potential read amplification (due to
+>>>> reading too much data around the fault which won't be used), and the
+>>>> latter is independent of base page size. I've chosen 64K folio size for
+>>>> arm64 which benefits both the 4K and 16K base page size configs and
+>>>> shouldn't lead to any read amplification in practice since the old
+>>>> read-around path was (usually) reading blocks of 128K. I don't
+>>>> anticipate any write amplification because text is always RO.
+>>>
+>>> Is there not also the potential for wasted memory due to ELF alignment?
+>>
+>> I think this is an orthogonal issue? My change isn't making that any worse.
+> 
+> To a certain extent, it is.  If readahead was doing order-2 allocations
+> before and is now doing order-4, you're tying up 0-12 extra pages which
+> happen to be filled with zeroes due to being used to cache the contents
+> of a hole.
 
-  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+Well we would still have read them in before, nothing has changed there. But I
+guess your point is more about reclaim? Because those pages are now contained in
+a larger folio, if part of the folio is in use then all of it remains active.
+Whereas before, if the folio was fully contained in the pad area and never
+accessed, it would fall down the LRU quickly and get reclaimed.
 
-are available in the Git repository at:
+> 
+>>> Kalesh talked about it in the MM BOF at the same time that Ted and I
+>>> were discussing it in the FS BOF.  Some coordination required (like
+>>> maybe Kalesh could have mentioned it to me rathere than assuming I'd be
+>>> there?)
+>>
+>> I was at Kalesh's talk. David H suggested that a potential solution might be for
+>> readahead to ask the fs where the next hole is and then truncate readahead to
+>> avoid reading the hole. Given it's padding, nothing should directly fault it in
+>> so it never ends up in the page cache. Not sure if you discussed anything like
+>> that if you were talking in parallel?
+> 
+> Ted said that he and Kalesh had talked about that solution.  I have a
+> more bold solution in mind which lifts the ext4 extent cache to the
+> VFS inode so that the readahead code can interrogate it.
+> 
+>> Anyway, I'm not sure if you're suggesting these changes need to be considered as
+>> one somehow or if you're just mentioning it given it is loosely related? My view
+>> is that this change is an improvement indepently and could go in much sooner.
+> 
+> This is not a reason to delay this patch.  It's just a downside which
+> should be mentioned in the commit message.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_6.15
+Fair point; I'll add a paragraph about the potential reclaim issue.
 
-for you to fetch changes up to 855912be0b046028abc9c0577787e749a8d26cf5:
+> 
+>>>> +static inline int arch_exec_folio_order(void)
+>>>> +{
+>>>> +	return -1;
+>>>> +}
+>>>
+>>> This feels a bit fragile.  I often expect to be able to store an order
+>>> in an unsigned int.  Why not return 0 instead?
+>>
+>> Well 0 is a valid order, no? I think we have had the "is order signed or
+>> unsigned" argument before. get_order() returns a signed int :)
+> 
+> But why not always return a valid order?  I don't think we need a
+> sentinel.  The default value can be 0 to do what we do today.
+> 
 
-  MIPS: config: omega2+, vocore2: enable CLK_MTMIPS (2025-03-25 21:35:54 +0100)
+But a single order-0 folio is not what we do today. Note that my change as
+currently implemented requests to read a *single* folio of the specified order.
+And note that we only get the order we request to page_cache_ra_order() because
+the size is limited to a single folio. If the size were bigger, that function
+would actually expand the requested order by 2. (although the parameter is
+called "new_order", it's actually interpretted as "old_order").
 
-----------------------------------------------------------------
-Added support for multi-cluster configuration
-Added quirks for enabling multi-cluster mode on EyeQ6
-Added DTS clocks for ralink
-Cleanup realtek DTS
-Other cleanups and fixes
+The current behavior is effectively to read 128K in order-2 folios (with smaller
+folios for boundary alignment).
 
-----------------------------------------------------------------
-Abhishek Tamboli (1):
-      MIPS: Fix Macro name
+So I see a few options:
 
-Bibo Mao (1):
-      MIPS: Use arch specific syscall name match function
+  - Continue to allow non-opted in arches to use the existing behaviour; in this
+case we need a sentinel. This could be -1, UINT_MAX or 0. But in the latter case
+you are preventing an opted-in arch from specifying that they want order-0 -
+it's meaning is overridden.
 
-Geert Uytterhoeven (1):
-      mips: dts: ingenic: Switch to simple-audio-card,hp-det-gpios
+  - Force all arches to use the new approach with a default folio order (and
+readahead size) of order-0. (The default can be overridden per-arch). Personally
+I'd be nervous about making this change.
 
-Gregory CLEMENT (5):
-      dt-bindings: mips: Document mti,mips-cm
-      dt-bindings: mips: mips-cm: Add a new compatible string for EyeQ6
-      MIPS: cm: Detect CM quirks from device tree
-      MIPS: CPS: Support broken HCI for multicluster
-      MIPS: mobileye: dts: eyeq6h: Enable cluster support
+  - Decouple the read size from the folio order size; continue to use the 128K
+read size and only allow opting-in to a specific folio order. The default order
+would be 2 (or 0). We would need to fix page_cache_async_ra() to call
+page_cache_ra_order() with "order + 2" (the new order) and fix
+page_cache_ra_order() to treat its order parameter as the *new* order.
 
-Johan Korsnes (1):
-      arch: mips: defconfig: Drop obsolete CONFIG_NET_CLS_TCINDEX
+Perhaps we should do those fixes anyway (and then actually start with a folio
+order of 0 - which I think you said in the past was your original intention?).
 
-Joris Vaisvila (1):
-      MIPS: config: omega2+, vocore2: enable CLK_MTMIPS
+Thanks,
+Ryan
 
-Paul Burton (4):
-      clocksource: mips-gic-timer: Enable counter when CPUs start
-      MIPS: pm-cps: Use per-CPU variables as per-CPU, not per-core
-      MIPS: CPS: Introduce struct cluster_boot_config
-      MIPS: CPS: Boot CPUs in secondary clusters
-
-Sander Vanheule (9):
-      mips: dts: realtek: Decouple RTL930x base DTSI
-      mips: dts: realtek: Clean up CPU clocks
-      mips: dts: realtek: Add address to SoC node name
-      mips: dts: realtek: Fold rtl83xx into rtl838x
-      mips: dts: realtek: Add SoC IRQ node for RTL838x
-      mips: dts: realtek: Correct uart interrupt-parent
-      mips: dts: realtek: Replace uart clock property
-      mips: dts: realtek: Add RTL838x SoC peripherals
-      mips: dts: realtek: Add restart to Cisco SG220-26P
-
-Sergio Paracuellos (6):
-      dt-bindings: clock: add clock definitions for Ralink SoCs
-      mips: dts: ralink: rt2880: update system controller node and its consumers
-      mips: dts: ralink: rt3050: update system controller node and its consumers
-      mips: dts: ralink: rt3883: update system controller node and its consumers
-      mips: dts: ralink: mt7620a: update system controller node and its consumers
-      mips: dts: ralink: mt7628a: update system controller node and its consumers
-
-Thomas Bogendoerfer (1):
-      MIPS: cm: Fix warning if MIPS_CM is disabled
-
-Thomas Zimmermann (1):
-      mips: sni: Do not include <linux/fb.h>
-
-Thorsten Blum (1):
-      MIPS: Loongson2ef: Replace deprecated strncpy() with strscpy()
-
-WangYuli (3):
-      MIPS: dec: Declare which_prom() as static
-      MIPS: cevt-ds1287: Add missing ds1287.h include
-      MIPS: ds1287: Match ds1287_set_base_clock() function types
-
- .../bindings/clock/mediatek,mtmips-sysc.yaml       |  11 +-
- .../devicetree/bindings/mips/mti,mips-cm.yaml      |  57 ++++
- arch/mips/boot/dts/ingenic/gcw0.dts                |   2 +-
- arch/mips/boot/dts/ingenic/rs90.dts                |   2 +-
- arch/mips/boot/dts/mobileye/eyeq6h.dtsi            |   4 +
- .../dts/ralink/gardena_smart_gateway_mt7688.dts    |   2 +-
- arch/mips/boot/dts/ralink/mt7620a.dtsi             |  10 +-
- arch/mips/boot/dts/ralink/mt7620a_eval.dts         |   2 +-
- arch/mips/boot/dts/ralink/mt7628a.dtsi             |  40 +--
- arch/mips/boot/dts/ralink/omega2p.dts              |   2 +-
- arch/mips/boot/dts/ralink/rt2880.dtsi              |  10 +-
- arch/mips/boot/dts/ralink/rt2880_eval.dts          |   2 +-
- arch/mips/boot/dts/ralink/rt3050.dtsi              |  10 +-
- arch/mips/boot/dts/ralink/rt3883.dtsi              |  10 +-
- arch/mips/boot/dts/ralink/rt3883_eval.dts          |   2 +-
- arch/mips/boot/dts/realtek/cisco_sg220-26.dts      |  10 +-
- arch/mips/boot/dts/realtek/rtl838x.dtsi            | 111 +++++++-
- arch/mips/boot/dts/realtek/rtl83xx.dtsi            |  59 -----
- arch/mips/boot/dts/realtek/rtl930x.dtsi            | 136 ++++++----
- arch/mips/configs/gpr_defconfig                    |   1 -
- arch/mips/configs/ip22_defconfig                   |   1 -
- arch/mips/configs/ip27_defconfig                   |   1 -
- arch/mips/configs/malta_defconfig                  |   1 -
- arch/mips/configs/malta_kvm_defconfig              |   1 -
- arch/mips/configs/malta_qemu_32r6_defconfig        |   1 -
- arch/mips/configs/maltaaprp_defconfig              |   1 -
- arch/mips/configs/maltasmvp_defconfig              |   1 -
- arch/mips/configs/maltasmvp_eva_defconfig          |   1 -
- arch/mips/configs/maltaup_defconfig                |   1 -
- arch/mips/configs/maltaup_xpa_defconfig            |   1 -
- arch/mips/configs/mtx1_defconfig                   |   1 -
- arch/mips/configs/omega2p_defconfig                |   1 +
- arch/mips/configs/rb532_defconfig                  |   1 -
- arch/mips/configs/rm200_defconfig                  |   1 -
- arch/mips/configs/vocore2_defconfig                |   1 +
- arch/mips/dec/prom/init.c                          |   2 +-
- arch/mips/include/asm/ds1287.h                     |   2 +-
- arch/mips/include/asm/ftrace.h                     |  16 ++
- arch/mips/include/asm/mach-rc32434/pci.h           |   2 +-
- arch/mips/include/asm/mips-cm.h                    |  40 +++
- arch/mips/include/asm/smp-cps.h                    |   7 +-
- arch/mips/kernel/asm-offsets.c                     |   3 +
- arch/mips/kernel/cevt-ds1287.c                     |   1 +
- arch/mips/kernel/cps-vec.S                         |  19 +-
- arch/mips/kernel/mips-cm.c                         |  18 +-
- arch/mips/kernel/pm-cps.c                          |  35 ++-
- arch/mips/kernel/smp-cps.c                         | 288 +++++++++++++++++----
- arch/mips/loongson2ef/common/machtype.c            |   3 +-
- arch/mips/sni/setup.c                              |   1 -
- drivers/clocksource/mips-gic-timer.c               |   6 +-
- include/dt-bindings/clock/mediatek,mtmips-sysc.h   | 130 ++++++++++
- 51 files changed, 836 insertions(+), 235 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mips/mti,mips-cm.yaml
- delete mode 100644 arch/mips/boot/dts/realtek/rtl83xx.dtsi
- create mode 100644 include/dt-bindings/clock/mediatek,mtmips-sysc.h
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
