@@ -1,128 +1,102 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3974A1D;
-	Sat, 29 Mar 2025 01:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC741C36;
+	Sat, 29 Mar 2025 01:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743210450; cv=none; b=EmqEpmwlBVOz/dyf/6+Qk1WLR6PUnDxoaJzXD32Nxr1KMmS/xoNUkBS/i2wpW5yHmPlLZUGHkoNMGANfK5ecJpXD4BSa+CMiiaEvUIHnBjz5iwJIRiF8dHl6xv/HtU045rl1lb3xHzansVN5weytdg4C++RCUooV/HHXl+PGMhg=
+	t=1743210687; cv=none; b=GCRSb6ZM/CPaX35FPKThwMJPfQ3/Gnz72ciURLA30vI1uLNlaLMKQxJmhSNEBmfiiumomz8LcYf6SBJsjl/KXVYCKBfFCATB2dtezjHRxTYkMK/MjNLAPnIhUp3kF/MRu6kK9P6wmZ1EbjLTBMx6vstg+l9C58eGbY64m77EDu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743210450; c=relaxed/simple;
-	bh=9VHMgg8XVI03DXLD39IVNu73KXwzIK1KERt6YTLgiE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiAY4Cv4tKLj9V2CqchF9xfp5TM134n1FlTJWV89QfyzU2SHg+AE0kJ1/JiYZLT+Wf2XrCu0tz8jiHhxkr4Hmf0TKJkFzCbwPmnbkbYJn78tf2/JWDj6VmYZLYnRc7wclqaHpmWuNXAd9ukUhZxK4DP8KcwdVMd51CgtLpq/J5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=baHwbji8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F4ngpkAK; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="baHwbji8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F4ngpkAK"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3BAF125401CC;
-	Fri, 28 Mar 2025 21:07:27 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Fri, 28 Mar 2025 21:07:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1743210447; x=
-	1743296847; bh=wKO8nLwVZ/c6d2peXPF8XkbDrw0UaTn7gMMaej/9ejg=; b=b
-	aHwbji8vf+26Z3AhA/3BOLPo/6KL/u1O6ZQ9sgVTT1ZIMQQIdC65DWB2ksyOLFuv
-	e+Zyjdo+V9IZhPHd2WI3sRF3S6JefkeezDN4r2ubtSeD4H/uNzTI2h1+WQZnkN64
-	MPyyoI1G0uuT5+q1HppvbjOtBCZe07Fs4tn/FYbV4zfSV4pKlqRfkYoChz199cnV
-	7Uptv60tU5WxjZK/g8D2CuwZwpOp6Vv5cgPhqrG+ZGYfjHcVuq1R7n9FicOHOt+C
-	Wba6lMfAb8MNEcaZP9+avFL4Wqn/L2wBGmHdrFD4Z2N5tQyDNSbT5HmbYLWjphTB
-	dFQMFfJkBKyvsznRl9LAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743210447; x=1743296847; bh=wKO8nLwVZ/c6d2peXPF8XkbDrw0UaTn7gMM
-	aej/9ejg=; b=F4ngpkAKSoehP3OLsF/lxLU0TZmnIpoyTC+9EeeZ2cTRWwPf8Kl
-	cJRlLd5djqHUayoozyF2W8oU8EX1fyP1kGNaQLt99Id93137/AhAHbTJEyn+Nq7U
-	x7h/5Lt1J3FFLZ/BuuUdnucZ0JHbZuHPZGNEb0TmrNH1mlbRKmfg/86TLdRizwBi
-	9rZUjkt8Tp0ph3DoxQZnGC12hNzZJy2x+5bz7vFBs+g8Vd3DLqRPQYKOkSsE+qh/
-	N6EATpXXu9h7+M2P5ZpaYNOxfFz2N2qK8AWfpJkQt3bTWhjqH2eCM0OiN/ETNbnX
-	DmljxKUOf4sou+ntsh7MbWa8mg0qwTmdYfA==
-X-ME-Sender: <xms:zkfnZ5cv0tN7H6h2b0G8kIC-F1SM83Tdr4kvIT266XcRHosBJSvPBw>
-    <xme:zkfnZ3MJaiAkJKzPMdvFuFhVRNuscMZPGgKH89d880-yDO5xjuQbxPmcxWM-leK7H
-    wBwmvizMHbxEj7EC7M>
-X-ME-Received: <xmr:zkfnZyiwB3mb2sXBjbeH0Yvk1tYzndaq7o_l1ONTx1MUySF-yllp6RwoggJzPGxdc1IvM684cJ3bWLTnCGtWNLVyqrErFph94GQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedvkeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhih
-    esshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhephefhhfettefgkedv
-    ieeuffevveeufedtlefhjeeiieetvdelfedtgfefuedukeeunecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgr
-    mhhotggthhhirdhjphdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtoheplhhurhhifigvnheskhihlhhinhhoshdrtghnpdhrtghpthhtoheprhgr
-    fhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhr
-    tghpthhtoheplhhinhhugidufeelgedquggvvhgvlheslhhishhtshdrshhouhhrtggvfh
-    horhhgvgdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegrtghpihgtrgdquggvvhgvlheslhhishhtshdr
-    lhhinhhugidruggvvhdprhgtphhtthhopehkvghrnhgvlhdqsghotheskhihlhhinhhosh
-    drtghn
-X-ME-Proxy: <xmx:zkfnZy9dTcq5_GooPo6FBhesS3-eTeFA9FJ5mnYztXhSZoT7VaLZwQ>
-    <xmx:zkfnZ1urQIo1HtXOxIXOyfszpprewy-pWXPkxDHpNYkpabXocAaBiQ>
-    <xmx:zkfnZxFUR1qUFUbRj_KHGKjaWLsMGdSkr4jIRd7_rc0e3cefm0YmFw>
-    <xmx:zkfnZ8OiLzZxmWIFGXvxyjOt9IjSqjrlNng4W8_-dzycsaWRKNtDtg>
-    <xmx:z0fnZ7InwO7RsxXU6AfioiRJ9a1GHj4X_mbER07cpjox-XHj7BV4djb1>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Mar 2025 21:07:23 -0400 (EDT)
-Date: Sat, 29 Mar 2025 10:07:21 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Riwen Lu <luriwen@kylinos.cn>
-Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: Re: [PATCH v1] tools: Fix compile error of pfrut/firewire
-Message-ID: <20250329010721.GA11319@workstation.local>
-Mail-Followup-To: Riwen Lu <luriwen@kylinos.cn>, rafael@kernel.org,
-	lenb@kernel.org, robert.moore@intel.com,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
-	k2ci <kernel-bot@kylinos.cn>
-References: <20250328074750.3524280-1-luriwen@kylinos.cn>
+	s=arc-20240116; t=1743210687; c=relaxed/simple;
+	bh=UO+g2BYpGAaukMg/9O98RekdQq371VrJWc/GvFKjUQY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lW6cfFqi7EIjOtxwgn41bMatOR0nKhyQ7ggDD2LfpD4XsAM4Jk6yjng3W4R+hD+bSvfqw1SDiA+IqtP9wV7U4QUapHAmId5W8+pGjJKeS1ecD2S1QUxKMFA+cbQaVGtFIz7dXMuPmCBYI+Sk/kPV0tpWww985MFCRM9xE3s28Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZPfTm3nnDz4f3mL8;
+	Sat, 29 Mar 2025 09:10:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 8BF0B1A1232;
+	Sat, 29 Mar 2025 09:11:15 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCH61+xSOdn_T56Hw--.31005S3;
+	Sat, 29 Mar 2025 09:11:15 +0800 (CST)
+Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
+To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, axboe@kernel.dk,
+ agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+ <Z-aCzTWXzFWe4oxU@infradead.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
+Date: Sat, 29 Mar 2025 09:11:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328074750.3524280-1-luriwen@kylinos.cn>
+In-Reply-To: <Z-aCzTWXzFWe4oxU@infradead.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCH61+xSOdn_T56Hw--.31005S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1fKw1UGr4rWw1xKF4xtFb_yoW8Jw1fpF
+	ZIqw4UGw4kAr4Y9rn7Cay7GFy0q3ykJrnxWryFqr9IgFn8uFna9F1fKanYka45urn7GF1a
+	vas5XryrGa18uFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 Hi,
 
-On Fri, Mar 28, 2025 at 03:47:50PM +0800, Riwen Lu wrote:
-> The value -rR of MAKEFLAGS implicit do not use make's built-in rules and
-> variables. Previous commit d1d096312176 ("tools: fix annoying "mkdir -p
-> ..." logs when building tools in parallel") removed the MAKEFLAGS=
-> command for tools and caused the built-in rules for pfrut/firewire
-> failed to take effect.
+ÔÚ 2025/03/28 19:06, Christoph Hellwig Ð´µÀ:
+> On Fri, Mar 28, 2025 at 02:08:39PM +0800, Yu Kuai wrote:
+>> A hidden disk, named mdxxx_bitmap, is created for bitmap, see details in
+>> llbitmap_add_disk(). And a file is created as well to manage bitmap IO for
+>> this disk, see details in llbitmap_open_disk(). Read/write bitmap is
+>> converted to buffer IO to this file.
+>>
+>> IO fast path will set bits to dirty, and those dirty bits will be cleared
+>> by daemon after IO is done. llbitmap_barrier is used to syncronize between
+>> IO path and daemon;
 > 
-> Reported-by: k2ci <kernel-bot@kylinos.cn>
-> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-> ---
->  tools/firewire/Makefile               | 7 +++++++
->  tools/power/acpi/tools/pfrut/Makefile | 2 +-
->  2 files changed, 8 insertions(+), 1 deletion(-)
+> Why do you need a separate gendisk?  I'll try to find some time to read
+> the code to understand what it does, but it would also be really useful
+> to explain the need for such an unusual concept here.
 
-As long as testing with v6.14 release, I can not find such failure. I
-guess that some one has fixed the issue between the commit and the
-release.
+The purpose here is to hide the low level bitmap IO implementation to
+the API disk->submit_bio(), and the bitmap IO can be converted to buffer
+IO to the bdev_file. This is the easiest way that I can think of to
+resue the pagecache, with natural ability for dirty page writeback. I do
+think about creating a new anon file and implement a new
+file_operations, this will be much more complicated.
 
-Would you please recheck the issue?
+Meanwhile, bitmap file for the old bitmap will be removed sooner or
+later, and this bdev_file implementation will compatible with bitmap
+file as well.
 
+Thanks,
+Kuai
 
-Thanks
+> 
+> .
+> 
 
-Takashi Sakamoto
