@@ -1,70 +1,70 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ADE1A5BAE
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A7B17ADF8
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743235453; cv=none; b=l1CK33AoEkQdEdg8BUV0rsY/9CsFTq6R25XTKu7RKD1LnXzd1tm9qkcfB6aT3ipo3vfUWVfVCCjZ8FaF2O2cVdix2cOZy4VO+F3P1J7XlIHkMca4y8GPVDSPob+dnyUSGZDOiXkJilSKNtK9pjAeVOJ888cMNjpxNuribQjT6Ok=
+	t=1743235459; cv=none; b=JVmOPYqOmJUxbmlTTI/7M9idC5VIp4A4HD0YimQi7S6XovnVo/xXIIwxHnJ72Ji7CtGm7BpDGrAT2sG9uom+li9hbs1TOpE6tjiR4gTZHhZo4Xiu+w5Kdnp2Z6R5yROudeuPTiayaACdlfkeKodLfh7sPZNJ1TZgl+Cn1xxcIpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743235453; c=relaxed/simple;
-	bh=n01874ZXOgZKG1U5uDz/yO7mdpwUb3dQEElR7UMv5hA=;
+	s=arc-20240116; t=1743235459; c=relaxed/simple;
+	bh=0X7wBvMaxNahxV5QjOwNWvzMwLufirRamEqjgIiOG1U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IcB3lmGgVEsg4NM4awD9ph7PRZxoRfcFX1YcpDBjebcvnU4h/nfdk73BQSjwZXPjYAmWzdK/EeBQDEMwV8elfkx91CczjIVSwRXhauvUMV61ElH4qdwMBeElSYeHNvlwzCphYlpIRoER6gfqX2FyfPqod2yJslAjF0keuyaHkh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EYQhq9r0; arc=none smtp.client-ip=209.85.219.41
+	 To:Cc:Content-Type; b=qYtLgmDSz2V3T+5C5FA7Q/BOn00QTGYowH+WclHrIjdrdDhE/gf9kv5JAGc/EaJb8QJ412bCoLvsuKWmkFN9Lrp10c9DKgbpy7jTtaj2AQ6UsRwFcAO5+UynCDipq++4obsfh9GoMMwJ8OOaODDfQfxew2UnHV9uulk1/DgmsEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2RLe7ejx; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYQhq9r0"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e41e17645dso28372086d6.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:04:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2RLe7ejx"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6ed16ce246bso14907936d6.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743235449; x=1743840249; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743235455; x=1743840255; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=n01874ZXOgZKG1U5uDz/yO7mdpwUb3dQEElR7UMv5hA=;
-        b=EYQhq9r0Ta3+69ufaxg+P0KU2G1wzbuN0x8LFEwpF8JaVuXdY57TI2oH87qb6znhaJ
-         hjk7cDicr9JYY/nfYP8HCFdfdm/CMg9HGSIYwsMCLqj/gQ4E4bJ9VJODHD4H7jzseOhK
-         zQNNeSBzsp7es4akV5Y5UuxV2B+aqyzisMi9C3CdDm9BMHCNHIdo759BB3l9vlVoN54v
-         ibjOUJHLzHVaHQQGp0yeEJ8D6d1qLwbeDbriRyOS7AKvN/dF6RPrrZl5hXm6PIW8VNG0
-         mL6KxCk+z79SZVb5XhIgyn7aCxVA0zE+K53rgCNiz+5iMSivJ3Kh6Sq/g76OJpZ/NAuG
-         6eBA==
+        bh=sBnpJWhFgm/AIGxyLE+07E9oj/XcdPnr2PYxtR9vvjk=;
+        b=2RLe7ejxn18PnO1p8o0jUtdeghxG0gkg5VArf1fNY2/u+qdcWIQogAnIDy8gcWGbQ7
+         JtToqMQU8CxOLrKoGs7JD9gSfseeakQxr9GFKTPBpVjQKQyK44PuX91VSeX8Mh1GcTyU
+         UvHumJiISoDXrEh7HbHvzwqWVs2fRWYiPteY9lDUvkOsudrs1SwE1G8m0aYvRlnBRJlm
+         lnHlTFWgRIXaIgOlkyVklSS7LxwmZ7zMbG23T617AKCgFYNzQyeIwquutSSe/HG6dUhq
+         9UCaX+PETkWUt5XBFM77Gasvb0kScfZEByAwREmDmn17BqTXLkgR6Fh/YJdNZzMSgv+y
+         gOAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743235449; x=1743840249;
+        d=1e100.net; s=20230601; t=1743235455; x=1743840255;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=n01874ZXOgZKG1U5uDz/yO7mdpwUb3dQEElR7UMv5hA=;
-        b=VPSEgNKf9Z4el7Ep5Dor/UCZR+dDlXKqulVV9p+Y3tOhpGlYgvlrggM6bcWnJsC6DV
-         6X60dPInLJckGbJcTB0xsmSrsJK7viaDPknx6QCUNfmW3LUDTG1utiMG3/B7s7hmEcLc
-         KN5PhCQ0NlMelN8qPuz6EKA8e2Hh4Xd2pvs0H+ZnIetZNwcCURa7QbJuiikGA1pHQSIJ
-         4MpGcnznA/IwaDQxsPSfWk/yr+HuMhQBV4A6wf1SdswunJQrkG49hdulJhvICgwoSP6Q
-         LAv34An9nZwlBgZb45ZA1BggFA9hq/+SrFc+RV1DJKyTYiwBnmsykuRWjd6HECHJH1PG
-         zBLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGFXvDowIItNxxVBQ+Y/vHel7/7tuBAtm1GeJlIlcq+caGx3nIX3jwVC342tpuiGw2lNc0+A7C4GiM7w0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQHZYc6B5wzb7oP5yE2Je/iv4ZhvHKStfZ19xW26i0JSKjRlnl
-	m5LoJJSgfXm+5HuYiX7j5Fnpmd8tgFHhOljeAN0HvDy2Jy/QJffMUM4cOphfts2GKbydsCQ+vpa
-	3eDL43tugKD7i1nPzp7ky/zeBq3I3ZF/sT7CO
-X-Gm-Gg: ASbGnctAr7CWFB6BoO5nDsLnvhY/CPd5bk+5H0q5nPGL/dwCVMQbQX5sPda7+2rxKSO
-	V7wDLH/KonXk9Oq8jqa7iaC5jwOHQnGFtOHwcyZQyfb4Rpvvqq7TMxBL519HXyNkaj7GLlkgTck
-	OBNoWwHWwhj109nG6K6PLhyKNXE9g=
-X-Google-Smtp-Source: AGHT+IGFuDJ/yS0u8dS14Gv20AD9SchI1L60wuXbwG89moIXFiN8E7tD+sXircX+ivXQe8fclvFz4iylGbitphpvsqU=
-X-Received: by 2002:a05:6214:496:b0:6ea:d604:9e56 with SMTP id
- 6a1803df08f44-6eed6073e0cmr33102156d6.9.1743235448950; Sat, 29 Mar 2025
- 01:04:08 -0700 (PDT)
+        bh=sBnpJWhFgm/AIGxyLE+07E9oj/XcdPnr2PYxtR9vvjk=;
+        b=C8JCTCce0DX+w0khgBmHgaW26O/2mv+d7Oyk+RaJMHepoRgJK+F1NfGBmS5i6jmfTI
+         gmcbMbc/Rj0a6ncpGklJC8vMxM1QwA8qR5ch5T3KUu/bZHhdde2lt+iWyTsHtTzI5PjK
+         QoT+GwR1fR9CFwrf0ctPYnymqYesYsySV93NfV1PjCHWzN+r6dATr6nLQHGUmGlR0rku
+         LX/SEAI+O4vUheVurGjCDEnQKv1YiUqer6pQTXwXgRRynhlcWQikBYZKYbbocuNIsNd6
+         DM5/q8fIvV4rmZRYZQ0IHAKAsAGesOtZAF7VHuZFxrGowcsXJa5zWgvg23ZS2KAGFhI5
+         qeQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlSH0x0Ta/LPTq/t9OWxfYfmaZUsiI5csDTKIL+KJ4WC3kv0zl6dU9lwGnzFqnsXi6iIhXqE/duaqPq8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc4iPcReGLOEMbkFm3M2xJsWTdeFEQrnhRG6ca7yD3B3K7qrdn
+	S8noqvGD4CWqLK6artik8gzh+UIlrfeWw3Se2w/zv2PBtvT9XMI7twpIDTfuayXvxRKdo9q94d4
+	whj5x30Ygz/bZ+er+irIYblW148TtfvCsmupa
+X-Gm-Gg: ASbGnctc0FjfPcfzbnKNjdcNp5ICneqmTr4htRJsAIruDivJZvPMG1mL0f/Cvgl6BhC
+	JYLldMz/CR/jVOfLPrmd8ncqyaN7Zp2qE5JJ1cJxx0WSusri/oTEECCMCFSf6SGNsDgNGNeG4Cx
+	wPdiRK2BLwVRhipVNkuQejvu/dZTg=
+X-Google-Smtp-Source: AGHT+IEc78D847LUde3+5bswzdf1ixUrsSY5twv855UuX9+/F9K0OsF+VDrVmnty/ImwqqAtDRcJZXHHN5I0PSHwDjI=
+X-Received: by 2002:ad4:5c42:0:b0:6eb:1e80:19fa with SMTP id
+ 6a1803df08f44-6eed5f6164cmr22680736d6.1.1743235454901; Sat, 29 Mar 2025
+ 01:04:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313114329.284104-1-acarmina@redhat.com> <20250313114329.284104-4-acarmina@redhat.com>
-In-Reply-To: <20250313114329.284104-4-acarmina@redhat.com>
+References: <20250313114329.284104-1-acarmina@redhat.com> <20250313114329.284104-7-acarmina@redhat.com>
+In-Reply-To: <20250313114329.284104-7-acarmina@redhat.com>
 From: David Gow <davidgow@google.com>
-Date: Sat, 29 Mar 2025 16:03:56 +0800
-X-Gm-Features: AQ5f1JpicRKRSaCIuqiwug0PrStdjBYACeo4Eb48BhA0aZtbew_fx1TOosHWZm8
-Message-ID: <CABVgOSmrb_am5nxOxJaZ_JL_wf21xy6e9R2hvEuEiJG29P4y2A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/14] kunit: Add test cases for backtrace warning suppression
+Date: Sat, 29 Mar 2025 16:04:01 +0800
+X-Gm-Features: AQ5f1JpT-aX1aghV5CTNaG4UuLzzr7X5SV4zHe81kzrsiyK5QNGcvsu-jzq-6nI
+Message-ID: <CABVgOSmofN-jw9AWpOTAvhE-d-oLW_MBnPx8QQ1GVLZb-sMEhg@mail.gmail.com>
+Subject: Re: [PATCH v4 06/14] x86: Add support for suppressing warning backtraces
 To: Alessandro Carminati <acarmina@redhat.com>
 Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
 	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
@@ -83,38 +83,99 @@ Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
 	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
 	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
 	loongarch@lists.linux.dev, x86@kernel.org, 
-	Linux Kernel Functional Testing <lkft@linaro.org>
+	Linux Kernel Functional Testing <lkft@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000bca11c063176a1b8"
+	boundary="0000000000001882cf063176a2b0"
 
---000000000000bca11c063176a1b8
+--0000000000001882cf063176a2b0
 Content-Type: text/plain; charset="UTF-8"
 
 On Thu, 13 Mar 2025 at 19:44, Alessandro Carminati <acarmina@redhat.com> wrote:
 >
 > From: Guenter Roeck <linux@roeck-us.net>
 >
-> Add unit tests to verify that warning backtrace suppression works.
+> Add name of functions triggering warning backtraces to the __bug_table
+> object section to enable support for suppressing WARNING backtraces.
 >
-> If backtrace suppression does _not_ work, the unit tests will likely
-> trigger unsuppressed backtraces, which should actually help to get
-> the affected architectures / platforms fixed.
+> To limit image size impact, the pointer to the function name is only added
+> to the __bug_table section if both CONFIG_KUNIT_SUPPRESS_BACKTRACE and
+> CONFIG_DEBUG_BUGVERBOSE are enabled. Otherwise, the __func__ assembly
+> parameter is replaced with a (dummy) NULL parameter to avoid an image size
+> increase due to unused __func__ entries (this is necessary because __func__
+> is not a define but a virtual variable).
 >
 > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
 > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
 > ---
-
-Always nice to have tests. :-)
 
 Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
---000000000000bca11c063176a1b8
+
+>  arch/x86/include/asm/bug.h | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+> index e85ac0c7c039..f6e13fc675ab 100644
+> --- a/arch/x86/include/asm/bug.h
+> +++ b/arch/x86/include/asm/bug.h
+> @@ -35,18 +35,28 @@
+>
+>  #ifdef CONFIG_DEBUG_BUGVERBOSE
+>
+> +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
+> +# define HAVE_BUG_FUNCTION
+> +# define __BUG_FUNC_PTR        __BUG_REL(%c1)
+> +# define __BUG_FUNC    __func__
+> +#else
+> +# define __BUG_FUNC_PTR
+> +# define __BUG_FUNC    NULL
+> +#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
+> +
+>  #define _BUG_FLAGS(ins, flags, extra)                                  \
+>  do {                                                                   \
+>         asm_inline volatile("1:\t" ins "\n"                             \
+>                      ".pushsection __bug_table,\"aw\"\n"                \
+>                      "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"   \
+>                      "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"       \
+> -                    "\t.word %c1"        "\t# bug_entry::line\n"       \
+> -                    "\t.word %c2"        "\t# bug_entry::flags\n"      \
+> -                    "\t.org 2b+%c3\n"                                  \
+> +                    "\t"  __BUG_FUNC_PTR "\t# bug_entry::function\n"   \
+> +                    "\t.word %c2"        "\t# bug_entry::line\n"       \
+> +                    "\t.word %c3"        "\t# bug_entry::flags\n"      \
+> +                    "\t.org 2b+%c4\n"                                  \
+>                      ".popsection\n"                                    \
+>                      extra                                              \
+> -                    : : "i" (__FILE__), "i" (__LINE__),                \
+> +                    : : "i" (__FILE__), "i" (__BUG_FUNC), "i" (__LINE__),\
+>                          "i" (flags),                                   \
+>                          "i" (sizeof(struct bug_entry)));               \
+>  } while (0)
+> @@ -92,7 +102,8 @@ do {                                                         \
+>  do {                                                           \
+>         __auto_type __flags = BUGFLAG_WARNING|(flags);          \
+>         instrumentation_begin();                                \
+> -       _BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));   \
+> +       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))                     \
+> +               _BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));   \
+>         instrumentation_end();                                  \
+>  } while (0)
+>
+> --
+> 2.34.1
+>
+
+--0000000000001882cf063176a2b0
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -204,13 +265,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgm3R/ghgzBpj1jMOVW83mzw4C0AL9
-5UEGdIWFX/GO6EAwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MzI5MDgwNDA5WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg2//D/Xyyvi5/ruv5pLyZ3Rv3y1HE
+7fNAKkTKrh5hWNEwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+MzI5MDgwNDE1WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAVuI1QEd4DlrvS5gBl3QUy59Zf/mUB8dgId9VEYAz0al5EKjnUBz77/up2C+g4NEz
-0wLl0FVtlf3Yobp82pqwW3x0dwzzdrHbgari46VT5k6TcWhyzFWPFAiYjBbWUPKbFmYHg2fbspaH
-ZVQcmtvsl5j3YWFtdRXGpP23CO5/j7Ccqat1DtBfiaJGs8BiuMmbUCxU6DAJh9msFzW2HI81pjEn
-NzUg/rB4tvKa2KsGETAEK5aWEqlGuTZGfUAXRIp0Osxr0lOA061vD5zrxMAdt6qZY0hpsLn8WdQ1
-mMivBeGETU9GcOmYSrrowtgKlJbuS+r/mMiBqOPIH54sv3R6gA==
---000000000000bca11c063176a1b8--
+AQEBBQAEggEASVlVFQXw4S3LvkoUEZJTR42uF61UnTKRZ1Lgt9fykLsQjDZijEnIOpMeJYkmZXyu
+7QcD+Ra2/VA+DA4I4QWkaSB0j7LwcrPn8LNP2wU66CUhrecq0speJgnRJyIkA0otoc+ER83dnzmH
+6bfJg20kfVB0h9LCjFXs5lKkV+4t6KuuqOcY/8NPt06C9aYf5Dwk2T1WxpNaORrGAEFflYWarP00
+r9guI0DFa/bKju/HEwOR1Tlhvz0kGdXggqfTm9F16r49EBBwyZO1aWjJ0/0ErT9jrLwUMOJmY1Xd
+W4bgW3fB7adVI0LPodpz2ViCEEios5AmV+rb2cKlmUfMzI3gCQ==
+--0000000000001882cf063176a2b0--
