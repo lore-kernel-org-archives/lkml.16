@@ -1,215 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F99D15B543;
-	Sat, 29 Mar 2025 04:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD32524F;
+	Sat, 29 Mar 2025 05:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743224362; cv=none; b=rNT1sHeiOHjk3adRGZQAuRr9VImQeTMeGyc/EQzhAmTwyy+dQ1JjT/MyJVdO5i0WaII5Jc/yHoDGwXMdJ9c390IE2w4bEr5fR183FHyyAyKte4PPmJkYlIu7mv6PVQBXRGM726UbmFe5z/KqhdkN82DcXwxCeAirkLFDwl1nO/w=
+	t=1743224648; cv=none; b=TbvTOoVmQppF3BzFPLuPL6pJPGGF99g+K4J+YUYxcsTty90SifVceGBaWXBDrovEqnfz37qfdLAZ2vzSs9k0TibQCgy43JQTt350+zLiwwLuqFPyBZ3GPPMkRMcGVKt0JD4Wfnj7ZcAm8NN01TbgI1aDNmo2EILto1g9xDWDOF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743224362; c=relaxed/simple;
-	bh=2Yne1QbhxA+8CZWwW8yAQd6QasSrkff6bi9RqIVQxpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQSp014BshvfSIDtDt/H51WUVSdp5PZkWhzhnX3t/oXIEi7YGBgfwE2itZub2ZTjjSDOU1Ex72WVSVgctFeWrXYIo2yV1x1r/vdlQuCB08AohbCD7aDXpvQpV3DOUWPVTUhP7YffE2+hkkncPUjs8PDB6VqWt0QIEhI5WwwBAaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aWGIvbX+; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743224648; c=relaxed/simple;
+	bh=lYO+q8seCZ2rCtp87F3094VljvpXkkXa7eg6tmFl/sk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FNt7NGx+eU2WTjU+rOBLdLI0mOCYsoyJHLlp7k8lZLEJB2uvHhbGzcaZB/eMWS6aXs3PGqrij4hSz0thj8HM6/ie/2z5c+TgxYkX0QqITzkRjnw+k2tlDAlf2FOxpqPb05gVeDS9CBcgKUdf/w1O6UDerbihGdg5OIa9tXHDQgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuTME070; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aWGIvbX+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743224361; x=1774760361;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2Yne1QbhxA+8CZWwW8yAQd6QasSrkff6bi9RqIVQxpI=;
-  b=aWGIvbX+7sPZ3/QLXuOyv4OOr3zwnZ8/Q0x5/Eb67VUfpIjeKxI2bOeN
-   baybo38bjoJgkz3NMOWcw2Qn55cKURojY8lKJ4blDNjxfa1dr5H3hk99+
-   Sb/gAVgnEOspLXQvJvHF40XaoVLNeOeCPwl/SE0XwEREbVDpAuz2mrrY/
-   3OZ0FcajzE3nQF/JBiThjMjohu0hAXyS0xuRX8cDH3TWjqXtG76LCz+hl
-   +EwhewQWfVKLm7Ok35Pr5c4ZH8hcdITDuHyFeivlQcytvvVRBJJQfeMBz
-   6ct+DtxJWFZ8jD4Xfh8MFEHOdnEaedMndOtA4DOSEFZb3cHCN5Y6WfGUl
-   w==;
-X-CSE-ConnectionGUID: uWMSZTVoTM6Sm72VM4MaMQ==
-X-CSE-MsgGUID: OLmr5RJ3QIKlyHk4bointQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44718738"
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="scan'208";a="44718738"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 21:59:20 -0700
-X-CSE-ConnectionGUID: IhXeNcEpQXmA46pvyVZ4WQ==
-X-CSE-MsgGUID: 52fOeOn6QNehvEx91wWYZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="scan'208";a="162869118"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 28 Mar 2025 21:59:15 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tyOHo-0007uc-2j;
-	Sat, 29 Mar 2025 04:59:12 +0000
-Date: Sat, 29 Mar 2025 12:58:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Subject: Re: [PATCH v3 03/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-Message-ID: <202503291204.imMRd3l7-lkp@intel.com>
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuTME070"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7A8AC4CEE2;
+	Sat, 29 Mar 2025 05:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743224648;
+	bh=lYO+q8seCZ2rCtp87F3094VljvpXkkXa7eg6tmFl/sk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IuTME070DKGOGws3i2K8vP1pjugsfZJ4jJ8C/su6eyeYIR0m1lhyc+ivIufD7D4SN
+	 8v7ficS37zcXSWW3hxURxhdrl+DqDq25Psbll0HAicNvKahGBRTlbXw9V3PymmB3dN
+	 97u8mGh65Kyud8WTz/IXm80QbkWCyBasTx4wVa+VOfrHJms5JT0N0wJ2tVwseBxtn+
+	 7dvvhGPBl8K7VOrLReyih9cThGsqfXCEGEUSuAW6/m3EQIFI4ET2CwK5uTFdJWDcTc
+	 p6m+KZvgWovVtOxDrlCpGOmxNTwyOw2nhHOltpZZ2sYBOXTPFQ4Pwu+82NkE7DxiPX
+	 b/6UrDJIdttUg==
+Message-ID: <a81c615a-a1f5-4dfc-81ce-6235abed0820@kernel.org>
+Date: Sat, 29 Mar 2025 06:03:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: timer: Add NXP System Timer Module
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
+ Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com, S32@nxp.com,
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250328134208.2183653-1-daniel.lezcano@linaro.org>
+ <20250328134208.2183653-2-daniel.lezcano@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250328134208.2183653-2-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Amirreza,
+On 28/03/2025 14:42, Daniel Lezcano wrote:
+> Add the System Timer Module description found on the NXP s32 platform
+> and the compatible for the s32g2 variant.
+> 
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
 
-kernel test robot noticed the following build warnings:
+I got only this patch, no cover letter, no changelog. What happened here?
 
-[auto build test WARNING on db8da9da41bced445077925f8a886c776a47440c]
+>  .../bindings/timer/nxp,stm-timer.yaml         | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
+> new file mode 100644
+> index 000000000000..a9c0151d62be
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250328-104950
-base:   db8da9da41bced445077925f8a886c776a47440c
-patch link:    https://lore.kernel.org/r/20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d%40oss.qualcomm.com
-patch subject: [PATCH v3 03/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-config: x86_64-randconfig-122-20250329 (https://download.01.org/0day-ci/archive/20250329/202503291204.imMRd3l7-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250329/202503291204.imMRd3l7-lkp@intel.com/reproduce)
+Filename following compatible.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503291204.imMRd3l7-lkp@intel.com/
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/nxp,stm-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP System Timer Module (STM)
+> +
+> +maintainers:
+> +  - Daniel Lezcano <daniel.lezcano@kernel.org>
+> +
+> +description:
+> +  The System Timer Module supports commonly required system and application
+> +  software timing functions. STM includes a 32-bit count-up timer and four
+> +  32-bit compare channels with a separate interrupt source for each channel.
+> +  The timer is driven by the STM module clock divided by an 8-bit prescale
+> +  value.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,s32g-stm
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/tee/tee_core.c:410:48: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *[noderef] uaddr @@     got void [noderef] __user * @@
-   drivers/tee/tee_core.c:410:48: sparse:     expected void *[noderef] uaddr
-   drivers/tee/tee_core.c:410:48: sparse:     got void [noderef] __user *
->> drivers/tee/tee_core.c:413:30: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *ptr @@     got void *[noderef] uaddr @@
-   drivers/tee/tee_core.c:413:30: sparse:     expected void const [noderef] __user *ptr
-   drivers/tee/tee_core.c:413:30: sparse:     got void *[noderef] uaddr
-   drivers/tee/tee_core.c:802:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *[noderef] uaddr @@     got void [noderef] __user * @@
-   drivers/tee/tee_core.c:802:41: sparse:     expected void *[noderef] uaddr
-   drivers/tee/tee_core.c:802:41: sparse:     got void [noderef] __user *
-   drivers/tee/tee_core.c:805:30: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *ptr @@     got void *[noderef] uaddr @@
-   drivers/tee/tee_core.c:805:30: sparse:     expected void const [noderef] __user *ptr
-   drivers/tee/tee_core.c:805:30: sparse:     got void *[noderef] uaddr
->> drivers/tee/tee_core.c:413:30: sparse: sparse: dereference of noderef expression
->> drivers/tee/tee_core.c:413:30: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:694:37: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:805:30: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:805:30: sparse: sparse: dereference of noderef expression
+Previously it was told to me there is no such soc as s32g but they are
+named differently, e.g. s32g2. See other bindings.
 
-vim +410 drivers/tee/tee_core.c
+Please consult internally and come with one unified approach to all NXP
+bindings. Otherwise, if this is a real soc, fix this for top level
+compatibles, because there is no s32g there either.
 
-   378	
-   379	static int params_from_user(struct tee_context *ctx, struct tee_param *params,
-   380				    size_t num_params,
-   381				    struct tee_ioctl_param __user *uparams)
-   382	{
-   383		size_t n;
-   384	
-   385		for (n = 0; n < num_params; n++) {
-   386			struct tee_shm *shm;
-   387			struct tee_ioctl_param ip;
-   388	
-   389			if (copy_from_user(&ip, uparams + n, sizeof(ip)))
-   390				return -EFAULT;
-   391	
-   392			/* All unused attribute bits has to be zero */
-   393			if (ip.attr & ~TEE_IOCTL_PARAM_ATTR_MASK)
-   394				return -EINVAL;
-   395	
-   396			params[n].attr = ip.attr;
-   397			switch (ip.attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK) {
-   398			case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-   399			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-   400				break;
-   401			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-   402			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-   403				params[n].u.value.a = ip.a;
-   404				params[n].u.value.b = ip.b;
-   405				params[n].u.value.c = ip.c;
-   406				break;
-   407			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
-   408			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-   409			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
- > 410				params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
-   411				params[n].u.ubuf.size = ip.b;
-   412	
- > 413				if (!access_ok(params[n].u.ubuf.uaddr,
-   414					       params[n].u.ubuf.size))
-   415					return -EFAULT;
-   416	
-   417				break;
-   418			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-   419			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-   420			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-   421				/*
-   422				 * If a NULL pointer is passed to a TA in the TEE,
-   423				 * the ip.c IOCTL parameters is set to TEE_MEMREF_NULL
-   424				 * indicating a NULL memory reference.
-   425				 */
-   426				if (ip.c != TEE_MEMREF_NULL) {
-   427					/*
-   428					 * If we fail to get a pointer to a shared
-   429					 * memory object (and increase the ref count)
-   430					 * from an identifier we return an error. All
-   431					 * pointers that has been added in params have
-   432					 * an increased ref count. It's the callers
-   433					 * responibility to do tee_shm_put() on all
-   434					 * resolved pointers.
-   435					 */
-   436					shm = tee_shm_get_from_id(ctx, ip.c);
-   437					if (IS_ERR(shm))
-   438						return PTR_ERR(shm);
-   439	
-   440					/*
-   441					 * Ensure offset + size does not overflow
-   442					 * offset and does not overflow the size of
-   443					 * the referred shared memory object.
-   444					 */
-   445					if ((ip.a + ip.b) < ip.a ||
-   446					    (ip.a + ip.b) > shm->size) {
-   447						tee_shm_put(shm);
-   448						return -EINVAL;
-   449					}
-   450				} else if (ctx->cap_memref_null) {
-   451					/* Pass NULL pointer to OP-TEE */
-   452					shm = NULL;
-   453				} else {
-   454					return -EINVAL;
-   455				}
-   456	
-   457				params[n].u.memref.shm_offs = ip.a;
-   458				params[n].u.memref.size = ip.b;
-   459				params[n].u.memref.shm = shm;
-   460				break;
-   461			default:
-   462				/* Unknown attribute */
-   463				return -EINVAL;
-   464			}
-   465		}
-   466		return 0;
-   467	}
-   468	
+This applies to all NXP-related patches (which I am sure was previously
+discussed on the lists).
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What is confusing: previous compatible was correct and I did not ask to
+change it.
+
+Best regards,
+Krzysztof
