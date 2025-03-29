@@ -1,95 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9947A372
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 15:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8041FC8;
+	Sat, 29 Mar 2025 15:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743262393; cv=none; b=PbltvzNxzVG2MdxV6PmshHGT2zcHjc2k/uuWE7Efg+cSGz6hkfwDrDUTYyj5WESavm/hMH4EEDMtoMFfjNaKYoFwP6BMKyuegJfC80t2VgCFiu43hhi8E9w8gad7Z+TK8Pk7GrIjRoctZLYP2oXLesuH0ysljyY/g5PrZfFrEK8=
+	t=1743262749; cv=none; b=J9XMLt3kSsTQDHflk7ibnGvbcAzYuqRJoaB9a0UtYedC+AqFSUb/jZuYQwrLHoMAenjzBqBVX+dnhiqejmSdh1RWBf+FVI6DTFljp1LZ6dxSvOOPjp43V3PKHhUNx9ynAYowkhqrtK/a731DODWz4KlpsFMWUhfD9PyXzmotSLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743262393; c=relaxed/simple;
-	bh=8U0F5pmk7inEAA6WlcczSHmBu0SB2vDd56zbfXOcO5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MSgnGfe8YZc+xvPVKc0fVOlC3hiItdXhk0vlBLwJHni9KdRwcymgbcch6MqoYVgYj7Tp/3DtjUAmU/Q4rn/mnP2BQxY/osuA1nsvV3LKV1IS1p+nGzdA5QWn7euh5bXr5jOXj7cpln2WwhytnW0i3Rq75SlrmWjvEhDVJG9F5Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BSU8ukP0; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743262749; c=relaxed/simple;
+	bh=XTZESrPKPGHpFAmnPm89jOBHONMycyklBf6gLShGzrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lnRBRxn4CxiS8VWzqiO3aVocmQSN2BwX7QrhVdXYhVfWU7IUubH7fWBD5nOfW3xkB6DTfpicbAh87LKxbAu+DgDXQzXe0mRtZ4+ULuzRKdpxLJef8G4qR54T00uFT4my5cPys2hilY21jRS68KcdYeKTJMIrSipG0N+oSvqG9hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgtQbEF2; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BSU8ukP0"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 42C8240E0215;
-	Sat, 29 Mar 2025 15:33:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Vpsrkw_Mwa-l; Sat, 29 Mar 2025 15:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743262376; bh=UaIEwOYMlAptnBnbqdiRGMOpO2EjIlkx41dbvF6N3ik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BSU8ukP0JGNDYiKJ6g+ZP8YYIL4a+4uyJR5ATgFxdMNh9I7ctxyuaR0QkheuQugtz
-	 Tq6Fmi+VK3PLVNCqWqx6KoGD7li220RA6xlEqgOoxG+vmcVw4+NY5YYimDgNvJbtDk
-	 OdpMLRUXP1zyZPJLhZDIrgCKtoQnMgEX+rMrsyp7tLhXMjy9ZiIikHKtsJmivTqgpK
-	 pnbg6RpFgrbPYdhpyzytoimE0KK6ZD1ey0mnEGDRqVB7l85eYtxULplauRrIKxheYA
-	 aQioS4CJywZLdvklt3oX8DUFAjEtYYUUbgF5XGF/zuG6FSJFDTRG+LHDGy/fZ0BgwL
-	 E3YT5oHjDt/EObIyiRCtEGntPwKw7ZvSqz9EqwKKwh0pP3hBqiJ2Tdy+HcusyGg5mI
-	 c3ZMPh4PNXG967tif783g6p8zpnubJf3yHn4X5e8ZUMh6Fud/uGce3qnIE27N6yfD3
-	 ye/0L7lQf7q9iLYTFK81CDh8HXRd2KyVqVixLoLz1ALKrXeB6CfsZgkSqWnmo7KpVH
-	 4kUlbkiCOEDdN0544ZU4jQ33ABhNqEI3IUCPiHy99AZGJrxDWw+SPENSSOycx+sFBG
-	 Kt0bu0gQgfkVuYGc2EeIyW9ThY8PP0bq4/lMV8pKt/19KgECQho9/KXAmfF39NlFVb
-	 eNWFxOy8fxktDDlfczNu1gUc=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A7FD440E015D;
-	Sat, 29 Mar 2025 15:32:49 +0000 (UTC)
-Date: Sat, 29 Mar 2025 16:32:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgtQbEF2"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224191d92e4so61922605ad.3;
+        Sat, 29 Mar 2025 08:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743262747; x=1743867547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qLqnf1fMnS1YGOd6jYlsQdvTvlitqPfts83ENABGWwg=;
+        b=PgtQbEF2nhb8g1P6DEOn/mSfSsh77NuRr7oq4r1TlbEtO3gSdBOq13jgLbTEdsyUw1
+         6FFJQSm6U9GN6gnZe65fA7xXOorEo60Rs4j0i0Zxs5EbOq6cbJdJDJx+s034TvSkwWgy
+         bjA2FLWEsT1LuxJzE1bluOcxFb5gXeIshTWYGkh+J5trsq/C4QB/PIHSXfaK8nNb7aQc
+         zbAcjdl9qj/u5Vs3qoJiflyTkAgjweYtbRnLKfEMNQH50/2vFzdwgFJOSNCcFSlbbycG
+         8e8vbgn5iTMbAd/jpozwpPkL3WvQfWTVRGaum6hikE1GHIUEBPtaQSfFBNmDysbhlx9p
+         /2NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743262747; x=1743867547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qLqnf1fMnS1YGOd6jYlsQdvTvlitqPfts83ENABGWwg=;
+        b=mWNTZ+s41St1qP6ZOJtUSKn72AxCUasZl6KtBQF3CQUMTfHsEqdbQ62ooICSaDvTs1
+         nB1lFLXY7fNDuKkOJz37qFOCDTnHX/E+wEg1TGiQTEPiqhetld5XhRwzguZHAMEYoo99
+         N6yu14qWXOuc45U3Y3XI3lMNt7o40XMVxZZv+qnsriZcVjV21PTqjl++j5oAXrZKOHpm
+         6igNCigS1OY1PpxwnSGD0Csg7eMfFSOoJxtH8k6NHOY01ymawN6Xg6Rlk74d/JAYpzNb
+         tu0JrWSgrYs8TpLOo8lZjJDYK6Ub56kMHrUe9t0K9hvxz4z3GGc+8H7iuZ4LGVcsUAIY
+         lUaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqtRpiFllZn4RNfktYne/zXlVm3zBDcKK63psDXQr/FUcU4A+ab+VpGuOufjvKiXg1MbRY5ZYXqow5gTQ=@vger.kernel.org, AJvYcCXLXzvoNnGbZq1skmSpz5ec6Hq9BocsrVfwxq8M53E0l5dUHu53ECY1kzlfV3K1DNz/K2WCHvUW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLpwg3Y7k9/+4mPmVE/nZ91CvNboDv3vEQijRpwlciescDk7Ia
+	O4DdMc9wBeSQxHUM/PFmhjw6RxZ8j9HJW2ik0xxvesqDQz4IPwiwY1YVd59V
+X-Gm-Gg: ASbGnct7y0kjENOk282O6/tqWIrOrHZRA15ukGTNbNKSY0cbQGa27fM7hCmQovGkmDB
+	x6KkJ9BQBC2AUm7VBwmCHUfEqq0lkSU9VE88EKoT+mzPeApom+0xF1vUVBSX73SDlSbV3kN1AFY
+	m6SDKFpv/UBSlUOE8E8wRyfbL9vbb0YrEn/inJkM50XX+FC5aMNN6+w+BV9EkeU1SmyZu9SHm84
+	+FRniM5uZ+kCnzCw41eWCyyW6gw9BDojOmu/C/lxbXPe8g96j/lplNddFfZSbTG+hQMeXEGmk3t
+	mBa2TxDHNS1opVnyBPMeARDS8xYpNdh22C3B
+X-Google-Smtp-Source: AGHT+IGs1TjjcX4cWeFoms4AWEOhlQe+/EY7vHCtZ0u05EQ4B2o13qDdrvGs4PGSzYZYftHAYkLbjg==
+X-Received: by 2002:a05:6a20:3d8f:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-2009f5bd151mr5034802637.5.1743262746951;
+        Sat, 29 Mar 2025 08:39:06 -0700 (PDT)
+Received: from apollo.localdomain ([2601:646:8201:fd20::f147])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6dd5d1sm3459254a12.46.2025.03.29.08.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 08:39:06 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Kees Cook <kees@kernel.org>
+Cc: linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
+	Khem Raj <raj.khem@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] mips: Add -std= flag specified in KBUILD_CFLAGS to vdso CFLAGS
+Date: Sat, 29 Mar 2025 08:39:03 -0700
+Message-ID: <20250329153903.32963-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z-cSQXJKMyBSfAAc@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 10:18:57PM +0100, Ingo Molnar wrote:
-> Linus,
-> 
-> Please pull the latest objtool/urgent Git tree from:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-03-28
-> 
->    # HEAD: ae958b12940bcd4ffa32c44684e4f2878bc5e140 objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
-> 
-> [ Merge note: not all driver fixes below have maintainer acks. ]
+GCC 15 changed the default C standard dialect from gnu17 to gnu23,
+which should not have impacted the kernel because it explicitly requests
+the gnu11 standard in the main Makefile. However, mips/vdso code uses
+its own CFLAGS without a '-std=' value, which break with this dialect
+change because of the kernel's own definitions of bool, false, and true
+conflicting with the C23 reserved keywords.
 
-Btw, test bot complains:
+  include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
+     11 |         false   = 0,
+        |         ^~~~~
+  include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
+  include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
+     35 | typedef _Bool                   bool;
+        |                                 ^~~~
+  include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
 
-https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+Add -std as specified in KBUILD_CFLAGS to the decompressor and purgatory
+CFLAGS to eliminate these errors and make the C standard version of these
+areas match the rest of the kernel.
 
-Date: Sat, 29 Mar 2025 22:29:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: x86-ml <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:objtool/urgent] BUILD REGRESSION ae958b12940bcd4ffa32c44684e4f2878bc5e140
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: stable@vger.kernel.org
+---
+v2: Filter the -std flag from KBUILD_CFLAGS instead of hardcoding
+v3: Adjust subject and commit message
 
--- 
-Regards/Gruss,
-    Boris.
+ arch/mips/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index fb4c493aaffa..69d4593f64fe 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -27,6 +27,7 @@ endif
+ # offsets.
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
++	$(filter -std=%,$(KBUILD_CFLAGS)) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+ 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
