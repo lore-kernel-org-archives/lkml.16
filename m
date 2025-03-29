@@ -1,95 +1,171 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B363597B;
-	Sat, 29 Mar 2025 09:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076883597B
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743241911; cv=none; b=Yg0rMuAjIK37V4bhYGl2M0ldPSIS9ZHQheC07WK2NUGVlJto61KkRoUmopahMiSzpApphHiLR1Dj8F3sQ8TSgHjCkCUvxZIUC/BOEYanZRwDtA+0MGlRHSikz719ZDgwi6p8/KW6506sUb4QnEffzbojHlt2zSvghRjjryD2SVs=
+	t=1743242193; cv=none; b=NO44shJbFFfVAeNJSywOYNcn0NUCXKChZh1ytPbR3ZornQBVZ3qf6l8C9hPHTnIYLvMpb0adXRMdHEmtISjk+eq0Nh5NJ9mmyvsSfQrDcnJIMahi//k0VFEIFNGfWQt2pCmoo+ObV1U0NTSwRAoqwiYbcxr8dxF4QC2KqS6Ws28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743241911; c=relaxed/simple;
-	bh=emnL5YrggIqYqC8E+OKm6HsIBhJSJimByrZY+7rtUkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLBTilzrj6GW9/rDrcNbkoPJdtxD5j9cjzSAUA/inwM76RUtj/BmdfiFiByb1tKN8lLSLzqGjb7lbCbo1yZ3g5oY9Qz4kMGBc7oEw+RKlq7etGP1uwodIhDLA7MR9u/g/ch1juqTsyHdqNDrYIw6hmRVZhWYDXfwXuiGdDj9JH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NT7Nzq/c; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1743242193; c=relaxed/simple;
+	bh=uRezo5XhrTPZNnIoTUOunciCt8yCaE5RYVV6ejLbSdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sc2TbjhFedi4+Ej4Y5lJTo0tCpHEzu75Gggu/NXCasElEjihhXmud5YjnduPqJ36ma+VBHJ4w7gAusbLpryWjvnul9PNtQEHsLazcYyoKrXiuS/SDNe+EHzyaPJ0tZuzXQRLoRnP1dtW+ad/jdvgfiZXhmUf8qZUHm7iujKao0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xmQwqicy; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NT7Nzq/c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1743241907;
-	bh=emnL5YrggIqYqC8E+OKm6HsIBhJSJimByrZY+7rtUkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NT7Nzq/cc/96FJDVDFFIzPg1/I+8zS4JgseMhhrn6m3g+LgBIt7jrCLWiDFv7JDdL
-	 y0Wj4Ddp0Ll4jmZA6YfQTeVcI/3W+YYGkw9VLQ+nyKPh1U73PmjGRrp8ZerC2oGyUi
-	 zzcoILwQ8zZFq7H66I6+aqsljNms334iBgLMZF6U=
-Date: Sat, 29 Mar 2025 10:51:47 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] tools/nolibc: MIPS: entrypoint cleanups and
- N32/N64 ABIs
-Message-ID: <7fef431b-1b68-4967-8f8a-d2b49e403578@t-8ch.de>
-References: <20250225-nolibc-mips-n32-v2-0-664b47d87fa0@weissschuh.net>
- <20250326205434.bPx_kVUx@breakpoint.cc>
- <60e78caf-49e5-42ad-900c-9813518d838b@t-8ch.de>
- <20250326220430._IkF6-zy@breakpoint.cc>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xmQwqicy"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso20036705e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 02:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743242190; x=1743846990; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qVSHj/4O8NaMEdadNaXoatmj3QQWp2MB7UQy5W5yL8s=;
+        b=xmQwqicy0C8V56iNJu7m0H5baZmLFs/aqpBBpwkmkX5n4O6nHeCSkuVLUfTErDgJ+6
+         TVlIjvB2d/+WJGwbUAlC/NyE3wkZmOauyhweVXMOpNlh7p9dyxQjlArXd16tG4cEyXc4
+         r197/RCKQSzkY6/YTwCsCwbhJBcS3hvrlP/OIEePn0x2Z04AAJX8JGeFTx4rPB6rK/bA
+         Id2XkcMEdyJfEkZW4+VWLDEVwRryEYnCbZDSfSVwigSkdhCQf00bnqasc164cSB8cvSW
+         NyMbi0V5ZQATn4u4vESAwaHkLv/4veFZt7hRbzWT/P2CdzwvufigjlvzRNCPaI85eQza
+         HveA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743242190; x=1743846990;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVSHj/4O8NaMEdadNaXoatmj3QQWp2MB7UQy5W5yL8s=;
+        b=lYyfF+6YoRTfkGuIal4M5+WZ/ok70ODhLB1xMg7KHDbHkjKxvsSIEJ4Ai13nyvZqzr
+         4Zo2oiGYb2Ot/aTZ8o2VGzYUbOS35c0vqv51fsceXEhnxTl9vtzBYLk24Utcmqj6bo8W
+         0ktsod7Qh5FqNcv5JDcBntw0x9m6XsvQOU+X3IIuyF8eG/Kn7G4fItdYTdXZ++/L37lY
+         1J31ERdUdkpsN5SiAtO5YdNYihfTo7iHYmd8UidWTdl623VieVdD1E/T2BgmbnjCrtC7
+         WpZl5itPwa5QofFQ/HN2gRiSS07EFmD247XUsCmrIFQyBrYMJ1haEDcSdgF3dof0Tb1x
+         +Mxg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3hYC6JDjZyUZGBCLgQjeOgZ+zqPeSFQlgcrSaI4zv/KSFjcjzZIm5kTOnfDF6TQ1/z/BfjbkAYOvsat0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRx5rDZZbIPH130iRP4Go8hCNsKTZkDz4EyQUV5Hp5G7xBMu1g
+	r+IaeF4fwAHSM1mwEDEpfAIdyty+Vk4dyc5WAGfmqfacOEt7/T7jdsRom77B88Y=
+X-Gm-Gg: ASbGncs2R/c1+QtR7+2Eo0S+dvArGw5SS0PTyv5EToUuKWK49M1pFzR64Zxh6dlmQik
+	a6ixbgK99UiukPvDoV/wwsoKYoMh4bnIGh2QPhcfcoP2bu6Vc2QvzZ5V4ZGwkcBUlSqNw979vds
+	oPj0Uu0SuRyi9STv21HFAyZm86RCB3M9Bf3y2/p5fCzKOA0Oww5+tnLu9j5WqQtnatSk20YdK0L
+	Pd0oPRW17JypkTqdfzGUqE3y3FpwXWrFbX5XorxWXpEKRwL3lcwizFiqFmBn/kJu/TTMOT1dKh5
+	qxYarqOYhr4MiNJhX5e1DqeHjarkFHT02peDgRoQmBqaHt5WSDoUuJHVNiZtUH9BxN5BDk87DZY
+	=
+X-Google-Smtp-Source: AGHT+IFOFTCOAfL9OXfmL28X8GIqYPlADXJOfL1WMOZ3VK74bGRG5Mf1bRmRfVzjPWNDvADCVJgf0A==
+X-Received: by 2002:a05:6000:2910:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39c120e0a9emr1736878f8f.32.1743242190221;
+        Sat, 29 Mar 2025 02:56:30 -0700 (PDT)
+Received: from [192.168.1.38] (i5E863BED.versanet.de. [94.134.59.237])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm5230104f8f.43.2025.03.29.02.56.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Mar 2025 02:56:29 -0700 (PDT)
+Message-ID: <fb176bbf-5e31-4e72-8201-4a2fc4d57ef5@linaro.org>
+Date: Sat, 29 Mar 2025 10:56:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250326220430._IkF6-zy@breakpoint.cc>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] dt-bindings: input: syna,rmi4: document
+ syna,pdt-fallback-desc
+To: David Heidelberg <david@ixit.cz>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+ Vincent Huang <vincent.huang@tw.synaptics.com>, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250308-synaptics-rmi4-v3-0-215d3e7289a2@ixit.cz>
+ <20250308-synaptics-rmi4-v3-1-215d3e7289a2@ixit.cz>
+ <20250310-hissing-vagabond-pegasus-cc8aed@krzk-bin>
+ <3c5e12fc-eb91-46e8-a558-9896f0bdcab4@ixit.cz>
+ <b3a5ec89-0125-4b01-8cca-69b9985b6089@kernel.org>
+ <48bb62eb-8aa9-465c-9e77-c0b375df0c9f@linaro.org>
+ <492da0ab-3a5c-4ee9-bc37-d66b007ffd81@kernel.org>
+ <5060c248-3160-4d52-81ec-8e06bbd246bf@linaro.org>
+ <2d555c27-1cb1-4ea9-9327-e1a3774e103b@ixit.cz>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <2d555c27-1cb1-4ea9-9327-e1a3774e103b@ixit.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-03-26 23:04:30+0100, Sebastian Andrzej Siewior wrote:
-> On 2025-03-26 22:51:54 [+0100], Thomas Weißschuh wrote:
-> > > mips32le works as-is.
-> > > For mips64le I had to s/-march=mips64r6/-march=mips64r2 to match the
-> > > ABI. Which makes me wonder: Why do do we need to pass -march here and
-> > > can't rely on toolchain defaults?
-> > 
-> > The goal here is to have an as-wide-as-possible test matrix for
-> > nolibc-test, which will mostly be running on QEMU anyways.
-> > Also we need to run the correct QEMU user variant; by fixing the
-> > architecture this is easy to do.
+
+
+On 3/28/25 23:45, David Heidelberg wrote:
+> On 26/03/2025 11:26, Caleb Connolly wrote:
+>>
+>>
+>> On 3/26/25 07:57, Krzysztof Kozlowski wrote:
+>>> On 25/03/2025 14:23, Caleb Connolly wrote:
+>>>>
+>>>>
+>>>> On 3/25/25 08:36, Krzysztof Kozlowski wrote:
+>>>>> On 24/03/2025 19:00, David Heidelberg wrote:
+>>>>>> On 10/03/2025 10:45, Krzysztof Kozlowski wrote:
+>>>>>>> On Sat, Mar 08, 2025 at 03:08:37PM +0100, David Heidelberg wrote:
+>>>>>>>> From: Caleb Connolly <caleb.connolly@linaro.org>
+>>>>>>>>
+>>>>>>>> This new property allows devices to specify some register values 
+>>>>>>>> which
+>>>>>>>> are missing on units with third party replacement displays. These
+>>>>>>>> displays use unofficial touch ICs which only implement a subset 
+>>>>>>>> of the
+>>>>>>>> RMI4 specification.
+>>>>>>>
+>>>>>>> These are different ICs, so they have their own compatibles. Why 
+>>>>>>> this
+>>>>>>> cannot be deduced from the compatible?
+>>>>>>
+>>>>>> Yes, but these identify as the originals.
+>>>>>
+>>>>>
+>>>>> It does not matter how they identify. You have the compatible for 
+>>>>> them.
+>>>>> If you cannot add compatible for them, how can you add dedicated
+>>>>> property for them?
+>>>>
+>>>> Hi Krzysztof,
+>>>>
+>>>> There are an unknown number of knock-off RMI4 chips which are sold in
+>>>> cheap replacement display panels from multiple vendors. We suspect
+>>>> there's more than one implementation.
+>>>>
+>>>> A new compatible string wouldn't help us, since we use the same DTB on
+>>>> fully original hardware as on hardware with replacement parts.
+>>>>
+>>>> The proposed new property describes configuration registers which are
+>>>> present on original RMI4 chips but missing on the third party ones, the
+>>>> contents of the registers is static.
+>>>
+>>>
+>>> So you want to add redundant information for existing compatible, while
+>>> claiming you cannot deduce it from that existing compatible... Well,
+>>> no.. you cannot be sure that only chosen boards will have touchscreens
+>>> replaced, thus you will have to add this property to every board using
+>>> this compatible making it equal to the compatible and we are back at my
+>>> original comment. This is deducible from the compatible. If not the new
+>>> one, then from old one.
+>>
+>> hmm I see, so instead we should add a compatible for the specific 
+>> variant (S3320 or something) of RMI4 in this device and handle this in 
+>> the driver? I think that makes sense.
 > 
-> I would prefer to make distro users as in real hardware first class
-> citizen and not QEMU users. If you run qemu you can specify the ABI
-> anyway.
+> Agree, preparing it for v4. So far proposing `compatible = "syna,rmi4- 
+> s3706b-i2c", "syna,rmi4-i2c"` (as S3706B is written in the commit and 
+> search confirms it for OP6/6T).
 
-Does the following work for you when running kust "make nolibc-test"?
+ack, sounds good!
+> 
+> David>
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>
+> 
 
-diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-index 58bcbbd029bc..27d5ceb20858 100644
---- a/tools/testing/selftests/nolibc/Makefile
-+++ b/tools/testing/selftests/nolibc/Makefile
-@@ -174,10 +174,13 @@ CFLAGS_s390x = -m64
- CFLAGS_s390 = -m31
- CFLAGS_mips32le = -EL -mabi=32 -fPIC
- CFLAGS_mips32be = -EB -mabi=32
-+ifeq ($(origin XARCH),command line)
-+CFLAGS_ARCH = $(CFLAGS_$(XARCH))
-+endif
- CFLAGS_STACKPROTECTOR ?= $(call cc-option,-mstack-protector-guard=global $(call cc-option,-fstack-protector-all))
- CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables -std=c89 -W -Wall -Wextra \
-                $(call cc-option,-fno-stack-protector) $(call cc-option,-Wmissing-prototypes) \
--               $(CFLAGS_$(XARCH)) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
-+               $(CFLAGS_ARCH) $(CFLAGS_STACKPROTECTOR) $(CFLAGS_EXTRA)
- LDFLAGS :=
+-- 
+Caleb (they/them)
 
- LIBGCC := -lgcc
-@@ -232,7 +235,7 @@ all: run
-
- sysroot: sysroot/$(ARCH)/include
-
--sysroot/$(ARCH)/include: | defconfig
-+sysroot/$(ARCH)/include:
-        $(Q)rm -rf sysroot/$(ARCH) sysroot/sysroot
-        $(QUIET_MKDIR)mkdir -p sysroot
-        $(Q)$(MAKE) -C $(srctree) outputmakefile
