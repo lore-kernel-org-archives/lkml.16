@@ -1,222 +1,207 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E80158A13
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938FA35972;
+	Sat, 29 Mar 2025 08:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743236048; cv=none; b=FQkiLY+qzHCH3KtCKjumXeqPMJj9F5a7VZC8lX+dTGJ8bp42Nkd3UtyxdxX4g5xxHl80pr/vuZ7hYisG8hIuuNot6xwZec+D0cRTYsGW4DOw23qrNUqeLVGUwjs+ma4uxea2EdW+EAhrvQgGQSOO3LW2nYOQigNqfdh/5AYzXdY=
+	t=1743236439; cv=none; b=U2GfejXsLeHZaqAMghrU9q8Q55zcVbXGgZ5O44Q79f75+7KJ2oSVSNZTcV2O8gsyESM1lSuXQOY+KziQSJCeNnqZn+AFQwUXlbyPlbaFagjYIZt6cNuGii1ZZYL3vrwuyfmgrHzl6t+KiN9Srv81Vog+TRQnaywv7PcTRubyLUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743236048; c=relaxed/simple;
-	bh=8GiND8jOfRRGd/cKIqYAgbzQPkMK0kvc1rafMvZ3PM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H7pjE3ahFfxhtzj5pMC3Aml9olsb4atiST1hXcdMUQ0YiXroBnb7HAPjuiixDTCQVIPqws6rIszJVr5VBGOsydGXeNs9RPXYBYStwVYbwUTK5n9FBQFg/PIEiJ3g9ZCEht1vRPpqs/PTbYrCQXIF7ICPLukmu4Vu5GB5qTz8pxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lWQApzNk; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743236439; c=relaxed/simple;
+	bh=y0SeCUL36wrOR7V4n+9xCfJTAjKCoOuyD7AomtkeFi4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pRgMSiDnt5XS/pZPjVPQyPfnwjal5CWig8CaYV9fIcxjwEUnHvmrbwQxbWTCYThK6D7qGyNjwvIXv3wBWWhptEZMnzoToY6jQ3cqxXS78rm1LKkp+k0nL2PgHK7H9KBnQuqOFfkoRXWjLAuVknH2p4nEEKLrY1JL7an2+cOupsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QAVmXVor; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lWQApzNk"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86718c2c3b9so1244459241.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743236046; x=1743840846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OV53tHVbf628erFwveMgJYR6DPNsKo+lGKHmW34PwcA=;
-        b=lWQApzNk2+afaPWtdoqZPmh+jxgwEuv/iU1IvLVhjwWyKaMj5txKia94Tq/h8QPAzU
-         w2yJGyC2vxXLfO5r3TRYX3G3q734lWBH/eTjTc58aQ6gMsHHx1yRZvbLvz96tVBorMi0
-         ygD6hVbxfAYvvC6A/9VBtwlynHecdS8GVv1J12acqS1AdJ+YXdnIwMZoRVnA/Kz7BewV
-         p92ZNlU+QyfjMmVDYh5SyRQP60DhtZR2+prPSjnZl0fhjYZC/4TSOPqnIsCfjvlnJhOC
-         I8E2SAD8VAy4HtZLX/oOzLWDK5Ya5U2Mp1PSTFlRHl9eL4o3Usmnzl+KgrnMdJuosXB2
-         yKxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743236046; x=1743840846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OV53tHVbf628erFwveMgJYR6DPNsKo+lGKHmW34PwcA=;
-        b=Yz4rP7ODKpCpYZ9RZYhypSaBqF1q5gmD9nNjCE56EAmJMtJ2RkA/gdO37oa2wpoPgv
-         pYYcEeXQN8Rh6vp33ZN5NJf2F0GnYFQhrvohvNrw9SpqkmwPwKjS/fyk5uZcZhNK/gUR
-         iHTXDicVXR1+NcmErfvvnCFkBGu9q2OQr9LxqN+QbmQe52JrrZcQdogMOmXyqBLpi4UZ
-         gbe9j2Db7r1zu9rj0nxXv4EnNOgtwppdHbh7RTdMndQIAIJ1cwzI6eMPWnEQCJ67+Rki
-         i+W3QSMvkbixpm+7ZSiSQWOXcSG1gc91Ra4mt0fgpqJu069U/ulDmPHq6WzxLrpx7P9I
-         s4nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/NMeTWfqzb181XMt9vGKbnDkBPBVvv+3b0M4G3O1xnKXrXMLYC7oB8bsIq5OhgLbIVETPccKNnJpNg5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXhekHIHt0f7VYm82/ilE3crUJHRdWLrWOUaNt2hArjrur2Tw5
-	tuFCfOJG9yS7CPLh3PU+UXJBU1dc50MuvaMAuUBDQ7rC697QpOjzpv7dY1xzPAKdbB9Yr2SU+bH
-	Vbc+bYZA6e4VHpuAY77LVeWKaR8uRUburn9w1dw==
-X-Gm-Gg: ASbGncvIFJI+j2TUSef81emNepoytBqGOGI9As5mo4TCfBe1FrHZvic/WRUFrjbuORp
-	t2jTyYHM5D++mtVMlQv4HgmzC5OfPGM2AoEDi2VRj3FqXiZU6cHcpIpPZLiYa1TiVdnj5RHkoRK
-	rc/s54VboZvBRGm3Qga/yx+VIR0aXKXiANgemd/n7gQ+mEStuoipD3fthnQ10=
-X-Google-Smtp-Source: AGHT+IHEtKCRNGj8GhmMQq+ZmsGVrBipDX2oWXka5tkbki1LML5Ps2Wrr39RT3XHXSBqLlr2M3yMmr17er9cOu8+i8I=
-X-Received: by 2002:a05:6102:2ad3:b0:4c1:a448:ac7d with SMTP id
- ada2fe7eead31-4c6d3881b78mr1432023137.10.1743236045813; Sat, 29 Mar 2025
- 01:14:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QAVmXVor"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=y0SeCUL36wrOR7V4n+9xCfJTAjKCoOuyD7AomtkeFi4=; b=QAVmXVor+lphg6/xt8xVfR847Y
+	TLDVCIxR6+RsuzYf8Y54wdObPh3ORL9w7t0/4OMNfH6eVZHVLxpmuIIZ/NEm2LoIrNm0R4s8BZaY4
+	Ns052O2iNKi/ja7sDgvP5hNXrAVXFVm6HEXIRepyZINlgd2XlLFwfNGVJq2UjVTna+OQ+4BMfzpjM
+	8zuBIT5QO1c8y97GOjulERbPtJaB+UCGaC6PnYUmo/uyjzcX2mSymtoQ/W2QjNN91FL0re3AHmgkf
+	RXS+AKJ3Y7yxacK1oNlq4/CH00ZTxI0tZsBJ7JDt0uoOxVjxJI1H9nd9T2b3LYDPWrpQ+LLXmgr12
+	vDNwfvBg==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.lumleys.internal)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tyRQe-00000006J2m-4AC4;
+	Sat, 29 Mar 2025 08:20:34 +0000
+Message-ID: <eaa33f756bc2e66ca193180a9847ee43fbdaa8ad.camel@infradead.org>
+Subject: Re: pvclock time drifting backward
+From: David Woodhouse <dwmw2@infradead.org>
+To: Ming Lin <minggr@gmail.com>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, Paolo
+ Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Date: Sat, 29 Mar 2025 08:20:32 +0000
+In-Reply-To: <CAF1ivSaEz0brSGfpv08oKnTjT=h99hs_G0ju0UGPwzoLvOSV8A@mail.gmail.com>
+References: <facda6e2-3655-4f2c-9013-ebb18d0e6972@gmail.com>
+	 <Z-HiqG_uk0-f6Ry1@google.com>
+	 <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
+	 <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com>
+	 <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
+	 <CAF1ivSaEz0brSGfpv08oKnTjT=h99hs_G0ju0UGPwzoLvOSV8A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-De4fXDMSM33XN+Rcrt85"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328145011.672606157@linuxfoundation.org>
-In-Reply-To: <20250328145011.672606157@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sat, 29 Mar 2025 13:43:54 +0530
-X-Gm-Features: AQ5f1JrhUEGT2ZlSUHwliccXNJOe-vPWvTNmSHrnFCqn8yijxsLxRCCNICwZY7Y
-Message-ID: <CA+G9fYuSxke1pLM2yPkijXuXQbyY-B3nQKa8rxdWxSL7nZ3YfA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 00/75] 6.6.85-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+
+
+--=-De4fXDMSM33XN+Rcrt85
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 28 Mar 2025 at 20:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.85 release.
-> There are 75 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 30 Mar 2025 14:49:59 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.85-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, 2025-03-28 at 11:30 -0700, Ming Lin wrote:
+>=20
+> >=20
+> > Is this live migration from one VMM to another on the same host, so we
+> > don't have to worry about the accuracy of the TSC itself? The guest TSC
+> > remains consistent? And presumably your host does *have* a stable TSC,
+> > and the guest's test case really ought to be checking the
+> > PVCLOCK_TSC_STABLE_BIT to make sure of that?
+>=20
+> The live migration is from one VMM to another on a remote host, and we
+> have also observed the same issue during live upgrades on the same host.
+
+Moving to a remote host also requires that you get the guest TSC to be
+reasonably synchronised on the destination. Which is another litany of
+sadness, especially if you have TSC scaling in the mix. Or even if your
+two "identical" hosts calculated a slightly different TSC frequency
+when they measured it at first boot.
+
+In that latter case, the mul/scale factors advertised to the guest in
+the pvclock will be *slightly* different on the new host. Your test in
+the guest would then fail if it requires that the pvclock be
+*identical*. The actual criterion is that the result should be
+identical at the time of the live migration (when the TSC frequency
+effectively changes).
+
+The code currently requires that the old and new TSC frequencies are
+within =C2=B11kHz of each other.
+
+> >=20
+> > If all the above assumptions/interpretations of mine are true, I still
+> > think it's expected that your clock will jump on live migration
+> > *unless* you also taught your VMM to use the new KVM_[GS]ET_CLOCK_GUEST
+> > ioctls which were added in my patch series, specifically to preserve
+> > the mathematical relationship between guest TSC and kvmclock across a
+> > migration.
+> >=20
+>=20
+> We are planning to test the patches on a 6.9 kernel (where they can be
+> applied cleanly) and modify the live upgrade/migration code to use the ne=
+w
+> KVM_[GS]ET_CLOCK_GUEST ioctls.
+>=20
+> BTW, what is the plan for upstreaming these patches?
+
+I need to find the time to rebase, rework and retest them. You're doing
+some of the testing and increasing the motivation... I'll see if I can
+get it done in the next week or three.
+
+--=-De4fXDMSM33XN+Rcrt85
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyOTA4MjAz
+MlowLwYJKoZIhvcNAQkEMSIEIAr5iGa1JkRAqX6pITTySFBs9OJKyjAer6/h+Gdbxi+NMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAelyX7hDfATxl
+Nk1UaWtyv0bopfVvu/3d6Eoa6/O5Uj4UuVXQFd0saNUs0fUgBX5hpXO8BFI6+Wz8HirL/iGM/zNj
+WiCIOfC0MfE0mkNCQn120eKXjGqRQm+zJLqeMcYxrMdElbqXrjedOMaZJXtqdzuCzSRQ5YFMEXu1
+UUXxFJmvwkQW3P/1dwnkSbLzuU65JOlj8+BYBcLcTIRrCXbVn/uE+X9ZMxDltlYmEmGYp/hilSPg
+19zuAcb9TzSoNDMj1D7prtbTZ29Atrtlt2FUTTPvswiYQONVr/slfP+9bxdexHdnytUS4RIiAExw
+BE+zBatHlVWz4KIlhd3uulPACtztHTmX8UeZt0Pw7jF2F3Ws32FxXlBbH1QtVY3bsdGx4WUCaH3k
+VzO+62/flVapH0JefbhBWvDdh7/oxzLLz/LhdmdmezF5WdJ7FrtG9aVrr4Eu0D//rgCdhdkAogW9
+oSQHFPEITfs9aJqJoxbgelXLbBL3CcWfO0sVRwX0NIDI8HajYGwN3c2C/jMfsEhZJPTCdOsbNt8N
+KvlaWKmL7oQ+ICJ3tWDGRbKXtr6dREXM2qGsS2Fg5cUahhOnpY+b7M7oZyk4QCDuaib1OlqHw3Q1
+xMmT1QNJC9RmrXfcx++nuLapc/KTizucYweBDpL/BUY3YfzRzysT84QSJOYYZgUAAAAAAAA=
 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 6.6.85-rc3
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 1a8546896fa3161eaf3b65771fdfc55241cc9efe
-* git describe: v6.6.83-243-g1a8546896fa3
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.8=
-3-243-g1a8546896fa3
-
-## Test Regressions (compared to v6.6.83-167-gbddc6e932207)
-
-## Metric Regressions (compared to v6.6.83-167-gbddc6e932207)
-
-## Test Fixes (compared to v6.6.83-167-gbddc6e932207)
-
-## Metric Fixes (compared to v6.6.83-167-gbddc6e932207)
-
-## Test result summary
-total: 114024, pass: 92211, fail: 2845, skip: 18530, xfail: 438
-
-## Build Summary
-* arc: 6 total, 5 passed, 1 failed
-* arm: 133 total, 133 passed, 0 failed
-* arm64: 46 total, 36 passed, 3 failed, 7 skipped
-* i386: 31 total, 26 passed, 5 failed
-* mips: 30 total, 25 passed, 5 failed
-* parisc: 5 total, 5 passed, 0 failed
-* powerpc: 36 total, 33 passed, 3 failed
-* riscv: 23 total, 22 passed, 1 failed
-* s390: 18 total, 14 passed, 4 failed
-* sh: 12 total, 10 passed, 2 failed
-* sparc: 9 total, 8 passed, 1 failed
-* x86_64: 38 total, 37 passed, 1 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--=-De4fXDMSM33XN+Rcrt85--
