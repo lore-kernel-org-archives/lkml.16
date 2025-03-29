@@ -1,180 +1,181 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-66.smtpout.orange.fr [80.12.242.66])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C854042048
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B690D2AD2A;
+	Sat, 29 Mar 2025 09:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743239987; cv=none; b=W9G7//WbPA7UirLtqaWOtCIE2k8FDIx4xiIAiFaX+RwUAbvvqTvx96aR5V2wKve210rrQBR0XANK5FQ3C3FpZvM9rpb0SwDcNakOsDtRWLkAGjfZHa7qLWKQd1WWSycTAtaa0yQo7zmPI2Oq0MSfs11XaF2YZRSE5nJOuwjpcCg=
+	t=1743240589; cv=none; b=N/7pQXvzgdqwwge6/yi3J5J3ssapvsPugcJvyArg2S7J9KZKjB4ohflGS1JEyO0LtgFkfMxOoDE+QcsXToEsaBJtkGCYlt7eMll+BSqynKeYgu/jlbSHkmv5g/ylDswthgAIfuk9OTWVoTSiaAE3MHDNNZdVBjxAMKXDdNVwPbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743239987; c=relaxed/simple;
-	bh=NyjDm5nCNjTC7rcDox6l7EVTuV3iQMiJqfcengk6nx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YlbXarl6xhwBcEJ4vB2GXu6tELy+Bqa5tnndKmU/CO9Jhz45y292n9xCp8HBF9oSzr+MTvLWji3OwTFChx887nVNSrPdVPdDZ76uNGYiaFc4ZqiTCNTPEHDd6+UPBMqJ4W48q94JwSQ45YfWeByKUDq3LNzTPWS4E+c8dXXqA34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJ/dj0cr; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743240589; c=relaxed/simple;
+	bh=hzQhOPNqE60R1qkBlg61xzswVm5bJ0iiYEc707dhqi0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mv1HyuDQN7/VFYr5WTIlhYKaD0GiLXE27paRWhioKW2jKbOdbkyxoas1Ci4cMaNA2i7+iO9MV/GLPE4MLVvQQj9ifgIlok+vEzJCrBx6MUZ1Z4enUHZEMw5Rr8drnbzYbK4kq3Ph1HvBRmeupLC2TePSxVzxsR+EWTAyOarzlhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sO2UC6fT; arc=none smtp.client-ip=80.12.242.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJ/dj0cr"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5499bd3084aso2722053e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 02:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743239984; x=1743844784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5wlu+gsg1SANJyfAnL7C7RXgklIENVYl+gKIe6lKbEA=;
-        b=hJ/dj0cruYVjeT6Y8gLF9T7EDfs50TMQmCOyBVf7WZs8BwL9Bn7DLY2hWWZuGHcUe3
-         yx01s1XXp7AEglvInxs8MSxbpaP0cf0XH60aUIVSDnXIlT+ZX5lEd9kvByONuUMwMEA/
-         XC6g5DyDpP3dMYquZcHOvDOlZDegiCCBOq+vP/XNWLbW/eiIjb0ikL4uu48UkIEafDtB
-         ceDzfnMn4jXLfFVKYoP3zK/UFYzfKzML9V+60w7zcTh10xZiHWWnZaVENAthak53QBcP
-         A4EyD3Rs5Zj5tNhcdzy4EU5V8W5anipuGCLwFzdsJQTRRiKPl0KDOn8xhSJh+3P5OpjR
-         jgjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743239984; x=1743844784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5wlu+gsg1SANJyfAnL7C7RXgklIENVYl+gKIe6lKbEA=;
-        b=GoY5U9vbcVp7352dFTOn1iklMjil1zDfabwFKX7KdUDguMcbf0PFlZfoan+lX+rfLr
-         xlMFLzpf4hyOdTosieT/Rg8NFstYWyoiQR7IVXfhrI//r4vbvmE7Ya89HhcAGFTXo4xl
-         LCIlHgWSwJl1S3ro3sxWCdpZ3NpwRgjCCzW/K70ltscsqM2611vXYgekkIjMmoaW7tXz
-         Q3R7Lomow1iiFHmM0bH5Y/kiSaPgUatviOPa+MTuVkNfcvEyQqMei07l+o8TBu8EMuHO
-         sDIDpj9X/wS68TI1FGhtlExyx02wtrEnE7r6/a8HJncGqvkS/tYo3eJTIQYxZj77FOAS
-         bqcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCj2ogaNpmzCSSAA5QKPToZcI77q+h3mIyrfDWXVGlyPuxHr6z9kidDYGMFKc3j/pCvgTU5Oy/Mx3bf4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtL1yzq3FQgE73kaVPuU/4Th2+9YpDv7Sy0Iigw6U13UxNn1K8
-	7aLghsQ8wUUQ/c/EUfdPgZNeFpD8RewiHYHXDUDRuKhYtQqm1VqA6de2i88eFNoCU8oPRYfYblb
-	Z5COKog3rORP2aVTI4R4XvFJDJ9z/8LAI40I=
-X-Gm-Gg: ASbGnct6uiZzGVDvZBN0/9HrTOM1rk0O/rGkGeN2j3XWsaYCY501YFRP7acTV2loo5v
-	3iDEiJ1OcxvIZoZi017z18EuSLDYKPav9R0xckmH3ksK7rXGmYBn7JCGYMec7o89tu53CLr+F8w
-	CmjHGi/KPlt83APvNHM51ClFntXw==
-X-Google-Smtp-Source: AGHT+IGCQNAoywZrpA8Mhjnaa2QAz/7AjPcQcEtp0YBf1MA4oFlMdSiGDwgIDBVVSP835PRgLy8FiCcNXUaDAIERz7k=
-X-Received: by 2002:a05:6512:31cd:b0:54a:f6ae:9e6f with SMTP id
- 2adb3069b0e04-54b10dba757mr914933e87.4.1743239983574; Sat, 29 Mar 2025
- 02:19:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sO2UC6fT"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id ySMrtFJFBkHP7ySMutS03L; Sat, 29 Mar 2025 10:20:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743240046;
+	bh=4gKjuoqKQNe9FB94aEC2wTPWEJscygTofIdbbOSUWHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=sO2UC6fTd8Dg3vSzZrTefyMvYX2q5Lac2yYQHSuSDIUvjFwmI1nqgDXRG8Sk7FE+J
+	 PG8Io1viZwSclEF+MXNuiamTY1UuynmpfqDvF21oPMRvw3dSIq25OD147J6uLcRBzF
+	 0GGz6bZJmaBu76xQ2Yy7iNTuvmFw8rJTMot2na3GCMLsUPM+WYocx6KzNkgyENganB
+	 qfx5PqwuxUWOOfOYgM/c6yAY8tricdhGQnqDNypVcehNoIRCQNXhboown4KPgdFAX/
+	 TUGRouwPeGDhWI0g4Nj0MMmdLvTua+J3FsBWd8macfz8idQWjW7t7X0l2Ih9GXvAF+
+	 58DHZ7FidJtuA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 29 Mar 2025 10:20:46 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <b1baac64-f56d-4d0f-92f1-d7bb808a151b@wanadoo.fr>
+Date: Sat, 29 Mar 2025 10:20:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325164854.199420-1-ubizjak@gmail.com> <20250325164854.199420-2-ubizjak@gmail.com>
- <Z-Mme_OxuhYfxgzO@gmail.com>
-In-Reply-To: <Z-Mme_OxuhYfxgzO@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sat, 29 Mar 2025 10:19:37 +0100
-X-Gm-Features: AQ5f1JqhBXcEqMMddpAUXuIgkuzv1UotkytiLa7YGYrtzDjhigskN3OVws2loLI
-Message-ID: <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-To: Ingo Molnar <mingo@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] fs: Supply dir_context.count as readdir buffer size
+ hint
+To: Jaco Kroon <jaco@uls.co.za>
+Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, miklos@szeredi.hu, rdunlap@infradead.org,
+ trapexit@spawn.link
+References: <20230727081237.18217-1-jaco@uls.co.za>
+ <20250314221701.12509-1-jaco@uls.co.za>
+ <20250314221701.12509-2-jaco@uls.co.za>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250314221701.12509-2-jaco@uls.co.za>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 25, 2025 at 10:56=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
-te:
->
->
-> * Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> > Emit naked POPCNT instruction when available with X86_NATIVE_CPU
-> > option. The compiler is not bound by ABI when emitting the instruction
-> > without the fallback call to __sw_hweight{32,64}() library function
-> > and has much more freedom to allocate input and output operands,
-> > including memory input operand.
-> >
-> > The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
-> > shrinks by 599 bytes:
-> >
-> >   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
-> >   Total: Before=3D22710531, After=3D22709932, chg -0.00%
-> >
-> > The asm changes from e.g.:
-> >
-> >          3bf9c:       48 8b 3d 00 00 00 00    mov    0x0(%rip),%rdi
-> >          3bfa3:       e8 00 00 00 00          call   3bfa8 <...>
-> >          3bfa8:       90                      nop
-> >          3bfa9:       90                      nop
-> >
-> > with:
-> >
-> >            34b:       31 c0                   xor    %eax,%eax
-> >            34d:       f3 48 0f b8 c7          popcnt %rdi,%rax
-> >
-> > in the .altinstr_replacement section
-> >
-> > to:
-> >
-> >          3bfdc:       31 c0                   xor    %eax,%eax
-> >          3bfde:       f3 48 0f b8 05 00 00    popcnt 0x0(%rip),%rax
-> >          3bfe5:       00 00
-> >
-> > where there is no need for an entry in the .altinstr_replacement
-> > section, shrinking all text sections by 9476 bytes:
-> >
-> >           text           data     bss      dec            hex filename
-> >       27267068        4643047  814852 32724967        1f357e7 vmlinux-o=
-ld.o
-> >       27257592        4643047  814852 32715491        1f332e3 vmlinux-n=
-ew.o
->
-> > +#ifdef __POPCNT__
-> > +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
-> > +                 : [cnt] "=3D&r" (res)
-> > +                 : [val] ASM_INPUT_RM (w));
-> > +#else
-> >       asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
-> >                               "call __sw_hweight32",
-> >                               ASM_CLR "popcntl %[val], %[cnt]",
-> >                               X86_FEATURE_POPCNT)
-> >                        : [cnt] "=3Da" (res), ASM_CALL_CONSTRAINT
-> >                        : [val] REG_IN (w));
->
-> So a better optimization I think would be to declare and implement
-> __sw_hweight32 with a different, less intrusive function call ABI that
+Hi,
 
-With an external function, the ABI specifies the location of input
-argument and function result. Unless we want to declare the whole
-function as asm() inline function (with some 20 instructions), we have
-to specify the location of function arguments and where the function
-result is to be found in the asm() that calls the external function.
-Register allocator then uses this information to move arguments to the
-right place before the call.
+a few nitpicks below to reduce the diffpatch with unrelated changes. 
+(trainling spaces)
 
-The above approach, when used to emulate an insn,  has a drawback.
-When the instruction is available as an alternative, it still has
-fixed input and output registers, forced by the ABI of the function
-call. Register allocator has to move registers unnecessarily to
-satisfy the constraints of the function call, not the instruction
-itself.
 
-The proposed solution builds on the fact that with -march=3Dnative (and
-also when -mpopcnt is specified on the command line) , the compiler
-signals the availability of certain ISA by defining the corresponding
-definition. We can use this definition to relax the constraints to fit
-the instruction, not the ABI of the fallback function call. On x86, we
-can also access memory directly, avoiding clobbering a temporary input
-register.
+Le 14/03/2025 à 23:16, Jaco Kroon a écrit :
+> This was provided by Miklos <miklos@szeredi.hu> via LKML on 2023/07/27
+> subject "Re: [PATCH] fuse: enable larger read buffers for readdir.".
+> 
+> This is thus preperation for an improved fuse readdir() patch.  The
 
-Without the fix for (obsolete) false dependency, the change becomes simply:
+s/preperation/preparation/
 
-#ifdef __POPCNT__
-     asm ("popcntl %[val], %[cnt]"
-                 : [cnt] "=3Dr" (res)
-                 : [val] ASM_INPUT_RM (w));
-#else
+> description he provided:
+> 
+> "The best strategy would be to find the optimal buffer size based on the size of
+> the userspace buffer.  Putting that info into struct dir_context doesn't sound
+> too complicated...
+> 
+> "Here's a patch.  It doesn't touch readdir.  Simply setting the fuse buffer size
+> to the userspace buffer size should work, the record sizes are similar (fuse's
+> is slightly larger than libc's, so no overflow should ever happen)."
 
-and besides the reported savings of 600 bytes in the .text section
-also allows the register allocator to schedule registers (and input
-arguments from memory) more optimally, not counting additional 9k
-saved space in the alternative section.
+...
 
-The patch is also an example, how -march=3Dnative enables further
-optimizations involving additional ISAs.
+> @@ -239,7 +240,7 @@ SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
+>   
+>   /*
+>    * New, all-improved, singing, dancing, iBCS2-compliant getdents()
+> - * interface.
+> + * interface.
 
-Thanks,
-Uros.
+Unrelated change.
+
+>    */
+>   struct linux_dirent {
+>   	unsigned long	d_ino;
+
+...
+
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 2788df98080f..1e426e2b5999 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -308,7 +308,7 @@ struct iattr {
+>    */
+>   #define FILESYSTEM_MAX_STACK_DEPTH 2
+>   
+> -/**
+> +/**
+
+Unrelated change.
+
+>    * enum positive_aop_returns - aop return codes with specific semantics
+>    *
+>    * @AOP_WRITEPAGE_ACTIVATE: Informs the caller that page writeback has
+> @@ -318,7 +318,7 @@ struct iattr {
+>    * 			    be a candidate for writeback again in the near
+>    * 			    future.  Other callers must be careful to unlock
+>    * 			    the page if they get this return.  Returned by
+> - * 			    writepage();
+> + * 			    writepage();
+
+Unrelated change.
+
+>    *
+>    * @AOP_TRUNCATED_PAGE: The AOP method that was handed a locked page has
+>    *  			unlocked it and the page might have been truncated.
+> @@ -1151,8 +1151,8 @@ struct file *get_file_active(struct file **f);
+>   
+>   #define	MAX_NON_LFS	((1UL<<31) - 1)
+>   
+> -/* Page cache limit. The filesystems should put that into their s_maxbytes
+> -   limits, otherwise bad things can happen in VM. */
+> +/* Page cache limit. The filesystems should put that into their s_maxbytes
+> +   limits, otherwise bad things can happen in VM. */
+
+Unrelated change.
+
+>   #if BITS_PER_LONG==32
+>   #define MAX_LFS_FILESIZE	((loff_t)ULONG_MAX << PAGE_SHIFT)
+>   #elif BITS_PER_LONG==64
+> @@ -2073,6 +2073,13 @@ typedef bool (*filldir_t)(struct dir_context *, const char *, int, loff_t, u64,
+>   struct dir_context {
+>   	filldir_t actor;
+>   	loff_t pos;
+> +	/*
+> +	 * Filesystems MUST NOT MODIFY count, but may use as a hint:
+> +	 * 0	    unknown
+> +	 * > 0      space in buffer (assume at least one entry)
+> +	 * INT_MAX  unlimited
+> +	 */
+> +	int count;
+>   };
+>   
+>   /*
+> @@ -2609,7 +2616,7 @@ int sync_inode_metadata(struct inode *inode, int wait);
+>   struct file_system_type {
+>   	const char *name;
+>   	int fs_flags;
+> -#define FS_REQUIRES_DEV		1
+> +#define FS_REQUIRES_DEV		1
+
+Unrelated change.
+
+>   #define FS_BINARY_MOUNTDATA	2
+>   #define FS_HAS_SUBTYPE		4
+>   #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
+> @@ -3189,7 +3196,7 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos);
+>   extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
+>   extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
+>   extern struct file * open_exec(const char *);
+> -
+> +
+
+Unrelated change.
+
+>   /* fs/dcache.c -- generic fs support functions */
+>   extern bool is_subdir(struct dentry *, struct dentry *);
+>   extern bool path_is_under(const struct path *, const struct path *);
+
