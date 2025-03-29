@@ -1,147 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC0440C;
-	Sat, 29 Mar 2025 08:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91CB208D0
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743238021; cv=none; b=sLEJzAAcDP6BrU6yTmuCW4n9bkzxwl+RPV2P9BPyAxup06RApIrq1yx8cIiNiuGa7KlTFjDh082uNZ0tFGUGB8WPN0zYBaIe+TIWzl6epBoE+tGGd3ODzm72wjF+AWBOSDaT/LHN9lLqZ67Skq6afd//YRwXKTCxhInN4IqF1V8=
+	t=1743238104; cv=none; b=rG3d75KyoNOYC33frEWAWNZwTxE6MssIw2fre+ke22T1mTOFgJAf/Btw8PO/4xP5WGok6BLzO41qq1HvU6J/JLC6FVHY0Wgv9ovKTklJZZ7fqfbKsTyyMyh3nZs5KlAg6zDNqDDj+G6hksVXYKCcUOhltwrmolzsq5AdYx2kA8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743238021; c=relaxed/simple;
-	bh=o63oO3H6a4iLbXjldUgL5HZ/mW/dfiOJ6BfjX1DMWe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkBoDYPWWQjO5AiuxcCkXATTb/Jhi+tdcwJZKdLXaCVtpaw+pdZdu0VmeWrRCJzIgrHz4qvqcFIqFGRTZVyMNys0+/86pe5C57TYuwP++XTvko7rdzOvVXnecxWh392uQN84AXIl+2qpSfsNFUa87myTPllhU42vrH5+qmU7IxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVCpCfSa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743238104; c=relaxed/simple;
+	bh=7b5xeDcGCdtsTCCz63v6qe/umnBA9a/AJw4tXCW+r5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A9V4ApJfnpCd8J6pOyPjU/DOh0CeszuHEYhr9A3kA9R+1tWG9YxRz1mh/IA7dUfcliMHd6ilDlAz+z8ANlXZo6pRmioQENd/1kPhk1oAtFVEYUqaaHVm2PwcW9ZI9u6lGHxV4aiHfVw6qYMMMc95+lXzGEeOzA13jQf4OO+43ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chX5K8OY; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVCpCfSa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2464C4CEE2;
-	Sat, 29 Mar 2025 08:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743238021;
-	bh=o63oO3H6a4iLbXjldUgL5HZ/mW/dfiOJ6BfjX1DMWe4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GVCpCfSacXTOXE/YI5xLq8i/U4zc1ItATsvRtUqtjxewNDR7PyhQ9bTbSIKG0xrbI
-	 mvlN03bh3/M107SQ9RIHexBFKg+/EE/3yKCuMgnALHX6Eu9v6bJe0iW+LEdhE+y0kB
-	 8Rh3ODMnxA//UE/9oxfHLFHKjWan2eOtMzow3busQgl9O6mNkDHQDbMwvqIaFsZM7I
-	 ioI8zoFRhVwcZSuPTGgQcbP1AUzevcV8eAT/JNbgtzcr8j9nVHtzo90sslumOTF0uw
-	 oAEriIE6BHfo27jwLD1MenmBoH/b2n3znO9PWocnqZKClVgK1+7iFMlC/GYqHoXOVP
-	 xxjbd6HjKD8tQ==
-Date: Sat, 29 Mar 2025 09:46:55 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org, jack@suse.cz
-Cc: linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 6/6] super: add filesystem freezing helpers for
- suspend and hibernate
-Message-ID: <20250329-ungeduldig-umgezogen-615a0f997e2b@brauner>
-References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <20250329-work-freeze-v2-6-a47af37ecc3d@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chX5K8OY"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30c2d427194so29784601fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743238101; x=1743842901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0nwuEpJzQFQurVKIoRIMqcXmjzrbmsPVGF6Vz2+s+bQ=;
+        b=chX5K8OYt8/5U1nvVjHpbowBjullNOvIaIcPOsDbOh1gKbvgsuxUgUT5E58deZiZ3n
+         XCvbkCbumXEmUolNnD9TrwfNuDAijdakFiaA9WuLhvGZ2S+fPIah+0eUvwW3Pd/HHuzx
+         I6/gKLSIGNac1WR35vBNGDPRA7pS0VO4Qry/iWaqcFZFwLNfDPGohaDfjo4R+S1J9zpi
+         fYu8BrK+EwjH0PdrPHWcL+CXweRo5mIbrzHsDhLAiLkfnXlvtlror0oJUqMI9tZeBgDq
+         er+9Le1xbVH4nPT2PURzw42R+1RvzvkbQmQavUXXLXL85PgOJ/V0KIrExZh1gcsYxecl
+         xNiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743238101; x=1743842901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0nwuEpJzQFQurVKIoRIMqcXmjzrbmsPVGF6Vz2+s+bQ=;
+        b=HXqzv1xyXUF6Y8j5jXvCa2Z2gcqs1ELN69HQfTLVOt8Z5z1ZMhm1YMQcOkU56zV089
+         W5kFFpFKNMS8KmXsUvAumq+Uwj8gR4AsGcBCR2jfWBRFRRXzMv2QpmZlyGtd1WCzhmVm
+         2vBQp4fAlvDV9c5PoIJ21i6H0KfaYFjB6aPR0ldHpx7tQJbw7jHp/ZdNCWm90CZvq3YI
+         GyvJ3AMk8uzEZpgDbfJhsOs0l6sgoUrfacjFdh6JKC7QUuyvDlyCnuiI4pfUPpF5Njc2
+         UWQfvd+QKhNfqiBOx9Izp/3/YyFG18Jpyo+Kv8CCiCfgpUfI4/7OlSWlOP1w65BYqPQ2
+         8yRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVS9S1mbYjq6+0agyJHGzhoanxy95fAKjZUmSnhcE9b799Bjs7t0vKUYSzRkSLkW+W2mFA1pwRa5PPU36c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrcurxFYaknGhki3m4o298/mB3kUw0pmqx5usgCkWh0/kS5Tmk
+	zYocSNdRjXtVvEcLHeSjEgPGcrzhJdFZDzP6Fv2bvQ7HKqjBgAi8t6cSSttk1sPJTuwRie5J0iN
+	FR5kVLfzdTuCZBLq2VAwx2r8w337akg==
+X-Gm-Gg: ASbGncvDvYXOqcFXk3/aBh16nXRcC9tOQcnsRLqi7/OcANpP5JVCJwD5mMWMZLdrsBF
+	R4f/LGHi9ZYtiJMNGyCbbrovcV7TJdglF+nTP/k2A74PtwDwEIZB3A+VR4AcT0I1MNqhT3MoAI4
+	BzjBpOQvmL6C780dm4vWS18h6oa4cKt88JwjiF
+X-Google-Smtp-Source: AGHT+IHDuBrbEGjNiEHyI2aE8xq7LaVKUuk/Tr+EcyUchZ2bsFIxhh/uufhM2/+6DZumbKtt7lt4AcJRwCvd/ckZKFM=
+X-Received: by 2002:a2e:a547:0:b0:30b:c328:3c9f with SMTP id
+ 38308e7fff4ca-30de027a2dbmr8215651fa.20.1743238100549; Sat, 29 Mar 2025
+ 01:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250329-work-freeze-v2-6-a47af37ecc3d@kernel.org>
+References: <20250325175215.330659-1-ubizjak@gmail.com> <20250325175215.330659-2-ubizjak@gmail.com>
+ <Z-MjgKSzJKIVooFI@gmail.com> <CAFULd4agDYNCJrQQ8bji09eGVJp1D46LH=fOpcfciza2qhKJfg@mail.gmail.com>
+ <Z-cib74Y1NjB4huZ@gmail.com>
+In-Reply-To: <Z-cib74Y1NjB4huZ@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sat, 29 Mar 2025 09:48:14 +0100
+X-Gm-Features: AQ5f1Jr8R0HyYLkgmpYzCnKQEbYTwtaHN1gJVQXu2h_ZgM-aFDunDBNhfiW1vBI
+Message-ID: <CAFULd4ZzoW+vP_pa1hEF--gvsG8yaPLU8S7oBkJBZLP4Tirepw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/bitops: Fix false output register dependency of
+ TZCNT insn
+To: Ingo Molnar <mingo@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 29, 2025 at 09:42:19AM +0100, Christian Brauner wrote:
-> Allow the power subsystem to support filesystem freeze for
-> suspend and hibernate.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/super.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fs.h |  2 ++
->  2 files changed, 57 insertions(+)
-> 
-> diff --git a/fs/super.c b/fs/super.c
-> index 666a2a16df87..4364b763e91f 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1176,6 +1176,61 @@ void emergency_thaw_all(void)
->  	}
->  }
->  
-> +static inline bool get_active_super(struct super_block *sb)
-> +{
-> +	bool active;
+On Fri, Mar 28, 2025 at 11:28=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > On Tue, Mar 25, 2025 at 10:43=E2=80=AFPM Ingo Molnar <mingo@kernel.org>=
+ wrote:
+> > >
+> > >
+> > > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > > On Haswell and later Intel processors, the TZCNT instruction appear=
+s
+> > > > to have a false dependency on the destination register. Even though
+> > > > the instruction only writes to it, the instruction will wait until
+> > > > destination is ready before executing. This false dependency
+> > > > was fixed for Skylake (and later) processors.
+> > > >
+> > > > Fix false dependency by clearing the destination register first.
+> > > >
+> > > > The x86_64 defconfig object size increases by 4215 bytes:
+> > > >
+> > > >           text           data     bss      dec            hex filen=
+ame
+> > > >       27342396        4642999  814852 32800247        1f47df7 vmlin=
+ux-old.o
+> > > >       27346611        4643015  814852 32804478        1f48e7e vmlin=
+ux-new.o
+> > >
+> > > Yeah, so Skylake was released in 2015, about a decade ago.
+> > >
+> > > So we'd be making the kernel larger for an unquantified
+> > > micro-optimization for CPUs that almost nobody uses anymore.
+> > > That's a bad trade-off.
+> >
+> > Yes, 4.2k seems a bit excessive. OTOH, I'd not say that the issue is
+> > a micro-optimization, it is bordering on the hardware bug.
+>
+> Has this been quantified, and do we really care about the
+> micro-performance of ~10-year old CPUs, especially at the
+> expense of modern CPUs?
 
-Typo on my end. This is ofc bool active = false;
-And fixed.
+No, although the change would be a one liner now. Without specially
+crafted benchmark loops the impact is not noticeable and typical
+kernel usage of these instructions is not that sensitive on
+destination.
 
-> +
-> +	if (super_lock_excl(sb)) {
-> +		active = atomic_inc_not_zero(&sb->s_active);
-> +		super_unlock_excl(sb);
-> +	}
-> +	return active;
-> +}
-> +
-> +static void filesystems_freeze_callback(struct super_block *sb, void *unused)
-> +{
-> +	if (!sb->s_op->freeze_fs && !sb->s_op->freeze_super)
-> +		return;
-> +
-> +	if (!get_active_super(sb))
-> +		return;
-> +
-> +	if (sb->s_op->freeze_super)
-> +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-> +	else
-> +		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-> +
-> +	deactivate_super(sb);
-> +}
-> +
-> +void filesystems_freeze(bool hibernate)
-> +{
-> +	__iterate_supers(filesystems_freeze_callback, NULL,
-> +			 SUPER_ITER_UNLOCKED | SUPER_ITER_REVERSE);
-> +}
-> +
-> +static void filesystems_thaw_callback(struct super_block *sb, void *unused)
-> +{
-> +	if (!sb->s_op->freeze_fs && !sb->s_op->freeze_super)
-> +		return;
-> +
-> +	if (!get_active_super(sb))
-> +		return;
-> +
-> +	if (sb->s_op->thaw_super)
-> +		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-> +	else
-> +		thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
-> +
-> +	deactivate_super(sb);
-> +}
-> +
-> +void filesystems_thaw(bool hibernate)
-> +{
-> +	__iterate_supers(filesystems_thaw_callback, NULL,
-> +			 SUPER_ITER_UNLOCKED | SUPER_ITER_REVERSE);
-> +}
-> +
->  static DEFINE_IDA(unnamed_dev_ida);
->  
->  /**
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index c475fa874055..29bd28491eff 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3518,6 +3518,8 @@ extern void drop_super_exclusive(struct super_block *sb);
->  extern void iterate_supers(void (*f)(struct super_block *, void *), void *arg);
->  extern void iterate_supers_type(struct file_system_type *,
->  			        void (*)(struct super_block *, void *), void *);
-> +void filesystems_freeze(bool hibernate);
-> +void filesystems_thaw(bool hibernate);
->  
->  extern int dcache_dir_open(struct inode *, struct file *);
->  extern int dcache_dir_close(struct inode *, struct file *);
-> 
-> -- 
-> 2.47.2
-> 
+Thanks,
+Uros.
