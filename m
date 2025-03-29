@@ -1,79 +1,72 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6A1E32CF;
-	Sat, 29 Mar 2025 18:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF568182D2;
+	Sat, 29 Mar 2025 19:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743274776; cv=none; b=JI4wGGcW+AbdS7QKBXzRNLEeFVWuxgRCIqNVeKT+AvSYlWDpUyUPFuFO7nMf5eM+em0eD5VxPP5T6ePsc37UPEOr/jYiONw45Xsv57PUgPLNQh9CWPiMS9S/axb3d1sWNptb0OijtF8JXCKxrkbH6B2W9TWN9AX/lmftYjUtXU8=
+	t=1743274904; cv=none; b=T6ZHODFeEu5dwhbL2rDZuddxIgOV+tQb/8HgV/ed+/AhSzCZxbLWTFuUe0m1V2Oe3y7uEQReQPzlxPZQXtxW+mXy7g2bW+MFCU9DsqJ9bH84MoUY2E1LKlOKJs9tL8QIHK3GMgFiM6TmL2H/iBwaJVCZH1g0ml1nNMUUaxuMEgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743274776; c=relaxed/simple;
-	bh=DZ0HssLI9K6jcU3FNMGKWR7mlgk0rUPsHjXSsz9w8Pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z97TNwhMcZ7aerEq4xBNMMhyPfGzoDCpivMWuMdgjffZdbcVIxHKSZ87kQvLSiNfOkK1s2wzAoNzfxBxPY6feAu0VaL4q18npuQ3AfBRq2sTEjnJvBSbuFDzr4Csr9tbKOImRyAKn2ZhXvKh3jT8OlnP67QvSyjEhkjda+yhjyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=ZT7XnTrc; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1743274904; c=relaxed/simple;
+	bh=Clp/hYZoUdAnabVyv6fxW2GJ2mX2YFnlFv949QntI1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KWjAANmoLC8fql9DkeEsBzF63yCobHZHd4VV5MkSFsdQCuOaFp8OL6+LIrXbLLHsoqGfGPhbjGGVn8KEYuRaNrlpd9LSRnOAdKgQr0Bt3vMIugMFVLe2kU9ffBq5jnC5h3peFRZlgIO+6AZCVS6B/GjBPD16YSFLthxEMbHidTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=BeF+M/Ez; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZT7XnTrc"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so6322756a12.2;
-        Sat, 29 Mar 2025 11:59:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BeF+M/Ez"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso5945396a12.3;
+        Sat, 29 Mar 2025 12:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743274773; x=1743879573; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cwf31W03hzDQ3pn4ZEZvOqnTw7bLaOev9kguqMxCgac=;
-        b=ZT7XnTrcqmkKB+ylodi0qM2X8wWz8bFzpcu+DWsqJwc0rACcadEwfw3SdQ/2PZuZ5X
-         Zzd2SPgZN/YOiE4/5omKaArWCMCV1WdANVZlgjUM7IfhANNDVIJrMad1fGm2pLUWB8Jj
-         RQ4YmrSa1+AtakzkjrhgnkrqBabXWLeLwtNptV4TtV1oF3crQpoU4LLDHxxmhJpmK/ky
-         2GCfGBlw500vN4tQWFrG747/+rW+0siM4Ijf77WbYkAxNddiutg5zcdRLWZ350wHlfDF
-         CGo+9A+s3urriNPap5Wi253D+PEC8WdS1UxBlJHjvc8R2qgXHDktSldhkJArbeoABzc6
-         fnGw==
+        d=googlemail.com; s=20230601; t=1743274901; x=1743879701; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U59vr0zBBqMHwQ7X8QxznFMvqw1Fg+vz+3lxSO/2TPc=;
+        b=BeF+M/Ez1kamZTelYE7ggoYpDofX/VJPBjQGIz2ZNp+mckQc+y5bFVZpVXDIHeGoHj
+         k0ueJmZ4zxjsetIpEzek+jN/Gj4g57TsH0nn92m+4P75jhE1tb47YvlsX930DwQrTTxb
+         hWZbX3uG1ih/wLkrr1F3opmuXGGGiwswwougWPedXZbsUCJLabaEQTLwkNg7+Y6PtXkm
+         gGFJpUvMJMuJrRNhe36qFWoUjJmeOD6opSSDEQhrGpc5v83XuSrreN926QMMC3Jbnfgz
+         b/D8/tdCUmt50KWurZBhDvdKiB1UfK+Ics8ooHAdG0DUGei5WWvh9SCiZdW9UEtS4IYx
+         Zlog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743274773; x=1743879573;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cwf31W03hzDQ3pn4ZEZvOqnTw7bLaOev9kguqMxCgac=;
-        b=h+GnbqtMMfn2Baiqkmp46ZEI7WIH4n/ukf61Q0jNTS9+HsBBAp3KRp5nS8ej2K9Z7B
-         zjRmWgvva8OA+bpoBtviPEo+j8CXqIfob+ytvjzt76Cu1QivRfbYoOMDxV381nl93pYq
-         G2uo4bOVJU3UjJm3EsCNnsaE58TSe1Ym/uW9wXT6p6VQ2tGwTzXoCW5tIXWp8Gkf6iqd
-         T1h3czyhIXrIQiesLL0LX4TmqUWJVaWdMnt9hapG2eFvaL5q0/XwrdcZiXP8SliM/+DC
-         yA2YCWnMfcC47E462zDzu6aXJ0gBwRd5YB6fPXe8nnS8ccQ2ylCtzoVILj14Ymilq8WA
-         CSiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYXa2aB6NRbh3ZHvc5H3D7uv8RTn6xfjkgQU0oIuWtZGUd3h4by6+i8z+jUhhQkgzYNeyH9SV8jPB/u6RB@vger.kernel.org, AJvYcCX+7hcFnE4F3+Kft+ceZLfSPQ9hj5Z1ZLcDz8M77qf/pkEY/vQSV29JrD4fv/ZNAIlz0xvP6CHywQCo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmhk91lDq8AbvVfjqAkwQQY2njOOc4XxHtDiNPongzXk9fDi2k
-	0A5Uxu/GPymmMkAXMnAaPYQ3MdLrXtmazQRmOryCRYnXPTAecUlj
-X-Gm-Gg: ASbGncu3w61uSSbYNfB3Nb0EoMBIKpHNT0EjJhBduIncxTXI4QX3Zi14FsWIAavtC7n
-	OmrBZhmfWL7T+hbDn1wF6MzZqgvax+BHG8WgLLKwbmBCJ4zq7JmQUdIBGguVEUeUYB/SbGjjO66
-	M8XokET63V5GTIE63NgVJUPaQ25GqOg5jR2qew/yhluBYbLpJVdxQfGmGlcYzS8x36GwbpWFiwC
-	cVEtNC007mVobpcQeagFXA1E1EgOCT6M9FvgbxA0wmWwXOa4Ih5CXxEqbr0vZDssVKtgUbvhf2V
-	S/J0J+3EhM6skV9Vyp9/+3pBDl7nuR13Wjt98+KZMn0IM8XaeAJrVgMs+A7RYyVrgNoA2IiKS+O
-	HyTjvQobr0Zf0sX+62F8l0LJt744YsTkKlZm4ANDfFdlKV3h609FkbXos0ck/DJH9vx75WA==
-X-Google-Smtp-Source: AGHT+IFTpADwyhmdGZC/uMEn7HRP+YrC2xbCL6evJOQI7YFnJ9+6LvnjcqnXDwdY3wn5SL8IaD1VLQ==
-X-Received: by 2002:a17:907:c26:b0:ac3:8895:8e99 with SMTP id a640c23a62f3a-ac738998f18mr322099266b.3.1743274773307;
-        Sat, 29 Mar 2025 11:59:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743274901; x=1743879701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U59vr0zBBqMHwQ7X8QxznFMvqw1Fg+vz+3lxSO/2TPc=;
+        b=IXHfT9adkynbsgz4pJi1PzP1CIlXhPRvEeUUFjUgGuE6surP9pK82RhmkXlpbsV+bN
+         fB351liK9CyX1NYRmNOC8n8IF4E9zpdjyt9TznPJyDRKA71t01KObTuBTmy9BPusmADz
+         jt3t80hXgXK2ujE+2dZ5Htrwkau4s7RFlHkPix2ecr4AINMG2uLtzrI6o6iAgIKKdozt
+         KcxaJI0Y3MizYWTxxDPeShgdjRwybSWWdV3T9BUQqq3MPRvuUbqDMCio8ObB6kNvd0fz
+         zHLK/gl1M3XyYy9gj750s21gG6pJisvVKT7YC6KBskcVLE55PVMvtNtqKRVfPpYDEK5F
+         Muig==
+X-Forwarded-Encrypted: i=1; AJvYcCXvkeyjHjQjDwoFcpLZErqeOCvOPWzpPegUKkCY047XkCWYkiaDfhiCUAsVPZd1tHh2ODYMSZMtPSGc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF1IoZs52qNRY1uN9uOcPe+fR31D3HWa5+1aDZuKtsz/oW/xvR
+	77OuUEevjUZRfgzvNEbZUYrIMS1rXMqLxRAViE8fUaJJT8kax/bn
+X-Gm-Gg: ASbGncvHrTvFRl5QOQLzJBS68ErXz3M2CEONCdw2CLIx5tAjJCrKLOWhhChyjJ1MYQ2
+	ND0GpPPUy9hu6zMg5MHc2KD2RPRI/jXfL3DaJuflgRjLVyLM8dGIW6tF7GX3rFjaEVlesDk9Hyp
+	o+01BWqmkiDDJG/hwqyFF/KT7BpkGJZFFj3wGl69sWLZvHWFFIuFp1aPymjcEU8rCfLATR/oCX/
+	VCk37T7TCZkV9Xeu/BmTUuzqtSHmCBMFDaKOskrG5uDPMiLwCMRgAhxeiq+H42gu4qcyM2GuTTE
+	DEmJjg1Rw0Q+WVRH31f1ntc3xziZGKdf5rVd+qIYPYTZfocdVtMUo8NzGcPWhrhKL1gfGly+lBR
+	EE7/fmAUlVZn41pGry+6YZu9Yu9U0JktnyfsV/IKiZgRC5+KeuQd4jcN3OIoalLKnq+I1PA==
+X-Google-Smtp-Source: AGHT+IFCZmQvxgAXplrXyIIkWZNZdRoKac8B36FAtmzTprgUIMSkQz7UFb/RGY0oFoPv2TH62Ye4jg==
+X-Received: by 2002:a17:907:6095:b0:ac7:358f:1b11 with SMTP id a640c23a62f3a-ac738a49b90mr357126166b.23.1743274900941;
+        Sat, 29 Mar 2025 12:01:40 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-ad73-6800-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:ad73:6800::e63])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7196dd46asm364497866b.160.2025.03.29.11.59.30
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac719621718sm375998066b.102.2025.03.29.12.01.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 11:59:31 -0700 (PDT)
+        Sat, 29 Mar 2025 12:01:38 -0700 (PDT)
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	jbrunet@baylibre.com,
-	khilman@baylibre.com,
-	neil.armstrong@linaro.org,
-	christianshewitt@gmail.com,
+To: linux-amlogic@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linus.walleij@linaro.org,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 7/7] arm64: dts: amlogic: a1: enable UART RX and TX pull up by default
-Date: Sat, 29 Mar 2025 19:58:55 +0100
-Message-ID: <20250329185855.854186-8-martin.blumenstingl@googlemail.com>
+Subject: [PATCH] pinctrl: meson: define the pull up/down resistor value as 60 kOhm
+Date: Sat, 29 Mar 2025 20:01:32 +0100
+Message-ID: <20250329190132.855196-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
-References: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,30 +75,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some boards have noise on the UART RX line when the UART pins are not
-connected to another device (such as an USB UART adapter). This can
-be addressed by using a pull up resistor. Not all boards may provide
-such a pull up resistor on the PCB so enable the SoC's pull-up on the
-UART RX and TX pads by default. This matches the default (from u-boot
-or SoC hardware) state for the pinmux configuration on these pads.
+The public datasheets of the following Amlogic SoCs describe a typical
+resistor value for the built-in pull up/down resistor:
+- Meson8/8b/8m2: not documented
+- GXBB (S905): 60 kOhm
+- GXL (S905X): 60 kOhm
+- GXM (S912): 60 kOhm
+- G12B (S922X): 60 kOhm
+- SM1 (S905D3): 60 kOhm
+
+The public G12B and SM1 datasheets additionally state min and max
+values:
+- min value: 50 kOhm for both, pull-up and pull-down
+- max value for the pull-up: 70 kOhm
+- max value for the pull-down: 130 kOhm
+
+Use 60 kOhm in the pinctrl-meson driver as well so it's shown in the
+debugfs output. It may not be accurate for Meson8/8b/8m2 but in reality
+60 kOhm is closer to the actual value than 1 Ohm.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/meson/pinctrl-meson.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 1eba0afb3fd9..f7f25a10f409 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -233,6 +233,7 @@ mux {
- 						groups = "uart_a_tx",
- 							 "uart_a_rx";
- 						function = "uart_a";
-+						bias-pull-up;
- 					};
- 				};
- 
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 253a0cc57e39..e5a32a0532ee 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -487,7 +487,7 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 		if (meson_pinconf_get_pull(pc, pin) == param)
+-			arg = 1;
++			arg = 60000;
+ 		else
+ 			return -EINVAL;
+ 		break;
 -- 
 2.49.0
 
