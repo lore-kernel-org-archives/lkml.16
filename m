@@ -1,127 +1,139 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E4BA55
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 02:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C9815A8;
+	Sat, 29 Mar 2025 02:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743216199; cv=none; b=mnkBdQcYl4Agkgqffd2uXtK6h/dLYev6CMHbloktNaNMwLVHmnBTVidK8GsDgsdGNjANHd2LIYcDkcor1f61m+WohrDkUP3DqjsZQHy3CksDBstei5zEoS3UCnsyfKuekst1yEHo+HvQdOBEOtyJQ1VBp+TFEyhRCb9IUQHlIVs=
+	t=1743216353; cv=none; b=uYPu2WZw+4Cp/X7VsxCyYuxt/h+wDEJFm484WrIcXzLjn26DLFJIRbqy9NQMjsMDeTjJhux6M8/JuFvdLFozVbGmAAXQyCnlWOjYqpwReVTX2zq9sQt1IEk46kOdeN1ZGpXHQmFmivIQ6zjJCg3SCN4JQne2EvifPA0KFMm2wWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743216199; c=relaxed/simple;
-	bh=HcIGeBrGMpCMxWsLaMVzZX0Pv11Can9GqBFjhYG624s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NF91aCtfklJuAs3MpIR7IHSTpRlBH6J/acoRMWa+Wxr7vpbFnlpKkbRqM9V9kWFtRLKvlPi2g+F031abiJWfuuaKCIgnI0mXVJ4tYIPG1VpKr1Gyety4jcIvZRJjJyrJR7y2r4TFEBjDlXC5aR0yOLGjFLm0JFKFmHfWHI3eez0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.219.182])
-	by gateway (Coremail) with SMTP id _____8Bxjaw7Xudn9BCqAA--.55476S3;
-	Sat, 29 Mar 2025 10:43:08 +0800 (CST)
-Received: from mail-yb1-f182.google.com (unknown [209.85.219.182])
-	by front1 (Coremail) with SMTP id qMiowMDxPcU5XudnisBlAA--.40200S3;
-	Sat, 29 Mar 2025 10:43:07 +0800 (CST)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e6405b5cd9bso2217916276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 19:43:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXBXnyFVqQGFY4MQi3kQPA1bn3Yv3RKN1LtV/Ck+0LyDwFF7+9wf2gcxOWhK28xhBay/LIgX0nqhqzUdKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDEVcz9cdr8bl+jQpiS8KkIY8sH7+Q8YUke7Kd4Ur80j5TNQVj
-	gqn9R3q6vHd8Gm6eF+zOEEiCaETeCaqQGRWh1/OFvZtPbUu4DbSoKGugz2P60sZYrpNtGa6wVcv
-	fF9haLJ/UIB4hbadhVJTGJhpPNXwDTmxVmDS3vA==
-X-Google-Smtp-Source: AGHT+IGk4jLVMMvZ9NO4g+M6cXpWM89jtepREBCULlvcxr5aiChB5Hx8NjFVELFpjOU4wIk0eMDYI9EFrsKCf5pBsNY=
-X-Received: by 2002:a05:6902:230a:b0:e61:f51a:a79c with SMTP id
- 3f1490d57ef6-e6b736c36f9mr6818089276.19.1743216184810; Fri, 28 Mar 2025
- 19:43:04 -0700 (PDT)
+	s=arc-20240116; t=1743216353; c=relaxed/simple;
+	bh=xR0kYYmDHYBvu8zW0lVbrQUftt/gZzoxa/JWUOZCI6c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WlXf3cT5kcpqxj6nmk0CW1naLlZ0Se5yz2/PEMWJniCaqS0TumJuyfVaQPRg3Twrf2eaXdW2wI0JSufPUk6Ypy1IHUO7Ub4DNiqJ/t9yIBasprAoie50taHlh7dZdAZtZUOQJt7HzWFjuumXu/ggt0mV4+vDkvxvEHNQvrPHnqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=VtcpE4Gt; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VtcpE4Gt"
+X-UUID: e560bc300c4711f0aae1fd9735fae912-20250329
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Mud+iDg4MCst5FqYuld9wlN2wQNOH84EC+hVthJ8uLo=;
+	b=VtcpE4Gt5/Fm5lGshyGRnCNCwOrErrahaOJDD3FYHasvLEhlRXC4YfiUX6xXjDTkLeO45v9bFJLGYYCf+S8KSNkUYSf987S8aPnNclmA8mrrQ6r59zlDj6I0Hq3tPtNeTN+CR7SR/D8rUCMx3Up8LSekSm1tVM8rD4JD0OBXcf0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:ea9136c0-9c83-4490-968a-63d943318f7f,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:1197f78c-f5b8-47d5-8cf3-b68fe7530c9a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: e560bc300c4711f0aae1fd9735fae912-20250329
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <ot_chhao.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 40643921; Sat, 29 Mar 2025 10:45:37 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Sat, 29 Mar 2025 10:45:36 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Sat, 29 Mar 2025 10:45:35 +0800
+From: Hao Chang <ot_chhao.chang@mediatek.com>
+To: Sean Wang <sean.wang@kernel.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>,
+	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen
+	<hanks.chen@mediatek.com>, Chunhui Li <chunhui.li@mediatek.com>,
+	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, Hao
+ Chang <ot_chhao.chang@mediatek.com>
+Subject: [PATCH] pinctrl: mediatek: Fix the invalid conditions
+Date: Sat, 29 Mar 2025 10:40:29 +0800
+Message-ID: <20250329024533.5279-1-ot_chhao.chang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304073554.20869-1-wangrui@loongson.cn> <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
- <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com> <CANiq72=AZ+CN4SScZcnRBpkS8ogCaZ=Uhe=k7fhGCVyecyRu5g@mail.gmail.com>
-In-Reply-To: <CANiq72=AZ+CN4SScZcnRBpkS8ogCaZ=Uhe=k7fhGCVyecyRu5g@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Sat, 29 Mar 2025 10:42:54 +0800
-X-Gmail-Original-Message-ID: <CAHirt9jg2hMJDb7o2H33-6DqnF0boUwdfiwmaJahg5C2=sPi0g@mail.gmail.com>
-X-Gm-Features: AQ5f1Jrp_Grtk1mM9tgpZbrZSf0byvB8hoYloKhjBdo_j1DwQ_sq-aJDwVxK7Po
-Message-ID: <CAHirt9jg2hMJDb7o2H33-6DqnF0boUwdfiwmaJahg5C2=sPi0g@mail.gmail.com>
-Subject: Re: [PATCH] rust: Fix enabling Rust and building with GCC for LoongArch
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qMiowMDxPcU5XudnisBlAA--.40200S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1UuFW7tF1xAr1DJr1DurX_yoW8Xw1rpr
-	WkKasrCr4kKFW8t3WxA340vayjk3ykurW8CrW5X342v3Z8uF1SgrW0qF1a9Fy8WF1kWw4j
-	vanF9a1rKFWqvFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7BMNUUUUU
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Sat, Mar 29, 2025 at 12:15=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
+The variable count_reg_names is defined as an int type and cannot be
+directly compared to an unsigned int. To resolve this issue,
+first verify the correctness of count_reg_names.
 
-Thanks for the review and feedback!
+https://lore.kernel.org/all/5ae93d42e4c4e70fb33bf35dcc37caebf324c8d3.camel@mediatek.com/T/
 
-> In any case, the usual question for these "skipped flags" is whether
-> they could affect the output of `bindgen`, i.e. could they modify
-> layouts somehow?
+Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
+Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
+---
+ drivers/pinctrl/mediatek/mtk-eint.c              | 4 ++--
+ drivers/pinctrl/mediatek/mtk-eint.h              | 2 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 7 +++++--
+ 3 files changed, 8 insertions(+), 5 deletions(-)
 
-These "skipped flags" won't affect the output of `bindgen`.
-
->
-> Also, it would be nice to mention a bit more what was the build error
-> and the GCC version in the commit message.
-
-To make it easier for the maintainer to include more details in the
-commit message, I've attached the original build error message below.
-
-  BINDGEN rust/bindings/bindings_generated.rs
-error: unknown argument: '-mexplicit-relocs'
-error: unknown argument: '-mdirect-extern-access'
-error: unsupported argument 'normal' to option '-mcmodel=3D' for target 'un=
-known'
-error: unknown target triple 'unknown'
-panicked at /home/hev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/=
-bindgen-0.71.1/ir/context.rs:564:15:
-libclang error; possible causes include:
-- Invalid flag syntax
-- Unrecognized flags
-- Invalid flag arguments
-- File I/O errors
-- Host vs. target architecture mismatch
-If you encounter an error missing from this list, please file an issue or a=
- PR!
-
-gcc version 14.2.0 (crosstool-NG 1.27.0)
-
->
-> Finally, regarding the Cc: stable, I guess that means 6.12+ since it
-> is the first LTS with loongarch64, right?
-
-Also, the `Cc: stable` is indeed targeting 6.12+, as it's the first
-LTS with LoongArch64.
-
-Thanks again!
-
-Cheers,
--Rui
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index ced4ee509b5b..557dec75fa03 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -507,7 +507,7 @@ EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+ 
+ int mtk_eint_do_init(struct mtk_eint *eint)
+ {
+-	unsigned int size, i, port, inst = 0;
++	unsigned int size, i, port, virq, inst = 0;
+ 	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
+ 
+ 	/* If clients don't assign a specific regs, let's use generic one */
+@@ -584,7 +584,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+ 		if (inst >= eint->nbase)
+ 			continue;
+ 		eint->pin_list[inst][eint->pins[i].index] = i;
+-		int virq = irq_create_mapping(eint->domain, i);
++		virq = irq_create_mapping(eint->domain, i);
+ 		irq_set_chip_and_handler(virq, &mtk_eint_irq_chip,
+ 					 handle_level_irq);
+ 		irq_set_chip_data(virq, eint);
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
+index f7f58cca0d5e..0c6bf7cbdc3a 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.h
++++ b/drivers/pinctrl/mediatek/mtk-eint.h
+@@ -66,7 +66,7 @@ struct mtk_eint_xt {
+ struct mtk_eint {
+ 	struct device *dev;
+ 	void __iomem **base;
+-	u8 nbase;
++	int nbase;
+ 	u16 *base_pin_num;
+ 	struct irq_domain *domain;
+ 	int irq;
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index d1556b75d9ef..0884c0700b3e 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -381,10 +381,13 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	count_reg_names = of_property_count_strings(np, "reg-names");
+-	if (count_reg_names < hw->soc->nbase_names)
++	if (count_reg_names < 0)
++		return -EINVAL;
++
++	hw->eint->nbase = count_reg_names - (int)hw->soc->nbase_names;
++	if (hw->eint->nbase <= 0)
+ 		return -EINVAL;
+ 
+-	hw->eint->nbase = count_reg_names - hw->soc->nbase_names;
+ 	hw->eint->base = devm_kmalloc_array(&pdev->dev, hw->eint->nbase,
+ 					    sizeof(*hw->eint->base), GFP_KERNEL | __GFP_ZERO);
+ 	if (!hw->eint->base) {
+-- 
+2.46.0
 
