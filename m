@@ -1,121 +1,140 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E11B424F;
-	Sat, 29 Mar 2025 14:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3096322E;
+	Sat, 29 Mar 2025 14:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743258615; cv=none; b=FNZXmnLT7nWHdszd2TJdHjWTisdRUWEn3cdCgmz5wGnsf++Ypejbeb6fsB1c1tMNwSFG9JvY1fD1ramWldMO2pP55slVRdmEip2Lav2R/pQOQgY88u839uU+gHk9RZCsgRnaPyfDTP/iMNMF/Z2cyjcEJGJXTDa52zYPzKOOUcg=
+	t=1743258685; cv=none; b=IoxCYtsy4rBkjeuWLbm4yWZjcneirSHJ8JQwnAxBd3fZbU6JEb1XUPpaIk/0mcN3CMHHo/0AfuWTz5gyxI2K2DVU0FHYdztrym4ZGCdTKywDsPoBHtVJ4uvxra3RewuGRM9uAKkgj0GZ5v/QH4B15NMgP7RpgL3HlLNlL4x0gRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743258615; c=relaxed/simple;
-	bh=w0oCwzhaxAnRCzRQ9/YRYIOxKZmZRzvgSTK++PeHVpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JgSToVaFduaMnxis9b08Rqg6VJHy7g+5cHaBipWAIoIFJnCUqB+yPs1hZqQGkz+RKfUg1Q3zuSD5oJ80XUB/yRalnnScyDwhArbXASBSwU5Jbpgb6DFPvLP3aVoSsMXqkyXzemWYho2VPO8WUqaaRQb+3d7NFaWjpZMqyB4d0+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EexcGqKT; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743258685; c=relaxed/simple;
+	bh=Yx3IR/M3JUiaq7t3IZjt+0mZMncu92M93RmE0vOeBZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E7zxY/Dxls9ZzD2UgQhJcpf/JWIN1wNXH8uKILdzX8K8Uo1hT2kJ0RinsZ6/P8ee/rqTV2zVE5FhEbC2Zy0qITeVvDWKPEz6l8OS9fcFBU38B+SJXrIikAJvehBEkoAXGp0I+N8VBE6gkD9QpT74Vq5nq9BG23f/HpOryUZ4BD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cifIv/QA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EexcGqKT"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-300fefb8e06so5003885a91.0;
-        Sat, 29 Mar 2025 07:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743258613; x=1743863413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xQzPizb+4q7++3drew8nzj42HkGLzBNjvrLjUAd15k=;
-        b=EexcGqKTceZ0JBAdt9qPEmmchZwwYFPgYUfYq3Y0ZXmwd/09WhysuqbOMPwO/IdFRI
-         1gCvrD+Lvs0LTmEzd3BK8G4Liy5s3WFU96uEDM3mXH8Jc4RPueo0utCGq7T0I+pGYu7Q
-         YmdL/0WSzEp8KjGlQ/NjKIwC6w7/AHYhbVP7Xsue08te1kDGdbI/HjHui5uEXFJ4LTw4
-         9/6cAzGc7DM/I/jaaljqhEc2RwZ/ipmViOZa5OR6v4ODFk381JX1IjT7y76VMoKejAZP
-         KxG4JBkpf03wTeksg8j8jOnI3woxx5pYBRjkWjnVIGmSovJLyO3Uh06zFWQzY+kmtkm7
-         ET6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743258613; x=1743863413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xQzPizb+4q7++3drew8nzj42HkGLzBNjvrLjUAd15k=;
-        b=vlWJLVDzKpjSsxwZHb0yGX4bSQFF4uuY5m36bH2wVNa8+AGBP8qJKYV2Tj9LQ4jRDk
-         adn+C7aYIOdoMqQ/5o471D1xZBVkdUfnnw8etC5Yd+sdgNJyuV5ux357PaUgIpQvq35C
-         rGK/chMzsUwv4IhCaCzoQX7GiKqMb9bXbO8zq484FU9Br0ozIy+qRGy9VHGS0y1Js6MU
-         hreHqu8sseJd+4jUARw0iI0FVMP5BC/mFJ3XVcvbb5XyiL76Jz5B8UNZfMjASLBLbKKA
-         COEbPTNQH/NgVumREmJNIrf7O7nm5mRpRQ23EJw2TTFLWC7PvJ6Ws48f6nfKInaJiLYd
-         FIXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXBNbYVk5KXv8dE1F/vMb/Bu4UBlmz+2pQ1XhE8Qg75Io0odHfabGYE3mubFRHp4ei6uyBF6eol3LrJ8+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqZ6OVOqtBuxKiQIgB6VT2eTyOEM2Gz27hPzHRs2BsslRi1Tay
-	rgaTu3qnri7fFYE2rwuwS8gVx4bKZYMwWcLt96/35W/Jf0uPkIVFSz7bXxyxlA68+Esy6uI4uYl
-	P6vgk0xxb4LIXu+S/kl2UCE5YsfKG9A==
-X-Gm-Gg: ASbGncvA0k0UYFHXINK//XgAwNuu/N8CPA6DAARmQLrnQWKksZtFQo3RjlZ9XTxl39Q
-	p+7WISs5ccxz4poPCc+lfBuiFZXjKO8/0uKTH4FPg8iC2P7SbdU6JZIclMOCE5T7tc4RR1lKUU4
-	xovPcS0qnkTbZkIEg53mrqCsNqgsAREdqfje3GiQ==
-X-Google-Smtp-Source: AGHT+IEZeGNvIgGgECDw9rUtEaQ1M5ojjZ6MTiTNno3W2R5+/BaqqCGv4o8c/FIay7eczCuG3dQAzb8XomY0bhRqn6A=
-X-Received: by 2002:a17:90b:2801:b0:305:2d27:7ba5 with SMTP id
- 98e67ed59e1d1-30531f7bf94mr4126927a91.6.1743258612675; Sat, 29 Mar 2025
- 07:30:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cifIv/QA"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52TD8DRl027703;
+	Sat, 29 Mar 2025 14:31:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	D7JGWpf4zSqQHxjFlFAOFoBTH0UKM5nfoIZyrOVrklU=; b=cifIv/QAEV+lRetw
+	Udchh9z3Nv4/ZnIOHgnydEm/SwNNnNFKDWjgpUGIEG1l3hg70ads47irsWBvZVtI
+	s68ND21o1lyLnNYOrPHbrY+rg51qq3kj8Jm/cfHjmN50SLHhRWcFEVjRmrwWkt7K
+	FyjNN17mxukBbJi+miFpVaUz5ZrdsmZGB6YAKEBNoNoktuAjWzBurPw9sABhm635
+	6fHCp42MwaH3U7FVkO8Kga+q2mdfjYcjzWaullKZ1Ln70dcG17XuSzZaOJgskjN5
+	8QjIwJ/QSUT2UBib68V9YLhEu5fAWKGDtz4TE5Nupr2+204ISNGA84t9XJtAyz3P
+	FO6vDg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p9890v22-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 29 Mar 2025 14:31:12 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52TEVBa2023088
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 29 Mar 2025 14:31:11 GMT
+Received: from [10.216.2.59] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 29 Mar
+ 2025 07:31:07 -0700
+Message-ID: <838dfc8d-24c3-4f03-9c24-863259bb22b1@quicinc.com>
+Date: Sat, 29 Mar 2025 20:01:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317183349.346399-1-bharadwaj.raju777@gmail.com> <2025031721511050987ca2@mail.local>
-In-Reply-To: <2025031721511050987ca2@mail.local>
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Date: Sat, 29 Mar 2025 19:59:46 +0530
-X-Gm-Features: AQ5f1Jrz_QSXKF34LaUrfOrHihalyXOcyYry5aS2gclqre26Jed_H26IChjSkAk
-Message-ID: <CAPZ5DTHKSzg6UV0bT5U9Xet7jL1c__n+GgfYz-38GybGzerYNQ@mail.gmail.com>
-Subject: Re: [PATCH] rtc: fix use of uninit struct in rtc_read_alarm_internal
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, shuah@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: i3c: Add Qualcomm I3C master
+ controller
+To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>
+References: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
+ <20250326141641.3471906-2-quic_msavaliy@quicinc.com>
+ <991b0652-76f2-40d6-b49b-1e6f76e254ac@kernel.org>
+ <661e1a21-0f3a-497a-9b3b-fab284e30d19@quicinc.com>
+ <36b67f9c-5905-4fa6-8190-ab980850b3a2@kernel.org>
+ <e997bd15-728c-4316-8050-d461f115fd9f@quicinc.com>
+ <04945ad2-1372-4c73-beae-fc6449fb9a76@kernel.org>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <04945ad2-1372-4c73-beae-fc6449fb9a76@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=fIk53Yae c=1 sm=1 tr=0 ts=67e80430 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=bnyXp7fuzn0CGs69xTYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: MLNCRU1aZpFZEFVeXiHbbgMVZQRbktZ8
+X-Proofpoint-ORIG-GUID: MLNCRU1aZpFZEFVeXiHbbgMVZQRbktZ8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503290104
 
-On Tue, Mar 18, 2025 at 3:21=E2=80=AFAM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 18/03/2025 00:03:43+0530, Bharadwaj Raju wrote:
-> > The trace call invokes rtc_tm_to_time64 on a
-> > potentially uninitialized alarm->time. Move the
-> > trace call to the path where we do successfully
-> > initialize and read that struct.
-> >
-> > This fixes a KMSAN warning.
-> >
-> > Fixes: 29a1f599c0cc ("rtc: Add tracepoints for RTC system")
-> >
-> > Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-> > ---
-> >  drivers/rtc/interface.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-> > index aaf76406cd7d..82ba33bf478b 100644
-> > --- a/drivers/rtc/interface.c
-> > +++ b/drivers/rtc/interface.c
-> > @@ -201,11 +201,12 @@ static int rtc_read_alarm_internal(struct rtc_dev=
-ice *rtc,
-> >               alarm->time.tm_yday =3D -1;
-> >               alarm->time.tm_isdst =3D -1;
-> >               err =3D rtc->ops->read_alarm(rtc->dev.parent, alarm);
-> > +             if (!err)
-> > +                     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->tim=
-e), err);
-> >       }
-> >
-> >       mutex_unlock(&rtc->ops_lock);
-> >
-> > -     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
->
-> This removes the tracepoint when there is an error, rendering it les
-> useful.
->
-> Also, as discussed about a year ago, alarm-time being uninitialized is
-> not actually an issue as mktime64 can handle whatever is the input so
-> this will never cause any problem so this isn't really a fix.
->
-> I suggest the following:
 
-Thanks for reviewing. Would you like me to make a second version of
-the patch with this suggestion?
+
+On 3/29/2025 4:36 PM, Krzysztof Kozlowski wrote:
+> On 29/03/2025 10:08, Mukesh Kumar Savaliya wrote:
+>>>>>> +  I3C in master mode supports up to 12.5MHz, SDR mode data transfer in mixed
+>>>>>> +  bus mode (I2C and I3C target devices on same i3c bus). It also supports
+>>>>>> +  hotjoin, IBI mechanism.
+>>>>>> +
+>>>>>> +  I3C Controller nodes must be child of GENI based Qualcomm Universal
+>>>>>> +  Peripharal. Please refer GENI based QUP wrapper controller node bindings
+>>>>>> +  described in Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml.
+>>>>>> +
+>>>>>> +allOf:
+>>>>>> +  - $ref: i3c.yaml#
+>>>>>> +
+>>>>>> +properties:
+>>>>>> +  compatible:
+>>>>>> +    const: qcom,i3c-master
+>>>>>
+>>>>> And this got worse. It makes also no sense either: how can you claim
+>>>>> that this covers all possible future I3C masters from Qualcomm?
+>>>>>
+>>>>> What was the resolution of previous discussion?
+>>>>>
+>>>> Below was my understanding and reply.
+>>>> "
+>>>> I think i should remove const. kept it for now as no other compatible to
+>>>> be added as of now.
+>>>> let me remove const.
+>>>> SoC name is not required, as this compatible is generic to all the SOCs.
+>>>
+>>> I don't see any talks about const, what are you referring to?
+>>>
+>> +properties:
+>> +  compatible:
+>> +    : qcom,i3c-geni
+>> will this be fine ?
+> 
+> Yes, I think that was also suggested by Rob. Or rather follow existing
+> style so qcom,geni-i3c for the compatible and filename.
+> 
+Sure, makes sense. With below i3c becomes similar in naming conventions 
+to spi, i2c, serial uart.
+
+Driver file name : i3c-qcom-geni.c
+dt-binding file name: qcom,i3c-geni-qcom.yaml
+compatible = "qcom,geni-i3c";
+> 
+> Best regards,
+> Krzysztof
+
