@@ -1,98 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89A018C011
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3F5D477;
+	Sat, 29 Mar 2025 08:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743236906; cv=none; b=AgAxGyV9E2ifbnVhcqZh6KV2kC28GfJbkAAOMAJAwbqi+cmqQ14Q5lx9FN1LRQsKbJ+t1J5SdDFuwzj6u+T4y9hH55FbQPmoNO39Yth+tikf56hLf+4svztqABATRUQky5aE7WLVTbTdk94xkyI2YHg1bnt4cRlYqD57G6w22l4=
+	t=1743237669; cv=none; b=tFbGZIPpAjrcPZF6aMeERjsLBKjsjK/vGXbacNK3SBYlOTJjQqVVZLBfD2z1q/9Ly/V3uce2ivP8P5CmUcNPLNIBx1BObJ5N2a6ulCZ/0HNmV0cOkSmsY7yzDdCGd8IYr7G5Dx573KZ2rcscf5ZY0Ag0pTcaxqG364h8GQ8w2SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743236906; c=relaxed/simple;
-	bh=e1cY4wDvK4VftRYcudk3ssemGuj0YiaH7+kvgqzoA/k=;
+	s=arc-20240116; t=1743237669; c=relaxed/simple;
+	bh=Zxi4fz242TKRMcLWwMnqMDyq07mgpNk9ykRalU4MaA4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fs8h8n1t5TTAKDiR1o+pU0p9IrUkUGO18fX8BJH/iF+HBZ7kYA3FcJs2RN5TLKnGgWw0dgyHamNgAVrsY0dxB1yD/4gKusHcPM4fwAkcSDPUxqETfAENXV9c7WJV/NWQk0WqPycXd9oNqhIjdTbexC+0sz03UedruObHfZNNkfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdLkSuIb; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=WOJ1N0sklWAm52i1FTxDAWsTt6XK7HIaYECGcdGWflBRf5dGAq/t7OCkUOU8fBqKldXr9s0rFk5LO12PbHZD8DjUlsRwPUWAKegEauPMJK2g9RRJTDTKVuTfCYI5JkV7zhTikaTTGA/vUnrUFbaWH5VOaRRuXRnuxoE/c/ytjSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zx/mZjrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdLkSuIb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F3AC4CEED
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:28:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zx/mZjrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDFAC4CEE2;
+	Sat, 29 Mar 2025 08:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743236906;
-	bh=e1cY4wDvK4VftRYcudk3ssemGuj0YiaH7+kvgqzoA/k=;
+	s=k20201202; t=1743237669;
+	bh=Zxi4fz242TKRMcLWwMnqMDyq07mgpNk9ykRalU4MaA4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RdLkSuIbujNkjfjTNEv1hw9zcaN0+WRn9Y99Ww+YtvXPjM3h3Yq0z5WJ5Na0A7+8c
-	 Vt3zzHogZNKw+lB67Tad1/5DfZSrhETxCh/MlMQlRTf8S7ugKbL1kGH6b8ghFUf+q9
-	 lwdKqAVXZ8/SqKlhgiOKMOeVSZBdOdsz/3uyn2f86SQ4kmPc5Qg5y0ImUCpCPf4QDy
-	 yB8ng2bV2pvUAMPq7E14ppCGAYKypN5f1w26QDw+/+MIoTSt48hRyWLynp9aSmllgJ
-	 vYeeTcqy0SDPmMnRpYH4d2qz992KnShVehY6McI99Xs2A/sJSQjiMy7PYQkYswzPPc
-	 8qbKQZCCMOLsg==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac25520a289so482299266b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:28:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVO1HcV3MxRaodt70cMghfK/re32EOCCqsMXL1/Mh78C6KjQFw4+gCtgTycba7Cfd1LoUcWKuHXsJS3yU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4HncaC7GN5ZPL+B63k4fsh8/v7eGRUvxRTLgaM+Xlu1WizxCe
-	t+YWS8fvIEWY0ZtSE5g91OkULO9gOCnBEk2kXD+C04G7al9Rj3rUDirfO8m9dp07vhYMFUv5hJB
-	9VM4BN0d7HVt6U52FjYgrBKG8KxY=
-X-Google-Smtp-Source: AGHT+IHp988rQ7jetK2u0ZAsAshqVegnEyIg3/+rnAPqbn8/6TQzTuuuypiRz5YKXCzBppKPpkxBSR9m0LV1qi5zq9M=
-X-Received: by 2002:a17:906:17cd:b0:ac7:391a:e2d6 with SMTP id
- a640c23a62f3a-ac7391ae497mr137180566b.61.1743236904805; Sat, 29 Mar 2025
- 01:28:24 -0700 (PDT)
+	b=Zx/mZjrM6XqTziTy4RNGn0HVSEcxkhfXOeQCNfYvlSZZiEnuOKpvNsTq82xlA8hRn
+	 LbRs532AIIcDZ/RkQJriwX+XNIeEfJ2Ip4JCw0HGkujPwcRC+4Ys5+oeo3REgNpuTG
+	 le8ktQt7eDzaqcHFiO7r2yiqk/gp3mm2q1X62kPgySJEAlrVfxV71BNxeFGatrAhRQ
+	 6UdcVXJaq87kmDu/aArGCIKEVSH1bDf+5jRZFhusGYSAJ/0fkb4NBGDb4hB2yOAkCQ
+	 6HQ1pGAJxfOxAQXNl+x+FoqE8WIav2byeSAAYWDXZkPJ1dUobUuNHm852mot0D+Tv4
+	 s1oL/yqaxhVUQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so4722786a12.0;
+        Sat, 29 Mar 2025 01:41:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVe2ow4tLo9fFV0iXyIFsnSzP2khsk7L9TCHX2eMyIscKr8HO7JwtWO7zH+d3rIMXC5HGIuVfms@vger.kernel.org, AJvYcCWPLhSBvx1SSEp62udXDcfOWfGH71gsapekK0aYDcKToBHUObTkyi04dH8UWLgbb+bDnKzRA4KtKtnDww4=@vger.kernel.org, AJvYcCXGZcnMrlf7wwudloKf0xDOEOY9xmwOFcToxLWB/HoBb2+ydA5WM4Jwi3JDWfdMbm4nqK6PhehabTQP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfeRCs2llyRmLEn7t20nxFnVhZ4tQN9ICG6a5LHEe5J6LfyvJk
+	0ZIHZxnBV9BXwH57Z3fmpjLxO7LG6vhaxII0X+FZ+Ooseu5T6bAT7aMSQ8AlGpUDQMBjrgqdVih
+	j+HWi2J/LuF0mJ13e5sYkOY0Xk20=
+X-Google-Smtp-Source: AGHT+IGv/udn16XAHP7Zs4N/IrBN03X4HvrPUNd9Z/faAOhZLawsyjO76H/1B0YEPwmuaU5XcM20zJcmJKmgAZJmeY0=
+X-Received: by 2002:a17:907:9693:b0:ac6:ff34:d046 with SMTP id
+ a640c23a62f3a-ac7389ea430mr192916366b.2.1743237668046; Sat, 29 Mar 2025
+ 01:41:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_7FAF68BF7A2EAD9BFE869ECFDB837F980309@qq.com>
-In-Reply-To: <tencent_7FAF68BF7A2EAD9BFE869ECFDB837F980309@qq.com>
+References: <20250327044840.3179796-1-chenhuacai@loongson.cn> <208f5310-5932-402b-9980-0225e67f2d66@rowland.harvard.edu>
+In-Reply-To: <208f5310-5932-402b-9980-0225e67f2d66@rowland.harvard.edu>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 29 Mar 2025 16:28:15 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
-X-Gm-Features: AQ5f1JoQnJAkAnrmlGENGEM6qTF7TYpCwz2mVRLO1-fU8G61sU0d4Lupr9QplA0
-Message-ID: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
-To: Yeking@red54.com
-Cc: loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, 
-	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 29 Mar 2025 16:40:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4aitynD20EEWQhF_uv79+1nw7sKxzd7c_+009oY63tEg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpMjO_6Um_SuZ1zMErU5UTbjicHozY5ADRdcNCOEzMWygBf3AVFsRaYCIg
+Message-ID: <CAAhV-H4aitynD20EEWQhF_uv79+1nw7sKxzd7c_+009oY63tEg@mail.gmail.com>
+Subject: Re: [PATCH V2] USB: OHCI: Add quirk for LS7A OHCI controller (rev 0x02)
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mingcong Bai <baimingcong@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Zhibang,
-
-On Fri, Mar 28, 2025 at 6:13=E2=80=AFPM <Yeking@red54.com> wrote:
+On Thu, Mar 27, 2025 at 10:13=E2=80=AFPM Alan Stern <stern@rowland.harvard.=
+edu> wrote:
 >
-> From: =E8=B0=A2=E8=87=B4=E9=82=A6 (XIE Zhibang) <Yeking@Red54.com>
+> On Thu, Mar 27, 2025 at 12:48:40PM +0800, Huacai Chen wrote:
+> > The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
+> > MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
+> > keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
+> > only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
+> > is wrapped around (the second 4KB BAR space is the same as the first 4K=
+B
+> > internally). So we can add an 4KB offset (0x1000) to the OHCI registers
+> > (from the PCI BAR resource) as a quirk.
+> >
+> > Cc: stable@vger.kernel.org
+> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: Mingcong Bai <baimingcong@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> > V2: add a comment explaining why the quirk is needed and how it fixes.
+> >
+> >  drivers/usb/host/ohci-pci.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/drivers/usb/host/ohci-pci.c b/drivers/usb/host/ohci-pci.c
+> > index 900ea0d368e0..bd90b2fed51b 100644
+> > --- a/drivers/usb/host/ohci-pci.c
+> > +++ b/drivers/usb/host/ohci-pci.c
+> > @@ -165,6 +165,24 @@ static int ohci_quirk_amd700(struct usb_hcd *hcd)
+> >       return 0;
+> >  }
+> >
+> > +static int ohci_quirk_loongson(struct usb_hcd *hcd)
+> > +{
+> > +     struct pci_dev *pdev =3D to_pci_dev(hcd->self.controller);
+> > +
+> > +     /*
+> > +      * Loongson's LS7A OHCI controller (rev 0x02) has a
+> > +      * flaw. MMIO register with offset 0x60/64 is treated
+> > +      * as legacy PS2-compatible keyboard/mouse interface.
+> > +      * Since OHCI only use 4KB BAR resource, LS7A OHCI's
+> > +      * 32KB BAR is wrapped around (the 2nd 4KB BAR space
+> > +      * is the same as the 1st 4KB internally). So add 4KB
+> > +      * offset (0x1000) to the OHCI registers as a quirk.
+> > +      */
+> > +     hcd->regs +=3D (pdev->revision =3D=3D 0x2) ? 0x1000 : 0x0;
 >
-> It is the built-in command line appended to the bootloader command line,
-> not the bootloader command line appended to the built-in command line.
+> I'm sorry, I should have mentioned this previously but I only noticed it
+> now.  This would be a lot easier for people to read if you wrote it as a
+> simple "if" statement:
 >
-> Fixes: fa96b57c1490 ("LoongArch: Add build infrastructure")
-> Signed-off-by: =E8=B0=A2=E8=87=B4=E9=82=A6 (XIE Zhibang) <Yeking@Red54.co=
-m>
-> ---
->  arch/loongarch/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>         if (pdev->revision =3D=3D 0x02)
+>                 hcd->regs +=3D 0x1000;
 >
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 7477d5f8d876..067c0b994648 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -388,8 +388,8 @@ config CMDLINE_BOOTLOADER
->  config CMDLINE_EXTEND
->         bool "Use built-in to extend bootloader kernel arguments"
->         help
-> -         The command-line arguments provided during boot will be
-> -         appended to the built-in command line. This is useful in
-> +         The built-in command line will be appended to the command-
-> +         line arguments provided during boot. This is useful in
->           cases where the provided arguments are insufficient and
-How about replace "to the built-in command line" with "with the
-built-in command line" and keep others unchanged?
+> Otherwise the patch looks fine.  If you make this change, you can
+> resubmit it with:
+>
+> Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Thanks, V3 is sent:
+https://lore.kernel.org/linux-usb/20250328040059.3672979-1-chenhuacai@loong=
+son.cn/T/#u
 
 Huacai
 
->           you don't want to or cannot modify them.
 >
-> --
-> 2.43.0
+> Alan Stern
 >
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int ohci_quirk_qemu(struct usb_hcd *hcd)
+> >  {
+> >       struct ohci_hcd *ohci =3D hcd_to_ohci(hcd);
+> > @@ -224,6 +242,10 @@ static const struct pci_device_id ohci_pci_quirks[=
+] =3D {
+> >               PCI_DEVICE(PCI_VENDOR_ID_ATI, 0x4399),
+> >               .driver_data =3D (unsigned long)ohci_quirk_amd700,
+> >       },
+> > +     {
+> > +             PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x7a24),
+> > +             .driver_data =3D (unsigned long)ohci_quirk_loongson,
+> > +     },
+> >       {
+> >               .vendor         =3D PCI_VENDOR_ID_APPLE,
+> >               .device         =3D 0x003f,
