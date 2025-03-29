@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE75CEEAA;
-	Sat, 29 Mar 2025 04:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F77250F8;
+	Sat, 29 Mar 2025 04:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743224119; cv=none; b=od+wLTAYMPKzp1XnODEAzz5jdlenURvrjLUT1MN+mte/LZVoreY7bXfOBVkyIWlayPLB9iP88/jTL7JezD1WEIu9tlHvEJNOX/8YbQUXsA+U5dCSvnEeI+xF/lj3KdIB+lKQWD8ra32WvCmN8QA1tvjsen0FY1WlKI3nfE3YdCE=
+	t=1743224355; cv=none; b=o+7IwOLsx87WY+YnHnVs4SGySgRR3uOlXT520th6crATYDFTXlJORPG3XVZLy9EO6jv2zV8fenP+7k/V4mZrCIxnXeISFlb9v3TMB0OKsXoybifs3zZlO6OuUQGmBHVj7+VDp0IEPQZIvnnvtrjwhFpvov1fj3eJWYRY+jb3MGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743224119; c=relaxed/simple;
-	bh=La3ROFlwW/alLy+1Tob0/xhWFSxDSdq3UkrkI8KKB10=;
+	s=arc-20240116; t=1743224355; c=relaxed/simple;
+	bh=MjvLsjOhoUCj12Cu7Ko4BrNiS+GzaxVSVFniRoHJB6s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kHO6dpsu13FWwdcXiruiXy/nkJ+jtjx/JUwMT2X+AucAlXk2s5R9AXsDgxD7jkFgHJwprgXp5fzcfZ4qTyD2ejGOoSwnEhnU/EANc4Ze4bikmFnId7v80JP0Brx7Q/zOehEPo6KIeT3DVg3umukVkTODivVwd+PM3QKam1INdL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2E33mOG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=C7df3yYgqdbU3n8NF9B7iTsW8vcWy/rGrd/RDODyKCrawyxryODxg/qDT9Bu17+6vsK56iBCShPWnHMmFp0ZxVAm16nPE9bE3Nc2iS0vGnkx55lOoTtRapuhjOviX7hZV2wdlqbSwuHklZBuzXAYl9e/8TVMX9Pr9On2S/o0TIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pm3ehZX3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2E33mOG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DABC4CEE2;
-	Sat, 29 Mar 2025 04:55:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pm3ehZX3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D554AC4CEE2;
+	Sat, 29 Mar 2025 04:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743224119;
-	bh=La3ROFlwW/alLy+1Tob0/xhWFSxDSdq3UkrkI8KKB10=;
+	s=k20201202; t=1743224355;
+	bh=MjvLsjOhoUCj12Cu7Ko4BrNiS+GzaxVSVFniRoHJB6s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E2E33mOGhJsuleCej5oGhrxU4x7BEEOSkisoErR+/86Nl14gQYtP9t3zUJbaIlNCs
-	 UbXD9l1sv2lemNOM5I7I85gLYCEn471ce+q+e2zY+DsQAHWQ3T7y5fuIVV0cPq2lBH
-	 7+fCmAAQ7+afIVzx9jBUyf+foODbXoWNhL28KEk62piTOpBfCIq50mjjS8jtq3B5BH
-	 wQYklE+ZcbUgU7aXXA0wyOz3Ph2YX0Xn1yAjA0346a2WIwkHPI0UFc8MM/4U/ECnTp
-	 w4CO5UdJnREiADeR1sUI7a/9bB5yKhAvhS5PmqoSGMYxOMtWkJEM/9qsdPpiKyFWPE
-	 cjrfSqKf2sFPg==
-Message-ID: <1873723e-de75-4e9f-b61c-a22f3b85758b@kernel.org>
-Date: Sat, 29 Mar 2025 05:55:13 +0100
+	b=Pm3ehZX3uHEn4NmSfkU9SUfJtTsJnVAjOKkx8vicYrP7SMLPp/f4pO/FQtz99rJvO
+	 /JWhNxH57Vukt7p5uhGE/lbO6hkATpXxzHz/TIuBSwtLN/b6RE6ZmZaTPutGpUmNtu
+	 x/aPm30T9WHMXstXgMT3MoP4S6CBG4P2lRHcub7oVk4T25KN7wPM0s89sH+M1AmJjR
+	 G5La+3/0856hOcQr+nFJhSasfCuehTIXOSw8k5oV587Q3PKvx92ZMOoVkOZxxmVvXS
+	 EjyC9eKVom7115wZdchG2PoZt4vCPY1YZR6v21EicmZ9Qaldu25SUUAZXwHueH2ok1
+	 9MhImU61nC1tg==
+Message-ID: <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
+Date: Sat, 29 Mar 2025 05:59:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] watchdog: Add the Software Watchdog Timer for the NXP
- S32 platform
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Thomas Fossati <thomas.fossati@linaro.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
- <20250328151516.2219971-2-daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
+To: Sam Winchenbach <sam.winchenbach@framepointer.org>,
+ linux-kernel@vger.kernel.org
+Cc: mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com, trix@redhat.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ michal.simek@amd.com, linux-fpga@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Sam Winchenbach <swinchenbach@arka.org>
+References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,246 +89,46 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250328151516.2219971-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 16:15, Daniel Lezcano wrote:
-> +
-> +struct s32g_wdt_device {
-> +	int rate;
-> +	void __iomem *base;
-> +	struct watchdog_device wdog;
-> +};
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static unsigned int timeout_param = S32G_WDT_DEFAULT_TIMEOUT;
-> +module_param(timeout_param, uint, 0);
-> +MODULE_PARM_DESC(timeout_param, "Watchdog timeout in seconds (default="
-> +		 __MODULE_STRING(S32G_WDT_DEFAULT_TIMEOUT) ")");
+On 28/03/2025 15:19, Sam Winchenbach wrote:
+> From: Sam Winchenbach <swinchenbach@arka.org>
+> 
+> Documents the ability to enable the ICAP interface on boot.
+> 
+> Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
+> ---
+>  .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml     | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> index 04dcadc2c20e9..bb2781ae126ca 100644
+> --- a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> @@ -31,6 +31,13 @@ properties:
+>      description:
+>        Phandle to syscon block which provide access to SLCR registers
+>  
+> +  enable-icap-on-load:
 
-Timeout is provided by DT.
+Missing vendor prefix.
 
-> +
-> +static bool early_enable = false;
-> +module_param(early_enable, bool, 0);
-> +MODULE_PARM_DESC(early_enable,
-> +		 "Watchdog is started on module insertion (default=false)");
-> +
-> +static const struct watchdog_info s32g_wdt_info = {
-> +	.identity = "s32g watchdog",
-> +	.options = WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
-> +	WDIOC_GETTIMEOUT | WDIOC_GETTIMELEFT,
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +#define S32G_WDT_DEBUG_FS_REGS(__reg)		\
-> +{						\
-> +	.name = __stringify(__reg),		\
-> +	.offset = __reg(0),			\
-> +}
-> +
-> +static const struct debugfs_reg32 wdt_regs[] = {
-> +	S32G_WDT_DEBUG_FS_REGS(S32G_SWT_CR),
-> +	S32G_WDT_DEBUG_FS_REGS(S32G_SWT_TO),
-> +	S32G_WDT_DEBUG_FS_REGS(S32G_SWT_CO),
-> +};
-> +
-> +static void s32g_wdt_debugfs_init(struct device *dev, struct s32g_wdt_device *wdev)
-> +{
-> +	struct debugfs_regset32 *regset;
-> +	static struct dentry *dentry = NULL;
-> +
-> +	if (!dentry)
-> +		dentry = debugfs_create_dir("watchdog", NULL);
-> +
-> +	dentry = debugfs_create_dir(dev_name(dev), dentry);
-> +
-> +	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
-> +	if (!regset)
-> +		return;
-> +
-> +	regset->base = wdev->base;
-> +	regset->regs = wdt_regs;
-> +	regset->nregs = ARRAY_SIZE(wdt_regs);
-> +
-> +	debugfs_create_regset32("registers", 0400, dentry, regset);
-> +}
-> +#else
-> +static inline void s32g_wdt_debugfs_init(struct device *dev, struct s32g_wdt_device *wdev)
-> +{
-> +}
-> +#endif
-> +
-> +static struct s32g_wdt_device *wdd_to_s32g_wdt(struct watchdog_device *wdd)
-> +{
-> +	return container_of(wdd, struct s32g_wdt_device, wdog);
-> +}
-> +
-> +static unsigned int wdog_sec_to_count(struct s32g_wdt_device *wdev, unsigned int timeout)
-> +{
-> +	return wdev->rate * timeout;
-> +}
-> +
-> +static int s32g_wdt_ping(struct watchdog_device *wdog)
-> +{
-> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
-> +
-> +	__raw_writel(S32G_WDT_SEQ1, S32G_SWT_SR(wdev->base));
-> +	__raw_writel(S32G_WDT_SEQ2, S32G_SWT_SR(wdev->base));
+> +    type: boolean
+> +    description: If present, the ICAP controller will be enabled when
+> +      the driver probes. This is useful if the fabric is loaded
+> +      during the boot process and contains a core, such as the SEM,
 
-I am confused why you do not use standard writel or don't have any
-barriers here. I think this is very error prone and in general
-discouraged practice (was for example raised by Arnd multiple times on
-the lists).
+I don't get how this is suitable for DT. If you decide to load the
+fabric from driver, that's driver decision so not DT.
 
+> +      that requires access to ICAP interface to operate properly.
 > +
-> +	return 0;
-> +}
-> +
-> +static int s32g_wdt_start(struct watchdog_device *wdog)
-> +{
-> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
-> +	unsigned long val;
-> +
-> +	val = __raw_readl(S32G_SWT_CR(wdev->base));
-> +
-> +	val |= S32G_SWT_CR_WEN;
-> +
-> +	__raw_writel(val, S32G_SWT_CR(wdev->base));
-> +
-> +	return 0;
-> +}
-> +
+>  required:
+>    - compatible
+>    - reg
 
-...
-
-> +
-> +static int s32g_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct clk *clk;
-> +	struct s32g_wdt_device *wdev;
-> +	struct watchdog_device *wdog;
-> +	int ret;
-> +
-> +	wdev = devm_kzalloc(dev, sizeof(struct s32g_wdt_device), GFP_KERNEL);
-
-sizeof(*)
-
-> +	if (!wdev)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	wdev->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(wdev->base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(wdev->base), "Can not get resource\n");
-> +
-> +	clk = devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(dev, PTR_ERR(clk), "Can't get Watchdog clock\n");
-> +
-> +	wdev->rate = clk_get_rate(clk);
-> +	if (!wdev->rate) {
-> +		dev_err(dev, "Input clock rate is not valid\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	wdog = &wdev->wdog;
-> +	wdog->info = &s32g_wdt_info;
-> +	wdog->ops = &s32g_wdt_ops;
-> +
-> +	/*
-> +	 * The code converts the timeout into a counter a value, if
-> +	 * the value is less than 0x100, then it is clamped by the SWT
-> +	 * module, so it is safe to specify a zero value as the
-> +	 * minimum timeout.
-> +	 */
-> +	wdog->min_timeout = 0;
-> +
-> +	/*
-> +	 * The counter register is a 32 bits long, so the maximum
-> +	 * counter value is UINT_MAX and the timeout in second is the
-> +	 * value divided by the rate.
-> +	 *
-> +	 * For instance, a rate of 51MHz lead to 84 seconds maximum
-> +	 * timeout.
-> +	 */
-> +	wdog->max_timeout = UINT_MAX / wdev->rate;
-> +
-> +	/*
-> +	 * The module param and the DT 'timeout-sec' property will
-> +	 * override the default value if they are specified.
-> +	 */
-> +	ret = watchdog_init_timeout(wdog, timeout_param, dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * As soon as the watchdog is started, there is no way to stop
-> +	 * it if the 'nowayout' option is set at boot time
-> +	 */
-> +	watchdog_set_nowayout(wdog, nowayout);
-> +
-> +	/*
-> +	 * The devm_ version of the watchdog_register_device()
-> +	 * function will call watchdog_unregister_device() when the
-> +	 * device is removed.
-> +	 */
-> +	watchdog_stop_on_unregister(wdog);
-> +
-> +	s32g_wdt_init(wdev);
-> +
-> +	/*
-> +	 * The debugfs will create a directory with the configured
-> +	 * watchdogs on the platform and a register file to give some
-> +	 * register content.
-> +	 */
-> +	s32g_wdt_debugfs_init(dev, wdev);
-> +
-> +	ret = devm_watchdog_register_device(dev, wdog);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Cannot register watchdog device\n");
-> +
-> +	dev_info(dev, "S32G Watchdog Timer Registered. "
-> +		 "timeout=%ds, nowayout=%d, early_enable=%d\n",
-> +		 wdog->timeout, nowayout, early_enable);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id s32g_wdt_dt_ids[] = {
-> +	{ .compatible = "nxp,s32g-wdt" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver s32g_wdt_driver = {
-> +	.probe = s32g_wdt_probe,
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +		.owner = THIS_MODULE,
-
-Drop, that's some ancient downstream code.
-
-> +		.of_match_table = s32g_wdt_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(s32g_wdt_driver);
-> +
-> +MODULE_AUTHOR("NXP");
-> +MODULE_DESCRIPTION("Watchdog driver for S32G SoC");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:" DRIVER_NAME);
-
-Drop, not needed. Fix your table module device Id instead... or start
-from other recent driver as a skeleton to avoid repeating the same
-issues we already fixed.
 
 Best regards,
 Krzysztof
