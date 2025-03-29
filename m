@@ -1,227 +1,240 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E0BC2C9
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E909D1B043C
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743248436; cv=none; b=Wc++yFZQuyLMsBDO2G/elPeDP3Mj51xkirBTkl/fS4ryVlgYGJRuIV4Bq0nigGwIjELTPm5tF1P69cATORa2gg0jkYweHxnIBkHyMFz3RaI1lFSKnX4JrCE6YdbGHukHVveoKaMrHafRyMhWLWc6DbGW+O2nx4hG1vOpyyxFZDE=
+	t=1743248537; cv=none; b=H/vm4GZr2BYxrACi4Ah7meZfqB2PYOcWnoo567X2DCAdGqN29MUmVjoYAkI3iyw3JwzmNsKxrBCGx18WpxYddJvWBofRr+clP+NI/38hfx1inkp1WhqgyvcwcXTGdcXoh26tMf50qQN7FbVjbqi5i47sRkYI2GmZ0QzADEFpDi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743248436; c=relaxed/simple;
-	bh=7kEgD6DzeKFEjMWiZPVq1otJgnMgklAD9SfrOlfX+Gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DbiFGbneO3XEMH8HSNE8c9yy0KDpS8H6L/wzyJSizthfDlQB1vhg81maAMVg2M5k8vXuZq25h3gJ6eSiwtJPLnTYu0ixQXgRRBjUUtHL8wU7wBmcWXiVseeWaqIEPpy46/PBxdhnxXvH9gL31FE+8H7r5jZkRUDcrcqYTH+Bauo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jUHDWg56; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743248537; c=relaxed/simple;
+	bh=/3fUFv9I1+6hyqB935Ue7MnXiU0wbFfGhPTCP5NZvdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yi6Le4SSvbYakSSaPxn7WCgPMkqYivos12nKQN5IzMleXL49rwzrncPYrYCxowd0xxOO565nf+6ZeLu3SLaebk2ZMl/BCK54uhEAg2fr7seL3k0WHT54RYAEMhIeQCKLu/KMKgrqv2Uxgz+4Uom/hou01xwjInhW9ftBj35OBl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C/vbrsxU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jUHDWg56"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743248432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9CEJ/sO7DltNlZUxnxCEA4NszRFr0//KBDDudIa4h8M=;
-	b=jUHDWg56hCjyfBAL7zkkSg+64vGNOFydFjVb1SGsp907zQtAB315Az2HuYffKI+h6PhqSW
-	x7VPrdaubXqvZjX0tCa3pTUwPX8b0mBLrYGcgKb4FHUU7ME9gtWX8QKo/khihpVxxBXtSG
-	3zWH9FmufBgkS5o+K5QWh2IXBHvUKGw=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	Dominik Haller <d.haller@phytec.de>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v11 10/14] drm/atomic-helper: Refactor crtc & encoder-bridge op loops into separate functions
-Date: Sat, 29 Mar 2025 17:09:21 +0530
-Message-Id: <20250329113925.68204-11-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
-References: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C/vbrsxU"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52T7jM07003906
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:42:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Mmm54hP5tMFj63YRNzC7S/gSA1WThy35TAoW/ZFfd30=; b=C/vbrsxU9RKNWNvY
+	PAo6sqUhnvDrdDvQG1F+uEFcNNfr6OV/1cVvP1w2MtpZqljllvTTmcyFecwB1u+s
+	tycfWw3fAKs9/CDFnQPri7xaXY7OPt76tszYznMnKIvS8g47H96JcK6FWycwcov9
+	PKPsprgkMpeFV1xNy60ccevdFFwMdq+f5iqQ3ctCSG5njnFtZwtwR6gm46LU+vjj
+	vD0ccxta+SjlDqnuj6GX5boEZMc7TICVXbb15pj1sKF/6gmuOhiiyoeBBazATet9
+	bsUMJ96d9cgkja+vD9L1Rc7gjeZlQ8M4+LmCIxomidYWpnObsHG+0jj0ez0sF6cb
+	3n4Tdw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa5bghwt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:42:07 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8f3c21043so6536486d6.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 04:42:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743248526; x=1743853326;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mmm54hP5tMFj63YRNzC7S/gSA1WThy35TAoW/ZFfd30=;
+        b=sGgNoAvn3N0IDi6kj1adQ6BiRkijzLkNW1lT9QYmQr1PsunLbB9PNeodk0Qa5UMs14
+         idkLSAc+VyfTxjc8kmRG2pLm2e89HJqCg+n9UqDFf6u7IRPY49hfAMnNDizemHLT5RkQ
+         ImO05xTC92RL8Us7Qu7cXIRxxgXVOHFVyPBIUp4QemeNe3W78njE8xiRkAfyJgmXXVhd
+         E+eTYKudJhQtUt7mKYlIioERVfo0j2tt49cL7KNdUqJfl8+hrNLwnnhkUrGGc/Q0/+SB
+         dkkTUIe2f4Iufn5TgyHo81pyWCdXR039jgWlYBdUedc6jaj2QgCfs9NH31ijaX0qSEUQ
+         aSWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvoUiYahG2qXJ2JB923rUq+U4d5P6cWc82KrBp03S6fNY0sVAE3mFgkC68YB1oLeCeoBi5BLg79s/ZP/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzziOC1P20tMWNB0R7tiUwGcCi0AE/73090V3rcg1TtrTIsTM4W
+	7/p/GNdo1HZCoPG9ZUb5pp8J/uf1UX9ZzLYMKRtnVkSLbUadHLIbtex1Fx8cvqwiHJqyRaEETUX
+	ThXnnzXzG/Do6SYMLcb1q409nh+2l5HD9cJm6kHeJvGmWkbe3BUf4y6H9/JPXHQI=
+X-Gm-Gg: ASbGncsSGZr9rQQby3OShUyEiAgNV9OH/1klo6030XGSzbFu6GEN8EUMdRkt0uYBkW3
+	LoW2QlFNv1ZXoZd7ecjkV069JWb0EruO6h2WZ5lQ8fsPEvFXr+G14wxnVCUuLSAYvewdJhFZtOD
+	1CMXCxEjTmnHxv8QG7qBBT/us4k78Y0UkKL79KJLRfmicgX1IV3Vv2aknaFg6/HyPleDhjVvCIE
+	vgBMewANMVrg/wYjP66PY9v276ddA8WtN7TopyNkS/Pv9+elI0j1k30X88zTSuHanv6qaJQwKhk
+	j6ml+r+NYfG500gf3vglupU6R1OD1R9VBlj9hgF2RdKRKkGLrBVsYGIo2lfxVPQXWDiUYw==
+X-Received: by 2002:a05:6214:19e3:b0:6e8:98ce:dd75 with SMTP id 6a1803df08f44-6eed6240a60mr13440626d6.9.1743248526292;
+        Sat, 29 Mar 2025 04:42:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyNtCjF7eZFHg5e8sgPfDmRiZq6NbJYI+bCAjDsmzT1x0V+Z5zGALW3AuIi5S1IGq561tZRQ==
+X-Received: by 2002:a05:6214:19e3:b0:6e8:98ce:dd75 with SMTP id 6a1803df08f44-6eed6240a60mr13440496d6.9.1743248525880;
+        Sat, 29 Mar 2025 04:42:05 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f3c7sm320820566b.94.2025.03.29.04.42.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Mar 2025 04:42:05 -0700 (PDT)
+Message-ID: <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
+Date: Sat, 29 Mar 2025 12:42:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
+ <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+ <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
+ <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
+ <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
+ <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
+ <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
+ <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: fJppjlmA0wbo6LDJ_oa9u0InURnBcvNk
+X-Authority-Analysis: v=2.4 cv=YqcPR5YX c=1 sm=1 tr=0 ts=67e7dc8f cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=jKyjlexm6IKzr5l-IOMA:9 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: fJppjlmA0wbo6LDJ_oa9u0InURnBcvNk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 spamscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503290083
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+On 3/29/25 10:39 AM, Manivannan Sadhasivam wrote:
+> On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
+>> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
+>>> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
+>>>> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
+>>>>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
+>>>>>>> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>>> PCIe equalization presets are predefined settings used to optimize
+>>>>>>>> signal integrity by compensating for signal loss and distortion in
+>>>>>>>> high-speed data transmission.
+>>>>>>>>
+>>>>>>>> Based upon the number of lanes and the data rate supported, write
+>>>>>>>> the preset data read from the device tree in to the lane equalization
+>>>>>>>> control registers.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>>>>>>>> ---
+>>>>>>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
+>>>>>>>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+>>>>>>>>   include/uapi/linux/pci_regs.h                     |  3 ++
+>>>>>>>>   3 files changed, 66 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> index dd56cc02f4ef..7c6e6a74383b 100644
+>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>>>>>>>>   	if (pci->num_lanes < 1)
+>>>>>>>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+>>>>>>>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
+>>>>>>>> +	if (ret)
+>>>>>>>> +		goto err_free_msi;
+>>>>>>>> +
+>>>>>>>>   	/*
+>>>>>>>>   	 * Allocate the resource for MSG TLP before programming the iATU
+>>>>>>>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+>>>>>>>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>>>>>>>>   	return 0;
+>>>>>>>>   }
+>>>>>>>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
+>>>>>>>> +{
+>>>>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>>>>>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
+>>>>>>>> +	u8 *presets;
+>>>>>>>> +	u32 cap;
+>>>>>>>> +	int i;
+>>>>>>>> +
+>>>>>>>> +	if (speed == PCIE_SPEED_8_0GT) {
+>>>>>>>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
+>>>>>>>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
+>>>>>>>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
+>>>>>>>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
+>>>>>>>> +		lane_reg_size = 0x2;
+>>>>>>>> +	} else if (speed == PCIE_SPEED_16_0GT) {
+>>>>>>>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
+>>>>>>>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
+>>>>>>>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
+>>>>>>>> +		lane_reg_size = 0x1;
+>>>>>>>> +	} else {
+>>>>>>>
+>>>>>>> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
+>>>>>>> controller supports them and if the presets property is defined in DT, then you
+>>>>>>> should apply the preset values.
+>>>>>>>
+>>>>>>> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
+>>>>>>> safely return.
+>>>>>>>
+>>>>>> I am fine to add it, but there is no GEN5 or GEN6 controller support
+>>>>>> added in dwc, isn't it best to add when that support is added and
+>>>>>> tested.
+>>>>>>
+>>>>>
+>>>>> What is the guarantee that this part of the code will be updated once the
+>>>>> capable controllers start showing up? I don't think there will be any issue in
+>>>>> writing to these registers.
+>>>>
+>>>> Let's not make assumptions about the spec of a cross-vendor mass-deployed IP
+>>>>
+>>>
+>>> I have seen the worse... The problem is, if those controllers start to show up
+>>> and define preset properties in DT, there will be no errors whatsoever to
+>>> indicate that the preset values were not applied, resulting in hard to debug
+>>> errors.
+>>
+>> else {
+>> 	dev_warn(pci->dev, "Missing equalization presets programming sequence\n");
+>> }
+>>
+> 
+> Then we'd warn for controllers supporting GEN5 or more if they do not pass the
+> presets property (which is optional).
 
-The way any singular display pipeline, in need of a modeset, gets
-enabled is as follows -
+Ohh, I didn't think about that - and I can only think about solutions that are
+rather janky.. with perhaps the least janky one being changing the else case I
+proposed above into:
 
-	crtc enable
-	(all) bridge pre-enable
-	encoder enable
-	(all) bridge enable
+else if (speed >= PCIE_SPEED_32_0GT && eq_presets_Ngts[speed - PCIE_SPEED_16_0GT][0] != PCI_EQ_RESV) {
+	...
+}> 
+>>>
+>>> I'm not forseeing any issue in this part of the code to support higher GEN
+>>> speeds though.
+>>
+>> I would hope so as well, but both not programming and misprogramming are
+>> equally hard to detect
+>>
+> 
+> I don't disagree. I wanted to have it since there is no sensible way of warning
+> users that this part of the code needs to be updated in the future.
 
-- and the disable sequence is exactly the reverse of this.
+I understand, however I'm worried that the programming sequence or register
+may change for higher speeds in a way that would be incompatible with what
+we assume here
 
-The crtc operations occur by looping over the old and new crtc states,
-while the encoder and bridge operations occur together, by looping over
-the connector states of the display pipelines.
-
-Refactor these operations - crtc enable/disable, and encoder & bridge
-(pre/post) enable/disable - into separate functions each, to make way
-for the re-ordering of the enable/disable sequences.
-
-This patch doesn't alter the sequence of crtc/encoder/bridge operations
-in any way, but helps to cleanly pave the way for the next two patches,
-by maintaining logical bisectability.
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- drivers/gpu/drm/drm_atomic_helper.c | 69 ++++++++++++++++++++---------
- 1 file changed, 49 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index ee64ca1b1bec..d185486071c5 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1160,11 +1160,10 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
- }
- 
- static void
--disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
-+encoder_bridge_disable(struct drm_device *dev, struct drm_atomic_state *state)
- {
- 	struct drm_connector *connector;
- 	struct drm_connector_state *old_conn_state, *new_conn_state;
--	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
- 	int i;
- 
-@@ -1227,6 +1226,14 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
- 
- 		drm_atomic_bridge_chain_post_disable(bridge, state);
- 	}
-+}
-+
-+static void
-+crtc_disable(struct drm_device *dev, struct drm_atomic_state *state)
-+{
-+	struct drm_crtc *crtc;
-+	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-+	int i;
- 
- 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
- 		const struct drm_crtc_helper_funcs *funcs;
-@@ -1274,6 +1281,14 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
- 	}
- }
- 
-+static void
-+disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
-+{
-+	encoder_bridge_disable(dev, state);
-+
-+	crtc_disable(dev, state);
-+}
-+
- /**
-  * drm_atomic_helper_update_legacy_modeset_state - update legacy modeset state
-  * @dev: DRM device
-@@ -1483,28 +1498,12 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
- 	}
- }
- 
--/**
-- * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
-- * @dev: DRM device
-- * @state: atomic state object being committed
-- *
-- * This function enables all the outputs with the new configuration which had to
-- * be turned off for the update.
-- *
-- * For compatibility with legacy CRTC helpers this should be called after
-- * drm_atomic_helper_commit_planes(), which is what the default commit function
-- * does. But drivers with different needs can group the modeset commits together
-- * and do the plane commits at the end. This is useful for drivers doing runtime
-- * PM since planes updates then only happen when the CRTC is actually enabled.
-- */
--void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
--					      struct drm_atomic_state *state)
-+static void
-+crtc_enable(struct drm_device *dev, struct drm_atomic_state *state)
- {
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state;
- 	struct drm_crtc_state *new_crtc_state;
--	struct drm_connector *connector;
--	struct drm_connector_state *new_conn_state;
- 	int i;
- 
- 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
-@@ -1528,6 +1527,14 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 				funcs->commit(crtc);
- 		}
- 	}
-+}
-+
-+static void
-+encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
-+{
-+	struct drm_connector *connector;
-+	struct drm_connector_state *new_conn_state;
-+	int i;
- 
- 	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
- 		const struct drm_encoder_helper_funcs *funcs;
-@@ -1565,6 +1572,28 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 
- 		drm_atomic_bridge_chain_enable(bridge, state);
- 	}
-+}
-+
-+/**
-+ * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
-+ * @dev: DRM device
-+ * @state: atomic state object being committed
-+ *
-+ * This function enables all the outputs with the new configuration which had to
-+ * be turned off for the update.
-+ *
-+ * For compatibility with legacy CRTC helpers this should be called after
-+ * drm_atomic_helper_commit_planes(), which is what the default commit function
-+ * does. But drivers with different needs can group the modeset commits together
-+ * and do the plane commits at the end. This is useful for drivers doing runtime
-+ * PM since planes updates then only happen when the CRTC is actually enabled.
-+ */
-+void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
-+					      struct drm_atomic_state *state)
-+{
-+	crtc_enable(dev, state);
-+
-+	encoder_bridge_enable(dev, state);
- 
- 	drm_atomic_helper_commit_writebacks(dev, state);
- }
--- 
-2.34.1
-
+Konrad
