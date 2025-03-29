@@ -1,100 +1,73 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC5117BCE
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 07:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F87208D0;
+	Sat, 29 Mar 2025 07:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743233284; cv=none; b=r+qrf7g8WsXpd/Fa8BgTDgQeDsaEvDJzbd1mtuPuScbuVh7mSml6aw4fwHpGC04FgHEMu8dsxP7FfSqLIrK0AQlkgirLtJU4/qzJu89E08gCxnLNGpCaAzUL+xN3jCUf9hHynGp2BEBma20WxpIhNQzycv+jP1f010qxGdAdLek=
+	t=1743233562; cv=none; b=YyoUawvSLleDwujaTdMcua8LbtIN31IeDXbIFlyWGNtNO5g4iW6aaKkJS2EzIVvmGGDUqXQmNHwaiRB9Bh+jXGi8qp02kFJzTSMcZ6sVEu5MHifU91IqrDHJAIZ5ZTeElDfeEgPdCYeYmXC5tZrFGJDuFR2I3c/IRWaIIoZUKeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743233284; c=relaxed/simple;
-	bh=k38HmKsHGBUJixcW1fB2JC7zfA7gYvLbiKF4tiKdzDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ld8sDSOsyr7uzPnB420iL07fRM76BIG8kTxVsfkDkvMdVydTWeOmQgt7cAQBD4jERDKWZdh8+IshQ4vtAXitoqBZT8ZnlkLYT6J3oFFK9ArS00e0WSKIKOCIG0CoDtmlCmLolZTRnWmnOpKAmGYa00TeMwKKnm6fmxqXIDrVZPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=NAILybhL; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="NAILybhL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=k38H
-	mKsHGBUJixcW1fB2JC7zfA7gYvLbiKF4tiKdzDU=; b=NAILybhLuMW6YKzY2a+e
-	wrsST5Ml4frqU/0QKmTwxpPEcEm5xzBW35RgW9kmu+0eFRZuu0RuCRGoET2rLfcM
-	gkrrdwyJkYIT5KP0g7JOfHKL3+I0VEOh22olPCoYTr7u+xKDreSnsvZdIfulpOWt
-	+br35VsPB4JwUV86xNF6dEwIhdCIAGfJFt7YrLoCSHR6G/Q93CmVbqO0MJX46m/N
-	t8mGpUIdprNN0ghSMbE8AWzoVoAxHVD5lpH6dbVX89KNyEJinp46QFwqEwetELC6
-	XYOBG/dogI9rcjP19ghEDHb7p8pK1VwewtAdouxzvC/uzSbsh3V63dXuneXchpX0
-	4w==
-Received: (qmail 503911 invoked from network); 29 Mar 2025 08:28:00 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Mar 2025 08:28:00 +0100
-X-UD-Smtp-Session: l3s3148p1@Z3RjIHYxJx1tKjJV
-Date: Sat, 29 Mar 2025 08:28:00 +0100
-From: Wolfram Sang <wsa-dev@sang-engineering.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: kernel test robot <lkp@intel.com>,
-	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: drivers/mmc/host/renesas_sdhi_core.c:951: undefined reference to
- `rdev_get_drvdata'
-Message-ID: <Z-ehAHFRK_WaGVJp@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa-dev@sang-engineering.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	kernel test robot <lkp@intel.com>,
-	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-References: <202503290554.zASQT70Q-lkp@intel.com>
- <TY3PR01MB11346FEE53574DBF768BA9B8686A32@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <Z-eeiMFsQQNMt2nn@shikoro>
- <TY3PR01MB11346D7FE2EC7FA3631C48A0C86A32@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	s=arc-20240116; t=1743233562; c=relaxed/simple;
+	bh=zl50PSAP+Yh901QF+MwN7P4o1BCnhPRvAAdmTF4TlG0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ae3LFrcfnr6zLw0ukSYMC+LILDOy2slp5M1J9lUiEfP+Szt7bPW90URWsKMncPbkd25+/7yHHAxUqlBqwMux8TebpKPS7EuEAPTYILYkcPQrnx8GEc/ABcNdQKulVpQtNsagouAwILPKQxhSYz7bqa8oWkcijVstdhr/ikYjE/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZPpxk2XYQz1d0tV;
+	Sat, 29 Mar 2025 15:32:10 +0800 (CST)
+Received: from dggpemf100013.china.huawei.com (unknown [7.185.36.179])
+	by mail.maildlp.com (Postfix) with ESMTPS id B359E18010B;
+	Sat, 29 Mar 2025 15:32:36 +0800 (CST)
+Received: from localhost.huawei.com (10.50.165.33) by
+ dggpemf100013.china.huawei.com (7.185.36.179) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 29 Mar 2025 15:32:36 +0800
+From: Yihang Li <liyihang9@huawei.com>
+To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <liyihang9@huawei.com>, <liuyonglong@huawei.com>,
+	<prime.zeng@hisilicon.com>
+Subject: [PATCH 0/5] hisi_sas: Misc patches and cleanups
+Date: Sat, 29 Mar 2025 15:32:31 +0800
+Message-ID: <20250329073236.2300582-1-liyihang9@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SSjaWliVp9hX0p5C"
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB11346D7FE2EC7FA3631C48A0C86A32@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemf100013.china.huawei.com (7.185.36.179)
 
+This series contains some minor bugfix and general tidying:
+- Add host_tagset_enable module param for v3 hw to show only one queue
+  capability to the kernel
+- Ignore the soft reset result by calling I_T_nexus after the SATA disk
+  is soft reset
+- General minor tidying
 
---SSjaWliVp9hX0p5C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
+Xingui Yang (1):
+  scsi: hisi_sas: Add host_tagset_enable module param for v3 hw
 
-> The changes were done in SDHI core (renesas_sdhi_core.c).
->=20
-> Like this, if a random config in that architecture has CONFIG_REGULATOR u=
-ndefined
-> will lead to the same error.
+Yihang Li (4):
+  scsi: hisi_sas: Use macro instead of magic number
+  scsi: hisi_sas: Code style cleanup
+  scsi: hisi_sas: Call I_T_nexus after soft reset for SATA disk
+  scsi: hisi_sas: Wait until eh is recovered
 
-True :( Not happy, but I don't want to over-complicate things. Most
-systems will have regulators enabled anyhow...
+ drivers/scsi/hisi_sas/hisi_sas.h       |  51 +++--
+ drivers/scsi/hisi_sas/hisi_sas_main.c  |  91 ++++----
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |   2 +-
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |   6 +-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 283 ++++++++++++++++---------
+ 5 files changed, 264 insertions(+), 169 deletions(-)
 
+-- 
+2.33.0
 
---SSjaWliVp9hX0p5C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfnoQAACgkQFA3kzBSg
-KbaLyA//e+TibE5R1T06Gmo5hvWR5RS/M0j+vgZRoe7K/Zbgpd5pTDLNGpmv0m1z
-N81nvx2B74/+Hh0dS2mY36ZOghDs5D1vyCZ0JKU2pY76WMza/XMZVDY8VYTaeSfA
-a17bySHBKkkmO+NsSluRA8x9mImjrmjFH/K9RyCH7zEUKkrhrL+Ikb0V/+uogA5c
-3wnXw0ItmIevENH8j2B7wp3iDvaYcWesV8grcjwwga2hJ98OmoXejrRt57oxC3sx
-m+DpzgU3p3m2Zl+yrWU7XGIeRI16O4hyVp0hjJWbAjEqqCCynSIy5SCtiWO3sI9M
-Md/y0EsVvM3U8TgZdtY0p3xAiPUOWZIgi+//AazeF6SuiR7IW5qwcCjXLNAt6Rtp
-G/luN7XodMxlXw/SnrujagPbq2wgKTcu8YXId8VmyDihKC14lJGRJyjh4fUtJsDc
-nkcnADdJoy6i7E5h0yjInSBr/mIcDAeFGwIQmond2Zn83a5bk+yK6MKV0CmsZe2i
-Hoj4lSqT4t4rye3ICwS2HmfkPm8RrxCAMgG4cgSEwGpWOZ4XC0T09lfIaqyT1EQ7
-Ez8idFj0T1N978my1RnGFwoNTHp/V82lnsHMfsG7GC5lOZDZ+YAQbBXRwYnLMHjZ
-0jNZdjsc1ncuZic3noHTJgE2W82Alubv2IppnhMgJFAj5vQ/JxQ=
-=Y1/S
------END PGP SIGNATURE-----
-
---SSjaWliVp9hX0p5C--
