@@ -1,106 +1,133 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FD0DDC5;
-	Sat, 29 Mar 2025 10:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875C1DDC5;
+	Sat, 29 Mar 2025 10:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743243851; cv=none; b=rSpb6L+rcWdnEiR0s3sDSf4kMR4LtLXcTWk2+ds/ItNJGtOMNVtk9TZbsJ0qVanHv4HCQFkV8wJ6yJbEOxlQv2tFPQ0Y/FgIGVKYkrluzUr+bZi9mHO3i5mQD4j//XkqlmgKYJJcBC1uRXGq2UluZIiEjrGBxt8S6beCtC8FbbI=
+	t=1743243938; cv=none; b=txMD8JmKa8Uj62xWzpBkScppUmpi93KxLJQL9L6qkgIgbiEkfYTwyJuIyO43j5V1Yz1DaR+rlXLlbzbr7SI2VF2FbYW8VkjxIe/h1q1OkiCudRZs65AfgVctt+0OLiL+rcYQsgoMu+B4ygLaC2M+kz0los/f/hqr6ZU1jCrP0Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743243851; c=relaxed/simple;
-	bh=TrP/Wn4eGdTF9dtf8nunHsdhuK0sv13xjOztlIjAtNM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=trVZkvN9nrux5TjaQaFEsIITyeXdl0foL0MmJuElKa5z2U1iQaB27bilMAV52kmG78ILp9NjYjpryrBJ7a8InkU+ftFf9SHnxHWnkzpKRsXuQgEBbTRKjtqDKdFnbRwdhRZ8MpJg7q78fPay6TOCzIOBJsA1d+xh7F/WCqZAlio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wsaGJWT2; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743243938; c=relaxed/simple;
+	bh=e8KFgAuXvgMLJ56yll//Wupj/W59FsnKhUFYXFD92v8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oug/5SID2c/vh0LI844pgpEuVDu4yuqJK6dD6m2XITmyaQFgVd8I8yZ3z9qIgx6tucl9mrBrigH9wINVjzQx6k+FalY6nDhSAgZMQF/3+0Z/2lIGp0o5y8r7PsbdxCsGmugq5LtCgmJhTINGsfHvf06HKfy3FZNx2jnlPSqku0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgRDLvSA; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wsaGJWT2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743243829; x=1743848629; i=markus.elfring@web.de;
-	bh=5LdYBXjWs0RyPdcjUc2Be6rWzStGoVEOUQW1Riy+q3U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=wsaGJWT2jLlmHkroDUKYzkhpUHqTOaXmezvlvEioH7x1qIquKnTPhyHNlZxx8JDI
-	 AyT3LS6cOF9vhfEV/kXuI/QzPC4hWXX3ekouWMa88TtArnC6FlYNAo/S5N23QEd2I
-	 lPx7j8xjmtWsCyPJI3EbSQTo4YQqm9HKmGPigZ8oubjJA6v/1BumJUiDNUZKog67y
-	 Bv1e9Ftlc70HksOvjQCVdnaF71SyAM2IR5kXSDczWeTDW+XVjAJVRFxcGj8+0CKOi
-	 lmwpSzEp5N8pjHVnFQjrjPcOafgRyoin68ZiYiWTQ7LQpEu5XV36TD6kXLwZy1kT0
-	 eWDAOVV1cY9jQ3M7zQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MKMA1-1th4h81HKx-00WiVs; Sat, 29
- Mar 2025 11:23:49 +0100
-Message-ID: <6ff5acac-4d41-4d4a-853c-9902e9673ef0@web.de>
-Date: Sat, 29 Mar 2025 11:23:39 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgRDLvSA"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so1175401a12.2;
+        Sat, 29 Mar 2025 03:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743243935; x=1743848735; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=skdz2J8vky2zwdmsTEpeak328qCERbX3VX3swBulodM=;
+        b=bgRDLvSAKFTuRqXdk1LaLp0O8kuB2BvBT/d9mOWnWRAvGHqZEVpCS2mfX3mWn0L+Ug
+         HNPT5OPLCiEQ5+0EREllOlcoGkQn14yhn7XVtbvR41jiOCLG/ar18gvfux4Ioy+6iveo
+         cUp68gnFEd8EfWuQp65u+EEApc1v9PFTUfuFqxNf2FxYklC+tcFv7eepmYqedL2cI60a
+         bByJ85b1fYp4N9/kNPR4D+mAfi1uCsMf1PEVfsuVOj2BbC/2e/IouOeUnMI+0dDmO9kR
+         RDA9pLOWYJN+96DHYBnTHYE5BCUTktM4uxKq1gh9Y10puTJLuDBBqahDetLt7awxVv2e
+         Vk1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743243935; x=1743848735;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=skdz2J8vky2zwdmsTEpeak328qCERbX3VX3swBulodM=;
+        b=aBli25zN82++aGCyyg2qZ/5EepFbUQXsHUSWE6R375FrVUZYeFyFnR9bKlJa4diS9v
+         V9Mz0zGatI4JjWzOQMts+KQkFQ++BPbUXVaZ8M1Fbvqqt/5nGgqPz0OePC6316vwCDZ9
+         cSoU5RJ7Z2SWEDNeQ41WD9ie9T2lx0b34B3xehJLP1ORc/xyZkdJrnAlQCoRQLMbV15/
+         5mzA5P4Hz9I4xGSKtjz8NdEDrALRfXLyyNCAFp9GC3UVHolBFQWHX0nWZYzizvfo9W69
+         AqBnFXN7IBeWDPUXzg/hrdrxWdm3wQTAa861nTLulUssXX1oHOpJp0XqIOm39HqHUJwv
+         0Osw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxB94DlSVPt3KqSsXJuCdkS4E7zgW3TtaouhDgwgNG8hkwkaQCDhTO0XnYRFZU4QLbGqF9qqOXwVKe6Do=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8oMBwwaTwxI9Jov/Iqru7Ze+n39RLi3TUrWY3FAClfcOY8iz7
+	G57ObOnNhhpMrLlgfEPuZlQbKDA/SWIW7kV35lOsybqlc+TwmSWgDCScM0iDsrTyTQyMgVPqUzD
+	7VVt8ko+NwAsrRrlDSu2z7PeIBl0=
+X-Gm-Gg: ASbGncsziIoDy+BBObtxrG9pc8vvpctq4ZFhrIWaHFCWuyh6PEH5ktV/P6FWaqFqEkP
+	jjU1eoH9++zYWt/iedj+mJmECclJlsCT2mLg0B9D70sgkckEBF16NFoy5N1+0PNp1Gvxwl6bKj+
+	XCjj7la1P18UZLiO/gt8ZGYvBdZCc=
+X-Google-Smtp-Source: AGHT+IH/ysz2hKHseoTKN+bQp8ZD1ck3UYjLHNFyo1DMrE4qsSXt6TBId2ymDv9u5fFo93SJET9TvhuCEN7P/zvSs3o=
+X-Received: by 2002:a05:6402:278f:b0:5ec:cba6:7d82 with SMTP id
+ 4fb4d7f45d1cf-5edfcc1fbcdmr2118434a12.3.1743243934565; Sat, 29 Mar 2025
+ 03:25:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Keke Li <keke.li@amlogic.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Scally <dan.scally@ideasonboard.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20250311-c3isp-v7-8-c3551bed9005@amlogic.com>
-Subject: Re: [PATCH v7 08/10] media: platform: Add C3 ISP driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250311-c3isp-v7-8-c3551bed9005@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20250328174216.3513079-1-sdf@fomichev.me>
+In-Reply-To: <20250328174216.3513079-1-sdf@fomichev.me>
+From: Taehee Yoo <ap420073@gmail.com>
+Date: Sat, 29 Mar 2025 19:25:22 +0900
+X-Gm-Features: AQ5f1Jq-HeWugC2XpX6jq-tfrgIkY9D9KShi2zZ13QuiHnYDaGgGvtz3y3Yu1Dc
+Message-ID: <CAMArcTV5gtpfM7CXP_s506YDGC8NbSLNmwPJ_FvY_k4Ej1cojw@mail.gmail.com>
+Subject: Re: [PATCH net] bnxt_en: bring back rtnl lock in bnxt_shutdown
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org, 
+	michael.chan@broadcom.com, pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:riFjtPdbDedxzsNaYtyXo2sh6luU6tuyWJXs0z3HvNwCQBLzhxp
- 065KY/dRCY5x3GJfxAN6znLfG5OqoW3fS447hGBLX/5krmf8rk8J7fEntEsRLGU75aosVU2
- l1YsPoP/Ko3nAtUDQEVizVJSA23PGAUczp6NUia+wNo2ypZgxD8xC8avM+KKPsIpgz4spL6
- 1gBONuD3929yaB+ClTPfg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DGlqtvh/EY8=;Ddz7mg13dgziraSgEKsDLx1bmaB
- XphbsDkuHCJiOBVKYf8j6LxY9XuYN5vksxveD3Zyld4QGG9awoWG4guLP5VekANWHaBfrG9sP
- jIVbZ0OZpVpW/vfit7+KFbWAGkKcbqla/fn7fKzdH+HE5JbCHfV7nDFbytfyN4hcKXrpW5xRP
- yAQ2InOfdvSN+sHp1RfOf+xWe3U/HuA/rQxTwqWZ151irQ0XPZGyjMh5h1glo236g6Ed8nf4+
- f+JSBvgzPEBSCb/ILtwDTrJR9FhE/fPlDmL1JruaPvew3ZlWVvCg7lpm+t+lks8D/+il3YnGr
- uMer4eoYNkW6b8h/OOYyNIqcIaYnqWHtQCDhptlowo3yuYQp2DDUubSRQjANG9JdtdGMJ63dG
- FihBIyVufuhd0avNRxQHGS7eo1BpxL5R6/siuCKeScSafMxs9LRwwKgJpz1CD3BL5U/NwSwZn
- 0s84TcZg33A2Q/a6xMNR/8YYb4yhGMUQHz83GLdhO1PmCvxRYEIzBjHupPfph5bl+XG/suLW4
- lWRGlgJdPgXEqbjBEM76QEplRF4Ay3YssQKz4+PzgQJDQN2vDpLXq2f+ZLMPIbU/LeTxLyH1G
- 1QXFCKNTlRsehS6M7c/DvZJ6VY+RZkPkbOrT+ulyAVfGQcUegtnikR/MdXueqtVeKJxgBLOmh
- HH8zbJPAzqD44NyED3dilUiVSWEd7zgrXh9Tg+aO4cca3+cWN5nGB3s7+RDwuW0/ePG9t49i2
- nuEOBKOGDnEQalYPcX/BDRkPYo8aVWMmPTMDiNhS1Wkc29LbbnaNkE43MnTd8H8lOMsrEDJn9
- p03XAXNmZtA8BDwtmFIzejIS6wNH2eaVCzpp17kQLvQwCDcwoxEUA4FS2MfWimsN0GeT0RO3U
- Zhee6BgP7A4L9E4YVJOGiT18A6hJjABniB+t6bWf9MmJtHaou5wF0Nnd14X4pdBPF7mPrDpf5
- nXK27Fh09354zKnsYqd4CdSBYHtMpRiHJf+pOL9bJKwbHva4C3L2JkwIMc7uEt5uGf2NycjxV
- 5TMLyVjET7af8XVvI4oJxuuj8Dfg+LTPrtvZLiS14DZyYY7NudFKyPyLinRI7/8eIG7XWc8+d
- QrFWAak8TKMCaDuOPvWjFib747NPQrfImfcfNgWSKyrR26HEq6R+kqctMn/zNfuWcIFFhCvW3
- fdP3ZjI+dq4HjSJzb0hPeB3x3YEhhbCh4Kt1dwhn4M/60KU5l1pAVakSInE9QDz1y830/iScO
- o0jTnQC8Af4ltUYreUaR+sCoapI1T3ioLsh+AyoAuU2D3Z3azdox6Ga2x9cOGtRgjXHjqT+ks
- xKOFmy3tWLKLvQ9jX7X2ywuWY+CIeU2x3zmyq8C/Mmbt1Ia21j1xEBbXiwdidc/rLP7ci7SGW
- MDMuOAcq1WdGhvaTG4TKBoz8CCO/0IBD6ldKYFuxRKUo1Vl+s8c7gmic795P7E4XiwBnyjk+d
- bYadjhnPX5AXLuibo0OBHMARnO5eyV1GEAzQZ7sklsbeTtWd9pW6HJIQMx5OScPoqFTVhSw==
 
-> The C3 ISP supports multi-camera and muti-exposure
+On Sat, Mar 29, 2025 at 2:42=E2=80=AFAM Stanislav Fomichev <sdf@fomichev.me=
+> wrote:
+>
 
-                                       multiexposure?
+Hi Stanislav,
+Thanks a lot for this fix!
 
+> Taehee reports missing rtnl from bnxt_shutdown path:
+>
+> inetdev_event (./include/linux/inetdevice.h:256 net/ipv4/devinet.c:1585)
+> notifier_call_chain (kernel/notifier.c:85)
+> __dev_close_many (net/core/dev.c:1732 (discriminator 3))
+> kernel/locking/mutex.c:713 kernel/locking/mutex.c:732)
+> dev_close_many (net/core/dev.c:1786)
+> netif_close (./include/linux/list.h:124 ./include/linux/list.h:215
+> bnxt_shutdown (drivers/net/ethernet/broadcom/bnxt/bnxt.c:16707) bnxt_en
+> pci_device_shutdown (drivers/pci/pci-driver.c:511)
+> device_shutdown (drivers/base/core.c:4820)
+> kernel_restart (kernel/reboot.c:271 kernel/reboot.c:285)
+>
+> Bring back the rtnl lock.
 
-> high dynamic range (HDR). It brings together some
-> advanced imaging technologies to provide good image quality.
-=E2=80=A6
+Tested-by: Taehee Yoo <ap420073@gmail.com>
 
-You may occasionally put more than 60 characters into text lines
-of such a change description.
-
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
-
-Regards,
-Markus
+>
+> Link: https://lore.kernel.org/netdev/CAMArcTV4P8PFsc6O2tSgzRno050DzafgqkL=
+A2b7t=3DFv_SY=3Dbrw@mail.gmail.com/
+> Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
+> Reported-by: Taehee Yoo <ap420073@gmail.com>
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> ---
+>  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethe=
+rnet/broadcom/bnxt/bnxt.c
+> index 934ba9425857..1a70605fad38 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> @@ -16698,6 +16698,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+>         if (!dev)
+>                 return;
+>
+> +       rtnl_lock();
+>         netdev_lock(dev);
+>         bp =3D netdev_priv(dev);
+>         if (!bp)
+> @@ -16717,6 +16718,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+>
+>  shutdown_exit:
+>         netdev_unlock(dev);
+> +       rtnl_unlock();
+>  }
+>
+>  #ifdef CONFIG_PM_SLEEP
+> --
+> 2.48.1
+>
