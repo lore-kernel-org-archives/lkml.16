@@ -1,117 +1,359 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53996179A7
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF61218641;
+	Sat, 29 Mar 2025 07:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743231373; cv=none; b=D3Zzmp1QeGGiHVUnJmk1VmVIt3wlV6/N59cc5mzWbqw37bJezgn4y+Z/uSjTEHJorAKHhhqlKwpdjzynw0vdNEUeETzoKhzOsKpb7TcmP3MHVNzNMMvPaUraxXOz952pvW7Bw6xxli69bdSGWCbLlrPOlodaLC6Uj39K0Kb6iEY=
+	t=1743231662; cv=none; b=A+LexYXNPDrDbuDxpw4v1MQysEH0D6TZBghcNrROOeiFe6Clkt4WkY/ZJfV9DrDh+6lACM9zoVtCQS84gt5vNGitkJ42qJ4HQpoPiGBUvm6wcEABPdkZZEu4qnx4jhBS86h9jAFZBTBQwi1iGmHWw6HWP+JfnVsrDlC2yoTdIjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743231373; c=relaxed/simple;
-	bh=A8UZGR26k4zw4LFDnFiyOz/bgWDmHh9Z1O2TAO18tBw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZcmiTk0t1fb/s7g3d0oz31GSlFqRs9PK8XRn0GBta8n6dFEddvRrvqblGHEWYWvqYCYaFhMzsohrnhs9MtU58WaJWPAKh3poiWc7xkrsVQji5Gim6x3WEyr2JlgTQmi6zF1zJoyMrj8ydPoXd2rF0LMyWYZezEJchhLZpOs/icU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=n1YXQgRD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ls/ZWoJq; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1743231662; c=relaxed/simple;
+	bh=SIgxLnOI5/TBUEB96Qt9TXxf6PQWCf+1f5n0SZ3olnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cTGG91pM8FCuPUA2ywHIx0gL93Lco7Syq+WFFTVN6OilBPu/AeyXz3fk+G3YpkqaIarcSByaD8bqMyfd/RYW/GvKiCWt63rXiX6wbs5Msh+VRu/Ghlmm5CjquUUXtqTOz5y//5j8aWP21YgkZDWIF2WKbRmqo/XMW0PbOQWUKO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mp8hwALT; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="n1YXQgRD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ls/ZWoJq"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4A5F81140086;
-	Sat, 29 Mar 2025 02:56:10 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-11.internal (MEProxy); Sat, 29 Mar 2025 02:56:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1743231370;
-	 x=1743317770; bh=vumH7d4rQW5BYe5HanUCiNB23xXJsOYrUl2QaYve7x4=; b=
-	n1YXQgRD8q8eKKGqsTazsfG9EkJBa7oFyx1xTUhDrlNhfXNHNqYgn8IBp8lCH+2R
-	Gwa8y94kJpHkn/kwa44OjVCxMWujXH/hTo4GOLKFo46KLFdl9pQosOme/q2+/xDZ
-	hKjeK3upd/uq+FjFCNm816mOc5I2+NQzdT8YG3ZYg5liMbIkNK8Z/tFE1HD9DC5a
-	PJyezvujof7C1lt5K17aPySC4dCex9uw9qRQCPa0feWyvT1Ph/5BqwiZ0zHT0jCq
-	4zWQNpRI4ckjLynCguyHa5HfA/W1B6gKbgkP2in/pH0wmveGqKTefAow64OtjJmv
-	8ueeBkvcubYoMTlE6YSc8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743231370; x=
-	1743317770; bh=vumH7d4rQW5BYe5HanUCiNB23xXJsOYrUl2QaYve7x4=; b=L
-	s/ZWoJqV9v9OgjHv6vuZ1xHsVVeJbm3PxyGQpgyHRCuw+ITBir+pRYEhyqz4LCJj
-	LKk/hBNvzJIVKXh7M2IcN9WruW+P2ty8QkI7UNzYVDL/c8N33vG9aG5igY4C69y/
-	SdRnYKIgHCKm2n4ErtbZ4eVD6UODra0YMY8pEOiNIlT6YgkVRWRl+jcr5F3jj5tj
-	aShS2fUqEJ1wCqAIjBwb3lnwO6kw3afkAhApTVH6H3hPnSidqqdBaJmTPFcziLY4
-	5Q81i6EUx8+/Xb8vfWyFzFi8kGdPCbhLFyfeBRSdSd1OyGAW7jZ8W5Fovyrom7M7
-	Y8tJjrykyb73ArrHGoSPw==
-X-ME-Sender: <xms:iZnnZ2ERpUqrEjfAeAD3I8yPeju_weiGq5qO-DmOuRkHFzA1yW3xGw>
-    <xme:iZnnZ3WoR4EGMI815cWQTD3WhKBb2ObIArjwSHy5T0skh0Ou-Rd_VGqgm33CfbFL6
-    iQh63wI4u6-w-bG9OI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeefhedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpeflrghmvghsuceosgholhgurdiiohhnvgdvfeejfeesfhgrshhtmh
-    grihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeetvefgveduhefhfedugfdvveeijefg
-    veffgfdthedvgeelkeefffffueefgeeivdenucffohhmrghinhepfhhrvggvuggvshhkth
-    hophdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpegsohhlugdriihonhgvvdefjeefsehfrghsthhmrghilhdrtghomhdpnhgspghrtg
-    hpthhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhgvgidrhhhu
-    nhhgsegrmhgurdgtohhmpdhrtghpthhtoheprghlvgigrghnuggvrhdruggvuhgthhgvrh
-    esrghmugdrtghomhdprhgtphhtthhopegruhhrrggsihhnughordhpihhllhgrihesrghm
-    ugdrtghomhdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtg
-    homhdprhgtphhtthhopehhrghrrhihrdifvghnthhlrghnugesrghmugdrtghomhdprhgt
-    phhtthhopehsuhhnphgvnhhgrdhlihesrghmugdrtghomhdprhgtphhtthhopehsihhmoh
-    hnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtgho
-    mhdprhgtphhtthhopehsihhquhgvihhrrgesihhgrghlihgrrdgtohhm
-X-ME-Proxy: <xmx:iZnnZwIwGCY3yWgsZjYiMe94nWQozmQhZ9lsnaGa0tSkTJ6hItDQMA>
-    <xmx:iZnnZwGpKTZWqO40SWQRC-oiAxMRl21T3esP28brx1oCBW0mcJ8q-g>
-    <xmx:iZnnZ8Wfw2Rp94T79iQOJB6yGO74qz44d_iZFjR5mreSqH29lxfhFQ>
-    <xmx:iZnnZzOhWEkl7FcX93-mGfBk5LdENSzoswwFIQBZL4c3cCd4Q3xtMw>
-    <xmx:ipnnZ9X9Wn12nuXREy-XFUYifF95n5osdDO44a1Bcfh7ZsZTb_hMExcb>
-Feedback-ID: ibd7e4881:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B9B3518A006B; Sat, 29 Mar 2025 02:56:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mp8hwALT"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22435603572so58366375ad.1;
+        Sat, 29 Mar 2025 00:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743231660; x=1743836460; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YN4WtqthsWkXxUqce00UcuHYVqDvhZTDgvAWdF2pTa8=;
+        b=Mp8hwALTCeVqXkAqP5fdtxN6BX7TjWTAENgPv/3qAUF+9j2O54L4O8KUVTZwU2zxCk
+         9Z+kxDlBVsM9nTtd1EYW9o59WRVA0ORdgcWGFs3GCFZj1Sap/bQrz6TK5UXYL5blC9Ec
+         PLkReI8eaM9xbuDCEEEIsePvr15J1O1CSdYWicGx+LFscrTmjjp7djf5DsjVKMu5HtUB
+         B6fpO1OEalyjBtmmjXvcuJTnzYhkqaog21CGDtybUHk2U1wMq8Ejz0vCv8NdXdY9+74+
+         q0kxsQqRCPLee3EArgDdNwmRehhn4nLT487lxtlw8AL2ZjadBLG/8mQG8ufEgcQhFJ6I
+         L+AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743231660; x=1743836460;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YN4WtqthsWkXxUqce00UcuHYVqDvhZTDgvAWdF2pTa8=;
+        b=ANMA9Apz8CUuxd6F5rGApIF32GoTPsXKDKbJc9lhUM0rUsBz6ydg/UP7lOI209hdr7
+         FkrNHYO1p4ad1GQHUzii9wiCvy+ZUo270cB0Zq6iYQYI63SGhAw85b93jAVynNgNB1hS
+         Ge7mYVGr2DepJOUYFCazuvcN7S85weTNhiHi+f82LZ5w9PIpDjnGgB9DlzLl4MLDgz2o
+         KImHlPqE1JifEcmOlgBjo29Wx9FrEM80cIGXP2g12wL5O3XS9d6H2IDd+vPY0NZiLYY9
+         S7DFUJiJxmaKif+mXhSOnUzx2RLnstJ/N8XHjfc4iq7fWqGFbs/3lpSSsjdoDuHpmSJE
+         TGSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJGnBjl0oypc+TNhkZbPF2W4IYwkinYUdHEq0vy6iug7DtuIAyQFujazZCGBUIF3dsyVNiioLEw7cZr50RnWk=@vger.kernel.org, AJvYcCXXcdqERNBzSx/9AptELjh54pqkq4y8RNJ1cHfa9gzEdU48Se2lnQ2pq+11ABRPFfV3b7qfYNr3bavt1+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLE/dPlStwbwiXtk9zxUed2TbfIDfknEwqVKOjyfsdyeaaPYDf
+	M9u6JCdffvrN5GvLErcokZr7zhMY9+A57jSX9mF9/H4qDH4dGXqG
+X-Gm-Gg: ASbGncuN4bi3IBJw26QYavzblWHfTW0l+Cn9uc5UuFYT1KCGvp7zY1GPj6SOAoZtd7U
+	VbxA6O4h9eYqFz0il1XUo2xRNumFzxht8r+uXb1LWDNw6rb2oLRRn3BEwH4kDqweyaDCi6yDU9L
+	pGBY4Z3AALO5MdOwWohmLXA/5YASeIr8mPbgdE6WAP/kX6tVZ8lsFwQMDq2LuhxhIqAuszZasQN
+	quMgTA3SfH1n4i40VSuyn8r95Aphl+1pIvZBiFuHCI/Nqz3hmZ5tJ/3uh6NZDLhBMqC6XA44qqX
+	UR35iLsCE29djVjUWG2286Hcii78LgUJqYNOvO85CeDRh3WtJtDvrxCveDEw1JiB97RV3UvdCu9
+	1WjM8kF0=
+X-Google-Smtp-Source: AGHT+IGprp313xVlqEgzUJTa5QBlXqqlQP1W/B++E5Rb4AP4oIoboJipGCREYWl/oiECUeFm4sWNxQ==
+X-Received: by 2002:a17:902:ebc7:b0:224:160d:3f54 with SMTP id d9443c01a7336-2292f97caa0mr33858535ad.31.1743231659870;
+        Sat, 29 Mar 2025 00:00:59 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6? ([2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf93esm29287565ad.154.2025.03.29.00.00.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Mar 2025 00:00:59 -0700 (PDT)
+Message-ID: <79beab1d-550f-462f-93b5-a887f9208a8e@gmail.com>
+Date: Sat, 29 Mar 2025 12:30:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Td646725364a3d5c9
-Date: Fri, 28 Mar 2025 23:54:34 -0700
-From: James <bold.zone2373@fastmail.com>
-To: "Shuah Khan" <skhan@linuxfoundation.org>, harry.wentland@amd.com,
- sunpeng.li@amd.com, siqueira@igalia.com, alexander.deucher@amd.com,
- christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch,
- aurabindo.pillai@amd.com, alex.hung@amd.com
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-Id: <8b73708c-4613-42a0-9d48-5bf6f0e01ced@app.fastmail.com>
-In-Reply-To: <476c5bb9-79c5-40b7-bba8-b52fb244e90e@linuxfoundation.org>
-References: <20250326070054.68355-1-bold.zone2373@fastmail.com>
- <476c5bb9-79c5-40b7-bba8-b52fb244e90e@linuxfoundation.org>
-Subject: Re: [PATCH] drm/amd/display: replace use of msleep(<20) with usleep_range for
- better accuracy
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] openrisc: Introduce new utility functions to flush
+ and invalidate caches
+To: Stafford Horne <shorne@gmail.com>
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+ sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250328202632.72809-1-sahilcdq@proton.me>
+ <20250328202632.72809-3-sahilcdq@proton.me> <Z-cZLwdbkemRGOJT@antec>
+Content-Language: en-US
+From: Sahil Siddiq <icegambit91@gmail.com>
+Autocrypt: addr=icegambit91@gmail.com; keydata=
+ xsDNBGcgaYEBDADpKUSKbchLCMdCuZGkuF50/7BiraKc8Ch+mk4T+2+E2/6qXAkalvCkFoqx
+ 3/sa35rconZAFzB/r19e7i3UajIQjATvENrGxqe/IFqcJxo2Jr1HQBwCrsmlQoUCilSC6nDi
+ ejcEIAFytJORDkCcZwLXPjdf5/4pbqVAW5823LB5j5F0TqHAnGY1RhS2V1eBPdRqjAA3xecT
+ zTmLHlkqAXgM2DOot1KbycedZSieCwEykTXMaLC0/3Gyo2Cp1WTWOIyD0hsXpLyFioV4FaX2
+ Lm+z45Zc4PoNXeC6+l4PdDxixs+saAbadknP+9omwlb+PkMd3esq2wkowTwTJVJK8FCCNTo5
+ 2OArA/ddxcyXY25JHN7vzGooFNW6Bb9YV+lbX6y95ytE3KcAmid73tQrcjlebIpgNAvOMyyZ
+ BgQJY0HSu3DGNZuKtbNM3iTl82TFj7MVgkEffgF83N6XyBqDztIz2lN47/q5wyRi3jda9NDt
+ geI+Nv145HjulO7bI3NT048AEQEAAc0kU2FoaWwgU2lkZGlxIDxpY2VnYW1iaXQ5MUBnbWFp
+ bC5jb20+wsENBBMBCAA3FiEERtYfQYWFu+uAZjYrrzGlXdb6f1cFAmcgaYEFCQWjmoACGwME
+ CwkIBwUVCAkKCwUWAgMBAAAKCRCvMaVd1vp/V/nnC/9KnNIr4a3JW3E/snxv1+XIyUmHBDLn
+ PKBmLDYxO9RJe1xKo/sNmLEno4c8G1F/y12TLV086cpBYGKkE8mPMBABqxuiPG8srwoKc2HW
+ bvoC2Zfeu/WeQ0YqeI9ZEwRhsDGQZ7vc8PnKnEUaPZn6iWW4GeX7dXWeGNrK0wU2B04l2d+M
+ FIKaoPHk8w5Ff++QNcn0YRkm//nYlukHUrMxhNcuc18jaLLftOh7BH/4EbKtTN75KAFePQBi
+ I2CbuC41fchTt12QrPB3yz1GKfudsEMLFHBNeComJNnuolPOq0YSyuKdRO8Jubn5ZqWQeTwj
+ XbG7wTonDc8xe46irOhz36VcjsjSY+PYhVZSeDWeDUZgpaJkBjQDDodIN2eoMwVEyUByos9H
+ mKrqrpBMmylOspAZzqjb5FtOqM0BCxQINdKKiMwRelSb6pHYCrbS0XzpwDUEpp7RWCbHgg+6
+ Ot72kQCEFxj2LzX9VxF24GGQy9inlUfN51IV04klSibtBuuz/NbOwM0EZyBpgQEMAJelVX4k
+ CtCxD4Ji3FQ8LZs22z7VoUvqIb7Gj2lNvhPeijlqqBkSMIgnSCLxlH4ahqKnEV58IrfVriV0
+ 92zb94Az2nl0r+bZYfvev1qCcVIYxk+pYYcRl5qPXX8XGalrkcBBWmkgTSwzNK9rV4850iVI
+ hsJNel49qen9JwiFYMSKa2MYgdYSbeuuwXwUp0ZHeVFc5RnPK2wxws1xcnsdb9hRXs2UeTEE
+ 0klG3HuXqJ96DzKrCieKHLjs330h+16gDWAFZSEoT7Mh3HFGI2dscVuBstQNgnwUMnsJv8jx
+ c005CfLCjCBnJEhMd2/QFuLwCZv4IdoghKwYw18e61UbX2bFovo9dduD527pD4sFqi7U7ofv
+ aO3yf+ulL6jiKypGvnbiBP3KY3aKxx6pHHH3aDc9eOqCUgrtS3+xt1du4+qxrYqEnrywFoJy
+ 5zqSzbnTTjFpdTbY5SS52fIOktLlAKzEg6V9hkg2r08hC3/L4NVj6I4tsGZlqb2neRlHFmCr
+ bQARAQABwsD8BBgBCAAmFiEERtYfQYWFu+uAZjYrrzGlXdb6f1cFAmcgaYIFCQWjmoACGwwA
+ CgkQrzGlXdb6f1fDIgwAmpB7eL3XNSx3F+gbmksOPMqCU5rEswRedjEt6tBzFTXhdNFfhZTb
+ vCddUNePZnzddgxAnDBcTqI1jx6Go6Hkti/mxJqXSczMYBsImD/lEm47axsADvpnNaEM+tmu
+ m/cMKfpILUpy2Ey7CKXUA1vpzYeUD29EQWi0fxM0arplrVt/uzUdFRFQRn2hCqeDLBLONX1F
+ Adq+re6M0dhKl4a2+erzZRIXh3vIGiDmpJEGrajrhqEnMXFp6toSiMGian94m8H3NT6rB64E
+ JmdHgyjXADFbn2G5Mb6Pwa8KnnK1kYcZ+Pwu9LfMXfgI01Sh/k01hjUVmnpYep4nHUfwXA8r
+ kn6WekD80DYbAfKyFAXQCO/nclZ82RNmJbDRi3AeMFrxKi6KgdGCp1Izhj9USaMOVqcuV2p0
+ Rsoq+sFqWOKaHWnQHCM9RkynQVqrgUaSawEbGlCP1KIhVmjfjVsmsCaKkUb9T6VeO+ZNe+Pn
+ rPgMe6IIvn24UuW2f6fIt0AaqOWq
+In-Reply-To: <Z-cZLwdbkemRGOJT@antec>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025, at 3:46 PM, Shuah Khan wrote:
-> On 3/26/25 01:00, James Flowers wrote:
->> msleep < 20ms will often sleep for ~20ms (according to Documentation/timers/timers-howto.rst).
->
-> Can you elaborate and explain why this change is necessary?
+Hi,
 
-scripts/checkpatch.pl highlighted it as a possible issue since msleep can cause the delay to be unexpectedly closer to 20ms. However, perhaps it would be better to submit a V2 with the change as usleep_range(10000, 20000) to match the actual delay range that msleep(10) has, which would help avoid a regression like this: https://gitlab.freedesktop.org/drm/amd/-/issues/3559#note_2532546. 
+On 3/29/25 3:18 AM, Stafford Horne wrote:
+> On Sat, Mar 29, 2025 at 01:56:31AM +0530, Sahil Siddiq wrote:
+>> [...]
+>> diff --git a/arch/openrisc/include/asm/cpuinfo.h b/arch/openrisc/include/asm/cpuinfo.h
+>> index 82f5d4c06314..e46afbfe9b5a 100644
+>> --- a/arch/openrisc/include/asm/cpuinfo.h
+>> +++ b/arch/openrisc/include/asm/cpuinfo.h
+>> @@ -15,6 +15,9 @@
+>>   #ifndef __ASM_OPENRISC_CPUINFO_H
+>>   #define __ASM_OPENRISC_CPUINFO_H
+>>   
+>> +#include <asm/spr.h>
+>> +#include <asm/spr_defs.h>
+>> +
+>>   struct cache_desc {
+>>   	u32 size;
+>>   	u32 sets;
+>> @@ -34,4 +37,16 @@ struct cpuinfo_or1k {
+>>   extern struct cpuinfo_or1k cpuinfo_or1k[NR_CPUS];
+>>   extern void setup_cpuinfo(void);
+>>   
+>> +/*
+>> + * Check if the cache component exists.
+>> + */
+>> +extern bool cpu_cache_is_present(const unsigned int cache_type);
+> 
+> This is used in cacheinfo.  OK.
+> 
+>> +/*
+>> + * Check if the cache block flush/invalidate register is implemented for the
+>> + * cache component.
+>> + */
+>> +extern bool cb_inv_flush_is_implemented(const unsigned int reg,
+>> +					const unsigned int cache_type);
+> 
+> But this function doesnt seem to be used anywhere but in cache.c. Does it need
+> to be public?
+> 
 
-Is there any appetite for drm/amd to change instances of msleep(x) (x being < 20) to usleep_range(x*1000, 20000), so that the range of delay is clear to readers unfamiliar with the msleep quirk? Please let me know and I can submit a V2.
+Right, this doesn't have to be public. However, based on the description below, it's
+better to remove this function.
 
-There is at least one instance (fixed by commit 57995aa8ffb3e47a74763cf9106d34e9e8be9d8d) in drm/amdgpu where msleep(1) seemed to be causing an unexpectedly long delay, and so was replaced with usleep_range. An issue possibly related to that fix is https://gitlab.freedesktop.org/drm/amd/-/issues/462.
+>>   #endif /* __ASM_OPENRISC_CPUINFO_H */
+>> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
+>> index b3edbb33b621..3a7b5baaa450 100644
+>> --- a/arch/openrisc/kernel/dma.c
+>> +++ b/arch/openrisc/kernel/dma.c
+>> @@ -17,6 +17,7 @@
+>>   #include <linux/pagewalk.h>
+>>   
+>>   #include <asm/cpuinfo.h>
+>> +#include <asm/cacheflush.h>
+>>   #include <asm/spr_defs.h>
+>>   #include <asm/tlbflush.h>
+>>   
+>> @@ -24,9 +25,6 @@ static int
+>>   page_set_nocache(pte_t *pte, unsigned long addr,
+>>   		 unsigned long next, struct mm_walk *walk)
+>>   {
+>> -	unsigned long cl;
+>> -	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
+>> -
+>>   	pte_val(*pte) |= _PAGE_CI;
+>>   
+>>   	/*
+>> @@ -36,8 +34,7 @@ page_set_nocache(pte_t *pte, unsigned long addr,
+>>   	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>   
+>>   	/* Flush page out of dcache */
+>> -	for (cl = __pa(addr); cl < __pa(next); cl += cpuinfo->dcache_block_size)
+>> -		mtspr(SPR_DCBFR, cl);
+>> +	local_dcache_range_flush(__pa(addr), __pa(next));
+>>   
+>>   	return 0;
+>>   }
+>> @@ -98,21 +95,14 @@ void arch_dma_clear_uncached(void *cpu_addr, size_t size)
+>>   void arch_sync_dma_for_device(phys_addr_t addr, size_t size,
+>>   		enum dma_data_direction dir)
+>>   {
+>> -	unsigned long cl;
+>> -	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
+>> -
+>>   	switch (dir) {
+>>   	case DMA_TO_DEVICE:
+>>   		/* Flush the dcache for the requested range */
+>> -		for (cl = addr; cl < addr + size;
+>> -		     cl += cpuinfo->dcache_block_size)
+>> -			mtspr(SPR_DCBFR, cl);
+>> +		local_dcache_range_flush(addr, addr + size);
+>>   		break;
+>>   	case DMA_FROM_DEVICE:
+>>   		/* Invalidate the dcache for the requested range */
+>> -		for (cl = addr; cl < addr + size;
+>> -		     cl += cpuinfo->dcache_block_size)
+>> -			mtspr(SPR_DCBIR, cl);
+>> +		local_dcache_range_inv(addr, addr + size);
+>>   		break;
+>>   	default:
+>>   		/*
+>> diff --git a/arch/openrisc/mm/cache.c b/arch/openrisc/mm/cache.c
+>> index eb43b73f3855..3bf6d728d2d2 100644
+>> --- a/arch/openrisc/mm/cache.c
+>> +++ b/arch/openrisc/mm/cache.c
+>> @@ -14,31 +14,63 @@
+>>   #include <asm/spr_defs.h>
+>>   #include <asm/cache.h>
+>>   #include <asm/cacheflush.h>
+>> +#include <asm/cpuinfo.h>
+>>   #include <asm/tlbflush.h>
+>>   
+>> -static __always_inline void cache_loop(struct page *page, const unsigned int reg)
+>> +static __always_inline void cache_loop(unsigned long paddr, unsigned long end,
+>> +				       const unsigned int reg, const unsigned int cache_type)
+>>   {
+>> -	unsigned long paddr = page_to_pfn(page) << PAGE_SHIFT;
+>> -	unsigned long line = paddr & ~(L1_CACHE_BYTES - 1);
+>> +	if (!cpu_cache_is_present(cache_type))
+>> +		return;
+>> +
+>> +	if (!cb_inv_flush_is_implemented(reg, cache_type))
+>> +		return;
+>>   
+>> -	while (line < paddr + PAGE_SIZE) {
+>> -		mtspr(reg, line);
+>> -		line += L1_CACHE_BYTES;
+>> +	while (paddr < end) {
+>> +		mtspr(reg, paddr);
+>> +		paddr += L1_CACHE_BYTES;
+>>   	}
+>>   }
+>>   
+>> +static void cache_loop_page(struct page *page, const unsigned int reg,
+>> +					    const unsigned int cache_type)
+>> +{
+>> +	unsigned long paddr = page_to_pfn(page) << PAGE_SHIFT;
+>> +	unsigned long end = paddr + PAGE_SIZE;
+>> +
+>> +	paddr &= ~(L1_CACHE_BYTES - 1);
+>> +
+>> +	cache_loop(paddr, end, reg, cache_type);
+>> +}
+>> +
+>>   void local_dcache_page_flush(struct page *page)
+>>   {
+>> -	cache_loop(page, SPR_DCBFR);
+>> +	cache_loop_page(page, SPR_DCBFR, SPR_UPR_DCP);
+>>   }
+>>   EXPORT_SYMBOL(local_dcache_page_flush);
+>>   
+>>   void local_icache_page_inv(struct page *page)
+>>   {
+>> -	cache_loop(page, SPR_ICBIR);
+>> +	cache_loop_page(page, SPR_ICBIR, SPR_UPR_ICP);
+>>   }
+>>   EXPORT_SYMBOL(local_icache_page_inv);
+>>   
+>> +void local_dcache_range_flush(unsigned long start, unsigned long end)
+>> +{
+>> +	cache_loop(start, end, SPR_DCBFR, SPR_UPR_DCP);
+>> +}
+>> +
+>> +void local_dcache_range_inv(unsigned long start, unsigned long end)
+>> +{
+>> +	cache_loop(start, end, SPR_DCBIR, SPR_UPR_DCP);
+>> +}
+>> +
+>> +void local_icache_range_inv(unsigned long start, unsigned long end)
+>> +{
+>> +	cache_loop(start, end, SPR_ICBIR, SPR_UPR_ICP);
+>> +}
+>> +
+>> +
+> 
+> There is an extra newline here.
 
-Currently there are 37 msleep(1) calls that I can find in drm/amd. I'm just thinking that optimization opportunities like above could be found more easily if the delay range is made clear?
+Oh, I missed this. I'll fix it.
 
-Best regards,
-James Flowers
+>>   void update_cache(struct vm_area_struct *vma, unsigned long address,
+>>   	pte_t *pte)
+>>   {
+>> @@ -59,3 +91,42 @@ void update_cache(struct vm_area_struct *vma, unsigned long address,
+>>   	}
+>>   }
+>>   
+>> +/*
+>> + * Check if the cache component exists.
+>> + */
+>> +bool cpu_cache_is_present(const unsigned int cache_type)
+>> +{
+>> +	unsigned long upr = mfspr(SPR_UPR);
+>> +
+>> +	return !!(upr & (SPR_UPR_UP | cache_type));
+>> +}
+>> +
+>> + /*
+>> +  * Check if the cache block flush/invalidate register is implemented for the
+>> +  * cache component.
+>> +  */
+>> +bool cb_inv_flush_is_implemented(const unsigned int reg,
+>> +				 const unsigned int cache_type)
+>> +{
+>> +	unsigned long cfgr;
+>> +
+>> +	if (cache_type == SPR_UPR_DCP) {
+>> +		cfgr = mfspr(SPR_DCCFGR);
+>> +		if (reg == SPR_DCBFR)
+>> +			return !!(cfgr & SPR_DCCFGR_CBFRI);
+>> +
+>> +		if (reg == SPR_DCBIR)
+>> +			return !!(cfgr & SPR_DCCFGR_CBIRI);
+>> +	}
+>> +
+>> +	/*
+>> +	 * The cache block flush register is not implemented for the instruction
+>> +	 * cache.
+>> +	 */
+>> +	if (cache_type == SPR_UPR_ICP) {
+>> +		cfgr = mfspr(SPR_ICCFGR);
+>> +		return !!(cfgr & SPR_ICCFGR_CBIRI);
+>> +	}
+>> +
+>> +	return false;
+>> +}
+> 
+> Usually we try to define functions before they are used.  This and
+> cpu_cache_is_present should be above cache_loop.
+
+Got it. I'll shift this.
+
+> As I mentioned, this may be a bit overkill, OpenRISC completely ignore writes to
+> SPR registers that are not implemented.  They are basically nops.  It may help
+> to avoid running cache loops, but really there are no implementations I know of
+> that have caches (SPR_UPR_UP) but no cache invalidation/flush registers.
+> 
+
+Understood. I'll remove this function.
+
+Thanks,
+Sahil
