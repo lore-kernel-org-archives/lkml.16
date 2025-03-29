@@ -1,160 +1,178 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91911DF26E
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3476D134BD;
+	Sat, 29 Mar 2025 19:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743275250; cv=none; b=UkOv9BjpftioBdRIuYJ7JjEl6R1awV6Ocor4VhLdS3Wy+fF7jt9RJTQwHGbMFQtYo0G7ymOdXrTQrYtuglV8T/XteWyi4Wsm96YfGpQCXVkYisirHDYGaCCKX/uKJXQm3+Wx7579w+ZNEVEIUtz3+fxwhbvNjNFmyovFXjA0yMI=
+	t=1743275614; cv=none; b=ZqV5+AAj5tipPNqbaPDoE/+VlpuQ8sMiuHoYi/zn83v8JUntdKAiR0Vzu95P1vc1h0Skijp+JMFtvXmvxFQ01iN6dAkEzsTZK4fcDJa/wIdEbe0h8NDvxMpLTABhHNmrk2DVjbNAMzQqH+5FqwGwKEkvped/DnjrmXTI5tReWrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743275250; c=relaxed/simple;
-	bh=4zP+jYalZt30nqxNJ61sdyKXLyBC1cY5RSVeldqbHHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hHO9p+1nFuI+dExH4HQ70skvhwMVYtfQcoK+C4NcilStN1N0IxTrpe10MFu6j9AUqL37PYrYzhpj1iqeDHFBMVpJIJ2JPQU+iO2Ep1wsaG7Oq9n9d0GLuasO7uPnvxMh8ysBNhXBLEgxhMPU+izpdpaliOHrrNiFkhf/Sm6RJ5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=BEiqiAwb; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1743275614; c=relaxed/simple;
+	bh=wGg8na7dTv8XnD4kZJKan/VRjynT7s83ckCx/R1Pts8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aQqXRVJHYh/FFb9pL312ofNnnL56S/6tI5QY5T2wglK1ntj4aiIbnn4q6G4K9Ij2UP21DyWle7ag8/tDxWCHbVJNZV+YDfn03yV7NZ8vghB3KLpiyXKa3TDOnb01OXMWzEypKjDsXRHdtKR3tLDAsgA5LmGOaAqhcOD1rJTNif8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhUNRS/u; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BEiqiAwb"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so4978135a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 12:07:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhUNRS/u"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224171d6826so30040725ad.3;
+        Sat, 29 Mar 2025 12:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743275247; x=1743880047; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5zCE82IEEUW3OgJQOexggjw77Krndyt+WM9SEFSCbzs=;
-        b=BEiqiAwbJB0zTuKzsRT5Z2WsrdRZd1DRUnpTNNNIQKn22XAzxH9o4s3dz5lESPzbyh
-         2mXC+gwNxauklbWP0Xz7gbhq/IRScNsflQ9JHeBG7P41z6y9H4bJB4Q1Mggexqcjpbxr
-         90mc7SxDMlO8yyuX6JbPjflLElIL6O1p8GD+FuzWNWmMPA3d/M04K/2lSvDtmKkkjfZL
-         k49VzN3Dg28a1Owz1OvjMuv0HqVf/HTiLac3i4FzhqDJL/rYkJsGRVIvaBkAB2qj6lQB
-         vkfct9O69G+XyRdUAMJbX7d9MgA7huNv3x5MB7I+RoOdc34jUCsxsdbiiosPCd9lfUeR
-         bFMg==
+        d=gmail.com; s=20230601; t=1743275612; x=1743880412; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJcGnPcqe3iN7N1I+Go0o0oWDdL9OLHD+1UStBOXd2c=;
+        b=NhUNRS/u2lcHKhJqGLNX/EsfPYMZ4N5lntijCRkFRJl+MPQLdMsTLhSIxkfHDComnH
+         965l9h6emjGUUBPA50SnDsT0wr4GDnVWxZORP0frDDMcDa/IGfgi2UFyNIBHC4IOtVQe
+         ewSes1shsw4HuhTX4jGGQYSj8cf70+55D26trvtEdu0Ga1+5vi/2vlkrQZm5MoRuyZy8
+         +Ai/HCeZeScBq4gIveQWGiIhCz5oTc45frzL/oKwTMEWSGhkaY8s/mvPFO6GNhchRV5s
+         SlOly8T2JbdRWcbWXB1dilohyTUaRyAt8L8MR2yY2o8hMLhuj7OlY9GuHaTBtRab0bxD
+         2Qsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743275247; x=1743880047;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5zCE82IEEUW3OgJQOexggjw77Krndyt+WM9SEFSCbzs=;
-        b=OtN3vfsAKDnceetqcPMeM7Evo45ZyrIw3ixMoyjnDjSlYYxiEwACoBd+xDixyEIysO
-         3lDwr+PxI7+FV2WRUl3LOSriKkeIYyxVfRxlqCjOR0cCwppHI1l7xFH24+H9uvCd7jbn
-         hAAUbAujPsodh+lzCf6sj1Ir5G9OWc2Y7VEtD0HRBoViW0tAS18N4E/OjX4p8081hJQz
-         ebQY470RPzqYIEbEY7grKqawXrkqQeayZvV+ZjbAksuPO2WX8Da5H+XYImZ6gt1r+ZEy
-         d1ruRTwglHiXPDS0117wp0LeMY25Lk7YGfh6cg6AFgWtPdDR93h0cH4fQEp8L6Yl6u1B
-         BNIg==
-X-Gm-Message-State: AOJu0Ywv+mhTDzGWHmJvTF7X6mPSLlNEHId0Fh6s2sB6GfDUK9PPQm2Q
-	3X9BK+b/E3V1NI7RGzFD+aJx2tWp7Ix7DpWU6jn24U6B+OgJ/GQF
-X-Gm-Gg: ASbGncuYE0GfJHL0WCS+e6DJKtX8XUQXLcf1E0O0dz1/fa+uGn/gebUzoqVUoqQsrdO
-	01q6DUR1afftHGAmxQcP8Edq0zbsZLaqTxu49S6zW5QIv81gyvGdv1qK757fG7wBcozPHzbwPOM
-	Yx7JffYTA0BqoycfPOMf6CJfM65sCTMC8O4LAxCOwXUyerUu+WHpuRQHgrLregxjsRQK78MkrnH
-	EvzWJO1Z0xJ9nHEsljs9mOK28O/1RLqbjXOupQLW/DX0Bqwr+To7ieG2ggbIYR1FSAPktBon3GM
-	fjDU6ZBdlDq07FqGisEPaIWy7r/BhIb9OiZoqeKDvg0L6DXdCt1ggOwlqm5AsPhiK7tgh/pmSGI
-	p5HpWZq1ZoRf0rn4s3xKmcLIsKz3rXd3fAB+t4w+BUhsK71wnD8P57FzzeyWOavddm5Dadw==
-X-Google-Smtp-Source: AGHT+IEWt7Qj737jJHCaN2ZyByecAgGhDvAAdbgZl/B8p5LpJrELRizAUQQWktSqw+FFBr/8ZteT5g==
-X-Received: by 2002:a05:6402:2689:b0:5dc:c531:e5c0 with SMTP id 4fb4d7f45d1cf-5edfde2067bmr3759805a12.27.1743275246879;
-        Sat, 29 Mar 2025 12:07:26 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-ad73-6800-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:ad73:6800::e63])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aac05sm3275271a12.3.2025.03.29.12.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 12:07:25 -0700 (PDT)
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org,
-	linux-phy@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kishon@kernel.org,
-	vkoul@kernel.org,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH v2 2/2] phy: amlogic: meson8b-usb2: Use the regmap_{clear,set}_bits helpers
-Date: Sat, 29 Mar 2025 20:07:12 +0100
-Message-ID: <20250329190712.858349-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250329190712.858349-1-martin.blumenstingl@googlemail.com>
-References: <20250329190712.858349-1-martin.blumenstingl@googlemail.com>
+        d=1e100.net; s=20230601; t=1743275612; x=1743880412;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nJcGnPcqe3iN7N1I+Go0o0oWDdL9OLHD+1UStBOXd2c=;
+        b=eSE3GBl/wPyaMjlS978WxnrUgd7wgy4V4hhR+GxuT/jvVvHfQerOSVfR6MRUdvCL4u
+         UAyyy6skZWBR1edvfZV5iYtbQIQT/D2gj2cO4+/gJg6BgRCtHUIA7FFbs8Mv+lUNQZQm
+         0OotkoPh1H2VGnZlalCt71jvqVlvbosC5ir/hAq3pyM11+TRGEj1Tq7d41uP9RKm8mUo
+         2Kt4y/5rD0Yb+poQXN4y9cuCVPj+1q3AJQnzUW/g9A+HNRZnbBhCbbfhD0KhO7ZoRUic
+         WdV/9HikxpxQnWyRutKvOiDiuIjk8P//mWsqc3fy+SyvI+yy7GJl96miLcTjHjli0BD0
+         F2kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk/QsX5W3vQXejcLWL4hzqHtCXY7XVfrM7W8p/kL9o4Me3uwQks+t9fsQuglpApS7XpZI+PLXnjSycqNg=@vger.kernel.org, AJvYcCV8uO0f2kVfr5bbQA7fwOx54hfHO/mtpfVFszz6/CaU9Zr34qE3j/Y1UiqWoBAihbQxehZMnuyBJJTxwpHPZp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0eeV8hOa29Zzg1gaLVCNrDaPWrrT/9V/3GMd8jhhl6eyRoN1q
+	kYOnjUteCYMz8E1aw4/UK5zV08oZ76vECsAigDXDWaOFV9RHxNjp
+X-Gm-Gg: ASbGnctlZilDZKsq57YfHlEy06WeNsrtg72YDQXRPWsyLYGFHV3aWYk2Rhnih99KKFf
+	MU0XjrBaCLdHKAmAB4JODP2F9Svi/khHrnythciD+O3TnzO/xQfWYOjAFH39aBmgWSEmvdalxM3
+	M9js7pEetxaH2ceu1lUwF3IKJp9bfax/iaHReywisL3hzrqUhMBiW0uI+swCIftPQXX4W++L/I5
+	4LkHnZzwibKREplPJKpZUtQPX6HKFMG7dqyqNPF0/UlgH+hVNWzXv9Vd47AyBfPsVLt0Occzfdw
+	ep5k27KI4UUVcQSvW0bX1EjgGyhDqRocRyOvLi4HL/7HKAAuHLcEEsS05fNNS1NSI21Pv88A8q+
+	8dBFNsLM=
+X-Google-Smtp-Source: AGHT+IExhS+UYM2t2Om26UAFOuIMtcC5jON9sZ2nZRoKA7uc+rWEkPuHhPHZdR3ob/+tcTS4xwYZ5Q==
+X-Received: by 2002:a05:6a00:148a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7398033ad19mr4613230b3a.2.1743275612277;
+        Sat, 29 Mar 2025 12:13:32 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6? ([2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710d796esm3948013b3a.168.2025.03.29.12.13.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Mar 2025 12:13:31 -0700 (PDT)
+Message-ID: <564042d9-0645-4a0d-aac8-383b0c699b49@gmail.com>
+Date: Sun, 30 Mar 2025 00:43:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] openrisc: Add cacheinfo support and introduce new
+ utility functions
+To: Stafford Horne <shorne@gmail.com>
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+ sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250329094622.94919-1-sahilcdq@proton.me>
+ <Z-fHhT-0a-fEkPnD@antec>
+Content-Language: en-US
+From: Sahil Siddiq <icegambit91@gmail.com>
+Autocrypt: addr=icegambit91@gmail.com; keydata=
+ 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
+ rPgMe6IIvn24UuW2f6fIt0AaqOWq
+In-Reply-To: <Z-fHhT-0a-fEkPnD@antec>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-These require less code, reduce the chance of typos and overall make the
-intent clearer. No functional changes.
+Hi,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/phy/amlogic/phy-meson8b-usb2.c | 28 ++++++++++----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+On 3/29/25 3:42 PM, Stafford Horne wrote:
+> Thanks for the respin.
+> 
+> I will take this version and put it in linux next to see if any issues come up.
+> 
+> -Stafford
 
-diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
-index d9c761b7c15c..a553231a9f7c 100644
---- a/drivers/phy/amlogic/phy-meson8b-usb2.c
-+++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
-@@ -165,8 +165,7 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
- 		return ret;
- 	}
- 
--	regmap_update_bits(priv->regmap, REG_CONFIG, REG_CONFIG_CLK_32k_ALTSEL,
--			   REG_CONFIG_CLK_32k_ALTSEL);
-+	regmap_set_bits(priv->regmap, REG_CONFIG, REG_CONFIG_CLK_32k_ALTSEL);
- 
- 	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_REF_CLK_SEL_MASK,
- 			   FIELD_PREP(REG_CTRL_REF_CLK_SEL_MASK, 0x2));
-@@ -175,23 +174,20 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
- 			   FIELD_PREP(REG_CTRL_FSEL_MASK, 0x5));
- 
- 	/* reset the PHY */
--	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET,
--			   REG_CTRL_POWER_ON_RESET);
-+	regmap_set_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET);
- 	udelay(RESET_COMPLETE_TIME);
--	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET, 0);
-+	regmap_clear_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET);
- 	udelay(RESET_COMPLETE_TIME);
- 
--	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
--			   REG_CTRL_SOF_TOGGLE_OUT);
-+	regmap_set_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT);
- 
- 	if (priv->dr_mode == USB_DR_MODE_HOST) {
--		regmap_update_bits(priv->regmap, REG_DBG_UART,
--				   REG_DBG_UART_SET_IDDQ, 0);
-+		regmap_clear_bits(priv->regmap, REG_DBG_UART,
-+				  REG_DBG_UART_SET_IDDQ);
- 
- 		if (priv->match->host_enable_aca) {
--			regmap_update_bits(priv->regmap, REG_ADP_BC,
--					   REG_ADP_BC_ACA_ENABLE,
--					   REG_ADP_BC_ACA_ENABLE);
-+			regmap_set_bits(priv->regmap, REG_ADP_BC,
-+					REG_ADP_BC_ACA_ENABLE);
- 
- 			udelay(ACA_ENABLE_COMPLETE_TIME);
- 
-@@ -214,17 +210,15 @@ static int phy_meson8b_usb2_power_off(struct phy *phy)
- 	struct phy_meson8b_usb2_priv *priv = phy_get_drvdata(phy);
- 
- 	if (priv->dr_mode == USB_DR_MODE_HOST)
--		regmap_update_bits(priv->regmap, REG_DBG_UART,
--				   REG_DBG_UART_SET_IDDQ,
--				   REG_DBG_UART_SET_IDDQ);
-+		regmap_set_bits(priv->regmap, REG_DBG_UART,
-+				REG_DBG_UART_SET_IDDQ);
- 
- 	clk_disable_unprepare(priv->clk_usb);
- 	clk_disable_unprepare(priv->clk_usb_general);
- 	reset_control_rearm(priv->reset);
- 
- 	/* power off the PHY by putting it into reset mode */
--	regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET,
--			   REG_CTRL_POWER_ON_RESET);
-+	regmap_set_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET);
- 
- 	return 0;
- }
--- 
-2.49.0
+Sounds good. Let me know if any more changes are required.
 
+> On Sat, Mar 29, 2025 at 03:16:19PM +0530, Sahil Siddiq wrote:
+>> Hi,
+>>
+>> The main purpose of this series is to expose CPU cache attributes for
+>> OpenRISC in sysfs using the cacheinfo API. The core implementation
+>> to achieve this is in patch #3. Patch #1 and #2 add certain enhancements
+>> to simplify the implementation of cacheinfo support.
+>>
+>> Patch #1 removes duplication of cache-related data members in struct
+>> cpuinfo_or1k.
+>>
+>> Patch #2 introduces several utility functions. One set of functions is
+>> used to check if the cache components and SPRs exist before attempting
+>> to use them. The other set provides a convenient interface to flush or
+>> invalidate a range of cache blocks.
+>>
+>> While testing these changes with QEMU, I realized that the check being
+>> performed in cpu_cache_is_present() would always get evaluated to true
+>> when the UPR_UP bit was set. This series fixes this check and addresses
+>> v4's review comments.
+>>
+>> Thanks,
+>> Sahil
+>>
+>> Sahil Siddiq (3):
+>>    openrisc: Refactor struct cpuinfo_or1k to reduce duplication
+>>    openrisc: Introduce new utility functions to flush and invalidate
+>>      caches
+>>    openrisc: Add cacheinfo support
+>>
+>>   arch/openrisc/include/asm/cacheflush.h |  17 ++++
+>>   arch/openrisc/include/asm/cpuinfo.h    |  24 ++++--
+>>   arch/openrisc/kernel/Makefile          |   2 +-
+>>   arch/openrisc/kernel/cacheinfo.c       | 104 +++++++++++++++++++++++++
+>>   arch/openrisc/kernel/dma.c             |  18 +----
+>>   arch/openrisc/kernel/setup.c           |  45 +----------
+>>   arch/openrisc/mm/cache.c               |  56 ++++++++++---
+>>   arch/openrisc/mm/init.c                |   5 +-
+>>   8 files changed, 196 insertions(+), 75 deletions(-)
+>>   create mode 100644 arch/openrisc/kernel/cacheinfo.c
+>>
+>>
+>> base-commit: ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e
+>> -- 
+>> 2.48.1
+>>
+
+Thanks,
+Sahil
