@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914F801;
-	Sat, 29 Mar 2025 01:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1009D2940F;
+	Sat, 29 Mar 2025 01:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743212223; cv=none; b=LsNr3MW9V1Nd/eU8LoFCuX950dz+iRLB5jnE7HBwlq9nq6kixLAitOVmAvN94xA+Ey7uK+9UkVDqGQPJZRjMLjP3YT3v7T9hicBlQktJwocNql5XwvKdGD6CBjgq4ev7lC880/IzdOoCMMTWg/Exm6jQmCE1CmcUfrFiIepY2iU=
+	t=1743212225; cv=none; b=mO5VmHzywdpLYabKrQ/xkudq07ppDICqkxpsKiHW8RThtEfOLIp6UAyX7QeWHCLLp0S8WxWlkh9stVOz0cAO0OLB9BMEdEnVZM3S/LzVNFfX5eCt92wVMaSONud4bJyuFq4v33Z/lnDb5S8pE2HE+ThkCHs/xQvv3FDlTy3jyV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743212223; c=relaxed/simple;
-	bh=o5gMyn/mlm4eQI/Dl0X9AbYok0h90x/eTaw9nzXxVOE=;
+	s=arc-20240116; t=1743212225; c=relaxed/simple;
+	bh=AEGkd/T+++fTkI+0PWDV+7VHoIu42JovBtOhzZmLmYY=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=jBy9MimD4Shw/othgHQKTGNFeFn0GdaTOAZOWQHlhMPO6HjSuyHH/318YhCn/3T8YPJ6CK4+tkdWKUW/kZ0I2ISbJFQdCsA+uX45539qkHpYgcX3LSv9O5gC/4kuCB6XzmTUrouxVMZL6223eD9uPck8StrDAtheicRJKt15+hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxBdoQmZ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=MztR6d3kqUurVQO47nHtw5fYOVzrQYKNpZ+rLToB/H1i7gSqzAmksNWpePfP5IMz5d4BPDt5f1NspyGMqP0DXMj4M8F0/Lcg0AAGsfEvXUgCnOmND2Mkl6iwrqNfXxkG4uLTAEdulmLLeTv7nAXnmHsCy3HN0+0o4nDm5wMgmHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wzn/Hixh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxBdoQmZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6478C4CEE4;
-	Sat, 29 Mar 2025 01:37:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wzn/Hixh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FAEC4CEE4;
+	Sat, 29 Mar 2025 01:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743212223;
-	bh=o5gMyn/mlm4eQI/Dl0X9AbYok0h90x/eTaw9nzXxVOE=;
+	s=k20201202; t=1743212224;
+	bh=AEGkd/T+++fTkI+0PWDV+7VHoIu42JovBtOhzZmLmYY=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=NxBdoQmZGTDH1AlPECrbDPD9Q2HdKGVHCD+APkAyVEB0q3uQbazXzYky6Uk/oQhz/
-	 pdOGfSrTaKOgAc4VcVRZfAEeiI1qeZe5rcQqtMxARHt39JOCgb5oXdNc/2+oIqllVj
-	 kPhKxEbmrxXvFX44pgNw4bTya/KBOWJsy0KjRBDxKq1Dz1p8lF3wAnWKakTdKgv4h0
-	 WsD3vYjVelPUch+0ShOmeqVCeu6YY4m3tH0m3xXswnSorSpmpTv4rSzOOME1zfSw61
-	 mcWfEv4Lhqbm3mkPpViVSSVrKEeRZWdoBKOdvvFdV+du49Rm3Q6ucakKlxEwxFgCHs
-	 0O//k268HPjvw==
-Date: Fri, 28 Mar 2025 20:37:02 -0500
+	b=Wzn/Hixhr00W282gN8wMfNXVqujyRBD/N1zXVNfwQhUYT0JD77S5LkNNDcuc+azP+
+	 gLuS3nZketikuMV7Vif76r992Ut6hOP7lwyxMMRDRXVxzrHq+cm4/dRIneXcCivGvA
+	 fIBua5rXlj9n75KVn47EyIAjU7KtRvjcyv7ledw3ioRD602WGeetiEvJmMNH9j4FP9
+	 dalINg8y2ydVsWsO8O6QmpQgpFcn0yBR5ZLzNZq0QbcLYdB1BbggK5azbXXv6CGqeb
+	 1gpCqzisWJNYRGb/WWQQV/CLLqcJSdSZD0YUAb7hvlxbLBTtWqFYa5f6PrkFLKqPS3
+	 YZpb0/l0m0ZTg==
+Date: Fri, 28 Mar 2025 20:37:03 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,37 +36,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: davem@davemloft.net, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Richard Cochran <richardcochran@gmail.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, netdev@vger.kernel.org, 
- Jakub Kicinski <kuba@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Fabio Estevam <festevam@gmail.com>, 
- Eric Dumazet <edumazet@google.com>, linux-arm-kernel@lists.infradead.org, 
- Andrew Lunn <andrew+netdev@lunn.ch>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>
-To: Lukasz Majewski <lukma@denx.de>
-In-Reply-To: <20250328133544.4149716-2-lukma@denx.de>
-References: <20250328133544.4149716-1-lukma@denx.de>
- <20250328133544.4149716-2-lukma@denx.de>
-Message-Id: <174321222112.2172775.16689010014876150131.robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch
- description
+Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, linux@roeck-us.net, 
+ Thomas Fossati <thomas.fossati@linaro.org>, linux-watchdog@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, wim@linux-watchdog.org, S32@nxp.com, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+Message-Id: <174321222207.2172829.15350189767926637719.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
 
 
-On Fri, 28 Mar 2025 14:35:41 +0100, Lukasz Majewski wrote:
-> This patch provides description of the MTIP L2 switch available in some
-> NXP's SOCs - e.g. imx287.
+On Fri, 28 Mar 2025 16:15:13 +0100, Daniel Lezcano wrote:
+> Describe the Software Watchdog Timer available on the S32G platforms.
 > 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
-> Changes for v2:
-> - Rename the file to match exactly the compatible
->   (nxp,imx287-mtip-switch)
-> ---
->  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 165 ++++++++++++++++++
->  1 file changed, 165 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+>  .../bindings/watchdog/nxp,s32g-wdt.yaml       | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -74,15 +66,13 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: /example-0/switch@800f0000: failed to match any schema with compatible: ['nxp,imx287-mtip-switch']
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: ethernet-phy@0: interrupts: [[13], [2]] is too long
-	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: ethernet-phy@1: interrupts: [[13], [2]] is too long
-	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.example.dts:18.29-23.11: Warning (unit_address_format): /example-0/watchdog@0x40100000: unit name should not have leading "0x"
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.example.dtb: watchdog@0x40100000: 'timeout-sec' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/watchdog/nxp,s32g-wdt.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250328133544.4149716-2-lukma@denx.de
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250328151516.2219971-1-daniel.lezcano@linaro.org
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
