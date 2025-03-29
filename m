@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6882A50;
-	Sat, 29 Mar 2025 04:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4042D635;
+	Sat, 29 Mar 2025 04:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743223126; cv=none; b=u0TLz9SndrxuM+c1GeUTToocA0k+T60ezx+NhLpOVtYZ2bi4l56LIpPEzi2I6w92HByDSXgKTN0+DCjoa2Pu8X38p9/ERpVckZVyTt3fTyfuCUDSggXWyo/vV9q8852Kj4XjY8RMowqSu7S79uBMf8FbZ3fsPrFL8dAubbGBmX8=
+	t=1743223387; cv=none; b=b+54aj79HkU6dgxfRLnnMcg2ILnFCVR086YIqSOD1x20orZdl5UZ2dBkhZWdO33tCdHgXUM93qby2xBEVjS+wqXvDwpBOa3dKog143upLK4IV+y9T9qJZ66aQ168LdX7m8X8zE4x7fcqiS9EAnSGr1siw6UkU39UJ6erT2YKfI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743223126; c=relaxed/simple;
-	bh=7q+Yck0Cj6soZ9tM/uUP3AbbuXduATe0/O5ptwVEFl4=;
+	s=arc-20240116; t=1743223387; c=relaxed/simple;
+	bh=uSwmc85sM9+0Oil5i3TgIA6/atbjT0fvVTmGzPHOcFs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jD94btCVRA9oomufz8W4LM5Rf6Ag597IaeU5dM7d87f2060i05hx/F8KHM7qdfLE0NOgyQYr0M8ES7hMQdqFfXerCIx1+21gzX2LgpBdvDWITJ8dMpmOpN9yQOpHQ7HiiW8zu41GY7rkEhlI17GaxatS2l5hLTLOtanJP/sh/ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwfM2noP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tE2xMZvBZtjB+QjoGp40ka9+9AxXaoCVAd5UWddOycFvlHpmzZVPO+9iFZsFYnafGuD64LphAhYNWQucC+MO1kQkvt50FS86QDvNMGk2h/mPm2E9WLLtHFUEXOSyEK1TOrzc1cFN5SknAdTmYf8PzbIDirAlXGW/JYprSr0BJA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/YO923h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwfM2noP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A214CC4CEE2;
-	Sat, 29 Mar 2025 04:38:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/YO923h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E616CC4CEE2;
+	Sat, 29 Mar 2025 04:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743223125;
-	bh=7q+Yck0Cj6soZ9tM/uUP3AbbuXduATe0/O5ptwVEFl4=;
+	s=k20201202; t=1743223386;
+	bh=uSwmc85sM9+0Oil5i3TgIA6/atbjT0fvVTmGzPHOcFs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uwfM2noPG2VVUQs9TuPyNnrEGG27RYJpinuBps7bz436mXOYOs6HdJ4V1lmjdNLU/
-	 GJ0/oEcBRdZAmEU/u3HU81vNQPnJfM7tnxJJM+ljzMyFlh+VTEWLGsaeDgxvURn6q/
-	 p6tniCTH2Etqhak7oe4L/ZTYwOJwDOACKgVN3GxBRCgDzX4raGBQCLHUQtWaMr4RsL
-	 2HIACrUIMEWxOpsQZOCIbWiILdKNsL4c5In2i32SEwBOn6qzJWlq0HB7tGRrNeoK8O
-	 QuyN7VJuHbadyKsPuTLBEbrjCmc5G/LE0CD/EAmm3nRmdtz0mLWbITJEl411iHlKhA
-	 u+vYO50fiOhig==
-Message-ID: <26ab079e-9178-4936-9dd9-6aa66916a59a@kernel.org>
-Date: Sat, 29 Mar 2025 05:38:38 +0100
+	b=N/YO923h4W5cT5sr6RpxaCVcDLeh3vL5Eh9x4B40khJjlWlaLaFq+k09DUyXEgBQL
+	 yNR/fvEcJVUIe2p3n5ju3tKV2aOV1KZ9gd5+oCepLtaUk0aUSRZMi6AnHIFfzH5At0
+	 mFfogdCANGpolvr0gIWAfsGjF+3UiIreXmxjZL+GZADPjTnL/eujt6Wibefh1pkcM6
+	 9QD6kwaLaCgAhRpIMcB4Duktpa+/muj6JRRNxnKK9AJOx/c1pOJ9AvARnxTBMeeVSs
+	 HdaVhcbnCo2QddbRVX1YsBKqE2raA0DDy81cu3tE8wUZYFHlpii0eUYnvCEdlNwztF
+	 rRHlhjJi58BMA==
+Message-ID: <5a17a122-6e17-408d-b4c1-49a7e1517861@kernel.org>
+Date: Sat, 29 Mar 2025 05:42:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: soc: ti: bist: Add BIST for K3
- devices
-To: Neha Malcom Francis <n-francis@ti.com>, nm@ti.com, vigneshr@ti.com,
- kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, u-kumar1@ti.com
-References: <20250328111439.374748-1-n-francis@ti.com>
- <20250328111439.374748-2-n-francis@ti.com>
- <fc4d9a33-2d3f-47e2-b1cf-59962cc54bce@kernel.org>
- <71f19095-02c5-4d9a-8c6f-c51fb4ea9b36@ti.com>
+Subject: Re: [RFC PATCH 1/4] dt-bindings: pinctrl: Add eswin,eic7700-pinctrl
+ binding
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>,
+ Min Lin <linmin@eswincomputing.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+ <20250325141311.758787-2-emil.renner.berthing@canonical.com>
+ <20250326-owl-of-algebraic-wealth-61aeda@krzk-bin>
+ <CAJM55Z9+dpbqt-c=55WXUXsw=Dhk6m6Q1_Js3s-T+8W7dtrURQ@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,58 +98,80 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <71f19095-02c5-4d9a-8c6f-c51fb4ea9b36@ti.com>
+In-Reply-To: <CAJM55Z9+dpbqt-c=55WXUXsw=Dhk6m6Q1_Js3s-T+8W7dtrURQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 13:42, Neha Malcom Francis wrote:
-> On 28/03/25 17:18, Krzysztof Kozlowski wrote:
->> On 28/03/2025 12:14, Neha Malcom Francis wrote:
->>> +properties:
->>> +  compatible:
->>> +    const: ti,j784s4-bist
->>> +
->>> +  reg:
->>> +    maxItems: 2
->>> +
->>> +  reg-names:
->>> +    items:
->>> +      - const: cfg
->>> +      - const: ctrl_mmr
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  power-domains:
->>> +    maxItems: 1
->>> +
->>> +  ti,bist-under-test:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +    description:
->>> +      the device IDs of the devices under test control of the BIST device, the
+On 26/03/2025 10:57, Emil Renner Berthing wrote:
+
+Please kindly trim the replies from unnecessary context. It makes it
+much easier to find new content.
+
+
 >>
->> Still not phandle... What is a "device ID"?
+>>> +    type: object
+>>> +    additionalProperties: false
+>>> +
+>>> +    patternProperties:
+>>> +      '-pins$':
+>>> +        type: object
+>>> +        allOf:
+>>> +          - $ref: /schemas/pinctrl/pincfg-node.yaml#
+>>> +          - $ref: /schemas/pinctrl/pinmux-node.yaml#
+>>> +
+>>> +        additionalProperties: false
+>>> +
+>>> +        description:
+>>> +          A pinctrl node should contain at least one subnode describing one
+>>> +          or more pads and their associated pinmux and pinconf settings.
+>>> +
+>>> +        properties:
+>>> +          pins:
+>>> +            items:
+>>> +              enum: [ CHIP_MODE, MODE_SET0, MODE_SET1, MODE_SET2, MODE_SET3,
+>>> +                      XIN, RTC_XIN, RST_OUT_N, KEY_RESET_N, GPIO0, POR_SEL,
+>>> +                      JTAG0_TCK, JTAG0_TMS, JTAG0_TDI, JTAG0_TDO, GPIO5, SPI2_CS0_N,
+>>> +                      JTAG1_TCK, JTAG1_TMS, JTAG1_TDI, JTAG1_TDO, GPIO11, SPI2_CS1_N,
+>>> +                      PCIE_CLKREQ_N, PCIE_WAKE_N, PCIE_PERST_N, HDMI_SCL, HDMI_SDA,
+>>> +                      HDMI_CEC, JTAG2_TRST, RGMII0_CLK_125, RGMII0_TXEN,
+>>> +                      RGMII0_TXCLK, RGMII0_TXD0, RGMII0_TXD1, RGMII0_TXD2,
+>>> +                      RGMII0_TXD3, I2S0_BCLK, I2S0_WCLK, I2S0_SDI, I2S0_SDO,
+>>> +                      I2S_MCLK, RGMII0_RXCLK, RGMII0_RXDV, RGMII0_RXD0, RGMII0_RXD1,
+>>> +                      RGMII0_RXD2, RGMII0_RXD3, I2S2_BCLK, I2S2_WCLK, I2S2_SDI,
+>>> +                      I2S2_SDO, GPIO27, GPIO28, GPIO29, RGMII0_MDC, RGMII0_MDIO,
+>>> +                      RGMII0_INTB, RGMII1_CLK_125, RGMII1_TXEN, RGMII1_TXCLK,
+>>> +                      RGMII1_TXD0, RGMII1_TXD1, RGMII1_TXD2, RGMII1_TXD3, I2S1_BCLK,
+>>> +                      I2S1_WCLK, I2S1_SDI, I2S1_SDO, GPIO34, RGMII1_RXCLK,
+>>> +                      RGMII2_RXDV, RGMII2_RXD0, RGMII2_RXD1, RGMII2_RXD2,
+>>> +                      RGMII2_RXD3, SPI1_CS0_N, SPI1_CLK, SPI1_D0, SPI1_D1, SPI1_D2,
+>>> +                      SPI1_D3, SPI1_CS1_N, RGMII1_MDC, RGMII1_MDIO, RGMII1_INTB,
+>>> +                      USB0_PWREN, USB1_PWREN, I2C0_SCL, I2C0_SDA, I2C1_SCL, I2C1_SDA,
+>>> +                      I2C2_SCL, I2C2_SDA, I2C3_SCL, I2C3_SDA, I2C4_SCL, I2C4_SDA,
+>>> +                      I2C5_SCL, I2C5_SDA, UART0_TX, UART0_RX, UART1_TX, UART1_RX,
+>>> +                      UART1_CTS, UART1_RTS, UART2_TX, UART2_RX, JTAG2_TCK, JTAG2_TMS,
+>>> +                      JTAG2_TDI, JTAG2_TDO, FAN_PWM, FAN_TACH, MIPI_CSI0_XVS,
+>>> +                      MIPI_CSI0_XHS, MIPI_CSI0_MCLK, MIPI_CSI1_XVS, MIPI_CSI1_XHS,
+>>> +                      MIPI_CSI1_MCLK, MIPI_CSI2_XVS, MIPI_CSI2_XHS, MIPI_CSI2_MCLK,
+>>> +                      MIPI_CSI3_XVS, MIPI_CSI3_XHS, MIPI_CSI3_MCLK, MIPI_CSI4_XVS,
+>>> +                      MIPI_CSI4_XHS, MIPI_CSI4_MCLK, MIPI_CSI5_XVS, MIPI_CSI5_XHS,
+>>> +                      MIPI_CSI5_MCLK, SPI3_CS_N, SPI3_CLK, SPI3_DI, SPI3_DO, GPIO92,
+>>> +                      GPIO93, S_MODE, GPIO95, SPI0_CS_N, SPI0_CLK, SPI0_D0, SPI0_D1,
+>>> +                      SPI0_D2, SPI0_D3, I2C10_SCL, I2C10_SDA, I2C11_SCL, I2C11_SDA,
+>>> +                      GPIO106, BOOT_SEL0, BOOT_SEL1, BOOT_SEL2, BOOT_SEL3, GPIO111,
+>>> +                      LPDDR_REF_CLK ]
+>>
+>> All these should be lowercase.
 > 
-> I took a shot at working with the phandle, however the test devices may
-> or may not be present in the devicetree at bootloader stage which is the
+> Plenty of pinctrl drivers use uppercase names for the pins, intel, amd,
+> mediatek to name a few, and this is also what the EIC7700 documentation uses.
+> Do you still wan't Linux to call the pins something else?
 
-If the nodes are not in DT, then you should not reference them here.
-Bootloader is supposed to receive all the nodes it is expected to work on.
+I am not asking you to use different names than in datasheet. Names will
+be exactly the same and the case does not matter for humans/grepping
+with datasheet. I don't get why using poor examples is the way to argue.
+It's like someone wrote bug, so I can as well...
 
-> only place this BIST driver can execute (I know I shouldn't be bringing
-> up the driver here but it's crucial to how I can model this property).
-> HW mandates you run it as early as possible before any other software
-> executes on the test device.
-> 
-> So now thinking of other possible ways to define the test devices, we
-> have unique HW identifiers [1] for each of the device which is what I've
-> used here...
-> 
-> [1]
-> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/arm/keystone/ti%2Ck3-sci-common.yaml#L31
-
-Then do not redefine properties, but use one common definition.
-
+Well fine.
 
 Best regards,
 Krzysztof
