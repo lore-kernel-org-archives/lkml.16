@@ -1,158 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A6E1D5CC5
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 14:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A06339A1;
+	Sat, 29 Mar 2025 14:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743258153; cv=none; b=B+olWvdw4wi3RT2TnQKVBgRbl1202mgUxPoYAjFf89ftB5meuNmNZxTeZ1ARnbflCh68AU/cZZaPau/y8MFyN0Zqd2fCbpM0YBrNt9/yD0BjFJcwVqB8EJOfFGFsC3ycxrZyIIqk/l6PVtXOO5OYaVDJqmK2XkDSKSxevaDqO5E=
+	t=1743258460; cv=none; b=Z96na4MKS+g+DtkNPKx9iXun+kr49qIt+vZ+ReZ7AnkZ8Yllh7+Lqug5ahMkny2wWvOJ4j14NDFso45V8LjuZzYDetFy26aYI0Xm7vseV1u6QHI4miqEHrc94xoY1X0wzvtQ6xIMKILElZ2wtFwTkEv+EiyouaMMONE8Qk+TPpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743258153; c=relaxed/simple;
-	bh=/I6H4s9GOaBgLTyzZBibv5a29XVJ28Rr+JwaWuJyJkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QmjSAN2t4wFvKHqVF5XfuEuiy0Ub7aYjwjDOz/Z1rlm/U8CnQzY7gNJMj+CUZh77uhKR5pmolk1cx6XeuoxZXKK9G9zwrEQjRh0BZ8enpULf1QUa8AgFrvySJ65QAC4BU6MOnyHQqXuzseMiE0iUeCboXbmg3I9DlAxEvxmwNDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gvJaLT+w; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743258460; c=relaxed/simple;
+	bh=TPng5g4WZM1ufzXcuBNCuTBv0uch6Jz3rOrVAhDQTNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=r/12HcnoIpmwHqmvWuEhLH0nMUkS9XsNwa9Hsmg1V4QtAK+luO9uelIwxqAHKzernXq3yl0wp7XfW5DnzRrtycpC/ou0gFxW+nsZ66c+khQW0o5s9eRWTSe8JHVZqgIbRRR8zaBgeqZU9NXMAXVeGChZILx8axlrk1j3WthIUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i0xkoFEi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvJaLT+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743258150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cw4rpcZvmTDlrAmFogt4iV7TrragRM8ByhrNacJd/I4=;
-	b=gvJaLT+wFIQMQ1Lh7I2yvqwezmuxSMPTBKVZ/G1ATMFRMg6hK+083PrJCQpQh9JWEgzbu3
-	x7l2YdDvmyOXSCSfqlLIdQJMBPh35QxuPBPRU20VuhoD7rYG+cF2SU8fFXx1qN7poTkzP4
-	fjxBYQ+Yhzas1q3q+dNJF3i/Gl09+Js=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-173-xkFppxFqO6CGI1faeSn_QQ-1; Sat,
- 29 Mar 2025 10:22:24 -0400
-X-MC-Unique: xkFppxFqO6CGI1faeSn_QQ-1
-X-Mimecast-MFC-AGG-ID: xkFppxFqO6CGI1faeSn_QQ_1743258142
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D12D19373D7;
-	Sat, 29 Mar 2025 14:22:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.25])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D359819560AB;
-	Sat, 29 Mar 2025 14:22:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 29 Mar 2025 15:21:47 +0100 (CET)
-Date: Sat, 29 Mar 2025 15:21:39 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: asmadeus@codewreck.org
-Cc: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>,
-	brauner@kernel.org, dhowells@redhat.com, ericvh@kernel.org,
-	jack@suse.cz, jlayton@kernel.org, kprateek.nayak@amd.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux_oss@crudebyte.com, lucho@ionkov.net, mjguzik@gmail.com,
-	netfs@lists.linux.dev, swapnil.sapkal@amd.com,
-	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev,
-	viro@zeniv.linux.org.uk
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
-Message-ID: <20250329142138.GA9144@redhat.com>
-References: <20250328144928.GC29527@redhat.com>
- <67e6be9a.050a0220.2f068f.007f.GAE@google.com>
- <20250328170011.GD29527@redhat.com>
- <Z-c4B7NbHM3pgQOa@codewreck.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i0xkoFEi"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52T7idao003693;
+	Sat, 29 Mar 2025 14:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uq4Et5owwwGRm0Vo/rx1V2Z7yc/0t/O17YBf+POMpnA=; b=i0xkoFEiSm8RTLNS
+	0bVkPnUWuYgPPZXP4lFmVg8fNeLMXISriAX5cEor61W1WWLOmJZJ2louub5mGfDK
+	OuFLhKDOLqwoVN7KH1we1VDtuSVAcyqNf2JUe+0BywEENi80A9cPPqkiqIz1fvoG
+	4v4WC0h8pVzo48R8Z+7zFk8oA1XCJPMqGaHhDAGXR3YNOeLVmREM8536xtSmZox6
+	khk6l61x6+baVILQVi5CAhUxs8uTVACNd7ZDIYhLcrT2wZ2rGcQjgjQNXLQg6Ld1
+	MxteQsvYBx3xD8gYgWf6MXOe1PjkW7ppmjprBNsGYCNR6HFJc43DhK+ZWuz9wCtW
+	O9b6Sw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p935rvbj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 29 Mar 2025 14:27:30 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52TERTAY024929
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 29 Mar 2025 14:27:29 GMT
+Received: from [10.216.2.59] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 29 Mar
+ 2025 07:27:25 -0700
+Message-ID: <3d6738cf-fc4c-4bc6-b986-9a647867e76f@quicinc.com>
+Date: Sat, 29 Mar 2025 19:57:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-c4B7NbHM3pgQOa@codewreck.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC: Markus Elfring <Markus.Elfring@web.de>, <linux-i3c@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        LKML
+	<linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+ <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+ <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+ <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
+ <a96511dc-5ba1-4302-acb0-f3b49bf8990c@quicinc.com>
+ <20250329104812225f9ee5@mail.local>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250329104812225f9ee5@mail.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: LyoDU4ZznexULVx21UNS5ehTd9SHm9UF
+X-Authority-Analysis: v=2.4 cv=KOFaDEFo c=1 sm=1 tr=0 ts=67e80352 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=X0vEURnw2XWclHXbzQYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: LyoDU4ZznexULVx21UNS5ehTd9SHm9UF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503290104
 
-First of all, let me remind that I know nothing about 9p or netfs ;)
-And I am not sure that my patch is the right solution.
 
-I am not even sure we need the fix, according to syzbot testing the
-problem goes away with the fixes from David
-https://web.git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
-but I didn't even try to read them, this is not my area.
 
-Now, I'll try to answer some of your questions, but I can be easily
-wrong.
-
-On 03/29, asmadeus@codewreck.org wrote:
->
-> Right, so your patch sounds better than Prateek's initial blowing
-> up workaround, but it's a bit weird anyway so let me recap:
-> - that syz repro has this unnatural pattern where the replies are all
-> written before the requests are sent
-
-Yes,
-
-> - 9p_read_work() (read worker) has an optimization that if there is no
-> in fly request then there obviously must be nothing to read (9p is 100%
-> client initiated, there's no way the server should send something
-> first), so at this point the reader task is idle
-
-Yes. But note that it does kernel_read() -> pipe_read() before it becomes
-idle. See below.
-
-> - p9_fd_request() (sending a new request) has another optimization that
-> only checks for tx: at this point if another request was already in
-> flight then the rx task should have a poll going on for rx, and if there
-> were no in flight request yet then there should be no point in checking
-> for rx, so p9_fd_request() only kick in the tx worker if there is room
-> to send
-
-Can't comment, but
-
-> - at this point I don't really get the logic that'll wake the rx thread
-> up either... p9_pollwake() will trigger p9_poll_workfn()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Yes, but where this p9_pollwake() can come from? see below.
-
-> - due to the new optimization (aaec5a95d59615 "pipe_read: don't wake up
-> the writer if the pipe is still full"), that 'if there is room to send'
-> check started failing and tx thread doesn't start?
-
-Again, I can be easily wrong, but no.
-
-With or without the optimization above, it doesn't make sense to start
-the tx thread when the pipe is full, p9_fd_poll() can't report EPOLLOUT.
-
-Lets recall that the idle read worker did kernel_read() -> pipe_read().
-Before this optimization, pipe_read() did the unnecessary
-
-	wake_up_interruptible_sync_poll(&pipe->wr_wait);
-
-when the pipe was full before the reading _and_ is still full after the
-reading.
-
-This wakeup calls p9_pollwake() which kicks p9_poll_workfn().
-
-p9_poll_workfn() calls p9_poll_mux().
-
-p9_poll_mux() does n = p9_fd_poll().
-
-"n & EPOLLOUT" is false, exactly because this wakeup was unnecessary,
-so p9_poll_mux() won't do schedule_work(&m->wq), this is fine,
-
-But, "n & EPOLLIN" is true, so p9_poll_mux() does schedule_work(&m->rq)
-and wakes the rx thread.
-
-p9_read_work() is called again. It reads more data and (I guess) notices
-some problem and does p9_conn_cancel(EIO).
-
-This no longer happens after the optimization. So in some sense the
-p9_fd_request() -> p9_poll_mux() hack (which wakes the rx thread in this
-case) restores the old behaviour.
-
-But again, again, quite possibly I completely misread this (nontrivial)
-code.
-
-Oleg.
+On 3/29/2025 4:18 PM, Alexandre Belloni wrote:
+> On 29/03/2025 14:38:14+0530, Mukesh Kumar Savaliya wrote:
+>> Hi Markus,
+>>
+>> On 3/29/2025 12:34 AM, Markus Elfring wrote:
+>>>>> Under which circumstances would you become interested to apply a statement
+>>>>> like “guard(spinlock_irqsave)(&gi3c->irq_lock);”?
+>>>> Didn't get, hence a question.  Do you suggest to use DEFINE_LOCK_GUARD_1 instead of existing method ?
+>>> I propose to pick further opportunities up for benefits from scope-based resource management.
+>>>
+>> Sorry, still not clear to me what should i add/change ? please share me some
+>> example.
+> 
+> Don't change anything, Markus is wasting your time.
+Clear to me. Thanks a lot !
+> 
 
