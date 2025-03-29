@@ -1,63 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D321DF74E;
-	Sat, 29 Mar 2025 19:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1825190470;
+	Sat, 29 Mar 2025 19:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743278152; cv=none; b=hobzAQBYr3gRlI0HyDzonGApT+zwoDeEjRAzH+CUDWZ6zdJIf/f96vjW5DJHWEvivSc3VAhaWMLrhzAcaZlwiyLugBiXXZ5lr+OZKsBPOU9LxW1WKl25TEdtbHwcLg/GzQZQ5aQlkGg40ZSTI4mwK5Rff957tq5kfN338F++Jcw=
+	t=1743278265; cv=none; b=ojsgAZ7Ssc8HaDnJiNy8ronzDP4/GL1TEwtvdtL4eTIsY0UrqZwtph+ErSz+LKnRi26GN59+Bv/fkUXTV7QPX8HzBuQ07/s9oA7u9luvl3/moQYt3khn7/j5ghi7K9K7geMpcRBBibYFxvoEwRS5u4+LZ9dOdAKaDV3HqN5iINU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743278152; c=relaxed/simple;
-	bh=puwSdO3LvqTx9sRg/DAaMWirKTOUK60gDzsiku6jIj4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FrSg9p5bg2T6QrfiwTCNCAmYgdQL93UmzFK/A9fJcfkhrn0fwNky2+6rSeEOClq+D6duE43lR+Uz7KH2tbxz36JisW65OaItB9KAOsdkoL+q1D8rSzORAgc5i377OVPEodwXG+N9R1QLVBkbfsSYeExC1prEEOIZrDODqUiUg/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiC6dugj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiC6dugj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C41C4CEE2;
-	Sat, 29 Mar 2025 19:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743278152;
-	bh=puwSdO3LvqTx9sRg/DAaMWirKTOUK60gDzsiku6jIj4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=tiC6dugj6OI5oupxc9exU759SUy/sIgnDr/sX4nvuNLFWx0bDi+nEdf944w013P42
-	 u6Xw2u5Lb1ir1FN4H0BMam+O62O8/bvNsKd/Dvl6gqytz+sIfqzuZdGaKX+skBABlz
-	 kJRFBP77nRjPli9Yo/EtJYhV9NaLPnYKY18lyKeu1IgV3aSiyRwZ1Gm2d1feW1o6EU
-	 T1VwTfyrR0tXWj5yWctY60kWsgow5dVfcpAViP/aJT7F8c2SDCoRYNWWZwmSsGuoYc
-	 q1vBUK6Vs2lzVtDYNXQ0XjAUiuez54iLlRQ7ldfJsC8Rgwo+MTASlpmu3QGEaUPBsn
-	 HHvfIMuFMXnzQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34922380AAFA;
-	Sat, 29 Mar 2025 19:56:30 +0000 (UTC)
-Subject: Re: [GIT PULL] parisc architecture fixes and updates for v6.15-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z-fcI2QOldcZOi4f@p100>
-References: <Z-fcI2QOldcZOi4f@p100>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z-fcI2QOldcZOi4f@p100>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git tags/parisc-for-6.15-rc1
-X-PR-Tracked-Commit-Id: e822b8f01b40eb193cf7ebb059ac7c560a562d6f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 883ab4e47c2b514696922243e1d84b7ac36f9d3c
-Message-Id: <174327818888.3264055.3986632374977575867.pr-tracker-bot@kernel.org>
-Date: Sat, 29 Mar 2025 19:56:28 +0000
-To: Helge Deller <deller@gmx.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+	s=arc-20240116; t=1743278265; c=relaxed/simple;
+	bh=nDtKHEALroPsCOl2psrdeC9yCUrrjfkkj9zKlm2Er00=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=V5SpvUqsd5IeTaplNWrRfeEK5Q//yswCIBobpdrlA8X+x2bShwr2kylYLJtv+rTRIp0XyqutL1ym+R54g3gI4+PvU6Bq3RO9TnU8fKW+BbOXBKIkui3ett5J1H09Ya62h1vBAhqilNB2h2CfDx2CmhYc6CIQjDFm8+1ZZxXECRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.153.136) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sat, 29 Mar
+ 2025 22:57:32 +0300
+Message-ID: <9d7f327b-330a-4874-a678-2cc231a4be8e@omp.ru>
+Date: Sat, 29 Mar 2025 22:57:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 5.10.y] KEYS: asymmetric: properly validate
+ hash_algo and encoding
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+To: <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Stefan Berger <stefanb@linux.ibm.com>, Tianjia Zhang
+	<tianjia.zhang@linux.alibaba.com>, Eric Biggers <ebiggers@google.com>, Vitaly
+ Chikunov <vt@altlinux.org>, Jarkko Sakkinen <jarkko@kernel.org>
+References: <256fc608-5e12-4473-bf66-c88658722c76@omp.ru>
+Content-Language: en-US
+Organization: Open Mobile Platform
+In-Reply-To: <256fc608-5e12-4473-bf66-c88658722c76@omp.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/29/2025 19:44:11
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 192222 [Mar 29 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
+ 68896fb0083a027476849bf400a331a2d5d94398
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info:
+	213.87.153.136:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.153.136
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/29/2025 19:46:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/29/2025 3:51:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-The pull request you sent on Sat, 29 Mar 2025 12:40:19 +0100:
+Hello!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git tags/parisc-for-6.15-rc1
+   Ugh, just realized that I managed to get the stable address wrong -- another resend needed... :-/
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/883ab4e47c2b514696922243e1d84b7ac36f9d3c
+MBR, Sergey
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
