@@ -1,323 +1,111 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DAF1B4138;
-	Sat, 29 Mar 2025 22:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF09BA932;
+	Sat, 29 Mar 2025 22:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743286214; cv=none; b=ID9TCQxlGG+FrVvxOC4nK1JhFPC7qeOr86tDz8gHNmxA64nJGZImiM0X4EHbliG4peVTZ3eGqbR9joj9BgOXyb4VUlBfBou3Dq9n1RS5dqgtQ9V2lYnA/pWmXS9EmE3I2o2eNG0ha5JnkTsV8rk0rNKuBVPOzw2JUWM9ze/cKy4=
+	t=1743286414; cv=none; b=VP+D8CflKLgz8SYf6iru/4HlxVgnjuIfW5s2lfxRmXcEbTyYthk9GcuUzsIT7J3NamVrlNxxSjiiVfaYW1UqUQ/rf/Pn2SjKNN14sOzrQ0os4fWKpAOxGFbZQdOleoRhDfZ5/UNgUeNR05fnqtulgmxr8Se3U5y2TapKoDkQCA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743286214; c=relaxed/simple;
-	bh=pZpq9ghubjJLhD+JS8dYzRXBCv3CK7S4BnH8+Gq+jls=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eMqzwazn1/sw9/9utOImN+/lWAeWoiUSi0qyPtLDKaUaRwLmjZ0PgFGU+IoiD0D65NsxUXzrV7nk/CikErjK+FAlnM9yDN5G4hkMLJtKFh32UgkK2LOdHlbbNqdQG1Wx8IeAvwVTNJk+6BmPClTpYmxj2eMZEgnFaNocJ5RQbdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=AE8ZduE3; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743286414; c=relaxed/simple;
+	bh=UNcrhMVK9+6ggiDuG4lotXX9rn+JtIXO2R2M7+oyDsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r0kwAa7sDvedjWocewg254nTs4R3GQtF8gWzp8gqPYjPPUbL07ugUax6Sb8fO29wqK+wKDkoX45frXKiDJDCYapSfRaIlThHR+9L34rF84KDSWs0F7zHVKmnnxHj7WGY2cN6M5c5NjnHN6ZPFE8BXLjL2KBUpWyJkfVG4rYaEec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQr6n6PV; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="AE8ZduE3"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2117910290279;
-	Sat, 29 Mar 2025 23:10:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743286209; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=OfWmKzMpdhulgNMGGh3laefwHhLvWPtC8uEl5axzFsw=;
-	b=AE8ZduE3XoX4GiJCzdR+S+uagY3W1crhK/9Od/0Du+QVU4y8VvoDLlYYTDV9kGoIoNpilx
-	WR3M9k1vokP49/Jn1bmr8qz7R86785D0aJ3iKLhYhpS4gtcANNPMRIDso7WMGTKdMOUzX2
-	eO5q4adU7YC7IFkjmcY3sMOEPGgbqou7xoIuZ03aiLgGXXaUuk6FlMNdsGUOYE0+JS9Qgj
-	ncNBLIEhuz2buRy3I6eQinFMApz+GtQm1owfcp97isb/GbKyt6Dv9wIelTUU3mvWvc9H9z
-	O8GLVicWGe3phK+pjb6gV6wvRPH2H+OeHpQEHAjhrxQOJKgreOGqXSy9dYmM3A==
-Date: Sat, 29 Mar 2025 23:10:04 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <20250329231004.4432831b@wsk>
-In-Reply-To: <e6f3e50f-8d97-4dbc-9de3-1d9a137ae09c@kernel.org>
-References: <20250328133544.4149716-1-lukma@denx.de>
-	<20250328133544.4149716-2-lukma@denx.de>
-	<e6f3e50f-8d97-4dbc-9de3-1d9a137ae09c@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQr6n6PV"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6df83fd01cbso15761606d6.2;
+        Sat, 29 Mar 2025 15:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743286411; x=1743891211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UNcrhMVK9+6ggiDuG4lotXX9rn+JtIXO2R2M7+oyDsg=;
+        b=BQr6n6PV7+I7JBHR7hZEXv7ItgzFPDnG5HHmrrG160bSVuxopQ1YUoOAsfiX3Rvujc
+         vdBEy4Vf2hbNmuR/WNzZ7gt64UfAr3138t0ARa0IcqVGY4LOZpmlwz3FfUpT951zYRxq
+         qWf93Bs6SGKK/yxzwbzyOl+lonCB9pSIIryoonh4JOTrWh3rLjSyldDYh78l9In1lFv/
+         XbBn+Uk+EPZy2ikQfJPf7rEWkFLlhNbsPQ0USC370Sp0Pmq7VMncUG06jRes7ueP+lkp
+         5W0mj8j5DdoXogKbFncBJ2Yej5azG2uG1DRYVI4PozUQYgAaIuiB6wl0GkA2bj/cMMn9
+         hZ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743286411; x=1743891211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UNcrhMVK9+6ggiDuG4lotXX9rn+JtIXO2R2M7+oyDsg=;
+        b=CrV3ZVBYngQKCbfVCVGE02w6Wf903JiE/xLFddiQD/yzmP0Sx9BJYTxFofJHcTrtZc
+         0KmBKCp4zd1gY485fzBC8cMKfh7vAmB1/xjD4p6t9fuUk1FENYF9j25Cxt1rs++8Hcjl
+         Uun6U8ry5GoQo2ENpVD/8TklQlZlTqtvkCHjOkpVgR8x7ymq0CIT6F84wGlktXkGWD42
+         sh0jFWYHDj2twkA2Yn4dLFFRdV9EiXTJWVS7ejwjVw6aN/KHOHF+lgfTkr5TrknExG5I
+         vM70Rn5/gQXsBGZooN3UtaOC2tBAoPAqaF5fVYoadgMdlTwx0uSXdifAE5AuTMymablt
+         ym+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX6NKFWmufb0kv7Ds1LNXenVVb5fG5bKsWw0lYSS6pr5t9UBHKKPnMLko3h6WT1mSB6SuX0veEtxaM=@vger.kernel.org, AJvYcCXOvhGy8jFB3vzBJJMEMcXAHuFzpq5Fz9aCNdkyz4oEK2ohE6KR/iqx2MP2IgOAq26E3PXqETQGJyYT6mX6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXBgzym0QRw5dGp0YypIT9ILTXNRzHGcb5A5WHoE8nLB+f5Els
+	ZW311TkMFjTwxf1/08BflafKRzXw+voHs2DkDpsnhTMWU4xfFMp6Sl/qqGFNw8wTP2SALiu2G/a
+	Y4m0+HvJL1eWf1JLBoJATWoFV1bU=
+X-Gm-Gg: ASbGncsZE3yFrihCNeaZWLYBEMhjS8QVag0mIwhq4m0ym5tcguU5dEfztx64C5PXSbY
+	5GWZC6BIVaiD0piYqgF3zdQiYcm6zhTKbU9sft10GJVEacFvnZAaBRanhVzyAwMMdK6joumRhM8
+	dKPKW2gJzK4ohoIse+SPidMxJlSXQFXqnWwpo3dF+Rd3EY1e3B+ivrrYOGTRea
+X-Google-Smtp-Source: AGHT+IE1GhbaiFupNzncNjral4X+Qq2nlO15G8JOuDDqzfK9PWWFHI6anDeFzMZMXwuRiR2eJqZrYIo2+LUfw5pZjpY=
+X-Received: by 2002:a05:6214:1d2f:b0:6ed:12b0:f181 with SMTP id
+ 6a1803df08f44-6eed5f9c369mr52180446d6.14.1743286411543; Sat, 29 Mar 2025
+ 15:13:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GOaK/S/VyPuiJbaUJ6=UdAb";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
-
---Sig_/GOaK/S/VyPuiJbaUJ6=UdAb
-Content-Type: text/plain; charset=UTF-8
+References: <20250329110230.2459730-1-nphamcs@gmail.com> <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+In-Reply-To: <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Sat, 29 Mar 2025 15:13:20 -0700
+X-Gm-Features: AQ5f1JoFtT9vRL_SzGvf34p_JQN2uIMkBVhEuTZsO1Din3fxRh7P9rjpu-oQRZ0
+Message-ID: <CAKEwX=OVRaUcD8A4HkCZWisNPH+Q9VzOGMJeHnOi40AnHsjjjw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering systems
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	chengming.zhou@linux.dev, sj@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, gourry@gourry.net, willy@infradead.org, 
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, minchan@kernel.org, 
+	senozhatsky@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+On Sat, Mar 29, 2025 at 12:53=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux.dev=
+> wrote:
+>
+> March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+>
+> > Currently, systems with CXL-based memory tiering can encounter the
+> > following inversion with zswap: the coldest pages demoted to the CXL
+> > tier can return to the high tier when they are zswapped out,
+> > creating memory pressure on the high tier.
+> > This happens because zsmalloc, zswap's backend memory allocator, does
+> > not enforce any memory policy. If the task reclaiming memory follows
+> > the local-first policy for example, the memory requested for zswap can
+> > be served by the upper tier, leading to the aformentioned inversion.
+> > This RFC fixes this inversion by adding a new memory allocation mode
+> > for zswap (exposed through a zswap sysfs knob), intended for
+> > hosts with CXL, where the memory for the compressed object is requested
+> > preferentially from the same node that the original page resides on.
+>
+> I didn't look too closely, but why not just prefer the same node by defau=
+lt? Why is a knob needed?
 
-> On 28/03/2025 14:35, Lukasz Majewski wrote:
-> > This patch provides description of the MTIP L2 switch available in
-> > some NXP's SOCs - e.g. imx287.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> > Changes for v2:
-> > - Rename the file to match exactly the compatible
-> >   (nxp,imx287-mtip-switch) =20
->=20
-> Please implement all the changes, not only the rename. I gave several
-> comments, although quick glance suggests you did implement them, so
-> then changelog is just incomplete.
+Good question, yeah the knob is to maintain the old behavior :) It
+might not be optimal, or even advisable, for all set up.
 
-Those comments were IMHO addressed automatically, as this time I took
-(I suppose :-) ) better file as a starting point.
+For hosts with node-based memory tiering, then yeah it's a good idea
+in general, but I don't quite know how to have information about that
+from the kernel's perspective.
 
-To be more specific it was:
-./Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+>
+> Or maybe if there's a way to tell the "tier" of the node we can prefer to=
+ allocate from the same "tier"?
 
-as I've been advised to use for the MTIP driver the same DTS
-description as the above one has (i.e. they are conceptually similar,
-so DTS description ABI can be used for both).
-
-I've also checked the:
-make CHECK_DTBS=3Dy DT_SCHEMA_FILES=3Dnxp,imx287-mtip-switch.yaml
-nxp/mxs/imx28-xea.dtb
-
-on Linux next and it gave no errors.
-
->=20
-> > ---
-> >  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 165
-> > ++++++++++++++++++ 1 file changed, 165 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > new file mode 100644 index 000000000000..a3e0fe7783ec --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > @@ -0,0 +1,165 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
-> > BSD-2-Clause) +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> > +
-> > +maintainers:
-> > +  - Lukasz Majewski <lukma@denx.de>
-> > +
-> > +description:
-> > +  The 2-port switch ethernet subsystem provides ethernet packet
-> > (L2)
-> > +  communication and can be configured as an ethernet switch. It
-> > provides the
-> > +  reduced media independent interface (RMII), the management data
-> > input
-> > +  output (MDIO) for physical layer device (PHY) management.
-> > + =20
->=20
-> If this is ethernet switch, why it does not reference ethernet-switch
-> schema? or dsa.yaml or dsa/ethernet-ports? I am not sure which one
-> should go here, but surprising to see none.
-
-It uses:
-$ref:=C2=B7ethernet-controller.yaml#
-
-for "ports".
-
-Other crucial node is "mdio", which references $ref: mdio.yaml#
-
->=20
-> > +properties:
-> > +  compatible:
-> > +    const: nxp,imx287-mtip--switch =20
->=20
-> Just one -.
->=20
-
-Ok.
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      The physical base address and size of the MTIP L2 SW module
-> > IO range =20
->=20
-> Wasn't here, drop.
->=20
-
-The 'reg' property (reg =3D <0x800f0000 0x20000>;) is defined in
-imx28.dtsi, where the SoC generic properties (as suggested by Andrew -
-like clocks, interrupts, clock-names) are moved.
-
-> > +
-> > +  phy-supply:
-> > +    description:
-> > +      Regulator that powers Ethernet PHYs.
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Register accessing clock
-> > +      - description: Bus access clock
-> > +      - description: Output clock for external device - e.g. PHY
-> > source clock
-> > +      - description: IEEE1588 timer clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: ipg
-> > +      - const: ahb
-> > +      - const: enet_out
-> > +      - const: ptp
-> > +
-> > +  interrupts:
-> > +    items:
-> > +      - description: Switch interrupt
-> > +      - description: ENET0 interrupt
-> > +      - description: ENET1 interrupt
-> > +
-> > +  pinctrl-names: true =20
->=20
-> Drop
-
-The 'pinctrl-names =3D "default";' are specified.
-
-Shouldn't it be kept?
-
->=20
-> > +
-> > +  ethernet-ports:
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +      '#address-cells':
-> > +        const: 1
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      "^port@[0-9]+$": =20
->=20
-> Keep consistent quotes, either " or '. Also [01]
->=20
-
-[12] - ports are numbered starting from 1.
-
->=20
-> > +        type: object
-> > +        description: MTIP L2 switch external ports
-> > +
-> > +        $ref: ethernet-controller.yaml#
-> > +        unevaluatedProperties: false
-> > +
-> > +        properties:
-> > +          reg:
-> > +            items:
-> > +              - enum: [1, 2]
-> > +            description: MTIP L2 switch port number
-> > +
-> > +          label:
-> > +            description: Label associated with this port
-> > +
-> > +        required:
-> > +          - reg
-> > +          - label
-> > +          - phy-mode
-> > +          - phy-handle
-> > +
-> > +  mdio:
-> > +    type: object
-> > +    $ref: mdio.yaml#
-> > +    unevaluatedProperties: false
-> > +    description:
-> > +      Specifies the mdio bus in the switch, used as a container
-> > for phy nodes. +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - mdio
-> > +  - ethernet-ports
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include<dt-bindings/interrupt-controller/irq.h>
-> > +    switch@800f0000 {
-> > +        compatible =3D "nxp,imx287-mtip-switch";
-> > +        reg =3D <0x800f0000 0x20000>;
-> > +        pinctrl-names =3D "default";
-> > +        pinctrl-0 =3D <&mac0_pins_a>, <&mac1_pins_a>;
-> > +        phy-supply =3D <&reg_fec_3v3>;
-> > +        interrupts =3D <100>, <101>, <102>;
-> > +        clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> > +        clock-names =3D "ipg", "ahb", "enet_out", "ptp";
-> > +        status =3D "okay"; =20
->=20
-> Drop
-
-Ok.
-
->=20
-> > +
-> > +        ethernet-ports {
-> > +                #address-cells =3D <1>;
-> > +                #size-cells =3D <0>; =20
->=20
-> Messed indentation. See example-schema or writing-schema.
->=20
-
-Ok.
-
->=20
->=20
-> Best regards,
-> Krzysztof
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/GOaK/S/VyPuiJbaUJ6=UdAb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfob7wACgkQAR8vZIA0
-zr1dnAf+K8wn68GHQnDP8Ngyr4LbkqtyX9vgW/b3tfNaPTIZkL1lMEUZ2HD2n+yv
-zlFrkNAv/msNWFbZKT/+yFvX3YNPLS0gc8TV0SyMoZ6naIlto86WX8t4qv1pWi6X
-38gwP4DGcCYMSALmPwyn3JH2pOnY7LuGT2GbomsOYfdn8UgjACmHJIVDWyhn/AA3
-cQHdJbFC2p7J+7QFGihcig3Neoepo1vI76sProBWIw7U9dIu+ybP14y5tmBAaxpV
-Urcqt7Wg43hU7HgM27muOk7XFttDbfbt408y//qjkHKdsQehjfJKpT4NKhol0oDK
-baCZykor3+/dSnMz0IhemScHL+k6rw==
-=IoZW
------END PGP SIGNATURE-----
-
---Sig_/GOaK/S/VyPuiJbaUJ6=UdAb--
+Is there an abstraction of the "tier" that we can use here?
