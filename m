@@ -1,73 +1,165 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A421EB3D
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D64190470
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743278010; cv=none; b=iycKaJIYCCqcPzQ5TZiFxg/ZKYEtvgZTkM+kWPqKTWEAM6tA3gSoNrK0nEL2WseesuSJWSU1iSpQtBRVNCxFnah2dUc7H6XJBZqaYSxC+QiRs7eLhusdQToo5hG4ahRNhzZr6xO6DlPSj8BF5hPB6WYYueCyCsdoGZUisLgAP4g=
+	t=1743278144; cv=none; b=XxgQrQnc1+m2Z3gbJpQgtDv6JuvNLvjR38CBc4/nZTHqXDZmq8gvcEanpLZi2lKR+2mrBeaoS15b9q5ShVmlcnEVKrtj6ZOoMt2MiJjQNa9JGwlyWF7q5zu/sKtwW3XEeKAVn1JSr7mrp5UGwU998KlfbY+iry2pXXvV7d44D68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743278010; c=relaxed/simple;
-	bh=ME1fBO5Jh7xEa67T+MF0kiPosGpY29d6ns5G/AbMfrI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=rrt7EbwQBo+82zJupPzb4jL86gISTPcKyH0VkZS1mAiLL5kgfEmoM6QHBQRY0XfZpkmmoc5kHeBAe1gyRwxD/Q682L+PvzPe/ThCoyuqhMgJAldLkfe0tVlqnEcPQbwb0Q1tzyhO2S88O2qrPuXBOOP9PJTqCxnVd0ROFzcO06Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FrJTbrqS; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743278144; c=relaxed/simple;
+	bh=eZE8/hjKsHgtycknl8v1WA+0nxrA0HY3fPZvx4gGCLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FaS7/n9j6q3tLMdjGM8W9VPL1QfgYXSjCXQxKU5QM5iTj1tT1U/OMgaiHygB59UyJo2FQKUIe4ZAzVQY5TwWaxat+O2UqaWJx4kUXXzFQW0d+ivmcu+/PSFXOmypqYJl1hKTArbDVyv2LrjAM+CIr3KlGXykk2u8nyhfmjFXPBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwPJx2kK; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FrJTbrqS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwPJx2kK"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f6ca9a3425so33445907b3.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 12:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743278141; x=1743882941; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u308vrKVuoCKv+aJT65raHq9rbK345amQxp+zuYQWyM=;
+        b=mwPJx2kKHcleLFrhBuSmBFcfc9rqfSPM9YxF6JKKWWu2vVl/TcnTqEwM563t3mUVZp
+         HzmB2bVLJjRDBYS4EktzFznfpVBnG9D1E2g+S9Q355XYCstLbo7ucsT5sE+J5RJOQn+x
+         qMdrwLyw4gRjm5GlovrIkhMpzd1n/GT5ixFEdVawJWk22Thl1f0wwLYczUUC0bmNitAv
+         ZJJYWQlpCgsM68bHCmtJAwOtVK68Ejx0H8nXzZ2tezzzAkKg3qyfWICdwT966IrX91J0
+         YrCZlAIF4Q83I1i98GuObfViiQgVH+GcvXh6FR2xRexiNeCHkc9+TGos47RxJG0aYoWP
+         NKdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743278141; x=1743882941;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u308vrKVuoCKv+aJT65raHq9rbK345amQxp+zuYQWyM=;
+        b=QaOIPS9Y1tYgXSV1XumyXj8R5c0PecMmbrySpcWB7FGY3scnaWzSPw3q7juWnpGhc0
+         d+vmWfAt9tFFQKzMaosUBO7W7wmcpdQuEizz2o1bUm2AmXJmBgf/W4cGV4FTmY7kiEZ/
+         Dtt4Qvpq7mqoJNx63e5kJMu4pCtn8ddG19Md0gHI9NooWBgf0LbfIA+7ZeaDLkewBwYw
+         g5PqkR8K4BVYxR1xXR1VejYqXv27AlFHMBGdLO31J0ZBrpuozH9WFNcEHhdV6M2WMCWL
+         gjIWU85mOMyb6F+MijIWu+tgm4G8K0I0BHqcGWtYTZFjxd3SgM4NgE2JUbrg622FmVUu
+         DBPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpof4QpA318JgGMrKHPwvXt8j3KsGDONB4/qMyCeN4ojRFMviZu/qyRloV2qaoCrKnZfGrr7nSeR+jNDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFHDsnNq0qlWaewkwxUW7CJ5T97dLdud1PckFkPC8HXO6k3WDD
+	iKnN2LjVQ+cFKDtt+WrQgL6SuXQEGYOPEmoIEF6kuO8DPbZWJbGz
+X-Gm-Gg: ASbGnctA+x4yead+Ev7MXgpNwkTiZ67wu4/zmD3Z7M1v4+dd/VIqhMFc97A0taTqCHM
+	DXzXSJ89uknu1BbNqDHou8S1q6ZniDBfdAkyA1JyqWGAkNwJyxSyrdETFdeJ8zzw8Njpu9xJoN6
+	jqLiXa23x5LSY048clgbpUCdwDnZOMz26yb25D5aDin6WJCk6LV2kot/9eUPvjaJ8dxW+Ok6C0L
+	EwnUVfhg5ZgaMuH/5ZbIjE2gxrBn2ld3gqmF+0xkJxl/jDBWQ6eiJ2WPoY829QhLSqySb2+EVb7
+	0zzAVFHcRaQMU+VhiHM9Xha9Q4A+uLFfyv+gYBBDq8r6zt04fW0=
+X-Google-Smtp-Source: AGHT+IG4rcKHYfG6fUGVUeKFoCaHXdI7Vf7h1ZSu+rjN4tPNcDUIdkmqIFpDhXKjne+NQj0YXgNZuQ==
+X-Received: by 2002:a05:690c:4883:b0:6fb:3b2b:e73e with SMTP id 00721157ae682-702571117d1mr59207557b3.14.1743278141336;
+        Sat, 29 Mar 2025 12:55:41 -0700 (PDT)
+Received: from [10.138.35.215] ([45.134.140.51])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023a3c44besm13457077b3.55.2025.03.29.12.55.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Mar 2025 12:55:40 -0700 (PDT)
+Message-ID: <3baabd6b-95ba-4f84-bdef-b44d6d071aba@gmail.com>
+Date: Sat, 29 Mar 2025 15:56:00 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743278006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ME1fBO5Jh7xEa67T+MF0kiPosGpY29d6ns5G/AbMfrI=;
-	b=FrJTbrqSP9wgn9WjYsD4xZr35TJFbcMCIw0hf+C5ZLFqizCcYh4WdAYysMmoHk98J9BlgW
-	1ny8mVqF0OJgZx0+W6FirtSrUVwyquaoI/feHaQRZxijkeSHntDcokRVrfzRIiFRW9wKKn
-	/yoj2JdXBr143TT+1OLPY4DAsbZO4d4=
-Date: Sat, 29 Mar 2025 19:53:23 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yosry Ahmed" <yosry.ahmed@linux.dev>
-Message-ID: <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
-TLS-Required: No
-Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering
- systems
-To: "Nhat Pham" <nphamcs@gmail.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
- sj@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
- gourry@gourry.net, willy@infradead.org, ying.huang@linux.alibaba.com,
- jonathan.cameron@huawei.com, dan.j.williams@intel.com,
- linux-cxl@vger.kernel.org, minchan@kernel.org, senozhatsky@chromium.org
-In-Reply-To: <20250329110230.2459730-1-nphamcs@gmail.com>
-References: <20250329110230.2459730-1-nphamcs@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] *** Add virtio gpu userptr support ***
+Content-Language: en-US
+To: Honglei Huang <honglei1.huang@amd.com>, David Airlie
+ <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+ Huang Rui <ray.huang@amd.com>
+Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Dmitry Osipenko <dmitry.osipenko@collabora.com>
+References: <20250321080029.1715078-1-honglei1.huang@amd.com>
+From: Demi Marie Obenour <demiobenour@gmail.com>
+Autocrypt: addr=demiobenour@gmail.com; keydata=
+ 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
+ +MYSfkEjBz0E8CLOcAw7JIwAaeBT
+In-Reply-To: <20250321080029.1715078-1-honglei1.huang@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+On 3/21/25 4:00 AM, Honglei Huang wrote:
+> From: Honglei Huang <Honglei1.Huang@amd.com>
+> 
+> Hello,
+> 
+> This series add virtio gpu userptr support and add libhsakmt capset.
+> The userptr feature is used for let host access guest user space memory,
+> this feature is used for GPU compute use case, to enable ROCm/OpenCL native
+> context. It should be pointed out that we are not to implement SVM here, 
+> this is just a buffer based userptr implementation.
+> The libhsakmt capset is used for ROCm context, libhsakmt is like the role 
+> of libdrm in Mesa.
+> 
+> Patches 1-2 add libhsakmt capset and userptr blob resource flag.
 
-> Currently, systems with CXL-based memory tiering can encounter the
-> following inversion with zswap: the coldest pages demoted to the CXL
-> tier can return to the high tier when they are zswapped out,
-> creating memory pressure on the high tier.
-> This happens because zsmalloc, zswap's backend memory allocator, does
-> not enforce any memory policy. If the task reclaiming memory follows
-> the local-first policy for example, the memory requested for zswap can
-> be served by the upper tier, leading to the aformentioned inversion.
-> This RFC fixes this inversion by adding a new memory allocation mode
-> for zswap (exposed through a zswap sysfs knob), intended for
-> hosts with CXL, where the memory for the compressed object is requested
-> preferentially from the same node that the original page resides on.
+libhsakmt and userptr are orthogonal from each other.
+Should the libhsakmt context be a separate patch series?
 
-I didn't look too closely, but why not just prefer the same node by defau=
-lt? Why is a knob needed?
+> Patches 3-5 implement basic userptr feature, in some popular bench marks,
+> it has an efficiency of about 70% compared to bare metal in OpenCL API.
+> Patch 6 adds interval tree to manage userptrs and prevent duplicate creation.
+> 
+> V2: - Split add HSAKMT context and blob userptr resource to two patches.
+>     - Remove MMU notifier related patches, cause use not moveable user space
+>       memory with MMU notifier is not a good idea.
+>     - Remove HSAKMT context check when create context, let all the context
+>       support the userptr feature.
+>     - Remove MMU notifier related content in cover letter.
+>     - Add more comments  for patch 6 in cover letter.
 
-Or maybe if there's a way to tell the "tier" of the node we can prefer to=
- allocate from the same "tier"?
+I have not looked at the implementation, but thanks for removing the MMU
+notifier support.  Should the interval tree be added before the feature
+is exposed to userspace?  That would prevent users who are doing kernel
+bisects from temporarily exposing a buggy feature to userspace.
+-- 
+Sincerely,
+Demi Marie Obenour (she/her/hers)
