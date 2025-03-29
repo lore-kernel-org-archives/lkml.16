@@ -1,585 +1,237 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1BD149C55;
-	Sat, 29 Mar 2025 16:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A801117BA6
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 16:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743264286; cv=none; b=MZ++pLL7yOi0Vew+3tFNAiNxRawoNXdZ3ya+JG/hKE78VWvJI85kDmJFRduKYqjgi9Ps5Us3yTbqqw/Ye9WK/b6qTVDkkM/Wi87F1pormXJYgu/uGuI+vEnKa0kYonPIxls6XMIXWiFEdRSO33vO0AdwQ/Jf+roH9ktjHpMwuUQ=
+	t=1743264971; cv=none; b=EjbN5/Br86uXmMi56q8x44pSWUHT0rWw72JuYLQOrcbQVnJCzKmv1X4jjQVfzALYLHoinQ9bvjljfk33ZDVsCWkROSPNjC9tIJ3kSlnxgLepfUcNjojpS8axrsS1cc1Wn6rc8WGl9gXhCgh4aFg0qKzrkmXpQSJxD9ldgPl96gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743264286; c=relaxed/simple;
-	bh=GV0VJoG2FOuRIEztRSJsH/0e5FecCJlzCmtykVF4ktM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IsylsOTeYWmpVmhZOLWv/Rl7TJkF4IGNiR4ybUf8P3wXMCj7stvpLgbrlDLZ23s2IStuASCM/70icY03NrXBrOBvQNlM1oDOdZ1aR6/P2Gf0aQkn1lUCk716Yif5U1FKlQW6Mjd4vveHQKcrG6LDfi5kBfjxMtJjMl5ryNSKE6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nP7/JNp6; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743264971; c=relaxed/simple;
+	bh=JryjqFs4vZibpVGCM4sa10aaOgZQLlHF7K8i8gZ9Yrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J9C9gpAkWO5b/LtmpmGKjhWrosOAybhtXUTx3U16t7M4DamfnyOEVmkGzvLhi3FL//zJGF/FgqXehIjzC3pf9u/oPBowR7Z60sVuqpG1TO+YH1/BPUOvQLox5pjSsm+57ssTmR8Tpf63mI+NPFN9plDP/Njdb/FZ+rk8TBmcomM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Mp83ASOX; arc=none smtp.client-ip=209.85.214.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nP7/JNp6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=PGvq+IgOO0pDlT/nRQyeX7phWlmZUo5b8zjWNJ3Kvqw=;
-	b=nP7/JNp6EALTPYs4yVKLSsSjs8lgJlyxUaRey+NgDroyOjOftlsB1YOjlmP4Iu
-	EdE/516y+FD7AAo/vYby6xjLJUHLh9RLrn9m4Tfwgf+jh4oJXHF/2T2DrJwuJ0v+
-	rBADRGOvSpDVuMkeEOyaCrjHBaCLqwsRohGFmGmD2BvDA=
-Received: from [192.168.71.89] (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgAX2MDiGehnaj5fAg--.12996S2;
-	Sun, 30 Mar 2025 00:03:48 +0800 (CST)
-Message-ID: <95d9f7d9-6569-4252-a54d-cbe38ade706b@163.com>
-Date: Sun, 30 Mar 2025 00:03:46 +0800
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Mp83ASOX"
+Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-22403c99457so6363795ad.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743264968; x=1743869768; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mewZW+MhqIiDJdg0gacut2Km63vtyiQRW4anmwKETlc=;
+        b=Mp83ASOX8IHLFOUQ6gbwvPPWbH3o/zP61m1t70/i8ET8O0oPdphM0T6AU0jN1lw2py
+         njFdhXVYCnv2HI9Lf8XdnwdmMhNOTDGs2ksu/O7FrIEjlM6swtuzIwimeMfcCOuuPsSL
+         /mWaipOUnB9JfeNv/H2bs2obj9lPVbVwkw4iKV0sgZWfy2jxgqxrs8A4mrShDX4RtxBA
+         dcciMyXMWIN3jsjXYxL63yZ0pQhffcWfL9pq5TwCEUMcFTUjPRGmyGkQUuwpWTijgoij
+         JBvf7ioJG+q2KKXWbmu3IxdRqbbq9TKZANgr7Vpk7DhcvB4lhXqMYPrRA9DqP/gHyofg
+         m4qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743264968; x=1743869768;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mewZW+MhqIiDJdg0gacut2Km63vtyiQRW4anmwKETlc=;
+        b=NKKhzdJPyfqWjQI5YApFiPD7XZ7MIEAEI0xtcecn5C9s2L58TN7lbh3jLqzS2vrrsn
+         06NF2Sq8U1tLrrpUc5nxUmilGSY3MZNDoXxHIxBAa4ABgRNpf/qEawQt/EudUO2uAbFn
+         oKzdKEwKH2VOPPXKHHi71myQtdIsOH0UjbRAir7HJpkimIS1BEy4Wdk8osivhv+/yCRC
+         aQlv1U5RcH2FoI0jotC+5s1RlfKEoCLfKUNAFQdJGsknXh+A0FwMUcnh6D7EnLcTtv3+
+         X+kOfeLL+c+iG4s/jpOT2+CgyAD5Jb0LT+Y7gieZN+XYRjqNipDJ6zwEoWWRmupqwDMc
+         crew==
+X-Forwarded-Encrypted: i=1; AJvYcCV6qpPz7TxOznzOTcYKFSIBo0lxkRqgfXcvicPQqni73SrBg68NwsCYcRdZqLCfLmcH5bdzPSK/77WBvd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV+vdiTq7AI4TMLKjxUfbiujP4YNeGcQ3j450rS7YFGkStfRcB
+	rxH3qDJs2zeCbJBRPJD+9woqAbSlESLzSA61hblYisN6FJCpyFv5qPu3HutTEmvkSlFGKMCgzsg
+	uTAHTBUdMj9WYYsauixlIhq0jgLpXKvLqfUQY0Xwo8LQaFYFU
+X-Gm-Gg: ASbGncsKro5kWCTzONZ6lwQ7WmzIgVBSSfN/7E9gNWve0KglamurIs8p5aw+jABUCkW
+	4uIeHvZrdN4amrMlJq+MkYpyNsL6aBxwfbOOFy4+QZgoB+IxMYO5bd4mFhdtUyfk5cL0EkkgiZF
+	OjYS9IuReby27rcXIB2JSaC3t+ssIeEE5pOhpS3N/xvzDHsSnmtHhQRQpzqPcVc/t1129isAC9M
+	mG8uv1+32K6VxJ6i+YDCxPL+9kHsw2L8Vuek2d5skgZxEEGteyAMNFa4j8hYdob/rKi+uRQaY4H
+	q3aSEbE8k6KnPCTPdeU/bOwZY1AD3Lmiiw==
+X-Google-Smtp-Source: AGHT+IHY7lxeNvUJQr9zrW4f2UbUqXgr3Si/nl43FACLcp5pjVxKR/RkDQZNnecVVayqIk5cPS9U30CnMFRx
+X-Received: by 2002:a05:6a00:2350:b0:737:6589:81e5 with SMTP id d2e1a72fcca58-7398032c9b1mr1990437b3a.2.1743264967832;
+        Sat, 29 Mar 2025 09:16:07 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-73971090ab8sm368317b3a.17.2025.03.29.09.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 09:16:07 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 1EC273401D3;
+	Sat, 29 Mar 2025 10:16:07 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 10E79E410B7; Sat, 29 Mar 2025 10:15:37 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring/wq: avoid indirect do_work/free_work calls
+Date: Sat, 29 Mar 2025 10:15:24 -0600
+Message-ID: <20250329161527.3281314-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-4-18255117159@163.com>
- <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
- <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
- <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
- <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
- <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
- <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
- <de6ce71c-ba82-496e-9c72-7c9c61b37906@163.com>
- <ddabf340-a00f-75b1-2b6b-d9ab550a984f@linux.intel.com>
- <9118fcc0-e5a5-40f2-be4b-7e06b4b20601@163.com>
- <b279863e-8d8c-4c14-98ad-c19d26c69146@163.com>
- <0e493832-6292-10d7-6f87-ed190059c999@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <0e493832-6292-10d7-6f87-ed190059c999@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgAX2MDiGehnaj5fAg--.12996S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3CrWruF4DCFyxAw1UGFW7Jwb_yoW8GF48uo
-	WfXrnxu3WrWr17A3yDKas7XwnrZa4avFn3AF4fCrs8XFy5Aa15Cr43Ca1fZ3y5uw48trWU
-	Zryktw12gFsFv3Wfn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUn1v3DUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgMeo2fmiTkwdQABsx
 
+struct io_wq stores do_work and free_work function pointers which are
+called on each work item. But these function pointers are always set to
+io_wq_submit_work and io_wq_free_work, respectively. So remove these
+function pointers and just call the functions directly.
 
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+---
+ io_uring/io-wq.c    | 15 ++++-----------
+ io_uring/io-wq.h    |  5 -----
+ io_uring/io_uring.c |  2 +-
+ io_uring/tctx.c     |  2 --
+ 4 files changed, 5 insertions(+), 19 deletions(-)
 
-On 2025/3/28 19:42, Ilpo Järvinen wrote:
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 47b31ad724fa..0d5dfd010a01 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -1198,6 +1198,64 @@ void pci_sort_breadthfirst(void);
->>
->>   /* Generic PCI functions exported to card drivers */
->>
->> +/* Extended capability finder */
->> +#define PCI_FIND_NEXT_CAP_TTL(priv, devfn, read_cfg, start, cap)     \
-> 
-> Please put it into drivers/pci/pci.h but other than that this is certainly
-> to the direction I was suggesting.
-
-Hi Ilpo,
-
-I'm sorry for not replying to you in time. I tried to understand your 
-suggestion, modify it, and then experiment on the actual SOC platform. 
-Thank you very much for your reply and patient advice.
-
-I'm going to put it in the drivers/pci/pci.h file.
-
-> 
-> You don't need to have those priv and devfn there like that but you can
-> use the args... trick (see linux/iopoll.h) and put them as last parameters
-> to the macro so they can wary based on the caller needs, assuming args
-> will work like this, I've not tested:
-> 
-> 		read_cfg(args, __pos, &val)
-> 
-
-I have modified it in the following reply, but I only modify it like 
-this at present: read_cfg(args, __pos, size, &val)
-
-> The size parameter is the most annoying one as it's in between where and
-> *val arguments so args... trick won't work for it. I suggest just
-> providing a function with the same signature as the related pci/access.c
-> function for now.
-> 
-
-Currently DWC, CDNS, and pci.c seem to be unable to unify a common 
-function to read config.
-
-I don't quite understand what you mean here. Is the current 
-dw_pcie_read_cfg, cdns_pcie_read_cfg, __pci_bus_read_config correct? 
-Please look at my latest modification. If it is not correct, please 
-explain it again. Thank you very much.
-
-> A few nits related to the existing code quality of the cap parser function
-> which should be addressed while we touch this function (probably in own
-> patches indepedent of this code move/rearrange patch itself).
-> 
-
-I will revise it in my final submission. The following reply has been 
-modified.
-
->> +	({                                                                  \
->> +		typeof(start) __pos = (start);                              \
->> +		int __ttl = PCI_FIND_CAP_TTL;                               \
->> +		u16 __ent = 0;                                              \
->> +		u8 __found_pos = 0;                                         \
->> +		u8 __id;                                                    \
->> +     \
->> +		read_cfg((priv), (devfn), __pos, 1, (u32 *)&__pos);         \
->> +     \
->> +		while (__ttl--) {                                           \
->> +			if (__pos < 0x40)                                   \
-> 
-> I started to wonder if there's something for this and it turn out we've
-> PCI_STD_HEADER_SIZEOF.
-
-It has been modified.
-
-> 
->> +				break;                                      \
->> +			__pos &= ~3;                                        \
-> 
-> This could use some align helper.
-
-It has been modified.
-
-> 
->> +			read_cfg((priv), (devfn), __pos, 2, (u32 *)&__ent); \
->> +     \
->> +			__id = __ent & 0xff;                                \
->> +			if (__id == 0xff)                                   \
->> +				break;                                      \
->> +			if (__id == (cap)) {                                \
->> +				__found_pos = __pos;                        \
->> +				break;                                      \
->> +			}                                                   \
->> +			__pos = (__ent >> 8);                               \
-> 
-> I'd add these into uapi/linux/pci_regs.h:
-
-This means that you will submit, and I will submit after you?
-Or should I submit this series of patches together?
-
-> 
-> #define PCI_CAP_ID_MASK		0x00ff
-> #define PCI_CAP_LIST_NEXT_MASK	0xff00
-> 
-> And then use FIELD_GET() to extract the fields.
-
-It has been modified.
-
-> 
->> +		}                                                           \
->> +		__found_pos;                                                \
->> +	})
->> +
->> +/* Extended capability finder */
->> +#define PCI_FIND_NEXT_EXT_CAPABILITY(priv, devfn, read_cfg, start, cap)    \
->> +	({                                                                 \
->> +		u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;                 \
->> +		u16 __found_pos = 0;                                       \
->> +		int __ttl, __ret;                                          \
->> +		u32 __header;                                              \
->> +    \
->> +		__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8; \
->> +		while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {       \
->> +			__ret = read_cfg((priv), (devfn), __pos, 4,        \
->> +					 &__header);                       \
->> +			if (__ret != PCIBIOS_SUCCESSFUL)                   \
->> +				break;                                     \
->> +    \
->> +			if (__header == 0)                                 \
->> +				break;                                     \
->> +    \
->> +			if (PCI_EXT_CAP_ID(__header) == (cap) &&           \
->> +			    __pos != start) {                              \
->> +				__found_pos = __pos;                       \
->> +				break;                                     \
->> +			}                                                  \
->> +    \
->> +			__pos = PCI_EXT_CAP_NEXT(__header);                \
->> +		}                                                          \
->> +		__found_pos;                                               \
->> +	})
->> +
->>   u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
->>   u8 pci_find_capability(struct pci_dev *dev, int cap);
->>   u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
-> 
-> 
-> I started to wonder though if the controller drivers could simply create
-> an "early" struct pci_dev & pci_bus just so they can use the normal
-> accessors while the real structs are not yet created. It looks not
-> much is needed from those structs to let the accessors to work.
-> 
-
-Here are a few questions:
-1. We need to initialize some variables for pci_dev. For example, 
-dev->cfg_size needs to be initialized to 4K for PCIe.
-
-u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
-{
-	......
-	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
-		return 0;
-	......
-
-
-2. Create an "early" struct pci_dev & pci_bus for each SOC vendor (Qcom, 
-Rockchip, etc). It leads to a lot of code that feels weird.
-
-I still prefer the approach we are discussing now.
-
-
-This is a modified patchs based on your suggestion:
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c 
-b/drivers/pci/controller/cadence/pcie-cadence.c
-index 204e045aed8c..3991cc4c58d6 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -7,6 +7,32 @@
-  #include <linux/of.h>
-
-  #include "pcie-cadence.h"
-+#include "../../pci.h"
-+
-+static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
-+{
-+	struct cdns_pcie *pcie = priv;
-+
-+	if (size == 4)
-+		*val = cdns_pcie_readl(pcie, where);
-+	else if (size == 2)
-+		*val = cdns_pcie_readw(pcie, where);
-+	else if (size == 1)
-+		*val = cdns_pcie_readb(pcie, where);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
-+				     cap, pcie);
-+}
-+
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie);
-+}
-
-  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
-  {
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h 
-b/drivers/pci/controller/cadence/pcie-cadence.h
-index f5eeff834ec1..dd7cb6b6b291 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie 
-*pcie, u32 reg)
-  	return readl(pcie->reg_base + reg);
-  }
-
-+static inline u32 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readw(pcie->reg_base + reg);
-+}
-+
-+static inline u32 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readb(pcie->reg_base + reg);
-+}
-+
-  static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
-  {
-  	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-@@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct 
-cdns_pcie_ep *ep)
-  }
-  #endif
-
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
-+
-  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
-
-  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, 
-u8 fn,
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
-b/drivers/pci/controller/dwc/pcie-designware.c
-index 145e7f579072..e9a9a80b1085 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -203,83 +203,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
-  		pci->type = ver;
-  }
-
--/*
-- * These interfaces resemble the pci_find_*capability() interfaces, but 
-these
-- * are for configuring host controllers, which are bridges *to* PCI 
-devices but
-- * are not PCI devices themselves.
-- */
--static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
--				  u8 cap)
-+static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
-  {
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
-+	struct dw_pcie *pcie = priv;
-
--	if (cap_id == cap)
--		return cap_ptr;
-+	*val = dw_pcie_read_dbi(pcie, where, size);
-
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCIBIOS_SUCCESSFUL;
-  }
-
-  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-  {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
-+				     pcie);
-  }
-  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-
--static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
--					    u8 cap)
--{
--	u32 header;
--	int ttl;
--	int pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
--	if (start)
--		pos = start;
--
--	header = dw_pcie_readl_dbi(pci, pos);
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		header = dw_pcie_readl_dbi(pci, pos);
--	}
--
--	return 0;
--}
--
-  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
-  {
--	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
-  }
-  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..778e366ea72e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -423,28 +423,28 @@ static int pci_dev_str_match(struct pci_dev *dev, 
-const char *p,
-  	return 1;
-  }
-
--static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
--				  u8 pos, int cap, int *ttl)
-+static int __pci_bus_read_config(void *priv, unsigned int devfn, int where,
-+				 u32 size, u32 *val)
-  {
--	u8 id;
--	u16 ent;
-+	struct pci_bus *bus = priv;
-+	int ret;
-
--	pci_bus_read_config_byte(bus, devfn, pos, &pos);
-+	if (size == 1)
-+		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
-+	else if (size == 2)
-+		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
-+	else
-+		ret = pci_bus_read_config_dword(bus, devfn, where, val);
-
--	while ((*ttl)--) {
--		if (pos < 0x40)
--			break;
--		pos &= ~3;
--		pci_bus_read_config_word(bus, devfn, pos, &ent);
-+	return ret;
-+}
-
--		id = ent & 0xff;
--		if (id == 0xff)
--			break;
--		if (id == cap)
--			return pos;
--		pos = (ent >> 8);
--	}
--	return 0;
-+static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
-+				  u8 pos, int cap, int *ttl)
-+{
-+	// If accepted, I will remove all use of "int *ttl" in a future patch.
-+	return PCI_FIND_NEXT_CAP_TTL(__pci_bus_read_config, pos, cap, bus,
-+				     devfn);
-  }
-
-  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
-@@ -553,42 +553,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+index 04a75d666195..d52069b1177b 100644
+--- a/io_uring/io-wq.c
++++ b/io_uring/io-wq.c
+@@ -112,13 +112,10 @@ enum {
+  * Per io_wq state
    */
-  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
-  {
--	u32 header;
--	int ttl;
--	u16 pos = PCI_CFG_SPACE_SIZE;
+ struct io_wq {
+ 	unsigned long state;
+ 
+-	free_work_fn *free_work;
+-	io_wq_work_fn *do_work;
 -
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+ 	struct io_wq_hash *hash;
+ 
+ 	atomic_t worker_refs;
+ 	struct completion worker_done;
+ 
+@@ -610,14 +607,14 @@ static void io_worker_handle_work(struct io_wq_acct *acct,
+ 			next_hashed = wq_next_work(work);
+ 
+ 			if (do_kill &&
+ 			    (work_flags & IO_WQ_WORK_UNBOUND))
+ 				atomic_or(IO_WQ_WORK_CANCEL, &work->flags);
+-			wq->do_work(work);
++			io_wq_submit_work(work);
+ 			io_assign_current_work(worker, NULL);
+ 
+-			linked = wq->free_work(work);
++			linked = io_wq_free_work(work);
+ 			work = next_hashed;
+ 			if (!work && linked && !io_wq_is_hashed(linked)) {
+ 				work = linked;
+ 				linked = NULL;
+ 			}
+@@ -932,12 +929,12 @@ static bool io_wq_worker_wake(struct io_worker *worker, void *data)
+ 
+ static void io_run_cancel(struct io_wq_work *work, struct io_wq *wq)
+ {
+ 	do {
+ 		atomic_or(IO_WQ_WORK_CANCEL, &work->flags);
+-		wq->do_work(work);
+-		work = wq->free_work(work);
++		io_wq_submit_work(work);
++		work = io_wq_free_work(work);
+ 	} while (work);
+ }
+ 
+ static void io_wq_insert_work(struct io_wq *wq, struct io_wq_acct *acct,
+ 			      struct io_wq_work *work, unsigned int work_flags)
+@@ -1193,23 +1190,19 @@ static int io_wq_hash_wake(struct wait_queue_entry *wait, unsigned mode,
+ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
+ {
+ 	int ret, i;
+ 	struct io_wq *wq;
+ 
+-	if (WARN_ON_ONCE(!data->free_work || !data->do_work))
+-		return ERR_PTR(-EINVAL);
+ 	if (WARN_ON_ONCE(!bounded))
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	wq = kzalloc(sizeof(struct io_wq), GFP_KERNEL);
+ 	if (!wq)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	refcount_inc(&data->hash->refs);
+ 	wq->hash = data->hash;
+-	wq->free_work = data->free_work;
+-	wq->do_work = data->do_work;
+ 
+ 	ret = -ENOMEM;
+ 
+ 	if (!alloc_cpumask_var(&wq->cpu_mask, GFP_KERNEL))
+ 		goto err;
+diff --git a/io_uring/io-wq.h b/io_uring/io-wq.h
+index d4fb2940e435..774abab54732 100644
+--- a/io_uring/io-wq.h
++++ b/io_uring/io-wq.h
+@@ -19,13 +19,10 @@ enum io_wq_cancel {
+ 	IO_WQ_CANCEL_OK,	/* cancelled before started */
+ 	IO_WQ_CANCEL_RUNNING,	/* found, running, and attempted cancelled */
+ 	IO_WQ_CANCEL_NOTFOUND,	/* work not found */
+ };
+ 
+-typedef struct io_wq_work *(free_work_fn)(struct io_wq_work *);
+-typedef void (io_wq_work_fn)(struct io_wq_work *);
 -
-  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
-  		return 0;
-
--	if (start)
--		pos = start;
--
--	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--		return 0;
--
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--			break;
--	}
--
--	return 0;
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(__pci_bus_read_config, start, cap,
-+					    dev->bus, dev->devfn);
-  }
-  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2e9cf26a9ee9..68c111be521d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -4,6 +4,65 @@
-
-  #include <linux/pci.h>
-
-+/* Ilpo: I'd add these into uapi/linux/pci_regs.h: */
-+#define PCI_CAP_ID_MASK		0x00ff
-+#define PCI_CAP_LIST_NEXT_MASK	0xff00
-+
-+/* Standard capability finder */
-+#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-+({									\
-+	u8 __pos = (start);						\
-+	int __ttl = PCI_FIND_CAP_TTL;					\
-+	u16 __ent;							\
-+	u8 __found_pos = 0;						\
-+	u8 __id;							\
-+									\
-+	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-+									\
-+	while (__ttl--) {						\
-+		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-+			break;						\
-+		__pos = ALIGN_DOWN(__pos, 4);				\
-+		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-+		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-+		if (__id == 0xff)					\
-+			break;						\
-+		if (__id == (cap)) {					\
-+			__found_pos = __pos;				\
-+			break;						\
-+		}							\
-+		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-+	}								\
-+	__found_pos;							\
-+})
-+
-+/* Extended capability finder */
-+#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)	\
-+({									\
-+	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;			\
-+	u16 __found_pos = 0;						\
-+	int __ttl, __ret;						\
-+	u32 __header;							\
-+									\
-+	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;	\
-+	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {		\
-+		__ret = read_cfg(args, __pos, 4, &__header);		\
-+		if (__ret != PCIBIOS_SUCCESSFUL)			\
-+			break;						\
-+									\
-+		if (__header == 0)					\
-+			break;						\
-+									\
-+		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {\
-+			__found_pos = __pos;				\
-+			break;						\
-+		}							\
-+									\
-+		__pos = PCI_EXT_CAP_NEXT(__header);			\
-+	}								\
-+	__found_pos;							\
-+})
-+
-  struct pcie_tlp_log;
-
-  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
-
-
-Looking forward to your latest suggestions.
-
-Best regards,
-Hans
+ struct io_wq_hash {
+ 	refcount_t refs;
+ 	unsigned long map;
+ 	struct wait_queue_head wait;
+ };
+@@ -37,12 +34,10 @@ static inline void io_wq_put_hash(struct io_wq_hash *hash)
+ }
+ 
+ struct io_wq_data {
+ 	struct io_wq_hash *hash;
+ 	struct task_struct *task;
+-	io_wq_work_fn *do_work;
+-	free_work_fn *free_work;
+ };
+ 
+ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data);
+ void io_wq_exit_start(struct io_wq *wq);
+ void io_wq_put_and_exit(struct io_wq *wq);
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index e4484a03e033..1d8d1b0e92f2 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -1808,11 +1808,11 @@ void io_wq_submit_work(struct io_wq_work *work)
+ 	const struct io_issue_def *def = &io_issue_defs[req->opcode];
+ 	unsigned int issue_flags = IO_URING_F_UNLOCKED | IO_URING_F_IOWQ;
+ 	bool needs_poll = false;
+ 	int ret = 0, err = -ECANCELED;
+ 
+-	/* one will be dropped by ->io_wq_free_work() after returning to io-wq */
++	/* one will be dropped by io_wq_free_work() after returning to io-wq */
+ 	if (!(req->flags & REQ_F_REFCOUNT))
+ 		__io_req_set_refcount(req, 2);
+ 	else
+ 		req_ref_get(req);
+ 
+diff --git a/io_uring/tctx.c b/io_uring/tctx.c
+index adc6e42c14df..5b66755579c0 100644
+--- a/io_uring/tctx.c
++++ b/io_uring/tctx.c
+@@ -33,12 +33,10 @@ static struct io_wq *io_init_wq_offload(struct io_ring_ctx *ctx,
+ 	}
+ 	mutex_unlock(&ctx->uring_lock);
+ 
+ 	data.hash = hash;
+ 	data.task = task;
+-	data.free_work = io_wq_free_work;
+-	data.do_work = io_wq_submit_work;
+ 
+ 	/* Do QD, or 4 * CPUS, whatever is smallest */
+ 	concurrency = min(ctx->sq_entries, 4 * num_online_cpus());
+ 
+ 	return io_wq_create(concurrency, &data);
+-- 
+2.45.2
 
