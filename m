@@ -1,72 +1,27 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C62829A0
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1AD199E80;
+	Sat, 29 Mar 2025 08:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743238795; cv=none; b=oU2jH+5/YBHe08nB1sqOLlvzI85f8n4SaRM1LOo4S0E/5+ypHjOFZvRdv2ElyaBet5oER1gxSp7B76N16MmlZhCuBjAaNOLfc7w4uUQ6ejLtKooRUkfugK0y4nZRog6PRrquEiUYImN1Vo6zdQGUn+UQ/Z0wNfAtkhM8mR1S0es=
+	t=1743238803; cv=none; b=WwH8e6TJ/QTzBeUV2n9M0erts6TPnNR+G32CdqpOMm0WzHKwNIX8QUAvem4fyE+EShoyvRj9Cj6gpVF+58S1wmsX3xHucYMPtQ1ck2RRxmOfchfwP0/F7g5UIhpYWbQknYOjn0Z4MfZqM+Hg8ZWSdmhCT1IrOKu8qZXWW7q/eKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743238795; c=relaxed/simple;
-	bh=P43UgQWtBugO4yRa9AP1UE8y4mvRbi7MD/UbP3JyaSQ=;
+	s=arc-20240116; t=1743238803; c=relaxed/simple;
+	bh=en+FZn0JORAKC9NVo7sgj5lgyDGulzZwQrzAOCRnH5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EVMQMRcBwTZw9oTK6WtbzZebpEUG+weMyTS6ewY8oSG9L9twT8NMuxHcYlTpSaoL+hJeLO1dCBPzfkM1baTZhiKV7+UEFhAY1+aE0+zkcpwxDcOynF1vhe2uezOG5sgEetUxI0r3bRxNtw4XwDsikr124RoW8cH7IHU6hFS/GxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LmqL8gTd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LmqL8gTd"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52T7ickO003565
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:59:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	37x3gXvWIZO0z5ax79P5XurFvsK6woppiUhnedErM2g=; b=LmqL8gTdUd0Bu9AF
-	6QOw6p6dL3yY60z8waGf1yxCMThOsM//qAHS7dflxVgP/iZx8K0HP0ELZeCTYgra
-	nzWLz/fnWwWvkZYzIM15G6bYEcakTvcKD4nBcO/q4xsA9qSXKkF23KPDe1DrnyRC
-	99k4rQp/67FznM1tjNvyvobVhJbwyzHjM2ZcuMFRp0HkOOg4tbvUl5o7/Q6Mai38
-	BNzQKotGelBXu9yYFwEV6JGHHaakUrXlRy7ABB4BXYpWXwKGoDXW/cn7NoVX7kl/
-	du1HRgny/FLtKrajUvNLP5slu0z4LYQ5Ey/zHAQ8Y4dXj+mOSQJuTwTiNGRJVnX9
-	L0raMw==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p9mjgbmf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 08:59:53 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6eeb8a269a7so5693096d6.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:59:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743238792; x=1743843592;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=37x3gXvWIZO0z5ax79P5XurFvsK6woppiUhnedErM2g=;
-        b=SXYSVzpm4/prXJs1YaCSSvaIRHFAT6sO/vKW8jcMXR5a8waJ4QuHT/l9WpzC7ionsl
-         3/NyCfaQcXHhVNjpdlVaw3b/9RBu+AwP2xB4Uq7+ElzeVO3kU/6MVidmTplN9oPZoZty
-         2tBACmSTkhgW+kAYkBCc1xDJuK2ZnE5RvhPXDh/CPwJ7H52ngshvqWUKhqX8LOF7ri8f
-         nIESN5u7MHAD9UXhbH4HyCKzWJ4rHKlOwEP0sn+IoFABjLAucU9c27c7e128idsa8LXZ
-         wK7fSxBHMUGh48CttAsP6vtkvMLJkXQXbT94Ws7Kwf+i6T1Acmt+MGsTVZc7c5hhzbm5
-         L2RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDO4FHfD4VUUkDEL5hhChwsnJiPRjtoI1uINQx0o6s6BQ9a3Shz6ShxyzaY8I0ZUEaWvuuRmZn5a5ukUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaD3ArOuMja4rcQjQZCSqaPX6vUkrrAt2NCQrrDWP4nopWN3yo
-	L/64PFb4+pQpRcdwswNw/qnJ1LiNl4OvMzXcA9WAGtspJ67sF4hqxBdQM86N6jA0/BBiHmuLmKk
-	CCT9CryvOGOBQSpG83vWN2c/xDXWTeiJcvbhWSIokqsA5jZliommt1TWbHkQo0mQ=
-X-Gm-Gg: ASbGncs+kXEFEc4cZ3tDHIoxJY5lPrNvDlqPgEot3sciTMqUIPGyaYYGsR0u/xpBnLe
-	pqSPq5BTRl9oPTma9TJoDZR95Sg+iFTTx00WZkqV9vlCcM5u6eUqvc3b7guSHfDIt0Cqilxrc4E
-	6UDGaVUcLos4O4UFGgfr1br60S23N2Tpo/zndW5jXu3uBuOgzDWm06WZ1UCMpwQbEEeaLrgpSdv
-	n53w1lOexP1WoDeydztaEJc6hScrPBQ0R/fnLARe9sHI0ckGJutmqjkxO5trx10drZEmSV4tJE/
-	9cMGjV3jbch0SufzOHU1jmLOofUEPnHHpodk7BR4Gk7Vld2wzoyY+OM885Xe/y6kOh+4gw==
-X-Received: by 2002:a05:620a:1792:b0:7c0:bc63:7b73 with SMTP id af79cd13be357-7c6908ca335mr102811085a.13.1743238791855;
-        Sat, 29 Mar 2025 01:59:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWgQ8bGtNGe0Vk1ZyjZA5f1jd7EgL+yhTvduuo9qldDJH4f2p/S8qqOhgDV+CWnBCyVhZeiQ==
-X-Received: by 2002:a05:620a:1792:b0:7c0:bc63:7b73 with SMTP id af79cd13be357-7c6908ca335mr102808485a.13.1743238791339;
-        Sat, 29 Mar 2025 01:59:51 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac725c71e95sm219562766b.76.2025.03.29.01.59.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 01:59:50 -0700 (PDT)
-Message-ID: <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
-Date: Sat, 29 Mar 2025 09:59:46 +0100
+	 In-Reply-To:Content-Type; b=WDdIbSXWzRIjgnlpFyy2rmcvFGalCfTbIYWN4BYc3W6ZC1O9A05pRBKUWcSEBbYY3wMulVNqwiklRt55AnsO069Rb9L7hkH6qyfAIKgD5YEfkQweCVKDYX/1ocNnXHYqxnHDCY9NYQ5AgGSNiNSMVGyN4Qi1akgiFjIoFFFBDL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+Received: from [192.168.241.128]
+	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1tyS2b-000000000jC-0WH3;
+	Sat, 29 Mar 2025 10:59:45 +0200
+Message-ID: <4d25c1fb-040a-4e0d-bc12-67f17a04378f@uls.co.za>
+Date: Sat, 29 Mar 2025 10:59:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,144 +29,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
- <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
- <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
- <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
- <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
- <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
- <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=Mfhsu4/f c=1 sm=1 tr=0 ts=67e7b689 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=124JrzZUfrG38n11_fAA:9 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-ORIG-GUID: nPqOX6UjYhIM_XG3gRiHYdL7nZeo-xeO
-X-Proofpoint-GUID: nPqOX6UjYhIM_XG3gRiHYdL7nZeo-xeO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503290062
+Subject: Re: fuse: increase readdir() buffer size
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bernd.schubert@fastmail.fm, miklos@szeredi.hu, rdunlap@infradead.org,
+ trapexit@spawn.link
+References: <20230727081237.18217-1-jaco@uls.co.za>
+ <20250314221701.12509-1-jaco@uls.co.za>
+ <05b36be3-f43f-4a49-9724-1a0d8d3a8ce4@uls.co.za>
+ <20250328194007.4768eaf9@pumpkin>
+Content-Language: en-GB
+From: Jaco Kroon <jaco@uls.co.za>
+Autocrypt: addr=jaco@uls.co.za; keydata=
+ xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
+ a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
+ gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
+ gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
+ HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
+ AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
+ bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
+ hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
+ Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
+ kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
+ o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
+ jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
+ GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
+ re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
+ yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
+ 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
+ XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
+ o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
+ FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
+ 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
+ TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
+Organization: Ultimate Linux Solutions (Pty) Ltd
+In-Reply-To: <20250328194007.4768eaf9@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-report: Relay access (ida.uls.co.za).
 
-On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
-> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
->> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
->>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
->>>>> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
->>>>>> PCIe equalization presets are predefined settings used to optimize
->>>>>> signal integrity by compensating for signal loss and distortion in
->>>>>> high-speed data transmission.
->>>>>>
->>>>>> Based upon the number of lanes and the data rate supported, write
->>>>>> the preset data read from the device tree in to the lane equalization
->>>>>> control registers.
->>>>>>
->>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->>>>>> ---
->>>>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
->>>>>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
->>>>>>   include/uapi/linux/pci_regs.h                     |  3 ++
->>>>>>   3 files changed, 66 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> index dd56cc02f4ef..7c6e6a74383b 100644
->>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>>>>>   	if (pci->num_lanes < 1)
->>>>>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
->>>>>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
->>>>>> +	if (ret)
->>>>>> +		goto err_free_msi;
->>>>>> +
->>>>>>   	/*
->>>>>>   	 * Allocate the resource for MSG TLP before programming the iATU
->>>>>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
->>>>>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->>>>>>   	return 0;
->>>>>>   }
->>>>>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
->>>>>> +{
->>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
->>>>>> +	u8 *presets;
->>>>>> +	u32 cap;
->>>>>> +	int i;
->>>>>> +
->>>>>> +	if (speed == PCIE_SPEED_8_0GT) {
->>>>>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
->>>>>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
->>>>>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
->>>>>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
->>>>>> +		lane_reg_size = 0x2;
->>>>>> +	} else if (speed == PCIE_SPEED_16_0GT) {
->>>>>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
->>>>>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
->>>>>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
->>>>>> +		lane_reg_size = 0x1;
->>>>>> +	} else {
->>>>>
->>>>> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
->>>>> controller supports them and if the presets property is defined in DT, then you
->>>>> should apply the preset values.
->>>>>
->>>>> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
->>>>> safely return.
->>>>>
->>>> I am fine to add it, but there is no GEN5 or GEN6 controller support
->>>> added in dwc, isn't it best to add when that support is added and
->>>> tested.
->>>>
+Hi David,
+
+On 2025/03/28 21:40, David Laight wrote:
+> On Fri, 28 Mar 2025 12:15:47 +0200
+> Jaco Kroon <jaco@uls.co.za> wrote:
+>
+>> Hi All,
+>>
+>> I've not seen feedback on this, please may I get some direction on this?
+> The only thing I can think of is that the longer loop might affect
+> scheduling latencies.
+
+I'm assuming you're referring to the fact that it's now possible to 
+iterate more times through the loop at the very last phase?
+
+The first loop which sets up the size of the folio should only ever 
+execute once unless there is fairly huge memory pressure and allocations 
+fails.
+
+The clamping code is unfortunate in my opinion, but it is possible that 
+we can either get an insane huge count (based on inspection of other 
+code, intended to be -1) or a zero value.
+
+The upper limit here is arbitrary, but in the usual case I'm expecting a 
+128KiB buffer to be allocated, which should usually succeed on the first 
+round.
+
+The call to fuse_read_args_fill may result in marginally longer running 
+code, along with the clamping code, but due to larger buffers of 
+dentries being returned this is more than compensated for in terms of 
+the drastic reduction in user-kernel space context switches by way of 
+fewer getdents() system calls having to be made to iterate a full readdir().
+
+Other systems may be more resilient, but glusterfs without my dentry 
+cache patches has a tendency to "forget" dentries under pressure, and 
+then have to restart getdents() runs via client-server round-trip hoops, 
+often resulting in system call durations on getdents upwards of 30s at a 
+time.  With this patch, the overall latency comes down drastically, and 
+the number of these (inferred) restart runs on the server side to find 
+the right place to continue reading from is also reduced, even without 
+increasing the dentry cache in the glusterfs code.  These two patches in 
+combination basically in my experience makes glusterfs operate no worse 
+than NFS on average.
+
+Given the feedback I'll discuss deploying updated kernels including 
+these patches to our production rather than test environments (one node 
+at a time, 21 in total) with the team.  And then provide feedback from 
+there.  Our rule remains not more than one node at a time for 
+potentially disruptive changes like these, and preferably no more than 
+one node a day per environment.
+
+In our test environment this panned out on newest (at time of mailing 
+this in) kernel, and informal time trials (time find /mount/point, with 
+180m inodes) was quite positive, and orders of magnitude better than 
+without (We killed the without after it took about 3x longer than with, 
+still incomplete).
+
+Kind regards,
+Jaco
+
+
+>
+> 	David
+>
+>> Kind regards,
+>> Jaco
+>>
+>> On 2025/03/15 00:16, Jaco Kroon wrote:
+>>> This is a follow up to the attempt made a while ago.
 >>>
->>> What is the guarantee that this part of the code will be updated once the
->>> capable controllers start showing up? I don't think there will be any issue in
->>> writing to these registers.
->>
->> Let's not make assumptions about the spec of a cross-vendor mass-deployed IP
->>
-> 
-> I have seen the worse... The problem is, if those controllers start to show up
-> and define preset properties in DT, there will be no errors whatsoever to
-> indicate that the preset values were not applied, resulting in hard to debug
-> errors.
-
-else {
-	dev_warn(pci->dev, "Missing equalization presets programming sequence\n");
-}
-
-> 
-> I'm not forseeing any issue in this part of the code to support higher GEN
-> speeds though.
-
-I would hope so as well, but both not programming and misprogramming are
-equally hard to detect
-
-Konrad
+>>> Whist the patch worked, newer kernels have moved from pages to folios,
+>>> which gave me the motivation to implement the mechanism based on the
+>>> userspace buffer size patch that Miklos supplied.
+>>>
+>>> That patch works as is, but I note there are changes to components
+>>> (overlayfs and exportfs) that I've got very little experience with, and
+>>> have not tested specifically here.  They do look logical.  I've marked
+>>> Miklos as the Author: here, and added my own Signed-off-by - I hope this
+>>> is correct.
+>>>
+>>> The second patch in the series implements the changes to fuse's readdir
+>>> in order to utilize the first to enable reading more than one page of
+>>> dent structures at a time from userspace, I've included a strace from
+>>> before and after this patch in the commit to illustrate the difference.
+>>>
+>>> To get the relevant performance on glusterfs improved (which was
+>>> mentioned elsewhere in the thread) changes to glusterfs to increase the
+>>> number of cached dentries is also required (these are pushed to github
+>>> but not yet merged, because similar to this patch, got stalled before
+>>> getting to the "ready for merge" phase even though it's operational).
+>>>
+>>> Please advise if these two patches looks good (I've only done relatively
+>>> basic testing now, and it's not running on production systems yet)
+>>>
+>>> Kind regards,
+>>> Jaco
+>>>   
