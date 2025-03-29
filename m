@@ -1,93 +1,100 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18C617A31A
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE62F17A31A
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743275230; cv=none; b=ouobqq4sLbVZoSn0FY9jyTjtuvHJkXNddL4YdsfX90ykeihUZVRPQ5afWk16JyiCNcnQir4LK57h5yyv5CetUoJpVQSgSu0X7s5zHeXKwgKq1pPXgKJ3pdILg1kYnqigVU9wagbvFsmf/av2BtQruwBOLBmyBK0BhWwQJroQu40=
+	t=1743275245; cv=none; b=dNgmAFwws5ykS3olCEBarMFXKK9xdnDr2QOhw6+Astb0VqWL7RjOkr2OdSf1aDeSBBu57eApMCRoFly/3KIirc9eB/HVYGGRxQv+QY6KGCOBEFdN0TLSlwsSAB6TIjvVaBLzWa1AjCQhitaG2pZjt9aB0GJr1WHuzuivyVeUqJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743275230; c=relaxed/simple;
-	bh=CPIt57KTbw48U5UWIhC/4Sj7Kxrgg20tW/7JGwREow0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kXPZaZlxF/Nc+X6qq7sl1n8vsmKp2p811cQhK/BpeLs+6W6exKgJfwhahhSoETpCUDKnChsHZm3B/DZU4yvSu16ECBy3qi9n7QCenTLnpnAva+kJL+1OrjsVzhHW0G9mvfyXjOWZgwc+rYpXC186o8FccsAxuaUEhMYFeo6lvB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=mbe2UgFK; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743275245; c=relaxed/simple;
+	bh=GJQ+7V2tQjzDrOWrXpmYG/CayAG2ta4MgxkbXWPPFuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z5yGkXHOLlcaglCks8tvI0GgIXJXD0d5ZmymZIhaPG/osaYwbKnKHbS90v++XFZIoBEmVKwePcdpLIoxnvRsDUdpLwvrJZ8oWWUv0V/tco9d0qsWXS/X+W+ZRseaPHTirMbibQ4/YxyxLgEzg4js+JJGwz8bTJJqAanOPWupzRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=OAel5WEz; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="mbe2UgFK"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d589227978so10200565ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 12:07:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OAel5WEz"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so5956030a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 12:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743275226; x=1743880026; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PaGHXcdYFnrdjAPBt/dtHNMzVVLvDagzoTGvwSBAWXQ=;
-        b=mbe2UgFKItYPtsZr9HBaL9Uj1UCCu4KekLD64Hk3kDAJJlhGKtD6sbIR45JCx0HHJG
-         P6LLPbtCqdMR17SfXNAJzJUe1wmvajIz6uI8v3LimwCwtcSefEHlPCgnPb6I3A37T6NZ
-         jsKl/cwPG3vWyZaZBugV1mY8TtHnP6/Ne0pr64ecFbqRg+nEotAjEVUnGi4cSiOhjS3R
-         FVCg7SF8jn8wjfj6Y3KaUBAXX778e2PmUPspQLbaKTW3X2FAD/YJFYvJNnfFAWykUuIv
-         CWHOYNxkYi/tquhi/GHKeZccDhcJd+6J+zU0w/U4gauldQjD/MWcKDWsfhUB7GcaPYFs
-         JRcQ==
+        d=googlemail.com; s=20230601; t=1743275242; x=1743880042; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JFz+j+lYMYpEFRAVVmF7Pa4RWjE2uLL9dKkNgmgdtZY=;
+        b=OAel5WEz0UP9HH7mDeVKTnRdcaevpfoja9R8xiZAiuzKZQuXuBMNo2qRohojY8jZUk
+         M9Vie2DEnM/dudktv9u6tItO0rcb1Jqe6zbssBLmCr9EVCEEoDCm31gfqOT7sK3+jjbQ
+         gOIp9stFBcQHOHh6LpamX0njn2+UREKjdiXL0+dV55Z+6O7m1uA7ndctFNReyzHZ14TQ
+         IIQufQdQQEU7uDTn4VfKMBC7gavNSRTLQkfc+ZUzYd6VYQEn+VT76zU74aTHGThT3EVh
+         Kdc8YrT6KqmgQc5CZx09zTAcdaNOOcmkI2s2h+fKapi4egW+f+MmKkDSDZBXelOtkEOM
+         6qvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743275226; x=1743880026;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PaGHXcdYFnrdjAPBt/dtHNMzVVLvDagzoTGvwSBAWXQ=;
-        b=uE3Bl+r0uwHjznxY2t5XYPWJSOTFVW3a+4dOfJdD3q/Hvmqn/udmqyrTDag02DXLwA
-         QDT4xBXtsKCtbVkoeHN58BJZtKPIoGjt5vCmXLk4hisAYrchDW/bRSdD4KRqSA1Y5wU/
-         GdY6ytiJ5fs9A9u5FHptx1C+gE6VuKLuijrNnGLowR69ARiBI7HOjWFF81I6T32fHK0W
-         17yf4vaQM65FkTdt26fQyw8BlYyp/TVxcXr17O3KpTti3sNGyiABrHAaD5S49tfggjk6
-         RNviYKBWKCu2shnbrNsIn6gIuCiDUTddfMHkYvK9EAAdf+/X5nxlfkX7ljAiXRG7H+r6
-         XrLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZPal27H/isUpghoKvFs0mFNfAdo7K6sSrIIIWoDDWPSn8X1Ha+GtTJxX6ac0tGJreCUn+HZedF6M4h8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvQAJVv6qVjvv0LNQsNakFXbzoc6VKKtMldMAkT4kPeM3qDLVS
-	vYzwCQ/Qdb7lfdxqcoeoJQfi6UigLmnorgGZixUzQAkYIbB/YLwJHAv02LebtJ8=
-X-Gm-Gg: ASbGncv1m1n03ofZ508XO7GosMGXXqVOf3F0mbeF7guWEfk2yTXDTAQT59l+5LZ5I9H
-	Ba8HSUTOhKNQYKcXMmfkgBiVCZqlWHnmJTyC2ClHeIb4zcBWb5iCEeurDgPW3w9M831fN9tBtOY
-	jUIvdEd7hg/ioyl1vsBXmMzDr8P+bR2PrKYnlHFCY627lpd3BHV97Q+y4k47ztFq5bvNE7tovAz
-	MwNO5Q2szOt4EtVb/e3t1TimTNyetTaDEYwHg8+wmTOwd6OkTZtYCcW0BDerdtVz59QvUNC4sCt
-	6TC3Sez5Aa6jQgFJa30i5nknKYqxqkipn5VukrXzmA==
-X-Google-Smtp-Source: AGHT+IGGI5rUj29WJPXqMbVotuqKmnVzBYiicrC4WVNgcPFELxFvIKEqhvm7OfHT2pS0TayTuv9AmA==
-X-Received: by 2002:a05:6e02:4401:20b0:3d2:af0b:6e2a with SMTP id e9e14a558f8ab-3d5d6c832eamr47389485ab.5.1743275226428;
-        Sat, 29 Mar 2025 12:07:06 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f46489e032sm1007193173.124.2025.03.29.12.07.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 12:07:05 -0700 (PDT)
-Message-ID: <9d8f1460-6317-4e8a-ba90-53e35b41f235@kernel.dk>
-Date: Sat, 29 Mar 2025 13:07:04 -0600
+        d=1e100.net; s=20230601; t=1743275242; x=1743880042;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JFz+j+lYMYpEFRAVVmF7Pa4RWjE2uLL9dKkNgmgdtZY=;
+        b=HtIaYQ30drX2t1Dc0MKP5M6NQqoHSKRQdtJC3ltqC/4CBGq28LUfeAk2FMqx4Nj7qt
+         Sr2f6Usp+GRCXowH2hPJOnqucr/74NvTvXg4zOn1QiXhne3yvOkRbhA4BKHF+Flt4U3E
+         O9AENSaqh60j4Grd/0D4hbSXd/kcrhdVRrj7tOp3Q5UoImRCvmFuHvPwD5+s0EXt54+1
+         7LzJ8UgOd/90FsfH5Q5YkQNtqMQFgI/p8DoIFB9Ia/6TXvOrB52C5uvgfK6J3LaRF33Y
+         e+jlHQSAMGpWS86L79fR6bepeW+YODaJgfdBrdqy4kzfTOvuNP4cEBOZNObZ2dR7NicB
+         g31w==
+X-Gm-Message-State: AOJu0Yz620wnFRIfeixSsAVhfRw29ORd+EUfSyNz16m/ACW9QoRu2spp
+	2mIAaq+1WJ2bZ50j1/5papfCAKkCmyopEdEmgqCmkhI535IFFbGuJs/k1Q==
+X-Gm-Gg: ASbGncutcETs2QIK8ofBiaFIbzcUzRZ6X4m/WXBD/sljth9bM5kl6TIHcGIZLGjaO1m
+	qHjzot+K3IG0jdCIl+4PubDNrZLR8INCStd6Zpob65IJFsYxYQkKL0uTVrf9UsOYJtf3JxZcURx
+	DmztEZhQ42YkkYUjWRUie9a+uE6a4IMkC6Iax3RVFVB4VkAuwUItFq3RT68hlgIkjIdlvDAzhrQ
+	KmJMvZkK2cvJS/qH/ycwUF3+/P+l0hoUsmxVv58AZy/wSB/KyWPx4r8nghpnl9rvZND28/Z0XRz
+	VkIyvMq4SlLqmYwLQqqGJ6sUgQN6Yfo0Tom+QSb+Sasswmd/5X05kcQqfIh+N6VZN8rxZiW2K2T
+	aih/OgZz+ni6BqnXQwa8ECalqe72Esfz2lWzJOIa7dnbitUfl0Ljxl6yDGWMXWNjj/AMuGsIlt1
+	Ucai87
+X-Google-Smtp-Source: AGHT+IEQ+QO1md8dITwHEJCHRkLxJT4UkzUndN8TnSWkTxa743bZesp6vBpeCuGkIGe8sK7LVrQqww==
+X-Received: by 2002:a05:6402:35c6:b0:5e7:b02b:6430 with SMTP id 4fb4d7f45d1cf-5edfdafb282mr2585993a12.23.1743275242058;
+        Sat, 29 Mar 2025 12:07:22 -0700 (PDT)
+Received: from localhost.localdomain (dynamic-2a02-3100-ad73-6800-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:ad73:6800::e63])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aac05sm3275271a12.3.2025.03.29.12.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 12:07:20 -0700 (PDT)
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: linux-amlogic@lists.infradead.org,
+	linux-phy@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kishon@kernel.org,
+	vkoul@kernel.org,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] phy: amlogic: meson8b-usb2: two small cleanup patches
+Date: Sat, 29 Mar 2025 20:07:10 +0100
+Message-ID: <20250329190712.858349-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring/wq: avoid indirect do_work/free_work calls
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250329161527.3281314-1-csander@purestorage.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250329161527.3281314-1-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/29/25 10:15 AM, Caleb Sander Mateos wrote:
-> struct io_wq stores do_work and free_work function pointers which are
-> called on each work item. But these function pointers are always set to
-> io_wq_submit_work and io_wq_free_work, respectively. So remove these
-> function pointers and just call the functions directly.
+Hello,
 
-Was going to say that the indirect call here is not something
-I'd be worried about in terms of performance, but it's also kind of
-pointless to have them when we have just the single do_work/free_work
-callback. And hence it'd reduce the struct footprint, which is always
-useful. So yeah, I do think the change makes sense.
+this series includes two small cleanups for the phy-meson8b-usb2
+driver. There are no functional changes.
+
+Changes since v1 at [0]:
+- added Neil's Reviewed-by (thank you!)
+
+
+[0] https://lore.kernel.org/linux-amlogic/20241231191718.2764065-1-martin.blumenstingl@googlemail.com/
+
+
+Martin Blumenstingl (2):
+  phy: amlogic: meson8b-usb2: Use FIELD_PREP instead of _SHIFT macros
+  phy: amlogic: meson8b-usb2: Use the regmap_{clear,set}_bits helpers
+
+ drivers/phy/amlogic/phy-meson8b-usb2.c | 35 +++++++++++---------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
 -- 
-Jens Axboe
+2.49.0
+
