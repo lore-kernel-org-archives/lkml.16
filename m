@@ -1,75 +1,48 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 5.mo576.mail-out.ovh.net (5.mo576.mail-out.ovh.net [46.105.43.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF471DF972;
-	Sat, 29 Mar 2025 19:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E66190470
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 19:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.43.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743276521; cv=none; b=Kq656UL1Mj7yoB+outM5WikNdJ4mULrbaXgpQmZYE/6FAv2p4RxdMQra2yS++T7lomGP760R9N3vxLphsmWku2lyO3tXhM/pOFI1AlAx/HyV2jAOV9CP1KiJJ2kva0dxR1v+wbj84/IBAW86j0Nb5xqcTjcmmPj/xext1VJ5ZQc=
+	t=1743276715; cv=none; b=ehW5TyKCyMjAQmbdjIuyp75gdEaeH0gr5jFycPJ6841C5s3WBP3DPG43K6jApE/qqcO8cJCcXfZhp4dQRo8Kq5rxyQessCD7o89UcUDwGDbZsyb0SR1IRlDa2y7U74hvhFCPgvNP4pz712pGERwereHZXrZ4L+yfQf2KcLjaqQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743276521; c=relaxed/simple;
-	bh=HMlu614l9vrUJR8sMZ9GS+Go9ildwpuzJT02rcw6AyY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kbtgLKt08TPJqaZ4opYT0p6dqLY0Esq/OqNl0jD40XFd21M7mmXJ+4e9Ug/oszhzsmN9hH3ybNKAJtcnd6WWiawCjTtZYeNnn1zjnKea9loX/D+0P8klRC6mFPvVStIhCbiidVPGuTrEHBir7XeaNtxBKqJtQvGNr3LGCDCXjOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/3GKIIx; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743276715; c=relaxed/simple;
+	bh=uGnuxLaPa9lafg8GL1vrIXjXYLga4eyTWR5Bm64gm6o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LLR97zO1ncHQEm4+do82inkfJ9reIUYk/7cCe+7mKXiwQozV29T3b1uZ+ouC+Ledl9mftpS6CgIUEINP8iqiRGA24bN95SQx3s4vi2OtnmxzCmSFTIv4w1UEre99mBAPdDyi4C1vng5pskzQDtiRvd/abPNTzF2Eo8nnQZdeX0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labcsmart.com; spf=pass smtp.mailfrom=labcsmart.com; dkim=pass (2048-bit key) header.d=labcsmart.com header.i=@labcsmart.com header.b=T0Vm1s/V; arc=none smtp.client-ip=46.105.43.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labcsmart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=labcsmart.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/3GKIIx"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso23316345e9.1;
-        Sat, 29 Mar 2025 12:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743276518; x=1743881318; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MMIrv1kqIoRpOCqYRw9tO7+mhVPULEt+KT/icWfjEqw=;
-        b=h/3GKIIxyjvuGqQjv1/aYbPntX7vVMWoU5ibOQK6rMVRAHCjsp5Bd0uhLTRhrZ/QP4
-         kLkXWRtxqArr5HqGbwL/7jPoJEPdxW28qt46LYCaStDjKEDBt2xJNZaaOjYx5bLFDd0w
-         JS4xO4MjwJdDVY35KBkjSvNILnIXkkgS5RJgvYLBEm6CbRADl0UAtG2F3rtAyu64ppKS
-         RQKRSPncH+JmVf5keZCL7WpmfO990KlhbBbGGyMtpyuIMa2/T1+VW6KXTw3X74x+80qZ
-         qQOmDN1Y4aBtDfa2jdLIC4wfORbYuR2ftzTIuTwV5ZJ/0qG6Wt3za3IgsWRgeamcb4ID
-         IeOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743276518; x=1743881318;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MMIrv1kqIoRpOCqYRw9tO7+mhVPULEt+KT/icWfjEqw=;
-        b=HTpM27P2JHwscl9bHiJYgZkF3mkKdOEIcP5O9nnZWdw+wLzQ9xZ+F3LUjVx0q9N+7E
-         iN55psLzrrOtkCelWA7cmepSPoZXXh3SWcM5Anaj70E43cJaQdL3GCJ3dqE8iCBnqMAG
-         j1cN/CAXjoRfkbwohX7nJK2tkkC+zXHUtDqtv9dtcSDB3zXXDN2mnuJOiFJrAMGnq1FQ
-         zIPpdu+5LgYk5yLIV5IFvhZCJZiWXBte3xUW09TB4Hn1nywFGSPlY3rKBU6jXaXJCg4H
-         g0uRBhh0Izc5qXs3NBvw8BPo5YTxNO7pp6YgSPUecbRM2Aic//+sW7xOO0GQ8vxswJGj
-         vFZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4JUKxLvSbsfyED4LmLwE+VeT7IhaA5OA8cDtwKH1GnEka9fBhdY/vrUUZKHqoo6746danjxKviLCMi+IP@vger.kernel.org, AJvYcCWHTAB09pM549PafM6JTAUns4ILdkDK4fdr6rbMKbVrMMLbTPZ8sQg1bn1wFETH2yZwhf1J0LvfIVJNkkjs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSqfq/U3gfuAfFprPefK6TCeotd/9yqQ+LaO29Cpi7ArVSRMNG
-	4AytuzfMygwko/eBuPCD73/+9m4sEIRTBilW4aLfZ50pN3VcIFid
-X-Gm-Gg: ASbGncuhU09/wbYpaAcIR/hb5EGMQN4yXGrec8kh03N7TnSkLbcu9bOylaqBiCLI+Xn
-	J/Vucr8w6TtjEHd18eO8HqR3znYu7sw7VGYAIRHfiLvrDeXmfb7s79J0SgPvlMQlodUHP0KElvV
-	Ec33BaxbIDR4/MoOqH19gg5dKZ5EImcxK+KgQbuudZD9pQcDUmNhoEM31xJ3K36nt7Azs1iF240
-	qQppnsrwZxQTmXxIAPnbpV79KRY0pkNEemVAALPS/PmEB0pGJLYtkzF1arpbuzeu99RWirHdhcG
-	278PKO091IdCOPq2Sz6kiDWYU4hUSUh51krvPmRNjUhg2gl1IpgUzAjFXrLi
-X-Google-Smtp-Source: AGHT+IG30aTTmjX0hsXkFfMYZnhRziWNzSZ+dgNEk4q0tnxeCpZEmJHXMCFDLxnfwtdvSv/NFK61hw==
-X-Received: by 2002:a5d:64ec:0:b0:39a:ca05:5232 with SMTP id ffacd0b85a97d-39c120c7ccemr2761702f8f.5.1743276517757;
-        Sat, 29 Mar 2025 12:28:37 -0700 (PDT)
-Received: from f.. (cst-prg-15-56.cust.vodafone.cz. [46.135.15.56])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e141sm6553400f8f.77.2025.03.29.12.28.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 12:28:37 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
+	dkim=pass (2048-bit key) header.d=labcsmart.com header.i=@labcsmart.com header.b="T0Vm1s/V"
+Received: from director11.ghost.mail-out.ovh.net (unknown [10.108.9.41])
+	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4ZQ5Cj0p3jz28wQ
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 18:15:13 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-bnbm7 (unknown [10.111.182.49])
+	by director11.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 9C73E1FE64;
+	Sat, 29 Mar 2025 18:15:10 +0000 (UTC)
+Received: from labcsmart.com ([37.59.142.99])
+	by ghost-submission-5b5ff79f4f-bnbm7 with ESMTPSA
+	id lXD9Eq446GegAwAAx023iw
+	(envelope-from <john.madieu@labcsmart.com>); Sat, 29 Mar 2025 18:15:10 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-99G00370defa65-2e12-46e3-a76d-ab6dc0455f8d,
+                    1AA15D79FD1645C8296C06E669C502FD88205396) smtp.auth=john.madieu@labcsmart.com
+X-OVh-ClientIp:141.94.163.193
+From: John Madieu <john.madieu@labcsmart.com>
+To: sven@svenpeter.dev,
+	j@jannau.net,
+	linus.walleij@linaro.org
+Cc: alyssa@rosenzweig.io,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH 2/2] fs: cache the string generated by reading /proc/filesystems
-Date: Sat, 29 Mar 2025 20:28:21 +0100
-Message-ID: <20250329192821.822253-3-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250329192821.822253-1-mjguzik@gmail.com>
-References: <20250329192821.822253-1-mjguzik@gmail.com>
+	john.madieu@gmail.com,
+	John Madieu <john.madieu@labcsmart.com>
+Subject: [PATCH] pinctrl: apple: Make regmap_config static const and fix indentation
+Date: Sat, 29 Mar 2025 18:15:06 +0000
+Message-Id: <20250329181506.890043-1-john.madieu@labcsmart.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,236 +50,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 4085046338809924234
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeegkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflohhhnhcuofgrughivghuuceojhhohhhnrdhmrgguihgvuheslhgrsggtshhmrghrthdrtghomheqnecuggftrfgrthhtvghrnhepgeegteetieettdffleeludeliedvueeuuefhveffhfehtdehiefhfefflefguddvnecukfhppeduvdejrddtrddtrddupddugedurdelgedrudeifedrudelfedpfeejrdehledrudegvddrleelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehjohhhnhdrmhgrughivghusehlrggstghsmhgrrhhtrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeeimgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=akVyMKQyCxWZ3yLiQHM8pT2PU+T/9mwnNjkwN1GvFNU=;
+ c=relaxed/relaxed; d=labcsmart.com; h=From; s=ovhmo4089092-selector1;
+ t=1743272113; v=1;
+ b=T0Vm1s/Vrkc1RsJQHrYki+Vr3ubVgaOhtDZs744k67Osex0cxMGi6iFlHHwWn/vqtIKTC93P
+ e1VZxhXuFjq2tNtU8IkyAFaJdFJqmVsbUEGGyq9CTzs03Pkkr+6CVnfiJd3EHQVvA3sJIiWQp8G
+ z3H/BNoJUOQ1Gq4qJcrHfL8gCaKqQJHnfybZLKx838mt49Bg+CXmbWEekOhzvM6HqxbKewphJAD
+ JbpI7fIyADsh+2pmzFirD+dT7wEj6CYcVwUymZ9XlRDevENOV7a5hZsVYxGPgdPZSGmCzgLLnwj
+ 42HRqU1sPKlyqcFxY20HYqEYS7B1wY+6abjC+mwJEB5sg==
 
-It is being read surprisingly often (e.g., by mkdir, ls and even sed!).
+Mark the regmap_config as static const since it is only used in this file
+and never modified, allowing the compiler to optimize it and enforce
+const-correctness.
 
-This is lock-protected pointer chasing over a linked list to pay for
-sprintf for every fs (32 on my boxen).
+Also fix minor indentation inconsistencies in function parameter alignment
+to conform with kernel coding style.
 
-Instead cache the result.
-
-While here mark the file as permanent to avoid atomic refs on each op
-(which can also degrade to taking a spinlock).
-
-open+read+close cycle single-threaded (ops/s):
-before:	450929
-after:	982308 (+117%)
-
-Here the main bottleneck is memcg.
-
-open+read+close cycle with 20 processes (ops/s):
-before:	578654
-after:	3163961 (+446%)
-
-The main bottleneck *before* is spinlock acquire in procfs eliminated by
-marking the file as permanent. The main bottleneck *after* is the
-spurious lockref trip on open.
-
-The file looks like a sterotypical C from the 90s, right down to an
-open-code and slightly obfuscated linked list. I intentionally did not
-clean up any of it -- I think the file will be best served by a Rust
-rewrite when the time comes.
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+Signed-off-by: John Madieu <john.madieu@labcsmart.com>
 ---
- fs/filesystems.c | 148 ++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 140 insertions(+), 8 deletions(-)
+Most changes replace space indentation with tabs.
 
-diff --git a/fs/filesystems.c b/fs/filesystems.c
-index 58b9067b2391..5d4649fd8788 100644
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -34,6 +34,23 @@
- static struct file_system_type *file_systems;
- static DEFINE_RWLOCK(file_systems_lock);
+ drivers/pinctrl/pinctrl-apple-gpio.c | 30 ++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-apple-gpio.c b/drivers/pinctrl/pinctrl-apple-gpio.c
+index f861e63f4115..0f551d67d482 100644
+--- a/drivers/pinctrl/pinctrl-apple-gpio.c
++++ b/drivers/pinctrl/pinctrl-apple-gpio.c
+@@ -66,7 +66,7 @@ struct apple_gpio_pinctrl {
+ #define REG_GPIOx_DRIVE_STRENGTH1 GENMASK(23, 22)
+ #define REG_IRQ(g, x)        (0x800 + 0x40 * (g) + 4 * ((x) >> 5))
  
-+#ifdef CONFIG_PROC_FS
-+static unsigned long file_systems_gen;
-+
-+struct file_systems_string {
-+	struct rcu_head rcufree;
-+	unsigned long gen;
-+	size_t len;
-+	char string[];
-+};
-+static struct file_systems_string *file_systems_string;
-+static void invalidate_filesystems_string(void);
-+#else
-+static void invalidate_filesystems_string(void)
-+{
-+}
-+#endif
-+
- /* WARNING: This can be used only if we _already_ own a reference */
- struct file_system_type *get_filesystem(struct file_system_type *fs)
+-struct regmap_config regmap_config = {
++static const struct regmap_config regmap_config = {
+ 	.reg_bits = 32,
+ 	.val_bits = 32,
+ 	.reg_stride = 4,
+@@ -79,13 +79,13 @@ struct regmap_config regmap_config = {
+ 
+ /* No locking needed to mask/unmask IRQs as the interrupt mode is per pin-register. */
+ static void apple_gpio_set_reg(struct apple_gpio_pinctrl *pctl,
+-                               unsigned int pin, u32 mask, u32 value)
++			       unsigned int pin, u32 mask, u32 value)
  {
-@@ -83,10 +100,12 @@ int register_filesystem(struct file_system_type * fs)
- 		return -EBUSY;
- 	write_lock(&file_systems_lock);
- 	p = find_filesystem(fs->name, strlen(fs->name));
--	if (*p)
-+	if (*p) {
- 		res = -EBUSY;
--	else
-+	} else {
- 		*p = fs;
-+		invalidate_filesystems_string();
-+	}
- 	write_unlock(&file_systems_lock);
- 	return res;
- }
-@@ -115,6 +134,7 @@ int unregister_filesystem(struct file_system_type * fs)
- 		if (fs == *tmp) {
- 			*tmp = fs->next;
- 			fs->next = NULL;
-+			invalidate_filesystems_string();
- 			write_unlock(&file_systems_lock);
- 			synchronize_rcu();
- 			return 0;
-@@ -234,25 +254,137 @@ int __init list_bdev_fs_names(char *buf, size_t size)
+ 	regmap_update_bits(pctl->map, REG_GPIO(pin), mask, value);
  }
  
- #ifdef CONFIG_PROC_FS
--static int filesystems_proc_show(struct seq_file *m, void *v)
-+/*
-+ * The fs list gets queried a lot by userspace, including rather surprising
-+ * programs (would you guess *sed* is on the list?). In order to reduce the
-+ * overhead we cache the resulting string, which normally hangs around below
-+ * 512 bytes in size.
-+ *
-+ * As the list almost never changes, its creation is not particularly optimized
-+ * for simplicity.
-+ *
-+ * We sort it out on read in order to not introduce a failure point for fs
-+ * registration (in principle we may be unable to alloc memory for the list).
-+ */
-+static void invalidate_filesystems_string(void)
+ static u32 apple_gpio_get_reg(struct apple_gpio_pinctrl *pctl,
+-                              unsigned int pin)
++			      unsigned int pin)
  {
--	struct file_system_type * tmp;
-+	struct file_systems_string *fss;
+ 	int ret;
+ 	u32 val;
+@@ -100,9 +100,9 @@ static u32 apple_gpio_get_reg(struct apple_gpio_pinctrl *pctl,
+ /* Pin controller functions */
  
--	read_lock(&file_systems_lock);
-+	lockdep_assert_held_write(&file_systems_lock);
-+	file_systems_gen++;
-+	fss = file_systems_string;
-+	WRITE_ONCE(file_systems_string, NULL);
-+	kfree_rcu(fss, rcufree);
-+}
-+
-+static noinline int regen_filesystems_string(void)
-+{
-+	struct file_system_type *tmp;
-+	struct file_systems_string *old, *new;
-+	size_t newlen, usedlen;
-+	unsigned long gen;
-+
-+retry:
-+	lockdep_assert_not_held(&file_systems_lock);
-+
-+	newlen = 0;
-+	write_lock(&file_systems_lock);
-+	gen = file_systems_gen;
-+	tmp = file_systems;
-+	/* pre-calc space for "%s\t%s\n" for each fs */
-+	while (tmp) {
-+		if (!(tmp->fs_flags & FS_REQUIRES_DEV))
-+			newlen += strlen("nodev");
-+		newlen += strlen("\t");
-+		newlen += strlen(tmp->name);
-+		newlen += strlen("\n");
-+		tmp = tmp->next;
-+	}
-+	write_unlock(&file_systems_lock);
-+
-+	new = kmalloc(offsetof(struct file_systems_string, string) + newlen + 1,
-+		      GFP_KERNEL);
-+	if (!new)
-+		return -ENOMEM;
-+
-+	new->gen = gen;
-+	new->len = newlen;
-+	new->string[newlen] = '\0';
-+	write_lock(&file_systems_lock);
-+	old = file_systems_string;
-+
-+	/*
-+	 * Did someone beat us to it?
-+	 */
-+	if (old && old->gen == file_systems_gen) {
-+		write_unlock(&file_systems_lock);
-+		kfree(new);
-+		return 0;
-+	}
-+
-+	/*
-+	 * Did the list change in the meantime?
-+	 */
-+	if (gen != file_systems_gen) {
-+		write_unlock(&file_systems_lock);
-+		kfree(new);
-+		goto retry;
-+	}
-+
-+	/*
-+	 * Populated the string.
-+	 *
-+	 * We know we have just enough space because we calculated the right
-+	 * size the previous time we had the lock and confirmed the list has
-+	 * not changed after reacquiring it.
-+	 */
-+	usedlen = 0;
- 	tmp = file_systems;
- 	while (tmp) {
--		seq_printf(m, "%s\t%s\n",
-+		usedlen += sprintf(&new->string[usedlen], "%s\t%s\n",
- 			(tmp->fs_flags & FS_REQUIRES_DEV) ? "" : "nodev",
- 			tmp->name);
- 		tmp = tmp->next;
+ static int apple_gpio_dt_node_to_map(struct pinctrl_dev *pctldev,
+-                                     struct device_node *node,
+-                                     struct pinctrl_map **map,
+-                                     unsigned *num_maps)
++				     struct device_node *node,
++				     struct pinctrl_map **map,
++				     unsigned *num_maps)
+ {
+ 	unsigned reserved_maps;
+ 	struct apple_gpio_pinctrl *pctl;
+@@ -147,8 +147,8 @@ static int apple_gpio_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		group_name = pinctrl_generic_get_group_name(pctldev, pin);
+ 		function_name = pinmux_generic_get_function_name(pctl->pctldev, func);
+ 		ret = pinctrl_utils_add_map_mux(pctl->pctldev, map,
+-		                                &reserved_maps, num_maps,
+-		                                group_name, function_name);
++						&reserved_maps, num_maps,
++						group_name, function_name);
+ 		if (ret)
+ 			goto free_map;
  	}
--	read_unlock(&file_systems_lock);
-+	BUG_ON(new->len != strlen(new->string));
-+
-+	/*
-+	 * Pairs with consume fence in READ_ONCE() in filesystems_proc_show().
-+	 */
-+	smp_store_release(&file_systems_string, new);
-+	write_unlock(&file_systems_lock);
-+	kfree_rcu(old, rcufree);
- 	return 0;
+@@ -171,7 +171,7 @@ static const struct pinctrl_ops apple_gpio_pinctrl_ops = {
+ /* Pin multiplexer functions */
+ 
+ static int apple_gpio_pinmux_set(struct pinctrl_dev *pctldev, unsigned func,
+-                                 unsigned group)
++				 unsigned group)
+ {
+ 	struct apple_gpio_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -237,7 +237,7 @@ static int apple_gpio_direction_input(struct gpio_chip *chip, unsigned int offse
  }
  
-+static int filesystems_proc_show(struct seq_file *m, void *v)
-+{
-+	struct file_systems_string *fss;
-+
-+	for (;;) {
-+		scoped_guard(rcu) {
-+			/*
-+			 * Pairs with smp_store_release() in regen_filesystems_string().
-+			 */
-+			fss = READ_ONCE(file_systems_string);
-+			if (likely(fss)) {
-+				seq_write(m, fss->string, fss->len);
-+				return 0;
-+			}
-+		}
-+
-+		int err = regen_filesystems_string();
-+		if (unlikely(err))
-+			return err;
-+	}
-+}
-+
- static int __init proc_filesystems_init(void)
+ static int apple_gpio_direction_output(struct gpio_chip *chip,
+-                                       unsigned int offset, int value)
++				       unsigned int offset, int value)
  {
--	proc_create_single("filesystems", 0, NULL, filesystems_proc_show);
-+	struct proc_dir_entry *pde;
-+
-+	pde = proc_create_single("filesystems", 0, NULL, filesystems_proc_show);
-+	proc_make_permanent(pde);
- 	return 0;
+ 	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+ 
+@@ -282,7 +282,7 @@ static void apple_gpio_irq_mask(struct irq_data *data)
+ 	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(gc);
+ 
+ 	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE,
+-	                   FIELD_PREP(REG_GPIOx_MODE, REG_GPIOx_IN_IRQ_OFF));
++			   FIELD_PREP(REG_GPIOx_MODE, REG_GPIOx_IN_IRQ_OFF));
+ 	gpiochip_disable_irq(gc, data->hwirq);
  }
- module_init(proc_filesystems_init);
+ 
+@@ -294,7 +294,7 @@ static void apple_gpio_irq_unmask(struct irq_data *data)
+ 
+ 	gpiochip_enable_irq(gc, data->hwirq);
+ 	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE,
+-	                   FIELD_PREP(REG_GPIOx_MODE, irqtype));
++			   FIELD_PREP(REG_GPIOx_MODE, irqtype));
+ }
+ 
+ static unsigned int apple_gpio_irq_startup(struct irq_data *data)
+@@ -303,7 +303,7 @@ static unsigned int apple_gpio_irq_startup(struct irq_data *data)
+ 	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+ 
+ 	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_GRP,
+-	                   FIELD_PREP(REG_GPIOx_GRP, 0));
++			   FIELD_PREP(REG_GPIOx_GRP, 0));
+ 
+ 	apple_gpio_direction_input(chip, data->hwirq);
+ 	apple_gpio_irq_unmask(data);
+@@ -320,7 +320,7 @@ static int apple_gpio_irq_set_type(struct irq_data *data, unsigned int type)
+ 		return -EINVAL;
+ 
+ 	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE,
+-	                   FIELD_PREP(REG_GPIOx_MODE, irqtype));
++			   FIELD_PREP(REG_GPIOx_MODE, irqtype));
+ 
+ 	if (type & IRQ_TYPE_LEVEL_MASK)
+ 		irq_set_handler_locked(data, handle_level_irq);
+@@ -429,7 +429,7 @@ static int apple_gpio_pinctrl_probe(struct platform_device *pdev)
+ 	unsigned int npins;
+ 	const char **pin_names;
+ 	unsigned int *pin_nums;
+-	static const char* pinmux_functions[] = {
++	static const char *pinmux_functions[] = {
+ 		"gpio", "periph1", "periph2", "periph3"
+ 	};
+ 	unsigned int i, nirqs = 0;
 -- 
-2.43.0
+2.25.1
 
