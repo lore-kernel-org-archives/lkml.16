@@ -1,135 +1,280 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E882B2D7
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 10:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44BD70807;
+	Sat, 29 Mar 2025 10:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743242588; cv=none; b=TsFkK5fZJ04+5Xy8ICK+dpqIExQfR4xVfREvXlNqf6S2xfWv4WOjCBjf6eeIJQuBXluZFksaoJH42WVnvPuXNV7AMpnj+lXB4IoAED49UQ6w+0bZB4MuDFcGRj0doDimFUdWlF3n47aqps6QHMtporYv0fmrjy7RQ2l2uy9BaPM=
+	t=1743242729; cv=none; b=Tu757WXbYCtcu6WzURjtKe55CHPH63McxUAcCRTZ1Rplz78Npwno2zp/3ORP6YdR4SJSxXhJIppYsQcVW4wBeTJbKTN56sXqDissbh3PjDPaTY4FXWHSjmelmjLTZLLlT+gSLMbxOHBTuUgPwLN6Eepc3cPka/WTBi9sVA/H9yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743242588; c=relaxed/simple;
-	bh=4BGhT6qNdP7Cy1tqF06zIULPCvGOl86++tyGHuJovXo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=cbPxbIlJE9btB1s0o0FA+eH2E6CDzZHauIasmSABiGMnJHY7cri+ZQGkZxCf0kia1TYgrIpthl/66EP4Vyu9zRfxigzPKqZb+8cQ1gfgkDoteEXOZgUI2w/Vy1zTBRuMPciGeQ1lzCFWH/Hz8+tZ/eQtF1HYcVmijCAgT2VElW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43541a706so28942185ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 03:03:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743242586; x=1743847386;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ox5FFkr2twoGUxOvBLmv3DfSm4qVY63WeVAMKw6rYoE=;
-        b=wuuZ6LacoLRj1uLWOzc9ijYAaJc5BCXdXZk3VPAAetWnkptYTTlCIyHhteu0a0RXWT
-         71GSh0+GFwUD98battLuFCDY1iQLSmvUN3AK21PA/009IRVgiai+uhjM5Doq8bFN19QC
-         ebBOmSX/arVZxzSxn3/T4qrQfPfvgsUjA2nvtzmUsE+2EMazkR5W/J+3z9kMyzKoGLnE
-         N20mkiJfN0NHj8o60ukUOt+knjv4FiP2Pqj6H+BCgVyyglNhyozOhkpp+RQV5Ods7GrP
-         Xi1fUO7Jl0+hQfnRRBjDGOLiQ7r+CBAyJvnF1AQtaN1dzTYMRaeDRNE35EuPQ5PGEZx1
-         ADEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCIXSCzMJXW0WLB40yzZhETLFC8xmkMnmpPdM3i0MwzNl0j0knPzfIFM5CJEJPqWP/VUq9EMWr12bLZbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/KApor4NUSI0ySpYNhry4gUPQIFI4RG71L7XxqnDM449f1LCR
-	HNe1r8cm8ExVuxcZsf6NFtWqUWiveJzAQGkS8cwxOWqFAaa8NYCfKGojMTFjOS0nQY8MhMSTT7u
-	LB1gKAc5NKvk+mPDetV3XmPxkjqiip7syyBwm2pKJfbrFS1ASiAlKlGA=
-X-Google-Smtp-Source: AGHT+IHQHs3XfHbBWYxW2kQFMuXxIOHsINyhGKNl+0nyLpoCPcKyg35esQOO02gDgcgC14Ua92xWd+fnWHWjQqFRV72pe7nCGz20
+	s=arc-20240116; t=1743242729; c=relaxed/simple;
+	bh=5OzxuyPYXCVlGprQPvC0QQq6AG0p6FibJk7WQO3UK1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QEGW/a4ObGCVlHjfG1astqCJu+Sx8wltIYhV0uCu0BsK64FRD2JGBNu6FuErVgshqOhn5cZUt77ZbLI1QgBk67IuelpGvYN/kLIXAPDitispS7kxuVQr1uGjFZHKXje4T9o/diuq/bmtPMXaVNcyMMdPkmRzkJ1E32KU6RS1ZY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lKduBr1w; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lKduBr1w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743242728; x=1774778728;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=5OzxuyPYXCVlGprQPvC0QQq6AG0p6FibJk7WQO3UK1I=;
+  b=lKduBr1wen25TqGUMggLFgFtqN5/RTybLVCV26t9AuIKC+J0S7rLJAMd
+   O36naz2H/oAfSicJU33kelaHxuIfuhYgsBt61uu93PX/mnavsFhS19+MH
+   26aqwQJQ4AnrkDHrwFCzrFYmC1ZWberr4oJDEU3gj9+o/CwTf40a4wj3o
+   WHt9Utl1wcCnsutAd1X64U6LuXHA2Yqxxspnzkw4yZ+t4ZqPh6cGzkAnO
+   Ay9fnFt/HDrnV29e6PBjYQMXI1thuhOKujzhsg/Wfjg+DiTXXnAaVV7Iy
+   6ZcfcbAE0r5xa3CtFz4pW6vo9nZgZey1qeoQ8pIyjpKL4L4Kj2C/eb5Io
+   w==;
+X-CSE-ConnectionGUID: 8vq4+wAzQbCYqp4pfzojfQ==
+X-CSE-MsgGUID: 5NV31hW9Sse1XGGeAeD8Cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="48261055"
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="asc'?scan'208";a="48261055"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:05:27 -0700
+X-CSE-ConnectionGUID: UgG6fmExQXmW1vaR3hTlbQ==
+X-CSE-MsgGUID: bFdL671UQIWCq1XMztHo0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="asc'?scan'208";a="130876992"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.136])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:05:23 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Robert Richter <rrichter@amd.com>,
+ ming.li@zohomail.com, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject:
+ Re: [PATCH 2/4 v3] cxl/core: Add helpers to detect Low memory Holes on x86
+Date: Sat, 29 Mar 2025 11:05:19 +0100
+Message-ID: <3503779.obQ9GjlxrE@fdefranc-mobl3>
+In-Reply-To: <67e73372737bf_201f0294e8@dwillia2-xfh.jf.intel.com.notmuch>
+References:
+ <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <20250314113708.759808-3-fabio.m.de.francesco@linux.intel.com>
+ <67e73372737bf_201f0294e8@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca09:0:b0:3d3:f19c:77c7 with SMTP id
- e9e14a558f8ab-3d5e09c8d9fmr21736625ab.16.1743242585813; Sat, 29 Mar 2025
- 03:03:05 -0700 (PDT)
-Date: Sat, 29 Mar 2025 03:03:05 -0700
-In-Reply-To: <tencent_FA76EF66A63CD7369E971636784A0074D509@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e7c559.050a0220.1547ec.0029.GAE@google.com>
-Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid
- context in __alloc_frozen_pages_noprof
-From: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart3483319.sy0gbHreEd";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+
+--nextPart3483319.sy0gbHreEd
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Date: Sat, 29 Mar 2025 11:05:12 +0100
+Message-ID: <3503779.obQ9GjlxrE@fdefranc-mobl3>
+MIME-Version: 1.0
 
-Hello,
+On Saturday, March 29, 2025 12:40:34=E2=80=AFAM Central European Standard T=
+ime Dan Williams wrote:
+> Fabio M. De Francesco wrote:
+> > In x86 with Low memory Hole, the BIOS may publishes CFMWS that describe
+> > SPA ranges which are subsets of the corresponding CXL Endpoint Decoders
+> > HPA's because the CFMWS never intersects LMH's while EP Decoders HPA's
+> > ranges are always guaranteed to align to the NIW * 256M rule.
+> >=20
+> > In order to construct Regions and attach Decoders, the driver needs to
+> > match Root Decoders and Regions with Endpoint Decoders, but it fails and
+> > the entire process returns errors because it doesn't expect to deal with
+> > SPA range lengths smaller than corresponding HPA's.
+> >=20
+> > Introduce functions that indirectly detect x86 LMH's by comparing SPA's
+> > with corresponding HPA's. They will be used in the process of Regions
+> > creation and Endpoint attachments to prevent driver failures in a few
+> > steps of the above-mentioned process.
+> >=20
+> > The helpers return true when HPA/SPA misalignments are detected under
+> > specific conditions: both the SPA and HPA ranges must start at
+> > LMH_CFMWS_RANGE_START (that in x86 with LMH's is 0x0), SPA range sizes
+> > be less than HPA's, SPA's range's size be less than 4G, HPA's size be
+> > aligned to the NIW * 256M rule.
+> >=20
+> > Also introduce a function to adjust the range end of the Regions to be
+> > created on x86 with LMH's.
+> >=20
+> > Cc: Alison Schofield <alison.schofield@intel.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >  drivers/cxl/core/lmh.c | 56 ++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/lmh.h | 29 ++++++++++++++++++++++
+> >  2 files changed, 85 insertions(+)
+> >  create mode 100644 drivers/cxl/core/lmh.c
+> >  create mode 100644 drivers/cxl/core/lmh.h
+> >=20
+> > diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
+> > new file mode 100644
+> > index 000000000000..2e32f867eb94
+> > --- /dev/null
+> > +++ b/drivers/cxl/core/lmh.c
+> > @@ -0,0 +1,56 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +#include <linux/range.h>
+> > +#include "lmh.h"
+> > +
+> > +/* Start of CFMWS range that end before x86 Low Memory Holes */
+> > +#define LMH_CFMWS_RANGE_START 0x0ULL
+> > +
+> > +/*
+> > + * Match CXL Root and Endpoint Decoders by comparing SPA and HPA range=
+s.
+> > + *
+> > + * On x86, CFMWS ranges never intersect memory holes while endpoint de=
+coders
+> > + * HPA range sizes are always guaranteed aligned to NIW * 256MB; there=
+fore,
+> > + * the given endpoint decoder HPA range size is always expected aligne=
+d and
+> > + * also larger than that of the matching root decoder. If there are LM=
+H's,
+> > + * the root decoder range end is always less than SZ_4G.
+> > + */
+> > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+> > +		    const struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	const struct range *r1, *r2;
+> > +	int niw;
+> > +
+> > +	r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
+> > +	r2 =3D &cxled->cxld.hpa_range;
+> > +	niw =3D cxled->cxld.interleave_ways;
+> > +
+> > +	if (r1->start =3D=3D LMH_CFMWS_RANGE_START && r1->start =3D=3D r2->st=
+art &&
+> > +	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
+> > +	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +/* Similar to arch_match_spa(), it matches regions and decoders */
+> > +bool arch_match_region(const struct cxl_region_params *p,
+> > +		       const struct cxl_decoder *cxld)
+> > +{
+> > +	const struct range *r =3D &cxld->hpa_range;
+> > +	const struct resource *res =3D p->res;
+> > +	int niw =3D cxld->interleave_ways;
+> > +
+> > +	if (res->start =3D=3D LMH_CFMWS_RANGE_START && res->start =3D=3D r->s=
+tart &&
+> > +	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
+> > +	    IS_ALIGNED(range_len(r), niw * SZ_256M))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +void arch_adjust_region_resource(struct resource *res,
+> > +				 struct cxl_root_decoder *cxlrd)
+> > +{
+> > +	res->end =3D cxlrd->res->end;
+> > +}
+> > diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
+> > new file mode 100644
+> > index 000000000000..16746ceac1ed
+> > --- /dev/null
+> > +++ b/drivers/cxl/core/lmh.h
+> > @@ -0,0 +1,29 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +#include "cxl.h"
+> > +
+> > +#ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
+> > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+> > +		    const struct cxl_endpoint_decoder *cxled);
+> > +bool arch_match_region(const struct cxl_region_params *p,
+> > +		       const struct cxl_decoder *cxld);
+> > +void arch_adjust_region_resource(struct resource *res,
+> > +				 struct cxl_root_decoder *cxlrd);
+> > +#else
+> > +static bool arch_match_spa(struct cxl_root_decoder *cxlrd,
+> > +			   struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	return false;
+>=20
+> I would have expected the default match routines to do the default
+> matching, not return false.
+>=20
+> This can document the common expectation on architectures that do not
+> need to account for decoders not aligning to window boundaries due to
+> holes.
+>=20
+Hi Dan,
 
-syzbot has tested the proposed patch but the reproducer is still triggering=
- an issue:
-WARNING in inode_set_cached_link
+A typical example of arch_match_spa() use is from match_root_decoder_by_ran=
+ge()
+which returns false on platforms that don't enable support for the low memo=
+ry hole.
+Therefore, the default behavior is failing the matching by returning false.
 
-------------[ cut here ]------------
-bad length passed for symlink [/tmp/syz-imagegen2884317625/=08] (got 39, ex=
-pected 29)
-WARNING: CPU: 0 PID: 6579 at ./include/linux/fs.h:803 inode_set_cached_link=
-+0xd0/0x110 include/linux/fs.h:802
-Modules linked in:
-CPU: 0 UID: 0 PID: 6579 Comm: syz-executor Not tainted 6.14.0-rc4-syzkaller=
--00172-g1d0b929fc070-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 02/12/2025
-RIP: 0010:inode_set_cached_link+0xd0/0x110 include/linux/fs.h:802
-Code: 41 5f 5d c3 cc cc cc cc e8 3d ef 44 ff c6 05 e0 41 a8 0d 01 90 48 c7 =
-c7 e0 23 3e 8c 4c 89 f6 44 89 fa 89 e9 e8 21 79 03 ff 90 <0f> 0b 90 90 e9 6=
-a ff ff ff 89 f9 80 e1 07 80 c1 03 38 c1 7c a1 e8
-RSP: 0018:ffffc90003667698 EFLAGS: 00010246
-RAX: 720c93d201fc4800 RBX: ffff888063c302b0 RCX: ffff88807b148000
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 000000000000001d R08: ffffffff81819472 R09: 1ffff110170c519a
-R10: dffffc0000000000 R11: ffffed10170c519b R12: ffff888063c302b0
-R13: dffffc0000000000 R14: ffff888063c30000 R15: 0000000000000027
-FS:  000055558945a500(0000) GS:ffff8880b8600000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe2a3a0da8 CR3: 0000000033d6c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __ext4_iget+0x2ea4/0x3f30 fs/ext4/inode.c:5012
- ext4_lookup+0x3e3/0x750 fs/ext4/namei.c:1813
- __lookup_slow+0x296/0x400 fs/namei.c:1793
- lookup_slow+0x53/0x70 fs/namei.c:1810
- walk_component+0x2ea/0x410 fs/namei.c:2114
- lookup_last fs/namei.c:2612 [inline]
- path_lookupat+0x16f/0x450 fs/namei.c:2636
- filename_lookup+0x2a3/0x670 fs/namei.c:2665
- user_path_at+0x3a/0x60 fs/namei.c:3072
- ksys_umount fs/namespace.c:2071 [inline]
- __do_sys_umount fs/namespace.c:2079 [inline]
- __se_sys_umount fs/namespace.c:2077 [inline]
- __x64_sys_umount+0xf1/0x170 fs/namespace.c:2077
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fdcbc38e497
-Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 =
-00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff f=
-f 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
-RSP: 002b:00007ffe2a3a1558 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: ffffffffffffffda RBX: 00007fdcbc40e08c RCX: 00007fdcbc38e497
-RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffe2a3a1610
-RBP: 00007ffe2a3a1610 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffe2a3a2700
-R13: 00007fdcbc40e08c R14: 000000000001bcfe R15: 00007ffe2a3a48c0
- </TASK>
+This is how arch_match_spa() is used to detect a hole and allow the matchin=
+g:
+
+static int match_root_decoder_by_range(struct device *dev,
+                                       const void *data)
+{
+        const struct cxl_endpoint_decoder *cxled =3D data;
+        struct cxl_root_decoder *cxlrd;
+        const struct range *r1, *r2;
+
+        if (!is_root_decoder(dev))
+                return 0;
+
+        cxlrd =3D to_cxl_root_decoder(dev);
+        r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
+        r2 =3D &cxled->cxld.hpa_range;
+
+        if (range_contains(r1, r2))
+                return true;
+        if (arch_match_spa(cxlrd, cxled))
+                return true;
+
+        return false;
+}
+
+Currently the default behavior is for match_root_decoder_by_range() to
+not match root and endpoint decoders. I left that default unchanged for
+all platforms and architectures that don't enable LMH support.=20
+
+Thanks,
+
+=46abio
+--nextPart3483319.sy0gbHreEd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmfnxdgACgkQ50DaXiQp
+iWHbmwf+Mo7E4aS3Yzp2MBV0BM9z8V21fAbAQLXzm73RiBWn2JQygCccmmcLbQAd
+/mslTClNnhpEXSQVIdk6hzemupcDL+tdh0EP/vFlnh9g/z7BBodAreQJhmIFz2gI
+eCiJhc1OXntQBhGU1bRTQfzC4tY95tnHQRVJ4VF6fhAc4RTnYLrn86QqJ7cRYVY3
+ARoQ+8vMU2P0p79/w/YJwR3dx/GizwnAX/tV1xpnARbr/hN+6TMGd2jvfv7GX3DI
+gLCI79HicckRr2GQdEJn7cF0jLIkjBv7YvolDQEKWwQKM51Bro5ud4nrUKreEdkK
+cJgMF8WVL6QuOmJ4hrM3AVrI36pVTw==
+=p+Sr
+-----END PGP SIGNATURE-----
+
+--nextPart3483319.sy0gbHreEd--
 
 
-Tested on:
-
-commit:         1d0b929f afs: Change dynroot to create contents on dem..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D17fb7804580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Db1debf8c2c3d28b=
-1
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D3b6c5c6a1d0119b68=
-7a1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D1514864c5800=
-00
 
