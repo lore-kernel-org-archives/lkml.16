@@ -1,66 +1,157 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756BF3597B;
-	Sat, 29 Mar 2025 09:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5DF13A86C
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 10:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743242256; cv=none; b=fm2946D+1sFtbBu7yWzZ0Xg0XZZjUPqYg0uodvQ2R62f+DKZTG6jkiWfNiair3G/Q8TMomZllv/tlnrkCOxzAWakNH9p2dQCt/1vASy3oD01eb243w+0nAZ1CVtA6FpMxVp/J3gVpnqkEeaggA9mPuvSLUM8rtgeDdD1rmiWUaY=
+	t=1743242557; cv=none; b=cYKbBvDLjKWXWed0z4GYTqMe+CWlz/Lo5hRWz1KxHNsfA8nPxXObGoAYvyhibsn5QExoRRLEeW2oKqqFnZOt8+7osI91KkNAIXsbSccepMoof8EQxhEr1s+Sb/8x1yWQchKgxew/CIMb/uNycDC2TjDGtkYhhZEgG5r4PmtlOWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743242256; c=relaxed/simple;
-	bh=n56iBYJh+619jz44wL6s7DUA0CbNuuQMnW5pkyXaauk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aq8m9lGZbPTSvJQlzjQuSC2zLAy1NxmHyK8qEG40NwjHvT07nlq+1uNMXvV7jlE1EbEyPUUGqAoh1cOWZNMCEhLRZSyfb67Ze9QAtC34QOahwJ4jvd2X9LDKLu5G/hwmL5TnEym8H+DArsMH9wMWV8aR0g4U77AVLMQOFiKNvmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tySwO-0005VP-00; Sat, 29 Mar 2025 10:57:24 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id BB183C00F0; Sat, 29 Mar 2025 10:57:15 +0100 (CET)
-Date: Sat, 29 Mar 2025 10:57:15 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Kees Cook <kees@kernel.org>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] mips: Add '-std=gnu11' to vdso CFLAGS
-Message-ID: <Z-fD-584-2L-YAhe@alpha.franken.de>
-References: <20250327032436.3600578-1-raj.khem@gmail.com>
+	s=arc-20240116; t=1743242557; c=relaxed/simple;
+	bh=dH9+6RQdoDLhFzbAWFEt6un7a5fTJ8/Aw42J7tuTQSc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gMc6ED1x8SWKvPx8VdABxjFuc/DcJb/gX3XfTqzpo/cqey44zGtpHESjASQ3sqJ/ilnVfyPcGdzYZ684FgU++Y8UIhhgMaZYcGDULwwT/evBcb9ZSG94F6YMRTD+eT1A8K+Wl19KpNOfzcRLa+Hh16IhpA5QDpPFRInb22WR8Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=rwwxVMWs; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="rwwxVMWs"
+Received: from [192.168.90.187] (unknown [94.110.49.146])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id B3CA15DACBF;
+	Sat, 29 Mar 2025 10:53:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1743242026;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dH9+6RQdoDLhFzbAWFEt6un7a5fTJ8/Aw42J7tuTQSc=;
+	b=rwwxVMWs4hmFUXR5Td3TjP/acvp3cAlIDH0WpWA3tkqqv42r4ZU2uzI+Dr6NRRnaj1VyWq
+	YwQR+xbW0wQSsvZosFiVGmjRy2nhd6qBObzIqS67Wxefh8OC8WU8ptWfvzKnxOtoFlevj2
+	ka1d+rX8A8qDhkJOAty9gQUkKorj6txt8Ueq/WryT0xIHhPEunesc1MvNdSWtgHzpXo7e4
+	dnewaHqKAPgTeDxcfjAXVudN8K87bSuCfGxKE3nxk5zQtfDJHOfXRruuKO3IDSpaC6gtj6
+	OA9GO7oUv7v5Q84NRb5lYQJHYmneUNWPdixJ09rcyHD2BZMfa7NhU3C/hYsIdw==
+Message-ID: <27075369f1d53f840965a09601e10b130f622d16.camel@svanheule.net>
+Subject: Re: [PATCH] dt-bindings: gpio: Correct indentation and style in DTS
+ example
+From: Sander Vanheule <sander@svanheule.net>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Linus Walleij	
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob
+ Herring	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley	 <conor+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+  Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Shawn Guo	 <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Paul Walmsley	
+ <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
+ Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, Shubhrajyoti Datta
+ <shubhrajyoti.datta@amd.com>, Srinivas Neeli	 <srinivas.neeli@amd.com>,
+ Michal Simek <michal.simek@amd.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Manikandan
+ Muralidharan	 <manikandan.m@microchip.com>, Maxime Ripard
+ <mripard@kernel.org>, Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>, Bert Vermeulen
+ <bert@biot.com>, 	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org
+Date: Sat, 29 Mar 2025 10:53:45 +0100
+In-Reply-To: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
+References: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327032436.3600578-1-raj.khem@gmail.com>
 
-On Wed, Mar 26, 2025 at 08:24:36PM -0700, Khem Raj wrote:
-> GCC 15 changed the default C standard dialect from gnu17 to gnu23,
-> which should not have impacted the kernel because it explicitly requests
-> the gnu11 standard in the main Makefile. However, mips/vdso code uses
-> its own CFLAGS without a '-std=' value, which break with this dialect
-> change because of the kernel's own definitions of bool, false, and true
-> conflicting with the C23 reserved keywords.
-> 
->   include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
->      11 |         false   = 0,
->         |         ^~~~~
->   include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
->   include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
->      35 | typedef _Bool                   bool;
->         |                                 ^~~~
->   include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
-> 
-> Add '-std=gnu11' to the decompressor and purgatory CFLAGS to eliminate
-> these errors and make the C standard version of these areas match the
-> rest of the kernel.
+Hi Krysztof,
 
-please adapt subject and description.
+On Mon, 2025-03-24 at 13:53 +0100, Krzysztof Kozlowski wrote:
+> DTS example in the bindings should be indented with 2- or 4-spaces and
+> aligned with opening '- |', so correct any differences like 3-spaces or
+> mixtures 2- and 4-spaces in one binding.=C2=A0 While re-indenting, drop
+> unused labels.
+>=20
+> No functional changes here, but saves some comments during reviews of
+> new patches built on existing code.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> =C2=A0.../bindings/gpio/atmel,at91rm9200-gpio.yaml=C2=A0 | 16 ++---
+> =C2=A0.../bindings/gpio/fairchild,74hc595.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 20 +++---
+> =C2=A0.../devicetree/bindings/gpio/gpio-mxs.yaml=C2=A0=C2=A0=C2=A0 | 70 +=
+++++++++----------
+> =C2=A0.../devicetree/bindings/gpio/nxp,pcf8575.yaml | 24 +++----
+> =C2=A0.../bindings/gpio/realtek,otto-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 8 +--
+> =C2=A0.../bindings/gpio/renesas,em-gio.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 20 +++---
+> =C2=A0.../bindings/gpio/renesas,rcar-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 24 +++----
+> =C2=A0.../devicetree/bindings/gpio/sifive,gpio.yaml |=C2=A0 6 +-
+> =C2=A0.../bindings/gpio/toshiba,gpio-visconti.yaml=C2=A0 | 24 +++----
+> =C2=A0.../bindings/gpio/xlnx,gpio-xilinx.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 48 ++++++-------
+> =C2=A010 files changed, 130 insertions(+), 130 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yam=
+l
+> b/Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
+> index 39fd959c45d2..728099c65824 100644
+> --- a/Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/realtek,otto-gpio.yaml
+> @@ -81,7 +81,7 @@ dependencies:
+> =C2=A0
+> =C2=A0examples:
+> =C2=A0=C2=A0 - |
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio@3500 {
+> +=C2=A0=C2=A0=C2=A0 gpio@3500 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "realtek,=
+rtl8380-gpio", "realtek,otto-gpio";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x3500 0x1c>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio-controller;
+> @@ -91,9 +91,9 @@ examples:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #interrupt-cells =3D <2>=
+;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent =3D <&r=
+tlintc>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <23>;
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> +=C2=A0=C2=A0=C2=A0 };
+> =C2=A0=C2=A0 - |
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio@3300 {
+> +=C2=A0=C2=A0=C2=A0 gpio@3300 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "realtek,=
+rtl9300-gpio", "realtek,otto-gpio";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x3300 0x1c>, <=
+0x3338 0x8>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio-controller;
+> @@ -103,6 +103,6 @@ examples:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #interrupt-cells =3D <2>=
+;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent =3D <&r=
+tlintc>;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <13>;
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> +=C2=A0=C2=A0=C2=A0 };
+> =C2=A0
+> =C2=A0...
 
-Thomas.
+FWIW
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Reviewed-by: Sander Vanheule <sander@svanheule.net>
+
+Thanks!
+
+Best,
+Sander
+
