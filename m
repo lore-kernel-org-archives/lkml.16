@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53334524F;
-	Sat, 29 Mar 2025 05:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCA5D477;
+	Sat, 29 Mar 2025 05:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743224706; cv=none; b=YciSE9XbQDw0NYwFO6HlgBMW6by+gGiPuWFM1NYV9MfYfi77vwZzb/NEksDbJeA8R0phVTZe7ELwFxupM8kkI+VAyC8Z3wF3DWgyrOyI7NaRZVj4cSv3iK+69/lKHtJFvOGENrLxAFi3BlR5r8znLhx0VFng/1HNysvkvWEygBM=
+	t=1743226955; cv=none; b=emLF3IoIF6ml9n0+WVhuXBt1LFkMUTmVNnZOrc3sKp5gWNniDpK3Zpo8MpuMILt4rZiEKpmF06bg2QvQb24F/2M4UN/0+vWE2VuMcoIRX9Z0Vs3RYa9e/SaGeiU9bvU5dJXLon+tJ1Njg5uZL0S3f4ADY1jvpdeeLW2umy12fzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743224706; c=relaxed/simple;
-	bh=465wNPNn0OBjQesUwHOaBKBTvwAHWe6mU+iLD4taErE=;
+	s=arc-20240116; t=1743226955; c=relaxed/simple;
+	bh=MQU3IqgTCz/ZEmtMvjQWzCjudUy0UJnOGc4cTmv9iak=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k7EGZrD/uNE/+voaatglSnqCNh0Z52q5PIxGBs6EiiLvF6kNZKdgIjOGFYIz/3f4PBlEVZODUfYJcsCdull8rPpDttRvUJIXYv0MPLsTZpx9bqNzWV/WdGgHKK0MwaDaVOD8MlVu2iGdT7g0+PQmFo2VYEY07d0sIZPwnaigUQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCMUt+cX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ES/HmQklUscHeuNVnzolkwDPrIrSpUDymmrDNAdmHgBegmlghgw5WxhnvRQXb7v3jxbGsail+pnPvBWJvZ/bChFUkDVC3joLcvv4REkkl0ple5QPRDi6AcNT7IBmY2Kw3aL8plvxTRXvEni3DYso/s4QYFOtqprc+e0W1KvSnRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGW27wT4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCMUt+cX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B891C4CEE2;
-	Sat, 29 Mar 2025 05:05:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGW27wT4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95CBC4CEE2;
+	Sat, 29 Mar 2025 05:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743224705;
-	bh=465wNPNn0OBjQesUwHOaBKBTvwAHWe6mU+iLD4taErE=;
+	s=k20201202; t=1743226954;
+	bh=MQU3IqgTCz/ZEmtMvjQWzCjudUy0UJnOGc4cTmv9iak=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KCMUt+cXnPDQ5ok3ULfm3MY2ap7AqYTpdNlZRDUMywp+fLtr3hqfj9iTDDo4ztjQg
-	 IYt7U/jfjvdQLmPXO8BGw90Nw78D0M9Yv4QLp7b4GRDhswWpkYpwwMqVQWd4q+3JHg
-	 35nwTOJMPwDXLRdCtI0AKeCeOmSIbgnOKtPyNUQQK8KswtczgQuU0uhmlS3FVZ3vEt
-	 2V4xUxNOB6mzC7Qzgc7yRfRmC9CCSv6dK0nDZFQRWRgH2IyR/llwIfHfQQqoTvsyzS
-	 9XGQvWFguAdnxFW0l1a+D0zYEgc6HFNGMb8yTLI+bz9+pO0ORsWNVIoXg+8FR0/Kaj
-	 ig3xvKcCAK5CA==
-Message-ID: <c433c28d-c88d-4647-b472-7bc81b332d8c@kernel.org>
-Date: Sat, 29 Mar 2025 06:04:59 +0100
+	b=qGW27wT4u4BYNWcVOeasU602NvStBEt74Wu5SoPO3e6tSrv3sE0FZFADL5hCA8q3N
+	 aO6nCOhCwb6RnXsrEldXkJy1GsemwjjvT1Dd6AlXub9oCpzi/q7iiYRTITe/w4e5hy
+	 /oWAXKsj6rWXAfo+sORcgCfuLkq+nBiXW7FryeyjxgpTxkOEBlXh0td9+16vOVrFbK
+	 SmeExZFD8ltxRG5me6sDCRqVqajPznxdTawt+oKZiZ2Jq7D2E6Y1iYZ0u2D/P2Ek8s
+	 N+gkBi5Bfo3/XAhV6MrXmkm6JMhIiUn595AlABJw2QyPMe1KJMfqpvPZqsvURMXZyt
+	 f12m9Ab5yY9TQ==
+Message-ID: <5c7b41bb-8e4e-44b2-9fd6-b5dd9258ee4e@kernel.org>
+Date: Sat, 29 Mar 2025 06:42:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+ binding
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Sylvain Petinot <sylvain.petinot@foss.st.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+ <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com>
+ <20250328-b4-vd55g1-v1-1-8d16b4a79f29@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,28 +91,167 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20250328-b4-vd55g1-v1-1-8d16b4a79f29@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 16:15, Daniel Lezcano wrote:
-> +description:
-> +  The System Timer Module supports commonly required system and
-> +  application software timing functions. STM includes a 32-bit
-> +  count-up timer and four 32-bit compare channels with a separate
-> +  interrupt source for each channel. The timer is driven by the STM
+On 28/03/2025 14:40, Benjamin Mugnier wrote:
 > +
 > +allOf:
-> +  - $ref: watchdog.yaml#
+> +  - $ref: /schemas/media/video-interface-devices.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - nxp,s32g-wdt
-This wasn't tested, so limited review - this also has wrong compatible,
-There is no such soc as s32g in the kernel. If that's a new soc, come
-with proper top-level bindings and some explanation, because I am sure
-previously we talked with NXP that this is not s32g but something else.
+> +    const: st,st-vd55g1
+
+Drop st. See your filename how this should be called. Anyway, filename
+must match the compatible.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  vcore-supply:
+> +    description: Digital core power supply (1.15V)
+> +
+> +  vddio-supply:
+> +    description: Digital IO power supply (1.8V)
+> +
+> +  vana-supply:
+> +    description: Analog power supply (2.8V)
+> +
+> +  reset-gpios:
+> +    description: Sensor reset active low GPIO (XSHUTDOWN)
+> +    maxItems: 1
+> +
+> +  st,leds:
+> +    description:
+> +      List sensor's GPIOs used to control strobe light sources during exposure
+> +      time. The numbers identify the sensor pin on which the illumination
+> +      system is connected. GPIOs are active-high.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      minimum: 0
+> +      maximum: 3
+> +
+> +  port:
+> +    $ref: /schemas/graph.yaml#/$defs/port-base
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      endpoint:
+> +        $ref: /schemas/media/video-interfaces.yaml#
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          data-lanes:
+> +            description:
+> +              VD55G1 only has one data lane, and must be 1.
+> +            maxItems: 1
+> +            items:
+> +              const: 1
+
+Instead of five lines, just two:
+
+items:
+  - const: 1
+
+Don't repeat constraints in free form text.
+
+
+> +
+> +          link-frequencies:
+> +            maxItems: 1
+> +            items:
+> +              minimum: 125000000
+> +              maximum: 600000000
+> +
+> +          lane-polarities:
+> +            minItems: 1
+> +            maxItems: 2
+> +
+> +        required:
+> +          - data-lanes
+> +          - link-frequencies
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - vcore-supply
+> +  - vddio-supply
+> +  - vana-supply
+> +  - reset-gpios
+> +  - port
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera-sensor@10 {
+> +            compatible = "st,vd55g1";
+
+And here another compatible...
+
+> +            reg = <0x10>;
+> +
+> +            clocks = <&camera_clk_12M>;
+> +
+> +            vcore-supply = <&camera_vcore_v1v15>;
+> +            vddio-supply = <&camera_vddio_v1v8>;
+> +            vana-supply = <&camera_vana_v2v8>;
+> +
+> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
+> +            st,leds = <2>;
+> +
+> +            orientation = <2>;
+> +            rotation = <0>;
+> +
+> +            port {
+> +                endpoint {
+> +                    data-lanes = <1>;
+> +                    link-frequencies = /bits/ 64 <600000000>;
+> +                    remote-endpoint = <&csiphy0_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2286200b355bde3604607be916ef09aa88feed0e..857af27ef392b6e6865d9a545061d1b012cce07e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22410,6 +22410,14 @@ S:	Maintained
+>  F:	Documentation/hwmon/stpddc60.rst
+>  F:	drivers/hwmon/pmbus/stpddc60.c
+>  
+> +ST VD55G1 DRIVER
+> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+> +L:	linux-media@vger.kernel.org
+> +S:	Maintained
+> +T:	git git://linuxtv.org/media.git
+
+Drop, unless you push patches there. Otherwise what is the point of
+duplicating subsystem data?
+
+> +F:	Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+> +
+>  ST VGXY61 DRIVER
+>  M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>  M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+> 
+
 
 Best regards,
 Krzysztof
