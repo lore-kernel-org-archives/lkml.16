@@ -1,171 +1,66 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076883597B
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756BF3597B;
+	Sat, 29 Mar 2025 09:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743242193; cv=none; b=NO44shJbFFfVAeNJSywOYNcn0NUCXKChZh1ytPbR3ZornQBVZ3qf6l8C9hPHTnIYLvMpb0adXRMdHEmtISjk+eq0Nh5NJ9mmyvsSfQrDcnJIMahi//k0VFEIFNGfWQt2pCmoo+ObV1U0NTSwRAoqwiYbcxr8dxF4QC2KqS6Ws28=
+	t=1743242256; cv=none; b=fm2946D+1sFtbBu7yWzZ0Xg0XZZjUPqYg0uodvQ2R62f+DKZTG6jkiWfNiair3G/Q8TMomZllv/tlnrkCOxzAWakNH9p2dQCt/1vASy3oD01eb243w+0nAZ1CVtA6FpMxVp/J3gVpnqkEeaggA9mPuvSLUM8rtgeDdD1rmiWUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743242193; c=relaxed/simple;
-	bh=uRezo5XhrTPZNnIoTUOunciCt8yCaE5RYVV6ejLbSdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sc2TbjhFedi4+Ej4Y5lJTo0tCpHEzu75Gggu/NXCasElEjihhXmud5YjnduPqJ36ma+VBHJ4w7gAusbLpryWjvnul9PNtQEHsLazcYyoKrXiuS/SDNe+EHzyaPJ0tZuzXQRLoRnP1dtW+ad/jdvgfiZXhmUf8qZUHm7iujKao0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xmQwqicy; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xmQwqicy"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso20036705e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 02:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743242190; x=1743846990; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qVSHj/4O8NaMEdadNaXoatmj3QQWp2MB7UQy5W5yL8s=;
-        b=xmQwqicy0C8V56iNJu7m0H5baZmLFs/aqpBBpwkmkX5n4O6nHeCSkuVLUfTErDgJ+6
-         TVlIjvB2d/+WJGwbUAlC/NyE3wkZmOauyhweVXMOpNlh7p9dyxQjlArXd16tG4cEyXc4
-         r197/RCKQSzkY6/YTwCsCwbhJBcS3hvrlP/OIEePn0x2Z04AAJX8JGeFTx4rPB6rK/bA
-         Id2XkcMEdyJfEkZW4+VWLDEVwRryEYnCbZDSfSVwigSkdhCQf00bnqasc164cSB8cvSW
-         NyMbi0V5ZQATn4u4vESAwaHkLv/4veFZt7hRbzWT/P2CdzwvufigjlvzRNCPaI85eQza
-         HveA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743242190; x=1743846990;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qVSHj/4O8NaMEdadNaXoatmj3QQWp2MB7UQy5W5yL8s=;
-        b=lYyfF+6YoRTfkGuIal4M5+WZ/ok70ODhLB1xMg7KHDbHkjKxvsSIEJ4Ai13nyvZqzr
-         4Zo2oiGYb2Ot/aTZ8o2VGzYUbOS35c0vqv51fsceXEhnxTl9vtzBYLk24Utcmqj6bo8W
-         0ktsod7Qh5FqNcv5JDcBntw0x9m6XsvQOU+X3IIuyF8eG/Kn7G4fItdYTdXZ++/L37lY
-         1J31ERdUdkpsN5SiAtO5YdNYihfTo7iHYmd8UidWTdl623VieVdD1E/T2BgmbnjCrtC7
-         WpZl5itPwa5QofFQ/HN2gRiSS07EFmD247XUsCmrIFQyBrYMJ1haEDcSdgF3dof0Tb1x
-         +Mxg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3hYC6JDjZyUZGBCLgQjeOgZ+zqPeSFQlgcrSaI4zv/KSFjcjzZIm5kTOnfDF6TQ1/z/BfjbkAYOvsat0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRx5rDZZbIPH130iRP4Go8hCNsKTZkDz4EyQUV5Hp5G7xBMu1g
-	r+IaeF4fwAHSM1mwEDEpfAIdyty+Vk4dyc5WAGfmqfacOEt7/T7jdsRom77B88Y=
-X-Gm-Gg: ASbGncs2R/c1+QtR7+2Eo0S+dvArGw5SS0PTyv5EToUuKWK49M1pFzR64Zxh6dlmQik
-	a6ixbgK99UiukPvDoV/wwsoKYoMh4bnIGh2QPhcfcoP2bu6Vc2QvzZ5V4ZGwkcBUlSqNw979vds
-	oPj0Uu0SuRyi9STv21HFAyZm86RCB3M9Bf3y2/p5fCzKOA0Oww5+tnLu9j5WqQtnatSk20YdK0L
-	Pd0oPRW17JypkTqdfzGUqE3y3FpwXWrFbX5XorxWXpEKRwL3lcwizFiqFmBn/kJu/TTMOT1dKh5
-	qxYarqOYhr4MiNJhX5e1DqeHjarkFHT02peDgRoQmBqaHt5WSDoUuJHVNiZtUH9BxN5BDk87DZY
-	=
-X-Google-Smtp-Source: AGHT+IFOFTCOAfL9OXfmL28X8GIqYPlADXJOfL1WMOZ3VK74bGRG5Mf1bRmRfVzjPWNDvADCVJgf0A==
-X-Received: by 2002:a05:6000:2910:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39c120e0a9emr1736878f8f.32.1743242190221;
-        Sat, 29 Mar 2025 02:56:30 -0700 (PDT)
-Received: from [192.168.1.38] (i5E863BED.versanet.de. [94.134.59.237])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm5230104f8f.43.2025.03.29.02.56.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 02:56:29 -0700 (PDT)
-Message-ID: <fb176bbf-5e31-4e72-8201-4a2fc4d57ef5@linaro.org>
-Date: Sat, 29 Mar 2025 10:56:27 +0100
+	s=arc-20240116; t=1743242256; c=relaxed/simple;
+	bh=n56iBYJh+619jz44wL6s7DUA0CbNuuQMnW5pkyXaauk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aq8m9lGZbPTSvJQlzjQuSC2zLAy1NxmHyK8qEG40NwjHvT07nlq+1uNMXvV7jlE1EbEyPUUGqAoh1cOWZNMCEhLRZSyfb67Ze9QAtC34QOahwJ4jvd2X9LDKLu5G/hwmL5TnEym8H+DArsMH9wMWV8aR0g4U77AVLMQOFiKNvmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tySwO-0005VP-00; Sat, 29 Mar 2025 10:57:24 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id BB183C00F0; Sat, 29 Mar 2025 10:57:15 +0100 (CET)
+Date: Sat, 29 Mar 2025 10:57:15 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Khem Raj <raj.khem@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Kees Cook <kees@kernel.org>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] mips: Add '-std=gnu11' to vdso CFLAGS
+Message-ID: <Z-fD-584-2L-YAhe@alpha.franken.de>
+References: <20250327032436.3600578-1-raj.khem@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] dt-bindings: input: syna,rmi4: document
- syna,pdt-fallback-desc
-To: David Heidelberg <david@ixit.cz>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Vincent Huang <vincent.huang@tw.synaptics.com>, linux-input@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250308-synaptics-rmi4-v3-0-215d3e7289a2@ixit.cz>
- <20250308-synaptics-rmi4-v3-1-215d3e7289a2@ixit.cz>
- <20250310-hissing-vagabond-pegasus-cc8aed@krzk-bin>
- <3c5e12fc-eb91-46e8-a558-9896f0bdcab4@ixit.cz>
- <b3a5ec89-0125-4b01-8cca-69b9985b6089@kernel.org>
- <48bb62eb-8aa9-465c-9e77-c0b375df0c9f@linaro.org>
- <492da0ab-3a5c-4ee9-bc37-d66b007ffd81@kernel.org>
- <5060c248-3160-4d52-81ec-8e06bbd246bf@linaro.org>
- <2d555c27-1cb1-4ea9-9327-e1a3774e103b@ixit.cz>
-Content-Language: en-US
-From: Caleb Connolly <caleb.connolly@linaro.org>
-In-Reply-To: <2d555c27-1cb1-4ea9-9327-e1a3774e103b@ixit.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327032436.3600578-1-raj.khem@gmail.com>
 
-
-
-On 3/28/25 23:45, David Heidelberg wrote:
-> On 26/03/2025 11:26, Caleb Connolly wrote:
->>
->>
->> On 3/26/25 07:57, Krzysztof Kozlowski wrote:
->>> On 25/03/2025 14:23, Caleb Connolly wrote:
->>>>
->>>>
->>>> On 3/25/25 08:36, Krzysztof Kozlowski wrote:
->>>>> On 24/03/2025 19:00, David Heidelberg wrote:
->>>>>> On 10/03/2025 10:45, Krzysztof Kozlowski wrote:
->>>>>>> On Sat, Mar 08, 2025 at 03:08:37PM +0100, David Heidelberg wrote:
->>>>>>>> From: Caleb Connolly <caleb.connolly@linaro.org>
->>>>>>>>
->>>>>>>> This new property allows devices to specify some register values 
->>>>>>>> which
->>>>>>>> are missing on units with third party replacement displays. These
->>>>>>>> displays use unofficial touch ICs which only implement a subset 
->>>>>>>> of the
->>>>>>>> RMI4 specification.
->>>>>>>
->>>>>>> These are different ICs, so they have their own compatibles. Why 
->>>>>>> this
->>>>>>> cannot be deduced from the compatible?
->>>>>>
->>>>>> Yes, but these identify as the originals.
->>>>>
->>>>>
->>>>> It does not matter how they identify. You have the compatible for 
->>>>> them.
->>>>> If you cannot add compatible for them, how can you add dedicated
->>>>> property for them?
->>>>
->>>> Hi Krzysztof,
->>>>
->>>> There are an unknown number of knock-off RMI4 chips which are sold in
->>>> cheap replacement display panels from multiple vendors. We suspect
->>>> there's more than one implementation.
->>>>
->>>> A new compatible string wouldn't help us, since we use the same DTB on
->>>> fully original hardware as on hardware with replacement parts.
->>>>
->>>> The proposed new property describes configuration registers which are
->>>> present on original RMI4 chips but missing on the third party ones, the
->>>> contents of the registers is static.
->>>
->>>
->>> So you want to add redundant information for existing compatible, while
->>> claiming you cannot deduce it from that existing compatible... Well,
->>> no.. you cannot be sure that only chosen boards will have touchscreens
->>> replaced, thus you will have to add this property to every board using
->>> this compatible making it equal to the compatible and we are back at my
->>> original comment. This is deducible from the compatible. If not the new
->>> one, then from old one.
->>
->> hmm I see, so instead we should add a compatible for the specific 
->> variant (S3320 or something) of RMI4 in this device and handle this in 
->> the driver? I think that makes sense.
+On Wed, Mar 26, 2025 at 08:24:36PM -0700, Khem Raj wrote:
+> GCC 15 changed the default C standard dialect from gnu17 to gnu23,
+> which should not have impacted the kernel because it explicitly requests
+> the gnu11 standard in the main Makefile. However, mips/vdso code uses
+> its own CFLAGS without a '-std=' value, which break with this dialect
+> change because of the kernel's own definitions of bool, false, and true
+> conflicting with the C23 reserved keywords.
 > 
-> Agree, preparing it for v4. So far proposing `compatible = "syna,rmi4- 
-> s3706b-i2c", "syna,rmi4-i2c"` (as S3706B is written in the commit and 
-> search confirms it for OP6/6T).
+>   include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
+>      11 |         false   = 0,
+>         |         ^~~~~
+>   include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
+>   include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
+>      35 | typedef _Bool                   bool;
+>         |                                 ^~~~
+>   include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
+> 
+> Add '-std=gnu11' to the decompressor and purgatory CFLAGS to eliminate
+> these errors and make the C standard version of these areas match the
+> rest of the kernel.
 
-ack, sounds good!
-> 
-> David>
->>>
->>> Best regards,
->>> Krzysztof
->>
-> 
+please adapt subject and description.
+
+Thomas.
 
 -- 
-Caleb (they/them)
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
