@@ -1,32 +1,30 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76A51D54E9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97551D54FA
 	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743255605; cv=none; b=NIq3K4GMMVknIBlwju041zCdDtRyMxfz7yJtLiiP/BcwNIyaeoAMf7UrJogv/qFNKbekH8LRPBrQYD3cIhz4fR58edNKw/EIdbhNP6ZWxQG1GsxChh8TBrN7DmItN4vVWpT7HGE67lkYwpxCltt5kiTK9lsIL9ngg6ZS8+9Q7CY=
+	t=1743255607; cv=none; b=l+1GqaQc3mpoELF83st7gfq6Y8iQtMN6q3xdk2qVB8CohFi+MWLNlsaZ8QVjNjWBkIt1mNjL1BFTWAE/cOXrPo8yN63OmwSGbU5DstwFAvCz7Cucfc2zCAPq5AHRwu9DBf1IUjZGZGUZ7mOsZ4xnFvGn2vgMOYyUoTHY/GzBQmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743255605; c=relaxed/simple;
-	bh=zlv57T4+DBr6Krp8ZJHZD3RPhyYOCHL5Fw3OmANSeOw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=npFxGfdgOAIWDs0ISwRpebi5IKsZsNvrgn4to8Hqiu9AJOKxo4ggeB1jksr/5UksK3Pcii6NiYKMA12MOtiCZYiG/5GeAAg1AP3nJ4OF0oTL22HdKEuyFGl7TipSDM5+oapC/BdhoTDwh97JI56pyFVYvgR59UTIewMFgZlnnDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NzqTZZvC; arc=none smtp.client-ip=91.218.175.184
+	s=arc-20240116; t=1743255607; c=relaxed/simple;
+	bh=roq/A2qj/tI1v+fl4G3eTYX5uXoiGC0VkH4Gzbvi44k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HNeD/n/0CJ8goay5aQ4AKV3Lkk3YQiamCEtuGJZn+SdLplcTF9wcifHuH2WZyyxqiP0OfI4/Mi+crTma6uDjTrcJlFsiUXyaAYBiBbXtZrhvTOG8v4+pCejSRlx00JR8XQy14hBdAothAlfduFKuumSvyqhPKb4GQr4trThvqL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=efd93fCs; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NzqTZZvC"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="efd93fCs"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743255600;
+	t=1743255590;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yQcNTSeG2iPmIRxzwztPIBn4ZYr30F+0CHZb9PD73uE=;
-	b=NzqTZZvC1Y5LhTvi/FxVMoI5h0UZI4YtJ57w0Lft/cDhcYMGyN4wNIT1+s0ZbCYZSH06K4
-	6cvjzWw+FHCUCU6UsbE7ABP5y6NSC5UxCiwsWVbykyMrQtwL7izQTS2hVk4RV7depHCG9M
-	+eY5MdnSvvsPuiFQQaeERU0qNDpQrsE=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/BLeetMFdRSaDEgXZxpuxUHjsyoLWL7tufgaVzZYvjw=;
+	b=efd93fCsFOvpgT7NiLdpHzdjL0CNQi2X3glgUGYoW6twdfSQtuj8R8As7TnL0RjG5dqqdK
+	emaVdHTA0kqj3GNxM4/+qXwHlk2poda4xEV2xRZMu8lyjAFWiPBnMBX5UGwfQmN5eYud+e
+	q1ngkZtQLdp290OhxBDX10x1fKRiZ9k=
 From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -51,11 +49,9 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Devicetree List <devicetree@vger.kernel.org>,
 	Linux Kernel List <linux-kernel@vger.kernel.org>,
 	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v7 2/4] dt-bindings: display: ti: Add schema for AM625 OLDI Transmitter
-Date: Sat, 29 Mar 2025 19:09:41 +0530
-Message-Id: <20250329133943.110698-3-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250329133943.110698-1-aradhya.bhatia@linux.dev>
-References: <20250329133943.110698-1-aradhya.bhatia@linux.dev>
+Subject: [PATCH v7 0/4] drm/tidss: Add OLDI bridge support
+Date: Sat, 29 Mar 2025 19:09:39 +0530
+Message-Id: <20250329133943.110698-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,377 +61,248 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+Hello all,
 
-The OLDI transmitters (TXes) do not have registers of their own, and are
-dependent on the source video-ports (VPs) from the DSS to provide
-configuration data. This hardware doesn't directly sit on the internal
-bus of the SoC, but does so via the DSS. Hence, the OLDI TXes are
-supposed to be child nodes under the DSS, and not independent devices.
+This patch series adds support for the dual OLDI TXes supported in Texas
+Instruments' AM62x and AM62Px family of SoCs. The OLDI TX hardware supports
+single-lvds, lvds-clone, and dual-lvds modes. These TXes have now been
+represented through DRM bridges within TI-DSS.
 
-Two of the OLDI TXes can function in tandem to output dual-link OLDI
-output, or cloned single-link outputs. In these cases, one OLDI will be
-the primary OLDI, and the other one, a companion. The following diagram
-represents such a configuration.
+* Some history and hardware description for this patch series *
 
-+-----+-----+         +-------+
-|     |     |         |       |
-|     | VP1 +----+--->+ OLDI0 |  (Primary - may need companion)
-|     |     |    |    |       |
-| DSS +-----+    |    +-------+
-|     |     |    |
-|     | VP2 |    |    +-------+
-|     |     |    |    |       |
-+-----+-----+    +--->+ OLDI1 |  (Companion OLDI)
-                      |       |
-                      +-------+
+This patch series is a complete re-vamp from the previously posted series[1] and
+hence, the version index has been reset to v1. The OLDI support from that series
+was dropped and only the base support for AM62x DSS was kept (and eventually
+merged)[2].
 
-The DSS in AM625 SoC has a configuration like the one above. The AM625
-DSS VP1 (port@0) can connect and control 2 OLDI TXes, to use them in
-dual-link or cloned single-link OLDI modes. It is only the VP1 that can
-connect to either OLDI TXes for the AM625 DSS, and not the VP2.
+The OLDI display that the tidss driver today supports, could not be extended for
+the newer SoCs. The OLDI display in tidss is modelled after the DSS and OLDI
+hardware in the AM65x SoC. The DSS in AM65x SoC, has two video-ports. Both these
+video-ports (VP) output DPI video signals. One of the DPI output (from VP1) from
+the DSS connects to a singular OLDI TX present inside the SoC. There is no other
+way for the DPI from VP1 to be taken out of the SoC. The other DPI output
+however - the one from VP2 - is taken out of the SoC as is. Hence we have an
+OLDI bus output and a DPI bus output from the SoC. Since the VP1 and OLDI are
+tightly coupled, the tidss driver considers them as a single entity. That is
+why, any OLDI sink connects directly to the DSS ports in the OF graphs.
 
-Alternatively, on some future TI SoCs, along with the above
-configuration, the OLDI TX can _also_ connect to separate video sources,
-making them work entirely independent of each other. In this case,
-neither of the OLDIs are "companion" or "secondary" OLDIs, and nor do
-they require one. They both are independent and primary OLDIs. The
-following diagram represents such a configuration.
+The newer SoCs have varying DSS and OLDI integrations.
 
-+-----+-----+               +-------+
-|     |     |               |       |
-|     | VP1 +--+----------->+ OLDI0 |  (Primary - may need companion)
-|     |     |  |            |       |
-|     +-----+  |            +-------+
-|     |     |  |
-|     | VP2 |  |
-|     |     |  |
-| DSS +-----+  |   +---+    +-------+
-|     |     |  +-->+ M |    |       |
-|     | VP3 +----->+ U +--->+ OLDI1 |  (Companion or Primary)
-|     |     |      | X |    |       |
-|     +-----+      +---+    +-------+
-|     |     |
-|     | VP4 |
-|     |     |
-+-----+-----+
+The AM62x DSS also has 2 VPs. The 2nd VP, VP2, outputs DPI signals which are
+taken out of the SoC - similar to the AM65x above. For the VP1, there are 2 OLDI
+TXes. These OLDI TXes can only receive DPI signals from VP1, and don't connect
+to VP2 at all.
 
-Note that depending on the mux configuration, the OLDIs can either be
-working together in tandem - sourced by VP1, OR, they could be working
-independently sourced by VP1 and VP3 respectively.
-The idea is to support all the configurations with this OLDI TX schema.
+The AM62Px SoC has 2 OLDI TXes like AM62x SoC. However, the AM62Px SoC also has
+2 separate DSSes. The 2 OLDI TXes can now be shared between the 2 VPs of the 2
+DSSes.
 
-The OLDI functionality is further supported by a system-control module,
-which contains a few registers to control OLDI IO power and other
-electrical characteristics of the IO lanes.
+The addition of the 2nd OLDI TX (and a 2nd DSS in AM62Px) creates a need for
+some major changes for a full feature experience.
 
-Add devicetree binding schema for the OLDI TXes to support various
-configurations, and extend their support to the AM625 DSS.
+1. The OF graph needs to be updated to accurately show the data flow.
+2. The tidss and OLDI drivers now need to support the dual-link and the cloned
+   single-link OLDI video signals.
+3. The drivers also need to support the case where 2 OLDI TXes are connected to
+   2 different VPs - thereby creating 2 independent streams of single-link OLDI
+   outputs.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Note that the OLDI does not have registers of its own. It is still dependent on
+the parent VP. The VP that provides the DPI video signals to the OLDI TXes, also
+gives the OLDI TXes all the config data. That is to say, the hardware doesn't
+sit on the bus directly - but does so through the DSS.
+
+In light of all of these hardware variations, it was decided to have a separate
+OLDI driver (unlike AM65x) but not entirely separate so as to be a platform
+device. The OLDI TXes are now being represented as DRM bridges under the tidss.
+
+
+* Regarding the Dependency Patches *
+Since the OLDI TXes have a hardware dependency with the parent VP(s), the OLDI
+configuration needs to happen before that VP is enabled for streaming. VP stream
+enable takes place in tidss_crtc_atomic_enable hook. I have posted patches[0]
+allowing DRM bridges to get pre-enabled before the CRTC of that bridge is
+enabled. Without those patches, some warnings or glitches may be observed.
+
+
+* Regarding the Drop of Clone Mode support *
+Another key point to note is that the support for clone mode has been dropped
+from the tidss OLDI driver, from v5 onwards. If the DT is configured for a clone
+mode, the driver will report an error and exit. This has been done because the
+driver was not supporting a specific case of clone mode where 2 OLDI sink
+bridges connected to the 2 OLDI TXes require active programming (unlike the
+simple-panels which do not). The driver does not support creation of two
+encoder-bridge pipelines (along with the parent tidss driver) to allow program
+any subsequent bridges (OLDI sinks and bridges thereafter).
+The code fragments that write the OLDI config to enable clone mode have been
+kept as they are, for future, but the driver will not continue to probe if it
+detects a clone mode configuration, for the time being.
+This drop of clone mode support can be undone by applying this _soft-tested_
+patch[6] on top of this series. This patch will revert the driver to previous
+revisions and will allow OLDI sinks that don't require active programming (for
+example: simple-panels) to work with the driver. Note that this isn't the ideal
+way to run clone mode, but it just works for any bridge pipeline after OLDT TX
+that does not require additional configuration after the OLDI (for example: a
+couple of simple lvds panels connected directly to the OLDI TXes in clone mode).
+
+
+These patches have been tested on AM625 based Beagleplay[3] platform with a
+Lincolntech LCD185 dual-lvds panel. The patches with complete support including
+the expected devicetree configuration of the OLDI TXes can be found in the
+"next_oldi-v7_1-tests" branch of my github fork[4]. This branch also has support
+for Microtips dual-lvds panel (SK-LCD1) which is compatible with the SK-AM625
+EVM platform.
+
+I'd appreciate it if somebody can test it, and report back if they observe any
+issues.
+
+Thanks,
+Aradhya
+
+* Important note about the authorship of patches *
+All the patches in the of this series were authored when I owned a "ti.com"
+based email id, i.e. <a-bhatia1@ti.com>. This email id is not in use anymore,
+and all the work done later has been part of my personal work. Since the
+original patches were authored using TI's email id, I have maintained the
+original authorships as they are, as well as their sign offs.
+
+I have further added another sign off that uses my current (and personal) email
+id, the one that is being used to send this revision, i.e.
+<aradhya.bhatia@linux.dev>.
+
 ---
- .../bindings/display/ti/ti,am625-oldi.yaml    |  88 ++++++++++
- .../bindings/display/ti/ti,am65x-dss.yaml     | 154 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 3 files changed, 243 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
-new file mode 100644
-index 000000000000..42a80a512660
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments AM625 OLDI Transmitter
-+
-+maintainers:
-+  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-+  - Aradhya Bhatia <aradhya.bhatia@linux.dev>
-+
-+description:
-+  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialized RGB
-+  pixel data transmission between host and flat panel display over LVDS (Low
-+  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to-1 data
-+  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS output
-+  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RGB or
-+  padded and un-padded 18-bit RGB bus formats as input.
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: serial clock input for the OLDI transmitters
-+
-+  clock-names:
-+    const: serial
-+
-+  ti,companion-oldi:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle to companion OLDI transmitter. This property is mandatory for the
-+      primarty OLDI TX if the OLDI TXes are expected to work either in dual-lvds
-+      mode or in clone mode. This property should point to the secondary OLDI
-+      TX.
-+
-+  ti,secondary-oldi:
-+    type: boolean
-+    description:
-+      Boolean property to mark the OLDI transmitter as the secondary one, when the
-+      OLDI hardware is expected to run as a companion HW, in cases of dual-lvds
-+      mode or clone mode. The primary OLDI hardware is responsible for all the
-+      hardware configuration.
-+
-+  ti,oldi-io-ctrl:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle to syscon device node mapping OLDI IO_CTRL registers found in the
-+      control MMR region. These registers are required to toggle the I/O lane
-+      power, and control its electrical characteristics.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Parallel RGB input port
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: LVDS output port
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+allOf:
-+  - if:
-+      required:
-+        - ti,secondary-oldi
-+    then:
-+      properties:
-+        ti,companion-oldi: false
-+
-+required:
-+  - reg
-+  - clocks
-+  - clock-names
-+  - ti,oldi-io-ctrl
-+  - ports
-+
-+additionalProperties: false
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index 07c3b792ff5a..9204d09fcba6 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -91,6 +91,24 @@ properties:
-           For AM625 DSS, the internal DPI output port node from video
-           port 1.
-           For AM62A7 DSS, the port is tied off inside the SoC.
-+        properties:
-+          endpoint@0:
-+            $ref: /schemas/graph.yaml#/properties/endpoint
-+            description:
-+              For AM625 DSS, VP Connection to OLDI0.
-+              For AM65X DSS, OLDI output from the SoC.
-+
-+          endpoint@1:
-+            $ref: /schemas/graph.yaml#/properties/endpoint
-+            description:
-+              For AM625 DSS, VP Connection to OLDI1.
-+
-+        anyOf:
-+          - required:
-+              - endpoint
-+          - required:
-+              - endpoint@0
-+              - endpoint@1
+Change Log:
+V7:
+  - Use for_each_available_child_of_node() instead of for_each_child_of_node()
+    to parse through the OLDI TX device nodes, as recommended by Alexander
+    Sverdlin.
+  - Rebase to drm-misc-next.
+    As part of this, update the bridge attach part of the code, as encoders are
+    now passed as a parameter in the drm_bridge_attach() call after Maxime
+    Ripard's change in commit 98007a0d56b0
+    ("drm/bridge: Add encoder parameter to drm_bridge_funcs.attach").
+  - Add Alexander Sverdlin's T-b tag in patch 4/4, and Tomi Valkeinen's R-b in
+    patch 3/4.
+
+V6:
+  - Add patch 3/4: ("drm/tidss: Add 'AM65X_' prefix to OLDI identifiers"),
+    to segregate the pre-existing OLDI code intended for AM65x, from the
+    new-coming OLDI bridge driver related code.
+  - Cosmetic changes suggested by Tomi Valkeinen in patch 4.
+  - Rebase to latest linux-next (next-20250226).
+  - Add Rob Herring's R-b in patch-2, and Tomi Valkeinen's R-b tags in
+    patches 2 and 4.
  
-       port@1:
-         $ref: /schemas/graph.yaml#/properties/port
-@@ -112,6 +130,25 @@ properties:
-       Input memory (from main memory to dispc) bandwidth limit in
-       bytes per second
- 
-+  oldi-transmitters:
-+    description:
-+      Child node under the DSS, to describe all the OLDI transmitters connected
-+      to the DSS videoports.
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      '^oldi@[0-1]$':
-+        $ref: ti,am625-oldi.yaml#
-+        description: OLDI transmitters connected to the DSS VPs
-+
- allOf:
-   - if:
-       properties:
-@@ -120,10 +157,25 @@ allOf:
-             const: ti,am62a7-dss
-     then:
-       properties:
-+        oldi-transmitters: false
-         ports:
-           properties:
-             port@0: false
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,am65x-dss
-+    then:
-+      properties:
-+        oldi-transmitters: false
-+        ports:
-+          properties:
-+            port@0:
-+              properties:
-+                endpoint@1: false
-+
- required:
-   - compatible
-   - reg
-@@ -171,3 +223,105 @@ examples:
-             };
-         };
-     };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        dss1: dss@30200000 {
-+            compatible = "ti,am625-dss";
-+            reg = <0x00 0x30200000 0x00 0x1000>, /* common */
-+                  <0x00 0x30202000 0x00 0x1000>, /* vidl1 */
-+                  <0x00 0x30206000 0x00 0x1000>, /* vid */
-+                  <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
-+                  <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
-+                  <0x00 0x3020a000 0x00 0x1000>, /* vp1 */
-+                  <0x00 0x3020b000 0x00 0x1000>, /* vp2 */
-+                  <0x00 0x30201000 0x00 0x1000>; /* common1 */
-+            reg-names = "common", "vidl1", "vid",
-+                        "ovr1", "ovr2", "vp1", "vp2", "common1";
-+            power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
-+            clocks =        <&k3_clks 186 6>,
-+                            <&vp1_clock>,
-+                            <&k3_clks 186 2>;
-+            clock-names = "fck", "vp1", "vp2";
-+            interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+            oldi-transmitters {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                oldi0: oldi@0 {
-+                    reg = <0>;
-+                    clocks = <&k3_clks 186 0>;
-+                    clock-names = "serial";
-+                    ti,companion-oldi = <&oldi1>;
-+                    ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+                    ports {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        port@0 {
-+                            reg = <0>;
-+                            oldi0_in: endpoint {
-+                                remote-endpoint = <&dpi0_out0>;
-+                            };
-+                        };
-+                        port@1 {
-+                            reg = <1>;
-+                            oldi0_out: endpoint {
-+                                remote-endpoint = <&panel_in0>;
-+                            };
-+                        };
-+                    };
-+                };
-+                oldi1: oldi@1 {
-+                    reg = <1>;
-+                    clocks = <&k3_clks 186 0>;
-+                    clock-names = "serial";
-+                    ti,secondary-oldi;
-+                    ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+                    ports {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        port@0 {
-+                            reg = <0>;
-+                            oldi1_in: endpoint {
-+                                remote-endpoint = <&dpi0_out1>;
-+                            };
-+                        };
-+                        port@1 {
-+                            reg = <1>;
-+                            oldi1_out: endpoint {
-+                                remote-endpoint = <&panel_in1>;
-+                            };
-+                        };
-+                    };
-+                };
-+            };
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+                    reg = <0>;
-+                    dpi0_out0: endpoint@0 {
-+                        reg = <0>;
-+                        remote-endpoint = <&oldi0_in>;
-+                    };
-+                    dpi0_out1: endpoint@1 {
-+                        reg = <1>;
-+                        remote-endpoint = <&oldi1_in>;
-+                    };
-+                };
-+                port@1 {
-+                    reg = <1>;
-+                    dpi1_out: endpoint {
-+                        remote-endpoint = <&hdmi_bridge>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 24e4d90a38d1..f9b17846caa1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7922,6 +7922,7 @@ M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-+F:	Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+V5:
+  - Implement fixes suggested by Rob Herring in patch-2.
+    * Drop the example from OLDI schema.
+    * Fix the DSS schema conditions.
+  - Drop the OLDI clone mode support from the driver as it was incomplete and
+    could not account for cases where OLDI TXes were connected to another pair
+    of bridges that would require additional programming, instead of a pair of
+    simple-panels which wouldn't.
+
+V4:
+  - Implement fixes suggested by Krzysztof Kozlowski:
+    * Squash patches v3:2/4 and v3:3/4 to v4:2/3, and add more hardware details
+      in commit description.
+    * Change the serial clock name for OLDI, from "s_clk" to "serial".
+    * Fix the required condition in the OLDI schema.
+    * Other minor fixes.
+  - Change "oldi-txes" OLDI DT node name to "oldi-transmitters".
+  - Update secondary-OLDI property requirements to be more relaxing for AM62P
+    DSS configuration.
+
+V3:
+  - Fix the dt_binding_check warning in patch 3/4[5] by adding
+    "additionalProperties" constraint.
+
+V2:
+  - Add all the R-b and A-b tags from Laurent Pinchart, Rob Herring, and
+    Tomi Valkeinen.
+  - Reword the subject for patch 1/4.
+  - Reword the commit descriptions to add proper hardware detail.
+  - Drop the change in schema reference for port@0 in patch 3/4.
+  - Lots of improvements for patch 4/4.
+    * Refactor OLDI selection logic in tidss_oldi_tx_power().
+    * Add "companion_instance" support to identify the OLDI index in
+      dual-link or cloned sinle-link modes.
+    * De-initialize tidss_oldi during tidss removal.
+    * Use dev_err_probe() instead of dev_err().
+    * Drop OLDI(n) macro.
+    * Move OLDI Config register bits to tidss_dispc_regs.h.
+    * Drop oldi bridge atomic_check().
+    * s/%d/%u for all print instances of "oldi_instance".
+    * Move OLDI init after DISPC init in tidss_probe.
+    * Use devm_drm_of_get_bridge() instead of
+      drm_of_find_panel_or_bridge() to find the next bridge and drop all
+      the drm_panel support from tidss_oldi.
+
+Previous revisions:
+V1: https://lore.kernel.org/all/20240511193055.1686149-1-a-bhatia1@ti.com/
+V2: https://lore.kernel.org/all/20240715200953.1213284-1-a-bhatia1@ti.com/
+V3: https://lore.kernel.org/all/20240716084248.1393666-1-a-bhatia1@ti.com/
+V4: https://lore.kernel.org/all/20241124143649.686995-1-aradhya.bhatia@linux.dev/
+V5: https://lore.kernel.org/all/20250209160925.380348-1-aradhya.bhatia@linux.dev/
+V6: https://lore.kernel.org/all/20250226181300.756610-1-aradhya.bhatia@linux.dev/
+
+
+[0]: Dependency Patches:
+("drm/atomic-helper: Refactor crtc & encoder-bridge op loops into separate functions")
+https://lore.kernel.org/all/20250329113925.68204-11-aradhya.bhatia@linux.dev/
+
+("drm/atomic-helper: Separate out bridge pre_enable/post_disable from enable/disable)
+https://lore.kernel.org/all/20250329115333.72614-1-aradhya.bhatia@linux.dev/
+
+("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
+https://lore.kernel.org/all/20250329115333.72614-2-aradhya.bhatia@linux.dev/
+
+
+[1]: AM62 OLDI Series - v7
+https://lore.kernel.org/all/20230125113529.13952-1-a-bhatia1@ti.com/
+
+[2]: AM62 DSS Series - v9
+https://lore.kernel.org/all/20230616150900.6617-1-a-bhatia1@ti.com/
+
+[3]: TI AM625 SoC based Beagleplay platform
+https://www.beagleboard.org/boards/beagleplay
+
+[4]: GitHub Fork for OLDI tests
+https://github.com/aradhya07/linux-ab/tree/next_oldi-v7_1-tests
+
+[5]: ("ti,am65x-dss.yaml: oldi-txes: Missing additionalProperties/
+      unevaluatedProperties constraint")
+https://lore.kernel.org/all/172107979988.1595945.9666141982402158422.robh@kernel.org/
+
+[6]: Undo drop of OLDI clone mode support
+https://gist.github.com/aradhya07/afb55761e64eb440d47d5de3ea2a3cb7
+
+Aradhya Bhatia (4):
+  dt-bindings: display: ti,am65x-dss: Re-indent the example
+  dt-bindings: display: ti: Add schema for AM625 OLDI Transmitter
+  drm/tidss: Mark AM65x OLDI code separately
+  drm/tidss: Add OLDI bridge support
+
+ .../bindings/display/ti/ti,am625-oldi.yaml    |  88 +++
+ .../bindings/display/ti/ti,am65x-dss.yaml     | 196 +++++-
+ MAINTAINERS                                   |   1 +
+ drivers/gpu/drm/tidss/Makefile                |   3 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c           |  92 +--
+ drivers/gpu/drm/tidss/tidss_dispc.h           |   7 +-
+ drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  29 +-
+ drivers/gpu/drm/tidss/tidss_drv.c             |   9 +
+ drivers/gpu/drm/tidss/tidss_drv.h             |   5 +
+ drivers/gpu/drm/tidss/tidss_kms.c             |   2 +-
+ drivers/gpu/drm/tidss/tidss_oldi.c            | 568 ++++++++++++++++++
+ drivers/gpu/drm/tidss/tidss_oldi.h            |  42 ++
+ 12 files changed, 976 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+ create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.h
+
+
+base-commit: c8ba07caaecc622a9922cda49f24790821af8a71
 -- 
 2.34.1
 
