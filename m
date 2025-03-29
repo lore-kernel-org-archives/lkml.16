@@ -1,244 +1,145 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED5681E
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 00:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F240979F2
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 00:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743207274; cv=none; b=UmrdpWUYybaHtTkp3PHeUCyqV2uXgmxK7kAbEQtNsKOt8Rjyx9oCeQeSiLvSlrgGfxr18uhwXZSa1gTB4WZXadtJGqEPTNqjifUxtLkU5am7UbzeCEXHeUxGS3Upwi2Ax+ePBcQPg/iJCQfK+wHpeZNoW9GtM8T2OfHFkmZzfIs=
+	t=1743207288; cv=none; b=KaL9Ly6MHf6TA1Sd+gjaQusIgvSBhKQ7YQz3C+BJlf4gjUQKQstuK6M7GyG+3C3b8IoD24fMllk2rqowRwkPcugM0GJTtYCM9iwCHq/vN0abZbKhkdhiTmUVeM8Q1vXL4B6OtazOxKBG1vzNHu66hpET3g1G8ySOxPNe09YV10M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743207274; c=relaxed/simple;
-	bh=yELwC7Jm7oaJNhOb+/l0AJpibERj9nsAmIKEJMJotWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gkGhvBhzZewR1fuFGP9RmSTpDZQMheMrpxmk8MoUknq/yWYjhgPvo78t7HAvWoEMkTQJd434FTYvFkfWy4TlwHcWUBHtJ5RXUMAvfiSmqxl6Apk0qz3s5wiYnnQYc6AKhApE2yLHn7gjdPp8bHFdryw4dpYh2iR/f9GcdEbIGIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=Ps0FphjZ; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+	s=arc-20240116; t=1743207288; c=relaxed/simple;
+	bh=dikRvIQJE5AwEZi0HuwdAuotFBlytZMOVrU0CsJOJy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m2KncoKhGvRBD+faNZocPjj8erF1suZrRFRCQ/bVyLH31lFqiLGAGeXLJZkel6Ckkq4TJFCdjpklhDhKe7bNDr1MlzM1U/b+8Tc57EH3ggCvKSRxX/NW5cyNonWVZvtl+JGImRVb6LDCcBjRPlc+Aa13FdxK9LmqH5kkcRbZpNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RiTzB1Z9; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="Ps0FphjZ"
-Date: Sat, 29 Mar 2025 01:14:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743207259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QNax2lMaBXSLUMj+8x9Q7eUm8I0qR5/VNqQoOVPR7Zk=;
-	b=Ps0FphjZRgKW9P0/HENf9nFKPoJUopvJ0UYw6SeGiMbGNMfmCWT7XdFTxoio7+Gr+2kyD0
-	YBI4V4pmYqW85SLenRHlnK7XriK0mJW/DnPlLjwA7mYNqO6lz9mkU+P8Nnn/7JoBRyxIYU
-	JXHHnDfHJ80Wpulp+veJ6rhmrff262PLEDrliwkPazJT7j1wO9A1CKBspM0Mvb7+lWt2IA
-	uQGmQ5eV2lvF9Y2lgi5tiBRmnPRQZ1IfzWBxe8m3OK3jxSqCWevc1ozoJD9b9Ig7aC3QjS
-	lZiIbiFAQwT4KY82iKKeOhC6T+/HbYpt/MP5Ok6StBCF6kUdoIcQVuOTDvRDOQ==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Dave Young <dyoung@redhat.com>, bhe@redhat.com
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
-	ytcoode@gmail.com, kexec@lists.infradead.org,
-	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z-c7V2hptt9U9UCl@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RiTzB1Z9"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so4984104a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743207284; x=1743812084; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AG8Ifwah4Vmo6gEwUtWGfmEMFesxHnV/oT3P7GlRyLw=;
+        b=RiTzB1Z9mdKaMvAF1A15shseJeP4deCdtCDBkQqMtSqHwlOg+EYKCyORdoOlyOQLRR
+         Vo7DmHPUKn5gA1Xdjhux+Ax7XAIsq8RmqsOAGNXo3DYIfnw1MQO/M+1ESQAeD2wjMSaf
+         HYqks90A5pgHPioIj4MM/ZJAvVxR1E0nKDT8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743207284; x=1743812084;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AG8Ifwah4Vmo6gEwUtWGfmEMFesxHnV/oT3P7GlRyLw=;
+        b=QUzzwLYy0Ve1BEqbLp85bqoPHLV/4dPnJXF5rFTN4pIvmq7XDxBcnUO/A2QNqEiLU2
+         K5m7Eyg3LGECH0MVKNgvMTJ4StSLu/xux4p+Ac6IkgmttDyd3rWPJ8N90loF7IOTdulS
+         5xNcg96Rph9UYzJPysXmXIhU/jMSel1fmt3Nq1HqeXeENLMEaPG47J7wyl06NAg4oDso
+         Tpb4NWXUYyUZkX0fQN8v5N+Ky3oW2ATLF6c9ORBILc3x1+VIDUaTAQUG/KJ1XZD7JWl1
+         sJZJToEW5jy+OGw9TGDEhA7J0YkpJG+zi1WAtvGjKHLuc4au4BZzJb8eEaIFRf0UCMoo
+         LAAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVC53LiODF5qlv1wCbs59GcBDa3lo2pgM01pqChx0THYYbHAIyec1EytBi8CAwQhT06F5vl9p9PBHXnCCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR/IC2fLEVGR/abWDJ2Ld6eRXfi6lUXTl1tdfott8YcZKpFZu/
+	PktsXbICBlj5bK7zGdnjg43hBcWYjhq2y/Lj2FgRYl36hHaDXmbLwo1Wtdfj2h5/KRIGjD5gx3K
+	CFxI=
+X-Gm-Gg: ASbGncvdanCPeNZNvg/T1/A1zXBVnCRDUVFZxAKyschjf9zavF+9RcCsAmZ1f6ACmBR
+	1bJbxLiWJx0FWIIDYCVyYxtb+HUMpcf0r7oW2B5Ii7wJSlTILEPadvYafrTsdtR5W9YUktx1REl
+	eF+gILC+LDjFwN9X/Wo/iMKoPEI7Cjn6E/BaGi7T3RFQJWkKCcuD6rEF8f5dGSIfp1O6yeRZhYX
+	vbRR2/IyeFZpPx9xGFoKUhbqXXMUddApVca77DLo6muQSVa/2GVh/LZzaSItXrmuuVVu4sRJErG
+	b6Cnec+XswU7YMbWcUpjkd9Wn++LbpTDbSigChjoZIe2fzJpntWn42P9dFGjP0gQJbgecvjNGuG
+	Kz0YdZUdJMSZhzzH/iH0=
+X-Google-Smtp-Source: AGHT+IGe7aLukp2fj9izUO3dAwDfOSiA2v8twbFiH5p4RQ0XwZxkuuqLdLNxZgi9dTq1dcDtgabIXg==
+X-Received: by 2002:a05:6402:1d4b:b0:5eb:cc22:aa00 with SMTP id 4fb4d7f45d1cf-5edfd13c985mr1030389a12.19.1743207284068;
+        Fri, 28 Mar 2025 17:14:44 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16d2dd0sm2052779a12.21.2025.03.28.17.14.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 17:14:43 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so4984062a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:14:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCULkchm8uFW0LJeTsABR6bodYsV7yqRo9TomnePu6YPVY0Iv6jbyjsU2nQWnS6Ztbikuz2oBI9Moh0kxqU=@vger.kernel.org
+X-Received: by 2002:a17:906:c40a:b0:ac7:391b:e68a with SMTP id
+ a640c23a62f3a-ac7391be94amr68288966b.60.1743207281660; Fri, 28 Mar 2025
+ 17:14:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250305184725.3341760-3-xin@zytor.com> <174238223959.14745.6970497940010271580.tip-bot2@tip-bot2>
+ <SN6PR02MB415756D1829740F6E8AC11D1D4D82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <CAHk-=whChrRQ0kuRuZo2+9D+J2BO9Q=1CV2eEk_yjrNi8kdjBg@mail.gmail.com>
+ <SN6PR02MB4157D2C2260E6BD529BCF08AD4A52@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250328162311.08134fa6@kernel.org>
+In-Reply-To: <20250328162311.08134fa6@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 28 Mar 2025 17:14:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjn1m+j1NYN6CKXvozOp-mmhXNFJLCub7Tr9JEz6Su5Lw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo162yBUMXLpk32WRwO_4G_Hcq8NjyKMaCUXTIvXHba2tcHXUK7rPHUW_o
+Message-ID: <CAHk-=wjn1m+j1NYN6CKXvozOp-mmhXNFJLCub7Tr9JEz6Su5Lw@mail.gmail.com>
+Subject: Re: [tip: x86/core] x86/cpufeatures: Generate the <asm/cpufeaturemasks.h>
+ header based on build config
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, Michael Kelley <mhklinux@outlook.com>, 
+	"Xin Li (Intel)" <xin@zytor.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
+	Nikolay Borisov <nik.borisov@suse.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-01-27 10:42 +0800, Dave Young wrote:
-> On Mon, 27 Jan 2025 at 10:39, Dave Young <dyoung@redhat.com> wrote:
-> > On 01/13/25 at 10:28pm, Roberto Ricci wrote:
-> > > After rebooting the system via kexec, hibernating and rebooting the machine, this oops occurs:
-> > >
-> > [snip]
-> > >
-> > > I will send the kernel config and dmesg in replies to this email.
-> > >
-> >
-> > I tried your config (removed some config driver related which is not useful), but it can not boot on my kvm guest.
-> > Firstly I saw a panic in ftrace path,  then I rebuilt the kernel without ftrace, it panicked again but in kvm related code path.
-> > Both are not related to kexec at all so I suspect your bug is not kexec specific.
-> >
-> > [snip]
-> >
-> > You can find the kernel config here (with the ftrace enabled):
-> > https://people.redhat.com/~ruyang/snakeyear/panic-ftrace.config
-> 
-> BTW, if I disable KASAN then kernel can boot, anyway kexec +
-> hibernation works fine with a few tests, no panics.
-> 
-> >
-> > Thanks
-> > Dave
+On Fri, 28 Mar 2025 at 16:23, Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> FWIW this also makes netdev CI melt down. Combination of allmodconfig
+> insisting on WERROR, us insisting on W=1, and this change insisting on
+> full kernel rebuild every time .config is touched :( IOW we do:
+>
+>         make allmodconfig
+>         ./scripts/config -d werror
+>         make -j W=1
+>
+> Could a hack like this fly? I don't see an easy way out ..
 
-Hi,
+Ok, clearly we need something like this.
 
-sorry for the late reply. I tried your modified config, but I'm getting
-the same oops I originally reported. No idea why the oops is not
-happening for you.
+That said, your patch makes my skin crawl a bit. Not because it's
+wrong, but because it really makes me think "why don't we have this as
+part of our normal "cmd_gen_" infrastructure?
 
-Anyway, I performed yet another bisection, this time with just plain
-defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+In fact, we *do* have something like that for our infrastructure: it's
+the 'filechk' macro.
 
-Updated steps to reproduce:
-1. Boot kernel >= v6.8 in a virtual machine created with this command:
-   `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
-2. Load the same kernel with:
-   `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
-3. Reboot (or call `kexec -e` directly)
-4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
-5. Upon resuming, three things could happen, depending on luck:
-5a. A kernel oops:
-```
-[   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[   42.574680] #PF: supervisor read access in kernel mode
-[   42.575001] #PF: error_code(0x0000) - not-present page
-[   42.575324] PGD 0 P4D 0
-[   42.575556] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-[   42.575860] CPU: 0 UID: 0 PID: 535 Comm: dhcpcd Kdump: loaded Not tainted 6.14.0 #1
-[   42.576333] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-[   42.576926] RIP: 0010:pcpu_alloc_noprof (??:?) 
-[ 42.577242] Code: 39 c6 0f 8f 0b 01 00 00 44 89 7c 24 40 48 8b 05 f6 f3 40 01 4c 89 74 24 20 4c 63 ce 49 c1 e1 04 4a 8d 0c 08 4d 89 cf 48 8b 19 <4c> 8b 33 48 39 d9 0f 84 c4 00 00 00 89 34 24 eb 34 89 c1 4c 89 e2
-All code
-========
-   0:	39 c6                	cmp    %eax,%esi
-   2:	0f 8f 0b 01 00 00    	jg     0x113
-   8:	44 89 7c 24 40       	mov    %r15d,0x40(%rsp)
-   d:	48 8b 05 f6 f3 40 01 	mov    0x140f3f6(%rip),%rax        # 0x140f40a
-  14:	4c 89 74 24 20       	mov    %r14,0x20(%rsp)
-  19:	4c 63 ce             	movslq %esi,%r9
-  1c:	49 c1 e1 04          	shl    $0x4,%r9
-  20:	4a 8d 0c 08          	lea    (%rax,%r9,1),%rcx
-  24:	4d 89 cf             	mov    %r9,%r15
-  27:	48 8b 19             	mov    (%rcx),%rbx
-  2a:*	4c 8b 33             	mov    (%rbx),%r14		<-- trapping instruction
-  2d:	48 39 d9             	cmp    %rbx,%rcx
-  30:	0f 84 c4 00 00 00    	je     0xfa
-  36:	89 34 24             	mov    %esi,(%rsp)
-  39:	eb 34                	jmp    0x6f
-  3b:	89 c1                	mov    %eax,%ecx
-  3d:	4c 89 e2             	mov    %r12,%rdx
+So I think the real fix is something like this ENTIRELY UNTESTED
+patch.  Whitespace-damaged again to make sure people don't apply this
+mindlessly, it needs more thought:
 
-Code starting with the faulting instruction
-===========================================
-   0:	4c 8b 33             	mov    (%rbx),%r14
-   3:	48 39 d9             	cmp    %rbx,%rcx
-   6:	0f 84 c4 00 00 00    	je     0xd0
-   c:	89 34 24             	mov    %esi,(%rsp)
-   f:	eb 34                	jmp    0x45
-  11:	89 c1                	mov    %eax,%ecx
-  13:	4c 89 e2             	mov    %r12,%rdx
-[   42.578146] RSP: 0018:ffffa083804b7de8 EFLAGS: 00010002
-[   42.578466] RAX: ffff8bc0bfffa5c0 RBX: 0000000000000000 RCX: ffff8bc0bfffa5e0
-[   42.578848] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffffffff9d77bb04
-[   42.579232] RBP: 0000000000000004 R08: 000000010004e063 R09: 0000000000000020
-[   42.579613] R10: 0000000000000000 R11: 000000004dd19067 R12: 0000000000000002
-[   42.579994] R13: 0000000000000000 R14: 0000000000000202 R15: 0000000000000020
-[   42.580382] FS:  00007f52ed1a3740(0000) GS:ffff8bc0bfa00000(0000) knlGS:0000000000000000
-[   42.580867] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   42.581211] CR2: 0000000000000000 CR3: 0000000102398000 CR4: 00000000000006f0
-[   42.581595] Call Trace:
-[   42.581823]  <TASK>
-[   42.582040] ? __die (??:?) 
-[   42.582498] ? page_fault_oops (fault.c:?) 
-[   42.582784] ? search_extable (??:?) 
-[   42.583061] ? pcpu_alloc_noprof (??:?) 
-[   42.583354] ? search_module_extables (??:?) 
-[   42.583652] ? exc_page_fault (??:?) 
-[   42.583930] ? asm_exc_page_fault (??:?) 
-[   42.584221] ? pcpu_alloc_noprof (??:?) 
-[   42.584509] ? pcpu_alloc_noprof (??:?) 
-[   42.584796] mm_init.isra.0 (fork.c:?) 
-[   42.585070] alloc_bprm (exec.c:?) 
-[   42.585335] do_execveat_common.isra.0 (exec.c:?) 
-[   42.585638] __x64_sys_execve (??:?) 
-[   42.585912] do_syscall_64 (??:?) 
-[   42.586185] entry_SYSCALL_64_after_hwframe (??:?) 
-[   42.586500] RIP: 0033:0x7f52ed27bbd7
-[ 42.586766] Code: eb cf e8 fc e9 03 00 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8b 05 e9 53 10 00 48 8b 10 e9 01 00 00 00 90 b8 3b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 52 10 00 f7 d8 64 89 01 48
-All code
-========
-   0:	eb cf                	jmp    0xffffffffffffffd1
-   2:	e8 fc e9 03 00       	call   0x3ea03
-   7:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
-   e:	00 00 00 
-  11:	66 90                	xchg   %ax,%ax
-  13:	48 8b 05 e9 53 10 00 	mov    0x1053e9(%rip),%rax        # 0x105403
-  1a:	48 8b 10             	mov    (%rax),%rdx
-  1d:	e9 01 00 00 00       	jmp    0x23
-  22:	90                   	nop
-  23:	b8 3b 00 00 00       	mov    $0x3b,%eax
-  28:	0f 05                	syscall
-  2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<-- trapping instruction
-  30:	73 01                	jae    0x33
-  32:	c3                   	ret
-  33:	48 8b 0d 21 52 10 00 	mov    0x105221(%rip),%rcx        # 0x10525b
-  3a:	f7 d8                	neg    %eax
-  3c:	64 89 01             	mov    %eax,%fs:(%rcx)
-  3f:	48                   	rex.W
+   arch/x86/Makefile | 4 ++--
+   1 file changed, 2 insertions(+), 2 deletions(-)
 
-Code starting with the faulting instruction
-===========================================
-   0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
-   6:	73 01                	jae    0x9
-   8:	c3                   	ret
-   9:	48 8b 0d 21 52 10 00 	mov    0x105221(%rip),%rcx        # 0x105231
-  10:	f7 d8                	neg    %eax
-  12:	64 89 01             	mov    %eax,%fs:(%rcx)
-  15:	48                   	rex.W
-[   42.587811] RSP: 002b:00007f52ed175e68 EFLAGS: 00000202 ORIG_RAX: 000000000000003b
-[   42.588313] RAX: ffffffffffffffda RBX: 00007ffec82864f0 RCX: 00007f52ed27bbd7
-[   42.588683] RDX: 00005581792386d0 RSI: 00007ffec82866a0 RDI: 000055816c62b6a3
-[   42.589052] RBP: 00007f52ed175ff0 R08: 0000000000000000 R09: 0000000000000000
-[   42.589468] R10: 0000000000000008 R11: 0000000000000202 R12: 00007ffec8286220
-[   42.589838] R13: 0000000000000040 R14: 0000000000000001 R15: 00007f52ed175f20
-[   42.590487]  </TASK>
-[   42.590705] Modules linked in:
-[   42.590949] CR2: 0000000000000000
-```
-5b. The system hangs
-5c. The system resumes, but if you execute again the command in step 2,
-    it fails
+  diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+  index 0fc7e8fd1a2e..769b29bf26ba 100644
+  --- a/arch/x86/Makefile
+  +++ b/arch/x86/Makefile
+  @@ -278,11 +278,11 @@ cpufeaturemasks.awk :=
+$(srctree)/arch/x86/tools/cpufeaturemasks.awk
+   cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
+   targets += $(cpufeaturemasks.hdr)
+   quiet_cmd_gen_featuremasks = GEN     $@
+  -      cmd_gen_featuremasks = $(AWK) -f $(cpufeaturemasks.awk)
+$(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
+  +      filechk_featuremasks = $(AWK) -f $(cpufeaturemasks.awk)
+$(cpufeatures_hdr) $(KCONFIG_CONFIG)
 
-I will send config and dmesg in replies to this email.
+   $(cpufeaturemasks.hdr): $(cpufeaturemasks.awk) $(cpufeatures_hdr)
+$(KCONFIG_CONFIG) FORCE
+        $(shell mkdir -p $(dir $@))
+  -     $(call if_changed,gen_featuremasks)
+  +     $(call filechk,featuremasks)
+   archprepare: $(cpufeaturemasks.hdr)
 
-The bisection pointed to
-b3ba234171cd kexec_file: load kernel at top of system RAM if required
+   ###
 
-#regzbot introduced: b3ba234171cd0d58df0a13c262210ff8b5fd2830
+does something like that work? (And really: note the "something like
+that" part, this may be *entirely* broken)
 
-Now that I think about it, this was the commit I found when I did the
-very first bisection after I found the bug. But I could not get the same
-result with subsequent bisections, so I didn't mention it in my original
-report.
-
-When reverting b3ba234171cd on top of v6.14, merge conflicts must be
-solved, I hope I did it right:
-
-```
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3eedb8c226ad..3014be212afd 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -614,10 +614,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
-                                           crashk_res.start, crashk_res.end,
-                                           kbuf, func);
- #endif
--       if (kbuf->top_down)
--               return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
--       else
--               return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-+       return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
-
- /**
-```
-
-Applying this diff solves the problem for v6.14.
+             Linus
