@@ -1,122 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36E01B393D
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 21:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E51F1F956
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 21:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743285029; cv=none; b=PjWp8STBvNWUt6Er4lGcf+//snPjjpu0ZJYc5LDiICL82UnaoYzA1tZ+73/6wt4kl4p+6oB9c5Ei1p/Z7wCDGAxiSmbAnFiio3rtDRpke8dAtMMPlLZdibRXxPvCFfbSIcQLgcEMQlt2piWOsCC4It9Hg+ndq1KA4OCX9VHp/kM=
+	t=1743285112; cv=none; b=Gkh+W5fDB8MjzrtQ59qYAFL/s5O995/HZH5YUC5QkhC4Uaw64jYbqmXc0pfhpqWDK5P8gCXE01/4AJFmDciiMgfIScMuAqAHtIOeGfyi8Oi8XdqRA697yneCVIYNAo5u29jVrucZTF9r707jZWOrk5Yq8bQ2JhCY+KW6bsMHrc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743285029; c=relaxed/simple;
-	bh=Bn65r9Eeocxlq0677inZdcI9j1hxm1RSNNsHDFat/rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CYOL7UoHsNewoiqQ8r5/pl6D3csXgT8rixpW1YNaCiceE7guDz7oS/BwxL4TMJBRwJHXcJdkZJw9ozzcxhzNeWGYZ/1S5MX6kQwvLSXRo9YtIHGriHKZK+vrIdF5AVbiP6A7SsbN1pbhgbortPx+OHVykx03C8Ef/pY/dvNkRZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jMiq99W8; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743285112; c=relaxed/simple;
+	bh=4dTn9b1fgmouJ+jWMYuw80TdZ/JvLFSrnXo/HOErIqI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ibZjlbbJiI2zOrmwMMTDOBcNq1f0v5D5ZbkG6Fe6SjYFWt5v4r0wRqFxU1301UMjtYMWeRF9/ApwE0wRUsQrE0lB5oSpbB7gHY1bQ7qry5gRBnHZ1hHfUu8wbL9snjbb0qMddoptS+RUJTVaTcFP9PVA27v4FIPqm1WmupX3bhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4Pdq0qp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMiq99W8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743285028; x=1774821028;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Bn65r9Eeocxlq0677inZdcI9j1hxm1RSNNsHDFat/rc=;
-  b=jMiq99W8Yae0/y0z2GSbIetGIbi5MQxry0rN4sq/f98cWQAXL8hZCoQA
-   oPcBemhiKQ9F2ojfZh3nK8+tnMM8y4wDwx4ShJ390z8CeXuMUDbw/rGAa
-   N59CxqhkDHtGstRclRkhTkQZJKdXuwDQTeT0gtSY1PZppWJGjZhCeEe91
-   Z2tgFRntjbyMDCdx3fuUbSFFgjsTQBv5BJcDRQNXxPlSeymBeG3X+UE9V
-   4+YG5VTjsDZLfWZaxN1zyacNymp3tf04F526srWAod5shtHtS7vWoKhou
-   AHfGJ96ZJWUr8/UO4g/WsPSKHCrzfgXVByea/ZQsdqwhZ9iTin4ocXV3Y
-   Q==;
-X-CSE-ConnectionGUID: s9S7Z1PZQmia+9vub9QLsw==
-X-CSE-MsgGUID: hEjCtx/4SpO82lIQc2rBHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="44512467"
-X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
-   d="scan'208";a="44512467"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 14:50:27 -0700
-X-CSE-ConnectionGUID: 9MsdH1MbSlWd3Wa5k8KJJg==
-X-CSE-MsgGUID: WgD6vfkpT8CwmJDgRMo5UA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
-   d="scan'208";a="125508563"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 29 Mar 2025 14:50:26 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tye4N-0008Ng-2B;
-	Sat, 29 Mar 2025 21:50:23 +0000
-Date: Sun, 30 Mar 2025 05:49:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>
-Subject: drivers/mmc/host/renesas_sdhi_core.c:973:undefined reference to
- `rdev_get_drvdata'
-Message-ID: <202503300554.KEiONTXz-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4Pdq0qp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D26C4CEE2;
+	Sat, 29 Mar 2025 21:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743285112;
+	bh=4dTn9b1fgmouJ+jWMYuw80TdZ/JvLFSrnXo/HOErIqI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=q4Pdq0qpGa6iEhUCY0Ldha5REvQxlH40icUH66J5+r3j3lotuEYpiP7vnS9S6B278
+	 x883BnboAJ5uK5qAuj1dyNcYRLmQRVDTIoHb40WR+ywP9nuCxsIM94Hn4mgNavMF2v
+	 Bhe0KnA+vRkQnOLI0wUSDxHjQcARpAAkANngpzj/r/Z+8+Z6Zewc0Hdj7Cbl+2ndRx
+	 mtNcU6kqLeyOMQzft3GdXJXK1+XIocbLzruL0PxX9geeAMiHWkur+j52liNn6jVy1U
+	 lkSkICG7z5gwJ/WJnsPmvIYFOVY3m5lNdyvW3YiTkmKvG222GJzwE8oS+DmXP7SfUV
+	 3GVR6xzeZGjfA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2FC380AAFA;
+	Sat, 29 Mar 2025 21:52:29 +0000 (UTC)
+Subject: Re: [GIT PULL] regmap updates for v6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <1873795367bda5d10ff64d1efa0625fa.broonie@kernel.org>
+References: <1873795367bda5d10ff64d1efa0625fa.broonie@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1873795367bda5d10ff64d1efa0625fa.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.15
+X-PR-Tracked-Commit-Id: 153dbf4adad0082d030c30d20541df2b1af52db6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 054b7477e3bfdd562b723ce5e227bd3fd2621f51
+Message-Id: <174328514860.3286170.12848452584865117606.pr-tracker-bot@kernel.org>
+Date: Sat, 29 Mar 2025 21:52:28 +0000
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   883ab4e47c2b514696922243e1d84b7ac36f9d3c
-commit: fae80a99dc0320be854aa789cbe7ed0e1e574c61 mmc: renesas_sdhi: Add support for RZ/G3E SoC
-date:   2 weeks ago
-config: parisc-randconfig-002-20250330 (https://download.01.org/0day-ci/archive/20250330/202503300554.KEiONTXz-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250330/202503300554.KEiONTXz-lkp@intel.com/reproduce)
+The pull request you sent on Thu, 27 Mar 2025 22:26:53 +0000:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503300554.KEiONTXz-lkp@intel.com/
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.15
 
-All errors (new ones prefixed by >>):
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/054b7477e3bfdd562b723ce5e227bd3fd2621f51
 
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_set_voltage':
->> drivers/mmc/host/renesas_sdhi_core.c:973:(.text+0x1c40): undefined reference to `rdev_get_drvdata'
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_enable':
-   drivers/mmc/host/renesas_sdhi_core.c:939:(.text+0x1cdc): undefined reference to `rdev_get_drvdata'
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_disable':
-   drivers/mmc/host/renesas_sdhi_core.c:927:(.text+0x1d38): undefined reference to `rdev_get_drvdata'
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_get_voltage':
-   drivers/mmc/host/renesas_sdhi_core.c:961:(.text+0x1d90): undefined reference to `rdev_get_drvdata'
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_is_enabled':
-   drivers/mmc/host/renesas_sdhi_core.c:951:(.text+0x1de0): undefined reference to `rdev_get_drvdata'
-   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_probe':
->> drivers/mmc/host/renesas_sdhi_core.c:1177:(.text+0x24a0): undefined reference to `devm_regulator_register'
-
-
-vim +973 drivers/mmc/host/renesas_sdhi_core.c
-
-   968	
-   969	static int renesas_sdhi_regulator_set_voltage(struct regulator_dev *rdev,
-   970						      int min_uV, int max_uV,
-   971						      unsigned int *selector)
-   972	{
- > 973		struct tmio_mmc_host *host = rdev_get_drvdata(rdev);
-   974		u32 sd_status;
-   975	
-   976		sd_status = sd_ctrl_read32(host, CTL_SD_STATUS);
-   977		if (min_uV >= 1700000 && max_uV <= 1950000) {
-   978			sd_status |= SD_STATUS_IOVS;
-   979			*selector = 1;
-   980		} else {
-   981			sd_status &= ~SD_STATUS_IOVS;
-   982			*selector = 0;
-   983		}
-   984		sd_ctrl_write32(host, CTL_SD_STATUS, sd_status);
-   985	
-   986		return 0;
-   987	}
-   988	
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
