@@ -1,181 +1,222 @@
-Received: from smtp.smtpout.orange.fr (smtp-66.smtpout.orange.fr [80.12.242.66])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B690D2AD2A;
-	Sat, 29 Mar 2025 09:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD42C29A5;
+	Sat, 29 Mar 2025 09:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743240589; cv=none; b=N/7pQXvzgdqwwge6/yi3J5J3ssapvsPugcJvyArg2S7J9KZKjB4ohflGS1JEyO0LtgFkfMxOoDE+QcsXToEsaBJtkGCYlt7eMll+BSqynKeYgu/jlbSHkmv5g/ylDswthgAIfuk9OTWVoTSiaAE3MHDNNZdVBjxAMKXDdNVwPbc=
+	t=1743240774; cv=none; b=S6N5rZ1CPdlyhmrJ9DTliN+6+cqpSImgjzdyjV4NrLaR4TSEFrbLb5skJChIGkABAZ0u2vaAw06AFDuPUxU2YapR0/fT4LDQL6gbtAhHs44tNnnWRjt+5w6omVAmw8EP9AcSToJWbFUOfWM9Zz41pzHmXLa44QA+jG1GkYIyaf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743240589; c=relaxed/simple;
-	bh=hzQhOPNqE60R1qkBlg61xzswVm5bJ0iiYEc707dhqi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mv1HyuDQN7/VFYr5WTIlhYKaD0GiLXE27paRWhioKW2jKbOdbkyxoas1Ci4cMaNA2i7+iO9MV/GLPE4MLVvQQj9ifgIlok+vEzJCrBx6MUZ1Z4enUHZEMw5Rr8drnbzYbK4kq3Ph1HvBRmeupLC2TePSxVzxsR+EWTAyOarzlhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sO2UC6fT; arc=none smtp.client-ip=80.12.242.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1743240774; c=relaxed/simple;
+	bh=ZJjvROGS/24EpS2gWXnFgSM/as3FtoBA8H2h2u4PQl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GR2fgDfTPT2jGONY0HMfpBRxsNrWpJCRGXStNV+PAeP7RPzOMYSI40sv0dOqurtrQLYPHDqPMssfQCLSK0LICl5EcHKEJl6ERky9oJDt2eM299Wi13tX4+P2HrKnnzkqMRcjH/vkKNDUAU2HCK88ICB02VabqjDJiuQjKSnNXPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=uNkBsUA+; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sO2UC6fT"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id ySMrtFJFBkHP7ySMutS03L; Sat, 29 Mar 2025 10:20:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743240046;
-	bh=4gKjuoqKQNe9FB94aEC2wTPWEJscygTofIdbbOSUWHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=sO2UC6fTd8Dg3vSzZrTefyMvYX2q5Lac2yYQHSuSDIUvjFwmI1nqgDXRG8Sk7FE+J
-	 PG8Io1viZwSclEF+MXNuiamTY1UuynmpfqDvF21oPMRvw3dSIq25OD147J6uLcRBzF
-	 0GGz6bZJmaBu76xQ2Yy7iNTuvmFw8rJTMot2na3GCMLsUPM+WYocx6KzNkgyENganB
-	 qfx5PqwuxUWOOfOYgM/c6yAY8tricdhGQnqDNypVcehNoIRCQNXhboown4KPgdFAX/
-	 TUGRouwPeGDhWI0g4Nj0MMmdLvTua+J3FsBWd8macfz8idQWjW7t7X0l2Ih9GXvAF+
-	 58DHZ7FidJtuA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 29 Mar 2025 10:20:46 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <b1baac64-f56d-4d0f-92f1-d7bb808a151b@wanadoo.fr>
-Date: Sat, 29 Mar 2025 10:20:40 +0100
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="uNkBsUA+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743240767;
+	bh=ZJjvROGS/24EpS2gWXnFgSM/as3FtoBA8H2h2u4PQl4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uNkBsUA+j8q3ZhYDeHyV6x5VqYHT1X4tqiBFvlC2BhtOYn+sdKSRAaOuvr72ZYIse
+	 Ehl+sD6OtBpig8oKqPcNXOQvaGzhNxH4kWrtBUDwpxUaTz8M97MK1UmXbEXtLzeR26
+	 /MHJCXx/XnlbDZ9uPxymMsvmgp9JX7Ehq1i4aquc=
+Date: Sat, 29 Mar 2025 10:32:46 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-leds@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <c5e292a2-927f-472b-a805-e70003319edd@t-8ch.de>
+References: <Z-azMlPnP7nPPJrY@kspp>
+ <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+ <9a0401f3-fa85-4308-a022-c4205fd7b50f@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] fs: Supply dir_context.count as readdir buffer size
- hint
-To: Jaco Kroon <jaco@uls.co.za>
-Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, miklos@szeredi.hu, rdunlap@infradead.org,
- trapexit@spawn.link
-References: <20230727081237.18217-1-jaco@uls.co.za>
- <20250314221701.12509-1-jaco@uls.co.za>
- <20250314221701.12509-2-jaco@uls.co.za>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250314221701.12509-2-jaco@uls.co.za>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a0401f3-fa85-4308-a022-c4205fd7b50f@embeddedor.com>
 
-Hi,
+Hi!
 
-a few nitpicks below to reduce the diffpatch with unrelated changes. 
-(trainling spaces)
-
-
-Le 14/03/2025 à 23:16, Jaco Kroon a écrit :
-> This was provided by Miklos <miklos@szeredi.hu> via LKML on 2023/07/27
-> subject "Re: [PATCH] fuse: enable larger read buffers for readdir.".
+On 2025-03-28 12:51:02-0600, Gustavo A. R. Silva wrote:
+> On 28/03/25 12:31, Thomas Weißschuh wrote:
+> > On 2025-03-28 08:33:22-0600, Gustavo A. R. Silva wrote:
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > > 
+> > > Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> > > a flexible structure where the size of the flexible-array member
+> > > is known at compile-time, and refactor the rest of the code,
+> > > accordingly.
+> > > 
+> > > So, with these changes, fix the following warning:
+> > > 
+> > > drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >   drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
+> > >   1 file changed, 11 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+> > > index 275522b81ea5..6eab0474f52d 100644
+> > > --- a/drivers/leds/leds-cros_ec.c
+> > > +++ b/drivers/leds/leds-cros_ec.c
+> > > @@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+> > >   				union cros_ec_led_cmd_data *arg)
+> > >   {
+> > >   	int ret;
+> > > -	struct {
+> > > -		struct cros_ec_command msg;
+> > > -		union cros_ec_led_cmd_data data;
+> > > -	} __packed buf = {
+> > > -		.msg = {
+> > > -			.version = 1,
+> > > -			.command = EC_CMD_LED_CONTROL,
+> > > -			.insize  = sizeof(arg->resp),
+> > > -			.outsize = sizeof(arg->req),
+> > > -		},
+> > > -		.data.req = arg->req
+> > > -	};
+> > > -
+> > > -	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+> > > +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+> > > +			sizeof(union cros_ec_led_cmd_data));
+> > > +
+> > > +	msg->version = 1;
+> > > +	msg->command = EC_CMD_LED_CONTROL;
+> > > +	msg->insize  = sizeof(arg->resp);
+> > > +	msg->outsize = sizeof(arg->req);
+> > > +	*(struct ec_params_led_control *)msg->data = arg->req;
+> > 
+> > To be honest this looks really ugly and it's not at all obvious what is
 > 
-> This is thus preperation for an improved fuse readdir() patch.  The
-
-s/preperation/preparation/
-
-> description he provided:
+> We can do something like this, instead:
 > 
-> "The best strategy would be to find the optimal buffer size based on the size of
-> the userspace buffer.  Putting that info into struct dir_context doesn't sound
-> too complicated...
-> 
-> "Here's a patch.  It doesn't touch readdir.  Simply setting the fuse buffer size
-> to the userspace buffer size should work, the record sizes are similar (fuse's
-> is slightly larger than libc's, so no overflow should ever happen)."
-
-...
-
-> @@ -239,7 +240,7 @@ SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
->   
->   /*
->    * New, all-improved, singing, dancing, iBCS2-compliant getdents()
-> - * interface.
-> + * interface.
-
-Unrelated change.
-
->    */
->   struct linux_dirent {
->   	unsigned long	d_ino;
-
-...
-
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 2788df98080f..1e426e2b5999 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -308,7 +308,7 @@ struct iattr {
->    */
->   #define FILESYSTEM_MAX_STACK_DEPTH 2
->   
-> -/**
-> +/**
-
-Unrelated change.
-
->    * enum positive_aop_returns - aop return codes with specific semantics
->    *
->    * @AOP_WRITEPAGE_ACTIVATE: Informs the caller that page writeback has
-> @@ -318,7 +318,7 @@ struct iattr {
->    * 			    be a candidate for writeback again in the near
->    * 			    future.  Other callers must be careful to unlock
->    * 			    the page if they get this return.  Returned by
-> - * 			    writepage();
-> + * 			    writepage();
-
-Unrelated change.
-
->    *
->    * @AOP_TRUNCATED_PAGE: The AOP method that was handed a locked page has
->    *  			unlocked it and the page might have been truncated.
-> @@ -1151,8 +1151,8 @@ struct file *get_file_active(struct file **f);
->   
->   #define	MAX_NON_LFS	((1UL<<31) - 1)
->   
-> -/* Page cache limit. The filesystems should put that into their s_maxbytes
-> -   limits, otherwise bad things can happen in VM. */
-> +/* Page cache limit. The filesystems should put that into their s_maxbytes
-> +   limits, otherwise bad things can happen in VM. */
-
-Unrelated change.
-
->   #if BITS_PER_LONG==32
->   #define MAX_LFS_FILESIZE	((loff_t)ULONG_MAX << PAGE_SHIFT)
->   #elif BITS_PER_LONG==64
-> @@ -2073,6 +2073,13 @@ typedef bool (*filldir_t)(struct dir_context *, const char *, int, loff_t, u64,
->   struct dir_context {
->   	filldir_t actor;
->   	loff_t pos;
-> +	/*
-> +	 * Filesystems MUST NOT MODIFY count, but may use as a hint:
-> +	 * 0	    unknown
-> +	 * > 0      space in buffer (assume at least one entry)
-> +	 * INT_MAX  unlimited
-> +	 */
-> +	int count;
->   };
->   
->   /*
-> @@ -2609,7 +2616,7 @@ int sync_inode_metadata(struct inode *inode, int wait);
->   struct file_system_type {
->   	const char *name;
->   	int fs_flags;
-> -#define FS_REQUIRES_DEV		1
-> +#define FS_REQUIRES_DEV		1
-
-Unrelated change.
-
->   #define FS_BINARY_MOUNTDATA	2
->   #define FS_HAS_SUBTYPE		4
->   #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
-> @@ -3189,7 +3196,7 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos);
->   extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
->   extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
->   extern struct file * open_exec(const char *);
+> diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+> index 275522b81ea5..c7235f4e577b 100644
+> --- a/drivers/leds/leds-cros_ec.c
+> +++ b/drivers/leds/leds-cros_ec.c
+> @@ -66,24 +66,24 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+>                                 union cros_ec_led_cmd_data *arg)
+>  {
+>         int ret;
+> -       struct {
+> -               struct cros_ec_command msg;
+> -               union cros_ec_led_cmd_data data;
+> -       } __packed buf = {
+> -               .msg = {
+> -                       .version = 1,
+> -                       .command = EC_CMD_LED_CONTROL,
+> -                       .insize  = sizeof(arg->resp),
+> -                       .outsize = sizeof(arg->req),
+> -               },
+> -               .data.req = arg->req
+> -       };
 > -
+> -       ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+> +       DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+> +                       sizeof(union cros_ec_led_cmd_data));
+> +       struct ec_params_led_control *req =
+> +                               (struct ec_params_led_control *)msg->data;
+> +       struct ec_response_led_control *resp =
+> +                               (struct ec_response_led_control *)msg->data;
 > +
+> +       msg->version = 1;
+> +       msg->command = EC_CMD_LED_CONTROL;
+> +       msg->insize  = sizeof(arg->resp);
+> +       msg->outsize = sizeof(arg->req);
+> +       *req = arg->req;
+> +
+> +       ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+>         if (ret < 0)
+>                 return ret;
+> 
+> -       arg->resp = buf.data.resp;
+> +       arg->resp = *resp;
+> 
+>         return 0;
+>  }
 
-Unrelated change.
+My issue was with the general usage of DEFINE_RAW_FLEX(), the reply was
+placed badly. For somebody not knowing this construct it's not clear
+what is happening under the hood.
+It's probably fine in a regular header file with some explanation,
+but in a random driver it looks off.
 
->   /* fs/dcache.c -- generic fs support functions */
->   extern bool is_subdir(struct dentry *, struct dentry *);
->   extern bool path_is_under(const struct path *, const struct path *);
+The following is what I had in mind. Now actually tested.
 
+--- a/drivers/leds/leds-cros_ec.c
++++ b/drivers/leds/leds-cros_ec.c
+@@ -60,31 +60,18 @@ static inline struct cros_ec_led_priv *cros_ec_led_cdev_to_priv(struct led_class
+ union cros_ec_led_cmd_data {
+        struct ec_params_led_control req;
+        struct ec_response_led_control resp;
+-} __packed;
++};
+
+ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+                                union cros_ec_led_cmd_data *arg)
+ {
+        int ret;
+-       struct {
+-               struct cros_ec_command msg;
+-               union cros_ec_led_cmd_data data;
+-       } __packed buf = {
+-               .msg = {
+-                       .version = 1,
+-                       .command = EC_CMD_LED_CONTROL,
+-                       .insize  = sizeof(arg->resp),
+-                       .outsize = sizeof(arg->req),
+-               },
+-               .data.req = arg->req
+-       };
+-
+-       ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++
++       ret = cros_ec_cmd(cros_ec, 1, EC_CMD_LED_CONTROL,
++                         &arg->req, sizeof(arg->req), &arg->resp, sizeof(arg->resp));
+        if (ret < 0)
+                return ret;
+
+-       arg->resp = buf.data.resp;
+-
+        return 0;
+ }
+
+
+> 
+> as in other cases:
+> 
+> https://lore.kernel.org/linux-hardening/Z-a4meHAy-t58bcE@kspp/
+> 
+> -Gustavo
+> 
+> > going on. We have the utility function cros_ec_cmd() which would be the
+> > nicer alternative. (Without having verified that it avoids the warning).
+> > While it is slightly more expensive, I don't think it matters.
+> > And if it does, the helper can be optimized.
+> > 
+> > (The same goes for my other cros_ec drivers)
+> > 
+> > > +
+> > > +	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
+> > >   	if (ret < 0)
+> > >   		return ret;
+> > > -	arg->resp = buf.data.resp;
+> > > +	arg->resp = *(struct ec_response_led_control *)msg->data;
+> > >   	return 0;
+> > >   }
+
+
+Thomas
