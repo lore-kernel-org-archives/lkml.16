@@ -1,301 +1,122 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AF73FE4;
-	Sat, 29 Mar 2025 21:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36E01B393D
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 21:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743282982; cv=none; b=uFwEFO4ECXfqHI3oUc/br++A37Gqb1hKW54RVeN440lLeUUsoxExc48XQEJQzgjsXSAv3qy0/OzP3DU/PMH8tcu/YqiJQ8C6/Ts4nwft3s9a+vFJC05sh3MzxASuBd0pjf9uyC0U/diUcps3yh2idiXv/wvQrFuJZMTxBU7JYqA=
+	t=1743285029; cv=none; b=PjWp8STBvNWUt6Er4lGcf+//snPjjpu0ZJYc5LDiICL82UnaoYzA1tZ+73/6wt4kl4p+6oB9c5Ei1p/Z7wCDGAxiSmbAnFiio3rtDRpke8dAtMMPlLZdibRXxPvCFfbSIcQLgcEMQlt2piWOsCC4It9Hg+ndq1KA4OCX9VHp/kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743282982; c=relaxed/simple;
-	bh=L6DSk1OIoezUV+5sSlLI6VHPLEJjZ4rUNN2hLtEo0hI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cm+TEGFyDcZ0Z5z/U5SFdf0BAjWFJaJXikH/SPYxZQUlIT3V5gEWVvyOoqPTZ1FjcTXmgxkFyx7ZbEivWTTilW0WXWTZhoZ077r4NThDNw4vUaAhdvC8rFxXHlZQsSMF5xgp90wmeERJweV+Hv7NiRbvVe+RgZpMUn7JJ1+wQNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=dwKw+b6q; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743285029; c=relaxed/simple;
+	bh=Bn65r9Eeocxlq0677inZdcI9j1hxm1RSNNsHDFat/rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=CYOL7UoHsNewoiqQ8r5/pl6D3csXgT8rixpW1YNaCiceE7guDz7oS/BwxL4TMJBRwJHXcJdkZJw9ozzcxhzNeWGYZ/1S5MX6kQwvLSXRo9YtIHGriHKZK+vrIdF5AVbiP6A7SsbN1pbhgbortPx+OHVykx03C8Ef/pY/dvNkRZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jMiq99W8; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="dwKw+b6q"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A819E10290279;
-	Sat, 29 Mar 2025 22:16:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743282971; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=E+Q42HuBJVYjxIr4gMUzVEJL9DLxf8H/aqvsj5v31NM=;
-	b=dwKw+b6qh5jtAWhPOdTJyhdDYqJyD+e/0NF81irefap/jm1/yZ3Hldf8JrB/Lh+lwrSfAo
-	EPZTRXjZfC+Wt9Kazgrh+3CIIclSLyiDdAbtAyr4HUFdNEXHpoyGW+0TaX0zXMXzz58EcF
-	77yk0yPRlhkY5S/CRFESl5Jwq3388FDeHBosoQugGXeaSZYKAJCuA3kvCe5zTr4gXVLytG
-	CiJr/3Vp5MEXXwPA4UiRXl6N7z5wY+GWug8naGXqOZN1N9Yh52GtPJ+6rJZp71/2+N5FPV
-	Y462Zn1yuWF9PQDEst1GxzMGtb1ok0Fdg0EXvPYOE9KdEW1hP8zGQE+F8hojOw==
-Date: Sat, 29 Mar 2025 22:16:03 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <20250329221603.1567e82c@wsk>
-In-Reply-To: <20250329170936.GA2246988-robh@kernel.org>
-References: <20250328133544.4149716-1-lukma@denx.de>
-	<20250328133544.4149716-2-lukma@denx.de>
-	<20250329170936.GA2246988-robh@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMiq99W8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743285028; x=1774821028;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Bn65r9Eeocxlq0677inZdcI9j1hxm1RSNNsHDFat/rc=;
+  b=jMiq99W8Yae0/y0z2GSbIetGIbi5MQxry0rN4sq/f98cWQAXL8hZCoQA
+   oPcBemhiKQ9F2ojfZh3nK8+tnMM8y4wDwx4ShJ390z8CeXuMUDbw/rGAa
+   N59CxqhkDHtGstRclRkhTkQZJKdXuwDQTeT0gtSY1PZppWJGjZhCeEe91
+   Z2tgFRntjbyMDCdx3fuUbSFFgjsTQBv5BJcDRQNXxPlSeymBeG3X+UE9V
+   4+YG5VTjsDZLfWZaxN1zyacNymp3tf04F526srWAod5shtHtS7vWoKhou
+   AHfGJ96ZJWUr8/UO4g/WsPSKHCrzfgXVByea/ZQsdqwhZ9iTin4ocXV3Y
+   Q==;
+X-CSE-ConnectionGUID: s9S7Z1PZQmia+9vub9QLsw==
+X-CSE-MsgGUID: hEjCtx/4SpO82lIQc2rBHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="44512467"
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="44512467"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 14:50:27 -0700
+X-CSE-ConnectionGUID: 9MsdH1MbSlWd3Wa5k8KJJg==
+X-CSE-MsgGUID: WgD6vfkpT8CwmJDgRMo5UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="125508563"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 29 Mar 2025 14:50:26 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tye4N-0008Ng-2B;
+	Sat, 29 Mar 2025 21:50:23 +0000
+Date: Sun, 30 Mar 2025 05:49:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>
+Subject: drivers/mmc/host/renesas_sdhi_core.c:973:undefined reference to
+ `rdev_get_drvdata'
+Message-ID: <202503300554.KEiONTXz-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=NAIwEwO9lbdwvsUnTeQSey";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---Sig_/=NAIwEwO9lbdwvsUnTeQSey
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   883ab4e47c2b514696922243e1d84b7ac36f9d3c
+commit: fae80a99dc0320be854aa789cbe7ed0e1e574c61 mmc: renesas_sdhi: Add support for RZ/G3E SoC
+date:   2 weeks ago
+config: parisc-randconfig-002-20250330 (https://download.01.org/0day-ci/archive/20250330/202503300554.KEiONTXz-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250330/202503300554.KEiONTXz-lkp@intel.com/reproduce)
 
-Hi Rob,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503300554.KEiONTXz-lkp@intel.com/
 
-> On Fri, Mar 28, 2025 at 02:35:41PM +0100, Lukasz Majewski wrote:
-> > This patch provides description of the MTIP L2 switch available in
-> > some NXP's SOCs - e.g. imx287.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> > Changes for v2:
-> > - Rename the file to match exactly the compatible
-> >   (nxp,imx287-mtip-switch)
-> > ---
-> >  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 165
-> > ++++++++++++++++++ 1 file changed, 165 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> >=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > new file mode 100644 index 000000000000..a3e0fe7783ec --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> > @@ -0,0 +1,165 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
-> > BSD-2-Clause) +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> > +
-> > +maintainers:
-> > +  - Lukasz Majewski <lukma@denx.de>
-> > +
-> > +description:
-> > +  The 2-port switch ethernet subsystem provides ethernet packet
-> > (L2)
-> > +  communication and can be configured as an ethernet switch. It
-> > provides the
-> > +  reduced media independent interface (RMII), the management data
-> > input
-> > +  output (MDIO) for physical layer device (PHY) management.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: nxp,imx287-mtip--switch
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      The physical base address and size of the MTIP L2 SW module
-> > IO range +
-> > +  phy-supply:
-> > +    description:
-> > +      Regulator that powers Ethernet PHYs.
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Register accessing clock
-> > +      - description: Bus access clock
-> > +      - description: Output clock for external device - e.g. PHY
-> > source clock
-> > +      - description: IEEE1588 timer clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: ipg
-> > +      - const: ahb
-> > +      - const: enet_out
-> > +      - const: ptp
-> > +
-> > +  interrupts:
-> > +    items:
-> > +      - description: Switch interrupt
-> > +      - description: ENET0 interrupt
-> > +      - description: ENET1 interrupt
-> > +
-> > +  pinctrl-names: true
-> > +
-> > +  ethernet-ports:
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +      '#address-cells':
-> > +        const: 1
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      "^port@[0-9]+$":
-> > +        type: object
-> > +        description: MTIP L2 switch external ports
-> > +
-> > +        $ref: ethernet-controller.yaml#
-> > +        unevaluatedProperties: false
-> > +
-> > +        properties:
-> > +          reg:
-> > +            items:
-> > +              - enum: [1, 2]
-> > +            description: MTIP L2 switch port number
-> > +
-> > +          label:
-> > +            description: Label associated with this port
-> > +
-> > +        required:
-> > +          - reg
-> > +          - label
-> > +          - phy-mode
-> > +          - phy-handle
-> > +
-> > +  mdio:
-> > +    type: object
-> > +    $ref: mdio.yaml#
-> > +    unevaluatedProperties: false
-> > +    description:
-> > +      Specifies the mdio bus in the switch, used as a container
-> > for phy nodes. +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - mdio
-> > +  - ethernet-ports
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include<dt-bindings/interrupt-controller/irq.h>
-> > +    switch@800f0000 {
-> > +        compatible =3D "nxp,imx287-mtip-switch";
-> > +        reg =3D <0x800f0000 0x20000>;
-> > +        pinctrl-names =3D "default";
-> > +        pinctrl-0 =3D <&mac0_pins_a>, <&mac1_pins_a>;
-> > +        phy-supply =3D <&reg_fec_3v3>;
-> > +        interrupts =3D <100>, <101>, <102>;
-> > +        clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> > +        clock-names =3D "ipg", "ahb", "enet_out", "ptp";
-> > +        status =3D "okay";
-> > +
-> > +        ethernet-ports {
-> > +                #address-cells =3D <1>;
-> > +                #size-cells =3D <0>;
-> > +
-> > +                mtip_port1: port@1 {
-> > +                        reg =3D <1>;
-> > +                        label =3D "lan0";
-> > +                        local-mac-address =3D [ 00 00 00 00 00 00 ];
-> > +                        phy-mode =3D "rmii";
-> > +                        phy-handle =3D <&ethphy0>;
-> > +                };
-> > +
-> > +                mtip_port2: port@2 {
-> > +                        reg =3D <2>;
-> > +                        label =3D "lan1";
-> > +                        local-mac-address =3D [ 00 00 00 00 00 00 ];
-> > +                        phy-mode =3D "rmii";
-> > +                        phy-handle =3D <&ethphy1>;
-> > +                };
-> > +        };
-> > +
-> > +        mdio_sw: mdio {
-> > +                #address-cells =3D <1>;
-> > +                #size-cells =3D <0>;
-> > +
-> > +                reset-gpios =3D <&gpio2 13 0>;
-> > +                reset-delay-us =3D <25000>;
-> > +                reset-post-delay-us =3D <10000>;
-> > +
-> > +                ethphy0: ethernet-phy@0 {
-> > +                        reg =3D <0>;
-> > +                        smsc,disable-energy-detect; =20
->=20
-> With a custom property, you should have a specific compatible.
+All errors (new ones prefixed by >>):
 
-I could add:
-compatible =3D "ethernet-phy-id0007.c0f0","ethernet-phy-ieee802.3-c22";
-
-but it would not make things either clearer nor simpler.
-
-I will just remove this property.
-
->=20
-> > +                        /* Both PHYs (i.e. 0,1) have the same,
-> > single GPIO, */
-> > +                        /* line to handle both, their interrupts
-> > (AND'ed) */
-> > +                        interrupt-parent =3D <&gpio4>;
-> > +                        interrupts =3D <13 IRQ_TYPE_EDGE_FALLING>; =20
->=20
-> The error report is because the examples have to guess the number of=20
-> provider interrupt cells and only 1 guess is supported. It guessed 1=20
-> from above.
->=20
-> In any case, unless the phys are built-in and fixed, they are out of=20
-> scope of this binding. So perhaps drop the interrupts and smsc
-> property.
-
-Ok, I will remove them.
-
->=20
-> Rob
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_set_voltage':
+>> drivers/mmc/host/renesas_sdhi_core.c:973:(.text+0x1c40): undefined reference to `rdev_get_drvdata'
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_enable':
+   drivers/mmc/host/renesas_sdhi_core.c:939:(.text+0x1cdc): undefined reference to `rdev_get_drvdata'
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_disable':
+   drivers/mmc/host/renesas_sdhi_core.c:927:(.text+0x1d38): undefined reference to `rdev_get_drvdata'
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_get_voltage':
+   drivers/mmc/host/renesas_sdhi_core.c:961:(.text+0x1d90): undefined reference to `rdev_get_drvdata'
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_regulator_is_enabled':
+   drivers/mmc/host/renesas_sdhi_core.c:951:(.text+0x1de0): undefined reference to `rdev_get_drvdata'
+   hppa-linux-ld: drivers/mmc/host/renesas_sdhi_core.o: in function `renesas_sdhi_probe':
+>> drivers/mmc/host/renesas_sdhi_core.c:1177:(.text+0x24a0): undefined reference to `devm_regulator_register'
 
 
+vim +973 drivers/mmc/host/renesas_sdhi_core.c
 
+   968	
+   969	static int renesas_sdhi_regulator_set_voltage(struct regulator_dev *rdev,
+   970						      int min_uV, int max_uV,
+   971						      unsigned int *selector)
+   972	{
+ > 973		struct tmio_mmc_host *host = rdev_get_drvdata(rdev);
+   974		u32 sd_status;
+   975	
+   976		sd_status = sd_ctrl_read32(host, CTL_SD_STATUS);
+   977		if (min_uV >= 1700000 && max_uV <= 1950000) {
+   978			sd_status |= SD_STATUS_IOVS;
+   979			*selector = 1;
+   980		} else {
+   981			sd_status &= ~SD_STATUS_IOVS;
+   982			*selector = 0;
+   983		}
+   984		sd_ctrl_write32(host, CTL_SD_STATUS, sd_status);
+   985	
+   986		return 0;
+   987	}
+   988	
 
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/=NAIwEwO9lbdwvsUnTeQSey
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfoYxQACgkQAR8vZIA0
-zr0/EwgAx/s1HQ3OV9LuT1M2dDnFpa7Ck55tkTu6Id5VMV6ygsaFR4D7/UpS++xQ
-g+YhbzhnrVE1ri5GYyfwYhCCT8XFesFyhbpqJydqNbAGHNnY7if9if3lxni0/Pz2
-wNeZOcdAGmem3uhT1yK7pWxHgIIYcCJ0Roq5iu9Urdjr0VpuAhhlXOexcKqfyzXk
-MMnBPBo3XGqk6DUh3ncY02wE6hDh8y5DZZRk5PgzvyCdUVvnX8ekpnklIk3VKKVh
-te7QIf3ECkgKqzQYFUq4mGnOzcH7ODz0kf0rt/DCdKDyIJXqqMzM+1cT7TZLcTE5
-TU5jL4DS18I0ufbg1ZbAb2xrlbk1WQ==
-=u478
------END PGP SIGNATURE-----
-
---Sig_/=NAIwEwO9lbdwvsUnTeQSey--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
