@@ -1,104 +1,99 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71718F4A
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914F801;
+	Sat, 29 Mar 2025 01:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743211620; cv=none; b=qsxnbmDJBPh6SlR3xu1N2+jJUNWeE6dk5w51FNo9DZDhn/0LreNumeK/Pe7lVLz4xgfYhGrrWVCu+YwQ+hA8Ojp13C71+hpT8I3UlnTFb49D1Q2Vxiw8cH6LYlrCNR8qtLimCDzpkHhUz9bIgDdhCFjMKruvh2iKOLv0sMj0jTg=
+	t=1743212223; cv=none; b=LsNr3MW9V1Nd/eU8LoFCuX950dz+iRLB5jnE7HBwlq9nq6kixLAitOVmAvN94xA+Ey7uK+9UkVDqGQPJZRjMLjP3YT3v7T9hicBlQktJwocNql5XwvKdGD6CBjgq4ev7lC880/IzdOoCMMTWg/Exm6jQmCE1CmcUfrFiIepY2iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743211620; c=relaxed/simple;
-	bh=UeU+dNWfV5v3e10I+uyNNP2RIX8IeSbfeC0wbfVG2UM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=JCXTFZG9hSvbLTwUB3GbcUy1siEWS0J2IC0aMSd+qlGQSy1sUQoqoSSqmkGvPe1t8VewDU2v8A34Ym1wa2HwKCYr+nZFl8A174H506r44SlWQ6CF9/6QdTSzKESFJBKgddsGh2uTa1cDuCX48zcVmn3oSPgtiMfWAsFbAJdLZEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K+lWGTyG; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743212223; c=relaxed/simple;
+	bh=o5gMyn/mlm4eQI/Dl0X9AbYok0h90x/eTaw9nzXxVOE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=jBy9MimD4Shw/othgHQKTGNFeFn0GdaTOAZOWQHlhMPO6HjSuyHH/318YhCn/3T8YPJ6CK4+tkdWKUW/kZ0I2ISbJFQdCsA+uX45539qkHpYgcX3LSv9O5gC/4kuCB6XzmTUrouxVMZL6223eD9uPck8StrDAtheicRJKt15+hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxBdoQmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K+lWGTyG"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so18547945e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743211616; x=1743816416; darn=vger.kernel.org;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7Xd7RMGwL+Gav8KAb2ER71A9xVEKtaQiZB3bM2GUMrU=;
-        b=K+lWGTyGyIXG7EhqrSqtIVAJLdVEc0wRTgqLurh2rKElSDWfM3kHoFXMoOs7O+6JcS
-         gJwogy3twL53S1pp0ORdg/kTGumDIkRHoisTibWfgsIIPgIfReF0C21h9w09a+abX9Tj
-         mcAzPCTOnTSHBL8C3RJLnG3Fq4DaSqW8n6/vFUXoxeFSmilkU9oH+aIuHVKh4daQyMl3
-         bTqs7colwiuP5IPf9bP/kNuTa7jcSe0U694O5ioTA35XImhxsLJuBfANIeTXNdMnVy2a
-         8aIQjwmKd58wNhJ/pUN8iKCd053i5hgxJg/dXXOiRO2yFSzbcTQI8ONqUDppQ9TTjmpY
-         bHaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743211616; x=1743816416;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Xd7RMGwL+Gav8KAb2ER71A9xVEKtaQiZB3bM2GUMrU=;
-        b=cu8buvGbmysUAvdvzLAwprmG2SZgUExmPo0yU4uyLlXN2nsTunRrTFGqA9Orw1uVM9
-         kKtOe0nLicykJcFGZ4q+fRONCcqbMIK+430bMlW4wgxoa5BvyZE1+h5+Buq9Hsq7BJ08
-         mfIhQCX5OVhK18yGTBbqg5hLRKksACeeXrLnEh6qYg2mrx26WPTYQAWckx/Y0QlGt1PF
-         GHe9txMMJuuZAkqXhcAWsHO7c1fBtmtFGLpRPC99prwNgWY58xkk9GEIMamrlZzfGbXY
-         23p4CE2YbUh3Yrcr7k0cXbSX6z9GXyo48Fbw6ulFDhhZCj7supq5H2baQh3lIGk8h2Qu
-         x60Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW632lSZhdjlESns7gmDs0ey0DEMoMm0wioehc80BrUE/A4ZXvIp33c9KizFWRiBXQ7UI1VBFDmzU98Y8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0aUzrlqk3sabpb2bC+ftTKbdOY26E4TiMkv5R+AVN5Wg/0h9U
-	4QWA0w55gVgQiV9FW2eflMlRjvYzBpHUgMQ66GuL3f9bVWk0CvpYjrBqp8KJPhM=
-X-Gm-Gg: ASbGncsb7Tf3kMK3Hqc43DMqZDzFf76VnY7Wg3BO8XXcboAU5Io461KpX+lpv/Lb/yA
-	N9uqYlwOdscNPN4QliCSABLbV4/a0b8TKJs3UbUydMU5O5EUJpGncSDaFjLeCt17LF0ltN3JA3s
-	SLApXjWzg6v2+B6i/GQlk7gJwEFXbzb0LfS9b5CZ6Ve0QYXm7f/652Ox1Mpf7x3PDY9sv0N/3It
-	b3J3m5cLC+bMPwTi+N5F0b4WDmv3mXVloul7tkBWZGxRmHEH2+Gg9B3DdrfxYHoqgTuV5DGi7Kq
-	lomozg8Py9o6KNWcke3BcJ4Nm3xA6VZgcFt7JxVZGdUCyA1pL2/x4tG/msYUq98rpNl1iFtq1w9
-	hRn4FeL5cnQ==
-X-Google-Smtp-Source: AGHT+IEwBNuvUbAMhxVWmNvRXOcvqx3XImmXmPW/lSoPmuRLIWXWpEkqe1jIw7kqySc1oRVntaGqZQ==
-X-Received: by 2002:a05:6000:1787:b0:391:2c0c:1270 with SMTP id ffacd0b85a97d-39c120cca84mr847956f8f.1.1743211616163;
-        Fri, 28 Mar 2025 18:26:56 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4239sm4264655f8f.94.2025.03.28.18.26.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 18:26:55 -0700 (PDT)
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Sat, 29 Mar 2025 01:26:51 +0000
-Subject: [PATCH 2/2] media: MAINTAINERS: Add myself to iris Reviewers
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxBdoQmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6478C4CEE4;
+	Sat, 29 Mar 2025 01:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743212223;
+	bh=o5gMyn/mlm4eQI/Dl0X9AbYok0h90x/eTaw9nzXxVOE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=NxBdoQmZGTDH1AlPECrbDPD9Q2HdKGVHCD+APkAyVEB0q3uQbazXzYky6Uk/oQhz/
+	 pdOGfSrTaKOgAc4VcVRZfAEeiI1qeZe5rcQqtMxARHt39JOCgb5oXdNc/2+oIqllVj
+	 kPhKxEbmrxXvFX44pgNw4bTya/KBOWJsy0KjRBDxKq1Dz1p8lF3wAnWKakTdKgv4h0
+	 WsD3vYjVelPUch+0ShOmeqVCeu6YY4m3tH0m3xXswnSorSpmpTv4rSzOOME1zfSw61
+	 mcWfEv4Lhqbm3mkPpViVSSVrKEeRZWdoBKOdvvFdV+du49Rm3Q6ucakKlxEwxFgCHs
+	 0O//k268HPjvw==
+Date: Fri, 28 Mar 2025 20:37:02 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-2-0ec1007fde3c@linaro.org>
-References: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
-In-Reply-To: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
-To: stanimir.k.varbanov@gmail.com, hverkuil@xs4all.nl, 
- quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, mchehab@kernel.org, 
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.14.2
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: davem@davemloft.net, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Richard Cochran <richardcochran@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, netdev@vger.kernel.org, 
+ Jakub Kicinski <kuba@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Fabio Estevam <festevam@gmail.com>, 
+ Eric Dumazet <edumazet@google.com>, linux-arm-kernel@lists.infradead.org, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Lukasz Majewski <lukma@denx.de>
+In-Reply-To: <20250328133544.4149716-2-lukma@denx.de>
+References: <20250328133544.4149716-1-lukma@denx.de>
+ <20250328133544.4149716-2-lukma@denx.de>
+Message-Id: <174321222112.2172775.16689010014876150131.robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch
+ description
 
-There's some crossover between venus and iris, I'd like to help out with
-the reviews for iris to ensure we keep upstream chugging along.
 
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, 28 Mar 2025 14:35:41 +0100, Lukasz Majewski wrote:
+> This patch provides description of the MTIP L2 switch available in some
+> NXP's SOCs - e.g. imx287.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v2:
+> - Rename the file to match exactly the compatible
+>   (nxp,imx287-mtip-switch)
+> ---
+>  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 165 ++++++++++++++++++
+>  1 file changed, 165 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5ccddd2030efd96324e53fcee8048120990a85d5..89fd10c690bbb395fe22f7a6440fb98c9a25c659 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19529,6 +19529,7 @@ QUALCOMM IRIS VIDEO ACCELERATOR DRIVER
- M:	Vikash Garodia <quic_vgarodia@quicinc.com>
- M:	Dikshita Agarwal <quic_dikshita@quicinc.com>
- R:	Abhinav Kumar <quic_abhinavk@quicinc.com>
-+R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
- L:	linux-media@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-2.49.0
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: /example-0/switch@800f0000: failed to match any schema with compatible: ['nxp,imx287-mtip-switch']
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: ethernet-phy@0: interrupts: [[13], [2]] is too long
+	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.example.dtb: ethernet-phy@1: interrupts: [[13], [2]] is too long
+	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250328133544.4149716-2-lukma@denx.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
