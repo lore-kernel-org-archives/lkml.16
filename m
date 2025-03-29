@@ -1,441 +1,258 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0A2DDBC
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBE23D3B3
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743228125; cv=none; b=CH7yzTbXU1AzNjOU8WAVCv4MxPxGAAH7oLA8p4LoI7/mTpsJlUDXLUtYHHvK05oTjRh9YY9fxHB7C6vRog4pM4m63cd06XAgL/W8UmFKlhaFiL4JYYWo7ADs9/kio89f48/yaKtwbUNQGY5ykPvbgDf939naoLP1mXFVHGsscSY=
+	t=1743228135; cv=none; b=DmxGpf/cnj64IymBpfQs+VXhhw5T4VnDKG3YaMKNHuSUkmMwKFMPwWmYTSLLvvLUxxtcITwplEp0YCM/FZsMrYYLkXcqKjA2ePXlrOIId18JrIc1M3SLp2h7p+fvvQGj02Oqh/38YWgmVBMDupHGgYa7OVxUzu4SmOYozOHzxjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743228125; c=relaxed/simple;
-	bh=WewjRQuuqeSaUYdRBG6umN5OIkygCeOa66ei/ISGMjQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lOll/RHFyJPFDh/kb30kEupxN47gOuRd8V7gC0WoCJYWOzcgPNUpxPCbliDwVmobr3HVAgS9jP9ziLqgA4sNW61iaplAyGl/Rss/5I1Ve3oxl8nQ8DZvNOJ/P5tvR0vK5NcP15bqvd13sO+q9SMrDf7NoEUE8zT6NfbyDbKdg6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d44b221f0dso53056045ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:02:03 -0700 (PDT)
+	s=arc-20240116; t=1743228135; c=relaxed/simple;
+	bh=wNxhe+rWQoGRC6duS7Ckowlo1wnA1Bcwre/uCDy9EKM=;
+	h=From:To:cc:Subject:In-reply-to:References:Mime-Version:
+	 Content-Type:Date:Message-ID; b=oHN60qSDCMtG41BslwoyaGvHbxO4gn55/9FTRlaljyLLfljjavpd+mIsgjWp1hCeBliH4MVcgBH9gG8Ymtb2UG4rdGmDZsncR5d7RaJlX09QIc5jrJSswoLeUAPIzHxbxmsxLQXR9FdyM25fVhocgG0AZTObJkNideMLXW1bu/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu; spf=pass smtp.mailfrom=vt.edu; dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b=Vms5GMt4; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vt.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b="Vms5GMt4"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5e1b40f68so331943785a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vt-edu.20230601.gappssmtp.com; s=20230601; t=1743228132; x=1743832932; darn=vger.kernel.org;
+        h=message-id:date:mime-version:references:in-reply-to:subject:cc:to
+         :from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=yd9YLVPtD8axfm0LhvKZP7RniIiBIW1ndqouPPCDs3M=;
+        b=Vms5GMt4+ykdKRVA6jAZ14RN6VGf8oNtnFvCvUrBjxLyDfm/SxZAFUYsYGHS/6qN7c
+         QtVnn32o/0tLw+m1JESv4DqPQP+ozuQvZz4AebxLwyY600Ya6KAVuD7jJtC6a8PHjXfU
+         6sGPm3NLH9OZcmJrIBnvcee08ySSdFz1A/SFq2RBw4yYphH1lMrJOdq8wydlOEdGUrmE
+         lnGEb9p7jt3cXFJ8o5d7QQqYZ3+ExwVOE2u5+SYjbhpDbNloBL8iHEQMjxW37XTwmKnz
+         uq6yhox+hky3S7cNnkTO9vT36oD2zg6MA0Q92oPuYszPAFFsfWPDeM/qN8tN/HR2b14S
+         4TXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743228123; x=1743832923;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DAU4a58Edhjn4KL8IBosSUXyKDAUcj9JwizkZercdbI=;
-        b=pzcNaCchElVqT47jcpjhvkpPPJI85kD+CDgeWacQbi9sbtatt7gN3ApZUBcKRpVAOD
-         tchc5gj4OMhViI5YWTZoZWFvVl7fMuVxZiUY0UqYBPoEC9WVjgrAD1JIg0/Yvi4lHegM
-         MF8N6YZW/QcKjvwSUCIzVq0pIgXI0FCbLCrRF65/jXJKnwzScVqzWQJl2TWlMo4NjliH
-         ust5MmQU72I9Lw9yc6ituuqOYFyCllzSXWG51tki/BK0wephgaxge2BJ6bHLRcYOoDZs
-         f0MUp7CdtS8pFXQUrohEOR/OHLNSAKais9VMV9YvruAZVxs19VG7rV/FID9YYkFTZWnw
-         3V4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX8N6Tztx67A13nwu7VJ8mJoHar+kYB4sJE3c7W5u7YXJOAsVvID2p4EoyGgtb08i5GCXMLiCmWlFJdqP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4lvSXrbrtCxIIEWWYm0bc5uPohBD7ym+fWkP80IiGEJOFVl6Z
-	ycsNMTiqxVEyOWkijtx6ST1yoAfu5h8++63QnVFXbxznNflxDpzNvgA636WecCoVy0EOlvS9IYW
-	c+KFGv4/1UaHYUO7Nv7Ua0sPPDnCrE4Qvil4HrxVOVCHsLK5g9ETL9cM=
-X-Google-Smtp-Source: AGHT+IFo/wKEwkNI23/SIqWNmdRzjWS4otGFaO9akRI4qM3uLCdzDZ3KIXCQalXZ/BGNBz+rdVAbrZPPUgo7bYNjgj5vcDkIbXtk
+        d=1e100.net; s=20230601; t=1743228132; x=1743832932;
+        h=message-id:date:mime-version:references:in-reply-to:subject:cc:to
+         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yd9YLVPtD8axfm0LhvKZP7RniIiBIW1ndqouPPCDs3M=;
+        b=BKcCGRCW9Kp3aaajOdZOX+BBSaxQ3j9JefMnnmFn50Z819fT8j8Ha7HgC7lRnVhvVj
+         09ZQkD3sGLduX6v6XOWkLbsWh3u01Up7NYUGOiI97H8cPIZOw/VkzDqnmBR/dD6WyTpt
+         2evEOCP74wGjwSdRg7LYCU6OINnp8n7RDzcHsiOru5wEktaSSngEHsWQxN9a+cHfdHE3
+         jMOqIflJMkqfWR5Z3mn1OiHIX9MPmo6xPHWL+8L8IUw0GcXUQ+QACPkBcK1Dx+NPiMVW
+         vGWbKxV+5HKlIWLIRR0IiLiRqXzMth9s3jJWXb3fnB1gs04HIkunPSSX3gVulgniAdK8
+         plBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXB1hqqR4ppsuKJvgtqLTItKh51wEER+UT9djg9byeMEA5AQtQQXZMFHeq2Buolo38ijlcdAL3P5JdXZ6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMA9TTaADAY/3tCZyyEWHnsNagNJfJQdshjWc0TNo4SSamgFkz
+	pziIMrbmqrwAgmAvkbzCdOb/DqPSmSm55daxd+iucDwYsJjoBoqECoWCY20bu8dP7iSr8prLltJ
+	b
+X-Gm-Gg: ASbGncuC9U3e1jyzRjWN1bwuCMKxBKdcZPdnjTKCrOPwt6M+NkbWvvnoC8+NmmYYZ/G
+	alW89MsmpQK/u5s7XnXG0vcYtOLU43+u0WEI5dCtc3YvFZ4BMgUGLiEpPxz7pMpWPBehd4xoaFp
+	o5BqDOebZh/ygcKUZIzsg9eAeuVE2ooWPPJ8ijBvtC7OHUyg+uXeJuiS6hwCCMnOYpPWmDDWVfw
+	UdQOypJoRSBSvrXgI3CidgqCNvdMus+/qimjUEX8m0YwlXVptgISPqSvmdW+3MVb4sHCGWvaM4Y
+	WzrbUNlpfmvdn0+Lfou5JBUAEnydkvc9Zkt/Xvn2
+X-Google-Smtp-Source: AGHT+IG2DCY7Ldp9rOmylZCs5R++q3u4fta77kE4MAFYfU7PoL+jxbKFr5Jewn89iztu0BLDtdphoQ==
+X-Received: by 2002:a05:620a:4607:b0:7c5:ae20:e832 with SMTP id af79cd13be357-7c6862e740amr204567285a.11.1743228132172;
+        Fri, 28 Mar 2025 23:02:12 -0700 (PDT)
+Received: from turing-police ([2601:5cf:407f:b7f2::c36])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f765ada7sm214508085a.9.2025.03.28.23.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 23:02:11 -0700 (PDT)
+Sender: Valdis Kletnieks <valdis@vt.edu>
+From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.10.0-pre 07/05/2021 with nmh-1.8+dev
+To: Ming Lei <ming.lei@redhat.com>
+cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+    Jens Axboe <axboe@kernel.dk>, linux-next@vger.kernel.org,
+    linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: next-20250327 - lockdep whine and USB issues at boot
+In-reply-to: <Z-dVr6cIyrOID0J0@fedora>
+References: <8775.1743185453@turing-police>
+ <Z-dVr6cIyrOID0J0@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:17ca:b0:3d0:10a6:99aa with SMTP id
- e9e14a558f8ab-3d5e08e960dmr19866605ab.4.1743228122836; Fri, 28 Mar 2025
- 23:02:02 -0700 (PDT)
-Date: Fri, 28 Mar 2025 23:02:02 -0700
-In-Reply-To: <tencent_75D09648E85EEECECE287BF26DD42D316F0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e78cda.050a0220.1547ec.001a.GAE@google.com>
-Subject: Re: [syzbot] [afs?] [ntfs3?] BUG: sleeping function called from
- invalid context in ovl_cache_entry_new
-From: syzbot <syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date: Sat, 29 Mar 2025 02:02:10 -0400
+Message-ID: <7755.1743228130@turing-police>
 
-Hello,
+On Sat, 29 Mar 2025 10:06:39 +0800, Ming Lei said:
+> On Fri, Mar 28, 2025 at 02:10:53PM -0400, Valdis Klētnieks wrote:
+> > Saw this during boot on a Dell Inspiron 5559 laptop.  
+> > 
+> > In addition, the external USB ports all gave up, rendering a USB mouse and a
+> > USB external drive totally dead in the water.  May or may not be related, I didn't
+> > dig too far into it.
+>
+> It shouldn't be related to the warning.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+> For this lockdep warning, feel free to try patch in the following link:
+>
+> https://lore.kernel.org/linux-block/Z-dUCLvf06SfTOHy@fedora/
 
- T5845] netdevsim netdevsim0 netdevsim0: set [1, 0] type 2 family 0 port 60=
-81 - 0
-[   67.873741][ T5845] netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   67.882828][ T5845] netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   67.892838][ T5845] netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   68.022968][  T739] netdevsim netdevsim0 netdevsim3 (unregistering): uns=
-et [1, 0] type 2 family 0 port 6081 - 0
-[   68.099904][  T739] netdevsim netdevsim0 netdevsim2 (unregistering): uns=
-et [1, 0] type 2 family 0 port 6081 - 0
-[   68.169446][  T739] netdevsim netdevsim0 netdevsim1 (unregistering): uns=
-et [1, 0] type 2 family 0 port 6081 - 0
-[   68.241769][  T739] netdevsim netdevsim0 netdevsim0 (unregistering): uns=
-et [1, 0] type 2 family 0 port 6081 - 0
-[   69.209247][ T5910] Bluetooth: hci0: unexpected cc 0x0c03 length: 249 > =
-1
-[   69.221468][ T5910] Bluetooth: hci0: unexpected cc 0x1003 length: 249 > =
-9
-[   69.230175][ T5910] Bluetooth: hci0: unexpected cc 0x1001 length: 249 > =
-9
-[   69.239192][ T5910] Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > =
-4
-[   69.246743][ T5910] Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > =
-2
-[   69.725106][   T13] wlan0: Created IBSS using preconfigured BSSID 50:50:=
-50:50:50:50
-[   69.741653][   T13] wlan0: Creating new IBSS network, BSSID 50:50:50:50:=
-50:50
-[   69.766123][ T1164] wlan1: Created IBSS using preconfigured BSSID 50:50:=
-50:50:50:50
-[   69.774200][ T1164] wlan1: Creating new IBSS network, BSSID 50:50:50:50:=
-50:50
-2025/03/29 06:01:08 executed programs: 0
-[   70.225341][ T5910] Bluetooth: hci0: unexpected cc 0x0c03 length: 249 > =
-1
-[   70.234939][ T5910] Bluetooth: hci0: unexpected cc 0x1003 length: 249 > =
-9
-[   70.243559][ T5910] Bluetooth: hci0: unexpected cc 0x1001 length: 249 > =
-9
-[   70.252434][ T5910] Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > =
-4
-[   70.260174][ T5910] Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > =
-2
-[   70.347265][ T5933] chnl_net:caif_netlink_parms(): no params data found
-[   70.389979][ T5933] bridge0: port 1(bridge_slave_0) entered blocking sta=
-te
-[   70.397116][ T5933] bridge0: port 1(bridge_slave_0) entered disabled sta=
-te
-[   70.404567][ T5933] bridge_slave_0: entered allmulticast mode
-[   70.411635][ T5933] bridge_slave_0: entered promiscuous mode
-[   70.419405][ T5933] bridge0: port 2(bridge_slave_1) entered blocking sta=
-te
-[   70.426553][ T5933] bridge0: port 2(bridge_slave_1) entered disabled sta=
-te
-[   70.434133][ T5933] bridge_slave_1: entered allmulticast mode
-[   70.440770][ T5933] bridge_slave_1: entered promiscuous mode
-[   70.459538][ T5933] bond0: (slave bond_slave_0): Enslaving as an active =
-interface with an up link
-[   70.470995][ T5933] bond0: (slave bond_slave_1): Enslaving as an active =
-interface with an up link
-[   70.493596][ T5933] team0: Port device team_slave_0 added
-[   70.501395][ T5933] team0: Port device team_slave_1 added
-[   70.519008][ T5933] batman_adv: batadv0: Adding interface: batadv_slave_=
-0
-[   70.526072][ T5933] batman_adv: batadv0: The MTU of interface batadv_sla=
-ve_0 is too small (1500) to handle the transport of batman-adv packets. Pac=
-kets going over this interface will be fragmented on layer2 which could imp=
-act the performance. Setting the MTU to 1560 would solve the problem.
-[   70.552861][ T5933] batman_adv: batadv0: Not using interface batadv_slav=
-e_0 (retrying later): interface not active
-[   70.565006][ T5933] batman_adv: batadv0: Adding interface: batadv_slave_=
-1
-[   70.572298][ T5933] batman_adv: batadv0: The MTU of interface batadv_sla=
-ve_1 is too small (1500) to handle the transport of batman-adv packets. Pac=
-kets going over this interface will be fragmented on layer2 which could imp=
-act the performance. Setting the MTU to 1560 would solve the problem.
-[   70.598637][ T5933] batman_adv: batadv0: Not using interface batadv_slav=
-e_1 (retrying later): interface not active
-[   70.627155][ T5933] hsr_slave_0: entered promiscuous mode
-[   70.633381][ T5933] hsr_slave_1: entered promiscuous mode
-[   70.639645][ T5933] debugfs: Directory 'hsr0' with parent 'hsr' already =
-present!
-[   70.647370][ T5933] Cannot create hsr debugfs directory
-[   70.812486][  T739] bridge_slave_1: left allmulticast mode
-[   70.819194][  T739] bridge_slave_1: left promiscuous mode
-[   70.825833][  T739] bridge0: port 2(bridge_slave_1) entered disabled sta=
-te
-[   70.842235][  T739] bridge_slave_0: left allmulticast mode
-[   70.847996][  T739] bridge_slave_0: left promiscuous mode
-[   70.853757][  T739] bridge0: port 1(bridge_slave_0) entered disabled sta=
-te
-[   71.122739][  T739] bond0 (unregistering): (slave bond_slave_0): Releasi=
-ng backup interface
-[   71.133922][  T739] bond0 (unregistering): (slave bond_slave_1): Releasi=
-ng backup interface
-[   71.144058][  T739] bond0 (unregistering): Released all slaves
-[   71.164249][ T5492]=20
-[   71.166627][ T5492] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-[   71.172866][ T5492] WARNING: possible recursive locking detected
-[   71.179026][ T5492] 6.14.0-syzkaller-09584-g7d06015d936c-dirty #0 Not ta=
-inted
-[   71.186417][ T5492] --------------------------------------------
-[   71.192576][ T5492] dhcpcd/5492 is trying to acquire lock:
-[   71.198194][ T5492] ffff888030ed0d28 (&dev->lock){+.+.}-{4:4}, at: lapbe=
-th_device_event+0x766/0xa20
-[   71.207517][ T5492]=20
-[   71.207517][ T5492] but task is already holding lock:
-[   71.214971][ T5492] ffff88805c068d28 (&dev->lock){+.+.}-{4:4}, at: dev_c=
-hange_flags+0x120/0x270
-[   71.223915][ T5492]=20
-[   71.223915][ T5492] other info that might help us debug this:
-[   71.231970][ T5492]  Possible unsafe locking scenario:
-[   71.231970][ T5492]=20
-[   71.239412][ T5492]        CPU0
-[   71.242679][ T5492]        ----
-[   71.245961][ T5492]   lock(&dev->lock);
-[   71.249953][ T5492]   lock(&dev->lock);
-[   71.253947][ T5492]=20
-[   71.253947][ T5492]  *** DEADLOCK ***
-[   71.253947][ T5492]=20
-[   71.262112][ T5492]  May be due to missing lock nesting notation
-[   71.262112][ T5492]=20
-[   71.270417][ T5492] 2 locks held by dhcpcd/5492:
-[   71.275342][ T5492]  #0: ffffffff900d3988 (rtnl_mutex){+.+.}-{4:4}, at: =
-devinet_ioctl+0x34e/0x1d80
-[   71.284475][ T5492]  #1: ffff88805c068d28 (&dev->lock){+.+.}-{4:4}, at: =
-dev_change_flags+0x120/0x270
-[   71.293780][ T5492]=20
-[   71.293780][ T5492] stack backtrace:
-[   71.299673][ T5492] CPU: 1 UID: 0 PID: 5492 Comm: dhcpcd Not tainted 6.1=
-4.0-syzkaller-09584-g7d06015d936c-dirty #0 PREEMPT(full)=20
-[   71.299689][ T5492] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 02/12/2025
-[   71.299700][ T5492] Call Trace:
-[   71.299706][ T5492]  <TASK>
-[   71.299712][ T5492]  dump_stack_lvl+0x241/0x360
-[   71.299731][ T5492]  ? __pfx_dump_stack_lvl+0x10/0x10
-[   71.299745][ T5492]  ? __pfx__printk+0x10/0x10
-[   71.299758][ T5492]  ? print_lock+0x171/0x1a0
-[   71.299770][ T5492]  print_deadlock_bug+0x2be/0x2d0
-[   71.299783][ T5492]  validate_chain+0x928/0x24e0
-[   71.299795][ T5492]  ? stack_depot_save_flags+0x3a/0x970
-[   71.299813][ T5492]  ? look_up_lock_class+0x7b/0x170
-[   71.299825][ T5492]  ? register_lock_class+0x54/0x330
-[   71.299841][ T5492]  __lock_acquire+0xad5/0xd80
-[   71.299859][ T5492]  lock_acquire+0x116/0x2f0
-[   71.299873][ T5492]  ? lapbeth_device_event+0x766/0xa20
-[   71.299888][ T5492]  __mutex_lock+0x1a5/0x10c0
-[   71.299900][ T5492]  ? lapbeth_device_event+0x766/0xa20
-[   71.299913][ T5492]  ? ref_tracker_alloc+0x316/0x4c0
-[   71.299930][ T5492]  ? lapbeth_device_event+0x766/0xa20
-[   71.299941][ T5492]  ? rcu_is_watching+0x15/0xb0
-[   71.299953][ T5492]  ? __pfx___mutex_lock+0x10/0x10
-[   71.299967][ T5492]  ? __raw_spin_lock_init+0x45/0x100
-[   71.299981][ T5492]  lapbeth_device_event+0x766/0xa20
-[   71.299994][ T5492]  notifier_call_chain+0x1a5/0x3f0
-[   71.300009][ T5492]  __dev_notify_flags+0x209/0x410
-[   71.300024][ T5492]  ? __pfx___dev_notify_flags+0x10/0x10
-[   71.300037][ T5492]  ? __dev_change_flags+0x517/0x700
-[   71.300052][ T5492]  ? __pfx___mutex_lock+0x10/0x10
-[   71.300063][ T5492]  ? __pfx___dev_change_flags+0x10/0x10
-[   71.300077][ T5492]  ? __pfx___mutex_lock+0x10/0x10
-[   71.300088][ T5492]  netif_change_flags+0xf0/0x1a0
-[   71.300103][ T5492]  dev_change_flags+0x146/0x270
-[   71.300117][ T5492]  devinet_ioctl+0xea4/0x1d80
-[   71.300132][ T5492]  ? __pfx_devinet_ioctl+0x10/0x10
-[   71.300145][ T5492]  ? get_user_ifreq+0x1bb/0x200
-[   71.300161][ T5492]  inet_ioctl+0x3d9/0x4f0
-[   71.300176][ T5492]  ? __pfx_inet_ioctl+0x10/0x10
-[   71.300190][ T5492]  ? lockdep_hardirqs_on+0x9d/0x150
-[   71.300211][ T5492]  ? tomoyo_path_number_perm+0x215/0x790
-[   71.300226][ T5492]  sock_do_ioctl+0x15a/0x490
-[   71.300238][ T5492]  ? __pfx_sock_do_ioctl+0x10/0x10
-[   71.300250][ T5492]  ? fd_install+0x9c/0x4c0
-[   71.300263][ T5492]  ? __asan_memset+0x23/0x50
-[   71.300278][ T5492]  ? smack_file_ioctl+0x2a7/0x3b0
-[   71.300295][ T5492]  sock_ioctl+0x644/0x900
-[   71.300312][ T5492]  ? __pfx_sock_ioctl+0x10/0x10
-[   71.300328][ T5492]  ? __sys_socket+0x209/0x3c0
-[   71.300341][ T5492]  ? __pfx_sock_ioctl+0x10/0x10
-[   71.300357][ T5492]  __se_sys_ioctl+0xf1/0x160
-[   71.300374][ T5492]  do_syscall_64+0xf3/0x230
-[   71.300386][ T5492]  ? clear_bhb_loop+0x45/0xa0
-[   71.300399][ T5492]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   71.300413][ T5492] RIP: 0033:0x7fa55dcd4d49
-[   71.300429][ T5492] Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 2=
-4 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0=
-f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-[   71.300439][ T5492] RSP: 002b:00007fffa292ae78 EFLAGS: 00000246 ORIG_RAX=
-: 0000000000000010
-[   71.300453][ T5492] RAX: ffffffffffffffda RBX: 00007fa55dc066c0 RCX: 000=
-07fa55dcd4d49
-[   71.300462][ T5492] RDX: 00007fffa293b068 RSI: 0000000000008914 RDI: 000=
-0000000000010
-[   71.300470][ T5492] RBP: 00007fffa294b228 R08: 00007fffa293b028 R09: 000=
-07fffa293afd8
-[   71.300478][ T5492] R10: 0000000000000000 R11: 0000000000000246 R12: 000=
-0000000000000
-[   71.300486][ T5492] R13: 00007fffa293b068 R14: 0000000000000028 R15: 000=
-0000000008914
-[   71.300498][ T5492]  </TASK>
-[   71.649519][ T1300] ieee802154 phy0 wpan0: encryption failed: -22
-[   71.655830][ T1300] ieee802154 phy1 wpan1: encryption failed: -22
-[   71.712528][  T739] hsr_slave_0: left promiscuous mode
-[   71.718615][  T739] hsr_slave_1: left promiscuous mode
-[   71.724266][  T739] batman_adv: batadv0: Interface deactivated: batadv_s=
-lave_0
-[   71.732057][  T739] batman_adv: batadv0: Removing interface: batadv_slav=
-e_0
-[   71.740909][  T739] batman_adv: batadv0: Interface deactivated: batadv_s=
-lave_1
-[   71.748958][  T739] batman_adv: batadv0: Removing interface: batadv_slav=
-e_1
-[   71.758568][  T739] veth1_macvtap: left promiscuous mode
-[   71.764195][  T739] veth0_macvtap: left promiscuous mode
-[   71.770138][  T739] veth1_vlan: left promiscuous mode
-[   71.775453][  T739] veth0_vlan: left promiscuous mode
-[   71.927279][  T739] team0 (unregistering): Port device team_slave_1 remo=
-ved
-[   71.945557][  T739] team0 (unregistering): Port device team_slave_0 remo=
-ved
-[   72.266794][ T5933] netdevsim netdevsim0 netdevsim0: renamed from eth0
-[   72.277112][ T5933] netdevsim netdevsim0 netdevsim1: renamed from eth1
-[   72.294262][ T5933] netdevsim netdevsim0 netdevsim2: renamed from eth2
-[   72.309749][ T5933] netdevsim netdevsim0 netdevsim3: renamed from eth3
-[   72.321044][ T5910] Bluetooth: hci0: command tx timeout
-[   72.379040][ T5933] 8021q: adding VLAN 0 to HW filter on device bond0
-[   72.396416][ T5933] 8021q: adding VLAN 0 to HW filter on device team0
-[   72.410829][ T1164] bridge0: port 1(bridge_slave_0) entered blocking sta=
-te
-[   72.418091][ T1164] bridge0: port 1(bridge_slave_0) entered forwarding s=
-tate
-[   72.436046][ T1164] bridge0: port 2(bridge_slave_1) entered blocking sta=
-te
-[   72.443239][ T1164] bridge0: port 2(bridge_slave_1) entered forwarding s=
-tate
-[   72.563767][ T5933] 8021q: adding VLAN 0 to HW filter on device batadv0
-[   72.597276][ T5933] veth0_vlan: entered promiscuous mode
-[   72.611239][ T5933] veth1_vlan: entered promiscuous mode
-[   72.635744][ T5933] veth0_macvtap: entered promiscuous mode
-[   72.645289][ T5933] veth1_macvtap: entered promiscuous mode
-[   72.662044][ T5933] batman_adv: batadv0: Interface activated: batadv_sla=
-ve_0
-[   72.675270][ T5933] batman_adv: batadv0: Interface activated: batadv_sla=
-ve_1
-[   72.687034][ T5933] netdevsim netdevsim0 netdevsim0: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   72.699053][ T5933] netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   72.709642][ T5933] netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   72.719441][ T5933] netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 f=
-amily 0 port 6081 - 0
-[   72.752137][ T5933] ieee80211 phy5: Selected rate control algorithm 'min=
-strel_ht'
-[   72.780028][   T12] wlan0: Created IBSS using preconfigured BSSID 50:50:=
-50:50:50:50
-[   72.792389][ T5933] ieee80211 phy6: Selected rate control algorithm 'min=
-strel_ht'
-[   72.793485][   T12] wlan0: Creating new IBSS network, BSSID 50:50:50:50:=
-50:50
-[   72.821218][   T12] wlan1: Created IBSS using preconfigured BSSID 50:50:=
-50:50:50:50
-[   72.831461][   T12] wlan1: Creating new IBSS network, BSSID 50:50:50:50:=
-50:50
+After applying that patch, USB *didn't* die during boot.  So apparently
+*something* changed.  
 
+Also, the patch merely caused a *different* lockdep warning.
+Rather than  &q->q_usage_counter(io) and &q->elevator_lock, the
+new one is &q->elevator_lock versus pcpu_alloc_mutex...
 
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
-go1.23.6.linux-amd64'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
-.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.23.6'
-GODEBUG=3D''
-GOTELEMETRY=3D'local'
-GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
-d'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build2577909696=3D/tmp/go-build -gno-record-gc=
-c-switches'
+Looks like it's a bit more convoluted than first looked?
 
-git status (err=3D<nil>)
-HEAD detached at 89d30d7360d
-nothing to commit, working tree clean
+[   52.140990] [    T954] io scheduler bfq registered
 
+[   52.355286] [    T848] ======================================================
+[   52.436367] [    T848] WARNING: possible circular locking dependency detected
+[   52.517414] [    T848] 6.14.0-next-20250327-dirty #111 Tainted: G          I     T  
+[   52.598492] [    T848] ------------------------------------------------------
+[   52.679571] [    T848] (udev-worker)/848 is trying to acquire lock:
+[   52.760647] [    T848] ffffffff99bb4470 (pcpu_alloc_mutex){+.+.}-{4:4}, at: pcpu_alloc_noprof+0x524/0x840
+[   53.162776] [    T848] 
+                          but task is already holding lock:
+[   53.244616] [    T848] ffff8c22c3392428 (&q->elevator_lock){+.+.}-{4:4}, at: elv_iosched_store+0xe1/0x260
+[   53.646741] [    T848] 
+                          which lock already depends on the new lock.
 
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D89d30d7360d4a366f8fdf00d6ac56cced7a45b0b -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20250325-195331'" -o ./b=
-in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
-mkdir -p ./bin/linux_amd64
-g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
-_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"89d30d7360d4a366f8fdf00d6ac56cced7=
-a45b0b\"
-/usr/bin/ld: /tmp/ccEnZsIz.o: in function `Connection::Connect(char const*,=
- char const*)':
-executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
-KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
-ions requires at runtime the shared libraries from the glibc version used f=
-or linking
+[   53.729459] [    T848] 
+                          the existing dependency chain (in reverse order) is:
+[   53.811348] [    T848] 
+                          -> #3 (&q->elevator_lock){+.+.}-{4:4}:
+[   54.214266] [    T848]        lock_acquire.part.0+0xbe/0x240
+[   54.295342] [    T848]        __mutex_lock+0xcb/0xfc0
+[   54.376409] [    T848]        elv_iosched_store+0xe1/0x260
+[   54.457476] [    T848]        kernfs_fop_write_iter+0x160/0x240
+[   54.538548] [    T848]        vfs_write+0x2ec/0x5c0
+[   54.619619] [    T848]        ksys_write+0x7a/0xf0
+[   54.700687] [    T848]        do_syscall_64+0x68/0x140
+[   54.781751] [    T848]        entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   54.862814] [    T848] 
+                          -> #2 (&q->q_usage_counter(io)#10){++++}-{0:0}:
+[   55.345959] [    T848]        lock_acquire.part.0+0xbe/0x240
+[   55.427018] [    T848]        blk_alloc_queue+0x30b/0x350
+[   55.508082] [    T848]        blk_mq_alloc_queue+0x62/0xd0
+[   55.589134] [    T848]        scsi_alloc_sdev+0x29c/0x3d0
+[   55.670185] [    T848]        scsi_probe_and_add_lun+0x1d8/0x2b0
+[   55.751232] [    T848]        __scsi_add_device+0x114/0x130
+[   55.832276] [    T848]        ata_scsi_scan_host+0x7a/0x190
+[   55.913321] [    T848]        async_run_entry_fn+0x24/0xc0
+[   55.994358] [    T848]        process_one_work+0x21e/0x5a0
+[   56.075404] [    T848]        worker_thread+0x1d5/0x3c0
+[   56.156444] [    T848]        kthread+0x114/0x230
+[   56.237474] [    T848]        ret_from_fork+0x2c/0x50
+[   56.318492] [    T848]        ret_from_fork_asm+0x1a/0x30
+[   56.399515] [    T848] 
+                          -> #1 (fs_reclaim){+.+.}-{0:0}:
+[   56.802275] [    T848]        lock_acquire.part.0+0xbe/0x240
+[   56.883298] [    T848]        fs_reclaim_acquire+0xa8/0xe0
+[   56.964317] [    T848]        __alloc_frozen_pages_noprof+0xd2/0x340
+[   57.045338] [    T848]        __alloc_pages_noprof+0x9/0x20
+[   57.126360] [    T848]        pcpu_alloc_pages.isra.0+0x97/0x180
+[   57.207375] [    T848]        pcpu_populate_chunk+0x34/0x70
+[   57.288388] [    T848]        pcpu_alloc_noprof+0x2d1/0x840
+[   57.369366] [    T848]        iommu_dma_init_fq+0x91/0x260
+[   57.450373] [    T848]        iommu_dma_init_domain+0x1de/0x210
+[   57.531381] [    T848]        iommu_setup_dma_ops+0x47/0x80
+[   57.612355] [    T848]        iommu_device_register+0x172/0x250
+[   57.693348] [    T848]        intel_iommu_init+0x5ef/0xbb0
+[   57.774344] [    T848]        pci_iommu_init+0x29/0x90
+[   57.855333] [    T848]        do_one_initcall+0x83/0x3c0
+[   57.936316] [    T848]        do_initcalls+0x130/0x1b0
+[   58.017300] [    T848]        kernel_init_freeable+0x292/0x300
+[   58.098281] [    T848]        kernel_init+0x15/0x130
+[   58.179254] [    T848]        ret_from_fork+0x2c/0x50
+[   58.260224] [    T848]        ret_from_fork_asm+0x1a/0x30
+[   58.341195] [    T848] 
+                          -> #0 (pcpu_alloc_mutex){+.+.}-{4:4}:
+[   58.743832] [    T848]        check_prev_add+0xe1/0xcf0
+[   58.824752] [    T848]        __lock_acquire+0x1031/0x13b0
+[   58.905697] [    T848]        lock_acquire.part.0+0xbe/0x240
+[   58.986633] [    T848]        __mutex_lock+0xcb/0xfc0
+[   59.067565] [    T848]        pcpu_alloc_noprof+0x524/0x840
+[   59.148463] [    T848]        sbitmap_init_node+0xf0/0x230
+[   59.229392] [    T848]        sbitmap_queue_init_node+0x29/0x140
+[   59.310317] [    T848]        blk_mq_init_tags+0x95/0x110
+[   59.391240] [    T848]        blk_mq_alloc_map_and_rqs+0x3c/0x110
+[   59.472131] [    T848]        blk_mq_init_sched+0x100/0x260
+[   59.553017] [    T848]        elevator_switch+0xb1/0x190
+[   59.633926] [    T848]        elv_iosched_store+0x1db/0x260
+[   59.714841] [    T848]        kernfs_fop_write_iter+0x160/0x240
+[   59.795728] [    T848]        vfs_write+0x2ec/0x5c0
+[   59.876599] [    T848]        ksys_write+0x7a/0xf0
+[   59.957500] [    T848]        do_syscall_64+0x68/0x140
+[   60.038396] [    T848]        entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   60.119269] [    T848] 
+                          other info that might help us debug this:
 
+[   60.201395] [    T848] Chain exists of:
+                            pcpu_alloc_mutex --> &q->q_usage_counter(io)#10 --> &q->elevator_lock
 
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=3D1170aa4c580000
+[   60.845339] [    T848]  Possible unsafe locking scenario:
 
+[   60.926872] [    T848]        CPU0                    CPU1
+[   61.007776] [    T848]        ----                    ----
+[   61.088676] [    T848]   lock(&q->elevator_lock);
+[   61.330053] [    T848]                                lock(&q->q_usage_counter(io)#10);
+[   61.651731] [    T848]                                lock(&q->elevator_lock);
+[   61.893151] [    T848]   lock(pcpu_alloc_mutex);
+[   62.134602] [    T848] 
+                           *** DEADLOCK ***
 
-Tested on:
-
-commit:         7d06015d Merge tag 'pci-v6.15-changes' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6f5a67fe881fabe=
-4
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D54e6c2176ba76c562=
-17e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D101dc6785800=
-00
+[   62.216729] [    T848] 6 locks held by (udev-worker)/848:
+[   62.297630] [    T848]  #0: ffff8c22c8575440 (sb_writers#4){.+.+}-{0:0}, at: ksys_write+0x7a/0xf0
+[   62.860055] [    T848]  #1: ffff8c22c9fb4090 (&of->mutex#2){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x119/0x240
+[   63.422482] [    T848]  #2: ffff8c22c821fad0 (kn->active#89){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x122/0x240
+[   63.984915] [    T848]  #3: ffff8c22c3391e98 (&q->q_usage_counter(io)#10){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x11/0x20
+[   64.547390] [    T848]  #4: ffff8c22c3391ed8 (&q->q_usage_counter(queue)){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x11/0x20
+[   65.029578] [    T848]  #5: ffff8c22c3392428 (&q->elevator_lock){+.+.}-{4:4}, at: elv_iosched_store+0xe1/0x260
+[   65.511794] [    T848] 
+                          stack backtrace:
+[   65.593348] [    T848] CPU: 1 UID: 0 PID: 848 Comm: (udev-worker) Tainted: G          I     T   6.14.0-next-20250327-dirty #111 PREEMPT(full)  7b54f670bb22238ec039f82f30e0fd3bcc8dbc83
+[   65.673611] [    T848] Tainte        d: [I]=FIRMWARE_WORKAROUND, [T]=RANDSTRUCT
+[   65.753868] [    T848] Hardware name: Dell Inc. Unidentified System/052K07, BIOS 1.9.0 09/07/2020
+[   65.834126] [    T848] Call Trace:
+[   65.914385] [    T848]  <TASK>
+[   65.994655] [    T848]  dump_stack_lvl+0x65/0x90
+[   66.074916] [    T848]  print_circular_bug.cold+0x38/0x46
+[   66.155178] [    T848]  check_noncircular+0x169/0x190
+[   66.235441] [    T848]  check_prev_add+0xe1/0xcf0
+[   66.315699] [    T848]  ? add_chain_cache+0x115/0x4c0
+[   66.395961] [    T848]  __lock_acquire+0x1031/0x13b0
+[   66.476225] [    T848]  lock_acquire.part.0+0xbe/0x240
+[   66.556484] [    T848]  ? pcpu_alloc_noprof+0x524/0x840
+[   66.636745] [    T848]  ? lock_acquire+0xf8/0x140
+[   66.717006] [    T848]  __mutex_lock+0xcb/0xfc0
+[   66.797266] [    T848]  ? pcpu_alloc_noprof+0x524/0x840
+[   66.877526] [    T848]  ? lockdep_hardirqs_on+0x84/0x130
+[   66.957786] [    T848]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   67.038044] [    T848]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   67.118303] [    T848]  ? pcpu_alloc_noprof+0x524/0x840
+[   67.198566] [    T848]  ? pcpu_alloc_noprof+0x524/0x840
+[   67.278825] [    T848]  ? find_held_lock+0x2b/0x80
+[   67.359084] [    T848]  pcpu_alloc_noprof+0x524/0x840
+[   67.439344] [    T848]  ? local_clock_noinstr+0xf/0x100
+[   67.519608] [    T848]  sbitmap_init_node+0xf0/0x230
+[   67.599870] [    T848]  sbitmap_queue_init_node+0x29/0x140
+[   67.680131] [    T848]  blk_mq_init_tags+0x95/0x110
+[   67.760392] [    T848]  blk_mq_alloc_map_and_rqs+0x3c/0x110
+[   67.840654] [    T848]  blk_mq_init_sched+0x100/0x260
+[   67.920916] [    T848]  elevator_switch+0xb1/0x190
+[   68.001176] [    T848]  ? elv_iosched_store+0x1d0/0x260
+[   68.081437] [    T848]  elv_iosched_store+0x1db/0x260
+[   68.161700] [    T848]  kernfs_fop_write_iter+0x160/0x240
+[   68.241960] [    T848]  vfs_write+0x2ec/0x5c0
+[   68.322224] [    T848]  ksys_write+0x7a/0xf0
+[   68.402485] [    T848]  do_syscall_64+0x68/0x140
+[   68.482745] [    T848]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   68.563004] [    T848] RIP: 0033:0x7f2a1747ca06
+[   68.643263] [    T848] Code: 5d e8 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 19 83 e2 39 83 fa 08 75 11 e8 26 ff ff ff 66 0f 1f 44 00 00 48 8b 45 10 0f 05 <48> 8b 5d f8 c9 c3 0f 1f 40 00 f3 0f 1e fa 55 48 89 e5 48 83 ec 08
+[   68.723521] [    T848] RSP: 002b:00007ffe48933eb0 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[   68.884037] [    T848] RAX: ffffffffffffffda RBX: 000056119a4eaff0 RCX: 00007f2a1747ca06
+[   68.964295] [    T848] RDX: 0000000000000003 RSI: 00007ffe48934200 RDI: 0000000000000027
+[   69.044553] [    T848] RBP: 00007ffe48933ed0 R08: 0000000000000000 R09: 0000000000000000
+[   69.124811] [    T848] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000003
+[   69.205068] [    T848] R13: 0000000000000003 R14: 00007ffe48934200 R15: 00007ffe48934200
+[   69.285332] [    T848]  </TASK>
 
