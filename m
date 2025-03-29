@@ -1,94 +1,132 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA2E199FC5
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5874C2940F;
+	Sat, 29 Mar 2025 13:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743255962; cv=none; b=uRXWlgOVrYUU2ZzSfIZ+srUepRlwY+QN/F3Ejba0dKqYOfMtTYji4zEndycrp4Yq3T6Q4A+Uh6enSje4MKzUV+59U4lwa1u2uG3N6csWx2kyfPRl3f4sC7h2vu6HZIAJJH+4vrUKmkNsBpfSBXFbKOmoqOMidpYd5BkyqA2DwDo=
+	t=1743256479; cv=none; b=rO4ZrT25W03+yc/m4zgOckLmgaJVLNsXftztMWDkstB4jKp6sQp2sxyo6ZXrZJzRcGAAXD0tbmaxdkBaBWMWZI4T01OlA+0n1AZLJTPcENG2U7mqAWDGhH8+q6fU5W242yGNPexVKC7/xBR8b8GHBSuiQuULiwPcOcJjxHkaAWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743255962; c=relaxed/simple;
-	bh=HYdwye3DZdcM677XbFBhxIw6WnNA/O2L05nzuCBKG3g=;
+	s=arc-20240116; t=1743256479; c=relaxed/simple;
+	bh=4n6gakwcu0PhUp9+6uuyFcPnhmioTI0TXWmXpfOEzJA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rfLK0Dh5+qs9AGCaaR/t6W473Rtw2+n96TBqgM3gZ9BqBr6E7G1Tthm+9feXnidb2Bialun6UwZ4X6Vm5DiggxH4lbqfhn3DgC8eaMyNj6+aDO9pRBI1Wa4cGQzpxR+P+zH5/1cDYLT20x25c9bhWeurAhMMOMkU2ci/M0AK68Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wCH8gELH; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=SaSZYJ3e6IU+H3GZ4taAI/+cCSfLSrT9YDrL8ElvkUKN+HnWD/kdVxrM3D8RGefC4etfyPjk0Yw/70PUFEgkhGLzPPr5r1Ydekp+mQupjZmk32/pmx9e7gWsigloci9yPA2ssQJ47Ygj33VIlUr8/49MwDWWR6PBTjDJQBluNyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=ON2HE2nC; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wCH8gELH"
-Message-ID: <3fb4b232-a0c2-4abe-a85e-2e4d938a22c7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743255959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LpsKaScSHv7GrRRXDH8nchWWCagrc+J7SdH8scHXBkA=;
-	b=wCH8gELHNGI3n2ux8QZYZAEchSEmxsdpuGiY4IBYA5VtNGhE2QbILw6yGJKQ5GesWesJFA
-	3Sv3qMmqyY28js7QLFRhkehoR6a6ulwTlMSK7chAVTi5R+Jt/gn+0AIIF2OCT80lCCaM5l
-	2Bgxd8H5BXzZ64ovRNFj4aCOYnQcb5o=
-Date: Sat, 29 Mar 2025 19:15:09 +0530
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="ON2HE2nC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1743256469; bh=4n6gakwcu0PhUp9+6uuyFcPnhmioTI0TXWmXpfOEzJA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ON2HE2nCYM+IiKTjO32HjB4U+sgj1thCQr1MdtjDPy6MbDMUpCnfnWTCCi7UkvywA
+	 pI+l6G+IGyzhGRGlEU8wc1In+MB9l7Qxx8xg2SbS68xoCOijadwCH/a3qq/61FLFcC
+	 pLuXhAQgFOq+xsevEhkhovsBry3oRd6Idow5rqQk=
+Message-ID: <ad132ebd-92f2-428c-95c2-d1986b5d060f@lucaweiss.eu>
+Date: Sat, 29 Mar 2025 14:54:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] drm/tidss: Add OLDI bridge support
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
-Cc: "j-choudhary@ti.com" <j-choudhary@ti.com>,
- "u-kumar1@ti.com" <u-kumar1@ti.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "devarsht@ti.com" <devarsht@ti.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nm@ti.com" <nm@ti.com>, "vigneshr@ti.com" <vigneshr@ti.com>,
- "praneeth@ti.com" <praneeth@ti.com>
-References: <20241124143649.686995-1-aradhya.bhatia@linux.dev>
- <8366a3d736f9937667aab024895a59e5947dd4a5.camel@siemens.com>
- <2c0b49a2-7cf3-4432-bab0-1eb110e8e8c2@linux.dev>
- <86d5d285a8467b3fcdadd3cf37ac0e4cbc874626.camel@siemens.com>
+Subject: Re: [PATCH 2/4] dt-bindings: display: panel: Add Himax HX83112B
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu>
+ <20250222-fp3-display-v1-2-ccd812e16952@lucaweiss.eu>
+ <20250223-tricky-saffron-rattlesnake-aaad63@krzk-bin>
+ <89cbb27e-414a-472f-8664-db5b4d37ddc1@lucaweiss.eu>
+ <cf3a0429-0c36-426f-b9b0-ae7749877bf3@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <86d5d285a8467b3fcdadd3cf37ac0e4cbc874626.camel@siemens.com>
-Content-Type: text/plain; charset=UTF-8
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <cf3a0429-0c36-426f-b9b0-ae7749877bf3@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-Hi Alexander,
+Hi all,
 
-On 26/03/25 00:27, Sverdlin, Alexander wrote:
-> Hi Aradhya!
-> 
-> On Thu, 2025-03-20 at 18:54 +0530, Aradhya Bhatia wrote:
->>> I've tried to test the patchset with necessary pre-requisites and DT additions
->>> with a single channel LVDS pannel and while I'm not successful yet, I've also noticed
->>> the following warning:
->>>
->>> tidss 30200000.dss: vp0: Clock rate 24285714 differs over 5% from requested 37000000
-> 
-> ...
-> 
->> While you have mentioned that you did add the prerequisites, could you
->> confirm that you applied the (now older) dependency patch mentioned in
->> the v4 cover-letter[1]?
->> Ideally, you should not observe these concerns if [1] were successfully
->> applied.
+On 2/24/25 9:16 AM, Krzysztof Kozlowski wrote:
+> On 23/02/2025 16:29, Luca Weiss wrote:
+>> Hi Krzysztof,
 >>
->> More importantly, if you are already on latest linux-next, I would
->> request you to use v6 of this OLDI series[2], along with the latest
->> dependency patches[0], as the older dependency patch is simply not
->> applicable on latest kernel anymore! =)
+>> On 23-02-2025 12:54 p.m., Krzysztof Kozlowski wrote:
+>>> On Sat, Feb 22, 2025 at 06:58:05PM +0100, Luca Weiss wrote:
+>>>> Himax HX83112B is a display driver IC used to drive LCD DSI panels.
+>>>> Describe it and the Fairphone 3 panel from DJN using it.
+>>>>
+>>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>>>> ---
+>>>>    .../bindings/display/panel/himax,hx83112b.yaml     | 75 ++++++++++++++++++++++
+>>>>    1 file changed, 75 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+>>>> new file mode 100644
+>>>> index 0000000000000000000000000000000000000000..e6bd4b33d40be98e479d84617aea6d2af0df70e4
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+>>>> @@ -0,0 +1,75 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/display/panel/himax,hx83112b.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Himax HX83112B-based DSI display panels
+>>>> +
+>>>> +maintainers:
+>>>> +  - Luca Weiss <luca@lucaweiss.eu>
+>>>> +
+>>>> +description:
+>>>> +  The Himax HX83112B is a generic DSI Panel IC used to control
+>>>> +  LCD panels.
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: panel-common.yaml#
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    contains:
+>>>> +      const: djn,fairphone-fp3-panel
+>>>
+>>> Why no himax,hx83112b fallback?
+>>
+>> While this is the driver IC for this panel, I don't think there's any
+>> "generic" init sequence that can successfully configure this panel, so
+>> generic hx83112b driver could work I'd say.
 > 
-> Thanks for all the hints and links! I can confirm that with linux-next and this
-> time all the necessary dependencies applied, I don't see the above warning.
 > 
+> Hm, indeed usually this would mean no need for unusable fallback alone,
+> but still drivers could use it for some common pieces of code. I imagine
+> there could be a piece of init sequence which is generic. Or some piece
+> of attributes.
+> We already have examples of both approaches for panels - with generic
+> fallback (himax,hx83102) and without (himax,hx83112a).
+> 
+> @Rob
+> what is your generic advice? Which of above (himax,hx83102 vs
+> himax,hx83112a) should be used, if the fallback compatible cannot be
+> used alone?
 
-I am glad it worked! Thank you for taking the time out, and testing the
-patches!  =)
+I believe this thread is still pending of a resolution, based on the 
+model number I've found, I made the compatible "djn,98-03057-6598b-i" 
+for v2, but it's still a question whether himax,hx83112b should be part 
+of the compatible.
 
--- 
 Regards
-Aradhya
+Luca
+
+> 
+> Best regards,
+> Krzysztof
 
