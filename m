@@ -1,145 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3F5D477;
-	Sat, 29 Mar 2025 08:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5084149C55;
+	Sat, 29 Mar 2025 08:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743237669; cv=none; b=tFbGZIPpAjrcPZF6aMeERjsLBKjsjK/vGXbacNK3SBYlOTJjQqVVZLBfD2z1q/9Ly/V3uce2ivP8P5CmUcNPLNIBx1BObJ5N2a6ulCZ/0HNmV0cOkSmsY7yzDdCGd8IYr7G5Dx573KZ2rcscf5ZY0Ag0pTcaxqG364h8GQ8w2SA=
+	t=1743237803; cv=none; b=KKw5BmdAKVGMucoxAzhS5jl9ipvys5DNinmP3R8eyp3Mh/vgRunTwYrOitgp8mmVZAZWiBW2sjbIdZXPTvrw/NQBPlqOtXrJmgs4YLD/2C8FLX6PwBVqYJ3zGWC9Pjgnv5IKkwUP3UqG19c0Q7Nbxx+6UeErK0sU+U04x7Xv8Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743237669; c=relaxed/simple;
-	bh=Zxi4fz242TKRMcLWwMnqMDyq07mgpNk9ykRalU4MaA4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WOJ1N0sklWAm52i1FTxDAWsTt6XK7HIaYECGcdGWflBRf5dGAq/t7OCkUOU8fBqKldXr9s0rFk5LO12PbHZD8DjUlsRwPUWAKegEauPMJK2g9RRJTDTKVuTfCYI5JkV7zhTikaTTGA/vUnrUFbaWH5VOaRRuXRnuxoE/c/ytjSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zx/mZjrM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743237803; c=relaxed/simple;
+	bh=wFN9OIyWwNbSBORPJ6nncMe0fBBQIRJE7fQ0HC06jkA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PPLfDI/6A0vqD8z2UttgQEfzzpRAxXhInGGNipvr6HbI5vSx4EMVfAjibhrLAQdZCHm/J76nT3vYn5RPmE3hP39/pQANhN1IHM3XbGq8Sh+9n1fduK+LsVcG9XTJ+pi21+UnKdgXDbkXj7NG1XkP0OqYCG8Dd8T2xAKYzfQp838=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3ZK7qz+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zx/mZjrM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDFAC4CEE2;
-	Sat, 29 Mar 2025 08:41:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3ZK7qz+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C689DC4CEE9;
+	Sat, 29 Mar 2025 08:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743237669;
-	bh=Zxi4fz242TKRMcLWwMnqMDyq07mgpNk9ykRalU4MaA4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Zx/mZjrM6XqTziTy4RNGn0HVSEcxkhfXOeQCNfYvlSZZiEnuOKpvNsTq82xlA8hRn
-	 LbRs532AIIcDZ/RkQJriwX+XNIeEfJ2Ip4JCw0HGkujPwcRC+4Ys5+oeo3REgNpuTG
-	 le8ktQt7eDzaqcHFiO7r2yiqk/gp3mm2q1X62kPgySJEAlrVfxV71BNxeFGatrAhRQ
-	 6UdcVXJaq87kmDu/aArGCIKEVSH1bDf+5jRZFhusGYSAJ/0fkb4NBGDb4hB2yOAkCQ
-	 6HQ1pGAJxfOxAQXNl+x+FoqE8WIav2byeSAAYWDXZkPJ1dUobUuNHm852mot0D+Tv4
-	 s1oL/yqaxhVUQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so4722786a12.0;
-        Sat, 29 Mar 2025 01:41:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVe2ow4tLo9fFV0iXyIFsnSzP2khsk7L9TCHX2eMyIscKr8HO7JwtWO7zH+d3rIMXC5HGIuVfms@vger.kernel.org, AJvYcCWPLhSBvx1SSEp62udXDcfOWfGH71gsapekK0aYDcKToBHUObTkyi04dH8UWLgbb+bDnKzRA4KtKtnDww4=@vger.kernel.org, AJvYcCXGZcnMrlf7wwudloKf0xDOEOY9xmwOFcToxLWB/HoBb2+ydA5WM4Jwi3JDWfdMbm4nqK6PhehabTQP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfeRCs2llyRmLEn7t20nxFnVhZ4tQN9ICG6a5LHEe5J6LfyvJk
-	0ZIHZxnBV9BXwH57Z3fmpjLxO7LG6vhaxII0X+FZ+Ooseu5T6bAT7aMSQ8AlGpUDQMBjrgqdVih
-	j+HWi2J/LuF0mJ13e5sYkOY0Xk20=
-X-Google-Smtp-Source: AGHT+IGv/udn16XAHP7Zs4N/IrBN03X4HvrPUNd9Z/faAOhZLawsyjO76H/1B0YEPwmuaU5XcM20zJcmJKmgAZJmeY0=
-X-Received: by 2002:a17:907:9693:b0:ac6:ff34:d046 with SMTP id
- a640c23a62f3a-ac7389ea430mr192916366b.2.1743237668046; Sat, 29 Mar 2025
- 01:41:08 -0700 (PDT)
+	s=k20201202; t=1743237803;
+	bh=wFN9OIyWwNbSBORPJ6nncMe0fBBQIRJE7fQ0HC06jkA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H3ZK7qz+8MC0riPsZg0GYIUJk16oM1aewi0aV77yrkicsZUaGmi7+EGu4C7F2OeeM
+	 QzMSuXEwrzkIVsvX8dCjS/9Je4H1b2l8jQF25RBlVY0/i6L1mBpd/H8F8DJKZ0rhpK
+	 Y6l1Vib7vAKG5MdH4gCxlDhQi5sJdalCPMyCVmNX5oQObRRt8E6OdFHNIMDY06wLPW
+	 Jq5eaXazghOVcEN+abZPRGuFyLDPaaQ02vv0WaPrdHdsszD/8vMDyA1Sabn78bEl9u
+	 2GjfV/9mtdt5/M37gfQB610w0/PzUcZ+hSvrWl2yw/ysjT0DKmHj85kSxFUcLNRD26
+	 z75CQD9x+lJRw==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	jack@suse.cz
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org,
+	hch@infradead.org,
+	david@fromorbit.com,
+	rafael@kernel.org,
+	djwong@kernel.org,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com
+Subject: [PATCH v2 0/6] Extend freeze support to suspend and hibernate
+Date: Sat, 29 Mar 2025 09:42:13 +0100
+Message-ID: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
+References: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327044840.3179796-1-chenhuacai@loongson.cn> <208f5310-5932-402b-9980-0225e67f2d66@rowland.harvard.edu>
-In-Reply-To: <208f5310-5932-402b-9980-0225e67f2d66@rowland.harvard.edu>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 29 Mar 2025 16:40:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4aitynD20EEWQhF_uv79+1nw7sKxzd7c_+009oY63tEg@mail.gmail.com>
-X-Gm-Features: AQ5f1JpMjO_6Um_SuZ1zMErU5UTbjicHozY5ADRdcNCOEzMWygBf3AVFsRaYCIg
-Message-ID: <CAAhV-H4aitynD20EEWQhF_uv79+1nw7sKxzd7c_+009oY63tEg@mail.gmail.com>
-Subject: Re: [PATCH V2] USB: OHCI: Add quirk for LS7A OHCI controller (rev 0x02)
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mingcong Bai <baimingcong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20250328-work-freeze-0a446869cd62
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1080; i=brauner@kernel.org; h=from:subject:message-id; bh=wFN9OIyWwNbSBORPJ6nncMe0fBBQIRJE7fQ0HC06jkA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ/31TxmH2NYZN9u1jARb+aGyKuaRvWywoJ/ajO1w91y k7omqjXUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMJEpdxj+ux4TdYydnLpGI9RM 5mFOTD338b7Pa6YVyd96o7FOheVfB8Mffj/VSboBXJadUlN+Ta+11/px4OSpBUFsi++tfVcf8HU vNwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 10:13=E2=80=AFPM Alan Stern <stern@rowland.harvard.=
-edu> wrote:
->
-> On Thu, Mar 27, 2025 at 12:48:40PM +0800, Huacai Chen wrote:
-> > The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
-> > MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
-> > keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
-> > only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
-> > is wrapped around (the second 4KB BAR space is the same as the first 4K=
-B
-> > internally). So we can add an 4KB offset (0x1000) to the OHCI registers
-> > (from the PCI BAR resource) as a quirk.
-> >
-> > Cc: stable@vger.kernel.org
-> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Tested-by: Mingcong Bai <baimingcong@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> > V2: add a comment explaining why the quirk is needed and how it fixes.
-> >
-> >  drivers/usb/host/ohci-pci.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/drivers/usb/host/ohci-pci.c b/drivers/usb/host/ohci-pci.c
-> > index 900ea0d368e0..bd90b2fed51b 100644
-> > --- a/drivers/usb/host/ohci-pci.c
-> > +++ b/drivers/usb/host/ohci-pci.c
-> > @@ -165,6 +165,24 @@ static int ohci_quirk_amd700(struct usb_hcd *hcd)
-> >       return 0;
-> >  }
-> >
-> > +static int ohci_quirk_loongson(struct usb_hcd *hcd)
-> > +{
-> > +     struct pci_dev *pdev =3D to_pci_dev(hcd->self.controller);
-> > +
-> > +     /*
-> > +      * Loongson's LS7A OHCI controller (rev 0x02) has a
-> > +      * flaw. MMIO register with offset 0x60/64 is treated
-> > +      * as legacy PS2-compatible keyboard/mouse interface.
-> > +      * Since OHCI only use 4KB BAR resource, LS7A OHCI's
-> > +      * 32KB BAR is wrapped around (the 2nd 4KB BAR space
-> > +      * is the same as the 1st 4KB internally). So add 4KB
-> > +      * offset (0x1000) to the OHCI registers as a quirk.
-> > +      */
-> > +     hcd->regs +=3D (pdev->revision =3D=3D 0x2) ? 0x1000 : 0x0;
->
-> I'm sorry, I should have mentioned this previously but I only noticed it
-> now.  This would be a lot easier for people to read if you wrote it as a
-> simple "if" statement:
->
->         if (pdev->revision =3D=3D 0x02)
->                 hcd->regs +=3D 0x1000;
->
-> Otherwise the patch looks fine.  If you make this change, you can
-> resubmit it with:
->
-> Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
-Thanks, V3 is sent:
-https://lore.kernel.org/linux-usb/20250328040059.3672979-1-chenhuacai@loong=
-son.cn/T/#u
+Add the necessary infrastructure changes to support freezing for suspend
+and hibernate.
 
-Huacai
+Just got back from LSFMM. So still jetlagged and likelihood of bugs
+increased. This should all that's needed to wire up power.
 
->
-> Alan Stern
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static int ohci_quirk_qemu(struct usb_hcd *hcd)
-> >  {
-> >       struct ohci_hcd *ohci =3D hcd_to_ohci(hcd);
-> > @@ -224,6 +242,10 @@ static const struct pci_device_id ohci_pci_quirks[=
-] =3D {
-> >               PCI_DEVICE(PCI_VENDOR_ID_ATI, 0x4399),
-> >               .driver_data =3D (unsigned long)ohci_quirk_amd700,
-> >       },
-> > +     {
-> > +             PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x7a24),
-> > +             .driver_data =3D (unsigned long)ohci_quirk_loongson,
-> > +     },
-> >       {
-> >               .vendor         =3D PCI_VENDOR_ID_APPLE,
-> >               .device         =3D 0x003f,
+This will be in vfs-6.16.super shortly.
+
+---
+Changes in v2:
+- Don't grab reference in the iterator make that a requirement for the
+  callers that need custom behavior.
+- Link to v1: https://lore.kernel.org/r/20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org
+
+---
+Christian Brauner (6):
+      super: remove pointless s_root checks
+      super: simplify user_get_super()
+      super: skip dying superblocks early
+      super: use a common iterator (Part 1)
+      super: use common iterator (Part 2)
+      super: add filesystem freezing helpers for suspend and hibernate
+
+ fs/super.c         | 201 ++++++++++++++++++++++++++++++++---------------------
+ include/linux/fs.h |   4 +-
+ 2 files changed, 126 insertions(+), 79 deletions(-)
+---
+base-commit: acb4f33713b9f6cadb6143f211714c343465411c
+change-id: 20250328-work-freeze-0a446869cd62
+
