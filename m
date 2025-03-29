@@ -1,126 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A013C0C;
-	Sat, 29 Mar 2025 09:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC5A158538;
+	Sat, 29 Mar 2025 09:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743239772; cv=none; b=O+b/U2hgxJDS3/9EXRd190/FEXFzpfjef+gCI3pXOtABrf2JKEVCy68DlN+J1cmiswtLKLlv5AI9tIyDAeSuThEjlCPrN4OlZ44mYdrCYUor/sAAqcYYorMaBjJik2rdoQ1wxy9tCHM9vhzwrnMxwAFzQYYVj5EjDCOMTL8Zm6U=
+	t=1743239834; cv=none; b=X3vZ9P1npOwXXiWtfaDgdnKrHUFsw6u+/fwtebWOuK4bAaz+LMl0lpZMrzFvgNx07Mc/zG3sCCyjg+h7395d/7tsj5q5ETIwFR8k/wVK7fyZv5R1iaeBvDdRxX5iv7zQ3s/RnqY6FR41E9b53w8Zr/LS4BVRqYUxBw4UwmzGNvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743239772; c=relaxed/simple;
-	bh=QUXkIaog4eeiNtGeVu2ZSxK9kZQgwHPHGcj4zcluliY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=habWx425l6vUdi0I9RgFRKHVqzueCjVQueE+RdRDUcLEXUNG2lI0yQ14KAE8RH86+bynbR/t7viCUUz7NYQ4XeQ78Ff0FYzHqBZBi9a/SVLEjjP3gy0Swc2J9+4UXKkF/t90kBFQh471h6rp0Hy7YJHxs6d3e1IbAH73XMXDZLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ouvRbnBK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743239834; c=relaxed/simple;
+	bh=eW6OCfNj36ra5M1ny2lKubEtu+e+UHN6ZzivUob2ulc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PyX2lDgoqbjOrCq6A7Cx6vplQMoeMsePH/u45WoHT6pj3TwRkLbd8/Jw2Ga9r8fhyEQCn1WTSVJm6+6G8Puf2/N7uepN1LwJSkSlgUjP+Y+NmJzOJ9EoGF2lSXR9Lk+8PUTilgNflWpwHibck7aCpD0slUoDiIN1XutZKiYccMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMPxvv5D; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ouvRbnBK"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52T7jw1u005966;
-	Sat, 29 Mar 2025 09:16:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZctcELcPbgMeBUILORibRhO1veAYoqsegMxTqB8eDys=; b=ouvRbnBK4ZUEElK3
-	MlAD7AqG5EZTqa75fF0DvbDWjXVgk2bb1feBrNmmoeJ4SkFcESnl5Brrq/rPgAnK
-	F9jPj7MPVN2O7ow/IvJiZxLoRGTogG4ghB3Ib3qlDNt/p7yVVOE33vtLlIrJVKlC
-	PlCc4SuQV1SU7odfghoFUpr5pWR0XZZuO156ahumVVmZNCck4fbOih1o8RRUGdXo
-	IENYQ0v1Dn+47DWIVOFD78Rqkzyi7Guy2e8A9LuDD5EB0ASe6v4uMTmX1Jg3pr+b
-	eW69ZxYbnfRZRdSwbDjM/P0A+tPhG9g8vz04hOAZZrYRc3jbjuvdYu0NB35iYPUe
-	3GdZVQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p935rdew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Mar 2025 09:16:01 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52T9FiKa031640
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Mar 2025 09:15:44 GMT
-Received: from [10.216.2.59] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 29 Mar
- 2025 02:15:41 -0700
-Message-ID: <e09c0d10-60f3-480b-a3f9-654ee2f14978@quicinc.com>
-Date: Sat, 29 Mar 2025 14:45:38 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMPxvv5D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743239833; x=1774775833;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eW6OCfNj36ra5M1ny2lKubEtu+e+UHN6ZzivUob2ulc=;
+  b=EMPxvv5DCqY5o0Jj46S9YrkZUGuh0DuOnlg2D/FfZH540mMk55Rrsvie
+   DebNiImaTCg95oRGALrWkzYZ9z17q9JruGL+fqlE2LigqduYOdgb9xSjI
+   J8y0FPVMZcnbzGnowPYb6XEVcMHJh6xfK85VGAVhg+/POpvjwLmul8Vjy
+   27t+QDFN3RV5aanqez1UMuJLSuD2kaob1GdrYS2a0hFwy0A1+nD6nFb18
+   qKhPNPt7/muXwfNDJ0NzuF0webojxzc01vjhD/eV0Kb7qbSBHPGh/+ZtI
+   1faB+C9hvi2ylKHroah+gDAqHdoJpNHoZWx1av7WVQjprgcib8BKD32Fy
+   g==;
+X-CSE-ConnectionGUID: ZUHjtbktTA6QEuwErU+c3Q==
+X-CSE-MsgGUID: AXFxSg22RCywzSWsLzxlEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="67075053"
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="scan'208";a="67075053"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 02:17:13 -0700
+X-CSE-ConnectionGUID: IjnCrNK2TxqngatVN6weoA==
+X-CSE-MsgGUID: 6yt3rtmYSjG1z8hvofugZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="scan'208";a="125649884"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 29 Mar 2025 02:17:10 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tySJP-000818-2J;
+	Sat, 29 Mar 2025 09:17:07 +0000
+Date: Sat, 29 Mar 2025 17:16:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
+Message-ID: <202503291609.9gCJpjjk-lkp@intel.com>
+References: <20250328-b4-vd55g1-v1-2-8d16b4a79f29@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] i2c: npcm: Add clock toggle recovery
-To: <mohammed.0.elbadry@gmail.com>
-CC: Tali Perry <tali.perry1@gmail.com>, Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Andi
- Shyti <andi.shyti@kernel.org>, <openbmc@lists.ozlabs.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
- <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250328193252.1570811-1-mohammed.0.elbadry@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QJ1FZTKbAJbJEPaabUI_orjrK2185UbJ
-X-Authority-Analysis: v=2.4 cv=KOFaDEFo c=1 sm=1 tr=0 ts=67e7ba51 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=XycGwPUB66WHHuA_nGUA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: QJ1FZTKbAJbJEPaabUI_orjrK2185UbJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503290065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328-b4-vd55g1-v1-2-8d16b4a79f29@foss.st.com>
 
-Looks good to me.
+Hi Benjamin,
 
-On 3/29/2025 1:02 AM, mohammed.0.elbadry@gmail.com wrote:
-> From: Tali Perry <tali.perry1@gmail.com>
-> 
-> During init of the bus, the module checks that the bus is idle.
-> If one of the lines are stuck try to recover them first before failing.
-> Sometimes SDA and SCL are low if improper reset occurs (e.g., reboot).
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> Signed-off-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
-Reviewed-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
->   drivers/i2c/busses/i2c-npcm7xx.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-> index 2fe68615942e..caf9aa1e6319 100644
-> --- a/drivers/i2c/busses/i2c-npcm7xx.c
-> +++ b/drivers/i2c/busses/i2c-npcm7xx.c
-> @@ -1967,10 +1967,14 @@ static int npcm_i2c_init_module(struct npcm_i2c *bus, enum i2c_mode mode,
->   
->   	/* Check HW is OK: SDA and SCL should be high at this point. */
->   	if ((npcm_i2c_get_SDA(&bus->adap) == 0) || (npcm_i2c_get_SCL(&bus->adap) == 0)) {
-> -		dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
-> -		dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
-> -			npcm_i2c_get_SCL(&bus->adap));
-> -		return -ENXIO;
-> +		dev_warn(bus->dev, " I2C%d SDA=%d SCL=%d, attempting to recover\n", bus->num,
-> +				 npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
-> +		if (npcm_i2c_recovery_tgclk(&bus->adap)) {
-> +			dev_err(bus->dev, "I2C%d init fail: SDA=%d SCL=%d\n",
-> +				bus->num, npcm_i2c_get_SDA(&bus->adap),
-> +				npcm_i2c_get_SCL(&bus->adap));
-> +			return -ENXIO;
-> +		}
->   	}
->   
->   	npcm_i2c_int_enable(bus, true);
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on b2c4bf0c102084e77ed1b12090d77a76469a6814]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Mugnier/media-dt-bindings-Add-ST-VD55G1-camera-sensor-binding/20250328-215939
+base:   b2c4bf0c102084e77ed1b12090d77a76469a6814
+patch link:    https://lore.kernel.org/r/20250328-b4-vd55g1-v1-2-8d16b4a79f29%40foss.st.com
+patch subject: [PATCH 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
+config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20250329/202503291609.9gCJpjjk-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250329/202503291609.9gCJpjjk-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503291609.9gCJpjjk-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   sh4-linux-ld: drivers/media/i2c/tc358746.o: in function `tc358746_probe':
+   tc358746.c:(.text+0x1bc0): undefined reference to `devm_clk_hw_register'
+   sh4-linux-ld: tc358746.c:(.text+0x1bcc): undefined reference to `devm_of_clk_add_hw_provider'
+   sh4-linux-ld: tc358746.c:(.text+0x1bd0): undefined reference to `of_clk_hw_simple_get'
+   sh4-linux-ld: drivers/media/i2c/vd55g1.o: in function `vd55g1_probe':
+>> vd55g1.c:(.text+0x1e38): undefined reference to `__udivdi3'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
