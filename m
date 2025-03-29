@@ -1,435 +1,585 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D901979E1;
-	Sat, 29 Mar 2025 16:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1BD149C55;
+	Sat, 29 Mar 2025 16:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743264039; cv=none; b=ji1jBB7cv6Ab0GTFLXjSLBEC+caqGoUb5JiB4VkWfBiK7v55W6kk+PBiX6BOWJ7TIWg2oPE513S9soik6vvY2J2n5Yyx6s692ClV3PzVy0hkBf1GCkU73kg2R07HRZQkj7/pfilBtmRFR0i0zr/YfpV79eELu2VRgdTdQPaYuUs=
+	t=1743264286; cv=none; b=MZ++pLL7yOi0Vew+3tFNAiNxRawoNXdZ3ya+JG/hKE78VWvJI85kDmJFRduKYqjgi9Ps5Us3yTbqqw/Ye9WK/b6qTVDkkM/Wi87F1pormXJYgu/uGuI+vEnKa0kYonPIxls6XMIXWiFEdRSO33vO0AdwQ/Jf+roH9ktjHpMwuUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743264039; c=relaxed/simple;
-	bh=XBYalBZfz3nYAjqM91atRnDYVqkCDVVpAwI9XkYY4Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBKUy2vWfHGlUa/OrZ9WgQP/nEoCwj82Z7yhshbN30ULSceRnaxL17t9fEuJQXR9kwJejXhQceDbmKqIt/5d+Q7WL69xdKF5dQCu8VbuPVjKWzpChdw19u2ILLOKWIgOVqGh2jvHLmwL//7XdMsSECZBTgS+otNOP/tT2G+13Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYVyoJAz; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743264286; c=relaxed/simple;
+	bh=GV0VJoG2FOuRIEztRSJsH/0e5FecCJlzCmtykVF4ktM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IsylsOTeYWmpVmhZOLWv/Rl7TJkF4IGNiR4ybUf8P3wXMCj7stvpLgbrlDLZ23s2IStuASCM/70icY03NrXBrOBvQNlM1oDOdZ1aR6/P2Gf0aQkn1lUCk716Yif5U1FKlQW6Mjd4vveHQKcrG6LDfi5kBfjxMtJjMl5ryNSKE6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nP7/JNp6; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYVyoJAz"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227cf12df27so47145635ad.0;
-        Sat, 29 Mar 2025 09:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743264037; x=1743868837; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=e09bq1QFCx15sz91iQYUA5891umVrz4UnXamEXGTNkM=;
-        b=OYVyoJAzxEjeJPg15IxQPLN72z37PRtQmP8P5Gf7Ae1fXa94CfKaQjsIBCi6VYCxVs
-         clr5QOsNnizeFBABYFMeryHFZMyge/33ZxHi2s0FGlrGgufR8LBfTl1o5d8aydv1+1rc
-         krJzwqqPTIVyJfC1DZDhTHCeboFzIE4gwM8Qa+6J7vuzBy+LTFaV2kqlaOwezpwlwQr9
-         VPvRqKxw2a4KsqzaWqTeFGb/JqRMTvj6ZUZCIjwBK0csORaNI1Z+1ersOFFQy7Q2482K
-         8MLqZXFP5V6plaDa0oWenYzqlYZlmNW9EI0Q4HJVMDBO0UpKYbujR77AtlI7qMgsPA0J
-         Eyyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743264037; x=1743868837;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e09bq1QFCx15sz91iQYUA5891umVrz4UnXamEXGTNkM=;
-        b=F4r2tA28UVvkzYmH90mKUVhZ2/UOaDDPUxqyEFhlMwMleji2SZ/TRJBrEuE1/BqjuF
-         vsVJ0YxIFTZBckXTbNB10AAj1PlL9dohIT1iyoga29B/xIjjS7NH5Ft6f+HATmbgxnHC
-         6UTCKyqmfq7ms6s+9rvMdqjQ0DZagiBHW7fO3orDw8n7dBs2iRAhZOIwxMw80meuLJhu
-         EUg6M4l4P7/WLy/gkPIrBcFlnTWWvjuATLHhBeMWjzALIF2oyf2fBbirV8WJ2io4mu2e
-         E3Qcc0lzRzk0g01bPFAfHGo3DqDlt9M77iiycUFPyMYq8DtPoBv4+HmfhMArJCKr0if/
-         oiww==
-X-Forwarded-Encrypted: i=1; AJvYcCUVA2LZktj30T5lcNQGIhZwPiWsx0V4sv17ngpiZMSb+iPZPpl4wTTGObxb6WFr+NwGQtT/j7kEyiF0WpU=@vger.kernel.org, AJvYcCUwL53j+I2t0hHg7inSU1HFl1EcSENuVLQFk6z94FWfRfAllBm62fZIO/LSQCeK1GMpAtPei02qApQp1Li2@vger.kernel.org, AJvYcCVP4EB8I42yu8+uI3nbfZLpZgUvpak3HFuKKnAoqlR8GMxD8F9yUq/y7yav36kkBFOqf+OQERLV@vger.kernel.org, AJvYcCVgxWSg4Ol5G++Qb3k/L5Y2Rgm2uc0DaQ7m9gqzH7JArhqFe3Ybr18hH4sdsn3T/zazo5Y=@vger.kernel.org, AJvYcCWk0jO7dBewnzwhVUpFAexhvMhWoIFkTDWUB0sLE3RG4uccNM+13iWVEJJKAcqqQ7LtKqgeedSpxHJ58q9I@vger.kernel.org, AJvYcCXPAibTnQbwbhDx0Jx4UUIOM1Pb/KjKAwH7/kmRoKn8xXz23WoJk4Qfvl6KEDjngfxIcAS0pcvFXJDQdP4NzA8=@vger.kernel.org, AJvYcCXjl+sWBLw/cEkpDHqUe/A9smcGIQdxrVx6uakWZNMd08o3JvsT177ojC7EpeSAUsOqZ4P/edaJt5Qnhxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG3trR1ON4UanMf7EzPGqtqSxFgWtTYr+WvKdI7YS7IXU7HUaG
-	Qkv9aWdTMT7ZlFx2g/OfCZxqcwOErZxLZViqrEMSsVEBEvBBy7uF
-X-Gm-Gg: ASbGncuh4zsadRsW3vCwAw58YhF46NMsLmKBasp67IecAXme0xNXnuWrSJN7Ec5/wM2
-	ybYxI/wxVj2k1aNxuFNZzsfU2tZNyrBcRl7XJoi/g09OhcgaOEpncfxHokyJfHplY6i7xYEetvl
-	YpWnumUq9yVKFQ5/7AoP1TsP3+k2zNaEWtDx0yO2OFng8oOz4ycHZ2EL81+zz4VdsUcL4nLpNcz
-	p8a7XnmfTNAMMTXnz1S+TX5SyOVpOCsPqcUhOO8lTh3i6JUs2o8+3y+O52Sh+CaAx8y0d53drVo
-	fA8MJwj/rMYLyPTzLjJ8tyqrdLvru3k9vJKGxLICdshcjKM9tP50H+V59B5woTQ0Xclbfg85
-X-Google-Smtp-Source: AGHT+IHc+mRbF7fELQ1shHtkA3D+WC9LomOMe2nEVwqrLw8CNFkqEgEqVTTBwRhp2NkmxJQxCOcZqA==
-X-Received: by 2002:a17:902:f545:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-2292ec073d0mr53750285ad.2.1743264036831;
-        Sat, 29 Mar 2025 09:00:36 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee0068sm37958825ad.94.2025.03.29.09.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 09:00:36 -0700 (PDT)
-Date: Sun, 30 Mar 2025 00:00:26 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
-	akpm@linux-foundation.org, alistair@popple.id.au,
-	andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
-	arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
-	bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
-	davem@davemloft.net, dmitry.torokhov@gmail.com,
-	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
-	edumazet@google.com, eleanor15x@gmail.com,
-	gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
-	jernej.skrabec@gmail.com, jirislaby@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, johannes@sipsolutions.net, jonas@kwiboo.se,
-	jserv@ccns.ncku.edu.tw, kuba@kernel.org, linux-fsi@lists.ozlabs.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux@rasmusvillemoes.dk, louis.peens@corigine.com,
-	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
-	mingo@redhat.com, miquel.raynal@bootlin.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, netdev@vger.kernel.org,
-	oss-drivers@corigine.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, rfoss@kernel.org,
-	richard@nod.at, simona@ffwll.ch, tglx@linutronix.de,
-	tzimmermann@suse.de, vigneshr@ti.com, x86@kernel.org
-Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
-Message-ID: <Z+gZGvgOwYBU/99o@visitorckw-System-Product-Name>
-References: <EB85C3C1-8A0D-4CB9-B501-BFEABDF3E977@zytor.com>
- <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
- <Z9CyuowYsZyez36c@thinkpad>
- <80771542-476C-493E-858A-D2AF6A355CC1@zytor.com>
- <Z9GtcNJie8TRKywZ@thinkpad>
- <Z9G2Tyypb3iLoBjn@visitorckw-System-Product-Name>
- <Z9KMKwnZXA2mkD2s@visitorckw-System-Product-Name>
- <Z+AlyB461xwMxMtG@visitorckw-System-Product-Name>
- <05F7AC70-E8E7-4D14-A4EB-880D92A96534@zytor.com>
- <Z-F_96AECHpsCXsL@thinkpad>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nP7/JNp6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=PGvq+IgOO0pDlT/nRQyeX7phWlmZUo5b8zjWNJ3Kvqw=;
+	b=nP7/JNp6EALTPYs4yVKLSsSjs8lgJlyxUaRey+NgDroyOjOftlsB1YOjlmP4Iu
+	EdE/516y+FD7AAo/vYby6xjLJUHLh9RLrn9m4Tfwgf+jh4oJXHF/2T2DrJwuJ0v+
+	rBADRGOvSpDVuMkeEOyaCrjHBaCLqwsRohGFmGmD2BvDA=
+Received: from [192.168.71.89] (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgAX2MDiGehnaj5fAg--.12996S2;
+	Sun, 30 Mar 2025 00:03:48 +0800 (CST)
+Message-ID: <95d9f7d9-6569-4252-a54d-cbe38ade706b@163.com>
+Date: Sun, 30 Mar 2025 00:03:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
+ finding the capabilities
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250323164852.430546-1-18255117159@163.com>
+ <20250323164852.430546-4-18255117159@163.com>
+ <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
+ <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
+ <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
+ <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
+ <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
+ <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
+ <de6ce71c-ba82-496e-9c72-7c9c61b37906@163.com>
+ <ddabf340-a00f-75b1-2b6b-d9ab550a984f@linux.intel.com>
+ <9118fcc0-e5a5-40f2-be4b-7e06b4b20601@163.com>
+ <b279863e-8d8c-4c14-98ad-c19d26c69146@163.com>
+ <0e493832-6292-10d7-6f87-ed190059c999@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <0e493832-6292-10d7-6f87-ed190059c999@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-F_96AECHpsCXsL@thinkpad>
+X-CM-TRANSID:PCgvCgAX2MDiGehnaj5fAg--.12996S2
+X-Coremail-Antispam: 1Uf129KBjvAXoW3CrWruF4DCFyxAw1UGFW7Jwb_yoW8GF48uo
+	WfXrnxu3WrWr17A3yDKas7XwnrZa4avFn3AF4fCrs8XFy5Aa15Cr43Ca1fZ3y5uw48trWU
+	Zryktw12gFsFv3Wfn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUn1v3DUUUU
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgMeo2fmiTkwdQABsx
 
-On Mon, Mar 24, 2025 at 11:53:35AM -0400, Yury Norov wrote:
-> On Sun, Mar 23, 2025 at 03:40:20PM -0700, H. Peter Anvin wrote:
-> > On March 23, 2025 8:16:24 AM PDT, Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-> > >On Thu, Mar 13, 2025 at 03:41:49PM +0800, Kuan-Wei Chiu wrote:
-> > >> On Thu, Mar 13, 2025 at 12:29:13AM +0800, Kuan-Wei Chiu wrote:
-> > >> > On Wed, Mar 12, 2025 at 11:51:12AM -0400, Yury Norov wrote:
-> > >> > > On Tue, Mar 11, 2025 at 03:24:14PM -0700, H. Peter Anvin wrote:
-> > >> > > > On March 11, 2025 3:01:30 PM PDT, Yury Norov <yury.norov@gmail.com> wrote:
-> > >> > > > >On Sun, Mar 09, 2025 at 11:48:26PM +0800, Kuan-Wei Chiu wrote:
-> > >> > > > >> On Fri, Mar 07, 2025 at 12:07:02PM -0800, H. Peter Anvin wrote:
-> > >> > > > >> > On March 7, 2025 11:53:10 AM PST, David Laight <david.laight.linux@gmail.com> wrote:
-> > >> > > > >> > >On Fri, 07 Mar 2025 11:30:35 -0800
-> > >> > > > >> > >"H. Peter Anvin" <hpa@zytor.com> wrote:
-> > >> > > > >> > >
-> > >> > > > >> > >> On March 7, 2025 10:49:56 AM PST, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> > >> > > > >> > >> >> (int)true most definitely is guaranteed to be 1.  
-> > >> > > > >> > >> >
-> > >> > > > >> > >> >That's not technically correct any more.
-> > >> > > > >> > >> >
-> > >> > > > >> > >> >GCC has introduced hardened bools that intentionally have bit patterns
-> > >> > > > >> > >> >other than 0 and 1.
-> > >> > > > >> > >> >
-> > >> > > > >> > >> >https://gcc.gnu.org/gcc-14/changes.html
-> > >> > > > >> > >> >
-> > >> > > > >> > >> >~Andrew  
-> > >> > > > >> > >> 
-> > >> > > > >> > >> Bit patterns in memory maybe (not that I can see the Linux kernel using them) but
-> > >> > > > >> > >> for compiler-generated conversations that's still a given, or the manager isn't C
-> > >> > > > >> > >> or anything even remotely like it.
-> > >> > > > >> > >> 
-> > >> > > > >> > >
-> > >> > > > >> > >The whole idea of 'bool' is pretty much broken by design.
-> > >> > > > >> > >The underlying problem is that values other than 'true' and 'false' can
-> > >> > > > >> > >always get into 'bool' variables.
-> > >> > > > >> > >
-> > >> > > > >> > >Once that has happened it is all fubar.
-> > >> > > > >> > >
-> > >> > > > >> > >Trying to sanitise a value with (say):
-> > >> > > > >> > >int f(bool v)
-> > >> > > > >> > >{
-> > >> > > > >> > >	return (int)v & 1;
-> > >> > > > >> > >}    
-> > >> > > > >> > >just doesn't work (see https://www.godbolt.org/z/MEndP3q9j)
-> > >> > > > >> > >
-> > >> > > > >> > >I really don't see how using (say) 0xaa and 0x55 helps.
-> > >> > > > >> > >What happens if the value is wrong? a trap or exception?, good luck recovering
-> > >> > > > >> > >from that.
-> > >> > > > >> > >
-> > >> > > > >> > >	David
-> > >> > > > >> > 
-> > >> > > > >> > Did you just discover GIGO?
-> > >> > > > >> 
-> > >> > > > >> Thanks for all the suggestions.
-> > >> > > > >> 
-> > >> > > > >> I don't have a strong opinion on the naming or return type. I'm still a
-> > >> > > > >> bit confused about whether I can assume that casting bool to int always
-> > >> > > > >> results in 0 or 1.
-> > >> > > > >> 
-> > >> > > > >> If that's the case, since most people prefer bool over int as the
-> > >> > > > >> return type and some are against introducing u1, my current plan is to
-> > >> > > > >> use the following in the next version:
-> > >> > > > >> 
-> > >> > > > >> bool parity_odd(u64 val);
-> > >> > > > >> 
-> > >> > > > >> This keeps the bool return type, renames the function for better
-> > >> > > > >> clarity, and avoids extra maintenance burden by having just one
-> > >> > > > >> function.
-> > >> > > > >> 
-> > >> > > > >> If I can't assume that casting bool to int always results in 0 or 1,
-> > >> > > > >> would it be acceptable to keep the return type as int?
-> > >> > > > >> 
-> > >> > > > >> Would this work for everyone?
-> > >> > > > >
-> > >> > > > >Alright, it's clearly a split opinion. So what I would do myself in
-> > >> > > > >such case is to look at existing code and see what people who really
-> > >> > > > >need parity invent in their drivers:
-> > >> > > > >
-> > >> > > > >                                     bool      parity_odd
-> > >> > > > >static inline int parity8(u8 val)       -               -
-> > >> > > > >static u8 calc_parity(u8 val)           -               -
-> > >> > > > >static int odd_parity(u8 c)             -               +
-> > >> > > > >static int saa711x_odd_parity           -               +
-> > >> > > > >static int max3100_do_parity            -               -
-> > >> > > > >static inline int parity(unsigned x)    -               -
-> > >> > > > >static int bit_parity(u32 pkt)          -               -
-> > >> > > > >static int oa_tc6_get_parity(u32 p)     -               -
-> > >> > > > >static u32 parity32(__le32 data)        -               -
-> > >> > > > >static u32 parity(u32 sample)           -               -
-> > >> > > > >static int get_parity(int number,       -               -
-> > >> > > > >                      int size)
-> > >> > > > >static bool i2cr_check_parity32(u32 v,  +               -
-> > >> > > > >                        bool parity)
-> > >> > > > >static bool i2cr_check_parity64(u64 v)  +               -
-> > >> > > > >static int sw_parity(__u64 t)           -               -
-> > >> > > > >static bool parity(u64 value)           +               -
-> > >> > > > >
-> > >> > > > >Now you can refer to that table say that int parity(uXX) is what
-> > >> > > > >people want to see in their drivers.
-> > >> > > > >
-> > >> > > > >Whichever interface you choose, please discuss it's pros and cons.
-> > >> > > > >What bloat-o-meter says for each option? What's maintenance burden?
-> > >> > > > >Perf test? Look at generated code?
-> > >> > > > >
-> > >> > > > >I personally for a macro returning boolean, something like I
-> > >> > > > >proposed at the very beginning.
-> > >> > > > >
-> > >> > > > >Thanks,
-> > >> > > > >Yury
-> > >> > > > 
-> > >> > > > Also, please at least provide a way for an arch to opt in to using the builtins, which seem to produce as good results or better at least on some architectures like x86 and probably with CPU options that imply fast popcnt is available.
-> > >> > > 
-> > >> > > Yeah. And because linux/bitops.h already includes asm/bitops.h
-> > >> > > the simplest way would be wrapping generic implementation with
-> > >> > > the #ifndef parity, similarly to how we handle find_next_bit case.
-> > >> > > 
-> > >> > > So:
-> > >> > > 1. Kuan-Wei, please don't invent something like ARCH_HAS_PARITY;
-> > >> > > 2. This may, and probably should, be a separate follow-up series,
-> > >> > >    likely created by corresponding arch experts.
-> > >> > > 
-> > >> > I saw discussions in the previous email thread about both
-> > >> > __builtin_parity and x86-specific implementations. However, from the
-> > >> > discussion, I learned that before considering any optimization, we
-> > >> > should first ask: which driver or subsystem actually cares about parity
-> > >> > efficiency? If someone does, I can help with a micro-benchmark to
-> > >> > provide performance numbers, but I don't have enough domain knowledge
-> > >> > to identify hot paths where parity efficiency matters.
-> > >> > 
-> > >> IMHO,
-> > >> 
-> > >> If parity is never used in any hot path and we don't care about parity:
-> > >> 
-> > >> Then benchmarking its performance seems meaningless. In this case, a
-> > >> function with a u64 argument would suffice, and we might not even need
-> > >> a macro to optimize for different types—especially since the macro
-> > >> requires special hacks to avoid compiler warnings. Also, I don't think
-> > >> code size matters here. If it does, we should first consider making
-> > >> parity a non-inline function in a .c file rather than an inline
-> > >> function/macro in a header.
-> > >> 
-> > >> If parity is used in a hot path:
-> > >> 
-> > >> We need different handling for different type sizes. As previously
-> > >> discussed, x86 assembly might use different instructions for u8 and
-> > >> u16. This may sound stubborn, but I want to ask again: should we
-> > >> consider using parity8/16/32/64 interfaces? Like in the i3c driver
-> > >> example, if we only have a single parity macro that selects an
-> > >> implementation based on type size, users must explicitly cast types.
-> > >> If future users also need parity in a hot path, they might not be aware
-> > >> of this requirement and end up generating suboptimal code. Since we
-> > >> care about efficiency and generated code, why not follow hweight() and
-> > >> provide separate implementations for different sizes?
-> > >> 
-> > >It seems no one will reply to my two emails. So, I have summarized
-> > >different interface approaches. If there is a next version, I will send
-> > >it after the merge window closes.
-> > >
-> > >Interface 1: Single Function
-> > >Description: bool parity_odd(u64)
-> > >Pros: Minimal maintenance cost
-> > >Cons: Difficult to integrate with architecture-specific implementations
-> > >      due to the inability to optimize for different argument sizes
+
+
+On 2025/3/28 19:42, Ilpo Järvinen wrote:
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 47b31ad724fa..0d5dfd010a01 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -1198,6 +1198,64 @@ void pci_sort_breadthfirst(void);
+>>
+>>   /* Generic PCI functions exported to card drivers */
+>>
+>> +/* Extended capability finder */
+>> +#define PCI_FIND_NEXT_CAP_TTL(priv, devfn, read_cfg, start, cap)     \
 > 
-> How difficult? It's just as simple as find_next_bit(). I already
-> pointed that.
+> Please put it into drivers/pci/pci.h but other than that this is certainly
+> to the direction I was suggesting.
+
+Hi Ilpo,
+
+I'm sorry for not replying to you in time. I tried to understand your 
+suggestion, modify it, and then experiment on the actual SOC platform. 
+Thank you very much for your reply and patient advice.
+
+I'm going to put it in the drivers/pci/pci.h file.
+
+> 
+> You don't need to have those priv and devfn there like that but you can
+> use the args... trick (see linux/iopoll.h) and put them as last parameters
+> to the macro so they can wary based on the caller needs, assuming args
+> will work like this, I've not tested:
+> 
+> 		read_cfg(args, __pos, &val)
 > 
 
-The architecture-specific implementation may use different approaches
-for different bit widths. As previously discussed by Peter and David,
-the x86 implementation of parity uses different instructions for u8 and
-u16 arguments. Having an interface that only takes u64 makes it
-difficult to accommodate these differences.
+I have modified it in the following reply, but I only modify it like 
+this at present: read_cfg(args, __pos, size, &val)
 
-Are you referring to the #ifndef parity approach when mentioning
-find_next_bit()? If so, I'm not sure how that would solve the issue
-while keeping different implementations for different bit widths under
-an interface that only takes u64.
-
-> > >Opinions: Jiri supports this approach
-> > >
-> > >Interface 2: Single Macro
-> > >Description: parity_odd() macro
-> > >Pros: Allows type-specific implementation
-> > >Cons: Requires hacks to avoid warnings; users may need explicit
-> 
-> So if the hack is documented, it's OK. I don't know the other way to
-> motivate compilers to get better other than pointing them to their
-> bugs.
+> The size parameter is the most annoying one as it's in between where and
+> *val arguments so args... trick won't work for it. I suggest just
+> providing a function with the same signature as the related pci/access.c
+> function for now.
 > 
 
-Perhaps this comes down to taste. IMHO, a solution relying on #if gcc
-#else with extensive comments to explain workarounds has a higher
-maintenance cost and is uglier compared to simply having three
-additional one-liner functions.
+Currently DWC, CDNS, and pci.c seem to be unable to unify a common 
+function to read config.
 
-That said, you are the maintainer, and you likely have a better
-perspective on the maintenance burden than I do.
+I don't quite understand what you mean here. Is the current 
+dw_pcie_read_cfg, cdns_pcie_read_cfg, __pci_bus_read_config correct? 
+Please look at my latest modification. If it is not correct, please 
+explain it again. Thank you very much.
 
-> > >      casting; potential sub-optimal code on 32-bit x86
+> A few nits related to the existing code quality of the cap parser function
+> which should be addressed while we touch this function (probably in own
+> patches indepedent of this code move/rearrange patch itself).
 > 
-> Any asm listings? Any real impact?
+
+I will revise it in my final submission. The following reply has been 
+modified.
+
+>> +	({                                                                  \
+>> +		typeof(start) __pos = (start);                              \
+>> +		int __ttl = PCI_FIND_CAP_TTL;                               \
+>> +		u16 __ent = 0;                                              \
+>> +		u8 __found_pos = 0;                                         \
+>> +		u8 __id;                                                    \
+>> +     \
+>> +		read_cfg((priv), (devfn), __pos, 1, (u32 *)&__pos);         \
+>> +     \
+>> +		while (__ttl--) {                                           \
+>> +			if (__pos < 0x40)                                   \
 > 
-I was just referring to the comment previously mentioned by David.
-Below is a simple assembly comparison between #2 and #3:
+> I started to wonder if there's something for this and it turn out we've
+> PCI_STD_HEADER_SIZEOF.
 
-generic_macro:
-        movq    xmm0, QWORD PTR [esp+4]
-        mov     edx, 27030
-        movdqa  xmm2, xmm0
-        psrlq   xmm2, 32
-        movdqa  xmm1, xmm2
-        pxor    xmm1, xmm0
-        movdqa  xmm3, xmm1
-        psrlq   xmm3, 16
-        movdqa  xmm0, xmm3
-        pxor    xmm0, xmm1
-        movdqa  xmm4, xmm0
-        psrlq   xmm4, 8
-        movdqa  xmm1, xmm4
-        pxor    xmm1, xmm0
-        movdqa  xmm5, xmm1
-        psrlq   xmm5, 4
-        movdqa  xmm0, xmm5
-        pxor    xmm0, xmm1
-        movd    eax, xmm0
-        and     eax, 15
-        bt      edx, eax
-        setc    al
-        ret
-fixed_type_parity_function:
-        mov     edx, DWORD PTR [esp+8]
-        xor     edx, DWORD PTR [esp+4]
-        mov     eax, edx
-        shr     eax, 16
-        xor     eax, edx
-        mov     edx, eax
-        xor     dl, ah
-        mov     eax, edx
-        shr     al, 4
-        xor     eax, edx
-        mov     edx, 27030
-        and     eax, 15
-        bt      edx, eax
-        setc    al
-        ret
+It has been modified.
 
-https://godbolt.org/z/cPjbEYKPP
-
-As I mentioned earlier, I can't point to any specific driver or
-subsystem where parity efficiency is critical. However, if performance
-is not a concern, then perhaps #1 is the simplest option, and we might
-not even need architecture-specific implementations.
-
-> > >Opinions: Yury supports this approach
-> > >
-> > >Interface 3: Multiple Functions
-> > >Description: bool parity_odd8/16/32/64()
-> > >Pros: No need for explicit casting; easy to integrate
 > 
-> Explicit castings are sometimes better than implicit ones.
+>> +				break;                                      \
+>> +			__pos &= ~3;                                        \
 > 
-In #2, users might easily overlook the need for explicit casting. As
-Peter pointed out, integer promotion could unintentionally lead to the
-32-bit version being used when it wasn't intended.
+> This could use some align helper.
 
-By making the function names and parameter types explicitly indicate
-8/16/32/64 bits, such issues become less likely to occur.
+It has been modified.
 
-> > >      architecture-specific optimizations; except for parity8(), all
-> > >      functions are one-liners with no significant code duplication
-> > >Cons: More functions may increase maintenance burden
 > 
-> s/may/will/
+>> +			read_cfg((priv), (devfn), __pos, 2, (u32 *)&__ent); \
+>> +     \
+>> +			__id = __ent & 0xff;                                \
+>> +			if (__id == 0xff)                                   \
+>> +				break;                                      \
+>> +			if (__id == (cap)) {                                \
+>> +				__found_pos = __pos;                        \
+>> +				break;                                      \
+>> +			}                                                   \
+>> +			__pos = (__ent >> 8);                               \
 > 
-> > >Opinions: Only I support this approach
-> > >
-> > >Regards,
-> > >Kuan-Wei
-> > 
-> > You can add me to the final option. I think it makes most sense
+> I'd add these into uapi/linux/pci_regs.h:
+
+This means that you will submit, and I will submit after you?
+Or should I submit this series of patches together?
+
 > 
-> This is not a democracy, and we are not voting here. We are engineers.
-> We share our expert opinions and choose the best one. I'll be happy to
-> go with any solution, if we all make sure it's the best.
+> #define PCI_CAP_ID_MASK		0x00ff
+> #define PCI_CAP_LIST_NEXT_MASK	0xff00
 > 
-I wasn't trying to initiate a vote. I was simply summarizing the
-possible approaches discussed so far and the feedback I've received.
+> And then use FIELD_GET() to extract the fields.
 
-> I'm for #2 because it 
->  - generates better code than #1;
+It has been modified.
 
-Which driver or subsystem would particularly care about parity
-efficiency?
-
->  - easier to use than #3; and
-
-I agree that #2 is easier to use than #3 if users don't need to perform
-explicit casting. However, if they do need to cast explicitly to get
-correct code generation, then I think #3 is clearer and simpler for
-users.
-
->  - has less maintenance burden than #3.
 > 
-> Why exactly #3 makes the most sense to you? Most variables are ints
-> and longs. How are you going to handle those with fixed-types parity()s?
+>> +		}                                                           \
+>> +		__found_pos;                                                \
+>> +	})
+>> +
+>> +/* Extended capability finder */
+>> +#define PCI_FIND_NEXT_EXT_CAPABILITY(priv, devfn, read_cfg, start, cap)    \
+>> +	({                                                                 \
+>> +		u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;                 \
+>> +		u16 __found_pos = 0;                                       \
+>> +		int __ttl, __ret;                                          \
+>> +		u32 __header;                                              \
+>> +    \
+>> +		__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8; \
+>> +		while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {       \
+>> +			__ret = read_cfg((priv), (devfn), __pos, 4,        \
+>> +					 &__header);                       \
+>> +			if (__ret != PCIBIOS_SUCCESSFUL)                   \
+>> +				break;                                     \
+>> +    \
+>> +			if (__header == 0)                                 \
+>> +				break;                                     \
+>> +    \
+>> +			if (PCI_EXT_CAP_ID(__header) == (cap) &&           \
+>> +			    __pos != start) {                              \
+>> +				__found_pos = __pos;                       \
+>> +				break;                                     \
+>> +			}                                                  \
+>> +    \
+>> +			__pos = PCI_EXT_CAP_NEXT(__header);                \
+>> +		}                                                          \
+>> +		__found_pos;                                               \
+>> +	})
+>> +
+>>   u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+>>   u8 pci_find_capability(struct pci_dev *dev, int cap);
+>>   u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
 > 
-If explicit casting is required for correct code generation, then both
-#2 and #3 face the same issue.
+> 
+> I started to wonder though if the controller drivers could simply create
+> an "early" struct pci_dev & pci_bus just so they can use the normal
+> accessors while the real structs are not yet created. It looks not
+> much is needed from those structs to let the accessors to work.
+> 
 
-To address this, my first thought was to add a parity_long() function,
-similar to hweight_long(). However, I can imagine that you'd find this
-even harder to accept due to increased maintenance burden.
+Here are a few questions:
+1. We need to initialize some variables for pci_dev. For example, 
+dev->cfg_size needs to be initialized to 4K for PCIe.
 
-This also brings me to another question that isn't directly related to
-parity but has me curious. Since you maintain hweight as well, what
-makes hweight and parity different enough that hweight follows the
-hweight8/16/32/64 and hweight_long() interface, while parity is leaning
-toward a macro-based approach? Their functionality seems quite similar
-to me.
+u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+{
+	......
+	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+		return 0;
+	......
 
-Regards,
-Kuan-Wei
+
+2. Create an "early" struct pci_dev & pci_bus for each SOC vendor (Qcom, 
+Rockchip, etc). It leads to a lot of code that feels weird.
+
+I still prefer the approach we are discussing now.
+
+
+This is a modified patchs based on your suggestion:
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c 
+b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..3991cc4c58d6 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -7,6 +7,32 @@
+  #include <linux/of.h>
+
+  #include "pcie-cadence.h"
++#include "../../pci.h"
++
++static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
++{
++	struct cdns_pcie *pcie = priv;
++
++	if (size == 4)
++		*val = cdns_pcie_readl(pcie, where);
++	else if (size == 2)
++		*val = cdns_pcie_readw(pcie, where);
++	else if (size == 1)
++		*val = cdns_pcie_readb(pcie, where);
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
++				     cap, pcie);
++}
++
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie);
++}
+
+  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+  {
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h 
+b/drivers/pci/controller/cadence/pcie-cadence.h
+index f5eeff834ec1..dd7cb6b6b291 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie 
+*pcie, u32 reg)
+  	return readl(pcie->reg_base + reg);
+  }
+
++static inline u32 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
++{
++	return readw(pcie->reg_base + reg);
++}
++
++static inline u32 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
++{
++	return readb(pcie->reg_base + reg);
++}
++
+  static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
+  {
+  	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+@@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct 
+cdns_pcie_ep *ep)
+  }
+  #endif
+
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
++
+  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+
+  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, 
+u8 fn,
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
+b/drivers/pci/controller/dwc/pcie-designware.c
+index 145e7f579072..e9a9a80b1085 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -203,83 +203,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+  		pci->type = ver;
+  }
+
+-/*
+- * These interfaces resemble the pci_find_*capability() interfaces, but 
+these
+- * are for configuring host controllers, which are bridges *to* PCI 
+devices but
+- * are not PCI devices themselves.
+- */
+-static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-				  u8 cap)
++static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
+  {
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
+-
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
++	struct dw_pcie *pcie = priv;
+
+-	if (cap_id == cap)
+-		return cap_ptr;
++	*val = dw_pcie_read_dbi(pcie, where, size);
+
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCIBIOS_SUCCESSFUL;
+  }
+
+  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+  {
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
++				     pcie);
+  }
+  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+
+-static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+-					    u8 cap)
+-{
+-	u32 header;
+-	int ttl;
+-	int pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+-	if (start)
+-		pos = start;
+-
+-	header = dw_pcie_readl_dbi(pci, pos);
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		header = dw_pcie_readl_dbi(pci, pos);
+-	}
+-
+-	return 0;
+-}
+-
+  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+  {
+-	return dw_pcie_find_next_ext_capability(pci, 0, cap);
++	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+  }
+  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..778e366ea72e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -423,28 +423,28 @@ static int pci_dev_str_match(struct pci_dev *dev, 
+const char *p,
+  	return 1;
+  }
+
+-static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+-				  u8 pos, int cap, int *ttl)
++static int __pci_bus_read_config(void *priv, unsigned int devfn, int where,
++				 u32 size, u32 *val)
+  {
+-	u8 id;
+-	u16 ent;
++	struct pci_bus *bus = priv;
++	int ret;
+
+-	pci_bus_read_config_byte(bus, devfn, pos, &pos);
++	if (size == 1)
++		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
++	else if (size == 2)
++		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
++	else
++		ret = pci_bus_read_config_dword(bus, devfn, where, val);
+
+-	while ((*ttl)--) {
+-		if (pos < 0x40)
+-			break;
+-		pos &= ~3;
+-		pci_bus_read_config_word(bus, devfn, pos, &ent);
++	return ret;
++}
+
+-		id = ent & 0xff;
+-		if (id == 0xff)
+-			break;
+-		if (id == cap)
+-			return pos;
+-		pos = (ent >> 8);
+-	}
+-	return 0;
++static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
++				  u8 pos, int cap, int *ttl)
++{
++	// If accepted, I will remove all use of "int *ttl" in a future patch.
++	return PCI_FIND_NEXT_CAP_TTL(__pci_bus_read_config, pos, cap, bus,
++				     devfn);
+  }
+
+  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+@@ -553,42 +553,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+   */
+  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+  {
+-	u32 header;
+-	int ttl;
+-	u16 pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+  		return 0;
+
+-	if (start)
+-		pos = start;
+-
+-	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+-		return 0;
+-
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+-			break;
+-	}
+-
+-	return 0;
++	return PCI_FIND_NEXT_EXT_CAPABILITY(__pci_bus_read_config, start, cap,
++					    dev->bus, dev->devfn);
+  }
+  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2e9cf26a9ee9..68c111be521d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -4,6 +4,65 @@
+
+  #include <linux/pci.h>
+
++/* Ilpo: I'd add these into uapi/linux/pci_regs.h: */
++#define PCI_CAP_ID_MASK		0x00ff
++#define PCI_CAP_LIST_NEXT_MASK	0xff00
++
++/* Standard capability finder */
++#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
++({									\
++	u8 __pos = (start);						\
++	int __ttl = PCI_FIND_CAP_TTL;					\
++	u16 __ent;							\
++	u8 __found_pos = 0;						\
++	u8 __id;							\
++									\
++	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
++									\
++	while (__ttl--) {						\
++		if (__pos < PCI_STD_HEADER_SIZEOF)			\
++			break;						\
++		__pos = ALIGN_DOWN(__pos, 4);				\
++		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
++		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
++		if (__id == 0xff)					\
++			break;						\
++		if (__id == (cap)) {					\
++			__found_pos = __pos;				\
++			break;						\
++		}							\
++		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
++	}								\
++	__found_pos;							\
++})
++
++/* Extended capability finder */
++#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)	\
++({									\
++	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;			\
++	u16 __found_pos = 0;						\
++	int __ttl, __ret;						\
++	u32 __header;							\
++									\
++	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;	\
++	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {		\
++		__ret = read_cfg(args, __pos, 4, &__header);		\
++		if (__ret != PCIBIOS_SUCCESSFUL)			\
++			break;						\
++									\
++		if (__header == 0)					\
++			break;						\
++									\
++		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {\
++			__found_pos = __pos;				\
++			break;						\
++		}							\
++									\
++		__pos = PCI_EXT_CAP_NEXT(__header);			\
++	}								\
++	__found_pos;							\
++})
++
+  struct pcie_tlp_log;
+
+  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+
+
+Looking forward to your latest suggestions.
+
+Best regards,
+Hans
 
