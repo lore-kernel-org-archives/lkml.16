@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E2F33E7;
-	Sat, 29 Mar 2025 04:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D4EA50;
+	Sat, 29 Mar 2025 04:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743222624; cv=none; b=LPkW3UIuRGLGlVFLJ8w1dBglQbJ+IYbp2OaDlOsbgYWss1daGBKRb503QmsM3hI/mAHV1rtDIiZ9CAs4XzL2MoWylpiWV5orJ4RtoGXT41pQL5RkTw/tF91U1zOEUNfc6XKs8f0KOd5m2GinzBRLeUrIaRU1PbsSKt9cTiCCq2w=
+	t=1743222919; cv=none; b=NQUY000g0fzuHWjcD6VcNMUc0xlhPltdyJriHVwelUagpGwRrDwXO7VgsIk/3yOK9vX4fkSThTtcHZZetPljTfpeazRrZH7xrmbSgSoEg3dHxfAfXH1BBozwzvRPUZ1zpbzh/Yn2rK9V73tKGaTlNRzcxl9cbfAPpw4vIODv3SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743222624; c=relaxed/simple;
-	bh=rkDYb1Sdmwv6LkGrTvcA37qxtJGwqLOkeIh2yI3P0Pc=;
+	s=arc-20240116; t=1743222919; c=relaxed/simple;
+	bh=v0cfE1DRzxT5S46yhgmeP5GBIfVEyu77Bp03e+u1BK8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzfwjpSUi7XokvkRE/43V5WMGJZWksjeAq8ayJWiR7pwfNoff1Bm3xUP2ytE8tX1iK8JcsxnJhbx3GLmD/C//f7usfOeWQisTa1Nkp687/scHPE/QO6H/qkiqflBNPs9J8j2W/MSbxxDU++5u4/ETJRivNClz2SxZJPN5ZO8g58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S74VnvRl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ILiyd74A3GyRZxQFmn3VMixnmhprKowust+sdiDlOun3LxMB6lka3SffQc3miMnQj4jUcgU7uZ+uSe0TiPJRvkL4rm2YeHJmPbL+U+0Ghj+XnEM5vtxQpYftxB02CHMAxCg1tk153wMo7ME7Pwvw1owSD2cl3FC+ZgWES0RQAHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEJ52tBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S74VnvRl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6292C4CEE2;
-	Sat, 29 Mar 2025 04:30:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEJ52tBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296AFC4CEE2;
+	Sat, 29 Mar 2025 04:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743222624;
-	bh=rkDYb1Sdmwv6LkGrTvcA37qxtJGwqLOkeIh2yI3P0Pc=;
+	s=k20201202; t=1743222915;
+	bh=v0cfE1DRzxT5S46yhgmeP5GBIfVEyu77Bp03e+u1BK8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S74VnvRlrodTY5MvDdyo2QLtEgWVql533yHtqFt4fqP3Tx5oOoGqEtOAw8u/CLg1Y
-	 nsALio/8CjJ2+5nim33wGvfZGLJbuCcjLj/elW6KWkbe6/52GJfEUw0KQsjeCvXA+e
-	 XWzWxGNLQo/mDOvsdPPKclDlNeOwtT/QFAgnkUKcpghkdBFZi9pXJkd6n8OzYZXfpw
-	 sxIMBmQs1lsDqfAxI8I7f/wjswbJDPQT0WmFuH6aLZOua0ufMyeZDjN6joTlszmwdN
-	 i42Ua5mPjZEL/XQhf4pbQ+2E9IHftSEbJa/d4ZAioa4jnzhf4Z8qa7jT+Us98FV1ly
-	 +fh9QNQRSWGTw==
-Message-ID: <e94d3ba7-78ad-453a-86c0-a71662e02922@kernel.org>
-Date: Sat, 29 Mar 2025 05:30:16 +0100
+	b=kEJ52tBsR2jJ7zUuLtV+vJofx3QvJ14UMTatjpdiwASdnz+tdALzjwovxt30PHI62
+	 ZXdTHd4+Cma7OkNXe00XRJ3QZDE3iy96XN1h4/FrdHOh/QNCF3J5Verng4T6jJP14P
+	 cFvZCYeIYhyNfzOBaPBO2dNqrFSOfoGiROF/cabtv4amIyGWRS8YMJ8UXPeV/bYcBZ
+	 rp0WICI6pKrulb4opPmYrsjPlk1DZiMTZ6Vrh+o4rD/y9dUORYRUrMCTHVdmL9n1gK
+	 3jnJpJ9gjW5H8wA3A4Y9m19p2fR908xRLHoG3Vt4OeFvtljDCZe4g+N3sDMXXqnDoI
+	 0bqhQwEnzH7FQ==
+Message-ID: <5a460228-ab50-490d-a222-d6a10aea3ff0@kernel.org>
+Date: Sat, 29 Mar 2025 05:35:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: i2c: Add OV05C10 camera sensor driver
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
- sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
- laurent.pinchart@ideasonboard.com, dave.stevenson@raspberrypi.com,
- dan.carpenter@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
- dantony@amd.com, Venkata Narendra Kumar Gutta <vengutta@amd.com>
-References: <20250328214706.1516566-1-pratap.nirujogi@amd.com>
+Subject: Re: [PATCH 2/2] dt-bindings: mailbox: Add devicetree binding for
+ bcm74110 mbox
+To: Justin Chen <justin.chen@broadcom.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org,
+ robh@kernel.org, jassisinghbrar@gmail.com,
+ bcm-kernel-feedback-list@broadcom.com
+References: <20250327221628.651042-1-justin.chen@broadcom.com>
+ <20250327221628.651042-3-justin.chen@broadcom.com>
+ <e7f51014-10b2-4f9c-9929-f2a4f32b023c@kernel.org>
+ <cb0905ec-1e80-4c56-befd-b90243dcfa31@broadcom.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,51 +91,60 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250328214706.1516566-1-pratap.nirujogi@amd.com>
+In-Reply-To: <cb0905ec-1e80-4c56-befd-b90243dcfa31@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 22:42, Pratap Nirujogi wrote:
-> +static int ov05c10_probe(struct i2c_client *client)
-> +{
-> +	struct ov05c10 *ov05c10;
-> +	u32 refclk;
-> +	int ret;
-> +
-> +	ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), GFP_KERNEL);
-> +	if (!ov05c10)
-> +		return -ENOMEM;
-> +
-> +	struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
-> +
-> +	ret = fwnode_property_read_u32(fwnode, "refclk", &refclk);
+On 28/03/2025 19:36, Justin Chen wrote:
+>>> +    const: 2
+>>> +    description:
+>>> +      The first cell is channel type and second cell is shared memory slot
+>>> +
+>>> +  brcm,mbox_tx:
+>>
+>> No underscores. See DTS coding style.
+>>
+> 
+> Acked. I already had this fixed in the driver, but not in the doc. Woops!
 
-Use existing properties, like clock-frequency. refclk means this is the
-clock, not it's frequency.
+So this did not even work and you did not test DTS.
 
-> +	if (ret)
-> +		return  dev_err_probe(&client->dev, -EINVAL,
-> +				      "fail to get refclk\n");
-> +	if (refclk != OV05C10_REF_CLK)
-> +		return dev_err_probe(&client->dev, -EINVAL,
-> +				     "failbad refclk %u, %lu expected\n",
-> +				     refclk, OV05C10_REF_CLK);
-> +
-> +	ret = ov05c10_parse_endpoint(&client->dev, fwnode);
-> +	if (ret)
-> +		return dev_err_probe(&client->dev, -EINVAL,
-> +				     "fail to parse endpoint\n");
-> +
-> +	ov05c10->enable_gpio = devm_gpiod_get(&client->dev, "sensor0_enable",
-> +					      GPIOD_OUT_LOW);
+Where is the DTS?
 
-Nothing improved and you did not bothered to wait for my feedback. You
-just sent v2.
+> 
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: Mailbox transmit doorbell
+>>
+>> Why is this needed in DT? How many instances do you have in one SoC?
+>> Where is the SoC DTS?
+>>
+> 
+> We have 3 possible instances in our current SoC. We currently only 
+> implement one. arm,scmi. But more will come in the future. I'll put a 
+> sample arm,scmi node as an example consumer in v2.
 
-There is no second GPIO, otherwise would be present here.
+No. Post your DTS instead.
 
-NAK.
+> 
+>>> +
+>>> +  brcm,mbox_rx:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: Mailbox receive doorbell
+>>> +
+>>> +  brcm,mbox_shmem:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>> +    maxItems: 2
+>>> +    description: Mailbox shared memory region and size
+>>
+>> No, use existing properties, e.g. memory region.
+>>
+> 
+> This is a region from the on chip memory. I will rename to be clear. It 
 
+memory? so reserved region is for what? Not memory?
+
+If this is memory, then reserved region. If this is not memory, but
+MMIO, then you have reg for that.
 
 
 Best regards,
