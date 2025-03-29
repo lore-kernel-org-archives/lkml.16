@@ -1,249 +1,149 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E671DED47;
-	Sat, 29 Mar 2025 20:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AA9143748
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 20:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743278846; cv=none; b=GPOK8b011qTlEGkGat4JQIeGM+iXjuWBe66vng3RIISXeuZqmCJ/DeOFr2fvEEdOfCHWgrIKcNUM3XeiukL8xFNA4/EHwCDuo5h67dfPTGc7ZcCZOp9sXBGY81P877qGS9AwCNxsg73LMXNHz9Fgk63Obz+VMi077q36cZWSu4U=
+	t=1743280229; cv=none; b=KJugMPYufHd1mAtEdhyS4XcHk4c8+uTb6fQUIVXj72EOksy5nObiNtklpd81yQ44nG3CvPs5BpftDeMJhKyZUR3BOMK6chQImqtkx6MWKYcPDx4qwoxIOjxCdJZ8yBaoDv39mfoL0SBm0gL04HqW0dYtKuo2HTL9n4Uk0dN1+4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743278846; c=relaxed/simple;
-	bh=JFrqu1Yd0mWyoCeub8YGs8zqUy2Uhdwz48LorZUX3Vw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:Content-Type; b=f71XmhGdS3cY3cEGLzUiCnDM9Z6DsAj7QQxA0pRNrfp32ToaBDjzhFdmR/I71WrVxTZSBd9rmq//NRTFP/p5aFbRIisCxxV5Cx9TzrmvBFGjmAXeMXDUTdzsRAq4jTx67Ye61VGp00Xe/x7rk943R2VR65QhPUKUqNo1KGwKzPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.153.136) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sat, 29 Mar
- 2025 23:07:10 +0300
-Message-ID: <db05804f-9094-4ed9-b32e-06d72e612647@omp.ru>
-Date: Sat, 29 Mar 2025 23:07:08 +0300
+	s=arc-20240116; t=1743280229; c=relaxed/simple;
+	bh=QFJ5fUbf4xYjOfEHj/MKCPtSrPBKpbcRcgO3zN1Da/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9R1n8DCkkxzmUGvw3H5IL6hSgf8THWBw+kriDOM1xK+2gjGlGAJLm7f9aUrp58hIZ+x2lvV+4LJU4VSD/UVfpwNH0A+F6waRW6lJm65XaZhqqv9IUXrYi9EXVz/zL48fUpsPFArMcOQ463j04gXtL8T/iGOD4sBYzpyw73Df2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=aW4M8QS3; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="aW4M8QS3"
+Date: Sat, 29 Mar 2025 21:30:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1743280222;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qtGq3mNlYow8hi5/IZSZYU3QysB2Tb0jRTp1wsbBTts=;
+	b=aW4M8QS3b++thG7g7a2HoNC7FuNBkM9NxwhZFG7OEAcPIU3vSt1JEBcuQSUED39rbYCBWm
+	w0sNFCzjZ9TaQ3sy9FtZB1SUoGKzjVDVk4OeXIiEG+MycVufpSxUJkMfVV/qfNJjt2r9vk
+	RIknYmi7YS74pwtd4tOuX7a/HWZridkVyxahP63wTdb+qY5P7YajZoA1QOoZuIOYHdcrQE
+	EavM9q1MZFIfo9Dyq7KFIScP7P1Y6/Th14lOKuHkHQqrkswPgSZjZOuDEOi0HEEev2w5XC
+	KZ7cjfSTZLYjxMwwGuyHtSNA4Y65VD/GjIbQGNxs7f64hrPjxtqjazYtnkGbwA==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
+	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+	akpm@linux-foundation.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z-hYWc9LtBU1Yhtg@desktop0a>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+ <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+ <Z-c7V2hptt9U9UCl@desktop0a>
+ <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH RESEND#2 5.10.y] KEYS: asymmetric: properly validate hash_algo
- and encoding
-To: <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Stefan Berger <stefanb@linux.ibm.com>, Tianjia Zhang
-	<tianjia.zhang@linux.alibaba.com>, Eric Biggers <ebiggers@google.com>, Vitaly
- Chikunov <vt@altlinux.org>, Jarkko Sakkinen <jarkko@kernel.org>
-Content-Language: en-US
-Organization: Open Mobile Platform
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/29/2025 19:54:13
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 192222 [Mar 29 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.153.136 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	213.87.153.136:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.153.136
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/29/2025 19:55:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/29/2025 7:06:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+X-Migadu-Flow: FLOW_OUT
 
-From: Eric Biggers <ebiggers@google.com>
+On 2025-03-29 09:44 +0800, Baoquan He wrote:
+> On 03/29/25 at 01:14am, Roberto Ricci wrote:
+> [snip]
+> > Anyway, I performed yet another bisection, this time with just plain
+> > defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+> > 
+> > Updated steps to reproduce:
+> > 1. Boot kernel >= v6.8 in a virtual machine created with this command:
+> >    `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
+> > 2. Load the same kernel with:
+> >    `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
+> > 3. Reboot (or call `kexec -e` directly)
+> > 4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
+> > 5. Upon resuming, three things could happen, depending on luck:
+> 
+> OK, this is a little complicated. wondering why you need to do the
+> hibernation and reboot. Just for curiosity.
 
-[ Upstream commit 590bfb57b2328951d5833979e7ca1d5fde2e609a ]
+The reason I do hibernation and reboot instead of hibernation and then
+manually boot again is just convenience during tests. The issue occurs
+with manual reboot too.
+The reason I want kexec + hibernation to work is to fix a hibernation
+issue on a system using ZFSBootMenu, a bootloader based on Linux which
+uses kexec to boot the final OS. Other software using the same
+mechanism include Petitboot and LinuxBoot. They might be affected as
+well but I didn't try.
 
-It is insecure to allow arbitrary hash algorithms and signature
-encodings to be used with arbitrary signature algorithms.  Notably,
-ECDSA, ECRDSA, and SM2 all sign/verify raw hash values and don't
-disambiguate between different hash algorithms like RSA PKCS#1 v1.5
-padding does.  Therefore, they need to be restricted to certain sets of
-hash algorithms (ideally just one, but in practice small sets are used).
-Additionally, the encoding is an integral part of modern signature
-algorithms, and is not supposed to vary.
+> > 5a. A kernel oops:
+> > ```
+> > [   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> ...snip... 
+> > I will send config and dmesg in replies to this email.
+> > 
+> > The bisection pointed to
+> > b3ba234171cd kexec_file: load kernel at top of system RAM if required
+> [snip]
+> 
+> I doubt how this caused the failure. I have several questions, could you
+> help answer:
+> 
+> 1) Can this problem be stably reproduced with kexec_file_load?
 
-Therefore, tighten the checks of hash_algo and encoding done by
-software_key_determine_akcipher().
+Every kernel build I tested which contains that commit is affected.
+However a given build will not always lead to the same of the three
+possible outcomes I described. E.g. first you get a oops (case 5a),
+then you repeat the same steps with the same kernel image and the
+system may get stuck at a black screen instead (case 5b).
+But it never fully works.
 
-Also rearrange the parameters to software_key_determine_akcipher() to
-put the public_key first, as this is the most important parameter and it
-often determines everything else.
+> 2) if answer to 1) is yes, can reverting b3ba234171cd fix it stably?
 
-[s.shtylyov@omp.ru: removed the ECDSA related code.]
+Yes. None of cases 5{a,b,c} I previously described occur. Seems to work
+fine.
 
-Fixes: 299f561a6693 ("x509: Add support for parsing x509 certs with ECDSA keys")
-Fixes: 215525639631 ("X.509: support OSCCA SM2-with-SM3 certificate verification")
-Fixes: 0d7a78643f69 ("crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm")
-Cc: stable@vger.kernel.org
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Tested-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Vitaly Chikunov <vt@altlinux.org>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> 3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
+> this because kexec_load interface defaults to put kexec kernel on top of
+> system RAM which is equivalent to applying commit b3ba234171cd.
 
----
-Re-sending with LKML added and testers moved from the To: to Cc:...
-Re-sending again with the correct stable ML address...
+No, it doesn't. While hibernation alone works, kexec + hibernation
+results in the system just rebooting without resuming the hibernation
+image, but no crash or other weird behaviour occurs.
+Initially I decided to focus on kexec_file_load in order to narrow
+things down, but that was before noticing that the bug could manifest
+itself in different forms.
+It is possible, indeed, that both syscalls are affected by the same
+problem, which is not caused by commit b3ba234171cd.
+I tried to test kexec_load with some older kernels, but I got build
+errors, so I tested longterm releases where such errors have been fixed.
+With v4.9.337, kexec (via kexec_load) + hibernation works.
+With v5.4.291 it doesn't.
+I'm not sure how bisection could be done in this case.
 
- crypto/asymmetric_keys/public_key.c |   92 ++++++++++++++++++++++--------------
- 1 file changed, 58 insertions(+), 34 deletions(-)
+> 4) Can you add '-d' to 'kexec -l' to print more debugging message?
 
-Index: linux-stable/crypto/asymmetric_keys/public_key.c
-===================================================================
---- linux-stable.orig/crypto/asymmetric_keys/public_key.c
-+++ linux-stable/crypto/asymmetric_keys/public_key.c
-@@ -59,38 +59,65 @@ static void public_key_destroy(void *pay
- }
- 
- /*
-- * Determine the crypto algorithm name.
-+ * Given a public_key, and an encoding and hash_algo to be used for signing
-+ * and/or verification with that key, determine the name of the corresponding
-+ * akcipher algorithm.  Also check that encoding and hash_algo are allowed.
-  */
--static
--int software_key_determine_akcipher(const char *encoding,
--				    const char *hash_algo,
--				    const struct public_key *pkey,
--				    char alg_name[CRYPTO_MAX_ALG_NAME])
-+static int
-+software_key_determine_akcipher(const struct public_key *pkey,
-+				const char *encoding, const char *hash_algo,
-+				char alg_name[CRYPTO_MAX_ALG_NAME])
- {
- 	int n;
- 
--	if (strcmp(encoding, "pkcs1") == 0) {
--		/* The data wangled by the RSA algorithm is typically padded
--		 * and encoded in some manner, such as EMSA-PKCS1-1_5 [RFC3447
--		 * sec 8.2].
-+	if (!encoding)
-+		return -EINVAL;
-+
-+	if (strcmp(pkey->pkey_algo, "rsa") == 0) {
-+		/*
-+		 * RSA signatures usually use EMSA-PKCS1-1_5 [RFC3447 sec 8.2].
- 		 */
-+		if (strcmp(encoding, "pkcs1") == 0) {
-+			if (!hash_algo)
-+				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
-+					     "pkcs1pad(%s)",
-+					     pkey->pkey_algo);
-+			else
-+				n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
-+					     "pkcs1pad(%s,%s)",
-+					     pkey->pkey_algo, hash_algo);
-+			return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
-+		}
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
-+		/*
-+		 * Raw RSA cannot differentiate between different hash
-+		 * algorithms.
-+		 */
-+		if (hash_algo)
-+			return -EINVAL;
-+	} else if (strcmp(pkey->pkey_algo, "sm2") == 0) {
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
- 		if (!hash_algo)
--			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
--				     "pkcs1pad(%s)",
--				     pkey->pkey_algo);
--		else
--			n = snprintf(alg_name, CRYPTO_MAX_ALG_NAME,
--				     "pkcs1pad(%s,%s)",
--				     pkey->pkey_algo, hash_algo);
--		return n >= CRYPTO_MAX_ALG_NAME ? -EINVAL : 0;
--	}
--
--	if (strcmp(encoding, "raw") == 0) {
--		strcpy(alg_name, pkey->pkey_algo);
--		return 0;
-+			return -EINVAL;
-+		if (strcmp(hash_algo, "sm3") != 0)
-+			return -EINVAL;
-+	} else if (strcmp(pkey->pkey_algo, "ecrdsa") == 0) {
-+		if (strcmp(encoding, "raw") != 0)
-+			return -EINVAL;
-+		if (!hash_algo)
-+			return -EINVAL;
-+		if (strcmp(hash_algo, "streebog256") != 0 &&
-+		    strcmp(hash_algo, "streebog512") != 0)
-+			return -EINVAL;
-+	} else {
-+		/* Unknown public key algorithm */
-+		return -ENOPKG;
- 	}
--
--	return -ENOPKG;
-+	if (strscpy(alg_name, pkey->pkey_algo, CRYPTO_MAX_ALG_NAME) < 0)
-+		return -EINVAL;
-+	return 0;
- }
- 
- static u8 *pkey_pack_u32(u8 *dst, u32 val)
-@@ -111,9 +138,8 @@ static int software_key_query(const stru
- 	u8 *key, *ptr;
- 	int ret, len;
- 
--	ret = software_key_determine_akcipher(params->encoding,
--					      params->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, params->encoding,
-+					      params->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -177,9 +203,8 @@ static int software_key_eds_op(struct ke
- 
- 	pr_devel("==>%s()\n", __func__);
- 
--	ret = software_key_determine_akcipher(params->encoding,
--					      params->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, params->encoding,
-+					      params->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -328,9 +353,8 @@ int public_key_verify_signature(const st
- 	BUG_ON(!sig);
- 	BUG_ON(!sig->s);
- 
--	ret = software_key_determine_akcipher(sig->encoding,
--					      sig->hash_algo,
--					      pkey, alg_name);
-+	ret = software_key_determine_akcipher(pkey, sig->encoding,
-+					      sig->hash_algo, alg_name);
- 	if (ret < 0)
- 		return ret;
- 
+When using kexec_file_load, just these two lines get printed:
+
+```
+Try gzip decompression.
+Try LZMA decompression.
+```
+
+When using kexec_load on kernel v5.4.291 (which doesn't work):
+[the output is in a reply to this email]
+
+When using kexec_load on kernel v4.9.337 (which works):
+Identical to above, except for the exact hex value of some addresses.
+
+> 5) Can normal kexec trigger the failure? I mean operating kexec w/o
+> the hibernation/resumption. 
+
+No, kexec without hibernation seems to work fine, regardless of kernel
+version and kexec syscall used.
