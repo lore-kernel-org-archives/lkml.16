@@ -1,87 +1,74 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22DC1E4BE
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60A73596F;
+	Sat, 29 Mar 2025 14:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743256776; cv=none; b=TEGZvrKXSoFQxB77Gwfrv95HWXB/2ivIAjexoFsAhcdbe0iAbwROMVa1eEVgQhoNWHIQYmU1pKmgsAA4wkKlK653k/PViwOdaVcFojLk4DAck6J426Zxr88m8gEXpSWGQzp10o40anaHKpfq5Zyaf1R+Ig/quX5CqE6GA0ZfHIE=
+	t=1743256958; cv=none; b=rXIMCfDoEY5mLZGXZW1h4g11ZyXq1yRbb4staoNGr9bgxYW7+WDiGx/VLYQKvQjZV2FFjmyCoKifAK92TkaADjqsJKbTvvRA+EfeDBnVFOZhEYEuSa8dr9I0IcjiKQenZI+L33dwJIn57aNng1TUaqM9HklCVAbVLEmn9neXNgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743256776; c=relaxed/simple;
-	bh=vjaEBPCj8oLavyF6cvcW6c7u48OjXqgEPZwbyYOsh/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iYzJv/EH5dChiyNKBKw0P2ZIsLQ6Mb+ChyHjGTluK2T/qm8ddodOU1lPpvbmq+RSwtVdOXWOhhcY/T3lGMLc/eDBJz5M0dp+zI3p0rFqvVHrEwWgcyLkwouwFornnVdJbv22y+wH1vEEsiFhQWsQ2btqZvl5MGLzp6iF55jy2P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cGcTw6BN; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cGcTw6BN"
-Message-ID: <2909146e-dffa-400b-b3ae-c0432c4a0bae@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743256771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=36gri5fD2xCnOVAPYs/LSgPPkt9zRhINUlQM2IDvXSc=;
-	b=cGcTw6BNm1vP1awkZJO0tJCiwL1WMjvxz9EzJ59JDqvhKT/bp4L4+24TbnlVTNZwghSAFh
-	WAFY9+S82iTQP53LoSM+bttb7IAdSWSDELJGbkfKq0ASyOuFZPTDl+hnUzOtDmHQpGOtd4
-	ujnPPHdaPxKvUNPrtnlS7+lsigmP+v4=
-Date: Sat, 29 Mar 2025 19:28:39 +0530
+	s=arc-20240116; t=1743256958; c=relaxed/simple;
+	bh=hL2LR4YRTbUHCeLjHYKPP0/AH4zkVFtQlxJUBIOjHbY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pAtE0dR7GQOS/kiMRZ6Y0BikrWpsaNJshlasT9NAr0fdEtja+cEWvSCZee6B1X23mcxLrifpgNr3fqDOfjWjYKroc67pn0CI9qMUqH1h5vH6qHvp6zZRmkW9NoBybmDh3S7cpehvmAMvChgcee+pvJTS/SysuyKzMvLT3Yq/Uhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 34D7C92009C; Sat, 29 Mar 2025 15:02:28 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 25BE492009B;
+	Sat, 29 Mar 2025 14:02:28 +0000 (GMT)
+Date: Sat, 29 Mar 2025 14:02:28 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: "Dmitry V. Levin" <ldv@strace.io>
+cc: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
+    Oleg Nesterov <oleg@redhat.com>, strace-devel@lists.strace.io, 
+    linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests/ptrace/get_syscall_info: fix for MIPS n32
+In-Reply-To: <20250329124856.GA1356@strace.io>
+Message-ID: <alpine.DEB.2.21.2503291345580.47733@angie.orcam.me.uk>
+References: <20250115233747.GA28541@strace.io> <0262acf1-4d3f-471b-bd56-4ddf8a2bc1a3@linuxfoundation.org> <20250329124856.GA1356@strace.io>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 0/4] drm/tidss: Add OLDI bridge support
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
- Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
- Jayesh Choudhary <j-choudhary@ti.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Devicetree List <devicetree@vger.kernel.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250226181300.756610-1-aradhya.bhatia@linux.dev>
- <20250328124413.GA44888@francesco-nb>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <20250328124413.GA44888@francesco-nb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Francesco,
+On Sat, 29 Mar 2025, Dmitry V. Levin wrote:
 
-On 28/03/25 18:14, Francesco Dolcini wrote:
-> Hello Aradhya,
+> > > +#if defined(_MIPS_SIM) && _MIPS_SIM == _MIPS_SIM_NABI32
+> > > +/*
+> > > + * MIPS N32 is the only architecture where __kernel_ulong_t
+> > > + * does not match the bitness of syscall arguments.
+> > > + */
+> > > +typedef unsigned long long kernel_ulong_t;
+> > > +#else
+> > > +typedef __kernel_ulong_t kernel_ulong_t;
+> > > +#endif
+> > > +
+> > 
+> > What's the reason for adding these typedefs? checkpatch should
+> > have warned you about adding new typedefs.
+> > 
+> > Also this introduces kernel_ulong_t in user-space test code.
+> > Something to avoid.
 > 
-> On Wed, Feb 26, 2025 at 11:42:56PM +0530, Aradhya Bhatia wrote:
->> The AM62Px SoC has 2 OLDI TXes like AM62x SoC. However, the AM62Px SoC also has
->> 2 separate DSSes. The 2 OLDI TXes can now be shared between the 2 VPs of the 2
->> DSSes.
-> 
-> Do we have support for 2 independent single link LVDS/OLDI display + 1 x DSI
-> display? From my understanding the SoC should support it, but it's not
-> clear if the SW does support it.
+> There has to be a new type for this test, and the natural way to do this
+> is to use typedef.  The alternative would be to #define kernel_ulong_t
+> which is ugly.  By the way, there are quite a few typedefs in selftests,
+> and there seems to be given no rationale why adding new types in selftests
+> is a bad idea.
 
-The AM62Px SoC does indeed support the configuration that you mention,
-but the mainline tidss driver does not support AM62Px DSSes yet.
+ FWIW I agree, and I fail to see a reason why this would be a problem in a 
+standalone test program where the typedef does not propagate anywhere.  
 
-This series only adds support for the OLDI TXes found in TI's DSS
-hardware.
+ The only potential issue I can identify would be a namespace clash, so 
+perhaps the new type could have a name prefix specific to the test, but it 
+doesn't appear to me a widespread practice across our selftests and then
+`kernel_' ought to be pretty safe against ISO C or POSIX, so perhaps let's 
+leave the things alone?
 
--- 
-Regards
-Aradhya
-
+  Maciej
