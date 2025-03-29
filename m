@@ -1,147 +1,138 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C1A17A2E8
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 17:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF88182D2;
+	Sat, 29 Mar 2025 17:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743270045; cv=none; b=k93M9pF1jXYLY64QT9e2GAjg3cYIpoY7oxpWYO0fShFmRGUJPurBixQptZJqOsTYCjT7AH4jZwI0e2I0hh1X7Z4CC//Q+HyyNExQta61RPm/eRAAGktDYFZ659T9PTRcNpqQrZyNs637uONv6h2LAMzJZFk1LlKV2p3FlvOJ0l4=
+	t=1743270646; cv=none; b=rH08XHbaSOPHd/vJVM/oePSYIbpzC4+UzGaWWg8tT6XycPjjZMbTu5n4DckJGLIniFGDpcUoLuDaxUryUowgVsVj/DzNDlj+gm8vmEsTeKTX9iu+DMDSwLz9sRbiUPMT5SqvGLwF3zTWp4bal4jwLpPKX+ZzmHaC/6k3jFY3KFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743270045; c=relaxed/simple;
-	bh=cADv9mH60jdUQLSz4UnQc60dv6pjuR24zJfR7jDKp84=;
+	s=arc-20240116; t=1743270646; c=relaxed/simple;
+	bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZOT2bKRGynRKtu+zzs6kOXAFljbOXRQFwApbWW4eQFTDt/kJHNpGgk87HsDc+ONGw/DqWrcqBKdmK9Is8bSWp5G90uPQFlQM8KY0c2b1aKTLopten8Nil9gztDWunj7lVtlbt/Gih0+gI9GuxTn1ikrqAk30c9MWqPajJGHtc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Ut8df5gR; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=fEd0auz91Cblm2VJhJZYp1+UjKFvmAkEMmQ6v4T0wQyTpxk/MDt1EEJpSCIno5f3irfnlpIn4g+V0U4HnWhb+Re9j93h4tCRi8qvGouOBiAbQ0EfayPT2q1rEa54Aqy8UagAYLGGJ6FVSChQ5yBjk+iIXWudGFnQmK3jzFSETBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyBTVXXN; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ut8df5gR"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac289147833so555652166b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 10:40:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyBTVXXN"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476b89782c3so35870921cf.1;
+        Sat, 29 Mar 2025 10:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743270041; x=1743874841; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X0UdghMQC3GlspzDKxnOCJK/ZrpjHmGsFb9PQQYuWpg=;
-        b=Ut8df5gRyvnDDoq934QVuhhcmNpoJKtJvliWC6ClQl95ZDxq3ABwz0GfRdBZhcOgXS
-         gFUEckeV9Z0vjmluSYdTsLDRQE6pNOCUZaF1kjQhizHijG7W6YFqGad7LXGlnrQtWwJ2
-         br4t/NMxudEmOUhQSolaT6I0WvETzQpRWl+/8=
+        d=gmail.com; s=20230601; t=1743270644; x=1743875444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
+        b=NyBTVXXNRp8a3cp5dIMveiXI/w5dONLbNMewa6jgnm6qMabJYO55zyui0scTY9zZtR
+         JwTxiykSZ4B+wdFdU88wDSsSKAehVAAb9/VsspsX41G1l8WnZrQ+NDlpyg92abD2Sbxl
+         ohEFZ4NiOHLrsvm4cc99rX4yjBf4/m/6NeRdZeLtKsWaOOlP1KtOZF54t/REqcNBzTFa
+         kxY8dpTycZd7zglY0OmxtOQX3DTTZj5HCYeQACHjVq09eZPDi8fc9MstYk/fnq9Uscp/
+         ojU0sBImlKCe54Gz+Dw1PfdbQB7aSMtFnhkwKyDMKHLayRIFkcnfhhc6Cea+PEtfAegg
+         9FSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743270041; x=1743874841;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X0UdghMQC3GlspzDKxnOCJK/ZrpjHmGsFb9PQQYuWpg=;
-        b=u9KH3ngYym95vbMACnIEKMrpmnpMEELqbJydKLRxmKrdwhdQ6ZKilKF6AkQOT8gek5
-         9qxuh30eS3KF+BmQ2QldLw2exXfoSRVYay5aoM5EPSJHoo6AmgXNsGmlNySTIKHrP6Ew
-         UU70Bqlq/MP3ihNydxOQJsAEJKuUA7QcmA2XYPqaGDW0MCWvW/vGxb1N3c20Y5rwjPZE
-         dhCF5fg4rJEeqhdJk9TIkASXPlSs8SCgr/9DDLYt4TIkDlOhAkX2M5nsnvsezwkFmu/+
-         pu5kp8X8lE2E4OGgkBSBKKnR95KFBzPBS2nBLLZE4fRVY/FGSYfIwb1nUOwNvUpZy//x
-         QE+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV+ZzxRzZFGE2k6gbzJ2cnfWLqbzFW4Q40PtiCB8qwNkJ97RceN3MiUAe+ES9woQvyp/KvxnrlNzVz59FQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTIeEMBySkcr6cah3t5Iha93WNQvNIr1fsnKK2WmOMP72cbq5R
-	BUtI1bj1LlpEJx0UtvnXX8KqnwsE6N2hVmipueGrIfDLrWFOkknufPu0O4rHsY+GOgUCNi2CTi/
-	Lr1M=
-X-Gm-Gg: ASbGncui4dPgKeoOQMNXPCq9grM0QhJVxVk9zwKoIHujE5sPv2EEqtddf3CfQeczo3p
-	/OIl+wvTgv5txzYleOxk2qC4l8OvcYCfiX+u2epPwtSwYiQCh00Qfv1kYt8C0hZrYE8eqb7tpIo
-	lSbEAR7Agd43JIKiIRs+figg5RcbqTYCe/aYnuF7SVIn4VV7tdxzvUiBA+QnFYEMSWPFZIhRTst
-	L5yEtd1l2RevdBjQk3lxbiIgQfiDJ3oS6P4ZPPPjfU2yDCHaawjIfaQnF/Ifvf24gRWiT2QMUDm
-	6IKKMDDwedEVlFwf5l9KRTMS7ZaNyew/SAjNL4M0CIW0JJYcNQpgeYKyeAU6gfqkhkyuHUxOUNl
-	vaceJWV03H6m0sqjMsAA=
-X-Google-Smtp-Source: AGHT+IHETTLHhPxfvnjwMVa+wZ2Lo7UEt1ay2OuXmUDutJpKDW27BoESljY3BP/SkF7w8P46Wc9Aiw==
-X-Received: by 2002:a17:906:48c6:b0:ac7:391a:e158 with SMTP id a640c23a62f3a-ac7391ae2a1mr251694766b.59.1743270040990;
-        Sat, 29 Mar 2025 10:40:40 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71962177fsm358135666b.115.2025.03.29.10.40.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 10:40:40 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abbb12bea54so618706066b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 10:40:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUaIAj0cIIL4Z/+QO2CDrqObVFfjGAaOXXqkCjTWLVTfLdsLZ3EztrBzXsrGzHWHFAyUA3TIXU8vnuZtJo=@vger.kernel.org
-X-Received: by 2002:a17:907:7f87:b0:ac3:f0b7:6ad3 with SMTP id
- a640c23a62f3a-ac738c1b69fmr310358366b.40.1743270039866; Sat, 29 Mar 2025
- 10:40:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743270644; x=1743875444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
+        b=X/Mj+Gm4e3Q97K1WEsSSE+nGvGJuSSIm66NM+8B1YO7PPZmLLl2JABNHCNQcu+I1uC
+         4UXUy5bXQcvTf5VMUlyue1RRpy+a6iQ0o1NobF0UlIH3FCIJVraRdBPc9TNpDAkCwWKH
+         6Q4ZLY6ZsFB2jJglSk7GyFF1K1QKr3JCwHmmcTTurB7D3ByGq6OGejeboaAoxihSVwUz
+         JSwstyvcNxdMs2sGUUHVzXfwtB4VEYqAm9ue1qP+4w/LOUwEMcomNvI4LhQF5k5gcNF1
+         MNcieoxi9wqoDjdln3HV8STWHSyeNrA6RM6mP3bpzGAfHX7vLtvir/pI03qdeo+mp0Zw
+         Oajw==
+X-Forwarded-Encrypted: i=1; AJvYcCU17+EjNd8OkBIIbeZmksNYCCITL774R2/25883VEVmatF2+Auyd0hJewUZDVwUMIQbUz09pN2QYdz23oU=@vger.kernel.org, AJvYcCVEMZKUUV2Gg0AsB40R6f46P4F7tzabX2xVAJHOd7iGLiFDs1sTyJBl3o7JzESX/2Nu39ih4zy+JcXoy2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFhsl1WTgNSMFW8x8/BPeB4i1uQDC5Lgmq2J21ZB+WkiwybkpR
+	wCv0i0PYxH8BHd/9ROAYgODSN9FDWTjSJv108luLyRJNTh4iVptzoy+VJt3w9+/+AHAR0QP1/0Q
+	ilJ+QKrvainrDN1GXXTjlzcZnyMA=
+X-Gm-Gg: ASbGncsE6MP2EGDtA2fu3gsYhxVGoK8winJt3oyWnaDXa6MKUhV9XrkzTfX1GsXprrD
+	azVOacfj3BUZz1WtdTyMZ8o75UoHJgBNpkYvvciPNsDvDP5BS/9tqQrkJlifbgYHJoIOmM+BEr1
+	4WD4+L+9Nw4mUvx2XuSeqo1GuIDxC8kC8aPUx70U5i+jaiYMmHSOAivoEYew==
+X-Google-Smtp-Source: AGHT+IEyfBtS6B8X2yr/f5ocuBfnuCUx2JnXYuIeBWNpQSzvULQDd+JR8MDrkEpwGjTkAau9a61tbFImJmfCo3M6KHA=
+X-Received: by 2002:ac8:7f4b:0:b0:477:ca3:4b66 with SMTP id
+ d75a77b69052e-477e4b29282mr47637391cf.12.1743270644050; Sat, 29 Mar 2025
+ 10:50:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZOxnTFhchkTvKpZV@gondor.apana.org.au> <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au> <ZfO6zKtvp2jSO4vF@gondor.apana.org.au>
- <ZkGN64ulwzPVvn6-@gondor.apana.org.au> <ZpkdZopjF9/9/Njx@gondor.apana.org.au>
- <ZuetBbpfq5X8BAwn@gondor.apana.org.au> <ZzqyAW2HKeIjGnKa@gondor.apana.org.au>
- <Z5Ijqi4uSDU9noZm@gondor.apana.org.au> <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au> <20250325152541.GA1661@sol.localdomain>
-In-Reply-To: <20250325152541.GA1661@sol.localdomain>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 29 Mar 2025 10:40:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whoeJQqyn73_CQVVhMXjb7-C_atv2m6s_Ssw7Ln9KfpTg@mail.gmail.com>
-X-Gm-Features: AQ5f1JozuZltVVXOxl16yiJ5dITk50jYErxouJq_h3URJNHiBCiZvEEX-32vNbc
-Message-ID: <CAHk-=whoeJQqyn73_CQVVhMXjb7-C_atv2m6s_Ssw7Ln9KfpTg@mail.gmail.com>
-Subject: Re: [GIT PULL] Crypto Update for 6.15
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
+ <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com> <20250326001336.GA23984@pendragon.ideasonboard.com>
+In-Reply-To: <20250326001336.GA23984@pendragon.ideasonboard.com>
+From: Gabriel <gshahrouzi@gmail.com>
+Date: Sat, 29 Mar 2025 13:50:00 -0400
+X-Gm-Features: AQ5f1Jq8tHUMMY_4wNuFI9rLkWF9v3pWiux_nw6Gw_ZztqG7vxIoRN8bhMGdG1k
+Message-ID: <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
+Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 25 Mar 2025 at 08:25, Eric Biggers <ebiggers@kernel.org> wrote:
+Hi Laurent,
+
+I=E2=80=99ve analyzed the bug report, and the root cause of the
+"WARNING-media_create_pad_link" issue is a mismatch in terminal
+references in the USB descriptor.
+
+The format type descriptor references terminal ID 6, while the audio
+streaming interface descriptor points to terminal ID 5. This
+discrepancy triggers the warning: "No streaming interface found for
+terminal 6", followed by the media pad link warning.
+
+I confirmed this by changing the terminal ID in the format descriptor
+from 6 to 5, which eliminates both warnings. This shows the warning is
+correctly identifying an invalid descriptor configuration, not a
+kernel bug.
+
+Since the USB descriptor is invalid, I believe the warning is
+necessary and should remain. The code should stay as is.
+
+Regards,
+Gabriel
+
+On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> Each hash request can also contain an entire scatterlist.  It's overkill for
-> what is actually needed for multibuffer hashing, which is a simple API that
-> hashes two buffers specified by virtual address.  Herbert's API creates lots of
-> unnecessary edge cases, most of which lack any testing.
-
-Isn't that the whole *point* of the generic crypto layer?
-
-Honestly, I think anybody who cares about modern CPU-based crypto
-should do what wireguard did: stop using the generic crypto layer,
-because it's fundamentally designed for odd async hardware in strange
-*legacy* models, and the whole basic design is around the indirection
-that allows different crypto engines.
-
-Because that's the *point* of that code. I mean, a large part of the
-*design* of it is centered around having external crypto engines. And
-the thing you worry about is pretty much the opposite of that.
-
-So if what you want is just fast modern crypto on the CPU, the generic
-interfaces are just odd and complicated.
-
-Yes, they get less complicated if you limit yourself to the
-synchronous interfaces - which is, as you point out - why most people
-do exactly that.
-
-Put another way: I don't disagree with you, but at the same time my
-reaction is that the generic crypto layer does what it has always
-done.
-
-I get the feeling that you are arguing for avoiding the overheads and
-abstractions, and I'm not disagreeing. But overheads and abstractions
-is what that crypto layer is *for*.
-
-I mean, you can do
-
-        tfm = crypto_alloc_shash("crc32c", 0, 0);
-
-and jump through the crazy hoops with the indirection of going through
-that tfm ("transformation object") that allocates a lot of extra info
-and works with other things. And it's designed to work with various
-non-CPU addresses etc.
-
-Or you can just do
-
-        crc = crc32c(crc, virt, cur_len);
-
-and you're done - at the cost of only working with regular virtually
-mapped addresses. Your choice.
-
-So I think you want to do the wireguard thing, and use the fixed and
-simple cases.
-
-Yes, those interfaces only exist for a subset of things, but I think
-that subset of things is (a) the relevant subset and (b) the ones
-you'd do the whole parallel execution for anyway (afaik you did
-sha256).
-
-              Linus
+> On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
+> > Hi Ricardo,
+> >
+> > > I cannot reach that URL
+> > I was unable to access the URL from my email client when I initially
+> > sent the email, but a couple of hours later, I was able to. Initially,
+> > copying and pasting the URL into the browser provided a workaround.
+> >
+> > > Shouldn't it be?:
+> > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for each =
+entity")
+> > You're right, I incorrectly referenced the wrong commit. However, I=E2=
+=80=99m
+> > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d57 -
+> > '[media] uvcvideo: Ignore entities for terminals with no supported
+> > format') as it's the latest commit affecting the line I'm changing or
+> > the one you mentioned.
+> >
+> > > Shouldn't source->num_pads be the same as remote->num_pads?
+> > The fuzzer (Syzkaller) that triggered the warning appears to have
+> > encountered a case where source->num_pads and remote->num_pads were
+> > different. When analyzing the case in GDB, remote->num_pads was 1,
+> > while source->num_pads was 0.
+>
+> This seems like the real bug that should be fixed.
+>
+> > > Are you sure that your kernel does not contain?
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c101d3a50a6=
+8c4629c9055e4c
+> > Yes, it should be included since I am running the upstream kernel.
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
