@@ -1,87 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B259188938;
-	Sat, 29 Mar 2025 08:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5121E1B960;
+	Sat, 29 Mar 2025 08:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743236489; cv=none; b=sG0tXa9ddVa7IL8tyiGU7zCHM9/VGnELMf8zjHAZpDex5xvUiCkN93VsqXjOOLKvV5Lqc/1olAm9yEZ2IuxR5XxfLvsK5j4C5dDfiZKgJ9A/CzgyhrW3mf30Uv3AchW1aCHew6cLQ8yJpvV8WVVzz3JsjWIZhPT0dsLRF1rZoCI=
+	t=1743236643; cv=none; b=XyvhkQfgGzVntNyH0eLZ58lbmztdCQ+7n6rGxMJQiQW34hvvapi4JPHLZOK2PgV3RfSGazuR6w8JYiIGdzlrYuSCPxPgWNZJ2i7oOK0dY3zXYuqA9ntcTEptVK/Wxvai0SXAZH72z3CAHtEoMO4yPl/ji5UEUywzjv83N5TGwKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743236489; c=relaxed/simple;
-	bh=RDng1iC7yEBwccXwe6X3ReRjKhh5M2mkpnVRCHzVEVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=suvH/oO9QxuRSIkJB/fStSOFLJUWo0ldb/60tvB76fYz4KpKbXYGhwBX5PTdJBPQA2NPjl9wVL8wlu/ScqnFjpBQneA2vfZouHDdS98H9RaOlRjJ3tWhr0kZhZm+ojctV4G/SJr7/lb++yoIbeW8SBUdB8zpBSB1dG/KrhAEkOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugOdIkXd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743236643; c=relaxed/simple;
+	bh=6/F1xo1a6hz9D0lSpJzTOclIxwyWre8k8tXllZh2aMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ehQRVHfBsEN0ioakFExa1vlN1ABRaZ0oDUGs62THcgYXv7UJD7PQKMizRsItl7rg67mXwRkMkJS/0kra/FQtTsOAf/qzHW1Xm53DNy6tSQAle+XkBHZg8NUD2Cv+Z+WovKWVHgF/HgPKQSKdBeS1Ca9ry1meJo5hRZsOma0vA9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiP0o3WH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugOdIkXd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE999C4CEE2;
-	Sat, 29 Mar 2025 08:21:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiP0o3WH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69FE5C4CEE2;
+	Sat, 29 Mar 2025 08:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743236488;
-	bh=RDng1iC7yEBwccXwe6X3ReRjKhh5M2mkpnVRCHzVEVQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ugOdIkXdli9YEmXGD6v14NPkkigM4FbVuLZK9T8U01dQQN72KRBAnug885XBg5yf7
-	 7H5z2d7TmkD0TZ6nCIxhYV7lPEjRUK+qYg2hZoHq/VxBCmgD6KUxeYuxbEKcsadWde
-	 4hXI/n7ixGxWJc6Ma/rJOxuOQrFiEHNb9gnn1ePhDGvMvtENcNeT6vkpczuKYVwLDf
-	 nvZL9MQFfEEt8lNc5+vRxxHet5i8zscJMKduDYrrQPV6crL7Y3SU1ua1ZX/IcsIx6x
-	 ab2026Qku1lDwRifGHomEHFXT6Ka463JdyP/rDA5vH7bGgq4hwiwBfT3HWjWasWE/g
-	 Bk6VkIHSuCBFA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: renesas_sdhi: add regulator dependency
-Date: Sat, 29 Mar 2025 09:20:52 +0100
-Message-Id: <20250329082123.2325267-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1743236642;
+	bh=6/F1xo1a6hz9D0lSpJzTOclIxwyWre8k8tXllZh2aMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OiP0o3WHLbD6GTr3EAM6IrF9gAM6aLPa3OhSemYNs4hC07FimS+33ssZsVirDOUo8
+	 IAqVmoSUx+JZq/hAmQfVDCgVTD5it5FlF+XC18fZf4yJNmpQiOkaybzqiOsrj0HBID
+	 p2CfZJ4sKG/BufXhtYV5wTO1EzaLhnlaxZdSkUeihVe8D0/DzUFH9qImOZT+uemhgy
+	 Ajz+0WhShLzNn55r2nYhNyWd2bwVt4EAddi1TB00zACaDlusVPrwFuk/LVDub1wKBf
+	 kBZfst0iZQCdOahkIcNVDypELCTzJlLFaiMYGewhK5TegN/mFunpiYVJXB6dpZnsoE
+	 7Vq1ixP65s/Hw==
+Date: Sat, 29 Mar 2025 09:23:56 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 4/4] vfs: add filesystem freeze/thaw callbacks for
+ power management
+Message-ID: <20250329-nahebringen-abhandeln-c8198e8c58fc@brauner>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
+ <20250328-luxus-zinspolitik-835cc75fbad5@brauner>
+ <cd5c3d8aab9c5fb37fa018cb3302ecf7d2bdb140.camel@HansenPartnership.com>
+ <20250328-ungnade-feldhasen-4a447a33068c@brauner>
+ <018ff37dde2bacf47f5d5f6aacd7f560795385b3.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <018ff37dde2bacf47f5d5f6aacd7f560795385b3.camel@HansenPartnership.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Mar 28, 2025 at 12:15:55PM -0400, James Bottomley wrote:
+> On Fri, 2025-03-28 at 16:52 +0100, Christian Brauner wrote:
+> [...]
+> > 
+> > > various operations from races.  Taken exclusively with down_write
+> > > and shared with down_read. Private functions internal to super.c
+> > > wrap this with grab_super and super_lock_shared/excl() wrappers.
+> > 
+> > See also the Documentation/filesystems/lock I added.
+> 
+> you mean locking.rst which covers s_umount?  It would be nice to add
+> the others as well.
+> 
+> > > The explicit freeze/thaw_super() functions require the s_umount
+> > > rwsem in down_write or exclusive mode and take it as the first step
+> > > in their operation.  Looking at the locking in
+> > > fs_bdev_freeze/thaw() implies that the super_operations
+> > > freeze_super/thaw_super *don't* need this taken (presumably they
+> > > handle it internally).
+> > 
+> > Block device locking cannot acquire the s_umount as that would cause
+> > lock inversion with the block device open_mutex. The locking scheme
+> > using sb_lock and the holder mutex allow safely acquiring the
+> > superblock. It's orthogonal to what you're doing though.
+> 
+> OK, but based on the above and the fact that the code has to call
+> either the super op freeze/thaw_super or the global call, I think this
+> can be handled in the callback as something like rather than trying to
+> thread an exclusive s_umount:
 
-The driver started using the regulator subsystem and fails to build without
-that now:
+Eww, no. We're not going to open-code that in two different places.
 
-ERROR: modpost: "rdev_get_drvdata" [drivers/mmc/host/renesas_sdhi_core.ko] undefined!
-ERROR: modpost: "devm_regulator_register" [drivers/mmc/host/renesas_sdhi_core.ko] undefined!
+> static void filesystems_thaw_callback(struct super_block *sb)
+> {
+> 	if (unlikely(!atomic_inc_not_zero(&sb->s_active)))
+> 		return;
+> 
+> 	if (sb->s_op->thaw_super)
+> 		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST
+> 				     | FREEZE_HOLDER_KERNEL
+> 				     | freeze_flags);
+> 	else if (sb->s_bdev)
+> 		thaw_super(sb,	FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL
+> 			   | freeze_flags);
+> 
+> 	deactivate_super(sb);
+> }
 
-Add a Kconfig dependency for this.
+This is broken. The freeze/thaw functions cannot be called with s_umount
+held otherwise they deadlock. And not holding s_umount while taking an
+active reference count isn't supported as we're optimistically dropping
+reference counts. We're not introducing exceptions to that scheme for no
+good reason.
 
-The 'select RESET_CONTROLLER' needs to either go away or get changed to a dependency
-in order to avoid Kconfig dependency loops here. The 'select' is otherwise used by
-drivers that register a reset controller, but normally not by those that just use one.
-
-Fixes: fae80a99dc03 ("mmc: renesas_sdhi: Add support for RZ/G3E SoC")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/mmc/host/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index d7c90a9630e9..c0f03367d765 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -692,9 +692,9 @@ config MMC_TMIO_CORE
- 
- config MMC_SDHI
- 	tristate "Renesas SDHI SD/SDIO controller support"
--	depends on SUPERH || ARCH_RENESAS || COMPILE_TEST
-+	depends on SUPERH || (ARCH_RENESAS && RESET_CONTROLLER) || COMPILE_TEST
-+	depends on REGULATOR
- 	select MMC_TMIO_CORE
--	select RESET_CONTROLLER if ARCH_RENESAS
- 	help
- 	  This provides support for the SDHI SD/SDIO controller found in
- 	  Renesas SuperH, ARM and ARM64 based SoCs
--- 
-2.39.5
-
+The other option is to move everything into the caller and bring back
+get_active_super() and then add SUPER_ITER_UNLOCKED instead of
+SUPER_ITER_GRAB. That's what I've done now.
