@@ -1,92 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09870A935;
-	Sat, 29 Mar 2025 11:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656DFC2C9;
+	Sat, 29 Mar 2025 11:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743247939; cv=none; b=HhEPjn5nE7+BWt2PqEir7If3eluwop6b1iB4crvYAosCT7DSIxDqVf5vlKQAjq1CK6Bx7wKXO1tIniDBkKTcWMFJFtuJnqBQ4QBWF7vqkFKlnboHrbRv0y/IrKvbTf868H2/Nt0Pr+INeRAt2PvHjbt8rC11pn0pueiEmpPb4F0=
+	t=1743248160; cv=none; b=Po13XWS4wxE/aL69StIQ3NrZExoj1KhoSjm2Z2ucqFxLa/Xta810NRRcK6aU01siwY7/GVoVLQj5dvMWHE6+/EMAjmedsLcF20KxEvpc9COi4UGXuRbKk0id4AUPUeHOIhyyYZTABFggQFNfPMifa4YXkdkgJSYz89zVSqN1ybE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743247939; c=relaxed/simple;
-	bh=9RzsQ0E7jdjbegvxUHbO7Zp0Kd0W8S0YBOdd9DVrMNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqUyX5hjBo36njXu+ZDQxhTOkicb+CW14Oz2dSe80Zk+JIZ6Qj6Rw7HaAFF9S8t/mEpJZxtmUymbtRiXodUS9mR0xl3d+0lItoT3yc84KWRE7/uKCnck2T6sGsYkc5/3f4zKUdML4gcODAsUbAI9O2Bz2vNCloQ+C5wZ20BUC9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6G6IxKL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743248160; c=relaxed/simple;
+	bh=fo4bucBnXY/q0oK6G7meZ4oUY3TMcCAnjpICzIo+a5A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jl5viEWcW7R+e9bapFws3ngaaLa+ULsfHfBpGFcm4792o7gFXlb48mKVlofRo3iSlWYRk1aa3yrkyTatZpGB2RnFP5By9E/dEOgSP1WRpVh6ouT26N1GkqiahvqAStiWp5deiga7ZAFpsCe9pYuZHpEeAz+mBaTTd4PPEXpv/+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaMD7RcH; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6G6IxKL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA013C4CEE2;
-	Sat, 29 Mar 2025 11:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743247938;
-	bh=9RzsQ0E7jdjbegvxUHbO7Zp0Kd0W8S0YBOdd9DVrMNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q6G6IxKLKe9hJQRP5obm7C+Bsx6BjbjFbTN9ToLSW109SDDApPb39G5lt813QpmWy
-	 mXGhYzBds4KV7JLlx1K4yg7gfzUkypFskWjvIAR/pg+65EqDEcHa2Zudc9FvGvDl+n
-	 VapJdc3R+A4ZvWi9mdujrbAIWypcR6QH04SAszPTh8Qwnh08Z0YFUyWdp9rZHR+QFK
-	 56/hgrPY0KF64o4KS/oV532kWBSClS0FI9mSWMQwh27o4YP7EaejfEsCfv8z3E67W/
-	 lmCsLCu/fNFubXa8xUHT4OG0VeUtA69O0k3XeDvUGvZLvx24q3fNRl0z6SxEzMs2Aw
-	 p47ZlCf1+qJcg==
-Date: Sat, 29 Mar 2025 13:32:13 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
-	ebiederm@xmission.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
-	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v13 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-Message-ID: <Z-faPSIlZV91j_Z0@kernel.org>
-References: <20250328230814.2210230-1-ross.philipson@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaMD7RcH"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso28770265e9.1;
+        Sat, 29 Mar 2025 04:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743248157; x=1743852957; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4URTuU4OqPDMxhBgu52MpzTH+LX835ANJbVjlWk8JY=;
+        b=gaMD7RcHn3ChRSKBj8FRbc668B1+IUkAabgMma7K6O4KfTSc20ZJnFDvXMGETpI537
+         yjEdWLSlGOzHxnH1oJk1L4j9UBWxpr7xXnlBgpardcoscErjE4aGTgeKASaXrx9fQlhu
+         G9+VItk68Wy8rsQ8Zm1nfz2sWXKUmmSCEay8B3W7iaOxcmRDK2xmFBJgpfnst6E+mRyo
+         XdEiJMB9sf9RcdaERMtGG80iEFRsOH+Yd6N5Y3e0nQqptrxcME5vlExK6oRypaa14+3U
+         W7YLGebV+LN/uUD/Qn9XkwK1xeVSQD8LDVeNyhG6RlaW8PK1YRPK3QGL71v5/EnrcC73
+         J3fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743248157; x=1743852957;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k4URTuU4OqPDMxhBgu52MpzTH+LX835ANJbVjlWk8JY=;
+        b=SbMhmnyAPGhcHSV1I/ZIKzArfGimEVx5NjNOTG/aM05h5Txo2TBiERLlttNGT4qKn0
+         Zq5xuPCtav7U7qL6c4wZY68FVVqMRrYFsob+PM87je6O0GMZvs5b9BTGOf0os9YeGojh
+         wvxvE6jnu84nuYN0HGOaiw29Kh72aX3T+HAT/J3+DQXQf4/8cMp5Q6Jf2XrWe2lDN2aW
+         ytxybCwOEkxxPUBX2sAtFa3ysg4ubWcX3TgTdhsqM8ykuhIGySlv0M7oU0aZ4TkC75gB
+         jNnUpfszg1WN1rbeU8tqwP/HzZ7y3kCZoJiaDcrk5bir1OlvqcqQoNQhee0DaGcOtHdf
+         cmFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdSNUJCZ6QvkY5ghAU6RK4jE2QIpAsAcV7eEiEmySBPXLGhVjSOSFKZZ+zuf+QdkMNNogMXhpKdBPH6jM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAAEkjlM1ZPDz0kakWOqNXhii1D9Lox1k/UIE9SJGWHvU5eeMX
+	lwiAUzXowjfkTACbD1qeseQxRdvxziBV8Jq8W1ff3x0Astp/KB1A
+X-Gm-Gg: ASbGnctWS7D6NoLcKnbGjIJ0lmy2+q34RIku2w18X3KzEkWJAuMmr3sY/9cG3z3MfWI
+	1tesp5zFA5Cnk2vHrMeMTYeP9RsFyPReq4sSUOylN9s3tK0z9aZY9NmEg6LhnInQtlEYyjCVZXl
+	r682njXrFPoIZM0wGxe8Ixbk7nv8Y/CMXW+G+DizqDTqpg+0K3wjvkavhXCjMAQYtukmkVN4/Fe
+	BRqvKbG3bFKk3Saf0JmAD5qo3DlATJY+s3X9C5OJ+Z0iC5EnHe0Hb6sOjWHj+cyTeNhukQqbSTt
+	7/g2KwGlWoHJtoYQEzL4V4fZdOFXyx4Kx9LG6t1uGDA+9w==
+X-Google-Smtp-Source: AGHT+IGzFDOv0az8Oo04Dh1HgtexqBpJ0sbaJycOwnYRGsKdBcmFIR0JBxHT3YADEewHZjwrHQSoFQ==
+X-Received: by 2002:a05:600c:4e48:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43db61e05abmr26723235e9.3.1743248155735;
+        Sat, 29 Mar 2025 04:35:55 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:c564:b82e:4883:713c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e834a5sm104631655e9.13.2025.03.29.04.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 04:35:55 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: robdclark@gmail.com,
+	quic_abhinavk@quicinc.com,
+	lumag@kernel.org,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	quic_jesszhan@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 RESEND] drm/msm/dpu: reorder pointer operations after sanity checks to avoid NULL deref
+Date: Sat, 29 Mar 2025 11:35:38 +0000
+Message-Id: <20250329113538.7935-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328230814.2210230-1-ross.philipson@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 04:07:55PM -0700, Ross Philipson wrote:
-> The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
-> enhance the boot security and integrity in a unified manner. The first area of
-> focus has been on the Trusted Computing Group's Dynamic Launch for establishing
-> a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
-> Trust for Measurement). The project has been and continues to work on providing
-> a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
-> cross-architecture (x86 and Arm), with our recent involvment in the upcoming
-> Arm DRTM specification. The order of introducing DRTM to the Linux kernel
-> follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
-> Technology (TXT) is present today and only requires a preamble loader, e.g. a
-> boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
-> been present since the introduction of AMD-V but requires an additional
-> component that is AMD specific and referred to in the specification as the
-> Secure Loader, which the TrenchBoot project has an active prototype in
-> development. Finally Arm's implementation is in specification development stage
-> and the project is looking to support it when it becomes available.
-> 
-> This patchset provides detailed documentation of DRTM, the approach used for
-> adding the capbility, and relevant API/ABI documentation. In addition to the
-> documentation the patch set introduces Intel TXT support as the first platform
-> for Linux Secure Launch.
-> 
-> A quick note on terminology. The larger open source project itself is called
-> TrenchBoot, which is hosted on Github (links below). The kernel feature enabling
-> the use of Dynamic Launch technology is referred to as "Secure Launch" within
-> the kernel code. As such the prefixes sl_/SL_ or slaunch/SLAUNCH will be seen
-> in the code. The stub code discussed above is referred to as the SL stub.
+_dpu_encoder_trigger_start dereferences "struct dpu_encoder_phys *phys"
+before the sanity checks which can lead to a NULL pointer dereference if
+phys is NULL.
+ 
+Fix this by reordering the dereference after the sanity checks.
+ 
+Fixes: 8144d17a81d9 ("drm/msm/dpu: Skip trigger flush and start for CWB")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+v2:
+- Moved Signed-off tag below Fixes tag
+- Moved dpu_enc declaration to the top and initialisation below sanity checks
 
-I did a quick recap of TPM patches and still looks good as far as I'm
-concerned. Not actively reviewing these anymore but I'll do a sanity
-check per patch set version.
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-BR, Jarkko
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 0eed93a4d056..0bd1f2bfaaff 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1667,7 +1667,7 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
+  */
+ static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
+ {
+-	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(phys->parent);
++	struct dpu_encoder_virt *dpu_enc;
+ 
+ 	if (!phys) {
+ 		DPU_ERROR("invalid argument(s)\n");
+@@ -1678,6 +1678,8 @@ static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
+ 		DPU_ERROR("invalid pingpong hw\n");
+ 		return;
+ 	}
++
++	dpu_enc = to_dpu_encoder_virt(phys->parent);
+ 
+ 	if (phys->parent->encoder_type == DRM_MODE_ENCODER_VIRTUAL &&
+ 	    dpu_enc->cwb_mask) {
+-- 
+2.39.5
+
