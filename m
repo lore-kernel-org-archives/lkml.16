@@ -1,157 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B182AE8E;
-	Sat, 29 Mar 2025 18:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749142AE8E;
+	Sat, 29 Mar 2025 18:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743273175; cv=none; b=GSorhdgrVn6rVXgInFRVG/+Sxgfexa8tMaIe1SV9+2W4JEISxZQwM6guf33lOiUIIyU3vKx6yQ1p7cRDXlHRKAy6MKC0vAx8NuI3JRAV1kf0R0qVkEn9Y2hkO3tiXcUV9bLrsiFm1AKO3xVjYHqxrbS/kqxB2Qy08+Js0FOF4DU=
+	t=1743273224; cv=none; b=CmAX8sbMqVwseTi8IKxFNCDP8Wv4BobGVQIP5iMKRQCBseOxDrJLGWaJL337bfB0L3SvBKwbiRbVAkSQxFTVK41+cgj24JVIzmJSMO67QTGXhFAWLbnEdIfelqCVGMpnd6ZoOxFWuC1g6cSNzua3zSYN/ZbNJnMbCn1N+oHRyw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743273175; c=relaxed/simple;
-	bh=88SrUHIh4lPXPPCyQrgHZe3BRPvZFsiCiw25NSW1FPg=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=HmFunLUlCw2fFj2e9SF/7AqMIw5tz1Dm9yMu0ctHdGT4FmdGA6plrQwpcOZipHsGbqhlbkIpXJJ14WhyduLZrHvs05DqRW5V1kyXfHZrpDgLf0iU6iY/CwfEmlhf2TN3rJ6q9tT9+MXY8pUxUsYJr6M8118bOlZzqQnBovTmgUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KL0yZGt9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KL0yZGt9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD62C4CEE2;
-	Sat, 29 Mar 2025 18:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743273175;
-	bh=88SrUHIh4lPXPPCyQrgHZe3BRPvZFsiCiw25NSW1FPg=;
-	h=From:To:Subject:Date:From;
-	b=KL0yZGt91+FbNnOOkmQfrmB+zy1dU4u0xDU/HVpcM/vcVFwir5l5ZaL9iwFJQs1o6
-	 nS0vnU/E+p3MjqLg9OiN9XgC8nzVJuhR8obg58ymT/QQBbkoMMaAr3Q1xEvaJy6Rxq
-	 UZmOCZ9nqsHh/ySwFHNbFWXdaNMD/WutsXx223Li/qaBDQ4wFWiV8KLF3fPf5wTkXf
-	 19rbBtpKcidIXXbQPqFSuQG3RoL12uBOZr9JJ+fVR9p6l4G06HdfGW9f0OunaUPHFK
-	 IScgMUbvIg63vw0XBCYV0PWEJmyZy/YKNQKtwXU3Fu8BweRTwLgv8RsNSyevIRsMph
-	 XYBlitrxDgBkw==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [RFC PATCH] keys: Add a list for unreferenced keys
-Date: Sat, 29 Mar 2025 20:32:43 +0200
-Message-Id: <20250329183243.719222-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1743273224; c=relaxed/simple;
+	bh=N0Bu789B+gdjMhkE5nvBLyPmkVSv0quQvGRlrjO9+28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XsozICA+AN9R9g+aOQhuxULd79HS3n25N+HofRx6FaIHT42gglKyFOLSphIOZ+bCizWibC3FotAD/gO/EUWJQ3ivpSFi4Vy3+StMQRTF6Fb3EM2CCeDpO/PxbPGBcWdJzusiyoAsE26z1I+YuoDjcR6Ae0I8KkGdI487vZFs8d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id AB1B9300034D8;
+	Sat, 29 Mar 2025 19:23:35 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 9633C11B31C; Sat, 29 Mar 2025 19:23:35 +0100 (CET)
+Date: Sat, 29 Mar 2025 19:23:35 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Moshe Shemesh <moshe@mellanox.com>, Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	linux-rdma@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@nvidia.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next v2 09/16] net/mlx5: Handle sync reset now event
+Message-ID: <Z-g6pzpZu_TU0-nA@wunner.de>
+References: <1602050457-21700-1-git-send-email-moshe@mellanox.com>
+ <1602050457-21700-10-git-send-email-moshe@mellanox.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1602050457-21700-10-git-send-email-moshe@mellanox.com>
 
-Add an isolated list for unreferenced keys, in order to make the reaping
-process more straight-forward and failure-safe.
+The following was applied as commit eabe8e5e88f5 ("net/mlx5: Handle
+sync reset now event").
 
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- include/linux/key.h      |  1 -
- security/keys/gc.c       | 21 ++++-----------------
- security/keys/internal.h |  1 +
- security/keys/key.c      |  7 +++++--
- 4 files changed, 10 insertions(+), 20 deletions(-)
+It does some questionable things (from a PCI perspective), so allow
+me to ask for details:
 
-diff --git a/include/linux/key.h b/include/linux/key.h
-index ba05de8579ec..074dca3222b9 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -236,7 +236,6 @@ struct key {
- #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
- #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
- #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
--#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
- 
- 	/* the key type and key description string
- 	 * - the desc is used to match a key against search criteria
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index f27223ea4578..7222692cfd60 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -218,11 +218,6 @@ static void key_garbage_collector(struct work_struct *work)
- 		key = rb_entry(cursor, struct key, serial_node);
- 		cursor = rb_next(cursor);
- 
--		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
--			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
--			goto found_unreferenced_key;
--		}
--
- 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
- 			if (key->type == key_gc_dead_keytype) {
- 				gc_state |= KEY_GC_FOUND_DEAD_KEY;
-@@ -286,6 +281,10 @@ static void key_garbage_collector(struct work_struct *work)
- 		key_schedule_gc(new_timer);
- 	}
- 
-+	spin_lock(&key_serial_lock);
-+	list_splice_init(&key_graveyard, &graveyard);
-+	spin_unlock(&key_serial_lock);
-+
- 	if (unlikely(gc_state & KEY_GC_REAPING_DEAD_2) ||
- 	    !list_empty(&graveyard)) {
- 		/* Make sure that all pending keyring payload destructions are
-@@ -328,18 +327,6 @@ static void key_garbage_collector(struct work_struct *work)
- 	kleave(" [end %x]", gc_state);
- 	return;
- 
--	/* We found an unreferenced key - once we've removed it from the tree,
--	 * we can safely drop the lock.
--	 */
--found_unreferenced_key:
--	kdebug("unrefd key %d", key->serial);
--	rb_erase(&key->serial_node, &key_serial_tree);
--	spin_unlock(&key_serial_lock);
--
--	list_add_tail(&key->graveyard_link, &graveyard);
--	gc_state |= KEY_GC_REAP_AGAIN;
--	goto maybe_resched;
--
- 	/* We found a restricted keyring and need to update the restriction if
- 	 * it is associated with the dead key type.
- 	 */
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 2cffa6dc8255..c1b6f0b5817c 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -66,6 +66,7 @@ struct key_user {
- extern struct rb_root	key_user_tree;
- extern spinlock_t	key_user_lock;
- extern struct key_user	root_key_user;
-+extern struct list_head key_graveyard;
- 
- extern struct key_user *key_user_lookup(kuid_t uid);
- extern void key_user_put(struct key_user *user);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..b34b4cba6ce7 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -22,6 +22,7 @@ DEFINE_SPINLOCK(key_serial_lock);
- 
- struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
- DEFINE_SPINLOCK(key_user_lock);
-+LIST_HEAD(key_graveyard);
- 
- unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
- unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
-@@ -658,8 +659,10 @@ void key_put(struct key *key)
- 				key->user->qnbytes -= key->quotalen;
- 				spin_unlock_irqrestore(&key->user->lock, flags);
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+			spin_lock(&key_serial_lock);
-+			rb_erase(&key->serial_node, &key_serial_tree);
-+			list_add_tail(&key->graveyard_link, &key_graveyard);
-+			spin_unlock(&key_serial_lock);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
--- 
-2.39.5
+On Wed, Oct 07, 2020 at 09:00:50AM +0300, Moshe Shemesh wrote:
+> On sync_reset_now event the driver does reload and PCI link toggle to
+> activate firmware upgrade reset. When the firmware sends this event it
+> syncs the event on all PFs, so all PFs will do PCI link toggle at once.
+> To do PCI link toggle, the driver ensures that no other device ID under
+> the same bridge by checking that all the PF functions under the same PCI
+> bridge have same device ID. If no other device it uses PCI bridge link
+> control to turn link down and up.
+[...]
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+> @@ -156,6 +157,120 @@ static void mlx5_sync_reset_request_event(struct work_struct *work)
+>  		mlx5_core_warn(dev, "PCI Sync FW Update Reset Ack. Device reset is expected.\n");
+>  }
+>  
+> +#define MLX5_PCI_LINK_UP_TIMEOUT 2000
+> +
+> +static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+> +{
+> +	struct pci_bus *bridge_bus = dev->pdev->bus;
+> +	struct pci_dev *bridge = bridge_bus->self;
+> +	u16 reg16, dev_id, sdev_id;
+> +	unsigned long timeout;
+> +	struct pci_dev *sdev;
+> +	int cap, err;
+> +	u32 reg32;
+> +
+> +	/* Check that all functions under the pci bridge are PFs of
+> +	 * this device otherwise fail this function.
+> +	 */
+> +	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
+> +	if (err)
+> +		return err;
+> +	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
+> +		err = pci_read_config_word(sdev, PCI_DEVICE_ID, &sdev_id);
+> +		if (err)
+> +			return err;
+> +		if (sdev_id != dev_id)
+> +			return -EPERM;
+> +	}
+> +
+> +	cap = pci_find_capability(bridge, PCI_CAP_ID_EXP);
+> +	if (!cap)
+> +		return -EOPNOTSUPP;
+> +
+> +	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
+> +		pci_save_state(sdev);
+> +		pci_cfg_access_lock(sdev);
+> +	}
+> +	/* PCI link toggle */
+> +	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
+> +	if (err)
+> +		return err;
+> +	reg16 |= PCI_EXP_LNKCTL_LD;
+> +	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
+> +	if (err)
+> +		return err;
+> +	msleep(500);
+> +	reg16 &= ~PCI_EXP_LNKCTL_LD;
+> +	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
+> +	if (err)
+> +		return err;
 
+The commit message doesn't state the reason why you're toggling
+the Link Disable bit.
+
+It propagates a Hot Reset down the hierarchy, so perhaps that's
+the reason you're doing this?
+
+If it is, why didn't you just use one of the existing library calls
+such as pci_reset_bus(bridge)?
+
+Thanks,
+
+Lukas
