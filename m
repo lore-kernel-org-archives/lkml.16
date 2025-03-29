@@ -1,143 +1,85 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669CAA926;
-	Sat, 29 Mar 2025 10:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB759A926;
+	Sat, 29 Mar 2025 10:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743245198; cv=none; b=o/HKHax21DiKCyComWPIL+sL8REsuYzGtFdUO3+NmrbvaGeheBPtPMYaNutVnwmOa7SA7Oi7eOLChHbOnccMvAxeLxxrQblq3hEEbfBNYmIY1Q7R2gsAHNbOpRHlx5S0UKV0b3VdSHqFiTLasHYdZtPWxES1eUVDJ6SoZLtAB3Q=
+	t=1743245303; cv=none; b=FlxWmSI2OecNd3UmKNpSc3uSDtABWojBZqLpE7AlvPLJzkSsEpWb2YhbEYMdDYDWpLYEZ8cg5q5Ec7UH+e5f9+xNOmWAspvL1wxu7vTzDHqFocZizBoRXlMO2uz0HEjdRjXR46McUsgDGdsDyb4tVmnkixq/T/utaSFdiR5NtjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743245198; c=relaxed/simple;
-	bh=abBknvG1tnsdcfr1O8SPtZNsNVvcjshg8g4ItvKLiuw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j4jVg0s1U+TSNYO3NmW8T4WDJT+DMXxH4Ea/AcdAZTndqt+rONDQhK88eB1Xc2QIWf+kxMNGrA/K++VeHQTKWxSO0iO8/xWyaxgeBxBTMwjeYFQ+hKXkLeWs/am06Aln7cQ/kizNMAnIpnsC4dzCDBY1CYA6v4uadG5w9UisE+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mAqDxCUk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WJ6T+T0n; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743245303; c=relaxed/simple;
+	bh=VRILCUl6tghO5fvQBAa9MBDTlEh08r9uEGUP7rrLACI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbSGy6K1DMHC+24lXDvUt9G/puEGlMVEPhMODNgXDzuA7lvjRNtSklGRAAp7bYGQobaBjmMK2NYDga+4jUsEyv3OCeTyMp3Du0E+2JUrFF4P9DO9OlMXFXbqV6cZpApW8KAwFz0U23/Q+bRYvxpI7a4bPqtBgMGjRukQw/PnAvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LEvALe9X; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mAqDxCUk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WJ6T+T0n"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 1A0CF25401BF;
-	Sat, 29 Mar 2025 06:46:33 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Sat, 29 Mar 2025 06:46:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743245192;
-	 x=1743331592; bh=OLgBx+r6xkyWt3W/cG+UMLFBG12g5/2uvOpEZ4keCCg=; b=
-	mAqDxCUkwen7TM7cFY3sJmJwVun6sZGtvCLRrgAp3fYxUy/imPb1G7nk+JiU3pBc
-	mC7YGmYYaN0ZlFp31BzCu89vxZSH51oM4lFKAY1nEt2rEGIhjpX7qbqf/9xA7rmq
-	DWasGE3K3p5VT4flT6GxgJwF1YzGljolSjZASyChTXypZ3wMfxZIM+l7nf6A/seM
-	H18xf3DlrI2gJU3/+s3YrqebEq8vQJi3c9sqtRNbmGGYZytMaGlo8iwQ5B2sPpgt
-	KifNfv4EfZOuVg8GTQ9B/rIP+39yaX+jwGH5OoE7e+RlNekjMyuw37DPQut8gF9c
-	Ug0v1nt1RDomIY0JHiCvOg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743245192; x=
-	1743331592; bh=OLgBx+r6xkyWt3W/cG+UMLFBG12g5/2uvOpEZ4keCCg=; b=W
-	J6T+T0nberVqJlNjDsJuZ5jujgRA+Azs+RLaEn7CyeV7pQRlgwtI2Mfg3iM1CvKW
-	42ZvD083ODClOj8j79BtmJ6C5Ehw7WxIh+6XGBLB4UQRQILq/RGvz5ndJiwc6HaW
-	lwm44CTOx4SMvThE8MnHJiaWpokKEf3NLsSHq/d3bbWsZ4RqvG88jiVN3TfK4sv0
-	bKCcSO+PO1DqnTBnlFRaWeWMhBtxFCfuF8dFaMjDssGwLUcRU/XJHyzJNLv2lI4t
-	V62oTLHQ+kfO3KhQM+Zx3qkB16c0SyEEDTZOudeo9Rm+Dkx38LrhEVS9Vjf2sx6d
-	PBYFHleHiSm3LuLveEfZw==
-X-ME-Sender: <xms:h8_nZ66EMpfl-OKodZX6tkbM5rT7SN6PdaZZWN0w0oc7vhGtne4-XQ>
-    <xme:h8_nZz7uFEB5e_TutvMsHyRGHqEMIk_3KdtCxmiIzFKsd2wmrNh42gCUNRV5M11ne
-    h6w9Yz7SUioJewdD4E>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeefleeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghijhhurdgurghsrdhjiiessg
-    hprdhrvghnvghsrghsrdgtohhmpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshes
-    ghhlihguvghrrdgsvgdprhgtphhtthhopegrughrihgrnhdrhhhunhhtvghrsehinhhtvg
-    hlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopeifshgrod
-    hrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthho
-    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehlihhnuhigqdhmmhgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:h8_nZ5d8fXOONevlZgzuIlDiCFSHIj7tuQzgfMDrDNwtRbQjDAciBw>
-    <xmx:h8_nZ3IidfwCF2RxQD62Lh8quNIoxT1Dd8_YbvGa9Yg2h6D63v1ujQ>
-    <xmx:h8_nZ-LaLZSlIrWGe7jJ3u2XHUINz8VOVpssg9V12Y3x72P0NUfTGQ>
-    <xmx:h8_nZ4zaa48gWvggJTRy7dbmZKytZzU5SJ6zYxEmlSu2hWsbB2WENQ>
-    <xmx:iM_nZ_qDrpW94WQaiSZTHwGXRsV4N5XGBNY_omCX9Jtk6qVUNR8DccBJ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 59E852220072; Sat, 29 Mar 2025 06:46:31 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LEvALe9X"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5F5EF44570;
+	Sat, 29 Mar 2025 10:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743245293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YyQo1MenJXkYhqS5gJTFkqIlunC7aRR8PjTnQH8TVW0=;
+	b=LEvALe9XtbyP6nloZS51W+XWdzDiIx+iG6xmC+eMZJ924dmDzAVeUmmRhWhlp5z4grPXDm
+	rjhoGw6/Ejt41w8iW3DB108kNlupUjE2xYcWec2V6vIgqLbWCNkyFsriIKodu9L67kVp9L
+	mqoeMs17Vp0+8tBTWSRNmFigSCJceAdbKIKZo2dgb/N7AfvKht6ek/M1KHHclD43AYcGA8
+	CTta/gxw3ssdSgRKydKCaMt3zDrcZUGJXkIt5xtUDRMty7+LF70fknBXzkdbmj6tdwW5Q3
+	Fr/z8NOTEoGo/qc3/RCnAPT8o59dA73I7G1/ifHhcqs4enS3PmbZDwSv5u7c6w==
+Date: Sat, 29 Mar 2025 11:48:12 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+Message-ID: <20250329104812225f9ee5@mail.local>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+ <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+ <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+ <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
+ <a96511dc-5ba1-4302-acb0-f3b49bf8990c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tdc810edfc44aecaa
-Date: Sat, 29 Mar 2025 11:46:10 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Ulf Hansson" <ulf.hansson@linaro.org>,
- "Biju Das" <biju.das.jz@bp.renesas.com>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <70367c55-81c9-4387-b332-1e19ab8397d2@app.fastmail.com>
-In-Reply-To: <Z-fBYVzkxZOqZixB@shikoro>
-References: <20250329082123.2325267-1-arnd@kernel.org>
- <Z-fBYVzkxZOqZixB@shikoro>
-Subject: Re: [PATCH] mmc: renesas_sdhi: add regulator dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a96511dc-5ba1-4302-acb0-f3b49bf8990c@quicinc.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeefleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgheeuieeikefhgfdvhfehiedvhffgjeetfffgtefhudfgtefffeevledtleejteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehquhhitggpmhhsrghvrghlihihsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepofgrrhhkuhhsrdfglhhfrhhinhhgseifvggsrdguvgdprhgtphhtthhopehli
+ hhnuhigqdhifegtsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshhsohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Sat, Mar 29, 2025, at 10:46, Wolfram Sang wrote:
-> On Sat, Mar 29, 2025 at 09:20:52AM +0100, Arnd Bergmann wrote:
->
->>  config MMC_SDHI
->>  	tristate "Renesas SDHI SD/SDIO controller support"
->> -	depends on SUPERH || ARCH_RENESAS || COMPILE_TEST
->> +	depends on SUPERH || (ARCH_RENESAS && RESET_CONTROLLER) || COMPILE_TEST
->> +	depends on REGULATOR
->
-> Hmm, this is too strict IMO. SuperH does not need REGULATOR.
+On 29/03/2025 14:38:14+0530, Mukesh Kumar Savaliya wrote:
+> Hi Markus,
+> 
+> On 3/29/2025 12:34 AM, Markus Elfring wrote:
+> > > > Under which circumstances would you become interested to apply a statement
+> > > > like “guard(spinlock_irqsave)(&gi3c->irq_lock);”?
+> > > Didn't get, hence a question.  Do you suggest to use DEFINE_LOCK_GUARD_1 instead of existing method ?
+> > I propose to pick further opportunities up for benefits from scope-based resource management.
+> > 
+> Sorry, still not clear to me what should i add/change ? please share me some
+> example.
 
-I haven't tried building on sh, but I don't see why it wouldn't
-need the regulator dependency. The code that calls it is
+Don't change anything, Markus is wasting your time.
 
-        rcfg.of_node = of_get_child_by_name(dev->of_node, "vqmmc-regulator");
-        if (!of_device_is_available(rcfg.of_node)) {
-                of_node_put(rcfg.of_node);
-                rcfg.of_node = NULL;
-        }
-
-        if (rcfg.of_node) {
-                rcfg.driver_data = priv->host;
-                rdev = devm_regulator_register(dev, &renesas_sdhi_vqmmc_regulator, &rcfg);
-        ...
-
-which sounds like regulators are always needed when
-of_get_child_by_name() may return a non-NULL pointer, i.e.
-when CONFIG_OF is enabled.
-
-If this is correct, maybe this is the best variant:
-
-config MMC_SDHI
-  	tristate "Renesas SDHI SD/SDIO controller support"
-	depends on SUPERH || ARCH_RENESAS || COMPILE_TEST
-        depends on (REGULATOR && RESET_CONTROLLER) || !OF
-
-CONFIG_ARCH_RENESAS is only set when CONFIG_OF is also set,
-so both subsystem dependencies are covered by that, while
-SUPERH doesn't currently enable OF, but will need the
-regulator and reset controller if that patch is ever merged.
-
-      Arnd
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
