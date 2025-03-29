@@ -1,95 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA212114
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 03:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB3C23774;
+	Sat, 29 Mar 2025 03:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743217891; cv=none; b=q9YZYGCVedPC8lfVb0kaMvEM0QQfXawY0mN53FIE8TZrVdY1m0YiSToRQ7tSGsSvcTq6QvG420SV/5++tgQxOnd3L+vQfrhdlnJRF3zgEsoedIUEsIYqPYMWoXeLq7QAbJq75mKqzTN2jr1b51HCBDceU3pd7Krp6XzRW08UedU=
+	t=1743218674; cv=none; b=DvIBoQg/zPqO0qQsAQCiT0sT2arQekg9WIu7SEYiHHMw29wuT/wwZd48nsld6CQuOzd6IBpSD96MNF+UE/wgfBfHXq/lrCVKuUnKlKx9d1AQJmDRGHQAb5ND4Q0Nwp9ZqwbJSNF/5ZQTCH5kfLy3r8EhnGwzzL+n+LeRpnD7y1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743217891; c=relaxed/simple;
-	bh=ozYsBlwZ80mmC9DOto6zSpibtseYMNHA9EQC5POqTBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WXiE7UmH2Z/SYC4b/3oRIko1TSoJeJSL+8dmT/tz0P97FTGL+Tzyny48tCuVTjpFR04VyiOnQ9cb3AmIZz4RUTkWmS9Yi9oqEW8l45vvVHykRGrevk3Ss3tgPeDbCiIf4NDt+Op9ATu0jK8dz6w9DGzEREIjvqzp1T7NN7CCMi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bbMCIEgG; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743218674; c=relaxed/simple;
+	bh=tcp2K/tv+kU6UvXNkQlqZQ3LMC/1SM4Y78TnXI/ei48=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XK6FnT9x4ePJao0LpNB5izyyvbCU/6t6Qe07zr/IYPIKClKbSnMSGW/k/X/a8rfwQ797fqhvDs4Lje9qTlTZasK7PY133gZGzYMkuqwIaRey2nj6dVM9655M03PAQYZbnR9fgBEKsZIaHpRMJPq0s06+VtSmOdYXjInf/Xxl2kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAXd3LS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bbMCIEgG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743217889; x=1774753889;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ozYsBlwZ80mmC9DOto6zSpibtseYMNHA9EQC5POqTBM=;
-  b=bbMCIEgGZ7Ms2ch22K2Xj4eXfJU3lW4uq6PfUEaq2uRPKv3TrW4d6WJA
-   8wC3e4+ClL5s3WWwYRVPtz4FaAiUG7kj4Hcigy87qQR30mh2ofOqVPoBq
-   ag5d9uGSRPBuxEkZBx163h8UVR8jy3PVzRHfgkdKqqpAEqN+eVEuvExDE
-   9+o3YjlyVO1Ovjn5mlvAgnPgF7rfdHPuQovfGW2/NOg92PuMpJGCbnI8A
-   2bnBLq2KSYf4y5N+nx6hB8rnHNWAguwlE3bLIEIg3L3WYzbM+ImToz9oI
-   nKZow60gDSc905wTdkQl9yMUPWskdwcKg1qkbN2OqpfLp3UNL7TjCI+gR
-   w==;
-X-CSE-ConnectionGUID: a7l6aTVUR/ScpRALZYAOvQ==
-X-CSE-MsgGUID: Xf/FWxoIRk+++xluaEqkFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="43833855"
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="scan'208";a="43833855"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 20:11:28 -0700
-X-CSE-ConnectionGUID: x0S5uQqvSy68I0odGtaLgw==
-X-CSE-MsgGUID: 5HkueOixTkK7PRUM6kZwqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="scan'208";a="126134780"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 28 Mar 2025 20:11:28 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tyMbS-0007sM-0L;
-	Sat, 29 Mar 2025 03:11:23 +0000
-Date: Sat, 29 Mar 2025 11:11:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: s390-linux-ld: Error: unable to disambiguate: -no-pie (did you mean
- --no-pie ?)
-Message-ID: <202503291141.yTqSRdTX-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAXd3LS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA88C4CEE4;
+	Sat, 29 Mar 2025 03:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743218673;
+	bh=tcp2K/tv+kU6UvXNkQlqZQ3LMC/1SM4Y78TnXI/ei48=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=mAXd3LS7sR3AywWuc2ONT0ujXulws2qOB5TA27JY5Rv3GFgBJ0PFUoI0m01l5Y5Ij
+	 EJQ98G2ISuqTgIsxnRwnjTxoEE9rYLNkZEhHY4maWXHJlvojdBRSFk79+QRN9HvZsm
+	 OYy0FARUFTQK+mkF+W22F1x4qBGU8pCRW7tSuaCEM6RNjwAnehuQFRItf4xlZ2N4JX
+	 unaIXbbEKgGd+4bD9NmIkjyf0KMDJqcKi0pP8Rk60cvpbmyHWZ5sF3mO667CLkiato
+	 iaPYgGZpiA4nyQjrl5jCBFmFJWZ2SPSDMvdyjOC1l/b7RVzqNmaH6gscI8vU8IN4ee
+	 /J0gjbuP1LYRg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71024380AAFA;
+	Sat, 29 Mar 2025 03:25:11 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI changes for v6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250328150308.GA1504545@bhelgaas>
+References: <20250328150308.GA1504545@bhelgaas>
+X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250328150308.GA1504545@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.15-changes
+X-PR-Tracked-Commit-Id: dea140198b846f7432d78566b7b0b83979c72c2b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7d06015d936c861160803e020f68f413b5c3cd9d
+Message-Id: <174321871003.3067838.16190207142048549199.pr-tracker-bot@kernel.org>
+Date: Sat, 29 Mar 2025 03:25:10 +0000
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi Sumanth,
+The pull request you sent on Fri, 28 Mar 2025 10:03:08 -0500:
 
-FYI, the error/warning still remains.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.15-changes
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0c86b42439b6c11d758b3392a21117934fef00c1
-commit: 00cda11d3b2ea07295490b7d67942014f1cbc5c1 s390: Compile kernel with -fPIC and link with -no-pie
-date:   11 months ago
-config: s390-randconfig-001-20250329 (https://download.01.org/0day-ci/archive/20250329/202503291141.yTqSRdTX-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250329/202503291141.yTqSRdTX-lkp@intel.com/reproduce)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7d06015d936c861160803e020f68f413b5c3cd9d
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503291141.yTqSRdTX-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> s390-linux-ld: Error: unable to disambiguate: -no-pie (did you mean --no-pie ?)
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for FB_IOMEM_HELPERS
-   Depends on [n]: HAS_IOMEM [=y] && FB_CORE [=n]
-   Selected by [m]:
-   - DRM_XE_DISPLAY [=y] && HAS_IOMEM [=y] && DRM_XE [=m] && DRM_XE [=m]=m
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
