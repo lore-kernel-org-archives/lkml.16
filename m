@@ -1,172 +1,225 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279981AAA23;
-	Sat, 29 Mar 2025 10:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743245966; cv=fail; b=m3qTCPA+RQDFh6wJJzj8gnjaIRltSwgKyTU3rXYglE5keuW/30iZ1XCtW49w5Zfv1IFFLXisq+0ABVl/G8HakKtdDlbqEFJRa5H3jG7FPv7t1/YTRU+SVzDJmnf4HZH1Cdm/Afs7kU3fFVUkFN7y0BB0mljZuOBE+WMpVS107sE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743245966; c=relaxed/simple;
-	bh=g0GlwfKoo9aeW6pbqwuqAE4oHj1qeNRAIM9irlJcJqg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dYUhO7whfyuLnvyyv4YqXzUShA4/G8bOG6Qxc1XqCUivulwPlOdetEy6AAuTyZiSm9Etnxcr61VJcT37Q7UeL+qDEnp4r8rI8EYhEOpUNiKJbH0LOxq/NPcIgt4PnW2UvV00ipyJk67g0GzQvDHecFUq/bt72pk5Mj240QlWUQ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=9AvfLB+E; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=mcxzM+8i; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C0C13DB9F
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743246048; cv=none; b=Le4Vja7KeZ1DQdYNhCxKnkHiLdjCNxZUbX2LgraIlPMj7paJyM/p5ITrUs89/wIchy/5gTEBin8kH/I+UzIxyuQxCVfZP3OJo4jY5nuDpEGl/Ifjbd2uW5LyvwxGN7OahUTiwtIR8laL7lKZAy123UAx7KbdP4bmzPPVBshJiVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743246048; c=relaxed/simple;
+	bh=CfOoC6JLa0u/InvAu2e9ZP6t101tvroQMiFkdtlSpJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t5JnyVWIcBY7d39bATAk51+8Upa+J2IdnVKXETumxwbyAi81KHbEVBG94CtB5B+UQ3DE3CC1HsEuiJ0Ir7Wf4qDmE0PNYcL7Jywfd0+C+urNdcCQeshB9cN06uw8Jnk4L2RuYk8zHz8VCpE7f15O28vbgPDgwDB4czd80uG5moQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyFty2zx; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="9AvfLB+E";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="mcxzM+8i"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 4381E480AF4;
-	Sat, 29 Mar 2025 06:59:17 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1743245957;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=RHO3yWxTen8cfAxy9aOWoO+AnpnPzPOoPnTKVT1ntBI=;
- b=9AvfLB+Et/5KT+V1EPnYq3i/sfxqn9q2R0SPH7C+gylHhfzjeUHw+UdrvYTRLshTUKiJH
- ZuMskWo1xZIagl7Aw==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1743245957;
-	cv=none; b=rliDB0OilO6hcbFYZ5wffqU3XC9D4HQ/30AuFkoNqnYBpscKA54wXGJJ8C+1TLIc0RuTj14agEZjpjH9dechhYjs7bJLqqFiJpXZhKEArF3B4+KvEWloyeCydk/V5BI5bLIcpbyC+1bn5FSB+VvjjqT2t8rbaSPxaGV1H/bpmrDeZe8fXxs1OwsaW9E249HgRj2wJwR/uf+QP7DTtzKaZGlycRk6HjemntO5+1sfX4S0VAr43HWYMpJfv4ILehe9ijxZej2GLK2Jm+C/2jfmX1BCAzlQLnuyUdA4B4iIVGbh/c4Q7hUh9SFVC8pB/8jAn692lkTk1b2pRwo65dOKOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1743245957; c=relaxed/simple;
-	bh=g0GlwfKoo9aeW6pbqwuqAE4oHj1qeNRAIM9irlJcJqg=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=R8jL5gL1+GOkJd3MZiucVyjOqiuHJSepx0dxy9cQ43L1Y68PPHpv2NZbIdnzNFCKvbkB3ZaAEn9Vc4W90H97ztVyp6Gk87cIOlVNkpx1hcRr2ONb2oEut7DJyrgv5aFGhR8uiJ9S6sq3U0W1HxzTp/Qx7Fxokxn8uJfaRT/7h/hjnsIk2rPU8F9713oBSaxSJcn95RO3knvbnZDS4rmCB2zPeugj7cb8yx4DY5195M9gVB7eGcgx57mGmzyEjiJ51Tuw8C1xIfjv2s0RK96jW3QNkusPRZZ7paJ4P1d0nzElQvAgsA2PGvyQnltAnUibr7A3AEs1I/zAxEprO9oG1w==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1743245957;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=RHO3yWxTen8cfAxy9aOWoO+AnpnPzPOoPnTKVT1ntBI=;
- b=mcxzM+8iKkqGtmGR85cxdbvTDoRxCcLSwuEfhXe+N8M9xRkKHDNmXJqiE9cSpKr2Gw/nY
- /ejk3xUwtQKmvtsnq5YR8EwZUSyBt/jD1CPlxlZASM5yGGDtlxXUEq3+MfMFyKfd176wD/3
- k77vvB0/fubyuY72tBgT+F7U8IJsD5VDplEmofqtMjcmPY561LaJTboDEqOef8QwNZrm7OM
- m1ThulyzheohevPuo0zhXGWDJWTUFKQX0iYUWDO8rfj1Q0AEXk7qrK/Ik1WaMlXwBPCkajS
- mpnMQ4CVVLoQPkc1ZSdWDt+z44aSvJC9q1CMGJKJjeWCOFKYSGgOWXMzR6mw==
-Received: by srv8.prv.sapience.com (Postfix) id 023B228011C;
-	Sat, 29 Mar 2025 06:59:16 -0400 (EDT)
-Message-ID: <d4204a3c44b31c6527b91558f9691b6a05faaadc.camel@sapience.com>
-Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
- get_direction failed -> pincntrl patch?
-From: Genes Lists <lists@sapience.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Sat, 29 Mar 2025 06:59:10 -0400
-In-Reply-To: <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
-				 <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
-				 <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com>
-			 <76e77de144a51d345c3542dd77dd0bdd86e4d5e5.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-uOpdoYz45Z3bDOU1DBh5"
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyFty2zx"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39129fc51f8so2238127f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 04:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743246044; x=1743850844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lpd/v2rFQ8PJ2Oa/njxuk/NvEWbCpD4BnSidJ1pdjSs=;
+        b=WyFty2zxf3drx1LzEmjZ1tT99qTiWAYNl7T7wF7rRrxZwrYhb+2D8ZiSalCTcl25ns
+         l4eIBRDJp0EpA+5Ig6rIaVq5Ejf0mTGXaP9vYVwzHQfoWR9q6miUVQ2B8ZXGR1Mokr+m
+         eYl8BBAIg2lihcRbhWLSK3as7SUdw8/wMWytNPA+yFnZRDn3CZmloO7uShAvAKGOkb/g
+         SAv5ya1GfClv20r2gB2ID0pSrhV5ioJWsnt7ywO5rAWcmN2+SGksjiO26a53OivS2Dzs
+         cDIX9BS2S2U5Q1jNGFTml/v4/1mTrNj/26hQ/dVLwyUv7hLCtsQvDld1QZqVGyvdFBlC
+         aMKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743246044; x=1743850844;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lpd/v2rFQ8PJ2Oa/njxuk/NvEWbCpD4BnSidJ1pdjSs=;
+        b=qjEl8rFKurYMM8CGTEyqYjNGNdJWOGMgdsRwN7L4EgUJSm9ZA0hSaTjQQwGWExGZlE
+         68zmrVyjl9D4j7QOLAA2wd/LHr6gPjAuhYd8Cj4wT7yiYwFl3WQiFu45mBZOaKajkqvV
+         8dfxKbFOeqB4L+dSwjjYGECJPsTDzdUzz9gAhMr7xcvjsO8znF3YDCpT/Sn8lWGk7WEw
+         XDTkRqK+03KY4EZwb39N3BRxMpqdNOQDSzDJy9SPI+AbWq7iBZivRv/J265q5S3GeEKX
+         lYtI3wyoGxlXqe4lCSCyBM74MXyQGlU3kGx6ev/P1XKt91v9Mdfo9INfkR95C8ufAN8r
+         dNBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSM2UWFA1y7HiBaG8rlfIx3m7Vv4LoA96M31rUAqYwkKIVrfSln0m90Ga6/vbULqpymEMB6R38OihF0Qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+9ahAiyA0+riuN/YWsshzfGV8O5y0GUSIq4eScJc/bAgcYaKd
+	BSAcqnx8cQwuJM8CHbr2wVFMYrCAYNGH1bUiCwUucI2t8Iz5q3uM
+X-Gm-Gg: ASbGncuKSv7i8UueKnL+59mludimHCWQ9BKbpA4dTquhzK61wkjulKGTLFdBnKHauOU
+	AZLf0pnVWo5b1HZbeum99Aw7GDcOGxFPUuej+zs/MyqIwwm1amqg7IXR6p7gweXaPHaj2M5Epy/
+	WDYPeRLte5kwEWuCZoIepb+fhuR6HJmMyYjeS/DbUE02nVBzwegSh0cEUyoYFO8xpnJcJxG8j8/
+	1I4u7NpjtA81CIuzt9maLUaXnKmDkK4E0mjNaFVSmvfTswphh8Z9IKHN5dTmZqd6kmYVPNCfF9h
+	N6/0gp0jwYc8sUQY307STzzs5fiv9eefxQXXJ/KVZ49CZD95c/rtRAPEGzinQo6GjLb1veb3BWv
+	EwRzd/4o=
+X-Google-Smtp-Source: AGHT+IGHwHisd5NdDEGzGpUj06ouXjZ9zpB9BIOEnC3pRML41UmEL6VBNdSFrrcC2lRta+kuD8eV1Q==
+X-Received: by 2002:a05:6000:1a85:b0:39a:ca05:54a9 with SMTP id ffacd0b85a97d-39c120e0ab5mr1584250f8f.29.1743246044276;
+        Sat, 29 Mar 2025 04:00:44 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e83482sm103531335e9.14.2025.03.29.04.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 04:00:43 -0700 (PDT)
+Date: Sat, 29 Mar 2025 11:00:42 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+Message-ID: <20250329110042.75a28342@pumpkin>
+In-Reply-To: <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
+References: <20250325164854.199420-1-ubizjak@gmail.com>
+	<20250325164854.199420-2-ubizjak@gmail.com>
+	<Z-Mme_OxuhYfxgzO@gmail.com>
+	<CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-
---=-uOpdoYz45Z3bDOU1DBh5
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2025-03-16 at 08:48 -0400, Genes Lists wrote:
-> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
-> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists
-> > <lists@sapience.com> said:
-> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
-> > > > ......
+On Sat, 29 Mar 2025 10:19:37 +0100
+Uros Bizjak <ubizjak@gmail.com> wrote:
+
+> On Tue, Mar 25, 2025 at 10:56=E2=80=AFPM Ingo Molnar <mingo@kernel.org> w=
+rote:
+> >
+> >
+> > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> > =20
+> > > Emit naked POPCNT instruction when available with X86_NATIVE_CPU
+> > > option. The compiler is not bound by ABI when emitting the instruction
+> > > without the fallback call to __sw_hweight{32,64}() library function
+> > > and has much more freedom to allocate input and output operands,
+> > > including memory input operand.
+> > >
+> > > The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
+> > > shrinks by 599 bytes:
+> > >
+> > >   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
+> > >   Total: Before=3D22710531, After=3D22709932, chg -0.00%
+> > >
+> > > The asm changes from e.g.:
+> > >
+> > >          3bf9c:       48 8b 3d 00 00 00 00    mov    0x0(%rip),%rdi
+> > >          3bfa3:       e8 00 00 00 00          call   3bfa8 <...>
+> > >          3bfa8:       90                      nop
+> > >          3bfa9:       90                      nop
+> > >
+> > > with:
+> > >
+> > >            34b:       31 c0                   xor    %eax,%eax
+> > >            34d:       f3 48 0f b8 c7          popcnt %rdi,%rax
+> > >
+> > > in the .altinstr_replacement section
+> > >
+> > > to:
+> > >
+> > >          3bfdc:       31 c0                   xor    %eax,%eax
+> > >          3bfde:       f3 48 0f b8 05 00 00    popcnt 0x0(%rip),%rax
+> > >          3bfe5:       00 00
+> > >
+> > > where there is no need for an entry in the .altinstr_replacement
+> > > section, shrinking all text sections by 9476 bytes:
+> > >
+> > >           text           data     bss      dec            hex filename
+> > >       27267068        4643047  814852 32724967        1f357e7 vmlinux=
+-old.o
+> > >       27257592        4643047  814852 32715491        1f332e3 vmlinux=
+-new.o =20
+> > =20
+> > > +#ifdef __POPCNT__
+> > > +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
+> > > +                 : [cnt] "=3D&r" (res)
+> > > +                 : [val] ASM_INPUT_RM (w));
+> > > +#else
+> > >       asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
+> > >                               "call __sw_hweight32",
+> > >                               ASM_CLR "popcntl %[val], %[cnt]",
+> > >                               X86_FEATURE_POPCNT)
+> > >                        : [cnt] "=3Da" (res), ASM_CALL_CONSTRAINT
+> > >                        : [val] REG_IN (w)); =20
+> >
+> > So a better optimization I think would be to declare and implement
+> > __sw_hweight32 with a different, less intrusive function call ABI that =
+=20
 >=20
-> >=20
-> > There are two problems here. The issue you're seeing is fixed in
-> > next but
-> > not in mainline due to my omission. I will send a patch for that.
-> >=20
-> > On the other hand, the pinctrl driver in question should be fixed
-> > too.
-> > Can you try the following change:
-> >=20
-> > diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
-> > b/drivers/pinctrl/intel/pinctrl-intel.c
-> > index d889c7c878e2..0c6925b53d9f 100644
-> > --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> > +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> > @@ -1068,7 +1068,11 @@ static int intel_gpio_get_direction(struct
-> > gpio_chip *chip, unsigned int offset)
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin =3D intel_gpio_to_pin(pc=
-trl, offset, NULL, NULL);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pin < 0)
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /*
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * For pins configured to functions other than
-> > GPIO, default
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 * to the safe INPUT value.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return GPIO_LINE_DIRECTION_IN;
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D intel_get_padcfg(pct=
-rl, pin, PADCFG0);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!reg)
-> >=20
-> > ?
-> >=20
-> > FYI: This was uncovered by commit 9d846b1aebbe ("gpiolib: check the
-> > return value of gpio_chip::get_direction()").
-> >=20
-> > Bart
+> With an external function, the ABI specifies the location of input
+> argument and function result. Unless we want to declare the whole
+> function as asm() inline function (with some 20 instructions), we have
+> to specify the location of function arguments and where the function
+> result is to be found in the asm() that calls the external function.
+> Register allocator then uses this information to move arguments to the
+> right place before the call.
 >=20
-> Hi Bart - I don't see this pincntrl patch in mainline yet - =C2=A0what's
-> your thinking on this?
+> The above approach, when used to emulate an insn,  has a drawback.
+> When the instruction is available as an alternative, it still has
+> fixed input and output registers, forced by the ABI of the function
+> call. Register allocator has to move registers unnecessarily to
+> satisfy the constraints of the function call, not the instruction
+> itself.
+
+Forcing the argument into a fixed register won't make much difference
+to execution time.
+Just a bit more work for the instruction decoder and a few more bytes
+of I-cache.
+(Register-register moves can be zero clocks.)
+In many cases (but not as many as you might hope for) the compiler
+back-tracks the input register requirement to the instruction that
+generates the value.
+
+In this case the called function needs two writeable registers.
+I think you can tell gcc the input is invalidated and the output
+is 'early clobber' so that the register are different.
+
+> The proposed solution builds on the fact that with -march=3Dnative (and
+> also when -mpopcnt is specified on the command line) , the compiler
+> signals the availability of certain ISA by defining the corresponding
+> definition. We can use this definition to relax the constraints to fit
+> the instruction, not the ABI of the fallback function call. On x86, we
+> can also access memory directly, avoiding clobbering a temporary input
+> register.
 >=20
-> thanks!
+> Without the fix for (obsolete) false dependency, the change becomes simpl=
+y:
 >=20
-(resending in plain text - sorry about that)
+> #ifdef __POPCNT__
+>      asm ("popcntl %[val], %[cnt]"
+>                  : [cnt] "=3Dr" (res)
+>                  : [val] ASM_INPUT_RM (w));
+> #else
+>=20
+> and besides the reported savings of 600 bytes in the .text section
+> also allows the register allocator to schedule registers (and input
+> arguments from memory) more optimally, not counting additional 9k
+> saved space in the alternative section.
+>=20
+> The patch is also an example, how -march=3Dnative enables further
+> optimizations involving additional ISAs.
 
-Hi Bart - I don't see this pincntrl patch in linus tree -  what's your
-thinking around this?
+To my mind it would be better to be able to specify oldest cpu
+type the build should support.
+Either by actual cpu type (eg 'skylake' or 'zen2') or maybe by
+a specific instruction (eg popcnt).
+The scripts would then determine the appropriate compiler flags
+and any extra -Dvar to generate appropriate code.
 
-thanks!
+The arch/x86/Kconfig.cpu seems to be missing options to select
+between 64bit cpus.
+That would also be the place to add CONFIG defines that mirror the
+X86_FEATURE_xxx flags.
 
+That would be more flexible.
 
---=20
-Gene
+	David
 
---=-uOpdoYz45Z3bDOU1DBh5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+>=20
+> Thanks,
+> Uros.
+>=20
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ+fSfgAKCRA5BdB0L6Ze
-27DLAP9ivUZRhlunSDMd4YRgEp+Q4UEeuCrxotIOZjz8/qV3/gD9HQhZvvAE8jlc
-0SeGbrTDQewCYFetqURFov5HhaK1nA8=
-=aYQz
------END PGP SIGNATURE-----
-
---=-uOpdoYz45Z3bDOU1DBh5--
