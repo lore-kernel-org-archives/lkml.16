@@ -1,131 +1,252 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF732184524;
-	Sat, 29 Mar 2025 10:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B9A11CA0;
+	Sat, 29 Mar 2025 10:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743243146; cv=none; b=rItokiFxnqtk8gHrvqXHzgdfY4MaMZe7czo/UHqUDjJmMLDy95V1m4GNF+uPpQ9s3PIWr6RN1Mbs5+eDfaVLUsgODtNQGaPprELOp8ihVbdsqMQY14fMUpyY0zf4lfa6EU9BcPWE1MzHxKBcuAgo/rNm/wGBj1yRaNyn7YuDanw=
+	t=1743243379; cv=none; b=t7n5cLAA56NxTJmm5Ws0oaHkHIQB7EhPQzfZ2HcdEfGUyZGUyiiL7L1X+HFnL19R0+NndN0EtI4keB2ZLbj76cZBqhqz7olHVxxZ9w7qakaxCN4IMU1DYY/Gn2hEBJyQYf1yxgIIQo7d8ioaKf5//7Dua79tYJRGVQl8NSlUYuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743243146; c=relaxed/simple;
-	bh=wvxCqMNZb48yRiki3mhcMKOZ1kNCA1qXcKYhdLENOKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGdtAUm3LqdeAXYFObYAKQhBhAWRXXiGnNiiK/gfOfFlR06ECtX1x67Ff1fHspVuwROHDKug3aOz7meZuA36JqcLThOI7rcza0e3qiUPSJskrs8Ooen/i9igeQiTsBI8+tYsgNVd6avYNoO7RD6frXWC3GGCYjKL34A/6OvoiwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYOzXy3y; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743243379; c=relaxed/simple;
+	bh=DUlll1Sn6RhUABXWceQkis59amWHUQXF0RZSHCEhWWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UCSQL8xMOfS5h7oYxPm9RUqcKrueNug/OO8SwESQxs4AoL3Rb80qvrM9CUQZxbMZgbF8bnijYIC8bHSy8ZXaWB5no39n/nG2QVLSryKsv/JUYQf6eCNTsgavx9rwcJ3+I8mUdvNz97p3mJT3kB9rOhWq2T3VjPOf/O5eRmrUYBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6fh39dh; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYOzXy3y"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso13604305e9.3;
-        Sat, 29 Mar 2025 03:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743243143; x=1743847943; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUeHeIiWi0wUklAANF4ypF28tasePe8/YNHk2njR8mA=;
-        b=DYOzXy3y7WY0uDaZ5UIVF7399fYLd+bUYFifn+ILxLcHFrMOInbZUiv7CQsXy8Svhc
-         rtEC0r3S3rnN+jdeYEEVphi9ef69XJMm0DUc6G5PPtT73Johi1/Y37xzpxjHAFR84IM8
-         tsg0+BeYGodWwhnggSw0aSfrkx7D4kq5hw6RriM3G5H7RrTX2gx+k1Dz1GCST2bE615i
-         mQkMf8+wFzyToKDA9E0iSWC17h/J0i4HswpBQ2OwrxlgUsjvL22iKjgwzsV/OalY4Epg
-         MFkdrz4qyeKcVspdkLskBNBdPV5UPDTKGc8GcdFHgrbzk0kY4952yK7UIvZnx1Po3dRh
-         wv1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743243143; x=1743847943;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SUeHeIiWi0wUklAANF4ypF28tasePe8/YNHk2njR8mA=;
-        b=T35SJok0fep7C/mrIgKt8/39MjrszP8QhPa6F8QUojvLaOuty4WNZatQipm843brtc
-         0pV4gs8E4ZEe5WM9P87e9qAdTMfP7P/vX51QDELYxF/GLfgY2vHG82ubxtKMVYT7/BlE
-         +W9h2qCB7zL/KrhEfoJ4pGhK2yGJFhHNMV0znEbE0t7ZIlRasrsRYoCk1MEZE0tfGplF
-         fFgulyEi58GkTubBBV7GtllVTdNCxAbkFgfESOFJOzbYhnDrQ9kolkrw7hps02b0Nu9v
-         FY5+w+dyqdVQ2h9fMD2245PYSHgQM2mJMAb5WLDVRm9hUu2mU/vzy40G+kdnosGr390b
-         U1mA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlNqTWwU+NCGF+CEwOmL+O3Vvn1hCAQ6Yiy8CWbn9xj1MVbt2R2/iW+PtoRZFKPp97ra30nK6UwikZoj+CVJ4=@vger.kernel.org, AJvYcCWYySNShdFTiEPFQXtsuAGqpfQ4HSSpffpMDHIkswIJdLlhezcH0EVXGofUbBz5rNQN+30XNjK459kOErk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPTBDdhldseVamqu7adwo4rjWu5xW09bEHJmcsVFKtqY6F1w9L
-	DV0+IV6ipK/Iu1qRyy1WJSlm9f3lPC8r4UV3pBabzjeX7kHioEK0
-X-Gm-Gg: ASbGncvdSW/xiqELB0oLNVL9hDOKkjyh8LUMvbkoUUdDATFTOmvUvlbxU+dpu0RhpBE
-	9mGJgs5cJb4hTYbA+w/gDHIvBI1j7f+01HvEIykYkCowaJxu1THIxbQgPeQPE8j6fZyEvJwHPUq
-	9E03Gxy/B5l7ubmkBWL9STDSU/e6B+PrRcsmXRq9NUqioN0fhqx4mcJzVi8g8bgZpBSB97tRTZK
-	oCxnRyXR3hRb4IS46O6cr+Pl+k+u/39IlI6TxminBbMpFUdwFtc/8juL/qfK+guFoUtjLjPWMgs
-	HbfyAGDDMsW9NnyEQsBg4iYcLi8G0rptjc2ClM1oLgq7RVMFTEkCnw6MKZ9QLYGTtRB56D9wgrD
-	Nu+UCrIZD
-X-Google-Smtp-Source: AGHT+IEvib4QJSDtDKzImmT9Wsq0Oz1Zz/p5LdLn6+XNsYmYqtOHG0tdssdwoQRf1dGv1lz5TClS9g==
-X-Received: by 2002:a05:600c:5126:b0:43c:e7a7:1e76 with SMTP id 5b1f17b1804b1-43db61d7d4dmr19828375e9.1.1743243142816;
-        Sat, 29 Mar 2025 03:12:22 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dede5csm102417455e9.8.2025.03.29.03.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 03:12:21 -0700 (PDT)
-Date: Sat, 29 Mar 2025 10:12:21 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Sahil Siddiq <icegambit91@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] openrisc: Add cacheinfo support and introduce new
- utility functions
-Message-ID: <Z-fHhT-0a-fEkPnD@antec>
-References: <20250329094622.94919-1-sahilcdq@proton.me>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6fh39dh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743243378; x=1774779378;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=DUlll1Sn6RhUABXWceQkis59amWHUQXF0RZSHCEhWWk=;
+  b=C6fh39dhtvM46m7lg/zpdjWQBIuRPCu1NqZk8Q31yquA/KOt4wGwA7+o
+   pytbz8NkvA/012DBSGMyYaCg6sGaABEdq2C2clOyoUWpTl6vrzbQ+EDaZ
+   CNNazM8uAwglBL0p3FnSd+0bISN2BPAWifOrpkUAPiLeWsjma4ZtmZm9V
+   4Mvu2j2bj5VrJBW+57/01JSxzIy38+BLlvov2MBH22nly3HlNpEyXsPbV
+   puH8M2rnFhKxUwqB6mpuVeycuSc3fjhK7o2EZbuOdNwlWvrt8ZkZbyjFp
+   KJGQwFVWIwIJW+h3febdAd6fOd1pMGAN2EZB/88SF2Hd1phIFK3SL73d/
+   Q==;
+X-CSE-ConnectionGUID: ZI7WpHTqSai6az8gZrCkkA==
+X-CSE-MsgGUID: jTZNCNc5RAmBLkHA+DekZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44608445"
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="asc'?scan'208";a="44608445"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:16:16 -0700
+X-CSE-ConnectionGUID: TdVktx+qQ8uHqt5GDqeqag==
+X-CSE-MsgGUID: GoLkVAfpR/Wzyw6dnzyu8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
+   d="asc'?scan'208";a="130505083"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.136])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:16:13 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject:
+ Re: [PATCH 4/4 v3] cxl/test: Simulate an x86 Low Memory Hole for tests
+Date: Sat, 29 Mar 2025 11:16:09 +0100
+Message-ID: <3089527.UnXabflUDm@fdefranc-mobl3>
+In-Reply-To: <67e7337f25c3a_1198729411@dwillia2-xfh.jf.intel.com.notmuch>
+References:
+ <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <20250314113708.759808-5-fabio.m.de.francesco@linux.intel.com>
+ <67e7337f25c3a_1198729411@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250329094622.94919-1-sahilcdq@proton.me>
+Content-Type: multipart/signed; boundary="nextPart3885345.vnuH1ECHvT";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Thanks for the respin.
+--nextPart3885345.vnuH1ECHvT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Date: Sat, 29 Mar 2025 11:16:00 +0100
+Message-ID: <3089527.UnXabflUDm@fdefranc-mobl3>
+MIME-Version: 1.0
 
-I will take this version and put it in linux next to see if any issues come up.
+On Saturday, March 29, 2025 12:40:47=E2=80=AFAM Central European Standard T=
+ime Dan Williams wrote:
+> Fabio M. De Francesco wrote:
+> > Simulate an x86 Low Memory Hole for the CXL tests by changing the first
+> > mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range s=
+izes
+> > to 1GB.
+> >=20
+> > Since the auto-created region of cxl-test uses mock_cfmws[0], whose ran=
+ge
+> > base address is typically different from the one published by the BIOS =
+on
+> > real hardware, the driver would fail to create and attach CXL Regions if
+> > it was run on the mock environment created by cxl-tests.
+> >=20
+> > Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match =
+CXL
+> > Root Decoders and Regions with Endpoint Decoders when the driver is run=
+ on
+> > mock devices.
+> >=20
+> > Since the auto-created region of cxl-test uses mock_cfmws[0], the
+> > LMH path in the CXL Driver will be exercised every time the cxl-test
+> > module is loaded. Executing unit test: cxl-topology.sh, confirms the
+> > region created successfully with a LMH.
+> >=20
+> > Cc: Alison Schofield <alison.schofield@intel.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >  drivers/cxl/core/lmh.c               | 35 ++++++++++++++++++++++++----
+> >  drivers/cxl/core/lmh.h               |  2 ++
+> >  tools/testing/cxl/cxl_core_exports.c |  2 ++
+> >  tools/testing/cxl/test/cxl.c         | 10 ++++++++
+> >  4 files changed, 45 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
+> > index 2e32f867eb94..9c55670c1c84 100644
+> > --- a/drivers/cxl/core/lmh.c
+> > +++ b/drivers/cxl/core/lmh.c
+> > @@ -1,11 +1,28 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> > =20
+> >  #include <linux/range.h>
+> > +#include <linux/pci.h>
+> > +
+> >  #include "lmh.h"
+> > =20
+> >  /* Start of CFMWS range that end before x86 Low Memory Holes */
+> >  #define LMH_CFMWS_RANGE_START 0x0ULL
+> > =20
+> > +static u64 mock_cfmws0_range_start =3D ULLONG_MAX;
+> > +
+> > +void set_mock_cfmws0_range_start(const u64 start)
+> > +{
+> > +	mock_cfmws0_range_start =3D start;
+> > +}
+> > +
+> > +static u64 get_cfmws_range_start(const struct device *dev)
+> > +{
+> > +	if (dev_is_pci(dev))
+> > +		return LMH_CFMWS_RANGE_START;
+> > +
+> > +	return mock_cfmws0_range_start;
+> > +}
+> > +
+>=20
+> cxl_test should never result in "mock" infrastructure appearing outside
+> of tools/testing/cxl/
+>=20
+> >  /*
+> >   * Match CXL Root and Endpoint Decoders by comparing SPA and HPA range=
+s.
+> >   *
+> > @@ -19,14 +36,19 @@ bool arch_match_spa(const struct cxl_root_decoder *=
+cxlrd,
+> >  		    const struct cxl_endpoint_decoder *cxled)
+> >  {
+> >  	const struct range *r1, *r2;
+> > +	u64 cfmws_range_start;
+> >  	int niw;
+> > =20
+> > +	cfmws_range_start =3D get_cfmws_range_start(&cxled->cxld.dev);
+> > +	if (cfmws_range_start =3D=3D ULLONG_MAX)
+> > +		return false;
+> > +
+> >  	r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
+> >  	r2 =3D &cxled->cxld.hpa_range;
+> >  	niw =3D cxled->cxld.interleave_ways;
+> > =20
+> > -	if (r1->start =3D=3D LMH_CFMWS_RANGE_START && r1->start =3D=3D r2->st=
+art &&
+> > -	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
+> > +	if (r1->start =3D=3D cfmws_range_start && r1->start =3D=3D r2->start =
+&&
+> > +	    r1->end < (cfmws_range_start + SZ_4G) && r1->end < r2->end &&
+> >  	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
+> >  		return true;
+> > =20
+> > @@ -40,9 +62,14 @@ bool arch_match_region(const struct cxl_region_param=
+s *p,
+> >  	const struct range *r =3D &cxld->hpa_range;
+> >  	const struct resource *res =3D p->res;
+> >  	int niw =3D cxld->interleave_ways;
+> > +	u64 cfmws_range_start;
+> > +
+> > +	cfmws_range_start =3D get_cfmws_range_start(&cxld->dev);
+> > +	if (cfmws_range_start =3D=3D ULLONG_MAX)
+> > +		return false;
+> > =20
+> > -	if (res->start =3D=3D LMH_CFMWS_RANGE_START && res->start =3D=3D r->s=
+tart &&
+> > -	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
+> > +	if (res->start =3D=3D cfmws_range_start && res->start =3D=3D r->start=
+ &&
+> > +	    res->end < (cfmws_range_start + SZ_4G) && res->end < r->end &&
+> >  	    IS_ALIGNED(range_len(r), niw * SZ_256M))
+> >  		return true;
+>=20
+> Someone should be able to read the straight line CXL driver code and
+> never know that an alternate implementation exists for changing these
+> details.
+>=20
+> So, the mock interface for this stuff should intercept at the
+> arch_match_spa() and arch_match_region() level.
+>=20
+> To me that looks like mark these implementations with the __mock
+> attribute, similar to to_cxl_host_bridge(). Then define strong versions
+> in tools/testing/cxl/mock_lmh.c.
+>=20
+> The strong versions would apply memory hole semantics to both windows
+> starting at zero and whatever cxl_test window you choose.
+>=20
+I thought the same and wanted to use the strong/weak mechanism, but then=20
+I noticed that the strong version (in tools/testing/cxl/mock_lmh.c) was nev=
+er
+called. I think it never happens because of the weak version is called from=
+=20
+cxl_core. I think that all functions called from cxl_core can't be override
+from cxl_test.=20
 
--Stafford
+Is that deduction unfounded? Am I missing something?
 
-On Sat, Mar 29, 2025 at 03:16:19PM +0530, Sahil Siddiq wrote:
-> Hi,
-> 
-> The main purpose of this series is to expose CPU cache attributes for
-> OpenRISC in sysfs using the cacheinfo API. The core implementation
-> to achieve this is in patch #3. Patch #1 and #2 add certain enhancements
-> to simplify the implementation of cacheinfo support.
-> 
-> Patch #1 removes duplication of cache-related data members in struct
-> cpuinfo_or1k.
-> 
-> Patch #2 introduces several utility functions. One set of functions is
-> used to check if the cache components and SPRs exist before attempting
-> to use them. The other set provides a convenient interface to flush or
-> invalidate a range of cache blocks.
-> 
-> While testing these changes with QEMU, I realized that the check being
-> performed in cpu_cache_is_present() would always get evaluated to true
-> when the UPR_UP bit was set. This series fixes this check and addresses
-> v4's review comments.
-> 
-> Thanks,
-> Sahil
-> 
-> Sahil Siddiq (3):
->   openrisc: Refactor struct cpuinfo_or1k to reduce duplication
->   openrisc: Introduce new utility functions to flush and invalidate
->     caches
->   openrisc: Add cacheinfo support
-> 
->  arch/openrisc/include/asm/cacheflush.h |  17 ++++
->  arch/openrisc/include/asm/cpuinfo.h    |  24 ++++--
->  arch/openrisc/kernel/Makefile          |   2 +-
->  arch/openrisc/kernel/cacheinfo.c       | 104 +++++++++++++++++++++++++
->  arch/openrisc/kernel/dma.c             |  18 +----
->  arch/openrisc/kernel/setup.c           |  45 +----------
->  arch/openrisc/mm/cache.c               |  56 ++++++++++---
->  arch/openrisc/mm/init.c                |   5 +-
->  8 files changed, 196 insertions(+), 75 deletions(-)
->  create mode 100644 arch/openrisc/kernel/cacheinfo.c
-> 
-> 
-> base-commit: ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e
-> -- 
-> 2.48.1
-> 
+Thanks,
+
+=46abio
+
+P.S.: Please notice that to_cxl_host_bridge() is never used in cxl_core.
+--nextPart3885345.vnuH1ECHvT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmfnyGAACgkQ50DaXiQp
+iWFHAggAjb3GlLvIwMT9y4dkfCLe1PxhLuxd3WbXrnplIEeslD7EaQs5GBtiEi66
+FuQ58gjhCJ3OCuTDQ5vc5KIRZo8FQhyPbEKvQy5d6fVUISU+k6ZzHkNaRAwhzIO3
+Y/vyD/fGPplCnnjGHCEroY0UDQLrV6eKGwSbMK78/DZYWkSi1vUroNCUtnAliSP7
+HrPR+yOiAztYAM/t0QALqypFMB4Qiy0z9n9M9/o+RYIkSeAIWE1LjhRrUrRvXbJe
+hc/FPRZJxJ+8wOZ6e0HZu1q5QLfQc7IuLRbJdUR9aAhocaLaccHD2f81qIsRx9ap
+lN//K4GlRULoIZmpcckMfESEwA59Rw==
+=5E5v
+-----END PGP SIGNATURE-----
+
+--nextPart3885345.vnuH1ECHvT--
+
+
+
