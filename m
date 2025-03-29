@@ -1,138 +1,131 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF88182D2;
-	Sat, 29 Mar 2025 17:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AF11BF58;
+	Sat, 29 Mar 2025 18:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743270646; cv=none; b=rH08XHbaSOPHd/vJVM/oePSYIbpzC4+UzGaWWg8tT6XycPjjZMbTu5n4DckJGLIniFGDpcUoLuDaxUryUowgVsVj/DzNDlj+gm8vmEsTeKTX9iu+DMDSwLz9sRbiUPMT5SqvGLwF3zTWp4bal4jwLpPKX+ZzmHaC/6k3jFY3KFU=
+	t=1743271322; cv=none; b=SQXFUZZ4hqqtAB5PIIP+x6kbNNfjAnOJeAdznSqG797jOCLeTQLZo4pTW5Ic/fXmUTC3mx6l71htccoC0AVUfIBnW7KWsr2jGEtfO32qAHmRfNoxbd58X+thYHSLKgFZ2uj4+r7b5GLm1pCQ2oLUl5J/48q78GGa4mE2SP24UJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743270646; c=relaxed/simple;
-	bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fEd0auz91Cblm2VJhJZYp1+UjKFvmAkEMmQ6v4T0wQyTpxk/MDt1EEJpSCIno5f3irfnlpIn4g+V0U4HnWhb+Re9j93h4tCRi8qvGouOBiAbQ0EfayPT2q1rEa54Aqy8UagAYLGGJ6FVSChQ5yBjk+iIXWudGFnQmK3jzFSETBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyBTVXXN; arc=none smtp.client-ip=209.85.160.177
+	s=arc-20240116; t=1743271322; c=relaxed/simple;
+	bh=3G68McS59Jm0PsvqVooccHj7w7LmHxfWFaHneBdvv8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PM1RgY6AaWFRpAFkpPVgMFn7CNHNRnf/je0DIoIs0ku4IDuf7zprFQaUcI+28lRg+BeXyHx4/TMONX6RvXE+0P415mumUttHe0cRNnIzBR1ERSbHVWnbQD0OzgwW8dWAsE7xE6qgrc4NvvDSz6mq5OmxcsCTuOL3rVS1LiJY+qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5l3+Dpr; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyBTVXXN"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476b89782c3so35870921cf.1;
-        Sat, 29 Mar 2025 10:50:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5l3+Dpr"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso30031015e9.3;
+        Sat, 29 Mar 2025 11:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743270644; x=1743875444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
-        b=NyBTVXXNRp8a3cp5dIMveiXI/w5dONLbNMewa6jgnm6qMabJYO55zyui0scTY9zZtR
-         JwTxiykSZ4B+wdFdU88wDSsSKAehVAAb9/VsspsX41G1l8WnZrQ+NDlpyg92abD2Sbxl
-         ohEFZ4NiOHLrsvm4cc99rX4yjBf4/m/6NeRdZeLtKsWaOOlP1KtOZF54t/REqcNBzTFa
-         kxY8dpTycZd7zglY0OmxtOQX3DTTZj5HCYeQACHjVq09eZPDi8fc9MstYk/fnq9Uscp/
-         ojU0sBImlKCe54Gz+Dw1PfdbQB7aSMtFnhkwKyDMKHLayRIFkcnfhhc6Cea+PEtfAegg
-         9FSQ==
+        d=gmail.com; s=20230601; t=1743271319; x=1743876119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1bdkWJBlp465zoP0rSSd01uwRG5DkrMz/7pJl4WgitE=;
+        b=Q5l3+DprK/WNI1pbk5BC0ksNoMqqi+XWdG2N392JasTM2sBU4jkXRMeJ4gyh99do8A
+         rm9WU+x12NfRaTv9Wxomh34hQ/goKwRKo0BGdQicaOXyEl19kbUUpADsHl7ibJBogVJs
+         QDlkJULpfBsu4QI1DBVRNwYuH5dr2b9uGNECs15lVg7J00m3mCKE6cKxwbaSpoXZJkhr
+         4BBEFxqgs77F1yP5R0p94GtoP9TCFzSW5lQlXPkXVZaabnyaKjz2Vuz37miatHytj+cT
+         FVOHz9pxt5XqRbvPos6msDN1j8T5R+355xuHOVGSJFSP2/Jl6RBXtRmAJdHkRd30JuyZ
+         AMHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743270644; x=1743875444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JgLSRMYPkcIuxIRmIYdn780sIE92C1U7KJGyVq99cZg=;
-        b=X/Mj+Gm4e3Q97K1WEsSSE+nGvGJuSSIm66NM+8B1YO7PPZmLLl2JABNHCNQcu+I1uC
-         4UXUy5bXQcvTf5VMUlyue1RRpy+a6iQ0o1NobF0UlIH3FCIJVraRdBPc9TNpDAkCwWKH
-         6Q4ZLY6ZsFB2jJglSk7GyFF1K1QKr3JCwHmmcTTurB7D3ByGq6OGejeboaAoxihSVwUz
-         JSwstyvcNxdMs2sGUUHVzXfwtB4VEYqAm9ue1qP+4w/LOUwEMcomNvI4LhQF5k5gcNF1
-         MNcieoxi9wqoDjdln3HV8STWHSyeNrA6RM6mP3bpzGAfHX7vLtvir/pI03qdeo+mp0Zw
-         Oajw==
-X-Forwarded-Encrypted: i=1; AJvYcCU17+EjNd8OkBIIbeZmksNYCCITL774R2/25883VEVmatF2+Auyd0hJewUZDVwUMIQbUz09pN2QYdz23oU=@vger.kernel.org, AJvYcCVEMZKUUV2Gg0AsB40R6f46P4F7tzabX2xVAJHOd7iGLiFDs1sTyJBl3o7JzESX/2Nu39ih4zy+JcXoy2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFhsl1WTgNSMFW8x8/BPeB4i1uQDC5Lgmq2J21ZB+WkiwybkpR
-	wCv0i0PYxH8BHd/9ROAYgODSN9FDWTjSJv108luLyRJNTh4iVptzoy+VJt3w9+/+AHAR0QP1/0Q
-	ilJ+QKrvainrDN1GXXTjlzcZnyMA=
-X-Gm-Gg: ASbGncsE6MP2EGDtA2fu3gsYhxVGoK8winJt3oyWnaDXa6MKUhV9XrkzTfX1GsXprrD
-	azVOacfj3BUZz1WtdTyMZ8o75UoHJgBNpkYvvciPNsDvDP5BS/9tqQrkJlifbgYHJoIOmM+BEr1
-	4WD4+L+9Nw4mUvx2XuSeqo1GuIDxC8kC8aPUx70U5i+jaiYMmHSOAivoEYew==
-X-Google-Smtp-Source: AGHT+IEyfBtS6B8X2yr/f5ocuBfnuCUx2JnXYuIeBWNpQSzvULQDd+JR8MDrkEpwGjTkAau9a61tbFImJmfCo3M6KHA=
-X-Received: by 2002:ac8:7f4b:0:b0:477:ca3:4b66 with SMTP id
- d75a77b69052e-477e4b29282mr47637391cf.12.1743270644050; Sat, 29 Mar 2025
- 10:50:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743271319; x=1743876119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1bdkWJBlp465zoP0rSSd01uwRG5DkrMz/7pJl4WgitE=;
+        b=Dq1CflthXiPwbcFYy9tmXovYyZvUJhQAAW84qjDythzyEgYIhI1pdUV6ISH3dw+j0e
+         eowFVGrVihBUuTh9c47NA7rs0r4rrb0HLHT8mtGdNdr6pBu0zFvOvMwrccivzR1PnNqL
+         o0anLvQBYzrY9hPy7P4uqEIyXEzQGUvVLFN+oxNId05ZkuNzn9yetz8D+dc/JPlkIKD+
+         XwvfREzvdkwh/T9DpFrJ/VeCbp4PDgaxvmb/zi/9VYVAeO/6A4vwUClFABCUFDxMvd29
+         3mVTETtjsoFkTU0DM5zdr+GEdvgvu9NpcUDn4A20IvO9w8ZD7mxWP5Rv/cn8l+aOvRT+
+         pgfg==
+X-Gm-Message-State: AOJu0YxOrXVMYpKdU6nG0vqzMrbSoQwIL0I1Ym8S3wVZZQVAfILyxkOc
+	o7J9A2JCZbcIYBkDZr162G5VvbTjHLmPo0bWN52F+doMWFbGbE++vvltLQ==
+X-Gm-Gg: ASbGncv8uvg0MyUe84Wuuyvgcu7T3Lct58EMi2/EK0yAXg1Lx2aLceb5tTQyEqj5+at
+	rAneg8T4/ga9vvUCFVNbA85q7OmFPzvFfnGNrvZAPUQ5Btvu6tU9S+9/blBjieh5tWW93Tjhf1e
+	HVCKPOD8xb3RRK8g9jfbdk+6Mly9+uNIj/7ftoMB7wAar4PxtD9mzwkiK2zgivI9IZsdt2pvZN0
+	4qvy3b0RNoPT+NIPqdLPOEj9QPEBgjoRj2X4l0LQNPMy0rsU60WTwanXCoonaiEpFVOF6r84R7E
+	3ms+LWTvSPq1WasY/xcTpYivvkBmvaFY2B9dra8Gxhr8Pet1MeDkT0Ky6fh3DwxENtccTt2e
+X-Google-Smtp-Source: AGHT+IFEXxTAW8ZpL/txA5T30KwwRt8KbiQuZrfEOpgxJQJUBBcTl2zUNYEar3sLZP3VqaI2LGfjmw==
+X-Received: by 2002:a05:600c:4fd1:b0:43c:f6b0:e807 with SMTP id 5b1f17b1804b1-43db8527142mr32549135e9.31.1743271318483;
+        Sat, 29 Mar 2025 11:01:58 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02f84sm67703535e9.25.2025.03.29.11.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 11:01:58 -0700 (PDT)
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH 1/2] crypto: omap-aes - use dev_groups to register attribute groups
+Date: Sat, 29 Mar 2025 20:01:21 +0200
+Message-ID: <20250329180122.3668989-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
- <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com> <20250326001336.GA23984@pendragon.ideasonboard.com>
-In-Reply-To: <20250326001336.GA23984@pendragon.ideasonboard.com>
-From: Gabriel <gshahrouzi@gmail.com>
-Date: Sat, 29 Mar 2025 13:50:00 -0400
-X-Gm-Features: AQ5f1Jq8tHUMMY_4wNuFI9rLkWF9v3pWiux_nw6Gw_ZztqG7vxIoRN8bhMGdG1k
-Message-ID: <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
-Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Laurent,
+Instead of manually adding attribute groups, set dev_groups pointer to
+have the driver core do it.
 
-I=E2=80=99ve analyzed the bug report, and the root cause of the
-"WARNING-media_create_pad_link" issue is a mismatch in terminal
-references in the USB descriptor.
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+---
+ drivers/crypto/omap-aes.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-The format type descriptor references terminal ID 6, while the audio
-streaming interface descriptor points to terminal ID 5. This
-discrepancy triggers the warning: "No streaming interface found for
-terminal 6", followed by the media pad link warning.
+diff --git a/drivers/crypto/omap-aes.c b/drivers/crypto/omap-aes.c
+index 551dd32a8db0..1ecf5f6ac04e 100644
+--- a/drivers/crypto/omap-aes.c
++++ b/drivers/crypto/omap-aes.c
+@@ -1086,10 +1086,7 @@ static struct attribute *omap_aes_attrs[] = {
+ 	&dev_attr_fallback.attr,
+ 	NULL,
+ };
+-
+-static const struct attribute_group omap_aes_attr_group = {
+-	.attrs = omap_aes_attrs,
+-};
++ATTRIBUTE_GROUPS(omap_aes);
+ 
+ static int omap_aes_probe(struct platform_device *pdev)
+ {
+@@ -1215,12 +1212,6 @@ static int omap_aes_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	err = sysfs_create_group(&dev->kobj, &omap_aes_attr_group);
+-	if (err) {
+-		dev_err(dev, "could not create sysfs device attrs\n");
+-		goto err_aead_algs;
+-	}
+-
+ 	return 0;
+ err_aead_algs:
+ 	for (i = dd->pdata->aead_algs_info->registered - 1; i >= 0; i--) {
+@@ -1277,8 +1268,6 @@ static void omap_aes_remove(struct platform_device *pdev)
+ 	tasklet_kill(&dd->done_task);
+ 	omap_aes_dma_cleanup(dd);
+ 	pm_runtime_disable(dd->dev);
+-
+-	sysfs_remove_group(&dd->dev->kobj, &omap_aes_attr_group);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -1304,6 +1293,7 @@ static struct platform_driver omap_aes_driver = {
+ 		.name	= "omap-aes",
+ 		.pm	= &omap_aes_pm_ops,
+ 		.of_match_table	= omap_aes_of_match,
++		.dev_groups = omap_aes_groups,
+ 	},
+ };
+ 
+-- 
+2.48.1
 
-I confirmed this by changing the terminal ID in the format descriptor
-from 6 to 5, which eliminates both warnings. This shows the warning is
-correctly identifying an invalid descriptor configuration, not a
-kernel bug.
-
-Since the USB descriptor is invalid, I believe the warning is
-necessary and should remain. The code should stay as is.
-
-Regards,
-Gabriel
-
-On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
-> > Hi Ricardo,
-> >
-> > > I cannot reach that URL
-> > I was unable to access the URL from my email client when I initially
-> > sent the email, but a couple of hours later, I was able to. Initially,
-> > copying and pasting the URL into the browser provided a workaround.
-> >
-> > > Shouldn't it be?:
-> > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for each =
-entity")
-> > You're right, I incorrectly referenced the wrong commit. However, I=E2=
-=80=99m
-> > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d57 -
-> > '[media] uvcvideo: Ignore entities for terminals with no supported
-> > format') as it's the latest commit affecting the line I'm changing or
-> > the one you mentioned.
-> >
-> > > Shouldn't source->num_pads be the same as remote->num_pads?
-> > The fuzzer (Syzkaller) that triggered the warning appears to have
-> > encountered a case where source->num_pads and remote->num_pads were
-> > different. When analyzing the case in GDB, remote->num_pads was 1,
-> > while source->num_pads was 0.
->
-> This seems like the real bug that should be fixed.
->
-> > > Are you sure that your kernel does not contain?
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c101d3a50a6=
-8c4629c9055e4c
-> > Yes, it should be included since I am running the upstream kernel.
->
-> --
-> Regards,
->
-> Laurent Pinchart
