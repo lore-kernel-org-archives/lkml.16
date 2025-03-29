@@ -1,113 +1,179 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104FC801;
-	Sat, 29 Mar 2025 01:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E81E555
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743212296; cv=none; b=NNkcAYOe4O+6OI3OroKq6W451s1NZxQrKcI1UuP5gTR31lVGh44qsklwIxNs9mq53rmnIZgqhaGDgyG+kQmM8j+JMta8O5NqT1bZ2I1fRcccqjpkGcJ0D2ReW5QZ+5xB+FffSEVcDanTnZaAUZS6HZicWTI4ztFNNdPF+ZnS+Z0=
+	t=1743212662; cv=none; b=Bk3Q3KiUBXImcadLe29ZH1kmpqOsJ5uxtDKA40Gx2aH7PR35M6X7Nyy+U7K8ZxfWaFYv7Ka0KmR0wF8nEYmO88PLe8+/CfIOAC0h57+ZvC0OB2YPNRKy8eOMxTtqLSDC6yyvEmXnt7+bj1+vpEgSVYp9u1HHvtQh7ovGPZVraVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743212296; c=relaxed/simple;
-	bh=ViLgvxXs0dFjM/U4lLxIubGaPTwphfVMNa0V07ntbXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZhQhxUmKVQR7lT/01s7Tz2aO+7MHKlPrtRvJsuUyPZ2YpHIT1BYynJMr9j2tuzzpByoMzetnvHaBz4x///4BTLCwPayp5xhmERUxvLI1O7taRXGc06XA7Xx6XIXO5XEUhxvpWNsSM0W1hehEY5nXNvOJ6uhiCx+neA/DAPzE6qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YuLUDbeQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743212662; c=relaxed/simple;
+	bh=DnV7vRN0lEH6EzXjMbUXtQUHI3fnnZRqw/5IC56SvFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o/xN4BUqbYSuuC12wSU9wiqTUvdb+x7MrUYWMAhCV+WZ6DVRU1ZmEYm7CCnNfYW3u/s+sB0Knv5tB4bAFKOvNfvqfjVnjlYadRxwrzc6/7RtAzpedwE+c7BVNNL1y1/Q7aV8pdP4/Wf3im2B95QmLLovo8Klddu/7a79SZV7wtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZRfdRL6I; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YuLUDbeQ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SNpnm4018104;
-	Sat, 29 Mar 2025 01:38:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6sdR2/NKiowrxDOl6hTJDkor5SKF+aK7B5d3HSV1/jI=; b=YuLUDbeQCyfZdIH/
-	l+Qk434ZH1CmDidS3DZ++fRjoFKRkkjcYWJkuTBoHm3r0Ssl8vAH4VXrQAYK+GIX
-	l8KZ4clRRI7PlQ80XbJrUmIK2Aakg97+c8S/ej7j784MCtNmegDx8smR2hEazM6Z
-	uSXq27R58ZCa1lr2G6Xjn53G1u6lRgQsqYyH5bgO8oYnpuqh06io/2/nVVA/hro+
-	ghMYUiSaBDAOywrqEfuxf4L8/yTyLxuDGXCH6oGik/58G50b1onzqbsq2M0cEWl3
-	nn64IAe+j0n0rV+nsx9baa0S300AYmQaZF2zZeJBsWmO6cQPAFdGA6WEXe1LU/o9
-	LoizaQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p2yu0evr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Mar 2025 01:38:10 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52T1c9T2022373
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Mar 2025 01:38:09 GMT
-Received: from [10.110.121.93] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Mar
- 2025 18:38:08 -0700
-Message-ID: <93ca218a-71a2-4751-860c-025ec29b9180@quicinc.com>
-Date: Fri, 28 Mar 2025 18:38:07 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZRfdRL6I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743212659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rrchpPNwlMYuDeEE/R/ZDKIqGUjMFbA0Mk/lyFLmNEU=;
+	b=ZRfdRL6I+d5Zq3MKmgmp51MDUFmwnPRQ4vwULulrF914C+k+G9Yk4iCZkDnHxD5AEgFISX
+	yt8+nqNgj4I3t/QVJECEmt15YMHkNqRoVZ53KJr9iqhz47kPA8xZ5L7brwWhLcysBW2H+e
+	BWOWLkTG11zJRMLZOwoA2XG8NW7uL2I=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-427-UkCKEg-cOlK3QBJdhl5i_w-1; Fri,
+ 28 Mar 2025 21:44:17 -0400
+X-MC-Unique: UkCKEg-cOlK3QBJdhl5i_w-1
+X-Mimecast-MFC-AGG-ID: UkCKEg-cOlK3QBJdhl5i_w_1743212656
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1FE8F196D2CC;
+	Sat, 29 Mar 2025 01:44:15 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.12])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A927D180175A;
+	Sat, 29 Mar 2025 01:44:11 +0000 (UTC)
+Date: Sat, 29 Mar 2025 09:44:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
+	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+	akpm@linux-foundation.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+ <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+ <Z-c7V2hptt9U9UCl@desktop0a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: MAINTAINERS: Switch from venus Reviewer to
- Maintainer
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        <stanimir.k.varbanov@gmail.com>, <hverkuil@xs4all.nl>,
-        <quic_vgarodia@quicinc.com>, <quic_dikshita@quicinc.com>,
-        <mchehab@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
- <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-1-0ec1007fde3c@linaro.org>
-Content-Language: en-US
-From: Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-1-0ec1007fde3c@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=d8r1yQjE c=1 sm=1 tr=0 ts=67e74f02 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8
- a=VwQbUJbxAAAA:8 a=I9BTf0qdugiClMELNpcA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: xzjM2AgMn4sf6YBTw_BgwTJV9wgGk5se
-X-Proofpoint-ORIG-GUID: xzjM2AgMn4sf6YBTw_BgwTJV9wgGk5se
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_12,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- mlxlogscore=826 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503290010
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-c7V2hptt9U9UCl@desktop0a>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 3/28/2025 6:26 PM, Bryan O'Donoghue wrote:
-> I'd like to volunteer my help in keeping venus maintained upstream.
+On 03/29/25 at 01:14am, Roberto Ricci wrote:
+> On 2025-01-27 10:42 +0800, Dave Young wrote:
+> > On Mon, 27 Jan 2025 at 10:39, Dave Young <dyoung@redhat.com> wrote:
+> > > On 01/13/25 at 10:28pm, Roberto Ricci wrote:
+> > > > After rebooting the system via kexec, hibernating and rebooting the machine, this oops occurs:
+> > > >
+> > > [snip]
+> > > >
+> > > > I will send the kernel config and dmesg in replies to this email.
+> > > >
+> > >
+> > > I tried your config (removed some config driver related which is not useful), but it can not boot on my kvm guest.
+> > > Firstly I saw a panic in ftrace path,  then I rebuilt the kernel without ftrace, it panicked again but in kvm related code path.
+> > > Both are not related to kexec at all so I suspect your bug is not kexec specific.
+> > >
+> > > [snip]
+> > >
+> > > You can find the kernel config here (with the ftrace enabled):
+> > > https://people.redhat.com/~ruyang/snakeyear/panic-ftrace.config
+> > 
+> > BTW, if I disable KASAN then kernel can boot, anyway kexec +
+> > hibernation works fine with a few tests, no panics.
+> > 
+> > >
+> > > Thanks
+> > > Dave
 > 
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi,
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 29b4471574982bf3f8d03158cd5edcb94bc9fab9..5ccddd2030efd96324e53fcee8048120990a85d5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19592,7 +19592,7 @@ F:	drivers/usb/typec/tcpm/qcom/
->  QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
->  M:	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+> sorry for the late reply. I tried your modified config, but I'm getting
+> the same oops I originally reported. No idea why the oops is not
+> happening for you.
 
-Is Stanimir still an active maintainer here? 
+Not that oops is not happening in my side, I can't boot kernel built
+with you provided config on Fedora OS. 
 
->  M:	Vikash Garodia <quic_vgarodia@quicinc.com>
-> -R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> +M:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->  L:	linux-media@vger.kernel.org
->  L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
+> 
+> Anyway, I performed yet another bisection, this time with just plain
+> defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+> 
+> Updated steps to reproduce:
+> 1. Boot kernel >= v6.8 in a virtual machine created with this command:
+>    `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
+> 2. Load the same kernel with:
+>    `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
+> 3. Reboot (or call `kexec -e` directly)
+> 4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
+> 5. Upon resuming, three things could happen, depending on luck:
+
+OK, this is a little complicated. wondering why you need to do the
+hibernation and reboot. Just for curiosity.
+
+> 5a. A kernel oops:
+> ```
+> [   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
+...snip... 
+> I will send config and dmesg in replies to this email.
+> 
+> The bisection pointed to
+> b3ba234171cd kexec_file: load kernel at top of system RAM if required
+> 
+> #regzbot introduced: b3ba234171cd0d58df0a13c262210ff8b5fd2830
+> 
+> Now that I think about it, this was the commit I found when I did the
+> very first bisection after I found the bug. But I could not get the same
+> result with subsequent bisections, so I didn't mention it in my original
+> report.
+> 
+> When reverting b3ba234171cd on top of v6.14, merge conflicts must be
+> solved, I hope I did it right:
+
+I doubt how this caused the failure. I have several questions, could you
+help answer:
+
+1) Can this problem be stably reproduced with kexec_file_load?
+
+2) if answer to 1) is yes, can reverting b3ba234171cd fix it stably?
+
+3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
+this because kexec_load interface defaults to put kexec kernel on top of
+system RAM which is equivalent to applying commit b3ba234171cd.
+
+4) Can you add '-d' to 'kexec -l' to print more debugging message?
+
+5) Can normal kexec trigger the failure? I mean operating kexec w/o
+the hibernation/resumption. 
+
+> 
+> ```
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 3eedb8c226ad..3014be212afd 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -614,10 +614,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+>                                            crashk_res.start, crashk_res.end,
+>                                            kbuf, func);
+>  #endif
+> -       if (kbuf->top_down)
+> -               return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
+> -       else
+> -               return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+> +       return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+>  }
+> 
+>  /**
+> ```
+> 
+> Applying this diff solves the problem for v6.14.
 > 
 
-
--- 
----Trilok Soni
