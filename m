@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD32524F;
-	Sat, 29 Mar 2025 05:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53334524F;
+	Sat, 29 Mar 2025 05:05:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743224648; cv=none; b=TbvTOoVmQppF3BzFPLuPL6pJPGGF99g+K4J+YUYxcsTty90SifVceGBaWXBDrovEqnfz37qfdLAZ2vzSs9k0TibQCgy43JQTt350+zLiwwLuqFPyBZ3GPPMkRMcGVKt0JD4Wfnj7ZcAm8NN01TbgI1aDNmo2EILto1g9xDWDOF4=
+	t=1743224706; cv=none; b=YciSE9XbQDw0NYwFO6HlgBMW6by+gGiPuWFM1NYV9MfYfi77vwZzb/NEksDbJeA8R0phVTZe7ELwFxupM8kkI+VAyC8Z3wF3DWgyrOyI7NaRZVj4cSv3iK+69/lKHtJFvOGENrLxAFi3BlR5r8znLhx0VFng/1HNysvkvWEygBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743224648; c=relaxed/simple;
-	bh=lYO+q8seCZ2rCtp87F3094VljvpXkkXa7eg6tmFl/sk=;
+	s=arc-20240116; t=1743224706; c=relaxed/simple;
+	bh=465wNPNn0OBjQesUwHOaBKBTvwAHWe6mU+iLD4taErE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNt7NGx+eU2WTjU+rOBLdLI0mOCYsoyJHLlp7k8lZLEJB2uvHhbGzcaZB/eMWS6aXs3PGqrij4hSz0thj8HM6/ie/2z5c+TgxYkX0QqITzkRjnw+k2tlDAlf2FOxpqPb05gVeDS9CBcgKUdf/w1O6UDerbihGdg5OIa9tXHDQgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuTME070; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=k7EGZrD/uNE/+voaatglSnqCNh0Z52q5PIxGBs6EiiLvF6kNZKdgIjOGFYIz/3f4PBlEVZODUfYJcsCdull8rPpDttRvUJIXYv0MPLsTZpx9bqNzWV/WdGgHKK0MwaDaVOD8MlVu2iGdT7g0+PQmFo2VYEY07d0sIZPwnaigUQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCMUt+cX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuTME070"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7A8AC4CEE2;
-	Sat, 29 Mar 2025 05:04:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCMUt+cX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B891C4CEE2;
+	Sat, 29 Mar 2025 05:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743224648;
-	bh=lYO+q8seCZ2rCtp87F3094VljvpXkkXa7eg6tmFl/sk=;
+	s=k20201202; t=1743224705;
+	bh=465wNPNn0OBjQesUwHOaBKBTvwAHWe6mU+iLD4taErE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IuTME070DKGOGws3i2K8vP1pjugsfZJ4jJ8C/su6eyeYIR0m1lhyc+ivIufD7D4SN
-	 8v7ficS37zcXSWW3hxURxhdrl+DqDq25Psbll0HAicNvKahGBRTlbXw9V3PymmB3dN
-	 97u8mGh65Kyud8WTz/IXm80QbkWCyBasTx4wVa+VOfrHJms5JT0N0wJ2tVwseBxtn+
-	 7dvvhGPBl8K7VOrLReyih9cThGsqfXCEGEUSuAW6/m3EQIFI4ET2CwK5uTFdJWDcTc
-	 p6m+KZvgWovVtOxDrlCpGOmxNTwyOw2nhHOltpZZ2sYBOXTPFQ4Pwu+82NkE7DxiPX
-	 b/6UrDJIdttUg==
-Message-ID: <a81c615a-a1f5-4dfc-81ce-6235abed0820@kernel.org>
-Date: Sat, 29 Mar 2025 06:03:59 +0100
+	b=KCMUt+cXnPDQ5ok3ULfm3MY2ap7AqYTpdNlZRDUMywp+fLtr3hqfj9iTDDo4ztjQg
+	 IYt7U/jfjvdQLmPXO8BGw90Nw78D0M9Yv4QLp7b4GRDhswWpkYpwwMqVQWd4q+3JHg
+	 35nwTOJMPwDXLRdCtI0AKeCeOmSIbgnOKtPyNUQQK8KswtczgQuU0uhmlS3FVZ3vEt
+	 2V4xUxNOB6mzC7Qzgc7yRfRmC9CCSv6dK0nDZFQRWRgH2IyR/llwIfHfQQqoTvsyzS
+	 9XGQvWFguAdnxFW0l1a+D0zYEgc6HFNGMb8yTLI+bz9+pO0ORsWNVIoXg+8FR0/Kaj
+	 ig3xvKcCAK5CA==
+Message-ID: <c433c28d-c88d-4647-b472-7bc81b332d8c@kernel.org>
+Date: Sat, 29 Mar 2025 06:04:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,24 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: timer: Add NXP System Timer Module
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
- Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
  "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>
-References: <20250328134208.2183653-1-daniel.lezcano@linaro.org>
- <20250328134208.2183653-2-daniel.lezcano@linaro.org>
+ <devicetree@vger.kernel.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -98,70 +92,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250328134208.2183653-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/03/2025 14:42, Daniel Lezcano wrote:
-> Add the System Timer Module description found on the NXP s32 platform
-> and the compatible for the s32g2 variant.
-> 
-> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: Thomas Fossati <thomas.fossati@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
-
-I got only this patch, no cover letter, no changelog. What happened here?
-
->  .../bindings/timer/nxp,stm-timer.yaml         | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> new file mode 100644
-> index 000000000000..a9c0151d62be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-
-Filename following compatible.
-
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/nxp,stm-timer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP System Timer Module (STM)
-> +
-> +maintainers:
-> +  - Daniel Lezcano <daniel.lezcano@kernel.org>
-> +
+On 28/03/2025 16:15, Daniel Lezcano wrote:
 > +description:
-> +  The System Timer Module supports commonly required system and application
-> +  software timing functions. STM includes a 32-bit count-up timer and four
-> +  32-bit compare channels with a separate interrupt source for each channel.
-> +  The timer is driven by the STM module clock divided by an 8-bit prescale
-> +  value.
+> +  The System Timer Module supports commonly required system and
+> +  application software timing functions. STM includes a 32-bit
+> +  count-up timer and four 32-bit compare channels with a separate
+> +  interrupt source for each channel. The timer is driven by the STM
+> +
+> +allOf:
+> +  - $ref: watchdog.yaml#
 > +
 > +properties:
 > +  compatible:
 > +    enum:
-> +      - nxp,s32g-stm
-
-Previously it was told to me there is no such soc as s32g but they are
-named differently, e.g. s32g2. See other bindings.
-
-Please consult internally and come with one unified approach to all NXP
-bindings. Otherwise, if this is a real soc, fix this for top level
-compatibles, because there is no s32g there either.
-
-This applies to all NXP-related patches (which I am sure was previously
-discussed on the lists).
-
-What is confusing: previous compatible was correct and I did not ask to
-change it.
+> +      - nxp,s32g-wdt
+This wasn't tested, so limited review - this also has wrong compatible,
+There is no such soc as s32g in the kernel. If that's a new soc, come
+with proper top-level bindings and some explanation, because I am sure
+previously we talked with NXP that this is not s32g but something else.
 
 Best regards,
 Krzysztof
