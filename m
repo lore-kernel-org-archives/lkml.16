@@ -1,78 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446E57FBD6;
-	Sat, 29 Mar 2025 17:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608917548
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 17:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743268337; cv=none; b=GK0ZLQF+dUHs6QnaiFJ7O5HC7/JhqybUxJVfsJ2f2SAXvJCLRthbUNH7GyQ8Lyfzy7k9hvl47BHJU/gtiDRZ6GqUUTYFHLRjhovCNbImPt7gpJ2InM19OGxUUEeA1D1L57aeu2Zh22uYAOV0xCzhSneQM2a04M2BjK/U6qelx38=
+	t=1743269393; cv=none; b=kEFF4Xw1MaL6c1bp6AcG+c3iGO2FaYfUmtujo0EmxuwvAP7VpC4nMsVtieb+Ei4ftaI9pevOYdQJkPO1OhUc2J4br0O5MADgoS6oi7tMYdflZVRbulz3amZWZWBaBmy7fTo6iO3acoOSpLofL3LNJd0u/URgRWbWJH3CXNhjfGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743268337; c=relaxed/simple;
-	bh=kdCx5doiFqQ/0qrNY7WENztc254Hfa+ysJOTF5wUoNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EL08HsOk+fScr7ewtr9PXEhPmFvG3zJ7kFpvWB2lMGSckXOPog8RQn/nOvbP7X7EduJM/g9locXqPY+WTuMnAkZ+4bok7JOwtFAbkwWQ1R3o0O4dCX7FKbdTkRiVEi1eYIwd8Ixui/QUWlGjIz1LhYdVXyYE+OGwj1Of02YDsL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpxNYRkt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpxNYRkt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A467C4CEE2;
-	Sat, 29 Mar 2025 17:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743268336;
-	bh=kdCx5doiFqQ/0qrNY7WENztc254Hfa+ysJOTF5wUoNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fpxNYRkt0fQ7i1BpVxLvydM9MwjHvbz9qxFkTLHg7xAbz4p6uVUC+XVSh4MBVHPnI
-	 EnFTF51BrW/8EA5H126vHeqwTCKbUB/VlUVTylcrtJ9zcoR9JKV1unqcHP4BACivp2
-	 zFDMtwDNs/y6ErGymv96mEkEz6sbqWUPYWFFmEJaXXNRT18dNkkNtHdlpdMOUzJVsE
-	 gkQvx6NKUIsNgFLXcC21/XTQgwuBNB8DSxyMqn6Dm630kQsyJCSsukLH4yl3qiX89G
-	 yqh3it+ObohcbGxXiyefjHH5vrDG4mj1SNyEyWFjKaAEmlmgL+Q5pts2CMV3bBtYco
-	 lmySLeq3OOIAg==
-Date: Sat, 29 Mar 2025 12:12:15 -0500
-From: Rob Herring <robh@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, linux@roeck-us.net,
-	Thomas Fossati <thomas.fossati@linaro.org>,
-	linux-watchdog@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	wim@linux-watchdog.org, S32@nxp.com,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-Message-ID: <20250329171215.GA2298924-robh@kernel.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
- <174321222207.2172829.15350189767926637719.robh@kernel.org>
+	s=arc-20240116; t=1743269393; c=relaxed/simple;
+	bh=imUYZ/W/GVleMNjiWv15mGu860oaVQw7PlgELqcSTqw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dfDVq7/3tM8NgS7/06YcJvzuDpazJLc9zptuCkTdFI1XhoaS6GtZxmRsjEl6esysBG8B+y2osTEOZWHb9rDW0vlePr3EyPgBXtxwuuxCEo5ocuzUu5xZVO99J8WnDj3c7y6HLIA3BMDiS2vx8PjS8BXKf5yvOqFEN386TtkmUnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tyZzp-000000006vT-45Ph;
+	Sat, 29 Mar 2025 13:29:25 -0400
+Message-ID: <a84047c77c1a5f16b0d25f0cee6fe86487d14a5b.camel@surriel.com>
+Subject: Re: [PATCH 1/3] x86/mm: Correct the actual count of available
+ global ASIDs
+From: Rik van Riel <riel@surriel.com>
+To: Hou Wenlong <houwenlong.hwl@antgroup.com>, linux-kernel@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,  Borislav Petkov	
+ <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Date: Sat, 29 Mar 2025 13:29:25 -0400
+In-Reply-To: <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+References: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
+	 <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174321222207.2172829.15350189767926637719.robh@kernel.org>
+Sender: riel@surriel.com
 
-On Fri, Mar 28, 2025 at 08:37:03PM -0500, Rob Herring (Arm) wrote:
-> 
-> On Fri, 28 Mar 2025 16:15:13 +0100, Daniel Lezcano wrote:
-> > Describe the Software Watchdog Timer available on the S32G platforms.
-> > 
-> > Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > Cc: Thomas Fossati <thomas.fossati@linaro.org>
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> >  .../bindings/watchdog/nxp,s32g-wdt.yaml       | 46 +++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml
-> > 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.example.dts:18.29-23.11: Warning (unit_address_format): /example-0/watchdog@0x40100000: unit name should not have leading "0x"
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.example.dtb: watchdog@0x40100000: 'timeout-sec' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	from schema $id: http://devicetree.org/schemas/watchdog/nxp,s32g-wdt.yaml#
+On Sat, 2025-03-29 at 21:05 +0800, Hou Wenlong wrote:
+>=20
+> +++ b/arch/x86/mm/tlb.c
+> @@ -279,7 +279,7 @@ static DEFINE_RAW_SPINLOCK(global_asid_lock);
+> =C2=A0static u16 last_global_asid =3D MAX_ASID_AVAILABLE;
+> =C2=A0static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE);
+> =C2=A0static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE);
+> -static int global_asid_available =3D MAX_ASID_AVAILABLE -
+> TLB_NR_DYN_ASIDS - 1;
+> +static int global_asid_available =3D MAX_ASID_AVAILABLE -
+> TLB_NR_DYN_ASIDS;
 
-You need unevaluatedProperties instead of additionalProperties.
+Unfortunately we are limited by the PCID space.
 
-Rob
+A process with ASID N will get PCID N+1.
+
+The PCID space has the same size (and maximum value)
+as the ASID space.
+
+That means we cannot use the top ASID value.
+
+Alternatively, I suppose we could have ASID and PCID
+line up, and always exclude ASID 0 from being used.
+
+That might (maybe) be prettier code, but it isn't what
+we have today.
+
+
+--=20
+All Rights Reversed.
