@@ -1,102 +1,125 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC741C36;
-	Sat, 29 Mar 2025 01:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDFC191
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 01:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743210687; cv=none; b=GCRSb6ZM/CPaX35FPKThwMJPfQ3/Gnz72ciURLA30vI1uLNlaLMKQxJmhSNEBmfiiumomz8LcYf6SBJsjl/KXVYCKBfFCATB2dtezjHRxTYkMK/MjNLAPnIhUp3kF/MRu6kK9P6wmZ1EbjLTBMx6vstg+l9C58eGbY64m77EDu8=
+	t=1743211126; cv=none; b=jgP4eBWMrdNFpKDi7RL6npniCfy9XLNxqX8TvvQfJeaoTrCxpyPxE6DEQX1pNWgalFdRioPB38t69K792V2XKLZl1BgH5Y/1fVHuSqk71wRluDmXj/kwt+2G8H9nczJdyyws7bWz9wYNTr7aYpMmhPviyYAi87pxuWkUz0P1b+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743210687; c=relaxed/simple;
-	bh=UO+g2BYpGAaukMg/9O98RekdQq371VrJWc/GvFKjUQY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lW6cfFqi7EIjOtxwgn41bMatOR0nKhyQ7ggDD2LfpD4XsAM4Jk6yjng3W4R+hD+bSvfqw1SDiA+IqtP9wV7U4QUapHAmId5W8+pGjJKeS1ecD2S1QUxKMFA+cbQaVGtFIz7dXMuPmCBYI+Sk/kPV0tpWww985MFCRM9xE3s28Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZPfTm3nnDz4f3mL8;
-	Sat, 29 Mar 2025 09:10:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 8BF0B1A1232;
-	Sat, 29 Mar 2025 09:11:15 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCH61+xSOdn_T56Hw--.31005S3;
-	Sat, 29 Mar 2025 09:11:15 +0800 (CST)
-Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
-To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, axboe@kernel.dk,
- agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
- <Z-aCzTWXzFWe4oxU@infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
-Date: Sat, 29 Mar 2025 09:11:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1743211126; c=relaxed/simple;
+	bh=B6WXFv42WibloTinEG3stIHOn2nFdQfJskknML+aNxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=grHm0jShDeBkllBrbDllgixes3N7eQtwCRMAt7FL/dKOeWI5pcKTIhXEr1xi6EghASh2cZiDhK9CKwYckcSQATPhtl+akScI8J0R25gNK+7PhzMawUp1hCHZ7XH92Apt8U91isLYcahDgjQ/zz5/yWeA80EiMHAB6fBO4qufdFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X535yHZn; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X535yHZn"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-399749152b4so932643f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743211122; x=1743815922; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rpne36gCiaUf/vOcHEmQCMmIt/bPKT4qWHgc4yEtsfA=;
+        b=X535yHZnjDUOa4beakAT6hhV9jRva/k7GCoMpmIwoHgGSZJX1MtSg6RKRXjzXyOcrM
+         FHh48ol0DBcStf06WfxlVuAIgsXVNWKZVPhRn0JqA8wJWCuPhYhRFe7KfMScZojUvO3J
+         RgaE9CttjtLGXOWwZGXO396neipjCWfZWY8biTZ18x6fTnGG74NprPB4qdxAeBMkOr5R
+         48lPCXrACiV5S5+zYwevL3QqSZd/S2nKMC6pG2/XEHnuKyWGpLMRnNp1Mlur3fz9OY4K
+         2wyKLrhF987HdsHNDWlurwduNtjXCzdrtD6w8sy/E40bus2pRgFLhD7b4isSlL8VSzJo
+         nd3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743211122; x=1743815922;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rpne36gCiaUf/vOcHEmQCMmIt/bPKT4qWHgc4yEtsfA=;
+        b=Zt3kTqMOABJzINKHUxWGto79byrdIA/dhKPfXZ1iLZNOhybQiG72zT7ohh5edLNZ24
+         37t74W7/p/LloEwJNszzUYS9Ke0hiGo1tqG5vAANwKxrkEek3dxAV/pWB4KVmsiBD1lx
+         u3squAyRK9HP5iBb3/Z4pbIJ/iMUzUZBvMhqiDKpirsg/XhqMD4QQsXIZeFLE/xR7Dk7
+         d9zSwA7d967oH8nYIQBY6o9XKTDzewMI7f08Z2FX3js7Gsap5LcMa/ZYNFpOSGSxR80y
+         gXu3Pkcc3QBed9cfcDO/xxh9bVsdfxFMGaN9r8F+Iztm9IGJOfdxcrpcUKoGBrQGCA81
+         UlfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUP6BKs8amsoy4jlJLd8BFfG5Oef5ObUiLBknd6FIpI0pNQNglm9Ur84RQXUFIdJqR4TS52LZxCeXL5+SI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiIivTjePCpEYxBJCABUoRwbe1pGNq11zapDILsX98Fs4TpmMQ
+	OKQZh8N7evf1NEmEyXEdTC7EW7LZ7wdg63y7tLHdtPtYWzKuRFqEqApfbIgwwIk=
+X-Gm-Gg: ASbGnctUcFcHBxcXBN5+3BoBO4dhNY/dwBbm1UVsINCPLtjtfswVz9c7SdZkFCNHBIW
+	tS0rySM3FabCtwkNzCo+B2soAeFJtNPFiOKbmtG+ekQD3VgofERkDRumnpxWMjtJXYbx5kRTqSl
+	nd4CyOrgFWOKGHBcpdzbZ3g81QV1NSQWJ6kCmtHnypFdi6VTYP0CYoT5wNlmDNqYs+XiL1jdi3W
+	EDgNeBcvwix+8QeaKFPrMlW3BFvrYsQ3sSC7MrPkmadCMtDXXSsM7jv3IecdPQBVVi8bFZcSpwr
+	gYRr6+PVoP8gnnSvQFNB06Zpr9YZySjPzbYcZKZOo/HX1TGQCsIshpFkaJajkBZEgc1c45F+5Ss
+	5tPolY0U0YA==
+X-Google-Smtp-Source: AGHT+IGgq3lN2khHUfxvzTLLGRHiPLTs5+vkkxGV/MOmv/iCHJ4zdsJUQ6EeZEdYriKuTFWbLbYrNg==
+X-Received: by 2002:a05:6000:40cd:b0:38f:38eb:fcfc with SMTP id ffacd0b85a97d-39c120ca794mr739070f8f.7.1743211122572;
+        Fri, 28 Mar 2025 18:18:42 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b662c11sm4252858f8f.31.2025.03.28.18.18.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 18:18:41 -0700 (PDT)
+Message-ID: <fef11ce6-b3b6-4677-9387-13332b9a9d43@linaro.org>
+Date: Sat, 29 Mar 2025 01:18:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z-aCzTWXzFWe4oxU@infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH61+xSOdn_T56Hw--.31005S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1fKw1UGr4rWw1xKF4xtFb_yoW8Jw1fpF
-	ZIqw4UGw4kAr4Y9rn7Cay7GFy0q3ykJrnxWryFqr9IgFn8uFna9F1fKanYka45urn7GF1a
-	vas5XryrGa18uFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] media: i2c: Add OV05C10 camera sensor driver
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+ laurent.pinchart@ideasonboard.com, dave.stevenson@raspberrypi.com,
+ krzk@kernel.org, dan.carpenter@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, Venkata Narendra Kumar Gutta <vengutta@amd.com>
+References: <MhUYQD7uWnfZQAPq7VslFWPHOmx2B2UfAIpbMhLq1-7GC_i5bI2hhns_-ov_AAVpEH_VmDDFYkS5aOKBwnY61g==@protonmail.internalid>
+ <20250328214706.1516566-1-pratap.nirujogi@amd.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250328214706.1516566-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 28/03/2025 21:42, Pratap Nirujogi wrote:
+> From: Bin Du <Bin.Du@amd.com>
 
-ÔÚ 2025/03/28 19:06, Christoph Hellwig Ð´µÀ:
-> On Fri, Mar 28, 2025 at 02:08:39PM +0800, Yu Kuai wrote:
->> A hidden disk, named mdxxx_bitmap, is created for bitmap, see details in
->> llbitmap_add_disk(). And a file is created as well to manage bitmap IO for
->> this disk, see details in llbitmap_open_disk(). Read/write bitmap is
->> converted to buffer IO to this file.
->>
->> IO fast path will set bits to dirty, and those dirty bits will be cleared
->> by daemon after IO is done. llbitmap_barrier is used to syncronize between
->> IO path and daemon;
-> 
-> Why do you need a separate gendisk?  I'll try to find some time to read
-> the code to understand what it does, but it would also be really useful
-> to explain the need for such an unusual concept here.
+> +static const struct i2c_device_id ov05c10_id[] = {
+> +	{"ov05c10", 0 },
+> +	{ }
+> +};
 
-The purpose here is to hide the low level bitmap IO implementation to
-the API disk->submit_bio(), and the bitmap IO can be converted to buffer
-IO to the bdev_file. This is the easiest way that I can think of to
-resue the pagecache, with natural ability for dirty page writeback. I do
-think about creating a new anon file and implement a new
-file_operations, this will be much more complicated.
+There's an IPU6/IPU7 version of this driver.
 
-Meanwhile, bitmap file for the old bitmap will be removed sooner or
-later, and this bdev_file implementation will compatible with bitmap
-file as well.
+https://github.com/intel/ipu6-drivers/blob/master/drivers/media/i2c/ov05c10.c
 
-Thanks,
-Kuai
+Perhaps you could import the Intel ACPI name contained in there too.
 
-> 
-> .
-> 
+> +
+> +MODULE_DEVICE_TABLE(i2c, ov05c10_id);
+> +
+> +static struct i2c_driver ov05c10_i2c_driver = {
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.pm = pm_ptr(&ov05c10_pm_ops),
+> +	},
+> +	.id_table = ov05c10_id,
+> +	.probe = ov05c10_probe,
+> +	.remove = ov05c10_remove,
+> +};
+> +
+> +module_i2c_driver(ov05c10_i2c_driver);
+> +
+> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
+> +MODULE_AUTHOR("Venkata Narendra Kumar Gutta <vengutta@amd.com>");
+> +MODULE_AUTHOR("Bin Du <bin.du@amd.com>");
+> +MODULE_DESCRIPTION("OmniVision OV05C1010 sensor driver");
+> +MODULE_LICENSE("GPL v2");
 
+Why v2 ? Checkpatch will complain about v2 and BTW the IPU6 driver above 
+is GPL not GPL v2.
+
+---
+bod
