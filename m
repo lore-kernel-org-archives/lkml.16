@@ -1,195 +1,201 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010014.outbound.protection.outlook.com [52.103.68.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A35219004A;
-	Sat, 29 Mar 2025 09:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743241022; cv=fail; b=IPn9MrlX+lGzupAFbVOFVvdnkuFfRLq6dfXLN0REeHjQ0Ihzq9i5K4oOp6zjOLdpgDdhxtLFiGbXdtwrF3zSMjzO7SJfIfIZshDoWy4cJ4btxfOyQnR2nG16EihNAE1QOvgopAV34qnNj20AaSO5lNgFwIOIVm0Z3ab/MszXy4g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743241022; c=relaxed/simple;
-	bh=y0jHra9XgMcl2ILOdu5UwGrt0Bl8EFarotMqjhbIiUk=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nLGnoaO03OFOcZpryTv24P5dKB4LAbBGQdzGw7fOGAl9BI86j8HmvaFoZQBv84cK8hzs1GtmLFMGmm8kRJ8mxoO5bfUC2Z29pzIjvnyFu33MR8kQNLdpoHjszEbNJ96qXQX8+GO7LTX9wwpZ9fu31S8+03/G3TNjTPjHRAqkPmY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=RtE2/cHQ; arc=fail smtp.client-ip=52.103.68.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C519B3CB
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 09:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743241196; cv=none; b=DxJcQ/30+sQ4HwdMAzPZjniTDTH3gW/3M/2FQEqt3wycLZG2m1DZvTV0J02luno8365OjwTwcS/oG6Gqqe216EZcnU7cnSnR7C74GavkkBphQ0aA1keeeSoY93kS62gzvkpr/CzOjpnV1HilYaCsZ2WT/T79KYM/HblKVf3TLjw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743241196; c=relaxed/simple;
+	bh=h448OrPfM6UqZDCzp4murBMKPsAopVuytMHYVBEJNWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SG5KrQ9SoocqQ209YsuL2pQPijqxXMneiTTp8ub66QpsmCPVlBJPUXcVj3B3TaUm5GUfw15ZPUW8s09+PVmgTDR0SjyTYLedDnYW9Dug22RHrb5Oqa9C1IpDmRdB4ca9DbtZuup762EzBp3GlPkyFfuoxhzN65jfrs4rV7IaB6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JKPCq82n; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="RtE2/cHQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=clBM8j0P6F+0MHztjQYzOCOSQWkMcvM8SghF9qEUrEENjeS0iNtuRb/6tmbHmgQ5PomOR19RFe7hA+H/9NFNnvf7YHJ9KmuuUGRljmyKaotiHEFnTUPwWgsWBbHIo36r0UGsWXEUxIy/IOlJH4s7Zw4RTZbNAFPNeI1SfZegkZ1OuiZjAqS/YG6XXp/BA18GX0WAaRtKtYDYexJa1/V6k6YHniIMK9YSTOlYsHA2R9hxzbQenU240dS/uQGg+I9UTOi/16D3thCeUnZkdyrU04L5q4qdsKYAek1XOx8Aa9lgyulnlPvg4VZrMr4s2bLEo5H9rHi6yY16UnK9oA/Ycw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z9E3evAXFtqh3K8HqsNk/YDfqH3XprhMB7zuawZtJAM=;
- b=mug0G+tQkRsglxuim6jRqpwIDqvc8iVV0Xk/+zvNmV33v8VNO4okbJCkwmwQLX/HqFsSDPtqUZD6sJ6u8AX2SLO0sWYzsUfpBIjVO7gC1J5xehJa035AUxwWm5EQ/AeSHNsaE4AeJX1nswYwtVzBPIifcjnduw5wHIyc1KvghFzIY8K+v26+GoBD5u/H5hu47XtFU9CmLd8C3wBD/ZtMlPc3oHppI8c/Z/OOHCjJnuVpa5P7oYGqHrAJ9VpCdl14CHVXrowvEyXwFeSncoti0aK2WSMjT4Aq/xRs4GIs9JCiKM9/ehR0U+qS3kLno0kESbIu+o/nAzleDsvY9NGxSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9E3evAXFtqh3K8HqsNk/YDfqH3XprhMB7zuawZtJAM=;
- b=RtE2/cHQ7PYKDjxRgjQBaNRmyM+ZnUsihEVGdw5oLwcjB/rQRiTsJrAY3jPOR+X+6vtnPmxgZuPXzUKIJHXRLkRMsWLYMINTg6HNpM9hzyC3I+xpqPLr+kYnB3MmQvwP83JNQ1tYI6lMXKcaIsoSYRYmg2F0gJX5JTV9D529AN4ln1tTzfreVGtU/mkxUBGW04AsqCCUxAeFim06eT7GueMEpM/hLi3xihjeKrrNcyXK/XOLJH9d0K3ESkSJ7HZ5fuO/e6FHs6jtRbPd+lbgNzykBjHt4xz2B1dlwTkKobrB+GeIa1LCiH4MvZdkTbmbBKQbdzXUer/0q9QPhJ6lFQ==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN0PR01MB10042.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1e9::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.27; Sat, 29 Mar
- 2025 09:36:56 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8583.028; Sat, 29 Mar 2025
- 09:36:56 +0000
-Message-ID:
- <PN3PR01MB9597D2F7627323EADE6C89A0B8A32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Sat, 29 Mar 2025 15:06:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v5 5/5] HID: apple: Add Apple Magic Keyboard A3119 USB-C
- support
-From: Aditya Garg <gargaditya08@live.com>
-To: jikos@kernel.org, jkosina@suse.com, bentiss@kernel.org,
- benjamin.tissoires@redhat.com
-Cc: g.sokol99@g-sokol.info, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org
-References: <PN3PR01MB9597CEB67FC52231276F6038B8A32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Language: en-US
-In-Reply-To: <PN3PR01MB9597CEB67FC52231276F6038B8A32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0053.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::28) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <c96614ac-c9b4-430b-a3d3-ca561e38e749@live.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKPCq82n"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-224191d92e4so59061515ad.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 02:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743241193; x=1743845993; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f1B6fKZgCWYC21ZRAVBlXkt0qD2ak5SViuiSZ8N3+e4=;
+        b=JKPCq82nH8bDC+cU8tnhJWItY3Ilb6xEVyaKIkICBEReBze7/s0Z04Fq90xv/ZWTu9
+         uDfw19DOa1c4zb4maRAj37trhYQX5sp05MmdejOk1AjH8ny7eabJJVHj2hMJSmGXHhKa
+         ze0jRZ2cQI1whbhJexo69q3G4Z4iewcdQZ1a3OrvZwEFL/3U1Rn6ukQl9zdQO+I8ck2L
+         rGPRKXU63wvjNzYVXzrhWgVz16KZgrpDKpik5CfFPCs15UhmANaqePm8NjcQHkOQYlnO
+         b+f3ZM398IsFY8qIiY//Oj/hCheALT6w78KIqfbP8ROf6aHYRsn//+qbt/c5t4eq/bXG
+         1E6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743241193; x=1743845993;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f1B6fKZgCWYC21ZRAVBlXkt0qD2ak5SViuiSZ8N3+e4=;
+        b=D2RWpyjx5M/Mo8W1RgAiTeWsYIK0/aSUy45+qJefWdJSAMkJojeIx4yZMn8UAVYgs9
+         hK25LkgN3+/cEq1LA9e1bor8SthWlWXXDngwSlfpXxcAOJtRwCtYXUnDohIuOLIoxlb3
+         hIvVywWF9NnonGbFb1duBf53NZA2u6cA3I1Rx6wRzRk97WtYk1XXyI2lukO6Xa2xLPUf
+         wIGdxUdcZ8m2fj19DfOCVpnuD8qilTh1WWBuRFgHMuZY/wl/l6gM3UhlXFA2UQ4YuLiP
+         vHIgmUUVNao8Yp4D0HBnMC+dhoPXgQwvM1DsEKDBBRwJjEWyWhwCdOvDCr2hyZjVp9Ty
+         wfcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXER5/36OazzVqlRiZA6CpIk3sNA6aW/9HeZabQtBiBKC+mh7zma9nt0LgVL+WrZY+bg4CKwAshzAq5EuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj0nbUwcwK/HLYRp2SrrtyE8aDtF3l5dez4MIrskuFFGYhaglg
+	kThzok/C7/vQYK6Q+90g0SgIYktUDyIy0q5ZfwWlAlGEFEh85ngfxtUyFYhH6Q==
+X-Gm-Gg: ASbGnctAT4kXA2LWotsPVda3BiMCf8GemuPLXrb+udH+f3KZy99QxPWOVzOnclry8so
+	AUV8FA7uAfp2j039DN/w9Z0EeZ8e9nPdoyFMHl0VeNNg1AvjtrFUKyTlvMxHNynG2KmHJVY8nvB
+	pQqk+B7DkwHL7oV1riowf3A/SU/nZjPMrlSuKYmpHcTxZPfxzcNSUG4FPl7C9JBmCETM8SeGL/v
+	XcDqAXf8hgrTcTpTFoCrB94XftlhP/LcCkSbdWFpDqJ2+Q+TEmqDnEB8x39VBPuEjnxsHhpVs0X
+	wcWd7rnssukEVy4tI4o61CwvzmaUcx6vZp8WbCgvjcn9XR2NShdJn7+uqLj50pm0JQ==
+X-Google-Smtp-Source: AGHT+IE1KaqJ+6Cbvp5IKf9CYxA89yFr/QCAcVpYriUorwTLgRU9GCydNQpKyuIpw63iCI+2E23ifQ==
+X-Received: by 2002:a17:902:ea02:b0:21f:6546:9af0 with SMTP id d9443c01a7336-2292f9fcb73mr34169145ad.44.1743241193405;
+        Sat, 29 Mar 2025 02:39:53 -0700 (PDT)
+Received: from thinkpad ([120.60.65.227])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf4f6sm31834655ad.152.2025.03.29.02.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 02:39:52 -0700 (PDT)
+Date: Sat, 29 Mar 2025 15:09:46 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_mrana@quicinc.com, 
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+Message-ID: <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
+ <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+ <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
+ <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
+ <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
+ <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
+ <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB10042:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d927c83-1a2b-4c32-8610-08dd6ea53ef6
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|19110799003|8060799006|15080799006|7092599003|461199028|6090799003|5072599009|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2lXdWk1Yno0clhBY25UN2dNOW1hcGdTYVhyZHZOQUFZRDlJNHNqMFk5TjdR?=
- =?utf-8?B?TlRhMTFPY09lS3BvRFczcEloeS80Z2tOVWVnaFF0OWZBQVdjMGNzU3hxK2sw?=
- =?utf-8?B?cnNQV2kwd3VnVHhnSU01d1dPQmE4cmU5M2ZmcjJiWVJId3B2OFJyMHloQUg3?=
- =?utf-8?B?dlJXdzIrbG9xQy95Ri83WHBCejFWNnFnMExuRlBKVkZRZGZQQVI5S0hCSXlD?=
- =?utf-8?B?Nmk0SC9xL2ZxekhGVVYvRHJ2clIzRDlTVFMrYzZMUGlqQXFqeGNVa0xZZDdy?=
- =?utf-8?B?MGd4d3pveWhRekt4S1o5T3F3dTUwWWU0alFvK3hiSG9ETklNeVE1MGwxdWhU?=
- =?utf-8?B?MUQ1bExYSWNFa281NUNLRmJLNlFsSzRGZFJzOUl0SnFSbm80YnJ2bzFOYVdD?=
- =?utf-8?B?Mmpza2Q0VkZSdzllcFNHcE4zbHBhSDNlTjRMRHVRMnFuTWxvYlpNQlJ6WGVG?=
- =?utf-8?B?eE9nZy9PNisrUEpiVVdxT2tOdmJMVm5WY3dZeVQzaU5jTjJuNzNBdzh6ZGNK?=
- =?utf-8?B?SUUxNGg2M2EyeWpRNkhsT3I0VWxSQSttcjF2ZHl4YnA2d1lubWU2WGExdzZy?=
- =?utf-8?B?czNUdkpPcnhUWlZ4VDR5SWxab1E0WElFNWt3NFFSblY4d2lRSVo2NE04bE5l?=
- =?utf-8?B?UlN3eWFKYmIwRHRoMHVyUkxETk5vekxjbjhsK1VLcEVHTHFKZ2t6NTUyQy9m?=
- =?utf-8?B?cVJaUWpxbWtuS1ZuL1JnOTZ4VUNDMEI2VDBPNW5nRWJFZmkvR3JQL1ZUQmJM?=
- =?utf-8?B?bTNUODFyaEM4MHArQnZuZDRBZ2RTY0p0eHVxUHhDWnhFb083UlZDRkdtdG1Z?=
- =?utf-8?B?cnRTZ1ZNdnFjZ09vK2hVcjZlaktmeXh3eG1kZGdEeEloSEdlR21yWVN6dThH?=
- =?utf-8?B?Ukpia0szRUlwZnFVd3ZSbzVEdFpUajhadVFTQTF5Z0taZFdTUUY0SFpzVzJB?=
- =?utf-8?B?eW1hMkFYWEdEUUo1cU9CcTd6Z3RNTTd3VW9uSWN4b2xyMGJDSXlIWlBaMWMy?=
- =?utf-8?B?UVB4VGpMaHdTanZrV1RzUEE2QnNUNnFDNEtQTG5MRmdYdld6am56WWhrUEF2?=
- =?utf-8?B?R0pHbWhQWWkwRXRraG93VU5CeVBKcUlUR1NKYmxGZ3dwd2VnU1dtc0cxUmdX?=
- =?utf-8?B?Q05EVjlsYy9VSkpFQzFUWTQ2S2MvZjR4cjF5OWZ2cDF4ODRCOHBpSVNpYXF3?=
- =?utf-8?B?VmFiSmU5OUtteXBGMnNqY0JIK0lxTUt0Q1NTcUphVkExVEJCRUZMdWhyWUcr?=
- =?utf-8?B?MHI0aVBsOGx3QU52cjBrZm5NbE5leUJEaklQRzdsTVMwREdkV2Y1T1BqeDlH?=
- =?utf-8?B?d2ZpUUdHc1VGZW14TDlvNTBOeng2M1NGZk04ZEUrTVczR3FuRTFYbWJ2ZTIv?=
- =?utf-8?B?a1o3Z3JTWXc0NVIzNXROWTFPQnFhS3E4TnpINjc4SlBBbFpmekMyaVN5ZHli?=
- =?utf-8?B?WXJSVXhZeExZOGNFeGl3RVBZaGJsdEEzbS9RMjJPQXQyeDAvNmVINVFqMXdq?=
- =?utf-8?B?bm9veU5ZK2orSWZnaTl3d3VZVFBtZzN3SDlYUDJTbm5sZmtPakNhVUpBaHUv?=
- =?utf-8?B?a2tNUT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1NMQ05Fdkc3aTVPa0VrMEtwclZQV2plS2E2ckRlK25XR211bFBVcE1Ub2pj?=
- =?utf-8?B?aVhwcDhlU2JGenVEdEMyQU1DWTNzZjFReXZWYUFKUTg3MGVEOHNuTkNOK1Ny?=
- =?utf-8?B?TnZsRzZYYWwvQUtqZ1V0L0VEdjV3QUthb0NjeE5ER3g5MjQ3dzhsek5uS25F?=
- =?utf-8?B?NzZPYS9jbSt0MmhRRmorVEdiRDNqS3c3V3pkYkwzRkd6eDNteDhadHNldXh4?=
- =?utf-8?B?Uk85aGRjMjAyQ3hmMmJJNUFLSmEzaWhFZGQwMkg4UWp3TGFlQk9qUmpiTnRK?=
- =?utf-8?B?aWJZeU1PQUF1bjY1YlBqZG1GZWpzbWQ1NEJzdjhXdWluWHhhRnRaWERmNGJo?=
- =?utf-8?B?VW1NSW9ETnpXUFZKSHJKazVybE5pSDJOOFE3aHpnVUkrNUVqZEpFU0tpcDdU?=
- =?utf-8?B?QzVNNllZUlZ3TWlyNk1EUktaNkU2VkwyYkdUSFdCMkNQTVNIN2RQS25TTXl4?=
- =?utf-8?B?UWYwM0xvWW81MFlIR0NjMHlJN3JYV1QxQW1pcjRqaGhkcllVMnphbTVyUTJB?=
- =?utf-8?B?Qm54ci8xV3VLeDBIZlBtdXhBUVh4d1VTUElNdlFmOEhXTXBmVFFFcmVtZzBn?=
- =?utf-8?B?TTJsMmVmNFNDZ2VWeE9iZ29IMW9NaUNobk1Qc3FuVnJGWEs1cWdsSUxFZ21E?=
- =?utf-8?B?S2FpL0w4Nzc0T2lzRE5lTHZlcUhkb2lzTkY2aTJ1RjhoQ0pTNVRMUUpONjBE?=
- =?utf-8?B?RzFzcmF6NjBxSC9xMXZqMmlyRnh0RGFiZHVzM1NzdUJjcDVHcmFNNEhEU2Jm?=
- =?utf-8?B?MnJHcWJDUG5oZFZiaGlYbnZZdEcrcU9rQWVDdnRNV0FicVFBVS9SUGgrNit5?=
- =?utf-8?B?NkR1ZGZzRFNobGV3c21FdjhzR1pEcE1BQlIrcWl1eHpSWUZJUXd3cUkwVExx?=
- =?utf-8?B?VTZodkJFN0M5dUU0ZnlVNENEbEJHL2FrT0tCQUhkc2c2NFduY2VmZnVvM1o3?=
- =?utf-8?B?NHZadFI0Y1ZLeVVsSjBpbC9valB1dUlhRWp4ak9JakRYeFZqUk5TblVQWUhP?=
- =?utf-8?B?dThsNHdyd1JrNGFoektQeHp3SjVibnpsTjVqM01tc2tOemdWNXY2RnEwSVFy?=
- =?utf-8?B?S2Y3cVZMUkJrb0NQZGlDUmNDUWhjV2tpVFdRa0xsWS9OMVhHNzVXdlE3V2Zm?=
- =?utf-8?B?c1JvS3B1OUFaRmpXSmIrOWE1ankrRmJVbmtqcnVidG42SFcrNnFDY3ZkOEtq?=
- =?utf-8?B?cFNHNVYrVFhNeVJGODl4OVlUdlluMFZid3VUQjlNaTdHTUxVRC9JK0NJU1Ev?=
- =?utf-8?B?Y0FoZVFYeUdJZmd3MDNpZzRFZytNVVNCZkJuNm56cWptU3hiYXF5NnpvY1Bu?=
- =?utf-8?B?OWx2cUhSeUlVNjkxbkpQQ1Z2MERaUnpDK3VBaEI1N1krN2tHQXFON2tGYUdT?=
- =?utf-8?B?a2dIS1lSNmhwTlhhV3FXRDczL2g1R0ZkcjRtYWhVUnRFRUhFT0Y5WDNGSjZx?=
- =?utf-8?B?WnJLbTlFNW5CUGNjeWpMM2lOUStVbWhoSXhVNW1vYm5kb3VuVDdTSTFjVzFR?=
- =?utf-8?B?L0kvL29Jb0txVEhYKzZBRGhUNUxqVE9NdENlRTM0MTZIVEpaMnVDRnIyNzg1?=
- =?utf-8?B?bXpnc1BKRGZReFc1Y3p0UnlmMEZhY0cwbmtqaCtZbnVHZU40M1pmZ3o4SkpR?=
- =?utf-8?B?TC94dk5KejVSTlFOdVdMekdsUU80blNVK2VmOVdaZjJ0MUpyNDUrNFppcEhU?=
- =?utf-8?B?SXg3c3dPUGs4UUhGWlFKd2hheTJkeVV1ckVIOW5yQklwRDNSSHhlTldhMXNs?=
- =?utf-8?Q?4m1oxXmWQfYngFMkESCg8ZeYc7EC1CFPcenvKPD?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d927c83-1a2b-4c32-8610-08dd6ea53ef6
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2025 09:36:56.3270
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB10042
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
 
-From: Aditya Garg <gargaditya08@live.com>
+On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
+> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
+> > On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
+> >> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
+> >>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
+> >>>>
+> >>>>
+> >>>> On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
+> >>>>> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
+> >>>>>> PCIe equalization presets are predefined settings used to optimize
+> >>>>>> signal integrity by compensating for signal loss and distortion in
+> >>>>>> high-speed data transmission.
+> >>>>>>
+> >>>>>> Based upon the number of lanes and the data rate supported, write
+> >>>>>> the preset data read from the device tree in to the lane equalization
+> >>>>>> control registers.
+> >>>>>>
+> >>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> >>>>>> ---
+> >>>>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
+> >>>>>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
+> >>>>>>   include/uapi/linux/pci_regs.h                     |  3 ++
+> >>>>>>   3 files changed, 66 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>> index dd56cc02f4ef..7c6e6a74383b 100644
+> >>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> >>>>>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> >>>>>>   	if (pci->num_lanes < 1)
+> >>>>>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+> >>>>>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
+> >>>>>> +	if (ret)
+> >>>>>> +		goto err_free_msi;
+> >>>>>> +
+> >>>>>>   	/*
+> >>>>>>   	 * Allocate the resource for MSG TLP before programming the iATU
+> >>>>>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+> >>>>>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> >>>>>>   	return 0;
+> >>>>>>   }
+> >>>>>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
+> >>>>>> +{
+> >>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> >>>>>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
+> >>>>>> +	u8 *presets;
+> >>>>>> +	u32 cap;
+> >>>>>> +	int i;
+> >>>>>> +
+> >>>>>> +	if (speed == PCIE_SPEED_8_0GT) {
+> >>>>>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
+> >>>>>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
+> >>>>>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
+> >>>>>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
+> >>>>>> +		lane_reg_size = 0x2;
+> >>>>>> +	} else if (speed == PCIE_SPEED_16_0GT) {
+> >>>>>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
+> >>>>>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
+> >>>>>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
+> >>>>>> +		lane_reg_size = 0x1;
+> >>>>>> +	} else {
+> >>>>>
+> >>>>> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
+> >>>>> controller supports them and if the presets property is defined in DT, then you
+> >>>>> should apply the preset values.
+> >>>>>
+> >>>>> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
+> >>>>> safely return.
+> >>>>>
+> >>>> I am fine to add it, but there is no GEN5 or GEN6 controller support
+> >>>> added in dwc, isn't it best to add when that support is added and
+> >>>> tested.
+> >>>>
+> >>>
+> >>> What is the guarantee that this part of the code will be updated once the
+> >>> capable controllers start showing up? I don't think there will be any issue in
+> >>> writing to these registers.
+> >>
+> >> Let's not make assumptions about the spec of a cross-vendor mass-deployed IP
+> >>
+> > 
+> > I have seen the worse... The problem is, if those controllers start to show up
+> > and define preset properties in DT, there will be no errors whatsoever to
+> > indicate that the preset values were not applied, resulting in hard to debug
+> > errors.
+> 
+> else {
+> 	dev_warn(pci->dev, "Missing equalization presets programming sequence\n");
+> }
+> 
 
-Add Apple Magic Keyboard 2024 with Touch ID and Numeric Keypad device ID
-(05ac:0322) to those recognized by the hid-apple driver. Keyboard is
-otherwise compatible with the existing implementation for its earlier
-2021 model.
+Then we'd warn for controllers supporting GEN5 or more if they do not pass the
+presets property (which is optional).
 
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
- drivers/hid/hid-apple.c | 5 +++++
- drivers/hid/hid-ids.h   | 1 +
- 2 files changed, 6 insertions(+)
+> > 
+> > I'm not forseeing any issue in this part of the code to support higher GEN
+> > speeds though.
+> 
+> I would hope so as well, but both not programming and misprogramming are
+> equally hard to detect
+> 
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index e95a54113..0524893f7 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -486,6 +486,7 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021:
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024:
- 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024:
-+		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024:
- 			table = magic_keyboard_2021_and_2024_fn_keys;
- 			break;
- 		case USB_DEVICE_ID_APPLE_WELLSPRINGT2_J132:
-@@ -1182,6 +1183,10 @@ static const struct hid_device_id apple_devices[] = {
- 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
- 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024),
- 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024),
-+		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
-+	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024),
-+		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_TOUCHBAR_BACKLIGHT),
- 		.driver_data = APPLE_MAGIC_BACKLIGHT },
- 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 8682e1b11..4925bfd08 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -167,6 +167,7 @@
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021   0x029f
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024   0x0320
- #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024   0x0321
-+#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2024   0x0322
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_ANSI	0x0290
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_ISO	0x0291
- #define USB_DEVICE_ID_APPLE_WELLSPRING8_JIS	0x0292
+I don't disagree. I wanted to have it since there is no sensible way of warning
+users that this part of the code needs to be updated in the future.
+
+- Mani
+
 -- 
-2.43.0
+மணிவண்ணன் சதாசிவம்
