@@ -1,99 +1,79 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from out0-218.mail.aliyun.com (out0-218.mail.aliyun.com [140.205.0.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161C56FBF;
-	Sat, 29 Mar 2025 13:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C11B18A92D
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743254187; cv=none; b=pIUuwoFhaQUODDqw1ir5zF63z8TDYjZ+2+/mp9NdIEVXgDE8JRORJF5EeWPx+odr5IKsfiVDGR/EN4JOKwF8hEuE0iuueqD45wKkg67e+QS7nvJQpIj+lwvOwNpTuMuFwFH9hISvgI+EeTKStxR7xPJt2VfeO3Pd8X2fc11YEe0=
+	t=1743254477; cv=none; b=QK3l7C7PnyzD7a9Moo/bszj9jUF4K44fIFJLLzwcs7qCwb6Z+KrpIm++JLQYZMFI/cnp4Om5TQtOlQ4RWzBYGgXkJYUMgzcrSyThhFujSPHCeSWAIQK95PezevtzGTfIK3GyMQdh5liPU1UaDcZVC7usLzyafFwA1IiOPO7cT6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743254187; c=relaxed/simple;
-	bh=KuHBuA8N+iaj2AuGnbHx4GIQehKT2sBQF/s4+KKtdTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JKor+cQ6BPEeplHe6Vbpo3eg7k2XsJkqienf97Axg8bEkiMbVuYppby5hX29tAkPlcEpkqJCeVJWbAqC8a7XxZiQkYRzMFGUOHnaM3zPJ0Be02r46jc/EYtw7CKhMDTh8wjFqdwqOW9Emf7fdUwzzzg8UIFKgJ26thA7cIaMKgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=r5NlGNOS; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743254477; c=relaxed/simple;
+	bh=tdHBFBo/TEYibTp45k+sQQzC3i+qYGY+W8PbDi4tgrg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=d7Fag+bFOAWp4gUZdjNmA59Epfxz1IHTbZtzD6wLdiBJtq5jVyEdbOlZ4Z2dIyyihq30VFyu/9uA5c7blyB8K4DEF3VCdHaFryQLkdXe+rQoEaaAOMmQzwHqxbjQZy+hWRL+b9s9IGjxf6L5wHA9+ulK27408BWTn8Rpfq8xgHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=AowBBROc; arc=none smtp.client-ip=140.205.0.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="r5NlGNOS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743254175; x=1743858975; i=markus.elfring@web.de;
-	bh=KuHBuA8N+iaj2AuGnbHx4GIQehKT2sBQF/s4+KKtdTo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=r5NlGNOSS4ou4h6aHuVMk1ORDtvYYw+y+d+CFmAe8lnVyNYMULA6tKjQAZEe5Ccj
-	 Bk9Mm3J/tg9El2T7lKO7fnYZdudAY74qAlY6Q8toUU6pUrc/deuDccQElVAJyHX7n
-	 LEzbSXdLlEN22rHWBWS567r+XUvlJUF/dhXxtNZm1kb+buyxH0o0ZouzAJormLo2K
-	 bb3apjV1BXOafbydoEWuvJU3gFPJiSekzatC49tJM5XBRGWL2LkrEv0kxtOwrrv+J
-	 P+UAlz0X2FjcJJmezR+5klPe1ZaNFcEEMQ5+gypd3dB2dchZZOS21RxV/Ws1Vpyu7
-	 INEvi8jmfPNhYwKVCQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N8Vsx-1t2mtT3ORV-00t4Bp; Sat, 29
- Mar 2025 14:16:14 +0100
-Message-ID: <8a69d4c0-bd4e-4957-8b04-4a6130c82166@web.de>
-Date: Sat, 29 Mar 2025 14:16:12 +0100
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="AowBBROc"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1743254470; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=pO5v6BVMqgqC6aARK169RT0wgqkBk4nwsWaRp7E2lKM=;
+	b=AowBBROc6jIYsF5XLraCCHCZXLVFTD1b8V+Eyg/EdXuOz3/XxZBYORtognBpjecTAZ9lwEmNOTdOd5dbeDfpSZ/siKyloQKRBQgisng11OHU30lSP+Y3V1nAeKh8M9qrJAscBbPS5kFz9GJ7eMsvMSJDPeyycGqJAF5P2GDe9pg=
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c6kOebC_1743253536 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Sat, 29 Mar 2025 21:05:36 +0800
+From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To: linux-kernel@vger.kernel.org
+Cc: "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
+  "Dave Hansen" <dave.hansen@linux.intel.com>,
+  "Andy Lutomirski" <luto@kernel.org>,
+  "Peter Zijlstra" <peterz@infradead.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,
+  "Ingo Molnar" <mingo@redhat.com>,
+  "Borislav Petkov" <bp@alien8.de>,
+   <x86@kernel.org>,
+  "H. Peter Anvin" <hpa@zytor.com>,
+  "Rik van Riel" <riel@surriel.com>
+Subject: [PATCH 2/3] mm/tlb: Fix wrong judgement in allocate_global_asid()
+Date: Sat, 29 Mar 2025 21:05:25 +0800
+Message-Id: <b014aea15c01528ce30187e92d1de0df94e76af7.1743250122.git.houwenlong.hwl@antgroup.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
+References: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
- <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
- <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
- <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
- <a96511dc-5ba1-4302-acb0-f3b49bf8990c@quicinc.com>
- <20250329104812225f9ee5@mail.local>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250329104812225f9ee5@mail.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:0vCbp2qS7xGeC+SBFAnjb28Q/RO9znj5JgQZ49qVjGESI0ovFj4
- CmeUw8DbMvMDh4XyhBlWAqp/H8Zu8dJBFJRIaT00l4xeFWeNfExL6K37PES2c47PvEcKpPL
- Ni2aJJ0jG452VVaaeW4jUO32/kfr9/dEe+1b7ca2dJPvbyz9+b19SdXDgM5BlQ9uAdg86CZ
- 3UkSmGZ6PDF0wn6pG3YEQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sVtO3BxdzGo=;aKaK8yoHWCzvD1O+ArEVPeUptBs
- a00HnonhgX5CoMAU2m03+3N/8X9X0VY09kFnhzXuKwwBPrAapMxg2IJ4Tt9cGzSnoSKmK8S0c
- ut9tcup+qX+Rqe4KNhfLCqbQnnwp0ZLZBzRIYW3ooakmVDQ5sn1DHf+Dcq8BTbjKiLNIwgSg3
- fDdXKw/3cxRsShYT8FWNJQ2ETGHv0Ij16YkVs414m0fOykdcRgq731rnITGG+u9DT18lFzG0Y
- uMIlTG3BJ6loWXZGnr5nHdGAR81k4eKOXmj7R0msjYN0Hav+PU/IgJWveYS2rBp/6BHrzuqzp
- /5ZWOU1yII8C/6GsYtloiDUH+nsMVeDMWrtJ90NQdEq21KejnhBEQZAam6x+wm9cK7GuLebqs
- 1XZhN0b9vl+7yFVi/A+xD9uZllvAjkRm4OLsemy9gGUwRlmLe14X1GxLNhLYwWERrJ9xkO+2K
- 8G5XVLh1YJpzThGao6zRf5+aAEefVbLVIVPKhJtE50ngYK0V5frVNqDWhC1lFmYWOnEDaz/oO
- bYeFfhOcloM8y4GkhkrPYGNHcwkKDUoOyRCmLhMLHW7bkSBgbZCZDTU5flKmNEE/erP7mzZLp
- OuGEUtwRdKB7pZujiy6KxdO89QG3jZ9arRjYqOCO/wA73M1YrpHcJAY6BzNZXoVvYAS2Hpwy8
- v6h/i7ESa0jSlmwQDXIDpYw8S9C1D53UUOHMVZghKH611NBxtao2EoEH2czJJOnqXWadw+4eS
- mIkbkG/tBulN1W38zNLcQk3ydMeGP06WKFaORRG9a1fVaLWoWMBCyD7k8XOdVToOsKmivYN8P
- mIkxc+tkuG925NzrS1Xdgi8pnTFlYydFCSaT5H9AyzxQbewakixnemIvARrK+h+j0bmUofjG0
- u6heCL+du8vmgoy/IFqLg/nHUpWdw2e6ZhpcBvxSyfnK/4i+ZtunXpWnX4kHDzI/V5H6Un2dJ
- p2FGSvZN8ROGj3kswHc5wqXsc9+hsn9UKjiPRHKkut/OaN2I2FsNJzKMzYoK26+FxteR9yIIG
- VAOdZhYbSBY8HosfiN7/rhijKZ5npFU5PHqGTT2fkx3IoggjOxYH+VlvlH6EtC/Q3Nv/4w4ul
- bvOJMkLbwVe23im4yTr97pdviMLGUBHcLcQykZ730VmVDxTbDu5RL3hwPQ60ZgXhftC8dzpAj
- XeqOy/EFAfJlYEeaZR0q9dW/mAfu9/nKr1qe9MIbCb/uG5NnPtgEFK6QDQCGguYsqKFedb6Ho
- mL9QrZVlSwbma4CjrShPV5n0YGdqVZRWlx4z5E292hX67dO532gyHMmStbyBWeuRbbp4c1KM5
- nXuUIcZJ2rnXfThqO2Me5z8ZlRSKlUqju8orr4lb41FtKHtsMRPmW2qtbVAR8wDz3ILcP5tcW
- phbVMsMMH9KJLgd5z+cYppJF5I25LJFZbiI+hHm1cJK3h2hPraIJYwXlDskKBYlU2xO0mR8nt
- 5/B3VTvhoQbCrVQjX9m3ZHrrol1TIrXljnWFg2QlRf5wogRiVBADSBOLf56k8+CP5YvlGtA==
+Content-Transfer-Encoding: 8bit
 
-> Don't change anything, Markus is wasting your time.
-Can clarifications become more constructive also for the usage of scope-based resource management?
+In allocate_global_asid(), 'global_asid_available' cannot be zero, as it
+has already been checked in use_global_asid(). Therefore, the warning in
+allocate_global_asid() cannot be triggered; fix the wrong judgment in
+allocate_global_asid().
 
-Regards,
-Markus
+Fixes: d504d1247e36 ("x86/mm: Add global ASID allocation helper functions")
+Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+---
+ arch/x86/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index cad4a8eae2d8..e9eda296fb0e 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -319,7 +319,7 @@ static u16 allocate_global_asid(void)
+ 
+ 	asid = find_next_zero_bit(global_asid_used, MAX_ASID_AVAILABLE, last_global_asid);
+ 
+-	if (asid >= MAX_ASID_AVAILABLE && !global_asid_available) {
++	if (asid >= MAX_ASID_AVAILABLE && global_asid_available) {
+ 		/* This should never happen. */
+ 		VM_WARN_ONCE(1, "Unable to allocate global ASID despite %d available\n",
+ 				global_asid_available);
+-- 
+2.31.1
+
