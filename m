@@ -1,64 +1,63 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D31F1E1A17;
-	Sat, 29 Mar 2025 18:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6A1E32CF;
+	Sat, 29 Mar 2025 18:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743274773; cv=none; b=YUMJNIl/nx/jY0hzHvToCsbBZrXA4f8cV08OuJ5jphGSDPI5bhRZRDSjQbzI7c3Yvd3FjjLFqRnqUj3CDqpKNGnrVLQ7Wsl4hTrHIBIFAbhXZjNJTL8+0+wIj9q2wuAn3ZvU2R2lM8zcmZzFr0bg3INHOcv06/sBFAw3DXQk5Ys=
+	t=1743274776; cv=none; b=JI4wGGcW+AbdS7QKBXzRNLEeFVWuxgRCIqNVeKT+AvSYlWDpUyUPFuFO7nMf5eM+em0eD5VxPP5T6ePsc37UPEOr/jYiONw45Xsv57PUgPLNQh9CWPiMS9S/axb3d1sWNptb0OijtF8JXCKxrkbH6B2W9TWN9AX/lmftYjUtXU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743274773; c=relaxed/simple;
-	bh=JeT+Yv20rIC4G1XXJi+Rw60mDZSnWFVaPcn+cM4Asko=;
+	s=arc-20240116; t=1743274776; c=relaxed/simple;
+	bh=DZ0HssLI9K6jcU3FNMGKWR7mlgk0rUPsHjXSsz9w8Pg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KUra/udsajkY1YrpCP3/+h6+zYry4uEhN/3gyuVPEzXvuZOLYw3k4v3RE3xFYY0hGLmw4sNtAd25Schn0v1LWbQ7G9MonKhJpZbpnxs4zzc2rhPFiMX6Dj9ejlEl4G4ESeINWmHT6GztgBfigOP+uJGesczXPMULdQhmnc+IUtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=diFp7+aT; arc=none smtp.client-ip=209.85.218.43
+	 MIME-Version; b=Z97TNwhMcZ7aerEq4xBNMMhyPfGzoDCpivMWuMdgjffZdbcVIxHKSZ87kQvLSiNfOkK1s2wzAoNzfxBxPY6feAu0VaL4q18npuQ3AfBRq2sTEjnJvBSbuFDzr4Csr9tbKOImRyAKn2ZhXvKh3jT8OlnP67QvSyjEhkjda+yhjyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=ZT7XnTrc; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="diFp7+aT"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac41514a734so535975466b.2;
-        Sat, 29 Mar 2025 11:59:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZT7XnTrc"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so6322756a12.2;
+        Sat, 29 Mar 2025 11:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743274770; x=1743879570; darn=vger.kernel.org;
+        d=googlemail.com; s=20230601; t=1743274773; x=1743879573; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nM1iEKnX8goZJjbBqk+vEAeC/fnWWVRUcl0seopOhvI=;
-        b=diFp7+aTzTbUeWOM4tjtxasKherU2tZN3grbYBjAXt8G55Zbvqtr44h789ISLAiFws
-         B4dunxTkxZUf2Fu0Vj5Gb2jr5js3XrAH963KlHgzDdE1q6A70pq2dy2qqZtMSPYjzijf
-         Dp/2GhBTQo/1Y6DStTQM7KYNQ0u1Z70hP+adtRSUe8mdpEUgYAY58xGYXIMKZAh7ME47
-         I93hoMTfeMPbrsEH8F/GpzUJiEURRIAtBT1IHGuaru41tcodzLC9hUULEbw4kL0nidDw
-         2zfgZm8PCy7T3SHHJmEVNR1VL+TJgdUA+nf5qzaYE3SOXXlqxbEpFGDu2OB2gQ9UTuN2
-         HFTQ==
+        bh=Cwf31W03hzDQ3pn4ZEZvOqnTw7bLaOev9kguqMxCgac=;
+        b=ZT7XnTrcqmkKB+ylodi0qM2X8wWz8bFzpcu+DWsqJwc0rACcadEwfw3SdQ/2PZuZ5X
+         Zzd2SPgZN/YOiE4/5omKaArWCMCV1WdANVZlgjUM7IfhANNDVIJrMad1fGm2pLUWB8Jj
+         RQ4YmrSa1+AtakzkjrhgnkrqBabXWLeLwtNptV4TtV1oF3crQpoU4LLDHxxmhJpmK/ky
+         2GCfGBlw500vN4tQWFrG747/+rW+0siM4Ijf77WbYkAxNddiutg5zcdRLWZ350wHlfDF
+         CGo+9A+s3urriNPap5Wi253D+PEC8WdS1UxBlJHjvc8R2qgXHDktSldhkJArbeoABzc6
+         fnGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743274770; x=1743879570;
+        d=1e100.net; s=20230601; t=1743274773; x=1743879573;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nM1iEKnX8goZJjbBqk+vEAeC/fnWWVRUcl0seopOhvI=;
-        b=sRQgu0SPYvqQM3ICrbCXwlGldVKjF2gPX+j0xK+6R1dgVB6UFaE+dtbTj96e7Q8cy6
-         cpZEUcMglXCb12ec4FEkoDGiuJwlzz1z/zl5hTeZTnHycUjZUSMBBomaeC7u0anbht5g
-         otsDiSDjIQPk+f/A0RhOy5I1G2EPO2N1n8r9ft29SCkVIFdNPlJOTIB5aaQlRQk7CMis
-         JlqYtysFamGSZOAhDkryhiOXKYDGfeBdRilKWoA2wPJorP44X4tIk4xwnkKJAF4PpHy0
-         pPCqnQEZ6iF0Phow++4Ib0DhkzA1/gJerOda+VuQCwK1LMilDCgukpjveLqCgRMBnxoZ
-         ustg==
-X-Forwarded-Encrypted: i=1; AJvYcCVoHU4T5IC4Lu/Q1NS9hcDXBfb+7fxlDO99D0T5AZ2TbMlMiUD3ksv8cKMKJFp1tWCP3I15mAFafWDi4KBy@vger.kernel.org, AJvYcCWwrcPjHVCnL7WgxuGAcDwHbj5ZuK7NCjtah3NLZxMtRIufm5+nEKcBzqjUQyCtz5s11XPlIWVFKdcz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7Rhqr8InVD8OF4/zhA+dB9hjGhG5lGIovB7Qsak6kpCe4nk6A
-	GVotPUhU0Z7yZaIHBkGdv6jcNuV7Pi7esIJz/RJDy6aNRKg9XLsj
-X-Gm-Gg: ASbGncvBgUkxU2mf0QXLpWWJor83uZxjX1CHh++3xNkZrrKnuLKSPLLXV0ty6BsjMm1
-	UmJMJv1FmjvRInpADFGDVs6ekfGpVBlxqhz4VcR+9x4u1E8tKvFeN7FmQrVdHdcZJlZ0uMWgwly
-	568L2KNDmadaw+KUSdPI28m2u7C0wsiPUpRERsKfns6L0V2GStrxLhKEJKtvdakfqapo7gnMFOU
-	tMspPbdhh/Eju7xDBrf007LdNCkMYgl+keS4MAUBw1yga8IFCXEFeTqwbY0iKwTVMvA09ji880q
-	EXzeX+a0xZIvjhso62osCOK7L1w6+AoCbnRORE+qF9HiqkNPCEoFxOAyQnsjXH/hSdkW0040u2+
-	vdkMlDeC2ruaXVp0f5hzrC290mZGMoKcNr4OYTQXbrwAo2nei+N/AK5IDl4Zwf6DzfRtuADRp+Y
-	z+1i8b
-X-Google-Smtp-Source: AGHT+IEz7v5Ljt9ZJRFv32Hw0OIPcmVi+flrUYAm3zPFqUuBjHYjrY6pgvKN0F18tzS38DfxADncyg==
-X-Received: by 2002:a17:907:869e:b0:ac1:ea6e:ad64 with SMTP id a640c23a62f3a-ac738a3f376mr380847966b.28.1743274770291;
-        Sat, 29 Mar 2025 11:59:30 -0700 (PDT)
+        bh=Cwf31W03hzDQ3pn4ZEZvOqnTw7bLaOev9kguqMxCgac=;
+        b=h+GnbqtMMfn2Baiqkmp46ZEI7WIH4n/ukf61Q0jNTS9+HsBBAp3KRp5nS8ej2K9Z7B
+         zjRmWgvva8OA+bpoBtviPEo+j8CXqIfob+ytvjzt76Cu1QivRfbYoOMDxV381nl93pYq
+         G2uo4bOVJU3UjJm3EsCNnsaE58TSe1Ym/uW9wXT6p6VQ2tGwTzXoCW5tIXWp8Gkf6iqd
+         T1h3czyhIXrIQiesLL0LX4TmqUWJVaWdMnt9hapG2eFvaL5q0/XwrdcZiXP8SliM/+DC
+         yA2YCWnMfcC47E462zDzu6aXJ0gBwRd5YB6fPXe8nnS8ccQ2ylCtzoVILj14Ymilq8WA
+         CSiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXa2aB6NRbh3ZHvc5H3D7uv8RTn6xfjkgQU0oIuWtZGUd3h4by6+i8z+jUhhQkgzYNeyH9SV8jPB/u6RB@vger.kernel.org, AJvYcCX+7hcFnE4F3+Kft+ceZLfSPQ9hj5Z1ZLcDz8M77qf/pkEY/vQSV29JrD4fv/ZNAIlz0xvP6CHywQCo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmhk91lDq8AbvVfjqAkwQQY2njOOc4XxHtDiNPongzXk9fDi2k
+	0A5Uxu/GPymmMkAXMnAaPYQ3MdLrXtmazQRmOryCRYnXPTAecUlj
+X-Gm-Gg: ASbGncu3w61uSSbYNfB3Nb0EoMBIKpHNT0EjJhBduIncxTXI4QX3Zi14FsWIAavtC7n
+	OmrBZhmfWL7T+hbDn1wF6MzZqgvax+BHG8WgLLKwbmBCJ4zq7JmQUdIBGguVEUeUYB/SbGjjO66
+	M8XokET63V5GTIE63NgVJUPaQ25GqOg5jR2qew/yhluBYbLpJVdxQfGmGlcYzS8x36GwbpWFiwC
+	cVEtNC007mVobpcQeagFXA1E1EgOCT6M9FvgbxA0wmWwXOa4Ih5CXxEqbr0vZDssVKtgUbvhf2V
+	S/J0J+3EhM6skV9Vyp9/+3pBDl7nuR13Wjt98+KZMn0IM8XaeAJrVgMs+A7RYyVrgNoA2IiKS+O
+	HyTjvQobr0Zf0sX+62F8l0LJt744YsTkKlZm4ANDfFdlKV3h609FkbXos0ck/DJH9vx75WA==
+X-Google-Smtp-Source: AGHT+IFTpADwyhmdGZC/uMEn7HRP+YrC2xbCL6evJOQI7YFnJ9+6LvnjcqnXDwdY3wn5SL8IaD1VLQ==
+X-Received: by 2002:a17:907:c26:b0:ac3:8895:8e99 with SMTP id a640c23a62f3a-ac738998f18mr322099266b.3.1743274773307;
+        Sat, 29 Mar 2025 11:59:33 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-ad73-6800-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:ad73:6800::e63])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7196dd46asm364497866b.160.2025.03.29.11.59.28
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7196dd46asm364497866b.160.2025.03.29.11.59.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 11:59:28 -0700 (PDT)
+        Sat, 29 Mar 2025 11:59:31 -0700 (PDT)
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To: linux-amlogic@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org,
@@ -69,9 +68,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	neil.armstrong@linaro.org,
 	christianshewitt@gmail.com,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 6/7] arm64: dts: amlogic: axg: enable UART RX and TX pull up by default
-Date: Sat, 29 Mar 2025 19:58:54 +0100
-Message-ID: <20250329185855.854186-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 7/7] arm64: dts: amlogic: a1: enable UART RX and TX pull up by default
+Date: Sat, 29 Mar 2025 19:58:55 +0100
+Message-ID: <20250329185855.854186-8-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
 References: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
@@ -92,63 +91,17 @@ or SoC hardware) state for the pinmux configuration on these pads.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index a6924d246bb1..2df143aa77ce 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1164,7 +1164,7 @@ mux {
- 						groups = "uart_tx_a",
- 							 "uart_rx_a";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 1eba0afb3fd9..f7f25a10f409 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -233,6 +233,7 @@ mux {
+ 						groups = "uart_a_tx",
+ 							 "uart_a_rx";
  						function = "uart_a";
--						bias-disable;
-+						bias-pull-up;
- 					};
- 				};
- 
-@@ -1182,7 +1182,7 @@ mux {
- 						groups = "uart_tx_b_x",
- 							 "uart_rx_b_x";
- 						function = "uart_b";
--						bias-disable;
-+						bias-pull-up;
- 					};
- 				};
- 
-@@ -1200,7 +1200,7 @@ mux {
- 						groups = "uart_tx_b_z",
- 							 "uart_rx_b_z";
- 						function = "uart_b";
--						bias-disable;
-+						bias-pull-up;
- 					};
- 				};
- 
-@@ -1218,7 +1218,7 @@ mux {
- 						groups = "uart_ao_tx_b_z",
- 							 "uart_ao_rx_b_z";
- 						function = "uart_ao_b_z";
--						bias-disable;
-+						bias-pull-up;
- 					};
- 				};
- 
-@@ -1654,7 +1654,7 @@ mux {
- 						groups = "uart_ao_tx_a",
- 							 "uart_ao_rx_a";
- 						function = "uart_ao_a";
--						bias-disable;
-+						bias-pull-up;
- 					};
- 				};
- 
-@@ -1672,7 +1672,7 @@ mux {
- 						groups = "uart_ao_tx_b",
- 							 "uart_ao_rx_b";
- 						function = "uart_ao_b";
--						bias-disable;
 +						bias-pull-up;
  					};
  				};
