@@ -1,85 +1,117 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C12F29A5;
-	Sat, 29 Mar 2025 06:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FC83010C
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743228347; cv=none; b=BXwyJHymm2DLqLYlalidLRNko5ypQUbAqZyNBXfx5Y9aa8Pky/qus3jTy7gHEH+ahifn5wwsmTMerLFQMR7pxLwuWa4ZxyesULZWcWecKvjl3H6UiNDsbO7u/g4QsFPKFkUIp2Y0ZvoT2eChlaTHWtwphe8nUIWNBlBwhDZTW3g=
+	t=1743228356; cv=none; b=QTwO3R8xeT9BnBitcHsJeRv/y+8R6SAGKTUsqJ1BlqErDNyFhqXqZGAPjXB5SvpRyxyXWA6SOe9j3EORRPlmLSRtP1RXfPMcyFeT8jXAg6vEpwBOU1IPqnL0ISat0qNP3l6xpusVlB2P5x44ozXRKaKtc4y1dLJHCto7ZkNQ1tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743228347; c=relaxed/simple;
-	bh=W8MmLsj+XhL7MTpl51FpqYMyJ6d9AWnF7Yt4WP4kx7U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rEab40FgSDlLWt6N3092GkfuaftkarsbKJjWH4TSXSB/Qq1gDDhViDlZ7YuiYlfTWJlqO0HblY0b62NkmkxKHm8hgrXiM6ae7/QQbQ4Uigllrwci0SdBtyWFmGEyzSvJ4oy80BZ5lyufZjBjluM0P4V0B6M9jo2v6ptxQLZABKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZPmxS4kjFzCsK4;
-	Sat, 29 Mar 2025 14:01:48 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id D8CF5140203;
-	Sat, 29 Mar 2025 14:05:28 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
- (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 29 Mar
- 2025 14:05:27 +0800
-From: Wang Liang <wangliang74@huawei.com>
-To: <bjorn@kernel.org>, <magnus.karlsson@intel.com>,
-	<maciej.fijalkowski@intel.com>, <jonathan.lemon@gmail.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<wangliang74@huawei.com>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-Date: Sat, 29 Mar 2025 14:15:48 +0800
-Message-ID: <20250329061548.1357925-1-wangliang74@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743228356; c=relaxed/simple;
+	bh=RBYdqELAGGITN3bER6Ed3RfAT6r2IaUZX4eTf8LknqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZxKItC/JhrVnLjZ6hV8pSmM5FM2cvHP+3lsQKMAXLwiFU/mm/83oc++0rPykX5TXJteC+Eyu+y6BN3iB2LQY1zasvI7vDystgbPJIfKDrK18fqj8dQ8Di5HPcZ6+njuwwh5a83L5mJbCnlXy9MFh1VOmu2kpeVpiy38ot1pqo60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=maWwVjF/; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="maWwVjF/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=ngfJ
+	rWFFQGzaVIiK7KuboErMRj/fe1cnJfB3LZ7PSjU=; b=maWwVjF/JGHBb+zL6K+w
+	uT9DyLA+GyeTqgvBKtbSnpDwo6MBM98N8+ukp+XsWV+YQNbhJ+VGQMXWB4yEb7OI
+	OP2Ljbef1zUx8Z2E+gWzcOsAnEUlgpPoJRgOOcP1PAIQR0yReglAWObrx0jP7RrO
+	G/2Efbs/ks7iD7TzX3aA1Yf2UThSP8c4pcE6EAFxuWBORQ5EzllqfYerohXwRX+3
+	+mmcxYeRu+3PXrugYFIEErK4GYkvEWchNbd4hOpSsJaKvdl8Jqfb0mX9Vy52lTws
+	2fQNGvNtjIgIxJBaIWi9+lcjPs3OyeqmSMP4j2sfuBNSCG5h9IiLYwrxc2dJgkCb
+	2w==
+Received: (qmail 486515 invoked from network); 29 Mar 2025 07:05:46 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Mar 2025 07:05:46 +0100
+X-UD-Smtp-Session: l3s3148p1@OWdS+nQxUuYgAwD6PzqDAV8182DI+BaV
+Date: Sat, 29 Mar 2025 07:05:49 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v2 resend] media: dvb: usb: Fix WARNING in
+ dib0700_i2c_xfer/usb_submit_urb
+Message-ID: <Z-eNvcrFu0VSY23U@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+References: <Z-MKiV0Ei5lmWik6@shikoro>
+ <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
+ <Z-MrfICsY06DZV-2@shikoro>
+ <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
+ <Z-QjIRoOWpoWaL6l@shikoro>
+ <c6bed13c-38df-43a6-ba5f-0da03b91f3df@rowland.harvard.edu>
+ <Z-RyiI1X9BN43feQ@shikoro>
+ <c7f67d3b-f1e6-4d68-99aa-e462fdcb315f@rowland.harvard.edu>
+ <Z-bEBk68dh918vy9@shikoro>
+ <24798648-c5a3-4e31-9897-4610053007f3@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/524CC2BhVTInLpO"
+Content-Disposition: inline
+In-Reply-To: <24798648-c5a3-4e31-9897-4610053007f3@rowland.harvard.edu>
 
-The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_RING
-option but do not reserve tx ring. Because xsk_poll() try to wakeup the
-driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
-tx_ring_empty_descs count increases once the xsk_poll()is called:
 
-  xsk_poll
-    xsk_generic_xmit
-      __xsk_generic_xmit
-        xskq_cons_peek_desc
-          xskq_cons_read_desc
-            q->queue_empty_descs++;
+--/524CC2BhVTInLpO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To avoid this count error, add check for tx descs before send msg in poll.
 
-Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not support ndo_xsk_wakeup")
-Signed-off-by: Wang Liang <wangliang74@huawei.com>
----
- net/xdp/xsk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> In the case of dib0700, it was clear from the source code that the=20
+> driver uses USB Control transfers to tell the hardware about I2C=20
+> messages.  I don't know if other bridges work in the same way.  In=20
+> theory a bridge could use USB Bulk transfers instead; they aren't=20
+> subject to this restriction on length-0 reads.  Or a bridge could use a=
+=20
+> Control read transfer but include extra header material along with the=20
+> actual data, so that a length-0 message wouldn't end up generating a=20
+> length-0 read.
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 89d2bef96469..fb01e6736677 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -989,7 +989,7 @@ static __poll_t xsk_poll(struct file *file, struct socket *sock,
- 	if (pool->cached_need_wakeup) {
- 		if (xs->zc)
- 			xsk_wakeup(xs, pool->cached_need_wakeup);
--		else if (xs->tx)
-+		else if (xs->tx && xskq_has_descs(xs->tx))
- 			/* Poll needs to drive Tx also in copy mode */
- 			xsk_generic_xmit(sk);
- 	}
--- 
-2.34.1
+Fully understood, thanks for your explanation.
 
+> So the short answer is that you would need to find someone who really=20
+> understands what's going on here -- which I don't.  Sorry.
+
+No worries. There are only 5 drivers or so, I will manually check if
+they use a control_read and have no own header. Doesn't sound hard.
+
+
+--/524CC2BhVTInLpO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfnjb0ACgkQFA3kzBSg
+KbYu9g//bQdOPKVCxAkPgX+ushrjFLpZnByCs0WHTQfKHYaNVlF+bNRfR9VUvRgH
+IQXKFYE7ShGb4zMqEm61525u04J+/lmp+sxM7JdBtOXnnptjYZ7prH5r0bKinHku
+dyMlVhtZIIEzqahpD2E1tKyGuvnRDeAY0L2SqveNz5JTO60Bece8XaKmI4bOKqF9
+/UrvmPvw81OXxh4o/fhVqFaDJzw//e7yRzrOeGZu+6D4OSNpHowxofDEAAjfE/7K
+8DjCAg1mMc1XLYVEC1vMgkEY7BbJdHens+W5VnLEFolqJrmX67ziquQ02jWqnKhm
+Q2rI/3UAeXZnLsg0me12fFjG76DDhiipP/fu4wrCgcwy+Dpk3FkkBXwv4svmcPXn
+RUx8SopRASSjkUn9GAsmPP0stpBuLt4PS0DK2qwHvo2eLVYEfnAeQ8w6xHCbvLu5
+8RgbHqlxwy8+sgfGVBIObtn9G+XWRG9u4+nhhHY89kcUlwVVPkpIDYAP0uWaxW49
+D0j9WCL/KA88U+QoIj0Wq1KAi/gfjWrBy/kMuASHScahtInni/T3pNDDluZ4e5xe
+uR90+/Lx/FL2Ax0S3FschTbxXoRKkKLcBs+DYjNEJZUfU22kRGh+FHraNAuy8aom
+nuIZKK+0Vf57uReWBN3UwPfUgdzLYqarhtWc+BlZn/D3GQ0ckpM=
+=Mjv2
+-----END PGP SIGNATURE-----
+
+--/524CC2BhVTInLpO--
