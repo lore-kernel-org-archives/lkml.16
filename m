@@ -1,119 +1,94 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D031CB337;
-	Sat, 29 Mar 2025 13:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA2E199FC5
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743255631; cv=none; b=pLWOSYK1ANsedJCv6nrTnolJL+1AkhMG29CpjNMkvFKnYXFDcDlExtXmGxUmZb/Bm+VazkAm5SyIbjyubndQw2bDHXGqMTU1/5waNexHKh1myuoN/ysYFNk4MB9xXhVrVkJcqMFkMcARHqMufijosyyAvGrareONNmOh3pGUCw4=
+	t=1743255962; cv=none; b=uRXWlgOVrYUU2ZzSfIZ+srUepRlwY+QN/F3Ejba0dKqYOfMtTYji4zEndycrp4Yq3T6Q4A+Uh6enSje4MKzUV+59U4lwa1u2uG3N6csWx2kyfPRl3f4sC7h2vu6HZIAJJH+4vrUKmkNsBpfSBXFbKOmoqOMidpYd5BkyqA2DwDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743255631; c=relaxed/simple;
-	bh=MoWzeZWOTaAKgwFTjQ36mqg0XzzUVcbJKEAWJVJs+KQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cyfOrDnuer8MJfi01W+lQmQ3xQ7sZAw2CW/ZXG6gYb5+AoW91Kvb5Pd72LCEt9DykieApAKWI+tKHlGB3JzULc6t3SGl45dxvTBdzX5PW7ceb/9BaxxngnclQRST5JghVolGRmdt89Lr7h4+NWDdczhpp4QHG5dUtD/X2Gb4Q18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYTUtJzx; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743255962; c=relaxed/simple;
+	bh=HYdwye3DZdcM677XbFBhxIw6WnNA/O2L05nzuCBKG3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rfLK0Dh5+qs9AGCaaR/t6W473Rtw2+n96TBqgM3gZ9BqBr6E7G1Tthm+9feXnidb2Bialun6UwZ4X6Vm5DiggxH4lbqfhn3DgC8eaMyNj6+aDO9pRBI1Wa4cGQzpxR+P+zH5/1cDYLT20x25c9bhWeurAhMMOMkU2ci/M0AK68Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wCH8gELH; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYTUtJzx"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22438c356c8so66313515ad.1;
-        Sat, 29 Mar 2025 06:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743255629; x=1743860429; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0dAst4F27VW8K5mYgO/xzjAOXmOxFERt6ayMD9R7JYo=;
-        b=CYTUtJzxzLB1qIMT+3a1FXyPowww7S6dCya/mSlRJ3mghzsaKjTZcb2F6LTqjD/ysN
-         M1tlfjpEt0q+vC/cLG4Edz0B6C+RIM6JEkEXc/doy1Bc1/xG7ZlEfF51O2ocYVMvkSAs
-         RHwTMFhjtHWsMhwHmUCLQ4QHHZ+D5o0nJVQTL+wgWZvowmZAHFU+VTpueXgLzoLW88YV
-         ygbQvzPgN9mRmfeVvNojgkq/AycpUsfSAXuAwmh4gjP9SQVgv22kj/kxFttsmlWkQtTp
-         4MzprROhYiCwwv9CXoJBQ4B7ZUJb13K0v7mKxcMINNclPoDqOYXjpUdZptsn9Nc8HJMc
-         bOPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743255629; x=1743860429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0dAst4F27VW8K5mYgO/xzjAOXmOxFERt6ayMD9R7JYo=;
-        b=CJ67iyTtkH8lwFyCdIjKAKn0++YxE3NsjVCuQao3OLQWlY5beN1CLtTKu5/23FZu6v
-         nBT4gqu6rtC71tRSMQA+nZszmVxKje72XNg8PFubkGdWQiRlBiwXfL7kO0UhA+WoTFTl
-         BG41DycY55MJkK4sGTIC6iHkBAFTtbNJnTdgqg46/XQaQnuakHz/7tpybz8E/HzP4Q/o
-         2QEqnWPaHlT77S8EH19TppUfryAxkIrdd+A7LLSJSB+YRH3dr88Msj3qPfSYyTuhfbYw
-         QnYy+sXr8bbN/PzJZD5JkwNuk631DhG30OriAwKIh07xEkeFe1gYBeIVhallxpIlNSr6
-         UxQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWsEfPL3uDD9F7gn5O9Dn9BpWExdO7kPuj1YXGVPNinHWq4sVnnZi/K65EeM0proqmhjVSKyIgG9d2hK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm+MZrCovlXW4a+PblM69xfsEV7NhoM2OtKKNwgELxwRPrvmt4
-	5mIneGoJ/UrTo2foDL6lDWTjzuCGSLSYTP9Yg0wQH36j6atdO/fy
-X-Gm-Gg: ASbGnctkRdKJNb1KarFsUdKyUmNI9jc0kfFQtWh6o88P4PvPRMOjSjsacNLxnzGvVYh
-	RmT2wm1181CIIgtaNtKmDDZxAXrSVrUnO4wd5U+jp7ni1qlU5N1gnzY5K/wX7azCi9X5hpY636d
-	W3i0iyoBXtpfX/2NoEiSMpIWYw28bSpiv0P2U8Pd7RKFW3krpxHziF52S9B2sbL/ovl/sEMKN0d
-	nh+HAf855KegV2duXFAEX+TdnO3/ZCkAseMV0eLqAIxNi1dj7S3pLWz7fwt5GEn1kj8lv9WIPuB
-	G7MfMRth9dzGKvzA5vE4mkxehlKOzH+f2DTBbIA9EniRI/4aF2PFAA==
-X-Google-Smtp-Source: AGHT+IGJjEMZtKoHgbsGX+ALAGZjFxOcU2Vy33m106UeqkLR7cq0fKX2dLrtPTHUTlpHex4xYcNFtw==
-X-Received: by 2002:a17:902:cf0e:b0:220:d257:cdbd with SMTP id d9443c01a7336-2292fa01b74mr53629935ad.48.1743255629078;
-        Sat, 29 Mar 2025 06:40:29 -0700 (PDT)
-Received: from localhost ([2804:30c:b03:ee00:e0b8:a8b8:44aa:8d0b])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3051cd9f674sm2350193a91.2.2025.03.29.06.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 06:40:27 -0700 (PDT)
-Date: Sat, 29 Mar 2025 10:41:30 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, jic23@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH v3] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <Z-f4irfx5Jtz-rfk@debian-BULLSEYE-live-builder-AMD64>
-References: <20250319045212.72650-1-simeddon@gmail.com>
- <Z965Rz8NuXhbHrgy@debian-BULLSEYE-live-builder-AMD64>
- <CAGd6pzNW2JKxTfQ8rLD8V7bdUgq8fc0R+ayChf3J0VdRm9Ptrg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wCH8gELH"
+Message-ID: <3fb4b232-a0c2-4abe-a85e-2e4d938a22c7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743255959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LpsKaScSHv7GrRRXDH8nchWWCagrc+J7SdH8scHXBkA=;
+	b=wCH8gELHNGI3n2ux8QZYZAEchSEmxsdpuGiY4IBYA5VtNGhE2QbILw6yGJKQ5GesWesJFA
+	3Sv3qMmqyY28js7QLFRhkehoR6a6ulwTlMSK7chAVTi5R+Jt/gn+0AIIF2OCT80lCCaM5l
+	2Bgxd8H5BXzZ64ovRNFj4aCOYnQcb5o=
+Date: Sat, 29 Mar 2025 19:15:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGd6pzNW2JKxTfQ8rLD8V7bdUgq8fc0R+ayChf3J0VdRm9Ptrg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] drm/tidss: Add OLDI bridge support
+To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+Cc: "j-choudhary@ti.com" <j-choudhary@ti.com>,
+ "u-kumar1@ti.com" <u-kumar1@ti.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "devarsht@ti.com" <devarsht@ti.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "nm@ti.com" <nm@ti.com>, "vigneshr@ti.com" <vigneshr@ti.com>,
+ "praneeth@ti.com" <praneeth@ti.com>
+References: <20241124143649.686995-1-aradhya.bhatia@linux.dev>
+ <8366a3d736f9937667aab024895a59e5947dd4a5.camel@siemens.com>
+ <2c0b49a2-7cf3-4432-bab0-1eb110e8e8c2@linux.dev>
+ <86d5d285a8467b3fcdadd3cf37ac0e4cbc874626.camel@siemens.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+In-Reply-To: <86d5d285a8467b3fcdadd3cf37ac0e4cbc874626.camel@siemens.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Siddharth,
+Hi Alexander,
 
-On 03/25, Siddharth Menon wrote:
-> On Sat, 22 Mar 2025 at 18:50, Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > On 03/19, Siddharth Menon wrote:
-> > > Refactor code to use the FIELD_PREP macro for setting bit fields
-> > > instead of manual bit manipulation.
-> >
-... 
-> I shall send in another patch addressing this.
-
-My understanding of Jonathan's reply to this patch is that it would actually be
-ok to do all MASK/FIELD_PREP/FIELD_GET cleanup in a single patch.
-
+On 26/03/25 00:27, Sverdlin, Alexander wrote:
+> Hi Aradhya!
 > 
-> > > -             st->data = cpu_to_be16((AD9832_CMD_SYNCSELSRC << CMD_SHIFT) |
-> > > +             st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
-> > >                                       st->ctrl_ss);
-> > Not sure about this assignment with mix of FIELD_PREP and non-FIELD_PREP value.
-> > Maybe have
-> >                                        FIELD_PREP(AD9832_DAT_MSK, st->ctrl_ss)); ?
+> On Thu, 2025-03-20 at 18:54 +0530, Aradhya Bhatia wrote:
+>>> I've tried to test the patchset with necessary pre-requisites and DT additions
+>>> with a single channel LVDS pannel and while I'm not successful yet, I've also noticed
+>>> the following warning:
+>>>
+>>> tidss 30200000.dss: vp0: Clock rate 24285714 differs over 5% from requested 37000000
 > 
-> From what I understood, I don't think that would work out. AD9832_SELSRC
-> = BIT(12) but AD9832_DAT_MSK only covers bits 7 through 0 GENMASK(7, 0).
->  It could exceed the maximum value allowed by the mask.
-
-Ah yes, that's correct. I didn't look very carefully at the assignment
-surroundings when replying. Sure, it would use the BIT(12) mask. So, something like
-FIELD_PREP(AD9832_SELSRC, st->ctrl_ss)
-
+> ...
 > 
-> Thanks,
-> Siddharth Menon
+>> While you have mentioned that you did add the prerequisites, could you
+>> confirm that you applied the (now older) dependency patch mentioned in
+>> the v4 cover-letter[1]?
+>> Ideally, you should not observe these concerns if [1] were successfully
+>> applied.
+>>
+>> More importantly, if you are already on latest linux-next, I would
+>> request you to use v6 of this OLDI series[2], along with the latest
+>> dependency patches[0], as the older dependency patch is simply not
+>> applicable on latest kernel anymore! =)
+> 
+> Thanks for all the hints and links! I can confirm that with linux-next and this
+> time all the necessary dependencies applied, I don't see the above warning.
+> 
 
-Regards,
-Marcelo
+I am glad it worked! Thank you for taking the time out, and testing the
+patches!  =)
+
+-- 
+Regards
+Aradhya
+
