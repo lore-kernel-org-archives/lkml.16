@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9691F81E;
-	Sat, 29 Mar 2025 00:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962F8B665
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 00:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743207999; cv=none; b=ASDSFatowThWMfb11CpMTwl1o/5XgQI9WbPNl3A8OOU8HsUk1pPNCPZpPJhHtpvmYjoSTdlyWGVNwnwX2QfJYkGxP9zwJpiUteOQGZqgK02vwvYoFcL9iTKd98xOm/kFGx+q8KH4036n/GTSTCPrLUEZKdPC3I5kIQWbihU0zog=
+	t=1743208001; cv=none; b=Wt/njK2MlvVYz5BHVD9YZt1qdaTZEsf4msfcg7hQ+BfgFwh4UYF3WTUYu9gwwIi73PtYaD3afvY3wGVHmg4KyoUjZMo6tt3Qf4yxgzTGlwvS7hYFwtbhW8b3l3g6kVotg9VxaWG+0lsqWPtOjM0VLM5kuxcnBYb0BrWSXw88VZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743207999; c=relaxed/simple;
-	bh=zpDCzelW2PppKIndLELYeS46J15TFCTFPRgNdgMFDxA=;
+	s=arc-20240116; t=1743208001; c=relaxed/simple;
+	bh=2QocWXouPzFbNBT7tZSzO62XxUsHtQujpCc1OOzOSP4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hcwn6lzLOrjIMtjNfWGH6am+IF2TGNtEFhrs2ZM5yUizrss7i2AqLWNj7XmROK3OiWe34rPLyMLRBcerIBysZM/PKjydoILI5BsDiHe8PwS0HXgLcvgbg1qmPGbQ+CemsD3Ocnv8g0ZprO4py/S7WdxnM0vym2u8VJ825i+WWm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qr+G2dEo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=DmCobePRfHl55xu5zfU1l+43qQGoN8jEkQq9SgRt/zUwKR848k2MXWjIb/XNqhD5m/dsA2F1YH3WPLNjn6xuH/OXxErWgb6rUaE5bDfJqEjlXcycP9iRDgO56bCXf+BaIme2RTvRNd3V2aeptfQFLZufN7XKFnRyp/fqhqshp10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzW0X/NJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qr+G2dEo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F580C4CEE4;
-	Sat, 29 Mar 2025 00:26:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzW0X/NJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE031C4CEEA;
+	Sat, 29 Mar 2025 00:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743207999;
-	bh=zpDCzelW2PppKIndLELYeS46J15TFCTFPRgNdgMFDxA=;
+	s=k20201202; t=1743208001;
+	bh=2QocWXouPzFbNBT7tZSzO62XxUsHtQujpCc1OOzOSP4=;
 	h=Date:From:To:Cc:Subject:From;
-	b=Qr+G2dEo7aRY1sdstMqefb42LskLHNrydytAhhMQK0J3ElrXM+6MDq1vojE9MsmX9
-	 ueqLRCvW9qg87A1CF9IERCj5SZAgm2M9exb8pRYRQPouGmOyfoOaFKh9vj43t8SbVH
-	 i8DC8RW6skEjGUAg9yy6s8CaYCFsDHteMjQoBHcVFxwPmc8Qxd9MwTgDSFb2SRwqTX
-	 HlTXxka7gHM1OzHdgmtgqifyy3HE9daJlKh9fstqJvvMVR6EWDN/wlBTyjv3qxDfaW
-	 RgTHTLDIr1lbSVCoH1FTB4VWBXETG4AhLRuHnb+S4byVayrq/M24yrWfgoMQJcamC1
-	 HCGsRCNbJ8CZw==
+	b=DzW0X/NJaKQjIZQcLVcdqwUwnijFQeY5UVXW4QpwPzirZt69v320C/Ik/76Tbtvq7
+	 rciC/dXC74YPtitxkpksvuHLPbTUFshsaOGwRpTrLgmXfN8PZzuQa0Ae3K9b46txs+
+	 My0GdtJqZtejxGr/HNMrlZzwlhs5fP8UDWHfYEEBsHeCkYJ8lCcKh5zIZGD9VqOu3y
+	 bT55UZ50fReTmvM/ONqV/gvUvMHIKwGys2Zb9IAdOsLGbYIYhuJoBkgG+ilJtook2F
+	 H3gLOiOPvthVupjhlFGfm6OeU8kJV/PkpzRbn4LjFUXw8jugKQW8Peur3bSIf5Qal3
+	 U0I7R8kzku3xA==
 Received: by venus (Postfix, from userid 1000)
-	id 273591809A1; Sat, 29 Mar 2025 01:26:37 +0100 (CET)
-Date: Sat, 29 Mar 2025 01:26:37 +0100
+	id F26C41809A2; Sat, 29 Mar 2025 01:26:38 +0100 (CET)
+Date: Sat, 29 Mar 2025 01:26:38 +0100
 From: Sebastian Reichel <sre@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 6.15
-Message-ID: <45zu47bzlzyh726zsf3wfi7xqxvsg3fkhmfqm6ejfyqm76rnp4@ddilazwcs566>
+Cc: linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hsi changes for hsi-6.15
+Message-ID: <qfwp3ydt4iu6cwb24bjmwakhfyw4t3zhbdew6zw7wdunes6ndg@qe6gtjusgln6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,15 +41,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kgvkouzpizatkwo7"
+	protocol="application/pgp-signature"; boundary="6apbzqn7obveqkwp"
 Content-Disposition: inline
 
 
---kgvkouzpizatkwo7
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--6apbzqn7obveqkwp
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [GIT PULL] power-supply changes for 6.15
+Subject: [GIT PULL] hsi changes for hsi-6.15
 MIME-Version: 1.0
 
 Hi Linus,
@@ -60,216 +59,42 @@ The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.gi=
-t tags/for-v6.15
+  https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git tags/hsi-for-6.15
 
-for you to fetch changes up to 0b8d073f6c66d7110ac9fab1f13a09337e03f1b6:
+for you to fetch changes up to e3f88665a78045fe35c7669d2926b8d97b892c11:
 
-  power: supply: mt6370: Remove redundant 'flush_workqueue()' calls (2025-0=
-3-17 16:00:09 +0100)
+  HSI: ssi_protocol: Fix use after free vulnerability in ssi_protocol Driver Due to Race Condition (2025-02-25 02:07:09 +0100)
 
 ----------------------------------------------------------------
-power supply and reset changes for the 6.15 series
+HSI changes for the 6.15 series
 
- * power-supply core
-  - remove unused set_charged infrastructure
-  - drop of_node from power_supply struct
- * power-supply drivers
-  - axp717: support devices without thermistors
-  - bq27xxx: support max design voltage for bq270x0 and bq27x10
-  - pcf50633: drop charger driver
-  - max1720x: add battery health support
-  - switch all power-supply devices from of_node to fwnode
-  - convert regmap users to maple tree register cache
-  - convert drivers to devm_kmemdup_array
-  - misc cleanups and fixes
- * reset drivers
-  - at91-sama5d2_shdwc: add sama7d65 support
+* ssi_protocol: fix potential use after free after module removal
 
 ----------------------------------------------------------------
-Andrew Kreimer (1):
-      power: supply: axp20x_usb_power: Fix typo in dev_warn message
+Kaixin Wang (1):
+      HSI: ssi_protocol: Fix use after free vulnerability in ssi_protocol Driver Due to Race Condition
 
-Andr=E9 Draszik (1):
-      power: supply: max1720x: fix a comment typo
+ drivers/hsi/clients/ssi_protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Andy Shevchenko (3):
-      driver core: Split devres APIs to device/devres.h
-      iio: imu: st_lsm9ds0: Replace device.h with what is needed
-      Merge patch series "Split devres APIs to device/devres.h and introduc=
-e devm_kmemdup_array()"
-
-Artur Weber (1):
-      power: supply: max77693: Fix wrong conversion of charge input thresho=
-ld value
-
-Bo Liu (9):
-      power: supply: bd99954: convert to use maple tree register cache
-      power: supply: bq24257: convert to use maple tree register cache
-      power: supply: bq2515x: convert to use maple tree register cache
-      power: supply: bq25890: convert to use maple tree register cache
-      power: supply: bq25980: convert to use maple tree register cache
-      power: supply: ltc4162l: convert to use maple tree register cache
-      power: supply: max1720x: convert to use maple tree register cache
-      power: supply: rt9455: convert to use maple tree register cache
-      power: supply: smb347: convert to use maple tree register cache
-
-Chen Ni (1):
-      power: supply: mt6370: Remove redundant 'flush_workqueue()' calls
-
-Chris Morgan (3):
-      mfd: axp20x: AXP717: Add AXP717_TS_PIN_CFG to writeable regs
-      dt-bindings: power: supply: axp20x-battery: Add x-powers,no-thermistor
-      power: supply: axp20x_battery: Update temp sensor for AXP717 from dev=
-ice tree
-
-Dimitri Fedrau (1):
-      power: supply: max1720x: add health property
-
-Dr. David Alan Gilbert (4):
-      power: supply: core: Remove unused power_supply_set_battery_charged
-      power: supply: ds2760: Remove unused ds2760_battery_set_charged
-      power: supply: Remove unused set_charged method
-      power: supply: pcf50633: Remove charger
-
-Raag Jadav (11):
-      err.h: move IOMEM_ERR_PTR() to err.h
-      devres: Introduce devm_kmemdup_array()
-      pinctrl: intel: copy communities using devm_kmemdup_array()
-      pinctrl: baytrail: copy communities using devm_kmemdup_array()
-      pinctrl: cherryview: use devm_kmemdup_array()
-      pinctrl: tangier: use devm_kmemdup_array()
-      pinctrl: pxa2xx: use devm_kmemdup_array()
-      iio: adc: xilinx-xadc-core: use devm_kmemdup_array()
-      input: sparse-keymap: use devm_kmemdup_array()
-      input: ipaq-micro-keys: use devm_kmemdup_array()
-      power: supply: sc27xx: use devm_kmemdup_array()
-
-Ryan Wanner (2):
-      dt-bindings: power: reset: atmel,sama5d2-shdwc: Add microchip,sama7d6=
-5-shdwc
-      power: reset: at91-sama5d2_shdwc: Add sama7d65 PMC
-
-Sebastian Reichel (4):
-      Merge tag 'tags/ib-mfd-power-v6.15' into psy-next
-      Merge tag 'ib-devres-iio-input-pinctrl-v6.15' into psy-next
-      power: supply: core: get rid of of_node
-      power: supply: all: switch psy_cfg from of_node to fwnode
-
-Shubhrajyoti Datta (1):
-      dt-bindings: power: reset: xilinx: Make "interrupts" property optional
-
-Sicelo A. Mhlongo (4):
-      power: supply: bq27xxx: Add voltage_max_design property for bq270x0 a=
-nd bq27x10
-      power: supply: bq27xxx: do not report bogus zero values
-      power: supply: bq27xxx_battery: do not update cached flags prematurely
-      Revert "power: supply: bq27xxx: do not report bogus zero values"
-
- .../bindings/power/reset/atmel,sama5d2-shdwc.yaml  |   5 +
- .../bindings/power/reset/xlnx,zynqmp-power.yaml    |   1 -
- .../x-powers,axp20x-battery-power-supply.yaml      |  20 +-
- drivers/iio/adc/xilinx-xadc-core.c                 |   4 +-
- drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c        |   2 +-
- drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c        |   2 +-
- drivers/input/keyboard/ipaq-micro-keys.c           |   5 +-
- drivers/input/sparse-keymap.c                      |   3 +-
- drivers/mfd/axp20x.c                               |   1 +
- drivers/pinctrl/intel/pinctrl-baytrail.c           |   6 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |   5 +-
- drivers/pinctrl/intel/pinctrl-intel.c              |   6 +-
- drivers/pinctrl/intel/pinctrl-tangier.c            |   5 +-
- drivers/pinctrl/pxa/pinctrl-pxa2xx.c               |   8 +-
- drivers/power/reset/at91-sama5d2_shdwc.c           |   1 +
- drivers/power/supply/Kconfig                       |   6 -
- drivers/power/supply/Makefile                      |   1 -
- drivers/power/supply/ab8500_charger.c              |   4 +-
- drivers/power/supply/acer_a500_battery.c           |   3 +-
- drivers/power/supply/act8945a_charger.c            |   2 +-
- drivers/power/supply/axp20x_ac_power.c             |   2 +-
- drivers/power/supply/axp20x_battery.c              |  23 +-
- drivers/power/supply/axp20x_usb_power.c            |   4 +-
- drivers/power/supply/bd99954-charger.c             |   4 +-
- drivers/power/supply/bq2415x_charger.c             |   2 +-
- drivers/power/supply/bq24190_charger.c             |   2 +-
- drivers/power/supply/bq24257_charger.c             |   2 +-
- drivers/power/supply/bq24735-charger.c             |   2 +-
- drivers/power/supply/bq2515x_charger.c             |   6 +-
- drivers/power/supply/bq256xx_charger.c             |   2 +-
- drivers/power/supply/bq25890_charger.c             |   2 +-
- drivers/power/supply/bq25980_charger.c             |   8 +-
- drivers/power/supply/bq27xxx_battery.c             |  40 +-
- drivers/power/supply/cpcap-battery.c               |   2 +-
- drivers/power/supply/cpcap-charger.c               |   2 +-
- drivers/power/supply/ds2760_battery.c              |  52 +--
- drivers/power/supply/generic-adc-battery.c         |   2 +-
- drivers/power/supply/gpio-charger.c                |   2 +-
- drivers/power/supply/ingenic-battery.c             |   2 +-
- drivers/power/supply/ip5xxx_power.c                |   2 +-
- drivers/power/supply/lego_ev3_battery.c            |   3 +-
- drivers/power/supply/lt3651-charger.c              |   2 +-
- drivers/power/supply/ltc4162-l-charger.c           |   4 +-
- drivers/power/supply/max17042_battery.c            |   2 +-
- drivers/power/supply/max1720x_battery.c            |  51 ++-
- drivers/power/supply/max77650-charger.c            |   2 +-
- drivers/power/supply/max77693_charger.c            |   2 +-
- drivers/power/supply/max8903_charger.c             |   2 +-
- drivers/power/supply/mm8013.c                      |   2 +-
- drivers/power/supply/mt6360_charger.c              |   2 +-
- drivers/power/supply/mt6370-charger.c              |   3 +-
- drivers/power/supply/olpc_battery.c                |   4 +-
- drivers/power/supply/pcf50633-charger.c            | 466 -----------------=
-----
- drivers/power/supply/pm8916_bms_vm.c               |   2 +-
- drivers/power/supply/pm8916_lbc.c                  |   2 +-
- drivers/power/supply/power_supply_core.c           |  30 +-
- drivers/power/supply/qcom_battmgr.c                |   5 +-
- drivers/power/supply/qcom_pmi8998_charger.c        |   2 +-
- drivers/power/supply/qcom_smbb.c                   |   2 +-
- drivers/power/supply/rk817_charger.c               |   2 +-
- drivers/power/supply/rt5033_battery.c              |   2 +-
- drivers/power/supply/rt5033_charger.c              |   3 +-
- drivers/power/supply/rt9455_charger.c              |   4 +-
- drivers/power/supply/rt9467-charger.c              |   2 +-
- drivers/power/supply/rt9471.c                      |   2 +-
- drivers/power/supply/sbs-battery.c                 |   2 +-
- drivers/power/supply/sbs-charger.c                 |   2 +-
- drivers/power/supply/sbs-manager.c                 |   2 +-
- drivers/power/supply/sc2731_charger.c              |   2 +-
- drivers/power/supply/sc27xx_fuel_gauge.c           |   8 +-
- drivers/power/supply/smb347-charger.c              |   4 +-
- drivers/power/supply/tps65090-charger.c            |   2 +-
- drivers/power/supply/tps65217_charger.c            |   2 +-
- drivers/power/supply/ucs1002_power.c               |   2 +-
- include/linux/device.h                             | 119 +-----
- include/linux/device/devres.h                      | 129 ++++++
- include/linux/err.h                                |   3 +
- include/linux/io.h                                 |   2 -
- include/linux/mfd/axp20x.h                         |   1 +
- include/linux/power/bq27xxx_battery.h              |   1 +
- include/linux/power_supply.h                       |   3 -
- 81 files changed, 366 insertions(+), 774 deletions(-)
- delete mode 100644 drivers/power/supply/pcf50633-charger.c
- create mode 100644 include/linux/device/devres.h
-
---kgvkouzpizatkwo7
+--6apbzqn7obveqkwp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfnPjkACgkQ2O7X88g7
-+ppCdw/+Jcq4GFczAaR2rPcMWiOKDQ5zuoSWU0vDOMLFgvzD9nP6Wm054LiAfUwA
-CKhrjKFtLIPaHSLqpEDUZDHt68Xih92vXKFif2euuda3o7T5YpspraQxdOqt9Pba
-Mali7SwZ242ta4Xmui5w0hwLWPOqwk3LE59dfFX2TQgVuZqvKpgsKpS90xjX6HwO
-6xkU+S2t1cS3Gv9BNQwh0rZJvHBeMJunP9n2Au1hk2LuE6UAW9R3Ovb32heZ4+Zb
-xaVEE5SGYJ1BTmMsYW+qgvV6UBRtw08u0W31r9ZVj6yKpWKt9vnMbo46U2p0Cv/C
-eNE0Eh53UwcD84vpWpg7JWZTc5B3AOSfpkvumcDelfv8u3U3ZxeZ+MKow3Qi6Tmm
-Pm2UDNCxPhG7NtBiv9bQNVsezoWLVhHHmXQat+l0AMIBllYQ2Dh/5MFoojK+nlQi
-QLptGuNs/xLIe2v9+JbBLZWhXZ/OF+sJWIO2IAKo6bEbKd/yYNSO+bMGp/HHciRT
-p3ohXvqCFOSKpHIuc4O+7JcusWkhEijl6/4AqgkDG/0LnhU1OHB97wVOe1McbY06
-tjLisGaObsR0XZgOTgDzM2wTIY3yvnKgLAdDv8cVxxVTjkUmx32EVyEg0wsTmle/
-avU7uAoDEItiobjjFjvXZEZhQSVVUi+fJCWlNWZ8h9PQTfFP4gI=
-=yahJ
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfnPj4ACgkQ2O7X88g7
++pqAGg//XbL+XgEnI3pjlfd30rDxcnLAeY8bHZsr2YEDUvd3hXuJeGFdnt7+lxER
+bt/NTOVDKnL+4FABFMxED+p7DhTYyTLSQfRlLE/8yQzZrUrbyR0yMrDX+bpUeTrz
+NXENRgV7Oqssb3EwA29TdqqpY8x5g7LRJXLOxhxW+0apBBjwdi/ZetFl17lJIEDO
+vlJibmN87ZCLVOQiqHnwbR9z7p1oVmJROela9s8hhOnjaJO1JItyD7PVpKhVb+py
+2K23ZZ7Q4l+11lA8s9K+x+VSCacMleAE7YAhLhhelqjXYdm2FW82s4UyH0mhBb/g
+Rrfk6Hr3597kksMNWnY0qkJ4bXonZpXyc48rPK9CuVf5Q+RgK9rasNnZ4l5XIalQ
+NLH4rNFpW3Nd1xdeVfro4AfhojKUsxlevMAP0+R2GQjH1FbsgEdUCGnd5q7z2b2P
+ATD3hgi5Ymv4vOm0MzDka4BKk+dZ0F+OrzbF0Xp5kdpc1L64GWJJzRbfA8dbOolD
+IcdY2uIkmd7fmKqRYqCcBOaIl7l6TVnEgLFmBeRFpIHdu9ezQ4wFaWj4/KJz3tM3
+pIfD2OUG8JhStwoMmwXoRLyrDPG4iJF19Wrj2zi46SQPLVv/9TPS5r9IWj4PkUI9
+q7N6JsnuoZOezZJHxrsQ+5ZgD9rptMR5yZ3gRp1r+w0ejaXvoR4=
+=jAbb
 -----END PGP SIGNATURE-----
 
---kgvkouzpizatkwo7--
+--6apbzqn7obveqkwp--
