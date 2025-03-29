@@ -1,132 +1,129 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5FC1DB55D
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461F11C5D77;
+	Sat, 29 Mar 2025 11:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743248422; cv=none; b=EiV+UgpsrkCbX2PlZqUgZkIck06D65l/pHhe0+WcUUZZ+kZ9We0Q8mDRDdRbTL8qwL2ped9s45UkTWTnbSOmBlFz4A5E5NNPoQue3YQkRVEI+ZMV0Q7X0fhRA1WZS7cQq0g74Qu9i0mPAt33fTxUIpMGzcfuN1UMOaFA48/PXOM=
+	t=1743248426; cv=none; b=FhGBiLE3a4JfkGHW70Dmp08JMZo5/FYRvmV0W4+4PWSvXznQsS3jfBmlSdNlL/EiW3udLKTA6EnfA/3oviW+uUUC1B4P5DINryjWxpElxKLs53CqpVf9+gyfLu/Ui5h6YxeU2Eogg0bKimt0D+wZiM6jVRLc+SmOii24QaEf0rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743248422; c=relaxed/simple;
-	bh=B1u6as5B/YLySIR9zZ2tbCm0ywzwHkJM4XWzLgpc5io=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ekZfdC9SApbOZ7TUJ0Y8X+BpEXY7JM6PKlF5TLgN7vK5oC/bmtu7EQ2cQm7TrPd5XOG0pG1VG4H6js5QCZImDmtyVfqptxbofwxf5QSaaZb3sM5XKJMK4tH9F4l7sm2rKz0lc0OzigXuZsyiiBEkvFjcdjWRE8d/FU18qkD7Hf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OSoZ3ISe; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743248426; c=relaxed/simple;
+	bh=P7al7clDRS8K/7GFc/corrgfq2NDWLfHg5TRl7eTdkk=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lxDnLgSCfw+EKOyksssb7TMUIMNyCTs7QPFRGhcCCygMOJFptnDcT5daUPmuv4ipD20G52Y7P3WhE2boCOzHeJ/VkeI5FMizLdibH4Q1B4TB5ELHqv7Oere/zs2yO9epaPvuvHAecKa0Ndk8KYij4FvrpqO9KKM/6eGy+gDVFJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=UQq1cy8m; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OSoZ3ISe"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743248418;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rIk50ETauNoMoUpyiJL6wIEyxdPfToBDa+Clu3JgPXw=;
-	b=OSoZ3ISevVyyRaRnfEtlnClKQSf3zwCB/FgQO9xVsL31sBU0AsrRKEH7naLAN5SKHWgrq3
-	jQYDGu6CtYOZH3nDq5fx9wHDjpgmcq0zFM0NitYxey24me2q0u4XUbS3G9ZnPszAugVkTS
-	oVK3O2UmBwsQ8WDLA7GEoBXfK0+5+So=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	Dominik Haller <d.haller@phytec.de>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v11 08/14] drm/bridge: cdns-dsi: Add input format negotiation
-Date: Sat, 29 Mar 2025 17:09:19 +0530
-Message-Id: <20250329113925.68204-9-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
-References: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="UQq1cy8m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1743248420; x=1743853220; i=deller@gmx.de;
+	bh=dztATHFqB+Zrc37/ZMpHqY/ixcWTTRZ34tWefSgFnYM=;
+	h=X-UI-Sender-Class:Date:From:To:Subject:Message-ID:MIME-Version:
+	 Content-Type:cc:content-transfer-encoding:content-type:date:from:
+	 message-id:mime-version:reply-to:subject:to;
+	b=UQq1cy8mxvX/zvGvL4J2YAeifgGgplHrvuxKYNje9BEACK9RJN4yVGxBcyD7Wi79
+	 T0wIqMAmr+20Jcjipl5bbGoW3S8kHSvpFiUh0X42n/CjRxb7sPqCYEGSm2pf9LzTW
+	 AvcRzxSR0eMjpkdYxlIkkTH299menMePhXS0nE3VUnKUEhCANgPj/g0TMknvfrycm
+	 6mauG0R8loVndWynYY15EhlVgH4dYkGUAVZwabw4kKAmGl7HP8DSXCX3sr1s2xaqy
+	 IEqqh1zi2oWNCaYjOGMtXPeTTr+4LCq5iu5tnmiOo+LTDb3jBPKNMk0MJWgHBLP4h
+	 vxWogg5IjEOom+N2Sw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from p100 ([109.250.63.121]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8hVB-1u2bHp2BWr-00A4oT; Sat, 29
+ Mar 2025 12:40:20 +0100
+Date: Sat, 29 Mar 2025 12:40:19 +0100
+From: Helge Deller <deller@gmx.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: [GIT PULL] parisc architecture fixes and updates for v6.15-rc1
+Message-ID: <Z-fcI2QOldcZOi4f@p100>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:dSKHRKYVH0549sDBljevIrVRYux+JiGD3JMaCBrjGBzx3fI5p9m
+ buWH5vaTo3yKl392DTLtkVVg6CHdxxfGUV4u8z1iV+ARE3oLKMKyKMN3klqpXJ+okb6/SGy
+ tZ7IeNIur7WG4T+M0qoIlQLszQinBODosDDG6Z+ZL4pFKcSIQ8UCNbbEE4yP9wmQu3Q7AD/
+ rkfaCLrSfY8zLHyzHLe1Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YT2CGzQUA2s=;uEGM9xhjlQRcruVOKcDLZKZi65w
+ R0v1+mqx9DNeKc0qMskWWIl4PvGK+SN91/EUyQPgq0EgadCRFDudbpkKNM3rLvU/q54L1+dtq
+ xnNKwUuRLsAcMKjNMPlK+SDk6geBPtJtORR4QQZ0AJuLz7MyiWFw/KuRaO1Jbk5oBLpjrUKBc
+ R1s6A6ZWXR7humKmTZ0NufZQR/9sOjbFntn4xGpY001aPsrjwAEGly/Tqzsjty5vAWKOorTkE
+ roXY53NHyayKvR8drwEbSQZ5mr8rvfG5Fn79McPJGJbzaKQ9cQse6p86HGIOu16LfU+pkLZ9m
+ yuu0RRUNlPo62cWJyIT2heoOBnyuXIPzng0a2FQ2PB+I9oJYppPk1PB7NpMo+nkIyPs7DeNBb
+ 5LI5F6O7EJWFQwXq9irg+2g6W9mee62O2wApUWkMfSdA7Z0j1xf8E43lNKx3ugYtGc5dDfT1W
+ fRNtPtNG5cFctFSOgAP61PO/DtV4pljKeK1673RuM031YNIv/vjSC7VMVj5hlmLkF5hGzylCd
+ by8thuRMMYbIflwEf+OAZQaNl1Axb9dQutz5RO9oilTM4CgaaMsAbRNTs/Xc1vjke7QKalmps
+ h1fQnfp5sMZ0H2b6796H8kCQ7r2UBcP56DB+ygfCUImvfcUABSEx6iAsn4o5AHcaarTlic74d
+ suwI9fWPVP9TbEYCH85YQdefF9L+kf3b//R1A60XSvlkGWCSQoMzZ4byuaP6VpZR4Zk45qqr/
+ V2hjCovvO99TK0eXB1+KHOAmejOgN5lEOrqGS1ndK/6gCksadlAGQQMNc7HhuuaMrmC+Chpg8
+ WtQ5Yn4YB73clGX4ULBqruZ9RrFzfwTzYu276sTcJB6OmR1+U5v4Ww1eZ134TrHVJogiPzAWO
+ QdhnfAPJbPIPqGkDbjvWdUBPcjlkxHWcpV/57rEuJg/gIji1JoaZ7lpEwaoAyrdcvZEN986yE
+ 1RwVyN8XDdxymYfj/wbmEOUb8+F8JI0LoRrnnpYQY6Ipilxd90B8+1p5UPjN/XYaiNJ5rmoUB
+ z0T80idB7qlcpji5cdr104JzJEaSc4lKrPZEw+gfmXeetVQXj1M1LxmhRHNc7SHIWYgVG2BNO
+ P7HMYc8+brUHTq0Jao6zpAQHH8zXBU+9xSglF0piB8si5SBIkGDOdUPPF8e5TvbU2eTN/6DF7
+ wzpx6xVvXvnRSlUAYFnbQfK6kU40tukCmlchQNv/8ELDyZ2X31ONdsHVJZy+tBOr9VEuLKlgk
+ gKsqMG3qQVpjuE7DMXhY2H5DHRRtjmHYEQixQAeBJlXq/l6vSTySgEx9IQRvEoW/akMtvGwvE
+ hHBbaoEsAsjiw1UaU6JUaYtKKaoOj07ZBpn0pMPaMJCc0umrn69IoA8duGETyXy7rGDipYgaI
+ aJPmkswilzxoPDa4Ys3d6o3LI34ic52oXAUJbOskImMy1H7LfDrSDaY5hpfxvzHVfNdJup2et
+ hFZDS6Q==
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+Hi Linus,
 
-Add support for the input format negotiation hook, that uses the helper
-drm_mipi_dsi_get_input_bus_fmt() for dsi hosts, to figure out the
-required input format.
+Please pull the updates for the parisc architecture for 6.15-rc1:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Drop parisc specific memcpy_fromio() function,
+clean up coding style and fix compile warnings.
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 89a3f3efc522..c333b5c025d9 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -936,6 +936,33 @@ static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
- 	cdns_dsi_hs_init(dsi);
- }
- 
-+static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-+					       struct drm_bridge_state *bridge_state,
-+					       struct drm_crtc_state *crtc_state,
-+					       struct drm_connector_state *conn_state,
-+					       u32 output_fmt,
-+					       unsigned int *num_input_fmts)
-+{
-+	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-+	struct cdns_dsi *dsi = input_to_dsi(input);
-+	struct cdns_dsi_output *output = &dsi->output;
-+	u32 *input_fmts;
-+
-+	*num_input_fmts = 0;
-+
-+	input_fmts = kzalloc(sizeof(*input_fmts), GFP_KERNEL);
-+	if (!input_fmts)
-+		return NULL;
-+
-+	input_fmts[0] = drm_mipi_dsi_get_input_bus_fmt(output->dev->format);
-+	if (!input_fmts[0])
-+		return NULL;
-+
-+	*num_input_fmts = 1;
-+
-+	return input_fmts;
-+}
-+
- static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
- 	.attach = cdns_dsi_bridge_attach,
- 	.mode_valid = cdns_dsi_bridge_mode_valid,
-@@ -946,6 +973,7 @@ static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
- 	.atomic_reset = drm_atomic_helper_bridge_reset,
- 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_get_input_bus_fmts = cdns_dsi_bridge_get_input_bus_fmts,
- };
- 
- static int cdns_dsi_attach(struct mipi_dsi_host *host,
--- 
-2.34.1
+Thanks!
+Helge
 
+----------------------------------------------------------------
+
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git tags/parisc-for-6.15-rc1
+
+for you to fetch changes up to e822b8f01b40eb193cf7ebb059ac7c560a562d6f:
+
+  parisc: led: Use scnprintf() to avoid string truncation warning (2025-03-09 22:27:54 +0100)
+
+----------------------------------------------------------------
+parisc architecture updates for kernel v6.15-rc1:
+
+Drop parisc specific memcpy_fromio() function,
+clean up coding style and fix compile warnings.
+
+----------------------------------------------------------------
+Helge Deller (2):
+      Input: gscps2 - Describe missing function parameters
+      parisc: led: Use scnprintf() to avoid string truncation warning
+
+Julian Vetter (2):
+      parisc: Fix formatting errors in io.c
+      parisc: Remove memcpy_fromio
+
+Thadeu Lima de Souza Cascardo (1):
+      parisc: perf: use named initializers for struct miscdevice
+
+Yu-Chun Lin (1):
+      parisc: PDT: Fix missing prototype warning
+
+ arch/parisc/include/asm/io.h      |   3 -
+ arch/parisc/kernel/parisc_ksyms.c |   1 -
+ arch/parisc/kernel/pdt.c          |   2 +
+ arch/parisc/kernel/perf.c         |   6 +-
+ arch/parisc/lib/io.c              | 119 ++++++++++----------------------------
+ drivers/input/serio/gscps2.c      |   6 ++
+ drivers/parisc/led.c              |   4 +-
+ 7 files changed, 41 insertions(+), 100 deletions(-)
