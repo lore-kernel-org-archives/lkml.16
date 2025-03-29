@@ -1,243 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A89B134B0;
-	Sat, 29 Mar 2025 17:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3491913E41A
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 17:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743268178; cv=none; b=N8hhCqRPnCTCVXXIoiXA4o4/9lTAoO8tluJA/mltEXDLdE/Y0xCI0gzqdk9zreFQFPRgF2ept2ivOLofsmY35Ls61claYUzW+IhBIiOnDrkpr3ZP5vrZUao2GRtgSNkURdvNQo5o40gz1Jdyl2qK9Mkzdk7XTfDhov4dgwf+2fo=
+	t=1743268243; cv=none; b=J2uXikDhjx6yj0OPrnv9cz/qUzD/CdICvX9PuTda++M0VV44CPt/Q9JyayeYqk3BGNOslb5zDNfv+UA/DLqo2+XJhYNiqU6oc6dwmckgAtpqSM4xyx6kzdT7hEP4yx3PU+9syb8jAwVjFPi6Q15xVyCjv3Avue415bOBSQN2Jf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743268178; c=relaxed/simple;
-	bh=Yrw919Z8v9sEOEODycWBG0VcN6JIS2JIx7r8X2SNbqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Afm+7GbCCdgHg55C6hYkxuQ0KHWDT6cOvF4lK9maGgKi6SaqoCtwBcguUmuuTvZ9GMHVe7OPhQXXgvvA5RwbUyW4FxyhbB1rt7mU6Hb9LssYGy8M8KIRTqau1eFcYuH4BywjEWdS+O5qjuSI9tzJQga2xRJ1XKCHjRIOlEgjz0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2e1lVzE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743268243; c=relaxed/simple;
+	bh=4DMmDPM+mnqlZL773FBuVPksbC1CLTN0NfZNu70KjNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LgszSBBbBN90aUW8JLQtqsdWRspdPIOWnQoi+ZiN4YOpIz4WFPdil46uH6Lq3FTEQZD8HJqobpqEme7tGW00+XP7ly576s7cl9EJm2EWkHq2vsIa6mTSMJhI0ni65GSNSYErwRSWJYRabU67wibpe8J8Shlum/EGFqsP+sXbypY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fbtfyOBS; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2e1lVzE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620FFC4CEE2;
-	Sat, 29 Mar 2025 17:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743268177;
-	bh=Yrw919Z8v9sEOEODycWBG0VcN6JIS2JIx7r8X2SNbqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R2e1lVzEIvqf8lTsrBOSozuxtbCArwAs8UQRY23wwkrO922x4WOT97/YmYE1kBx1h
-	 hrVMXalk0q6ylxGuY63GwGj7vkUCTafxVvG+KXeW0+LpkmXoXfAPjdw+ZqHFaFbS/m
-	 p0km9gIq2073Orqk0UMuOroc/9WQi1mZFq8RtD1mPY76N3y4LD4uk1PUmOGCIMGkoS
-	 U/bt8VATBZu9+hSBrfVxZ0zG9WASaNewvAakSIzZ13y2Dzu1j5r4WEwL1gdY7Asa1y
-	 Xe/km4URkWd6FU13FL6jv4jaXkN5+sKt5bUpMlooiEHVVLugz7mmuJ7G1vnvOMnLbS
-	 xUONiztU+GCmA==
-Date: Sat, 29 Mar 2025 12:09:36 -0500
-From: Rob Herring <robh@kernel.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
-Message-ID: <20250329170936.GA2246988-robh@kernel.org>
-References: <20250328133544.4149716-1-lukma@denx.de>
- <20250328133544.4149716-2-lukma@denx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fbtfyOBS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743268241; x=1774804241;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4DMmDPM+mnqlZL773FBuVPksbC1CLTN0NfZNu70KjNg=;
+  b=fbtfyOBS1WeycbWrxIXBbWI2hru4wJPE5HpSsts/dutJl9ib5AbnscDg
+   ScKh9qz3b6HtH2CsmeiYpWwZMoGNcYdDf0CgYykNv628NZPYDPXU252m5
+   SKUAFykIAgfkbdxki8gsjtFPtCJe8ZYYr7becEZ6Na+uAx9whXLTZkeJe
+   0QzhgzeN7ppqQZO6Fgv7gfwEf5WHR+pCu3LaedAdqRql8sGTfZOMWVvde
+   0zaZcP04Q0nyOeKjb1y43MspgBQFqId6n6R5dAyrP3NF/opVEwAa5tYR5
+   3/Iuwt2+/IWHE7tBVi6pgbxt2i7R5N8crRqxUjLRbFjGIheqcSC+U4/0M
+   A==;
+X-CSE-ConnectionGUID: nBqMQE7VTAWNSEQfnxUgPg==
+X-CSE-MsgGUID: RT/kFh/ZQFy+DDNzqDvz4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="44329144"
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="44329144"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 10:10:41 -0700
+X-CSE-ConnectionGUID: 2ATFz57SSnWBkJtKWXE6jQ==
+X-CSE-MsgGUID: +g+mxmhFQbeO30Wi9C/5/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
+   d="scan'208";a="148891558"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 29 Mar 2025 10:10:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id B7E751AE; Sat, 29 Mar 2025 19:10:36 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
+	linux-mm@kvack.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Srikanth Aithal <sraithal@amd.com>
+Subject: [PATCH] mm/page_alloc: fix deadlock on cpu_hotplug_lock in __accept_page()
+Date: Sat, 29 Mar 2025 19:10:29 +0200
+Message-ID: <20250329171030.3942298-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328133544.4149716-2-lukma@denx.de>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 28, 2025 at 02:35:41PM +0100, Lukasz Majewski wrote:
-> This patch provides description of the MTIP L2 switch available in some
-> NXP's SOCs - e.g. imx287.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
-> Changes for v2:
-> - Rename the file to match exactly the compatible
->   (nxp,imx287-mtip-switch)
-> ---
->  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 165 ++++++++++++++++++
->  1 file changed, 165 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> new file mode 100644
-> index 000000000000..a3e0fe7783ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
-> @@ -0,0 +1,165 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> +
-> +maintainers:
-> +  - Lukasz Majewski <lukma@denx.de>
-> +
-> +description:
-> +  The 2-port switch ethernet subsystem provides ethernet packet (L2)
-> +  communication and can be configured as an ethernet switch. It provides the
-> +  reduced media independent interface (RMII), the management data input
-> +  output (MDIO) for physical layer device (PHY) management.
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,imx287-mtip--switch
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      The physical base address and size of the MTIP L2 SW module IO range
-> +
-> +  phy-supply:
-> +    description:
-> +      Regulator that powers Ethernet PHYs.
-> +
-> +  clocks:
-> +    items:
-> +      - description: Register accessing clock
-> +      - description: Bus access clock
-> +      - description: Output clock for external device - e.g. PHY source clock
-> +      - description: IEEE1588 timer clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: ahb
-> +      - const: enet_out
-> +      - const: ptp
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Switch interrupt
-> +      - description: ENET0 interrupt
-> +      - description: ENET1 interrupt
-> +
-> +  pinctrl-names: true
-> +
-> +  ethernet-ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^port@[0-9]+$":
-> +        type: object
-> +        description: MTIP L2 switch external ports
-> +
-> +        $ref: ethernet-controller.yaml#
-> +        unevaluatedProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            items:
-> +              - enum: [1, 2]
-> +            description: MTIP L2 switch port number
-> +
-> +          label:
-> +            description: Label associated with this port
-> +
-> +        required:
-> +          - reg
-> +          - label
-> +          - phy-mode
-> +          - phy-handle
-> +
-> +  mdio:
-> +    type: object
-> +    $ref: mdio.yaml#
-> +    unevaluatedProperties: false
-> +    description:
-> +      Specifies the mdio bus in the switch, used as a container for phy nodes.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - mdio
-> +  - ethernet-ports
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include<dt-bindings/interrupt-controller/irq.h>
-> +    switch@800f0000 {
-> +        compatible = "nxp,imx287-mtip-switch";
-> +        reg = <0x800f0000 0x20000>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
-> +        phy-supply = <&reg_fec_3v3>;
-> +        interrupts = <100>, <101>, <102>;
-> +        clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> +        clock-names = "ipg", "ahb", "enet_out", "ptp";
-> +        status = "okay";
-> +
-> +        ethernet-ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                mtip_port1: port@1 {
-> +                        reg = <1>;
-> +                        label = "lan0";
-> +                        local-mac-address = [ 00 00 00 00 00 00 ];
-> +                        phy-mode = "rmii";
-> +                        phy-handle = <&ethphy0>;
-> +                };
-> +
-> +                mtip_port2: port@2 {
-> +                        reg = <2>;
-> +                        label = "lan1";
-> +                        local-mac-address = [ 00 00 00 00 00 00 ];
-> +                        phy-mode = "rmii";
-> +                        phy-handle = <&ethphy1>;
-> +                };
-> +        };
-> +
-> +        mdio_sw: mdio {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                reset-gpios = <&gpio2 13 0>;
-> +                reset-delay-us = <25000>;
-> +                reset-post-delay-us = <10000>;
-> +
-> +                ethphy0: ethernet-phy@0 {
-> +                        reg = <0>;
-> +                        smsc,disable-energy-detect;
+When the last page in the zone is accepted, __accept_page() calls
+static_branch_dec(). This function takes cpu_hotplug_lock, which can
+lead to a deadlock if the allocation occurs during CPU bringup path as
+_cpu_up() also takes the lock.
 
-With a custom property, you should have a specific compatible.
+To prevent this deadlock, defer static_branch_dec() to a workqueue.
 
-> +                        /* Both PHYs (i.e. 0,1) have the same, single GPIO, */
-> +                        /* line to handle both, their interrupts (AND'ed) */
-> +                        interrupt-parent = <&gpio4>;
-> +                        interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
+Call static_branch_dec() only when the workqueue is not yet initialized.
+Workqueues are initialized before CPU bring up, so this will not
+conflict with the first scenario.
 
-The error report is because the examples have to guess the number of 
-provider interrupt cells and only 1 guess is supported. It guessed 1 
-from above.
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 55ad43e8ba0f ("mm: add a helper to accept page")
+Reported-by: Srikanth Aithal <sraithal@amd.com>
+Tested-by: Srikanth Aithal <sraithal@amd.com>
+---
+ include/linux/mmzone.h |  3 +++
+ mm/internal.h          |  1 +
+ mm/mm_init.c           |  1 +
+ mm/page_alloc.c        | 28 ++++++++++++++++++++++++++--
+ 4 files changed, 31 insertions(+), 2 deletions(-)
 
-In any case, unless the phys are built-in and fixed, they are out of 
-scope of this binding. So perhaps drop the interrupts and smsc property.
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 9540b41894da..9027f751b619 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -964,6 +964,9 @@ struct zone {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	/* Pages to be accepted. All pages on the list are MAX_PAGE_ORDER */
+ 	struct list_head	unaccepted_pages;
++
++	/* To be called once the last page in the zone is accepted */
++	struct work_struct	unaccepted_cleanup;
+ #endif
+ 
+ 	/* zone flags, see below */
+diff --git a/mm/internal.h b/mm/internal.h
+index 109ef30fee11..f2e6d42af6eb 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1516,6 +1516,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+ 
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ void accept_page(struct page *page);
++void unaccepted_cleanup_work(struct work_struct *work);
+ #else /* CONFIG_UNACCEPTED_MEMORY */
+ static inline void accept_page(struct page *page)
+ {
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 2630cc30147e..d5a51f65dc4d 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1404,6 +1404,7 @@ static void __meminit zone_init_free_lists(struct zone *zone)
+ 
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	INIT_LIST_HEAD(&zone->unaccepted_pages);
++	INIT_WORK(&zone->unaccepted_cleanup, unaccepted_cleanup_work);
+ #endif
+ }
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 4fe93029bcb6..e51304d3f126 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6921,6 +6921,11 @@ static DEFINE_STATIC_KEY_FALSE(zones_with_unaccepted_pages);
+ 
+ static bool lazy_accept = true;
+ 
++void unaccepted_cleanup_work(struct work_struct *work)
++{
++	static_branch_dec(&zones_with_unaccepted_pages);
++}
++
+ static int __init accept_memory_parse(char *p)
+ {
+ 	if (!strcmp(p, "lazy")) {
+@@ -6959,8 +6964,27 @@ static void __accept_page(struct zone *zone, unsigned long *flags,
+ 
+ 	__free_pages_ok(page, MAX_PAGE_ORDER, FPI_TO_TAIL);
+ 
+-	if (last)
+-		static_branch_dec(&zones_with_unaccepted_pages);
++	if (last) {
++		/*
++		 * There are two corner cases:
++		 *
++		 * - If allocation occurs during the CPU bring up,
++		 *   static_branch_dec() cannot be used directly as
++		 *   it causes a deadlock on cpu_hotplug_lock.
++		 *
++		 *   Instead, use schedule_work() to prevent deadlock.
++		 *
++		 * - If allocation occurs before workqueues are initialized,
++		 *   static_branch_dec() should be called directly.
++		 *
++		 *   Workqueues are initialized before CPU bring up, so this
++		 *   will not conflict with the first scenario.
++		 */
++		if (system_wq)
++			schedule_work(&zone->unaccepted_cleanup);
++		else
++			unaccepted_cleanup_work(&zone->unaccepted_cleanup);
++	}
+ }
+ 
+ void accept_page(struct page *page)
+-- 
+2.47.2
 
-Rob
