@@ -1,73 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEFF35972;
-	Sat, 29 Mar 2025 13:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161C56FBF;
+	Sat, 29 Mar 2025 13:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743254016; cv=none; b=DqpZIAegA9SkSV/P3W1kNNcTEIlbAs0kgZma9mxYzEB/90Hp8DSYma7QfD38dxIpuoZM9uDdDrt4uTy5hQIW/nDwB4yR/HNJDFpORLZCiF8PJiRnvT2WVkhODGWbR3J1D0h62aVKJxCtUO/+i1IrEkWmQwNcecQAap6l+cdYGIc=
+	t=1743254187; cv=none; b=pIUuwoFhaQUODDqw1ir5zF63z8TDYjZ+2+/mp9NdIEVXgDE8JRORJF5EeWPx+odr5IKsfiVDGR/EN4JOKwF8hEuE0iuueqD45wKkg67e+QS7nvJQpIj+lwvOwNpTuMuFwFH9hISvgI+EeTKStxR7xPJt2VfeO3Pd8X2fc11YEe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743254016; c=relaxed/simple;
-	bh=k3ENnCvttoTHre0U8Xi/uZbxzNz8OopraBe46cPcNFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jFjVMicnJe4Px/KXsKb7NvCUgX0/ls3+LqZ1GvPAK/QoHX2Fmdy0rV5TYlskLOXTJDoa2S/ym9U/0iqHmMO9o/x8VwNdVq84SFyhn3k6QAEjp/bS7ePqNGEY8OAw62lJDUEVunPlE5Z4J3lD+/DKJqWZZQPnhnNcGxuKUpB65oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qB4HGciT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743254187; c=relaxed/simple;
+	bh=KuHBuA8N+iaj2AuGnbHx4GIQehKT2sBQF/s4+KKtdTo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JKor+cQ6BPEeplHe6Vbpo3eg7k2XsJkqienf97Axg8bEkiMbVuYppby5hX29tAkPlcEpkqJCeVJWbAqC8a7XxZiQkYRzMFGUOHnaM3zPJ0Be02r46jc/EYtw7CKhMDTh8wjFqdwqOW9Emf7fdUwzzzg8UIFKgJ26thA7cIaMKgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=r5NlGNOS; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qB4HGciT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E574C4CEE2;
-	Sat, 29 Mar 2025 13:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743254014;
-	bh=k3ENnCvttoTHre0U8Xi/uZbxzNz8OopraBe46cPcNFE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qB4HGciTPKzEk7PKVOQPn54NaNxY/jz6vqvYTirHN5MoLEK0YQeJ3e1uRxbbKZlFk
-	 o02Jjtu9HoIs9ImMrFJ3GMW2aJ1jsw3IOnr0+JnmdJZv4OsGq7hW8XIJtK4ExWSgDF
-	 kKbJJ1o1aId3ykmNiptFcAdxShAwgN0aCtphOMmAIa7cNh+3MJLn4XhUb80J6t3jFW
-	 X99YkcHNQ1XJx4mqF2jWA6shioCNqw4nAbC6SBt+y6DNfaT6QdPoRCYBZ9kJawUGHz
-	 qGGWRCcjJCH52aRmjufvCL6GBfFKbnGHr72n5FjuBeIPWwHvViJgzYqfLfIAjFAstS
-	 ktzodHbYvh1qw==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72c019869eeso1225000a34.1;
-        Sat, 29 Mar 2025 06:13:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUV+VTepVlHv9YUoQD9kn14rhvFAzYNOioRNbR8kKo7vrYIRdbpy8IbPcfNMCRwKQm6lvwpTinU@vger.kernel.org, AJvYcCVJCNzJeastEYvdNTR2Uz8YYV5sBy7kDF2N5mkap7by48zwdJxs6Waz5y9/1+s5sTqMAqS1Yl9yJyl5Ahff@vger.kernel.org, AJvYcCXZ7ZbWu96QUUSbZjHD1wlSeFlhkk8WBeRPIRjQHrqVYeLsyjb+5p+5/9kw3Oz69om5EwM9GAK/AdtSBDJO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS+WpqmpIaye+FW+VZuvK0o7OMgXwgAXsieZagperIWCJpLuuR
-	5hRtdEZlyGvTh5O65bYnA4ZZV7jMtibI4K8+W0/+TmFDX/Ccx/lA39byo41m+mYQ5I7gorD5QBy
-	eK7AkaGsBwbvkHXCkU/RPGPIu5LE=
-X-Google-Smtp-Source: AGHT+IGb7s9gfq5iGJMNRiyccjflHb1IPj491GUyTvFSrYg+i3gX/HLDhiktdy6SWUaq8aTHkGsIy+duWFL0Ccq1VtI=
-X-Received: by 2002:a05:6830:710c:b0:72b:81a8:dea5 with SMTP id
- 46e09a7af769-72c6380e676mr1774873a34.17.1743254013791; Sat, 29 Mar 2025
- 06:13:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="r5NlGNOS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743254175; x=1743858975; i=markus.elfring@web.de;
+	bh=KuHBuA8N+iaj2AuGnbHx4GIQehKT2sBQF/s4+KKtdTo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=r5NlGNOSS4ou4h6aHuVMk1ORDtvYYw+y+d+CFmAe8lnVyNYMULA6tKjQAZEe5Ccj
+	 Bk9Mm3J/tg9El2T7lKO7fnYZdudAY74qAlY6Q8toUU6pUrc/deuDccQElVAJyHX7n
+	 LEzbSXdLlEN22rHWBWS567r+XUvlJUF/dhXxtNZm1kb+buyxH0o0ZouzAJormLo2K
+	 bb3apjV1BXOafbydoEWuvJU3gFPJiSekzatC49tJM5XBRGWL2LkrEv0kxtOwrrv+J
+	 P+UAlz0X2FjcJJmezR+5klPe1ZaNFcEEMQ5+gypd3dB2dchZZOS21RxV/Ws1Vpyu7
+	 INEvi8jmfPNhYwKVCQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N8Vsx-1t2mtT3ORV-00t4Bp; Sat, 29
+ Mar 2025 14:16:14 +0100
+Message-ID: <8a69d4c0-bd4e-4957-8b04-4a6130c82166@web.de>
+Date: Sat, 29 Mar 2025 14:16:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250326144918epcas1p1bf704db657010812a18e9fef5c3a6784@epcas1p1.samsung.com>
- <20250326144848.3219740-1-sj1557.seo@samsung.com>
-In-Reply-To: <20250326144848.3219740-1-sj1557.seo@samsung.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Sat, 29 Mar 2025 22:13:22 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd9Wrb4P+dNBCPiXcAdddkRxQ+2LTo-ocTBdziGLGZ_hZA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp3aG0uMR5wNhC4FcXGtsoFgS6HK7XYP3G6TX-gC90furB2tBygi418j38
-Message-ID: <CAKYAXd9Wrb4P+dNBCPiXcAdddkRxQ+2LTo-ocTBdziGLGZ_hZA@mail.gmail.com>
-Subject: Re: [PATCH] exfat: fix potential wrong error return from get_block
-To: Sungjong Seo <sj1557.seo@samsung.com>
-Cc: yuezhang.mo@sony.com, sjdev.seo@gmail.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cpgs@samsung.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 2/3] i3c: master: Add Qualcomm I3C controller driver
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
+References: <20250326141641.3471906-3-quic_msavaliy@quicinc.com>
+ <66d344b9-5cc6-4060-86ff-8100a00de477@web.de>
+ <4161e6de-b16f-4371-be41-cc12adb3e9b8@quicinc.com>
+ <e32324c8-1888-451b-8621-0e468ca61fd9@web.de>
+ <a96511dc-5ba1-4302-acb0-f3b49bf8990c@quicinc.com>
+ <20250329104812225f9ee5@mail.local>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250329104812225f9ee5@mail.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:0vCbp2qS7xGeC+SBFAnjb28Q/RO9znj5JgQZ49qVjGESI0ovFj4
+ CmeUw8DbMvMDh4XyhBlWAqp/H8Zu8dJBFJRIaT00l4xeFWeNfExL6K37PES2c47PvEcKpPL
+ Ni2aJJ0jG452VVaaeW4jUO32/kfr9/dEe+1b7ca2dJPvbyz9+b19SdXDgM5BlQ9uAdg86CZ
+ 3UkSmGZ6PDF0wn6pG3YEQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sVtO3BxdzGo=;aKaK8yoHWCzvD1O+ArEVPeUptBs
+ a00HnonhgX5CoMAU2m03+3N/8X9X0VY09kFnhzXuKwwBPrAapMxg2IJ4Tt9cGzSnoSKmK8S0c
+ ut9tcup+qX+Rqe4KNhfLCqbQnnwp0ZLZBzRIYW3ooakmVDQ5sn1DHf+Dcq8BTbjKiLNIwgSg3
+ fDdXKw/3cxRsShYT8FWNJQ2ETGHv0Ij16YkVs414m0fOykdcRgq731rnITGG+u9DT18lFzG0Y
+ uMIlTG3BJ6loWXZGnr5nHdGAR81k4eKOXmj7R0msjYN0Hav+PU/IgJWveYS2rBp/6BHrzuqzp
+ /5ZWOU1yII8C/6GsYtloiDUH+nsMVeDMWrtJ90NQdEq21KejnhBEQZAam6x+wm9cK7GuLebqs
+ 1XZhN0b9vl+7yFVi/A+xD9uZllvAjkRm4OLsemy9gGUwRlmLe14X1GxLNhLYwWERrJ9xkO+2K
+ 8G5XVLh1YJpzThGao6zRf5+aAEefVbLVIVPKhJtE50ngYK0V5frVNqDWhC1lFmYWOnEDaz/oO
+ bYeFfhOcloM8y4GkhkrPYGNHcwkKDUoOyRCmLhMLHW7bkSBgbZCZDTU5flKmNEE/erP7mzZLp
+ OuGEUtwRdKB7pZujiy6KxdO89QG3jZ9arRjYqOCO/wA73M1YrpHcJAY6BzNZXoVvYAS2Hpwy8
+ v6h/i7ESa0jSlmwQDXIDpYw8S9C1D53UUOHMVZghKH611NBxtao2EoEH2czJJOnqXWadw+4eS
+ mIkbkG/tBulN1W38zNLcQk3ydMeGP06WKFaORRG9a1fVaLWoWMBCyD7k8XOdVToOsKmivYN8P
+ mIkxc+tkuG925NzrS1Xdgi8pnTFlYydFCSaT5H9AyzxQbewakixnemIvARrK+h+j0bmUofjG0
+ u6heCL+du8vmgoy/IFqLg/nHUpWdw2e6ZhpcBvxSyfnK/4i+ZtunXpWnX4kHDzI/V5H6Un2dJ
+ p2FGSvZN8ROGj3kswHc5wqXsc9+hsn9UKjiPRHKkut/OaN2I2FsNJzKMzYoK26+FxteR9yIIG
+ VAOdZhYbSBY8HosfiN7/rhijKZ5npFU5PHqGTT2fkx3IoggjOxYH+VlvlH6EtC/Q3Nv/4w4ul
+ bvOJMkLbwVe23im4yTr97pdviMLGUBHcLcQykZ730VmVDxTbDu5RL3hwPQ60ZgXhftC8dzpAj
+ XeqOy/EFAfJlYEeaZR0q9dW/mAfu9/nKr1qe9MIbCb/uG5NnPtgEFK6QDQCGguYsqKFedb6Ho
+ mL9QrZVlSwbma4CjrShPV5n0YGdqVZRWlx4z5E292hX67dO532gyHMmStbyBWeuRbbp4c1KM5
+ nXuUIcZJ2rnXfThqO2Me5z8ZlRSKlUqju8orr4lb41FtKHtsMRPmW2qtbVAR8wDz3ILcP5tcW
+ phbVMsMMH9KJLgd5z+cYppJF5I25LJFZbiI+hHm1cJK3h2hPraIJYwXlDskKBYlU2xO0mR8nt
+ 5/B3VTvhoQbCrVQjX9m3ZHrrol1TIrXljnWFg2QlRf5wogRiVBADSBOLf56k8+CP5YvlGtA==
 
-On Wed, Mar 26, 2025 at 11:49=E2=80=AFPM Sungjong Seo <sj1557.seo@samsung.c=
-om> wrote:
->
-> If there is no error, get_block() should return 0. However, when bh_read(=
-)
-> returns 1, get_block() also returns 1 in the same manner.
->
-> Let's set err to 0, if there is no error from bh_read()
->
-> Fixes: 11a347fb6cef ("exfat: change to get file size from DataLength")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-Applied it to dev with Yuezhang's reviewed-by tag.
-Thanks!
+> Don't change anything, Markus is wasting your time.
+Can clarifications become more constructive also for the usage of scope-based resource management?
+
+Regards,
+Markus
