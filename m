@@ -1,178 +1,147 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3476D134BD;
-	Sat, 29 Mar 2025 19:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658BC134BD;
+	Sat, 29 Mar 2025 19:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743275614; cv=none; b=ZqV5+AAj5tipPNqbaPDoE/+VlpuQ8sMiuHoYi/zn83v8JUntdKAiR0Vzu95P1vc1h0Skijp+JMFtvXmvxFQ01iN6dAkEzsTZK4fcDJa/wIdEbe0h8NDvxMpLTABhHNmrk2DVjbNAMzQqH+5FqwGwKEkvped/DnjrmXTI5tReWrY=
+	t=1743275685; cv=none; b=aua9wiTk1i7jO/Py/Qv4fdsA/sRfzUX9Zn6USh7uRmzt5nP7oIglkRUHW7YlNIDDih66kVQA2Qh7//PEtS/cvWfQ1qsEu3BQ6Uw6ev/D3RAJmw8qdmC7oVKNmJC5t8+rMmdQuFNhWjSeY45CBiKqiw52asWK9P+pkgYuoMWFThA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743275614; c=relaxed/simple;
-	bh=wGg8na7dTv8XnD4kZJKan/VRjynT7s83ckCx/R1Pts8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aQqXRVJHYh/FFb9pL312ofNnnL56S/6tI5QY5T2wglK1ntj4aiIbnn4q6G4K9Ij2UP21DyWle7ag8/tDxWCHbVJNZV+YDfn03yV7NZ8vghB3KLpiyXKa3TDOnb01OXMWzEypKjDsXRHdtKR3tLDAsgA5LmGOaAqhcOD1rJTNif8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhUNRS/u; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743275685; c=relaxed/simple;
+	bh=2iHFD4cCTuabZpf/KjyRS7hm/Gl/39G0GLR3oawAJHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K6U4U1ImuMNaQOprD3Xj7O4W/6WATBDrFxWJfaVz4OT5PjGB2BaRAWzS29vj/VZt/OAHvN/kGPwhFHHF7G3aafBlbhlHGd27CtXF/7Uw8BmI45nxWsCdv9JF3AwZ4AhZTlbCDo63SdzxzJahydAWSkY/Aqg9Of8SuFfxoEfAZCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=UESkSlfi; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhUNRS/u"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224171d6826so30040725ad.3;
-        Sat, 29 Mar 2025 12:13:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UESkSlfi"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac29fd22163so546449266b.3;
+        Sat, 29 Mar 2025 12:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743275612; x=1743880412; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nJcGnPcqe3iN7N1I+Go0o0oWDdL9OLHD+1UStBOXd2c=;
-        b=NhUNRS/u2lcHKhJqGLNX/EsfPYMZ4N5lntijCRkFRJl+MPQLdMsTLhSIxkfHDComnH
-         965l9h6emjGUUBPA50SnDsT0wr4GDnVWxZORP0frDDMcDa/IGfgi2UFyNIBHC4IOtVQe
-         ewSes1shsw4HuhTX4jGGQYSj8cf70+55D26trvtEdu0Ga1+5vi/2vlkrQZm5MoRuyZy8
-         +Ai/HCeZeScBq4gIveQWGiIhCz5oTc45frzL/oKwTMEWSGhkaY8s/mvPFO6GNhchRV5s
-         SlOly8T2JbdRWcbWXB1dilohyTUaRyAt8L8MR2yY2o8hMLhuj7OlY9GuHaTBtRab0bxD
-         2Qsg==
+        d=googlemail.com; s=20230601; t=1743275682; x=1743880482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4qdQmtdze7x4J+KlNeJtAH6STgJ/ut+25HlOxXn6Nc=;
+        b=UESkSlfioys1tdexoKBTKXe4uD4MXlo5NOXsJUJ6b+Z3xHdj2sNhulEjMW3KUq3h1N
+         qwSimVpsZtZHva+PlvEGY5au4KbqN586sn/nDBwoEUSPGRRns/f9ksMuIQ6P40n9Fa7X
+         B/5DGC2p2+nuFU/TwaDX4kT6k8pqM5DSiVa95QYYc65g+Usz1LSpjlNnlzgAVA8rn23b
+         G0eIVrz09n2GpwMFQGDCwJuc8SpQnXWeUIRdduOyApgLM5gPaTu8oCHth/AjjuTvlW4H
+         KvzPk+0tPj4Yc9yWaVrkj2hwuxJPlfWoEeLI3WOULqZlVtpXRdDzyqbkLXD5xuDSxN1Q
+         l1Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743275612; x=1743880412;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nJcGnPcqe3iN7N1I+Go0o0oWDdL9OLHD+1UStBOXd2c=;
-        b=eSE3GBl/wPyaMjlS978WxnrUgd7wgy4V4hhR+GxuT/jvVvHfQerOSVfR6MRUdvCL4u
-         UAyyy6skZWBR1edvfZV5iYtbQIQT/D2gj2cO4+/gJg6BgRCtHUIA7FFbs8Mv+lUNQZQm
-         0OotkoPh1H2VGnZlalCt71jvqVlvbosC5ir/hAq3pyM11+TRGEj1Tq7d41uP9RKm8mUo
-         2Kt4y/5rD0Yb+poQXN4y9cuCVPj+1q3AJQnzUW/g9A+HNRZnbBhCbbfhD0KhO7ZoRUic
-         WdV/9HikxpxQnWyRutKvOiDiuIjk8P//mWsqc3fy+SyvI+yy7GJl96miLcTjHjli0BD0
-         F2kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUk/QsX5W3vQXejcLWL4hzqHtCXY7XVfrM7W8p/kL9o4Me3uwQks+t9fsQuglpApS7XpZI+PLXnjSycqNg=@vger.kernel.org, AJvYcCV8uO0f2kVfr5bbQA7fwOx54hfHO/mtpfVFszz6/CaU9Zr34qE3j/Y1UiqWoBAihbQxehZMnuyBJJTxwpHPZp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0eeV8hOa29Zzg1gaLVCNrDaPWrrT/9V/3GMd8jhhl6eyRoN1q
-	kYOnjUteCYMz8E1aw4/UK5zV08oZ76vECsAigDXDWaOFV9RHxNjp
-X-Gm-Gg: ASbGnctlZilDZKsq57YfHlEy06WeNsrtg72YDQXRPWsyLYGFHV3aWYk2Rhnih99KKFf
-	MU0XjrBaCLdHKAmAB4JODP2F9Svi/khHrnythciD+O3TnzO/xQfWYOjAFH39aBmgWSEmvdalxM3
-	M9js7pEetxaH2ceu1lUwF3IKJp9bfax/iaHReywisL3hzrqUhMBiW0uI+swCIftPQXX4W++L/I5
-	4LkHnZzwibKREplPJKpZUtQPX6HKFMG7dqyqNPF0/UlgH+hVNWzXv9Vd47AyBfPsVLt0Occzfdw
-	ep5k27KI4UUVcQSvW0bX1EjgGyhDqRocRyOvLi4HL/7HKAAuHLcEEsS05fNNS1NSI21Pv88A8q+
-	8dBFNsLM=
-X-Google-Smtp-Source: AGHT+IExhS+UYM2t2Om26UAFOuIMtcC5jON9sZ2nZRoKA7uc+rWEkPuHhPHZdR3ob/+tcTS4xwYZ5Q==
-X-Received: by 2002:a05:6a00:148a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7398033ad19mr4613230b3a.2.1743275612277;
-        Sat, 29 Mar 2025 12:13:32 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6? ([2401:4900:1c44:e4e:6e69:d5cb:5b5a:ea6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710d796esm3948013b3a.168.2025.03.29.12.13.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Mar 2025 12:13:31 -0700 (PDT)
-Message-ID: <564042d9-0645-4a0d-aac8-383b0c699b49@gmail.com>
-Date: Sun, 30 Mar 2025 00:43:21 +0530
+        d=1e100.net; s=20230601; t=1743275682; x=1743880482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k4qdQmtdze7x4J+KlNeJtAH6STgJ/ut+25HlOxXn6Nc=;
+        b=vOyOEK5zEOf/9HAU0ZbcCrWFnYdwdEs1fY39PTPWkAHFSBiS7VZ8Yjj1dQj6hGRhYz
+         Cg7m8BPQ8uutRSSoF4wxv9aUd512w5jre8lBJr2vgLWB/zaNM00QSQPVj6ALz2qTobmR
+         uYi4MTyf8P+kfksAAUX40btOdyAk84Nh2ce6RFsY1PILe4NBjDXPPCYqc2fcu2R4oVL8
+         M7VTGIj0hhrWtQEuIe490x93a+aNeFYh5JGJrut+IyEBWdbNHlgubQQQ1A80NfKV/Ery
+         d5tJ/cOsQ5Ha1UiUSBK7F2rflMkuv9G2pHuOan+gagkt2V/D/Qdenurs3fsnKBCx7wld
+         7JRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVH8qkZWULqWgTqO9YkljD/rwSVQWpX/onjD8AFCa+YsEPm4dw08IcqcT20Bov9Zge1YSD4qYbik9DAGYA=@vger.kernel.org, AJvYcCXDB9CJ3paEwV4JegH3Tqi0DRrWbHb34j3BzCLrAOjM20NDBFnvrLZHJ/hktEoBRhfenXWtt7cD6i4bQX0=@vger.kernel.org, AJvYcCXE0Tz6RHPiO8AC+seO2isoYdgoMymEiTCuLI0PG50L0C15J3b7N/96Oi55b0I9Vs8mtRp0LrPZyVKKBQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeN3+wNmfASQ9Pfbda33wus5VRQZv9rrgqPj4OWIJsqqt55YMU
+	W8LrVdH3BYKPkcIci0kwzeEbKCLKPEpbqbVxrFnuUcUCBCkApuMw
+X-Gm-Gg: ASbGncshzFlx7XnKWtGwoHvnCbyINF79hPv8AbSrvaCmZcmjtKQwmhV46XNNcG4Fd+D
+	FIyKNFqD7xn8IrVu6ALuzkM/oqetgevNBdHkN06jm7O/lI6lVJH+FD3P57opOFrVPZIeFzT5feO
+	pUnU+mRI/5F4z72BNSyjAw/lnihWiBJBwu47x+VryzR6ochEDxMB9E/zPIYtCURepi8Y3Refzv5
+	V2KwYeEuLQ6cl46TVJ8nR8dwWWb//NhNT32rER51GlC5yAHFfK8hKQxFeZUySTVbiR+w9XeJfrf
+	Rr/DAzQaa2hC+fMX8HRoi1kgveH+DMYS71c8VHbx2ehIUCinh8mkNaCFPhmreZ0is9X+qEjbOei
+	AQY8WhLFk/82GYvJUN7Q9XYuHxbhYEkTuq82hLYZDZoYLvEWU3qMpLLdiixFD33CAj2UHqaKspz
+	YEhSBL
+X-Google-Smtp-Source: AGHT+IGKSSVjR4jmVEM1dPlaS/R+l5YVQlq5r7CWXRElqfgt1HNgA0wl2mVf2UCJ7eOqQ2c6wzoLXw==
+X-Received: by 2002:a17:907:7e82:b0:ac1:effd:f2ea with SMTP id a640c23a62f3a-ac738a82f63mr347131966b.24.1743275681354;
+        Sat, 29 Mar 2025 12:14:41 -0700 (PDT)
+Received: from localhost.localdomain (dynamic-2a02-3100-ad73-6800-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:ad73:6800::e63])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17b2ab3sm3327592a12.52.2025.03.29.12.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 12:14:40 -0700 (PDT)
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: dri-devel@lists.freedesktop.org,
+	linux-sound@vger.kernel.org
+Cc: mperttunen@nvidia.com,
+	jonathanh@nvidia.com,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hjc@rock-chips.com,
+	heiko@sntech.de,
+	andy.yan@rock-chips.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	dmitry.baryshkov@linaro.org,
+	mripard@kernel.org,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2] ASoC: hdmi-codec: wire up the .prepare callback also for SPDIF DAI ops
+Date: Sat, 29 Mar 2025 20:14:33 +0100
+Message-ID: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] openrisc: Add cacheinfo support and introduce new
- utility functions
-To: Stafford Horne <shorne@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
- sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250329094622.94919-1-sahilcdq@proton.me>
- <Z-fHhT-0a-fEkPnD@antec>
-Content-Language: en-US
-From: Sahil Siddiq <icegambit91@gmail.com>
-Autocrypt: addr=icegambit91@gmail.com; keydata=
- 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
- rPgMe6IIvn24UuW2f6fIt0AaqOWq
-In-Reply-To: <Z-fHhT-0a-fEkPnD@antec>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Commit 2fef64eec23a ("ASoC: hdmi-codec: Add a prepare hook") added a
+prepare implementation. Back then the new callback was only integrated
+with hdmi_codec_i2s_dai_ops (which is used by the I2S input code-path).
+It was not added to hdmi_codec_spdif_dai_ops (which is used by the SPDIF
+input code-path).
 
-On 3/29/25 3:42 PM, Stafford Horne wrote:
-> Thanks for the respin.
-> 
-> I will take this version and put it in linux next to see if any issues come up.
-> 
-> -Stafford
+With commit baf616647fe6 ("drm/connector: implement generic HDMI audio
+helpers") the DRM subsystem has gained a helper framework which can be
+used by HDMI controller drivers. HDMI controller drivers are often
+tightly coupled with the hdmi-codec because of the so-called HDMI audio
+infoframe (which is often managed by the display controller).
 
-Sounds good. Let me know if any more changes are required.
+To allow the new DRM HDMI audio framework to work with the hdmi-codec
+driver for SPDIF inputs we also need to hook up the prepare callback to
+hdmi_codec_spdif_dai_ops. Just hooking into the hw_params callback would
+not be enough as hw_params (is called too early and) doesn't have access
+to the HDMI audio infoframe contents.
 
-> On Sat, Mar 29, 2025 at 03:16:19PM +0530, Sahil Siddiq wrote:
->> Hi,
->>
->> The main purpose of this series is to expose CPU cache attributes for
->> OpenRISC in sysfs using the cacheinfo API. The core implementation
->> to achieve this is in patch #3. Patch #1 and #2 add certain enhancements
->> to simplify the implementation of cacheinfo support.
->>
->> Patch #1 removes duplication of cache-related data members in struct
->> cpuinfo_or1k.
->>
->> Patch #2 introduces several utility functions. One set of functions is
->> used to check if the cache components and SPRs exist before attempting
->> to use them. The other set provides a convenient interface to flush or
->> invalidate a range of cache blocks.
->>
->> While testing these changes with QEMU, I realized that the check being
->> performed in cpu_cache_is_present() would always get evaluated to true
->> when the UPR_UP bit was set. This series fixes this check and addresses
->> v4's review comments.
->>
->> Thanks,
->> Sahil
->>
->> Sahil Siddiq (3):
->>    openrisc: Refactor struct cpuinfo_or1k to reduce duplication
->>    openrisc: Introduce new utility functions to flush and invalidate
->>      caches
->>    openrisc: Add cacheinfo support
->>
->>   arch/openrisc/include/asm/cacheflush.h |  17 ++++
->>   arch/openrisc/include/asm/cpuinfo.h    |  24 ++++--
->>   arch/openrisc/kernel/Makefile          |   2 +-
->>   arch/openrisc/kernel/cacheinfo.c       | 104 +++++++++++++++++++++++++
->>   arch/openrisc/kernel/dma.c             |  18 +----
->>   arch/openrisc/kernel/setup.c           |  45 +----------
->>   arch/openrisc/mm/cache.c               |  56 ++++++++++---
->>   arch/openrisc/mm/init.c                |   5 +-
->>   8 files changed, 196 insertions(+), 75 deletions(-)
->>   create mode 100644 arch/openrisc/kernel/cacheinfo.c
->>
->>
->> base-commit: ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e
->> -- 
->> 2.48.1
->>
+Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+Changes since v1 at [0]:
+- re-sending since there was no feedback
 
-Thanks,
-Sahil
+
+The following three upstream drivers can use the hdmi-codec with SPDIF
+inputs:
+- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+- drivers/gpu/drm/rockchip/cdn-dp-core.c
+- drivers/gpu/drm/tegra/hdmi.c
+
+It would be great if any of the maintainers of these platforms (Cc'ed)
+could confirm that this patch doesn't break anything.
+
+Mark, Dmitry: who of you would take this patch (Mark via the ASoC
+tree or Dmitry via drm-misc)?
+
+
+[0] https://lore.kernel.org/dri-devel/20250105162407.30870-1-martin.blumenstingl@googlemail.com/
+
+
+ sound/soc/codecs/hdmi-codec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 17019b1d680b..8bd125e18a7f 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -1010,6 +1010,7 @@ static const struct snd_soc_dai_ops hdmi_codec_spdif_dai_ops = {
+ 	.startup	= hdmi_codec_startup,
+ 	.shutdown	= hdmi_codec_shutdown,
+ 	.hw_params	= hdmi_codec_hw_params,
++	.prepare	= hdmi_codec_prepare,
+ 	.mute_stream	= hdmi_codec_mute,
+ 	.pcm_new	= hdmi_codec_pcm_new,
+ };
+-- 
+2.49.0
+
