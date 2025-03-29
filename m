@@ -1,75 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out187-23.us.a.mail.aliyun.com (out187-23.us.a.mail.aliyun.com [47.90.187.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD131C460A;
-	Sat, 29 Mar 2025 13:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D181C460A
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743255345; cv=none; b=syteqel0PkQOrZNM04Zq8DXjfuhB7nRI+AdVJD4J5kZKlv5LjOf7EEI5Uim+NDHjjAlZ6jQWv8VhpfbCHEQ1sDRIqOC5hBGXbnCgnwWo7oC4ZxjjK3KBkPtMjTiCmXhxcC422E1vIT7EetL9kFzXSnhBBNIlLxjml2UuoSAPSlA=
+	t=1743255403; cv=none; b=IIN+Dw845AsdfYxTNpoewdIf/1KGlMcIsHra9pQI9VOyqj1ZJLuRCi/G2uMnhP50rU6O8lgYV2/BnLQAD1M3DvTBw3DAqlYjns4qzHwLzEFtfz1n9/39rFw6CFFBaaSqxNmE5VpqvCi9vsVLZy8XxOIcTW1G1BP+C9x2pGfALeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743255345; c=relaxed/simple;
-	bh=+S2YwW0R/VrGE2BqFDOgebu3LwcT+mV5mrkXCsYwago=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=X6UY7DNgKYWSHGct0JuHuJQA5ewFFbek6zJ6UDqLcFqdwpNOVfRIT65tEOh94oSJqm6rDDKde3QDHVO8rypQuEzo44eCH7cJHhRy2NdovlKlgj+kCzxS0vF+VLHaKowT3Au2HbC7VrtEnc5zmuFX3yxCTY2God1xtLBQR9WsfR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJLddEmK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743255403; c=relaxed/simple;
+	bh=GYA6XhR04RH+1CAfGlxWuNUtvxz+KVpOVf0+Uyr+8/U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HT+P7/LXrbWVadK+XIkwmLDiTOjaIv2fBBbR4QdNFGsDBPOB9yi1cXliePEdgp9yfneOoFUVK3KHpLvO3PfBXOfqxlmE4BExTZWzL2U+XQV4O/16fmmwefR1MPidiiQwLwitx2/9GZAsEOpa2VWnx1qmXHc+RvAWJysSbmZldwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=hga6NPIf; arc=none smtp.client-ip=47.90.187.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJLddEmK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D657EC4CEE2;
-	Sat, 29 Mar 2025 13:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743255344;
-	bh=+S2YwW0R/VrGE2BqFDOgebu3LwcT+mV5mrkXCsYwago=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CJLddEmKG8zXkTIk0DEOQgMbeMx0vWC1Wnzz4yGYOpEjN93TQtXbPld+66obQh5MA
-	 MKr2D83hydkIuz8PsVgkguzJ3a71P7u2EfN4HDEmfbFhjdCMAJVLS79aYl2JZOxHMq
-	 XICWMUl8I8jtaarcbGhTEec/njOkeWVqCrRhWYGmn1RVR3L3ISXvTCVV6Cz+XxgWM3
-	 UuwbO1wZ2mj2cqn0znKcBdl6o+N+LBYqtv9BUiTAkCgNXE3BgJfHA+WErsgnMff5Pa
-	 1VL9x+sS1YPlM38i7Y2VZNAeu1lwcMeglXLCXABITLsHaJ7jfvDtiMGdYsbnLb4p1X
-	 W3NaaY98yuLdQ==
-Date: Sat, 29 Mar 2025 22:35:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] tracing: tprobe-events: Support multiple tprobes on
- the same tracepoint
-Message-Id: <20250329223535.e121322ab3191368ad5ee799@kernel.org>
-In-Reply-To: <20250326070809.9f92d18741c6342a68179c5a@kernel.org>
-References: <174212767109.348872.18231451508464729427.stgit@devnote2>
-	<174212769289.348872.12945848497242748827.stgit@devnote2>
-	<20250325130628.3a9e234c@gandalf.local.home>
-	<20250326070809.9f92d18741c6342a68179c5a@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="hga6NPIf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1743255385; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=eajsjoiON1I0Jxv4Hsr4N5ua6b1s7QOKAILrBRn4bpM=;
+	b=hga6NPIf8GI/H5QBBckg8fs/izWnHFnysOz+hQLv/Oa3BA9336mYI76Co5HGpCGRJHPJwsv6QI2clAM6mNq/baAsEgtw28ApOv7gjf9JljRnrkMo6q26JWTQGhk/IKpb1MjKyCwGEWzMEPVzo7HiE0acoBd+Dp0FVyJSuKzhA4k=
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c7ROdG-_1743253534 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Sat, 29 Mar 2025 21:05:35 +0800
+From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To: linux-kernel@vger.kernel.org
+Cc: "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
+  "Dave Hansen" <dave.hansen@linux.intel.com>,
+  "Andy Lutomirski" <luto@kernel.org>,
+  "Peter Zijlstra" <peterz@infradead.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,
+  "Ingo Molnar" <mingo@redhat.com>,
+  "Borislav Petkov" <bp@alien8.de>,
+   <x86@kernel.org>,
+  "H. Peter Anvin" <hpa@zytor.com>,
+  "Rik van Riel" <riel@surriel.com>
+Subject: [PATCH 1/3] x86/mm: Correct the actual count of available global ASIDs
+Date: Sat, 29 Mar 2025 21:05:24 +0800
+Message-Id: <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
+References: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Mar 2025 07:08:09 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The available ASID range for global ASID allocation is
+[TLB_NR_DYN_ASIDS, MAX_ASID_AVAILABLE-1], which is a close interval. So
+the actual count of available ASIDs for global ASID allocation should be
+'(MAX_ASID_AVIALBE-1) - TLB_NR_DYN_ASIDS + 1'.
 
-> > > +	/* tpoint can be NULL, but we don't care here. */
-> > > +
-> > > +	/* Search existing tracepoint_user */
-> > > +	for_each_trace_fprobe(tf, dpos) {
-> > > +		if (!trace_fprobe_is_tracepoint(tf))
-> > > +			continue;
-> > > +		if (!strcmp(tf->symbol, name)) {
-> > 
-> > If the try_module_get() failed, can this every be true?
-> 
-> Ah, that becomes true in the next patch. In this patch, it should
-> not be true.
+Fixes: d504d1247e36 ("x86/mm: Add global ASID allocation helper functions")
+Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+---
+ arch/x86/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No, I was wrong. Even if the try_module_get() failed, tracepoint_user
-is allocated anyway (with tpoint = NULL). Thus this can be true.
-
-Thank you,
-
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index e459d97ef397..cad4a8eae2d8 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -279,7 +279,7 @@ static DEFINE_RAW_SPINLOCK(global_asid_lock);
+ static u16 last_global_asid = MAX_ASID_AVAILABLE;
+ static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE);
+ static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE);
+-static int global_asid_available = MAX_ASID_AVAILABLE - TLB_NR_DYN_ASIDS - 1;
++static int global_asid_available = MAX_ASID_AVAILABLE - TLB_NR_DYN_ASIDS;
+ 
+ /*
+  * When the search for a free ASID in the global ASID space reaches
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.31.1
+
