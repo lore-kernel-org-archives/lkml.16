@@ -1,32 +1,32 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBC51C3308
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117A41CAA63
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 11:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743248384; cv=none; b=uhvM5zsOQdN0XqWbA1bmTN0AGYCbOV8PKqq44HVBTkA4cPi+m8a+EYTf+nqd0caTIQXavc9TG+DaGPpy9FVMMbEAfdFLhYwDQqMo3ZppvuoudXCSE651KwIQRjmsYAmUO4ciDbtYS48vm9ALaFPrwz1He6BdPs23joH/nAccG+k=
+	t=1743248388; cv=none; b=uuIVkCRe12P64UpI7hS7k86ZZVOxJ4FwKngii0fHzMKvbwCArIU/wBAePoNOEVtKrsmfP9iJf1ps2DCGWQ8Ct/tBUxcs8WT9Y+W2D1UeqhIRYWrkCfWUPwpuslHK1uwKKgAr7jLyI4fb1YAMgwrkn2sz43DdxChlRnx+SVmaV94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743248384; c=relaxed/simple;
-	bh=GQNVQGTV6tU0ucAzACDoH1RS8W51GlHc/KpBiGt+pM0=;
+	s=arc-20240116; t=1743248388; c=relaxed/simple;
+	bh=YKi8hBb20v+kVNc/kFoCwjQjQydfT/uSE7FTAI+bQCQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WXNEpZTRSalOUH1jssDUI+03+9xLGd7OzuVcF+UtfxRd0UERkplXOzWAsJVZFm6AJKcV46DFFR04IXd2JD14fk3PRK5FMVvUFYLsdc8GUeO0NtNGnDOK1by+K5iXt5qIxjr5H8+jJOYpb66F2JLKF9tKwqMOGwEfhGNLp2ySvCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H1+1j4hY; arc=none smtp.client-ip=91.218.175.173
+	 MIME-Version; b=cHAx9N0hHKF2gdqsarN13aGcEPJD4DmuqXXtLDKeknT7TlgpzLk4ktU4sDGSpXuoGKR+gDG9EzCuQGtLjXg/yqy5rVgl9soh/3EvMI/7NJIX28BT+Lk605Dxf1lHbgukfmY2a6OzGIfzYzlZvJcJIFQrQjeixDV5GF0+aaPP9Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HK9PY80h; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H1+1j4hY"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HK9PY80h"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743248379;
+	t=1743248385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k5hNPwbnjZEy7+j1MXKyHlFHRyFkdr5dcKL3LqQkG8s=;
-	b=H1+1j4hYuWwhNd9nivU+m/Bp2Z5eRbVWjQiiXagmULJtRfXePjQEi0LpPSeGRXPnzkz52H
-	WhAfDHQVjckZezegGWCPZ6D1EODP4UK+5d/Y7/NnJlQlwnrzFqCQQzM8E4FYe14XGSwyxU
-	VX4RAGIyy5hzfu4fcRABl72wY7UZMOo=
+	bh=GsA1pQnRlR6l2x6bKdBI0zxehwHaTt8i7wNnjmPpXMo=;
+	b=HK9PY80hlcRf+/+QHcyfYvY2bAQXNx1M2TMRyAS64ywg6Y3GaaYgQDbxVEnrp/zomC1bo3
+	JIwtYnpS+64EMpReMnRXCUv800yJqHMEF5WYXTQyQM8x0pAJxgki3t/IIX72u+msotrhMB
+	zKG6xXjSFliqecNk1Vv7o8uJXh6osx0=
 From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
@@ -53,9 +53,9 @@ Cc: Nishanth Menon <nm@ti.com>,
 	Linux Kernel List <linux-kernel@vger.kernel.org>,
 	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
 	stable@vger.kernel.org
-Subject: [PATCH v11 01/14] drm/bridge: cdns-dsi: Fix connecting to next bridge
-Date: Sat, 29 Mar 2025 17:09:12 +0530
-Message-Id: <20250329113925.68204-2-aradhya.bhatia@linux.dev>
+Subject: [PATCH v11 02/14] drm/bridge: cdns-dsi: Fix phy de-init and flag it so
+Date: Sat, 29 Mar 2025 17:09:13 +0530
+Message-Id: <20250329113925.68204-3-aradhya.bhatia@linux.dev>
 In-Reply-To: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
 References: <20250329113925.68204-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
@@ -69,20 +69,18 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 
-Fix the OF node pointer passed to the of_drm_find_bridge() call to find
-the next bridge in the display chain.
+The driver code doesn't have a Phy de-initialization path as yet, and so
+it does not clear the phy_initialized flag while suspending. This is a
+problem because after resume the driver looks at this flag to determine
+if a Phy re-initialization is required or not. It is in fact required
+because the hardware is resuming from a suspend, but the driver does not
+carry out any re-initialization causing the D-Phy to not work at all.
 
-The code to find the next panel (and create its panel-bridge) works
-fine, but to find the next (non-panel) bridge does not.
+Call the counterparts of phy_init() and phy_power_on(), that are
+phy_exit() and phy_power_off(), from _bridge_post_disable(), and clear
+the flags so that the Phy can be initialized again when required.
 
-To find the next bridge in the pipeline, we need to pass "np" - the OF
-node pointer of the next entity in the devicetree chain. Passing
-"of_node" to of_drm_find_bridge (which is what the code does currently)
-will fetch the bridge for the cdns-dsi which is not what's required.
-
-Fix that.
-
-Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+Fixes: fced5a364dee ("drm/bridge: cdns: Convert to phy framework")
 Cc: stable@vger.kernel.org
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
@@ -90,22 +88,33 @@ Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 ---
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 99d43944fb8f..1cfe17865b06 100644
+index 1cfe17865b06..3b15528713fe 100644
 --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -966,7 +966,7 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
- 		bridge = drm_panel_bridge_add_typed(panel,
- 						    DRM_MODE_CONNECTOR_DSI);
- 	} else {
--		bridge = of_drm_find_bridge(dev->dev.of_node);
-+		bridge = of_drm_find_bridge(np);
- 		if (!bridge)
- 			bridge = ERR_PTR(-EINVAL);
- 	}
+@@ -683,6 +683,11 @@ static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 
++	dsi->phy_initialized = false;
++	dsi->link_initialized = false;
++	phy_power_off(dsi->dphy);
++	phy_exit(dsi->dphy);
++
+ 	pm_runtime_put(dsi->base.dev);
+ }
+ 
+@@ -1166,7 +1171,6 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
+ 	clk_disable_unprepare(dsi->dsi_sys_clk);
+ 	clk_disable_unprepare(dsi->dsi_p_clk);
+ 	reset_control_assert(dsi->dsi_p_rst);
+-	dsi->link_initialized = false;
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
