@@ -1,209 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF51CFEC3
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 14:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E11B424F;
+	Sat, 29 Mar 2025 14:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743258584; cv=none; b=kAChY9+/JwDy3RaiFA74G0sEzr2/9pc1FfuQU/zBkPRjTUYvbBJQc8TzP/QcAPS26XrBkS3+K8DhxjixtHFWSSa/JvJm8d7dd5qPWBqq259O8FJ3YsFK7+3uMax/wXJLU7MqTsHtbXPIOJdB+9NZ+5YfMAD/kuaU/Xpcjk5sBGY=
+	t=1743258615; cv=none; b=FNZXmnLT7nWHdszd2TJdHjWTisdRUWEn3cdCgmz5wGnsf++Ypejbeb6fsB1c1tMNwSFG9JvY1fD1ramWldMO2pP55slVRdmEip2Lav2R/pQOQgY88u839uU+gHk9RZCsgRnaPyfDTP/iMNMF/Z2cyjcEJGJXTDa52zYPzKOOUcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743258584; c=relaxed/simple;
-	bh=Fi4F8RQv3DGy1GiBd1AcwgqpKf/9p4SPpKi3oBfiZgs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XyRLw0d5UQ1zEBIaQF8tXqmhu/wyw+j8ssFHuIJeQMOqwoo3PQ5NirvhYrC7b1jrn4Qn4i3o8jsnM6kX+biXBBRZ5rCoHxiije9tnTVMDFrUAsYtTKPCZ9aeDcso9K87m2a77rOkprig1uqROgB76DTevKiKhRTHljl5TNTDJ7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A/Y2DmPF; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743258615; c=relaxed/simple;
+	bh=w0oCwzhaxAnRCzRQ9/YRYIOxKZmZRzvgSTK++PeHVpE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JgSToVaFduaMnxis9b08Rqg6VJHy7g+5cHaBipWAIoIFJnCUqB+yPs1hZqQGkz+RKfUg1Q3zuSD5oJ80XUB/yRalnnScyDwhArbXASBSwU5Jbpgb6DFPvLP3aVoSsMXqkyXzemWYho2VPO8WUqaaRQb+3d7NFaWjpZMqyB4d0+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EexcGqKT; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A/Y2DmPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743258582; x=1774794582;
-  h=date:from:to:cc:subject:message-id;
-  bh=Fi4F8RQv3DGy1GiBd1AcwgqpKf/9p4SPpKi3oBfiZgs=;
-  b=A/Y2DmPFwTBeyRiIbtPFxlm7h5JyqXa1r92NrGt5n+mu3OWMcDGQntMF
-   ZrxLXQlCRCS2xtPneWF/+avBltZrCapYyX2LJHJn//1A6XsecwyiAOiZk
-   4lOuJb/tltiooILCcNR+mKnoSQs4TrvvT+gr2QtcuDdPB55rN/XkIKw6H
-   uPgOn7VbHvHyfhNEq889jgffjQxi2oCI4CT3OxPb1KqtFu9y4sspXDCfb
-   ZQi002XzvLfr8U2OgN5bby6T74rOQvNaTh9C9Qa+mYnFzR11L+QZJ0vqq
-   YIawn96cdSO96+iHXVHUI2T2kvxLXH6A7Xf16NKTYrmI1tfM9gCQizjF3
-   w==;
-X-CSE-ConnectionGUID: kF9EZXkeRBSXTEXf8FFMGA==
-X-CSE-MsgGUID: 6h7fEdz4QZOpglHnOUNy0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="44614727"
-X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
-   d="scan'208";a="44614727"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 07:29:40 -0700
-X-CSE-ConnectionGUID: HsdaDa0dSU6ASMRYODaiCg==
-X-CSE-MsgGUID: IGSpX17uQUqcc4bTd0sMNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,286,1736841600"; 
-   d="scan'208";a="162944552"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 29 Mar 2025 07:29:39 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tyXBo-0008AF-2q;
-	Sat, 29 Mar 2025 14:29:36 +0000
-Date: Sat, 29 Mar 2025 22:29:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:objtool/urgent] BUILD REGRESSION
- ae958b12940bcd4ffa32c44684e4f2878bc5e140
-Message-ID: <202503292202.Sge7ZEUc-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EexcGqKT"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-300fefb8e06so5003885a91.0;
+        Sat, 29 Mar 2025 07:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743258613; x=1743863413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+xQzPizb+4q7++3drew8nzj42HkGLzBNjvrLjUAd15k=;
+        b=EexcGqKTceZ0JBAdt9qPEmmchZwwYFPgYUfYq3Y0ZXmwd/09WhysuqbOMPwO/IdFRI
+         1gCvrD+Lvs0LTmEzd3BK8G4Liy5s3WFU96uEDM3mXH8Jc4RPueo0utCGq7T0I+pGYu7Q
+         YmdL/0WSzEp8KjGlQ/NjKIwC6w7/AHYhbVP7Xsue08te1kDGdbI/HjHui5uEXFJ4LTw4
+         9/6cAzGc7DM/I/jaaljqhEc2RwZ/ipmViOZa5OR6v4ODFk381JX1IjT7y76VMoKejAZP
+         KxG4JBkpf03wTeksg8j8jOnI3woxx5pYBRjkWjnVIGmSovJLyO3Uh06zFWQzY+kmtkm7
+         ET6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743258613; x=1743863413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+xQzPizb+4q7++3drew8nzj42HkGLzBNjvrLjUAd15k=;
+        b=vlWJLVDzKpjSsxwZHb0yGX4bSQFF4uuY5m36bH2wVNa8+AGBP8qJKYV2Tj9LQ4jRDk
+         adn+C7aYIOdoMqQ/5o471D1xZBVkdUfnnw8etC5Yd+sdgNJyuV5ux357PaUgIpQvq35C
+         rGK/chMzsUwv4IhCaCzoQX7GiKqMb9bXbO8zq484FU9Br0ozIy+qRGy9VHGS0y1Js6MU
+         hreHqu8sseJd+4jUARw0iI0FVMP5BC/mFJ3XVcvbb5XyiL76Jz5B8UNZfMjASLBLbKKA
+         COEbPTNQH/NgVumREmJNIrf7O7nm5mRpRQ23EJw2TTFLWC7PvJ6Ws48f6nfKInaJiLYd
+         FIXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBNbYVk5KXv8dE1F/vMb/Bu4UBlmz+2pQ1XhE8Qg75Io0odHfabGYE3mubFRHp4ei6uyBF6eol3LrJ8+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqZ6OVOqtBuxKiQIgB6VT2eTyOEM2Gz27hPzHRs2BsslRi1Tay
+	rgaTu3qnri7fFYE2rwuwS8gVx4bKZYMwWcLt96/35W/Jf0uPkIVFSz7bXxyxlA68+Esy6uI4uYl
+	P6vgk0xxb4LIXu+S/kl2UCE5YsfKG9A==
+X-Gm-Gg: ASbGncvA0k0UYFHXINK//XgAwNuu/N8CPA6DAARmQLrnQWKksZtFQo3RjlZ9XTxl39Q
+	p+7WISs5ccxz4poPCc+lfBuiFZXjKO8/0uKTH4FPg8iC2P7SbdU6JZIclMOCE5T7tc4RR1lKUU4
+	xovPcS0qnkTbZkIEg53mrqCsNqgsAREdqfje3GiQ==
+X-Google-Smtp-Source: AGHT+IEZeGNvIgGgECDw9rUtEaQ1M5ojjZ6MTiTNno3W2R5+/BaqqCGv4o8c/FIay7eczCuG3dQAzb8XomY0bhRqn6A=
+X-Received: by 2002:a17:90b:2801:b0:305:2d27:7ba5 with SMTP id
+ 98e67ed59e1d1-30531f7bf94mr4126927a91.6.1743258612675; Sat, 29 Mar 2025
+ 07:30:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250317183349.346399-1-bharadwaj.raju777@gmail.com> <2025031721511050987ca2@mail.local>
+In-Reply-To: <2025031721511050987ca2@mail.local>
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Date: Sat, 29 Mar 2025 19:59:46 +0530
+X-Gm-Features: AQ5f1Jrz_QSXKF34LaUrfOrHihalyXOcyYry5aS2gclqre26Jed_H26IChjSkAk
+Message-ID: <CAPZ5DTHKSzg6UV0bT5U9Xet7jL1c__n+GgfYz-38GybGzerYNQ@mail.gmail.com>
+Subject: Re: [PATCH] rtc: fix use of uninit struct in rtc_read_alarm_internal
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, shuah@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
-branch HEAD: ae958b12940bcd4ffa32c44684e4f2878bc5e140  objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
+On Tue, Mar 18, 2025 at 3:21=E2=80=AFAM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 18/03/2025 00:03:43+0530, Bharadwaj Raju wrote:
+> > The trace call invokes rtc_tm_to_time64 on a
+> > potentially uninitialized alarm->time. Move the
+> > trace call to the path where we do successfully
+> > initialize and read that struct.
+> >
+> > This fixes a KMSAN warning.
+> >
+> > Fixes: 29a1f599c0cc ("rtc: Add tracepoints for RTC system")
+> >
+> > Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+> > ---
+> >  drivers/rtc/interface.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> > index aaf76406cd7d..82ba33bf478b 100644
+> > --- a/drivers/rtc/interface.c
+> > +++ b/drivers/rtc/interface.c
+> > @@ -201,11 +201,12 @@ static int rtc_read_alarm_internal(struct rtc_dev=
+ice *rtc,
+> >               alarm->time.tm_yday =3D -1;
+> >               alarm->time.tm_isdst =3D -1;
+> >               err =3D rtc->ops->read_alarm(rtc->dev.parent, alarm);
+> > +             if (!err)
+> > +                     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->tim=
+e), err);
+> >       }
+> >
+> >       mutex_unlock(&rtc->ops_lock);
+> >
+> > -     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
+>
+> This removes the tracepoint when there is an error, rendering it les
+> useful.
+>
+> Also, as discussed about a year ago, alarm-time being uninitialized is
+> not actually an issue as mktime64 can handle whatever is the input so
+> this will never cause any problem so this isn't really a fix.
+>
+> I suggest the following:
 
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-`-- loongarch-randconfig-001-20250328
-    `-- arch-loongarch-kernel-traps.o:warning:objtool:show_stack:skipping-duplicate-warning(s)
-
-elapsed time: 1443m
-
-configs tested: 129
-configs skipped: 4
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                            hsdk_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250328    gcc-12.4.0
-arc                   randconfig-002-20250328    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         lpc32xx_defconfig    clang-17
-arm                            mps2_defconfig    clang-21
-arm                        neponset_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250328    clang-18
-arm                   randconfig-002-20250328    gcc-8.5.0
-arm                   randconfig-003-20250328    clang-18
-arm                   randconfig-004-20250328    gcc-8.5.0
-arm                           sunxi_defconfig    gcc-14.2.0
-arm                        vexpress_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250328    gcc-8.5.0
-arm64                 randconfig-002-20250328    clang-15
-arm64                 randconfig-003-20250328    clang-16
-arm64                 randconfig-004-20250328    gcc-8.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250328    gcc-12.4.0
-csky                  randconfig-002-20250328    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250328    clang-21
-hexagon               randconfig-002-20250328    clang-14
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250328    gcc-12
-i386        buildonly-randconfig-002-20250328    gcc-12
-i386        buildonly-randconfig-003-20250328    clang-20
-i386        buildonly-randconfig-004-20250328    gcc-12
-i386        buildonly-randconfig-005-20250328    clang-20
-i386        buildonly-randconfig-006-20250328    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                 loongson3_defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250328    gcc-14.2.0
-loongarch             randconfig-002-20250328    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-m68k                          multi_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                      bmips_stb_defconfig    clang-21
-mips                           gcw0_defconfig    clang-14
-mips                        vocore2_defconfig    clang-15
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250328    gcc-6.5.0
-nios2                 randconfig-002-20250328    gcc-10.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250328    gcc-9.3.0
-parisc                randconfig-002-20250328    gcc-13.3.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                     ksi8560_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250328    clang-21
-powerpc               randconfig-002-20250328    clang-21
-powerpc               randconfig-003-20250328    clang-21
-powerpc                     tqm8541_defconfig    clang-21
-powerpc64             randconfig-001-20250328    clang-16
-powerpc64             randconfig-002-20250328    clang-21
-powerpc64             randconfig-003-20250328    gcc-8.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250328    gcc-8.5.0
-riscv                 randconfig-002-20250328    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250328    gcc-6.5.0
-s390                  randconfig-002-20250328    gcc-6.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250328    gcc-10.5.0
-sh                    randconfig-002-20250328    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250328    gcc-13.3.0
-sparc                 randconfig-002-20250328    gcc-7.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250328    gcc-11.5.0
-sparc64               randconfig-002-20250328    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250328    clang-17
-um                    randconfig-002-20250328    clang-21
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250328    clang-20
-x86_64      buildonly-randconfig-002-20250328    clang-20
-x86_64      buildonly-randconfig-003-20250328    clang-20
-x86_64      buildonly-randconfig-004-20250328    clang-20
-x86_64      buildonly-randconfig-005-20250328    clang-20
-x86_64      buildonly-randconfig-006-20250328    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250328    gcc-9.3.0
-xtensa                randconfig-002-20250328    gcc-13.3.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks for reviewing. Would you like me to make a second version of
+the patch with this suggestion?
