@@ -1,49 +1,77 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AA9143748
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 20:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F001DE8A2
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 20:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743280229; cv=none; b=KJugMPYufHd1mAtEdhyS4XcHk4c8+uTb6fQUIVXj72EOksy5nObiNtklpd81yQ44nG3CvPs5BpftDeMJhKyZUR3BOMK6chQImqtkx6MWKYcPDx4qwoxIOjxCdJZ8yBaoDv39mfoL0SBm0gL04HqW0dYtKuo2HTL9n4Uk0dN1+4E=
+	t=1743280256; cv=none; b=o+TJN4raP+RbPGijQz0+HVytZiv372JMwhHdjDDvd/1kKg6ZRRlODhqNdn8oy45gn0Vc3CzKvfYP2CbFfx97hsZWpGrH53xneBxr+lfobhDxtkc7XpTM7llerVGKobfdPugmF+qIe4SfaGxDo6MMalmZO7vJKUubNoA4ID7Lw5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743280229; c=relaxed/simple;
-	bh=QFJ5fUbf4xYjOfEHj/MKCPtSrPBKpbcRcgO3zN1Da/w=;
+	s=arc-20240116; t=1743280256; c=relaxed/simple;
+	bh=Yu8gx4E30LKjqkUeN+vwaFVnCZ1b49SThURUG43iDtI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a9R1n8DCkkxzmUGvw3H5IL6hSgf8THWBw+kriDOM1xK+2gjGlGAJLm7f9aUrp58hIZ+x2lvV+4LJU4VSD/UVfpwNH0A+F6waRW6lJm65XaZhqqv9IUXrYi9EXVz/zL48fUpsPFArMcOQ463j04gXtL8T/iGOD4sBYzpyw73Df2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=aW4M8QS3; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=h/FsIS3KOiLV1HVzuWlT4Bl/qDsOAEMZ6D5TbpYH+dLkrYaa4N/nK3fvYTFQg2jXVHNd0QJ/buACrP7D2O0lML5oLLGcE8Kuf06n53vDrNuWsu6eBFU+w8lMjzU8BT2Vh2Tj/CBzUF2xQp2BSABSZxOrj/joQgkzM4y2tk9yTVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zHUlig8P; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="aW4M8QS3"
-Date: Sat, 29 Mar 2025 21:30:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743280222;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qtGq3mNlYow8hi5/IZSZYU3QysB2Tb0jRTp1wsbBTts=;
-	b=aW4M8QS3b++thG7g7a2HoNC7FuNBkM9NxwhZFG7OEAcPIU3vSt1JEBcuQSUED39rbYCBWm
-	w0sNFCzjZ9TaQ3sy9FtZB1SUoGKzjVDVk4OeXIiEG+MycVufpSxUJkMfVV/qfNJjt2r9vk
-	RIknYmi7YS74pwtd4tOuX7a/HWZridkVyxahP63wTdb+qY5P7YajZoA1QOoZuIOYHdcrQE
-	EavM9q1MZFIfo9Dyq7KFIScP7P1Y6/Th14lOKuHkHQqrkswPgSZjZOuDEOi0HEEev2w5XC
-	KZ7cjfSTZLYjxMwwGuyHtSNA4Y65VD/GjIbQGNxs7f64hrPjxtqjazYtnkGbwA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z-hYWc9LtBU1Yhtg@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
- <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zHUlig8P"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso5141446a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 13:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743280253; x=1743885053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hcKHKeP7WWkzt6wllCWrZxsfdiWPO0K4X4xYXivfUlI=;
+        b=zHUlig8PCOj8nQe6uPjQC6nHhMdUFTf+ChShlT0uLCdRdWcvQ5X/c+gxSB9HNPUVOv
+         TCYSGlWYebTj7KG/hCWm/mIawJn4NZcHu8lDWoKWKqxo9XgGPULaWxI/hOSLQEZI+xof
+         1OFxIu5CKrKWnzSaGUPjcfDzT6xeaklpSsouh2ywp5eQjrmpuo0Eza/L/SOCctzrJa3f
+         mhVxlCpx1gPIYo+HAxssKA87mKDJYBjFBlHp+lmOy/CrKVk1TsJDkkki/jvdZYlUuSDA
+         ubfvkoNYH95C+kjfZ6awNUmq7AH1IISGBivAnI/Y0lFpb/aK2w5DzM9MW8+u3ExjSJVL
+         8vEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743280253; x=1743885053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hcKHKeP7WWkzt6wllCWrZxsfdiWPO0K4X4xYXivfUlI=;
+        b=Bkq8ocGQLCH9YXaQrFcrBsjpteyE9/VYCemKYUp2Yt4O3d0KwpbKHJrpngjDZV1G+F
+         Rpnq3f9TmUEuG0t2Npx9ReTCOosXyeTmNdG7mKJumBJ41Ci91uPV5gtxMmTu6eo8ztD7
+         JGKsb1Vc0JtV41RCj/WT6qqhQ1T++jIVXwG3hFv3VU2t9TUaoLthzkE+tz+HivFFLGuR
+         MPJlBQVNYNmpYjh0AG3Sr3O8VQgbYdeqvG/0bzpWAYMuQ7kZd64It7BxPEA+xr124pNI
+         JzWARnlyRsJ77H77bwnzm7LPjPTsabwpMiYFndi82Tia1VFSxXe+z0+IAEtvAjbDp1es
+         OD7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUyzHR+S5XBp1KEnVzEQAPjFut/w9NFCnspekAahYlgJ7I3hgW6FNeKCHrTyKZUKbnpK50MuwtwMjkUDdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN1OU3N95ZK0JTMcNC7cxo8/aMZ6d+IhbbAIb6pwLyUcaxBsSS
+	Le7ZHPRLGKNq8YGfLBKaBfVCUUVxeQvIPVr1Oj/u3JEz7lFNic/zh25IvpTwPPU=
+X-Gm-Gg: ASbGncuDZJVToo8DHq4l/A4+MzEvIHNRT28b7ujNh+BObFtgff7CZRprGUmMhJOGoGt
+	b50fNv1eIpaRbs2R1K+p4KMJH0EcHDUVwxMDAB5Z+m1onwU+w216q4WisAP43mKnCEKjP7WJkB5
+	rPftVQ7sVeESw18n/Ttqa+8ijjnMIicXwdcqUxTVirsotJ6moHGYazP8vbZAy0JPfeBh75ubUNN
+	OUrxNWKGBe6iUVm5NvCiSKuyu963YeQE29ybbfN1B+sHVwd/La9KzwVIHgWA6CFf3BC4Uq3jcwE
+	9xPcHt2nxJfy4qCVMmbV7ewSLbSQthrhZB5HDfgyqA==
+X-Google-Smtp-Source: AGHT+IEb6Ruea6hK6TV9vn2hpTxeIQDJ7rrjAnaoPPm7WZXIAH45MUutF4n7CxtI5vev0wjCTCnfjw==
+X-Received: by 2002:a05:6402:4007:b0:5e5:c637:b69 with SMTP id 4fb4d7f45d1cf-5edfcbe9333mr3696024a12.6.1743280252884;
+        Sat, 29 Mar 2025 13:30:52 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e04e6sm3377468a12.76.2025.03.29.13.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 13:30:52 -0700 (PDT)
+Date: Sat, 29 Mar 2025 22:30:50 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dennis Gilmore <dgilmore@redhat.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e78100-t14s: enable SDX62 modem
+Message-ID: <Z+hYel7Cb2t4mMPl@linaro.org>
+References: <20250327081427.19693-1-johan+linaro@kernel.org>
+ <Z+ZsE1wm87GfVanE@linaro.org>
+ <04ada91e-bf41-4be6-9021-96bcb781a40b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,98 +80,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <04ada91e-bf41-4be6-9021-96bcb781a40b@oss.qualcomm.com>
 
-On 2025-03-29 09:44 +0800, Baoquan He wrote:
-> On 03/29/25 at 01:14am, Roberto Ricci wrote:
-> [snip]
-> > Anyway, I performed yet another bisection, this time with just plain
-> > defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+On 25-03-29 13:06:54, Konrad Dybcio wrote:
+> On 3/28/25 10:29 AM, Abel Vesa wrote:
+> > On 25-03-27 09:14:27, Johan Hovold wrote:
+> >> Enable PCIe5 and the SDX62 modem present on some T14s.
+> >>
+> >> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> >> ---
+> >>
+> >> I don't have a modem in my T14s, but this is based on the work I did to
+> >> enable the modem on the CRD reference design and the T14s schematics.
+> >>
 > > 
-> > Updated steps to reproduce:
-> > 1. Boot kernel >= v6.8 in a virtual machine created with this command:
-> >    `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
-> > 2. Load the same kernel with:
-> >    `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
-> > 3. Reboot (or call `kexec -e` directly)
-> > 4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
-> > 5. Upon resuming, three things could happen, depending on luck:
-> 
-> OK, this is a little complicated. wondering why you need to do the
-> hibernation and reboot. Just for curiosity.
-
-The reason I do hibernation and reboot instead of hibernation and then
-manually boot again is just convenience during tests. The issue occurs
-with manual reboot too.
-The reason I want kexec + hibernation to work is to fix a hibernation
-issue on a system using ZFSBootMenu, a bootloader based on Linux which
-uses kexec to boot the final OS. Other software using the same
-mechanism include Petitboot and LinuxBoot. They might be affected as
-well but I didn't try.
-
-> > 5a. A kernel oops:
-> > ```
-> > [   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> ...snip... 
-> > I will send config and dmesg in replies to this email.
+> > What happens with T14s variants that do not have the WWAN ?
 > > 
-> > The bisection pointed to
-> > b3ba234171cd kexec_file: load kernel at top of system RAM if required
-> [snip]
+> > Is it OK to enable it on those, HW-wise ?
+> > 
+> > (Hope we don't have to split the devicetree again, like we did for the
+> > panel)
 > 
-> I doubt how this caused the failure. I have several questions, could you
-> help answer:
+> Unless Lenovo planted something else on these GPIOs (doubt), it's even better
+> to enable it, as UEFI brings up this controller anyway
+
+SGTM then.
+
 > 
-> 1) Can this problem be stably reproduced with kexec_file_load?
-
-Every kernel build I tested which contains that commit is affected.
-However a given build will not always lead to the same of the three
-possible outcomes I described. E.g. first you get a oops (case 5a),
-then you repeat the same steps with the same kernel image and the
-system may get stuck at a black screen instead (case 5b).
-But it never fully works.
-
-> 2) if answer to 1) is yes, can reverting b3ba234171cd fix it stably?
-
-Yes. None of cases 5{a,b,c} I previously described occur. Seems to work
-fine.
-
-> 3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
-> this because kexec_load interface defaults to put kexec kernel on top of
-> system RAM which is equivalent to applying commit b3ba234171cd.
-
-No, it doesn't. While hibernation alone works, kexec + hibernation
-results in the system just rebooting without resuming the hibernation
-image, but no crash or other weird behaviour occurs.
-Initially I decided to focus on kexec_file_load in order to narrow
-things down, but that was before noticing that the bug could manifest
-itself in different forms.
-It is possible, indeed, that both syscalls are affected by the same
-problem, which is not caused by commit b3ba234171cd.
-I tried to test kexec_load with some older kernels, but I got build
-errors, so I tested longterm releases where such errors have been fixed.
-With v4.9.337, kexec (via kexec_load) + hibernation works.
-With v5.4.291 it doesn't.
-I'm not sure how bisection could be done in this case.
-
-> 4) Can you add '-d' to 'kexec -l' to print more debugging message?
-
-When using kexec_file_load, just these two lines get printed:
-
-```
-Try gzip decompression.
-Try LZMA decompression.
-```
-
-When using kexec_load on kernel v5.4.291 (which doesn't work):
-[the output is in a reply to this email]
-
-When using kexec_load on kernel v4.9.337 (which works):
-Identical to above, except for the exact hex value of some addresses.
-
-> 5) Can normal kexec trigger the failure? I mean operating kexec w/o
-> the hibernation/resumption. 
-
-No, kexec without hibernation seems to work fine, regardless of kernel
-version and kexec syscall used.
+> Konrad
