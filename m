@@ -1,117 +1,77 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FC83010C
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219D529A5
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743228356; cv=none; b=QTwO3R8xeT9BnBitcHsJeRv/y+8R6SAGKTUsqJ1BlqErDNyFhqXqZGAPjXB5SvpRyxyXWA6SOe9j3EORRPlmLSRtP1RXfPMcyFeT8jXAg6vEpwBOU1IPqnL0ISat0qNP3l6xpusVlB2P5x44ozXRKaKtc4y1dLJHCto7ZkNQ1tc=
+	t=1743228426; cv=none; b=qQ7hKUTiwrqH7xYMykKzt91M0Ae5k5JUIZZeOIBpoeCXVDPK4vjXdOFGc7hrk+S5EplCKZOUaUvGgN6D67HFUJgZYoe+l1Fh4BSPbes/2dsOJ8q57SeNHnuHIxD3H6iqbnszdkmCWKI2o2do3bff+yIiHV15EB52c3HUDH2qD/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743228356; c=relaxed/simple;
-	bh=RBYdqELAGGITN3bER6Ed3RfAT6r2IaUZX4eTf8LknqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZxKItC/JhrVnLjZ6hV8pSmM5FM2cvHP+3lsQKMAXLwiFU/mm/83oc++0rPykX5TXJteC+Eyu+y6BN3iB2LQY1zasvI7vDystgbPJIfKDrK18fqj8dQ8Di5HPcZ6+njuwwh5a83L5mJbCnlXy9MFh1VOmu2kpeVpiy38ot1pqo60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=maWwVjF/; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="maWwVjF/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=ngfJ
-	rWFFQGzaVIiK7KuboErMRj/fe1cnJfB3LZ7PSjU=; b=maWwVjF/JGHBb+zL6K+w
-	uT9DyLA+GyeTqgvBKtbSnpDwo6MBM98N8+ukp+XsWV+YQNbhJ+VGQMXWB4yEb7OI
-	OP2Ljbef1zUx8Z2E+gWzcOsAnEUlgpPoJRgOOcP1PAIQR0yReglAWObrx0jP7RrO
-	G/2Efbs/ks7iD7TzX3aA1Yf2UThSP8c4pcE6EAFxuWBORQ5EzllqfYerohXwRX+3
-	+mmcxYeRu+3PXrugYFIEErK4GYkvEWchNbd4hOpSsJaKvdl8Jqfb0mX9Vy52lTws
-	2fQNGvNtjIgIxJBaIWi9+lcjPs3OyeqmSMP4j2sfuBNSCG5h9IiLYwrxc2dJgkCb
-	2w==
-Received: (qmail 486515 invoked from network); 29 Mar 2025 07:05:46 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Mar 2025 07:05:46 +0100
-X-UD-Smtp-Session: l3s3148p1@OWdS+nQxUuYgAwD6PzqDAV8182DI+BaV
-Date: Sat, 29 Mar 2025 07:05:49 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v2 resend] media: dvb: usb: Fix WARNING in
- dib0700_i2c_xfer/usb_submit_urb
-Message-ID: <Z-eNvcrFu0VSY23U@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-References: <Z-MKiV0Ei5lmWik6@shikoro>
- <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
- <Z-MrfICsY06DZV-2@shikoro>
- <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
- <Z-QjIRoOWpoWaL6l@shikoro>
- <c6bed13c-38df-43a6-ba5f-0da03b91f3df@rowland.harvard.edu>
- <Z-RyiI1X9BN43feQ@shikoro>
- <c7f67d3b-f1e6-4d68-99aa-e462fdcb315f@rowland.harvard.edu>
- <Z-bEBk68dh918vy9@shikoro>
- <24798648-c5a3-4e31-9897-4610053007f3@rowland.harvard.edu>
+	s=arc-20240116; t=1743228426; c=relaxed/simple;
+	bh=MpvjVSdc0WQHW7z1FzEIIOl+lD2KA5yr6W4Of9wFYH4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BweLHSpvELtYDU8+EYUR9WqchZvAR0YgsvhgPbCHWGK5CWmyrkPFRVdYfnDdd7pzsqO7Uo5reiYTkrrkPK8hR1ZpcdeZJCv2Q+wvWpZlKUNn6zQM1uBYd08yJH8movwohKYjWRte/eFa3z4oyw81kCMpaSijhaemDYRpFXd6wrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e15e32366so282009739f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:07:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743228424; x=1743833224;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PslXHn+HRCKvMki/o8uXPaurn4b0wbhh4fKpbenniEA=;
+        b=KSWOGNJOhsOYMLaFpLcVpj1G5uI2ITnCbHOWDQ0b6IS6mqd+9jjzgM2jiO3Ym4F7KZ
+         i4abCk3lj09sQJk8RuWtUPuu1wGpO6UYDy2vCjh3LEWJQT0FhccWM3ibrlMlw3MNnQR9
+         jyUmK9JgKtIhrSjc39e4+DHyxqA2cghJ5LlicZfA27A4kDvIHKaK0V7Sffaad1ssUb40
+         /dX5Hp8R5CiAnPd07MXCZQQ3LCwvfzbMwKIWk/7t+QRtlHQaz9ld1gYMVwpave4rG5SO
+         CnZClx1KfLguTMDEf53GnlLUhgySPfAPthqxLF5MZw/cKvu/Oe6EjmmW7tWsvUmXM2BU
+         4qIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUARaPqaLwJjd5bAgFpWuqSuv77TiwYfOTyT5ACfNEkDvvjBQ6p+rlMOhPFm/mKiIvi8KCjfiABQUr5HdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4nZuiH9i+IuKZYsLsqVsCE8Vy4fB/KeWLtyrWFQK1UNtaqjun
+	YgvDMRbg4YQdB1Q9fOo6CfuTJWXAoIoeY9WQvNhOT8HzSzSBHMi0nbU9jqDdvWhDE49t4B8qTy9
+	Brbbc7sI4G7LX8W2UuEnQY3fLd7ObnThHq6CO4lX8ylEuRZIksTaOgf4=
+X-Google-Smtp-Source: AGHT+IFUPX9pw9runny0iEMJYg8F12tktifVwNu6m2yAXo2QQLjXpnMt0pII7QHeD+ylT93x02LXeNLC3V5ZjplGf7Suy0zHceGP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/524CC2BhVTInLpO"
-Content-Disposition: inline
-In-Reply-To: <24798648-c5a3-4e31-9897-4610053007f3@rowland.harvard.edu>
+X-Received: by 2002:a05:6e02:3f09:b0:3d4:28c0:1692 with SMTP id
+ e9e14a558f8ab-3d5e08eff80mr21094665ab.5.1743228424129; Fri, 28 Mar 2025
+ 23:07:04 -0700 (PDT)
+Date: Fri, 28 Mar 2025 23:07:04 -0700
+In-Reply-To: <tencent_43A5890D8A92615DC95DBA99714FD50D8207@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e78e08.050a0220.1547ec.001e.GAE@google.com>
+Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid
+ context in __alloc_frozen_pages_noprof
+From: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot tried to test the proposed patch but the build/boot failed:
+
+failed to apply patch:
+checking file fs/afs/dynroot.c
+Hunk #1 FAILED at 287.
+Hunk #2 succeeded at 305 (offset -1 lines).
+Hunk #3 succeeded at 356 (offset -1 lines).
+1 out of 3 hunks FAILED
 
 
---/524CC2BhVTInLpO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
+Tested on:
 
-> In the case of dib0700, it was clear from the source code that the=20
-> driver uses USB Control transfers to tell the hardware about I2C=20
-> messages.  I don't know if other bridges work in the same way.  In=20
-> theory a bridge could use USB Bulk transfers instead; they aren't=20
-> subject to this restriction on length-0 reads.  Or a bridge could use a=
-=20
-> Control read transfer but include extra header material along with the=20
-> actual data, so that a length-0 message wouldn't end up generating a=20
-> length-0 read.
+commit:         1d0b929f afs: Change dynroot to create contents on dem..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5f1762820c18874b
+dashboard link: https://syzkaller.appspot.com/bug?extid=3b6c5c6a1d0119b687a1
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17917804580000
 
-Fully understood, thanks for your explanation.
-
-> So the short answer is that you would need to find someone who really=20
-> understands what's going on here -- which I don't.  Sorry.
-
-No worries. There are only 5 drivers or so, I will manually check if
-they use a control_read and have no own header. Doesn't sound hard.
-
-
---/524CC2BhVTInLpO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfnjb0ACgkQFA3kzBSg
-KbYu9g//bQdOPKVCxAkPgX+ushrjFLpZnByCs0WHTQfKHYaNVlF+bNRfR9VUvRgH
-IQXKFYE7ShGb4zMqEm61525u04J+/lmp+sxM7JdBtOXnnptjYZ7prH5r0bKinHku
-dyMlVhtZIIEzqahpD2E1tKyGuvnRDeAY0L2SqveNz5JTO60Bece8XaKmI4bOKqF9
-/UrvmPvw81OXxh4o/fhVqFaDJzw//e7yRzrOeGZu+6D4OSNpHowxofDEAAjfE/7K
-8DjCAg1mMc1XLYVEC1vMgkEY7BbJdHens+W5VnLEFolqJrmX67ziquQ02jWqnKhm
-Q2rI/3UAeXZnLsg0me12fFjG76DDhiipP/fu4wrCgcwy+Dpk3FkkBXwv4svmcPXn
-RUx8SopRASSjkUn9GAsmPP0stpBuLt4PS0DK2qwHvo2eLVYEfnAeQ8w6xHCbvLu5
-8RgbHqlxwy8+sgfGVBIObtn9G+XWRG9u4+nhhHY89kcUlwVVPkpIDYAP0uWaxW49
-D0j9WCL/KA88U+QoIj0Wq1KAi/gfjWrBy/kMuASHScahtInni/T3pNDDluZ4e5xe
-uR90+/Lx/FL2Ax0S3FschTbxXoRKkKLcBs+DYjNEJZUfU22kRGh+FHraNAuy8aom
-nuIZKK+0Vf57uReWBN3UwPfUgdzLYqarhtWc+BlZn/D3GQ0ckpM=
-=Mjv2
------END PGP SIGNATURE-----
-
---/524CC2BhVTInLpO--
