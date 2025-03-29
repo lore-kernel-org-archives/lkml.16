@@ -1,77 +1,120 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219D529A5
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A54C29A5
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 06:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743228426; cv=none; b=qQ7hKUTiwrqH7xYMykKzt91M0Ae5k5JUIZZeOIBpoeCXVDPK4vjXdOFGc7hrk+S5EplCKZOUaUvGgN6D67HFUJgZYoe+l1Fh4BSPbes/2dsOJ8q57SeNHnuHIxD3H6iqbnszdkmCWKI2o2do3bff+yIiHV15EB52c3HUDH2qD/0=
+	t=1743228791; cv=none; b=eEhk1jLRDyhVzm/3hDxVuGzuYsFKXKov2zdvlyXtLqwvtldhLaJeunq5GiAlLk0Y0O06c8Twz9kUTSesiTNQfScgBQ2UuxNxArHwQmCR/UYqzOcdvGLXn8i9nYs7LG/Kwkbw6xXRJ3EaLu/0Pc7o5iI4101JXA3KnI9GEm+r7eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743228426; c=relaxed/simple;
-	bh=MpvjVSdc0WQHW7z1FzEIIOl+lD2KA5yr6W4Of9wFYH4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BweLHSpvELtYDU8+EYUR9WqchZvAR0YgsvhgPbCHWGK5CWmyrkPFRVdYfnDdd7pzsqO7Uo5reiYTkrrkPK8hR1ZpcdeZJCv2Q+wvWpZlKUNn6zQM1uBYd08yJH8movwohKYjWRte/eFa3z4oyw81kCMpaSijhaemDYRpFXd6wrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e15e32366so282009739f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:07:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743228424; x=1743833224;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PslXHn+HRCKvMki/o8uXPaurn4b0wbhh4fKpbenniEA=;
-        b=KSWOGNJOhsOYMLaFpLcVpj1G5uI2ITnCbHOWDQ0b6IS6mqd+9jjzgM2jiO3Ym4F7KZ
-         i4abCk3lj09sQJk8RuWtUPuu1wGpO6UYDy2vCjh3LEWJQT0FhccWM3ibrlMlw3MNnQR9
-         jyUmK9JgKtIhrSjc39e4+DHyxqA2cghJ5LlicZfA27A4kDvIHKaK0V7Sffaad1ssUb40
-         /dX5Hp8R5CiAnPd07MXCZQQ3LCwvfzbMwKIWk/7t+QRtlHQaz9ld1gYMVwpave4rG5SO
-         CnZClx1KfLguTMDEf53GnlLUhgySPfAPthqxLF5MZw/cKvu/Oe6EjmmW7tWsvUmXM2BU
-         4qIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUARaPqaLwJjd5bAgFpWuqSuv77TiwYfOTyT5ACfNEkDvvjBQ6p+rlMOhPFm/mKiIvi8KCjfiABQUr5HdU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4nZuiH9i+IuKZYsLsqVsCE8Vy4fB/KeWLtyrWFQK1UNtaqjun
-	YgvDMRbg4YQdB1Q9fOo6CfuTJWXAoIoeY9WQvNhOT8HzSzSBHMi0nbU9jqDdvWhDE49t4B8qTy9
-	Brbbc7sI4G7LX8W2UuEnQY3fLd7ObnThHq6CO4lX8ylEuRZIksTaOgf4=
-X-Google-Smtp-Source: AGHT+IFUPX9pw9runny0iEMJYg8F12tktifVwNu6m2yAXo2QQLjXpnMt0pII7QHeD+ylT93x02LXeNLC3V5ZjplGf7Suy0zHceGP
+	s=arc-20240116; t=1743228791; c=relaxed/simple;
+	bh=EhdNLTLd3ZkHRpplWGGCgKzGBevtbKGh785eCLCkJIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DSlakLF5tsr9p759PcyXDsheQXc4h2NCbKzkoiT/kNCbAMViRJp60VXMNnrd9ymkl8R4fW5bB1edXFAL4AE3oS8MeOY++sSIojMsqIBFP3I+hoxMzvYA+O1j+megNnCAvtquDR7t3/awjxo4knHsQiBvaMlate5M1SUjtCXzJKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZPn4w0PzWz2TS3W;
+	Sat, 29 Mar 2025 14:08:16 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1445514013B;
+	Sat, 29 Mar 2025 14:12:59 +0800 (CST)
+Received: from [10.159.166.136] (10.159.166.136) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Sat, 29 Mar 2025 14:12:57 +0800
+Message-ID: <808ab7db-b42d-4510-8b07-99ed96aef1f0@huawei.com>
+Date: Sat, 29 Mar 2025 14:12:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3f09:b0:3d4:28c0:1692 with SMTP id
- e9e14a558f8ab-3d5e08eff80mr21094665ab.5.1743228424129; Fri, 28 Mar 2025
- 23:07:04 -0700 (PDT)
-Date: Fri, 28 Mar 2025 23:07:04 -0700
-In-Reply-To: <tencent_43A5890D8A92615DC95DBA99714FD50D8207@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e78e08.050a0220.1547ec.001e.GAE@google.com>
-Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid
- context in __alloc_frozen_pages_noprof
-From: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector info
+ and EDID by using AUX channel
+To: Maxime Ripard <mripard@kernel.org>, Jani Nikula
+	<jani.nikula@linux.intel.com>
+CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
+	<airlied@gmail.com>, <daniel@ffwll.ch>, <kong.kongxinwei@hisilicon.com>,
+	<liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <libaihan@huawei.com>, <shenjian15@huawei.com>,
+	<shaojijie@huawei.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <shiyongbang@huawei.com>
+References: <20250319032435.1119469-6-shiyongbang@huawei.com>
+ <87frj8c9ol.fsf@intel.com> <ff11c8ac-7eb4-42cb-86d3-ad9924c9374b@huawei.com>
+ <87jz8ea6zq.fsf@intel.com> <8ee961ca-0d3c-487d-a672-82714ee56743@huawei.com>
+ <875xjw87dm.fsf@intel.com> <a8599ca0-9a50-453e-8986-f8fae5aa9160@huawei.com>
+ <87v7ru6bfk.fsf@intel.com> <51bae617-cfc7-43f9-968e-5f2a3ad9af40@huawei.com>
+ <87pli14fgh.fsf@intel.com> <20250328-hopping-ibis-of-gaiety-f7cac3@houat>
+From: Yongbang Shi <shiyongbang@huawei.com>
+In-Reply-To: <20250328-hopping-ibis-of-gaiety-f7cac3@houat>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-Hello,
+> On Fri, Mar 28, 2025 at 12:28:14PM +0200, Jani Nikula wrote:
+>> On Fri, 28 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>>> On Thu, 27 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>>>> 在 2025/3/26 17:32, Jani Nikula 写道:
+>>>>>> On Tue, 25 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>>>>>>> On Mon, 24 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>>>>>>>>> On Wed, 19 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>>>>>>>>>> From: Baihan Li <libaihan@huawei.com>
+>>>>>>>>>>>
+>>>>>>>>>>> Add registering drm_aux and use it to get connector edid with drm
+>>>>>>>>>>> functions. Add ddc channel in connector initialization to put drm_aux
+>>>>>>>>>>> in drm_connector.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Baihan Li <libaihan@huawei.com>
+>>>>>>>>>>> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+>>>>>>>>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>>>>>>>>>> ---
+>>>>>>>>>>> ChangeLog:
+>>>>>>>>>>> v6 -> v7:
+>>>>>>>>>>>        - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
+>>>>>>>>>> I don't understand this, and I did not suggest such a thing.
+>>>>>>>>>>
+>>>>>>>>>> BR,
+>>>>>>>>>> Jani.
+>>>>>>>>>>
+>>>>>>>>> Hi Jani,
+>>>>>>>>>
+>>>>>>>>> Is the modification of v8 correct?
+>>>>>>>> I never received that for whatever reason.
+>>>>>>> Here's the link: https://lore.kernel.org/all/20250320101455.2538835-1-shiyongbang@huawei.com/
+>>>>>> Thanks.
+>>>>>>
+>>>>>> The EDID handling looks fine.
+>>>>>>
+>>>>>> AFAICT you leak dp->aux.name though.
+>>>>>>
+>>>>>>
+>>>>>> BR,
+>>>>>> Jani.
+>>>>> Thanks for for reminding me, actually the dp->aux.name was written because I misunderstood what you meant in V7,
+>>>>> and I deleted it in V8.
+>>>> This is in the link you posted:
+>>>>
+>>>> +	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
+>>>>
+>>> Hi Jani,
+>>>
+>>> I got it. I think I can change it to devm_kasprintf() in next bug fix patch, is that ok?
+>> Maybe. I don't have the time to look into hibmc details.
+> I don't either, but it looks suspicious to me. devm_kasprintf will be
+> freed when the device will be removed, but the DP Aux bus is probably
+> staying for a bit longer?
+>
+> Maxime
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Hi Ripard,
 
-failed to apply patch:
-checking file fs/afs/dynroot.c
-Hunk #1 FAILED at 287.
-Hunk #2 succeeded at 305 (offset -1 lines).
-Hunk #3 succeeded at 356 (offset -1 lines).
-1 out of 3 hunks FAILED
+I will bind it to my hibmc device, and aux_unregister is in early_unregister callback of dp's connector_funcs,
+which is before the hibmc_pci_remove(), so I think it work good.
 
-
-
-Tested on:
-
-commit:         1d0b929f afs: Change dynroot to create contents on dem..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5f1762820c18874b
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b6c5c6a1d0119b687a1
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17917804580000
 
