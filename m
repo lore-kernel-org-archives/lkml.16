@@ -1,280 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44BD70807;
-	Sat, 29 Mar 2025 10:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0F1208D0;
+	Sat, 29 Mar 2025 10:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743242729; cv=none; b=Tu757WXbYCtcu6WzURjtKe55CHPH63McxUAcCRTZ1Rplz78Npwno2zp/3ORP6YdR4SJSxXhJIppYsQcVW4wBeTJbKTN56sXqDissbh3PjDPaTY4FXWHSjmelmjLTZLLlT+gSLMbxOHBTuUgPwLN6Eepc3cPka/WTBi9sVA/H9yY=
+	t=1743242787; cv=none; b=UcGokAuLmcGjJluQiAUKJfUJUkXfuUmU+7/B6n8yu/ajeqaM2SsYihkvJeVI1qyNVj6lnHbQ1XDc/acUFjDKNi7ZmOjok+7p8tSId/81xtdlrX4Sa70WOa4lOn6wxyZ7pASUPShm0Dmz9I3GvVV9wI0BDIRJT+vknlVFSghMdig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743242729; c=relaxed/simple;
-	bh=5OzxuyPYXCVlGprQPvC0QQq6AG0p6FibJk7WQO3UK1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEGW/a4ObGCVlHjfG1astqCJu+Sx8wltIYhV0uCu0BsK64FRD2JGBNu6FuErVgshqOhn5cZUt77ZbLI1QgBk67IuelpGvYN/kLIXAPDitispS7kxuVQr1uGjFZHKXje4T9o/diuq/bmtPMXaVNcyMMdPkmRzkJ1E32KU6RS1ZY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lKduBr1w; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lKduBr1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743242728; x=1774778728;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=5OzxuyPYXCVlGprQPvC0QQq6AG0p6FibJk7WQO3UK1I=;
-  b=lKduBr1wen25TqGUMggLFgFtqN5/RTybLVCV26t9AuIKC+J0S7rLJAMd
-   O36naz2H/oAfSicJU33kelaHxuIfuhYgsBt61uu93PX/mnavsFhS19+MH
-   26aqwQJQ4AnrkDHrwFCzrFYmC1ZWberr4oJDEU3gj9+o/CwTf40a4wj3o
-   WHt9Utl1wcCnsutAd1X64U6LuXHA2Yqxxspnzkw4yZ+t4ZqPh6cGzkAnO
-   Ay9fnFt/HDrnV29e6PBjYQMXI1thuhOKujzhsg/Wfjg+DiTXXnAaVV7Iy
-   6ZcfcbAE0r5xa3CtFz4pW6vo9nZgZey1qeoQ8pIyjpKL4L4Kj2C/eb5Io
-   w==;
-X-CSE-ConnectionGUID: 8vq4+wAzQbCYqp4pfzojfQ==
-X-CSE-MsgGUID: 5NV31hW9Sse1XGGeAeD8Cg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="48261055"
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="asc'?scan'208";a="48261055"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:05:27 -0700
-X-CSE-ConnectionGUID: UgG6fmExQXmW1vaR3hTlbQ==
-X-CSE-MsgGUID: bFdL671UQIWCq1XMztHo0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,285,1736841600"; 
-   d="asc'?scan'208";a="130876992"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.136])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 03:05:23 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Robert Richter <rrichter@amd.com>,
- ming.li@zohomail.com, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject:
- Re: [PATCH 2/4 v3] cxl/core: Add helpers to detect Low memory Holes on x86
-Date: Sat, 29 Mar 2025 11:05:19 +0100
-Message-ID: <3503779.obQ9GjlxrE@fdefranc-mobl3>
-In-Reply-To: <67e73372737bf_201f0294e8@dwillia2-xfh.jf.intel.com.notmuch>
-References:
- <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
- <20250314113708.759808-3-fabio.m.de.francesco@linux.intel.com>
- <67e73372737bf_201f0294e8@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1743242787; c=relaxed/simple;
+	bh=pC4yT71Ib0ckoDWBir7IsgDkdHvt1zvX0i+HOKnOltk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oD8SR0FhhOSmua7bKRVpgVta6UGXMO9whU6S610y7F8L6hcTLqlPgEDCTkAv6zAmObFKD+JD92/oBqxbSAuGBgafiJSLbbvta4Wlc3IVvJTUDNoanleWZWfKcduyaDoW3tVm4621fWjpmb+nie+9jSW1l+lz4kLQBkWwjXDfqsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tyT54-0005YC-00; Sat, 29 Mar 2025 11:06:22 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 77697C00F0; Sat, 29 Mar 2025 11:06:16 +0100 (CET)
+Date: Sat, 29 Mar 2025 11:06:16 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: torvalds@linux-foundation.org
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS changes for v6.15
+Message-ID: <Z-fGGOyv_5IafH71@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3483319.sy0gbHreEd";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---nextPart3483319.sy0gbHreEd
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Date: Sat, 29 Mar 2025 11:05:12 +0100
-Message-ID: <3503779.obQ9GjlxrE@fdefranc-mobl3>
-MIME-Version: 1.0
+The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
 
-On Saturday, March 29, 2025 12:40:34=E2=80=AFAM Central European Standard T=
-ime Dan Williams wrote:
-> Fabio M. De Francesco wrote:
-> > In x86 with Low memory Hole, the BIOS may publishes CFMWS that describe
-> > SPA ranges which are subsets of the corresponding CXL Endpoint Decoders
-> > HPA's because the CFMWS never intersects LMH's while EP Decoders HPA's
-> > ranges are always guaranteed to align to the NIW * 256M rule.
-> >=20
-> > In order to construct Regions and attach Decoders, the driver needs to
-> > match Root Decoders and Regions with Endpoint Decoders, but it fails and
-> > the entire process returns errors because it doesn't expect to deal with
-> > SPA range lengths smaller than corresponding HPA's.
-> >=20
-> > Introduce functions that indirectly detect x86 LMH's by comparing SPA's
-> > with corresponding HPA's. They will be used in the process of Regions
-> > creation and Endpoint attachments to prevent driver failures in a few
-> > steps of the above-mentioned process.
-> >=20
-> > The helpers return true when HPA/SPA misalignments are detected under
-> > specific conditions: both the SPA and HPA ranges must start at
-> > LMH_CFMWS_RANGE_START (that in x86 with LMH's is 0x0), SPA range sizes
-> > be less than HPA's, SPA's range's size be less than 4G, HPA's size be
-> > aligned to the NIW * 256M rule.
-> >=20
-> > Also introduce a function to adjust the range end of the Regions to be
-> > created on x86 with LMH's.
-> >=20
-> > Cc: Alison Schofield <alison.schofield@intel.com>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/cxl/core/lmh.c | 56 ++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/lmh.h | 29 ++++++++++++++++++++++
-> >  2 files changed, 85 insertions(+)
-> >  create mode 100644 drivers/cxl/core/lmh.c
-> >  create mode 100644 drivers/cxl/core/lmh.h
-> >=20
-> > diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
-> > new file mode 100644
-> > index 000000000000..2e32f867eb94
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/lmh.c
-> > @@ -0,0 +1,56 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +#include <linux/range.h>
-> > +#include "lmh.h"
-> > +
-> > +/* Start of CFMWS range that end before x86 Low Memory Holes */
-> > +#define LMH_CFMWS_RANGE_START 0x0ULL
-> > +
-> > +/*
-> > + * Match CXL Root and Endpoint Decoders by comparing SPA and HPA range=
-s.
-> > + *
-> > + * On x86, CFMWS ranges never intersect memory holes while endpoint de=
-coders
-> > + * HPA range sizes are always guaranteed aligned to NIW * 256MB; there=
-fore,
-> > + * the given endpoint decoder HPA range size is always expected aligne=
-d and
-> > + * also larger than that of the matching root decoder. If there are LM=
-H's,
-> > + * the root decoder range end is always less than SZ_4G.
-> > + */
-> > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
-> > +		    const struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	const struct range *r1, *r2;
-> > +	int niw;
-> > +
-> > +	r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
-> > +	r2 =3D &cxled->cxld.hpa_range;
-> > +	niw =3D cxled->cxld.interleave_ways;
-> > +
-> > +	if (r1->start =3D=3D LMH_CFMWS_RANGE_START && r1->start =3D=3D r2->st=
-art &&
-> > +	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
-> > +	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +/* Similar to arch_match_spa(), it matches regions and decoders */
-> > +bool arch_match_region(const struct cxl_region_params *p,
-> > +		       const struct cxl_decoder *cxld)
-> > +{
-> > +	const struct range *r =3D &cxld->hpa_range;
-> > +	const struct resource *res =3D p->res;
-> > +	int niw =3D cxld->interleave_ways;
-> > +
-> > +	if (res->start =3D=3D LMH_CFMWS_RANGE_START && res->start =3D=3D r->s=
-tart &&
-> > +	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
-> > +	    IS_ALIGNED(range_len(r), niw * SZ_256M))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +void arch_adjust_region_resource(struct resource *res,
-> > +				 struct cxl_root_decoder *cxlrd)
-> > +{
-> > +	res->end =3D cxlrd->res->end;
-> > +}
-> > diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
-> > new file mode 100644
-> > index 000000000000..16746ceac1ed
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/lmh.h
-> > @@ -0,0 +1,29 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +
-> > +#include "cxl.h"
-> > +
-> > +#ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
-> > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
-> > +		    const struct cxl_endpoint_decoder *cxled);
-> > +bool arch_match_region(const struct cxl_region_params *p,
-> > +		       const struct cxl_decoder *cxld);
-> > +void arch_adjust_region_resource(struct resource *res,
-> > +				 struct cxl_root_decoder *cxlrd);
-> > +#else
-> > +static bool arch_match_spa(struct cxl_root_decoder *cxlrd,
-> > +			   struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	return false;
->=20
-> I would have expected the default match routines to do the default
-> matching, not return false.
->=20
-> This can document the common expectation on architectures that do not
-> need to account for decoders not aligning to window boundaries due to
-> holes.
->=20
-Hi Dan,
+  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
 
-A typical example of arch_match_spa() use is from match_root_decoder_by_ran=
-ge()
-which returns false on platforms that don't enable support for the low memo=
-ry hole.
-Therefore, the default behavior is failing the matching by returning false.
+are available in the Git repository at:
 
-This is how arch_match_spa() is used to detect a hole and allow the matchin=
-g:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_6.15
 
-static int match_root_decoder_by_range(struct device *dev,
-                                       const void *data)
-{
-        const struct cxl_endpoint_decoder *cxled =3D data;
-        struct cxl_root_decoder *cxlrd;
-        const struct range *r1, *r2;
+for you to fetch changes up to 855912be0b046028abc9c0577787e749a8d26cf5:
 
-        if (!is_root_decoder(dev))
-                return 0;
+  MIPS: config: omega2+, vocore2: enable CLK_MTMIPS (2025-03-25 21:35:54 +0100)
 
-        cxlrd =3D to_cxl_root_decoder(dev);
-        r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
-        r2 =3D &cxled->cxld.hpa_range;
+----------------------------------------------------------------
+Added support for multi-cluster configuration
+Added quirks for enabling multi-cluster mode on EyeQ6
+Added DTS clocks for ralink
+Cleanup realtek DTS
+Other cleanups and fixes
 
-        if (range_contains(r1, r2))
-                return true;
-        if (arch_match_spa(cxlrd, cxled))
-                return true;
+----------------------------------------------------------------
+Abhishek Tamboli (1):
+      MIPS: Fix Macro name
 
-        return false;
-}
+Bibo Mao (1):
+      MIPS: Use arch specific syscall name match function
 
-Currently the default behavior is for match_root_decoder_by_range() to
-not match root and endpoint decoders. I left that default unchanged for
-all platforms and architectures that don't enable LMH support.=20
+Geert Uytterhoeven (1):
+      mips: dts: ingenic: Switch to simple-audio-card,hp-det-gpios
 
-Thanks,
+Gregory CLEMENT (5):
+      dt-bindings: mips: Document mti,mips-cm
+      dt-bindings: mips: mips-cm: Add a new compatible string for EyeQ6
+      MIPS: cm: Detect CM quirks from device tree
+      MIPS: CPS: Support broken HCI for multicluster
+      MIPS: mobileye: dts: eyeq6h: Enable cluster support
 
-=46abio
---nextPart3483319.sy0gbHreEd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Johan Korsnes (1):
+      arch: mips: defconfig: Drop obsolete CONFIG_NET_CLS_TCINDEX
 
------BEGIN PGP SIGNATURE-----
+Joris Vaisvila (1):
+      MIPS: config: omega2+, vocore2: enable CLK_MTMIPS
 
-iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmfnxdgACgkQ50DaXiQp
-iWHbmwf+Mo7E4aS3Yzp2MBV0BM9z8V21fAbAQLXzm73RiBWn2JQygCccmmcLbQAd
-/mslTClNnhpEXSQVIdk6hzemupcDL+tdh0EP/vFlnh9g/z7BBodAreQJhmIFz2gI
-eCiJhc1OXntQBhGU1bRTQfzC4tY95tnHQRVJ4VF6fhAc4RTnYLrn86QqJ7cRYVY3
-ARoQ+8vMU2P0p79/w/YJwR3dx/GizwnAX/tV1xpnARbr/hN+6TMGd2jvfv7GX3DI
-gLCI79HicckRr2GQdEJn7cF0jLIkjBv7YvolDQEKWwQKM51Bro5ud4nrUKreEdkK
-cJgMF8WVL6QuOmJ4hrM3AVrI36pVTw==
-=p+Sr
------END PGP SIGNATURE-----
+Paul Burton (4):
+      clocksource: mips-gic-timer: Enable counter when CPUs start
+      MIPS: pm-cps: Use per-CPU variables as per-CPU, not per-core
+      MIPS: CPS: Introduce struct cluster_boot_config
+      MIPS: CPS: Boot CPUs in secondary clusters
 
---nextPart3483319.sy0gbHreEd--
+Sander Vanheule (9):
+      mips: dts: realtek: Decouple RTL930x base DTSI
+      mips: dts: realtek: Clean up CPU clocks
+      mips: dts: realtek: Add address to SoC node name
+      mips: dts: realtek: Fold rtl83xx into rtl838x
+      mips: dts: realtek: Add SoC IRQ node for RTL838x
+      mips: dts: realtek: Correct uart interrupt-parent
+      mips: dts: realtek: Replace uart clock property
+      mips: dts: realtek: Add RTL838x SoC peripherals
+      mips: dts: realtek: Add restart to Cisco SG220-26P
 
+Sergio Paracuellos (6):
+      dt-bindings: clock: add clock definitions for Ralink SoCs
+      mips: dts: ralink: rt2880: update system controller node and its consumers
+      mips: dts: ralink: rt3050: update system controller node and its consumers
+      mips: dts: ralink: rt3883: update system controller node and its consumers
+      mips: dts: ralink: mt7620a: update system controller node and its consumers
+      mips: dts: ralink: mt7628a: update system controller node and its consumers
 
+Thomas Bogendoerfer (1):
+      MIPS: cm: Fix warning if MIPS_CM is disabled
 
+Thomas Zimmermann (1):
+      mips: sni: Do not include <linux/fb.h>
+
+Thorsten Blum (1):
+      MIPS: Loongson2ef: Replace deprecated strncpy() with strscpy()
+
+WangYuli (3):
+      MIPS: dec: Declare which_prom() as static
+      MIPS: cevt-ds1287: Add missing ds1287.h include
+      MIPS: ds1287: Match ds1287_set_base_clock() function types
+
+ .../bindings/clock/mediatek,mtmips-sysc.yaml       |  11 +-
+ .../devicetree/bindings/mips/mti,mips-cm.yaml      |  57 ++++
+ arch/mips/boot/dts/ingenic/gcw0.dts                |   2 +-
+ arch/mips/boot/dts/ingenic/rs90.dts                |   2 +-
+ arch/mips/boot/dts/mobileye/eyeq6h.dtsi            |   4 +
+ .../dts/ralink/gardena_smart_gateway_mt7688.dts    |   2 +-
+ arch/mips/boot/dts/ralink/mt7620a.dtsi             |  10 +-
+ arch/mips/boot/dts/ralink/mt7620a_eval.dts         |   2 +-
+ arch/mips/boot/dts/ralink/mt7628a.dtsi             |  40 +--
+ arch/mips/boot/dts/ralink/omega2p.dts              |   2 +-
+ arch/mips/boot/dts/ralink/rt2880.dtsi              |  10 +-
+ arch/mips/boot/dts/ralink/rt2880_eval.dts          |   2 +-
+ arch/mips/boot/dts/ralink/rt3050.dtsi              |  10 +-
+ arch/mips/boot/dts/ralink/rt3883.dtsi              |  10 +-
+ arch/mips/boot/dts/ralink/rt3883_eval.dts          |   2 +-
+ arch/mips/boot/dts/realtek/cisco_sg220-26.dts      |  10 +-
+ arch/mips/boot/dts/realtek/rtl838x.dtsi            | 111 +++++++-
+ arch/mips/boot/dts/realtek/rtl83xx.dtsi            |  59 -----
+ arch/mips/boot/dts/realtek/rtl930x.dtsi            | 136 ++++++----
+ arch/mips/configs/gpr_defconfig                    |   1 -
+ arch/mips/configs/ip22_defconfig                   |   1 -
+ arch/mips/configs/ip27_defconfig                   |   1 -
+ arch/mips/configs/malta_defconfig                  |   1 -
+ arch/mips/configs/malta_kvm_defconfig              |   1 -
+ arch/mips/configs/malta_qemu_32r6_defconfig        |   1 -
+ arch/mips/configs/maltaaprp_defconfig              |   1 -
+ arch/mips/configs/maltasmvp_defconfig              |   1 -
+ arch/mips/configs/maltasmvp_eva_defconfig          |   1 -
+ arch/mips/configs/maltaup_defconfig                |   1 -
+ arch/mips/configs/maltaup_xpa_defconfig            |   1 -
+ arch/mips/configs/mtx1_defconfig                   |   1 -
+ arch/mips/configs/omega2p_defconfig                |   1 +
+ arch/mips/configs/rb532_defconfig                  |   1 -
+ arch/mips/configs/rm200_defconfig                  |   1 -
+ arch/mips/configs/vocore2_defconfig                |   1 +
+ arch/mips/dec/prom/init.c                          |   2 +-
+ arch/mips/include/asm/ds1287.h                     |   2 +-
+ arch/mips/include/asm/ftrace.h                     |  16 ++
+ arch/mips/include/asm/mach-rc32434/pci.h           |   2 +-
+ arch/mips/include/asm/mips-cm.h                    |  40 +++
+ arch/mips/include/asm/smp-cps.h                    |   7 +-
+ arch/mips/kernel/asm-offsets.c                     |   3 +
+ arch/mips/kernel/cevt-ds1287.c                     |   1 +
+ arch/mips/kernel/cps-vec.S                         |  19 +-
+ arch/mips/kernel/mips-cm.c                         |  18 +-
+ arch/mips/kernel/pm-cps.c                          |  35 ++-
+ arch/mips/kernel/smp-cps.c                         | 288 +++++++++++++++++----
+ arch/mips/loongson2ef/common/machtype.c            |   3 +-
+ arch/mips/sni/setup.c                              |   1 -
+ drivers/clocksource/mips-gic-timer.c               |   6 +-
+ include/dt-bindings/clock/mediatek,mtmips-sysc.h   | 130 ++++++++++
+ 51 files changed, 836 insertions(+), 235 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/mti,mips-cm.yaml
+ delete mode 100644 arch/mips/boot/dts/realtek/rtl83xx.dtsi
+ create mode 100644 include/dt-bindings/clock/mediatek,mtmips-sysc.h
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
