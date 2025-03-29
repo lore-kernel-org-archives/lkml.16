@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608917548
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 17:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F125B2746D
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 17:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743269393; cv=none; b=kEFF4Xw1MaL6c1bp6AcG+c3iGO2FaYfUmtujo0EmxuwvAP7VpC4nMsVtieb+Ei4ftaI9pevOYdQJkPO1OhUc2J4br0O5MADgoS6oi7tMYdflZVRbulz3amZWZWBaBmy7fTo6iO3acoOSpLofL3LNJd0u/URgRWbWJH3CXNhjfGI=
+	t=1743269709; cv=none; b=YrQGkCW2XCkBSir/yYhW8jr3w4PcFdvg3qxrx0ZKYWrtDoWJ/trJwZh4o953JgSggbIL5YpNHTsi2IEfaq86RptI30kcYjlyThxf9ngJERPEmd6ezYvzHY+gnY6S9rzOiRSAQTMYAJ3fmkXQ52dqZSJGXGxhlbVIdBkJnbBUKOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743269393; c=relaxed/simple;
-	bh=imUYZ/W/GVleMNjiWv15mGu860oaVQw7PlgELqcSTqw=;
+	s=arc-20240116; t=1743269709; c=relaxed/simple;
+	bh=bAgKKrSFWsHfY55fI+O+BJ5zZQ3uCPatofpr9gvmd5g=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dfDVq7/3tM8NgS7/06YcJvzuDpazJLc9zptuCkTdFI1XhoaS6GtZxmRsjEl6esysBG8B+y2osTEOZWHb9rDW0vlePr3EyPgBXtxwuuxCEo5ocuzUu5xZVO99J8WnDj3c7y6HLIA3BMDiS2vx8PjS8BXKf5yvOqFEN386TtkmUnk=
+	 Content-Type:MIME-Version; b=kJYf4kFau9RMSo/Pn+yW/CcgEwbx89VCfIss4RK65CaXIShpsoxZ+R6pOH87rxU0hSJbIzoOBodaH79RKrdNxNGCt7Jt9EIIm3QcZQQ0AGdeBVlgtNcF3bmQq1xALDzqlhBGWWhUFonMM2ieAQgRD5eQBiTv7Yx39RS2++r/lK8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,21 +18,21 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tyZzp-000000006vT-45Ph;
-	Sat, 29 Mar 2025 13:29:25 -0400
-Message-ID: <a84047c77c1a5f16b0d25f0cee6fe86487d14a5b.camel@surriel.com>
-Subject: Re: [PATCH 1/3] x86/mm: Correct the actual count of available
- global ASIDs
+	id 1tya40-000000006xZ-38oE;
+	Sat, 29 Mar 2025 13:33:44 -0400
+Message-ID: <df4f0ce855b7acd6fc9777457b89359e075a5cbb.camel@surriel.com>
+Subject: Re: [PATCH 2/3] mm/tlb: Fix wrong judgement in
+ allocate_global_asid()
 From: Rik van Riel <riel@surriel.com>
 To: Hou Wenlong <houwenlong.hwl@antgroup.com>, linux-kernel@vger.kernel.org
 Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
  <luto@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
  <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,  Borislav Petkov	
  <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Date: Sat, 29 Mar 2025 13:29:25 -0400
-In-Reply-To: <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+Date: Sat, 29 Mar 2025 13:33:44 -0400
+In-Reply-To: <b014aea15c01528ce30187e92d1de0df94e76af7.1743250122.git.houwenlong.hwl@antgroup.com>
 References: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
-	 <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+	 <b014aea15c01528ce30187e92d1de0df94e76af7.1743250122.git.houwenlong.hwl@antgroup.com>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -69,32 +69,27 @@ MIME-Version: 1.0
 Sender: riel@surriel.com
 
 On Sat, 2025-03-29 at 21:05 +0800, Hou Wenlong wrote:
+> In allocate_global_asid(), 'global_asid_available' cannot be zero, as
+> it
+> has already been checked in use_global_asid(). Therefore, the warning
+> in
+> allocate_global_asid() cannot be triggered; fix the wrong judgment in
+> allocate_global_asid().
 >=20
-> +++ b/arch/x86/mm/tlb.c
-> @@ -279,7 +279,7 @@ static DEFINE_RAW_SPINLOCK(global_asid_lock);
-> =C2=A0static u16 last_global_asid =3D MAX_ASID_AVAILABLE;
-> =C2=A0static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE);
-> =C2=A0static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE);
-> -static int global_asid_available =3D MAX_ASID_AVAILABLE -
-> TLB_NR_DYN_ASIDS - 1;
-> +static int global_asid_available =3D MAX_ASID_AVAILABLE -
-> TLB_NR_DYN_ASIDS;
+> Fixes: d504d1247e36 ("x86/mm: Add global ASID allocation helper
+> functions")
+> Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
 
-Unfortunately we are limited by the PCID space.
+Good catch.
 
-A process with ASID N will get PCID N+1.
-
-The PCID space has the same size (and maximum value)
-as the ASID space.
-
-That means we cannot use the top ASID value.
-
-Alternatively, I suppose we could have ASID and PCID
-line up, and always exclude ASID 0 from being used.
-
-That might (maybe) be prettier code, but it isn't what
-we have today.
+Reviewed-by: Rik van Riel <riel@surriel.com>
 
 
+Looking at allocate_global_asid() again, I wonder if
+that needs to be turned back into a loop.
+
+What if we have no global asids available, and then
+an asid gets freed that is smaller than the value
+of last_global_asid?
 --=20
 All Rights Reversed.
