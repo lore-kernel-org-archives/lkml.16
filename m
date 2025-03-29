@@ -1,60 +1,62 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736D313DB9F;
-	Sat, 29 Mar 2025 11:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C571BD01D;
+	Sat, 29 Mar 2025 11:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743246154; cv=none; b=LgzQdEVDVZDIkCbRDXaWe09rdE1I/9QWLPzaGoGPjlYBqPfuF87NxsI3XET0VP17aL0B8rvS1TjoRe9HngGolRObd97mqduNP3PcdggPyj1u4LrZU7hHL3vO0Ood9Z/c+LqVFghBWyy5YuiP7+ucb4QHEstXvQ/4dnqZlc6yqDE=
+	t=1743246155; cv=none; b=oSI9htOuLc5W/5UMA7pDNrxxe/5mzhaAVKCYix745Q7vnjL0h9iv8ZsRAgISJWxvqv4e/ithYPyzURR+usiSA9lX6rcZ36ICL0pMyIudo/RRmMkRpiM2Yl6cijSu6cccUedAeUGN/B2pv4vLpp26KXdp2wzqys/RDc0ERPMzMSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743246154; c=relaxed/simple;
-	bh=l6crxca4r7jaf55ZSnco5wxAGLEhNB1a7qmJEmUi54E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tX6iNy8F+1Wo5p0cAQHNwPK6HCLpQ8lFE83BR38uzjMdEeZxHObVa7LjVkvLqs7G4+EnLKOZ3yU3QDurKckN2VSc2Q9QJ8ubOC2dd6ySOhgaNbh0wyj1+tWudSYr40TRdt3C2P6qkJy4vH4clXm05y9pG2m30kI+gYlclFlTpZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HlfzAxlj; arc=none smtp.client-ip=209.85.219.178
+	s=arc-20240116; t=1743246155; c=relaxed/simple;
+	bh=5R9hzXaHIloEixtk4wd4P/Jbk/Qez0T6Wvo4Cm/eNHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XtdmDiioNn5uUxiueUKgs0ue47AaxZ9HeiaBxjdsYDru2iXMdLd5N+N9hHM0LqYkpF8YP2TPsfSgGbMxEJ+U6atAbYnujR0/ObRGX79wN4ES6RdMVVKqNupqSFUjQCqGUNIkxhtFoh0C5y52ZI9qclZLRveU3te15jTasmyQXWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lscB1D19; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HlfzAxlj"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e46ebe19368so2529193276.0;
-        Sat, 29 Mar 2025 04:02:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lscB1D19"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e643f0933afso3294292276.1;
+        Sat, 29 Mar 2025 04:02:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743246151; x=1743850951; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sz8keCqa5qupL5Rb/+bTM+6bhMdIOvmpSra9wTxqHOM=;
-        b=HlfzAxlj52+TdVsSka9dISBWUuqm14mxuRBYr/DOVszHqc99om8lt5o7EjRTvYUmQI
-         usTCOUwlxf17nFDwjfSiH5k3ZeFmwHr9rGsIdOW96K+yFM/B2R2VqE3pyXObcp50Df4N
-         7UgC5u8rf9h5IiEbYRcdwIq2DRO//UEzYriqjzVNSZt/oE0yUOi++2xW0l3nUCqWvwZV
-         UfmamB3/O2D3dq1xQ4MmWUPkWRd9HqZNLQGGR5zCvH3x6DouJnMLhJwbSKPS0KmQY1b9
-         g1mItc7yBG0QGA3l5DijTcQLEVIVbBibBPZ/hGhFnqb5J629NjezrhPCi6V3veCwS8r7
-         6Z6Q==
+        d=gmail.com; s=20230601; t=1743246153; x=1743850953; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jsq1kdQlFLn6WmPKzWPYjHoxE5hbtalWfUYgVjm4hmU=;
+        b=lscB1D19ZqIVRIVOwjs5cSyT2LELOMSuN0uVlq/m8LXyNK/v9c1ipmhZ4ec8VtTy6f
+         Bsm3Cx/Ej3+S6423wAaytoKpRGBsHro5rLx37VBE3tpP0MuveGVIY92XWFjBOvRUj51C
+         K/LqSb0s54HwvG5KjfZq+xRBVFjE8owuLhs6Fa0XKEpycHRrrWsocAYuVv2+6A2B08XA
+         EUy3mevhLEReQuo5bJR7UDhrO+smuGKzZbF+PtdrcagQqHEZ0/kEwxJjgoeJilvUahdH
+         aRaLiwkFhgAXV86UmH6moAjI3fxgEIiJdqD+oWCoEN7KQEqIC9TALAYCROfWQvuWnLZe
+         AlNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743246151; x=1743850951;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sz8keCqa5qupL5Rb/+bTM+6bhMdIOvmpSra9wTxqHOM=;
-        b=K4cIIhsp8N5rB8o5btvzELeNooPY1aYYChyA499z6WupiyWB3dYI2L7FJ46p1u5s9z
-         72yBw2NUwVM1OjFRoYcSjA7eCnmARxnddYQDzosreSKqYrRu5XWLPxbi3pmvm4+lRMpO
-         qM5zYnzr6CV6yLG1XkObfD9y5B8Nuiq/MrLiGawxrhkUHJCTnDzpNaD09H6GMJGEZpXC
-         73iDug0mf8NtiY6F7hhBTZiggZcCXs6g5pk2GlPAjLPj5/2XAEFWNnHC7I+dSx1qzdxp
-         e43+wAe2rdcTiekPeCqpd7L6QhRZs+f9QZKcwBiFD49E2zbEZRs8fhMvo7gxt81ri39O
-         d3Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVzaei/ODttPjIN8CNkxdlmcMFNafIS2WfoM4wI02PYyFVVQmSDzP3TfJ0WhFqD9//Bvx7OSofuv0Y=@vger.kernel.org, AJvYcCW6iwFUTPCPkW36L6aSNJxb4xkt+tirOq9DhbknfPsQpEjPoRGTnBC52NA9GnxzVsYJkh4EfD5/rdwJs1vq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuUM/u/1GMrL4HvPV4QeFIFGeS35rgxuCyJlauWjYGZgMD48B2
-	R+tl/9MXk0CukjzGCC7MrXLiEoU9vVyUMlh8Gh/2yTUOqpAgyKPY
-X-Gm-Gg: ASbGncs7X/jBOYW1kguYp1aeHhRnqtPSXwRqLM3SdxL1+WkKQF0sEDRX9LDKpghOe8y
-	uhg2O4dFdPI0DZvw56YhOWkuoPHMk0+rygUy16SeSodQdhgIEhymaYhgYI7Ixaoze7Mp//7HzFK
-	71xUkAZMIxWxPRG84HA3c3TGxeWPCnux0IrNYZgJ1zlvrpP9hdQyAYQlb1sbApFX+oiKHECWMhO
-	V6IBc2tQpxpWlwzjBKpyRNLF3Hx+/fH6NVnC9R7I/t30LfEHl0k3IILnpKE65qXxvoMBPmJu9JQ
-	ouexs/j9SevoRYfZsD/D8hb3zC725rQBzLI3d9nt6XTcJw==
-X-Google-Smtp-Source: AGHT+IGTHtzkeKtUtYf4ABEeM2lZ6bKxI1FNIxhtRBiZP9SDv3siVSdXIdoMhyiM9MahzTDX2SnQXA==
-X-Received: by 2002:a05:690c:480a:b0:6fd:47a7:3fb2 with SMTP id 00721157ae682-702572d919bmr36632147b3.24.1743246151245;
-        Sat, 29 Mar 2025 04:02:31 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:1::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023a3bb561sm11682677b3.40.2025.03.29.04.02.30
+        d=1e100.net; s=20230601; t=1743246153; x=1743850953;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jsq1kdQlFLn6WmPKzWPYjHoxE5hbtalWfUYgVjm4hmU=;
+        b=WxA2mvPOglgvSaYvsos7QR6myReWmcxqRiuUjKRcybuNnOowwWdl7Ehz5pOixb5Y61
+         SPKkBRz9H9gv2U4TH3M3YFF5RFpFHl9Mwl8w9wyi4ctvm2p8lyk5MjtXGHT8IeW+ggoi
+         Y6R465eCib0bregdy9COwBRpEM1vemp1Rg5VTt7Pqxl3tQP5qhtUmbX9RiQaOM77sfVL
+         bbR7LtaOcG/8p0HCOuHoD1c1iTfNm096XZtZ4Yr89VSE46Zjt5SqkIHrsEKg2u+DjCsr
+         cETiolowWfgiYob3AbFSocsq1zr1q37nqnwa7faqiqz0Jy+W9ZzTOv963hxAZRBjklDN
+         AY2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUqY9blSAcwmzRmxR2JOitbvGvgu4TPlA7roXwIi2jyKUv3cb7F6fZh0OMIp23t/1RyDg4eLVDL6ck=@vger.kernel.org, AJvYcCXxIyAAibpmxMEIq/ks9wJPAo6B6SygW5WYzrMDkdG6FGOUSabBmie7ZcgqTSR9U9Dh13j9sdyJGGH0FOOF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu5buxT5Xa7xu2pm6emFfiCZyXzBYffJ2YzplGHav5g1jGlXKD
+	gV/bs6UGitvrpzeARPwyz7yuA7l+RYWA6q5Srbf0Vp19XGGwtpeq
+X-Gm-Gg: ASbGncurphxFQFUlQ+HqR6FPFfdMn7GbOWvopnnBz9seqoSSRadZT5SKYq3Ys+jFrc1
+	kJmo3ftdePuxvABhmOLFZhNr/J1zoG0uQ0mfhG/8mtkM4+KCV7IFi0zKP+qcaarkd3K41EDm2Jo
+	+KFDBVN1IZLaWe+v2qNpUh6sTszCXO7O1AGv0geP3bi5CKm7qL6lQZ4YRW383W41xHpohpMEkvE
+	U0xt69r26ua54u6dGcV+94EQ3h0hA807a6k2UqVOUH2sLVJbLTpOF0RHABavPj5I+PxaUXR+fP8
+	ujD3lk6jBxYpgENjWDiUfqKI7xb2nNVIAso=
+X-Google-Smtp-Source: AGHT+IH2l8g9eICi5VxjR50z5D2Rf7QYBYscXVtxEG4K+/DFEXhUzLsi2QX42gax29HRevowTi1+Bg==
+X-Received: by 2002:a05:6902:1581:b0:e6b:7e33:b637 with SMTP id 3f1490d57ef6-e6b82e2e712mr3210420276.14.1743246152740;
+        Sat, 29 Mar 2025 04:02:32 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:2::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e6b8473463fsm324084276.23.2025.03.29.04.02.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 04:02:30 -0700 (PDT)
+        Sat, 29 Mar 2025 04:02:32 -0700 (PDT)
 From: Nhat Pham <nphamcs@gmail.com>
 To: linux-mm@kvack.org
 Cc: akpm@linux-foundation.org,
@@ -72,10 +74,12 @@ Cc: akpm@linux-foundation.org,
 	linux-cxl@vger.kernel.org,
 	minchan@kernel.org,
 	senozhatsky@chromium.org
-Subject: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering systems
-Date: Sat, 29 Mar 2025 04:02:28 -0700
-Message-ID: <20250329110230.2459730-1-nphamcs@gmail.com>
+Subject: [RFC PATCH 2/2] zswap: add sysfs knob for same node mode
+Date: Sat, 29 Mar 2025 04:02:30 -0700
+Message-ID: <20250329110230.2459730-3-nphamcs@gmail.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250329110230.2459730-1-nphamcs@gmail.com>
+References: <20250329110230.2459730-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,71 +88,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, systems with CXL-based memory tiering can encounter the
-following inversion with zswap: the coldest pages demoted to the CXL
-tier can return to the high tier when they are zswapped out,
-creating memory pressure on the high tier.
+Taking advantage of the new node-selection capability of zsmalloc, allow
+zswap to keep the compressed copy in the same node as the original page.
 
-This happens because zsmalloc, zswap's backend memory allocator, does
-not enforce any memory policy. If the task reclaiming memory follows
-the local-first policy for example, the memory requested for zswap can
-be served by the upper tier, leading to the aformentioned inversion.
+The main use case is for CXL systems, where pages in CXL tier should
+stay in CXL when they are zswapped so as not to create memory pressure
+in higher tier.
 
-This RFC fixes this inversion by adding a new memory allocation mode
-for zswap (exposed through a zswap sysfs knob), intended for
-hosts with CXL, where the memory for the compressed object is requested
-preferentially from the same node that the original page resides on.
+This new behavior is opted-in only, and can be enabled as follows:
 
-With the new zswap allocation mode enabled, we should observe the
-following dynamics:
+echo Y > /sys/module/zswap/parameters/same_node_mode
 
-1. When demotion is turned on, under reasonable conditions, zswap will
-   prefer CXL memory by default, since top-tier memory being reclaimed
-   will typically be demoted instead of swapped.
-
-2. This should prevent reclaim on the lower tier from causing high-tier
-   memory pressure due to new allocations.
-
-3. This should avoid a quiet promotion of cold memory (memory being
-   zswapped is cold, but is promoted when put into the zswap pool
-   because the memory allocated for the compressed copy comes from the
-   high tier).
-   
-4. However, this may actually cause pressure on the CXL tier, which may
-   actually result in further demotion (to swap, etc). This needs to be
-   tested.
-
-I'm still testing and collecting more data, but figure I should send
-this out as an RFC to spark the discussion:
-
-1. Is this the right policy? Do we need a more complicated policy?
-   Should we instead go for the "lowest" node (which would require new
-   memory tiering API)? Or maybe trying each node from current node
-   to the lowest node in the hierarchy?
-
-   Also, I hack together this fix with CXL in mind, but if there are
-   other cases that I should also address we can explore a more general
-   memory allocation strategy or interface.
-
-2. Similarly, is this the right zsmalloc API? For instance, we can build
-   build a full-fledged mempolicy-based API for zsmalloc, but I haven't
-   found a use case for it yet.
-
-3. Assuming this is the right policy, what should be the semantics? Not
-   very good at naming things, so same_node_mode might not be it :)
-
-Nhat Pham (2):
-  zsmalloc: let callers select NUMA node to store the compressed objects
-  zswap: add sysfs knob for same node mode
-
+Suggested-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+---
  Documentation/admin-guide/mm/zswap.rst |  9 +++++++++
- include/linux/zpool.h                  |  4 ++--
- mm/zpool.c                             |  8 +++++---
- mm/zsmalloc.c                          | 28 +++++++++++++++++++-------
- mm/zswap.c                             | 10 +++++++--
- 5 files changed, 45 insertions(+), 14 deletions(-)
+ mm/zswap.c                             | 10 ++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-
-base-commit: 4135040c342ba080328891f1b7e523c8f2f04c58
+diff --git a/Documentation/admin-guide/mm/zswap.rst b/Documentation/admin-guide/mm/zswap.rst
+index fd3370aa43fe..be8953acc15e 100644
+--- a/Documentation/admin-guide/mm/zswap.rst
++++ b/Documentation/admin-guide/mm/zswap.rst
+@@ -142,6 +142,15 @@ User can enable it as follows::
+ This can be enabled at the boot time if ``CONFIG_ZSWAP_SHRINKER_DEFAULT_ON`` is
+ selected.
+ 
++In a NUMA system, sometimes we want the compressed copy to reside in the same
++node as the original page. For instance, if we use the NUMA nodes to represent
++a CXL-based memory tiering system, we do not want the pages demoted to the
++lower tier to accidentally return to the higher tier via zswap, creating
++memory pressure in the higher tier. The same-node behavior can be enabled
++as follows::
++
++	echo Y > /sys/module/zswap/parameters/same_node_mode
++
+ A debugfs interface is provided for various statistic about pool size, number
+ of pages stored, same-value filled pages and various counters for the reasons
+ pages are rejected.
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 89b6d4ade4cd..2eee57648750 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -129,6 +129,9 @@ static bool zswap_shrinker_enabled = IS_ENABLED(
+ 		CONFIG_ZSWAP_SHRINKER_DEFAULT_ON);
+ module_param_named(shrinker_enabled, zswap_shrinker_enabled, bool, 0644);
+ 
++static bool zswap_same_node_mode;
++module_param_named(same_node_mode, zswap_same_node_mode, bool, 0644);
++
+ bool zswap_is_enabled(void)
+ {
+ 	return zswap_enabled;
+@@ -942,7 +945,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ {
+ 	struct crypto_acomp_ctx *acomp_ctx;
+ 	struct scatterlist input, output;
+-	int comp_ret = 0, alloc_ret = 0;
++	int comp_ret = 0, alloc_ret = 0, nid = page_to_nid(page);
+ 	unsigned int dlen = PAGE_SIZE;
+ 	unsigned long handle;
+ 	struct zpool *zpool;
+@@ -981,7 +984,10 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+ 
+ 	zpool = pool->zpool;
+ 	gfp = GFP_NOWAIT | __GFP_NORETRY | __GFP_HIGHMEM | __GFP_MOVABLE;
+-	alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle, NULL);
++	if (zswap_same_node_mode)
++		alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle, &nid);
++	else
++		alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle, NULL);
+ 	if (alloc_ret)
+ 		goto unlock;
+ 
 -- 
 2.47.1
+
