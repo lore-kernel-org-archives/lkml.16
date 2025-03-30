@@ -1,137 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762101A314B
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F901D54E3
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743357778; cv=none; b=kEtcBv0uZsLwG7Wuuwd8TIiK97vG7T2PYDpviYkeu3rftY5GJrSTQwZWccR+bIQx7k/gMGb/5705lMMcpEEIJjVxwuqucc/Y+T1cjzfGdb90M377Ti4BdWJT751vMgoa4Aa/NwuNiht5tk3h410LTEdl+Em1YPTPNvJ4qo+UA8s=
+	t=1743357958; cv=none; b=e2DxE+PWxvBIiIuoQ1Kh2bPS03rZG3tawTAD5p3oOdWxBtBik8Vx+AUfmolXV1a4H254F+mn+j2glmY2oKtfGJHlG4jN3U/m7gijKQuDJUaIysExiUBDwnqcg2nQiqIFT60jdpw7lybeoO4V5IDdhj5WD/Vq9lVnPQ5vUOTsRis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743357778; c=relaxed/simple;
-	bh=TXYLh/RcMb5W+PFVwLVpt9syPHW6Z38wPnySREiMUAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dQ6F0ZEhQ+2THoa246e6SUAWpKHXC3UuNqtNIWMBsJ5KBXgjpV5Cio0wIZ05o9656TczQOJA03w2K4MnM0ZcFqDFft0AitgG8Lr5q4SAUIx00MOfjlVIuAV4u1w0hCQIqGtlmdUfiSxeTtBSeDAG2bXb2Rqx7WUPbLhUW89gUlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R21EayuK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743357958; c=relaxed/simple;
+	bh=hBWP/0soWHbq3zbQYt3u1v10HqYji3ePqIHWx3i+RwY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AYhff2VlYqcTGNyldo22SxVUCGBQshsUFz0eUV4NkGeFvhMvflG7cXjCzoVHWkj62zFJlqdur5kWXoyPzaMmFvAO/4/ZLUdgM+nKvpBXwMQJpEksBCxKlr2/QefF7aiu4xQp4RLAsV3e5eftjoPl1n4Ubx4bV7UpjTHDIMPKuRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UuGtsN7K; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R21EayuK"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UB3BaW024224
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qlaN7asJ193Fv+MWu0+aw75zEOU6L/Dd+AbBmRtY93Y=; b=R21EayuKxRFlQ/v5
-	z8rgfFYBWcq/B3MBLeCi+vWKR8ldpTUF0l9O9c6/3eabxszkg1ATPOqv+U5NViIC
-	EdWcGqrtK2iqV4vHMP/8rzESZpc/Hkdhs4em9l8em5trodfgrNX5CW/ma4+37fN6
-	4C+3aCj+DfbvhU5SKrLS94Z4KOboCKXVHXj+1iLTG4UpipWiu5Fp7AOAp4wrB90D
-	9KUozjJ8qrR5BDIsl2t6pHQlNyLkixG7jN3q8fCjPvQY03zGGfPe3WPpOc8Dj927
-	FaT/e9g/Zs3gtpc2ozvUM+/ic5tFfM70e9c/D0OO0M5DM1JKXaHZf/i22PjhEFmO
-	JuEtMA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhjsr7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:56 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54a6b0c70so357899285a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:02:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UuGtsN7K"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso23785245e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743357954; x=1743962754; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hnfsVQoN7BVQq/UCAqhsRfIkUla9FknIwhk198jk+nA=;
+        b=UuGtsN7KdQHj2N6SmthPaWLXq/gB6M/L+fr/wek0DzgVOS2wyWr+EpT9t0Viiy1b++
+         EVsFcWNccymGc/QUCj13XDTL778JUewl7aUrrB1euekYmr6X7dTmbDqIjvmYoiTmej6m
+         pDPfZUvLtuYzFU54SbTDlAxfART2NZ/2eigHYB/keQqhB8jUd7TgAtMsDLgNXKEuncuh
+         79m76oqcFH8QJjzkdAU7JzQuGpQ9KnxivaqZsNELDCp1TSdc07mz0uxEAhuoNBx+/YLR
+         qGWEN3w0cSFYslP6E/ddCY5z9c21UVsfCuAu5PkqULKUHjeamaIPJ+uNGTtTSmOcEm8Z
+         nMkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743357775; x=1743962575;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qlaN7asJ193Fv+MWu0+aw75zEOU6L/Dd+AbBmRtY93Y=;
-        b=SLV13AnPNokrbpzqPA5sywiW8u+oAVlBvWBecDb8iertzM9re6isySuOe5xieD3cKm
-         fIwe4LZiVBYecZy7pyOfCHBWCCQngBX05bF3NMPoXLeJW2de2+z/tWCge0mg7b+P1N4V
-         0H0B2g/ImyCXxH2TnosqSoGNJqVmDUMY8+lAohrwYq6JEapznsEr2KYhhWCzLZkko6TG
-         blCLddxllU6XOsioHjebNcGzXFEz+xHNWGLWfNGOV/XUe76jXVETSViwYjpoOU8GbtmF
-         jJgjuNZOvMSZH88wNuyUhKtnyOUHHe5tHFbStQRrhZCcMfolu627wcr3jPSM3eOHgef0
-         NiAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZXvE9hKVMfGYjDtwrXk5UHFAA/QS4E9pJcNzF64gttU2/j8VJW8jag7RgZgw38a6A2e4Ih7/06mP72wU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiB52jITeLo7Zvvojl3RF6n/jC9i5lj6Cyk++6cIbaM/rfZt21
-	hh9FE6ns7hLaAVEur/krFloherwS6/W+VVoUOIvLUDLi61B4402uA9ja09GSaSiGLfBFTYSn5fb
-	anYNrJk8vlXTCg4b+Rr2+KixHGWScnJiL5d64s2hHSOI7PxGzGw67GO65S3QcxAs=
-X-Gm-Gg: ASbGnctj6qvUVAWQeC+m1RI3FU5HFmHKoXmcxkeny6yUypYqzZEURIQq+e5EXGmE2dF
-	HNLDZBQH9SRVsgDbfHz070aQPsTJmgBsRpZakptmkKPNcS4t7UORNBG9kUBu6XBk9uE3xFyRHOK
-	dJ3rm+gnUZ5YHjfljKG5277SAYegLMfHBwkdJvY4orSd54zMlYBkr7pM3snpAKLrypiqqDvr+7n
-	vq4kcoQaRJ99E5edZxvkzK/XzQkbPdRBqydPL/G1r6jMDvMV/mjLTEjKlJoHnyAEFodbRbrWP3F
-	yYe5cwWwBZvpfIbBGWWQWVaE3FfxxGRXRrWOUB4aBxH/vc4FrNvbHurpjhUN6exuRPU=
-X-Received: by 2002:a05:620a:400e:b0:7c5:65ab:5001 with SMTP id af79cd13be357-7c69087ddd9mr654773185a.39.1743357775271;
-        Sun, 30 Mar 2025 11:02:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAPYhkOOkZUjy6KYQuyGJsfsTPEhDTKBmuQ5FBkrMVqvE17ds8QzCwlgbwULJxX9LUBjkjwQ==
-X-Received: by 2002:a05:620a:400e:b0:7c5:65ab:5001 with SMTP id af79cd13be357-7c69087ddd9mr654770985a.39.1743357774924;
-        Sun, 30 Mar 2025 11:02:54 -0700 (PDT)
-Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0e78f29csm703408e87.113.2025.03.30.11.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 11:02:52 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Liviu Dudau <liviu.dudau@arm.com>, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
-Date: Sun, 30 Mar 2025 21:02:49 +0300
-Message-ID: <174335776562.2565584.12345735704248581476.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250324210824.3094660-1-arnd@kernel.org>
-References: <20250324210824.3094660-1-arnd@kernel.org>
+        d=1e100.net; s=20230601; t=1743357954; x=1743962754;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hnfsVQoN7BVQq/UCAqhsRfIkUla9FknIwhk198jk+nA=;
+        b=Sux7RSAdNe8TeI9rIKaeo5pHXQpM+QZRtZwsfI9KLoElVeXelFRGyGASYNfp78Wsgs
+         rtajYkb2lxVeJzk4EsX2l8eaC9hxSsSdodSUEcCcFWBiC358g3UiVnQkN4AFjU9xddaw
+         H9dSO7QTr6K26SoE4M3/KXrNuRxn19weZ5DFAqABnD7ExdAybuI14aSovra7FWJh5omm
+         MCYLU3t0Ex7/13KUyzKgd+wegzORq2QXaSH/mxBGmYB8ibrejobkm2kzXafd7Vdk+iyP
+         Dc4nX0hf2qAZGOk+vyhz7KFANGx7cFyoHf22lcnwYg7DzJEJW/zcNoqBddhQa0XfAp0l
+         gI5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWs1DXDkIm2F6u+WTNcBv1yqHHovwrqAM0icLXToNaH56suwy6nHH2TmgnjWr8+WCQsgXYBGkfyYqWsN/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5K6la6dBtA/NXd4HTaMuRMVmh2Y2Gh2xHrn5nyEN9dG0slCXe
+	eSYOrFDtN8OgyHX0xkslYP1/hvoqjyJu11iGN7oX6GuVQWUuwvj5HIWXzDyqNnsTsnGoP7zdKAs
+	h4rCiAmS1H8sspJ5BeIjX29SZeZRCwiuAdpy7lg==
+X-Gm-Gg: ASbGncvdR0CYfin73N1vbhh4jnQAmF3XSoEAEhXeelIO9EsC1LxEpO4GdNPWRM5Ur5W
+	MXXzA4bP6QUlVzb9dCAyW83a9ksXy+VDVqPwsnwXgNpm3JIyRNxnvRxhv8oE0yi6mg7mW0aLL2V
+	xBpn+7UcPuDq0y/E11fpGW0SPvATr/BBumm5NJ3IVO9JWdM8u9tw+tPpYTzgsI/hrLhFV82Q==
+X-Google-Smtp-Source: AGHT+IHoos9QzanPsGiYgW04xbM8tHV8yEstV7nbyP17tfhgl5Tu6pOmCopyigYoqs8pQfUizNRz5NEJZ+MuExnPEyA=
+X-Received: by 2002:a05:600c:3493:b0:43b:c6a7:ac60 with SMTP id
+ 5b1f17b1804b1-43db62b72e4mr57523125e9.10.1743357954536; Sun, 30 Mar 2025
+ 11:05:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: AJXCOW_a-l6uAixmVkvTfalf3-IXX1Fl
-X-Proofpoint-ORIG-GUID: AJXCOW_a-l6uAixmVkvTfalf3-IXX1Fl
-X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67e98750 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=Wyn_QxJju8WABout-1IA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300126
+References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v5-1-25083d9732fc@linaro.org>
+ <f2odvmbhsfmkrkzada2a7qdjavomt2cjji7mbwibzlhxiz35ai@2qxnfb44eb2r>
+In-Reply-To: <f2odvmbhsfmkrkzada2a7qdjavomt2cjji7mbwibzlhxiz35ai@2qxnfb44eb2r>
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Sun, 30 Mar 2025 19:05:43 +0100
+X-Gm-Features: AQ5f1JrPaoChzlVOaAUOxwhyfNR6iarewZ64iTBqQ4hyLv-fzJCFGnyzphgmD5s
+Message-ID: <CACr-zFDUMzb+jKcBc1SfpsOiQsAJJ0jsPdS-vcA=OXy-K3pfQQ@mail.gmail.com>
+Subject: Re: [PATCH v5] drm/dp: clamp PWM bit count to advertised MIN and MAX capabilities
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>, 
+	Rui Miguel Silva <rui.silva@linaro.org>, Abel Vesa <abel.vesa@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 24 Mar 2025 22:08:07 +0100, Arnd Bergmann wrote:
-> This fails to build without the KMS helper functions:
-> 
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_detect_work':
-> tda998x_drv.c:(.text+0x4e6): undefined reference to `drm_kms_helper_hotplug_event'
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_bind':
-> tda998x_drv.c:(.text.unlikely+0x33): undefined reference to `drm_simple_encoder_init'
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x584): undefined reference to `drm_atomic_helper_connector_reset'
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x590): undefined reference to `drm_helper_probe_single_connector_modes'
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a4): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a8): undefined reference to `drm_atomic_helper_connector_destroy_state'
-> 
-> [...]
+Hi Dmitry,
 
-Applied to drm-misc-next-fixes, thanks!
+On Sun, 30 Mar 2025 at 18:56, Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Sun, Mar 30, 2025 at 06:49:40PM +0100, Christopher Obbard wrote:
+> > According to the eDP specification (VESA Embedded DisplayPort Standard
+> > v1.4b, Section 3.3.10.2), if the value of DP_EDP_PWMGEN_BIT_COUNT is
+> > less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, the sink is required to use
+> > the MIN value as the effective PWM bit count.
+> >
+> > This commit updates the logic to clamp the reported
+> > DP_EDP_PWMGEN_BIT_COUNT to the range defined by
+> > DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN and _CAP_MAX. As part of this change,
+> > the behavior is modified such that reading _CAP_MIN and _CAP_MAX
+> > registers is now required to succeed. Before reading these registers
+> > was optional.
+>
+> Describe why, not what. Something like 'is now required to succeed,
+> otherwise bl->max value can end up being not set, although
+> drm_edp_backlight_probe_max() returned success'.
+>
+> LGTM otherwise.
 
-[1/1] drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
-      commit: 85a063b8b281e144ed96463936fb4e6b3d4fe9e4
+Amazing. We got there eventually!
+I updated the commit message around this change to be:
 
-Best regards,
--- 
-With best wishes
-Dmitry
+    As part of this change, the behavior is modified such that reading both
+    _CAP_MIN and _CAP_MAX registers is now required to succeed, otherwise
+    bl->max value could end up being not set although
+    drm_edp_backlight_probe_max() returned success.
 
+
+I will wait for more feedback for few days before sending the next version.
+
+
+Cheers!
+
+Chris
