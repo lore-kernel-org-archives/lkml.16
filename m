@@ -1,105 +1,117 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C289184F;
-	Sun, 30 Mar 2025 09:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC63178F29;
+	Sun, 30 Mar 2025 09:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743327409; cv=none; b=FvyVQscv0vC2QZXo0xQVNBchOTFa9g/Bw0MUTjAJDTvLkIQcoA7IOXVEy/i5GTPuDp3LyHb4Nu4NRRSpkn46RLRUyNo7xudRahzOzgFS8YD8SVSrYMsCTdQ+15cdI5BNfj+ZnIX+tLmg9cW2FlZqidgDhz0q2oie/nAJQ1/nm2A=
+	t=1743327785; cv=none; b=P9IrcsN6uN44f421l+u7ktoOitvTGJ6b21bC+TVNmDn+86T7IRnePw5oKLHacTKCykcBuN+bKYGS4kWo+3aYzdQw76/fM64bpX+eI22Z1vq+oG3RIByPz5BnlJVw9l4p5gIKc1c9pN9+YakOyY/TPEMWyqtZ2AkUjygvNk5sQ+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743327409; c=relaxed/simple;
-	bh=Z6N2sgFqDrc+LKPGTaLIbSzwuHDOUkrxXi0adkQkUsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NWTuYjr4RaBs2emUpsgmAk3rIUfC2y+KOkhO58Ng3C8ItPmxziOWap+1hz2KtIkm3DHNN510D7fo0yAvQGVr4CvZIcIjSDpiW/MHlLWT/dVWV86U4dX6QWLRc5M4WTWaV3TR9XSiuU+CzwFfovWrnHc7op+erqzEyAwnqkwg6RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DD2dthyQ; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743327785; c=relaxed/simple;
+	bh=65vRl2bgFK9n20bD3FPj5jSnqKTP04U2VPXDFWAuA4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bvbrwYzz8zBBKKorJaEVwpRRm4QpnoG4ow4pLgymoEJNj5cfQBJJ+LikUpuN6Eix2DhPF/otVQMdPtKCYxUpw6fJeypyYv8yBxCJSWyyXvwOAOEfeEVKWAuUEMwCieIYS2HyclQXpf2ATDQpFrhaWb3nfMv1NUUmMj45vqHB4Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyGmvp+C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DD2dthyQ"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22423adf751so66245555ad.2;
-        Sun, 30 Mar 2025 02:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743327408; x=1743932208; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bYgs5EwCW20iv2ZHkUXjzYyA5IFX+7v48mlboekMnkI=;
-        b=DD2dthyQ/tGMKIjB7ykva+YaqW+uQLf34WP3XXAi4/wJbiND1ZSQu3VcWFVKk8ntal
-         9beFVdXyZn9lJT3UoIy+9qNaCutki0xBPXzSzgpnMNdRepyluZ+4NtGS/XEOjcGwR0gp
-         Q4jrGuRs+yKOgKvCTPb4K+/qgSEq9p8k1HxRNG7T1IB4ljmcxMQPwr+XTHe6FQTBaDh+
-         4ZJBIFUh4XvV41T8pG8bdzLVIkfZgFuxBZsHrVvoMvw+453qVWT6J3WPFtG4bjAYK/HB
-         391j1r9LOTciGGzbicu50oHKECiuKU9qi6g6Xc3i5LOujht+WJC4FjNis96yIV/wMqgt
-         7E7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743327408; x=1743932208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bYgs5EwCW20iv2ZHkUXjzYyA5IFX+7v48mlboekMnkI=;
-        b=cEx1J/MhoZzIlAmr6Ti7iK0egi2pux8u+gMidOIeHaqP9IsX8cNMwhyfzbHR7lD96j
-         jfVPjFM7yWkC8/LyQvdnuxgElYfuG43GVIck24zftvIEuDBN7hKF2Bz+SBypo7amUh0E
-         bjamGlav9AOaV7Xlmh2PIme+pcTgseiNsdG7S4QogTc9Hc/05EiMm0i0PjAsL5ce6Ort
-         5m9COf2elPYhMt1QT2nm+/lyEjoFI3u2EbaE8ydib0IhEpnlisg9pwX7rAjrOwwjBXw9
-         57t9GgeeVoclVUNMetlzA0JjCb364ooctcREZ227Cn4qGHUptVK0eQ8tiofzinhjoQNY
-         nsEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7+S/uL3XYTWA4CYMJbyggUznWE7+U5YZ61yRcocNzSbHB2uxHKIGBgiHfgrMRCAZd7eWVSV3DaNhPHfTYFhc=@vger.kernel.org, AJvYcCWnRNZsLBlXCt2kUoDE0HFME8lUkv8YH8FmdEGA+a7A3v/oETfTwYJUKlKqyxCsNiEZRCl9oXxMNf/DkGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz7Qft4XfvADrzkNwfAGXsqV969jnaRVsm5S+at2N7QXaSNTUu
-	C7iU5ENBJyDvqYu66uRtA3x7Mld9na5//ElL2hWcNQJOqsVGipk0C3B71ESd
-X-Gm-Gg: ASbGncvbsZI8LFKFEFtPZguUhSvvyft9RnIGPKcSPX9Qju7CDRw7GMwTZfAvZTe+l/n
-	Uw6Yd9qNtBJrLZk1YoM9kQI1JbvS9OQeDzU2V1MdSxDVv/5ynhPLUDSW3G0YFCuvjsXTHYIiT6v
-	zFSPtEf7bvIev03sPys9xYTKE7SuhlcydM/F9CIq8yXMLM1Z3O34QESEYknMt4xPSPmpM24rsLz
-	j25iF/hwwbJTmgDIrWz7Re6t24sCEs9utv3JfobaJ+AKta/irKN/PS0zQhIlX9b1B21LxGIP4RN
-	IK4vlSjABU2Cx/LeCbndtt4rq6rNrU1NinZD+vqfwfPvU/bZAU6SO31M69G+
-X-Google-Smtp-Source: AGHT+IHQe5JLOQsc4DfiAdpRLI4eVuDTaOIkdGpNNABtdwCKbTWlJCrWgt8Qi6Cy1jR+TdLWnCW/7w==
-X-Received: by 2002:a17:903:1c2:b0:224:de2:7fd0 with SMTP id d9443c01a7336-2292f97482bmr74392445ad.25.1743327407659;
-        Sun, 30 Mar 2025 02:36:47 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.217.226])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2291f1df011sm48923455ad.194.2025.03.30.02.36.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 02:36:47 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: abdun.nihaal@gmail.com
-Cc: luciano.coelho@nokia.com,
-	vidhya.govindan@nokia.com,
-	linville@tuxdriver.com,
-	kalle.valo@nokia.com,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix memory leak in wl1251_tx_work
-Date: Sun, 30 Mar 2025 15:05:56 +0530
-Message-ID: <20250330093556.22417-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyGmvp+C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE05C4CEDD;
+	Sun, 30 Mar 2025 09:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743327785;
+	bh=65vRl2bgFK9n20bD3FPj5jSnqKTP04U2VPXDFWAuA4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GyGmvp+C3WpETEiLlYG0YXsLHCfEYT0nS1ANSddQv/rAEt/HIOWVzgq1VnLE5RNsc
+	 CnqYHMFciII6GeoDkq6u8J5CJQEjMkCZe7GfoMe7NjYMknv1yRV2uA2JBF+me2yp0J
+	 qz844vURCv9FGu2xGfzFMpTn4jrih8t2Xoccv/wwSy3MRo3WamJPMnaCF15HBaypyR
+	 1hwnRQZHyJWchRKr7Au/9jonqcn/ZrqXcrTjKUv6TWPKdZeMdakV+tcYynwWqn1v+f
+	 LCGsrJI5nRqC2EjpyP2gCHYFzUlihacI4GhLpC6aJgS92N7ukeJYxpF5BLglZpuXFQ
+	 BB4A6KAfQyYGg==
+Message-ID: <b68559e6-fc2b-493b-9f37-3125ff924a65@kernel.org>
+Date: Sun, 30 Mar 2025 11:42:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: i3c: Add Qualcomm I3C master
+ controller
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+ linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org
+References: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
+ <20250326141641.3471906-2-quic_msavaliy@quicinc.com>
+ <991b0652-76f2-40d6-b49b-1e6f76e254ac@kernel.org>
+ <661e1a21-0f3a-497a-9b3b-fab284e30d19@quicinc.com>
+ <36b67f9c-5905-4fa6-8190-ab980850b3a2@kernel.org>
+ <e997bd15-728c-4316-8050-d461f115fd9f@quicinc.com>
+ <04945ad2-1372-4c73-beae-fc6449fb9a76@kernel.org>
+ <838dfc8d-24c3-4f03-9c24-863259bb22b1@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <838dfc8d-24c3-4f03-9c24-863259bb22b1@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The skb dequeued from tx_queue is lost when wl1251_ps_elp_wakeup fails
-with a -ETIMEDOUT error. Fix that by queueing the skb back to tx_queue.
+On 29/03/2025 15:31, Mukesh Kumar Savaliya wrote:
+> dt-binding file name: qcom,i3c-geni-qcom.yaml
 
-Fixes: c5483b719363 ("wl12xx: check if elp wakeup failed")
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
----
- drivers/net/wireless/ti/wl1251/tx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+No. I already asked to use compatible as filename. Don't create your own
+rules.
 
-diff --git a/drivers/net/wireless/ti/wl1251/tx.c b/drivers/net/wireless/ti/wl1251/tx.c
-index 474b603c121c..adb4840b0489 100644
---- a/drivers/net/wireless/ti/wl1251/tx.c
-+++ b/drivers/net/wireless/ti/wl1251/tx.c
-@@ -342,8 +342,10 @@ void wl1251_tx_work(struct work_struct *work)
- 	while ((skb = skb_dequeue(&wl->tx_queue))) {
- 		if (!woken_up) {
- 			ret = wl1251_ps_elp_wakeup(wl);
--			if (ret < 0)
-+			if (ret < 0) {
-+				skb_queue_head(&wl->tx_queue, skb);
- 				goto out;
-+			}
- 			woken_up = true;
- 		}
- 
--- 
-2.47.2
+> compatible = "qcom,geni-i3c";
+>>
+>> Best regards,
+>> Krzysztof
+> 
 
+
+Best regards,
+Krzysztof
