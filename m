@@ -1,148 +1,123 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B06B17A2EC
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B971C84D4
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743369240; cv=none; b=YQzOz+6QMAA/7Bce51TaSHb+nRtWJR0ggLIYHFKvNoXLfMImqpsrCXJwcpNdXGtxiecBCeH65DMWjE3lTVIVLPalPsfh4o0Inpqv/jwf+6CL/ePZpgNSJDrYUlKpWanmBE7Oc6Ba1rAMZ96vxZQa8EwI8g6nzPlWXU8OOnmapwY=
+	t=1743369497; cv=none; b=TJtk1962YbLV+e4s0iI4WKkfXPI4USyX8Qz3eqQckH3AP+EPmT6G1B9cUzBQMp08FRQiPXNxY0UI167eb8wYeQfDFEfvBVmLShMYipSRhnmR9DhB2yltXRqLzZpCwG9rh6QPr3CsQ9CeP5tUqU/tqhQU5zV4nwrAm6Qk/jv1u2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743369240; c=relaxed/simple;
-	bh=tuY/QNQk/F9SugrUgSfFsgzuGaTIb2SuuPlR/76U+A8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LDs1MmAAwqOwD0A27gyuPcS9RlnJpP/JBgWQPj0OSiKerVm0tfAZG7gLJduJrQaUn5Mc643notnphsbFrauJ0euCy7BzLSQBbY//dqSXkGIzZUMd2K7jXt7dnAATiF0nPW4lrWw/lcxRf4D0UdcKVdBk7AN8kBYJJgy/DJdXGU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MSrKarQ4; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	s=arc-20240116; t=1743369497; c=relaxed/simple;
+	bh=Ooa4UcGNscB5a35lf6i0Tw6kXOLOJYWwKJ0KUvILWyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkhT4iZNItIl4KC1cAatnQ6G6xX0106re7Dz6afZttOWwmyh/HCG86SJe3S/qLiVUyKKH3bUpelh9cmnEtQo4QFF/WgBoHs8PaOWDqK2UxJmAporO8DEPPSRQgnAEqohxMUfJG7rrlYwSSwHsrWZNPbhlQ/VHE+vtmmHY9/AtTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fb1AsJUC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MSrKarQ4"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30364fc706fso6202007a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743369238; x=1743974038; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=61IYoBnyZqJEMEpkuy3cn0SZfZ0XGPVC6El2dNeevTQ=;
-        b=MSrKarQ4eiBdkKzw55QshBdp7cp8chyr4CABIpQ4u8jkYg/AYGqv/qvkMbcMAhYnK+
-         5eIlc/xEQRM79Wf/iar2zzrRSGcrIlTboJyPb68MXKsfMYJtYBIWRpTayM61I68nFpq5
-         gzg2iscxRhIB6Hu6L2Z+NMO75PYGNxef3swBxsiQY1A24JiDtRe+kQa3bHprCSmini/9
-         Z2/7Hcx2dnI1VUeoCT55C+uo6KzfytYHEje+sw+1XGk1Jb4eRZhg5zw2Q2O7UymazgkJ
-         s5kvnePPhFz5bXqsfDIx8anFlHggHgcL+OUIaHiR3GQ1f+JZskzyqVWHm7hdkZEr0a+O
-         +iXA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fb1AsJUC"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UKhX9a028637
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:18:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Paayu8WvfEGwEqdQbUj3+ZGD
+	d1cOdWz4M9UO1SwtVuw=; b=fb1AsJUCSOSzNfD21cezt7tvkihLf6jcbCuz+ZeV
+	SMkxnxnA5r5KD3z29dwkdPGLtkDrIxfIEsay5bf4t/FG8HQyKoti0wlmULHwvtaL
+	gJhIFYuCTmyTGmHJOTh/6UUSd1ErEG3dfnNm00nMq67RFb9IPgY60Fr/KkBta0nk
+	qRbQQnPbZttwkvgbl4PvrEFqqLzWbQyq8XJW6N9efK4gN5tKHG6UEKt2dvsYG60j
+	J/wJBkI76m0cLA/pe4oGLj7QBrlDe/OtX9tvKQFwLBFyeTK7GPiVSxFWcUFkaNK6
+	dwOHKemuHlOJw/9tMQroYJO6L89Wf269fBI4VjdH7SO1QA==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p7tvav81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:18:13 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e91d8a7165so61389806d6.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:18:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743369238; x=1743974038;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61IYoBnyZqJEMEpkuy3cn0SZfZ0XGPVC6El2dNeevTQ=;
-        b=j06lPmpEt+TqqPwBurfGFrtefZojeOZY1oeYbXrt18YBHWuhtOqqnnMYagkrMiiWhk
-         k1FhkboIPal0qwLeszHxJKn15GHHxd+cC6fDtgOEEN8AUkycdA/+TXK0yOAb98RDVPbv
-         2K2/dLve1zkTc7l1k1sGsgBlEKLZRxvBec3SDHEXy8+WLDMxT4sSVD0Op+K8iD8mge+O
-         QQ7Ebm5zX8jveBSYcEol/PBcbiOt84lDNQy0wyncA4H63mK6wYUKPFSiel5WlS8WyWzp
-         ykxHXFn9Rant5Z4dPTrw0LcaCVVm8ZNC8ACH35O/S9iXG01cmXz/SnoA4FpoRc3Ztj/P
-         7uIA==
-X-Gm-Message-State: AOJu0YyZhrCdTDEKNa63rpSmbrjsY31mJ/2ANnvBFnUsmgRegiPepyNv
-	8XFVO6+WYTTgQ9h31u+x90jlRnTaA+Ojdgzi4zDtB0VOgpgnOttYPZPGyhdglaZM3tz+aJMI7iU
-	VZylq6LFAGA==
-X-Google-Smtp-Source: AGHT+IExA/Qh/zET4rYRjfCGWnHQ2oDyUcaf7FrxoGsylJCTJr1cZxpuLWN9JGul9NvyF2ynMXNVsUSEXVUzfA==
-X-Received: from pjbqn11.prod.google.com ([2002:a17:90b:3d4b:b0:2ea:29de:af10])
- (user=cmllamas job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2e8d:b0:2fe:99cf:f579 with SMTP id 98e67ed59e1d1-30531f7c03bmr12282871a91.4.1743369238499;
- Sun, 30 Mar 2025 14:13:58 -0700 (PDT)
-Date: Sun, 30 Mar 2025 21:13:23 +0000
+        d=1e100.net; s=20230601; t=1743369492; x=1743974292;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Paayu8WvfEGwEqdQbUj3+ZGDd1cOdWz4M9UO1SwtVuw=;
+        b=dNIJuXQvZk6vXNgLL1TaAZhtineMlREHP94OR5HCBwrQbAAf//I3gH5gYIgbpppT9Y
+         zcnh15Z5ZL05IYBv6UGOrWnXr4tKF2TFKlzzcSpeei/ezULK816Qbu0j2GAiHRYmuiyg
+         UYdwL8SaaXNYm7krkoMf5MuOn2lV+ToQmx3d7Icq8R/LvJs0WmSHBn2fb617kC47VYWI
+         ihxiWsQlRSMWQcDtOsh19tYZz1nh/bqrnR/KDZm6DnGy8M0pQk1AlYChqpXxSrUw/BM7
+         wpjpmWcqN5tjS1fJ4vDmMbYA3KvzJAuLXHtPpAoULt2OyYu0jpTZYOq0TeDZDtBOdOen
+         Z6UA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFpaIRl8gSVMaqpG1/IYmdYGgT1W7WY/OOfMf18ULBKNgFhMhqA3bXesCYF4HowdinrlLzIjrXbZUbvR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG1UYgsvGTlBd/l1bCkb31qGMlj1tmqOJ+755pMtCAcQm8Fs65
+	9csX1aKsKO0Gi3CGo4p68nyTvjbj9L+WewAgaxKkbUPpbjJWXoEjae9sVmtPtkxguj414VRJLPJ
+	RLoOo1kypg+DsEiqCU2q1mE07MsdI1BhQsamURnfXeM3/hj4ZjgQsRoR23Uh37yE=
+X-Gm-Gg: ASbGnct045uGkU8u4KUQfg/K62M2Co7tZ/gmxz16dl9covDFRvCr/jK2BhJiXG0ql5Y
+	06BZJBg1IMw7rbMh6N/pFfgWGsx7YYU/9FFZDEaon3q4nTCdZVh1Te3tyfB2DfoqARprZQ2jynw
+	bUxoserLz9TjJmgkvouropxW3WeeUMW5MaIUomRrXsCh6eCE8SebwShhbF4htkXb9k2D3buxL7w
+	Pmgq05ylJ1hC691GfozufxJN8xDgjWd9K1gjtBe/+xI9vTCkkFuJVaQkRhri0OaScN7HhjDnHLl
+	bVb2DJUgP1GXLaut4J2pWFZ6W2TuGXECP/AY16/mvjgy5UxYidTj+nTeFlcSXnDralpp8HpTHSc
+	mHso=
+X-Received: by 2002:a05:620a:4722:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c6862ef454mr1103733285a.1.1743369492219;
+        Sun, 30 Mar 2025 14:18:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAv7jrTxDdjg78EAAVbYKt+dMneuIjLdd38so3bZG7Hgu4I+zdN5YTn/dl7VRlOI11qb8vvQ==
+X-Received: by 2002:a05:620a:4722:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c6862ef454mr1103729685a.1.1743369491843;
+        Sun, 30 Mar 2025 14:18:11 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2aa92a3sm12169691fa.12.2025.03.30.14.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 14:18:09 -0700 (PDT)
+Date: Mon, 31 Mar 2025 00:18:06 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/15] drm/connector: hdmi: Add missing bpc debug info
+ to hdmi_try_format_bpc()
+Message-ID: <esfrpbkbcvktjfu3u4m3wlc3te73t42pz3k2eb5pthdl2w7o4w@mwgwseljuaml>
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-4-294d3ebbb4b2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250330211325.530677-1-cmllamas@google.com>
-Subject: [PATCH bpf] libbpf: Fix implicit memfd_create() for bionic
-From: Carlos Llamas <cmllamas@google.com>
-To: bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alastair Robertson <ajor@meta.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Carlos Llamas <cmllamas@google.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326-hdmi-conn-yuv-v3-4-294d3ebbb4b2@collabora.com>
+X-Authority-Analysis: v=2.4 cv=OIon3TaB c=1 sm=1 tr=0 ts=67e9b515 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=QX4gbG5DAAAA:8 a=EUspDBNiAAAA:8 a=Go0fpDh_rV6_VJzv3a0A:9 a=CjuIK1q_8ugA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=AbAUZ8qAyYyZVLSsDulk:22
+X-Proofpoint-ORIG-GUID: TP0NEnRu-y3dXxTuNiFQsDNyTeP4r0ZQ
+X-Proofpoint-GUID: TP0NEnRu-y3dXxTuNiFQsDNyTeP4r0ZQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-30_09,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=849 lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503300150
 
-Since memfd_create() is not consistently available across different
-bionic libc implementations, using memfd_create() directly can break
-some Android builds:
+On Wed, Mar 26, 2025 at 12:19:53PM +0200, Cristian Ciocaltea wrote:
+> The very first debug message in hdmi_try_format_bpc() is incomplete, as
+> it doesn't provide the given bpc in addition to the tried format.
+> 
+> Add the missing debug information and drop the now redundant message
+> from hdmi_compute_config().
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/display/drm_hdmi_state_helper.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
 
-  tools/lib/bpf/linker.c:576:7: error: implicit declaration of function 'memfd_create' [-Werror,-Wimplicit-function-declaration]
-    576 |         fd = memfd_create(filename, 0);
-        |              ^
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-To fix this, relocate and inline the sys_memfd_create() helper so that
-it can be used in "linker.c". Similar issues were previously fixed by
-commit 9fa5e1a180aa ("libbpf: Call memfd_create() syscall directly").
-
-Cc: Alastair Robertson <ajor@meta.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Fixes: 6d5e5e5d7ce1 ("libbpf: Extend linker API to support in-memory ELF files")
-Signed-off-by: Carlos Llamas <cmllamas@google.com>
----
- tools/lib/bpf/libbpf.c          | 9 ---------
- tools/lib/bpf/libbpf_internal.h | 9 +++++++++
- tools/lib/bpf/linker.c          | 2 +-
- 3 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 194809da5172..1f36e16461e1 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1719,15 +1719,6 @@ static Elf64_Sym *find_elf_var_sym(const struct bpf_object *obj, const char *nam
- 	return ERR_PTR(-ENOENT);
- }
- 
--/* Some versions of Android don't provide memfd_create() in their libc
-- * implementation, so avoid complications and just go straight to Linux
-- * syscall.
-- */
--static int sys_memfd_create(const char *name, unsigned flags)
--{
--	return syscall(__NR_memfd_create, name, flags);
--}
--
- #ifndef MFD_CLOEXEC
- #define MFD_CLOEXEC 0x0001U
- #endif
-diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
-index de498e2dd6b0..19770402807f 100644
---- a/tools/lib/bpf/libbpf_internal.h
-+++ b/tools/lib/bpf/libbpf_internal.h
-@@ -666,6 +666,15 @@ static inline int sys_dup3(int oldfd, int newfd, int flags)
- 	return syscall(__NR_dup3, oldfd, newfd, flags);
- }
- 
-+/* Some versions of Android don't provide memfd_create() in their libc
-+ * implementation, so avoid complications and just go straight to Linux
-+ * syscall.
-+ */
-+static inline int sys_memfd_create(const char *name, unsigned flags)
-+{
-+	return syscall(__NR_memfd_create, name, flags);
-+}
-+
- /* Point *fixed_fd* to the same file that *tmp_fd* points to.
-  * Regardless of success, *tmp_fd* is closed.
-  * Whatever *fixed_fd* pointed to is closed silently.
-diff --git a/tools/lib/bpf/linker.c b/tools/lib/bpf/linker.c
-index b52f71c59616..077af6f8bebb 100644
---- a/tools/lib/bpf/linker.c
-+++ b/tools/lib/bpf/linker.c
-@@ -573,7 +573,7 @@ int bpf_linker__add_buf(struct bpf_linker *linker, void *buf, size_t buf_sz,
- 
- 	snprintf(filename, sizeof(filename), "mem:%p+%zu", buf, buf_sz);
- 
--	fd = memfd_create(filename, 0);
-+	fd = sys_memfd_create(filename, 0);
- 	if (fd < 0) {
- 		ret = -errno;
- 		pr_warn("failed to create memfd '%s': %s\n", filename, errstr(ret));
 -- 
-2.49.0.472.ge94155a9ec-goog
-
+With best wishes
+Dmitry
