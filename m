@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DB73D3B8;
-	Sun, 30 Mar 2025 02:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA9A2033A
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 02:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743302296; cv=none; b=BDQyYs+npAHrOgupPVWJvd4MT1K0b6yhPDAgTkFnzgIR7RpBdOjAdIK3H/ETEg8JlmCnR/l6OG9smCJPtcjx2tPlB9FYv2yj8/RpedMjGceSaXVU+eNq45KZH2JcSsKV1RYNwwfhx3xQ/rU6bgachU2yIJha1e3YPtGcSfe8DK4=
+	t=1743302305; cv=none; b=LdOJ+JmzC5i/JwsZIvRyst15YS5jfMJ+GbM4b1FTT/+mmf57mr3MpLrrW45vT+2VuhJJLezNxPpMXSrOQuU0jrnHzo05rEGVEiM3OELd5HcSp+m7FS2H7IqJ6dzsHEYTpw48YVljw5A2ddXnLTNMDAnmmX0U3NdzsjTU/7noGoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743302296; c=relaxed/simple;
-	bh=B+2L8TIuKJDiyMpTPtwBakSI6kSRyVHLEwUBKHcKmR8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=C6LN12Ndt8DmELmTQJUECrNQtR9HQYexJkYE2Swb4AhicpgqoiYW9EVxod8imsCA63b5hbqrlnAkke3TYLMpkjaiKRkPExWs/4ZdUGe/17SkADThnrvBu6e2BKuue7JVQL4WQpYUL/mXMmNpADQDryAekouH0FEFVHdfDXoi5ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bI9+2f1V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743302305; c=relaxed/simple;
+	bh=OW1YpnBCQCPAWDhMDpl72owiE6DO66K++nIHB2UMsck=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AuZ6g4FXfMHnHcSubMlDdKM1z30H2uW0jHc80Z+COwb3kDeZakkwhtUHX2S72J5t2RHnN4kEGafBjGm1cZZgeKfAQ2ncOsGHbRxiHXn1nRzyuiAviIMIeOz+Ll0zIYo/JpVbkvvs69bl8ZtGnzX77xVafYG+x9flREzlXvKlX1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXPZACc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bI9+2f1V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B6B4C4CEEA;
-	Sun, 30 Mar 2025 02:38:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXPZACc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB41C4CEE2;
+	Sun, 30 Mar 2025 02:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743302296;
-	bh=B+2L8TIuKJDiyMpTPtwBakSI6kSRyVHLEwUBKHcKmR8=;
+	s=k20201202; t=1743302305;
+	bh=OW1YpnBCQCPAWDhMDpl72owiE6DO66K++nIHB2UMsck=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bI9+2f1VR29h7encvrj3ybyJX/eIx/brfqgwk4vmwP4L5tp93YBKK2YbtSDaLbJVH
-	 KlRRO4VY5sTCZ037enzt1U0JJ5njnYEx3Fx6H6LW3F3W7IrQRWoFLNTHMadzlIpWK1
-	 D92gKKMzz1lvamfgDnbChlHtvqBIvgxETiw8Cs4h6B2A3whUmcvyA1RHgSIYPX5L1D
-	 e12e5utatpGP/atkvo0yDCge8UK+U5g4Hg0dyAB1wzs3/ItISs+DLUG6p0BODnbzY7
-	 xZxq0W56SrQBtgi75Vals7zN9zt5WZ/XkprZRxTGxDcSCY2YfhDq9FodaFkLLtfI3Z
-	 lnvwEsgJ0MCZg==
+	b=UXPZACc68HCbl/xz5XVA8BGPPjIcsfRmKqV1PbD43xm7wNMOZ8KlKdOYMk8iOSPMk
+	 D0/N9hoYQP0uJQeGluWNPT94q30YqxAEqm9kkTFJ0YUItPz3AOalExcXQFkSKHEUBH
+	 u6FHpcRWWbVd4S9bTL/CpK7YyK53b6s7Mp35vMMQXaYQeqtsD+iHFeBJfQCURDKXQa
+	 yKbnOOILSOc3IHscLS8molPdVlDMsnFOMxgsN4NrFEeJo/zR1M4R2IRKhVK/HWkd1S
+	 hK1VtTSQ/lGT5A8blptYBj0nN30CdTAEN0bN+irxr7FwWXCQMiDwikI6pnMFni/E1x
+	 N/7bQQJLFXOvw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CF0380AA7A;
-	Sun, 30 Mar 2025 02:38:54 +0000 (UTC)
-Subject: Re: [GIT PULL] power-supply changes for 6.15
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF0E380AA7A;
+	Sun, 30 Mar 2025 02:39:02 +0000 (UTC)
+Subject: Re: [GIT PULL] Mailbox changes for v6.15
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <45zu47bzlzyh726zsf3wfi7xqxvsg3fkhmfqm6ejfyqm76rnp4@ddilazwcs566>
-References: <45zu47bzlzyh726zsf3wfi7xqxvsg3fkhmfqm6ejfyqm76rnp4@ddilazwcs566>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <45zu47bzlzyh726zsf3wfi7xqxvsg3fkhmfqm6ejfyqm76rnp4@ddilazwcs566>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v6.15
-X-PR-Tracked-Commit-Id: 0b8d073f6c66d7110ac9fab1f13a09337e03f1b6
+In-Reply-To: <CABb+yY3nL=VjLZq_pDxQfr3m2-B78hiuJyEWhSNRU_zcjaQdKg@mail.gmail.com>
+References: <CABb+yY3nL=VjLZq_pDxQfr3m2-B78hiuJyEWhSNRU_zcjaQdKg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
+X-PR-Tracked-Message-Id: <CABb+yY3nL=VjLZq_pDxQfr3m2-B78hiuJyEWhSNRU_zcjaQdKg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jassibrar/mailbox.git tags/mailbox-v6.15
+X-PR-Tracked-Commit-Id: 1ec12fd31ecc38e2a81a137be7eec5df51894bcc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 556f1b4874ca87feede736e1b2b4d11bc76f5bb9
-Message-Id: <174330233284.3338213.10095649526426750231.pr-tracker-bot@kernel.org>
-Date: Sun, 30 Mar 2025 02:38:52 +0000
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+X-PR-Merge-Commit-Id: 7f2ff7b6261742ed52aa973ccdf99151b7cc3a50
+Message-Id: <174330234151.3338213.16025891843762658050.pr-tracker-bot@kernel.org>
+Date: Sun, 30 Mar 2025 02:39:01 +0000
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 29 Mar 2025 01:26:37 +0100:
+The pull request you sent on Sat, 29 Mar 2025 18:57:34 -0500:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v6.15
+> git://git.kernel.org/pub/scm/linux/kernel/git/jassibrar/mailbox.git tags/mailbox-v6.15
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/556f1b4874ca87feede736e1b2b4d11bc76f5bb9
+https://git.kernel.org/torvalds/c/7f2ff7b6261742ed52aa973ccdf99151b7cc3a50
 
 Thank you!
 
