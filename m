@@ -1,129 +1,119 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82C274C08;
-	Sun, 30 Mar 2025 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5E81FC8;
+	Sun, 30 Mar 2025 09:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743325150; cv=none; b=T1j7hFTAkGWknU8pD3qkr3UyvB35b5rRAMyoZAX4mXw7mF8KtCPUZ7Hs1KzgHPvM+yNELC2Q9icSk3Ib73fjFr/+zC7VXWyR3r7ac/5UU3jUkXkhVV+I/RJqaReYZRUwPDH57Lvm1ewlNvbj9vIxEq3lyDE5XPZa7izi1ftrEfQ=
+	t=1743325343; cv=none; b=fd46jwBxTkb0Sfn2iCIJMCqKsa3c8fYz+N8wkFFzCjh3eddoPDLQiJvngg7yD3RbMUDSgWZF9t5B/uUpHT71a9aSLumgaUqFIcwunZ6/Q9KTdcqjVlapz8AZhpbXu6O21Iwtyj7Il29mfclbp6Fllwoyw/PyJFOtMOqpLfPZgkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743325150; c=relaxed/simple;
-	bh=/km/b3RP7+meUdGujK5Cfjr3gVbfpj8Ix+nZ0yoaw80=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=opyOBPoIBA8DBalkPnAKssJsTG/XPXi/dE138ZVavArP9WynyzwF0IQorKR7KBwoBC36SJ9WH3FFvxlSoMIWvJmNLFVy+jD737gNU0Hhc4PD9PZBycMD0M6OM6eiyhH6+ml36QiJtYoK8aFFo0iiEBjV6NUuaw4ODWF0XRjhqQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CR6AnNXx; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CR6AnNXx"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dKo53063341
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 30 Mar 2025 03:39:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743323960;
-	bh=zVyzdrsq8rwcKEYT3slz18YJ/cFCFrZ4CWV2JbLOQZg=;
-	h=From:To:CC:Subject:Date;
-	b=CR6AnNXxBE8XeAGt6nNrC2LOTQwIlN7yitDmLdEDpYT3rVcHLm8OfbVxDMLNPVtTK
-	 ia1Fp6Jx7t9dFfDjNOQKRHiKYHaP4KM8FJQPdN0JSpi94znarBoF+CqZ82eZkGCCYI
-	 qm/hyf4JSBQjIAlLbWmElYreWFpu2mr/RwR5gg+g=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dKrW118394;
-	Sun, 30 Mar 2025 03:39:20 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
- Mar 2025 03:39:19 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 30 Mar 2025 03:39:19 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dE4g015769;
-	Sun, 30 Mar 2025 03:39:15 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
-        <18255117159@163.com>, <cassel@kernel.org>,
-        <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
-CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 0/4] Loadable Module support for PCIe Cadence and J721E
-Date: Sun, 30 Mar 2025 14:09:10 +0530
-Message-ID: <20250330083914.529222-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743325343; c=relaxed/simple;
+	bh=HN4eyjGkmYzYJQBWqVbT566gMQ4nx+PEzy+YXapRTQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9mtt0u9xGUPr4chTLAyFu/7gdEPJ94CAXcXLcgyWOlBXO6vJgWJGutmkEj4PMHHziqyTjgbF036u1+kvZTD7K3z8/FRVTa/Cfw97pdrrgg5YEKJq/kQLuuWCTOr2fVq7FjeY8na/hFFMXUFavXoAQRy5GIqwa0QkIG3qptjXdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72a4793d4e2so2358253a34.2;
+        Sun, 30 Mar 2025 02:02:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743325341; x=1743930141;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1yBd/ODNrh8Fe+xOoPBuyChg14xiHnbz7kP9BJcwRFs=;
+        b=KRLD+MdGApKt+WqZmBt59gUtgr8S04G92Id3GTqWcAgGCvPrsKXortgjwU2FYeB92R
+         1+PPcFx3W/JQDtDO8fml/MBK7GomGGTygNMWlYR+c1h4cGBQneT2d431ziMlteEU0tzt
+         ctb7kbsIy9CJaVMNpmIx+QlXk36qKmqpAwcoAecKRRmqLX1pAi2DMzTAln3xIoYL0DBf
+         gQmZ2MC0qRbIyzKYG98boej4GYfcXNo7F2UfeU+WlY85oGRRk0c5nHuHtcpShI94u2L5
+         Q3x05tc2OIKKnVL+u8ekF1SRhX4/Ln8ITQ9FPqoQiVmAGNcK4lA6de9+wgR2l0UB9rr6
+         Nj1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUH86sTTqU3f7y57scn2mVV7tXMFAqHR4TRh7WpoWkAkdnHStITQ5qyvFzym2RtltLMXyI0b3lcrQ7jm7Ao@vger.kernel.org, AJvYcCUMYO7ORR4AOAPA4z8dNlDw10i/n17XwCWQ/CV5t+X3G6ZTqHgrggNsdALl46AnblJjl3oUm0/t6DJ/NiA5TsI4/End72Ih@vger.kernel.org, AJvYcCW6L2G7vyrfk1M7XUTOCge5VRX1ffFImICtd3G0p7EEAxKoBej/Hc7G6v0PhCdR7OHWQoaugEkDCA==@vger.kernel.org, AJvYcCXBqwDi1v9aUzuymwvBWxFHohEOL5E10FC8t6GwcK8vj8wL04HCw3V83Dy9LFLhSSX9d196orFJpzEBmT7F@vger.kernel.org
+X-Gm-Message-State: AOJu0YytgL2YS5CCqyogc/g1vRdroqoalmuwBKH6h6F9NjgViyBjki1o
+	WMVHS4ZGGmyt2LTu9xKYru1jH08JhLlcPiNnEeJnooWW/rj+CW7O5WGe1/hc
+X-Gm-Gg: ASbGnctXC7BVrpCjU7FQTDCt4p/Agk0uwGHjNwB4dVxrO5wI2ZgRNWsWOFWhojpzRaT
+	Y341PcRZv/TY3/PnO89VkSok5jCch2G8aBxV2Zl7BTGaNqdq/apExtW+geLuyPek0DX5cGx53y9
+	501T0V/02PSTpyQksgr+WIJH1MfwyH5rc+ejzBmk5uni/EQmkCaetUdU4D/JJa/SkBzRIyRo+n5
+	XWBPxw70pXhHGe9iuJufHjgBs/28yQ6WQu+sajR8KM72UTg1JZkTTxm2HmRtQO/DxlB9mgEGrXL
+	svT9bYqaxQhhcaeqlYNWZIUUfArrdaGyUh75w1wWUHa0YecJ9hWrOx3JUdkJ3lvNNnJxC70tEqX
+	gy6sSVpU=
+X-Google-Smtp-Source: AGHT+IGe1ca3/ROKpOPYc48RxAwb97dFnzwJgTg/ttj25F7g9YgtD4RPFjxSjWr8toYP2mqs9qF8Aw==
+X-Received: by 2002:a05:6830:648d:b0:72b:8889:8224 with SMTP id 46e09a7af769-72c6378f567mr3776523a34.10.1743325340739;
+        Sun, 30 Mar 2025 02:02:20 -0700 (PDT)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c580fa72fsm1055752a34.41.2025.03.30.02.02.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Mar 2025 02:02:20 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72bbc03d436so2335232a34.3;
+        Sun, 30 Mar 2025 02:02:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV143y1r4S9L/XvZtfpT27FdqbQcoYhDw7MI/e80L5o+Jdjg8MfubnyMO9TOi6vicPjL45gtvNSjhKr2f6W@vger.kernel.org, AJvYcCVMz3XnRkFBYG/MUmou22oMwYInYD0h+znB5QyUQpgreCxsIK4LnlBvBlSvp65UjNjWs9jbcoG5PKiVguMaI+LdUmeo6Ouq@vger.kernel.org, AJvYcCVfpBFjjFeuqZGAYX/oEKBD4YQL6Lxqqt3Njr+OZaJ9Bw0iVDNoSBhUfRquNT2ubNmNXW4AYM956g==@vger.kernel.org, AJvYcCW8hIUiESSggQ8aWdmvSTbUfNRSeJw1pBDBEJwzCWqJOQZmgS6yKnlQv0uTSuv1p0tjnp//HKzSe/IwKQj1@vger.kernel.org
+X-Received: by 2002:a05:6102:374f:b0:4bd:22d5:fbd7 with SMTP id
+ ada2fe7eead31-4c6d38bcea0mr3187622137.11.1743324864295; Sun, 30 Mar 2025
+ 01:54:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250314160543.605055-1-arnd@kernel.org> <CAMuHMdViGZRQL7toi7Arvm5L=OTK1mGmODbckE+427bx4KyWdw@mail.gmail.com>
+ <4a1e3e4d-a568-4f5f-a6cc-502b9642d0eb@app.fastmail.com>
+In-Reply-To: <4a1e3e4d-a568-4f5f-a6cc-502b9642d0eb@app.fastmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 30 Mar 2025 10:54:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU2k8Bmnpw88s=zA_a2m8ez=exo7OA53MkzkG=evyC+PQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JphbMNAQgqmLcM55P3nJxdyUBj0OwAW-n13ImistOI9Tt0rKqYokhipW3k
+Message-ID: <CAMuHMdU2k8Bmnpw88s=zA_a2m8ez=exo7OA53MkzkG=evyC+PQ@mail.gmail.com>
+Subject: Re: [PATCH] [v2] crypto: lib/Kconfig: hide library options
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, 
+	Arnaud Ebalard <arno@natisbad.org>, Srujana Challa <schalla@marvell.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
+	David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, "Justin M. Forbes" <jforbes@fedoraproject.org>, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, Rosen Penev <rosenp@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Arnd,
 
-This series enables support to build the PCIe Cadence Controller drivers
-and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
-Modules. The motivation for this series is that PCIe is not a necessity
-for booting the SoC, due to which it doesn't have to be a built-in
-module. Additionally, the defconfig doesn't enable the PCIe Cadence
-Controller drivers and the PCI J721E driver, due to which PCIe is not
-supported by default. Enabling the configs as of now (i.e. without this
-series) will result in built-in drivers i.e. a bloated Linux Image for
-everyone who doesn't have the PCIe Controller. Therefore, with this
-series, after enabling support for building the drivers as loadable
-modules, the driver configs can be enabled in the defconfig to build
-the drivers as loadable modules, thereby enabling PCIe.
+On Sun, 30 Mar 2025 at 10:45, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Sun, Mar 30, 2025, at 10:34, Geert Uytterhoeven wrote:
+> > On Fri, 14 Mar 2025 at 17:05, Arnd Bergmann <arnd@kernel.org> wrote:
+> >> --- a/security/keys/Kconfig
+> >> +++ b/security/keys/Kconfig
+> >> @@ -60,7 +60,7 @@ config BIG_KEYS
+> >>         bool "Large payload keys"
+> >>         depends on KEYS
+> >>         depends on TMPFS
+> >> -       depends on CRYPTO_LIB_CHACHA20POLY1305 = y
+> >> +       select CRYPTO_LIB_CHACHA20POLY1305
+> >>         help
+> >>           This option provides support for holding large keys within the kernel
+> >>           (for example Kerberos ticket caches).  The data may be stored out to
+> >
+> > Due to dropping the dependency, this appeared on my radar.
+> > Should this be selected by one or some of the Kerberos Kconfig symbols?
+>
+> I don't see why: before commit 521fd61c84a1 ("security/keys: rewrite
+> big_key crypto to use library interface") it was user selectable
+> without the crypto dependency, and now it got back to that. I think
+> from the point of view of Kconfig that is how we want it.
 
-Series is based on linux-next tagged next-20250328.
+Sure, I mean from a functional point of view.  Let me rephrase:
+When do you want to store Kerberos ticket caches within the kernel?
+Is that pure user-space, or is that done by the kernel?
 
-Series has been tested by loading and unloading the PCI J721E driver
-when operating in the Root-Complex mode on J700-EVM with an NVMe SSD
-connected to the PCIe Connector. "hdparm" based reads of the NVMe SSD
-have been performed to validate functionality before and after a module
-unload-load sequence using modprobe. Additionally, the module unload
-was performed while running "hdparm" in the background. No crash was
-seen and reloading the module enumerated the NVMe SSD and "hdparm" could
-be re-run successfully.
+Gr{oetje,eeting}s,
 
-v1 of this series is at:
-https://lore.kernel.org/r/20250307103128.3287497-1-s-vadapalli@ti.com/
-Changes since v1:
-- Collected "Reviewed-by" tags from:
-  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  for the first two patches in this series.
-- Based on feedback from Mani on the third patch of the v1 series at:
-  https://lore.kernel.org/r/20250318080304.jsmrxqil6pn74nzh@thinkpad/
-  pci_epc_deinit_notify() has been included in cdns_pcie_ep_disable().
-- Based on feedback from Thomas on the fourth patch of the v1 series at:
-  https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
-  the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
-  dropped.
-
-Regards,
-Siddharth.
-
-Kishon Vijay Abraham I (1):
-  PCI: cadence: Add support to build pcie-cadence library as a kernel
-    module
-
-Siddharth Vadapalli (3):
-  PCI: cadence-host: Introduce cdns_pcie_host_disable helper for cleanup
-  PCI: cadence-ep: Introduce cdns_pcie_ep_disable helper for cleanup
-  PCI: j721e: Add support to build as a loadable module
-
- drivers/pci/controller/cadence/Kconfig        |  12 +-
- drivers/pci/controller/cadence/pci-j721e.c    |  33 ++++-
- .../pci/controller/cadence/pcie-cadence-ep.c  |  17 +++
- .../controller/cadence/pcie-cadence-host.c    | 113 ++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.c |  12 ++
- drivers/pci/controller/cadence/pcie-cadence.h |  14 ++-
- 6 files changed, 192 insertions(+), 9 deletions(-)
+                        Geert
 
 -- 
-2.34.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
