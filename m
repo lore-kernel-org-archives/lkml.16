@@ -1,149 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0542AEED;
-	Sun, 30 Mar 2025 09:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819522B2CF
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743328064; cv=none; b=gxfus4byJtXCY/UMc0aeubGrQIX3lz2jLFbJnCAtGrckDT6FLYVjConTggeTIy2VmMyFu8FGR0vrIYTqWyoeV9RSUNQqqKSo34e1EpEcQZajprztuVkv7/0hPh8kyy/Sh4owriq77Hi32OSDtTXs4AcrCWbFFidntkAKrevbz+8=
+	t=1743328439; cv=none; b=DzPCPQariljcvMoCI6nM+uuXcPbX+HJl5wYsKjcxYDCSF1ZFuCPtsp7z2t/W8YoWQZdS2lhe6dfe9H2BXmSWh6NTFTd1SsDAJ0t9iJ3tx5+d8eSolBqH01CsF6IOlf3Mp0Nx977UkKXjY8Noe4zpz5BV5znQLvf7ySdI7Fck/5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743328064; c=relaxed/simple;
-	bh=psvkuZ2HANcXsLHVMnp8FjLK9GuAYITBf0uSmRyuCVY=;
+	s=arc-20240116; t=1743328439; c=relaxed/simple;
+	bh=Y77qOZJg1ztePs3u1ibfM+37emwBml1d4mvWvji+LaM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kg6Bqgz/QBF2EwCvJVgdaxvKa0O8bW8Wp+dmDGThPlMbwZfGXCNCYMTYrAa999rCY4k/k7nvIMiQb5WXwL+zHK6B5d5lzouvy9sEg82kkzJ82sEogDN9jy8FKTooFfLgmr2vAEI/8wBD8zzCuIR5DncCahbib0GewKr1nDO0JLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrQZBimv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gdgNLp8PUSQwHGMEas1fQwf2m+qseBPDdjgL67wr21xeQuGArEzUI1uM9cNIDpxUZRRqKkHqZKyWKz6/qV5dyAwhwazwVxLctUCRQJ/q4qrvUQjmbBRLiXQDdbwxJyWgQyeUpRsEyyx0Fh3A3/7m5gxeW588Z1tvsI4e1A1zCWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=css6jhxY; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrQZBimv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CEBFC4CEDD;
-	Sun, 30 Mar 2025 09:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743328063;
-	bh=psvkuZ2HANcXsLHVMnp8FjLK9GuAYITBf0uSmRyuCVY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OrQZBimvw5BmUwfbK5Gie4EbkXBd/xbjkNzSjev9VMI3E8AZ0AsworyQgB5oKmFOn
-	 6lzTnPt+D0zHIgwWwUGCiXDNk1ryT81BK5d4u5BQxBIdHYTovKdofaW3Vq8EPytVkS
-	 viCqYt3fyXJTZ6Qgw10c09IUtbsF15rkhv7Y9WsinV9U5RLY0RIHKWnMBULZ/be/XO
-	 93+iB760B/TyDUBJwpeXTVmRSqXo5fFLjj5k1tqDiAhRXEoWbDK3kN9ZDCtDkrXebQ
-	 Y7rJ/wpYMyn0tpft0Uv4JBURgVddp0XnSGzYNYcytoH6XK3i/a46KUIMW8wpuQllRB
-	 B0gj9i4PybYbA==
-Message-ID: <564768c3-56f0-4236-86e6-00cacb7b6e7d@kernel.org>
-Date: Sun, 30 Mar 2025 11:47:32 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="css6jhxY"
+Message-ID: <cdc1fbbb-4299-4283-9bac-f1d7fb6962b6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743328424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=28ZmjUKSGx9bHyjrPWK8SrKiBbCt6lY+A/8H7faqvwU=;
+	b=css6jhxYQSoSJQO+hyUEb6FQkLXz6A011PSJP6LoueaA50IGcM4GFHbzDMaNL4clnzEIFk
+	sE7mxlof2wEOKpVizkRCidqSOrRhD3dS5PSCyVWNVfYr7U+7iDTczD1dJQBd405ulhqf1z
+	BUeNENUAV9Ac/WGg12TCfqvilw3btDs=
+Date: Sun, 30 Mar 2025 11:53:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250328133544.4149716-1-lukma@denx.de>
- <20250328133544.4149716-2-lukma@denx.de>
- <e6f3e50f-8d97-4dbc-9de3-1d9a137ae09c@kernel.org>
- <20250329231004.4432831b@wsk>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250329231004.4432831b@wsk>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH][next] IB/hfi1: Avoid -Wflex-array-member-not-at-end
+ warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <Z-WgwsCYIXaBxnvs@kspp>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <Z-WgwsCYIXaBxnvs@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 29/03/2025 23:10, Lukasz Majewski wrote:
->>> +  
->>
->> If this is ethernet switch, why it does not reference ethernet-switch
->> schema? or dsa.yaml or dsa/ethernet-ports? I am not sure which one
->> should go here, but surprising to see none.
+在 2025/3/27 20:02, Gustavo A. R. Silva 写道:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> It uses:
-> $ref:·ethernet-controller.yaml#
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct opa_mad_notice_attr` is a flexible structure --a structure
+> that contains a flexible-array member.
 > 
-> for "ports".
+> Fix the following warning:
 > 
-> Other crucial node is "mdio", which references $ref: mdio.yaml#
+> drivers/infiniband/hw/hfi1/mad.c:23:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-These are children, I am speaking about this device node.
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
 
-> 
->>
->>> +properties:
->>> +  compatible:
->>> +    const: nxp,imx287-mtip--switch  
->>
->> Just one -.
->>
-> 
-> Ok.
-> 
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +    description:
->>> +      The physical base address and size of the MTIP L2 SW module
->>> IO range  
->>
->> Wasn't here, drop.
->>
-> 
-> The 'reg' property (reg = <0x800f0000 0x20000>;) is defined in
-> imx28.dtsi, where the SoC generic properties (as suggested by Andrew -
-> like clocks, interrupts, clock-names) are moved.
+Thanks,
+Zhu Yanjun
 
-Drop description, not the reg. Reg was in the previous version. You
-added random changes here, not coming from the previous review.
+> ---
+>   drivers/infiniband/hw/hfi1/mad.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+> index b39f63ce6dfc..3f11a90819d1 100644
+> --- a/drivers/infiniband/hw/hfi1/mad.c
+> +++ b/drivers/infiniband/hw/hfi1/mad.c
+> @@ -20,12 +20,14 @@
+>   
+>   struct trap_node {
+>   	struct list_head list;
+> -	struct opa_mad_notice_attr data;
+>   	__be64 tid;
+>   	int len;
+>   	u32 retry;
+>   	u8 in_use;
+>   	u8 repress;
+> +
+> +	/* Must be last --ends in a flexible-array member. */
+> +	struct opa_mad_notice_attr data;
+>   };
+>   
+>   static int smp_length_check(u32 data_size, u32 request_len)
 
-Best regards,
-Krzysztof
