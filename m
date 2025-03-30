@@ -1,228 +1,224 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB3338FB9
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 05:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B95ECA5A
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 05:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743311547; cv=none; b=LtvUFSzcs83vzIfwi7p92DlIN4F1l+4r7jWlHn0+/oayVrbuCCoFwb8/bZNxesOK3AwWGoOaydYMvX3gGLIjZxpLMW3eM/4XK0QcB0wbLo3UdxU3bs3xDfeX+CxAqLhF21KBpcfrP0DK6YPoMK9ZnMwsX3d+zpxH6v6GkXXp3O4=
+	t=1743311967; cv=none; b=s7yo1o18w0faNdtqicYfbKZx+EHDl98odJ9EiEiN9SEUpNPcLpshGQ1CqYADYp3PTVkMP4Z6n2dGtAQDnNSgwaCm5NiQzleO/DHJXMEfYxqKCgTkwuvLYPZSnwUWIphQvgblVvCP8ErFCefqCukAVYxE2hUHLiEjvS5i+38teQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743311547; c=relaxed/simple;
-	bh=1j8YqjvsJlLnu8yMLldBJoE/4G33tqMVxMrZeYK3jNw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pGMzBDhQ2EvHqUHo2XgeT5+qTZdD/LSyds++n3wgvaW+A0xka/tD1sXaFBlTxaSaKyGLVpcRCcxv4SLUVuMjdKBzI5VvY9DchpgB5tMiyzux+LZmeBUqBSURmcE8LYClAmyVs9Vtrtr3EQaFcUmDCa3wt/QaAhysYfpjlkE+wuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QOCxy72c; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743311967; c=relaxed/simple;
+	bh=nPQZ1NLQ+M58mczlQ+1oFaVayuWA0Qei6+XzCaVfIHU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=pdqkoJeyX8M+SvqMFnPPqosIcmj7BDvSbvkWROKFdSwnfbrEKhTRkWKVX25EkXiWNDfYPpZrpZTH2o5+esM2LP5KGf5W+AWEvVN9r7t9nG/GlDUZvFG0XYaX//k9l0dvDNkN9goFZ2AY8d9HkFYxyL9YeQZDb4TxB4Bd9Rq6Hhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=tometzki.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=WC+wbYoe; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tometzki.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOCxy72c"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8fb83e137so31053146d6.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 22:12:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="WC+wbYoe"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86b9d1f729eso1493982241.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 22:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743311543; x=1743916343; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        d=riscv-rocks.de; s=google; t=1743311964; x=1743916764; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aQfKd7dSjicawIIsQ7i6BFJQWxqwatHShTr1AjcSaZw=;
-        b=QOCxy72cII+Y2yglpamS8L66myjEt/AO1TdlGu8XQgyoOLFOE86kOhrwSxox+Xi4tU
-         HwHwIMhTPeDfOaHc3XV9bOQuOgeCe2u1WSTO0IrdVrbFlaB2Ow2g+JxmvJmZqJOKxr3u
-         59EZaF8MARCIr8xZKfLIYwiQLDXW4EGe8JXuamQKARxFPSGzk9liEVoGOsRlxV7Pu7ap
-         yIZjLTI4bOVC4Rnbw+maMz+XhP+aQcB5Z2751wxsAL/Cjx0shIo3QaTrxw3gg2P35AJ6
-         fZrLUPh7fl+LcvXEZCR2bkaz3WK3yo5LA/z34jEHHQbiC6dzh6qWFwLKbAZxR8FOI216
-         +8xA==
+        bh=wydS+q5Y7PErTfGeOZj7r0n099cHl32Sx4KGlihwfho=;
+        b=WC+wbYoeHY5NIfFwyUkLlZkV/WO5CIdWsYIaglA7hSFNGg9hF0OfmryjZmmMJIYCNS
+         ZeFn98joQoyEs9ART3+97dBhth7Km+87f/qrwJM/2RQPiN8/MX9Ay5wa4UnfD2GIHiRg
+         bqmd7YhPKhDek3gwILWDU5HHVveLRY9YiBh8YAmajFNerPwbZbhLtYvL+HdLOmfDN2HT
+         mfH+piLcyqv0BijL6HOMc/on+aXa7f1BxxwpmWA/pkfhJe5lW36sGhhSPw/zceCWC3HL
+         6KOTcYMAn0g0Z0PXI8Qubu3BRXLh8yX0u84An5HYM/DvIlqqz/GlEUO5VW8YGbmd5zDN
+         Uppw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743311543; x=1743916343;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        d=1e100.net; s=20230601; t=1743311964; x=1743916764;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aQfKd7dSjicawIIsQ7i6BFJQWxqwatHShTr1AjcSaZw=;
-        b=KFlrlsrFIbb9/okLxx8LSpENzW5c0e2xl9Ha0iqQmKW/rqo1P8Nt2YvDym3hHRQUtG
-         uUv1gyB5PDc2NF7n4St7ly7YTfecB0itivn7FLkzTFbA37fpjDacVWixY6ctXDEYw2Xr
-         VSTIKlD4e7BCQ/7OoGgt3dQDZ+XonMFKIedK1LfnpEag9AU1nnjhI3zMlNk2oeOhKr8G
-         KQpnQ8X6F3grp8YMYULCvgtBmdWPH//G8wwr3h3Xe1q43kJnQmBFgIQjKS78c5Cu0QJW
-         Thq4ZVxZcdY6j7nxjME1q7EtbtxM96bFTRba7GiugcnSf1q89om0Gden/+Rdbkzb61Tl
-         Ibsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCwgwH+y8Owq2kU81/YaxMctiOc6+qh3vSbgJg4lhfyc5gA1KE8jHvVBjFs3G26480HoiSuxNFjA0TQyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYgmzZ3vPQuOxei+agJ3R0zSLJCFBfxUfXQXR38OJ3CW1ZzsKa
-	eyJA7OIWBORXArmdaOf+Fpmb8TO40h4GTtbvpt2shEIB9y5leT2YFNR/M3mxw4iLHKalg9TJEQ9
-	ydTVi8409LRmFBERr/uUhyGsItELMKEqIVDu6
-X-Gm-Gg: ASbGnctcbO+c1mafkoZu7ncSjS+zY832PaO5SZgmInTn/jqypRphE7h6LvMsWShw+eD
-	MpagbJ8RfsI/KuahtEBLS9LgJ9MQyMKff8dOE+G4TpfZpbiltLgHcmiv8SaADXoS4MwSxhUUwkG
-	HaI/aXHP5w+JasOGT7kGn+PCJDkBA=
-X-Google-Smtp-Source: AGHT+IECso0AH+f9gY/3D2hxexj20fLuhrzfIJFbiITVTezAm5nCtrtTZCxSJvO/r2/hTlIiKeYdYFh/oV5kPxb6WRg=
-X-Received: by 2002:ad4:5e8a:0:b0:6e8:97d2:99a2 with SMTP id
- 6a1803df08f44-6eed62274dcmr63689486d6.39.1743311543479; Sat, 29 Mar 2025
- 22:12:23 -0700 (PDT)
+        bh=wydS+q5Y7PErTfGeOZj7r0n099cHl32Sx4KGlihwfho=;
+        b=BVM0p/prX3BYsxtST+9Sc8r4OsYvbJAs6YLhF85NN6pdwL44I3rOhxMnmww8XDGzSX
+         /VUwxXiQMIh6P11DTQGMNo+fywOYJsHehJNZEycVDJ4nnjaL8mEyoRVMldNmN7AmePG7
+         oMjcZ8Sr9t1eCZCCUj2OX9TC6LsQloT8UWA9Kdvo5RzUaMdAEMb1jVQSuf+2yyt//O9W
+         ak9G07mblomxStFUXB29+TeuhasYYz5/etQ62wQard/7RjGEwutGCsbUEJWDbrMWo7v0
+         7Ma230vOu2xQ70UPcsDsxDQjRBw7NWkEw9UtaHXL1Ct+8aUiZbYBqE6VYd/pkL5zUeU6
+         nJgA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Wwk1MrpP4bb7+vrIUo/2UqFn+k7EhhjWaCHb6B0mhgpgSfX3/x1jyKauFdOyUdh2FU/dMCooLrv7TZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziafdQJsyp5CANtSbwvpxj7G9wSoC23TsEm9kxTbsllPSBAqCt
+	GzZGojxFS1SLkHsH1n34HqxbXHMF2KEvmSzhaGsTRyEUrqQUHzudxZ++y5R5Y82hkcC+9LmluTi
+	faPFXYL7ZvH6LOVWwepSlED8ii27HsrgPz2wjLQ==
+X-Gm-Gg: ASbGncuLE+VDysP8N2vE1JcfB8xR8//Ud2URb25kZewq07818QVLvArbQc7QZHOHlO1
+	NZX7eRlAriek7hxNvZQzfQDO3AozRTVWnOieZHOe15PEGgYPDU4cqk9kiNRfKonLRpCAyiDhwaZ
+	VnWpFWwAJ1X/14rveH4zFmgimmnQYmFOg0TRJRgXJCUBFSC55hestWqqmQk84Xd23J5psK
+X-Google-Smtp-Source: AGHT+IF0xvVvgdeorD9IT+Dkc2B4F3ZSL+B/miv/lZXoktKpPZ/5q6iktduqzvbN7k8nJKODUuCVQWW3dpChcYv0MYM=
+X-Received: by 2002:a05:6102:8029:b0:4c1:7a08:9279 with SMTP id
+ ada2fe7eead31-4c6d38d9fcfmr2910866137.15.1743311964327; Sat, 29 Mar 2025
+ 22:19:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329150320.331018-1-acarmina@redhat.com>
-In-Reply-To: <20250329150320.331018-1-acarmina@redhat.com>
-From: David Gow <davidgow@google.com>
-Date: Sun, 30 Mar 2025 13:12:11 +0800
-X-Gm-Features: AQ5f1JqP_E82VImpD5tveJ2n-SlMTcQ5iK-8tml7RUBGNC7746FyJEl393zGM-o
-Message-ID: <CABVgOS=CmT-=opimA0Yq3S=VpPYb-4UXYZqpr=LTFQBybomnww@mail.gmail.com>
-Subject: Re: [PATCH] kunit: fixes Compilation error on s390
-To: Alessandro Carminati <acarmina@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Daniel Diaz <daniel.diaz@linaro.org>, Arthur Grillo <arthurgrillo@riseup.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
-	Ville Syrjala <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Guenter Roeck <linux@roeck-us.net>, Alessandro Carminati <alessandro.carminati@gmail.com>, 
-	Jani Nikula <jani.nikula@intel.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Mickael Salaun <mic@digikod.net>, Kees Cook <kees@kernel.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, dri-devel@lists.freedesktop.org, 
-	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-next@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000004ef7bd06318859ec"
-
---0000000000004ef7bd06318859ec
+From: Damian Tometzki <damian@riscv-rocks.de>
+Date: Sun, 30 Mar 2025 07:19:13 +0200
+X-Gm-Features: AQ5f1Jori5-AGVUE446kbiBAdYqYUZ7aoiSFzOBDzZd_gWhgjZqLgUo8syP3Xy4
+Message-ID: <CAL=B37kdL1orSQZD2A3skDOevRXBzF__cJJgY_GFh9LZO3FMsw@mail.gmail.com>
+Subject: Kernel Null Pointer Dereference on Fedora with thinkpad_acpi
+To: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 29 Mar 2025 at 23:04, Alessandro Carminati <acarmina@redhat.com> wrote:
->
-> The current implementation of suppressing warning backtraces uses __func__,
-> which is a compile-time constant only for non -fPIC compilation.
-> GCC's support for this situation in position-independent code varies across
-> versions and architectures.
->
-> On the s390 architecture, -fPIC is required for compilation, and support
-> for this scenario is available in GCC 11 and later.
->
-> Fixes:  d8b14a2 ("bug/kunit: core support for suppressing warning backtraces")
->
-> Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
-> ---
+Hi together,
 
-Makes sense and seems to work here. Thanks!
+I encountered a kernel crash on a Lenovo ThinkPad (BIOS N32ET95W 1.71)
+running Fedora with kernel 6.15 (merge window) 7f2ff7b62617. The issue
+is a NULL pointer dereference during initialization of the
+thinkpad_acpi module. The crash occurs in kobject_get() while handling
+RFKill device registration (tpacpi_new_rfkill =E2=86=92 rfkill_register =E2=
+=86=92
+device_add).
+With kernel 6.14 system boot=C2=B4s fine
 
-Acked-by: David Gow <davidgow@google.com>
+Let me know if further logs or debugging info are needed. Below the short d=
+ump
 
-Cheers,
--- David
+Mar 29 17:43:16.173712 fedora kernel: thinkpad_acpi: Disabling
+thinkpad-acpi brightness events by default...
+Mar 29 17:43:16.175636 fedora kernel: ACPI: bus type thunderbolt registered
+Mar 29 17:43:16.179626 fedora kernel: BUG: kernel NULL pointer
+dereference, address: 000000000000004c
+Mar 29 17:43:16.179689 fedora kernel: #PF: supervisor read access in kernel=
+ mode
+Mar 29 17:43:16.180235 fedora kernel: #PF: error_code(0x0000) - not-present=
+ page
+Mar 29 17:43:16.180290 fedora kernel: PGD 0 P4D 0
+Mar 29 17:43:16.180325 fedora kernel: Oops: Oops: 0000 [#1] SMP NOPTI
+Mar 29 17:43:16.180340 fedora kernel: CPU: 6 UID: 0 PID: 1015 Comm:
+(udev-worker) Not tainted 6.14.0 #355 PREEMPT(lazy)
+Mar 29 17:43:16.180449 fedora kernel: Hardware name: LENOVO
+20XWCTO1WW/20XWCTO1WW, BIOS N32ET95W (1.71 ) 10/24/2024
+Mar 29 17:43:16.180469 fedora kernel: RIP: 0010:kobject_get+0xd/0x70
+Mar 29 17:43:16.180491 fedora kernel: Code: 66 66 2e 0f 1f 84 00 00 00
+00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e
+fa 53 48 89 fb 48 85 ff 74 1f <f6> 47 3c 01 74 22 48 8d 7b 38 b8 01
+00>
+Mar 29 17:43:16.180506 fedora kernel: RSP: 0018:ffffd3d200b5f750
+EFLAGS: 00010202
+Mar 29 17:43:16.180523 fedora kernel: RAX: ffff8ebbc10fac00 RBX:
+0000000000000010 RCX: 0000000000000000
+Mar 29 17:43:16.180534 fedora kernel: RDX: 0000000000000000 RSI:
+ffffffff9aebafa0 RDI: 0000000000000010
+Mar 29 17:43:16.180547 fedora kernel: RBP: ffff8ebbd49f4b88 R08:
+0000000000000100 R09: 0000000000000000
+Mar 29 17:43:16.180559 fedora kernel: R10: ffffd3d200b5f760 R11:
+0000000000000008 R12: 0000000000000010
+Mar 29 17:43:16.180573 fedora kernel: R13: ffff8ebbc8b12388 R14:
+ffffffffc14a7500 R15: 0000000000000000
+Mar 29 17:43:16.180587 fedora kernel: FS:  00007f1aa7c15040(0000)
+GS:ffff8ebf72546000(0000) knlGS:0000000000000000
+Mar 29 17:43:16.180606 fedora kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+Mar 29 17:43:16.180630 fedora kernel: CR2: 000000000000004c CR3:
+0000000113948001 CR4: 0000000000f70ef0
+Mar 29 17:43:16.180642 fedora kernel: PKRU: 55555554
+Mar 29 17:43:16.180654 fedora kernel: Call Trace:
+Mar 29 17:43:16.180664 fedora kernel:  <TASK>
+Mar 29 17:43:16.180676 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180688 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180704 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180712 fedora kernel:  ? device_add+0x8f/0x6e0
+Mar 29 17:43:16.180724 fedora kernel:  ? __die_body.cold+0x8/0x12
+Mar 29 17:43:16.180739 fedora kernel:  ? page_fault_oops+0x146/0x180
+Mar 29 17:43:16.180748 fedora kernel:  ? exc_page_fault+0x7e/0x1a0
+Mar 29 17:43:16.180758 fedora kernel:  ? asm_exc_page_fault+0x26/0x30
+Mar 29 17:43:16.180769 fedora kernel:  ? __pfx_klist_children_get+0x10/0x10
+Mar 29 17:43:16.180781 fedora kernel:  ? kobject_get+0xd/0x70
+Mar 29 17:43:16.180792 fedora kernel:  device_add+0x8f/0x6e0
+Mar 29 17:43:16.180804 fedora kernel:  rfkill_register+0xbc/0x2c0 [rfkill]
+Mar 29 17:43:16.180813 fedora kernel:  tpacpi_new_rfkill+0x185/0x230
+[thinkpad_acpi]
+Mar 29 17:43:16.180826 fedora kernel:  ibm_init+0x66/0x2a0 [thinkpad_acpi]
+Mar 29 17:43:16.180840 fedora kernel:
+tpacpi_pdriver_probe+0x160/0x250 [thinkpad_acpi]
+Mar 29 17:43:16.180852 fedora kernel:  platform_probe+0x41/0xa0
+Mar 29 17:43:16.180887 fedora kernel:  really_probe+0xdb/0x340
+Mar 29 17:43:16.180900 fedora kernel:  ? pm_runtime_barrier+0x55/0x90
+Mar 29 17:43:16.180912 fedora kernel:  ? __pfx___driver_attach+0x10/0x10
+Mar 29 17:43:16.180920 fedora kernel:  __driver_probe_device+0x78/0x140
+Mar 29 17:43:16.180932 fedora kernel:  driver_probe_device+0x1f/0xa0
+Mar 29 17:43:16.180942 fedora kernel:  __driver_attach+0xb8/0x1d0
+Mar 29 17:43:16.180954 fedora kernel:  bus_for_each_dev+0x82/0xd0
+Mar 29 17:43:16.180966 fedora kernel:  bus_add_driver+0x12f/0x210
+Mar 29 17:43:16.180976 fedora kernel:  driver_register+0x72/0xd0
+Mar 29 17:43:16.180988 fedora kernel:  __platform_driver_probe+0x45/0x90
+Mar 29 17:43:16.180999 fedora kernel:  __platform_create_bundle+0xe7/0x100
+Mar 29 17:43:16.181011 fedora kernel:  ?
+__pfx_tpacpi_pdriver_probe+0x10/0x10 [thinkpad_acpi]
+Mar 29 17:43:16.181025 fedora kernel:  ?
+__pfx_thinkpad_acpi_module_init+0x10/0x10 [thinkpad_acpi]
+Mar 29 17:43:16.181035 fedora kernel:
+thinkpad_acpi_module_init+0x37e/0x430 [thinkpad_acpi]
+Mar 29 17:43:16.181045 fedora kernel:  do_one_initcall+0x58/0x300
+Mar 29 17:43:16.181053 fedora kernel:  do_init_module+0x82/0x240
+Mar 29 17:43:16.181065 fedora kernel:  init_module_from_file+0x8b/0xe0
+Mar 29 17:43:16.181073 fedora kernel:  idempotent_init_module+0x113/0x310
+Mar 29 17:43:16.181083 fedora kernel:  __x64_sys_finit_module+0x67/0xc0
+Mar 29 17:43:16.181093 fedora kernel:  do_syscall_64+0x7f/0x170
+Mar 29 17:43:16.181103 fedora kernel:  ? syscall_exit_to_user_mode+0x1d5/0x=
+210
+Mar 29 17:43:16.181112 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181124 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181135 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181144 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181152 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181163 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181173 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181182 fedora kernel:  ? seq_read_iter+0x20e/0x480
+Mar 29 17:43:16.181198 fedora kernel:  ? vfs_read+0x29b/0x370
+Mar 29 17:43:16.181217 fedora kernel:  ? __seccomp_filter+0x41/0x4e0
+Mar 29 17:43:16.181233 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181250 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181264 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181280 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181292 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181316 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181331 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181341 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181351 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181360 fedora kernel:  entry_SYSCALL_64_after_hwframe+0x76/=
+0x7e
+Mar 29 17:43:16.181372 fedora kernel: RIP: 0033:0x7f1aa84c5a8d
+Mar 29 17:43:16.181381 fedora kernel: Code: ff c3 66 2e 0f 1f 84 00 00
+00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2
+4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d
+4b>
+Mar 29 17:43:16.181392 fedora kernel: RSP: 002b:00007ffe5ca79bc8
+EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+Mar 29 17:43:16.181406 fedora kernel: RAX: ffffffffffffffda RBX:
+00005610a8c7deb0 RCX: 00007f1aa84c5a8d
+Mar 29 17:43:16.181419 fedora kernel: RDX: 0000000000000000 RSI:
+00007f1aa7b88965 RDI: 0000000000000032
+Mar 29 17:43:16.181431 fedora kernel: RBP: 00007ffe5ca79c80 R08:
+0000000000000000 R09: 00007ffe5ca79c30
+Mar 29 17:43:16.181441 fedora kernel: R10: 0000000000000000 R11:
+0000000000000246 R12: 0000000000020000
+Mar 29 17:43:16.181448 fedora kernel: R13: 00005610a8c7f880 R14:
+00007f1aa7b88965 R15: 0000000000000000
+Mar 29 17:43:16.181458 fedora kernel:  </TASK>
+Mar 29 17:43:16.181472 fedora kernel: Modules linked in: cfg80211(+)
+thunderbolt(+) thinkpad_acpi(+) igen6_edac intel_soc_dts_iosf
+platform_profile snd soundcore int3403_thermal int340x_thermal_zone
+soc_button_>
+Mar 29 17:43:16.181784 fedora kernel: CR2: 000000000000004c
+Mar 29 17:43:16.181806 fedora kernel: ---[ end trace 0000000000000000 ]---
 
-
->  lib/kunit/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> index 201402f0ab49..6c937144dcea 100644
-> --- a/lib/kunit/Kconfig
-> +++ b/lib/kunit/Kconfig
-> @@ -17,6 +17,7 @@ if KUNIT
->
->  config KUNIT_SUPPRESS_BACKTRACE
->         bool "KUnit - Enable backtrace suppression"
-> +       depends on (!S390 && CC_IS_GCC) || (CC_IS_GCC && GCC_VERSION >= 110000)
->         default y
->         help
->           Enable backtrace suppression for KUnit. If enabled, backtraces
-> --
-> 2.34.1
->
-
---0000000000004ef7bd06318859ec
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg2b9KEh5FrtfAkoEKlqi4asV237rr
-9fb6nmFTHZWJumwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MzMwMDUxMjIzWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAgPfoxb2P4ooZHla/9Oj6NKDGUb055QQd2H+S4Z+qEB/GZ5fPox3MhCexlt33YxcC
-oy5hEqCst1Ug5GUWsI5KwPQm6jpg1R+amEK83pycNIXSUcoN7VgtM4+ImAwmm6WEcYY4hhzarLql
-f3j+FRyy1rBm4V07Dcf/nfJel9rI2vRNR3IJDPkFX3Lxseo20DxlODDPF5Ebx9ge47NmgcW5LBSV
-d+ULUQ3N7B7/mEmOWOcTz9f+6BJ8W8cPbaqHjcV9mrjH4GxpRZgigXtD5sBsjYda4u4uTFEICms9
-YcGGqdPKL0Cqv/PGjphXU6HPh2gbbSgIRDBY0SIT7CZmTPvTew==
---0000000000004ef7bd06318859ec--
+Best regards
+Damian
