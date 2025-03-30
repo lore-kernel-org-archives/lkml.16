@@ -1,136 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FF31CD205;
-	Sun, 30 Mar 2025 16:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2C39461
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743352534; cv=none; b=G9v0aabatRx3n5eV07Jo52afRzNmQG8PqaDQxe0Fo1mdU4NoQREqNqFg6FvfNLtVvPtBeoO4bVN59os23adL6uMo3PyrFJtJ5E2JUMWoNambY/e98OssNQQXyXdGww18euwtM9hpVVegMq34jtby8Z7CFe2NE/VSGEogOA8xtc0=
+	t=1743352601; cv=none; b=bsqz7wA/UWtrDJBAJVXh8cwfC6piaVARY51heHPwbNzSUT+fyxXN7Dwx554AvR6xNlFuI64qWLoJHRh1XfdLmTyq7rtcwd7CV/bxeeV6gAsIBWsGTJBqWQ6cKaLH8P0xAtV+QC0zPlfKE85pjUmhkH+ifpBORq9ZiGanZRyugqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743352534; c=relaxed/simple;
-	bh=awwD76MG8HmfFfbsWnFxLgNKojOB1p4MjsMjAmU3tSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DLtt73RGS40+sbyfcUWxHlY5UOacoNUW+xgcmAWAoatVfA70YvseVqb3yPP6i+gY/1h9XuTy7j9dQbds4a6mZizyv8hBqa0bz+9JZmpRH9kHaQxzBO4gPZECkdZftz3I7f6Amc92GKZ3j7wu6rzYAjoFf4Zdj24M0Q4g3M7QFCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGGsKP0M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743352601; c=relaxed/simple;
+	bh=QWR6EaDQI1AguCT0SWh5ztNU28dnd6/6IjNKf/tPDeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTQslFbW6EgEUiYBKuxqub/KcxVwQmArc3NgUcv5wWcyXdvW9E1KEVY4y0rQQag16YgbDhSNfz19m6UHsNCq9IlQDsLxrA1vcxiEnb8umLFS17EoJp9/KS5rrrzsBKEZUMvjHgBLL3LAyl6QTgueT5P25iuJFioAHo/67EA6NVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fa8xr9xf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGGsKP0M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015CAC4CEDD;
-	Sun, 30 Mar 2025 16:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743352534;
-	bh=awwD76MG8HmfFfbsWnFxLgNKojOB1p4MjsMjAmU3tSo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dGGsKP0MqoU4yzNin26nlWak4YrxZHMRUn4bGlEy4tj3H1JtoxR0l7/AhTx09lP2N
-	 jBzOA2IVr4qjuVlRw2Kq7YBEXSUUtDwT8Lr/ZG0qr/CLiTMsGskBizFrzCKpq4VqTJ
-	 9NFw1eRIp2wuW3cmrExEX85zdafXpGFco8QjN4Sa9o0jUAWsQbggPnAnmf0s2Cwtfi
-	 3yKFwxWlftOG6qnaJJrvLh/5FC44T2oalR5wcapycAc1GCvAqWZLTiLa+Ss3fm7FbW
-	 qLEYMiwir6+ThdgobqPD4wEBpjycKeeUsHTGW6YlEtac4SbgjY+gK4WhtTkWXBAtvD
-	 Flf155+sN7Wpg==
-Date: Sun, 30 Mar 2025 17:35:25 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>, David Lechner
- <dlechner@baylibre.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>, Guillaume Stols
- <gstols@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>, Trevor
- Gamblin <tgamblin@baylibre.com>, Matteo Martelli
- <matteomartelli3@gmail.com>, Alisa-Dariana Roman <alisadariana@gmail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, =?UTF-8?B?Sm/Do28=?=
- Paulo =?UTF-8?B?R29uw6dhbHZlcw==?= <joao.goncalves@toradex.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v10 6/8] iio: adc: Support ROHM BD79124 ADC
-Message-ID: <20250330173525.5d6e3d29@jic23-huawei>
-In-Reply-To: <ca3886c9abcb268ca976e62cd7da28bf5d6e6382.1742560649.git.mazziesaccount@gmail.com>
-References: <cover.1742560649.git.mazziesaccount@gmail.com>
-	<ca3886c9abcb268ca976e62cd7da28bf5d6e6382.1742560649.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fa8xr9xf"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UA4B38030595
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=J9IbJLHzN5Gek81KZ8rQbP94
+	oxIGmfBdFVQn3sF3atY=; b=fa8xr9xf4VRxYcMRudOdck7gw+gOU0yTkctt0jYk
+	OoKRdloSvJnZg+yq5y5IUKAblD3jQ0BqZm2JAalm3ZIfqfNvddLM25E701Duy0w+
+	2gjk7tJpsyPhYxk4qjEIGj6rCS9VJRuLWHEGTytT8qZISGtZAVHGy2XK9KABRCic
+	55h4i30u9QRfle6nLc17EvVFxUKCScpHrUAZFkFv9NIyPkiCk1a4gdDduqGBEFOd
+	wCAV+oI4jfGR08C9gVFaOQRqEekXCvLuqBCPkf5rxHdKMoMpFKdTaZDNl1CIyWcd
+	ISwEWHB2d7ZGUdTlXv9oc77DYnUAoMWiAQ6K075isyx14g==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p935tfm4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:33 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b94827so528870885a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:36:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743352592; x=1743957392;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J9IbJLHzN5Gek81KZ8rQbP94oxIGmfBdFVQn3sF3atY=;
+        b=mwiUclb1gGcAMiFEkmGI+/KxIawSV5zOhBBsGLpwOdDgLKHwrSv6TERUkKWMs733D0
+         M3tEVxC4RMVkz9gPz/1BONVR+jKberDKRqxVru/CqIHVtaoJqTY4Fi9rnD3kwJQRbbmp
+         o3DpO1XG3XVveYbOjxC1RBwwzcyrHtLJ4irsVQCwNWHNYubecPHqnNYgd42Rgr7L5L3w
+         dOdYgg0vq9ex1gWxN37BMGfRmTf4ry9qgZivkYiuLzBdgsAD3/L6kAFPuUlgDPcPzp4d
+         J/nnXPAPcTRmxSSL9pe55JoYIKi/nhd8j7fJ9UuvAj8Md6kyiMarVisiEiXSZl4+mxrH
+         HqGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvrwYQT+18p/+xZZ/q0GY5OmsNUGzES4UkHEexX7zjE41LF0YdtPfO+YIETYx4N04ot53kZNxXlNuro+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy45CyZSkbU4wbEmoz9p41OkG54c3uXg4yTRAP6fqKQ2xZWdM+Y
+	zBTw+mIO8wDwZG1YYRLYxPj5WvPHU8+AiGSFHUltOV8YJqmEV5ActCI8+k/UtQnAWHqwIQV9pKM
+	FBRjGOS+3kkmnkus8iGcMk1w0u8Z2v7zu7K17gQi/igjhwe7Y4k8nw9X6uM4c7pg=
+X-Gm-Gg: ASbGncsNvk/ZDccJnJS614VuAG58NcOwyOJBtn/D8jz1h9nfIlfm195JGAZ9mdDj6je
+	MEmhR7BgXEsZ03dLZRLsQnpJt2ZRAOs5gFv1sFSIkkqJcPPBslN4YZytBukfM4Mav9Jii7YttA6
+	QwZdRJyi1AJpmlJ1uHG5QvGio8PCnWKviR/tzJ9THAXa6rGJ+ZU88k2UehUHLq67VaiZ98bstsk
+	Q8TshkFBeBts/n55KuSUqNt62t4IsTID83bR1jNawXLBzJRVPEaC8IV707iK3+otvMQzbXxfLfZ
+	9O5OjsBYpOrffYuHMymuBm/MPYdekri4TzVCJsThJekddVbo21IDW6bewPRmRzR489MDL0kyH1l
+	taVw=
+X-Received: by 2002:a05:620a:4108:b0:7c5:48b8:b4ac with SMTP id af79cd13be357-7c69072f371mr927036285a.34.1743352591854;
+        Sun, 30 Mar 2025 09:36:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEdV5tc6GnhjMZwo8TLqjXFz1vGzqWB4XFi2jQnVxmtoNtcZMKKrRG70w3Gh77iotOX99M3Q==
+X-Received: by 2002:a05:620a:4108:b0:7c5:48b8:b4ac with SMTP id af79cd13be357-7c69072f371mr927032985a.34.1743352591505;
+        Sun, 30 Mar 2025 09:36:31 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0957fc65sm921069e87.118.2025.03.30.09.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 09:36:29 -0700 (PDT)
+Date: Sun, 30 Mar 2025 19:36:26 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
+        mperttunen@nvidia.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, dmitry.baryshkov@linaro.org, mripard@kernel.org
+Subject: Re: [PATCH v2] ASoC: hdmi-codec: wire up the .prepare callback also
+ for SPDIF DAI ops
+Message-ID: <h6izcncnqyiyv7nvyvauzjftjvzyhhev6y7wbmdqjyonrdw5ho@4yclxkbukgcs>
+References: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
+X-Proofpoint-GUID: Z6Ud32uSVzoPTLSxMu5FH8U7se2JryBP
+X-Authority-Analysis: v=2.4 cv=KOFaDEFo c=1 sm=1 tr=0 ts=67e97311 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=mK_AVkanAAAA:8 a=rfKdTcLzpojuHggjPigA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22 a=3gWm3jAn84ENXaBijsEo:22
+X-Proofpoint-ORIG-GUID: Z6Ud32uSVzoPTLSxMu5FH8U7se2JryBP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503300115
 
-On Mon, 24 Mar 2025 09:13:42 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-
-> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
-> an automatic measurement mode, with an alarm interrupt for out-of-window
-> measurements. The window is configurable for each channel.
+On Sat, Mar 29, 2025 at 08:14:33PM +0100, Martin Blumenstingl wrote:
+> Commit 2fef64eec23a ("ASoC: hdmi-codec: Add a prepare hook") added a
+> prepare implementation. Back then the new callback was only integrated
+> with hdmi_codec_i2s_dai_ops (which is used by the I2S input code-path).
+> It was not added to hdmi_codec_spdif_dai_ops (which is used by the SPDIF
+> input code-path).
 > 
-> The I2C protocol for manual start of the measurement and data reading is
-> somewhat peculiar. It requires the master to do clock stretching after
-> sending the I2C slave-address until the slave has captured the data.
-> Needless to say this is not well suopported by the I2C controllers.
+> With commit baf616647fe6 ("drm/connector: implement generic HDMI audio
+> helpers") the DRM subsystem has gained a helper framework which can be
+> used by HDMI controller drivers. HDMI controller drivers are often
+> tightly coupled with the hdmi-codec because of the so-called HDMI audio
+> infoframe (which is often managed by the display controller).
 > 
-> Thus do not support the BD79124's manual measurement mode but implement
-> the measurements using automatic measurement mode, relying on the
-> BD79124's ability of storing latest measurements into register.
+> To allow the new DRM HDMI audio framework to work with the hdmi-codec
+> driver for SPDIF inputs we also need to hook up the prepare callback to
+> hdmi_codec_spdif_dai_ops. Just hooking into the hw_params callback would
+> not be enough as hw_params (is called too early and) doesn't have access
+> to the HDMI audio infoframe contents.
 > 
-> Support also configuring the threshold events for detecting the
-> out-of-window events.
+> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+> Changes since v1 at [0]:
+> - re-sending since there was no feedback
 > 
-> The BD79124 keeps asserting IRQ for as long as the measured voltage is
-> out of the configured window. Thus, prevent the user-space from choking
-> on the events and mask the received event for a fixed duration (1 second)
-> when an event is handled.
 > 
-> The ADC input pins can be also configured as general purpose outputs.
-> Make those pins which don't have corresponding ADC channel node in the
-> device-tree controllable as GPO.
+> The following three upstream drivers can use the hdmi-codec with SPDIF
+> inputs:
+> - drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+> - drivers/gpu/drm/rockchip/cdn-dp-core.c
+> - drivers/gpu/drm/tegra/hdmi.c
 > 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> It would be great if any of the maintainers of these platforms (Cc'ed)
+> could confirm that this patch doesn't break anything.
+> 
+> Mark, Dmitry: who of you would take this patch (Mark via the ASoC
+> tree or Dmitry via drm-misc)?
 
-One trivial thing inline.
+There is no reason for it to go through drm-misc, we picked up only
+several API changes in order to ease merging of the patchset. This patch
+should go normally via Mark's tree.
 
-Jonathan
 
-> diff --git a/drivers/iio/adc/rohm-bd79124.c b/drivers/iio/adc/rohm-bd79124.c
-> new file mode 100644
-> index 000000000000..099eccaa2232
-> --- /dev/null
-> +++ b/drivers/iio/adc/rohm-bd79124.c
-> @@ -0,0 +1,1147 @@
-
->
-> +static int bd79124_read_event_value(struct iio_dev *iio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    enum iio_event_type type,
-> +				    enum iio_event_direction dir,
-> +				    enum iio_event_info info, int *val,
-> +				    int *val2)
-> +{
-> +	struct bd79124_data *data = iio_priv(iio_dev);
-> +	int ret, reg;
-> +
-> +	if (chan->channel >= BD79124_MAX_NUM_CHANNELS)
-> +		return -EINVAL;
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		if (dir == IIO_EV_DIR_RISING)
-> +			*val = data->alarm_r_limit[chan->channel];
-> +		else if (dir == IIO_EV_DIR_FALLING)
-> +			*val = data->alarm_f_limit[chan->channel];
-> +		else
-> +			return -EINVAL;
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_EV_INFO_HYSTERESIS:
-> +		reg = BD79124_GET_HYSTERESIS_REG(chan->channel);
-> +		ret = regmap_read(data->map, reg, val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val &= BD79124_MSK_HYSTERESIS;
-> +		/*
-> +		 * The data-sheet says the hysteresis register value needs to be
-> +		 * sifted left by 3.
-
-shifted
-
+-- 
+With best wishes
+Dmitry
