@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D8D1CDFCE
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 12:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8331A155333
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 12:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743337063; cv=none; b=knVYhsV0GGYdNboA60vMp6zf8o8zYw7SlGx2bOc7wmpp+GyJqqpgVQnoUA+U+U2DGRsKEX/Xh6SazBXYxZTiIhSWAtfP9Z+8wz6LOorNsUqHfqMJAVTO30xPb5HL0aKbwhcWA4lfK1LEGgfjqou+hmgrHG1YPSZBDXN6UmhH/bI=
+	t=1743337070; cv=none; b=M0mO1MUVMGtOhltRnKg0bjH6HcNJRGVXCx77KaVw7Rh9X2D79G0Ouv5cvrNgJRuF5HBS53EN0jH/1ypjJu+WzFuLQwtTvT/dlcbUsVusdtoM64AawL/U/WpleCYGPKu6jJ4wMfwrlAW40Cx0QlQ8pyYI8J+nrCccMDIqFaxxXN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743337063; c=relaxed/simple;
-	bh=gKdhX4jI7FvUr3w6tNdE00UAASTxwhzzmxFRJbbPJgo=;
+	s=arc-20240116; t=1743337070; c=relaxed/simple;
+	bh=sNo71/UwJJrOsGQDRP85vpICwpdHE7BULlIn/TDNp10=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=p8ZQ0Zirud9RzJXubPLqUJFZ/CrYIWU6w7Vbw7FwbIIC5l2N5y7md9Z2fw6QzhVaN//U9pR/egWRlk4o5721fF+7RgTiYwDMAxv3RiToogAmvTFvrj8P8aZ8CPmmWjpgNL3z3lB/DRBYpqChAcIFP7SR9VLE0xduWdVDRu8+QI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NI6i1+be; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-type; b=AswiccR63tuMTVYtm53Vs8i64QSJW+SJpF5xNXijkFAIVqSJLVjYlOUqk4zO3xsrCcflOaF6lgoJ7pXk+2pWBs9qEdvcSCjwAU/Favih3+DTCQswzk6gKYj5tSjiF+9cRASNALHpvdYCbGcm3dfHXquixrNGYaHnRpG5A0U6SQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SBWCTnW1; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NI6i1+be"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBWCTnW1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743337061;
+	s=mimecast20190719; t=1743337067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7LqQOrccmB1vzyfnAtlatGcQGL//TNrd+LmFWKgXy5M=;
-	b=NI6i1+betIgdO1fQ15s3NHiYItbx88NC2Bo8et0+ewGzlVvh/IiL96D0CdUyceW6VGk8ql
-	jQdkMnJUrAZvoinoQtsl3XDjxmT4eHBzTdi+lUwyr2JVQtLmOy20YrVtr4GafT6Q+tAQLQ
-	L/Xxjlv2OB95kTTZJFY5Pv5x81DeIzQ=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=hxqDMoJetNer7F1DwMLPFhLQrU8sSqdg39HX8cZyX4Y=;
+	b=SBWCTnW1iM2ul+g6V3EgV3mt54ZfoUrAWkRxsrSzR+8ccObDxQYqyvY5Vj3g74ohwxMtlH
+	oE630Qc5BoOYGkhZeb2NArnAWkrusfaW0/zA23FnqPjY0EGIy/oZxBrbSgtIEpBo7NHJWs
+	aED3mP56knpo4BYQvMZzJyF3laWVkuo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-LJRw6BwZMB2lZhSVeFH_uQ-1; Sun,
- 30 Mar 2025 08:17:39 -0400
-X-MC-Unique: LJRw6BwZMB2lZhSVeFH_uQ-1
-X-Mimecast-MFC-AGG-ID: LJRw6BwZMB2lZhSVeFH_uQ_1743337058
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-Zv7FARzWNZOEPs16cB8FOQ-1; Sun,
+ 30 Mar 2025 08:17:43 -0400
+X-MC-Unique: Zv7FARzWNZOEPs16cB8FOQ-1
+X-Mimecast-MFC-AGG-ID: Zv7FARzWNZOEPs16cB8FOQ_1743337062
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6FFEF19560AF;
-	Sun, 30 Mar 2025 12:17:38 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 200B31800266;
+	Sun, 30 Mar 2025 12:17:42 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.17])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CEE2B180094A;
-	Sun, 30 Mar 2025 12:17:35 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 630CE180094A;
+	Sun, 30 Mar 2025 12:17:38 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: akpm@linux-foundation.org
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 3/7] mm/gup: Fix the outdated code comments above get_user_pages_unlocked()
-Date: Sun, 30 Mar 2025 20:17:13 +0800
-Message-ID: <20250330121718.175815-4-bhe@redhat.com>
+Subject: [PATCH 4/7] mm/gup: remove gup_fast_pgd_leaf() and clean up the relevant codes
+Date: Sun, 30 Mar 2025 20:17:14 +0800
+Message-ID: <20250330121718.175815-5-bhe@redhat.com>
 In-Reply-To: <20250330121718.175815-1-bhe@redhat.com>
 References: <20250330121718.175815-1-bhe@redhat.com>
 Precedence: bulk
@@ -62,45 +62,86 @@ Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Since commit f0818f472d8d ("mm: gup: add get_user_pages_locked
-and get_user_pages_unlocked"), get_user_pages() doesn't need to have
-mmap_lock held anymore. It calls __get_user_pages_locked() which
-can acquire and drop the mmap_lock internaly.
+In the current kernel, only pud huge page is supported in some
+architectures. P4d and pgd huge pages haven't been supported yet.
+And in mm/gup.c, there's no pgd huge page handling in the
+follow_page_mask() code path. Hence it doesn't make sense to have
+gup_fast_pgd_leaf() in gup_fast code path.
 
-Hence remove the incorrect code comments now.
+Here remove gup_fast_pgd_leaf() and clean up the relevant codes.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- mm/gup.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ mm/gup.c | 49 +++----------------------------------------------
+ 1 file changed, 3 insertions(+), 46 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index 8788105daee8..3345a065c2cb 100644
+index 3345a065c2cb..3d2c57f59b4d 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -2702,19 +2702,9 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
- EXPORT_SYMBOL(get_user_pages);
+@@ -3168,46 +3168,6 @@ static int gup_fast_pud_leaf(pud_t orig, pud_t *pudp, unsigned long addr,
+ 	return 1;
+ }
  
- /*
-- * get_user_pages_unlocked() is suitable to replace the form:
-- *
-- *      mmap_read_lock(mm);
-- *      get_user_pages(mm, ..., pages, NULL);
-- *      mmap_read_unlock(mm);
-- *
-- *  with:
-- *
-- *      get_user_pages_unlocked(mm, ..., pages);
-- *
-- * It is functionally equivalent to get_user_pages_fast so
-- * get_user_pages_fast should be used instead if specific gup_flags
-- * (e.g. FOLL_FORCE) are not required.
-+ * get_user_pages_unlocked() is functionally equivalent to
-+ * get_user_pages_fast so get_user_pages_fast should be used instead
-+ * if specific gup_flags (e.g. FOLL_FORCE) are not required.
-  */
- long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
- 			     struct page **pages, unsigned int gup_flags)
+-static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+-		unsigned long end, unsigned int flags, struct page **pages,
+-		int *nr)
+-{
+-	int refs;
+-	struct page *page;
+-	struct folio *folio;
+-
+-	if (!pgd_access_permitted(orig, flags & FOLL_WRITE))
+-		return 0;
+-
+-	BUILD_BUG_ON(pgd_devmap(orig));
+-
+-	page = pgd_page(orig);
+-	refs = record_subpages(page, PGDIR_SIZE, addr, end, pages + *nr);
+-
+-	folio = try_grab_folio_fast(page, refs, flags);
+-	if (!folio)
+-		return 0;
+-
+-	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
+-		gup_put_folio(folio, refs, flags);
+-		return 0;
+-	}
+-
+-	if (!pgd_write(orig) && gup_must_unshare(NULL, flags, &folio->page)) {
+-		gup_put_folio(folio, refs, flags);
+-		return 0;
+-	}
+-
+-	if (!gup_fast_folio_allowed(folio, flags)) {
+-		gup_put_folio(folio, refs, flags);
+-		return 0;
+-	}
+-
+-	*nr += refs;
+-	folio_set_referenced(folio);
+-	return 1;
+-}
+-
+ static int gup_fast_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr,
+ 		unsigned long end, unsigned int flags, struct page **pages,
+ 		int *nr)
+@@ -3302,12 +3262,9 @@ static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
+ 		next = pgd_addr_end(addr, end);
+ 		if (pgd_none(pgd))
+ 			return;
+-		if (unlikely(pgd_leaf(pgd))) {
+-			if (!gup_fast_pgd_leaf(pgd, pgdp, addr, next, flags,
+-					       pages, nr))
+-				return;
+-		} else if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
+-					       pages, nr))
++		BUILD_BUG_ON(pgd_leaf(pgd));
++		if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
++					pages, nr))
+ 			return;
+ 	} while (pgdp++, addr = next, addr != end);
+ }
 -- 
 2.41.0
 
