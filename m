@@ -1,129 +1,217 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F741991CD
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8ED29D0D
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743358630; cv=none; b=mYGoT64zQ61a8B+tTywj7w+lBJpxxGTyPiZy0dNDYS5ZEVLB6zO2yyeSSUFLvXsiMbiHa94L0W8Wf0nO90i+T9xeiBrLdYWSaV9+nU9k+mqJhORLc0V2hlKrcAlB3oCLvvJZ8YJrJ5uioAs1F6B18ARUGccVxamc03DjZ2c7PWk=
+	t=1743359197; cv=none; b=V/Gbc+tJDVKsqui5thnNWRgNAaSnXtUhpWsebKMgK1O5WhQjQ5LnG8Doi18WYLSA7LHD8aZd/FmbpCwTcT0LY4NafXtnI1TaBcDKoJ2wCEVz6uKPJuMalfiLS8P/IpemEP3D3lStYaGDGEy0kkNlkmVC5fpfL3PmE/pNAcFJ7KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743358630; c=relaxed/simple;
-	bh=6UylvYop+OEXgnhp2SlA5a70VJf2UCbf7wjxmu0fM84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjNuTPWDC74fDU1jMUU3CNua6RAdEqduBdGZZhrLHW0l1IfUWsE1V8jD7wJN2C5pt+guhuo6mEocdXvmlIwxk5oDBAK658mUeacbbob4ToMgbwl+ZwcLrkp3dYD5sf9TIGyovxG9ORnZ2c7WNehUU6vjHhts4dYqLKuMsShIENQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a298Ave/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743359197; c=relaxed/simple;
+	bh=AsOvyzG2+BqCl1OSBTdMoaHdgyWWwoIe8+rcvOXl3Ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hwVJ/ug6Y4BgLzdDpRS9XSE4n+ip8SggZgpe3VJwpEw3drqJrK/ctGhf+vqZGnZiudbYCliRBGWHv73Mjvwb+e0+Iauwl9TSEzgH+aJv/ldm9Lm/8lnEvyntUoiDQ9eMX+Q+zN3JPSaLDluVVihv7lbbc3L0puMnwyun8jYqhm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EecGKwsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a298Ave/"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52U9rKEZ014451
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:17:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=dcSksA11RlOYohkA60SYzmtV
-	b9G/fNoYNF/FlKhWLUg=; b=a298Ave/aiaZ62Jo76qt4r3+hYH5USThmjwt4Idk
-	7MYrE8ogftZH3RMVB0dRC2oVCKJM5osebYZsAu2Lr7/MlVz7x1p+HQccxGfwpRz7
-	BwTFmXdrSeCcZLZ8WEQioiN1+6Y/zRMikdPWMSQA54DTCqOs9Mjr86RPF+irb7Bo
-	vgD9wtaRuKMJAbEc8yN+Sz6zF+pVxzAf7wgkzqPES3uJppMDokgseur1AdW6rrvV
-	fB9lhcs5uLya6DMZxDzu5GnDO2CGYO+yXGDU8DXBjIGdGKl2d/lMRmgBOxqE++9w
-	L//Spgf2s4pgZxBNdMO56RsyVBCFoYSL/6wzIvGQIX37cA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa5bjh79-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:17:07 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c0a3ff7e81so698658885a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:17:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743358626; x=1743963426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dcSksA11RlOYohkA60SYzmtVb9G/fNoYNF/FlKhWLUg=;
-        b=dDeiXYpt5B56Heyj4Byds6C3Sf0Ix/EVJUC9TLAWQkemhOfrth7X4BBjsPwnDb4Y69
-         guWVBQmBtxMXhInXEbc/Si8f2deoRSVwqE/6Az8eswplsROre2je7hWEUCRix1igtyl8
-         MTS6sTLYk6V7bQ8CtxXiC2TfnzTGMQ3T6YxDh7yTkfVhvmEg8vPeXbL6LZnkN0U0OxWI
-         b3fWpph4QY07BH9GhsUPm9iFTbf7V5UYeVfe1gyLfQOjyfUuWoqdGCvtcrgY6kCevheU
-         DvFJIfSfjKYZzRaHuFLmGHg95kNjSMZ9rEtCi+wRdX5gbymXrWwBcGNBTbkuMC+ZXp1B
-         TPOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWslaND/2DNEfehMNBnu3wz4OT4Hr0YmoKPeK+pu+mzzXaVa2BaD6Uf59XK/OFH86pxQYnT8H+R74KozIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEB+WY+IU+BzWFqckh0BujzomnAWCEWf5HoZK9Mu8oCPACvt/l
-	MwkWvpMzGvGkRN14vwAGjO+nalM1uYCU1oI1rTHoXgOw6JCNj7vjXRbZ/ZNxqA/HtfdXKEYZtvD
-	UJ8ILl2zKkcQro+Y+8DXeNJnVMNSj742pKsdIf7E4iSqc1k7nh7ZfCvOdXmg1Eek=
-X-Gm-Gg: ASbGncsvkc82D/XjCmViTHdg2KPU27N8WiVxCE1tqvvnZ4eI0Jx6uingWi7JLs4GDyG
-	kjrFNB6WridOiZ9EMXykrdQ6MhD2HWc9H86m1vdvXxL7+H8S4If7R0cVkUEaavc/KtlrN7fzAnC
-	nM8rdazJ6Y7af18VAPcVca9hGyFE0+qsGyaXdjk6c9kYuLQ/CF4S1GX791f/gf7031vwH5v2QAU
-	vXQUY2zT5TK3UEUqF/jaw2+k5KqeeSXDa8tvQ+tjl7zP1efQI0OaLMzyYZs81LlnIJui9p+93CP
-	f8C/sa2YQKSZ+hFr3/9I7kofq+lwY4GLPeMBFF402gaPKdVdCM/cO4+lVEqSc25Yhqkpe5QaFS5
-	scDU=
-X-Received: by 2002:a05:620a:3186:b0:7c5:50cc:51b3 with SMTP id af79cd13be357-7c69072c8ddmr825385985a.33.1743358626630;
-        Sun, 30 Mar 2025 11:17:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjrCySJld3XG7/AgsGbLsMX1lIvdoId2dpO0+vc7j49p/kntZmwsaPQy1MzMkMt0UlMwFlzQ==
-X-Received: by 2002:a05:620a:3186:b0:7c5:50cc:51b3 with SMTP id af79cd13be357-7c69072c8ddmr825384885a.33.1743358626387;
-        Sun, 30 Mar 2025 11:17:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b09580011sm935682e87.149.2025.03.30.11.17.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 11:17:04 -0700 (PDT)
-Date: Sun, 30 Mar 2025 21:17:01 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Hermes.wu@ite.com.tw
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Pet.Weng@ite.com.tw, Kenneth.Hung@ite.com.tw, treapking@chromium.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] drm/bridge: it6505: check INT_LINK_TRAIN_FAIL
- while link auto training
-Message-ID: <afnywa3x3nheteid7mt7u6hljge2tensmelj54ztamassmfpj5@7vyxzaprijoc>
-References: <20250326-fix-link-training-v2-0-756c8306f500@ite.com.tw>
- <20250326-fix-link-training-v2-2-756c8306f500@ite.com.tw>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EecGKwsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F411CC4CEDD;
+	Sun, 30 Mar 2025 18:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743359196;
+	bh=AsOvyzG2+BqCl1OSBTdMoaHdgyWWwoIe8+rcvOXl3Ys=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EecGKwsC4PCrPQDNVnGmyffyaMYbYrmlx56IlDM/GShztPCAbIFswGB9vvTb2zRLB
+	 EETCtsz2l7dgWuyjuJTJODhrTZew0/u9oEOuglcJoCgg7Eiias7Ozh4QldoED4YBx9
+	 8p/A2BF7Yo0VRo6kXCNKT3ev6wAIYHGMP7KrPobI=
+Date: Sun, 30 Mar 2025 20:26:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [GIT PULL] Driver core updates for 6.15-rc1
+Message-ID: <Z-mM2UCJNwRiUcaF@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250326-fix-link-training-v2-2-756c8306f500@ite.com.tw>
-X-Proofpoint-GUID: oZWZ2D2kI-f3tl-oMAdHpru0cntEqWOE
-X-Authority-Analysis: v=2.4 cv=YqcPR5YX c=1 sm=1 tr=0 ts=67e98aa3 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=Ns9eNvu6AAAA:8 a=EUspDBNiAAAA:8 a=_LDb0pKpX-kM06tvKcsA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=LZLx1i01EnjtqRv10NxV:22
-X-Proofpoint-ORIG-GUID: oZWZ2D2kI-f3tl-oMAdHpru0cntEqWOE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 spamscore=0 phishscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=745 bulkscore=0 adultscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503300128
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 01:34:14PM +0800, Hermes Wu via B4 Relay wrote:
-> From: Hermes Wu <Hermes.wu@ite.com.tw>
-> 
-> When start link training, interrupt status INT_LINK_TRAIN_FAIL can
-> use to check link training fail and no need to wait until timeout.
-> 
-> it6505_irq_link_train_fail() remove from interrupt and no longer used.
-> 
-> Signed-off-by: Hermes Wu <Hermes.wu@ite.com.tw>
-> ---
->  drivers/gpu/drm/bridge/ite-it6505.c | 25 ++++++++++++++-----------
->  1 file changed, 14 insertions(+), 11 deletions(-)
-> 
+The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
 
--- 
-With best wishes
-Dmitry
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-6.15-rc1
+
+for you to fetch changes up to 51d0de7596a458096756c895cfed6bc4a7ecac10:
+
+  rust: platform: require Send for Driver trait implementers (2025-03-20 07:41:11 -0700)
+
+----------------------------------------------------------------
+Driver core updates for 6.15-rc1
+
+Here is the big set of driver core updates for 6.15-rc1.  Lots of stuff
+happened this development cycle, including:
+  - kernfs scaling changes to make it even faster thanks to rcu
+  - bin_attribute constify work in many subsystems
+  - faux bus minor tweaks for the rust bindings
+  - rust binding updates for driver core, pci, and platform busses,
+    making more functionaliy available to rust drivers.  These are all
+    due to people actually trying to use the bindings that were in 6.14.
+  - make Rafael and Danilo full co-maintainers of the driver core
+    codebase
+  - other minor fixes and updates.
+
+This has been in linux-next for a while now, with the only reported
+issue being some merge conflicts with the rust tree.  Depending on which
+tree you pull first, you will have conflicts in one of them.  The merge
+resolution has been in linux-next as an example of what to do, or can be
+found here:
+	https://lore.kernel.org/r/CANiq72n3Xe8JcnEjirDhCwQgvWoE65dddWecXnfdnbrmuah-RQ@mail.gmail.com
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Bagas Sanjaya (1):
+      kernel: Fix "select" wording on HZ_250 description
+
+Bharadwaj Raju (1):
+      drivers/base/bus.c: fix spelling of "subsystem"
+
+Danilo Krummrich (8):
+      rust: pci: use to_result() in enable_device_mem()
+      rust: device: implement device context marker
+      rust: pci: fix unrestricted &mut pci::Device
+      rust: platform: fix unrestricted &mut platform::Device
+      rust: pci: impl Send + Sync for pci::Device
+      rust: platform: impl Send + Sync for platform::Device
+      rust: pci: require Send for Driver trait implementers
+      rust: platform: require Send for Driver trait implementers
+
+Ethan Carter Edwards (1):
+      rust/kernel/faux: mark Registration methods inline
+
+Fiona Behrens (2):
+      rust: io: rename `io::Io` accessors
+      rust: io: fix devres test with new io accessor functions
+
+Greg Kroah-Hartman (4):
+      Merge 6.14-rc3 into driver-core-next
+      driver core: faux: only create the device if probe() succeeds
+      Merge 6.14-rc6 into driver-core-next
+      MAINTAINERS: driver core: mark Rafael and Danilo as co-maintainers
+
+Lucas De Marchi (1):
+      drivers: base: component: Allow more space for device name
+
+Lyude Paul (2):
+      rust/faux: Drop #[repr(transparent)] from faux::Registration
+      rust/faux: Add missing parent argument to Registration::new()
+
+Sebastian Andrzej Siewior (8):
+      kernfs: Acquire kernfs_rwsem in kernfs_notify_workfn().
+      kernfs: Acquire kernfs_rwsem in kernfs_get_parent_dentry().
+      kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().
+      kernfs: Don't re-lock kernfs_root::kernfs_rwsem in kernfs_fop_readdir().
+      kernfs: Use RCU to access kernfs_node::parent.
+      kernfs: Use RCU to access kernfs_node::name.
+      kernfs: Drop kernfs_rwsem while invoking lookup_positive_unlocked().
+      kernfs: Move dput() outside of the RCU section.
+
+Thomas Weiﬂschuh (22):
+      cxl/port: Constify 'struct bin_attribute'
+      firmware: dmi: Mark bin_attributes as __ro_after_init
+      firmware: dmi: Define bin_attributes through macro
+      firmware: dmi: Constify 'struct bin_attribute'
+      drm/sysfs: Constify 'struct bin_attribute'
+      drm/lima: Constify 'struct bin_attribute'
+      drm/i915: Constify 'struct bin_attribute'
+      drm/amdgpu: Constify 'struct bin_attribute'
+      drm/amd/display: Constify 'struct bin_attribute'
+      fsi: core: Use const 'struct bin_attribute' callbacks
+      accel/habanalabs: constify 'struct bin_attribute'
+      Input: goodix-berlin - constify 'struct bin_attribute'
+      efi/mokvar: Use const 'struct bin_attribute' callback
+      pcmcia: cistpl: Constify 'struct bin_attribute'
+      powerpc/secvar: Mark __init functions as such
+      powerpc/secvar: Constify 'struct bin_attribute'
+      powerpc/powernv/ultravisor: Constify 'struct bin_attribute'
+      powerpc/powernv/opal: Constify 'struct bin_attribute'
+      powerpc/perf/hv-24x7: Constify 'struct bin_attribute'
+      firmware: qemu_fw_cfg: constify 'struct bin_attribute'
+      rapidio: constify 'struct bin_attribute'
+      efi: rci2: mark bin_attribute as __ro_after_init
+
+Thorsten Blum (1):
+      driver core: location: Use str_yes_no() helper function
+
+Zijun Hu (3):
+      driver core: class: Remove needless return in void API class_remove_file()
+      driver core: Remove needless return in void API device_remove_group()
+      MAINTAINERS: Add driver core headers to DRIVER CORE maintainers
+
+ MAINTAINERS                                        |   6 +-
+ arch/powerpc/kernel/secvar-sysfs.c                 |  24 +--
+ arch/powerpc/perf/hv-24x7.c                        |   8 +-
+ arch/powerpc/platforms/powernv/opal-core.c         |  10 +-
+ arch/powerpc/platforms/powernv/opal-dump.c         |   4 +-
+ arch/powerpc/platforms/powernv/opal-elog.c         |   4 +-
+ arch/powerpc/platforms/powernv/opal-flash.c        |   4 +-
+ arch/powerpc/platforms/powernv/opal-msglog.c       |   6 +-
+ arch/powerpc/platforms/powernv/ultravisor.c        |   6 +-
+ arch/x86/kernel/cpu/resctrl/internal.h             |   5 +
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c          |  14 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c             |  73 ++++---
+ drivers/accel/habanalabs/common/sysfs.c            |  10 +-
+ drivers/base/bus.c                                 |   2 +-
+ drivers/base/component.c                           |  12 +-
+ drivers/base/faux.c                                |  15 +-
+ drivers/base/physical_location.c                   |   5 +-
+ drivers/cxl/port.c                                 |  10 +-
+ drivers/firmware/dmi-sysfs.c                       |  28 ++-
+ drivers/firmware/dmi_scan.c                        |   4 +-
+ drivers/firmware/efi/mokvar-table.c                |   4 +-
+ drivers/firmware/efi/rci2-table.c                  |   2 +-
+ drivers/firmware/qemu_fw_cfg.c                     |   6 +-
+ drivers/fsi/fsi-core.c                             |   8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         |   6 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c            |  14 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |  13 +-
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c |   8 +-
+ drivers/gpu/drm/drm_sysfs.c                        |  10 +-
+ drivers/gpu/drm/i915/i915_gpu_error.c              |   8 +-
+ drivers/gpu/drm/i915/i915_sysfs.c                  |  12 +-
+ drivers/gpu/drm/lima/lima_drv.c                    |   8 +-
+ drivers/input/touchscreen/goodix_berlin_core.c     |  10 +-
+ drivers/pcmcia/cistpl.c                            |   8 +-
+ drivers/rapidio/rio-sysfs.c                        |  14 +-
+ fs/kernfs/dir.c                                    | 211 ++++++++++++---------
+ fs/kernfs/file.c                                   |   6 +-
+ fs/kernfs/kernfs-internal.h                        |  37 +++-
+ fs/kernfs/mount.c                                  |  46 +++--
+ fs/kernfs/symlink.c                                |  30 +--
+ fs/sysfs/dir.c                                     |   2 +-
+ fs/sysfs/file.c                                    |  24 ++-
+ include/linux/device.h                             |   2 +-
+ include/linux/device/class.h                       |   2 +-
+ include/linux/kernfs.h                             |  14 +-
+ kernel/Kconfig.hz                                  |   2 +-
+ kernel/cgroup/cgroup-v1.c                          |   2 +-
+ kernel/cgroup/cgroup.c                             |  24 ++-
+ rust/kernel/device.rs                              |  26 +++
+ rust/kernel/devres.rs                              |   2 +-
+ rust/kernel/faux.rs                                |  16 +-
+ rust/kernel/io.rs                                  |  66 +++----
+ rust/kernel/pci.rs                                 | 150 +++++++++------
+ rust/kernel/platform.rs                            | 104 +++++++---
+ samples/rust/rust_driver_faux.rs                   |   2 +-
+ samples/rust/rust_driver_pci.rs                    |  20 +-
+ samples/rust/rust_driver_platform.rs               |  11 +-
+ security/selinux/hooks.c                           |   7 +-
+ tools/testing/selftests/bpf/progs/profiler.inc.h   |   2 +-
+ 59 files changed, 739 insertions(+), 450 deletions(-)
