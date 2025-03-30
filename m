@@ -1,94 +1,76 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D39820E6
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 22:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC3520E6;
+	Sun, 30 Mar 2025 22:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743373201; cv=none; b=nySiTk8PTrB4WQCPuquY6qGlyIQwMRiG3S+bQ5lSrPpdxMnuwQuiCFI0APFOX3YiLQ7z2zrFOHzVsaxUKDYL4DFcOM9hOOXKazRvTDXVyIZgSaLwpHkybpytRNqwnbwOgtXHIucIRhZ8LJX1tS1g4YMAgZ5rrF/q5fV3Vffw0sQ=
+	t=1743373242; cv=none; b=YcLHOvZzklNWKWFMJmGnGsUXwbT8S6QWa54ykoIHj64BbO9op/471VgjkAAW8czImxtLwk6JlukeswkqkH6CabTF18UWOQGV67SVz0UIn3q+ffX4sorb26E2suZhsCzemEhYn9ZuuEynqey51Cm9NizzT9feY213HNf5nNtLmm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743373201; c=relaxed/simple;
-	bh=d3Hh5+8o+LqZ5YZ/DWooR8tHi8vlLIrQ/xoPmvrdoPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vCmYHxMlab5ePpFbex5YqJfCdE7vHfr4me0dc6YSW2FVNFDevfXShWLhjmXDnSIF2fakMdXLlRK4Bly0HDc0zxl2dKBR+7kU+p/yBlZlAYMPd/W9cgUb0N8Wr3C2x5C9fmfT1DCuLmhQJh2bsUStTPdt+WQ961po4RF23tDMS2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZDS0bSEr; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743373242; c=relaxed/simple;
+	bh=qr1SU/+V0tubEcV2EGOD9x+yIPR/uH9AFnLW8DbU3wU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=WqMndbeID2jWdraCd/Rvsxo6vidzAxIqXykN4x4y72uuM582n1sM8f0lzADqbQ9hn98mCW7lq2GDzBL9i3BPTKUKy6r5RqWQ98rkFvcBdpqctqgTrzP//4+fiy5JgYw3ZJDjKNiqLjrTpmCgLfBxH67Bqyrqqel7Iu+mB5RO17A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeHhTT0N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZDS0bSEr"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso696594366b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 15:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743373198; x=1743977998; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRYNq/CwJhWYwy5Oz5r9LCWDNQKlE4ZCFzsFqqIyVwk=;
-        b=ZDS0bSErpEAqrlRFaASc0bjzwAjxKFxEncZ5ekklGGDKgXtQVhHn/g1V32lY1Cr0Lo
-         wnCGPM+LQ694ckH7Ka8GOT4EIe7/xpNzKCeRNpor0Cm+qm1Ioo8Kv1ZEQRw8WMOcmwxs
-         kMhUE/RerGaGLPCPh8T1NWlEdcLBcxPNXkE24=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743373198; x=1743977998;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NRYNq/CwJhWYwy5Oz5r9LCWDNQKlE4ZCFzsFqqIyVwk=;
-        b=ht6kpkpKX/LQq/jbcWT7O1TNPhl9kx3fH3t62wzB0owZsC1TRHBABFbB76dmZ1+ADq
-         6TMIRk2aY/sh22sQ8COSaSlcs/AEQcmTAIJqsYzHDKzlmuGS5gyPrBByntpSZ8x3XpN/
-         qneeUR9AOqiA+hOikLmnNTpkxD7Hc3jTcJWcx+IIIf9grZpAcICamI6uLf828H1gcLjK
-         BQXLJIMM85B89q7zCR5CG8vMYuXiRGl42DbRRYt2alp6oekBmr0lcDCY9VYPUt/unFp5
-         y9S1XkqezSZ/hZ1Edjy5BYaPdNhiJ5zg8IlLdq/jCqEyOFoBv4bfO8WqvzpjJ+KQ8yoH
-         ZsGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWj5IWz/k0hDgUKhBQiXDh2T8xAgYR2AWlsgOjct6EoAs3WRX3O8gpP2U08cPKGKGUtrm0FmfQywnu3AOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8B21Vx0OKU5h+KGcyxibUdHQy+fCVfOWhSQif0XT3tB9n27Lh
-	IIzVhppYDwq6IcFwaIhrJsx7VLJyHYi2wLPEG3tklcr9k3PJ5yn+KkQmLlaSsf7roaUtbHxgf/7
-	C+BA=
-X-Gm-Gg: ASbGncvzlk8/06qEHwwg+DR60Eeh2uZdvm236BcsDwfw153wSjwDr54lLtvBGkesyCP
-	KMubpPW5T7CKhO+clpJaaIorz5vgDDkpS8X56gAcREB+uyAxLmZVyPb+svchjWMU3YEiwNf7JaR
-	apxFpiLKsNyXZXXRlbLKs20p7Pysw4vJ5J3ygp0mZUYY0SbZSekMNkQMsjk+iJmZIp6N030XszK
-	ljv7gbUWoER9irO9wGp76a+vQx3uZW3f6AVy6XwhjAMZOLZ2/SAwL7fnp/Wfh7oxvnlZB6nNbKW
-	hYZ43Z9YpSLIirHohG/tCM5DRWNRyVnASiaZSTGfL49T+HZJLD5CXRYdcHGhRuIkijshSjYb0Fq
-	riNXMLPBGwkVCnBF/D2A=
-X-Google-Smtp-Source: AGHT+IG3R4XkCLLRJcf6NzHO0pqKRMmoE9vUQuqrbrSvU8C7EtqvkxkV6YdtC3cLmedLfL5gYl8q/g==
-X-Received: by 2002:a17:907:1c17:b0:ac1:17fe:c74f with SMTP id a640c23a62f3a-ac736972007mr562861866b.21.1743373197716;
-        Sun, 30 Mar 2025 15:19:57 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196f7a6csm532777966b.176.2025.03.30.15.19.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 15:19:56 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2aeada833so743785966b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 15:19:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgUuGkc1Mz1ClzgJO15JCV1jqX/jTpOIJjUpZafTHuwcfBtKXg8aOk9n5QEbjX7/dZf267hQ0PZeBBnXA=@vger.kernel.org
-X-Received: by 2002:a17:907:8687:b0:ac0:4364:4083 with SMTP id
- a640c23a62f3a-ac736457e2dmr784375266b.0.1743373196498; Sun, 30 Mar 2025
- 15:19:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeHhTT0N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F83C4CEDD;
+	Sun, 30 Mar 2025 22:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743373241;
+	bh=qr1SU/+V0tubEcV2EGOD9x+yIPR/uH9AFnLW8DbU3wU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jeHhTT0NWFM8xN5zHiAtZ0xDWpGs/R/+7goE/slo/ho/zgUMnVnpFoY4G90WpJ/bF
+	 9008hCx1eZ+5LvFVOWp0cJZeJA7+C2GlpKpkDuUzGlwUR9dAQKtA0czJJU95ob0qT7
+	 byCLJNJ4Fu+SyDBCMlXhcyXIarxDwrpzEjyzxF8iTWtVbx5kBBR5jw4UVDSYgP9xiX
+	 /UYKWP6FPnlcx2Dt4hy5kcmUj3fJaGMTxY8r+RvyOx/93jN0CsEj8vzKaT2nzm3O0v
+	 5XWNOGPb7HKRdiEzpz8SduaKyB2ud+SkOB28hKV1aBbPMppkKjF3MlcnlY3b/m+hIm
+	 1YpvT1CRgu20w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE37C380AA7A;
+	Sun, 30 Mar 2025 22:21:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-cSQXJKMyBSfAAc@gmail.com> <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
-In-Reply-To: <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 30 Mar 2025 15:19:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpyLxUomzdWRmvoW-CrUH7vUZ4bGC-MqEtx8tAyYe1YhoqimHhQqYl7nCE
-Message-ID: <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
-Subject: Re: [GIT PULL] objtool fixes and updates
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <a.p.zijlstra@chello.nl>, Josh Poimboeuf <jpoimboe@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] tools/build: Use SYSTEM_BPFTOOL for system bpftool
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174337327853.3560732.7620775881771969379.git-patchwork-notify@kernel.org>
+Date: Sun, 30 Mar 2025 22:21:18 +0000
+References: <20250326004018.248357-1-tglozar@redhat.com>
+In-Reply-To: <20250326004018.248357-1-tglozar@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, jkacur@redhat.com,
+ lgoncalv@redhat.com, venkat88@linux.ibm.com, qmo@qmon.net
 
-On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
->
-> Btw, test bot complains:
->
-> https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+Hello:
 
-That's not a very helpful error message, but I've dropped this pull
-request for now. Ingo?
+This patch was applied to bpf/bpf-next.git (master)
+by Steven Rostedt (Google) <rostedt@goodmis.org>:
 
-             Linus
+On Wed, 26 Mar 2025 01:40:18 +0100 you wrote:
+> The feature test for system bpftool uses BPFTOOL as the variable to set
+> its path, defaulting to just "bpftool" if not set by the user.
+> 
+> This conflicts with selftests and a few other utilities, which expect
+> BPFTOOL to be set to the in-tree bpftool path by default. For example,
+> bpftool selftests fail to build:
+> 
+> [...]
+
+Here is the summary with links:
+  - tools/build: Use SYSTEM_BPFTOOL for system bpftool
+    https://git.kernel.org/bpf/bpf-next/c/814d051ebed4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
