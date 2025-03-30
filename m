@@ -1,40 +1,78 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7004211CAF;
-	Sun, 30 Mar 2025 10:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86458184F;
+	Sun, 30 Mar 2025 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743330853; cv=none; b=WZDfkXdqnvOKPCt2Bg02WtnoKsSni/3OP9KIyNgCyJ8Na/JhMyea1SSHstEut2witrHuIBvnvPYJcMI5kdSTKawwtFBtREeNyp5YqAdcF6BSqFbW5ODj/nU6lhhMmVKXH9SEbnFqFroAdK1o8fKE6Cx0bQ4XP5MQUANSemz+dD8=
+	t=1743330899; cv=none; b=gnUuqft5cJjyHG+3mZEHKelQ+GSkXE4Vrn7Vjm3Di2J9YeLl5JE1+psZgvckNH16X2x4dpKWsTfmk4J+TWtGmTDDVgpQamm6KsP/gcvXKGOiLzO/qieJ5MfAyNgUo3KpNOGx8qgufqDvGi2ROpPGJzvvUd4Ekb3Njn1Q7YQe8qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743330853; c=relaxed/simple;
-	bh=/Q3k5X2P4dwXQISDL+GBAhFuGgVmsV1ZMtOfAK/F7aQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TgRZBkOmZjSpeDkVqLjhSWWf14omoZA8930wiArWgH7YrUkrQyfVolEyK9Qw+Pe+JovJ/fpRsdudRgBYQ2VlEMeiyPILAS4lD17j0EqiqbtHcKTahPN9rw6jT1eb+wOi6uQBdHkxnocDChU0LloGUeEjDKxmM3g0FirVJ3RxFyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=E8lzzqlY; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743330899; c=relaxed/simple;
+	bh=CTFnlW/udSDv88n+9dJ8nEXvEm2pfyeAT4QAhA1DEyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXVnLJYi1cXifPJ2DNGkVzmjHTqcvl7H5xSa5kVOzLS1idSQ3bYgjp5Mlpk+eDx30K6Xcn4KBvpoXM5aOr976p3dvKGFKk4+NRMN/jl/YuNrcX0dZgicMVyvE8Ovh4ne+xkdZCsXBixXgAD1VGBKqgJBq7m7rEsM1V/W+9CXhq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Le/SIPUB; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="E8lzzqlY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=R/OU0
-	V8NdoaJXsUCiLUPKOq7COZkSQ1mwl2m2pWiWKA=; b=E8lzzqlYztuKqKaYYo1Ah
-	hYhIoXtLhNQz29V8PYzfAUHoNBB/whZyrvaBRRtfbQTWkWhyydN+PZn98GeuchsZ
-	2a5gp4VOlIEBLUQDiHvkmj7OJrcuBtS65F5Mw+yAc+4LKCJj4lUsDAZ5OuKTWerl
-	ndv4fwz3bC/YQ9wW0IJc+U=
-Received: from WIN-S4QB3VCT165.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXj9gEHulnSK1lCw--.60329S4;
-	Sun, 30 Mar 2025 18:33:41 +0800 (CST)
-From: Debin Zhu <mowenroot@163.com>
-To: linux-security-module@vger.kernel.org
-Cc: netdev@vger.kernel.org,
-	selinux@vger.kernel.org,
-	paul@paul-moore.com,
-	linux-kernel@vger.kernel.org,
-	kuba@kernel.org,
-	Debin Zhu <mowenroot@163.com>,
-	Bitao Ouyang <1985755126@qq.com>
-Subject: [PATCH v2] netlabel: Fix NULL pointer exception caused by CALIPSO on IPv4 sockets
-Date: Sun, 30 Mar 2025 18:33:39 +0800
-Message-Id: <20250330103339.30794-1-mowenroot@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le/SIPUB"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so44506175ad.0;
+        Sun, 30 Mar 2025 03:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743330898; x=1743935698; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n6ILafFdAuS6ZwMjkWQd4TNYrYxem7zRVOv+WyE0Dgc=;
+        b=Le/SIPUBaYtdjtNTcbQ4c4mnRYLbDZZoBDpAhkLfDbQvJ1Ru85EOlmqFQwimNm4eku
+         4QdAKW21vBY4zXOiGug3a0x1JI5V/XT4LcTIMjhtXQJZIlRfqZPtdK9UkVsw1/PcyEFz
+         IbZ5apEucxagF5ZsBSc22LTkfJ12vTjQEj1Mf2O2G81mj86P2jHpSiuqHx9i2VmVf416
+         xoXUW1McyMhkZIuW+0I4G0EVYoN/E7Tyy8+/W7ISDdkaraQGV6C2FmoGbXzBtWL0k8QX
+         UxO4yvYFu8ltafc0/7n5v8yAB1kX7HAwt872zvyrUW+fhUcjpA5XhPHB9fQwWhgxBMB+
+         fCfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743330898; x=1743935698;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n6ILafFdAuS6ZwMjkWQd4TNYrYxem7zRVOv+WyE0Dgc=;
+        b=kKUWWM+6EXUbIyWUD1RrPxyqrWm6eNZluMBh2t+FRWHGIU3fcLOZ4bB8u0xcEFQ4Jg
+         TkMglnfH9lYUjFUFc4TeRKV494RyFQUow1FwgNPA7adrXc0JLU1iLJipwop/RKA3rLuM
+         rEcqiODvtN2ZygauOjlv6DNMKgXVGMZJPUyeNYR4O48nwpUg1QOQB66kTTv4gmyJG8cC
+         hkB7JW+fMyqHw2isBgELBoYqaS8LUbsFPgudnPrrxdAQ6iAzyIzWmzWNHkF99b3Ssouz
+         sUZOP/omvve9cWJB83UPfDhe4WRTcKPvQuin8wzM2H3E34xnPnM+KbhuE/VR7VOi5yd7
+         Jlxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJVu2k3b0sZrPbJb9ZcSxcKM7EPAq+EHR+NTfFr3PvNTrTCa0CVXOOxd+HoswzbL4ss5ybppFdNMGCyMf6gtA=@vger.kernel.org, AJvYcCVQZSwDoUXBKnq34v4Td8AGwD5soJbwcu1UxIkpGSgznuBo/WWrHhd4IyudxCUpO/FYI3K/1IOsk1drczE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM2dkZ+rCB7fT/04eyt/jD0o5crNFeDt260UT9YwDn/Y3a7IGK
+	odGWsX4HZ5E61+iEyYG4sKIXR/XUz2QzwPl3v0DRDW9Z88azwUur
+X-Gm-Gg: ASbGncs081GMrpL87AHQIhAYocaleieql4rPiYeK+t2riA1koC46AlVB4S7BkKZacru
+	iLMHLrg3yXf6tNhodbSlsxMgO2+YEHSGTqzSgkzYoaXyVtHmjoZWP7EMc04zZa73Xg5eGrUfW2k
+	ZKHehxUXAp6XRtCJBAg4h5FmyS66r3fV6/QOkBsewQxTXRD+xznRVbcmfXoHn0+PRpFcuVS+UMN
+	1IIpCFIX+azM7jEByyfe1vXsQMynGsQBMKrlpD4lkvhZqg/q8lTVsTDdwg9wEUXY2Lwgjy3/jVs
+	P+4bcuNfDsmYh2J4jrnT5uqWl9656egALCqVeZBxUDDYEPkO3UFc2bkqEtH3
+X-Google-Smtp-Source: AGHT+IH8jyiJdNbL2Tnz5sqZEPmHYfQeGIc5jmN+yL9P7wGGppF5FQlkFCFXB02xpCFhvQ80wcUgUA==
+X-Received: by 2002:a05:6a21:3408:b0:1f5:79c4:5da6 with SMTP id adf61e73a8af0-2009f5bcdfemr8257677637.5.1743330897784;
+        Sun, 30 Mar 2025 03:34:57 -0700 (PDT)
+Received: from localhost.localdomain ([49.37.217.226])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-af93b67f3f8sm4617113a12.7.2025.03.30.03.34.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 03:34:57 -0700 (PDT)
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: arend.vanspriel@broadcom.com
+Cc: kvalo@kernel.org,
+	u.kleine-koenig@baylibre.com,
+	jeff.johnson@oss.qualcomm.com,
+	toke@toke.dk,
+	abdun.nihaal@gmail.com,
+	jacobe.zang@wesion.com,
+	megi@xff.cz,
+	sebastian.reichel@collabora.com,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] wifi: brcmfmac: fix memory leak in brcmf_get_module_param
+Date: Sun, 30 Mar 2025 16:04:24 +0530
+Message-ID: <20250330103425.44197-1-abdun.nihaal@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,140 +80,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXj9gEHulnSK1lCw--.60329S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCr1rtry3tF4kurW7Cry5twb_yoWrCryDpF
-	yDKan8A348AFWUWws3XFWkCrWSkF4kKF17urWxAw4YkasrGr18Ja48KrWIya4ayFZrKrZ5
-	Xr48ta1F9w4kC3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRebytUUUUU=
-X-CM-SenderInfo: pprzv0hurr3qqrwthudrp/1tbiEwwelGfmvP2sogACsZ
 
-Vulnerability Description:
+The memory allocated for settings is not freed when brcmf_of_probe
+fails. Fix that by freeing settings before returning in error path.
 
-	From Linux Kernel v4.0 to the latest version, 
-	a type confusion issue exists in the `netlbl_conn_setattr` 
-	function (`net/netlabel/netlabel_kapi.c`) within SELinux, 
-	which can lead to a local DoS attack.
-
-	When calling `netlbl_conn_setattr`, 
-	`addr->sa_family` is used to determine the function behavior. 
-	If `sk` is an IPv4 socket, 
-	but the `connect` function is called with an IPv6 address, 
-	the function `calipso_sock_setattr()` is triggered. 
-	Inside this function, the following code is executed:
-
-	sk_fullsock(__sk) ? inet_sk(__sk)->pinet6 : NULL;
-
-	Since `sk` is an IPv4 socket, `pinet6` is `NULL`, 
-	leading to a null pointer dereference and triggering a DoS attack.
-
-<TASK>
-calipso_sock_setattr+0x4f/0x80 net/netlabel/netlabel_calipso.c:557
-netlbl_conn_setattr+0x12a/0x390 net/netlabel/netlabel_kapi.c:1152
-selinux_netlbl_socket_connect_helper 
-selinux_netlbl_socket_connect_locked+0xf5/0x1d0 
-selinux_netlbl_socket_connect+0x22/0x40 security/selinux/netlabel.c:611
-selinux_socket_connect+0x60/0x80 security/selinux/hooks.c:4923
-security_socket_connect+0x71/0xb0 security/security.c:2260
-__sys_connect_file+0xa4/0x190 net/socket.c:2007
-__sys_connect+0x145/0x170 net/socket.c:2028
-__do_sys_connect net/socket.c:2038 [inline]
-__se_sys_connect net/socket.c:2035 [inline]
-__x64_sys_connect+0x6e/0xb0 net/socket.c:2035
-do_syscall_x64 arch/x86/entry/common.c:51 
-
-Affected Versions:
-
-- Linux 4.0 - Latest Linux Kernel version
-
-Reproduction Steps:
-
-	Use the `netlabelctl` tool and 
-	run the following commands to trigger the vulnerability:
-
-	netlabelctl map del default
-	netlabelctl cipsov4 add pass doi:8 tags:1
-	netlabelctl map add default address:192.168.1.0/24 protocol:cipsov4,8
-	netlabelctl calipso add pass doi:7
-	netlabelctl map add default address:2001:db8::1/32 protocol:calipso,7
-
-Then, execute the following PoC code:
-
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-	struct sockaddr_in6 server_addr = {0};
-	server_addr.sin6_family = AF_INET6;     
-	server_addr.sin6_port = htons(8080);    
-
-	const char *ipv6_str = "2001:db8::1";    
-	inet_pton(AF_INET6, ipv6_str, &server_addr.sin6_addr);
-
-	connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
-
-Suggested Fix:
-
-	When using an IPv4 address on an IPv6 UDP/datagram socket, 
-	the operation will invoke the IPv4 datagram code through 
-	the IPv6 datagram code and execute successfully. 
-	It is necessary to check whether the `pinet6` pointer 
-	returned by `inet6_sk()` is NULL; otherwise, 
-	unexpected issues may occur.
-
-Signed-off-by: Debin Zhu <mowenroot@163.com>
-Signed-off-by: Bitao Ouyang <1985755126@qq.com>
+Fixes: 0ff0843310b7 ("wifi: brcmfmac: Add optional lpo clock enable support")
+Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
 ---
- net/ipv6/calipso.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+V1 -> V2 : Add subsystem name in commit header as suggested by Arend
 
-diff --git a/net/ipv6/calipso.c b/net/ipv6/calipso.c
-index dbcea9fee..a8a8736df 100644
---- a/net/ipv6/calipso.c
-+++ b/net/ipv6/calipso.c
-@@ -1072,8 +1072,13 @@ static int calipso_sock_getattr(struct sock *sk,
- 	struct ipv6_opt_hdr *hop;
- 	int opt_len, len, ret_val = -ENOMSG, offset;
- 	unsigned char *opt;
--	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
-+	struct ipv6_pinfo *pinfo = inet6_sk(sk);
-+	struct ipv6_txoptions *txopts;
- 
-+	if (!pinfo)
-+		return -EAFNOSUPPORT;
-+
-+	txopts = txopt_get(pinfo);
- 	if (!txopts || !txopts->hopopt)
- 		goto done;
- 
-@@ -1125,8 +1130,13 @@ static int calipso_sock_setattr(struct sock *sk,
- {
- 	int ret_val;
- 	struct ipv6_opt_hdr *old, *new;
--	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
--
-+	struct ipv6_pinfo *pinfo = inet6_sk(sk);
-+	struct ipv6_txoptions *txopts;
-+
-+	if (!pinfo)
-+		return -EAFNOSUPPORT;
-+
-+	txopts = txopt_get(pinfo);
- 	old = NULL;
- 	if (txopts)
- 		old = txopts->hopopt;
-@@ -1153,8 +1163,13 @@ static int calipso_sock_setattr(struct sock *sk,
- static void calipso_sock_delattr(struct sock *sk)
- {
- 	struct ipv6_opt_hdr *new_hop;
--	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
-+	struct ipv6_pinfo *pinfo = inet6_sk(sk);
-+	struct ipv6_txoptions *txopts;
- 
-+	if (!pinfo)
-+		return;
-+
-+	txopts = txopt_get(pinfo);
- 	if (!txopts || !txopts->hopopt)
- 		goto done;
- 
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index cfcf01eb0daa..f26e4679e4ff 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -561,8 +561,10 @@ struct brcmf_mp_device *brcmf_get_module_param(struct device *dev,
+ 	if (!found) {
+ 		/* No platform data for this device, try OF and DMI data */
+ 		brcmf_dmi_probe(settings, chip, chiprev);
+-		if (brcmf_of_probe(dev, bus_type, settings) == -EPROBE_DEFER)
++		if (brcmf_of_probe(dev, bus_type, settings) == -EPROBE_DEFER) {
++			kfree(settings);
+ 			return ERR_PTR(-EPROBE_DEFER);
++		}
+ 		brcmf_acpi_probe(dev, bus_type, settings);
+ 	}
+ 	return settings;
 -- 
-mowenroot@163.com
+2.47.2
 
