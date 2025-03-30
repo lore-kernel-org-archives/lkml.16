@@ -1,46 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF85C4A05;
-	Sun, 30 Mar 2025 11:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CC34A05;
+	Sun, 30 Mar 2025 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743333419; cv=none; b=Zh2EpVe8mG3VpbjCESuy6PpMrwQhS2bqPjL5p5lXXYeo9B9ZPpaOEY5a1nBI08uaUKM0mjAH6bH5zQVyL5LW8LP49s3q336GzZMnKKV1bMxDLG2pUxneKbiPsipPIN80NTZoJcD8br1Xkba4McYLTlNqKGhIlzRTeDJjBRjgfdQ=
+	t=1743333700; cv=none; b=gjiGYHZ2g/z/RyioJXUfUuLnJwif14xVLgXZRaw/La/pOW1i10Xw9S1Z8QxvESWC6WM7HmzcMianNRegwkL61BeybuTOVLhRNVhvtcDnawfJE6vsxmS/tcMoIYVbqVl8W213Idq9wf71wvxCHxFfzr01Bo1sQfARw3SYmBHPrDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743333419; c=relaxed/simple;
-	bh=bTzXpKprA2KMypybMT7l/o4/hn/A7pY8SKGCCVw2Oes=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JukzJFSBjRhmBPxYNniyQIqf1mbas+si9BXwcrVev1hcal2QfdOVNHTimLMJzS7YePs1GdDIMExFPtlUtrjxw47EXDiE8GyQ/ymsp+qQXUgfyKe5bAlnqTmSFzCGypD43KI3+ytvPQ7HLddoyukNVGLK0JQrawSzSTlkR8CsQ+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ld6/Hdu7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743333700; c=relaxed/simple;
+	bh=aE1PF5WLy33Y8t4F9B7ciZ8sDuqyDOI9Xc97DhOEnz0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tqKQyaGeg//F5feiEr6sxesdQMMS6NBnch7Uxaqf+JM9YGwV8shF/54jwNQn0XDeJRz2lPWSMQfe8iJ/jorEfLTGIP/cescKPs+zjb/vy+e6lsg/AyO2vlY+LQpIACJmFxxKQyntEqWlxlZQhdfCnuE2AmtZv279s3wqPDmoyII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFC9yGs9; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ld6/Hdu7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826D1C4CEDD;
-	Sun, 30 Mar 2025 11:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743333419;
-	bh=bTzXpKprA2KMypybMT7l/o4/hn/A7pY8SKGCCVw2Oes=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ld6/Hdu7glJQ/4jJ8525vkS46srn/5xoTzoUTe59aGH42X/8RuGAEM+HjJN41bXwv
-	 bYNYcwW0slK5ouHNHGgjtTwfhkR9GrTCPptjOLIUWaa6d6i2nk/UGdCc6pF8sEPaes
-	 7pm39Q+kKyLSEBG9zP2+EIgWe0pqu8vaSuxffGy2BcMdZLMKUfNX8TzzxNgM630IBX
-	 jrEAxyfDpjJ1kIXzoYUcqTrKdDa0A3BO7+PpX4uBfs3cbz/T+YMWewPJQ+/CvvPw8M
-	 Ej5JB+9Bm8patk2Tx5Qh3nbH23W2p4ItnsgbNGFUFtERiJszRHP6gV810ftflK9I7F
-	 0NGzixSJUqgZA==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: [RFC PATCH v2] KEYS: Add a list for unreferenced keys
-Date: Sun, 30 Mar 2025 14:16:49 +0300
-Message-Id: <20250330111649.13547-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFC9yGs9"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22928d629faso33900895ad.3;
+        Sun, 30 Mar 2025 04:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743333698; x=1743938498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iMZHL0UOoWagu8ugPnApvJFimUNmRJzmGaDhx8HHglA=;
+        b=PFC9yGs96SF1qlNwVcNWtIbHJukIpKi2JCDa6Ly3PZbfc9MxeGny8sdKuZQzv/bBC7
+         vrPeG2SwBjlMEYMNXbqCiKhYe7g1I4bH6fSvCAoz8gmI8v6CHTCtW04MPA/hpK7muTnL
+         cK43Tq2PvRga7jZpUgr97NyHia0frgUTyeckzTupCcCgncZ0xSRwHFbfM23pGxXiMnPA
+         cBxTjXL1A2u+IDSuyBETS6HlqbnVvLiPwxCiANZW08dOM+8iL54M0U1hQpVDqJ3ispjS
+         SZJVOdvFP27nDLWTCp/JX/z704nGyN7BnjBnINCeHf5vB4+9JbXP7aGz1U4AxOq29iNF
+         EeTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743333698; x=1743938498;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iMZHL0UOoWagu8ugPnApvJFimUNmRJzmGaDhx8HHglA=;
+        b=g8wmYQf5tMSC3/yXTKTxss5Hf6ZpwmW/Ds7v+u4gZ47jpLFInBtloGsae7wVxDkUXF
+         XrdNUae5j45GUTyNjFHdsdeHEYn4Plng7bmSsaBPD9kliC2jQX7q1jn9/+vDG3ZV1l9k
+         AFZs1IAnq6Uskih53VAGRT5Sg2AUyun5qGUnXTsWU6YS4Kv86A+UtAtGmSu6re40uXnV
+         JQpjHabi4fBxUuv1Uj8bY3SEqPIjhNh/u3gAeZih0456FZFyoLxStkrOdZiXJ5370JqY
+         0Sot/boZ29RMGiNbuTvdswbRIeqMOX0eJ9iStxtIpml+hz83tB25of7sS/5xzazo8OXY
+         gRDw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7q1NUvNa/fonmH95SE4OByPhmeEaE8+oulL+KFWpGH31CvQX43NgIw8isqq9cbNEeW2oUS6SyoST96jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz62k5l13d/NAojOP+0wY0Qb3aguoFMojheB6vXw44qZdnnW1i7
+	7gwR06NNi25Ex8qONPZ0DVSg+cpRP590WLHTJkSK5KkkDj7mC7Gq
+X-Gm-Gg: ASbGnctbb1oWy/eqVXdA7xGWYW0F9Pri5x0VX+ad3y7FHMDl6ZaPfmgzn98yJMhS/eE
+	GtNvJA2i9x7NFg6CS7NlcdSIEPfGRK/D9hO7YgyzEUO8w1iLjlTnWRZBi7rbaK20lJwCEjsEwa+
+	wJZdYJRDD6yU0iijOACT1HKBFhUIDw2PEKbqXlr/aPyMphd1XZKgKDZi8b0ooH2TcBVR+sFyNnw
+	j0xX84iSkPsUpToICvRt0qhEUWOEYtMl+dWpno5/4VLcYEIVHmhYppms2CwEgsX2X1VEFFzYxdC
+	7TbBsHkm2XKgmRoxYKQckgQgyx9XzmsGCFensQ9AFe7DIjXT/8AoJWV8ndfCdPW1oJJ2kAgztRj
+	ow7jhlW+fvQF2fGuYBM/Y3FOUwHGOizNi84mGdZbE2Q==
+X-Google-Smtp-Source: AGHT+IH99+PhWGohVfsr72uKeMhi0Xw9rhOjQI/S3ZcNcnEaPoC4XzXMs6Rq7hlk5w+0eNCUsKccYw==
+X-Received: by 2002:a05:6a00:194a:b0:736:6ac4:d1ff with SMTP id d2e1a72fcca58-7398032c2damr8985734b3a.3.1743333698173;
+        Sun, 30 Mar 2025 04:21:38 -0700 (PDT)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deefe4sm4997845b3a.30.2025.03.30.04.21.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 04:21:37 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v3 2/2] serial: sifive: Switch to nbcon console
+Date: Sun, 30 Mar 2025 20:21:09 +0900
+Message-Id: <20250330112109.393526-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250330110957.392460-1-ryotkkr98@gmail.com>
+References: <20250330110957.392460-1-ryotkkr98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,138 +89,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add an isolated list for unreferenced keys. This splits key deletion as
-separate phase, after the key reaper. This makes the whole process more
-rigid, as these two distinct tasks don't intervene each other.
+Add the necessary callbacks(write_atomic, write_thread, device_lock
+and device_unlock) and CON_NBCON flag to switch the sifive console
+driver to perform as nbcon console.
 
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v2:
-- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
-  function.
----
- include/linux/key.h      |  1 -
- security/keys/gc.c       | 27 +++++++--------------------
- security/keys/internal.h |  1 +
- security/keys/key.c      |  7 +++++--
- 4 files changed, 13 insertions(+), 23 deletions(-)
+Both ->write_atomic() and ->write_thread() will check for console
+ownership whenever they are accessing registers.
 
-diff --git a/include/linux/key.h b/include/linux/key.h
-index ba05de8579ec..074dca3222b9 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -236,7 +236,6 @@ struct key {
- #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
- #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
- #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
--#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
- 
- 	/* the key type and key description string
- 	 * - the desc is used to match a key against search criteria
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index f27223ea4578..ffd456b6967d 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -130,9 +130,9 @@ void key_gc_keytype(struct key_type *ktype)
- }
+The ->device_lock()/unlock() will provide the additional serilization
+necessary for ->write_thread() which is called from dedicated printing
+thread.
+
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
+---
+ drivers/tty/serial/sifive.c | 87 +++++++++++++++++++++++++++++++------
+ 1 file changed, 74 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 054a8e630..37d5820af 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -151,6 +151,7 @@ struct sifive_serial_port {
+ 	unsigned long		baud_rate;
+ 	struct clk		*clk;
+ 	struct notifier_block	clk_notifier;
++	bool			console_line_ended;
+ };
  
  /*
-- * Garbage collect a list of unreferenced, detached keys
-+ * Takes ownership of the given list, and deinitializes and destroys the keys.
-  */
--static noinline void key_gc_unused_keys(struct list_head *keys)
-+static noinline void key_gc_graveyard(struct list_head *keys)
- {
- 	while (!list_empty(keys)) {
- 		struct key *key =
-@@ -218,11 +218,6 @@ static void key_garbage_collector(struct work_struct *work)
- 		key = rb_entry(cursor, struct key, serial_node);
- 		cursor = rb_next(cursor);
+@@ -785,33 +786,88 @@ static void sifive_serial_console_putchar(struct uart_port *port, unsigned char
  
--		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
--			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
--			goto found_unreferenced_key;
--		}
--
- 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
- 			if (key->type == key_gc_dead_keytype) {
- 				gc_state |= KEY_GC_FOUND_DEAD_KEY;
-@@ -286,6 +281,10 @@ static void key_garbage_collector(struct work_struct *work)
- 		key_schedule_gc(new_timer);
- 	}
- 
-+	spin_lock(&key_serial_lock);
-+	list_splice_init(&key_graveyard, &graveyard);
-+	spin_unlock(&key_serial_lock);
+ 	__ssp_wait_for_xmitr(ssp);
+ 	__ssp_transmit_char(ssp, ch);
 +
- 	if (unlikely(gc_state & KEY_GC_REAPING_DEAD_2) ||
- 	    !list_empty(&graveyard)) {
- 		/* Make sure that all pending keyring payload destructions are
-@@ -299,7 +298,7 @@ static void key_garbage_collector(struct work_struct *work)
++	ssp->console_line_ended = (ch == '\n');
++}
++
++static void sifive_serial_device_lock(struct console *co, unsigned long *flags)
++{
++	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
++
++	return __uart_port_lock_irqsave(up, flags);
++}
++
++static void sifive_serial_device_unlock(struct console *co, unsigned long flags)
++{
++	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
++
++	return __uart_port_unlock_irqrestore(up, flags);
+ }
  
- 	if (!list_empty(&graveyard)) {
- 		kdebug("gc keys");
--		key_gc_unused_keys(&graveyard);
-+		key_gc_graveyard(&graveyard);
- 	}
+-static void sifive_serial_console_write(struct console *co, const char *s,
+-					unsigned int count)
++static void sifive_serial_console_write_atomic(struct console *co,
++					       struct nbcon_write_context *wctxt)
+ {
+ 	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
+-	unsigned long flags;
++	struct uart_port *port = &ssp->port;
+ 	unsigned int ier;
+-	int locked = 1;
  
- 	if (unlikely(gc_state & (KEY_GC_REAPING_DEAD_1 |
-@@ -328,18 +327,6 @@ static void key_garbage_collector(struct work_struct *work)
- 	kleave(" [end %x]", gc_state);
- 	return;
+ 	if (!ssp)
+ 		return;
  
--	/* We found an unreferenced key - once we've removed it from the tree,
--	 * we can safely drop the lock.
--	 */
--found_unreferenced_key:
--	kdebug("unrefd key %d", key->serial);
--	rb_erase(&key->serial_node, &key_serial_tree);
--	spin_unlock(&key_serial_lock);
--
--	list_add_tail(&key->graveyard_link, &graveyard);
--	gc_state |= KEY_GC_REAP_AGAIN;
--	goto maybe_resched;
--
- 	/* We found a restricted keyring and need to update the restriction if
- 	 * it is associated with the dead key type.
- 	 */
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 2cffa6dc8255..c1b6f0b5817c 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -66,6 +66,7 @@ struct key_user {
- extern struct rb_root	key_user_tree;
- extern spinlock_t	key_user_lock;
- extern struct key_user	root_key_user;
-+extern struct list_head key_graveyard;
+-	if (oops_in_progress)
+-		locked = uart_port_trylock_irqsave(&ssp->port, &flags);
+-	else
+-		uart_port_lock_irqsave(&ssp->port, &flags);
++	if (!nbcon_enter_unsafe(wctxt))
++		return;
  
- extern struct key_user *key_user_lookup(kuid_t uid);
- extern void key_user_put(struct key_user *user);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..b34b4cba6ce7 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -22,6 +22,7 @@ DEFINE_SPINLOCK(key_serial_lock);
+ 	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
+ 	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
  
- struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
- DEFINE_SPINLOCK(key_user_lock);
-+LIST_HEAD(key_graveyard);
+-	uart_console_write(&ssp->port, s, count, sifive_serial_console_putchar);
++	if (!ssp->console_line_ended)
++		uart_console_write(port, "\n", 1, sifive_serial_console_putchar);
++	uart_console_write(port, wctxt->outbuf, wctxt->len,
++			   sifive_serial_console_putchar);
  
- unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
- unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
-@@ -658,8 +659,10 @@ void key_put(struct key *key)
- 				key->user->qnbytes -= key->quotalen;
- 				spin_unlock_irqrestore(&key->user->lock, flags);
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+			spin_lock(&key_serial_lock);
-+			rb_erase(&key->serial_node, &key_serial_tree);
-+			list_add_tail(&key->graveyard_link, &key_graveyard);
-+			spin_unlock(&key_serial_lock);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
+ 	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
+ 
+-	if (locked)
+-		uart_port_unlock_irqrestore(&ssp->port, flags);
++	nbcon_exit_unsafe(wctxt);
++}
++
++static void sifive_serial_console_write_thread(struct console *co,
++					       struct nbcon_write_context *wctxt)
++{
++	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
++	struct uart_port *port = &ssp->port;
++	unsigned int ier;
++
++	if (!ssp)
++		return;
++
++	if (!nbcon_enter_unsafe(wctxt))
++		return;
++
++	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
++	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
++
++	if (nbcon_exit_unsafe(wctxt)) {
++		int len = READ_ONCE(wctxt->len);
++		int i;
++
++		for (i = 0; i < len; i++) {
++			if (!nbcon_enter_unsafe(wctxt))
++				break;
++
++			uart_console_write(port, wctxt->outbuf + i, 1,
++					   sifive_serial_console_putchar);
++
++			if (!nbcon_exit_unsafe(wctxt))
++				break;
++		}
++	}
++
++	while (!nbcon_enter_unsafe(wctxt))
++		nbcon_reacquire_nobuf(wctxt);
++
++	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
++
++	nbcon_exit_unsafe(wctxt);
+ }
+ 
+ static int sifive_serial_console_setup(struct console *co, char *options)
+@@ -829,6 +885,8 @@ static int sifive_serial_console_setup(struct console *co, char *options)
+ 	if (!ssp)
+ 		return -ENODEV;
+ 
++	ssp->console_line_ended = true;
++
+ 	if (options)
+ 		uart_parse_options(options, &baud, &parity, &bits, &flow);
+ 
+@@ -839,10 +897,13 @@ static struct uart_driver sifive_serial_uart_driver;
+ 
+ static struct console sifive_serial_console = {
+ 	.name		= SIFIVE_TTY_PREFIX,
+-	.write		= sifive_serial_console_write,
++	.write_atomic	= sifive_serial_console_write_atomic,
++	.write_thread	= sifive_serial_console_write_thread,
++	.device_lock	= sifive_serial_device_lock,
++	.device_unlock	= sifive_serial_device_unlock,
+ 	.device		= uart_console_device,
+ 	.setup		= sifive_serial_console_setup,
+-	.flags		= CON_PRINTBUFFER,
++	.flags		= CON_PRINTBUFFER | CON_NBCON,
+ 	.index		= -1,
+ 	.data		= &sifive_serial_uart_driver,
+ };
 -- 
-2.39.5
+2.34.1
 
