@@ -1,100 +1,68 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8AB155A25;
-	Sun, 30 Mar 2025 11:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F8D149C55;
+	Sun, 30 Mar 2025 11:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743332702; cv=none; b=IJSJ7sJfTyND7Dbo0isS+wYukyfFM6d06btbrseE9WhVuxXA8R5A5vMQCFN0uwGwOiEMipHht1SMHkNQJjxZaJkR0zsWLfPRy/pnepmb+PcBaOv7R3ToXMtDRPvqCl9C6MK72xJ65Ly6hkjyT19NtJov29WYHfASqBZ5yE+vIyQ=
+	t=1743332977; cv=none; b=XY+vOiHL9U7nicQigDq56Z61Bfd3YMvSymBWMCbAFtscN/PP9bLynwD3uD0xL/p3tYb4MjLiHb1yvjHi9DU+BxgWqeSkFl3oy/yFp4Rif3aGGbqqA1rhiNUxujNPjpM/D+v8+c42dyxyE/N5VTrxeVXE5lSECPTDSkzQfHELmfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743332702; c=relaxed/simple;
-	bh=pfNNxAdTq6eb1LHw7nhPWiLqqGrsqhtTtoSGYECEcEg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=D0ywTIlc0v2+4J3CYkxH4jXHBksYbimuFVHAVImEhdmF+wMorJJaYcFcP7HfStbIEmxOrFUFQJQMxx3TtA39lxzPopybWT1nctECp7rx6lY285JpU+D0iOzJZWnK7La/mlRvIMm9ZF04Sjl2pzl1Y/PaIPPQ1z1I9C7a7F2VMgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=i+au7s5f; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743332977; c=relaxed/simple;
+	bh=6L25GE0MjKdrLEZF3H7DMdT7li1y4IAdnXKXHnFok6Q=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=rx3mYk0wuHX5fublGGsbPj8cPudhXJjRbi+UDc5bJOgfLwY2QlSfBxrDIJ6ppz2iOBUztwPCS43mxEv7Th+msMqa3jHSljnZ7eu+uKGLdspYYtfWJotpNR9e1O3LZIZIjOXFl27cENFtSB09T7BfqAvqDn8OhznsfFyc5bzXpd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HnKcGhCF; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="i+au7s5f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743332660; x=1743937460; i=markus.elfring@web.de;
-	bh=7XNR047n0tXM8NmFwSJtrXlOT11ohyoE+m+0m0SvfAQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=i+au7s5fEodaGPXUL0fhpGDPzMV4f56PQ5wU3WXtw/p+vagplHY9Em3B8szdU5ka
-	 BiDaVCj3c9/ywSK9/KoSgCipbL8hwFj8+Pu3vaugwCZJ5q9UmrzoPHo+ZbjzBddrz
-	 I2apm6XMSJINtioCwVwpQP+LKbEHiENGABZek3BXnS4lgGF68JbRFzAbqDK+Vt7wt
-	 cOX1lc/qyNk1OT+2l3bWaUES1692Kp4sp/ozQLEv/b34Z+TFrBTh3UOyuvyHe6mJc
-	 IfK5KKD1sRRliqFL6F3yFCjzsavWcMf4sck9ktWtxCkX5kNuVVgJWeQzsBriEu4pt
-	 CGVVxt4AQBU7A6/A5Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MtPrY-1t7iDC0hwM-0163PR; Sun, 30
- Mar 2025 13:04:20 +0200
-Message-ID: <aaa4ce64-db4a-49b7-8725-4514c0a52e0b@web.de>
-Date: Sun, 30 Mar 2025 13:04:17 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HnKcGhCF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Mime-Version:Message-ID:
+	Content-Type; bh=6L25GE0MjKdrLEZF3H7DMdT7li1y4IAdnXKXHnFok6Q=;
+	b=HnKcGhCFJtTDkm2L0lQ/GbV47VtQscqkRGp5TYmX852gj/jrQyi9PTqbXEqs8f
+	0VnkKoB98G5EvUYgGpJVufH5aOiwk9fHGj2K/W/fsIe767asp/Y/y1r6WSxYwhaw
+	iPLPhUgdYbSgiAvs1gM2qGisv7myM8UmmGHOBGAIlbPB8=
+Received: from WIN-S4QB3VCT165 (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgAn8v9UJulnZlqlBQ--.26173S2;
+	Sun, 30 Mar 2025 19:09:10 +0800 (CST)
+Date: Sun, 30 Mar 2025 19:09:10 +0800
+From: "mowenroot@163.com" <mowenroot@163.com>
+To: "Paul Moore" <paul@paul-moore.com>, 
+	kuba <kuba@kernel.org>
+Cc: 1985755126 <1985755126@qq.com>, 
+	netdev <netdev@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] netlabel: Fix NULL pointer exception caused by CALIPSO on IPv4 sockets
+References: <20250326074355.24016-1-mowenroot@163.com>, 
+	<CAHC9VhRUq0yjGLhGf=GstDb8h5uC_Hh8W9zXkJRMXAgbNXQTZA@mail.gmail.com>, 
+	<20250328050242.7bec73be@kernel.org>, 
+	<CAHC9VhRvrOCqBT-2xRF5zrkeDN3EvShUggOF=Uh47TXFc5Uu1w@mail.gmail.com>
+X-Priority: 3
+X-GUID: FD9EE270-3FB3-4D7E-A082-8AE943683651
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.25.331[cn]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Abdun Nihaal <abdun.nihaal@gmail.com>, linux-wireless@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Kalle Valo <kalle.valo@nokia.com>,
- Kalle Valo <kvalo@kernel.org>, "John W. Linville" <linville@tuxdriver.com>,
- Luciano Coelho <luciano.coelho@nokia.com>,
- Luciano Coelho <luciano.coelho@intel.com>,
- Vidhya Govindan <vidhya.govindan@nokia.com>,
- Vidhya Govindan <vidhya.govindan@vvdntech.in>
-References: <20250330093556.22417-1-abdun.nihaal@gmail.com>
-Subject: Re: [PATCH] Fix memory leak in wl1251_tx_work
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250330093556.22417-1-abdun.nihaal@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:7aUbUz4Z3/RYjliKc8o9zNcxEEvOW9Bvrm25RrlUTmRWjgzs7cy
- 9Ye2b7t1K83gbNEgxQjzRTcMmNoaEI5nerVlRSrnsaEnrAdr24S0w5sUlwFjIKPQcZzOeBa
- ugJoS/96YfCnMT/yfTh6D8pl9HY5j92ApY1RKTvTl9DU6GTlhzg7dXV+5FQ6v8M0DcSuJzP
- bpJzFZQYwzqyOX0ZCcQ2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OqojHTPAX3Q=;oJDEECPFHEGzg0csiHSvDiVMMtW
- 7X656/GoucVcmkCQxDSCYokEMr8BE1gsX/t925iSNIQiZRXJbKQLWnSEsE0twsXVVnWHHvppg
- ca2eeA/78cvMpwRl7MM1d/KFe3e+R8Bk8tqT1mTU0nzXeBK0kScbkb+jM557/Jth8AL0n1KXq
- LREDR5mUKpHAqILlfYH8B56heUKDk1tPeMa2ORdE9UdHKMSQvj7DLGe97h0FfrWGMwkRGbBme
- 2rr5FPrdNReJ80fRok9guzYIwAoAaQqFjUmVU5udauVMr38LNzGbLAWCSBAzwDtVvVQ0LtURz
- QF57P8douMLkMp9ZW0xMVHPGPwQeJ9T3clGbEz9sRvIMogrkkJFV+T3mynjJ0c4URBkp6ifpj
- c5jRW8+552TwEuzlRtOam0adc4mCFbniKfUhIeJmxs5T4ElVZZplbvSa9kzrg6m+HtqLOGqz9
- BWbyLZjXzasTttdnFfdb6FlgXVvrpfYQK18bX3Mpfe56puOov2cmvyWSY54UHvWoD+Q44Ax/N
- 5yP2dHPr29ReAfOKdnb0i3CjXSGq+/LV1qlYnybjJQaMqdp7sN+GZufeXRBG+ACBCO2lTer2q
- wj4gZBVIpmpdK0krjZDT0djnRpJoNEYBghE/rlk/qQUO8n9RoIEzMHpBxGdgrWuEtSxgrDlPq
- 9IIEH69UL73eQMJqnNsdFdpFIRVsXxEdwR8v0RT7gLhCOd7L+FLvxMEBaQWGlSesbm6Cg4hnN
- HCiNwVZ2B8Hu8ZGJgv9TZvr7gQYfi4NmYz43i10FqabzUTstdyeta8FMi0oWtOmYbipSVIe3q
- M0GBHZg7rlc6hlDkzek5YCy5pbS6wCcYblHKTFYfH6FNujL8iBF6NOIjIW2PgMglH3C2W9CZV
- JKb41d8XrWVKuTLMQqGrzD1FiRKa0DfZzitaBlfHsPZu2fnZ57SLl6iE3MrOn6E83ARkU50r2
- vu1f9UHwfJnSvfmiS21dxe5BdHcrneY/m99ADizeFLa1r096hZYCMsLoOYi70tLIcXqF349nj
- E4WjeeTG7OAt0ddjg1jWZckSWKq3nMd2uq2jfgGcGAZXlFi9rF4hgzYXY+0koofwoGFS4cxyo
- 3B7mquRqYx35p2m0AZ8A8TxwQ9kSPYSPwh2mDpD+blWhd4EyJ8VQq3jDusuk9itU16xNv7ud8
- smKXVBfEhHxqgoGsUcISGgAo65FG2wJJ/N3oqaT2Oh1WC+G1tpOc2KCojKbFQYmoZg7anyUMs
- miqfjVT4Dyk76yuRBKkHWqoKQt5IJoqAWmdwUVELb/7yStzpg2UVKThqF7ssfSIYeVOpa3/NC
- WmuXIzTClRCSfaGtTOqyCIhogDsYZed+VWFpI7sPvvVd5NGDIjUQ7LKWMQC28li+yqhGnwSL2
- nDKbCriJOjiwK+4z3gefJq6gTI1ZgfyLZ+pX7Q08RLRPBdGn9jGlxzlPzBZc1Joiabam6Owxx
- 9z3KmjJCOTkbOhqrRlj2dM6dS4VePXQ+G9NuuQiJtQNLjjKH0
+Mime-Version: 1.0
+Message-ID: <202503301909090753553@163.com>
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-CM-TRANSID:PigvCgAn8v9UJulnZlqlBQ--.26173S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUF6pPUUUUU
+X-CM-SenderInfo: pprzv0hurr3qqrwthudrp/1tbiEwgglGfpJeIJ+wAAsU
 
-> The skb dequeued from tx_queue is lost when wl1251_ps_elp_wakeup fails
-> with a -ETIMEDOUT error. Fix that by queueing the skb back to tx_queue.
+SGkgUGF1bCwgSmFrdWIsIGFuZCBhbGwgbWFpbnRhaW5lcnMsCgpUaGFua3MgZm9yIHlvdXIgcmV2
+aWV3IGFuZCBzdWdnZXN0aW9ucy4KCkkgaGF2ZSBzdWJtaXR0ZWQgdGhlIHYyIHBhdGNoIGFuZCBt
+YWRlIHRoZSBmb2xsb3dpbmcgaW1wcm92ZW1lbnRzOgoKLSBBZGRlZCBhIGJsYW5rIGxpbmUgYmV0
+d2VlbiBsb2NhbCB2YXJpYWJsZSBkZWNsYXJhdGlvbnMgYW5kIHRoZSBtYWluIGxvZ2ljIGZvciBi
+ZXR0ZXIgcmVhZGFiaWxpdHkuCi0gUmVtb3ZlZCB1bm5lY2Vzc2FyeSBjb21tZW50cyBhcyB0aGUg
+Y29kZSBpcyBzZWxmLWV4cGxhbmF0b3J5LgotIEltcHJvdmVkIHRoZSBjb21taXQgbWVzc2FnZSBh
+bmQgaW5jbHVkZWQgbW9yZSBkZXRhaWxlZCBpbmZvcm1hdGlvbiwgaW5jbHVkaW5nIHRoZSByZXBy
+b2R1Y2VyIHN0ZXBzLgoKTWFueSB0aGFua3MgdG8gUGF1bCBmb3IgeW91ciBjYXJlZnVsIGd1aWRh
+bmNl4oCUeW91IGFyZSBhIGdyZWF0IHRlYWNoZXIuCgpUaGFua3MgYWdhaW4gZm9yIHlvdXIgZmVl
+ZGJhY2shCgpUaGFua3MgYWdhaW4uCiBEZWJpbiBaaHUgJiBCaXRhbyBPdXlhbmcKCi0tCm1vd2Vu
+cm9vdEAxNjMuY29tCg==
 
-* Please reconsider the distribution of email addresses over recipient lists
-  once more.
-
-* A corresponding subsystem specification can usually be helpful here.
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/drivers/net/wireless/ti/wl1251/tx.c?h=next-20250328
-
-* Would you like to append parentheses to any function names?
-
-
-Regards,
-Markus
