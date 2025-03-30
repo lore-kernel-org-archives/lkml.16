@@ -1,115 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63400BE67;
-	Sun, 30 Mar 2025 00:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C4223BE;
+	Sun, 30 Mar 2025 00:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743294425; cv=none; b=TxG4otbOv1PvI5NW3VfZxKoI8eKcoXNZE5NHStATYyDn3U9MYLcj8HL1EnCMtZNqrFxuPToGaBjv+Gi46g/qgc6KIL1bBEjN9tamfiLZPMBY0JgGEIg8/wlEEzJNoSOeZiHucmvlVZbAElNo8hcWiTGPobH/baRyyw3SS8GQfRk=
+	t=1743294698; cv=none; b=AQD1CG4YlMrVm2X7ZVgL/Jx3k2Zda+opqJClGOHio3E5ryT4vbwYNedZX2rLS4nFukf7f6J5M4/qJDgRCq4fwzFoqatARjWAmnAh/GJAYeZdw272uMCs+fjI17Ghk+42q6FMNksp5Vz55ZKu73S5+JTOU7+UDwF3RKkJU/5wxdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743294425; c=relaxed/simple;
-	bh=aiiKdFDmCS0U9MUvBKmwJ6wtLAwgtVEXAZWbVJ4delE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=gFwv/teIznrJ4S9ZbMlf7U08ifmcWC0YcFuvSbJWzSV5RVMR8X1xGOtz7BpCm1jyd6+4Y6qw3God/nYBjXal6M//uzh/usJS355w8Mznd1riqizaPEYG0/ajMVdQPQJbDrkAYAk/lXOfvgsjDzeUlfEQ4kD6Az9n7bkOLz7CYSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdWoEnL7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743294698; c=relaxed/simple;
+	bh=isoKbfAHNzLky7XIAHoTR8T1AwEEoAMUQtj1R54nwQg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bT0FjKcWqIlD4NnLJNPddHn4iOWg0ETdMV0sK7sjjWkRvc+lakxmsVLLydNSHKxrPn9HeSlfb7TW0ZMVSvfKiKaze0RXh7FCpqeF/QaK5sYp+4SMxD0NC2Jty8SpG99f9GKz3/mMjT1h+NyX6iFHvZpqGstTT+77J84RBAY8aMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+xvcGaz; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdWoEnL7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01651C4CEEA;
-	Sun, 30 Mar 2025 00:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743294425;
-	bh=aiiKdFDmCS0U9MUvBKmwJ6wtLAwgtVEXAZWbVJ4delE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=YdWoEnL7t3+G1eeikHnkF20YlYkfES7CxO/Bpxz0+RX6+FLucVZqHc97etVGahclJ
-	 eJ+W+Jp+4QdjpGCfWCZdXf3yUeZqhZIGppdp0x7S3eqKVs+NASYHeoSgfOjLDY3FmK
-	 5F3AYTFi3pF5aBRlHUUcJI+Qlbaf9f8+HPa+XRIqaj7RPJPt13+oRoDeaBPplp09WI
-	 Dg4FsXV/9d0Euzy4vKTH+xz2hiKWu2g1zVKGSYYQwszyk5OrmkWFwlsYIjiC2whRbY
-	 NBYRMGWh+cIWrmkGZ306mabVDmnSlu0mSHOrfxh4tOVLYGNtdH36Zo9wCP9wFIJ/If
-	 YQCFHairp9IOg==
-Date: Sat, 29 Mar 2025 19:27:04 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+xvcGaz"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301c4850194so4556179a91.2;
+        Sat, 29 Mar 2025 17:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743294696; x=1743899496; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T8sX9JQgcjDM5B2WbHLYXAKpNL5V5b9vaaWmdqn5sl8=;
+        b=a+xvcGazK/qQHOynMH9pr2wQGavkokJLpZJwem+4CldMIqNW0exGKvsseqaazEIcws
+         mbVKF9EOc9gwMfnfx6u13TUMe+URunjghguACIDNBritXTHiNYuu8y68WFOvF6SShrtM
+         QpwI2ZyiJrdkdKMRDKibrMFdo2Pg9XSFE1kcJyDUvVdGZBJnwdzsSiEAuRqx0IPRppZY
+         3ML0+MvbxF6Chx+EDrBOXge7fQ1anyorjaH33+zSa5Cs2EUtYzs001KI0Oq2icgZdePN
+         Ov0ZPJMnpe1NzlEwdEv5uHcYugQIvifh5rPDIEqPiBG7ywvufoLp7Ni98Ac3/052pMMQ
+         gL9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743294696; x=1743899496;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T8sX9JQgcjDM5B2WbHLYXAKpNL5V5b9vaaWmdqn5sl8=;
+        b=MlNjRJNKfJd5+0zx+DJUYhcDiipgg0FSm4Xs7ELNAeRns9bv3YlANzdSrFdPidPFmV
+         GvqYjUYvkLgRfcta8B06YvwFuPL/wlxT+0KNGs2s1m9NUyuZCitC3x3tbFfxRezZyfHp
+         qS97pZYw3NmT8V2r+BQtv/eKtHqGTC7ED2WFYN3YUOEOlovSEmTS/ko34VVnJUZTGDEl
+         3cpQfeLyLSuy5C1sI+1YkWkxjw8vKRL1j1E/U4s6HBNfSrovWn8PKwKKuPhjIBdISVHT
+         NYv5eCYVpLQiB97PIre5zLeFfw1eP6DPkuAh9jrR6mo5nzjxtnkmBLiPy8WNSNYUpv2N
+         kHSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwdfIhiXuiG22rEzrP14SRXtD8eovreJ9iBBHTQwuw1WwRt9e5hOddJTGTUkamclpkPIGP0BgA4/gqKqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Cu5RMWFxxMU/I4OWkHb6WEXFX6dK0HGjdSXoT17zehk/2kNa
+	D0cJaO5ffr/MlyM0it1vchr8k9UReMbvO/RIS9cXS5AgNoTLH2ES
+X-Gm-Gg: ASbGnctl9JH1jNFFwmEf7mcaGuhGg7GHQaId12dl9mg3W2LvLnJMDP4EHpqqeP+T0pg
+	PLUBwjHoMMc3QnD8SD2ktxdtIY3LEhGlobH0r+WIc9hm7+y2Aitrx6sM2KtkR0lYz9p4S+MSfFN
+	DypSOosKWkkt9ivjENcRTW+yFhYizSz5TRK8QT+tQyslBOUO3OY8dPl1dSitDyGhUDnhj0R8I3c
+	XT4cL8/Cle54s5lQgmTeyF59yxVSiF8k/ByKK64vUwAYZLPzMVe6I9lZZwRMHl34QRkmeNSxSY0
+	C0iTaR5nUlNEkORUZb4QjHgOyaljqcwYvB4uuLjvnFeYt3GacNBTrvebNK3rqJLU6nYhYRdWS1l
+	q14Ksqw5DnD/+1UUT+VrcNht85vnxle4=
+X-Google-Smtp-Source: AGHT+IFjOYlNIkklCiPR6SNYbKSePzshOfqmakMpfEqa1st5hBR7yRveiAYE76V57DWiH0YclLcTpQ==
+X-Received: by 2002:a17:90b:56c8:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-30531e89c4cmr8376057a91.0.1743294695638;
+        Sat, 29 Mar 2025 17:31:35 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dfd497csm7466308a91.5.2025.03.29.17.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 17:31:35 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v2 0/2] serial: sifive: Convert sifive console to nbcon
+Date: Sun, 30 Mar 2025 09:30:58 +0900
+Message-Id: <20250330003058.386447-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- Sascha Hauer <s.hauer@pengutronix.de>, Benjamin Hahn <b.hahn@phytec.de>, 
- linux-kernel@vger.kernel.org, Teresa Remmet <t.remmet@phytec.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, upstream@lists.phytec.de, 
- Yashwanth Varakala <y.varakala@phytec.de>, Shawn Guo <shawnguo@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Fabio Estevam <festevam@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Jan Remmet <j.remmet@phytec.de>
-To: Yannic Moog <y.moog@phytec.de>
-In-Reply-To: <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-0-28324c7f81fa@phytec.de>
-References: <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-0-28324c7f81fa@phytec.de>
-Message-Id: <174329418273.2439899.17086234453417036380.robh@kernel.org>
-Subject: Re: [PATCH 0/3] Add new imx imx8mp-libra-rdk-fpsc SBC
+Content-Transfer-Encoding: 8bit
 
+Hi!
 
-On Fri, 28 Mar 2025 14:04:36 +0100, Yannic Moog wrote:
-> The Libra i.MX 8M Plus is a SBC that consists of the Libra base board
-> and the phyCORE i.MX 8M Plus FPSC SoM.
-> This series adds its binding and device trees.
-> In addition add an overlay for an LVDS display that may optionally be
-> connected to the Libra board.
-> 
-> ---
-> Yannic Moog (3):
->       dt-bindings: add imx8mp-libra-rdk-fpsc
->       arm64: dts: add imx8mp-libra-rdk-fpsc board
->       arm64: dts: add imx8mp-libra-rdk-fpsc LVDS panel overlay
-> 
->  Documentation/devicetree/bindings/arm/fsl.yaml     |   7 +
->  arch/arm64/boot/dts/freescale/Makefile             |   3 +
->  .../imx8mp-libra-rdk-fpsc-lvds-etml1010g3dra.dtso  |  44 ++
->  .../boot/dts/freescale/imx8mp-libra-rdk-fpsc.dts   | 291 ++++++++
->  .../boot/dts/freescale/imx8mp-phycore-fpsc.dtsi    | 796 +++++++++++++++++++++
->  5 files changed, 1141 insertions(+)
-> ---
-> base-commit: 90453dc4dee29b96b9162895f45776bc25526e07
-> change-id: 20241210-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-c273025682f2
-> 
-> Best regards,
-> --
-> Yannic Moog <y.moog@phytec.de>
-> 
-> 
-> 
+This series convert sifive console to nbcon.
 
+The first patch fixes the issue which was pointed out by John [0] 
+that the driver has been accessing SIFIVE_SERIAL_IE_OFFS register 
+on its ->startup() and ->shutdown() without port lock synchronization 
+against ->write().
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+The fix on the first patch still applies to the second patch which 
+converts the console to nbcon as ->write_thread() holds port lock
+and ->write_atomic() checks for the console ownership.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+Sincerely,
+Ryo Takakura
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+[0] https://lore.kernel.org/lkml/84sen2fo4b.fsf@jogness.linutronix.de/
 
-  pip3 install dtschema --upgrade
+---
 
+Changes since v1:
+[1] https://lore.kernel.org/lkml/20250323060603.388621-1-ryotkkr98@gmail.com/
 
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 90453dc4dee29b96b9162895f45776bc25526e07
+- Thank you John for the feedback!
+- Add a patch for synchronizing startup()/shutdown() vs write(). 
+- Add <Reviewed-by> by John.
 
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
+---
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-0-28324c7f81fa@phytec.de:
+Ryo Takakura (2):
+  serial: sifive: lock port in startup()/shutdown() callbacks
+  serial: sifive: Switch to nbcon console
 
-arch/arm64/boot/dts/freescale/imx8mp-libra-rdk-fpsc.dtb: clock-controller@30e20000: clocks: [[2, 284], [2, 123], [2, 124], [2, 125], [2, 127], [2, 128], [2, 182], [2, 321]] is too long
-	from schema $id: http://devicetree.org/schemas/clock/imx8mp-audiomix.yaml#
-arch/arm64/boot/dts/freescale/imx8mp-libra-rdk-fpsc.dtb: clock-controller@30e20000: clock-names: ['ahb', 'sai1', 'sai2', 'sai3', 'sai5', 'sai6', 'sai7', 'axi'] is too long
-	from schema $id: http://devicetree.org/schemas/clock/imx8mp-audiomix.yaml#
+ drivers/tty/serial/sifive.c | 93 +++++++++++++++++++++++++++++++------
+ 1 file changed, 80 insertions(+), 13 deletions(-)
 
-
-
-
+-- 
+2.34.1
 
