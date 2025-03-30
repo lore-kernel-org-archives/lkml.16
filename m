@@ -1,89 +1,108 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47FA1E1022;
-	Sun, 30 Mar 2025 17:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1289935973;
+	Sun, 30 Mar 2025 17:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743354240; cv=none; b=H9kjF4ULwGFSSbEdPPxdywmqVmXC23bbARTo9R9qp9ftZvq1bltNeSbMDOyTAEMyCAn1RbXdSohvFI05R3B11pR8N2JSKrj0L8rI3CxLXW/dEMDU5rvc1yQEwO4qwAoERFQXHzaALVb+X7qIHV6IRmiXtm9cbW8Uu4yHStGV8L8=
+	t=1743354272; cv=none; b=q3/bmXVnOJpUrEscV1VCUnLbok1nu8mPfeOokBiW0RZGM0EOmsnTZKRTW0oK45e4uzfvxB28Ojo6KH1cv3xhIgO13xyIP6UaxgGuDRS5psF9YkxcO+QHivBndCnuCsPZH0h2b8Yj7fdR245Jb8tg8GatMNeUxs7Ee8M+8tgdNjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743354240; c=relaxed/simple;
-	bh=/w190+E2yNUMb/HQLj6HQ64fNAaTeI4WKdIBqNfX5j8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i1EizLohp4l/fXKN1jt+yXALO4WHEE0wD7Afbt3nnOHFKBW9xYryCnanfYIKhVPc4i63/Ebb4wG9b8EXwdBlzPGUnMHN5nZ0bWfBt5LpXtQQjbSQaF/MZxn1Xz3gfEmq7votdAOoewl72RRCYh09XWXdh5QNfJutHAIOJGNC348=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=djwo9TLa; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+	s=arc-20240116; t=1743354272; c=relaxed/simple;
+	bh=43r6bjUcx0YTEMqsvYoJzkSo/VOX3GnZ0DuinvEwGuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oDtWRRK1AZGXd3UbSMAZl9IwUf+RlTl/N5+SXMxAuZEhhw4YijTN+e3E8ejhmN9Ymopv9mU2wRLqETqq8NNdJv/qtiE9Adw79g31fDA3AWM7P8SMs5cOXwTf7fZryF0TE6BsCs/imNfLxUxZ5mlBihmJoX0Ol8zvYlKswcOli3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okHXyUDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="djwo9TLa"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 06BA32FC992;
-	Sun, 30 Mar 2025 19:03:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1743354236; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=qHZQubt93g9flz+cf8eKxXCG1pfT8X6EDn96rb+XNGk=;
-	b=djwo9TLalKWPFeyjbCMXIUYElxqlZR2dYKbX8DHr97Ssgl5G585a9LiPFwg7qZlIAQYrYH
-	dUCTWitaVDKwz9/ZS0yQbggLdCDk1lTzI/7UZhz7N2K6G/qRgOiodxxiwjpW26R16D2ld1
-	ByIalCe8EX2CmpoLCikJjd2L+l+ZtEaBWV+yWaxpp2zNeECOBEcBb2PNV7HcQmZeXmwy16
-	QFVNyQdzlignSG9P7iFgHu2ayuY+RKexc0UOXsueaxp14jVIr+OZVUUNHHDhQYD+h0uVEO
-	ARlY2tionybOr19NbUAN2Hdp/D3J2nWWpc0f6WaOod9RCyv6LSMCHjsLr82CmQ==
-From: Caleb James DeLisle <cjd@cjdns.fr>
-To: linux-mips@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	benjamin.larsson@genexis.eu,
-	linux-mediatek@lists.infradead.org,
-	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v3 10/10] MAINTAINERS: Add entry for newly added EcoNet platform.
-Date: Sun, 30 Mar 2025 17:03:06 +0000
-Message-Id: <20250330170306.2584136-11-cjd@cjdns.fr>
-In-Reply-To: <20250330170306.2584136-1-cjd@cjdns.fr>
-References: <20250330170306.2584136-1-cjd@cjdns.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okHXyUDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFAC0C4CEDD;
+	Sun, 30 Mar 2025 17:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743354271;
+	bh=43r6bjUcx0YTEMqsvYoJzkSo/VOX3GnZ0DuinvEwGuQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=okHXyUDpmKsRWgFeB3wV5Bc+7lpg19jdh3jDfuviISvYSDfbh3c0xza/5dht57nPd
+	 LNPILV24e+ZTsF+mduCuu8NMzuyN3TOvMEDEX7PLBA9OZTqC3CudIY8jZuUCYm5LBP
+	 1MoJfnSe51JAJ4iC4DCawQpMoROzvGXIOJQ0OvrOq0gNCL9AQ9X5Tcdsuw9t6TfAOU
+	 a0f627OJN0qFHQBZ2gkZQYozL61p1EYaUUmGi5NvCuBf7zt0JwGm7vwensW4GaBZDC
+	 IhzWGq6+cXo4Cw3WrbX3I/FRUmFoURB9gO5vpOXPhnC8cMya6vX9IhDrPHW3SEuIwp
+	 XoBSOzEKcXIjg==
+Date: Sun, 30 Mar 2025 18:04:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-iio@vger.kernel.org, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Angelo Dureghello <adureghello@baylibre.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7380: disable offload before using SPI bus
+Message-ID: <20250330180424.0949ebb6@jic23-huawei>
+In-Reply-To: <20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-v1-1-6912ac8c0ae0@baylibre.com>
+References: <20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-v1-1-6912ac8c0ae0@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a MAINTAINERS entry as part of integration of the EcoNet MIPS platform.
+On Thu, 20 Mar 2025 11:21:52 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> Move disabling of the SPI offload before attempting to use the SPI bus
+> to write a register in ad7380_offload_buffer_predisable().
+> 
+> This caused a crash in the spi_engine_irq() interrupt handler due to
+> being in an invalid state.
+> 
+> Fixes: bbeaec81a03e ("iio: ad7380: add support for SPI offload")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+Hmm.  I've cheated a bit and created a temporary branch called
+fixes-togreg-testing that's based on char-misc-next
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efee40ea589f..ed5329762584 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8182,6 +8182,18 @@ W:	https://linuxtv.org
- Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- F:	drivers/media/dvb-frontends/ec100*
- 
-+ECONET MIPS PLATFORM
-+M:	Caleb James DeLisle <cjd@cjdns.fr>
-+L:	linux-mips@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
-+F:	Documentation/devicetree/bindings/mips/econet.yaml
-+F:	Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
-+F:	arch/mips/boot/dts/econet/
-+F:	arch/mips/econet/
-+F:	drivers/clocksource/timer-econet-en751221.c
-+F:	drivers/irqchip/irq-econet-en751221.c
-+
- ECRYPT FILE SYSTEM
- M:	Tyler Hicks <code@tyhicks.com>
- L:	ecryptfs@vger.kernel.org
--- 
-2.39.5
+That will all unwind once Linus (hopefully) takes Greg's pull request
+and I'll rebase on that or rc1.
+
+Anyhow, applied this patch to that magic branch.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/ad7380.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+> index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..a2b41980c942e4cd1575bfe4f3846e297ad5d01d 100644
+> --- a/drivers/iio/adc/ad7380.c
+> +++ b/drivers/iio/adc/ad7380.c
+> @@ -1211,6 +1211,9 @@ static int ad7380_offload_buffer_predisable(struct iio_dev *indio_dev)
+>  	struct ad7380_state *st = iio_priv(indio_dev);
+>  	int ret;
+>  
+> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
+> +	spi_unoptimize_message(&st->offload_msg);
+> +
+>  	if (st->seq) {
+>  		ret = regmap_update_bits(st->regmap,
+>  					 AD7380_REG_ADDR_CONFIG1,
+> @@ -1222,10 +1225,6 @@ static int ad7380_offload_buffer_predisable(struct iio_dev *indio_dev)
+>  		st->seq = false;
+>  	}
+>  
+> -	spi_offload_trigger_disable(st->offload, st->offload_trigger);
+> -
+> -	spi_unoptimize_message(&st->offload_msg);
+> -
+>  	return 0;
+>  }
+>  
+> 
+> ---
+> base-commit: 9f36acefb2621d980734a5bb7d74e0e24e0af166
+> change-id: 20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-a801dcfb9c00
+> 
+> Best regards,
 
