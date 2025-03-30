@@ -1,129 +1,78 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B5B17B418;
-	Sun, 30 Mar 2025 08:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21D418DF6D
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324005; cv=none; b=CQVkSUDTPXuS+uoPCGnqBIUd6YPBLzBnyOlmaKhpCNhGqBQaW94IS/9bSCN3Emr9phCnqFTfJBJAy5A+I5sbw2BIE7b9flENFX6KgOh9djF4nbEPxJuGZ1WvDNYhKV00Gdzl5rO4fH3yqYL1fTMctenfWpvqCV1TtK4348oKjAU=
+	t=1743324022; cv=none; b=ktEIPQsGgs18aaA50G2fW7bBVTcXynvOQadbHDIbyu0FznZvUS6oKgpqeQejwVAk7LwfaOC3bJSRs1yaDlDr9l7g5YwoqgM2qkITWMGO53+IcHg5wa8BvckoHd9n2RWeleuhnD46Uq11KrbqGDiFYa/C2eASU/kfvR0RDEXYFb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324005; c=relaxed/simple;
-	bh=8NFl9Rm+/neaLUUhF6x3kk32vpPnZ0g7mkwNz2mowVM=;
+	s=arc-20240116; t=1743324022; c=relaxed/simple;
+	bh=ca5Lq/0EQ7jPAb3oWTyli15DsYson7jaU3ejVDyRXHw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q+ws7vPVgI51cyPzNUSfzpUWdnrmWQUuU0joh/Y7DAKzqkt8FKgCcTOUVoO+VbV8728zyAkyT6U4iKxP2MFx4c2ZUQZDJGSE7fDLr1+35SID0AvFvxorjtqU8NW0fyICvEQdJpwduVtYSH60+OfdJ7BtvQ1A+hzR9ALdjVe2oZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=RzV0fq7o; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	 To:Cc:Content-Type; b=byX1ktT5enqWBnKKWCHBHGkw3o/7h0jvCiG9sLi+BYGD++DNuwWiKmPMz5ET9yC/TAzdXVf8v1GkUd1hmvh+1z/ShtQBnvsaAg27dlTn9sroNRgnOdEBTeWJpntoTqMuY4DATYI2Hmszg8nw3cSSVdzR8lapLZOi/RDuKjDPzzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKMgljRK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="RzV0fq7o"
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 453832E02C63;
-	Sun, 30 Mar 2025 11:39:51 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1743323991;
-	bh=8NFl9Rm+/neaLUUhF6x3kk32vpPnZ0g7mkwNz2mowVM=;
-	h=Received:From:Subject:To;
-	b=RzV0fq7oT7DUunroLGA9rHPWnECB6Z+U93wO0tgkiseEpH8zkEj5qTujRb166vOI6
-	 cEpdsx25mvwH9aqiRZxtNEWAeLy2NVjYijQShNUf4QC9uHH+f40wovUWBBrOkRkRKM
-	 zgs6fo4t81Z3Odr6KknJjTG1rJWyw+Iy/30/1Fyc=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-307c13298eeso40425401fa.0;
-        Sun, 30 Mar 2025 01:39:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVR9oRApgSafWb3gY26r3pJ/j9BtiM4rb5HqO1hVsudIA9DR507IcjC9cH53xunss1SQ0xU+iEIkXT6GQ==@vger.kernel.org,
- AJvYcCWiJojYEzhlIZFnk/4/feV6x2qYgCvllgdWp4DBd5vKwdcfnT7P5np77WsdqikIjkaw6rG/ghaDBuFueoRb5M5qNmegXg==@vger.kernel.org,
- AJvYcCXw99wky5o3bOcqiarzY2mxqle/kpRrsIRyQ6/xkjpP2eKBJ4fWOeDo2rtjyOnoMrALw7Zj2Jjr8Kdzf3ni@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9FTZ+HLlcrPAbnks3+Lk5zJu9sfhzXdbgS1XP5nWrkqSpTFjV
-	KIP1wX97vKEVnu0k9gMQYiKFTccQRW/8pcU16192i3BJ730Irelnp/yMU2uS85FrfTQQ7REpkM5
-	ODCTGnKaaoyGr7FloQ+1jf5/kQd4=
-X-Google-Smtp-Source: 
- AGHT+IERs4pT/k/49aQC65OzWEWwormi5XQVt1V4Fo2YyTJWPbmDq1/t81uPTRhJx0gJ1zThqnVkJxkNvqPiqIfbNls=
-X-Received: by 2002:a2e:9182:0:b0:30b:f0dd:9096 with SMTP id
- 38308e7fff4ca-30dd409e992mr28942311fa.12.1743323990661; Sun, 30 Mar 2025
- 01:39:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKMgljRK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64CDEC4CEE8
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743324022;
+	bh=ca5Lq/0EQ7jPAb3oWTyli15DsYson7jaU3ejVDyRXHw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XKMgljRKvL4AO1eX36ymWzy3P0jjfHeIfdZu/+uYDZOcsGsTs4KllnR7ZJeShfZIm
+	 ANW61QQWKqt4ACCZkYejxaYxll+SKWaFWkR3PemovCK3m8i56supLX4RIoMhs8nd/b
+	 hU80tK3ApvjKAJyYgt1mNv7RQIOCARD3GOeThIvNFzIBNmFFj6q7YwfkJH7hwtX0+p
+	 OeNu1tgENzJPeb47Cw7QTGgvA84cjW7W+5a8oGuRIx4YX+B+wQlRxc0ktCRHBqyKmu
+	 GAjDiNOG65ynzkbIX2X5c6JlheZVN3YIHiwpTzMr0SmQnUQxcfRNQefQpel+ef3PA4
+	 0GBb0buthwSjQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so619129966b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 01:40:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUatASz9RYhNWUmFT6cQrutSRgt3MpotHbCBSHx9jqjO8lqfz5wG4CPeXqXI86yHEZh3WbNkwb3Cf9IS70=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4+1CL9qgoDngTw/7SXIc7LluiWFYjP8Bv+hWuKM8LcYCWvDB0
+	3v0S8G2rht02002Ddrp3oPw0cYCdKcGQbF8zU8X2m52JXK0KRpIXI2LexNPsWTZZV2zapl1AklW
+	hQD7XKxO9NfJpKMQu9phdR3obapA=
+X-Google-Smtp-Source: AGHT+IEaTL7KP2VLk2bwtDA9C4Ekdb7n8ZwK058Y6N9KwEcNBMb5l8HLNp2UJfs8Vk9cgMj+oA5ubRu6EVYSnxM88Ys=
+X-Received: by 2002:a17:907:a08a:b0:ac3:cff:80f1 with SMTP id
+ a640c23a62f3a-ac738c880d3mr413105666b.54.1743324020941; Sun, 30 Mar 2025
+ 01:40:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-10-lkml@antheas.dev>
- <f04e6a59-cb72-9ca9-2c98-85702b6194fa@linux.intel.com>
- <CAGwozwF8PZczpqOFm3ONDdJTVCgcWOZ8mXrASbmiAXUhQvOhdg@mail.gmail.com>
- <43c4dd17-de34-804f-7080-b287ac4a0cac@linux.intel.com>
- <26s13395-1ro2-37o8-01q5-6r4p09p69174@xreary.bet>
-In-Reply-To: <26s13395-1ro2-37o8-01q5-6r4p09p69174@xreary.bet>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 30 Mar 2025 10:39:38 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwHbZHk_eSe-ZEM6jYM2HC4GxwnUrreZSh=+xJrKquEi9g@mail.gmail.com>
-X-Gm-Features: AQ5f1Jra7sQb-aaz8rgqvtj8FVHUmYutqJvSPeAOe85u6LHamCT55MgFfnENILI
-Message-ID: 
- <CAGwozwHbZHk_eSe-ZEM6jYM2HC4GxwnUrreZSh=+xJrKquEi9g@mail.gmail.com>
-Subject: Re: [PATCH v5 09/11] HID: asus: add basic RGB support
-To: Jiri Kosina <jikos@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>
+References: <CAAhV-H5T3DLFfzPg4Zgzn7JbzqoNZdYn5_F06QNHS230xq-1MA@mail.gmail.com>
+ <tencent_928F84F5CCDFC9B34B7BCACF5CA00FED5006@qq.com>
+In-Reply-To: <tencent_928F84F5CCDFC9B34B7BCACF5CA00FED5006@qq.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 30 Mar 2025 16:40:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4mAHixEZOgoYb3v1ELMW0=xUJwsfmR_DG5G3i7QTo=3A@mail.gmail.com>
+X-Gm-Features: AQ5f1JplMwHWAOKASkzCgYlRsRXZPm7krKQyvbHM_XbTUYWI8r1eDh3a1GeUN_s
+Message-ID: <CAAhV-H4mAHixEZOgoYb3v1ELMW0=xUJwsfmR_DG5G3i7QTo=3A@mail.gmail.com>
+Subject: Re: Re: [PATCH] LoongArch: Kconfig: Fix help text of CMDLINE_EXTEND
+To: =?UTF-8?B?6LCi6Ie06YKmIChYSUUgWmhpYmFuZyk=?= <Yeking@red54.com>
+Cc: guoren@kernel.org, jiaxun.yang@flygoat.com, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174332399157.10109.13157866496455022773@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
 
-On Wed, 26 Mar 2025 at 12:00, Jiri Kosina <jikos@kernel.org> wrote:
+On Sat, Mar 29, 2025 at 5:45=E2=80=AFPM =E8=B0=A2=E8=87=B4=E9=82=A6 (XIE Zh=
+ibang) <Yeking@red54.com> wrote:
 >
-> On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
+> Hi, Huacai,
 >
-> > You don't need to "pause" for the merge window, in some subsystem
-> > there's mandatory pause during merge window but I find that unnecessary=
-.
-> > I know people on pdx86 do review during merge window so no need to wait
-> > when working with patches related to pdx86. Just don't expect patches
-> > get applied during the merge window or right after it (the latter tends=
- to
-> > be the most busiest time of cycle for me) :-).
-> >
-> > It's more about the frequency, how often to send a series which is
-> > relatively large. Large number of versions end up just filling inboxes
-> > (and patchwork's pending patches list) and we don't have time to read t=
-hem
-> > all through so I suggest waiting like 3 days at minimum between version=
-s
-> > when the series is large or complex to give time to go through the seri=
-es.
-> >
-> > This is not a hard rule, so if there are e.g. many significant changes,
-> > feel free to "violate" it in that case.
+> > How about replace "to the built-in command line" with "with the
+> > built-in command line" and keep others unchanged?
+> It seems that the use of the preposition "with" does not conform to the r=
+egular
+> collocation of "append" and may lead to ambiguity.
+> You can consult an LLM such as DeepSeek, Qwen, or ChatGPT.
+OK, I applied but change the title to "LoongArch: Fix help text of
+CMDLINE_EXTEND in Kconfig", thanks.
+
+Huacai
+
 >
-> Exactly. I am unlikely to do much review during the merge window myself,
-> but I'll pick up the patchset and followup once the merge window is over,
-> so feel free to keep discussing and polishing it with me on CC :)
->
-> Thanks,
-
-I think we have reached a good point with this series. We can pick up
-again when you guys are ready.
-
-I will switch gears and look a bit into msi-wmi-platform for the MSI
-Claw with Armin and we can revisit this come rc1.
-
-Let's try to get through it early in 6.16 so that Luke can also do
-what he wants to with the Ally, and let's push the oxpec move as well,
-so I can get those two off my plate.
-
-Antheas
-
-> --
-> Jiri Kosina
-> SUSE Labs
+> Zhibang
 >
