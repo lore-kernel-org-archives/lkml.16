@@ -1,158 +1,116 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0444D10785
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7098F4A;
+	Sun, 30 Mar 2025 18:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743359885; cv=none; b=mZBgwOtAq3Yc3HeSIqmeO4f0VXII9YjorPErmUQK/ne9Gyp8hX5NWazL5zg2pSdet0JT6R4lZYmFID3Nzk7FjfnhpIKphK+Dq+C58BZKC6VPzD8e+09H8GTy20ukbXJEIFUYPt4TXH/ENDLn2W2VlbKTeykRqccBKtgpjqWiV6M=
+	t=1743360225; cv=none; b=QctXQ3RI1nXaFUC6wONqpHNdf/AWudFI7isy7uYq5f6kWJUlveb7sV/OXL/emCgm9oyiXfOgNM5pAHonn8X5RX0fEQBxsVhUGH3gnTdOSpA8uxAxu3PUAjSB3oYTeTXFVNvwPWBBWD+/SW40YKVpne0NZ6jl5bqWvhVANlLxoYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743359885; c=relaxed/simple;
-	bh=pkY4c8FHlxzdFNGqG+eb9HZyAmPvfA00bP0RLScqCb8=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=oRbKMhuwk0KJlKZ2Lm5ZdoIeGf7RRnhj9QSFZOYd5DWlfoQTPh7Sm2gqtzjbTWHmo3RsqqZochKGBtphaMZs6bLcRTDXLn+vGwRxZbqvsn6mqmmjr5bcapczUE4Y3ZE0IHbm+RM8WOBb2UYR2WTuQCUigHNo0i1r5AxICGViybg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=LGpCoIzb; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743360225; c=relaxed/simple;
+	bh=yTHIj6pSnTi8mksj3ewma2KmkG/z7OTrATTw79miqqs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=qMrRTvpLP5/y/sjwFUVeamgkbo1qIcs4+DwA74fbRhPaZ1XMpEFIlWNaqHLrD2dYfYl9Hkfa88BkYSZH7zs0MMAu8nSHo2HlB8ulbtCXcyCt3i/RfFPhlaj79MVHJqlYyixCmkB1OjZYgtPBavIPNk/fU4UveE6unMM314e7lB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFoDoMQI; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="LGpCoIzb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFoDoMQI"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3015001f862so4791706a91.3;
+        Sun, 30 Mar 2025 11:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=PxIQWxjk0JSpOwy5cDVIhfRPf0gWcG0YhaYFdxmbneo=;
-  b=LGpCoIzb7carg5oYs4IP+88YEyngeq/Syt/lqU+c/Vuba/PYx0zV58jx
-   IWZ4GQy7Nk/LOQFOlcPsrIR/jtVY+jKzfpk4CMa6BDVWJPQIU0kLMjpEB
-   vftdjUtZR8ICqLpkoy/VTXu8A5cA8VEN8YSMohZ9UlDFBEgNdroe15DO6
-   Y=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.14,289,1736809200"; 
-   d="scan'208";a="112970248"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2025 20:38:01 +0200
-Date: Sun, 30 Mar 2025 20:37:59 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Gabriele Monaco <gmonaco@redhat.com>
-cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
-    linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
-Subject: kernel/trace/rv/rv.c:812:2-8: preceding lock on line 790 (fwd)
-Message-ID: <alpine.DEB.2.22.394.2503302037080.23941@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        d=gmail.com; s=20230601; t=1743360224; x=1743965024; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yTHIj6pSnTi8mksj3ewma2KmkG/z7OTrATTw79miqqs=;
+        b=PFoDoMQIuHLwpPAo35DfmyHFcIcrLM/u1J2+pCjIGR1zJoqUg8VLBOQFgRrnq8iMPr
+         Sne+ul2cAvMBpQ7wZsNX565YjkEj5W8/+DLE7cRqp5LFkDNQy4456LfHRMa25Rf4H5cU
+         5WoaV6/rJpA9DdZgatcQeUEjippIX35g2I5uNlQkPMeM03IQVz0YGISiBgPYvHmI89iN
+         /FdTUrElBPdhu2V/VSf/z6HN9z3HS5BXD2/ZKcHbvVXThLHdNfdRIeiNxnKyFNOwzUY2
+         caFrdUCwfcaNpw/4lPEzsYYBbu0RmAkJcox+tzy08wUNz0uIF9wuAe+/ciWQB9HhBpCF
+         xnpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743360224; x=1743965024;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yTHIj6pSnTi8mksj3ewma2KmkG/z7OTrATTw79miqqs=;
+        b=R4cTBT4Qe8KUL3yCchEr7o4ss4iMXGGq+8GhP/xTedIrIDEn/YVZUomr++QzwlT2Ua
+         5LDodVOSyYcRSLaE7sc5ama8OnaYHsbwvAXQMShu1pyWKOs2h5cgfrpSZKDrWeNZWjLd
+         Sb7fS2tQ2glDVkAoHKovcJ55/DdcuHYAD3KzNSj21SX5HTzu+3UlG3pEQFx8/JIkupfN
+         kV/zcZaO0rdfMWDAEg3lZ+Gx7nJwWPOsv9tXjGgmOlxpaTmDIjckOz8fWAgg/FQcRSj7
+         88Lai2PMIZOgqKfNtBMPhoA4rW97odixrJzowV81++EIF6ie/9ExDvvBk6gsaFPqr7YN
+         tB5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWavualG7cSxksebGzmHFLTqTxN+P1mSrgvSwQF53X8GZNJ9pawxAc9VhNAgOzSX3qpF3KvmmS5jhbI3gF2z/sSZ2N+bw==@vger.kernel.org, AJvYcCXO4UCCkuAP8fRjW8KGJkUYzBP2jW5krJNUJnLU9GZjP5Q5I+9V/J1dvbhvfBpbRTYh8P5B1kPuoSCSpqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXaUYCiEIWngsSPB61WHxRlJVwdn/3q93q2B/SOiSczi3ZGrml
+	K0tc2vH8mdGciR/S8hsYFlVJYpRZ3MOUaJJEetUiGeL4BPZS5rom
+X-Gm-Gg: ASbGncvLy2oFeeQmSZ0Zd4UqMpwhCYGnonzZaCB7lu/mnOFVMQ75OL0J8X2N66FbIke
+	tuy5ZQhTgwByjodRJnzFyajWnqHIWNQ0n99h32LycmBE4z+6eUi6nnXsdQvBBoEe08e4FiyT5bK
+	tepuf+q0Z9acn6BFpJHVNQXoiGdGpLUv4SVL1UMkoydme3sEOtaQYTbTzXvskQazyWxYA2SMYD5
+	tat7pm7dOS8P5/CKw04fP8jt4UHX2N4y6p2Hxglh/ZYxAskke+dyGbrErciUPsxgm2ZMEQlEvc2
+	epiL2+RGdSmpUm71FQMfyOMHM83QJCi/sugJ4tCjthmgATrN
+X-Google-Smtp-Source: AGHT+IGTwjdTgA3d53CBEcgC1UhzuLmFkhq0pi1HXLWlT03QRj78CDBkQP1NrMYsAj+uFneRKugQIA==
+X-Received: by 2002:a17:90b:134d:b0:2fa:e9b:33b8 with SMTP id 98e67ed59e1d1-305320afaadmr10451666a91.18.1743360223746;
+        Sun, 30 Mar 2025 11:43:43 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516fed5fbsm5734308a91.37.2025.03.30.11.43.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Mar 2025 11:43:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 30 Mar 2025 15:43:40 -0300
+Message-Id: <D8TTMCQBDYX3.H8ACLTS7KL19@gmail.com>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, "Damian Tometzki"
+ <damian@riscv-rocks.de>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix NULL pointer
+ dereferences while probing
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Kurt Borja" <kuurtb@gmail.com>, "Henrique de Moraes Holschuh"
+ <hmh@hmh.eng.br>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mark
+ Pearson" <mpearson-lenovo@squebb.ca>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250330-thinkpad-fix-v1-1-4906b3fe6b74@gmail.com>
+In-Reply-To: <20250330-thinkpad-fix-v1-1-4906b3fe6b74@gmail.com>
 
-Please check on whether line 812 needs an unlock.
+On Sun Mar 30, 2025 at 12:39 PM -03, Kurt Borja wrote:
+> Some subdrivers make use of the global reference tpacpi_pdev during
+> initialization, which is called from the platform driver's probe.
+> However, after
+>
+> commit 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initial=
+ization to tpacpi_pdriver's probe.")
+>
+> this variable is only properly initialized *after* probing and this can
+> result in a NULL pointer dereference.
+>
+> In order to fix this without reverting the commit, register the platform
+> bundle in two steps, first create and initialize tpacpi_pdev, then
+> register the driver synchronously with platform_driver_probe(). This way
+> the benefits of commit 38b9ab80db31 are preserved.
+>
+> Additionally,
+>
+> commit 43fc63a1e8f6 ("platform/x86: thinkpad_acpi: Move HWMON initializat=
+ion to tpacpi_hwmon_pdriver's probe")
+>
+> introduced a similar problem, however tpacpi_sensors_pdev is only used
+> once inside the probe, so replace the global reference with the one
+> given by the probe.
 
-julia
+I don't understand why b4 added the linux-riscv list to the recipients,
+but it was definitely not inteded.
 
----------- Forwarded message ----------
-Date: Mon, 31 Mar 2025 02:25:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: oe-kbuild@lists.linux.dev
-Cc: lkp@intel.com, Julia Lawall <julia.lawall@inria.fr>
-Subject: kernel/trace/rv/rv.c:812:2-8: preceding lock on line 790
+Sorry for the noise.
 
-BCC: lkp@intel.com
-CC: oe-kbuild-all@lists.linux.dev
-CC: linux-kernel@vger.kernel.org
-TO: Gabriele Monaco <gmonaco@redhat.com>
-CC: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7f2ff7b6261742ed52aa973ccdf99151b7cc3a50
-commit: cb85c660fcd4b3a03ed993affa0b2d1a8af2f06b rv: Add option for nested monitors and include sched
-date:   6 days ago
-:::::: branch date: 17 hours ago
-:::::: commit date: 6 days ago
-config: loongarch-randconfig-r061-20250330 (https://download.01.org/0day-ci/archive/20250331/202503310200.UBXGitB4-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Julia Lawall <julia.lawall@inria.fr>
-| Closes: https://lore.kernel.org/r/202503310200.UBXGitB4-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> kernel/trace/rv/rv.c:812:2-8: preceding lock on line 790
-
-vim +812 kernel/trace/rv/rv.c
-
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  771
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  772  /**
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  773   * rv_register_monitor - register a rv monitor.
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  774   * @monitor:    The rv_monitor to be registered.
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  775   * @parent:     The parent of the monitor to be registered, NULL if not nested.
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  776   *
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  777   * Returns 0 if successful, error otherwise.
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  778   */
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  779  int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  780  {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  781  	struct rv_monitor_def *r, *p = NULL;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  782  	int retval = 0;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  783
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  784  	if (strlen(monitor->name) >= MAX_RV_MONITOR_NAME_SIZE) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  785  		pr_info("Monitor %s has a name longer than %d\n", monitor->name,
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  786  			MAX_RV_MONITOR_NAME_SIZE);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  787  		return -EINVAL;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  788  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  789
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29 @790  	mutex_lock(&rv_interface_lock);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  791
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  792  	list_for_each_entry(r, &rv_monitors_list, list) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  793  		if (strcmp(monitor->name, r->monitor->name) == 0) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  794  			pr_info("Monitor %s is already registered\n", monitor->name);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  795  			retval = -EEXIST;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  796  			goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  797  		}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  798  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  799
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  800  	if (parent) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  801  		list_for_each_entry(r, &rv_monitors_list, list) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  802  			if (strcmp(parent->name, r->monitor->name) == 0) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  803  				p = r;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  804  				break;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  805  			}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  806  		}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  807  	}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  808
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  809  	if (p && rv_is_nested_monitor(p)) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  810  		pr_info("Parent monitor %s is already nested, cannot nest further\n",
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  811  			parent->name);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05 @812  		return -EINVAL;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  813  	}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  814
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  815  	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  816  	if (!r) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  817  		retval = -ENOMEM;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  818  		goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  819  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  820
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  821  	r->monitor = monitor;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  822  	r->parent = parent;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  823
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  824  	retval = create_monitor_dir(r, p);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  825  	if (retval) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  826  		kfree(r);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  827  		goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  828  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  829
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  830  	/* keep children close to the parent for easier visualisation */
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  831  	if (p)
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  832  		list_add(&r->list, &p->list);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  833  	else
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  834  		list_add_tail(&r->list, &rv_monitors_list);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  835
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  836  out_unlock:
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  837  	mutex_unlock(&rv_interface_lock);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  838  	return retval;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  839  }
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  840
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+ ~ Kurt
