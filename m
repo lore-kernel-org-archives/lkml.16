@@ -1,130 +1,278 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF3A8F6C
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880B51F949
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743354885; cv=none; b=Ovn9jDWSO3iA2AAH/ty/Prliv5bqm+rl+voS0+D3Ido7Vlq3WjxydAo3yn92jnQIqwx1E4IuJVb59YqPtUyz9E7/mpdUoaDlNaSftoYK3Zb98SaTrmBjEYifKq0D2LU5iQsm/su4mU6uwcBFX+ULTHwwuEVhn/HJzxNtEja1ndM=
+	t=1743355069; cv=none; b=KlYIKYHw4Ruz9+GR7BmlwkjQa43b2GKmKSdeO6BOG5Qca+UBh1j1eizHlt3oebt8e3++zQ91pIGv7PaT0kABuscMpY0T5AOFeEpaSRGtLZBz2Vzjrfnk6bNKA8S3wtr5nUN6sPxAhkEUxS4qIM0RnAVJIMU3M1TcxKfuytlBg4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743354885; c=relaxed/simple;
-	bh=wkagIR5FLAk8HgfoJCiDVW0JJkVVFpH+cJJWFoeb5pQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NJ0B2CVHskCicy5NPl/c71ypMdfI8Fs2GhLtNuQXMoCpRaFE+IEIfjE9aMxIRk/Ojq+WqzoAAOb71JTvYrJ/SbpQGWTCCWMyVoWMU3gprIEQlIAYjOyo+OhaBUql/t7cAOa/1LuB1murwD+gWQVZ9qaYwtck5wyZ1udPEGt3H0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n4ZMEK63; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1743355069; c=relaxed/simple;
+	bh=S9AM5kQkINYFuwdChO0UETHMV8+Nceks4e+Zzk78Ad4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QMtucJcXBy1StrVe/JUkqEKPEubHqp3n5HY1a99ckUIvD37Dpuq63G0VqBUWw83+amspeooJKfFneGxV1otSh6oZa6OW0Oy46/SpMIUXrokPAvQUuy1ypqeZ+szS4rLB8QrUhLnklSkfmbpOzDifYinBKw11XbhBWN+K05/8kKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VXU74ws/; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n4ZMEK63"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UDanCZ000891
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:14:43 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VXU74ws/"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52U9hqVh027551
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:17:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5i3eDoRwfxAXyOJNfAoWRrpjX5DTKwyAl2h3Ll2a+Ck=; b=n4ZMEK63TxeG6m9O
-	ItDJchUK4hSWpjPBrvdt06ROOOq+vnSD9gFiYAA5gN2R1uPAofD0G8ZUITuDcKlv
-	3CCJkytVNn3z3KiMXmLU21Kc1/lfREtaEWvphgWtRjCIt3wOg7zdQvLSTFn8P6pg
-	rZOYKhces30KsuyImsNeDT2ibbTwNtdKG6bEm3Z4+SycRBd5iqCkq4lcH52fVhp5
-	wSZ9Nu9vHfTVl0homIOtuTJl84pHNDCZu/XG3cR4T9LdyPAtHXfuLlFyND06ovON
-	rlEufN7nf3V/gKWkTAvtEfdywzMUKHzqewm6tbIy5zbWRqv7uQX+UCXyCLeo3smN
-	ToEiUQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p9mjjfy2-1
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=EcwUdgEiSYf8BTglQ0dIsDse
+	ErgZKSvhrPT4HqNTL9k=; b=VXU74ws/EgVaXuLpI3SybCXfNFE+Sk1b6sz/qWN4
+	FdRvgA76UV98/HCjnohkWCsIJcOHv/UVw28A6/KRAWokFNP4v0AhlDNiRYIDWsSC
+	ynunMDf1SehqTwTrqkQ59fDrUijS8iSmZsnZduXLpoCxWkeL9K3TI9xUqvR5iEu9
+	2dyx6X7x6wrpLjzPet1j4kLD1tDNN7lQlS83XKgK5v8dUtQ0B5D/DXFYAM0MC4PK
+	dPN9lB5n8O/JPTGpDR8Yy1g0LdS6l7HjIpkX1Gm1Udu77ZgaCN8yC3mIihXntVE5
+	lbWEGDkt3nYRuOCW6jI54xlXsmPCWvRWOvsAxh3WxcJ2zw==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qatat-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:14:42 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c579d37eeeso611940785a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:14:42 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:17:46 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-30364fc706fso6077295a91.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:17:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743354881; x=1743959681;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5i3eDoRwfxAXyOJNfAoWRrpjX5DTKwyAl2h3Ll2a+Ck=;
-        b=gbeU4AZW5IUgXgkh7f3ThNKe+nssR1otCNAQ1QoZFRQaunKgczhAAOwtt+FbXmOQzw
-         M2YiACScUs3p0K9jnd+RhHYU0nUDaVDZcjz6ylqrOwCOJSITY8MvNO3K36mEa0RHWIZ/
-         Vy75Qx7Ae/i2FCgf6UKM7sa+Oy29WI2RLhRYyowt0zQ8c35KqFgxXLUiYZQEjva9lDug
-         peCLGZUEDTQqzXi2YKR5+xbTsMTifopBl9Q+CuWChWzGzRJ/gOCHTlJXU0Sr3iOpqVeY
-         BbFlEw5O7DCNuT4s1CBQjotXFWC3hmzYTaCUtjUjmTkaHXN8JMK55gijk3alpTXViqwD
-         7EOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQDMq41+mPKpMzhGZa+gUI2YFSSu1eFBVbFf5g95ujT6EC/JyPbe2ZEMilkYaYe6cJY1DNEYhjHmCX39c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoqQ3uS2hpMSaXFpTJ/NdE+6moXjbvOwm2OURZMPeHgN3Xh5PF
-	fK2qb5/g4rZTHnlChKRch5T790hEre2PYNSs+BZEU3vYBtLHC8+tXomv+UNZfomsWZcHnxW71QL
-	s9qU9qYFw6RibdF/j9hF4sPxVDoFsG2e1wVVOR89Ux0YxlKxeNxcqo86RffgSpdEkQN7SfKlau8
-	l+
-X-Gm-Gg: ASbGncuQCp6mLth7WsBOkQV4A6stTXKdPOzDcR46k5zZIzl+VxEgZXfoszOPtjDCogW
-	UuwlJa4TrHy1o3w3XzB3sx3ziDS57I1/A0eY3F0SUyc7aNQX3Ldd+6hvGPru9ADJupHrBDQZDYn
-	7lRti6RTIctwbLRg/tQEoD0yEA7RNHyO544+Ocy3C7QrOwGdS0mK1VOtmNFVr/aXisKPSZ5gmor
-	gjaROvby/EmI7BkQAPtRvpAzfhXICfet5T+7P7YkAknjOiJE1k5PUoOwl/6xCPgVWf+N/pTO8NE
-	nd5fTI5OGwWeBB6OQPKSX2Sr4gIX28bZ8Gp6uYFb+hjF7Dg38eY+2a/D/NNvmJS8ewc=
-X-Received: by 2002:a05:620a:4103:b0:7c5:467f:d130 with SMTP id af79cd13be357-7c69087cf02mr1038533185a.36.1743354881377;
-        Sun, 30 Mar 2025 10:14:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6ouIKg8DzyniG2QRhNtOGX2OqcIrcPRuppMODsS9RbSuUxUY5ZbhZt97wTj9QrUTaz/fM/w==
-X-Received: by 2002:a05:620a:4103:b0:7c5:467f:d130 with SMTP id af79cd13be357-7c69087cf02mr1038530785a.36.1743354881076;
-        Sun, 30 Mar 2025 10:14:41 -0700 (PDT)
-Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2b4c82dsm11838891fa.72.2025.03.30.10.14.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 10:14:39 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Anusha Srivatsa <asrivats@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Tejas Vipin <tejasvipin76@gmail.com>,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3] drm/panel/sharp-ls043t1le01: Use _multi variants
-Date: Sun, 30 Mar 2025 20:14:35 +0300
-Message-ID: <174335487030.2561144.6278208739964228205.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250326-b4-panel-ls043t1le01-v3-1-96c554c0ea2b@redhat.com>
-References: <20250326-b4-panel-ls043t1le01-v3-1-96c554c0ea2b@redhat.com>
+        d=1e100.net; s=20230601; t=1743355065; x=1743959865;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EcwUdgEiSYf8BTglQ0dIsDseErgZKSvhrPT4HqNTL9k=;
+        b=r/u4oPgTZzSf1e2Tx6ZMjU0ZfGhk7Vqyno5kl7xZpR9WxoXLMhoNgbzzeSDeTNLN3U
+         5Rvde8JqCcmgoIdqFIbQqKpgg2EjL1YvEtILGvFLA3fi+zf8pRMCeGfcYLASZNlLvFOd
+         sq/sOLSfbOGhowWSjCFRQMd9VcNKd02HYu9RHIFY+CCAKsS9NtktZ9rPq53iHLIfZeoF
+         VMWsN53IKcNq/b9zVE6r6wxtHevyb+w1E53Cxm30n8EM6IEpuww/6sPDyv7l8cvRXIDh
+         PpXHMaMvcP6Ar9dOMDQhq3JLqMAB6dmUh/q2ZRjNw4IC7T3W+y+T7rr3UHyR9qe0//bQ
+         MCdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbvHtSewQ1A7rZhH8jXvBuG4gdW0aey7+94ZZ0EtFNKuHLvPQzwzqAed5Oya5r3VndXTSLdvRtycLkIsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhRF17i//2bCu7Cn71OTW9FMbj6DKPI9O1HOc09dmEFFbcyAEn
+	BDSkRlCiDMXBu7NJHvOsU/7pkB1gqpYkocDjr92EtydBc2IUMJDHwoXpCCO/XtOT5s7P4HatnjU
+	x6X9k9xj6Rwh68zlz91b89C70JbYNRc3ZRNk0+LwiVxdhQxd2temvaOoaiYIle6T8e+loH676sm
+	5FsTOSl2Hbu3N2/TV9DJlbzt0TSkZZPNsz3UwSXA==
+X-Gm-Gg: ASbGncuvFiev9sYY1VNkuGbQwpBEIfHSNQlY+waKp6I9HhXGmA3AE9PZ+4HzjjQkupY
+	H2+oteuN7GqFI6xaz9Wc+8ny5h3k+w0cr+O2P9FbL75AV8X75AeYUQzkhdGN9Ao9qnIrLFe/A
+X-Received: by 2002:a17:90b:3a44:b0:2fe:a8b1:7d8 with SMTP id 98e67ed59e1d1-305321654e3mr9795823a91.25.1743355064710;
+        Sun, 30 Mar 2025 10:17:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE169pd79jXAIo01uzlr+kN2gZtfMu7kLVkVb4gh8lE1YluloYnuKAfYmw0Vaz94tUj+Ycsdr2wdfChwIZz4rc=
+X-Received: by 2002:a17:90b:3a44:b0:2fe:a8b1:7d8 with SMTP id
+ 98e67ed59e1d1-305321654e3mr9795791a91.25.1743355064304; Sun, 30 Mar 2025
+ 10:17:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=Mfhsu4/f c=1 sm=1 tr=0 ts=67e97c02 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=dR6xgOBWzFjIgz3fxCEA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: ixzO-2Mnm6R16ZuuBEy29ysG2z_cPKLW
-X-Proofpoint-GUID: ixzO-2Mnm6R16ZuuBEy29ysG2z_cPKLW
+References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v3-1-156801d97a8a@linaro.org>
+ <qub7j44btsgd2vdn67jn65c7y7kx4dhjojoh4z5erjalugctad@fyenu2xkuo4b> <CACr-zFCOqGmsFnJ_aW7cV99gmQdEtso3JGEiFFeKjk6-p6R54w@mail.gmail.com>
+In-Reply-To: <CACr-zFCOqGmsFnJ_aW7cV99gmQdEtso3JGEiFFeKjk6-p6R54w@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sun, 30 Mar 2025 20:17:33 +0300
+X-Gm-Features: AQ5f1Jp11F-zF0UJKEy2saRvg3cnx5AXZoElc2BHHK_IVeLuKyNtM3nbubHanT8
+Message-ID: <CAO9ioeWTgK2AYYt19VSOVjF6rt00xZ=gt1=dUb4A7UEEMwgaSA@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/dp: clamp PWM bit count to advertised MIN and MAX capabilities
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Rui Miguel Silva <rui.silva@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67e97cba cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=SrgeRYV4RCk8RcaWdqsA:9 a=QEXdDO2ut3YA:10
+ a=iS9zxrgQBfv6-_F4QbHw:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: i_1nRDR6ndgb9nxAF2rzvMGRHNkqXoXg
+X-Proofpoint-GUID: i_1nRDR6ndgb9nxAF2rzvMGRHNkqXoXg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300120
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503300120
 
-On Wed, 26 Mar 2025 23:29:19 -0400, Anusha Srivatsa wrote:
-> Move away from using deprecated API and use _multi variants
-> if available. Use mipi_dsi_msleep() and mipi_dsi_usleep_range()
-> instead of msleep() and usleep_range() respectively.
-> 
-> Used Coccinelle to find the _multi variant APIs,replacing
-> mpi_dsi_msleep() where necessary and for returning
-> dsi_ctx.accum_err in these functions. mipi_dsi_dcs_write()
-> does not have a corresponding _multi() variant. Replacing it with
-> mipi_dsi_dcs_write_seq_multi() instead. This change is manual.
-> 
-> [...]
+On Sun, 30 Mar 2025 at 20:11, Christopher Obbard
+<christopher.obbard@linaro.org> wrote:
+>
+> Hi Dmitry,
+>
+> On Sun, 30 Mar 2025 at 17:42, Dmitry Baryshkov
+> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> >
+> > On Sun, Mar 30, 2025 at 05:31:20PM +0100, Christopher Obbard wrote:
+> > > According to the eDP specification (VESA Embedded DisplayPort Standard
+> > > v1.4b, Section 3.3.10.2), if the value of DP_EDP_PWMGEN_BIT_COUNT is
+> > > less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, the sink is required to use
+> > > the MIN value as the effective PWM bit count.
+> > >
+> > > This commit updates the logic to clamp the reported
+> > > DP_EDP_PWMGEN_BIT_COUNT to the range defined by
+> > > DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN and _CAP_MAX. This ensures correct
+> > > handling of eDP panels that report a zero PWM bit count but still
+> > > provide valid non-zero MIN and MAX capability values. Without this
+> > > clamping, brightness values may be interpreted incorrectly, leading
+> > > to a dim or non-functional backlight.
+> > >
+> > > For example, the Samsung ATNA40YK20 OLED panel used in the Lenovo
+> > > ThinkPad T14s Gen6 (Snapdragon) reports a PWM bit count of 0, but
+> > > supports AUX backlight control and declares a valid 11-bit range.
+> > > Clamping ensures brightness scaling works as intended on such panels.
+> > >
+> > > Co-developed-by: Rui Miguel Silva <rui.silva@linaro.org>
+> > > Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> > > Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
+> > > ---
+> > > Changes in v3:
+> > > - Properly rebase patch on top of latest version of drm-misc-next.
+> > > - Make patch more generic by clamping PWM bit count to advertised MIN
+> > >   and MAX capabilities (suggested by Dmitry).
+> > > - Link to v2: https://lore.kernel.org/r/20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-v2-1-16dc3ee00276@linaro.org
+> > >
+> > > Changes in v2:
+> > > - Split backlight brightness patch from T14s OLED enablement series.
+> > > - Use PWMGEN_CAP_MIN rather than MAX (Dmitry).
+> > > - Rework commit message to reference eDP spec.
+> > > - Rebase on drm-misc-next.
+> > > - Link to v1: https://lore.kernel.org/all/20250325-wip-obbardc-qcom-t14s-oled-panel-v2-4-e9bc7c9d30cc@linaro.org/
+> > > ---
+> > >  drivers/gpu/drm/display/drm_dp_helper.c | 48 ++++++++++++++++++++-------------
+> > >  1 file changed, 30 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+> > > index e2439c8a7fefe116b04aaa689b557e2387b05540..fcc26cb96a51066a503433b2dc660126155d179c 100644
+> > > --- a/drivers/gpu/drm/display/drm_dp_helper.c
+> > > +++ b/drivers/gpu/drm/display/drm_dp_helper.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/init.h>
+> > >  #include <linux/iopoll.h>
+> > >  #include <linux/kernel.h>
+> > > +#include <linux/minmax.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/sched.h>
+> > >  #include <linux/seq_file.h>
+> > > @@ -4033,8 +4034,33 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+> > >                           aux->name, ret);
+> > >               return -ENODEV;
+> > >       }
+> > > -
+> >
+> > Nitpick: please keep the empty line.
+>
+> Sure.
+>
+>
+> > >       pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
+> > > +     if (ret != 1) {
+> >
+> > No. Please take a look a few lines below, where you are removing
+> > corresponding lines.
+>
+> Hmm, the original code which reads CAP_MIN and CAP_MAX both check if
+> ret != 1 too, am I missing something ?
 
-Applied to drm-misc-next, thanks!
+Yes, you do. Please scroll this email a few lines down.
 
-[1/1] drm/panel/sharp-ls043t1le01: Use _multi variants
-      commit: 20e8219205145e1af3b98b6a0a3cc59568116a05
+>
+>
+> > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
+> > > +                         aux->name, ret);
+> > > +             return -ENODEV;
+> >
+> > Hmm. Why? It was 'return 0' before and your commit message contains no
+> > explanation.
+>
+> Yeah, basically returning 0 here would not set bl->max but indicate
+> success. Is my logic correct? I will simply update the commit message
+> if so.
 
-Best regards,
+Please describe that in the commit message why it's required for those
+two reg reads to succeed.
+
+>
+>
+> > > +     }
+> > > +     pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
+> > > +     if (ret != 1) {
+> > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
+> > > +                         aux->name, ret);
+> > > +             return -ENODEV;
+> > > +     }
+> > > +     pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     /*
+> > > +      * Per VESA eDP Spec v1.4b, section 3.3.10.2:
+> > > +      * If DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
+> > > +      * the sink must use the MIN value as the effective PWM bit count.
+> > > +      * Clamp the reported value to the [MIN, MAX] capability range to ensure
+> > > +      * correct brightness scaling on compliant eDP panels.
+> > > +      */
+> > > +     pn = clamp(pn, pn_min, pn_max);
+> > > +
+> > >       bl->max = (1 << pn) - 1;
+> > >       if (!driver_pwm_freq_hz)
+> > >               return 0;
+> > > @@ -4054,29 +4080,15 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+> > >        */
+> > >       fxp = DIV_ROUND_CLOSEST(1000 * DP_EDP_BACKLIGHT_FREQ_BASE_KHZ, driver_pwm_freq_hz);
+> > >
+> > > -     /* Use highest possible value of Pn for more granularity of brightness adjustment while
+> > > +     /*
+> > > +      * Ensure frequency is within 25% of desired value.
+> > > +      * Use highest possible value of Pn for more granularity of brightness adjustment while
+> >
+> > Huh? I don't see a corresponding code change. If you are fixing the
+> > comment, it should come as a separate commit.
+>
+> Sure. I will drop this hunk.
+> I folded it into this commit as it was a leftover artifact of moving
+> the code around.
+
+Please refrain from folding unrelated changes.
+
+>
+> >
+> > >        * satisfying the conditions below.
+> > >        * - Pn is in the range of Pn_min and Pn_max
+> > >        * - F is in the range of 1 and 255
+> > >        * - FxP is within 25% of desired value.
+> > >        *   Note: 25% is arbitrary value and may need some tweak.
+> > >        */
+> > > -     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
+> > > -     if (ret < 0) {
+> > > -             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
+> > > -                         aux->name, ret);
+> > > -             return 0;
+> > > -     }
+> > > -     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
+> > > -     if (ret < 0) {
+> > > -             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
+> > > -                         aux->name, ret);
+> > > -             return 0;
+> > > -     }
+> > > -     pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > -     pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > -
+> > > -     /* Ensure frequency is within 25% of desired value */
+> > >       fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
+> > >       fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
+> > >       if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
+> >
+> > --
+> > With best wishes
+> > Dmitry
+
+
+
 -- 
 With best wishes
 Dmitry
-
