@@ -1,63 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D7E1CB332
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CE438FB0
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743375825; cv=none; b=cxUGNafAhxul2Zg5sth9JGcbzRG8xuKe4SMyFvKSkzoeXM0Dr1lcRIlJmEbWDUAb3tmeOPiSJMBGDpQg7B55kBNMCgxYFdTB2ryMCbA3Cqw82oXbeLiiGyXs/uzxzZMr1tA8D14EOG7Rh4h0pbe6wzqAIcwPabcMLkmSA+FotRM=
+	t=1743376461; cv=none; b=qlvu/rKDVJ85wbcstyqIZDtotaawN9iKifYFUgek6D++jA8G72UKb5jpZmEB7pCFKBjJ6rl6rlFmwoIj7UMCUeurb70qB5cg2L+I4Gbovg/GRPvwMYVAfeRZ+Ha/i6BraDyrzXvFyi2eURSqZF4fnQCEnn6DIw0uMqZ4lqPfJ+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743375825; c=relaxed/simple;
-	bh=YnhBiEyGG4kUKGDoXuqKLxcMpcf/K6WZiM6Ja+AnVm0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rMyJ5idwWDVf7OYFxRbIDZJH+SBvRdc4iTmsLX6HAKUYLLZrRY0EVFhSjCF2ywKJJUIYvmm7bGJlTRlxqIplUbZLZ8JSuCeLvVF5MqwO8iAL56HWlmwgpSVGHn3aeYZeDn1H/vP9OeuN8YyhMbSfAyaHJiBlaavXcbOf1uV9TWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFEXDATU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743376461; c=relaxed/simple;
+	bh=NkOMhcXrC/jW6pY8KEWT/YdXdb3huaro4QfHKbDGLzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsTbArjKFH6Xu6iTweMptGIDofWeR0PETpRrZLRJv449Uh1/qT6X4ahoUo40dOAiQYuxB6aMlHSvsbeb3A3yvizTn5RWBtdpX+QocUKwxCSzbC8sYEDR7pOA40Hw21AD37gudfZD6CDDE4I6GrjCCoXcI/mBgjx/V7Sr4j1/NUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JXXNYMxC; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFEXDATU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB642C4CEEB;
-	Sun, 30 Mar 2025 23:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743375824;
-	bh=YnhBiEyGG4kUKGDoXuqKLxcMpcf/K6WZiM6Ja+AnVm0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=gFEXDATUqieCc9p3+YIKsXzYhVizzIP3DIRSfxzhdTEJPGcnKUd8fsLMudikK4vtJ
-	 9OzfumNcqaQ1TVAIaCj1cW7BaqBEseHCiHvaucQn9JZV2xz+mk6md1XbGBxhmwI4iR
-	 PLgXo8KDIT4vQBQMoEkD9AO5QO+mojdbzBe7MVbOlhNdPdzxMdFBrv43Q9ciyke9su
-	 fOGpFLrpeHQl7aeMwpgAuG2aZQy+HeWsdJuBdW9QY3tgE5HYyDOfxNf9axvEh+fZ11
-	 C1emckPsityZljPo17mewKzbWIFS1T1vYIzNsMqgWLO2WjlR+azrdj5RZaHxSmiL0w
-	 96f9RRxWnsFdw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC57380AA7A;
-	Sun, 30 Mar 2025 23:04:22 +0000 (UTC)
-Subject: Re: [GIT PULL] x86 fixes and updates
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z-cU8qfH1dd7Bmmb@gmail.com>
-References: <Z-cU8qfH1dd7Bmmb@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z-cU8qfH1dd7Bmmb@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-28
-X-PR-Tracked-Commit-Id: 31ab12df723543047c3fc19cb8f8c4498ec6267f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7405c0f01aa281e20d9f9f34ac450537985bfb05
-Message-Id: <174337586132.3614380.3023408428702632812.pr-tracker-bot@kernel.org>
-Date: Sun, 30 Mar 2025 23:04:21 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JXXNYMxC"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1029840E021E;
+	Sun, 30 Mar 2025 23:14:15 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SYiqqmB0qdI9; Sun, 30 Mar 2025 23:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743376449; bh=Kkprs2kGxIWD4glBMbh075fjoPI323XMOBqGSvlx76I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JXXNYMxCy49jRQ7luW87ivpqddodq3Cj5PZFOWN4PG58hFLiaD2SjxsG7q3A+XS1O
+	 13V79RqAfxm6nPVQZIZ0Sj+ikXYn+I4AU0pUbJnt3XacgtrEwPsrA4mvJDAW7SYwXk
+	 ZFjznBSbPF4QuQRA2CLNY6yzuhHc6e9aMTONmtVkUTqoFIhU+YdGW715rvQArAPM75
+	 YtVPAh8ikRv9/pBCGuGn5+rD9o2sBbQCJQ60rysfq5KSj7C3zIjL0O97MyGc3wl08d
+	 1WmQ8/A/OL7yCV+M8STPw7lJpiL/rUQIXMGmMP5OzwwOcgqYcESBljqjYL/vuKfsrC
+	 Bpx2Z31EVRU6E8QZJMN5N46Hx/NjE1yxB40abe0n6rMNmnsvKiA1u1/MQ5ixmPCw1d
+	 m+LzZ5RrzZJEAYKIL5A736Q5WWHKc1XU9Mh49LclTjVHa9nGNCKSzORpH6csYrMWX/
+	 G2pblmMSUYbA3fMmM5lXcGFBHRontPfCvtcG1znvG+3ulo2hCH/LM1hsvTN3fLTChj
+	 tCWXnpNYs6HenRTGUn+VAzo1p8qhKBPTD8fVphDyjV8NxGbNW8IGIxNKej1zAG5yYH
+	 s8qE+HIBOJ9l2TtZSQX2HE+hcGTlIxjAP+9potQDF0JrgXYHpDsny+cCGHOBslfCT+
+	 bKpr7IYxwrzPNLKr2H7M9bsU=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A62B940E0215;
+	Sun, 30 Mar 2025 23:14:02 +0000 (UTC)
+Date: Mon, 31 Mar 2025 01:13:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
+References: <Z-cSQXJKMyBSfAAc@gmail.com>
+ <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+ <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
 
-The pull request you sent on Fri, 28 Mar 2025 22:30:26 +0100:
+On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
+> On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > Btw, test bot complains:
+> >
+> > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+> 
+> That's not a very helpful error message
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-28
+I found this:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7405c0f01aa281e20d9f9f34ac450537985bfb05
+https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
 
-Thank you!
+which looks like the original report.
+
+Looks unsolved yet...
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
