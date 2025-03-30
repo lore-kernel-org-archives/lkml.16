@@ -1,248 +1,137 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1591DB13A
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762101A314B
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743357749; cv=none; b=e2IWgHCwGjopCo4bf7OVaqzTXK6j3a5pzSYmNRlGGA983cfUY8KOl8eTuaV4DI1MPaSB9imyfPKEVHqx5Oxqf2xGhhFB3kr3kDqJL/8AkJdySJhb+GonLrj9r4a3SyyqBsl5zjKiUiEglVo81wJgC9KAKWYV8ABXVfIsBXP3nk4=
+	t=1743357778; cv=none; b=kEtcBv0uZsLwG7Wuuwd8TIiK97vG7T2PYDpviYkeu3rftY5GJrSTQwZWccR+bIQx7k/gMGb/5705lMMcpEEIJjVxwuqucc/Y+T1cjzfGdb90M377Ti4BdWJT751vMgoa4Aa/NwuNiht5tk3h410LTEdl+Em1YPTPNvJ4qo+UA8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743357749; c=relaxed/simple;
-	bh=j6UjuPEl/kIYq5SdQ9Hb7zznH+KKztrfdFpG0Jbofko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rmsfb6mmv075B+yKcPlAUuvigGcpH51hm6tDYUK+Crvqvh8iKbTrVWv5yZ71DaJOoHj80sNYafLNEPjK/hVuKtd5q0ZkTYzQ8lENiXPsjUw8EC9broWaj6Tx+802wHX58qsF3ZWqsOvym3hkNUBU2vrm4tn77Y7LYi04pU0lg0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgVg0AwE; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743357778; c=relaxed/simple;
+	bh=TXYLh/RcMb5W+PFVwLVpt9syPHW6Z38wPnySREiMUAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dQ6F0ZEhQ+2THoa246e6SUAWpKHXC3UuNqtNIWMBsJ5KBXgjpV5Cio0wIZ05o9656TczQOJA03w2K4MnM0ZcFqDFft0AitgG8Lr5q4SAUIx00MOfjlVIuAV4u1w0hCQIqGtlmdUfiSxeTtBSeDAG2bXb2Rqx7WUPbLhUW89gUlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R21EayuK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgVg0AwE"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so22756385e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:02:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743357745; x=1743962545; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iWy6ovl0zQ/vnlPSDTM1oRQg1uBsQPw5Up8mdmqasyI=;
-        b=hgVg0AwEiRSDzye61Ifl7+S9VRgHVE31iR/G4x4WIeWvrJef3h7lay+o4I3JBSrCF5
-         FWn/79dQ+16iqcfLZC3dUkfQyGh+tCAVgvH1DxYLTbKvCJQ16ubw2kkvg97sTlbTpVnF
-         MQCGQAGLldTywDB/w9KRQFIz08SlmIUHwaepp2TFDGEjEz2bDf3dIT9zohdtiiDrAroD
-         5gtwW2wJvrX6W45SB1pCtax7j4cWPKkK99tAaCEgqCdd8C91C3rYCz12518+jGaTo0tc
-         nUO3J2FDMLloDtoUg8yk+vhYPVC6cqZjSJXoEr1f1lOSWZBEIXegbTLkjFbxY6sU2RVr
-         WHAw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R21EayuK"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UB3BaW024224
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qlaN7asJ193Fv+MWu0+aw75zEOU6L/Dd+AbBmRtY93Y=; b=R21EayuKxRFlQ/v5
+	z8rgfFYBWcq/B3MBLeCi+vWKR8ldpTUF0l9O9c6/3eabxszkg1ATPOqv+U5NViIC
+	EdWcGqrtK2iqV4vHMP/8rzESZpc/Hkdhs4em9l8em5trodfgrNX5CW/ma4+37fN6
+	4C+3aCj+DfbvhU5SKrLS94Z4KOboCKXVHXj+1iLTG4UpipWiu5Fp7AOAp4wrB90D
+	9KUozjJ8qrR5BDIsl2t6pHQlNyLkixG7jN3q8fCjPvQY03zGGfPe3WPpOc8Dj927
+	FaT/e9g/Zs3gtpc2ozvUM+/ic5tFfM70e9c/D0OO0M5DM1JKXaHZf/i22PjhEFmO
+	JuEtMA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhjsr7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:02:56 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54a6b0c70so357899285a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:02:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743357745; x=1743962545;
+        d=1e100.net; s=20230601; t=1743357775; x=1743962575;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iWy6ovl0zQ/vnlPSDTM1oRQg1uBsQPw5Up8mdmqasyI=;
-        b=RGcm2fxjctHkcKIL5PE31mfjvQK6yAqyvMJcgdYw/rvnrAM26kC+8SIsjCKb9MnG21
-         qZF5DC2p+0Jqa5m/BVV7LPnVrIkcPiMVKDMIM4BkrbCHy5c7KHWYQY5VDEk01JAUw/0O
-         6DJ5vq10Ch0Av8mMSQj63hkCyhxQn6ZlMoZpjMV6DtCn6Pr1ce24FOEBEqQun3zjGx/j
-         x+91VM9Z8r6t8GrLNp3O/PBgsmjlvII9EMT8+t07u+cDOx+19xbNj6LkECckUBg17+XX
-         a01eybyXturXK8jgwy4yoDTU1DIzDo9/u/F6yi0nq+U1/eg9TqE/Zj40sur99TuAW3bC
-         djfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeb/Z5Q0eVQyl6DCvJYZB04dm2NFtfKAdRHD7VqernKze96AePHRo1AHKUOzVwo5MYKv3p/gFbW+nmNFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyorbhKAGRZ9hEM0iWCY8YtNltwqxXBx4z2uUHWvAKjhaXHoULX
-	I2kAMYiepJ/uoNZu0cPq5E7F96mYS2fL6JyruwumImUiGUR2BjxU
-X-Gm-Gg: ASbGncsMmv9zW9AHFcOaAZK70Vogl7AK1id0u9WuflBYH+Xl/EcFiqJK//wHmbsqXMj
-	Rgh9KXesXgP9HiPreBjCPZVq5pk9aoZPNRr+g9FrkCTUufNzSYa2r/BOIrMB2c82zuPgZFD2X+R
-	3bNSerPYKZ/L+pCGPgJuPSjohweBi+hecUfQRfcs93GFFTSo4QEgba08uDnl1VpCIdyn5+quoob
-	8w2mbChD53KubiCBuNhcYAkmB6EeOx0SYWyTSqwBAJaWIqH5MomR5mwFBn0xi2D+xFJBXM6PH4e
-	wbpoICU1F1BWb2tJBtGH9gUELEte8wE/mk9yyfu5LjiVHJwCVXFSy9yZpj+DcF5ch4oiwvNU14V
-	EonvD6aQ=
-X-Google-Smtp-Source: AGHT+IFVuKtj8o/IXERjIzC9tzAkiSTq863h/eNJhhtThjx+YMb48N8a5W58uWW5iTgUXvN79ix8jg==
-X-Received: by 2002:a05:600c:4c8a:b0:43c:f680:5c2e with SMTP id 5b1f17b1804b1-43d9118f627mr70470885e9.13.1743357745014;
-        Sun, 30 Mar 2025 11:02:25 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba3ee4sm99589865e9.8.2025.03.30.11.02.24
+        bh=qlaN7asJ193Fv+MWu0+aw75zEOU6L/Dd+AbBmRtY93Y=;
+        b=SLV13AnPNokrbpzqPA5sywiW8u+oAVlBvWBecDb8iertzM9re6isySuOe5xieD3cKm
+         fIwe4LZiVBYecZy7pyOfCHBWCCQngBX05bF3NMPoXLeJW2de2+z/tWCge0mg7b+P1N4V
+         0H0B2g/ImyCXxH2TnosqSoGNJqVmDUMY8+lAohrwYq6JEapznsEr2KYhhWCzLZkko6TG
+         blCLddxllU6XOsioHjebNcGzXFEz+xHNWGLWfNGOV/XUe76jXVETSViwYjpoOU8GbtmF
+         jJgjuNZOvMSZH88wNuyUhKtnyOUHHe5tHFbStQRrhZCcMfolu627wcr3jPSM3eOHgef0
+         NiAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZXvE9hKVMfGYjDtwrXk5UHFAA/QS4E9pJcNzF64gttU2/j8VJW8jag7RgZgw38a6A2e4Ih7/06mP72wU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiB52jITeLo7Zvvojl3RF6n/jC9i5lj6Cyk++6cIbaM/rfZt21
+	hh9FE6ns7hLaAVEur/krFloherwS6/W+VVoUOIvLUDLi61B4402uA9ja09GSaSiGLfBFTYSn5fb
+	anYNrJk8vlXTCg4b+Rr2+KixHGWScnJiL5d64s2hHSOI7PxGzGw67GO65S3QcxAs=
+X-Gm-Gg: ASbGnctj6qvUVAWQeC+m1RI3FU5HFmHKoXmcxkeny6yUypYqzZEURIQq+e5EXGmE2dF
+	HNLDZBQH9SRVsgDbfHz070aQPsTJmgBsRpZakptmkKPNcS4t7UORNBG9kUBu6XBk9uE3xFyRHOK
+	dJ3rm+gnUZ5YHjfljKG5277SAYegLMfHBwkdJvY4orSd54zMlYBkr7pM3snpAKLrypiqqDvr+7n
+	vq4kcoQaRJ99E5edZxvkzK/XzQkbPdRBqydPL/G1r6jMDvMV/mjLTEjKlJoHnyAEFodbRbrWP3F
+	yYe5cwWwBZvpfIbBGWWQWVaE3FfxxGRXRrWOUB4aBxH/vc4FrNvbHurpjhUN6exuRPU=
+X-Received: by 2002:a05:620a:400e:b0:7c5:65ab:5001 with SMTP id af79cd13be357-7c69087ddd9mr654773185a.39.1743357775271;
+        Sun, 30 Mar 2025 11:02:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAPYhkOOkZUjy6KYQuyGJsfsTPEhDTKBmuQ5FBkrMVqvE17ds8QzCwlgbwULJxX9LUBjkjwQ==
+X-Received: by 2002:a05:620a:400e:b0:7c5:65ab:5001 with SMTP id af79cd13be357-7c69087ddd9mr654770985a.39.1743357774924;
+        Sun, 30 Mar 2025 11:02:54 -0700 (PDT)
+Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0e78f29csm703408e87.113.2025.03.30.11.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 11:02:24 -0700 (PDT)
-Date: Sun, 30 Mar 2025 19:02:21 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-Message-ID: <20250330190221.4b75c7de@pumpkin>
-In-Reply-To: <CAFULd4aybKBdpVv_mt5EgNGDp6yk_ayGr9C4H15-3dc3h6K9aA@mail.gmail.com>
-References: <20250325164854.199420-1-ubizjak@gmail.com>
-	<20250325164854.199420-2-ubizjak@gmail.com>
-	<Z-Mme_OxuhYfxgzO@gmail.com>
-	<CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
-	<20250329110042.75a28342@pumpkin>
-	<CAFULd4aybKBdpVv_mt5EgNGDp6yk_ayGr9C4H15-3dc3h6K9aA@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 30 Mar 2025 11:02:52 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Liviu Dudau <liviu.dudau@arm.com>, Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
+Date: Sun, 30 Mar 2025 21:02:49 +0300
+Message-ID: <174335776562.2565584.12345735704248581476.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250324210824.3094660-1-arnd@kernel.org>
+References: <20250324210824.3094660-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: AJXCOW_a-l6uAixmVkvTfalf3-IXX1Fl
+X-Proofpoint-ORIG-GUID: AJXCOW_a-l6uAixmVkvTfalf3-IXX1Fl
+X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67e98750 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=Wyn_QxJju8WABout-1IA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503300126
 
-On Sun, 30 Mar 2025 09:49:43 +0200
-Uros Bizjak <ubizjak@gmail.com> wrote:
+On Mon, 24 Mar 2025 22:08:07 +0100, Arnd Bergmann wrote:
+> This fails to build without the KMS helper functions:
+> 
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_detect_work':
+> tda998x_drv.c:(.text+0x4e6): undefined reference to `drm_kms_helper_hotplug_event'
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_bind':
+> tda998x_drv.c:(.text.unlikely+0x33): undefined reference to `drm_simple_encoder_init'
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x584): undefined reference to `drm_atomic_helper_connector_reset'
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x590): undefined reference to `drm_helper_probe_single_connector_modes'
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a4): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+> x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a8): undefined reference to `drm_atomic_helper_connector_destroy_state'
+> 
+> [...]
 
-> On Sat, Mar 29, 2025 at 12:00=E2=80=AFPM David Laight
-> <david.laight.linux@gmail.com> wrote:
-> >
-> > On Sat, 29 Mar 2025 10:19:37 +0100
-> > Uros Bizjak <ubizjak@gmail.com> wrote:
-> > =20
-> > > On Tue, Mar 25, 2025 at 10:56=E2=80=AFPM Ingo Molnar <mingo@kernel.or=
-g> wrote: =20
-> > > >
-> > > >
-> > > > * Uros Bizjak <ubizjak@gmail.com> wrote:
-> > > > =20
-> > > > > Emit naked POPCNT instruction when available with X86_NATIVE_CPU
-> > > > > option. The compiler is not bound by ABI when emitting the instru=
-ction
-> > > > > without the fallback call to __sw_hweight{32,64}() library functi=
-on
-> > > > > and has much more freedom to allocate input and output operands,
-> > > > > including memory input operand.
-> > > > >
-> > > > > The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
-> > > > > shrinks by 599 bytes:
-> > > > >
-> > > > >   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
-> > > > >   Total: Before=3D22710531, After=3D22709932, chg -0.00%
-> > > > >
-> > > > > The asm changes from e.g.:
-> > > > >
-> > > > >          3bf9c:       48 8b 3d 00 00 00 00    mov    0x0(%rip),%r=
-di
-> > > > >          3bfa3:       e8 00 00 00 00          call   3bfa8 <...>
-> > > > >          3bfa8:       90                      nop
-> > > > >          3bfa9:       90                      nop
-> > > > >
-> > > > > with:
-> > > > >
-> > > > >            34b:       31 c0                   xor    %eax,%eax
-> > > > >            34d:       f3 48 0f b8 c7          popcnt %rdi,%rax
-> > > > >
-> > > > > in the .altinstr_replacement section
-> > > > >
-> > > > > to:
-> > > > >
-> > > > >          3bfdc:       31 c0                   xor    %eax,%eax
-> > > > >          3bfde:       f3 48 0f b8 05 00 00    popcnt 0x0(%rip),%r=
-ax
-> > > > >          3bfe5:       00 00
-> > > > >
-> > > > > where there is no need for an entry in the .altinstr_replacement
-> > > > > section, shrinking all text sections by 9476 bytes:
-> > > > >
-> > > > >           text           data     bss      dec            hex fil=
-ename
-> > > > >       27267068        4643047  814852 32724967        1f357e7 vml=
-inux-old.o
-> > > > >       27257592        4643047  814852 32715491        1f332e3 vml=
-inux-new.o =20
-> > > > =20
-> > > > > +#ifdef __POPCNT__
-> > > > > +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
-> > > > > +                 : [cnt] "=3D&r" (res)
-> > > > > +                 : [val] ASM_INPUT_RM (w));
-> > > > > +#else
-> > > > >       asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
-> > > > >                               "call __sw_hweight32",
-> > > > >                               ASM_CLR "popcntl %[val], %[cnt]",
-> > > > >                               X86_FEATURE_POPCNT)
-> > > > >                        : [cnt] "=3Da" (res), ASM_CALL_CONSTRAINT
-> > > > >                        : [val] REG_IN (w)); =20
-> > > >
-> > > > So a better optimization I think would be to declare and implement
-> > > > __sw_hweight32 with a different, less intrusive function call ABI t=
-hat =20
-> > >
-> > > With an external function, the ABI specifies the location of input
-> > > argument and function result. Unless we want to declare the whole
-> > > function as asm() inline function (with some 20 instructions), we have
-> > > to specify the location of function arguments and where the function
-> > > result is to be found in the asm() that calls the external function.
-> > > Register allocator then uses this information to move arguments to the
-> > > right place before the call.
-> > >
-> > > The above approach, when used to emulate an insn,  has a drawback.
-> > > When the instruction is available as an alternative, it still has
-> > > fixed input and output registers, forced by the ABI of the function
-> > > call. Register allocator has to move registers unnecessarily to
-> > > satisfy the constraints of the function call, not the instruction
-> > > itself. =20
-> >
-> > Forcing the argument into a fixed register won't make much difference
-> > to execution time.
-> > Just a bit more work for the instruction decoder and a few more bytes
-> > of I-cache.
-> > (Register-register moves can be zero clocks.)
-> > In many cases (but not as many as you might hope for) the compiler
-> > back-tracks the input register requirement to the instruction that
-> > generates the value. =20
->=20
-> I'm afraid I don't fully understand what you mean by "back-tracking
-> the input register requirement".
+Applied to drm-misc-next-fixes, thanks!
 
-If the asm block requires an input in %rdx then the instruction that
-creates the value would be expected to put it into %rdx ready for the
-asm block.
-Even if it doesn't a register-register move is often implemented without
-using the ALU by 'register renaming' (there is an indirection between
-the register 'number' the code uses and the physical latches that hold
-the value, multiple copies of (say) %rax can be live at the same time).
+[1/1] drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
+      commit: 85a063b8b281e144ed96463936fb4e6b3d4fe9e4
 
-> However, with:
->=20
-> asm("insn %0, %1" : "=3Dr" (out) : "r" (in));
->=20
-> the compiler is not obliged to match input with output, although many
-> times it does so (especially when input argument is dead). To avoid
-> false dependence on the output, we should force the compiler to always
-> match input and output:
->=20
-> asm("insn %0, %1" : "=3Dr" (out) : "0" (in));
+Best regards,
+-- 
+With best wishes
+Dmitry
 
-I'd expect the compiler to generate better code if it is allowed to
-use separate registers for the input and output.
-It may be able to use the input value again.
-There is no 'dependency' on the output register (unless the instruction
-only updates the low bits).
-
->=20
-> and this will resolve false dependence (input register obviously needs
-> to be ready before insn) at the expense of an extra move instruction
-> in front of the insn in case input is not dead. This is unfortunately
-> not possible when one of the alternatives is a function call, where
-> location of input and output arguments is specified by ABI.
->=20
-> > In this case the called function needs two writeable registers.
-> > I think you can tell gcc the input is invalidated and the output
-> > is 'early clobber' so that the register are different. =20
->=20
-> Yes, my first patch used this approach, where output operand is cleared f=
-irst:
-
-That clearing of the output serves an entirely different purpose.
->=20
-> asm("xorl %0, %0; popcntl %1, %0" : "=3D&r" (out) : "rm" (in));
->=20
-> Please note that "earlyclobbered" output reg can't be matched with
-> input reg, or with any reg that forms the address.
-
-But you want them to be different.
-The called function needs to multiple 'shift and add' sequences.
-To do that it needs a scratch register.
-So if the asm block requires the input in %rdx, puts the output in %rax
-and destroys %rdx you can write a function that doesn't need any other
-registers.
-If you try really hard you can make the called function depend on the
-register the compiler selects - and white a different copy for each.
-Not worth it here.
-
-	David
