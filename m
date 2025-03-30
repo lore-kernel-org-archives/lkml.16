@@ -1,92 +1,102 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31D018A6A7
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044A964A8F;
+	Sun, 30 Mar 2025 17:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743355930; cv=none; b=NpC0QZdTOa5HPWccZ7nkemE7+/MhwjPJqH30ICpfb4ZCRhCBwOgjwx9QAOMiow8D2laoEAcAKcgiB2As6o/n5COgVh1OIz8MIe276AuT6vMZ6367cj8S2wUWcoHManT6q1Lo9PZnvkVJ3R4krO0nKVk8ixEmH9IDTy7s0q6VfNo=
+	t=1743356077; cv=none; b=XeBalvxL3OpwfzThHZUQX8/IuVm+mis7RhvPEo/nWWGQQnXv6nCXeYYLjQmJigsKRhzvbq4qFL2m88DWbqO0uB6aVgm+kYH2ff7PNXY0OfiIzXwaSAxfYm0/8lQFLqBxbENlEsjpSj4JbvLUdvA3hiQ9xkHIwWs2LHSg00DcEIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743355930; c=relaxed/simple;
-	bh=80EjwrQgCr1m0ngWb4imWyl/LLhti2yd45R7yKVtS/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dxpIvz9pWjJ4kbd2AYNGtD40EUAjXa1yWyR+/WHBMtz2Kz48/sNlMtB63zam+h1gyXG+zehPuuFau8k0qpPeG2cGDollYpfYZ0/nUiRz4u+/ZMFBWSxRzcYvxTWl8wyN/Slcy6dDPkm3+tnYe4KnL1wbIoWYfGU3XVw9Hj25sws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=F45FKK26; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743356077; c=relaxed/simple;
+	bh=/f7cHgswFyevL77zH0J7n/IZxVHe5aFvptP81sWfbUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jnf+rXtjxh1798u0KNv9vxuqznSepC0SeKQuYqjInXhaXNn79xmdF/OeoMipalRsNlhzyzhO3Ute1wUfu6euvAkqzSgXMvZIQsu7QxOIKibIK4XqnJr+wbx2EYmgu+e7CZxz5g2pK60CZtv6ZIsi9wdub5elXveabClEroNfJVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZaDyiON; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="F45FKK26"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7314640E0215;
-	Sun, 30 Mar 2025 17:31:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 73gcme-QvyL4; Sun, 30 Mar 2025 17:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743355914; bh=eocWMfEdchVosqUeljix+CtLmykEqKaqVPaHYSGl7ZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F45FKK26vESKnjiOl7Mief6NnMXhCHmmaK17apoQpqaVHk9CTjk7pxGq+Ncgqx333
-	 X7c2LPEBim7MZmQJd/c0sP4I9U2r2OIBO7B2DbPdRQ2PcUlilazJTCfx1AwlsfAHrb
-	 oqkcOsOppYA40ukYzbj144s/W6oZWbl1cpxTZ3p1dtJ1HbxMxkYRpqi588P+LVRNH2
-	 /xLwHatbvVpdEpMyA9RO2t69hnieUa+qrAFzxQONQbICuqyxRx/DeCADgpVD2HQDUE
-	 sg5Fa9ZoFSbHFbT72FIKlaUmifipOGV7TxZ1zHZkFxzbLjXTOnJpLmKj5+GWP8Zbd1
-	 IM6x2YNPOAkPDVqJKuAboP2rcVXi1rHl2AHMSJ5ddU450tZE+fxIV77HvtNpSFiTrc
-	 XkJfi9/I9YsfA5ZCceoH1oa1VkAZWVao5klCWjkfZR3DX1Eey/ANXfPETPo5zQsQMl
-	 EEb1xbBs+Js+JXVPbgvAIiFa2Wooj//Wn6TvgsL64Rl4PYAkpx9mOASrUkAQA+7NRN
-	 QI8aEagSvCfGRy1Vt90FBP2cq01KMrT47Rd6G3m63CNJ4gd4E/Ehrb/DwLLwPFPwIj
-	 zsX8RbWi5H33qVhi9wOtG1lbfoMsrBl2uVUUkcaXOOd8vkgrVrvcF7eNpyTdtc2uFT
-	 EdocMFk+pNzunpAlNY4CPt9Y=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8F88640E0213;
-	Sun, 30 Mar 2025 17:31:47 +0000 (UTC)
-Date: Sun, 30 Mar 2025 19:31:40 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-Message-ID: <20250330173140.GCZ-l__PVdSx6mj-zL@fat_crate.local>
-References: <20250325164854.199420-1-ubizjak@gmail.com>
- <20250325164854.199420-2-ubizjak@gmail.com>
- <20250325171141.GDZ-LjzaPbAG1MwjZi@fat_crate.local>
- <CAFULd4ZT5mjjEXW3SnGQVMo18fO8CapFS-ikLQvYFw5EKtEfmA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZaDyiON"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668D6C4CEDD;
+	Sun, 30 Mar 2025 17:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743356076;
+	bh=/f7cHgswFyevL77zH0J7n/IZxVHe5aFvptP81sWfbUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BZaDyiONhUvs6eisrJKBQzPDhbQNncQcDkxB774A201WTkxWsKGgXSzpuJ8VpwrQt
+	 w/wXknp32z3H5ZZqudHHKQtmrxL7MVArflug8alGFgD++kVQYICZyYV8wgQmQk+mTD
+	 5pQRLidErVcdC6Nnt++QpfBCS30JG4iB/L5+JG3Fg1NNl6BO8E50LyLRYLiz+CBEFK
+	 KvFYuuXMMRmh/WLVkD/9XAfMOc12qABBzyOLeDazdz4UaCz+KIYc15iUC4XOgJfq8M
+	 s8AMCziDogMRApUydFK0WIPf+vR9PEwAoNDBVgZZbNpQf9ol50Y4WwDpK5d2bl2J64
+	 7FBLiq5VGfHNA==
+Date: Sun, 30 Mar 2025 18:34:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Cc: david@ixit.cz, Lars-Peter Clausen <lars@metafoo.de>, Svyatoslav Ryhel
+ <clamor95@gmail.com>, Robert Eckelmann <longnoserob@gmail.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/13] iio: light: al3010: Move
+ devm_add_action_or_reset back to _probe
+Message-ID: <20250330183428.454f846d@jic23-huawei>
+In-Reply-To: <20250319-al3010-iio-regmap-v2-9-1310729d0543@ixit.cz>
+References: <20250319-al3010-iio-regmap-v2-0-1310729d0543@ixit.cz>
+	<20250319-al3010-iio-regmap-v2-9-1310729d0543@ixit.cz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAFULd4ZT5mjjEXW3SnGQVMo18fO8CapFS-ikLQvYFw5EKtEfmA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 30, 2025 at 05:15:16PM +0200, Uros Bizjak wrote:
-> You missed this part:
+On Wed, 19 Mar 2025 21:59:48 +0100
+David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org> wrote:
+
+> From: David Heidelberg <david@ixit.cz>
 > 
-> --q--
-> ... where there is no need for an entry in the .altinstr_replacement
+> In a preparation to the regmap transition.
+I'm not following the reasoning for this patch.
 
-Not really - .altinstr* memory gets jettisoned after boot.
+The setup action being unwound is done in _init()
+and if we happen to get an error on the write immediately after
+where it currently is, we no longer power down the device.
 
-> section, shrinking all text sections by 9476 bytes:
 
-So if anything, this saves a whopping ~9K disk space and makes hweight* an
-unreadable mess.
 
-So no, thanks.
+> 
+> Improve error handling using dev_err_probe().
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+>  drivers/iio/light/al3010.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/light/al3010.c b/drivers/iio/light/al3010.c
+> index 8c004a9239aef246a8c6f6c3f4acd6b760ee8249..8098c92c9572befe92d00ef0785ded5e1a08d587 100644
+> --- a/drivers/iio/light/al3010.c
+> +++ b/drivers/iio/light/al3010.c
+> @@ -89,12 +89,6 @@ static int al3010_init(struct al3010_data *data)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = devm_add_action_or_reset(&data->client->dev,
+> -				       al3010_set_pwr_off,
+> -				       data);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	ret = i2c_smbus_write_byte_data(data->client, AL3010_REG_CONFIG,
+>  					FIELD_PREP(AL3010_GAIN_MASK,
+>  						   AL3XXX_RANGE_3));
+> @@ -195,6 +189,10 @@ static int al3010_probe(struct i2c_client *client)
+>  		return ret;
+>  	}
+>  
+> +	ret = devm_add_action_or_reset(dev, al3010_set_pwr_off, data);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add action\n");
+> +
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  
+> 
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
