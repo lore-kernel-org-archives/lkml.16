@@ -1,203 +1,257 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72034431
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 07:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF1C13A3ED
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 07:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743320905; cv=none; b=fTIN8Ek6xy+PXFTx5aN87Z+GfetBYYsUQgsG4GIEetUq4tl2zA9bimkBbrvgsFD0OchI+Hj1jR/plcW7B4QvFfJTpZ3gwj66J1bZOapQbjxMZYHGOevfByk5INZ50632BHc+Jy6+09Gb0TXXx3I6gR6tEC1eovhvaI0X+6dWgxU=
+	t=1743320993; cv=none; b=HVG3WvRBSpcJCqs3G3szDX+0Oc9uD6wLEsQt1gtylFSCq30P0Ly0g83NY3YStp/qWNHfNolH/4Dk8y7OXcZBq7n0pHkd23afVojp/FtJcxjmPlGOacY967FLm8GO1L2TaAfLMM3DSK+6rPOurbSmE5hCkYRU7aG6hfWgDSYGvrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743320905; c=relaxed/simple;
-	bh=ZXe6YO10qHPKaVckGQTqfBOPg3TJe1uvKXpR/vzcLzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IBa26wJoI1Gd4S8k/fNdaODsFfkYUvMz5hVcVslIp9fWhbYWX14wD6PtGyxPaGgUPxuldWFIs7Ext4v4yDTCK3YQb8f5DLrsmTUCsWsjSrMKYJeugdnt9Wm0mfOlDq7e5YwyyEqk5tUX4sedHpqOEH0Nxjb0WZcn8beVgQ8Jid8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QsWasIzX; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743320993; c=relaxed/simple;
+	bh=yI3v5SKInTwjTobY+ygFi1ymKIfwWFxmc6JOIeibKts=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FppM5y+ZgRcyGjgBOPS9OHUbZS3ffTy4o9Ua+SH3rUOwYE5g744KJD/rTkBSJGdveqVXd4HXxvifFmDP/PVA/9wD2CtQ/HXEGCWgaX5lvNekDKq/w2LDRg/wlyL/lX+SIKC2X6EdmHDQHpWFAGEGp3L6T50/1xdfP9GjJ0K/kjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B8Q1+hwa; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QsWasIzX"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52U6tj0N008817;
-	Sun, 30 Mar 2025 07:47:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=ttcq4pZHt7Gr+FZ9vt0xqE+TrTQM
-	gvp2ZXVHLpm2ltY=; b=QsWasIzXkBNtaKT5ejogHShJEqtV8ukhPc40fAlSIAeL
-	8DB7rj/oeM9Sf0d8SQ3cEqJwo9S+HUshMZSPobyrIWi73wL+k+4ek382PHekajxN
-	dlZSQvcP6jENMYkyGDlZzSOFthOm+g9vUyz4Jw803n/zql+SIkhN2Bj+JBY3L/fM
-	WzlwlsNVUgkdBMxejzhDwyJi6D6u/sJJFZrRtjvVc6wAAMdoE26n+FD+1PKpK+Al
-	0gXTQyF6TUSIxP+Wj+DCAScW+dPFR4R1alQVGteHsqtgwpQST37NRUSbarwJJKqn
-	pY5+b41wHofKW5C1bZZisYvLKs2OXOtBNV3D9Bm5Lw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45pr1p9fys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Mar 2025 07:47:50 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52U7lo8F007840;
-	Sun, 30 Mar 2025 07:47:50 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45pr1p9fyq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Mar 2025 07:47:50 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52U1rM19014555;
-	Sun, 30 Mar 2025 07:47:49 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pvpkrvb2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Mar 2025 07:47:49 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52U7ljgr18350498
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 30 Mar 2025 07:47:45 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 43A3920049;
-	Sun, 30 Mar 2025 07:47:45 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A01120040;
-	Sun, 30 Mar 2025 07:47:40 +0000 (GMT)
-Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.97.134])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 30 Mar 2025 07:47:40 +0000 (GMT)
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yosry Ahmed <yosry.ahmed@linux.dev>,
-        Tamir Duberstein <tamird@gmail.com>,
-        Srikar Dronamraju <srikar@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: [PATCH] powerpc/defconfigs: Set HZ=1000 on ppc64 and powernv defconfigs
-Date: Sun, 30 Mar 2025 13:17:34 +0530
-Message-ID: <20250330074734.16679-1-vineethr@linux.ibm.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8Q1+hwa"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bf1d48843so31055931fa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 00:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743320989; x=1743925789; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9qB/hRdQ0EcKQyRqIVMf31SbkoGsSqeYW5NUG47zMtM=;
+        b=B8Q1+hwasu0nSQ+sNwv9Awp4Vh9NZpSr9R5TLEhVGlknGYQHayEf1PLJoRD/F6hnUU
+         T/tv8BSAlueItHBEEstzEuND0ROi9z5oYFpzaC5s+PX3NiUcv0B8UVxgqVQ+VtLQOGow
+         +PpFWHJyfQp0mvhIRO6V2TzWebinB1EY8jXWFvifGefQrH6Rsc5RzvdWNCNjfWz9zs/P
+         3ta6c/UufcUz/ZGzM6GZo7WIQFakrtOabmPPBMw29gCSdsKgjd7o/myzLyg/oOYvzFtG
+         CD+lje/Ghvr7egwk9DeYDQBBqDjeXIPHV/VpINrapTSVSWJXIuYC1M0/jEgUTY2IQGZ9
+         j7yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743320989; x=1743925789;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9qB/hRdQ0EcKQyRqIVMf31SbkoGsSqeYW5NUG47zMtM=;
+        b=eG9Rbd95zMUIZkrwh81BGiZoyCfhEPmqhQk2RrRHPjFy3it54SNCVOg81+jOv8iNqq
+         JIr6aEWfh8dFeixkpN7YDXIbM/3FWmAN0kkIexX2ElalgSp+by60Tlp1BRH4xFqEHl11
+         JGMI6fxVaZagNlt6pmqemDrXKQgqG382tXA6BjHCVfTFoYfDx5yn1PCJPsoEOf3jh5wd
+         wBX6/mK7xsSN2PPToL+Y0aFaxGoLDqWCgRr20AF6TPu5DAs3RWlzudKMaYtz8tJdW9nP
+         19YH3qt3S5S/vlbd/FH9gOj6NRg3iDtPFau3cFve5W7Mf5W7ktJf/IdQxHaPTJG5efHW
+         VT+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWnJfnxzggd9lx1xcks3LJNqjHqEKjb/49o3py4nzB+qHlPVU/4hf9DvHwtKQuyTKlrZBR9j0jsfQXoWCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiItkg2FZTtDEQqphGm3qqLOh/+DiLWyHBTCmasR29czqQSWzH
+	BltwV4z8sx+sFLhG95MIPJnEdjZdcCkiRMcydFxk+eQIunM7l59duVNZO7xytUxPACESwf1sW80
+	hX1gMuFRgv4lN2GScFtTj4vxI2kc=
+X-Gm-Gg: ASbGncvNrnPwVMXazmOWn5QNjpsjo02XNKQEmjfXe5PwqWeG9z2pRqY4tdtLhN8Zuv5
+	7w9d3tSpKkFLa0pmOVwb33X6RNrrNJlvStsAxu7jrfV5v6gT05qFVXz/ji3opraudVVQLZ3ysFS
+	G5cJ+8UhPzrxazWG8O0VI2svVoYQ==
+X-Google-Smtp-Source: AGHT+IGvdU+Mx6wO4OhhQEUE7pQwdRXjsCMHFJf63nNSX08WSFtm58gFyANZDJu1b0h3zHc8HWOKVOMB4bdJWALzYdU=
+X-Received: by 2002:a2e:a23a:0:b0:30d:e104:b67e with SMTP id
+ 38308e7fff4ca-30de104b853mr11329931fa.41.1743320989218; Sun, 30 Mar 2025
+ 00:49:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6K6noxtlI7DKdwX5XZATnrIciW5ht5UF
-X-Proofpoint-ORIG-GUID: ArbiTZTrsMQ4WUKzruDXvUT0xHYD1Hsm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_03,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300051
+References: <20250325164854.199420-1-ubizjak@gmail.com> <20250325164854.199420-2-ubizjak@gmail.com>
+ <Z-Mme_OxuhYfxgzO@gmail.com> <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
+ <20250329110042.75a28342@pumpkin>
+In-Reply-To: <20250329110042.75a28342@pumpkin>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 30 Mar 2025 09:49:43 +0200
+X-Gm-Features: AQ5f1Jp6et1XspYDeD3XZxndoz0Rg61wGHQqTQz9iWKKNQKOOw9CL6YEJ8IBFjY
+Message-ID: <CAFULd4aybKBdpVv_mt5EgNGDp6yk_ayGr9C4H15-3dc3h6K9aA@mail.gmail.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 030bdc3fd080 ("powerpc/defconfigs: Set HZ=100 on pseries and ppc64
-defconfigs") lowered CONFIG_HZ from 250 to 100, citing reduced need for a
-higher tick rate due to high-resolution timers and concerns about timer
-interrupt overhead and cascading effects in the timer wheel.
+On Sat, Mar 29, 2025 at 12:00=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Sat, 29 Mar 2025 10:19:37 +0100
+> Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > On Tue, Mar 25, 2025 at 10:56=E2=80=AFPM Ingo Molnar <mingo@kernel.org>=
+ wrote:
+> > >
+> > >
+> > > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > > Emit naked POPCNT instruction when available with X86_NATIVE_CPU
+> > > > option. The compiler is not bound by ABI when emitting the instruct=
+ion
+> > > > without the fallback call to __sw_hweight{32,64}() library function
+> > > > and has much more freedom to allocate input and output operands,
+> > > > including memory input operand.
+> > > >
+> > > > The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
+> > > > shrinks by 599 bytes:
+> > > >
+> > > >   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
+> > > >   Total: Before=3D22710531, After=3D22709932, chg -0.00%
+> > > >
+> > > > The asm changes from e.g.:
+> > > >
+> > > >          3bf9c:       48 8b 3d 00 00 00 00    mov    0x0(%rip),%rdi
+> > > >          3bfa3:       e8 00 00 00 00          call   3bfa8 <...>
+> > > >          3bfa8:       90                      nop
+> > > >          3bfa9:       90                      nop
+> > > >
+> > > > with:
+> > > >
+> > > >            34b:       31 c0                   xor    %eax,%eax
+> > > >            34d:       f3 48 0f b8 c7          popcnt %rdi,%rax
+> > > >
+> > > > in the .altinstr_replacement section
+> > > >
+> > > > to:
+> > > >
+> > > >          3bfdc:       31 c0                   xor    %eax,%eax
+> > > >          3bfde:       f3 48 0f b8 05 00 00    popcnt 0x0(%rip),%rax
+> > > >          3bfe5:       00 00
+> > > >
+> > > > where there is no need for an entry in the .altinstr_replacement
+> > > > section, shrinking all text sections by 9476 bytes:
+> > > >
+> > > >           text           data     bss      dec            hex filen=
+ame
+> > > >       27267068        4643047  814852 32724967        1f357e7 vmlin=
+ux-old.o
+> > > >       27257592        4643047  814852 32715491        1f332e3 vmlin=
+ux-new.o
+> > >
+> > > > +#ifdef __POPCNT__
+> > > > +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
+> > > > +                 : [cnt] "=3D&r" (res)
+> > > > +                 : [val] ASM_INPUT_RM (w));
+> > > > +#else
+> > > >       asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
+> > > >                               "call __sw_hweight32",
+> > > >                               ASM_CLR "popcntl %[val], %[cnt]",
+> > > >                               X86_FEATURE_POPCNT)
+> > > >                        : [cnt] "=3Da" (res), ASM_CALL_CONSTRAINT
+> > > >                        : [val] REG_IN (w));
+> > >
+> > > So a better optimization I think would be to declare and implement
+> > > __sw_hweight32 with a different, less intrusive function call ABI tha=
+t
+> >
+> > With an external function, the ABI specifies the location of input
+> > argument and function result. Unless we want to declare the whole
+> > function as asm() inline function (with some 20 instructions), we have
+> > to specify the location of function arguments and where the function
+> > result is to be found in the asm() that calls the external function.
+> > Register allocator then uses this information to move arguments to the
+> > right place before the call.
+> >
+> > The above approach, when used to emulate an insn,  has a drawback.
+> > When the instruction is available as an alternative, it still has
+> > fixed input and output registers, forced by the ABI of the function
+> > call. Register allocator has to move registers unnecessarily to
+> > satisfy the constraints of the function call, not the instruction
+> > itself.
+>
+> Forcing the argument into a fixed register won't make much difference
+> to execution time.
+> Just a bit more work for the instruction decoder and a few more bytes
+> of I-cache.
+> (Register-register moves can be zero clocks.)
+> In many cases (but not as many as you might hope for) the compiler
+> back-tracks the input register requirement to the instruction that
+> generates the value.
 
-However, improvements have been made to the timer wheel algorithm since
-then, particularly in eliminating cascading effects at the cost of minor
-timekeeping inaccuracies. More details are available here
-https://lwn.net/Articles/646950/. This removes the original concern about
-cascading, and the reliance on high-resolution timers is not applicable
-to the scheduler, which still depends on periodic ticks set by CONFIG_HZ.
+I'm afraid I don't fully understand what you mean by "back-tracking
+the input register requirement". However, with:
 
-With the introduction of the EEVDF scheduler, users can specify custom
-slices for workloads. The default base_slice is 3ms, but with CONFIG_HZ=100
-(10ms tick interval), base_slice is ineffective. Workloads like stress-ng
-that do not voluntarily yield the CPU run for ~10ms before switching out.
-Additionally, setting a custom slice below 3ms (e.g., 2ms) should lower
-task latency, but this effect is lost due to the coarse 10ms tick.
+asm("insn %0, %1" : "=3Dr" (out) : "r" (in));
 
-By increasing CONFIG_HZ to 1000 (1ms tick), base_slice is properly honored,
-and user-defined slices work as expected. Benchmark results support this
-change:
+the compiler is not obliged to match input with output, although many
+times it does so (especially when input argument is dead). To avoid
+false dependence on the output, we should force the compiler to always
+match input and output:
 
-Latency improvements in schbench with EEVDF under stress-ng-induced noise:
+asm("insn %0, %1" : "=3Dr" (out) : "0" (in));
 
-Scheduler       CONFIG_HZ  Custom Slice  99th Percentile Latency (µs)
---------------------------------------------------------------------
-EEVDF           1000       No            0.30x
-EEVDF           1000       2 ms          0.29x
-EEVDF (default) 100        No            1.00x
+and this will resolve false dependence (input register obviously needs
+to be ready before insn) at the expense of an extra move instruction
+in front of the insn in case input is not dead. This is unfortunately
+not possible when one of the alternatives is a function call, where
+location of input and output arguments is specified by ABI.
 
-Switching to HZ=1000 reduces the 99th percentile latency in schbench by
-~70%. This improvement occurs because, with HZ=1000, stress-ng tasks run
-for ~3ms before yielding, compared to ~10ms with HZ=100. As a result,
-schbench gets CPU time sooner, reducing its latency.
+> In this case the called function needs two writeable registers.
+> I think you can tell gcc the input is invalidated and the output
+> is 'early clobber' so that the register are different.
 
-Daytrader Performance:
+Yes, my first patch used this approach, where output operand is cleared fir=
+st:
 
-Daytrader results show minor variation within standard deviation,
-indicating no significant regression.
+asm("xorl %0, %0; popcntl %1, %0" : "=3D&r" (out) : "rm" (in));
 
-Workload (Users/Instances)  Throughput 1000HZ vs 100HZ (Std Dev%)
---------------------------------------------------------------------------
-30 u, 1 i                   +3.01% (1.62%)
-60 u, 1 i                   +1.46% (2.69%)
-90 u, 1 i                   –1.33% (3.09%)
-30 u, 2 i                   -1.20% (1.71%)
-30 u, 3 i                   –0.07% (1.33%)
+Please note that "earlyclobbered" output reg can't be matched with
+input reg, or with any reg that forms the address.
 
-Avg. Response Time: No Change (=)
+> > The proposed solution builds on the fact that with -march=3Dnative (and
+> > also when -mpopcnt is specified on the command line) , the compiler
+> > signals the availability of certain ISA by defining the corresponding
+> > definition. We can use this definition to relax the constraints to fit
+> > the instruction, not the ABI of the fallback function call. On x86, we
+> > can also access memory directly, avoiding clobbering a temporary input
+> > register.
+> >
+> > Without the fix for (obsolete) false dependency, the change becomes sim=
+ply:
+> >
+> > #ifdef __POPCNT__
+> >      asm ("popcntl %[val], %[cnt]"
+> >                  : [cnt] "=3Dr" (res)
+> >                  : [val] ASM_INPUT_RM (w));
+> > #else
+> >
+> > and besides the reported savings of 600 bytes in the .text section
+> > also allows the register allocator to schedule registers (and input
+> > arguments from memory) more optimally, not counting additional 9k
+> > saved space in the alternative section.
+> >
+> > The patch is also an example, how -march=3Dnative enables further
+> > optimizations involving additional ISAs.
+>
+> To my mind it would be better to be able to specify oldest cpu
+> type the build should support.
+> Either by actual cpu type (eg 'skylake' or 'zen2') or maybe by
+> a specific instruction (eg popcnt).
+> The scripts would then determine the appropriate compiler flags
+> and any extra -Dvar to generate appropriate code.
 
-pgbench select queries:
+Please note that with -march=3Dnative the compiler driver ("gcc") does
+this for you. -march=3Dnative expands to a series of -m compile flags
+(you can see these flags by passing -### to gcc) and each flag defines
+corresponding ISA macro when set. E.g., passing -mpopcnt defines
+__POPCNT__ macro. These macros can be used instead of -Dvar for
+conditional compilation that depends on -m ISA flags, passed to the
+compiler ("cc1").
 
-Metric                         1000HZ vs 100HZ (Std Dev%)
-------------------------------------------------------------------
-Average TPS Change             +2.16% (1.27%)
-Average Latency Change         –2.21% (1.21%)
+> The arch/x86/Kconfig.cpu seems to be missing options to select
+> between 64bit cpus.
+> That would also be the place to add CONFIG defines that mirror the
+> X86_FEATURE_xxx flags.
 
-Average TPS: Higher the better
-Average Latency: Lower the better
+While the above -march=3Dnative expands in the driver, setting e.g.
+-march=3Dskylake enables CPU capabilities in the compiler itself.
+However, using -march=3D...cpu...  also sets corresponding ISA macros,
+so the proposed approach does not exclude Kconfig.cpu options.
+Automatically set ISA macros can be used instead of X86_FEATURE_xxx
+flags for maximum flexibility.
 
-pgbench shows both throughput and latency improvements beyond standard
-deviation.
-
-Given these results and the improvements in timer wheel implementation,
-increasing CONFIG_HZ to 1000 ensures that powerpc benefits from EEVDF’s
-base_slice and allows fine-tuned scheduling for latency-sensitive
-workloads.
-
-Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
----
- arch/powerpc/configs/powernv_defconfig | 2 +-
- arch/powerpc/configs/ppc64_defconfig   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
-index 6b6d7467fecf..8abf17d26b3a 100644
---- a/arch/powerpc/configs/powernv_defconfig
-+++ b/arch/powerpc/configs/powernv_defconfig
-@@ -46,7 +46,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
- CONFIG_CPU_FREQ_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
- CONFIG_CPU_IDLE=y
--CONFIG_HZ_100=y
-+CONFIG_HZ_1000=y
- CONFIG_BINFMT_MISC=m
- CONFIG_PPC_TRANSACTIONAL_MEM=y
- CONFIG_PPC_UV=y
-diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-index 5fa154185efa..45d437e4c62e 100644
---- a/arch/powerpc/configs/ppc64_defconfig
-+++ b/arch/powerpc/configs/ppc64_defconfig
-@@ -57,7 +57,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
- CONFIG_CPU_FREQ_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
- CONFIG_CPU_FREQ_PMAC64=y
--CONFIG_HZ_100=y
-+CONFIG_HZ_1000=y
- CONFIG_PPC_TRANSACTIONAL_MEM=y
- CONFIG_KEXEC=y
- CONFIG_KEXEC_FILE=y
--- 
-2.47.0
-
+Thanks,
+Uros.
