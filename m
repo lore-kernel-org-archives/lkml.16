@@ -1,129 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CF13594D
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD3B1876;
+	Sun, 30 Mar 2025 23:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743378979; cv=none; b=CivF2RQMd/ySdELjsgXlDp8lm/Oc3jfhBOcb93jfkGWQAuKcQ6S5bagSO1vARJDOssx8BrkQDXS1Ofb00XfmMZBj9RdViZaQ5mWC7uxUQh8yD6g9hIhTFarrtrXxxR9D/Vemb44aVrWmop9C9O179jiT8B9dCjwJUCm6hLlAi2g=
+	t=1743379035; cv=none; b=FzF28GECRAwow/F2cln4WBjW0V3eNH9/2OfAWotL0J4k/bCM5FdhAG498h0+opA9nt5JdJ/uG3jriEh8Zh/xSD32EWKSRS6UsxzxGMnmW8Aia1IuS+jhbyEc82wsp72nBpVU1RVJWMyuQu8U8X0B18MA9MtNf09x8ZNLzaQ8KCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743378979; c=relaxed/simple;
-	bh=iVuClAr2aYqh7WKm6QX2yMC0zJR6TTLN2hLzA+GJXOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CaP5i/z9Okc/iaHuNu28XtHWfboLl8gN21hVzDO8bjMn/MrCUlybFOTJJ8nw5rbCNFNHd1vv747Z1ydJ37uY2u/AleNr4VMmXuhGerkM41+PmgzVOynGBKnfqzy7aqX4fhlWylF/D6Gng42uDWT61iAax15u65nfKH0GXgP7k+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZWPmgawD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2hvEGas; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZWPmgawD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2hvEGas; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743379035; c=relaxed/simple;
+	bh=LmuhSVgZKmyT4HmOcs80V3yny9lafUjqV8PzWLmoMNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BwXDPAJaBGv4ioSfbOgDpAZpK9iZEzI8910+SRQDI1wFzqitrN0QJ5sr0MKK5q6JMdc0Nxeq5XjbHCf79E8I1DnHhZFXnngHKMPXWInTSlqAvuBofmArMnLn7UDaZmSv3VRMiKtK4Qdf7kzSLI6o2TG0VhICN5LELoYwlr7mwXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pId25eYh; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZWPmgawD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2hvEGas";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZWPmgawD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2hvEGas"
-Received: from lion.mk-sys.cz (unknown [10.100.225.114])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pId25eYh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743379030;
+	bh=1Dmo4GHPifvt9bk9c1jPpHERZ/BKdA/aLhRg//dKecI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pId25eYhtY6xK/nft2AomMzH+XEaZi5GrLlucBj89ixvjXmuwg/tavb9tMrcScH2U
+	 /iMq4zcgMdqAg31M5ByTuMIbIT+dRy5wCuWU0Yz71ZXugiH2uQ7kKnQt9Ekp85JYLA
+	 kAAJ4rFU2Pft3JXQRMdDBeCZ2pl4ZRq0TGV9rJCo4zuwhhOlXtJaKGb/VJnrR8xHyH
+	 al04ftPnvOq+G7TZqdIdkJiBzFmmqfBAeoxyBkUCH0/nA0sZcs+iZA/e1ZCGeJmbo3
+	 GDiV2Pkb5ii016+i39xSv/SWBrMFf/cDrLLaaDPZfwMugYpPCY1l9yPHgH7bbybB7j
+	 abwzPh+1xAXMA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 850942119B;
-	Sun, 30 Mar 2025 23:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743378973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkFtXGeyDEF6b4XWmmH4QrQrUTJ4sXopxEBUbn/eJZo=;
-	b=ZWPmgawDQEyJxUCqViYu4NcD/tJ7OGLtTpBV/Ws+Dxci6odAlFfxh+peCGJetCl8Tgt4uB
-	jwyQCB+sJ2w4NO+YVwAGz3tPhneV1A5/dbtKsMqsXsUjMYbFlcCrvX46wLNwpJpniHLflu
-	G7Fkg3ejNyDSFWNIxcBKl8R9qa7G078=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743378973;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkFtXGeyDEF6b4XWmmH4QrQrUTJ4sXopxEBUbn/eJZo=;
-	b=Y2hvEGas8uKls6Xc+o+se4SUjJ7LZA6okTFAgNhWucVWE1oyoh3oR2n8vL+WkJqFaWjLP5
-	RzbiSKyu50aKdXDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743378973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkFtXGeyDEF6b4XWmmH4QrQrUTJ4sXopxEBUbn/eJZo=;
-	b=ZWPmgawDQEyJxUCqViYu4NcD/tJ7OGLtTpBV/Ws+Dxci6odAlFfxh+peCGJetCl8Tgt4uB
-	jwyQCB+sJ2w4NO+YVwAGz3tPhneV1A5/dbtKsMqsXsUjMYbFlcCrvX46wLNwpJpniHLflu
-	G7Fkg3ejNyDSFWNIxcBKl8R9qa7G078=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743378973;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkFtXGeyDEF6b4XWmmH4QrQrUTJ4sXopxEBUbn/eJZo=;
-	b=Y2hvEGas8uKls6Xc+o+se4SUjJ7LZA6okTFAgNhWucVWE1oyoh3oR2n8vL+WkJqFaWjLP5
-	RzbiSKyu50aKdXDg==
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id 6DE0720057; Mon, 31 Mar 2025 01:56:13 +0200 (CEST)
-Date: Mon, 31 Mar 2025 01:56:13 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Xing <kernelxing@tencent.com>, 
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH ethtool-next 0/3] Add support for hardware timestamp
- provider
-Message-ID: <mjn6eeo6lestvo6z3utb7aemufmfhn5alecyoaz46dt4pwjn6v@4aaaz6qpqd4b>
-References: <20250305-feature_ptp-v1-0-f36f64f69aaa@bootlin.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZQrln6fq7z4wbx;
+	Mon, 31 Mar 2025 10:57:09 +1100 (AEDT)
+Date: Mon, 31 Mar 2025 10:57:08 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Masami Hiramatsu <mhiramat@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Uday Shankar <ushankar@purestorage.com>
+Subject: Re: linux-next: manual merge of the ftrace tree with the kbuild
+ tree
+Message-ID: <20250331105708.331ec145@canb.auug.org.au>
+In-Reply-To: <20250324164111.20c92791@canb.auug.org.au>
+References: <20250324164111.20c92791@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305-feature_ptp-v1-0-f36f64f69aaa@bootlin.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,kernel.org,redhat.com,lunn.ch,gmail.com,tencent.com,armlinux.org.uk,vger.kernel.org,bootlin.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -2.30
-X-Spam-Flag: NO
+Content-Type: multipart/signed; boundary="Sig_/Fn5qcwP+BfSlpDSjOCX53fw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Wed, Mar 05, 2025 at 06:33:36PM +0100, Kory Maincent wrote:
-> Add support for reading tsinfo of a specific hardware timetstamp provider.
-> Enable selecting the hwtstamp provider within the network topology of a
-> network interface.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-> Kory Maincent (3):
->       update UAPI header copies
->       tsinfo: Add support for hwtstamp provider
->       netlink: Add support for tsconfig command
-> 
+--Sig_/Fn5qcwP+BfSlpDSjOCX53fw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi all,
 
-the series has been applied to master branch as the kernel counterpart
-is already present in 6.14 kernel release.
+On Mon, 24 Mar 2025 16:41:11 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> Today's linux-next merge of the ftrace tree got a conflict in:
+>=20
+>   scripts/tracing/draw_functrace.py
+>=20
+> between commit:
+>=20
+>   9d702bb1d3c0 ("scripts: make python shebangs specific about desired ver=
+sion")
+>=20
+> from the kbuild tree and commit:
+>=20
+>   a926d15a799a ("scripts/tracing: Remove scripts/tracing/draw_functrace.p=
+y")
+>=20
+> from the ftrace tree.
+>=20
+> I fixed it up (I just removed the file) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-Michal
+This is now a conflict between the kbuild tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Fn5qcwP+BfSlpDSjOCX53fw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfp2lQACgkQAVBC80lX
+0Gze5gf/W3ZJD3yNtQFKdZjC5mKll29ce0pO3oDh9yDxbgzx3pGIBOBp0X/xybyt
+2a+GeVZAsTRov1iYMO25Gs6womett4aVP7ueN6GmNhRLRlJDw+tN8B7BNUboomyK
+X3CmB9O77suMFooN1X/KFU8Pk1TZ/VGBF4i76cLjauLF5VkGP2S8XMOtUmHOE5Ol
+vRjNGT7ShsUL/EIa/Xv68sj5FR375at2TBKRGSpq3JCGkGOpxwNwFrhbb2i64lxU
+yJTrcjY7Y1rFkS6U+x+KCidQlxZLcCUOxk/mKwz/3IcRTlPePqKKAVDNV5AGU6jt
+LFLerBpXYnrdeU8H3348Di2CczP7qg==
+=1mnR
+-----END PGP SIGNATURE-----
+
+--Sig_/Fn5qcwP+BfSlpDSjOCX53fw--
