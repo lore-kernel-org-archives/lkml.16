@@ -1,244 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDE58632C;
-	Sun, 30 Mar 2025 05:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8763817C2;
+	Sun, 30 Mar 2025 05:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743314060; cv=none; b=ZTPaZJsiDvSjnFQvfXHf2yjPl3BobVLUO16yFcpTISY4H28dN5DnsQTqmbirpPwCyL/0aYYP6pv3shxU/gGA3iFvPkUMpiSKVqhPbKsM4XKbuqEUa/CdUEB3WhjwxzV9Ote8UItSJgaINbKOZVSZhyrTaOGKXon3NxH7Gu6pbwI=
+	t=1743314097; cv=none; b=gOFw/phuaF4fQzLQ9/IlQ9obMeB/V+WAUvHsTBMX4nJ7Em0tHxXpfljcjeeEezj+0RNIbCTDqSDV35ZTcTqRJ2MhtO43ye2G4BHFcG7puqRPDa7hxwKO+UjnEC+79e5qr0VnH86jePNky6rEeJUZLd8Pn1p6KyNKekLLaJW4a5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743314060; c=relaxed/simple;
-	bh=f/AenSlhfMnCT25RFDW+6en6R4m+nQS9Aw3y5vxVcBM=;
+	s=arc-20240116; t=1743314097; c=relaxed/simple;
+	bh=6p8gncaaZsHPc5k3Qs2ZLsncfJuQGvSixclKj5eyQLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLv78ouMfPjlR+hTULpfOksAxq8++ktq0e2pziL/UTSZQfOl9uGrGe89G78pK0+kPCAfA4dLOSsoa6VdI1vMkZ2zeAjLdgrn/Lu3OI10yv4PdTpj4NMYJ3wAYiM0G56ADCYi97gcGD2ZHM3BOu7eHtzvLlrIIHZZ4pGHL4cjcV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJ3TzpsC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V62ZETbRle0UMDvB/qm66BLA6k7cfUD5z/7hUtz9NMoK+XYOJIlVEoglxHOIcOd7LPYiPbxOYEOcSRywBcj2ibWjq8IdcaXOJyszZhLrNoqRrvDkpZslVENeDnu9ezkqVfQaE7SZtJABdwkNU6/2T7+qyr7IkoZ51IYmKHSvPJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ln3XgHIC; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJ3TzpsC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848F3C4CEDD;
-	Sun, 30 Mar 2025 05:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743314058;
-	bh=f/AenSlhfMnCT25RFDW+6en6R4m+nQS9Aw3y5vxVcBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DJ3TzpsClhWYy3lqUkINLa1GUFedz31yZydVOXx0xuncx7FHy/h/wL+DoWTBnvc5Q
-	 lRv6E4xIjwbzwYMBfwTL6rTsEDN3PsSLl1k7mrWfznDnjOdi5B1WznbrJ4vkRnjSz6
-	 ileKLtkHY9cGh8wiKBfb/+qB142UvincelDHJUpSBfi+Jw8LVgezCqUXX1AAQ3AYal
-	 cUUNFTdhNZwqoUlPtQvbCV6e5CPoJLdiLdgfSxRaIfcmOPkPmpIKZHiZZ9VJOzUTHK
-	 H5VwTF6zPYcnW+xZaTEkuZxPtGMuf7dt0wk/rxQJK5eqg3WZlz58SPJJseuvmyzGjY
-	 ftzOcSTJW/0sQ==
-Date: Sat, 29 Mar 2025 22:54:17 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH 1/3] perf sort: Keep output fields in the same level
-Message-ID: <Z-jcifdq7GP2cD4k@z2>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ln3XgHIC"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so452914966b.1;
+        Sat, 29 Mar 2025 22:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743314094; x=1743918894; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LZS5hChiziL0zECiXtf+2ICQEzuKraJOFVrf1WXGBpo=;
+        b=Ln3XgHICO3pkubsy+qBzV8NjDOrPbTSJN8Q1Dz1oRlPg/+WL/xwSWeCEkdds5/Kbg0
+         ptPuhHS8atkyczWHA72rsEv6XzU5kG78/c6jJy83pt/nxckswwMChTemrwrpdAKvON2N
+         lwiLf9vQSLhcwLTIU3w0jDpt8jjXixUZuvRFDSqVUXnqbPDxa+6II7IiaF6Xgwc4hOFn
+         7A+qQgkLqbvRXSzauw9bdormpCA4lEHwA/zl7sBTkSfZ+FEcKhBJesJdM5hNqcXPc19x
+         8Kiu7ZLQGJ1RE9bNjhfdUrg+eZ3kStoiKBXKUbCgasrfTE724E+Ogyq5L3gVeX2C7LmK
+         6edA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743314094; x=1743918894;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LZS5hChiziL0zECiXtf+2ICQEzuKraJOFVrf1WXGBpo=;
+        b=encZSJE8pjQsci/JvWpopnvUXvKBxoEZZqPXfOLKuOLtuikg2S4XYxQCe5RvvTjVoK
+         qo9zJyh9J5xy4rMyS+DWVTL3MAjGNa+30ahyEw0xwJyxH6xdig1q6rh5WWWxSYPd82f1
+         xnOVX033A1Llmrgqub3uXQaD6NA9lCRDzRmWfpUuXfTmQJGz+X40gEBGxAnRcLmnLpMX
+         /ctJAQc56RF5sfjS7pzFIL04w7HS/GFp4mLMR1Z9YElLyipmJZst1Byjfiht0IUQbbiy
+         KZAgn+cAcoNt4FHt8/tOjnIlLs53eYtu44Ap4oZLfxkmzPGhztq77/uXwT6+oKMyCXPg
+         uiLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGaJfY6Wl6vptABiiUA0M4rCnr90QPJnXNK6u1tG75qFR8HHcGP0Cbqiq/CEnBeKA0SB3TwfZ+Yk0iQivD@vger.kernel.org, AJvYcCWdS3OTMM6yj98qsws4WinOHRY3YRI9OyzcF7CB9ysOd/tkkV3a/iRHxD3VFRDOLjVdcEVf+DPUS/Aq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVJ83sgPMNuZyqDWih8TDQwVYwLjNKgdc0YZFVMr9wei9teT6N
+	LJOjvBaWhrQadg+e9+8li0tEclBrRPDK94kYUHrqiq9SpLHFNKdv
+X-Gm-Gg: ASbGncsAETgwnZx8m7V4uaj1Leg83OC6YQFM+8fOcC0Tj99+3byBAJzJq468Z/15TrP
+	nX00MAvLkdHA25a90R9AiiJZQNwRKA3l3S6aIQ2/IEjNlvBlO8clEqUfq2sYRSYU/uQp1khEkZU
+	JN4a2OxKqIKO4TTLXjpgv5CTIn7jE7iPhIlsG2XTaDPqbOb5/fQm/gDOWde4trcc4MKrjTYFlwI
+	uga9XKbhCA7RnuexrAKU0tFkwIQVKGcnq2stzx9eXsu05lEyBMJSNNHB29VX1Ob/EW9z43zPS2N
+	Rer/yOMd8K5ek2VUzdAk0oU21dewgzq4kqAFd9e7XK+2RJdx7rMMouNuB374SRNDxko=
+X-Google-Smtp-Source: AGHT+IE87WJv0/ZzDl3FXShm+jTRY2Te+7Zv9PYAX8DvccPdhOEnetOp/txCzMreLmUt78hsaQBNgA==
+X-Received: by 2002:a17:907:7f07:b0:ac2:55f2:f939 with SMTP id a640c23a62f3a-ac738975e33mr385096066b.6.1743314093493;
+        Sat, 29 Mar 2025 22:54:53 -0700 (PDT)
+Received: from localhost (44.tor-exit.nothingtohide.nl. [192.42.116.218])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ac71922ba63sm433884266b.2.2025.03.29.22.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 22:54:53 -0700 (PDT)
+Date: Sun, 30 Mar 2025 07:54:50 +0200
+From: Ahmed Salem <x0rw3ll@gmail.com>
+To: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org
+Cc: skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linuxfoundation.org, linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/2] ACPI: mark ACPI_COPY_NAMESEG destinations with
+ __nonstring attribute
+Message-ID: <a9bd2a1b490b4305c18f8473aab21c97e8902fb8.1743313252.git.x0rw3ll@gmail.com>
+References: <cover.1743313252.git.x0rw3ll@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9vgt1pjiNbDBDbM@gmail.com>
+In-Reply-To: <cover.1743313252.git.x0rw3ll@gmail.com>
 
-On Thu, Mar 20, 2025 at 10:32:39AM +0100, Ingo Molnar wrote:
-> 
-> * Namhyung Kim <namhyung@kernel.org> wrote:
-> 
-> > On Fri, Mar 07, 2025 at 12:08:27AM -0800, Namhyung Kim wrote:
-> > > This is useful for hierarchy output mode where the first level is
-> > > considered as output fields.  We want them in the same level so that it
-> > > can show only the remaining groups in the hierarchy.
-> > > 
-> > > Before:
-> > >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> > >   ...
-> > >   #          Overhead  Samples / Period / Command / Shared Object
-> > >   # .................  ..........................................
-> > >   #
-> > >      100.00%           4035
-> > >         100.00%           3835883066
-> > >            100.00%           perf
-> > >                99.37%           perf
-> > >                 0.50%           ld-linux-x86-64.so.2
-> > >                 0.06%           [unknown]
-> > >                 0.04%           libc.so.6
-> > >                 0.02%           libLLVM-16.so.1
-> > > 
-> > > After:
-> > >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> > >   ...
-> > >   #    Overhead       Samples        Period  Command / Shared Object
-> > >   # .......................................  .......................
-> > >   #
-> > >      100.00%          4035    3835883066     perf
-> > >          99.37%          4005    3811826223     perf
-> > >           0.50%            19      19210014     ld-linux-x86-64.so.2
-> > >           0.06%             8       2367089     [unknown]
-> > >           0.04%             2       1720336     libc.so.6
-> > >           0.02%             1        759404     libLLVM-16.so.1
-> > > 
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > Ping!  Anybody interested in this change? :)
-> 
-> Oh yes, all such pieces of intelligent organization of textual output 
-> of profiling data are worth their weight in gold in my book. :-)
-> 
->   Acked-by: Ingo Molnar <mingo@kernel.org>
-> 
-> 1)
-> 
-> On a related note, does anyone know why perf stat output alignment 
-> sucks so much these days:
-> 
->   starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging 2>&1 | grep elapsed
->            0.11620 +- 0.00327 seconds time elapsed  ( +-  2.81% )
->           0.120813 +- 0.000570 seconds time elapsed  ( +-  0.47% )
->           0.122280 +- 0.000443 seconds time elapsed  ( +-  0.36% )
->           0.119813 +- 0.000752 seconds time elapsed  ( +-  0.63% )
->            0.12190 +- 0.00134 seconds time elapsed  ( +-  1.10% )
->           0.119862 +- 0.000542 seconds time elapsed  ( +-  0.45% )
->           0.120075 +- 0.000608 seconds time elapsed  ( +-  0.51% )
->           0.120350 +- 0.000273 seconds time elapsed  ( +-  0.23% )
->            0.12203 +- 0.00114 seconds time elapsed  ( +-  0.93% )
->            0.12229 +- 0.00114 seconds time elapsed  ( +-  0.93% )
->            0.12032 +- 0.00115 seconds time elapsed  ( +-  0.95% )
->           0.121241 +- 0.000463 seconds time elapsed  ( +-  0.38% )
->           0.119404 +- 0.000333 seconds time elapsed  ( +-  0.28% )
->           0.119945 +- 0.000766 seconds time elapsed  ( +-  0.64% )
->           0.121215 +- 0.000879 seconds time elapsed  ( +-  0.72% )
->            0.12001 +- 0.00109 seconds time elapsed  ( +-  0.91% )
->            0.12193 +- 0.00182 seconds time elapsed  ( +-  1.49% )
->           0.119184 +- 0.000794 seconds time elapsed  ( +-  0.67% )
->           0.120062 +- 0.000439 seconds time elapsed  ( +-  0.37% )
->           0.120834 +- 0.000760 seconds time elapsed  ( +-  0.63% )
->           0.369473 +- 0.000992 seconds time elapsed  ( +-  0.27% )
-> 
-> ... see how the vertical alignment of the output goes randomly wacko - 
-> I presume because there's a trailing zero in the output number and the 
-> code for some inexplicable reason decides to shorten it to make the 
-> life of developers harder? ;-)
+strncpy(), which ACPI_COPY_NAMESEG currently uses, is deprecated[1].
 
-I found this commit. :)  I think it didn't consider nested perf stat
-with --repeat options.
+This patch is the first of two, ultimately replacing strncpy() with
+strtomem(), avoiding future compiler warnings about truncation.
 
-commit bc22de9bcdb2249150fb5b3c48fdc4f6bedd3ad7
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon Apr 23 11:08:20 2018 +0200
+[1] https://github.com/KSPP/linux/issues/90
 
-    perf stat: Display time in precision based on std deviation
-    
-    Ingo suggested to display elapsed time for multirun workload (perf stat
-    -e) with precision based on the precision of the standard deviation.
-    
-    In his own words:
-    
-      > This output is a slightly bit misleading:
-    
-      >  Performance counter stats for 'make -j128' (10 runs):
-      >      27.988995256 seconds time elapsed                  ( +-  0.39% )
-    
-      > The 9 significant digits in the result, while only 1 is valid, suggests accuracy
-      > where none exists.
-    
-      > It would be better if 'perf stat' would display elapsed time with a precision
-      > adjusted to stddev, it should display at most 2 more significant digits than
-      > the stddev inaccuracy.
-    
-      > I.e. in the above case 0.39% is 0.109, so we only have accuracy for 1 digit, and
-      > so we should only display 3:
-    
-      >        27.988 seconds time elapsed                       ( +-  0.39% )
-    
-    Plus a suggestion about the output, which is small enough and connected
-    with the above change that I merged both changes together.
-    
-      > Small output style nit - I think it would be nice if with --repeat the stddev was
-      > also displayed in absolute values, besides percentage:
-      >
-      >       27.988 +- 0.109 seconds time elapsed   ( +- 0.39% )
-    
-    The output is now:
-    
-       Performance counter stats for './perf bench sched pipe' (5 runs):
-       SNIP
-               13.3667 +- 0.0256 seconds time elapsed  ( +-  0.19% )
-    
-    Suggested-by: Ingo Molnar <mingo@kernel.org>
-    Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Andi Kleen <ak@linux.intel.com>
-    Cc: David Ahern <dsahern@gmail.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Link: http://lkml.kernel.org/r/20180423090823.32309-7-jolsa@kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
+---
+ drivers/acpi/acpica/acdebug.h                            | 2 +-
+ drivers/acpi/prmt.c                                      | 2 +-
+ drivers/acpi/sysfs.c                                     | 4 ++--
+ include/acpi/actbl.h                                     | 6 +++---
+ tools/power/acpi/os_specific/service_layers/oslinuxtbl.c | 2 +-
+ tools/power/acpi/tools/acpidump/apfiles.c                | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-> 
-> 2)
-> 
-> It's also incredibly hard to Ctrl-C a 'perf stat --repeat' instance:
-> 
->  starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  # Running 'sched/messaging' benchmark:
->  # 20 sender and receiver processes per group
->  # 10 groups == 400 processes run
-> 
->  ...
->  Ctrl-C
-> 
->  # Running 'sched/messaging' benchmark:
->  perf: pollperf: perf: pollperf: pollpollperf: pollperf: pollperf: : Interrupted system call
->  : Interrupted system call
->  poll: Interrupted system call
->  perf: pollperf: : Interrupted system call
->  perf: pollperf: pollpollperf: : Interrupted system call
->  pollperf: pollperf: perf: perf: pollpollpollperf: : Interrupted system call
->  pollperf: poll: Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  perf: poll: Interrupted system call
->  perf: perf: pollpoll: Interrupted system call
->  : Interrupted system call
->  perf: perf: perf: perf: perf: perf: : Interrupted system call
->  pollpollpollpollpollpoll: Interrupted system call
->  : Interrupted system call
->  : Interrupted system call
->  perf: perf: pollperf: perf: perf: perf: perf: perf: pollperf: : Interrupted system call
->  pollpollpoll: Interrupted system call
-> 
-> Note how the perf stat instance actually *hangs*. I have to Ctrl-Z it, 
-> and kill -9 %1 it the hard way to clean up:
+diff --git a/drivers/acpi/acpica/acdebug.h b/drivers/acpi/acpica/acdebug.h
+index 911875c5a5f1..2b56a8178f43 100644
+--- a/drivers/acpi/acpica/acdebug.h
++++ b/drivers/acpi/acpica/acdebug.h
+@@ -37,7 +37,7 @@ struct acpi_db_argument_info {
+ struct acpi_db_execute_walk {
+ 	u32 count;
+ 	u32 max_count;
+-	char name_seg[ACPI_NAMESEG_SIZE + 1];
++	char name_seg[ACPI_NAMESEG_SIZE + 1] __nonstring;
+ };
+ 
+ #define PARAM_LIST(pl)                  pl
+diff --git a/drivers/acpi/prmt.c b/drivers/acpi/prmt.c
+index e549914a636c..ca70f01c940c 100644
+--- a/drivers/acpi/prmt.c
++++ b/drivers/acpi/prmt.c
+@@ -40,7 +40,7 @@ struct prm_buffer {
+ };
+ 
+ struct prm_context_buffer {
+-	char signature[ACPI_NAMESEG_SIZE];
++	char signature[ACPI_NAMESEG_SIZE] __nonstring;
+ 	u16 revision;
+ 	u16 reserved;
+ 	guid_t identifier;
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index a48ebbf768f9..a05d4032d4f1 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -307,9 +307,9 @@ static struct kobject *hotplug_kobj;
+ 
+ struct acpi_table_attr {
+ 	struct bin_attribute attr;
+-	char name[ACPI_NAMESEG_SIZE];
++	char name[ACPI_NAMESEG_SIZE] __nonstring;
+ 	int instance;
+-	char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE];
++	char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE] __nonstring;
+ 	struct list_head node;
+ };
+ 
+diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
+index 451f6276da49..8aa60281e7db 100644
+--- a/include/acpi/actbl.h
++++ b/include/acpi/actbl.h
+@@ -66,12 +66,12 @@
+  ******************************************************************************/
+ 
+ struct acpi_table_header {
+-	char signature[ACPI_NAMESEG_SIZE];	/* ASCII table signature */
++	char signature[ACPI_NAMESEG_SIZE] __nonstring;	/* ASCII table signature */
+ 	u32 length;		/* Length of table in bytes, including this header */
+ 	u8 revision;		/* ACPI Specification minor version number */
+ 	u8 checksum;		/* To make sum of entire table == 0 */
+-	char oem_id[ACPI_OEM_ID_SIZE];	/* ASCII OEM identification */
+-	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE];	/* ASCII OEM table identification */
++	char oem_id[ACPI_OEM_ID_SIZE] __nonstring;	/* ASCII OEM identification */
++	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE] __nonstring;	/* ASCII OEM table identification */
+ 	u32 oem_revision;	/* OEM revision number */
+ 	char asl_compiler_id[ACPI_NAMESEG_SIZE];	/* ASCII ASL compiler vendor ID */
+ 	u32 asl_compiler_revision;	/* ASL compiler version */
+diff --git a/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c b/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c
+index 9d70d8c945af..52026b9e389e 100644
+--- a/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c
++++ b/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c
+@@ -19,7 +19,7 @@ ACPI_MODULE_NAME("oslinuxtbl")
+ typedef struct osl_table_info {
+ 	struct osl_table_info *next;
+ 	u32 instance;
+-	char signature[ACPI_NAMESEG_SIZE];
++	char signature[ACPI_NAMESEG_SIZE] __nonstring;
+ 
+ } osl_table_info;
+ 
+diff --git a/tools/power/acpi/tools/acpidump/apfiles.c b/tools/power/acpi/tools/acpidump/apfiles.c
+index 13817f9112c0..5a39b7d9351d 100644
+--- a/tools/power/acpi/tools/acpidump/apfiles.c
++++ b/tools/power/acpi/tools/acpidump/apfiles.c
+@@ -103,7 +103,7 @@ int ap_open_output_file(char *pathname)
+ 
+ int ap_write_to_binary_file(struct acpi_table_header *table, u32 instance)
+ {
+-	char filename[ACPI_NAMESEG_SIZE + 16];
++	char filename[ACPI_NAMESEG_SIZE + 16] __nonstring;
+ 	char instance_str[16];
+ 	ACPI_FILE file;
+ 	acpi_size actual;
+-- 
+2.47.2
 
-It looks like the problem is in the perf bench sched messaging not in
-perf stat.  If the signal delivered before all groups are created, it
-may wait for children indefinitely.
-
-Thanks,
-Namhyung
-
-> 
->  pollpollpoll: Interrupted system call
->  �
->  [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  starship:~/tip> kill -9 %1
-> 
->  [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
->  starship:~/tip> kill -9 %1
-> 
-> Does anyone use this thing for actual benchmarking work? ;-)
