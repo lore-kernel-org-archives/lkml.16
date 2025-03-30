@@ -1,100 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C8935973;
-	Sun, 30 Mar 2025 15:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BA835973;
+	Sun, 30 Mar 2025 15:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743348998; cv=none; b=EbnJqtguz5+9gDQUm9XOGOc5STE0HA9Ee69l/xSxbFOV75J1WXs0MSNOWTDNRMbSclphI3icQptLKWFChP8/CxrtPZh2b4rJeQPonsVixidFqS00uYa0pq1WrAS3GgEQrPB7zM2FhOd2cYixRqhxFIl9Y0XucUy8OeJxPwnCLA0=
+	t=1743349015; cv=none; b=FENz5a3pwicfTPeLavfWgDJvVpsoQScKbXKa9Ily5Y3LvSqJvlnY8AW/hzr4fdxTl5hlKXnnUhFy2TxmiSisNUue2nnoTPoCso2NNUzOoAACxBNj62wLNpM9//QzKzj6vb8G2S0tWSRNNNcGTHa2uROpzEOppHjhyAwAYPIO+JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743348998; c=relaxed/simple;
-	bh=FTJ0vDMKBBzaCMUHsW6aS1lwvumacUsEATHIVqqD7hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dvqp9+KjLPOrToavT9C/xDCN0LjJ/lT+RldN3HqqnJ68lm/c+bFkP810rH8X/Y3U9cry6G73xySnYeCqxSgZFN1YDC5qroClXArB5X4OTDkAKFtSA4YyL437oRSbbvgEtqp1HILl9PAh6e+KGO1XJb43ipUGfN+qwFrq/bQ4UPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdfT6JH8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdfT6JH8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99098C4CEDD;
-	Sun, 30 Mar 2025 15:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743348997;
-	bh=FTJ0vDMKBBzaCMUHsW6aS1lwvumacUsEATHIVqqD7hk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VdfT6JH8o3I2bSBL35JE8GPR3JWZs7z0194qDGFO6qbXUhnFD7reDireTCi7pOHpy
-	 XTlqkOaON8sxxibCAYUjp0yMO0YD+EvnK0odUvi9SIwyckNnxKgtJnuaKjUUBV/lSI
-	 NgloaKoNLkgORBf4/aSUIA+hunDZdRs9zD8zwsqrWgZ3h+94a1Q7PbOAxD9SGVnRi1
-	 /PTKuqW8Q7X7UG+0zL6C4bZp3phcIz451qIuJZUU0pcY7SNBsvKSkxP9ScVc8h7Wbp
-	 kIsJx3+groNSvFPQoWvO1uU349NtnfsY4NOoEkFht3XqYC2dcet9vNek2GB+mpsDjL
-	 +PjLWwzJsKYZw==
-Date: Sun, 30 Mar 2025 16:36:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Claudiu <claudiu.beznea@tuxon.dev>,
- prabhakar.mahadev-lad.rj@bp.renesas.com, lars@metafoo.de,
- linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Claudiu Beznea
- <claudiu.beznea.uj@bp.renesas.com>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, rafael@kernel.org, ulf.hansson@linaro.org,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 0/2] iio: rzg2l_adc: Cleanups for rzg2l_adc driver
-Message-ID: <20250330163627.152d76ef@jic23-huawei>
-In-Reply-To: <2025032703-genre-excitable-9473@gregkh>
-References: <20250324122627.32336-1-claudiu.beznea.uj@bp.renesas.com>
-	<20250327153845.6ab73574@jic23-huawei>
-	<2025032703-genre-excitable-9473@gregkh>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743349015; c=relaxed/simple;
+	bh=XweAKWXxUC23DUIurG+R29h2z/MkdSB1+ji3iZkr25E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=spLNMSwS3LLFznkrcVGxuxOl4SY7Ul8pNzZ9Ei1hegmbCak35zA/yqSVm7sGw8wiC6/W+GvMTB9icuO+U9Ibyq7tCoE5E6+MWzTrq3URPmsfHLHZCkJDUbbK7D22wRk/QZsScUIS6kQjW68cX0TaQbQMxSlJLeCU/974UumJ/iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 41912441CD;
+	Sun, 30 Mar 2025 15:36:50 +0000 (UTC)
+Message-ID: <7c3b13e1-425d-4471-91fd-7156c4758719@ghiti.fr>
+Date: Sun, 30 Mar 2025 17:36:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests: riscv: fix v_exec_initval_nolibc.c
+Content-Language: en-US
+To: Ignacio Encinas Rubio <ignacio@iencinas.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+References: <20250306-fix-v_exec_initval_nolibc-v2-1-97f9dc8a7faf@iencinas.com>
+ <14e0cc95-95d7-4e7d-949b-d944366510a3@iencinas.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <14e0cc95-95d7-4e7d-949b-d944366510a3@iencinas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeejkeeugfdthefhveelffdvgeetgeelteeijeekheehfeevtdduvdfgteevgfehffenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemiegrjeelmeejkedutgemhegsvggsmeelleelheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemiegrjeelmeejkedutgemhegsvggsmeelleelhedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemiegrjeelmeejkedutgemhegsvggsmeelleelhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehighhnrggtihhosehivghntghinhgrshdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfi
+ hhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkshgvlhhfthgvshhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlqdhmvghnthgvvghssehlihhsthhsrdhlihhnuhigrdguvghv
+X-GND-Sasl: alex@ghiti.fr
 
-On Thu, 27 Mar 2025 17:22:20 +0100
-Greg KH <gregkh@linuxfoundation.org> wrote:
+Hi ignacio,
 
-> On Thu, Mar 27, 2025 at 03:38:45PM +0000, Jonathan Cameron wrote:
-> > On Mon, 24 Mar 2025 14:26:25 +0200
-> > Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> >   
-> > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > > 
-> > > Hi,
-> > > 
-> > > Series adds some cleanups for the RZ/G2L ADC driver after the support
-> > > for the RZ/G3S SoC.  
-> > 
-> > This doesn't address Dmitry's comment or highlight the outstanding
-> > question he had to Greg KH on v3.  
-> > I appreciate you want to get this fixed but I'd rather we got
-> > it 'right' first time!
-> > 
-> > Also, please make sure to +CC anyone who engaged with an earlier version.
-> > 
-> > For reference of Greg if he sees this, Dmitry was expressing view that
-> > the fix belongs in the bus layer not the individual drivers.
-> > FWIW that feels like the right layer to me as well.
-> > 
-> > https://lore.kernel.org/all/Z8k8lDxA53gUJa0n@google.com/#t  
-> 
-> As this is a PM question, Rafael would be the best to ask.
+On 30/03/2025 13:12, Ignacio Encinas Rubio wrote:
+> Gentle ping :)
 
-Sure. Perhaps Rafael missed previous discussion, so I've messaged
-him directly to draw his attention to the series.
 
-Claudiu, please include all relevant people in +CC.  Don't trim
-it down to those effected by a particular solution as has happened
-here. +CC Rafael, Daniel and Ulf.
+No worries, it's either being merged in 6.15-rc1 or rc2!
 
 Thanks,
 
-Jonathan
+Alex
 
 
-> 
-> thanks,
-> 
-> greg k-h
-
+>
+> On 6/3/25 20:49, Ignacio Encinas wrote:
+>> Vector registers are zero initialized by the kernel. Stop accepting
+>> "all ones" as a clean value.
+>>
+>> Note that this was not working as expected given that
+>> 	value == 0xff
+>> can be assumed to be always false by the compiler as value's range is
+>> [-128, 127]. Both GCC (-Wtype-limits) and clang
+>> (-Wtautological-constant-out-of-range-compare) warn about this.
+>>
+>> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+>> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+>> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
+>> ---
+>> Changes in v2:
+>>
+>> Remove code that becomes useless now that the only "clean" value for
+>> vector registers is 0.
+>>
+>> - Link to v1: https://lore.kernel.org/r/20250305-fix-v_exec_initval_nolibc-v1-1-b87b60e43002@iencinas.com
+>> ---
+>>   tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c | 10 +++-------
+>>   1 file changed, 3 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+>> index 35c0812e32de0c82a54f84bd52c4272507121e35..4dde05e45a04122b566cedc36d20b072413b00e2 100644
+>> --- a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+>> +++ b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+>> @@ -6,7 +6,7 @@
+>>    * the values. To further ensure consistency, this file is compiled without
+>>    * libc and without auto-vectorization.
+>>    *
+>> - * To be "clean" all values must be either all ones or all zeroes.
+>> + * To be "clean" all values must be all zeroes.
+>>    */
+>>   
+>>   #define __stringify_1(x...)	#x
+>> @@ -14,9 +14,8 @@
+>>   
+>>   int main(int argc, char **argv)
+>>   {
+>> -	char prev_value = 0, value;
+>> +	char value = 0;
+>>   	unsigned long vl;
+>> -	int first = 1;
+>>   
+>>   	if (argc > 2 && strcmp(argv[2], "x"))
+>>   		asm volatile (
+>> @@ -44,14 +43,11 @@ int main(int argc, char **argv)
+>>   			"vsrl.vi " __stringify(register) ", " __stringify(register) ", 8\n\t" \
+>>   			".option pop\n\t"					\
+>>   			: "=r" (value));					\
+>> -		if (first) {							\
+>> -			first = 0;						\
+>> -		} else if (value != prev_value || !(value == 0x00 || value == 0xff)) { \
+>> +		if (value != 0x00) {						\
+>>   			printf("Register " __stringify(register)		\
+>>   				" values not clean! value: %u\n", value);	\
+>>   			exit(-1);						\
+>>   		}								\
+>> -		prev_value = value;						\
+>>   	}									\
+>>   })
+>>   
+>>
+>> ---
+>> base-commit: 03d38806a902b36bf364cae8de6f1183c0a35a67
+>> change-id: 20250301-fix-v_exec_initval_nolibc-498d976c372d
+>>
+>> Best regards,
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
