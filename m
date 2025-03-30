@@ -1,250 +1,154 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E103C3C
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 15:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16783C3C;
+	Sun, 30 Mar 2025 15:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743347603; cv=none; b=F3s7B2RZIAeylNnEPtBGNTOIl8oaiqjyIcqWnNo3LW/4TzfvATNWuMd9ON+JwOFHfEdWaEPCa88dxKimR5bml7OcxBSWFmXYMP7ppTLQhcJCt/eSi3ZX3s6lS3OzsQgrLLulR4tp1n5a/5SuN5Ch6uZyc+tgAXh4LZcCmcMcItg=
+	t=1743347607; cv=none; b=lYj19iWG1ktiYFTi22be+e23U5/K7ckEQd4i9ROmaO2MPTgk5Td5JDHkDR5eDZQw5vvz8Ba9tAASZwaQyjf3vKh+DZCCH7rGW8WElywx46171aHR13b+a7Be0odHPmn6pM12/gDKRrOEPcuH5S7YZB1AcoH+kJbZjVgtCKe9huU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743347603; c=relaxed/simple;
-	bh=r4eKyKOf8p6eMne2ml5qlZRtyj7KrzDm2GcJnthCYk8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gNB46GFQSAQnF2Zx1WtvbgKoxFVpLAzMpuvH57+1WjBsy7QTINbvChUg28wd76qCy94F4bV9YoSXlpfNMfWxv6Ui6v20pgVP5hUGCJbp878hfquQgRG8TBzvJUXIYR51tVOFch89ifHXfEyMiIsAUffl82PqtGg2yc7DeZudttA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RlKUZCbC; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743347607; c=relaxed/simple;
+	bh=OO+ddB6jXqbazFwzyc+1bl2E8ekrpgxwXY7ouvovQhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PtPQ9rMhL28pF1daXrWvMnUuNuoX6iNeJSOJGrKjHzCv013WKD/MZefj6CF6TA7yuWzTq7yslBFAnmh4yAgOLtdEKzyck2MJ4sAdk6fN5ImchwqNxgj1kYzm9RmmZvFXpxHkKI6rnTVRYvrtu7PDdRS019rAZrxAYVEdEL5s7qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oP8RUAOr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlKUZCbC"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22403cbb47fso77759245ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743347601; x=1743952401; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dlVLtOXTk2IyM0Aka9pHJk9+dLoQ8r5FHHUbG7LJJhg=;
-        b=RlKUZCbCCXTYtKXHV4BEAEoH8lY67AD5tEnCOgpaejEZxKs4Y3S49SaGMGM37P5ZgF
-         x1RAXV2g2DIbDmVi5HutF151qH7myQLEaA8ppjrbbG4VDrAFSDA4Z4u+mq41ORJIzds4
-         5rqKbfvKTgDvtBOZPKchUbkfMEGhOGNYQ7gM7LkvEeCZYalt/N6K7D3NfDaUSDoS0hH8
-         Q4MC9aIBFEEMbT7AtzYsK35Kid+4z94hukKPx6BKgZuv4O08XbV3HomT5nc5FXaAS4DQ
-         2DQS6utDhzzvtONvnlYC7D7CPPpUXKdei1Uva3GbS7Z9UTCA1/fBC+1FH6ayABDQk/FT
-         naXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743347601; x=1743952401;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dlVLtOXTk2IyM0Aka9pHJk9+dLoQ8r5FHHUbG7LJJhg=;
-        b=IaO1wzUVyXiRD/0wC+nF/6fzEuOxy3zHF9bfg2OtQj3A1dsJOvOJIsSd4+jzYPcN1z
-         X3bWI0xnZ9+h5Xrm/s4lzEH4Hb41vFA+3ClfQvcPLEGspJ6mHOrUq/xa6uIVl9gJVwsB
-         vXS4TJH3MTCC45DZPqT0kLAk4DvHw4xuJt3U8b0gJS94NEqhF+5g+plJxJRf1cZSdCz+
-         EEkWZZi4W2pU/I2fMKSuKOF5tkUTNiFmaVe0/UwBRs29h35WvOC7Gb8k4DzPy51mGWHc
-         M7CRA2fMEea4awUvI+637Usj2+Uu1JuxEgF9jKZ4OtuPtTBCivcKU+w7tpTUL0+b06ga
-         tALw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfm2qA0H2iofoNUrzW1ZD8Htnx1Dj9sokl4n3dlXxhoPw3UlGkOOMSKyuMnwYPokdaUfeDKtgXPSVVxc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4LcULWFgVy618BhUKKdeCGfmk+llQoWZ1hpzTkcXngkN8VjSu
-	5mR+f8LWaWOHdUR9/1YcHM4jTa1s+dCcFcMB5k7N/G1nK4IA8huxtEm4Pti8XYU=
-X-Gm-Gg: ASbGncvj7uDmLFTu3Kf4rEsSVEe04u8Pzvg/6NbGkeZyR9onihOJzuyGBC0bi8u5SDd
-	cf2T99TqCXf+yFkF2spZbilPrUEx5UU/3T4jBChCjD6qoYPrAc8PSIGggS4rsVmM1bVGCGzSS+T
-	fMCDR+4d6iwmIUolq7qPsnRmN5vUUPsWXCnnlEaIhI9NdUi2dABFalKPtgta/dMd3EyqbGYEjoC
-	SKZVi5GLIzdQCVoV4ZMf83qyAmr3ZrwX9I+EPSpaB0yqAJmajwT6mjeNFCgO3E3rJ67vmv6h5/3
-	3p+emNHqmqeaiVOWc3jNByt0T9WXND3JRHV7SDSXN+SweEtchmuTYp4BFPIWBfQW
-X-Google-Smtp-Source: AGHT+IFhkVjZEtZZiDR/lIq7Xt06caYzDaHpT1YLwfNEV7T0glEpa/c6E7kzVsqz8dSB9FmG2yDuYw==
-X-Received: by 2002:a17:902:ebd1:b0:223:3630:cd32 with SMTP id d9443c01a7336-2292fa162abmr98837035ad.53.1743347601318;
-        Sun, 30 Mar 2025 08:13:21 -0700 (PDT)
-Received: from distilledx.SRMIST.EDU.IN ([103.4.220.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dee68sm52840595ad.205.2025.03.30.08.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 08:13:21 -0700 (PDT)
-From: Tejas Vipin <tejasvipin76@gmail.com>
-To: neil.armstrong@linaro.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: quic_jesszhan@quicinc.com,
-	dianders@chromium.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	asrivats@redhat.com,
-	Tejas Vipin <tejasvipin76@gmail.com>
-Subject: [PATCH] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi wrapped functions
-Date: Sun, 30 Mar 2025 20:43:04 +0530
-Message-ID: <20250330151304.128417-1-tejasvipin76@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oP8RUAOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BADC4CEDD;
+	Sun, 30 Mar 2025 15:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743347607;
+	bh=OO+ddB6jXqbazFwzyc+1bl2E8ekrpgxwXY7ouvovQhY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oP8RUAOrbT60js2Pt3PDu1tBKh8Y9Ij8ePnsYnDJpZViq3YTaf1xGdwd4TPNgkUCQ
+	 BHuwbCdHkiKHGIXIhGKexViUIllL2GVr428bvXqo/8qr6E3ETcR0eeOrjZLyF0f5+w
+	 69rn4F/I0vHkJh5khV7e3w3MY9y6cB4jg/01nEK2xVEP9euvwU5lxSwdaL7f6ybpkt
+	 ehFwIcNA3KvPF6Qa1hs5ofAJxyDxtKQ4OqdCqlqoFu6NvaX1CdkhAVXcGR4iYSbac/
+	 E9HKwTZcfXSsOmYH4JQa7ytzAspLFHl84jZCRnlw/EIpGZs4oinfm2YILy1xwEqpjZ
+	 gUCWub+YQiBAg==
+Date: Sun, 30 Mar 2025 16:13:17 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sam Winchenbach <sam.winchenbach@framepointer.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, antoniu.miclaus@analog.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ bpellegrino@arka.org, Sam Winchenbach <swinchenbach@arka.org>
+Subject: Re: [PATCH v7 1/6] dt-bindings: iio: filter: Add lpf/hpf freq
+ margins
+Message-ID: <20250330161317.4f537c86@jic23-huawei>
+In-Reply-To: <Z9mKghgKk9vuHUyF@65YTFL3.secure.tethers.com>
+References: <20250316135008.155304-1-sam.winchenbach@framepointer.org>
+	<20250316-sexy-tested-cheetah-c4a2f8@krzk-bin>
+	<Z9g6tPqhAoTckFBh@65YTFL3.secure.tethers.com>
+	<20250317185535.7d00444d@jic23-huawei>
+	<Z9mKghgKk9vuHUyF@65YTFL3.secure.tethers.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Changes the boe-bf060y8m-aj0 panel to use multi style functions for
-improved error handling.
+On Tue, 18 Mar 2025 11:00:18 -0400
+Sam Winchenbach <sam.winchenbach@framepointer.org> wrote:
 
-Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
----
- .../gpu/drm/panel/panel-boe-bf060y8m-aj0.c    | 112 +++++++-----------
- 1 file changed, 43 insertions(+), 69 deletions(-)
+> On Mon, Mar 17, 2025 at 06:55:35PM +0000, Jonathan Cameron wrote:
+> > On Mon, 17 Mar 2025 11:07:32 -0400
+> > Sam Winchenbach <sam.winchenbach@framepointer.org> wrote:
+> >  =20
+> > > On Sun, Mar 16, 2025 at 05:38:42PM +0100, Krzysztof Kozlowski wrote: =
+=20
+> > > > On Sun, Mar 16, 2025 at 09:50:03AM -0400, Sam Winchenbach wrote:   =
+=20
+> > > > > From: Sam Winchenbach <swinchenbach@arka.org>
+> > > > >=20
+> > > > > Adds two properties to add a margin when automatically finding the
+> > > > > corner frequencies.
+> > > > >=20
+> > > > > Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
+> > > > > ---
+> > > > >  .../bindings/iio/filter/adi,admv8818.yaml     | 20 +++++++++++++=
+++++++
+> > > > >  1 file changed, 20 insertions(+)   =20
+> > > >=20
+> > > > I don't understand. You got my tag. No changelog here, no cover let=
+ter,
+> > > > nothing explains what happened here and why the tag is being remove=
+d.
+> > > >    =20
+> > >=20
+> > > Apologies,
+> > >=20
+> > > I am still quite new to this workflow, and it deviates significantly
+> > > from my day-to-day work. I mentioned in the previous patch set that I
+> > > would like to update my email address and change:
+> > > "driver core: -> iio: core:"
+> > > I wasn't aware more than that was needed. Sorry for any confusion
+> > > this may have caused.
+> > >=20
+> > > In the future what is the preferred way to handle a
+> > > situation like this? I wasn't aware of the cover letter feature but
+> > > that looks like a promising option. =20
+> >=20
+> > Either add stuff below the --- above as that doesn't end up in the
+> > eventual git log, or --cover-letter on your git-format-patch and
+> > put useful things like that in there.
+> >  =20
+> > >=20
+> > > It looks like another option is to add commentary to each patch.
+> > >=20
+> > > I am less certain about your tag being removed - I don't fully
+> > > understand that. Is there a way to preserve that if changes are made
+> > > after you sign-off? =20
+> >=20
+> > Once a tag is given it is up to the patch author to add it to the
+> > patches for future versions.  That should only be dropped if the
+> > author thinks there are significant enough changes to warrant a fresh
+> > review.  If you do drop a tag like that, then the change log
+> > under --- on the particular patch should clearly state why. =20
+> > >  =20
+>=20
+> Thanks for the guidance - I see the part I missed:
+>=20
+>=20
+> "Both Tested-by and Reviewed-by tags, once received on mailing list
+> from tester or reviewer, should be added by author to the applicable
+> patches when sending next versions. However if the patch has changed
+> substantially in following version, these tags might not be
+> applicable anymore and thus should be removed. Usually removal of
+> someone=E2=80=99s Tested-by or Reviewed-by tags should be mentioned in the
+> patch changelog (after the =E2=80=98---=E2=80=99 separator)."
+>=20
+> In my situation I made a mistake by not including his "Reviewed-by"
+> in the changes I pushed up. How does this work if no further changes
+> are required? Does it call onto the maintainer to apply the tag when
+> merging in the change set?
+>=20
+> Is there anything I should do at this point to correct my error?
+It's a slightly messy case but I'd feel fine with a reply that said
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c b/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
-index 7e66db4a88bb..d017f9c00d69 100644
---- a/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
-+++ b/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
-@@ -55,71 +55,52 @@ static void boe_bf060y8m_aj0_reset(struct boe_bf060y8m_aj0 *boe)
- static int boe_bf060y8m_aj0_on(struct boe_bf060y8m_aj0 *boe)
- {
- 	struct mipi_dsi_device *dsi = boe->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
--
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0xa5, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xb2, 0x00, 0x4c);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_3D_CONTROL, 0x10);
--	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, DCS_ALLOW_HBM_RANGE);
--	mipi_dsi_dcs_write_seq(dsi, 0xf8,
--			       0x00, 0x08, 0x10, 0x00, 0x22, 0x00, 0x00, 0x2d);
--
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(30);
--
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0xa5, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xc0,
--			       0x08, 0x48, 0x65, 0x33, 0x33, 0x33,
--			       0x2a, 0x31, 0x39, 0x20, 0x09);
--	mipi_dsi_dcs_write_seq(dsi, 0xc1, 0x00, 0x00, 0x00, 0x1f, 0x1f,
--			       0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
--			       0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f);
--	mipi_dsi_dcs_write_seq(dsi, 0xe2, 0x20, 0x04, 0x10, 0x12, 0x92,
--			       0x4f, 0x8f, 0x44, 0x84, 0x83, 0x83, 0x83,
--			       0x5c, 0x5c, 0x5c);
--	mipi_dsi_dcs_write_seq(dsi, 0xde, 0x01, 0x2c, 0x00, 0x77, 0x3e);
--
--	msleep(30);
--
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display on: %d\n", ret);
--		return ret;
--	}
--	msleep(50);
--
--	return 0;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0xa5, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb2, 0x00, 0x4c);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_3D_CONTROL, 0x10);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_POWER_SAVE, DCS_ALLOW_HBM_RANGE);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf8,
-+				     0x00, 0x08, 0x10, 0x00, 0x22, 0x00, 0x00, 0x2d);
-+
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 30);
-+
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0xa5, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0,
-+				     0x08, 0x48, 0x65, 0x33, 0x33, 0x33,
-+				     0x2a, 0x31, 0x39, 0x20, 0x09);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0x00, 0x00, 0x00, 0x1f, 0x1f,
-+				     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
-+				     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe2, 0x20, 0x04, 0x10, 0x12, 0x92,
-+				     0x4f, 0x8f, 0x44, 0x84, 0x83, 0x83, 0x83,
-+				     0x5c, 0x5c, 0x5c);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xde, 0x01, 0x2c, 0x00, 0x77, 0x3e);
-+
-+	mipi_dsi_msleep(&dsi_ctx, 30);
-+
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 50);
-+
-+	return dsi_ctx.accum_err;
- }
- 
--static int boe_bf060y8m_aj0_off(struct boe_bf060y8m_aj0 *boe)
-+static void boe_bf060y8m_aj0_off(struct boe_bf060y8m_aj0 *boe)
- {
- 	struct mipi_dsi_device *dsi = boe->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	/* OFF commands sent in HS mode */
- 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
--	msleep(20);
--
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
--	usleep_range(1000, 2000);
--	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
- 
--	return 0;
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_usleep_range(&dsi_ctx, 1000, 2000);
-+	if (!(dsi_ctx.accum_err))
-+		dsi->mode_flags |= MIPI_DSI_MODE_LPM;
- }
- 
- static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
-@@ -157,7 +138,6 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
- 
- 	ret = boe_bf060y8m_aj0_on(boe);
- 	if (ret < 0) {
--		dev_err(dev, "Failed to initialize panel: %d\n", ret);
- 		gpiod_set_value_cansleep(boe->reset_gpio, 1);
- 		return ret;
- 	}
-@@ -178,15 +158,11 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
- static int boe_bf060y8m_aj0_unprepare(struct drm_panel *panel)
- {
- 	struct boe_bf060y8m_aj0 *boe = to_boe_bf060y8m_aj0(panel);
--	struct device *dev = &boe->dsi->dev;
--	int ret;
- 
--	ret = boe_bf060y8m_aj0_off(boe);
--	if (ret < 0)
--		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+	boe_bf060y8m_aj0_off(boe);
- 
- 	gpiod_set_value_cansleep(boe->reset_gpio, 1);
--	ret = regulator_bulk_disable(ARRAY_SIZE(boe->vregs), boe->vregs);
-+	regulator_bulk_disable(ARRAY_SIZE(boe->vregs), boe->vregs);
- 
- 	return 0;
- }
-@@ -234,13 +210,11 @@ static int boe_bf060y8m_aj0_bl_update_status(struct backlight_device *bl)
- {
- 	struct mipi_dsi_device *dsi = bl_get_data(bl);
- 	u16 brightness = backlight_get_brightness(bl);
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
--	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
--	if (ret < 0)
--		return ret;
-+	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, brightness);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int boe_bf060y8m_aj0_bl_get_brightness(struct backlight_device *bl)
--- 
-2.49.0
+oops I forgot to include
+Reviewed-by: xxxx
+as the scripts will pick that up.
+>=20
+> Thanks,
+> -Sam
+>=20
+> > > Sorry again about the confusion this caused, =20
+> > No problem, takes a while for everyone to get used to a different
+> > process. There are extensive docs, but it is still easy to miss
+> > things!
+> >=20
+> > Jonathan
+> >  =20
+> > > -Sam
+> > >  =20
+> > > > Best regards,
+> > > > Krzysztof
+> > > >    =20
+> >  =20
 
