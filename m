@@ -1,149 +1,219 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2C39461
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0E8175D50;
+	Sun, 30 Mar 2025 16:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743352601; cv=none; b=bsqz7wA/UWtrDJBAJVXh8cwfC6piaVARY51heHPwbNzSUT+fyxXN7Dwx554AvR6xNlFuI64qWLoJHRh1XfdLmTyq7rtcwd7CV/bxeeV6gAsIBWsGTJBqWQ6cKaLH8P0xAtV+QC0zPlfKE85pjUmhkH+ifpBORq9ZiGanZRyugqY=
+	t=1743352783; cv=none; b=UFHE6rC1To+nGxga1nZa4SDrKax3nYAg+M1BpGsTLk2DEm7bNVMD0hnADZg0QAn8a1UWelLgrKXphbNfi5zeJbIvddD9GJdybn4tOFAqkorJ02HFvmKuvrfUjgedAJkEOWjNBqsD7L3iHamF20ubxQiQf+L410BK7zSgejZxWzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743352601; c=relaxed/simple;
-	bh=QWR6EaDQI1AguCT0SWh5ztNU28dnd6/6IjNKf/tPDeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTQslFbW6EgEUiYBKuxqub/KcxVwQmArc3NgUcv5wWcyXdvW9E1KEVY4y0rQQag16YgbDhSNfz19m6UHsNCq9IlQDsLxrA1vcxiEnb8umLFS17EoJp9/KS5rrrzsBKEZUMvjHgBLL3LAyl6QTgueT5P25iuJFioAHo/67EA6NVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fa8xr9xf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743352783; c=relaxed/simple;
+	bh=V5j1W1nJpZdHJRcysq7Oe534M79h+6sw32lCrhO5bko=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H687h5A76VYm0nK4WxqPE3+Ia7tJ0LNC+447PFAg6Zgc5G4zpYhbSGRejr/HYNRxv8o/eCoSzbLS0rr4KbkQ+wBg67PHmZ/z1OQSa2fud0lJ5wcXDoJ4Y7Gb97QfGBt2GGdkzmaZ2InDujMGBV3I7KDU8djRa859FUGQlDWbZV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSlP+kHK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fa8xr9xf"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UA4B38030595
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=J9IbJLHzN5Gek81KZ8rQbP94
-	oxIGmfBdFVQn3sF3atY=; b=fa8xr9xf4VRxYcMRudOdck7gw+gOU0yTkctt0jYk
-	OoKRdloSvJnZg+yq5y5IUKAblD3jQ0BqZm2JAalm3ZIfqfNvddLM25E701Duy0w+
-	2gjk7tJpsyPhYxk4qjEIGj6rCS9VJRuLWHEGTytT8qZISGtZAVHGy2XK9KABRCic
-	55h4i30u9QRfle6nLc17EvVFxUKCScpHrUAZFkFv9NIyPkiCk1a4gdDduqGBEFOd
-	wCAV+oI4jfGR08C9gVFaOQRqEekXCvLuqBCPkf5rxHdKMoMpFKdTaZDNl1CIyWcd
-	ISwEWHB2d7ZGUdTlXv9oc77DYnUAoMWiAQ6K075isyx14g==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p935tfm4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:36:33 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b94827so528870885a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:36:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743352592; x=1743957392;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J9IbJLHzN5Gek81KZ8rQbP94oxIGmfBdFVQn3sF3atY=;
-        b=mwiUclb1gGcAMiFEkmGI+/KxIawSV5zOhBBsGLpwOdDgLKHwrSv6TERUkKWMs733D0
-         M3tEVxC4RMVkz9gPz/1BONVR+jKberDKRqxVru/CqIHVtaoJqTY4Fi9rnD3kwJQRbbmp
-         o3DpO1XG3XVveYbOjxC1RBwwzcyrHtLJ4irsVQCwNWHNYubecPHqnNYgd42Rgr7L5L3w
-         dOdYgg0vq9ex1gWxN37BMGfRmTf4ry9qgZivkYiuLzBdgsAD3/L6kAFPuUlgDPcPzp4d
-         J/nnXPAPcTRmxSSL9pe55JoYIKi/nhd8j7fJ9UuvAj8Md6kyiMarVisiEiXSZl4+mxrH
-         HqGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvrwYQT+18p/+xZZ/q0GY5OmsNUGzES4UkHEexX7zjE41LF0YdtPfO+YIETYx4N04ot53kZNxXlNuro+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy45CyZSkbU4wbEmoz9p41OkG54c3uXg4yTRAP6fqKQ2xZWdM+Y
-	zBTw+mIO8wDwZG1YYRLYxPj5WvPHU8+AiGSFHUltOV8YJqmEV5ActCI8+k/UtQnAWHqwIQV9pKM
-	FBRjGOS+3kkmnkus8iGcMk1w0u8Z2v7zu7K17gQi/igjhwe7Y4k8nw9X6uM4c7pg=
-X-Gm-Gg: ASbGncsNvk/ZDccJnJS614VuAG58NcOwyOJBtn/D8jz1h9nfIlfm195JGAZ9mdDj6je
-	MEmhR7BgXEsZ03dLZRLsQnpJt2ZRAOs5gFv1sFSIkkqJcPPBslN4YZytBukfM4Mav9Jii7YttA6
-	QwZdRJyi1AJpmlJ1uHG5QvGio8PCnWKviR/tzJ9THAXa6rGJ+ZU88k2UehUHLq67VaiZ98bstsk
-	Q8TshkFBeBts/n55KuSUqNt62t4IsTID83bR1jNawXLBzJRVPEaC8IV707iK3+otvMQzbXxfLfZ
-	9O5OjsBYpOrffYuHMymuBm/MPYdekri4TzVCJsThJekddVbo21IDW6bewPRmRzR489MDL0kyH1l
-	taVw=
-X-Received: by 2002:a05:620a:4108:b0:7c5:48b8:b4ac with SMTP id af79cd13be357-7c69072f371mr927036285a.34.1743352591854;
-        Sun, 30 Mar 2025 09:36:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEdV5tc6GnhjMZwo8TLqjXFz1vGzqWB4XFi2jQnVxmtoNtcZMKKrRG70w3Gh77iotOX99M3Q==
-X-Received: by 2002:a05:620a:4108:b0:7c5:48b8:b4ac with SMTP id af79cd13be357-7c69072f371mr927032985a.34.1743352591505;
-        Sun, 30 Mar 2025 09:36:31 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0957fc65sm921069e87.118.2025.03.30.09.36.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 09:36:29 -0700 (PDT)
-Date: Sun, 30 Mar 2025 19:36:26 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
-        mperttunen@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, dmitry.baryshkov@linaro.org, mripard@kernel.org
-Subject: Re: [PATCH v2] ASoC: hdmi-codec: wire up the .prepare callback also
- for SPDIF DAI ops
-Message-ID: <h6izcncnqyiyv7nvyvauzjftjvzyhhev6y7wbmdqjyonrdw5ho@4yclxkbukgcs>
-References: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSlP+kHK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07588C4CEDD;
+	Sun, 30 Mar 2025 16:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743352783;
+	bh=V5j1W1nJpZdHJRcysq7Oe534M79h+6sw32lCrhO5bko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DSlP+kHKxiKQhEBGuOxQvTYGW2bothqLP6dIcRecKrLJBpk2FAQQ1Sd6hhBeuzeRq
+	 uzc+n5Lat8DYzJqEunPmSYRE3SWpFes1lhxdokXGw03tLAp23GJKKluvvimOCXPXzr
+	 9UmTF60kHO92zccmwnCHVjfMlIklx5i4nr51Nr805xZSQQTjGsz6cSApKud+Fzabh+
+	 eHNWEZR4K7lM2YOA8ejB3M+0umjyLGGLRxj71D4WjHFXKgtGlKse1d6MhXjelM7wwm
+	 Rjrd49yz8AqS0I3NW6FBkjhGZOMp4ePleRmbdgPmKCS5dcaBzjQB7IfZSR5Jn1sy6G
+	 sB4EyXezgVr5Q==
+Date: Sun, 30 Mar 2025 17:39:29 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Lad Prabhakar
+ <prabhakar.mahadev-lad.rj@bp.renesas.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Guillaume Stols <gstols@baylibre.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
+ <matteomartelli3@gmail.com>, Alisa-Dariana Roman <alisadariana@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?B?Sm/Do28=?= Paulo =?UTF-8?B?R29uw6dhbHZlcw==?=
+ <joao.goncalves@toradex.com>, Ramona Alexandra Nechita
+ <ramona.nechita@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v10 2/8] property: Add functions to iterate named child
+Message-ID: <20250330173929.155477d1@jic23-huawei>
+In-Reply-To: <2767173b7b18e974c0bac244688214bd3863ff06.1742560649.git.mazziesaccount@gmail.com>
+References: <cover.1742560649.git.mazziesaccount@gmail.com>
+	<2767173b7b18e974c0bac244688214bd3863ff06.1742560649.git.mazziesaccount@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
-X-Proofpoint-GUID: Z6Ud32uSVzoPTLSxMu5FH8U7se2JryBP
-X-Authority-Analysis: v=2.4 cv=KOFaDEFo c=1 sm=1 tr=0 ts=67e97311 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=mK_AVkanAAAA:8 a=rfKdTcLzpojuHggjPigA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22 a=3gWm3jAn84ENXaBijsEo:22
-X-Proofpoint-ORIG-GUID: Z6Ud32uSVzoPTLSxMu5FH8U7se2JryBP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300115
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 29, 2025 at 08:14:33PM +0100, Martin Blumenstingl wrote:
-> Commit 2fef64eec23a ("ASoC: hdmi-codec: Add a prepare hook") added a
-> prepare implementation. Back then the new callback was only integrated
-> with hdmi_codec_i2s_dai_ops (which is used by the I2S input code-path).
-> It was not added to hdmi_codec_spdif_dai_ops (which is used by the SPDIF
-> input code-path).
+On Mon, 24 Mar 2025 09:12:50 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> There are a few use-cases where child nodes with a specific name need to
+> be parsed. Code like:
 > 
-> With commit baf616647fe6 ("drm/connector: implement generic HDMI audio
-> helpers") the DRM subsystem has gained a helper framework which can be
-> used by HDMI controller drivers. HDMI controller drivers are often
-> tightly coupled with the hdmi-codec because of the so-called HDMI audio
-> infoframe (which is often managed by the display controller).
+> fwnode_for_each_child_node()
+> 	if (fwnode_name_eq())
+> 		...
 > 
-> To allow the new DRM HDMI audio framework to work with the hdmi-codec
-> driver for SPDIF inputs we also need to hook up the prepare callback to
-> hdmi_codec_spdif_dai_ops. Just hooking into the hw_params callback would
-> not be enough as hw_params (is called too early and) doesn't have access
-> to the HDMI audio infoframe contents.
+> can be found from a various drivers/subsystems. Adding a macro for this
+> can simplify things a bit.
 > 
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> In a few cases the data from the found nodes is later added to an array,
+> which is allocated based on the number of found nodes. One example of
+> such use is the IIO subsystem's ADC channel nodes, where the relevant
+> nodes are named as channel[@N].
+> 
+> Add helpers for iterating and counting device's sub-nodes with certain
+> name instead of open-coding this in every user.
+> 
+> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Whilst I've queued up the series, I'll be rebasing on rc1 anyway
+so if Sakari or anyone else still wants to comment on this patch
+or offer tags, go ahead!
+
+Jonathan
 > ---
-> Changes since v1 at [0]:
-> - re-sending since there was no feedback
+> Revision history:
+> v9 =>
+>  - No changes
+> v8 => v9:
+>  - Drop the fwnode_for_each_available_named_child_node() as suggested
+>    by Sakari during v8 review:
+>    https://lore.kernel.org/all/Z9mQPJwnKAkPHriT@kekkonen.localdomain/
+> v7 => v8:
+>  - Fix the example in fwnode_get_named_child_node_count() documentation
+>    to use the fwnode_get_named_child_node_count() and not the
+>    device_get_named_child_node_count()
+>  - Fix the rest of the new macro's indentiations
+> v6 => v7:
+>  - Improve kerneldoc
+>  - Inline device_get_named_child_node_count() and change it to call
+>    fwnode_get_named_child_node_count() inside
+>  - Fix indentiation of the new macros
+> v5 => v6:
+>  - Add helpers to also iterate through the nodes.
+> v4 => v5:
+>  - Use given name instead of string 'channel' when counting the nodes
+>  - Add also fwnode_get_child_node_count_named() as suggested by Rob.
+> v3 => v4:
+>  - New patch as suggested by Jonathan, see discussion in:
+> https://lore.kernel.org/lkml/20250223161338.5c896280@jic23-huawei/
+> ---
+>  drivers/base/property.c  | 27 +++++++++++++++++++++++++++
+>  include/linux/property.h | 20 ++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
 > 
-> 
-> The following three upstream drivers can use the hdmi-codec with SPDIF
-> inputs:
-> - drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-> - drivers/gpu/drm/rockchip/cdn-dp-core.c
-> - drivers/gpu/drm/tegra/hdmi.c
-> 
-> It would be great if any of the maintainers of these platforms (Cc'ed)
-> could confirm that this patch doesn't break anything.
-> 
-> Mark, Dmitry: who of you would take this patch (Mark via the ASoC
-> tree or Dmitry via drm-misc)?
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index c1392743df9c..f42f32ff45fc 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -945,6 +945,33 @@ unsigned int device_get_child_node_count(const struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(device_get_child_node_count);
+>  
+> +/**
+> + * fwnode_get_named_child_node_count - number of child nodes with given name
+> + * @fwnode: Node which child nodes are counted.
+> + * @name: String to match child node name against.
+> + *
+> + * Scan child nodes and count all the nodes with a specific name. Potential
+> + * 'number' -ending after the 'at sign' for scanned names is ignored.
+> + * E.g.::
+> + *   fwnode_get_named_child_node_count(fwnode, "channel");
+> + * would match all the nodes::
+> + *   channel { }, channel@0 {}, channel@0xabba {}...
+> + *
+> + * Return: the number of child nodes with a matching name for a given device.
+> + */
+> +unsigned int fwnode_get_named_child_node_count(const struct fwnode_handle *fwnode,
+> +					       const char *name)
+> +{
+> +	struct fwnode_handle *child;
+> +	unsigned int count = 0;
+> +
+> +	fwnode_for_each_named_child_node(fwnode, child, name)
+> +		count++;
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_get_named_child_node_count);
+> +
+>  bool device_dma_supported(const struct device *dev)
+>  {
+>  	return fwnode_call_bool_op(dev_fwnode(dev), device_dma_supported);
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index e214ecd241eb..3e83babac0b0 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -167,6 +167,10 @@ struct fwnode_handle *fwnode_get_next_available_child_node(
+>  	for (child = fwnode_get_next_child_node(fwnode, NULL); child;	\
+>  	     child = fwnode_get_next_child_node(fwnode, child))
+>  
+> +#define fwnode_for_each_named_child_node(fwnode, child, name)		\
+> +	fwnode_for_each_child_node(fwnode, child)			\
+> +		if (!fwnode_name_eq(child, name)) { } else
+> +
+>  #define fwnode_for_each_available_child_node(fwnode, child)		       \
+>  	for (child = fwnode_get_next_available_child_node(fwnode, NULL); child;\
+>  	     child = fwnode_get_next_available_child_node(fwnode, child))
+> @@ -178,11 +182,19 @@ struct fwnode_handle *device_get_next_child_node(const struct device *dev,
+>  	for (child = device_get_next_child_node(dev, NULL); child;	\
+>  	     child = device_get_next_child_node(dev, child))
+>  
+> +#define device_for_each_named_child_node(dev, child, name)		\
+> +	device_for_each_child_node(dev, child)				\
+> +		if (!fwnode_name_eq(child, name)) { } else
+> +
+>  #define device_for_each_child_node_scoped(dev, child)			\
+>  	for (struct fwnode_handle *child __free(fwnode_handle) =	\
+>  		device_get_next_child_node(dev, NULL);			\
+>  	     child; child = device_get_next_child_node(dev, child))
+>  
+> +#define device_for_each_named_child_node_scoped(dev, child, name)	\
+> +	device_for_each_child_node_scoped(dev, child)			\
+> +		if (!fwnode_name_eq(child, name)) { } else
+> +
+>  struct fwnode_handle *fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
+>  						  const char *childname);
+>  struct fwnode_handle *device_get_named_child_node(const struct device *dev,
+> @@ -210,6 +222,14 @@ int fwnode_irq_get_byname(const struct fwnode_handle *fwnode, const char *name);
+>  
+>  unsigned int device_get_child_node_count(const struct device *dev);
+>  
+> +unsigned int fwnode_get_named_child_node_count(const struct fwnode_handle *fwnode,
+> +					       const char *name);
+> +static inline unsigned int device_get_named_child_node_count(const struct device *dev,
+> +							     const char *name)
+> +{
+> +	return fwnode_get_named_child_node_count(dev_fwnode(dev), name);
+> +}
+> +
+>  static inline int device_property_read_u8(const struct device *dev,
+>  					  const char *propname, u8 *val)
+>  {
 
-There is no reason for it to go through drm-misc, we picked up only
-several API changes in order to ease merging of the patchset. This patch
-should go normally via Mark's tree.
-
-
--- 
-With best wishes
-Dmitry
