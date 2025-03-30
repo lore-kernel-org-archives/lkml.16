@@ -1,92 +1,159 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CE438FB0
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248AA20E6;
+	Sun, 30 Mar 2025 23:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743376461; cv=none; b=qlvu/rKDVJ85wbcstyqIZDtotaawN9iKifYFUgek6D++jA8G72UKb5jpZmEB7pCFKBjJ6rl6rlFmwoIj7UMCUeurb70qB5cg2L+I4Gbovg/GRPvwMYVAfeRZ+Ha/i6BraDyrzXvFyi2eURSqZF4fnQCEnn6DIw0uMqZ4lqPfJ+U=
+	t=1743376764; cv=none; b=EsA+rOn1jxt8iS7hwUZNdeMCT2B3OKAzT3mPOED2dg5zGhqCaW/D8MaLnA9S4JQ9qXH7sShh9RQwUtfZCbPqhKUwRxqQOuZCENtuPXTyTY4LbmLGxdfq2Wo755kE9co4oKt6fUsj3jF8RJRocrSJpGJ0pbrI681MKVlttNQEM6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743376461; c=relaxed/simple;
-	bh=NkOMhcXrC/jW6pY8KEWT/YdXdb3huaro4QfHKbDGLzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsTbArjKFH6Xu6iTweMptGIDofWeR0PETpRrZLRJv449Uh1/qT6X4ahoUo40dOAiQYuxB6aMlHSvsbeb3A3yvizTn5RWBtdpX+QocUKwxCSzbC8sYEDR7pOA40Hw21AD37gudfZD6CDDE4I6GrjCCoXcI/mBgjx/V7Sr4j1/NUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JXXNYMxC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743376764; c=relaxed/simple;
+	bh=8nQGx2KJsjUrKVGpuIbNILsMlvjdk37dTmK+6zn4g/g=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=EbVTJ3kB8adm/KcjbPqA3HJGLeup3D1+YiAIxAAnk+LGMOU3FaETUYRs2BGjoPnNunXoXQfx7ZHn2gt3aOsc0e2wHPfgaBhzb0fZYoY+Kpr/oDPJmVKd2yeA8XTLz590TYM492XgWnT9q7v3h7RutoNqfB6QIanYI0ouBrEOcQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TwXxlMnM; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JXXNYMxC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1029840E021E;
-	Sun, 30 Mar 2025 23:14:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id SYiqqmB0qdI9; Sun, 30 Mar 2025 23:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743376449; bh=Kkprs2kGxIWD4glBMbh075fjoPI323XMOBqGSvlx76I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JXXNYMxCy49jRQ7luW87ivpqddodq3Cj5PZFOWN4PG58hFLiaD2SjxsG7q3A+XS1O
-	 13V79RqAfxm6nPVQZIZ0Sj+ikXYn+I4AU0pUbJnt3XacgtrEwPsrA4mvJDAW7SYwXk
-	 ZFjznBSbPF4QuQRA2CLNY6yzuhHc6e9aMTONmtVkUTqoFIhU+YdGW715rvQArAPM75
-	 YtVPAh8ikRv9/pBCGuGn5+rD9o2sBbQCJQ60rysfq5KSj7C3zIjL0O97MyGc3wl08d
-	 1WmQ8/A/OL7yCV+M8STPw7lJpiL/rUQIXMGmMP5OzwwOcgqYcESBljqjYL/vuKfsrC
-	 Bpx2Z31EVRU6E8QZJMN5N46Hx/NjE1yxB40abe0n6rMNmnsvKiA1u1/MQ5ixmPCw1d
-	 m+LzZ5RrzZJEAYKIL5A736Q5WWHKc1XU9Mh49LclTjVHa9nGNCKSzORpH6csYrMWX/
-	 G2pblmMSUYbA3fMmM5lXcGFBHRontPfCvtcG1znvG+3ulo2hCH/LM1hsvTN3fLTChj
-	 tCWXnpNYs6HenRTGUn+VAzo1p8qhKBPTD8fVphDyjV8NxGbNW8IGIxNKej1zAG5yYH
-	 s8qE+HIBOJ9l2TtZSQX2HE+hcGTlIxjAP+9potQDF0JrgXYHpDsny+cCGHOBslfCT+
-	 bKpr7IYxwrzPNLKr2H7M9bsU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A62B940E0215;
-	Sun, 30 Mar 2025 23:14:02 +0000 (UTC)
-Date: Mon, 31 Mar 2025 01:13:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
- <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwXxlMnM"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5499bd3084aso3738109e87.0;
+        Sun, 30 Mar 2025 16:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743376761; x=1743981561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6BJMr1YMIspleLREyQx5LlPS/Sumgq17WN3aY8QEoU0=;
+        b=TwXxlMnMl3H8N2jFZTz1MT8fAw/9B7JxlaQHlo0tjz9dTpetN1/w9OxewNn//QxlLK
+         oyMOJxtPq8XRg7qmhd9CdzDoFG9A2GQFBEhnW94gM6iaqlJmbt0x/Lk/XCYyKfkCR5CT
+         GWu3o6vQOiP+Ujy3FJhm75odyiMGzTixyDVdIKK2ywRgodlnDG/QhHkZrzxNlwqB+P02
+         xmCSBbF0FKfFTPc79gaV83dotv/jkTj5/XL7bc407hp1GKUwyZ7uLOca5DRMR0njJTzI
+         PVyuWbY7/EKI6XOz14gk9m2yFzTccc3t5szfZG2MvkyBQPbPYP3wJWxwUkWCyyZsiizx
+         j72Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743376761; x=1743981561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6BJMr1YMIspleLREyQx5LlPS/Sumgq17WN3aY8QEoU0=;
+        b=Od9KG3j4LLCpZ/O0YRDT4M59GCq5H4dHTvCNga72Yt2q+Qlv4+LA4MXcnu+Wu5uGCn
+         W+r5kIGszvRwDxSIVVtNG/xCycZOTg1uvvjxSpiQgUVw5OPY3CvziPCpzKaPXHaoEvRn
+         GoqFd7+hESGQjhgw3T1apSQ6sIq/gTOBrnjuZ2k2ybOac5Atx6RdEVVYDcHt58FsClPc
+         b2FftFELUzIjC/B3TfujdYtTCh5uaVaq7Hg/AmCysv8rfWuyVHqLZG5kf4+e6LLNj2vc
+         aEElJWWoUgCripdsSEQ1YC4mC+MZyMEqkw5jCcSyuK/zsJLbYvIlxS9YTmQJvAUOXo0I
+         gg5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVtTqQ6QZ6zF1/zfvjp4W7Drqp29Kd1G2d/35woV+N7as4/zQrJY8j8Ho0uXwxIh4PtVYXylgCZw3OE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQyujlX8m50Bgsm3lfXgG5wykMWh9aepFr8F88do0WAB+cY2I7
+	XDAyjr1QPWQB3Bfl4kx9EhthM8hqDHo4v44Fe+tsZ2xfWFUvpNqMK6bYGP1hCUI5P/TDrtVCjpJ
+	EoyoDasAazR18ndggicucueYdE5hJSgV1
+X-Gm-Gg: ASbGncvFJf8vuhTz9e1DtHMg8iSRmqHiST6LbDKiOPATpqMP5yzaoTMHscTIRVt/Byn
+	uQHT15coR1+GSreFE70NGkjh5utd4j+AmTwgky1z+1rJAotvUPQH/wrW5CvJP6NvUkDMS+JgUCI
+	Dq7H0xoEgpfNlrznknKOCl+Ds4CYM6/ufcZb3azf4MpIwnMrV3j9HEUCFVPOzO
+X-Google-Smtp-Source: AGHT+IGqqNkf/CsL8lniMdgz9V+ClCUIp47QcW90Bhn1P7CsqBJ2PdWK0XnE9d4syvgquR9xzQefhhaVkK5Da4mxuvE=
+X-Received: by 2002:a05:6512:a90:b0:549:8cc8:efed with SMTP id
+ 2adb3069b0e04-54b1113f152mr1727512e87.48.1743376760845; Sun, 30 Mar 2025
+ 16:19:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
+From: Steve French <smfrench@gmail.com>
+Date: Sun, 30 Mar 2025 18:19:09 -0500
+X-Gm-Features: AQ5f1Jreu8PzZ5-rQRxOkZLjfT8xaaUmNfo78xnkzAvd54z5yLE3DLisMbT91_s
+Message-ID: <CAH2r5mtYV4wqDvgod+qrzv1+YQN_zzjvEh1TKTwPmtkBU5jC6g@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
-> On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > Btw, test bot complains:
-> >
-> > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
-> 
-> That's not a very helpful error message
+Please pull the following changes since commit
+38fec10eb60d687e30c8c6b5420d86e8149f7557:
 
-I found this:
+  Linux 6.14 (2025-03-24 07:02:41 -0700)
 
-https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
+are available in the Git repository at:
 
-which looks like the original report.
+  git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc-part1-smb3-client-f=
+ixes
 
-Looks unsolved yet...
+for you to fetch changes up to e14b64247438e5026b2fce8ffd7cdf80a87e2bfa:
 
--- 
-Regards/Gruss,
-    Boris.
+  cifs: Add new mount option -o nounicode to disable SMB1 UNICODE mode
+(2025-03-26 14:51:58 -0500)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+----------------------------------------------------------------
+14 smb3/cifs client fixes and minor update to maintainers file
+- Fix for network namespace refcount leak
+- Multichannel fix and minor multichannel debug message cleanup
+- Fix potential null ptr reference in SMB3 close
+- Fix for special file handling when reparse points not supported by server
+- Two ACL fixes one for stricter ACE validation, one for incorrect
+perms requested
+- Three RFC1001 fixes: one for SMB3 mounts on port 139, one for better
+default hostname, and one for better session response processing
+- Minor update to email address for MAINTAINERS file
+- Allow disabling Unicode for access to old SMB1 servers
+- Three minor cleanups
+----------------------------------------------------------------
+Alexandra Diupina (1):
+      cifs: avoid NULL pointer dereference in dbg call
+
+Aman (1):
+      CIFS: Propagate min offload along with other parameters from
+primary to secondary channels.
+
+Bharath SM (2):
+      smb: minor cleanup to remove unused function declaration
+      smb: mark the new channel addition log as informational log with cifs=
+_info
+
+Ivan Abramov (2):
+      smb: client: Remove redundant check in cifs_oplock_break()
+      smb: client: Remove redundant check in smb2_is_path_accessible()
+
+Namjae Jeon (1):
+      cifs: add validation check for the fields in smb_aces
+
+Pali Roh=C3=A1r (6):
+      cifs: Check if server supports reparse points before using them
+      cifs: Fix getting DACL-only xattr system.cifs_acl and system.smb3_acl
+      cifs: Fix establishing NetBIOS session for SMB2+ connection
+      cifs: Improve establishing SMB connection with NetBIOS session
+      cifs: Set default Netbios RFC1001 server name to hostname in UNC
+      cifs: Add new mount option -o nounicode to disable SMB1 UNICODE mode
+
+Steve French (1):
+      MAINTAINERS: reorder preferred email for Steve French
+
+Wang Zhaolong (1):
+      smb: client: Fix netns refcount imbalance causing leaks and use-after=
+-free
+
+ MAINTAINERS                |   2 +-
+ fs/smb/client/cifsacl.c    |  21 ++++-
+ fs/smb/client/cifsfs.c     |   4 +
+ fs/smb/client/cifsglob.h   |   2 +
+ fs/smb/client/cifsproto.h  |   4 +-
+ fs/smb/client/cifssmb.c    |  11 ++-
+ fs/smb/client/connect.c    | 206
+++++++++++++++++++++++++++++++++++++++++++++-----
+ fs/smb/client/file.c       |   2 +-
+ fs/smb/client/fs_context.c |  22 ++++++
+ fs/smb/client/fs_context.h |   2 +
+ fs/smb/client/link.c       |   3 +-
+ fs/smb/client/sess.c       |  10 ++-
+ fs/smb/client/smb1ops.c    |   1 +
+ fs/smb/client/smb2inode.c  |   8 ++
+ fs/smb/client/smb2misc.c   |   9 ++-
+ fs/smb/client/smb2ops.c    |   6 +-
+ fs/smb/client/smb2pdu.c    |   4 +-
+ fs/smb/client/transport.c  |   2 +-
+ fs/smb/client/xattr.c      |  15 +++-
+ 19 files changed, 289 insertions(+), 45 deletions(-)
+
+
+--=20
+Thanks,
+
+Steve
