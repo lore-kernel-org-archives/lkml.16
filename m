@@ -1,107 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3811D3232;
-	Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16E1175D50
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743328519; cv=none; b=VUS9mrRF8/p0mp6+BEkKDKAqjIC9ffu0Vf+jDt6m8Ejv4UNWSpAaKDifsaCsGK5z+3Ogx6ltafkJSUAyoJ+mUgmy9TcW6aDoezQ35zzhH9vFMjhbDD0S2ODxqKjIVNJO5ZwVWOGbfSxGQzlAqZwQt/KYjhQbnhAastlXsjFyrTU=
+	t=1743328595; cv=none; b=e6Wc6tmRXXRL1MTSdf0gmjeqNl+NzIJVe3KRbZ19P4eVFguoE0G5qxo9WCb3J8Z4kFhhjvOHEbThx2BaFPtD/Ztimnl9hdBFMzJHEqpXmPDZ5eeyS9xqaxkZ/zA83qlKVO5Oab3AjFGsKnSnbT/F841bveNmnOSGxfKlTWT/Z60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743328519; c=relaxed/simple;
-	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxoyufvwoRumKlPIpTU4IjeQCwx+o2HoBcZpaL8nY88LSC3T/woOOsKMPDz8E9A5mrMatXOP4iA/uLKsKcQ63Ipc2v2fdP93gpYY6gcqaAQUNz62UfPtzMrOl0dW6jlCeq4mB0fF4+2QV7T4KTsWnlvymi8lLdKCXY4YGe2jrv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVwYvOID; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743328595; c=relaxed/simple;
+	bh=RUDSGvItXzSBsZbJHb4eW9ygx48mxfh0w3yikLXGz4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hFsVt+m+YsGPNAdb8ZIPgDolsMZBYOvDpEi0vAnSoOHFWZGNk1GncFNd7EsnlRkPYW0YbRfeNMc2U/O//m5UAFfK/03j81nlxfrqFiapq/CrsF5NKremWieDSkUjv4TJHgvAl/MTt4wgCY0rxnxLI7M8Rok20/4+TwpcBuN+Rck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyjea/ns; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVwYvOID"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7102C4CEED;
-	Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyjea/ns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C68FC4CEDD;
+	Sun, 30 Mar 2025 09:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743328518;
-	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LVwYvOIDxdCP0Z9BjL3B1PAHmQd53fCbPCe/8WOgLcx1ljiuXcCB9ADzvsgrEEe7N
-	 J94UI9F1F43dVael8ZKw1WrBuL3Z8/K01PAuFyK7QiPLBN6nFeQ/4lCtBWE6PGKg+k
-	 AATkpLpk7JltkfNCvra7WIZyxcrPpu0ZfnDz+0crF5lR6jU3TahgKiKt29zC974P/p
-	 BLnyAJcEmlTXSgR0RsYJfH/b43X7GogMb1dfG3N44taBxdk6Pkt2UaoeKV31gy9kPC
-	 bUQX4ziINEwxmfZh6H2syHazgTlPuXw7zvRmWKCwu4l5B/eufTJ22wNH9Q0ywZ3M1d
-	 Zeam7t1/znD7A==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so6579228a12.3;
-        Sun, 30 Mar 2025 02:55:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU69d1Ayxz6FFh6uTEWIxsfek783QOEbjCBFrb8VtmDI7ZCdhDhCL9fHj0S6/nEg326BjmYbvcEIVVB@vger.kernel.org, AJvYcCVk/kxmCwFg8UdoJt0MyD4E4xoWMlDWF8PcnBoa9qaNXjaIxbKs9qrVSx2wo1oSJrvOXDFkDrTTJnBJMn+s@vger.kernel.org, AJvYcCWfTXWMF22e+mu073QbZ0njNa+PIs1au3Q3xqIAdqWh2VaiHqaQTD6bTXpQAzttp/BOciLcAWfcvJS+IA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH53+Mze8qeUZ1KKPlGs6qKYrrdeSFdzqLb2ExewKdxyWlWMix
-	4n+entGa5TjepzNSEWPE27aJu5C/lF5Tr53bRQ0aRoNd534vOWRhGKg2u0Cf4yN/GAQDEIi5fzT
-	Wh03WZncWoon1hy5JLnsbZ2z/jfg=
-X-Google-Smtp-Source: AGHT+IE+jFr2hSf27y/s5sTiGjkAaHOpg05In4illWNF6eBuAiUU/eLj5n9SWJwueOHAvvfk8n3IXs3JbaDs3TMErMA=
-X-Received: by 2002:a17:907:6092:b0:abf:3cb2:1c04 with SMTP id
- a640c23a62f3a-ac738a0f3b3mr442616566b.9.1743328517187; Sun, 30 Mar 2025
- 02:55:17 -0700 (PDT)
+	s=k20201202; t=1743328595;
+	bh=RUDSGvItXzSBsZbJHb4eW9ygx48mxfh0w3yikLXGz4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nyjea/nsKPX4TBbSc4SNiZkdeh1YrRhW55hXJuEsZjJ8wz01I93NOeNRtgCKaTi8L
+	 Qmp6Yt1tO4UynMyiegDW6ZTfv3O6SOiATBaJM4MhZcAmtU2BH8KTnsdLDogk681tDM
+	 VECZ+gTexUzlH/TpyF6i+tz8+dbzOLd4Cuzn++788z9myxNmbFhRm/9ZQPrDDOHsC4
+	 OauURqFEHUa0kGS5hdiiziXYIUvbbJSBzixzIYxzYcSx28GS5xLJPU6WaQ8Tw++Xet
+	 L4ecBw2XI3dP+eOBTSZD+dROhHjfNgf+xSzudq3tYJgjFPC9fL6QPrqKAY/Kx/4fbh
+	 LlERAmAwNPwrg==
+Date: Sun, 30 Mar 2025 11:56:31 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+Message-ID: <Z-kVT4ROZJXx6kui@gmail.com>
+References: <20250325164854.199420-1-ubizjak@gmail.com>
+ <20250325164854.199420-2-ubizjak@gmail.com>
+ <Z-Mme_OxuhYfxgzO@gmail.com>
+ <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224112042.60282-1-xry111@xry111.site> <20250224112042.60282-4-xry111@xry111.site>
-In-Reply-To: <20250224112042.60282-4-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 30 Mar 2025 17:55:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
-X-Gm-Features: AQ5f1JoPN8zLi6dXxQbDVe9ayOBCDaGT24wARYK2-Hg0w9-96JHC_84wcc-aObw
-Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] LoongArch: vDSO: Remove --hash-style=sysv
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Guo Ren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
 
-Applied, thanks.
 
-Huacai
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-On Mon, Feb 24, 2025 at 7:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
-> far before the first LoongArch CPU was taped.  Using
-> --hash-style=3Dsysv might imply unaddressed issues and confuse readers.
->
-> Some architectures use an explicit --hash-style=3Dboth here, but
-> DT_GNU_HASH has already been supported by Glibc and Musl and become the
-> de-facto standard of the distros when the first LoongArch CPU was taped.
-> So DT_HASH seems just wasting storage space for LoongArch.
->
-> Just drop the option and rely on the linker default, which is likely
-> "gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch distros (confirmed on
-> Arch, Debian, Gentoo, and LFS; AOSC now defaults to "both" but it seems
-> just an oversight).
->
-> Following the logic of commit 48f6430505c0
-> ("arm64/vdso: Remove --hash-style=3Dsysv").
->
-> Link: https://github.com/AOSC-Dev/aosc-os-abbs/pull/9796
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/vdso/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-> index fdde1bcd4e26..abaf87c58f9d 100644
-> --- a/arch/loongarch/vdso/Makefile
-> +++ b/arch/loongarch/vdso/Makefile
-> @@ -37,7 +37,7 @@ endif
->  # VDSO linker flags.
->  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
->         $(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
-> -       --hash-style=3Dsysv --build-id -T
-> +       --build-id -T
->
->  #
->  # Shared build commands.
-> --
-> 2.48.1
->
+> > So a better optimization I think would be to declare and implement 
+> > __sw_hweight32 with a different, less intrusive function call ABI 
+> > that
+> 
+> With an external function, the ABI specifies the location of input 
+> argument and function result.
+
+This is all within the kernel, and __sw_hweight32() is implemented in 
+the kernel as well, entirely in assembly, and the ALTERNATIVE*() macros 
+are fully under our control as well - so we have full control over the 
+calling convention.
+
+Ie. in principle there's no need for the __sw_hweight32 function 
+utilized by ALTERNATIVE() to be a C-call-ABI external function with all 
+its call-clobbering constraints that disturbs register state affected 
+by the C-call-ABI. (RSI RSI RDX RCX R8 R9)
+
+The calling convention used is the kernel's choice, which we can 
+re-evaluate.
+
+For example, we could make a version of __sw_hweight32 that is a 
+largely no-clobber function that only touches a single register, which 
+receives its input in RAX and returns the result to RAX (as usual), and 
+saves/restores everything else. This pushes overhead into the uncommon 
+case (__sw_hweight32 users) and reduces register pressure on the 
+calling site.
+
+I'm not saying it's *worth* it for POPCNTL emulation alone:
+
+ - The code generation benefits might or might not be there. Needs to 
+   be examined.
+
+ - There may be some trouble with on-stack red zones used by the 
+   compiler, if the compiler doesn't know that a call was done.
+
+ - Plus rolling a different calling convention down the alternatives 
+   patching macros will have some maintenance overhead side effects. 
+   Possibly other usecases need to be found as well for this to be 
+   worth it.
+
+But I wanted to bust the false assumption you seem to be making about 
+C-call-ABI constraints.
+
+Thanks,
+
+	Ingo
