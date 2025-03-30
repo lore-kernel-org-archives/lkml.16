@@ -1,193 +1,129 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D528817C210;
-	Sun, 30 Mar 2025 08:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B5B17B418;
+	Sun, 30 Mar 2025 08:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324004; cv=none; b=gfpFhBcfa/WvPuSIjObIXeV1uIgaBqQ3Dyk57nfa/6NPKy8RCHwm+R8xg3NbWTJMuq1W7GP7SMz0JqLltiEAwi19L3K7PQra29S7Xb7NiAd5g6blRZvJYadVMCQRseZYmxJxj/RSDyGEssOumXIeg4YBbhg4ianvlX7dhxMawyk=
+	t=1743324005; cv=none; b=CQVkSUDTPXuS+uoPCGnqBIUd6YPBLzBnyOlmaKhpCNhGqBQaW94IS/9bSCN3Emr9phCnqFTfJBJAy5A+I5sbw2BIE7b9flENFX6KgOh9djF4nbEPxJuGZ1WvDNYhKV00Gdzl5rO4fH3yqYL1fTMctenfWpvqCV1TtK4348oKjAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324004; c=relaxed/simple;
-	bh=HW7ggk+LWvDis9CEkUDJLDFpizS2seBZHRwP9FS5rj0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aEg1OmneHPvv5zqnJoya6o1zazy0hEs6xlWyDQCq6OuI3ZUZRTU0Fs1ICtbvhykpnLLXUtUNyDpIQqiRZxyqwx5NMMknrkiv4dTDhFkZ0ZXeGsQmjnUNT/fLwyS3fqksGYibjgVKAc8GA2sAFH7ZaautDxfdOAQw9NtFk75aYVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=roeoz/cL; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743324005; c=relaxed/simple;
+	bh=8NFl9Rm+/neaLUUhF6x3kk32vpPnZ0g7mkwNz2mowVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q+ws7vPVgI51cyPzNUSfzpUWdnrmWQUuU0joh/Y7DAKzqkt8FKgCcTOUVoO+VbV8728zyAkyT6U4iKxP2MFx4c2ZUQZDJGSE7fDLr1+35SID0AvFvxorjtqU8NW0fyICvEQdJpwduVtYSH60+OfdJ7BtvQ1A+hzR9ALdjVe2oZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=RzV0fq7o; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="roeoz/cL"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8deG43063355
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 30 Mar 2025 03:39:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743323980;
-	bh=ftTUVa3F4ZhHp3yFPdSL/78GBPKqpz6M5cNECbhzEeo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=roeoz/cLOJ0bVio9++8zpLY9v2qWnRHCzsZj6FRkvB0UQeZ5DeA1mY7bcJPIFbSjz
-	 jKxlyTKHLLhJK+xEVHcDfq2tfVOlBKt0FzQPPsUFUSc/i1ILLiv8iFFqZdCoINDwTJ
-	 m9wxQQ+ppmOmXzcfXrdHtbS0TQERxk5ym9DmbiIE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8deaL122957
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 30 Mar 2025 03:39:40 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
- Mar 2025 03:39:40 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 30 Mar 2025 03:39:39 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dE4k015769;
-	Sun, 30 Mar 2025 03:39:35 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
-        <18255117159@163.com>, <cassel@kernel.org>,
-        <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
-CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable module
-Date: Sun, 30 Mar 2025 14:09:14 +0530
-Message-ID: <20250330083914.529222-5-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250330083914.529222-1-s-vadapalli@ti.com>
-References: <20250330083914.529222-1-s-vadapalli@ti.com>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="RzV0fq7o"
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 453832E02C63;
+	Sun, 30 Mar 2025 11:39:51 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1743323991;
+	bh=8NFl9Rm+/neaLUUhF6x3kk32vpPnZ0g7mkwNz2mowVM=;
+	h=Received:From:Subject:To;
+	b=RzV0fq7oT7DUunroLGA9rHPWnECB6Z+U93wO0tgkiseEpH8zkEj5qTujRb166vOI6
+	 cEpdsx25mvwH9aqiRZxtNEWAeLy2NVjYijQShNUf4QC9uHH+f40wovUWBBrOkRkRKM
+	 zgs6fo4t81Z3Odr6KknJjTG1rJWyw+Iy/30/1Fyc=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-307c13298eeso40425401fa.0;
+        Sun, 30 Mar 2025 01:39:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCVR9oRApgSafWb3gY26r3pJ/j9BtiM4rb5HqO1hVsudIA9DR507IcjC9cH53xunss1SQ0xU+iEIkXT6GQ==@vger.kernel.org,
+ AJvYcCWiJojYEzhlIZFnk/4/feV6x2qYgCvllgdWp4DBd5vKwdcfnT7P5np77WsdqikIjkaw6rG/ghaDBuFueoRb5M5qNmegXg==@vger.kernel.org,
+ AJvYcCXw99wky5o3bOcqiarzY2mxqle/kpRrsIRyQ6/xkjpP2eKBJ4fWOeDo2rtjyOnoMrALw7Zj2Jjr8Kdzf3ni@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9FTZ+HLlcrPAbnks3+Lk5zJu9sfhzXdbgS1XP5nWrkqSpTFjV
+	KIP1wX97vKEVnu0k9gMQYiKFTccQRW/8pcU16192i3BJ730Irelnp/yMU2uS85FrfTQQ7REpkM5
+	ODCTGnKaaoyGr7FloQ+1jf5/kQd4=
+X-Google-Smtp-Source: 
+ AGHT+IERs4pT/k/49aQC65OzWEWwormi5XQVt1V4Fo2YyTJWPbmDq1/t81uPTRhJx0gJ1zThqnVkJxkNvqPiqIfbNls=
+X-Received: by 2002:a2e:9182:0:b0:30b:f0dd:9096 with SMTP id
+ 38308e7fff4ca-30dd409e992mr28942311fa.12.1743323990661; Sun, 30 Mar 2025
+ 01:39:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250325184601.10990-1-lkml@antheas.dev>
+ <20250325184601.10990-10-lkml@antheas.dev>
+ <f04e6a59-cb72-9ca9-2c98-85702b6194fa@linux.intel.com>
+ <CAGwozwF8PZczpqOFm3ONDdJTVCgcWOZ8mXrASbmiAXUhQvOhdg@mail.gmail.com>
+ <43c4dd17-de34-804f-7080-b287ac4a0cac@linux.intel.com>
+ <26s13395-1ro2-37o8-01q5-6r4p09p69174@xreary.bet>
+In-Reply-To: <26s13395-1ro2-37o8-01q5-6r4p09p69174@xreary.bet>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sun, 30 Mar 2025 10:39:38 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHbZHk_eSe-ZEM6jYM2HC4GxwnUrreZSh=+xJrKquEi9g@mail.gmail.com>
+X-Gm-Features: AQ5f1Jra7sQb-aaz8rgqvtj8FVHUmYutqJvSPeAOe85u6LHamCT55MgFfnENILI
+Message-ID: 
+ <CAGwozwHbZHk_eSe-ZEM6jYM2HC4GxwnUrreZSh=+xJrKquEi9g@mail.gmail.com>
+Subject: Re: [PATCH v5 09/11] HID: asus: add basic RGB support
+To: Jiri Kosina <jikos@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <174332399157.10109.13157866496455022773@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
-Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
-loadable module.
+On Wed, 26 Mar 2025 at 12:00, Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
+>
+> > You don't need to "pause" for the merge window, in some subsystem
+> > there's mandatory pause during merge window but I find that unnecessary=
+.
+> > I know people on pdx86 do review during merge window so no need to wait
+> > when working with patches related to pdx86. Just don't expect patches
+> > get applied during the merge window or right after it (the latter tends=
+ to
+> > be the most busiest time of cycle for me) :-).
+> >
+> > It's more about the frequency, how often to send a series which is
+> > relatively large. Large number of versions end up just filling inboxes
+> > (and patchwork's pending patches list) and we don't have time to read t=
+hem
+> > all through so I suggest waiting like 3 days at minimum between version=
+s
+> > when the series is large or complex to give time to go through the seri=
+es.
+> >
+> > This is not a hard rule, so if there are e.g. many significant changes,
+> > feel free to "violate" it in that case.
+>
+> Exactly. I am unlikely to do much review during the merge window myself,
+> but I'll pick up the patchset and followup once the merge window is over,
+> so feel free to keep discussing and polishing it with me on CC :)
+>
+> Thanks,
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+I think we have reached a good point with this series. We can pick up
+again when you guys are ready.
 
-v1:
-https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
-Changes since v1:
-- Based on feedback from Thomas at:
-  https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
-  the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
-  dropped.
+I will switch gears and look a bit into msi-wmi-platform for the MSI
+Claw with Armin and we can revisit this come rc1.
 
-Regards,
-Siddharth.
+Let's try to get through it early in 6.16 so that Luke can also do
+what he wants to with the Ally, and let's push the oxpec move as well,
+so I can get those two off my plate.
 
- drivers/pci/controller/cadence/Kconfig     |  6 ++--
- drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 4 deletions(-)
+Antheas
 
-diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-index 82b58096eea0..72d7d264d6c3 100644
---- a/drivers/pci/controller/cadence/Kconfig
-+++ b/drivers/pci/controller/cadence/Kconfig
-@@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
- 	  different vendors SoCs.
- 
- config PCI_J721E
--	bool
-+	tristate
- 
- config PCI_J721E_HOST
--	bool "TI J721E PCIe controller (host mode)"
-+	tristate "TI J721E PCIe controller (host mode)"
- 	depends on ARCH_K3 || COMPILE_TEST
- 	depends on OF
- 	select PCIE_CADENCE_HOST
-@@ -57,7 +57,7 @@ config PCI_J721E_HOST
- 	  core.
- 
- config PCI_J721E_EP
--	bool "TI J721E PCIe controller (endpoint mode)"
-+	tristate "TI J721E PCIe controller (endpoint mode)"
- 	depends on ARCH_K3 || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_ENDPOINT
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index ef1cfdae33bb..8bffcd31729c 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -15,6 +15,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-@@ -27,6 +28,7 @@
- #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
- 
- #define ENABLE_REG_SYS_2	0x108
-+#define ENABLE_CLR_REG_SYS_2	0x308
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
- #define LINK_DOWN		BIT(1)
-@@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
- 	return IRQ_HANDLED;
- }
- 
-+static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
-+{
-+	u32 reg;
-+
-+	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
-+	reg |= pcie->linkdown_irq_regfield;
-+	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
-+}
-+
- static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
- {
- 	u32 reg;
-@@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
- 	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
- 	struct device *dev = &pdev->dev;
-+	struct cdns_pcie_ep *ep;
-+	struct cdns_pcie_rc *rc;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
-+		cdns_pcie_host_disable(rc);
-+	} else {
-+		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
-+		cdns_pcie_ep_disable(ep);
-+	}
-+
-+	if (pcie->reset_gpio) {
-+		msleep(PCIE_T_PVPERL_MS);
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+	}
- 
- 	clk_disable_unprepare(pcie->refclk);
- 	cdns_pcie_disable_phy(cdns_pcie);
-+	j721e_pcie_disable_link_irq(pcie);
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
- }
-@@ -730,4 +757,8 @@ static struct platform_driver j721e_pcie_driver = {
- 		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
--builtin_platform_driver(j721e_pcie_driver);
-+module_platform_driver(j721e_pcie_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("PCIe controller driver for TI's J721E and related SoCs");
-+MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
--- 
-2.34.1
-
+> --
+> Jiri Kosina
+> SUSE Labs
+>
