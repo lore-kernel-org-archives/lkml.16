@@ -1,291 +1,163 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44128F9CB
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 12:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468D619B3CB
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 12:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743337587; cv=none; b=XDw9YOAIQDUsQWF1aPI3UG3likCr2JKfO/gynrU06lOm1zDi7YPqFCzmi+R8xN4XCsMnCx3BvlBHxNNW0r2NpnDl1eMY7S4WPS6amfDiFcj6r9GKofvDD15fFBtKGFI+xtIB1gzE8mT67WxVXmPY7neV8++V2kNNPrvcInm/dnM=
+	t=1743337884; cv=none; b=Lu8ej9cHfXGtbpTAE77NRe8EwiLgIxeLec7qSw0nF2lZIWy+R7tqJIkGfcyl1BeiNrx5/tyqem8ZleCQI3ZukebAlmEKufEtkveKFTGz2mk61t/xIuBEGqP49ll7GyZylWw0x5bKXGkkVQlB2WK+yTn9rrYCPzdwwO6zcajXqZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743337587; c=relaxed/simple;
-	bh=oa5609GjEbqbmZxv+Z5AcVoUV7XY33As93x5YIiVidA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=esI4FiiNLcFfwou78KLfwkgHnMgxqpGHY2riE2S46ChC2tCBVlUlZxH+VRJeRWQ2noMkEpzb4TvU+6jLzj0/WFYotiehWvwQ6qtJr6JTExO06vHssa4XAbhlhAoFVd6C+YyGnQKb6I6OLNgI3IHQdakq8uLRNwti5/uOuHpklYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d453d367a0so75172955ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 05:26:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743337584; x=1743942384;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oRFL0cukSSQZkgKtceLexvl+CCiDh5NZuVQfyWa81t4=;
-        b=V2o070sbmuIf9YIZq0vgA6KHjxkdjBFLH37lr0Wv9xaHljpCVftCEbyOQ7urnZkr32
-         UsLU7NH7O+QLDa3iT7GLVhQyRcN9NHeE+URh8UUFnmf00lY2yH0jEWtcW/u42QCTIGpk
-         G0YaUpvFzdtF6EUgyFHczTRHShOpEVPAn3Fb8aIZH69X3UalhUSG0Gr537PZMtXLRufi
-         suYHHuEg1vJR1hFHJoqXwdtjkZViqgpsF4ZnKmmNFE5ICcE+rPlGSqMWRUxzv72kWv/u
-         2HUYTiGtlmFlMX4CZGsw0hagiVPW8hhQC/EFdUBu5HtmrxkdsxujTrVkMtPpHa1t8bBU
-         1MZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWdLmACk4qVxaweBTILsLccVOIKaqp6gIQi/IHCOXJRu7D7lC8JK1oMKzx3B6nsHkxyu5djyE71MAXDiak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkgw+JpLkWKX4HybB41GXiWnloqvDrToM8c8wy1V09uFyYACZ0
-	+XIYPusQ617bOegxFXyMoFrD6+AnnHQ5C/CQH+VkQUdpcm2SxL0v+yCxAcXOgj4HiJfkEpmpJfr
-	Jwvhgn7XfMHny/OIXgaXQL7DyeOOtQjUDxiQWzxaTNyJBZ3Fn2/j0JzM=
-X-Google-Smtp-Source: AGHT+IEB0JiiXjsCkQKPzqAuB+IRI8ElWDpaqWH3jVCHF4oQkxXqnHfCJU5nND944YkOIGF5TFD7tXz1sItquJ0KZZcTEiqdbZ1i
+	s=arc-20240116; t=1743337884; c=relaxed/simple;
+	bh=/rHCJf+H/jrX9p/5rBcSy4Uwf6w+SeFwEG7jAr3quGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ID3iS4d2bWZgbmKaUTps+sh4Iw2gmuGFC62etBT/CpBbsQh6HacWq/MRbysMCVId4PKKPP2o9G/x5eZJrSh8vm2qZzv6BED9y0FeyQoqulW1DEE7tox9aWtcvlUYDNwKj19xRIGi1QCyKnlmdLS8731inn+SKLxfhidAg47vGJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b=QzN4sqc/; arc=none smtp.client-ip=193.222.135.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b="QzN4sqc/"
+Received: (wp-smtpd smtp.tlen.pl 45464 invoked from network); 30 Mar 2025 14:24:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=20241105;
+          t=1743337478; bh=REhcB2mZS7tKDoofE4+e/4NAUzzcPKvy/9MhJDFWxvU=;
+          h=Subject:To:Cc:From;
+          b=QzN4sqc/a77KvB6WCbtfM10m84ppIPeFGm8c8hhGBWu8w3R4eQEN6iRw5pmyV5R9Z
+           /DXF7JJpdCtMzuLLDnowwXep/fOuBgyHpQW91Y1MDUy5MJ7D2jwr247lU97fLuzBtP
+           JqbFjSf3hNQ6BtZ44RNJAIUPxuMB11LnPKYnY3Qk808vkPobqi58gThBkW3yce4dKl
+           OZcogMz6BVj4nhMYVoX2cZsd5XgKCrdL2UDU/wC+Oa5FQx+V3SByYsOMpPJlcJoLNu
+           aGLaKVwn2dn27sF55SpsAd2z3aXVEfmGVY3caVrVuG6BQe3hFkv05rd6es8DBksaMr
+           fLyNhOOdTg7uA==
+Received: from apn-78-30-75-194.dynamic.gprs.plus.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[78.30.75.194])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <bp@alien8.de>; 30 Mar 2025 14:24:38 +0200
+Message-ID: <947b1ceb-77a3-439b-bb7b-6eba38e12cb3@o2.pl>
+Date: Sun, 30 Mar 2025 14:23:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d8b:b0:3ce:8ed9:ca94 with SMTP id
- e9e14a558f8ab-3d5e09e6086mr37517785ab.14.1743337584418; Sun, 30 Mar 2025
- 05:26:24 -0700 (PDT)
-Date: Sun, 30 Mar 2025 05:26:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e93870.050a0220.1547ec.00a5.GAE@google.com>
-Subject: [syzbot] [afs?] KASAN: slab-use-after-free Read in afs_dynroot_readdir
-From: syzbot <syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com>
-To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ BUG: Invalid wait context ] rtc_lock at: mc146818_avoid_UIP
+To: Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: lkml <linux-kernel@vger.kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+Content-Language: en-GB, pl
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 8be777aa6b28230075e5f412c274339f
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [AWN0]                               
+
+W dniu 30.03.2025 o 13:32, Borislav Petkov pisze:
+> So,
+>
+> while playing with suspend to RAM, I got this lockdep splat below.
+>
+> Poking around I found:
+>
+> ec5895c0f2d8 ("rtc: mc146818-lib: extract mc146818_avoid_UIP")
+>
+> which is doing this funky taking and dropping the rtc_lock and I guess that's
+> inherited from ye olde times.
+>
+> I "fixed" it so lockdeup doesn't warn by converting rtc_lock to a raw spinlock
+> but this is definitely not the right fix so let me bounce it off to the folks
+> on Cc who might have a better idea perhaps...
+>
+> Thx.
 
 Hello,
 
-syzbot found the following issue on:
+This problem has been reported before, see
 
-HEAD commit:    1e26c5e28ca5 Merge tag 'media/v6.15-1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11cea198580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=deb16a68b254ed74
-dashboard link: https://syzkaller.appspot.com/bug?extid=1aa62e6852a6ad1c7944
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150b543f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1455aa4c580000
+https://lore.kernel.org/all/463fbc29-b41f-4d2d-a869-108114000cdb@o2.pl/
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-1e26c5e2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/75d05b64ca52/vmlinux-1e26c5e2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a9f16a31d0fb/bzImage-1e26c5e2.xz
+I started work on converting rtc_lock to a raw spinlock, but got stuck 
+mostly to a lack
+of time etc. Only did some MIPS patches (unpublished).
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com
+The problem is that timekeeping_suspend() takes a raw spinlock called 
+"tk_core.lock".
+With this lock taken, this function indirectly calls 
+mc146818_avoid_UIP(), which takes
+a normal spinlock called "rtc_lock". It is necessary to take the 
+rtc_lock while accessing
+the RTC: the RTC access cycle consists of writing to an index register 
+and then accessing
+the data register. If something else touches the index register in the 
+middle, we get garbage.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in afs_dynroot_readdir_cells fs/afs/dynroot.c:296 [inline]
-BUG: KASAN: slab-use-after-free in afs_dynroot_readdir+0xd20/0xf50 fs/afs/dynroot.c:352
-Read of size 4 at addr ffff888032c50148 by task syz-executor403/16899
+During a RTC tick, the RTC date/time registers are in an unspecified 
+state - roughly during this
+time the UIP (Update In Progress) bit in an RTC register A is set. This 
+is handled by
+mc146818_avoid_UIP(). This function takes and releases the rtc_lock 
+multiple times,
+in order not to hold it for too long a time (while sleeping).
+But the rtc_lock does need to be taken anyway.
 
-CPU: 0 UID: 0 PID: 16899 Comm: syz-executor403 Not tainted 6.14.0-syzkaller-02665-g1e26c5e28ca5 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- afs_dynroot_readdir_cells fs/afs/dynroot.c:296 [inline]
- afs_dynroot_readdir+0xd20/0xf50 fs/afs/dynroot.c:352
- iterate_dir+0x293/0xb40 fs/readdir.c:108
- __do_sys_getdents fs/readdir.c:322 [inline]
- __se_sys_getdents fs/readdir.c:308 [inline]
- __x64_sys_getdents+0x14d/0x2c0 fs/readdir.c:308
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f037b875499
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 1d 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdbb88e7f8 EFLAGS: 00000246 ORIG_RAX: 000000000000004e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f037b875499
-RDX: 00000000000000b8 RSI: 0000200000001fc0 RDI: 0000000000000005
-RBP: 00002000000001c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdbb88e81c
-R13: 00007ffdbb88e850 R14: 0000200000000808 R15: 0000200000000804
- </TASK>
+So the solutions would be:
 
-Allocated by task 16883:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
- kmalloc_noprof include/linux/slab.h:902 [inline]
- kzalloc_noprof include/linux/slab.h:1036 [inline]
- afs_alloc_cell fs/afs/cell.c:137 [inline]
- afs_lookup_cell+0x61d/0x1680 fs/afs/cell.c:264
- afs_dynroot_lookup_cell fs/afs/dynroot.c:111 [inline]
- afs_dynroot_lookup+0x3d8/0xd60 fs/afs/dynroot.c:159
- __lookup_slow+0x24e/0x460 fs/namei.c:1807
- lookup_slow fs/namei.c:1824 [inline]
- walk_component+0x353/0x5b0 fs/namei.c:2128
- lookup_last fs/namei.c:2626 [inline]
- path_lookupat+0x17e/0x780 fs/namei.c:2650
- filename_lookup+0x224/0x5f0 fs/namei.c:2679
- user_path_at+0x3a/0x60 fs/namei.c:3085
- do_mount fs/namespace.c:4215 [inline]
- __do_sys_mount fs/namespace.c:4429 [inline]
- __se_sys_mount fs/namespace.c:4406 [inline]
- __x64_sys_mount+0x1fc/0x310 fs/namespace.c:4406
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+1. Change the rtc_lock to a raw spinlock.
 
-Freed by task 0:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2376 [inline]
- slab_free mm/slub.c:4633 [inline]
- kfree+0x2b6/0x4d0 mm/slub.c:4832
- afs_cell_destroy+0x21c/0x310 fs/afs/cell.c:524
- rcu_do_batch kernel/rcu/tree.c:2568 [inline]
- rcu_core+0x799/0x14e0 kernel/rcu/tree.c:2824
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:561
- __do_softirq kernel/softirq.c:595 [inline]
- invoke_softirq kernel/softirq.c:435 [inline]
- __irq_exit_rcu+0x109/0x170 kernel/softirq.c:662
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1049
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+2. Change the tick_freeze_lock to a normal spinlock (if possible).
 
-Last potentially related work creation:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xb8/0xd0 mm/kasan/generic.c:548
- __call_rcu_common.constprop.0+0x9a/0x9f0 kernel/rcu/tree.c:3082
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c1/0xef0 kernel/workqueue.c:3400
- kthread+0x3a4/0x760 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+3. Possibly rewrite mc146818_avoid_UIP to avoid taking the rtc_lock if 
+the tick_freeze_lock is held (likely ugly).
 
-Second to last potentially related work creation:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xb8/0xd0 mm/kasan/generic.c:548
- insert_work+0x36/0x230 kernel/workqueue.c:2183
- __queue_work+0x97e/0x10f0 kernel/workqueue.c:2341
- queue_work_on+0x1a4/0x1f0 kernel/workqueue.c:2392
- queue_work include/linux/workqueue.h:662 [inline]
- afs_put_cell.part.0+0x1ab/0x240 fs/afs/cell.c:569
- afs_put_cell fs/afs/cell.c:557 [inline]
- afs_manage_cell_work+0x6de/0x1940 fs/afs/cell.c:859
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c1/0xef0 kernel/workqueue.c:3400
- kthread+0x3a4/0x760 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+4. Maybe something else I haven't thought about.
 
-The buggy address belongs to the object at ffff888032c50000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 328 bytes inside of
- freed 1024-byte region [ffff888032c50000, ffff888032c50400)
+Thanks,
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x32c50
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b442dc0 0000000000000000 dead000000000001
-raw: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b442dc0 0000000000000000 dead000000000001
-head: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
-head: 00fff00000000003 ffffea0000cb1401 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5692, tgid 5692 (dhcpcd-run-hook), ts 22236164619, free_ts 21924635911
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1551
- prep_new_page mm/page_alloc.c:1559 [inline]
- get_page_from_freelist+0x10c4/0x34c0 mm/page_alloc.c:3477
- __alloc_frozen_pages_noprof+0x223/0x24d0 mm/page_alloc.c:4740
- alloc_pages_mpol+0x1fb/0x540 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2446 [inline]
- allocate_slab mm/slub.c:2610 [inline]
- new_slab+0x23c/0x330 mm/slub.c:2663
- ___slab_alloc+0xd9c/0x1940 mm/slub.c:3849
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3939
- __slab_alloc_node mm/slub.c:4014 [inline]
- slab_alloc_node mm/slub.c:4175 [inline]
- __do_kmalloc_node mm/slub.c:4317 [inline]
- __kmalloc_noprof+0x2f2/0x510 mm/slub.c:4330
- kmalloc_noprof include/linux/slab.h:906 [inline]
- load_elf_phdrs+0x102/0x210 fs/binfmt_elf.c:532
- load_elf_binary+0x1fa/0x4f80 fs/binfmt_elf.c:860
- search_binary_handler fs/exec.c:1773 [inline]
- exec_binprm fs/exec.c:1805 [inline]
- bprm_execve fs/exec.c:1857 [inline]
- bprm_execve+0x8dd/0x1700 fs/exec.c:1833
- do_execveat_common.isra.0+0x4a5/0x610 fs/exec.c:1964
- do_execve fs/exec.c:2038 [inline]
- __do_sys_execve fs/exec.c:2114 [inline]
- __se_sys_execve fs/exec.c:2109 [inline]
- __x64_sys_execve+0x8e/0xb0 fs/exec.c:2109
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5668 tgid 5668 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1127 [inline]
- free_frozen_pages+0x6d8/0xf40 mm/page_alloc.c:2660
- discard_slab mm/slub.c:2707 [inline]
- __put_partials+0x16d/0x1c0 mm/slub.c:3176
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x4e/0x120 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x195/0x1e0 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4138 [inline]
- slab_alloc_node mm/slub.c:4187 [inline]
- kmem_cache_alloc_noprof+0x1cb/0x3b0 mm/slub.c:4194
- getname_flags.part.0+0x48/0x540 fs/namei.c:146
- getname_flags+0x93/0xf0 include/linux/audit.h:322
- getname include/linux/fs.h:2844 [inline]
- getname_maybe_null include/linux/fs.h:2851 [inline]
- getname_maybe_null include/linux/fs.h:2848 [inline]
- vfs_fstatat+0xe1/0xf0 fs/stat.c:363
- __do_sys_newfstatat+0xa1/0x130 fs/stat.c:532
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff888032c50000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888032c50080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888032c50100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                              ^
- ffff888032c50180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888032c50200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Mateusz
