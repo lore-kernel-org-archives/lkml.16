@@ -1,112 +1,115 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51F62F5E;
-	Sun, 30 Mar 2025 01:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560A42594;
+	Sun, 30 Mar 2025 02:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743297920; cv=none; b=ZzNfuiGX2TI9040PCYmuCBzjzDkT7QgLUD2wkEnP3EtRrCEuijUXWZpcd/5XpWH7sn0andSHSJR3oaWXSZ8QJ+ufpX629xnO0cq6gpHz8QcX1v+2QjO8BJz9NGwfaK1o+GxZivrA7xX3ma+/utxO21mNFIZCZz7cZlHsMPeT4jQ=
+	t=1743300354; cv=none; b=FNL2HhpjKRo8zNHLvr3GWoOkrDY2r4RdTXIo0raqqQuF8x+noMHTUqBuX0ouv8dsOlQbpj7ciaDFbA+HAhTNIGk00o9rO2fREAVnD/DzYHGvESUhjUoPBBcIqqERI52mbAtztT/kBs1p5XqHr3EF4ap7ovfHlufs7m9Tohd2i9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743297920; c=relaxed/simple;
-	bh=63YAsRcrUP7aTS8gAI4HjbVeysFlkxotoNZUiIvo1KI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hiZG3iT/6GdoSk7/eUB+LrMHA4/cKb66oC5LSmQTPSORnPta6kygM3JMxBGJ6wsUAvix7wNEYHtyUTDIzHLK3EHbVQ46oiehVUNqLPy4ogaqGZMWhBAnRLZXHOB+RJeHlUjvdbEnvjV5+N7tqAQV7kZI2I/eXYwmA02QddWoB9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c9uxCmn7; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9uxCmn7"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so23483875e9.1;
-        Sat, 29 Mar 2025 18:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743297917; x=1743902717; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0YBtgoHQ8wdNpKVMvmo1Gs6WFu0m4rSJTZCQrvW/Ocs=;
-        b=c9uxCmn7iDXVkXtI3YBFwj8lznN4B/5m6PdRwgYDUJWQBI/UzR7nH3qUUYPxTboMzX
-         sl1N2lYaVIlW6kd6tLmtgmYnTqmuEU+soL1sd+gf4NUiX93lfZ4nCpSrH041Lb+Z9lCg
-         tYXfaaQ2p/6n3LNXya2AyXN31b6ZxY/7zqW0HmW//UNh6+yFi/cOT+HFdIYEG9LLzqbz
-         gNyZUfVo5DTRw8TWvJwG5mhDiAVetJBuk0XSHKz6dBnFM+HYAyabc3feO11z/9jtElhU
-         XEJ95MCdxo8FPVBYgLu5+IPTcsJj/J/2D7eUNpl4HgIgx/YYuwH7jkDDGFmmatnsmGw3
-         z4ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743297917; x=1743902717;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0YBtgoHQ8wdNpKVMvmo1Gs6WFu0m4rSJTZCQrvW/Ocs=;
-        b=qrDc/rGhkW04hLiNidmjyzdaBFJVEwYfLU0215lcaitJJEnj248nmVLCEoLJbYSuXL
-         0C0EAGj6zSCyR89oXVVbr8OH8OCWzs1nwm+sJHztRo165QJiu/677xmusCaghCcrWPOb
-         e15P6B42ar7+2B8ID3Vcufzaqps9rkDTGpdNjgQhPImVP3cwfnHeflwtHC8oijAWR8fo
-         VUvJJIOGRhEBZpSYd4APaFVdgW1muKuHTyJzNZLmVn3cR6EAxmzUDHWBE8PIICAQ28Ge
-         Vmu7qSB3mpwg6Oy0lKSFgmkKGMWToRlvn3vGkJKbYKSbzvkqzMfh1xaM/4A2EYS1p3oz
-         e6gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJa+yousjqEdqXnAHuXfOpyLdDVW54uUO/bf9WKV8RndXAvbw5AX5Gf8tVSRA20C0JGJePxmHPZ7/s@vger.kernel.org, AJvYcCX1oQ/7xkBXDHS1CZqTPkQov7G7AfPXouS8AAG7pHQk0lq2rxvYGzJVC/mMOJbWui4y0B9IJMLff2vOUvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrjYcT060E9AIZquNTtGeYP486dacpCNRdvHFiNz2+hdPVAB1w
-	eIdfYSg+BF0y2rbwjIZADpzXAIqWGw1K2cT3alKYbZEle9bhvI+B
-X-Gm-Gg: ASbGnctu4Yyf/QD3uxvDTtjFMjpiJm/tIpNeznoHf68VNCyVFzPL6odaEWg6JH9Ejq+
-	f7mpRVlK6CKPko+WbxlndVCuehPNMuKBDogLL88pOm0Oz2Xxhnxb4rYcaPPWfn9zK+wlP+Pdfw9
-	HL8OHt0FVUdNMcYFE+5qxze2vIOc5LpsCV6BcO7zY/UdgD57joM0nfdWoNVlF9hieWeBU9rptLC
-	5t+B9BACrDecpzUV6J9KeVJR7iBCsghAj9e9EjK7f0D3KCQ+OPm4Qzcs2za0X1mTPSJJNC0GDCX
-	TXk1gOx0CSsD5bhrj+yKLRQ2C+aYWbMK3lAiMHePQiOLhcNp+IdWkZHZ7sdI5vDzR+CNgDH4Ilr
-	Cw/aqlpiBe9iUupomheDCGDOg
-X-Google-Smtp-Source: AGHT+IETgakP77R1xNRKQkY2RX9kFRQvJyHoxZlC3KNeSg7iURqiKwJHKtUZE8zqkLBK2Qu2lsdF/w==
-X-Received: by 2002:a05:6000:4282:b0:38f:3073:708 with SMTP id ffacd0b85a97d-39c120cc9aamr3108884f8f.3.1743297916783;
-        Sat, 29 Mar 2025 18:25:16 -0700 (PDT)
-Received: from localhost.localdomain (84-72-105-84.dclient.hispeed.ch. [84.72.105.84])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6589e4sm7321606f8f.10.2025.03.29.18.25.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 18:25:16 -0700 (PDT)
-From: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-To: clabbe@baylibre.com
-Cc: david@ixit.cz,
-	gregkh@linuxfoundation.org,
-	johan@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	martin.blumenstingl@googlemail.com,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Subject: Re: [PATCH v8 1/2] usb: serial: add support for CH348
-Date: Sun, 30 Mar 2025 03:24:51 +0200
-Message-ID: <20250330012451.13711-1-frattaroli.nicolas@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250204135842.3703751-1-clabbe@baylibre.com>
-References: <20250204135842.3703751-1-clabbe@baylibre.com>
+	s=arc-20240116; t=1743300354; c=relaxed/simple;
+	bh=h5eblBkeQPp3yr4CoLpcNqIK5ZT10dlT1isVczh0PZc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Rr7AwtUzSeCzKJxVATRzthy27XrWgg/QbYcJo1YNNOZve3Vxj6kmHlnBKlZuKDKbN9SRJmy3ozYCh4XafPRx8v5dy8RE1zpnvUJMTrsZQjLCRoRN/gfb2UPy5hksKo3l/e0seTlcM6RwJOLY56eDBwMO2w2ekgwijUdsYOFgS7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tyi3K-000000001y7-0Ilg;
+	Sat, 29 Mar 2025 22:05:34 -0400
+Message-ID: <2ccb9f828ea392eb22f8deb7d9644a4575fa9ee5.camel@surriel.com>
+Subject: Re: [syzbot] [mm?] [fs?] BUG: sleeping function called from invalid
+ context in folio_mc_copy
+From: Rik van Riel <riel@surriel.com>
+To: Luis Chamberlain <mcgrof@kernel.org>, syzbot	
+ <syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com>, Jan Kara
+ <jack@suse.cz>,  Dave Chinner <david@fromorbit.com>
+Cc: brauner@kernel.org, hare@suse.de, joel.granados@kernel.org, 
+	john.g.garry@oracle.com, kees@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com, willy@infradead.org
+Date: Sat, 29 Mar 2025 22:05:34 -0400
+In-Reply-To: <Z-XGWGKJJThjtsXM@bombadil.infradead.org>
+References: <67e57c41.050a0220.2f068f.0033.GAE@google.com>
+	 <Z-XGWGKJJThjtsXM@bombadil.infradead.org>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-On Tue, 4 Feb 2025 13:58:40 +0000 Corentin Labbe wrote:
-> The CH348 is an USB octo port serial adapter.
-> The device multiplexes all 8 ports in the same pair of Bulk endpoints.
-> Since there is no public datasheet, unfortunately it remains some magic
-> values
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  drivers/usb/serial/Kconfig  |   9 +
->  drivers/usb/serial/Makefile |   1 +
->  drivers/usb/serial/ch348.c  | 736 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 746 insertions(+)
->  create mode 100644 drivers/usb/serial/ch348.c
->
+On Thu, 2025-03-27 at 14:42 -0700, Luis Chamberlain wrote:
+> On Thu, Mar 27, 2025 at 09:26:41AM -0700, syzbot wrote:
+> > Hello,
+>=20
+> Thanks, this is a known issue and we're having a hard time
+> reproducing [0].
+>=20
+> > C reproducer:=C2=A0=C2=A0
+> > https://syzkaller.appspot.com/x/repro.c?x=3D152d4de4580000
+>=20
+> Thanks! Sadly this has not yet been able to let me reprodouce the
+> issue,
+> and so we're trying to come up with other ways to test the imminent
+> spin
+> lock + sleep on buffer_migrate_folio_norefs() path different ways
+> now,
+> including a new fstests [1] but no luck yet.
 
-Tested-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+The backtrace in the report seems to make the cause
+of the bug fairly clear, though.
 
-Quickly gave this another test by just connecting two ports of a CH348 device
-together and making sure data arrives unchowdered at the other end when sending
-at full speed with various baud rates. Seems to work about as well as I
-expected my jumper wires to hold up at higher baudrates.
+The function folio_mc_copy() can sleep.
 
-I'll likely use this to lessen the pile of active USB-to-serial devices on my
-desk while working, so many thanks for keeping up the good work on the driver.
-That way it'll also get some more in-depth real world testing in th e coming
-weeks, but I doubt it needs more testing at this stage.
+The function __buffer_migrate_folio() calls
+filemap_migrate_folio() with a spinlock held.
 
-Regards,
-Nicolas Frattaroli
+That function eventually calls folio_mc_copy():
+
+ __might_resched+0x5d4/0x780 kernel/sched/core.c:8764
+ folio_mc_copy+0x13c/0x1d0 mm/util.c:742
+ __migrate_folio mm/migrate.c:758 [inline]
+ filemap_migrate_folio+0xb4/0x4c0 mm/migrate.c:943
+ __buffer_migrate_folio+0x3ec/0x5d0 mm/migrate.c:874
+ move_to_new_folio+0x2ac/0xc20 mm/migrate.c:1050
+ migrate_folio_move mm/migrate.c:1358 [inline]
+ migrate_folios_move mm/migrate.c:1710 [inline]
+
+The big question is how to safely release the
+spinlock in __buffer_migrate_folio() before calling
+filemap_migrate_folio()
+
+--=20
+All Rights Reversed.
