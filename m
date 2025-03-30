@@ -1,231 +1,132 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A2935973
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE589461;
+	Sun, 30 Mar 2025 16:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743352290; cv=none; b=nN16kXY4hRIcW5Lw/l42RduiJTP9/wpPcwOpePG73vfMv2oUpeppHvKysGPY44B2SJrmINcVj+VsqIrTPqJFH4gSPh6ycoD8J9uFYzx9sDYgM1GMrbnCW8dYdEMCgAKrmjUx7NlFyryclR8ufLript3/sJDlbzqIQR97qjC+zLs=
+	t=1743352522; cv=none; b=RXnyTUt7Uqai+/U5nYkgsWhSk60LHZAy6ENEZPKwCjpacaklgUpVkszd0qTDdKibabfqnsSoQ8IsABJHL43aaAovrXZC/liRE5fdbfOejz772l4cq8xTqlhaisv5hvtykpyvWpFLjWyPKihN9bmSg+jBVEjBXimXU04t2Iid88U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743352290; c=relaxed/simple;
-	bh=ZptMS2YNiNc/3WQkVupNrI8hPTUmk2GcuQjiBuJrXuw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WxrwaNBP2t9xIXxvEcu188l2wL7wwR+eAo6COc5swC6AUQ9NwIOGbVTXyHfFse0mpiexKbYcnfEulDoarIyrMHC1fBCw9/N/uZLMwc+s+leWCpJNR3B/N75z/x8j2L+MQg8nAhNf5lXzfAvJOyGot4SXQsLLX4vtxhUqDrHCxpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SeC7hCIc; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743352522; c=relaxed/simple;
+	bh=O0QJ1S+tuxSySVX10I5InTFb4LaPHEWfNmS9eJeW4i8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eYOxzMOyletd1sh0xZI8vUtJ85O73jx7HJ65iBrcUvO/rfVuPuf3wSwMrRXqyLbmGVbe5Cvuv6DuEhzcWAMyCA2SRpjyFov2nJatPhdrpmeMJAsC6XUDLZUvjK0KdJYIFx/K88HdwKQ3qTQoCLhtSUZPj1QYm4uPc/I210AvFcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eV2cZxLS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SeC7hCIc"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913fdd0120so2031751f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743352285; x=1743957085; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GPrHRvALzcklAe1SO2j1NA7D4uOT5LWEqFteqcGDcOQ=;
-        b=SeC7hCIczNNj3oDssCLiguiBnoLqEeriIgCz+r9vhVfV3ybl0BKKaS1szoXR+Dl570
-         5xVQqRivshJstO/XiFUTA8uGZ0bKeXyTGnE5n/QMPvfTQweYGcxhcGUNTppU0iRUU0jH
-         cxKeppArrswPHSa1aXwVjmyB3VewAZbZmV4PMsG1UGa5/zsOvCu6zkAojznV5ys6uqLC
-         XaPWuc9RXI3fH/7Vfxs2rp2tqhy8MWJHpySzY4Hn5GQLH1MCqu9v6EHWgOT1hPdaglaO
-         RAEL+gg2DKvjJ1Di97o5yI8KffIC/ghf9Di/ZBdDARFg3+iZ9NRz9KE1HCpZGD2kEk95
-         geGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743352285; x=1743957085;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GPrHRvALzcklAe1SO2j1NA7D4uOT5LWEqFteqcGDcOQ=;
-        b=e5BYbCsZGDYdWD2ptek/bI6iUJfklOS63EjYPDn4GgQjuBrXL2xafZIM+gxcX1N217
-         1iYmishvx500hayHvVtb+YtU5kJTU/hlZMjeHVlX15u/aVhPmGOwQfpo0rRbr2qmBghw
-         1Da0uU/8/VZlKjMVkW/kNMdA0spxi/IlhT3DtXTi92KLHKydGgvFEX8UuFHz4gxTaRI5
-         UUX2SBg+nN2ccnUp7wAzTv0sIYvN7DB4Qo1mkNYz4qSSCB+Khp9dXJuM/pGzjtWEuU4B
-         qpSyej/mvEBXxeavk3pOGh7hU801FCqoFqXQgtQnoLX+BUKcpxZgw9uBhggGxjC7RUHP
-         S2Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeydZsfXUo1fq5VYuSy1B/wtgDipehY1Wj1eLNyGcFs3L9aDB5pMlTW/NsjRHlz4RH+si4CQPFb6PWTTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV3qReDdT2w3zUwohCah4Ouszabd3Q8lBi6I+YY6TUbSVVe5rX
-	brI7TALnE2HQYBfKYfcwIATkQULJMMa4o+MYvXlH8lkqpJ+T1kuc9PJooq0ybOqtG/azkve+mQg
-	WOTtcNA==
-X-Gm-Gg: ASbGncvy47SlrQ4V2wFthWMTURrJkIcgKwIJedSiZRihRvraTbQv73Zx8CyTANkJ1Jc
-	Xn38/vEak08nHEoH0eRI5KKZzEbN9049RS8Cice1lMrFRggtIHxnZ1ue8qbifKFjvwp6+5e9lsz
-	696Wr+hIsQnpQHj376PxcaOOIyuM7Eim+nizy38j9gN6I25cGJxPKr+/5FamEjkYsSO5ErYE/iM
-	wBr2P9pEqTy1hnP9C4aXvRi6xFwl1/v7LZM32gRmzMtloNeaJLITkmykmrpvVmw8ooLZ0m+eI8a
-	PBBSNeM/+wMudGq+uznXkYOCICOzNE2Cj6i9D+eroRgolrfEietKtQpe
-X-Google-Smtp-Source: AGHT+IE+aqXoAXGrqH9nHVoq6TOPYkRBhIZkBrvSID1GaGZZhnTAVX8Melg3PXUUZkGfoua+IYkIhQ==
-X-Received: by 2002:a05:6000:2913:b0:391:4674:b136 with SMTP id ffacd0b85a97d-39c120e21famr5115503f8f.29.1743352285029;
-        Sun, 30 Mar 2025 09:31:25 -0700 (PDT)
-Received: from localhost ([2a00:23c8:b70a:ae01:9cf7:b69:fc50:980f])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b662736sm8782789f8f.22.2025.03.30.09.31.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 09:31:24 -0700 (PDT)
-From: Christopher Obbard <christopher.obbard@linaro.org>
-Date: Sun, 30 Mar 2025 17:31:20 +0100
-Subject: [PATCH v3] drm/dp: clamp PWM bit count to advertised MIN and MAX
- capabilities
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eV2cZxLS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4ED8C4CEDD;
+	Sun, 30 Mar 2025 16:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743352521;
+	bh=O0QJ1S+tuxSySVX10I5InTFb4LaPHEWfNmS9eJeW4i8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eV2cZxLSdjl03dd/h5OucJBUm+skfwhgNH4u6LqnmIDooH0wEbTZzJdDx5NQV0cNp
+	 kDp65+jBQ6hinrXemX+9QisDy3XtvF/9tbQaMLLunNYvnJhwywEUnbWojVgg6DjpEg
+	 B+FxMzRcY90V48t5nkJeGSK+IJ/UqihfQH1Wfab14TBF4yovbuLoWU6ZgO9vTJRZMF
+	 NwI0o+ejp7W0KuJVCCUdWT0mzVg7nX+oHn+UdAdJCpO4pSZSejXvpCCdnZjEf96Ew5
+	 50cS2hq+iupRqCjM/uVZJKHX/hjzzlzK+XGEJ1SjNoVVya8C7DfxVGdm38SE5CZNoj
+	 ns4t3/IG5+J6A==
+Date: Sun, 30 Mar 2025 17:35:11 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Guillaume Stols <gstols@baylibre.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>, Trevor Gamblin
+ <tgamblin@baylibre.com>, Matteo Martelli <matteomartelli3@gmail.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>, =?UTF-8?B?Sm/Do28=?= Paulo
+ =?UTF-8?B?R29uw6dhbHZlcw==?= <joao.goncalves@toradex.com>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v10 6/8] iio: adc: Support ROHM BD79124 ADC
+Message-ID: <20250330173511.16ea9ebc@jic23-huawei>
+In-Reply-To: <Z-EWmK2r6VgmPAqa@smile.fi.intel.com>
+References: <cover.1742560649.git.mazziesaccount@gmail.com>
+	<ca3886c9abcb268ca976e62cd7da28bf5d6e6382.1742560649.git.mazziesaccount@gmail.com>
+	<Z-EWmK2r6VgmPAqa@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v3-1-156801d97a8a@linaro.org>
-X-B4-Tracking: v=1; b=H4sIANdx6WcC/53NTQ6CMBCG4auQrh1TChTiynsYFv0ZYRJscUpQQ
- 7i7lSO4fL/F92wiIRMmcSk2wbhSohhyVKdCuNGEAYF8bqGkamSlWnjRDNFaw97B08UHLGWdIE7
- oYTYBJ7BMw7gETAlqqWSnG6ubTor8ODPe6X1otz73SGmJ/DnwVf3W/5xVQQml9q5ClFK1+jpRM
- BzPkQfR7/v+BVwnGTrnAAAA
-X-Change-ID: 20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-4020865b6580
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Johan Hovold <johan@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, 
- Abel Vesa <abel.vesa@linaro.org>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5287;
- i=christopher.obbard@linaro.org; h=from:subject:message-id;
- bh=ZptMS2YNiNc/3WQkVupNrI8hPTUmk2GcuQjiBuJrXuw=;
- b=owEBbQKS/ZANAwAKAWNNxPBocEb4AcsmYgBn6XHYV/kWi78zjq7hEIUXXbz2H/Bp3P5/qaM//
- ysPk0W9IwqJAjMEAAEKAB0WIQTxi9yLbCX5CqI9UXRjTcTwaHBG+AUCZ+lx2AAKCRBjTcTwaHBG
- +AQfD/0ZEu0c1BS/4jKKv+rAhpGxtHtFtL/7CDK4c90Dde0BI+T5VH3ulxDg3a8HMTgCM8eQ+C3
- 0sax5n7KG9ub2O/9YzbKAWIDcTQGVDUvqwRK4LmPgXcJS6yUYNsz3JxxwS6tzoi3QPs2uzAuoi8
- XD6OY2EeOeGk2iqYdeaB4Cs1m5g9tN7/xZMVaxzTrgJ5yuyPeVHzOeIwt1QP4/13SIqIN19/fwQ
- ffY4R7ExpSAMNqBu+mQYIPRXEInf+HW8FbGESc+rfBxC/qxW+6RbjQakEvwhUxNYZKE1lv5oHXO
- 4ISa6DASl/OxKBPCPoNZZVmTp/rmX6IM97mT3IBn920nn8o0HdjzUSA7FfNpC2mmSdYCDOHAeu6
- v3NaJBX6V7bQ9VYiPy0spfEv+nL6jNLOpBEOnIMwLFfQH/A/vNQtetl7H5Y3YBy9fX2ZtWstkmW
- 9I7wDZMZ0/5Z6I/F3I1EZH46DdHYcBM1TDq4kGdJUmzT7w4S1lKv46BTAX9BQ9CpJNW4lXPa2mj
- AVqNbsU2Au1YbbciWvQ5tD16fG/HnixiQBCqPvEN9hkile/m+v7/bjjFbzRdBe6hw+p81/PgcCl
- kEB05rPGwhDFHylZmA2VOd76xapMr28o4spjJNQqS1wqSG/kni1I7F3INMjAj6quhsruReVNeGL
- Bd9BhCryrBrLoOQ==
-X-Developer-Key: i=christopher.obbard@linaro.org; a=openpgp;
- fpr=F18BDC8B6C25F90AA23D5174634DC4F0687046F8
 
-According to the eDP specification (VESA Embedded DisplayPort Standard
-v1.4b, Section 3.3.10.2), if the value of DP_EDP_PWMGEN_BIT_COUNT is
-less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, the sink is required to use
-the MIN value as the effective PWM bit count.
+On Mon, 24 Mar 2025 10:23:52 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-This commit updates the logic to clamp the reported
-DP_EDP_PWMGEN_BIT_COUNT to the range defined by
-DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN and _CAP_MAX. This ensures correct
-handling of eDP panels that report a zero PWM bit count but still
-provide valid non-zero MIN and MAX capability values. Without this
-clamping, brightness values may be interpreted incorrectly, leading
-to a dim or non-functional backlight.
+> On Mon, Mar 24, 2025 at 09:13:42AM +0200, Matti Vaittinen wrote:
+> > The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
+> > an automatic measurement mode, with an alarm interrupt for out-of-window
+> > measurements. The window is configurable for each channel.
+> > 
+> > The I2C protocol for manual start of the measurement and data reading is
+> > somewhat peculiar. It requires the master to do clock stretching after
+> > sending the I2C slave-address until the slave has captured the data.
+> > Needless to say this is not well suopported by the I2C controllers.
+> > 
+> > Thus do not support the BD79124's manual measurement mode but implement
+> > the measurements using automatic measurement mode, relying on the
+> > BD79124's ability of storing latest measurements into register.
+> > 
+> > Support also configuring the threshold events for detecting the
+> > out-of-window events.
+> > 
+> > The BD79124 keeps asserting IRQ for as long as the measured voltage is
+> > out of the configured window. Thus, prevent the user-space from choking
+> > on the events and mask the received event for a fixed duration (1 second)
+> > when an event is handled.
+> > 
+> > The ADC input pins can be also configured as general purpose outputs.
+> > Make those pins which don't have corresponding ADC channel node in the
+> > device-tree controllable as GPO.  
+> 
+> Thank you for the nicely written driver!
+> However, I have one big issue with it (see below).
+> 
+> ...
+> 
+> > +static void bd79124gpo_set(struct gpio_chip *gc, unsigned int offset, int value)
+> > +static void bd79124gpo_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+> > +				    unsigned long *bits)  
+> 
+> These will be _rv variants anyway as there is no chance this series goes before that.
 
-For example, the Samsung ATNA40YK20 OLED panel used in the Lenovo
-ThinkPad T14s Gen6 (Snapdragon) reports a PWM bit count of 0, but
-supports AUX backlight control and declares a valid 11-bit range.
-Clamping ensures brightness scaling works as intended on such panels.
+I don't mind seeing this as a follow up series, but I would like that
+to hit this cycle if possible.
 
-Co-developed-by: Rui Miguel Silva <rui.silva@linaro.org>
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
----
-Changes in v3:
-- Properly rebase patch on top of latest version of drm-misc-next.
-- Make patch more generic by clamping PWM bit count to advertised MIN
-  and MAX capabilities (suggested by Dmitry).
-- Link to v2: https://lore.kernel.org/r/20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-v2-1-16dc3ee00276@linaro.org
+> 
+> ...
+> 
+> > +struct bd79124_raw {
+> > +	u8 val_bit3_0; /* Is set in high bits of the byte */
+> > +	u8 val_bit11_4;
+> > +};
+> > +#define BD79124_RAW_TO_INT(r) ((r.val_bit11_4 << 4) | (r.val_bit3_0 >> 4))
+> > +#define BD79124_INT_TO_RAW(val) {					\
+> > +	.val_bit11_4 = (val) >> 4,					\
+> > +	.val_bit3_0 = (val) << 4,					\
+> > +}  
+> 
+> All the rest is fine to me and looks good, but above is a principal impediment
+> to give you my tag. In case you update the type to __le16, feel free to add
+> my Reviewed-by tag.
 
-Changes in v2:
-- Split backlight brightness patch from T14s OLED enablement series.
-- Use PWMGEN_CAP_MIN rather than MAX (Dmitry).
-- Rework commit message to reference eDP spec.
-- Rebase on drm-misc-next.
-- Link to v1: https://lore.kernel.org/all/20250325-wip-obbardc-qcom-t14s-oled-panel-v2-4-e9bc7c9d30cc@linaro.org/
----
- drivers/gpu/drm/display/drm_dp_helper.c | 48 ++++++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 18 deletions(-)
+Matti, I think after all the back and forth it is clear I should have
+been fussier about this in the RFC as it would have saved time.
+My advice in future is once something has been poked twice by reviewers
+just change it.  For what it is worth I prefer what Andy is asking for
+but not enough to hold this longer.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
-index e2439c8a7fefe116b04aaa689b557e2387b05540..fcc26cb96a51066a503433b2dc660126155d179c 100644
---- a/drivers/gpu/drm/display/drm_dp_helper.c
-+++ b/drivers/gpu/drm/display/drm_dp_helper.c
-@@ -28,6 +28,7 @@
- #include <linux/init.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
-+#include <linux/minmax.h>
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/seq_file.h>
-@@ -4033,8 +4034,33 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
- 			    aux->name, ret);
- 		return -ENODEV;
- 	}
--
- 	pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-+
-+	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
-+	if (ret != 1) {
-+		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
-+			    aux->name, ret);
-+		return -ENODEV;
-+	}
-+	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-+
-+	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
-+	if (ret != 1) {
-+		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
-+			    aux->name, ret);
-+		return -ENODEV;
-+	}
-+	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-+
-+	/*
-+	 * Per VESA eDP Spec v1.4b, section 3.3.10.2:
-+	 * If DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
-+	 * the sink must use the MIN value as the effective PWM bit count.
-+	 * Clamp the reported value to the [MIN, MAX] capability range to ensure
-+	 * correct brightness scaling on compliant eDP panels.
-+	 */
-+	pn = clamp(pn, pn_min, pn_max);
-+
- 	bl->max = (1 << pn) - 1;
- 	if (!driver_pwm_freq_hz)
- 		return 0;
-@@ -4054,29 +4080,15 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
- 	 */
- 	fxp = DIV_ROUND_CLOSEST(1000 * DP_EDP_BACKLIGHT_FREQ_BASE_KHZ, driver_pwm_freq_hz);
- 
--	/* Use highest possible value of Pn for more granularity of brightness adjustment while
-+	/*
-+	 * Ensure frequency is within 25% of desired value.
-+	 * Use highest possible value of Pn for more granularity of brightness adjustment while
- 	 * satisfying the conditions below.
- 	 * - Pn is in the range of Pn_min and Pn_max
- 	 * - F is in the range of 1 and 255
- 	 * - FxP is within 25% of desired value.
- 	 *   Note: 25% is arbitrary value and may need some tweak.
- 	 */
--	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
--	if (ret < 0) {
--		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
--			    aux->name, ret);
--		return 0;
--	}
--	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
--	if (ret < 0) {
--		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
--			    aux->name, ret);
--		return 0;
--	}
--	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
--	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
--
--	/* Ensure frequency is within 25% of desired value */
- 	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
- 	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
- 	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
+So applied (with tweak as per other mail) and with assumption you'll chase
+this with the gpio chip stuff cleaned up to use the new functions.
 
----
-base-commit: 4c4d9b7b6c6e676eca22585139aba5f03de74b90
-change-id: 20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-4020865b6580
+Thanks,
 
-Best regards,
--- 
-Christopher Obbard <christopher.obbard@linaro.org>
+Jonathan
+
 
