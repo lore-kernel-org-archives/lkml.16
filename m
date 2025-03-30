@@ -1,68 +1,131 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F8D149C55;
-	Sun, 30 Mar 2025 11:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8881D175D50;
+	Sun, 30 Mar 2025 11:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743332977; cv=none; b=XY+vOiHL9U7nicQigDq56Z61Bfd3YMvSymBWMCbAFtscN/PP9bLynwD3uD0xL/p3tYb4MjLiHb1yvjHi9DU+BxgWqeSkFl3oy/yFp4Rif3aGGbqqA1rhiNUxujNPjpM/D+v8+c42dyxyE/N5VTrxeVXE5lSECPTDSkzQfHELmfs=
+	t=1743333028; cv=none; b=NR0PafyTTbdbCF6311MerSGqIZHaorXlJBW7zsWD/iixpkusVqnFtJ+xABDyjIl6CMPhc+G459EmgwTfOc6dp4CYxLSYvceBQmoVkRf8kcm30HFs7+cFLdF9cBpqE9ays/SaP5KySQWF93JECJmu+yzp/3oQsXHtnBjB0plQfiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743332977; c=relaxed/simple;
-	bh=6L25GE0MjKdrLEZF3H7DMdT7li1y4IAdnXKXHnFok6Q=;
-	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
-	 Content-Type; b=rx3mYk0wuHX5fublGGsbPj8cPudhXJjRbi+UDc5bJOgfLwY2QlSfBxrDIJ6ppz2iOBUztwPCS43mxEv7Th+msMqa3jHSljnZ7eu+uKGLdspYYtfWJotpNR9e1O3LZIZIjOXFl27cENFtSB09T7BfqAvqDn8OhznsfFyc5bzXpd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HnKcGhCF; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743333028; c=relaxed/simple;
+	bh=uMH9D5qQAVaC3sufhouTJxvBFoW4Cg3Kxe6V50NQyrI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqIcSPjdVVnDnncgT16/LyphOPacrZJvABpQxBom9WwO8tLkBjaxPgqMGhR83gA/a1GHnDQy3cDXfQnrVAiy/rxRHnNMjbnzIxlDlFNM2bqGvB5BQf7hvrE5UtSMfg/DW6fPI8eC5wW2bhmWqHkni0Cp9UeKwBK0UcmEdjvN/y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6eosBVz; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HnKcGhCF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Mime-Version:Message-ID:
-	Content-Type; bh=6L25GE0MjKdrLEZF3H7DMdT7li1y4IAdnXKXHnFok6Q=;
-	b=HnKcGhCFJtTDkm2L0lQ/GbV47VtQscqkRGp5TYmX852gj/jrQyi9PTqbXEqs8f
-	0VnkKoB98G5EvUYgGpJVufH5aOiwk9fHGj2K/W/fsIe767asp/Y/y1r6WSxYwhaw
-	iPLPhUgdYbSgiAvs1gM2qGisv7myM8UmmGHOBGAIlbPB8=
-Received: from WIN-S4QB3VCT165 (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgAn8v9UJulnZlqlBQ--.26173S2;
-	Sun, 30 Mar 2025 19:09:10 +0800 (CST)
-Date: Sun, 30 Mar 2025 19:09:10 +0800
-From: "mowenroot@163.com" <mowenroot@163.com>
-To: "Paul Moore" <paul@paul-moore.com>, 
-	kuba <kuba@kernel.org>
-Cc: 1985755126 <1985755126@qq.com>, 
-	netdev <netdev@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] netlabel: Fix NULL pointer exception caused by CALIPSO on IPv4 sockets
-References: <20250326074355.24016-1-mowenroot@163.com>, 
-	<CAHC9VhRUq0yjGLhGf=GstDb8h5uC_Hh8W9zXkJRMXAgbNXQTZA@mail.gmail.com>, 
-	<20250328050242.7bec73be@kernel.org>, 
-	<CAHC9VhRvrOCqBT-2xRF5zrkeDN3EvShUggOF=Uh47TXFc5Uu1w@mail.gmail.com>
-X-Priority: 3
-X-GUID: FD9EE270-3FB3-4D7E-A082-8AE943683651
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.25.331[cn]
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6eosBVz"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3035858c687so4911796a91.2;
+        Sun, 30 Mar 2025 04:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743333027; x=1743937827; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KF09n6ohxZVdfCGussuOtctoxzw/9z0eF08JQ8zCyw8=;
+        b=B6eosBVzzsifAB7mUwm2gB2aCdHRlnTn+gU14Evqg9BKI2fInZFRhZmBSLEtp7EiFs
+         ITTLvly140T1X+MnnrFBOtU2QYOYh/8etOzEl6Vrt+KQk5JQbDjlYFfzYP71LfOhNGh1
+         Z1fB60uum4J5BUeKqqMJC1Zi7s3U96LfFAG4v3b9ZGtTVnZ15etp8d3pbPNejHXFvnDg
+         270KemPLE3oqF3v0sxFGiYErroaqgXlV4GD61MbI2ubovqURCQhkMezbfOf9+auzWIFq
+         2t7R1/lqDUUu0VtqSHo2IlJ7tGnK2+Kkqd2jcHnWh2pb0ygpk2XCN9haffOORwENSXv6
+         fGEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743333027; x=1743937827;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KF09n6ohxZVdfCGussuOtctoxzw/9z0eF08JQ8zCyw8=;
+        b=MScB1VpDQqlTj2oDA+tc1Z/qmqBOMwq/GAFTeCFOj2Oaq4DpImdZTqYInUaS9+zxuz
+         PlO2IRlMeZpCAGSmeXRf92nX6P/2mzNk6iPXHBRD4E05mL4kB8tV19v3ipgQCV8Kk8ZO
+         WHH6frp5rc8/jY0x+3fcxPfSr4BVcqwujIm2SHk2qauRZKWZTgtRdUVpxDZA21R1zxr+
+         xtKStLuloHCErEFHbPu4PRYM1xqGG2+YCLBX37wSpNxDy1Kcm8JTrbijQxSoYZJ87Ydw
+         MaXhuL39YB51Cpv9H3h8b3cbuyVltyeWTA1C5QnFY7d1b/WZyVIP1FztoLMebwWBXMYC
+         q2bA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJaBtIzUjHiQGk803Jny1ULTCg8yxXyDDZ2pZxx9w8S9NPj+Googy5sGKlMooF4tJphGYwYHlYpaAtQEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw22rHTxt07T4xHlErEMdK3oBsXM0h+OBvUKg3H2qt50Zb7myBD
+	O5Ty+axQ6UEMFb8dFsdHzlQBNGZp/WQ80awfIHUZCiKyAdE5xgQv
+X-Gm-Gg: ASbGnctO1M2waq1ZwzCr65kv+LqrQtTi7NbDl/lY5Lxi/mCfX0qNP2dXjoSEAYZ3cae
+	v75pccEKn3aCU08FAmQ1YqzUI/ywMLZSrfzlyItQxSq5Kc8rahdXA7xk4M7Aaive4WgE7A2dp1I
+	USsyfrpGTBedwefXSZlTGqg/vc462FlinMJE8WdHY/fG5AkJB6g7cizLYxJPSdxlYIcaxzZtZZz
+	mQvjoy2DMA7e5yxossZgTlv5vzMfjUtjNR42We3nBU44XN6Eq7/gC77fu7jt0YjcyqSpG9cBuxV
+	dwzd82qQElzVERTH5LGkqY88mXeDGtgY25AZnJota2/Rx6Q3jay4dvT6GWVDmRi4gx+V18NxGVe
+	WEV96QZs5+xxOE3mLHKIppbAClxozxdEV4G8n9+ZrKg==
+X-Google-Smtp-Source: AGHT+IFnbzl2epOSt90H01aDeUm2b0dBQj1iJ1sf8IFO6dYHI0OIszwKM41B4LCe7IBBHP62GqRyjg==
+X-Received: by 2002:a17:90b:3b85:b0:2ff:6e72:b8e9 with SMTP id 98e67ed59e1d1-30532154023mr7903936a91.25.1743333026761;
+        Sun, 30 Mar 2025 04:10:26 -0700 (PDT)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dff0529sm8367069a91.16.2025.03.30.04.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 04:10:26 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v3 0/2] serial: sifive: Convert sifive console to nbcon
+Date: Sun, 30 Mar 2025 20:09:57 +0900
+Message-Id: <20250330110957.392460-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <202503301909090753553@163.com>
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-CM-TRANSID:PigvCgAn8v9UJulnZlqlBQ--.26173S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUF6pPUUUUU
-X-CM-SenderInfo: pprzv0hurr3qqrwthudrp/1tbiEwgglGfpJeIJ+wAAsU
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-SGkgUGF1bCwgSmFrdWIsIGFuZCBhbGwgbWFpbnRhaW5lcnMsCgpUaGFua3MgZm9yIHlvdXIgcmV2
-aWV3IGFuZCBzdWdnZXN0aW9ucy4KCkkgaGF2ZSBzdWJtaXR0ZWQgdGhlIHYyIHBhdGNoIGFuZCBt
-YWRlIHRoZSBmb2xsb3dpbmcgaW1wcm92ZW1lbnRzOgoKLSBBZGRlZCBhIGJsYW5rIGxpbmUgYmV0
-d2VlbiBsb2NhbCB2YXJpYWJsZSBkZWNsYXJhdGlvbnMgYW5kIHRoZSBtYWluIGxvZ2ljIGZvciBi
-ZXR0ZXIgcmVhZGFiaWxpdHkuCi0gUmVtb3ZlZCB1bm5lY2Vzc2FyeSBjb21tZW50cyBhcyB0aGUg
-Y29kZSBpcyBzZWxmLWV4cGxhbmF0b3J5LgotIEltcHJvdmVkIHRoZSBjb21taXQgbWVzc2FnZSBh
-bmQgaW5jbHVkZWQgbW9yZSBkZXRhaWxlZCBpbmZvcm1hdGlvbiwgaW5jbHVkaW5nIHRoZSByZXBy
-b2R1Y2VyIHN0ZXBzLgoKTWFueSB0aGFua3MgdG8gUGF1bCBmb3IgeW91ciBjYXJlZnVsIGd1aWRh
-bmNl4oCUeW91IGFyZSBhIGdyZWF0IHRlYWNoZXIuCgpUaGFua3MgYWdhaW4gZm9yIHlvdXIgZmVl
-ZGJhY2shCgpUaGFua3MgYWdhaW4uCiBEZWJpbiBaaHUgJiBCaXRhbyBPdXlhbmcKCi0tCm1vd2Vu
-cm9vdEAxNjMuY29tCg==
+Hi!
+
+This series convert sifive console to nbcon.
+
+The first patch fixes the issue which was pointed out by John [0] 
+that the driver has been accessing SIFIVE_SERIAL_IE_OFFS register 
+on its ->startup() and ->shutdown() without port lock synchronization 
+against ->write().
+
+The fix on the first patch still applies to the second patch which 
+converts the console to nbcon as ->write_thread() holds port lock
+and ->write_atomic() checks for the console ownership.
+
+Sincerely,
+Ryo Takakura
+
+[0] https://lore.kernel.org/lkml/84sen2fo4b.fsf@jogness.linutronix.de/
+
+---
+
+Changes since v1:
+[1] https://lore.kernel.org/lkml/20250323060603.388621-1-ryotkkr98@gmail.com/
+
+- Thank you John for the feedback!
+- Add a patch for synchronizing startup()/shutdown() vs write(). 
+- Add <Reviewed-by> by John.
+
+Changes since v2:
+[2] https://lore.kernel.org/all/20250330003058.386447-1-ryotkkr98@gmail.com/ 
+
+- Add Cc stable for the first patch.
+
+---
+
+Ryo Takakura (2):
+  serial: sifive: lock port in startup()/shutdown() callbacks
+  serial: sifive: Switch to nbcon console
+
+ drivers/tty/serial/sifive.c | 93 +++++++++++++++++++++++++++++++------
+ 1 file changed, 80 insertions(+), 13 deletions(-)
+
+-- 
+2.34.1
 
