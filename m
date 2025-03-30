@@ -1,278 +1,129 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64213FE4;
-	Sun, 30 Mar 2025 13:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E111288B1;
+	Sun, 30 Mar 2025 14:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743342854; cv=none; b=RFnAZQlUQUwGgfmD2v1m8ul0mjhghwXVToj6rgEI64zaeu8IvG1BJ0qr72Nu6aJITE8xmiA/687d8TNoTtIiVW5G8AzrDpVEsLLtepsR1IsIJ3JgKD7Ee8xGtj56MYynJBDH35lZ/SSZszEVc7UX+uHDTpnIRowUB+YUaorH0E4=
+	t=1743343261; cv=none; b=Ynm78eEi9dPxlbeN15ZKP6r+PJTSzCEvPKnf6IQH7y3qqSbO6wmf/LxTlF3gmVn63OJXZ8V9Jph2PBJyVZy527yn3Mx2NZ/BU7d1yELLiyji5o5JFNOEYE4vAC+yda/CQotyLgQU8MVgid7o1jz656XMBxaB7rONLrfPBXhHeSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743342854; c=relaxed/simple;
-	bh=DXt+GXeV4mp0WRGLCUGBLPVEPVQcKyAxaH7Wq8tfIJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lnJSZbw5K8mUuuNbSvjchS2xUis3pazrr2x7KnbipzeiZMuxW3GKo8+yPPzc84COC8hY5yawKo543wLQUZCTyjs4ZhQlWq2MAHzHi3EjT+PVyL6742KSiPGhDfQVOAJ9G793zr8ZuuZcmENxCdwxlIBtpi7FGygKdD3Q8QhoRy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fR1PxzJV; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743343261; c=relaxed/simple;
+	bh=wi+LA1O4Z14BJNn/fKaFSqytvWpIfpYOMUYZx3QPyCE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GiaOdS8+jnqOV5RMRxE2VExQftTH8E5trLf0uzALJC98J88d2RubU+VPaqp0g8UQ9yDelnA/iEHaHbrROwqts60I3e3BUALBn6txVl2TTvTVoYSNRCsQPXHoaOhUaLhjfbViyH3ehvBY0yceyQb0zgSRKXKHCzxNHMheZ0QDPSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=XUC/4PuY; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR1PxzJV"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5171061a91.0;
-        Sun, 30 Mar 2025 06:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743342852; x=1743947652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cja7WXf88weQH2Ms3egRtRNJB0hV1hLf9dov+aKpUCA=;
-        b=fR1PxzJV8c8QhuhputE3qfEwAYU0EfgKJ4Q1rn7/v2kah+PFq23ztzWMnKiScAISrJ
-         3tUGmFRgyV1anbSJHNgeEK2nEzL+1Ewuq0uWZ0gHP2TMRrObvIzIZEWSadvACO2iG/AD
-         uLop589I/syqbu0fKVgZsTC0+0xUkjNi9/e7oALEasD6yq4a2obAPKKkf9woS1NoNkND
-         yu3cFbSPcrSZnsD1Q7dABqTRkIBMzL4QiZzw2J/10RBRIQfUifEtBXmKJgsEMXtQEq2u
-         utF7Mv2V7lr/FY62uz6ASDJforZ2RZVumrNiZTrUSA3Z8mq4/C/iEkBPwhWMq5PCmM/m
-         erfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743342852; x=1743947652;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cja7WXf88weQH2Ms3egRtRNJB0hV1hLf9dov+aKpUCA=;
-        b=nrb5YKfKuao0tUCf7eUnQwf2b6MfArp7TuO53L9TIN5His5x8aRF3dUW1IPCHnrB+B
-         oBXlEM+o8CuSTY0xC7lj/6VbxOIsnSRKP6EpuzqUnDRajejM8BwnuLOLTZF/dvDVjQ5S
-         nXZvUcuD/Sy12qCmoFGxIvBSQv8cYuTWVDuiMKLMOV31CPIsoSWkf80NceNhEcvN9pQs
-         MTGcVtlLJDhnQXJcgaLqcySX8L3spG6sf+ErRv03jMkTJe907o9IVT7/olh1YzoFqrVi
-         BNAMjZSd+EbsXyNEhNUMqi7FelqkFpEW+dAZeK1sDuPIFxzJFUhCxEvFGm9MQ90c14U9
-         03lA==
-X-Gm-Message-State: AOJu0YxqSx+1OkiWTF3A3i/6rfng5AnrdOhiizNJYeAeExAe+AocLL1L
-	5Dm6u8S3F05hyxLH3ezOGj7PJeR5j6/XwgtZj9bWfWsxc9hI0lvKpgRRudpGX4s=
-X-Gm-Gg: ASbGncuyjYC3jXzct30KStKodzC5vxzjZm5ZzDwizepoVjWZe5ijc5RdkJkdJcExBCo
-	ZMaDtDoH5Pf0BW94V++Gzjeiw5pl0+eJKYCDhqWipf9Bhzmz+cEEEU5emYW3zov0rcUNeUNdoXI
-	ieyKekWQvkRCpjcVJAg3M/ht83mzsoNglgaNLw17DaOAbFjyiIEhkAQ/1pxOUS3xuKK2pPLOk/5
-	z6rUQ063RX0b4CL+EaDtRXi3iMMIySN8rqIgv3Wv9jy5o7sTKs7QZ1X1HJeejtVQIgZTfu68rZ4
-	dHde0ySUeh0BeaRV1a1eBS5LGcjnO30niOu73FgevBK9c1RY+7i5iVDs7nVDh51NK+Y=
-X-Google-Smtp-Source: AGHT+IGJRRD5SUgH1BoqMZGKNSNNsdWWHJiTdd51Gyk8ADVMgC2QcXtjhGAmxE4p//k5Ni8tp81dJQ==
-X-Received: by 2002:a17:90a:fc46:b0:2ff:52e1:c4b4 with SMTP id 98e67ed59e1d1-3053216eb64mr8498809a91.32.1743342851805;
-        Sun, 30 Mar 2025 06:54:11 -0700 (PDT)
-Received: from fedora.am.students.amrita.edu ([175.184.253.10])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cdfbbsm51889505ad.146.2025.03.30.06.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 06:54:11 -0700 (PDT)
-From: Siddharth Menon <simeddon@gmail.com>
-To: linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	gregkh@linuxfoundation.org,
-	jic23@kernel.org,
-	Michael.Hennerich@analog.com,
-	lars@metafoo.de,
-	marcelo.schmitt1@gmail.com,
-	Siddharth Menon <simeddon@gmail.com>
-Subject: [PATCH v5] iio: frequency: ad9832: Use FIELD_PREP macro to set bit fields
-Date: Sun, 30 Mar 2025 19:19:51 +0530
-Message-ID: <20250330135402.105418-1-simeddon@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XUC/4PuY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1743343258;
+	bh=wi+LA1O4Z14BJNn/fKaFSqytvWpIfpYOMUYZx3QPyCE=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=XUC/4PuYSVRRexyB8oHo03Xu+wOhzPbEjJrzBj/A4Rfg6p+88ufyskSaWDwvoz3WW
+	 LuRnMXNtaASHwcscmTh7aQ57IfN9NJsgQulN2uEk2N+6ovUhza0L1GdIDFYZYcaq9P
+	 6pcehefE7e5u0hOcgx1UELCHiseBHlUjVopIw2AI=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 8B5A01C030D;
+	Sun, 30 Mar 2025 10:00:57 -0400 (EDT)
+Message-ID: <3f140c076c3756e84d515b81ee9eeeaf13ca4b42.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 0/6] Extend freeze support to suspend and hibernate
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Christian Brauner <brauner@kernel.org>, jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com,
+ rafael@kernel.org,  djwong@kernel.org, pavel@kernel.org,
+ peterz@infradead.org, mingo@redhat.com,  will@kernel.org,
+ boqun.feng@gmail.com
+Date: Sun, 30 Mar 2025 10:00:56 -0400
+In-Reply-To: <20250330-heimweg-packen-b73908210f79@brauner>
+References: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
+	 <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
+	 <12ce8c18f4e16b1de591cbdfb8f6e7844e42807b.camel@HansenPartnership.com>
+	 <9c0a24cd8b03539fd6b8ecd5a186a5cf98b5d526.camel@HansenPartnership.com>
+	 <20250330-heimweg-packen-b73908210f79@brauner>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
+	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
+	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
+	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
+	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
+	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
+	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
+	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Use bitfield and bitmask macros to clearly specify AD9832 SPI
-command fields to make register write code more readable.
+On Sun, 2025-03-30 at 10:33 +0200, Christian Brauner wrote:
+[...]
+> > I found the systemd bug
+> >=20
+> > https://github.com/systemd/systemd/issues/36888
+>=20
+> I don't think that's a systemd bug.
 
-Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Signed-off-by: Siddharth Menon <simeddon@gmail.com>
----
- v1->v2:
- - remove CMD_SHIFT and ADD_SHIFT
- - use GENMASK
- - store regval in an array and iterate through it
- v2->v3:
- - add missing header
- - refactor code in the previously introduced loops
- v3->v4:
- - update commit message with a better one
- - convert AD9832_PHASE and RES_MASK to masks
- - cleanup a few if else blocks
- v4->v5
- - remove unnecessary inversion (val ? 0 : 1) used
-   with AD9832_PHASE_MASK introduced in v4
- - use ARRAY_SIZE instead of fixed integers
- - use reverse xmas tree order
- - align mask macros
- drivers/staging/iio/frequency/ad9832.c | 85 +++++++++++++-------------
- 1 file changed, 44 insertions(+), 41 deletions(-)
+Heh, well I have zero interest in refereeing a turf war between systemd
+and dracut over mismatched expectations.  The point for anyone who
+wants to run hibernate tests is that until they both sort this out the
+bug can be fixed by removing the system identifier check from systemd-
+hibernate-resume-generator.
 
-diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-index 140ee4f9c137..e74d085fb4f2 100644
---- a/drivers/staging/iio/frequency/ad9832.c
-+++ b/drivers/staging/iio/frequency/ad9832.c
-@@ -16,6 +16,9 @@
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/sysfs.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/unaligned.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -59,17 +62,18 @@
- #define AD9832_CMD_SLEEPRESCLR	0xC
- 
- #define AD9832_FREQ		BIT(11)
--#define AD9832_PHASE(x)		(((x) & 3) << 9)
-+#define AD9832_PHASE_MASK	GENMASK(10, 9)
- #define AD9832_SYNC		BIT(13)
- #define AD9832_SELSRC		BIT(12)
- #define AD9832_SLEEP		BIT(13)
- #define AD9832_RESET		BIT(12)
- #define AD9832_CLR		BIT(11)
--#define CMD_SHIFT		12
--#define ADD_SHIFT		8
- #define AD9832_FREQ_BITS	32
- #define AD9832_PHASE_BITS	12
--#define RES_MASK(bits)		((1 << (bits)) - 1)
-+#define RES_MASK(bits)		GENMASK((bits) - 1, 0)
-+#define AD9832_CMD_MSK		GENMASK(15, 12)
-+#define AD9832_ADD_MSK		GENMASK(11, 8)
-+#define AD9832_DAT_MSK		GENMASK(7, 0)
- 
- /**
-  * struct ad9832_state - driver instance specific data
-@@ -131,6 +135,8 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- {
- 	unsigned long clk_freq;
- 	unsigned long regval;
-+	u8 regval_bytes[4];
-+	u16 freq_cmd;
- 
- 	clk_freq = clk_get_rate(st->mclk);
- 
-@@ -138,19 +144,15 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- 		return -EINVAL;
- 
- 	regval = ad9832_calc_freqreg(clk_freq, fout);
-+	put_unaligned_be32(regval, regval_bytes);
- 
--	st->freq_data[0] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((regval >> 24) & 0xFF));
--	st->freq_data[1] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					((regval >> 16) & 0xFF));
--	st->freq_data[2] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					((addr - 2) << ADD_SHIFT) |
--					((regval >> 8) & 0xFF));
--	st->freq_data[3] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 3) << ADD_SHIFT) |
--					((regval >> 0) & 0xFF));
-+	for (int i = 0; i < ARRAY_SIZE(regval_bytes); i++) {
-+		freq_cmd = (i % 2 == 0) ? AD9832_CMD_FRE8BITSW : AD9832_CMD_FRE16BITSW;
-+
-+		st->freq_data[i] = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, freq_cmd) |
-+			FIELD_PREP(AD9832_ADD_MSK, addr - i) |
-+			FIELD_PREP(AD9832_DAT_MSK, regval_bytes[i]));
-+	}
- 
- 	return spi_sync(st->spi, &st->freq_msg);
- }
-@@ -158,15 +160,21 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- static int ad9832_write_phase(struct ad9832_state *st,
- 			      unsigned long addr, unsigned long phase)
- {
-+	u8 phase_bytes[2];
-+	u16 phase_cmd;
-+
- 	if (phase >= BIT(AD9832_PHASE_BITS))
- 		return -EINVAL;
- 
--	st->phase_data[0] = cpu_to_be16((AD9832_CMD_PHA8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((phase >> 8) & 0xFF));
--	st->phase_data[1] = cpu_to_be16((AD9832_CMD_PHA16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					(phase & 0xFF));
-+	put_unaligned_be16(phase, phase_bytes);
-+
-+	for (int i = 0; i < ARRAY_SIZE(phase_bytes); i++) {
-+		phase_cmd = (i % 2 == 0) ? AD9832_CMD_PHA8BITSW : AD9832_CMD_PHA16BITSW;
-+
-+		st->phase_data[i] = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, phase_cmd) |
-+			FIELD_PREP(AD9832_ADD_MSK, addr - i) |
-+			FIELD_PREP(AD9832_DAT_MSK, phase_bytes[i]));
-+	}
- 
- 	return spi_sync(st->spi, &st->phase_msg);
- }
-@@ -197,24 +205,22 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 		ret = ad9832_write_phase(st, this_attr->address, val);
- 		break;
- 	case AD9832_PINCTRL_EN:
--		if (val)
--			st->ctrl_ss &= ~AD9832_SELSRC;
--		else
--			st->ctrl_ss |= AD9832_SELSRC;
--		st->data = cpu_to_be16((AD9832_CMD_SYNCSELSRC << CMD_SHIFT) |
-+		st->ctrl_ss &= ~AD9832_SELSRC;
-+		st->ctrl_ss |= FIELD_PREP(AD9832_SELSRC, val ? 0 : 1);
-+
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
- 					st->ctrl_ss);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
- 	case AD9832_FREQ_SYM:
--		if (val == 1) {
--			st->ctrl_fp |= AD9832_FREQ;
--		} else if (val == 0) {
-+		if (val == 1 || val == 0) {
- 			st->ctrl_fp &= ~AD9832_FREQ;
-+			st->ctrl_fp |= FIELD_PREP(AD9832_FREQ, val ? 0 : 1);
- 		} else {
- 			ret = -EINVAL;
- 			break;
- 		}
--		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
- 					st->ctrl_fp);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
-@@ -224,21 +230,18 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 			break;
- 		}
- 
--		st->ctrl_fp &= ~AD9832_PHASE(3);
--		st->ctrl_fp |= AD9832_PHASE(val);
-+		st->ctrl_fp &= ~FIELD_PREP(AD9832_PHASE_MASK, 3);
-+		st->ctrl_fp |= FIELD_PREP(AD9832_PHASE_MASK, val);
- 
--		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
- 					st->ctrl_fp);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
- 	case AD9832_OUTPUT_EN:
--		if (val)
--			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
--					AD9832_CLR);
--		else
--			st->ctrl_src |= AD9832_RESET;
-+		st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP | AD9832_CLR);
-+		st->ctrl_src |= FIELD_PREP(AD9832_RESET, val ? 0 : 1);
- 
--		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
- 					st->ctrl_src);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
-@@ -396,7 +399,7 @@ static int ad9832_probe(struct spi_device *spi)
- 	spi_message_add_tail(&st->phase_xfer[1], &st->phase_msg);
- 
- 	st->ctrl_src = AD9832_SLEEP | AD9832_RESET | AD9832_CLR;
--	st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-+	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
- 					st->ctrl_src);
- 	ret = spi_sync(st->spi, &st->msg);
- 	if (ret) {
--- 
-2.49.0
+> > And hacked around it, so I can confirm a simple hibernate/resume
+> > works provided the sd_start_write() patches are applied (and the
+> > hooks are plumbed in to pm).
+> >=20
+> > There is an oddity: the systemd-journald process that would usually
+> > hang hibernate in D wait goes into R but seems to be hung and can't
+> > be killed by the watchdog even with a -9.=C2=A0 It's stack trace says
+> > it's still stuck in sb_start_write:
+> >=20
+> > [<0>] percpu_rwsem_wait.constprop.10+0xd1/0x140
+> > [<0>] ext4_page_mkwrite+0x3c1/0x560 [ext4]
+> > [<0>] do_page_mkwrite+0x38/0xa0
+> > [<0>] do_wp_page+0xd5/0xba0
+> > [<0>] __handle_mm_fault+0xa29/0xca0
+> > [<0>] handle_mm_fault+0x16a/0x2d0
+> > [<0>] do_user_addr_fault+0x3ab/0x810
+> > [<0>] exc_page_fault+0x68/0x150
+> > [<0>] asm_exc_page_fault+0x22/0x30
+> >=20
+> > So I think there's something funny going on in thaw.
+>=20
+> My uneducated guess is that it's probably an issue with ext4 freezing
+> and unfreezing. xfs stops workqueues after all writes and pagefault
+> writers have stopped. This is done in ->sync_fs() when it's called
+> from freeze_super(). They are restarted when ->unfreeze_fs is called.
+
+It is possible, but I note that if I do
+
+fsfreeze --freeze /
+
+I can produce exactly the above stack trace in systemd-journald, but if
+I unfreeze root it continues on normally.  Thus I think this is some
+type of bad interaction with the process freezing that goes on in
+hibernate.  I'm going to see if I can replicate using the cgroup
+freezer.
+
+> But for ext4 in ->sync_fs() the rsv_conversion_wq is flushed. I think
+> that should be safe to do but I'm not sure if there can't be other
+> work coming in on it before the actual freeze call. Jan will be able
+> to explain this a lot better. I don't have time today to figure out
+> what this does.
+
+Understood.  The above is for Jan if he'd like to think about it.
+
+Regards,
+
+James
 
