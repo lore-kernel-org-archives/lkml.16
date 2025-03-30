@@ -1,95 +1,215 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FA54207F;
-	Sun, 30 Mar 2025 15:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134301CCEE0;
+	Sun, 30 Mar 2025 15:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743349276; cv=none; b=qNdYJ6K2jy4khn42RyZvW9jsAHY1n7WyJ9AihSIg6f4rB0WVVPu1fuziZRSek2I/p62xnn1lt0d3jZyOz/FqPkBMCcAFI3QUmpkMpZJkxMANKZD7WK2xlRPE6YBvGE7Fkp2d+Mo1vgg42djouQWA32/qUV/H6OCVzmP9lLpa23Y=
+	t=1743349431; cv=none; b=jZNbxQT9YxvNPDwZ8XSQ2HII6jzeW5bTNqaoBtzQgv3vyHt6G9/z5P0Ts7q+1CwSE7gLbH09st1p14mKKbT0NVfWDzpB6yU2Rql6ceCAwi3foee7FYU/6GeDTG+qfJ8gx0ej7RmbSnryP0rm2y/1YFgAvJtejrFV73VoOigkS1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743349276; c=relaxed/simple;
-	bh=jngc2KNcY7N13o+oStS7JZtPmi/K0V0y0+D/jnwY45Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=qjsr+PKMomjrvMCbZqnon5W1ydMNz/eF9+jf5jddRMTXK02DonQ0iZSmiXi3IWCURlJJSfdeJpdpPNDcWlX1gkSWpVJK99sKNiBMn0CHQArgAOvu3kW3qiCya4Fb1OXIC/A2iY0/qafrSymdc8UtrFcBmKKoC/r1JbX39TRvKRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GsnhZ/5p; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1743349431; c=relaxed/simple;
+	bh=DY/QoIgUcxlYWKWErAMultP4tK424psP9SLBssFPk1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n81+D6VN9MG02S2gtpsYYNLM6jG4xajvCHml0DTZbzrSovZibewiRzPZFTi1GmILI31+YiqbxPjnqE4RIn/ULYhafQKgJd4YoAg0kQYeePTNAI8jIrPxx3aa3W8E2+Ue4jbh8iaqfzRTdiZiI3KNiG+U4kNuxNuyR5dnjVLxj8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKxyF+ty; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsnhZ/5p"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223a7065ff8so48400565ad.0;
-        Sun, 30 Mar 2025 08:41:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKxyF+ty"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3035858c687so5032996a91.2;
+        Sun, 30 Mar 2025 08:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743349274; x=1743954074; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jngc2KNcY7N13o+oStS7JZtPmi/K0V0y0+D/jnwY45Y=;
-        b=GsnhZ/5phj9Qf2RsSOJc8n+feEV6RCnDao5D07EKaeNLq5I4bJGMLPvRXPIk8Hc/hV
-         PblLL1H9mowPT2dcm1hUW2M2wEnTy10emu//SUMLpWMkRat7aP7SIf71/RAEze6hh5rE
-         3tzmw6/6LvXBHYyNY4RiJCLR8a+c/FyMbHkrWjfQpB5ywztIUREo/ciGdfuIrzm9zOCV
-         w/zCRYHkEZ1amBieudzX0OaDaWryEYK5eStBfdui7aSgrWreSj0eIJery/mA5otfNS0m
-         MpIW3zbkMoHHT1FumOfWxjADW6JI8e3L+xySd5msZFrleO5+iAGl/HfIAgwesKNPCK7S
-         gisQ==
+        d=gmail.com; s=20230601; t=1743349429; x=1743954229; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uYhteagEyzg+N5CaIO1iHsEXBTHsWVMkEKuAyOQorjA=;
+        b=KKxyF+ty8voDiCAIANhraEC1/8WqY9g2wqSpsG4SJfBmW4/NzPbeEykaHF0fLJ5lTs
+         QCow8IiLVlbYVm6D/WancDXuXsSbq1rPOt2ggRXZnJBpvN9AuB3OvW2iLFcBWBVOSkMp
+         2JD6WwnTmxireofohz+Akh92OHcju73hbQ3aKjZZ7W1q6Hna6N7xUWcVjHIXjrIs/Twy
+         aCpv9GORzqFdtQURwtQ/D/8keX9I+tEF4iBvN2xHTTMiFRYFXqu15UO8XQQv82JmPGIA
+         aWaM1Ek1V+jalf2GmAJMkbKLbienJuha716h5kFiLMoGxyj0wHoLPsriVyvqO2fyOLtx
+         6rQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743349274; x=1743954074;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jngc2KNcY7N13o+oStS7JZtPmi/K0V0y0+D/jnwY45Y=;
-        b=Y/P9n/DFaMqN/5duQXESkkklxRpA/0lDmQxNNK6xj9I5LsQav+Z6Y4kP1bopGWikCe
-         GB4YdLnu0CaugnnQYxL+D6Av5dWWrA49z2v5I4RJ+B0rRVembpg93YGuR1vRn5AUegyJ
-         WrOXklNg7CsAf7cpPGLOEdiCdlZN2EiZ9ixiXMVJd2RVCDJZFTtoaRfV7S8bS8YefW5p
-         PNHSGO1Q24rIW5zaljVNsEMJSMdo+3davw65PchD89DDUtPddGlJmR9VPyRuLf3OuraN
-         89+oY62cjwwheHd9Xn7Fp0EWoDQ5MGjx8MRUUb4Lw79M+fCxJd3AXsRRLOd8pMKA2SR0
-         APAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVv/b/iYE4Sle0yOgTLbqNaa1rNOZu1+QvbY7jwES8XRgheAk/mAXftjmc1ANpMdTeYZiPEvgWuvcvxrsA=@vger.kernel.org, AJvYcCX1aGBGNT9DRqySMw2sy7Mg0+8py9S6hm6Rrzwf5axglNxaqj0dj3MmgAZaGIf8aTfz8MC5aa5uuwdaF92aOAvP/MoeqQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzocd3IVQCEcXzU9tKSlfzVHHUU6qOYchMgWPHM0JCZ6oa7rr6
-	QGmk7IWFp6mRR8ZBocThSYqVh5AblFMBSddG9wr/3psVDklPVgkbMRuDsg==
-X-Gm-Gg: ASbGnctUa4aZBV/b6cfcMmygEgtxEim/YN1ooeZwrGy1+88umlenGCFp3SHDibwB5kw
-	zHLJ3cRgWXcg06WRvz/yCl7tPMUqgAYTpipWDbYByhWRfXgfX4SWLNBMostJ1EviW8zapcZxf2q
-	3VN4e4rwzRTxW34hrjxQGuBNLuqywR7J2MARjebPfiIsQP9/Rg4wZzf6EbnZiZNZ9UAQaN2Yc4U
-	/V8MlB88YkbuK2UajvrNzJMJ/0tESRrCi4C9sMCSg4NNCJh1Lj/JLe87hTAFUtMpqbxn/uX6LpA
-	Iyw8Xpx7lEWM/LhY9QqVlUwWWEHDwag+kAoOrA==
-X-Google-Smtp-Source: AGHT+IFXLQuQHYykk7MLl78LXCntqt8swyAiHrIVAIyPQoLnmVvJdwkzlqdRH6dAZVAYmTPU54+9TQ==
-X-Received: by 2002:a05:6a20:2d27:b0:1fd:f8eb:d232 with SMTP id adf61e73a8af0-2009f644c2cmr10964937637.24.1743349274434;
-        Sun, 30 Mar 2025 08:41:14 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93ba10871sm4132057a12.73.2025.03.30.08.41.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 08:41:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743349429; x=1743954229;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uYhteagEyzg+N5CaIO1iHsEXBTHsWVMkEKuAyOQorjA=;
+        b=b71FEOmFyy3eSclrXQykWKppqs7psWrtFhYcUxwCEvkJE9epKFjF6iB9kf+mXuD4Sn
+         0UZ0JgwBl0QhsCuDb3qDMT7eUw0IazinsU8IocmNPZZWzkomUWYC4simYFwE1bJ9WGwk
+         k1D7zKsuydT398+lV3TnMowrhC8cZOc1S6W6DAQa1lUVQViDfE1gtGMyteNfN++LZd9m
+         +Zvy9Aai8G5/s3B3YihGDOjnESQnp2rnfm0T1LDnuOspDojIaizNBVAf6VGEBaZR+A81
+         CGPF7h+/swAEJVcKS1OYpJ5LrtfiyP0UemqjgXvpUXlwmJ5hlSxupR42hbCnDgY0K8Ky
+         ef8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWTl4GGHnBZ30Srl17Niif4b7n2H8Iu1u00MDFXWZ9lkDArP0PhAi2//+kxQ5P9l5EcXgykO7BFnSSBsUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYBQC/WUtawmi8ofXILVH9SlyqDHv4I4Cwriangruz6u5PwEfC
+	3d0agHpbIjyJmYFqt/9mrcViMGtaBvqb+ZKl8hT+dSEAf2yfoZe2yeg83v6k
+X-Gm-Gg: ASbGncsBdDMHb9j3SwiyOFRHb6c2ZryI6Q0Xe5FJ9cM5C99jnX85rcgtrJg0maSJzZe
+	vLRpAk+qZWzIsC+Gcp6zKt1nvDKpDhmNrYYRLOfUPmVd7Ad1hNNCfkBJCFFrRm0jBszE1zkfyGl
+	oe5tkrBXefkCiokuCYyp6Wa/Lx+UfyS6PC44Tc/MRlyuYgWo0lqc8Zb29rmla88ba8Nqub2RAEj
+	6Qq5A6KixSDyvYI5fY3aK0a25u4vVER+MkxfEmXIO4RUIqA+ahPLBJ0iiM2LlOH73p3jIMbUbuT
+	ipuqwgrzDurYvdjlvh3++YQE8tkOmkZgh3uSrPRUBZCRKTRyoNshXL1TI6s93fXC
+X-Google-Smtp-Source: AGHT+IFQ1NR4OoxulZ7bvgn4OOzRV3N3uO6d2kuqzhU72/7pKS2qxDZ/gPmXAxdv5zgchB26Xkyk0A==
+X-Received: by 2002:a17:90b:2e88:b0:2fa:228d:5b03 with SMTP id 98e67ed59e1d1-305320afbbfmr9008735a91.19.1743349428908;
+        Sun, 30 Mar 2025 08:43:48 -0700 (PDT)
+Received: from localhost ([2804:30c:b03:ee00:e0b8:a8b8:44aa:8d0b])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30516d62964sm5567734a91.26.2025.03.30.08.43.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 08:43:47 -0700 (PDT)
+Date: Sun, 30 Mar 2025 12:44:50 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Siddharth Menon <simeddon@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, gregkh@linuxfoundation.org,
+	jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
+Subject: Re: [PATCH v5] iio: frequency: ad9832: Use FIELD_PREP macro to set
+ bit fields
+Message-ID: <Z-lm8l1ILFuJE5YS@debian-BULLSEYE-live-builder-AMD64>
+References: <20250330135402.105418-1-simeddon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 30 Mar 2025 12:41:11 -0300
-Message-Id: <D8TPQMU8LMXF.71ASYXE4U0C8@gmail.com>
-Cc: <hmh@hmh.eng.br>, <ibm-acpi-devel@lists.sourceforge.net>,
- <platform-driver-x86@vger.kernel.org>, "Linux Kernel Mailing List"
- <linux-kernel@vger.kernel.org>
-Subject: Re: Kernel Null Pointer Dereference on Fedora with thinkpad_acpi
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Damian Tometzki" <damian@riscv-rocks.de>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <CAL=B37kdL1orSQZD2A3skDOevRXBzF__cJJgY_GFh9LZO3FMsw@mail.gmail.com> <D8TDEP8ZEYE6.24AVWSGXURB4I@gmail.com> <CAL=B37ko7Zyr6gJxYTvsFKsfXKNTPw80UvjNgbQ+B6EZ9GGfaw@mail.gmail.com> <D8TEDS91VAGU.1UVZWWWWMRRNG@gmail.com> <CAL=B37nDNmkNo46tSfH-B7a+Uhex2LqhkbhJ7pjU9zrv+j3wug@mail.gmail.com>
-In-Reply-To: <CAL=B37nDNmkNo46tSfH-B7a+Uhex2LqhkbhJ7pjU9zrv+j3wug@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250330135402.105418-1-simeddon@gmail.com>
 
-On Sun Mar 30, 2025 at 7:16 AM -03, Damian Tometzki wrote:
-> Hello Kurt,
-> hello together,
->
-> I successfully tested the patch on my ThinkPad X1. System boots
-> normally without errors.
->
-> Tested-by: Damian Tometzki <damian@riscv-rocks.de>
->
-> Best regards
-> Damian
+Hi Siddharth,
 
-Thanks a lot for reporting and testing! The fix has been submitted now.
+Some suggestions in addition to what Jonathan has provided in his review.
 
---=20
- ~ Kurt
+On 03/30, Siddharth Menon wrote:
+> Use bitfield and bitmask macros to clearly specify AD9832 SPI
+> command fields to make register write code more readable.
+> 
+> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> ---
+>  v1->v2:
+>  - remove CMD_SHIFT and ADD_SHIFT
+>  - use GENMASK
+>  - store regval in an array and iterate through it
+>  v2->v3:
+>  - add missing header
+>  - refactor code in the previously introduced loops
+>  v3->v4:
+>  - update commit message with a better one
+>  - convert AD9832_PHASE and RES_MASK to masks
+>  - cleanup a few if else blocks
+>  v4->v5
+>  - remove unnecessary inversion (val ? 0 : 1) used
+>    with AD9832_PHASE_MASK introduced in v4
+>  - use ARRAY_SIZE instead of fixed integers
+>  - use reverse xmas tree order
+>  - align mask macros
+>  drivers/staging/iio/frequency/ad9832.c | 85 +++++++++++++-------------
+>  1 file changed, 44 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+> index 140ee4f9c137..e74d085fb4f2 100644
+> --- a/drivers/staging/iio/frequency/ad9832.c
+> +++ b/drivers/staging/iio/frequency/ad9832.c
+> @@ -16,6 +16,9 @@
+>  #include <linux/slab.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/unaligned.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -59,17 +62,18 @@
+>  #define AD9832_CMD_SLEEPRESCLR	0xC
+>  
+>  #define AD9832_FREQ		BIT(11)
+> -#define AD9832_PHASE(x)		(((x) & 3) << 9)
+> +#define AD9832_PHASE_MASK	GENMASK(10, 9)
+>  #define AD9832_SYNC		BIT(13)
+>  #define AD9832_SELSRC		BIT(12)
+>  #define AD9832_SLEEP		BIT(13)
+>  #define AD9832_RESET		BIT(12)
+>  #define AD9832_CLR		BIT(11)
+> -#define CMD_SHIFT		12
+> -#define ADD_SHIFT		8
+>  #define AD9832_FREQ_BITS	32
+>  #define AD9832_PHASE_BITS	12
+> -#define RES_MASK(bits)		((1 << (bits)) - 1)
+> +#define RES_MASK(bits)		GENMASK((bits) - 1, 0)
+I also don't see RES_MASK being used by ad9832 so just drop it.
+
+> +#define AD9832_CMD_MSK		GENMASK(15, 12)
+> +#define AD9832_ADD_MSK		GENMASK(11, 8)
+> +#define AD9832_DAT_MSK		GENMASK(7, 0)
+>  
+...
+>  	case AD9832_FREQ_SYM:
+> -		if (val == 1) {
+> -			st->ctrl_fp |= AD9832_FREQ;
+> -		} else if (val == 0) {
+> +		if (val == 1 || val == 0) {
+>  			st->ctrl_fp &= ~AD9832_FREQ;
+> +			st->ctrl_fp |= FIELD_PREP(AD9832_FREQ, val ? 0 : 1);
+The previous implementation would set ctrl_fp if val == 1 and unset it if val == 0.
+This patch seems to be doing the reverse (setting ctrl_fp if val == 0, and
+unsetting it if val != 0). Was the previous implementation potentially buggy?
+If not, I think we can just do
+
+		st->ctrl_fp &= ~AD9832_FREQ;
+		st->ctrl_fp |= FIELD_PREP(AD9832_FREQ, !!val);
+
+>  		} else {
+>  			ret = -EINVAL;
+>  			break;
+>  		}
+and drop the error path. Slight change in interface but guess no problem with that.
+
+> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
+>  					st->ctrl_fp);
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+> @@ -224,21 +230,18 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
+>  			break;
+>  		}
+>  
+> -		st->ctrl_fp &= ~AD9832_PHASE(3);
+> -		st->ctrl_fp |= AD9832_PHASE(val);
+> +		st->ctrl_fp &= ~FIELD_PREP(AD9832_PHASE_MASK, 3);
+> +		st->ctrl_fp |= FIELD_PREP(AD9832_PHASE_MASK, val);
+
+This seems to be a typical modify use case as exemplified in
+include/linux/bitfield.h. So,
+
+		st->ctrl_fp &= ~AD9832_PHASE_MASK;
+		st->ctrl_fp |= FIELD_PREP(AD9832_PHASE_MASK, val);
+
+>  
+> -		st->data = cpu_to_be16((AD9832_CMD_FPSELECT << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_FPSELECT) |
+>  					st->ctrl_fp);
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+>  	case AD9832_OUTPUT_EN:
+> -		if (val)
+> -			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
+> -					AD9832_CLR);
+> -		else
+> -			st->ctrl_src |= AD9832_RESET;
+> +		st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP | AD9832_CLR);
+> +		st->ctrl_src |= FIELD_PREP(AD9832_RESET, val ? 0 : 1);
+Hmm, this is modifying behavior. AD9832_SLEEP and AD9832_CLR were only being
+modified if something other than 0 was written to output enable sysfs file.
+Is the patch code mode appropriate than how the driver was before?
+
+>  
+> -		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
+>  					st->ctrl_src);
+>  		ret = spi_sync(st->spi, &st->msg);
+>  		break;
+
+Regards,
+Marcelo
