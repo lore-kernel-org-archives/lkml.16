@@ -1,32 +1,32 @@
 Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F02A1D88D7;
-	Sun, 30 Mar 2025 17:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66731581F0;
+	Sun, 30 Mar 2025 17:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743354228; cv=none; b=Go1ptnb1Lj7JMG/EPx22njp0v8DmvqpVVuC/EgbwZM5CtVtF2k4B6+1uxO35EYyth8x2AQdURdtxh5xKXbWyhjiPWkQ/hge2R0jemOGWAiVspkKhjmfTEX826U1flHF3lqEgcHYlVQoQhAR4LrPx7Gvc6x+TULQzqTUj0Xn1Oyw=
+	t=1743354228; cv=none; b=VuzTD6a83hVz2UrET1LflFCVRdmQUdRbgiV6XUIN8lUDgNUL3TlJ4CV2YFCKSX1mGBMl43uJKnml9kOFCJw0PLwN7Q7JCmGUOLAuHCW6Q5EM77I8qDDKs+5y30UE6IBNS5U2QvPJ6tXnMVEeUxqGzpGg8C1/QzqCTFc6t5q0FpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743354228; c=relaxed/simple;
-	bh=oNRaRLnfBnb1ZW6aGxeeGzxFOjGDwmSQYzr1X70JYlw=;
+	bh=iuH8/R83wXjbtd5UQ8lDR5xT+6EitQJGTKDHv5Nic4Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mi3ab3P5ZpFzmXAxi4o/dMKV7NmlpNxWn8qmMRvkPFPqutjdhwSabe+tVc9E5oF+My9PiHcFRzdS0gjQ+ELWeCheRHKEYRKhjxN+Z4O+EvyhC8mctD1AxahpyH12y89Sq7lNKWC5MZRj2D34Z6JJYzCMjExOrq/pUoMjlcwAHi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=s8IiOi/G; arc=none smtp.client-ip=5.135.140.105
+	 MIME-Version; b=j+muvdDXHu5Gwgs43c0s92wUAWLagYzLL21txyYzNZaHMgw0kw/at3TokMviGwxfU1ooyjri2s1QuzE4OnDnbcOyFRbH8zqd0E+DzsJA/g5L1xQmIGt8XspYR/ZIZWn/AXCtgoCd23ca3GztntFiocr/sxmjq+BYTDQtJ3xzB7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=ophRaC/H; arc=none smtp.client-ip=5.135.140.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="s8IiOi/G"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D82782FA7DC;
-	Sun, 30 Mar 2025 19:03:36 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="ophRaC/H"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 53B122FA7DD;
+	Sun, 30 Mar 2025 19:03:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1743354218; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1743354223; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=xKEBoXrCiMWH3OKIjSGQxmpl36DpxjBdQvVyTSGdPlc=;
-	b=s8IiOi/GgrcHrUA/t0GlzR9VBCXstrqTZTxwDSzMPJEUfI7SDS/opH1WqBgRwxSlkQZopB
-	fZueoo+4GziA7+NarQK2gKXrpgC8wvrBRmA+94ESQAWT3I2bUeMR4xwufRosjuM5XThEJX
-	gBkYxj4nOI4oVapaqyL93IAebfPU55iyjwD1AxHU2uCywLZHXfOBNyrfwR/6TC6I2A9vpX
-	xw5xzm/hLS+mjMrFowwYcdrncopodvLoWEhhoUK+6ifXjrTdA8GbEZJsZfCziLzIorybY3
-	IYuFntXpvbD+8QCYbVdBzHsiidk4aLpyiKtqL3i/96Sr25Te84pix80Ht01/3w==
+	bh=MV6qZJAKG2VQUeEH0tVEEYSEdZK/Zf4FCnYQtlW5yeE=;
+	b=ophRaC/HRk/QwKMhVaTxmg0RKR3dV9QQx5S8Fj/PoCov6BPbtee4yO5DXffiNTLh06HbQl
+	8BAYlkNk/X+jxw+FJGIDCF/Fy6cJ1HT15Hmd1GiK5r2czG7kfihJNc6t+/OEwmeMRi32kJ
+	ydue1m0INYdujeAVe8SQB4kKP4saGsD1oKJ+cFSe2UefnQQ5iIDNNS2Eu4pTvkTYeKw2eX
+	Cb1OtUvJqs+6GFMQ4geZBFkJwLeKXB4wIbaiOYU/5+z8+JIUNsMcEPqIgWKgTHod04EaVS
+	6OuRojVAGMswtAhUDY8Sc4KGwxvJ10F34XkFXulInJOdFeUdYJLcs/4HPvb/7Q==
 From: Caleb James DeLisle <cjd@cjdns.fr>
 To: linux-mips@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -40,9 +40,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	benjamin.larsson@genexis.eu,
 	linux-mediatek@lists.infradead.org,
 	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v3 01/10] dt-bindings: vendor-prefixes: Add EcoNet
-Date: Sun, 30 Mar 2025 17:02:57 +0000
-Message-Id: <20250330170306.2584136-2-cjd@cjdns.fr>
+Subject: [PATCH v3 04/10] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU Timer
+Date: Sun, 30 Mar 2025 17:03:00 +0000
+Message-Id: <20250330170306.2584136-5-cjd@cjdns.fr>
 In-Reply-To: <20250330170306.2584136-1-cjd@cjdns.fr>
 References: <20250330170306.2584136-1-cjd@cjdns.fr>
 Precedence: bulk
@@ -54,26 +54,103 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Add the "econet" vendor prefix for SoC maker
+Add device tree bindings for the so-called high-precision timer (HPT)
+in the EcoNet EN751221 SoC.
 
 Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+HPT is a name commonly used in vendor and 3rd party out-of-tree sources.
+---
+ .../bindings/timer/econet,en751221-timer.yaml | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 5079ca6ce1d1..371f6bb81f81 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -428,6 +428,8 @@ patternProperties:
-     description: EBV Elektronik
-   "^eckelmann,.*":
-     description: Eckelmann AG
-+  "^econet,.*":
-+    description: EcoNet (HK) Limited
-   "^edgeble,.*":
-     description: Edgeble AI Technologies Pvt. Ltd.
-   "^edimax,.*":
+diff --git a/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+new file mode 100644
+index 000000000000..c1e7c2b6afde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/econet,en751221-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: EcoNet EN751221 High Precision Timer (HPT)
++
++maintainers:
++  - Caleb James DeLisle <cjd@cjdns.fr>
++
++description:
++  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
++  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
++  count/compare registers and a per-CPU control register, with a single interrupt
++  line using a percpu-devid interrupt mechanism.
++
++properties:
++  compatible:
++    oneOf:
++      - const: econet,en751221-timer
++      - items:
++          - const: econet,en751627-timer
++          - const: econet,en751221-timer
++
++  reg:
++    minItems: 1
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++    description: A percpu-devid timer interrupt shared across CPUs.
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: econet,en751627-timer
++    then:
++      properties:
++        reg:
++          items:
++            - description: VPE timers 0 and 1
++            - description: VPE timers 2 and 3
++    else:
++      properties:
++        reg:
++          items:
++            - description: VPE timers 0 and 1
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@1fbf0400 {
++        compatible = "econet,en751627-timer", "econet,en751221-timer";
++        reg = <0x1fbf0400 0x100>, <0x1fbe0000 0x100>;
++        interrupt-parent = <&intc>;
++        interrupts = <30>;
++        clocks = <&hpt_clock>;
++    };
++  - |
++    timer@1fbf0400 {
++        compatible = "econet,en751221-timer";
++        reg = <0x1fbe0400 0x100>;
++        interrupt-parent = <&intc>;
++        interrupts = <30>;
++        clocks = <&hpt_clock>;
++    };
++...
 -- 
 2.39.5
 
