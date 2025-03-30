@@ -1,102 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C508F5B;
-	Sun, 30 Mar 2025 18:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB398F5B
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743358116; cv=none; b=qc15KS5KO0QYnWulI1DxEwNlSOxYH5PtvG80+I3xke3EB2dfTj/fX+T5uqfs6wSe7hop92+01FYeMFKjcPRa2aPynHsZHfJ+WUg+8ofBgFaSfYTAyLfKGpd0QfwgycM6fqLqaiFrZgnw4QAbtRl9Be0dCI4ysrf25arn8QnuQTw=
+	t=1743358232; cv=none; b=h2PMnrp4E804X0fD825Sf6mfCN4Il+I8hQn1fM3YsXTbMnDZs8vWQci92RpCBPi3J5gLfM3U5I3J0N9dCHFZ1krtdg42gBfPaCm5zSRzwvJ8onm3GodlRhn6HzcNpsO0O/aFv/6zQLpMzq35/JsaK5AHoI3nIfgetAi2d9zjL88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743358116; c=relaxed/simple;
-	bh=CN2OkThA27NdQWpbEPcjNloXlUl9MhYskmBkPRGKCVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gw4Yp6/AmnrkVVJfmAI/aYXFPqzwAFMCePWydN2jSsZWJOEyiWXnyLJAIKMjIX7QRMFb571XVgXlPPIIaMUClLAaCSe59ZW0DQtUYRXBJ7ec+V4TVGUq5xlyWL+qmsnWFKqM/cPr/gBxO48B/dFos9MGMjV/+lja7C4wlPW9q7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvrJ+sci; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743358232; c=relaxed/simple;
+	bh=uxlRSDj+6l7hE2ngpMyNG1uZskgjxdbHsuqaEWdvBq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MyNKIQHpeaNNsOGCoMYk92RKtlz/4HmSjpYhAcKx33veti8967tAvhwVWhCaWrjqbFJZ54kf6iZ8GD+v0cXnabJdF8dcsXw4hjUljtuQZJSS+NwlC4sNRZpCG4LSY1XwUZD9Rcbt5ZNqHseQE8zMffIQ2WZMphPcb2iVLEZMNlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MIbo4g88; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvrJ+sci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBA0C4CEDD;
-	Sun, 30 Mar 2025 18:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743358116;
-	bh=CN2OkThA27NdQWpbEPcjNloXlUl9MhYskmBkPRGKCVk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cvrJ+scib8pnbZFObnCGzNTSDBiN0jLF0AKE5SXxAQ877MCqVDA3fC6JT+APqltQu
-	 XuI6RsFl45smHmZJzqpuQoolPHP6nke/2CL5cNm3I1Izr4BG0xyDkHBMmKcMul0eRN
-	 U30PfURcIBLuhD4g00Jcx9BzegZpw0JoEjTW7JzL+kINd0rgBwDMk50aIQ77S/CZhT
-	 yLMKigQzLoTN8Vgx5SIIsZsHZF3SP7xz4W89Up+m6+rf8dyz7L5M+pSKUxMhQJARJj
-	 xCBfTpEsmRyb/PfNc/RKb4M/Cq1pvJmDozR3vKdpy1BLkJQeqcY1j57Okzg+OqtF8D
-	 JsvfdtKBC5W3A==
-Date: Sun, 30 Mar 2025 19:08:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-iio@vger.kernel.org, Michael Hennerich
- <Michael.Hennerich@analog.com>, Angelo Dureghello
- <adureghello@baylibre.com>, Alexandru Ardelean <aardelean@baylibre.com>,
- Beniamin Bia <beniamin.bia@analog.com>, Stefan Popa
- <stefan.popa@analog.com>, linux-kernel@vger.kernel.org, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Subject: Re: [PATCH v2 10/10] iio: adc: ad7606_par: add ad7606c chips
-Message-ID: <20250330190827.654b4f3d@jic23-huawei>
-In-Reply-To: <20250318-iio-adc-ad7606-improvements-v2-10-4b605427774c@baylibre.com>
-References: <20250318-iio-adc-ad7606-improvements-v2-0-4b605427774c@baylibre.com>
-	<20250318-iio-adc-ad7606-improvements-v2-10-4b605427774c@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MIbo4g88"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=N75v2HqyJOpmak3w13xGj/S5QvQzHhXruTn6pilQLIY=; b=MIbo4g88lf9x9jrf9xboOAIROs
+	tPjCrSZjCosWazHBC/n+/akKzmviBEC4B5zzYdFHgsqg9RuYV9C4vxsbGA93rMAG2CzDAMGM2yN3p
+	vbAQIlX6C5b1ik2c1PVvSVgNm7WvnvgblQp5h5jMzjo+scJsjNTtPzAr++g9JXj4uV2wttTEvwbAC
+	kmyGNc+xF0j2ClVvXoU1ldjLqc/dyIqVgjQK3gG+M8aGeYZqEs2vY6etKBgAgolQ4gNXifQv32pTb
+	C0lOdpdRYx9wRQbE8JyMrTje9YonvpwG9cF8Aglsx7EErGto5/PMN5TJNvmbkaBN9UODvVBqW0a5x
+	V4ZaduyA==;
+Received: from [189.7.87.178] (helo=[192.168.0.224])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tyx6m-008mKg-1F; Sun, 30 Mar 2025 20:10:08 +0200
+Message-ID: <5e353e6d-6e81-411b-8eef-dd4a241ca1ac@igalia.com>
+Date: Sun, 30 Mar 2025 15:10:03 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] drm/vc4: tests: Stop allocating the state in test
+ init
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
+ <20250318-drm-vc4-kunit-failures-v1-3-779864d9ab37@kernel.org>
+ <ad77e39d-4862-4e04-87a0-2a6a2682d5c9@igalia.com>
+ <20250328-radiant-azure-falcon-aafcf3@houat>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+In-Reply-To: <20250328-radiant-azure-falcon-aafcf3@houat>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 18 Mar 2025 17:52:18 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+Hi Maxime,
 
-> Add lookup table entries for ad7606c-16 and ad7606c-18 chips.
->=20
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Applied to the togreg branch of iio.git which due to timing I'll only
-push out as testing until rc1 is available for me to rebase on top of.
+On 28/03/25 12:32, Maxime Ripard wrote:
+> On Sun, Mar 23, 2025 at 03:48:17PM -0300, Maíra Canal wrote:
+>> Hi Maxime,
+>>
+>> On 18/03/25 11:17, Maxime Ripard wrote:
+>>> The vc4-pv-muxing-combinations and vc5-pv-muxing-combinations test
+>>> suites use a common test init function which, in part, allocates the
+>>> drm atomic state the test will use.
+>>>
+>>> That allocation relies on  drm_kunit_helper_atomic_state_alloc(), and
+>>> thus requires a struct drm_modeset_acquire_ctx. This context will then
+>>> be stored in the allocated state->acquire_ctx field.
+>>>
+>>> However, the context is local to the test init function, and is cleared
+>>> as soon as drm_kunit_helper_atomic_state_alloc() is done. We thus end up
+>>> with an dangling pointer to a cleared context in state->acquire_ctx for
+>>> our test to consumes.
+>>>
+>>> We should really allocate the context and the state in the test
+>>> functions, so we can also control when we're done with it.
+>>>
+>>> Fixes: 30188df0c387 ("drm/tests: Drop drm_kunit_helper_acquire_ctx_alloc()")
+>>> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+>>> ---
+>>>    drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 41 +++++++++++++++++---------
+>>>    1 file changed, 27 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+>>> index 992e8f5c5c6ea8d92338a8fe739fa1115ff85338..52c04ef33206bf4f9e21e3c8b7cea932824a67fa 100644
+>>> --- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+>>> +++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+>>> @@ -18,11 +18,10 @@
+>>>    #include "vc4_mock.h"
+>>>    struct pv_muxing_priv {
+>>>    	struct vc4_dev *vc4;
+>>> -	struct drm_atomic_state *state;
+>>
+>> Can't we add `struct drm_modeset_acquire_ctx` here? Then, we can be sure
+>> that the context exists during the entire test case.
+>>
+>> Also, we can add `drm_modeset_drop_locks()` and
+>> `drm_modeset_acquire_fini()` to a exit function in the kunit suite.
+> 
+> That's what we were doing before, but the kunit functions and exit
+> functions are run in a separate thread by design, which then cause
+> lockdep to complain.
+> 
+> It's not great, but we can't really change either :/
+> 
 
-Thanks,
+Thanks for the explanation, Maxime. In that case,
 
-Jonathan
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 
-> ---
->  drivers/iio/adc/ad7606_par.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/ad7606_par.c b/drivers/iio/adc/ad7606_par.c
-> index e33b07ab5eace4b78e7cf39ee7e8d9379c9f73e7..634852c4bbd2c531d6c0e02d2=
-f1e62db9008cad9 100644
-> --- a/drivers/iio/adc/ad7606_par.c
-> +++ b/drivers/iio/adc/ad7606_par.c
-> @@ -222,6 +222,8 @@ static const struct platform_device_id ad7606_driver_=
-ids[] =3D {
->  	{ .name	=3D "ad7606-6", .driver_data =3D (kernel_ulong_t)&ad7606_6_info=
-, },
->  	{ .name	=3D "ad7606-8", .driver_data =3D (kernel_ulong_t)&ad7606_8_info=
-, },
->  	{ .name	=3D "ad7606b", .driver_data =3D (kernel_ulong_t)&ad7606b_info, =
-},
-> +	{ .name =3D "ad7606c-16", .driver_data =3D (kernel_ulong_t)&ad7606c_16_=
-info },
-> +	{ .name =3D "ad7606c-18", .driver_data =3D (kernel_ulong_t)&ad7606c_18_=
-info },
->  	{ .name	=3D "ad7607", .driver_data =3D (kernel_ulong_t)&ad7607_info, },
->  	{ .name	=3D "ad7608", .driver_data =3D (kernel_ulong_t)&ad7608_info, },
->  	{ .name	=3D "ad7609", .driver_data =3D (kernel_ulong_t)&ad7609_info, },
-> @@ -235,6 +237,8 @@ static const struct of_device_id ad7606_of_match[] =
-=3D {
->  	{ .compatible =3D "adi,ad7606-6", .data =3D &ad7606_6_info },
->  	{ .compatible =3D "adi,ad7606-8", .data =3D &ad7606_8_info },
->  	{ .compatible =3D "adi,ad7606b", .data =3D &ad7606b_info },
-> +	{ .compatible =3D "adi,ad7606c-16", .data =3D &ad7606c_16_info },
-> +	{ .compatible =3D "adi,ad7606c-18", .data =3D &ad7606c_18_info },
->  	{ .compatible =3D "adi,ad7607", .data =3D &ad7607_info },
->  	{ .compatible =3D "adi,ad7608", .data =3D &ad7608_info },
->  	{ .compatible =3D "adi,ad7609", .data =3D &ad7609_info },
->=20
+Best Regards,
+- Maíra
+
+> Maxime
 
