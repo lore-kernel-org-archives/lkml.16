@@ -1,95 +1,107 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819522B2CF
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3811D3232;
+	Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743328439; cv=none; b=DzPCPQariljcvMoCI6nM+uuXcPbX+HJl5wYsKjcxYDCSF1ZFuCPtsp7z2t/W8YoWQZdS2lhe6dfe9H2BXmSWh6NTFTd1SsDAJ0t9iJ3tx5+d8eSolBqH01CsF6IOlf3Mp0Nx977UkKXjY8Noe4zpz5BV5znQLvf7ySdI7Fck/5o=
+	t=1743328519; cv=none; b=VUS9mrRF8/p0mp6+BEkKDKAqjIC9ffu0Vf+jDt6m8Ejv4UNWSpAaKDifsaCsGK5z+3Ogx6ltafkJSUAyoJ+mUgmy9TcW6aDoezQ35zzhH9vFMjhbDD0S2ODxqKjIVNJO5ZwVWOGbfSxGQzlAqZwQt/KYjhQbnhAastlXsjFyrTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743328439; c=relaxed/simple;
-	bh=Y77qOZJg1ztePs3u1ibfM+37emwBml1d4mvWvji+LaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gdgNLp8PUSQwHGMEas1fQwf2m+qseBPDdjgL67wr21xeQuGArEzUI1uM9cNIDpxUZRRqKkHqZKyWKz6/qV5dyAwhwazwVxLctUCRQJ/q4qrvUQjmbBRLiXQDdbwxJyWgQyeUpRsEyyx0Fh3A3/7m5gxeW588Z1tvsI4e1A1zCWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=css6jhxY; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743328519; c=relaxed/simple;
+	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jxoyufvwoRumKlPIpTU4IjeQCwx+o2HoBcZpaL8nY88LSC3T/woOOsKMPDz8E9A5mrMatXOP4iA/uLKsKcQ63Ipc2v2fdP93gpYY6gcqaAQUNz62UfPtzMrOl0dW6jlCeq4mB0fF4+2QV7T4KTsWnlvymi8lLdKCXY4YGe2jrv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVwYvOID; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="css6jhxY"
-Message-ID: <cdc1fbbb-4299-4283-9bac-f1d7fb6962b6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743328424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=28ZmjUKSGx9bHyjrPWK8SrKiBbCt6lY+A/8H7faqvwU=;
-	b=css6jhxYQSoSJQO+hyUEb6FQkLXz6A011PSJP6LoueaA50IGcM4GFHbzDMaNL4clnzEIFk
-	sE7mxlof2wEOKpVizkRCidqSOrRhD3dS5PSCyVWNVfYr7U+7iDTczD1dJQBd405ulhqf1z
-	BUeNENUAV9Ac/WGg12TCfqvilw3btDs=
-Date: Sun, 30 Mar 2025 11:53:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVwYvOID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7102C4CEED;
+	Sun, 30 Mar 2025 09:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743328518;
+	bh=5JcLcytBRlmqq09jrH9DsNQgRgGQPz51SsbBw3q5JSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LVwYvOIDxdCP0Z9BjL3B1PAHmQd53fCbPCe/8WOgLcx1ljiuXcCB9ADzvsgrEEe7N
+	 J94UI9F1F43dVael8ZKw1WrBuL3Z8/K01PAuFyK7QiPLBN6nFeQ/4lCtBWE6PGKg+k
+	 AATkpLpk7JltkfNCvra7WIZyxcrPpu0ZfnDz+0crF5lR6jU3TahgKiKt29zC974P/p
+	 BLnyAJcEmlTXSgR0RsYJfH/b43X7GogMb1dfG3N44taBxdk6Pkt2UaoeKV31gy9kPC
+	 bUQX4ziINEwxmfZh6H2syHazgTlPuXw7zvRmWKCwu4l5B/eufTJ22wNH9Q0ywZ3M1d
+	 Zeam7t1/znD7A==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so6579228a12.3;
+        Sun, 30 Mar 2025 02:55:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU69d1Ayxz6FFh6uTEWIxsfek783QOEbjCBFrb8VtmDI7ZCdhDhCL9fHj0S6/nEg326BjmYbvcEIVVB@vger.kernel.org, AJvYcCVk/kxmCwFg8UdoJt0MyD4E4xoWMlDWF8PcnBoa9qaNXjaIxbKs9qrVSx2wo1oSJrvOXDFkDrTTJnBJMn+s@vger.kernel.org, AJvYcCWfTXWMF22e+mu073QbZ0njNa+PIs1au3Q3xqIAdqWh2VaiHqaQTD6bTXpQAzttp/BOciLcAWfcvJS+IA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH53+Mze8qeUZ1KKPlGs6qKYrrdeSFdzqLb2ExewKdxyWlWMix
+	4n+entGa5TjepzNSEWPE27aJu5C/lF5Tr53bRQ0aRoNd534vOWRhGKg2u0Cf4yN/GAQDEIi5fzT
+	Wh03WZncWoon1hy5JLnsbZ2z/jfg=
+X-Google-Smtp-Source: AGHT+IE+jFr2hSf27y/s5sTiGjkAaHOpg05In4illWNF6eBuAiUU/eLj5n9SWJwueOHAvvfk8n3IXs3JbaDs3TMErMA=
+X-Received: by 2002:a17:907:6092:b0:abf:3cb2:1c04 with SMTP id
+ a640c23a62f3a-ac738a0f3b3mr442616566b.9.1743328517187; Sun, 30 Mar 2025
+ 02:55:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH][next] IB/hfi1: Avoid -Wflex-array-member-not-at-end
- warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z-WgwsCYIXaBxnvs@kspp>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <Z-WgwsCYIXaBxnvs@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250224112042.60282-1-xry111@xry111.site> <20250224112042.60282-4-xry111@xry111.site>
+In-Reply-To: <20250224112042.60282-4-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 30 Mar 2025 17:55:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
+X-Gm-Features: AQ5f1JoPN8zLi6dXxQbDVe9ayOBCDaGT24wARYK2-Hg0w9-96JHC_84wcc-aObw
+Message-ID: <CAAhV-H5-h3iJSDAkXz2dnW6JQRGJm03EFG2KLL_Ak1q83LMKAA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] LoongArch: vDSO: Remove --hash-style=sysv
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Guo Ren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/3/27 20:02, Gustavo A. R. Silva 写道:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct opa_mad_notice_attr` is a flexible structure --a structure
-> that contains a flexible-array member.
-> 
-> Fix the following warning:
-> 
-> drivers/infiniband/hw/hfi1/mad.c:23:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Applied, thanks.
 
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+Huacai
 
-Thanks,
-Zhu Yanjun
-
+On Mon, Feb 24, 2025 at 7:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
+> far before the first LoongArch CPU was taped.  Using
+> --hash-style=3Dsysv might imply unaddressed issues and confuse readers.
+>
+> Some architectures use an explicit --hash-style=3Dboth here, but
+> DT_GNU_HASH has already been supported by Glibc and Musl and become the
+> de-facto standard of the distros when the first LoongArch CPU was taped.
+> So DT_HASH seems just wasting storage space for LoongArch.
+>
+> Just drop the option and rely on the linker default, which is likely
+> "gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch distros (confirmed on
+> Arch, Debian, Gentoo, and LFS; AOSC now defaults to "both" but it seems
+> just an oversight).
+>
+> Following the logic of commit 48f6430505c0
+> ("arm64/vdso: Remove --hash-style=3Dsysv").
+>
+> Link: https://github.com/AOSC-Dev/aosc-os-abbs/pull/9796
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
->   drivers/infiniband/hw/hfi1/mad.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-> index b39f63ce6dfc..3f11a90819d1 100644
-> --- a/drivers/infiniband/hw/hfi1/mad.c
-> +++ b/drivers/infiniband/hw/hfi1/mad.c
-> @@ -20,12 +20,14 @@
->   
->   struct trap_node {
->   	struct list_head list;
-> -	struct opa_mad_notice_attr data;
->   	__be64 tid;
->   	int len;
->   	u32 retry;
->   	u8 in_use;
->   	u8 repress;
-> +
-> +	/* Must be last --ends in a flexible-array member. */
-> +	struct opa_mad_notice_attr data;
->   };
->   
->   static int smp_length_check(u32 data_size, u32 request_len)
-
+>  arch/loongarch/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index fdde1bcd4e26..abaf87c58f9d 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -37,7 +37,7 @@ endif
+>  # VDSO linker flags.
+>  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
+>         $(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
+> -       --hash-style=3Dsysv --build-id -T
+> +       --build-id -T
+>
+>  #
+>  # Shared build commands.
+> --
+> 2.48.1
+>
