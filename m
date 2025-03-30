@@ -1,82 +1,39 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CC1360;
-	Sun, 30 Mar 2025 22:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA711DDC0B;
+	Sun, 30 Mar 2025 22:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743372703; cv=none; b=Iwk9sCvQP8juGHDesopmOGFq73RYPK/+kkOSI3WwZgLuuv4joCTCUf5C63/UAFhOQJ4+N8XwI1mFr0QaAtjI35sHZDma5WFApbz1R3ZQdVEGxkoVueuS+QWDgK85kZyi3RvKFhwGMs1OAePw1EIF/avATdLc5B8deQBe81DkaTE=
+	t=1743372714; cv=none; b=sdYILlkz1aGCGrIMh610dbkl8cCfHlok1T1QJXpIf9cSF+rd+McnUmfE074tABze4f3m5KB1Kv+vwUdmTm89g5Ku+0XhTAls/hcEI9y8OMha8Xg0huB7CoEARqIrOhBA4rbSbqUTqxn4od12HtaOoXGKqv3e9PbaGCCdSTXLh54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743372703; c=relaxed/simple;
-	bh=5OYu+LPdT0zxCCut4a54c8JAWGyt/pv9NUzT3onTaqY=;
+	s=arc-20240116; t=1743372714; c=relaxed/simple;
+	bh=LGjM+uG3yN2TuXG5w70qSulch8tgxCw+EQ4H7ATDvVo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k7TYmG1DOC3p+5LCD72Nv/MopmBY734jPsXJTyYgsVdSecGMHxoaEkYQQ2htaAeB8DDJZQSKXZpWmsiVU6I9GWJSbhSQIK4KYOhLsEaOGjhGkSfWErL5/+X01QTNo67m8FI8u4cqWBvWhVjxcB238c+bYKkUvVmBd4wvlFWMPoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Ipuv5bJ1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q2hEP55J; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	 In-Reply-To:Content-Type; b=H+LpmStOdJ40ROG/jcHX1N2b7DpYeARcxbJboXGXsg437SV+MwCfwHxh5cLDeP+u6V/Mwd1VlqiwWPtpiou543pCYGA07NRiQrTj+cw3gmgHA1UehcPZ2Efb9psDJZ90y53UthMos+DHzYzETUK5QW8LnaKG0RZmx69fd/yjgzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=NEWee4Zv; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Ipuv5bJ1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q2hEP55J"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id DBCF11140127;
-	Sun, 30 Mar 2025 18:11:39 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Sun, 30 Mar 2025 18:11:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1743372699;
-	 x=1743459099; bh=lNzTTxGuh6BzUDpbT5+6DHYz7KvNNl77PA84r4+mVfk=; b=
-	Ipuv5bJ1YmwgIUqWh564SrrlC8MkHQ20/LvQ3km2QFG947KC30zxyOb2Wbe/kpyU
-	yI2cZtpFt9DwcGtVjzNKSIhXTQ8hRiqc1wTJ5sKgOPGGPnYwhFSPynBBE/EXaJVh
-	PcbIz78UeLTtT7xadvcFw9x6JR9KNrKMyBcAOT1tw2chhKqENP/7vYGNHCk/bExr
-	tAF/X92St/bHgM6dKIJphxn3eXtS3y2TcHMY6/8b+lTNHfRaLXyLHJ+UoJ5EgQ3s
-	n8/msdll9i74XcypZLocO0Gs0aaCjlThem9n7aVzwrSWE5yiifjocQp4SghDIhqW
-	yaiZaCkNvkDvTijRactbjQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743372699; x=
-	1743459099; bh=lNzTTxGuh6BzUDpbT5+6DHYz7KvNNl77PA84r4+mVfk=; b=Q
-	2hEP55JrRUILU6IEMONn1tQTIFpRCfHnIlhUdCttjcvGtjfisb3hbjGN9i4Ul982
-	8M/kc340L3v7Vge0nEM5CBN2QmEvUockRi1sI2MfPNb5Yk6XLch7+SuxcB/9fJTd
-	4R3zT74hmiM6dW5SAE6q/URcBGEZ8VRqFH/ATirVIASEAz9cvPE/moOgwwG0K8jU
-	1xNya7ubVcNIE6+gbuUFSKIJkO5CbFIjys3axCvMdxzjMNhiYwmDtfqT+c85k/TM
-	/D90jLnk1g7JhDE5UjSkCC5QWiByJFYmkGgmnyYOArEtETktETH1n70jR1Fg9Szs
-	/evVdTccaPyXLJktJ9qcg==
-X-ME-Sender: <xms:msHpZ_X1Youp5Y24nZDM7OWdzlw5ip54cVxfiGDupeTT_8qw3j0unQ>
-    <xme:msHpZ3nz7r1T9QijVbLLWzbRh3yb_miWRaQ226R6BVgpC_9CbdSFfsX3vCrBZ7Lnr
-    qWV8mSeEdZD4TuuxXU>
-X-ME-Received: <xmr:msHpZ7a4aOaPUv4F09iXnnzu3vt8Stb__u3pCLqYd5ST6-kboaIByX-Hna91Crf1JUrdqc6o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeekvddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
-    vdejnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonh
-    gvshdruggvvheqnecuggftrfgrthhtvghrnhepveduueevtdetgfehfeeliedvvdfhtdei
-    hfdtkeejuddvgeeivddtkeffgeekueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghp
-    thhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthh
-    gvrghsrdguvghvpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekiees
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghl
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    ephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgr
-    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:msHpZ6WVNZGltVt4S3LUTDTkCSDmeLDX2b60s1osjrLsfqwZp3bucQ>
-    <xmx:msHpZ5m5oj7_-D1oNd4JxXMZkH-Wlc_VUxQqkfs_E3g41PVcHeCx7Q>
-    <xmx:msHpZ3cY-yX9FEJhNJq8KJEE--4INGgWQDXws_GIFMMctUOnuAyX_w>
-    <xmx:msHpZzHmNfb_ky3otupe_0v3YvpWmg_VxF27muKQCFroJNZEr__b4w>
-    <xmx:m8HpZ746L3xitxXW4uqhNgqW00N9ZiOXTeVMSfraoA0b_-r_eEpVTOnK>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 30 Mar 2025 18:11:35 -0400 (EDT)
-Message-ID: <648a1d1f-a222-480a-aec9-ab3e0cf790a1@ljones.dev>
-Date: Mon, 31 Mar 2025 11:11:33 +1300
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="NEWee4Zv"
+Received: from [10.0.0.228] (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id A1DCF165C19;
+	Mon, 31 Mar 2025 00:11:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1743372702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3H32D2MG+HVkOMXTA0u9viQ00uGsZ2h/+IJLzYF6WMQ=;
+	b=NEWee4ZvYgkePkC09NLDtgIdYJamLiVCB+dVxOMxOQVE8EzfEF8jrDDvS9zKPrRx9+wXnX
+	RFw+lGgHAtudGe48l2vi3s8R0TOcnq+8sb1MTMZ1/+kekvcJeKT56vlVwoy7lVu3M2dDgj
+	Ze9+WRpr4o39/FtRcMEzJG2JHv1erHs=
+Message-ID: <454deee5-5359-4fc8-bdaa-801de90f6257@ixit.cz>
+Date: Mon, 31 Mar 2025 00:11:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,107 +41,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/11] HID: asus: add RGB support to the ROG Ally units
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-11-lkml@antheas.dev>
-Content-Language: en-NZ
-From: "Luke D. Jones" <luke@ljones.dev>
-In-Reply-To: <20250325184601.10990-11-lkml@antheas.dev>
+Subject: Re: [PATCH v8 1/2] usb: serial: add support for CH348
+To: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, clabbe@baylibre.com
+Cc: gregkh@linuxfoundation.org, johan@kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ martin.blumenstingl@googlemail.com
+References: <20250204135842.3703751-1-clabbe@baylibre.com>
+ <20250330012451.13711-1-frattaroli.nicolas@gmail.com>
+Content-Language: en-US
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <20250330012451.13711-1-frattaroli.nicolas@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 26/03/25 07:45, Antheas Kapenekakis wrote:
-> Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
+If another Tested-by is needed to get this in, I can build kernel w/ 
+driver and give it shot too.
+
+Thanks for your work & testing!
+
+On 30/03/2025 03:24, Nicolas Frattaroli wrote:
+> On Tue, 4 Feb 2025 13:58:40 +0000 Corentin Labbe wrote:
+>> The CH348 is an USB octo port serial adapter.
+>> The device multiplexes all 8 ports in the same pair of Bulk endpoints.
+>> Since there is no public datasheet, unfortunately it remains some magic
+>> values
+>>
+>> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+>> ---
+>>   drivers/usb/serial/Kconfig  |   9 +
+>>   drivers/usb/serial/Makefile |   1 +
+>>   drivers/usb/serial/ch348.c  | 736 ++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 746 insertions(+)
+>>   create mode 100644 drivers/usb/serial/ch348.c
+>>
 > 
-> Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->   drivers/hid/hid-asus.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> Tested-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
 > 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index c135c9ff87b74..fa8ec237efe26 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -1424,10 +1424,10 @@ static const struct hid_device_id asus_devices[] = {
->   	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
->   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->   	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
-> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
->   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->   	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
-> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
->   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->   	    USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
->   	  QUIRK_ROG_CLAYMORE_II_KEYBOARD },
+> Quickly gave this another test by just connecting two ports of a CH348 device
+> together and making sure data arrives unchowdered at the other end when sending
+> at full speed with various baud rates. Seems to work about as well as I
+> expected my jumper wires to hold up at higher baudrates.
+> 
+> I'll likely use this to lessen the pile of active USB-to-serial devices on my
+> desk while working, so many thanks for keeping up the good work on the driver.
+> That way it'll also get some more in-depth real world testing in th e coming
+> weeks, but I doubt it needs more testing at this stage.
+> 
+> Regards,
+> Nicolas Frattaroli
 
-Hi Antheas,
+-- 
+David Heidelberg
 
-I have some good news for you, ASUS got back to me, there *is* a way to 
-get the feature level of a keyboard.
-
-## 2.2. Configuration command
-
-In order to confirm what functions are the USB device supported, host 
-retrieves the
-configuration information by feature report method. Therefore, the 
-firmware has to
-return the data (byte 0x06~) to the host.
-
-### 2.2.1. Set feature
-
-| Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-|-----------|-----------|----------|----------|------------|---------|
-| Report ID | OP code   | Addr_L   | Addr_H   | Read ROM   | Length  |
-| Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-
-### 2.2.2. Get feature
-
-| Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-|-----------|-----------|----------|----------|------------|---------|
-| Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-
-**Byte 6**
-- 0x00: KB, 1-zone with single color
-- 0x01: KB, QWERASD-partition
-- 0x02: KB, 4-zone with RGB
-- 0x03: KB, Per-key with RGB
-- 0x04: KB, 1-zone with RGB
-- Other: reserved
-
-**Byte 7(keyboard language)**
-- 0x01: US
-- 0x02: UK
-- 0x03: JP
-- Other: reserved
-
-I've not done anything with this myself yet, circumstances last week 
-weren't great for me. If you implement this in driver I will ensure I 
-get it tested as I have both single colour and rgb laptops.
-
-What i *do* know is:
-
-- 0x00: KB, 1-zone with single color
-- 0x01: KB, QWERASD-partition
-These can be standard kb_backlight
-
-- 0x02: KB, 4-zone with RGB
-- 0x03: KB, Per-key with RGB
-- 0x04: KB, 1-zone with RGB
-These work with the regular EC-mode RGB command for static/solid colour 
-and you don't need to worry about zone/per-key. It would be good to 
-document those as defines or enum or something for future.
-
-Hope this helps.
-
-Cheers,
-Luke.
