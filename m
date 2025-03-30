@@ -1,114 +1,110 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBEA9461
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 15:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866889461;
+	Sun, 30 Mar 2025 15:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743347732; cv=none; b=s0xM8aFvvMnEHC7H6sW6GU7JApooZJcQG2Kblc5i1q3s1ZBnuElSBvKsk1qfaPFaM7xOvUojm9QCVC154S7r7PBdv1SWvaQUzt5X+ut6DTfEE4IUbzXhC2YApG8sz3o/rX12upFk+PwkS0SmZ38NIZwu22jMDJfDr4VFn38nMGw=
+	t=1743347848; cv=none; b=obXWfpa4O7w9sOSf/donJRzwcucmI/Z3kxWAlR0pj0IvPNh3yJ7EiYru8lPkvHYsOH8ea/dy4UdCP6E8OavNtr87aUDiINRHS/V+WuH7TY3Zd6S5/heRAMYlFuEkefWs3U8KXt4wTly/6ew7lRHdM3ysoeKeeWhm4A9eG4kz2jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743347732; c=relaxed/simple;
-	bh=nSQe5DiuJc0ezL/sZCLaSFWYPIUnawdRp/DU2qXnNV0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZCG7R5S9bGGrlNCA1Qe28i7sEElFNz39ZnJ3i6qkip0g4MQNfvJqodhtO4Bgn/qUb6VvV95IhDJHFvxCmkHexILDQLUc4vJbEXNGhh4tlYM4RiCf96Q1NNM/tMK5XIpupQyyoHN0c2gaBgjMDh+8Up/IZgzkNWE/HKISXiO3x7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEZ950XF; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743347848; c=relaxed/simple;
+	bh=GqrXJA/GoOV/tLNKKAKW/ZwC2zKYzb6MfKixWEusiKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQwIDZLPZ6lux8egggyUf9tXRTf3IQrrf4Iy7qk4voumzc8SQnBTSrJovFnUPyN6BIwQXWx/g/7wJxP7KAOZEMq9wTT8sssHMBQeRItCZ6jBXgr6+f2Pa2gD2ax9RUYWS4xdBkxICwtE9dkoJ0B1ygQId1VXmkKddT003UmaQZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPcBRrp/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEZ950XF"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-307c13298eeso42179241fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743347728; x=1743952528; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBGt0vfsXHVqKT4w76oPzKF16hPOvvtDAHKYBgXP2f8=;
-        b=dEZ950XF2nM6ekbM8+BNJ4ylCv8dnoj6yre7ATmr43D8Giw1OnlchGITrjQPSLsrAO
-         dZe8UYd14eOGtTvDJ9nc3C0rRK3G1rg8R4qIaGYxhEAyux9TGxc0CKrS0IOCW4SuNd1K
-         QZ/rkv1Z5uuCZBTImQHqhnL/71YDj6i1a36eQiUWw1PPymekyndnSXuxBsMVOGQF24aT
-         KY7a8yK25dh09vLaturJ/Ikdp2zV1A80TC2yUO1KkvViCUfOYBPo3J18fUJJyu12Gj9p
-         mnouGgw/srwKOnfdGqGE1Ygn6TRYOpMhf38mFvEjdniBZtNPJ7JqhuIVDC0Dfo7vRQHQ
-         bCxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743347728; x=1743952528;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBGt0vfsXHVqKT4w76oPzKF16hPOvvtDAHKYBgXP2f8=;
-        b=APkB6xyW3FBvqO6oMfxhqlWwn5kHI41ohzCV3U+f5AsxyR4br76ez6x6w4MJNHaBA4
-         lMeAPDK9RZsW/fAqIxqdIfA3ZbC5fwHTOj0sbNskG1C6ne3eHBhDH444lByTFKuxW1Gq
-         BfmzFfhfAJDmWXo69M3Ce5OCqCAuUpWgMUjB/F/nej1OuD1iPZInpNt5cw1MuiGCujDv
-         sYWkIelba+7hIZlfbPLnNQsSNCPzTMgzHfIiOpCzGcSyS3VBOsLXBubRtiJXZ9oH8YTQ
-         QKwRIq1Hr8xNuMRjbdpkDOZIb0sw17ISvRWwvdN8tLpRbUN0OkIiErNeJ8K56s2yRMqg
-         tC5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXNkKm6MqVo3Ckep11Ri9ZAsILPaXH/eK6fVZfHi1WS1qgvpFUTlvstimOiBGzrB3zHtwBsNxoeQgRbz7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOd/b+K/GC+pHcZTxdHzxz0/JZ/3P/BDrU/dI578JbV5HFXbUz
-	KOLgAGeHRWktTIX+xQpyZx8kRSMyJZDfp9paHgHxaYXGhzhdwIwmu1iNX8F4GHfWOGtJ8pLt3q0
-	/MwNi8NMu10E7R46XI3YSmfTkEcBYNOyS
-X-Gm-Gg: ASbGncsGGCThWl4jSOXvDglgRqK/mLRhwkXQRUg0QN0OStoRzTOEVGizoo7f/FRvcLg
-	F8o9gXs72cM3rIVSIokm+Eey/FM6Ni1PDJIP9nllaEQjZgxahsE4coV05TwvNCBCIh0DkfIQwjr
-	WSzRY5np1DGLBK9WSaLl9cCqZRbehVMjnMXPBj
-X-Google-Smtp-Source: AGHT+IHQ6lXMgsEEY7detjs4hgfXjnd9zlTjkiq8ZcsaIS4qeU3wbZWTG1lQvkNndDRguWxjA44Siuruwz0unAL5pSU=
-X-Received: by 2002:a2e:a58a:0:b0:30c:465c:51de with SMTP id
- 38308e7fff4ca-30ddf7fdba2mr14042731fa.10.1743347728120; Sun, 30 Mar 2025
- 08:15:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPcBRrp/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2559CC4CEDD;
+	Sun, 30 Mar 2025 15:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743347847;
+	bh=GqrXJA/GoOV/tLNKKAKW/ZwC2zKYzb6MfKixWEusiKc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aPcBRrp/mMiYpUHA0XgSTG9RAZmwxGMNCP9E+JSQbK1jsrbiEzWz4kvgD58/wTb9x
+	 ZqhaHX0c+3tAV6+wxhS+yqL9SDevZ6N1cwjAHfagPaLIfOkjGw0s73FuYtwlwrSwxd
+	 tRlh6yrSge5xB4lmj/jwhAIa5a6idsWILKvjdn2+6mXreiKWOtX6zXYMMGmQvf/M7x
+	 87YEd1G56jJUMfMGnivGFT8nS815ITlwEKrJBVRP6QZRY9dHxB7KTf3+Jn+A/l8hKG
+	 IgTLbaVmkLGGYRY5bp/CYF452wSRRjZjvJ/obx28M/LkqGW6EMfAYyVqcoAvq67nCl
+	 DEdqRIXJqxVXA==
+Date: Sun, 30 Mar 2025 16:17:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sam Winchenbach <sam.winchenbach@framepointer.org>
+Cc: linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, antoniu.miclaus@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, bpellegrino@arka.org, Sam Winchenbach
+ <swinchenbach@arka.org>
+Subject: Re: [PATCH v8 5/6] iio: core: Add support for writing 64 bit attrs
+Message-ID: <20250330161721.7d718fd0@jic23-huawei>
+In-Reply-To: <20250328174831.227202-6-sam.winchenbach@framepointer.org>
+References: <20250328174831.227202-1-sam.winchenbach@framepointer.org>
+	<20250328174831.227202-6-sam.winchenbach@framepointer.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325164854.199420-1-ubizjak@gmail.com> <20250325164854.199420-2-ubizjak@gmail.com>
- <20250325171141.GDZ-LjzaPbAG1MwjZi@fat_crate.local>
-In-Reply-To: <20250325171141.GDZ-LjzaPbAG1MwjZi@fat_crate.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 30 Mar 2025 17:15:16 +0200
-X-Gm-Features: AQ5f1Jo7usrD5Mk0YJzj-ljKa6KA_fx5hNd1_vH7fHLwfEEIMFK944nXf5NwmA4
-Message-ID: <CAFULd4ZT5mjjEXW3SnGQVMo18fO8CapFS-ikLQvYFw5EKtEfmA@mail.gmail.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 6:11=E2=80=AFPM Borislav Petkov <bp@alien8.de> wrot=
-e:
->
-> On Tue, Mar 25, 2025 at 05:48:38PM +0100, Uros Bizjak wrote:
-> > +#ifdef __POPCNT__
-> > +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
-> > +                 : [cnt] "=3D&r" (res)
-> > +                 : [val] ASM_INPUT_RM (w));
-> > +#else
-> >       asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
-> >                               "call __sw_hweight32",
-> >                               ASM_CLR "popcntl %[val], %[cnt]",
-> >                               X86_FEATURE_POPCNT)
-> >                        : [cnt] "=3Da" (res), ASM_CALL_CONSTRAINT
-> >                        : [val] REG_IN (w));
-> > -
-> > +#endif
->
-> A whopping 599 bytes which makes the asm more ugly.
->
-> Not worth the effort IMO.
+On Fri, 28 Mar 2025 13:48:30 -0400
+Sam Winchenbach <sam.winchenbach@framepointer.org> wrote:
 
-You missed this part:
+> From: Sam Winchenbach <swinchenbach@arka.org>
+> 
+> Prior to this patch it was only possible to read 64 bit integers.
+> 
+> Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
+> ---
+>  drivers/iio/industrialio-core.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index a2117ad1337d5..b2436b8f3eeae 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -965,8 +965,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
+>  	int ret, fract_mult = 100000;
+>  	int integer, fract = 0;
+> +	long long integer64;
+>  	bool is_char = false;
+>  	bool scale_db = false;
+> +	bool is_64bit = false;
+>  
+>  	/* Assumes decimal - precision based on number of digits */
+>  	if (!indio_dev->info->write_raw)
+> @@ -990,6 +992,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		case IIO_VAL_CHAR:
+>  			is_char = true;
+>  			break;
+> +		case IIO_VAL_INT_64:
+> +			is_64bit = true;
+> +			break;
+>  		default:
+>  			return -EINVAL;
+>  		}
+> @@ -1000,6 +1005,13 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		if (sscanf(buf, "%c", &ch) != 1)
+>  			return -EINVAL;
+>  		integer = ch;
+> +	} else if (is_64bit) {
+> +		ret = kstrtoll(buf, 0, &integer64);
+> +		if (ret)
+> +			return ret;
+> +
+> +		fract = (int)(integer64 >> 32);
+> +		integer = (int)(integer64 & 0xFFFFFFFF);
+I forgot on previous reviews but for this case we have wordpart.h
 
---q--
-... where there is no need for an entry in the .altinstr_replacement
-section, shrinking all text sections by 9476 bytes:
+		fract = lower_32_bits(integer64);
+		integer = upper_32_bits(integer64);
 
-            text           data     bss      dec            hex filename
-        27267068        4643047  814852 32724967        1f357e7 vmlinux-old=
-.o
-        27257592        4643047  814852 32715491        1f332e3 vmlinux-new=
-.o
---/q--
+I'll tweak that whilst applying.
 
-Thanks,
-Uros.
+>  	} else {
+>  		ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
+>  					    scale_db);
+
