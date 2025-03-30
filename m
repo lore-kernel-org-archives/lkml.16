@@ -1,116 +1,159 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D374AEEAA;
-	Sun, 30 Mar 2025 21:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE0BE67;
+	Sun, 30 Mar 2025 21:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743370118; cv=none; b=SIpqFMxbW4J2YvJkEmBsIMdY5KeB48lag58lHPugEKEhUNHEyS26Gh9oTI46s07jVptS2FWZfyghnGXd7ZtXG78ZrHILXUTKI7k8rwk8A8WytLb6QAk6aZt00Fl5D+2WwXdxPFLI91HEgnOLlGkUOdxupTnHDz9LSZcg/4t+Yto=
+	t=1743370230; cv=none; b=md5A0BFSu3I2dm0vIjhzaRGf1xoRZQac53yedE3GLoX4BDJPMjA2GwMgU5F4SyCRHtv5LjZUZ+kajmE804LbkkVBsosOhzAss6YUOyEV/laymQHs2dOXr0B5DX7KEJgSFfL8xQI0Bj3phMmNVuXnLKzJ7NGyRzJJtJNPZ+650Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743370118; c=relaxed/simple;
-	bh=HIpM9hYzjP/g9i1cY/OEycnx2DC+LjHysGz3lE5EyQg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UWA75+pB7DXXuKtPwtL/zczoagXPOoyrnC0Sp3OxHugFhMuPk1ThINmyDMCEOw9zrkX/2yiy0o0wOz0TFK1T6k5cqQX016NXtRNjybZbHy4aCtwWRNFG9+XTrLT52UCLgYTOOKx20dfoMSaIlZPLL+7iZN+ZT4ahUK2ui9+iGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q/hhRpya; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1743370230; c=relaxed/simple;
+	bh=rwPm/b9mN0zAn8FYFaggPzfpON9La4aWZ1wDAZv7GmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DlaC8Lm9RhgXXa0wMa8QqNrfBzu5sskfqnin9R6GKT600dO2F1vEp4EXJQ3tgN+KKJHzbRYlWkB/2YzUA90qF3Jbzzpq575QqFsHfxf3ly+xMQYYah21qIAXvbrs4+fr8F9xfolYQ7JhW7KPuw/pm192QSjT7AMxoXIVewvC7+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPWrbCi3; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/hhRpya"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=HIpM9hYzjP/g9i1cY/OEycnx2DC+LjHysGz3lE5EyQg=; b=Q/hhRpyamRXibNzigh2wG8/crc
-	ROYh6p8GREOUEHn5tPI/fG9G8DE4L8N1epcO9IHxApYf/rGNhQ3VmRGxA6UzdctKclKmGUTgNIzsC
-	76m1acHpB5W5m9TMue6N9Qra6ijIlHpw8lJLREto9is2YXLk+ebNigSoN5LCAytBqNH9COzHnEqeH
-	z1RG3qddVWELJ3MWgOm3zk7kzSlb42TVr24uisl6/2Gmh4Hjf4XnKxoRmOv+ohFZkgIi/mZunziCi
-	icx4CajoRfo+cML2Jfz1BONBydD5a/3hHnRie4i4JSIt5cdyrz/xRYarmiddiPFVCBqgWkFiu7Oce
-	KThu+WDA==;
-Received: from [172.31.31.142] (helo=[127.0.0.1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tz0CE-00000006YmG-0vmx;
-	Sun, 30 Mar 2025 21:27:58 +0000
-Date: Sun, 30 Mar 2025 22:27:58 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: linuxppc-dev@lists.ozlabs.org, "Michael S. Tsirkin" <mst@redhat.com>
-CC: Claire Chang <tientzu@chromium.org>, Rob Herring <robh+dt@kernel.org>,
- mpe@ellerman.id.au, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, boris.ostrovsky@oracle.com,
- jgross@suse.com, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>, heikki.krogerus@linux.intel.com,
- peterz@infradead.org, benh@kernel.crashing.org, grant.likely@arm.com,
- paulus@samba.org, mingo@kernel.org, sstabellini@kernel.org,
- Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Bartosz Golaszewski <bgolaszewski@baylibre.com>,
- xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
- linux-devicetree <devicetree@vger.kernel.org>,
- Nicolas Boichat <drinkcat@chromium.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Greg KH <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>,
- lkml <linux-kernel@vger.kernel.org>,
- "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
- Jim Quinlan <james.quinlan@broadcom.com>,
- Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?ISO-8859-1?Q?Eugenio_P=E9rez?= <eperezma@redhat.com>,
- virtualization@lists.linux.dev, graf@amazon.de
-Subject: Re: Using Restricted DMA for virtio-pci
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250330125929-mutt-send-email-mst@kernel.org>
-References: <20210209062131.2300005-1-tientzu@chromium.org> <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org> <20250321142947-mutt-send-email-mst@kernel.org> <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org> <20250330125929-mutt-send-email-mst@kernel.org>
-Message-ID: <E3EE485D-AD74-457C-BDEC-F8C62DFE4909@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPWrbCi3"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso3661605f8f.0;
+        Sun, 30 Mar 2025 14:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743370227; x=1743975027; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yOOpYDacP3qw4CicXaURsjZhalE+xbMRn+milGOOg5E=;
+        b=ZPWrbCi3d9YJabEwAIh77/4Geo6+e3193HJeNZErD/DnDJGTGCWVmAn4iqMGI3PSxs
+         2c95kbKyTpCGjoXZ3BY219oRa/KSpQ3hqIBFfXQ2xG8LxdQ+3LRyomDTgqmeQ3pn1m6D
+         r+SwkPlIXl51oDrksjAqYKH3A/Q9lYnnNu9XyXtfIWVHiDRHya3cz4Dqe/AQVeJR8L4D
+         gS7u6U8ABPY0HfnCC6VaGj1p/GtGupfND1RjzWhnSiIEGurT+sNgcEo77//l3Vw/oP8i
+         oVoQ1jdFgfipmASCLkFD8vLuQCu4caMl80atkGVW95XvAdYd28ZLfYD5/7yMNJpRt3z3
+         dbYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743370227; x=1743975027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yOOpYDacP3qw4CicXaURsjZhalE+xbMRn+milGOOg5E=;
+        b=SNw6ntTksKgNabECkE+wQBXn8Rxx376V4UemkKlMHaKk0Fv4oYgN9bIxWbK7flpBmm
+         iXww8EA2TNvzyTwFWqLDxWrLt3Br15IUzEeUsZlSYqvgQfSD+L0X4ka4nz97pKT9xNbD
+         Y7E+5Zj+TboFMar9+0Tfu3yNYDgpitKpX/eYnKj8gYEjtp05V9K1FUXan/uddEIx2sEN
+         qdt4eKM/7ei2dhpracUGUVHYBTlTV/MtnSNt4SOqEj+4wOCSnU0ZuKxRe+ppqrgQ9F8V
+         gX1WzSf/ulCMdswksujkkT73Et3W5f4N3H4PHkAAX0AV95CYu06DYikITHWCnOUHIlVl
+         89wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLGAtdjWr+xjxpe1AQYlRpCu0BtqQYlIsT92UyRxrITyYsRBv2HKeZZixN4fORBf0Ed9rumGP1Bc7GGMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn7fpRjPCTI5/OIyVJ+JQYMfyQ97di2fCYANd9UKDy9/MEgjPj
+	O3rxtxnicshok1qS23Exgw5zh4PCEhjjDnmcBXCkMxNzLIamQQPntj8oq20Zo0ZKvbqyPcA7RD5
+	vLQj3KDrJgMW/hcA61Na9aUb1aDQ=
+X-Gm-Gg: ASbGnctIirJfqblIMx//t1XUtyMAF4Gdt4Q21myxpNUcwKquw1g7Wx7xid0FuceWzrD
+	eUCQypp3DcpA6HMl1mgVewT5cr1eWHSVcdMUsL4VDHPcdUu7zaqerlIp5QbJTcIqA8cFlQKimNj
+	ncEPK0chILVGL6KC1S+nyELV/UjZQfY2QQqzNYhFm6nncppmChpeIW
+X-Google-Smtp-Source: AGHT+IGy6TYkwqWgmB4qVvUpl+hS3Hb0sVBnt8U2ZwjeeCa8mROOAVHVYBHFbL7WUn3u4+jOQRKGFypsVayyAIua8Uc=
+X-Received: by 2002:a05:6000:2913:b0:39a:ca59:a626 with SMTP id
+ ffacd0b85a97d-39c120e3e5cmr5650236f8f.28.1743370226631; Sun, 30 Mar 2025
+ 14:30:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250327145159.99799-1-alexei.starovoitov@gmail.com> <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
+In-Reply-To: <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 30 Mar 2025 14:30:15 -0700
+X-Gm-Features: AQ5f1JqKoFYJATW7xwoyQD92tAvSQWSre1BbHdyzNRzzGs11RJb--CavgF31AIQ
+Message-ID: <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
+Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Sebastian Sewior <bigeasy@linutronix.de>, 
+	Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On 30 March 2025 18:06:47 BST, "Michael S=2E Tsirkin" <mst@redhat=2Ecom> wr=
-ote:
->> It's basically just allowing us to expose through PCI, what I believe
->> we can already do for virtio in DT=2E
+On Sun, Mar 30, 2025 at 1:42=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
->I am not saying I am against this extension=2E
->The idea to restrict DMA has a lot of merit outside pkvm=2E
->For example, with a physical devices, limiting its DMA
->to a fixed range can be good for security at a cost of
->an extra data copy=2E
+> On Thu, 27 Mar 2025 at 07:52, Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > The pull includes work from Sebastian, Vlastimil and myself
+> > with a lot of help from Michal and Shakeel.
+> > This is a first step towards making kmalloc reentrant to get rid
+> > of slab wrappers: bpf_mem_alloc, kretprobe's objpool, etc.
+> > These patches make page allocator safe from any context.
 >
->So I am not saying we have to block this specific hack=2E
+> So I've pulled this too, since it looked generally fine.
+
+Thanks!
+
+> The one reaction I had is that when you basically change
 >
->what worries me fundamentally is I am not sure it works well
->e=2Eg=2E for physical virtio cards=2E
+>         spin_lock_irqsave(&zone->lock, flags);
+>
+> into
+>
+>         if (!spin_trylock_irqsave(&zone->lock, flags)) {
+>                 if (unlikely(alloc_flags & ALLOC_TRYLOCK))
+>                         return NULL;
+>                 spin_lock_irqsave(&zone->lock, flags);
+>         }
+>
+> we've seen bad cache behavior for this kind of pattern in other
+> situations: if the "try" fails, the subsequent "do the lock for real"
+> case now does the wrong thing, in that it will immediately try again
+> even if it's almost certainly just going to fail - causing extra write
+> cache accesses.
+>
+> So typically, in places that can see contention, it's better to either do
+>
+>  (a) trylock followed by a slowpath that takes the fact that it was
+> locked into account and does a read-only loop until it sees otherwise
+>
+>      This is, for example, what the mutex code does with that
+> __mutex_trylock() -> mutex_optimistic_spin() pattern, but our
+> spinlocks end up doing similar things (ie "trylock" followed by
+> "release irq and do the 'relax loop' thing).
 
-Not sure why it doesn't work for physical cards=2E They don't need to be b=
-us-mastering; they just take data from a buffer in their own RAM=2E
+Right,
+__mutex_trylock(lock) -> mutex_optimistic_spin() pattern is
+equivalent to 'pending' bit spinning in qspinlock.
 
->Attempts to pass data between devices will now also require
->extra data copies=2E
+> or
+>
+>  (b) do the trylock and lock separately, ie
+>
+>         if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
+>                 if (!spin_trylock_irqsave(&zone->lock, flags))
+>                         return NULL;
+>         } else
+>                 spin_lock_irqsave(&zone->lock, flags);
+>
+> so that you don't end up doing two cache accesses for ownership that
+> can cause extra bouncing.
 
-Yes=2E I think that's acceptable, but if we really cared we could perhaps =
-extend the capability to refer to a range inside a given BAR on a specific =
-*device*? Or maybe just *function*, and allow sharing of SWIOTLB buffer wit=
-hin a multi-function device?
+Ok, I will switch to above.
 
-I think it's overkill though=2E
+> I'm not sure this matters at all in the allocation path - contention
+> may simply not be enough of an issue, and the trylock is purely about
+> "unlikely NMI worries", but I do worry that you might have made the
+> normal case slower.
 
->Did you think about adding an swiotlb mode to virtio-iommu at all?
->Much easier than parsing page tables=2E
+We actually did see zone->lock being contended in production.
+Last time the culprit was an inadequate per-cpu caching and
+these series in 6.11 fixed it:
+https://lwn.net/Articles/947900/
+I don't think we've seen it contended in the newer kernels.
 
-Often the guests which need this will have a real IOMMU for the true pass-=
-through devices=2E Adding a virtio-iommu into the mix (or any other system-=
-wide way of doing something different for certain devices) is problematic=
-=2E
+Johannes, pls correct me if I'm wrong.
 
-The on-device buffer keeps it nice and simple, and even allows us to do de=
-vice support for operating systems like Windows where it's a lot harder to =
-do anything generic in the core OS=2E
-
+But to avoid being finger pointed, I'll switch to checking alloc_flags
+first. It does seem a better trade off to avoid cache bouncing because
+of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
+others that it's faster to do trylock first to avoid branch misprediction.
