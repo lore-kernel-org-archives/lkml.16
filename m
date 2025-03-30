@@ -1,124 +1,76 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CA8192D96;
-	Sun, 30 Mar 2025 22:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FA41FC8
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 22:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743373705; cv=none; b=cehv3KG2iNEFJfn5hxVHnBukc85QHoDvshOzIeKwhsi79Jfhs7g3SdG3bkrrDiqz84Ciwylg5pBSJcK3Gt37CCv5UQN/gKk4jDAtBo+2zWf2rnfmQVrNThgAzKCyrI7M7zwsiN5r7I4+ICw0Y0nPIz8EkC7ctUNMDlP51XMZaD4=
+	t=1743374695; cv=none; b=W3A5rlnVnVl6CZBV5R+J4BUMGTKGSVNuglqByHTkLAKd6uUroboHrzMP6RYACIy59frTg/L79FcnKS7yZ72sJgfoILY+bM3uQH9NF/0yrl8wG7obdZHaWnlBsQXmLsRHnbTJS6Pg1mNBFEa5BFcZTnoFaJXgP0rJL1ZFYkk4+Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743373705; c=relaxed/simple;
-	bh=RYS9MhzesrrUoPLXu2c6MwfIN30lM1bnS2nmVVnH3VA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LduHFwmq6UDmZ6QBmZIJJ7L+tonybcYg8p0CFCmJQlE9UgoglpX0Cv3iwsDSMbZtqsGwuM0NysN9WEQFmrtuZXZY+I3Y60hCZN/qkgtxAj8vKZqjszO2rW/xqJuu86AHoKUZAZeBSGDtzO4e1LgmeOrbL3XbL+CPa7HH8FV8ops=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=k6Owq24R; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1743374695; c=relaxed/simple;
+	bh=FS/ZM5OQLv03Ny4iJC4eMRJ7foffcS/ETeiodsWWCas=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=soQ/UQYIvubP9GxqHFV1zJqIHjmR4vffQVUYbWzSVPU26NHmz25fjdLOqkJCQTmMzD13yc6MBCF80LmWNruXkyvZMKQpnr9sB5Qm/cgoL9Xw+c+xc1QN9o321k6bXYix2iO+uyQqWc/sGW4tZWHW0f8G1Fn3KKd5jNQ6QgIGUkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=au1bnvFg; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k6Owq24R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1743373697;
-	bh=0vaSGuv1ydIA+l5Om6KnRwKWgQa287SH/5RUtST2Duw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=k6Owq24Rc2wjCIqDEXtd5blfED1JkuI68jr1LU/RzxS+ajmF3YLaC6yr6ZSclPw7+
-	 McfdGEzUdzqeEPzSLvEOmnoBi5AwkLnrXqTKwzbERCUxgBuiVwNOX9RBstZB61ZM/s
-	 WvwvL+ryg0yc/HmSHLxZ651a1x8UFAsOyV7SBnUJ20mWAHDDf6i2Gd0YydmtV3yi5D
-	 orLsJaoMcESuV8bzG0RTWfMoRNzhPdLKqFRf8mZ5p/kfZk/SBnD3D4LT1ARIv1mptE
-	 y3wm0EislDaUlbtEfuMXRN8IRYSESzuY9bAYyM3DQjOWwuWJHwLoCRNEiXrguDdP86
-	 96EenVaPjCnyg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZQpnF2nhjz4x8b;
-	Mon, 31 Mar 2025 09:28:17 +1100 (AEDT)
-Date: Mon, 31 Mar 2025 09:28:16 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Christian Brauner <brauner@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, NeilBrown <neilb@suse.de>
-Subject: linux-next: manual merge of the bcachefs tree with Linus' tree
-Message-ID: <20250331092816.778a7c83@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="au1bnvFg"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52UMiJPZ2998636
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 30 Mar 2025 15:44:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52UMiJPZ2998636
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743374661;
+	bh=uQjNrCA2abb1dCMcAFSILRDE0EVEkoS7UON1Hg8revU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=au1bnvFg09VieFIsVOTtI0Xb6wjhJfepG2WWvdzcdPUSVYHKiaLjFazCgfaMcOLBi
+	 IBozWVsTHWkTycoZe8WxsGpx/m6gvpMmVhcrf383CIJVArcLG7sd4XOw9A+PXZNM+r
+	 rsX76g7h/MY9Xz2GWSTqwuvdJ1EqL+88p2tHLPdkqK6+tNvaqGdVD2/KAJrLjo2zgB
+	 LN+Rbu93yGFNLbSRYpMC3w8p0edKvxLwFTha2O3qzEztaWMZQhCIjUN7yG/Xpg0NJ8
+	 +hTjXRl8dPLc1ihdyXq6Giqjb8JPYuabtjfk13Zj8pDytYvYZAt9i4VngGOq7s707a
+	 5O3j3+yhLay9w==
+Date: Sun, 30 Mar 2025 15:44:19 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: David Laight <david.laight.linux@gmail.com>,
+        Uros Bizjak <ubizjak@gmail.com>
+CC: Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_-tip_2/2=5D_x86/hweight=3A_Use_POPCN?=
+ =?US-ASCII?Q?T_when_available_with_X86=5FNATIVE=5FCPU_option?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250330191544.213e07d8@pumpkin>
+References: <20250325164854.199420-1-ubizjak@gmail.com> <20250325164854.199420-2-ubizjak@gmail.com> <Z-Mme_OxuhYfxgzO@gmail.com> <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com> <Z-kVT4ROZJXx6kui@gmail.com> <CAFULd4a2eOhZ4TPQRsLtN1yPYSfgqsXR_yOG+z3PedE-ZCMynw@mail.gmail.com> <20250330191544.213e07d8@pumpkin>
+Message-ID: <0C7D298A-86E7-427F-B45B-25C2F663D2FA@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VIafB1Geyt1du50.uQaUA1w";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/VIafB1Geyt1du50.uQaUA1w
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On March 30, 2025 11:15:44 AM PDT, David Laight <david=2Elaight=2Elinux@gma=
+il=2Ecom> wrote:
+>On Sun, 30 Mar 2025 18:07:30 +0200
+>Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
+>
+>=2E=2E=2E
+>> The kernel is currently compiled with -mno-red-zone, gcc-15 introduces
+>> special "redzone" clobber to disable red-zone in the function that
+>> includes asm() when/if the kernel starts using redzone=2E
+>
+>I really don't understand the point of a stack 'red-zone'=2E
+>In any function that contains memory writes the cost of a
+>'sub $n,%rsp' at the top and corresponding add at the bottom
+>is surely noise=2E
+>
+>	David=2E
 
-Today's linux-next merge of the bcachefs tree got a conflict in:
-
-  fs/bcachefs/fs-ioctl.c
-
-between commit:
-
-  1c3cb50b58c3 ("VFS: change kern_path_locked() and user_path_locked_at() t=
-o never return negative dentry")
-
-from Linus' tree and commit:
-
-  707549600c4a ("bcachefs: bch2_ioctl_subvolume_destroy() fixes")
-
-from the bcachefs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/bcachefs/fs-ioctl.c
-index f45054cee746,0273130f18dc..000000000000
---- a/fs/bcachefs/fs-ioctl.c
-+++ b/fs/bcachefs/fs-ioctl.c
-@@@ -537,10 -537,16 +537,12 @@@ static long bch2_ioctl_subvolume_destro
-  		ret =3D -EXDEV;
-  		goto err;
-  	}
-- 	ret =3D __bch2_unlink(dir, victim, true);
- -	if (!d_is_positive(victim)) {
- -		ret =3D -ENOENT;
- -		goto err;
- -	}
-+=20
-+ 	ret =3D   inode_permission(file_mnt_idmap(filp), d_inode(victim), MAY_WR=
-ITE) ?:
-+ 		__bch2_unlink(dir, victim, true);
-  	if (!ret) {
-  		fsnotify_rmdir(dir, victim);
-- 		d_delete(victim);
-+ 		d_invalidate(victim);
-  	}
-  err:
-  	inode_unlock(dir);
-
---Sig_/VIafB1Geyt1du50.uQaUA1w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfpxYAACgkQAVBC80lX
-0Gx7pQf/YT9vMtTpPYEuNNkrZAHfPTp5WNdhVHsNxhojrsEQZqiyQN8I0uC6joOS
-hvRFMUp5zt2DznTLiiC51/MJrkJ3uJt4PSKusmmBAFkpXIKK8ic4zImrePSsgypO
-1s5mX+F88x9+5oiFtGXMobmt4gScLdbU3FpRPth//bUQdmiqnYGI0+ymCCBEXef2
-ojzOAzhC2rlQWpdUlSx8cd1IsXuDdXkayEU9asRn2PlaF0q+j7gZKkKHWKeNMSMl
-yEyUdMOF5sWs+v+pAb1axdNb68ZcFaxoW6mLqhSp2Mx2ux28YB6SJ+8cOU8943wL
-ICM/pATNXml2z9QIZTTTgiH/2wwLHw==
-=1rwO
------END PGP SIGNATURE-----
-
---Sig_/VIafB1Geyt1du50.uQaUA1w--
+Perhaps you should check out the performance numbers instead=2E
