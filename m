@@ -1,182 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E556846C;
-	Sun, 30 Mar 2025 03:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E862F44
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 04:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743305692; cv=none; b=anG7wHGAlt2N6KuDg0GB8+aqPJV5D2WwqvLXmIXdQYj+keYNzJlIbEqg8XTFyyCSbd5zvNr7PDjHPmHDWsRTeSPOarwAlbVs15WJg6I6Dm+McBc2kx/5x4FtWp2uIbfHmcjb/ev2DqT0pxgsVlohqLwOvj0FRLwXuxSFOfEb5FU=
+	t=1743307355; cv=none; b=ABinAUCwN/IaRIff+zLZTX7e7yLoJJcfiNvvfQSP00zhDtzBqfZnkzW8+I/ItPZ1SMiUHMiJMMpSdfw2j4rIkCWGgd08CaKAezEmNVFn6M9SBwQrptGNGc7ngNZeQCXdD507XXy7u4mjiSKRJBUf9B3ge0dLgp7u4Udu2qGNWq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743305692; c=relaxed/simple;
-	bh=ZpDmFfTqDod7fD8BFl62uGKzhbYu8m1a/T0HXQFr9M4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hcCLHyMV5N4aGdcGm4k/Q6jtXZffW0f+qF4fjKfVvTByXCLHumRwdjfQtLl8Qd3fg+6poevqL/sYYmgk7+zbXJNq/x4mUYpzZHhmrhzT69MifeJVPE/xZjQaR1RsLYgCZNuSLb2pZfaxZFeMdqEp0NELfcW7GwH95uBkcpt1/xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDaSlhT5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDaSlhT5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C040C4CEE9;
-	Sun, 30 Mar 2025 03:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743305691;
-	bh=ZpDmFfTqDod7fD8BFl62uGKzhbYu8m1a/T0HXQFr9M4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CDaSlhT56kbl88GFwWZrtEXQK4sBMOeiHhmtktBayrDgJps2Xu81wTRVJGuH8mPwe
-	 r9MBeJxRBY53bJU02PJKtSlV9H26l6O9qNLZYKgp5UlxFWpE0PSX5udUA4ROdmYgcT
-	 KXBVagrg+GwlhvCf3plyaX1MoC5uO0ebalveqLFQDDBbaCRV54ha3Fiia4KKWXD34Z
-	 C4UP3PCEES8RyZXft/NwR0wpq5Kn31JFBKr08FlsfoKUyTis1x/uJUqm5CfRAXx1Yx
-	 zKEmnCkcERe5OZouc6rbqRf1pFIFmklPRdq70bhIBC3JTQjOz5XzaDCig8dELL1R4h
-	 ac4CrdyNWLupA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org
-Subject: [PATCH] tracing: fprobe: Fix to lock module while registering fprobe
-Date: Sun, 30 Mar 2025 12:34:47 +0900
-Message-ID: <174330568792.459674.16874380163991113156.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1743307355; c=relaxed/simple;
+	bh=g7nmG3cuX61qblNdtGJqtqikiHFRv+SmSC2NYgXjADM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SkNSSwlyB8uwfEGPZuaRjxv9UF3jtEroyK9qoz4cc+J7C4RB7zv5s1FChuE5XY2pz+YGyDBZUYb4jkxOStDot1l5D6TCOQMBl2n0pPiAb681OzkcXcDchVuP7VMiuB57DSnGxvLSljZ7GTEonzMkhKxDCxvmE2PJkbH6YD5wO1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so36253795ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 21:02:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743307353; x=1743912153;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7nmG3cuX61qblNdtGJqtqikiHFRv+SmSC2NYgXjADM=;
+        b=Qvtgbz44I4ZohswPmA+BpUwQioNnt7h3DP8ncM00O8YAz91g6wkKlIKU5eVQJlrBk5
+         1QPARf75RT3nAlQNb80FpJ8cZQjksiL93QbWkY2RMmyo+RobtNXt8bIzOa9tz4m19dKH
+         lo/ktH5096UytrgH9dZhb7UVzCxAoVxaoc3FYuOnxg1nPMu5oEI1aoxg74WJRjmGJkiy
+         N+KEd7abjFj+HeKSdkBJXSehwvsi9fb//pRZUKsswNlgxqMwkfdeKfhTZpgTsgcbHFoh
+         0VsYab2FNbuBx+rogWpOIpA9uMrZzOuVrIm09BbFFmZkAwNEi0mIA4ibvHPORyVN9WiM
+         DY4w==
+X-Gm-Message-State: AOJu0YwcV/WUC0YlmT+EpbvFwgl+5ChWCDDqsgRAYAwkBEMomyAhYSF/
+	Qlw4UFayq9BYDjiXBD3qTurJ3IK0f3yydP44qkJBXNd3FWg6a7IFJ6xxbAUKBiWCvMeT8vRM/6g
+	9hxX071jgoK60lABHSWAFyvC9+h+UzuhSUH420Zapin5iNDR796xi4Z0=
+X-Google-Smtp-Source: AGHT+IEOYbkFG/9PfV3h0VVZizWjiQKCtpSSSuysORuIS/Eurvapy2Je/Wl9tVliMuofjkqeIentcUTdZ+yZcH/PVFYYcLUQDlKI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:c:b0:3d4:3ab3:daf0 with SMTP id
+ e9e14a558f8ab-3d5e090cd94mr49628725ab.7.1743307352759; Sat, 29 Mar 2025
+ 21:02:32 -0700 (PDT)
+Date: Sat, 29 Mar 2025 21:02:32 -0700
+In-Reply-To: <67e57c41.050a0220.2f068f.0033.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e8c258.050a0220.1547ec.0086.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [mm?] [fs?] BUG: sleeping function called
+ from invalid context in folio_mc_copy
+From: syzbot <syzbot+f3c6fda1297c748a7076@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Since register_fprobe() does not get the module reference count while
-registering fgraph filter, if the target functions (symbols) are in
-modules, those modules can be unloaded when registering fprobe to
-fgraph.
+***
 
-To avoid this issue, get the reference counter of module for each
-symbol, and put it after register the fprobe.
+Subject: Re: [syzbot] [mm?] [fs?] BUG: sleeping function called from invalid context in folio_mc_copy
+Author: mcgrof@kernel.org
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/all/20250325130628.3a9e234c@gandalf.local.home/
-Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/fprobe.c |   67 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 33082c4e8154..cb86f90d4b1e 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -445,6 +445,7 @@ struct filter_match_data {
- 	size_t index;
- 	size_t size;
- 	unsigned long *addrs;
-+	struct module **mods;
- };
- 
- static int filter_match_callback(void *data, const char *name, unsigned long addr)
-@@ -458,30 +459,47 @@ static int filter_match_callback(void *data, const char *name, unsigned long add
- 	if (!ftrace_location(addr))
- 		return 0;
- 
--	if (match->addrs)
--		match->addrs[match->index] = addr;
-+	if (match->addrs) {
-+		struct module *mod = __module_text_address(addr);
-+
-+		if (mod && !try_module_get(mod))
-+			return 0;
- 
-+		match->mods[match->index] = mod;
-+		match->addrs[match->index] = addr;
-+	}
- 	match->index++;
- 	return match->index == match->size;
- }
- 
- /*
-  * Make IP list from the filter/no-filter glob patterns.
-- * Return the number of matched symbols, or -ENOENT.
-+ * Return the number of matched symbols, or errno.
-+ * If @addrs == NULL, this just counts the number of matched symbols. If @addrs
-+ * is passed with an array, we need to pass the an @mods array of the same size
-+ * to increment the module refcount for each symbol.
-+ * This means we also need to call `module_put` for each element of @mods after
-+ * using the @addrs.
-  */
--static int ip_list_from_filter(const char *filter, const char *notfilter,
--			       unsigned long *addrs, size_t size)
-+static int get_ips_from_filter(const char *filter, const char *notfilter,
-+			       unsigned long *addrs, struct module **mods,
-+			       size_t size)
- {
- 	struct filter_match_data match = { .filter = filter, .notfilter = notfilter,
--		.index = 0, .size = size, .addrs = addrs};
-+		.index = 0, .size = size, .addrs = addrs, .mods = mods};
- 	int ret;
- 
-+	if (addrs && !mods)
-+		return -EINVAL;
-+
- 	ret = kallsyms_on_each_symbol(filter_match_callback, &match);
- 	if (ret < 0)
- 		return ret;
--	ret = module_kallsyms_on_each_symbol(NULL, filter_match_callback, &match);
--	if (ret < 0)
--		return ret;
-+	if (IS_ENABLED(CONFIG_MODULES)) {
-+		ret = module_kallsyms_on_each_symbol(NULL, filter_match_callback, &match);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
- 	return match.index ?: -ENOENT;
- }
-@@ -543,24 +561,35 @@ static int fprobe_init(struct fprobe *fp, unsigned long *addrs, int num)
-  */
- int register_fprobe(struct fprobe *fp, const char *filter, const char *notfilter)
- {
--	unsigned long *addrs;
--	int ret;
-+	unsigned long *addrs __free(kfree) = NULL;
-+	struct module **mods __free(kfree) = NULL;
-+	int ret, num;
- 
- 	if (!fp || !filter)
- 		return -EINVAL;
- 
--	ret = ip_list_from_filter(filter, notfilter, NULL, FPROBE_IPS_MAX);
--	if (ret < 0)
--		return ret;
-+	num = get_ips_from_filter(filter, notfilter, NULL, NULL, FPROBE_IPS_MAX);
-+	if (num < 0)
-+		return num;
- 
--	addrs = kcalloc(ret, sizeof(unsigned long), GFP_KERNEL);
-+	addrs = kcalloc(num, sizeof(*addrs), GFP_KERNEL);
- 	if (!addrs)
- 		return -ENOMEM;
--	ret = ip_list_from_filter(filter, notfilter, addrs, ret);
--	if (ret > 0)
--		ret = register_fprobe_ips(fp, addrs, ret);
- 
--	kfree(addrs);
-+	mods = kcalloc(num, sizeof(*mods), GFP_KERNEL);
-+	if (!mods)
-+		return -ENOMEM;
-+
-+	ret = get_ips_from_filter(filter, notfilter, addrs, mods, num);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = register_fprobe_ips(fp, addrs, ret);
-+
-+	for (int i = 0; i < num; i++) {
-+		if (mods[i])
-+			module_put(mods[i]);
-+	}
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(register_fprobe);
-
+#syz test: https://github.com/linux-kdevops/linux.git 20250529-ext4-migration-fix
