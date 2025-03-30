@@ -1,78 +1,98 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4863FE4;
-	Sun, 30 Mar 2025 22:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C437B17A2E8
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 22:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743372105; cv=none; b=lok9/LwCChvpgrA4HQ0nPr4nXMCjzZPj4yAqucUPg/AbU+Ea1KtLbgrYsjv5tyhcxLSkmGFUZ/Cr6yyns6x/3LTRHFQNeXy4wwtnURdcl15wVWTTMtyTzSQ6DhuGw/YU9eYxX8uH6vesZmDLc56Q3bG6sGHlPYfjmJkb3rdGkbs=
+	t=1743372478; cv=none; b=FDq/Z8yk7ZRQMVC1PrBz0h4oHtfaXmpVqC06+y/bm8zn15pQ4yom8mxvzkCKA+fu+jKeZMqkRx0xhT74PF4eVKko7O3wJlyd0D5SOYiRbMwl6ECgP/ofZMQEh4VgRnO/3DndamgfDiqZF8xvFjNnVuyGQNfNeeGIzw/TtpEvYCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743372105; c=relaxed/simple;
-	bh=Tkszc10LvC0X2gbLARjsGrXZv7vlFk8/4HEG3JZn8mo=;
+	s=arc-20240116; t=1743372478; c=relaxed/simple;
+	bh=ohfxjDX9fblLKKTzxOdM6et4/HX8MMaKN2vHJEhkhQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGSDFB+lPfc9i5DrUJ6pnenmnhoApsbhv+1df+Nyrv1atUbB8bPoQXYE5iw9bVvwQp32BsQMZX7W99K5gK0/eaN0uMSpQt8Ibcy9/95Fm9UF9yIZGN08a2/Yp1Bl41TyRIx+AxzfJCnZ34H0mfX2t5ZOr6or87IBF4W+P4K5ghU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qngwqqaa; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGPdzd/heF0h9o6IoqmCSFezuPlOlwykkGcOWP+1/mkXq6md+jHH5bM0ETUfbT0v6l5M+PE4Wt11B+moeWxjroAcisF4b+ifsKQdK2++f/BLad47eJ0l8vQABQGHrm1j6MSH4pmsPQZRv3VVNN1tSC1ccJsRdjQ8Paimko89hII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BoIuDbgO; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qngwqqaa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kwMfUz4DFsWidBocR7kOt39zwWI/U4VW18DMFO9dYPI=; b=qngwqqaaexO6eKBiK3FhtSkgdL
-	MSs+nzF88N5K+EnT0ayn42AcEt1Tzd/rNS0zSettN7iHSvSTi0GDIgh/3ttm0X1eKnUb4BifKp7Kq
-	Gq8FPlSLKGduevzveO93LqEZAsb+UOabQlZ62bvZcUYAh+P2QGohtxJ/5jZNFbWqPAeQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tz0iW-007XLD-KA; Mon, 31 Mar 2025 00:01:20 +0200
-Date: Mon, 31 Mar 2025 00:01:20 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] net: mtip: The L2 switch driver for imx287
-Message-ID: <022e19f5-9a9c-42eb-9358-a6fe832e8f5f@lunn.ch>
-References: <20250328133544.4149716-1-lukma@denx.de>
- <20250328133544.4149716-5-lukma@denx.de>
- <3648e94f-93e6-4fb0-a432-f834fe755ee3@lunn.ch>
- <20250330222041.10fb8d3d@wsk>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BoIuDbgO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=ohfx
+	jDX9fblLKKTzxOdM6et4/HX8MMaKN2vHJEhkhQs=; b=BoIuDbgOdrgRasCV9kOo
+	PxfHsYfCy8rkKXt3+FfnkRObgVyXzv8MsJH1CS3u9BnjH7Y7F7VOws6+NV5pwv5R
+	EB+QfnU89CNHAepjVFqJIDg0YpaQGARkjgeClBXSJa4Tl8vddIlMCu4E1iFewqec
+	+qBkLNT9R8714o/ohD5M1heKK6h5MnfDlhSlzZKpilo2285XAo3g7b3E+lpU5we1
+	tIzJkSUTTjYysE+5xIlw0cczYnIlU0k+ps4+G+GKB7ySDwW07J9i1GxxeXsP7yBg
+	ygjnVpAtu1i8YU2wnUGqHtt8BCD43d6qgo7tam2efxUE6Dixj/+lqmQ048ukGNH5
+	Uw==
+Received: (qmail 1004929 invoked from network); 31 Mar 2025 00:07:49 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 00:07:49 +0200
+X-UD-Smtp-Session: l3s3148p1@OKHDiJYxFp5Q8qei
+Date: Mon, 31 Mar 2025 00:07:49 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
+Cc: ulf.hansson@linaro.org, salauyou.ihar@gmail.com,
+	linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: renesas_sdhi: Fix error handling in
+ renesas_sdhi_probe
+Message-ID: <Z-nAtQ-CZ8zMUWiK@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>,
+	ulf.hansson@linaro.org, salauyou.ihar@gmail.com,
+	linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WHsS06c/awOKTr4T"
+Content-Disposition: inline
+In-Reply-To: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
+
+
+--WHsS06c/awOKTr4T
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250330222041.10fb8d3d@wsk>
+Content-Transfer-Encoding: quoted-printable
 
-> > > +	/* Prevent a state halted on mii error */
-> > > +	if (fep->mii_timeout && phy_dev->state == PHY_HALTED) {
-> > > +		phy_dev->state = PHY_UP;
-> > > +		goto spin_unlock;
-> > > +	}  
-> > 
-> > A MAC driver should not be playing around with the internal state of
-> > phylib.
-> 
-> Ok, I've replaced it with PHY API calls (phy_start() and
-> phy_is_started()).
+On Wed, Mar 26, 2025 at 11:06:38PM +0100, Ruslan Piasetskyi wrote:
+> After moving tmio_mmc_host_probe down, error handling has to be
+> adjusted.
+>=20
+> Fixes: 74f45de394d9 ("mmc: renesas_sdhi: register irqs before registering=
+ controller")
+> Reviewed-by: Ihar Salauyou <salauyou.ihar@gmail.com>
+> Signed-off-by: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
 
-phy_start() and phy_stop() should be used in pairs. It is not good to
-call start more often than stop.
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-What exactly is going on here? Why would there be MII errors?
+Thanks!
 
-	Andrew
+
+--WHsS06c/awOKTr4T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfpwLEACgkQFA3kzBSg
+KbYtEQ//U7CzloYofUyXsJzdVRGE18961OpCyxbc9i7x+0QBZXoTGpQG/33BFqnI
+KiMvjLxEqmtHUKFCU26KLAEuIoJ+FmMsS8iEPyvymyZqsQk05tNG0cDdYNPB1YBS
+XeYD6K43WBresADsqgNrRpWFxnfH79HZA9IP6nR6IpjmVOP2mA5LvtfRB+DI2P8u
+oT+WWehZMDreNqiiHTfgImy5TTI9alw8dwdb4waChDKtHqYR1QZT3z2spb5XTGAm
+d/PRdAsYMkPP/HosPoMszQxvwhQtWMazyNCplVIf009eV62M1SI8O+kTQ/y+s/dz
+2sAdwUJafuS/3pbR4ueNmfR3bnnNBGAmLKfisT2x1C70O17ixS3TKT81v6u1M032
+NJ8MbbuLts8Io8Hu7rizKjUFpQfHvoKE+3r1DxaYqrUPLXGlNzPwl/w1Vnd6qf13
+LYZ3MZXNmX+lsf3Sl+6FZurn2tZSChaA4LUFBhAiAocxCAisoJpcghpm7JDbQEfd
+D96n0qMzPKGMLHWkif5OmaURgHmMoeF9117ib82Ov/T6K5d1nZdzPzofi/+LolFI
+C1fxT7Ya4pvm6br0sgduTHyqYeYzy2lnKKwm55NxAj7CwIK9PHxXTRShUm2ftCjU
+4FjQmoE2Mbxu/frn11/p6sGqGuXiSCdN0wnnjle+oTFdFAsMaSU=
+=Lcuh
+-----END PGP SIGNATURE-----
+
+--WHsS06c/awOKTr4T--
