@@ -1,115 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DCF6DCE1;
-	Sun, 30 Mar 2025 08:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08396DCE1
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743323640; cv=none; b=hvlJrOHvZowTbfwRByTnJbJBKyZO0ZLvw8zVkguZPPXGbbDrgTi3Gj6vnF8xsWhISNZKH80DoYTcRJuYEfj0UcZNvvnOug0fWIwJlu/5CBvCYP5OT67UkqkDPuOn8UONx4/ftE2RD98j6FfGX++QjXaBy0DQ2AlB/+C4uMh/EZw=
+	t=1743323803; cv=none; b=IX1NbAIc+SB++XEJV07k8niKp8vwz/ITYHogNT6l8OshVj9I7FB9/fT4iJag+gM1g9GihGM2beMC02tFdFzIwWoBlE25jY69r43u1UnBofZpTkr4dlFVGJ02myL01H/GuWo9Y6VtwG8RbtVawMTvaZEgNbL4oadtBnW92VD5N10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743323640; c=relaxed/simple;
-	bh=v/AkdNjDg8/pFM52YxmtXHA4bqiwCOloHOV+ED+lidE=;
+	s=arc-20240116; t=1743323803; c=relaxed/simple;
+	bh=kOFOJm39FkXH+rwD+36WlO5jTjLl36ZB3AYPctsbP88=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uqlm7yCUXLoUUUUPxblH+FSZOD5fqEibSbHVNsud6kIkIAhnOAlJkvratWtsv7WgBgyJklmolBK49j+YLRoghIgtHgORCYsz+bx2zZwa/DG1BU2mIsLW/3RFbz/ZYJ9YpZVLt4gdacOWd8wQpmjfFMXmUvofluKjyTc+oFP9p20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVUvAuEt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wv69ofUF4dGU0ifMfbVX95FNF7W6uIWNx/E6ooNovf6cnVssl7/IiSYQeghJw4O643HvD0STKHQnG2LryOy2KwVn/Qv3P5Frn59iTkn+g9DQUiSblMU+aECBBSM5MFv0i/vCV/YU14TUy6JN6zCU6JgllBpxvYpiP66ys8BTyGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1H9fmPw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVUvAuEt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B51C4CEDD;
-	Sun, 30 Mar 2025 08:33:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1H9fmPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A1FC4CEDD;
+	Sun, 30 Mar 2025 08:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743323639;
-	bh=v/AkdNjDg8/pFM52YxmtXHA4bqiwCOloHOV+ED+lidE=;
+	s=k20201202; t=1743323802;
+	bh=kOFOJm39FkXH+rwD+36WlO5jTjLl36ZB3AYPctsbP88=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SVUvAuEt4Xnauc3Gcjd/qhE314/MpfmZATEXSN3y1IcleCQiehAxKLio5mWWAZ5de
-	 Uk/5b3+xhpmqUmEIh00orZN6UfkttxEt/bQqm3EV1ZRttG6W1JxhmHEC2Fjy2w0NQD
-	 eWgh87cbDR4X2RhFWOPAUYk0jKdI3/MY3gU6b2dHZ9NsizeB70Um9VDUL17rH6v256
-	 AeQ5Rang+cD5W/BUO3OooKk/EUz8KVrf5TyIxZA3Q8XuWYdb3sW3R4vJEpZ9TgphzQ
-	 Jkw0c+sizJIvU88cJxJ8S60CnLtRSnKDa0vgWFOpgfwqVZpiXSqcA+3dXC9gEAnDQd
-	 CDZw9o1v0Xwfw==
-Date: Sun, 30 Mar 2025 10:33:53 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, rafael@kernel.org, 
-	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 0/6] Extend freeze support to suspend and hibernate
-Message-ID: <20250330-heimweg-packen-b73908210f79@brauner>
-References: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
- <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <12ce8c18f4e16b1de591cbdfb8f6e7844e42807b.camel@HansenPartnership.com>
- <9c0a24cd8b03539fd6b8ecd5a186a5cf98b5d526.camel@HansenPartnership.com>
+	b=B1H9fmPwgNZ8nM0tHdayf7Ir9hlQgGnpZPiRWgV94jiu7g8SP3pgHLHY5s2MlRYul
+	 9pCKDTNJbGboAItH7ZuQFjJpvWyOfAjJFQMyK7Q+dDywXIPuuQpPGlmIyq0Jz/bRMi
+	 HxjYlDNgLXzIC8oES4Hs60N78eVn31UrlDlV1/MmR3PHPZhowZZvCcTrBFQF2CHVlZ
+	 fbMzHmERVLTUq8jiXHMuZwBLcj0TkUo6Ce/mGkgxaMd1VSI+Wq9yryJ5edJLQKO20C
+	 AeiNKSwhMwJYx8NprmqCf/ti597kztA2EAtgtXv8JZtDAwKNywIXtJD1IqIkEfEE1Q
+	 R4r1jzkSN5xPA==
+Date: Sun, 30 Mar 2025 11:36:34 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, catalin.marinas@arm.com,
+	will@kernel.org, gshan@redhat.com, steven.price@arm.com,
+	suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
+	david@redhat.com, urezki@gmail.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: pageattr: Explicitly bail out when changing
+ permissions for vmalloc_huge mappings
+Message-ID: <Z-kCkh1XWX8Rwjwz@kernel.org>
+References: <20250328062103.79462-1-dev.jain@arm.com>
+ <Z-cnmklGUojMzsUF@kernel.org>
+ <deedf5e2-4a25-4c1f-a5d8-a661a2eb16d2@arm.com>
+ <Z-jzouwNZwk8Ft-j@kernel.org>
+ <b7be0b9c-89fa-470d-8f6d-7db6282b3c68@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c0a24cd8b03539fd6b8ecd5a186a5cf98b5d526.camel@HansenPartnership.com>
+In-Reply-To: <b7be0b9c-89fa-470d-8f6d-7db6282b3c68@arm.com>
 
-On Sat, Mar 29, 2025 at 01:02:32PM -0400, James Bottomley wrote:
-> On Sat, 2025-03-29 at 10:04 -0400, James Bottomley wrote:
-> > On Sat, 2025-03-29 at 09:42 +0100, Christian Brauner wrote:
-> > > Add the necessary infrastructure changes to support freezing for
-> > > suspend and hibernate.
+On Sun, Mar 30, 2025 at 01:53:57PM +0530, Dev Jain wrote:
+> 
+> 
+> On 30/03/25 1:02 pm, Mike Rapoport wrote:
+> > On Sat, Mar 29, 2025 at 09:46:56AM +0000, Ryan Roberts wrote:
+> > > On 28/03/2025 18:50, Mike Rapoport wrote:
+> > > > On Fri, Mar 28, 2025 at 11:51:03AM +0530, Dev Jain wrote:
+> > > > > arm64 uses apply_to_page_range to change permissions for kernel VA mappings,
+> > > > 
+> > > >                                                       for vmalloc mappings ^
+> > > > 
+> > > > arm64 does not allow changing permissions to any VA address right now.
+> > > > 
+> > > > > which does not support changing permissions for leaf mappings. This function
+> > > > > will change permissions until it encounters a leaf mapping, and will bail
+> > > > > out. To avoid this partial change, explicitly disallow changing permissions
+> > > > > for VM_ALLOW_HUGE_VMAP mappings.
+> > > > > 
+> > > > > Signed-off-by: Dev Jain <dev.jain@arm.com>
 > > > 
-> > > Just got back from LSFMM. So still jetlagged and likelihood of bugs
-> > > increased. This should all that's needed to wire up power.
-> > > 
-> > > This will be in vfs-6.16.super shortly.
-> > > 
-> > > ---
-> > > Changes in v2:
-> > > - Don't grab reference in the iterator make that a requirement for
-> > > the callers that need custom behavior.
-> > > - Link to v1:
-> > > https://lore.kernel.org/r/20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org
+> > > I wonder if we want a Fixes: tag here? It's certainly a *latent* bug.
 > > 
-> > Given I've been a bit quiet on this, I thought I'd better explain
-> > what's going on: I do have these built, but I made the mistake of
-> > doing a dist-upgrade on my testing VM master image and it pulled in a
-> > version of systemd (257.4-3) that has a broken hibernate.  Since I
-> > upgraded in place I don't have the old image so I'm spending my time
-> > currently debugging systemd ... normal service will hopefully resume
-> > shortly.
+> > We have only a few places that use vmalloc_huge() or VM_ALLOW_HUGE_VMAP and
+> > if there was a code that plays permission games on these allocations, x86
+> > set_memory would blow up immediately, so I don't think Fixes: is needed
+> > here.
 > 
-> I found the systemd bug
-> 
-> https://github.com/systemd/systemd/issues/36888
+> But I think x86 can handle this (split_large_page() in __change_page_attr())
+> ?
 
-I don't think that's a systemd bug.
+Yes, but it also updates corresponding direct map entries when vmalloc
+permissions change and the direct map update presumes physical contiguity
+of the range. 
 
-> And hacked around it, so I can confirm a simple hibernate/resume works
-> provided the sd_start_write() patches are applied (and the hooks are
-> plumbed in to pm).
+> > > > > ---
+> > > > >   arch/arm64/mm/pageattr.c | 4 ++--
+> > > > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> > > > > index 39fd1f7ff02a..8337c88eec69 100644
+> > > > > --- a/arch/arm64/mm/pageattr.c
+> > > > > +++ b/arch/arm64/mm/pageattr.c
+> > > > > @@ -96,7 +96,7 @@ static int change_memory_common(unsigned long addr, int numpages,
+> > > > >   	 * we are operating on does not result in such splitting.
+> > > > >   	 *
+> > > > >   	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
+> > > > > -	 * Those are guaranteed to consist entirely of page mappings, and
+> > > > > +	 * Disallow VM_ALLOW_HUGE_VMAP vmalloc mappings so that
+> > > > 
+> > > > I'd keep mention of page mappings in the comment, e.g
+> > > > 
+> > > > 	* Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
+> > > > 	* mappings are updated and splitting is never needed.
+> > > > 
+> > > > With this and changelog updates Ryan asked for
+> > > > 
+> > > > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > > > 
+> > > > 
+> > > > >   	 * splitting is never needed.
+> > > > >   	 *
+> > > > >   	 * So check whether the [addr, addr + size) interval is entirely
+> > > > > @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
+> > > > >   	area = find_vm_area((void *)addr);
+> > > > >   	if (!area ||
+> > > > >   	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
+> > > > > -	    !(area->flags & VM_ALLOC))
+> > > > > +	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
+> > > > >   		return -EINVAL;
+> > > > >   	if (!numpages)
+> > > > > -- 
+> > > > > 2.30.2
+> > > > > 
+> > > > 
+> > > 
+> > 
 > 
-> There is an oddity: the systemd-journald process that would usually
-> hang hibernate in D wait goes into R but seems to be hung and can't be
-> killed by the watchdog even with a -9.  It's stack trace says it's
-> still stuck in sb_start_write:
-> 
-> [<0>] percpu_rwsem_wait.constprop.10+0xd1/0x140
-> [<0>] ext4_page_mkwrite+0x3c1/0x560 [ext4]
-> [<0>] do_page_mkwrite+0x38/0xa0
-> [<0>] do_wp_page+0xd5/0xba0
-> [<0>] __handle_mm_fault+0xa29/0xca0
-> [<0>] handle_mm_fault+0x16a/0x2d0
-> [<0>] do_user_addr_fault+0x3ab/0x810
-> [<0>] exc_page_fault+0x68/0x150
-> [<0>] asm_exc_page_fault+0x22/0x30
-> 
-> So I think there's something funny going on in thaw.
 
-My uneducated guess is that it's probably an issue with ext4 freezing
-and unfreezing. xfs stops workqueues after all writes and pagefault
-writers have stopped. This is done in ->sync_fs() when it's called from
-freeze_super(). They are restarted when ->unfreeze_fs is called.
-
-But for ext4 in ->sync_fs() the rsv_conversion_wq is flushed. I think
-that should be safe to do but I'm not sure if there can't be other work
-coming in on it before the actual freeze call. Jan will be able to
-explain this a lot better. I don't have time today to figure out what
-this does.
+-- 
+Sincerely yours,
+Mike.
