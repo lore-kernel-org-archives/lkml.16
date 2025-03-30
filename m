@@ -1,63 +1,73 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C0A433A4;
-	Sun, 30 Mar 2025 08:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99603433A4;
+	Sun, 30 Mar 2025 08:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324498; cv=none; b=RKtrcnY+fH1yC2L9BS61DbKsBYBi43qe7rxvFTbXF5MaW7v5pgvsjylh2aMOnDvDSQvwyZ5bx3I188WU1vJlnUQZYfTDbKDNNbufejWpRuwWei++uQ1NWgOa62tPI/ILNA1Nt3EmUhV1w86C0w/gf/uHIAgJReNLsnz5KsOoaAk=
+	t=1743324598; cv=none; b=Ko2HkQRHMEtfMEXkOrol2tcKBOuyRnkhsDa1PhCvJbGTFnevSu0EnBlSqHozX35ZEsHgpgXFYV/4celO0iLliv5SNEsNPgx9kDxuwNGdKFGnp8CPRadT8BqfYdUooEDN7rRHIIz97fdtwuVMSun9ED/SRW7zK9CyqZ0SBKXojvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324498; c=relaxed/simple;
-	bh=u2jHDVSry0FpBHziWHd2Q+tk8Gg6YND6fS4BDzD2Ako=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gi8LE3JvbaG8sMC7y34gYz2yH9zhzjOE8rUb4U8Y6DPY6HdEi9N1idiCjP3Q83t5N2kCyP08DOHrpbCmZm50eAigRrQwgTZOeY231nri0zHFyNaLQZgkPAqitvWqdEU/4gFfjp+9uvyj4IVFToYdpmZd4zL0S70f0PqJvryQPKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nou3TA3q; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743324598; c=relaxed/simple;
+	bh=+bKsd+lUz1xN+iEJQV8fzknCljZQm9eRGmS71BH0FEA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qp1n6xHeMKewFlwEOcLRrXOmQH76EMZiT00E2y4xze/u+S13tKtwOLRGIk37T8EXh4SamYkclHoP+4yEfdCH9WmyQB+g+1Daf5ZSi0QBPIU83dSuNUFMMhaivLWds2we4Q2v8fSv71kD/bCNV2rZ7vo1hRIar2nKn4rzzxZW6XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyjzPC7A; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nou3TA3q"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dUuG2447366
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 30 Mar 2025 03:39:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743323970;
-	bh=OtYLXG90eJ5bXrADp8w285Rs0wrLbQJIKJ4ztNMCQR8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=nou3TA3qQASygvb6AaTTblhQAJ9aKFIDwkR/V7F3gEI6RNLKI4BkW4G9GC+y7cecS
-	 eyYAKBL0Ye5yx04p0EdWmpxfMHefUzg5YxsVBoU3zjxY4CIMnjDaqB+y4UHqoWF+s6
-	 Uoen4NWYzTshU98rT2RGJUCfKEceYpTmLoiBnFa4=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dUfG020420
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 30 Mar 2025 03:39:30 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
- Mar 2025 03:39:29 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 30 Mar 2025 03:39:29 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dE4i015769;
-	Sun, 30 Mar 2025 03:39:25 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
-        <18255117159@163.com>, <cassel@kernel.org>,
-        <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
-CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 2/4] PCI: cadence-host: Introduce cdns_pcie_host_disable helper for cleanup
-Date: Sun, 30 Mar 2025 14:09:12 +0530
-Message-ID: <20250330083914.529222-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250330083914.529222-1-s-vadapalli@ti.com>
-References: <20250330083914.529222-1-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyjzPC7A"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240b4de12bso38267185ad.2;
+        Sun, 30 Mar 2025 01:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743324596; x=1743929396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EmzCxvsOduwulsT5Wgwx5bMOIAHj7o4CdA5a/pTT+Dk=;
+        b=PyjzPC7A0iOIIVe1HXPQmbnjqf15w3HmKsPeTMfIB1RR74TDfBQA5uS5+qvgwrgpAx
+         FozlLek54RTJ31qZcCUTyol2fDck1jpn3X/CVOl6aoKxWyk+7EfX4SuhSPS/TmUtyn0A
+         3UOWEHwbvY7kKXEZ6draVNElw7GR4CY9JMcZD6YtIiO3ZpAcKg1OBh66EroxtXaUuZoG
+         84T6c6XoomHoTl50rRr/Av1YYib/dEwXrqNRbmi2bFDeK/3xt2XbxCuuLSt6XQP8t9nb
+         rnHGtHgZL0jDilVKWOepkUuiLDDvkVFdPe4STVw4R8BZmUJlYjNgTdVsRl7RqqZ/7gW2
+         vijA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743324596; x=1743929396;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EmzCxvsOduwulsT5Wgwx5bMOIAHj7o4CdA5a/pTT+Dk=;
+        b=FLDb8IlqRHd8lfY8b38zF54l6AsCFr5MbBHCXbqwNMe6GKfCLkF8v4CA5lbqgawU2h
+         F+zgiCJc+uDxboBwS382qmG64Y2QtVxZuHitSLQPyNPmV0pBuqJXEufxXtLWOjplNMFS
+         f0yYh016IOiuqI0LMl7foeaLM7o35IkZ4wY3/DvhD7+pkujw1W1Xbew5ECg/HEKyOrxC
+         kWky2u6c+odmSXtlfouKlR1PIL1eGJ7KwvJ5tcpSgsaor6MG/BOy1+eEfu/SvgEyz/HY
+         vm+xXtJjUK2aqYvDXH7zrgXCUZ5XBc7i30v0hZ6RrHP4Y35GhW1BEZCZ2ZAU4sPUJu9L
+         7i/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUEZWaLFZotsgyLHH3mWy6NFlJf0RNfDKlB1PpZncvvE9mMKdCjQItvidSZDui9JL2wojUHVyaFH8lVx2xX@vger.kernel.org, AJvYcCVEfdX97/edyNNV1dkXtY+re/5znfNaG9cgAn9kKwe2QX8sMLbaK62KeEniBpShOhN9JUjmCzpFvW8=@vger.kernel.org, AJvYcCWSTxrLye+bXR/xWZRMLRaKHqj9S0ERaa2vIn0fRIGTZYlPrdSh3ZO7GObyV0dovsopHBRyoCtHXYHaLoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzwD9+jVKImanGV62CUKeiWbtEs0EQbEr4zh+DyQvJ/kzIkt/M
+	Ret/khRa/4qAmHn3EJdL1SaQehaeN/HINNKx5WVw3xGxIT048YmY
+X-Gm-Gg: ASbGncvyoyOMxPoA+vO9Mfp6065molzrpVwiSZ8+u77ZRw+6gVFJ3qjPbRzMkReAQsk
+	l8aC5RuKeFeQ8MocpONRwlndRVeEVHhPbbGQg2VOP4kBzOLDNcSfmA3uDlxBcII5WcTLdUeld8e
+	uv+OGeeVyCHE+0JOOhCqk7C+9QcSaqG8A0PQEVmjF1wsMNBJiJIsCI4v0cIErnMmNk/hQ99ewTy
+	lCmhCcb024tUt9+AaHBR0TdPCihvqD7BF5CRCOrVHmv1ARDX5+HxSbJgugu+47TGOlpKtPfJDW4
+	YRaXf9FAUnIUezo6JUQmr9grSx6PRsOYXh/XiBz5eRmkZMMZgHoXcdOJNuSL8HPjFvKt9HGiOfK
+	U
+X-Google-Smtp-Source: AGHT+IFSa6czLX5BHKoQR4RzOcx/YbmUF2SgaxAIgJ4HQT0OJsOtxycsYNBJibWU+vKZphORkcPWdw==
+X-Received: by 2002:a05:6a21:c94:b0:1f5:9175:2596 with SMTP id adf61e73a8af0-2009f607a8bmr8922370637.13.1743324595736;
+        Sun, 30 Mar 2025 01:49:55 -0700 (PDT)
+Received: from salmon-ASUS-TUF-Dash-F15-FX516PR.. ([2402:7500:a17:45d:8f98:c8e0:143a:d5da])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b8ae16esm4434055a12.61.2025.03.30.01.49.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 01:49:55 -0700 (PDT)
+From: Chih Yun Lin <noralin249@gmail.com>
+To: corbet@lwn.net
+Cc: jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-input@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chih Yun Lin <noralin249@gmail.com>
+Subject: [PATCH] docs: hid: Fix typo in intel-thc-hid.rst
+Date: Sun, 30 Mar 2025 16:45:18 +0800
+Message-ID: <20250330084518.20916-1-noralin249@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,211 +75,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Introduce the helper function cdns_pcie_host_disable() which will undo
-the configuration performed by cdns_pcie_host_setup(). Also, export it
-for use by existing callers of cdns_pcie_host_setup(), thereby allowing
-them to cleanup on their exit path.
+Corrected the spelling of "triggerred" to "triggered" and "flexiblity"
+to "flexibility".
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Chih Yun Lin <noralin249@gmail.com>
 ---
+ Documentation/hid/intel-thc-hid.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-v1:
-https://lore.kernel.org/r/20250307103128.3287497-3-s-vadapalli@ti.com/
-Changes since v1:
-- Collected "Reviewed-by" tag from:
-  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Regards,
-Siddharth.
-
- .../controller/cadence/pcie-cadence-host.c    | 104 ++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h |   5 +
- 2 files changed, 109 insertions(+)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 96055edeb099..741508738f88 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -152,6 +152,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
- 	return ret;
- }
+diff --git a/Documentation/hid/intel-thc-hid.rst b/Documentation/hid/intel-thc-hid.rst
+index 6c417205ac6a..dc9250787fc5 100644
+--- a/Documentation/hid/intel-thc-hid.rst
++++ b/Documentation/hid/intel-thc-hid.rst
+@@ -182,7 +182,7 @@ value and use PIO write (by setting SubIP write opcode) to do a write operation.
  
-+static void cdns_pcie_host_disable_ptm_response(struct cdns_pcie *pcie)
-+{
-+	u32 val;
-+
-+	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val & ~CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
-+}
-+
- static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
- {
- 	u32 val;
-@@ -177,6 +185,26 @@ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
- 	return ret;
- }
+ THC also includes two GPIO pins, one for interrupt and the other for device reset control.
  
-+static void cdns_pcie_host_deinit_root_port(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	u32 value, ctrl;
-+
-+	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, 0xffff);
-+	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0xff);
-+	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0xff);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, 0xffffffff);
-+	cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, 0xffff);
-+	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
-+	value = ~(CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
-+		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
-+		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
-+		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
-+		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
-+		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
-+}
-+
- static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -393,6 +421,32 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
-         return resource_size(entry2->res) - resource_size(entry1->res);
- }
+-Interrupt line can be configured to either level triggerred or edge triggerred by setting MMIO
++Interrupt line can be configured to either level triggered or edge triggered by setting MMIO
+ Control register.
  
-+static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	enum cdns_pcie_rp_bar bar;
-+	u32 value;
-+
-+	/* Reset inbound configuration for all BARs which were being used */
-+	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
-+		if (rc->avail_ib_bar[bar])
-+			continue;
-+
-+		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), 0);
-+		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), 0);
-+
-+		if (bar == RP_NO_BAR)
-+			continue;
-+
-+		value = ~(LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
-+			  LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
-+			  LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
-+			  LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
-+			  LM_RC_BAR_CFG_APERTURE(bar, bar_aperture_mask[bar] + 2));
-+		cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
-+	}
-+}
-+
- static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -430,6 +484,29 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
- 	return 0;
- }
+ Reset line is controlled by BIOS (or EFI) through ACPI _RST method, driver needs to call this
+@@ -302,10 +302,10 @@ waiting for interrupt ready then read out the data from system memory.
+ 3.3.2 Software DMA channel
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-+static void cdns_pcie_host_deinit_address_translation(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
-+	struct resource_entry *entry;
-+	int r;
-+
-+	cdns_pcie_host_unmap_dma_ranges(rc);
-+
-+	/*
-+	 * Reset outbound region 0 which was reserved for configuration space
-+	 * accesses.
-+	 */
-+	cdns_pcie_reset_outbound_region(pcie, 0);
-+
-+	/* Reset rest of the outbound regions */
-+	r = 1;
-+	resource_list_for_each_entry(entry, &bridge->windows) {
-+		cdns_pcie_reset_outbound_region(pcie, r);
-+		r++;
-+	}
-+}
-+
- static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -487,6 +564,12 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 	return cdns_pcie_host_map_dma_ranges(rc);
- }
+-THC supports a software triggerred RxDMA mode to read the touch data from touch IC. This SW RxDMA
++THC supports a software triggered RxDMA mode to read the touch data from touch IC. This SW RxDMA
+ is the 3rd THC RxDMA engine with the similar functionalities as the existing two RxDMAs, the only
+-difference is this SW RxDMA is triggerred by software, and RxDMA2 is triggerred by external Touch IC
+-interrupt. It gives a flexiblity to software driver to use RxDMA read Touch IC data in any time.
++difference is this SW RxDMA is triggered by software, and RxDMA2 is triggered by external Touch IC
++interrupt. It gives a flexibility to software driver to use RxDMA read Touch IC data in any time.
  
-+static void cdns_pcie_host_deinit(struct cdns_pcie_rc *rc)
-+{
-+	cdns_pcie_host_deinit_address_translation(rc);
-+	cdns_pcie_host_deinit_root_port(rc);
-+}
-+
- int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
- {
- 	int err;
-@@ -499,6 +582,14 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
- }
- EXPORT_SYMBOL_GPL(cdns_pcie_host_init);
- 
-+static void cdns_pcie_host_link_disable(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+
-+	cdns_pcie_stop_link(pcie);
-+	cdns_pcie_host_disable_ptm_response(pcie);
-+}
-+
- int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -524,6 +615,19 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
- }
- EXPORT_SYMBOL_GPL(cdns_pcie_host_link_setup);
- 
-+void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
-+{
-+	struct pci_host_bridge *bridge;
-+
-+	bridge = pci_host_bridge_from_priv(rc);
-+	pci_stop_root_bus(bridge->bus);
-+	pci_remove_root_bus(bridge->bus);
-+
-+	cdns_pcie_host_deinit(rc);
-+	cdns_pcie_host_link_disable(rc);
-+}
-+EXPORT_SYMBOL_GPL(cdns_pcie_host_disable);
-+
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- {
- 	struct device *dev = rc->pcie.dev;
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 4b7f295e24e7..0b6bed1ac146 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -523,6 +523,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
- int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
- int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-+void cdns_pcie_host_disable(struct cdns_pcie_rc *rc);
- void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 			       int where);
- #else
-@@ -541,6 +542,10 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	return 0;
- }
- 
-+static inline void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
-+{
-+}
-+
- static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 					     int where)
- {
+ Before software starts a SW RxDMA, it shall stop the 1st and 2nd RxDMA, clear PRD read/write pointer
+ and quiesce the device interrupt (THC_DEVINT_QUIESCE_HW_STS = 1), other operations are the same with
 -- 
-2.34.1
+2.43.0
 
