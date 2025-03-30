@@ -1,231 +1,154 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397ED2F24;
-	Sun, 30 Mar 2025 01:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0613F33FE;
+	Sun, 30 Mar 2025 01:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743297266; cv=none; b=Ud1J5SrfNeqwZWt8O5b2daDeHGXj9PjdevvrCdqlNJgP+zzro63o4tUGmyLRRO/cOzSCkCRXaprsHPOeHu6LdHa7D1QIPON5m+AG/WdSC/z7vfXO6Ep6TDfDalvzCYTUePec77ImJGPQP/povr+Fd2A9Usoyclc55RA3+wHIRpA=
+	t=1743297425; cv=none; b=r8hT8PsexQRqQxtwlxbcmJXbUTUauP2VQ7xiENPYz6Lxw1Geybo5t8U1wM6Ut8BQdYu3iOUriqkpfS1NkmLp3+q7Qf/6YbaxnORHua3yGkrSb12qtp8SU3n6NkzlEkI5qBvWF+PXf779tSsVtjQ6q1Ug7O833CrZrgdp4zN9xAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743297266; c=relaxed/simple;
-	bh=NJjk4aEzjPTotmsuuOjOnYRwqn1RcnR0XuMkiPEmO2c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Hj3APXv1HBc0Z38FbxZCCc1yNoibQHAHl7r0p+JLjBbASsc1z5zPZui+5Nt+fiMGLvNQpmBFKN4t+b1CPOEDF5lWtsdGZOfX7I7MkLNyTVMPbPOZEqd4wPCF+N1NRVjSvQubGIkXGiL7h7PpwOmvOXllH/tRtUpfY00ioTVvSi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dRG80hsW; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743297425; c=relaxed/simple;
+	bh=JH5PhsEjqUV63zXAEJGLPDt8Og1iMsdPVSrpr74+ndc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UwgqSj5l7vqQa+GvbyeItCFMzUAMD9vH2/iwrB057mFsDykfxseyVbhcJe+EKWuWoFz6nVPkNSMu15WJG0eF9kkhJIgWnmwV2ZWggqYA1/BfrLLgmyQNaqhhbuKlj+OtYhLw/4SU4pFpxPIeW5YiASCZcdmWMm+OOYybeHkb7lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QKrV3ib0; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dRG80hsW"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52U1DHVh2615696
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 29 Mar 2025 18:13:18 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52U1DHVh2615696
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743297205;
-	bh=Yuf/0dPL8EDYIt8LEmDAzk7tX/UHLbJMePeCjp2/s9E=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=dRG80hsWRZPqYaHLspQwvAhajiyygRXgM5oM1moistjtcLvP99FwFeCcuWxQsqp78
-	 9T+sJ1PV56vwPReVUFwF83zO2bXNQzdA/dNvdEICHX+q8mtkhpBIOOCdvg86k60ull
-	 4wrPMV//HewvTULNssMWyjWFlpY+30CFjWyhaYq0c45CgR7chzDulYSOwEoKZamTvg
-	 rqgtTUM2p3ao/sj9COgajivzgHH1x6wAC5WuvS0K9WxIkgSnhxNi1/57/LQ2rRQO5U
-	 mfHeqtDL6XZ2i9rhHSdCQFo3cblzedkxTzCplnl3NiaebFEeURzo5v1oloD1rdXqNm
-	 DXcgS91FdpHyA==
-Date: Sat, 29 Mar 2025 18:13:15 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-CC: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v13_19/19=5D_x86/efi=3A_EFI_stu?=
- =?US-ASCII?Q?b_DRTM_launch_support_for_Secure_Launch?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250328230814.2210230-20-ross.philipson@oracle.com>
-References: <20250328230814.2210230-1-ross.philipson@oracle.com> <20250328230814.2210230-20-ross.philipson@oracle.com>
-Message-ID: <B41D3199-8054-4B2C-94D6-508D1DE4C8B3@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKrV3ib0"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223f4c06e9fso63442855ad.1;
+        Sat, 29 Mar 2025 18:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743297423; x=1743902223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovcY3FlJhLAlcHfJCYvAAuLol4KahlQ6od7r+edeYnQ=;
+        b=QKrV3ib09kCrHp9RxL2yCzKyodJ8gZdpDfZzPO9cB6DQ/tAbOrsrAClyev73IzDvta
+         FhkULTk96stKLBYQIdAg9GUUXrxYSekdSuzzq9PtqKihsVFNKN3g+kinMVoX/NjZdCa6
+         pOq4lpLupp2Ev+I6XOryClgPsN0ydrhFD7nYN6VY8Cqkq+iC0CMM/5+QbTMF5iMzCB4D
+         oCllrP7i58iwNYgNXzty9CiuGCK0ygDgfc4apLIghr0ya84ddKwFZkSlu2pl4Re/Pz7h
+         pZUKgVNyd2CuhvpgSVKzCuogH4kT5pAWGf9OO3it93blS5fwskuaS81e8fHnWEa08rAY
+         bZGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743297423; x=1743902223;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ovcY3FlJhLAlcHfJCYvAAuLol4KahlQ6od7r+edeYnQ=;
+        b=jPzheD+mRU+Is0/2k4RtJAvmb2nDim5nXc/eELD1NM5aVVc++XzLN3cDQZJqM6YZBM
+         9EM5UpOXgB/xQtat4TWzexbFJpqWm+4klArFka5mwIiuio4d0thOvAdUOkVQefDzeltQ
+         q1VliRSfnSCU4Zu6SI+DwMjfxqCAdGRB4LrSaUfdAP19C5dGzc3ekucPnr26O2aCGKUH
+         aKDi3QDFyO7CAuWJ3nYJroU7KeTaPSfUT98P+83THby7f2DJlEU+g0Ni8muvJCUPYmic
+         aSjieTie1eVQigDbfOMcoYdD1GeDYE9eyK/8y34naaIMRSHv/bI/mEqWeaO3CF336mKx
+         H1ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUMa4XEMN9IyF1ePW5xL7UDF3CR53/ycVfyR56omHoTUZ/t+eR/UJ6IN0W7n4z+JtMXM0jNG+km@vger.kernel.org, AJvYcCWNxRMGaeqKN1O3YzBCa2gyMG4MURBhfaQBkrZbUu7SODX3o5yGpM8kC3Zj1IM0QazTTB6OaYa920LVzyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6xLkoN+LXGhGh8UGaeU3mykVadzxbORbWbKbMCRW7UxqM2Z63
+	IsBsnbGmAZ7IKQjgIFZRnMGbUKmkja2/iVmtMQSnBH15LclvWGDw
+X-Gm-Gg: ASbGncsvkpZCr/YJlB41T07l54pe9QszF4weaxxy9yzHqhp8kOw8HdQXQFNmY6ZLfqB
+	jNePIucprduBdcXOvrBfa0u98LmIV1b0RCtBoPVRhYAPHx+KkJeiam/0PwnxaJAIqxk+PNr5U1t
+	N1PdCBjRqbtYKN52YmpqFc4om4cnEApvnxwsteptR44fnQwkeHmsqdQKisxZKkPPBVPXvdfbne9
+	8wSAmfQvMHEUbwTe2LI1kDFrYZWSyedpEndfB/ol7HHk7fhqKjG+s4il8VYCI/G9GVHPhDDgVe+
+	82zRViqYXvvTAGiy6uo7lMRrjKVZrNna18J05FYytWPrxLpOxqN4Npbko+TyOdo2BqJK3CB9WAK
+	xQU0zIZKFH9B6cIQCB3Z5glpEcFI4RfE=
+X-Google-Smtp-Source: AGHT+IExY0Kwk0LiQcVFg3q5/x15pk5JiYTn786iSOPSIwCtGaKXfANA/cjX9M8xUqFQ2DVybK8rug==
+X-Received: by 2002:a17:902:e5cd:b0:225:abd2:5e5a with SMTP id d9443c01a7336-22921c7af8dmr108875945ad.4.1743297423271;
+        Sat, 29 Mar 2025 18:17:03 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee210csm43496455ad.70.2025.03.29.18.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 18:17:02 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	u.kleine-koenig@baylibre.com,
+	lkp@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	stable@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: Re: [PATCH v2 1/2] serial: sifive: lock port in startup()/shutdown() callbacks
+Date: Sun, 30 Mar 2025 10:16:10 +0900
+Message-Id: <20250330011610.388077-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <Z-iSb0ryR-tiUCj0@42be267012b8>
+References: <Z-iSb0ryR-tiUCj0@42be267012b8>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On March 28, 2025 4:08:14 PM PDT, Ross Philipson <ross=2Ephilipson@oracle=
-=2Ecom> wrote:
->This support allows the DRTM launch to be initiated after an EFI stub
->launch of the Linux kernel is done=2E This is accomplished by providing
->a handler to jump to when a Secure Launch is in progress=2E This has to b=
-e
->called after the EFI stub does Exit Boot Services=2E
->
->Signed-off-by: Ross Philipson <ross=2Ephilipson@oracle=2Ecom>
->Reviewed-by: Ard Biesheuvel <ardb@kernel=2Eorg>
->---
-> drivers/firmware/efi/libstub/efistub=2Eh  |  8 +++
-> drivers/firmware/efi/libstub/x86-stub=2Ec | 94 +++++++++++++++++++++++++
-> 2 files changed, 102 insertions(+)
->
->diff --git a/drivers/firmware/efi/libstub/efistub=2Eh b/drivers/firmware/=
-efi/libstub/efistub=2Eh
->index d96d4494070d=2E=2Ebbbc4b327ce1 100644
->--- a/drivers/firmware/efi/libstub/efistub=2Eh
->+++ b/drivers/firmware/efi/libstub/efistub=2Eh
->@@ -135,6 +135,14 @@ void efi_set_u64_split(u64 data, u32 *lo, u32 *hi)
-> 	*hi =3D upper_32_bits(data);
-> }
->=20
->+static inline
->+void efi_set_u64_form(u32 lo, u32 hi, u64 *data)
->+{
->+	u64 upper =3D hi;
->+
->+	*data =3D lo | upper << 32;
->+}
->+
-> /*
->  * Allocation types for calls to boottime->allocate_pages=2E
->  */
->diff --git a/drivers/firmware/efi/libstub/x86-stub=2Ec b/drivers/firmware=
-/efi/libstub/x86-stub=2Ec
->index 863910e9eefc=2E=2E033133e7d953 100644
->--- a/drivers/firmware/efi/libstub/x86-stub=2Ec
->+++ b/drivers/firmware/efi/libstub/x86-stub=2Ec
->@@ -9,6 +9,8 @@
-> #include <linux/efi=2Eh>
-> #include <linux/pci=2Eh>
-> #include <linux/stddef=2Eh>
->+#include <linux/slr_table=2Eh>
->+#include <linux/slaunch=2Eh>
->=20
-> #include <asm/efi=2Eh>
-> #include <asm/e820/types=2Eh>
->@@ -798,6 +800,93 @@ static efi_status_t efi_decompress_kernel(unsigned l=
-ong *kernel_entry)
-> 	return efi_adjust_memory_range_protection(addr, kernel_text_size);
-> }
->=20
->+#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
->+static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
->+						 struct boot_params *boot_params)
->+{
->+	struct slr_entry_intel_info *txt_info;
->+	struct slr_entry_policy *policy;
->+	bool updated =3D false;
->+	int i;
->+
->+	txt_info =3D slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
->+	if (!txt_info)
->+		return false;
->+
->+	txt_info->boot_params_addr =3D (u64)boot_params;
->+
->+	policy =3D slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
->+	if (!policy)
->+		return false;
->+
->+	for (i =3D 0; i < policy->nr_entries; i++) {
->+		if (policy->policy_entries[i]=2Eentity_type =3D=3D SLR_ET_BOOT_PARAMS)=
+startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
+The register is also accessed from write() callback.
+
+If console were printing and startup()/shutdown() callback
+gets called, its access to the register could be overwritten.
+
+Add port->lock to startup()/shutdown() callbacks to make sure
+their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
+write() callback.
+
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: stable@vger.kernel.org
+---
+
+Hi,
+
+I'm sorry that I wasn't aware of how Cc stable should be done. 
+
+I added Cc for stable but please tell me if this patch should be
+resent or if there is any that is missing.
+
+Sincerely,
+Ryo Takakura
+
+---
+ drivers/tty/serial/sifive.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 5904a2d4c..054a8e630 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -563,8 +563,11 @@ static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
+ static int sifive_serial_startup(struct uart_port *port)
  {
->+			policy->policy_entries[i]=2Eentity =3D (u64)boot_params;
->+			updated =3D true;
->+			break;
->+		}
->+	}
->+
->+	/*
->+	 * If this is a PE entry into EFI stub the mocked up boot params will
->+	 * be missing some of the setup header data needed for the second stage
->+	 * of the Secure Launch boot=2E
->+	 */
->+	if (image) {
->+		struct setup_header *hdr =3D (struct setup_header *)((u8 *)image->imag=
-e_base +
->+					    offsetof(struct boot_params, hdr));
->+		u64 cmdline_ptr;
->+
->+		boot_params->hdr=2Esetup_sects =3D hdr->setup_sects;
->+		boot_params->hdr=2Esyssize =3D hdr->syssize;
->+		boot_params->hdr=2Eversion =3D hdr->version;
->+		boot_params->hdr=2Eloadflags =3D hdr->loadflags;
->+		boot_params->hdr=2Ekernel_alignment =3D hdr->kernel_alignment;
->+		boot_params->hdr=2Emin_alignment =3D hdr->min_alignment;
->+		boot_params->hdr=2Exloadflags =3D hdr->xloadflags;
->+		boot_params->hdr=2Einit_size =3D hdr->init_size;
->+		boot_params->hdr=2Ekernel_info_offset =3D hdr->kernel_info_offset;
->+		efi_set_u64_form(boot_params->hdr=2Ecmd_line_ptr, boot_params->ext_cmd=
-_line_ptr,
->+				 &cmdline_ptr);
->+		boot_params->hdr=2Ecmdline_size =3D strlen((const char *)cmdline_ptr);
->+	}
->+
->+	return updated;
->+}
->+
->+static void efi_secure_launch(struct boot_params *boot_params)
->+{
->+	struct slr_entry_dl_info *dlinfo;
->+	efi_guid_t guid =3D SLR_TABLE_GUID;
->+	dl_handler_func handler_callback;
->+	struct slr_table *slrt;
->+
->+	/*
->+	 * The presence of this table indicated a Secure Launch
->+	 * is being requested=2E
->+	 */
->+	slrt =3D (struct slr_table *)get_efi_config_table(guid);
->+	if (!slrt || slrt->magic !=3D SLR_TABLE_MAGIC)
->+		return;
->+
->+	/*
->+	 * Since the EFI stub library creates its own boot_params on entry, the
->+	 * SLRT and TXT heap have to be updated with this version=2E
->+	 */
->+	if (!efi_secure_launch_update_boot_params(slrt, boot_params))
->+		return;
->+
->+	/* Jump through DL stub to initiate Secure Launch */
->+	dlinfo =3D slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
->+
->+	handler_callback =3D (dl_handler_func)dlinfo->dl_handler;
->+
->+	handler_callback(&dlinfo->bl_context);
->+
->+	unreachable();
->+}
->+#endif
->+
-> static void __noreturn enter_kernel(unsigned long kernel_addr,
-> 				    struct boot_params *boot_params)
-> {
->@@ -925,6 +1014,11 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
-> 		goto fail;
-> 	}
->=20
->+#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
->+	/* If a Secure Launch is in progress, this never returns */
->+	efi_secure_launch(boot_params);
->+#endif
->+
-> 	/*
-> 	 * Call the SEV init code while still running with the firmware's
-> 	 * GDT/IDT, so #VC exceptions will be handled by EFI=2E
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_enable_rxwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ 
+ 	return 0;
+ }
+@@ -572,9 +575,12 @@ static int sifive_serial_startup(struct uart_port *port)
+ static void sifive_serial_shutdown(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_disable_rxwm(ssp);
+ 	__ssp_disable_txwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ }
+ 
+ /**
+-- 
+2.34.1
 
-efi_set_u64_form()?
-
-What the heck is that? If it actually involves two u32 packed into a 64 fi=
-eld, why not simply do two stores?
