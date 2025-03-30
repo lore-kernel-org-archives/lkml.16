@@ -1,85 +1,87 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8498A17CA1B
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460E13EA83
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743357392; cv=none; b=nyjK5hSEjSkbKXqWdDsKjhljg++7dD58WIbAl8o4D4C53wcC4lvfQXUwmB4r8Xtr6BBB5P1g7F4mM28CFfTDBJI0zCwqmF4cG4GLbzue2O2kGJCQ6kxfZ2Q5MSqhakWVUDFr7Qbg5K+C1YysKn1VzRVNa0aweUt+qH+iRZ7Hc4o=
+	t=1743357444; cv=none; b=niX9ZUSkwjnBhgMrfWQqDeKdtebdHGN5XEo3pwZKmks5JfRtK97SmNiSjLmVr2o9KTMXEeUB2HZxcJCKN0pP9cV1gZBsMg4DIOQB8lf/xHEH0RgBOrxNFqI9Q5XZx+fZ1L7Fjw5uN1MUfUbx/cRTlr5X40acltrUA2puabJwUDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743357392; c=relaxed/simple;
-	bh=M7YcCO2/Jd6OWqTReHmKh8CPEQ89KUSFbclKV7W0TEo=;
+	s=arc-20240116; t=1743357444; c=relaxed/simple;
+	bh=EtUorDddqFNcBwRwGkKlfqCbzOMDWMWH2CLtn81bciU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uf63bkN1PYaq2E0NrrXRii63FRKBO48OmpL+DP3/nPujJ4JXUHtmradNHj7aIhjsK6VLqfVFQylaNZekekLhTwVzgANuTg87pm7DHEicKffE9Rhk39p5LKO8Zgu0cW1p/Nh3Putjp5mwC1NWZym05b+UpnymqvTEtmZGC06HA8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=e75VYa//; arc=none smtp.client-ip=205.220.168.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=gIF8pgpx2woYs7LI3R7JPRfeQRuiCsDAdJ867vdjE9Jnm3rNGJSuBT3mUycQcnYcgX/1etBN24cuXWTY1/QRxKhSvp1BP78T987Uq+B2tDVC3JaZNL+l5go5jgRsafi+QXfCg48lGYiENQcRP9af6mfWz2aOKXmSopw1crPs3O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YKeMWYdB; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="e75VYa//"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52U80EKA018208
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:56:29 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YKeMWYdB"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UHgPS3002158
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:57:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Lz8cPs1jv9yYaNYKFo1LAT2i
-	8NFG1hmV95XiMt5jeXQ=; b=e75VYa//hrOje19C0Mz0/K39wmVEMpMO95Nzp7z7
-	1F2XnyGv6DNSg5Tl9bHgbnl/hj2KvBAT7RnNTtlBmIrN16Hq4YMVXZw/5NDgldL2
-	SGanrfylCQ679LHwwRgEdIkovyfJ1iErzxt7lJMsVvHMtMGck0tcjIsoMG7BfZTz
-	qAM8XpNYhLdOoQXg1b/yvGH0+GJiRY12UXEHWBOOIiy7tKjt1xJu7Fgli7R39dHg
-	6dFeAQxgCeRZiljucaJhme53BE3KiEL+EGL1utUFupbLSrrfP+NBXHEEpocYQ8l8
-	SHkcTsPau2O4Kle+gIxmxsqNiXklZDjgNdMA3SMCAzBtmg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhjser-1
+	:references:subject:to; s=qcppdkim1; bh=K48pr407NmdXjNjoX6mg329x
+	m7rtHyYJTjFsde4INrw=; b=YKeMWYdB5WiByHomr3HUqLzPb0mauf8fzjxrgIas
+	AgZ5rhq+gm0EyGwUlqiFWHV45RKMGb4i3VJsjOon6LzmluL+y9YUGjO0xw7PpjBM
+	b81X7FpA2TDHsoQcF9lqx0ZTAX23dprZYYcKs9Lz7GT1JIsk8NsAqrE7lmTd2Ofg
+	N5JJ3wgpljpARCwWhPD8BF9Myum1HzZyve3AioF9cDpP9w47hZvJYgwX9SixJRFD
+	R9U3MGBwKJm+Lx3/wLbHQRkOMkuOhRN0GaEMkxpYa7ZxbcJs32ZAnM7XDdN0n2mB
+	r4Mq9/HwCOlwdewUgLWC6byskwKFFSVmLllxIMRIztaPng==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p86kjnfk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:56:29 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so135467885a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:56:29 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:57:21 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e91b1ddb51so65473456d6.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:57:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743357388; x=1743962188;
+        d=1e100.net; s=20230601; t=1743357440; x=1743962240;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lz8cPs1jv9yYaNYKFo1LAT2i8NFG1hmV95XiMt5jeXQ=;
-        b=uJDtVp6S1TgYLrMdltxPVC+Gjt5i2RubFDMueqB8SuX/NJEYOuYs2gK0EoEZA69pW+
-         qh998+LzpVMei6qOYbQ8grH+bFCO/EpmS6S5ngc4upG2+YW+CiNN5ki6xsor+z4wQS28
-         nk1aWvKJg9RoMnoSvsubJj4ZnoOHGimpO5qrMYef58UFdTeXh1wrCVVLb+CtdcYl+TxD
-         v834Hr/uopmJgkj7fVOwfYt4e71cMQmVO3oPTmJxrulrp6Z0qs7WUezAT1vnMq144krq
-         X1VFuR641x9+7pd7sovOS2lhc1q7SQoOpMviuS8MPtw5JPbnAafKZUWG36QFVwjavhqB
-         YfsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKfCABC/EyXyHz81avbZq+z+j/is9cfAdntIpcuFNhICAdAvMTw4EAG4hr+7qdLiAqxtkUVwfllKCjQP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuaJVtOvhPd9QS7ooC5t/+xVhEpV3VyLMjok2YIR8J0Ot0AyQr
-	5FRRr5OWVdzlK+D41babcOZd0OkegBywXdh5sUlN1k/5ymbvxq6AlSBFeD0yID+881Qgrr9Vrxn
-	ViVvV6RApYxxNoDBYyzW/oYDWC28FJQn+eqJryoM+83Qv1puEIITDL+a6scdrMXs=
-X-Gm-Gg: ASbGncu8UMVfH5+dvdnlOxGCjKkLgPqZdK0ePcoBUjZK+WQ4Y0x//jYBReT13cNY9JE
-	Q21TZjOXtUYEpXqhLaEKVN6IvTGXd3d4t+fDd4X+Aqo8Ah/KF7mAkVU2DJBmWckDGzuYaOQg20c
-	DAYPA7yNyDe1RyDsZFMLC8msg1b3xwU8vyccAYErZlIstCYsAxO6aGSlkqniSidyaN+V2lvgQ6U
-	7hRx9FvEfGDPahRaTbW94H+H993vyL+KCaCTuB4XZKu7u0KDazLcwJwifxIyp46SLdlpeyuSnUw
-	thycphOr6Sdoe79QGnzM9iLVQXWaXqqxTVO6MIKjfLDGWPxHMI44ZAPK1xl9Yygcs9ccoIp07gK
-	sIQ8=
-X-Received: by 2002:a05:620a:29d0:b0:7c5:5a97:f784 with SMTP id af79cd13be357-7c690730c58mr798692685a.33.1743357388338;
-        Sun, 30 Mar 2025 10:56:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHV8w3BiW0koPwvLrrFAy1gyiPQeqzm5vgh0g49Qe+2/7yY+I33AnKCPyAKUW1tUcda2ovAEg==
-X-Received: by 2002:a05:620a:29d0:b0:7c5:5a97:f784 with SMTP id af79cd13be357-7c690730c58mr798689985a.33.1743357388038;
-        Sun, 30 Mar 2025 10:56:28 -0700 (PDT)
+        bh=K48pr407NmdXjNjoX6mg329xm7rtHyYJTjFsde4INrw=;
+        b=BNbj0dDqg3FEUcynHWHHFdB4Uj7xE1JSaSRKSD9+tGFYAh2CKFHlmSa3QhL0rkbTQj
+         Ym111v0AKzfCXGQ1/vn6/OIwdyOoiWtPqBsN8YYjJOrZX+qCoycqMuAp/eMWHKecJAs2
+         v2HNfEbZB+YYTF2qKE++OjCl23A/ibVtjFzZ98c6ayiVatv4oOpWGumZ4G7yYKJHrSpp
+         gpvXTcsQR0Baeb4JakVW0LQPQHvglnqMU/HL4zgb94XyGQ+B0/zozuoGOuRlc44CLGiq
+         kVe4vmM7MD0L3doAEJ2La0m6NaOVRQtuNU7pEE5nsxR0v4LqqIvDL3QYo4i/b56FaAKd
+         3r2A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7nbYRQR3w1nF+v2nwp0LjtvhuZu/RZyfQ+/W1jVJQ2TBtbW5pIWHkIqVgz8dgFOcrH3kMF+nrv3gh7XQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVqqARx7EfklVGASxCysY+/mIF1dltNqcr5IsN+VOOgMJ2217M
+	tX13lge1QTLoAjDJGVP/zzcDGosn+33eAxD4qYryi/YFuhRCLc5sCaHrc3YRE2T7nLaK+VjMm+Q
+	fa2ko3n/wL0nmhfjRp56vdfX9Sv+HDym0DvwTeeCiGbMjsNEae7sytJbaeKsNvv8=
+X-Gm-Gg: ASbGncuLgbMJ8gLSL1NCD/2yVj0nJgwSQxuvNFzUAvkjOIMdZ530KmE8mJo0uaUTZZs
+	sZ5naLyf2++p6MGQ1/l8nymxh8HtfGGSSVN1QaS3tNTjjdzp7T6mPDsCbrkOGOijmjgO+pXbSLS
+	L+0iyWw6+x5weaUUCa3UTExdA2/HfI1mBD2RVC4nE9nCfKcYPgAxSAY8UtFVYwIbfNe7RYpaThO
+	VS17GUU4g1vCoAU2FHwbsqHdIyz03HToTDsX2gAKwVd9k5H6YS7HjxmB02ogOqPHTjPsrBx9Y9G
+	WKSSYui0bw3UVQw2jeayVTN1uRFzqH8MOIziOh5n2HU3IQZjcXqJjm9cFTNiiZshgm5gLTFAqhL
+	0Lws=
+X-Received: by 2002:a05:6214:d47:b0:6e8:f464:c9a0 with SMTP id 6a1803df08f44-6eed5fd86a1mr108549376d6.13.1743357440626;
+        Sun, 30 Mar 2025 10:57:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVvlmwx6EzG97d8Z/5FF9ujKK/PzZ2pMWAIcuSk6n/X4l9c0W6BiEXwN6oDfaMUgX+SiJCTQ==
+X-Received: by 2002:a05:6214:d47:b0:6e8:f464:c9a0 with SMTP id 6a1803df08f44-6eed5fd86a1mr108549096d6.13.1743357440340;
+        Sun, 30 Mar 2025 10:57:20 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2acf72dsm11498061fa.48.2025.03.30.10.56.24
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2b4c7a4sm11820341fa.71.2025.03.30.10.57.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 10:56:25 -0700 (PDT)
-Date: Sun, 30 Mar 2025 20:56:23 +0300
+        Sun, 30 Mar 2025 10:57:18 -0700 (PDT)
+Date: Sun, 30 Mar 2025 20:57:15 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Christopher Obbard <christopher.obbard@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Rui Miguel Silva <rui.silva@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v5] drm/dp: clamp PWM bit count to advertised MIN and MAX
- capabilities
-Message-ID: <f2odvmbhsfmkrkzada2a7qdjavomt2cjji7mbwibzlhxiz35ai@2qxnfb44eb2r>
-References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v5-1-25083d9732fc@linaro.org>
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] drm/bridge: sii902x: Set bridge type
+Message-ID: <aectka7gnuydp6rvr3gz5ivx2bz3dpkuuatzwryewng5b7nflf@cpvtiddfrzz5>
+References: <20250326101124.4031874-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,53 +90,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v5-1-25083d9732fc@linaro.org>
-X-Proofpoint-GUID: kh6yrvAgk2b7D-RBC6ftJuvU99oXR64u
-X-Proofpoint-ORIG-GUID: kh6yrvAgk2b7D-RBC6ftJuvU99oXR64u
-X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67e985cd cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=YrjviDGP2Rj_hCM7jl4A:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=cvBusfyB2V15izCimMoJ:22
+In-Reply-To: <20250326101124.4031874-1-alexander.stein@ew.tq-group.com>
+X-Authority-Analysis: v=2.4 cv=W8g4VQWk c=1 sm=1 tr=0 ts=67e98601 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=8f9FM25-AAAA:8 a=EUspDBNiAAAA:8 a=-avToEXnEOD4PdG-UZUA:9 a=CjuIK1q_8ugA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=uSNRK0Bqq4PXrUp6LDpb:22
+X-Proofpoint-GUID: bX0pdIfUXbrGRC85YPdUNjLJn0Fx_rwm
+X-Proofpoint-ORIG-GUID: bX0pdIfUXbrGRC85YPdUNjLJn0Fx_rwm
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ mlxlogscore=917 mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0
+ phishscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
  authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502280000 definitions=main-2503300125
 
-On Sun, Mar 30, 2025 at 06:49:40PM +0100, Christopher Obbard wrote:
-> According to the eDP specification (VESA Embedded DisplayPort Standard
-> v1.4b, Section 3.3.10.2), if the value of DP_EDP_PWMGEN_BIT_COUNT is
-> less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, the sink is required to use
-> the MIN value as the effective PWM bit count.
+On Wed, Mar 26, 2025 at 11:11:23AM +0100, Alexander Stein wrote:
+> This is a RGB to HDMI bridge, so set the bridge type accordingly.
 > 
-> This commit updates the logic to clamp the reported
-> DP_EDP_PWMGEN_BIT_COUNT to the range defined by
-> DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN and _CAP_MAX. As part of this change,
-> the behavior is modified such that reading _CAP_MIN and _CAP_MAX
-> registers is now required to succeed. Before reading these registers
-> was optional.
-
-Describe why, not what. Something like 'is now required to succeed,
-otherwise bl->max value can end up being not set, although
-drm_edp_backlight_probe_max() returned success'.
-
-LGTM otherwise.
-
-> This ensures correct handling of eDP panels that report a zero PWM
-> bit count but still provide valid non-zero MIN and MAX capability
-> values. Without this clamping, brightness values may be interpreted
-> incorrectly, leading to a dim or non-functional backlight.
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  drivers/gpu/drm/bridge/sii902x.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> For example, the Samsung ATNA40YK20 OLED panel used in the Lenovo
-> ThinkPad T14s Gen6 (Snapdragon) reports a PWM bit count of 0, but
-> supports AUX backlight control and declares a valid 11-bit range.
-> Clamping ensures brightness scaling works as intended on such panels.
-> 
-> Co-developed-by: Rui Miguel Silva <rui.silva@linaro.org>
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
 With best wishes
