@@ -1,246 +1,302 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE6C1AA1C9
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D72C1A9B3F
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743329731; cv=none; b=oFYRtS5byglQJMVm9tsyKpiS4SgQjUfXn+R/uYjSuLRxmIkij9ScesM+T10O33SJin7TZDYhM+lq6WbNSmmhZbLP8d9vdXGgpSUPpoXygAeUx4PUlAYtXRksLF+u3PFEV+Va2LNALTnS+y3hmPDIWLgSvmSMMbLFSmLNdInSNsU=
+	t=1743329834; cv=none; b=o2sgR6J0mg615onaNENG09uFEfUDVYl/81B+cC5JJkqFT8L8iwwbHikefiGcIjzNqYoAtKEt/ZbGDXlmNt2O4gCaL7JHWBz19WcdQI+v7Lu3+77nFYmFqWtKX/soEWGZ7UAXDEz/X4eKxKqBgdN3cLmOPsTbuCfzXQi1OkK9gTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743329731; c=relaxed/simple;
-	bh=99wkWhy/lCj+tv6LO2+FpffBuhc7Ut3csLcyTV8mNB8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=syq+D1W4vuMnQOfZ+och/OdgYbEFkyYw8+RZyDGyQtIsAvzILxPJ6OS4oM6aZIz31Q1EaEofppVkNQXcd8CBrAxz/aNIuP4w0pV97JHYHgn7H8deQUUFiiFpnFKExzZoYJ08AO30Ga/+jp2B0sjFi0jv/suUJ6+QJeZv79bKP1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d451ad5b2dso50482255ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 03:15:29 -0700 (PDT)
+	s=arc-20240116; t=1743329834; c=relaxed/simple;
+	bh=QUJBcVTblvI2EP5xQeDaKtT9t49vv3F0LfFpOmYL5zQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oo7sgE585KtCUHgEH15Krld4FacCug4otqDhx30k8zXZD9FQ7MLT8r6mVPjv8EMKfsoexLuwyftouddTXwejWx1HJgZYLZkXMClMtGWpdFI6WM5lcQU9eOGdr8jlR3+TcelC995hNuVmOhZ7SDs4zEtrV6tHZCpN/V6QdrhI/MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=tometzki.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=XZOXdUhw; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tometzki.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="XZOXdUhw"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523f1b31cf8so1328593e0c.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 03:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscv-rocks.de; s=google; t=1743329830; x=1743934630; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y4hmIlzKnM4x1XSGz8oqM3l2exfPjdhfaEWlyxe3yT8=;
+        b=XZOXdUhwRYq8sYjLxh37zoavhGvWcSfwKKj4SWm/SRrco2AaLtji/IBpBHRjAAkaFJ
+         cqVLS1nNmkWCzGH/pR5TbESItsqOcWD+v/Kn5l+KavDIjIu3QWVWqmDl5HpmdWEr6eae
+         kbSLGqkfsQqTKZATznqB65djsUclvdTlp9p6GZAsprcs3YppTbiUPpLvjzc7rWeQPaW2
+         YX954uDJl8hq/VyfDkfPO4Uy9M8h01UKfyiXCS50UM3ftwCQGMojFpOxqYI7keR09T2I
+         CChEHqINjhAvme3SBrTQMHq3oRqeCFS26vpXEWFSmdnC/fWZ0g+pb5H9eR1Kgsq3BGFj
+         gBAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743329728; x=1743934528;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aRIumUmVALlisx7HIVaILs9tTAYP+kvXPJggT6KTe0s=;
-        b=SXG8+FmgbF3My/VlVutRFucqlujpu8yCLGO+5i2pgGLF06Vuh2WxYhgWYpVzB1MOu+
-         3XDZr4/c9vWJOUlNoOGqjQBbKtigo/3T6iO87FFrh2x/wIKsVfsyiR5mN4lfmkl4zgvk
-         ZFgAicb1ZOf7uKy3vy+edC6VbK5GFVxH3NcbECHZrGzX7IIsaDKgx5EHS9WApaYCLNxJ
-         JqO6+8HsP6c9ILSWagxNhD14yfLO5lWiua2JaElclQfK0emOzWEpL6EoyJzXs+lixzEg
-         +lv9jJJj+HAZbN8XY8UfHnxr6zv3Z/oRASGIjhWMaj4HDIZDeIVTQLTS10DYc/pXk0WX
-         y6Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiHAmPKicKa8curkbyWusTw4fw+whrqGQLe7HgiqtcyON5oTu0f6C7p6Pfy4jayjsRgw9FTbRrA0cCKxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqaDw+rhdp0xuGWRzbnLajGG9WqXMy8m/+wR25bnZNg/iJ1TyI
-	1r796v8vU1bLYiqv7piPMtXvcVDEQS9nSMd5ovnsQE05bPeS3CyEd0dSAYlsI0BnvTEpS5ZQ3Ac
-	N8TYr5Qk1Bh0JdJ9oLO4m4GwZSWcHoCj0Drt7N8hwXYspGdHHtI/Pyz4=
-X-Google-Smtp-Source: AGHT+IECRGMTHDljt+iYwo556tAb9d1HTBmp0TKRaLg8/NmttQiOqh9bw+A9IV5PX3xA+yuzvvLKt674te7Us9JR9Ls3QnAoZrmM
+        d=1e100.net; s=20230601; t=1743329830; x=1743934630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y4hmIlzKnM4x1XSGz8oqM3l2exfPjdhfaEWlyxe3yT8=;
+        b=q3GZzjNAJ1Hd67GIfc9cGf2T+cifz5gTHLdDO8AifXTtoIAH6gwrIm7fDU0d2Saw2f
+         ROd6NOuYo8ZOxLgrNhGpWql6YtWRsUFtulMEv9zLbvzzVtBh4efNU4wjhdk6qG3LeXit
+         t/V7yeFcSx8Ez4p2W3ZB1SG+nmKp9xV87wnEnMVoa16bpL1dbBu+D87s3wOUd/shW8KW
+         FPiUW4vmg7Yjd0V1INE7mZxCt+iGzLl53GmQj6X2cVF/3QYYoQrpLsaHTmjcNvHLZI4O
+         fYZIldzPtojy3d9y469xV1mm+iIN7bNpcwDOsEbwaiMj7HE6HwYaP4QZEbybcUJtWW++
+         JFtg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+aLPiXYo0HpeZXhWQc+J5dJmfkDXovR3pMjhTEZ5/vmS/oN/xRaO53iHZo+WjpSo6VygY7N1hPqiunaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2tU6BBsMlF/dS4nFq/fuA8/EjJv1aXGhn8fhSu0cP/QzeDuie
+	E8u+toqVFE5UQUQXxwaWdmeRVx2aCOW6crSjc4OVL9yEOSkGqUilmxipZpcJ4PMxsyrqMV5VWs3
+	vbVRjPYjd3Y767P4a2JiJGgy9zo11nFEFlZlEaw==
+X-Gm-Gg: ASbGncsjx0ZhFFSB1tEV6jVJaOaK5eh2Xw5lUWbNFR8B5Rd1Funlx67XxKc6XgjBZSE
+	yaYNTpmskbcbSNjK1NjIavsR0mxOtmuqI/XfuzNbJBVjVOUfextkHR2lu2EMbVZYe6f7gLZWdR4
+	XllqW4u4NocssajRL4frVGPQhHinUZGXilcBuol+OVbjVVYXq4jh+U1ZD6hDeug7w+VgRZ
+X-Google-Smtp-Source: AGHT+IF7wmYD0v2wV7AArUPg1C3DKP9EzijeJLu59el+RlTsKkFNaJOOPiOz4nWPOd+gTE3gTqA2Dixs7Pt1qhAdbNg=
+X-Received: by 2002:a05:6102:f0b:b0:4c1:91da:dac1 with SMTP id
+ ada2fe7eead31-4c6d386f3aamr2752325137.6.1743329829959; Sun, 30 Mar 2025
+ 03:17:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4401:20b0:3d5:890b:d9e1 with SMTP id
- e9e14a558f8ab-3d5e08bced1mr34573115ab.1.1743329728138; Sun, 30 Mar 2025
- 03:15:28 -0700 (PDT)
-Date: Sun, 30 Mar 2025 03:15:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e919c0.050a0220.1547ec.00a1.GAE@google.com>
-Subject: [syzbot] [pci?] upstream test error: general protection fault in msix_prepare_msi_desc
-From: syzbot <syzbot+8423775fd52d4cc7e5c9@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <CAL=B37kdL1orSQZD2A3skDOevRXBzF__cJJgY_GFh9LZO3FMsw@mail.gmail.com>
+ <D8TDEP8ZEYE6.24AVWSGXURB4I@gmail.com> <CAL=B37ko7Zyr6gJxYTvsFKsfXKNTPw80UvjNgbQ+B6EZ9GGfaw@mail.gmail.com>
+ <D8TEDS91VAGU.1UVZWWWWMRRNG@gmail.com>
+In-Reply-To: <D8TEDS91VAGU.1UVZWWWWMRRNG@gmail.com>
+From: Damian Tometzki <damian@riscv-rocks.de>
+Date: Sun, 30 Mar 2025 12:16:59 +0200
+X-Gm-Features: AQ5f1JrNKC-LSmi8WC38UPS2EIku1txYddu_ejaayvw7kQwVfmBJzlEFsln7S0A
+Message-ID: <CAL=B37nDNmkNo46tSfH-B7a+Uhex2LqhkbhJ7pjU9zrv+j3wug@mail.gmail.com>
+Subject: Re: Kernel Null Pointer Dereference on Fedora with thinkpad_acpi
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Kurt,
+hello together,
 
-syzbot found the following issue on:
+I successfully tested the patch on my ThinkPad X1. System boots
+normally without errors.
 
-HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kernel..=
-.
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D12bf5804580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4444a7da3861fcf=
-5
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D8423775fd52d4cc7e=
-5c9
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
-ian) 2.40
+Tested-by: Damian Tometzki <damian@riscv-rocks.de>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9113c1eac62e/disk-=
-f6e0150b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f1dd0f2f5338/vmlinux-=
-f6e0150b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b275479ad610/bzI=
-mage-f6e0150b.xz
+Best regards
+Damian
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
+On Sun, Mar 30, 2025 at 8:47=E2=80=AFAM Kurt Borja <kuurtb@gmail.com> wrote=
 :
-Reported-by: syzbot+8423775fd52d4cc7e5c9@syzkaller.appspotmail.com
-
-ntfs3: Enabled Linux POSIX ACLs support
-ntfs3: Read-only LZX/Xpress compression included
-efs: 1.0a - http://aeschi.ch.eu.org/efs/
-jffs2: version 2.2. (NAND) (SUMMARY)  =C2=A9 2001-2006 Red Hat, Inc.
-romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
-QNX4 filesystem 0.2.3 registered.
-qnx6: QNX6 filesystem 1.0.0 registered.
-fuse: init (API version 7.42)
-orangefs_debugfs_init: called with debug mask: :none: :0:
-orangefs_init: module version upstream loaded
-JFS: nTxBlock =3D 8192, nTxLock =3D 65536
-SGI XFS with ACLs, security attributes, realtime, quota, no debug enabled
-9p: Installing v9fs 9p2000 file system support
-NILFS version 2 loaded
-befs: version: 0.9.3
-ocfs2: Registered cluster interface o2cb
-ocfs2: Registered cluster interface user
-OCFS2 User DLM kernel interface loaded
-gfs2: GFS2 installed
-ceph: loaded (mds proto 32)
-NET: Registered PF_ALG protocol family
-xor: automatically using best checksumming function   avx      =20
-async_tx: api initialized (async)
-Key type asymmetric registered
-Asymmetric key parser 'x509' registered
-Asymmetric key parser 'pkcs8' registered
-Key type pkcs7_test registered
-Block layer SCSI generic (bsg) driver version 0.4 loaded (major 238)
-io scheduler mq-deadline registered
-io scheduler kyber registered
-io scheduler bfq registered
-input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-ACPI: button: Power Button [PWRF]
-input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-ACPI: button: Sleep Button [SLPF]
-ioatdma: Intel(R) QuickData Technology Driver 5.00
-ACPI: \_SB_.LNKC: Enabled at IRQ 11
-virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-ACPI: \_SB_.LNKD: Enabled at IRQ 10
-virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-ACPI: \_SB_.LNKB: Enabled at IRQ 10
-virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
-virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
-N_HDLC line discipline registered with maxframe=3D4096
-Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-00:03: ttyS0 at I/O 0x3f8 (irq =3D 4, base_baud =3D 115200) is a 16550A
-00:04: ttyS1 at I/O 0x2f8 (irq =3D 3, base_baud =3D 115200) is a 16550A
-00:05: ttyS2 at I/O 0x3e8 (irq =3D 6, base_baud =3D 115200) is a 16550A
-00:06: ttyS3 at I/O 0x2e8 (irq =3D 7, base_baud =3D 115200) is a 16550A
-Non-volatile memory driver v1.3
-Oops: general protection fault, probably for non-canonical address 0xdffffc=
-0000000000: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-syzkaller-03565-gf6=
-e0150b2003 #0 PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 02/12/2025
-RIP: 0010:msix_prepare_msi_desc+0x18a/0x310 drivers/pci/msi/msi.c:615
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 7f 01 00 00 4c 89 =
-ea 4c 89 63 60 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c=
-0 74 08 3c 03 0f 8e fd 00 00 00 41 8b 6d 00 31 ff
-RSP: 0000:ffffc900000674f8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90000067588 RCX: ffffffff8501ef7f
-RDX: 0000000000000000 RSI: ffffffff8501eb05 RDI: ffffc900000675e8
-RBP: ffff888021efe000 R08: 0000000000000004 R09: 0000000000000000
-R10: 0000000000000002 R11: 0000000000002ba3 R12: ffffc9000008e008
-R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888124e5a000(0000) knlGS:000000000000000=
+>
+> On Sun Mar 30, 2025 at 3:28 AM -03, Damian Tometzki wrote:
+> > On Sun, Mar 30, 2025 at 8:01=E2=80=AFAM Kurt Borja <kuurtb@gmail.com> w=
+rote:
+> >>
+> >> Hi Damian,
+> >>
+> >> On Sun Mar 30, 2025 at 2:19 AM -03, Damian Tometzki wrote:
+> >> > Hi together,
+> >> >
+> >> > I encountered a kernel crash on a Lenovo ThinkPad (BIOS N32ET95W 1.7=
+1)
+> >> > running Fedora with kernel 6.15 (merge window) 7f2ff7b62617. The iss=
+ue
+> >> > is a NULL pointer dereference during initialization of the
+> >> > thinkpad_acpi module. The crash occurs in kobject_get() while handli=
+ng
+> >> > RFKill device registration (tpacpi_new_rfkill =E2=86=92 rfkill_regis=
+ter =E2=86=92
+> >> > device_add).
+> >> > With kernel 6.14 system boot=C2=B4s fine
+> >> >
+> >> > Let me know if further logs or debugging info are needed. Below the =
+short dump
+> >> >
+> >> > Mar 29 17:43:16.173712 fedora kernel: thinkpad_acpi: Disabling
+> >> > thinkpad-acpi brightness events by default...
+> >> > Mar 29 17:43:16.175636 fedora kernel: ACPI: bus type thunderbolt reg=
+istered
+> >> > Mar 29 17:43:16.179626 fedora kernel: BUG: kernel NULL pointer
+> >> > dereference, address: 000000000000004c
+> >> > Mar 29 17:43:16.179689 fedora kernel: #PF: supervisor read access in=
+ kernel mode
+> >> > Mar 29 17:43:16.180235 fedora kernel: #PF: error_code(0x0000) - not-=
+present page
+> >> > Mar 29 17:43:16.180290 fedora kernel: PGD 0 P4D 0
+> >> > Mar 29 17:43:16.180325 fedora kernel: Oops: Oops: 0000 [#1] SMP NOPT=
+I
+> >> > Mar 29 17:43:16.180340 fedora kernel: CPU: 6 UID: 0 PID: 1015 Comm:
+> >> > (udev-worker) Not tainted 6.14.0 #355 PREEMPT(lazy)
+> >> > Mar 29 17:43:16.180449 fedora kernel: Hardware name: LENOVO
+> >> > 20XWCTO1WW/20XWCTO1WW, BIOS N32ET95W (1.71 ) 10/24/2024
+> >> > Mar 29 17:43:16.180469 fedora kernel: RIP: 0010:kobject_get+0xd/0x70
+> >> > Mar 29 17:43:16.180491 fedora kernel: Code: 66 66 2e 0f 1f 84 00 00 =
+00
+> >> > 00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e
+> >> > fa 53 48 89 fb 48 85 ff 74 1f <f6> 47 3c 01 74 22 48 8d 7b 38 b8 01
+> >> > 00>
+> >> > Mar 29 17:43:16.180506 fedora kernel: RSP: 0018:ffffd3d200b5f750
+> >> > EFLAGS: 00010202
+> >> > Mar 29 17:43:16.180523 fedora kernel: RAX: ffff8ebbc10fac00 RBX:
+> >> > 0000000000000010 RCX: 0000000000000000
+> >> > Mar 29 17:43:16.180534 fedora kernel: RDX: 0000000000000000 RSI:
+> >> > ffffffff9aebafa0 RDI: 0000000000000010
+> >> > Mar 29 17:43:16.180547 fedora kernel: RBP: ffff8ebbd49f4b88 R08:
+> >> > 0000000000000100 R09: 0000000000000000
+> >> > Mar 29 17:43:16.180559 fedora kernel: R10: ffffd3d200b5f760 R11:
+> >> > 0000000000000008 R12: 0000000000000010
+> >> > Mar 29 17:43:16.180573 fedora kernel: R13: ffff8ebbc8b12388 R14:
+> >> > ffffffffc14a7500 R15: 0000000000000000
+> >> > Mar 29 17:43:16.180587 fedora kernel: FS:  00007f1aa7c15040(0000)
+> >> > GS:ffff8ebf72546000(0000) knlGS:0000000000000000
+> >> > Mar 29 17:43:16.180606 fedora kernel: CS:  0010 DS: 0000 ES: 0000 CR=
+0:
+> >> > 0000000080050033
+> >> > Mar 29 17:43:16.180630 fedora kernel: CR2: 000000000000004c CR3:
+> >> > 0000000113948001 CR4: 0000000000f70ef0
+> >> > Mar 29 17:43:16.180642 fedora kernel: PKRU: 55555554
+> >> > Mar 29 17:43:16.180654 fedora kernel: Call Trace:
+> >> > Mar 29 17:43:16.180664 fedora kernel:  <TASK>
+> >> > Mar 29 17:43:16.180676 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x=
+2f0
+> >> > Mar 29 17:43:16.180688 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x=
+2f0
+> >> > Mar 29 17:43:16.180704 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x=
+2f0
+> >> > Mar 29 17:43:16.180712 fedora kernel:  ? device_add+0x8f/0x6e0
+> >> > Mar 29 17:43:16.180724 fedora kernel:  ? __die_body.cold+0x8/0x12
+> >> > Mar 29 17:43:16.180739 fedora kernel:  ? page_fault_oops+0x146/0x180
+> >> > Mar 29 17:43:16.180748 fedora kernel:  ? exc_page_fault+0x7e/0x1a0
+> >> > Mar 29 17:43:16.180758 fedora kernel:  ? asm_exc_page_fault+0x26/0x3=
 0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000df82000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- msix_setup_msi_descs+0x19c/0x260 drivers/pci/msi/msi.c:639
- __msix_setup_interrupts drivers/pci/msi/msi.c:672 [inline]
- msix_setup_interrupts drivers/pci/msi/msi.c:701 [inline]
- msix_capability_init drivers/pci/msi/msi.c:743 [inline]
- __pci_enable_msix_range+0x90f/0x1150 drivers/pci/msi/msi.c:851
- pci_alloc_irq_vectors_affinity+0x238/0x2a0 drivers/pci/msi/api.c:268
- vp_request_msix_vectors drivers/virtio/virtio_pci_common.c:160 [inline]
- vp_find_vqs_msix+0x423/0xea0 drivers/virtio/virtio_pci_common.c:417
- vp_find_vqs+0x96/0x7a0 drivers/virtio/virtio_pci_common.c:525
- virtio_find_vqs include/linux/virtio_config.h:226 [inline]
- virtio_find_single_vq include/linux/virtio_config.h:237 [inline]
- probe_common+0x324/0x700 drivers/char/hw_random/virtio-rng.c:155
- virtio_dev_probe+0x586/0x8a0 drivers/virtio/virtio.c:341
- call_driver_probe drivers/base/dd.c:579 [inline]
- really_probe+0x23e/0xa90 drivers/base/dd.c:658
- __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
- driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
- __driver_attach+0x283/0x580 drivers/base/dd.c:1216
- bus_for_each_dev+0x13b/0x1d0 drivers/base/bus.c:370
- bus_add_driver+0x2e9/0x690 drivers/base/bus.c:678
- driver_register+0x15c/0x4b0 drivers/base/driver.c:249
- do_one_initcall+0x120/0x6e0 init/main.c:1257
- do_initcall_level init/main.c:1319 [inline]
- do_initcalls init/main.c:1335 [inline]
- do_basic_setup init/main.c:1354 [inline]
- kernel_init_freeable+0x5c2/0x900 init/main.c:1567
- kernel_init+0x1c/0x2b0 init/main.c:1457
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:msix_prepare_msi_desc+0x18a/0x310 drivers/pci/msi/msi.c:615
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 7f 01 00 00 4c 89 =
-ea 4c 89 63 60 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c=
-0 74 08 3c 03 0f 8e fd 00 00 00 41 8b 6d 00 31 ff
-RSP: 0000:ffffc900000674f8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90000067588 RCX: ffffffff8501ef7f
-RDX: 0000000000000000 RSI: ffffffff8501eb05 RDI: ffffc900000675e8
-RBP: ffff888021efe000 R08: 0000000000000004 R09: 0000000000000000
-R10: 0000000000000002 R11: 0000000000002ba3 R12: ffffc9000008e008
-R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888124f5a000(0000) knlGS:000000000000000=
+> >> > Mar 29 17:43:16.180769 fedora kernel:  ? __pfx_klist_children_get+0x=
+10/0x10
+> >> > Mar 29 17:43:16.180781 fedora kernel:  ? kobject_get+0xd/0x70
+> >> > Mar 29 17:43:16.180792 fedora kernel:  device_add+0x8f/0x6e0
+> >> > Mar 29 17:43:16.180804 fedora kernel:  rfkill_register+0xbc/0x2c0 [r=
+fkill]
+> >> > Mar 29 17:43:16.180813 fedora kernel:  tpacpi_new_rfkill+0x185/0x230
+> >> > [thinkpad_acpi]
+> >> > Mar 29 17:43:16.180826 fedora kernel:  ibm_init+0x66/0x2a0 [thinkpad=
+_acpi]
+> >> > Mar 29 17:43:16.180840 fedora kernel:
+> >> > tpacpi_pdriver_probe+0x160/0x250 [thinkpad_acpi]
+> >> > Mar 29 17:43:16.180852 fedora kernel:  platform_probe+0x41/0xa0
+> >> > Mar 29 17:43:16.180887 fedora kernel:  really_probe+0xdb/0x340
+> >> > Mar 29 17:43:16.180900 fedora kernel:  ? pm_runtime_barrier+0x55/0x9=
 0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000df82000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 3 bytes skipped:
-   0:	df 48 89             	fisttps -0x77(%rax)
-   3:	fa                   	cli
-   4:	48 c1 ea 03          	shr    $0x3,%rdx
-   8:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-   c:	0f 85 7f 01 00 00    	jne    0x191
-  12:	4c 89 ea             	mov    %r13,%rdx
-  15:	4c 89 63 60          	mov    %r12,0x60(%rbx)
-  19:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  20:	fc ff df
-  23:	48 c1 ea 03          	shr    $0x3,%rdx
-* 27:	0f b6 04 02          	movzbl (%rdx,%rax,1),%eax <-- trapping instruct=
-ion
-  2b:	84 c0                	test   %al,%al
-  2d:	74 08                	je     0x37
-  2f:	3c 03                	cmp    $0x3,%al
-  31:	0f 8e fd 00 00 00    	jle    0x134
-  37:	41 8b 6d 00          	mov    0x0(%r13),%ebp
-  3b:	31 ff                	xor    %edi,%edi
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> >> > Mar 29 17:43:16.180912 fedora kernel:  ? __pfx___driver_attach+0x10/=
+0x10
+> >> > Mar 29 17:43:16.180920 fedora kernel:  __driver_probe_device+0x78/0x=
+140
+> >> > Mar 29 17:43:16.180932 fedora kernel:  driver_probe_device+0x1f/0xa0
+> >> > Mar 29 17:43:16.180942 fedora kernel:  __driver_attach+0xb8/0x1d0
+> >> > Mar 29 17:43:16.180954 fedora kernel:  bus_for_each_dev+0x82/0xd0
+> >> > Mar 29 17:43:16.180966 fedora kernel:  bus_add_driver+0x12f/0x210
+> >> > Mar 29 17:43:16.180976 fedora kernel:  driver_register+0x72/0xd0
+> >> > Mar 29 17:43:16.180988 fedora kernel:  __platform_driver_probe+0x45/=
+0x90
+> >> > Mar 29 17:43:16.180999 fedora kernel:  __platform_create_bundle+0xe7=
+/0x100
+> >> > Mar 29 17:43:16.181011 fedora kernel:  ?
+> >> > __pfx_tpacpi_pdriver_probe+0x10/0x10 [thinkpad_acpi]
+> >> > Mar 29 17:43:16.181025 fedora kernel:  ?
+> >> > __pfx_thinkpad_acpi_module_init+0x10/0x10 [thinkpad_acpi]
+> >> > Mar 29 17:43:16.181035 fedora kernel:
+> >> > thinkpad_acpi_module_init+0x37e/0x430 [thinkpad_acpi]
+> >> > Mar 29 17:43:16.181045 fedora kernel:  do_one_initcall+0x58/0x300
+> >> > Mar 29 17:43:16.181053 fedora kernel:  do_init_module+0x82/0x240
+> >> > Mar 29 17:43:16.181065 fedora kernel:  init_module_from_file+0x8b/0x=
+e0
+> >> > Mar 29 17:43:16.181073 fedora kernel:  idempotent_init_module+0x113/=
+0x310
+> >> > Mar 29 17:43:16.181083 fedora kernel:  __x64_sys_finit_module+0x67/0=
+xc0
+> >> > Mar 29 17:43:16.181093 fedora kernel:  do_syscall_64+0x7f/0x170
+> >> > Mar 29 17:43:16.181103 fedora kernel:  ? syscall_exit_to_user_mode+0=
+x1d5/0x210
+> >> > Mar 29 17:43:16.181112 fedora kernel:  ? do_syscall_64+0x8c/0x170
+> >> > Mar 29 17:43:16.181124 fedora kernel:  ?
+> >> > syscall_exit_to_user_mode_prepare+0x14a/0x180
+> >> > Mar 29 17:43:16.181135 fedora kernel:  ? syscall_exit_to_user_mode+0=
+x10/0x210
+> >> > Mar 29 17:43:16.181144 fedora kernel:  ? do_syscall_64+0x8c/0x170
+> >> > Mar 29 17:43:16.181152 fedora kernel:  ?
+> >> > syscall_exit_to_user_mode_prepare+0x14a/0x180
+> >> > Mar 29 17:43:16.181163 fedora kernel:  ? syscall_exit_to_user_mode+0=
+x10/0x210
+> >> > Mar 29 17:43:16.181173 fedora kernel:  ? do_syscall_64+0x8c/0x170
+> >> > Mar 29 17:43:16.181182 fedora kernel:  ? seq_read_iter+0x20e/0x480
+> >> > Mar 29 17:43:16.181198 fedora kernel:  ? vfs_read+0x29b/0x370
+> >> > Mar 29 17:43:16.181217 fedora kernel:  ? __seccomp_filter+0x41/0x4e0
+> >> > Mar 29 17:43:16.181233 fedora kernel:  ?
+> >> > syscall_exit_to_user_mode_prepare+0x14a/0x180
+> >> > Mar 29 17:43:16.181250 fedora kernel:  ? syscall_exit_to_user_mode+0=
+x10/0x210
+> >> > Mar 29 17:43:16.181264 fedora kernel:  ? do_syscall_64+0x8c/0x170
+> >> > Mar 29 17:43:16.181280 fedora kernel:  ? do_syscall_64+0x8c/0x170
+> >> > Mar 29 17:43:16.181292 fedora kernel:  ?
+> >> > syscall_exit_to_user_mode_prepare+0x14a/0x180
+> >> > Mar 29 17:43:16.181316 fedora kernel:  ? syscall_exit_to_user_mode+0=
+x10/0x210
+> >> > Mar 29 17:43:16.181331 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+> >> > Mar 29 17:43:16.181341 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+> >> > Mar 29 17:43:16.181351 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+> >> > Mar 29 17:43:16.181360 fedora kernel:  entry_SYSCALL_64_after_hwfram=
+e+0x76/0x7e
+> >> > Mar 29 17:43:16.181372 fedora kernel: RIP: 0033:0x7f1aa84c5a8d
+> >> > Mar 29 17:43:16.181381 fedora kernel: Code: ff c3 66 2e 0f 1f 84 00 =
+00
+> >> > 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2
+> >> > 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d
+> >> > 4b>
+> >> > Mar 29 17:43:16.181392 fedora kernel: RSP: 002b:00007ffe5ca79bc8
+> >> > EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> >> > Mar 29 17:43:16.181406 fedora kernel: RAX: ffffffffffffffda RBX:
+> >> > 00005610a8c7deb0 RCX: 00007f1aa84c5a8d
+> >> > Mar 29 17:43:16.181419 fedora kernel: RDX: 0000000000000000 RSI:
+> >> > 00007f1aa7b88965 RDI: 0000000000000032
+> >> > Mar 29 17:43:16.181431 fedora kernel: RBP: 00007ffe5ca79c80 R08:
+> >> > 0000000000000000 R09: 00007ffe5ca79c30
+> >> > Mar 29 17:43:16.181441 fedora kernel: R10: 0000000000000000 R11:
+> >> > 0000000000000246 R12: 0000000000020000
+> >> > Mar 29 17:43:16.181448 fedora kernel: R13: 00005610a8c7f880 R14:
+> >> > 00007f1aa7b88965 R15: 0000000000000000
+> >> > Mar 29 17:43:16.181458 fedora kernel:  </TASK>
+> >> > Mar 29 17:43:16.181472 fedora kernel: Modules linked in: cfg80211(+)
+> >> > thunderbolt(+) thinkpad_acpi(+) igen6_edac intel_soc_dts_iosf
+> >> > platform_profile snd soundcore int3403_thermal int340x_thermal_zone
+> >> > soc_button_>
+> >> > Mar 29 17:43:16.181784 fedora kernel: CR2: 000000000000004c
+> >> > Mar 29 17:43:16.181806 fedora kernel: ---[ end trace 000000000000000=
+0 ]---
+> >> >
+> >> > Best regards
+> >> > Damian
+> >>
+> >> Hmmm - I have a feeling about this one.
+> >>
+> >> Can you apply and test the attached proposed patch? If you do please
+> >> verify if the problem persist and if the driver has all the features
+> >> present before the regression.
+> >>
+> >> If everything goes nicely, feel free to add a Tested-by: tag for when =
+I
+> >> submit this.
+> >>
+> >> --
+> >>  ~ Kurt
+> >
+> > Hi Kurt,
+> >
+> > many thnaks for the fast response.
+> > With this patch my system boot again but i have other dump in dmesg
+>
+> Oh, makes sense. It's the same problem but it was hidden because of the
+> previous one.
+>
+> The attached patch should fix it.
+>
+> --
+>  ~ Kurt
