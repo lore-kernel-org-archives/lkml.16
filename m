@@ -1,111 +1,96 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA1F322E;
-	Sun, 30 Mar 2025 21:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702DA137932
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743371380; cv=none; b=nbhVv7vPYnngMO1QDU7Cp92spUCgyZVL+5exA8K6WTkltDZRtVm9gi85GkvgS2NxoDegtTtEqG0OH31DMioD+PE0SL0R/lp6szEqd8cD42v/5iB5pgKUBlR/tDOJz5WXd1KHq1QVjhnUIWrF2Zn+AyMMGwpPsyzaxqBIa48MJtU=
+	t=1743371627; cv=none; b=OKc+fTRCIH5Cr8uHogg2qcylU/Ux18sPNkObtaAX7+TtuppzbK5P8GmXc7Z74oimPXSP7BRktPfEm4ux4Xsmibo3wVB4gs/yadrQs7kvn70ZwmnOYcJnoRpnn9qkT9jpdKpQyQ9j7BOJGRHaE4F2zjRj8AXQSM5wSxa3EYHGb2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743371380; c=relaxed/simple;
-	bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B8PZ1OUGztwJmbhxIBofAhvKFO6Ne4ueRLAlFqpcg43mtrPi1x/nmCqk5G6n8oC28Ogh+f61n4t+SruxUtHmM7p4auqHOWYknIWyhcNJAS+MAi3JeO8GaxFMdV8BEQuQD23v1s4SVFwvpYLHeimq3MbuLeIClDh+lq5geghivbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSoiSl3s; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743371627; c=relaxed/simple;
+	bh=SZdMgUXbNzWIrkGHQT1Y5GbxGU727DTli16VagtZmMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TlXotNMMkMRsJ/4P0Q5jHAHIN0pbRnO3emblNf8xItNocDo4Z63viw4xezCzl4KOBOvvjefaapUiJm8OHidEUL2Oqf3GdKekQKRJMZ1x5uCVRt2pmD21/lBaFyL0FlpPNJnM5f9zwkmzUSrQEav3PBydYnSjCEfFAC2xRYsJ3vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tzch3Y7Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSoiSl3s"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39129fc51f8so2871149f8f.0;
-        Sun, 30 Mar 2025 14:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743371377; x=1743976177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
-        b=SSoiSl3s0qtJIhX5Nz67nDKc4GnMTQyutv0hSsGDrgxqBJiN33EUdUz3PdcQ+bLiIl
-         tTo/yr4kZxvgGmHYSvRL++Nsn3bKQUsH2lIVoK4Kg3DzLcO3F6IBTLCvzB+CQhGiKTb6
-         8CbLK2+DLRejqGwX0XQ3iibAwxdoh4pGcvQECyaglfOxJu1TDoCb+mLn66B6cS2ZspQf
-         zn1LhjFPspaULKuKsykn/GcqA5KG3SY6FQDl566N2v+5TLijw62HscEWoJGUMl55drDm
-         3Q236Q5a/dh8oqoaLySQlQhO8etVGmQeC/RFwS17ivrco/J9UbnpHPR/UkDM5moEMwMR
-         Nrrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743371377; x=1743976177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
-        b=tFUJoxhGCOTmfCG+9Q2DCLRWQK7CQOGM73DsGSXIJcx819Xv2aDpjoFvWRLHLUSQfS
-         VMVbk0a3PaEpc2ROH7DRCnTpY697WHj1HWdJbN31QBHpUAD3jpiHiNbYW+eT2wPrAR7G
-         kEuAsZLL05OhTihjT5CMZQxcyes/6mDZV00LQtLDGjRbDorlFE4CwFJhL+EGzf/7KNrI
-         n9scTbG3n+mkDXaERNoH5af2kLE1tjCMAX057vPamNk7Aca6OYZrHgONttPdfvnc0Th2
-         oxXoGnY0keRwvYImTcfvKl9FhpGFcEI2J9xikU12NuCkI6iyQzVm8VFsf3ly8405Zt24
-         5+uA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjj5SKhARuL7g4xqRhAY+cvhjLh56cxtt++b66UDEpogBBaRejwz87ujkXVAWgeavaIkOoTQLIfplybUc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8RVlrpckS8vgZQuuO0/mDyrVpfmqpojgovvJC412K3g79l5uu
-	cdVUX7t1z44Ljah5yI3kyqKeG33VS1KL3/wzDgTRkczspEyBOfYaMeWqCJZlWM9NSZqzMa3qo2C
-	r+xq8Kh3JzFunw4FKP+VjniKIMDDShcvg
-X-Gm-Gg: ASbGncsknFcCS8fL0EPePlphnSaeUPDg/xa4+VdhFjmc5eMJpfvktw4DYioYkQ+sCPa
-	zSNZiq+vgm082fcrf3DD7rtl4ULz320PQL6QgSSnzRHbOdfnBBAn6jCZIHzgQ8Q1tK9fWb293QD
-	JDofApzbZ2/WGV/pp/yooJOVE0JFT5leUw43k9wTyhCg==
-X-Google-Smtp-Source: AGHT+IEj5nVSpMEmpyscOMP8aBK71ZOCtpa6uRa277a20hDE37jwD6gF+LXfZmgu1gjRnSxec3eIglQ/Ysy3hK0lsJs=
-X-Received: by 2002:a5d:5983:0:b0:390:ebae:6c18 with SMTP id
- ffacd0b85a97d-39c120db794mr4805640f8f.12.1743371376647; Sun, 30 Mar 2025
- 14:49:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tzch3Y7Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743371624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QWxjGxcyTTj0xgoyyQ7hbINmphGtnz7f5bPVPSEtkro=;
+	b=Tzch3Y7QzU+JCwpi9mIXy79d3P3HASU7c+aSUxy9q+NYZHEawYN6f2sAZYludM1Vv3/6gd
+	23gVzKU72vpS9lNT4kRnQ/OeSisly/EiH/UdpvgpuZtIUwyUFHX4nxd//Lpavzfhhuywm2
+	bfcS1dmuuHj+u/sP7oIKHZXZDB9mY/s=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-zXGxUkmlMmqFTaLBpVs1Lg-1; Sun,
+ 30 Mar 2025 17:53:42 -0400
+X-MC-Unique: zXGxUkmlMmqFTaLBpVs1Lg-1
+X-Mimecast-MFC-AGG-ID: zXGxUkmlMmqFTaLBpVs1Lg_1743371621
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CC2811945103;
+	Sun, 30 Mar 2025 21:53:40 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.34])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B5BC41801747;
+	Sun, 30 Mar 2025 21:53:38 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 00/10] cgroup/cpuset: Miscellaneous partition bug fixes and enhancements
+Date: Sun, 30 Mar 2025 17:52:38 -0400
+Message-ID: <20250330215248.3620801-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
- <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com> <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
-In-Reply-To: <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 30 Mar 2025 14:49:25 -0700
-X-Gm-Features: AQ5f1JpJScHiZxdaUdxrBAEAm56iBd_dKXIKv3TysCy4nSIInWB0LPwUwOK27nI
-Message-ID: <CAADnVQKBg0ESvDRvs_cHHrwLrpkar9bAZ9JJRnxUwe4zfGym6w@mail.gmail.com>
-Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Sebastian Sewior <bigeasy@linutronix.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Sun, Mar 30, 2025 at 1:56=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> But I do think that the lock name needs fixing.
->
-> "localtry_lock_t" is not a good name, and spreading that odd
-> "localtry" into the actual (non-try) locking functions makes the
-> naming actively insane.
->
-> If the *only* operation you could do on the lock was "trylock", then
-> "localtry" would be fine. Then the lock literally is a "only try"
-> thing. But as it is, the naming now ends up actively broken.
->
-> Honestly, the lock name should probably reflect the fact that it can
-> be used from any context (with a "trylock"), not about the trylock
-> part itself.
->
-> So maybe "nmisafe_local_lock_t" or something in that vein?
->
-> Please fix this up, There aren't *that* many users of
-> "localtry_xyzzy", let's get this fixed before there are more of them.
+This patch series fixes a number of bugs in the cpuset partition code as
+well as improvement in remote partition handling. The test_cpuset_prs.sh
+is also enhanced to allow more vigorous remote partition testing.
 
-Ok. Agree with the reasoning that the name doesn't quite fit.
+Waiman Long (10):
+  cgroup/cpuset: Fix race between newly created partition and dying one
+  cgroup/cpuset: Fix incorrect isolated_cpus update in
+    update_parent_effective_cpumask()
+  cgroup/cpuset: Fix error handling in remote_partition_disable()
+  cgroup/cpuset: Remove remote_partition_check() & make
+    update_cpumasks_hier() handle remote partition
+  cgroup/cpuset: Don't allow creation of local partition over a remote
+    one
+  cgroup/cpuset: Code cleanup and comment update
+  cgroup/cpuset: Remove unneeded goto in sched_partition_write() and
+    rename it
+  selftest/cgroup: Update test_cpuset_prs.sh to use | as effective CPUs
+    and state separator
+  selftest/cgroup: Clean up and restructure test_cpuset_prs.sh
+  selftest/cgroup: Add a remote partition transition test to
+    test_cpuset_prs.sh
 
-nmisafe_local_lock_t name works for me,
-though nmisafe_local_lock_irqsave() is a bit verbose.
+ include/linux/cgroup-defs.h                   |   1 +
+ include/linux/cgroup.h                        |   2 +-
+ kernel/cgroup/cgroup.c                        |   6 +
+ kernel/cgroup/cpuset-internal.h               |   1 +
+ kernel/cgroup/cpuset.c                        | 401 +++++++-----
+ .../selftests/cgroup/test_cpuset_prs.sh       | 617 ++++++++++++------
+ 6 files changed, 649 insertions(+), 379 deletions(-)
 
-Don't have better name suggestions at the moment.
+-- 
+2.48.1
 
-Sebastian, Vlastimil,
-what do you prefer ?
