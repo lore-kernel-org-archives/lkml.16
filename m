@@ -1,104 +1,161 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694621A256B
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05EB156F5E
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743329640; cv=none; b=RZXg0wbcmjHel3WhW+rxUNJMdtN+CfMayDLyYoVPLNafnCoqB7WCZdiB7FzBtoYPqbXd+aMI8Ll7oVi6P7ebxn6RNqnHtYjApXtpcU9/b9s4Y+Ef2CftuVacJerE2SK2JibyCrpzAIV+agQbXa3imxdvvcYB6kd6vM7sxafKUCY=
+	t=1743329730; cv=none; b=VB+Awc9WCf90H7RwDTa3KSdvZtDxpqriuJCREnUWvmY8t8h6VEdiCQrwppDoSeXT5uYR9qp0ddXaU68CbGA4Fwp10xjkkLTwIasBS8n2o+P0IM4F6zzOE0+kFXp6DZRt1g+gPc8kufjeKwuk94QppjueQQGkzwYJvRhatihxVXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743329640; c=relaxed/simple;
-	bh=5Dn34M3j1J/0yG2xzBOIVJdG+eWKyBdZzWhp6uW6JiI=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=tBnJ1bYvF/GQ5SwflgEgucYQKI5kf8xIlyYnWXpSIHCz50Z1zFxTk28/rlEeF0wsTcEb9nQHy5HHUgHVKVjZKhHKZnroTcrwoC0kHpCQoU/t1JZJiwvRO2TRhUFE2Yqy2StUMeu9diUTEN27lG/VfIh7BemEO6vlJLs749QZBeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZLlD0nbt; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZLlD0nbt"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso2258211a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 03:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1743329637; x=1743934437; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JU9e44tO6FJo/GjHldkKNGDusFlokQ2t2C9nEsto6Fo=;
-        b=ZLlD0nbtYKgcPRVStfN40UQt8fjE46Shna1bnIb1gxSE9B6ER4rbB4msA8LvSGsotD
-         rDyyJESKgkWv/Sz2Is2vTiOXqumK+ezmg9XYniQztsmG4+6+Je3qFJ0TGS1GVH8rLq+6
-         rAFHlwT7btx3CeYRGIyh8K40rg4/8X2fWBWK0=
+	s=arc-20240116; t=1743329730; c=relaxed/simple;
+	bh=ovrS+hhQ+D3Vdq+h1iQ2Te5xSJKALDA/V3W/wiq25qc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hJWHm9dJLAG8n3xGdWONizB+vnXUPcyL7Eh3ZVTCJqP2t8+QX0+pFIJ0G7by3lD2Y4XWjwvg4hfX+qJLiD6zN3DMDmmQ4dpiY1bcXUE9ISUvrCNJnEDxmra6I/d7Ir5YbEv7At6Fwx7pfEfIoUPmWl4H4Ml7KvHoOqms1vZa8NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so32544635ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 03:15:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743329637; x=1743934437;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JU9e44tO6FJo/GjHldkKNGDusFlokQ2t2C9nEsto6Fo=;
-        b=vPsI/QIN6u57/HRlbMXnI6ipMGB2MgyKagjviFK9/fN4bQK3XQcNy6sV89B190aPUG
-         vb2Arh5isM2BxpTAV/v/UBo4RQ2xWxN6cBg/xgF/Q/A1Ewtf4gjjb/Yr9kPwW0Xh2Phv
-         np+OggANHLZvW1zIOGtjW0Z6ZO21ItFC8Lo5lFEvdLw+aePZYTuescrdrBMCWBRBfPhI
-         fGc5TTctf037JMxk6A4QrhFNNUu0mIi1Q0z5LpOAnfP949R3r2LwC/C/vRlp+CmPTYqb
-         Y+wA4q7UO9SOS2zdqFBoA9an/YGR351tevczUYjYeY9oiK0k+5hxLY43m20FE+GoLtDs
-         TNbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGzL+EmZt3JRgsNU4e2LRk1qPN3/2rtNA9OJtTNZQVjMKTU8EYV0eGPHEXPhW+6/Fro4jHHcexROeS/+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkXsOK1GicMCMiJGDLtChtJVk9p+BLfzdSjlnw2BP3j2Nakh8M
-	d3ksxKLuziTqlqf6UGuBZlx2S6ImUQ/AaYc4zmlNWyRseA7yw1r36A7wATSuZw==
-X-Gm-Gg: ASbGncshFv3VG6/FRhhtG9qkwk3RcfMmmRAyJQguVUNUshGPkYIndZR3rs6IfOTezZF
-	UX86SJJfzch77f4GwaSajy7rc6ctGO3lObGxvqVgQs7YOtsVwiAx11AbmdBrLfKicdm5Rwp0Jt8
-	EuBmkpKgBLORTQ0Pt9fjla0mAZairs39/aEZrzHLznNJFmysjslZ+EBC9oi0QS2vCgb6N+u7ycM
-	KV8AUuyhsPyFC7MaN4qqYkwtNRjt2n3u6o5YMERMcvgD/OWnuvr8zgU7xOptz2ggqXsc8YJdfZa
-	xML/9R+7TrGaw0VULM0yzCmVFDvGSZO+chvcD3O0ZokLfa4tx5nR0uD1qStH9jopEGx4ZCKTALV
-	sYWPohbg=
-X-Google-Smtp-Source: AGHT+IEhOwFN64RAI12GBOewic8rItD3qND4hzZYF1sIbS+MnHfLx1/+PRibZCWYf0GY0riRMXCk2g==
-X-Received: by 2002:a05:6402:3490:b0:5e4:9726:7779 with SMTP id 4fb4d7f45d1cf-5edfcc1f72fmr4865313a12.2.1743329636709;
-        Sun, 30 Mar 2025 03:13:56 -0700 (PDT)
-Received: from [192.168.178.39] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17dfc4dsm4084750a12.71.2025.03.30.03.13.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 03:13:56 -0700 (PDT)
-From: Arend Van Spriel <arend.vanspriel@broadcom.com>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-CC: <kvalo@kernel.org>, <jeff.johnson@oss.qualcomm.com>, <toke@toke.dk>, <jacobe.zang@wesion.com>, <u.kleine-koenig@baylibre.com>, <megi@xff.cz>, <sebastian.reichel@collabora.com>, <saikrishnag@marvell.com>, <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <linux-kernel@vger.kernel.org>
-Date: Sun, 30 Mar 2025 12:13:56 +0200
-Message-ID: <195e68b2ab8.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <195e686b618.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-References: <20250330093505.22370-1-abdun.nihaal@gmail.com>
- <195e686b618.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-User-Agent: AquaMail/1.54.1 (build: 105401536)
-Subject: Re: [PATCH] Fix memory leak in brcmf_get_module_param
+        d=1e100.net; s=20230601; t=1743329728; x=1743934528;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k0cOCVQAoOK647p6NNI63RprUfbyFb3LGuBYJSCgOxg=;
+        b=f+zR6AXrEewPi7MHRL/qToyt0GleT/osvuFZu9KdjVnpnmAQz4hzZtp1tzEZXNx8+Z
+         R7iJlQx+fkaKryIoSif+uwAjF46pfnSUd8YHnYuYLDSifT3EIed4+3tIBCOl3OwectJE
+         pWFRGe+Lh3A2Mvm3NRVuJnEEDZhub/RViOr+D7yJlRcKma9kqrlfZP6jfMWUcaNPOdQo
+         j/3wXhvp84Soq6tWzC0DrQOKhpQ9On7NL0nNcGV/ZhLMo63MW35FPovnb9x/umLiwemu
+         Fdrrqx/ObiH1uJeA8m1d++VTSUElljTKhf0GUomyiENEZygDO4r4+87gNhOanpFTjHr2
+         AzXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLHEvj/vKFrs03myOw7OgDlG8zRPYwRWHbIUl+GlEjDLUog9CdIqcmx/A5RvAf+PEtfXNWvLmFzVwrlpU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQCr0NbdqHJ+6eyskAeixNdX9rYyXTGI4Ac6WkbVMovFgva5h4
+	UMDXUAkX/b1odI6ANwT9ElM91+WMhdA1KsrgTyqaAy2QHLZFjCuk5xESu9VsNZaAPoIzRFsJkpt
+	56WHBonuvcDiIMNr65G2R+I+sktqAMC8gSCycmu4Ngy7DDPohj4mDl4M=
+X-Google-Smtp-Source: AGHT+IHD8CiNJzu3epd+Ov9VwJ4+BaqGC0HPg8/F36dMJg9k35uR9gcPnFt2aEXepeTZ6aTPUTmUd6k1+aYCKmQjjHVnXhAA2IrP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3f04:b0:3d3:fa69:6755 with SMTP id
+ e9e14a558f8ab-3d5e09366cemr53039315ab.5.1743329727878; Sun, 30 Mar 2025
+ 03:15:27 -0700 (PDT)
+Date: Sun, 30 Mar 2025 03:15:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e919bf.050a0220.1547ec.00a0.GAE@google.com>
+Subject: [syzbot] [lsm?] WARNING in free_ruleset
+From: syzbot <syzbot+8bca99e91de7e060e4ea@syzkaller.appspotmail.com>
+To: gnoack@google.com, jmorris@namei.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, mic@digikod.net, paul@paul-moore.com, 
+	serge@hallyn.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On March 30, 2025 12:09:04 PM Arend Van Spriel 
-<arend.vanspriel@broadcom.com> wrote:
+Hello,
 
-> On March 30, 2025 11:35:41 AM Abdun Nihaal <abdun.nihaal@gmail.com> wrote:
->
->> The memory allocated for settings is not freed when brcmf_of_probe
->> fails. Fix that by freeing settings before returning in error path.
->>
->> Fixes: 0ff0843310b7 ("wifi: brcmfmac: Add optional lpo clock enable support")
->
-> Good catch. Thanks for the fix.
+syzbot found the following issue on:
 
-The patch is fine, but a minor procedural nit that I should mention. The 
-subject of patches for brcmfmac should have prefix "wifi: brcmfmac:" as 
-shown in the Fixes: line. Hopefully Kalle can take care of that.
+HEAD commit:    7d06015d936c Merge tag 'pci-v6.15-changes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12c4fbb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2dde96545058477
+dashboard link: https://syzkaller.appspot.com/bug?extid=8bca99e91de7e060e4ea
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13380404580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=174f764c580000
 
-Regards,
-Arend
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-7d06015d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a3714415ac07/vmlinux-7d06015d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/60a299508e73/Image-7d06015d.gz.xz
 
->
-> Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
->> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
->> ---
->> drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 4 +++-
->> 1 file changed, 3 insertions(+), 1 deletion(-)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8bca99e91de7e060e4ea@syzkaller.appspotmail.com
+
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x30/0xe0 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 __ll_sc_atomic_fetch_sub_release arch/arm64/include/asm/atomic_ll_sc.h:96 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 arch_atomic_fetch_sub_release arch/arm64/include/asm/atomic.h:51 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 raw_atomic_fetch_sub_release include/linux/atomic/atomic-arch-fallback.h:944 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:401 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 __refcount_sub_and_test include/linux/refcount.h:264 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 __refcount_dec_and_test include/linux/refcount.h:307 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 refcount_dec_and_test include/linux/refcount.h:325 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 landlock_put_hierarchy security/landlock/domain.h:164 [inline]
+WARNING: CPU: 1 PID: 3298 at security/landlock/domain.h:133 free_ruleset+0x144/0x174 security/landlock/ruleset.c:490
+Modules linked in:
+CPU: 1 UID: 0 PID: 3298 Comm: syz-executor356 Not tainted 6.14.0-syzkaller-09584-g7d06015d936c #0 PREEMPT 
+Hardware name: linux,dummy-virt (DT)
+pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+pc : landlock_free_hierarchy_details security/landlock/domain.h:133 [inline]
+pc : landlock_put_hierarchy security/landlock/domain.h:168 [inline]
+pc : free_ruleset+0x144/0x174 security/landlock/ruleset.c:490
+lr : landlock_put_hierarchy security/landlock/domain.h:167 [inline]
+lr : free_ruleset+0xdc/0x174 security/landlock/ruleset.c:490
+sp : ffff800089483d30
+x29: ffff800089483d30 x28: f7f0000005ba0000 x27: 0000000000000000
+x26: 0000000000000000 x25: fcf000000415ca80 x24: fcf00000040a7438
+x23: 00000000ffffffff x22: 0000000000000001 x21: fcf00000040a7420
+x20: fcf00000040a7420 x19: f1f000000678ca00 x18: 00000000fffffffd
+x17: 0000000000000000 x16: 0000000000000000 x15: ffff800089483270
+x14: 00000000ffffffea x13: ffff800089483808 x12: ffff80008298eb10
+x11: 0000000000000001 x10: 0000000000000001 x9 : 000000000002ffe8
+x8 : f7f0000005ba0000 x7 : ffff800089483fd8 x6 : 00000000000affa8
+x5 : fff000007f8e3588 x4 : ffff800089484000 x3 : 0000000000000000
+x2 : fcf00000040a7458 x1 : 0000000000000001 x0 : 0000000000000000
+Call trace:
+ __ll_sc_atomic_fetch_sub_release arch/arm64/include/asm/atomic_ll_sc.h:96 [inline] (P)
+ arch_atomic_fetch_sub_release arch/arm64/include/asm/atomic.h:51 [inline] (P)
+ raw_atomic_fetch_sub_release include/linux/atomic/atomic-arch-fallback.h:944 [inline] (P)
+ atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:401 [inline] (P)
+ __refcount_sub_and_test include/linux/refcount.h:264 [inline] (P)
+ __refcount_dec_and_test include/linux/refcount.h:307 [inline] (P)
+ refcount_dec_and_test include/linux/refcount.h:325 [inline] (P)
+ landlock_put_hierarchy security/landlock/domain.h:164 [inline] (P)
+ free_ruleset+0x144/0x174 security/landlock/ruleset.c:490 (P)
+ landlock_put_ruleset security/landlock/ruleset.c:498 [inline]
+ landlock_put_ruleset security/landlock/ruleset.c:494 [inline]
+ __free_landlock_put_ruleset security/landlock/ruleset.h:200 [inline]
+ landlock_merge_ruleset+0x210/0x440 security/landlock/ruleset.c:534
+ __do_sys_landlock_restrict_self security/landlock/syscalls.c:549 [inline]
+ __se_sys_landlock_restrict_self security/landlock/syscalls.c:479 [inline]
+ __arm64_sys_landlock_restrict_self+0xb0/0x250 security/landlock/syscalls.c:479
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x48/0x110 arch/arm64/kernel/syscall.c:49
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x30/0xe0 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+---[ end trace 0000000000000000 ]---
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
