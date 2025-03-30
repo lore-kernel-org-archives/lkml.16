@@ -1,123 +1,122 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB398F5B
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A938F5B
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743358232; cv=none; b=h2PMnrp4E804X0fD825Sf6mfCN4Il+I8hQn1fM3YsXTbMnDZs8vWQci92RpCBPi3J5gLfM3U5I3J0N9dCHFZ1krtdg42gBfPaCm5zSRzwvJ8onm3GodlRhn6HzcNpsO0O/aFv/6zQLpMzq35/JsaK5AHoI3nIfgetAi2d9zjL88=
+	t=1743358299; cv=none; b=tvWoaD9vQRYLUGpGSOCpmrWVtW7O7YtdKfTDCEkR/8YRlluQknPnw2NGExd//DtbQfFz5PW4rA0K9pmbVZxiIQREfYaluy2uBco0ELJXS/uiprVk/KS9LzEtvhVjdC01i3xoabmv8vTZlSjik5UClzAZdSOTvyHuwppr+u0in78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743358232; c=relaxed/simple;
-	bh=uxlRSDj+6l7hE2ngpMyNG1uZskgjxdbHsuqaEWdvBq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyNKIQHpeaNNsOGCoMYk92RKtlz/4HmSjpYhAcKx33veti8967tAvhwVWhCaWrjqbFJZ54kf6iZ8GD+v0cXnabJdF8dcsXw4hjUljtuQZJSS+NwlC4sNRZpCG4LSY1XwUZD9Rcbt5ZNqHseQE8zMffIQ2WZMphPcb2iVLEZMNlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MIbo4g88; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1743358299; c=relaxed/simple;
+	bh=seO8jyUp3229Hcn6+4owzadoI1ijb3ZNSQ5729GFqXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uhRYG1KI/JPvLbum6ZbGwssL7eBTQsqjFo70TzXkF7yJvDhbH58qG1ukHMHk+gP/4ts5poUPsvJFCa6qjuHbLdlF1e616MXjbqyfVrh7WDDffbyWZ/xMB9xp/nhQJxXSWlHB6r+u3W1USQzea7DVKx5IHOrhadpG1ES31bgkDZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ragl/Hij; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MIbo4g88"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=N75v2HqyJOpmak3w13xGj/S5QvQzHhXruTn6pilQLIY=; b=MIbo4g88lf9x9jrf9xboOAIROs
-	tPjCrSZjCosWazHBC/n+/akKzmviBEC4B5zzYdFHgsqg9RuYV9C4vxsbGA93rMAG2CzDAMGM2yN3p
-	vbAQIlX6C5b1ik2c1PVvSVgNm7WvnvgblQp5h5jMzjo+scJsjNTtPzAr++g9JXj4uV2wttTEvwbAC
-	kmyGNc+xF0j2ClVvXoU1ldjLqc/dyIqVgjQK3gG+M8aGeYZqEs2vY6etKBgAgolQ4gNXifQv32pTb
-	C0lOdpdRYx9wRQbE8JyMrTje9YonvpwG9cF8Aglsx7EErGto5/PMN5TJNvmbkaBN9UODvVBqW0a5x
-	V4ZaduyA==;
-Received: from [189.7.87.178] (helo=[192.168.0.224])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tyx6m-008mKg-1F; Sun, 30 Mar 2025 20:10:08 +0200
-Message-ID: <5e353e6d-6e81-411b-8eef-dd4a241ca1ac@igalia.com>
-Date: Sun, 30 Mar 2025 15:10:03 -0300
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ragl/Hij"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UDlNor023365
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:11:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vVUKLCIEpo206oYXZqtYL/532lLPSl4dW8ZhmmRNjnA=; b=Ragl/HijPeAkHk37
+	VULHizWZt5LEXj9cVUkE8adHuFhgdMplH4A2qw/QNyxeHNGp8t9Rdryzk/ujUycI
+	1RouVw70STahMdY9mI8s117MxGESOtUDHQ+NhLz4/VIKgdpWHIqyQqLiDwfzT3KY
+	qqCHHGkAIUmS401ziT2j/PVaqkGqqbzi3ymsvNtsUIuseD+SmFohiwkx6nxdI+CL
+	cJNlONlAa4jvTfPmLb0lNh1cNan2tzN7Y3j4iH8k9zg738ciEOySZi94H6vDGV4D
+	u8dlmehF47Msek3OL8yjgNMDlP9894J8iTiS7tRVCPvasK8JU2gOeQIylnyqmSJ2
+	5kycow==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p8f1amtu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 18:11:36 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476b2179079so71262651cf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:11:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743358295; x=1743963095;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vVUKLCIEpo206oYXZqtYL/532lLPSl4dW8ZhmmRNjnA=;
+        b=MON3l2YxvzIBRyXB4zuc3CKnjHwqAqu5z9N6CMb3Jx4eB5F/W8u9GQ9oXS7PdUpn77
+         fJjv/Me1NNDlVDCDSaDroukE7pRa2JGbvaWZiuIkUsV/Ny0sPNhLk0hhhFYq+U4dHrS+
+         n7vAtKrvXOeup16urgG0CrmNum0dQk68ZIgdoxBut6E6c9gCQCIO9vFw/3ESQqhYZTYs
+         ldKmpuVKDjvcHWdLkAFsNgeGKJuBRFZ8V+OdgSEcAvfE1HnnwC5qCydqPGoJoeRspsSE
+         RrU8lBreA9d24jkqwf1RcP76aSwLPQ3aXh24f7s3XwauxyXmzJghDMLzILk+PFIp2624
+         vsNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVin4EYUokWfl5gajfy3VO4waBsfS4FFw4hyvyLkO0aUGVmQFCgBLIpG2eKwOlcoziD3T3ka0lJ1yeQz6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUhXNRvg2N4o+taCBHxrHR4dITFdt4dn7ALpij9W32szExxrp/
+	hGd+06O7HSJvkgOgU9lWnrq4amrlE7GMFWZTF2HKiPpBvVkHMufADcgTQytynRSuL1RINoNXrp9
+	h21l33BqQnIll+O31jiBORHMURf+Kj078b8hHUwVVJATO4ax/9q8hvr/Eqs9Q5pk=
+X-Gm-Gg: ASbGncuQjaEpQx5l25vQ3A5Jz0n5RrvrxANB+cK5zw7zpHee3woJRqL1FctF5khSpvT
+	/7yviLzzfYGu9y99rHKAzfOUT33MpLQwbognbe2UulzQRJse/Ybk+zY9jjpoT+4/0FqCMCdr7ve
+	MCajvA/05N6c4dPe43LEO9TkCrkvWQcI+0KIHCwds9GjHZTVBVtsyDUEATJaHflVR9lkEMuRcr8
+	lfrMAfMx+9YWxVSVWom26KmBFjX7bThD+iprg6PRZAsZ3vXZPiaiF5AwC2hpx5PZnZHQze/D5/C
+	C88348npskTREv+omITbq3gGTQGhny+l0jptmEMU4CLWWze/CK8fKKOq2qFZGsl79FI=
+X-Received: by 2002:a05:620a:4152:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c6862ebd01mr862965485a.10.1743358295529;
+        Sun, 30 Mar 2025 11:11:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/4Ayu0px2bsgfwGlasLAeI7cob1w2ZXmawFYAbJ+6bPKbrGT1NUrtNEzMcRulXVA9Z3WOew==
+X-Received: by 2002:a05:620a:4152:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c6862ebd01mr862962985a.10.1743358295232;
+        Sun, 30 Mar 2025 11:11:35 -0700 (PDT)
+Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2aa9c56sm11478831fa.4.2025.03.30.11.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 11:11:33 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] drm/bridge: sii902x: Set bridge type
+Date: Sun, 30 Mar 2025 21:11:29 +0300
+Message-ID: <174335828699.2569365.9085452563273162039.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250326101124.4031874-1-alexander.stein@ew.tq-group.com>
+References: <20250326101124.4031874-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] drm/vc4: tests: Stop allocating the state in test
- init
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
- <20250318-drm-vc4-kunit-failures-v1-3-779864d9ab37@kernel.org>
- <ad77e39d-4862-4e04-87a0-2a6a2682d5c9@igalia.com>
- <20250328-radiant-azure-falcon-aafcf3@houat>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250328-radiant-azure-falcon-aafcf3@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=AsDu3P9P c=1 sm=1 tr=0 ts=67e98958 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=QAnTTyjkLDB7MCdMeLoA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-GUID: PBZZt1XKY5aXgUtc4ZvstdViGpz8kSKt
+X-Proofpoint-ORIG-GUID: PBZZt1XKY5aXgUtc4ZvstdViGpz8kSKt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 adultscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503300127
 
-Hi Maxime,
-
-On 28/03/25 12:32, Maxime Ripard wrote:
-> On Sun, Mar 23, 2025 at 03:48:17PM -0300, Maíra Canal wrote:
->> Hi Maxime,
->>
->> On 18/03/25 11:17, Maxime Ripard wrote:
->>> The vc4-pv-muxing-combinations and vc5-pv-muxing-combinations test
->>> suites use a common test init function which, in part, allocates the
->>> drm atomic state the test will use.
->>>
->>> That allocation relies on  drm_kunit_helper_atomic_state_alloc(), and
->>> thus requires a struct drm_modeset_acquire_ctx. This context will then
->>> be stored in the allocated state->acquire_ctx field.
->>>
->>> However, the context is local to the test init function, and is cleared
->>> as soon as drm_kunit_helper_atomic_state_alloc() is done. We thus end up
->>> with an dangling pointer to a cleared context in state->acquire_ctx for
->>> our test to consumes.
->>>
->>> We should really allocate the context and the state in the test
->>> functions, so we can also control when we're done with it.
->>>
->>> Fixes: 30188df0c387 ("drm/tests: Drop drm_kunit_helper_acquire_ctx_alloc()")
->>> Signed-off-by: Maxime Ripard <mripard@kernel.org>
->>> ---
->>>    drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 41 +++++++++++++++++---------
->>>    1 file changed, 27 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
->>> index 992e8f5c5c6ea8d92338a8fe739fa1115ff85338..52c04ef33206bf4f9e21e3c8b7cea932824a67fa 100644
->>> --- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
->>> +++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
->>> @@ -18,11 +18,10 @@
->>>    #include "vc4_mock.h"
->>>    struct pv_muxing_priv {
->>>    	struct vc4_dev *vc4;
->>> -	struct drm_atomic_state *state;
->>
->> Can't we add `struct drm_modeset_acquire_ctx` here? Then, we can be sure
->> that the context exists during the entire test case.
->>
->> Also, we can add `drm_modeset_drop_locks()` and
->> `drm_modeset_acquire_fini()` to a exit function in the kunit suite.
+On Wed, 26 Mar 2025 11:11:23 +0100, Alexander Stein wrote:
+> This is a RGB to HDMI bridge, so set the bridge type accordingly.
 > 
-> That's what we were doing before, but the kunit functions and exit
-> functions are run in a separate thread by design, which then cause
-> lockdep to complain.
-> 
-> It's not great, but we can't really change either :/
 > 
 
-Thanks for the explanation, Maxime. In that case,
+Applied to drm-misc-next, thanks!
 
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
+[1/1] drm/bridge: sii902x: Set bridge type
+      commit: 586831a417c9ffbcac63cf1b53f05d15024fdd56
 
-Best Regards,
-- Maíra
-
-> Maxime
+Best regards,
+-- 
+With best wishes
+Dmitry
 
