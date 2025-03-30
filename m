@@ -1,131 +1,126 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8881D175D50;
-	Sun, 30 Mar 2025 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F160175D50
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 11:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743333028; cv=none; b=NR0PafyTTbdbCF6311MerSGqIZHaorXlJBW7zsWD/iixpkusVqnFtJ+xABDyjIl6CMPhc+G459EmgwTfOc6dp4CYxLSYvceBQmoVkRf8kcm30HFs7+cFLdF9cBpqE9ays/SaP5KySQWF93JECJmu+yzp/3oQsXHtnBjB0plQfiU=
+	t=1743333172; cv=none; b=uHyevS4ic5/kSaBpAMCIhVNfqUdHspefFAtUsAQmsZrl2pvjDbYFWhLUGdrafrKZ78HcuLnovOkpNwaABGDnHFcbZLrynm8vzPZrn8B+eNEgfJuYiUucutlbrTMkqs/pNFaAvWMmQCcKL2euKMWYR++9SV6I5x2qMrt9I8XdAQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743333028; c=relaxed/simple;
-	bh=uMH9D5qQAVaC3sufhouTJxvBFoW4Cg3Kxe6V50NQyrI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqIcSPjdVVnDnncgT16/LyphOPacrZJvABpQxBom9WwO8tLkBjaxPgqMGhR83gA/a1GHnDQy3cDXfQnrVAiy/rxRHnNMjbnzIxlDlFNM2bqGvB5BQf7hvrE5UtSMfg/DW6fPI8eC5wW2bhmWqHkni0Cp9UeKwBK0UcmEdjvN/y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6eosBVz; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743333172; c=relaxed/simple;
+	bh=LnWQlUy0Obb41LuuYcG29m2i3AkxpTw3bT9Z6HbqeoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XYe9cpgLWfi2yDgkw1zBKjK3kQVUQ95BmyLoJlyDfRAbbg/JEYI2SAjOrYqZM56d6JO5d4xaZF1WsT2PZ9jfUVAxxj3cq5i8d1GcGjQ+WJq+SAlP4PEBb70FTDBBVC4CLGnTSDhFiMsNqP5KDX3BG3vYYX/iQyE6DTVr1jLbnYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=An30oobd; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6eosBVz"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3035858c687so4911796a91.2;
-        Sun, 30 Mar 2025 04:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743333027; x=1743937827; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KF09n6ohxZVdfCGussuOtctoxzw/9z0eF08JQ8zCyw8=;
-        b=B6eosBVzzsifAB7mUwm2gB2aCdHRlnTn+gU14Evqg9BKI2fInZFRhZmBSLEtp7EiFs
-         ITTLvly140T1X+MnnrFBOtU2QYOYh/8etOzEl6Vrt+KQk5JQbDjlYFfzYP71LfOhNGh1
-         Z1fB60uum4J5BUeKqqMJC1Zi7s3U96LfFAG4v3b9ZGtTVnZ15etp8d3pbPNejHXFvnDg
-         270KemPLE3oqF3v0sxFGiYErroaqgXlV4GD61MbI2ubovqURCQhkMezbfOf9+auzWIFq
-         2t7R1/lqDUUu0VtqSHo2IlJ7tGnK2+Kkqd2jcHnWh2pb0ygpk2XCN9haffOORwENSXv6
-         fGEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743333027; x=1743937827;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KF09n6ohxZVdfCGussuOtctoxzw/9z0eF08JQ8zCyw8=;
-        b=MScB1VpDQqlTj2oDA+tc1Z/qmqBOMwq/GAFTeCFOj2Oaq4DpImdZTqYInUaS9+zxuz
-         PlO2IRlMeZpCAGSmeXRf92nX6P/2mzNk6iPXHBRD4E05mL4kB8tV19v3ipgQCV8Kk8ZO
-         WHH6frp5rc8/jY0x+3fcxPfSr4BVcqwujIm2SHk2qauRZKWZTgtRdUVpxDZA21R1zxr+
-         xtKStLuloHCErEFHbPu4PRYM1xqGG2+YCLBX37wSpNxDy1Kcm8JTrbijQxSoYZJ87Ydw
-         MaXhuL39YB51Cpv9H3h8b3cbuyVltyeWTA1C5QnFY7d1b/WZyVIP1FztoLMebwWBXMYC
-         q2bA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJaBtIzUjHiQGk803Jny1ULTCg8yxXyDDZ2pZxx9w8S9NPj+Googy5sGKlMooF4tJphGYwYHlYpaAtQEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw22rHTxt07T4xHlErEMdK3oBsXM0h+OBvUKg3H2qt50Zb7myBD
-	O5Ty+axQ6UEMFb8dFsdHzlQBNGZp/WQ80awfIHUZCiKyAdE5xgQv
-X-Gm-Gg: ASbGnctO1M2waq1ZwzCr65kv+LqrQtTi7NbDl/lY5Lxi/mCfX0qNP2dXjoSEAYZ3cae
-	v75pccEKn3aCU08FAmQ1YqzUI/ywMLZSrfzlyItQxSq5Kc8rahdXA7xk4M7Aaive4WgE7A2dp1I
-	USsyfrpGTBedwefXSZlTGqg/vc462FlinMJE8WdHY/fG5AkJB6g7cizLYxJPSdxlYIcaxzZtZZz
-	mQvjoy2DMA7e5yxossZgTlv5vzMfjUtjNR42We3nBU44XN6Eq7/gC77fu7jt0YjcyqSpG9cBuxV
-	dwzd82qQElzVERTH5LGkqY88mXeDGtgY25AZnJota2/Rx6Q3jay4dvT6GWVDmRi4gx+V18NxGVe
-	WEV96QZs5+xxOE3mLHKIppbAClxozxdEV4G8n9+ZrKg==
-X-Google-Smtp-Source: AGHT+IFnbzl2epOSt90H01aDeUm2b0dBQj1iJ1sf8IFO6dYHI0OIszwKM41B4LCe7IBBHP62GqRyjg==
-X-Received: by 2002:a17:90b:3b85:b0:2ff:6e72:b8e9 with SMTP id 98e67ed59e1d1-30532154023mr7903936a91.25.1743333026761;
-        Sun, 30 Mar 2025 04:10:26 -0700 (PDT)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dff0529sm8367069a91.16.2025.03.30.04.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 04:10:26 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	pmladek@suse.com,
-	samuel.holland@sifive.com,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	Ryo Takakura <ryotkkr98@gmail.com>
-Subject: [PATCH v3 0/2] serial: sifive: Convert sifive console to nbcon
-Date: Sun, 30 Mar 2025 20:09:57 +0900
-Message-Id: <20250330110957.392460-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="An30oobd"
+Message-ID: <14e0cc95-95d7-4e7d-949b-d944366510a3@iencinas.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
+	s=key1; t=1743333168;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QJY3OLhP2SkmfexLon8hzKLe4fDSbbfUy/idzgYz8bg=;
+	b=An30oobdO9LFf0QQeb0gDKl+YJQCJivOaMuyVu1pPFaynt3+Ue61jxmEiUC6ouLugMvMst
+	kN3ZFifMDLqlyIj8VnA9284owVulaFeSA062+b6Zn+OhXyvrr0NWcrbqdMUgJAU0SpZLnh
+	CNPnID6XrLh/kIit6F1L/M4lsfIVJR8rdtVCy+Zj2gSzeKpAXT+nGzxSo24kBWFqcNA6tR
+	qOLK+mvmtb88T+CfR3GxerP7HPgkwH5Jw6KMRWYO5PORxXmfh+DPW8L6CXpU4VeOoBwzF1
+	n4bnN7Zt5KppamvM8SYNCglFPb2I/DhGI8+/VAgrx65OGarD1mex7uawOLGIMg==
+Date: Sun, 30 Mar 2025 13:12:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] selftests: riscv: fix v_exec_initval_nolibc.c
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+References: <20250306-fix-v_exec_initval_nolibc-v2-1-97f9dc8a7faf@iencinas.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ignacio Encinas Rubio <ignacio@iencinas.com>
+In-Reply-To: <20250306-fix-v_exec_initval_nolibc-v2-1-97f9dc8a7faf@iencinas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi!
+Gentle ping :)
 
-This series convert sifive console to nbcon.
-
-The first patch fixes the issue which was pointed out by John [0] 
-that the driver has been accessing SIFIVE_SERIAL_IE_OFFS register 
-on its ->startup() and ->shutdown() without port lock synchronization 
-against ->write().
-
-The fix on the first patch still applies to the second patch which 
-converts the console to nbcon as ->write_thread() holds port lock
-and ->write_atomic() checks for the console ownership.
-
-Sincerely,
-Ryo Takakura
-
-[0] https://lore.kernel.org/lkml/84sen2fo4b.fsf@jogness.linutronix.de/
-
----
-
-Changes since v1:
-[1] https://lore.kernel.org/lkml/20250323060603.388621-1-ryotkkr98@gmail.com/
-
-- Thank you John for the feedback!
-- Add a patch for synchronizing startup()/shutdown() vs write(). 
-- Add <Reviewed-by> by John.
-
-Changes since v2:
-[2] https://lore.kernel.org/all/20250330003058.386447-1-ryotkkr98@gmail.com/ 
-
-- Add Cc stable for the first patch.
-
----
-
-Ryo Takakura (2):
-  serial: sifive: lock port in startup()/shutdown() callbacks
-  serial: sifive: Switch to nbcon console
-
- drivers/tty/serial/sifive.c | 93 +++++++++++++++++++++++++++++++------
- 1 file changed, 80 insertions(+), 13 deletions(-)
-
--- 
-2.34.1
+On 6/3/25 20:49, Ignacio Encinas wrote:
+> Vector registers are zero initialized by the kernel. Stop accepting
+> "all ones" as a clean value.
+> 
+> Note that this was not working as expected given that
+> 	value == 0xff
+> can be assumed to be always false by the compiler as value's range is
+> [-128, 127]. Both GCC (-Wtype-limits) and clang
+> (-Wtautological-constant-out-of-range-compare) warn about this.
+> 
+> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
+> ---
+> Changes in v2:
+> 
+> Remove code that becomes useless now that the only "clean" value for
+> vector registers is 0.
+> 
+> - Link to v1: https://lore.kernel.org/r/20250305-fix-v_exec_initval_nolibc-v1-1-b87b60e43002@iencinas.com
+> ---
+>  tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+> index 35c0812e32de0c82a54f84bd52c4272507121e35..4dde05e45a04122b566cedc36d20b072413b00e2 100644
+> --- a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+> +++ b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
+> @@ -6,7 +6,7 @@
+>   * the values. To further ensure consistency, this file is compiled without
+>   * libc and without auto-vectorization.
+>   *
+> - * To be "clean" all values must be either all ones or all zeroes.
+> + * To be "clean" all values must be all zeroes.
+>   */
+>  
+>  #define __stringify_1(x...)	#x
+> @@ -14,9 +14,8 @@
+>  
+>  int main(int argc, char **argv)
+>  {
+> -	char prev_value = 0, value;
+> +	char value = 0;
+>  	unsigned long vl;
+> -	int first = 1;
+>  
+>  	if (argc > 2 && strcmp(argv[2], "x"))
+>  		asm volatile (
+> @@ -44,14 +43,11 @@ int main(int argc, char **argv)
+>  			"vsrl.vi " __stringify(register) ", " __stringify(register) ", 8\n\t" \
+>  			".option pop\n\t"					\
+>  			: "=r" (value));					\
+> -		if (first) {							\
+> -			first = 0;						\
+> -		} else if (value != prev_value || !(value == 0x00 || value == 0xff)) { \
+> +		if (value != 0x00) {						\
+>  			printf("Register " __stringify(register)		\
+>  				" values not clean! value: %u\n", value);	\
+>  			exit(-1);						\
+>  		}								\
+> -		prev_value = value;						\
+>  	}									\
+>  })
+>  
+> 
+> ---
+> base-commit: 03d38806a902b36bf364cae8de6f1183c0a35a67
+> change-id: 20250301-fix-v_exec_initval_nolibc-498d976c372d
+> 
+> Best regards,
 
