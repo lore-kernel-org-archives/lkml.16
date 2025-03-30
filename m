@@ -1,169 +1,133 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AF9EEC8
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 06:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC4912E7F
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 06:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743317591; cv=none; b=eZhFd0FUWyMEofHrpXdd5Y1ReSw1/AwXuuBP6Uy40TFVPkltXJyQjHNmF29bN2JfjNusSoe9WwIxiygiweiFPvIi34lffYX/QDSPGF4YOBJQMOxKqXSqDbj7NOvoz+gmz+s9jnDkxH1VFfK1gZORHWIvFoJhzO+4hHeSfnuOUEU=
+	t=1743317662; cv=none; b=fgsAGabPVyMqziXujT8xf5xsBfgBQLz7SsFLhWzNacLGwsZMmTK0cYU8j0+5VPuK0ZbTIcF15+UG+QUGd1ZJ89LnYaFmlDG+T5YphWHwCJgdEewdk7UYnSDT1FmSEEqlrxyuRmPWmX/gbOpbDpZWlb3WSFsbEaZSOo990QQwUOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743317591; c=relaxed/simple;
-	bh=Hzc8o3qzar0J8QvYkUe+xXnuNHPnaiJkn3uWv7tUhOo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XCVkSkuRR5l5+7OqAHrTOvb/NBBFYM5cWDGoK5acf1Ap0GdPQQgM7H/jA0CpLIA9pTawKNFB0qVdOHLONnz1gnL99qsZWghrfhludsg8IzzSxkRJ7G36MKfiPyE9FZfvStpl1vtoiRv0ta869IegTMDYnPczqQgZ7qFy/nV5M2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nyVBaHU9; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1743317662; c=relaxed/simple;
+	bh=RM5VKr/vhX6+mbd6ORRLLuuy46xKh1rfSK1Y6Gyv+VA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eAao6xsxivisTepgmmvC3OHs/wmLWh0+EfWIjx2wb2j4RNN5l6ZGZ6H2tEdQBqtuPuRKmCGOwW31qNTroc2QuK4v6h73hZ7+78zkGbI3Keod+Pqt3uKC7btSTA8EFSlbDt/NYlRDA2X7wqVbF1KbBjy03cRmmc40D4a6DU4G5uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NW8BF/4B; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nyVBaHU9"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743317578; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=kNdfZoUpFKB6YFxeh+rDzkVIdDXkzGcNrgN7Sp6e5qo=;
-	b=nyVBaHU9hmtYewOV269qEvq1GXcG0P9zILNLdXSV8WebdILPwSMyuzsHRhULB/UZ3vOuHJSC72RkCiaPN2L+r4ovyzoa4iMY1a5Fsn2IW6yjpYVozlgztin5c1POWNOOoHBvv9VxKlG4jiKap/y2swv4/fP2RagCZa8ru98uZJ0=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WTLiftQ_1743317566 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 30 Mar 2025 14:52:58 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Nikhil Dhama <nikhil.dhama@amd.com>
-Cc: <akpm@linux-foundation.org>,  Ying Huang <huang.ying.caritas@gmail.com>,
-  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,  Bharata B Rao
- <bharata@amd.com>,  Raghavendra <raghavendra.kodsarathimmappa@amd.com>,
- Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH] mm: pcp: scale batch to reduce number of high order pcp
- flushes on deallocation
-In-Reply-To: <20250325171915.14384-1-nikhil.dhama@amd.com> (Nikhil Dhama's
-	message of "Tue, 25 Mar 2025 22:49:15 +0530")
-References: <20250325171915.14384-1-nikhil.dhama@amd.com>
-Date: Sun, 30 Mar 2025 14:52:46 +0800
-Message-ID: <8734evf1s1.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NW8BF/4B"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso27502351fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Mar 2025 23:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743317659; x=1743922459; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uCqM6S9fcFwdZC01tk9e6BbnR34DNrquAtTO5TK6Sfg=;
+        b=NW8BF/4Bkyb6iQC3aK95xK6Iw+H8+wstOKschBAM+Mf+eoK3D9MTXd1mo535oCwfcG
+         ADWEbglPus2/cP2Azb6ld9hFHqFL/nI5rS9ES8LvuNcbgo+KXmP+VuGQeqPbtw2s1PNZ
+         7A2wL5N8blZSsCfCzM60X4GxTvD7w2gaUgZ1RBt6Ue9DLsFsitGuIpfaKv4UHAwd+hb0
+         ClGvZOS7MNYTe+BhVbbrKRqlHW1ETMHivMTOZLhrZYVdN6ZiCMmkxecgXzZzDacMwHDL
+         Mo9bSyXnY3YBEii/J18AgEragCjUGW4lsp2ECiN9sKu1aBxvguSMaco7Gp+G3bYYmByZ
+         Rsnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743317659; x=1743922459;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uCqM6S9fcFwdZC01tk9e6BbnR34DNrquAtTO5TK6Sfg=;
+        b=VmEr+U8niFqR4PDgW9PJ/jy5kYm1ahREP2GvpQ23XVDJpeDyBcN+GYVw24eU08OQlF
+         yjRpo/deOilFfEypwbk5vNaQBdthuDUyJlZDtdsK9hHc4ekmeHgkKUyIzeYiXDnCr3Yv
+         eXbI+BlU5OvL1Y130e4tVSqLR4v28LPQz+8FeB1/RIBiNemsS+WziQ3yB0EGZ4KvVAdT
+         Xel0m9GsMUvUKcFAwXGNYJccctRKEsLAMBgXY45skr2mpE+PJ+/mfg3sma0uh+5VZjEI
+         m2Wrt6ORzjkjr1UFCKuoR2BSU+2sD0a7zH6dtPpts+oBtVgqU8LHoLwDDX5zALIalGxk
+         eBuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrDQaSQMPtGnKHZfjzXSb/DHfttCFMN0mOcw4LieiYwbto6XPw/Etmt0HWpnwyz3VHdmPPj+Z/vN4JfrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV+Dcxxea0g4+toNIlwuZ5t/fgk0r/cY6+tyxmQTOevRltaU3Z
+	trr0b2EjIdbMtitI5WqeKS1cpWQ6ZSER3EsulUxfRElwWx4DzT1Q0j8E3ff7RxE7TAV8PIzfzLo
+	O7ZrVEsQ03dfEuiBYjdHvpayQkD8=
+X-Gm-Gg: ASbGncthdtDD0gopktwTC7DvRj2LKBb3IjyR8EcmAbp/nhujqblNQDmrMoYVNKIjYpO
+	BORKzBRdYxBWYLWpV0qmL1B2U4hIQ/VigCWSejjsokp93odLvwuXZha2R6q5RDMae1xzNGUsJB9
+	CDUHhpP1JrSh3iHrqCcwe5hvQxZgWVA5bd0TX/
+X-Google-Smtp-Source: AGHT+IFibXH+k1L08iAWYqZ2L4GCmxrk77eTnatFSg85QJoKDL3EgBu5C5hlXDOQVxhPj9NixuPBkglKT5AqlrUn9NU=
+X-Received: by 2002:a2e:a584:0:b0:30b:f23e:77fb with SMTP id
+ 38308e7fff4ca-30de0279068mr17493301fa.21.1743317658548; Sat, 29 Mar 2025
+ 23:54:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20250325164854.199420-1-ubizjak@gmail.com> <20250325164854.199420-2-ubizjak@gmail.com>
+ <Z-Mme_OxuhYfxgzO@gmail.com> <CAFULd4bCnnL-CBFwgAQtN9S+sUE_wikda6E+8k9632J9b62dCg@mail.gmail.com>
+ <10FC5E45-98DB-4C34-A0FE-16B2BB588F11@zytor.com>
+In-Reply-To: <10FC5E45-98DB-4C34-A0FE-16B2BB588F11@zytor.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 30 Mar 2025 08:54:13 +0200
+X-Gm-Features: AQ5f1Jrx4TtAhaAX0S9PUaKXNy4HySWwuHG3zvY-4feUEiciTgIzvvs4y9VUURg
+Message-ID: <CAFULd4b=5Gh1YxJtq3bWKZFf_jCRrSFv5TurGDEP3ymCfjpPkQ@mail.gmail.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Nikhil,
+On Sun, Mar 30, 2025 at 12:10=E2=80=AFAM H. Peter Anvin <hpa@zytor.com> wro=
+te:
+>
+> On March 29, 2025 2:19:37 AM PDT, Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> >The proposed solution builds on the fact that with -march=3Dnative (and
+> >also when -mpopcnt is specified on the command line) , the compiler
+> >signals the availability of certain ISA by defining the corresponding
+> >definition. We can use this definition to relax the constraints to fit
+> >the instruction, not the ABI of the fallback function call. On x86, we
+> >can also access memory directly, avoiding clobbering a temporary input
+> >register.
+> >
+> >Without the fix for (obsolete) false dependency, the change becomes simp=
+ly:
+> >
+> >#ifdef __POPCNT__
+> >     asm ("popcntl %[val], %[cnt]"
+> >                 : [cnt] "=3Dr" (res)
+> >                 : [val] ASM_INPUT_RM (w));
+> >#else
+> >
+> >and besides the reported savings of 600 bytes in the .text section
+> >also allows the register allocator to schedule registers (and input
+> >arguments from memory) more optimally, not counting additional 9k
+> >saved space in the alternative section.
+> >
+> >The patch is also an example, how -march=3Dnative enables further
+> >optimizations involving additional ISAs.
+>
+> If you have __POPCNT__ defined, could you not simply use __builtin_popcnt=
+()?
 
-Nikhil Dhama <nikhil.dhama@amd.com> writes:
+We can use it, but then the compiler (at least GCC) will start to emit
+false dependency fixups for POPCNT instructions (which we don't want;
+TZCNT has the same problem, where we agreed that it is not worth
+fixing for 10 years old cpus [1]).
 
-> In old pcp design, pcp->free_factor gets incremented in nr_pcp_free()
-> which is invoked by free_pcppages_bulk(). So, it used to increase 
-> free_factor by 1 only when we try to reduce the size of pcp list or
-> flush for high order.
-> and free_high used to trigger only for order > 0 and order <
-> costly_order and free_factor > 0.
->   
-> and free_factor used to scale down by a factor of 2 on every successful
-> allocation. 
->
-> for iperf3 I noticed that with older design in kernel v6.6, pcp list was
-> drained mostly when pcp->count > high (more often when count goes above
-> 530). and most of the time free_factor was 0, triggering very few 
-> high order flushes.
->
-> Whereas in the current design, free_factor is changed to free_count to keep
-> track of the number of pages freed contiguously, 
-> and with this design for iperf3, pcp list is getting flushed more 
-> frequently because free_high heuristics is triggered more often now.
->
-> In current design, free_count is incremented on every deallocation,
-> irrespective of whether pcp list was reduced or not. And logic to
-> trigger free_high is if free_count goes above batch (which is 63) and
-> there are two contiguous page free without any allocation. 
-> (and with cache slice optimisation).
->
-> With this design, I observed that high order pcp list is drained as soon 
-> as both count and free_count goes about 63.
->  
-> and due to this more aggressive high order flushing, applications 
-> doing contiguous high order allocation will require to go to global list
-> more frequently.
->
-> On a 2-node AMD machine with 384 vCPUs on each node, 
-> connected via Mellonox connectX-7, I am seeing a ~30% performance 
-> reduction if we scale number of iperf3 client/server pairs from 32 to 64. 
->
-> So, though this new design reduced the time to detect high order flushes, 
-> but for application which are allocating high order pages more
-> frequently it may be flushing the high order list pre-maturely.
-> This motivates towards tuning on how late or early we should flush
-> high order lists.
->
-> for free_high heuristics. I tried to scale batch and tune it, 
-> which will delay the free_high flushes.
->
->
-> 			score	# free_high
-> -----------		-----	-----------
-> v6.6 (base)		100	 	4
-> v6.12 (batch*1)		 69	      170
-> batch*2			 69	      150
-> batch*4			 74	      101
-> batch*5			100	       53
-> batch*6			100	       36
-> batch*8			100		3
->   
-> scaling batch for free_high heuristics with a factor of 5 or above restores
-> the performance, as it is reducing the number of high order flushes.
->
-> On 2-node AMD server with 384 vCPUs each,score for other benchmarks with 
-> patch v2 along with iperf3 are as follows:
+Please note that __builtin functions are not strictly required to be
+inlined and can generate a library call [2]. I have been burned by
+this fact with __builtin_parity(), so IMO the safest way in case of
+POPCNT insn is to use ISA macros only to determine the availability of
+ISA.
 
-Em..., IIUC, this may disable the free_high optimizations.  free_high
-optimization is introduced by Mel Gorman in commit f26b3fa04611
-("mm/page_alloc: limit number of high-order pages on PCP during bulk
-free").  So, this may trigger regression for the workloads in the
-commit.  Can you try it too?
+Also note that optimizations with constant arguments are already
+performed elsewhere (c.f. <asm-generic/bitops/const_hweight.h>) and
+__arch_hweight() receives only variable arguments, so optimization
+opportunities with __builtin function are greatly reduced.
 
->                      iperf3    lmbench3            netperf         kbuild
->                               (AF_UNIX)      (SCTP_STREAM_MANY)
->                     -------   ---------      -----------------     ------
-> v6.6 (base)            100          100                  100          100
-> v6.12                   69          113                 98.5         98.8
-> v6.12 with patch       100        112.5                100.1         99.6 
->
-> for network workloads, clients and server are running on different
-> machines conneted via Mellanox Connect-7 NIC. 
->
-> number of free_high:
-> 		     iperf3    lmbench3            netperf         kbuild
->                               (AF_UNIX)      (SCTP_STREAM_MANY)
->                     -------   ---------      -----------------     ------
-> v6.6 (base)              5          12                   6           2
-> v6.12                  170          11                  92           2
-> v6.12 with patch    	58          11                	34           2
->
->
-> Signed-off-by: Nikhil Dhama <nikhil.dhama@amd.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ying Huang <huang.ying.caritas@gmail.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Bharata B Rao <bharata@amd.com>
-> Cc: Raghavendra <raghavendra.kodsarathimmappa@amd.com>
->
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index b6958333054d..326d5fbae353 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2617,7 +2617,7 @@ static void free_unref_page_commit(struct zone *zone, struct per_cpu_pages *pcp,
->  	 * stops will be drained from vmstat refresh context.
->  	 */
->  	if (order && order <= PAGE_ALLOC_COSTLY_ORDER) {
-> -		free_high = (pcp->free_count >= batch &&
-> +		free_high = (pcp->free_count >= (batch*5) &&
->  			     (pcp->flags & PCPF_PREV_FREE_HIGH_ORDER) &&
->  			     (!(pcp->flags & PCPF_FREE_HIGH_BATCH) ||
->  			      pcp->count >= READ_ONCE(batch)));
+[1] https://lore.kernel.org/lkml/CAFULd4ZzoW+vP_pa1hEF--gvsG8yaPLU8S7oBkJBZ=
+LP4Tirepw@mail.gmail.com/
+[2] https://lore.kernel.org/linux-mm/CAKbZUD0N7bkuw_Le3Pr9o1V2BjjcY_YiLm8a8=
+DPceubTdZ00GQ@mail.gmail.com/
 
----
-Best Regards,
-Huang, Ying
+Uros.
