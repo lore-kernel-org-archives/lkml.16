@@ -1,79 +1,40 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E981C32;
-	Sun, 30 Mar 2025 10:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7004211CAF;
+	Sun, 30 Mar 2025 10:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743330731; cv=none; b=uVZq62WUrBjl7kQbaY0nz2SV/fgEKepsOWfaUH1jKq5q9+LvtOwlJojNv+JecUWuetZht7GDVJk3qJ6TOYPNy2MhkR2zuLxl7ec2fth1V7fxO3IlJYC8eczUr4HBd77LjbXtwMnKB7uAVMA2/4KmaZCsARN0QWv44bwT7uFbThQ=
+	t=1743330853; cv=none; b=WZDfkXdqnvOKPCt2Bg02WtnoKsSni/3OP9KIyNgCyJ8Na/JhMyea1SSHstEut2witrHuIBvnvPYJcMI5kdSTKawwtFBtREeNyp5YqAdcF6BSqFbW5ODj/nU6lhhMmVKXH9SEbnFqFroAdK1o8fKE6Cx0bQ4XP5MQUANSemz+dD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743330731; c=relaxed/simple;
-	bh=4CsmiRTGPgjRJkOtRLEfCjNRl+x/o92qpy4n1tthYh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8i/upQ2IYBDE83RLMjrRqFh+Dklcg2WKpGsORtvkA7X92GVVWpFKJXqY+w7FB+5rmoiln89S5TkMpGYmsiAUeYIxZTqPoJ29kp5GuMdYRK2JQVT8PkEZHmJsgtT+yGp4IHIIM6DaO/DJsHbZP0rt+LHTbrCdnySYpo1fGoX6WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fw9SCgHK; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743330853; c=relaxed/simple;
+	bh=/Q3k5X2P4dwXQISDL+GBAhFuGgVmsV1ZMtOfAK/F7aQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TgRZBkOmZjSpeDkVqLjhSWWf14omoZA8930wiArWgH7YrUkrQyfVolEyK9Qw+Pe+JovJ/fpRsdudRgBYQ2VlEMeiyPILAS4lD17j0EqiqbtHcKTahPN9rw6jT1eb+wOi6uQBdHkxnocDChU0LloGUeEjDKxmM3g0FirVJ3RxFyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=E8lzzqlY; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fw9SCgHK"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224100e9a5cso67672755ad.2;
-        Sun, 30 Mar 2025 03:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743330729; x=1743935529; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nC8MTZbIQ3cw2rW7vnWZ7qJLnzWQzFuLM6bwSWKD7+s=;
-        b=Fw9SCgHKubXVQNMgOgSJsLL07CmmFbblVNDcofl0EmV3PabKGN4WHQgiYHVfvTHPpH
-         4onV02tVwr+s7sgyvT81ZTsAI/+gkx6uRVCiy79ILWpQr+yfsykRI9au/h2tMDkmcMF6
-         kgaPBXQqe0EFCuR7u4253fp+HfMX9VWIUdr3BlLeYEuZCSLEukPpp3g4Z2Fxpayr2pWK
-         jr2bdOUeJf87cJaC8HQ2KF8/S7aSclYsS5zhprp+36otP7WeMdN+MDBTL817Gsjg6NVA
-         3Krwzk5DTZOodXm9KHnRKOXRj5Mxu2ql9AijQ41gqa/z+KIWWaRCIPSeSEgec3Cc+OyJ
-         CTsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743330729; x=1743935529;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nC8MTZbIQ3cw2rW7vnWZ7qJLnzWQzFuLM6bwSWKD7+s=;
-        b=W/IcvFvs7F3J6gNJtDuQUMMKmjhh++goTQI98wEwbanrZfcrqYrEw5MNlrHZXKjHbY
-         ThU05FyiLfQBbntmrTNayIOCpkBgEljO7i7hqMadIFHX9FtbRZ+vagmVq13nDneaye9u
-         yJjcsObft66CGhnqbfcB0G1xBXb4246fh8kCYKqh25QmE8wlXwSYafr44aIK5PDiagGy
-         tjvEPmq2rf2q+K57pxSAGLR+4QA/cg+HmE2bu4zIjcBCIc3hTXGUb4DFpTgFuSFyyaqj
-         RvTyQOL+3qlkqFiJXKn5nrdqu/c2fgEJuAzy9nZtsbfK8i0I38J5vP1rNrpooAQ2u2h5
-         w0VA==
-X-Forwarded-Encrypted: i=1; AJvYcCUK2R2uDhWL0lHCyFniMOS7DqUVcHJGePfNjMOrnWlYYpu9AlZ+VZTuS7cT1oJ/4r/zYqTz013KbxubaQ0=@vger.kernel.org, AJvYcCXQmCzD2jbNUAX0nizWIev8svq4l7iHn8yjyfCL/LUW0nTB5kcCGNJ/iMhTTXcrsIDbIgGQYxFswQLBhNNaGM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF4SdvzZzNGMj3yU8xOLbM03aFNQAs/1/Yta/whBnbNXPdKMxM
-	N3kuDcEUN79LG7rVS96GnE7IwuYMLRW7GmBXCerbG7TDReipXlu4
-X-Gm-Gg: ASbGncs+0nrroiZ4PVV16ONZXOBZYJTjedltf+jIEQZqqWeu71iMUCsxylTtzdfYANn
-	LNGPiaIc5DlI/dvObaU9pyKJhfmYDv25N1lmw+XAoqkP1gPacfgQrnyFmPUU/gHt4HIYpEtdZcr
-	GI5dshtF8uWMgNXxlHVbU0LatmJkA/OmPBD8fVEAhXYLWbuxXHKRE9odQrbEarP6tPQE2TPa+rt
-	E1HUqH1iUsQfWwhDX4kfa5k9TjQQugN7lLgU55ELWkin4YRChQ14hZT6xdpoRdMmJhirceI39k7
-	/qyZjCST12oLWIdeAV7NuLQbdm/ni92fGE4soaVAwZY+7+FUM+J09voHhi5WssloUBjnP1M=
-X-Google-Smtp-Source: AGHT+IF2U0LzXGyGzaSSSOSuiBfH1sRfywjZs24Sy+5pYInOUAquWdNQ3Ifee87/AniJGorJuPkWbw==
-X-Received: by 2002:a05:6a00:174b:b0:736:4d44:8b77 with SMTP id d2e1a72fcca58-7398035e5a0mr9197373b3a.8.1743330729403;
-        Sun, 30 Mar 2025 03:32:09 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.217.226])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73970e29377sm5111720b3a.66.2025.03.30.03.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 03:32:08 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: johannes@sipsolutions.net
-Cc: nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	erick.archer@outlook.com,
-	kvalo@kernel.org,
-	miriam.rachel.korenblit@intel.com,
-	emmanuel.grumbach@intel.com,
-	abdun.nihaal@gmail.com,
-	linville@tuxdriver.com,
-	khoroshilov@ispras.ru,
-	linux-wireless@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] wifi: at76c50x: fix use after free access in at76_disconnect
-Date: Sun, 30 Mar 2025 16:01:10 +0530
-Message-ID: <20250330103110.44080-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="E8lzzqlY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=R/OU0
+	V8NdoaJXsUCiLUPKOq7COZkSQ1mwl2m2pWiWKA=; b=E8lzzqlYztuKqKaYYo1Ah
+	hYhIoXtLhNQz29V8PYzfAUHoNBB/whZyrvaBRRtfbQTWkWhyydN+PZn98GeuchsZ
+	2a5gp4VOlIEBLUQDiHvkmj7OJrcuBtS65F5Mw+yAc+4LKCJj4lUsDAZ5OuKTWerl
+	ndv4fwz3bC/YQ9wW0IJc+U=
+Received: from WIN-S4QB3VCT165.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXj9gEHulnSK1lCw--.60329S4;
+	Sun, 30 Mar 2025 18:33:41 +0800 (CST)
+From: Debin Zhu <mowenroot@163.com>
+To: linux-security-module@vger.kernel.org
+Cc: netdev@vger.kernel.org,
+	selinux@vger.kernel.org,
+	paul@paul-moore.com,
+	linux-kernel@vger.kernel.org,
+	kuba@kernel.org,
+	Debin Zhu <mowenroot@163.com>,
+	Bitao Ouyang <1985755126@qq.com>
+Subject: [PATCH v2] netlabel: Fix NULL pointer exception caused by CALIPSO on IPv4 sockets
+Date: Sun, 30 Mar 2025 18:33:39 +0800
+Message-Id: <20250330103339.30794-1-mowenroot@163.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,33 +42,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAXj9gEHulnSK1lCw--.60329S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCr1rtry3tF4kurW7Cry5twb_yoWrCryDpF
+	yDKan8A348AFWUWws3XFWkCrWSkF4kKF17urWxAw4YkasrGr18Ja48KrWIya4ayFZrKrZ5
+	Xr48ta1F9w4kC3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRebytUUUUU=
+X-CM-SenderInfo: pprzv0hurr3qqrwthudrp/1tbiEwwelGfmvP2sogACsZ
 
-The memory pointed to by priv is freed at the end of at76_delete_device
-function (using ieee80211_free_hw). But the code then accesses the udev
-field of the freed object to put the USB device. This may also lead to a
-memory leak of the usb device. Fix this by using udev from interface.
+Vulnerability Description:
 
-Fixes: 29e20aa6c6af ("at76c50x-usb: fix use after free on failure path in at76_probe()")
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+	From Linux Kernel v4.0 to the latest version, 
+	a type confusion issue exists in the `netlbl_conn_setattr` 
+	function (`net/netlabel/netlabel_kapi.c`) within SELinux, 
+	which can lead to a local DoS attack.
+
+	When calling `netlbl_conn_setattr`, 
+	`addr->sa_family` is used to determine the function behavior. 
+	If `sk` is an IPv4 socket, 
+	but the `connect` function is called with an IPv6 address, 
+	the function `calipso_sock_setattr()` is triggered. 
+	Inside this function, the following code is executed:
+
+	sk_fullsock(__sk) ? inet_sk(__sk)->pinet6 : NULL;
+
+	Since `sk` is an IPv4 socket, `pinet6` is `NULL`, 
+	leading to a null pointer dereference and triggering a DoS attack.
+
+<TASK>
+calipso_sock_setattr+0x4f/0x80 net/netlabel/netlabel_calipso.c:557
+netlbl_conn_setattr+0x12a/0x390 net/netlabel/netlabel_kapi.c:1152
+selinux_netlbl_socket_connect_helper 
+selinux_netlbl_socket_connect_locked+0xf5/0x1d0 
+selinux_netlbl_socket_connect+0x22/0x40 security/selinux/netlabel.c:611
+selinux_socket_connect+0x60/0x80 security/selinux/hooks.c:4923
+security_socket_connect+0x71/0xb0 security/security.c:2260
+__sys_connect_file+0xa4/0x190 net/socket.c:2007
+__sys_connect+0x145/0x170 net/socket.c:2028
+__do_sys_connect net/socket.c:2038 [inline]
+__se_sys_connect net/socket.c:2035 [inline]
+__x64_sys_connect+0x6e/0xb0 net/socket.c:2035
+do_syscall_x64 arch/x86/entry/common.c:51 
+
+Affected Versions:
+
+- Linux 4.0 - Latest Linux Kernel version
+
+Reproduction Steps:
+
+	Use the `netlabelctl` tool and 
+	run the following commands to trigger the vulnerability:
+
+	netlabelctl map del default
+	netlabelctl cipsov4 add pass doi:8 tags:1
+	netlabelctl map add default address:192.168.1.0/24 protocol:cipsov4,8
+	netlabelctl calipso add pass doi:7
+	netlabelctl map add default address:2001:db8::1/32 protocol:calipso,7
+
+Then, execute the following PoC code:
+
+	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+	struct sockaddr_in6 server_addr = {0};
+	server_addr.sin6_family = AF_INET6;     
+	server_addr.sin6_port = htons(8080);    
+
+	const char *ipv6_str = "2001:db8::1";    
+	inet_pton(AF_INET6, ipv6_str, &server_addr.sin6_addr);
+
+	connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+
+Suggested Fix:
+
+	When using an IPv4 address on an IPv6 UDP/datagram socket, 
+	the operation will invoke the IPv4 datagram code through 
+	the IPv6 datagram code and execute successfully. 
+	It is necessary to check whether the `pinet6` pointer 
+	returned by `inet6_sk()` is NULL; otherwise, 
+	unexpected issues may occur.
+
+Signed-off-by: Debin Zhu <mowenroot@163.com>
+Signed-off-by: Bitao Ouyang <1985755126@qq.com>
 ---
-V1 -> V2 : Add subsystem name in commit header message
+ net/ipv6/calipso.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
- drivers/net/wireless/atmel/at76c50x-usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/atmel/at76c50x-usb.c b/drivers/net/wireless/atmel/at76c50x-usb.c
-index 504e05ea30f2..97ea7ab0f491 100644
---- a/drivers/net/wireless/atmel/at76c50x-usb.c
-+++ b/drivers/net/wireless/atmel/at76c50x-usb.c
-@@ -2552,7 +2552,7 @@ static void at76_disconnect(struct usb_interface *interface)
+diff --git a/net/ipv6/calipso.c b/net/ipv6/calipso.c
+index dbcea9fee..a8a8736df 100644
+--- a/net/ipv6/calipso.c
++++ b/net/ipv6/calipso.c
+@@ -1072,8 +1072,13 @@ static int calipso_sock_getattr(struct sock *sk,
+ 	struct ipv6_opt_hdr *hop;
+ 	int opt_len, len, ret_val = -ENOMSG, offset;
+ 	unsigned char *opt;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
  
- 	wiphy_info(priv->hw->wiphy, "disconnecting\n");
- 	at76_delete_device(priv);
--	usb_put_dev(priv->udev);
-+	usb_put_dev(interface_to_usbdev(interface));
- 	dev_info(&interface->dev, "disconnected\n");
- }
++	if (!pinfo)
++		return -EAFNOSUPPORT;
++
++	txopts = txopt_get(pinfo);
+ 	if (!txopts || !txopts->hopopt)
+ 		goto done;
+ 
+@@ -1125,8 +1130,13 @@ static int calipso_sock_setattr(struct sock *sk,
+ {
+ 	int ret_val;
+ 	struct ipv6_opt_hdr *old, *new;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
+-
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
++
++	if (!pinfo)
++		return -EAFNOSUPPORT;
++
++	txopts = txopt_get(pinfo);
+ 	old = NULL;
+ 	if (txopts)
+ 		old = txopts->hopopt;
+@@ -1153,8 +1163,13 @@ static int calipso_sock_setattr(struct sock *sk,
+ static void calipso_sock_delattr(struct sock *sk)
+ {
+ 	struct ipv6_opt_hdr *new_hop;
+-	struct ipv6_txoptions *txopts = txopt_get(inet6_sk(sk));
++	struct ipv6_pinfo *pinfo = inet6_sk(sk);
++	struct ipv6_txoptions *txopts;
+ 
++	if (!pinfo)
++		return;
++
++	txopts = txopt_get(pinfo);
+ 	if (!txopts || !txopts->hopopt)
+ 		goto done;
  
 -- 
-2.47.2
+mowenroot@163.com
 
