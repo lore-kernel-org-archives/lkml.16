@@ -1,247 +1,275 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474DA433A4
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 08:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C0A433A4;
+	Sun, 30 Mar 2025 08:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324392; cv=none; b=sz5C97NtspHAcXrlzk3KK7wTZ7iPy2TjCcpQ0HZb7IaUGUH1+w4zjVg5eS22GtQFW+GSM4tIubYUnv0ZYzJCJqD2qkXkvVGWpkEM6flc4WJJA83zR3g965L26Q44QtXHg2kV3MfK94qJ71NStCFEqr06NOlpdiJdTFaiXLmMp5I=
+	t=1743324498; cv=none; b=RKtrcnY+fH1yC2L9BS61DbKsBYBi43qe7rxvFTbXF5MaW7v5pgvsjylh2aMOnDvDSQvwyZ5bx3I188WU1vJlnUQZYfTDbKDNNbufejWpRuwWei++uQ1NWgOa62tPI/ILNA1Nt3EmUhV1w86C0w/gf/uHIAgJReNLsnz5KsOoaAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324392; c=relaxed/simple;
-	bh=nB5zVyoWkKtSMWyrB2qF1NlwiT86Km+y0OY6hSECnvk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sdmj5e6j6aUPyy5z4nrSWMUxkMsck42/Vym27+i6/M1zfIMqYeezPVK3QQ8ELhsEZeC6ILRS6FIjwB5w8UTgXMxG511IJ3t6Zr4POt7Q/X81urPiaMDIi7pyW2SVooRfULtBSc9X8oUXVO4UzeE6qJZB2+6T2u3rekoyznZ8POg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=a/M8mE5p; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1743324498; c=relaxed/simple;
+	bh=u2jHDVSry0FpBHziWHd2Q+tk8Gg6YND6fS4BDzD2Ako=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gi8LE3JvbaG8sMC7y34gYz2yH9zhzjOE8rUb4U8Y6DPY6HdEi9N1idiCjP3Q83t5N2kCyP08DOHrpbCmZm50eAigRrQwgTZOeY231nri0zHFyNaLQZgkPAqitvWqdEU/4gFfjp+9uvyj4IVFToYdpmZd4zL0S70f0PqJvryQPKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nou3TA3q; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="a/M8mE5p"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224104a9230so8424895ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 01:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1743324389; x=1743929189; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OP7wSVRxqZprZiQ3YXaTRHM9F6vanGJpiTcjAfY0K+g=;
-        b=a/M8mE5pEPEZpi4twMo/d218cb2ErAW/gbhIxO1Urx1FeDjC7TKKlr0MyONT3hPSU/
-         M9sS6Kgedg7cmiT/lEWjY+HO++s1id2MlFecCjWnionhPnK/7n+OBcaHL9aSNXIJ7QxR
-         B8xjX6ZNm+K/0zegeSjn92cNrDWBKdd599t4fLyAyuG0GtIJHBElSgles77rzh28YPmt
-         xEaG0ECqpPhb02YzxwHyUGi66XD5jG7YCd8R0Hy5IjRQ7W4wucR0xibjKrt2fLztO2bj
-         +rZvJzIQBzd69R6Iw6tG8GFV4CD9p0Cc9g7KzYhZTADAzhmRTrjNlYIsYuQ07Pd441xd
-         D1uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743324389; x=1743929189;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OP7wSVRxqZprZiQ3YXaTRHM9F6vanGJpiTcjAfY0K+g=;
-        b=aazRh6Rd7gThiJegq8aDhWhepPUTyFr/mB21XL+E7TKTtYZbfu6+og0C9TLD3tzc+3
-         LlhVAMY9RlPbPiSd2yd2myHxrJyT15S1JUMyvPCJMn4WHx4IyeJxkTnAkoJMrKRHqbGf
-         vegC+zuK/pasKmb7AnNjHZ8R5GYqPBZPfuF8qQnUigkVvvX1YRbOSxK9fI4TG8qgLI9y
-         6dGCImAf5vSSNQC8oo3bBOTROEUFqieGyzqvc+mHWhA6oVOK2IEfmTsTxeU2/GgiDAdF
-         8FpEpC6QY0e5vaNqan59yi10iRXRDxoEVFQiV1ca1Yb6MPZXyqNkW8vEiuBG56Pwi49Z
-         TtnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhr3ZlszBIz0X4H0mjRU+9vDhQPshPSxpbZrWsAMzUie5MetTD5nPXIVehy2efia6MRcEwWrwz0U8PCl0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx42CjM6Z/Za0raRoPhtyQcE5VuHb2mKHPSVumaCITH3ULeG/8D
-	AcrL2gnjKKddCPPK4JuAJcVMnlwVw56/jfgjJ+df25qb71Dwgxg4UCGWqVKdnvn32fbfX2YbIlD
-	n
-X-Gm-Gg: ASbGncvmdtgw4zxPiFwn5wYn8RjvvFQ7i9uc2rCbJnErntu+ARoaTuA/zfgEK8sMRDE
-	AolpSchZGPcFGhP5sQlVMe6ZoM9sCqFp+opUTPB6TwxaZILPJmyuHiJi1mdAelyHdpnrYxY77o7
-	yP/6DcR2WNjnudSEtkphZsRkp4I2Sw0/jp+O+xeU+SlouQb3jEeSyn+JsS30vZjjipCZN0e+rr8
-	b3Q96JSxz4h1pO5+faI2IfSV68mvvFX6778GgQNiTiLOVX06ROWtSAK5PdU9MjBCnY19MzamtBL
-	C4nGvLN61Hx4znNK48KtzJHiqbR5laZ/zubaDk6LhbBN6mTtTfQ9Of9mkMKmIzHk4XBdb1DRJg=
-	=
-X-Google-Smtp-Source: AGHT+IESerX/3Q+xCrZX3JL51WpJGwixgjurQesFsCydWjwPEC6uzOqOPSIKSgLlCTMS8yrZcYmSsg==
-X-Received: by 2002:a17:902:ef09:b0:216:3dd1:5460 with SMTP id d9443c01a7336-2292f944d43mr30195315ad.2.1743324389345;
-        Sun, 30 Mar 2025 01:46:29 -0700 (PDT)
-Received: from [10.254.231.96] ([139.177.225.229])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971068581sm4810804b3a.114.2025.03.30.01.46.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 01:46:28 -0700 (PDT)
-Message-ID: <f5f056f1-a698-4660-87f0-63f5753c1679@bytedance.com>
-Date: Sun, 30 Mar 2025 16:46:20 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nou3TA3q"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dUuG2447366
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 30 Mar 2025 03:39:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743323970;
+	bh=OtYLXG90eJ5bXrADp8w285Rs0wrLbQJIKJ4ztNMCQR8=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=nou3TA3qQASygvb6AaTTblhQAJ9aKFIDwkR/V7F3gEI6RNLKI4BkW4G9GC+y7cecS
+	 eyYAKBL0Ye5yx04p0EdWmpxfMHefUzg5YxsVBoU3zjxY4CIMnjDaqB+y4UHqoWF+s6
+	 Uoen4NWYzTshU98rT2RGJUCfKEceYpTmLoiBnFa4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dUfG020420
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 30 Mar 2025 03:39:30 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
+ Mar 2025 03:39:29 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 30 Mar 2025 03:39:29 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dE4i015769;
+	Sun, 30 Mar 2025 03:39:25 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <18255117159@163.com>, <cassel@kernel.org>,
+        <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
+CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2 2/4] PCI: cadence-host: Introduce cdns_pcie_host_disable helper for cleanup
+Date: Sun, 30 Mar 2025 14:09:12 +0530
+Message-ID: <20250330083914.529222-3-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250330083914.529222-1-s-vadapalli@ti.com>
+References: <20250330083914.529222-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [RFC][PATCH] sched: Cache aware load-balancing
-Content-Language: en-US
-To: "Chen, Yu C" <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
- tim.c.chen@linux.intel.com, tglx@linutronix.de, mingo@kernel.org,
- gautham.shenoy@amd.com, kprateek.nayak@amd.com
-References: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
- <93907416-dab4-4a3a-82b6-e37e4ee334db@bytedance.com>
- <143a63f6-3e1b-42fd-a4c8-8d2f6b7d3583@intel.com>
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <143a63f6-3e1b-42fd-a4c8-8d2f6b7d3583@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 3/29/25 11:06 PM, Chen, Yu C wrote:
-> On 3/28/2025 9:57 PM, Abel Wu wrote:
->>
->> IIUC this work updates stats for the whole mm and seems not
->> necessary for each task of the process to repeat same thing.
->> Hence would be better move this work to mm_struct.
->>
-> 
-> It seems that the per task cache_work is used to avoid
-> duplicated task_cache_work() in task->task_works queue, see
-> task_tick_cache()'s check
->   if (work->next == work)
->      task_work_add()
+Introduce the helper function cdns_pcie_host_disable() which will undo
+the configuration performed by cdns_pcie_host_setup(). Also, export it
+for use by existing callers of cdns_pcie_host_setup(), thereby allowing
+them to cleanup on their exit path.
 
-Yes, this check avoids task_works being corrupt caused by double
-adding the work, no matter this work is task- or mm-specific. So
-if moving to mm_struct, this check become false once any task takes
-this work, and other tasks can not do the same job until that task
-finishes by setting work->next to work.
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
 
-BTW, moving to mm_struct will save some memory footprint?
+v1:
+https://lore.kernel.org/r/20250307103128.3287497-3-s-vadapalli@ti.com/
+Changes since v1:
+- Collected "Reviewed-by" tag from:
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> 
-> To do exclusive task_cache_work() and only allow 1 task
-> in the process to do the calculation, maybe introducing similar mechanism like task_numa_work(), something like this:
-> 
-> if (!try_cmpxchg(&mm->cache_next_scan, &calc, next_scan))
->      return;
+Regards,
+Siddharth.
 
-Yes, this looks good to me. While Peter used epoch to regulate
-the frequency of this work, which is a ligher way but allows some
-inaccuracy which is further fixed by a double check after holding
-mm->mm_sched_lock.
+ .../controller/cadence/pcie-cadence-host.c    | 104 ++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h |   5 +
+ 2 files changed, 109 insertions(+)
 
-I plan to use trylock on mm->mm_sched_lock first. If trylock fails
-then someone is adding the work and we can skip early.
-
-static void task_tick_cache(struct rq *rq, struct task_struct *p)
-{
-	...
-
-	if (mm->mm_sched_epoch == rq->cpu_epoch)
-		return;
-
-	guard(raw_spinlock)(&mm->mm_sched_lock);  <-- trylock
-
-	...
-}
-
-> 
->>> +
->>> +static inline
->>> +void account_mm_sched(struct rq *rq, struct task_struct *p, s64 delta_exec)
->>> +{
->>> +    struct mm_struct *mm = p->mm;
->>> +    struct mm_sched *pcpu_sched;
->>> +    unsigned long epoch;
->>> +
->>> +    /*
->>> +     * init_task and kthreads don't be having no mm
->>> +     */
->>> +    if (!mm || !mm->pcpu_sched)
->>> +        return;
->>> +
->>> +    pcpu_sched = this_cpu_ptr(p->mm->pcpu_sched);
->>> +
->>> +    scoped_guard (raw_spinlock, &rq->cpu_epoch_lock) {
->>> +        __update_mm_sched(rq, pcpu_sched);
->>> +        pcpu_sched->runtime += delta_exec;
->>> +        rq->cpu_runtime += delta_exec;
->>> +        epoch = rq->cpu_epoch;
->>> +    }
->>> +
->>> +    /*
->>> +     * If this task hasn't hit task_cache_work() for a while, invalidate
->>> +     * it's preferred state.
->>> +     */
->>> +    if (epoch - READ_ONCE(mm->mm_sched_epoch) > EPOCH_OLD) {
->>> +        mm->mm_sched_cpu = -1;
->>> +        pcpu_sched->occ = -1;
->>> +    }
->>
->> This seems too late. account_mm_sched() is called when p is runnable,
->> so if the whole process sleeps for a while before woken up, ttwu will
->> take the out-dated value.
->>
-> 
-> Yup, there seems to be a problem. It would be better if we could reset the mm_sched_cpu to -1 after the last thread of the process falls asleep. But considering that all threads are sleeping, even if the ttwu tries to enqueue the first newly-woken thread to an out-dated idle mm_sched_cpu, does it matter? I guess it would not be a serious problem, because all the cache of the process might have been evicted due to long sleep.
-
-Yes, it seems not a big deal if mm_sched_cpu not overwrites any better
-choice.
-
-> 
->>> +
->>> +static void task_cache_work(struct callback_head *work)
->>> +{
->>> +    struct task_struct *p = current;
->>> +    struct mm_struct *mm = p->mm;
->>> +    unsigned long m_a_occ = 0;
->>> +    int cpu, m_a_cpu = -1;
->>> +    cpumask_var_t cpus;
->>> +
->>> +    WARN_ON_ONCE(work != &p->cache_work);
->>> +
->>> +    work->next = work;
->>> +
->>> +    if (p->flags & PF_EXITING)
->>> +        return;
->>> +
->>> +    if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
->>> +        return;
->>> +
->>> +    scoped_guard (cpus_read_lock) {
->>> +        cpumask_copy(cpus, cpu_online_mask);
->>> +
->>> +        for_each_cpu(cpu, cpus) {
->>> +            /* XXX sched_cluster_active */
->>> +            struct sched_domain *sd = per_cpu(sd_llc, cpu);
->>> +            unsigned long occ, m_occ = 0, a_occ = 0;
->>> +            int m_cpu = -1, nr = 0, i;
->>> +
->>> +            for_each_cpu(i, sched_domain_span(sd)) {
->>> +                occ = fraction_mm_sched(cpu_rq(i),
->>> +                            per_cpu_ptr(mm->pcpu_sched, i));
->>> +                a_occ += occ;
->>> +                if (occ > m_occ) {
->>> +                    m_occ = occ;
->>> +                    m_cpu = i;
->>> +                }
->>
->> It would be possible to cause task stacking on this hint cpu
->> due to its less frequently updated compared to wakeup.
->>
-> 
-> The SIS would overwrite the prev CPU with this hint(cached) CPU, and use that cached CPU as a hint to search for an idle CPU, so ideally it should not cause task stacking. But there is a race condition that multiple wakeup path might find the same cached "idle" CPU and queue wakees on it, this usually happens when there is frequent context switch(wakeup)+short duration tasks.
-
-Ideally mm_sched_cpu is updated every EPOCH_PERIOD which is default
-to 10ms, so I'm afraid the race window is not small.
-
-> 
-> 
->> And although the occupancy heuristic looks reasonable, IMHO it
->> doesn't make much sense to compare between cpus as they share
->> the LLC, and a non-hint cpu with warmer L1/L2$ in same LLC with
->> the hint cpu seems more preferred.
->>
->> Do you think it's appropriate or not to only hint on the hottest
->> LLC? So the tasks can hopefully wokenup on 'right' LLC on the
->> premise that wouldn't cause much imbalance between LLCs.
->>
->  > I will do some tests and return with more feedback.
->  >
-> 
-> Find an idle CPU in the wakee's hostest LLC seems to be plausible.
-> The benchmark data might indicate a proper way.
-> 
-> thanks,
-> Chenyu
-> 
-> 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 96055edeb099..741508738f88 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -152,6 +152,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+ 	return ret;
+ }
+ 
++static void cdns_pcie_host_disable_ptm_response(struct cdns_pcie *pcie)
++{
++	u32 val;
++
++	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
++	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val & ~CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
++}
++
+ static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+ {
+ 	u32 val;
+@@ -177,6 +185,26 @@ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+ 	return ret;
+ }
+ 
++static void cdns_pcie_host_deinit_root_port(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	u32 value, ctrl;
++
++	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, 0xffff);
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0xff);
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0xff);
++	cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, 0xffffffff);
++	cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, 0xffff);
++	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
++	value = ~(CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
++		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
++		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
++		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
++		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
++		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS);
++	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
++}
++
+ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+@@ -393,6 +421,32 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
+         return resource_size(entry2->res) - resource_size(entry1->res);
+ }
+ 
++static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	enum cdns_pcie_rp_bar bar;
++	u32 value;
++
++	/* Reset inbound configuration for all BARs which were being used */
++	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
++		if (rc->avail_ib_bar[bar])
++			continue;
++
++		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), 0);
++		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), 0);
++
++		if (bar == RP_NO_BAR)
++			continue;
++
++		value = ~(LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
++			  LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
++			  LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
++			  LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
++			  LM_RC_BAR_CFG_APERTURE(bar, bar_aperture_mask[bar] + 2));
++		cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
++	}
++}
++
+ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+@@ -430,6 +484,29 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+ 	return 0;
+ }
+ 
++static void cdns_pcie_host_deinit_address_translation(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
++	struct resource_entry *entry;
++	int r;
++
++	cdns_pcie_host_unmap_dma_ranges(rc);
++
++	/*
++	 * Reset outbound region 0 which was reserved for configuration space
++	 * accesses.
++	 */
++	cdns_pcie_reset_outbound_region(pcie, 0);
++
++	/* Reset rest of the outbound regions */
++	r = 1;
++	resource_list_for_each_entry(entry, &bridge->windows) {
++		cdns_pcie_reset_outbound_region(pcie, r);
++		r++;
++	}
++}
++
+ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+@@ -487,6 +564,12 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	return cdns_pcie_host_map_dma_ranges(rc);
+ }
+ 
++static void cdns_pcie_host_deinit(struct cdns_pcie_rc *rc)
++{
++	cdns_pcie_host_deinit_address_translation(rc);
++	cdns_pcie_host_deinit_root_port(rc);
++}
++
+ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+ {
+ 	int err;
+@@ -499,6 +582,14 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+ }
+ EXPORT_SYMBOL_GPL(cdns_pcie_host_init);
+ 
++static void cdns_pcie_host_link_disable(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++
++	cdns_pcie_stop_link(pcie);
++	cdns_pcie_host_disable_ptm_response(pcie);
++}
++
+ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+@@ -524,6 +615,19 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+ }
+ EXPORT_SYMBOL_GPL(cdns_pcie_host_link_setup);
+ 
++void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
++{
++	struct pci_host_bridge *bridge;
++
++	bridge = pci_host_bridge_from_priv(rc);
++	pci_stop_root_bus(bridge->bus);
++	pci_remove_root_bus(bridge->bus);
++
++	cdns_pcie_host_deinit(rc);
++	cdns_pcie_host_link_disable(rc);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_host_disable);
++
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 4b7f295e24e7..0b6bed1ac146 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -523,6 +523,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
+ int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
++void cdns_pcie_host_disable(struct cdns_pcie_rc *rc);
+ void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 			       int where);
+ #else
+@@ -541,6 +542,10 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	return 0;
+ }
+ 
++static inline void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
++{
++}
++
+ static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 					     int where)
+ {
+-- 
+2.34.1
 
