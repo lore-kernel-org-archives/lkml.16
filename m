@@ -1,269 +1,220 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4905735973
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853ED1DB546
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743354413; cv=none; b=erqh+n/Fvl64RywbUI4wRxGjvIF8QG9Fd6CG6/VcfbpmDhmlm0q1RNBPqjtoGdMSCc6Bts3MX2jLs632IMJLNgbqIzNdNayJih284Lz4W9bsLWwJr+BuTeLCueurVnuKTGOtBxgifQiBnC9+LQ3hzSSc84px1qIy4QjBNICgx7c=
+	t=1743354419; cv=none; b=ObP9hSqQ8SEe+kU680aOnoj0DPjuYXoQj4AbF5jq/MHoJ42W7ZASbkMHElFZAGi0J/uzz8+FVuu1balW+SlJv27hYV7274xJ1+zavOujBGbcfCbtenGsfvS5DQG2XpZLTYkroIwfYbJI+M9EqNYOwep6JHs49Qwm4YRx5DHPCIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743354413; c=relaxed/simple;
-	bh=264WT+/htHneIl3gN4jYFdYsxux8A+vzovoCXWZVB7A=;
+	s=arc-20240116; t=1743354419; c=relaxed/simple;
+	bh=5UmCN6T9Cr1gCtDDz08QVciKcS4TNX6bP4xhWdD/03c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MB1hyrCOp4chR9AfCYF3pfK58gVLO5MTu6BQhDRUgDDtLBcRhcvEpkJDImB1CY3wcTv4mt2qh/K6f6ZswJKG7uNgdqhKjOBfdBkqLbvHNboaMKMionOgNg7DJIs9+LuIJGFuOdsGDsu7GcsPQWg4iU5W7qzP/7GHb/1HkXFYCGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pSy6Xvni; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMK4ImmkSTdcxVuV15bmvzo3JD6R2zsqY0LvXnio+wWuAxiYtYovDhYZOWTa0L2n8Vi7t15cUa1k4VTZLwSjqC+8w6qfv5vPGDsKtDEpvkymXM8oLA5tplSAGA+sr0Zn2Wxye2L+FgnFELy8GnwrxMgpwCxeNZB1cKlvcPBDqck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gnsH83w+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pSy6Xvni"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52U9fmfJ021318
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:06:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=I+VLkI+ax9ERPcJ9cL1bscBH
-	LAOnRdfptdTShhJuse0=; b=pSy6XvnivVuyjdrXmo4lbz4DHMSSlvvvhwHM4tjx
-	oSibeMe92EF8qzuXerJx0c6iEigSCmGrmTvwdfYz+g6vg1dTjO/RriONPuZ+nVCt
-	wgT4AJyUQZ17CDW+ewveJNWCMikRPNAnEJI0zaCZho50c7RCywVlLzb+moBDQ1Qx
-	v/73pXfOx4k+kypTOlTfLZja5ZIlBszEH5kAQBLHih6GdkMc4AXvZg1dPQGhEcE3
-	DjzCrRdirRJjd0LSa5Wvuw8lBIPk3HJfBlCr0Ef58QAe7vAwCgbiDSHO9bucpyu/
-	Kko5ycKEKhsyAmDtMYUKqkJ1CKxDgl8o3XiC5BtvlWXOMg==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhjqm8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:06:51 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c549ea7166so594778885a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:06:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gnsH83w+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743354416;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q3mk6TbPcxIg/goVXurjT8cjd9wFt7uMusUUceOMSw4=;
+	b=gnsH83w+LEvnz/9UzYJxOSwl0DD3U4YQF62i+QZPC3hocp/LTC5bu5oMMAiWKKf3auiR5M
+	SOybO3X3P5MLBzWwLubmq/5bZB5tTHSEGiMj2hsfC2fXyPQbZuAtjqeu1U6nzZdq7CPyWA
+	mmdqmcvS7lkNSuVxJ/T3JfoEEIzoeQU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661--p_g3TguNk68BNRmiDx5yg-1; Sun, 30 Mar 2025 13:06:55 -0400
+X-MC-Unique: -p_g3TguNk68BNRmiDx5yg-1
+X-Mimecast-MFC-AGG-ID: -p_g3TguNk68BNRmiDx5yg_1743354414
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so33281435e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:06:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743354410; x=1743959210;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I+VLkI+ax9ERPcJ9cL1bscBHLAOnRdfptdTShhJuse0=;
-        b=Wm5SIHVcfZwVtb5XYUPZuj/KiAI1NOESA0FxLc65W1Vj6YI6kWO+A//hhT0sOHzNke
-         yG2U6drjiXsqJ1Mzy8kAxXqe8rKOH0b/+QaQn+6FucgrHnHxoumZcz4ODsdSVPP7l/Wq
-         0sRfSPnxk4jYxoJSmDEB6+MAFhQ6y3I3Gn/Yc1qiMyk3sT0RfS47s09HIkB6aB9aTHMl
-         ERtNqcar96SNH7b2OCJV6ZYvjs2e+5vGDT1inozYacIuwiqDRiLkngyoyPLYuPMBDdAx
-         d96mGP/nHtsNPwQDIYO1TS8pLBxVMFaIO4SyXQVT5OK/RIk1iyFFfQff9ysEKsTRIakj
-         aqrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXRWFOeJK15RqHHvDsVDxoVsxH3nX/H1N+nc4DTUrTRfH7Ewx8l3e6tHkpausM/F3sYoQ9LqyHDiWdHZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHH+PGF2eUL5o3Ul5C+ODh69wUSV38BYh9Fpuf2X2l20dMPQd4
-	MGNkkAz3pZU+vQyhrYjHIao1sXk0+1n9TrQu54BI2Kzoehnc2bK3ThzfhCfwVYedxnzeognb/s2
-	vLuJDUVFgTuUWUsFztxeaGZlFyXvC2avXex+oa8C+/ogHwT951JGkXG/Vl5Q3+40=
-X-Gm-Gg: ASbGnctbhj0MPpy+BwjagA9KRf8T3WmZIi+La4KjePToVTTvAs4G5lPgQvnGAlXVadf
-	MyhoObBCvEW0KMTlEJjK4AxGZWchQrFAyr8U9KHB3bvDEe9x4rOOi58MqfjdxnyqJG/UM3AWPgB
-	Lgzz7cbgcb1hBNyH2xaBtdUNo9uA0VbpcfDlJuZJvo5rzZljx3a0pvCZvfoDNGZ0nsvFWLBVXWB
-	8OHPs3NxFxjb5VG1p/gz7tqGw/t/sXATiKCrbuUDWEyCnjUwAOinCwZh/IPcNkpFqLKXyjbM5t7
-	q4G+GoMIp9hmpmlVlXUXlnQF3eQZBe5YTm4Ga7LYFsKJikbqnU1JTTRQLXLVy9Y1P+istIU7XQ9
-	fK1E=
-X-Received: by 2002:a05:620a:258a:b0:7c5:44d0:7dba with SMTP id af79cd13be357-7c6862eb951mr652266285a.11.1743354409814;
-        Sun, 30 Mar 2025 10:06:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHXdbnVrztDXt1+jaui5Pj368uoHZyRke4qm8wUBYD+KeXW481x0Ae0ktxhm8GoDb6798JqpA==
-X-Received: by 2002:a05:620a:258a:b0:7c5:44d0:7dba with SMTP id af79cd13be357-7c6862eb951mr652262485a.11.1743354409461;
-        Sun, 30 Mar 2025 10:06:49 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c00edsm948945e87.32.2025.03.30.10.06.47
+        d=1e100.net; s=20230601; t=1743354414; x=1743959214;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q3mk6TbPcxIg/goVXurjT8cjd9wFt7uMusUUceOMSw4=;
+        b=mDqDlzweSQ+YSaU4b+qCuL1MybwtugL8tUxNPQv5qNAiHFkz2dnb1bhQOFIc9WeSw3
+         qsuXgiQlKx9sTC03jez5/9YjfKAPav2ZmB1neatabBLtas7gKKjJYpQLyOUTBI1G9Y9X
+         BgL/Ir/diJ44y/SLz9KFljg2jsiwBZI8IC/5uHgh0JUXuzd9Zk6onHXkU9zCNVOmn7Ha
+         bzgbgvKEPTuB47LTg4ND2qvAQE71zQP3KAeExQaZTg5dv9ex6eIrl9kBLnKX2dk6jsYo
+         vC4xVnvf7M5A1WOtt1xIZrHMAW0DfaUPYWi2W4ZdLU7aSAEw3uS8bV5epqvdBUDuN3SE
+         ZqAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWW5PLIk/JN3qFyh9Td0nndkN+rEyukrVgZRAgUHzsiUMBmotyRXVt4iYqGp0qOwaxvnHzZc1deR7X8z+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnY4FgZYOg8d/jTcWMjdmFckZnH3vDC3dKTEzdZmhJ1g1k9D9l
+	DZhuipwmckLFDUrMAKmpF8n0xNqS82+nM/zAsf7A6Zb69k2TATo5Yt26dWTufNaiU5QAHxQJOic
+	sYp3q8gBs1rgOB7gBTrh8Z5FkklUNafoPCX4blUyXdxZLOrU0F7u3A9QVDGB03w==
+X-Gm-Gg: ASbGnctNbR5IyW++PCJ8r1ABTUA2h+6KYyF+0pM53mqpIb4gOHCwydq8Y1rZNJglM4b
+	VkPkVuXNNTbS5S5e5hqRQazEdx5EzZijHnWLX4UIl79HTl8qd2POoCSber/f4J5VMkpUSV/UiZZ
+	EEiO1Y4E+nIxpBfZ5eaW39mrG0eGtFkn5aqZM++wzj2mQkd4DeAiyfQcwki672DT0AVMfi43WDV
+	JpCKE6/23uNOx10AXYNVaLSLRPCGM72JKPzKXUVzb6hatfI6MtElHuXZyiJJJcWwde7MyofcsOC
+	F3Pa734I1Q==
+X-Received: by 2002:a05:6000:290f:b0:390:f552:d291 with SMTP id ffacd0b85a97d-39c120dc53emr6045349f8f.22.1743354413860;
+        Sun, 30 Mar 2025 10:06:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHnojfMbGERAUL3k9pGdjXNeKSJM3z6oVNts7beynMJRyZ4qGr50Up8p35T+/D9THLJjAJmw==
+X-Received: by 2002:a05:6000:290f:b0:390:f552:d291 with SMTP id ffacd0b85a97d-39c120dc53emr6045310f8f.22.1743354413473;
+        Sun, 30 Mar 2025 10:06:53 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02e75sm96683605e9.30.2025.03.30.10.06.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 10:06:47 -0700 (PDT)
-Date: Sun, 30 Mar 2025 20:06:45 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
-        helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
-        robdclark@gmail.com, guilherme.gallo@collabora.com,
-        sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
-        lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
-Message-ID: <v4dhuuuvfk63bakncz43z3ndjdze5ac7nrv6qvtpdnonfpetsx@5hh3vzcj336x>
-References: <20250327160117.945165-1-vignesh.raman@collabora.com>
- <20250327160117.945165-3-vignesh.raman@collabora.com>
+        Sun, 30 Mar 2025 10:06:52 -0700 (PDT)
+Date: Sun, 30 Mar 2025 13:06:47 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Claire Chang <tientzu@chromium.org>, Rob Herring <robh+dt@kernel.org>,
+	mpe@ellerman.id.au, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	boris.ostrovsky@oracle.com, jgross@suse.com,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	heikki.krogerus@linux.intel.com, peterz@infradead.org,
+	benh@kernel.crashing.org, grant.likely@arm.com, paulus@samba.org,
+	mingo@kernel.org, sstabellini@kernel.org,
+	Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+	xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	Nicolas Boichat <drinkcat@chromium.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	"list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	virtualization@lists.linux.dev, graf@amazon.de
+Subject: Re: Using Restricted DMA for virtio-pci
+Message-ID: <20250330125929-mutt-send-email-mst@kernel.org>
+References: <20210209062131.2300005-1-tientzu@chromium.org>
+ <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
+ <20250321142947-mutt-send-email-mst@kernel.org>
+ <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250327160117.945165-3-vignesh.raman@collabora.com>
-X-Proofpoint-GUID: 1vlsz02IBLs2iYaRqQHjM8ZiJlE1YQr0
-X-Proofpoint-ORIG-GUID: 1vlsz02IBLs2iYaRqQHjM8ZiJlE1YQr0
-X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67e97a2b cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=e5mUnYsNAAAA:8 a=QX4gbG5DAAAA:8 a=Mlic37jVtDCE-JpPDfwA:9 a=NV4wyG33IU+YRRekGPUaDRyT+ac=:19
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=Vxmtnl_E_bksehYqCbjh:22 a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300119
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
 
-On Thu, Mar 27, 2025 at 09:31:11PM +0530, Vignesh Raman wrote:
-> Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
-> exit with a non-zero error code while configuring them as warning in
-> the GitLab CI pipeline.
-
-Can it really succeed or is it going to be an always-failing job? The
-dt_binding_check generally succeed, dtbs_check generates tons of
-warnings. We are trying to make progress there, but it's still very far
-from being achevable.
-
+On Fri, Mar 21, 2025 at 06:42:20PM +0000, David Woodhouse wrote:
+> On Fri, 2025-03-21 at 14:32 -0400, Michael S. Tsirkin wrote:
+> > On Fri, Mar 21, 2025 at 03:38:10PM +0000, David Woodhouse wrote:
+> > > On Tue, 2021-02-09 at 14:21 +0800, Claire Chang wrote:
+> > > > This series implements mitigations for lack of DMA access control on
+> > > > systems without an IOMMU, which could result in the DMA accessing the
+> > > > system memory at unexpected times and/or unexpected addresses, possibly
+> > > > leading to data leakage or corruption.
+> > > 
+> > > Replying to an ancient (2021) thread which has already been merged...
+> > > 
+> > > I'd like to be able to use this facility for virtio devices.
+> > > 
+> > > Virtio already has a complicated relationship with the DMA API, because
+> > > there were a bunch of early VMM bugs where the virtio devices where
+> > > magically exempted from IOMMU protection, but the VMM lied to the guest
+> > > and claimed they weren't.
+> > > 
+> > > With the advent of confidential computing, and the VMM (or whatever's
+> > > emulating the virtio device) not being *allowed* to arbitrarily access
+> > > all of the guest's memory, the DMA API becomes necessary again.
+> > > 
+> > > Either a virtual IOMMU needs to determine which guest memory the VMM
+> > > may access, or the DMA API is wrappers around operations which
+> > > share/unshare (or unencrypt/encrypt) the memory in question.
+> > > 
+> > > All of which is complicated and slow, if we're looking at a minimal
+> > > privileged hypervisor stub like pKVM which enforces the lack of guest
+> > > memory access from VMM.
+> > > 
+> > > I'm thinking of defining a new type of virtio-pci device which cannot
+> > > do DMA to arbitrary system memory. Instead it has an additional memory
+> > > BAR which is used as a SWIOTLB for bounce buffering.
+> > > 
+> > > The driver for it would look much like the existing virtio-pci device
+> > > except that it would register the restricted-dma region first (and thus
+> > > the swiotlb dma_ops), and then just go through the rest of the setup
+> > > like any other virtio device.
+> > > 
+> > > That seems like it ought to be fairly simple, and seems like a
+> > > reasonable way to allow an untrusted VMM to provide virtio devices with
+> > > restricted DMA access.
+> > > 
+> > > While I start actually doing the typing... does anyone want to start
+> > > yelling at me now? Christoph? mst? :)
+> > 
+> > 
+> > I don't mind as such (though I don't understand completely), but since
+> > this is changing the device anyway, I am a bit confused why you can't
+> > just set the VIRTIO_F_ACCESS_PLATFORM feature bit?  This forces DMA API
+> > which will DTRT for you, will it not?
 > 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> ---
->  drivers/gpu/drm/ci/check-devicetrees.yml | 38 ++++++++++++++++++++++
->  drivers/gpu/drm/ci/dt-binding-check.sh   | 18 +++++++++++
->  drivers/gpu/drm/ci/dtbs-check.sh         | 41 ++++++++++++++++++++++++
->  drivers/gpu/drm/ci/gitlab-ci.yml         |  1 +
->  4 files changed, 98 insertions(+)
->  create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
->  create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
->  create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+> That would be necessary but not sufficient. The question is *what* does
+> the DMA API do?
 > 
-> diff --git a/drivers/gpu/drm/ci/check-devicetrees.yml b/drivers/gpu/drm/ci/check-devicetrees.yml
-> new file mode 100644
-> index 000000000000..5f0c477f7578
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/check-devicetrees.yml
-> @@ -0,0 +1,38 @@
-> +.dt-check-base:
-> +  timeout: "1h"
-> +  variables:
-> +    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
-> +  script:
-> +    - drivers/gpu/drm/ci/${SCRIPT_NAME}
-> +  artifacts:
-> +    when: on_failure
-> +    paths:
-> +      - ${ARTIFACT_FILE}
-> +  allow_failure:
-> +    exit_codes:
-> +      - 102
-> +
-> +dtbs-check:arm32:
-> +  extends:
-> +    - .build:arm32
-> +    - .dt-check-base
-> +  variables:
-> +    SCRIPT_NAME: "dtbs-check.sh"
-> +    ARTIFACT_FILE: "dtbs-check.log"
-> +
-> +dtbs-check:arm64:
-> +  extends:
-> +    - .build:arm64
-> +    - .dt-check-base
-> +  variables:
-> +    SCRIPT_NAME: "dtbs-check.sh"
-> +    ARTIFACT_FILE: "dtbs-check.log"
-> +
-> +dt-binding-check:
-> +  extends:
-> +    - .build
-> +    - .use-debian/x86_64_build
-> +    - .dt-check-base
-> +  variables:
-> +    SCRIPT_NAME: "dt-binding-check.sh"
-> +    ARTIFACT_FILE: "dt-binding-check.log"
-> diff --git a/drivers/gpu/drm/ci/dt-binding-check.sh b/drivers/gpu/drm/ci/dt-binding-check.sh
-> new file mode 100755
-> index 000000000000..2a72bb89c013
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/dt-binding-check.sh
-> @@ -0,0 +1,18 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: MIT
-> +
-> +set -euxo pipefail
-> +
-> +apt-get update -qq
-> +apt install -y --no-install-recommends yamllint
-> +pip3 install dtschema
-> +
-> +if ! make -j${FDO_CI_CONCURRENT:-4} dt_binding_check >/dev/null 2>dt-binding-check.log; then
-
-I'd rather see errors in job output too.
-
-> +    echo "ERROR: 'make dt_binding_check' failed. Please check dt-binding-check.log for details."
-> +    exit 1
-> +fi
-> +
-> +if [[ -s dt-binding-check.log ]]; then
-> +    echo "WARNING: dt_binding_check reported warnings. Please check dt-binding-check.log for details."
-> +    exit 102
-> +fi
-> diff --git a/drivers/gpu/drm/ci/dtbs-check.sh b/drivers/gpu/drm/ci/dtbs-check.sh
-> new file mode 100755
-> index 000000000000..a0129d5a53b0
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/dtbs-check.sh
-> @@ -0,0 +1,41 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: MIT
-> +
-> +set -euxo pipefail
-> +
-> +. drivers/gpu/drm/ci/override-ld-with-bfd.sh
-> +
-> +apt-get update -qq
-> +pip3 install dtschema
-> +
-> +case "${KERNEL_ARCH}" in
-> +    "arm")
-> +        GCC_ARCH="arm-linux-gnueabihf"
-> +        ;;
-> +    "arm64")
-> +        GCC_ARCH="aarch64-linux-gnu"
-> +        ;;
-> +    "x86_64")
-> +        GCC_ARCH="x86_64-linux-gnu"
-> +        ;;
-> +    *)
-> +        echo "Unsupported architecture: ${KERNEL_ARCH}"
-> +        exit 1
-> +        ;;
-> +esac
-> +
-> +export ARCH="${KERNEL_ARCH}"
-> +export CROSS_COMPILE="${GCC_ARCH}-"
-> +
-> +make `basename ${DEFCONFIG}`
-> +make -j${FDO_CI_CONCURRENT:-4} dtbs
-
-You don't need to build dtbs separately, dtbs_check includes dtbs.
-
-> +
-> +if ! make -j${FDO_CI_CONCURRENT:-4} dtbs_check >/dev/null 2>dtbs-check.log; then
-
-I'd rather see errors in job output too.
-
-> +    echo "ERROR: 'make dtbs_check' failed. Please check dtbs-check.log for details."
-> +    exit 1
-> +fi
-> +
-> +if [[ -s dtbs-check.log ]]; then
-> +    echo "WARNING: dtbs_check reported warnings. Please check dtbs-check.log for details."
-> +    exit 102
-> +fi
-> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-> index 65adcd97e06b..9e61b49e9960 100644
-> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
-> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-> @@ -108,6 +108,7 @@ include:
->    - drivers/gpu/drm/ci/static-checks.yml
->    - drivers/gpu/drm/ci/build.yml
->    - drivers/gpu/drm/ci/test.yml
-> +  - drivers/gpu/drm/ci/check-devicetrees.yml
->    - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/lab-status.yml'
->  
->  
-> -- 
-> 2.47.2
+> For a real passthrough PCI device, perhaps we'd have a vIOMMU exposed
+> to the guest so that it can do real protection with two-stage page
+> tables (IOVA→GPA under control of the guest, GPA→HPA under control of
+> the hypervisor). For that to work in the pKVM model though, you'd need
+> pKVM to be talking the guest's stage1 I/O page tables to see if a given
+> access from the VMM ought to be permitted?
 > 
+> Or for confidential guests there could be DMA ops which are an
+> 'enlightenment'; a hypercall into pKVM to share/unshare pages so that
+> the VMM can actually access them, or SEV-SNP guests might mark pages
+> unencrypted to have the same effect with hardware protection.
+> 
+> Doing any of those dynamically to allow the VMM to access buffers in
+> arbitrary guest memory (when it wouldn't normally have access to
+> arbitrary guest memory) is complex and doesn't perform very well. And
+> exposes a full 4KiB page for any byte that needs to be made available.
+> 
+> Thus the idea of having a fixed range of memory to use for a SWIOTLB,
+> which is fairly much what the restricted DMA setup is all about.
+> 
+> We're just proposing that we build it in to a virtio-pci device model,
+> which automatically uses the extra memory BAR instead of the
+> restricted-dma-pool DT node.
+> 
+> It's basically just allowing us to expose through PCI, what I believe
+> we can already do for virtio in DT.
+
+I am not saying I am against this extension.
+The idea to restrict DMA has a lot of merit outside pkvm.
+For example, with a physical devices, limiting its DMA
+to a fixed range can be good for security at a cost of
+an extra data copy.
+
+So I am not saying we have to block this specific hack.
+
+what worries me fundamentally is I am not sure it works well
+e.g. for physical virtio cards.
+Attempts to pass data between devices will now also require
+extra data copies.
+
+
+Did you think about adding an swiotlb mode to virtio-iommu at all?
+Much easier than parsing page tables.
+
+
 
 -- 
-With best wishes
-Dmitry
+MST
+
