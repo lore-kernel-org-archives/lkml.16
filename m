@@ -1,91 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9696B78F29
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0542AEED;
+	Sun, 30 Mar 2025 09:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743327841; cv=none; b=n8yTBQtEWg/S/hMq3A3aqxucQmYX9FlMpwO3jIi48QvHiYAXOfB5WKN/y1JZHdLlIDL/jWV3YYK+6jU3f/hGSHv6E3CTPnGWCfMxIknu4MsfRlsksbMjBEW22ModUXI2a78LRAAoZJiIw5fO9uLj50Wdj20aet0d+Mijweukbkk=
+	t=1743328064; cv=none; b=gxfus4byJtXCY/UMc0aeubGrQIX3lz2jLFbJnCAtGrckDT6FLYVjConTggeTIy2VmMyFu8FGR0vrIYTqWyoeV9RSUNQqqKSo34e1EpEcQZajprztuVkv7/0hPh8kyy/Sh4owriq77Hi32OSDtTXs4AcrCWbFFidntkAKrevbz+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743327841; c=relaxed/simple;
-	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YwL9JoTH245jmI2wRMmb/wN9MXHUkabSD+bEkwYmHYMqPumicDT2smcA/b/umABV3FeiS79Ld0Bgh4Vrdx4H59tYd3lN2ts3ZMVq06/HGdF4cWHu9Xrp1xfEGt2jZmxfPJHZvzD0TGYnOGLSreX4Kf05Y+6BAuc7Bda7+ARPq78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S45ZTCwq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743328064; c=relaxed/simple;
+	bh=psvkuZ2HANcXsLHVMnp8FjLK9GuAYITBf0uSmRyuCVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kg6Bqgz/QBF2EwCvJVgdaxvKa0O8bW8Wp+dmDGThPlMbwZfGXCNCYMTYrAa999rCY4k/k7nvIMiQb5WXwL+zHK6B5d5lzouvy9sEg82kkzJ82sEogDN9jy8FKTooFfLgmr2vAEI/8wBD8zzCuIR5DncCahbib0GewKr1nDO0JLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrQZBimv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S45ZTCwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D2FC4CEDD
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:44:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrQZBimv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CEBFC4CEDD;
+	Sun, 30 Mar 2025 09:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743327841;
-	bh=0YXluHFZq6Z9vSO7L1Xh83iHulVfnNR6llaVWJByH0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S45ZTCwq2kHVpFq/y3lL/UzaEcOgqEFfNnoj0RgYBW0yzxe6NdD/WLYSasBzr+ClB
-	 N0p2TVTk2JNC1ouiQJGH+obGWPPbglZwU6Idz8zrBaACJeGP+9sFbsQEUDGn58ibkf
-	 ot1nNui2w7Nome/adQMqGebl+LSBGf9QY6G7rZDomD0e5ifdpw0SOWYuwpVJHV0PJC
-	 LM0U6F4jpQPQufX+Pjo6ua/cCQMeVRKaLBH9xemK+kbzw3G8e/NuZBDfHzFpXQBet7
-	 3OE4PD0Bwsci5SObKYd089ggNUv2gTooG3GFRvRj8O4BRqOmBTba7yfUcAz8c1t33v
-	 Ib7S+4kUC/96A==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac29fd22163so599078766b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 02:44:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX1R/eXSJzFV5XsN5dcnEg3QP54K5yuu1MotxG4Lk2dxDz+UrgQ8u+uU1r0AOjQQh6Z7qwzTwGPl4//1a8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw30vKCECiSPwFparXB7sNF3dgPYF+v1igur09EtsDzddbgR0YQ
-	64V93c+/aK9ryt7SeZ/fMW2BasJBnaAaYpJ5SXuFxo+jdI9GntOtR7/UGyQm+j+Kw/OBAn2iRnI
-	eY4qogCdUCqiUzYujBrqNAZsQZQg=
-X-Google-Smtp-Source: AGHT+IFNzj5RgPbZFTwtEoDlkVrQD7AFWQB2HR/KFzTHpsjuJk7kAi+3yG6WGzLSjp8vJaxh9TNURuFlgBvLCOVFDDQ=
-X-Received: by 2002:a17:907:9693:b0:ac6:ff34:d046 with SMTP id
- a640c23a62f3a-ac7389ea430mr489833366b.2.1743327839602; Sun, 30 Mar 2025
- 02:43:59 -0700 (PDT)
+	s=k20201202; t=1743328063;
+	bh=psvkuZ2HANcXsLHVMnp8FjLK9GuAYITBf0uSmRyuCVY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OrQZBimvw5BmUwfbK5Gie4EbkXBd/xbjkNzSjev9VMI3E8AZ0AsworyQgB5oKmFOn
+	 6lzTnPt+D0zHIgwWwUGCiXDNk1ryT81BK5d4u5BQxBIdHYTovKdofaW3Vq8EPytVkS
+	 viCqYt3fyXJTZ6Qgw10c09IUtbsF15rkhv7Y9WsinV9U5RLY0RIHKWnMBULZ/be/XO
+	 93+iB760B/TyDUBJwpeXTVmRSqXo5fFLjj5k1tqDiAhRXEoWbDK3kN9ZDCtDkrXebQ
+	 Y7rJ/wpYMyn0tpft0Uv4JBURgVddp0XnSGzYNYcytoH6XK3i/a46KUIMW8wpuQllRB
+	 B0gj9i4PybYbA==
+Message-ID: <564768c3-56f0-4236-86e6-00cacb7b6e7d@kernel.org>
+Date: Sun, 30 Mar 2025 11:47:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319025413.67014-1-linmq006@gmail.com>
-In-Reply-To: <20250319025413.67014-1-linmq006@gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 30 Mar 2025 17:43:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
-X-Gm-Features: AQ5f1JovyJXUWpxNRcfdKpHq0uOXu1s-LbigB0Ck1IzFHnj9mnOzVtoQC_UVERY
-Message-ID: <CAAhV-H77Y2aCWd678KOABZ+yEkXVZWr2ZLMzLQKKs23EWGPPuw@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch: Fix device node refcount leak in fdt_cpu_clk_init
-To: Miaoqian Lin <linmq006@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Hongliang Wang <wanghongliang@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: net: Add MTIP L2 switch description
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250328133544.4149716-1-lukma@denx.de>
+ <20250328133544.4149716-2-lukma@denx.de>
+ <e6f3e50f-8d97-4dbc-9de3-1d9a137ae09c@kernel.org>
+ <20250329231004.4432831b@wsk>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250329231004.4432831b@wsk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Applied, thanks.
+On 29/03/2025 23:10, Lukasz Majewski wrote:
+>>> +  
+>>
+>> If this is ethernet switch, why it does not reference ethernet-switch
+>> schema? or dsa.yaml or dsa/ethernet-ports? I am not sure which one
+>> should go here, but surprising to see none.
+> 
+> It uses:
+> $ref:·ethernet-controller.yaml#
+> 
+> for "ports".
+> 
+> Other crucial node is "mdio", which references $ref: mdio.yaml#
 
-Huacai
+These are children, I am speaking about this device node.
 
-On Wed, Mar 19, 2025 at 10:54=E2=80=AFAM Miaoqian Lin <linmq006@gmail.com> =
-wrote:
->
-> Add missing of_node_put() to properly handle the reference count of the
-> device node obtained from of_get_cpu_node().
->
-> Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from DTS=
-")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> ---
->  arch/loongarch/kernel/env.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 2f1f5b08638f..01aea44cf4b0 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -68,6 +68,7 @@ static int __init fdt_cpu_clk_init(void)
->                 return -ENODEV;
->
->         clk =3D of_clk_get(np, 0);
-> +       of_node_put(np);
->         if (IS_ERR(clk))
->                 return -ENODEV;
->
-> --
-> 2.39.5 (Apple Git-154)
->
+> 
+>>
+>>> +properties:
+>>> +  compatible:
+>>> +    const: nxp,imx287-mtip--switch  
+>>
+>> Just one -.
+>>
+> 
+> Ok.
+> 
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      The physical base address and size of the MTIP L2 SW module
+>>> IO range  
+>>
+>> Wasn't here, drop.
+>>
+> 
+> The 'reg' property (reg = <0x800f0000 0x20000>;) is defined in
+> imx28.dtsi, where the SoC generic properties (as suggested by Andrew -
+> like clocks, interrupts, clock-names) are moved.
+
+Drop description, not the reg. Reg was in the previous version. You
+added random changes here, not coming from the previous review.
+
+Best regards,
+Krzysztof
