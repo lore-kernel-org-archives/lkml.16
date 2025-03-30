@@ -1,176 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE54322E
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA1F322E;
+	Sun, 30 Mar 2025 21:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743371335; cv=none; b=gQvd86GL4Ujjmz8sZke4pEdpsYZVQnu1bmyHk5A6mc6jggeltcASqOi29bPakkPOuHHbfrFAOH4atHbK/v/5FIW0rflB4Xtksv/GlqT+lgkhcDRc0kPKeRzCGv35ZDax+US1VcH2bJSeHAjEN/Yb9tA3k0T7kzNL6fe8AwJ0S4E=
+	t=1743371380; cv=none; b=nbhVv7vPYnngMO1QDU7Cp92spUCgyZVL+5exA8K6WTkltDZRtVm9gi85GkvgS2NxoDegtTtEqG0OH31DMioD+PE0SL0R/lp6szEqd8cD42v/5iB5pgKUBlR/tDOJz5WXd1KHq1QVjhnUIWrF2Zn+AyMMGwpPsyzaxqBIa48MJtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743371335; c=relaxed/simple;
-	bh=KZH/gVFLFKR8E7Hs8KBGnWzJSYu4wOpcLXfxzdOJuWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IuoPfIi4vjdqOR4mbJgh5nnAAcxwk/SZrJ995djia3hv4n1F5YML3CikpMHvshg9V2EpIkJbubdivHt3VDXp8nFRqwM05iI6uNBu1enyNIjYpORss26mbFVyiTM+uSVUQXwFZ+PTVniP3r5TTZOAlvbcyTvW1Vg5/RdShfyJtW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hNpU6pON; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743371380; c=relaxed/simple;
+	bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B8PZ1OUGztwJmbhxIBofAhvKFO6Ne4ueRLAlFqpcg43mtrPi1x/nmCqk5G6n8oC28Ogh+f61n4t+SruxUtHmM7p4auqHOWYknIWyhcNJAS+MAi3JeO8GaxFMdV8BEQuQD23v1s4SVFwvpYLHeimq3MbuLeIClDh+lq5geghivbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSoiSl3s; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNpU6pON"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743371332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRkqFL3NXkPCwg+oa2kxw02pthB6mXCTdemECWhwX84=;
-	b=hNpU6pONKodQd8M3EaFiv2hkW8z9T57xb8mKe/6fwQP4r2uOXMyqo/dfIt+nlnwHmtXVbq
-	wQ1vehs87NGYy8Q7MT4LQCIlSRbjYF5CCA/r/K1EJJlhdTm8m3Hk+CthvJvXu8MncyODep
-	UN7+vTARjHsksykNsg+mytaw1YWHr/o=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-zqLfBKmGPySou_dPEdewHg-1; Sun, 30 Mar 2025 17:48:51 -0400
-X-MC-Unique: zqLfBKmGPySou_dPEdewHg-1
-X-Mimecast-MFC-AGG-ID: zqLfBKmGPySou_dPEdewHg_1743371330
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so26255785e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:48:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743371330; x=1743976130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSoiSl3s"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39129fc51f8so2871149f8f.0;
+        Sun, 30 Mar 2025 14:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743371377; x=1743976177; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MRkqFL3NXkPCwg+oa2kxw02pthB6mXCTdemECWhwX84=;
-        b=sbZRnukA4tRxUFf76hdtyDWFPF4p+QpQoN73b8UGCxACbNERY3j0Qpk1MXGSC+8FqO
-         27c6qw9p5rYrqXFFuQIkXQWV/WivEPjm7SuFYsVxQ42jnZGmiu0X83LSQEW+05P0rGW7
-         g/EjPI0rtZMu8fpqcX5fvr4mJ+0s0HBCKkJsLGPV2MrxPzP8hFYkwDC/NlbCByDumkt0
-         pDFUXjeCG8K3rUMcGp+N6+ZwY1gJGBBQywGbF1X2tWMz3gyUc8FEqPPt+ja5lUGzlCjg
-         Q8vV9Gu4S4xp3IpczxhXmVOYnbo6JPXGibnoINtTsvWTzO0RBZilxZW3x/0Vzr0D9OtZ
-         HqkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb0iPuJMNUNBWIT5GxeKPAHjYvBme9XKLZaLgXuVrxFZItenRckxnnyr5169lQIy34+YhPHkcu6IwbpEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrZTMkLM4FxQ+vf+UQjjU4ocAR9f3AlrzZ13LNnsOa7Sd0i4AP
-	9rpw/hRaU+zCTdtkhzngaZjSGPPZ5AQPpQyzrX/UlD7xc/gAl9d+/5l1tpgHRaTYm1h1T+lDZqY
-	wyrmvYMn1G9b/urBdTSFez8DDPK77c8Jnbhn5Ojft1WO/Tf7O51ctjgG2SUj4vw==
-X-Gm-Gg: ASbGnct0uJcnc527yYwdgZ1rwV8MhFS3yFQC1zZWgDpV+NM6vGHdR7cf3hMlHr7gptE
-	dia1dzSuZdImJraXJlodHjcQW13cIDFJIUCiLvM6ILcOD0echDAXyRNtIPH7npVQ1Lfu0Ak5uJ3
-	kNGDwIa1fdM46Pa8asLJfQufKLTzx/n33fcUzAs1C1NFQYPVbquR9ufutDo+bCf5jODXQvvnXIb
-	80jwNcWkXzOkQi8ZPGpHYxtEAaRUO+5nh+maj3Pvw25XCb27MOmmuevr1Tl2vzauiRDf3Iv1L3V
-	QuHNUwGHJA==
-X-Received: by 2002:a05:600c:1d8c:b0:43c:f050:fee8 with SMTP id 5b1f17b1804b1-43db628992cmr52509465e9.20.1743371329777;
-        Sun, 30 Mar 2025 14:48:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1kdHHR/M4aOUOFDnZpG/iLLAoqQlqVBS2836/4CKe19RX2SyJrF+xilFjC/1QxsrymXzr6Q==
-X-Received: by 2002:a05:600c:1d8c:b0:43c:f050:fee8 with SMTP id 5b1f17b1804b1-43db628992cmr52509055e9.20.1743371329422;
-        Sun, 30 Mar 2025 14:48:49 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e83477sm147882045e9.16.2025.03.30.14.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 14:48:48 -0700 (PDT)
-Date: Sun, 30 Mar 2025 17:48:42 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Claire Chang <tientzu@chromium.org>,
-	Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	boris.ostrovsky@oracle.com, jgross@suse.com,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	heikki.krogerus@linux.intel.com, peterz@infradead.org,
-	benh@kernel.crashing.org, grant.likely@arm.com, paulus@samba.org,
-	mingo@kernel.org, sstabellini@kernel.org,
-	Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-	xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Nicolas Boichat <drinkcat@chromium.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	"list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	virtualization@lists.linux.dev, graf@amazon.de
-Subject: Re: Using Restricted DMA for virtio-pci
-Message-ID: <20250330173951-mutt-send-email-mst@kernel.org>
-References: <20210209062131.2300005-1-tientzu@chromium.org>
- <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
- <20250321142947-mutt-send-email-mst@kernel.org>
- <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
- <20250330125929-mutt-send-email-mst@kernel.org>
- <E3EE485D-AD74-457C-BDEC-F8C62DFE4909@infradead.org>
+        bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
+        b=SSoiSl3s0qtJIhX5Nz67nDKc4GnMTQyutv0hSsGDrgxqBJiN33EUdUz3PdcQ+bLiIl
+         tTo/yr4kZxvgGmHYSvRL++Nsn3bKQUsH2lIVoK4Kg3DzLcO3F6IBTLCvzB+CQhGiKTb6
+         8CbLK2+DLRejqGwX0XQ3iibAwxdoh4pGcvQECyaglfOxJu1TDoCb+mLn66B6cS2ZspQf
+         zn1LhjFPspaULKuKsykn/GcqA5KG3SY6FQDl566N2v+5TLijw62HscEWoJGUMl55drDm
+         3Q236Q5a/dh8oqoaLySQlQhO8etVGmQeC/RFwS17ivrco/J9UbnpHPR/UkDM5moEMwMR
+         Nrrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743371377; x=1743976177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=89owqkNig/chtb1qbvXIS/wFn0LF4Vem9rBrdDWcVQc=;
+        b=tFUJoxhGCOTmfCG+9Q2DCLRWQK7CQOGM73DsGSXIJcx819Xv2aDpjoFvWRLHLUSQfS
+         VMVbk0a3PaEpc2ROH7DRCnTpY697WHj1HWdJbN31QBHpUAD3jpiHiNbYW+eT2wPrAR7G
+         kEuAsZLL05OhTihjT5CMZQxcyes/6mDZV00LQtLDGjRbDorlFE4CwFJhL+EGzf/7KNrI
+         n9scTbG3n+mkDXaERNoH5af2kLE1tjCMAX057vPamNk7Aca6OYZrHgONttPdfvnc0Th2
+         oxXoGnY0keRwvYImTcfvKl9FhpGFcEI2J9xikU12NuCkI6iyQzVm8VFsf3ly8405Zt24
+         5+uA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjj5SKhARuL7g4xqRhAY+cvhjLh56cxtt++b66UDEpogBBaRejwz87ujkXVAWgeavaIkOoTQLIfplybUc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8RVlrpckS8vgZQuuO0/mDyrVpfmqpojgovvJC412K3g79l5uu
+	cdVUX7t1z44Ljah5yI3kyqKeG33VS1KL3/wzDgTRkczspEyBOfYaMeWqCJZlWM9NSZqzMa3qo2C
+	r+xq8Kh3JzFunw4FKP+VjniKIMDDShcvg
+X-Gm-Gg: ASbGncsknFcCS8fL0EPePlphnSaeUPDg/xa4+VdhFjmc5eMJpfvktw4DYioYkQ+sCPa
+	zSNZiq+vgm082fcrf3DD7rtl4ULz320PQL6QgSSnzRHbOdfnBBAn6jCZIHzgQ8Q1tK9fWb293QD
+	JDofApzbZ2/WGV/pp/yooJOVE0JFT5leUw43k9wTyhCg==
+X-Google-Smtp-Source: AGHT+IEj5nVSpMEmpyscOMP8aBK71ZOCtpa6uRa277a20hDE37jwD6gF+LXfZmgu1gjRnSxec3eIglQ/Ysy3hK0lsJs=
+X-Received: by 2002:a5d:5983:0:b0:390:ebae:6c18 with SMTP id
+ ffacd0b85a97d-39c120db794mr4805640f8f.12.1743371376647; Sun, 30 Mar 2025
+ 14:49:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E3EE485D-AD74-457C-BDEC-F8C62DFE4909@infradead.org>
+References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
+ <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com> <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
+In-Reply-To: <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 30 Mar 2025 14:49:25 -0700
+X-Gm-Features: AQ5f1JpJScHiZxdaUdxrBAEAm56iBd_dKXIKv3TysCy4nSIInWB0LPwUwOK27nI
+Message-ID: <CAADnVQKBg0ESvDRvs_cHHrwLrpkar9bAZ9JJRnxUwe4zfGym6w@mail.gmail.com>
+Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Sebastian Sewior <bigeasy@linutronix.de>, 
+	Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 30, 2025 at 10:27:58PM +0100, David Woodhouse wrote:
-> On 30 March 2025 18:06:47 BST, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> >> It's basically just allowing us to expose through PCI, what I believe
-> >> we can already do for virtio in DT.
-> >
-> >I am not saying I am against this extension.
-> >The idea to restrict DMA has a lot of merit outside pkvm.
-> >For example, with a physical devices, limiting its DMA
-> >to a fixed range can be good for security at a cost of
-> >an extra data copy.
-> >
-> >So I am not saying we have to block this specific hack.
-> >
-> >what worries me fundamentally is I am not sure it works well
-> >e.g. for physical virtio cards.
-> 
-> Not sure why it doesn't work for physical cards. They don't need to be bus-mastering; they just take data from a buffer in their own RAM.
+On Sun, Mar 30, 2025 at 1:56=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> But I do think that the lock name needs fixing.
+>
+> "localtry_lock_t" is not a good name, and spreading that odd
+> "localtry" into the actual (non-try) locking functions makes the
+> naming actively insane.
+>
+> If the *only* operation you could do on the lock was "trylock", then
+> "localtry" would be fine. Then the lock literally is a "only try"
+> thing. But as it is, the naming now ends up actively broken.
+>
+> Honestly, the lock name should probably reflect the fact that it can
+> be used from any context (with a "trylock"), not about the trylock
+> part itself.
+>
+> So maybe "nmisafe_local_lock_t" or something in that vein?
+>
+> Please fix this up, There aren't *that* many users of
+> "localtry_xyzzy", let's get this fixed before there are more of them.
 
-I mean, it kind of does, it is just that CPU pulling data over the PCI bus
-stalls it so is very expensive. It is not by chance people switched to
-DMA almost exclusively.
+Ok. Agree with the reasoning that the name doesn't quite fit.
 
+nmisafe_local_lock_t name works for me,
+though nmisafe_local_lock_irqsave() is a bit verbose.
 
-> >Attempts to pass data between devices will now also require
-> >extra data copies.
-> 
-> Yes. I think that's acceptable, but if we really cared we could perhaps extend the capability to refer to a range inside a given BAR on a specific *device*? Or maybe just *function*, and allow sharing of SWIOTLB buffer within a multi-function device?
+Don't have better name suggestions at the moment.
 
-Fundamentally, this is what dmabuf does.
-
-> I think it's overkill though.
-> 
-> >Did you think about adding an swiotlb mode to virtio-iommu at all?
-> >Much easier than parsing page tables.
-> 
-> Often the guests which need this will have a real IOMMU for the true
-> pass-through devices.
-
-Not sure I understand. You mean with things like stage 2 passthrough?
-
-> Adding a virtio-iommu into the mix (or any other
-> system-wide way of doing something different for certain devices) is
-> problematic.
-
-OK... but the issue isn't specific to no DMA devices, is it?
-
-
-> The on-device buffer keeps it nice and simple,
-
-I am not saying it is not.
-It's just a little boutique.
-
-> and even allows us to
-> do device support for operating systems like Windows where it's a lot
-> harder to do anything generic in the core OS.
-
-Well we do need virtio iommu windows support sooner or later, anyway.
-
--- 
-MST
-
+Sebastian, Vlastimil,
+what do you prefer ?
