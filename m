@@ -1,113 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2569C80C02
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3C97082D;
+	Sun, 30 Mar 2025 19:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743362433; cv=none; b=EcZqq8j8wOwvFu8O2mvN6G/dvy5GO2y7B9BU8GMjW3mL2O6Qj9/QaHjHoFerCWY+wvslGe2AmAnA3gYX//nN3wXqVMsRz2enr8xTNlWKmAOnZqqUt9u1J1gfe5LTAmF/xc0YOPJCbbHk4q5aPlu0uTXpsmCce+SZbFeTxyk5xYk=
+	t=1743362600; cv=none; b=owxmonx7/SAqvRukQd4vbhGskC8nWTfB7R0t/LonufrgckNteMYAz24L2DEzJr1/rvw8ujaMBH2RB23dXvnUwSKwPuo+5ECctd9ixNyNaGalMG6AsZ6RdisWdYjapQ6DLaok0yniphJmiLVvEyIPA7kI8xMxA0b151bIpGXxdlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743362433; c=relaxed/simple;
-	bh=rsbJa18r1oClDCmvKLOHT/qFx7mEayUhEfw+cyknsOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bT5CtctSoJhnRYA/9DRbFLAQM4vDthDGsMU60W+20QmjIi4OLp9woK2zcu8G/sfQOo8MQD46JJ/mi1G467tOJW+zDNCSbFgdbd0UMRYq2GO8GviEmYDb03/I5b4530xn+K8gFbx9qdxGpcJMgMa8OB16lxBjPKGJUDZJbua3iW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpvD102o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743362600; c=relaxed/simple;
+	bh=zn4nCHOLF9fB0XAQT/8gM5ey68BkBLQRW35VGloRwv4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=UC6T9s7z6lScIJ/DiVhOnczkdQ4Qw3n4A8cwl1aOE8xu98v+7jpLHow/APkYmjapy8tEssgaEIZyvYYo4vISuLnahF56WBxYLndaVF/m6K8DbRiGoEyUtdl89K7WA3CJHs9LjehDKR3pY+EGDTCgA9OROSwBvUYGrKgAbbDucuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nCLPgGyt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/dSXxlxJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpvD102o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C812FC4CEDD;
-	Sun, 30 Mar 2025 19:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743362432;
-	bh=rsbJa18r1oClDCmvKLOHT/qFx7mEayUhEfw+cyknsOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tpvD102oggaCZfkfwhlXNYxMWBvjMFcE3JRgYAvIlH/eVzb+tSVReir46Ln6vS/Ku
-	 8rshRhTU2UAnK5pl8W1xJAKnwYp4Z8Z3l/hKXBMHukjFdHXeCLy3oopa8DXpKXbdpq
-	 8udslUkbkJ+UxvjXzXSR4pxijTyih8l1nM2Uy7r/9teKHmxMmHm2KypTmQ4+AxR9Cu
-	 spKricPl1qpOMEXHvAdjE5olpA7njAmgODi/eUUzblCfne38xGiK8sO4GrMsPlLMWL
-	 sXQmAsFTTivKiKM5aKS32EazmI+YSG5YBtJtiV4UE895OzCeN7j8+qhbOxmHMEaF08
-	 tHdrgP+3nrerQ==
-Date: Sun, 30 Mar 2025 21:20:28 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-Message-ID: <Z-mZfCvep7iMrqoU@gmail.com>
-References: <20250325164854.199420-1-ubizjak@gmail.com>
- <20250325164854.199420-2-ubizjak@gmail.com>
- <20250325171141.GDZ-LjzaPbAG1MwjZi@fat_crate.local>
- <CAFULd4ZT5mjjEXW3SnGQVMo18fO8CapFS-ikLQvYFw5EKtEfmA@mail.gmail.com>
- <20250330173140.GCZ-l__PVdSx6mj-zL@fat_crate.local>
- <Z-mRwxb3r1yrH332@gmail.com>
- <20250330190651.GDZ-mWS5RRwsN8Q3g4@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nCLPgGyt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/dSXxlxJ"
+Date: Sun, 30 Mar 2025 19:23:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743362588;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZhpcdIp4yJ0izvyO+CeFNzYLAjRWQqI1xQ39F/Kzlog=;
+	b=nCLPgGytkf8BipHZhEEm+k1pksQIoA/emF41OXG0oXIjaD23CESIYGdEEJmQNa8IleL+IZ
+	bPWkGKQsQ+n1xfIN80RzX4RoXsBtZ1MwhOz6LH0UwgWrZaTkrOhoaaHZXDJeuKbnkKOoDe
+	Q+Z1xvjdrrGpfSOWU6janHhMI9rdLRxc7ARhG5AvkNjcScae0oTt6mOAj/TcyDY0s5a4Fw
+	8eIui5wONQYOF3uF8dCwzNcNtIqdnmx5r35JDgNEvEvuOeg/LLWGrF++72zupUl5yNbWNj
+	cNG8sIStrc54LRVw+1APJ5Y+KDJco+2qbzP6yDcyGtM49AP6+CTTfpctVwQ9iA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743362588;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZhpcdIp4yJ0izvyO+CeFNzYLAjRWQqI1xQ39F/Kzlog=;
+	b=/dSXxlxJS8jKZtNu84e5U6SY+rT8HbX7UnoJC0ejlSzK2uxbj0D8N3nH2yWiRrfBxCDGXl
+	7DYwBw0wRMx9hDCg==
+From: "tip-bot2 for Oleg Nesterov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/isolation: Make CONFIG_CPU_ISOLATION depend
+ on CONFIG_SMP
+Cc: kernel test robot <lkp@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250330134955.GA7910@redhat.com>
+References: <20250330134955.GA7910@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250330190651.GDZ-mWS5RRwsN8Q3g4@fat_crate.local>
+Message-ID: <174336258318.14745.15934634106640104624.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the sched/urgent branch of tip:
 
-* Borislav Petkov <bp@alien8.de> wrote:
+Commit-ID:     9939188c730d68b8b6b5210b7770021656181730
+Gitweb:        https://git.kernel.org/tip/9939188c730d68b8b6b5210b7770021656181730
+Author:        Oleg Nesterov <oleg@redhat.com>
+AuthorDate:    Sun, 30 Mar 2025 15:49:55 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 30 Mar 2025 21:08:05 +02:00
 
-> On Sun, Mar 30, 2025 at 08:47:31PM +0200, Ingo Molnar wrote:
-> >  +#ifdef __POPCNT__
-> >  +     asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
-> >  +                 : [cnt] "=&r" (res)
-> >  +                 : [val] ASM_INPUT_RM (w));
-> >  +#else
-> >        asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
-> >                                "call __sw_hweight32",
-> >                                ASM_CLR "popcntl %[val], %[cnt]",
-> >                                X86_FEATURE_POPCNT)
-> >                         : [cnt] "=a" (res), ASM_CALL_CONSTRAINT
-> >                         : [val] REG_IN (w));
-> >  -
-> >  +#endif
-> 
-> That ifdeffery.
-> 
-> The alternative only is fine as this is the usual way we do those 
-> insns.
-> 
-> The ifdeffery around it is ugly and is pushing it and it would be 
-> fine if it would bring anything but it doesn't. It is making the code 
-> ugly for no good reason whatsoever.
+sched/isolation: Make CONFIG_CPU_ISOLATION depend on CONFIG_SMP
 
-Tangible code size reduction, if it can be realized, is definitely 
-'something', so your claim is simply false.
+kernel/sched/isolation.c obviously makes no sense without CONFIG_SMP, but
+the Kconfig entry we have right now:
 
-> > Which is 3 straightforward lines of assembly code and a 
-> > straightforward #ifdef.
-> 
-> And they bring what exactly?
-> 
-> I haven't seen anything besides some super minor, completely 
-> pointless, hm, "savings". So much so that the uglification of the 
-> function is not worth it in the *least*.
+	config CPU_ISOLATION
+		bool "CPU isolation"
+		depends on SMP || COMPILE_TEST
 
-Even 0.5K of .text reduction is a tangible benefit.
+allows the creation of pointless .config's which cause
+build failures.
 
-The kernel's 35 years long history comprises of literally over a 
-million patches, which were small and inconsequential 99% of the time.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250330134955.GA7910@redhat.com
 
-> > My main objection is different: if __POPCNT__ isn't defined during 
-> > the kernel build of major Linux distros, then this optimization 
-> > almost doesn't exist to our users. And I don't think it's defined.
-> 
-> Yah, that too.
-> 
-> This whole effort is a total waste of time and energy.
+Closes: https://lore.kernel.org/oe-kbuild-all/202503260646.lrUqD3j5-lkp@intel.com/
+---
+ init/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We don't know yet for sure, but I don't think an absolutist "can't do" 
-approach is very productive.
-
-Thanks,
-
-	Ingo
+diff --git a/init/Kconfig b/init/Kconfig
+index 681f38e..ab9b0c2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -709,7 +709,7 @@ endmenu # "CPU/Task time and stats accounting"
+ 
+ config CPU_ISOLATION
+ 	bool "CPU isolation"
+-	depends on SMP || COMPILE_TEST
++	depends on SMP
+ 	default y
+ 	help
+ 	  Make sure that CPUs running critical tasks are not disturbed by
