@@ -1,124 +1,106 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C638A3C3C
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6997F7DA6D
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743368201; cv=none; b=RzcDDILZMjo/PhhVu5pDXMg/YiyeMTwKeuI3nUIi4Ko52tlxv+ZsfdrNR6rGLeuBmoex+EmFdbTOciQ8UPbnXfogELtpHUgrcpzyD46ytxxSFLb6bVgYUkV4p1cO4NqZfY+ETIg9I9UfDAEuNfHWsMnDRpJBozvokbrNlvPC0n0=
+	t=1743368626; cv=none; b=hm1Qk89+wlrV+XwG4IWm4AwGXyOYZDw133M+0SpOZtxcHO5RUp4/uGhEBb8elGWfpBjiAi40uz3NhkaEIbhBczh6jnudJN+zXE+SMSFG1BVq3+qgamTl2P5Bf8s2Y4Mu4VRy8nVHCwI8N8LRbv+lj9n5JGZedxWXCsPQBGBT1/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743368201; c=relaxed/simple;
-	bh=2NQf+mO6qVdzH6Wz1CSg+U7Kj2HvJtwz9HN9tyJTQYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FdSRLKi2EVv+J8W3IcllBHVsp2khznnGLRdcLSKBcvD+fdxGb1rYd6nvtRpBqgEIosmQgZLzJvtGgXCjGWbMjMStpsU+iUQquNwookD7Pf1ECe5IoVjsAlClWtp0krHFx5spUjvVf/nomay/JSP5eSdhvFdzbaJIDcsNYCm0pqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MTp2KdKa; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743368626; c=relaxed/simple;
+	bh=BlgBjxm23AYNd0h/mAI9Jknhk/ZECR40hodjq+/8Wm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sfMI7p/99OjOB2U2FkUaEndmRk1eENU2J1n21lKSynmqwBAv1nNpH8oyT9LZmwi6no5brr4qMif4UbqHnTbPJ8puai1figjkaw/X7F5SDnghAxtadjMIS1TzBp3/sga6lHAOUhVDGn4K/LHHrHmqQmzu/os41f7akeqhqwLFKT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bi0ph5H7; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MTp2KdKa"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso746546466b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 13:56:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bi0ph5H7"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so26071785e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743368198; x=1743972998; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BSOLpfQDj26hqGlCIT72Nb/pIYj7VgJoNsTI8j/3oiA=;
-        b=MTp2KdKaPxraQqIb4BqNFSL4wUIeeQ/J9hnsBLNhXej0yCn6rxPyn0gDqaQX1ir2dU
-         x7M3eUpP/eS64eV9ImmKdSt0gsTuO8V+6VtfBnvZMctc4F0OU7RI1OPbytJUEEPEi1rD
-         4eu9VKN0bo3J8nuW2lOxNuL07WkFkMzTq+3GA=
+        d=linaro.org; s=google; t=1743368623; x=1743973423; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8D3NqmpueTiU+Bdqbh9LRrqxWjOBzMrVbyFS3AFwYqM=;
+        b=Bi0ph5H74hnPL7NvnFIc1W8w22ZCV0ZtzkdLgsBhVPDPz3J8ZxMtr6//Gr29CninTA
+         DI0EtNWRBpqf7TejGHE5ViTSD2zWoruKioC0zz8QFTXQNLTpDRnHiWgwjQPgzF7MNmmT
+         dJdsLmwckO3hYwMkd4ss+O02kwgVrHrash4PlhzkbIRm1BAz6N2Z0ELjFfcHee2upwHb
+         fA68Jz0xnVrxfZYAUTy9ryBYCbEr6MXZrqH5RLBvfp4JX6RJr64hs03dAjr4sunOaoeO
+         pGjubiaZhDEmY9Y4wn9ZXO/CipdotEUuaSm+gPZULFeQSlzBqgTqIYuVhzK4Lo3BDWkH
+         QbXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743368198; x=1743972998;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BSOLpfQDj26hqGlCIT72Nb/pIYj7VgJoNsTI8j/3oiA=;
-        b=atX/KXZpZv10bcAMsxgU0HdOlvN+KH/GUmlPIv5L6oWGFkNccF/ktux2owuzlAItOw
-         kq414hmTBHVM2BVrCl2wNtYoL3IaHE4ZqDkdT5XGxhWfMMjJzPjgbirazg62hHT5hCOf
-         ET4w15kA6hJQqksqEXbiTw3TY6A+h8kRJiDuPwOwpRL4WBqavRkSzS65scIgMG2+N+LR
-         JGLR/SrYX3iBX5TGsflEXAVVHMXsq540rkXCAkGT2DsQ5NqTSGgUUPdUI3uTNCayBYe9
-         myKv0IkGmIAhogNGUWCDNCMzuue3C5rC46y560rVW9zSfG9YYKu7h68vCXUleSm8BPpY
-         rq7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUDum5d4TPx3Nwz7zEni2jMeXRLf7TYWg6qyAQR8lvQmdeEmBcIYOjzMROul0HdGu/+825YH8FeYH8E9as=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBaJbED8BygDHWkCRn8KtIRW9h3cb1KyOjlM+ugvBMOJt+M+Yl
-	/Y4y4cArsw9GHFZ0631Ph6BXI9XpImbyCkD8LreSrAQFpW7wpJQlJrevp6jJoOZKoYo4naLY1W9
-	eOiQ=
-X-Gm-Gg: ASbGncucvVS2gR+z4PezkPQc4p7n8zl0B10Fl5GI7tH709Ikohw7iaw8q5tOE+iY6zl
-	+t2M5skLEi3zMpHXo496BAQxANjlDaIyYXnGbEDuKYY5zkfxOq8YXgpL/htVoL/KmbuTImUI/O6
-	JY5CDAKL6SneNYSKYDw+DFiKH2zkoZfWToz+0oAoJ0wLBAFGkwwSuDEVXmt/4o0ZQCvPyuVsuan
-	p7Pt+zM5RNhicN1/2EVI439KDGxr9WWBVUR5mGB4vosxKbXF8mKvYaI8Xa5eQico5+IiszojChT
-	b0EIc2dlr7n7g4c51wxWsgqB3PxSjL1COs17FgZx9kSI3u/WRz2R44Xx76VgpydM5ao00MNX87S
-	15fqC9FrystSnGbXpb4k=
-X-Google-Smtp-Source: AGHT+IF8/ejfkQagjdNknnjsoxbz8PnhOEnkhGj/t3V40P8neFlQxzSKFYl88zbEumiRLyad21pllQ==
-X-Received: by 2002:a17:906:c148:b0:ac6:eaea:c0e3 with SMTP id a640c23a62f3a-ac738c6f017mr551500266b.49.1743368197817;
-        Sun, 30 Mar 2025 13:56:37 -0700 (PDT)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b150sm525228566b.46.2025.03.30.13.56.35
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1743368623; x=1743973423;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8D3NqmpueTiU+Bdqbh9LRrqxWjOBzMrVbyFS3AFwYqM=;
+        b=aMZbogMTDWhoR8tWWHXt2ejRpwrWx1tX3XV/efMDs91uofgqlm0mG0bvMmJWKxwpmT
+         0UScDCwGiUfhguMqTRxV8q8c7hMBS+bSGGEsevwnKC0wQB/7JDZes33JhMZ9LO4S/NOK
+         72lIRG/6E9HjpyQTprEKjanAPikPQbwOxVvrtitAfKsoToV6WyMzJmooeprzMVjxAzNM
+         /gSyvlFqWTMtKgLHrtj8wAlwmNNxyLV7V8RU3xD55GTZPd+bbHCP85er7flWQm5gNEKA
+         Wwfkmp7XC/v9EY0KARHjmTX4xMWwQd/6INjVnVQmKA8/0BK+N/UvKjF3g4pNfsnDrU18
+         7d4A==
+X-Gm-Message-State: AOJu0YxynNS/6S2CMtzlYYVD6Fjvqd5mwNjy/OYf5SsIzHWkQwDMu5z5
+	JLrWneotgNep4iy+0QQ98WvEceXtlosRYgk6FOM3czjA+buRcM3xgqzsd9LtkJA=
+X-Gm-Gg: ASbGncsEVG/DRp37M45QyJ7pgRNGUgpJXSp87I47sMjV1v0fztKdCeWgV5hXEBgmIVp
+	4Re3BEyZ8G2s9sGpmad38hxWk5fw7dZrCfJYlYcasaqWFFGTrwFQQyd4uNtE373pKQFu6P/0tK3
+	As4yoUSuPadqO9MljkUw7c8ZrZNcxLKCiqHki3XuMHYRMOEvXk/53O0e9xvZ50iszG1kVChPdg7
+	6gXE5WcKZhknWZidHsGMIm1+0hurEEWOeAFgV57AjMBWk78D6tdDQ8mDSmtoVuntLuG9/ERbp+8
+	/zUWn1J83ZXC0ceSy2GewfXzQ8tdjFh0C3RO5AQ4viwjaMXQnSYhzMBG3B0z1D8=
+X-Google-Smtp-Source: AGHT+IEO7oIdmGRhbq793eHu6DRtCa2g7hBjl5FzB7OHhu3GudhvZu5dnl7teyvg6FY+ye97mYO5KA==
+X-Received: by 2002:a05:600c:34d0:b0:43c:f5e4:895e with SMTP id 5b1f17b1804b1-43db61d7785mr49964495e9.1.1743368622599;
+        Sun, 30 Mar 2025 14:03:42 -0700 (PDT)
+Received: from [192.168.68.117] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d8ff042c8sm101288115e9.27.2025.03.30.14.03.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 13:56:36 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso746543466b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 13:56:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVIO7fpw54j3S0vVwn4q8nbgCgEmO8KjrMjCjaf6ypaFU48syVO3dOP92z4r5rS0OWWAg0I9cz4qrYRmuU=@vger.kernel.org
-X-Received: by 2002:a17:907:7e82:b0:ac3:8896:416f with SMTP id
- a640c23a62f3a-ac738a64ef5mr780959366b.15.1743368195497; Sun, 30 Mar 2025
- 13:56:35 -0700 (PDT)
+        Sun, 30 Mar 2025 14:03:41 -0700 (PDT)
+Message-ID: <a85e75dc-8ea2-42d1-9b70-124196439fde@linaro.org>
+Date: Sun, 30 Mar 2025 22:03:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327145159.99799-1-alexei.starovoitov@gmail.com> <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
-In-Reply-To: <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 30 Mar 2025 13:56:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpJ7geT4BoReQk_MXUrgZ8jgWTwt7ona-UlzJd5cAmwkXVKsuAn2yvli_0
-Message-ID: <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
-Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@kernel.org, akpm@linux-foundation.org, peterz@infradead.org, 
-	vbabka@suse.cz, bigeasy@linutronix.de, rostedt@goodmis.org, mhocko@suse.com, 
-	shakeel.butt@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
+ <c064ac7c-00c0-4d52-9dfa-35941ae37b81@linaro.org>
+ <2025033053-bloated-blanching-773e@gregkh>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <2025033053-bloated-blanching-773e@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 30 Mar 2025 at 13:42, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> The one reaction I had is that when you basically change
+Hi Greg,
 
-Oh, actually, two reactions now that I fixed up the merge build issue
-which forced me to look at the function naming.
+On 30/03/2025 19:30, Greg KH wrote:
+> On Tue, Mar 25, 2025 at 11:31:38AM +0000, Srinivas Kandagatla wrote:
+>> Hi Greg,
+>>
+>> Just want to ping you incase these patches fell through the cracks.
+>>
+>> Normally you pick nvmem series much earlier.
+>>
+>> Pl, let me know if there is anything that I can do to help.
+> 
+> Crap, I missed these, so sorry about that.  Are these also in linux-next
+> from your development tree?  If so, I can suck them in next week and get
+> them to Linus for -rc1.
+Yes, these are in linux-next.
 
-That 'localtry_lock_irqsave()' naming is horrendous.
+pulling it for next rc1 would really help,
 
-The "try" part in it makes me think it's a trylock. But no, the
-"localtry" just comes from the lock naming, and the trylock version is
-localtry_trylock_irqsave.
+> 
+> Again, my fault, sorry, I blame conference travel :(
 
-That's horrible.
+No worries, hope you had good conference.
 
-I missed that on the first read-though, and I'm not unpulling it
-because the code generally makes sense.
-
-But I do think that the lock name needs fixing.
-
-"localtry_lock_t" is not a good name, and spreading that odd
-"localtry" into the actual (non-try) locking functions makes the
-naming actively insane.
-
-If the *only* operation you could do on the lock was "trylock", then
-"localtry" would be fine. Then the lock literally is a "only try"
-thing. But as it is, the naming now ends up actively broken.
-
-Honestly, the lock name should probably reflect the fact that it can
-be used from any context (with a "trylock"), not about the trylock
-part itself.
-
-So maybe "nmisafe_local_lock_t" or something in that vein?
-
-Please fix this up, There aren't *that* many users of
-"localtry_xyzzy", let's get this fixed before there are more of them.
-
-             Linus
+--srini
+> 
+> greg k-h
