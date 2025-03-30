@@ -1,116 +1,135 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99603433A4;
-	Sun, 30 Mar 2025 08:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E511581F0;
+	Sun, 30 Mar 2025 08:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743324598; cv=none; b=Ko2HkQRHMEtfMEXkOrol2tcKBOuyRnkhsDa1PhCvJbGTFnevSu0EnBlSqHozX35ZEsHgpgXFYV/4celO0iLliv5SNEsNPgx9kDxuwNGdKFGnp8CPRadT8BqfYdUooEDN7rRHIIz97fdtwuVMSun9ED/SRW7zK9CyqZ0SBKXojvo=
+	t=1743324712; cv=none; b=a9saKyMUdfbr+3FrY1SHlHFoIg1/TfWGRJrBo1zJNmet2RVFj6ScKuRNxXZl1vWBuS+dAStPH7KdtMen+QbXu6vIs52IUmOSLUPZG9j+/oqQhX8I89aUuk5pv+37F9MUtl2AP0V/SS075cFsEVXMm/64ZqKg02osSetUK8SnttA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743324598; c=relaxed/simple;
-	bh=+bKsd+lUz1xN+iEJQV8fzknCljZQm9eRGmS71BH0FEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qp1n6xHeMKewFlwEOcLRrXOmQH76EMZiT00E2y4xze/u+S13tKtwOLRGIk37T8EXh4SamYkclHoP+4yEfdCH9WmyQB+g+1Daf5ZSi0QBPIU83dSuNUFMMhaivLWds2we4Q2v8fSv71kD/bCNV2rZ7vo1hRIar2nKn4rzzxZW6XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyjzPC7A; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743324712; c=relaxed/simple;
+	bh=xPhwWDI3vRjZ0m2k4v3KogrcS24YICsNymfB02MqAIE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=a96c47yCUpd/JelsDBRkUPWuK8a3OMe06g6M3/+SIak1W4Wqj8SxRsaSrVHgkBLmM1Zs5CK5M6DfwJ0w5Fr53TjseVSAQglfqxCK60OWwP03IL9GtZt1EYgzaGrF1/A5Ggm7hsBHjdOhCKUBHHYrERg172vV0KoKLX4uyfkIZDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=DJnJtTkx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E1rLm3UZ; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyjzPC7A"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240b4de12bso38267185ad.2;
-        Sun, 30 Mar 2025 01:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743324596; x=1743929396; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EmzCxvsOduwulsT5Wgwx5bMOIAHj7o4CdA5a/pTT+Dk=;
-        b=PyjzPC7A0iOIIVe1HXPQmbnjqf15w3HmKsPeTMfIB1RR74TDfBQA5uS5+qvgwrgpAx
-         FozlLek54RTJ31qZcCUTyol2fDck1jpn3X/CVOl6aoKxWyk+7EfX4SuhSPS/TmUtyn0A
-         3UOWEHwbvY7kKXEZ6draVNElw7GR4CY9JMcZD6YtIiO3ZpAcKg1OBh66EroxtXaUuZoG
-         84T6c6XoomHoTl50rRr/Av1YYib/dEwXrqNRbmi2bFDeK/3xt2XbxCuuLSt6XQP8t9nb
-         rnHGtHgZL0jDilVKWOepkUuiLDDvkVFdPe4STVw4R8BZmUJlYjNgTdVsRl7RqqZ/7gW2
-         vijA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743324596; x=1743929396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EmzCxvsOduwulsT5Wgwx5bMOIAHj7o4CdA5a/pTT+Dk=;
-        b=FLDb8IlqRHd8lfY8b38zF54l6AsCFr5MbBHCXbqwNMe6GKfCLkF8v4CA5lbqgawU2h
-         F+zgiCJc+uDxboBwS382qmG64Y2QtVxZuHitSLQPyNPmV0pBuqJXEufxXtLWOjplNMFS
-         f0yYh016IOiuqI0LMl7foeaLM7o35IkZ4wY3/DvhD7+pkujw1W1Xbew5ECg/HEKyOrxC
-         kWky2u6c+odmSXtlfouKlR1PIL1eGJ7KwvJ5tcpSgsaor6MG/BOy1+eEfu/SvgEyz/HY
-         vm+xXtJjUK2aqYvDXH7zrgXCUZ5XBc7i30v0hZ6RrHP4Y35GhW1BEZCZ2ZAU4sPUJu9L
-         7i/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUEZWaLFZotsgyLHH3mWy6NFlJf0RNfDKlB1PpZncvvE9mMKdCjQItvidSZDui9JL2wojUHVyaFH8lVx2xX@vger.kernel.org, AJvYcCVEfdX97/edyNNV1dkXtY+re/5znfNaG9cgAn9kKwe2QX8sMLbaK62KeEniBpShOhN9JUjmCzpFvW8=@vger.kernel.org, AJvYcCWSTxrLye+bXR/xWZRMLRaKHqj9S0ERaa2vIn0fRIGTZYlPrdSh3ZO7GObyV0dovsopHBRyoCtHXYHaLoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzwD9+jVKImanGV62CUKeiWbtEs0EQbEr4zh+DyQvJ/kzIkt/M
-	Ret/khRa/4qAmHn3EJdL1SaQehaeN/HINNKx5WVw3xGxIT048YmY
-X-Gm-Gg: ASbGncvyoyOMxPoA+vO9Mfp6065molzrpVwiSZ8+u77ZRw+6gVFJ3qjPbRzMkReAQsk
-	l8aC5RuKeFeQ8MocpONRwlndRVeEVHhPbbGQg2VOP4kBzOLDNcSfmA3uDlxBcII5WcTLdUeld8e
-	uv+OGeeVyCHE+0JOOhCqk7C+9QcSaqG8A0PQEVmjF1wsMNBJiJIsCI4v0cIErnMmNk/hQ99ewTy
-	lCmhCcb024tUt9+AaHBR0TdPCihvqD7BF5CRCOrVHmv1ARDX5+HxSbJgugu+47TGOlpKtPfJDW4
-	YRaXf9FAUnIUezo6JUQmr9grSx6PRsOYXh/XiBz5eRmkZMMZgHoXcdOJNuSL8HPjFvKt9HGiOfK
-	U
-X-Google-Smtp-Source: AGHT+IFSa6czLX5BHKoQR4RzOcx/YbmUF2SgaxAIgJ4HQT0OJsOtxycsYNBJibWU+vKZphORkcPWdw==
-X-Received: by 2002:a05:6a21:c94:b0:1f5:9175:2596 with SMTP id adf61e73a8af0-2009f607a8bmr8922370637.13.1743324595736;
-        Sun, 30 Mar 2025 01:49:55 -0700 (PDT)
-Received: from salmon-ASUS-TUF-Dash-F15-FX516PR.. ([2402:7500:a17:45d:8f98:c8e0:143a:d5da])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b8ae16esm4434055a12.61.2025.03.30.01.49.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 01:49:55 -0700 (PDT)
-From: Chih Yun Lin <noralin249@gmail.com>
-To: corbet@lwn.net
-Cc: jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-input@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chih Yun Lin <noralin249@gmail.com>
-Subject: [PATCH] docs: hid: Fix typo in intel-thc-hid.rst
-Date: Sun, 30 Mar 2025 16:45:18 +0800
-Message-ID: <20250330084518.20916-1-noralin249@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="DJnJtTkx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E1rLm3UZ"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 42846114011B;
+	Sun, 30 Mar 2025 04:51:48 -0400 (EDT)
+Received: from phl-imap-07 ([10.202.2.97])
+  by phl-compute-12.internal (MEProxy); Sun, 30 Mar 2025 04:51:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
+	 t=1743324708; x=1743411108; bh=dTqWupLjl7cdoWEq+RC/Hw7jFYiUJzqN
+	ImVvEUcMouk=; b=DJnJtTkx4FtwTGs+MCsrm43hFIkfqw4YaAN/iAf6TgpR0LbC
+	o+1eLQsYmMCqFU1GY8C+JR/xcq53SyuUQywH6k3f+PP1xqqCMv9G5aU89r5KCy7E
+	esU9ANb6BbU6oi4EDQAzKVSib3TPZUA7xmK25k/ZZsKjfKtCF6MoRwSqR4WaoGe8
+	O5OzmT+DbH6fhcpx1/IDh8wahLKCbFydU1W83a2yls0+1pkAqVzGrWsoPFPE5XyJ
+	Y/XUuouU25KflRa/Z0Ls1fDdWHp1E198ihXjdvNIjSRzMTLSmO6B00nsLqG++heE
+	fHBafwieQnBMeyIkmNAQbORXHzaf3WjS83JPyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743324708; x=
+	1743411108; bh=dTqWupLjl7cdoWEq+RC/Hw7jFYiUJzqNImVvEUcMouk=; b=E
+	1rLm3UZ5lxXQ2IfWIxo+qXUsKga+l/AU8skmGxFy4QX4/GQMa7NMcwYOkgewM8MM
+	Ck2QOI5duUsk+T0zZ73+5fRGnrHWUJpLxQfmTBxKHvLxZ37Bzst3f4/D9Aet4zPK
+	vOgJMbpaqGbLUZxVKfusy3ZI1dT+e+3LN1NpU4mmUtL35tL+byFt99Z6c/pV4ZSN
+	uUeqpQfeoHqKB5nu19xAOrAniDep7IG7sgoWkpNOmIRjPokDdFYgVM+pSzZrLWEv
+	GnTOHRPwGChr0agwfrfbJJy/ClTXEAOTmVJpcLQ8GfyQO2s3598YjeYrrFFrG+l/
+	rFhIHueaTk3zZB6vnEPsg==
+X-ME-Sender: <xms:IQbpZzmp2KoRE1ljRh7hr-SHuOTQ2BaiFqboNbdzG_3Q0dfu64n51w>
+    <xme:IQbpZ21fyxznLm7bF4IiUP9f_YTDHzitZJ2fyRbK0EmkF6a6No9IdIhjWcm98H6T1
+    A2xYMiPn647jbr-MX4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeiieduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
+    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepleefteeugeduudeuudeuhfefheegveek
+    ueefffdvffektdffffelveffvddvueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
+    rhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptghhrhhish
+    htohhphhgvrdhlvghrohihsegtshhgrhhouhhprdgvuhdprhgtphhtthhopehmphgvsegv
+    lhhlvghrmhgrnhdrihgurdgruhdprhgtphhtthhopegrnhguhidrshhhvghvtghhvghnkh
+    hosehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhhpihhgghhinhesghhmrghilhdrtgho
+    mhdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegrnhguihdrsh
+    hhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrvhgvvghnsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehmrgguugihsehlihhnuhigrdhisghmrdgtohhmpdhrtg
+    hpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggv
+    rggurdhorhhg
+X-ME-Proxy: <xmx:IQbpZ5rnL3CUphbOwpi10Itieqzl_zNrcEz9pXzntZMIsAR_r15lcA>
+    <xmx:IQbpZ7lkVSFcsxeK4r1GNWXI3qP-UoeTeih7LDrpKSLezZoXZ4wdPg>
+    <xmx:IQbpZx3dqW678wETZPJesy7jhheRYZyXtPWyvLhjpFCIv-K2IQuvLA>
+    <xmx:IQbpZ6vPnTiLL8VLuFuGSM6VQQv3--z4cZRdI-xpQHE9Lvz7z9kgOg>
+    <xmx:JAbpZ7MTq30YCxSfV2OaJOKEeOCcrUXIfDBhrimcqMIKp5boESOGqfpz>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B0DB1BA006F; Sun, 30 Mar 2025 04:51:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T14a5dff03e1db70d
+Date: Sun, 30 Mar 2025 10:50:53 +0200
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>
+Cc: "Janne Grunau" <j@jannau.net>, "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Hector Martin" <marcan@marcan.st>
+Message-Id: <b647d45f-32e3-4864-8a94-2e0b819fba18@app.fastmail.com>
+In-Reply-To: <Z965tVhC5jxy1kqZ@surfacebook.localdomain>
+References: <20250222-pasemi-fixes-v1-0-d7ea33d50c5e@svenpeter.dev>
+ <20250222-pasemi-fixes-v1-1-d7ea33d50c5e@svenpeter.dev>
+ <rjvak3c2k5a64jw4ef23i5uptg4zzl3u7lqszqbg56l4hqms77@hrkn5eydxwiy>
+ <Z965tVhC5jxy1kqZ@surfacebook.localdomain>
+Subject: Re: [PATCH 1/4] i2c: pasemi: Add registers bits and switch to BIT()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Corrected the spelling of "triggerred" to "triggered" and "flexiblity"
-to "flexibility".
+On Sat, Mar 22, 2025, at 14:23, Andy Shevchenko wrote:
+> Thu, Mar 20, 2025 at 01:23:25AM +0100, Andi Shyti kirjoitti:
+>> Hi Sven,
+>> 
+>> On Sat, Feb 22, 2025 at 01:38:33PM +0000, Sven Peter via B4 Relay wrote:
+>> > From: Sven Peter <sven@svenpeter.dev>
+>> > 
+>> > Add the missing register bits to the defines and also switch
+>> > those to use the BIT macro which is much more readable than
+>> > using hardcoded masks
+>> > 
+>> > Co-developed-by: Hector Martin <marcan@marcan.st>
+>> > Signed-off-by: Hector Martin <marcan@marcan.st>
+>> > Signed-off-by: Sven Peter <sven@svenpeter.dev>
+>> 
+>> Just this patch merged to i2c/i2c-host.
+>
+> This needs an update as well. The proper header for BIT() et al. is bits.h.
+> bitfield.h is for FIELD_*() et al.
 
-Signed-off-by: Chih Yun Lin <noralin249@gmail.com>
----
- Documentation/hid/intel-thc-hid.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ugh, good catch. Since this commit is already on the way upstream I'll send a fix
+(and another one to sort the headers alphabetically while I'm at it anyway).
 
-diff --git a/Documentation/hid/intel-thc-hid.rst b/Documentation/hid/intel-thc-hid.rst
-index 6c417205ac6a..dc9250787fc5 100644
---- a/Documentation/hid/intel-thc-hid.rst
-+++ b/Documentation/hid/intel-thc-hid.rst
-@@ -182,7 +182,7 @@ value and use PIO write (by setting SubIP write opcode) to do a write operation.
- 
- THC also includes two GPIO pins, one for interrupt and the other for device reset control.
- 
--Interrupt line can be configured to either level triggerred or edge triggerred by setting MMIO
-+Interrupt line can be configured to either level triggered or edge triggered by setting MMIO
- Control register.
- 
- Reset line is controlled by BIOS (or EFI) through ACPI _RST method, driver needs to call this
-@@ -302,10 +302,10 @@ waiting for interrupt ready then read out the data from system memory.
- 3.3.2 Software DMA channel
- ~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--THC supports a software triggerred RxDMA mode to read the touch data from touch IC. This SW RxDMA
-+THC supports a software triggered RxDMA mode to read the touch data from touch IC. This SW RxDMA
- is the 3rd THC RxDMA engine with the similar functionalities as the existing two RxDMAs, the only
--difference is this SW RxDMA is triggerred by software, and RxDMA2 is triggerred by external Touch IC
--interrupt. It gives a flexiblity to software driver to use RxDMA read Touch IC data in any time.
-+difference is this SW RxDMA is triggered by software, and RxDMA2 is triggered by external Touch IC
-+interrupt. It gives a flexibility to software driver to use RxDMA read Touch IC data in any time.
- 
- Before software starts a SW RxDMA, it shall stop the 1st and 2nd RxDMA, clear PRD read/write pointer
- and quiesce the device interrupt (THC_DEVINT_QUIESCE_HW_STS = 1), other operations are the same with
--- 
-2.43.0
 
+Thanks,
+
+
+Sven
