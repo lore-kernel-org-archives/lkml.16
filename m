@@ -1,76 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC3520E6;
-	Sun, 30 Mar 2025 22:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CA8192D96;
+	Sun, 30 Mar 2025 22:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743373242; cv=none; b=YcLHOvZzklNWKWFMJmGnGsUXwbT8S6QWa54ykoIHj64BbO9op/471VgjkAAW8czImxtLwk6JlukeswkqkH6CabTF18UWOQGV67SVz0UIn3q+ffX4sorb26E2suZhsCzemEhYn9ZuuEynqey51Cm9NizzT9feY213HNf5nNtLmm8=
+	t=1743373705; cv=none; b=cehv3KG2iNEFJfn5hxVHnBukc85QHoDvshOzIeKwhsi79Jfhs7g3SdG3bkrrDiqz84Ciwylg5pBSJcK3Gt37CCv5UQN/gKk4jDAtBo+2zWf2rnfmQVrNThgAzKCyrI7M7zwsiN5r7I4+ICw0Y0nPIz8EkC7ctUNMDlP51XMZaD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743373242; c=relaxed/simple;
-	bh=qr1SU/+V0tubEcV2EGOD9x+yIPR/uH9AFnLW8DbU3wU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WqMndbeID2jWdraCd/Rvsxo6vidzAxIqXykN4x4y72uuM582n1sM8f0lzADqbQ9hn98mCW7lq2GDzBL9i3BPTKUKy6r5RqWQ98rkFvcBdpqctqgTrzP//4+fiy5JgYw3ZJDjKNiqLjrTpmCgLfBxH67Bqyrqqel7Iu+mB5RO17A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeHhTT0N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743373705; c=relaxed/simple;
+	bh=RYS9MhzesrrUoPLXu2c6MwfIN30lM1bnS2nmVVnH3VA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LduHFwmq6UDmZ6QBmZIJJ7L+tonybcYg8p0CFCmJQlE9UgoglpX0Cv3iwsDSMbZtqsGwuM0NysN9WEQFmrtuZXZY+I3Y60hCZN/qkgtxAj8vKZqjszO2rW/xqJuu86AHoKUZAZeBSGDtzO4e1LgmeOrbL3XbL+CPa7HH8FV8ops=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=k6Owq24R; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeHhTT0N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F83C4CEDD;
-	Sun, 30 Mar 2025 22:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743373241;
-	bh=qr1SU/+V0tubEcV2EGOD9x+yIPR/uH9AFnLW8DbU3wU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jeHhTT0NWFM8xN5zHiAtZ0xDWpGs/R/+7goE/slo/ho/zgUMnVnpFoY4G90WpJ/bF
-	 9008hCx1eZ+5LvFVOWp0cJZeJA7+C2GlpKpkDuUzGlwUR9dAQKtA0czJJU95ob0qT7
-	 byCLJNJ4Fu+SyDBCMlXhcyXIarxDwrpzEjyzxF8iTWtVbx5kBBR5jw4UVDSYgP9xiX
-	 /UYKWP6FPnlcx2Dt4hy5kcmUj3fJaGMTxY8r+RvyOx/93jN0CsEj8vzKaT2nzm3O0v
-	 5XWNOGPb7HKRdiEzpz8SduaKyB2ud+SkOB28hKV1aBbPMppkKjF3MlcnlY3b/m+hIm
-	 1YpvT1CRgu20w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE37C380AA7A;
-	Sun, 30 Mar 2025 22:21:19 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k6Owq24R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743373697;
+	bh=0vaSGuv1ydIA+l5Om6KnRwKWgQa287SH/5RUtST2Duw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=k6Owq24Rc2wjCIqDEXtd5blfED1JkuI68jr1LU/RzxS+ajmF3YLaC6yr6ZSclPw7+
+	 McfdGEzUdzqeEPzSLvEOmnoBi5AwkLnrXqTKwzbERCUxgBuiVwNOX9RBstZB61ZM/s
+	 WvwvL+ryg0yc/HmSHLxZ651a1x8UFAsOyV7SBnUJ20mWAHDDf6i2Gd0YydmtV3yi5D
+	 orLsJaoMcESuV8bzG0RTWfMoRNzhPdLKqFRf8mZ5p/kfZk/SBnD3D4LT1ARIv1mptE
+	 y3wm0EislDaUlbtEfuMXRN8IRYSESzuY9bAYyM3DQjOWwuWJHwLoCRNEiXrguDdP86
+	 96EenVaPjCnyg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZQpnF2nhjz4x8b;
+	Mon, 31 Mar 2025 09:28:17 +1100 (AEDT)
+Date: Mon, 31 Mar 2025 09:28:16 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, NeilBrown <neilb@suse.de>
+Subject: linux-next: manual merge of the bcachefs tree with Linus' tree
+Message-ID: <20250331092816.778a7c83@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] tools/build: Use SYSTEM_BPFTOOL for system bpftool
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174337327853.3560732.7620775881771969379.git-patchwork-notify@kernel.org>
-Date: Sun, 30 Mar 2025 22:21:18 +0000
-References: <20250326004018.248357-1-tglozar@redhat.com>
-In-Reply-To: <20250326004018.248357-1-tglozar@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, jkacur@redhat.com,
- lgoncalv@redhat.com, venkat88@linux.ibm.com, qmo@qmon.net
+Content-Type: multipart/signed; boundary="Sig_/VIafB1Geyt1du50.uQaUA1w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/VIafB1Geyt1du50.uQaUA1w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to bpf/bpf-next.git (master)
-by Steven Rostedt (Google) <rostedt@goodmis.org>:
+Hi all,
 
-On Wed, 26 Mar 2025 01:40:18 +0100 you wrote:
-> The feature test for system bpftool uses BPFTOOL as the variable to set
-> its path, defaulting to just "bpftool" if not set by the user.
-> 
-> This conflicts with selftests and a few other utilities, which expect
-> BPFTOOL to be set to the in-tree bpftool path by default. For example,
-> bpftool selftests fail to build:
-> 
-> [...]
+Today's linux-next merge of the bcachefs tree got a conflict in:
 
-Here is the summary with links:
-  - tools/build: Use SYSTEM_BPFTOOL for system bpftool
-    https://git.kernel.org/bpf/bpf-next/c/814d051ebed4
+  fs/bcachefs/fs-ioctl.c
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+between commit:
 
+  1c3cb50b58c3 ("VFS: change kern_path_locked() and user_path_locked_at() t=
+o never return negative dentry")
 
+from Linus' tree and commit:
+
+  707549600c4a ("bcachefs: bch2_ioctl_subvolume_destroy() fixes")
+
+from the bcachefs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/bcachefs/fs-ioctl.c
+index f45054cee746,0273130f18dc..000000000000
+--- a/fs/bcachefs/fs-ioctl.c
++++ b/fs/bcachefs/fs-ioctl.c
+@@@ -537,10 -537,16 +537,12 @@@ static long bch2_ioctl_subvolume_destro
+  		ret =3D -EXDEV;
+  		goto err;
+  	}
+- 	ret =3D __bch2_unlink(dir, victim, true);
+ -	if (!d_is_positive(victim)) {
+ -		ret =3D -ENOENT;
+ -		goto err;
+ -	}
++=20
++ 	ret =3D   inode_permission(file_mnt_idmap(filp), d_inode(victim), MAY_WR=
+ITE) ?:
++ 		__bch2_unlink(dir, victim, true);
+  	if (!ret) {
+  		fsnotify_rmdir(dir, victim);
+- 		d_delete(victim);
++ 		d_invalidate(victim);
+  	}
+  err:
+  	inode_unlock(dir);
+
+--Sig_/VIafB1Geyt1du50.uQaUA1w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfpxYAACgkQAVBC80lX
+0Gx7pQf/YT9vMtTpPYEuNNkrZAHfPTp5WNdhVHsNxhojrsEQZqiyQN8I0uC6joOS
+hvRFMUp5zt2DznTLiiC51/MJrkJ3uJt4PSKusmmBAFkpXIKK8ic4zImrePSsgypO
+1s5mX+F88x9+5oiFtGXMobmt4gScLdbU3FpRPth//bUQdmiqnYGI0+ymCCBEXef2
+ojzOAzhC2rlQWpdUlSx8cd1IsXuDdXkayEU9asRn2PlaF0q+j7gZKkKHWKeNMSMl
+yEyUdMOF5sWs+v+pAb1axdNb68ZcFaxoW6mLqhSp2Mx2ux28YB6SJ+8cOU8943wL
+ICM/pATNXml2z9QIZTTTgiH/2wwLHw==
+=1rwO
+-----END PGP SIGNATURE-----
+
+--Sig_/VIafB1Geyt1du50.uQaUA1w--
