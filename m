@@ -1,138 +1,148 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4671DE2C2;
-	Sun, 30 Mar 2025 21:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B06B17A2EC
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743369041; cv=none; b=D10wt6gIIjYAnD8T/YHjZAoalvxRmIZHvG2bTWKqcqjHpaGYo6eOx/J4+JotjrF/HJW/ZrrZIsixHmpxKvysjRuyLAWIwlKpRSkA0p3Oz1KXC2FiiY5PKDuMWYkW11LYDg3jnf+mlvXHW+wZ+6CnFbOExauQqaP04AfDNkG/trg=
+	t=1743369240; cv=none; b=YQzOz+6QMAA/7Bce51TaSHb+nRtWJR0ggLIYHFKvNoXLfMImqpsrCXJwcpNdXGtxiecBCeH65DMWjE3lTVIVLPalPsfh4o0Inpqv/jwf+6CL/ePZpgNSJDrYUlKpWanmBE7Oc6Ba1rAMZ96vxZQa8EwI8g6nzPlWXU8OOnmapwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743369041; c=relaxed/simple;
-	bh=xoBfgfkIqXjcBrop+nOuaaOt7tuIPPpmVu1LXwn86I0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RNew6m4XZ7BB7AgaUybXzZmHYKghxuSGvgRRq1V0Y9AWyO7I3+K2IQ1Zz5oVY6KOT9YykgmDIauTUF6Z+xkWvQ+4c1S8zV7VUnPD3hCJhWdHBL96FdZ0bynqyk+l26DBuAJRu7G0soVzX+8S87R+2VF3/kh+xed39C9j7pU7GKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=C9O9xv6b; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1743369240; c=relaxed/simple;
+	bh=tuY/QNQk/F9SugrUgSfFsgzuGaTIb2SuuPlR/76U+A8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LDs1MmAAwqOwD0A27gyuPcS9RlnJpP/JBgWQPj0OSiKerVm0tfAZG7gLJduJrQaUn5Mc643notnphsbFrauJ0euCy7BzLSQBbY//dqSXkGIzZUMd2K7jXt7dnAATiF0nPW4lrWw/lcxRf4D0UdcKVdBk7AN8kBYJJgy/DJdXGU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MSrKarQ4; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="C9O9xv6b"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2243803b776so51884985ad.0;
-        Sun, 30 Mar 2025 14:10:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MSrKarQ4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30364fc706fso6202007a91.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743369039; x=1743973839; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Um1wOWHml/UzYVpawVxxwTUXJz9obh5pK6O3uqssEdc=;
-        b=C9O9xv6bJP1e/9xQn8NqdBgNYrW6lYmnJ7IhbNBVWij1ujWdOHqAD0PSwvGH0PHcxV
-         751feCQIj7nTpFZ4GdGztf/1oJs5jQEEFU+SaH7S0jXQfpfRSIFq2Dh30Ndz7RxUnNhm
-         lLJqymmf9assf4R4iLkKDdX7Ha9v12jzM4yX8UON+wYuqE60HRNmT/wOFN1R6Gn8f4pS
-         mPF5jecV3g/dpNPRKRTXU/FQMUyEwg8C3oUEXHsdEUZYVJM4zQmwhlZl/mZC+MwSTNfg
-         7LBGWu17LFsevHvdhuSPrzeoxhSRglZKy3+X2Gp4YsRraL3IVkOBqzoc90iWujLpEV3F
-         b6sg==
+        d=google.com; s=20230601; t=1743369238; x=1743974038; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=61IYoBnyZqJEMEpkuy3cn0SZfZ0XGPVC6El2dNeevTQ=;
+        b=MSrKarQ4eiBdkKzw55QshBdp7cp8chyr4CABIpQ4u8jkYg/AYGqv/qvkMbcMAhYnK+
+         5eIlc/xEQRM79Wf/iar2zzrRSGcrIlTboJyPb68MXKsfMYJtYBIWRpTayM61I68nFpq5
+         gzg2iscxRhIB6Hu6L2Z+NMO75PYGNxef3swBxsiQY1A24JiDtRe+kQa3bHprCSmini/9
+         Z2/7Hcx2dnI1VUeoCT55C+uo6KzfytYHEje+sw+1XGk1Jb4eRZhg5zw2Q2O7UymazgkJ
+         s5kvnePPhFz5bXqsfDIx8anFlHggHgcL+OUIaHiR3GQ1f+JZskzyqVWHm7hdkZEr0a+O
+         +iXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743369039; x=1743973839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Um1wOWHml/UzYVpawVxxwTUXJz9obh5pK6O3uqssEdc=;
-        b=g2aKQSjbZHmXNJlMYo+7Gs3KpoYUQQzCK00qhLBr+uyCSwpMXrk6a91oT8+NrosTkn
-         vr8qsxDP0uUNNfC9JEE3mZlbjmXALok3FVouUFTBnTSEEfnV16fhOYqbG54jMO/AxAvF
-         bseImhwQAcBjUKwSlgSE5kzEuAu2awGDRx89TULXjNWouHR9yh7jKqzO4LlQc3/Kltkf
-         KbCt184XlQQ40SXu3F/LNfguC+iu25TMMRCRlMmEY8oRl64qKtuN2J5Cwpg3Z400W/XI
-         uhhyiFFLYULxXw8XYDwStonZZQ8T9dGRO8NYDt8Zu5UlcWjN5phEAdb+/U+u3v4oB01Z
-         DA7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUQuc0jqa2PamUMk2j49NlbJOa1ick2Cmb+apmvT627bdQtnorNWZlfz5EEkZ6nDix1QD8CQJe6L/y1@vger.kernel.org, AJvYcCVPnEkBHLH2K+H5QPltguJPzvzDe+GQRp/Pa/1sVIfqurajl+Fi9Y5P1lsVg6QnTEZlxJhm6KH/W+Ob9IXQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwwtIb1odOUtRATh10tf320YqXPKMN138dE4nmiOr0Dq61Nnkw
-	xdDSvnebXf1paq5ouoBKXdmmJnr6YjovtcwJC784jv9PhoRSdWz1/Az4pyGGQj+YqEC/fS2EIPL
-	TPKDBCP+vNj8VDle5p9LtJuLxp+HiLpuZ
-X-Gm-Gg: ASbGncsjI3pER6w1hIeq0LmzjkIljgP1kUfVfL4w6P1PNoLzVjXuPJU14s/7eKrGUk2
-	NkrdNfSOwVSyX96E8ql2kDvZKcymlnC21Ct18G5o1C3Q7fHjFw40g33ojQYaKzT68odOImIig75
-	01MnpPIfNOduZ6k8zT1UK7c3NC5s9hw+CtdOMVQFq4qic9ZvlYLWQ0qh/Rwx0=
-X-Google-Smtp-Source: AGHT+IGG8TQ/aML9NKHr9fatF2KsYLKFfgoL9nDkVZai2+M8OApdKY34UCov5OwIf2Xe/caQxnERpRKq31UEig1iKE4=
-X-Received: by 2002:a17:903:19ee:b0:224:10a2:cad5 with SMTP id
- d9443c01a7336-2292f942a6amr130079115ad.10.1743369038858; Sun, 30 Mar 2025
- 14:10:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743369238; x=1743974038;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=61IYoBnyZqJEMEpkuy3cn0SZfZ0XGPVC6El2dNeevTQ=;
+        b=j06lPmpEt+TqqPwBurfGFrtefZojeOZY1oeYbXrt18YBHWuhtOqqnnMYagkrMiiWhk
+         k1FhkboIPal0qwLeszHxJKn15GHHxd+cC6fDtgOEEN8AUkycdA/+TXK0yOAb98RDVPbv
+         2K2/dLve1zkTc7l1k1sGsgBlEKLZRxvBec3SDHEXy8+WLDMxT4sSVD0Op+K8iD8mge+O
+         QQ7Ebm5zX8jveBSYcEol/PBcbiOt84lDNQy0wyncA4H63mK6wYUKPFSiel5WlS8WyWzp
+         ykxHXFn9Rant5Z4dPTrw0LcaCVVm8ZNC8ACH35O/S9iXG01cmXz/SnoA4FpoRc3Ztj/P
+         7uIA==
+X-Gm-Message-State: AOJu0YyZhrCdTDEKNa63rpSmbrjsY31mJ/2ANnvBFnUsmgRegiPepyNv
+	8XFVO6+WYTTgQ9h31u+x90jlRnTaA+Ojdgzi4zDtB0VOgpgnOttYPZPGyhdglaZM3tz+aJMI7iU
+	VZylq6LFAGA==
+X-Google-Smtp-Source: AGHT+IExA/Qh/zET4rYRjfCGWnHQ2oDyUcaf7FrxoGsylJCTJr1cZxpuLWN9JGul9NvyF2ynMXNVsUSEXVUzfA==
+X-Received: from pjbqn11.prod.google.com ([2002:a17:90b:3d4b:b0:2ea:29de:af10])
+ (user=cmllamas job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2e8d:b0:2fe:99cf:f579 with SMTP id 98e67ed59e1d1-30531f7c03bmr12282871a91.4.1743369238499;
+ Sun, 30 Mar 2025 14:13:58 -0700 (PDT)
+Date: Sun, 30 Mar 2025 21:13:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net> <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net>
-In-Reply-To: <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Sun, 30 Mar 2025 23:10:28 +0200
-X-Gm-Features: AQ5f1JpHPy4BrslsaR2BuaGOJO_CEScsXGIyscHyEtnp4vipG1FtG1_j-1eqkLs
-Message-ID: <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
-To: j.ne@posteo.net
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250330211325.530677-1-cmllamas@google.com>
+Subject: [PATCH bpf] libbpf: Fix implicit memfd_create() for bionic
+From: Carlos Llamas <cmllamas@google.com>
+To: bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Alastair Robertson <ajor@meta.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Carlos Llamas <cmllamas@google.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+Since memfd_create() is not consistently available across different
+bionic libc implementations, using memfd_create() directly can break
+some Android builds:
 
-On Sun, Mar 23, 2025 at 1:38=E2=80=AFPM J. Neusch=C3=A4fer via B4 Relay
-<devnull+j.ne.posteo.net@kernel.org> wrote:
-[...]
-> +               eth_phy0: ethernet-phy@0 {
-> +                       /* IC Plus IP101A (0x02430c54) */
-> +                       reg =3D <0>;
-Does reg =3D <1> also work on your board?
-0 is the broadcast address. It's unfortunately something that we still
-have incorrect in a lot of .dts files.
+  tools/lib/bpf/linker.c:576:7: error: implicit declaration of function 'memfd_create' [-Werror,-Wimplicit-function-declaration]
+    576 |         fd = memfd_create(filename, 0);
+        |              ^
 
-[...]
-> +&i2c_AO {
-> +       status =3D "okay";
-> +       pinctrl-0 =3D <&i2c_ao_pins>;
-> +       pinctrl-names =3D "default";
-> +
-> +       pmic@32 {
-> +               compatible =3D "ricoh,rn5t618";
-> +               reg =3D <0x32>;
-> +               system-power-controller;
-Here I'm a bit surprised:
-Aren't some of the outputs used to drive VCCK (CPU power rail) and
-VDDEE (everything else power rail, which also powers the GPU)?
+To fix this, relocate and inline the sys_memfd_create() helper so that
+it can be used in "linker.c". Similar issues were previously fixed by
+commit 9fa5e1a180aa ("libbpf: Call memfd_create() syscall directly").
 
-[...]
-> +&usb1 {
-> +       status =3D "okay";
-> +       dr_mode =3D "host";
-> +       /*
-> +        * This bus features a Realtek RTL8188 2.4GHz WiFi module, with a
-> +        * 3.3V supply voltage that must be enabled before use.
-> +        */
-> +       vbus-supply =3D <&wifi_3v3>;
-If you want to go for perfection then you can use
-Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml as
-reference.
-It's also an "onboard" USB device which requires toggling a GPIO and regula=
-tors.
-The driver side is super easy to manage as it's generic (meaning: it
-parses any GPIO and regulator as long as the USB ID is registered):
-drivers/usb/misc/onboard_usb_dev.c
+Cc: Alastair Robertson <ajor@meta.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Fixes: 6d5e5e5d7ce1 ("libbpf: Extend linker API to support in-memory ELF files")
+Signed-off-by: Carlos Llamas <cmllamas@google.com>
+---
+ tools/lib/bpf/libbpf.c          | 9 ---------
+ tools/lib/bpf/libbpf_internal.h | 9 +++++++++
+ tools/lib/bpf/linker.c          | 2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-That way you can just describe the RTL8188 on the USB bus and assign
-it's vd33-supply without having to (ab)use vbus-supply of the USB
-controller.
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 194809da5172..1f36e16461e1 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1719,15 +1719,6 @@ static Elf64_Sym *find_elf_var_sym(const struct bpf_object *obj, const char *nam
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-/* Some versions of Android don't provide memfd_create() in their libc
+- * implementation, so avoid complications and just go straight to Linux
+- * syscall.
+- */
+-static int sys_memfd_create(const char *name, unsigned flags)
+-{
+-	return syscall(__NR_memfd_create, name, flags);
+-}
+-
+ #ifndef MFD_CLOEXEC
+ #define MFD_CLOEXEC 0x0001U
+ #endif
+diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
+index de498e2dd6b0..19770402807f 100644
+--- a/tools/lib/bpf/libbpf_internal.h
++++ b/tools/lib/bpf/libbpf_internal.h
+@@ -666,6 +666,15 @@ static inline int sys_dup3(int oldfd, int newfd, int flags)
+ 	return syscall(__NR_dup3, oldfd, newfd, flags);
+ }
+ 
++/* Some versions of Android don't provide memfd_create() in their libc
++ * implementation, so avoid complications and just go straight to Linux
++ * syscall.
++ */
++static inline int sys_memfd_create(const char *name, unsigned flags)
++{
++	return syscall(__NR_memfd_create, name, flags);
++}
++
+ /* Point *fixed_fd* to the same file that *tmp_fd* points to.
+  * Regardless of success, *tmp_fd* is closed.
+  * Whatever *fixed_fd* pointed to is closed silently.
+diff --git a/tools/lib/bpf/linker.c b/tools/lib/bpf/linker.c
+index b52f71c59616..077af6f8bebb 100644
+--- a/tools/lib/bpf/linker.c
++++ b/tools/lib/bpf/linker.c
+@@ -573,7 +573,7 @@ int bpf_linker__add_buf(struct bpf_linker *linker, void *buf, size_t buf_sz,
+ 
+ 	snprintf(filename, sizeof(filename), "mem:%p+%zu", buf, buf_sz);
+ 
+-	fd = memfd_create(filename, 0);
++	fd = sys_memfd_create(filename, 0);
+ 	if (fd < 0) {
+ 		ret = -errno;
+ 		pr_warn("failed to create memfd '%s': %s\n", filename, errstr(ret));
+-- 
+2.49.0.472.ge94155a9ec-goog
 
-[...]
-> +               sdxc_c_pins: sdxc-c {
-> +                       mux {
-> +                               groups =3D "sdxc_d0_c", "sdxc_d13_c",
-> +                                       "sdxc_clk_c", "sdxc_cmd_c",
-> +                                       "sdxc_d47_c";
-> +                               function =3D "sdxc_c";
-> +                               bias_pull_up;
-This has to be bias-pull-up (dashes instead of underscores).
-
-
-Best regards,
-Martin
