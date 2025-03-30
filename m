@@ -1,137 +1,97 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7701CDA3F
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C167E1991CD
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743362803; cv=none; b=JV0X/IjLQfEU6pEWg8FOn+dlwnwrB5AWcMPeUpsc4fzDeWYhjjtruMGz0cQdOZFr7iFCq3TgZ5wvPVWHGOisP6g4PQSMlWdjhvT0y07lhV5mftWPqPH9pYTFN4Zd6e9l4O5fXBV4qOifWfn58YdO1OEMrBh0+kv9hIYSsRYaUiI=
+	t=1743362915; cv=none; b=SjOUP8x3LPKF+cy4CPjxYUhfX8a/oM+FGjL4o6X2GKYiTjJf0v1GAULcpzQNSCvIrxJ6VXm6F+annDCqxdS8DJPGwByGWCTLKp36b/qMkA0KIYxSqM0MraOfyBfBGrKSZPs4m6QX9kiGX8vLpv+bvg1VdE6q1P31keDU1lVd3Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743362803; c=relaxed/simple;
-	bh=QQjWPiOzm4rZs44Nz9sCrKcrc/xE+dRevyZXJgsSyOc=;
+	s=arc-20240116; t=1743362915; c=relaxed/simple;
+	bh=oQ6tDnrzI0Gr+iIsTCpw2Rsmp5ujG/ASFsYqXQTe+VY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h31f8W5tVWJ1MoTP+4OMs5SCbAlvoKWxwhclZUPK8kUcWLS4WlHaV2ZGJttb96HfJqqZ8IK6nDU/no2QHp3vGyQQmYLrRQrhZlm9JNWMO9UwrEAHceVsRARu9aHkV1NGyHWF6TQeo60jPraWxqtCmQxBLYmsgSD87MbltbNf4Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ki1PSypQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q5egmvZvYVjf7cju7CmNeColSNl67Z8aiEO7nd4vPDw+a3ipbXiZmP9wEF7L+S8SD+Zy5MQ/7AwsXTo9/Hohy5Vklld2o/WRGJG/G4SzJhGMvfiJH5FJSPrdk6jhabEMcxaLmM82UZHtr+0eS/8GCHLe52ytQHIekCMCg2HsAlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=c5CBWENj; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ki1PSypQ"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UELEGR023474
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:26:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=pAHgTy/CACDJNBcxbiqcZgMo
-	cw/wyMoGwl1/5JsSoqg=; b=ki1PSypQdYxX22g6f4x0HgB9VJNCi0zLqJxdUL97
-	SacGa2FmMl1rO4yXCwd3SsJpWoDgDlR+UB0le2RVqZ7PliEKDVeun5MqqH34kTnc
-	3wjlqOi5TGUGFHWL5QaBOZC6NVTn8YnSz0n0q2/FYCMAVfX3SwR1J9xQDm+Yqxc2
-	10V9ZNi5ACoB1N1sdbQjyhRQgH05XfPm77nRg9JDEl9aTVt9MmPfvi7slyVTqsvB
-	fO0at1J7RajacBB4xNqwP7HEcL+vgaffLzOwdMcPnOisB/s5G+MYNzdVwxPgKhXc
-	rFANVRK3vLdKKY2prnv2rsZEWucFTnGyU5Nf5Bq3nvUsWA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p86kjrgu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:26:40 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5d608e703so701543585a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 12:26:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743362799; x=1743967599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pAHgTy/CACDJNBcxbiqcZgMocw/wyMoGwl1/5JsSoqg=;
-        b=MOSbF7TSNr2wupqgJ2IiSay8EukpVAlMx4Kb0s1gF/aAaM42rCUhonWaLerA80SweF
-         X1F3dWfcWZp1S/3nW6B61vAHiLf9hvF9e2MgQTp6gR6cL4Pl1HApOrDB1KQI3a3c8/Tf
-         ACFYvRsP/ryI+omrM5LgHJsoG1fUo20efIp1p/iAAPiWfXt2tCuUalvzmijXAFiBZ7jx
-         WSCd675qNAaSC4MzVVRr8sgBYPeR5tEEybo1a6xye30bvrHhbUGaYzfcVTdOTXqOmQWl
-         IrCUdU6GoddC3Mr8LPYmAIohCI7QqusKmzUsLUGLlKZWmdUTJ71fIdzTyw+9nLF51rli
-         JZPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzERzJwTnWQTe3biFKUxa/2s3nRX8pWH3buTUBE/pySlHb8rjYZmgCHZ7Gi9IlOVH0/jkEsjKP+HiiGAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNpBACV6IZywP1RLF6kAUY/CvxOQyZGXFrS+49K2EKY4MCC4U1
-	HVbX63iRQzNNniVKP6PBb67z8GsKIfhNYOlpZtvL3xN3WndtvEYRVxcNv0LSgwzPJkvDmPSJsxL
-	6IIGgDPfvjPULKdKIASK1rP9/zNXe1KArD5WqgZAcT+O1J65YduSGW4GtpXF8i+g=
-X-Gm-Gg: ASbGncvT21MvcBL31S91dVo+RgbLkdZu/8louORHohSxN0zEVQmhJaRRU5xCb6JN6dc
-	MqdixAENhOgwERvLfmuhtaTSd1La2e1D8QPDF4NOlcDZ8N/30khY5+N0ochPnyf8n8B56yhwSHg
-	bh3c2JpdwDFK6k+AOHtmOueAKHqusBJsPMackkcgf5zbhnDvYbmt/EZVs8UQwHMkOxdcWQYqN5O
-	UfQ9/kElrnXE7tD0T4FcmmCt/bhBJNP75/PEdnRgOl+JtcvMTLZdfcRn/zxEyJbOJE6VFv8Sx5d
-	fMViVUnrrSOQEa1JbtnDi/VB/JucRdq6jhWZUOIsW2ue3yKjvoq3IYJKF3wXCVx60C2JHpqTyOv
-	vL2k=
-X-Received: by 2002:a05:620a:1aa1:b0:7c5:5fa0:4617 with SMTP id af79cd13be357-7c69087cc6cmr977665985a.40.1743362799743;
-        Sun, 30 Mar 2025 12:26:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHuzwPAeNbLcInRyGKSU3ltKyTKZ5JZ5WGJJjb7Pq+vWyVd70VYxdrssavMwtCrSJhB7YhpgA==
-X-Received: by 2002:a05:620a:1aa1:b0:7c5:5fa0:4617 with SMTP id af79cd13be357-7c69087cc6cmr977663785a.40.1743362799399;
-        Sun, 30 Mar 2025 12:26:39 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0959f429sm949528e87.212.2025.03.30.12.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 12:26:37 -0700 (PDT)
-Date: Sun, 30 Mar 2025 22:26:34 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
-        mperttunen@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, dmitry.baryshkov@linaro.org, mripard@kernel.org
-Subject: Re: [PATCH v2] ASoC: hdmi-codec: wire up the .prepare callback also
- for SPDIF DAI ops
-Message-ID: <yyxqg6odzlac2434kmzvjccguf6cehhotat2m6r4at7o2ldiuh@rl7y2vv4hetj>
-References: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="c5CBWENj"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6F37A40E021C;
+	Sun, 30 Mar 2025 19:28:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BLYi_yRK7l-5; Sun, 30 Mar 2025 19:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743362907; bh=1xcoUUfbyxZ1ZXPtdJxFFHfiV61C0zHs+b0Vxar86UA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c5CBWENjnbXfTYKfiPrQXXsHpjNhUJ3r+9M2PnnsL98ClPdRB42MQtZQIgIEsqhCJ
+	 yUdgVHe+LCZ5p15oXrfYmXMCYc4jMS7WY7+uD9u7e8Xygii1sSJ3+dfrBuk3s7zjEL
+	 mWV+OTPGiQkkYrYSkYWI461gHmT8EM5U5UDJd5ZGFTSJRCj+6vhfJP1D0wLhW47B8X
+	 IvD/ezXLwbQfP4S2eyDdnOxQzVW1gP7wV5bCgFxWQgCQ80lZge65U7yJ5ypUgCadtC
+	 VuL24/112Yxvd6OHEQ3QTUWT3/778aOnsnv/l+OA8nN8Kot8HMBkJfyhQ1b+WYej24
+	 kKL2ew/a5iPXF3cIiFBrBQGri5qi0Sc59EXMxbrdIQnseFEpWQZL6aDAE8tnT3xkpm
+	 toPr4yP8ntDD2RCgntdSXMz3TN1f0jHYg3S+SFr6yteFCiAcFM2Tyn7/W20uGKX7/4
+	 uYAr5HTElHffK8TNwo6lwzm/2/USvH35i08j+OzYbj+HyvuXKlQJkVXTAx782B1rGO
+	 VK/5wy2QORT4ZRmd5KS4d3zk++tFKOEl/MIaG+4I/CbtyZDiwUUYUWgD8YnpktSr9u
+	 xh5vqYnEMB1BE7qU1KgmGU9x0Y1oxKO0JrZyh/MHhxF/Xhjgwbg0Ga9ZKEXciY8a7z
+	 39WOXCFR+gJKpq1PFUZZQjGU=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B3DC40E0213;
+	Sun, 30 Mar 2025 19:28:20 +0000 (UTC)
+Date: Sun, 30 Mar 2025 21:28:13 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+Message-ID: <20250330192813.GEZ-mbTd6ZIHWr52gO@fat_crate.local>
+References: <20250325164854.199420-1-ubizjak@gmail.com>
+ <20250325164854.199420-2-ubizjak@gmail.com>
+ <20250325171141.GDZ-LjzaPbAG1MwjZi@fat_crate.local>
+ <CAFULd4ZT5mjjEXW3SnGQVMo18fO8CapFS-ikLQvYFw5EKtEfmA@mail.gmail.com>
+ <20250330173140.GCZ-l__PVdSx6mj-zL@fat_crate.local>
+ <Z-mRwxb3r1yrH332@gmail.com>
+ <20250330190651.GDZ-mWS5RRwsN8Q3g4@fat_crate.local>
+ <Z-mZfCvep7iMrqoU@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250329191433.873237-1-martin.blumenstingl@googlemail.com>
-X-Authority-Analysis: v=2.4 cv=W8g4VQWk c=1 sm=1 tr=0 ts=67e99af0 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=mK_AVkanAAAA:8 a=EUspDBNiAAAA:8 a=rfKdTcLzpojuHggjPigA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=cvBusfyB2V15izCimMoJ:22 a=3gWm3jAn84ENXaBijsEo:22
-X-Proofpoint-GUID: hSu4-l0eGVjwPWaoNdGe1-4JLfwPp0CC
-X-Proofpoint-ORIG-GUID: hSu4-l0eGVjwPWaoNdGe1-4JLfwPp0CC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=787 mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503300136
+In-Reply-To: <Z-mZfCvep7iMrqoU@gmail.com>
 
-On Sat, Mar 29, 2025 at 08:14:33PM +0100, Martin Blumenstingl wrote:
-> Commit 2fef64eec23a ("ASoC: hdmi-codec: Add a prepare hook") added a
-> prepare implementation. Back then the new callback was only integrated
-> with hdmi_codec_i2s_dai_ops (which is used by the I2S input code-path).
-> It was not added to hdmi_codec_spdif_dai_ops (which is used by the SPDIF
-> input code-path).
-> 
-> With commit baf616647fe6 ("drm/connector: implement generic HDMI audio
-> helpers") the DRM subsystem has gained a helper framework which can be
-> used by HDMI controller drivers. HDMI controller drivers are often
-> tightly coupled with the hdmi-codec because of the so-called HDMI audio
-> infoframe (which is often managed by the display controller).
-> 
-> To allow the new DRM HDMI audio framework to work with the hdmi-codec
-> driver for SPDIF inputs we also need to hook up the prepare callback to
-> hdmi_codec_spdif_dai_ops. Just hooking into the hw_params callback would
-> not be enough as hw_params (is called too early and) doesn't have access
-> to the HDMI audio infoframe contents.
-> 
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
-> Changes since v1 at [0]:
-> - re-sending since there was no feedback
+On Sun, Mar 30, 2025 at 09:20:28PM +0200, Ingo Molnar wrote:
+> Tangible code size reduction, if it can be realized, is definitely 
+> 'something', so your claim is simply false.
 
+I don't think you're reading my mails.
 
-Almost forgot:
+What "tangible code size reduction"?
 
+9K vmlinux size?
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+For sections which are getting jettisoned after boot?
+
+So now the rule is what: make the asm an unreadable mess just to save 9K disk
+space?
+
+I call that bullshit. A total and stinking one.
 
 -- 
-With best wishes
-Dmitry
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
