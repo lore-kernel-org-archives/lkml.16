@@ -1,159 +1,176 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE0BE67;
-	Sun, 30 Mar 2025 21:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE54322E
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743370230; cv=none; b=md5A0BFSu3I2dm0vIjhzaRGf1xoRZQac53yedE3GLoX4BDJPMjA2GwMgU5F4SyCRHtv5LjZUZ+kajmE804LbkkVBsosOhzAss6YUOyEV/laymQHs2dOXr0B5DX7KEJgSFfL8xQI0Bj3phMmNVuXnLKzJ7NGyRzJJtJNPZ+650Mk=
+	t=1743371335; cv=none; b=gQvd86GL4Ujjmz8sZke4pEdpsYZVQnu1bmyHk5A6mc6jggeltcASqOi29bPakkPOuHHbfrFAOH4atHbK/v/5FIW0rflB4Xtksv/GlqT+lgkhcDRc0kPKeRzCGv35ZDax+US1VcH2bJSeHAjEN/Yb9tA3k0T7kzNL6fe8AwJ0S4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743370230; c=relaxed/simple;
-	bh=rwPm/b9mN0zAn8FYFaggPzfpON9La4aWZ1wDAZv7GmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DlaC8Lm9RhgXXa0wMa8QqNrfBzu5sskfqnin9R6GKT600dO2F1vEp4EXJQ3tgN+KKJHzbRYlWkB/2YzUA90qF3Jbzzpq575QqFsHfxf3ly+xMQYYah21qIAXvbrs4+fr8F9xfolYQ7JhW7KPuw/pm192QSjT7AMxoXIVewvC7+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPWrbCi3; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743371335; c=relaxed/simple;
+	bh=KZH/gVFLFKR8E7Hs8KBGnWzJSYu4wOpcLXfxzdOJuWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IuoPfIi4vjdqOR4mbJgh5nnAAcxwk/SZrJ995djia3hv4n1F5YML3CikpMHvshg9V2EpIkJbubdivHt3VDXp8nFRqwM05iI6uNBu1enyNIjYpORss26mbFVyiTM+uSVUQXwFZ+PTVniP3r5TTZOAlvbcyTvW1Vg5/RdShfyJtW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hNpU6pON; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPWrbCi3"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso3661605f8f.0;
-        Sun, 30 Mar 2025 14:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743370227; x=1743975027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yOOpYDacP3qw4CicXaURsjZhalE+xbMRn+milGOOg5E=;
-        b=ZPWrbCi3d9YJabEwAIh77/4Geo6+e3193HJeNZErD/DnDJGTGCWVmAn4iqMGI3PSxs
-         2c95kbKyTpCGjoXZ3BY219oRa/KSpQ3hqIBFfXQ2xG8LxdQ+3LRyomDTgqmeQ3pn1m6D
-         r+SwkPlIXl51oDrksjAqYKH3A/Q9lYnnNu9XyXtfIWVHiDRHya3cz4Dqe/AQVeJR8L4D
-         gS7u6U8ABPY0HfnCC6VaGj1p/GtGupfND1RjzWhnSiIEGurT+sNgcEo77//l3Vw/oP8i
-         oVoQ1jdFgfipmASCLkFD8vLuQCu4caMl80atkGVW95XvAdYd28ZLfYD5/7yMNJpRt3z3
-         dbYw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNpU6pON"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743371332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRkqFL3NXkPCwg+oa2kxw02pthB6mXCTdemECWhwX84=;
+	b=hNpU6pONKodQd8M3EaFiv2hkW8z9T57xb8mKe/6fwQP4r2uOXMyqo/dfIt+nlnwHmtXVbq
+	wQ1vehs87NGYy8Q7MT4LQCIlSRbjYF5CCA/r/K1EJJlhdTm8m3Hk+CthvJvXu8MncyODep
+	UN7+vTARjHsksykNsg+mytaw1YWHr/o=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-zqLfBKmGPySou_dPEdewHg-1; Sun, 30 Mar 2025 17:48:51 -0400
+X-MC-Unique: zqLfBKmGPySou_dPEdewHg-1
+X-Mimecast-MFC-AGG-ID: zqLfBKmGPySou_dPEdewHg_1743371330
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so26255785e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 14:48:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743370227; x=1743975027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yOOpYDacP3qw4CicXaURsjZhalE+xbMRn+milGOOg5E=;
-        b=SNw6ntTksKgNabECkE+wQBXn8Rxx376V4UemkKlMHaKk0Fv4oYgN9bIxWbK7flpBmm
-         iXww8EA2TNvzyTwFWqLDxWrLt3Br15IUzEeUsZlSYqvgQfSD+L0X4ka4nz97pKT9xNbD
-         Y7E+5Zj+TboFMar9+0Tfu3yNYDgpitKpX/eYnKj8gYEjtp05V9K1FUXan/uddEIx2sEN
-         qdt4eKM/7ei2dhpracUGUVHYBTlTV/MtnSNt4SOqEj+4wOCSnU0ZuKxRe+ppqrgQ9F8V
-         gX1WzSf/ulCMdswksujkkT73Et3W5f4N3H4PHkAAX0AV95CYu06DYikITHWCnOUHIlVl
-         89wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLGAtdjWr+xjxpe1AQYlRpCu0BtqQYlIsT92UyRxrITyYsRBv2HKeZZixN4fORBf0Ed9rumGP1Bc7GGMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn7fpRjPCTI5/OIyVJ+JQYMfyQ97di2fCYANd9UKDy9/MEgjPj
-	O3rxtxnicshok1qS23Exgw5zh4PCEhjjDnmcBXCkMxNzLIamQQPntj8oq20Zo0ZKvbqyPcA7RD5
-	vLQj3KDrJgMW/hcA61Na9aUb1aDQ=
-X-Gm-Gg: ASbGnctIirJfqblIMx//t1XUtyMAF4Gdt4Q21myxpNUcwKquw1g7Wx7xid0FuceWzrD
-	eUCQypp3DcpA6HMl1mgVewT5cr1eWHSVcdMUsL4VDHPcdUu7zaqerlIp5QbJTcIqA8cFlQKimNj
-	ncEPK0chILVGL6KC1S+nyELV/UjZQfY2QQqzNYhFm6nncppmChpeIW
-X-Google-Smtp-Source: AGHT+IGy6TYkwqWgmB4qVvUpl+hS3Hb0sVBnt8U2ZwjeeCa8mROOAVHVYBHFbL7WUn3u4+jOQRKGFypsVayyAIua8Uc=
-X-Received: by 2002:a05:6000:2913:b0:39a:ca59:a626 with SMTP id
- ffacd0b85a97d-39c120e3e5cmr5650236f8f.28.1743370226631; Sun, 30 Mar 2025
- 14:30:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743371330; x=1743976130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MRkqFL3NXkPCwg+oa2kxw02pthB6mXCTdemECWhwX84=;
+        b=sbZRnukA4tRxUFf76hdtyDWFPF4p+QpQoN73b8UGCxACbNERY3j0Qpk1MXGSC+8FqO
+         27c6qw9p5rYrqXFFuQIkXQWV/WivEPjm7SuFYsVxQ42jnZGmiu0X83LSQEW+05P0rGW7
+         g/EjPI0rtZMu8fpqcX5fvr4mJ+0s0HBCKkJsLGPV2MrxPzP8hFYkwDC/NlbCByDumkt0
+         pDFUXjeCG8K3rUMcGp+N6+ZwY1gJGBBQywGbF1X2tWMz3gyUc8FEqPPt+ja5lUGzlCjg
+         Q8vV9Gu4S4xp3IpczxhXmVOYnbo6JPXGibnoINtTsvWTzO0RBZilxZW3x/0Vzr0D9OtZ
+         HqkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb0iPuJMNUNBWIT5GxeKPAHjYvBme9XKLZaLgXuVrxFZItenRckxnnyr5169lQIy34+YhPHkcu6IwbpEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrZTMkLM4FxQ+vf+UQjjU4ocAR9f3AlrzZ13LNnsOa7Sd0i4AP
+	9rpw/hRaU+zCTdtkhzngaZjSGPPZ5AQPpQyzrX/UlD7xc/gAl9d+/5l1tpgHRaTYm1h1T+lDZqY
+	wyrmvYMn1G9b/urBdTSFez8DDPK77c8Jnbhn5Ojft1WO/Tf7O51ctjgG2SUj4vw==
+X-Gm-Gg: ASbGnct0uJcnc527yYwdgZ1rwV8MhFS3yFQC1zZWgDpV+NM6vGHdR7cf3hMlHr7gptE
+	dia1dzSuZdImJraXJlodHjcQW13cIDFJIUCiLvM6ILcOD0echDAXyRNtIPH7npVQ1Lfu0Ak5uJ3
+	kNGDwIa1fdM46Pa8asLJfQufKLTzx/n33fcUzAs1C1NFQYPVbquR9ufutDo+bCf5jODXQvvnXIb
+	80jwNcWkXzOkQi8ZPGpHYxtEAaRUO+5nh+maj3Pvw25XCb27MOmmuevr1Tl2vzauiRDf3Iv1L3V
+	QuHNUwGHJA==
+X-Received: by 2002:a05:600c:1d8c:b0:43c:f050:fee8 with SMTP id 5b1f17b1804b1-43db628992cmr52509465e9.20.1743371329777;
+        Sun, 30 Mar 2025 14:48:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1kdHHR/M4aOUOFDnZpG/iLLAoqQlqVBS2836/4CKe19RX2SyJrF+xilFjC/1QxsrymXzr6Q==
+X-Received: by 2002:a05:600c:1d8c:b0:43c:f050:fee8 with SMTP id 5b1f17b1804b1-43db628992cmr52509055e9.20.1743371329422;
+        Sun, 30 Mar 2025 14:48:49 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e83477sm147882045e9.16.2025.03.30.14.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 14:48:48 -0700 (PDT)
+Date: Sun, 30 Mar 2025 17:48:42 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linuxppc-dev@lists.ozlabs.org, Claire Chang <tientzu@chromium.org>,
+	Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	boris.ostrovsky@oracle.com, jgross@suse.com,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	heikki.krogerus@linux.intel.com, peterz@infradead.org,
+	benh@kernel.crashing.org, grant.likely@arm.com, paulus@samba.org,
+	mingo@kernel.org, sstabellini@kernel.org,
+	Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+	xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Nicolas Boichat <drinkcat@chromium.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	"list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	virtualization@lists.linux.dev, graf@amazon.de
+Subject: Re: Using Restricted DMA for virtio-pci
+Message-ID: <20250330173951-mutt-send-email-mst@kernel.org>
+References: <20210209062131.2300005-1-tientzu@chromium.org>
+ <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
+ <20250321142947-mutt-send-email-mst@kernel.org>
+ <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
+ <20250330125929-mutt-send-email-mst@kernel.org>
+ <E3EE485D-AD74-457C-BDEC-F8C62DFE4909@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327145159.99799-1-alexei.starovoitov@gmail.com> <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
-In-Reply-To: <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 30 Mar 2025 14:30:15 -0700
-X-Gm-Features: AQ5f1JqKoFYJATW7xwoyQD92tAvSQWSre1BbHdyzNRzzGs11RJb--CavgF31AIQ
-Message-ID: <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
-Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Sebastian Sewior <bigeasy@linutronix.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E3EE485D-AD74-457C-BDEC-F8C62DFE4909@infradead.org>
 
-On Sun, Mar 30, 2025 at 1:42=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, 27 Mar 2025 at 07:52, Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
+On Sun, Mar 30, 2025 at 10:27:58PM +0100, David Woodhouse wrote:
+> On 30 March 2025 18:06:47 BST, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> >> It's basically just allowing us to expose through PCI, what I believe
+> >> we can already do for virtio in DT.
 > >
-> > The pull includes work from Sebastian, Vlastimil and myself
-> > with a lot of help from Michal and Shakeel.
-> > This is a first step towards making kmalloc reentrant to get rid
-> > of slab wrappers: bpf_mem_alloc, kretprobe's objpool, etc.
-> > These patches make page allocator safe from any context.
->
-> So I've pulled this too, since it looked generally fine.
+> >I am not saying I am against this extension.
+> >The idea to restrict DMA has a lot of merit outside pkvm.
+> >For example, with a physical devices, limiting its DMA
+> >to a fixed range can be good for security at a cost of
+> >an extra data copy.
+> >
+> >So I am not saying we have to block this specific hack.
+> >
+> >what worries me fundamentally is I am not sure it works well
+> >e.g. for physical virtio cards.
+> 
+> Not sure why it doesn't work for physical cards. They don't need to be bus-mastering; they just take data from a buffer in their own RAM.
 
-Thanks!
+I mean, it kind of does, it is just that CPU pulling data over the PCI bus
+stalls it so is very expensive. It is not by chance people switched to
+DMA almost exclusively.
 
-> The one reaction I had is that when you basically change
->
->         spin_lock_irqsave(&zone->lock, flags);
->
-> into
->
->         if (!spin_trylock_irqsave(&zone->lock, flags)) {
->                 if (unlikely(alloc_flags & ALLOC_TRYLOCK))
->                         return NULL;
->                 spin_lock_irqsave(&zone->lock, flags);
->         }
->
-> we've seen bad cache behavior for this kind of pattern in other
-> situations: if the "try" fails, the subsequent "do the lock for real"
-> case now does the wrong thing, in that it will immediately try again
-> even if it's almost certainly just going to fail - causing extra write
-> cache accesses.
->
-> So typically, in places that can see contention, it's better to either do
->
->  (a) trylock followed by a slowpath that takes the fact that it was
-> locked into account and does a read-only loop until it sees otherwise
->
->      This is, for example, what the mutex code does with that
-> __mutex_trylock() -> mutex_optimistic_spin() pattern, but our
-> spinlocks end up doing similar things (ie "trylock" followed by
-> "release irq and do the 'relax loop' thing).
 
-Right,
-__mutex_trylock(lock) -> mutex_optimistic_spin() pattern is
-equivalent to 'pending' bit spinning in qspinlock.
+> >Attempts to pass data between devices will now also require
+> >extra data copies.
+> 
+> Yes. I think that's acceptable, but if we really cared we could perhaps extend the capability to refer to a range inside a given BAR on a specific *device*? Or maybe just *function*, and allow sharing of SWIOTLB buffer within a multi-function device?
 
-> or
->
->  (b) do the trylock and lock separately, ie
->
->         if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
->                 if (!spin_trylock_irqsave(&zone->lock, flags))
->                         return NULL;
->         } else
->                 spin_lock_irqsave(&zone->lock, flags);
->
-> so that you don't end up doing two cache accesses for ownership that
-> can cause extra bouncing.
+Fundamentally, this is what dmabuf does.
 
-Ok, I will switch to above.
+> I think it's overkill though.
+> 
+> >Did you think about adding an swiotlb mode to virtio-iommu at all?
+> >Much easier than parsing page tables.
+> 
+> Often the guests which need this will have a real IOMMU for the true
+> pass-through devices.
 
-> I'm not sure this matters at all in the allocation path - contention
-> may simply not be enough of an issue, and the trylock is purely about
-> "unlikely NMI worries", but I do worry that you might have made the
-> normal case slower.
+Not sure I understand. You mean with things like stage 2 passthrough?
 
-We actually did see zone->lock being contended in production.
-Last time the culprit was an inadequate per-cpu caching and
-these series in 6.11 fixed it:
-https://lwn.net/Articles/947900/
-I don't think we've seen it contended in the newer kernels.
+> Adding a virtio-iommu into the mix (or any other
+> system-wide way of doing something different for certain devices) is
+> problematic.
 
-Johannes, pls correct me if I'm wrong.
+OK... but the issue isn't specific to no DMA devices, is it?
 
-But to avoid being finger pointed, I'll switch to checking alloc_flags
-first. It does seem a better trade off to avoid cache bouncing because
-of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
-others that it's faster to do trylock first to avoid branch misprediction.
+
+> The on-device buffer keeps it nice and simple,
+
+I am not saying it is not.
+It's just a little boutique.
+
+> and even allows us to
+> do device support for operating systems like Windows where it's a lot
+> harder to do anything generic in the core OS.
+
+Well we do need virtio iommu windows support sooner or later, anyway.
+
+-- 
+MST
+
