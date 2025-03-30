@@ -1,562 +1,369 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7BF29A0
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 15:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDD11CA84;
+	Sun, 30 Mar 2025 15:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743346851; cv=none; b=IocHE7hTjG/3MIk3MDfaHTuo+csH+GooljJpZ9JpNtltFk8LrVa9TxVhz3VlQ6+FLYiMTORmAN1OHHV7ODvqnaiQNaeVWrkEDc4osvrVsnK2OMfa7jl03H/1oonky6DQkFsrigDDqCyjI4f3ASUju/nPVtv+wyBwtTc3Ozf51vk=
+	t=1743347317; cv=none; b=pAYRTglVC0BLccsQrfh9vQfPac3Q6hiFqCM6+25TLQp1ykaJoVnHSuUkJhU2f4Z63yWv1XcD5UUPpQZdGghEUwOjmSbjCBlIFYK2aPH/nGg/vyHc+sHz8P/U/feZYupb87WHP9Qq50+tBTxqxsF1ED3jKt3CNlWzGnbGb2sXYEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743346851; c=relaxed/simple;
-	bh=Nwi4ImU2MVNtb7j9ol9HYpFJLXfnLPMCg7n7LWeNybc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XEKYuoBxR6lAmOs0/yR9xDZKP/XMO7mpyR16ljDuIHgnIoFGJAmCCSCAdRn/0hUt1FflaLl5FScga+fHUa8Q6DiBy0LEDP8lMyOvYWETvii6UcnY7OcX7cMQ9aQzoSfxm7T21Trt89veooZeKtcK8MAJECLjkOGgs4w21zZNKHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWdoTCut; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743347317; c=relaxed/simple;
+	bh=3yJoXS3aoVCn5SRdxH72qtXJLR3Q44bN3jSoRVPocdk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qGkuTJOQiSlGaTpYjylZQVE3no8TDuiZFdqtufU9GmsIncZlP4mnWmprIzaJkrrdD9Kn3ZvYb6D5Gn0EasVAHlIaNf0QCnzhyxnwZiclddCIwweUFTb7dESmC9CJCxMMSEKuVMuerHY5hoT2QRrjMkVxG90jlGTU2qL7oN3bDPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QN4IF3SS; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWdoTCut"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743346849; x=1774882849;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nwi4ImU2MVNtb7j9ol9HYpFJLXfnLPMCg7n7LWeNybc=;
-  b=jWdoTCutL06/BDt/rOZpdWFcvdwLe3DkydKOCbOviudxZecrVccPCdp4
-   ZzuZ7Hmt9NKRKFpOBmBxpcN8XyNIuFIy0w8X53+TRe+ZjGbnkNivxbJpr
-   EVfxUlkRKDGgmZInNVcLHDn00u6OPrMjy8edEAOPl8Ht0Slj2M2muX4Rs
-   TNf1uQMniGHHl84DFRhfcnJPxZJveV8RRV/PoiMZQz3tO825R4uj/mncM
-   aHtslSk3LUnAbKmo8tHYDclQq74HreamR599S7mhjljvp7t2O8zjV4+3b
-   zyeBJVjICFBLBqPibraTYvh/SIgYc+mspeBBSaw1sWJiMXwZCcieO0h0w
-   A==;
-X-CSE-ConnectionGUID: XfBS93U4RkiSjbxK8oyzFw==
-X-CSE-MsgGUID: qLx6ke4ySfGpZynYODoYtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="62042468"
-X-IronPort-AV: E=Sophos;i="6.14,289,1736841600"; 
-   d="scan'208";a="62042468"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2025 08:00:49 -0700
-X-CSE-ConnectionGUID: Imzo2GppT6ej3tSffhQfww==
-X-CSE-MsgGUID: nO/SJjepRnK8Wi4mHMzwkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,289,1736841600"; 
-   d="scan'208";a="130588446"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.161.23])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2025 08:00:46 -0700
-Date: Sun, 30 Mar 2025 23:01:16 +0800
-From: "Lai, Yi" <yi1.lai@linux.intel.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Oliver Sang <oliver.sang@intel.com>, yi1.lai@intel.com
-Subject: Re: [PATCH v3 4/7] mm/mremap: initial refactor of move_vma()
-Message-ID: <Z+lcvEIHMLiKVR1i@ly-workstation>
-References: <cover.1741639347.git.lorenzo.stoakes@oracle.com>
- <ab611d6efae11bddab2db2b8bb3925b1d1954c7d.1741639347.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QN4IF3SS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3yJoXS3aoVCn5SRdxH72qtXJLR3Q44bN3jSoRVPocdk=; b=QN4IF3SSgnWBqSpbejxiqnd0/E
+	fXeGCBHfJpUStt9wEbS0sCNgkzHOK4byeQg7TdWDATfLPPTGJBUxr7xdK8J/fQaBquYU2Jzi/VIXW
+	UFglLl6KXBMNne0T51xU/ckBAmn0Lp4t9rwucDWk41GYnVeoj4zZ/wrgOOFn5UESYeCRNxEQutm5S
+	ESTXR7p0cTu3pnJkLchK1fDz1ewQOxGv85uidxiZ2JRqBgsB/cFw0RGjc92pTH7uFRFZwdSc+sUqT
+	PQ7XSy+/6aAHgk0Rt4uaqhODrMEa+tlkEdzJxTHJAAB/1toiaC9TQivieMdtAhqm7RrKLleFmbYor
+	xbBtCppg==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tyuGS-00000006Wxz-2VMu;
+	Sun, 30 Mar 2025 15:07:56 +0000
+Message-ID: <09fc164ebcfd893ffd67d1b224d6e1c5e5772ee0.camel@infradead.org>
+Subject: Re: Using Restricted DMA for virtio-pci
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Claire Chang <tientzu@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
+ mpe@ellerman.id.au, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>,  Frank Rowand <frowand.list@gmail.com>, Konrad Rzeszutek
+ Wilk <konrad.wilk@oracle.com>,  boris.ostrovsky@oracle.com,
+ jgross@suse.com, Christoph Hellwig <hch@lst.de>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>, heikki.krogerus@linux.intel.com,
+ peterz@infradead.org,  benh@kernel.crashing.org, grant.likely@arm.com,
+ paulus@samba.org, mingo@kernel.org,  sstabellini@kernel.org, Saravana
+ Kannan <saravanak@google.com>,  xypron.glpk@gmx.de, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>,  Bartosz Golaszewski
+ <bgolaszewski@baylibre.com>, xen-devel@lists.xenproject.org, Thierry Reding
+ <treding@nvidia.com>,  linux-devicetree <devicetree@vger.kernel.org>,
+ linuxppc-dev@lists.ozlabs.org, Nicolas Boichat <drinkcat@chromium.org>, 
+ Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Greg KH <gregkh@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, lkml <linux-kernel@vger.kernel.org>,
+ "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Jim
+ Quinlan <james.quinlan@broadcom.com>,  Robin Murphy <robin.murphy@arm.com>,
+ hch@infradead.org, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
+ <eperezma@redhat.com>, virtualization@lists.linux.dev, graf@amazon.de
+Date: Sun, 30 Mar 2025 16:07:56 +0100
+In-Reply-To: <20250330093532-mutt-send-email-mst@kernel.org>
+References: <20210209062131.2300005-1-tientzu@chromium.org>
+	 <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
+	 <20250321142947-mutt-send-email-mst@kernel.org>
+	 <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
+	 <8e7084b04e5c0456c0ff32ea131a199c6af763cd.camel@infradead.org>
+	 <20250330093532-mutt-send-email-mst@kernel.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-mYzUro773zg9T/uQYbOm"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab611d6efae11bddab2db2b8bb3925b1d1954c7d.1741639347.git.lorenzo.stoakes@oracle.com>
-
-On Mon, Mar 10, 2025 at 08:50:37PM +0000, Lorenzo Stoakes wrote:
-> Update move_vma() to use the threaded VRM object, de-duplicate code and
-> separate into smaller functions to aid readability and debug-ability.
-> 
-> This in turn allows further simplification of expand_vma() as we can
-> simply thread VRM through the function.
-> 
-> We also take the opportunity to abstract the account charging page count
-> into the VRM in order that we can correctly thread this through the
-> operation.
-> 
-> We additionally do the same for tracking mm statistics - exec_vm,
-> stack_vm, data_vm, and locked_vm.
-> 
-> As part of this change, we slightly modify when locked pages statistics
-> are counted for in mm_struct statistics.  However this should cause no
-> issues, as there is no chance of underflow, nor will any rlimit failures
-> occur as a result.
-> 
-> This is an intermediate step before a further refactoring of move_vma() in
-> order to aid review.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/mremap.c | 186 ++++++++++++++++++++++++++++++++++------------------
->  1 file changed, 122 insertions(+), 64 deletions(-)
-> 
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index af022e3b89e2..6305cb9a86f6 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -68,6 +68,7 @@ struct vma_remap_struct {
->  	bool mlocked;			/* Was the VMA mlock()'d? */
->  	enum mremap_type remap_type;	/* expand, shrink, etc. */
->  	bool mmap_locked;		/* Is mm currently write-locked? */
-> +	unsigned long charged;		/* If VM_ACCOUNT, # pages to account. */
->  };
->  
->  static pud_t *get_old_pud(struct mm_struct *mm, unsigned long addr)
-> @@ -816,35 +817,88 @@ static unsigned long vrm_set_new_addr(struct vma_remap_struct *vrm)
->  	return 0;
->  }
->  
-> -static unsigned long move_vma(struct vm_area_struct *vma,
-> -		unsigned long old_addr, unsigned long old_len,
-> -		unsigned long new_len, unsigned long new_addr,
-> -		bool *mlocked, unsigned long flags,
-> -		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
-> +/*
-> + * Keep track of pages which have been added to the memory mapping. If the VMA
-> + * is accounted, also check to see if there is sufficient memory.
-> + *
-> + * Returns true on success, false if insufficient memory to charge.
-> + */
-> +static bool vrm_charge(struct vma_remap_struct *vrm)
->  {
-> -	long to_account = new_len - old_len;
-> -	struct mm_struct *mm = vma->vm_mm;
-> -	struct vm_area_struct *new_vma;
-> -	unsigned long vm_flags = vma->vm_flags;
-> -	unsigned long new_pgoff;
-> -	unsigned long moved_len;
-> -	bool account_start = false;
-> -	bool account_end = false;
-> -	unsigned long hiwater_vm;
-> -	int err = 0;
-> -	bool need_rmap_locks;
-> -	struct vma_iterator vmi;
-> +	unsigned long charged;
-> +
-> +	if (!(vrm->vma->vm_flags & VM_ACCOUNT))
-> +		return true;
-> +
-> +	/*
-> +	 * If we don't unmap the old mapping, then we account the entirety of
-> +	 * the length of the new one. Otherwise it's just the delta in size.
-> +	 */
-> +	if (vrm->flags & MREMAP_DONTUNMAP)
-> +		charged = vrm->new_len >> PAGE_SHIFT;
-> +	else
-> +		charged = vrm->delta >> PAGE_SHIFT;
-> +
-> +
-> +	/* This accounts 'charged' pages of memory. */
-> +	if (security_vm_enough_memory_mm(current->mm, charged))
-> +		return false;
-> +
-> +	vrm->charged = charged;
-> +	return true;
-> +}
-> +
-> +/*
-> + * an error has occurred so we will not be using vrm->charged memory. Unaccount
-> + * this memory if the VMA is accounted.
-> + */
-> +static void vrm_uncharge(struct vma_remap_struct *vrm)
-> +{
-> +	if (!(vrm->vma->vm_flags & VM_ACCOUNT))
-> +		return;
-> +
-> +	vm_unacct_memory(vrm->charged);
-> +	vrm->charged = 0;
-> +}
-> +
-> +/*
-> + * Update mm exec_vm, stack_vm, data_vm, and locked_vm fields as needed to
-> + * account for 'bytes' memory used, and if locked, indicate this in the VRM so
-> + * we can handle this correctly later.
-> + */
-> +static void vrm_stat_account(struct vma_remap_struct *vrm,
-> +			     unsigned long bytes)
-> +{
-> +	unsigned long pages = bytes >> PAGE_SHIFT;
-> +	struct mm_struct *mm = current->mm;
-> +	struct vm_area_struct *vma = vrm->vma;
-> +
-> +	vm_stat_account(mm, vma->vm_flags, pages);
-> +	if (vma->vm_flags & VM_LOCKED) {
-> +		mm->locked_vm += pages;
-> +		vrm->mlocked = true;
-> +	}
-> +}
-> +
-> +/*
-> + * Perform checks before attempting to write a VMA prior to it being
-> + * moved.
-> + */
-> +static unsigned long prep_move_vma(struct vma_remap_struct *vrm,
-> +				   unsigned long *vm_flags_ptr)
-> +{
-> +	unsigned long err = 0;
-> +	struct vm_area_struct *vma = vrm->vma;
-> +	unsigned long old_addr = vrm->addr;
-> +	unsigned long old_len = vrm->old_len;
->  
->  	/*
->  	 * We'd prefer to avoid failure later on in do_munmap:
->  	 * which may split one vma into three before unmapping.
->  	 */
-> -	if (mm->map_count >= sysctl_max_map_count - 3)
-> +	if (current->mm->map_count >= sysctl_max_map_count - 3)
->  		return -ENOMEM;
->  
-> -	if (unlikely(flags & MREMAP_DONTUNMAP))
-> -		to_account = new_len;
-> -
->  	if (vma->vm_ops && vma->vm_ops->may_split) {
->  		if (vma->vm_start != old_addr)
->  			err = vma->vm_ops->may_split(vma, old_addr);
-> @@ -862,22 +916,46 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  	 * so KSM can come around to merge on vma and new_vma afterwards.
->  	 */
->  	err = ksm_madvise(vma, old_addr, old_addr + old_len,
-> -						MADV_UNMERGEABLE, &vm_flags);
-> +			  MADV_UNMERGEABLE, vm_flags_ptr);
->  	if (err)
->  		return err;
->  
-> -	if (vm_flags & VM_ACCOUNT) {
-> -		if (security_vm_enough_memory_mm(mm, to_account >> PAGE_SHIFT))
-> -			return -ENOMEM;
-> -	}
-> +	return 0;
-> +}
-> +
-> +static unsigned long move_vma(struct vma_remap_struct *vrm)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	struct vm_area_struct *vma = vrm->vma;
-> +	struct vm_area_struct *new_vma;
-> +	unsigned long vm_flags = vma->vm_flags;
-> +	unsigned long old_addr = vrm->addr, new_addr = vrm->new_addr;
-> +	unsigned long old_len = vrm->old_len, new_len = vrm->new_len;
-> +	unsigned long new_pgoff;
-> +	unsigned long moved_len;
-> +	unsigned long account_start = false;
-> +	unsigned long account_end = false;
-> +	unsigned long hiwater_vm;
-> +	int err;
-> +	bool need_rmap_locks;
-> +	struct vma_iterator vmi;
-> +
-> +	err = prep_move_vma(vrm, &vm_flags);
-> +	if (err)
-> +		return err;
-> +
-> +	/* If accounted, charge the number of bytes the operation will use. */
-> +	if (!vrm_charge(vrm))
-> +		return -ENOMEM;
->  
->  	vma_start_write(vma);
->  	new_pgoff = vma->vm_pgoff + ((old_addr - vma->vm_start) >> PAGE_SHIFT);
-> -	new_vma = copy_vma(&vma, new_addr, new_len, new_pgoff,
-> +	new_vma = copy_vma(&vrm->vma, new_addr, new_len, new_pgoff,
->  			   &need_rmap_locks);
-> +	/* This may have been updated. */
-> +	vma = vrm->vma;
->  	if (!new_vma) {
-> -		if (vm_flags & VM_ACCOUNT)
-> -			vm_unacct_memory(to_account >> PAGE_SHIFT);
-> +		vrm_uncharge(vrm);
->  		return -ENOMEM;
->  	}
->  
-> @@ -902,7 +980,7 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  		old_addr = new_addr;
->  		new_addr = err;
->  	} else {
-> -		mremap_userfaultfd_prep(new_vma, uf);
-> +		mremap_userfaultfd_prep(new_vma, vrm->uf);
->  	}
->  
->  	if (is_vm_hugetlb_page(vma)) {
-> @@ -910,7 +988,7 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  	}
->  
->  	/* Conceal VM_ACCOUNT so old reservation is not undone */
-> -	if (vm_flags & VM_ACCOUNT && !(flags & MREMAP_DONTUNMAP)) {
-> +	if (vm_flags & VM_ACCOUNT && !(vrm->flags & MREMAP_DONTUNMAP)) {
->  		vm_flags_clear(vma, VM_ACCOUNT);
->  		if (vma->vm_start < old_addr)
->  			account_start = true;
-> @@ -928,13 +1006,12 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  	 * If this were a serious issue, we'd add a flag to do_munmap().
->  	 */
->  	hiwater_vm = mm->hiwater_vm;
-> -	vm_stat_account(mm, vma->vm_flags, new_len >> PAGE_SHIFT);
->  
->  	/* Tell pfnmap has moved from this vma */
->  	if (unlikely(vma->vm_flags & VM_PFNMAP))
->  		untrack_pfn_clear(vma);
->  
-> -	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
-> +	if (unlikely(!err && (vrm->flags & MREMAP_DONTUNMAP))) {
->  		/* We always clear VM_LOCKED[ONFAULT] on the old vma */
->  		vm_flags_clear(vma, VM_LOCKED_MASK);
->  
-> @@ -947,22 +1024,20 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  			unlink_anon_vmas(vma);
->  
->  		/* Because we won't unmap we don't need to touch locked_vm */
-> +		vrm_stat_account(vrm, new_len);
->  		return new_addr;
->  	}
->  
-> +	vrm_stat_account(vrm, new_len);
-> +
->  	vma_iter_init(&vmi, mm, old_addr);
-> -	if (do_vmi_munmap(&vmi, mm, old_addr, old_len, uf_unmap, false) < 0) {
-> +	if (do_vmi_munmap(&vmi, mm, old_addr, old_len, vrm->uf_unmap, false) < 0) {
->  		/* OOM: unable to split vma, just get accounts right */
-> -		if (vm_flags & VM_ACCOUNT && !(flags & MREMAP_DONTUNMAP))
-> +		if (vm_flags & VM_ACCOUNT && !(vrm->flags & MREMAP_DONTUNMAP))
->  			vm_acct_memory(old_len >> PAGE_SHIFT);
->  		account_start = account_end = false;
->  	}
->  
-> -	if (vm_flags & VM_LOCKED) {
-> -		mm->locked_vm += new_len >> PAGE_SHIFT;
-> -		*mlocked = true;
-> -	}
-> -
->  	mm->hiwater_vm = hiwater_vm;
->  
->  	/* Restore VM_ACCOUNT if one or two pieces of vma left */
-> @@ -1141,9 +1216,7 @@ static unsigned long mremap_to(struct vma_remap_struct *vrm)
->  	if (err)
->  		return err;
->  
-> -	return move_vma(vrm->vma, vrm->addr, vrm->old_len, vrm->new_len,
-> -			vrm->new_addr, &vrm->mlocked, vrm->flags,
-> -			vrm->uf, vrm->uf_unmap);
-> +	return move_vma(vrm);
->  }
->  
->  static int vma_expandable(struct vm_area_struct *vma, unsigned long delta)
-> @@ -1248,17 +1321,11 @@ static unsigned long check_mremap_params(struct vma_remap_struct *vrm)
->  static unsigned long expand_vma_in_place(struct vma_remap_struct *vrm)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	long pages = vrm->delta >> PAGE_SHIFT;
->  	struct vm_area_struct *vma = vrm->vma;
->  	VMA_ITERATOR(vmi, mm, vma->vm_end);
-> -	long charged = 0;
-> -
-> -	if (vma->vm_flags & VM_ACCOUNT) {
-> -		if (security_vm_enough_memory_mm(mm, pages))
-> -			return -ENOMEM;
->  
-> -		charged = pages;
-> -	}
-> +	if (!vrm_charge(vrm))
-> +		return -ENOMEM;
->  
->  	/*
->  	 * Function vma_merge_extend() is called on the
-> @@ -1271,15 +1338,11 @@ static unsigned long expand_vma_in_place(struct vma_remap_struct *vrm)
->  	 */
->  	vma = vrm->vma = vma_merge_extend(&vmi, vma, vrm->delta);
->  	if (!vma) {
-> -		vm_unacct_memory(charged);
-> +		vrm_uncharge(vrm);
->  		return -ENOMEM;
->  	}
->  
-> -	vm_stat_account(mm, vma->vm_flags, pages);
-> -	if (vma->vm_flags & VM_LOCKED) {
-> -		mm->locked_vm += pages;
-> -		vrm->mlocked = true;
-> -	}
-> +	vrm_stat_account(vrm, vrm->delta);
->  
->  	return 0;
->  }
-> @@ -1319,11 +1382,7 @@ static bool align_hugetlb(struct vma_remap_struct *vrm)
->  static unsigned long expand_vma(struct vma_remap_struct *vrm)
->  {
->  	unsigned long err;
-> -	struct vm_area_struct *vma = vrm->vma;
->  	unsigned long addr = vrm->addr;
-> -	unsigned long old_len = vrm->old_len;
-> -	unsigned long new_len = vrm->new_len;
-> -	unsigned long flags = vrm->flags;
->  
->  	err = resize_is_valid(vrm);
->  	if (err)
-> @@ -1356,7 +1415,7 @@ static unsigned long expand_vma(struct vma_remap_struct *vrm)
->  	 */
->  
->  	/* We're not allowed to move the VMA, so error out. */
-> -	if (!(flags & MREMAP_MAYMOVE))
-> +	if (!(vrm->flags & MREMAP_MAYMOVE))
->  		return -ENOMEM;
->  
->  	/* Find a new location to move the VMA to. */
-> @@ -1364,8 +1423,7 @@ static unsigned long expand_vma(struct vma_remap_struct *vrm)
->  	if (err)
->  		return err;
->  
-> -	return move_vma(vma, addr, old_len, new_len, vrm->new_addr,
-> -			&vrm->mlocked, flags, vrm->uf, vrm->uf_unmap);
-> +	return move_vma(vrm);
->  }
->  
->  /*
-> -- 
-> 2.48.1
->
-
-Hi Lorenzo Stoakes,
-
-Greetings!
-
-I used Syzkaller and found that there is general protection fault in mremap in linux-next tag - next-20250325.
-
-After bisection and the first bad commit is:
-"
-d5c8aec0542e mm/mremap: initial refactor of move_vma()
-"
-
-The deadlock can still be reproduced. You could try following reproduction binary.
-
-All detailed into can be found at:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap
-Syzkaller repro code:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap/repro.c
-Syzkaller repro syscall steps:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap/repro.prog
-Syzkaller report:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap/repro.report
-Kconfig(make olddefconfig):
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap/kconfig_origin
-Bisect info:
-https://github.com/laifryiee/syzkaller_logs/tree/main/250329_061207_mremap/bisect_info.log
-bzImage:
-https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250329_061207_mremap/bzImage_eb4bc4b07f66f01618d9cb1aa4eaef59b1188415
-Issue dmesg:
-https://github.com/laifryiee/syzkaller_logs/blob/main/250329_061207_mremap/eb4bc4b07f66f01618d9cb1aa4eaef59b1188415_dmesg.log
-
-"
-[   43.795673] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASI
-[   43.797814] KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-[   43.799835] CPU: 1 UID: 0 PID: 665 Comm: repro Not tainted 6.14.0-next-20250325-eb4bc4b07f66 #1 PREEMPT(voluntary)
-[   43.800338] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org4
-[   43.800911] RIP: 0010:__do_sys_mremap+0x13a9/0x15d0
-[   43.801188] Code: e8 ac 57 a8 ff 48 8b 85 30 fe ff ff 48 89 83 70 ff ff ff 49 89 c5 e9 2b f2 ff ff e8 91 57 a8 ff 485
-[   43.802152] RSP: 0018:ffff88801aa67ce8 EFLAGS: 00010293
-[   43.802432] RAX: dffffc0000000004 RBX: ffff88801aa67eb0 RCX: ffffffff81e42e5a
-[   43.802791] RDX: ffff888011e6ca80 RSI: ffffffff81df64cf RDI: 0000000000000007
-[   43.803172] RBP: ffff88801aa67ed8 R08: 0000000000000000 R09: ffffed10023cd950
-[   43.803558] R10: 0000000010000000 R11: ffff888011e6d8d8 R12: ffff888020fe5000
-[   43.803943] R13: ffff88801f8f2780 R14: ffff888020fe5170 R15: 0000000000000000
-[   43.804324] FS:  00007f8f5ae81600(0000) GS:ffff8880e3684000(0000) knlGS:0000000000000000
-[   43.804749] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   43.805069] CR2: 00007f8f5ac57910 CR3: 0000000021690001 CR4: 0000000000770ef0
-[   43.805442] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   43.805796] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
-[   43.806173] PKRU: 55555554
-[   43.806345] Call Trace:
-[   43.806558]  <TASK>
-[   43.806700]  ? show_regs+0x6d/0x80
-[   43.807345]  ? die_addr+0x45/0xb0
-[   43.807768]  ? exc_general_protection+0x1ad/0x340
-[   43.808360]  ? asm_exc_general_protection+0x2b/0x30
-[   43.808939]  ? vma_merge_new_range+0x16a/0x930
-[   43.809499]  ? __do_sys_mremap+0x139f/0x15d0
-[   43.810012]  ? __do_sys_mremap+0x13a9/0x15d0
-[   43.810528]  ? __do_sys_mremap+0x139f/0x15d0
-[   43.811043]  ? __pfx___do_sys_mremap+0x10/0x10
-[   43.811587]  ? __this_cpu_preempt_check+0x21/0x30
-[   43.812177]  __x64_sys_mremap+0xc7/0x150
-[   43.812652]  ? syscall_trace_enter+0x14d/0x280
-[   43.813201]  x64_sys_call+0x1933/0x2150
-[   43.813658]  do_syscall_64+0x6d/0x150
-[   43.814101]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   43.814686] RIP: 0033:0x7f8f5ac3ee5d
-[   43.815125] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d8
-[   43.817168] RSP: 002b:00007fff14f19058 EFLAGS: 00000217 ORIG_RAX: 0000000000000019
-[   43.818037] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8f5ac3ee5d
-[   43.818430] RDX: 0000000000004000 RSI: 0000000000002000 RDI: 0000000020ffd000
-[   43.818793] RBP: 00007fff14f19070 R08: 0000000020ffc000 R09: 0000000000000800
-[   43.819160] R10: 0000000000000000 R11: 0000000000000217 R12: 00007fff14f19188
-[   43.819540] R13: 0000000000401126 R14: 0000000000403e08 R15: 00007f8f5aeca000
-[   43.819945]  </TASK>
-[   43.820066] Modules linked in:
-[   43.820308] ---[ end trace 0000000000000000 ]---
-[   43.820587] RIP: 0010:__do_sys_mremap+0x13a9/0x15d0
-[   43.820874] Code: e8 ac 57 a8 ff 48 8b 85 30 fe ff ff 48 89 83 70 ff ff ff 49 89 c5 e9 2b f2 ff ff e8 91 57 a8 ff 485
-[   43.821855] RSP: 0018:ffff88801aa67ce8 EFLAGS: 00010293
-[   43.822150] RAX: dffffc0000000004 RBX: ffff88801aa67eb0 RCX: ffffffff81e42e5a
-[   43.822543] RDX: ffff888011e6ca80 RSI: ffffffff81df64cf RDI: 0000000000000007
-[   43.822928] RBP: ffff88801aa67ed8 R08: 0000000000000000 R09: ffffed10023cd950
-[   43.823347] R10: 0000000010000000 R11: ffff888011e6d8d8 R12: ffff888020fe5000
-[   43.823757] R13: ffff88801f8f2780 R14: ffff888020fe5170 R15: 0000000000000000
-[   43.824156] FS:  00007f8f5ae81600(0000) GS:ffff8880e3684000(0000) knlGS:0000000000000000
-[   43.824627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   43.824959] CR2: 00007f8f5ac57910 CR3: 0000000021690001 CR4: 0000000000770ef0
-[   43.825350] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   43.825757] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
-[   43.826154] PKRU: 55555554
-"
-
-Hope this cound be insightful to you.
-
-Regards,
-Yi Lai
-
----
-
-If you don't need the following environment to reproduce the problem or if you
-already have one reproduced environment, please ignore the following information.
-
-How to reproduce:
-git clone https://gitlab.com/xupengfe/repro_vm_env.git
-cd repro_vm_env
-tar -xvf repro_vm_env.tar.gz
-cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
-  // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
-  // You could change the bzImage_xxx as you want
-  // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
-You could use below command to log in, there is no password for root.
-ssh -p 10023 root@localhost
-
-After login vm(virtual machine) successfully, you could transfer reproduced
-binary to the vm by below way, and reproduce the problem in vm:
-gcc -pthread -o repro repro.c
-scp -P 10023 repro root@localhost:/root/
-
-Get the bzImage for target kernel:
-Please use target kconfig and copy it to kernel_src/.config
-make olddefconfig
-make -jx bzImage           //x should equal or less than cpu num your pc has
-
-Fill the bzImage file into above start3.sh to load the target kernel in vm.
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
 
-Tips:
-If you already have qemu-system-x86_64, please ignore below info.
-If you want to install qemu v7.1.0 version:
-git clone https://github.com/qemu/qemu.git
-cd qemu
-git checkout -f v7.1.0
-mkdir build
-cd build
-yum install -y ninja-build.x86_64
-yum -y install libslirp-devel.x86_64
-../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
-make
-make install 
+--=-mYzUro773zg9T/uQYbOm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, 2025-03-30 at 09:42 -0400, Michael S. Tsirkin wrote:
+> On Fri, Mar 28, 2025 at 05:40:41PM +0000, David Woodhouse wrote:
+> > On Fri, 2025-03-21 at 18:42 +0000, David Woodhouse wrote:
+> > > >=20
+> > > > I don't mind as such (though I don't understand completely), but si=
+nce
+> > > > this is changing the device anyway, I am a bit confused why you can=
+'t
+> > > > just set the VIRTIO_F_ACCESS_PLATFORM feature bit?=C2=A0 This force=
+s DMA API
+> > > > which will DTRT for you, will it not?
+> > >=20
+> > > That would be necessary but not sufficient. ...
+>=20
+> could you explain pls?
+
+There was more to that in the previous email which I elided for this
+followup.
+
+https://lore.kernel.org/all/d1382a6ee959f22dc5f6628d8648af77f4702418.camel@=
+infradead.org/
+
+> > My first cut at a proposed spec change looks something like this. I'll
+> > post it to the virtio-comment list once I've done some corporate
+> > bureaucracy and when the list stops sending me python tracebacks in
+> > response to my subscribe request.
+>=20
+> the linux foundation one does this? maybe poke at the admins.
+>=20
+> > In the meantime I'll hack up some QEMU and guest Linux driver support
+> > to match.
+> >=20
+> > diff --git a/content.tex b/content.tex
+> > index c17ffa6..1e6e1d6 100644
+> > --- a/content.tex
+> > +++ b/content.tex
+> > @@ -773,6 +773,9 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved =
+Feature Bits}
+> > =C2=A0Currently these device-independent feature bits are defined:
+> > =C2=A0
+> > =C2=A0\begin{description}
+> > +=C2=A0 \item[VIRTIO_F_SWIOTLB (27)] This feature indicates that the de=
+vice
+> > +=C2=A0 provides a memory region which is to be used for bounce bufferi=
+ng,
+> > +=C2=A0 rather than permitting direct memory access to system memory.
+> > =C2=A0=C2=A0 \item[VIRTIO_F_INDIRECT_DESC (28)] Negotiating this featur=
+e indicates
+> > =C2=A0=C2=A0 that the driver can use descriptors with the VIRTQ_DESC_F_=
+INDIRECT
+> > =C2=A0=C2=A0 flag set, as described in \ref{sec:Basic Facilities of a V=
+irtio
+> > @@ -885,6 +888,10 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved=
+ Feature Bits}
+> > =C2=A0VIRTIO_F_ACCESS_PLATFORM is not offered, then a driver MUST pass =
+only physical
+> > =C2=A0addresses to the device.
+> > =C2=A0
+> > +A driver SHOULD accept VIRTIO_F_SWIOTLB if it is offered, and it MUST
+> > +then pass only addresses within the Software IOTLB bounce buffer to th=
+e
+> > +device.
+> > +
+> > =C2=A0A driver SHOULD accept VIRTIO_F_RING_PACKED if it is offered.
+> > =C2=A0
+> > =C2=A0A driver SHOULD accept VIRTIO_F_ORDER_PLATFORM if it is offered.
+> > @@ -921,6 +928,10 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved=
+ Feature Bits}
+> > =C2=A0A device MAY fail to operate further if VIRTIO_F_ACCESS_PLATFORM =
+is not
+> > =C2=A0accepted.
+> > =C2=A0
+> > +A device MUST NOT offer VIRTIO_F_SWIOTLB if its transport does not
+> > +provide a Software IOTLB bounce buffer.
+> > +A device MAY fail to operate further if VIRTIO_F_SWIOTLB is not accept=
+ed.
+> > +
+> > =C2=A0If VIRTIO_F_IN_ORDER has been negotiated, a device MUST use
+> > =C2=A0buffers in the same order in which they have been available.
+> > =C2=A0
+> > diff --git a/transport-pci.tex b/transport-pci.tex
+> > index a5c6719..23e0d57 100644
+> > --- a/transport-pci.tex
+> > +++ b/transport-pci.tex
+> > @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\labe=
+l{sec:Virtio Transport Option
+> > =C2=A0\item ISR Status
+> > =C2=A0\item Device-specific configuration (optional)
+> > =C2=A0\item PCI configuration access
+> > +\item SWIOTLB bounce buffer
+> > =C2=A0\end{itemize}
+> > =C2=A0
+> > =C2=A0Each structure can be mapped by a Base Address register (BAR) bel=
+onging to
+> > @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\labe=
+l{sec:Virtio Transport Option
+> > =C2=A0#define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
+> > =C2=A0/* Vendor-specific data */
+> > =C2=A0#define VIRTIO_PCI_CAP_VENDOR_CFG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 9
+> > +/* Software IOTLB bounce buffer */
+> > +#define VIRTIO_PCI_CAP_SWIOTLB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 10
+> > =C2=A0\end{lstlisting}
+> > =C2=A0
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Any other value is res=
+erved for future use.
+> > @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:V=
+irtio
+> > =C2=A0The driver MUST qualify the \field{vendor_id} before
+> > =C2=A0interpreting or writing into the Vendor data capability.
+> > =C2=A0
+> > +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virt=
+io
+> > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > +Software IOTLB bounce buffer capability}
+> > +
+> > +The optional Software IOTLB bounce buffer capability allows the
+> > +device to provide a memory region which can be used by the driver
+> > +driver for bounce buffering. This allows a device on the PCI
+> > +transport to operate without DMA access to system memory addresses.
+> > +
+> > +The Software IOTLB region is referenced by the
+> > +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
+> > +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFO=
+RM
+> > +capability, if negotiated.
+>=20
+>=20
+> why not? an optimization?
+> A mix of swiotlb and system memory might be very challenging from POV
+> of ordering.
+
+Conceptually, these addresses are *on* the PCI device. If the device is
+accessing addresses which are local to it, they aren't subject to IOMMU
+translation/filtering because they never even make it to the PCI bus as
+memory transactions.
+
+>=20
+> > +
+> > +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{=
+Virtio
+> > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > +Software IOTLB bounce buffer capability}
+> > +
+> > +Devices which present the Software IOTLB bounce buffer capability
+> > +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
+> > +
+> > +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{=
+Virtio
+> > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > +Software IOTLB bounce buffer capability}
+> > +
+> > +The driver SHOULD use the offered buffer in preference to passing syst=
+em
+> > +memory addresses to the device.
+>=20
+> Even if not using VIRTIO_F_SWIOTLB? Is that really necessary?
+
+That part isn't strictly necessary, but I think it makes sense, for
+cases where the SWIOTLB support is an *optimisation* even if it isn't
+strictly necessary.
+
+Why might it be an "optimisation"? Well... if we're thinking of a model
+like pKVM where the VMM can't just arbitrarily access guest memory,
+using the SWIOTLB is a simple way to avoid that (by using the on-board
+memory instead, which *can* be shared with the VMM).
+
+But if we want to go to extra lengths to support unenlightened guests,
+an implementation might choose to just *disable* the memory protection
+if the guest doesn't negotiate VIRTIO_F_SWIOTLB, instead of breaking
+that guest.
+
+Or it might have a complicated emulation/snooping of virtqueues in the
+trusted part of the hypervisor so that it knows which addresses the
+guest has truly *asked* the VMM to access. (And yes, of course that's
+what an IOMMU is for, but when have you seen hardware companies design
+a two-stage IOMMU which supports actual PCI passthrough *and* get it
+right for the hypervisor to 'snoop' on the stage1 page tables to
+support emulated devices too....)
+
+Ultimately I think it was natural to advertise the location of the
+buffer with the VIRTIO_PCI_CAP_SWIOTLB capability and then to have the
+separate VIRTIO_F_SWIOTLB for negotiation... leaving the obvious
+question of what a device should do if it sees one but *not* the other.
+
+Obviously you can't have VIRTIO_F_SWIOTLB *without* there actually
+being a buffer advertised with VIRTIO_PCI_CAP_SWIOTLB (or its
+equivalent for other transports). But the converse seemed reasonable as
+a *hint* even if the use of the SWIOTLB isn't mandatory.
+
+--=-mYzUro773zg9T/uQYbOm
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMzMDE1MDc1
+NlowLwYJKoZIhvcNAQkEMSIEIF3xw9Z4evpIp/lVAcDbFgxbJXuRG0tQFapgel3ylA6MMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAW0QSjRaorM1G
+6kWlL8kxzKFJBFJSLWTDLAUB1R1hRbODU299NsYz/zc0rEFUknaIVg+2GxOf9JSPoIlLqRf3H9iR
+xxSnP9b4i9HzN1+bdaKNVyz+ntkZes8ZfUwgrWHpEviilC8GVpE1iK5i6fqLwDxxbEG/yADer2lf
+koxYQjdQig5JWmySbiohsPSJStZVy3nykbqbJ6wmQxiltwrcFY1ItsAOFUfP+zohZ8RggMwL6XQK
+QQZGBnsxdb6atYSbRyYdwkl/3qxH+3bpKJYieFHdvxNnAvA0tWWLBmkaV23XjlHUkTFfbjMf1yCl
+jeJKQHtfSnbjwoO8YFQHoN2Mxm+QvHgsVFB/6voKjs+JQodg/McB/Dw//XuNJnoeE1fwiHfzV2aJ
+riXBYmHQsQOrFTTJmixB/hvi86MgON4yoi6jsUzw7R712UncQvL/y/mNaIPKYxw3vxompof8M6MZ
+gdx8hdcssMymr0OIXOvKDfEoGP18D+wGQ6+VXhLI0eS0bF3/7kSBv3T3w14VkuO3uY/Ntg9q65Y0
+MiqOA8nHsouy7ibW243/oFbGklh+cHB9ABH8mGo+O2fQK8BLHGdO6bXid4g6ZKSVmOSaMq+9WRZs
+G5zTc5JfG1EWKIGXEhTRezVVMcHkaGAarJYtO6FDrvZI03QoayEKx6v+0yrTAwkAAAAAAAA=
 
 
+--=-mYzUro773zg9T/uQYbOm--
