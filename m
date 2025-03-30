@@ -1,220 +1,433 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853ED1DB546
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 17:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE3235973;
+	Sun, 30 Mar 2025 17:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743354419; cv=none; b=ObP9hSqQ8SEe+kU680aOnoj0DPjuYXoQj4AbF5jq/MHoJ42W7ZASbkMHElFZAGi0J/uzz8+FVuu1balW+SlJv27hYV7274xJ1+zavOujBGbcfCbtenGsfvS5DQG2XpZLTYkroIwfYbJI+M9EqNYOwep6JHs49Qwm4YRx5DHPCIQ=
+	t=1743354458; cv=none; b=O4lovNVPoop4Es+HaHWIDw0YeR+05/d+NLNE6LhvckCwhBD/OEXAJHr/QwL0zFt7XlDR1RjLH1BQc9wn4kTHlovhj7P1xo4zLMVnijqPs3Es3yLURE0XfMFxy3M5ZAuKss0NQw2gdjTChqdEulqh4q59G9JzlOECvRKjSIappXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743354419; c=relaxed/simple;
-	bh=5UmCN6T9Cr1gCtDDz08QVciKcS4TNX6bP4xhWdD/03c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMK4ImmkSTdcxVuV15bmvzo3JD6R2zsqY0LvXnio+wWuAxiYtYovDhYZOWTa0L2n8Vi7t15cUa1k4VTZLwSjqC+8w6qfv5vPGDsKtDEpvkymXM8oLA5tplSAGA+sr0Zn2Wxye2L+FgnFELy8GnwrxMgpwCxeNZB1cKlvcPBDqck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gnsH83w+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743354458; c=relaxed/simple;
+	bh=mKly5oKaxS0kW5BaWYg85pisIDCtmkDXkzuYHChnth4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OZcHQnX3SXf526es6Ac+wToYixx0fhvNktVArWAks2sfcrdWE+X1yZlPYWiie80AKPMdDgRPe+7emxqBnwUHs0wyD/2RwOn5xBOxw6ofSTgRkxU6WjQnUyVt2n3F0ONsQibUCERS1d/2Ioq5EEQsEISa9Ymx9h9JvPUewsQqcns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dd8ghf7L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gnsH83w+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743354416;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q3mk6TbPcxIg/goVXurjT8cjd9wFt7uMusUUceOMSw4=;
-	b=gnsH83w+LEvnz/9UzYJxOSwl0DD3U4YQF62i+QZPC3hocp/LTC5bu5oMMAiWKKf3auiR5M
-	SOybO3X3P5MLBzWwLubmq/5bZB5tTHSEGiMj2hsfC2fXyPQbZuAtjqeu1U6nzZdq7CPyWA
-	mmdqmcvS7lkNSuVxJ/T3JfoEEIzoeQU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661--p_g3TguNk68BNRmiDx5yg-1; Sun, 30 Mar 2025 13:06:55 -0400
-X-MC-Unique: -p_g3TguNk68BNRmiDx5yg-1
-X-Mimecast-MFC-AGG-ID: -p_g3TguNk68BNRmiDx5yg_1743354414
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so33281435e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 10:06:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743354414; x=1743959214;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3mk6TbPcxIg/goVXurjT8cjd9wFt7uMusUUceOMSw4=;
-        b=mDqDlzweSQ+YSaU4b+qCuL1MybwtugL8tUxNPQv5qNAiHFkz2dnb1bhQOFIc9WeSw3
-         qsuXgiQlKx9sTC03jez5/9YjfKAPav2ZmB1neatabBLtas7gKKjJYpQLyOUTBI1G9Y9X
-         BgL/Ir/diJ44y/SLz9KFljg2jsiwBZI8IC/5uHgh0JUXuzd9Zk6onHXkU9zCNVOmn7Ha
-         bzgbgvKEPTuB47LTg4ND2qvAQE71zQP3KAeExQaZTg5dv9ex6eIrl9kBLnKX2dk6jsYo
-         vC4xVnvf7M5A1WOtt1xIZrHMAW0DfaUPYWi2W4ZdLU7aSAEw3uS8bV5epqvdBUDuN3SE
-         ZqAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWW5PLIk/JN3qFyh9Td0nndkN+rEyukrVgZRAgUHzsiUMBmotyRXVt4iYqGp0qOwaxvnHzZc1deR7X8z+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnY4FgZYOg8d/jTcWMjdmFckZnH3vDC3dKTEzdZmhJ1g1k9D9l
-	DZhuipwmckLFDUrMAKmpF8n0xNqS82+nM/zAsf7A6Zb69k2TATo5Yt26dWTufNaiU5QAHxQJOic
-	sYp3q8gBs1rgOB7gBTrh8Z5FkklUNafoPCX4blUyXdxZLOrU0F7u3A9QVDGB03w==
-X-Gm-Gg: ASbGnctNbR5IyW++PCJ8r1ABTUA2h+6KYyF+0pM53mqpIb4gOHCwydq8Y1rZNJglM4b
-	VkPkVuXNNTbS5S5e5hqRQazEdx5EzZijHnWLX4UIl79HTl8qd2POoCSber/f4J5VMkpUSV/UiZZ
-	EEiO1Y4E+nIxpBfZ5eaW39mrG0eGtFkn5aqZM++wzj2mQkd4DeAiyfQcwki672DT0AVMfi43WDV
-	JpCKE6/23uNOx10AXYNVaLSLRPCGM72JKPzKXUVzb6hatfI6MtElHuXZyiJJJcWwde7MyofcsOC
-	F3Pa734I1Q==
-X-Received: by 2002:a05:6000:290f:b0:390:f552:d291 with SMTP id ffacd0b85a97d-39c120dc53emr6045349f8f.22.1743354413860;
-        Sun, 30 Mar 2025 10:06:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHnojfMbGERAUL3k9pGdjXNeKSJM3z6oVNts7beynMJRyZ4qGr50Up8p35T+/D9THLJjAJmw==
-X-Received: by 2002:a05:6000:290f:b0:390:f552:d291 with SMTP id ffacd0b85a97d-39c120dc53emr6045310f8f.22.1743354413473;
-        Sun, 30 Mar 2025 10:06:53 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02e75sm96683605e9.30.2025.03.30.10.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 10:06:52 -0700 (PDT)
-Date: Sun, 30 Mar 2025 13:06:47 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Claire Chang <tientzu@chromium.org>, Rob Herring <robh+dt@kernel.org>,
-	mpe@ellerman.id.au, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	boris.ostrovsky@oracle.com, jgross@suse.com,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	heikki.krogerus@linux.intel.com, peterz@infradead.org,
-	benh@kernel.crashing.org, grant.likely@arm.com, paulus@samba.org,
-	mingo@kernel.org, sstabellini@kernel.org,
-	Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-	xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	Nicolas Boichat <drinkcat@chromium.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	"list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	virtualization@lists.linux.dev, graf@amazon.de
-Subject: Re: Using Restricted DMA for virtio-pci
-Message-ID: <20250330125929-mutt-send-email-mst@kernel.org>
-References: <20210209062131.2300005-1-tientzu@chromium.org>
- <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
- <20250321142947-mutt-send-email-mst@kernel.org>
- <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dd8ghf7L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D52D4C4CEDD;
+	Sun, 30 Mar 2025 17:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743354458;
+	bh=mKly5oKaxS0kW5BaWYg85pisIDCtmkDXkzuYHChnth4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dd8ghf7L8tqcW1dMt+ItEWVGBozNTbTv0XNoGR11aJqMl46lZRLW2sXgnRDevBTgV
+	 OlcPVF3Ub3EHuoEc0bSeDLRm0dUHJxdvBmgGuemXOuork0ynMPajGhvp/MK2Qljij+
+	 CsoHKh+ajmohv9DvX5GuCtrdjjoee19flIdtfb2RNIBoo1YSqhkh2KZD815Bt5Scn/
+	 a+Ke7kDmRumOmGzW+vzPmg44bzJBovJI64wXJBTH3cEkk/tUbnPg9pycTMy3/ETn5q
+	 sI61ATQwkHkWQRFHf7dYfYZ4X+bicmAO0dWOHmbzF4WSyx1WQB34hZxMiGYZCCo4dR
+	 HPL2UT5Oi0POQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Rust for 6.15
+Date: Sun, 30 Mar 2025 19:05:34 +0200
+Message-ID: <20250330170535.546869-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
 
-On Fri, Mar 21, 2025 at 06:42:20PM +0000, David Woodhouse wrote:
-> On Fri, 2025-03-21 at 14:32 -0400, Michael S. Tsirkin wrote:
-> > On Fri, Mar 21, 2025 at 03:38:10PM +0000, David Woodhouse wrote:
-> > > On Tue, 2021-02-09 at 14:21 +0800, Claire Chang wrote:
-> > > > This series implements mitigations for lack of DMA access control on
-> > > > systems without an IOMMU, which could result in the DMA accessing the
-> > > > system memory at unexpected times and/or unexpected addresses, possibly
-> > > > leading to data leakage or corruption.
-> > > 
-> > > Replying to an ancient (2021) thread which has already been merged...
-> > > 
-> > > I'd like to be able to use this facility for virtio devices.
-> > > 
-> > > Virtio already has a complicated relationship with the DMA API, because
-> > > there were a bunch of early VMM bugs where the virtio devices where
-> > > magically exempted from IOMMU protection, but the VMM lied to the guest
-> > > and claimed they weren't.
-> > > 
-> > > With the advent of confidential computing, and the VMM (or whatever's
-> > > emulating the virtio device) not being *allowed* to arbitrarily access
-> > > all of the guest's memory, the DMA API becomes necessary again.
-> > > 
-> > > Either a virtual IOMMU needs to determine which guest memory the VMM
-> > > may access, or the DMA API is wrappers around operations which
-> > > share/unshare (or unencrypt/encrypt) the memory in question.
-> > > 
-> > > All of which is complicated and slow, if we're looking at a minimal
-> > > privileged hypervisor stub like pKVM which enforces the lack of guest
-> > > memory access from VMM.
-> > > 
-> > > I'm thinking of defining a new type of virtio-pci device which cannot
-> > > do DMA to arbitrary system memory. Instead it has an additional memory
-> > > BAR which is used as a SWIOTLB for bounce buffering.
-> > > 
-> > > The driver for it would look much like the existing virtio-pci device
-> > > except that it would register the restricted-dma region first (and thus
-> > > the swiotlb dma_ops), and then just go through the rest of the setup
-> > > like any other virtio device.
-> > > 
-> > > That seems like it ought to be fairly simple, and seems like a
-> > > reasonable way to allow an untrusted VMM to provide virtio devices with
-> > > restricted DMA access.
-> > > 
-> > > While I start actually doing the typing... does anyone want to start
-> > > yelling at me now? Christoph? mst? :)
-> > 
-> > 
-> > I don't mind as such (though I don't understand completely), but since
-> > this is changing the device anyway, I am a bit confused why you can't
-> > just set the VIRTIO_F_ACCESS_PLATFORM feature bit?  This forces DMA API
-> > which will DTRT for you, will it not?
-> 
-> That would be necessary but not sufficient. The question is *what* does
-> the DMA API do?
-> 
-> For a real passthrough PCI device, perhaps we'd have a vIOMMU exposed
-> to the guest so that it can do real protection with two-stage page
-> tables (IOVA→GPA under control of the guest, GPA→HPA under control of
-> the hypervisor). For that to work in the pKVM model though, you'd need
-> pKVM to be talking the guest's stage1 I/O page tables to see if a given
-> access from the VMM ought to be permitted?
-> 
-> Or for confidential guests there could be DMA ops which are an
-> 'enlightenment'; a hypercall into pKVM to share/unshare pages so that
-> the VMM can actually access them, or SEV-SNP guests might mark pages
-> unencrypted to have the same effect with hardware protection.
-> 
-> Doing any of those dynamically to allow the VMM to access buffers in
-> arbitrary guest memory (when it wouldn't normally have access to
-> arbitrary guest memory) is complex and doesn't perform very well. And
-> exposes a full 4KiB page for any byte that needs to be made available.
-> 
-> Thus the idea of having a fixed range of memory to use for a SWIOTLB,
-> which is fairly much what the restricted DMA setup is all about.
-> 
-> We're just proposing that we build it in to a virtio-pci device model,
-> which automatically uses the extra memory BAR instead of the
-> restricted-dma-pool DT node.
-> 
-> It's basically just allowing us to expose through PCI, what I believe
-> we can already do for virtio in DT.
+Hi Linus,
 
-I am not saying I am against this extension.
-The idea to restrict DMA has a lot of merit outside pkvm.
-For example, with a physical devices, limiting its DMA
-to a fixed range can be good for security at a cost of
-an extra data copy.
+This is the next round of the Rust support.
 
-So I am not saying we have to block this specific hack.
+This time around, there are a couple of "major" things you should look
+out for.
 
-what worries me fundamentally is I am not sure it works well
-e.g. for physical virtio cards.
-Attempts to pass data between devices will now also require
-extra data copies.
+The first one is that this contains my first pull from someone else --
+we are starting to use sub-trees in the Rust "subsystem". Please let me
+know if I messed up (since these will be trees that you don't pull,
+there should still be a single merge base). I did the merge as the last
+thing, so that it can be easily redone if needed, just in case.
 
+The second is that there are non-trivial conflicts, in particular a
+semantic conflict. It is not complex to fix, but it requires changes in
+different files. The resolutions in -next are fine -- I also did a test
+merge too:
 
-Did you think about adding an swiotlb mode to virtio-iommu at all?
-Much easier than parsing page tables.
+    https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git rust-6.15-test-merge
 
+Finally, there will be another semantic conflict with driver-core, but
+you did not get that PR yet (Dave mentioned it in the DRM one too, since
+it conflicts with them too). The result is fine in linux-next though,
+so please use that when you get it. Greg will likely mention it too.
 
+All commits have been in linux-next for at least three rounds, including
+the merge, and most for more than a week. After this, we will try to
+get back to earlier pulls.
 
--- 
-MST
+Please pull for v6.15 -- thanks!
 
+Cheers,
+Miguel
+
+The following changes since commit 7eb172143d5508b4da468ed59ee857c6e5e01da6:
+
+  Linux 6.14-rc5 (2025-03-02 11:48:20 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-6.15
+
+for you to fetch changes up to e6ea10d5dbe082c54add289b44f08c9fcfe658af:
+
+  Merge tag 'rust-hrtimer-for-v6.15-v3' of https://github.com/Rust-for-Linux/linux into rust-next (2025-03-25 23:41:14 +0100)
+
+----------------------------------------------------------------
+Rust changes for v6.15
+
+Toolchain and infrastructure:
+
+ - Extract the 'pin-init' API from the 'kernel' crate and make it into
+   a standalone crate.
+
+   In order to do this, the contents are rearranged so that they can
+   easily be kept in sync with the version maintained out-of-tree that
+   other projects have started to use too (or plan to, like QEMU).
+
+   This will reduce the maintenance burden for Benno, who will now have
+   his own sub-tree, and will simplify future expected changes like the
+   move to use 'syn' to simplify the implementation.
+
+ - Add '#[test]'-like support based on KUnit.
+
+   We already had doctests support based on KUnit, which takes the
+   examples in our Rust documentation and runs them under KUnit.
+
+   Now, we are adding the beginning of the support for "normal" tests,
+   similar to those the '#[test]' tests in userspace Rust. For instance:
+
+       #[kunit_tests(my_suite)]
+       mod tests {
+           #[test]
+           fn my_test() {
+               assert_eq!(1 + 1, 2);
+           }
+       }
+
+   Unlike with doctests, the 'assert*!'s do not map to the KUnit
+   assertion APIs yet.
+
+ - Check Rust signatures at compile time for functions called from C by
+   name.
+
+   In particular, introduce a new '#[export]' macro that can be placed
+   in the Rust function definition. It will ensure that the function
+   declaration on the C side matches the signature on the Rust function:
+
+       #[export]
+       pub unsafe extern "C" fn my_function(a: u8, b: i32) -> usize {
+           // ...
+       }
+
+   The macro essentially forces the compiler to compare the types of
+   the actual Rust function and the 'bindgen'-processed C signature.
+
+   These cases are rare so far. In the future, we may consider
+   introducing another tool, 'cbindgen', to generate C headers
+   automatically. Even then, having these functions explicitly marked
+   may be a good idea anyway.
+
+ - Enable the 'raw_ref_op' Rust feature: it is already stable, and
+   allows us to use the new '&raw' syntax, avoiding a couple macros.
+   After everyone has migrated, we will disallow the macros.
+
+ - Pass the correct target to 'bindgen' on Usermode Linux.
+
+ - Fix 'rusttest' build in macOS.
+
+'kernel' crate:
+
+ - New 'hrtimer' module: add support for setting up intrusive timers
+   without allocating when starting the timer. Add support for
+   'Pin<Box<_>>', 'Arc<_>', 'Pin<&_>' and 'Pin<&mut _>' as pointer types
+   for use with timer callbacks. Add support for setting clock source
+   and timer mode.
+
+ - New 'dma' module: add a simple DMA coherent allocator abstraction and
+   a test sample driver.
+
+ - 'list' module: make the linked list 'Cursor' point between elements,
+   rather than at an element, which is more convenient to us and allows
+   for cursors to empty lists; and document it with examples of how to
+   perform common operations with the provided methods.
+
+ - 'str' module: implement a few traits for 'BStr' as well as the
+   'strip_prefix()' method.
+
+ - 'sync' module: add 'Arc::as_ptr'.
+
+ - 'alloc' module: add 'Box::into_pin'.
+
+ - 'error' module: extend the 'Result' documentation, including a few
+   examples on different ways of handling errors, a warning about using
+   methods that may panic, and links to external documentation.
+
+'macros' crate:
+
+  - 'module' macro: add the 'authors' key to support multiple authors.
+    The original key will be kept until everyone has migrated.
+
+Documentation:
+
+ - Add error handling sections.
+
+MAINTAINERS:
+
+ - Add Danilo Krummrich as reviewer of the Rust "subsystem".
+
+ - Add 'RUST [PIN-INIT]' entry with Benno Lossin as maintainer. It has
+   its own sub-tree.
+
+ - Add sub-tree for 'RUST [ALLOC]'.
+
+ - Add 'DMA MAPPING HELPERS DEVICE DRIVER API [RUST]' entry with Abdiel
+   Janulgue as primary maintainer. It will go through the sub-tree of
+   the 'RUST [ALLOC]' entry.
+
+ - Add 'HIGH-RESOLUTION TIMERS [RUST]' entry with Andreas Hindborg as
+   maintainer. It has its own sub-tree.
+
+And a few other cleanups and improvements.
+
+----------------------------------------------------------------
+Abdiel Janulgue (4):
+      rust: error: Add EOVERFLOW
+      rust: add dma coherent allocator abstraction
+      samples: rust: add Rust dma test sample driver
+      MAINTAINERS: add entry for Rust dma mapping helpers device driver API
+
+Alice Ryhl (8):
+      rust: task: make Pid type alias public
+      rust: list: extract common code for insertion
+      rust: list: make the cursor point between elements
+      rust: fix signature of rust_fmt_argument
+      rust: macros: support additional tokens in quote!
+      rust: add #[export] macro
+      print: use new #[export] macro for rust_fmt_argument
+      panic_qr: use new #[export] macro
+
+Andreas Hindborg (17):
+      rust: hrtimer: introduce hrtimer support
+      rust: sync: add `Arc::as_ptr`
+      rust: hrtimer: implement `HrTimerPointer` for `Arc`
+      rust: str: implement `PartialEq` for `BStr`
+      rust: str: implement `Index` for `BStr`
+      rust: str: implement `AsRef<BStr>` for `[u8]` and `BStr`
+      rust: str: implement `strip_prefix` for `BStr`
+      rust: hrtimer: allow timer restart from timer handler
+      rust: hrtimer: add `UnsafeHrTimerPointer`
+      rust: hrtimer: add `hrtimer::ScopedHrTimerPointer`
+      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&T>`
+      rust: hrtimer: implement `UnsafeHrTimerPointer` for `Pin<&mut T>`
+      rust: alloc: add `Box::into_pin`
+      rust: hrtimer: implement `HrTimerPointer` for `Pin<Box<T>>`
+      rust: hrtimer: add `HrTimerMode`
+      rust: hrtimer: add clocksource selection through `ClockId`
+      rust: hrtimer: add maintainer entry
+
+Antonio Hickey (2):
+      rust: enable `raw_ref_op` feature
+      rust: block: refactor to use `&raw mut`
+
+Benno Lossin (21):
+      rust: init: disable doctests
+      rust: move pin-init API into its own directory
+      rust: add extensions to the pin-init crate and move relevant documentation there
+      rust: pin-init: move proc-macro documentation into pin-init crate
+      rust: pin-init: change examples to the user-space version
+      rust: pin-init: call `try_[pin_]init!` from `[pin_]init!` instead of `__init_internal!`
+      rust: pin-init: move the default error behavior of `try_[pin_]init`
+      rust: pin-init: move `InPlaceInit` and impls of `InPlaceWrite` into the kernel crate
+      rust: pin-init: move impl `Zeroable` for `Opaque` and `Option<KBox<T>>` into the kernel crate
+      rust: add `ZeroableOption` and implement it instead of `Zeroable` for `Option<Box<T, A>>`
+      rust: pin-init: fix documentation links
+      rust: pin-init: remove kernel-crate dependency
+      rust: pin-init: change the way the `paste!` macro is called
+      rust: make pin-init its own crate
+      rust: pin-init: add `std` and `alloc` support from the user-space version
+      rust: pin-init: synchronize documentation with the user-space version
+      rust: pin-init: internal: synchronize with user-space version
+      rust: pin-init: miscellaneous synchronization with the user-space version
+      rust: pin-init: add miscellaneous files from the user-space version
+      rust: pin-init: re-enable doctests
+      MAINTAINERS: add entry for the `pin-init` crate
+
+Borys Tyran (1):
+      rust: improve lifetimes markup
+
+Charalampos Mitrodimas (1):
+      rust: rbtree: fix comments referring to Box instead of KBox
+
+Danilo Krummrich (1):
+      rust: dma: add `Send` implementation for `CoherentAllocation`
+
+Dirk Behme (3):
+      docs: rust: Add error handling sections
+      rust: types: add intra-doc links for `Opaque<T>`
+      rust: error: extend the Result documentation
+
+Gary Guo (1):
+      rust: alloc: make `ReallocFunc::call` inline
+
+Guilherme Giacomo Simoes (1):
+      rust: module: introduce `authors` key
+
+Guillaume Gomez (1):
+      scripts: rust: mention file name in error messages
+
+José Expósito (3):
+      rust: kunit: add KUnit case and suite macros
+      rust: macros: add macro to easily run KUnit tests
+      rust: kunit: allow to know if we are in a test
+
+Miguel Ojeda (4):
+      MAINTAINERS: add Danilo Krummrich as Rust reviewer
+      MAINTAINERS: rust: add tree field for RUST [ALLOC]
+      rust: add pin-init crate build infrastructure
+      Merge tag 'rust-hrtimer-for-v6.15-v3' of https://github.com/Rust-for-Linux/linux into rust-next
+
+Tamir Duberstein (2):
+      rust: uaccess: name the correct function
+      rust: macros: fix `make rusttest` build on macOS
+
+Thomas Weißschuh (2):
+      rust: pass correct target to bindgen on Usermode Linux
+      rust: add kunitconfig
+
+ Documentation/rust/coding-guidelines.rst           |    8 +
+ Documentation/rust/testing.rst                     |    7 +
+ MAINTAINERS                                        |   44 +
+ drivers/block/rnull.rs                             |    2 +-
+ drivers/gpu/drm/drm_panic.c                        |    5 -
+ drivers/gpu/drm/drm_panic_qr.rs                    |   13 +-
+ drivers/net/phy/ax88796b_rust.rs                   |    2 +-
+ drivers/net/phy/qt2025.rs                          |    2 +-
+ include/drm/drm_panic.h                            |    7 +
+ include/linux/sprintf.h                            |    3 +
+ lib/vsprintf.c                                     |    3 -
+ rust/.kunitconfig                                  |    3 +
+ rust/Makefile                                      |   76 +-
+ rust/bindings/bindings_helper.h                    |    6 +
+ rust/kernel/alloc/allocator.rs                     |    1 +
+ rust/kernel/alloc/kbox.rs                          |   15 +-
+ rust/kernel/block/mq/request.rs                    |    4 +-
+ rust/kernel/block/mq/tag_set.rs                    |    5 +-
+ rust/kernel/dma.rs                                 |  391 +++++
+ rust/kernel/driver.rs                              |    6 +-
+ rust/kernel/error.rs                               |  124 +-
+ rust/kernel/fs/file.rs                             |    4 +-
+ rust/kernel/init.rs                                | 1450 ++-----------------
+ rust/kernel/kunit.rs                               |  171 +++
+ rust/kernel/lib.rs                                 |    9 +-
+ rust/kernel/list.rs                                |  473 +++++--
+ rust/kernel/net/phy.rs                             |    4 +-
+ rust/kernel/pci.rs                                 |    2 +-
+ rust/kernel/platform.rs                            |    2 +-
+ rust/kernel/prelude.rs                             |    8 +-
+ rust/kernel/print.rs                               |   10 +-
+ rust/kernel/rbtree.rs                              |   12 +-
+ rust/kernel/seq_file.rs                            |    2 +-
+ rust/kernel/str.rs                                 |   46 +
+ rust/kernel/sync/arc.rs                            |   81 +-
+ rust/kernel/sync/condvar.rs                        |    6 +-
+ rust/kernel/sync/lock.rs                           |    4 +-
+ rust/kernel/sync/lock/mutex.rs                     |    2 +-
+ rust/kernel/sync/lock/spinlock.rs                  |    2 +-
+ rust/kernel/sync/poll.rs                           |    4 +-
+ rust/kernel/task.rs                                |    2 +-
+ rust/kernel/time.rs                                |   68 +
+ rust/kernel/time/hrtimer.rs                        |  520 +++++++
+ rust/kernel/time/hrtimer/arc.rs                    |  100 ++
+ rust/kernel/time/hrtimer/pin.rs                    |  104 ++
+ rust/kernel/time/hrtimer/pin_mut.rs                |  108 ++
+ rust/kernel/time/hrtimer/tbox.rs                   |  120 ++
+ rust/kernel/types.rs                               |   23 +-
+ rust/kernel/uaccess.rs                             |    3 +-
+ rust/macros/export.rs                              |   29 +
+ rust/macros/helpers.rs                             |  153 +-
+ rust/macros/kunit.rs                               |  161 +++
+ rust/macros/lib.rs                                 |  164 +--
+ rust/macros/module.rs                              |   12 +-
+ rust/macros/quote.rs                               |   28 +-
+ rust/pin-init/CONTRIBUTING.md                      |   72 +
+ rust/pin-init/README.md                            |  228 +++
+ rust/pin-init/examples/big_struct_in_place.rs      |   39 +
+ rust/pin-init/examples/error.rs                    |   27 +
+ rust/pin-init/examples/linked_list.rs              |  161 +++
+ rust/pin-init/examples/mutex.rs                    |  209 +++
+ rust/pin-init/examples/pthread_mutex.rs            |  178 +++
+ rust/pin-init/examples/static_init.rs              |  122 ++
+ rust/pin-init/internal/src/helpers.rs              |  152 ++
+ rust/pin-init/internal/src/lib.rs                  |   48 +
+ rust/{macros => pin-init/internal/src}/pin_data.rs |    7 +-
+ .../internal/src}/pinned_drop.rs                   |    7 +-
+ rust/{macros => pin-init/internal/src}/zeroable.rs |   11 +-
+ rust/{kernel/init => pin-init/src}/__internal.rs   |   46 +-
+ rust/pin-init/src/alloc.rs                         |  158 +++
+ rust/pin-init/src/lib.rs                           | 1486 ++++++++++++++++++++
+ rust/{kernel/init => pin-init/src}/macros.rs       |  129 +-
+ samples/rust/Kconfig                               |   11 +
+ samples/rust/Makefile                              |    1 +
+ samples/rust/rust_dma.rs                           |   97 ++
+ samples/rust/rust_driver_faux.rs                   |    2 +-
+ samples/rust/rust_driver_pci.rs                    |    2 +-
+ samples/rust/rust_driver_platform.rs               |    2 +-
+ samples/rust/rust_minimal.rs                       |    2 +-
+ samples/rust/rust_misc_device.rs                   |    2 +-
+ samples/rust/rust_print_main.rs                    |    2 +-
+ scripts/Makefile.build                             |    4 +-
+ scripts/generate_rust_analyzer.py                  |   17 +-
+ scripts/rustdoc_test_gen.rs                        |    8 +-
+ 84 files changed, 5999 insertions(+), 1845 deletions(-)
+ create mode 100644 rust/.kunitconfig
+ create mode 100644 rust/kernel/dma.rs
+ create mode 100644 rust/kernel/time/hrtimer.rs
+ create mode 100644 rust/kernel/time/hrtimer/arc.rs
+ create mode 100644 rust/kernel/time/hrtimer/pin.rs
+ create mode 100644 rust/kernel/time/hrtimer/pin_mut.rs
+ create mode 100644 rust/kernel/time/hrtimer/tbox.rs
+ create mode 100644 rust/macros/export.rs
+ create mode 100644 rust/macros/kunit.rs
+ create mode 100644 rust/pin-init/CONTRIBUTING.md
+ create mode 100644 rust/pin-init/README.md
+ create mode 100644 rust/pin-init/examples/big_struct_in_place.rs
+ create mode 100644 rust/pin-init/examples/error.rs
+ create mode 100644 rust/pin-init/examples/linked_list.rs
+ create mode 100644 rust/pin-init/examples/mutex.rs
+ create mode 100644 rust/pin-init/examples/pthread_mutex.rs
+ create mode 100644 rust/pin-init/examples/static_init.rs
+ create mode 100644 rust/pin-init/internal/src/helpers.rs
+ create mode 100644 rust/pin-init/internal/src/lib.rs
+ rename rust/{macros => pin-init/internal/src}/pin_data.rs (97%)
+ rename rust/{macros => pin-init/internal/src}/pinned_drop.rs (92%)
+ rename rust/{macros => pin-init/internal/src}/zeroable.rs (88%)
+ rename rust/{kernel/init => pin-init/src}/__internal.rs (84%)
+ create mode 100644 rust/pin-init/src/alloc.rs
+ create mode 100644 rust/pin-init/src/lib.rs
+ rename rust/{kernel/init => pin-init/src}/macros.rs (92%)
+ create mode 100644 samples/rust/rust_dma.rs
