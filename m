@@ -1,214 +1,113 @@
-Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA903232;
-	Sun, 30 Mar 2025 14:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85F646B5;
+	Sun, 30 Mar 2025 14:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743344874; cv=none; b=pibLdVksXuSRE0pjxslxR5TYnWhAAGGDHa5Df4WAQKzJLwq5OmOH7XdhoERsIstajuYcFqtFL1CIrL/ePGkJsRUJh/sUupMTM1wJd3jQx2sFBZ8Fa/6u848uv72xrQASbHeQL3l3esEjZVC6lArLdf7CG5ByPga4rdsdpbN4LxY=
+	t=1743345182; cv=none; b=U8UBREV+OmM+ApmV1Eiyp/8e2Vyv5lVlailO/9EUWOhSo245r2QtWgm1VDnmrzOoa2WVaxLwWBCUWoXLw2vuNZxnD96yUwTeacrCtlZrMjqSuCZN/lvSAOWJ649+Mfbzz3iktPsOmLP6rRAO0FCKw6SOjsoT8BWhrQyUZul1bqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743344874; c=relaxed/simple;
-	bh=Xqehng9m3Qcp1mTjx7Gw51fQtpN49xnpGi3qNQ+ZOpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kx5QSGTh7LT9JmKhidLEIxCAkWBOqOMdSm/AzSi7ggiYjszQxQu8K/unLWUg+m6O6ZcYU76jbFmQY/fHxoWwQff7fFZcvVKx40q8zzM1/H2+jKvzcr113qLQGbUprXH1D5SlAcycstlxX/Z+VH7cZfYch4BEoB9dIEColzIsQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
-Received: from [192.168.241.128]
-	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1tytdJ-000000000pA-3NNp;
-	Sun, 30 Mar 2025 16:27:30 +0200
-Message-ID: <cb0c9321-9c1d-4910-bcbd-3d0ca10d62cb@uls.co.za>
-Date: Sun, 30 Mar 2025 16:27:25 +0200
+	s=arc-20240116; t=1743345182; c=relaxed/simple;
+	bh=c2+wWjdujv3UHeuwB5Y44qeQdzTMiNxOlvXMxrg+ClE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jqde2deeGSpt4kuHaUgeHOjyJ1whENl+jdzbu+amCcUxB8xasA0K7UPRETGGTXfVAJ7QVOWqM77nY9zu5KJG0viAN17GW2Es5k71GqtF1u1jzFVZ5SKPmISB5Qp3rToDLZ3KBv3Hx0X55afH8DoLYYYcG0kDtZYrxDukWYJR2D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3yhVuzY; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3yhVuzY"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so35389825e9.0;
+        Sun, 30 Mar 2025 07:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743345179; x=1743949979; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KDZlBB97sXiBRPJPnnCLtIfRcmpHR+yPzooZ+KfqlxA=;
+        b=j3yhVuzYrt/Y8tRzQ16JcBYm4NQgpm0ip3vFPBKyUWHfIVSoOfSp5rkUn2a+yiEFua
+         2+H+HKVa0aMRy6Jsb6FuMyQxQhKqe5swid0Al3f7yd5icouR/WtuX6qmbh0oXrkzGJMz
+         0IH5pdZqhxHLDHXZZlyIk+OPIcxwFDaK0QTpmDV1mOLMlZ+56PWNsxjOSCtIxOxsV7nx
+         6YdLum0IHRUtAKEMhDSItIj5fMkSmLbo8PbbEieDXgAvgkbs1mrv8Y0LELsVVurhWQ1E
+         1znYAXf+D7WzbwL6mFC1LLpW7dae2pEgQCgc1y963LDKADaL09CejUkQaazHo+m4uXgA
+         vfpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743345179; x=1743949979;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KDZlBB97sXiBRPJPnnCLtIfRcmpHR+yPzooZ+KfqlxA=;
+        b=P3QqzgYNQf95YK1RxTXrJuvMi1+mslAwye+0MdHVIFNUO4n/qubVL908XGZtRQiofL
+         CRyz3J3+jr3sptz1AHYN3ewl99QqAdTBZcCtIUzP4IK6wbT91Ci6j/M+O21JTJxlq499
+         pXA2lTSRLKnC8FdjoRIlSx3PzE7V2Px8nskJOh6T9KSbUao5CnWwtAEc82gvJLspxWok
+         RyEx1crZyBt+qQNoL4Q6byH6oMke1j17tVE59Vqm96dTl9/JdVOJgiZ1NUVjBmSj+vCS
+         n2JcPR3UY6H9cYsNAd+egkAi7l6hcCu1FO8bFZ9WNAa1H0j5rX/s3am0jVufxzjH7QQm
+         dZ6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJXq+Rccur2AHvvCd8+0J1yqRdpG8amFmnYeDHovFfog0Y4rNO59LXL+gdm6NjMS5q0A+oyoe3Ua1x@vger.kernel.org, AJvYcCX4y5kRg9SBn+l4a3jCyHJe0NcLop9jzyrG7L4tkRes/TUN7RaMLFqE01IMmgsbHXofvDxmZ/lUl9DPuAV7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMssuUtX1ADCju0PPrb9wtnCKZhlD9lJ0GeoSITDasaGoPHtQ/
+	NkeK9lkIT0F8A08fvWk1GbFbmcaLJDsJWB3WC6K983jRw+vjta8J
+X-Gm-Gg: ASbGncsZ/8Ljc9M89rw/CMsgPsTZ/AzX7wogyHLnnpGBqx8CubPqhFzcKf38pAO6Uqq
+	8QwRVUnXGZpwlt6wIkN1avy6ebEkxMrw1u1D/q7vAqOaKxqcWaZxn6LQBuOc1M5jO6wmYliRrYn
+	FoEjvl0OIP8q7qXJdSaTC66ZFF+KV+zRZ51R/jgGmYaHQ/DUgAzvXn8y0+HBthdAp7tFcBRjjDg
+	xHQM5POPEGTPdlr+Hxe0MKO1yr1SkKhyaLTQiqYD498gwq064CTbHDwItzl+RI0EhjfbXQF0U5X
+	uzoX6bra1ihjWD6NlD4vPJs1NzMQns4g0PpWZLXgFjce3EvsOoDd7fQNGZHj
+X-Google-Smtp-Source: AGHT+IHaSWu6Z+1rDc9SQC310UBhA6tjaaU882YzdNUAhxmwTHuuOQ3qnc1Sxxt+8NnSRPc5mpgrvg==
+X-Received: by 2002:a05:600c:1f10:b0:43c:f8fc:f6a6 with SMTP id 5b1f17b1804b1-43e8e3cf6d0mr45291815e9.9.1743345178939;
+        Sun, 30 Mar 2025 07:32:58 -0700 (PDT)
+Received: from toolbox.. ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66363fsm8999934f8f.36.2025.03.30.07.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 07:32:58 -0700 (PDT)
+From: Christian Hewitt <christianshewitt@gmail.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: amlogic: gxlx-s905l-p271: add saradc compatible
+Date: Sun, 30 Mar 2025 14:32:54 +0000
+Message-Id: <20250330143254.3159519-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] fs: Supply dir_context.count as readdir buffer size
- hint
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, miklos@szeredi.hu, rdunlap@infradead.org,
- trapexit@spawn.link
-References: <20230727081237.18217-1-jaco@uls.co.za>
- <20250314221701.12509-1-jaco@uls.co.za>
- <20250314221701.12509-2-jaco@uls.co.za>
- <b1baac64-f56d-4d0f-92f1-d7bb808a151b@wanadoo.fr>
-Content-Language: en-GB
-From: Jaco Kroon <jaco@uls.co.za>
-Autocrypt: addr=jaco@uls.co.za; keydata=
- xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
- a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
- gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
- gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
- HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
- AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
- bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
- hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
- Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
- kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
- o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
- jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
- GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
- re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
- yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
- 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
- XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
- o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
- FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
- 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
- TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
-Organization: Ultimate Linux Solutions (Pty) Ltd
-In-Reply-To: <b1baac64-f56d-4d0f-92f1-d7bb808a151b@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-report: Relay access (ida.uls.co.za).
 
-ACK.  Fixed locally.
+Add the saradac node using the meson-gxlx-saradc compatible to ensure
+MPLL clocks are poked and audio output is enabled on the p271 (S905L)
+board.
 
-Thank you.
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+The meson-gxlx-saradc compatible is now merged via the IIO tree, see [0].                                   
 
-Will give a few more days before re-sending.
+[0] https://patchwork.kernel.org/project/linux-amlogic/cover/20250330101922.1942169-1-martin.blumenstingl@googlemail.com/
 
-Kind regards,
-Jaco
+ arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 2025/03/29 11:20, Christophe JAILLET wrote:
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts b/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
+index 942df754a0ed..1221f4545130 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
+@@ -38,6 +38,10 @@ mali: gpu@c0000 {
+ 	};
+ };
+ 
++&saradc {
++	compatible = "amlogic,meson-gxlx-saradc", "amlogic,meson-saradc";
++};
++
+ &usb {
+ 	dr_mode = "host";
+ };
+-- 
+2.34.1
 
-> Hi,
->
-> a few nitpicks below to reduce the diffpatch with unrelated changes. 
-> (trainling spaces)
->
->
-> Le 14/03/2025 à 23:16, Jaco Kroon a écrit :
->> This was provided by Miklos <miklos@szeredi.hu> via LKML on 2023/07/27
->> subject "Re: [PATCH] fuse: enable larger read buffers for readdir.".
->>
->> This is thus preperation for an improved fuse readdir() patch. The
->
-> s/preperation/preparation/
->
->> description he provided:
->>
->> "The best strategy would be to find the optimal buffer size based on 
->> the size of
->> the userspace buffer.  Putting that info into struct dir_context 
->> doesn't sound
->> too complicated...
->>
->> "Here's a patch.  It doesn't touch readdir.  Simply setting the fuse 
->> buffer size
->> to the userspace buffer size should work, the record sizes are 
->> similar (fuse's
->> is slightly larger than libc's, so no overflow should ever happen)."
->
-> ...
->
->> @@ -239,7 +240,7 @@ SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
->>     /*
->>    * New, all-improved, singing, dancing, iBCS2-compliant getdents()
->> - * interface.
->> + * interface.
->
-> Unrelated change.
->
->>    */
->>   struct linux_dirent {
->>       unsigned long    d_ino;
->
-> ...
->
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index 2788df98080f..1e426e2b5999 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -308,7 +308,7 @@ struct iattr {
->>    */
->>   #define FILESYSTEM_MAX_STACK_DEPTH 2
->>   -/**
->> +/**
->
-> Unrelated change.
->
->>    * enum positive_aop_returns - aop return codes with specific 
->> semantics
->>    *
->>    * @AOP_WRITEPAGE_ACTIVATE: Informs the caller that page writeback has
->> @@ -318,7 +318,7 @@ struct iattr {
->>    *                 be a candidate for writeback again in the near
->>    *                 future.  Other callers must be careful to unlock
->>    *                 the page if they get this return.  Returned by
->> - *                 writepage();
->> + *                 writepage();
->
-> Unrelated change.
->
->>    *
->>    * @AOP_TRUNCATED_PAGE: The AOP method that was handed a locked 
->> page has
->>    *              unlocked it and the page might have been truncated.
->> @@ -1151,8 +1151,8 @@ struct file *get_file_active(struct file **f);
->>     #define    MAX_NON_LFS    ((1UL<<31) - 1)
->>   -/* Page cache limit. The filesystems should put that into their 
->> s_maxbytes
->> -   limits, otherwise bad things can happen in VM. */
->> +/* Page cache limit. The filesystems should put that into their 
->> s_maxbytes
->> +   limits, otherwise bad things can happen in VM. */
->
-> Unrelated change.
->
->>   #if BITS_PER_LONG==32
->>   #define MAX_LFS_FILESIZE    ((loff_t)ULONG_MAX << PAGE_SHIFT)
->>   #elif BITS_PER_LONG==64
->> @@ -2073,6 +2073,13 @@ typedef bool (*filldir_t)(struct dir_context 
->> *, const char *, int, loff_t, u64,
->>   struct dir_context {
->>       filldir_t actor;
->>       loff_t pos;
->> +    /*
->> +     * Filesystems MUST NOT MODIFY count, but may use as a hint:
->> +     * 0        unknown
->> +     * > 0      space in buffer (assume at least one entry)
->> +     * INT_MAX  unlimited
->> +     */
->> +    int count;
->>   };
->>     /*
->> @@ -2609,7 +2616,7 @@ int sync_inode_metadata(struct inode *inode, 
->> int wait);
->>   struct file_system_type {
->>       const char *name;
->>       int fs_flags;
->> -#define FS_REQUIRES_DEV        1
->> +#define FS_REQUIRES_DEV        1
->
-> Unrelated change.
->
->>   #define FS_BINARY_MOUNTDATA    2
->>   #define FS_HAS_SUBTYPE        4
->>   #define FS_USERNS_MOUNT        8    /* Can be mounted by userns 
->> root */
->> @@ -3189,7 +3196,7 @@ ssize_t __kernel_read(struct file *file, void 
->> *buf, size_t count, loff_t *pos);
->>   extern ssize_t kernel_write(struct file *, const void *, size_t, 
->> loff_t *);
->>   extern ssize_t __kernel_write(struct file *, const void *, size_t, 
->> loff_t *);
->>   extern struct file * open_exec(const char *);
->> -
->> +
->
-> Unrelated change.
->
->>   /* fs/dcache.c -- generic fs support functions */
->>   extern bool is_subdir(struct dentry *, struct dentry *);
->>   extern bool path_is_under(const struct path *, const struct path *);
->
