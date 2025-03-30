@@ -1,611 +1,334 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012049.outbound.protection.outlook.com [52.103.2.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1361DF747
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 21:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743371635; cv=none; b=oXH93uhOlJDPA2HD0//DlWytl62bDHZUyEzXUVIPYxVwXo21IvSJ1Z5i0Ojjm3s6t3HIDc3rK8gpKvJaA2ZGFQXTUdpB1E5/3tM4iE9VYpgdKlhdC1+z7XICw12os6OJMa8YCEtk/R9wstctUK636gMV1VpD9wOFlei7Vm+OxFU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743371635; c=relaxed/simple;
-	bh=7joIjpORfzSw3mVw/thtzi0t+cMfR2dHBTW3ZZw4IjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d139xW1CZ0IQQV4ffjHUU0b/ll6uLLIG/NSMP+mZexo0j+a8dWOrPzP6pHggwdbSXwpqot3dAkUDdSLj1vsh9nJjnuxXbmN0mYGv6CkMfAFmsr/guQjmD5oeo/2GJWIm8VyYG3AaSsmrJPZx8rXw1qJs/3VsnuqqFSvrfa/3m2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A1AwEVlO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696C91E00B4;
+	Sun, 30 Mar 2025 21:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743371637; cv=fail; b=RamxxQp4tIxLS81W+I5VVY9MGBEE8aOUJKrvz9c8Rt/cD5zHPbZwMVAYaL2hmnGQdIGWxAtG4hIpY+64lAe+nFIW0+mXpgOhovlUVG0/rqFKYs1JJzTVOHGSCbtVwr67peUiGLBZHImwEulB6zMMkUYJKibq7RTAYSFTvss3KQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743371637; c=relaxed/simple;
+	bh=aspQuQ+aJhvXpMtp6IjRMxm3wcLzUbzASxFhWZ+tF00=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=FRQ/APQrvdDTO53j03Yc82aznhcp4hgcIXfoefOmTUbOY63nrFqeTsrncZeTzJwz20sv1342fjyhQ0jZ0Kl8UmrekCKwy+PiOVVoRi1e7yyNPZJ17zTCZlBz+FUZFA3ObyDm29x3Ogj/iVyp2DKFuYlKK4DQ7JBt2KBmUxJOrO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kA0WqBxt; arc=fail smtp.client-ip=52.103.2.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A1AwEVlO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743371632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uo36KXp8L+TEKtoEnugaRSRjEW0Cq6TG5xkblxfQSuc=;
-	b=A1AwEVlOPCpHUhkAk0IgBTi5dkrr1zrYLtWhOo0g47U9s47iKGFpZshq0WEB1D7K4sLvWm
-	rxn4PoIDLbnr/l1KIjToz3Kz0hoi38Q2UaoYojx1OSeZeHXnM4E60x96QyDbaBYX8dCL2M
-	LurXs4XSRSU+HVtuX2+JlZW4XCc+r+s=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-275-Dp5QgUA2Nverz0NjcwDfyg-1; Sun,
- 30 Mar 2025 17:53:50 -0400
-X-MC-Unique: Dp5QgUA2Nverz0NjcwDfyg-1
-X-Mimecast-MFC-AGG-ID: Dp5QgUA2Nverz0NjcwDfyg_1743371629
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B6F811945103;
-	Sun, 30 Mar 2025 21:53:48 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.34])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E61451801750;
-	Sun, 30 Mar 2025 21:53:46 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 04/10] cgroup/cpuset: Remove remote_partition_check() & make update_cpumasks_hier() handle remote partition
-Date: Sun, 30 Mar 2025 17:52:42 -0400
-Message-ID: <20250330215248.3620801-5-longman@redhat.com>
-In-Reply-To: <20250330215248.3620801-1-longman@redhat.com>
-References: <20250330215248.3620801-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kA0WqBxt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NX0B6e0Y/iPHUZZHhOZAXt4/K3a+p89TvCcNzZyXa42wq7R95jN5XRLDYmL53vKFt2GtNZ7vnJf6MCJzi6ix/MpAXI4fa/5rB5FJntCi58SutrCom49l+1jlvmPyoiGN/krCV8Zn+hIKQEHKcsPTuYdRydw50ufcpJlpJDy460MFKdGijFFmex8/gp43L13wY825BYGWeYvXbMFsUtzWbEBITY7PHZXPzVf3Msy4YCgltu90LoxEZ6T4TqmmyRkABcSm/5qVZhZqCK3EkVWt27tIUH1ec06RkCrON5/dlr4TQIWSVhpTgKnNsNNncVwTbm0d4GXG1deBbShIvzP+1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OGoIa4emq0wt1gdEE7rHOPaRVTngesHmF5MoQVx1adk=;
+ b=ftZiDvJxFYW0oDsjQooqefkaWhDBeRplqUD0AANZK5iHq14g/+6t8Z09twfgyKbuaGVFBVGwkI26IzQpgfon5pF/Rjabppa7Z6mFqSj8fa2TDR4cQbRrQk+S3a+775+8/msOxWUrxhmSehV7+cGXeimicx52Nw6DJp7Ke7/sM+M2A4b+jt/LBaTsqYCaE0pEtA5tx7CB3sgKje5jylihw5LBmakLGowbVopO0aDmzl4XpWDE0p4uR3Rr3ccDQdJ7O1X6Fnh72UyRDi7agi6V8ztAfGChhnziD7GBo7cMOzWuksND/xD++IhBf4zyKbJdUVFkewpSw95QjHoDuqXiQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OGoIa4emq0wt1gdEE7rHOPaRVTngesHmF5MoQVx1adk=;
+ b=kA0WqBxtFbYA1lQfRSxvBdCEWWrywR14c5gmifpRB9AiIaVw1P3nX8QoxRNyHnQv0Iyy6imFo2QSZdInl81a49pqZZXUuon3dLhRCR+QuiIKoDc302ZiBz53WYlaiyROgwQ9X4owXE21pl2l/SsAOWKKTggFHO0KSJ9cqnnNVgztSs9ydxBM4RNrCcB9wFxOF0uQgkHDnhA9PC3WdJH72rsiOASN32xjur3d9rzgvlzZkSHCSuN0g2eD+PJytvQww7Z1TAEdqEb3HXxia8u0f8jMP77wcdaPAFPKlFrPAfKeIv6lrU2qR/dKqZbrqp8h9TPYQttVXJDDxR/YuMmfDg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB7527.namprd02.prod.outlook.com (2603:10b6:510:4e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Sun, 30 Mar
+ 2025 21:53:52 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8534.043; Sun, 30 Mar 2025
+ 21:53:52 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+CC: "x86@kernel.org" <x86@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up hypercall
+ arguments
+Thread-Topic: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up
+ hypercall arguments
+Thread-Index: AQHbk+AV21q88EUTeE6kvPDNj7sy5bN+ExQAgAYmPaA=
+Date: Sun, 30 Mar 2025 21:53:52 +0000
+Message-ID:
+ <SN6PR02MB4157007B9432826CAF0E42A8D4A22@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-5-mhklinux@outlook.com>
+ <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
+In-Reply-To: <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7527:EE_
+x-ms-office365-filtering-correlation-id: d3825a9b-8a9f-484f-ecc9-08dd6fd55c37
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799006|12121999004|461199028|19110799003|8062599003|8060799006|102099032|56899033|3412199025|440099028|12091999003|30101999003|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?jVTuxOjziXj8/hltyF7kL/TdUGIIKHMpakRotfsAQcAj5WP2hcxYSHedBfrQ?=
+ =?us-ascii?Q?uo2Ff5bu23aXBahYGr89hDBNUdOzA2/QMU8W0cTt8H5KGzEUaMmEWlfWLuJa?=
+ =?us-ascii?Q?nQp00zBjBogBuMCqKpMLJKk2VTWicALiLhUlEqeFk8VywucrihdKzPpY8FrJ?=
+ =?us-ascii?Q?eLNTvpKwczloYrK5TleaGnJdCsNGyFEnRhX4mlfxo8gbTNxHd+N2Orx36LqX?=
+ =?us-ascii?Q?SMBiNC5jSUgwNR8UPH9I5jMeFRaLd58cgRBbZSAZOzzsePouSOcfHuN4lWT6?=
+ =?us-ascii?Q?u6JnZO814jivNZm82ZcNdX+dONDLyMFzM/z49DFQ0njdECMQKa1ivfufCh6d?=
+ =?us-ascii?Q?0wlVtBVYhjnFnwRrka3CSNdIIlGYqsho3A4mgLDGBvtO3Xe8qz+dEe+HnDkz?=
+ =?us-ascii?Q?N5i2nBbLvKpp7wS4PHnOscl5kWReAO8SuaTZ7BmHdDNFOSlT2TuYNTCy7Rwo?=
+ =?us-ascii?Q?svdDDsZ7Wib7AOM26mJR36K2pIcBOHB+kU64stusoyOuu2hMWMWBMsPgF5Jc?=
+ =?us-ascii?Q?N/9E8zK03TeFoGbiRgUrK9YjAIydKK/pW+30++C0gTzKot32hjwBhdD+mn5W?=
+ =?us-ascii?Q?AOebsy2/wMvO1Ig+AYEL0GK9aePdCOtyHMJJcH9053rwqLM0T5x7B8kSwcsX?=
+ =?us-ascii?Q?2WMwDhmhV8sdDNVTxPxbYuROGweDMWSXCzMOBnN0AmMJjGAV8LMtAk2IHBkd?=
+ =?us-ascii?Q?WP7325+t3mxkmlEFs3r4k3EvHaKVBi67jrTSLsppV0iV+y8Myk6KxY0r9vsk?=
+ =?us-ascii?Q?Ub2W8g9Ks0VnoK3THYXHA4qSOrOy60+RjAUAOjbrJLr4GOB/K3TWYH+eUm9b?=
+ =?us-ascii?Q?LXGaewleQXHk7y3NlMiUyOipf4Fde1ujHi90eu+HSevYJRvvrocQyzNfpDq4?=
+ =?us-ascii?Q?DqbKPnLnYu1+FJwxJLOsG53/esfc3dMVJTME+Xjg9ob0ygVpubBZYJwMlBlk?=
+ =?us-ascii?Q?+h+FFs+DJOA0rOVo/FSi0WWFI8v5EJ+GZc5eAqqKwnmnBzZKe4JFsu6ypVuA?=
+ =?us-ascii?Q?n4LdoUACa5TGs8dfDLP3+HcBShNmwX3IdC3m8Je6SJHEW1dP2E0yLxmzFHnX?=
+ =?us-ascii?Q?j7Jk8G26JnqQrfhF4m4plHb7hFsALMKa/x+fme+8j2e0nYTQvzkTnjhU7Ov3?=
+ =?us-ascii?Q?kMqFB80ZeuZn1aLNxwVWkCtDoE0YPUfFkkvZ27igfRAaKkGxSIS13Z1C+BNt?=
+ =?us-ascii?Q?5erPZSlTn1tNTxl1Atu3Kj4dKEX6s45fNo352Q=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?0HR1vulC3xb/jH0mizz04MOiNgz5VUMUNeMFnsm17GHHYs+/P2FL7ySdU9WR?=
+ =?us-ascii?Q?TzZOayo0azSJ6mafH4XySQZutM8IStvoUVYamGvy6nTX0IrWoYEjZ/0uxxIr?=
+ =?us-ascii?Q?D1bpZbXrayZDY2kKOFyKSUZUSynaizURfne+b59qbv8ZSH80gpeeIsuAIskq?=
+ =?us-ascii?Q?autTGPGD2WinEeb6zHBGU7tEL4Tr1fe6BMmoGfbaMhjWAD9Hwx/phDNf32Km?=
+ =?us-ascii?Q?zRbc9R2FsC7e91xzMsXUynhHYkdmvBbztBcDzcsDOYwgWcGY+tBQv66RjrwM?=
+ =?us-ascii?Q?7aZXyr112fn3Wt9hZWwQcVONUDDwrq3dOEo37/XRZTKh94w++ZdhG/xdtrA4?=
+ =?us-ascii?Q?iHphu65Er0cbx0hbDLnBW/hGt5hhIW/fg9QZvjQMC9UXXLT/E0AtmX0bubag?=
+ =?us-ascii?Q?5tfyqGPb6QwGLfU04S851dLIRDy+Nk6nd5fFOEMVm/EAPYaiQZZVmO/sj522?=
+ =?us-ascii?Q?DBR3r9v2IfMHZiVGpClsFMc7UVNk4vDEEwixYn7ocJrelbUoFSPnqQcvWavH?=
+ =?us-ascii?Q?noI0ohJjEy3kXTYGwSHWhHPXfOA1jTIocCc79+DPuT4ZK0oZsjSFLDCC04bn?=
+ =?us-ascii?Q?4lf4P8xqJJPZBt0sGStbySZZNmquUfZhWAqG+HQF+wZPxNzdrkD3BSgwO+Wa?=
+ =?us-ascii?Q?M0p3SJxcoJCxBALnV+lZk13X0MFyI/vhsupP4H8DH/KIPs0kk3ndcm5AFnME?=
+ =?us-ascii?Q?m2zEZSYABrn0aG9Aq1JAnv08E4bJU19IAF9FwxAkKZJ0k3/7i3KTn/3uLWL4?=
+ =?us-ascii?Q?XLppjgHJQMIueLlJfHjPm5p8JWp/mi3ic5ZbmGpGPJ/LQQmy/vKlO/wIkXfa?=
+ =?us-ascii?Q?VHlzPDQAyRxXYXitVisAi1diSso2yGo2jfG0jCIR2jowiFG+Tv2aCbPPbSI7?=
+ =?us-ascii?Q?n9Rt+GbJEFk/LtilWEbw8NtSU8uQxWDqyQgJwcOO7Zgl8ZjxS+jSvX+JZFiU?=
+ =?us-ascii?Q?5/LZmr+aavqb0NufdosS1mTJvNOmTUjrAr8ykzE38hhXvfw1RiOT742BdvW5?=
+ =?us-ascii?Q?44Nhpq6sLj3QJn8RSejyUDE7AZrwzOLjsJHfvAZtv2OMVqN4Tu7zOWkhq8Se?=
+ =?us-ascii?Q?wB9SJcuNYDrrhE0GFFzcIxt2cILpEobR4NM6wdSvJWOXPgS1CcQAjAjqcFdh?=
+ =?us-ascii?Q?FM6l5si09+192nctVXeZooPYy87llNFuAcptXROZbs+ntQ8Wn+RFcVaICxhj?=
+ =?us-ascii?Q?innYWhnOtOv+yJ1XGs/0eysMDzF63H+ujBWHlFxoFz/iSvWnE5eiqpH+Z7U?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3825a9b-8a9f-484f-ecc9-08dd6fd55c37
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2025 21:53:52.2289
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7527
 
-Currently, changes in exclusive CPUs are being handled in
-remote_partition_check() by disabling conflicting remote partitions.
-However, that may lead to results unexpected by the users. Fix
-this problem by removing remote_partition_check() and making
-update_cpumasks_hier() handle changes in descendant remote partitions
-properly.
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, March=
+ 21, 2025 1:11 PM
+>=20
+> On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
+> >
+> > Update hypercall call sites to use the new hv_hvcall_*() functions
+> > to set up hypercall arguments. Since these functions zero the
+> > fixed portion of input memory, remove now redundant zero'ing of
+> > input fields.
+> >
+> > hv_post_message() requires additional updates. The payload area is
+> > treated as an array to avoid wasting cycles on zero'ing it and
+> > then overwriting with memcpy(). To allow treatment as an array,
+> > the corresponding payload[] field is updated to have zero size.
+> >
+> I'd prefer to leave the payload field as a fixed-sized array.
+> Changing it to a flexible array makes it look like that input is
+> for a variable-sized or rep hypercall, and it makes the surrounding
+> code in hv_post_message() more complex and inscrutable as a result.
+>=20
+> I suggest leaving hv_post_message() alone, except for changing
+> hyperv_pcpu_input_arg -> hyperv_pcpu_arg, and perhaps a comment
+> explaining why hv_hvcall_input() isn't used there.
+>=20
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> >  drivers/hv/hv.c           | 9 ++++++---
+> >  drivers/hv/hv_balloon.c   | 4 ++--
+> >  drivers/hv/hv_common.c    | 2 +-
+> >  drivers/hv/hv_proc.c      | 8 ++++----
+> >  drivers/hv/hyperv_vmbus.h | 2 +-
+> >  5 files changed, 14 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> > index a38f84548bc2..e2dcbc816fc5 100644
+> > --- a/drivers/hv/hv.c
+> > +++ b/drivers/hv/hv.c
+> > @@ -66,7 +66,8 @@ int hv_post_message(union hv_connection_id connection=
+_id,
+> >  	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
+> >  		aligned_msg =3D this_cpu_ptr(hv_context.cpu_context)->post_msg_page;
+> >  	else
+> > -		aligned_msg =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +		hv_hvcall_in_array(&aligned_msg, sizeof(*aligned_msg),
+> > +				   sizeof(aligned_msg->payload[0]));
+> >
+> >  	aligned_msg->connectionid =3D connection_id;
+> >  	aligned_msg->reserved =3D 0;
+> > @@ -80,8 +81,10 @@ int hv_post_message(union hv_connection_id connectio=
+n_id,
+> >  						  virt_to_phys(aligned_msg), 0);
+> >  		else if (hv_isolation_type_snp())
+> >  			status =3D hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
+> > -						   aligned_msg, NULL,
+> > -						   sizeof(*aligned_msg));
+> > +						   aligned_msg,
+> > +						   NULL,
+> > +						   struct_size(aligned_msg, payload,
+> > +						   HV_MESSAGE_PAYLOAD_QWORD_COUNT));
+>=20
+> See my comment above, I'd prefer to leave this function mostly
+> alone to maintain readability.
 
-The compute_effective_exclusive_cpumask() function is enhanced to check
-the exclusive_cpus and effective_xcpus from siblings and excluded them
-in its effective exclusive CPUs computation and return a value to show if
-there is any sibling conflicts.  This is somewhat like the cpu_exclusive
-flag check in validate_change(). This is the initial step to enable us
-to retire the use of cpu_exclusive flag in cgroup v2 in the future.
+Let me try again to introduce hv_hvcall_*() without changing struct
+hv_input_post_message. If that struct isn't changed, then the
+hv_ghcb_hypercall() arguments don't have to change.
 
-One of the tests in the TEST_MATRIX of the test_cpuset_prs.sh
-script has to be updated due to changes in the way a child remote
-partition root is being handled (updated instead of invalidation)
-in update_cpumasks_hier().
+I'd like to reach a point where hyperv_input_arg isn't referenced in any
+open coding -- it should be referenced only internally in the hv_call_*()
+functions and where it is allocated and deallocated. The arguments to
+hv_hvcall_in_array() will be a slightly more complicated to prevent zero'in=
+g
+the entire payload area, but I don't think readability alone is justificati=
+on
+for open-coding the use of hyperv_input_arg.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/cgroup/cpuset.c                        | 258 ++++++++++--------
- .../selftests/cgroup/test_cpuset_prs.sh       |   4 +-
- 2 files changed, 143 insertions(+), 119 deletions(-)
+Other reviewers -- please chime in on whether the "no open coding" goal
+should be kept. I can drop that goal if that's the way folks prefer.
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 2c5b25609c56..ffa85d34ba51 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -86,7 +86,6 @@ static struct list_head remote_children;
-  * A flag to force sched domain rebuild at the end of an operation.
-  * It can be set in
-  *  - update_partition_sd_lb()
-- *  - remote_partition_check()
-  *  - update_cpumasks_hier()
-  *  - cpuset_update_flag()
-  *  - cpuset_hotplug_update_tasks()
-@@ -1340,20 +1339,57 @@ EXPORT_SYMBOL_GPL(cpuset_cpu_is_isolated);
-  * compute_effective_exclusive_cpumask - compute effective exclusive CPUs
-  * @cs: cpuset
-  * @xcpus: effective exclusive CPUs value to be set
-- * Return: true if xcpus is not empty, false otherwise.
-+ * @real_cs: the real cpuset (can be NULL)
-+ * Return: 0 if there is no sibling conflict, > 0 otherwise
-  *
-- * Starting with exclusive_cpus (cpus_allowed if exclusive_cpus is not set),
-- * it must be a subset of parent's effective_xcpus.
-+ * If exclusive_cpus isn't explicitly set or a real_cs is provided, we have to
-+ * scan the sibling cpusets and exclude their exclusive_cpus or effective_xcpus
-+ * as well. The provision of real_cs means that a cpumask is being changed and
-+ * the given cs is a trial one.
-  */
--static bool compute_effective_exclusive_cpumask(struct cpuset *cs,
--						struct cpumask *xcpus)
-+static int compute_effective_exclusive_cpumask(struct cpuset *cs,
-+					       struct cpumask *xcpus,
-+					       struct cpuset *real_cs)
- {
-+	struct cgroup_subsys_state *css;
- 	struct cpuset *parent = parent_cs(cs);
-+	struct cpuset *sibling;
-+	int retval = 0;
- 
- 	if (!xcpus)
- 		xcpus = cs->effective_xcpus;
- 
--	return cpumask_and(xcpus, user_xcpus(cs), parent->effective_xcpus);
-+	cpumask_and(xcpus, user_xcpus(cs), parent->effective_xcpus);
-+
-+	if (!real_cs) {
-+		if (!cpumask_empty(cs->exclusive_cpus))
-+			return 0;
-+	} else {
-+		cs = real_cs;
-+	}
-+
-+	/*
-+	 * Exclude exclusive CPUs from siblings
-+	 */
-+	rcu_read_lock();
-+	cpuset_for_each_child(sibling, css, parent) {
-+		if (sibling == cs)
-+			continue;
-+
-+		if (!cpumask_empty(sibling->exclusive_cpus) &&
-+		    cpumask_intersects(xcpus, sibling->exclusive_cpus)) {
-+			cpumask_andnot(xcpus, xcpus, sibling->exclusive_cpus);
-+			retval++;
-+			continue;
-+		}
-+		if (!cpumask_empty(sibling->effective_xcpus) &&
-+		    cpumask_intersects(xcpus, sibling->effective_xcpus)) {
-+			cpumask_andnot(xcpus, xcpus, sibling->effective_xcpus);
-+			retval++;
-+		}
-+	}
-+	rcu_read_unlock();
-+	return retval;
- }
- 
- static inline bool is_remote_partition(struct cpuset *cs)
-@@ -1395,7 +1431,7 @@ static int remote_partition_enable(struct cpuset *cs, int new_prs,
- 	 * remote partition root underneath it, its exclusive_cpus must
- 	 * have overlapped with subpartitions_cpus.
- 	 */
--	compute_effective_exclusive_cpumask(cs, tmp->new_cpus);
-+	compute_effective_exclusive_cpumask(cs, tmp->new_cpus, NULL);
- 	if (cpumask_empty(tmp->new_cpus) ||
- 	    cpumask_intersects(tmp->new_cpus, subpartitions_cpus) ||
- 	    cpumask_subset(top_cpuset.effective_cpus, tmp->new_cpus))
-@@ -1404,8 +1440,10 @@ static int remote_partition_enable(struct cpuset *cs, int new_prs,
- 	spin_lock_irq(&callback_lock);
- 	isolcpus_updated = partition_xcpus_add(new_prs, NULL, tmp->new_cpus);
- 	list_add(&cs->remote_sibling, &remote_children);
-+	cpumask_copy(cs->effective_xcpus, tmp->new_cpus);
- 	spin_unlock_irq(&callback_lock);
- 	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	cpuset_force_rebuild();
- 	cs->prs_err = 0;
- 
- 	/*
-@@ -1429,22 +1467,24 @@ static void remote_partition_disable(struct cpuset *cs, struct tmpmasks *tmp)
- {
- 	bool isolcpus_updated;
- 
--	compute_effective_exclusive_cpumask(cs, tmp->new_cpus);
- 	WARN_ON_ONCE(!is_remote_partition(cs));
--	WARN_ON_ONCE(!cpumask_subset(tmp->new_cpus, subpartitions_cpus));
-+	WARN_ON_ONCE(!cpumask_subset(cs->effective_xcpus, subpartitions_cpus));
- 
- 	spin_lock_irq(&callback_lock);
- 	list_del_init(&cs->remote_sibling);
- 	isolcpus_updated = partition_xcpus_del(cs->partition_root_state,
--					       NULL, tmp->new_cpus);
-+					       NULL, cs->effective_xcpus);
- 	if (cs->prs_err)
- 		cs->partition_root_state = -cs->partition_root_state;
- 	else
- 		cs->partition_root_state = PRS_MEMBER;
- 
-+	/* effective_xcpus may need to be changed */
-+	compute_effective_exclusive_cpumask(cs, NULL, NULL);
- 	reset_partition_data(cs);
- 	spin_unlock_irq(&callback_lock);
- 	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	cpuset_force_rebuild();
- 
- 	/*
- 	 * Propagate changes in top_cpuset's effective_cpus down the hierarchy.
-@@ -1456,14 +1496,15 @@ static void remote_partition_disable(struct cpuset *cs, struct tmpmasks *tmp)
- /*
-  * remote_cpus_update - cpus_exclusive change of remote partition
-  * @cs: the cpuset to be updated
-- * @newmask: the new effective_xcpus mask
-+ * @xcpus: the new exclusive_cpus mask, if non-NULL
-+ * @excpus: the new effective_xcpus mask
-  * @tmp: temporary masks
-  *
-  * top_cpuset and subpartitions_cpus will be updated or partition can be
-  * invalidated.
-  */
--static void remote_cpus_update(struct cpuset *cs, struct cpumask *newmask,
--			       struct tmpmasks *tmp)
-+static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
-+			       struct cpumask *excpus, struct tmpmasks *tmp)
- {
- 	bool adding, deleting;
- 	int prs = cs->partition_root_state;
-@@ -1474,13 +1515,13 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *newmask,
- 
- 	WARN_ON_ONCE(!cpumask_subset(cs->effective_xcpus, subpartitions_cpus));
- 
--	if (cpumask_empty(newmask)) {
-+	if (cpumask_empty(excpus)) {
- 		cs->prs_err = PERR_CPUSEMPTY;
- 		goto invalidate;
- 	}
- 
--	adding   = cpumask_andnot(tmp->addmask, newmask, cs->effective_xcpus);
--	deleting = cpumask_andnot(tmp->delmask, cs->effective_xcpus, newmask);
-+	adding   = cpumask_andnot(tmp->addmask, excpus, cs->effective_xcpus);
-+	deleting = cpumask_andnot(tmp->delmask, cs->effective_xcpus, excpus);
- 
- 	/*
- 	 * Additions of remote CPUs is only allowed if those CPUs are
-@@ -1502,8 +1543,17 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *newmask,
- 		isolcpus_updated += partition_xcpus_add(prs, NULL, tmp->addmask);
- 	if (deleting)
- 		isolcpus_updated += partition_xcpus_del(prs, NULL, tmp->delmask);
-+	/*
-+	 * Need to update effective_xcpus and exclusive_cpus now as
-+	 * update_sibling_cpumasks() below may iterate back to the same cs.
-+	 */
-+	cpumask_copy(cs->effective_xcpus, excpus);
-+	if (xcpus)
-+		cpumask_copy(cs->exclusive_cpus, xcpus);
- 	spin_unlock_irq(&callback_lock);
- 	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	if (adding || deleting)
-+		cpuset_force_rebuild();
- 
- 	/*
- 	 * Propagate changes in top_cpuset's effective_cpus down the hierarchy.
-@@ -1516,47 +1566,6 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *newmask,
- 	remote_partition_disable(cs, tmp);
- }
- 
--/*
-- * remote_partition_check - check if a child remote partition needs update
-- * @cs: the cpuset to be updated
-- * @newmask: the new effective_xcpus mask
-- * @delmask: temporary mask for deletion (not in tmp)
-- * @tmp: temporary masks
-- *
-- * This should be called before the given cs has updated its cpus_allowed
-- * and/or effective_xcpus.
-- */
--static void remote_partition_check(struct cpuset *cs, struct cpumask *newmask,
--				   struct cpumask *delmask, struct tmpmasks *tmp)
--{
--	struct cpuset *child, *next;
--	int disable_cnt = 0;
--
--	/*
--	 * Compute the effective exclusive CPUs that will be deleted.
--	 */
--	if (!cpumask_andnot(delmask, cs->effective_xcpus, newmask) ||
--	    !cpumask_intersects(delmask, subpartitions_cpus))
--		return;	/* No deletion of exclusive CPUs in partitions */
--
--	/*
--	 * Searching the remote children list to look for those that will
--	 * be impacted by the deletion of exclusive CPUs.
--	 *
--	 * Since a cpuset must be removed from the remote children list
--	 * before it can go offline and holding cpuset_mutex will prevent
--	 * any change in cpuset status. RCU read lock isn't needed.
--	 */
--	lockdep_assert_held(&cpuset_mutex);
--	list_for_each_entry_safe(child, next, &remote_children, remote_sibling)
--		if (cpumask_intersects(child->effective_cpus, delmask)) {
--			remote_partition_disable(child, tmp);
--			disable_cnt++;
--		}
--	if (disable_cnt)
--		cpuset_force_rebuild();
--}
--
- /*
-  * prstate_housekeeping_conflict - check for partition & housekeeping conflicts
-  * @prstate: partition root state to be checked
-@@ -1629,6 +1638,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 	bool nocpu;
- 
- 	lockdep_assert_held(&cpuset_mutex);
-+	WARN_ON_ONCE(is_remote_partition(cs));
- 
- 	/*
- 	 * new_prs will only be changed for the partcmd_update and
-@@ -1670,13 +1680,20 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 	nocpu = tasks_nocpu_error(parent, cs, xcpus);
- 
- 	if ((cmd == partcmd_enable) || (cmd == partcmd_enablei)) {
-+		/*
-+		 * Need to call compute_effective_exclusive_cpumask() in case
-+		 * exclusive_cpus not set. Sibling conflict should only happen
-+		 * if exclusive_cpus isn't set.
-+		 */
-+		xcpus = tmp->new_cpus;
-+		if (compute_effective_exclusive_cpumask(cs, xcpus, NULL))
-+			WARN_ON_ONCE(!cpumask_empty(cs->exclusive_cpus));
-+
- 		/*
- 		 * Enabling partition root is not allowed if its
--		 * effective_xcpus is empty or doesn't overlap with
--		 * parent's effective_xcpus.
-+		 * effective_xcpus is empty.
- 		 */
--		if (cpumask_empty(xcpus) ||
--		    !cpumask_intersects(xcpus, parent->effective_xcpus))
-+		if (cpumask_empty(xcpus))
- 			return PERR_INVCPUS;
- 
- 		if (prstate_housekeeping_conflict(new_prs, xcpus))
-@@ -1695,13 +1712,16 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 		new_prs = (cmd == partcmd_enable) ? PRS_ROOT : PRS_ISOLATED;
- 	} else if (cmd == partcmd_disable) {
- 		/*
--		 * May need to add cpus to parent's effective_cpus for
--		 * valid partition root.
-+		 * May need to add cpus back to parent's effective_cpus
-+		 * (and maybe removed from subpartitions_cpus/isolated_cpus)
-+		 * for valid partition root. xcpus may contain CPUs that
-+		 * shouldn't be removed from the two global cpumasks.
- 		 */
--		adding = !is_prs_invalid(old_prs) &&
--			  cpumask_and(tmp->addmask, xcpus, parent->effective_xcpus);
--		if (adding)
-+		if (is_partition_valid(cs)) {
-+			cpumask_copy(tmp->addmask, cs->effective_xcpus);
-+			adding = true;
- 			subparts_delta--;
-+		}
- 		new_prs = PRS_MEMBER;
- 	} else if (newmask) {
- 		/*
-@@ -1711,6 +1731,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 			part_error = PERR_CPUSEMPTY;
- 			goto write_error;
- 		}
-+
- 		/* Check newmask again, whether cpus are available for parent/cs */
- 		nocpu |= tasks_nocpu_error(parent, cs, newmask);
- 
-@@ -1927,7 +1948,7 @@ static void compute_partition_effective_cpumask(struct cpuset *cs,
- 	 *  2) All the effective_cpus will be used up and cp
- 	 *     has tasks
- 	 */
--	compute_effective_exclusive_cpumask(cs, new_ecpus);
-+	compute_effective_exclusive_cpumask(cs, new_ecpus, NULL);
- 	cpumask_and(new_ecpus, new_ecpus, cpu_active_mask);
- 
- 	rcu_read_lock();
-@@ -1935,6 +1956,11 @@ static void compute_partition_effective_cpumask(struct cpuset *cs,
- 		if (!is_partition_valid(child))
- 			continue;
- 
-+		/*
-+		 * There shouldn't be a remote partition underneath another
-+		 * partition root.
-+		 */
-+		WARN_ON_ONCE(is_remote_partition(child));
- 		child->prs_err = 0;
- 		if (!cpumask_subset(child->effective_xcpus,
- 				    cs->effective_xcpus))
-@@ -1990,32 +2016,39 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp,
- 		bool remote = is_remote_partition(cp);
- 		bool update_parent = false;
- 
-+		old_prs = new_prs = cp->partition_root_state;
-+
- 		/*
--		 * Skip descendent remote partition that acquires CPUs
--		 * directly from top cpuset unless it is cs.
-+		 * For child remote partition root (!= cs), we need to call
-+		 * remote_cpus_update() if effective_xcpus will be changed.
-+		 * Otherwise, we can skip the whole subtree.
-+		 *
-+		 * remote_cpus_update() will reuse tmp->new_cpus only after
-+		 * its value is being processed.
- 		 */
- 		if (remote && (cp != cs)) {
--			pos_css = css_rightmost_descendant(pos_css);
--			continue;
--		}
-+			compute_effective_exclusive_cpumask(cp, tmp->new_cpus, NULL);
-+			if (cpumask_equal(cp->effective_xcpus, tmp->new_cpus)) {
-+				pos_css = css_rightmost_descendant(pos_css);
-+				continue;
-+			}
-+			rcu_read_unlock();
-+			remote_cpus_update(cp, NULL, tmp->new_cpus, tmp);
-+			rcu_read_lock();
- 
--		/*
--		 * Update effective_xcpus if exclusive_cpus set.
--		 * The case when exclusive_cpus isn't set is handled later.
--		 */
--		if (!cpumask_empty(cp->exclusive_cpus) && (cp != cs)) {
--			spin_lock_irq(&callback_lock);
--			compute_effective_exclusive_cpumask(cp, NULL);
--			spin_unlock_irq(&callback_lock);
-+			/* Remote partition may be invalidated */
-+			new_prs = cp->partition_root_state;
-+			remote = (new_prs == old_prs);
- 		}
- 
--		old_prs = new_prs = cp->partition_root_state;
--		if (remote || (is_partition_valid(parent) &&
--			       is_partition_valid(cp)))
-+		if (remote || (is_partition_valid(parent) && is_partition_valid(cp)))
- 			compute_partition_effective_cpumask(cp, tmp->new_cpus);
- 		else
- 			compute_effective_cpumask(tmp->new_cpus, cp, parent);
- 
-+		if (remote)
-+			goto get_css;	/* Ready to update cpuset data */
-+
- 		/*
- 		 * A partition with no effective_cpus is allowed as long as
- 		 * there is no task associated with it. Call
-@@ -2035,9 +2068,6 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp,
- 		if (is_in_v2_mode() && !remote && cpumask_empty(tmp->new_cpus))
- 			cpumask_copy(tmp->new_cpus, parent->effective_cpus);
- 
--		if (remote)
--			goto get_css;
--
- 		/*
- 		 * Skip the whole subtree if
- 		 * 1) the cpumask remains the same,
-@@ -2098,6 +2128,9 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp,
- 		spin_lock_irq(&callback_lock);
- 		cpumask_copy(cp->effective_cpus, tmp->new_cpus);
- 		cp->partition_root_state = new_prs;
-+		if (!cpumask_empty(cp->exclusive_cpus) && (cp != cs))
-+			compute_effective_exclusive_cpumask(cp, NULL, NULL);
-+
- 		/*
- 		 * Make sure effective_xcpus is properly set for a valid
- 		 * partition root.
-@@ -2184,7 +2217,14 @@ static void update_sibling_cpumasks(struct cpuset *parent, struct cpuset *cs,
- 						  parent);
- 			if (cpumask_equal(tmp->new_cpus, sibling->effective_cpus))
- 				continue;
-+		} else if (is_remote_partition(sibling)) {
-+			/*
-+			 * Change in a sibling cpuset won't affect a remote
-+			 * partition root.
-+			 */
-+			continue;
- 		}
-+
- 		if (!css_tryget_online(&sibling->css))
- 			continue;
- 
-@@ -2241,8 +2281,9 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 		 * trialcs->effective_xcpus is used as a temporary cpumask
- 		 * for checking validity of the partition root.
- 		 */
-+		trialcs->partition_root_state = PRS_MEMBER;
- 		if (!cpumask_empty(trialcs->exclusive_cpus) || is_partition_valid(cs))
--			compute_effective_exclusive_cpumask(trialcs, NULL);
-+			compute_effective_exclusive_cpumask(trialcs, NULL, cs);
- 	}
- 
- 	/* Nothing to do if the cpus didn't change */
-@@ -2315,19 +2356,13 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 		 * Call remote_cpus_update() to handle valid remote partition
- 		 */
- 		if (is_remote_partition(cs))
--			remote_cpus_update(cs, xcpus, &tmp);
-+			remote_cpus_update(cs, NULL, xcpus, &tmp);
- 		else if (invalidate)
- 			update_parent_effective_cpumask(cs, partcmd_invalidate,
- 							NULL, &tmp);
- 		else
- 			update_parent_effective_cpumask(cs, partcmd_update,
- 							xcpus, &tmp);
--	} else if (!cpumask_empty(cs->exclusive_cpus)) {
--		/*
--		 * Use trialcs->effective_cpus as a temp cpumask
--		 */
--		remote_partition_check(cs, trialcs->effective_xcpus,
--				       trialcs->effective_cpus, &tmp);
- 	}
- 
- 	spin_lock_irq(&callback_lock);
-@@ -2379,8 +2414,15 @@ static int update_exclusive_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 	if (cpumask_equal(cs->exclusive_cpus, trialcs->exclusive_cpus))
- 		return 0;
- 
--	if (*buf)
--		compute_effective_exclusive_cpumask(trialcs, NULL);
-+	if (*buf) {
-+		trialcs->partition_root_state = PRS_MEMBER;
-+		/*
-+		 * Reject the change if there is exclusive CPUs conflict with
-+		 * the siblings.
-+		 */
-+		if (compute_effective_exclusive_cpumask(trialcs, NULL, cs))
-+			return -EINVAL;
-+	}
- 
- 	/*
- 	 * Check all the descendants in update_cpumasks_hier() if
-@@ -2411,8 +2453,8 @@ static int update_exclusive_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 			if (invalidate)
- 				remote_partition_disable(cs, &tmp);
- 			else
--				remote_cpus_update(cs, trialcs->effective_xcpus,
--						   &tmp);
-+				remote_cpus_update(cs, trialcs->exclusive_cpus,
-+						   trialcs->effective_xcpus, &tmp);
- 		} else if (invalidate) {
- 			update_parent_effective_cpumask(cs, partcmd_invalidate,
- 							NULL, &tmp);
-@@ -2420,12 +2462,6 @@ static int update_exclusive_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 			update_parent_effective_cpumask(cs, partcmd_update,
- 						trialcs->effective_xcpus, &tmp);
- 		}
--	} else if (!cpumask_empty(trialcs->exclusive_cpus)) {
--		/*
--		 * Use trialcs->effective_cpus as a temp cpumask
--		 */
--		remote_partition_check(cs, trialcs->effective_xcpus,
--				       trialcs->effective_cpus, &tmp);
- 	}
- 	spin_lock_irq(&callback_lock);
- 	cpumask_copy(cs->exclusive_cpus, trialcs->exclusive_cpus);
-@@ -2806,17 +2842,6 @@ static int update_prstate(struct cpuset *cs, int new_prs)
- 	if (alloc_cpumasks(NULL, &tmpmask))
- 		return -ENOMEM;
- 
--	/*
--	 * Setup effective_xcpus if not properly set yet, it will be cleared
--	 * later if partition becomes invalid.
--	 */
--	if ((new_prs > 0) && cpumask_empty(cs->exclusive_cpus)) {
--		spin_lock_irq(&callback_lock);
--		cpumask_and(cs->effective_xcpus,
--			    cs->cpus_allowed, parent->effective_xcpus);
--		spin_unlock_irq(&callback_lock);
--	}
--
- 	err = update_partition_exclusive(cs, new_prs);
- 	if (err)
- 		goto out;
-@@ -3767,7 +3792,6 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- 		remote_partition_disable(cs, tmp);
- 		compute_effective_cpumask(&new_cpus, cs, parent);
- 		remote = false;
--		cpuset_force_rebuild();
- 	}
- 
- 	/*
-diff --git a/tools/testing/selftests/cgroup/test_cpuset_prs.sh b/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-index 400a696a0d21..4e3fabed52da 100755
---- a/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-+++ b/tools/testing/selftests/cgroup/test_cpuset_prs.sh
-@@ -326,8 +326,8 @@ TEST_MATRIX=(
- 				   .      .     X3      P2     .     0 A1:0-2,A2:1-2,XA2:3,XA3:3,A3:3 \
- 								       A1:P0,A3:P2 3"
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3:P2 \
--				   .      .     X3      .      .     0 A1:0-3,A2:1-3,XA2:3,XA3:3,A3:2-3 \
--								       A1:P0,A3:P-2"
-+				   .      .     X3      .      .     0 A1:0-2,A2:1-2,XA2:3,XA3:3,A3:3,XA3:3 \
-+								       A1:P0,A3:P2 3"
- 	" C0-3:X2-3:S+ C1-3:X2-3:S+ C2-3:X2-3:P2 \
- 				   .     X4      .      .      .     0 A1:0-3,A2:1-3,A3:2-3,XA1:4,XA2:,XA3 \
- 								       A1:P0,A3:P-2"
--- 
-2.48.1
+>=20
+> >  		else
+> >  			status =3D HV_STATUS_INVALID_PARAMETER;
+> >  	} else {
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index fec2f18679e3..2def8b8794ee 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -1582,14 +1582,14 @@ static int hv_free_page_report(struct page_repo=
+rting_dev_info *pr_dev_info,
+> >  	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+> >  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order)=
+);
+> >  	local_irq_save(flags);
+> > -	hint =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +
+> > +	hv_hvcall_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
+>=20
+> We should ensure the returned batch size is large enough for
+> "nents".
+
+OK, right.  That test would replace the WARN_ON_ONCE() based on nents.
+
+>=20
+> >  	if (!hint) {
+> >  		local_irq_restore(flags);
+> >  		return -ENOSPC;
+> >  	}
+> >
+> >  	hint->heat_type =3D HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> > -	hint->reserved =3D 0;
+> >  	for_each_sg(sgl, sg, nents, i) {
+> >  		union hv_gpa_page_range *range;
+> >
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> > index 9804adb4cc56..a6b1cdfbc8d4 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -293,7 +293,7 @@ void __init hv_get_partition_id(void)
+> >  	u64 status, pt_id;
+> >
+> >  	local_irq_save(flags);
+> > -	output =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	hv_hvcall_inout(NULL, 0, &output, sizeof(*output));
+> >  	status =3D hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+> >  	pt_id =3D output->partition_id;
+> >  	local_irq_restore(flags);
+> > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> > index 2fae18e4f7d2..5c580ee1c23f 100644
+> > --- a/drivers/hv/hv_proc.c
+> > +++ b/drivers/hv/hv_proc.c
+> > @@ -73,7 +73,8 @@ int hv_call_deposit_pages(int node, u64 partition_id,=
+ u32 num_pages)
+> >
+> >  	local_irq_save(flags);
+> >
+> > -	input_page =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	hv_hvcall_in_array(&input_page, sizeof(*input_page),
+> > +			   sizeof(input_page->gpa_page_list[0]));
+>=20
+> We should ensure the returned batch size is large enough.
+
+OK.
+
+>=20
+> >
+> >  	input_page->partition_id =3D partition_id;
+> >
+> > @@ -124,9 +125,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index=
+, u32 apic_id)
+> >  	do {
+> >  		local_irq_save(flags);
+> >
+> > -		input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> >  		/* We don't do anything with the output right now */
+> > -		output =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > +		hv_hvcall_inout(&input, sizeof(*input), &output, sizeof(*output));
+> >
+> >  		input->lp_index =3D lp_index;
+> >  		input->apic_id =3D apic_id;
+> > @@ -167,7 +167,7 @@ int hv_call_create_vp(int node, u64 partition_id, u=
+32 vp_index, u32 flags)
+> >  	do {
+> >  		local_irq_save(irq_flags);
+> >
+> > -		input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +		hv_hvcall_in(&input, sizeof(*input));
+> >
+> >  		input->partition_id =3D partition_id;
+> >  		input->vp_index =3D vp_index;
+> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> > index 29780f3a7478..44b5e8330d9d 100644
+> > --- a/drivers/hv/hyperv_vmbus.h
+> > +++ b/drivers/hv/hyperv_vmbus.h
+> > @@ -101,7 +101,7 @@ struct hv_input_post_message {
+> >  	u32 reserved;
+> >  	u32 message_type;
+> >  	u32 payload_size;
+> > -	u64 payload[HV_MESSAGE_PAYLOAD_QWORD_COUNT];
+> > +	u64 payload[];
+>=20
+> See my comment above, I'd prefer to keep this how it is.
+>=20
+> >  };
+> >
+> >
+>=20
+> Thanks
+> Nuno
 
