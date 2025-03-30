@@ -1,183 +1,293 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6953524F
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07B48F5B
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743353796; cv=none; b=og0whd7AgaBlvvnCGtkJmvGALN8Mh5JVH3RBchQ2iB4ZT8ibLLZrO1ndrPDhbPR7sFGuOamKjWOnGQ5L7gq0tUHf+yfbLuCsg/oCdLEeU43k+Z0LbnqsspK9jyCMB0hhE8hF/qjncsF3iUFAS2QqLLM6Ov/U7boAlK6oZJWxkhs=
+	t=1743353966; cv=none; b=Yz+g7ogvgoH22+6pWy9HFGJ+DR6Q8wurfPgQK8aoM5tXu5sPcJc5uECTWP25lzAj7vZ018xHQR+HyaJRMom/t54g14MUBuMvc6b7mrSilaIgmdTDxRlBkBURU1vTROP8XTxnr3mfSa8X5RzWMg7YRi1aqkI6KGwa7hBcwB2Ukm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743353796; c=relaxed/simple;
-	bh=ugx3iFmuhrANKSUvnjf2pFMuge9oTbaiSz/oMFsEtNU=;
+	s=arc-20240116; t=1743353966; c=relaxed/simple;
+	bh=L+Ch126l1E8VN++Dx7jTJTrhsULldQUHnKQy3Ih2m08=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJTYW0dUNeWoJFXtyEWa8qapNgKAXEfN5n7pBHLQgnh/iCyh2owlVhYq0n0gRFlIb8veKWAP7sIpu2rLyWwVM5jbF2JYcnODTYkL55aSDt9EOQzG9KDdZuNo4tjq6MfOtyAAFvMNlegpzJt6SDqBQKZ1x/0ftX54ucQpYIjQJ1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j4sCcTDx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsQlOBADXzJnt8qK6Ok9z1jk8KOjWCERlQb8H8ZgWwtgm3K/1L/+OagoaGuzz8iivpL1clfTCygUkkKQm1VwHoTFQe264Ba6jjIs1qHUf5feiTrSG2uFX2WZFWKv1nsorJK9n/033AgEfQtwkUOISwTwzdxfacLmsXa0CHKkVpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iYWBVoXU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j4sCcTDx"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UAUJwM020960
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m7uokHfqZ4KRFTDcfVljxqYCazuqvkk8tCDZ9P6+Ur8=; b=j4sCcTDxDD11AWz8
-	jxlqoWdTDZac9TtrI4Qvw1w+XhmJhlbPvaHkIrwdQ6ABhGFAbL34iuj/EjtWR3Cy
-	nGX69tG8XZmdF1SLaLBvjmbtxjLXpXxHuQn0PLoEKESr4lNv5LFGvDA75d5Ebi4I
-	TRhseTX5kz42aRzaiKX6cQQLO6Xp0wsbWHV55hWRe4+akFv17moNzlhrp5vdOHcO
-	MoWN/5YJFznDjaZQSuJokjc6Wb0uZDGmfcvISbxuIuPWJidWSEkU4tkMPvDlzSrn
-	C0hwmigcmYPeFYsNvPkUdgGb4mbtNSroKPJj6aS8CXIKHxdOb5L90liftzJ0CdvS
-	bq9UeA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa1ntedu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 16:56:33 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c0a3ff7e81so691169985a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:56:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYWBVoXU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743353963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o3t3cKdFvQ9kSTO6AkCwvmYi+EYplfurO1UOS5Rdldo=;
+	b=iYWBVoXU6nG0tTObS6zuLPdGl8lDH8o2PCx/xJ+3MC/KE/7hQH6uFH4tFPgobPZhyQe1xb
+	boG3tH5lMAt9VbyuMykqNtsjTqdWA5XOfiRZyN6zQFtJpnj6XT4EWzfLfjUNxrjVFpXllV
+	QzgM6Q0ZKcmeUML/xujsuGw7foKnYko=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-Fq8yrLkjND6_ddyB1qtnng-1; Sun, 30 Mar 2025 12:59:22 -0400
+X-MC-Unique: Fq8yrLkjND6_ddyB1qtnng-1
+X-Mimecast-MFC-AGG-ID: Fq8yrLkjND6_ddyB1qtnng_1743353961
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so27073755e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 09:59:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743353792; x=1743958592;
+        d=1e100.net; s=20230601; t=1743353961; x=1743958761;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m7uokHfqZ4KRFTDcfVljxqYCazuqvkk8tCDZ9P6+Ur8=;
-        b=X4cgSSP0JQmu4gdZI4Zu1NjRiukTfRD/wlv75Hxp8Jwj7U/0OiF2R7S1hiSXdYXYIg
-         +7EWd4CGqWh4TxJ3Qkv266UOrmKDHaCuRMbSjD+eLCFyr5Rsoz9h1ji7X7l3zVIQN3Ui
-         ssXT6wTi1kz7cPxNlYI6AM/KSsZc0cKy9WfIr/hJo9m2qQLg4VuMaxQqebX2mo1QC4dq
-         693JyNKIbrh6VQEsJwJt6g+b6ut5fUFTBosiA3u11y6eZqEXTEKZk3zpaV2p08ZeKqxQ
-         2N7TI9F20xExNQ6fW7YSkxwAnwvnz623BIFHGFV1ENH7CWbydWVIkkvh3kdvEOGxjrJr
-         8RRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFhZ1yobZSUwMBvSDmqXLCCZkA4pt2U3/1Fao1I5K5alOwBQTF8/o5gRYglWtuPDhWcHH8dCYiB413R2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKV3YWpBGDpU7hOJPJu1NkaMnSqfalFSsel3Hlx3vlgMKtNbpa
-	FxK8oPdA6shLMoYpsRWNNGfGOKhJ/q3WKVe+GMCG50DdblzBEwWcyeaLLyr3mMkId/ujwwMmver
-	0Nw8/P0YLVYv8noW6MqgB3GDfeAWgE/xqHRAxuHiebNr7lz22v8w5SdO3NlfL0lw=
-X-Gm-Gg: ASbGncsXdSVAhOVokrHKvjmJWjI0rUoQDuJ/4+u/WABTMhX5YoiBdoOYU/02kGURmTq
-	k7uT9hpnd3F8WsB/3SkeiRFvoCLd1lAkw2iLP6tCN6IlFUfFL0kWxJw5PsFcpeQwcu8gJHTKHHW
-	hpZarKY5WKc5ohiNjG98Zr5KXoCz56wpOjWi/RIaOf9VLzQyoBFIVT8qNG0aT08eVtBZIaJF2E2
-	K9RJ2Nj0op/+LC/x5L8iRh4Nf1AqXQ8zC1w0Yvb221YsuHVfLQXdpvmX55Wqf3V1g98VwwKR5Nq
-	bSLefSNCFhNAon2AQabbceoluPUdiG1VwBa0bf2FeMnjvSLXXAJr1HnM2P4UQo10Pc/9sLtVXXu
-	JMbs=
-X-Received: by 2002:a05:620a:294b:b0:7c5:55f9:4bcc with SMTP id af79cd13be357-7c690875438mr914929885a.44.1743353792245;
-        Sun, 30 Mar 2025 09:56:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAGROZQHrobik1sT64wznHTJFjoetxVmMUgkrcVfDA3ekun6awwmeTzczpF8OfYcFB05B4HA==
-X-Received: by 2002:a05:620a:294b:b0:7c5:55f9:4bcc with SMTP id af79cd13be357-7c690875438mr914927785a.44.1743353791853;
-        Sun, 30 Mar 2025 09:56:31 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095a365asm932303e87.250.2025.03.30.09.56.28
+        bh=o3t3cKdFvQ9kSTO6AkCwvmYi+EYplfurO1UOS5Rdldo=;
+        b=RSBRGLzRdTUpAcd+ZNaDql/B5E1FJPjFFhkw3nYep1fyAWyy9foDyjm2G+eVzn73sC
+         wKzBhCc31vg1xSFrRdSKL2cpvOQDv61i5G3tbqIlMeChdzax0nVzyybDaXyW8lVAP6pl
+         uVQExP2LpAXBdICGS2FZa0byxgKt1vW4Rbe8o4HwVA712VWULKNhuToJ2ifECDAdiJXi
+         6XGEWsSne2y4fi+Eucyc38MYHZhdoFfTcok+OZK3tMqnJz1No2xH+nfpl6qzPo+6QAjT
+         1pbTZH8c+CzsrTi7fRit19RdpML5CRkbcievurDwEbYTxkfAnSmYnmHJRrP+0mKkl3yJ
+         n/wA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMvtRaE1QqRmUtpguZHw9StX0xsa3Ouj8s+7lv2P6D/VfRPLwesqojQxm6rTPT7Nrzo5Rq7xX69MwvIsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNJ5lpx/ewSa1i7hbKXYzkbbqL1i+1QvXxpoU4Qp4iUYLMwlrm
+	30NFCck7QAth7xToheFG2JuNYEkQ3rk6hC8SDhamVPz0PxmTb/dGHYVfSpeJb9FwVZ51eoIpFpK
+	fhNOk11Yr6VPPN5giRjlnJ5t7WICnOnXncy0fdivDkRerEfr9Xtv1tvZPrBlbKA==
+X-Gm-Gg: ASbGncuVOo2mwfk2A/2zKpcFAMg6vQT95bSzAShFzyWFZkQez0I6cRhGLy0Eg6RApWI
+	s5OMgGsLsPybbHlKiooJk/kSVYjtT9DVeQKKMoOKUvYS9sJEc1IMqApEmnxqLY13jCu3PS+ddaD
+	5bNijd9ROWLcMneH9juXLhoQ2bkByelkzApuej6rvhWcpafcm6/qSkaCMP1W+0TFG6egZP2Tuoo
+	0lInG0NwFzZ4ztQ8t9MgDmN78cyDqaZE/ZQP5SD/qDKzQGmjLzQmrzE00YMGxbCewy2Gktm6Lfo
+	IbEcS3rybw==
+X-Received: by 2002:a05:600c:3b1a:b0:43c:f16a:641e with SMTP id 5b1f17b1804b1-43db61d774emr47821775e9.6.1743353960938;
+        Sun, 30 Mar 2025 09:59:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+p9VLRRjFT3w4qBD/7B0LlHwO9LmFFwBhLcfryqChirTqXeZbU3Dh3SrxX6aYrpGFJgo00w==
+X-Received: by 2002:a05:600c:3b1a:b0:43c:f16a:641e with SMTP id 5b1f17b1804b1-43db61d774emr47821495e9.6.1743353960480;
+        Sun, 30 Mar 2025 09:59:20 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02f9csm97569695e9.26.2025.03.30.09.59.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 09:56:29 -0700 (PDT)
-Date: Sun, 30 Mar 2025 19:56:26 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Yongbang Shi <shiyongbang@huawei.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>, xinliang.liu@linaro.org,
-        tiantao6@hisilicon.com, maarten.lankhorst@linux.intel.com,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-        kong.kongxinwei@hisilicon.com, liangjian010@huawei.com,
-        chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com,
-        shenjian15@huawei.com, shaojijie@huawei.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector
- info and EDID by using AUX channel
-Message-ID: <4kzdu5otwfqh6segxrkcxc3abuswa56k3aopj24m4cz2ay2by7@4m3o7y6kjsnd>
-References: <ff11c8ac-7eb4-42cb-86d3-ad9924c9374b@huawei.com>
- <87jz8ea6zq.fsf@intel.com>
- <8ee961ca-0d3c-487d-a672-82714ee56743@huawei.com>
- <875xjw87dm.fsf@intel.com>
- <a8599ca0-9a50-453e-8986-f8fae5aa9160@huawei.com>
- <87v7ru6bfk.fsf@intel.com>
- <51bae617-cfc7-43f9-968e-5f2a3ad9af40@huawei.com>
- <87pli14fgh.fsf@intel.com>
- <20250328-hopping-ibis-of-gaiety-f7cac3@houat>
- <808ab7db-b42d-4510-8b07-99ed96aef1f0@huawei.com>
+        Sun, 30 Mar 2025 09:59:18 -0700 (PDT)
+Date: Sun, 30 Mar 2025 12:59:13 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Claire Chang <tientzu@chromium.org>, Rob Herring <robh+dt@kernel.org>,
+	mpe@ellerman.id.au, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	boris.ostrovsky@oracle.com, jgross@suse.com,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	heikki.krogerus@linux.intel.com, peterz@infradead.org,
+	benh@kernel.crashing.org, grant.likely@arm.com, paulus@samba.org,
+	mingo@kernel.org, sstabellini@kernel.org,
+	Saravana Kannan <saravanak@google.com>, xypron.glpk@gmx.de,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+	xen-devel@lists.xenproject.org, Thierry Reding <treding@nvidia.com>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	Nicolas Boichat <drinkcat@chromium.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	"list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Robin Murphy <robin.murphy@arm.com>, hch@infradead.org,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	virtualization@lists.linux.dev, graf@amazon.de
+Subject: Re: Using Restricted DMA for virtio-pci
+Message-ID: <20250330125637-mutt-send-email-mst@kernel.org>
+References: <20210209062131.2300005-1-tientzu@chromium.org>
+ <979b6a34ca5724ced1d4871b58bf227065d7da57.camel@infradead.org>
+ <20250321142947-mutt-send-email-mst@kernel.org>
+ <d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org>
+ <8e7084b04e5c0456c0ff32ea131a199c6af763cd.camel@infradead.org>
+ <20250330093532-mutt-send-email-mst@kernel.org>
+ <09fc164ebcfd893ffd67d1b224d6e1c5e5772ee0.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <808ab7db-b42d-4510-8b07-99ed96aef1f0@huawei.com>
-X-Proofpoint-ORIG-GUID: -YIKx4HyChJqTmMuuRJFfSPyRlbdi8fN
-X-Proofpoint-GUID: -YIKx4HyChJqTmMuuRJFfSPyRlbdi8fN
-X-Authority-Analysis: v=2.4 cv=MPlgmNZl c=1 sm=1 tr=0 ts=67e977c1 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=i0EeH86SAAAA:8 a=KKAkSRfTAAAA:8 a=yBIrBa1NPDpUKAAkRtsA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-30_08,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 clxscore=1015
- bulkscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503300118
+In-Reply-To: <09fc164ebcfd893ffd67d1b224d6e1c5e5772ee0.camel@infradead.org>
 
-On Sat, Mar 29, 2025 at 02:12:56PM +0800, Yongbang Shi wrote:
-> > On Fri, Mar 28, 2025 at 12:28:14PM +0200, Jani Nikula wrote:
-> > > On Fri, 28 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
-> > > > > On Thu, 27 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
-> > > > > > åœ¨ 2025/3/26 17:32, Jani Nikula å†™é“:
-> > > > > > > On Tue, 25 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
-> > > > > > > > > On Mon, 24 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
-> > > > > > > > > > > On Wed, 19 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
-> > > > > > > > > > > > From: Baihan Li <libaihan@huawei.com>
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Add registering drm_aux and use it to get connector edid with drm
-> > > > > > > > > > > > functions. Add ddc channel in connector initialization to put drm_aux
-> > > > > > > > > > > > in drm_connector.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Signed-off-by: Baihan Li <libaihan@huawei.com>
-> > > > > > > > > > > > Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-> > > > > > > > > > > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > > > > > > > > ---
-> > > > > > > > > > > > ChangeLog:
-> > > > > > > > > > > > v6 -> v7:
-> > > > > > > > > > > >        - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
-> > > > > > > > > > > I don't understand this, and I did not suggest such a thing.
-> > > > > > > > > > > 
-> > > > > > > > > > > BR,
-> > > > > > > > > > > Jani.
-> > > > > > > > > > > 
-> > > > > > > > > > Hi Jani,
-> > > > > > > > > > 
-> > > > > > > > > > Is the modification of v8 correct?
-> > > > > > > > > I never received that for whatever reason.
-> > > > > > > > Here's the link: https://lore.kernel.org/all/20250320101455.2538835-1-shiyongbang@huawei.com/
-> > > > > > > Thanks.
-> > > > > > > 
-> > > > > > > The EDID handling looks fine.
-> > > > > > > 
-> > > > > > > AFAICT you leak dp->aux.name though.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > BR,
-> > > > > > > Jani.
-> > > > > > Thanks for for reminding me, actually the dp->aux.name was written because I misunderstood what you meant in V7,
-> > > > > > and I deleted it in V8.
-> > > > > This is in the link you posted:
+On Sun, Mar 30, 2025 at 04:07:56PM +0100, David Woodhouse wrote:
+> On Sun, 2025-03-30 at 09:42 -0400, Michael S. Tsirkin wrote:
+> > On Fri, Mar 28, 2025 at 05:40:41PM +0000, David Woodhouse wrote:
+> > > On Fri, 2025-03-21 at 18:42 +0000, David Woodhouse wrote:
 > > > > > 
-> > > > > +	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
-> > > > > 
-> > > > Hi Jani,
+> > > > > I don't mind as such (though I don't understand completely), but since
+> > > > > this is changing the device anyway, I am a bit confused why you can't
+> > > > > just set the VIRTIO_F_ACCESS_PLATFORM feature bit?  This forces DMA API
+> > > > > which will DTRT for you, will it not?
 > > > > 
-> > > > I got it. I think I can change it to devm_kasprintf() in next bug fix patch, is that ok?
-> > > Maybe. I don't have the time to look into hibmc details.
-> > I don't either, but it looks suspicious to me. devm_kasprintf will be
-> > freed when the device will be removed, but the DP Aux bus is probably
-> > staying for a bit longer?
+> > > > That would be necessary but not sufficient. ...
 > > 
-> > Maxime
+> > could you explain pls?
 > 
-> Hi Ripard,
+> There was more to that in the previous email which I elided for this
+> followup.
 > 
-> I will bind it to my hibmc device, and aux_unregister is in early_unregister callback of dp's connector_funcs,
-> which is before the hibmc_pci_remove(), so I think it work good.
+> https://lore.kernel.org/all/d1382a6ee959f22dc5f6628d8648af77f4702418.camel@infradead.org/
+> 
+> > > My first cut at a proposed spec change looks something like this. I'll
+> > > post it to the virtio-comment list once I've done some corporate
+> > > bureaucracy and when the list stops sending me python tracebacks in
+> > > response to my subscribe request.
+> > 
+> > the linux foundation one does this? maybe poke at the admins.
+> > 
+> > > In the meantime I'll hack up some QEMU and guest Linux driver support
+> > > to match.
+> > > 
+> > > diff --git a/content.tex b/content.tex
+> > > index c17ffa6..1e6e1d6 100644
+> > > --- a/content.tex
+> > > +++ b/content.tex
+> > > @@ -773,6 +773,9 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved Feature Bits}
+> > >  Currently these device-independent feature bits are defined:
+> > >  
+> > >  \begin{description}
+> > > +  \item[VIRTIO_F_SWIOTLB (27)] This feature indicates that the device
+> > > +  provides a memory region which is to be used for bounce buffering,
+> > > +  rather than permitting direct memory access to system memory.
+> > >    \item[VIRTIO_F_INDIRECT_DESC (28)] Negotiating this feature indicates
+> > >    that the driver can use descriptors with the VIRTQ_DESC_F_INDIRECT
+> > >    flag set, as described in \ref{sec:Basic Facilities of a Virtio
+> > > @@ -885,6 +888,10 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved Feature Bits}
+> > >  VIRTIO_F_ACCESS_PLATFORM is not offered, then a driver MUST pass only physical
+> > >  addresses to the device.
+> > >  
+> > > +A driver SHOULD accept VIRTIO_F_SWIOTLB if it is offered, and it MUST
+> > > +then pass only addresses within the Software IOTLB bounce buffer to the
+> > > +device.
+> > > +
+> > >  A driver SHOULD accept VIRTIO_F_RING_PACKED if it is offered.
+> > >  
+> > >  A driver SHOULD accept VIRTIO_F_ORDER_PLATFORM if it is offered.
+> > > @@ -921,6 +928,10 @@ \chapter{Reserved Feature Bits}\label{sec:Reserved Feature Bits}
+> > >  A device MAY fail to operate further if VIRTIO_F_ACCESS_PLATFORM is not
+> > >  accepted.
+> > >  
+> > > +A device MUST NOT offer VIRTIO_F_SWIOTLB if its transport does not
+> > > +provide a Software IOTLB bounce buffer.
+> > > +A device MAY fail to operate further if VIRTIO_F_SWIOTLB is not accepted.
+> > > +
+> > >  If VIRTIO_F_IN_ORDER has been negotiated, a device MUST use
+> > >  buffers in the same order in which they have been available.
+> > >  
+> > > diff --git a/transport-pci.tex b/transport-pci.tex
+> > > index a5c6719..23e0d57 100644
+> > > --- a/transport-pci.tex
+> > > +++ b/transport-pci.tex
+> > > @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
+> > >  \item ISR Status
+> > >  \item Device-specific configuration (optional)
+> > >  \item PCI configuration access
+> > > +\item SWIOTLB bounce buffer
+> > >  \end{itemize}
+> > >  
+> > >  Each structure can be mapped by a Base Address register (BAR) belonging to
+> > > @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
+> > >  #define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
+> > >  /* Vendor-specific data */
+> > >  #define VIRTIO_PCI_CAP_VENDOR_CFG        9
+> > > +/* Software IOTLB bounce buffer */
+> > > +#define VIRTIO_PCI_CAP_SWIOTLB           10
+> > >  \end{lstlisting}
+> > >  
+> > >          Any other value is reserved for future use.
+> > > @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:Virtio
+> > >  The driver MUST qualify the \field{vendor_id} before
+> > >  interpreting or writing into the Vendor data capability.
+> > >  
+> > > +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virtio
+> > > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > > +Software IOTLB bounce buffer capability}
+> > > +
+> > > +The optional Software IOTLB bounce buffer capability allows the
+> > > +device to provide a memory region which can be used by the driver
+> > > +driver for bounce buffering. This allows a device on the PCI
+> > > +transport to operate without DMA access to system memory addresses.
+> > > +
+> > > +The Software IOTLB region is referenced by the
+> > > +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
+> > > +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFORM
+> > > +capability, if negotiated.
+> > 
+> > 
+> > why not? an optimization?
+> > A mix of swiotlb and system memory might be very challenging from POV
+> > of ordering.
+> 
+> Conceptually, these addresses are *on* the PCI device. If the device is
+> accessing addresses which are local to it, they aren't subject to IOMMU
+> translation/filtering because they never even make it to the PCI bus as
+> memory transactions.
+> 
+> > 
+> > > +
+> > > +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
+> > > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > > +Software IOTLB bounce buffer capability}
+> > > +
+> > > +Devices which present the Software IOTLB bounce buffer capability
+> > > +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
+> > > +
+> > > +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
+> > > +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
+> > > +Software IOTLB bounce buffer capability}
+> > > +
+> > > +The driver SHOULD use the offered buffer in preference to passing system
+> > > +memory addresses to the device.
+> > 
+> > Even if not using VIRTIO_F_SWIOTLB? Is that really necessary?
+> 
+> That part isn't strictly necessary, but I think it makes sense, for
+> cases where the SWIOTLB support is an *optimisation* even if it isn't
+> strictly necessary.
+> 
+> Why might it be an "optimisation"? Well... if we're thinking of a model
+> like pKVM where the VMM can't just arbitrarily access guest memory,
+> using the SWIOTLB is a simple way to avoid that (by using the on-board
+> memory instead, which *can* be shared with the VMM).
+> 
+> But if we want to go to extra lengths to support unenlightened guests,
+> an implementation might choose to just *disable* the memory protection
+> if the guest doesn't negotiate VIRTIO_F_SWIOTLB, instead of breaking
+> that guest.
+> 
+> Or it might have a complicated emulation/snooping of virtqueues in the
+> trusted part of the hypervisor so that it knows which addresses the
+> guest has truly *asked* the VMM to access. (And yes, of course that's
+> what an IOMMU is for, but when have you seen hardware companies design
+> a two-stage IOMMU which supports actual PCI passthrough *and* get it
+> right for the hypervisor to 'snoop' on the stage1 page tables to
+> support emulated devices too....)
+> 
+> Ultimately I think it was natural to advertise the location of the
+> buffer with the VIRTIO_PCI_CAP_SWIOTLB capability and then to have the
+> separate VIRTIO_F_SWIOTLB for negotiation... leaving the obvious
+> question of what a device should do if it sees one but *not* the other.
+> 
+> Obviously you can't have VIRTIO_F_SWIOTLB *without* there actually
+> being a buffer advertised with VIRTIO_PCI_CAP_SWIOTLB (or its
+> equivalent for other transports). But the converse seemed reasonable as
+> a *hint* even if the use of the SWIOTLB isn't mandatory.
 
-No, DRM connectors are a part of the DRM framework and can potentially
-outlive the underlying device.
+OK but I feel it's more work than you think, so we really need
+a better reason than just "why not".
+
+For example, it's not at all clear to me how the ordering is
+going to work if buffers are in memory but the ring is swiotlb
+or the reverse. Ordering will all be messed up.
 
 -- 
-With best wishes
-Dmitry
+MST
+
