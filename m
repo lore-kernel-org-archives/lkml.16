@@ -1,77 +1,59 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85F646B5;
-	Sun, 30 Mar 2025 14:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848C41EA65;
+	Sun, 30 Mar 2025 14:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743345182; cv=none; b=U8UBREV+OmM+ApmV1Eiyp/8e2Vyv5lVlailO/9EUWOhSo245r2QtWgm1VDnmrzOoa2WVaxLwWBCUWoXLw2vuNZxnD96yUwTeacrCtlZrMjqSuCZN/lvSAOWJ649+Mfbzz3iktPsOmLP6rRAO0FCKw6SOjsoT8BWhrQyUZul1bqg=
+	t=1743346656; cv=none; b=ZXYCv3E7dYeRPmI/FPsLyGxiryorR4qSAPeoefqyG/II4A1ZlCxofxrDdoTSp7MGqNjdlI1P6aYDy9aQfOYqvpm42n24kB8H/kHX4U8p3xlHOtL3bKtVxXEOpoh4EuCJBerOH5hPm8bXYqLGTvT29bvpBuNMh2Uavn4C5LN9JX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743345182; c=relaxed/simple;
-	bh=c2+wWjdujv3UHeuwB5Y44qeQdzTMiNxOlvXMxrg+ClE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jqde2deeGSpt4kuHaUgeHOjyJ1whENl+jdzbu+amCcUxB8xasA0K7UPRETGGTXfVAJ7QVOWqM77nY9zu5KJG0viAN17GW2Es5k71GqtF1u1jzFVZ5SKPmISB5Qp3rToDLZ3KBv3Hx0X55afH8DoLYYYcG0kDtZYrxDukWYJR2D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3yhVuzY; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743346656; c=relaxed/simple;
+	bh=paMlcnbsyzixmxEKIk7TpgKIis192RtNpMFqbarKJOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hul3eHLDtYxJ3tSHD5KDGuZiUjH1t/GpQZ9mR6fIKQKpgkUetCXr3SoAiMxOX7W/G+k0HiVIppAC6fCaC8rR540RT73eiGg8dZt5rSgo+5PZT9FT00at6ACvoXzi8c9KM6RZDDo8xDrvuM/jsXDrTeE/iemYFh3Oe0N8286p/7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=gGBtNgWa; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3yhVuzY"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so35389825e9.0;
-        Sun, 30 Mar 2025 07:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743345179; x=1743949979; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDZlBB97sXiBRPJPnnCLtIfRcmpHR+yPzooZ+KfqlxA=;
-        b=j3yhVuzYrt/Y8tRzQ16JcBYm4NQgpm0ip3vFPBKyUWHfIVSoOfSp5rkUn2a+yiEFua
-         2+H+HKVa0aMRy6Jsb6FuMyQxQhKqe5swid0Al3f7yd5icouR/WtuX6qmbh0oXrkzGJMz
-         0IH5pdZqhxHLDHXZZlyIk+OPIcxwFDaK0QTpmDV1mOLMlZ+56PWNsxjOSCtIxOxsV7nx
-         6YdLum0IHRUtAKEMhDSItIj5fMkSmLbo8PbbEieDXgAvgkbs1mrv8Y0LELsVVurhWQ1E
-         1znYAXf+D7WzbwL6mFC1LLpW7dae2pEgQCgc1y963LDKADaL09CejUkQaazHo+m4uXgA
-         vfpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743345179; x=1743949979;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KDZlBB97sXiBRPJPnnCLtIfRcmpHR+yPzooZ+KfqlxA=;
-        b=P3QqzgYNQf95YK1RxTXrJuvMi1+mslAwye+0MdHVIFNUO4n/qubVL908XGZtRQiofL
-         CRyz3J3+jr3sptz1AHYN3ewl99QqAdTBZcCtIUzP4IK6wbT91Ci6j/M+O21JTJxlq499
-         pXA2lTSRLKnC8FdjoRIlSx3PzE7V2Px8nskJOh6T9KSbUao5CnWwtAEc82gvJLspxWok
-         RyEx1crZyBt+qQNoL4Q6byH6oMke1j17tVE59Vqm96dTl9/JdVOJgiZ1NUVjBmSj+vCS
-         n2JcPR3UY6H9cYsNAd+egkAi7l6hcCu1FO8bFZ9WNAa1H0j5rX/s3am0jVufxzjH7QQm
-         dZ6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUJXq+Rccur2AHvvCd8+0J1yqRdpG8amFmnYeDHovFfog0Y4rNO59LXL+gdm6NjMS5q0A+oyoe3Ua1x@vger.kernel.org, AJvYcCX4y5kRg9SBn+l4a3jCyHJe0NcLop9jzyrG7L4tkRes/TUN7RaMLFqE01IMmgsbHXofvDxmZ/lUl9DPuAV7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMssuUtX1ADCju0PPrb9wtnCKZhlD9lJ0GeoSITDasaGoPHtQ/
-	NkeK9lkIT0F8A08fvWk1GbFbmcaLJDsJWB3WC6K983jRw+vjta8J
-X-Gm-Gg: ASbGncsZ/8Ljc9M89rw/CMsgPsTZ/AzX7wogyHLnnpGBqx8CubPqhFzcKf38pAO6Uqq
-	8QwRVUnXGZpwlt6wIkN1avy6ebEkxMrw1u1D/q7vAqOaKxqcWaZxn6LQBuOc1M5jO6wmYliRrYn
-	FoEjvl0OIP8q7qXJdSaTC66ZFF+KV+zRZ51R/jgGmYaHQ/DUgAzvXn8y0+HBthdAp7tFcBRjjDg
-	xHQM5POPEGTPdlr+Hxe0MKO1yr1SkKhyaLTQiqYD498gwq064CTbHDwItzl+RI0EhjfbXQF0U5X
-	uzoX6bra1ihjWD6NlD4vPJs1NzMQns4g0PpWZLXgFjce3EvsOoDd7fQNGZHj
-X-Google-Smtp-Source: AGHT+IHaSWu6Z+1rDc9SQC310UBhA6tjaaU882YzdNUAhxmwTHuuOQ3qnc1Sxxt+8NnSRPc5mpgrvg==
-X-Received: by 2002:a05:600c:1f10:b0:43c:f8fc:f6a6 with SMTP id 5b1f17b1804b1-43e8e3cf6d0mr45291815e9.9.1743345178939;
-        Sun, 30 Mar 2025 07:32:58 -0700 (PDT)
-Received: from toolbox.. ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66363fsm8999934f8f.36.2025.03.30.07.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 07:32:58 -0700 (PDT)
-From: Christian Hewitt <christianshewitt@gmail.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: amlogic: gxlx-s905l-p271: add saradc compatible
-Date: Sun, 30 Mar 2025 14:32:54 +0000
-Message-Id: <20250330143254.3159519-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="gGBtNgWa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743346644; x=1743951444; i=spasswolf@web.de;
+	bh=paMlcnbsyzixmxEKIk7TpgKIis192RtNpMFqbarKJOc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=gGBtNgWaQigjbDZdbhArPRoyl5PvwqghMU8VVCNUeJuS2XrHDtSiJjxotPUqv1O2
+	 N1RMN8z4AkSOsiLDjo8QKOUi4YzC+NyshnXXijTRUR2ywlsUqH2klnH1MEbToBjyf
+	 mb8Gdz8ZMvbePJ2sxQ+JcZQ1Ig5RKuaKIGLKoWvQv0dmgTW7Zzc1eUHiWotViv1x7
+	 zgqdNA7Ro9EtkRfKsQ3n0pNsoUB2X1RbzpDQ3rShB9XSISBrDk3SBCjccOpRHPAfE
+	 QD6FATmLTqx7Z3R/QdQcpFQX7PhDp4D3SxkiibgrcNQdiOdr7vCPS0lUUQ4IYpZqy
+	 +LMVjhFTRqv7dpxCJw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
+ (mrweb006 [213.165.67.108]) with ESMTPSA (Nemesis) id
+ 1Mxpmc-1tC08g1IJ4-00wRcp; Sun, 30 Mar 2025 16:57:24 +0200
+From: Bert Karwatzki <spasswolf@web.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	=?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+	"Daniel Gomez" <da.gomez@kernel.org>,
+	=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>,
+	"Bjorn Helgaas" <helgaas@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-pci@vger.kernel.org,
+	"Ingo Molnar" <mingo@redhat.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	"Dave Hansen" <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends
+Date: Sun, 30 Mar 2025 16:57:17 +0200
+Message-ID: <20250330145719.32280-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <87v7rxzct0.ffs@tglx>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,35 +61,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nkWDZ3wl89O1RHvPpDsRC7wrZxkyQ6Ar8ilNgBDFHoUFD2MBzVs
+ 1nPuJFIQE+DweCB5he01EvPkRIoBrglw4JAuqeK+j/W3pVnn5GXnHymx9dKP7Kw9mEj/IKc
+ 53NhvcKE0M70gKCVKzI0DHtN/RCBJ4CU/a3pFI+KKhabc6ZujcgQsaD8saibq531fJb313o
+ ngyCJ1po4towA43WKAxjg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wJCifl4CpFM=;pIs1w/sJ/84spZPO2nx3agN2Pnx
+ Ae8afovBO+2C+P4j7qkZ9pgPzgAhOgIxrjQTbSs3FvZvqSMxOFa1GjqdsCGhHLmS+rGwJp0OU
+ MUTOCOjyvLotFw5PIxK7yPe3oFmXj+FpeipFrzGVqKkW5rGMKXELshSiQo+roGQQA1/BJV5K3
+ BskBSxNgb1X/Eme532dvlvgGny2myzvVXnbrcxFO84DUwgAJIP2qL4S1E9zvMJ4MKSI0WwJ6a
+ eMpS5tvDgmHoftVHgAimZHaAbImiD9HIK6mXUGtRm5NNnADE3fIu9YMV1Xyppg0Mt0EGk9aPb
+ oFbS8zsafr92I5ut4O81OeNVfsperzs+vzixbHe1/QnC12JS8k/qGc8KZXQAwbpXvWK+RtzkK
+ FxRqQWxdcZykhklJF4NdjYUJwH+EI3jGjKvieKnHRHzJGl07+wC3ynLm2MnMpCwl5CTGsrzmU
+ 1RjyQ+qV4MPzsJbeQAT5OWlQEJcqszewE4y3MRVz/FhkDTkig3cev3MYkoXctX+k35sgznXEi
+ uMasZSj+hi1J1/y/r/r5g3R8EyMSvQFF6mxaBB1LLy9AA3Vc4tAG25Mwmv//ovNKYtI/9gUAg
+ aS3GdPEOvTxGu08TsgCPIHzk9VMluzl1o4pdWU9IE9dY2304pxhjf6eb7OelxSU6UJyfwGpEu
+ zJXhkMAoNirJnAVVGhRWQ9gtBzJQ/01g6I+du8mOa+IGBZeH+hLZcdLFDMWPThuSCSexSlbQC
+ 0QCCUGMe+X7OeOFavH2taPu7OI+O1CgtX2x6iee/okPXNNauQsEmxW/zXvJvMm0clnkJ/THlO
+ vFSLygdTDRjEqpJE47mcZiEom36ssyoI3mi1yFXz7fIvW8hbAKexz/fkTR/rd8KRoadT+fhKv
+ SnCdruPmrJa8PJ4RIyuxk8nlis8rfO0BV4is745M7yd4VRZ764VC3aLc+3QW38IVs25gqmPAU
+ jLn/zGJjcu0ODi0+ju0O0s9LHoW3u3rtrJIZJYDt7ix85CFrE+lpdBjUxpRdolCisnwNj8qEU
+ iSC3io79qQ8jnQ49NVnLRzLRTc/N8dWnkD8Y710xKpnV3Za1gCDzqmqMtNyed2shlFFaojvkb
+ PEXcc2i6tRCqMMnmBYMDw9PzLd+ez0FDSRaaKuqLodZbkOUDvLY8fbNNBOowYRQzlVvW7Topc
+ DgvlX4tX81mWj8B1ZmpDmiTcTRauPdMoPqNjJgPqGo4OeF5DxAGXLGPalRnTXBRyr47x1dCax
+ bg957YOIqkN0Xc7Zb9bBVJQ0VEvn5vwmPvGleEyEa2w17kfPUWMdQUw0Yh5JxDP6zvDFysY7t
+ xPiptEL4ng68xMP1yLr6xBt25fcTB14AzMe35aA8ia8ReZvclaX1b2/CMx/e9ZisNK0RWlza9
+ mTP5V/4/ao+gUm1gK1EaUsDs1NhsAadeIkSzkNrh5Amqs17DD+Q+3Bu0VsX40dTs5tddg1c3/
+ RhqF70w==
 
-Add the saradac node using the meson-gxlx-saradc compatible to ensure
-MPLL clocks are poked and audio output is enabled on the p271 (S905L)
-board.
+This also fixes a timeout error in the nvme driver introduced by commit
+c3164d2e0d1. In linux-next-2025032{5,6} booting hangs in about 50% of boot
+attempts with the message:
+nvme nvme1: I/O tag 4 (1004) QID 0 timeout, completion polled
+nvme nvme0: I/O tag 20 (1014) QID 0 timeout, completion polled
+after some more time I get a message about task udev-worker blocking for more
+than 61 seconds and get dropped to an initramfs shell. I bisected this to
+commit c3164d2e0d1. As this error does not occur in linux-next-20250328, I
+searched for commits that might fix this error and indeed cherrypicking commit
+dbc5d00074fd on top of linux-next-20250326 fixes the issue for me. No xen or
+kvm was used in my case.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
-The meson-gxlx-saradc compatible is now merged via the IIO tree, see [0].                                   
-
-[0] https://patchwork.kernel.org/project/linux-amlogic/cover/20250330101922.1942169-1-martin.blumenstingl@googlemail.com/
-
- arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts b/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
-index 942df754a0ed..1221f4545130 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxlx-s905l-p271.dts
-@@ -38,6 +38,10 @@ mali: gpu@c0000 {
- 	};
- };
- 
-+&saradc {
-+	compatible = "amlogic,meson-gxlx-saradc", "amlogic,meson-saradc";
-+};
-+
- &usb {
- 	dr_mode = "host";
- };
--- 
-2.34.1
-
+Bert Karwatzki
