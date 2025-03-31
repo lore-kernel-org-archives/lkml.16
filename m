@@ -1,189 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D491D514E;
-	Mon, 31 Mar 2025 10:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D731DE3A8;
+	Mon, 31 Mar 2025 10:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417636; cv=none; b=WhmpZqw4QCjNgWox5a+F0kpylUGqd3Mzi5zmFgwg5U6u1GA3GY1j/d7/trxaz7ojEuHpXuC5rf/nojVmSgqZZ5Ov7/nd7hkSYRgCkkX1/eIYQC5nPsebFbArk9CpwlO30xhpfEfM57Wip7cUqhd5RE3J0j15uPpR94WvJ+lYJgk=
+	t=1743417779; cv=none; b=MHr48vGSvlI4leJaBAL02/x1XnB5Ev98qgsd1ygKUZc0YjAPCkRBkZeqRnDi3K7AZmJ5bL0JlQcRj0Y1upIWDFiugPi5UahzpGS8xYNUjPuubX/aoU0shlprYz+ntRyQ4xqkq7rOfTPlOpny+S/7gBqh5NAER3JuOuJJZdhuha0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417636; c=relaxed/simple;
-	bh=xNHvghKTAooo5rUet2CY72pCirZRWaZON5GFTGGSXn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kS5EtBoILvCzGzKQJ/L4olY0xbFEvywgHwOOjBMqId8MG5vo7hoIEtIPsCpF/kYsULcYE+81NaW2p+FUJn7kYeoiraXUSxPvzhDSpzmJIZrUhn/DUuyit3Kt2CTxf/PZ7+WvfmFKcAzGLa59FPRFamK/uLPaDy0vOXD8upQw9uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpgrFv7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743417779; c=relaxed/simple;
+	bh=PP2nLbUR4K+BHOjN3x6gO7ihm2saogOHP8pqQhFxx5o=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=nVVqd1tmZE90vdXqM/f6GFEH3YzHj8+LcK+qFC8Py+z/gigUCXScU0DUd66751x9R0OBoHWZwfeGnYARTjukOlDPcfWqaeSLZSp0Avk9iAm+wBC+Pv4Kyy3mwFpAHcdUTeUgZm8l1EUo9TlJU28Y4g08PfH9X5xFGrqqfOyZua0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BLJcVXfd; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpgrFv7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841BAC4CEE3;
-	Mon, 31 Mar 2025 10:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743417636;
-	bh=xNHvghKTAooo5rUet2CY72pCirZRWaZON5GFTGGSXn4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bpgrFv7/XH6Y2DdGNw/jrtUgbqUcrPo/VpBGiCAx2Td12l45EXOifI1O7FvgvKvsy
-	 mLYJTGz2T2EAMG9x44+7BrlcXDdiU2CTsiz04aIthXkJJl29Chyh+ilA3bqeGWwAlw
-	 I5N7jm8QIQcmL+oTdTcl3waCUsN/W4Xv3JPs8vvtLMAOPVT1rqW6wZZjn9BnxK01oJ
-	 8HgU1Z0wvmsv+Mn8fo5dv2UvCXCuHD0pn1vmX/4l8bzNolxnh2afBMbzQFE5CUIdXP
-	 oE6pRDIsQcOMlMDxIQ4WCFm8S0t/umA3J7ILq1UpludgdcpKfMQRxJg2oQzv2s23g3
-	 2muOKQk71l23Q==
-Date: Mon, 31 Mar 2025 11:40:29 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v5 08/11] iio: accel: adxl345: add activity event
- feature
-Message-ID: <20250331114029.2d828b19@jic23-huawei>
-In-Reply-To: <20250318230843.76068-9-l.rubusch@gmail.com>
-References: <20250318230843.76068-1-l.rubusch@gmail.com>
-	<20250318230843.76068-9-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BLJcVXfd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743417737; x=1744022537; i=markus.elfring@web.de;
+	bh=9roccz9Qx+blLyXus8t6DHy/uRVh48jXrCw8kRAg0H4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=BLJcVXfdn7F6c57YB2ZHtWJofsXQswzqhogdQmbP+S2McdbvUNMcjV61uqmjoffb
+	 IkafM+0es/ktZVqRxHvx/2M6HDYuHsd01yLfsldBUAK5i0DR+8vPtJ7d+MBQwZkSU
+	 i9wtxNez83kkOACxSLhqMrYtcXsPrO2fJgjxlZTijTKHZlnoDugIy9HCSWnp3PJGk
+	 3YtvAmkk9hUi/HKzvBUeD/3Cxpg0xEIcHp3F8hUu6XsMz0+0S2zNF+cpB0WSn4l1i
+	 KoUIO2cdFok0CbORB9jElKjItrwKdJ7muYq0vDID8fERgrVH7z3+7ldGbUeQFPFNU
+	 3TAqevX4wxcaVoVsKQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MRk4e-1tVxhr1N4U-00TWSO; Mon, 31
+ Mar 2025 12:42:17 +0200
+Message-ID: <c29ec6bb-231d-442d-86fc-a767d45a150e@web.de>
+Date: Mon, 31 Mar 2025 12:42:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+To: Abdun Nihaal <abdun.nihaal@gmail.com>, linux-wireless@vger.kernel.org,
+ Kalle Valo <kvalo@kernel.org>, Michael Nemanov <michael.nemanov@ti.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "John W. Linville" <linville@tuxdriver.com>
+References: <20250330104532.44935-1-abdun.nihaal@gmail.com>
+Subject: Re: [PATCH v2] wifi: wl1251: fix memory leak in wl1251_tx_work
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250330104532.44935-1-abdun.nihaal@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:3iERD4b3Yw9llUC5thBKi3u3Gag7Irv/Wl557QXFBK7/RxzamDi
+ 09+ph2b9U2GUznP+jeG3sqs+LuVp0mYmbZt4caAsxyMU0f9L/Uaw99ScE7PqjabGAy/eph+
+ BNswROiax/V+RfxaCOQZwKfCKu8wp0UMdgveM+0UMC4HU4kbfrokPruepP5aJUJIoRv+yuM
+ OundTDu8eyUaTboXioqWA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UEwMep2gVxQ=;1y4Va+sjGwAqmdY3Qdw1bdlnq7v
+ 4N/EbXaiHSmsOuiAGLrLQkKaMdFm/dcRrRuS93pBNj9FYIXUTEoPk+3tp0Hw2wBQzhpeXQv9x
+ nnlR8q/kupqJazZ8CPVdltOHO6fEXK846oyCua7qrx+zaQ+aslpkVaUxSPU7vfU9wJoz7UBsl
+ Oj1rcIOH8xIcAYmrkwGLH/2tgsQe4SfUuonKDyMC7Fdxl+1BVfaEuFHyLEazbUGo/f2/TV60e
+ 6+nU7DuB2KmRK0xeZu/zK4sKYRj06STkZdIuOh0VyqwXxj3eFojE5siHIkFD6Kh90LsM9b73J
+ 3+cgRvuUjvBwC5vBfKxVQ4sBqoPKjj+sBWJEk+ib0aqINvQj3/GWyVLsRaCrjsAxRGlwwL2DL
+ UPJUzQoQnJZ7rl3tFYA4kjfDp+7KV3XbRNZYCUdFBUl2sqwKjrwDYNrfLb2M8iYlFAL6pK2B9
+ UncgiZzxb4k9n2SEzG4HT2+ylSPArUXgTlYR4sJiFITAxn0xbIWLtjO+u5ppCjJbS0IvAnWrl
+ Bgo491kwwoJnyEBrQZQPkQqO0os0Bmacsf3Iy/e6zigFfuGXdCrBsL6GeC3NFy4rbvlRMb/gm
+ t8YLHkSyJlWOy6PkGQqTTQ3rMAsMcUTkyMr1a5JMhv7nTwxWiAOp5yTvQ2MEw2F6D/pG0bhCF
+ NvKpSJ+FCDUvWruzMWWC3taQdExpPD0HEYzC7sXhsAwaxY/dKz8Kf8g2krdkvbxg0d3kVWhhX
+ jJ/orOpaZLbFD8ZLzz+W9MrrE4/oiVjX8WLBEZmnj5eZB8tVdBYqDF5Vqu9Sx9FHoWk1FNE6w
+ n1viIEKEDd9bwqRUXOQH81z6IIdCBHwdGQg+JLQq8H1i/O2dusAL9ge6cGghTiefe4n3qLyDF
+ 2UiEZz1bly1oXr4ZZwD4iKX/0axzBxGwZUeqaCCAG2+Tq+E7Pbh3x56mWlgOZpOmf4+36oaFG
+ MJqVgyc/dU+da2Q/0xX3yHRjF8gZUp72M0pUgSUIgD4AqQuPCzSoUU3s42k5AYd3DXf3xYNgY
+ uoR/TGc66ITvB3N74YJwO9kvG2bKCZwW+xRV/NHmTR72uGrtyzEhCdYOZLP3Zjnt977bYW4uW
+ CpAJyJiUm/JSQ1DjQ7S/Afir2nMDR1eeDJljq942PdJl2o3g9sGFQG4p0OVtaI1L2Q6XM1AWN
+ bKkb/A1uAIRnRY9n3H0LpW8ez4cRth/LFaAy51lfFH/t0GdtGpDkqA9s5PLs8beDNL/3VuftC
+ /5Qj6wFWDPqzdwP7cVwxfpwYQpLA2zHIwk0mtTt3d7kiJA87prJl7U8J/wtEeknBlCRUml6L9
+ VEaI6rNtzfDkzoi69ylZjMeTS4cwJnbgwxX3tRGqdwZjqPuJM4j4rnjW0O4eILbHxhB/31xsP
+ qKONIEvGvYEAlxECbelfL3BOJpL43xFEDMlIxddWZ9x8EQuVUx/s3et22BZ11AY/60FWRuY4E
+ MgvDCgKBHWx5wmVYCGv05Rr32/uc6c7U8HIkiJsnwPUqTfMS5
 
-On Tue, 18 Mar 2025 23:08:40 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> The skb dequeued from tx_queue is lost when wl1251_ps_elp_wakeup fails
 
-> Make the sensor detect and issue interrupts at activity. Activity
-> events are configured by a threshold stored in regmap cache. Initialize
-> the activity threshold register to a reasonable default value in probe.
-> The value is taken from the older ADXL345 input driver, to provide a
-> similar behavior. Reset the activity/inactivity direction enabling
-> register in probe. Reset and initialization shall bring the sensor in a
-> defined initial state to prevent dangling settings when warm restarting
-> the sensor.
-> 
-> Activity, ODR configuration together with the range setting prepare the
-> activity/inactivity hystersesis setup, implemented in a follow up patch.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-
-> +static int adxl345_is_act_inact_en(struct adxl345_state *st,
-> +				   enum iio_modifier axis,
-> +				   enum adxl345_activity_type type, bool *en)
-> +{
-> +	unsigned int regval;
-> +	bool axis_en;
-> +	u32 axis_ctrl;
-> +	int ret;
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &axis_ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (type == ADXL345_ACTIVITY) {
-> +		switch (axis) {
-> +		case IIO_MOD_X:
-> +			axis_en = FIELD_GET(ADXL345_ACT_X_EN, axis_ctrl);
-> +			break;
-> +		case IIO_MOD_Y:
-> +			axis_en = FIELD_GET(ADXL345_ACT_Y_EN, axis_ctrl);
-> +			break;
-> +		case IIO_MOD_Z:
-> +			axis_en = FIELD_GET(ADXL345_ACT_Z_EN, axis_ctrl);
-Same as in earlier patch; axis_en is never used.
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*en = (adxl345_act_int_reg[type] & regval) > 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int adxl345_set_act_inact_en(struct adxl345_state *st,
-> +				    enum iio_modifier axis,
-> +				    enum adxl345_activity_type type,
-> +				    bool cmd_en)
-> +{
-> +	bool axis_en, en;
-> +	unsigned int threshold;
-> +	u32 axis_ctrl = 0;
-> +	int ret;
-> +
-> +	if (type == ADXL345_ACTIVITY) {
-> +		switch (axis) {
-> +		case IIO_MOD_X:
-> +			axis_ctrl = ADXL345_ACT_X_EN;
-> +			break;
-> +		case IIO_MOD_Y:
-> +			axis_ctrl = ADXL345_ACT_Y_EN;
-> +			break;
-> +		case IIO_MOD_Z:
-> +			axis_ctrl = ADXL345_ACT_Z_EN;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	if (cmd_en)
-> +		ret = regmap_set_bits(st->regmap,
-> +				      ADXL345_REG_ACT_INACT_CTRL, axis_ctrl);
-> +	else
-> +		ret = regmap_clear_bits(st->regmap,
-> +					ADXL345_REG_ACT_INACT_CTRL, axis_ctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(st->regmap, adxl345_act_thresh_reg[type], &threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	en = false;
-> +
-> +	if (type == ADXL345_ACTIVITY) {
-> +		axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) > 0;
-The > 0 doesn't add anything as this can't be negative.
-
-Drag declaration of axis_en down here as only used in this block.
-or just combine with previous and next bit as
-		en = (type === ADXL345_ACTIVITY) &&
-		     FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) &&
-		     (threshold > 0);
-
-> +		en = axis_en && threshold > 0;
-> +	}
-> +
-> +	return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
-> +				  adxl345_act_int_reg[type],
-> +				  en ? adxl345_act_int_reg[type] : 0);
-> +}
-> +
->  /* tap */
->  
+                                                                   failed?
 
 
+> with a -ETIMEDOUT error. Fix that by queueing the skb back to tx_queue.
 
-> @@ -1347,6 +1542,14 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
->  		if (ret)
->  			return ret;
->  
-> +		ret = regmap_write(st->regmap, ADXL345_REG_ACT_INACT_CTRL, 0);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, 6);
+Can an other summary phrase be more appropriate for such a software situation?
 
-6 is a fairly random number. Add a comment for why this default.
-
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_TAP, tap_threshold);
->  		if (ret)
->  			return ret;
-
+Regards,
+Markus
