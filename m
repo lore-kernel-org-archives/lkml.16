@@ -1,95 +1,77 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83EE1D63F7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBAD19259E
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409957; cv=none; b=FEf6Yj01kgeDB7admcFLR6gh6jQMEu6VqrCUU0Q1Dm+ZyCryC40D2MVUS6AZBTzFOIj6fJfvigPiNmPXtZ9Te4SiozUI1njU0L0bBE0rLT36ZG0BJo+F5l1FexwW/OwrVGgF48OkMVee7Q8Kzb/Vo+HiNZ+7QeAWIR5UmI3pWoQ=
+	t=1743409986; cv=none; b=mwG1pWZsJkh/eCgezqNsT2i/tEdfbxc9DYJ+50V0TI1JSpZy1FEFl3SqlfpSuyO/eRIfHnng0LrPWqfkyS3y/e0G7ogIK8kq82gjRdbLW088hiGWmE2y2kxUOxrZuhpbelOcARacTGqe7G71fSTO2kPvmiuiiCq1flhRhG+7w9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409957; c=relaxed/simple;
-	bh=LSk+dlqox64Q4e4rKwf3ODiueaI41xX8vDf3gV7VJ+E=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqzzrDMM6gg3b5j2PxkRV0JrkhbZcfMWKNC6loE9zQbHxQW5tskQYdYeJM4JZF9liEgKY3SroDXL6cYvqJHpr1psllLOGZScaWEqFlmk1FBcsNd/J9ETuCWdMI3b+P9qhl9Z0SuwhRI2v/i/jQz9aA/4xTczhju2pxraHuMccd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=igrMAOWV; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743409986; c=relaxed/simple;
+	bh=2Rb5MbgBhl/LXYKGwpqa+Xon91y55iJLtR9YQGBjHd4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=t3Vr+S4Gn7f4TSefVFGnr0q1uog9wsY2wqaYnzx82KESWqmVuOGfxUAgRqGgOGs/FKJjW/4P5P5HcUlsrJXi7qnILc8rQm3Jr9EBuXL2PVkoJxXp2sH2WpWT+NYGKlABbOccgE6RqVFgSwKMoTYBOpIBKAwRwKcbbu2T+ewZtpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=quZaV9tB; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="igrMAOWV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=LSk+
-	dlqox64Q4e4rKwf3ODiueaI41xX8vDf3gV7VJ+E=; b=igrMAOWVfFekRogWtdLY
-	Mm6fvTfU3n17CRWQIyT81TZQMUrrNDNZF7wjyas7Zs7BdkyTJ0xD0zGqscgoDQTJ
-	CHFbfcY6/fm+8Ihf1Gd3nVswq6EgNkl9YmGSiMBE3HdqUzREpOeXr3HBiaGi+dEQ
-	SiL8h0rWdfdSsrKTZecLwdCY2xB0WeFdUNDa3UFgmeC7I1/+dmJ6aP3oIFSoVTq5
-	mO1c3neP32nRgAOD63bGG9sm4fctEIhKrsxZo9WZ6pJPUO/xjkUEdg7R2AqafrhM
-	uItw4RlE28X2zk3JjutWAOV+LHfF/AUaXuueqeX2HLx0DVw4JDlPJpPOFtxnJ4nn
-	ow==
-Received: (qmail 1158313 invoked from network); 31 Mar 2025 10:32:33 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:32:33 +0200
-X-UD-Smtp-Session: l3s3148p1@WBT8Qp8xdsNQ8qei
-Date: Mon, 31 Mar 2025 10:32:33 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] mmc: core: Add support for graceful host removal for
- eMMC/SD
-Message-ID: <Z-pTIYmFXxOBe2xs@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <Z9w5SZmytn5g9SA9@shikoro>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="quZaV9tB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743409972; bh=2Rb5MbgBhl/LXYKGwpqa+Xon91y55iJLtR9YQGBjHd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=quZaV9tB8nWkpZkNyKijHu3btbfTLTnWnDQHV6lUksEr0ZqQk+9/54bMGIpssfE7t
+	 uHUtMl/4ygocXKqm8+gfbClQn0xld/l9HWZVoM+kyno/1XeBfgDgITrpJOerlVmPbd
+	 ciMN6mE48W01AxZzZ5o+TOt3vi7q0vF5Te1mJrAI=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 7FA17EC8; Mon, 31 Mar 2025 16:31:58 +0800
+X-QQ-mid: xmsmtpt1743409918t6ehpvlig
+Message-ID: <tencent_5D89C06E5AA49E40EB8FBFAA6796F6891F07@qq.com>
+X-QQ-XMAILINFO: MB5+LsFw85NoCWsrF4NZy6wGXVRiNjjTZ7AdzGQKAKdUU27Vh+8v4n1OqnfDdE
+	 KK4uy5K/V3dc5LbAvtD3geMvhRosrX1VzhLp8/oxZX0vOBhKJgGu3ayqeRkk9X7NdQOKOf61A8LJ
+	 EViV9mSi9cN6JVIzUeljxFdAcb2ta4ZlG5lBf+0zP410v/a3xmd6auxybeBAwCQpQytUpMoTxOYo
+	 8r/oCwQmwT+WtcAmBN1PNYG0kD0mrl8GuZnKY+xTqs9Y+qBnUDK93FDstbtXteMAF+SKk+LQmgJ5
+	 YALvAI3nqYEhC5drR6aZL5rqfJaqPdozYfR+Y3PCrqV0RLDebIDeYsx+8MZB6R/eym8M5YZs05Nx
+	 enSAN3mAQZhIpk+0rtukDpKQKAW26cXVoV4HARLzFWL4/0eZY82gcHGa+ztB2NCeLAudCp20npPg
+	 ++ZpMi55c8N3TQ+JfHzK06XAHgA2uvnbGma5UBgq0mjGHdRb/2oe5gsSv9xIMW3UGJyL4oS1PWPV
+	 3pvrt3GOA41dJ4PJNIUf7JmpXneeVQaZvPN296du8hOgOJ9FJ/r6I0JW2IuwESyEepVG5GUfuf69
+	 AP7RpxQdFxQPI9wmH9x3j+5njp2RjbLUf4LGim90XCchleDb8UEFWRa0kjO8C+drK4RzqaLykPZV
+	 JoHyx49djdQ7yH+jSv986bFI/QLRoT9Nqxl+Ul7zZ14mErPJfwe9G/kKVZ90ho8Cv3cIpGsiB07L
+	 zDvM53bp5CZgyfz0b0ukKjIjh0g5dBXji5yjxUd0NTM9nQBY/UhCT94KJfyDsyuH6Bsysevdcvxb
+	 yiNl10XMHEj9o0meY+V6Badun17+4202nUtxcdpQxNc+DG/LcHuweVvjA5lapHhOsHo6rUiYQcpH
+	 HndSC2YrN9LgLQtoXPpUpZKlGlKQspDcE8xT3+okeOUCdgTt029PHP7UqyFmxIQ5R3zVlc0Pcsn9
+	 KKtzpVOAzUMCeeNWO0ro36Qi2w82Iv35MXo2/pdkJ4/eKq7yWCO4PO96TcRcow
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+Sender: yeking@red54.com
+From: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>
+To: linux@armlinux.org.uk
+Cc: Yeking@red54.com,
+	andrea.porta@suse.com,
+	ardb@kernel.org,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	will@kernel.org
+Subject: Re: Re: [PATCH] ARM64: Add back and fix support for CMDLINE_EXTEND
+Date: Mon, 31 Mar 2025 08:31:55 +0000
+X-OQ-MSGID: <20250331083155.120735-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z-aWdil-GWFC3c-y@shell.armlinux.org.uk>
+References: <Z-aWdil-GWFC3c-y@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="H2SuczBNSEJZj+2v"
-Content-Disposition: inline
-In-Reply-To: <Z9w5SZmytn5g9SA9@shikoro>
+Content-Transfer-Encoding: 8bit
 
+> This breaks the ability for the user (via the boot loader) to override
+> built-in arguments.
 
---H2SuczBNSEJZj+2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+How does a non-default configuration break the ability you're talking about? If
+you insist, why not remove the non-default CMDLINE_FORCE as well?
 
-
-> Awesome! Thank you. Will surely check it out. Not before next week I am
-> afraid. But already looking forward to testing it!
-
-So, I tested this with a Renesas Spider board (R-Car S4). The three
-cases (shutdown, suspend, unbind) all lead to proper flagging if notify
-can't be used or not. Only the question from patch 2 is left open.
-
-But thank you, this has come a long way :)
-
-
---H2SuczBNSEJZj+2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqUyEACgkQFA3kzBSg
-KbaLmA//UldyM/hVAW4YYDj93tKxOktK8T9DX8DyCxGiVaTBbv+6onVXpJ2S3qp5
-OjwfIQ8MdtG2AvoSRJsACiqgFNDxcv3Tq28JnsOtAwvWcGqeHvWJ9JEUodEdG5/K
-xobw+cYJyVCRgtKpppnN6fGXKTptZ+8q0XEfWeZWvTYoSRekvZbTIEDj8Se5AHJ9
-HiPDTrrz+BkNcXR5a19joItbDZRwEHjwTptSBzvgVLqgTWcYvoPYU5RQfCkGJYVy
-mxpb2KeqMxtJq0Mkzi3qPA5up2jbsx5djWuxrUruxSvsJoBKOiJ5OOkPMKUdHawD
-lT+0folQYVQZElF5DZwC18iP9qXhksXw0/PeAQv6DDDfH0QOWYgk2do/VWkRhJf1
-F/+Hiy3cyREelkMmUBW3sXbl325zyv83TYm3dem809angOqRVCf8faXrqGaP/YXM
-bNUK2t0vJPSIVfqmYCs8dFWs29MjtM5kGUtTaaKo6fFWfwQvwhkPNZsGZ983nKLP
-s2vScJCyd8ohSGyz2q0WxqRarCjgE/tERYx9qMxOuweyhTnVC+d0VMtSHxX/eQyD
-AK/jr6jLkXHsO7+fGI320wgyKBtpR8dbvx35t/wD3kGpmnnzBchLJrcKtpU92jaR
-ZAl9kko5RauxK9/A1aByl7HXeYn/bwxoODRufSwu+2Px0DysERU=
-=3780
------END PGP SIGNATURE-----
-
---H2SuczBNSEJZj+2v--
