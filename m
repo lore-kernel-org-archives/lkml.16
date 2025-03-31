@@ -1,97 +1,123 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from out-16.pe-a.jellyfish.systems (out-16.pe-a.jellyfish.systems [198.54.127.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299CE211299
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64181DF73C;
+	Mon, 31 Mar 2025 13:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743426444; cv=none; b=hm+onsYjMTPEnqT11DwgSApdIXyUYNXOYRsB4k+BCRWzloYXjk3Rt48+3XsSt63pmWZN5IODefH0rsmwQfNeehH3mkeA2JmxJHCUk2sKoNAQHhaxA1H/XgTb8YeM/ih6FiE98jwTkTt8SuHB2ds6IdcWc8wcn4uGnaT1TEzUbYg=
+	t=1743426445; cv=none; b=jRzrTtYc89QC4yg1yUZ4XynhtDLZrX6Czcqde6nF7gmo8zI0RKqcP0c2cnjqaFnVE89zbCsWf0kxBjF1kb7ok113B9T2MMORv42nSWjn/RUmo16VgWOXi9p5uJWldWcdAZXflx6B5Akxp3cm/uF+3IPBkoKgV51FVrPD2ijialw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743426444; c=relaxed/simple;
-	bh=16YwZIoXgnM9i1KCudAoJ/d9NcgG2KIssSVas1YK37s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mWvVt5EDTfZmBI3zo5rnzFIsXtAIAxiUT5NX88aL+MolCIzX3aK+rnGkELeLZPpA6wTotTnt/B6LNcTFTGbacguyQNuGImMapK+q4Bq8Jq5PqELOFt/U/4DUFovLX9j9/htr3fVkxGCH9T9wIBLu4JNsVRiSOqgQNmDP4dRrg2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gsl2Knsa; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743426445; c=relaxed/simple;
+	bh=XAf34DaNZayKTZMezBU2SOnWNVi58X5xnCWEMzzxUdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rk3MHUxe3dXa6sd/vy16eqnOdmMAv5zCg2pxNYUMvB859qEuiMafifxcuz2SFUahSP1TeBSxctbTEnAX+vtYDppWZ8CP3sgDma7WNKpHk1raaVlOi8P5nrMLLg9GJKIDYBpvRUPVNwdujR8LklkdakHyuOrvqI+FjCHq10Z7UFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=TKLOJmIT; arc=none smtp.client-ip=198.54.127.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gsl2Knsa"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d4496a34cdso17450975ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:07:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743426441; x=1744031241; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3ed/Ddyzsa1QN6yzj0LbFuD8MNEjFi7fRrdU4dK99FE=;
-        b=gsl2Knsa2Uwk0CxzHOT5kvv1hUlPdbHPCCTlxgJcfo9I/G0tEZbGwl+OHAtzuQtPWx
-         RAGy0QFGFc1CGdEx+IcgaH0T2fMrGU/zZ3FucCgyOBEOfZHcIIcUlVVt84eC3Vw44juC
-         1KwPZ6K1tTU0x5YigBSByp6IX5GEWvjGokDmzHKZ8nGZ977TksCtRlR/kPelF10N9bZr
-         Ey2amgFvqIENnGA8UgbdhIlJetiJQ47XPShzmSBofkkTQLx6YmqrMxAZjP4mRRODK5zj
-         yiyrzjpQ7zezTJNgyYPn+tyuJP5+jCk+6GF1gHVmlNPl46tGAkRS9nR2DNocmZJoQ9TS
-         ZXHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743426441; x=1744031241;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ed/Ddyzsa1QN6yzj0LbFuD8MNEjFi7fRrdU4dK99FE=;
-        b=iURAvUybBph1pc4HcsCdzgP9Zeg2oeVh+Au2ajByIpJXU31mtyuIN927m9gmgRZ/RF
-         Yjz99vQ7j3y31DcOK8aeYni7yY8RYRO3uO1ZZJiqPyI3QV43qLg9OjYj6SeCyeCEva+g
-         lDFe5TiGZWb5mgGu9tptjeI9Wr+2AyptEPrq5n5Aez5hvnTdG+gabA4Y/KM4Ktlxsn2k
-         EEG/BrWINa5hkbYeHKIBi999dOlfisP8ScjSYF1/F5g+3j0T8xN1rPJyV78bNWnvMeX4
-         GveMUpw/H7fLBBIwsjrJaIMZk/KuJ2xzXAHrnEkedjWbRaLmOEhO04PPrHtMD3VIvdG1
-         0oKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+4MlWhmH9SlVfJBxnnZWWzUFRtQx8eD0nU12Z+7F7ULjJjH+Ognp1Pc5EilJrJMAICvk3aah4ZUwO47c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYwAvH2gtl9y2HrvkNYZ5qf2Mn1Mn+Qeys8+cB3deILJEiAjQX
-	yG7f+kqV0izm3u9onlggQRAWilyCRsCXLA42GI7/ESNRZ2YqCuRergZ9xGRgVd8=
-X-Gm-Gg: ASbGnctoUeh5MzaPPamMWg0WhNBFT4zmaMF6q4RYRdmyXLJiFMoHdVoGPR5Q8vihc5p
-	2godpRJAnR5qDjmrj4tGPZVWZRB1socqgi5p0/oF9Y8Goik8wliKuL/DjlvIkOn21QEnDt3+8Ax
-	p7taK/ADGYUhOLuTE2u2MPTVQafTXKahymbA2HI+Fn/FVaynQ664Mx4r6U4NNHpdl4TVZs1Aek5
-	U16KrdtDfg9B43z/+AKlemfQRqp732a12hiF9W9nxUsnOd25MWEoKoAOI8M4vuuDU6XeoVaZINY
-	cjjriSfWlz2laTS2pp4j1vjIXl++ggyXm6EtlMEsMg==
-X-Google-Smtp-Source: AGHT+IG32Cg6zI9tmakUIJ1DbRmEZpmwRLQi8qjY4xoSKRbxylqUWbU9vadDFdtujdQ/ao3ofcsZDA==
-X-Received: by 2002:a92:ca09:0:b0:3d3:f19c:77c7 with SMTP id e9e14a558f8ab-3d5e09c8d9fmr73771055ab.16.1743426441218;
-        Mon, 31 Mar 2025 06:07:21 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f46471b40fsm1863674173.26.2025.03.31.06.07.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 06:07:20 -0700 (PDT)
-Message-ID: <aa8b9ee9-1787-421c-9914-d3d7c77bd1a2@kernel.dk>
-Date: Mon, 31 Mar 2025 07:07:19 -0600
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="TKLOJmIT"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZRBHT1fDlz4wJq;
+	Mon, 31 Mar 2025 13:07:17 +0000 (UTC)
+Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZRBHT0j32z2Sd0Q;
+	Mon, 31 Mar 2025 09:07:17 -0400 (EDT)
+Received: from mta-09.privateemail.com (localhost [127.0.0.1])
+	by mta-09.privateemail.com (Postfix) with ESMTP id 4ZRBHS6LlKz3hhV8;
+	Mon, 31 Mar 2025 09:07:16 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1743426436;
+	bh=XAf34DaNZayKTZMezBU2SOnWNVi58X5xnCWEMzzxUdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TKLOJmITEmXEBpX+lbpAlM2Dji1iMpPnX5u0rMJHfTPPpDFn28v0BGAY1er+GG1Ve
+	 xT5NvcH+J5ce9CjXHsHmYaVHEEjf4eC9+VirK/idvZB7JE4UpxVPa10Vap/BdkkNNs
+	 yg/Swd77PKX+cweoz85KxjuA5N5j2B/qNPAhMZq/XEHxS/QSF9f6gIAl2f8301b3kq
+	 rVLOVDuaRy0c0PrSXY4g/b2AdWwCfCIYWKTO1RnoUlBa7qAS47tTR3ekii4BRco8kM
+	 2OJlk8OB74RcJt8G8WqZ/U8psvrfNjGzPiuqUaaVwNMoxG/QA98yTGVookS6cu0fYa
+	 B3pYk+p061smA==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-09.privateemail.com (Postfix) with ESMTPA;
+	Mon, 31 Mar 2025 09:07:00 -0400 (EDT)
+Date: Mon, 31 Mar 2025 09:07:03 -0400
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, mdf@kernel.org, hao.wu@intel.com, 
+	yilun.xu@intel.com, trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, michal.simek@amd.com, linux-fpga@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Sam Winchenbach <swinchenbach@arka.org>
+Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
+Message-ID: <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
+References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
+ <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
+ <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
+ <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warning after merge of the block tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Ming Lei <ming.lei@redhat.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250331163734.7dc27905@canb.auug.org.au>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250331163734.7dc27905@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On 3/30/25 11:37 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the block tree, today's linux-next build (htmldocs)
-> produced this warning:
-> 
-> Documentation/block/ublk.rst:353: WARNING: Footnote [#] is not referenced. [ref.footnote]
-> 
-> Introduced by commit
-> 
->   17970209167d ("ublk: document zero copy feature")
+On Mon, Mar 31, 2025 at 02:43:59PM +0200, Krzysztof Kozlowski wrote:
+> On 31/03/2025 14:30, Sam Winchenbach wrote:
+> >>
+> >>> +    type: boolean
+> >>> +    description: If present, the ICAP controller will be enabled when
+> >>> +      the driver probes. This is useful if the fabric is loaded
+> >>> +      during the boot process and contains a core, such as the SEM,
+> >>
+> >> I don't get how this is suitable for DT. If you decide to load the
+> >> fabric from driver, that's driver decision so not DT.
+> > 
+> > Before writing the fabric to the FPGA the driver disables the ICAP, enabling
+> > the PCAP. Once writing is complete it unconditionally disables the PCAP,
+> > enabling the ICAP. This patch just makes it so, depending on the use case,
+> > the ICAP can be enabled at boot. This will not prevent the system from being
+> > able to load a fabric through the driver. I added in this boolean so existing
+> > behavior would be maintained.
+> > 
+> > Do you recommend another approach such as writing to a sysfs attribute to
+> > switch from PCAP to ICAP?
+> Not sure yet. Can't you check the status of ICAP before programming and
+> then enable it only if was enabled before?
 
-Thanks, I killed the footnote.
+I am having a bit of difficulty understanding this so let's talk about cases
+where the ICAP is enabled/disabled -
 
--- 
-Jens Axboe
+1. When writing the fabric from the driver
+   In this situation it might make sense to read the state of the ICAP
+   interface when preparing the fabric, before enabling PCAP. When the write
+   completes you could re-enable the ICAP if it was previously enabled.
 
+   This might be outside the scope of this change - and I am not comfortable
+   enough with this use-case to understand potential side effects from doing
+   this. Logically it makes sense, but there may be a very specific reason that
+   the ICAP must be enabled after doing a fabric load or partial
+   reconfiguration.
+
+2. When the FPGA driver loads and is probed by the DTS
+   In this situation, which is covered by this patch, the FPGA is loaded by
+   BootROM/FSBL but contains functionality that requires the ICAP. Unless the
+   user has made modifications to the FSBL or 3rd stage bootloader there is no
+   clear way to enable the ICAP interface. Checking to see if it had been
+   enabled prior to loading this driver does not (in my opinion) make a lot of
+   sense here.
+
+   Perhaps the name of the DTS is confusing? The suffix '-on-load' was meant to
+   indicate when the driver was loaded, not the fabric. Would the suffix
+   '-on-probe' be more clear?
+
+Let me know your thoughts,
+-Sam
+
+>
+> Best regards,
+> Krzysztof
