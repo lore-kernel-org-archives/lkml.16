@@ -1,118 +1,68 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FC61519B8;
-	Mon, 31 Mar 2025 07:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AA878F5D;
+	Mon, 31 Mar 2025 07:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743404449; cv=none; b=mfhyD7KhMGnZEuXgp2z/73OtI43wRw4qHasru7s/j6MxWr84rrZgzBBBY0ukB50syvhvlaYgOvrCiii/r2JRy1Ya/RHZLvHGNAjzReLbFlPqt5BPERYUjBNcK8MbSMA68ABD6X/FzkVjWP7kHl8M3JwR5U8VftE41BWO8QA5CeU=
+	t=1743404499; cv=none; b=Assp+kICV+WfnFC/ekvxw3s2nZQbhcjXr1ntmmIadZtxGSyBr02RWA66IQeHTAI/bAqv8fZKCBSqrcm2x540NE/yuGovAE7zB4LRkBLiYaf5unliE3aKoUy4hqEFLyVIaY+EUVGw3nqs4YtQ0n5GDfEPECGHrFntFYlHP4vupFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743404449; c=relaxed/simple;
-	bh=p/p8rn7lBW65XVPA+w0Sra2JPznUZ41wzwWe+Ccmuxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uK1VvG6rDKWMJ5qavldnzp+CRByZRasaBusm9qfN1NJ9sZRIE2BBmCNQpTH5BoSyNG12SjQABEU3fjeIn7AEThq61ySTnrgrzhf/kzPHz2PL9Y25v68q7spaYaceJYqpwqFzOCVWQTSbH8xeRrnMAu/zqfiXaAJytzxs7ucjHm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=NnnXc3jb; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743404499; c=relaxed/simple;
+	bh=I2xjJSKsxTPdXtdeGhLco5ny4M3RowmsAlXNHfIxfeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNMsqAbLC9qYV9CayZPr/B9ZomJQA7gDQDACGKiKpoKk17gDERoYQOaIdszOSJw8VOB5ttabFCB2lC/uUArPDYo+GpUxxBDcRgDznbQI+QggEFdfWExxBqC8taG4M/2K2FBjUFPsiudrNuc8M+N2g99vc2QrBsXglAcuEke5v3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3lmq/Xx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="NnnXc3jb"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 07FFA102F66E1;
-	Mon, 31 Mar 2025 09:00:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743404439; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=Tuk9xLLGOA3p2uSHVjgEZqViacVfaAPTNHEavU4XDWs=;
-	b=NnnXc3jbq7tgb9NvNsc9O9FQmE+niADmjpA5rKPOCm1kMZVJGVlMDhqRZeGk8x5hTsguYq
-	pvGzvAwYbMQeIaXFyfvOCg8JFIkR1j6JinU2OEH+7nQiniop+N4eEQOPkZbgW57u/Jlw62
-	Lgurh2V2yvOKoaFccfxzeseieCKCbVYDcKh6NX/1vrCfORggFLr5GE1YIWnX1dxcaF/fBb
-	vCkCijMHFcCZW7rxNFWZpap+LszDiTYnSNwq8nuF8IvsBmxEYJUCqQ9iq/KL5qfYdIKIqo
-	fsZ0OiFr2imsRSjTGUSExQBccEI/TXhceVDp4zQpSVtLNOUUjjPKIcEirUQKUw==
-Date: Mon, 31 Mar 2025 09:00:33 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250331090033.281807b2@wsk>
-In-Reply-To: <022e19f5-9a9c-42eb-9358-a6fe832e8f5f@lunn.ch>
-References: <20250328133544.4149716-1-lukma@denx.de>
-	<20250328133544.4149716-5-lukma@denx.de>
-	<3648e94f-93e6-4fb0-a432-f834fe755ee3@lunn.ch>
-	<20250330222041.10fb8d3d@wsk>
-	<022e19f5-9a9c-42eb-9358-a6fe832e8f5f@lunn.ch>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3lmq/Xx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0758C4CEE3;
+	Mon, 31 Mar 2025 07:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743404498;
+	bh=I2xjJSKsxTPdXtdeGhLco5ny4M3RowmsAlXNHfIxfeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D3lmq/XxMTBDfoD/eUS4Ng0hYx0E4hWnv44mT+wz3WMqq/X1oEgNhUwkLR7vAQGJ7
+	 HOIzVIgosJr2vEJIUGda+zgTkAXNZwKzniTbAZgHRjuMTyIqvICXXZjoduwkZsPNOJ
+	 vT9jLGAlidzhRd8H8hZL1FG90KmhbRCvGiAYZdBeWRQSss8vTCf6WLSmd9UynxkjsF
+	 tqx+cftnM78UzJCOB2QOxEABNp3y6bxThx1eXPDoEx+WR571IObaBw/hBqi0JyVWPJ
+	 p74xGgdlh1I+p4v4EQbLX16RF9eyCBiBY8OCHkWE2LyhfTKLAwrIsPrNtLWe+icV5S
+	 9n4+9xvGGBZTA==
+Date: Mon, 31 Mar 2025 09:01:35 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Caleb James DeLisle <cjd@cjdns.fr>
+Cc: linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 04/10] dt-bindings: timer: Add EcoNet EN751221 "HPT"
+ CPU Timer
+Message-ID: <20250331-realistic-powerful-elk-6e2ddd@krzk-bin>
+References: <20250330170306.2584136-1-cjd@cjdns.fr>
+ <20250330170306.2584136-5-cjd@cjdns.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/O3v+DOu0N.qQTG3HhCy4w.0";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250330170306.2584136-5-cjd@cjdns.fr>
 
---Sig_/O3v+DOu0N.qQTG3HhCy4w.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Mar 30, 2025 at 05:03:00PM +0000, Caleb James DeLisle wrote:
+> Add device tree bindings for the so-called high-precision timer (HPT)
+> in the EcoNet EN751221 SoC.
+> 
+> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+> ---
+> HPT is a name commonly used in vendor and 3rd party out-of-tree sources.
+> ---
+>  .../bindings/timer/econet,en751221-timer.yaml | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
 
-Hi Andrew.
-
-> > > > +	/* Prevent a state halted on mii error */
-> > > > +	if (fep->mii_timeout && phy_dev->state =3D=3D PHY_HALTED) {
-> > > > +		phy_dev->state =3D PHY_UP;
-> > > > +		goto spin_unlock;
-> > > > +	}   =20
-> > >=20
-> > > A MAC driver should not be playing around with the internal state
-> > > of phylib. =20
-> >=20
-> > Ok, I've replaced it with PHY API calls (phy_start() and
-> > phy_is_started()). =20
->=20
-> phy_start() and phy_stop() should be used in pairs. It is not good to
-> call start more often than stop.
->=20
-> What exactly is going on here? Why would there be MII errors?
->=20
-
-Exactly.
-
-I've double check it - this can be safely dropped.
-
-> 	Andrew
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
+Krzysztof
 
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/O3v+DOu0N.qQTG3HhCy4w.0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfqPZEACgkQAR8vZIA0
-zr2uZAf/X9cFX5/KF/UwjOOG5zujQrAPZ8w1dyFZMuxUtk8kuXMPb15aOYHrHNru
-75mZmO+XEFjn8ZH1zo8gNFkcIZtXXRl9ySXNdv3qKnlRBNdMddQR5lMI+l1OixPr
-SEH8lCzHgIi3s+RHFNsFrOrRnkKYkQwNHjiciDsgOFfn2Pzn7/oysfr0N/0guAsf
-o4IQTXOe6HKQk/xiKYSiYSxbxZEYkEhVaRiizQwFF/lPbInPSJYN4/QMPkoaldcT
-qcRyDKlHIAcvHnts/1lsTgrlugfSqAIdXgnUYKwi0GCmpkX7U6DA15uN7+kfhKSq
-wm1rAr67gqNHiUvqXB6WyIQRFbZPNg==
-=ACUc
------END PGP SIGNATURE-----
-
---Sig_/O3v+DOu0N.qQTG3HhCy4w.0--
