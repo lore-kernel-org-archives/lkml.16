@@ -1,61 +1,57 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DF322154D
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7535622156F
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743434303; cv=none; b=Tl4FLsTPqt1R3O/NFm0zPaKc7zdcken1FBuyPoFyX6WtQRfviTMWTalWxrjJkf4AdfXGUJX5AwXQRjMbmP9SmuT1jg6vG1NZkjNw8t196swCAQPfMY3+x1/pYR+oLnpMKV5NTqKKqdnLYZ/cmkulusTNKEM//A83JKGgs/ErROc=
+	t=1743434386; cv=none; b=ILEqCamK4cxzi999ePpm69cwf75WGVasGU7KpHj+Kx2NKcnVH+HZy0eCbKege1gweCifoJMZ5u6VRQ3wXFcXEi+nQHAsKfGqUm+KyE4y7/NslotZOs3zEtUxUW/X/PrQpLFKckdOBO5NcVUvsK70Y0zcYaC5nhgMo/uu6CfA/Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743434303; c=relaxed/simple;
-	bh=lostnhECuFpgx/V9Dx4e+cnyz6zzHXEbycPo2Khhj0I=;
+	s=arc-20240116; t=1743434386; c=relaxed/simple;
+	bh=XGAQM6GpfSCyFaD3vcOh0HxJVIDFC/IjBmRvyaqD8m8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QJX6Rb1UXsVA8AUoeikootgr8ud/crBSw7VYuIyHfXzzBN8RPWeQVc81I7p2q9W0saSldPMyOzho9pbCgpVqtR6K+D2lHp/dBS+AR5p3mG5kOr0AO166qIs3VVOYCu1mfVg8WnqkhTYf4o+90pbQmAM1IL0d9GsvK7wPAmsLoG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jq+J1FJh; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y93p7KQsv8PtWEUdPXdnZRkXUSv08nkA1h/f77PGQQx+Bk8MJThiS+sQ2/l8Alvqu0s8ifiyYt26+d7MuqDOltwb11wiRXGViREXkGm7bxNj8STeymR2poAr9oG9A6TR1n6myfKf84h+6htzkrekLzUUFwAwyr0FYifsVpZDs9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K1TNjMn0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jq+J1FJh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1n52K2Ecs0rvNvb7Wx6zfsNYz+Pw0RbIiWPNEiPmYtM=; b=jq+J1FJhdA0ywdc2jT+QIw3sTD
-	1xJw1BtSQHm8s912c+lbyA7F7E0z487dN8fquAfywdvSNtsNUDCe1XHRRPtQfbpFZwgAqTiLeNLI4
-	4+F0kUqJC3U+jg0yTnfZQTt3SGrZSenwWgy8/TNpHgza0IzccfDjt2ud55FjVDIPAN2PpuHeEIagg
-	WfxyrjjHpuek8ZAb9zMrwez3yjwu7JyCnAyw8vVdSvgwe1xQgeMA0/fXQSViZegTg6oY5ptz6phAI
-	EKGjKJ+Pxr5z/GLqXk+ZSom4o3R6eD4KS9GYtEB3hcmZhb3/H44uZZ2Qbn9vsijnkSu9VqoXOvmDG
-	/sFSjbUA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35078)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tzGtu-0004Hw-2s;
-	Mon, 31 Mar 2025 16:18:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tzGtp-0001mP-0c;
-	Mon, 31 Mar 2025 16:18:05 +0100
-Date: Mon, 31 Mar 2025 16:18:05 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: =?utf-8?B?6LCi6Ie06YKmIChYSUUgWmhpYmFuZyk=?= <Yeking@red54.com>,
-	ardb@kernel.org, bjorn.andersson@sonyericsson.com,
-	dave@vasilevsky.ca, ebiggers@google.com, linus.walleij@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	liuyuntao12@huawei.com, lumag@kernel.org, masahiroy@kernel.org,
-	nathan@kernel.org, nico@fluxnic.net, oskar.andero@sonyericsson.com,
-	ruanjinjie@huawei.com, victor.boivie@sonyericsson.com,
-	Rob Herring <robh@kernel.org>
-Subject: Re: Re: [PATCH] ARM: Fix support for CMDLINE_EXTEND
-Message-ID: <Z-qyLY-Moj5Uo8XH@shell.armlinux.org.uk>
-References: <Z-aWPqAUOIDEzzpZ@shell.armlinux.org.uk>
- <tencent_F967B6C3FF5405F2D17EF660590BFD213C0A@qq.com>
- <Z-qQuyG7rDeSF_oX@shell.armlinux.org.uk>
- <Z-qZ_4YmTJdFWAHF@shell.armlinux.org.uk>
- <CAJGZr0+zcy+28bJydUo88zpNBN-M2-qcaahr8Pxg=yfdT6RAPg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K1TNjMn0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743434382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fwTyXp3rS+4S8gP/lz0Bj0kULSAr5fxq/70sl6mUr24=;
+	b=K1TNjMn02tJ4uDRxlubpmkROVwXlq3e0AbEt1Xm8Sdqm9F9NsitLjCu8RP9pgxdXFsm6Jx
+	ot+4TOrU2rfefUD0NowowEYwvLpM36LpSNYaCzCAFu7/eEWRFd3Rbt6UuSQrsJGQramhfS
+	tXkGeGr7sabxximWSPtRDtYSLxPN/80=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-DXiJ7LEvNKCMMy60WETe5A-1; Mon,
+ 31 Mar 2025 11:19:38 -0400
+X-MC-Unique: DXiJ7LEvNKCMMy60WETe5A-1
+X-Mimecast-MFC-AGG-ID: DXiJ7LEvNKCMMy60WETe5A_1743434377
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F693195608D;
+	Mon, 31 Mar 2025 15:19:36 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.9])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A4331955DCE;
+	Mon, 31 Mar 2025 15:19:34 +0000 (UTC)
+Date: Mon, 31 Mar 2025 23:19:28 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] mm/gup: Fix the outdated code comments above
+ get_user_pages_unlocked()
+Message-ID: <Z+qygOF2kueozxk0@MiWiFi-R3L-srv>
+References: <20250330121718.175815-1-bhe@redhat.com>
+ <20250330121718.175815-4-bhe@redhat.com>
+ <Z-qfflDA8pEn7HZ5@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,27 +60,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJGZr0+zcy+28bJydUo88zpNBN-M2-qcaahr8Pxg=yfdT6RAPg@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <Z-qfflDA8pEn7HZ5@localhost.localdomain>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Mon, Mar 31, 2025 at 06:14:27PM +0300, Maxim Uvarov wrote:
-> It will be good  to have some constance here with other arches:
-> ./arch/arm/kernel/atags_parse.c:#if defined(CONFIG_CMDLINE_EXTEND)
-> ./arch/sh/kernel/setup.c:#ifdef CONFIG_CMDLINE_EXTEND
-> ./arch/powerpc/kernel/prom_init.c:    if
-> (IS_ENABLED(CONFIG_CMDLINE_EXTEND) || l <= 0 || p[0] == '\0')
-> ./arch/loongarch/kernel/setup.c:     * CONFIG_CMDLINE_EXTEND is enabled.
-> ./arch/loongarch/kernel/setup.c:    if
-> (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-> ./arch/riscv/kernel/pi/cmdline_early.c:    if
-> (IS_ENABLED(CONFIG_CMDLINE_EXTEND) ||
+On 03/31/25 at 03:58pm, Oscar Salvador wrote:
+> On Sun, Mar 30, 2025 at 08:17:13PM +0800, Baoquan He wrote:
+> > Since commit f0818f472d8d ("mm: gup: add get_user_pages_locked
+> > and get_user_pages_unlocked"), get_user_pages() doesn't need to have
+> > mmap_lock held anymore. It calls __get_user_pages_locked() which
+> > can acquire and drop the mmap_lock internaly.
 > 
-> Or drop CONFIG_CMDLINE_EXTEND completely or make arm64 work as others.
+> Yes, __get_user_pages_locked() can aquire and drop the lock, but AFAICS
+> get_user_pages() always calls __get_user_pages_locked() with locked=1,
+> which means that is holding the lock, right?
 
-I'm not changing something that has had 14 years of being the way it's
-been - people will have come to rely upon it. Changing it now is way
-too late.
+Ah, You are right. Thanks for looking into this, Oscar. I incredibly
+missed the local virable definition "int locked = 1;" line. I will drop
+this patch, or wrap the code comment fix into other patch about the
+obsolete reference with "get_user_pages(mm, ..., pages, NULL)".
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> > Hence remove the incorrect code comments now.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/gup.c | 16 +++-------------
+> >  1 file changed, 3 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 8788105daee8..3345a065c2cb 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -2702,19 +2702,9 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
+> >  EXPORT_SYMBOL(get_user_pages);
+> >  
+> >  /*
+> > - * get_user_pages_unlocked() is suitable to replace the form:
+> > - *
+> > - *      mmap_read_lock(mm);
+> > - *      get_user_pages(mm, ..., pages, NULL);
+> > - *      mmap_read_unlock(mm);
+> > - *
+> > - *  with:
+> > - *
+> > - *      get_user_pages_unlocked(mm, ..., pages);
+> > - *
+> > - * It is functionally equivalent to get_user_pages_fast so
+> > - * get_user_pages_fast should be used instead if specific gup_flags
+> > - * (e.g. FOLL_FORCE) are not required.
+> > + * get_user_pages_unlocked() is functionally equivalent to
+> > + * get_user_pages_fast so get_user_pages_fast should be used instead
+> > + * if specific gup_flags (e.g. FOLL_FORCE) are not required.
+> >   */
+> >  long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+> >  			     struct page **pages, unsigned int gup_flags)
+> > -- 
+> > 2.41.0
+> > 
+> > 
+> 
+> -- 
+> Oscar Salvador
+> SUSE Labs
+> 
+
