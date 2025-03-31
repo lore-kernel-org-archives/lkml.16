@@ -1,202 +1,330 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FCF7080D;
-	Mon, 31 Mar 2025 21:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121D221C9EA;
+	Mon, 31 Mar 2025 21:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743455651; cv=none; b=BSZ1208/A9zqRx0tM7TEzeY84mbudY8fA+hXfXpv1zxAEgWqsRPna8NX6JPiXbvy8dsmWvHjQKkd66HC5oc/AFxfZ/aZbu9kelSKGRz/JfaVGCAIZeriMOZttux2Da5qFw+eeyz2GQrUiyKwb5u1Mi8//PKYoit44LPfjBQ2Ux4=
+	t=1743455654; cv=none; b=fJWpGyPNf2PlRIrtGbpwe3oEcaXSziuTVd4ub+Z0RPdWtFftjozQebE/65vGyC/kM0KJtV2DZqoLsbfnVBgq/QDLKSAXJRk5JRt0fWQVeEp/1Z25VbnwPEDkkXVtDTur2763lDmCkMDk+KJe5OEDVquRREVxcxisCa9vpFFO2W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743455651; c=relaxed/simple;
-	bh=hMQSMUh44erp4N8q6IyW/OEe5dQ0e24JRgxyticPm3A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YGEiwruhNqHfxmBrQyI8wgGpZU9a4a++039TGEAQp45/weYN6hJ/UMfaJAsK9fPYaDvRWsYUNBsm+VUt+IR2wBiSNU8xFiYoDWG/Qd8H92QhiP6LpfbFTl68LJN/3BV14IdrK+yAHIHX8vqwEpTrHkjkiCD6SQx6xIhVzRsMDuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=q8FbJJ2U; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1743455654; c=relaxed/simple;
+	bh=CLlhmTXlnNx2k1IYm/46xAYUPC/4ykPPJnHTtwDfly0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZLd509zwBMnp/L8JVoAMKsNr1hfEwKDCbFjTM+ux3VAI8bzSDXn3L7In8/s7bLVw+ikCJ4lVsSM6CrVa1UJ8tRgOXeblXrOaNfxyyJBEozVZIis6f56sSkXjVZxrzg0NeiPS0zgN/UOBKwjqGH7lm9VxSYf7mcuBKQzhR1Z9kZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehD1nHpY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="q8FbJJ2U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1743455646; x=1744060446; i=quwenruo.btrfs@gmx.com;
-	bh=Uso56pb8SuJXJToitq1Sfh07PwWrBACFK0dG374DTk4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=q8FbJJ2UfY4cmIwgU9PRtc2lIKi8FKBWD62DAPlGgVSBvUTVLksPbKi8y/oBT/OF
-	 /MvjYtWEC1fjqoIjWAEbRLAZuSgdChXIT3Hr/bckyaYfmFfC2K08Wv9dU5yehAsl1
-	 1bwI9pWFJ20+8Q+72BR3726k2bBkmga+u9SPbbSZ12I7JU62+NwaowHeNVNbBbG/l
-	 dvdNDAqGk/bQLT5mQiyUtCBXj455y+PiwWadCkAmzPot4xFlTerbHtIkJ3jKub6iu
-	 MGPdTruiGoX59x1xUqFnepJs/3SdRd4jxx9AECzdcAu0VBkKKQZ+D+Fk2qQhUlIDp
-	 6RaC731SSpv0Ofh0Zg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MWigq-1tbIAA03lA-00LO1K; Mon, 31
- Mar 2025 23:14:06 +0200
-Message-ID: <b1437d32-8c85-4e5d-9c68-76938dcf6573@gmx.com>
-Date: Tue, 1 Apr 2025 07:44:01 +1030
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehD1nHpY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377D1C4CEE5;
+	Mon, 31 Mar 2025 21:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743455653;
+	bh=CLlhmTXlnNx2k1IYm/46xAYUPC/4ykPPJnHTtwDfly0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ehD1nHpYU6pHs/cJMc1SnCeBhZ907BtSrszfWiC2/n0+wLDd4iCfFmg2sL2uNyPDO
+	 sjTQmnsWVlP2Z8FnecbGw0f28CZSie9nuJIJyOsJjPna+pP3kNTkMY4KyDv4+DZW3D
+	 acr0ONCeocbQDnHDvxS+EZYTFih1vCcv0UJJ9Yhx84xy3vK/ecttRmv7wQ3rg+fzNT
+	 108KPg9n/zJTK5qIWAYgziiLxyO4G37gpijJ61IkVWJ7Q+3nrBfeg5DG4FdCjARiw+
+	 GOl5r+ET2armxpIsdVvet7LXzwjaKrMREX3uWwhV0VGHu7Jvxgc0RXXyfmjj8X6W8X
+	 7sIVvBacejZaw==
+Date: Mon, 31 Mar 2025 23:14:10 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	"rcu@vger.kernel.org" <rcu@vger.kernel.org>
+Subject: Re: [PATCH 1/3] rcu: Replace magic number with meaningful constant
+ in rcu_seq_done_exact()
+Message-ID: <Z-sFonl2NrppdGQS@pavilion.home>
+References: <20250324170156.469763-1-joelagnelf@nvidia.com>
+ <20250324170156.469763-2-joelagnelf@nvidia.com>
+ <eeda52c2-5397-4aad-ad01-ca04e5b0b80f@paulmck-laptop>
+ <DDDD275D-1017-4189-9A8A-578021A33B4A@nvidia.com>
+ <e47e5611-36de-4d12-9c07-57aa2a885299@paulmck-laptop>
+ <Z-nBcg9FJqu5RzME@pavilion.home>
+ <71fc9642-5fc7-45ec-8196-8fc89ed8e765@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
- modes
-To: Daniel Vacek <neelx@suse.com>, Qu Wenruo <wqu@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250331082347.1407151-1-neelx@suse.com>
- <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
- <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Wyx1ID2SLyDtKGYljXxoQ4MsjwjnTHtepavDI4MKCE8h/yCJYEP
- TKJsHqtwjUlf9+ZyGRMEua1vyg7u8allsbi/G6M1naWFvewEAbkDdmq4xJhiraZCjfh/pdk
- xaAXxHCFJfB1d8tO0qA5RKSqr50gsmqnE3yB2BTqqW8fwGSw/rj0KAqPUYMAWrovuAXPZNa
- qC1ixGSzS8V63L0doP47Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GUz/ptwjjPw=;LCFY6SXiqxR/zNFzbS/PXjWpnTh
- bkQdCjL3vos4cMu1EONFTcf7sU8CLI0EXpaGXjTgNLEPscIRPdAH4rZw/tQFzazfRTri0uzCs
- aVhphBdmG24PryrKr7CeFd/JyYVYq9sxxwoxR2zinSP4vNjWYE5wOl5JgtR8uJGih8TbZgnuv
- QaK13KqAOYjI7yCPWStdkzdc8Uqv8yl6SvZ4x9gef9Jd9kGro/xsexGzKnW/ZqYNXXTUFtZJi
- m5ll0n2dxsUI2UKTXOxKk58Bg4B6R5q3tUBDTUOJIgkHksJkNjG+SQxh062moyNeWbl/HcuXU
- hRDKnXNEd9GXyohBik7fw1TZdgAFb40SKhJzWOvXwexuJXiNbOFdvaEAvCoVPjxA6N240Lrjw
- tYQsxPFSFlab3N1bWh9B0W2uB/60e3ulikbLKH+H7hmP9NsW87XH4l+S7gimu/0e3M93NXlR7
- 5mqXGcbFoCQ1RTIZ7xwZ38JhWlOrpCImVHVljlFwGHZWwcPYQmI5I6+yEodl6Po6RCY2X2j/D
- /iaXPqeZ4yL95Gvpx5YOmWiqak6NSxZiB2tvmRhmI56aQW1oq8rXj0DOPCobbX8wpbNB00qUo
- zLztBPRauFEieidjpoiH8lAP8Zpovy52ZczwfIuWEQh5JZsvFogubCDpNs3cR2VX//pvYz43Q
- UUfFMn/UFaanU8CZWS8Tf+agyG4edJuuwjY1qmIpPpvRoCsYaypfgA7HjF38oooQv04sfPVcq
- 3vAMY2diNonG0b/Nbx0krkV0xfgWKXIe5WezTbTkgk/bWrnnnwDZDBNhk4a8HIQqJC3v8FGO7
- EuVDI1HcKQhcjnaWhYZXB3TFUxzgkicVL1X7qYVfEOCQwWtyAPfggAB2srokgVbbKVLycXwnA
- DaApJNh+rL5ufD23br3ryvQJGQFAAOA5VvIerw++etZGxuaHi+Z1cpYECITk2IfqJ9Eo+9P+c
- Xpu+Xzi3M4dxZdr1mKV7wWf2Dcp+B04PvozoJWsrYG7mkfWPHK8f/yP3zRSFkHLTCmE8fjo5i
- GPNsFF6jaysjgI9Me+v8W3J6mJ3PuNj+zWqIJzS9cpaIRXLGsoAjeRNbZFZk3okV0LEMkQeTa
- U3MOiZmMSfQfgKIpcEuybXgd7HcWuMudc1LpKPE6QMKv8AbKfN4CHOeIEn0AS1rZ/hG/q1+xs
- ZMtDPdRlCBDuhhZLKWk+Zgz5BfCZ/XMzJWktkSeWthbQerbeCxjC4q48nxihqNMdSzvbe0Jf7
- 0w3G2qN2OrJrwNMuuJY4JKGWaBMYpdBFpZBqi/IpbaMD2LWla7txnhkIPPwnh0JIOSH4/OaJ9
- 1wOTnHeW2l6FB3j0bugRPDYwgBhV9Jq0B+P861bN3+YJC1bTe1T0nOBm8t0RZ6B5VnTJj256v
- Poukc5u5FsMzDfVarDQ82VcXIfeB4RCc6ORhe1Z/GBaeCgQ7VffrQFTd+yJWlKHo0puUkVqCE
- KKXrIfg==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <71fc9642-5fc7-45ec-8196-8fc89ed8e765@paulmck-laptop>
 
+Le Mon, Mar 31, 2025 at 11:28:47AM -0700, Paul E. McKenney a écrit :
+> > So I'm unfortunately asking again if it wouldn't be a good idea to have a single
+> > global state counter that lives in the root node so that we don't have it
+> > duplicated in rcu_state.gp_seq.
+> > 
+> > This involves some special care:
+> > 
+> > 1) As you pointed out, the root can also be the unique leaf. So care must
+> >    be taken that no QS is reported before new online CPUs have been handled
+> >    and QS masks initialized. In order for __note_gp_changes() to handle
+> >    it gracefully we must have two seq states: one to tell the
+> >    grace period has started (before checking new online CPUs): RCU_STATE_STARTED
+> >    and one to tell that grace period is ready to receive quiescent states:
+> >    RCU_STATE_WAIT_QS. Although not strictly required, __note_gp_changes() can
+> >    ignore simple state changes to RCU_STATE_STARTED in order to spare useless
+> >    work and rnp locking. No QS will be reported before ->qsmask are initialized
+> >    in any case.
+> 
+> We have available up to three stages of grace-period processing, which
+> can be expanded relatively easily.  My concern is that we will be
+> replacing "which ->gp_seq to use" confusion with "which gp_seq state
+> to pay attention to" confusion.
 
+True, this comes at the cost of a bit more complex state space.
 
-=E5=9C=A8 2025/3/31 20:36, Daniel Vacek =E5=86=99=E9=81=93:
-[...]
->>>                        btrfs_set_opt(ctx->mount_opt, COMPRESS);
->>>                        btrfs_clear_opt(ctx->mount_opt, NODATACOW);
->>>                        btrfs_clear_opt(ctx->mount_opt, NODATASUM);
->>> +             } else if (strncmp(param->string, "zstd-fast", 9) =3D=3D=
- 0) {
->>> +                     ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
->>> +                     ctx->compress_level =3D
->>> +                             -btrfs_compress_str2level(BTRFS_COMPRESS=
-_ZSTD,
->>> +                                                       param->string =
-+ 9
->>
->> Can we just use some temporary variable to save the return value of
->> btrfs_compress_str2level()?
->
-> I don't see any added value. Isn't `ctx->compress_level` temporary
-> enough at this point? Note that the FS is not mounted yet so there's
-> no other consumer of `ctx`.
->
-> Or did you mean just for readability?
+> 
+> > 2) rcu_gp_cleanup() currently ends the grace period top-down through the rnp tree
+> >    and only then on rcu_state. With this change it's simply top-down. I have audited
+> >    rcu_seq_snap() and rcu_start_this_gp() uses and I haven't found an obvious
+> >    issue with that.
+> 
+> That would result in the root rcu_node structure's ->gp_seq declaring the
+> grace period over before the rest of the rcu_node structures were aware
+> of it having ended.  I guess that the last leaf rcu_node structure's
+> ->gp_seq field would be what you would look at if you were looking for
+> the actual grace period end.
+> 
+> Of course, you could argue that the grace period isn't fully over
+> until all the CPUs are aware of it, but that can take a very long time,
+> especially if there are CPUs staying idle for seconds (let alone minutes)
+> at at time.
 
-Doing all the same checks and flipping the sign of ctx->compress_level
-is already cursed to me.
+Right. And it seems not all parts of RCU agree on a common definition of
+a complete grace period. Polling seem to be fine with just the root rnp
+to reflect rcu_seq_end() (which happens before the leaves do). Snapshot takers
+though rely on the whole tree to reflect the GP end...
 
-Isn't something like this easier to understand?
+As far as I audited the code, mostly rcu_seq_snap() callers, rcu_start_this_gp()
+and __note_gp_changes(), it looks fine to consider the GP is ended as soon
+as the root reflects it. I may have missed something of course...
 
-	level =3D btrfs_compress_str2level();
-	if (level > 0)
-		ctx->compress_level =3D -level;
-	else
-		ctx->compress_level =3D level;
+> > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> > index feb3ac1dc5d5..c4bb3eb92a58 100644
+> > --- a/kernel/rcu/rcu.h
+> > +++ b/kernel/rcu/rcu.h
+> > @@ -19,6 +19,12 @@
+> >   * The two least significant bits contain the control flags.
+> >   * The most significant bits contain the grace-period sequence counter.
+> >   *
+> > + * RCU_STATE_STARTED		:	The gp has started but QS are not
+> > + *					requested yet.
+> > + *
+> > + * RCU_STATE_WAIT_QS		:	The gp has started and waits for
+> > + *					QS to be reported.
+> 
+> Do we want RCU_STATE_IDLE, by analogy with SRCU?
 
->
->> );
->>> +                     if (ctx->compress_level > 0)
->>> +                             ctx->compress_level =3D -ctx->compress_l=
-evel;
->>
->> This also means, if we pass something like "compress=3Dzstd-fast:-9", i=
-t
->> will still set the level to the correct -9.
->>
->> Not some weird double negative, which is good.
->>
->> But I'm also wondering, should we even allow minus value for "zstd-fast=
-".
->
-> It was meant as a safety in a sense that `s/zstd:-/zstd-fast:-/` still
-> works the same. Hence it defines that "fast level -3 <=3D=3D=3D> fast le=
-vel
-> 3" (which is still level -3 in internal zstd representation).
-> So if you mounted `compress=3Dzstd-fast:-9` it's understood you actually
-> meant `compress=3Dzstd-fast:9` in the same way as if you did
-> `compress=3Dzstd:-9`.
->
-> I thought this was solid. Or would you rather bail out with -EINVAL?
+Makes sense.
 
-I prefer to bail out with -EINVAL, but it's only my personal choice.
+> 
+> >   * When both control flags are zero, no grace period is in progress.
+> >   * When either bit is non-zero, a grace period has started and is in
+> >   * progress. When the grace period completes, the control flags are reset
+> > @@ -54,6 +60,9 @@
+> >   *					grace-period sequence number.
+> >   */
+> >  
+> > +#define RCU_STATE_STARTED	0x1
+> > +#define RCU_STATE_WAIT_QS	0x2
+> > +
+> >  /* Low-order bit definition for polled grace-period APIs. */
+> >  #define RCU_GET_STATE_COMPLETED	0x1
+> >  
+> > @@ -92,7 +101,13 @@ static inline void rcu_seq_start(unsigned long *sp)
+> >  {
+> >  	WRITE_ONCE(*sp, *sp + 1);
+> >  	smp_mb(); /* Ensure update-side operation after counter increment. */
+> > -	WARN_ON_ONCE(rcu_seq_state(*sp) != 1);
+> > +	WARN_ON_ONCE(rcu_seq_state(*sp) != RCU_STATE_STARTED);
+> > +}
+> > +
+> > +static inline void rcu_seq_wait_qs(unsigned long *sp)
+> > +{
+> > +	WRITE_ONCE(*sp, *sp + 1);
+> > +	WARN_ON_ONCE(rcu_seq_state(*sp) != RCU_STATE_WAIT_QS);
+> 
+> Or we could have the WARN_ON_ONCE() first, and use rcu_seq_set_state().
 
-You'd better wait for feedbacks from other people.
+Right!
 
-Thanks,
-Qu>
->>> +                     btrfs_set_opt(ctx->mount_opt, COMPRESS);
->>> +                     btrfs_clear_opt(ctx->mount_opt, NODATACOW);
->>> +                     btrfs_clear_opt(ctx->mount_opt, NODATASUM);
->>>                } else if (strncmp(param->string, "zstd", 4) =3D=3D 0) =
-{
->>>                        ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
->>>                        ctx->compress_level =3D
->>
->> Another thing is, if we want to prefer using zstd-fast:9 other than
->> zstd:-9, should we also change our compress handling in
->> btrfs_show_options() to show zstd-fast:9 instead?
->
-> At this point it's not about preference but about compatibility. I
-> actually tested changing this but as a side-effect it also had an
-> influence on `btrfs.compression` xattr (our `compression` property)
-> which is rather an incompatible on-disk format change. Hence I falled
-> back keeping it simple. Showing `zstd:-9` is still a valid output.
->
-> --nX
->
->> Thanks,
->> Qu
->
+> > @@ -192,6 +192,21 @@ int rcu_get_gp_kthreads_prio(void)
+> >  }
+> >  EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
+> >  
+> > +/*
+> > + * Return the root node of the rcu_state structure.
+> > + */
+> > +static struct rcu_node *rcu_get_root(void)
+> > +{
+> > +	return &rcu_state.node[0];
+> > +}
+> 
+> OK, just code movement.
 
+Right, if I proceed with this, a series will (try to) split more gently
+for review.
+
+> 
+> > +static unsigned long *rcu_root_seq(void)
+> > +{
+> > +	struct rcu_node *root = rcu_get_root();
+> > +
+> > +	return &root->gp_seq;
+> > +}
+> 
+> Adding this function might be useful in any case, even if we keep the
+> current rcu_state.gp_seq counter.  A single place to add comments that
+> address the chosen type of confusion, if nothing else.  ;-)
+
+;-))
+
+> 
+> 13 calls want the pointer and 13 want the value.  An even split!
+
+The split is but 13 itself is not even! And I know people who strongly
+want it to stay that way!
+
+> Not sure what lesson to draw from this, though indirecting a function call will
+> likely cause some confusion.  Some might argue for two access functions,
+> one for the pointer and the other for the value.  Me, I am just glad that
+> I included the word "might" in the first sentence of the prior paragraph.
+
+Right, I'm not proud of the *rcu_root_seq() things.
+I thought about adding rcu_root_seq_current() but I'm not entirely comfortable
+with having all readers under READ_ONCE(). I like when our assumptions of non
+concurrent plain accesses are defeatedly reported by KCSAN.
+
+> > @@ -1249,7 +1256,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+> >  
+> >  	raw_lockdep_assert_held_rcu_node(rnp);
+> >  
+> > -	if (rdp->gp_seq == rnp->gp_seq)
+> > +	if (!rcu_seq_changed(rdp->gp_seq, rnp->gp_seq))
+> 
+> The old code would detect a bunch of elapsed grace periods, starting
+> and ending in the same state.  The new code does not.  Does the new code
+> correctly handle CPUs that go idle for many grace periods?
+
+I'm not sure I understand what you mean. rcu_seq_changed() is a comparison
+that simply clears RCU_SEQ_STARTED on both sides such that:
+
+* Different GP numbers with or without RCU_SEQ_STARTED/RCU_SEQ_WAIT_QS
+  are always considered a change.
+
+* Same GP numbers but rnp has RCU_SEQ_WAIT_QS while rdp hasn't is considered a
+  change
+
+but:
+
+* Same GP numbers but rnp has RCU_SEQ_STARTED while rdp hasn't is _NOT_
+  considered a change. This is not for correctness but rather to spare
+  rnp locking and useless work. The ->qsmask are 0 anyway so no QS can
+  be reported too early.
+
+> > @@ -1802,10 +1809,9 @@ static noinline_for_stack bool rcu_gp_init(void)
+> >  	/* Advance to a new grace period and initialize state. */
+> >  	record_gp_stall_check_time();
+> >  	/* Record GP times before starting GP, hence rcu_seq_start(). */
+> > -	rcu_seq_start(&rcu_state.gp_seq);
+> > -	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> 
+> Why are we dropping the ASSERT_EXCLUSIVE_WRITER()?  As opposed to moving
+> it to the setting of the rcu_node structures' ->gp_seq updates?
+
+I must confess I misunderstood that macro and thought it was to assert
+the variable has no other writer _at all_. But that seem to apply
+scopewise. So yes good point.
+
+> > @@ -1902,7 +1908,10 @@ static noinline_for_stack bool rcu_gp_init(void)
+> >  		rdp = this_cpu_ptr(&rcu_data);
+> >  		rcu_preempt_check_blocked_tasks(rnp);
+> >  		rnp->qsmask = rnp->qsmaskinit;
+> > -		WRITE_ONCE(rnp->gp_seq, rcu_state.gp_seq);
+> > +		if (!rnp->parent)
+> > +			rcu_seq_wait_qs(&rnp->gp_seq);
+> > +		else
+> > +			WRITE_ONCE(rnp->gp_seq, *rcu_root_seq());
+> 
+> This asymmetry is necessary because if I understand correctly, the
+> non-root rcu_node structures still have zero state.  But this is one
+> argument for use of rcu_seq_set_state(), because then you could just do
+> rcu_seq_set_state(rnp->gp_seq, RCU_STATE_WAIT_QS) in both cases.
+> 
+> Or am I missing something that prevents this from working?
+
+Indeed, the sequence counter (but not the state) is expected to be the same on
+all nodes, so we can just modify the state as you said. And we can then assert
+WARN_ON_ONCE(rnp->gp_seq != *rcu_root_seq())
+
+> > @@ -2114,16 +2124,12 @@ static noinline void rcu_gp_cleanup(void)
+> >  	 * the rcu_node structures before the beginning of the next grace
+> >  	 * period is recorded in any of the rcu_node structures.
+> >  	 */
+> > -	new_gp_seq = rcu_state.gp_seq;
+> > -	rcu_seq_end(&new_gp_seq);
+> >  	rcu_for_each_node_breadth_first(rnp) {
+> >  		raw_spin_lock_irq_rcu_node(rnp);
+> >  		if (WARN_ON_ONCE(rcu_preempt_blocked_readers_cgp(rnp)))
+> >  			dump_blkd_tasks(rnp, 10);
+> >  		WARN_ON_ONCE(rnp->qsmask);
+> > -		WRITE_ONCE(rnp->gp_seq, new_gp_seq);
+> > -		if (!rnp->parent)
+> > -			smp_mb(); // Order against failing poll_state_synchronize_rcu_full().
+> 
+> OK, this got moved up.
+> 
+> > +		WRITE_ONCE(rnp->gp_seq, *rcu_root_seq());
+> 
+> The idea being that the root rcu_node ->gp_seq is just overwritten
+> with itself, correct?
+
+Right!
+
+> 
+> >  		rdp = this_cpu_ptr(&rcu_data);
+> >  		if (rnp == rdp->mynode)
+> >  			needgp = __note_gp_changes(rnp, rdp) || needgp;
+> > @@ -2146,9 +2152,7 @@ static noinline void rcu_gp_cleanup(void)
+> >  	raw_spin_lock_irq_rcu_node(rnp); /* GP before ->gp_seq update. */
+> >  
+> >  	/* Declare grace period done, trace first to use old GP number. */
+> > -	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("end"));
+> > -	rcu_seq_end(&rcu_state.gp_seq);
+> > -	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> 
+> Same question on not moving ASSERT_EXCLUSIVE_WRITER() to the rcu_node
+> structures' ->gp_seq updates.
+
+Indeed!
+
+> > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> > index a9a811d9d7a3..9d811270b808 100644
+> > --- a/kernel/rcu/tree.h
+> > +++ b/kernel/rcu/tree.h
+> > @@ -347,7 +347,6 @@ struct rcu_state {
+> >  
+> >  	/* The following fields are guarded by the root rcu_node's lock. */
+> >  
+> > -	unsigned long gp_seq ____cacheline_internodealigned_in_smp;
+> >  						/* Grace-period sequence #. */
+> 
+> Heh!  Does the rcu_node structure's ->gp_seq need alignment?
+
+Probably but then this will increase the size of all rnp's, right?
+
+Thanks!
