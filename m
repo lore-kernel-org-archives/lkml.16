@@ -1,163 +1,133 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868E515E5BB
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCC1D5166;
+	Mon, 31 Mar 2025 08:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410952; cv=none; b=eRo0xvYbFyN5CKN1DyOpzM3cHxGSa9abOaQZAyXGav+YirAX4DWv+VYIsEexFB0cGiKi0X8q44rGMaWRNS6CucvtZbYmPUqGXW8iORwxwuUFbiz/REwGm+Ub9EAnwB8Rb0wXwENfv22igAPIf7wL0yQO3jPPnlpJrYxo7eefnHQ=
+	t=1743411223; cv=none; b=FvrAc1AxWpkXc0kKRQ+NcF/kyGTWJFfPdUVRAlSN5AWfygfs6bRvyDHehhTJKsnIAbfVrZLnA2eFF1kcB472tZsQz7apI+vmajw4IfKaLPL1MbahHfscUgTdm+Qy8oFxhIUTIWKKQ8EMvph59NgUG73zV8Y5N7hHfQkVmoE3M/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410952; c=relaxed/simple;
-	bh=t/8faHLL83J137LJpJfZX7qm+i6iv0APIty3Cf7tof0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qg8LMcUMhxj7cvacjIZUwDMsTXYkJ31EsGrCCyJQ2bmxqFIO8OAviSeefIyeP0yPKYcseh2Ikm38rCEEhtzP+uEQLM9lfy9645XR9SKdZrj3lI5Y6tX4k+QkCuUoFFvfw8reXJWJhWZIljGvwRJWcatZfhd/DqafNJIeH3HRJdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Rm3IgMXA; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743411223; c=relaxed/simple;
+	bh=5EGtzJ1cMbOymkIecmlDD7A+m6NCguni7LbhMLAGmKM=;
+	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
+	 Content-Disposition; b=ENzmtpzUggoWcNbgdxrwOorhWk1irhUpIzxl1pDURrmcFBjC+rOlBWNlszg6adEl0AJtA5Wjik0EXFvW0+V6H4jYMkT+n+gwDe6u1p1ho7HGQO7YkGS49cYi0QX/1nCySvZFXvMsgYkx5unsu7lhTLUnO7YkwLErkqZPVlk5LzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QH30cafp; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Rm3IgMXA"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39727fe912cso1468443f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:49:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH30cafp"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso516461f8f.0;
+        Mon, 31 Mar 2025 01:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743410948; x=1744015748; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Whl2WUPVc98vQM/m+qe6R3Gc9cHEk/GeWcmoXxjFvvk=;
-        b=Rm3IgMXAmPDqh140rm5zrxLS/2Z1+oJJnRnO6tg8WWaaT3F+c8g0gEm1rs3w6TgoSG
-         xDaAE08O0SyoYCIIqKzx8peRscw/v+eFw+SekOPcIyjMFnTqqlUkD+9s2z5PPOSSKiDT
-         buz8MJnRRuth+jx6syEOmvxwoez37/RwLxYualKv1Fxp2Xw6/fgtXAYJwFU1DdUopk34
-         XbC8vMlcpirDiwr580yD1Pm4kzlZ44fuWWk7m7iHeqxqQDOqhw04+jro1kENnKm8MYU1
-         crIRIsRLx6JV2iWlutA+EGdMrGOgkGYZupMpiWwEjUAmequ43+lfBKAQUctsG/lXT16v
-         j08A==
+        d=gmail.com; s=20230601; t=1743411220; x=1744016020; darn=vger.kernel.org;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PtxUbrlQcpIDc0UcOWH0EPLAdbTyQEPVRfkNKbeKs9g=;
+        b=QH30cafpT9lTXYrYXAuOwda8t9uqbb7qYZYHLNdM/AaRHISMlu8UYlRPSInS1cKVF1
+         xT2y9MDY1/7FtZCLMfqxamXKPH4NgX6vlfjbsEWx3A4yIKx3ez/+7AfNHoXXbDeAbo3B
+         Qbog/636DG96HXKrb9OICUnrk3/l+zpxB6BSfU+KahEbso3QGn7a8cYw8c99O/91dcX1
+         AcLv5/+C6/rTD4lIuiPgyxHmz2EIpGwWCKxeRpOVzSFIjz69oMD5o77Ct2+fPLwO7c6O
+         KvFZKatgNPSJy15phWIAThuxfUdzyoKabv4ROIB7vkse2flRhS8UBdH9yzXs9dlYgt0o
+         tQDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743410948; x=1744015748;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Whl2WUPVc98vQM/m+qe6R3Gc9cHEk/GeWcmoXxjFvvk=;
-        b=r9zK6OGX+2j+LnEQ80IklvU2mzrGm3q2NDhzkXR664+FVXDftWHZZ/ywoe78+aQAVU
-         S/zcDA254ebUgEVzYfe0rDwq23ZvYdYejm3ha2i0Fb5LJ0B2Mv8H1kCVsVHLfNPxGq4D
-         dASHASeLzMnHloRuaLOkKHIr6YVZw8x2dSjtcyYlVeLVRhOmuLLyxJ945OFvyO0+E7wv
-         L2hZQxQKa/6HfWM9TrgNVD6cTSdbJgCsIQZ9Cn8A27J4Szs40BLM5b8ABaP5LUE8Sbtn
-         D/O4Kwxa3CTewaN8B+pboeeK4oblqKayQwp0etqtX8nAXZoUsQOZX0Dfqq8lLtPajH6U
-         ksQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfoCBGKU/9uP/FPa8O6efyGgs6uhFxAorFz6YGie56QIfEXV360RGp7+9VDBwaJVSDHiOangKlk4lCOIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCKxTIYLqoRbkKnA9B8ngsHQv/fjvViqoFa/pSkdpr5NJOYeic
-	ULgCbgBBwTUOu8HAooK3QHup12jr5EPlnk5CKX89Hp+YIYrOVPrFzgY7/IwXZxY=
-X-Gm-Gg: ASbGncsH5FIzovPyPmGAqMR05wUSzS3yeqHC7UYIQiKWaIAgcSlctnVdDOZ5qr5KfLo
-	thjypze+clLC3xomSv4//+xwnMQ/XfDzzH+KnERuTbKBviwGHfYufErH14/Tbdv636Bxwo8Ss4I
-	xq1LOEYrB3o/k0llhQteCHVe6hElv+nroAHMnYZSGpsTla6xIpmUaJyw6hJNP+0tQUgZWz4NgYv
-	2gum9esO0OS3+QbVN2pRngFCFsc8mmSHCQHBcKV+I4ubZmtP5TcWXQwoDN0aLr7QRDE0M1XCzTj
-	yOFRWIl+PqSOShOGmHzHvXE+qW868WgCS0CJOvJO3savqO47bxtPaQ9M0eMAyyia4GfH7L8g
-X-Google-Smtp-Source: AGHT+IGGwyZuZkogO2wb6LoJ32i7LaAkPiT9c+v6fSm+b2JTEK7/NawdZ3l9f6xwibJk26NytyxDrg==
-X-Received: by 2002:a5d:584e:0:b0:391:231b:8e0d with SMTP id ffacd0b85a97d-39c12117ca7mr5915249f8f.39.1743410947649;
-        Mon, 31 Mar 2025 01:49:07 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dee06sm64292535ad.179.2025.03.31.01.49.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 01:49:07 -0700 (PDT)
-Message-ID: <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
-Date: Mon, 31 Mar 2025 19:19:02 +1030
+        d=1e100.net; s=20230601; t=1743411220; x=1744016020;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PtxUbrlQcpIDc0UcOWH0EPLAdbTyQEPVRfkNKbeKs9g=;
+        b=GSM265i69uEmH5z4cTSrkB8kqLVniYYqagfqJ9veiLpJ6BWmB8g+iUyaFc6TPpMZFz
+         lWWzVTPBybHUumithHyobO0Z1dDKdBGUwGoq1S3e3KKgqDkDch8oRBbXV79Nb+aJUmhG
+         rYeXullJiLf4XvLxNIhSCZE2dsXu8d0qOHD8oeZnsZCPEi4+D6YDCtcRi399wWEbNV57
+         TV8ds5fBAQm0LIpMDZWM9FutwllCq04k+6HYgM5eZawLDl3X89PHdBECuoYSBZR48ILW
+         PJMLG8v6mvCrWWFx+R/BkB91NmzJFT0TGxfK/P10p9bfAvIwQQ7MKb2AKbYAVOHYDOvQ
+         94Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUokMztA87zBf5c/6eOdRQAEtYGUEaokvkFpzIoyNIiEJjv4i5nVZOp5Id+fFbSJ9xZBEgxnFCdRYJ3SQ==@vger.kernel.org, AJvYcCXla00bY6puuMUrxDudEsedFeIj3ceJRfX4tDW3c2VWvEMG/VWiyIowIIUt35sc6Fil1Lav104TrchvqzvU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIbmcy3pxTYLjIMlUGWr17f/mzwm+NzLMJzUfd2hcEk4Je4QvG
+	ODefhn/qjYXSu9W0QhlIkXkdlO8LYghWIkpUDA4UvP/yRCkymM5SPFofagBs6a5bnw==
+X-Gm-Gg: ASbGncvf9Kwrh93lWVmOCMzQLkmhKPa99UnjolwcbTD5kqRs+f4O1o7FoeZb/wW9CYj
+	MR5YzmkNPd4oFNdyHNNlb1oW3tm3QLx+P9KAE0R/wlZi0nKGY0eWIlACrKoTdeE2/uj1p56rFh5
+	99yLRK+IAvfoygXdXOI5GlvOs0wnAmRKH57qCyAHwl5EnJjj761ZB5zuqWQb9ZpsWsXcqzYyq9q
+	ljL2B22HbGnurbXPbcLS3WikiMQlXz3s/PpHbOTqhViI284sAX1ni1/FJfesdfJrwtm9+Xg3iNR
+	DgIi8yUxcZ6hlkw+Sk/ltaNOoQ==
+X-Google-Smtp-Source: AGHT+IHwvB74wwNeidy3mQa+dv6lV/E0/a4qIZOa2bnY/+0tds3rmfJTIzcrSfjdOjcosUvg4F39WA==
+X-Received: by 2002:a05:6000:4282:b0:392:c64:9aef with SMTP id ffacd0b85a97d-39c120de0d9mr6626741f8f.20.1743411219944;
+        Mon, 31 Mar 2025 01:53:39 -0700 (PDT)
+Received: from parrot ([105.113.58.96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4200sm10813538f8f.96.2025.03.31.01.53.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 01:53:39 -0700 (PDT)
+Message-ID: <67ea5813.5d0a0220.293276.775e@mx.google.com>
+X-Google-Original-Message-ID: <Z-pYEL_knf6sSfZF@princerichard17a@gmail.com>
+Date: Mon, 31 Mar 2025 09:53:36 +0100
+From: Richard Akintola <princerichard17a@gmail.com>
+To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
+Subject: [PATCH] staging: sm750fb: modify function name to kernel code style
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
- modes
-To: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Nick Terrell <terrelln@fb.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250331082347.1407151-1-neelx@suse.com>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20250331082347.1407151-1-neelx@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Change camelCase function name sii164ResetChip to sii164_reset_chip
+as reported by checkpatch.pl
 
+CHECK: Avoid camelCase: <sii164ResetChip>
 
-在 2025/3/31 18:53, Daniel Vacek 写道:
-> Now that zstd fast compression levels are allowed with `compress=zstd:-N`
-> mount option, allow also specifying the same using the `compress=zstd-fast:N`
-> alias.
-> 
-> Upstream zstd deprecated the negative levels in favor of the `zstd-fast`
-> label anyways so this is actually the preferred way now. And indeed it also
-> looks more human friendly.
-> 
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
-> ---
->   fs/btrfs/super.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-> index 40709e2a44fce..c1bc8d4db440a 100644
-> --- a/fs/btrfs/super.c
-> +++ b/fs/btrfs/super.c
-> @@ -368,6 +368,16 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
->   			btrfs_set_opt(ctx->mount_opt, COMPRESS);
->   			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
->   			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
-> +		} else if (strncmp(param->string, "zstd-fast", 9) == 0) {
-> +			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
-> +			ctx->compress_level =
-> +				-btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
-> +							  param->string + 9
+Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
+---
+ drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
+ drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
+ drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Can we just use some temporary variable to save the return value of 
-btrfs_compress_str2level()?
+diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
+index 8b81e8642f9e..cc8ff3978d42 100644
+--- a/drivers/staging/sm750fb/ddk750_dvi.c
++++ b/drivers/staging/sm750fb/ddk750_dvi.c
+@@ -18,7 +18,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
+ 		.get_vendor_id = sii164_get_vendor_id,
+ 		.get_device_id = sii164GetDeviceID,
+ #ifdef SII164_FULL_FUNCTIONS
+-		.reset_chip = sii164ResetChip,
++		.reset_chip = sii164_reset_chip,
+ 		.get_chip_string = sii164GetChipString,
+ 		.set_power = sii164SetPower,
+ 		.enable_hot_plug_detection = sii164EnableHotPlugDetection,
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
+index 2532b60245ac..795f8c86e3c0 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.c
++++ b/drivers/staging/sm750fb/ddk750_sii164.c
+@@ -250,10 +250,10 @@ long sii164_init_chip(unsigned char edge_select,
+ #ifdef SII164_FULL_FUNCTIONS
+ 
+ /*
+- *  sii164ResetChip
++ *  sii164_reset_chip
+  *      This function resets the DVI Controller Chip.
+  */
+-void sii164ResetChip(void)
++void sii164_reset_chip(void)
+ {
+ 	/* Power down */
+ 	sii164SetPower(0);
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
+index 71a7c1cb42c4..a9edc9474f87 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.h
++++ b/drivers/staging/sm750fb/ddk750_sii164.h
+@@ -31,7 +31,7 @@ unsigned short sii164_get_vendor_id(void);
+ unsigned short sii164GetDeviceID(void);
+ 
+ #ifdef SII164_FULL_FUNCTIONS
+-void sii164ResetChip(void);
++void sii164_reset_chip(void);
+ char *sii164GetChipString(void);
+ void sii164SetPower(unsigned char powerUp);
+ void sii164EnableHotPlugDetection(unsigned char enableHotPlug);
+-- 
+2.39.5
 
-);
-> +			if (ctx->compress_level > 0)
-> +				ctx->compress_level = -ctx->compress_level;
-
-This also means, if we pass something like "compress=zstd-fast:-9", it 
-will still set the level to the correct -9.
-
-Not some weird double negative, which is good.
-
-But I'm also wondering, should we even allow minus value for "zstd-fast".
-
-> +			btrfs_set_opt(ctx->mount_opt, COMPRESS);
-> +			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
-> +			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
->   		} else if (strncmp(param->string, "zstd", 4) == 0) {
->   			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
->   			ctx->compress_level =
-
-Another thing is, if we want to prefer using zstd-fast:9 other than 
-zstd:-9, should we also change our compress handling in 
-btrfs_show_options() to show zstd-fast:9 instead?
-
-Thanks,
-Qu
