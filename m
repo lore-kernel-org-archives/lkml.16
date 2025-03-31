@@ -1,90 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4962153CE;
-	Mon, 31 Mar 2025 15:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AA521CC68;
+	Mon, 31 Mar 2025 15:38:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743435528; cv=none; b=NMnrjTew64O7WE+qRwZPsEi8reGiNMn6xm55fMMGG1H8JvWAEGNarxaEye8OqI30owob7gKqbMpFVx+YM0Kttz7VKQmgyuPFWmXKUnhXO9++f32pvcADmLzDcgDmMd+T/z6i3pUV8r1lR1fcnbJtiSlBr9QZhNAA8RXx9PEeMCA=
+	t=1743435531; cv=none; b=IcSi7/HrxetCkzckbZXZgmFYM93q1SdVcHi5N5UpH8gGtokhEWcVr3/SD2X6jrnObhKxRcFJG0p/YQTsa7+Ga2tXEtuiOj1MN/Nj91xSMXO1bMtUVeXYY/Ygexsbqfny5xx44LNoD90G5Iv18gIlvpMmPzTXwCn76Lsi/dbNroA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743435528; c=relaxed/simple;
-	bh=uPSFDa3b3rPozp0DJtpTJXXVjrP8+jyf8IICol+dDB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eo5m5biQR56wMYS5no6UjLoDC31IFVedyg9lgp4rQJpLKcPKBVxTMdVXfsHzub6I7eKEoqNr4Q34N6IdDhskQFjKD6sLd4Efr3cRP3YKkQXESw711CRSwDU15fZUxkdwVRr7G/GfHZ+ZCoXHsfYwv6yZ44EkD67SftRNfcT7O/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSKh8Jdg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743435531; c=relaxed/simple;
+	bh=Oz77cFlqw5DPmwbKSrlj7neM+agoaLjuUmLJLZuKvZE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=XNyul2JeVoaW5UneBKU0SWvzygEMT7sgwsrdU9uSC9uPC/0hg7BOPTdPdU2wij5YZMmTEDicy055jIQt8fc6BF+KtGswMMjwEF375MiULo8R8UrzDQG7JBE7IBSMzdb8XAI7wEoF69sIHvXBDCy72YGJ4d1NXAQSUbhGqklcIVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naDzZhIn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSKh8Jdg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C72C4CEE3;
-	Mon, 31 Mar 2025 15:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naDzZhIn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D94C4CEE9;
+	Mon, 31 Mar 2025 15:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743435528;
-	bh=uPSFDa3b3rPozp0DJtpTJXXVjrP8+jyf8IICol+dDB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FSKh8JdgV0duer2kbzBdTNP5z5eGNu9pG/3/MHQNO1b+YqRPv750ZGkYlksOPDRgI
-	 ncq/Yxtcg3xMJWF/B+xiDDVtJLSidlgAgexzyHgGf1KD+0eMo0gkioOveQCtUD/vA1
-	 mXoi3SVE7K5BXW2FgStISu/J3rIAJzEGx/jk/1yXDLjDmb+/ZxImYeQ0pK0neE9TUS
-	 0nxNsp1vvtAO1efpyo7oIdGM8P7irU5ppGB/6aRu4K5Ak9Ui7rT/sQ/Dhj9lvXozZ2
-	 jBawS/LSOyr2+srkMLE82QgSDwJ0ac71X2amcl5dzDIhQR9jkEWN6UOQSLGqd86UdU
-	 qmgno6/eIg/Pg==
-Date: Mon, 31 Mar 2025 16:38:41 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 10/21] dt-bindings: riscv: add Counter delegation ISA
- extensions description
-Message-ID: <20250331-cardigan-canary-cdec5038faf9@spud>
-References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
- <20250327-counter_delegation-v5-10-1ee538468d1b@rivosinc.com>
+	s=k20201202; t=1743435530;
+	bh=Oz77cFlqw5DPmwbKSrlj7neM+agoaLjuUmLJLZuKvZE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=naDzZhInFIu7ojKFiE8dgAYcoFhZb/uIZH6bS5xW0FHt4854cJKMrKMCT7ylBppTK
+	 DrKPQDCxW92veNEgLnRbgUv8RfkiX3ur23VbuZEIbsQocPOSE+JvNoFs6iE64lY7Xh
+	 Zm9hnFGIPLzXGCg0V4zMcpPImfUmAJ9spViTxp9cqdRWQLqBp/1gP7Kw0e9HXkU48Q
+	 +sN0D6ztAgulbdQcml0rNrb8ErEEFE9X3GSOkQOkqM78/rDupZbSvJUWoebjiRQmM6
+	 QZWZ88R/NKDkaa5gloS0bZ1f2kwY9p2J7uVS/eubsdeouKWrt6HUjXmqs73VNzSjca
+	 yuq8mumUiGJBg==
+Date: Tue, 1 Apr 2025 00:38:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] tracing: fprobe events: Fix possible UAF on
+ modules
+Message-Id: <20250401003846.0e4c0176c3410281dee27c05@kernel.org>
+In-Reply-To: <174343533593.843280.8788277038071990492.stgit@devnote2>
+References: <174343532655.843280.15317319860632975273.stgit@devnote2>
+	<174343533593.843280.8788277038071990492.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dG1PDbcUbNATIzue"
-Content-Disposition: inline
-In-Reply-To: <20250327-counter_delegation-v5-10-1ee538468d1b@rivosinc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+Oops, I have already sent this as;
+
+https://lore.kernel.org/all/174342990779.781946.9138388479067729366.stgit@devnote2/
+
+please ignore this.
+
+On Tue,  1 Apr 2025 00:35:36 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Commit ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module
+> refcount") moved try_module_get() from __find_tracepoint_module_cb()
+> to find_tracepoint() caller, but that introduced a possible UAF
+> because the module can be unloaded before try_module_get(). In this
+> case, the module object should be freed too. Thus, try_module_get()
+> does not only fail but may access to the freed object.
+> 
+> To avoid that, try_module_get() in __find_tracepoint_module_cb()
+> again.
+> 
+> Fixes: ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module refcount")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_fprobe.c |   26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 985ff98272da..2cd9ff1049f1 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -919,9 +919,15 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
+>  	struct __find_tracepoint_cb_data *data = priv;
+>  
+>  	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
+> -		data->tpoint = tp;
+> -		if (!data->mod)
+> +		/* If module is not specified, try getting module refcount. */
+> +		if (!data->mod && mod) {
+> +			/* If failed to get refcount, ignore this tracepoint. */
+> +			if (!try_module_get(mod))
+> +				return;
+> +
+>  			data->mod = mod;
+> +		}
+> +		data->tpoint = tp;
+>  	}
+>  }
+>  
+> @@ -933,7 +939,11 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+>  		data->tpoint = tp;
+>  }
+>  
+> -/* Find a tracepoint from kernel and module. */
+> +/*
+> + * Find a tracepoint from kernel and module. If the tracepoint is on the module,
+> + * the module's refcount is incremented and returned as *@tp_mod. Thus, if it is
+> + * not NULL, caller must call module_put(*tp_mod) after used the tracepoint.
+> + */
+>  static struct tracepoint *find_tracepoint(const char *tp_name,
+>  					  struct module **tp_mod)
+>  {
+> @@ -962,7 +972,10 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
+>  	}
+>  }
+>  
+> -/* Find a tracepoint from specified module. */
+> +/*
+> + * Find a tracepoint from specified module. In this case, this does not get the
+> + * module's refcount. The caller must ensure the module is not freed.
+> + */
+>  static struct tracepoint *find_tracepoint_in_module(struct module *mod,
+>  						    const char *tp_name)
+>  {
+> @@ -1169,11 +1182,6 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  	if (is_tracepoint) {
+>  		ctx->flags |= TPARG_FL_TPOINT;
+>  		tpoint = find_tracepoint(symbol, &tp_mod);
+> -		/* lock module until register this tprobe. */
+> -		if (tp_mod && !try_module_get(tp_mod)) {
+> -			tpoint = NULL;
+> -			tp_mod = NULL;
+> -		}
+>  		if (tpoint) {
+>  			ctx->funcname = kallsyms_lookup(
+>  				(unsigned long)tpoint->probestub,
+> 
 
 
---dG1PDbcUbNATIzue
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 27, 2025 at 12:35:51PM -0700, Atish Patra wrote:
-> Add description for the Smcdeleg/Ssccfg extension.
->=20
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---dG1PDbcUbNATIzue
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+q3AQAKCRB4tDGHoIJi
-0vhqAQCY9B8ZEw2rz3RmJIV81yzCSBeNKE2xgSdx/aEU/fDvlwD/dcuiA0D0Y5R4
-7UBK9mlhN8m4DtBZ4u36l9HsPTBdMgg=
-=xY5i
------END PGP SIGNATURE-----
-
---dG1PDbcUbNATIzue--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
