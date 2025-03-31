@@ -1,130 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546E321B9C1;
-	Mon, 31 Mar 2025 20:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D832216E24;
+	Mon, 31 Mar 2025 20:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743454625; cv=none; b=pr7doJOrsnoThz0a4b0oq9WqNP4Oe7cH/4GvshacpRCQiN+OuODmizAj7+uhnBn3XwFN+RATL1J/JQnWj3kTWJDVLVgSVK4bTV4cBtxvWjvTxnsO+03aZlmFqDqTrelDaO1hrPI7GaTqDgkpffk1Phbn91O1Qe25lF96rIySyNY=
+	t=1743454647; cv=none; b=ACPIdPR4fhGFOqtrFlSbyvgegUTlA8G63EVCFYDmc348cMS1wnl/CeH17XZiRMOVPhCuwKekWyfDksahv8hpMBmkXm/QmShL2AKNr1eAbuztvVuJL4daef4NvHOEiIhdm7GhBK7KB2D8QKekk49R8IdqGrqgNgNlEGnz5zvLiXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743454625; c=relaxed/simple;
-	bh=grjGL6ZIKMvZ89GhSxoNkBZGfmrbW7YwQq6dlnLMIhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KFg9PnrYAW5ZK70ClaggW7NLKztYZNI0Cx9rrdsP8/Ya3ijhtIUCybBnFALa6QZHJpMmy5iCIClTLCPKVe5yfHCykw5lUfeNcnalbw4jyGoclcE302iV9LcbzEs3J3qNHhJaCSrLQ2FKrQVuTZoNxYF4n9xULKJ/IbCRJZu21kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A55C4CEE3;
-	Mon, 31 Mar 2025 20:57:03 +0000 (UTC)
-Date: Mon, 31 Mar 2025 16:58:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
- Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <20250331165801.715aba48@gandalf.local.home>
-In-Reply-To: <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
-References: <20250331143426.947281958@goodmis.org>
-	<20250331143532.459810712@goodmis.org>
-	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-	<20250331133906.48e115f5@gandalf.local.home>
-	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743454647; c=relaxed/simple;
+	bh=10bv2ci8Gq6q+ywpbgUZb11BTLKgedTDu+zcEPWmeN0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=msjov1frB92gd2WoBbWubIY9zHA29Y3AZ5refKJgx2KaoN3zFXv4dxBuScXXWY/Iw6iRq4nwxnUALtvKmgSDDOck1LEN/V5kdMjc/7ge0U4BYpGP9inMjGeQ+Yidl/PjW5eJn482MvwizzHNoR9h4ovsvVrIzA1FcNja57z7JbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=d28vV6/y; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d28vV6/y"
+Received: from narnia (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4D2A1210237A;
+	Mon, 31 Mar 2025 13:57:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D2A1210237A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743454645;
+	bh=5XsgAWUoFJ8EmLqO+z62iuJCHz41nTI4m6vFV/nAFDg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=d28vV6/yHuGZDGRY+KhqOML58EhHOZvrywvgHDZb0obC9gbdEWtd1vkSN7MEHX4P2
+	 e9a2D4VWMXQWHWQ2FoVJfkcWg1HevVpml0wySPWlEGN/IQiIxN2AtXipKVvyu9vvC9
+	 c0uwH1dLc9NLCkUNPgqOf5hVIXGc82dBCH4f5l54=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+ <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
+ =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
+ Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jan Stancek <jstancek@redhat.com>,
+ Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com,
+ teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
+Subject: Re: [RFC PATCH security-next 0/4] Introducing Hornet LSM
+In-Reply-To: <Z97xvUul1ObkmulE@kernel.org>
+References: <20250321164537.16719-1-bboscaccy@linux.microsoft.com>
+ <Z97xvUul1ObkmulE@kernel.org>
+Date: Mon, 31 Mar 2025 13:57:15 -0700
+Message-ID: <871puc7wb8.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 31 Mar 2025 12:12:08 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Jarkko Sakkinen <jarkko@kernel.org> writes:
+
+Hi Jarkko,
+
+Thanks for the comments. Paul did a very nice job providing some
+background info, allow me to provide some additional data.
+
+> On Fri, Mar 21, 2025 at 09:45:02AM -0700, Blaise Boscaccy wrote:
+>> This patch series introduces the Hornet LSM.
+>> 
+>> Hornet takes a simple approach to light-skeleton-based eBPF signature
+>
+> Can you define "light-skeleton-based" before using the term.
+>
+> This is the first time in my life when I hear about it.
+>
+
+Sure. Here is the patchset where this stuff got introduced if you are
+curious.
+https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gmail.com/
+
+eBPF has similar requirements to that of modules when it comes to
+loading: find kallysym addresses, fix up elf relocations, some
+struct field offset handing stuff called CO-RE (compile-one
+run-anywhere), and some other miscellaneous bookkeeping.  During eBPF
+program compilation, pseudo-values get written to the immedate operands
+of instructions.  During loading, those pseudo-values get rewritten with
+concrete addresses or data applicable to the currently running system,
+e.g. a kallsym address or a fd for a map. This needs to happen before
+the instructions for a bpf program are loaded into the kernel via the
+bpf() syscall.
+
+Unlike modules, an in-kernel loader unfortunately doesn't
+exist. Typically, the instruction rewriting is done dynamically in
+userspace via libbpf (or the rust/go/python loader). What skeletons do
+is generate a script of required instruction-rewriting operations which
+then gets played back at load-time against a hard-coded blob of raw
+instruction data. This removes the need to distribute source-code or
+object files.
+
+There are two flavors of skeletons, normal skeletons, and light
+skeletons. Normal skeletons utilize relocation logic that lives in
+libbpf, and the relocations/instruction rewriting happen in userspace.
+The second flavor, light skeletons, uses a small eBPF program that
+contains the relocation lookup logic. As it's running in in the kernel,
+it unpacks the target program, peforms the instruction rewriting, and
+loads the target program. Light skeletons are currently utilized for
+some drivers, and BPF_PRELOAD functionionality since they can operate
+without userspace.
+
+Light skeletons were recommended on various mailing list discussions as
+the preffered path to performing signature verification. There are some
+PoCs floating around that used light-skeletons in concert with
+fs-verity/IMA and eBPF LSMs. We took a slightly different approach to
+Hornet, by utilizing the existing PCKS#7 signing scheme that is used for
+kernel modules.
+
+>> verification. Signature data can be easily generated for the binary
+>
+> s/easily//
+>
+> Useless word having no measure.
+>
+
+Ack, thanks.
 
 
-> > OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
-> > same thing as pstore. And it looks like pstore should be updated too.  
-> 
-> Please just stop copying code from random drivers or filesystems.
+>> data that is generated via bpftool gen -L. This signature can be
+>
+> I have no idea what that command does.
+>
+> "Signature data can be generated for the binary data as follows:
+>
+> bpftool gen -L
+>
+> <explanation>"
+>
+> Here you'd need to answer to couple of unknowns:
+>
+> 1. What is in exact terms "signature data"?
 
-Note, I did not blindly copy it. I knew ramoops did exactly what I wanted
-to do, so I looked at how it did it. I read the code, it looked reasonable,
-and I mapped it.
+That is a PKCS#7 signature of a data buffer containing the raw
+instructions of an eBPF program, followed by the initial values of any
+maps used by the program. 
 
-I needed a way to map physical memory to vmap memory. How am I supposed to
-know it was not doing it the proper way?
+> 2. What does "bpftool gen -L" do?
+>
 
-> 
-> Christ.
-> 
-> I've said this before: core kernel code has higher quality
-> requirements than random drivers (or even random filesystems).
+eBPF programs often have 2 parts. An orchestrator/loader program that
+provides load -> attach/run -> i/o -> teardown logic and the in-kernel
+program.
 
-I did not believe pstore was a random file system. It does similar code
-that tracing does.
+That command is used to generate a skeleton which can be used by the
+orchestrator prgoram. Skeletons get generated as a C header file, that
+contains various autogenerated functions that open and load bpf programs
+as decribed above. That header file ends up being included in a
+userspace orchestrator program or possibly a kernel module.
 
-> 
-> You can't copy crazy incorrect snippets from random sources and put it
-> in core kernel code.
-
-Note, even though this code lives in kernel/, it is not much different than
-pstore code. It's a way to trace / debug the kernel, very much like pstore
-in that it's used to debug. I saw that code was written in 2012 and thought
-it was mature. It made sense, and yes I could have looked for a range, but
-I trusted the people who wrote that code. This wasn't just a random looking
-at something and copying it. I really wanted to understand how it worked.
-
-And I did talk with some of the mm folks, and they seemed OK with this.
-
-
-> If it's not part of the kernel memory allocator, it does not
-> necessarily have a "struct page *" associated with it. Using a pointer
-> to 'struct page' and passing it off is just fundamentally more than a
-> bug: it's seriously and deeply broken.
-> 
-> It's probably much more obviously broken if the physical addresses
-> came from a PCI device, and this all just happens to work because it's
-> actually real RAM and we ended up having a 'struct page []' for it for
-> some random reason.
-
-Note, this only works with RAM.
+> This feedback maps to other examples too in the cover letter.
+>
+> BR, Jarkko
 
 
-> Or it might just be because that memory *has* been in the E280 memory
-> map before it was reserved, and the 'strict page' arrays may have been
-> sized for the original E280 information, not the "after stealing"
-> information.
+I'll rework this with some definitions of the eBPF subsystem jargon
+along with your suggestions.
 
-I guess you mean E820.
-
-Mike can correct me if I'm wrong, but the memory that was stolen was actual
-memory returned by the system (E820 in x86). It reserves the memory before
-the memory allocation reserves this memory. So what reserve_mem returns is
-valid memory that can be used by memory allocator, but is currently just
-"reserved" which means it wants to prevent the allocator from using it.
-
-
-> And yes, I'm not at all surprised that we'd have other mis-users of
-> this. We have some very historical code that depends on reserved pages
-> going back all the way to linux-0.01 I suspect, because things like
-> the original VGA code knew that the physical addresses were in the
-> BIOS hole region that was backed by 'struct page'.
-
-I believe this is what Mike set up. A way to have normal RAM reserved
-before it gets added to the memory allocator. This was by design.
-
-In fact, if you do pull my v2[*] pull request of the ring buffer code (that
-removes this user space mapping of the persistent ring buffer logic) it
-actually adds the ability to free the memory and add it back into the memory
-allocator.
-
- https://lore.kernel.org/linux-trace-kernel/173989134814.230693.18199312930337815629.stgit@devnote2/
-
--- Steve
-
-[*] https://lore.kernel.org/all/20250328173533.7fa7810d@gandalf.local.home/
+-blaise
