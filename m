@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6B82144C1;
-	Mon, 31 Mar 2025 14:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCBE2139C9;
+	Mon, 31 Mar 2025 14:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431706; cv=none; b=C/8oGUpoG4ccGvq4rPSpv0Y8v7RgJdIDypNNvGcPbsankckVyJSLbhL4oECH9pizUAAEIXNtwdmjVh+MVFOPlfO90ipAErSBnhLcDHvUjQo0jIJw2VpE9LaEU/0QJfI1/nNyu82weYbySPfMLgGSFaKmS+KmuhshwhchrsAMXoE=
+	t=1743431711; cv=none; b=bA1DCxOdwxz4CF8BxxKDZQhs3+Pn3fMECyq1A4aiEVGkiKJxvXZyU/nYkDfcfPiwUWqXGBMrJcVtgwOKAEhA7fxWaOCQEcitptZZikSADsvf8oErDch1rIz5fywgdUvn50pi3ERiY/eLbZlpmuzszCNyow+Dg6n3hTTXhRBI7t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431706; c=relaxed/simple;
-	bh=DIQizwHmfCEk4AJXRdolmNYd1M44sWCcLNHDmneyAT4=;
+	s=arc-20240116; t=1743431711; c=relaxed/simple;
+	bh=RxXN5ImDkHlxqQmfInHiKTyFOrz987IzeR6333NbSJ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DUaEYA+k3P/y713/0ZNnrlzjbeMO1do0zqVoCx22732xRDr1C1Mq0dCW8nn5uYoUdB+9yz9hwqi5uymW9IftjdFNUpccQ3/c8LFSUvqQ1voozrLJx760mSHkfOTXlvjnN+5a1++5rZpIPGj4q/Q91+tkcKBDmb79KzskqD2VHqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3VbZbTs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ByV5gHXIxjClqILIdXchbcd4aeQLo11jxwz0gqaL18z1EqsZu2Fu4xThKAmUTNYFMfRkprCWed8cjUc/anDOMaYUI/8o9Gcd5OFtL+TV8raJ9YYDb7wUm+B6EjzrBt+LdycgDSI8r198Q3FXqcjg5IycbDSmcOfo6ZlVhV6dU5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VN3X0c5J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3VbZbTs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5E1C4CEE3;
-	Mon, 31 Mar 2025 14:35:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VN3X0c5J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED90C4CEE3;
+	Mon, 31 Mar 2025 14:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431706;
-	bh=DIQizwHmfCEk4AJXRdolmNYd1M44sWCcLNHDmneyAT4=;
+	s=k20201202; t=1743431711;
+	bh=RxXN5ImDkHlxqQmfInHiKTyFOrz987IzeR6333NbSJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M3VbZbTsH+YWV5atGS1ex+hrnUjeDN3cLNFkVNXOVQGzQc6iO0OgwEtyVrWaQD68+
-	 ESWGJwmzz6+4qFdo5AuqzbtkrQNd4ljGIe7gNXtr5Z4OZCjWWrWBIbJO81Hwdyajkw
-	 xPb9jTySsRM8NtyKA5JrXxhIJ5CZO02ixs3ZHO+RejeoIrzcNE3GTjlvA0noHjzMxx
-	 dblfXmVVS40xKSE9X5virPhVGB7kqcW/cSSlpoDGydg0zEHNfmF65x6OtTdxDYHHaK
-	 uG4rcu4+1fEAY9Fw7UBAMqNEjRmHQi1rB7OlHJDwpRHwThS0LEGVXOXuN2qNSmXKAo
-	 jtls6tuNwherw==
+	b=VN3X0c5JEX1KzMRilhCNXpB8HDzItTArlYw2Zeb7nlHlMU8j1P/osSrhXmLZb+azj
+	 MlfjKG+bjmpHAwhvF4RGAWrZbBNuu1Li4xRQj6GIECVWBYW/1SP7o/JokLBXHpwWU4
+	 4+sjRwlo0IsqmcuGCvN5VdSmIzIs/cDhWVDGn+B0ioHsXKFui3rBwm6eO8bipB9jKW
+	 2tdDLFPhqLaFvimb1xsc+V0hgSSwX+66AeM4bdLJxTqKxmILhp1/dyWW4oiYvvIYSN
+	 IW4ecB4zoIM8sWWfoMvF8q207Z4wcyHpbF5LTnPr9IzS7ngae2zPQ3JyBRjI+iMPzz
+	 5ervVB8Rr72Og==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Xin Li (Intel)" <xin@zytor.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org
-Subject: [PATCH AUTOSEL 6.13 06/16] x86/ia32: Leave NULL selector values 0~3 unchanged
-Date: Mon, 31 Mar 2025 10:34:40 -0400
-Message-Id: <20250331143450.1685242-6-sashal@kernel.org>
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 08/16] perf: arm_pmu: Don't disable counter in armpmu_add()
+Date: Mon, 31 Mar 2025 10:34:42 -0400
+Message-Id: <20250331143450.1685242-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250331143450.1685242-1-sashal@kernel.org>
 References: <20250331143450.1685242-1-sashal@kernel.org>
@@ -59,139 +54,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: "Xin Li (Intel)" <xin@zytor.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit ad546940b5991d3e141238cd80a6d1894b767184 ]
+[ Upstream commit dcca27bc1eccb9abc2552aab950b18a9742fb8e7 ]
 
-The first GDT descriptor is reserved as 'NULL descriptor'.  As bits 0
-and 1 of a segment selector, i.e., the RPL bits, are NOT used to index
-GDT, selector values 0~3 all point to the NULL descriptor, thus values
-0, 1, 2 and 3 are all valid NULL selector values.
+Currently armpmu_add() tries to handle a newly-allocated counter having
+a stale associated event, but this should not be possible, and if this
+were to happen the current mitigation is insufficient and potentially
+expensive. It would be better to warn if we encounter the impossible
+case.
 
-When a NULL selector value is to be loaded into a segment register,
-reload_segments() sets its RPL bits.  Later IRET zeros ES, FS, GS, and
-DS segment registers if any of them is found to have any nonzero NULL
-selector value.  The two operations offset each other to actually effect
-a nop.
+Calls to pmu::add() and pmu::del() are serialized by the core perf code,
+and armpmu_del() clears the relevant slot in pmu_hw_events::events[]
+before clearing the bit in pmu_hw_events::used_mask such that the
+counter can be reallocated. Thus when armpmu_add() allocates a counter
+index from pmu_hw_events::used_mask, it should not be possible to observe
+a stale even in pmu_hw_events::events[] unless either
+pmu_hw_events::used_mask or pmu_hw_events::events[] have been corrupted.
 
-Besides, zeroing of RPL in NULL selector values is an information leak
-in pre-FRED systems as userspace can spot any interrupt/exception by
-loading a nonzero NULL selector, and waiting for it to become zero.
-But there is nothing software can do to prevent it before FRED.
+If this were to happen, we'd end up with two events with the same
+event->hw.idx, which would clash with each other during reprogramming,
+deletion, etc, and produce bogus results. Add a WARN_ON_ONCE() for this
+case so that we can detect if this ever occurs in practice.
 
-ERETU, the only legit instruction to return to userspace from kernel
-under FRED, by design does NOT zero any segment register to avoid this
-problem behavior.
+That possiblity aside, there's no need to call arm_pmu::disable(event)
+for the new event. The PMU reset code initialises the counter in a
+disabled state, and armpmu_del() will disable the counter before it can
+be reused. Remove the redundant disable.
 
-As such, leave NULL selector values 0~3 unchanged and close the leak.
-
-Do the same on 32-bit kernel as well.
-
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20241126184529.1607334-1-xin@zytor.com
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Tested-by: James Clark <james.clark@linaro.org>
+Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-2-4e9922fc2e8e@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/signal_32.c | 62 +++++++++++++++++++++++++------------
- 1 file changed, 43 insertions(+), 19 deletions(-)
+ drivers/perf/arm_pmu.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/signal_32.c b/arch/x86/kernel/signal_32.c
-index ef654530bf5a9..98123ff10506c 100644
---- a/arch/x86/kernel/signal_32.c
-+++ b/arch/x86/kernel/signal_32.c
-@@ -33,25 +33,55 @@
- #include <asm/smap.h>
- #include <asm/gsseg.h>
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 398cce3d76fc4..2f33e69a8caf2 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -342,12 +342,10 @@ armpmu_add(struct perf_event *event, int flags)
+ 	if (idx < 0)
+ 		return idx;
  
-+/*
-+ * The first GDT descriptor is reserved as 'NULL descriptor'.  As bits 0
-+ * and 1 of a segment selector, i.e., the RPL bits, are NOT used to index
-+ * GDT, selector values 0~3 all point to the NULL descriptor, thus values
-+ * 0, 1, 2 and 3 are all valid NULL selector values.
-+ *
-+ * However IRET zeros ES, FS, GS, and DS segment registers if any of them
-+ * is found to have any nonzero NULL selector value, which can be used by
-+ * userspace in pre-FRED systems to spot any interrupt/exception by loading
-+ * a nonzero NULL selector and waiting for it to become zero.  Before FRED
-+ * there was nothing software could do to prevent such an information leak.
-+ *
-+ * ERETU, the only legit instruction to return to userspace from kernel
-+ * under FRED, by design does NOT zero any segment register to avoid this
-+ * problem behavior.
-+ *
-+ * As such, leave NULL selector values 0~3 unchanged.
-+ */
-+static inline u16 fixup_rpl(u16 sel)
-+{
-+	return sel <= 3 ? sel : sel | 3;
-+}
-+
- #ifdef CONFIG_IA32_EMULATION
- #include <asm/unistd_32_ia32.h>
- 
- static inline void reload_segments(struct sigcontext_32 *sc)
- {
--	unsigned int cur;
-+	u16 cur;
- 
-+	/*
-+	 * Reload fs and gs if they have changed in the signal
-+	 * handler.  This does not handle long fs/gs base changes in
-+	 * the handler, but does not clobber them at least in the
-+	 * normal case.
-+	 */
- 	savesegment(gs, cur);
--	if ((sc->gs | 0x03) != cur)
--		load_gs_index(sc->gs | 0x03);
-+	if (fixup_rpl(sc->gs) != cur)
-+		load_gs_index(fixup_rpl(sc->gs));
- 	savesegment(fs, cur);
--	if ((sc->fs | 0x03) != cur)
--		loadsegment(fs, sc->fs | 0x03);
-+	if (fixup_rpl(sc->fs) != cur)
-+		loadsegment(fs, fixup_rpl(sc->fs));
-+
- 	savesegment(ds, cur);
--	if ((sc->ds | 0x03) != cur)
--		loadsegment(ds, sc->ds | 0x03);
-+	if (fixup_rpl(sc->ds) != cur)
-+		loadsegment(ds, fixup_rpl(sc->ds));
- 	savesegment(es, cur);
--	if ((sc->es | 0x03) != cur)
--		loadsegment(es, sc->es | 0x03);
-+	if (fixup_rpl(sc->es) != cur)
-+		loadsegment(es, fixup_rpl(sc->es));
- }
- 
- #define sigset32_t			compat_sigset_t
-@@ -105,18 +135,12 @@ static bool ia32_restore_sigcontext(struct pt_regs *regs,
- 	regs->orig_ax = -1;
- 
- #ifdef CONFIG_IA32_EMULATION
 -	/*
--	 * Reload fs and gs if they have changed in the signal
--	 * handler.  This does not handle long fs/gs base changes in
--	 * the handler, but does not clobber them at least in the
--	 * normal case.
+-	 * If there is an event in the counter we are going to use then make
+-	 * sure it is disabled.
 -	 */
- 	reload_segments(&sc);
- #else
--	loadsegment(gs, sc.gs);
--	regs->fs = sc.fs;
--	regs->es = sc.es;
--	regs->ds = sc.ds;
-+	loadsegment(gs, fixup_rpl(sc.gs));
-+	regs->fs = fixup_rpl(sc.fs);
-+	regs->es = fixup_rpl(sc.es);
-+	regs->ds = fixup_rpl(sc.ds);
- #endif
++	/* The newly-allocated counter should be empty */
++	WARN_ON_ONCE(hw_events->events[idx]);
++
+ 	event->hw.idx = idx;
+-	armpmu->disable(event);
+ 	hw_events->events[idx] = event;
  
- 	return fpu__restore_sig(compat_ptr(sc.fpstate), 1);
+ 	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
 -- 
 2.39.5
 
