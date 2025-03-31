@@ -1,147 +1,116 @@
-Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542B202F6D
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B72A1D7
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743427153; cv=none; b=HmLLKf8c22kHdqALNX86SgjH4pMIRNGSN0eaRFmCZsy1IBmhRkGyabkzyFNbmqDM23jjc1k4AWJMf+zjFO2FeAFk7SR3GHxAhTC2Wz9yH0Gg9Y4wIF2cwhbSoq5zvUDJxq9/xyjkjygLRyrIXckg4Kutd17WlN45Hb5FGhXP2as=
+	t=1743427192; cv=none; b=U+E4vz4A4HDHnmIEyNTVnIcMmfQnp+hty9eWnjSqYKV71IezQOBSMd9sF6BnYw3OWUf764AdlzgONO5gmYWKtxzlpLMftxFOzhvTeC0ChvEf6udAtfVqFY6F6wTvJzGD2bsYBEhnJ6mGBv8XcwpJSp8EgGeNLLqS/abvx29CwHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743427153; c=relaxed/simple;
-	bh=9lIdQkQX9NhVijtsyv+5cMKTdPnXRz7repYBlxwakX8=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KWbmCKG5+TEMpnT7yQPpnWYH1Mo1YSEizJ/ZZoATKEj1MUcPaWY6Zj8Ij+Qeg2I0ldklCY8vn1at24+zmnoynM2qAjIyb12bds1iGJum2dypMgsVA9gK6N9b4lGfKXTWYH9adXJ5bYg7Z4fn2opk50WVLTIaHY95VhgMABid6Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=LiC1Hdl3; arc=none smtp.client-ip=91.236.205.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	s=arc-20240116; t=1743427192; c=relaxed/simple;
+	bh=P6DCTUit0leEkPXg7yvciyfLzZCMNlz+axqKHwql/cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UKvD058P+55nFV/unbJ4fPss3AZd0+XuNOsq9GLBMEI6tstoKxKFrgNZWoH/0cCWaenc+aTLFDr17j8lbEushf0TfoutGh2V5KxZ3XQPfOaUH9gjrcgdle3zcUjdfrWIoyaG/dJDEMY7PgDArZN0RbScHiWzvmZzo7XQtk6+2qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bdFmwDFu; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="LiC1Hdl3"
-Received: from mail.crpt.ru ([192.168.60.4])
-	by mail.crpt.ru  with ESMTP id 52VDIe9H015652-52VDIe9J015652
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Mon, 31 Mar 2025 16:18:40 +0300
-Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 31 Mar
- 2025 16:18:40 +0300
-Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
- ([192.168.60.4]) with mapi id 15.01.2507.044; Mon, 31 Mar 2025 16:18:40 +0300
-From: =?utf-8?B?0JLQsNGC0L7RgNC+0L/QuNC9INCQ0L3QtNGA0LXQuQ==?=
-	<a.vatoropin@crpt.ru>
-To: Felix Kuehling <Felix.Kuehling@amd.com>
-CC: =?utf-8?B?0JLQsNGC0L7RgNC+0L/QuNC9INCQ0L3QtNGA0LXQuQ==?=
-	<a.vatoropin@crpt.ru>, Alex Deucher <alexander.deucher@amd.com>,
-	=?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] drm/amdkfd: Change svm_range_get_info return type
-Thread-Topic: [PATCH v2] drm/amdkfd: Change svm_range_get_info return type
-Thread-Index: AQHboj9r5RaSSHXkwUiCl2J/gxqZZA==
-Date: Mon, 31 Mar 2025 13:18:40 +0000
-Message-ID: <20250331131833.68281-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX2.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 3/31/2025 10:37:00 AM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bdFmwDFu"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso3948936f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743427188; x=1744031988; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YcmYk5PTzxCtOJOaVVP5nkeOuljxOTS0F0qSnk/8Fxg=;
+        b=bdFmwDFuhB+0Gfw/nwoixHXAPnagSqngq0oFhy2OTzNvXJUcT0sNuoFCClUQw7uBuz
+         KYkkxUpMQ+H3ShxhEUeJI6F60G59kUzJCwNBboyjzYLrbyihXmIwVodeSQz2j9U0IvN/
+         zF1Aivt/B5O02E+hiCLTunMTIrj9e0kfF2Bafh95oUgsPZVqqcOYqL4xu+36mTrTv6cA
+         sH5hF3AAX74wkDfaZ73JFf2ssrSIvIXT9UDDCjafcx0zbWkFkg8UvK47i/JDfqkbincz
+         F8Gj8ccNJhtEYlT6HVf05ggMwyv/gzfd28sexlGo4qjUSra8fi2vHU9FWxfmB6Z2qJbB
+         hK3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743427188; x=1744031988;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YcmYk5PTzxCtOJOaVVP5nkeOuljxOTS0F0qSnk/8Fxg=;
+        b=GofaBJM6xsiknln99bdxvoTB7IvtPyIZ5D63u0aB84YUWcidTjJ+B5NdKAktJdAOOj
+         IqO7WatpKTZRkZ6dPvFo+LU8dOGLZW4k2xm1ol2uE2IG7V9K6w8Sne1S8vcxUIXZ0s8Q
+         2pO4Vx7INbot8Mpqzi3PQZWZILYnwWDDeUwyclCsj0u3ffbWDYXGFvttbLnqBEwGyIUG
+         9/77LlKdqoiONLgN5BmITFdsGH3xpT2IjeOVtKLW81U7oSGNCboB6xYeyky+AyySrSkh
+         jFlbngmnjFMN5QuP5qv1M0aezocYiN+4h6Kiru1csZF+kRcKLJPwTZW04UscM4vBonX2
+         rxWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwX4tUGpFTSGNjz+yMgLavkv7+YvSqIub8Rwx6c/+CKH8Dqyu+U24I+F1I4H5ElinRKNatq/cLQSbLQxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqsxaTroP1781nPlwoZmyT8yx/JgOnsxxWtpDbutDoAsKpxe8G
+	TGlZ72DiMc6sYYcwdDJcHkEJ8nJT/ltOYxQiE9K89rlj69ejyp+n6PZ4kQJIhZk=
+X-Gm-Gg: ASbGnctCyXu+ilDaMK1EMOnFLhzH90fOq+Y7lXYcQKrVljMRVfhKz010+9Iktc4vpfo
+	JUjhyNZWfUmG30TfNeuezJqFnjA9+na36KCX2PaEVJj6rUJuv5K5mRalETCFoISKik4RbZqeTHZ
+	Q6uyNdCvkqWMRoBGF7YBKkRKN/aHvUeVnOWhQ5inkIEu6xR4g57tiAx2b16jeo46Pv+yw6vlfzB
+	KrvrEM+J0TOBaFCTsW/Gfe+S8JYqm+U2HOTfdUDPmuFTOU/S2YiWf1KTWJAFtXGNqA4bO6trzZT
+	BDbUy4Pvs946I9J2YO0mKCrgDaZEI9R+4FjeQc3i0mwIhCd9KD1vLNmJM4EZZKqP5/bo6U//xVl
+	g5Kb3wFhojIvYCTggYkmiY9+ShbPtXvpJKdqtSg==
+X-Google-Smtp-Source: AGHT+IGZqmArJyrihK4euVLU0horXdZgOg53706JbhiZUWs5TDnkpgzuRWwj3lskoRyG6Hkk8G0VLA==
+X-Received: by 2002:a05:6000:2b06:b0:399:6d26:7752 with SMTP id ffacd0b85a97d-39c12117ad8mr5124011f8f.38.1743427188556;
+        Mon, 31 Mar 2025 06:19:48 -0700 (PDT)
+Received: from u94a (2001-b011-fa04-3f62-b2dc-efff-fee8-7e7a.dynamic-ip6.hinet.net. [2001:b011:fa04:3f62:b2dc:efff:fee8:7e7a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dedcfsm68393265ad.193.2025.03.31.06.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 06:19:47 -0700 (PDT)
+Date: Mon, 31 Mar 2025 21:19:36 +0800
+From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+To: "Naveen N. Rao" <naveen@kernel.org>, 
+	Hari Bathini <hbathini@linux.ibm.com>, bpf@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, 
+	Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: [BUG?] ppc64le: fentry BPF not triggered after live patch (v6.14)
+Message-ID: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 192.168.60.4
-X-FE-Policy-ID: 2:4:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=9lIdQkQX9NhVijtsyv+5cMKTdPnXRz7repYBlxwakX8=;
- b=LiC1Hdl3sEbAIU8+QDpAgP2xVY6l+ZTuywyeWuN4SfvZddDQyRoEUXv8H34ohMw2n3K9vdZTQlO6
-	ZRW9oIwm9w1xqP85vFQ/9eeKU+htI2Awt9sZ3sIbbHHc9HHYrmGr1GCu6Rle8c4FHsS1t6JWEDF/
-	RvaAN+zVM06KPAtHHKVUXF9qqBkVk81u58RH/u92KUpKYBKZEvqTk7oFEFvXMBkdZltT8yHHQQhQ
-	dedUoSlQQ7G84w7skqTlbFm0DgTG1njR6qaqiwXpT+TjhoJ5b2F/hAMZ1x4Nnz9V6ZV/fTWURXTd
-	jYeGTkHOBRQwKQbhAg5okbZra7dbJDp/3Yqe8Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-RnJvbTogQW5kcmV5IFZhdG9yb3BpbiA8YS52YXRvcm9waW5AY3JwdC5ydT4NCg0KU3RhdGljIGFu
-YWx5c2lzIHNob3dzIHRoYXQgcG9pbnRlciAic3ZtcyIgY2Fubm90IGJlIE5VTEwgYmVjYXVzZSBp
-dCBwb2ludHMNCnRvIHRoZSBvYmplY3QgInN0cnVjdCBzdm1fcmFuZ2VfbGlzdCIuIFJlbW92ZSB0
-aGUgZXh0cmEgTlVMTCBjaGVjay4gSXQgaXMNCm1lYW5pbmdsZXNzIGFuZCBoYXJtcyB0aGUgcmVh
-ZGFiaWxpdHkgb2YgdGhlIGNvZGUuDQoNCkluIHRoZSBmdW5jdGlvbiBzdm1fcmFuZ2VfZ2V0X2lu
-Zm8oKSB0aGVyZSBpcyBubyBwb3NzaWJpbGl0eSBvZiBmYWlsdXJlLg0KVGhlcmVmb3JlLCB0aGUg
-Y2FsbGVyIG9mIHRoZSBmdW5jdGlvbiBzdm1fcmFuZ2VfZ2V0X2luZm8oKSBkb2VzIG5vdCBuZWVk
-DQphIHJldHVybiB2YWx1ZS4gQ2hhbmdlIHRoZSBmdW5jdGlvbiBzdm1fcmFuZ2VfZ2V0X2luZm8o
-KSByZXR1cm4gdHlwZSBmcm9tDQoiaW50IiB0byAidm9pZCIuIA0KDQpTaW5jZSB0aGUgZnVuY3Rp
-b24gc3ZtX3JhbmdlX2dldF9pbmZvKCkgaGFzIGEgcmV0dXJuIHR5cGUgb2YgInZvaWQiLiBUaGUN
-CmNhbGxlciBvZiB0aGUgZnVuY3Rpb24gc3ZtX3JhbmdlX2dldF9pbmZvKCkgZG9lcyBub3QgbmVl
-ZCBhIHJldHVybiB2YWx1ZS4NCkRlbGV0ZSBleHRyYSBjb2RlLg0KDQpGb3VuZCBieSBMaW51eCBW
-ZXJpZmljYXRpb24gQ2VudGVyIChsaW51eHRlc3Rpbmcub3JnKSB3aXRoIFNWQUNFLg0KDQpTaWdu
-ZWQtb2ZmLWJ5OiBBbmRyZXkgVmF0b3JvcGluIDxhLnZhdG9yb3BpbkBjcnB0LnJ1Pg0KLS0tDQp2
-MSAtPiB2MjogYWxzbyBjaGFuZ2UgcmV0dXJuIHR5cGUgb2Ygc3ZtX3JhbmdlX2dldF9pbmZvKCkg
-cGVyIEZlbGl4IEt1ZWhsaW5nIHN1Z2dlc3Rpb24NCg0KIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1k
-a2ZkL2tmZF9jaGFyZGV2LmMgfCAgNCArLS0tDQogZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQv
-a2ZkX3N2bS5jICAgICB8ICA3ICsrLS0tLS0NCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9r
-ZmRfc3ZtLmggICAgIHwgMTEgKysrKystLS0tLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0
-aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-YW1kL2FtZGtmZC9rZmRfY2hhcmRldi5jIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2Zk
-X2NoYXJkZXYuYw0KaW5kZXggMWU5ZGQwMDYyMGJmLi5hMjE0OWFmYTU4MDMgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfY2hhcmRldi5jDQorKysgYi9kcml2ZXJz
-L2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfY2hhcmRldi5jDQpAQCAtMjAzOSw5ICsyMDM5LDcgQEAg
-c3RhdGljIGludCBjcml1X2dldF9wcm9jZXNzX29iamVjdF9pbmZvKHN0cnVjdCBrZmRfcHJvY2Vz
-cyAqcCwNCiANCiAJbnVtX2V2ZW50cyA9IGtmZF9nZXRfbnVtX2V2ZW50cyhwKTsNCiANCi0JcmV0
-ID0gc3ZtX3JhbmdlX2dldF9pbmZvKHAsICZudW1fc3ZtX3JhbmdlcywgJnN2bV9wcml2X2RhdGFf
-c2l6ZSk7DQotCWlmIChyZXQpDQotCQlyZXR1cm4gcmV0Ow0KKwlzdm1fcmFuZ2VfZ2V0X2luZm8o
-cCwgJm51bV9zdm1fcmFuZ2VzLCAmc3ZtX3ByaXZfZGF0YV9zaXplKTsNCiANCiAJKm51bV9vYmpl
-Y3RzID0gbnVtX3F1ZXVlcyArIG51bV9ldmVudHMgKyBudW1fc3ZtX3JhbmdlczsNCiANCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfc3ZtLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vYW1kL2FtZGtmZC9rZmRfc3ZtLmMNCmluZGV4IDEwMDcxN2E5OGVjMS4uMWI3ZDU3YTFi
-MjQ1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX3N2bS5jDQor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfc3ZtLmMNCkBAIC00MDc2LDggKzQw
-NzYsOCBAQCBpbnQga2ZkX2NyaXVfcmVzdG9yZV9zdm0oc3RydWN0IGtmZF9wcm9jZXNzICpwLA0K
-IAlyZXR1cm4gcmV0Ow0KIH0NCiANCi1pbnQgc3ZtX3JhbmdlX2dldF9pbmZvKHN0cnVjdCBrZmRf
-cHJvY2VzcyAqcCwgdWludDMyX3QgKm51bV9zdm1fcmFuZ2VzLA0KLQkJICAgICAgIHVpbnQ2NF90
-ICpzdm1fcHJpdl9kYXRhX3NpemUpDQordm9pZCBzdm1fcmFuZ2VfZ2V0X2luZm8oc3RydWN0IGtm
-ZF9wcm9jZXNzICpwLCB1aW50MzJfdCAqbnVtX3N2bV9yYW5nZXMsDQorCQkJdWludDY0X3QgKnN2
-bV9wcml2X2RhdGFfc2l6ZSkNCiB7DQogCXVpbnQ2NF90IHRvdGFsX3NpemUsIGFjY2Vzc2liaWxp
-dHlfc2l6ZSwgY29tbW9uX2F0dHJfc2l6ZTsNCiAJaW50IG5hdHRyX2NvbW1vbiA9IDQsIG5hdHRy
-X2FjY2Vzc2liaWxpdHkgPSAxOw0KQEAgLTQwODksOCArNDA4OSw2IEBAIGludCBzdm1fcmFuZ2Vf
-Z2V0X2luZm8oc3RydWN0IGtmZF9wcm9jZXNzICpwLCB1aW50MzJfdCAqbnVtX3N2bV9yYW5nZXMs
-DQogCSpzdm1fcHJpdl9kYXRhX3NpemUgPSAwOw0KIA0KIAlzdm1zID0gJnAtPnN2bXM7DQotCWlm
-ICghc3ZtcykNCi0JCXJldHVybiAtRUlOVkFMOw0KIA0KIAltdXRleF9sb2NrKCZzdm1zLT5sb2Nr
-KTsNCiAJbGlzdF9mb3JfZWFjaF9lbnRyeShwcmFuZ2UsICZzdm1zLT5saXN0LCBsaXN0KSB7DQpA
-QCAtNDEzMiw3ICs0MTMwLDYgQEAgaW50IHN2bV9yYW5nZV9nZXRfaW5mbyhzdHJ1Y3Qga2ZkX3By
-b2Nlc3MgKnAsIHVpbnQzMl90ICpudW1fc3ZtX3JhbmdlcywNCiANCiAJcHJfZGVidWcoIm51bV9z
-dm1fcmFuZ2VzICV1IHRvdGFsX3ByaXZfc2l6ZSAlbGx1XG4iLCAqbnVtX3N2bV9yYW5nZXMsDQog
-CQkgKnN2bV9wcml2X2RhdGFfc2l6ZSk7DQotCXJldHVybiAwOw0KIH0NCiANCiBpbnQga2ZkX2Ny
-aXVfY2hlY2twb2ludF9zdm0oc3RydWN0IGtmZF9wcm9jZXNzICpwLA0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9zdm0uaCBiL2RyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1ka2ZkL2tmZF9zdm0uaA0KaW5kZXggNmVhMjNjNzgwMDljLi4wMWM3YTQ4Nzc5MDQgMTAwNjQ0
-DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfc3ZtLmgNCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9zdm0uaA0KQEAgLTE4NCw4ICsxODQsOCBAQCB2b2lk
-IHNjaGVkdWxlX2RlZmVycmVkX2xpc3Rfd29yayhzdHJ1Y3Qgc3ZtX3JhbmdlX2xpc3QgKnN2bXMp
-Ow0KIHZvaWQgc3ZtX3JhbmdlX2RtYV91bm1hcF9kZXYoc3RydWN0IGRldmljZSAqZGV2LCBkbWFf
-YWRkcl90ICpkbWFfYWRkciwNCiAJCQkgdW5zaWduZWQgbG9uZyBvZmZzZXQsIHVuc2lnbmVkIGxv
-bmcgbnBhZ2VzKTsNCiB2b2lkIHN2bV9yYW5nZV9kbWFfdW5tYXAoc3RydWN0IHN2bV9yYW5nZSAq
-cHJhbmdlKTsNCi1pbnQgc3ZtX3JhbmdlX2dldF9pbmZvKHN0cnVjdCBrZmRfcHJvY2VzcyAqcCwg
-dWludDMyX3QgKm51bV9zdm1fcmFuZ2VzLA0KLQkJICAgICAgIHVpbnQ2NF90ICpzdm1fcHJpdl9k
-YXRhX3NpemUpOw0KK3ZvaWQgc3ZtX3JhbmdlX2dldF9pbmZvKHN0cnVjdCBrZmRfcHJvY2VzcyAq
-cCwgdWludDMyX3QgKm51bV9zdm1fcmFuZ2VzLA0KKwkJCXVpbnQ2NF90ICpzdm1fcHJpdl9kYXRh
-X3NpemUpOw0KIGludCBrZmRfY3JpdV9jaGVja3BvaW50X3N2bShzdHJ1Y3Qga2ZkX3Byb2Nlc3Mg
-KnAsDQogCQkJICAgIHVpbnQ4X3QgX191c2VyICp1c2VyX3ByaXZfZGF0YSwNCiAJCQkgICAgdWlu
-dDY0X3QgKnByaXZfb2Zmc2V0KTsNCkBAIC0yMzcsMTMgKzIzNywxMiBAQCBzdGF0aWMgaW5saW5l
-IGludCBzdm1fcmFuZ2Vfc2NoZWR1bGVfZXZpY3Rfc3ZtX2JvKA0KIAlyZXR1cm4gLUVJTlZBTDsN
-CiB9DQogDQotc3RhdGljIGlubGluZSBpbnQgc3ZtX3JhbmdlX2dldF9pbmZvKHN0cnVjdCBrZmRf
-cHJvY2VzcyAqcCwNCi0JCQkJICAgICB1aW50MzJfdCAqbnVtX3N2bV9yYW5nZXMsDQotCQkJCSAg
-ICAgdWludDY0X3QgKnN2bV9wcml2X2RhdGFfc2l6ZSkNCitzdGF0aWMgaW5saW5lIHZvaWQgc3Zt
-X3JhbmdlX2dldF9pbmZvKHN0cnVjdCBrZmRfcHJvY2VzcyAqcCwNCisJCQkJICAgICAgdWludDMy
-X3QgKm51bV9zdm1fcmFuZ2VzLA0KKwkJCQkgICAgICB1aW50NjRfdCAqc3ZtX3ByaXZfZGF0YV9z
-aXplKQ0KIHsNCiAJKm51bV9zdm1fcmFuZ2VzID0gMDsNCiAJKnN2bV9wcml2X2RhdGFfc2l6ZSA9
-IDA7DQotCXJldHVybiAwOw0KIH0NCiANCiBzdGF0aWMgaW5saW5lIGludCBrZmRfY3JpdV9jaGVj
-a3BvaW50X3N2bShzdHJ1Y3Qga2ZkX3Byb2Nlc3MgKnAsDQotLSANCjIuNDMuMA0K
+Hi all,
+
+On ppc64le (v6.14, kernel config attached), I've observed that fentry
+BPF programs stop being invoked after the target kernel function is live
+patched. This occurs regardless of whether the BPF program was attached
+before or after the live patch. I believe fentry/fprobe on ppc64le is
+added with [1].
+
+Steps to reproduce on ppc64le:
+- Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
+  with fentry (kfunc is the older name bpftrace used for fentry, used
+  here for max compatability)
+
+    bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
+
+- Run `cat /proc/cmdline` and observe bpftrace output
+
+- Load samples/livepatch/livepatch-sample.ko
+
+- Run `cat /proc/cmdline` again. Observe "this has been live patched" in
+  output, but no new bpftrace output.
+
+Note: once the live patching module is disabled through the sysfs interface
+the BPF program invocation is restored.
+
+Is this the expected interaction between fentry BPF and live patching?
+On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
+unintended. Any insights appreciated.
+
+
+Thanks,
+Shung-Hsi Yu
+
+1: https://lore.kernel.org/all/20241030070850.1361304-2-hbathini@linux.ibm.com/
