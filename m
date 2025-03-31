@@ -1,185 +1,163 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C3E15E5BB;
-	Mon, 31 Mar 2025 08:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868E515E5BB
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410886; cv=none; b=YjKNvoBpae/hNrOB7d+jlC4S785Ipqsb9uIL4C8pClno6Xt11fFBLtOx69u70IbvYWEr7gw0dB3HN2ej8sfjGjS4Q5DADkxCjLDOf+QjH+2K9QvDNpiDL9INiY20RP+T7t+m3hSKbaxvJfbVreD+wQABDJVXreghkrbBoR7Wehk=
+	t=1743410952; cv=none; b=eRo0xvYbFyN5CKN1DyOpzM3cHxGSa9abOaQZAyXGav+YirAX4DWv+VYIsEexFB0cGiKi0X8q44rGMaWRNS6CucvtZbYmPUqGXW8iORwxwuUFbiz/REwGm+Ub9EAnwB8Rb0wXwENfv22igAPIf7wL0yQO3jPPnlpJrYxo7eefnHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410886; c=relaxed/simple;
-	bh=2Aph5r+ucMnFx8WbEX334zQY670ZD+b5koX2yPrT+io=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
-	 References:In-Reply-To; b=FDVgHu9x/003iuN74lThMncmORPPExtOv3PksZteVDAk2FcyrRfyQwFUAsxUJ2DbOWHINJ3xm84UO+WOw/KmQUJThL93CumDYiveyGRDsjYyxJauXXKNJ2JsFBJy9qzH3GWCzQOkzSgXGyoeLjaMJ7uPA6e59pUgrAww3xea3G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Da+8Anil; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743410952; c=relaxed/simple;
+	bh=t/8faHLL83J137LJpJfZX7qm+i6iv0APIty3Cf7tof0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qg8LMcUMhxj7cvacjIZUwDMsTXYkJ31EsGrCCyJQ2bmxqFIO8OAviSeefIyeP0yPKYcseh2Ikm38rCEEhtzP+uEQLM9lfy9645XR9SKdZrj3lI5Y6tX4k+QkCuUoFFvfw8reXJWJhWZIljGvwRJWcatZfhd/DqafNJIeH3HRJdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Rm3IgMXA; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Da+8Anil"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B7BF62047D;
-	Mon, 31 Mar 2025 08:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743410881;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9aErTBB6XoGeVcpJbLF45VHi7cVLHU979KcrvGo1E0c=;
-	b=Da+8Anilt9Neby3nnfgRhzL9gqecwhYWYFRvTUXHkG/WEhbCA8z2Nr6aa6Kgpl+qrvfyDE
-	NoFKL/KBHHpdjYgv9CMUgWPAWDfu5HgkOezzhxKYANUYZGjhME8NPMRmQ7ONyXwXI6RJrl
-	g1+n1eBUZCndKJsxD5o4le4STCDdyT5ePYRiyidUKAlnJI4nKq1frCwgH3yEWStwbsi1FJ
-	SBcTvjfhPkeSbMz7ou3CL4jxggXzGcq6smV3uqkEeAk54/sjpl2gj/M896x0JKwXM61NrT
-	jk3MFf1aqSK5sGQBou9eV+sjb925zqptuFAe7E5ygQ8knVEN2egtCwfWbR1p1w==
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Rm3IgMXA"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39727fe912cso1468443f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743410948; x=1744015748; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Whl2WUPVc98vQM/m+qe6R3Gc9cHEk/GeWcmoXxjFvvk=;
+        b=Rm3IgMXAmPDqh140rm5zrxLS/2Z1+oJJnRnO6tg8WWaaT3F+c8g0gEm1rs3w6TgoSG
+         xDaAE08O0SyoYCIIqKzx8peRscw/v+eFw+SekOPcIyjMFnTqqlUkD+9s2z5PPOSSKiDT
+         buz8MJnRRuth+jx6syEOmvxwoez37/RwLxYualKv1Fxp2Xw6/fgtXAYJwFU1DdUopk34
+         XbC8vMlcpirDiwr580yD1Pm4kzlZ44fuWWk7m7iHeqxqQDOqhw04+jro1kENnKm8MYU1
+         crIRIsRLx6JV2iWlutA+EGdMrGOgkGYZupMpiWwEjUAmequ43+lfBKAQUctsG/lXT16v
+         j08A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743410948; x=1744015748;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Whl2WUPVc98vQM/m+qe6R3Gc9cHEk/GeWcmoXxjFvvk=;
+        b=r9zK6OGX+2j+LnEQ80IklvU2mzrGm3q2NDhzkXR664+FVXDftWHZZ/ywoe78+aQAVU
+         S/zcDA254ebUgEVzYfe0rDwq23ZvYdYejm3ha2i0Fb5LJ0B2Mv8H1kCVsVHLfNPxGq4D
+         dASHASeLzMnHloRuaLOkKHIr6YVZw8x2dSjtcyYlVeLVRhOmuLLyxJ945OFvyO0+E7wv
+         L2hZQxQKa/6HfWM9TrgNVD6cTSdbJgCsIQZ9Cn8A27J4Szs40BLM5b8ABaP5LUE8Sbtn
+         D/O4Kwxa3CTewaN8B+pboeeK4oblqKayQwp0etqtX8nAXZoUsQOZX0Dfqq8lLtPajH6U
+         ksQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfoCBGKU/9uP/FPa8O6efyGgs6uhFxAorFz6YGie56QIfEXV360RGp7+9VDBwaJVSDHiOangKlk4lCOIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCKxTIYLqoRbkKnA9B8ngsHQv/fjvViqoFa/pSkdpr5NJOYeic
+	ULgCbgBBwTUOu8HAooK3QHup12jr5EPlnk5CKX89Hp+YIYrOVPrFzgY7/IwXZxY=
+X-Gm-Gg: ASbGncsH5FIzovPyPmGAqMR05wUSzS3yeqHC7UYIQiKWaIAgcSlctnVdDOZ5qr5KfLo
+	thjypze+clLC3xomSv4//+xwnMQ/XfDzzH+KnERuTbKBviwGHfYufErH14/Tbdv636Bxwo8Ss4I
+	xq1LOEYrB3o/k0llhQteCHVe6hElv+nroAHMnYZSGpsTla6xIpmUaJyw6hJNP+0tQUgZWz4NgYv
+	2gum9esO0OS3+QbVN2pRngFCFsc8mmSHCQHBcKV+I4ubZmtP5TcWXQwoDN0aLr7QRDE0M1XCzTj
+	yOFRWIl+PqSOShOGmHzHvXE+qW868WgCS0CJOvJO3savqO47bxtPaQ9M0eMAyyia4GfH7L8g
+X-Google-Smtp-Source: AGHT+IGGwyZuZkogO2wb6LoJ32i7LaAkPiT9c+v6fSm+b2JTEK7/NawdZ3l9f6xwibJk26NytyxDrg==
+X-Received: by 2002:a5d:584e:0:b0:391:231b:8e0d with SMTP id ffacd0b85a97d-39c12117ca7mr5915249f8f.39.1743410947649;
+        Mon, 31 Mar 2025 01:49:07 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dee06sm64292535ad.179.2025.03.31.01.49.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 01:49:07 -0700 (PDT)
+Message-ID: <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
+Date: Mon, 31 Mar 2025 19:19:02 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 31 Mar 2025 10:47:59 +0200
-Message-Id: <D8UBKT8USZ4U.1OOL1IJMPECFE@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>
-Subject: Re: [PATCH v5 01/11] dt-bindings: mfd: gpio: Add MAX7360
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-1-fb20baf97da0@bootlin.com>
-In-Reply-To: <20250318-mdb-max7360-support-v5-1-fb20baf97da0@bootlin.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeelgeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffvufevofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehvedtkeffueelheektddvjefhiefhgedtudevgeehvdevlefgveetkeevleelteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhgvvgesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
+ modes
+To: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Nick Terrell <terrelln@fb.com>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250331082347.1407151-1-neelx@suse.com>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <20250331082347.1407151-1-neelx@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue Mar 18, 2025 at 5:26 PM CET, Mathieu Dubois-Briand wrote:
-> Add device tree bindings for Maxim Integrated MAX7360 device with
-> support for keypad, rotary, gpios and pwm functionalities.
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+
+
+在 2025/3/31 18:53, Daniel Vacek 写道:
+> Now that zstd fast compression levels are allowed with `compress=zstd:-N`
+> mount option, allow also specifying the same using the `compress=zstd-fast:N`
+> alias.
+> 
+> Upstream zstd deprecated the negative levels in favor of the `zstd-fast`
+> label anyways so this is actually the preferred way now. And indeed it also
+> looks more human friendly.
+> 
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
 > ---
+>   fs/btrfs/super.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+> index 40709e2a44fce..c1bc8d4db440a 100644
+> --- a/fs/btrfs/super.c
+> +++ b/fs/btrfs/super.c
+> @@ -368,6 +368,16 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>   			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+>   			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+>   			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+> +		} else if (strncmp(param->string, "zstd-fast", 9) == 0) {
+> +			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
+> +			ctx->compress_level =
+> +				-btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
+> +							  param->string + 9
 
-Hi,
+Can we just use some temporary variable to save the return value of 
+btrfs_compress_str2level()?
 
-Following discussion we had under the PWM patch of this series, we might
-need to refactor a bit the device tree binding architecture, adding two
-new subnodes, one for pinctrl and one for PWM.
+);
+> +			if (ctx->compress_level > 0)
+> +				ctx->compress_level = -ctx->compress_level;
 
-This will need create two new compatible values with associated bindings
-and modify a bit the properties of the maxim,max7360.yaml binding.
+This also means, if we pass something like "compress=zstd-fast:-9", it 
+will still set the level to the correct -9.
 
-Here is the example modified to reflect what I have in mind.
+Not some weird double negative, which is good.
 
-> ...
->
-> diff --git a/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml b/D=
-ocumentation/devicetree/bindings/mfd/maxim,max7360.yaml
-> new file mode 100644
-> index 000000000000..d3c09531dc5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-> @@ -0,0 +1,170 @@
->
-> ...
->
-> +examples:
-> +  - |
-> +    #include <dt-bindings/input/input.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      io-expander@38 {
-> +        compatible =3D "maxim,max7360";
-> +        reg =3D <0x38>;
-> +
-> +        interrupt-parent =3D <&gpio1>;
-> +        interrupts =3D <23 IRQ_TYPE_LEVEL_LOW>,
-> +                     <24 IRQ_TYPE_LEVEL_LOW>;
-> +        interrupt-names =3D "inti", "intk";
-> +
-> +        keypad,num-rows =3D <8>;
-> +        keypad,num-columns =3D <4>;
-> +        linux,keymap =3D <
-> +          MATRIX_KEY(0x00, 0x00, KEY_F5)
-> +          MATRIX_KEY(0x01, 0x00, KEY_F4)
-> +          MATRIX_KEY(0x02, 0x01, KEY_F6)
-> +          >;
-> +        keypad-debounce-delay-ms =3D <10>;
-> +        autorepeat;
-> +
-> +        rotary-debounce-delay-ms =3D <2>;
-> +        linux,axis =3D <0>; /* REL_X */
-> +
+But I'm also wondering, should we even allow minus value for "zstd-fast".
 
-+ max7360_pwm: pwm {
-+         compatible =3D "maxim,max7360-pwm";
+> +			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+> +			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+> +			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+>   		} else if (strncmp(param->string, "zstd", 4) == 0) {
+>   			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
+>   			ctx->compress_level =
 
-> +        #pwm-cells =3D <3>;
+Another thing is, if we want to prefer using zstd-fast:9 other than 
+zstd:-9, should we also change our compress handling in 
+btrfs_show_options() to show zstd-fast:9 instead?
 
-+ };
-
-> +
-> +        max7360_gpio: gpio {
-> +          compatible =3D "maxim,max7360-gpio";
-> +
-> +          gpio-controller;
-> +          #gpio-cells =3D <2>;
-> +          maxim,constant-current-disable =3D <0x06>;
-> +
-> +          interrupt-controller;
-> +          #interrupt-cells =3D <0x2>;
-> +        };
-> +
-> +        max7360_gpo: gpo {
-> +          compatible =3D "maxim,max7360-gpo";
-> +
-> +          gpio-controller;
-> +          #gpio-cells =3D <2>;
-> +        };
-
-+ pinctrl {
-+         compatible =3D "maxim,max7360-pinctrl";
-
-> +
-> +        backlight_pins: backlight-pins {
-> +          pins =3D "PORT2";
-> +          function =3D "pwm";
-> +        };
-
-+ };
-
-> +      };
-> +    };
-
-This would allow to assign a device tree node to both the pinctrl and
-the PWM devices in the kernel?
-
-Is there any comment regarding this proposal? Without any specific
-comment, I will send a new version with these changes in a few days.
-
-Best regards,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Thanks,
+Qu
