@@ -1,168 +1,94 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD6838FB9
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD672905
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743387269; cv=none; b=rP9k6o0/KrzSG2cmx61O8dWwswKuNAqGyvT2n29rLn8WugJfMifQmcFriH3qpUretn1NjjkfINggq+q7jYGUhJ2fyiMinGn7Cxkv+IAFBfnGU8S8xsTR10je0WSbGYfK0uGGUXXN5UgIc3UC/vRqgKkjUl8WtN23n7KpFjl+wZI=
+	t=1743387625; cv=none; b=bkJPPURajmMZfHDaxr+2jOvpcyBII3gbMITFOuFUfjo9w9mSuWHN66RUWRmR3gdiUkNH1DAg3LI1v6qQH1QwiD6uCiQLJQKoRzbGs9H76usmvNsS35VvC1uO70U8OrdguMgGsUrEso9kGYjbjvv9yAhr+i2FS5xeyUBZqQ7G3t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743387269; c=relaxed/simple;
-	bh=otP5ppnT9Z1XPJMiBGLIWJxYif8WNzKhHlwtQdlMvUc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=H7tPp4ZGaWxd6WmROLeT9lWNXBOV5Q9bmuHgAAmPsGhucx4bmOWL3ZcYXdTR6maYeqEfoh3cefs3Y4y/vd412pYmIpvB53u6TJNIueLWosQvLp9CsdPI607GoPCWU4INRp09y70UIujRFoykEx1iLAtV9rJhk6BDCYRaxcjgUnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d44dc8a9b4so39948645ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:14:27 -0700 (PDT)
+	s=arc-20240116; t=1743387625; c=relaxed/simple;
+	bh=Vc3l3CSc7QBNedbq3Zp7ibwc4g4zCpNv2JGQXO0+gD4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qPqv2Ob8IpL4eUjeWGxh5pce1pQtmQnY6BCnZdZTJ5fQXkFuUVgkdtGoKJ0dytN8TSnvAJyPUxttlqAEZ+/DJpp1YzwT68n5Z1Ci2lwxFqCDmL1+zvsLImNEq510iOSWZnEnIU2hEQhzaO6uQgTc8jY00y20m4FT6EtGBBC96bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dhavale.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1gnZUbl6; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dhavale.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1gnZUbl6"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff5296726fso10909323a91.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743387623; x=1743992423; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CE/nyia5DEOnQIZIUnbMXDCnBfii1l2JD0CpWO2H6MY=;
+        b=1gnZUbl6YW44gByxPYW5oHheOvmHlKQwBuGRJD1lcnnODqOBVKMADjbbfQ5M2PU2oN
+         Kq3zfZbudE/7x4KV5fwsyqXfKIVnQq/Qys7HoWB1gYjh84UkVJX3vekrkwZHADLtyLdD
+         3nZZjsnWJglAtshr2aZrVlLm7nS1Z4SFMEwKvJ6Rwe9fbI80yoJ/8fVzmGLXKkKh9Rs6
+         c7hLsghYEjr+Eizu6RjpPiNzUm+jGqZBs7veYdL64hD1iGjlqe4xbVQMTd3aARJOW88O
+         Zx6+0SUHzRsyvqHJ1lADhDyafT7nxYWElqUpsupvwrvlbeUhSAxmbPWbxvlQToUJPBcv
+         nruQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743387266; x=1743992066;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+        d=1e100.net; s=20230601; t=1743387623; x=1743992423;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zn4wsqECmycelK2HB+BPPSdvs//fE/pmKUurDQYNNO4=;
-        b=HAb1xc/RKAIFcj1vc+3KSypN0Fuo9s1BVNkkxFo/juu4OwpFe0tIExFDg6kAGThW5r
-         cCDgzDX/RkbP/eZrGUOAdWcSAq9EiBvuHLJxqrmq6rbBW6B+ZSeZKU6bTjRSUf6DR1yr
-         2xqOVNJvlEwFPbko/XWrVQiMGGNDByi8yIPBhaYG2Q9jGoGeBGs199fZkNlmQZLrpgrG
-         gjoEwpYnMEuClGE4ZKAPQGhX5mBkBucebTuZozent6Y3DG5xWekWSSNCSXNrsfLpvRIX
-         8jVMR9kzA/xthVLYYunoPDXZV9GRwY9WV454o7t97+wS62eAb75W/C9IdqljunXLwhRM
-         BxJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhMGfzbzOiBzNBgoC/+f3BV1gApBiOKnKq91MnDoVZnT7WWK+aQo1cTcMTLME+z4ect5KPUwZpQ6nt3os=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrxXPxOcuk2mBEHb5X+yY2rgpoHS3jlPNuolIZPDu0HHmTPM1V
-	POx511BwMJiBC7nnRdMaorCvBeXs33qFoLLtuRfyr5sF1vBdi06fu57u04d4JQ6Y+fo2Ta3Q5be
-	a3zkpr0ZEjfztUuF80mXDrmczZRNq0tST8SRnhljCEUvepgRmK9U6VDw=
-X-Google-Smtp-Source: AGHT+IHzaYoQ6A44D1gbKMagzp6/4TOHACf+Mx08YIPA7ACJMpaj92WyCyyf1pCWil+4DLIasr/vgutg399jYAaX6NfMvuhZXDIM
+        bh=CE/nyia5DEOnQIZIUnbMXDCnBfii1l2JD0CpWO2H6MY=;
+        b=C/S+WfdVsVWhiPu+IeQu6SUD3OE+Ad8YyAxQWRBNBDb1+9LHitN5iVz3URIdPTNUwl
+         OcGqaEW8hNTJGalaZwYpTr+ifxUifMpIxvp6htNwwCrgImxQLqTXXYleA2zeI90zjYSA
+         nHzz0mOq46tJZcOdayOWW5mxTdbUFf1dKAzP7JlxRIblknSIjsa2lOi0D9XV2sB5k4np
+         R/0G3mgw2i+JLZEBVJLoTFhQ0xkg6zn0nLHpiwUNtYj6UR1AWP5ab6VnDJfZ2V6BQxb9
+         b1emuseJ/hkFsJnfB5wDIs8SrB8TaBr7WowVyGMtpoAnZEFzGqF31JfWO5q05EEJE5qk
+         ol8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWOZ7mTqXsNR5Vwag85xRqy5ozhhR2wEaytvTR1QAE8ymiKfTteGLi25I0hLYoqyZwn84UeP5LJw97ZB3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwybKZNyp3l5HaJpgRQj5hR2EjZtJ+303BgzTIYVZECUf2+DTbE
+	hJwxbcNSRhEFcoyAvku0jDHFHeMGdNIVQZXcJVGikQ/O5MsB/GoY2Xz+ehUAjBkZ6BfBj7/GySh
+	k1fArFA==
+X-Google-Smtp-Source: AGHT+IHr5kzCuFJpX8RIEt+C13OGCbfgVGDGu5VAxthGCbZAVACvbaHVl3cvJRmLj2GVMsvQphxnC1sEjgqk
+X-Received: from pjc3.prod.google.com ([2002:a17:90b:2f43:b0:2fe:7f7a:74b2])
+ (user=dhavale job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d48:b0:2fe:b774:3ec8
+ with SMTP id 98e67ed59e1d1-305321471fcmr9826794a91.23.1743387622875; Sun, 30
+ Mar 2025 19:20:22 -0700 (PDT)
+Date: Sun, 30 Mar 2025 19:20:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1646:b0:3d3:fdcc:8fb8 with SMTP id
- e9e14a558f8ab-3d5e090cedfmr58623345ab.10.1743387266684; Sun, 30 Mar 2025
- 19:14:26 -0700 (PDT)
-Date: Sun, 30 Mar 2025 19:14:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e9fa82.050a0220.1547ec.00e8.GAE@google.com>
-Subject: [syzbot] [input?] [usb?] UBSAN: shift-out-of-bounds in __kfifo_alloc
-From: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
-To: bentiss@kernel.org, jikos@kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250331022011.645533-1-dhavale@google.com>
+Subject: [PATCH v1 0/1] erofs: start per-CPU workers on demand
+From: Sandeep Dhavale <dhavale@google.com>
+To: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
+Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+erofs currently starts per-CPU workers on module_init() which is not
+necessary. This starting of resources on cpu hotplug and unplug
+shows up in Android where the erofs in built-in and erofs is
+not yet being used.
 
-syzbot found the following issue on:
+Following patch moves the creation of per-CPU workers on the first
+mount and they are removed when on the last unmount.
 
-HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ebabb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a15c3c5deef99cef
-dashboard link: https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e4a4c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d1d804580000
+I tested this with erofs-utils test as well as running reads on
+erofs mountpoint while running aggressive cpu online/offline in a
+loop, withoutn any issue.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-f6e0150b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/416c28ebba43/vmlinux-f6e0150b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/df554d24e7cb/bzImage-f6e0150b.xz
+Thanks,
+Sandeep.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com
+Sandeep Dhavale (1):
+  erofs: lazily initialize per-CPU workers and CPU hotplug support
 
-usb 5-1: New USB device found, idVendor=056a, idProduct=00f8, bcdDevice= 0.00
-usb 5-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 5-1: config 0 descriptor??
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in ./include/linux/log2.h:57:13
-shift exponent 64 is too large for 64-bit type 'long unsigned int'
-CPU: 0 UID: 0 PID: 835 Comm: kworker/0:2 Not tainted 6.14.0-syzkaller-03565-gf6e0150b2003 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x27f/0x420 lib/ubsan.c:492
- __roundup_pow_of_two include/linux/log2.h:57 [inline]
- __kfifo_alloc.cold+0x18/0x1d lib/kfifo.c:32
- wacom_devm_kfifo_alloc drivers/hid/wacom_sys.c:1308 [inline]
- wacom_parse_and_register+0x28e/0x5d10 drivers/hid/wacom_sys.c:2368
- wacom_probe+0xa1c/0xe10 drivers/hid/wacom_sys.c:2867
- __hid_device_probe drivers/hid/hid-core.c:2717 [inline]
- hid_device_probe+0x354/0x710 drivers/hid/hid-core.c:2754
- call_driver_probe drivers/base/dd.c:579 [inline]
- really_probe+0x23e/0xa90 drivers/base/dd.c:658
- __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
- driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
- __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
- bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
- __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
- bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
- device_add+0x1148/0x1a70 drivers/base/core.c:3666
- hid_add_device+0x373/0xa60 drivers/hid/hid-core.c:2900
- usbhid_probe+0xd38/0x13f0 drivers/hid/usbhid/hid-core.c:1432
- usb_probe_interface+0x300/0x9c0 drivers/usb/core/driver.c:396
- call_driver_probe drivers/base/dd.c:579 [inline]
- really_probe+0x23e/0xa90 drivers/base/dd.c:658
- __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
- driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
- __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
- bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
- __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
- bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
- device_add+0x1148/0x1a70 drivers/base/core.c:3666
- usb_set_configuration+0x1187/0x1e20 drivers/usb/core/message.c:2210
- usb_generic_driver_probe+0xb1/0x110 drivers/usb/core/generic.c:250
- usb_probe_device+0xec/0x3e0 drivers/usb/core/driver.c:291
- call_driver_probe drivers/base/dd.c:579 [inline]
- really_probe+0x23e/0xa90 drivers/base/dd.c:658
- __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
- driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
- __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
- bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
- __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
- bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
- device_add+0x1148/0x1a70 drivers/base/core.c:3666
- usb_new_device+0xd07/0x1a20 drivers/usb/core/hub.c:2663
- hub_port_connect drivers/usb/core/hub.c:5533 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5673 [inline]
- port_event drivers/usb/core/hub.c:5833 [inline]
- hub_event+0x2eb7/0x4fa0 drivers/usb/core/hub.c:5915
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c1/0xef0 kernel/workqueue.c:3400
- kthread+0x3a4/0x760 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
----[ end trace ]---
+ fs/erofs/internal.h |  5 +++++
+ fs/erofs/super.c    | 27 +++++++++++++++++++++++++++
+ fs/erofs/zdata.c    | 35 +++++++++++++++++++++++------------
+ 3 files changed, 55 insertions(+), 12 deletions(-)
 
+-- 
+2.49.0.472.ge94155a9ec-goog
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
