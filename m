@@ -1,180 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FCE27726
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C768D17A2E2;
+	Mon, 31 Mar 2025 10:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743416256; cv=none; b=MfGpVxK+c2ICTqm7lXy7o1yEQWLGe3ei4fY//UKYgEnue0xPb+QaWZXYRiNo6bmVpGYkj6yID8otZBcMdMcMsacENKAv7YeuJzEMRTg9ef19HIJPePnmbaW4xqh8YmGOEViSV0wfIxwMEyVwNVF6ntNeo3xU2KoevyFB6Vz7Iz0=
+	t=1743416263; cv=none; b=eoujVJbWPGc9FDPrwDyKKuc6JS+Xetx59j611uvhKoroq+76o348E6pm0eQAGue5S6mLtv/A9woZhgrkz5ZmCmByLi+7qSo90pZQN7r/ezwJbhrOjsajPqRxOydE2yGBfKK7+ctzcptS5BzbKKHYj9d3qgG+xHOjeHVhULRb7zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743416256; c=relaxed/simple;
-	bh=P3ae9o2zkDLTx09+K++AB9fYk/TKSV28NS5F5x/wtcU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pIRSlg5BjN5Uo/NYRaj/6JXGVmlKzbGHifO7i2OradRl7uwuJRYcbj62P5XXS9oVGu1poWRoVBzR/CxnC59HkePKsLoo33NMmpfU8V/mxVdSQNuw170uv8jSqRevnGHS4a/SbX6pEc6A2Opk42QQflQyAJQ/GV9fC/jnm7YWyT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YU5wCZY2; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743416263; c=relaxed/simple;
+	bh=OnEcQ86N1b/nWwzloNbMBTvRyH+I2tQtz+Iwgl9ovf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aK3aFgHojCtVzcELId59Jyl7HUtlpN/G3L4HVZCR3MmOtzpGit415e+07D3Si5/yN0a2Rg1bSSg0mBf/VYY0NAyhmpQBZLDI+KIQbkGTMrs7p8e5j9bcIP5YHkOGwNfPeO6yc8QGMGYyDVBBpc1W3Zn9ES6ljLdAA5oBSXwtvY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1su6Ole; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YU5wCZY2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743416254; x=1774952254;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=P3ae9o2zkDLTx09+K++AB9fYk/TKSV28NS5F5x/wtcU=;
-  b=YU5wCZY2nwB3WU/dhushPENET5xZTYrWbbNAa89D/vwhqMsaPuR+qTri
-   K/H4PmtBC5uOammVTS/FVIs28XHmrSOI8LIPcfDEtCkXCnhx7rZLZSry1
-   fUgecG0CmQBfvXm52ZApn/YM/i46pF6rMfC31DsWw2klJjwdG81cWMzwE
-   lNQK/8k5tRzfxT97RJD1K5QakOVeumYHpgxif2Fi3TIeEw1L/EkaGtfS+
-   YqZDrl+XBQvVvn3Rc+1Vd4quFAnekxRDH1zeOqyirxArgqL2MDBjKT4an
-   dBWOntcDGya3dMVzTSJMjVXijE/01erLYN7Z6sdCOCdgjYlSca3QBcPKK
-   Q==;
-X-CSE-ConnectionGUID: IROWBOfeSjGTsrNRq5tjUg==
-X-CSE-MsgGUID: 3khtYnYlQ/W2ouLwV5GBwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="48364530"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="48364530"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:17:33 -0700
-X-CSE-ConnectionGUID: paWjvvQDQ7OT5YVewgiQLg==
-X-CSE-MsgGUID: rMYsm2X9R4++SHo22bhuXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="157057222"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.182])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:17:31 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Dave Airlie
- <airlied@gmail.com>
-Cc: simona.vetter@ffwll.ch, dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [git pull] drm for 6.15-rc1
-In-Reply-To: <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
- <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
-Date: Mon, 31 Mar 2025 13:17:28 +0300
-Message-ID: <87h6394i87.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1su6Ole"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515D5C4CEE3;
+	Mon, 31 Mar 2025 10:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743416262;
+	bh=OnEcQ86N1b/nWwzloNbMBTvRyH+I2tQtz+Iwgl9ovf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N1su6OlesOh1iys2BALYaqexBKG7IcFqHgPaafBKTCbyQo6geGjhLQKz7O0OcoXvT
+	 YQIpzmw1tQSWTsF9vwtzrlcdIcF7KcjPFAwykaVs903WQhoAu/+qZ7Ggeiwe7IRAvi
+	 Y8aEbjENC3F1wRSXqHhXFrzi6g01c1oFTHI0YEi4v3pDcQrlIYk7ErbPRAXMN1Gvnt
+	 gSg2xKJSTtBhyue1C7dnSzI120JEcG6dtEm9tY06MaoOdl/kTFn/fkjNUhbHm5WCdt
+	 7HMZ5EnAV1JEKUK7IsVxDNhULSyJAaVCFvsuIggC5RwuFJb0eGVdW8LT9vTHsipJF2
+	 GZDbcKOlstJLA==
+Date: Mon, 31 Mar 2025 12:17:30 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+	linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+	pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+Message-ID: <Z-pruogreCuU66wm@gmail.com>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-On Fri, 28 Mar 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> If you want to do that hdrtest thing, do it as part of your *own*
-> checks. Don't make everybody else see that disgusting thing and have
-> those turds in their trees.
->
-> I'll just disable it by marking it BROKEN for now. You guys can figure
-> out what you want to do, but no, forcing others to see those things is
-> not the answer.
-
-Fair. I hear you.
-
-> I would suggest you *not* make this part of the Kconfig setup and
-> normal build at all, but be something where *you* can run it as part
-> of your tests (ie do it as a "make drm-hdrtest" kind of thing, not as
-> part of regular builds).
-
-I would very much prefer for this to be part of the build, just hidden
-behind Kconfig. We're doing build-time checks, and kbuild gives us all
-the machinery to make it happen. Without the dependency tracking you'd
-have to check everything every time, and that's just going to mean
-people won't run it.
-
-I suggest a Kconfig knob to truly make this opt-in, only for developers
-who actually want it. Not enabled by allmodconfig or allyesconfig or
-even allnoconfig. Only if you manually enable it. And yes, that's how it
-should've been from the start. My bad.
-
-Below's a patch to make it happen. We'll probably want to add more
-checks like this in the future. We want to catch a whole bunch of build
-issues up front. We want to be clean of e.g. W=1 and kernel-doc issues
-pre-merge instead of doing extra rounds of fixes afterwards.
-
-BR,
-Jani.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331082251.3171276-2-xin@zytor.com>
 
 
+* Xin Li (Intel) <xin@zytor.com> wrote:
 
-From 8c709510caab4b4ad6aa73cbcd972f32b58cad8d Mon Sep 17 00:00:00 2001
-From: Jani Nikula <jani.nikula@intel.com>
-Date: Mon, 31 Mar 2025 12:25:45 +0300
-Subject: [PATCH] drm: add config option for extra build-time checks
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Cc: Jani Nikula <jani.nikula@intel.com>
+> -	__wrmsr      (MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3, val >> 32);
+> +	native_wrmsrl(MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3);
 
-The DRM subsystem contains additional build-time checks, primarily aimed
-at DRM developers and CI systems. The checks may be overzealous. They
-may slow down or fail the build altogether. They may create excessive
-dependency files in the build tree. They should not be enabled for
-regular builds, and certainly not forced on unsuspecting developers
-running an allyesconfig or allmodconfig build.
+This is an improvement.
 
-Add config DRM_DISABLE_EXTRA_BUILD_CHECKS, enabled by default as well as
-by allyesconfig/allmodconfig, hiding the extra checks from anyone but
-people who intentionally opt-in for the checks.
+> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
+> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)plr->closid << 32 | rmid_p);
 
-For example, to enable header tests:
+> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, closid_p);
+> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)closid_p << 32 | rmid_p);
 
-$ scripts/config --disable CONFIG_DRM_DISABLE_EXTRA_BUILD_CHECKS --enable CONFIG_DRM_HEADER_TEST
-$ make olddefconfig
+This is not an improvement.
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Closes: https://lore.kernel.org/r/CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com
-Fixes: 62ae45687e43 ("drm: ensure drm headers are self-contained and pass kernel-doc")
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
----
- drivers/gpu/drm/Kconfig | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Please provide a native_wrmsrl() API variant where natural [rmid_p, closid_p]
+high/lo parameters can be used, without the shift-uglification...
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 2cba2b6ebe1c..5a3fce9ef998 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -489,9 +489,26 @@ config DRM_PRIVACY_SCREEN
- 	bool
- 	default n
- 
-+# Reversed option to disable on allyesconfig/allmodconfig builds
-+config DRM_DISABLE_EXTRA_BUILD_CHECKS
-+	bool "Disable DRM subsystem extra build-time checks"
-+	default y
-+	help
-+	  The DRM subsystem contains additional build-time checks, primarily
-+	  aimed at DRM developers and CI systems. The checks may be
-+	  overzealous. They may slow down or fail the build altogether. They may
-+	  create excessive dependency files in the tree. They should not be
-+	  enabled for regular builds, and thus they are disabled by default.
-+
-+# Proxy config to allow simple "depends on DRM_EXTRA_BUILD_CHECKS"
-+config DRM_EXTRA_BUILD_CHECKS
-+	bool
-+	depends on DRM && EXPERT && DRM_DISABLE_EXTRA_BUILD_CHECKS=n
-+	default !DRM_DISABLE_EXTRA_BUILD_CHECKS
-+
- config DRM_WERROR
- 	bool "Compile the drm subsystem with warnings as errors"
--	depends on DRM && EXPERT
-+	depends on DRM_EXTRA_BUILD_CHECKS
- 	depends on !WERROR
- 	default n
- 	help
-@@ -505,7 +522,7 @@ config DRM_WERROR
- 
- config DRM_HEADER_TEST
- 	bool "Ensure DRM headers are self-contained and pass kernel-doc"
--	depends on DRM && EXPERT && BROKEN
-+	depends on DRM_EXTRA_BUILD_CHECKS
- 	default n
- 	help
- 	  Ensure the DRM subsystem headers both under drivers/gpu/drm and
--- 
-2.39.5
+Thanks,
 
-
--- 
-Jani Nikula, Intel
+	Ingo
