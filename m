@@ -1,182 +1,162 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093391531DB;
-	Mon, 31 Mar 2025 10:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D521DE4D8
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743415560; cv=none; b=ia1tNb6LzV7ky/8WzUJfFXT6XjS3u77c6Cq7hU1ryMcvjZtZHt3EXDA2JWgNq5EcY8bzCYEX1FPHhUMQYd1F/vZZlQhw8/mThUFp+JaAhoZH8Op8DnU71YgQJSeahEIYH3DZRe1OegqcPiNP1PSeaWKxh+VpqHdDMk+87vq/KIg=
+	t=1743415590; cv=none; b=iuMwjpr58qW5O1nJf1RlFiJUPTenmdLu9D/+SYto/jjwainJxJDvTAKcfXfECn5cY2IQls/P50DBGEBpn6U/+gFAA8sQXOimHhacGb2sRp69HCgmM3QnA2nodgFWkhVpvezf05l0HQCUupjiPL8oFn9Fd2CvjCGh+Lep5nnIn/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743415560; c=relaxed/simple;
-	bh=AsDgzAUT8sMUKV7TwxR7XvfZ619TcnK+8Y0nOvvr09k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hpcb22jjP3EA2yVonfyemUA74Y2DhuPNtdx/11E+0p3b0hn4YrgOLVoHO3LON4G6odtBSa5eJdUjz+xSLANTZ0Htw7xphLaYNAl2yO8ln/OzeU1uum74ZSBZnQzjlzXTzC70fWmJVpU42VoztcTEOpQOFv4rgtuLq2Ut9RSmZBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=L8c4RwBW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GdC/BMez; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1743415590; c=relaxed/simple;
+	bh=j3gsOeQ0J9+h4s5tv+MEM7+H2Ks6tViGWPgQEYxS5yU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZFKbEhU2H1PO/rUA//7redBmP3J+tMXk82EGULqlMOVw37OXRzEvJs10d0zH9qNb4sax27OA2KUI6OsQdiC+WkipdTtCSO+HeUEPXDij5mV8S7UiH8xqxUkEg9v0LZD439hX6MPfPaMetmqsZIvcRm+DR9EKSgZ/7DiXzH/B7wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VHn7t6T+; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="L8c4RwBW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GdC/BMez"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id DC2561384409;
-	Mon, 31 Mar 2025 06:05:56 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Mon, 31 Mar 2025 06:05:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743415556;
-	 x=1743501956; bh=nchhUVuAAorL0EgxuZL9IZu5rkzQ0M46OJLLbl4XGVw=; b=
-	L8c4RwBW7/oqaiqL+U6FvAV9TP70RZmpwsABCfNCAkXlgnWljqr0XkFJ4U5cSxca
-	0XYAE0oqR/IrFbmA7U3he1jIahWPPPMFGPvN62bqbZ27x5pG102866Ca1t+1jIS1
-	SsUmJW2+NuE8Vnlpjgn22Kg9SixBIZEJxucmdxaAEsm5eCgfYf5uQMRBCIh6yqvo
-	Wv50T/bDdPou/ETRrzCrcB14HIVsnSzz3l9UP3U9iGwmy7InPjhpfQ0BOmYfjxrS
-	EwpyJ6fhQzV76PMtE3qeSNJQGUnQN6Y6J2rJLKSTLH9c33cTNRGmnTtMWeuAqYxt
-	k16WGQ8oBmRAuWlYhMNqNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743415556; x=
-	1743501956; bh=nchhUVuAAorL0EgxuZL9IZu5rkzQ0M46OJLLbl4XGVw=; b=G
-	dC/BMezhE+nwSTfFWtYwXcCkrexLE6O42p9w+cI6Fben4D9l2S1FvXGfiuYXAUwp
-	gc+rIqFLDANbIQ99Au39fgRN9WMKi2Iv+cXHUKyPjUFagRkOOSEz2i0RwZhuMtUE
-	WBuxyLAkxvYjZD0E2s8YYs3AeMmCQaE0GcHEoplKTrolIPnq8PF8Z/z6FckXrKGn
-	I65iD2B7DQ+Bl7U11jlbHugHMyxbzMW7fLZFGmJj5yJbWckWlqctMZMb+qEBMdur
-	cqWUPyGBEhmkgBhhMWD92RU8bPAu2aGIHMMR6YOgAW7yKMtVDy0GvbKG+ooTi9jr
-	kfO2pRlAsE8hFPYnKl5jg==
-X-ME-Sender: <xms:AmnqZ2n7pqDbpJL1RHdxJzCsqtl-oEtJHh-wrefGoP2f4p_wLqb6Tg>
-    <xme:AmnqZ919u4d4_awZxE4oG8RPS75WqZGuchUYpzDFFOFPZXIEz72mO4XqKEAYdVOwz
-    Bc4AS2VAaOdpA0VP4g>
-X-ME-Received: <xmr:AmnqZ0p9BeNKZ7v8rPx7msDXjnRg53CYH3X2ivfk30vzmxtfb3I95PBLZNE3mHRN1JtWqVLM3syGgTTiZ26fykCSartG20KYWw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeelieefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeev
-    teegtddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdr
-    shhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopedvfe
-    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhgvkhdrvhgrshhuthdorhgv
-    nhgvshgrshesmhgrihhlsghogidrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqd
-    hkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehk
-    fieslhhinhhugidrtghomhdprhgtphhtthhopehrrghfrghlsehmihhlvggtkhhirdhplh
-    dprhgtphhtthhopegrqdgshhgrthhirgdusehtihdrtghomhdprhgtphhtthhopegshhgv
-    lhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptghonhhorhdoughtsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggv
-    rhdrsggvpdhrtghpthhtohephhgvihhkohesshhnthgvtghhrdguvg
-X-ME-Proxy: <xmx:AmnqZ6lAAolEv1lvwEz_JB_6KLN_eRAvAmSnu5EmxUtpG4O-ZNqTpg>
-    <xmx:AmnqZ00iHcKdzkrwMjLJw8URFY2SBJWHPwr84_gtoJGGSuPg5JCoMA>
-    <xmx:AmnqZxtlG7mWiNymiwke6d86mwSCcge3sM6lDmzPbMdagVDvudWMPA>
-    <xmx:AmnqZwXgAX-oQNc3hcAmTVsasfhFkPNzH-ndN9CV1pwDC79cDHhzDw>
-    <xmx:BGnqZ1WgrfeLKtJmIWlaD2RGmCaO_7r4vmu3jTbEb4sm6R9dCZ7I2asu>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 31 Mar 2025 06:05:54 -0400 (EDT)
-Date: Mon, 31 Mar 2025 12:05:52 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 0/4] arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H
- Sparrow Hawk board support
-Message-ID: <20250331100552.GC233273@ragnatech.se>
-References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VHn7t6T+"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso674772266b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743415587; x=1744020387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TrMN6LZWukOmN0j90Re+qVcywcRqKb8H+Y3qDOVIMVY=;
+        b=VHn7t6T+nmF/wANvZ2lSQBW04ipnnR8CtYUH4V5tY9zBvWTOXHzC1BrW2YdECd/OLs
+         1efTKIUKvWAap9hWhrD+Q5HcNH9s5JrwW3vT9WzcwEZ81oXCnKxcKre0L5FXRPT4YwgT
+         4C12ddLK/LnfO0dyx9EnK46w6jLyTq0Ry5411dVqn57ZxCw3+dZ8+pHBJ+4jGaLwNWm4
+         lTc2bVMWzu2qM1OnPZUyG5HZdTblI4jnqWYMXrOS3ZeE3kUAGh3Dc9TP1GgX5D7n8+m5
+         C0xP2ixduom22pMsyVDpJu7VNd6nCM48zV9os9lGe4cwmVvyN2OWYC3ttxAK0qo+kypT
+         qgYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743415587; x=1744020387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TrMN6LZWukOmN0j90Re+qVcywcRqKb8H+Y3qDOVIMVY=;
+        b=RzLrFbU3sF8Vn2fSTbAuW0/9ztBWx/VvzbLNmOmrn7WSeTUc9XzIg2llcGMcLM94aB
+         r6hRbeNJjXG0X5h6EO/hX7BBMcAYyl71Kmd6Y91u+Qu7uEY446tGt3X9/rbOlS27fZE7
+         3kAYJv0iocr57fZ0pCzz21XX1q+vMmPouqW4u1mleKa6gXhjgKvvakpXRc0YKsxxd3ym
+         AeKeQt6BXolhbBhjAQzBRQIyZ0IuzyEJz6Q5GZ9rvlTJxx4ChNJWZx3QIi4PlFqDUnyY
+         K73bkIsXylyf66qPk48wMCkAVyuAT2mW7MnnauUMpxLxkx9HO+kR9l70nWp3BmIKlk1o
+         g+XA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuwD44k3xOChn45ozxiDpo7Rb9TyR4gehdGgr6/FeSbyhwZvfSKAxQ1sBEUuQaAye8OnK5lDPMzFp6l80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOeDczkYFnDxmbS4teP7d5C2G8dCr4K7e6geuvmLOWz4Bj63Ol
+	s7ock3CURHJ461EW7UG+jvOG3MCsfHEKdg/0tDiKf2pPN00LpFTey3BeT4dQR4QfavVpE6gDzKr
+	bIMRwVKoYR2expsIo5nDSFKMveiwRoma+szHsaw==
+X-Gm-Gg: ASbGncv7VlWFfCcEsdpSlgvOWtntG7WHwTuGpheCHgsrbEs5EAfGwDOzraz3zz01X92
+	+o/EODAnH/gkmtucPs6sk5Q1f+rWCxsRF9e9qbvE4fb/HDwGUbF8NJNS/Bpi8v9hZ4gCNEf0L6I
+	pwT+386JJWuET5kl/WlzcxfCy9
+X-Google-Smtp-Source: AGHT+IFjoxRROSQJ2QQqf9HRlr+wmpb/KClLSvPvp1nnV8qvUH1qPNSLpAY2JcZAclvPhNIvsCQu1LAjYR7TxgXQO58=
+X-Received: by 2002:a17:906:4a94:b0:ac7:a2:b6d6 with SMTP id
+ a640c23a62f3a-ac738bae0eemr656150266b.57.1743415586921; Mon, 31 Mar 2025
+ 03:06:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
+References: <20250331082347.1407151-1-neelx@suse.com> <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
+In-Reply-To: <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Mon, 31 Mar 2025 12:06:15 +0200
+X-Gm-Features: AQ5f1JqutY5B58lKkBXLsgmMnOxey8gmhV-G874E52O3tluKYg9BOIh6iYZZcLU
+Message-ID: <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast modes
+To: Qu Wenruo <wqu@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marek,
+On Mon, 31 Mar 2025 at 10:49, Qu Wenruo <wqu@suse.com> wrote:
+> =E5=9C=A8 2025/3/31 18:53, Daniel Vacek =E5=86=99=E9=81=93:
+> > Now that zstd fast compression levels are allowed with `compress=3Dzstd=
+:-N`
+> > mount option, allow also specifying the same using the `compress=3Dzstd=
+-fast:N`
+> > alias.
+> >
+> > Upstream zstd deprecated the negative levels in favor of the `zstd-fast=
+`
+> > label anyways so this is actually the preferred way now. And indeed it =
+also
+> > looks more human friendly.
+> >
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > ---
+> >   fs/btrfs/super.c | 10 ++++++++++
+> >   1 file changed, 10 insertions(+)
+> >
+> > diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+> > index 40709e2a44fce..c1bc8d4db440a 100644
+> > --- a/fs/btrfs/super.c
+> > +++ b/fs/btrfs/super.c
+> > @@ -368,6 +368,16 @@ static int btrfs_parse_param(struct fs_context *fc=
+, struct fs_parameter *param)
+> >                       btrfs_set_opt(ctx->mount_opt, COMPRESS);
+> >                       btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+> >                       btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+> > +             } else if (strncmp(param->string, "zstd-fast", 9) =3D=3D =
+0) {
+> > +                     ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
+> > +                     ctx->compress_level =3D
+> > +                             -btrfs_compress_str2level(BTRFS_COMPRESS_=
+ZSTD,
+> > +                                                       param->string +=
+ 9
+>
+> Can we just use some temporary variable to save the return value of
+> btrfs_compress_str2level()?
 
-Thanks for your work.
+I don't see any added value. Isn't `ctx->compress_level` temporary
+enough at this point? Note that the FS is not mounted yet so there's
+no other consumer of `ctx`.
 
-On 2025-03-30 21:56:08 +0200, Marek Vasut wrote:
-> Add Renesas R-Car V4H Sparrow Hawk board based on R-Car V4H ES3.0 (R8A779G3)
-> SoC. This is a single-board computer with single gigabit ethernet, DSI-to-eDP
-> bridge, DSI and two CSI2 interfaces, audio codec, two CANFD ports, micro SD
-> card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe SSD, debug
-> UART and JTAG.
-> 
-> The board uses split clock for PCIe controller and device, which requires
-> slight extension of rcar-gen4-pci-host.yaml DT schema, to cover this kind
-> of description. The DWC PCIe controller driver already supports this mode
-> of clock operation, hence no driver change is needed.
+Or did you mean just for readability?
 
-For the whole series,
+> );
+> > +                     if (ctx->compress_level > 0)
+> > +                             ctx->compress_level =3D -ctx->compress_le=
+vel;
+>
+> This also means, if we pass something like "compress=3Dzstd-fast:-9", it
+> will still set the level to the correct -9.
+>
+> Not some weird double negative, which is good.
+>
+> But I'm also wondering, should we even allow minus value for "zstd-fast".
 
-Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+It was meant as a safety in a sense that `s/zstd:-/zstd-fast:-/` still
+works the same. Hence it defines that "fast level -3 <=3D=3D=3D> fast level
+3" (which is still level -3 in internal zstd representation).
+So if you mounted `compress=3Dzstd-fast:-9` it's understood you actually
+meant `compress=3Dzstd-fast:9` in the same way as if you did
+`compress=3Dzstd:-9`.
 
-> 
-> Marek Vasut (4):
->   dt-bindings: PCI: rcar-gen4-pci-host: Document optional aux clock
->   dt-bindings: vendor-prefixes: Add Retronix Technology Inc.
->   dt-bindings: soc: renesas: Document Renesas R-Car V4H Sparrow Hawk
->     board support
->   arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H Sparrow Hawk
->     board support
-> 
->  .../bindings/pci/rcar-gen4-pci-host.yaml      |   8 +-
->  .../bindings/soc/renesas/renesas.yaml         |   7 +
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  arch/arm64/boot/dts/renesas/Makefile          |   2 +
->  .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 671 ++++++++++++++++++
->  5 files changed, 687 insertions(+), 3 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
-> 
-> ---
-> Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> Cc: "Rafał Miłecki" <rafal@milecki.pl>
-> Cc: Aradhya Bhatia <a-bhatia1@ti.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Junhao Xie <bigfoot@classfun.cn>
-> Cc: Kever Yang <kever.yang@rock-chips.com>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Neil Armstrong <neil.armstrong@linaro.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> 
-> -- 
-> 2.47.2
-> 
-> 
+I thought this was solid. Or would you rather bail out with -EINVAL?
 
--- 
-Kind Regards,
-Niklas Söderlund
+> > +                     btrfs_set_opt(ctx->mount_opt, COMPRESS);
+> > +                     btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+> > +                     btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+> >               } else if (strncmp(param->string, "zstd", 4) =3D=3D 0) {
+> >                       ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
+> >                       ctx->compress_level =3D
+>
+> Another thing is, if we want to prefer using zstd-fast:9 other than
+> zstd:-9, should we also change our compress handling in
+> btrfs_show_options() to show zstd-fast:9 instead?
+
+At this point it's not about preference but about compatibility. I
+actually tested changing this but as a side-effect it also had an
+influence on `btrfs.compression` xattr (our `compression` property)
+which is rather an incompatible on-disk format change. Hence I falled
+back keeping it simple. Showing `zstd:-9` is still a valid output.
+
+--nX
+
+> Thanks,
+> Qu
