@@ -1,131 +1,222 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazolkn19010009.outbound.protection.outlook.com [52.103.43.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC98F13CA97
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412472; cv=none; b=qrW7L+tk3xSLlbqmPeE4Oqici2zW06PJPL6Q5/MsDgRdSmjdtbeVzOvHqtLWaKRK52YqAb+SIqdCqJEANWm23eVQgvAtuyokpmJInUacC9BCrskECYP3vb4gQ+knWCzzUbQ3Fz15MwgR6oZg7NNATD8/AK4ySZvoIIywXePVLxY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412472; c=relaxed/simple;
-	bh=fKCmciuVrejgNfucjb/y/00oSEiIqotqVhoUG09i+hI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=mLMEpUDYdhI5bahOQwzss+hz7znfkJio+a9EAL4lgYv+Yr5+WEF3Dz/1C7ipFKQEZWoQ18ZTKSAA5QNtJiIHMo1muEu1cCCawLup058NcB56UOWcB5FcGGPqAtI4vbju0mwWIpY8d+1GugkZZy6MyVTqkfuJudXGoYIGufXPczM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EfpYhVVQ; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037621D6DBB;
+	Mon, 31 Mar 2025 09:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743412510; cv=fail; b=h1cMAz18uI1nIMRqzl6EiBPYJLYSGLXMKJsRsPFEtXQsuyU+xSSTSQppWO3dBGCx5eq62AWvvdKCRXiMGmU5f7/gm2IVk+wW7Nk1uDncfsmQBRccVytqFcNzcVfNBlKdm1obnKE9HsdbPJjcFtL+NVUAJaf6imHGc1TkTCDidd8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743412510; c=relaxed/simple;
+	bh=UYlQXGWufs4XT9FSJqP1PlhoDY42tpNZNEbBby2aG+c=;
+	h=Message-ID:Date:Subject:To:References:Cc:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HagqAlHNAOGQ2tvE6QVbiyRIYK1uYO5gZMLucFA1a9ucnlBHEwXs1IKgAjrwwaUA7ZxeaUgewi1nNtQTuaZWaQAewSRoPcqg2iCphZPJeQNMCBum/RHIj5ed2sKe29yhu+l+kMEk/xD0/ZuborQpmIGv+YRsq33/51qwQw+AlAY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=r6+4up/F; arc=fail smtp.client-ip=52.103.43.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EfpYhVVQ"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e637edaa652so3041444276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743412469; x=1744017269; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=efmCxG+jaNBJ2pGe9YTJUnaGnslDF0WWbVSPJUczx00=;
-        b=EfpYhVVQrhKV//BvHy0025zthJOr6afBX+9aZvawBccsfbpEEr29JTjm81sO+KAGT/
-         PnS3L0GU3FOfoDI6kJL/+esh8aLc12dEZPBNxaURErwA5vhFx6UaIXngZjB5jXwf74N5
-         CMumoMOgwHuLdnia9oEpPDypC0CD3144/ZOkpryNW1p/OLi5bcLocgHgTyGp0fAxW3f7
-         dYEiqE7OV9+4c70s5gyjql0TuxYxnVKqShgN14Y5rGZiiO5raXl8Lmv1GgwPGYyD20pj
-         ZmGHBSEZ2LVtgYEuGb6qNbO6FMZxxaJHV3YGdVdPzCFh+sR62yoTQzRaIulcPjcBOctD
-         QAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743412469; x=1744017269;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=efmCxG+jaNBJ2pGe9YTJUnaGnslDF0WWbVSPJUczx00=;
-        b=bNmZrCbHZ2/A5HSUS1dXhTNuPYNSNarY4Glbs3CbU4b5CFXHLCFCVn1ImNHids2T2K
-         wzOmO9NjS6cBsvEKpyKHmKd8VV0zLtTEcpAKQoqxAmvVj/KqcECYQdZPRjcLHwvcuFyY
-         i0G92dkrjuXzwz4Too22Xh1eJA7IQ9N4Lxqjt5PM31QAm7R8BZI61RFe0dYeavCFfrUj
-         Z5ScqlDzdORhwX8jpoQ15oUP2rjJjVkZXKzzrE5BjFJ0yybW1O2Ushmn1oFDVNGn7zxl
-         ST03FXIN4AILIGmvMG5jCFYOG/YCfRSXX05zEdIcUEIr/mjzsp+eLkdNmYJydLNPEFD8
-         bewA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZRGcXlNAJPtDGlOrct32eZE0k8T5oKQ+nC4mooHecP90AEL9Eq5XlRB96jb1f9V2wNx6U1KXAcImOBM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh66iurFGsvN3E0yAManeIpIqIf8tbjlO2dI0i+zEN1FrveNXf
-	cIOTaSnMe4cjW3YRAD6rgfFYgqU28DsGAl1TiVnu+oLYFTHrYfCMQFeWc/k9B3QIN7+YTQ18kEQ
-	A0kzqkeIljR38EyHnuwFlPWL+iw7QP4N+OyM5Rw==
-X-Gm-Gg: ASbGncvdmUi2ocKWGIQwBN70BkjE3vZ/nU1G39ohNKBL0wszkszEB3EnUUyzhCVHdPc
-	WdH7opIycbyaXlnUOdG1ZN9wowPaTFJndTqPGUqC3ffZUJjxzIdVAdHHxs2VLAzYZFLnGZMbK3G
-	a5ybp05q7kmDfWgotpnTOJUcHsAxI=
-X-Google-Smtp-Source: AGHT+IHh9xktT34GqhiGsVujUnGGm0FQurTIYLhUauWx5xwssos0oEUywTUlZ+xscELY+5XdU4/SW3GH2916Y6r1a10=
-X-Received: by 2002:a05:690c:6887:b0:6ff:1fac:c4fc with SMTP id
- 00721157ae682-702573684e1mr117766837b3.37.1743412469616; Mon, 31 Mar 2025
- 02:14:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="r6+4up/F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lPCbS14t91gaS5+Hf2HlA3ZGPZxm9QvU9uP9qlpFSm09wa32Kz8wpJuO54LhS//7to4DZeWV7dfZEf7yWe7pZF5Jkf1yljtgnMDZ3fICKser528/abl4WIAFHIhB49DytrPFG0pDmIo4mHPv0PhFrz5zS8di5LgRTeooqeKiQa25pn0lqzs1oEY0PAYl0T2JApQ3kcbyYiy4S+4JVEz5fLzASUKKc+/+as1EElZfXRo7Of85YkJc/0r0EWHS9AiWJz0YDJ0Lds/j0BmeL78sbEA4L4UGnHLFGHwfrF33D8h7qTW2OnvrHsexF4hg3SMSSFle4WlHJgrGi9ZhWqqKag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KQ81FctvxVw1zePeKIA9qRQTQX115vh08qBVar7KpqQ=;
+ b=FdeJGCoq+gI047WdpmvfC88FJDzV6qVu30BjkrNNI9pfPSnspDQnxxr4CtA+pOim6YCv3F6pdpGM81L7A4a8nF2Y/VbiG5GBXXk9rLyNt9znpI6ODZ4wQR2TFGw9657iwR2pb2kTixdpmZoZWaTcNhcHLkupXqadHDyT8eXXKdDp3nSqLcYhmt9Jxs7d6xEh7r0h5cBHPw8/M1kQ4Vjq/nu31CjiCBFOzZ7wy9D6wwtMYb+jT+6OKZ6x5ZAHzsNSeWxx7yRIf3j9lntCP6HH7PjWVFPOCEx4cNx8if7obj8YzgH757ppmeWRdLXPr/NGPYyXsUbValXVfCbaEJx9xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KQ81FctvxVw1zePeKIA9qRQTQX115vh08qBVar7KpqQ=;
+ b=r6+4up/FEi0MLv4rIbtthzXYNKFxHpZyAa3+w7Y2TLXPot3JO0CVCHVYZbIw9XXd6SyNMI0RpFDGhaEa0Xx1F3ajCTbRJQiXcALoPnG4itIQ1ar11XWmbZruBIB9w2OI8JA9JBdDAd6FLGlFgykpvHRvWv+1Rck82EqdnkCnKVn8a/3bwttsEYIiAuVFB8P5LWIiHBHHqmRiTq815uzgN+5cZjngqfm+No5ax+Jo5sScZD/ARJfnVy3Ipm/TcvhNixDPmNibGZ3XicQyBsl4jfa7aelE3BO5OuJVfNPk5dcV25TnPzUaxzZdqh5/lbUUr9Y9iPx/4qNZhZa6fmeWlg==
+Received: from TYBPR01MB5470.jpnprd01.prod.outlook.com (2603:1096:404:8025::8)
+ by OS3PR01MB10137.jpnprd01.prod.outlook.com (2603:1096:604:1e4::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
+ 2025 09:15:05 +0000
+Received: from TYBPR01MB5470.jpnprd01.prod.outlook.com
+ ([fe80::a7c3:4e82:38ff:65f3]) by TYBPR01MB5470.jpnprd01.prod.outlook.com
+ ([fe80::a7c3:4e82:38ff:65f3%5]) with mapi id 15.20.8583.033; Mon, 31 Mar 2025
+ 09:15:05 +0000
+Message-ID:
+ <TYBPR01MB5470C91FC2902D16D3FB9707B1AD2@TYBPR01MB5470.jpnprd01.prod.outlook.com>
+Date: Mon, 31 Mar 2025 17:14:53 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] tools: Fix compile error of pfrut/firewire
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+References: <20250328074750.3524280-1-luriwen@kylinos.cn>
+ <20250329010721.GA11319@workstation.local>
+Content-Language: en-US
+Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
+ linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+ k2ci <kernel-bot@kylinos.cn>
+From: luriwen <luriwen@hotmail.com>
+In-Reply-To: <20250329010721.GA11319@workstation.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::18)
+ To TYBPR01MB5470.jpnprd01.prod.outlook.com (2603:1096:404:8025::8)
+X-Microsoft-Original-Message-ID:
+ <67a464e3-874d-4c81-8cda-c44ded0863f2@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-3-ulf.hansson@linaro.org> <PH7PR16MB6196C3AC7A7B7CA99A70E7DDE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
- <Z-pQj6ynnfMa77fM@shikoro>
-In-Reply-To: <Z-pQj6ynnfMa77fM@shikoro>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 31 Mar 2025 11:13:53 +0200
-X-Gm-Features: AQ5f1Jr7WV6ibZ9pOu7C8LaYmbAKrf81E1XaVWgZJi_Ofi4gKPgGIRE2NlhigSs
-Message-ID: <CAPDyKFr0MvQDxsi-Qd0F=1KuR4Gy6s5bhVdOXRt9K14Z9sO2Kw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mmc: core: Further avoid re-storing power to the eMMC
- before a shutdown
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Avri Altman <Avri.Altman@sandisk.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, 
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYBPR01MB5470:EE_|OS3PR01MB10137:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef6b36f1-834b-4573-3e7f-08dd70348548
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|8060799006|19110799003|6090799003|7092599003|15080799006|8022599003|461199028|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aHRQSWxZNzQ0MkdOVldSclJLcGtGRzBZYlpMdnh2TGFRREZ5OHZSK0xNcmpx?=
+ =?utf-8?B?ZmxjN3pobEZ0TUZMZnZEbWhhSHo4ZW95SEF0SDk3SDVYYjZJbHRVYzl3MGFY?=
+ =?utf-8?B?NGcrRHgycFZtQkZoUm5BWldlNzA5Ti9RTHRVUFF2K1A4Nk5HY3pQQmw3dXUx?=
+ =?utf-8?B?UmljTjlWOXVZZHRxNVQ4S2thYzRuOVgxT3R0SzhqQjRNRTlBSDhxUFpVeUdM?=
+ =?utf-8?B?N3Z2c2dGYnIzamptUVR1aU9sengwU1BpNzY5UzhhbmlmaGYrcnFyazlyNG1m?=
+ =?utf-8?B?TVNVSDI1RHdwZ0Z2U0l6S2xLeFpVV0R0ZHl4VitTWXZZZWpWeVFHVFFaU044?=
+ =?utf-8?B?dlVhN3huVGJCWmRudnJXeVRiVml1ZVNoUTd4SGE1emI4MUFrRFhmZWdmZS9J?=
+ =?utf-8?B?OExYT2tncVA1bUpVSHJYem1hVkd5Y25STjI4NHBQZ0pGSytKZVU4M2xKblAx?=
+ =?utf-8?B?UjNpTW5FSXAwWUdnUnFUTkR2Ull5V3VqZEtvcVpQYVNubnp0KzZsRkYvNnBl?=
+ =?utf-8?B?SExzell5SXUraVg3WldnbktxeEhtZm91VzV6amhqb3FTZHczdHUzT0JuL1Nv?=
+ =?utf-8?B?TVlBaVVqZ2VHY1RpVUVrMEpneWNLck5WbFpSUEFuWC85SHdlaUh3TXVNeXln?=
+ =?utf-8?B?N3lVVHNsMkErbWNEYVYrU0pJcy91bjlZZC9rbUJ5QWtZQS9yOVVoNlhhOWky?=
+ =?utf-8?B?djVydzk3TVlFMkpoUWtyWFhpNDhud1FIdmFsSVh0M0Q0a1RIa1h3RHlaazA5?=
+ =?utf-8?B?bDZkN3dpbkFkeU9CMW1kaEtTc2tBTHIvU1l0VERtalFoWGRXTVdkUHMvWGpN?=
+ =?utf-8?B?TTE3Z3lqUVVFZGZ5aE5lVDh5aU8zSkJCc2pQUG9QMkhUNWFCREtJUVV5aHFz?=
+ =?utf-8?B?QUNxd3Y0SDFiSEU5RUpFcE56WlMwamF2K2QxbXVBL3R2UzFJR004S0tzM0Z3?=
+ =?utf-8?B?b1djbTZPR0tXaml1RGZVTitVM3RxR1BscE0yejBHaitYT2Nud2FUOHhMbUhE?=
+ =?utf-8?B?WTR2TFlSZlk3L2hMWDJWbEE4RVkrMjViL05ieVUyYW1vdDhTRzZmR1czSHcw?=
+ =?utf-8?B?b0srVkNWa3lDY2Fwc1ZPeUhpWkg5bERNVFdTbE54YVBuU0xiU3BWTmM4dXIz?=
+ =?utf-8?B?Zk1LYUorOU9aaWNDek5CZkxSQ2FqWktQMjEya3JNQmFVQlRXNVBBUHdoMEE1?=
+ =?utf-8?B?SjFGSTFQSysrZWEvMUtSSEEyTWl0Z1lEa1kwS05ZMm0yQlZYSTlnTmFNV3Er?=
+ =?utf-8?B?YlQ5UmtmdXprK3VjR00rbXBkV2JNNU04d20xS0gzZHlnalc5WUlaM2pjN1Nq?=
+ =?utf-8?B?TWwwczN6TTVyc1Q2VFgyYVp3blFrd2NMaEV0enMxQVZwV1orcjZ1UUdHQUor?=
+ =?utf-8?B?Ynh4R1N0RWgxbmVGMWRnUDFNRW1EajYrcHFHM1hESERsSzJBUlFocks1NHpD?=
+ =?utf-8?B?cmxuL2RFS0ZsS3dmb1NBMVFRY0NQWHB5ZlA4VkZZakdpclg5RE11SlRyQmpQ?=
+ =?utf-8?B?ZEc3MlM4aXJXbGJsZjA2R3NXdVpiNnlGNEZnKzNNWlk2VllSUUM1Qng0dVdF?=
+ =?utf-8?Q?4Qnx4G8QH+9fUUlbLQalBwqlU=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Z2JWQ2pDTktmTnNqajg4NjkxUUdUV3dNZzJSU0l2TllMNW1VU1BHQmVMajBr?=
+ =?utf-8?B?T0hmUmEwejBTcTZHbEx3cnhzSTRncC9PeGR0eFo4VFVYYTN2cll6TzhKSTlw?=
+ =?utf-8?B?bmNxNWVYcytnOUl4N2NXYTk2VVdEeS95Nk9aNjAreVhRQ2VpSHoxWTJXNWtQ?=
+ =?utf-8?B?NDhTZFdoQ0ZNY2JEY25yaTRmMFZtMm9NUkRTSGxDcXdkWFNEei9MZlhUK0Fz?=
+ =?utf-8?B?RlJhS2tLUUN2Q1BPR00xZEdma201eXdmZnJCZVlSQk80MkRRenFCMjZVb1Iz?=
+ =?utf-8?B?MWhyRThZU0ZYNlFJaEdCTjhScEhyWWpIOWZ6bnZ3ZFQ0ZlRBaTVOZGpWVXJG?=
+ =?utf-8?B?VkgvUFVYNzV4UHlDcGVSclZhM1FaeXVkZ0F2WWpVUU1FSmpyVUJ1Wkw2aFZ6?=
+ =?utf-8?B?WjBQejJIQ1RLcHhORVRZcWRFdWE1VVIydVg4S0o3dDI0aVh1aWQybGdWMFlJ?=
+ =?utf-8?B?dHFtREV1b1QvcmF5NVJnT1RGTWdXdnFvNVlTRmpIK282dkkvd0VpTFlFMHpD?=
+ =?utf-8?B?ZEZPQTJJQ0U1WDBJaldlYWIzNWM4Q1F5SVpFZ0tDaXJPWWZ1OUNJQVRzSDZ4?=
+ =?utf-8?B?Q0ZBUEY1d3R0UUJ1NWJKYVBtMUhqSTZ3OUVSYmxENTdIY3lvSVphNVBiMEVQ?=
+ =?utf-8?B?Nk1Zd3Q2UGNEM0dPaS9vVkxlNE5tV3QxT2lUZWdyUzhERXRDUU5vRktBcm9x?=
+ =?utf-8?B?c01QNlpJN0ZkT1BIUkNqM25yTmJRbVkvK05XWVB4OUxTdlh3cDdsRkRvcytX?=
+ =?utf-8?B?ck0vYmVQQVUvYjV4VVN6a3hpU2ZLeThBVmFXTCtGbUtxQU5HeU5Gd1EvdWJY?=
+ =?utf-8?B?RkVuRnJqd3JRQm1SWlFmeDlad1JCU1RSNnBQbEg5ZlowT1Ira0JmNmFibncv?=
+ =?utf-8?B?R1Nqd3RlQUpGRG00dkk0VzNicWxWem8xdGlsTGo3MFoyTWVBRGtyajY1WTQx?=
+ =?utf-8?B?aVpMYmNmbHQxQkhpM3QxRll1Y2hrU21FRWtYWitRTkduOUFRZEhBa0R3cWVt?=
+ =?utf-8?B?YUY1SDdXRzZRbHJOYnNUN0ZMWnNNcGdGMHdvOUZMaGlYckxlVzd3NTl2b0lh?=
+ =?utf-8?B?MGVxS0VNR3l5VVlCTlFiWlZ5a3h3Zzh6YkkvTHlERml0eWk2aEZUNXA5TDdR?=
+ =?utf-8?B?WlRSRWJvck1VVFZxaVVBM2h1d0RBQitEWmFPR1AvWDFsWTJ1alRRMG9DeXpO?=
+ =?utf-8?B?b0V2b1ZQTGlpOHd0RlZtSVFrMmpSRndQM2FLallhSXc0a2srWGFvRlJUdlNR?=
+ =?utf-8?B?WmFjYitOMTgrL2dKMmRmSzN4RGptcHVoRmFKWmEyRFJxeDgrT2dmRWR6UE50?=
+ =?utf-8?B?MkFQdURGU3Z5b0IzZU45UlNJdlQ4bHlEclJEZUtDT3RYa3E3UVJpQTdOdjhu?=
+ =?utf-8?B?SDkxc3crei9yRlBjS1M3MGhjc3MyVWp4bzVwZWF2enJCQTVCL1pnWklDTHpU?=
+ =?utf-8?B?eGw1RDliRDRYM2RXUXU2WE9IQlFGdTk0S2p2aEFCVWpid1NFOVk5dy9xaU1y?=
+ =?utf-8?B?WExjL3BCU1RvQldzN2VuMlRtdjUrdHc0MWdsMDFHVC9RNXdPbEtjNnJJeHJU?=
+ =?utf-8?B?aWRITU9uRmxDUDVhREd4N05qd2x5UzZBR2YzbWpxR2ZDeTZybGdOaGtFeGw1?=
+ =?utf-8?Q?542ieCREwS85/3vhTuB1Nt1COAcwSF+qUfgvTuMVpuyY=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-15995.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef6b36f1-834b-4573-3e7f-08dd70348548
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5470.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 09:15:05.5413
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10137
 
-On Mon, 31 Mar 2025 at 10:21, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
->
-> > > +static bool mmc_may_poweroff_notify(const struct mmc_host *host,
-> > > +                               bool is_suspend)
->
-> Maybe add some comments about the difference between
-> mmc_can_poweroff_notify() and mmc_may_poweroff_notify()? Like make it
-> super-obvious, so I will easily remember next year again :)
+在 2025/3/29 09:07, Takashi Sakamoto 写道:
+> Hi,
+> 
+> On Fri, Mar 28, 2025 at 03:47:50PM +0800, Riwen Lu wrote:
+>> The value -rR of MAKEFLAGS implicit do not use make's built-in rules and
+>> variables. Previous commit d1d096312176 ("tools: fix annoying "mkdir -p
+>> ..." logs when building tools in parallel") removed the MAKEFLAGS=
+>> command for tools and caused the built-in rules for pfrut/firewire
+>> failed to take effect.
+>>
+>> Reported-by: k2ci <kernel-bot@kylinos.cn>
+>> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+>> ---
+>>   tools/firewire/Makefile               | 7 +++++++
+>>   tools/power/acpi/tools/pfrut/Makefile | 2 +-
+>>   2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> As long as testing with v6.14 release, I can not find such failure. I
+> guess that some one has fixed the issue between the commit and the
+> release.
+> 
+> Would you please recheck the issue?
+> 
+> 
+> Thanks
+> 
+> Takashi Sakamoto
 
-mmc_can_* functions are mostly about checking what the card is capable
-of. So mmc_can_poweroff_notify() should be consistent with the other
-similar functions.
+I have reconfirmed that this type of error does indeed exist when using 
+make tools/all or make tools/firewire at commit 4e82c87058f4 ("Merge tag 
+'rust-6.15' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux") in the 6.14 
+kernel.
+The relevant error messages are as follows:
+$ make tools/all
+   ...
+   LD       pfrut
+/usr/bin/ld: 
+/home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.o: 
+in function `print_cap':
+/home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:179: 
+undefined reference to `uuid_unparse'
+/usr/bin/ld: 
+/home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:184: 
+undefined reference to `uuid_unparse'
+/usr/bin/ld: 
+/home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:189: 
+undefined reference to `uuid_unparse'
+/usr/bin/ld: 
+/home/luriwen/workspace/kernel/kernel.org/linux-git/linux/tools/power/acpi/tools/pfrut/pfrut.c:191: 
+undefined reference to `uuid_unparse'
+collect2: error: ld returned 1 exit status
 
-For eMMC power-off notifications in particular, it has become more
-complicated as we need to check the power-off scenario along with the
-host's capabilities, to understand what we should do.
+$ make tools/firewire
+   SYNC    include/config/auto.conf.cmd
+   HOSTCC  scripts/basic/fixdep
+   HOSTCC  scripts/kconfig/conf.o
+   HOSTCC  scripts/kconfig/confdata.o
+   HOSTCC  scripts/kconfig/expr.o
+   LEX     scripts/kconfig/lexer.lex.c
+   YACC    scripts/kconfig/parser.tab.[ch]
+   HOSTCC  scripts/kconfig/lexer.lex.o
+   HOSTCC  scripts/kconfig/menu.o
+   HOSTCC  scripts/kconfig/parser.tab.o
+   HOSTCC  scripts/kconfig/preprocess.o
+   HOSTCC  scripts/kconfig/symbol.o
+   HOSTCC  scripts/kconfig/util.o
+   HOSTLD  scripts/kconfig/conf
+   DESCEND firewire
+make[3]: *** No rule to make target 'nosy-dump.o', needed by 
+'nosy-dump'.  Stop.
+make[2]: *** [Makefile:72: firewire] Error 2
+make[1]: *** 
+[/home/kylin/remote/kernel/kernel.org/linux-git/linux/Makefile:1438: 
+tools/firewire] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
 
-I am certainly open to another name than mmc_may_power_off_notify(),
-if that is what you are suggesting. Do you have a proposal? :-)
-
->
-> > >     if (mmc_can_poweroff_notify(host->card) &&
-> > > -           !(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
-> > > +       !mmc_may_poweroff_notify(host, true))
-> > I guess this deserve some extra documentation because:
-> > If MMC_CAP2_FULL_PWR_CYCLE is not set but MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND is set,
-> > !mmc_may_poweroff_notify(host, true) will evaluate to false while !(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) will evaluate to true.
-
-Right. See more below.
-
->
-> I agree, I neither get this. Another way to express my confusion is: Why
-> do we set the 'is_suspend' flag to true in the shutdown function?
->
-
-I understand your concern and I agree that this is rather messy.
-Anyway, for shutdown, we set the is_suspend flag to false. The
-reasoning behind this is that during shutdown we know that the card
-will be fully powered-down (both vcc and vccq will be cut).
-
-In suspend/runtime_suspend, we don't really know as it depends on what
-the platform/host is capable of. If we can't do a full power-off
-(maybe just vcc can be cut), then we prefer the sleep command instead.
-
-I was hoping that patch3 should make this more clear (using an enum
-type), but I can try to add some comment(s) in the code to further
-clarify the policy.
-
-Thanks for reviewing and testing!
-
-Kind regards
-Uffe
+Thanks
