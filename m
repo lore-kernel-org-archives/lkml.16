@@ -1,173 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAEC25334D;
-	Mon, 31 Mar 2025 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6301D2144C9
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743433059; cv=none; b=q6z+dg+06C7wYyIZpc533UpAFt2IL5vu6RS7j4SOFPr1myBkYYAE2fpVoPDQNxFwf0zV2AH4RGhEsVvTxzCukTMKNo7AYIs/3kfq3oGMJhbyfbQ88rCSY2SlWWq352OqUoVpOa3BrSLZpHMqcjRRLEMdzvHHHghWwWTX2WfLuNk=
+	t=1743433206; cv=none; b=uaksriFxpAcq25DmeFH+s2tvpXAUziHPbqqpOk7IQNEXhyoTVIuVSBk0vgQ3yss0p2xqxOy+Ov2BO8D8NOH99n0GBoJXlXC0J9a+kg54/TPTVkl4GN99/HBBFDYDa9iLyzHYSsrkhxrmVvV5Ltub5SsGPsCf7kbpmn0Tc17tJgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743433059; c=relaxed/simple;
-	bh=d0vGvwbwP8fWW4AbI8Iq6Ga7f0iNLcIIEd2wDfHEa50=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OU0LfSRqM5SiVcYF+erlZEjAqiA/880O0A2yfNhIVsuBFpwX0UHYSmiJU0aXTRgJKcsKijt4sZP5VZV7lIBtXHyAvfQEYbr6sFtiZ29jQumKjrw7o6jfDcQR1TuDQUDlpwsGINJ5ehO+3m6fA31ASO4ZI4u3/BMN4hIqn3endaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+4l0cYE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743433206; c=relaxed/simple;
+	bh=1EN/cIMgUtWr0qWN49ERSHoJ6jcvO58c2E3XnD9QX1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O//5BzukTUKCIo47/VhGdQghvA+zHyNNyXvhgB/NiR5013R7iTheVV8PjMWlBYhIhHtfbkD67BacqjOLtTpPh3gtFMqIKdvx+Sx+tCq/+dlx9pAuz1qe9EDE9X5hZ4lIcicSZtvo07Pu8+MCpQZpre3oI+ZSRDvluxQgbgq91fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VvKN2nlt; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+4l0cYE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF52EC4CEE4;
-	Mon, 31 Mar 2025 14:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743433059;
-	bh=d0vGvwbwP8fWW4AbI8Iq6Ga7f0iNLcIIEd2wDfHEa50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u+4l0cYENUmO0ojKgDOkrfRxfJFis4OrljdYHMLa1U3p0S0Vs8OoLBx1u5QZXkyXX
-	 hyun21uEdQqvlXjafqLB87AflQ6nAqPz66ZfVSuYTL825N/z48DHseRFOjy8qJHt3I
-	 1zBMpaFM5wVjZpwoNJVTvFIyer/Va7GJyVLZE6yi81Z7zpiY0nDdnQ9NgwnRI8+up9
-	 doCwX/70uEJFIgHYA8Za9nEjOrFRCWwewHkKT/vuvpJSwyKkQ19Lmpf82bklkluPTT
-	 cifZixN2T5hxeNM9/i23g7+SLJnsNurih5JCU8qcq6dTbdtagtYX62g5TvNkNYOxoI
-	 +ipFOwu6sPO/Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ricard Wanderlof <ricard2013@butoba.net>,
-	Takashi Iwai <tiwai@suse.de>,
-	Sasha Levin <sashal@kernel.org>,
-	clemens@ladisch.de,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/5] ALSA: usb-audio: Fix CME quirk for UF series keyboards
-Date: Mon, 31 Mar 2025 10:57:28 -0400
-Message-Id: <20250331145728.1706329-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331145728.1706329-1-sashal@kernel.org>
-References: <20250331145728.1706329-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VvKN2nlt"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476b89782c3so50772441cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743433203; x=1744038003; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q/XP5iQdJ2sfX5iQDsDzT/UIhpAdSsTpMGtKs110k1o=;
+        b=VvKN2nlt3tFyCTyT+cKUdfgSwQVwkP6ps/amL+FYl7nSq5S5noWmOp3e+UCPYSZs6K
+         SPKddWdgvScKp4PfnOujme1iYrAgAbIFnNin4aFXrCeimA7ZMNL5R4yKpHD7l/awwD0u
+         uPRevIz4sRx+qGuDNlbLnQ0A+uzESW1JUhyhrTdbgG7Vntb9G2lHp9+zTEma0gx2GXwa
+         JlzWbr8r974q94aGwiIDTWcJ8IuJHpF/yWqJzY0kIKCVPt/c4JMo8AGh8ugYQZYLq+YB
+         W83Iy/rQUELTUrrrTOIvwvQBQPWOAU5W2a9i7SUZzbBzQ7ZnM7/NhWQUatqTSyYxAPqA
+         zHqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743433203; x=1744038003;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q/XP5iQdJ2sfX5iQDsDzT/UIhpAdSsTpMGtKs110k1o=;
+        b=VB+rla4WXAsCeNgEKx+KgTBGBq9dXY39t3KFnIUC6HB4mhInmNthhDui2BhW5CoPls
+         m242MOfQM4t/p5IbGbp7hYO5LdylCQKKzWg2tei6iLK5kzAVz3eeehl/tBXTWAhUbaQZ
+         iMnXKKgerIAAJ4XBBYn93cFJzvE8R6d8lzujvWexu/VowkVMatiWjJT5IGisoE5s6tI3
+         /C042mGBMNqTZnq7+ISgrgnRcs8tGnZgAyoCf3QiygKUKpH2TEbVpTxCCjoP7c7rnly3
+         zvbFLhuZMK8VoujsWpDLJehTH7TdAxyOzQDvpNSxb0MGyIitKoeBZEf2gvv4/UFLzAEx
+         BYkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnRi/a7yMiXTUS2HdUmwyLOsbxzTQ84w9bbBro0/0pXadEVSlPTZKpcmlTCjfO8qvkFKRkecziyQCvw0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsIwy0EvtBGeyUwwLAIeqb0krKMwen+KPvgfvHlxzCOU5WxiCl
+	Rjat2ARMEUWFszxw0+O4fuyOVodIhBmQ/JriqVF7A9o0faCY8HMYjjCKLlDBXIk=
+X-Gm-Gg: ASbGncsUhZTqGauMObXDrMptUrlkQfDKyaStMPSACRXy5VGhcZwnV1TDILI465RM3Wc
+	UyeUb5lMXtleS8WWh5Ay451LLrGnUaV7ZeC75MMH8Rw6yP/hw/+8FGlAEk46q77yl6vrmLozzuf
+	tb9A+W2i59gjmQt7nhlAsR1G7sX3UT6VJs63m2y74Lw56634XpWz8CGZusVmPMbMOL95KbephT5
+	XGWuHVylqiHbfIEBpGaeG+y9X28GM8yju3Ybn36V068PzyDNM0tm2EKth3qX4LoM4foWiDv9Sqm
+	RTBIdlxZhodA98+5zZdptpX3j1TJkhRISFzyDdgdNQk=
+X-Google-Smtp-Source: AGHT+IE9kLbI8h0rUyhUxntQ/fxPgI58b5Kb5NuIQENL4V46jZPC7rePLkR5c64cC1zxLsKy2I1Ivg==
+X-Received: by 2002:ac8:7d08:0:b0:471:cdae:ac44 with SMTP id d75a77b69052e-477ed78e91cmr123041321cf.47.1743433202781;
+        Mon, 31 Mar 2025 08:00:02 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47782a49facsm50913661cf.31.2025.03.31.08.00.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 08:00:01 -0700 (PDT)
+Date: Mon, 31 Mar 2025 10:59:57 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sebastian Sewior <bigeasy@linutronix.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
+Message-ID: <20250331145957.GA2110528@cmpxchg.org>
+References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
+ <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
+ <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.291
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
 
-From: Ricard Wanderlof <ricard2013@butoba.net>
+On Sun, Mar 30, 2025 at 02:30:15PM -0700, Alexei Starovoitov wrote:
+> On Sun, Mar 30, 2025 at 1:42 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Thu, 27 Mar 2025 at 07:52, Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > The pull includes work from Sebastian, Vlastimil and myself
+> > > with a lot of help from Michal and Shakeel.
+> > > This is a first step towards making kmalloc reentrant to get rid
+> > > of slab wrappers: bpf_mem_alloc, kretprobe's objpool, etc.
+> > > These patches make page allocator safe from any context.
+> >
+> > So I've pulled this too, since it looked generally fine.
+> 
+> Thanks!
+> 
+> > The one reaction I had is that when you basically change
+> >
+> >         spin_lock_irqsave(&zone->lock, flags);
+> >
+> > into
+> >
+> >         if (!spin_trylock_irqsave(&zone->lock, flags)) {
+> >                 if (unlikely(alloc_flags & ALLOC_TRYLOCK))
+> >                         return NULL;
+> >                 spin_lock_irqsave(&zone->lock, flags);
+> >         }
+> >
+> > we've seen bad cache behavior for this kind of pattern in other
+> > situations: if the "try" fails, the subsequent "do the lock for real"
+> > case now does the wrong thing, in that it will immediately try again
+> > even if it's almost certainly just going to fail - causing extra write
+> > cache accesses.
+> >
+> > So typically, in places that can see contention, it's better to either do
+> >
+> >  (a) trylock followed by a slowpath that takes the fact that it was
+> > locked into account and does a read-only loop until it sees otherwise
+> >
+> >      This is, for example, what the mutex code does with that
+> > __mutex_trylock() -> mutex_optimistic_spin() pattern, but our
+> > spinlocks end up doing similar things (ie "trylock" followed by
+> > "release irq and do the 'relax loop' thing).
+> 
+> Right,
+> __mutex_trylock(lock) -> mutex_optimistic_spin() pattern is
+> equivalent to 'pending' bit spinning in qspinlock.
+> 
+> > or
+> >
+> >  (b) do the trylock and lock separately, ie
+> >
+> >         if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
+> >                 if (!spin_trylock_irqsave(&zone->lock, flags))
+> >                         return NULL;
+> >         } else
+> >                 spin_lock_irqsave(&zone->lock, flags);
+> >
+> > so that you don't end up doing two cache accesses for ownership that
+> > can cause extra bouncing.
+> 
+> Ok, I will switch to above.
+> 
+> > I'm not sure this matters at all in the allocation path - contention
+> > may simply not be enough of an issue, and the trylock is purely about
+> > "unlikely NMI worries", but I do worry that you might have made the
+> > normal case slower.
+> 
+> We actually did see zone->lock being contended in production.
+> Last time the culprit was an inadequate per-cpu caching and
+> these series in 6.11 fixed it:
+> https://lwn.net/Articles/947900/
+> I don't think we've seen it contended in the newer kernels.
+>
+> Johannes, pls correct me if I'm wrong.
 
-[ Upstream commit c2820405ba55a38932aa2177f026b70064296663 ]
+Contention should indeed be rare in practice. This has become a very
+coarse lock, with nowadays hundreds of HW threads hitting still only
+one or two zones. A lot rides on the fastpath per-cpu caches, and it
+becomes noticable very quickly if those are sized inappropriately.
 
-Fix quirk for CME master keyboards so it not only handles
-sysex but also song position pointer, MIDI timing clock, start
-and stop messages, and active sensing. All of these can be
-output by the CME UF series master keyboards.
+> But to avoid being finger pointed, I'll switch to checking alloc_flags
+> first. It does seem a better trade off to avoid cache bouncing because
+> of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
+> others that it's faster to do trylock first to avoid branch misprediction.
 
-Tested with a CME UF6 in a desktop Linux environment as
-well as on the Zynthian Raspberry Pi based platform.
-
-Signed-off-by: Ricard Wanderlof <ricard2013@butoba.net>
-Link: https://patch.msgid.link/20250313-cme-fix-v1-1-d404889e4de8@butoba.net
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/usb/midi.c | 80 ++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 74 insertions(+), 6 deletions(-)
-
-diff --git a/sound/usb/midi.c b/sound/usb/midi.c
-index f175c537353a0..2dded1f2ca05e 100644
---- a/sound/usb/midi.c
-+++ b/sound/usb/midi.c
-@@ -505,16 +505,84 @@ static void ch345_broken_sysex_input(struct snd_usb_midi_in_endpoint *ep,
- 
- /*
-  * CME protocol: like the standard protocol, but SysEx commands are sent as a
-- * single USB packet preceded by a 0x0F byte.
-+ * single USB packet preceded by a 0x0F byte, as are system realtime
-+ * messages and MIDI Active Sensing.
-+ * Also, multiple messages can be sent in the same packet.
-  */
- static void snd_usbmidi_cme_input(struct snd_usb_midi_in_endpoint *ep,
- 				  uint8_t *buffer, int buffer_length)
- {
--	if (buffer_length < 2 || (buffer[0] & 0x0f) != 0x0f)
--		snd_usbmidi_standard_input(ep, buffer, buffer_length);
--	else
--		snd_usbmidi_input_data(ep, buffer[0] >> 4,
--				       &buffer[1], buffer_length - 1);
-+	int remaining = buffer_length;
-+
-+	/*
-+	 * CME send sysex, song position pointer, system realtime
-+	 * and active sensing using CIN 0x0f, which in the standard
-+	 * is only intended for single byte unparsed data.
-+	 * So we need to interpret these here before sending them on.
-+	 * By default, we assume single byte data, which is true
-+	 * for system realtime (midi clock, start, stop and continue)
-+	 * and active sensing, and handle the other (known) cases
-+	 * separately.
-+	 * In contrast to the standard, CME does not split sysex
-+	 * into multiple 4-byte packets, but lumps everything together
-+	 * into one. In addition, CME can string multiple messages
-+	 * together in the same packet; pressing the Record button
-+	 * on an UF6 sends a sysex message directly followed
-+	 * by a song position pointer in the same packet.
-+	 * For it to have any reasonable meaning, a sysex message
-+	 * needs to be at least 3 bytes in length (0xf0, id, 0xf7),
-+	 * corresponding to a packet size of 4 bytes, and the ones sent
-+	 * by CME devices are 6 or 7 bytes, making the packet fragments
-+	 * 7 or 8 bytes long (six or seven bytes plus preceding CN+CIN byte).
-+	 * For the other types, the packet size is always 4 bytes,
-+	 * as per the standard, with the data size being 3 for SPP
-+	 * and 1 for the others.
-+	 * Thus all packet fragments are at least 4 bytes long, so we can
-+	 * skip anything that is shorter; this also conveniantly skips
-+	 * packets with size 0, which CME devices continuously send when
-+	 * they have nothing better to do.
-+	 * Another quirk is that sometimes multiple messages are sent
-+	 * in the same packet. This has been observed for midi clock
-+	 * and active sensing i.e. 0x0f 0xf8 0x00 0x00 0x0f 0xfe 0x00 0x00,
-+	 * but also multiple note ons/offs, and control change together
-+	 * with MIDI clock. Similarly, some sysex messages are followed by
-+	 * the song position pointer in the same packet, and occasionally
-+	 * additionally by a midi clock or active sensing.
-+	 * We handle this by looping over all data and parsing it along the way.
-+	 */
-+	while (remaining >= 4) {
-+		int source_length = 4; /* default */
-+
-+		if ((buffer[0] & 0x0f) == 0x0f) {
-+			int data_length = 1; /* default */
-+
-+			if (buffer[1] == 0xf0) {
-+				/* Sysex: Find EOX and send on whole message. */
-+				/* To kick off the search, skip the first
-+				 * two bytes (CN+CIN and SYSEX (0xf0).
-+				 */
-+				uint8_t *tmp_buf = buffer + 2;
-+				int tmp_length = remaining - 2;
-+
-+				while (tmp_length > 1 && *tmp_buf != 0xf7) {
-+					tmp_buf++;
-+					tmp_length--;
-+				}
-+				data_length = tmp_buf - buffer;
-+				source_length = data_length + 1;
-+			} else if (buffer[1] == 0xf2) {
-+				/* Three byte song position pointer */
-+				data_length = 3;
-+			}
-+			snd_usbmidi_input_data(ep, buffer[0] >> 4,
-+					       &buffer[1], data_length);
-+		} else {
-+			/* normal channel events */
-+			snd_usbmidi_standard_input(ep, buffer, source_length);
-+		}
-+		buffer += source_length;
-+		remaining -= source_length;
-+	}
- }
- 
- /*
--- 
-2.39.5
-
+If you haven't yet, it could be interesting to check if/where branches
+are generated at all, given the proximity and the heavy inlining
+between where you pass the flag and where it's tested.
