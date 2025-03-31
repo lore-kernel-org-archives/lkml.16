@@ -1,226 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2089.outbound.protection.outlook.com [40.107.22.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47B71DF738;
-	Mon, 31 Mar 2025 11:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743420178; cv=none; b=hnr2vVK44MoTuPNikoc7kDY9X9T1WK9KiUTBiyEvzEpu4cr6NfSsehQQVIzL7dT+TUCQveVRHGWgQQKyWbHy6xoO90HN8aDPkDKn3doN1PB0fPLT8v9pQk5mQflfJI/YPnVDWtfyVvmhVI4Fd+z515K0uvUdtYzhCqUptQULVSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743420178; c=relaxed/simple;
-	bh=+rM7H87bGjZOkexSahbMGJkksOwLNre4F+yLSRfdliM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H2zCj4oneEYTE6AJ/n3aYFdEvxIYVooMkU1lCt++chyL+nCo0l50Fk8W8oGrbVCtNGw4rxzAq0euW2cump5VmxkTOgZ5QibOmJWdmTCr/jQ0sPwJsKzwKLc7DBJHQCB4DtTGwsOrfJgoCrE+x7Dj62BuWmJA5tfwupAJe+GGvTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q90DRg5I; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50959191F94;
+	Mon, 31 Mar 2025 11:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743420248; cv=fail; b=t61sgPeRyd2TT8jkUwZnCGhM1kiAh6iAH01r0OWl1fte/gvXjMGlehbBotrCDfREYBEdcHJIEtgD9nqe/C1iBwWJT+LevjHNAW2iFqmWxkW/G+uc7IYX8PcISIShNfAzxGznaORW3INvkbpp+F7u5dlHjMPAK6Eck1DIqkBl3X4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743420248; c=relaxed/simple;
+	bh=/I1YiUMpQTSqpxrWqDyuWyPuSQUWgLnb4+4PWrRcGKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dI9+s7i40m65aixYxlgWsErTJ8ubkInMdIlI4B1Md+Q/3t5XppB1xIp2VXC9c/C0flsqHlvuPHzQmBj5NOAn+Ebh/Z6p6ohs4XmfN48DQ7pdcvqINqD2FWRXkbsZ1QG6RIwL0yxcsiR3DuEs0pMs79kQ8Iz9qYSeY2i61VhR2HM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=JRbf4NGu; arc=fail smtp.client-ip=40.107.22.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q90DRg5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD07DC4CEE3;
-	Mon, 31 Mar 2025 11:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743420177;
-	bh=+rM7H87bGjZOkexSahbMGJkksOwLNre4F+yLSRfdliM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Q90DRg5IDDTHjxDPYNBUJRT7Tub/qoBUGW3Ci79Rv+2hTDAiNNwup+0VOa7+V33Se
-	 jV8MO8FYKXsHkmL6iQfMvNfc0DZjbbfAxwD79+4/FtmK5UNjPbRQsmMTU1OqsYksqo
-	 5AIXoDG/vg9rqb8nnI6H3Qf7YKZ4WplrTAOUdP59q7WAHgUIyQTWghBrpcHs9ApfCx
-	 MdiZK6U2BB6T1JC2Y/SEz1v7Yryp93w20yVd/ZvW63MEz9k172Kp3EC9Bp3rx79HRQ
-	 CCyXS6+rZe0/0O4EZS9QwuXFyKcpWoNKyISarZQo3TrEExGMQPB2hh29UeM5AcOGD9
-	 XDEZc6UeGSrxw==
-Date: Mon, 31 Mar 2025 12:22:47 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
-Message-ID: <20250331122247.05c6b09d@jic23-huawei>
-In-Reply-To: <8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JRbf4NGu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PEDWlxAJrvxWAHXDZiINMAbgsxQhHEzPSWj3jPNEwhGdzKjN455uDNqTnH6AvsmQX83DCnvCMALIlU8DZjpSZKdXz7wDeE6ZQlCUpO1hzMTg/K8yzAGLdKw2G2j1dSOKuutR/S440eHBGSJ6OV/Laz05j7Gk6OWkVxRYGPlbhPXtHWeBu4bEh0EsbrI7hThdvy/kZG5XJfjs86AZjEDerATDS1ukpJ6ijL9Bg9sgrrV6FaM7kRblcQjUJMHGv4VAV3aFHYEISPVDMgktZbzZzJ1lfG2vSJHEfBjr5oBPxqrrBL02+yV8u4cKlKdWWhNZVqsA8FPUebRMwT9P6+pBlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wpl+zOtvHfhSrvLnU9vwpxlHNgY7HPO5Rwqdt0urMGo=;
+ b=dAVkWx8r38GFWijB+NFt+4CCZn/p4saREMRA/DBiRASy/8hkYtGEYoyzfiHgDVNyiZl//lRiDB4Xfnw2DmcUlaTFz+IszGP8DX/vFX2oqTSGGZ0I7ze9N4eXh2J/n/jJCINqjKZKX+kcPL17ugwZFxIt0vK5hPOWZAhLj1rW69IgBMF2/DLlvlgxt9QvwxHDpGt1E2orSOYof4rhyb9xpMkyS6VlAi1YjNXqPHCc+tpQYDQI/nuXHGNKg0tth9GVxzc/A+P4DVsIbEc294OEr/uBHdmA6BIM6F86c7TeUPfCXLg/l8lpzuo3zcsLeuHHcar/vo9YnTkYq9TYjekWcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wpl+zOtvHfhSrvLnU9vwpxlHNgY7HPO5Rwqdt0urMGo=;
+ b=JRbf4NGuO/ZOaKj1mKPSkvCNV/KLH7CgXo3xOi7jRA3MdW+R561DNZte4iDbmKOa06UirBLMd11xKyQ8olkoXpx91RA7+Rv0sEi7UVT2kF1POH//y/2rYeOg+5LscCSX2vyasqR/0R465/X41WWhZf7jiZ3VYca+o97ukpcx+ziOIpxqXj6upaH+0odo0bOQLoL8knpmMtJhrtG2hRjuPZHBx9mut+pflNjcdkGPAJPUK4lFCaveyf5MOOpvumz3NRa06JyatixIU8LKKD7+R7tvOOY3yrnaDkhKIgbwugJUobUKy53CgBmYuK8Np0C6lpkrHTWS07NnnBifodbM/Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by GVXPR04MB10476.eurprd04.prod.outlook.com (2603:10a6:150:1e2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Mon, 31 Mar
+ 2025 11:24:00 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
+ 11:24:00 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM),
+	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] remoteproc: imx_rproc: Add mutex protection for workqueue
+Date: Mon, 31 Mar 2025 19:22:45 +0800
+Message-Id: <20250331112246.2407276-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0110.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GVXPR04MB10476:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9cc590e-6e46-451b-940b-08dd70468892
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?51zhq02UmDVpVbQ3RghY3VASp2o4oG/6Ix57f4LS2SWJv1OsmriSO1J7+fgU?=
+ =?us-ascii?Q?2itlK7ZhVhZ1Ub/78O0VTqELivFPOFjZzAHhIp3t0rKuH4J6zBMqGpslTVCo?=
+ =?us-ascii?Q?DS734ubdBpCwCQrg192rC1qycOiNvfBD1uxK6uwcQHXuMj3qn/r2GPJ7YT1r?=
+ =?us-ascii?Q?4fQQ2VgFgrg3yNiVIELtW0TRAt+q/qkUpdmOjv6IHRKdIW7GaYtU9C+snv//?=
+ =?us-ascii?Q?trPSYDM94DiQcid+RyDZRMkZluVI3ku/RoivEnuRHxrwxyXdRkDkSQ1zZ7SQ?=
+ =?us-ascii?Q?aEvaR9ax+1dL9Q3A9jZj7nXitEcw/ysCfEE7C3U8DwL7OIyAk3aHVlVtARSS?=
+ =?us-ascii?Q?u6tVgTvRZXPzKGx2ImNhQspo0hn/TQZqF2blr7D7YAk2OPlhw9P364ZfX5c2?=
+ =?us-ascii?Q?ezB761xhXMAAa8z9HJs0CLTUr0xoVILTwhigRwO/lRrP4j9en13ByAWe0Leu?=
+ =?us-ascii?Q?mYaUwVZRKLYHGzE19bgrz46C9QDkO698QHwp8VEzT+Si2xN0Rebxfx0t9hbF?=
+ =?us-ascii?Q?o271Qz4Diqo5zAeM/4nmRrEC67AQdfxzWmp2iIiBVGYdw54fxp4NuqdxqBQV?=
+ =?us-ascii?Q?mIQP9pz8+NEKJtmGBzIBjeCrqBRnNtxO4gakC9T8pBXMUCMIxZdgtW2swzec?=
+ =?us-ascii?Q?cqedb7JzAIbRnU21o3DHJuHrNG+bRQCuJxEU1Xzs/WZBT/tkxNHnyVm9uQNk?=
+ =?us-ascii?Q?0jHprIg4q0WrD6vFY6OfEqj79FChCzPf2N1c4rz+wNDtl68kVASFDDDdOWlN?=
+ =?us-ascii?Q?tMZKA084l3kE0A6TIdYIFh59SpWzW39sfFtK0JfdBnNTiQjNwQeHENbHS3Kt?=
+ =?us-ascii?Q?2RwH6QUqXyLdhV2gvARRGe2tgCJUiZS3Kae70SLgyM9rlMRmCTpJndA1D5aA?=
+ =?us-ascii?Q?d1PAIqaypKG/81hc7yPVhV+ujylwA6XYtCK3bGsXDlGivJdygUHWTjST9FUd?=
+ =?us-ascii?Q?lCqqO3Uxb7XZTYWkZF5CiMlM8CLa6502tjiIFJ2ldDxnseaKQsEtsgmPBinm?=
+ =?us-ascii?Q?mapcADaOTJS2eXKL4xGs/81WTahM1JXKGJ+dAjOudt4QHPmJHooGR+KiHphH?=
+ =?us-ascii?Q?5US045lKs6otjx0EeyiQccgbsTbhIIyS4n5naKbMKb57OTXt+izjTOnjI1m4?=
+ =?us-ascii?Q?M1m4usZjmXkHd1EbN9WS57xf4f2IwWYDT34+wdAh3ma2doKFTw+dSfdNrWp7?=
+ =?us-ascii?Q?3Wlrk11ZMTlrbWAlhL/J9nVUMfiv2SeTXNVo1jRn4LpYc+R+k98L7W48L2gA?=
+ =?us-ascii?Q?7MTReFnix85hrUSpRVucgN03ifgx+GV9ppdMnxdPZETXFbNrK8QAon2bHjyt?=
+ =?us-ascii?Q?GkakyGneAHVE5jWIgw+ZIQRi4lakdfHSqcTlndevHu53GS14tV/Ju+DkPJqi?=
+ =?us-ascii?Q?CbKEcaLpY+9y8L0A4g82ien/x6tvDpKDHXsBr1LiuaHICOQjz7EJUrj7Tw+u?=
+ =?us-ascii?Q?vrrIJESLzpMOVddTgLsZDdN8zTfoSVcv1/ylun628NIHwVrT0yG7Sg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?a/bwNfDJCNz40fzxWLvy6TRs4OtdSlbdGMeS+tBrmElkZSc/FHgkA9a15ilm?=
+ =?us-ascii?Q?rVLXCfKthvC/H3KxVl+RiXuF+pSvsG2ozcubOlwwuelqNtQHYMAMaLenP7o+?=
+ =?us-ascii?Q?et8QxcEbxN7z+oGrBskBME5h3zSFi7TRGBnVqCSyhH6Ui1m7ipNwrE6Twj8E?=
+ =?us-ascii?Q?WHu79MRsYCagDLZVQ+T5Yj/TLY5OJioPbTaac+jDuNQoLNNMRCNzJ4+vUvth?=
+ =?us-ascii?Q?qWeTGqoXr8vftGAaGRWU22ISsP9pGQxCbYcMyziGv0XjinoglqCvYyGOVsci?=
+ =?us-ascii?Q?7dQQCHhgupRUzctBM/EYPAndApK2pv8+S5NAtfNdnDTyXHied0zzciqUFJbq?=
+ =?us-ascii?Q?42lcdYxTQa38QwnuuOi0pSCrhrpLSWuAT4FVWyvAmn89mlFjg5gNgCmSt4na?=
+ =?us-ascii?Q?hHzBGlSB5fzW3oj8WtD9dNpg1bIo3bFaoW12IMnTuOeRTOadRL29NBL5dhZ/?=
+ =?us-ascii?Q?kWvjWDU2w/GzKGR8E9MvH7Iy5QSNomlpKEXyy2Wn27LlTjNhkfUKV3az18en?=
+ =?us-ascii?Q?phV3UF9qeDX0ZYeih3n8x1e/Q6en40H9yj4AORd5pjMFTASjUgLFu69hdTaL?=
+ =?us-ascii?Q?PYysjqYQVb0KYmZb1lenA07qCZMq3p4klI9KZOlgZe9R1+3dXyxHHAMWIVj5?=
+ =?us-ascii?Q?jx9EeTFwiNQ+K3GpKbMl/jkpmiprOjKcDp6uXyLvnvBAIeyR1lCIemwVSThG?=
+ =?us-ascii?Q?3/X9eMvVUj8goazxbB0bubdlx9aQMp7fK3c3kAMpNDwPGuYgVelNou+jORbc?=
+ =?us-ascii?Q?fHCtK0VT+k0e5lPM353oBblqWnsOxnZk2FP0eWWjHgpLp72vmfDuOAPZuIo/?=
+ =?us-ascii?Q?bvLJK4av8OoGQL2THtX8cOu0w/ty4haBAUqHYKbVgrEPAXCfzGJMP/+a8GmQ?=
+ =?us-ascii?Q?4SRMvSG41WxJ4Fn1DXlF2xPPaGekwSivm4Z+f8GpzGuz7uG8ov9StSjaKJzO?=
+ =?us-ascii?Q?cTu2ibnaIh5MmgMxQuSliH1QkZu7YacYptnl7H5rEiBojb106evphSuhLEnK?=
+ =?us-ascii?Q?sw3+jQsbrLVdXhjeP8dfi5XUBmhqwQBZKSx+s/N3eWzRf7ug8vWUfFpQ2ES2?=
+ =?us-ascii?Q?kSckQxhxYoDakUnGyfaB+xhyaVJ9g9rg1AuGaZgZNq8ziNaDN308CrnAAIgo?=
+ =?us-ascii?Q?cpWeuwsuaLL7fkSbZx85cUA2KQqoJPy/+e63Ma2/q2glZ9u9zNf9nKlSkAyY?=
+ =?us-ascii?Q?LS9/PxAwBHEb9JXreiUMbLKi97MheCnoI0LKecEBEOuu+wRlh7pAjADUVGPt?=
+ =?us-ascii?Q?Qo1jrkfmU2Mlub7osQHKLhXAW8Tq2DZtqa6aSLcfCxyUtWKYc2NfJIqADNa9?=
+ =?us-ascii?Q?eb03uyAvHENE3CxgeEwIg1zcjls+1AauPN1dsGmSwujY0PJQ/OTklX7qdFOn?=
+ =?us-ascii?Q?wmDKMsgT4MDXvUNO/uhaK8B2HM9dw3+hghvBo4LRdRVWzrNYOV5N5dVVGfx+?=
+ =?us-ascii?Q?VVZ3pSxoW+EVg8A7x2u9tDQLWL8A3F38LlkAG/0fwqoZXFWS/FqE+davKcn+?=
+ =?us-ascii?Q?on7lffRVGWIA4OZKceIEHJvsnAetRrOkO0wv6gozQW/r8lo2+SuYCDLDwDRQ?=
+ =?us-ascii?Q?3aWptQsCA3uAxrs0MWSwbPvEQcwNX3hhFeNABtmd?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9cc590e-6e46-451b-940b-08dd70468892
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 11:24:00.2123
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pNlo/pwITRVTkV+kMgvfgkqBVEohr6TMRUp6unCDOHWlJtd0BzvNDI2QnpCCtO+SvTBm2+jXTnU7P0O7idiJeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10476
 
-On Mon, 31 Mar 2025 11:03:58 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+From: Peng Fan <peng.fan@nxp.com>
 
-> The ROHM BD79104 ADC has identical SPI communication logic as the
-> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
-> started when the CS is pulled low, and channel selection is done by
-> writing the channel ID after two zero bits. Data is contained in
-> big-endian format in the last 12 bits.
+Same as
+commit 47e6ab07018e ("remoteproc: imx_dsp_rproc: Add mutex
+protection for workqueue") and commit 35bdafda40cc ("remoteproc:
+stm32_rproc: Add mutex protection for workqueue"), imx_rproc driver
+also has similar issue, although no issue reported until now.
 
-Nicely found match.  Sometimes these are tricky to spot.
+Reuse the commit log from the fix to imx_dsp_rproc:
 
-> 
-> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
-> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
-> the driver expects finding these from the device-tree, instead of having
-> the "vref" only as TI's driver.
-> 
-> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
-> have two voltage inputs as well. Pins are called Va (analog reference)
-> and Vd (digital supply pin) - but I keep the existing driver behaviour
-> for the TI's IC "as is", because I have no HW to test changes, and
-> because I have no real need to touch it.
-> 
-> NOTE II: The BD79104 requires SPI MODE 3.
-> 
-> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
-> this board I had to drop the SPI speed below the 20M which is mentioned
-> in the data-sheet [2]. This, however, may be a limitation of the EVK
-> board, not the component itself.
-> 
-> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
-> 
-> [2]:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
-> 
-Prefer Datasheet tags with # [1] 
-after them for the cross references.  
+The workqueue may execute late even after remoteproc is stopped or
+stopping, some resources (rpmsg device and endpoint) have been
+released in rproc_stop_subdevices(), then rproc_vq_interrupt()
+accessing these resources will cause kennel dump.
 
-Those belong here in the tag block (no blank lines)
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Call trace:
+ virtqueue_add_split
+ virtqueue_add_inbuf
+ rpmsg_recv_done
+ vring_interrupt
+ rproc_vq_interrupt
+ imx_rproc_vq_work
+ process_one_work
+ worker_thread
+ kthread
+ ret_from_fork
 
-One request for an additional cleanup precursor patch given you are
-touching the relevant code anyway.   It's a small one that you can
-test so hope you don't mind doing that whilst here.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/remoteproc/imx_rproc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I'm relying on the incredibly small chance anyone has a variable
-regulator wired up to the reference that they are modifying at runtime.
-I have seen that done (once long ago on a crazy dev board for a really
-noisy humidity sensor) when the reference was VDD but not on a separate
-reference pin.  That means we almost certainly won't break the existing
-parts and can't have a regression on your new one so we should be fine
-to make the change.
-
-Thanks,
-
-Jonathan
-
-> 
-> ---
-> ---
->  drivers/iio/adc/Kconfig         |  2 +-
->  drivers/iio/adc/ti-adc128s052.c | 40 +++++++++++++++++++++++++++++----
->  2 files changed, 37 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 849c90203071..148a52b3db94 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -1425,7 +1425,7 @@ config TI_ADC128S052
->  	depends on SPI
->  	help
->  	  If you say yes here you get support for Texas Instruments ADC128S052,
-> -	  ADC122S021 and ADC124S021 chips.
-> +	  ADC122S021, ADC124S021 and ROHM Semiconductor BD79104 chips.
->  
->  	  This driver can also be built as a module. If so, the module will be
->  	  called ti-adc128s052.
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index c68ee4e17a03..c7283d606d2e 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -21,6 +21,9 @@
->  struct adc128_configuration {
->  	const struct iio_chan_spec	*channels;
->  	u8				num_channels;
-> +	const char			*refname;
-> +	int				num_other_regulators;
-> +	const char * const		(*other_regulators)[];
->  };
->  
->  struct adc128 {
-> @@ -119,10 +122,28 @@ static const struct iio_chan_spec adc124s021_channels[] = {
->  	ADC128_VOLTAGE_CHANNEL(3),
->  };
->  
-> +static const char * const bd79104_regulators[] = { "iovdd" };
-> +
->  static const struct adc128_configuration adc128_config[] = {
-> -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
-> -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
-> -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
-> +	{
-> +		.channels = adc128s052_channels,
-> +		.num_channels = ARRAY_SIZE(adc128s052_channels),
-> +		.refname = "vref",
-> +	}, {
-> +		.channels = adc122s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc122s021_channels),
-> +		.refname = "vref",
-> +	}, {
-> +		.channels = adc124s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc124s021_channels),
-> +		.refname = "vref",
-> +	}, {
-> +		.channels = adc128s052_channels,
-> +		.num_channels = ARRAY_SIZE(adc128s052_channels),
-> +		.refname = "vdd",
-> +		.other_regulators = &bd79104_regulators,
-> +		.num_other_regulators = 1,
-> +	},
->  };
->  
->  static const struct iio_info adc128_info = {
-> @@ -157,7 +178,7 @@ static int adc128_probe(struct spi_device *spi)
->  	indio_dev->channels = config->channels;
->  	indio_dev->num_channels = config->num_channels;
->  
-> -	adc->reg = devm_regulator_get(&spi->dev, "vref");
-> +	adc->reg = devm_regulator_get(&spi->dev, config->refname);
-
-Hmm. It is very unusual for a reference regulator to be variable
-after power up.  As such, maybe refactor the driver to use
-devm_regulator_get_enable_read_voltage() which will save a few lines of
-code and generally be easier to read.
-
-That would need to be a separate precursor patch though.
-
-
->  	if (IS_ERR(adc->reg))
->  		return PTR_ERR(adc->reg);
->  
-> @@ -169,6 +190,15 @@ static int adc128_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> +	if (config->num_other_regulators) {
-> +		ret = devm_regulator_bulk_get_enable(&spi->dev,
-> +						config->num_other_regulators,
-> +						*config->other_regulators);
-> +		if (ret)
-> +			return dev_err_probe(&spi->dev, ret,
-> +					     "Failed to enable regulators\n");
-> +	}
-> +
->  	devm_mutex_init(&spi->dev, &adc->lock);
->  
->  	return devm_iio_device_register(&spi->dev, indio_dev);
-> @@ -182,6 +212,7 @@ static const struct of_device_id adc128_of_match[] = {
->  	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
->  	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
->  	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
-> +	{ .compatible = "rohm,bd79104", .data = &adc128_config[3] },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, adc128_of_match);
-> @@ -194,6 +225,7 @@ static const struct spi_device_id adc128_id[] = {
->  	{ "adc124s021", (kernel_ulong_t)&adc128_config[2] },
->  	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
->  	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
-> +	{ "bd79104", (kernel_ulong_t)&adc128_config[3] },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(spi, adc128_id);
+diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+index 74299af1d7f1..f933c8f4fc8b 100644
+--- a/drivers/remoteproc/imx_rproc.c
++++ b/drivers/remoteproc/imx_rproc.c
+@@ -5,6 +5,7 @@
+ 
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/arm-smccc.h>
++#include <linux/cleanup.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/firmware/imx/sci.h>
+@@ -785,6 +786,11 @@ static void imx_rproc_vq_work(struct work_struct *work)
+ 					      rproc_work);
+ 	struct rproc *rproc = priv->rproc;
+ 
++	guard(mutex)(&rproc->lock);
++
++	if (rproc->state != RPROC_RUNNING)
++		return;
++
+ 	idr_for_each(&rproc->notifyids, imx_rproc_notified_idr_cb, rproc);
+ }
+ 
+-- 
+2.37.1
 
