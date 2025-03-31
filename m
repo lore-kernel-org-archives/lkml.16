@@ -1,352 +1,391 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4996921A435
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32087211A0D
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743455182; cv=none; b=oYCnW+L+h6yaem37gx+c2yPloor9ntzQVpwD6JYEYLJLSIO2p4PeecjT7F1DFiRIRLzQVtPtMAX3s9tItqQIG06p8sn3NGpkg1XtLWdkiHwBx3zu/uQSLlSOztLgj8y+lyNWJNaFVh7fA5YLSLb/hHcOtzOX4PWMa/f7vOT+xbY=
+	t=1743455386; cv=none; b=bOs4+XWcKWQXV4iiGUMEmccBI8fcog9ylDrtSJzX0QY1n8PkfFemow32tZhXI9BmxfQohH/OtF+nPTstwhekG8NCmd34wIrKAp6VkMhXy+q+tk8XnE5ErRrBPnXn60+0fFsR7gzqKm1NlJ4XujptupjsbFeMD80BpXzdjDWA0vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743455182; c=relaxed/simple;
-	bh=MQnp2uy3ZflVrGeaZcVF05TJ9zXOjsYdI6paYfPAhxw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R05gK8LDrT7vfs79z67U9nmcyJsqBUAm9otRh1uTqE+BBhlecuS+P0icuyJ6y5bfMYjMvI0W1eYU7grnE3NnmX0DVhDsWjlejvQgmYUjI03+67+/TxQdf2M4KCpg6WSoFLS3CTz1bOFg5qHubn26xzlg2QOfaCQKWTnpV6nqEOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ky77Bjpv; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743455386; c=relaxed/simple;
+	bh=0PdwCXHaWxCcWBHDdCYwmX9WuzivXoiVTmd9yF67r1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s3k1K3vuBNJ9hcKIvh1kJJ/gb8lEMWNvXNvJW4YpvUs5HW8gEX+PsT3t1O0juXf77csAIiIDjJbuhcwSew7i3SXEBsvktgQnlUmapUGuunvo4XkcEi6eUx5weo09wpumsz39BLbWF2w8Zp+VijoXHld4NJ0GzYw9q35EfilHRzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BgK4/tyE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ky77Bjpv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BgK4/tyE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743455180; x=1774991180;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=MQnp2uy3ZflVrGeaZcVF05TJ9zXOjsYdI6paYfPAhxw=;
-  b=Ky77BjpvM5ie/4x2jqx2KfD00l294X7qTR5GnpDL2j/Ys3B1mBMX2URR
-   ekKqaIeVCrdGGXNXjOFEm3RiQZXFY7g+cyblqELy9LWNTU29bSApvXKaZ
-   +lQn4vJ57dcbgTAT3PomwnXT4V71AbaQhTCyQ1Cowerj3GRRJFbcHff7J
-   7GKtVogwXfeyUVMEi2fYLtU+dGQeaB8KIEokus8Ja8BESD9FUk+H05Loj
-   tQdAu/W0pfPMtJ7HygEOXD2jIysZs2OOvwvK4easKmD1zpKQkSynOClTv
-   gwdUN/uHrp1p+kBNnWcLW+lfaxqNRjo4xkCr/KP+nEMkbHnowMjn7uteQ
-   A==;
-X-CSE-ConnectionGUID: W/JeBNUiRnaHDKgoPUvwVA==
-X-CSE-MsgGUID: EAe2hOLmRZqcmp/NSjCYsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="48425352"
+  t=1743455383; x=1774991383;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0PdwCXHaWxCcWBHDdCYwmX9WuzivXoiVTmd9yF67r1A=;
+  b=BgK4/tyE/AkL5UABVozxD/Uq5r6RQAtieDIQ8dG88kohC+OfdAZ94OWz
+   ApXsGZQGu9dK5JcLQ2Pj798Pu1El9sIqcyDHpbSCVTW61mqO3rMErRobL
+   fvMkkQGiByyGuDSRcBwXFi2bD/d2woo+3fRQNotMo7nGTpil43aeB3Wrs
+   CdL7vyrDZ7YHWznbPov+nH6HvZ6j8rkrf0igRh4gllC0NVoAlfrjPcY5U
+   YpWg3jVKgyr9pqBg6G2LjWq+K3IsMkbOmFBbPGJPFl8rDGrpzulZfU5Pn
+   AhVev/2lhpFlMuU5GiT96+GuFIW7BjbbYLdIDFibCWVBEXF+RdLyEWjOz
+   g==;
+X-CSE-ConnectionGUID: Y8HThLrfRSqjYLEnzCls2w==
+X-CSE-MsgGUID: fgmvgGwtTHqhw8kvzulE7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44771190"
 X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="48425352"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:06:19 -0700
-X-CSE-ConnectionGUID: 5Z83Yu72RuuoVvxkWqyjUg==
-X-CSE-MsgGUID: ztKU9T0STX66+orNRmhgfg==
+   d="scan'208";a="44771190"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:09:42 -0700
+X-CSE-ConnectionGUID: UuDmdYRbSV+IzxDgg4ckDg==
+X-CSE-MsgGUID: 3XWJYOVsR5uDg4FXFNBMEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="149383684"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.64]) ([10.125.109.64])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:06:17 -0700
-Message-ID: <d7efe8bb02cbb3e2f6a32b350dcf0aa44d3f4091.camel@linux.intel.com>
-Subject: Re: [RFC][PATCH] sched: Cache aware load-balancing
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org, 
-	gautham.shenoy@amd.com, kprateek.nayak@amd.com
-Cc: juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,  rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com,  linux-kernel@vger.kernel.org,
- yu.c.chen@intel.com, tglx@linutronix.de
-Date: Mon, 31 Mar 2025 14:06:16 -0700
-In-Reply-To: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
-References: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQENBE6N6zwBCADFoM9QBP6fLqfYine5oPRtaUK2xQavcYT34CBnjTlhbvEVMTPlNNzE5v04Kagcvg5wYcGwr3gO8PcEKieftO+XrzAmR1t3PKxlMT1bsQdTOhKeziZxh23N+kmA7sO/jnu/X2AnfSBBw89VGLN5fw9DpjvU4681lTCjcMgY9KuqaC/6sMbAp8uzdlue7KEl3/D3mzsSl85S9Mk8KTLMLb01ILVisM6z4Ns/X0BajqdD0IEQ8vLdHODHuDMwV3veAfnK5G7zPYbQUsK4+te32ruooQFWd/iqRf815j6/sFXNVP/GY4EWT08UB129Kzcxgj2TEixe675Nr/hKTUVKM/NrABEBAAGJAS4EIAECABgFAk6ONYoRHQFLZXkgaXMgcmVwbGFjZWQACgkQHH3vaoxLv2UmbAgAsqa+EKk2yrDc1dEXbZBBGeCiVPXkP7iajI/FiMVZHFQpme4vpntWhg0BIKnF0OSyv0wgn3wzBWx0Zh3cve/PICIj268QvXkb0ykVcIoRnWwBeavO4dd304Mzhz5fBzJwjYx06oabgUmeGawVCEq7UfXy+PsdQdoTabsuD1jq0MbOL/4sB6CZc4V2mQbW4+Js670/sAZSMj0SQzK9CQyQdg6Wivz8GgTBjWwWsfMt4g2u0s6rtBo8NUZG/yw6fNdaoDaT/OCHuBopGmsmFXInigwOXsjyp15Yqs/de3S2Nu5NdjJUwmN1Qd1bXEc/ItvnrFB0RgoNt2gzf25aPifLabQlVGltIENoZW4gPHRpbS5jLmNoZW5AbGludXguaW50ZWwuY29tPokBOAQTAQIAIgUCTo3rPAIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQHH3vaoxLv2XYdAf8DgRO4eIAtWZy4zLv0EZHWiJ35GYAQ5fPFWBoNURE0+vICrvLyfCKTlUTFxFxTiAWHUO7JM+uBHQSJVsE+ERmTPsiU
-	O1m7SxZakGy9U2WOEiWMZMRp7HZE8vPUY5AM1OD0b38WBeUD3FPx5WRlQ0z6izF9aIHxoQhci0/WtmGLOPw3HUlCy1c4DDl6cInpy/JqUPcYlvsp+bWbdm7R5b33WW2CNVVr1eLj+1UP0Iow4jlLzNLW+jOpivLDs3G/bNC1Uu/SAzTvbaDBRRO9ToX5rlg3Zi8PmOUXWzEfO6N+L1gFCAdYEB4oSOghSbk2xCC4DRlUTlYoTJCRsjusXEy4bkBDQROjes8AQgAzuAQ5rF4/ZYaklzSXjXERiX0y1zBYmcYd2xVOKf50gh8IYv8allShkQ8mAalwIwyxTY+1k72GNCZIRVILSsuQY6fLmPUciuCk/X1y4oLNsF/Np8M9xxwYwqUibUwRdWwpSG2V0bcqjtUH1akaoY758wLONUmXrlfVonCfENd0aiP+ZLxYE1d1CRPv4KbAZ6z6seQCEQrappE4YXIC9yJUqT076DD1RhPmwNbNTTAauuwG+vX+jWsc5hUaHbKsAf/Rsw13+RA3dzWekbeIxO9qvQoQ26oqKEA31mxWhwNDnkTeo07+e2EGC2BV6s+sU1/m/lup5Bj34JLP7qYtd6EswARAQABiQEeBBgBAgAJBQJOjes8AhsMAAoJEBx972qMS79lYmQH+I4qdFm8wlkh/ZVWNJMSpfUfupuLPZ0g0hxNr3l2ZltEskVl5w+wJV+hBZ7zMmSxMYvMjJ+5aBDSZOfzhnK6+ETl4e/heDYiBLPYCtvU88cMRFb3jKcVxSfSzbBawEr7OFfCny3UtmYQ0PJmHFT6p+wlEHSyKxtyDDlLS/uPPR/llK94fOhvQlX8dir9b8r7JGuFTjtG2YbsTuapi3sFDmBhFZwYcNMt80FSIXGQjJzrsl1ZVSIwmqlF2191+F/Gr0Ld92dz1oEOjwKH1oRb/0MTsNU7udZv7L8iGKWCjHnA0dIoXKilf8EJyXGQ0wjQE3WBAdMecbvSKDRA7k
-	9a75kCDQROjjboARAAtXPJWkNkK3s22BXrcK8w9L/Kzqmp4+V9Y5MkkK94Zv66lXAybnXH3UjL9ATQgo7dnaHxcVX0S9BvHkEeKqEoMwxg86Bb2tzY0yf9+E5SvTDKLi2O1+cd7F3Wba1eM4Shr90bdqLHwEXR90A6E1B7o4UMZXD5O3MI013uKN2hyBW3CAVJsYaj2s9wDH3Qqm4Xe7lnvTAGV+zPb5Oj26MjuD4GUQLOZVkaA+GX0TrUlYl+PShJDuwQwpWnFbDgyE6YmlrWVQ8ZGFF/w/TsRgJMZqqwsWccWRw0KLNUp0tPGig9ECE5vy1kLcMdctD+BhjF0ZSAEBOKyuvQQ780miweOaaTsADu5MPGkd3rv7FvKdNencd+G1BRU8GyCyRb2s6b0SJnY5mRnE3L0XfEIJoTVeSDchsLXwPLJy+Fdd2mTWQPXlnforgfKmX6BYsgHhzVsy1/zKIvIQey8RbhBp728WAckUvN47MYx9gXePW04lzrAGP2Mho+oJfCpI0myjpI9CEctvJy4rBXRgb4HkK72i2gNOlXsabZqy46dULcnrMOsyCXj6B1CJiZbYz4xb8n5LiD31SAfO5LpKQe/G4UkQOZgt+uS7C0Zfp61+0mrhKPG+zF9Km1vaYNH8LIsggitIqE05uCFi9sIgwez3oiUrFYgTkTSqMQNPdweNgVhSUAEQEAAbQ0VGltIENoZW4gKHdvcmsgcmVsYXRlZCkgPHRpbS5jLmNoZW5AbGludXguaW50ZWwuY29tPokCVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTRofI2lb24ozcpAhyiZ7WKota4SQUCYjOVvwUJF2fF1wAKCRCiZ7WKota4SeetD/4hztE+L/Z6oqIYlJJGgS9gjV7c08YH/jOsiX99yEmZC/BApyEpqCIs+RUYl12hwVUJc++sOm/p3d31iXvgddXGYxim00+DIhIu6sJ
-	aDzohXRm8vuB/+M/Hulv+hTjSTLreAZ9w9eYyqffre5AlEk/hczLIsAsYRsqyYZgjfXLk5JN0L7ixsoDRQ5syZaY11zvo3LZJX9lTw0VPWlGeCxbjpoQK91CRXe9dx/xH/F/9F203ww3Ggt4VlV6ZNdl14YWGfhsiJU2rbeJ930sUDbMPJqV60aitI93LickNG8TOLG5QbN9FzrOkMyWcWW7FoXwTzxRYNcMqNVQbWjRMqUnN6PXCIvutFLjLF6FBe1jpk7ITlkS1FvA2rcDroRTU/FZRnM1k0K4GYYYPj11Zt3ZBcPoI0J3Jz6P5h6fJioqlhvZiaNhYneMmfvZAWJ0yv+2c5tp2aBmKsjmnWecqvHL5r/bXeziKRdcWyXqrEEj6OaJr3S4C0MIgGLteARvbMH+3tNTDIqFuyqdzHLKwEHuvKxHzYFyV7I5ZEQ2HGH5ZRZ2lRpVjSIlnD4L1PS6Bes+ALDrWqksbEuuk+ixFKKFyIsntIM+qsjkXseuMSIG5ADYfTla9Pc5fVpWBKX/j0MXxdQsxT6tiwE7P+osbOMwQ6Ja5Qi57hj8jBRF1znDjDZkBDQRcCwpgAQgAl12VXmQ1X9VBCMC+eTaB0EYZlzDFrW0GVmi1ii4UWLzPo0LqIMYksB23v5EHjPvLvW/su4HRqgSXgJmNwJbD4bm1olBeecIxXp6/S6VhD7jOfi4HACih6lnswXXwatzl13OrmK6i82bufaXFFIPmd7x7oz5Fuf9OQlLOnhbKXB/bBSHXRrMCzKUJKRia7XQx4gGe+AT6JxEj6YSvRT6Ik/RHpS/QpuOXcziNHhcRPD/ZfHqJSEa851yA1J3Qvx1KQK6t5I4hgp7zi3IRE0eiObycHJgT7nf/lrdAEs7wrSOqIx5/mZ5eoKlcaFXiKJ3E0Wox6bwiBQXrAQ/2yxBxVwARAQABtCVUaW0gQ2hlbiA8dGltLmMuY2hlbkBsaW51eC5pbnRlbC5jb20+
-	iQFUBBMBCAA+FiEEEsKdz9s94XWwiuG96lQbuGeTCYsFAlwLCmACGwMFCQHhM4AFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQ6lQbuGeTCYuQiQf9G2lkrkRdLjXehwCl+k5zBkn8MfUPi2ItU2QDcBit/YyaZpNlSuh8h30gihp5Dlb9BnqBVKxooeIVKSKC1HFeG0AE28TvgCgEK8qP/LXaSzGvnudek2zxWtcsomqUftUWKvoDRi1AAWrPQmviNGZ4caMd4itKWf1sxzuH1qF5+me6eFaqhbIg4k+6C5fk3oDBhg0zr0gLm5GRxK/lJtTNGpwsSwIJLtTI3zEdmNjW8bb/XKszf1ufy19maGXB3h6tA9TTHOFnktmDoWJCq9/OgQS0s2D7W7f/Pw3sKQghazRy9NqeMbRfHrLq27+Eb3Nt5PyiQuTE8JeAima7w98quQ==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+   d="scan'208";a="126191150"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:09:42 -0700
+Date: Mon, 31 Mar 2025 14:09:40 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v2 01/16] x86/rectrl: Fake OOBMSM interface
+Message-ID: <Z-sElKJOGyw3eflV@agluck-desk3>
+References: <20250321231609.57418-1-tony.luck@intel.com>
+ <20250321231609.57418-2-tony.luck@intel.com>
+ <b69bee17-6a84-4cb2-ab8a-2793c2fe7c49@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b69bee17-6a84-4cb2-ab8a-2793c2fe7c49@intel.com>
 
-On Tue, 2025-03-25 at 13:09 +0100, Peter Zijlstra wrote:
-> Hi all,
->=20
-> One of the many things on the eternal todo list has been finishing the
-> below hackery.
->=20
-> It is an attempt at modelling cache affinity -- and while the patch
-> really only targets LLC, it could very well be extended to also apply to
-> clusters (L2). Specifically any case of multiple cache domains inside a
-> node.
->=20
-> Anyway, I wrote this about a year ago, and I mentioned this at the
-> recent OSPM conf where Gautham and Prateek expressed interest in playing
-> with this code.
->=20
-> So here goes, very rough and largely unproven code ahead :-)
->=20
-> It applies to current tip/master, but I know it will fail the __percpu
-> validation that sits in -next, although that shouldn't be terribly hard
-> to fix up.
->=20
-> As is, it only computes a CPU inside the LLC that has the highest recent
-> runtime, this CPU is then used in the wake-up path to steer towards this
-> LLC and in task_hot() to limit migrations away from it.
->=20
-> More elaborate things could be done, notably there is an XXX in there
-> somewhere about finding the best LLC inside a NODE (interaction with
-> NUMA_BALANCING).
+On Mon, Mar 31, 2025 at 09:14:55AM -0700, Reinette Chatre wrote:
+> Hi Tony,
 
-Thanks for sharing the patch.
+Thanks for the review.
 
-> +
-> +static void task_cache_work(struct callback_head *work)
-> +{
-> +	struct task_struct *p =3D current;
-> +	struct mm_struct *mm =3D p->mm;
-> +	unsigned long m_a_occ =3D 0;
-> +	int cpu, m_a_cpu =3D -1;
-> +	cpumask_var_t cpus;
-> +
-> +	WARN_ON_ONCE(work !=3D &p->cache_work);
-> +
-> +	work->next =3D work;
-> +
-> +	if (p->flags & PF_EXITING)
-> +		return;
-> +
-> +	if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
-> +		return;
-> +
-> +	scoped_guard (cpus_read_lock) {
-> +		cpumask_copy(cpus, cpu_online_mask);
-> +
+> (nit in shortlog: rectrl -> resctrl)
+> 
+> On 3/21/25 4:15 PM, Tony Luck wrote:
+> > Real version is coming soon ... this is here so the remaining parts
+> > will build (and run ... assuming a 2 socket system that supports RDT
+> > monitoring ... only missing part is that the event counters just
+> > report fixed values).
+> > 
+> > Real version of this would just add the INTEL_AET_RESCTRL Kconfig
+> > option with dependency checks on
+> >   INTEL_VSEC=y && INTEL_AET_TELEMETRY=y && INTEL_AET_DISCOVERY=y
+> > 
+> > Just for RFC discussion.
+> 
+> Would appreciate a bit more detail about what OOBMSM provides
+> to be able to understand this series.
 
-We can constrain the preferred LLC in the same preferred node
-as that from numa balancing. Then numa balancing and preferred LLC
-won't fight each other if preferred LLC falls on a different node.
+Short answer is just what you see in this structure:
 
-Perhaps something like this here
+struct telemetry_region {
+   struct oobmsm_plat_info plat_info;
+   void __iomem            *addr;
+   size_t                  size;
+   u32                     guid;
+   u32                     num_rmids;
+};
 
-+#ifdef CONFIG_NUMA_BALANCING
-+               if (static_branch_likely(&sched_numa_balancing) &&
-+                       p->numa_preferred_nid !=3D NUMA_NO_NODE)
-+                       cpumask_and(cpus, cpus, cpumask_of_node(p->numa_pre=
-ferred_nid));
-+#endif
+I've passed on your suggestion for some comments on the
+definition to David Box, since this structure will be part
+of his patches to enable the discovery of OOBMSM features.
 
+The trail for breadcrumbs from this to event counters is:
+1) Lookup the "guid" in XML files at https://github.com/intel/Intel-PMT
+2) Each of those lists each event counter in the MMIO region referred
+to by the <addr,size> fields in excruciating detail. E.g. for the first
+register (at offset 0 from "addr"):
 
-> +		for_each_cpu(cpu, cpus) {
-> +			/* XXX sched_cluster_active */
-> +			struct sched_domain *sd =3D per_cpu(sd_llc, cpu);
-> +			unsigned long occ, m_occ =3D 0, a_occ =3D 0;
-> +			int m_cpu =3D -1, nr =3D 0, i;
-> +
-> +			for_each_cpu(i, sched_domain_span(sd)) {
-> +				occ =3D fraction_mm_sched(cpu_rq(i),
-> +							per_cpu_ptr(mm->pcpu_sched, i));
-> +				a_occ +=3D occ;
-> +				if (occ > m_occ) {
-> +					m_occ =3D occ;
-> +					m_cpu =3D i;
-> +				}
-> +				nr++;
-> +				trace_printk("(%d) occ: %ld m_occ: %ld m_cpu: %d nr: %d\n",
-> +					     per_cpu(sd_llc_id, i), occ, m_occ, m_cpu, nr);
-> +			}
-> +
-> +			a_occ /=3D nr;
+  <TELI:description>Accumulated core energy usage across all cores running RMID 0</TELI:description>
+          <TELI:SampleType>Snapshot</TELI:SampleType>
+          <TransFormInputs xmlns="http://schemas.intel.com/telemetry/base/common">
+                  <TransFormInput varName="parameter_0">
+                          <sampleGroupIDREF>Container_0</sampleGroupIDREF>
+                          <sampleIDREF>RMID_0_CORE_ENERGY</sampleIDREF>
+                  </TransFormInput>
+          </TransFormInputs>
+          <TELI:transformREF>U63.45.18</TELI:transformREF>
+  </TELI:T_AggregatorSample>
+  <TELI:T_AggregatorSample sampleName="RMID_0_CORE_ENERGY_VALID" sampleGroup="RMID_0_CORE_ENERGY" datatypeIDREF="tcounter_valid" sampleID="1">
+          <TELI:description>If set, RMID_0_CORE_ENERGY counter reading is valid</TELI: description>
+          <TELI:SampleType>Snapshot</TELI:SampleType>
+          <TransFormInputs xmlns="http://schemas.intel.com/telemetry/base/common">
+                  <TransFormInput varName="parameter_0">
+                          <sampleGroupIDREF>Container_0</sampleGroupIDREF>
+                          <sampleIDREF>RMID_0_CORE_ENERGY_VALID</sampleIDREF>
+                  </TransFormInput>
+          </TransFormInputs>
+          <TELI:transformREF>passthru</TELI:transformREF>
+  </TELI:T_AggregatorSample>
 
-Is it necessary to divide by nr (#CPUs in LLC)? Suppose we have uneven
-number of CPUs between LLC, but some total occupancy, we will skew towards
-the smaller LLC with this division, which may not be desirable.=C2=A0Could =
-happen
-if some CPUs are offlined. I think the preferred LLC can be the one with
-most accumulated occupancy.
+This verbosity repeats for each of the events for RMID 0, then for RMID 1, 2, ...
 
-> +			if (a_occ > m_a_occ) {
-> +				m_a_occ =3D a_occ;
-> +				m_a_cpu =3D m_cpu;
-> +			}
-> +
-> +			trace_printk("(%d) a_occ: %ld m_a_occ: %ld\n",
-> +				     per_cpu(sd_llc_id, cpu), a_occ, m_a_occ);
-> +
-> +			for_each_cpu(i, sched_domain_span(sd)) {
-> +				/* XXX threshold ? */
-> +				per_cpu_ptr(mm->pcpu_sched, i)->occ =3D a_occ;
-> +			}
-> +
-> +			cpumask_andnot(cpus, cpus, sched_domain_span(sd));
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * If the max average cache occupancy is 'small' we don't care.
-> +	 */
-> +	if (m_a_occ < (NICE_0_LOAD >> EPOCH_OLD))
-> +		m_a_cpu =3D -1;
-> +
-> +	mm->mm_sched_cpu =3D m_a_cpu;
-> +
-> +	free_cpumask_var(cpus);
-> +}
-> +
-> +void init_sched_mm(struct task_struct *p)
-> +{
-> +	struct callback_head *work =3D &p->cache_work;
-> +	init_task_work(work, task_cache_work);
-> +	work->next =3D work;
-> +}
-> +
-> +#else
-> +
-> +static inline void account_mm_sched(struct rq *rq, struct task_struct *p=
-,
-> +				    s64 delta_exec) { }
-> +
-> +
-> +void init_sched_mm(struct task_struct *p) { }
-> +
-> +static void task_tick_cache(struct rq *rq, struct task_struct *p) { }
-> +
-> +#endif
-> +
-> +static inline
-> +void update_curr_task(struct rq *rq, struct task_struct *p, s64 delta_ex=
-ec)
->  {
->  	trace_sched_stat_runtime(p, delta_exec);
->  	account_group_exec_runtime(p, delta_exec);
-> +	account_mm_sched(rq, p, delta_exec);
->  	cgroup_account_cputime(p, delta_exec);
->  }
-> =20
-> @@ -1215,7 +1434,7 @@ s64 update_curr_common(struct rq *rq)
-> =20
->  	delta_exec =3D update_curr_se(rq, &donor->se);
->  	if (likely(delta_exec > 0))
-> -		update_curr_task(donor, delta_exec);
-> +		update_curr_task(rq, donor, delta_exec);
-> =20
->  	return delta_exec;
->  }
-> @@ -1244,7 +1463,7 @@ static void update_curr(struct cfs_rq *cfs_rq)
->  	if (entity_is_task(curr)) {
->  		struct task_struct *p =3D task_of(curr);
-> =20
-> -		update_curr_task(p, delta_exec);
-> +		update_curr_task(rq, p, delta_exec);
-> =20
->  		/*
->  		 * If the fair_server is active, we need to account for the
-> @@ -7850,7 +8069,7 @@ static int select_idle_sibling(struct task_struct *=
-p, int prev, int target)
->  	 * per-cpu select_rq_mask usage
->  	 */
->  	lockdep_assert_irqs_disabled();
-> -
-> +again:
->  	if ((available_idle_cpu(target) || sched_idle_cpu(target)) &&
->  	    asym_fits_cpu(task_util, util_min, util_max, target))
->  		return target;
-> @@ -7888,7 +8107,8 @@ static int select_idle_sibling(struct task_struct *=
-p, int prev, int target)
->  	/* Check a recently used CPU as a potential idle candidate: */
->  	recent_used_cpu =3D p->recent_used_cpu;
->  	p->recent_used_cpu =3D prev;
-> -	if (recent_used_cpu !=3D prev &&
-> +	if (prev =3D=3D p->wake_cpu &&
-> +	    recent_used_cpu !=3D prev &&
->  	    recent_used_cpu !=3D target &&
->  	    cpus_share_cache(recent_used_cpu, target) &&
->  	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_=
-cpu)) &&
-> @@ -7941,6 +8161,18 @@ static int select_idle_sibling(struct task_struct =
-*p, int prev, int target)
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
-> =20
-> +	if (prev !=3D p->wake_cpu && !cpus_share_cache(prev, p->wake_cpu)) {
-> +		/*
-> +		 * Most likely select_cache_cpu() will have re-directed
-> +		 * the wakeup, but getting here means the preferred cache is
-> +		 * too busy, so re-try with the actual previous.
-> +		 *
-> +		 * XXX wake_affine is lost for this pass.
-> +		 */
-> +		prev =3D target =3D p->wake_cpu;
-> +		goto again;
-> +	}
-> +
->  	/*
->  	 * For cluster machines which have lower sharing cache like L2 or
->  	 * LLC Tag, we tend to find an idle CPU in the target's cluster
-> @@ -8563,6 +8795,40 @@ static int find_energy_efficient_cpu(struct task_s=
-truct *p, int prev_cpu)
->  	return target;
->  }
-> =20
-> +#ifdef CONFIG_SCHED_CACHE
-> +static long __migrate_degrades_locality(struct task_struct *p, int src_c=
-pu, int dst_cpu, bool idle);
-> +
-> +static int select_cache_cpu(struct task_struct *p, int prev_cpu)
-> +{
-> +	struct mm_struct *mm =3D p->mm;
-> +	int cpu;
-> +
-> +	if (!mm || p->nr_cpus_allowed =3D=3D 1)
-> +		return prev_cpu;
-> +
-> +	cpu =3D mm->mm_sched_cpu;
+The important bits for Linux are the name, the type, and the valid bit.
 
-Some regressions seen when the preferred LLC has significant load, causing =
-frequent task
-migrations between preferred and other LLCs. For those cases, tasks should
-stay with prev_cpu to avoid migration overhead. Perhaps we could
-consider the load in preferred LLC to see if we should move a task there.=
-=C2=A0
-Say if preferred LLC is heavily loaded (say nr_running in LLC >=3D cpus in =
-LLC),
-we can stick with prev_cpu and not attempt to switch LLC.
+I will add more comments to the Linux structures when they are added
+in one of the later patches in this series.
+> 
+> Even though changelog mentions "event counters" I am not able to
+> recognize any unique events provided by this interface. Instead it
+> just seems to provide a memory region that is entirely up to resctrl
+> to interpret based on the "unique identifier" hinted to in cover letter.
+> I could not find any description that connects the "unique identifier"
+> to the "guid" used in following patches. I think it will be helpful to
+> upfront connect the high level "unique identifier" with the "guid" that
+> the patches use to make this obvious.
+> 
+> Closest information to something that can be used by resctrl is
+> "num_rmids". Could you please add information on how "num_rmids" relates
+> to the memory region that is only specified via an addr and size?
+> 
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  .../cpu/resctrl/fake_intel_aet_features.h     | 73 +++++++++++++++++++
+> >  .../cpu/resctrl/fake_intel_aet_features.c     | 65 +++++++++++++++++
+> >  arch/x86/Kconfig                              |  1 +
+> >  arch/x86/kernel/cpu/resctrl/Makefile          |  1 +
+> >  drivers/platform/x86/intel/pmt/Kconfig        |  3 +
+> >  5 files changed, 143 insertions(+)
+> >  create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
+> >  create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
+> > 
+> > diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
+> > new file mode 100644
+> > index 000000000000..c835c4108abc
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
+> > @@ -0,0 +1,73 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +/* Bits stolen from OOBMSM VSEC discovery code */
+> > +
+> > +enum pmt_feature_id {
+> > +	FEATURE_INVALID			= 0x0,
+> > +	FEATURE_PER_CORE_PERF_TELEM	= 0x1,
+> > +	FEATURE_PER_CORE_ENV_TELEM	= 0x2,
+> > +	FEATURE_PER_RMID_PERF_TELEM	= 0x3,
+> > +	FEATURE_ACCEL_TELEM		= 0x4,
+> > +	FEATURE_UNCORE_TELEM		= 0x5,
+> > +	FEATURE_CRASH_LOG		= 0x6,
+> > +	FEATURE_PETE_LOG		= 0x7,
+> > +	FEATURE_TPMI_CTRL		= 0x8,
+> > +	FEATURE_RESERVED		= 0x9,
+> > +	FEATURE_TRACING			= 0xA,
+> > +	FEATURE_PER_RMID_ENERGY_TELEM	= 0xB,
+> > +	FEATURE_MAX			= 0xB,
+> > +};
+> > +
+> > +/**
+> > + * struct oobmsm_plat_info - Platform information for a device instance
+> > + * @cdie_mask:       Mask of all compute dies in the partition
+> > + * @package_id:      CPU Package id
+> > + * @partition:       Package partition id when multiple VSEC PCI devices per package
+> > + * @segment:         PCI segment ID
+> > + * @bus_number:      PCI bus number
+> > + * @device_number:   PCI device number
+> > + * @function_number: PCI function number
+> > + *
+> > + * Structure to store platform data for a OOBMSM device instance.
+> > + */
+> > +struct oobmsm_plat_info {
+> > +	u16 cdie_mask;
+> > +	u8 package_id;
+> > +	u8 partition;
+> > +	u8 segment;
+> > +	u8 bus_number;
+> > +	u8 device_number;
+> > +	u8 function_number;
+> > +};
+> > +
+> > +enum oobmsm_supplier_type {
+> > +	OOBMSM_SUP_PLAT_INFO,
+> > +	OOBMSM_SUP_DISC_INFO,
+> > +	OOBMSM_SUP_S3M_SIMICS,
+> > +	OOBMSM_SUP_TYPE_MAX
+> > +};
+> > +
+> > +struct oobmsm_mapping_supplier {
+> > +	struct device *supplier_dev[OOBMSM_SUP_TYPE_MAX];
+> > +	struct oobmsm_plat_info plat_info;
+> > +	unsigned long features;
+> > +};
+> > +
+> > +struct telemetry_region {
+> > +	struct oobmsm_plat_info	plat_info;
+> > +	void __iomem		*addr;
+> > +	size_t			size;
+> > +	u32			guid;
+> > +	u32			num_rmids;
+> > +};
+> 
+> Could there be some description of what a "telemetry_region" is and
+> how the members should be interpreted by resctrl?
 
+As mentioned above. I passed this request to David Box.
 
-> +	if (cpu < 0)
-> +		return prev_cpu;
-> +
-> +
-> +	if (static_branch_likely(&sched_numa_balancing) &&
-> +	    __migrate_degrades_locality(p, prev_cpu, cpu, false) > 0) {
-> +		/*
-> +		 * XXX look for max occupancy inside prev_cpu's node
-> +		 */
-> +		return prev_cpu;
-> +	}
-> +
-> +	return cpu;
-> +}
-> +#else
-> +static int select_cache_cpu(struct task_struct *p, int prev_cpu)
-> +{
-> +	return prev_cpu;
-> +}
-> +#endif
-> +
-> +
->  /*
->   * select_task_rq_fair: Select target runqueue for the waking task in do=
-mains
->   * that have the relevant SD flag set. In practice, this is SD_BALANCE_W=
-AKE,
-> @@ -8588,6 +8854,8 @@ select_task_rq_fair(struct task_struct *p, int prev=
-_cpu, int wake_flags)
->  	 * required for stable ->cpus_allowed
->  	 */
->  	lockdep_assert_held(&p->pi_lock);
-> +	guard(rcu)();
+> > +
+> > +struct pmt_feature_group {
+> > +	enum pmt_feature_id	id;
+> > +	int			count;
+> > +	struct kref		kref;
+> > +	struct telemetry_region	regions[];
+> > +};
+> > +
+> > +struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
+> > +
+> > +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
+> > diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
+> > new file mode 100644
+> > index 000000000000..b537068d99fb
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
+> > @@ -0,0 +1,65 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include <linux/cleanup.h>
+> > +#include <linux/minmax.h>
+> > +#include <linux/slab.h>
+> > +#include "fake_intel_aet_features.h"
+> > +#include <linux/intel_vsec.h>
+> > +#include <linux/resctrl.h>
+> > +
+> > +#include "internal.h"
+> > +
+> > +#define ENERGY_QWORDS	((576 * 2) + 3)
+> > +#define PERF_QWORDS	((576 * 7) + 3)
+> > +
+> > +static long pg[4 * ENERGY_QWORDS + 2 * PERF_QWORDS];
+> > +
+> > +static int __init fill(void)
+> > +{
+> > +	u64 val = 0;
+> > +
+> > +	for (int i = 0; i < sizeof(pg); i += sizeof(val)) {
+> > +		pg[i / sizeof(val)] = BIT_ULL(63) + val;
+> > +		val++;
+> > +	}
+> > +	return 0;
+> > +}
+> > +device_initcall(fill);
+> > +
+> > +#define PKG_REGION(_entry, _guid, _addr, _pkg)	\
+> > +	[_entry] = { .guid = _guid, .addr = (void __iomem *)_addr, .plat_info = { .package_id = _pkg }}
+> > +
+> > +static struct pmt_feature_group fake_energy = {
+> > +	.count = 4,
+> > +	.regions = {
+> > +		PKG_REGION(0, 0x26696143, &pg[0 * ENERGY_QWORDS], 0),
+> > +		PKG_REGION(1, 0x26696143, &pg[1 * ENERGY_QWORDS], 0),
+> > +		PKG_REGION(2, 0x26696143, &pg[2 * ENERGY_QWORDS], 1),
+> > +		PKG_REGION(3, 0x26696143, &pg[3 * ENERGY_QWORDS], 1)
+> > +	}
+> > +};
+> > +
+> > +static struct pmt_feature_group fake_perf = {
+> > +	.count = 2,
+> > +	.regions = {
+> > +		PKG_REGION(0, 0x26557651, &pg[4 * ENERGY_QWORDS + 0 * PERF_QWORDS], 0),
+> > +		PKG_REGION(1, 0x26557651, &pg[4 * ENERGY_QWORDS + 1 * PERF_QWORDS], 1)
+> > +	}
+> > +};
+> 
+> Could there be some guidance on how to interpret the hardcoded data? For example,
+> one group contains two regions and the other four. Was this just done for testing
+> to ensure implementation supports multiple regions per package or ...? 
+> Is it expected that multiple feature groups could have different number of regions?
+> I also think initializing the id would be helpful to understand the example better.
 
-Tim
+You are correct. The varying number of regions was simply to exercise
+the code that needs to aggregate values from multiple regions. The
+first implementation of this has homogeneous aggregators all working
+for the same events from the same CPUs. But I don't see that as a
+requirement. I could envision a system with different aggregators
+for different events, perhaps servicing different groups of CPUs on
+the same package.
+
+> > +
+> > +struct pmt_feature_group *
+> > +intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
+> > +{
+> > +	switch (id) {
+> > +	case FEATURE_PER_RMID_ENERGY_TELEM:
+> > +		return &fake_energy;
+> > +	case FEATURE_PER_RMID_PERF_TELEM:
+> > +		return &fake_perf;
+> > +	default:
+> > +		return ERR_PTR(-ENOENT);
+> > +	}
+> > +	return ERR_PTR(-ENOENT);
+> > +}
+> > +
+> > +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
+> > +{
+> > +}
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index ea29d22a621f..6112cb6cad05 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -504,6 +504,7 @@ config X86_CPU_RESCTRL
+> >  	bool "x86 CPU resource control support"
+> >  	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+> >  	depends on MISC_FILESYSTEMS
+> > +	select INTEL_AET_RESCTRL	if X86_64
+> 
+> I expect something like this will stay (i.e. not part of the "Fake" code).
+> In this case, should this perhaps only be selected on Intel (CPU_SUP_INTEL)?
+> (nit: the tab is unexpected)
+
+Yes, this part isn't fake, and is should depend on CPU_SUP_INTEL.
+
+> >  	select ARCH_HAS_CPU_RESCTRL
+> >  	select RESCTRL_FS
+> >  	select RESCTRL_FS_PSEUDO_LOCK
+> > diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
+> > index 909be78ec6da..2c3b09f95127 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/Makefile
+> > +++ b/arch/x86/kernel/cpu/resctrl/Makefile
+> > @@ -2,6 +2,7 @@
+> >  obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
+> >  obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
+> >  obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
+> > +obj-$(CONFIG_INTEL_AET_RESCTRL)		+= fake_intel_aet_features.o
+> >  
+> >  # To allow define_trace.h's recursive include:
+> >  CFLAGS_pseudo_lock.o = -I$(src)
+> > diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/intel/pmt/Kconfig
+> > index e916fc966221..6d3b1f64efe9 100644
+> > --- a/drivers/platform/x86/intel/pmt/Kconfig
+> > +++ b/drivers/platform/x86/intel/pmt/Kconfig
+> > @@ -38,3 +38,6 @@ config INTEL_PMT_CRASHLOG
+> >  
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called intel_pmt_crashlog.
+> > +
+> > +config INTEL_AET_RESCTRL
+> > +	bool
+> 
+> I expect that this will also stay ... if so, could this be expanded to
+> have needed dependency and also be accompanied by some documentation. Something like
+> "Architecture selects this when ...." This will make it clear that this is
+> not something a user will select during kernel build while also explaining
+> what it is used for.
+
+This part will also stay. I will add a comment as you suggest.
+
+> Reinette
+
+-Tony
