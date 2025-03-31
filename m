@@ -1,67 +1,60 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E649670805
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E6B33EA
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743403582; cv=none; b=I+4YOzC0Us97UlEHpd7cujHpKrYRRHtBfR3FChsn0GXX6KHnnVvasl3Gq6lGa+h7xilTymX8aa9lEJRzp6GdVW2WFk2lgi7gTyBhqCRo82XxZdB4OSoBX6dBwybtGy7ZmCZX3wa1j2nXIu03xM1orhhkZO3QJ2xWzSGi4Hq9X8M=
+	t=1743403678; cv=none; b=Zskxi4ntyeBASM7boggBbW6BPrz6X1E6wma3Jkn98rg9Ez+MaoNDOCznSc1OO6vg2Jojwt/upPPL3gXy9OWYYRs6URp1yhzcueE7fjgJQLGSdYVOWKIIbrEiB3f3GM7Fmw9ZwP3HKEMyYb7H99Y4ovEWlpkRec562I9/MSV7UPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743403582; c=relaxed/simple;
-	bh=jlSvjAFn3alQ4Yt+kDwAuBIfr3O8/1uPwl29MTTzlVA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=Dbs/NSjsib0g3LYZhm1xCWyvXUCjIJypxPUAjFmZIh/HeXgaKmctRI1ToDIjPP29EXBdpIRfLfgwLy6IZ2edHT8GvSs2QQdqdBln4BQIzcNJv4V+Z7+gHjn3MvxQOOczMYpQdNwhoQM+wwFWq0u2s8VwHyWCgcnhaa4i9qBRgXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c4njhH0I; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743403678; c=relaxed/simple;
+	bh=F0xnPgnr0ipIPPbnwP9KnlTZy6+WfyOzeko7lAPraEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=bkxE7zGKmsHGnxuqnA1rH7TZV1dT7d/7Q0ROiS5GY8x3AIAZM6NJehHJSxzmF29iZ5hiTgN3WvE3LSZN2Y6fWGYqTtSepQKff1zdElisLhgUp1DvgSdFeN/iDXw7qvMnh8l21TmZAZ+2yRYFwpIg+k6ffUNP23u8p1b91Y4Ec9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kHChQPbc; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4njhH0I"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so32784835e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743403579; x=1744008379; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AA4sDqP4J8juhu+e1eHgJ4HsEPfRns6pCAnRWR1sqHg=;
-        b=c4njhH0IefARTcXjurUd2qOH2+9usm5m+9t4MJq7+BnHv0326GpENb0jN7/BvKmmOh
-         sFrp7slesm5vPOdsjxnfDzykXTom1jPET4hSpr8MVAdjROWwEN29FMkxByEWbWoNa9MX
-         wtHkGXBDP80sJqmwvJiEeiiqzcrl7DUCSd3FR7RJ+bJZJcyp1wudHulxpQr12xpgKuHN
-         D5borkN+abmfMm+rxC9s4Rl2Jft9YCrwHBGYWp869MgEnsA9wf2kosHcBOX2iXYmqwaz
-         c5Kv9N3ZA58MiWrwF1oLtHwI/BZi0r5UADwQyJkMnxWO5JNHsoKjAi9r1yJzGLdBlGau
-         nLKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743403579; x=1744008379;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AA4sDqP4J8juhu+e1eHgJ4HsEPfRns6pCAnRWR1sqHg=;
-        b=tJ/iuTLueDQNNrtZ34W4mXM/2T18ALgMlrVd+4xPyEQsNErJ7FToXYGHimaHG+U0zs
-         roksIjMUVVFM42U31RHTOATKZxFMg6y1pCqoJ0onf9n/iVF3IBtI0YRwXa75FUab8Xc/
-         JAua3TtoTbz7+1n1X1hp49qhbjaKjowFWtM/yIYJLv4WzR9HQk4/3VUiSSPHvq+pum2e
-         5UY6WgH2V2w7O0CmFQEFF9lWxOa8ZxyyNqSAI3JwgRXWHue4ozoMS9NxzcVraLKj1CA2
-         JjLVRRkgKVmq52ts1jsl6phThTgT9Rr5eG+uwi07NcUmJE1iHc/CPjNthZP0zbJvf/Tk
-         zPsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRmTrKJyWT1agpXwPpEE/CUZMB96ngA30d4wlRGrb4cyGjbAJwS/FrTM3RUqK+/3bS/uRIj1h5woGkExM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkf1Vvya5dijy4X7j2WPE7uPQJCmBmFRzmJ2RD7/xqsvGQo3az
-	vCaSxEocBMZfZB60a3SK5mMzwiximWd3UHglHVfEw7bUy8XpL9Ls/X/Gnp9HCDE=
-X-Gm-Gg: ASbGncuIeslVnYvIf5sCWC1o9UQGN/p+xukVhpsxm+tYLO5hZ7JkPbnf+b/5xvj0b7L
-	emS+yOnSBfCHRE5AU0TPtO7Gg6aaU3RN6fgqvTRiS1CTxj94bloBEdq0FXtG4EZQ5Q4/sHeyHjw
-	Pg+g6dzRjCzIdDACF+1hhZK5fTlPztrDv61SyUISiA5KkY1NkM2RxCtrBIxBNbFYlLFtOu95zwc
-	cyqFJpv6j2iV7+B5Jn6KgpdKxZtH29E+cdFttAva5NivTVULtrMny/T0pXiUDy1Rf1Pn+pvl4PV
-	9Vwhe1Wh68KFBkC3zlirfq0Th/v9N1kEM6w/iQdiS4vux5xYny8jvC4BFg80+DCMoNaGokejTJh
-	LkMismQIor9CTd++w
-X-Google-Smtp-Source: AGHT+IGx1f4vC8GTeK58NiotvPS6asWIcIisQro1qkimwNxZktvh2jq9DwcElB67LzcJE4nqjvtuyg==
-X-Received: by 2002:a05:600c:5108:b0:43c:f629:66f3 with SMTP id 5b1f17b1804b1-43db624be12mr58276565e9.18.1743403579170;
-        Sun, 30 Mar 2025 23:46:19 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:143:2e3d:45f1:fd2? ([2a01:e0a:3d9:2080:143:2e3d:45f1:fd2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8314b6dbsm157837065e9.36.2025.03.30.23.46.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 23:46:18 -0700 (PDT)
-Message-ID: <82674b8f-4fc3-4fd2-bc7d-f573d2d11b58@linaro.org>
-Date: Mon, 31 Mar 2025 08:46:18 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kHChQPbc"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250331064747epoutp01a0b5c0e31d1545d4959ec64e24e8f465~x0GYh7_NO2866528665epoutp01V
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:47:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250331064747epoutp01a0b5c0e31d1545d4959ec64e24e8f465~x0GYh7_NO2866528665epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743403667;
+	bh=cU8ZjDVrKVfX1VkxH+yC4pcYzBmbmHhNz0/QzzT4Zv0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=kHChQPbcsF45GT5LLZpQlRbjmJes60WLD21uxwms0+WVdQdth0pNzxOxJZaateGvL
+	 vzvGxW5SyrxJVtOsi1pMr+1VRBiTLS7hZU8re5ovj/MICKn4QqJmSTeeVAXW0Es8oY
+	 6rq4SzYL86RgWU8dsLLj4EyHOe7/GYuR7X0iL5ZY=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250331064747epcas5p1c73b9c47280486dbd3e073f578e6101f~x0GYHtvUm1024410244epcas5p1y;
+	Mon, 31 Mar 2025 06:47:47 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZR1sY1SMPz3hhTF; Mon, 31 Mar
+	2025 06:47:45 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5F.73.10173.19A3AE76; Mon, 31 Mar 2025 15:47:45 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250331064744epcas5p246d4fb167638e93fa07f8d79f4894d42~x0GVl0icP1265112651epcas5p2j;
+	Mon, 31 Mar 2025 06:47:44 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250331064744epsmtrp2f15506c5e0a78f1f1b527bede2f89b9c~x0GVk6n2f1429014290epsmtrp2r;
+	Mon, 31 Mar 2025 06:47:44 +0000 (GMT)
+X-AuditID: b6c32a44-8c1fc700000027bd-83-67ea3a91be53
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D0.74.08766.09A3AE76; Mon, 31 Mar 2025 15:47:44 +0900 (KST)
+Received: from [107.122.11.51] (unknown [107.122.11.51]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250331064743epsmtip1738065b18eb9877c45e9f5459f18a1cf~x0GUF5CfA1389113891epsmtip1U;
+	Mon, 31 Mar 2025 06:47:42 +0000 (GMT)
+Message-ID: <48b9a876-0e3b-4c89-9aa3-b48f502868c3@samsung.com>
+Date: Mon, 31 Mar 2025 12:16:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,66 +62,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/2] media: MAINTAINERS: Add myself into venus/iris to
- maintain/review
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- stanimir.k.varbanov@gmail.com, hverkuil@xs4all.nl,
- quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, mchehab@kernel.org,
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v4 3/3] nvme/ioctl: move fixed buffer lookup to
+ nvme_uring_cmd_io()
+To: Caleb Sander Mateos <csander@purestorage.com>, Keith Busch
+	<kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig
+	<hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Pavel Begunkov
+	<asml.silence@gmail.com>
+Cc: Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org,
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Kanchan Joshi <joshi.k@samsung.com>
+In-Reply-To: <20250328154647.2590171-4-csander@purestorage.com>
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmlu5Eq1fpBpv/sFrMWbWN0WL13X42
+	i/8L57JarFx9lMniXes5FotJh64xWjy9OovJ4vKuOWwW85c9ZbdY9/o9iwOXx85Zd9k9zt/b
+	yOJx+Wypx6ZVnWwem5fUe+y+2cDm0dv8js1j28Nedo/Pm+QCOKOybTJSE1NSixRS85LzUzLz
+	0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lRSKEvMKQUKBSQWFyvp29kU5ZeW
+	pCpk5BeX2CqlFqTkFJgU6BUn5haX5qXr5aWWWBkaGBiZAhUmZGfc+KVc8IitovXmTLYGxlOs
+	XYwcHBICJhLXlwl3MXJxCAnsZpRYv+0YG4TziVFi+uQZTBDON0aJrxfesncxcoJ1bJx+gBEi
+	sZdR4sDDFWAJIYG3jBKbluqB2LwCdhLnth1lA7FZBFQlds6HaOYVEJQ4OfMJC4gtKiAvcf/W
+	DLC4sECkRE/3RrChIgIPGSW6lm1hAXGYBRoZJVZuhJjELCAucevJfCaQw9kENCUuTC4FCXMK
+	2Eu8Xt3IAlEiL7H97RxmkF4JgQMcEp9+b2OFONtFYtbvuVC2sMSr41ug3pGS+PxuLxuEnS3x
+	4NEDFgi7RmLH5j6oenuJhj83wAHGDLR3/S59iF18Er2/nzBBwpFXoqNNCKJaUeLepKdQneIS
+	D2csgbI9JG72PmOBBNxxRolph/azTmBUmIUULrOQfDkLyTuzEDYvYGRZxSiZWlCcm56abFpg
+	mJdaDo/v5PzcTYzgVKzlsoPxxvx/eocYmTgYDzFKcDArifBGfH2ZLsSbklhZlVqUH19UmpNa
+	fIjRFBhBE5mlRJPzgdkgryTe0MTSwMTMzMzE0tjMUEmct3lnS7qQQHpiSWp2ampBahFMHxMH
+	p1QDk+Y/hXN7o17seW9XeJbL0XDrIbMpzO9yvMpuqu6VnL70+A4V2/L3534uPe3d8HUL98Ky
+	1/+1dMtVzTz+ML38qyu09dGD/du/vmB4fLjqR++GBIajma82xV6dNTXI1urmi/7jT1ctbFEq
+	darxPN1/zuFIckfZ9NiLSu1TEqdr5L1oLNtleV3Onf+Sa4Gfm3Fp4hypxbyV91T/XarOk+Wr
+	OrDsepLwzQr5ckH/3L3vvzQedL0kyJk+/+1RtczvlRFvZgV+eujP6nqB9VKw1yaG93XpppvM
+	d9y6XeNVs3fXsdulR+yZZjhJvrRL/vD9ecX1sqDi/Znv/1xkEuK+wdOfqPX2qf6TdNs/5595
+	TdjIJKPEUpyRaKjFXFScCAAaGeHyTgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnO4Eq1fpBv/Wq1jMWbWN0WL13X42
+	i/8L57JarFx9lMniXes5FotJh64xWjy9OovJ4vKuOWwW85c9ZbdY9/o9iwOXx85Zd9k9zt/b
+	yOJx+Wypx6ZVnWwem5fUe+y+2cDm0dv8js1j28Nedo/Pm+QCOKO4bFJSczLLUov07RK4Mm78
+	Ui54xFbRenMmWwPjKdYuRk4OCQETiY3TDzB2MXJxCAnsZpS4197HDJEQl2i+9oMdwhaWWPnv
+	OTtE0WtGiY7+m4wgCV4BO4lz246ygdgsAqoSO+e/ZYeIC0qcnPmEBcQWFZCXuH9rBlhcWCBS
+	oqd7I1iviMBDRonlX/hBhjILNDJKzN4J0gCy4TijxNYrEB3MQGfcejKfqYuRg4NNQFPiwuRS
+	kDCngL3E69WNLBAlZhJdW7sYIWx5ie1v5zBPYBSaheSOWUgmzULSMgtJywJGllWMkqkFxbnp
+	ucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMGRp6W5g3H7qg96hxiZOBgPMUpwMCuJ8EZ8fZkuxJuS
+	WFmVWpQfX1Sak1p8iFGag0VJnFf8RW+KkEB6YklqdmpqQWoRTJaJg1OqgWml09Q+hnLXJeYc
+	X9dqn91VJTyxcYLSWpUVvMdF/ld+1crnTM23KF1zYtrXuvPCL/XaLZcbyS5baFcSmHT2j/Oi
+	l35C2gETk7Xnpq3ecoH5Q1jR4ZCQ1B92Nnk3jI3tr2gt7vYN6GZf5Vn6oSQ9Z9mNDivtXqlb
+	C7ZM/fDKcve50hvMvNK3ffY/tHvzmvfr/B/C542/nX3X57UySWvv3pf6/+5wfppl11X54/rE
+	nb+XtVQnlgoEbY78/Li0fa7kPV+3gwsVs2829Pn9vvb6lTcLq278vAyxaY8Kdsqs3cA2dUaV
+	DrP3Vo9VXHOrf6zg/GriYvHpYUVqYqtwm/SF6Y/3TpbVt3+mtP1k6JYdve1KLMUZiYZazEXF
+	iQDQ+iznKwMAAA==
+X-CMS-MailID: 20250331064744epcas5p246d4fb167638e93fa07f8d79f4894d42
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250328155548epcas5p2368eb1a59883b133a9baf4ac39d6bac6
+References: <20250328154647.2590171-1-csander@purestorage.com>
+	<CGME20250328155548epcas5p2368eb1a59883b133a9baf4ac39d6bac6@epcas5p2.samsung.com>
+	<20250328154647.2590171-4-csander@purestorage.com>
 
-On 29/03/2025 02:26, Bryan O'Donoghue wrote:
-> I'd like to help out getting patches reviewed and merged for both of these
-> drivers.
-> 
-> +M for venus
-> +R for iris
-> 
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
-> Bryan O'Donoghue (2):
->        media: MAINTAINERS: Switch from venus Reviewer to Maintainer
->        media: MAINTAINERS: Add myself to iris Reviewers
-> 
->   MAINTAINERS | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> ---
-> base-commit: f2151613e040973c868d28c8b00885dfab69eb75
-> change-id: 20250329-b4-25-03-29-media-committers-venus-iris-maintainers-eb38e49dc67b
-> 
-> Best regards,
+On 3/28/2025 9:16 PM, Caleb Sander Mateos wrote:
+> For NVMe passthru operations with fixed buffers, the fixed buffer lookup
+> happens in io_uring_cmd_import_fixed(). But nvme_uring_cmd_io() can
+> return -EAGAIN first from nvme_alloc_user_request() if all tags in the
+> tag set are in use. This ordering difference is observable when using
+> UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table. If
+> the NVMe passthru operation is followed by UBLK_U_IO_UNREGISTER_IO_BUF
+> to unregister the fixed buffer and the NVMe passthru goes async, the
+> fixed buffer lookup will fail because it happens after the unregister.
 
-I have no power here, but get my:
-Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
+while the patch looks fine, I wonder what setup is required to 
+trigger/test this. Given that io_uring NVMe passthru is on the char 
+device node, and ublk does not take char device as the backing file. 
+Care to explain?
