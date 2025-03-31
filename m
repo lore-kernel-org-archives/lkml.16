@@ -1,188 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B399139D1B;
-	Mon, 31 Mar 2025 17:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9A4215073
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743442690; cv=none; b=uXkl+5cGKXO6UUoI/QRQV507Z9UCZh7d4/dVawCFySKS6A4MZ+ZIUC4a9rz3g+glQlHqXg5j0zEuSvMtPYypZW+R77mrGpBOtnEpxjnBvO6g/3GBBDP0VmG9d/l2yWIvFvyXSs6vDfgF2jZ7zOoLt6ydzUOQt184JeXdGZisEy4=
+	t=1743442978; cv=none; b=FQ7a5raeaffqelH0OSWpkGOF/JDDBN6urbgOztvyjjWiu3Cdg7wn6UV/Yw/By47x8nHPuzmLB0sKjAZBIbqbbYp18S0xYKoonl/AsNkf1W/J31QGjbBdLokJw9E0C6zq0dPk2KvNeVv4t32MUbVKuiqJ9BML2+A3Aon2YXK971w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743442690; c=relaxed/simple;
-	bh=4iXrT9ZY4Xoqd9GGuS3SRMQkL/GITaKNwVGMJSBVvCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uWUrxolAoASE25IYDpdQTjB2YqMbu+XhelmddvTwd7nkDexPg4XdMNO4qxy8lsctxprxXj5a2hlLgoOnwoWwYO0/BzXtwqc8CbIVMS+L8PWxS3SW6RijmtXc5+QQll6QzQgCsno53MR55fIv4I3pbBiQLa0gF68YztfuggdBtW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D453C4CEE3;
-	Mon, 31 Mar 2025 17:38:08 +0000 (UTC)
-Date: Mon, 31 Mar 2025 13:39:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
- Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <20250331133906.48e115f5@gandalf.local.home>
-In-Reply-To: <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-References: <20250331143426.947281958@goodmis.org>
-	<20250331143532.459810712@goodmis.org>
-	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743442978; c=relaxed/simple;
+	bh=DjdZITVl1P+PGZS6GuULUNzMohmS5YvO2xYitU40iNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KoqEGs31/yYQXqeY+L21APCr1m/KMpTTN4AP2tpgeVVmSd2xZY6UDMgTlQgHua9j/sDbEthmEx076Y8CwGoCZCmT3p43Kfzqaw5WABWX2xWtOg1Z+bQj2AocT9NBSdQmJGYEXLy0gUCnYlB5r8WpHqucCY7UCudMHQzum+vpglQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sBk4co78; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sBk4co78"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55b53a459so498383585a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743442975; x=1744047775; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=My8uhixiibhggK7Xb+4LFtDtHM4swzPwMY30T/cp9Dw=;
+        b=sBk4co78rc+KuGFAk3H3ryog0cWhKLBxtXb2iol48e6qLcm1Mk3WT42woiYGWOBuCB
+         PzX3xQVejspbYuRCMDISB9ojQqLbxTPigV6YG6WTCi3LK70QG1sA7Ig6+dVG/gIw66gn
+         f4yGTVwEarsNamM2hHDIWqcbj0VnyJ3g5baeMG+R4qL5AES8pyeL+GFhwukK1hqxwYLA
+         uNSS02EV41qAyPH2sWQr1gmXKTQ/QtNEzVaRDgV2geEZ3+JucmZCfZkxSvZ5dQyerINg
+         i+IP5B1Put8sgGgWvjRyu1sHDC5tUizgwBuTSLvBnetcIrt3cYRb+K8hDgdBnkgHL1ko
+         kq6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743442975; x=1744047775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=My8uhixiibhggK7Xb+4LFtDtHM4swzPwMY30T/cp9Dw=;
+        b=Dqe7WrON/hStGxJhbh8TVaZOucpKhnKSdvhmJ4obMV4KXCYA11L746Jojw4lcNsJSl
+         q0GlACUCyGAKxg6OIhXanVV20JCz2Eb0r9Xxrtde6jVMpjMbFT11thwd0THEoT3q3aPy
+         4G7gGHz28oEBNCiHxH3gOkC+y8GNTfMw4/doavoVkwiBWNFlTFGOKtHTYxM8DQxpNaNz
+         Glb4Wd6tz0Ycbbt2LRVahjLwGbZZr88JiQ17zA6EmECL75afOt5lodiRAxoXYfAc/6EL
+         jXyhX7dmeOimSh7tqffuS8HJnSsKWKnP6LZN/cVHRTCBdvPMRu3aCVhxO5ADxIKiaQ1+
+         05DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUalU/lYnour7P4TNv407x2Zhv/kjQQ+DuFmbwu6RXJIKuR1qbixJSBaFBWPSm/zvsEhYPHcvOCo4yYLYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaCwzUMYR8N3ba8czCgZimr7H+EiiUPsilR8eeTMd5eB26N6kV
+	P0CV3yAgXbqfhNSl2I60B+p4Fuo0rkzbqbdH/7gm8l82rMfxD8wpHeWonUTeGrciN+mLfFQEken
+	FO+WDuCjX5Sbb1nGu6NsRk16YH5b+vFjoH+fE
+X-Gm-Gg: ASbGnct34yLMw5vZ48yGIB3XJHCBPS85PenZjNdvDMLNjwfQw0ZzPMdWEWRsSCAe+wz
+	S9zhFdchjo9SsuTnKWtNvLzbSpTbbI3XhNNJrB/QUg2nJqxvFwz9met9ULlebNVM/x3vGX/ypyL
+	LkUTXCsTSNKZHitPDFoOP75our
+X-Google-Smtp-Source: AGHT+IFVYeXdtz8CMmMU3r4guNsVjIFuRiY1o3vm/KhYGXO0UfVI67k7g7GlfbcLm9vxymX/IVsqshiItVdG+n6JtD0=
+X-Received: by 2002:a05:620a:2483:b0:7c5:55be:7bff with SMTP id
+ af79cd13be357-7c69087585fmr1356768685a.43.1743442974849; Mon, 31 Mar 2025
+ 10:42:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <67e1fd15.050a0220.bc49a.766e@mx.google.com> <c0a9a0d5-400b-4238-9242-bf21f875d419@redhat.com>
+ <Z-Il69LWz6sIand0@Mac.home> <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
+ <Z-L5ttC9qllTAEbO@boqun-archlinux> <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
+ <Z-MHHFTS3kcfWIlL@boqun-archlinux> <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
+ <Z-OPya5HoqbKmMGj@Mac.home> <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com> <Z-rQNzYRMTinrDSl@boqun-archlinux>
+In-Reply-To: <Z-rQNzYRMTinrDSl@boqun-archlinux>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 31 Mar 2025 19:42:43 +0200
+X-Gm-Features: AQ5f1JoLvOmmtYvJq2bkf46RVtrKhW7rLor1IMlgcRlpTIfmTPZnYqRALBM5hWk
+Message-ID: <CANn89iLvu_ijSV+FnrZ6qei_Ty2c9V-RjwLMk24+oOS91bNjaQ@mail.gmail.com>
+Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
+ RCU synchronization
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Waiman Long <llong@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, aeh@meta.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com, 
+	kernel-team@meta.com, Erik Lundgren <elundgren@meta.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 31 Mar 2025 09:55:28 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Mon, Mar 31, 2025 at 7:26=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
+> [...]
+> > > > Anyway, that may work. The only problem that I see is the issue of =
+nesting
+> > > > of an interrupt context on top of a task context. It is possible th=
+at the
+> > > > first use of a raw_spinlock may happen in an interrupt context. If =
+the
+> > > > interrupt happens when the task has set the hazard pointer and iter=
+ating the
+> > > > hash list, the value of the hazard pointer may be overwritten. Alte=
+rnatively
+> > > > we could have multiple slots for the hazard pointer, but that will =
+make the
+> > > > code more complicated. Or we could disable interrupt before setting=
+ the
+> > > > hazard pointer.
+> > > Or we can use lockdep_recursion:
+> > >
+> > >     preempt_disable();
+> > >     lockdep_recursion_inc();
+> > >     barrier();
+> > >
+> > >     WRITE_ONCE(*hazptr, ...);
+> > >
+> > > , it should prevent the re-entrant of lockdep in irq.
+> > That will probably work. Or we can disable irq. I am fine with both.
+>
+> Disabling irq may not work in this case, because an NMI can also happen
+> and call register_lock_class().
+>
+> I'm experimenting a new idea here, it might be better (for general
+> cases), and this has the similar spirit that we could move the
+> protection scope of a hazard pointer from a key to a hash_list: we can
+> introduce a wildcard address, and whenever we do a synchronize_hazptr(),
+> if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
+> hence synchronize_hazptr() will still wait until it's zero'd. Not only
+> this could help in the nesting case, it can also be used if the users
+> want to protect multiple things with this simple hazard pointer
+> implementation.
 
+For the record this was my suggestion.
 
-> > +       /* Make sure the mappings are page aligned */
-> > +       *start = ALIGN(*start, PAGE_SIZE);  
-> 
-> The above is *completely* unacceptable.
-> 
-> There is no way in hell that ALIGN() can ever be right.
+Breno, what do you think ? Feel free to grab, test, add comments and a
+nice changelog, thanks !
 
-I just did this to be robust in case what was passed in was not aligned. In
-all my use cases, it is.
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 67964dc4db952ea11d4b88554383ea0ec5946ef9..fb56bcb887ca163525f003cb788=
+0c76511d166e7
+100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -117,7 +117,12 @@ do {
+         \
+ } while (0)
 
-> 
-> You don't even fix up the low bits of the returned virtual address, so
-> you literally return the virtual address of something that doesn't
-> match what was passed in.
-> 
-> So if you pass it a starting area that isn't page-aligned, it now
-> randomly gives you complete crap back, and includes some random
-> unrelated part in the mapping.
-> 
-> So no. That needs to be a
-> 
->         if (*start & PAGE_MASK)
->                 return NULL;
+ extern void lockdep_register_key(struct lock_class_key *key);
+-extern void lockdep_unregister_key(struct lock_class_key *key);
++
++extern void __lockdep_unregister_key(struct lock_class_key *key, bool sync=
+);
++static inline void lockdep_unregister_key(struct lock_class_key *key)
++{
++       return __lockdep_unregister_key(key, true);
++}
 
-No problem, will update. As I said, I just added that to not map something
-that wasn't part of what was passed in. But returning error if it's not
-page aligned works for me too.
+ /*
+  * These methods are used by specific locking variants (spinlocks,
+@@ -372,8 +377,12 @@ static inline void lockdep_register_key(struct
+lock_class_key *key)
+ {
+ }
 
-> 
-> or whatever. Because just randomly corrupting the base address by
-> ignoring the low bits is not ok.
-> 
-> > +       /* The size must fit full pages */
-> > +       page_count = size >> PAGE_SHIFT;  
-> 
-> This part works, simply because truncating the size is fine. It won't
-> all get mapped, but that's the caller's problem, at least the code
-> isn't returning random crap that has random other data in it.
-> 
-> That said, I don't see the point. If you want to virtually map
-> physical pages, they need to be full pages, otherwise the end result
-> gets randomly truncated. So I think that while this is much better
-> than the "return random crap that doesn't make any sense", it should
-> be the same rule: just don't allow mapping partial pages.
-> 
-> So make it be
-> 
->         if (size & PAGE_MASK)
->                 return NULL;
-> 
-> instead, and just enforce the fact that allocations have to be sanely
-> aligned for vmap.
++static inline void __lockdep_unregister_key(struct lock_class_key
+*key, bool sync)
++{
++}
+ static inline void lockdep_unregister_key(struct lock_class_key *key)
+ {
++       return __lockdep_unregister_key(key, true);
+ }
 
-Again, I'm happy to error out on non alignment. I'll just update the
-documentation to say it must be page size aligned. Currently it shows an
-example of using 4096 for alignment, but that should be changed to
-explicitly say to have it page aligned, as some archs (ppc) have 64K pages.
+ #define lockdep_depth(tsk)     (0)
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index b15757e6362615aeecb1629f8e60375e13a87e6d..3b754c7fdaf19887734b1ee37f7=
+c058f8f751a4e
+100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -6574,7 +6574,7 @@ void lockdep_reset_lock(struct lockdep_map *lock)
+  * key irrespective of debug_locks to avoid potential invalid access to fr=
+eed
+  * memory in lock_class entry.
+  */
+-void lockdep_unregister_key(struct lock_class_key *key)
++void lockdep_unregister_key(struct lock_class_key *key, bool sync)
+ {
+        struct hlist_head *hash_head =3D keyhashentry(key);
+        struct lock_class_key *k;
+@@ -6610,8 +6610,11 @@ void lockdep_unregister_key(struct lock_class_key *k=
+ey)
+        if (need_callback)
+                call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
 
-> 
-> Anyway, that takes care of the horrific interface. However, there's
-> another issue:
-> 
-> > +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);  
-> 
-> you create this pointless array of pages. Why? It's a physically
-> contiguous area.
-> 
-> You do that just because you want to use vmap() to map that contiguous
-> area one page at a time.
-> 
-> But this is NOT a new thing. It's exactly what every single PCI device
-> with a random physical memory region BAR needs to do. And no, they
-> don't create arrays of 'struct page *', because they use memory that
-> doesn't even have page backing.
-> 
-> So we actually have interfaces to do linear virtual mappings of
-> physical pages that *predate* vmap(), and do the right thing without
-> any of these games.
+-       /* Wait until is_dynamic_key() has finished accessing k->hash_entry=
+. */
+-       synchronize_rcu();
++       /* Wait until is_dynamic_key() has finished accessing k->hash_entry=
+.
++        * @sync is false for callers dealing with the sync themselves.
++        */
++       if (sync)
++               synchronize_rcu();
+ }
+ EXPORT_SYMBOL_GPL(lockdep_unregister_key);
 
-[ Added the pstore folks ]
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 14ab2f4c190a1e201dd1788b413a06e799a829f2..9affef187237a13559642d435e1=
+a196a909f75f9
+100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -988,8 +988,8 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_queu=
+e,
 
-OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
-same thing as pstore. And it looks like pstore should be updated too.
+        return sch;
+ errout1:
+-       lockdep_unregister_key(&sch->root_lock_key);
+-       kfree(sch);
++       __lockdep_unregister_key(&sch->root_lock_key, false);
++       kfree_rcu(sch, rcu);
+ errout:
+        return ERR_PTR(err);
+ }
+@@ -1077,7 +1077,7 @@ static void __qdisc_destroy(struct Qdisc *qdisc)
+        if (ops->destroy)
+                ops->destroy(qdisc);
 
-> 
-> Yes, the legacy versions of interfaces are all for IO memory, but we
-> do have things like vmap_page_range() which should JustWork(tm).
-> 
-> Yeah, you'll need to do something like
-> 
->         unsigned long vmap_start, vmap_end;
-> 
->         area = get_vm_area(size, VM_IOREMAP);
->         if (!area)
->                 return NULL;
-> 
->         vmap_start = (unsigned long) area->addr;
->         vmap_end = vmap_start + size;
-> 
->         ret = vmap_page_range(vmap_start, vmap_end,
->                 *start, prot_nx(PAGE_KERNEL));
-> 
->         if (ret < 0) {
->                 free_vm_area(area);
->                 return NULL;
->         }
-> 
-> and the above is *entirely* untested and maybe there's something wrong
-> there, but the concept should work, and when you don't do it a page at
-> a time, you not only don't need the kmalloc_array(), it should even do
-> things like be able to use large page mappings if the alignment and
-> size work out.
-> 
-> That said, the old code is *really* broken to begin with. I don't
-> understand why you want to vmap() a contiguous physical range. Either
-> it's real pages to begin with, and you can just use "page_address()"
-> to get a virtual address, it's *not* real pages, and doing
-> "pfn_to_page()" is actively wrong, because it creates a fake 'struct
-> page *' pointer that isn't valid.
-> 
-> Is this all just for some disgusting HIGHMEM use (in which case you
-> need the virtual mapping because of HIGHMEM)? Is there any reason to
-> support HIGHMEM in this area at all?
-> 
-> So I'm not sure why this code does all this horror in the first place.
-> Either it's all just confused code that just didn't know what it was
-> doing and just happened to work (very possible..) or there is
-> something odd going on.
-
-[ Adding Mike Rapoport ]
-
-This is due to what the "reserve_mem" kernel command line feature gives
-back. It reserves physical memory that is not part of the kernel memory
-allocator (it also works with memmap ie. memmap=12M$0x284500000, which also
-requires physical memory addresses that are not part of the memory
-allocator).
-
-It's up to the user to map it to virtual memory. The same is true for
-ramoops in pstore.
-
--- Steve
+-       lockdep_unregister_key(&qdisc->root_lock_key);
++       __lockdep_unregister_key(&qdisc->root_lock_key, false);
+        module_put(ops->owner);
+        netdev_put(dev, &qdisc->dev_tracker);
