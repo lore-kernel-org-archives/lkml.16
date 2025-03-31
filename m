@@ -1,120 +1,126 @@
-Received: from out-09.pe-a.jellyfish.systems (out-09.pe-a.jellyfish.systems [198.54.127.69])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97F12114;
-	Mon, 31 Mar 2025 19:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459CE40BF5
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743449459; cv=none; b=Ob0cluFKc61HntPgUrp7BKe/IJperFbvBCN1BF5qzZmopSSC3TrwN1tprKsxUAUEXuAmOuPcYwX0ZIH4847+gPDvfeTVQ5lI+4z74l6C49XM7og+rzBRHaLIqS5pHZkyHndToGWbcTc9mRkindxkGWioEAbrGYcg7BLJayBoDDw=
+	t=1743449997; cv=none; b=VKnHqqunpiM6y33bYeAxED98wJi1anO6UhsjqSlLr/hwJXGyyXSnKqGqld+Ks5VfL/zYrlUuv0kJcWVyyOtPuXoNnk4BSZ8XVKp1gKYSyg137e/AHBJtNKJhsukmZ3XzO4j8NGVSA1nE8i8r9DogEwaZrjyQIeNJDNb4Sxo4mpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743449459; c=relaxed/simple;
-	bh=5fDvWYlmklSJIuIH3nKjwJPHW4lF+afHO6be9jzEMOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OIEkoLD5KcWl77EeHLQ98d6j/mrWi+CvHhMUQ0HcWOlQ9Q4ZFG4HCKrci2voMaFkOwvLeBiG3JMkxagjWAcdNxGpI4QDXYCype013hXlp/csdbI5okba492DK+XcrGafkHeCZAnfHJuWRCUg7CKQMfTdVPJLQ64YjRlh+q6gPY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=aQPvP/ce; arc=none smtp.client-ip=198.54.127.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1743449997; c=relaxed/simple;
+	bh=WMrOSux3d041kvJhwd25JmPn54Ax3vU8/DHkV76LhwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n/DgIlAFasFtlWwxMC53rKEffGTh2ivTBgRRTJSCxFhCGk0fnZGu5V/0kZachRXSABaukkHOYnNVK/z74h2isBb6woUuykXmm3yEw47+j4iF6zpfPatfI7TlQBlJwYOQt/xPTQya6ie4Tnn+9biD7H5ov+CHflbZ9GxOODscMYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SqFdWOgU; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="aQPvP/ce"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZRLp13Wdcz9sNx;
-	Mon, 31 Mar 2025 19:30:49 +0000 (UTC)
-Received: from MTA-13.privateemail.com (unknown [10.50.14.29])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZRLp067Mtz2Sd0R;
-	Mon, 31 Mar 2025 15:30:48 -0400 (EDT)
-Received: from mta-13.privateemail.com (localhost [127.0.0.1])
-	by mta-13.privateemail.com (Postfix) with ESMTP id 4ZRLp04kqvz3hhXJ;
-	Mon, 31 Mar 2025 15:30:48 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1743449448;
-	bh=5fDvWYlmklSJIuIH3nKjwJPHW4lF+afHO6be9jzEMOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aQPvP/ceXuB3n2EoUlKP/9KyjbFSJYLfUBIXSa04DucEv39456vr1eXW7oHXPDua1
-	 5G3YldXC5O2YTc7ZKw8XM2ZUtQsNwGCg6HVcQ5O0LUJz3n67yRDlymGykMU2n7jvnY
-	 t298jQktcfrm9W263IJmslM2mklfsYUeYKjd/BzV8Kmcay/uTYBNijXx4CEeEk1+/R
-	 J8twU46j9LR0ptxLG8tGqFjBLUr5IpZ6/pb9qfl+Dc5bg80oytgdNLP47HOmEF5sIG
-	 0HfFaWsayI/j6tUzvQ3HOUcOOCq1Kt3n3YwhCyuMZ7ul56I9Diuf/dH7/Lm0DgDtnY
-	 tKw5IOyFP0L/Q==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-13.privateemail.com (Postfix) with ESMTPA;
-	Mon, 31 Mar 2025 15:30:35 -0400 (EDT)
-Date: Mon, 31 Mar 2025 15:30:37 -0400
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-kernel@vger.kernel.org, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, antoniu.miclaus@analog.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	bpellegrino@arka.org, Sam Winchenbach <swinchenbach@arka.org>
-Subject: Re: [PATCH v8 0/6] Update auto corner freq calculation
-Message-ID: <npxfioo7wvjaduggdlk765uwna2umnwhmndgmk3mcwcjyi3jwd@wi6mbnfpvmss>
-References: <20250328174831.227202-1-sam.winchenbach@framepointer.org>
- <20250330162300.4c318897@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqFdWOgU"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54b1095625dso437524e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743449992; x=1744054792; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KE46Inlegp6APD9xE6trTWfYli76kOte9df0I7MWvBQ=;
+        b=SqFdWOgUdPagzpykPGD5HyNuCTzP07bsvxChP4BgCi6mDYpbH7J2/ZuUvAAxc7RK4z
+         l5nhaV/aZZ6lXVFr98lw2mKuIX82ElfgmK1piBIeCcltLr8AYzTw01NIIpi6PrWyYD4J
+         SBBBnzbo5lhhNbMPz8IgCx8dgmGRBuvaTdkhBTyS5QUFShOWLKQV5HqulVihpmQ5SIx/
+         qsUT9rlFWD9qhdfcys9Hw+XZjDwWwJ27O5WdZLtL7GHrBMt/1Dp24HDrPmoTFIbBy0GS
+         S/Nfy8btjhyxYE0xta9ZloRyi3q36CvyJ30yfoRfwt2Ap8Tqn24nGjcsyNKqenPJnppW
+         ExEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743449992; x=1744054792;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KE46Inlegp6APD9xE6trTWfYli76kOte9df0I7MWvBQ=;
+        b=wB58Et1dvIc6ZhwPIIVIfFyA+DUPqnGP5slFSeU6BFmsMlxK6nLH4CIMrr5Erle95R
+         3q3eTOu5VG5vcEDApTiza601p45U6lweZ5yUtNnKSzjr+KkhctugdHUnA2TtpMucQwgT
+         ESieYYtpGhU6vLiHe4SwEbl6z97G5qsoOjsfteBZg77wiib+SC6L6+Yb3w+DVNJlVzz8
+         abvgI/iuBgeXOS2Pn8ioNTOky3hA56S45gAc1tmqdlIUao75A9Ug1ZDfM87zH2OVnb3l
+         awN60p4RCC/P/Y1FsDTjQhTlyR+NiOUs01D5aknxKrXybQv52MhVXcIk7DuaeE+KI8G4
+         mw5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBGKSFvRfkBvZw5BokYIXJ8XZD/xP7Ef7Td+krnfB4/cXy3soklGoxsS36q9xCvCfv7wMLyNsjYnGGv24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLAb3syZn4VihlEDZQdPY1qCue07oeDNqadYZFtkPDcc2iHPY9
+	Q4yJvassCdQDg/9tiPPgF62aqZNWiGnsPisWLB3sWdr2RBLN1D+n
+X-Gm-Gg: ASbGncuAvFA7qV+AxtD9zbXqwsYfUr9JOcnTI+xvmysbMq8v8OMO6kuLlIdP18PNEtO
+	6WF7Is/p1WyBMeTQVylCWzE77Guun8awr5CSPtgyGkeYII6ER69pKfkwbH9leVMJerlMFu6x3mc
+	eRXcP9c6/Ga35Fb8GrwQpjrax3QYbHZP5nEZU47ka1pQ0qWExzNtciYbNo5lLc0ZlMDRAts9oxx
+	Vcbe0faOQXm9/Wv3MaC8ukf9vBWB1D6mLknAUTI7fP1CnsGCa3ehN5344JyZsKyDTNA49yfQxsZ
+	g9ysQNT6Wk79yThl3GcF7ULZPeyqyPBXJHdp4v2ja1wUh41QgNqJmuWxC8HEZIolHN4EP7LZuSj
+	pEtW0yeJfKmm5DseeZwQ4ZOA+ES/AW+oVvms=
+X-Google-Smtp-Source: AGHT+IHtvjwnzdADUjoykjBM/nZjeA0797jOcEMUJpoq4gEQBt2aHMNBmOBXLVHt4e4Gi37A9IwK2A==
+X-Received: by 2002:a05:6512:b1d:b0:545:bb6:8e41 with SMTP id 2adb3069b0e04-54c0a536fd8mr64283e87.52.1743449992095;
+        Mon, 31 Mar 2025 12:39:52 -0700 (PDT)
+Received: from ?IPV6:2001:678:a5c:1204:5508:6e19:c6a3:9875? (parmesan.int.kasm.eu. [2001:678:a5c:1204:5508:6e19:c6a3:9875])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095a0b39sm1219278e87.229.2025.03.31.12.39.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 12:39:51 -0700 (PDT)
+Message-ID: <256412b3-9878-41be-8a22-78d5356b8479@gmail.com>
+Date: Mon, 31 Mar 2025 21:39:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250330162300.4c318897@jic23-huawei>
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH FOR-NEXT] riscv: Add norvc after .option arch in runtime
+ const
+To: Charlie Jenkins <charlie@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
+Content-Language: en-US, sv-SE
+From: Klara Modin <klarasmodin@gmail.com>
+In-Reply-To: <20250331-fix_runtime_const_norvc-v1-1-89bc62687ab8@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 30, 2025 at 04:23:00PM +0100, Jonathan Cameron wrote:
-> On Fri, 28 Mar 2025 13:48:25 -0400
-> Sam Winchenbach <sam.winchenbach@framepointer.org> wrote:
+On 2025-03-31 20:45, Charlie Jenkins wrote:
+> .option arch clobbers .option norvc. Prevent gas from emitting
+> compressed instructions in the runtime const alternative blocks by
+> setting .option norvc after .option arch. This issue starts appearing on
+> gcc 15, which adds zca to the march.
 > 
-> > From: Sam Winchenbach <swinchenbach@arka.org>
-> > 
-> > v1: Initial submission
-> > v2: Cleaned up wording of commit message
-> > v3: Add DTS properties to control corner frequency margins
-> > v4: Fixed wrapping
-> >     Added maintainers to CC
-> > v5: Remove magic numbers
-> >     Break out patches into features
-> >     Small coding style fixes
-> > v6: Converted dts property from hz to mhz
-> >     Removed blank lines in dts binding documentation
-> > v7: Updated author/sign-off address
-> >     fixed patch path description
-> > v8: Added missing Reviewed-By tag in v7
-> > 
-> > Brian Pellegrino (1):
-> >   iio: filter: admv8818: Support frequencies >= 2^32
-> Applied to the togreg branch of iio.git and initially pushed out as testing.
+> Reported by: Klara Modin <klarasmodin@gmail.com>
 > 
-> I thought about splitting off the fixes and sending them a faster path, but that
-> last fix is rather large for that so I haven't.
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: a44fb5722199 ("riscv: Add runtime constant support")
+> Closes: https://lore.kernel.org/all/cc8f3525-20b7-445b-877b-2add28a160a2@gmail.com/
+> ---
+>   arch/riscv/include/asm/runtime-const.h | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> Shout if you think I should try to get the fixes upstream quickly and
-> I can move them to my fixes branch.
+> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+> index c07d049fdd5d2999c57d8a90e7363829c5462368..451fd76b881152919f22de8f5c56b51171acbf3c 100644
+> --- a/arch/riscv/include/asm/runtime-const.h
+> +++ b/arch/riscv/include/asm/runtime-const.h
+> @@ -56,6 +56,7 @@
+>   #define RISCV_RUNTIME_CONST_64_ZBA				\
+>   	".option push\n\t"					\
+>   	".option arch,+zba\n\t"					\
+> +	".option norvc\n\t"					\
+>   	"slli	%[__tmp],%[__tmp],32\n\t"			\
+>   	"add.uw %[__ret],%[__ret],%[__tmp]\n\t"			\
+>   	"nop\n\t"						\
+> @@ -65,6 +66,7 @@
+>   #define RISCV_RUNTIME_CONST_64_ZBKB				\
+>   	".option push\n\t"					\
+>   	".option arch,+zbkb\n\t"				\
+> +	".option norvc\n\t"					\
+>   	"pack	%[__ret],%[__ret],%[__tmp]\n\t"			\
+>   	"nop\n\t"						\
+>   	"nop\n\t"						\
 > 
-> Jonathan
+> ---
+> base-commit: b2117b630c48be69d2782ed79fefe35dcd192ce6
+> change-id: 20250331-fix_runtime_const_norvc-407af1f24541
 
-This sounds fine to me. I don't understand the differences between the branches
-so I am more than happy to defer to your expertise.
+Thanks!
 
-I don't believe these fixes are critical, although the behavior is incorrect.
-
-Thank you, happy to see patchset making some progress.
--Sam
-
-> 
-> > 
-> > Sam Winchenbach (5):
-> >   dt-bindings: iio: filter: Add lpf/hpf freq margins
-> >   iio: filter: admv8818: fix band 4, state 15
-> >   iio: filter: admv8818: fix integer overflow
-> >   iio: filter: admv8818: fix range calculation
-> >   iio: core: Add support for writing 64 bit attrs
-> > 
-> >  .../bindings/iio/filter/adi,admv8818.yaml     |  20 ++
-> >  drivers/iio/filter/admv8818.c                 | 224 +++++++++++++-----
-> >  drivers/iio/industrialio-core.c               |  12 +
-> >  3 files changed, 202 insertions(+), 54 deletions(-)
-> > 
-> 
+Tested-by: Klara Modin <klarasmodin@gmail.com>
