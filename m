@@ -1,79 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023328BEA;
-	Mon, 31 Mar 2025 12:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7291DF973;
+	Mon, 31 Mar 2025 12:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424362; cv=none; b=G7Yp2ug+A9bQt0C9pitP7gYd5RxSZ6jDWbn56Ay2gGrNRbtgSAohra3IEd09uZsutB2A+JoiNmU2lhXF39egvl9A/ltbL+BPodcY1e4LIKcwkxoV171vxUKEtQk+yHxRqp4zNhW7jARVWKdkSkqwCvCIU2P0gjDFbUiagONuUcA=
+	t=1743424436; cv=none; b=FF85t49H8SpvB2PDjxcaz9VAYvD5E9vzWeos8r5W1xeqzV6QPLgz1uvBVqb3giTij3mchrvTcvlsdvZRqlS2cu/+N1XD+aDNme/dnsj8C9K/qmL3OkJPAib6UhAA143EGdkoKRlRYoLeMWC34RIyYPsLtFjdMtw+6JdOxy8LzTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424362; c=relaxed/simple;
-	bh=/9UMxV9C0ZFWNA4MVNHGM2B2ubXASCVpghnMfKCyzKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxKqAkiHHFRU7+626MYXi6L6gu1QGLtXXnsv9zkQ+H7yIwRnKf3mwd24HZWHWrfG8q+mwE3zesgjJkoUVVNoUUiW6uenk/OTuUBbTn6KwhUMfhX5eYQQyrhONfGEs4VbsPwt5XEQVN4D1y1Fq8uRIVtUBx0bwcfr/Xp8AyFfuuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoiHZIVB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoiHZIVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1BAC4CEE3;
-	Mon, 31 Mar 2025 12:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743424361;
-	bh=/9UMxV9C0ZFWNA4MVNHGM2B2ubXASCVpghnMfKCyzKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MoiHZIVBQb/9TMsKfoHq+WnMNahoZTf3g7D7ioteQ8vjUhDp9YpQ9mR318QbHET8w
-	 PShRG0Ly3siL7mauHHNJcyulEtBDXXDpsjzwal0bUueW5OvocvjX8ZH3f7bxiL4wO0
-	 tVjiRSQ/6PmQ8iecFBRDZ/O2qm1WOfkBb5ZYh9z/RJYcvYp3HxsUTvqyWvh0mn+yS9
-	 wGRSvYdj6RLqu1wQtexX1+HQ09+UDuMkuufrsEwfruI9ACPLMAZkDmNobROkCPyTv+
-	 m9HahQlW8NyrcjnAEyNAJyny0OtqVDI1suLchwIJU/iNugq/ekws5+RZt2mypVRGkA
-	 sFbTXJL65Ar/A==
-Date: Mon, 31 Mar 2025 13:32:36 +0100
-From: Mark Brown <broonie@kernel.org>
-To: srinivas.kandagatla@linaro.org
-Cc: perex@perex.cz, tiwai@suse.com, krzysztof.kozlowski@linaro.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
-	johan+linaro@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
-Message-ID: <74214537-ad4c-428f-8323-b79502788a66@sirena.org.uk>
-References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
- <20250314174800.10142-4-srinivas.kandagatla@linaro.org>
+	s=arc-20240116; t=1743424436; c=relaxed/simple;
+	bh=SYhyciRCD6HcPvOs+YyIrEknhUE8pAVUbbxH0T6fJcg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MZNJ/vkXHeVK8PfZKwxipHAcp3ALaROjO60IBETM7hnhqEs5Jzv0lndE7lcjchpqWb/hq24RnBVkd8UiB2hrNKpsAZ+HZ4UE3y1IWzNc+mcWNsjHli4nFyyEUhIIKdmayvfHRjOmeZgk8RqQWStEue4nJnVcYATiH7N7n7b0nRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZR9Sf2YXMzWfp0;
+	Mon, 31 Mar 2025 20:30:10 +0800 (CST)
+Received: from dggpemf100013.china.huawei.com (unknown [7.185.36.179])
+	by mail.maildlp.com (Postfix) with ESMTPS id 910761800B1;
+	Mon, 31 Mar 2025 20:33:51 +0800 (CST)
+Received: from localhost.huawei.com (10.50.165.33) by
+ dggpemf100013.china.huawei.com (7.185.36.179) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 31 Mar 2025 20:33:51 +0800
+From: Yihang Li <liyihang9@huawei.com>
+To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <liyihang9@huawei.com>, <liuyonglong@huawei.com>,
+	<prime.zeng@hisilicon.com>
+Subject: [PATCH v2 4/4] scsi: hisi_sas: Wait until eh is recovered
+Date: Mon, 31 Mar 2025 20:33:49 +0800
+Message-ID: <20250331123349.99591-5-liyihang9@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250331123349.99591-1-liyihang9@huawei.com>
+References: <20250331123349.99591-1-liyihang9@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NhPuFL6AeQDXhXJO"
-Content-Disposition: inline
-In-Reply-To: <20250314174800.10142-4-srinivas.kandagatla@linaro.org>
-X-Cookie: The Ranger isn't gonna like it, Yogi.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf100013.china.huawei.com (7.185.36.179)
 
+SATA devices are lost when FLR is performed while the controller and disks
+are in suspended state.
 
---NhPuFL6AeQDXhXJO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is because the libata layer is called to initialize the SATA device
+during controller resuming. If FLR is executed at this time, the IDENTIFY
+command fails. As a result, the revalidate fails, and the SATA device is
+disabled by the libata layer.
 
-On Fri, Mar 14, 2025 at 05:47:58PM +0000, srinivas.kandagatla@linaro.org wrote:
+So, wait until eh is recovered.
 
-> Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
-> Cc: stable@vger.kernel.org
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This commit doesn't appear to exist.
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index c3cbeb556440..97ff48e7fe5d 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -5130,9 +5130,11 @@ static void hisi_sas_reset_prepare_v3_hw(struct pci_dev *pdev)
+ {
+ 	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
+ 	struct hisi_hba *hisi_hba = sha->lldd_ha;
++	struct Scsi_Host *shost = hisi_hba->shost;
+ 	struct device *dev = hisi_hba->dev;
+ 	int rc;
+ 
++	wait_event(shost->host_wait, !scsi_host_in_recovery(shost));
+ 	dev_info(dev, "FLR prepare\n");
+ 	down(&hisi_hba->sem);
+ 	set_bit(HISI_SAS_RESETTING_BIT, &hisi_hba->flags);
+-- 
+2.33.0
 
---NhPuFL6AeQDXhXJO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqi2MACgkQJNaLcl1U
-h9B2hQf/aTPSvZufhdBJPko/DP5CQ2MYquv5UUlKDt22IED+7oDOBo+Juy31hak1
-jajqojGdU8TgEDE4vc5/h5Lghxw290CVhBFqClvO3nqYT3p5d0xLX+6ZB0di9sKn
-oHqg0nXNKZxyFVlDyOLnhVdGoTR6KWHflOkJTMfkzOdE85BiK/OZkCz4OAnPxXYM
-pfbquVMOcAKIWt5RAU3oa8ooyPkpKf1Z+68deC09Fk6yCn05M/P6d2k6EbVX7cH7
-DTRBVhPRM6Zn++MuHrZ1V88FdnNceqIS0HHvHFF5ZJ+c9V5cdwxbEX8TXIwsu6dE
-fc+Pjtqloz2Q5/SydNopsRcqKlaDsA==
-=gxJU
------END PGP SIGNATURE-----
-
---NhPuFL6AeQDXhXJO--
