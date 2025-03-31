@@ -1,206 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A8A43172
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C5814D29B;
+	Mon, 31 Mar 2025 20:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452656; cv=none; b=CRc59YMqZp7QyPoDmTy7x8Y+U/aO8X5N4h+pcodMDoQ+oqn5y/pEdT4v/ld/WAJIYgdzr006pNg8lCxFktsK820xzYiqDK30xNeNj6at6oCLLojJOHrEqz4yhmB+VZFJEr2DDu49PNDW8lx2jjUJp2FyrjRk1oIBf/jYq5dmQGs=
+	t=1743452727; cv=none; b=t5m/mD3++B4n032CG47PCwHJuu6RDQJJr+1jFsSbdsBBHafn9VCYiymU8ASEf12iVUAOMyWt1H/JVbXi5N8f8DdMX/LL6tbiBMR6H7Q2oCs6x8dG2DVmHaQJ0jVxLYs84Q26lOW1uc8L7B4xUJtwt5fc4byLTwcWvyJpGXOrLBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452656; c=relaxed/simple;
-	bh=RaV+ftD7id0HINAlA10aBvlHKJlS/GQxAi1hYTsniAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K4a04WV2TANMQZ32k3l0Wpia6ZTal0B8FEb4tLZWa4xmshqhzSYSZJTJkjQ3+yIHXPPL9k+b1OhlRGl2ej3aOIT0HaXIYZub42uIv23vudAIt6Db7S/TbvVU2pyrt70qI4Hu69ZbRrRYfk4+EKc63kpWas7x49YreF4ECleTTd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMfBA8R0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743452727; c=relaxed/simple;
+	bh=HIrTCApyUI6z9mNHfz/Tj6ozDxPQrbqQfpuGoqEqy8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pinogya9BvkmshmcLErAIrd4FMpvSupXqDjX1lrRad6tzjHybIPvxaj7quNKVPmVA6TCMPdJD9kU03HFkVA4XfXOipEy/CNpwUEE7ztS2RHinqjKVyhd6F3yr9xQsoK8mv+igam/uNQTbF0SmweYW7xMBI5feX4nWuVaSGbd7Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbtYkXt0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMfBA8R0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416F7C4CEE3;
-	Mon, 31 Mar 2025 20:24:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbtYkXt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A7BC4CEEE;
+	Mon, 31 Mar 2025 20:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452655;
-	bh=RaV+ftD7id0HINAlA10aBvlHKJlS/GQxAi1hYTsniAQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gMfBA8R0TJsT4T//dtoFdQjOPnDS96w6ahGBc6Wbt1lGYFKbIH03ZtbTT4eVqK5WU
-	 2hqXcK7X4noNDLdKW9toC+tPgl4dWj3oc6pRyYxFnxk7rXNc5B3NwtAJQ2FMq80i/F
-	 TgsVUMuVlFEN5hgcFTam6iHZFBeFghz+n+qmukRBIcEF5zLceiUJk14okMA8ees38+
-	 17QUU7Op+prjqCHq16MZyr2rfHNYbnRUamT8mkb1/DdsYdgrIL8BDQe1ljGyE0o3j1
-	 EXeXKVaMu+R/qa05jlTDgOcgiEA/cOX2/8+W9+WdZYfm/cnTFJVl++srYcK5f5ZrDS
-	 /2GjPL/rlmGrA==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH 6/9] mm/memory: split non-tlb flushing part from zap_page_range_single()
-Date: Mon, 31 Mar 2025 13:24:11 -0700
-Message-Id: <20250331202411.1221-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250311205801.85356-1-sj@kernel.org>
-References: 
+	s=k20201202; t=1743452727;
+	bh=HIrTCApyUI6z9mNHfz/Tj6ozDxPQrbqQfpuGoqEqy8A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YbtYkXt0+2jTE/6nRB/szJIKDmcQTL1iUpBdG54Bw+A5fs5ibstBVSnOxkUuADwp3
+	 GLnCaxJ7eOLa12HJDPOczF6EIzrS7YRJYIUb7LPy3yUrrLXgpxhJDp/2oV9uA2ZLy3
+	 Oc3kj1+PUvB2cYWsK6+0/2miyMHOk6eSQuIcd+JJLo4owPJQAUllx6Hmt5OIcCZ7VG
+	 YOfcK8u6XvKAEVUqqn7gVEcQyYc5yQ24Fy70b8jEUUQVrOfoCvGhFEpkxdQBdaISIo
+	 yeCIfOLEaYsliw1pxISaUC5ymVKH45zY4t29AE3e3diHEfeuRLEVWI0oJA0AAHIhkz
+	 QJ3Y2CilMP7hw==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6028e5a45d7so395166eaf.1;
+        Mon, 31 Mar 2025 13:25:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVa9YQo19szZ+79jRRha9hrImlP8w0VVHsp1HRbsA99rIDO3NSPehKiaoClDo0eRqEaU8DI59lL@vger.kernel.org, AJvYcCVqa9at6fQy0eRNmExzgWvq+15QpgOM9v1mhhLDog8d22y00Q/D2j0NPfmhWRS9ga+o8K2YQO7MQ2Dot1U=@vger.kernel.org, AJvYcCXLA/2bD6vytfYw40QmIQxBamNgL1nmda5hcVNc9UmFaeu2kPKNlKYAM7lq2XTQVqG6lHrAQ6mMCw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5i/Y04Om0NFeSmboGJf31AA/aT64IbrU1LMcbkD9eEQKftiMA
+	5ECet5LBadG7IORL7zh/y2xgVCvml3QFMt0aH5mLDol5YZuWt8GVek8ck19j3TCDPnrxKmlClUj
+	mkJ3QiWAi07A68w7EB4LAbON3nhU=
+X-Google-Smtp-Source: AGHT+IE2MnxYcEJPT7iTnc0xVnzAudkbexu5Aqgnz9oKUGGbqsjRUa8sEYypsTv5IKX8Hhj/ppZWLYejK5qggypnIV0=
+X-Received: by 2002:a05:6870:be94:b0:29e:503a:7ea3 with SMTP id
+ 586e51a60fabf-2cbcf805f9fmr6504735fac.36.1743452726411; Mon, 31 Mar 2025
+ 13:25:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250326062540.820556-1-xin@zytor.com> <CAJZ5v0jfak9K_7b=adf5ew-xDiGHUEPSp5ZpAGt66Okj-ovsGQ@mail.gmail.com>
+ <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
+In-Reply-To: <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 31 Mar 2025 22:25:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j+yxAPZE0eVqkrNjG2L-gZwndmW-0=Pjt9dgeTG7KKKQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jrq30lwkTb_KiOVXJm-_hg25edEjHIRU-4WPLre4pYOSFiiRO7G2_gYicc
+Message-ID: <CAJZ5v0j+yxAPZE0eVqkrNjG2L-gZwndmW-0=Pjt9dgeTG7KKKQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] x86/fred: Fix system hang during S4 resume with
+ FRED enabled
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, pavel@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, xi.pardee@intel.com, 
+	todd.e.brandt@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Mar 2025 13:58:01 -0700 SeongJae Park <sj@kernel.org> wrote:
+On Mon, Mar 31, 2025 at 10:04=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wro=
+te:
+>
+> On March 31, 2025 8:30:49 AM PDT, "Rafael J. Wysocki" <rafael@kernel.org>=
+ wrote:
+> >On Wed, Mar 26, 2025 at 7:26=E2=80=AFAM Xin Li (Intel) <xin@zytor.com> w=
+rote:
+> >>
+> >> During an S4 resume, the system first performs a cold power-on.  The
+> >> kernel image is initially loaded to a random linear address, and the
+> >> FRED MSRs are initialized.  Subsequently, the S4 image is loaded,
+> >> and the kernel image is relocated to its original address from before
+> >> the S4 suspend.  Due to changes in the kernel text and data mappings,
+> >> the FRED MSRs must be reinitialized.
+> >
+> >To be precise, the above description of the hibernation control flow
+> >doesn't exactly match the code.
+> >
+> >Yes, a new kernel is booted upon a wakeup from S4, but this is not "a
+> >cold power-on", strictly speaking.  This kernel is often referred to
+> >as the restore kernel and yes, it initializes the FRED MSRs as
+> >appropriate from its perspective.
+> >
+> >Yes, it loads a hibernation image, including the kernel that was
+> >running before hibernation, often referred to as the image kernel, but
+> >it does its best to load image pages directly into the page frames
+> >occupied by them before hibernation unless those page frames are
+> >currently in use.  In that case, the given image pages are loaded into
+> >currently free page frames, but they may or may not be part of the
+> >image kernel (they may as well belong to user space processes that
+> >were running before hibernation).  Yes, all of these pages need to be
+> >moved to their original locations before the last step of restore,
+> >which is a jump into a "trampoline" page in the image kernel, but this
+> >is sort of irrelevant to the issue at hand.
+> >
+> >At this point, the image kernel has control, but the FRED MSRs still
+> >contain values written to them by the restore kernel and there is no
+> >guarantee that those values are the same as the ones written into them
+> >by the image kernel before hibernation.  Thus the image kernel must
+> >ensure that the values of the FRED MSRs will be the same as they were
+> >before hibernation, and because they only depend on the location of
+> >the kernel text and data, they may as well be recomputed from scratch.
+> >
+> >> Reported-by: Xi Pardee <xi.pardee@intel.com>
+> >> Reported-and-Tested-by: Todd Brandt <todd.e.brandt@intel.com>
+> >> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> >> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> >> Cc: stable@kernel.org # 6.9+
+> >> ---
+> >>  arch/x86/power/cpu.c | 16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >>
+> >> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> >> index 63230ff8cf4f..ef3c152c319c 100644
+> >> --- a/arch/x86/power/cpu.c
+> >> +++ b/arch/x86/power/cpu.c
+> >> @@ -27,6 +27,7 @@
+> >>  #include <asm/mmu_context.h>
+> >>  #include <asm/cpu_device_id.h>
+> >>  #include <asm/microcode.h>
+> >> +#include <asm/fred.h>
+> >>
+> >>  #ifdef CONFIG_X86_32
+> >>  __visible unsigned long saved_context_ebx;
+> >> @@ -231,6 +232,21 @@ static void notrace __restore_processor_state(str=
+uct saved_context *ctxt)
+> >>          */
+> >>  #ifdef CONFIG_X86_64
+> >>         wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
+> >> +
+> >> +       /*
+> >> +        * Restore FRED configs.
+> >> +        *
+> >> +        * FRED configs are completely derived from current kernel tex=
+t and
+> >> +        * data mappings, thus nothing needs to be saved and restored.
+> >> +        *
+> >> +        * As such, simply re-initialize FRED to restore FRED configs.
+> >
+> >Instead of the above, I would just say "Reinitialize FRED to ensure
+> >that the FRED registers contain the same values as before
+> >hibernation."
+> >
+> >> +        *
+> >> +        * Note, FRED RSPs setup needs to access percpu data structure=
+s.
+> >
+> >And I'm not sure what you wanted to say here?  Does this refer to the
+> >ordering of the code below or to something else?
+> >
+> >> +        */
+> >> +       if (ctxt->cr4 & X86_CR4_FRED) {
+> >> +               cpu_init_fred_exceptions();
+> >> +               cpu_init_fred_rsps();
+> >> +       }
+> >>  #else
+> >>         loadsegment(fs, __KERNEL_PERCPU);
+> >>  #endif
+> >> --
+> >
+>
+> Just to make it clear: the patch is correct, the shortcoming is in the de=
+scription.
 
-> On Tue, 11 Mar 2025 12:45:44 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> 
-> > On Mon, Mar 10, 2025 at 10:23:15AM -0700, SeongJae Park wrote:
-> > > Some of zap_page_range_single() callers such as [process_]madvise() with
-> > > MADV_DONEED[_LOCKED] cannot batch tlb flushes because
-> > > zap_page_range_single() does tlb flushing for each invocation.  Split
-> > > out the body of zap_page_range_single() except mmu_gather object
-> > > initialization and gathered tlb entries flushing parts for such batched
-> > > tlb flushing usage.
-> > >
-> > > Signed-off-by: SeongJae Park <sj@kernel.org>
-> > > ---
-> > >  mm/memory.c | 36 ++++++++++++++++++++++--------------
-> > >  1 file changed, 22 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/mm/memory.c b/mm/memory.c
-> > > index 78c7ee62795e..88c478e2ed1a 100644
-> > > --- a/mm/memory.c
-> > > +++ b/mm/memory.c
-> > > @@ -1995,38 +1995,46 @@ void unmap_vmas(struct mmu_gather *tlb, struct ma_state *mas,
-> > >  	mmu_notifier_invalidate_range_end(&range);
-> > >  }
-> > >
-> > > -/**
-> > > - * zap_page_range_single - remove user pages in a given range
-> > > - * @vma: vm_area_struct holding the applicable pages
-> > > - * @address: starting address of pages to zap
-> > > - * @size: number of bytes to zap
-> > > - * @details: details of shared cache invalidation
-> > > - *
-> > > - * The range must fit into one VMA.
-> > > - */
-> > > -void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
-> > > +static void unmap_vma_single(struct mmu_gather *tlb,
-> > > +		struct vm_area_struct *vma, unsigned long address,
-> > >  		unsigned long size, struct zap_details *details)
-> > >  {
-> > >  	const unsigned long end = address + size;
-> > >  	struct mmu_notifier_range range;
-> > > -	struct mmu_gather tlb;
-> > >
-> > >  	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma->vm_mm,
-> > >  				address, end);
-> > >  	hugetlb_zap_begin(vma, &range.start, &range.end);
-> > > -	tlb_gather_mmu(&tlb, vma->vm_mm);
-> > >  	update_hiwater_rss(vma->vm_mm);
-> > >  	mmu_notifier_invalidate_range_start(&range);
-> > >  	/*
-> > >  	 * unmap 'address-end' not 'range.start-range.end' as range
-> > >  	 * could have been expanded for hugetlb pmd sharing.
-> > >  	 */
-> > > -	unmap_single_vma(&tlb, vma, address, end, details, false);
-> > > +	unmap_single_vma(tlb, vma, address, end, details, false);
-> > >  	mmu_notifier_invalidate_range_end(&range);
-> > > -	tlb_finish_mmu(&tlb);
-> > >  	hugetlb_zap_end(vma, details);
-> > 
-> > Previously hugetlb_zap_end() would happen after tlb_finish_mmu(), now it happens
-> > before?
-> > 
-> > This seems like a major problem with this change.
-> 
-> Oh, you're right.  This could re-introduce the racy hugetlb allocation failure
-> problem that fixed by commit 2820b0f09be9 ("hugetlbfs: close race between
-> MADV_DONTNEED and page fault").  That is, this patch can make hugetlb
-> allocation failures increase while MADV_DONTNEED is going on.
-> 
-> Maybe a straightforward fix of the problem is doing hugetlb_zap_end() for all
-> vmas in a batched manner, similar to that for tlb flush.  For example, add a
-> list or an array for the vmas in 'struct madvise_behavior', let
-> 'unmap_vma_single()' adds each vma in there, and call hugetlb_zap_end() for
-> gathered vmas at vector_madvise() or do_madvise().  Does that make sense?
-> 
-> Also Cc-ing Rik, who is the author of the commit 2820b0f09be9 ("hugetlbfs:
-> close race between MADV_DONTNEED and page fault") for a case that I'm missing
-> something important.
+Yes, the code changes in the patch are technically correct.
 
-I now think the straightforward fix I mentioned in the previous message might
-be unnecessarily big change.  Maybe letting the unmap_vma_single() caller does
-hugetlb_zap_end() and tlb_finish_mmu() on their own in a correct sequence could
-be another way?  Then zap_page_range_single() can do the calls for each
-invocation as it did before.  process_madvise() could do batched tlb flushes
-only for non-hugetlb case.  That is, do the tlb entries gathering as this
-version of patch series proposes in usual.  But see if the address range is for
-hugetlb and therefore require hugetlb_zap_end() call in real.  If so, flush the
-so far gathered tlb entries, call hugetlb_zap_end(), and then start next batch?
+> I would say that Xin's description, although perhaps excessively brief, i=
+s correct from the *hardware* point of view, whereas Rafael adds the much n=
+eeded *software* perspective.
+>
+> As far as hardware is concerned, Linux S4 is just a power on (we don't us=
+e any BIOS support for S4 even if it exists, which it rarely does anymore, =
+and for very good reasons.) From a software point of view, it is more like =
+a kexec into the frozen kernel image, which then has to re-establish its ru=
+ntime execution environment =E2=80=93 (including the FRED state, which is w=
+hat this patch does.)
+>
+> For the APs this is done through the normal AP bringup mechanism, it is o=
+nly the BSP that needs special treatment.
 
-In other words, I'm proposing to split the batched flushes when a hugetlb is
-encountered.  This means that tlb flush overhead reduction might be smaller
-than expected if process_madvise() for unmapping hugetlb pages is intensively
-invoked.  But I 't think that's not a common use case.  Having the benefit for
-non-hugetlb pages with simple change first, and revisiting hugetlb case later
-once the problem comes out might be a way, in my opinion.
-
-For example, my idea could implemented like below, on top of this entire patch
-series.
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 4021db51aeda..e6a74e7ef864 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -861,6 +861,20 @@ static long madvise_dontneed_single_vma(struct madvise_behavior *behavior,
- 	};
- 
- 	unmap_vma_single(behavior->tlb, vma, start, end - start, &details);
-+	/*
-+	 * hugetlb_zap_end() should be called after tlb_finish_mmu() to avoid
-+	 * hugetlb faults for the tlb-flushing memory hanppen before freeing of
-+	 * the memory.  If not, the fault will fail memory allocation.
-+	 *
-+	 * If hugetlb_zap_end() really need to be called, flush so-far gathered
-+	 * tlb entries, invoke hugetlb_zap_end(), and start another batch of
-+	 * tlb flushes for remaining unmap works.
-+	 */
-+	if (is_vm_hugetlb_page(vma)) {
-+		tlb_finish_mmu(behavior->tlb);
-+		hugetlb_zap_end(vma, &details);
-+		tlb_gather_mmu(behavior->tlb, vma->vm_mm);
-+	}
- 	return 0;
- }
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index add8d540cb63..4431630d3240 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2023,7 +2023,6 @@ void unmap_vma_single(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	 */
- 	unmap_single_vma(tlb, vma, address, end, details, false);
- 	mmu_notifier_invalidate_range_end(&range);
--	hugetlb_zap_end(vma, details);
- }
- 
- /**
-@@ -2043,6 +2042,7 @@ void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
- 	tlb_gather_mmu(&tlb, vma->vm_mm);
- 	unmap_vma_single(&tlb, vma, address, size, details);
- 	tlb_finish_mmu(&tlb);
-+	hugetlb_zap_end(vma, details);
- }
- 
- /**
-
-Any concern or something I'm missing?
-
-
-Thanks,
-SJ
-
-[...]
+That's correct.
