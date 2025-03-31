@@ -1,75 +1,101 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5904D3FFD;
-	Mon, 31 Mar 2025 07:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2557C2940F
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743404630; cv=none; b=UHuEd4Z2l2t8w9AYRxiub2GO9uYXzAAY2taewk18UZayRTCrEBSJbJo5GbtXAd8q0bfMCwzvr8EFZUXUYnG9V9k3QN1AOqHCFXX/rLt/sBvQ7I/7FktfKwyx+ssx1ArVy7m+OKT0FStW7UOGNNaEvWKwPWeYAZ44gNnW5mXgj6I=
+	t=1743404741; cv=none; b=DUnLNireqVmRaW7VWRB6o0rLR+ScofzYAXp/xELWhkGtKUkz0n0WBMD7kT6o8FPcf182o93o1YAEefMY3uwMex9OwT0wd5Vln1fSK0kQJY1PjkmVMBPaXNWQq6HtbcS06VQHIGi9u+jLQ6xIAx8YyhHLewpbAU5rR4NMhq6+qkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743404630; c=relaxed/simple;
-	bh=uh0Kdg9+2/RZobH1vJXwPomYg/ddyoVt05GywxqlLco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JU8FGsZ/i7WjToAF9FRD3v0iPHm99p+uqtPHcPrIY43jrTgoCZxI8QdrZRm1LZ2332FhZ8Yiy+7EjKnC6pi+he29S7emk0fP+cYBycOcMTHZuIU8HhCmcd+NtwFGajpDzBmQEtDO1gZ+h5FvtJio7La/GgKNccygimeT6RZGOGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=QM09gOPl; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1743404741; c=relaxed/simple;
+	bh=tNR4Q8cdhO0cDwTQ89Rpe0pYrXsa1HjTyroTZsF11e0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qkdyaO14hTf26iJBYXjo/TR1wupbji4l+qZ2rv8I2jD7UqZlEdbMABCK5SQR5RDnyMDH7R91tE6nrupLCLJj3uOIm2JCtrzt2d6D0rlFHEkx+A3HKlkVK0nOpHvH7Em0Q6FyBz4t3xpzy+tfaiyLx+ZggabLTI8QIRcT9JqYEbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SMqo/lfR; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="QM09gOPl"
-Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id D07A01F928;
-	Mon, 31 Mar 2025 09:03:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743404625;
-	bh=iUrJsyAGZWwv9LZe9IW16HfAiP9jnMfqvzb8gtrWOMo=; h=From:To:Subject;
-	b=QM09gOPlLwwKt8C2yM+uPJN4jB75qFHtYEkY/AHYjhb8JoTm2+0U1Xlsk8JmuFgKW
-	 iGUlfFxyWD7qrLG3BZN2UUtrS0cFv3VksFX8kqszWRFvdIFTUP8D9YUWeATb4yW89v
-	 hRK9PopZN7uehojCb4smnEvWxpXSoNSnM2YPKSXGJfN6BxOFl7Ks+rTpFNeXi9HQ9M
-	 aDn+ZC5yuRLC0xqmoqNPY49GjcFwT/vlixwx562G6mmCeiPgKiApaG3XR7kjXel6Nq
-	 1/9nulO01ytSDCdosZ60t5EHVyYPsXXlV+DZJwa2Vf+c2Aa8wjz54UhvaE4wK3ifEx
-	 IfctCdx/qcYRw==
-Date: Mon, 31 Mar 2025 09:03:40 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v1] dt-bindings: gpio: pca95xx: add Toradex Embedded
- Controller
-Message-ID: <20250331070340.GA13824@francesco-nb>
-References: <20250328122917.43273-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SMqo/lfR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=tNR4
+	Q8cdhO0cDwTQ89Rpe0pYrXsa1HjTyroTZsF11e0=; b=SMqo/lfRRmbI+RT6asN3
+	n1jza5mkl02RL2n+ARuU7sgLnZYb5Gf+VfTzN+sKU5Nrs+6Ju2+IQ3DzGsl0VaN5
+	QytmYKMNwOevrGaUjbow8qMXGXKO5z+IBuBpnDzG+oKU6ZuMjLjgi0Hb2whip0PN
+	51+jQ5/1exhdJjem7SFPGEw7fqaAo2YpiW2dxHlzyU2QnV6GiI82YB4wYPtvF/jA
+	qn+DQrKAN4QGBJoKbUuh+FQgMsPh3ptOo9ubKAXUtReTiHoGWagqI9M3k0CAgUiV
+	ysFzQiPR2RVu23FRoHC2HDnqMSYOph5DgHNlPZn0pSmnAk7T5KrZro1UYhD9Rcic
+	aA==
+Received: (qmail 1129435 invoked from network); 31 Mar 2025 09:05:37 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 09:05:37 +0200
+X-UD-Smtp-Session: l3s3148p1@oXQJDJ4xBrBQ8qei
+Date: Mon, 31 Mar 2025 09:05:36 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>, ulf.hansson@linaro.org,
+	salauyou.ihar@gmail.com, linux-mmc@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: renesas_sdhi: Fix error handling in
+ renesas_sdhi_probe
+Message-ID: <Z-o-wDYdfdKig5_p@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>,
+	ulf.hansson@linaro.org, salauyou.ihar@gmail.com,
+	linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
+ <Z-nAtQ-CZ8zMUWiK@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Hb6I+YkcuGQRP6Yz"
+Content-Disposition: inline
+In-Reply-To: <Z-nAtQ-CZ8zMUWiK@shikoro>
+
+
+--Hb6I+YkcuGQRP6Yz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250328122917.43273-1-francesco@dolcini.it>
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Mar 31, 2025 at 12:07:49AM +0200, Wolfram Sang wrote:
+> On Wed, Mar 26, 2025 at 11:06:38PM +0100, Ruslan Piasetskyi wrote:
+> > After moving tmio_mmc_host_probe down, error handling has to be
+> > adjusted.
+> >=20
+> > Fixes: 74f45de394d9 ("mmc: renesas_sdhi: register irqs before registeri=
+ng controller")
+> > Reviewed-by: Ihar Salauyou <salauyou.ihar@gmail.com>
+> > Signed-off-by: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
+>=20
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-On Fri, Mar 28, 2025 at 01:29:17PM +0100, Francesco Dolcini wrote:
-> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> 
-> The Toradex Embedded Controller IO16 is a 16-bit I2C I/O expander
-> implemented using a small MCU.
-> Its register interface and behavior are compatible with the PCAL6416.
-> 
-> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Also:
 
-Please ignore this patch, I'll send soon a v2.
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-The issue with this patch is that the compatible is too long, we are
-going to re-use "embedded-controller" prefix for other devices and this
-creates clashes with the i2c compatible match fallback function
-(i2c_of_match_device_sysfs).
 
-Francesco
+--Hb6I+YkcuGQRP6Yz
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqPrwACgkQFA3kzBSg
+KbaHghAAtnGmYUaSEALZT2+umgQanfx6c5PsESPug+KB7UeNK64IrTJ1GkDENfcO
+qmJdHWp30ymBO1wACwinZvU5+P/OFNe144cG3MhkkxGn46PP6dHDo71HQCVoqafK
+tFwr433kvd/3+o3rUYASkcrrdkg4YRIpwiyhTedIpETDTBj9FVuqeTYsw4jbBmj4
+oG6v9IOSxKsmAjvwb025Pf9ISrbH1gEz6jiP4eyj7tpgvkAI+9XL1N9smdLe9GAt
+OV1xS9nmiYk9W+HhGFTDY5VSoKWlFQRKwjS3y1febnrttczrAhnSzJEONMNVLRvy
+hOm/Y9kVHV4ptZoy9oU7gnYfMuHf4bth43oi7TWKUu8Apn54lGWnMK4IjFIlb0nO
+QGEfTRc3ab6E76nG3OhG76yZgH1gq0EGv6hX81E3f2juejws+v/zKotUw55gJoax
+xxc2ADmy4xJkmPtTzITqJn6tQuUGPDxE5RGIdrQ6Wv1JX4ozHfhjlcl/QTSAKvbB
+BI+DRTRHQXhgk4t8Ud+r69mFFO4GTzIu1TRg8btFAg+K/CwVxWvcH+nHtfOPUhtc
+E90AQWTCJTVrtb/RiqBZDJVQQUKHc5Yh2R8lJSHsl7qSoW3JdfsOg8v+3iPY5cC3
+C595plUaTiY9e4mIh5A/4eEyNjzvFtn16s2oviSxaZfY9fha3yE=
+=PNaQ
+-----END PGP SIGNATURE-----
+
+--Hb6I+YkcuGQRP6Yz--
