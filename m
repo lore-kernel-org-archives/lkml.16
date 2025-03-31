@@ -1,186 +1,140 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DB02356AD
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43171236441;
+	Mon, 31 Mar 2025 14:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432924; cv=none; b=ciyNVARugCJBRUtUsoqbxzNrOz67JNkUYAaVllGQLB8NxcDTjMH5U1vm0KS9XvJ7K0P29ln8jh4Ka/wnYrE7iS9IW9bId+Q+wZvqvCIg32UL4KWnFo+sGpKkRnzkyXEc5S+2F8kP/rbuxmDbTBHWeLq2rBl8aqTJUHE82Lj3mo8=
+	t=1743432927; cv=none; b=bqiqv69prVkB9dY6RGDdA7H3pyJoHkUsLBg3YzL4pqvZW4phUgF2bZn+qde7bPH/5Cloh2QBPSIQ8M+UW6R+jo9rGe7oMfXZK8S+L4du2JgyXE9kIKsZLi9hinMpudf2Jgu9p1wxw5zrb0ZgB2Xpw62rlFwaw8EG8TAOQYQ9Ukk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432924; c=relaxed/simple;
-	bh=Q9O8UjLPceVEDCDVbzGN5rZyqSeVA1cCqDcPa6gtF7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XEUuxiGokV39CW61+sI5S9lFk1g2pECaTjNkYbDpTYXxMeL8eB+/jg2ZiJjQ3QdwzU9ipyi4hxtLNUJsgvQPDWL3p94VcnuX2J6W87iPONq9ZI/0KKGYqe/7UoAsgNHsHqC3ABb0kJWgleUaIlVK8grJui9tdlePKLUD4Y6ohGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wej7R7w+; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743432927; c=relaxed/simple;
+	bh=Ee353CiGbp0EYMm17fz0KvO+R7WovZhoCsJ1sEP0af0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HQdDPSeIIJiTyP+KIltyQJ7EhxMXLCWa9TrWxAk+F9aFWBYvQLQVKGvgbjz/vEHchJv7rQln03FZA91Z5ZO8UAKhbxb6Ki8ubasrdsIzVmhK/v6J1UhTmHH0qv+gjBA1FLbAVtFQmM4klZvgGNFILDNXfZhg8lZVsWVvkYkW5/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUeP+6B7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wej7R7w+"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 82399725;
-	Mon, 31 Mar 2025 16:53:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743432808;
-	bh=Q9O8UjLPceVEDCDVbzGN5rZyqSeVA1cCqDcPa6gtF7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wej7R7w+Pso2p0b4aeIXBL2u8ndNKcj+OZ6IYfyKD53IJoflnrCT7g29kYHpSG04c
-	 KrEhXY1ajSpi8jPbE551RKqC/EWPdscU05czKxVEHwz+bNTiAElp9/96FHOnJxKTwT
-	 o5LQszvm6ZJTqSKouOeFuzvpUdWcAZXddc24GGzk=
-Date: Mon, 31 Mar 2025 17:54:56 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Vishal Sagar <vishal.sagar@amd.com>,
-	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-Message-ID: <20250331145456.GB27882@pendragon.ideasonboard.com>
-References: <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
- <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
- <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
- <20250327112009.6b4dc430@eldfell>
- <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
- <20250327175842.130c0386@eldfell>
- <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
- <20250331105446.098f0fbe@eldfell>
- <20250331082135.GB13690@pendragon.ideasonboard.com>
- <20250331135337.61934003@eldfell>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUeP+6B7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AAD2C4CEEF;
+	Mon, 31 Mar 2025 14:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743432926;
+	bh=Ee353CiGbp0EYMm17fz0KvO+R7WovZhoCsJ1sEP0af0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kUeP+6B7NXJfPwyshyXHKOzr3QLbMp7BVGwH67i8OWdfe+9qL1/hU0dot/ZRKLTY8
+	 Tjjvc1HZz+AruajzKEtqqhPSCcMNWvI7YTGgKQSjR6I35cgBosaKNNu9VtP4AafRa6
+	 /dMzKI0LrTL+05yilKTjwznQrbGd1R7PmUdFWBgj98MNRIdij1XTTtfsR5qssl8gCE
+	 BZqfpNPKitTgK0hlZsAIUHP9KCQ5aELpUvRvwf5VVlsK/Hh9Mgj+tGxp969i26m/UJ
+	 7RYpCzbTiDD3njJ7gskBiVqkyIbTtsMmwArM8Z7pWKqg0bJ5hhbNkJpD66UtEzHZ/9
+	 CNzB+/+FxqsKg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Tomasz=20Paku=C5=82a?= <tomasz.pakula.oficjalny@gmail.com>,
+	=?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal@nozomi.space>,
+	Paul Dino Jones <paul@spacefreak18.xyz>,
+	=?UTF-8?q?Crist=C3=B3ferson=20Bueno?= <cbueno81@gmail.com>,
+	Pablo Cisneros <patchkez@protonmail.com>,
+	Jiri Kosina <jkosina@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 08/23] HID: pidff: Add hid_pidff_init_with_quirks and export as GPL symbol
+Date: Mon, 31 Mar 2025 10:54:54 -0400
+Message-Id: <20250331145510.1705478-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250331145510.1705478-1-sashal@kernel.org>
+References: <20250331145510.1705478-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250331135337.61934003@eldfell>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.21
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 01:53:37PM +0300, Pekka Paalanen wrote:
-> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote:
-> > On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
-> > > On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wrote:
-> > > > On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote:
-> > > > > On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrote:
-> > > > > > On 27/03/2025 11:20, Pekka Paalanen wrote:    
-> > > > > > > On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wrote:
-> > > > > > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
-> > > > > > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote:
-> > > > > > >>>> Add greyscale Y8 format.
-> > > > > > >>>>
-> > > > > > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>    
-> > > > > > >>>
-> > > > > > >>> Thanks for your patch!
-> > > > > > >>>    
-> > > > > > >>>> --- a/include/uapi/drm/drm_fourcc.h
-> > > > > > >>>> +++ b/include/uapi/drm/drm_fourcc.h
-> > > > > > >>>> @@ -405,6 +405,9 @@ extern "C" {
-> > > > > > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
-> > > > > > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
-> > > > > > >>>>
-> > > > > > >>>> +/* Greyscale formats */
-> > > > > > >>>> +
-> > > > > > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */    
-> > > > > > >>>
-> > > > > > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
-> > > > > > >>> the number of bits in the FOURCC format. What do you envision
-> > > > > > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?    
-> > > > > > >>
-> > > > > > >> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
-> > > > > > >> not required, but different fourccs for the same formats do confuse.
-> > > > > > >>
-> > > > > > >> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
-> > > > > > >> possible, and if not, invent a new one.    
-> > > > > > >
-> > > > > > > what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
-> > > > > > >
-> > > > > > > Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
-> > > > > > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
-> > > > > > > defined by MatrixCoefficients (H.273 terminology)?
-> > > > > > >
-> > > > > > > That would be my intuitive assumption following how YCbCr is handled.
-> > > > > > > Is it obvious enough, or should there be a comment to that effect?    
-> > > > > >
-> > > > > > You raise an interesting point. Is it defined how a display driver, that
-> > > > > > supports R8 as a format, shows R8 on screen? I came into this in the
-> > > > > > context of grayscale formats, so I thought R8 would be handled as (R, R,
-> > > > > > R) in RGB. But you say (R, 0, 0), which... also makes sense.    
-> > > > >
-> > > > > That is a good question too. I based my assumption on OpenGL behavior
-> > > > > of R8.
-> > > > >
-> > > > > Single channel displays do exist I believe, but being single-channel,
-> > > > > expansion on the other channels is likely meaningless. Hm, but for the
-> > > > > KMS color pipeline, it would be meaningful, like with a CTM.
-> > > > > Interesting.
-> > > > >
-> > > > > I don't know. Maybe Geert does?    
-> > > > 
-> > > > I did some digging, and was a bit surprised that it was you who told
-> > > > me to use R8 instead of Y8?
-> > > > https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell  
-> > > 
-> > > Hi Geert,
-> > > 
-> > > indeed I did. I never thought of the question of expansion to R,G,B
-> > > before. Maybe that expansion is what spells R8 and Y8 apart?
-> > > 
-> > > I do think that expansion needs to be specified, so that the KMS color
-> > > pipeline computations are defined. There is a big difference between
-> > > multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
-> > > 
-> > > - (R, 0, 0)
-> > > - (R, R, R)
-> > > - (c1 * Y, c2 * Y, c3 * Y)  
-> > 
-> > I'd be very surprised by an YUV to RGB conversion matrix where the first
-> > column would contain different values. What we need to take into account
-> > though is quantization (full vs. limited range).
-> 
-> A good point, are the Y coefficients always 1.0 after quantization
-> range has been accounted for?
+From: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
 
-As far as I understand, they should be. RGB is full range, so the Y
-range should map to [0.0, 1.0] in RGB space. I'm also not aware of any
-colorspace where a grey colour would have different R, G and B values.
+[ Upstream commit 36de0164bbaff1484288e84ac5df5cff00580263 ]
 
-There's a related but separate question: if Y is a luma (in Y'CbCr
-terms), it will not be linear, compared to the Y luminance (YCbCr). We
-have a DEGAMMA_LUT to linearize data, but that's in the CRTC output
-path, not in the plane path, and I don't see any API element to specify
-the transfer function of data input to a CRTC.
+This lays out a way to provide an initial set of quirks to enable before
+device initialization takes place. GPL symbol export needed for the
+possibility of building HID drivers which use this function as modules.
 
-> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
-> (R, 0, 0), so we have both variants. Or do we need Y-formats at all?
-> 
-> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
-> in the KMS color processing?
-> 
-> > > I forgot to consider that in the discussion of single-channel displays,
-> > > because the displays obviously do not consider any other channel than
-> > > the one.
-> > > 
-> > > Using DRM_FORMAT_Y8 FB with a single-channel display might even be
-> > > surprising, because the proposed Y8 definition would result in c1 * Y,
-> > > and not Y. The default c1 comes from the BT.601 matrix IIRC?
-> > > 
-> > > Therefore I think the difference between R8 and Y8 has been found. Now
-> > > we just need to determine whether R8 means (R, 0, 0) or (R, R, R) to
-> > > nail down the color operations as well. There are questions like what
-> > > is the outcome at the video signal level when we have one KMS plane
-> > > with an R8 FB and another KMS plane with an RGBA8888 FB on the same
-> > > CRTC? What about Y8 or NV12 in the mix? What if the video signal is
-> > > single-channel, RGB, or YCbCr?  
+Adding a wrapper function to ensure compatibility with the old behavior
+of hid_pidff_init.
 
+Signed-off-by: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
+Reviewed-by: Michał Kopeć <michal@nozomi.space>
+Reviewed-by: Paul Dino Jones <paul@spacefreak18.xyz>
+Tested-by: Paul Dino Jones <paul@spacefreak18.xyz>
+Tested-by: Cristóferson Bueno <cbueno81@gmail.com>
+Tested-by: Pablo Cisneros <patchkez@protonmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/usbhid/hid-pidff.c | 15 ++++++++++++++-
+ include/linux/hid.h            |  2 ++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/usbhid/hid-pidff.c b/drivers/hid/usbhid/hid-pidff.c
+index 5a57ba0d7026a..b8c2ba0a930c2 100644
+--- a/drivers/hid/usbhid/hid-pidff.c
++++ b/drivers/hid/usbhid/hid-pidff.c
+@@ -1268,8 +1268,9 @@ static int pidff_check_autocenter(struct pidff_device *pidff,
+ 
+ /*
+  * Check if the device is PID and initialize it
++ * Set initial quirks
+  */
+-int hid_pidff_init(struct hid_device *hid)
++int hid_pidff_init_with_quirks(struct hid_device *hid, __u32 initial_quirks)
+ {
+ 	struct pidff_device *pidff;
+ 	struct hid_input *hidinput = list_entry(hid->inputs.next,
+@@ -1291,6 +1292,7 @@ int hid_pidff_init(struct hid_device *hid)
+ 		return -ENOMEM;
+ 
+ 	pidff->hid = hid;
++	pidff->quirks = initial_quirks;
+ 
+ 	hid_device_io_start(hid);
+ 
+@@ -1369,3 +1371,14 @@ int hid_pidff_init(struct hid_device *hid)
+ 	kfree(pidff);
+ 	return error;
+ }
++EXPORT_SYMBOL_GPL(hid_pidff_init_with_quirks);
++
++/*
++ * Check if the device is PID and initialize it
++ * Wrapper made to keep the compatibility with old
++ * init function
++ */
++int hid_pidff_init(struct hid_device *hid)
++{
++	return hid_pidff_init_with_quirks(hid, 0);
++}
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index cd3fedce48109..818e07744c408 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -1223,8 +1223,10 @@ void hid_quirks_exit(__u16 bus);
+ 
+ #ifdef CONFIG_HID_PID
+ int hid_pidff_init(struct hid_device *hid);
++int hid_pidff_init_with_quirks(struct hid_device *hid, __u32 initial_quirks);
+ #else
+ #define hid_pidff_init NULL
++#define hid_pidff_init_with_quirks NULL
+ #endif
+ 
+ /* HID PIDFF quirks */
 -- 
-Regards,
+2.39.5
 
-Laurent Pinchart
