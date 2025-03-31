@@ -1,140 +1,138 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB8C217664;
-	Mon, 31 Mar 2025 20:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA1A2144C0
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452883; cv=none; b=Hzc22ijfBETppyRm5DsEx1wmrILzZQ8JcpFWBF50axqHUsydxe+YTNIuJDQCHliQOFxyMOrjsTJCopvxJB8gtGZiMMlHlw/j3by3oWKSaDlZIkVl445wcvy/3aSlQ7M9tFO2mT3x7G6O2TtyDijl5/J2zVtkR0tdd65RJ3gyPyA=
+	t=1743452903; cv=none; b=gdfyR9qmkqKi2MBNGC/cxRtraUog8FLN/OGwaMRQS62WwY1FM6BbgMpS/KifoPgDA6OSEM2dPmbY5OER6QN0pbVz1as9LKegZLLLgT2lQZ1g/RjCkelzhuZZMp8/1Pog55ezPEfz8k75P5UF3Sp+lB2oZeO8YVW/zqk8eWia2UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452883; c=relaxed/simple;
-	bh=PguanBqMDkb5To9BTN3sgW0idJGAj6XtvhMWRpcqrEI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RO1BHfu5cBuzdgtnT/AnCx2kgzrjYWk37PgRrvAM+9clcu7f8DX4cC+op7svx5UA7qzbdMJVB5fsVbD9GbpGqnQ8a0SzfouxJsyz4XP17PP9Ded54YOnFLV1gcXzczdU5EQmtIG0qI/h7GU6XFLc3fahBqRuJRrmz37sgQQFxuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZoA0utL; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743452903; c=relaxed/simple;
+	bh=aeGyfdMZLf7+UsI6/vhKAJEd3wrd0uULXQHq6JP/5gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IfdoAO0fK+1bbgp/z6f7R07X0eh4x/c4YIxvBeeTLQZJynpUr6RAmJ49u8fzO3YDlaJr63Fjke7bg8r1KC6TRP1WGk79FV6upSHpLTuH4ofcO5Ic0gz2oJw6XXgmBARvNBvomgcTuT/6KuSScetgldw+9iZjHFfSI3VpcmkiVVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=o6CIYMZj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZoA0utL"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3851574f8f.2;
-        Mon, 31 Mar 2025 13:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743452880; x=1744057680; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QUt09F+DYIFnC8f7XCRnOh1byr9Dt+QFf/4SpMdh7mY=;
-        b=HZoA0utLuFN2BrJ95ZDkBizPVqRHTMNgdDxGWJczPGza6qpKP4RdteZ7fy71RskKPK
-         KbGaOJL+iDpQgiq+IvLpaEZLjAQlrnS1OzDIbGNDtzpsyVMpYiZdzD4xBEOGtwNdXOVP
-         rGBQSWrGw5Q5GLNyTWGpgngMw8qSwJ5bo1W+CR/+5SxiQaUhf9dxTlvN/Jy013Zvm2eb
-         7xVIZV/FoC7DvJAyk77KhWuOqZy01tTBxyXPkr+3Yy3klal4KoIgUbCFrIaJQBlmvvnQ
-         jYixHaVHjXHuKlffqYij6DxViMig5LVdzkczw0h/zlBbBf3/5ilQrFC5NmsU56DSVvIo
-         2czQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="o6CIYMZj"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFDKoI012624
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:28:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3K1rbl6qLD0AtNbSIccTfCXz55A/TcpEH0lxj5Tjkgk=; b=o6CIYMZjS0eTH2pW
+	DwtcHer2I2PH2+rmXWG0qUSITBqjCOxqK/ouXEns8OcSAZgvrCtlMdbv4mIO61qF
+	j8QLgiV66fCb8Yk+o8LZs4LQ8wmfl8yP8lIq9m4KqKxqo99JWeZUUD8kQl53drp1
+	Hj+VvglfDlSRAMsFJTHnblsbDO/pqt74bp3wapT6pWkvD8Gf1oqYylBvfu5PGUak
+	bcRFZqy9zCkTm4zj2mqGqR237ICIq3+RGOlv+5PIHORyCMUU7yjdrOZPLY4UnAAh
+	29RnM0PjYD6YawuJBmqLqmdM7oeJE4UhL4nb9ZEBrp1nu3WmyzUgIRLj0mtCcAVm
+	1323Sw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p9mjneuw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:28:20 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5bb68b386so429195085a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:28:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743452880; x=1744057680;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QUt09F+DYIFnC8f7XCRnOh1byr9Dt+QFf/4SpMdh7mY=;
-        b=xIdq+kxhGoQqJVWqORXduhdp3qdGAedtraLbpzMj4+bdTpmgSEqe5Nnd260CTIDT3U
-         +pA4in3BkZUw+vQgKCQhLLrKuIDruqJdz4xQutfSeTyZJmg1NI1fVyg+T1xKp4T0HmAK
-         n+LqtrdVQBUIVkMrHp1G6IIiwzr+H9OtVgw3tUqBDO8L7bMWqwi54hgOQj+npLBy+ZRZ
-         zKguL6u0cDt/MYQsnLOqoOI5T7ViXaUh3lWM+Pz/1Dwc+5NZgWEO//fi4e6gujT7crFz
-         iFyE/2yDF7YzFNwdJrU/xE7mVUjbDipiuPD59R99G0bszdfbXGXHaO607Q+dycPPl/ZG
-         7Wbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCX4VnzFeizDKQxKOTKziaOuDXTRG6n4qrxJzaRdBT+4TcesUhll+L0XVU4u9tv8hx/vvy9X3Q2u2JN7nN@vger.kernel.org, AJvYcCX3IF3trOOy4BJvSaMpKI4VdQK0kc3LRpU7e67pZvpSVBEKF0SZsXkiCTFU9gbJALrHypyfvXxq0AiS@vger.kernel.org, AJvYcCXisxc3nxFznaeEvlAgTAukqZ1HdVHMDM9iqhofEI/NwhCALH335/WyqyxlpJbdJ55Jb2YrG8txWHEUX4dgWg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpzcwFB+dHTE2llz9/gPZc7RkZESu9cohnIol0KrOuHQxkMXiF
-	INxlgiC4UCOakUrTdo4OvDvSQZnenB76YXbZmWKX8CosqZL6aa1L2NKWB5rjbC8o4hJ84OAOtH2
-	mOKHxykcpTYfWMIO3fup4KTbdpw==
-X-Gm-Gg: ASbGncvxKTWcNnMmCKuVG40oH5Muw42zw1qv8zxc021NwZ4SzGDkFeCgl1Dy5zY37qJ
-	VN5sekhRhUEqeXdUOxAyZ0y8LsXPuDpc9EHVWCLwpt4VSp71wzVP2YSF8u/C9gdQIrwlGbJek3A
-	qFU85zIZ2KqxNDMABi9V0GT6AUvg==
-X-Google-Smtp-Source: AGHT+IGZ7aD+wTuJCUUTIE2voBO6WaNR+M71hW0FwWuRHRO+nbuXUQt2yRpKAIAzsQ1Ki+hHiXULVp/okC5PD1K/ujA=
-X-Received: by 2002:a05:6000:1848:b0:391:4b8e:a200 with SMTP id
- ffacd0b85a97d-39c120e3f45mr7986223f8f.32.1743452879739; Mon, 31 Mar 2025
- 13:27:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743452899; x=1744057699;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3K1rbl6qLD0AtNbSIccTfCXz55A/TcpEH0lxj5Tjkgk=;
+        b=VcLWfl2xqCjpVaIFS0U1JPrLpJ87PK5G6XpOEwjmeP68bCof5cTv0rzYEtw1PfqY+q
+         YYRhvOJaWwbtKur6enGMNCqASL64nkGKCFgAn/uCHgmiu7o3AJT7sVuXGW/E4vmhkyyV
+         RKLsU/sKh6ZmlCTHbgBYzaLCNxEoMCMkD6r46qaEXyq8rU+OYZDC+hc80Is3sCy8M6u8
+         4eWzGezdmfsgpGUmVii3UnkBhfiCzp7maxDO1YZyoukfMTv1jBpwPOdcoBZdje0VdEoy
+         MSrgICOVanNMtZaANtqmVwntUeJplqdV5c2rpA+MGVG/sl93/MdT33DO/F+bCaBym7V9
+         DY/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXN6iTKwwLvARq5EvCrRH34zLWgU5CJlnwE/ATSkzkFQ1ST9gR6yVVE45DiThDmHK3JR1EsVgUc/RJJAhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdI8oloqzeZETTp87ibGjIyFaRkbUQ35xU8U++GfRE31/upc1Y
+	Vr7ASJXk9rD/EqJHpCy2lbhY+QNMKlx2FX+S9j0PaaDOO0l9zC3R10y5tYqzumPieno9v/LIvXj
+	LqjtsixSuOcUNhVmwYAA0iu812Bmn3SdLmAIONj3USrqHKqospoSUVfJSmzUrobo=
+X-Gm-Gg: ASbGnctuOdGCHqZntp7w7Lu+b/G1Hr1b9n5S9qUbhGsBlpitZJxY6PRdgwmwpKLZ0Ea
+	wy2cqTSCT4jeWmYDc64gdwo64PZggPN1srTlZjPSxXPSLfYX2zMh3N0/Wiimk432pdw8PJEiR8V
+	SO9XZoWh009q8D7kAQCKy9BZmOZdiHpnXvgX5WYFEo3biAC2AZMpWbzRS2YqBitO3d8aktybk2P
+	7x0k3WXYPqJV/kv7fyVRN2IwyOC+2hsakqSJ6Vdr6pr5upHOzP7eNeLUC1KZh/4aw9kD0WLKMqf
+	dTKXNPSRf2TkP4O3fXFvZQSReXMuocco1KCjp4CVsfdMBcbgxFpBX9H0SEjJAu/oZGHEl7aQ6Fh
+	m0cc=
+X-Received: by 2002:a05:620a:468d:b0:7c5:5e05:df33 with SMTP id af79cd13be357-7c690897454mr1407868485a.51.1743452899558;
+        Mon, 31 Mar 2025 13:28:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZsy3ubrttJKu3HDyw18jx9OGKPzoNm6q9xzA+s2DW7AytAK8ZIKxMqQnEzQcoeHb/Y6PrMg==
+X-Received: by 2002:a05:620a:468d:b0:7c5:5e05:df33 with SMTP id af79cd13be357-7c690897454mr1407865485a.51.1743452899194;
+        Mon, 31 Mar 2025 13:28:19 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2acf72dsm14925951fa.48.2025.03.31.13.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 13:28:18 -0700 (PDT)
+Date: Mon, 31 Mar 2025 23:28:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+        quic_jesszhan@quicinc.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, asrivats@redhat.com
+Subject: Re: [PATCH v2] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
+ wrapped functions
+Message-ID: <jlqxx47vzlp6rmwpi3tskig4qu4bgyqd7vletxbzzn7xdpep72@42tzrjkg65lh>
+References: <20250331061838.167781-1-tejasvipin76@gmail.com>
+ <CAD=FV=UbUqNf4WoWzqMe5bDQmxiT+bRG_cn0n1dBrkFRijx0Cw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
- <20250331073423.3184322-2-alex.vinarskis@gmail.com> <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
- <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
- <Z-p1uADNVAM9NcAW@hovoldconsulting.com> <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
- <Z-rnvSKEysdDyj4s@hovoldconsulting.com> <siktv5i4fnkbjgzfwkztp3px3cxlhxuoxssmksr4ww5voe5heq@ttzkhisnyxl6>
-In-Reply-To: <siktv5i4fnkbjgzfwkztp3px3cxlhxuoxssmksr4ww5voe5heq@ttzkhisnyxl6>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Mon, 31 Mar 2025 22:27:47 +0200
-X-Gm-Features: AQ5f1JrvxkAG2q5VhnZZeDDpnCGBUwNe0xLpshq81zgzYXlp6gvsgRPSqtO2KTU
-Message-ID: <CAMcHhXrUZxG07OOA20FRkO+j+U0iiT0B4CpRaV2uZ0dwfyQpYA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
- WiFi/BT pwrseq
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Johan Hovold <johan@kernel.org>, "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=UbUqNf4WoWzqMe5bDQmxiT+bRG_cn0n1dBrkFRijx0Cw@mail.gmail.com>
+X-Authority-Analysis: v=2.4 cv=Mfhsu4/f c=1 sm=1 tr=0 ts=67eafae4 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=z-ExhNoxjeCmSYn54VYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: 7pnTXOm5IlGCWQk5Z5ehGRkP6nE-0rUn
+X-Proofpoint-GUID: 7pnTXOm5IlGCWQk5Z5ehGRkP6nE-0rUn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_09,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 suspectscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310141
 
-On Mon, 31 Mar 2025 at 22:15, Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
->
-> On Mon, Mar 31, 2025 at 09:06:37PM +0200, Johan Hovold wrote:
-> > On Mon, Mar 31, 2025 at 06:51:03PM +0200, Aleksandrs Vinarskis wrote:
-> > > On Mon, 31 Mar 2025 at 13:00, Johan Hovold <johan@kernel.org> wrote:
-> > > > On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
-> > > > > On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
-> > > > > > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
-> > > > > > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
-> > > > > > > combo chip using the new power sequencing bindings. All voltages are
-> > > > > > > derived from chained fixed regulators controlled using a single GPIO.
-> > > > > > >
-> > > > > > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
-> > > > > > > WiFi/BT pwrseq").
+On Mon, Mar 31, 2025 at 08:06:36AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Mar 30, 2025 at 11:18 PM Tejas Vipin <tejasvipin76@gmail.com> wrote:
 > >
-> > > > > > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
-> > > > > > > X1-based Dell XPS 13 9345")
-> > > > > >
-> > > > > > Not sure what happened here.
-> > > > >
-> > > > > Bluetooth and WLAN definitions were missing, as at the time I only
-> > > > > knew the UART port being used for bluetooth, and was missing
-> > > > > everything else to describe it.
-> > > >
-> > > > Ah, ok. The above sentence looked like some left-over copy paste. I
-> > > > guess you don't need to mention it at all since this does not seem to
-> > > > warrant a proper Fixes tag.
-> > >
-> > > It was a suggestion from Dmitry in v1. Though indeed it does not
-> > > warrant a proper Fixed tag, as it is something  that was left out from
-> > > the initial series, I think it's fine to keep it like this, if it's
-> > > okay with you?
+> > @@ -157,7 +137,6 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
 > >
-> > I think you misinterpreted Dmitry here. He just said that after you
-> > added the reference to the commit you based this on to the commit
-> > message you could add his reviewed-by tag ("With that fixed: R-B: Dmitry
-> > ...")
-> >
-> >       https://lore.kernel.org/all/ou7w4hvbbz72nzrm45gfhpq2uzkuwpfudqeh2o34tcnbnazxgz@glmuryu5dh3s/
-> >
-> > As it stands it's hard to understand what that sentence means and why
-> > it is there (looks like a copy paste mistake). I suggest you just drop
-> > it.
->
-> I disliked the original phrase "Derived from: commit subject". Instead I
-> suggested a different, more standard way, '... commit abcdefabcdef
-> ("commit subject")'. With that phrase in place Aleksandrs can add my R-B
-> tag.
+> >         ret = boe_bf060y8m_aj0_on(boe);
+> >         if (ret < 0) {
+> > -               dev_err(dev, "Failed to initialize panel: %d\n", ret);
+> >                 gpiod_set_value_cansleep(boe->reset_gpio, 1);
+> >                 return ret;
+> 
+> It's not new, but the error handling here looks wrong to me. Instead
+> of just returning after setting the GPIO, this should be turning off
+> the regulators, shouldn't it? That would mean adding a new error label
+> for turning off "BF060Y8M_VREG_VCI" and then jumping to that.
 
-SMH just re-read it... apologies for the confusion. Will fix it now.
+We should not be turning off the regulator in _prepare(), there will be
+an unmatched regulator disable call happening in _unprepare(). Of course
+it can be handled by adding a boolean, etc, but I think keeping them on
+is a saner thing.
 
-Alex
+> 
+> Given that we're already squeezing an error handling fix into this
+> patch, maybe it would make sense to add this one too (and, of course,
+> mention it in the commit message).
+> 
+> -Doug
 
->
-> --
-> With best wishes
-> Dmitry
+-- 
+With best wishes
+Dmitry
