@@ -1,209 +1,161 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70172147EA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF21B155725;
+	Mon, 31 Mar 2025 16:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440152; cv=none; b=g3DDbpAPtY+dbdtfU3muNzvffPcbsx5jjKpKxVJoKwf/lzuLeHNRioiRmHyArf6wVsDXzj/6yHMJ1VMN4bkeqUqlg/DTYrRmPrZ0hxl0OhVz/ousGD0GSHdQPOqpPNykkw3P2FORn4wTi8Lfk0J2BGDmaFT32g6aMdqjb+M5BoU=
+	t=1743440193; cv=none; b=traVi86yAwuUk3s9Q2iahZoq5ZGAcpIETY5deA4FFOhRHWotCVPfsfQqTonRxOJr8NmTiGbBriPGDfu1WG0Z5UcT4o9sCrSNvbsDsxXgpsD9ILNUW5dSIa59AnxbbfpaaGaLRI9H80i+b+e/2/6ypOB/vJUGdpNOhbtvaw7iOk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440152; c=relaxed/simple;
-	bh=nbbZ8G/enUVJMoOd8aC7hUU9KCHgeQrNZ7sTOkRuFAo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GEXEHvCwJJBh+SwvYXFm/Zq721EsKzPmqWA41s6tsXetZxfGS0kZczdzPp/djWORL54cKvvLMuDaOB/JD/NMEHVMCONTxWkIyMEC0tylrh6MnzsKT+ojAZKlCuvbJ/U9yUE9/chDXLaEFSCrzuyC9X8BMSHR+1fVPlM2RjmgV2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UIOVn4p3; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743440193; c=relaxed/simple;
+	bh=5pFinEz7ke1siiunzxiqlXX2duHMmNQpekzCsvcdZf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Isg59lfv+HqQ93vRRzuxzMiAAfIiMvJaJjmqswSS94pTEy4+kKweqDggcBYzh7WCRFDYkjzYzPG80gAtzRW5hHeQKLBfSQNETWVckvJK5+IhRDd2otItQsywaCVP95Mt5LcCCO0qTWneorwffwXM67FAHilAYzMsL6H9l5z58/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlqON7MA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UIOVn4p3"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso819004466b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743440149; x=1744044949; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nYwZCdqgU/HYxLtCJzRvtoajX2kMqfp4JL+kcV4obEM=;
-        b=UIOVn4p3dAcUTmoImoEHvUdxVaalZirlcHHFONU9Tnzfwp+Vor9zmcPdiR2du0vbz5
-         UnID1ZEIqevWMX9tv33LF0tUb5Nv4KlwqDh3ciZHrCOTGMB6GFKf9sdciLSf5NIZDZnp
-         hSa4PkumVvZtMSF4YbKk8I3tBaF60esSmA4/8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743440149; x=1744044949;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nYwZCdqgU/HYxLtCJzRvtoajX2kMqfp4JL+kcV4obEM=;
-        b=BFcxXiiRs7KBxVu6/4utisyTmnEZePQlyKyc6KUrKdO3yLJScUGlyvLUutzp1LOq6R
-         mPKiXPWcQ85oEq0HjqY6r0mmZSDzaYX4ShgtdYljvzICG/I29wMrI+kvYyd5IivXIhh2
-         qj8bRsgjKmvYOgPnqvLScx+1KAIenfe8r/4j+V+GRyanlzRJJgdr31bMHYZWcwb7ddr7
-         aYAV2wjo2s+5/Xs6kESDRCmS+oV++IwNI/IqW7Rl7++48SKRkgfc6mF9APjsb15H40cj
-         oG6kNtk5Yx0hsm2lbefk0ow5ijuf2vQLQcNSsH62Adm9wOHhwfZ1Fo1xwlrwZNLccRku
-         f+7w==
-X-Gm-Message-State: AOJu0YwC95nQhB+3Fbj0uNJ77UZ+q8bVzppf3NoCFDQTX9+iF2wn5zKv
-	e1wbyZQZg8qBy5lvs9fIPTLTW//PanQOjRX0lDSGOOhNX1IS99cSRwXdlbLZ9D+v+jgrmsMYm2d
-	CiKk=
-X-Gm-Gg: ASbGncuMC0sOOcQDR6K1VrX6ecUybeZ0AzsgvM4VOO/PHbKXQrg7FUV3RTkwgnqgmO9
-	D3WdYR/DGZ5izasYQeoXaYt8Sr933VN00GqOUAbCWjHOErglonNOm57EKZvzO1DFBubk8/SquQG
-	CcUpEPRBlMTF8Ntjowc62QH2HnhZDEDoiZHb+mgq8+N6n/QyHffssQ1gN+CHENutTHiVMKGkljh
-	zg8O7NjQFfU+5JKAcqAijSlS/Pst9e8R09w7UhKlNzktTtGtTTRxkmDeTyN3hHb5cppFIJLMQG3
-	+L4AqfcZy8S0uxstMSNysPwY2IqbO40urh5NUyiNPZs/LeDsUndEJe0BF1kLk5iSQBxBssVPUKA
-	dgGN3fDNb8HCRsQR6Z0A=
-X-Google-Smtp-Source: AGHT+IFSRd1P5zRejBNj7D1vnYoYvcFfVM0qpfNWKPFFu+Wpybei/kFAPn3Z5zchydO3f62pqLtpFA==
-X-Received: by 2002:a17:906:5908:b0:ac7:3a23:569c with SMTP id a640c23a62f3a-ac73a235730mr760871066b.1.1743440148665;
-        Mon, 31 Mar 2025 09:55:48 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196ca988sm642848866b.150.2025.03.31.09.55.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 09:55:46 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so8836850a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:55:46 -0700 (PDT)
-X-Received: by 2002:a17:907:3f26:b0:ac4:3d4:50b with SMTP id
- a640c23a62f3a-ac738a95899mr973600566b.32.1743440145725; Mon, 31 Mar 2025
- 09:55:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlqON7MA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 362ACC4CEE3;
+	Mon, 31 Mar 2025 16:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743440192;
+	bh=5pFinEz7ke1siiunzxiqlXX2duHMmNQpekzCsvcdZf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nlqON7MAMS8h43V+Wdv2AVwCQAV5bVHeHNBiaxUtbElCsnji7qxsCNlk7N8b8MTbv
+	 +NOnz4IUxFnOc4A7EMIYgPXSNNGhrTOQI//YOLh0x+v8On9kzBK1bQrHVLmBCJz0cj
+	 MT0WwQLuRUVGWa4cTLVQTFFSZCUZKMBHAh/PS6bScIiZyf3edwKj54E6TP4/bT7Lsw
+	 +LPdhw809nbBUGMekvgF0MfaemAlmF4IIwFyrlxfB/h12wLshSbXae6Z8aTtIPeH4w
+	 +MwGgiUVn6zItlKnU7ujYGkPEinkR4zH8gD5d9sOeEPMeXkJtbkhJGxlDyAVWbu59B
+	 u+UpcURuxHHfA==
+Date: Mon, 31 Mar 2025 16:56:30 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Chaining is dead
+Message-ID: <20250331165630.GA3893920@google.com>
+References: <ZuetBbpfq5X8BAwn@gondor.apana.org.au>
+ <ZzqyAW2HKeIjGnKa@gondor.apana.org.au>
+ <Z5Ijqi4uSDU9noZm@gondor.apana.org.au>
+ <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au>
+ <20250325152541.GA1661@sol.localdomain>
+ <Z-NdGvErMGS5OT7X@gondor.apana.org.au>
+ <Z-NjarWmWSmQ97K0@gondor.apana.org.au>
+ <20250326033404.GD1661@sol.localdomain>
+ <Z-N55Yjve6wTnPqm@gondor.apana.org.au>
+ <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
-In-Reply-To: <20250331143532.459810712@goodmis.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 31 Mar 2025 09:55:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-X-Gm-Features: AQ5f1JofnGlZZIBzRL8nqNouUuwr3wJtpcwy6ycYi9xaYeiAa4GGLQMcoE3H27Y
-Message-ID: <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
- the vmap of physical memory
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
 
-On Mon, 31 Mar 2025 at 07:34, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Instead, rename ring_buffer_alloc_range() to ring_buffer_alloc_physical()
-> where contiguous physical memory is passed to the ring buffer code,
+On Sun, Mar 30, 2025 at 10:33:23AM +0800, Herbert Xu wrote:
+> On Wed, Mar 26, 2025 at 11:52:05AM +0800, Herbert Xu wrote:
+> >
+> > they don't need it.  Take ext4 as an example:
+> > 
+> > 	ext4 calls verity
+> > 	schedule_work(verity_work);
+> > 	return asynchronously!
+> > 
+> > verity_work:
+> > 	do the crypto work
+> > 	__read_end_io(bio);
+> 
+> I went ahead and removed the work queue for fsverity and fscrypt
+> (except for the reading of the Merkle tree which is still done in
+> a work queue because I'm too lazy to make that async), and it
+> actually turned out to be slower than using a work queue.
+> 
+> I was testing with an encrypted 8GB file over ext4 mounted over a
+> loopback device in tmpfs.  The encryption is with xts-vaes.  It turns
+> out that not using a work queue actually made reading the entire file
+> go from 2.4s to 2.5s.
+> 
+> I then tried passing the whole bio (256KB per crypto request in my
+> test as opposed to the data unit size of 4KB per crypto request)
+> through using chaining to skcipher, with xts-vaes doing the requests
+> one-by-one.  Against my expectations, this didn't speed things up at
+> all (but at least it didn't slow things down either).  All the
+> benefits of aggregating the data were offset by the extra setup cost
+> of creating the chained requests.
 
-The concept looks like an improvement, but:
+Yes, your chaining API has poor performance and is difficult to test, as I've
+been saying all along.
 
-> +static unsigned long map_pages(unsigned long *start, unsigned long *end)
-> +{
-> +       struct page **pages;
-> +       phys_addr_t page_start;
-> +       unsigned long size;
-> +       unsigned long page_count;
-> +       unsigned long i;
-> +       void *vaddr;
-> +
-> +       /* Make sure the mappings are page aligned */
-> +       *start = ALIGN(*start, PAGE_SIZE);
+> So chaining is clearly not the way to go because it involves cutting
+> up into data units at the start of the process, rather than the end.
 
-The above is *completely* unacceptable.
+Certainly agreed that chaining is not the way to go, but I think you're
+overlooking that Linus's suggestion to use the libraries directly would also
+solve this, while also not being restricted to bios and folios (note that not
+all filesystems are block-based, for example...).  That would avoid the
+per-request overhead from the generic crypto infrastructure, which is the real
+source of the problem.
 
-There is no way in hell that ALIGN() can ever be right.
+> Finally I hacked up a patch (this goes on top of the skcipher branch
+> in cryptodev) to pass the whole bio through the Crypto API all the
+> way to xts-vaes which then unbundled it.  This turned out to be a
+> winner, taking the read time for 8GB from 2.4s down to 2.1s.
+> 
+> In view of this result, I'm going to throw away chaining, and instead
+> work on an interface that can take a whole bio (or folio), then cut
+> it up into the specified data unit size before processing.
+> 
+> The bottom-end of the interface should be able to feed two (or whatever
+> number you fancy) data units to the actual algorithm.
+> 
+> This should work just as well for compression, since their batching
+> input is simply a order-N folio.  The compression output is a bit
+> harder because the data unit size is not constant, but I think I
+> have a way of making it work by adding a bit to the scatterlist data
+> structure to indicate the end of each data unit.
+> 
+> PS For fsverity a 256KB bio size equates to 64 units of hash input.
+> My strategy is to allocate the whole thing if we can (2KB or 4KB
+> depending on your digest size), and if that fails, fall back to
+> a stack buffer of 512 bytes (or whatever number that keeps the
+> compiler quiet regarding stack usage).  Even if we're on the stack,
+> it should still give more than enough to data to satiate your
+> multibuffer hash code.
 
-You don't even fix up the low bits of the returned virtual address, so
-you literally return the virtual address of something that doesn't
-match what was passed in.
+Extending the generic crypto infrastructure to support bios and folios is an
+interesting idea.
 
-So if you pass it a starting area that isn't page-aligned, it now
-randomly gives you complete crap back, and includes some random
-unrelated part in the mapping.
+But TBH I think it's worse than Linus's suggestion of just extending lib/crypto/
+to support the needed functionality and using that directly.  Your proposal is
+again solving a problem created by the generic crypto infrastructure being too
+complex, by making the generic crypto infrastructure even more complex.
 
-So no. That needs to be a
+With the bio and folio support in the generic crypto infrastructure, there would
+be lots of work to do with adding support in all the underlying algorithms, and
+adding tests for all the new APIs.
 
-        if (*start & PAGE_MASK)
-                return NULL;
+For hashing, users would need to allocate an array to hold the digest for every
+block in the bio or folio.  That would add an additional memory allocation to
+every I/O.  You said you'd like to fall back to a smaller buffer if the memory
+allocation fails.  But that's silly; if we have to support that anyway, we might
+as well do it that way only.  In which case the bio interface is pointless.
 
-or whatever. Because just randomly corrupting the base address by
-ignoring the low bits is not ok.
+Also note that the kernel also *already* has an abstraction layer that allows
+doing en/decryption on bios.  It's called blk-crypto, and it makes it possible
+to do the en/decryption using either inline encryption hardware (i.e., the newer
+style of crypto accelerator that is actually commonly used and doesn't use the
+Crypto API at all) or the Crypto API.  I have plans to remove the fs-layer bio
+en/decryption code from fscrypt and always use blk-crypto instead.
 
-> +       /* The size must fit full pages */
-> +       page_count = size >> PAGE_SHIFT;
+Adding bio support to the Crypto API feels duplicative of blk-crypto, and we'd
+end up with too many abstraction layers.  I think my preferred approach is that
+blk-crypto-fallback would directly call the library functions.  The legacy
+Crypto API really has no useful role to play anymore.
 
-This part works, simply because truncating the size is fine. It won't
-all get mapped, but that's the caller's problem, at least the code
-isn't returning random crap that has random other data in it.
+FWIW, there are also people thinking about developing inline hashing hardware,
+in which case something similar would apply to blk-integrity.
 
-That said, I don't see the point. If you want to virtually map
-physical pages, they need to be full pages, otherwise the end result
-gets randomly truncated. So I think that while this is much better
-than the "return random crap that doesn't make any sense", it should
-be the same rule: just don't allow mapping partial pages.
-
-So make it be
-
-        if (size & PAGE_MASK)
-                return NULL;
-
-instead, and just enforce the fact that allocations have to be sanely
-aligned for vmap.
-
-Anyway, that takes care of the horrific interface. However, there's
-another issue:
-
-> +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
-
-you create this pointless array of pages. Why? It's a physically
-contiguous area.
-
-You do that just because you want to use vmap() to map that contiguous
-area one page at a time.
-
-But this is NOT a new thing. It's exactly what every single PCI device
-with a random physical memory region BAR needs to do. And no, they
-don't create arrays of 'struct page *', because they use memory that
-doesn't even have page backing.
-
-So we actually have interfaces to do linear virtual mappings of
-physical pages that *predate* vmap(), and do the right thing without
-any of these games.
-
-Yes, the legacy versions of interfaces are all for IO memory, but we
-do have things like vmap_page_range() which should JustWork(tm).
-
-Yeah, you'll need to do something like
-
-        unsigned long vmap_start, vmap_end;
-
-        area = get_vm_area(size, VM_IOREMAP);
-        if (!area)
-                return NULL;
-
-        vmap_start = (unsigned long) area->addr;
-        vmap_end = vmap_start + size;
-
-        ret = vmap_page_range(vmap_start, vmap_end,
-                *start, prot_nx(PAGE_KERNEL));
-
-        if (ret < 0) {
-                free_vm_area(area);
-                return NULL;
-        }
-
-and the above is *entirely* untested and maybe there's something wrong
-there, but the concept should work, and when you don't do it a page at
-a time, you not only don't need the kmalloc_array(), it should even do
-things like be able to use large page mappings if the alignment and
-size work out.
-
-That said, the old code is *really* broken to begin with. I don't
-understand why you want to vmap() a contiguous physical range. Either
-it's real pages to begin with, and you can just use "page_address()"
-to get a virtual address, it's *not* real pages, and doing
-"pfn_to_page()" is actively wrong, because it creates a fake 'struct
-page *' pointer that isn't valid.
-
-Is this all just for some disgusting HIGHMEM use (in which case you
-need the virtual mapping because of HIGHMEM)? Is there any reason to
-support HIGHMEM in this area at all?
-
-So I'm not sure why this code does all this horror in the first place.
-Either it's all just confused code that just didn't know what it was
-doing and just happened to work (very possible..) or there is
-something odd going on.
-
-          Linus
+- Eric
