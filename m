@@ -1,116 +1,61 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B2130A54;
-	Mon, 31 Mar 2025 17:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440990; cv=pass; b=oZ4QZaQ0nCnSIPmgMTo4HmFGnP6YQwxIRF9joXJdETUBKoYLHEl5ik3M8Q8n4kRIM795UrqcdTo5sbfccj/b1aDIwy/HDGatfs2kLuLlc5TcD/4mq/rMB0c/7lMJ2XFL1aGSlUhk15O9QWUwcNJFFSPcVLNWvIw1zN4IxeSE5nI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440990; c=relaxed/simple;
-	bh=XY4Lz8nmOhMCJfx5G9//aIEqVmxe+7WPFPY77en7ljQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ebp3QI+KGcGXPu/UrmmsQ/Yn0TJFhloD6HAJd78nin9wJLKKZZ4EfkGZjOb7zfX9tmat7SW/89zok5MbM/y2XNIF2ts+Y+/IAs0ofvejHdQhy7256cTQ08vwodD3Vg9QGDYDVDiwqk7h53QOQYlwciY8Hu8Id55ydMpDWqC39EY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WRvu1IZs; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE983130A54;
+	Mon, 31 Mar 2025 17:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743441038; cv=none; b=ZQg+IsCDKdMjdrCJztud5IhQ41YkHTJGtQwAz1cx36NMkVrPUqpg18UGftIuA8r+gpadVvhWEJzIrWJQqDdZesTkIFznvk7BP1ZgqjA4KBxYW0lRKd8T9Dln5UypABTsX0dUt6frNPz8NwuMNoJeHQrYmD9BKgOQfOMOCF+t2bI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743441038; c=relaxed/simple;
+	bh=fW05yxRGO3a+2Htch6vXAYBqk9OLY5N7AW6f2uPA3YY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hlYYTyoupUeqMLDyqACfqSBWYCPP+Ougz72Wplo4gsPmuZemgbyw9XR9ZISWkYytUbl325KhugZldiH2dJtCTnlxEu01VIiUpkp/j3YfCBjYw7j6UKbS5x817toXq5Vd2YQwWzFASdKDFaOiyuR/V+TQMewc15STDpwhAo8fFqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORfRDVXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="WRvu1IZs"
-ARC-Seal: i=1; a=rsa-sha256; t=1743440961; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IZNFBj8lLYb431hC4EdDVb+eCljK5x9WopO21wV+b2w9WICI/o8Tit+PoipHWqIAxlwUBv8+eUOFdBu+C7PsHUt9ytcFLcmW7jPF8AW/S6r6/pYADeQE/OZX0Qlw/rpuHC+h7CB/EBJMuqQ3ntAIvxa6nQv4iNxpgVCUoFHKFUQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743440961; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=eRBZ3dXnGZXHdDQufzHIdL1aCFdXcn3+mx27ydvwC+w=; 
-	b=QkZEsL+5X5dn2Aq1x49IvYcyeHvLd2tP4prnmmgw0kt3tN0G43vvFZkiM9UTWQi/jDmFo1Pg/Ykb6UgrWbOBLeLsLDz853aG7SpHMQ5+yM70vKKhx5DL7HeivzFBEJVI5EeuBCJnmGMRP+4xaFZkRtq7/v3+5Lols79MlzAIqe0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743440961;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=eRBZ3dXnGZXHdDQufzHIdL1aCFdXcn3+mx27ydvwC+w=;
-	b=WRvu1IZsZEnlRHbV+H1uw8jZgVGDqvH/Usx/K60ryHAYDq7jzoJsFjz2bZ835ZHk
-	jTlnkNfvrqO9OI/+IVmX/Wc0XoFw/91Gwolg0Hm8oraEM8Z0dBgTom747d17FLndUHX
-	kRvnEibtXFfnjse5qFKYfqvbXduM/EbXVCGT7F7g=
-Received: by mx.zohomail.com with SMTPS id 1743440958770263.33762723850737;
-	Mon, 31 Mar 2025 10:09:18 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORfRDVXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F4B2C4CEE3;
+	Mon, 31 Mar 2025 17:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743441038;
+	bh=fW05yxRGO3a+2Htch6vXAYBqk9OLY5N7AW6f2uPA3YY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ORfRDVXaxI9YZrPQrwaQ+hwVtaV18urjj8Ade0KrD+cnNsBYHDMnBo8OSm62QcV8E
+	 tvjTrFyYPj73I5d0LVCsqp4aiSVLN7pnjEkR2u34+1lOYKp29syxx6BOAckzcsOqRx
+	 QbRRmXrlAwAR2Jz+FTnIh/Lp4grB5xs7hgji/Czjy1EXZtKY1Heg4oF3M2I4IFfl4B
+	 S+zIOUnGAn1AsfhLXo4yD2oDUPgGRP32mDTtE4tFypkU/CEIWVvWRh+edPwdRU2laC
+	 3KMGU4tG7KRPpOyWNbhdK4frov6v8dGmMznna8/dGQbyV1OmnXpI0WchXqq58TAx/Q
+	 xw2ddPWw7axqg==
+Date: Mon, 31 Mar 2025 10:10:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/4] net: mtip: Add support for MTIP imx287 L2 switch
+ driver
+Message-ID: <20250331101036.68afd26a@kernel.org>
+In-Reply-To: <20250331103116.2223899-1-lukma@denx.de>
+References: <20250331103116.2223899-1-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v5 06/13] scripts: generate_rust_analyzer.py: add type
- hints
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
-Date: Mon, 31 Mar 2025 14:09:02 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1B186177-16B9-4D2D-9603-F713F0FE9BEC@collabora.com>
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
- <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Tamir,
+On Mon, 31 Mar 2025 12:31:12 +0200 Lukasz Majewski wrote:
+> This patch series adds support for More Than IP's L2 switch driver embedded
+> in some NXP's SoCs. This one has been tested on imx287, but is also available
+> in the vf610.
 
-[snip]
-
->     rust_project =3D {
-> -        "crates": generate_crates(args.srctree, args.objtree, =
-args.sysroot_src, args.exttree, args.cfgs),
-> +        "crates": generate_crates(
-> +            args.srctree,
-> +            args.objtree,
-> +            args.sysroot_src,
-> +            args.exttree,
-> +            defaultdict(
-> +                list,
-> +                {
-> +                    crate: vals.lstrip("--cfg").split()
-> +                    for crate, vals in map(lambda cfg: cfg.split("=3D",=
- 1), args.cfgs)
-> +                },
-> +            ),
-> +        ),
->         "sysroot": str(args.sysroot),
->     }
->=20
->=20
-> --=20
-> 2.49.0
->=20
-
-I found `args_crates_cfgs()` a lot easier to understand, but I guess =
-this is a
-matter of taste. I also find that this `defaultdict()` call slightly =
-pollutes
-the surrounding code, but again, that might be just me.
-
-Regardless, running `mypy` still passes, and there is no change to the =
-output.
-
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-
-=E2=80=94 Daniel=
+Lukasz, please post with RFC in the subject tags during the merge
+window. As I already said net-next is closed.
