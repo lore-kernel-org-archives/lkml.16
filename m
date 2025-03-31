@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC99E1EC00C;
-	Mon, 31 Mar 2025 08:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9B1F03C9;
+	Mon, 31 Mar 2025 08:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409467; cv=none; b=Eic+EO844hK7JLGqFhW391oAh3ZW4P55IsgbmFP0EzxaKPAAOTWn0E1XbbkeeUtgv07yCVddsYfSYR/C4wRuQqnNvOF/hzFhDgY5COU/Qc61tZ5R75vEjy3LZ33/6LtolmwMU/bQ0nCBi9zyRgjkk4U2nWWaA1fpkLWwOKwPMf8=
+	t=1743409470; cv=none; b=fdYw+R82rqsVQVM+WEr1N8Yr/L4qGW48pgyXMQkdX6mQW8Ea+nOHzPXiuuBxs6e6LgKIJp40bJkFXsZQbh1tFz2SSghfuJ+dyZE3yLdLIq9s/XmRz+KPQ08kD4zYtnkFJd7x5YAru7Zx0aZxetT5Nccz9RWQAh01rY0bZg0WYVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409467; c=relaxed/simple;
-	bh=o9yCUyHRvdZVCtPxYF8n3kIoSQXy7DN2Skw+gaOuRpY=;
+	s=arc-20240116; t=1743409470; c=relaxed/simple;
+	bh=oYmM0CCry6cTlflAhfomz2ZkehnIFifV1gvK1EPpSk8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LRxqdXoRIukHh8pTKSWrXv/ZLdyVZFGombsMN002SVXgfB6SFrYW8fMTWvmaR0zRixw7ydpzzJfu4wFwgaQ+Rp7PuvhmyXLl67FRHjUlDQign9hvJJwDKSURkCdFE2H8oDRQdDKsbCEkSIK3iFTywZMP/ynIDjehb1wZlpyWPOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=PnRobvTi; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=Y7gySEXhbix7tjkWBUsXuhH5bPqKngVeqAaCEfQlrWNPfr318XDxM7S0iCcRYvNAH6cpuQZHiFfclMC67kQrJBJ5/ak5Hfed3DgE8FE7qXwAzmoZNZNF56dIelNHb/ZdOS5S7GM0i/YVZ2+sX9PiJQemWoRk8FEspSx+xtsWOFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=EVNNysVl; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PnRobvTi"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EVNNysVl"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp0B3171319
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp073171319
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 31 Mar 2025 01:23:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp0B3171319
+	Mon, 31 Mar 2025 01:23:12 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp073171319
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743409402;
-	bh=AliY8eRLGXH0M9T1YLICUMbSBraUzdLknMsijvvtjSM=;
+	s=2025032001; t=1743409394;
+	bh=4oMqi/mNiX/dP3yUNXOh0KHKk5eO4mtyZ/S9nY+rYCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PnRobvTiAXfnZAA5cVvRKq7KE/T/TrORn+EtVp1jCTqA8ycun7Wucl8DJLIO71N2/
-	 uSEpnYPaUafO8DpxST6jufpuHWqLkzTNOnaZtZniIJpVjolE8yipeVlu40jxS3AxVz
-	 SQXxQMsab++sLuUC9KkA/PcH3r95hKodFUqGxFZQ9js7SuO8Is0I08vsCNtKya5bjI
-	 mij9VKqWcRygtaCmMG+i1TdPNItSumUg5xfXgt/1D8fSuKbEzPD6bPqWH0ZclRLlBQ
-	 yjIIY+aIXe/tviO8O3oyYbGBtYyk40Hm4yPMyYxfnoNqsAUOTo4DSLZ+1BUmRmGqR4
-	 89R6xqzhUgPLQ==
+	b=EVNNysVl8UKZVEUX8F7MbPFwX2epn0yrpmH2w+9q6c8158NF8qnthafY3Pkh8Ilxh
+	 9M0ASaWQUpbHnDRwUDQa7VXHXLDjd40aeBCbAqUiExQtgZ+wsRgJSE1VkqGpirm+UR
+	 5prXvLiFohME5Rh9uOv5Cw+cBYozzUd9b4kenjhMrVaaMr45h9Bi4/VNNbAxT8bv2/
+	 Z8Dx3/k762OqkBR7GvNLYD2WZ0BEYXT78x4FpDvDc8rCAR5k7TIawz4/K3bBBGMueL
+	 W/Wh/zFdQkonvF67LZZkVO833IcrPosTMqlS6T0maUanzmLHMlKbYhc9HxoZ+xAFPV
+	 Y0GoucFLKizNQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
@@ -49,9 +49,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
         seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
         kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-Subject: [RFC PATCH v1 11/15] x86/extable: Implement EX_TYPE_FUNC_REWIND
-Date: Mon, 31 Mar 2025 01:22:47 -0700
-Message-ID: <20250331082251.3171276-12-xin@zytor.com>
+Subject: [RFC PATCH v1 07/15] x86/msr: Remove pmu_msr_{read,write}()
+Date: Mon, 31 Mar 2025 01:22:43 -0700
+Message-ID: <20250331082251.3171276-8-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331082251.3171276-1-xin@zytor.com>
 References: <20250331082251.3171276-1-xin@zytor.com>
@@ -63,213 +63,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+Now pmu_msr_{read,write}() just do pmu_msr_chk_emulated(), so remove
+them and call pmu_msr_chk_emulated() directly.
 
-Add a new exception type, which allows emulating an exception as if it
-had happened at or near the call site of a function.  This allows a
-function call inside an alternative for instruction emulation to "kick
-back" the exception into the alternatives pattern, possibly invoking a
-different exception handling pattern there, or at least indicating the
-"real" location of the fault.
-
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 ---
- arch/x86/include/asm/asm.h                 |   6 +
- arch/x86/include/asm/extable_fixup_types.h |   1 +
- arch/x86/mm/extable.c                      | 135 +++++++++++++--------
- 3 files changed, 91 insertions(+), 51 deletions(-)
+ arch/x86/xen/enlighten_pv.c | 17 ++++++++++-------
+ arch/x86/xen/pmu.c          | 24 ++++--------------------
+ arch/x86/xen/xen-ops.h      |  3 +--
+ 3 files changed, 15 insertions(+), 29 deletions(-)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index cc2881576c2c..c05c33653194 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -243,5 +243,11 @@ register unsigned long current_stack_pointer asm(_ASM_SP);
- #define _ASM_EXTABLE_FAULT(from, to)				\
- 	_ASM_EXTABLE_TYPE(from, to, EX_TYPE_FAULT)
- 
-+#define _ASM_EXTABLE_FUNC_REWIND(from, ipdelta, spdelta)	\
-+	_ASM_EXTABLE_TYPE(from, from /* unused */,		\
-+			  EX_TYPE_FUNC_REWIND |			\
-+			  EX_DATA_REG(spdelta) |		\
-+			  EX_DATA_IMM(ipdelta))
-+
- #endif /* __KERNEL__ */
- #endif /* _ASM_X86_ASM_H */
-diff --git a/arch/x86/include/asm/extable_fixup_types.h b/arch/x86/include/asm/extable_fixup_types.h
-index 906b0d5541e8..9cd1cea45052 100644
---- a/arch/x86/include/asm/extable_fixup_types.h
-+++ b/arch/x86/include/asm/extable_fixup_types.h
-@@ -67,5 +67,6 @@
- #define	EX_TYPE_ZEROPAD			20 /* longword load with zeropad on fault */
- 
- #define	EX_TYPE_ERETU			21
-+#define	EX_TYPE_FUNC_REWIND		22
- 
- #endif
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 51986e8a9d35..eb9331240a88 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -290,6 +290,27 @@ static bool ex_handler_eretu(const struct exception_table_entry *fixup,
- }
- #endif
- 
-+/*
-+ * Emulate a fault taken at the call site of a function.
-+ *
-+ * The combined reg and flags field are used as an unsigned number of
-+ * machine words to pop off the stack before the return address, then
-+ * the signed imm field is used as a delta from the return IP address.
-+ */
-+static bool ex_handler_func_rewind(struct pt_regs *regs, int data)
-+{
-+	const long ipdelta = FIELD_GET(EX_DATA_IMM_MASK, data);
-+	const unsigned long pops = FIELD_GET(EX_DATA_REG_MASK | EX_DATA_FLAG_MASK, data);
-+	unsigned long *sp;
-+
-+	sp = (unsigned long *)regs->sp;
-+	sp += pops;
-+	regs->ip = *sp++ + ipdelta;
-+	regs->sp = (unsigned long)sp;
-+
-+	return true;
-+}
-+
- int ex_get_fixup_type(unsigned long ip)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 7401cce19939..a047dadf4511 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1090,8 +1090,9 @@ static void xen_write_cr4(unsigned long cr4)
+ static u64 xen_do_read_msr(unsigned int msr, int *err)
  {
- 	const struct exception_table_entry *e = search_exception_tables(ip);
-@@ -302,6 +323,7 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
- {
- 	const struct exception_table_entry *e;
- 	int type, reg, imm;
-+	bool again;
+ 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
++	bool emulated;
  
- #ifdef CONFIG_PNPBIOS
- 	if (unlikely(SEGMENT_IS_PNP_CODE(regs->cs))) {
-@@ -317,60 +339,71 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
+-	if (pmu_msr_read(msr, &val, err))
++	if (pmu_msr_chk_emulated(msr, &val, true, &emulated) && emulated)
+ 		return val;
+ 
+ 	if (err)
+@@ -1134,6 +1135,7 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+ 			     unsigned int high, int *err)
+ {
+ 	u64 val;
++	bool emulated;
+ 
+ 	switch (msr) {
+ 	case MSR_FS_BASE:
+@@ -1163,12 +1165,13 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+ 	default:
+ 		val = (u64)high << 32 | low;
+ 
+-		if (!pmu_msr_write(msr, val)) {
+-			if (err)
+-				*err = native_write_msr_safe(msr, val);
+-			else
+-				native_write_msr(msr, val);
+-		}
++		if (pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated)
++			return;
++
++		if (err)
++			*err = native_write_msr_safe(msr, val);
++		else
++			native_write_msr(msr, val);
  	}
- #endif
- 
--	e = search_exception_tables(regs->ip);
--	if (!e)
--		return 0;
--
--	type = FIELD_GET(EX_DATA_TYPE_MASK, e->data);
--	reg  = FIELD_GET(EX_DATA_REG_MASK,  e->data);
--	imm  = FIELD_GET(EX_DATA_IMM_MASK,  e->data);
--
--	switch (type) {
--	case EX_TYPE_DEFAULT:
--	case EX_TYPE_DEFAULT_MCE_SAFE:
--		return ex_handler_default(e, regs);
--	case EX_TYPE_FAULT:
--	case EX_TYPE_FAULT_MCE_SAFE:
--		return ex_handler_fault(e, regs, trapnr);
--	case EX_TYPE_UACCESS:
--		return ex_handler_uaccess(e, regs, trapnr, fault_addr);
--	case EX_TYPE_CLEAR_FS:
--		return ex_handler_clear_fs(e, regs);
--	case EX_TYPE_FPU_RESTORE:
--		return ex_handler_fprestore(e, regs);
--	case EX_TYPE_BPF:
--		return ex_handler_bpf(e, regs);
--	case EX_TYPE_WRMSR:
--		return ex_handler_msr(e, regs, true, false, reg);
--	case EX_TYPE_RDMSR:
--		return ex_handler_msr(e, regs, false, false, reg);
--	case EX_TYPE_WRMSR_SAFE:
--		return ex_handler_msr(e, regs, true, true, reg);
--	case EX_TYPE_RDMSR_SAFE:
--		return ex_handler_msr(e, regs, false, true, reg);
--	case EX_TYPE_WRMSR_IN_MCE:
--		ex_handler_msr_mce(regs, true);
--		break;
--	case EX_TYPE_RDMSR_IN_MCE:
--		ex_handler_msr_mce(regs, false);
--		break;
--	case EX_TYPE_POP_REG:
--		regs->sp += sizeof(long);
--		fallthrough;
--	case EX_TYPE_IMM_REG:
--		return ex_handler_imm_reg(e, regs, reg, imm);
--	case EX_TYPE_FAULT_SGX:
--		return ex_handler_sgx(e, regs, trapnr);
--	case EX_TYPE_UCOPY_LEN:
--		return ex_handler_ucopy_len(e, regs, trapnr, fault_addr, reg, imm);
--	case EX_TYPE_ZEROPAD:
--		return ex_handler_zeropad(e, regs, fault_addr);
-+	do {
-+		e = search_exception_tables(regs->ip);
-+		if (!e)
-+			return 0;
-+
-+		again = false;
-+
-+		type = FIELD_GET(EX_DATA_TYPE_MASK, e->data);
-+		reg  = FIELD_GET(EX_DATA_REG_MASK,  e->data);
-+		imm  = FIELD_GET(EX_DATA_IMM_MASK,  e->data);
-+
-+		switch (type) {
-+		case EX_TYPE_DEFAULT:
-+		case EX_TYPE_DEFAULT_MCE_SAFE:
-+			return ex_handler_default(e, regs);
-+		case EX_TYPE_FAULT:
-+		case EX_TYPE_FAULT_MCE_SAFE:
-+			return ex_handler_fault(e, regs, trapnr);
-+		case EX_TYPE_UACCESS:
-+			return ex_handler_uaccess(e, regs, trapnr, fault_addr);
-+		case EX_TYPE_CLEAR_FS:
-+			return ex_handler_clear_fs(e, regs);
-+		case EX_TYPE_FPU_RESTORE:
-+			return ex_handler_fprestore(e, regs);
-+		case EX_TYPE_BPF:
-+			return ex_handler_bpf(e, regs);
-+		case EX_TYPE_WRMSR:
-+			return ex_handler_msr(e, regs, true, false, reg);
-+		case EX_TYPE_RDMSR:
-+			return ex_handler_msr(e, regs, false, false, reg);
-+		case EX_TYPE_WRMSR_SAFE:
-+			return ex_handler_msr(e, regs, true, true, reg);
-+		case EX_TYPE_RDMSR_SAFE:
-+			return ex_handler_msr(e, regs, false, true, reg);
-+		case EX_TYPE_WRMSR_IN_MCE:
-+			ex_handler_msr_mce(regs, true);
-+			break;
-+		case EX_TYPE_RDMSR_IN_MCE:
-+			ex_handler_msr_mce(regs, false);
-+			break;
-+		case EX_TYPE_POP_REG:
-+			regs->sp += sizeof(long);
-+			fallthrough;
-+		case EX_TYPE_IMM_REG:
-+			return ex_handler_imm_reg(e, regs, reg, imm);
-+		case EX_TYPE_FAULT_SGX:
-+			return ex_handler_sgx(e, regs, trapnr);
-+		case EX_TYPE_UCOPY_LEN:
-+			return ex_handler_ucopy_len(e, regs, trapnr, fault_addr, reg, imm);
-+		case EX_TYPE_ZEROPAD:
-+			return ex_handler_zeropad(e, regs, fault_addr);
- #ifdef CONFIG_X86_FRED
--	case EX_TYPE_ERETU:
--		return ex_handler_eretu(e, regs, error_code);
-+		case EX_TYPE_ERETU:
-+			return ex_handler_eretu(e, regs, error_code);
- #endif
--	}
-+		case EX_TYPE_FUNC_REWIND:
-+			again = ex_handler_func_rewind(regs, e->data);
-+			break;
-+		default:
-+			break;	/* Will BUG() */
-+		}
-+	} while (again);
-+
- 	BUG();
-+	return 0;
  }
  
- extern unsigned int early_recursion_flag;
+diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+index 1364cd3fb3ef..4d20503430dd 100644
+--- a/arch/x86/xen/pmu.c
++++ b/arch/x86/xen/pmu.c
+@@ -128,7 +128,7 @@ static inline uint32_t get_fam15h_addr(u32 addr)
+ 	return addr;
+ }
+ 
+-static inline bool is_amd_pmu_msr(unsigned int msr)
++static bool is_amd_pmu_msr(u32 msr)
+ {
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+ 	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+@@ -194,8 +194,7 @@ static bool is_intel_pmu_msr(u32 msr_index, int *type, int *index)
+ 	}
+ }
+ 
+-static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+-				  int index, bool is_read)
++static bool xen_intel_pmu_emulate(u32 msr, u64 *val, int type, int index, bool is_read)
+ {
+ 	uint64_t *reg = NULL;
+ 	struct xen_pmu_intel_ctxt *ctxt;
+@@ -257,7 +256,7 @@ static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+ 	return false;
+ }
+ 
+-static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
++static bool xen_amd_pmu_emulate(u32 msr, u64 *val, bool is_read)
+ {
+ 	uint64_t *reg = NULL;
+ 	int i, off = 0;
+@@ -298,8 +297,7 @@ static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
+ 	return false;
+ }
+ 
+-static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+-				 bool *emul)
++bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul)
+ {
+ 	int type, index = 0;
+ 
+@@ -313,20 +311,6 @@ static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+ 	return true;
+ }
+ 
+-bool pmu_msr_read(u32 msr, u64 *val, int *err)
+-{
+-	bool emulated;
+-
+-	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+-}
+-
+-bool pmu_msr_write(u32 msr, u64 val)
+-{
+-	bool emulated;
+-
+-	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
+-}
+-
+ static unsigned long long xen_amd_read_pmc(int counter)
+ {
+ 	struct xen_pmu_amd_ctxt *ctxt;
+diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+index 4a0a1d73d8b8..6545661010ce 100644
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -274,8 +274,7 @@ void xen_pmu_finish(int cpu);
+ static inline void xen_pmu_init(int cpu) {}
+ static inline void xen_pmu_finish(int cpu) {}
+ #endif
+-bool pmu_msr_read(u32 msr, u64 *val, int *err);
+-bool pmu_msr_write(u32 msr, u64 val);
++bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul);
+ int pmu_apic_update(uint32_t reg);
+ unsigned long long xen_read_pmc(int counter);
+ 
 -- 
 2.49.0
 
