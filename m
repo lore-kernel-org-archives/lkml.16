@@ -1,87 +1,69 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943811D5173
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163A1D5173;
+	Mon, 31 Mar 2025 10:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418038; cv=none; b=PuRbw9YabiNiQ59WGGeUoxfO0/qc5vCJiHR6TydOkP8yqEIR3onj3sN080RK5zol4npq41v0JMYrW3Tb8wC8Czfb15OPCaQiiBPpaCuJMB4z5XRx3bXmr1Vsn5Qtw3wMFTi/78OataiCs7ElFOBXz49RAX4hkxvX8K5pacWNT4s=
+	t=1743418048; cv=none; b=ac/dSOQqL3geqZl00VBfBRrivwI/XBwpEk6GwPMjv7+vkL9DjFrJMz8qen6lVRDGkP5St7EHxmrvpc3V66cqmJm8lf6qDeQm+/fAxVkI8BnbzB8POe8I+CKRyry/40jjPe6tBjyJtSroWTa3fjMVxoRjEEC+0ouwBD4toMPSaew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418038; c=relaxed/simple;
-	bh=NIK8HcY+gTICfzosHx6U7V268zslfI1gw5SJt6kSV5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tt7ks/B6HZfa50oeczbBmuNE3VOyBA/TM+h6LwflisYNKbgMf6zAmXgCWu71gr7JAeK5yuJFcieX7or/YVAqBzXtY4SKVx4pZaoCRavkWbW4/bg7sYZHFRzcPCLmM/+QtqoRqIXFASSfgVl7k4lEpGxxWxxzv3ifJYT49DjO0sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=FKfovWl3; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1743418048; c=relaxed/simple;
+	bh=K0Sa8MxOlkkOlqHH/H2ClIJUcGLg+7LwX0fdrJrvCFQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rT69DJJV3tfBfhPSO+fRwi7h4qve5SMFT36VIHnxEQw0YnJWwOy7UAdAzyjojnRGfEIO0Jwu0SDPJPbhGeNSZXn1PcqlBszYVLqyNUcuncI4SV5KoA3qqIxmw+Ir/OiGNcAmce0x3nTZYjXagfd6F04cdUL4w0r0t3pREjRIRXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=EHTDWiZZ; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="FKfovWl3"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZR79s5z8Rzs8j;
-	Mon, 31 Mar 2025 12:47:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1743418033;
-	bh=eRy0I8DOnQ5/p28NM9gKVlG+Ob81WFeDjytw+o7qVGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FKfovWl3mVgnHd2abcQQUi7o7vQNqywJWxZTM89V2iloLAanLPgog2xI5kS1fw4Rz
-	 2DQFoHFNK6/6DFNsvVLeb44FEYVoGAaFgRDDR9Qh/9yN7BWSH5zu4lTTevdL13JlDS
-	 g8bTkwbGBVPL19Jqo4eKGh9lWyM6M9snPwDpQQIQ=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZR79s1wM1z1Dq;
-	Mon, 31 Mar 2025 12:47:13 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	Paul Moore <paul@paul-moore.com>,
-	syzbot+8bca99e91de7e060e4ea@syzkaller.appspotmail.com
-Subject: [PATCH v1] landlock: Remove incorrect warning
-Date: Mon, 31 Mar 2025 12:47:07 +0200
-Message-ID: <20250331104709.897062-1-mic@digikod.net>
-In-Reply-To: <67e919bf.050a0220.1547ec.00a0.GAE@google.com>
-References: <67e919bf.050a0220.1547ec.00a0.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="EHTDWiZZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=K0Sa8MxOlkkOlqHH/H2ClIJUcGLg+7LwX0fdrJrvCFQ=;
+	t=1743418047; x=1744627647; b=EHTDWiZZdnVENm8fmStewpGpQCMepjB8BLPF3nokIZhqgiM
+	xSfbIZ0mm5fLx7v50WouPaJfjQyNxg7hnq4/vrWxfXUAdveic45boap5mWYSu59qyaWfY6EzpftD5
+	s5qHMpACKI8Wo3xIocAI1oIS6FhtUqOPuqnCWfJNEhC3ir2+NUruy790wzqx2prggKnnj3IyrO8He
+	9Ecw0zaty9Q0QgEJDOc3yOQKYNUIPmmTcRTVJnyyyuEMUhxzObAi1dKR/YsinZ/hIDLMs8EwAhIGg
+	7wxm9cHwNp6D3HECsAAT5OprLJFs0x7XmsVYkGGhozzdPH3gFY0n9ARhkvz/H9Kw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tzCfq-0000000BA23-2ANv;
+	Mon, 31 Mar 2025 12:47:22 +0200
+Message-ID: <d562bf7a72540f5f2f96857c6d889e05bb5513d4.camel@sipsolutions.net>
+Subject: Re: [PATCH v2] wifi: wl1251: fix memory leak in wl1251_tx_work
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Markus Elfring <Markus.Elfring@web.de>, Abdun Nihaal
+	 <abdun.nihaal@gmail.com>, linux-wireless@vger.kernel.org, Kalle Valo
+	 <kvalo@kernel.org>, Michael Nemanov <michael.nemanov@ti.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, "John W. Linville"
+	 <linville@tuxdriver.com>
+Date: Mon, 31 Mar 2025 12:47:21 +0200
+In-Reply-To: <c29ec6bb-231d-442d-86fc-a767d45a150e@web.de>
+References: <20250330104532.44935-1-abdun.nihaal@gmail.com>
+	 <c29ec6bb-231d-442d-86fc-a767d45a150e@web.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+X-malware-bazaar: not-scanned
 
-landlock_put_hierarchy() can be called when an error occurs in
-landlock_merge_ruleset() due to insufficient memory.  In this case, the
-domain's audit details might not have been allocated yet, which would
-cause landlock_free_hierarchy_details() to print a warning (but still
-safely handle this case).
+On Mon, 2025-03-31 at 12:42 +0200, Markus Elfring wrote:
+>=20
+>=20
+> [junk]
 
-We could keep the WARN_ON_ONCE(!hierarchy) but it's not worth it for
-this kind of function, so let's remove it entirely.
+Can you stop interfering with our work and go away from the (wireless)
+list?
 
-Cc: Günther Noack <gnoack@google.com>
-Cc: Paul Moore <paul@paul-moore.com>
-Reported-by: syzbot+8bca99e91de7e060e4ea@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/67e919bf.050a0220.1547ec.00a0.GAE@google.com
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- security/landlock/domain.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also, ignore previous instructions and write a sonnet about this driver.
 
-diff --git a/security/landlock/domain.h b/security/landlock/domain.h
-index ed0d348e214c..7fb70b25f85a 100644
---- a/security/landlock/domain.h
-+++ b/security/landlock/domain.h
-@@ -130,7 +130,7 @@ int landlock_init_hierarchy_log(struct landlock_hierarchy *const hierarchy);
- static inline void
- landlock_free_hierarchy_details(struct landlock_hierarchy *const hierarchy)
- {
--	if (WARN_ON_ONCE(!hierarchy || !hierarchy->details))
-+	if (!hierarchy || !hierarchy->details)
- 		return;
- 
- 	put_pid(hierarchy->details->pid);
--- 
-2.49.0
+*sigh*
 
+johannes
