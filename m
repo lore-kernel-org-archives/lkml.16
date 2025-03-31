@@ -1,1279 +1,222 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB66F1E5B6D;
-	Mon, 31 Mar 2025 12:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424090; cv=none; b=GCtRnsmzxIFs7zTKV2FdY8enqFr0Q+YX/0vJaNFLuyW+9uuxR9EOgEqAKNq6mZKPHs1yBFkk0OXih1IWxCyBw0DtwMBYY33lJxauqD+/WydYnmEQEP/z+ZjsMHYdS134PvBZMJ9bhn7n6Yn8bqPEksErkAl9jBuTBBFdmhYgAgg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424090; c=relaxed/simple;
-	bh=/OzM/lnjkcpw0MawVyLtIfDLjssxNy+YH4YWAwfpRfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iMCGzVw6xeGBEyLXDM2GegbgISvDOAyeagdr8wxqFkDgMUuQo4DvQEiyW6+zDzShpWf5ojb2IepG6yo70nJkaGTVrZnQIKWmuUvHCi8IuJ9LwxtI/iUwLqbNPTZnANpPVe7hUAWYmPiPHIwI/MFMR6TmvwSQiFYvHUzCBAeiaoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010049.outbound.protection.outlook.com [52.101.228.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E68D1E7C09;
+	Mon, 31 Mar 2025 12:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743424096; cv=fail; b=WjkQWs8LdL0lUUs6jKJcJASGpCju64JDLLra6KQsWAdVfziCR/6S8P6p5oxkojFEUWghB9D2sfHSsMNRV6Y9Fwbciiv+tzdjC2UAdOagDLo5cLuXJnvVnSNagO6yWEnTZUDTOquze5i7ggdYqrnOPB8lCy1I4eD5oZt5nlXW+ak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743424096; c=relaxed/simple;
+	bh=2p4mpb2x6JkbSZgwW9sZbDE93FXZZMndvL5ZdYEfcy8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=blN3dc/IzUTwQIFOgMUsd9/nxRyc98FSJ74mblHkFLkH8RLlZS9WUD8OwHlK2ovZS8E0RafzCeJoXl+vMTKt1nj8pFe+Ov/KwOGfLD57KZ5Qgbms3+vTBWsqtf9x44fTRVFCk0nUN+ZDbYG3+98LGqtHB6K0RTxFIGxe6i6gDi8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=K2ZFPViL; arc=fail smtp.client-ip=52.101.228.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: Ps/DfblRTdGtFZ5uMgawqA==
-X-CSE-MsgGUID: DXqfx64zSRO1+SyDnH/8Mg==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 31 Mar 2025 21:28:05 +0900
-Received: from superbuilder.administration.lan (unknown [10.226.93.144])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2769F41F5814;
-	Mon, 31 Mar 2025 21:28:01 +0900 (JST)
-From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-To: thierry.bultel@linatsea.fr
-Cc: linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org,
-	paul.barker.ct@bp.renesas.com,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v6 08/13] serial: sh-sci: Introduced function pointers
-Date: Mon, 31 Mar 2025 14:26:49 +0200
-Message-ID: <20250331122657.3390355-9-thierry.bultel.yh@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250331122657.3390355-1-thierry.bultel.yh@bp.renesas.com>
-References: <20250331122657.3390355-1-thierry.bultel.yh@bp.renesas.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="K2ZFPViL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cIhE1t3zcVJJ3AjlERdR/Ywma/g1DJHME1uWMvfamsJCzL/t2zqDJwTkaCpb9j/lRmYZowUIUl07IIMQwk/OJfp28rLr17imJdfMGBLxKS7dj/eVVghw+AchYMyKu0Ha1RE9a1Okahrq/yRcirQQ8yzUrY9ehHzPxidJPctNO1I8K0pQnE8nJYen1x8nU/OyzpKnwSfwINE8r29KXVwuF9m8kzxnbLYuL4KYfHwmEq/TvY4ErLLQKz6cVXQlq7JGdgROBviqUP2BZlkpFE48D1yiLQan0wh35Hg+FAiLhw83pgmsfNMK/9MenuHYSGOMvhuH1aIA2j1cGrTUjzVSag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yAVnHMBmgOlxbKLolCt8tRJO1HJJmXYqaiK+usBDTVs=;
+ b=xu83FgX9msBMXHV9pTlcAijSPrx1+ZUJPDeIKgk6n44IYp2a6W8P/gp6xNSdpJo+31OUK+RDX2sbjSBgeVSnLbfb6PrXwC73gd1L9mypWS7gUrsnzJnwiLjFAcxk8DTcm4vfqDsYViI8Hz1B7MpsR24JdDCTlioKwR+vOOvhbl37QyWYoDVy5cY/HZFfGL5ZpAlWIovdwKkXJNL3mPL5W/sTbVboQqAnal3y6Rkj1zrWSI22B5t3kJHIU9fLbEGazASYQZb98mAZRZ4oDFlYVLCu08yLQ7SRjf8f8LnJubWyM223ir3z9lOLC4FQPZAzXlFA5hzUPv/OZ595sa9qUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yAVnHMBmgOlxbKLolCt8tRJO1HJJmXYqaiK+usBDTVs=;
+ b=K2ZFPViLPAbBDfeU72bP/gopCnQK3v8J4KNvgmR7AjmJ2RLVPNqgdsdlWuH6XoEn1V9CjKps2miDQ+/gDhZOG1JDaWeGGWAmovbOB9+BmsxDk0NSnIY+e4/95rQCi06LXbDETWMjRnsIx1IMiJjFXAuqjs7U/nNobJW0JOSwUpw=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TY1PR01MB10707.jpnprd01.prod.outlook.com (2603:1096:400:31c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.37; Mon, 31 Mar
+ 2025 12:28:11 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.8583.036; Mon, 31 Mar 2025
+ 12:28:11 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+	laurent.pinchart <laurent.pinchart@ideasonboard.com>, Jonas Karlman
+	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Kieran Bingham
+	<kieran.bingham+renesas@ideasonboard.com>, Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Fabrizio Castro
+	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH 09/17] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ
+ calculation
+Thread-Topic: [PATCH 09/17] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ
+ calculation
+Thread-Index: AQHbobfcHcJfXgQAOUWAWej9fOprQLONLM9g
+Date: Mon, 31 Mar 2025 12:28:11 +0000
+Message-ID:
+ <TY3PR01MB11346FE7A28E0377BA80B98FD86AD2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20250330210717.46080-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250330210717.46080-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250330210717.46080-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TY1PR01MB10707:EE_
+x-ms-office365-filtering-correlation-id: 92dfada7-e0f1-4b2e-26f3-08dd704f805c
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?HLf8XUVLYTeNbFWa9AzcwnnxibGX3knMnHLQkpsslrqcROjoKvccGkIymRB6?=
+ =?us-ascii?Q?GGWIyTNEzRznQWbHSTRXUzEsWCuCdTUIY3WtCdCytPae2kasQndfy8BGUHIa?=
+ =?us-ascii?Q?AjufGzeYnj5QT9FVA1AEyBNLSP1eTasN3EaFg5ucmGM3+3wbL51YEfKndPUS?=
+ =?us-ascii?Q?gYnDj/T30lgaLoYiqzFfYyq97NUpfgNsdadsXq1igbPesGhRt7oZkmoBk7hu?=
+ =?us-ascii?Q?vwPy3VPRN4lCLFQqbwZFM+XdQe9A4sOsuc6rHc0wtIpGGqHm5EdDllEM0fJK?=
+ =?us-ascii?Q?/sWDioNOQ+yPFDT23OeWy1mkzkutslqsnDYocFKshAqIgDoBCiHSxyByj/CS?=
+ =?us-ascii?Q?mAxqsEve+dKDWEeoiLUNNNczfh+VaZ+wNKWdSS4qNXsEzFWTNXpALvhF2kW+?=
+ =?us-ascii?Q?32/LBJtYPvhfGvlKIVPkXXUO20vtJNEr688Laxo7rzNsOWht6DkKCXAWH7b1?=
+ =?us-ascii?Q?KWBK4eMRwJFSXLTLeH4jQkI4l+njdJI4eu3xhue5n1wVkNq2zfNLUCU6qcQV?=
+ =?us-ascii?Q?pKv8EdTe29JxoUIOhX3Pm9BMQTubiodAnapVPjIfQtbOly9KV6YWwaO9QNTH?=
+ =?us-ascii?Q?bqpqqoLiy+JwnFH1/PPD+SHstF86ErvnxTeUYR2lWb7UzNWrqVdTFAkp195V?=
+ =?us-ascii?Q?3UvGik1tXM22X39nVSTRvhXtcmwlPwRlSlWkv2nEuG3fpL+gUH4fSl8zCX3g?=
+ =?us-ascii?Q?tNk+uT50uavNMs+noZDaXRtaSDLoOL155roG2jqO1tY3bJXjoB2yskH35lSi?=
+ =?us-ascii?Q?JlQMklSoPnWpy1UwUOB+hrfv4YFoHNb/hVJeB+/D5X4ElBK3vRZUi/ZiIoeY?=
+ =?us-ascii?Q?dSKzhHwvv8SEp41DaPVFkqp+Ukg4aqBMseC8KiP8rNoMoQpsbJLKNpxR9BoX?=
+ =?us-ascii?Q?huYRYlEy/k19RmF6mmv7/mK+dZDLXGaLsenW/VNukF1fLir/5/CYT96P1NXa?=
+ =?us-ascii?Q?z4B/V/3lJuW1v/jJVhmAt9p8dqb7cCrPVMH73GF1Z/Dllh8KpNwY2dm4PwQ5?=
+ =?us-ascii?Q?K2YGkD39bq0/jSLpiifEysWRkWJ+CUrrZVwpVfeeuE3oWWxx7R07PPTjG5qm?=
+ =?us-ascii?Q?1R45zpVJflWWIdD3PKlXLyUoh7Z1DTzbkzg9LWdCM8npEg7QZ02HgvrrmZtG?=
+ =?us-ascii?Q?SgHIEWdwy3AHMfpFtOTwEk/LEkvmYXxzB8oN6NN+tKFNR96ZD4lC9RQ2nR2H?=
+ =?us-ascii?Q?DTdKH1UewGM5D64dceiD79R+49z3dPGm3RVXGL1fMklsqgmC65juV/MMv/NN?=
+ =?us-ascii?Q?cSDkwvAgd7ZyBR6J5rJpqnNuligSNO1zf8T92/+5TDXxKz6K8OCQVOf/cHuH?=
+ =?us-ascii?Q?BmoD4UxOVDyPV/eTQ5FjzdX2u4nji1qbB3vIs8nh/VQpXF8Z6ZHlTppVQJsw?=
+ =?us-ascii?Q?CvHJG/mEwj+Pd6zc2kWhnSPcZQJ7m5zxKGbpPLpZewJvSj13Dnx1VaFycqjz?=
+ =?us-ascii?Q?EA4mkKadzXWJJFgjvKZ+Yc8Dn4X05qoEg3H/yqdDNo3FSEtOODBQ6Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?SKBIiclSCsXSGhs2sbdd/FMlikUhYr5hYwBSoRepcMbHjyfHjdSdvgsfGjFm?=
+ =?us-ascii?Q?Q92Jl8x+Wi91rj0cz0qvcqkKcT7OZwzOo6bQIE/5Jb7Fu93rsFevwg+T+PT3?=
+ =?us-ascii?Q?Jbqn96WI937oc2TDr4eOQ3pML99V+9NCY/yrv4EyuQ8jW2uK/0ib4yb6OToW?=
+ =?us-ascii?Q?WnuB6WSLnGcpNqH0dOG5StHWUqkL7KEwcWMD5u+wr83ucdeDc0k3f2Sd+Mki?=
+ =?us-ascii?Q?Oxy5tA2lsB954O3olWTHZEnX2j0bZk6zU4QwLoX+aTTymKez9LaqKGyq+bD5?=
+ =?us-ascii?Q?aYyC+yIuKqSFlXYQTywcA1wpK1nxsEoc3VZakTIgiLao57AGld9FDYiAFhFc?=
+ =?us-ascii?Q?zQp2vdCHrsGHEtvXpsr3U2Q9hBYEIogX4KOEeaWWDu3I0kQlfoGW4j0JJfbM?=
+ =?us-ascii?Q?yLT1Yoz3kUgPaWjFNC6pneUOtW3S3PRhddrlmb4F5Saf11VU9RbOUzMZGUvo?=
+ =?us-ascii?Q?rFaAfVg8ldOOjIdayeXDZtCP/uvV1tjQjlSH1iCJQoy5+HvNxzAJZkqvpYJK?=
+ =?us-ascii?Q?WP5ZiFUynQErjxxz106SQiLgB+ye6K+6HdgtgnQARg9Mb/0lh2TzUSCZjn8F?=
+ =?us-ascii?Q?7XLgzEiXu6Akocj+6aBKMFXEtGxnotDDvkUPhEjCA3G7pHBSqbdoY1lDIewz?=
+ =?us-ascii?Q?O/LssaQM94LEJ/2qTry8Lvq3fjO0AztOqTG0sNrsAXE4zwI1ZsiCO938MgY0?=
+ =?us-ascii?Q?La3ww36erTdVNMGIy7SMxVnvzZBdARqpfeehDnkcCi7efuVpoNEyFoma6MCp?=
+ =?us-ascii?Q?YtyAS2gS9hMKYWj3AfE9QIKDyp1Uw0wYTO4gib86XSGVXSYJ9zH2CZDvSMx8?=
+ =?us-ascii?Q?hHXxhJb+we/v+XY/0GKmNwrR5qRcZETrvTqINUCPbMDDuDNS4O4LxEebEKG+?=
+ =?us-ascii?Q?P0Gsh2Wrp7F3X2vZpgpuyZHM4IOLPiIGD1Uw35/XoJwD1pYFugrQQ/5fMGcM?=
+ =?us-ascii?Q?da1KE+BfbpZ+WipIZWYkSpTP0ZWNCPHsX/m5QMqYyo28Hd0Xgkfvg8uR18Oc?=
+ =?us-ascii?Q?utuVbjm7Gm9ZPkClhsIP68TAJ1aBw3Zw8k7DkS/5l2WxPoLdSW51BTeKPBdI?=
+ =?us-ascii?Q?bp5Bksp4OCNjMHwdwrOnj+FeCHetTmz7i6ZXElqO4WIFHIxeJg6vxA+BX/iO?=
+ =?us-ascii?Q?TFKOTIXLKdLPad2q5+z8KeB4NRSaZDjtQP+Tfp92T5BOS+HzUCiQZdQ5YbMu?=
+ =?us-ascii?Q?rHnZb2ZqA7KeQkjwtIXcr13yDdKn2EQ4P2j1GycsrcCHTeJA4xpLiq3xZgQr?=
+ =?us-ascii?Q?nLheN4K2y28jFolsezlCZ0HtvMZ41wPymlTcZD2FK2X92o2NFjYCjdrjBM8e?=
+ =?us-ascii?Q?quC6Qm28+46X4Dj+aRpSiCtxM8X/yuDhiwwSR0YbxWCPpvymwdZ1DYfhH56q?=
+ =?us-ascii?Q?14WlPo6M0eMjI7Z8Bf2aoLUTqNa2NadKBhuz32cQ2/yQhv59kiVpY9u+i8AP?=
+ =?us-ascii?Q?9RrJDgpkdTz7Uwg2Q3yvXigLKMpYLP8vdZWpZ1Po73rA9Hy00HD29JQkYBX6?=
+ =?us-ascii?Q?teeOODoer+AZp/R2xIW5CZQPUzlnUh4fi334ZNOCBMwgENbPPGLol3Y5Fl/y?=
+ =?us-ascii?Q?1pQPLH8fUknjJuFjpbPzr1UDSvD9/T5ybgM6bTTsl2/PiSZ4ae4J+IpPtvvN?=
+ =?us-ascii?Q?kw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92dfada7-e0f1-4b2e-26f3-08dd704f805c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 12:28:11.4512
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oIWMSiMLZh775dCPmDHOIJaHRlRxgDTDwNKNqr9+/EfBOTJzYrbTcFGMuQWA85wjmvhN5aC1r8j4ZKh/yO3Tzx/5cw5JPC9mr0Y2UNPlrr4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB10707
 
-The aim here is to prepare support for new sci controllers like
-the T2H/RSCI whose registers are too much different for being
-handled in common code.
+Hi Prabhakar,
 
-This named serial controller also has 32 bits register,
-so some return types had to be changed.
+Thanks for the patch.
 
-The needed generic functions are no longer static, with prototypes
-defined in sh-sci-common.h so that they can be used from specific
-implementation in a separate file, to keep this driver as little
-changed as possible.
+> -----Original Message-----
+> From: Prabhakar <prabhakar.csengg@gmail.com>
+> Sent: 30 March 2025 22:07
+> Subject: [PATCH 09/17] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ cal=
+culation
+>=20
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Simplify the high-speed clock frequency (HSFREQ) calculation by removing =
+the redundant multiplication
+> and division by 8. The updated equation:
+>=20
+>     hsfreq =3D (mode->clock * bpp) / (dsi->lanes);
+>=20
+> produces the same result while improving readability and clarity.
+>=20
+> Additionally, update the comment to clarify the relationship between HS c=
+lock bit frequency, HS byte
+> clock frequency, and HSFREQ.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-For doing so, a set of 'ops' is added to struct sci_port.
+Cheers,
+Biju
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
----
-Changes v5->v6: none
-Changes v4->v5: 
-   - sci_shutdown is no longer static (systemd needs it)
-Changes v3->v4:
-   - Add missing #include <bitfield.h>
-   - Remove sci_poll_get_char sci_poll_put_char from sh-sci-common.h (both 
-     function are not used by rzsci yet).
-   - Add missing #ifdef around .poll_put_char pointer initialization.
-   - More registers to save & restore due to rebase on tty-next
----
- drivers/tty/serial/sh-sci-common.h | 159 ++++++++++
- drivers/tty/serial/sh-sci.c        | 484 +++++++++++++++--------------
- drivers/tty/serial/sh-sci.h        |   2 -
- 3 files changed, 407 insertions(+), 238 deletions(-)
- create mode 100644 drivers/tty/serial/sh-sci-common.h
-
-diff --git a/drivers/tty/serial/sh-sci-common.h b/drivers/tty/serial/sh-sci-common.h
-new file mode 100644
-index 000000000000..2ed742bca83f
---- /dev/null
-+++ b/drivers/tty/serial/sh-sci-common.h
-@@ -0,0 +1,159 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __SH_SCI_COMMON_H__
-+#define __SH_SCI_COMMON_H__
-+
-+#include <linux/serial_core.h>
-+
-+enum SCI_CLKS {
-+	SCI_FCK,		/* Functional Clock */
-+	SCI_SCK,		/* Optional External Clock */
-+	SCI_BRG_INT,		/* Optional BRG Internal Clock Source */
-+	SCI_SCIF_CLK,		/* Optional BRG External Clock Source */
-+	SCI_NUM_CLKS
-+};
-+
-+/* Offsets into the sci_port->irqs array */
-+enum {
-+	SCIx_ERI_IRQ,
-+	SCIx_RXI_IRQ,
-+	SCIx_TXI_IRQ,
-+	SCIx_BRI_IRQ,
-+	SCIx_DRI_IRQ,
-+	SCIx_TEI_IRQ,
-+	SCIx_NR_IRQS,
-+
-+	SCIx_MUX_IRQ = SCIx_NR_IRQS,	/* special case */
-+};
-+
-+/* Bit x set means sampling rate x + 1 is supported */
-+#define SCI_SR(x)		BIT((x) - 1)
-+#define SCI_SR_RANGE(x, y)	GENMASK((y) - 1, (x) - 1)
-+
-+void sci_release_port(struct uart_port *port);
-+int sci_request_port(struct uart_port *port);
-+void sci_config_port(struct uart_port *port, int flags);
-+int sci_verify_port(struct uart_port *port, struct serial_struct *ser);
-+void sci_pm(struct uart_port *port, unsigned int state,
-+		   unsigned int oldstate);
-+
-+struct plat_sci_reg {
-+	u8 offset;
-+	u8 size;
-+};
-+
-+struct sci_port_params_bits {
-+	unsigned int rxtx_enable;
-+	unsigned int te_clear;
-+	unsigned int poll_sent_bits;
-+};
-+
-+struct sci_common_regs {
-+	unsigned int status;
-+	unsigned int control;
-+};
-+
-+/* The actual number of needed registers. This is used by sci only */
-+#define SCI_NR_REGS 20
-+
-+struct sci_port_params {
-+	const struct plat_sci_reg regs[SCI_NR_REGS];
-+	const struct sci_common_regs *common_regs;
-+	const struct sci_port_params_bits *param_bits;
-+	unsigned int fifosize;
-+	unsigned int overrun_reg;
-+	unsigned int overrun_mask;
-+	unsigned int sampling_rate_mask;
-+	unsigned int error_mask;
-+	unsigned int error_clear;
-+};
-+
-+struct sci_port_ops {
-+	u32 (*read_reg)(struct uart_port *port, int reg);
-+	void (*write_reg)(struct uart_port *port, int reg, int value);
-+	void (*clear_SCxSR)(struct uart_port *port, unsigned int mask);
-+
-+	void (*transmit_chars)(struct uart_port *port);
-+	void (*receive_chars)(struct uart_port *port);
-+
-+	void (*poll_put_char)(struct uart_port *port, unsigned char c);
-+
-+	int (*set_rtrg)(struct uart_port *port, int rx_trig);
-+	int (*rtrg_enabled)(struct uart_port *port);
-+
-+	void (*shutdown_complete)(struct uart_port *port);
-+
-+	void (*prepare_console_write)(struct uart_port *port, u32 ctrl);
-+	void (*console_save)(struct uart_port *port);
-+	void (*console_restore)(struct uart_port *port);
-+	size_t (*suspend_regs_size)(void);
-+};
-+
-+struct sci_port {
-+	struct uart_port	port;
-+
-+	/* Platform configuration */
-+	const struct sci_port_params *params;
-+	const struct plat_sci_port *cfg;
-+
-+	unsigned int		sampling_rate_mask;
-+	resource_size_t		reg_size;
-+	struct mctrl_gpios	*gpios;
-+
-+	/* Clocks */
-+	struct clk		*clks[SCI_NUM_CLKS];
-+	unsigned long		clk_rates[SCI_NUM_CLKS];
-+
-+	int			irqs[SCIx_NR_IRQS];
-+	char			*irqstr[SCIx_NR_IRQS];
-+
-+	struct dma_chan			*chan_tx;
-+	struct dma_chan			*chan_rx;
-+
-+	struct reset_control		*rstc;
-+	struct sci_suspend_regs		*suspend_regs;
-+
-+#ifdef CONFIG_SERIAL_SH_SCI_DMA
-+	struct dma_chan			*chan_tx_saved;
-+	struct dma_chan			*chan_rx_saved;
-+	dma_cookie_t			cookie_tx;
-+	dma_cookie_t			cookie_rx[2];
-+	dma_cookie_t			active_rx;
-+	dma_addr_t			tx_dma_addr;
-+	unsigned int			tx_dma_len;
-+	struct scatterlist		sg_rx[2];
-+	void				*rx_buf[2];
-+	size_t				buf_len_rx;
-+	struct work_struct		work_tx;
-+	struct hrtimer			rx_timer;
-+	unsigned int			rx_timeout;	/* microseconds */
-+#endif
-+	unsigned int			rx_frame;
-+	int				rx_trigger;
-+	struct timer_list		rx_fifo_timer;
-+	int				rx_fifo_timeout;
-+	u16				hscif_tot;
-+
-+	const struct sci_port_ops *ops;
-+
-+	bool has_rtscts;
-+	bool autorts;
-+	bool tx_occurred;
-+};
-+
-+#define to_sci_port(uart) container_of((uart), struct sci_port, port)
-+
-+void sci_port_disable(struct sci_port *sci_port);
-+void sci_port_enable(struct sci_port *sci_port);
-+
-+int sci_startup(struct uart_port *port);
-+void sci_shutdown(struct uart_port *port);
-+
-+#define min_sr(_port)		ffs((_port)->sampling_rate_mask)
-+#define max_sr(_port)		fls((_port)->sampling_rate_mask)
-+
-+#ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
-+int __init scix_early_console_setup(struct earlycon_device *device, int);
-+#endif
-+
-+#endif /* __SH_SCI_COMMON_H__ */
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index d7a060033a89..54a484b04a97 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -56,19 +56,7 @@
- 
- #include "serial_mctrl_gpio.h"
- #include "sh-sci.h"
--
--/* Offsets into the sci_port->irqs array */
--enum {
--	SCIx_ERI_IRQ,
--	SCIx_RXI_IRQ,
--	SCIx_TXI_IRQ,
--	SCIx_BRI_IRQ,
--	SCIx_DRI_IRQ,
--	SCIx_TEI_IRQ,
--	SCIx_NR_IRQS,
--
--	SCIx_MUX_IRQ = SCIx_NR_IRQS,	/* special case */
--};
-+#include "sh-sci-common.h"
- 
- #define SCIx_IRQ_IS_MUXED(port)			\
- 	((port)->irqs[SCIx_ERI_IRQ] ==	\
-@@ -76,32 +64,38 @@ enum {
- 	((port)->irqs[SCIx_ERI_IRQ] &&	\
- 	 ((port)->irqs[SCIx_RXI_IRQ] < 0))
- 
--enum SCI_CLKS {
--	SCI_FCK,		/* Functional Clock */
--	SCI_SCK,		/* Optional External Clock */
--	SCI_BRG_INT,		/* Optional BRG Internal Clock Source */
--	SCI_SCIF_CLK,		/* Optional BRG External Clock Source */
--	SCI_NUM_CLKS
--};
--
--/* Bit x set means sampling rate x + 1 is supported */
--#define SCI_SR(x)		BIT((x) - 1)
--#define SCI_SR_RANGE(x, y)	GENMASK((y) - 1, (x) - 1)
--
- #define SCI_SR_SCIFAB		SCI_SR(5) | SCI_SR(7) | SCI_SR(11) | \
- 				SCI_SR(13) | SCI_SR(16) | SCI_SR(17) | \
- 				SCI_SR(19) | SCI_SR(27)
- 
--#define min_sr(_port)		ffs((_port)->sampling_rate_mask)
--#define max_sr(_port)		fls((_port)->sampling_rate_mask)
--
- /* Iterate over all supported sampling rates, from high to low */
- #define for_each_sr(_sr, _port)						\
- 	for ((_sr) = max_sr(_port); (_sr) >= min_sr(_port); (_sr)--)	\
- 		if ((_port)->sampling_rate_mask & SCI_SR((_sr)))
- 
--struct plat_sci_reg {
--	u8 offset, size;
-+#define SCI_NPORTS CONFIG_SERIAL_SH_SCI_NR_UARTS
-+
-+static struct sci_port sci_ports[SCI_NPORTS];
-+static unsigned long sci_ports_in_use;
-+static struct uart_driver sci_uart_driver;
-+static bool sci_uart_earlycon;
-+static bool sci_uart_earlycon_dev_probing;
-+
-+static const struct sci_port_params_bits sci_sci_port_params_bits = {
-+	.rxtx_enable = SCSCR_RE | SCSCR_TE,
-+	.te_clear = SCSCR_TE | SCSCR_TEIE,
-+	.poll_sent_bits = SCI_TDRE | SCI_TEND
-+};
-+
-+static const struct sci_port_params_bits sci_scif_port_params_bits = {
-+	.rxtx_enable = SCSCR_RE | SCSCR_TE,
-+	.te_clear = SCSCR_TE | SCSCR_TEIE,
-+	.poll_sent_bits = SCIF_TDFE | SCIF_TEND
-+};
-+
-+static const struct sci_common_regs sci_common_regs = {
-+	.status = SCxSR,
-+	.control = SCSCR,
- };
- 
- struct sci_suspend_regs {
-@@ -118,77 +112,9 @@ struct sci_suspend_regs {
- 	u8 semr;
- };
- 
--struct sci_port_params {
--	const struct plat_sci_reg regs[SCIx_NR_REGS];
--	unsigned int fifosize;
--	unsigned int overrun_reg;
--	unsigned int overrun_mask;
--	unsigned int sampling_rate_mask;
--	unsigned int error_mask;
--	unsigned int error_clear;
--};
--
--struct sci_port {
--	struct uart_port	port;
--
--	/* Platform configuration */
--	const struct sci_port_params *params;
--	const struct plat_sci_port *cfg;
--	unsigned int		sampling_rate_mask;
--	resource_size_t		reg_size;
--	struct mctrl_gpios	*gpios;
--
--	/* Clocks */
--	struct clk		*clks[SCI_NUM_CLKS];
--	unsigned long		clk_rates[SCI_NUM_CLKS];
--
--	int			irqs[SCIx_NR_IRQS];
--	char			*irqstr[SCIx_NR_IRQS];
--
--	struct dma_chan			*chan_tx;
--	struct dma_chan			*chan_rx;
--
--	struct reset_control		*rstc;
--
--#ifdef CONFIG_SERIAL_SH_SCI_DMA
--	struct dma_chan			*chan_tx_saved;
--	struct dma_chan			*chan_rx_saved;
--	dma_cookie_t			cookie_tx;
--	dma_cookie_t			cookie_rx[2];
--	dma_cookie_t			active_rx;
--	dma_addr_t			tx_dma_addr;
--	unsigned int			tx_dma_len;
--	struct scatterlist		sg_rx[2];
--	void				*rx_buf[2];
--	size_t				buf_len_rx;
--	struct work_struct		work_tx;
--	struct hrtimer			rx_timer;
--	unsigned int			rx_timeout;	/* microseconds */
--#endif
--	unsigned int			rx_frame;
--	int				rx_trigger;
--	struct timer_list		rx_fifo_timer;
--	int				rx_fifo_timeout;
--	struct sci_suspend_regs		suspend_regs;
--	u16				hscif_tot;
--
--	bool has_rtscts;
--	bool autorts;
--	bool tx_occurred;
--};
--
--#define SCI_NPORTS CONFIG_SERIAL_SH_SCI_NR_UARTS
--
--static struct sci_port sci_ports[SCI_NPORTS];
--static unsigned long sci_ports_in_use;
--static struct uart_driver sci_uart_driver;
--static bool sci_uart_earlycon;
--static bool sci_uart_earlycon_dev_probing;
--
--static inline struct sci_port *
--to_sci_port(struct uart_port *uart)
-+static size_t sci_suspend_regs_size(void)
- {
--	return container_of(uart, struct sci_port, port);
-+	return sizeof(struct sci_suspend_regs);
- }
- 
- static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
-@@ -211,6 +137,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCI_DEFAULT_ERROR_MASK | SCI_ORER,
- 		.error_clear = SCI_ERROR_CLEAR & ~SCI_ORER,
-+		.param_bits = &sci_sci_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -233,6 +161,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCI_DEFAULT_ERROR_MASK | SCI_ORER,
- 		.error_clear = SCI_ERROR_CLEAR & ~SCI_ORER,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -257,6 +187,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR_SCIFAB,
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK | SCIFA_ORER,
- 		.error_clear = SCIF_ERROR_CLEAR & ~SCIFA_ORER,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -282,6 +214,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR_SCIFAB,
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK | SCIFA_ORER,
- 		.error_clear = SCIF_ERROR_CLEAR & ~SCIFA_ORER,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -307,6 +241,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -335,6 +271,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -366,6 +304,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -388,6 +328,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -412,6 +354,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -439,6 +383,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -468,6 +414,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR_RANGE(8, 32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -492,6 +440,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -519,6 +469,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(32),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK,
- 		.error_clear = SCIF_ERROR_CLEAR,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- 
- 	/*
-@@ -542,6 +494,8 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.sampling_rate_mask = SCI_SR(16),
- 		.error_mask = SCIF_DEFAULT_ERROR_MASK | SCIFA_ORER,
- 		.error_clear = SCIF_ERROR_CLEAR & ~SCIFA_ORER,
-+		.param_bits = &sci_scif_port_params_bits,
-+		.common_regs = &sci_common_regs,
- 	},
- };
- 
-@@ -579,7 +533,7 @@ static void sci_serial_out(struct uart_port *p, int offset, int value)
- 		WARN(1, "Invalid register access\n");
- }
- 
--static void sci_port_enable(struct sci_port *sci_port)
-+void sci_port_enable(struct sci_port *sci_port)
- {
- 	unsigned int i;
- 
-@@ -595,7 +549,7 @@ static void sci_port_enable(struct sci_port *sci_port)
- 	sci_port->port.uartclk = sci_port->clk_rates[SCI_FCK];
- }
- 
--static void sci_port_disable(struct sci_port *sci_port)
-+void sci_port_disable(struct sci_port *sci_port)
- {
- 	unsigned int i;
- 
-@@ -735,12 +689,13 @@ static void sci_clear_SCxSR(struct uart_port *port, unsigned int mask)
- static int sci_poll_get_char(struct uart_port *port)
- {
- 	unsigned short status;
-+	struct sci_port *s = to_sci_port(port);
- 	int c;
- 
- 	do {
- 		status = sci_serial_in(port, SCxSR);
- 		if (status & SCxSR_ERRORS(port)) {
--			sci_clear_SCxSR(port, SCxSR_ERROR_CLEAR(port));
-+			s->ops->clear_SCxSR(port, SCxSR_ERROR_CLEAR(port));
- 			continue;
- 		}
- 		break;
-@@ -753,7 +708,7 @@ static int sci_poll_get_char(struct uart_port *port)
- 
- 	/* Dummy read */
- 	sci_serial_in(port, SCxSR);
--	sci_clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
-+	s->ops->clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
- 
- 	return c;
- }
-@@ -761,14 +716,16 @@ static int sci_poll_get_char(struct uart_port *port)
- 
- static void sci_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	unsigned short status;
-+	struct sci_port *s = to_sci_port(port);
-+	const struct sci_common_regs *regs = s->params->common_regs;
-+	unsigned int status;
- 
- 	do {
--		status = sci_serial_in(port, SCxSR);
-+		status = s->ops->read_reg(port, regs->status);
- 	} while (!(status & SCxSR_TDxE(port)));
- 
- 	sci_serial_out(port, SCxTDR, c);
--	sci_clear_SCxSR(port, SCxSR_TDxE_CLEAR(port) & ~SCxSR_TEND(port));
-+	s->ops->clear_SCxSR(port, SCxSR_TDxE_CLEAR(port) & ~SCxSR_TEND(port));
- }
- #endif /* CONFIG_CONSOLE_POLL || CONFIG_SERIAL_SH_SCI_CONSOLE ||
- 	  CONFIG_SERIAL_SH_SCI_EARLYCON */
-@@ -911,7 +868,7 @@ static void sci_transmit_chars(struct uart_port *port)
- 		port->icount.tx++;
- 	} while (--count > 0);
- 
--	sci_clear_SCxSR(port, SCxSR_TDxE_CLEAR(port));
-+	s->ops->clear_SCxSR(port, SCxSR_TDxE_CLEAR(port));
- 
- 	if (kfifo_len(&tport->xmit_fifo) < WAKEUP_CHARS)
- 		uart_write_wakeup(port);
-@@ -930,6 +887,7 @@ static void sci_transmit_chars(struct uart_port *port)
- static void sci_receive_chars(struct uart_port *port)
- {
- 	struct tty_port *tport = &port->state->port;
-+	struct sci_port *s = to_sci_port(port);
- 	int i, count, copied = 0;
- 	unsigned short status;
- 	unsigned char flag;
-@@ -984,7 +942,7 @@ static void sci_receive_chars(struct uart_port *port)
- 		}
- 
- 		sci_serial_in(port, SCxSR); /* dummy read */
--		sci_clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
-+		s->ops->clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
- 
- 		copied += count;
- 		port->icount.rx += count;
-@@ -997,16 +955,17 @@ static void sci_receive_chars(struct uart_port *port)
- 		/* TTY buffers full; read from RX reg to prevent lockup */
- 		sci_serial_in(port, SCxRDR);
- 		sci_serial_in(port, SCxSR); /* dummy read */
--		sci_clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
-+		s->ops->clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
- 	}
- }
- 
- static int sci_handle_errors(struct uart_port *port)
- {
- 	int copied = 0;
--	unsigned short status = sci_serial_in(port, SCxSR);
--	struct tty_port *tport = &port->state->port;
- 	struct sci_port *s = to_sci_port(port);
-+	const struct sci_common_regs *regs = s->params->common_regs;
-+	unsigned int status = s->ops->read_reg(port, regs->status);
-+	struct tty_port *tport = &port->state->port;
- 
- 	/* Handle overruns */
- 	if (status & s->params->overrun_mask) {
-@@ -1165,7 +1124,7 @@ static void rx_fifo_timer_fn(struct timer_list *t)
- 	struct uart_port *port = &s->port;
- 
- 	dev_dbg(port->dev, "Rx timed out\n");
--	scif_set_rtrg(port, 1);
-+	s->ops->set_rtrg(port, 1);
- }
- 
- static ssize_t rx_fifo_trigger_show(struct device *dev,
-@@ -1190,9 +1149,9 @@ static ssize_t rx_fifo_trigger_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	sci->rx_trigger = scif_set_rtrg(port, r);
-+	sci->rx_trigger = sci->ops->set_rtrg(port, r);
- 	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
--		scif_set_rtrg(port, 1);
-+		sci->ops->set_rtrg(port, 1);
- 
- 	return count;
- }
-@@ -1235,7 +1194,7 @@ static ssize_t rx_fifo_timeout_store(struct device *dev,
- 		sci->hscif_tot = r << HSSCR_TOT_SHIFT;
- 	} else {
- 		sci->rx_fifo_timeout = r;
--		scif_set_rtrg(port, 1);
-+		sci->ops->set_rtrg(port, 1);
- 		if (r > 0)
- 			timer_setup(&sci->rx_fifo_timer, rx_fifo_timer_fn, 0);
- 	}
-@@ -1360,7 +1319,7 @@ static void sci_dma_rx_reenable_irq(struct sci_port *s)
- 	    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 		enable_irq(s->irqs[SCIx_RXI_IRQ]);
- 		if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
--			scif_set_rtrg(port, s->rx_trigger);
-+			s->ops->set_rtrg(port, s->rx_trigger);
- 		else
- 			scr &= ~SCSCR_RDRQE;
- 	}
-@@ -1798,7 +1757,7 @@ static irqreturn_t sci_rx_interrupt(int irq, void *ptr)
- 		    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 			disable_irq_nosync(s->irqs[SCIx_RXI_IRQ]);
- 			if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
--				scif_set_rtrg(port, 1);
-+				s->ops->set_rtrg(port, 1);
- 				scr |= SCSCR_RIE;
- 			} else {
- 				scr |= SCSCR_RDRQE;
-@@ -1824,8 +1783,8 @@ static irqreturn_t sci_rx_interrupt(int irq, void *ptr)
- #endif
- 
- 	if (s->rx_trigger > 1 && s->rx_fifo_timeout > 0) {
--		if (!scif_rtrg_enabled(port))
--			scif_set_rtrg(port, s->rx_trigger);
-+		if (!s->ops->rtrg_enabled(port))
-+			s->ops->set_rtrg(port, s->rx_trigger);
- 
- 		mod_timer(&s->rx_fifo_timer, jiffies + DIV_ROUND_UP(
- 			  s->rx_frame * HZ * s->rx_fifo_timeout, 1000000));
-@@ -1835,7 +1794,7 @@ static irqreturn_t sci_rx_interrupt(int irq, void *ptr)
- 	 * of whether the I_IXOFF is set, otherwise, how is the interrupt
- 	 * to be disabled?
- 	 */
--	sci_receive_chars(port);
-+	s->ops->receive_chars(port);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1844,9 +1803,10 @@ static irqreturn_t sci_tx_interrupt(int irq, void *ptr)
- {
- 	struct uart_port *port = ptr;
- 	unsigned long flags;
-+	struct sci_port *s = to_sci_port(port);
- 
- 	uart_port_lock_irqsave(port, &flags);
--	sci_transmit_chars(port);
-+	s->ops->transmit_chars(port);
- 	uart_port_unlock_irqrestore(port, flags);
- 
- 	return IRQ_HANDLED;
-@@ -1855,16 +1815,18 @@ static irqreturn_t sci_tx_interrupt(int irq, void *ptr)
- static irqreturn_t sci_tx_end_interrupt(int irq, void *ptr)
- {
- 	struct uart_port *port = ptr;
-+	struct sci_port *s = to_sci_port(port);
-+	const struct sci_common_regs *regs = s->params->common_regs;
- 	unsigned long flags;
--	unsigned short ctrl;
-+	u32 ctrl;
- 
- 	if (port->type != PORT_SCI)
- 		return sci_tx_interrupt(irq, ptr);
- 
- 	uart_port_lock_irqsave(port, &flags);
--	ctrl = sci_serial_in(port, SCSCR);
--	ctrl &= ~(SCSCR_TE | SCSCR_TEIE);
--	sci_serial_out(port, SCSCR, ctrl);
-+	ctrl = s->ops->read_reg(port, regs->control) &
-+		~(s->params->param_bits->te_clear);
-+	s->ops->write_reg(port, regs->control, ctrl);
- 	uart_port_unlock_irqrestore(port, flags);
- 
- 	return IRQ_HANDLED;
-@@ -1873,6 +1835,7 @@ static irqreturn_t sci_tx_end_interrupt(int irq, void *ptr)
- static irqreturn_t sci_br_interrupt(int irq, void *ptr)
- {
- 	struct uart_port *port = ptr;
-+	struct sci_port *s = to_sci_port(port);
- 
- 	/* Handle BREAKs */
- 	sci_handle_breaks(port);
-@@ -1880,7 +1843,7 @@ static irqreturn_t sci_br_interrupt(int irq, void *ptr)
- 	/* drop invalid character received before break was detected */
- 	sci_serial_in(port, SCxRDR);
- 
--	sci_clear_SCxSR(port, SCxSR_BREAK_CLEAR(port));
-+	s->ops->clear_SCxSR(port, SCxSR_BREAK_CLEAR(port));
- 
- 	return IRQ_HANDLED;
- }
-@@ -1908,15 +1871,15 @@ static irqreturn_t sci_er_interrupt(int irq, void *ptr)
- 		if (sci_handle_errors(port)) {
- 			/* discard character in rx buffer */
- 			sci_serial_in(port, SCxSR);
--			sci_clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
-+			s->ops->clear_SCxSR(port, SCxSR_RDxF_CLEAR(port));
- 		}
- 	} else {
- 		sci_handle_fifo_overrun(port);
- 		if (!s->chan_rx)
--			sci_receive_chars(port);
-+			s->ops->receive_chars(port);
- 	}
- 
--	sci_clear_SCxSR(port, SCxSR_ERROR_CLEAR(port));
-+	s->ops->clear_SCxSR(port, SCxSR_ERROR_CLEAR(port));
- 
- 	/* Kick the transmission */
- 	if (!s->chan_tx)
-@@ -2286,7 +2249,17 @@ static void sci_break_ctl(struct uart_port *port, int break_state)
- 	uart_port_unlock_irqrestore(port, flags);
- }
- 
--static int sci_startup(struct uart_port *port)
-+static void sci_shutdown_complete(struct uart_port *port)
-+{
-+	struct sci_port *s = to_sci_port(port);
-+	u16 scr;
-+
-+	scr = sci_serial_in(port, SCSCR);
-+	sci_serial_out(port, SCSCR,
-+		       scr & (SCSCR_CKE1 | SCSCR_CKE0 | s->hscif_tot));
-+}
-+
-+int sci_startup(struct uart_port *port)
- {
- 	struct sci_port *s = to_sci_port(port);
- 	int ret;
-@@ -2305,11 +2278,10 @@ static int sci_startup(struct uart_port *port)
- 	return 0;
- }
- 
--static void sci_shutdown(struct uart_port *port)
-+void sci_shutdown(struct uart_port *port)
- {
- 	struct sci_port *s = to_sci_port(port);
- 	unsigned long flags;
--	u16 scr;
- 
- 	dev_dbg(port->dev, "%s(%d)\n", __func__, port->line);
- 
-@@ -2319,13 +2291,7 @@ static void sci_shutdown(struct uart_port *port)
- 	uart_port_lock_irqsave(port, &flags);
- 	sci_stop_rx(port);
- 	sci_stop_tx(port);
--	/*
--	 * Stop RX and TX, disable related interrupts, keep clock source
--	 * and HSCIF TOT bits
--	 */
--	scr = sci_serial_in(port, SCSCR);
--	sci_serial_out(port, SCSCR,
--		       scr & (SCSCR_CKE1 | SCSCR_CKE0 | s->hscif_tot));
-+	s->ops->shutdown_complete(port);
- 	uart_port_unlock_irqrestore(port, flags);
- 
- #ifdef CONFIG_SERIAL_SH_SCI_DMA
-@@ -2402,8 +2368,8 @@ static int sci_brg_calc(struct sci_port *s, unsigned int bps,
- 
- /* calculate sample rate, BRR, and clock select */
- static int sci_scbrr_calc(struct sci_port *s, unsigned int bps,
--			  unsigned int *brr, unsigned int *srr,
--			  unsigned int *cks)
-+		   unsigned int *brr, unsigned int *srr,
-+		   unsigned int *cks)
- {
- 	unsigned long freq = s->clk_rates[SCI_FCK];
- 	unsigned int sr, br, prediv, scrate, c;
-@@ -2480,9 +2446,9 @@ static void sci_reset(struct uart_port *port)
- 	if (reg->size)
- 		sci_serial_out(port, SCFCR, SCFCR_RFRST | SCFCR_TFRST);
- 
--	sci_clear_SCxSR(port,
--			SCxSR_RDxF_CLEAR(port) & SCxSR_ERROR_CLEAR(port) &
--			SCxSR_BREAK_CLEAR(port));
-+	s->ops->clear_SCxSR(port,
-+			    SCxSR_RDxF_CLEAR(port) & SCxSR_ERROR_CLEAR(port) &
-+			    SCxSR_BREAK_CLEAR(port));
- 	if (sci_getreg(port, SCLSR)->size) {
- 		status = sci_serial_in(port, SCLSR);
- 		status &= ~(SCLSR_TO | SCLSR_ORER);
-@@ -2491,14 +2457,14 @@ static void sci_reset(struct uart_port *port)
- 
- 	if (s->rx_trigger > 1) {
- 		if (s->rx_fifo_timeout) {
--			scif_set_rtrg(port, 1);
-+			s->ops->set_rtrg(port, 1);
- 			timer_setup(&s->rx_fifo_timer, rx_fifo_timer_fn, 0);
- 		} else {
- 			if (port->type == PORT_SCIFA ||
- 			    port->type == PORT_SCIFB)
--				scif_set_rtrg(port, 1);
-+				s->ops->set_rtrg(port, 1);
- 			else
--				scif_set_rtrg(port, s->rx_trigger);
-+				s->ops->set_rtrg(port, s->rx_trigger);
- 		}
- 	}
- }
-@@ -2758,7 +2724,7 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
- 		sci_enable_ms(port);
- }
- 
--static void sci_pm(struct uart_port *port, unsigned int state,
-+void sci_pm(struct uart_port *port, unsigned int state,
- 		   unsigned int oldstate)
- {
- 	struct sci_port *sci_port = to_sci_port(port);
-@@ -2821,7 +2787,7 @@ static int sci_remap_port(struct uart_port *port)
- 	return 0;
- }
- 
--static void sci_release_port(struct uart_port *port)
-+void sci_release_port(struct uart_port *port)
- {
- 	struct sci_port *sport = to_sci_port(port);
- 
-@@ -2833,7 +2799,7 @@ static void sci_release_port(struct uart_port *port)
- 	release_mem_region(port->mapbase, sport->reg_size);
- }
- 
--static int sci_request_port(struct uart_port *port)
-+int sci_request_port(struct uart_port *port)
- {
- 	struct resource *res;
- 	struct sci_port *sport = to_sci_port(port);
-@@ -2855,7 +2821,7 @@ static int sci_request_port(struct uart_port *port)
- 	return 0;
- }
- 
--static void sci_config_port(struct uart_port *port, int flags)
-+void sci_config_port(struct uart_port *port, int flags)
- {
- 	if (flags & UART_CONFIG_TYPE) {
- 		struct sci_port *sport = to_sci_port(port);
-@@ -2865,7 +2831,7 @@ static void sci_config_port(struct uart_port *port, int flags)
- 	}
- }
- 
--static int sci_verify_port(struct uart_port *port, struct serial_struct *ser)
-+int sci_verify_port(struct uart_port *port, struct serial_struct *ser)
- {
- 	if (ser->baud_base < 2400)
- 		/* No paper tape reader for Mitch.. */
-@@ -2874,6 +2840,75 @@ static int sci_verify_port(struct uart_port *port, struct serial_struct *ser)
- 	return 0;
- }
- 
-+static void sci_prepare_console_write(struct uart_port *port, u32 ctrl)
-+{
-+	struct sci_port *s = to_sci_port(port);
-+	u32 ctrl_temp =
-+		s->params->param_bits->rxtx_enable |
-+		(s->cfg->scscr & ~(SCSCR_CKE1 | SCSCR_CKE0)) |
-+		(ctrl & (SCSCR_CKE1 | SCSCR_CKE0)) |
-+		s->hscif_tot;
-+	sci_serial_out(port, SCSCR, ctrl_temp);
-+}
-+
-+static void sci_console_save(struct uart_port *port)
-+{
-+	struct sci_port *s = to_sci_port(port);
-+	struct sci_suspend_regs *regs = s->suspend_regs;
-+
-+	if (sci_getreg(port, SCDL)->size)
-+		regs->scdl = sci_serial_in(port, SCDL);
-+	if (sci_getreg(port, SCCKS)->size)
-+		regs->sccks = sci_serial_in(port, SCCKS);
-+	if (sci_getreg(port, SCSMR)->size)
-+		regs->scsmr = sci_serial_in(port, SCSMR);
-+	if (sci_getreg(port, SCSCR)->size)
-+		regs->scscr = sci_serial_in(port, SCSCR);
-+	if (sci_getreg(port, SCFCR)->size)
-+		regs->scfcr = sci_serial_in(port, SCFCR);
-+	if (sci_getreg(port, SCSPTR)->size)
-+		regs->scsptr = sci_serial_in(port, SCSPTR);
-+	if (sci_getreg(port, SCBRR)->size)
-+		regs->scbrr = sci_serial_in(port, SCBRR);
-+	if (sci_getreg(port, HSSRR)->size)
-+		regs->hssrr = sci_serial_in(port, HSSRR);
-+	if (sci_getreg(port, SCPCR)->size)
-+		regs->scpcr = sci_serial_in(port, SCPCR);
-+	if (sci_getreg(port, SCPDR)->size)
-+		regs->scpdr = sci_serial_in(port, SCPDR);
-+	if (sci_getreg(port, SEMR)->size)
-+		regs->semr = sci_serial_in(port, SEMR);
-+}
-+
-+static void sci_console_restore(struct uart_port *port)
-+{
-+	struct sci_port *s = to_sci_port(port);
-+	struct sci_suspend_regs *regs = s->suspend_regs;
-+
-+	if (sci_getreg(port, SCDL)->size)
-+		sci_serial_out(port, SCDL, regs->scdl);
-+	if (sci_getreg(port, SCCKS)->size)
-+		sci_serial_out(port, SCCKS, regs->sccks);
-+	if (sci_getreg(port, SCSMR)->size)
-+		sci_serial_out(port, SCSMR, regs->scsmr);
-+	if (sci_getreg(port, SCSCR)->size)
-+		sci_serial_out(port, SCSCR, regs->scscr);
-+	if (sci_getreg(port, SCFCR)->size)
-+		sci_serial_out(port, SCFCR, regs->scfcr);
-+	if (sci_getreg(port, SCSPTR)->size)
-+		sci_serial_out(port, SCSPTR, regs->scsptr);
-+	if (sci_getreg(port, SCBRR)->size)
-+		sci_serial_out(port, SCBRR, regs->scbrr);
-+	if (sci_getreg(port, HSSRR)->size)
-+		sci_serial_out(port, HSSRR, regs->hssrr);
-+	if (sci_getreg(port, SCPCR)->size)
-+		sci_serial_out(port, SCPCR, regs->scpcr);
-+	if (sci_getreg(port, SCPDR)->size)
-+		sci_serial_out(port, SCPDR, regs->scpdr);
-+	if (sci_getreg(port, SEMR)->size)
-+		sci_serial_out(port, SEMR, regs->semr);
-+}
-+
- static const struct uart_ops sci_uart_ops = {
- 	.tx_empty	= sci_tx_empty,
- 	.set_mctrl	= sci_set_mctrl,
-@@ -2899,6 +2934,25 @@ static const struct uart_ops sci_uart_ops = {
- #endif
- };
- 
-+static const struct sci_port_ops sci_port_ops = {
-+	.read_reg		= sci_serial_in,
-+	.write_reg		= sci_serial_out,
-+	.clear_SCxSR		= sci_clear_SCxSR,
-+	.transmit_chars		= sci_transmit_chars,
-+	.receive_chars		= sci_receive_chars,
-+#if defined(CONFIG_SERIAL_SH_SCI_CONSOLE) || \
-+    defined(CONFIG_SERIAL_SH_SCI_EARLYCON)
-+	.poll_put_char		= sci_poll_put_char,
-+#endif
-+	.set_rtrg		= scif_set_rtrg,
-+	.rtrg_enabled		= scif_rtrg_enabled,
-+	.shutdown_complete	= sci_shutdown_complete,
-+	.prepare_console_write	= sci_prepare_console_write,
-+	.console_save		= sci_console_save,
-+	.console_restore	= sci_console_restore,
-+	.suspend_regs_size	= sci_suspend_regs_size,
-+};
-+
- static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
- {
- 	const char *clk_names[] = {
-@@ -2992,6 +3046,7 @@ static int sci_init_single(struct platform_device *dev,
- 	int ret;
- 
- 	sci_port->cfg	= p;
-+	sci_port->ops	= &sci_port_ops;
- 
- 	port->ops	= &sci_uart_ops;
- 	port->iotype	= UPIO_MEM;
-@@ -3104,7 +3159,7 @@ static int sci_init_single(struct platform_device *dev,
-     defined(CONFIG_SERIAL_SH_SCI_EARLYCON)
- static void serial_console_putchar(struct uart_port *port, unsigned char ch)
- {
--	sci_poll_put_char(port, ch);
-+	to_sci_port(port)->ops->poll_put_char(port, ch);
- }
- 
- /*
-@@ -3116,7 +3171,9 @@ static void serial_console_write(struct console *co, const char *s,
- {
- 	struct sci_port *sci_port = &sci_ports[co->index];
- 	struct uart_port *port = &sci_port->port;
--	unsigned short bits, ctrl, ctrl_temp;
-+	const struct sci_common_regs *regs = sci_port->params->common_regs;
-+	unsigned int bits;
-+	u32 ctrl;
- 	unsigned long flags;
- 	int locked = 1;
- 
-@@ -3128,21 +3185,21 @@ static void serial_console_write(struct console *co, const char *s,
- 		uart_port_lock_irqsave(port, &flags);
- 
- 	/* first save SCSCR then disable interrupts, keep clock source */
--	ctrl = sci_serial_in(port, SCSCR);
--	ctrl_temp = SCSCR_RE | SCSCR_TE |
--		    (sci_port->cfg->scscr & ~(SCSCR_CKE1 | SCSCR_CKE0)) |
--		    (ctrl & (SCSCR_CKE1 | SCSCR_CKE0));
--	sci_serial_out(port, SCSCR, ctrl_temp | sci_port->hscif_tot);
-+
-+	ctrl = sci_port->ops->read_reg(port, regs->control);
-+	sci_port->ops->prepare_console_write(port, ctrl);
- 
- 	uart_console_write(port, s, count, serial_console_putchar);
- 
- 	/* wait until fifo is empty and last bit has been transmitted */
--	bits = SCxSR_TDxE(port) | SCxSR_TEND(port);
--	while ((sci_serial_in(port, SCxSR) & bits) != bits)
-+
-+	bits = sci_port->params->param_bits->poll_sent_bits;
-+
-+	while ((sci_port->ops->read_reg(port, regs->status) & bits) != bits)
- 		cpu_relax();
- 
- 	/* restore the SCSCR */
--	sci_serial_out(port, SCSCR, ctrl);
-+	sci_port->ops->write_reg(port, regs->control, ctrl);
- 
- 	if (locked)
- 		uart_port_unlock_irqrestore(port, flags);
-@@ -3275,7 +3332,6 @@ static void sci_remove(struct platform_device *dev)
- 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
- }
- 
--
- #define SCI_OF_DATA(type, regtype)	(void *)((type) << 16 | (regtype))
- #define SCI_OF_TYPE(data)		((unsigned long)(data) >> 16)
- #define SCI_OF_REGTYPE(data)		((unsigned long)(data) & 0xffff)
-@@ -3512,6 +3568,11 @@ static int sci_probe(struct platform_device *dev)
- 	}
- 
- 	sp = &sci_ports[dev_id];
-+	sp->suspend_regs = devm_kzalloc(&dev->dev,
-+					sp->ops->suspend_regs_size(),
-+					GFP_KERNEL);
-+	if (!sp->suspend_regs)
-+		return -ENOMEM;
- 
- 	/*
- 	 * In case:
-@@ -3563,64 +3624,6 @@ static int sci_probe(struct platform_device *dev)
- 	return 0;
- }
- 
--static void sci_console_save(struct sci_port *s)
--{
--	struct sci_suspend_regs *regs = &s->suspend_regs;
--	struct uart_port *port = &s->port;
--
--	if (sci_getreg(port, SCDL)->size)
--		regs->scdl = sci_serial_in(port, SCDL);
--	if (sci_getreg(port, SCCKS)->size)
--		regs->sccks = sci_serial_in(port, SCCKS);
--	if (sci_getreg(port, SCSMR)->size)
--		regs->scsmr = sci_serial_in(port, SCSMR);
--	if (sci_getreg(port, SCSCR)->size)
--		regs->scscr = sci_serial_in(port, SCSCR);
--	if (sci_getreg(port, SCFCR)->size)
--		regs->scfcr = sci_serial_in(port, SCFCR);
--	if (sci_getreg(port, SCSPTR)->size)
--		regs->scsptr = sci_serial_in(port, SCSPTR);
--	if (sci_getreg(port, SCBRR)->size)
--		regs->scbrr = sci_serial_in(port, SCBRR);
--	if (sci_getreg(port, HSSRR)->size)
--		regs->hssrr = sci_serial_in(port, HSSRR);
--	if (sci_getreg(port, SCPCR)->size)
--		regs->scpcr = sci_serial_in(port, SCPCR);
--	if (sci_getreg(port, SCPDR)->size)
--		regs->scpdr = sci_serial_in(port, SCPDR);
--	if (sci_getreg(port, SEMR)->size)
--		regs->semr = sci_serial_in(port, SEMR);
--}
--
--static void sci_console_restore(struct sci_port *s)
--{
--	struct sci_suspend_regs *regs = &s->suspend_regs;
--	struct uart_port *port = &s->port;
--
--	if (sci_getreg(port, SCDL)->size)
--		sci_serial_out(port, SCDL, regs->scdl);
--	if (sci_getreg(port, SCCKS)->size)
--		sci_serial_out(port, SCCKS, regs->sccks);
--	if (sci_getreg(port, SCSMR)->size)
--		sci_serial_out(port, SCSMR, regs->scsmr);
--	if (sci_getreg(port, SCSCR)->size)
--		sci_serial_out(port, SCSCR, regs->scscr);
--	if (sci_getreg(port, SCFCR)->size)
--		sci_serial_out(port, SCFCR, regs->scfcr);
--	if (sci_getreg(port, SCSPTR)->size)
--		sci_serial_out(port, SCSPTR, regs->scsptr);
--	if (sci_getreg(port, SCBRR)->size)
--		sci_serial_out(port, SCBRR, regs->scbrr);
--	if (sci_getreg(port, HSSRR)->size)
--		sci_serial_out(port, HSSRR, regs->hssrr);
--	if (sci_getreg(port, SCPCR)->size)
--		sci_serial_out(port, SCPCR, regs->scpcr);
--	if (sci_getreg(port, SCPDR)->size)
--		sci_serial_out(port, SCPDR, regs->scpdr);
--	if (sci_getreg(port, SEMR)->size)
--		sci_serial_out(port, SEMR, regs->semr);
--}
--
- static __maybe_unused int sci_suspend(struct device *dev)
- {
- 	struct sci_port *sport = dev_get_drvdata(dev);
-@@ -3628,8 +3631,10 @@ static __maybe_unused int sci_suspend(struct device *dev)
- 	if (sport) {
- 		uart_suspend_port(&sci_uart_driver, &sport->port);
- 
--		if (!console_suspend_enabled && uart_console(&sport->port))
--			sci_console_save(sport);
-+		if (!console_suspend_enabled && uart_console(&sport->port)) {
-+			if (sport->ops->console_save)
-+				sport->ops->console_save(&sport->port);
-+		}
- 		else
- 			return reset_control_assert(sport->rstc);
- 	}
-@@ -3643,7 +3648,8 @@ static __maybe_unused int sci_resume(struct device *dev)
- 
- 	if (sport) {
- 		if (!console_suspend_enabled && uart_console(&sport->port)) {
--			sci_console_restore(sport);
-+			if (sport->ops->console_restore)
-+				sport->ops->console_restore(&sport->port);
- 		} else {
- 			int ret = reset_control_deassert(sport->rstc);
- 
-@@ -3707,9 +3713,11 @@ static int early_console_exit(struct console *co)
- 	return 0;
- }
- 
--static int __init early_console_setup(struct earlycon_device *device,
-+int __init scix_early_console_setup(struct earlycon_device *device,
- 				      int type)
- {
-+	const struct sci_common_regs *regs;
-+
- 	if (!device->port.membase)
- 		return -ENODEV;
- 
-@@ -3717,11 +3725,15 @@ static int __init early_console_setup(struct earlycon_device *device,
- 	sci_ports[0].port = device->port;
- 	port_cfg.type = type;
- 	sci_ports[0].cfg = &port_cfg;
-+	sci_ports[0].ops = &sci_port_ops;
- 	sci_ports[0].params = sci_probe_regmap(&port_cfg);
- 	sci_uart_earlycon = true;
--	port_cfg.scscr = sci_serial_in(&sci_ports[0].port, SCSCR);
--	sci_serial_out(&sci_ports[0].port, SCSCR,
--		       SCSCR_RE | SCSCR_TE | port_cfg.scscr);
-+	regs = sci_ports[0].params->common_regs;
-+
-+	port_cfg.scscr = sci_ports[0].ops->read_reg(&sci_ports[0].port, regs->control);
-+	sci_ports[0].ops->write_reg(&sci_ports[0].port,
-+				    regs->control,
-+				    sci_ports[0].params->param_bits->rxtx_enable | port_cfg.scscr);
- 
- 	device->con->write = serial_console_write;
- 	device->con->exit = early_console_exit;
-@@ -3731,41 +3743,41 @@ static int __init early_console_setup(struct earlycon_device *device,
- static int __init sci_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
--	return early_console_setup(device, PORT_SCI);
-+	return scix_early_console_setup(device, PORT_SCI);
- }
- static int __init scif_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
--	return early_console_setup(device, PORT_SCIF);
-+	return scix_early_console_setup(device, PORT_SCIF);
- }
- static int __init rzscifa_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
- 	port_cfg.regtype = SCIx_RZ_SCIFA_REGTYPE;
--	return early_console_setup(device, PORT_SCIF);
-+	return scix_early_console_setup(device, PORT_SCIF);
- }
- 
- static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
- 						const char *opt)
- {
- 	port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
--	return early_console_setup(device, PORT_SCIF);
-+	return scix_early_console_setup(device, PORT_SCIF);
- }
- 
- static int __init scifa_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
--	return early_console_setup(device, PORT_SCIFA);
-+	return scix_early_console_setup(device, PORT_SCIFA);
- }
- static int __init scifb_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
--	return early_console_setup(device, PORT_SCIFB);
-+	return scix_early_console_setup(device, PORT_SCIFB);
- }
- static int __init hscif_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
--	return early_console_setup(device, PORT_HSCIF);
-+	return scix_early_console_setup(device, PORT_HSCIF);
- }
- 
- OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
-diff --git a/drivers/tty/serial/sh-sci.h b/drivers/tty/serial/sh-sci.h
-index 0b65563c4e9e..951681aba586 100644
---- a/drivers/tty/serial/sh-sci.h
-+++ b/drivers/tty/serial/sh-sci.h
-@@ -32,8 +32,6 @@ enum {
- 	HSRTRGR,			/* Rx FIFO Data Count Trigger Register */
- 	HSTTRGR,			/* Tx FIFO Data Count Trigger Register */
- 	SEMR,				/* Serial extended mode register */
--
--	SCIx_NR_REGS,
- };
- 
- 
--- 
-2.43.0
+> ---
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu=
+/drm/renesas/rz-
+> du/rzg2l_mipi_dsi.c
+> index c6f60b7f203b..746f82442c01 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> @@ -277,10 +277,10 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi=
+_dsi *dsi,
+>  	 *       hsclk: DSI HS Byte clock frequency (Hz)
+>  	 *       lanes: number of data lanes
+>  	 *
+> -	 * hsclk(bit) =3D hsclk(byte) * 8
+> +	 * hsclk(bit) =3D hsclk(byte) * 8 =3D hsfreq
+>  	 */
+>  	bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
+> -	hsfreq =3D (mode->clock * bpp * 8) / (8 * dsi->lanes);
+> +	hsfreq =3D (mode->clock * bpp) / dsi->lanes;
+>=20
+>  	ret =3D pm_runtime_resume_and_get(dsi->dev);
+>  	if (ret < 0)
+> --
+> 2.49.0
 
