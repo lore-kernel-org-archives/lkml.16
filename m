@@ -1,123 +1,84 @@
-Received: from out-16.pe-a.jellyfish.systems (out-16.pe-a.jellyfish.systems [198.54.127.94])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64181DF73C;
-	Mon, 31 Mar 2025 13:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2CC1DF73C
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743426445; cv=none; b=jRzrTtYc89QC4yg1yUZ4XynhtDLZrX6Czcqde6nF7gmo8zI0RKqcP0c2cnjqaFnVE89zbCsWf0kxBjF1kb7ok113B9T2MMORv42nSWjn/RUmo16VgWOXi9p5uJWldWcdAZXflx6B5Akxp3cm/uF+3IPBkoKgV51FVrPD2ijialw=
+	t=1743426503; cv=none; b=sXMPRdgBujWWG3S3OyxswZa/yxOWQkn2W7kUllfr2K6SZNubvL+dGQPLroKZ6jrGGs/PxjT4uVN4cnnFO0v1xqd9AFYB1Mh3CSPFK6TxBLbdxuC7PJl5Gq6RBG8UBCR8lt+v7Qd7CjiH9tN57RmnJ98a6gZ9e/pfgSxbgmgzKpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743426445; c=relaxed/simple;
-	bh=XAf34DaNZayKTZMezBU2SOnWNVi58X5xnCWEMzzxUdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rk3MHUxe3dXa6sd/vy16eqnOdmMAv5zCg2pxNYUMvB859qEuiMafifxcuz2SFUahSP1TeBSxctbTEnAX+vtYDppWZ8CP3sgDma7WNKpHk1raaVlOi8P5nrMLLg9GJKIDYBpvRUPVNwdujR8LklkdakHyuOrvqI+FjCHq10Z7UFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=TKLOJmIT; arc=none smtp.client-ip=198.54.127.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="TKLOJmIT"
-Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
-	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZRBHT1fDlz4wJq;
-	Mon, 31 Mar 2025 13:07:17 +0000 (UTC)
-Received: from MTA-09.privateemail.com (unknown [10.50.14.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZRBHT0j32z2Sd0Q;
-	Mon, 31 Mar 2025 09:07:17 -0400 (EDT)
-Received: from mta-09.privateemail.com (localhost [127.0.0.1])
-	by mta-09.privateemail.com (Postfix) with ESMTP id 4ZRBHS6LlKz3hhV8;
-	Mon, 31 Mar 2025 09:07:16 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1743426436;
-	bh=XAf34DaNZayKTZMezBU2SOnWNVi58X5xnCWEMzzxUdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TKLOJmITEmXEBpX+lbpAlM2Dji1iMpPnX5u0rMJHfTPPpDFn28v0BGAY1er+GG1Ve
-	 xT5NvcH+J5ce9CjXHsHmYaVHEEjf4eC9+VirK/idvZB7JE4UpxVPa10Vap/BdkkNNs
-	 yg/Swd77PKX+cweoz85KxjuA5N5j2B/qNPAhMZq/XEHxS/QSF9f6gIAl2f8301b3kq
-	 rVLOVDuaRy0c0PrSXY4g/b2AdWwCfCIYWKTO1RnoUlBa7qAS47tTR3ekii4BRco8kM
-	 2OJlk8OB74RcJt8G8WqZ/U8psvrfNjGzPiuqUaaVwNMoxG/QA98yTGVookS6cu0fYa
-	 B3pYk+p061smA==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-09.privateemail.com (Postfix) with ESMTPA;
-	Mon, 31 Mar 2025 09:07:00 -0400 (EDT)
-Date: Mon, 31 Mar 2025 09:07:03 -0400
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, mdf@kernel.org, hao.wu@intel.com, 
-	yilun.xu@intel.com, trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, michal.simek@amd.com, linux-fpga@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Sam Winchenbach <swinchenbach@arka.org>
-Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
-Message-ID: <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
-References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
- <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
- <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
- <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
+	s=arc-20240116; t=1743426503; c=relaxed/simple;
+	bh=lQcciuXGdeI+gMHGUsufMwWOrrIFBfsxM70zLAB5wC4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V8FRsKB5+6877KKLQao2flENthSAjv3vy931K4AZbW1vXGzigg5Q/j84lIw/aU/VOnUfsQ6ewjoE2vNKsIPlNwgUKPgdrtaS2jnEtZIfjMWJsN69Sp5tEQo2DHkM2VPJBx+dNVZjuRr0mHc70FJshOvsG0KjcMXi0TspTxPlZZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-849d26dd331so516585139f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:08:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743426501; x=1744031301;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HQm97m3F2hf17H9sSC0zFvTaV5xTq5eG+zcc0Ysc7gY=;
+        b=MPk0j0vd323TXiuC4I7JkybUMSJj/82GvqPrrwRx6U2d2orqrUjzkGC9ELhUYuKHZK
+         ndD+MD8QXZ+liy+BFWuuObI8t1UHMMSm5dsZsjXYsOYZGQ7/ZHsuZJgTjiV4xsiUYEiN
+         vYlIZMkn44bVxFuUdlbai5yGwPm8Xp7v0cBUoDT11zcj80Hcguk3MyRPnQm9lyTDu7U/
+         0DE0sbuiSqcUVeEHplIHVY0WpjZDA1rKDPGjBRmktOuS31A5iJac2s+0Tl2Mrg/SrI0r
+         +f20oSg5J41mMSe7rzYS1Jlj7P6DpDMeq0OTzvSBL6Z76FetKhFtgE0FGbMVqxlGR4m9
+         QkhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQvFzwtkTVHmgfW1eCCDGjGjBxPwO73gs+vwXCYtGz92tMl1xQnGwBnN0+UIIOfcezxuX/yNmYEzzaxtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6wPlLOEann8eaZu4ZgGxu1pCxJIuHSFGKNg4pXs9S7XZk23YD
+	cPAjaFLs+TQipnhvfdPOtdNeZp7+zjlKAO5eNYWozpMQKIhg2WKFcegn3UI7UKUA6m8YUgS/GcA
+	XBlRj2nwJgXA0Vvvq6wHxpXAqma695S4bvzzBnVPr/zjG+yBFvru+QKM=
+X-Google-Smtp-Source: AGHT+IHIaGFv45CH9yP1SffeoWvG2028p1ktltDelf5T5UC2qndIIoinYo63hKIwG71cL4xQRElrEOk1KdPJWahGv071nX2vW6XE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-Received: by 2002:a05:6e02:1988:b0:3d2:ed3c:67a8 with SMTP id
+ e9e14a558f8ab-3d5d6c8346amr107275575ab.4.1743426501208; Mon, 31 Mar 2025
+ 06:08:21 -0700 (PDT)
+Date: Mon, 31 Mar 2025 06:08:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ea93c5.050a0220.1547ec.0142.GAE@google.com>
+Subject: [syzbot] Monthly f2fs report (Mar 2025)
+From: syzbot <syzbot+listcca4438a6792bfb39532@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 02:43:59PM +0200, Krzysztof Kozlowski wrote:
-> On 31/03/2025 14:30, Sam Winchenbach wrote:
-> >>
-> >>> +    type: boolean
-> >>> +    description: If present, the ICAP controller will be enabled when
-> >>> +      the driver probes. This is useful if the fabric is loaded
-> >>> +      during the boot process and contains a core, such as the SEM,
-> >>
-> >> I don't get how this is suitable for DT. If you decide to load the
-> >> fabric from driver, that's driver decision so not DT.
-> > 
-> > Before writing the fabric to the FPGA the driver disables the ICAP, enabling
-> > the PCAP. Once writing is complete it unconditionally disables the PCAP,
-> > enabling the ICAP. This patch just makes it so, depending on the use case,
-> > the ICAP can be enabled at boot. This will not prevent the system from being
-> > able to load a fabric through the driver. I added in this boolean so existing
-> > behavior would be maintained.
-> > 
-> > Do you recommend another approach such as writing to a sysfs attribute to
-> > switch from PCAP to ICAP?
-> Not sure yet. Can't you check the status of ICAP before programming and
-> then enable it only if was enabled before?
+Hello f2fs maintainers/developers,
 
-I am having a bit of difficulty understanding this so let's talk about cases
-where the ICAP is enabled/disabled -
+This is a 31-day syzbot report for the f2fs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/f2fs
 
-1. When writing the fabric from the driver
-   In this situation it might make sense to read the state of the ICAP
-   interface when preparing the fabric, before enabling PCAP. When the write
-   completes you could re-enable the ICAP if it was previously enabled.
+During the period, 1 new issues were detected and 1 were fixed.
+In total, 9 issues are still open and 57 have already been fixed.
 
-   This might be outside the scope of this change - and I am not comfortable
-   enough with this use-case to understand potential side effects from doing
-   this. Logically it makes sense, but there may be a very specific reason that
-   the ICAP must be enabled after doing a fabric load or partial
-   reconfiguration.
+Some of the still happening issues:
 
-2. When the FPGA driver loads and is probed by the DTS
-   In this situation, which is covered by this patch, the FPGA is loaded by
-   BootROM/FSBL but contains functionality that requires the ICAP. Unless the
-   user has made modifications to the FSBL or 3rd stage bootloader there is no
-   clear way to enable the ICAP interface. Checking to see if it had been
-   enabled prior to loading this driver does not (in my opinion) make a lot of
-   sense here.
+Ref Crashes Repro Title
+<1> 1246    Yes   INFO: task hung in f2fs_balance_fs
+                  https://syzkaller.appspot.com/bug?extid=8b85865808c8908a0d8c
+<2> 59      Yes   kernel BUG in f2fs_evict_inode (4)
+                  https://syzkaller.appspot.com/bug?extid=5c81eb8c0a380fa578b5
+<3> 11      No    WARNING: locking bug in f2fs_getxattr (2)
+                  https://syzkaller.appspot.com/bug?extid=44090b62afaabafe828a
 
-   Perhaps the name of the DTS is confusing? The suffix '-on-load' was meant to
-   indicate when the driver was loaded, not the fabric. Would the suffix
-   '-on-probe' be more clear?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Let me know your thoughts,
--Sam
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
->
-> Best regards,
-> Krzysztof
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
