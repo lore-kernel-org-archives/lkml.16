@@ -1,99 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3F5217734;
-	Mon, 31 Mar 2025 14:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B4021859F;
+	Mon, 31 Mar 2025 14:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431806; cv=none; b=ceNVIs7nUgmEPSbpC1IXHHQ68VykYsdnm3rWcnzAtLiG+DEVD1gBRF+CevhQixuaGY6LInKfT7rzJ9xLjxHojAlCbjQFJSvV+wAEhE7JFoxhLjwjhHo2YksDzhaWNPVcyOg6ReFzjLDCcsLIPbR55suD6iHqz09pMwE1hPs/wiE=
+	t=1743431806; cv=none; b=K9lBTa1nziLW5SHIGDKm6hh1GYuFjc8DfcBIJjU9ir6Jh/dj7qflnslstLPDgWDSL5Lz5YcDyPSYErjcgEq6NxVDHzdIf3yynqJvb+PG0rKQLVweGIg/2wszv2riSkDRYmSApqUHbMNLLE9wPEiFTkVtANgoMNUf27NGcQXQmL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743431806; c=relaxed/simple;
-	bh=I61xE3ni3lGHVXYyEJNSPDvgOR5RNMogHt78sUy1r54=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o1vp+6BPfvOMn3oU4kEzqIQloYGz4uLGVa7jOeF8enkPLXxkElgygR8QSHxsF/w89EpszAuzq4VVW+XeU3zMcIypomrMyUlkYTOf0mNHWaiEszcNgxmeju43eOYlYUMASOYqJx0pSmTb/7EGFjCAo+H1weJP4ZQXhy9EpED+4zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogWp3evj; arc=none smtp.client-ip=10.30.226.201
+	bh=saBfwSTx9+zrA2PPu4GkKVVeKaJUPYevf/A5oECr0ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Atx99MmGOBTo3I5oX869dZbc26YR8rrohPo/IyHqzWdqGIzJUV0gZInHmTBW+8r+8rRA/6hMG4yxzck/mfMxdWQerHjlggHyOOLS6eqAdKAN2UN2T40Ur7ZxZIxc0yAw5cOGQOUpwiwEHjROn348+XuYsuV9A+TuHJWnx9MXyxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIR7XGd4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogWp3evj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCADC4CEE4;
-	Mon, 31 Mar 2025 14:36:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIR7XGd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6394CC4CEED;
+	Mon, 31 Mar 2025 14:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431805;
-	bh=I61xE3ni3lGHVXYyEJNSPDvgOR5RNMogHt78sUy1r54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ogWp3evjBV3CMp9x56ZNKmMsCtu/MR2fjY4OjoNAQa65UzRRX/Czd+F1oZBwM7NmQ
-	 t3eo/jxTiWC//8738ZmP7tipt3HbuS8nI0+UWn236atNCbl2gGARpsfNzdgPndpKYN
-	 nLSONakb3mv3NKXcjflYmlMTNZYSPW7NsJrr94ZfG5TUzpuOAsdEyDBl2UvntbdDog
-	 2EyzCFA2K0OS1qSFl4uQC4KDsNKO8+24KdXOuAcPYCXIVNPUYzO4FVeOqcXGbeC2Af
-	 RLhPM/ojkn1rW9NnLy6tbvfXp1anDIRVcS64QUmHLX7dm9IGeuwjjXJ/1NHZutQbFD
-	 H/lAupuMddb9g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	oliver.upton@linux.dev,
-	shameerali.kolothum.thodi@huawei.com,
-	scott@os.amperecomputing.com,
-	bwicaksono@nvidia.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 4/6] arm64: cputype: Add QCOM_CPU_PART_KRYO_3XX_GOLD
-Date: Mon, 31 Mar 2025 10:36:30 -0400
-Message-Id: <20250331143634.1686409-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331143634.1686409-1-sashal@kernel.org>
-References: <20250331143634.1686409-1-sashal@kernel.org>
+	s=k20201202; t=1743431806;
+	bh=saBfwSTx9+zrA2PPu4GkKVVeKaJUPYevf/A5oECr0ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vIR7XGd4L3Iz9uJZYZ/LcQjWI9ZXFd2ChMXVauWYXRo3tIRGb1kn3kwp/B7V2Jskb
+	 6PDPr0nOrrCS2KTkQp8zwJPJ7qwsdTGnTHLyEHms9ZErYZE8aand4okT8pSWsLgXHQ
+	 ybNAiGdg6EORQ4xfV2u4PSKvE5dZq9+IMPgWcQ/IpFL5v5Jus3F7SKMhgEl9jTEds9
+	 Wm00667Wx3UtCd1xzPJQlVt1Tz5X0/tuZfQapA2UBXtEU7ZtX9FnNzBxCppbSfmspK
+	 86P63Vs1o3tDnvbXpDntX3NkoyoigIUZ4eX25iPgUUmI7g8jYBc1oCgkfIPG0LePEw
+	 p5IuDtle2V8Qg==
+Date: Mon, 31 Mar 2025 08:36:42 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kanchan Joshi <joshi.k@samsung.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org,
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] nvme/ioctl: move fixed buffer lookup to
+ nvme_uring_cmd_io()
+Message-ID: <Z-qoevl5Jaf7WFsQ@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250328154647.2590171-1-csander@purestorage.com>
+ <CGME20250328155548epcas5p2368eb1a59883b133a9baf4ac39d6bac6@epcas5p2.samsung.com>
+ <20250328154647.2590171-4-csander@purestorage.com>
+ <48b9a876-0e3b-4c89-9aa3-b48f502868c3@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.132
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48b9a876-0e3b-4c89-9aa3-b48f502868c3@samsung.com>
 
-From: Douglas Anderson <dianders@chromium.org>
+On Mon, Mar 31, 2025 at 12:16:58PM +0530, Kanchan Joshi wrote:
+> On 3/28/2025 9:16 PM, Caleb Sander Mateos wrote:
+> > For NVMe passthru operations with fixed buffers, the fixed buffer lookup
+> > happens in io_uring_cmd_import_fixed(). But nvme_uring_cmd_io() can
+> > return -EAGAIN first from nvme_alloc_user_request() if all tags in the
+> > tag set are in use. This ordering difference is observable when using
+> > UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table. If
+> > the NVMe passthru operation is followed by UBLK_U_IO_UNREGISTER_IO_BUF
+> > to unregister the fixed buffer and the NVMe passthru goes async, the
+> > fixed buffer lookup will fail because it happens after the unregister.
+> 
+> while the patch looks fine, I wonder what setup is required to 
+> trigger/test this. Given that io_uring NVMe passthru is on the char 
+> device node, and ublk does not take char device as the backing file. 
+> Care to explain?
 
-[ Upstream commit 401c3333bb2396aa52e4121887a6f6a6e2f040bc ]
-
-Add a definition for the Qualcomm Kryo 300-series Gold cores.
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Trilok Soni <quic_tsoni@quicinc.com>
-Link: https://lore.kernel.org/r/20241219131107.v3.1.I18e0288742871393228249a768e5d56ea65d93dc@changeid
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/include/asm/cputype.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index 8efc3302bf96b..a735215cb88ef 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -119,6 +119,7 @@
- #define QCOM_CPU_PART_KRYO		0x200
- #define QCOM_CPU_PART_KRYO_2XX_GOLD	0x800
- #define QCOM_CPU_PART_KRYO_2XX_SILVER	0x801
-+#define QCOM_CPU_PART_KRYO_3XX_GOLD	0x802
- #define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
- #define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
- #define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
-@@ -188,6 +189,7 @@
- #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO)
- #define MIDR_QCOM_KRYO_2XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_2XX_GOLD)
- #define MIDR_QCOM_KRYO_2XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_2XX_SILVER)
-+#define MIDR_QCOM_KRYO_3XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_GOLD)
- #define MIDR_QCOM_KRYO_3XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_SILVER)
- #define MIDR_QCOM_KRYO_4XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_GOLD)
- #define MIDR_QCOM_KRYO_4XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_SILVER)
--- 
-2.39.5
-
+Not sure I understand the question. A ublk daemon can use anything it
+wants on the backend. Are you just referring to the public ublksrv
+implementation? That's not used here, if that's what you mean.
