@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3519321ABB1;
-	Mon, 31 Mar 2025 14:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500C6224B04;
+	Mon, 31 Mar 2025 14:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432784; cv=none; b=PktTojZYb5x84YW4uljYVuXuHMDr/dcl/vpNCIt0V3TR4KJg0sp6trLQkzT3c7LftENRLNNUxgSlmlNP1wEuowJSOlIQRy6/pwFh6h1+JWeGBclkfmcZzTsDCLXUziR88A2g5y33YtInBX8YsnXeM3OMDu+r2rj1LGBWXT4QWVA=
+	t=1743432790; cv=none; b=qv3i66V0wBgkJDE7TS/6Gv3iBt/MjcJ+uff2HmwQyC0U/2eVmQSVSGNqDAD2T74+dyfwbwZNDmu/D3SKL706xsNT5uyU26crAKXsn3p40tBmCagwcfvLarMQUOCKZbvz1G+EfdD2UfMF37irVaGWvleuiJLlj1qrJq/BADKOH2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432784; c=relaxed/simple;
-	bh=xO45oJ6fv7ziohtbacf5231zNZ0AkyJrxOIsdAOD5pU=;
+	s=arc-20240116; t=1743432790; c=relaxed/simple;
+	bh=/6KUNMY1A8Y26pV1qijaAS+oDo1V2M/1ZXrTWMwG300=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Km/fxQeAByLPmnX8PDm8fJ9pna0rKSx1hDxtkisntUQ+gqmVj/BVVQOZ2U2IrIiCEDcwNpNClYUXKN5DSqsmNFLBkEVLOuWF9QZyqqQCpzEjRzEOVjS1WvkGY+dP6n+LBW9m/e03x7WB3ViTW2tUjqmOVVpjzNf/VeO++J3Irhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Imll8z+D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=FPLx3g+QBPKGf4zGbQ9n2SWGUvBEM0+JXATk04znRMRk/PsfXB6RwIlskPyUgaoTkUJBB74dM4ng5/nAcdl5ILLQN6hCNkR7jZm09cfv6KQVWJl2LCkqOx+ile+eq54OjU55EHGiTg8+LCGgqN+xRoJWlRHbx4Y3pne3skM6ijU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/Ea23zB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Imll8z+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78778C4CEEB;
-	Mon, 31 Mar 2025 14:53:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/Ea23zB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F25C4CEE4;
+	Mon, 31 Mar 2025 14:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743432783;
-	bh=xO45oJ6fv7ziohtbacf5231zNZ0AkyJrxOIsdAOD5pU=;
+	s=k20201202; t=1743432790;
+	bh=/6KUNMY1A8Y26pV1qijaAS+oDo1V2M/1ZXrTWMwG300=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Imll8z+DOFDgpwHlJRNdW0DC/w52lk+xmO5WfazjUPqwf/WQp6pWQKWJX8wqtcJPQ
-	 mFLyZljpQjooUg7+Wm/++vY1wLPo1hUONKu3u86ceivCvvWBbBcQHdUFGI2SBhjgWg
-	 CTejN4ze4WPRg2cS5/mO3a+PwmBanzmxojyllk+lTVTnL5aWCEDp8W+IdPPV4Bc5Et
-	 If8XKTdxCYkKx/d3rnJj0dcgfeRop31zjhmRopGEpyBwOpeRPuEHcrzWxCNUEGVzSj
-	 xmhWP1Kc0yZTq8WqwajWs0JDSIpuR3lFQ98LaXevQYuV81qhC1c710mSi0usQ/rSWw
-	 rWfmS1xGXKo8A==
+	b=d/Ea23zBuUTCBjX8SQNk5k0OXnhFzTf5Dw6IbX2EU4HQEOxfvb+fAW/nEczz+uB2P
+	 tz22G0UXmEIZrSpIJbuoyruSOKFjSBvFCdAFdD3JTEJ27ugy4V5Lh4VP1e1CEztpLO
+	 Ow+ALgmIjEi3yISyuxivwkN4bHsk4BT24W8EWlN37m40nycSay1F4pJL6U0z88rmSf
+	 b+50qPqKP8Uy/f16Rly6T5UmQ+uvX4YomVK+PlJ1qPnuf93lt/hY4lLPT4gBrTrrE1
+	 6jinS287bxHgTpJXY+sWZA9LTw24udI/VSbQebQgi7Ey7nlAfxXu9mJO91lCaJ+hfC
+	 ahrPD0RhIrpYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: =?UTF-8?q?Tomasz=20Paku=C5=82a?= <tomasz.pakula.oficjalny@gmail.com>,
 	=?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal@nozomi.space>,
 	Paul Dino Jones <paul@spacefreak18.xyz>,
+	=?UTF-8?q?Crist=C3=B3ferson=20Bueno?= <cbueno81@gmail.com>,
 	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
+	oleg@makarenk.ooo,
 	jikos@kernel.org,
 	bentiss@kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 09/27] HID: pidff: Add FIX_WHEEL_DIRECTION quirk
-Date: Mon, 31 Mar 2025 10:52:27 -0400
-Message-Id: <20250331145245.1704714-9-sashal@kernel.org>
+	linux-input@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 11/27] HID: pidff: Add PERIODIC_SINE_ONLY quirk
+Date: Mon, 31 Mar 2025 10:52:29 -0400
+Message-Id: <20250331145245.1704714-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250331145245.1704714-1-sashal@kernel.org>
 References: <20250331145245.1704714-1-sashal@kernel.org>
@@ -58,70 +60,81 @@ Content-Transfer-Encoding: 8bit
 
 From: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
 
-[ Upstream commit 3051bf5ec773b803c474ea556b57d678a8885be3 ]
+[ Upstream commit abdbf8764f4962af2a910abb3a213ecf304a73d3 ]
 
-Most steering wheels simply ignore DIRECTION field, but some try to be
-compliant with the PID standard and use it in force calculations. Games
-often ignore setting this field properly and/or there can be issues with
-dinput8 -> wine -> SDL -> Linux API translation, and this value can be
-incorrect. This can lead to partial/complete loss of Force Feedback or
-even unexpected force reversal.
+Some devices only support SINE periodic effect although they advertise
+support for all PERIODIC effect in their HID descriptor. Some just do
+nothing when trying to play such an effect (upload goes fine), some express
+undefined behavior like turning to one side.
 
-Sadly, this quirk can't be detected automatically without sending out
-effects that would move an axis.
+This quirk forces all the periodic effects to be uploaded as SINE. This is
+acceptable as all these effects are similar in nature and are mostly used as
+rumble. SINE is the most popular with others seldom used (especially SAW_UP
+and SAW_DOWN).
 
-This fixes FFB on Moza Racing devices and others where effect direction
-is not simply ignored.
+Fixes periodic effects for PXN and LITE STAR wheels
 
 Signed-off-by: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
 Reviewed-by: Michał Kopeć <michal@nozomi.space>
 Reviewed-by: Paul Dino Jones <paul@spacefreak18.xyz>
+Tested-by: Cristóferson Bueno <cbueno81@gmail.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hid-pidff.c | 12 +++++++++---
- include/linux/hid.h            |  1 +
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ drivers/hid/hid-universal-pidff.c | 15 ++++++++++-----
+ drivers/hid/usbhid/hid-pidff.c    |  3 +++
+ include/linux/hid.h               |  1 +
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/hid/hid-universal-pidff.c b/drivers/hid/hid-universal-pidff.c
+index 55aad2e4ac1b8..7ef5ab9146b1c 100644
+--- a/drivers/hid/hid-universal-pidff.c
++++ b/drivers/hid/hid-universal-pidff.c
+@@ -168,11 +168,16 @@ static const struct hid_device_id universal_pidff_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_FFBEAST, USB_DEVICE_ID_FFBEAST_JOYSTICK), },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_FFBEAST, USB_DEVICE_ID_FFBEAST_RUDDER), },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_FFBEAST, USB_DEVICE_ID_FFBEAST_WHEEL) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V10) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12_LITE) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12_LITE_2) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_LITE_STAR_GT987_FF) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V10),
++		.driver_data = HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12),
++		.driver_data = HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12_LITE),
++		.driver_data = HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_ID_PXN_V12_LITE_2),
++		.driver_data = HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LITE_STAR, USB_DEVICE_LITE_STAR_GT987_FF),
++		.driver_data = HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, universal_pidff_devices);
 diff --git a/drivers/hid/usbhid/hid-pidff.c b/drivers/hid/usbhid/hid-pidff.c
-index b8c2ba0a930c2..a37cf852a2836 100644
+index a37cf852a2836..4c94d8cbac43a 100644
 --- a/drivers/hid/usbhid/hid-pidff.c
 +++ b/drivers/hid/usbhid/hid-pidff.c
-@@ -137,6 +137,9 @@ static const u8 pidff_block_load_status[] = { 0x8c, 0x8d };
- #define PID_EFFECT_STOP		1
- static const u8 pidff_effect_operation_status[] = { 0x79, 0x7b };
+@@ -637,6 +637,9 @@ static int pidff_upload_effect(struct input_dev *dev, struct ff_effect *effect,
+ 				return -EINVAL;
+ 			}
  
-+/* Polar direction 90 degrees (North) */
-+#define PIDFF_FIXED_WHEEL_DIRECTION	0x4000
++			if (pidff->quirks & HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY)
++				type_id = PID_SINE;
 +
- struct pidff_usage {
- 	struct hid_field *field;
- 	s32 *value;
-@@ -328,9 +331,12 @@ static void pidff_set_effect_report(struct pidff_device *pidff,
- 	pidff->set_effect[PID_GAIN].value[0] =
- 		pidff->set_effect[PID_GAIN].field->logical_maximum;
- 	pidff->set_effect[PID_DIRECTION_ENABLE].value[0] = 1;
--	pidff->effect_direction->value[0] =
--		pidff_rescale(effect->direction, 0xffff,
--				pidff->effect_direction);
-+
-+	/* Use fixed direction if needed */
-+	pidff->effect_direction->value[0] = pidff_rescale(
-+		pidff->quirks & HID_PIDFF_QUIRK_FIX_WHEEL_DIRECTION ?
-+		PIDFF_FIXED_WHEEL_DIRECTION : effect->direction,
-+		0xffff, pidff->effect_direction);
- 
- 	/* Omit setting delay field if it's missing */
- 	if (!(pidff->quirks & HID_PIDFF_QUIRK_MISSING_DELAY))
+ 			error = pidff_request_effect_upload(pidff,
+ 					pidff->type_id[type_id]);
+ 			if (error)
 diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 31dfe9ed5394b..7a55accf689e0 100644
+index 7a55accf689e0..e180679ab284c 100644
 --- a/include/linux/hid.h
 +++ b/include/linux/hid.h
-@@ -1234,6 +1234,7 @@ int hid_pidff_init_with_quirks(struct hid_device *hid, __u32 initial_quirks);
- #define HID_PIDFF_QUIRK_MISSING_DELAY		BIT(0)
+@@ -1235,6 +1235,7 @@ int hid_pidff_init_with_quirks(struct hid_device *hid, __u32 initial_quirks);
  #define HID_PIDFF_QUIRK_MISSING_PBO		BIT(1)
  #define HID_PIDFF_QUIRK_PERMISSIVE_CONTROL	BIT(2)
-+#define HID_PIDFF_QUIRK_FIX_WHEEL_DIRECTION	BIT(3)
+ #define HID_PIDFF_QUIRK_FIX_WHEEL_DIRECTION	BIT(3)
++#define HID_PIDFF_QUIRK_PERIODIC_SINE_ONLY	BIT(4)
  
  #define dbg_hid(fmt, ...) pr_debug("%s: " fmt, __FILE__, ##__VA_ARGS__)
  
