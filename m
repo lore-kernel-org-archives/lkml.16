@@ -1,172 +1,386 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9CA157A5A
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A39D1D516A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409324; cv=none; b=FoxSXPGCgpmlbCvMWiP1tHbjTPSAg41/D1+k4wWqXZYkkkvTuCwidIA1ExGtYaEYK3qAzfUn1yI0HuVndsIVmFUuH5yJglBxYAAmoxu3pxU4mOFLLi8MPLFnuOZX/B8TgX5E8LQqLHBGgdPTjAX4owBPglG+kFTD4ZxxGD8W3VE=
+	t=1743409325; cv=none; b=NEN6qcmMI81MK/kZ7DMl7wwO/vMlItF0x156hx3qXsgXWMs0DDNSntHXrKvNIzwlEwUR9qz26poTQvNboxD9YpQ5yx/HBBXIaYs5huJAiQco22EsgWSGSGWQcLnqLKXGDpnB7BsJPoIucUzQrMbWVdnoiEo7JfPFddJmFEzSUYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409324; c=relaxed/simple;
-	bh=tUrrndyetcQdf+fJlK/WuPN0EMaUdeLYo6Dod9/nY6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heON49z3J3szp3vn/aUd+lgx5tj+oOT2zfpaS+6cKZc2vwAQ047L8SwTuSZUzYXY7JC0REjyGtMreQzjvco/r0C4/PUUNZhsay6y8cOG/BuUtfX2uNHalGCJ9sppu3B/CQSJPDjSMv140X01VuRv05lncwatKU4KOyJTDUbuJuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sox2lVNC; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sox2lVNC"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C8154250;
-	Mon, 31 Mar 2025 10:20:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743409209;
-	bh=tUrrndyetcQdf+fJlK/WuPN0EMaUdeLYo6Dod9/nY6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sox2lVNCEUZ1fv2QDPfZ8SNuu1x+9s4JVyz55uRTltFx/HfltKgOyoJm43X89aism
-	 mPPWstyuYlXvBtatqUZUU2Z+bGs8PSyL+LjCNh73J3Xhp311XBx+HI+Y56w/IUdURc
-	 7NIjXgksgogiFrLzHDgrcmdsEBxcDBfNuyhKYIHY=
-Date: Mon, 31 Mar 2025 11:21:35 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Vishal Sagar <vishal.sagar@amd.com>,
-	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-Message-ID: <20250331082135.GB13690@pendragon.ideasonboard.com>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
- <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
- <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
- <20250327112009.6b4dc430@eldfell>
- <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
- <20250327175842.130c0386@eldfell>
- <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
- <20250331105446.098f0fbe@eldfell>
+	s=arc-20240116; t=1743409325; c=relaxed/simple;
+	bh=4UfzHwofz9BiEgSn/Z8gx5AFmSGFbhwc7GAPGDvcFVA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=TrmNtfnIV131v3LH/mGCxD3daQMqaJjxmnXHo9S10MhecNuSjp8DHEBvgKQsBo+E9GbbXM2XCPGIRuOiD6O0m7A91tqmRf+E/jjgDepca2mlie9vhiCopMyTT9ZT9GbWdYP9u6A3HMAWpiaF8Ywqh7iT4M3xxXudjYqgQN/FScg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso45048455ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:22:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743409322; x=1744014122;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l59wvPGj13fRjxZWsF9kAPO8beJLVpr8axatp0sFNT4=;
+        b=E649hsZGTv22drMwDaP0YtG71+I4yNOvuh1jf03XeJCfWUdnE3UiNyoPJ7drnGCfO+
+         gbnzkjYVfXVNJy9NUUR2ui+c9ZTGXaVzrA58YS73RI+fiVYjK3QnisG/TU66q2JsVaE/
+         4xoZ6ArfOcwCf/6VpzUlhCMosvV+sS6aalYyworwcmC7ENCETc+ZULr/aW0DIyzfwXHD
+         uPtpZw067bPfjOyXtM+xdesrMM8TDR8lSxInMs8V6HUgj1ONzTYLWoho/9WWsM9CKRWd
+         mHFooH/BTgReVEVkKJe/kNnXHFO7aJKc354IHbo5oPJZQWJoAKXmcGeQWRNIk6qClsEA
+         Qa5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX3fw/WdkLlRsiEh6wLwvynTEOxzy186qXskoXyby0wAMMBSSrCqpVJKyG9X+K07Dz/Ogw/SU/WdsY3qag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2B/i/taZ9VCztB2OSNkYLLa0q2Zx5BUvFeCPWetShw8tnGFFn
+	lK9WS5ghwmv1sQZDJwR1oK06Mpu6sq5prlg29XQYQd4Kwq6cyMxmird5dfDeOiBcgbnxnK1Vbbg
+	/MNtZT+CklR+ojb9ydTtM61c+6QjB4ijbmbv1gMcnWA3MSExKTfz4jD0=
+X-Google-Smtp-Source: AGHT+IHWxl0TG4tehUyN659l0LJLBeEd5wniWgMhrNLmMsQpFN/pQhZIFDqmef8dK6IgSBcfqYHAnXeMs/dDEHRAqTuMMCUuDxmI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250331105446.098f0fbe@eldfell>
+X-Received: by 2002:a05:6e02:3084:b0:3d3:f9e0:709b with SMTP id
+ e9e14a558f8ab-3d5e09c87a1mr71851165ab.17.1743409322442; Mon, 31 Mar 2025
+ 01:22:02 -0700 (PDT)
+Date: Mon, 31 Mar 2025 01:22:02 -0700
+In-Reply-To: <164892.1743408445@warthog.procyon.org.uk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ea50aa.050a0220.1547ec.0122.GAE@google.com>
+Subject: Re: [syzbot] [afs?] KASAN: slab-use-after-free Read in afs_dynroot_readdir
+From: syzbot <syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com>
+To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
-> On Thu, 27 Mar 2025 17:35:39 +0100
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> 
-> > Hi Pekka,
-> > 
-> > On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
-> > <pekka.paalanen@haloniitty.fi> wrote:
-> > > On Thu, 27 Mar 2025 16:21:16 +0200
-> > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:  
-> > > > On 27/03/2025 11:20, Pekka Paalanen wrote:  
-> > > > > On Wed, 26 Mar 2025 15:55:18 +0200
-> > > > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:  
-> > > > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote:  
-> > > > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
-> > > > >>> <tomi.valkeinen@ideasonboard.com> wrote:  
-> > > > >>>> Add greyscale Y8 format.
-> > > > >>>>
-> > > > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>  
-> > > > >>>
-> > > > >>> Thanks for your patch!
-> > > > >>>  
-> > > > >>>> --- a/include/uapi/drm/drm_fourcc.h
-> > > > >>>> +++ b/include/uapi/drm/drm_fourcc.h
-> > > > >>>> @@ -405,6 +405,9 @@ extern "C" {
-> > > > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
-> > > > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
-> > > > >>>>
-> > > > >>>> +/* Greyscale formats */
-> > > > >>>> +
-> > > > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */  
-> > > > >>>
-> > > > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
-> > > > >>> the number of bits in the FOURCC format. What do you envision
-> > > > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?  
-> > > > >>
-> > > > >> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
-> > > > >> not required, but different fourccs for the same formats do confuse.
-> > > > >>
-> > > > >> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
-> > > > >> possible, and if not, invent a new one.  
-> > > > >
-> > > > > what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
-> > > > >
-> > > > > Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
-> > > > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
-> > > > > defined by MatrixCoefficients (H.273 terminology)?
-> > > > >
-> > > > > That would be my intuitive assumption following how YCbCr is handled.
-> > > > > Is it obvious enough, or should there be a comment to that effect?  
-> > > >
-> > > > You raise an interesting point. Is it defined how a display driver, that
-> > > > supports R8 as a format, shows R8 on screen? I came into this in the
-> > > > context of grayscale formats, so I thought R8 would be handled as (R, R,
-> > > > R) in RGB. But you say (R, 0, 0), which... also makes sense.  
-> > >
-> > > That is a good question too. I based my assumption on OpenGL behavior
-> > > of R8.
-> > >
-> > > Single channel displays do exist I believe, but being single-channel,
-> > > expansion on the other channels is likely meaningless. Hm, but for the
-> > > KMS color pipeline, it would be meaningful, like with a CTM.
-> > > Interesting.
-> > >
-> > > I don't know. Maybe Geert does?  
-> > 
-> > I did some digging, and was a bit surprised that it was you who told
-> > me to use R8 instead of Y8?
-> > https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
-> 
-> Hi Geert,
-> 
-> indeed I did. I never thought of the question of expansion to R,G,B
-> before. Maybe that expansion is what spells R8 and Y8 apart?
-> 
-> I do think that expansion needs to be specified, so that the KMS color
-> pipeline computations are defined. There is a big difference between
-> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
-> 
-> - (R, 0, 0)
-> - (R, R, R)
-> - (c1 * Y, c2 * Y, c3 * Y)
+Hello,
 
-I'd be very surprised by an YUV to RGB conversion matrix where the first
-column would contain different values. What we need to take into account
-though is quantization (full vs. limited range).
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> I forgot to consider that in the discussion of single-channel displays,
-> because the displays obviously do not consider any other channel than
-> the one.
-> 
-> Using DRM_FORMAT_Y8 FB with a single-channel display might even be
-> surprising, because the proposed Y8 definition would result in c1 * Y,
-> and not Y. The default c1 comes from the BT.601 matrix IIRC?
-> 
-> Therefore I think the difference between R8 and Y8 has been found. Now
-> we just need to determine whether R8 means (R, 0, 0) or (R, R, R) to
-> nail down the color operations as well. There are questions like what
-> is the outcome at the video signal level when we have one KMS plane
-> with an R8 FB and another KMS plane with an RGBA8888 FB on the same
-> CRTC? What about Y8 or NV12 in the mix? What if the video signal is
-> single-channel, RGB, or YCbCr?
+0000000 0000000000000031 0000726565666965
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 0000000000000031 00006d5f65636864
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbf2b313423342c
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 262821df2e2e33df 3228df3232202b22 df312e232d2435bf 2324353124322431
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
+info registers vcpu 2
 
--- 
-Regards,
+CPU#2
+RAX=3D0000000000033bfc RBX=3D0000000000000002 RCX=3Dffffffff8b6b32d9 RDX=3D=
+ffffed100d4c65be
+RSI=3Dffffffff8bf428a0 RDI=3Dffffffff81918dd1 RBP=3Dffffed1003ad1910 RSP=3D=
+ffffc90000187e00
+R8 =3D0000000000000000 R9 =3Dffffed100d4c65bd R10=3Dffff88806a632deb R11=3D=
+ffffffff9acc36a8
+R12=3D0000000000000002 R13=3Dffff88801d68c880 R14=3Dffffffff90847210 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b6b46cf RFL=3D00000246 [---Z-P-] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff8880d6bfa000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe0000091000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe000008f000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007ffe3a3f24b8 CR3=3D000000000e182000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D0000000000062003 Opmask01=3D00000000001000c0 Opmask02=3D00000000=
+0fffffff Opmask03=3D0000000000000000
+Opmask04=3D0000000000000000 Opmask05=3D0000000000000000 Opmask06=3D00000000=
+00000000 Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000034687465
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00007ffe3a3e2280 0000003000000008
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 2e2e2e2e2e2e2e2e 2e2e2e2e2e2e2e2e
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 000000ff00000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 ffff0000ff000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2525252525252525 2525252525252525 2525252525252525 2525252525252525
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 50422064656e7761 7073203a73250050 5241006e65706f5f 667062203a732500
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 50420541404b5244 5556051f56000050 5241004b40554a5f 435547051f560000
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 00005644101183e0 00005644101197e0 0000000000000181 0000000000000000
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000041 0700000000000029 00316e6170772f74 656e2f317968702f
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 0000564475764233 73656d5f70636864
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 725f0f7b5f6fd661 72610f657b69f37f 6567777777777fff 7f7f7d7f75777965
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 7865686e69622000 7761722000696963 73612000656d616e 6420006e69616d6f
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 0000000000000031 0000726565666965
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000021 0000000000000000 0000000000000031 00006d5f65636864
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbfbfbfbfbfbfbf bfbf2b313423342c
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 262821df2e2e33df 3228df3232202b22 df312e232d2435bf 2324353124322431
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
+info registers vcpu 3
 
-Laurent Pinchart
+CPU#3
+RAX=3D00000000000275d4 RBX=3D0000000000000003 RCX=3Dffffffff8b6b32d9 RDX=3D=
+ffffed100d4e65be
+RSI=3Dffffffff8bf428a0 RDI=3Dffffffff81918dd1 RBP=3Dffffed1003b54000 RSP=3D=
+ffffc90000197e00
+R8 =3D0000000000000000 R9 =3Dffffed100d4e65bd R10=3Dffff88806a732deb R11=3D=
+ffffffff9ada5038
+R12=3D0000000000000003 R13=3Dffff88801daa0000 R14=3Dffffffff90847210 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b6b46cf RFL=3D00000246 [---Z-P-] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff8880d6cfa000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe00000d8000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe00000d6000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00005643d1f0e680 CR3=3D0000000028726000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D0000000060000000 Opmask01=3D00000000ffffffff Opmask02=3D00000000=
+fff80800 Opmask03=3D0000000000000000
+Opmask04=3D0000000000000000 Opmask05=3D0000000000000000 Opmask06=3D00000000=
+00000000 Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000001
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00007ffdf1a6b290 0000003000000010
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 6c5f5f0045544156 4952505f4342494c
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 000000000042494c
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 6362696c5f5f0045 5441564952505f43
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2525252525252525 2525252525252525 2525252525252525 2525252525252525
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4f6e3a6d5e007325 2e73250064252e73 2500656c6f736e6f 632f7665642f000a
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4f4b1f485e005600 0b56000041000b56 000040494a564b4a 460a5340410a000a
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
+go1.23.6.linux-amd64'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
+.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.23.6'
+GODEBUG=3D''
+GOTELEMETRY=3D'local'
+GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build1472119147=3D/tmp/go-build -gno-record-gc=
+c-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 89d30d7360
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D89d30d7360d4a366f8fdf00d6ac56cced7a45b0b -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20250325-195331'" -o ./b=
+in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
+_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"89d30d7360d4a366f8fdf00d6ac56cced7=
+a45b0b\"
+/usr/bin/ld: /tmp/cc2CraHQ.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D14d623e4580000
+
+
+Tested on:
+
+commit:         4e82c870 Merge tag 'rust-6.15' of git://git.kernel.org..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd1f30123de5ffff
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D1aa62e6852a6ad1c7=
+944
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D122e47b05800=
+00
+
