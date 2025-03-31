@@ -1,184 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C5814D29B;
-	Mon, 31 Mar 2025 20:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1731CAA90;
+	Mon, 31 Mar 2025 20:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452727; cv=none; b=t5m/mD3++B4n032CG47PCwHJuu6RDQJJr+1jFsSbdsBBHafn9VCYiymU8ASEf12iVUAOMyWt1H/JVbXi5N8f8DdMX/LL6tbiBMR6H7Q2oCs6x8dG2DVmHaQJ0jVxLYs84Q26lOW1uc8L7B4xUJtwt5fc4byLTwcWvyJpGXOrLBA=
+	t=1743452850; cv=none; b=Lhg80K6y8Dzrx91Bb2sFMP+edgB7vyicOTFxAuss6umDBAokQ8mNwM7Rj1fFLAq8+CSgbfugbicd8Q/0RuCOCiyUWe1Uu2wfZWdXzZCN07BkadYATqW7T4s4+BXipxLyMugG6kh3Na8kIRQG54Z6tBbOQiLDkpXGrIoVsCVuRqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452727; c=relaxed/simple;
-	bh=HIrTCApyUI6z9mNHfz/Tj6ozDxPQrbqQfpuGoqEqy8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pinogya9BvkmshmcLErAIrd4FMpvSupXqDjX1lrRad6tzjHybIPvxaj7quNKVPmVA6TCMPdJD9kU03HFkVA4XfXOipEy/CNpwUEE7ztS2RHinqjKVyhd6F3yr9xQsoK8mv+igam/uNQTbF0SmweYW7xMBI5feX4nWuVaSGbd7Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbtYkXt0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743452850; c=relaxed/simple;
+	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TV9/ltKq0hSU4b99KrjQw53lKSGHTMpeiJAoGPsq/FLoPDvE/yACVUTteLELLmwvA5MBKTWocw6dlfwwWK5Dvqhy/h57zEhoF/cf9jX1npvvM50x0JZt6+AmxiVAZ3diYqleCL2wdI0vmhOZonOO2AeCw9nMEnQU9165Fs9Uezw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=1xyxNhXA; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbtYkXt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A7BC4CEEE;
-	Mon, 31 Mar 2025 20:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452727;
-	bh=HIrTCApyUI6z9mNHfz/Tj6ozDxPQrbqQfpuGoqEqy8A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YbtYkXt0+2jTE/6nRB/szJIKDmcQTL1iUpBdG54Bw+A5fs5ibstBVSnOxkUuADwp3
-	 GLnCaxJ7eOLa12HJDPOczF6EIzrS7YRJYIUb7LPy3yUrrLXgpxhJDp/2oV9uA2ZLy3
-	 Oc3kj1+PUvB2cYWsK6+0/2miyMHOk6eSQuIcd+JJLo4owPJQAUllx6Hmt5OIcCZ7VG
-	 YOfcK8u6XvKAEVUqqn7gVEcQyYc5yQ24Fy70b8jEUUQVrOfoCvGhFEpkxdQBdaISIo
-	 yeCIfOLEaYsliw1pxISaUC5ymVKH45zY4t29AE3e3diHEfeuRLEVWI0oJA0AAHIhkz
-	 QJ3Y2CilMP7hw==
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6028e5a45d7so395166eaf.1;
-        Mon, 31 Mar 2025 13:25:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVa9YQo19szZ+79jRRha9hrImlP8w0VVHsp1HRbsA99rIDO3NSPehKiaoClDo0eRqEaU8DI59lL@vger.kernel.org, AJvYcCVqa9at6fQy0eRNmExzgWvq+15QpgOM9v1mhhLDog8d22y00Q/D2j0NPfmhWRS9ga+o8K2YQO7MQ2Dot1U=@vger.kernel.org, AJvYcCXLA/2bD6vytfYw40QmIQxBamNgL1nmda5hcVNc9UmFaeu2kPKNlKYAM7lq2XTQVqG6lHrAQ6mMCw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5i/Y04Om0NFeSmboGJf31AA/aT64IbrU1LMcbkD9eEQKftiMA
-	5ECet5LBadG7IORL7zh/y2xgVCvml3QFMt0aH5mLDol5YZuWt8GVek8ck19j3TCDPnrxKmlClUj
-	mkJ3QiWAi07A68w7EB4LAbON3nhU=
-X-Google-Smtp-Source: AGHT+IE2MnxYcEJPT7iTnc0xVnzAudkbexu5Aqgnz9oKUGGbqsjRUa8sEYypsTv5IKX8Hhj/ppZWLYejK5qggypnIV0=
-X-Received: by 2002:a05:6870:be94:b0:29e:503a:7ea3 with SMTP id
- 586e51a60fabf-2cbcf805f9fmr6504735fac.36.1743452726411; Mon, 31 Mar 2025
- 13:25:26 -0700 (PDT)
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="1xyxNhXA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=; b=1xyxNhXAAZkumfn+rj9gjbDgJq
+	Cac07i2SbLbMyd3WejpqlYAZVYYUr44gazhhYrd4YT8aNL7InIJUa8HDHDKrH39rL+yAODAtOH/7W
+	O4j8vi/2JqQUU3hGyXW+acp0G6EuYTesgDP9t4I9fOHGiXRet9y7HD+n8rGRvNAOznCzq5roEUY1m
+	7BoGjfNMB6lVKOw406lFzYc91MyD8ADG8uM9jOeXlxWWzT+NqbO0Sr5tRTkGP8ry5YaR6uzAZQ3rt
+	ykbUgPvgPMRkNTbX7AqOM/i8CQiNgBDue667YAS2zuEXYboBuiyDbB0DNmEUv/4KIaGtzEw0IHpur
+	YBO6gx7cElsGJEN1IsJxDEiAO4N3dhfj+icUDr4RWA6qGmhE/J1uSHf0gocR9WXKmoZDAvdVBjjMC
+	T5H55JVmt3id6TXT5t3Q0YgS8tKzB4WMMNOB4EQYHjzySVUlsBn/xb34lZ6+LVMKIgkQ6MV+AO7RS
+	d1XvbBcwupfsWYYJr0+8JKjv;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1tzLj6-007YEh-3D;
+	Mon, 31 Mar 2025 20:27:21 +0000
+Message-ID: <62ef4f1e-a726-423a-a765-ee584ee681c0@samba.org>
+Date: Mon, 31 Mar 2025 22:27:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326062540.820556-1-xin@zytor.com> <CAJZ5v0jfak9K_7b=adf5ew-xDiGHUEPSp5ZpAGt66Okj-ovsGQ@mail.gmail.com>
- <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
-In-Reply-To: <148C8753-8972-4970-8951-E2D1CB26D8B0@zytor.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 31 Mar 2025 22:25:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j+yxAPZE0eVqkrNjG2L-gZwndmW-0=Pjt9dgeTG7KKKQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jrq30lwkTb_KiOVXJm-_hg25edEjHIRU-4WPLre4pYOSFiiRO7G2_gYicc
-Message-ID: <CAJZ5v0j+yxAPZE0eVqkrNjG2L-gZwndmW-0=Pjt9dgeTG7KKKQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] x86/fred: Fix system hang during S4 resume with
- FRED enabled
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, pavel@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, xi.pardee@intel.com, 
-	todd.e.brandt@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/4] net: pass 'optlen_t' to proto[ops].getsockopt()
+ hooks
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, Breno Leitao
+ <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, David Ahern <dsahern@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
+ Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Robin van der Gracht <robin@protonic.nl>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Alexandra Winter <wintera@linux.ibm.com>,
+ Thorsten Winkler <twinkler@linux.ibm.com>,
+ James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
+ Matt Johnston <matt@codeconstruct.com.au>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Remi Denis-Courmont <courmisch@gmail.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+ Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+References: <cover.1743449872.git.metze@samba.org>
+ <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
+Content-Language: en-US, de-DE
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-On Mon, Mar 31, 2025 at 10:04=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wro=
-te:
->
-> On March 31, 2025 8:30:49 AM PDT, "Rafael J. Wysocki" <rafael@kernel.org>=
- wrote:
-> >On Wed, Mar 26, 2025 at 7:26=E2=80=AFAM Xin Li (Intel) <xin@zytor.com> w=
-rote:
-> >>
-> >> During an S4 resume, the system first performs a cold power-on.  The
-> >> kernel image is initially loaded to a random linear address, and the
-> >> FRED MSRs are initialized.  Subsequently, the S4 image is loaded,
-> >> and the kernel image is relocated to its original address from before
-> >> the S4 suspend.  Due to changes in the kernel text and data mappings,
-> >> the FRED MSRs must be reinitialized.
-> >
-> >To be precise, the above description of the hibernation control flow
-> >doesn't exactly match the code.
-> >
-> >Yes, a new kernel is booted upon a wakeup from S4, but this is not "a
-> >cold power-on", strictly speaking.  This kernel is often referred to
-> >as the restore kernel and yes, it initializes the FRED MSRs as
-> >appropriate from its perspective.
-> >
-> >Yes, it loads a hibernation image, including the kernel that was
-> >running before hibernation, often referred to as the image kernel, but
-> >it does its best to load image pages directly into the page frames
-> >occupied by them before hibernation unless those page frames are
-> >currently in use.  In that case, the given image pages are loaded into
-> >currently free page frames, but they may or may not be part of the
-> >image kernel (they may as well belong to user space processes that
-> >were running before hibernation).  Yes, all of these pages need to be
-> >moved to their original locations before the last step of restore,
-> >which is a jump into a "trampoline" page in the image kernel, but this
-> >is sort of irrelevant to the issue at hand.
-> >
-> >At this point, the image kernel has control, but the FRED MSRs still
-> >contain values written to them by the restore kernel and there is no
-> >guarantee that those values are the same as the ones written into them
-> >by the image kernel before hibernation.  Thus the image kernel must
-> >ensure that the values of the FRED MSRs will be the same as they were
-> >before hibernation, and because they only depend on the location of
-> >the kernel text and data, they may as well be recomputed from scratch.
-> >
-> >> Reported-by: Xi Pardee <xi.pardee@intel.com>
-> >> Reported-and-Tested-by: Todd Brandt <todd.e.brandt@intel.com>
-> >> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> >> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> >> Cc: stable@kernel.org # 6.9+
-> >> ---
-> >>  arch/x86/power/cpu.c | 16 ++++++++++++++++
-> >>  1 file changed, 16 insertions(+)
-> >>
-> >> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-> >> index 63230ff8cf4f..ef3c152c319c 100644
-> >> --- a/arch/x86/power/cpu.c
-> >> +++ b/arch/x86/power/cpu.c
-> >> @@ -27,6 +27,7 @@
-> >>  #include <asm/mmu_context.h>
-> >>  #include <asm/cpu_device_id.h>
-> >>  #include <asm/microcode.h>
-> >> +#include <asm/fred.h>
-> >>
-> >>  #ifdef CONFIG_X86_32
-> >>  __visible unsigned long saved_context_ebx;
-> >> @@ -231,6 +232,21 @@ static void notrace __restore_processor_state(str=
-uct saved_context *ctxt)
-> >>          */
-> >>  #ifdef CONFIG_X86_64
-> >>         wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
-> >> +
-> >> +       /*
-> >> +        * Restore FRED configs.
-> >> +        *
-> >> +        * FRED configs are completely derived from current kernel tex=
-t and
-> >> +        * data mappings, thus nothing needs to be saved and restored.
-> >> +        *
-> >> +        * As such, simply re-initialize FRED to restore FRED configs.
-> >
-> >Instead of the above, I would just say "Reinitialize FRED to ensure
-> >that the FRED registers contain the same values as before
-> >hibernation."
-> >
-> >> +        *
-> >> +        * Note, FRED RSPs setup needs to access percpu data structure=
-s.
-> >
-> >And I'm not sure what you wanted to say here?  Does this refer to the
-> >ordering of the code below or to something else?
-> >
-> >> +        */
-> >> +       if (ctxt->cr4 & X86_CR4_FRED) {
-> >> +               cpu_init_fred_exceptions();
-> >> +               cpu_init_fred_rsps();
-> >> +       }
-> >>  #else
-> >>         loadsegment(fs, __KERNEL_PERCPU);
-> >>  #endif
-> >> --
-> >
->
-> Just to make it clear: the patch is correct, the shortcoming is in the de=
-scription.
-
-Yes, the code changes in the patch are technically correct.
-
-> I would say that Xin's description, although perhaps excessively brief, i=
-s correct from the *hardware* point of view, whereas Rafael adds the much n=
-eeded *software* perspective.
->
-> As far as hardware is concerned, Linux S4 is just a power on (we don't us=
-e any BIOS support for S4 even if it exists, which it rarely does anymore, =
-and for very good reasons.) From a software point of view, it is more like =
-a kexec into the frozen kernel image, which then has to re-establish its ru=
-ntime execution environment =E2=80=93 (including the FRED state, which is w=
-hat this patch does.)
->
-> For the APs this is done through the normal AP bringup mechanism, it is o=
-nly the BSP that needs special treatment.
-
-That's correct.
+PiBkaWZmIC0tZ2l0IGEvbmV0L3NvY2tldC5jIGIvbmV0L3NvY2tldC5jDQo+IGluZGV4IDlh
+MGU3MjBmMDg1OS4uZmEyZGUxMmMxMGU2IDEwMDY0NA0KPiAtLS0gYS9uZXQvc29ja2V0LmMN
+Cj4gKysrIGIvbmV0L3NvY2tldC5jDQo+IEBAIC0yMzUwLDEyICsyMzUwLDE1IEBAIGludCBk
+b19zb2NrX2dldHNvY2tvcHQoc3RydWN0IHNvY2tldCAqc29jaywgYm9vbCBjb21wYXQsIGlu
+dCBsZXZlbCwNCj4gICAJfSBlbHNlIGlmICh1bmxpa2VseSghb3BzLT5nZXRzb2Nrb3B0KSkg
+ew0KPiAgIAkJZXJyID0gLUVPUE5PVFNVUFA7DQo+ICAgCX0gZWxzZSB7DQo+IC0JCWlmIChX
+QVJOX09OQ0Uob3B0dmFsLmlzX2tlcm5lbCB8fCBvcHRsZW4uaXNfa2VybmVsLA0KPiArCQlv
+cHRsZW5fdCBfb3B0bGVuID0geyAudXAgPSBOVUxMLCB9Ow0KPiArDQo+ICsJCWlmIChXQVJO
+X09OQ0Uob3B0dmFsLmlzX2tlcm5lbCwNCg0KU29ycnksIHRoZSByZW1vdmFsIG9mICd8fCBv
+cHRsZW4uaXNfa2VybmVsJyBzaG91bGQgYmUgaW4gdGhlIG5leHQgY29tbWl0Li4uDQoNCj4g
+ICAJCQkgICAgICAiSW52YWxpZCBhcmd1bWVudCB0eXBlIikpDQo+ICAgCQkJcmV0dXJuIC1F
+T1BOT1RTVVBQOw0KDQoNCg==
