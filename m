@@ -1,94 +1,126 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD5173;
-	Mon, 31 Mar 2025 19:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA8173
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743450708; cv=none; b=Zah2KW6SY9X7qarrOt34IGMqQyQPvrykdQxGhZb8WEG2W9NBKNtQZP4ZpugVcWxe+Mf0dg2FP5WQiPWXNJcMNmGtv7XfA8OefKPhSRwfYiZ8CJNEzefPXLsbVnIyFyUq3IcCp22hVwUadyiFN0aS4z4WBo7UeLHzfiCa2hau27w=
+	t=1743450744; cv=none; b=WIzqi0lnaIem3CFliaUj6DGOIp2pd2p6KFyWBPWTpU1veDxZCAEr5fQF0hldaV4DiG4LU64Dwk2K3RHCPmbvjzJ0aU7NQLul8xKjxTXyzNpch5E3RNde2oAM1g/auW6eYhWLUSlbJcOH5N9H4qewYnIVFJjHTZHkp+S1ulHrCfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743450708; c=relaxed/simple;
-	bh=/913otloLGIK9WB3vUpB/fyu/LBH3sBrmhAhMG6gFn4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Low616kIbK59YEX3iMDqGiCC0swyocfrgBwMbJJ7QXr68u52rKCufxQj7/dP1bV9T2grLGzNERkergoOa5nGHWIUF2CmHb8BzsM9T+qHajPN4vw3Cd2+Lb9ZVmMqgehJzxjJF/jlOGEci6igU4CEc3I5od39gUrOvl6zddL1LFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=F3swiOwa; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1743450744; c=relaxed/simple;
+	bh=DRUU2pNYeJJJUzwnkyf6OahAXjw+xb6h0x9gKA8kw88=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HoI5qFqSyDlabenH+vmvLz+tFVuOgRdEd+7/vvdeOuW0EZilLiYitCyQk8xh+H4AedOZzLNcjI3WJnKSm77BKq8ElDzu5AnCWRAI+sCz1elQBTVt5/eLazgCZmZFWgOEIpGCBxAjCVCTRnXDI9kj6fUAth6Y0MN4OF3g50JUTlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=e3tbuOof; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="F3swiOwa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1743450705;
-	bh=/913otloLGIK9WB3vUpB/fyu/LBH3sBrmhAhMG6gFn4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=F3swiOwaHMFobvAcAnUt/J2BeH86ItTA1chzzA2oFKO7/m/nIXpRNEJUOpOZ5P5pD
-	 vg5bZDooMeMcOtQrYDOqlCnJUpvIeQE2LC0CHOsHm6q0wpG3YFWoUn2rEgWtqqQBRx
-	 1Q0UoAKCW74w6wqwdPdyGgo6sibpCPZYPYJedAic=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 31C531C02E7;
-	Mon, 31 Mar 2025 15:51:45 -0400 (EDT)
-Message-ID: <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
- to down_read
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com,
-  rafael@kernel.org, djwong@kernel.org, pavel@kernel.org,
- peterz@infradead.org,  mingo@redhat.com, will@kernel.org,
- boqun.feng@gmail.com
-Date: Mon, 31 Mar 2025 15:51:43 -0400
-In-Reply-To: <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
-References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
-	 <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="e3tbuOof"
+Received: (wp-smtpd smtp.wp.pl 5709 invoked from network); 31 Mar 2025 21:45:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1743450338; bh=bzYp1a9JujIir3+dFelCBWZSQnKsjs5IU9fJyIRJ3as=;
+          h=From:To:Cc:Subject;
+          b=e3tbuOofBgJ8k2hIqfI7eSLadYP+mZNlxIpg51vzWcCkRHWQRIG08Rkh9fpx9xxRI
+           2fE1Y9LZJ4IvG1ZVCtldfJ28NAaTnVC0vDUzTsXpsiwzch/c+zf0lrXN7rjo/LQcc8
+           gT8rh07YVJH+TPUoUH7KhOzR9Es//zJaZbQBqpGvgM+nIg3b20XWfRVYfkMSd3URCu
+           OjNPKXYwlwa4exAWX7hkq9R0FEj/HLrOpYgoOT4YMS1l8rt8+Y20RcRgYla1+m+++A
+           zpwSsIfSFKSeq1hvC0WvW9n0X1GvTilS8F0X9VuxzLMMvpvHR4QWIJ3ZBdOyt51/PG
+           4rKDRWW8GieJQ==
+Received: from 83.5.244.88.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.244.88])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-wireless@vger.kernel.org>; 31 Mar 2025 21:45:38 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: linux-wireless@vger.kernel.org,
+	johannes@sipsolutions.net,
+	linux-kernel@vger.kernel.org
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH iw 1/2] iw: fix HE capabilities on Big Endian platforms
+Date: Mon, 31 Mar 2025 21:45:16 +0200
+Message-Id: <20250331194517.4840-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                                      
+X-WP-MailID: 8427da6a13d57a6c7f0a6ee75ae056f8
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000B [wSNU]                               
 
-On Thu, 2025-03-27 at 10:06 -0400, James Bottomley wrote:
-[...]
-> -static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool
-> reader)
-> +static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool
-> reader,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool freeze)
-> =C2=A0{
-> =C2=A0	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
-> =C2=A0	bool wait;
-> @@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct
-> percpu_rw_semaphore *sem, bool reader)
-> =C2=A0	spin_unlock_irq(&sem->waiters.lock);
-> =C2=A0
-> =C2=A0	while (wait) {
-> -		set_current_state(TASK_UNINTERRUPTIBLE);
-> +		set_current_state(TASK_UNINTERRUPTIBLE |
-> +				=C2=A0 freeze ? TASK_FREEZABLE : 0);
+IE fields are encoded in Little Endian and are not correctly
+printed on Big Endian platforms.
 
-This is a bit embarrassing, the bug I've been chasing is here: the ?
-operator is lower in precedence than | meaning this expression always
-evaluates to TASK_FREEZABLE and nothing else (which is why the process
-goes into R state and never wakes up).
+Fixes: c741be9f6ca344 ("iw: print HE capabilities")
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ util.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Let me fix that and redo all the testing.
-
-Regards,
-
-James
+diff --git a/util.c b/util.c
+index dc84886..04e8089 100644
+--- a/util.c
++++ b/util.c
+@@ -1262,14 +1262,14 @@ static void __print_he_capa(const __u16 *mac_cap,
+ 
+ 	#define PRINT_HE_CAP(_var, _idx, _bit, _str) \
+ 	do { \
+-		if (_var[_idx] & BIT(_bit)) \
++		if (le16toh(_var[_idx]) & BIT(_bit)) \
+ 			printf("%s\t\t\t" _str "\n", pre); \
+ 	} while (0)
+ 
+ 	#define PRINT_HE_CAP_MASK(_var, _idx, _shift, _mask, _str) \
+ 	do { \
+-		if ((_var[_idx] >> _shift) & _mask) \
+-			printf("%s\t\t\t" _str ": %d\n", pre, (_var[_idx] >> _shift) & _mask); \
++		if ((le16toh(_var[_idx]) >> _shift) & _mask) \
++			printf("%s\t\t\t" _str ": %d\n", pre, (le16toh(_var[_idx]) >> _shift) & _mask); \
+ 	} while (0)
+ 
+ 	#define PRINT_HE_MAC_CAP(...) PRINT_HE_CAP(mac_cap, __VA_ARGS__)
+@@ -1280,7 +1280,7 @@ static void __print_he_capa(const __u16 *mac_cap,
+ 
+ 	printf("%s\t\tHE MAC Capabilities (0x", pre);
+ 	for (i = 0; i < 3; i++)
+-		printf("%04x", mac_cap[i]);
++		printf("%04x", le16toh(mac_cap[i]));
+ 	printf("):\n");
+ 
+ 	PRINT_HE_MAC_CAP(0, 0, "+HTC HE Supported");
+@@ -1394,18 +1394,18 @@ static void __print_he_capa(const __u16 *mac_cap,
+ 		char *bw[] = { "<= 80", "160", "80+80" };
+ 		int j;
+ 
+-		if ((phy_cap[0] & (phy_cap_support[i] << 8)) == 0)
++		if ((le16toh(phy_cap[0]) & (phy_cap_support[i] << 8)) == 0)
+ 			continue;
+ 
+ 		/* Supports more, but overflow? Abort. */
+-		if ((i * 2 + 2) * sizeof(mcs_set[0]) >= mcs_len)
++		if ((i * 2 + 2) * sizeof(le16toh(mcs_set[0])) >= mcs_len)
+ 			return;
+ 
+ 		for (j = 0; j < 2; j++) {
+ 			int k;
+ 			printf("%s\t\tHE %s MCS and NSS set %s MHz\n", pre, j ? "TX" : "RX", bw[i]);
+ 			for (k = 0; k < 8; k++) {
+-				__u16 mcs = mcs_set[(i * 2) + j];
++				__u16 mcs = le16toh(mcs_set[(i * 2) + j]);
+ 				mcs >>= k * 2;
+ 				mcs &= 0x3;
+ 				printf("%s\t\t\t%d streams: ", pre, k + 1);
+@@ -1428,7 +1428,7 @@ static void __print_he_capa(const __u16 *mac_cap,
+ 			ppet_len = 0;
+ 	}
+ 
+-	if (ppet_len && (phy_cap[3] & BIT(15))) {
++	if (ppet_len && (le16toh(phy_cap[3]) & BIT(15))) {
+ 		printf("%s\t\tPPE Threshold ", pre);
+ 		for (i = 0; i < ppet_len; i++)
+ 			if (ppet[i])
+-- 
+2.39.5
 
