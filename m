@@ -1,77 +1,132 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBAD19259E
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F2738F80;
+	Mon, 31 Mar 2025 08:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409986; cv=none; b=mwG1pWZsJkh/eCgezqNsT2i/tEdfbxc9DYJ+50V0TI1JSpZy1FEFl3SqlfpSuyO/eRIfHnng0LrPWqfkyS3y/e0G7ogIK8kq82gjRdbLW088hiGWmE2y2kxUOxrZuhpbelOcARacTGqe7G71fSTO2kPvmiuiiCq1flhRhG+7w9g=
+	t=1743410031; cv=none; b=Ndh2Q9J4pKmG1pay94QCxuXXJjtTT8qWUZ3NqeAr/icIUVwEgiByZExSUQHkP4O0oLHV2T46AwvCWz7R3fIMt59b/0ggzxIRNG0HivrlKYeQcutQeCdDoVKcOzpUp8Df2P/+80UN+UkQoG3y8b+xop9glgqAT2sr48SaLFA/cVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409986; c=relaxed/simple;
-	bh=2Rb5MbgBhl/LXYKGwpqa+Xon91y55iJLtR9YQGBjHd4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=t3Vr+S4Gn7f4TSefVFGnr0q1uog9wsY2wqaYnzx82KESWqmVuOGfxUAgRqGgOGs/FKJjW/4P5P5HcUlsrJXi7qnILc8rQm3Jr9EBuXL2PVkoJxXp2sH2WpWT+NYGKlABbOccgE6RqVFgSwKMoTYBOpIBKAwRwKcbbu2T+ewZtpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=quZaV9tB; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
+	s=arc-20240116; t=1743410031; c=relaxed/simple;
+	bh=DloZZIE6n19coXOX3Zta04gIhkvxcrcJ9ymuCwF7tgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qlNTm+lNqiP5xXD4U95inkbrlY0KNXm5gVonX+wDepNn1q4d+DSSEiiq+jEdze6Bf5cfaNq3b6McZ/2CelNUnTv0SvXKSFpMkv+LrZIl4VwKWWTIDenFh+zxQJ3+QLfJ/xOOxamDXQRrzK18fQcZoBwxg1PcyEU2E0hbaj/Zxzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DShemQvr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="quZaV9tB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743409972; bh=2Rb5MbgBhl/LXYKGwpqa+Xon91y55iJLtR9YQGBjHd4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=quZaV9tB8nWkpZkNyKijHu3btbfTLTnWnDQHV6lUksEr0ZqQk+9/54bMGIpssfE7t
-	 uHUtMl/4ygocXKqm8+gfbClQn0xld/l9HWZVoM+kyno/1XeBfgDgITrpJOerlVmPbd
-	 ciMN6mE48W01AxZzZ5o+TOt3vi7q0vF5Te1mJrAI=
-Received: from mail.red54.com ([139.99.8.57])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id 7FA17EC8; Mon, 31 Mar 2025 16:31:58 +0800
-X-QQ-mid: xmsmtpt1743409918t6ehpvlig
-Message-ID: <tencent_5D89C06E5AA49E40EB8FBFAA6796F6891F07@qq.com>
-X-QQ-XMAILINFO: MB5+LsFw85NoCWsrF4NZy6wGXVRiNjjTZ7AdzGQKAKdUU27Vh+8v4n1OqnfDdE
-	 KK4uy5K/V3dc5LbAvtD3geMvhRosrX1VzhLp8/oxZX0vOBhKJgGu3ayqeRkk9X7NdQOKOf61A8LJ
-	 EViV9mSi9cN6JVIzUeljxFdAcb2ta4ZlG5lBf+0zP410v/a3xmd6auxybeBAwCQpQytUpMoTxOYo
-	 8r/oCwQmwT+WtcAmBN1PNYG0kD0mrl8GuZnKY+xTqs9Y+qBnUDK93FDstbtXteMAF+SKk+LQmgJ5
-	 YALvAI3nqYEhC5drR6aZL5rqfJaqPdozYfR+Y3PCrqV0RLDebIDeYsx+8MZB6R/eym8M5YZs05Nx
-	 enSAN3mAQZhIpk+0rtukDpKQKAW26cXVoV4HARLzFWL4/0eZY82gcHGa+ztB2NCeLAudCp20npPg
-	 ++ZpMi55c8N3TQ+JfHzK06XAHgA2uvnbGma5UBgq0mjGHdRb/2oe5gsSv9xIMW3UGJyL4oS1PWPV
-	 3pvrt3GOA41dJ4PJNIUf7JmpXneeVQaZvPN296du8hOgOJ9FJ/r6I0JW2IuwESyEepVG5GUfuf69
-	 AP7RpxQdFxQPI9wmH9x3j+5njp2RjbLUf4LGim90XCchleDb8UEFWRa0kjO8C+drK4RzqaLykPZV
-	 JoHyx49djdQ7yH+jSv986bFI/QLRoT9Nqxl+Ul7zZ14mErPJfwe9G/kKVZ90ho8Cv3cIpGsiB07L
-	 zDvM53bp5CZgyfz0b0ukKjIjh0g5dBXji5yjxUd0NTM9nQBY/UhCT94KJfyDsyuH6Bsysevdcvxb
-	 yiNl10XMHEj9o0meY+V6Badun17+4202nUtxcdpQxNc+DG/LcHuweVvjA5lapHhOsHo6rUiYQcpH
-	 HndSC2YrN9LgLQtoXPpUpZKlGlKQspDcE8xT3+okeOUCdgTt029PHP7UqyFmxIQ5R3zVlc0Pcsn9
-	 KKtzpVOAzUMCeeNWO0ro36Qi2w82Iv35MXo2/pdkJ4/eKq7yWCO4PO96TcRcow
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-Sender: yeking@red54.com
-From: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>
-To: linux@armlinux.org.uk
-Cc: Yeking@red54.com,
-	andrea.porta@suse.com,
-	ardb@kernel.org,
-	broonie@kernel.org,
-	catalin.marinas@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	will@kernel.org
-Subject: Re: Re: [PATCH] ARM64: Add back and fix support for CMDLINE_EXTEND
-Date: Mon, 31 Mar 2025 08:31:55 +0000
-X-OQ-MSGID: <20250331083155.120735-1-Yeking@Red54.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z-aWdil-GWFC3c-y@shell.armlinux.org.uk>
-References: <Z-aWdil-GWFC3c-y@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DShemQvr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E75C4CEE3;
+	Mon, 31 Mar 2025 08:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743410030;
+	bh=DloZZIE6n19coXOX3Zta04gIhkvxcrcJ9ymuCwF7tgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DShemQvrSa58moVUJ3a8exwKWWlOCwJOfj0u5GMTnY1rdcyK5kpc7C6YPvzVqIkoA
+	 LyT9t45QlEpdEmzYmeYyeJcKNsJPtTbi26iGak0bqBHrLIlzIBELjrkfuIzSNTQcjF
+	 ghoQCq3xEWxAMx6YoDyD6/yg0Q+MqHOLQ+C8esZ5n2oHTCYvK6Fdif5gN3ijzSeyT2
+	 ziY08DAzYIEEvZjCi2kmwsKSsI5nNkaImPbmMSRreqt6l3a3G5SrwgxpNSOSdSn2Q1
+	 HKMBSP6ByoZDz13XIp9kgWmVpdZPtPT5q1/E4vRy1XcM8+PDOiMRsvWapp56LOwpSH
+	 tzTPrMqDl9wzA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tzAae-000000002tv-1hIZ;
+	Mon, 31 Mar 2025 10:33:53 +0200
+Date: Mon, 31 Mar 2025 10:33:52 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Rui Miguel Silva <rui.silva@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Subject: Re: [PATCH v6] drm/dp: clamp PWM bit count to advertised MIN and MAX
+ capabilities
+Message-ID: <Z-pTcB0L33bozxjl@hovoldconsulting.com>
+References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v6-1-84ad1cd1078a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v6-1-84ad1cd1078a@linaro.org>
 
-> This breaks the ability for the user (via the boot loader) to override
-> built-in arguments.
+On Sun, Mar 30, 2025 at 08:31:07PM +0100, Christopher Obbard wrote:
+> According to the eDP specification (VESA Embedded DisplayPort Standard
+> v1.4b, Section 3.3.10.2), if the value of DP_EDP_PWMGEN_BIT_COUNT is
+> less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, the sink is required to use
+> the MIN value as the effective PWM bit count.
+> 
+> This commit updates the logic to clamp the reported
+> DP_EDP_PWMGEN_BIT_COUNT to the range defined by _CAP_MIN and _CAP_MAX.
+> 
+> As part of this change, the behavior is modified such that reading both
+> _CAP_MIN and _CAP_MAX registers is now required to succeed, otherwise
+> bl->max value could end up being not set although
+> drm_edp_backlight_probe_max() returned success.
+> 
+> This ensures correct handling of eDP panels that report a zero PWM
+> bit count but still provide valid non-zero MIN and MAX capability
+> values. Without this clamping, brightness values may be interpreted
+> incorrectly, leading to a dim or non-functional backlight.
+> 
+> For example, the Samsung ATNA40YK20 OLED panel used in the Lenovo
+> ThinkPad T14s Gen6 (Snapdragon) reports a PWM bit count of 0, but
+> supports AUX backlight control and declares a valid 11-bit range.
+> Clamping ensures brightness scaling works as intended on such panels.
+> 
+> Co-developed-by: Rui Miguel Silva <rui.silva@linaro.org>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
 
-How does a non-default configuration break the ability you're talking about? If
-you insist, why not remove the non-default CMDLINE_FORCE as well?
+> @@ -4035,6 +4036,32 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+>  	}
+>  
+>  	pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +
+> +	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
+> +	if (ret < 0) {
+> +		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
+> +			    aux->name, ret);
+> +		return -ENODEV;
+> +	}
+> +	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +
+> +	ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
+> +	if (ret < 0) {
+> +		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
+> +			    aux->name, ret);
+> +		return -ENODEV;
+> +	}
+> +	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> +
+> +	/*
+> +	 * Per VESA eDP Spec v1.4b, section 3.3.10.2:
+> +	 * If DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
+> +	 * the sink must use the MIN value as the effective PWM bit count.
+> +	 * Clamp the reported value to the [MIN, MAX] capability range to ensure
+> +	 * correct brightness scaling on compliant eDP panels.
+> +	 */
+> +	pn = clamp(pn, pn_min, pn_max);
 
+You never make sure that pn_min <= pn_max so you could end up with
+pn < pn_min on broken hardware here. Not sure if it's something you need
+to worry about at this point.
+
+> +
+>  	bl->max = (1 << pn) - 1;
+>  	if (!driver_pwm_freq_hz)
+>  		return 0;
+
+Otherwise this looks correct to me and does not break backlight control
+on the X1E reference design:
+
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
