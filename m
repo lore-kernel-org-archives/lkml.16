@@ -1,139 +1,131 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C5D1C84AA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D491DE3A8;
+	Mon, 31 Mar 2025 10:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418650; cv=none; b=qrbYIMdCtdJ0VidPIuhEGcpJtAIGszXIGRkI7vUcA/g3dpztnpC3752CeaKbArzCM8rYO8BMYSDGbdqmLYArIqUz09K/K8Q4ySNyXD79u7ia0tyWUNcZdN/hwsg/odDdaIbTn6L27M24fuqjFHaft53sP08CMekIsQv3lHf+GI8=
+	t=1743418650; cv=none; b=lXsY4e6CaAObw2oRWz5X7a9nvKK5lg0a3iP6v++1+spHEshewsb9A1q3WZXSmWoZBO01rHRiumeX0SfEO/D5r8o99TQmHw0QpvsBWBeWEs2AldFeKpGD2Mz2G+1Xpn1Rx0gfUcJRkkGsmR6E5PaibSK7TmxhO1xKjVtJY7shWxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743418650; c=relaxed/simple;
-	bh=vZc4WLoF722KufXOX/s3fWR9QlQ5ECV3mb4MtzX7J4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tW0Uqot5FjnXKJFT32oYY0zSLjqVZ9TJFxPXNtgfVzdEN0sI0jdlCc3Ok28ftIXLSsEybyCssS5ODf69RDotDIwuR/1l2YZvIwyKUEU8be3gxWeWDZLTcfvPFHvUcckomKlOdEndBWkxawlbaCDadvCaCIonFWQEAmlJT5Fards=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YF2RlIl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jCEmoNfH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YF2RlIl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jCEmoNfH; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	bh=09yqRkz8LTxcnQum29LjmUWWXJkwcJhFdYmdig6HcgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kXAh7jtVuaO+6ZGhFWSUVD6t1eNyU1yidRA2l9yJsG6Jin0nuVjrhHNAdG3jYsAYlplabWDCyOBB99tEGKWurCwZmMPeXxvRxEqZcyVX0vy6t+I45rmUpsNiWtYZ5rdnP+tRhaGjNM1AwUlphWGPTZlNUZ2fGQlIMihc/1Q7o+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=efEeA3cW; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YF2RlIl6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jCEmoNfH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YF2RlIl6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jCEmoNfH"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 8F78D1F38D;
-	Mon, 31 Mar 2025 10:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743418646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
-	b=YF2RlIl6UxN8gjtKv0fke8bouCvvzRT47LyJmr4ULr/9KeRuP9MYy/Zsjz2D7FzQQ0N9Ym
-	9N3yo1NLUQKL3ggQB8T4Mw+2GTh5BNCtI/o42NQCbs/3sMi1UXLBstsuqCa6hvDkNa5Un4
-	B34+bCrrCeqc4z5SMf6hQb/B66alz84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743418646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
-	b=jCEmoNfHFOR5dPqJlRHSH7G3ktjTYy1SPRHbig7fqJuMu1xf/bPM+2YX9xT+M53/SOpXGj
-	6LUkv7dq+/o9aCDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743418646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
-	b=YF2RlIl6UxN8gjtKv0fke8bouCvvzRT47LyJmr4ULr/9KeRuP9MYy/Zsjz2D7FzQQ0N9Ym
-	9N3yo1NLUQKL3ggQB8T4Mw+2GTh5BNCtI/o42NQCbs/3sMi1UXLBstsuqCa6hvDkNa5Un4
-	B34+bCrrCeqc4z5SMf6hQb/B66alz84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743418646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
-	b=jCEmoNfHFOR5dPqJlRHSH7G3ktjTYy1SPRHbig7fqJuMu1xf/bPM+2YX9xT+M53/SOpXGj
-	6LUkv7dq+/o9aCDw==
-From: Michal Suchanek <msuchanek@suse.de>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Michal Suchanek <msuchanek@suse.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efEeA3cW"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227cf12df27so61054595ad.0;
+        Mon, 31 Mar 2025 03:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743418648; x=1744023448; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fQxoGO+j1MyZc3JaI/rKrHOI5r9i4Uu5nnw1H4HdvvM=;
+        b=efEeA3cWInkiE4H6xdpflnmXpW4H6usWL9k3pd4mgloulYAVV+b9TcPZ5BN3TPclMU
+         lUagS6Z6zOHIuoGxtIw7dlxRi8BavqBDVpNtBHhLi6D1FiG3x92slDTXoEJwG+ZGpXOR
+         h/RBgGXdPlOsNTiYfJAqV+fmsioeTVD6E9rPi/CsgjAPx/60J1SCifS5ZKgAEY7BkWr0
+         RYj+xYk53pttnN0PFvXy9VHyd6wKHw+kQ9JZrtJG6Z7O5ndCcoCzPTHf0HWM3JBc0m4T
+         MNDGw546Tn5+4Hk76M4oTpskEjf9tsdWX3chWVIGo3I/ukzDtpcNoWgp5qvG4dKQjceN
+         J8Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743418648; x=1744023448;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fQxoGO+j1MyZc3JaI/rKrHOI5r9i4Uu5nnw1H4HdvvM=;
+        b=jjibRsymXytE4WEOgTSa8d2DYBC8QbDRDKK7xobTRbyfqWN01ZYsoJRlb5dfy+2eKO
+         6Lf/RdtOS1OqDjQrDygbCku8OZ16JX/6ov0Xwm69UNZ3NzNxdQKzI/2iQ4smjK/NGUE8
+         404Y2xQ8xRG5pKbSVWobrM8My7VrRssXqXL2HWL/aUN4TAVRRRY2aYq+75LMDtz1/amD
+         Sh+MqkTBS/sSfRb5ybE/srcgJ7+KDwoCV7Dyc69PZ0qVJ0aoSwriUWOWpPFG8d8KbXsc
+         zg7xyP65Wsbmh8zIMFBrScwwP4xNZv1gumW5B988ChJFfxRFmtwMeh5w72mWL98dezwy
+         j7RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDQAQ8AABeFxbnoenIoYa0Oo1gc3uaAlp5IN6HOMaSvAqKqk481dqwl+4Sh5vHhT7OKHYQnliUc5n6+e+e@vger.kernel.org, AJvYcCWTAjTXuyEpruufSGgomwqzcGUMPiFhhkd/ru4AEAEc30P2cULnTawGd5YbpVp/FAcsk7jb6xd2nrJJwqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1vS5EkXYCRGhWJrhJsCYmgknRy7O+YJ27jFnMfb8cUiURUbIt
+	/sORJW3vEke2fFHIoiYG4z03dCEOgeTv1WCJKmvKaFSBAhmyqH7s
+X-Gm-Gg: ASbGncsrFGNXD8to1WPKV0c3cKmChRlYaQpg43btTTSKVpGl8/U28tapLpF7c4NyVQh
+	/UsID6gKbeKMErakewlzKBKs74ffCLV12Nm2TrcO8wGM0lC90mCsPB8Hi8Fm4RAKTNcR1NVtLoR
+	THy74MHCl9ACSJ+Bm97fT4YoA+LFO1UYgrzhtKjwhzk4oPmTagpzIKVLBQXe7/1IYbl8Z5Ky2Rr
+	3XfR7QqF+sJL+qNsqpRfTNn6Ur5ATgZBGSYjb2cYCP2YSX7fMZYXkQGeeWqMbUzjpyPVFVUzefh
+	3fCZY5XJWN+Kx6Cvm3nBsokn6KjEJNGnFUF0dpSylGd4gGufzVAnfMCfKnb+cn1ac/MxNeB+Af6
+	kYz4KzEturTXh0Ds93iHETvf5KADnTGhK/GcR5wwqCA==
+X-Google-Smtp-Source: AGHT+IHNmQ9Qu2Wh8ipfkyOz9gG66AB6OTRqclxipqrg+lUH4XOIHmm7HxeHOz4+gDNk+/q1p1iFAA==
+X-Received: by 2002:a17:903:2341:b0:21f:6f33:f96 with SMTP id d9443c01a7336-22921ca356bmr192345245ad.6.1743418648294;
+        Mon, 31 Mar 2025 03:57:28 -0700 (PDT)
+Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397109d241sm6660848b3a.129.2025.03.31.03.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 03:57:28 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: bigeasy@linutronix.de
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	conor.dooley@microchip.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
 	linux-kernel@vger.kernel.org,
-	"Nysal Jan K.A." <nysal@linux.ibm.com>
-Subject: [PATCH v3] powerpc/boot: Fix build with gcc 15
-Date: Mon, 31 Mar 2025 12:57:19 +0200
-Message-ID: <20250331105722.19709-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <875xjsjj6b.fsf@mpe.ellerman.id.au>
-References: <875xjsjj6b.fsf@mpe.ellerman.id.au>
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	ryotkkr98@gmail.com,
+	samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com
+Subject: Re: [PATCH v3 2/2] serial: sifive: Switch to nbcon console
+Date: Mon, 31 Mar 2025 19:57:19 +0900
+Message-Id: <20250331105719.8409-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250331080318.BdZQodhu@linutronix.de>
+References: <20250331080318.BdZQodhu@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org,google.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
 
-Similar to x86 the ppc boot code does not build with GCC 15.
+Hi Sebastian,
 
-Copy the fix from
-commit ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
+On Mon, 31 Mar 2025 10:03:18 +0200, Sebastian Andrzej Siewior wrote:
+>On 2025-03-30 20:21:09 [+0900], Ryo Takakura wrote:
+>> --- a/drivers/tty/serial/sifive.c
+>> +++ b/drivers/tty/serial/sifive.c
+>> @@ -785,33 +786,88 @@ static void sifive_serial_console_putchar(struct uart_port *port, unsigned char
+>>  
+>>  	__ssp_wait_for_xmitr(ssp);
+>>  	__ssp_transmit_char(ssp, ch);
+>> +
+>> +	ssp->console_line_ended = (ch == '\n');
+>> +}
+>> +
+>> +static void sifive_serial_device_lock(struct console *co, unsigned long *flags)
+>> +{
+>> +	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
+>> +
+>> +	return __uart_port_lock_irqsave(up, flags);
+>
+>this does look odd. A return statement in a return-void function. The
+>imx driver started it…
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v2: Move the fix outside of ifdef to apply to all subarchitectures
-v3: Change BOOTCFLAGS rather than BOOTTARGETFLAGS
----
- arch/powerpc/boot/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+Oh I see. I wasn't paying enough attetion to it...
+I'll fix it for the next version, Thanks!
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 184d0680e661..a7ab087d412c 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -70,6 +70,7 @@ BOOTCPPFLAGS	:= -nostdinc $(LINUXINCLUDE)
- BOOTCPPFLAGS	+= -isystem $(shell $(BOOTCC) -print-file-name=include)
- 
- BOOTCFLAGS	:= $(BOOTTARGETFLAGS) \
-+		   -std=gnu11 \
- 		   -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
- 		   -fno-strict-aliasing -O2 \
- 		   -msoft-float -mno-altivec -mno-vsx \
--- 
-2.47.1
+Sincerely,
+Ryo Takakura
 
+>> +}
+>> +
+>> +static void sifive_serial_device_unlock(struct console *co, unsigned long flags)
+>> +{
+>> +	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
+>> +
+>> +	return __uart_port_unlock_irqrestore(up, flags);
+>>  }
+>
+>Sebastian
