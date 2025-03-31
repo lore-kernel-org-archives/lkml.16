@@ -1,99 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E0A1E1A33;
-	Mon, 31 Mar 2025 16:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D884136347;
+	Mon, 31 Mar 2025 16:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437961; cv=none; b=j9JqLC9LRhjd5kGoKPyEandbUUSbLAMIjSYKdQsHJfuFlxRT4jnok6ojrHblz5YQB6FEYQg8PGLjT4aCu9GxfYOMvsPFKf95nR4TwFrGoUccLlgHtuvTAurYTYf2uXte2wPo+glEPDbddyjIC7OBSn8rPT+5r5cpH0E0vEvhYl4=
+	t=1743438010; cv=none; b=luwb9n2IbIC60pgXgAGpbxw2y0oW++hbzrfycWBaXmzCLaSE46LMmb6224YYGHziQT8MUWiCaYuuNo1kVQv8BBqPCQ2XCW2hV1gAz5NCW8zYjeq2/XwZ8/PWMy9Xa+DUxURRuVC7I9mJHDyWZanMxdU9tPrLqLF9VawUzDEjED0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437961; c=relaxed/simple;
-	bh=roewgQHfIruVDUH6EBm5hwC6KAdFcxTLxOaU1wDesD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WxbiUFWacp0MXX20jXqEEuibQGNrXvaA1ZtDeARBeRxV+IdzSGAO8gBd8yE/iCYgHVj1+cnghHNd6Phz8SW27dyy97LfAz7vdYp4U7t/n+kr8smzTduUQljRUhXKJBFRT1ZuY5GqXPuVLe15KbBf5ie7XERX/H48OinZlu5/RPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIt8+jCs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743438010; c=relaxed/simple;
+	bh=mjyKu4v10FijIC6PaGIIgvxeDHbyaTw2Vd0LUmOfcSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jSDQ6KNA00AbT65/5XdCcYZL0yaZXGmRWFQOSMZq63DQsHLC+F+LFF0yyZau/Pm10zjasjjXVRO0rNLJcKWF//TfEubm2QetBbT85qpm/kdXD2Jt4fOJm2JtaSgL3eOhnaUtlcowY1ztpstCojRJ3ihevVMiwB6GymJgyufAVBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BSO6Mxqp; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIt8+jCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3EAC4CEE3;
-	Mon, 31 Mar 2025 16:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743437961;
-	bh=roewgQHfIruVDUH6EBm5hwC6KAdFcxTLxOaU1wDesD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QIt8+jCszsenhJLqxRjIQ72UdAMpuyuHV4ASuccWd40QaBVxDAukNsXxWLxNnQGHE
-	 TloayNmbYzjkzBGeEhfqlySbn7AseYwZcqnLZgSninGB/kjG/9icTNyiozQ+L7/eEy
-	 Y/5BDdXP5cH5SlnHgsYjssXmdniLpiyNSsT+3IdccyfWGfQzcMgcI/j7c7aqokIb0M
-	 fooQ3KvooOrk0sIsRJ5Em64cImbjbc5MDw5pt7HsLx02xfn9fvb3IQmyn0I4x6yDHy
-	 wsGfnyUEmZWXf4H8niRF++DGSpUDb4Jd5K9xYU3gIn58N2RIzRUDFXW+vIFOBOS2Y2
-	 88XvzLxidG6fg==
-Date: Mon, 31 Mar 2025 18:19:10 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, xi.pardee@intel.com, todd.e.brandt@intel.com
-Subject: Re: [PATCH v1 1/1] x86/fred: Fix system hang during S4 resume with
- FRED enabled
-Message-ID: <Z-rAfosRsjRfm7Ts@gmail.com>
-References: <20250326062540.820556-1-xin@zytor.com>
- <CAJZ5v0jfak9K_7b=adf5ew-xDiGHUEPSp5ZpAGt66Okj-ovsGQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BSO6Mxqp"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3EAAF444FD;
+	Mon, 31 Mar 2025 16:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743438006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ytyW6Ib7JG7PXGq9nIWUTfnzofsAb7FeQ+Sz3N7/aBA=;
+	b=BSO6MxqpZban1/3AGE86T0zuVdxHLOfZ8zSYuybSVfZ/B2G7lXHXGU8dw3v0WCRgEY4RPa
+	KuMZOc3PUYOt/9G5xWKgXq7bZVZvg0P+hTuI8PAoKT5ykkTSII+UB2onkDcyPcuZR+F4qt
+	rzcLGexPwJbsTpcnZQ/GrYVPSwJH1RNwo1PvfTYfvsm7UxXddNvuXX3a14S5j/MWXi4kJq
+	6+GvMGVZf8zRo8Xz8zxuWo1za1p+xeoP6r9JbPwpVSKGjTo5mCslu5afiPzBmAuU4haEoi
+	fcmztvXOZ3zfodOCmYrl4KU06KOhXAxBffuyN0zQNavonYVu0PvMg9EVCgJMaw==
+Date: Mon, 31 Mar 2025 18:20:00 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexander Duyck
+ <alexander.duyck@gmail.com>, davem@davemloft.net, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
+ fixed-link configuration
+Message-ID: <20250331182000.0d94902a@fedora.home>
+In-Reply-To: <Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	<20250307173611.129125-10-maxime.chevallier@bootlin.com>
+	<8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
+	<20250328090621.2d0b3665@fedora-2.home>
+	<CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
+	<12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
+	<CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
+	<02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
+	<Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0jfak9K_7b=adf5ew-xDiGHUEPSp5ZpAGt66Okj-ovsGQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtfeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrlhgvgigrnhguvghrrdguuhihtghksehgmhgrihhlrdgto
+ hhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
+On Mon, 31 Mar 2025 15:54:20 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-* Rafael J. Wysocki <rafael@kernel.org> wrote:
-
-> On Wed, Mar 26, 2025 at 7:26 AM Xin Li (Intel) <xin@zytor.com> wrote:
-> >
-> > During an S4 resume, the system first performs a cold power-on.  The
-> > kernel image is initially loaded to a random linear address, and the
-> > FRED MSRs are initialized.  Subsequently, the S4 image is loaded,
-> > and the kernel image is relocated to its original address from before
-> > the S4 suspend.  Due to changes in the kernel text and data mappings,
-> > the FRED MSRs must be reinitialized.
+> On Mon, Mar 31, 2025 at 04:17:02PM +0200, Andrew Lunn wrote:
+> > On Fri, Mar 28, 2025 at 04:26:04PM -0700, Alexander Duyck wrote:  
+> > > A serdes PHY is part of it, but not a traditional twisted pair PHY as
+> > > we are talking about 25R, 50R(50GAUI & LAUI), and 100P interfaces. I
+> > > agree it is a different beast, but are we saying that the fixed-link
+> > > is supposed to be a twisted pair PHY only?  
+> > 
+> > With phylink, the PCS enumerates its capabilities, the PHY enumerates
+> > its capabilities, and the MAC enumerates it capabilities. phylink then
+> > finds the subset which all support.
+> > 
+> > As i said, historically, fixed_link was used in place of a PHY, since
+> > it emulated a PHY. phylinks implementation of fixed_link is however
+> > different. Can it be used in place of both a PCS and a PHY? I don't
+> > know.  
 > 
-> To be precise, the above description of the hibernation control flow
-> doesn't exactly match the code.
+> In fixed-link mode, phylink will use a PCS if the MAC driver says there
+> is one, but it will not look for a PHY.
 > 
-> Yes, a new kernel is booted upon a wakeup from S4, but this is not "a
-> cold power-on", strictly speaking.  This kernel is often referred to
-> as the restore kernel and yes, it initializes the FRED MSRs as
-> appropriate from its perspective.
+> > You are pushing the envelope here, and maybe we need to take a step
+> > back and consider what is a fixed link, how does it fit into the MAC,
+> > PCS, PHY model of enumeration? Maybe fixed link should only represent
+> > the PHY and we need a second sort of fixed_link object to represent
+> > the PCS? I don't know?  
 > 
-> Yes, it loads a hibernation image, including the kernel that was
-> running before hibernation, often referred to as the image kernel, but
-> it does its best to load image pages directly into the page frames
-> occupied by them before hibernation unless those page frames are
-> currently in use.  In that case, the given image pages are loaded into
-> currently free page frames, but they may or may not be part of the
-> image kernel (they may as well belong to user space processes that
-> were running before hibernation).  Yes, all of these pages need to be
-> moved to their original locations before the last step of restore,
-> which is a jump into a "trampoline" page in the image kernel, but this
-> is sort of irrelevant to the issue at hand.
+> As I previously wrote today in response to an earlier email, the
+> link modes that phylink used were the first-match from the old
+> settings[] array in phylib which is now gone. This would only ever
+> return _one_ link mode, which invariably was a baseT link mode for
+> the slower speeds.
 > 
-> At this point, the image kernel has control, but the FRED MSRs still
-> contain values written to them by the restore kernel and there is no
-> guarantee that those values are the same as the ones written into them
-> by the image kernel before hibernation.  Thus the image kernel must
-> ensure that the values of the FRED MSRs will be the same as they were
-> before hibernation, and because they only depend on the location of
-> the kernel text and data, they may as well be recomputed from scratch.
+> Maxime's first approach at adapting this to his new system was to
+> set every single link mode that corresponded with the speed. I
+> objected to that, because it quickly gets rediculous when we end
+> up with lots of link modes being indicated for e.g. 10, 100M, 1G
+> but the emulated PHY for these speeds only indicates baseT. That's
+> just back-compatibility but... in principle changing the link modes
+> that are reported to userspace for a fixed link is something we
+> should not be doing - we don't know if userspace tooling has come
+> to rely on that.
+> 
+> Yes, it's a bit weird to be reporting 1000baseT for a 1000BASE-X
+> interface mode, but that's what we've always done in the past and
+> phylink was coded to maintain that (following the principle that
+> we shouldn't do gratuitous changes to the information exposed to
+> userspace.)
+> 
+> Maxime's replacement approach is to just expose baseT, which
+> means that for the speeds which do not have a baseT mode, we go
+> from supporting it but with a weird link mode (mostly baseCR*)
+> based on first-match in the settings[] table, to not supporting the
+> speed.
 
-That's a rather critical difference... I zapped the commit from 
-tip:x86/urgent, awaiting -v2 with a better changelog and better
-in-code comments.
+I very wrongfully considered that there was no >10G fixed-link users, I
+plan to fix that with something like the proposed patch in the
+discussion, that reports all linkmodes for speeds above 10G (looks less
+like a randomly selected mode, you can kind-of see what's going on as
+you get all the linkmodes) but is a change in what we expose to
+userspace.
 
-Thanks,
+Or maybe simpler, I could extend the list of compat fixed-link linkmodes
+to all speeds with the previous arbitrary values that Russell listed in
+the other mail (that way, no user-visible changes :) )
 
-	Ingo
+I was hoping Alexander could give option 1 a try, but let me know if
+you think we should instead adopt option 2, which is probably the safer
+on.
+
+Maxime
