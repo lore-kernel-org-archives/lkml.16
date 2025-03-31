@@ -1,145 +1,139 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFED321B9D9
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614B02144CE
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743456228; cv=none; b=s3OLKBcPVJGiTdCtsa93nWb+wgPC2sa0eYAG2gyuQKRomLZhigDLEDOfN1SODqa94+BByUfeZ/Wx9Zr1vTQM14d5DaByiR4odFCfK55kVSvlTrMWWoKJ9BvEwwDJAjOLF5o0rNvD8UCr8Bpr/tZSmpPwRXpgWMa9UjYL+2XSBJU=
+	t=1743456321; cv=none; b=sf7San/0OXXXdZrdAme+VYnHR3Qy/qDDIew0esvAZAxR1qYaUB14R5HchsZCJDCBJM7wkcdxLBtOdByIzczAAvWUj7U4NqFJHDZMkoevJlhnyQHYq5AVa5My9GYr0KPRm+OfTckzyBTmDj4w4f9ud3ZruvGq03R5T6LNEg68pNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743456228; c=relaxed/simple;
-	bh=2PjEA6PEqXvUEzDs93/qP1FFZhf+Fl56SKt1x3Lq+AQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cnUJ2MK7E/6wyX8bHZx2CaWuOc9GspJiOuXn6iA1LQcVcPP8GJP7cFrc+Gaf4DJaLb0/GMSaDWp2UH23/I6rHvCaWHvKn1rSjf+F2quGTJf3OZBD3b1i/FHfc4cG0hu0Qo+5eNBXtCdWgZ//KhlL/nTvFk1jF8PxN353vavjBIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTTRvQQ/; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTTRvQQ/"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6feab7c5f96so44333397b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743456226; x=1744061026; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ToiqwXTNWbSOaWmF/3nfIhcFQB86VWKA/YOyk/TfLa4=;
-        b=hTTRvQQ/rIE0tVqoDGljL6rGGtgMK8UnvVtG86JbJORAdJIM9FzXkRNHSlXRlCVrX0
-         yK2Q3cxMxQ46YL5wiXvcEVJH1xTbPrfhfKJsPzhzp6JeFmhPQr7qhM3KMMPY1VDHaVUV
-         glZZEjopNLkJRxm8FOUMOMnWpyo2BEuciOjyebaUFMJbMqecIYDDnIDFnnnxJA82qW7K
-         tTB/3c/4oKDnYZDo1aO4UCNCsKfe+XCJVcPUPwG+EfaxJnpOIv8PxZ8nKseNaFNtstSG
-         Kv4mbqs9oapabCBa1h5hWbnSgtD49CPHfcLG+NdlLWV3UBOT5JLjWaJDniWQJ2R+z5uc
-         NYIA==
+	s=arc-20240116; t=1743456321; c=relaxed/simple;
+	bh=kbVxx07mR1BQOpieWS72nLRI7TVYhLdd/hiFKCA90bc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PbmR/3CZ1IEN3X8SidC3KkKfM1EDjgSAtVaLqwo56CuDL3QNtZFsYxX8pTBCax1GX5SSBf4SN/pgk6O5qI1AnL9521xIm5kDPKUkdfVLYmq2rBtLFdI8TJgfsVn+oFXz5kN7Xk2G0VZjnbcjo1ESF0Bb57Om6vs4anY20FBQ7G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d438be189bso46666735ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:25:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743456226; x=1744061026;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ToiqwXTNWbSOaWmF/3nfIhcFQB86VWKA/YOyk/TfLa4=;
-        b=Zl1HB2lJvLEC9ZW4yEiQda4UG3NI5p2WtpdNnRCTnLQqXTgnpLk1je2pH41CAl02yf
-         ziOImfuacxCuglJyemyUy/B6HA9efJXSTKVQmzbry3SCdM208uDQgDNJ/p5II2YAofeY
-         wW+iAjlRPTgm6EczKe5CdSeNLJ0RSllJWDd0YYIDyPxJl6hACtm19xUGkEbzFpNk1+wn
-         +kPLhdN+lfLdS7p7Nx6cKFfOc55mpL0uanR2cmxwl2+dkad/XfPsnBNPEXdAs1C9Z1Yb
-         z+AuPzr30Walth5W8ON9j8GkNNwr0+zBd/mv7TtCSiWvTct5CeG4LA2AXvlZ6hGXQ2Vm
-         ut6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUWV/be0Ts+TpmpJCFHAnBvx7Prq5ejyhwK8UhMCc7rMSeCZAfDX4p+lo9TcRF0JJuHqvqZvtyhfIAZDW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLlIh4R9uLWLraHehV1bzbYFNWx30DY9F3o+kMht1MuXQCtJE2
-	qjm/rNJsYjNqFhJlJfSpCZDVcQ1V1C6amOtj2q0/AZxwnZHG9G9F4meTKA==
-X-Gm-Gg: ASbGnctJ70yjCjNRhTNYXnX27tZCPGl9VeVL9TfMrwCymLvW9xcTTqWr/+u0Hvc5gMh
-	i/pUsrMnG0vcen3tMiTpF76SeWAVZxKwfawntgICeOMPZgEvXPq7Ru2eAFLjftVnMngN04cPFZI
-	5+ImbgYBfo3otkZH4TQiMShQVsKJxLsSaP7z/YrycOgQoEo5sP526H9OsQnsxL0/C2tcVPWmBWl
-	ML1d1t5tXIm+iRK0Uw/2MPRR1Xlw1+dNOo5pRmJttbvMJL/LuESov8MpgqUQYzprdw5bTmNdePY
-	SXzQ6SqaFm9xJFGaXES7T/VnQBb/hK90bZTRsPyq3pYHN5HQBmmoTg==
-X-Google-Smtp-Source: AGHT+IF2ccfX+N8GaDhZWoT7fQ4TPsL1iJZI+VlKe+DiDxzY0SY30WKJtzZwgizskXCPz7NweIs+fQ==
-X-Received: by 2002:a05:690c:74c9:b0:6fd:390d:5a9c with SMTP id 00721157ae682-70257119196mr148843427b3.10.1743456225544;
-        Mon, 31 Mar 2025 14:23:45 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:4::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023aa07ce3sm23481337b3.116.2025.03.31.14.23.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 14:23:45 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Wupeng Ma <mawupeng1@huawei.com>
-Cc: akpm@linux-foundation.org,
-	mike.kravetz@oracle.com,
-	david@redhat.com,
-	muchun.song@linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [RFC PATCH] mm: hugetlb: Fix incorrect fallback for subpool
-Date: Mon, 31 Mar 2025 14:23:41 -0700
-Message-ID: <20250331212343.66780-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250325061634.2118202-1-mawupeng1@huawei.com>
-References: 
+        d=1e100.net; s=20230601; t=1743456319; x=1744061119;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uFQrTdF8fqNNfwFQ8ock3XgZs5XmJ4g5svfUAT+PrvU=;
+        b=j3Qs1pGV/Sk8LrhhS2UqnmvPcvCRFChiUhPwrdteC9bsu4B2hcvza2v81sByM2jXo1
+         Oop1t1C8pF9ff2E8003k6LkdIJ5fpCkkytTCZY5O73GgjE1wZgOxDbA/wECyZ3YdCCK9
+         jg8yqUti7RfBJsYZgZycD+1f207yH9ZtAy3DwWkGR18u07Zq6/NYyNSay2PaXsEzmEmV
+         IPwLcczEI/nDBeWt5LwI127pvOFZrAcwjNoUXzsCoXzx3WGhPYlF0Nfqhzs3mKemq7cm
+         wl266sPfUIOWx0vUqzv1x/hl0EEe2NSNU50vPFhBzlH9+JiTo2wXc1g2IVyVLWMKuqgS
+         aneQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcMvZb0eaX9egWFmrf3sPUkychTZeonpTksNQozZOxsmAwT6fgJOEALqxXvEp/fAcrY62/8vlG7bsSAzo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc6hhrFLVM4IcnO88bMa0mnOgUyg9Wi4f2TaKINGqj/H1scEQD
+	hJkQSQz6iGsWJFEao6+v8449o8El7WgYcsYobdLCnCCReMC3dkajPdu2NUUfATzN0z1o+exNJN7
+	JQtULPdNB/Ju8rMuBh8h5owFPsJ6wPQBnXlHmO/8ObWWncUU+bq+Z/48=
+X-Google-Smtp-Source: AGHT+IH+wJVg/pndsmDWifUT3yO6fIkzaQLY6NCBXwGpBUC1zG/2C6/tpC0tr4ZUUWKaFCt482Ny7DfEH6sYX31dpUUcV3urc+7t
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3d81:b0:3ce:4b12:fa17 with SMTP id
+ e9e14a558f8ab-3d5e0a0cfe7mr112032225ab.19.1743456319467; Mon, 31 Mar 2025
+ 14:25:19 -0700 (PDT)
+Date: Mon, 31 Mar 2025 14:25:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eb083f.050a0220.1547ec.0175.GAE@google.com>
+Subject: [syzbot] [io-uring?] WARNING in io_req_task_complete
+From: syzbot <syzbot+7039663f7490865be042@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025 14:16:34 +0800 Wupeng Ma <mawupeng1@huawei.com> wrote:
+Hello,
 
-> During our testing with hugetlb subpool enabled, we observe that
-> hstate->resv_huge_pages may underflow into negative values. Root cause
-> analysis reveals a race condition in subpool reservation fallback handling
-> as follow:
-> 
-> hugetlb_reserve_pages()
->     /* Attempt subpool reservation */
->     gbl_reserve = hugepage_subpool_get_pages(spool, chg);
-> 
->     /* Global reservation may fail after subpool allocation */
->     if (hugetlb_acct_memory(h, gbl_reserve) < 0)
->         goto out_put_pages;
-> 
-> out_put_pages:
->     /* This incorrectly restores reservation to subpool */
->     hugepage_subpool_put_pages(spool, chg);
-> 
-> When hugetlb_acct_memory() fails after subpool allocation, the current
-> implementation over-commits subpool reservations by returning the full
-> 'chg' value instead of the actual allocated 'gbl_reserve' amount. This
-> discrepancy propagates to global reservations during subsequent releases,
-> eventually causing resv_huge_pages underflow.
-> 
-> This problem can be trigger easily with the following steps:
-> 1. reverse hugepage for hugeltb allocation
-> 2. mount hugetlbfs with min_size to enable hugetlb subpool
-> 3. alloc hugepages with two task(make sure the second will fail due to
->    insufficient amount of hugepages)
-> 4. with for a few seconds and repeat step 3 which will make
->    hstate->resv_huge_pages to go below zero.
-> 
-> To fix this problem, return corrent amount of pages to subpool during the
-> fallback after hugepage_subpool_get_pages is called.
-> 
-> Fixes: 1c5ecae3a93f ("hugetlbfs: add minimum size accounting to subpools")
-> Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
+syzbot found the following issue on:
 
-Hi Wupeng,
-Thank you for the fix! This is a problem that we've also seen happen in
-our fleet at Meta. I was able to recreate the issue that you mentioned -- to
-explicitly lay down the steps I used:
+HEAD commit:    609706855d90 Merge tag 'trace-latency-v6.15-3' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=135b8c74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e29b75096ef62c41
+dashboard link: https://syzkaller.appspot.com/bug?extid=7039663f7490865be042
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-1. echo 1 > /proc/sys/vm/nr_hugepages
-2. mkdir /mnt/hugetlb-pool
-3.mount -t hugetlbfs -o min_size=2M none /mnt/hugetlb-pool
-4. (./get_hugepage &) && (./get_hugepage &)
-    # get_hugepage just opens a file in /mnt/hugetlb-pool and mmaps 2M into it.
-5. sleep 3
-6. (./get_hugepage &) && (./get_hugepage &)
-7. cat /proc/meminfo | grep HugePages_Rsvd
+Unfortunately, I don't have any reproducer for this issue yet.
 
-... and (6) shows that HugePages_Rsvd has indeed underflowed to U64_MAX!
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-60970685.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5b1637a9bb2b/vmlinux-60970685.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8343880c0c31/bzImage-60970685.xz
 
-I've also verified that applying your fix and then re-running the reproducer
-shows no underflow.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7039663f7490865be042@syzkaller.appspotmail.com
 
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 6086 at io_uring/io_uring.h:411 io_req_complete_defer io_uring/io_uring.h:411 [inline]
+WARNING: CPU: 3 PID: 6086 at io_uring/io_uring.h:411 io_req_task_complete+0x164/0x200 io_uring/io_uring.c:1586
+Modules linked in:
+CPU: 3 UID: 0 PID: 6086 Comm: syz.1.28 Not tainted 6.14.0-syzkaller-11125-g609706855d90 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:io_req_complete_defer io_uring/io_uring.h:411 [inline]
+RIP: 0010:io_req_task_complete+0x164/0x200 io_uring/io_uring.c:1586
+Code: bd a8 00 00 00 be ff ff ff ff e8 a7 57 ad 06 31 ff 41 89 c4 89 c6 e8 7b 10 fa fc 45 85 e4 0f 85 1d ff ff ff e8 3d 15 fa fc 90 <0f> 0b 90 e9 0f ff ff ff e8 2f 15 fa fc 48 8d bd 70 01 00 00 48 b8
+RSP: 0018:ffffc90004017a90 EFLAGS: 00010246
+RAX: 0000000000080000 RBX: ffff88805a877b80 RCX: ffffc9000c001000
+RDX: 0000000000080000 RSI: ffffffff84c11c63 RDI: 0000000000000005
+RBP: ffff888031082000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88805a877ba8 R14: 0000000000000004 R15: fffffbfff210b986
+FS:  00007fbfc42196c0(0000) GS:ffff8880d6cd4000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000000022c CR3: 0000000050852000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ io_notif_tw_complete+0x15b/0x350 io_uring/notif.c:32
+ io_handle_tw_list+0x483/0x500 io_uring/io_uring.c:1057
+ tctx_task_work_run+0xac/0x380 io_uring/io_uring.c:1121
+ tctx_task_work+0x7a/0xd0 io_uring/io_uring.c:1139
+ task_work_run+0x14d/0x240 kernel/task_work.c:227
+ get_signal+0x1d1/0x26d0 kernel/signal.c:2808
+ arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbfc338d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbfc42190e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007fbfc35a5fa8 RCX: 00007fbfc338d169
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007fbfc35a5fa8
+RBP: 00007fbfc35a5fa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbfc35a5fac
+R13: 0000000000000000 R14: 00007fff2d376730 R15: 00007fff2d376818
+ </TASK>
 
-Sent using hkml (https://github.com/sjp38/hackermail)
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
