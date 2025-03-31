@@ -1,351 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B306189F36
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E221189F36;
+	Mon, 31 Mar 2025 11:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743420973; cv=none; b=fZuUgOgJaBKFFWSXPOVqdw+0okOvN/5eAkxI+BNyj4QIxbF7NCw9MkfHc2opZsSuPFZej3LGwe1nJqTQuxW+P6OS4XsCR9GtP2nogXtzHVC30730mi7+YfOthvJ/81qIxW7Kku7VOPbvSvQtcJSoBre906aMjMY6QiClu2FK4bk=
+	t=1743420980; cv=none; b=q8kLTygcnGEk3l9XqqA8tJzufgoQUZIhXIjfTNSyoMLWLjLSPfIMiKfhu0oD1wDFRJ/eQU4UF8uxVnekubEyQ0T0xOSwTQ41DfAb5Rh8qzRAX9/1M9b3gUe//92eHLZzoOVQX+uiFxH3UDP1IEZ5+VUX8FLW/aIMyCNBCvA403k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743420973; c=relaxed/simple;
-	bh=IRFmzHZa5lhPHHiYNz8oSv/Pz2F5YpZFGhKTA+VYUQo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UWXiVzZ6WgO0BSvAYiZRK1uR3BoRXdU6i7BlPQQE9g0/H2OGD6YPVn4e0/1SJ9YrrCJP8yMFov0EOumb7rvDH1lM4qE9jABFe4w2Jo2+1mSOV4iJcB7ifs2ekDYOyrAkvZ+5dD0YlV+x1CRt4GNpF6eB24bnxP7vvWBRfFMK2E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eq5gbsBE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743420980; c=relaxed/simple;
+	bh=pF56YOqlTVhNvsegl9hLUU+hjxXkWHtyCd2UpHXKUX8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=KlxqTa0x1YyUmL45HzL7xreP9BheiOnOF/mQ8iP2F4DFNI5eijxw9RuCK5Eg8Vy6rDg80E/XKC8Jg5x6rniav1OeGB7I0hxJEPK55WgJ4KEL+SXHESIzr95D4jIP/G70gJ1PuLJtM0PZsRPneXVZaANkHfMV0cO6k6ucscAaEXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B19hZUae; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8kbybUw0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eq5gbsBE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FAC8C4CEE5;
-	Mon, 31 Mar 2025 11:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743420973;
-	bh=IRFmzHZa5lhPHHiYNz8oSv/Pz2F5YpZFGhKTA+VYUQo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Eq5gbsBEXh2+fcBX6d4MPBtyDWjkatMHWgBxegds4t0eoSo0W1aDNg+JJ9iZTG5+y
-	 gT/O0sJL7FcUmTEBsF2flhgG9WyXJWgUePcQg0fl2rqmH8ekQFB1ZZzkyCPC9NGUda
-	 TKDOqzQBTJyKwqeADhx4FrtwuS944ikFJTb+j1GYqscYo3biTuLmcwxO7sUDGOU13g
-	 ldfJKSdjz+1UtLs3uB1ILGdnihpgQ02UMY1liOVQRPOJ72wBbqdiZr17gWUdD2XHVM
-	 yXakafHzRjVB+VWG/SxvEzDsUrTpqlxnOWavU1UL5sQadxaaq8olA8s3Xj+1AeGCyX
-	 tfubHyYilUJlA==
-Message-ID: <3f5c26c0-f44c-4639-a636-8c01c22405f6@kernel.org>
-Date: Mon, 31 Mar 2025 19:36:08 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B19hZUae";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8kbybUw0"
+Date: Mon, 31 Mar 2025 11:36:09 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743420976;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XAJSsbuA2Jnaqrp1DXgyl741m+tb9aiTC3SD1GfWow4=;
+	b=B19hZUaeH+sPJqFN2uPYPdnRG8ogBezgV0SyNS2LCv3eUQWi2puJHiKVUxAU7RE2b7TOY+
+	gsI6nQzAUWKtp3UIc8C8J7ABSdENMFYFis1Z4hTNJXiPcNM7q5S566WRB1naS7PDkmOAqI
+	zn4FoEFKmrAjxsNnRHgzAT/aGBvNMbRLiO+sNiVIdbVQgfrVCdhT8uDBUxrnPnmFzwSkQ2
+	mVsGIO3z9SUXNDSdk8P4t/LlbSiNjJPuXcNYe+ZoqSSegGQzomMHkVCn8WqrMJYUB8M/oD
+	vZ/Qd+M+pQn1xXIDHAL1h5FY7x04Nj72esRcs+CuqM3xIq4Mo/83kCxVIDpcgg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743420976;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XAJSsbuA2Jnaqrp1DXgyl741m+tb9aiTC3SD1GfWow4=;
+	b=8kbybUw06qV1j1dM9ZFX9+Ef5YsbS7SP4xY/IMly782tNL2UZrOP7foa62I+EGz9pK4BTB
+	eO0mQuvRAI+ETWAQ==
+From: "tip-bot2 for Yeoreum Yun" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: Fix child_total_time_enabled accounting
+ bug at task exit
+Cc: Peter Zijlstra <peterz@infradead.org>, Yeoreum Yun <yeoreum.yun@arm.com>,
+ Ingo Molnar <mingo@kernel.org>, Leo Yan <leo.yan@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250326082003.1630986-1-yeoreum.yun@arm.com>
+References: <20250326082003.1630986-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, jaegeuk@kernel.org, jyh429@gmail.com,
- linux-kernel@vger.kernel.org, pilhyun.kim@sk.com
-Subject: Re: [External Mail] Re: [f2fs-dev] [External Mail] Re: [External
- Mail] Re: [PATCH] f2fs: prevent the current section from being selected as a
- victim during garbage collection
-To: "yohan.joung" <yohan.joung@sk.com>, linux-f2fs-devel@lists.sourceforge.net
-References: <b51283c6-ec5b-48ba-a1a1-b16911a5c5c8@kernel.org>
- <20250331051402.2595-1-yohan.joung@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250331051402.2595-1-yohan.joung@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174342097143.14745.6007783850854411758.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 3/31/25 13:13, yohan.joung wrote:
->> On 2025/3/28 15:25, yohan.joung wrote:
->>>> On 2025/3/28 11:40, yohan.joung wrote:
->>>>>> From: Chao Yu <chao@kernel.org>
->>>>>> Sent: Thursday, March 27, 2025 10:48 PM
->>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
->>>>>> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
->>>>>> kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
->>>>>> <pilhyun.kim@sk.com>
->>>>>> Subject: [External Mail] Re: [External Mail] Re: [External Mail] Re:
->>>>>> [PATCH] f2fs: prevent the current section from being selected as a
->>>>>> victim during garbage collection
->>>>>>
->>>>>> On 2025/3/27 16:00, yohan.joung@sk.com wrote:
->>>>>>>> From: Chao Yu <chao@kernel.org>
->>>>>>>> Sent: Thursday, March 27, 2025 4:30 PM
->>>>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
->>>>>>>> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
->>>>>>>> linux- kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
->>>>>>>> <pilhyun.kim@sk.com>
->>>>>>>> Subject: [External Mail] Re: [External Mail] Re: [PATCH] f2fs:
->>>>>>>> prevent the current section from being selected as a victim
->>>>>>>> during garbage collection
->>>>>>>>
->>>>>>>> On 3/27/25 14:43, yohan.joung@sk.com wrote:
->>>>>>>>>> From: Chao Yu <chao@kernel.org>
->>>>>>>>>> Sent: Thursday, March 27, 2025 3:02 PM
->>>>>>>>>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org;
->>>>>>>>>> daeho43@gmail.com
->>>>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
->>>>>>>>>> linux- kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE
->>>>>>>>>> <yohan.joung@sk.com>
->>>>>>>>>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the current
->>>>>>>>>> section from being selected as a victim during garbage
->>>>>>>>>> collection
->>>>>>>>>>
->>>>>>>>>> On 3/26/25 22:14, Yohan Joung wrote:
->>>>>>>>>>> When selecting a victim using next_victim_seg in a large
->>>>>>>>>>> section, the selected section might already have been cleared
->>>>>>>>>>> and designated as the new current section, making it actively
->>>>>>>>>>> in
->>>> use.
->>>>>>>>>>> This behavior causes inconsistency between the SIT and SSA.
->>>>>>>>>>
->>>>>>>>>> Hi, does this fix your issue?
->>>>>>>>>
->>>>>>>>> This is an issue that arises when dividing a large section into
->>>>>>>>> segments for garbage collection.
->>>>>>>>> caused by the background GC (garbage collection) thread in large
->>>>>>>>> section
->>>>>>>>> f2fs_gc(victim_section) ->
->>>>>>>>> f2fs_clear_prefree_segments(victim_section)->
->>>>>>>>> cursec(victim_section) -> f2fs_gc(victim_section by
->>>>>>>>> next_victim_seg)
->>>>>>>>
->>>>>>>> I didn't get it, why f2fs_get_victim() will return section which
->>>>>>>> is used by curseg? It should be avoided by checking w/
->> sec_usage_check().
->>>>>>>>
->>>>>>>> Or we missed to check gcing section which next_victim_seg points
->>>>>>>> to during get_new_segment()?
->>>>>>>>
->>>>>>>> Can this happen?
->>>>>>>>
->>>>>>>> e.g.
->>>>>>>> - bggc selects sec #0
->>>>>>>> - next_victim_seg: seg #0
->>>>>>>> - migrate seg #0 and stop
->>>>>>>> - next_victim_seg: seg #1
->>>>>>>> - checkpoint, set sec #0 free if sec #0 has no valid blocks
->>>>>>>> - allocate seg #0 in sec #0 for curseg
->>>>>>>> - curseg moves to seg #1 after allocation
->>>>>>>> - bggc tries to migrate seg #1
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>> That's correct
->>>>>>> In f2fs_get_victim, we use next_victim_seg to directly jump to
->>>>>>> got_result, thereby bypassing sec_usage_check What do you think
->>>>>>> about this change?
->>>>>>>
->>>>>>> @@ -850,15 +850,20 @@ int f2fs_get_victim(struct f2fs_sb_info
->>>>>>> *sbi,
->>>>>> unsigned int *result,
->>>>>>>                            p.min_segno = sbi->next_victim_seg[BG_GC];
->>>>>>>                            *result = p.min_segno;
->>>>>>>                            sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->>>>>>> -                       goto got_result;
->>>>>>>                    }
->>>>>>>                    if (gc_type == FG_GC &&
->>>>>>>                                    sbi->next_victim_seg[FG_GC] != NULL_SEGNO)
->> {
->>>>>>>                            p.min_segno = sbi->next_victim_seg[FG_GC];
->>>>>>>                            *result = p.min_segno;
->>>>>>>                            sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->>>>>>> -                       goto got_result;
->>>>>>>                    }
->>>>>>> +
->>>>>>> +               secno = GET_SEC_FROM_SEG(sbi, segno);
->>>>>>> +
->>>>>>> +               if (sec_usage_check(sbi, secno))
->>>>>>> +                       goto next;
->>>>>>> +
->>>>>>> +               goto got_result;
->>>>>>>            }
->>>>>>
->>>>>> But still allocator can assign this segment after sec_usage_check()
->>>>>> in race condition, right?
->>>>> Since the BG GC using next_victim  takes place after the SIT update
->>>>> in do_checkpoint, it seems unlikely that a race condition with
->>>> sec_usage_check will occur.
->>>>
->>>> I mean this:
->>>>
->>>> - gc_thread
->>>>    - f2fs_gc
->>>>     - f2fs_get_victim
->>>>      - sec_usage_check --- segno #1 is not used in any cursegs
->>>> 					- f2fs_allocate_data_block
->>>> 					 - new_curseg
->>>> 					  - get_new_segment find segno #1
->>>>
->>>>     - do_garbage_collect
->>>>
->>>> Thanks,
->>>
->>> 						  do_checkpoint sec0 free
->>> 						  If sec0 is not freed, then
->> segno1 within sec0 cannot be
->>> allocated
->>> - gc_thread
->>>    - f2fs_gc
->>>     - f2fs_get_victim
->>>      - sec_usage_check  --- segno #1 is not used in any cursegs (but sec0
->> is already used)
->>> 							- f2fs_allocate_data_block
->>> 							- new_curseg
->>> 							- get_new_segment find
->> segno #1
->>>
->>>     - do_garbage_collect
->>>
->>> I appreciate your patch, it is under testing.
->>> but I'm wondering if there's a risk of a race condition in this
->>> situation
->>
->> Oh, yes, I may missed that get_new_segment can return a free segment in
->> partial used section.
->>
->> So what do you think of this?
->> - check CURSEG() in do_garbage_collect() and get_victim()
->> - reset next_victim_seg[] in get_new_segment() and __set_test_and_free()
->> during checkpoint.
->>
->> Thanks,
-> 
-> How about using victim_secmap?
-> gc_thread
-> 				mutex_lock(&DIRTY_I(sbi)->seglist_lock);
-> 				__set_test_and_free
-> 				check cur section next_victim clear 
-> 				mutex_unlock(&dirty_i->seglist_lock);
->                                         
-> mutex_lock(&dirty->seglist_lock);
-> f2fs_get_victim
-> mutex_unlock(&dirty_i->seglist_lock);
-> 
-> static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
->                 if (next >= start_segno + usable_segs) {
->                         if (test_and_clear_bit(secno, free_i->free_secmap))
->                                 free_i->free_sections++;
-> +
-> +                       if (test_and_clear_bit(secno, dirty_i->victim_secmap))
-> +                               sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+The following commit has been merged into the perf/urgent branch of tip:
 
-Can this happen?
+Commit-ID:     a3c3c66670cee11eb13aa43905904bf29cb92d32
+Gitweb:        https://git.kernel.org/tip/a3c3c66670cee11eb13aa43905904bf29cb92d32
+Author:        Yeoreum Yun <yeoreum.yun@arm.com>
+AuthorDate:    Wed, 26 Mar 2025 08:20:03 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 31 Mar 2025 12:57:38 +02:00
 
-segs_per_sec=2
+perf/core: Fix child_total_time_enabled accounting bug at task exit
 
-- seg#0 and seg#1 are all dirty
-- all valid blocks are removed in seg#1
-- checkpoint -> seg#1 becomes free
-- gc select this sec and next_victim_seg=seg#0
-- migrate seg#0, next_victim_seg=seg#1
-- allocator assigns seg#1 to curseg
-- gc tries to migrate seg#1
+The perf events code fails to account for total_time_enabled of
+inactive events.
 
-Thanks,
+Here is a failure case for accounting total_time_enabled for
+CPU PMU events:
 
->                 }
->         }
->>
->>>
->>>
->>>>
->>>>>>
->>>>>> IMO, we can clear next_victim_seg[] once section is free in
->>>>>> __set_test_and_free()? something like this:
->>>>> I will test it according to your suggestion.
->>>>> If there are no issues, can I submit it again with the patch?
->>>>> Thanks
->>>>>>
->>>>>> ---
->>>>>>     fs/f2fs/segment.h | 13 ++++++++++---
->>>>>>     1 file changed, 10 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h index
->>>>>> 0465dc00b349..826e37999085 100644
->>>>>> --- a/fs/f2fs/segment.h
->>>>>> +++ b/fs/f2fs/segment.h
->>>>>> @@ -473,9 +473,16 @@ static inline void __set_test_and_free(struct
->>>>>> f2fs_sb_info *sbi,
->>>>>>     			goto skip_free;
->>>>>>     		next = find_next_bit(free_i->free_segmap,
->>>>>>     				start_segno + SEGS_PER_SEC(sbi),
->> start_segno);
->>>>>> -		if (next >= start_segno + usable_segs) {
->>>>>> -			if (test_and_clear_bit(secno, free_i->free_secmap))
->>>>>> -				free_i->free_sections++;
->>>>>> +		if ((next >= start_segno + usable_segs) &&
->>>>>> +			test_and_clear_bit(secno, free_i->free_secmap)) {
->>>>>> +			free_i->free_sections++;
->>>>>> +
->>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) ==
->>>>>> +									secno)
->>>>>> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) ==
->>>>>> +									secno)
->>>>>> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->>>>>>     		}
->>>>>>     	}
->>>>>>     skip_free:
->>>>>> --
->>>>>> 2.40.1
->>>>>>
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Because the call stack is different, I think that in order to
->>>>>>>>> handle everything at once, we need to address it within
->>>>>>>>> do_garbage_collect, or otherwise include it on both sides.
->>>>>>>>> What do you think?
->>>>>>>>>
->>>>>>>>> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment
->>>>>>>>> (70961) type [0, 1] in SSA and SIT [30146.346151][ T1300] Call
->> trace:
->>>>>>>>> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c
->>>>>>>>> [30146.346157][ T1300]  show_stack+0x18/0x28 [30146.346158][
->>>>>>>>> T1300] dump_stack_lvl+0x50/0x6c [30146.346161][ T1300]
->>>>>>>>> dump_stack+0x18/0x28 [30146.346162][ T1300]
->>>>>>>>> f2fs_stop_checkpoint+0x1c/0x3c [30146.346165][ T1300]
->>>>>>>>> do_garbage_collect+0x41c/0x271c [30146.346167][ T1300]
->>>>>>>>> f2fs_gc+0x27c/0x828 [30146.346168][ T1300]
->>>>>>>>> gc_thread_func+0x290/0x88c [30146.346169][ T1300]
->>>>>>>>> kthread+0x11c/0x164 [30146.346172][ T1300]
->>>>>>>>> ret_from_fork+0x10/0x20
->>>>>>>>>
->>>>>>>>> struct curseg_info : 0xffffff803f95e800 {
->>>>>>>>> 	segno        : 0x11531 : 70961
->>>>>>>>> }
->>>>>>>>>
->>>>>>>>> struct f2fs_sb_info : 0xffffff8811d12000 {
->>>>>>>>> 	next_victim_seg[0] : 0x11531 : 70961 }
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947
->>>>>>>>>> -2
->>>>>>>>>> -
->>>>>>>>>> chao@kernel.org
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
->>>>>>>>>>> ---
->>>>>>>>>>>     fs/f2fs/gc.c | 4 ++++
->>>>>>>>>>>     1 file changed, 4 insertions(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
->>>>>>>>>>> 2b8f9239bede..4b5d18e395eb 100644
->>>>>>>>>>> --- a/fs/f2fs/gc.c
->>>>>>>>>>> +++ b/fs/f2fs/gc.c
->>>>>>>>>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi,
->>>>>>>>>>> struct
->>>>>>>>>> f2fs_gc_control *gc_control)
->>>>>>>>>>>     		goto stop;
->>>>>>>>>>>     	}
->>>>>>>>>>>
->>>>>>>>>>> +	if (__is_large_section(sbi) &&
->>>>>>>>>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
->>>>>>>>>>> +		goto stop;
->>>>>>>>>>> +
->>>>>>>>>>>     	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
->>>>>>>>>>>     				gc_control->should_migrate_blocks,
->>>>>>>>>>>     				gc_control->one_time);
->>>>>>>>>
->>>>>>>
->>>>>
->>>
+  sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
+  ...
 
+  armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+  armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+                             `          `          `
+                             `          `          > total_time_running with child
+                             `          > total_time_enabled with child
+                             > count with child
+
+  Performance counter stats for 'stress-ng --pthread=2 -t 2s':
+
+       1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
+       1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
+
+The two events above are opened on two different CPU PMUs, for example,
+each event is opened for a cluster in an Arm big.LITTLE system, they
+will never run on the same CPU.  In theory, the total enabled time should
+be same for both events, as two events are opened and closed together.
+
+As the result show, the two events' total enabled time including
+child event is different (2289429840 vs 1950025700).
+
+This is because child events are not accounted properly
+if a event is INACTIVE state when the task exits:
+
+  perf_event_exit_event()
+   `> perf_remove_from_context()
+     `> __perf_remove_from_context()
+       `> perf_child_detach()   -> Accumulate child_total_time_enabled
+         `> list_del_event()    -> Update child event's time
+
+The problem is the time accumulation happens prior to child event's
+time updating. Thus, it misses to account the last period's time when
+the event exits.
+
+The perf core layer follows the rule that timekeeping is tied to state
+change. To address the issue, make __perf_remove_from_context()
+handle the task exit case by passing 'DETACH_EXIT' to it and
+invoke perf_event_state() for state alongside with accounting the time.
+
+Then, perf_child_detach() populates the time into the parent's time metrics.
+
+After this patch, the bug is fixed:
+
+  sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
+  ...
+  armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
+  armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
+
+   Performance counter stats for 'stress-ng --pthread=2 -t 10s':
+
+      15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
+      22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
+
+[ mingo: Clarified the changelog. ]
+
+Fixes: ef54c1a476aef ("perf: Rework perf_event_exit_event()")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Leo Yan <leo.yan@arm.com>
+Link: https://lore.kernel.org/r/20250326082003.1630986-1-yeoreum.yun@arm.com
+---
+ kernel/events/core.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0bb2165..128db74 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2451,6 +2451,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
+ #define DETACH_GROUP	0x01UL
+ #define DETACH_CHILD	0x02UL
+ #define DETACH_DEAD	0x04UL
++#define DETACH_EXIT	0x08UL
+ 
+ /*
+  * Cross CPU call to remove a performance event
+@@ -2465,6 +2466,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 			   void *info)
+ {
+ 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
++	enum perf_event_state state = PERF_EVENT_STATE_OFF;
+ 	unsigned long flags = (unsigned long)info;
+ 
+ 	ctx_time_update(cpuctx, ctx);
+@@ -2473,16 +2475,19 @@ __perf_remove_from_context(struct perf_event *event,
+ 	 * Ensure event_sched_out() switches to OFF, at the very least
+ 	 * this avoids raising perf_pending_task() at this time.
+ 	 */
+-	if (flags & DETACH_DEAD)
++	if (flags & DETACH_EXIT)
++		state = PERF_EVENT_STATE_EXIT;
++	if (flags & DETACH_DEAD) {
+ 		event->pending_disable = 1;
++		state = PERF_EVENT_STATE_DEAD;
++	}
+ 	event_sched_out(event, ctx);
++	perf_event_set_state(event, min(event->state, state));
+ 	if (flags & DETACH_GROUP)
+ 		perf_group_detach(event);
+ 	if (flags & DETACH_CHILD)
+ 		perf_child_detach(event);
+ 	list_del_event(event, ctx);
+-	if (flags & DETACH_DEAD)
+-		event->state = PERF_EVENT_STATE_DEAD;
+ 
+ 	if (!pmu_ctx->nr_events) {
+ 		pmu_ctx->rotate_necessary = 0;
+@@ -13731,12 +13736,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		mutex_lock(&parent_event->child_mutex);
+ 	}
+ 
+-	perf_remove_from_context(event, detach_flags);
+-
+-	raw_spin_lock_irq(&ctx->lock);
+-	if (event->state > PERF_EVENT_STATE_EXIT)
+-		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
+-	raw_spin_unlock_irq(&ctx->lock);
++	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
+ 
+ 	/*
+ 	 * Child events can be freed.
