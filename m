@@ -1,128 +1,354 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C981D5CC2;
-	Mon, 31 Mar 2025 07:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CD01C9DC6
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407422; cv=none; b=MZsYuTzu9cbQq9KixQ2AvKNbZRBhm24/hM/UDnEBf95soEFDhUnIMIPa4HJ8e0OagCNe8lZ6GHAg0nYrPbbDGA0jtQxWaZPca/KUMX4jL1iZyvsI7F+acWGzyFhnhhluxw+5UqvLlXpZrwPqcGSUocUxEY3pmMQ+XHhCX9ly+W4=
+	t=1743407422; cv=none; b=qqWdil+U+A1TpqSPKbq7/oIYrrbTGfmM3tWuPMWtNDwq83y36ggFn1zW64HIlKEfHcLZo+Bl0M7Irpo4zTQJSTCycX4febwDe8LRmqffFslHO9nneQRHE1h2YKV/+PbdcIYz5iBKxekk6RL4Qszl/7JUl3j5HC6FsAY8Qe8kvv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743407422; c=relaxed/simple;
-	bh=prYw5u8aOVdWtVy6m/f9wz2b6yIFj/X4vl/CDi7qjyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lL+PzlE3Mb4zuHHfiEyUWIud+aRx5CvFSPZyG/H1+VEC6s9f8nA+zO/y6ELlihf/Zu41WeRX3t7H6nLK06jxjPuqPihdQuMypby4Ik9E4+zikp5DkCKOR2nVh5peMm120nvQybpUhL+zHc5vZiCqnhSnVEEarpOJpUOBBhPVXKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AM/pd9GY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AM/pd9GY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6366C4CEE3;
-	Mon, 31 Mar 2025 07:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743407421;
-	bh=prYw5u8aOVdWtVy6m/f9wz2b6yIFj/X4vl/CDi7qjyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AM/pd9GYteRQlJHH/4X+M0M8nhgTeNEfVSpqgsbbU5wiwkmMPlyVTd8bLxqEmRFPA
-	 4lcFyj0NdCqddz2tPlng2UW+ZkqHQ7ft6RKN6Z8NrjawnLDfNbDzz1JbEk+001y7bW
-	 cgz0/f3YJRN3QfcvpffdtzpVomt7JntgcUSbeUC1xR2cRLZWAqujDuzFtGpNiAeW3Q
-	 mXLrwE6TxaxDk6h3898Tk1UBLaqBFOCIJdKn/5URXjlXyMdmmuqxrmfp6TMfo5GT1b
-	 PPHYRRdy/ZucFP7tgDqFLY+5hTH28fwsLQm4Z48NUkMwPNya62eDQzlpFRTCd9P0OW
-	 JKlXVaiCG+0Eg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tz9uZ-00000000574-2xYS;
-	Mon, 31 Mar 2025 09:50:23 +0200
-Date: Mon, 31 Mar 2025 09:50:23 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Christopher Obbard <christopher.obbard@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>, devicetree@vger.kernel.org,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v3 1/2] arm64: dts: qcom: x1e78100-t14s: add hpd gpio to
- eDP panel
-Message-ID: <Z-pJP4PMwPo3L3Og@hovoldconsulting.com>
-References: <20250327-wip-obbardc-qcom-t14s-oled-panel-v3-0-45d5f2747398@linaro.org>
- <20250327-wip-obbardc-qcom-t14s-oled-panel-v3-1-45d5f2747398@linaro.org>
+	bh=ndtQj3Quuiuzfj8P1fJiUEABRGfbmS7H1u+JYWjzFIs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SCk98MteRuSrLYC1pSIGqhxyWb/fe0zxuCCbTGpy88oq4QHOIVshpZRzeYv5fgXsew4RAQI0EZN0RY/HxBEBIURAeLzZKLB89YPJSr1WPIH1Y+8incxth7WlfBHun8LC/lnhOKHiYCjmHpsB3lIgWO9flofuHF1GDmYW1MUowC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZR39S2CSkzWfnK;
+	Mon, 31 Mar 2025 15:46:36 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 686F11400DC;
+	Mon, 31 Mar 2025 15:50:17 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Mon, 31 Mar 2025 15:50:16 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<jani.nikula@linux.intel.com>, <dmitry.baryshkov@oss.qualcomm.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 drm-dp 6/9] drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
+Date: Mon, 31 Mar 2025 15:42:09 +0800
+Message-ID: <20250331074212.3370287-7-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250331074212.3370287-1-shiyongbang@huawei.com>
+References: <20250331074212.3370287-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-wip-obbardc-qcom-t14s-oled-panel-v3-1-45d5f2747398@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On Thu, Mar 27, 2025 at 04:56:53PM +0000, Christopher Obbard wrote:
-> The eDP panel has an HPD GPIO. Describe it in the device tree
-> for the generic T14s model, as the HPD GPIO property is used in
-> both the OLED and LCD models which inherit this device tree.
+From: Baihan Li <libaihan@huawei.com>
 
-AFAICT, this patch is not correct as the hotplug detect signal is
-connected directly to the display controller on (these) Qualcomm SoCs
-and is already handled by its driver.
+DP controller can support generating a color bar signal over the
+DisplayPort interface. This can be useful to check for possible DDR
+or GPU problems, as the signal generator resides completely in the DP
+block. Add debugfs file that controls colorbar generator.
 
-Describing it as you do here leads to less accurate delays, see commits:
-	
-	2327b13d6c47 ("drm/panel-edp: Take advantage of wait_hpd_asserted() in struct drm_dp_aux").
-	3b5765df375c ("drm/panel: atna33xc20: Take advantage of wait_hpd_asserted() in struct drm_dp_aux")
+echo: config the color bar register to display
+cat: print the color bar configuration
 
-Perhaps you lose some other functionality too.
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ChangeLog:
+v3 -> v4:
+  - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
+v2 -> v3:
+  - rewrite the commit log, suggested by Dmitry Baryshkov.
+  - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
+  - change binary format to integer format, suggested by Dmitry Baryshkov.
+v1 -> v2:
+  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
+  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
+  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
+  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
+---
+ drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  43 ++++++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  29 +++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |   3 +
+ .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++++++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |   1 +
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |   2 +
+ 7 files changed, 184 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+index 43de077d6769..1f65c683282f 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
++++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ hibmc-drm-y := hibmc_drm_drv.o hibmc_drm_de.o hibmc_drm_vdac.o hibmc_drm_i2c.o \
+-	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_serdes.o hibmc_drm_dp.o
++	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_serdes.o hibmc_drm_dp.o \
++	       hibmc_drm_debugfs.o
  
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> index 962fb050c55c4fd33f480a21a8c47a484d0c82b8..46c73f5c039ed982b553636cf8c4237a20ba7687 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> @@ -980,8 +980,12 @@ &mdss_dp3 {
->  	aux-bus {
->  		panel: panel {
->  			compatible = "edp-panel";
-> +			hpd-gpios = <&tlmm 119 GPIO_ACTIVE_HIGH>;
->  			power-supply = <&vreg_edp_3p3>;
->  
-> +			pinctrl-0 = <&edp_hpd_n_default>;
-> +			pinctrl-names = "default";
-> +
->  			port {
->  				edp_panel_in: endpoint {
->  					remote-endpoint = <&mdss_dp3_out>;
-> @@ -1286,6 +1290,13 @@ hall_int_n_default: hall-int-n-state {
->  		bias-disable;
->  	};
->  
-> +	edp_hpd_n_default: edp-hpd-n-state {
-> +		pins = "gpio119";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-> +	};
+ obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc-drm.o
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+index aa9354a996c9..ce7cb07815b2 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+@@ -226,3 +226,46 @@ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode)
+ 
+ 	return 0;
+ }
++
++static const struct hibmc_dp_color_raw g_rgb_raw[] = {
++	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
++	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
++	{CBAR_RED,       0xfff, 0x000, 0x000},
++	{CBAR_ORANGE,    0xfff, 0x800, 0x000},
++	{CBAR_YELLOW,    0xfff, 0xfff, 0x000},
++	{CBAR_GREEN,     0x000, 0xfff, 0x000},
++	{CBAR_CYAN,      0x000, 0x800, 0x800},
++	{CBAR_BLUE,      0x000, 0x000, 0xfff},
++	{CBAR_PURPLE,    0x800, 0x000, 0x800},
++	{CBAR_BLACK,     0x000, 0x000, 0x000},
++};
++
++void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg)
++{
++	struct hibmc_dp_dev *dp_dev = dp->dp_dev;
++	struct hibmc_dp_color_raw raw_data;
++
++	if (cfg->enable) {
++		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(9),
++					 cfg->self_timing);
++		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(8, 1),
++					 cfg->dynamic_rate);
++		if (cfg->pattern == CBAR_COLOR_BAR) {
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 0);
++		} else {
++			raw_data = g_rgb_raw[cfg->pattern];
++			drm_dbg_dp(dp->drm_dev, "r:%x g:%x b:%x\n", raw_data.r_value,
++				   raw_data.g_value, raw_data.b_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 1);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(23, 12),
++						 raw_data.r_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(23, 12),
++						 raw_data.g_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(11, 0),
++						 raw_data.b_value);
++		}
++	}
++
++	hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(0), cfg->enable);
++	writel(HIBMC_DP_SYNC_EN_MASK, dp_dev->base + HIBMC_DP_TIMING_SYNC_CTRL);
++}
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+index 53b6d0beecea..83a53dae8012 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+@@ -14,6 +14,33 @@
+ 
+ struct hibmc_dp_dev;
+ 
++enum hibmc_dp_cbar_pattern {
++	CBAR_COLOR_BAR,
++	CBAR_WHITE,
++	CBAR_RED,
++	CBAR_ORANGE,
++	CBAR_YELLOW,
++	CBAR_GREEN,
++	CBAR_CYAN,
++	CBAR_BLUE,
++	CBAR_PURPLE,
++	CBAR_BLACK,
++};
++
++struct hibmc_dp_color_raw {
++	enum hibmc_dp_cbar_pattern pattern;
++	u32 r_value;
++	u32 g_value;
++	u32 b_value;
++};
++
++struct hibmc_dp_cbar_cfg {
++	u8 enable;
++	u8 self_timing;
++	u8 dynamic_rate; /* 0:static, 1-255(frame):dynamic */
++	enum hibmc_dp_cbar_pattern pattern;
++};
++
+ struct hibmc_dp {
+ 	struct hibmc_dp_dev *dp_dev;
+ 	struct drm_device *drm_dev;
+@@ -21,10 +48,12 @@ struct hibmc_dp {
+ 	struct drm_connector connector;
+ 	void __iomem *mmio;
+ 	struct drm_dp_aux aux;
++	struct hibmc_dp_cbar_cfg cfg;
+ };
+ 
+ int hibmc_dp_hw_init(struct hibmc_dp *dp);
+ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode);
+ void hibmc_dp_display_en(struct hibmc_dp *dp, bool enable);
++void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg);
+ 
+ #endif
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+index 6eb76decc636..5614b727a710 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+@@ -67,6 +67,9 @@
+ #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+ #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
+ 
++#define HIBMC_DP_COLOR_BAR_CTRL			0x260
++#define HIBMC_DP_COLOR_BAR_CTRL1		0x264
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
+ #define HIBMC_DP_CFG_TIMING_GEN0_HACTIVE	GENMASK(31, 16)
+ #define HIBMC_DP_CFG_TIMING_GEN0_HBLANK		GENMASK(15, 0)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+new file mode 100644
+index 000000000000..f585387c3a49
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright (c) 2024 Hisilicon Limited.
++
++#include <linux/debugfs.h>
++#include <linux/device.h>
++#include <linux/seq_file.h>
++#include <linux/pci.h>
++
++#include <drm/drm_drv.h>
++#include <drm/drm_file.h>
++#include <drm/drm_debugfs.h>
++#include <drm/drm_edid.h>
++
++#include "hibmc_drm_drv.h"
++
++#define MAX_BUF_SIZE 12
++
++static ssize_t hibmc_control_write(struct file *file, const char __user *user_buf,
++				   size_t count, loff_t *ppos)
++{
++	struct hibmc_drm_private *priv = file_inode(file)->i_private;
++	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
++	int ret, idx;
++	u8 buf[MAX_BUF_SIZE];
++
++	if (count >= MAX_BUF_SIZE)
++		return -EINVAL;
++
++	if (copy_from_user(buf, user_buf, count))
++		return -EFAULT;
++
++	buf[count] = '\0';
++
++	/* Only 4 parameters is allowed, the ranger are as follow:
++	 * [0] enable/disable colorbar feature
++	       0: enable colorbar, 1: disable colorbar
++	 * [1] the timing source of colorbar displaying
++	       0: timing follows XDP, 1: internal self timing
++	 * [2] the movment of colorbar displaying
++	       0: static colorbar image,
++	 *     1~255: right shifting a type of color per (1~255)frames
++	 * [3] the color type of colorbar displaying
++	       0~9: color bar, white, red, orange,
++	 *          yellow, green, cyan, bule, pupper, black
++	 */
++	if (sscanf(buf, "%hhu %hhu %hhu %u", &cfg->enable, &cfg->self_timing,
++		   &cfg->dynamic_rate, &cfg->pattern) != 4) {
++		return -EINVAL;
++	}
++
++	if (cfg->pattern > 9 || cfg->enable > 1 || cfg->self_timing > 1)
++		return -EINVAL;
++
++	ret = drm_dev_enter(&priv->dev, &idx);
++	if (!ret)
++		return -ENODEV;
++
++	hibmc_dp_set_cbar(&priv->dp, cfg);
++
++	drm_dev_exit(idx);
++
++	return count;
++}
++
++static int hibmc_dp_dbgfs_show(struct seq_file *m, void *arg)
++{
++	struct hibmc_drm_private *priv = m->private;
++	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
++	int idx;
++
++	if (!drm_dev_enter(&priv->dev, &idx))
++		return -ENODEV;
++
++	seq_printf(m, "hibmc dp colorbar cfg: %u %u %u %u\n", cfg->enable, cfg->self_timing,
++		   cfg->dynamic_rate, cfg->pattern);
++
++	drm_dev_exit(idx);
++
++	return 0;
++}
++
++static int hibmc_open(struct inode *inode, struct file *filp)
++{
++	return single_open(filp, hibmc_dp_dbgfs_show, inode->i_private);
++}
++
++static const struct file_operations hibmc_dbg_fops = {
++	.owner   = THIS_MODULE,
++	.write   = hibmc_control_write,
++	.read    = seq_read,
++	.open    = hibmc_open,
++	.llseek  = seq_lseek,
++	.release = single_release,
++};
++
++void hibmc_debugfs_init(struct drm_connector *connector, struct dentry *root)
++{
++	struct drm_device *dev = connector->dev;
++	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
++
++	/* create the file in drm directory, so we don't need to remove manually */
++	debugfs_create_file("colorbar-cfg", 0200,
++			    root, priv, &hibmc_dbg_fops);
++}
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+index 8e5ee816dfbd..a86ecce4b3c1 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+@@ -55,6 +55,7 @@ static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+ 	.late_register = hibmc_dp_late_register,
+ 	.early_unregister = hibmc_dp_early_unregister,
++	.debugfs_init = hibmc_debugfs_init,
+ };
+ 
+ static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index 3ddd71aada66..bc89e4b9f4e3 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -69,4 +69,6 @@ int hibmc_ddc_create(struct drm_device *drm_dev, struct hibmc_vdac *connector);
+ 
+ int hibmc_dp_init(struct hibmc_drm_private *priv);
+ 
++void hibmc_debugfs_init(struct drm_connector *connector, struct dentry *root);
++
+ #endif
+-- 
+2.33.0
 
-I checked the firmware configuration for this pin on my T14s, which
-does not match what you have here. Instead the function is set to
-"edp0_hot" which forwards the signal to the display controller which
-already handles the signal on panel power on. (And there is also no
-internal pull up enabled).
-
-We may want to describe this pin configuration somewhere, but that's a
-separate issue.
-
-Johan
