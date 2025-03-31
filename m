@@ -1,178 +1,101 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23D71C84CB;
-	Mon, 31 Mar 2025 07:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C07F1C1F22;
+	Mon, 31 Mar 2025 07:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407565; cv=none; b=fb7tDV8LFOG2LOLK8Z14d9zcyFiEEtpmNCmPrhkRex8bykumRzFU4Q6boxOfjEPWAZx/H8lFbhTxVN2uaXjns22BhrYwe/zY9rPTnjxm9gbo9rZbliPnrcicjTEDQoGQlqnAU6FGP0fhW9ZSpBFRuOYKCXKkzOSIV+NLCXJr+So=
+	t=1743407581; cv=none; b=TNvwifs82nuDImF4A115Wu2E5+AVYsiEpVm6A9FLVZf7lBF1c7hecp6wA+Q6qeRdclseQ8Gxxrm15Cmfc/3GjjtiKg3Vb2PmxO9KDGhgdKWiC7tXGxmszggJC3CoiKgZn+GDADKk50wa3oT/mSaSxv4X582Er7yeORCO9C8+TNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407565; c=relaxed/simple;
-	bh=T4RYABb0/AAiokpzPfBeolRqfC+EBCsgyNzLU6qopVg=;
+	s=arc-20240116; t=1743407581; c=relaxed/simple;
+	bh=nVsr6h/d6wxlnXYTNX2+zfMFUgOmP7kxOHDWcKbB0O0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KbQLFTj3ml/8pYwUcsCYtOf5rIrfPLHJ29I8z3UTlPT4gkscPIBcr7NTXn6hWlNeitSU3TAY8A+E9mJbPoRTM7CWqF+9N2AVReya6OlNB1ueQScb8yZYtRW5KyP4pD/GvFQdSy09snTEloJockGYDt5u+Q7uV18p8tH1zLyzd9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=kxwAVoQN; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	 To:Cc:Content-Type; b=rEkwK65ACUJJRImVv9KffJXZpzxl1VHA06m3zAD+KFSuzaO/L5jfP4UPwe9gXZXCoDRUSwhNqGYZvNTKmfBJSv7vxu17RNtk1Algx2CbsztYtCyuQXM1lhH5zZLJjVFJ2cWymINdaq1jlyoRUSeLA2JvoGK3gUmGWXyDll5jbHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AuUPLgdA; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="kxwAVoQN"
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 1BBA92E07C72;
-	Mon, 31 Mar 2025 10:52:35 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1743407558;
-	bh=dPHXz37ma9SoVrUSxR/9oICeJsQcw4sXADN0QUet89M=;
-	h=Received:From:Subject:To;
-	b=kxwAVoQNBagZ/exmuY42Xdm/fO4N15p0VJsTj3Zw+P89KnU8s5pcgLMkME1vywYc8
-	 7N2Pwe5t9d+wxuAmxUFFbOYUtGJBZuSBAHxRf1rQsoG0tlG2dqwEWC0M1Of96b1tlW
-	 +hSEU6W3ehKSGihk/PkaZ/VjlZ8dcL9hTZBk5Gzc=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.173) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f173.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f173.google.com with SMTP id
- 38308e7fff4ca-30bf3f3539dso39969831fa.1;
-        Mon, 31 Mar 2025 00:52:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUMClX6OITGpCtaCcyjfgF+dL7PDb1LZ3kuskwqSuhcqe6DyncRgTc07NUBF2VNX1bOLiN8xhAe9NkDnQ==@vger.kernel.org,
- AJvYcCWDIkGxqF0F1OWhq8rjWIphm7bHXCu1eT1ZoWQD/TbtuVDakwouv1uWOYG1lUgab+kqnGa99xpJcvBQpy5j@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoRQLSuWb1yKY5oWxDIV6IwXJVE7aNRuijPh8Uo11OBaYj1x85
-	Hm2cremK6pMWLCdOairWLlIHi4bVEjYRsx4eFEHsk2eEyduoR93+aaG3l4tp8DqoWzxM253ykyV
-	7C2g5NjlayPzjq0iHz1x7EpC44rY=
-X-Google-Smtp-Source: 
- AGHT+IG51YjIB3w/EWFyxGDdLo0A/6GstSrq+tlwMO8nsvwVyczjmzQx83uKM1M9Qgy/BhtjZLGUL71UgEkpNlmauLg=
-X-Received: by 2002:a05:651c:2223:b0:30c:1aa6:5565 with SMTP id
- 38308e7fff4ca-30ddfa2bf34mr24184491fa.20.1743407554353; Mon, 31 Mar 2025
- 00:52:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuUPLgdA"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-301317939a0so951016a91.2;
+        Mon, 31 Mar 2025 00:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743407579; x=1744012379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DQKkjiuT794y4BQUqltzWiJ7Uf7+ew47mA8K1XybC9s=;
+        b=AuUPLgdAjUO48mLcq+pkSqSjoju+t0SUxdBUFms0iUBNqUlxyy7sXReI3zqjGgCXln
+         UBlAL8t4Lte535M1yd3MJapF/cHNWyuahAT0WejIZr2x9+PldnXtAEl3STuJeXT+hcYP
+         AalIz30/5/BwoERXg2ch4wG4ybRmVyOniM3D0kSuP57dOe2A4tGfriMD41wPJLCR3JNE
+         xKaFqcuD5jbgY4micXJZv1a4qY4HmhraV06iZyhjI6RXlV1hhbqVmMOfhulwOYZb8FOf
+         eYEiqog8SlbWtlTk2zWrUrFRRh+eYJ84ls+1Y+iJQUOW+Z8bqbOyKW1m9aO1lhIBaZNR
+         VKdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743407579; x=1744012379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DQKkjiuT794y4BQUqltzWiJ7Uf7+ew47mA8K1XybC9s=;
+        b=VAkzLvASYu4AhKJ0eum0e+bjh1KUH9YsEk11dPg7NcK+Z+Drw2lv1XRrcrf02EgIvb
+         RuV9RzpYuooze61gR+19OT+g0IjeCBKWxnX76eMKYzhCBUexlSlrSk52NwV2xtOF1WAK
+         +28VbJIK3jaiZJLvXVwmuHvDrzrBReS3X8DsIIoaY7Y+vLX1qhsri60QIQZBYgz3R6IR
+         RJxwixcQ7GNcf5eCFyXIYXp2IX2WI15QHv1hAwVc6KUMYgrgb8FpejNVV84N+Pz2pXUL
+         awwPu9n11ClfRz0/u2Bs1v9N3lZDaQtLK+OWYIvSWMulCw6ztWjCuTRM1AykTy29GTT9
+         aNyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVU9TeBa+IwCAE5hD714Nt5tIjvnf6RbbTxB+Jx8aA+/uduR6rZEd/QSn3IF9vQi4c5jMfPuo1eMd3Ey3Y=@vger.kernel.org, AJvYcCVkTjQnbTvZqXmRUy38jVPklrQ7cXMHTwKvuFhhBq9mnTwTZ+do4SwGqDMomxigwUzhgCJ7SLtXKC/SCw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBSEQZxaPi8In79m1Xzz44ZD5Jzl+jpnrHI0cAoBGMig/A9fsw
+	DAUB7cagMaoC3qGM4U4rTk8+KUieg7+cD4/MlOlxc+05ptoRgskBL+9i6Ggn4Ws+EQxjXk8eEsp
+	dbxmBH0zpqn0IuVnsU2MvKfu0mjXRprg5
+X-Gm-Gg: ASbGncvdXRVCU7RK7Y/9JboK3n0O/+hKyltM2AXk9HObZkQ5ORLt45EzqBEheWnaYIA
+	NddsRQ4McUkXHOUFzXTmY20pUXVdlpgiItcMnTFcfUFAMzujGO6wC+9t0hSlR0RT3gcHIZgMn+B
+	EM81rVez3Xe8QrD5OPIZAsK783Hg==
+X-Google-Smtp-Source: AGHT+IExlfy+kCtZtMaJcYDQP5xOqBKVUmeEGNbJM8Eb6hjgi5fuPefp4DGFeV5Xv5oQUNQnx5Z2Lw31XHXWhigW2C0=
+X-Received: by 2002:a17:90b:1d11:b0:2fe:a747:935a with SMTP id
+ 98e67ed59e1d1-3053213f401mr3653033a91.4.1743407578651; Mon, 31 Mar 2025
+ 00:52:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-11-lkml@antheas.dev>
- <648a1d1f-a222-480a-aec9-ab3e0cf790a1@ljones.dev>
-In-Reply-To: <648a1d1f-a222-480a-aec9-ab3e0cf790a1@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 31 Mar 2025 09:52:22 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqe4-ED7pMCJ-pvbT6w6TmbqqZtk2L6hLDXJr7jXmq8PwD1nJ7nvPRayIg
-Message-ID: 
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/11] HID: asus: add RGB support to the ROG Ally units
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250331160726.4e3d93dd@canb.auug.org.au>
+In-Reply-To: <20250331160726.4e3d93dd@canb.auug.org.au>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 31 Mar 2025 09:52:45 +0200
+X-Gm-Features: AQ5f1JoDIIjMX-klTP4q5jHdGxKVyW3--zvZLHd4NxngTGQHoznPsrL35nSiuD4
+Message-ID: <CANiq72=LaRJK22Z6=KppMea_vk-34-UixTtQKFmjW6EFBytfrQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the rust tree with the loongarch tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	WANG Rui <wangrui@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174340755579.17681.18017299989546706960@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 31 Mar 2025 at 00:11, Luke D. Jones <luke@ljones.dev> wrote:
+On Mon, Mar 31, 2025 at 7:07=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
 >
-> On 26/03/25 07:45, Antheas Kapenekakis wrote:
-> > Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
-> >
-> > Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >   drivers/hid/hid-asus.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index c135c9ff87b74..fa8ec237efe26 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -1424,10 +1424,10 @@ static const struct hid_device_id asus_devices[] = {
-> >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
-> >         QUIRK_ROG_CLAYMORE_II_KEYBOARD },
+> Today's linux-next merge of the rust tree got a conflict in:
 >
-> Hi Antheas,
+>   rust/Makefile
 >
-> I have some good news for you, ASUS got back to me, there *is* a way to
-> get the feature level of a keyboard.
+> between commit:
 >
-> ## 2.2. Configuration command
+>   13c23cb4ed09 ("rust: Fix enabling Rust and building with GCC for LoongA=
+rch")
 >
-> In order to confirm what functions are the USB device supported, host
-> retrieves the
-> configuration information by feature report method. Therefore, the
-> firmware has to
-> return the data (byte 0x06~) to the host.
+> from the loongarch tree and commit:
 >
-> ### 2.2.1. Set feature
+>   6b2dab17d6fa ("rust: pass correct target to bindgen on Usermode Linux")
 >
-> | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> |-----------|-----------|----------|----------|------------|---------|
-> | Report ID | OP code   | Addr_L   | Addr_H   | Read ROM   | Length  |
-> | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
+> from the rust tree.
 >
-> ### 2.2.2. Get feature
->
-> | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> |-----------|-----------|----------|----------|------------|---------|
-> | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
->
-> **Byte 6**
-> - 0x00: KB, 1-zone with single color
+> I fixed it up (see below) and can carry the fix as necessary. This
 
-Nice find. The asus-hid driver already implements this and checks for
-0x00 to bail the backlight.
+Looks good to me, thanks!
 
-So that check should be removed as it does not work with single color
-keyboards and instead checked for 2,3,4 to enable RGB.
-
-This also means removing the RGB check and getting global support in one go.
-
-Antheas
-
-> - 0x01: KB, QWERASD-partition
-> - 0x02: KB, 4-zone with RGB
-> - 0x03: KB, Per-key with RGB
-> - 0x04: KB, 1-zone with RGB
-> - Other: reserved
->
-> **Byte 7(keyboard language)**
-> - 0x01: US
-> - 0x02: UK
-> - 0x03: JP
-> - Other: reserved
->
-> I've not done anything with this myself yet, circumstances last week
-> weren't great for me. If you implement this in driver I will ensure I
-> get it tested as I have both single colour and rgb laptops.
->
-> What i *do* know is:
->
-> - 0x00: KB, 1-zone with single color
-> - 0x01: KB, QWERASD-partition
-> These can be standard kb_backlight
->
-> - 0x02: KB, 4-zone with RGB
-> - 0x03: KB, Per-key with RGB
-> - 0x04: KB, 1-zone with RGB
-> These work with the regular EC-mode RGB command for static/solid colour
-> and you don't need to worry about zone/per-key. It would be good to
-> document those as defines or enum or something for future.
->
-> Hope this helps.
->
-> Cheers,
-> Luke.
+Cheers,
+Miguel
