@@ -1,861 +1,166 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25C4F193079;
-	Mon, 31 Mar 2025 06:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3E18E02A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743403295; cv=none; b=kQbM5+3DIifcdsfYbglKaSsN6bzNU1QehpFthiZQLJZ06EjsSli2IMFlxPmTb5XAxR7Ayr6pAezFIIxou9apUjSvpMF4IZ1Vgjhv6v22pzVYOgTtHVqVEDNUKJ3hzTR7oauUAqJ3dZ0dUDvhsvFoMzqTWwBGGNFzQtLdPk1Drvc=
+	t=1743403330; cv=none; b=Tuwwz/Qjdp23cMqQU6GbTh8uSWKAxXV6QL3RH5XEZl7KrfCgroWRKuUz+gfx34pp+S5xZfkx/y4RE7/WSa8PTSWS9pJL6PL7NeBHjaVFiHtPQE3ZD4XNoHeJ539ARhZjOWrqaelYfccr7T9FRPw3ZeucKOf7X55vPGzDI9e5jG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743403295; c=relaxed/simple;
-	bh=7c8WPFv9sz/9L3oiAJ1SpsHuC03whWqYs63eJE4Q29U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fcEfi19Gp4W4OKzor4LttXAgCRC3gitkgf36ayghK6xngw6tKFOWskuSl49QRk1NekUPXoy/vwQywFJhYKO32T2bib8FDnkBg5XA2z2eWj1Y+Z1A8h9EqmKIwvzDjaPkB0Ew0auD9EynBFrEFffQmd7y8H+K0sG4dEm2pFcS/uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8AxaeEUOepn1CSsAA--.47050S3;
-	Mon, 31 Mar 2025 14:41:24 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMDxu8QNOepnBt9oAA--.50151S4;
-	Mon, 31 Mar 2025 14:41:22 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
-	peterz@infradead.org,
-	wangliupu@loongson.cn,
-	lvjianmin@loongson.cn,
-	maobibo@loongson.cn,
-	siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v2 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-Date: Mon, 31 Mar 2025 14:41:16 +0800
-Message-Id: <20250331064116.32540-3-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250331064116.32540-1-zhangtianyang@loongson.cn>
-References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+	s=arc-20240116; t=1743403330; c=relaxed/simple;
+	bh=+2rhNhl4SB84aYUqvJfZumo57DfkJ75LYelGCFBJ7Bc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QwHCvsu8WH40GV5pMDAF+RIkidMxiCH56d10JLrOCF3PntysOdlp7c2oNzQbDdCYtgnXumwwc4RIsKx+QqBCYYmATcfTwn1ark4nqVi5VxzmsQMF5kLqAkm7mR8tBCbtSmRGRQal5rT5lJ+lN5af7Uwgwjugseg5M4yqt1fzdfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tSurU/6I; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSurU/6I"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f2f391864so2379961f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743403325; x=1744008125; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pSZWvc98awNxNS7sUp2CK9I3oZgb0IYq+6Zaom/DnwM=;
+        b=tSurU/6IpnpamumyLYHJjLYEtuQv8MUAl5iapyedqqKHiOuznymvN8a2hU3y/Vlc3w
+         oWSRN8/6Apu6OOkM8Sy0lKHVFKKNHB5hzGQ/2L05cKkNhSRqCnc5UeGTn4kAAU4WoZq7
+         PqbKOobLEzh6wKe7ssxAA941RrXSE9T4qQ+9UWnEw/r0O2iHxzzoezxY4WGnUhRi7+aM
+         QowigQ2v3C90GJj2zp0lbKzDqLtAd5YT/QwNnlwkAllkUeYCpQ+H9k6L1Gjow14piL10
+         vAwSwcgEV8b+iLgZl4nz/vL/rWIoPv+/KsBGmIGRgC2o9zrWGshx49eoSbNUzKPUqnNA
+         NkUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743403325; x=1744008125;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pSZWvc98awNxNS7sUp2CK9I3oZgb0IYq+6Zaom/DnwM=;
+        b=j5TqoivGswpAvzQQ+oEi8gRpWcoA3zyAdiijmrDbNqh4mHbjhNlry3siGijQKovc+Y
+         eL+nUN5bIBSA9Y2h1x4ti/YEu9Dpnsg3dS7xViM7WYY9LJeG88OdxTsxtHGwGtW2WUOO
+         6XXENxVT0nN3PGJI2JigXiuac5GjjfKk6b+pqGAM5RqBQfgJc+effHg1pasQNBsWo92X
+         l8eBKxazWG2ikzcUswzgikBmhVIJviAOFTEsIo+4nPghwisUm2S28AXpBzGUhlBmFIVf
+         c+L5u98bw4LauIvmtsITNxZBMck6DJda5IJ5HgRjSeyJjtTyZOacaL1s1J44dSvukIt3
+         BIXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDRQIzqZg2i/O67pHsqH37jqcneZzPIdkbW/8mqKeiTmmeUD9EMeUIGmDE8KryZhgfUZSOxW75u8Q5IOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYcGb1sTLYUry5tSXswUs9hX87xK+vxr3m/kWXlfJwSch+w1/X
+	2pU/GC8qcJZ69h38w+LNVhtQDD6+RTRosHrMHhKo1d/nDWfKeRRX1kOjarfNa/I=
+X-Gm-Gg: ASbGncvAkSpRe9wSwSGq6q/zze6YyH7iE3drKxvOEtyoywYjKM4YazO9/xyJwWja74Z
+	AC9rQKV8hc7Yy9h+8OZVadqOyS9qyBndPx1oyC+CZR2pAA9nTR3G8j3LKE8ZG0LX9uU0lLubkZv
+	Fgt2PuKu5/6g07b1eRhj90iBKLxG9gv+Bzv8NCCggjgJNZ28pBvBkePf8J7lAqL/vyR8IcZ0dNn
+	ienRKv41OQoE6N1frVfXn0L2ZhkyaGYVMOa1W136wYRx2fUlozh/uSSMAt4PN6UiPyBUxBmB9eO
+	FqJmZNwqVyf8S3rKWgzhLy1ESI6u8K03n7DVMLUzh2iubk+HejzWkCuOnvMV2RIvtRVpvoRNp3m
+	VYygvQtE5HoPR6k+8Zd1zCjz1pus=
+X-Google-Smtp-Source: AGHT+IFaaiFJvSkuFgpzRjmFl4ky713HsFznh//e5XklchpgjCOz6VUhATdj7MkI4kwAKPb/DPGB1g==
+X-Received: by 2002:a05:6000:178c:b0:391:29f:4f87 with SMTP id ffacd0b85a97d-39c1211c8f4mr5516473f8f.49.1743403325590;
+        Sun, 30 Mar 2025 23:42:05 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:143:2e3d:45f1:fd2? ([2a01:e0a:3d9:2080:143:2e3d:45f1:fd2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fccf0a9sm111590335e9.17.2025.03.30.23.42.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Mar 2025 23:42:05 -0700 (PDT)
+Message-ID: <04c47466-b1a3-4eb2-8f28-95faa29ff45f@linaro.org>
+Date: Mon, 31 Mar 2025 08:42:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxu8QNOepnBt9oAA--.50151S4
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfWr17Zr13trWUXFy5WFy5ZFc_yoW8Kry7Xo
-	WfJFs3G34rWr18CrWrKa17tFyxZ3yrGrs5Aw1fuFZ7Z3ZFvr45KrW7G3yavFy2gF10qFsx
-	Aay0qwn3GFWxtr93l-sFpf9Il3svdjkaLaAFLSUrUUUU5b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYZ7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc66wDUUUU
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/7] dts: amlogic: enable UART RX and TX pull up by
+ default
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, jbrunet@baylibre.com, khilman@baylibre.com,
+ christianshewitt@gmail.com
+References: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The main function of the Redirected interrupt controller is to manage the
-redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+On 29/03/2025 19:58, Martin Blumenstingl wrote:
+> On the LibreELEC forum there have been reports that Odroid-C2 does not
+> boot when UART is left disconnected [0]. It turns out that this can be
+> solved by enabling the SoCs pull-up resistor on the UART RX and TX
+> pads [1].
+> It's not clear whether that specific Odroid-C2 board has a broken
+> resistor, the resistor is not populated (either by accident or on
+> purpose) or if there's another reason.
+> 
+> Testing on an SM1 X96-Air shows that pull-ups being enabled on UART
+> RX and TX is actually the default (either set in vendor u-boot or an
+> actual hardware default).
+> 
+> This series enables the UART RX and TX pull up resistors in the
+> default pin configuration on all supported SoCs.
+> 
+> Testing has been done on:
+> - GXBB Odroid-C1 on u-boot by a user in the LibreELEC forums [2]
+> - Meson8b Odroid-C1 on Linux (with vendor u-boot)
+> - SM1 X96-Air on Linux (with vendor u-boot)
+> 
+> Please include this early so the various CI systems can test these
+> patches.
+> 
+> 
+> [0] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195481#post195481
+> [1] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195667#post195667
+> [2] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195674#post195674
+> 
+> 
+> Martin Blumenstingl (7):
+>    ARM: dts: amlogic: meson8: enable UART RX and TX pull up by default
+>    ARM: dts: amlogic: meson8b: enable UART RX and TX pull up by default
+>    arm64: dts: amlogic: gxbb: enable UART RX and TX pull up by default
+>    arm64: dts: amlogic: gxl: enable UART RX and TX pull up by default
+>    arm64: dts: amlogic: g12: enable UART RX and TX pull up by default
+>    arm64: dts: amlogic: axg: enable UART RX and TX pull up by default
+>    arm64: dts: amlogic: a1: enable UART RX and TX pull up by default
+> 
+>   arch/arm/boot/dts/amlogic/meson8.dtsi             |  4 ++--
+>   arch/arm/boot/dts/amlogic/meson8b.dtsi            |  4 ++--
+>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi         |  1 +
+>   arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 12 ++++++------
+>   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 10 +++++-----
+>   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 10 +++++-----
+>   arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 12 ++++++------
+>   7 files changed, 27 insertions(+), 26 deletions(-)
+> 
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
----
- arch/loongarch/include/asm/cpu-features.h |   1 +
- arch/loongarch/include/asm/cpu.h          |   2 +
- arch/loongarch/include/asm/loongarch.h    |   6 +
- arch/loongarch/kernel/cpu-probe.c         |   2 +
- drivers/irqchip/Makefile                  |   2 +-
- drivers/irqchip/irq-loongarch-avec.c      |  21 +-
- drivers/irqchip/irq-loongarch-ir.c        | 561 ++++++++++++++++++++++
- drivers/irqchip/irq-loongson.h            |  12 +
- include/linux/cpuhotplug.h                |   1 +
- 9 files changed, 594 insertions(+), 14 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
-index fc83bb32f9f0..03f7e93e81e0 100644
---- a/arch/loongarch/include/asm/cpu-features.h
-+++ b/arch/loongarch/include/asm/cpu-features.h
-@@ -68,5 +68,6 @@
- #define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
- #define cpu_has_lspw		cpu_opt(LOONGARCH_CPU_LSPW)
- #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
-+#define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
- 
- #endif /* __ASM_CPU_FEATURES_H */
-diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
-index 98cf4d7b4b0a..33cd96e569d8 100644
---- a/arch/loongarch/include/asm/cpu.h
-+++ b/arch/loongarch/include/asm/cpu.h
-@@ -102,6 +102,7 @@ enum cpu_type_enum {
- #define CPU_FEATURE_PTW			27	/* CPU has hardware page table walker */
- #define CPU_FEATURE_LSPW		28	/* CPU has LSPW (lddir/ldpte instructions) */
- #define CPU_FEATURE_AVECINT		29	/* CPU has AVEC interrupt */
-+#define CPU_FEATURE_REDIRECTINT		30      /* CPU has interrupt remmap */
- 
- #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
- #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
-@@ -133,5 +134,6 @@ enum cpu_type_enum {
- #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
- #define LOONGARCH_CPU_LSPW		BIT_ULL(CPU_FEATURE_LSPW)
- #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
-+#define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
- 
- #endif /* _ASM_CPU_H */
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 52651aa0e583..95e06cb6831e 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1130,6 +1130,7 @@
- #define  IOCSRF_FLATMODE		BIT_ULL(10)
- #define  IOCSRF_VM			BIT_ULL(11)
- #define  IOCSRF_AVEC			BIT_ULL(15)
-+#define  IOCSRF_REDIRECTINT		BIT_ULL(16)
- 
- #define LOONGARCH_IOCSR_VENDOR		0x10
- 
-@@ -1189,6 +1190,11 @@
- 
- #define LOONGARCH_IOCSR_EXTIOI_NODEMAP_BASE	0x14a0
- #define LOONGARCH_IOCSR_EXTIOI_IPMAP_BASE	0x14c0
-+#define LOONGARCH_IOCSR_REDIRECT_CFG		0x15e0
-+#define LOONGARCH_IOCSR_REDIRECT_TBR		0x15e8  /* IRT BASE REG*/
-+#define LOONGARCH_IOCSR_REDIRECT_CQB		0x15f0  /* IRT CACHE QUEUE BASE */
-+#define LOONGARCH_IOCSR_REDIRECT_CQH		0x15f8  /* IRT CACHE QUEUE HEAD, 32bit */
-+#define LOONGARCH_IOCSR_REDIRECT_CQT		0x15fc  /* IRT CACHE QUEUE TAIL, 32bit */
- #define LOONGARCH_IOCSR_EXTIOI_EN_BASE		0x1600
- #define LOONGARCH_IOCSR_EXTIOI_BOUNCE_BASE	0x1680
- #define LOONGARCH_IOCSR_EXTIOI_ISR_BASE		0x1800
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index fedaa67cde41..543474fd1399 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -289,6 +289,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
- 		c->options |= LOONGARCH_CPU_EIODECODE;
- 	if (config & IOCSRF_AVEC)
- 		c->options |= LOONGARCH_CPU_AVECINT;
-+	if (config & IOCSRF_REDIRECTINT)
-+		c->options |= LOONGARCH_CPU_REDIRECTINT;
- 	if (config & IOCSRF_VM)
- 		c->options |= LOONGARCH_CPU_HYPERVISOR;
- }
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 25e9ad29b8c4..5dd7d6b151d9 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -113,7 +113,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index 80e55955a29f..a2a8c819cfb1 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -24,7 +24,6 @@
- #define VECTORS_PER_REG		64
- #define IRR_VECTOR_MASK		0xffUL
- #define IRR_INVALID_MASK	0x80000000UL
--#define AVEC_MSG_OFFSET		0x100000
- 
- #ifdef CONFIG_SMP
- struct pending_list {
-@@ -47,15 +46,6 @@ struct avecintc_chip {
- 
- static struct avecintc_chip loongarch_avec;
- 
--struct avecintc_data {
--	struct list_head	entry;
--	unsigned int		cpu;
--	unsigned int		vec;
--	unsigned int		prev_cpu;
--	unsigned int		prev_vec;
--	unsigned int		moving;
--};
--
- static inline void avecintc_enable(void)
- {
- 	u64 value;
-@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
- 	INIT_LIST_HEAD(&plist->head);
- }
- 
--static void avecintc_sync(struct avecintc_data *adata)
-+void avecintc_sync(struct avecintc_data *adata)
- {
- 	struct pending_list *plist;
- 
-@@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 			return -EBUSY;
- 
- 		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
--			return 0;
-+			return IRQ_SET_MASK_OK_DONE;
- 
- 		cpumask_and(&intersect_mask, dest, cpu_online_mask);
- 
-@@ -121,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
- 	}
- 
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -242,6 +233,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
- 		d = this_cpu_read(irq_map[vector]);
- 		if (d) {
- 			generic_handle_irq_desc(d);
-+
- 		} else {
- 			spurious_interrupt();
- 			pr_warn("Unexpected IRQ occurs on CPU#%d [vector %ld]\n", smp_processor_id(), vector);
-@@ -412,6 +404,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 
- static inline int __init acpi_cascade_irqdomain_init(void)
- {
-+	if (cpu_has_redirectint)
-+		return redirect_acpi_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
- }
- 
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..9e1cbbb72e29
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,561 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Loongson Technologies, Inc.
-+ */
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/spinlock.h>
-+#include <linux/msi.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+#include "irq-msi-lib.h"
-+
-+#define IRD_ENTRIES			65536
-+
-+/* redirect entry size 128bits */
-+#define IRD_PAGE_ORDER			(20 - PAGE_SHIFT)
-+
-+/* irt cache invalid queue */
-+#define	INVALID_QUEUE_SIZE		4096
-+
-+#define INVALID_QUEUE_PAGE_ORDER	(16 - PAGE_SHIFT)
-+
-+#define GPID_ADDR_MASK			0x3ffffffffffULL
-+#define GPID_ADDR_SHIFT			6
-+
-+#define CQB_SIZE_SHIFT			0
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_SHIFT			12
-+#define CQB_ADDR_MASK			(0xfffffffffULL)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct irq_domain *redirect_domain;
-+
-+struct redirect_entry {
-+	struct  {
-+		__u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	}	lo;
-+	__u64	hi;
-+};
-+
-+struct redirect_gpid {
-+	u64	pir[4];      /* Pending interrupt requested */
-+	u8	en	: 1, /* doorbell */
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+} __aligned(64);
-+
-+struct redirect_table {
-+	int			node;
-+	struct redirect_entry	*table;
-+	unsigned long		*bitmap;
-+	unsigned int		nr_ird;
-+	struct page		*page;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct redirect_item {
-+	int			index;
-+	struct redirect_entry	*entry;
-+	struct redirect_gpid	*gpid;
-+	struct redirect_table	*table;
-+};
-+
-+struct redirect_queue {
-+	int		node;
-+	u64		base;
-+	u32		max_size;
-+	int		head;
-+	int		tail;
-+	struct page	*page;
-+	raw_spinlock_t	lock;
-+};
-+
-+
-+struct irde_desc {
-+	struct redirect_table	ird_table;
-+	struct redirect_queue	inv_queue;
-+};
-+
-+struct irde_inv_cmd {
-+	union {
-+		__u64	cmd_info;
-+		struct {
-+			__u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		}	index;
-+	};
-+	__u64		notice_addr;
-+};
-+
-+struct smp_invalid_arg {
-+	struct redirect_queue	*queue;
-+	struct irde_inv_cmd	*cmd;
-+};
-+
-+static struct irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+
-+static inline bool invalid_queue_is_full(int node_id, u32 *tail)
-+{
-+	u32 head;
-+
-+	head = iocsr_read32(LOONGARCH_IOCSR_REDIRECT_CQH);
-+	*tail = iocsr_read32(LOONGARCH_IOCSR_REDIRECT_CQT);
-+
-+	return !!(head == ((*tail + 1) % INVALID_QUEUE_SIZE));
-+}
-+
-+static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
-+{
-+	struct irde_inv_cmd *inv_addr;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&rqueue->lock);
-+
-+	while (invalid_queue_is_full(rqueue->node, &tail))
-+		cpu_relax();
-+
-+	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
-+	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
-+	tail = (tail + 1) % INVALID_QUEUE_SIZE;
-+
-+	wmb();
-+
-+	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
-+}
-+
-+static void smp_call_invalid_enqueue(void *arg)
-+{
-+	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
-+
-+	invalid_enqueue(s_arg->queue, s_arg->cmd);
-+}
-+
-+static void irde_invlid_entry_node(struct redirect_item *item)
-+{
-+	struct redirect_queue *rqueue;
-+	struct smp_invalid_arg arg;
-+	struct irde_inv_cmd cmd;
-+	volatile u64 raddr = 0;
-+	int node = item->table->node, cpu;
-+
-+	rqueue = &(irde_descs[node].inv_queue);
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	if (cpu_to_node(smp_processor_id()) == node)
-+		invalid_enqueue(rqueue, &cmd);
-+	else {
-+		for_each_cpu(cpu, cpumask_of_node(node)) {
-+			if (cpu_online(cpu))
-+				break;
-+		}
-+		arg.queue = rqueue;
-+		arg.cmd = &cmd;
-+		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
-+	}
-+
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(struct redirect_item *item, struct redirect_table *ird_table)
-+{
-+	int index;
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
-+	if (index > IRD_ENTRIES) {
-+		pr_err("No redirect entry to use\n");
-+		return -ENOMEM;
-+	}
-+
-+	__set_bit(index, ird_table->bitmap);
-+
-+	item->index = index;
-+	item->entry = &ird_table->table[index];
-+	item->table = ird_table;
-+
-+	return 0;
-+}
-+
-+static int redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table;
-+	struct redirect_entry *entry;
-+	unsigned long flags;
-+
-+	ird_table = item->table;
-+
-+	entry = item->entry;
-+	memset(entry, 0, sizeof(struct redirect_entry));
-+
-+	raw_spin_lock_irqsave(&ird_table->lock, flags);
-+	bitmap_release_region(ird_table->bitmap, item->index, 0);
-+	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
-+
-+	kfree(item->gpid);
-+
-+	irde_invlid_entry_node(item);
-+
-+	return 0;
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item, struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item->entry;
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & (GPID_ADDR_MASK);
-+	entry->lo.vector = 0xff;
-+	wmb();
-+}
-+
-+static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	struct avecintc_data *adata;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE)
-+		return IRQ_SET_MASK_OK;
-+	else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+
-+	adata = irq_data_get_avec_data(data);
-+
-+	redirect_domain_prepare_entry(item, adata);
-+
-+	irde_invlid_entry_node(item);
-+
-+	avecintc_sync(adata);
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item;
-+
-+	item = irq_data_get_irq_chip_data(d);
-+	msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 0xffff) << 4));
-+	msg->address_hi = 0x0;
-+	msg->data = 0x0;
-+}
-+
-+static inline void redirect_ack_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void redirect_unmask_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void redirect_mask_irq(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name			= "REDIRECT",
-+	.irq_ack		= redirect_ack_irq,
-+	.irq_mask		= redirect_mask_irq,
-+	.irq_unmask		= redirect_unmask_irq,
-+	.irq_set_affinity	= redirect_set_affinity,
-+	.irq_compose_msi_msg	= redirect_compose_msi_msg,
-+};
-+
-+static void redirect_free_resources(struct irq_domain *domain,
-+						unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *irq_data;
-+	struct redirect_item *item;
-+
-+	for (int i = 0; i < nr_irqs; i++) {
-+		irq_data = irq_domain_get_irq_data(domain, virq  + i);
-+		if (irq_data && irq_data->chip_data) {
-+			item = irq_data->chip_data;
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int redirect_alloc(struct irq_domain *domain,
-+					unsigned int virq, unsigned int nr_irqs,
-+					 void *arg)
-+{
-+	struct redirect_table *ird_table;
-+	struct avecintc_data *avec_data;
-+	struct irq_data *irq_data;
-+	int ret, i, node;
-+
-+#ifdef CONFIG_NUMA
-+	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
-+#else
-+	node = 0;
-+#endif
-+	ird_table = &irde_descs[node].ird_table;
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		avec_data = irq_data_get_avec_data(irq_data);
-+		ret = redirect_table_alloc(item, ird_table);
-+		if (ret) {
-+			pr_err("Alloc redirect table entry failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+		redirect_domain_prepare_entry(item, avec_data);
-+	}
-+	return 0;
-+
-+out_free_resources:
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -EINVAL;
-+}
-+
-+static void redirect_free(struct irq_domain *domain,
-+				     unsigned int virq, unsigned int nr_irqs)
-+{
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops redirect_domain_ops = {
-+	.alloc		= redirect_alloc,
-+	.free		= redirect_free,
-+	.select		= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(int node)
-+{
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+	struct page *pages;
-+
-+	pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] Invalid Queue alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	rqueue->page = pages;
-+	rqueue->base = (u64)page_address(pages);
-+	rqueue->max_size = INVALID_QUEUE_SIZE;
-+	rqueue->head = 0;
-+	rqueue->tail = 0;
-+	rqueue->node = node;
-+	raw_spin_lock_init(&rqueue->lock);
-+
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
-+				(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
-+	return 0;
-+}
-+
-+static int redirect_table_init(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	struct page *pages;
-+	unsigned long *bitmap;
-+
-+	pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->page = pages;
-+	ird_table->table = page_address(pages);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+	ird_table->nr_ird = IRD_ENTRIES;
-+	ird_table->node = node;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
-+	if (redirect_queue_init(node))
-+		return -EINVAL;
-+
-+	iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+
-+	return 0;
-+}
-+
-+static void redirect_table_fini(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+
-+	if (ird_table->page) {
-+		__free_pages(ird_table->page, IRD_PAGE_ORDER);
-+		ird_table->table = NULL;
-+		ird_table->page = NULL;
-+	}
-+
-+	if (ird_table->page) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (rqueue->page) {
-+		__free_pages(rqueue->page, INVALID_QUEUE_PAGE_ORDER);
-+		rqueue->page = NULL;
-+		rqueue->base = 0;
-+	}
-+
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_CQB);
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_TBR);
-+}
-+
-+static int redirect_cpu_online(unsigned int cpu)
-+{
-+	int ret, node = cpu_to_node(cpu);
-+
-+	if (cpu != cpumask_first(cpumask_of_node(node)))
-+		return 0;
-+
-+	ret = redirect_table_init(node);
-+	if (ret) {
-+		redirect_table_fini(node);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+#if defined(CONFIG_ACPI)
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-+		const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init redirect_acpi_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct irq_domain *domain;
-+	int ret;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+			&redirect_domain_ops, irde_descs);
-+	if (!domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+	redirect_domain = domain;
-+
-+	ret = redirect_table_init(0);
-+	if (ret)
-+		goto out_free_table;
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_free_table;
-+	}
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_REDIRECT_STARTING,
-+				  "irqchip/loongarch/redirect:starting",
-+				  redirect_cpu_online, NULL);
-+
-+	pr_info("loongarch irq redirect modules init succeeded\n");
-+	return 0;
-+
-+out_free_table:
-+	redirect_table_fini(0);
-+	irq_domain_remove(redirect_domain);
-+	redirect_domain = NULL;
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return -EINVAL;
-+}
-+#endif
-diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
-index 11fa138d1f44..05ad40ffb62b 100644
---- a/drivers/irqchip/irq-loongson.h
-+++ b/drivers/irqchip/irq-loongson.h
-@@ -5,6 +5,15 @@
- 
- #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
-+#define AVEC_MSG_OFFSET		0x100000
-+struct avecintc_data {
-+	struct list_head        entry;
-+	unsigned int            cpu;
-+	unsigned int            vec;
-+	unsigned int            prev_cpu;
-+	unsigned int            prev_vec;
-+	unsigned int            moving;
-+};
- 
- int find_pch_pic(u32 gsi);
- 
-@@ -24,4 +33,7 @@ int pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
- int pch_msi_acpi_init_avec(struct irq_domain *parent);
- 
-+int redirect_acpi_init(struct irq_domain *parent);
-+
-+void avecintc_sync(struct avecintc_data *adata);
- #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 6cc5e484547c..2fd5531fa378 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -146,6 +146,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_IRQ_EIOINTC_STARTING,
- 	CPUHP_AP_IRQ_AVECINTC_STARTING,
-+	CPUHP_AP_IRQ_REDIRECT_STARTING,
- 	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_IRQ_THEAD_ACLINT_SSWI_STARTING,
- 	CPUHP_AP_IRQ_RISCV_IMSIC_STARTING,
--- 
-2.43.0
+I'll apply them now so they can be tested on -next for this whole cycle.
 
+Thanks,
+Neil
