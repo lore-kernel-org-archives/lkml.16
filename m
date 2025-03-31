@@ -1,193 +1,613 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010018.outbound.protection.outlook.com [52.101.229.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DC117A2E8;
-	Mon, 31 Mar 2025 10:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743415996; cv=fail; b=lIJs0MwDceVzVjzt0C6pOjHx0m5c62OIQGNeQiP5BnKO07N8TpxgxxJgIT21Qf0exR7zqNKNVMt/bTC8UGS659ow4l+Gt+F8+aMfPujWXV4o3zyESoHr1oCgwt5HbccB0lt3nu7xHlxZyy0iR4g/aVH/vTJgU0ts2Jleob1ZvgU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743415996; c=relaxed/simple;
-	bh=UFJEv9DCI+W/k7eJdRfB2p8q9W0Kf+hELo2jPCb7Yiw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ilKdY1BN2MRjPSvioZWbnzrnRgFxIGgiH5/dDkVUhG1FPmPCpamU8z2zp23gEA/bY4hjjIWtMLvg3mB1mGMgFPVTMUR8t5qZL5mwX0m6wbCo1SXtw6Eti+J1WcI/VbpItNekPOyRyC7g2FLoIr0Eg/q/tQICk3EbCP4njeIFLN8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=vwr2Cz6t; arc=fail smtp.client-ip=52.101.229.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570531D7E57;
+	Mon, 31 Mar 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743416090; cv=none; b=h+lD80HxndDSn6dI9Xhr8Myryqwyzy1M8GTwbpyvGKRif7xQbmmEpHpFe/A6wX7O701BghKogRuXfryoLMBHM2X11xmY9cUEZTa7LDVMiWSAF8yNkhjXLGlUOimFEjlzzEWv/fmua1M0Ts0ZihS/ie2Y7Y3Mw3QfzpCCTenzQ9o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743416090; c=relaxed/simple;
+	bh=1AqSi1p24wD4DNJlyiz5K+5BupPM8tUpVQ9NMMvUIwo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hQC0UH6eGkDlCh/9SUdpIVpfW2ZQJaeu2prmkAkPhtLOhwZk3aU2PXkVBBysavvXA9xDcKWbBgE+I0BeLrcCeMMyDvdBylOPdc2mCJYyiwJLI6tGdzZqzDh8EXazDanlNnQQegu8+SGZTT0LKHoIdosAiRlRHnl69mixuZuuRho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUPtWS+M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="vwr2Cz6t"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DmJhWaM6XAF7Jp/esGlAa6U1uGZT5ZDBFfWN96Jt5YXDlsap3n9aV1RNV+ymTX1QZ1/hSFaUF3Lzd6pUlu+hxJZYOSXgEU4IBOFeFpKppFObBKssMJrYajhRs/h/R9CvsZKvYRUEeRAf+knPDzbtEMostPArW27S/XRIXxJMc3aPDrGI7okDdyoX1+1GBkk3WhYdE24gEKWmBFYF0ex7H6zc8bjxTQJo0JL32Bm2OEjkKG0R2WpJk0Lo5uPT+pte8tdKUHA8JE7Yx1xIJAOq1C1rwaI1fqp6rZ+i/HB/ZZBEfPXctEbpJv3YH1lWuE12+10MVqStkL7urpecLf3D3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UFJEv9DCI+W/k7eJdRfB2p8q9W0Kf+hELo2jPCb7Yiw=;
- b=F2i4KyIIslOlNUsmmQB7HtaOirqfYmeXOEO/j7yJgYyOrzIWzi4RNbpz2pcRKLEd2ga90H0+yI1OnnkSEy4GF6XO0dn0A2PF887ulIuFFLu1NdqAOCSXXwhp/9FAb0Xxa56ZI3e2d5U+64Xvu3NnsigGEo1xSjiV6Izo/fKR2Uckjjo/sB1CZx4wJLGSp6xmP3XSrN+ZY8VzMl6CYS9wHJ7LQAWRBNArBXf6SjNix6hgXYHWgGyUgw/RKfb1/yVPUzlHKLJzIFg+DqTW44ihjLLyq4wy2RuU3SQLPZmPF2t/Z5vLtBNJgOwacgYN0ZbESTa47Saxqn37L6kz/u5rVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UFJEv9DCI+W/k7eJdRfB2p8q9W0Kf+hELo2jPCb7Yiw=;
- b=vwr2Cz6t17zkepVVruBEabHXcwkjcyiEKp4oCLlmY3E0LzR8ztoJhIr0TJdwmUQshp+NBqdOwcmYm+X/KN0qGwCC8dmCQjNKnLQhpa0XdsEH1kPp6k5dFBsbnVYBCAnBCmsz7dPTinGQO+0q4AvdrGN48wWJWKKDiwDw8bV4N1E=
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com (2603:1096:400:3c0::7)
- by TY4PR01MB15819.jpnprd01.prod.outlook.com (2603:1096:405:2b8::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.35; Mon, 31 Mar
- 2025 10:13:10 +0000
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::7497:30af:3081:1479]) by TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::7497:30af:3081:1479%5]) with mapi id 15.20.8583.028; Mon, 31 Mar 2025
- 10:13:10 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Prabhakar
-	<prabhakar.csengg@gmail.com>
-CC: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Magnus Damm
-	<magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org"
-	<linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, Fabrizio Castro
-	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH 0/6] clk: renesas: rzv2h: Add clock and reset entries for
- USB2 and GBETH
-Thread-Topic: [PATCH 0/6] clk: renesas: rzv2h: Add clock and reset entries for
- USB2 and GBETH
-Thread-Index: AQHboBwxmb2DVJkt/UWaCOiFKQonaLONBkSAgAACqGA=
-Date: Mon, 31 Mar 2025 10:13:09 +0000
-Message-ID:
- <TYCPR01MB11332E15E9A94C41A6D46F3FF86AD2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
-References: <20250328200105.176129-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXSoP_9P5rEQfFXP=SWSJ+3HY6XOZ0N2BMuke7=euHsVA@mail.gmail.com>
-In-Reply-To:
- <CAMuHMdXSoP_9P5rEQfFXP=SWSJ+3HY6XOZ0N2BMuke7=euHsVA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11332:EE_|TY4PR01MB15819:EE_
-x-ms-office365-filtering-correlation-id: 6e26518f-9af4-434c-d299-08dd703ca37d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Njh6cC9VUnVKSUtOYkdCQjlmbEdXeVVibDk4N3VVd3RqdCtzek5aV1ZiMEtI?=
- =?utf-8?B?YVJ4VlIrNEt2V3pBOTdjY2YwT1Z1SXd0SUtESVRCM2ZzWFRJVSthTk9WUVVN?=
- =?utf-8?B?OXdiaGgvN2Q1M2lUeDNOd3Q5aUVCekpiTUYrSGxEbFRTL0FhSHNIdHQxSVRF?=
- =?utf-8?B?Y2RySmdHZjFtaXE5U3pXUC8xNCtEQnRXMThwYWtMTXppaTFweTVNVHZXV3Q0?=
- =?utf-8?B?dk5NdFhieG1HOG9FMFYrQmFVdHY3QkdnaUd5SFI3TUZYSGhIYXdMNzZQallm?=
- =?utf-8?B?bUkrbGhiWmlJdG5IR2dYWkhPOXR1bDZkaXVxeXdhVVhxWm5hUEdxUmxNNzVp?=
- =?utf-8?B?WDJaaFhrQkJ3dmNreUlBWnRpTFVFeU9MalpwbzFkTjBJckZSZGw4UnRXU2Ji?=
- =?utf-8?B?YlNqbjVVa3RjNGFuenRrd1RyaVdkaTQzZ05ZS0ZkY25yM1hQWXkxNnVoYTlh?=
- =?utf-8?B?eHJ5SEZZdFNKUVJ5UHlCTjg2dWQ2TGQ4TVlxcmk3MXM5UVREbjd3NDZobEp1?=
- =?utf-8?B?SjdYd2VNNW94bTdLRjBTbURqSWMwZ2psWUdEbnp0TVJrVXdkOGlSYnhCLzhn?=
- =?utf-8?B?QzhWT3MxS3ZXdmtIdzZMYWpuU0N4ajlxMTdGeFJ4aDRzeXR1TjJMNlJRdGpJ?=
- =?utf-8?B?dmxoWTBUUWxwVFB6NllKV2ZtaEpCbktLdWI5ejlrS3lHYTdMc2J2azlEUGs0?=
- =?utf-8?B?cmQxYWR1bEVUK1BhOTN1MGZ2RnFJcC9LVENOUngyMkhpdFRhSDZ5eEJzUlkz?=
- =?utf-8?B?K3gvUytrc2JwTHQwV1hWQWliQmFUZkNuYzRBTkdLeGpuWWFHZnZxbW5MOWJi?=
- =?utf-8?B?ME9lbGl5YTlKWGFkVFNhRlQrUnlaN2JEazhLQjdhaURFT2c0UU5pbmxLRGFy?=
- =?utf-8?B?MjNFVEhRZi9pcFpqM3RicFBZU3Nka2Q2N1lwdTZReXlHTHYzMVJwb0J2ZFFU?=
- =?utf-8?B?eXNJNG5Hb2FCL0NucVhVdDhja3RQVWRGWlkvTnlodHRyYWV3eUx6dXhZZDl1?=
- =?utf-8?B?eW9OQU4wWWlXTE1MMk1sNDhrcUx2MGEzRE5sRGw5VW51Z0prY25UTzJNVWc0?=
- =?utf-8?B?b1kyTkl6L1BNWFRtVHFlRnEzTFlpTVdVTm53U1FxNzMyK2xDRFk4cU5yMmlC?=
- =?utf-8?B?UlVkYnJ4VVp3eVpGVG00dXVwYlZMVGxVbG1HWDl4YTFCQWd5dEFXaDB3WHRa?=
- =?utf-8?B?WC9lZXpaZFI3UlQwdktPU3M3S2NxQVZ5b1BoaTRMeklnSnBic2tGcVY0UHdm?=
- =?utf-8?B?bmluMVNQMTNjbmtFdEdRVCt5YlZ2cTNadkVLdnhWRjRkZ1daN3MzWmJVcFVs?=
- =?utf-8?B?c3MxeEtRTWx3cThKcjNad2VBcDRZOWlMc2xHY0NLRTh3L2Jjb1VCVTZ0TGxn?=
- =?utf-8?B?Z090eDZPS2hYMW9HN2ZJMUEyUGdObkZHUGc4NUgxS1NIZHlBQ2JoUFdOVXJr?=
- =?utf-8?B?ZDJzQTMxWSs5OW1PWTd0elZNNHppaHA5ZXhlSWxKWUtBWUZjUWhiakVsQVlS?=
- =?utf-8?B?UjJYSFZSRzlZaEhuc0szSHY5VFZIeGVNUHhYMDFRNmNuc1VpKzloSWxJWEtE?=
- =?utf-8?B?SWRrckc1b01sYzErQm1tVWlTdGNTSnNNN1VydFptd041MmJaenhMYWVTTHNT?=
- =?utf-8?B?ckxKNW9scFdjUDhJb1g1dEhCbFNZZFMzclZ0UVlOaGJZKzRhWFVMOEs0TjhB?=
- =?utf-8?B?YzJ2dVZMd3BoZWU5NmE4UjZQL09xS2c4RUlnKzdsUjVFZFR5bi9FemZjNXl6?=
- =?utf-8?B?TmlSNWtQWHY3TGJVKzJycXZJUjRmVUtCV1JRbU5vMEsxY0pIUHAwNG14aXZ1?=
- =?utf-8?B?dWhVQy9ITzJIK1gySnNKVkZ5UlQ4RGpldDlVUXR1eVg0bWo1UlBUbU93WUlC?=
- =?utf-8?B?KzJCckY2REFmOExEd3NGa0RSVk4vSVExcVFDeFU3cTdRMCtzWkhPZzNycGcy?=
- =?utf-8?Q?0F2BcwSeMt+ZOUF5Nhu3/m+BZ4oxwQXV?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11332.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cHBvUVpGbTdTTkQ3K2xZMm5XZzlXbEUvYzdvS3pyMVdaYXlrWHNNMHVDaUhT?=
- =?utf-8?B?QTdNd0VEQUE0UHRnem1MM2puUU5zUEhPWklERzZ6OEJiQkZqOUtkZWJTdlJZ?=
- =?utf-8?B?cStiM2RabjZ4eFArcXM4WE1ZVTJzNzNYcFZNaUdXam80dU1GK1NkMTlKSUJ2?=
- =?utf-8?B?cmJ4YUxTNStvNDlXYnUvMUViamI4Mkx5VEtPMjJhTWpEaFQ0U1RuTEsvcDgw?=
- =?utf-8?B?L0o0Wi9mcVNSWDVqUzcvTWdyN3Z2ME81YTVqWVh4SWJTZktzT2tMa2ZyZlQr?=
- =?utf-8?B?MGw5aUhoWjNqSUlUMCtBNlFxdXcyTWtFeEhhUjJqaFFaTnFTOTVaaGFmd1pu?=
- =?utf-8?B?Qmt5OHBOZzYzZjJGQ3RyQUMzenJTc21LRmxyMDZzWklramlwVTNQNG1rWTRp?=
- =?utf-8?B?ZlFISUFFdXIxNC96TlFTSEErWXI4S1lOSmUwSFlULzV3V3A1Sk1iWUM0bXZu?=
- =?utf-8?B?WU5WNkxKZ0Zkb2pMNjBaOU9JSG43TjhQNUExMk9nWjRYek93S2xYWFNQS05X?=
- =?utf-8?B?RFkwRUVIcVlpT0M0dzM5VkNwSEtFZGloMjYvR2gycTQyTEFRSEhqcnBDbE9Q?=
- =?utf-8?B?QTQ0elJTZTZFdXpVSUhGRVM1T1BIeEVOajQ4dGFyank5c2dIRTBvdEZWZnRa?=
- =?utf-8?B?VWhpTE9aSlc1MzVxVzBISVFwMXNqY2NWUldFSGlheVdMNlplcGwxQzl3V00z?=
- =?utf-8?B?ZFR6bFVCcTZPbzl4c1c0N25KUTFlNW5hWm1VKzRWejh6RXhudThFQ3dxRFN4?=
- =?utf-8?B?TURtM2ppUndKSWxjUGJ6WkRCNEc4dGNodEFHUWJnYU5tbEowU08vUVlFU0ov?=
- =?utf-8?B?UXNKL1creTc5cndta3F2eEhKZlJVZTRKR0djOFQxNHpWN0w0cWdMKzVCcWdJ?=
- =?utf-8?B?VHZXcTh6b2FNZ2Rva1I5ZUNVa2E1WFE2RFVrM2RMbjFZYnZHM216T3BtbHN4?=
- =?utf-8?B?dGgyMWxDekNEQzM4TFJJdGlZT2JtbzNBU0RlV1ZXdGRmUWZmWkVCbnRsSmR3?=
- =?utf-8?B?aWV2dEV4c0R4L24vMG9qSExpVlMzN0lmWUxsY0tUNmxRN3VCaStJNXZqZzBO?=
- =?utf-8?B?d2Z2VFRXZUc2dUZIUjUrM2JUMnFKOGRCek5PcWQ0cWJiVmhUN1E3MFk0YzE5?=
- =?utf-8?B?MFo2NXh1TTEzeUlVaEJnQVk3WW5Ib3dTS0FuYnhqL25TZ2FIMUk5UmhLd3FF?=
- =?utf-8?B?OEVPTXk2bVo4SGo2SUpiNTFabUFValpaaVJLNFZ0djhZVzFvUFZnUjRJZ0FX?=
- =?utf-8?B?aGlQS0NTNWtsbmVaNHpPVElVM2R1Vkg3c2tEZkpPcVFRRnlqWGk5NHhnYU8r?=
- =?utf-8?B?NHJiMGFQSDd3V3hkK3BjMGsveXZpVHZQSGcwc2RzdUo1a3R2VEM2TDhIU01o?=
- =?utf-8?B?L1FYSEdNVzMzYkc3c2ltM3pxNkFWYWJxQ2F4V0pSTkE5OThHZXJ4OUxrYnU5?=
- =?utf-8?B?aDhjcDBLdzAvT0VCb1hDcWhnS0dOdTZIVllOVk1rQ1dVcy9STmVrQUtURlVh?=
- =?utf-8?B?T2NVYVd2NlZObHNsMXo5Y1lKTGV5S1B1a0ZNcnVCOEh5TWQvNFo1M0NVNFVT?=
- =?utf-8?B?cjZWeDB0dmVEY2t3YWFVdXg3UGRRYll0OEsycUJ3bjBDVXdNTzlmNytjaVE5?=
- =?utf-8?B?RkRVc21ERUlXaU5RS2Z2dEF3QUtBUGI3ZXhnY3dTd3pqV3FNNnpvSGZYejB1?=
- =?utf-8?B?c0YvaUZGOUdZaE5ncXJyWld5MUR4d3RWK2hSZlRHSndSWm1ZZ280QktMai9M?=
- =?utf-8?B?QjlRWDZXUWF3LzBxUXBKTEp1MmN0WmcrMHRRMWpWajZnTUpBYjRTUjNia0ZT?=
- =?utf-8?B?SDAydDlQUGQzMTkwdmlHZlpzZFdyTEFEbndCdnM2Z3hxRzZIaTllRk10aXR6?=
- =?utf-8?B?M3k1T3U5QVdjZUltVmxDZUd4Wmg3K3E4UUV5c3M2My9SNGlGT1ZjTzdGaFdP?=
- =?utf-8?B?WUF1bExiSEo3MHdqZXNONmhRNXJxMElYV1IyL1dvN3o5T3ZQZk91TjR4NFRV?=
- =?utf-8?B?UDJUNFlRQlVod3BuQnJZZkorckNoTnMxTWFLOUh6eWx2b0FqNy9TeXpZcDNy?=
- =?utf-8?B?OWFjb1U5dnl6OTZxYmVzZnBMelJKc0Zoay9ocjRjdW52cmVncE1yVGlQNXJr?=
- =?utf-8?B?UlFGdTNhWTVnZ0s4cmZoUUlGazdVUEFWbXBndHZoUHNjSm9NaCtLaEt1YjVa?=
- =?utf-8?B?bWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUPtWS+M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCA44C4CEEB;
+	Mon, 31 Mar 2025 10:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743416089;
+	bh=1AqSi1p24wD4DNJlyiz5K+5BupPM8tUpVQ9NMMvUIwo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CUPtWS+McfHg6Swqjh1VRUTSPe6b463dJPPphs4WWhf5IrZVHdp7raYWs6kHksiAM
+	 zHUQKfjFjV0twTrgNiQQIOp724lv0JGy3vYss9aIXDeB91Z1auqXtlKBYTD4nso+mE
+	 QD3wUwQlllimDDdcv9GLsV6LjuEJaCqkWo/O+BUz3Ue67liyZP34gTtpL6dTynnr9v
+	 /OsuyF2JscmGKcNQbVbY1Bwmy4BezxCF/ixoftNMu3QuXYhNWOjdLpNQIo8H2wZk5F
+	 3BuD6hsXHkvft8XF3hGqrE5SjZmiX1J1pl1zdNgzuJpFMgmSqgL3Q6SP4jRKtY7Qg8
+	 v/G5PmPq3BuBw==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so706871566b.0;
+        Mon, 31 Mar 2025 03:14:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUCjUKzF0VlgN5kiXjfEOyt0wRyeGE+fdfvBZNlbR2FW5TvjfBuxuAx8x4QpFt1cU8g0yvRsHClw7UNbx23MO/T@vger.kernel.org, AJvYcCV6Cd+b1qFDisDGE/BQ7fyE015Ma0mFL8oW5OLU/SAAQxNacFKw7gC4/MFf0bQsst/0Z+CSq5YX+J9PbUhP@vger.kernel.org, AJvYcCXqMGaZ8G0b9YrS1jwF/xD0zHpZ+ihSNUayAu6Mj4Xc0d9Vlqq+DuQ27O8PEOfkPEgXeUrqO+yu45qaRrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztK7h8YcGoT/D5ENRW0nPGCrvIplF059gSHlFLvKijjlmzz7Hw
+	s1ummUJ8eAF9oFti9915/0CCAx2IarTw/LjLyz7wSuiY5lWRoYKoh/y0o6IES4/jO0Q8NHk8gjt
+	xsfznIsu7OMPXPk6CerhLmud4wF0=
+X-Google-Smtp-Source: AGHT+IHJqJEnzM7IHoaBimLQZhw25r2L3iYKhxkNOQG/mUR0g7f5kA9k4S+fAFhk8NQgBjDM2/uOqu8IQmrCmYKrldQ=
+X-Received: by 2002:a17:907:d25:b0:abf:4708:8644 with SMTP id
+ a640c23a62f3a-ac738bbebedmr693287466b.43.1743416088297; Mon, 31 Mar 2025
+ 03:14:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11332.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e26518f-9af4-434c-d299-08dd703ca37d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 10:13:09.9602
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zBJe/3/4TK9lN7kGIYl9IeEd41KaWYCT0M13o72IkfsbnOOktrVhfdr7rI+iKGCnkTaTCiZ1bMhW8kwRL8802GJCdRUIMVGZOB8/gmeCFmQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB15819
+References: <20250327021809.29954-1-zhaoqunqin@loongson.cn> <20250327021809.29954-2-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250327021809.29954-2-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 31 Mar 2025 18:14:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7m7Rmp=0Wdksi_LhqsKU1zw3U-iQtt2FT2pjZJwohi6A@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp_Qjs6hA377J-lhlu2e_SJvL2pW6ob0DiNp59jrqUXAclJglPxPDK7oQ0
+Message-ID: <CAAhV-H7m7Rmp=0Wdksi_LhqsKU1zw3U-iQtt2FT2pjZJwohi6A@mail.gmail.com>
+Subject: Re: [PATCH v6 1/6] mfd: Add support for Loongson Security Module
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, 
+	Yinggang Gu <guyinggang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMzEgTWFyY2ggMjAy
-NSAxMDo1Nw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAvNl0gY2xrOiByZW5lc2FzOiByenYyaDog
-QWRkIGNsb2NrIGFuZCByZXNldCBlbnRyaWVzIGZvciBVU0IyIGFuZCBHQkVUSA0KPiANCj4gSGkg
-UHJhYmhha2FyIChhbmQgQmlqdSksDQo+IA0KPiBPbiBGcmksIDI4IE1hciAyMDI1IGF0IDIxOjAx
-LCBQcmFiaGFrYXIgPHByYWJoYWthci5jc2VuZ2dAZ21haWwuY29tPiB3cm90ZToNCj4gPiBOb3Rl
-LCB0aGVzZSBwYXRjaCBhcHBseSBvbiB0b3Agb2YgdGhlIGZvbGxvd2luZyBwYXRjaCBzZXJpZXM6
-DQo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjUwMjI4MjAyNjU1LjQ5MTAzNS0x
-LXByYWJoYWthci5tYWhhZGV2LQ0KPiA+IGxhZC5yakBicC5yZW5lc2FzLmNvbS8NCj4gDQo+IFRo
-YXQgcGF0Y2ggc2VyaWVzIHdhcyB1bHRpbWF0ZWx5IGlnbm9yZWQgYmVjYXVzZSBpdCB3YXMgbm90
-IGNsZWFyIGhvdyBpdCByZWxhdGVkIHRvIG90aGVyIHNpbWlsYXINCj4gcGF0Y2hlcyBmb3IgdGhl
-IHNhbWUgZHJpdmVyLiAgU28gcGxlYXNlIGNvb3JkaW5hdGUgYW5kIHJlc2VuZCwgYmFzZWQgb24g
-cmVuZXNhcy1jbGstZm9yLXY2LjE2LCBvciBldmVuDQo+IGJldHRlciwNCj4gdjYuMTUtcmMxIG5l
-eHQgd2Vlay4NCg0KREVGX0NTRElWIG1hY3JvIGZvciBjbGsgZGl2aWRlciB3aXRoIGN1c3RvbSBj
-b2RlIGFzIGl0IHJlcXVpcmVzIFJNVyBvcGVyYXRpb24uDQoNCmFuZA0KDQpERUZfU0RJViBtYWNy
-byBmb3IgY2xrIGRpdmlkZXIgd2l0aCBnZW5lcmljIEFQSS4NCg0KU28sIHlvdSBtZWFuIHVzZSBE
-RUZfQ1NESVYgbWFjcm8gZm9yIGNsayBkaXZpZGVyIHdpdGggZ2VuZXJpYyBBUEkgPz8NCg0KQ2hl
-ZXJzLA0KQmlqdQ0K
+Hi, Qunqin,
+
+On Thu, Mar 27, 2025 at 10:17=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.c=
+n> wrote:
+>
+> This driver supports Loongson Security Module, which provides the control
+> for it's hardware encryption acceleration child devices.
+>
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> ---
+> v6: Replace all "ls6000se" with "loongson"
+> v5: Registered "ls6000se-rng" device.
+> v3-v4: None
+>
+> v2: Removed "ls6000se-sdf" device, added "ls6000se-tpm" device.
+>     Passed dmamem size to SE firmware in se_init_hw() function.
+>
+>  drivers/mfd/Kconfig             |  10 +
+>  drivers/mfd/Makefile            |   2 +
+>  drivers/mfd/loongson-se.c       | 374 ++++++++++++++++++++++++++++++++
+>  include/linux/mfd/loongson-se.h |  75 +++++++
+>  4 files changed, 461 insertions(+)
+>  create mode 100644 drivers/mfd/loongson-se.c
+>  create mode 100644 include/linux/mfd/loongson-se.h
+>
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 22b936310..a31ccb1b0 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2422,5 +2422,15 @@ config MFD_UPBOARD_FPGA
+>           To compile this driver as a module, choose M here: the module w=
+ill be
+>           called upboard-fpga.
+>
+> +config MFD_LOONGSON_SE
+> +       tristate "Loongson Security Module Interface"
+> +       depends on LOONGARCH && ACPI
+> +       select MFD_CORE
+> +       help
+> +         The Loongson security module provides the control for hardware
+> +         encryption acceleration devices. Each device uses at least one
+> +         channel to interact with security module, and each channel may
+> +         have its own buffer provided by security module.
+This file is mostly sorted by alpha-betical order, so moving this
+between MFD_INTEL_M10_BMC_PMCI and MFD_QNAP_MCU is better.
+
+> +
+>  endmenu
+>  endif
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 948cbdf42..fc50601ca 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)  +=3D rsmu_i2c.o rsmu_core=
+.o
+>  obj-$(CONFIG_MFD_RSMU_SPI)     +=3D rsmu_spi.o rsmu_core.o
+>
+>  obj-$(CONFIG_MFD_UPBOARD_FPGA) +=3D upboard-fpga.o
+> +
+> +obj-$(CONFIG_MFD_LOONGSON_SE)  +=3D loongson-se.o
+> diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
+> new file mode 100644
+> index 000000000..bf16f7df8
+> --- /dev/null
+> +++ b/drivers/mfd/loongson-se.c
+> @@ -0,0 +1,374 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/* Copyright (C) 2025 Loongson Technology Corporation Limited */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/loongson-se.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +/*
+> + * The Loongson Security Module provides the control for hardware
+> + * encryption acceleration child devices. The SE framework is
+> + * shown as follows:
+> + *
+> + *                   +------------+
+> + *                   |    CPU     |
+> + *                   +------------+
+> + *                     ^       ^
+> + *                 DMA |       | IRQ
+> + *                     v       v
+> + *        +-----------------------------------+
+> + *        |     Loongson Security Module      |
+> + *        +-----------------------------------+
+> + *             ^                ^
+> + *    channel1 |       channel2 |
+> + *             v                v
+> + *        +-----------+    +----------+
+> + *        | sub-dev1  |    | sub-dev2 |  ..... Max sub-dev31
+> + *        +-----------+    +----------+
+> + *
+> + * The CPU cannot directly communicate with SE's sub devices,
+> + * but sends commands to SE, which processes the commands and
+> + * sends them to the corresponding sub devices.
+> + */
+> +
+> +struct loongson_se {
+> +       void __iomem *base;
+> +       u32 version;
+> +       spinlock_t dev_lock;
+> +       struct completion cmd_completion;
+> +
+> +       /* dma memory */
+> +       void *mem_base;
+> +       int mem_map_pages;
+> +       unsigned long *mem_map;
+> +
+> +       /* channel */
+> +       struct mutex ch_init_lock;
+> +       struct lsse_ch chs[SE_CH_MAX];
+lsse_ch is confusing, rename it to se_channel is better.
+
+> +};
+> +
+> +union se_request {
+> +       u32 info[8];
+> +       struct se_cmd {
+> +               u32 cmd;
+> +               u32 info[7];
+> +       } req;
+> +       struct se_res {
+> +               u32 cmd;
+> +               u32 cmd_ret;
+> +               u32 info[6];
+> +       } res;
+> +};
+> +
+> +static inline u32 se_readl(struct loongson_se *se, u32 off)
+> +{
+> +       return readl(se->base + off);
+> +}
+> +
+> +static inline void se_writel(struct loongson_se *se, u32 val, u32 off)
+> +{
+> +       writel(val, se->base + off);
+> +}
+> +
+> +static void se_enable_int_locked(struct loongson_se *se, u32 int_bit)
+> +{
+> +       u32 tmp;
+> +
+> +       tmp =3D se_readl(se, SE_S2LINT_EN);
+> +       tmp |=3D int_bit;
+> +       se_writel(se, tmp, SE_S2LINT_EN);
+> +}
+> +
+> +static void se_disable_int(struct loongson_se *se, u32 int_bit)
+> +{
+> +       unsigned long flag;
+> +       u32 tmp;
+> +
+> +       spin_lock_irqsave(&se->dev_lock, flag);
+> +
+> +       tmp =3D se_readl(se, SE_S2LINT_EN);
+> +       tmp &=3D ~(int_bit);
+> +       se_writel(se, tmp, SE_S2LINT_EN);
+> +
+> +       spin_unlock_irqrestore(&se->dev_lock, flag);
+> +}
+Enable/disable interrupt is not symmetric, it is better to rename
+se_enable_int_locked() to se_enable_int(), then move the lock out of
+se_disable_int().
+
+> +static int se_poll(struct loongson_se *se, u32 int_bit)
+> +{
+> +       u32 status;
+> +       int err;
+> +
+> +       spin_lock_irq(&se->dev_lock);
+> +
+> +       se_enable_int_locked(se, int_bit);
+> +       se_writel(se, int_bit, SE_L2SINT_SET);
+> +       err =3D readl_relaxed_poll_timeout_atomic(se->base + SE_L2SINT_ST=
+AT, status,
+> +                                               !(status & int_bit), 1, 1=
+0000);
+> +
+> +       spin_unlock_irq(&se->dev_lock);
+> +
+> +       return err;
+> +}
+> +
+> +static int se_send_requeset(struct loongson_se *se, union se_request *re=
+q)
+> +{
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(req->info); i++)
+> +               se_writel(se, req->info[i], SE_DATA_S + i * 4);
+> +
+> +       return se_poll(se, SE_INT_SETUP);
+> +}
+> +
+> +/*
+> + * Called by SE's child device driver.
+> + * Send a request to the corresponding device.
+> + */
+> +int se_send_ch_requeset(struct lsse_ch *ch)
+> +{
+> +       return se_poll(ch->se, ch->int_bit);
+> +}
+> +EXPORT_SYMBOL_GPL(se_send_ch_requeset);
+> +
+> +static int se_get_res(struct loongson_se *se, u32 cmd, union se_request =
+*res)
+> +{
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(res->info); i++)
+> +               res->info[i] =3D se_readl(se, SE_DATA_L + i * 4);
+> +
+> +       if (res->res.cmd !=3D cmd)
+> +               return -EFAULT;
+> +
+> +       return 0;
+> +}
+> +
+> +static int se_send_genl_cmd(struct loongson_se *se, union se_request *re=
+q)
+What does genl stand for? Maybe you can simply rename it to se_send_cmd().
+
+
+Huacai
+
+> +{
+> +       int err;
+> +
+> +       err =3D se_send_requeset(se, req);
+> +       if (err)
+> +               return err;
+> +
+> +       if (!wait_for_completion_timeout(&se->cmd_completion, HZ))
+> +               return -ETIME;
+> +
+> +       return se_get_res(se, req->req.cmd, req);
+> +}
+> +
+> +static int se_set_msg(struct lsse_ch *ch)
+> +{
+> +       struct loongson_se *se =3D ch->se;
+> +       union se_request req;
+> +
+> +       req.req.cmd =3D SE_CMD_SETMSG;
+> +       req.req.info[0] =3D ch->id;
+> +       req.req.info[1] =3D ch->smsg - se->mem_base;
+> +       req.req.info[2] =3D ch->msg_size;
+> +
+> +       return se_send_genl_cmd(se, &req);
+> +}
+> +
+> +static irqreturn_t se_irq(int irq, void *dev_id)
+> +{
+> +       struct loongson_se *se =3D (struct loongson_se *)dev_id;
+> +       struct lsse_ch *ch;
+> +       u32 int_status;
+> +       int id;
+> +
+> +       int_status =3D se_readl(se, SE_S2LINT_STAT);
+> +       se_disable_int(se, int_status);
+> +       if (int_status & SE_INT_SETUP) {
+> +               complete(&se->cmd_completion);
+> +               int_status &=3D ~SE_INT_SETUP;
+> +               se_writel(se, SE_INT_SETUP, SE_S2LINT_CL);
+> +       }
+> +
+> +       while (int_status) {
+> +               id =3D __ffs(int_status);
+> +
+> +               ch =3D &se->chs[id];
+> +               if (ch->complete)
+> +                       ch->complete(ch);
+> +               int_status &=3D ~BIT(id);
+> +               se_writel(se, BIT(id), SE_S2LINT_CL);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int se_init_hw(struct loongson_se *se, dma_addr_t addr, int size)
+> +{
+> +       union se_request req;
+> +       int err;
+> +
+> +       /* Start engine */
+> +       req.req.cmd =3D SE_CMD_START;
+> +       err =3D se_send_genl_cmd(se, &req);
+> +       if (err)
+> +               return err;
+> +
+> +       /* Get Version */
+> +       req.req.cmd =3D SE_CMD_GETVER;
+> +       err =3D se_send_genl_cmd(se, &req);
+> +       if (err)
+> +               return err;
+> +       se->version =3D req.res.info[0];
+> +
+> +       /* Setup dma memory */
+> +       req.req.cmd =3D SE_CMD_SETBUF;
+> +       req.req.info[0] =3D addr & 0xffffffff;
+> +       req.req.info[1] =3D addr >> 32;
+> +       req.req.info[2] =3D size;
+> +
+> +       return se_send_genl_cmd(se, &req);
+> +}
+> +
+> +/*
+> + * se_init_ch() - Init the channel used by child device.
+> + *
+> + * Allocate dma memory as agreed upon with SE on SE probe,
+> + * and register the callback function when the data processing
+> + * in this channel is completed.
+> + */
+> +struct lsse_ch *se_init_ch(struct device *dev, int id, int data_size, in=
+t msg_size,
+> +                          void *priv, void (*complete)(struct lsse_ch *s=
+e_ch))
+> +{
+> +       struct loongson_se *se =3D dev_get_drvdata(dev);
+> +       struct lsse_ch *ch;
+> +       int data_first, data_nr;
+> +       int msg_first, msg_nr;
+> +
+> +       mutex_lock(&se->ch_init_lock);
+> +
+> +       ch =3D &se->chs[id];
+> +       ch->se =3D se;
+> +       ch->id =3D id;
+> +       ch->int_bit =3D BIT(id);
+> +
+> +       data_nr =3D round_up(data_size, PAGE_SIZE) / PAGE_SIZE;
+> +       data_first =3D bitmap_find_next_zero_area(se->mem_map, se->mem_ma=
+p_pages,
+> +                                               0, data_nr, 0);
+> +       if (data_first >=3D se->mem_map_pages) {
+> +               ch =3D NULL;
+> +               goto out_unlock;
+> +       }
+> +
+> +       bitmap_set(se->mem_map, data_first, data_nr);
+> +       ch->off =3D data_first * PAGE_SIZE;
+> +       ch->data_buffer =3D se->mem_base + ch->off;
+> +       ch->data_size =3D data_size;
+> +
+> +       msg_nr =3D round_up(msg_size, PAGE_SIZE) / PAGE_SIZE;
+> +       msg_first =3D bitmap_find_next_zero_area(se->mem_map, se->mem_map=
+_pages,
+> +                                              0, msg_nr, 0);
+> +       if (msg_first >=3D se->mem_map_pages) {
+> +               ch =3D NULL;
+> +               goto out_unlock;
+> +       }
+> +
+> +       bitmap_set(se->mem_map, msg_first, msg_nr);
+> +       ch->smsg =3D se->mem_base + msg_first * PAGE_SIZE;
+> +       ch->rmsg =3D ch->smsg + msg_size / 2;
+> +       ch->msg_size =3D msg_size;
+> +       ch->complete =3D complete;
+> +       ch->priv =3D priv;
+> +       ch->version =3D se->version;
+> +
+> +       if (se_set_msg(ch))
+> +               ch =3D NULL;
+> +
+> +out_unlock:
+> +       mutex_unlock(&se->ch_init_lock);
+> +
+> +       return ch;
+> +}
+> +EXPORT_SYMBOL_GPL(se_init_ch);
+> +
+> +static const struct mfd_cell se_devs[] =3D {
+> +       { .name =3D "loongson-rng" },
+> +       { .name =3D "loongson-tpm" },
+> +};
+> +
+> +static int loongson_se_probe(struct platform_device *pdev)
+> +{
+> +       struct loongson_se *se;
+> +       struct device *dev =3D &pdev->dev;
+> +       int nr_irq, irq, err, size;
+> +       dma_addr_t paddr;
+> +
+> +       se =3D devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
+> +       if (!se)
+> +               return -ENOMEM;
+> +       dev_set_drvdata(dev, se);
+> +       init_completion(&se->cmd_completion);
+> +       spin_lock_init(&se->dev_lock);
+> +       mutex_init(&se->ch_init_lock);
+> +       dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +       if (device_property_read_u32(dev, "dmam_size", &size))
+> +               return -ENODEV;
+> +       size =3D roundup_pow_of_two(size);
+> +       se->mem_base =3D dmam_alloc_coherent(dev, size, &paddr, GFP_KERNE=
+L);
+> +       if (!se->mem_base)
+> +               return -ENOMEM;
+> +       se->mem_map_pages =3D size / PAGE_SIZE;
+> +       se->mem_map =3D devm_bitmap_zalloc(dev, se->mem_map_pages, GFP_KE=
+RNEL);
+> +       if (!se->mem_map)
+> +               return -ENOMEM;
+> +
+> +       se->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(se->base))
+> +               return PTR_ERR(se->base);
+> +
+> +       nr_irq =3D platform_irq_count(pdev);
+> +       if (nr_irq <=3D 0)
+> +               return -ENODEV;
+> +       while (nr_irq) {
+> +               irq =3D platform_get_irq(pdev, --nr_irq);
+> +               /* Use the same interrupt handler address.
+> +                * Determine which irq it is accroding
+> +                * SE_S2LINT_STAT register.
+> +                */
+> +               err =3D devm_request_irq(dev, irq, se_irq, 0, "loongson-s=
+e", se);
+> +               if (err)
+> +                       dev_err(dev, "failed to request irq: %d\n", irq);
+> +       }
+> +
+> +       err =3D se_init_hw(se, paddr, size);
+> +       if (err)
+> +               return err;
+> +
+> +       return devm_mfd_add_devices(dev, 0, se_devs, ARRAY_SIZE(se_devs),
+> +                                   NULL, 0, NULL);
+> +}
+> +
+> +static const struct acpi_device_id loongson_se_acpi_match[] =3D {
+> +       {"LOON0011", 0},
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, loongson_se_acpi_match);
+> +
+> +static struct platform_driver loongson_se_driver =3D {
+> +       .probe   =3D loongson_se_probe,
+> +       .driver  =3D {
+> +               .name  =3D "loongson-se",
+> +               .acpi_match_table =3D loongson_se_acpi_match,
+> +       },
+> +};
+> +module_platform_driver(loongson_se_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+> +MODULE_DESCRIPTION("Loongson Security Module driver");
+> diff --git a/include/linux/mfd/loongson-se.h b/include/linux/mfd/loongson=
+-se.h
+> new file mode 100644
+> index 000000000..f70e9f196
+> --- /dev/null
+> +++ b/include/linux/mfd/loongson-se.h
+> @@ -0,0 +1,75 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/* Copyright (C) 2025 Loongson Technology Corporation Limited */
+> +
+> +#ifndef __LOONGSON_SE_H__
+> +#define __LOONGSON_SE_H__
+> +
+> +#define SE_DATA_S                      0x0
+> +#define SE_DATA_L                      0x20
+> +#define SE_S2LINT_STAT                 0x88
+> +#define SE_S2LINT_EN                   0x8c
+> +#define SE_S2LINT_SET                  0x90
+> +#define SE_S2LINT_CL                   0x94
+> +#define SE_L2SINT_STAT                 0x98
+> +#define SE_L2SINT_EN                   0x9c
+> +#define SE_L2SINT_SET                  0xa0
+> +#define SE_L2SINT_CL                   0xa4
+> +
+> +/* INT bit definition */
+> +#define SE_INT_SETUP                   BIT(0)
+> +#define SE_INT_TPM                     BIT(5)
+> +
+> +#define SE_CMD_START                   0x0
+> +#define SE_CMD_STOP                    0x1
+> +#define SE_CMD_GETVER                  0x2
+> +#define SE_CMD_SETBUF                  0x3
+> +#define SE_CMD_SETMSG                  0x4
+> +
+> +#define SE_CMD_RNG                     0x100
+> +#define SE_CMD_SM2_SIGN                        0x200
+> +#define SE_CMD_SM2_VSIGN               0x201
+> +#define SE_CMD_SM3_DIGEST              0x300
+> +#define SE_CMD_SM3_UPDATE              0x301
+> +#define SE_CMD_SM3_FINISH              0x302
+> +#define SE_CMD_SM4_ECB_ENCRY           0x400
+> +#define SE_CMD_SM4_ECB_DECRY           0x401
+> +#define SE_CMD_SM4_CBC_ENCRY           0x402
+> +#define SE_CMD_SM4_CBC_DECRY           0x403
+> +#define SE_CMD_SM4_CTR                 0x404
+> +#define SE_CMD_TPM                     0x500
+> +#define SE_CMD_ZUC_INIT_READ           0x600
+> +#define SE_CMD_ZUC_READ                        0x601
+> +#define SE_CMD_SDF                     0x700
+> +
+> +#define SE_CH_MAX                      32
+> +#define SE_CH_RNG                      1
+> +#define SE_CH_SM2                      2
+> +#define SE_CH_SM3                      3
+> +#define SE_CH_SM4                      4
+> +#define SE_CH_TPM                      5
+> +#define SE_CH_ZUC                      6
+> +#define SE_CH_SDF                      7
+> +
+> +struct lsse_ch {
+> +       struct loongson_se *se;
+> +       void *priv;
+> +       u32 version;
+> +       u32 id;
+> +       u32 int_bit;
+> +
+> +       void *smsg;
+> +       void *rmsg;
+> +       int msg_size;
+> +
+> +       void *data_buffer;
+> +       int data_size;
+> +       u32 off;
+> +
+> +       void (*complete)(struct lsse_ch *se_ch);
+> +};
+> +
+> +struct lsse_ch *se_init_ch(struct device *dev, int id, int data_size, in=
+t msg_size,
+> +                          void *priv, void (*complete)(struct lsse_ch *s=
+e_ch));
+> +int se_send_ch_requeset(struct lsse_ch *ch);
+> +
+> +#endif
+> --
+> 2.45.2
+>
+>
