@@ -1,165 +1,78 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAA51E32B9;
-	Mon, 31 Mar 2025 12:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19DB210F4D
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743425485; cv=none; b=f2G9tnvHaZxoHDXv+yAt1K/wAng/Cgo9J+nYponemOdVfA9Mro1WCxT2ZNGI1NNJ/aLg0PknXoh+RsXOv3NshvKYB6MTSKRazw/jg1zNm2Bobroz5S52urrh8ctqvjHKPKAFQoT0GbLAFHcIizmRIGQnNw40BkEHhb7nbXpUXJI=
+	t=1743425509; cv=none; b=U0RCWk96YqlwjRDUxuzopaN/U4dajyeHKFVChl/DPKQjFB4mZSL+2gSwaG97b/WK9tS6Jk5xPUPEvQBh7e4GwEUFmASKvwvyO7kut42tne1ad0reoNZ1Co9xPN/JQBbLumxTML5inXilcUNXBzCtXao1Ey3t3lALblg8AHBjvjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743425485; c=relaxed/simple;
-	bh=o7BfxZztujt/cO63wRvOavseqgC5ImSFqXNneLm+NqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Am4AlFsLpuv6SzUUSAykk9ctBjMOpykEYpVuXA/MJKFCY+xeVeVW07+/B4Tilj9MHJ053lNuzp/1SLhy9GBZitK9GNKzPJkewOdGTzTC/VjeBPRY/uQtNOLZZGnmlsM7AhA53SMo2t7mG+c6wFn4+ZHPJIWjVZehL9lpeXifDBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IlzP0CH4; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743425509; c=relaxed/simple;
+	bh=v3wQM9Ejj+Iy65AhJxQ0Y+WRn5r9k4FONXp7Wx1rPK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d/FYvxXu4DHF8MmL37EiKjDiZxVEZ9lbapdsS8pbgU6jm56x+0LJtxidSRajKPJg3wAjUtqi8AI13HkAfgQ4DcMIkPzZbsd7WU92o9ZNEMQsKKLSejePFQ6whvYUCfkYsetvlaxOpk65hk6z1g/YCrgbP9wRfbUOe6PimaCijes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vYKJubwu; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IlzP0CH4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2eMi5/lczQNiBiqshlbN0fbzw9ejRfgeqUAlYl9qpIg=; b=IlzP0CH4jRpFhrxHnDsiF5VoSv
-	TEHTcyEhjYgMq81+mdn0a/0q3NmQ/Y6q9+k1h8H99zGPsY/x1csGV3hxdrujioo8ZbqnMZKvJGGkw
-	bBWMQH71eKnnTtsa67hVb83aolECGaKaU2ooRJsivkEqZZ4sweufF9HId3jlSbgHC++npXBxrO1pZ
-	WVXa4d8tfsdtIEA2WiIgfYRMxsiHJfoAskGXYEcs0Z+iCAgEDTqv+nLCmHFsvnoiLT42YSPdRjx5A
-	VTddXBrFHl0ivIoRDR3hiL0uqXZ7xQxb0hNDMLznNSOcPf2Xm3mAZhis/falAlUcHyltw2H9iRdx2
-	RfSghQqg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51288)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tzEbZ-0003zS-2D;
-	Mon, 31 Mar 2025 13:51:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tzEbT-0001gK-2Q;
-	Mon, 31 Mar 2025 13:50:59 +0100
-Date: Mon, 31 Mar 2025 13:50:59 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Alexander H Duyck <alexander.duyck@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <Z-qPs7y8C09xh5_b@shell.armlinux.org.uk>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-10-maxime.chevallier@bootlin.com>
- <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vYKJubwu"
+Message-ID: <9ee54186-b56c-4876-a36f-1e4fb1835d09@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743425504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ewznl65RNkeccHlCjpGDXGzaa1MPhX9mGfWAWmSXFO8=;
+	b=vYKJubwuym42iosd4jr5O/MhHD5ueOKYFgh/wPqbztnUySBK5jgLZ5B+0RTD1igxGvgcRE
+	cZEtzs0SZJYmTMlCaPozouKcq1ksAhoEWzx/TE22DLK9N9FseBMDTU8c+k8rJpQMozHHOB
+	QLXtrXEMV74i88AB88ALOdc3o/8N370=
+Date: Mon, 31 Mar 2025 20:51:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Subject: Re: [v4] mm/page_alloc: Consolidate unlikely handling in
+ page_expected_state
+To: Markus Elfring <Markus.Elfring@web.de>, Ye Liu <liuye@kylinos.cn>,
+ linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Sidhartha Kumar <sidhartha.kumar@oracle.com>
+References: <20250328014757.1212737-1-ye.liu@linux.dev>
+ <Z-ayTt8o656AkGfz@casper.infradead.org>
+ <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
+ <05ebb2eb-5f66-4613-a39e-40194c96341f@web.de>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <05ebb2eb-5f66-4613-a39e-40194c96341f@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 27, 2025 at 06:16:00PM -0700, Alexander H Duyck wrote:
-> On Fri, 2025-03-07 at 18:36 +0100, Maxime Chevallier wrote:
-> > When phylink creates a fixed-link configuration, it finds a matching
-> > linkmode to set as the advertised, lp_advertising and supported modes
-> > based on the speed and duplex of the fixed link.
-> > 
-> > Use the newly introduced phy_caps_lookup to get these modes instead of
-> > phy_lookup_settings(). This has the side effect that the matched
-> > settings and configured linkmodes may now contain several linkmodes (the
-> > intersection of supported linkmodes from the phylink settings and the
-> > linkmodes that match speed/duplex) instead of the one from
-> > phy_lookup_settings().
-> > 
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > ---
-> >  drivers/net/phy/phylink.c | 44 +++++++++++++++++++++++++++------------
-> >  1 file changed, 31 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> > index cf9f019382ad..8e2b7d647a92 100644
-> > --- a/drivers/net/phy/phylink.c
-> > +++ b/drivers/net/phy/phylink.c
-> > @@ -802,12 +802,26 @@ static int phylink_validate(struct phylink *pl, unsigned long *supported,
-> >  	return phylink_validate_mac_and_pcs(pl, supported, state);
-> >  }
-> >  
-> > +static void phylink_fill_fixedlink_supported(unsigned long *supported)
-> > +{
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT, supported);
-> > +	linkmode_set_bit(ETHTOOL_LINK_MODE_10000baseT_Full_BIT, supported);
-> > +}
-> > +
-> 
-> Any chance we can go with a different route here than just locking
-> fixed mode to being only for BaseT configurations?
-> 
-> I am currently working on getting the fbnic driver up and running and I
-> am using fixed-link mode as a crutch until I can finish up enabling
-> QSFP module support for phylink and this just knocked out the supported
-> link modes as I was using 25CR, 50CR, 50CR2, and 100CR2.
-> 
-> Seems like this should really be something handled by some sort of
-> validation function rather than just forcing all devices using fixed
-> link to assume that they are BaseT. I know in our direct attached
-> copper case we aren't running autoneg so that plan was to use fixed
-> link until we can add more flexibility by getting QSFP support going.
 
-Please look back at phylink's historical behaviour. Phylink used to
-use phy_lookup_setting() to locate the linkmode for the speed and
-duplex. That is the behaviour that we should be aiming to preserve.
+在 2025/3/31 20:21, Markus Elfring 写道:
+>> Regarding the reviewer shortage, I’d be happy to help by reviewing
+>> other patches as well. Could you please share the process for becoming
+>> a reviewer?
+> Under which circumstances would you dare to comment information from
+> other contributors?
+>
+> How will your development interests evolve further?
+>
+>
+>>             What are the requirements or steps to get involved?
+> You can try to improve communication skills as needed.
 
-We were getting:
+I don’t see how I’ve offended anyone.
+         -- I was simply asking about the process to become a reviewer.
+What exactly is the issue with that?
+How did you interpret my message to warrant such a response?
 
-speed	duplex	linkmode
-10M	Half	10baseT_Half
-10M	Full	10baseT_Full
-100M	Half	100baseT_Half
-100M	Full	100baseT_Full
-1G	Half	1000baseT_Half
-1G	Full	1000baseT_Full (this changed over time)
-2.5G	Full	2500baseT_Full
-5G	Full	5000baseT_Full
+Thanks,
+Ye Liu
 
-At this point, things get weird because of the way linkmodes were
-added, as we return the _first_ match. Before commit 3c6b59d6f07c
-("net: phy: Add more link modes to the settings table"):
-
-10G	Full	10000baseKR_Full
-Faster speeds not supported
-
-After the commit:
-10G	Full	10000baseCR_Full
-20G	Full	20000baseKR2_Full
-25G	Full	25000baseCR_Full
-40G	Full	40000baseCR4_Full
-50G	Full	50000baseCR2_Full
-56G	Full	56000baseCR4_Full
-100G	Full	100000baseCR4_Full
-
-It's all a bit random. :(
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
