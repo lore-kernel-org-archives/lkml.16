@@ -1,81 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54813523A
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6BF2905
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743385192; cv=none; b=f/+kyIjcOkdkWWFam594o24UEcCZrbfEcR/C02xOHBpguAXbEA2n5sb7POkhtjNWPgBHteUEKW8aOZkhnlYgEgTJ3UJsvqIfDn9i+AxU7kRg33qHj6Ps53Ck1WL83rN9jUpGOvIRir9aMx+qgeVpoVbn+/CB/basLzCgcVBmzBk=
+	t=1743385839; cv=none; b=iNqlrrvTcP8xTjBK3WCbmXN9ifAuvOAOWSGb9rimYnqylV3qGFX0yhgKTKXLJsKO4BERt5zyDSUb+jXAtOP170pyguoMyCaXObOCqAhzqvR/oxZum0ikgQL7rHi7TE9C6vvtUDvp+JkftLhvUX1HcEzE1BVn2/+p1ZBkuNMcbDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743385192; c=relaxed/simple;
-	bh=WofpQ5qLrWzLUcBlDJCYsikhvX94nh0bqkCL5Fqx7NQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZBdFrHQ8BVI+NKBhT05OBvzQkbD2Dw41SmliVHoLHIEEQ/X9qT24i0CJ6v4H12/Tv9uM9IXPXV1q6iHXGMvpbqu2HjpWaM5PYDNK8WOVepLkwiau30bcSt3YWYWzqUIXGgJN2MeZp+Gl+EDotllJkn8tl/Hth2RpSS6sfw7iLM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDl2uJsS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743385839; c=relaxed/simple;
+	bh=yz62TKK6huhFh0HWx99pfPawYWTuAWXT+s00Gpt22t8=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=Tf4VVnaX8Y1ENI8rYckEmTPHL7YHWqrumYSDbWyjfBjEHFHQrYN3F/yle+JpZEQuLALu3LxPXdM3qqK2SpsCNEg1AY0Gb+OFgUPQxqLy3YeDIHP8RrP7d2HDARtu36dsEjBxItFNzLxT01Ciq0nO6zm92G9OQxUZKWRdZ2oujDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aQUqhZWl; arc=none smtp.client-ip=47.90.199.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDl2uJsS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F67EC4CEDD;
-	Mon, 31 Mar 2025 01:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743385191;
-	bh=WofpQ5qLrWzLUcBlDJCYsikhvX94nh0bqkCL5Fqx7NQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hDl2uJsSVD63QANTesA3q93OULFiBZl/fKqHi2TB2v/IrM266LvzlvC/leWua/FyT
-	 NOnRUkpUZN0LYOGynNVz1enUXHktjKGrzpJgwjIJ0Wu/QR5n3X3SAr/T9XQ2MOT9s/
-	 XEm3mxNgiTV+9z1EucsSHyHQlsJ4FXfLypUXW9+T8EePgxVP+IDuBegKCuZ6Io/7aA
-	 dTZblgxaS5SeUGz5tUcsy4CU7vIn1xvwsgXG8RVB/8ijyHgHW9ArWcDIptsOP3Snm0
-	 nGNw54dLU13nUYZenJnhQcP7edf7Dj2S6DXvPPI0/rS2EukRyN/xoUMmlaU+0K8VuO
-	 DJzqEdCwXh8Yg==
-Date: Sun, 30 Mar 2025 18:39:47 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
- <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
- <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aQUqhZWl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743385819; h=Message-ID:Subject:Date:From:To;
+	bh=jHOq3QtmwewmuGcfwHQ9jM68BB3uetbBtMD2GTM1Pxc=;
+	b=aQUqhZWll5acCKjzyf8jKTt+v6TPzSN4Yi7YHGpLDDwOTO++ogETSbI1mG3L1t5nJYx9bbnvYHplzZPJ5ulIVyA5C9H26EgcHyRk2LoghCLEpLzLk+u6NlOYukU1CG2CjM0sM2XZdMIIEmLbnN25etKMaRES1JOAbBwwIS9u1fM=
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WTOXjik_1743385819 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Mar 2025 09:50:19 +0800
+Message-ID: <1743385770.0724318-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH 00/19] virtio_ring in order support
+Date: Mon, 31 Mar 2025 09:49:30 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: eperezma@redhat.com,
+ virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ mst@redhat.com,
+ jasowang@redhat.com
+References: <20250324054333.1954-1-jasowang@redhat.com>
+In-Reply-To: <20250324054333.1954-1-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
 
-On Mon, Mar 31, 2025 at 01:13:55AM +0200, Borislav Petkov wrote:
-> On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
-> > On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
-> > >
-> > > Btw, test bot complains:
-> > >
-> > > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
-> > 
-> > That's not a very helpful error message
-> 
-> I found this:
-> 
-> https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
-> 
-> which looks like the original report.
-> 
-> Looks unsolved yet...
 
-The "new" warning is just the "skipping duplicate warning", which was
-already merged with commit 0a7fb6f07e3a ("objtool: Increase per-function
-WARN_FUNC() rate limit").  So none of the warnings are specific to this
-pull request.
+For series:
 
-Tiezhu, can you please look at this warning?
-  
-   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
-   arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 
--- 
-Josh
+Thanks.
+
+On Mon, 24 Mar 2025 13:43:14 +0800, Jason Wang <jasowang@redhat.com> wrote:
+> Hello all:
+>
+> This sereis tries to implement the VIRTIO_F_IN_ORDER to
+> virtio_ring. This is done by introducing virtqueue ops so we can
+> implement separate helpers for different virtqueue layout/features
+> then the in-order were implmeented on top.
+>
+> Tests shows 5% imporvemnt in RX PPS with KVM guest + testpmd on the
+> host.
+>
+> Please review.
+>
+> Thanks
+>
+> Jason Wang (19):
+>   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
+>   virtio_ring: switch to use vring_virtqueue in virtqueue_poll variants
+>   virtio_ring: unify logic of virtqueue_poll() and more_used()
+>   virtio_ring: switch to use vring_virtqueue for virtqueue resize
+>     variants
+>   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_prepare
+>     variants
+>   virtio_ring: switch to use vring_virtqueue for virtqueue_add variants
+>   virtio: switch to use vring_virtqueue for virtqueue_add variants
+>   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
+>     variants
+>   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
+>   virtio_ring: switch to use vring_virtqueue for disable_cb variants
+>   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
+>     variants
+>   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
+>   virtio_ring: introduce virtqueue ops
+>   virtio_ring: determine descriptor flags at one time
+>   virtio_ring: factor out core logic of buffer detaching
+>   virtio_ring: factor out core logic for updating last_used_idx
+>   virtio_ring: move next_avail_idx to vring_virtqueue
+>   virtio_ring: factor out split indirect detaching logic
+>   virtio_ring: add in order support
+>
+>  drivers/virtio/virtio_ring.c | 856 ++++++++++++++++++++++++++---------
+>  1 file changed, 653 insertions(+), 203 deletions(-)
+>
+> --
+> 2.42.0
+>
