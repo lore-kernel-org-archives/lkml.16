@@ -1,212 +1,114 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D935C1876
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293AD1876;
+	Mon, 31 Mar 2025 09:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412336; cv=none; b=CGqwF0eHrXvHQ3GYw1xKUAMQsUiiC6g3ByHyIlMeAuSOBT+62+rj5hJbddOCgL3AqKgBGDNZjAzDEfssFq0hhzTd4xlxgnH/N/TpQu/M7uRWj9aL2+myOMITPTUF4x1xwGZGeK4WCFDVtiPcHNWZOzd52K5ay2uV+6zLDLeU5vU=
+	t=1743412382; cv=none; b=ltCvk9Y+PwiSYB+ye6OkDRIvFLmgg7k/r75OAhlU2RLa8vJV0vh7z5CgqOqy8TLJxZFGwrGtuNeO/6hrVEIxkzWgdzLdNx2v2vHR/s0qWADjs1QsVbnbVDy0064ZplxT6DOVlQmaP3+cPtAoMmIB7pXzyDxUWFmFJ5MHLn+jYUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412336; c=relaxed/simple;
-	bh=jQEefqsaFQ5JVl1WyD7y4k8V3KJl31aWu30TIrr7DYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fN76DhPWFWdcW2lErZzdByzJlTYj2WKYFn2Qr9fDj4uFFQ8pBUFrM0teP55UVvwFDTWBqrqNC+M3yuc3fhiooAPi8/6ti/E9oReU4NVRpwclQsw3J2CA2daj8cC03bby45ljhmpUV7HExBJH0beNWmiVlILR4y3b6U0E+1/6xUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0Ky7qT/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5xNYbIDA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0Ky7qT/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5xNYbIDA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743412382; c=relaxed/simple;
+	bh=1BCnRwBIdCzqQFieKBec6z0k5OCysP5SaPC0p2GcB0k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i7MU7fy5q74ROLjoAdhid8CK0Qg0sBFPvyJdtvZxU00X2w7pgsFmkK7O59WwGRUbuVe3cg8frxfdKnki2UL7tksqgEkNqzOPNqZrA3Xnu0syf46pGSovok+bAojcaX0I8eT9flIUUMfZjtQ8TliL0SBvn8ZCMNQefmPryih7qlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0nRmvIf; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0Ky7qT/4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5xNYbIDA";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0Ky7qT/4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5xNYbIDA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B0FAC211E5;
-	Mon, 31 Mar 2025 09:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743412332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
-	b=0Ky7qT/4CPAWKoJK20bS0zRSUYBw4mVpm1FMtakdX28HNzw+tBLvP4cerHS8wQz4MDR4op
-	htsVQvf+vE+2g8nMA1luQ3XzQ4kFQVkrPiY6o+OOpf3tOrpgbVuc+orz12f9XnGo+yz+eJ
-	TisSybQgCG8rwWHp9/T8l9ghq3iVa2A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743412332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
-	b=5xNYbIDAPWPYR+qBthBJgb2fUcAJG7MHIGLcQ+Tapv05LkCi/4xt49aO12emtH0H8brQ4P
-	eSO5NEsRMhhZxKBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="0Ky7qT/4";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5xNYbIDA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743412332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
-	b=0Ky7qT/4CPAWKoJK20bS0zRSUYBw4mVpm1FMtakdX28HNzw+tBLvP4cerHS8wQz4MDR4op
-	htsVQvf+vE+2g8nMA1luQ3XzQ4kFQVkrPiY6o+OOpf3tOrpgbVuc+orz12f9XnGo+yz+eJ
-	TisSybQgCG8rwWHp9/T8l9ghq3iVa2A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743412332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
-	b=5xNYbIDAPWPYR+qBthBJgb2fUcAJG7MHIGLcQ+Tapv05LkCi/4xt49aO12emtH0H8brQ4P
-	eSO5NEsRMhhZxKBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C77613A1F;
-	Mon, 31 Mar 2025 09:12:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Pii9FGxc6mdlSwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 31 Mar 2025 09:12:12 +0000
-Message-ID: <08b645e4-1a48-4f73-a26d-419966533de0@suse.de>
-Date: Mon, 31 Mar 2025 11:12:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0nRmvIf"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-226185948ffso82532925ad.0;
+        Mon, 31 Mar 2025 02:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743412380; x=1744017180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aXfa9bgMsQdeUBd20MfPXF0A+XxOPRxIRG+U13SNVEE=;
+        b=A0nRmvIfHkJ6SeWACwGrjUWvFyFfnz7xmiwY9G/NBcqHKGMuqOvbrlFfiL4F32khZC
+         1WOuHaKA+wJtm2QEHRi+ccbglUALBXWi3o92+ljEAt+3+ntPuexKzf1LA/j6XIIPxi1M
+         1UCXT6v53O2flMveixHhM6GYMQ5FuOLHnlpkXybfOw7b0dE4FIXXv2w5LN+/uvx7QaAg
+         VLP/UVzs/w9zKz66LBIdsx3gGYQfh4o9tNdUbdjjKIjQoLWyr49iGvYZVZFfaUPZgEkT
+         47kXinM5fCe1LW8QfDZ89gnMdlumyMx+YH3Q28HKf3Ig52YxLrwEY2ETsyrKL3HbR+4C
+         vwaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743412380; x=1744017180;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aXfa9bgMsQdeUBd20MfPXF0A+XxOPRxIRG+U13SNVEE=;
+        b=ovz9C2FaSpFOBMF8nqICHHg4FiGdFDmUvk0S5/rTz1yz3vk1wX+fRR7IjnZ9CnZ8rk
+         JiSujCldSwbToAgG4QPtf1VRoN+bEyYEuW9WhbEydVZCPAUdB7JrELoE5yO6TaprGBMp
+         DerEvllm2XA9fS8z5uWmXjRruMHntLoWCsYynS+GmaHf5iqX7tQTednGwlJ2QAhJz1W3
+         Q7Xe/yCsq1toShtMX0pxXhy0cZ51p+v7lYBBx7/RGdDtrNcq+7SBwkg0YwSR0M8AI5R8
+         ZTn1dzt8jCnA+VJr4A2W07of8lnrwmqp8fLfNIvuXYPpoEHz9JrNzX/FOTq6LymHROpD
+         nWyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNc0W00jSpX2WGbUaHK1ipDAIgc6IEs7Li9k8atTuNf5E9R71+CZbMCXUvnAlg5mT0Ejns0491UvrWeg==@vger.kernel.org, AJvYcCWnX65csOkLnte2SDguMSuKRiFFVDEBXhHKMRlmEeNbU/T07N6TiqpFdujWE8fv9MktuJZAEtKOGOcswpG+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDYytq4pNc6JFek8db6AEd1r77nmBUUn4tF2JV6PzdQcJcnpEG
+	v2iOkqV25GlzBoWxbSruum9MQ38XKVJZrRQLN5vCXB537kwyXQtw
+X-Gm-Gg: ASbGnctoXiuh69/iqQoWkFl3J0YqUqaYUB6KqOos76Ovxhq/8cU5et6dai2tJRT2S24
+	t636kbvm6mHDCqrJL8eLcssfqfiws5Gwsd3cGnt7gopJfECvlQ5Bmvi0wsrvCD2kmfU8aXB7RnZ
+	BVFtWX1mziesuew+98KK7Di/HIFzqXrQ9LD+WiuU5T1dmYCAUy2tPYDOIIIZOwSNpn7665B4TAI
+	pQgL1PwJQkejdtXKy+ff5soP4PzRgUHcQkLMNrqY+RLuY3q+uPTQebjTkCoBh7FBh1zwS810qqG
+	EQbqctmoT8xFwx2lpHNyaKdBbu+kgweBzo/xb9zvi13e5xTVMFggPgtP4mVPS78V0UiNP284cfR
+	EyV5ulw==
+X-Google-Smtp-Source: AGHT+IFEEh/emvRl57NiK87EmBBBQ4yLrU3pfC0mqT77RnMd2vcNv7HBRIC3yTEMkuLyR9iPqdxvVw==
+X-Received: by 2002:a17:902:e550:b0:224:c46:d167 with SMTP id d9443c01a7336-2292f95f1edmr137533305ad.16.1743412380165;
+        Mon, 31 Mar 2025 02:13:00 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1fa0a5sm64957295ad.240.2025.03.31.02.12.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 02:12:59 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: lee@kernel.org,
+	danielt@kernel.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH] backlight: qcom-wled: Add NULL check in the wled_configure
+Date: Mon, 31 Mar 2025 17:12:45 +0800
+Message-Id: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/6] Introduce sparse DRM shmem object allocations
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- kernel@collabora.com, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
- <c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
- <20250331103102.22be5363@collabora.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250331103102.22be5363@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B0FAC211E5
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[collabora.com,linux-foundation.org,linux.intel.com,kernel.org,gmail.com,ffwll.ch,arm.com,vger.kernel.org,lists.freedesktop.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-Hi
+When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function wled_configure.
 
-Am 31.03.25 um 10:31 schrieb Boris Brezillon:
-> Hi Thomas,
->
-> On Mon, 31 Mar 2025 09:13:59 +0200
-> Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
->> Hi
->>
->> Am 26.03.25 um 03:14 schrieb Adrián Larumbe:
->>> This patch series is a proposal for implementing sparse page allocations
->>> for shmem objects. It was initially motivated by a kind of BO managed by
->>> the Panfrost driver, the tiler heap, which grows on demand every time the
->>> GPU faults on a virtual address within its drm_mm-managed ranged.
->> I've looked at panfrost_gem.h and found that the driver's gem structure
->> has grown quite a bit. It seems to have outgrown gem-shmem already.  I
->> think you should consider pulling a copy of gem-shmem into the driver
->> and building a dedicated memory manager on top.
-> Actually, it's not just something we need for panfrost. I plan to use
-> the same non-blocking allocation mechanism for panthor's heap
-> chunks/buffers, and lima could use it for its heap buffers too. The
-> non-blocking page allocation is also something i915 has been
-> open-coding here [1], and I believe that some of this logic could
-> (and should IMHO) live in common code rather than each driver coming
-> with its own solution, thus increasing the risk of bugs/inconsistencies.
-> That's even more important if we provide a common gem-shmem shrinker
-> like Dmitry's has been proposing.
+A NULL check should be added after the devm_kasprintf call to prevent potential NULL pointer dereference error.
 
-Thanks for the note.
+Fixes: f86b77583d88c ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
 
-Best regards
-Thomas
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/video/backlight/qcom-wled.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->
-> Best Regards,
->
-> Boris
->
-> [1]https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/i915/gem/i915_gem_shmem.c#L89
-
+diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+index 9afe701b2a1b..db5eda8ec37e 100644
+--- a/drivers/video/backlight/qcom-wled.c
++++ b/drivers/video/backlight/qcom-wled.c
+@@ -1406,8 +1406,14 @@ static int wled_configure(struct wled *wled)
+ 	wled->ctrl_addr = be32_to_cpu(*prop_addr);
+ 
+ 	rc = of_property_read_string(dev->of_node, "label", &wled->name);
+-	if (rc)
++	if (rc) {
+ 		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
++		if (!wled->name) {
++			dev_err(dev, "Failed to allocate memory for wled name\n");
++			return -ENOMEM;
++		}
++	}
++
+ 
+ 	switch (wled->version) {
+ 	case 3:
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.34.1
 
