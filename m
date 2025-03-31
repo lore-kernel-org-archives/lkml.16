@@ -1,64 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F5E202978
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55108214A7D;
+	Mon, 31 Mar 2025 17:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440863; cv=none; b=AS0nlik1ohsuvvldbfj6nGbhldvxGF48d+G9ywQFIaDeJfSmrWtjVOtZ4sW4yCnSYiz9diOyMurcy+d+4UpbCdLvGjNeBYFR77bnMxrKDnJCCJDnkCUYjIZ+nT62Lk5ZPcUEfsVrQApLTe0dHtlJXjzU8A25rGMo3BGh9Z99kso=
+	t=1743440873; cv=none; b=moUJ3j+rKFCPEhKTHrUOd4IboNKxqlW1OqpNR9KbKCFuAEGfmXH+tV09XoZ8EajPAGWQEnMb/jToh/k9HGKNw4uhQ6NeuYFHZdeA8Nayqk80xQC15mCXMwFi20n5mCKegdbEpZPZBkY8YRnJYhrV8XkYc66lZn3Gm7Ku/Xvzjxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440863; c=relaxed/simple;
-	bh=w7wK1P0SQ/Hrek0iTVemnHXl2LYfpN+h9+x2gyjOXIs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=B2dCxCOUYquSfZ9NcjRjSnVRJxP2JA5A/mFvBLoytd8dExUSpmHPo272lwg6UwujwsnEG4KqTyygilIM/pH4bVx3BXLC0ZroIOJNYgcvL9iAAEAei8UQz1q7VXyNU7xa4CKujk/a1MhvLNdjV9q5nPcyNNZDXyIHH3Z+h3U6yLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mum90agY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743440873; c=relaxed/simple;
+	bh=Ac5MStQWz5ZGSFJAWjJrRkS2cgVa+kWhUxEigbooqIk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LERQqm+oo3TFE/spnPj5M3K8tVAMVThMNA3KBUyh16aDYulM1eCDWw85Uxd84lKQyOSpH1J7im2FN15JpsQuWX049Im5v/THo77iOWbbm8wPpFHbF2ny/tTjL1q6bESDkZpYQznZHnXYUcmY2dI+v1dI54A+5sw2M20JQcIFC5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OnmGg3Qx; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mum90agY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5054C4CEE3;
-	Mon, 31 Mar 2025 17:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743440862;
-	bh=w7wK1P0SQ/Hrek0iTVemnHXl2LYfpN+h9+x2gyjOXIs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=mum90agYPLukQ+6aMVJH5E6srf/DCCm043eDX6W9lklwrlX2w9HRlEtVcLg8/cKpV
-	 xkh/wK0OPc0xx5+GFUC+baFYkQcYQLUlr/wDpYEHHm2yXS16Td+fAaSkE8GALOcyt9
-	 sMecHa5z67vaZ7VSjD2qPTJ43nRfw/+b+d6iruOMKwAByviumDJ9WIFpVx0DxvYCGB
-	 EOQ7Xg3KvPuN0pqJe5Moo80tpKt3HdVZ8G9FbkWIYD8r1SeIv018aclsdR6EUUcvPs
-	 FOV3Cd4XI5V0Riiht2hRvyJJP7D4YbvV4+NRD11LhT4z9eFP6o5kkKjQafk5DjzhzE
-	 dEXxuCXRO17jg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE13D380AA7A;
-	Mon, 31 Mar 2025 17:08:20 +0000 (UTC)
-Subject: Re: [GIT PULL v3] latency tracing: Documentation fix for previous pull
- request
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250328172030.286d5a47@gandalf.local.home>
-References: <20250328172030.286d5a47@gandalf.local.home>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250328172030.286d5a47@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-latency-v6.15-3
-X-PR-Tracked-Commit-Id: 4bb5d82b66002b770f8917d68ab4fbefcb7f5f9b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 609706855d90bcab6080ba2cd030b9af322a1f0c
-Message-Id: <174344089929.63132.1626492609518506781.pr-tracker-bot@kernel.org>
-Date: Mon, 31 Mar 2025 17:08:19 +0000
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Gabriele Monaco <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Stephen Rothwell <sfr@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnmGg3Qx"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so85978175ad.2;
+        Mon, 31 Mar 2025 10:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743440871; x=1744045671; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aquQkKumd4VhkPXinf4JJ+BAI1iQnswaUODJpG5BEEc=;
+        b=OnmGg3QxGanZoOe8OH6uhwWuFtIdvv1MrWgG1GIGdZgF976XIHddpBV48/o1sGsfRX
+         a2H/A0nD7v6hIuI73YPW2Cg29wddHQR9VEQtLvpgW1AHvQXSMriI3jCqcC+4404sH5JF
+         SuX6XC1vr74frICHntbIMdm5cbUv7UagY2gHw+X44Y3aKtGW4mwYemcHB+hdP2qGvj51
+         eaMaTcG4KOm7TQX9BFAQrPh4zdYUUmeaIUPdu1LaNAzPjd3mpEidhKyLs+p/dcK/ZrwR
+         UKx2Sf/Ikqj/hAncDy57rVr0jUPbXxQHByAR9ZY5JidL+rlnYeg+l46JgcfeLq/d88uc
+         lm5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743440871; x=1744045671;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aquQkKumd4VhkPXinf4JJ+BAI1iQnswaUODJpG5BEEc=;
+        b=mtBh8wAosHRSq6yNygPV7b1cFXw6bjBs/JYjSdu0alcdN9ZtjsTRlIUIxIV0lGF+1P
+         0GJSK3H9eJHLtoTFel6lVyUywLYEOlaYLayCWx6xTEYqYuhfD46PEysjylMwLiH2lSuq
+         6X/U9QHLvHA0ia/Sn/qo76A747KvkkWcNdJ4etqTORp8KC/021JPKy3OzCSc0tdATOxA
+         dHdwCDn4NLYehehiSQoZf2zPuMbyhnSLpNKSAojSh2q2jw2zhg6qekEevzYbB0hy4rPZ
+         DWcOdYlFq0pmXTsZK7WeN5zGCUSbBYsJS0CzUWVt+8zCdUI4U2nmJxvYckAECd67JaVh
+         bH3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWOYbn4hXx8expwbV5dzz0v1JQN4dgDQAJLbMzXTivP7Ax3OfxBQ6nL6KP+x1YzB3dkvmT62denm/UVQIF0@vger.kernel.org, AJvYcCWixzgAe/jluOIuD/sX/+cg6LX75HtCigM/6HRfrSRb5WA0QSxwJzDTBZSfxOZxYFj/B/LPj5nZOEIy5IuS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2oEWL05xGfIlSQZMwFiQA+jOSYI6ouGUGAOqMsSeejnrGr7Y6
+	JIi0ooPUpmVXjsdgv19rdtv2dLHS2SULAK5kINO86V4kxWZ2Q1ed
+X-Gm-Gg: ASbGncuIAZoZgoiNjewJxuS8N5zFjUVJ5sTNeHYWMX4Fg0rNfBIsNzlG8mXJ7XtirIG
+	k5yg8/q21LwsG6qOgG7Pk0bBZF8O+ikwYgHwshO6T0oyWmNT4mWZgDo2cj/qpkMJ6vCMTiKdVQO
+	7ZUAz5nAhVdi3iZ9yyv3r3WngcuBwJqXB1BB7Nggsq4QVO3+4DqQsTPbjZ5PU4Dovk3/MbSjmTq
+	bq778XqsxuAfgDauyRCDjOrlETEGEMoH+Y+SrIG3xmtEDHdtWDfRc2VPNdKlKlEXElgueJA4tqE
+	qmqAzUTXVaRgmOzE/agDZh9H90vQij/dylTpk2kCLzuIFyOIkitZSdA2YIZQ1Tme6dJ51bBo1Q=
+	=
+X-Google-Smtp-Source: AGHT+IHzCNER8mRUkPyrZ9q6jFS0Z4BZCz8Kh5pS1gk7gv6cbwmjXQEH/vhMurcSH8lxyqLdEhPeyg==
+X-Received: by 2002:a05:6a21:9188:b0:1f5:55b7:1bb4 with SMTP id adf61e73a8af0-2009f5fdc52mr15349617637.11.1743440871528;
+        Mon, 31 Mar 2025 10:07:51 -0700 (PDT)
+Received: from localhost.localdomain ([221.214.202.225])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69b127sm6584664a12.17.2025.03.31.10.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 10:07:51 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: akpm@linux-foundation.org
+Cc: adrian.ratiu@collabora.com,
+	superman.xpt@gmail.com,
+	brauner@kernel.org,
+	felix.moessbauer@siemens.com,
+	jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mjguzik@gmail.com,
+	syzbot+02e64be5307d72e9c309@syzkaller.appspotmail.com,
+	syzbot+f9238a0a31f9b5603fef@syzkaller.appspotmail.com,
+	tglx@linutronix.de,
+	viro@zeniv.linux.org.uk,
+	xu.xin16@zte.com.cn
+Subject: [PATCH V4] proc: Fix the issue of proc_mem_open returning NULL
+Date: Mon, 31 Mar 2025 10:06:47 -0700
+Message-Id: <20250331170647.36285-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250331091635.36547-1-superman.xpt@gmail.com>
+References: <20250331091635.36547-1-superman.xpt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 28 Mar 2025 17:20:30 -0400:
+On Mon, 31 Mar 2025 02:16:35 -0700 Penglei Jiang <superman.xpt@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-latency-v6.15-3
+> On Thu, 27 Mar 2025 12:24:45 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> > On Mon, 24 Mar 2025 21:14:48 -0700 Penglei Jiang <superman.xpt@gmail.com> wrote:
+> >
+> > > > >  if (IS_ERR(mm))
+> > > > > -return mm == ERR_PTR(-ESRCH) ? NULL : mm;
+> > > > > +return mm;
+> > > > >
+> > > > >  /* ensure this mm_struct can't be freed */
+> > > > >  mmgrab(mm);
+> > > > > --
+> > > > > 2.17.1
+> > > > >
+> > >
+> > > Mateusz Guzik provides valuable suggestions.
+> > >
+> > > Complete the missing NULL checks.
+> >
+> > proc_mem_open() can return errno, NULL or mm_struct*.  It isn't obvious
+> > why.
+> >
+> > While you're in there can you please add documentation to
+> > proc_mem_open() which explains its return values?
+>
+> I apologize for the delayed response.
+>
+> Add documentation comments to proc_mem_open() and add NULL checks in
+> several call sites.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/609706855d90bcab6080ba2cd030b9af322a1f0c
+Adjust comments based on the V3 patch.
 
-Thank you!
+Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+---
+ fs/proc/base.c       | 12 +++++++++---
+ fs/proc/task_mmu.c   | 12 ++++++------
+ fs/proc/task_nommu.c |  4 ++--
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 5538c4aee8fa..c7619e8ef399 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -827,7 +827,13 @@ static const struct file_operations proc_single_file_operations = {
+ 	.release	= single_release,
+ };
+ 
+-
++/*
++ * proc_mem_open() can return errno, NULL or mm_struct*.
++ *
++ *   - Returns NULL if the task has no mm (PF_KTHREAD or PF_EXITING)
++ *   - Returns mm_struct* on success
++ *   - Returns error code on failure
++ */
+ struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
+ {
+ 	struct task_struct *task = get_proc_task(inode);
+@@ -854,8 +860,8 @@ static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
+ {
+ 	struct mm_struct *mm = proc_mem_open(inode, mode);
+ 
+-	if (IS_ERR(mm))
+-		return PTR_ERR(mm);
++	if (IS_ERR_OR_NULL(mm))
++		return mm ? PTR_ERR(mm) : -ESRCH;
+ 
+ 	file->private_data = mm;
+ 	return 0;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index f02cd362309a..14d1d8d3e432 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -212,8 +212,8 @@ static int proc_maps_open(struct inode *inode, struct file *file,
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		int err = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		seq_release_private(inode, file);
+ 		return err;
+@@ -1312,8 +1312,8 @@ static int smaps_rollup_open(struct inode *inode, struct file *file)
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		ret = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		ret = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		single_release(inode, file);
+ 		goto out_free;
+@@ -2045,8 +2045,8 @@ static int pagemap_open(struct inode *inode, struct file *file)
+ 	struct mm_struct *mm;
+ 
+ 	mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(mm))
+-		return PTR_ERR(mm);
++	if (IS_ERR_OR_NULL(mm))
++		return mm ? PTR_ERR(mm) : -ESRCH;
+ 	file->private_data = mm;
+ 	return 0;
+ }
+diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
+index bce674533000..59bfd61d653a 100644
+--- a/fs/proc/task_nommu.c
++++ b/fs/proc/task_nommu.c
+@@ -260,8 +260,8 @@ static int maps_open(struct inode *inode, struct file *file,
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		int err = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		seq_release_private(inode, file);
+ 		return err;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.17.1
+
