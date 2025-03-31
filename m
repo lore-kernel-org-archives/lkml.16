@@ -1,100 +1,114 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1EC130A54
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336017DA9C;
+	Mon, 31 Mar 2025 17:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440494; cv=none; b=HtytY0Low+AHXF2+8B+HXV5x07UU8+E7CBiqtsGdgpmPSg1GGAXuxrGuy9rA0SL6gLO67HCYFUJVpcuG9Dx6gCauQu+JP+n3jJN73j8EP2l2EhApE1OAUr8YxMgLNq2z1xDGJAVhCmzsswPnaSK6tiri/hGeYF5asLvztI7/GXQ=
+	t=1743440502; cv=none; b=P5kbAZIoUFEevCQguUHTYBpMU7GD9mCtxNQTm/swbs3NZ/XjMVmi7b+nLDkZEAEUidyt+BGKfh3Gkrq462LfzDO7oetqpUmSuX4rT2q27a7HB/p6AAgCRKmY/5eY9x8Ut4d9UL6sodDKGyhhzHNWpPwld75JaSohDW2lJ218aBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440494; c=relaxed/simple;
-	bh=8IL/Ra0pO0weo0T0Jdbi6Z7WKIY/D3v+uDgImwBhRSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mD1o84KD+SL/c7ZY5zLchaXIA1OZ1P75mqs2S+sLbvmXNs2l654ezI3lFvIEsCgaEFZSKL3v9B3mcQiTNViA96us+O5rkj2RDezuWvf7SDpjUCNiYaNlDZnipCtrv+yhvojcBFu1iFjvrKS5sATmsTOdYglVr1AKQ24rob1I9A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fw5n3oOD; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743440502; c=relaxed/simple;
+	bh=6gNrD6rhX5iuo1PEzyMHSc39hXph6HLJfwyv/eyZCtM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OGUPIaSlHGw6IZP1jGnXL7nNboIokJCqk2pYczdaGM4maRyW07BfP1p70ByM0dku8fcVus2NSMWO/ICpXTMB2Mc/G8MBVRfrUscstAifBuwn5j6ZVOBo27+mQtUfzSkZZwhEjljWXXHUVkkF35oI3M7JlQJHZUy7r/nzr2Jkfcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQWvG82g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fw5n3oOD"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso45014565e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743440489; x=1744045289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/r3cMncWG+nY/YBhRc114Qo+8DX8tI4MejL3tdVmr+0=;
-        b=fw5n3oODWjF8na0MnF9LvPXxbvJRy582Xs73jLdOvNIFi5bXFWkbz5mjwPmF0smw0V
-         zZCciJ1IfrE6hZPaONvIEKIRKHSfRva9BO05ugkULyG5JC+EblkJEuxGTeGdqOYdLO8Y
-         cAcqTlbJeuzY57uF6MUPTZhgQ1CdUOyc77+Rv4o+I5Hku5ygm3jDCsaGMlCytS/Uqxti
-         f37NrofyUX9sBwzh1l+2ueCi4gcTsePCdMQ8XzPl+OPiEBdhXxSo2yOVDtc3LRtdlU4f
-         qG8hLvBXawUuJSn0VBKzWZRT/xpXtfVXI743QO4wjlriEKP/aN2XEXJCmZsCwESrm9aZ
-         Dd5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743440489; x=1744045289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/r3cMncWG+nY/YBhRc114Qo+8DX8tI4MejL3tdVmr+0=;
-        b=quxDkeo+IC0stnoYNbUihkd7TsbFoemGBf5JidfAxcaT0Y1HaO0DDG9eSz8VmTHeZN
-         iyw1vkTCJ18FHz5iVWPFbd8g5hJxld3b9OTlraouU8HIS1QBM7BXtoS17RuSsfe+B8ru
-         WhDfSj5afMnIvu10sOKd5u7dW1sIvn8xuciWDqRP5HRt0gLWxXDxDQfvi1x12r4oIVym
-         EHfrSdYZ1EW6xxHGqtT3FtdLxl5wDmGdcqf+UXgbaZmAKZ1qOFj1NexImLba4sobCCXU
-         VNs3RDB/8qX9EjNotALvc6KnyAvxMSG+IuMV6Pw9NIMk7GbyUF0BEMlovAdh9r4rwOxq
-         mlyg==
-X-Gm-Message-State: AOJu0YwMbJnBuuZBr8swPji6s7nk+UxMXZ/4rQ07nCmDg6DycBkyHE9n
-	e9JyRE1nfPGyIpOKvXqhpXuzSuthcPlUY+Fn23/x8rfoD7+iQvpEVmLQsw==
-X-Gm-Gg: ASbGncsNR9pA06za3VpefW8d1TG7SLf1aD2pQg23U8XDFWTlTjykAFMdgCJgh0GLpr1
-	d7Ti6hDhbzkpVYvj6eWmo9tvrAvM7otBxqz0YWdOgxfRm2vYYwr8RtJBA/CFpB2VRlHS1ndWbAb
-	ezNE1fmzxiMlSfHNbMxXKiw6FS2aK1X7w9CNQ+bYBCBXAzEy5ousnSgnhv64z1Cs0JVXebzcX5d
-	W9OiwmJJ4OPj27kXZjU+84pp7RKKVrsKsAQVa82bXuLtQi+0jIe39FBv4Y7NSjPhHFqnPOC7mcm
-	cfSbw6Mmef4gLJSqunJuBuqs0H2gAcZGrpQu8B98dcfy3ixrREIe+IB29XwEsDkCJ6z8LCEW
-X-Google-Smtp-Source: AGHT+IFrWW99VuYLydKfDJdKrNp0jCkmt3VC6VQ3OE4jNig0W63r/JX5R7w3Qlo11exHRiAl97rKlA==
-X-Received: by 2002:a05:600c:46d1:b0:43c:f8fe:dd82 with SMTP id 5b1f17b1804b1-43db624aed9mr89094335e9.18.1743440487779;
-        Mon, 31 Mar 2025 10:01:27 -0700 (PDT)
-Received: from chironslaptop.localdomain ([145.40.144.104])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663617sm11853806f8f.34.2025.03.31.10.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 10:01:27 -0700 (PDT)
-From: Chiron Horwood <chiron.developer@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: kuba@kernel.org,
-	Chiron Horwood <chiron.developer@gmail.com>
-Subject: [PATCH] CREDITS: Add Sam Moores
-Date: Mon, 31 Mar 2025 19:01:02 +0100
-Message-ID: <20250331180102.216308-1-chiron.developer@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQWvG82g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2995C4CEE3;
+	Mon, 31 Mar 2025 17:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743440501;
+	bh=6gNrD6rhX5iuo1PEzyMHSc39hXph6HLJfwyv/eyZCtM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XQWvG82gyqHveXCVuH/qp2bsBYpPZbqxqzhleTR5q3PyfIM+GY9MpyRzYUALW8E6l
+	 fxXd4Qfa2jK7bl0lvkzHxVlJSXW1sssfxcbHMqMTCtdcPwnlk5Aour7v2E2MZzUdRv
+	 Hr6+NXGJCwVVWtvihVrqOtbvFnd1qmOgx4MYrirVMNUhqK6HMoAr48wBvWqSheGaI+
+	 CQwnWK3OgBzA5QcsGtC/zXl0k6x2VRwaNYF/9Sv2xDyiiTSXiZbmw4gPZQvPkgu3SR
+	 U3TbrS8n6CUmKEwE0kyygJC3/a00sq2KbHuMS/JL4+WVgx79V89i3HaJ1CkLgHY30G
+	 DxwVX8sCNEeXA==
+Date: Mon, 31 Mar 2025 11:01:38 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] leds: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-rKcgFjsyKvd58q@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Thank you for reviewing this.
+Replace an on-stack definition of a flexible structure with a call
+to utility function cros_ec_cmd().
 
-Signed-off-by: Chiron Horwood <chiron.developer@gmail.com>
+So, with these changes, fix the following warning:
+
+drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- CREDITS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes in v2:
+ - Use utility function cros_ec_cmd() instead of DEFINE_RAW_FLEX(). (Thomas Weiﬂschuh)
 
-diff --git a/CREDITS b/CREDITS
-index 5cc36686d0f1..8af8f71d450d 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -2857,6 +2857,12 @@ E: paul@paul-moore.com
- W: https://www.paul-moore.com
- D: NetLabel, SELinux, audit
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-azMlPnP7nPPJrY@kspp/
+
+ drivers/leds/leds-cros_ec.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
+index 275522b81ea5..377cf04e202a 100644
+--- a/drivers/leds/leds-cros_ec.c
++++ b/drivers/leds/leds-cros_ec.c
+@@ -60,31 +60,18 @@ static inline struct cros_ec_led_priv *cros_ec_led_cdev_to_priv(struct led_class
+ union cros_ec_led_cmd_data {
+ 	struct ec_params_led_control req;
+ 	struct ec_response_led_control resp;
+-} __packed;
++};
  
-+N: Sam Moores
-+D: This section is dedicated to our beloved friend Sam Moores who tragically lost his life
-+D: He loved using Linux and was passionate about the open-source community
-+D: He will always be forever in our hearts <3
-+D: We love you Sam. From Chiron, Freya and Rosalind
+ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
+ 				union cros_ec_led_cmd_data *arg)
+ {
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		union cros_ec_led_cmd_data data;
+-	} __packed buf = {
+-		.msg = {
+-			.version = 1,
+-			.command = EC_CMD_LED_CONTROL,
+-			.insize  = sizeof(arg->resp),
+-			.outsize = sizeof(arg->req),
+-		},
+-		.data.req = arg->req
+-	};
+-
+-	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
 +
- N: James Morris
- E: jmorris@namei.org
- W: http://namei.org/
++	ret = cros_ec_cmd(cros_ec, 1, EC_CMD_LED_CONTROL, &arg->req,
++			  sizeof(arg->req), &arg->resp, sizeof(arg->resp));
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	arg->resp = buf.data.resp;
+-
+ 	return 0;
+ }
+ 
 -- 
-2.49.0
+2.43.0
 
