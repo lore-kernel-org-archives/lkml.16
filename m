@@ -1,141 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7510515E97
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967D41922F4
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743448575; cv=none; b=C/PjbF4DUsrG4VqASi5MmoHxUmILAt8lXE+yHgCP1QP+WtVT3QK0QxN9V+Pq/rQof1M0+UkBPpelGHN7REp887M6vPN4gG220+P/SXFqo9hgUickXuJCSLG1jzlJsVZxBGzstV32Tk54lp5l3En65mbl3GZEOWR4MXytNLOzq0Q=
+	t=1743448591; cv=none; b=YcFXb+lWNKxu5rKtapt7pDU6cHaVQy5JP402qyeRqfQnH5y6KlYPT+4EgSLlgGTjhK/a7NFyqSqOLd5LyTCjRx7HhwRTQCMs91SSzaa/NA7f42wNnoi5p4EqrpEazwY54coxHI2XXvQ5ja7biq4TZgCUSatKpj4KIi7x8E+3L/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743448575; c=relaxed/simple;
-	bh=CtHdMHrKlfZ7g7PpNoNCyPugTTz5Qo63UASBR7+IHxk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BqCohfmQ5kz5kGy66vjmz+Y4dnOgDdvl7M4DmIGKb1IIJfS2XHTNSzFi8chXrlRQI6dd4DphMztbSuJDb7c9Xj3R4Gt5rU4bFeO9HC8x/UTQZ7pXLySbHT5FpWmrMtBqgohHbbZJNUmHvH2zzgwLLSKKWjNJRLWWFJS4gsc7EY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVenDXo1; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVenDXo1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743448573; x=1774984573;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CtHdMHrKlfZ7g7PpNoNCyPugTTz5Qo63UASBR7+IHxk=;
-  b=HVenDXo17gssDKu0f6e/wCX4vzTU/IxrV1R4A0CSfeYhqANRqVULpFlA
-   fWECImSNm3O3MgV7W+TweHjB/sQMFaj49EnS9PNkCQAkwNxklzUNi3ckm
-   /rnmbEd8kdsJEkaVNsOIDAnyh+7NzXkca6ZcC6sJI0I47uVdkfujM5qrg
-   CE1B3xRuHcaxXeOwWFd++y9vMYtUlC+eXB9ovP/LgX7DJN0ZLsYX6gNUp
-   I+sYvLtXMViexhUrDUJaj69gOU+IRDqa5dq6ABSsjxGF627EkF8DYgJ7J
-   3gqifN+euStugqzzLMRvPMrO8t2mwTx1c7hfKHma3xmz0gCGebVXx0jG5
-   w==;
-X-CSE-ConnectionGUID: 5UcEdbTGQYawLrFi4Ji8uw==
-X-CSE-MsgGUID: B3D7DBlnQLmE52atSbml8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="43998982"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="43998982"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 12:16:12 -0700
-X-CSE-ConnectionGUID: 1jKPCwj6SzOXQc2QkEW9Jg==
-X-CSE-MsgGUID: NlxK9D+8Tu+SYyCppxVh0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="131012861"
-Received: from lbogdanm-mobl3.ger.corp.intel.com (HELO [10.124.221.61]) ([10.124.221.61])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 12:16:12 -0700
-Message-ID: <b5526175-e0fd-49fc-a899-4920aa0f595e@intel.com>
-Date: Mon, 31 Mar 2025 12:16:11 -0700
+	s=arc-20240116; t=1743448591; c=relaxed/simple;
+	bh=18Pw0mgUTZPK6P3rxpC6vM29vU41Kw7fYKYXkuisqMc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kR1BRNYFnNtyvrmA7y6CIEgA/4BPtOGnMSkzoiWTen3qId97vmBRLgRU1aJ7biU0/dvb/2LVLEPcus/IsRE56vDi/qLLFC6K8EwbabZIQ7GP/LwFI1aaZkB4etN5ShKHMMtz8Ic3lyouyD3tsAqCeU55lrlqr04HzzTGHtlGLGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2b3882febso37854495ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:16:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743448588; x=1744053388;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=esh/XtQtyGPq1g1MswoyRQBQUBrrz1SRiJehCq4juCg=;
+        b=dmABRoPVE5hZdUYUkd8UtyOWsLY8QUGaJ8uQJe5DQG5HrqXFGPsH70duLlTN45N8r9
+         lRFwYF08JbL4SdQsB5VJOIAB16DYkIuzyLVYxLPLHr+lzdjndHi5O3hl+vF4zgovlr5f
+         zBq9uONsGILr9TfDmgX7t6/ldgns2VmTWPcmmmpI3Y+7YF+rVtRjhxSySUjrCpV7NXeA
+         3TnXFfMii3FqFFPDPcVDQdZxuPqtUj1NPOZgFVOsXi11PPY/aXsv1176bLmKMohRnhkE
+         c6qjrZZFctpX0hSPaBGsQGFarX0IoeVpNVAVEpE6d9zpUH353Khv6owr+oT7Ugy8TwOE
+         aMTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMApZN4rr89xrHUtQqHTzzdT64MmV2n5UGq61NzYlhh3Gi+DwvnbFln9s/fBEpNhMcKD+8Ax0N6S1WxKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzimAnzAos96mRMLNGjJrXZ8bUVezpar26DZSgZrKfiTXUf26py
+	Bo6t4oaZe7ADPmTioQn/+IvKKvyfzJappoev+fUCuM4m4Omm1S4HOw2GXEYUAS7479w2AeQFNCe
+	e4RlvoBkGcsUInZYUeOkCsJGJ6CzZevgo1citQRJzRVC532cs4mlYUfM=
+X-Google-Smtp-Source: AGHT+IEbgHgnETiMVNyl6WIXU+Hf6kIrwoytDIPpcB5qnXjh0TKIEkGAZ57DjxqmDQ70TQhiF+15zv8Y993ejzn4suF+C3R3d9gT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] x86/microcode/intel: Support mailbox transfer
-To: Chao Gao <chao.gao@intel.com>, "Chang S. Bae" <chang.seok.bae@intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- colinmitchell@google.com
-References: <20250320234104.8288-1-chang.seok.bae@intel.com>
- <20250320234104.8288-6-chang.seok.bae@intel.com> <Z+TG04nYo4SaRDmw@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <Z+TG04nYo4SaRDmw@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3183:b0:3d5:e002:b8ac with SMTP id
+ e9e14a558f8ab-3d5e0908e3emr98854025ab.9.1743448588540; Mon, 31 Mar 2025
+ 12:16:28 -0700 (PDT)
+Date: Mon, 31 Mar 2025 12:16:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eaea0c.050a0220.1547ec.016b.GAE@google.com>
+Subject: [syzbot] [bluetooth?] possible deadlock in l2cap_conn_del
+From: syzbot <syzbot+b71bb48c13bf3fed3692@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/26/25 20:32, Chao Gao wrote:
-> static enum ucode_state wait_for_transaction(void)
-> {
-> 	u32 timeout, status;
-> 
-> 	/* Allow time for hardware to complete the operation: */
-> 	for (timeout = 0; timeout < MBOX_XACTION_TIMEOUT_MS; timeout++) {
-> 		msleep(1);
-> 
-> 		status = readl(staging.mmio_base + MBOX_STATUS_OFFSET);
-> 
-> 		if (status & MASK_MBOX_STATUS_READY)
-> 			return UCODE_OK;
-> 
-> 		/* Check for explicit error response */
-> 		if (status & MASK_MBOX_STATUS_ERROR)
-> 			return UCODE_ERROR;
-> 	}
-> 
-> 	/*
-> 	 * Hardware is neither responded to the action nor
-> 	 * signaled any error. Treat the case as timeout.
-> 	 */
-> 	return UCODE_TIMEOUT;
-> }
+Hello,
 
-The flow at minimal indent in the function should be the _main_ control
-flow: the common case.
+syzbot found the following issue on:
 
-The common case here is the "return UCODE_OK". It should not be buried
-in a for() loop. I kinda like what Chang had before.
+HEAD commit:    6537cfb395f3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=160183a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cc40dfe827ffb85
+dashboard link: https://syzkaller.appspot.com/bug?extid=b71bb48c13bf3fed3692
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179c6498580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/742bdd7166fc/disk-6537cfb3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9c22363533ce/vmlinux-6537cfb3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2197dde515b2/bzImage-6537cfb3.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b71bb48c13bf3fed3692@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-rc3-syzkaller-00060-g6537cfb395f3 #0 Not tainted
+------------------------------------------------------
+kworker/u9:0/53 is trying to acquire lock:
+ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4148 [inline]
+ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: __flush_work+0xe9/0xc60 kernel/workqueue.c:4206
+
+but task is already holding lock:
+ffff888035a42b38 (&conn->lock#2){+.+.}-{4:4}, at: l2cap_conn_del+0x71/0x690 net/bluetooth/l2cap_core.c:1760
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&conn->lock#2){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       l2cap_info_timeout+0x60/0xa0 net/bluetooth/l2cap_core.c:1666
+       process_one_work kernel/workqueue.c:3236 [inline]
+       process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+       kthread+0x7a9/0x920 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+-> #0 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3163 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       touch_work_lockdep_map kernel/workqueue.c:3920 [inline]
+       start_flush_work kernel/workqueue.c:4174 [inline]
+       __flush_work+0x739/0xc60 kernel/workqueue.c:4206
+       __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4362
+       l2cap_conn_del+0x507/0x690 net/bluetooth/l2cap_core.c:1794
+       l2cap_connect_cfm+0xcc/0x1090 net/bluetooth/l2cap_core.c:7195
+       hci_connect_cfm include/net/bluetooth/hci_core.h:2051 [inline]
+       hci_conn_failed+0x287/0x400 net/bluetooth/hci_conn.c:1266
+       hci_abort_conn_sync+0xd27/0x1340 net/bluetooth/hci_sync.c:5588
+       hci_cmd_sync_work+0x22b/0x400 net/bluetooth/hci_sync.c:332
+       process_one_work kernel/workqueue.c:3236 [inline]
+       process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+       kthread+0x7a9/0x920 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&conn->lock#2);
+                               lock((work_completion)(&(&conn->info_timer)->work));
+                               lock(&conn->lock#2);
+  lock((work_completion)(&(&conn->info_timer)->work));
+
+ *** DEADLOCK ***
+
+6 locks held by kworker/u9:0/53:
+ #0: ffff888024bc9148 ((wq_completion)hci5){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+ #0: ffff888024bc9148 ((wq_completion)hci5){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3317
+ #1: ffffc90000bd7c60 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+ #1: ffffc90000bd7c60 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
+ #2: ffff88805cf6cd80 (&hdev->req_lock){+.+.}-{4:4}, at: hci_cmd_sync_work+0x1ec/0x400 net/bluetooth/hci_sync.c:331
+ #3: ffff88805cf6c078 (&hdev->lock){+.+.}-{4:4}, at: hci_abort_conn_sync+0x9ee/0x1340 net/bluetooth/hci_sync.c:5569
+ #4: ffff888035a42b38 (&conn->lock#2){+.+.}-{4:4}, at: l2cap_conn_del+0x71/0x690 net/bluetooth/l2cap_core.c:1760
+ #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: start_flush_work kernel/workqueue.c:4148 [inline]
+ #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: __flush_work+0xe9/0xc60 kernel/workqueue.c:4206
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 53 Comm: kworker/u9:0 Not tainted 6.14.0-rc3-syzkaller-00060-g6537cfb395f3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue: hci5 hci_cmd_sync_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+ check_prev_add kernel/locking/lockdep.c:3163 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+ validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ touch_work_lockdep_map kernel/workqueue.c:3920 [inline]
+ start_flush_work kernel/workqueue.c:4174 [inline]
+ __flush_work+0x739/0xc60 kernel/workqueue.c:4206
+ __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4362
+ l2cap_conn_del+0x507/0x690 net/bluetooth/l2cap_core.c:1794
+ l2cap_connect_cfm+0xcc/0x1090 net/bluetooth/l2cap_core.c:7195
+ hci_connect_cfm include/net/bluetooth/hci_core.h:2051 [inline]
+ hci_conn_failed+0x287/0x400 net/bluetooth/hci_conn.c:1266
+ hci_abort_conn_sync+0xd27/0x1340 net/bluetooth/hci_sync.c:5588
+ hci_cmd_sync_work+0x22b/0x400 net/bluetooth/hci_sync.c:332
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
