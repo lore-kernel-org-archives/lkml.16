@@ -1,106 +1,136 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93E82AEE1;
-	Mon, 31 Mar 2025 11:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD5F1DF738;
+	Mon, 31 Mar 2025 11:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743419293; cv=none; b=LLR8NeHFkZE+9kNCgetJJBJ3Vi93U/Q06kLcg7ljkZjMvsNkfH5OK35sBANE7WTLSskUTBmOt3q4Sw0QZm+P6uIfNpbHk/86z9VK8xxn7QTv+NCUbSTa+IwbTibowISeZV+hfIiXKcz+dvKNCdzmotGPgsMTvLBJHHKQrJLkR/4=
+	t=1743419496; cv=none; b=RsyObJUmbtBnR0anMXGxpTB6tYW9F6sw/BkvPrfnDhJSxfSKVBo10msZMHyjXxosKvYMfX86PKXc3XmP6t/eWUS5yqDHrV+dp3z5q0aAN9FS5hCEDsKKQNQed19Tr7+fHb4rnUcWH6gXk5INKRubqwdcz6BQUyXGLwD9cG0x9ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743419293; c=relaxed/simple;
-	bh=ABbYmkdZot2xo1j9ZE43O5qMAIZuh7Wo1WZXf7p9nQ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HPDyAWi2JmSFEZvabpuwiMZgdJUZI70GAGR4OOS/1l2qD+83/U8IIhL7vcdYiEr0D6JYUWIJM9OZU6scdO/2KLENOndp1YySv1fOaxqbsq6k8DR0JYxfBZhqU31nw3zvFKbU7CH6FHbLJ8speQh/4q273XRqMWLvHPyp+85+gnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwAhWdBb; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743419496; c=relaxed/simple;
+	bh=ToVl5s0RX30wsE1JGZ8Oo6lsEMnYO/jqCv3oJ3odNCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kq19Q0yj38xxeBTms8ToRpHX+3B9MkVX444wsFaYHzQ4fuC/ypZuc1JpkInthmvJGJdULwsYbC/CfjGifloQQcM08w3W9Fx0Eut2sybBLWO4CJYLvFGxOSJFTpCESfgUS0MgKIZLaYA/YefbHSocAg7zMcBk0WKdU8DFJVPRAUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gn35hVfq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwAhWdBb"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2240b4de12bso55787585ad.2;
-        Mon, 31 Mar 2025 04:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743419291; x=1744024091; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQQM3Yu8f39BKq2Mg/PjZ0Uv+SRmBe59/r9UjuQMsco=;
-        b=KwAhWdBb9yClGr6oBYYq7h0Uce6u9C/fr4gs6276sgoisCEJoEHRjimA+0U+fCfutp
-         TxBLzlXr1BWHhKLRffUxWUD0yJ+2TVS2NF792s4DFrysWmFWvgy6EhM5mctCihOPaaYm
-         gbSQJlEvQLoeoFC7B/cWAz3yV+MaNPiwJovyqDwRGARGGoHtHfcLqSw6U7IcT315iWZZ
-         esPNmqjnUlbWqYde0+Ud2+RFR04/+QR4OGPHQoii5nyeikGWsMQHeXv6zBbBUk5Sx7ns
-         KbPSRm4Cz2vzZbnsHr3kaUYv5H+WgJu3rufmoVk8hJuOUS8V28pyi+RHAbC9nGs324WF
-         +oKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743419291; x=1744024091;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NQQM3Yu8f39BKq2Mg/PjZ0Uv+SRmBe59/r9UjuQMsco=;
-        b=PrbdtSBxBTdvy8AoZWUh1GPEb/wxnzuQgUQZI4gOfRoFdO1aMNCtGSg7CBqbx8/i11
-         LmKEUNUci/d4hmf0z8oZNIHbIuTjVJUaQieG3s4yxakYa8YuYGdUXh9q1JRegFT04h8Q
-         s/ggBA30uNjKoFBkWlPuc90L3UKn5YsR9jwja+RLd4EZUKhZBlFNdVGAr4uuohsPVTFX
-         Knt9TfMdBJrElC6QKOUAm60iMtjnuYKymmReqYFms9tl/9TrriejYBcxX3QDu4I7ythw
-         HnY8H1N1krLIQD5oossitbmQkTrfN0MdN8RSapmb7iSXUOH6Oezg066+eeW31nyVt8Zv
-         XrKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4h8dDwjdG2z+7mGTtPAczcXDanXwBCtNxMz1X77gHGZE7mv5pT04NZEDk2QariRFXDNvoqHm0mrjkSSsoaIrFEhE=@vger.kernel.org, AJvYcCWc/dovgWD6Ld/kTGB3hLzfJZ1IC94SCpoxfz+qR7+02pxQrwHHa2j533YIGqczx3fwtc3s0PEXCyxVW8o=@vger.kernel.org, AJvYcCXYc5veThWirG4Lhvo0wB4703gkMQxO17y5Ptjnkbd0LRfeVgu/lAz/3GmwxX/41cstoNs7D8oenq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz22YuOsE6xo/bp7d2xGqCriCsrOhD/fzWnMTcDXRNGhvQT8ZaT
-	8lPsGzhA32Njk3tuhIYD+YXCDUHuuVV/HS01ATq2MnuFYekg3hgw
-X-Gm-Gg: ASbGnctrc3OQDlmNR9vFMxRPv9FFEeIyCqZWT9srtXqjtlhJP8ojWnanK3gfGW10HOu
-	7Fqpka0R/XiReuWK2jljCwe1Y8dYCxfBmfhhWtuY0WwgbRpp4Ddfq0PZOeIbwbT0uNS5mIDSJad
-	59lu+4UOE5T6fuL/Q3vZNumAPp/Nq1L+UWt186uyv33TLHi2Q0TbCpgk71fbaVukW4o/W9JPLxp
-	iMOe22oTw+D4uc+Z6dtP3q6HQdX3RKOwQz9WCE9QtkaiUesbWTfCwyeYEicFo+cNSYiPfsktJIy
-	iAAFxdQKUKnbQ0cv0Kgr0arRdevLe9xRzUuHqMOCAArt5IUxCokfE8hVw7kcoV+y3D8jlyg=
-X-Google-Smtp-Source: AGHT+IEfDTgHboSZ6iP2dwOP4vEW2XdDO0sbdpyybIi/mimcrNizy0gR6Y/LkkD3gFM65fgc+CAQ5Q==
-X-Received: by 2002:a17:902:c408:b0:220:cb6c:2e30 with SMTP id d9443c01a7336-2292fa010cemr150564165ad.49.1743419290986;
-        Mon, 31 Mar 2025 04:08:10 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dfbb4sm66890615ad.198.2025.03.31.04.08.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 04:08:10 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: djakov@kernel.org,
-	krzk@kernel.org
-Cc: s.nawrocki@samsung.com,
-	a.swigon@samsung.com,
-	alim.akhtar@samsung.com,
-	linux-pm@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH] interconnect: Add NULL check in exynos_generic_icc_probe
-Date: Mon, 31 Mar 2025 19:08:02 +0800
-Message-Id: <20250331110802.9658-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gn35hVfq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DF0C4CEE3;
+	Mon, 31 Mar 2025 11:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743419494;
+	bh=ToVl5s0RX30wsE1JGZ8Oo6lsEMnYO/jqCv3oJ3odNCU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gn35hVfq20httgc+1wFBMcrSpFOYWqTZK/Nhs0UvoD60L/EdQQxtufInpxmR5fM+j
+	 yRE3JWRQY6WOALpaw+no8XiEhdBRBMZtLGYlFGQE/vGda/BFmfB059MGaloW+cqz63
+	 mlqqWE+WnkSmxsf9AmmLAOpvulgJISuIcR5dQJ+jGhn+3XQTz3yVBufWYeS/QvrNDr
+	 simzNxj6OGgBXRatOtTFf5pP7Ae6Dcur4SIX/LmfP4AE+MVWaNxMvef7TAs3NZOCcM
+	 qW8jjK0oF6zsg5yfAGmo7oWepzUD0r6pr2P9tuYE3g+d3H/JCIPSdFz2HM7Aj5qoxT
+	 eFKn3L2zNHSCA==
+Date: Mon, 31 Mar 2025 12:11:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
+ <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] iio: adc: ti-adc128s052: Fix ADC value on BE
+ systems
+Message-ID: <20250331121124.4fed1d44@jic23-huawei>
+In-Reply-To: <babe1eac3de30aa22e09266de1f5521fa9e0decd.1742474322.git.mazziesaccount@gmail.com>
+References: <cover.1742474322.git.mazziesaccount@gmail.com>
+	<babe1eac3de30aa22e09266de1f5521fa9e0decd.1742474322.git.mazziesaccount@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function exynos_generic_icc_probe.
+On Mon, 31 Mar 2025 11:02:55 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error. This is similar to the commit 050b23d081da.
+> ADCs supported by the ti-adc128s052 driver do return the ADC data in 16
+> bits using big-endian format. The driver does unconditionally swap the
+> bytes. This leads to wrong values being reported to users on big endian
+> systems.
+> 
+> Fix this by using the be16_to_cpu() instead of doing unconditional byte
+> swapping.
 
-Fixes: 2f95b9d5cf0b3 ("interconnect: Add generic interconnect driver for Exynos SoCs")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/interconnect/samsung/exynos.c | 2 ++
- 1 file changed, 2 insertions(+)
+It's not doing unconditional byte swap that I can see. The
+adc->buffer[0] << 8 | adc->buffer[1]
+will work on big or little endian systems as we are explicitly saying
+which byte represents higher bit values in a 16 bit output so on little
+endian it's a byte swap, but on big endian it's a noop (the compiler might
+noticed that and replace this code sequence with an assignment)
 
-diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
-index 9e041365d909..3dccc84f72cf 100644
---- a/drivers/interconnect/samsung/exynos.c
-+++ b/drivers/interconnect/samsung/exynos.c
-@@ -134,6 +134,8 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
- 	priv->node = icc_node;
- 	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
- 					bus_dev->of_node);
-+	if (!icc_node->name)
-+		return -ENOMEM;
- 	if (of_property_read_u32(bus_dev->of_node, "samsung,data-clock-ratio",
- 				 &priv->bus_clk_ratio))
- 		priv->bus_clk_ratio = EXYNOS_ICC_DEFAULT_BUS_CLK_RATIO;
--- 
-2.34.1
+Good cleanup, but not a fix as such unless I'm missing something.
+> 
+> Fixes: 913b86468674 ("iio: adc: Add TI ADC128S052")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> ---
+> I have no big endian machines on my hands to test this. Problem was
+> spotted by reading the code, which leaves some room for errors.
+> Careful reviewing is appreciated!
+> ---
+>  drivers/iio/adc/ti-adc128s052.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index a456ea78462f..d1e31122ea0d 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -28,19 +28,20 @@ struct adc128 {
+>  	struct regulator *reg;
+>  	struct mutex lock;
+>  
+> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
+> +	__be16 buffer __aligned(IIO_DMA_MINALIGN);
+>  };
+>  
+>  static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+>  {
+>  	int ret;
+> +	char *msg = (char *)&adc->buffer;
+>  
+> -	mutex_lock(&adc->lock);
+> +	msg[0] = channel << 3;
+> +	msg[1] = 0;
+
+Given you are writing shared state why move this out of the lock?
+Whilst here maybe using guard() would clean this driver up a little.
+
+
+Use a separate buffer (or a union) so we can avoid the casting here
+
+>  
+> -	adc->buffer[0] = channel << 3;
+> -	adc->buffer[1] = 0;
+> +	mutex_lock(&adc->lock);
+>  
+> -	ret = spi_write(adc->spi, &adc->buffer, 2);
+> +	ret = spi_write(adc->spi, msg, 2);
+
+Given you are tidying this up, lets make the source of that size value obvious.
+
+sizeof(adc->buffer)
+
+>  	if (ret < 0) {
+>  		mutex_unlock(&adc->lock);
+>  		return ret;
+> @@ -53,7 +54,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> +	return be16_to_cpu(adc->buffer) & 0xFFF;
+>  }
+>  
+>  static int adc128_read_raw(struct iio_dev *indio_dev,
 
