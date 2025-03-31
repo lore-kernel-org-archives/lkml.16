@@ -1,121 +1,118 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642C01B6CF1
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5461F1CCEE0
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743408381; cv=none; b=l3/jdT9sLwKnnwn7f907RXjMH3XW4fuJNWFXBEb3Dsoot/7yB6Mii1UMlSeORUrXdsByN8AowHP6W25zbiwRin3Kpo9fAhweTPns4nU/Koea39O3CebKEKQmluQFBugQW+Z0MohR4VohNaGsPUs8ul4+5H0wvN8sArocGB7Yffk=
+	t=1743408382; cv=none; b=BoJaRE02hnquSxSaIgn0jWvb18ubjgScdb158VaG+LUbos+1A7Emn9U8dsQvuiA4bC2QhhRJiQtpuMyo0eMZvlNZ2KJIwJBtuYqaQN9UCaFrPpbaBfbgg3RWxp6e4bucCZaaMlbXZX/D/jobROfecX7O13S/xSuotahVEcDM0jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743408381; c=relaxed/simple;
-	bh=ZfJC0SeKdJDQbt1YZCchBbUcg7nBqFPWQB9hQRz76Os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PX+e7yGvJKnGrMOf3WkhP73+QpPAgvHK8PwfkdxSoDi73osp6sCOXF0XTNOSUrgWJaOIf0nMEhWQ0no6ukcRpQ3/qfvoXHdY6WyZTHyXgfrrxa92qRzojTxYdY2/cQH8mf4b9/dx+GZ2z4ds+utfyrEkBQnkaG80yKXHVXQEhbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nYW7ZXwr; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743408382; c=relaxed/simple;
+	bh=tv0nA08POILAAqGWy14m3N6kItXW+3kMFSaB74kI3N0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=LliZY7MvurveY5fC1XiIJDqKlY9r2O39n0lWDnpYX8y3Ao4lyPeK0CbCqaVcECHwocRAhkl7+ETy9bGhqp6ymT712xYEXE3R9MrokCcwUxS+0xzDse0sgUHnQ19UgmtXtjPBcpcJG4K0O1Hsyw507ts9gpnsqYPc1JTn6ag/lYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z+/CY2pt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYW7ZXwr"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so28767565e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743408377; x=1744013177; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dem/AHZR7qF3cH79b+8VdRbhMuCiw79+oYYuDn1nDoI=;
-        b=nYW7ZXwrLX1j6ndkWjLKlFmTOP8IFtRO1aRj9OhlprisCFwJQtJ3RKPln49b6Mmp95
-         Y8nVE9GXzmYUdcO77/7AF5MHvhE4CELpr9VsVXZbK60CKet1wQGbykgDrFtiBr4SD1n8
-         que9RNF7Oz8U3oL3GrTN/j0U6yTYUgBxC9EYs9sAUeoTN+sDAtMCzmAqIvKbSvt3y3C2
-         y+YsIHuNJ14uqwHNrPa13jBfA02VwS13F4dlCaUkaGzbUBkeGIJ1el/YzMAJqxftHNzd
-         rDWmFcZYwkJsux5d+ROGmo6ACx2FeB6/+Ks4q5BrFeUuV1yfXsffACZGuXbp8wSbeFzw
-         dM3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743408377; x=1744013177;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dem/AHZR7qF3cH79b+8VdRbhMuCiw79+oYYuDn1nDoI=;
-        b=FlP78M6y3L+wcZ2OdTbHQljRX9RIdUnH0nS+tIrKCARVK1hA4eS3+CXlAR4EkcnhkO
-         QfkiU3z+N3miQzd0SFKYMicURFSSmUbSKCtt9rRxu+22mPUQEomA9N/cWpkvvPP5Sd1H
-         uO408FiH0eg1MHF8cBMK+T+0JYDgxjixfqKCr2pOWEWBHY2HFfM69tfikAmoRPrlTJpq
-         zjvoG3Q4gT5dEZPNwB63oTunq7iLlpkc73zDVGNkiy1geNKvGxQaxbD91NJi9OOsOVnR
-         so0UeVu0yTvjTbEm24ZHjM1TzEfLCPVpv6s3q3PElp0lXBRDE9I1LRO2md9+/gXBMtu0
-         PzaA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4z+SnFpDkaEyBauvbsV9upyRbN5iddd6EVBZPqH4GLMeY5nPNU7Ib18ucU7zN/o0NOn7X8zM+Z8T97jM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjCVGPbnHimf3v09T8jbxL34ZiWRiqv3GHcu/pdNmIbGjr5Z3d
-	3pw7fhxAlyRV1oEI0RJqZfvgu0Z8FSuWErb2a/kanrjOIJBh8Q6LCOtdtXqSydU=
-X-Gm-Gg: ASbGnctf8tie5kxOrk+xZYmFK3d/6retqgtoEMk43GjwIyL4zacOs2qpkWFvb8ntvTb
-	jGy5uVjQUBMiBBOv/Z+aryVE3rfhXd28eQBPC/tSrGigHKAkzn8VQYG5yGSSENU1umdNNhAfbq0
-	X7nGvD92079QrC6+QAdVLvgfdwR0xxsau+N3EJ9Q8Hh4pAaECkbg4z4bHxlSj79uah7q/+1j5mD
-	nTP+rYKkXd1FqlmmzwfNiNFUvSxk/HmWiKSL0W2lBynZ0R2xZamVF+RGZF7fyp2Ak+v2263xk67
-	KTgf+bjNFWMf1A892v8DA28AtgckOAnnlGGObaE5cNCGNCRuvw==
-X-Google-Smtp-Source: AGHT+IH4vJ/KqgunlkK1ej1cXacAghtjETA+BJXj8kGxSrm8d1nKUfuPzSv/zW4Kld1su7UgbTv4Jw==
-X-Received: by 2002:a05:600c:4f0d:b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-43db62b5b62mr61296165e9.27.1743408376550;
-        Mon, 31 Mar 2025 01:06:16 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d8fba3ef1sm117879915e9.2.2025.03.31.01.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 01:06:16 -0700 (PDT)
-Date: Mon, 31 Mar 2025 11:06:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: David Gow <davidgow@google.com>
-Cc: Alessandro Carminati <acarmina@redhat.com>,
-	linux-kselftest@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville Syrjala <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-Subject: Re: [PATCH] kunit: fixes backtrace suppression test module
- description
-Message-ID: <8e4dcf64-898c-4334-8124-598964089f4a@stanley.mountain>
-References: <20250329150529.331215-1-acarmina@redhat.com>
- <CABVgOS=s-NgS1tPOOPDstuVfTmsW9H0kP8nEQmtfFiubQeyvWw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+/CY2pt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743408379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rPsm0V0jwFb/CAGVhHad9xohOJQN3D43emc/SoqswrQ=;
+	b=Z+/CY2ptGTZE+4S/ybOVnC1g9UQ6pvpvQmSNTGey2Uoh6Xjh+FHJeiexsSsJo6oHqLuIVb
+	thkKUalYM81SHaN0NvtSXo2JbTEnBu+opwV6aLMsMRuIYOXnNLzrvf858ckErvL9qfMlgY
+	jKbddwXju3CDkAuq35iSMKSvl7LunRo=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-W96iTcGqPbmvzUKojrGGFA-1; Mon,
+ 31 Mar 2025 04:06:15 -0400
+X-MC-Unique: W96iTcGqPbmvzUKojrGGFA-1
+X-Mimecast-MFC-AGG-ID: W96iTcGqPbmvzUKojrGGFA_1743408374
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 109E91955DCE;
+	Mon, 31 Mar 2025 08:06:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3FE11180B48C;
+	Mon, 31 Mar 2025 08:06:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <67e57c6c.050a0220.2f068f.0036.GAE@google.com>
+References: <67e57c6c.050a0220.2f068f.0036.GAE@google.com>
+To: syzbot <syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, almaz.alexandrovich@paragon-software.com,
+    linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+    marc.dionne@auristor.com, ntfs3@lists.linux.dev,
+    syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [afs?] [ntfs3?] BUG: sleeping function called from invalid context in ovl_cache_entry_new
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOS=s-NgS1tPOOPDstuVfTmsW9H0kP8nEQmtfFiubQeyvWw@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <164840.1743408370.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Mar 2025 09:06:10 +0100
+Message-ID: <164841.1743408370@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Sun, Mar 30, 2025 at 01:11:59PM +0800, David Gow wrote:
-> On Sat, 29 Mar 2025 at 23:06, Alessandro Carminati <acarmina@redhat.com> wrote:
-> >
-> > Adds module description to the backtrace suppression test
-> >
-> > Fixes:  ("19f3496") kunit: add test cases for backtrace warning suppression
-> >
-> > Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
-> > ---
-> 
-> The "Fixes" tag here should be immediately before the Signed-off-by
-> line, without a newline. Also, ideally the format should be something
-> like:
-> Fixes: d03d078df162 ("kunit: add test cases for backtrace warning suppression")
-> 
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
 
-Yeah.  Everyone should configure the default hash length to 12.
+commit db7a516159869b19f237c73bd75599bbe0bfcc4d
+Author: David Howells <dhowells@redhat.com>
+Date:   Fri Mar 28 16:46:58 2025 +0000
 
-git config set --global core.abbrev 12
+    afs: Fix afs_dynroot_readdir() to not use the RCU read lock
+    =
 
-I generate my fixes tags like so:
+    afs_dynroot_readdir() uses the RCU read lock to walk the cell list whi=
+lst
+    emitting cell automount entries - but dir_emit() may write to a usersp=
+ace
+    buffer, thereby causing a fault to occur and waits to happen.
+    =
 
-#!/bin/bash
+    Fix afs_dynroot_readdir() to get a shared lock on net->cells_lock inst=
+ead.
+    =
 
-git log -1 --format='Fixes: %h ("%s")' $*
+    Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand=
+")
+    Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: Marc Dionne <marc.dionne@auristor.com>
+    cc: linux-afs@lists.infradead.org
+    cc: linux-fsdevel@vger.kernel.org
 
-regards,
-dan carpenter
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 691e0ae607a1..8c6130789fde 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
+ct dir_context *ctx)
+ 	}
+ =
+
+ 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
+-		rcu_read_lock();
++		down_read(&net->cells_lock);
+ 		ret =3D afs_dynroot_readdir_cells(net, ctx);
+-		rcu_read_unlock();
++		up_read(&net->cells_lock);
+ 	}
+ 	return ret;
+ }
 
