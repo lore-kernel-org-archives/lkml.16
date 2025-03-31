@@ -1,103 +1,195 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A971E0B86;
-	Mon, 31 Mar 2025 16:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9003573451;
+	Mon, 31 Mar 2025 16:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743438487; cv=none; b=itvV8CKlHi6I8lZcG//WqL7GYdhM9e0/clmbELX4frR4b8Jq80i42Rp+OGELl1JVbUx0Sc8BkYp+ffVGFOO+zd88iKrXkGJRwbNRUoNcSqs5rhviJDGe5tdCzzBQKn4kEKetOv8+i5HneEgUDxGnP8BOU8WwQjdtyIVyvrwh6zQ=
+	t=1743438692; cv=none; b=FEaYL5IX6W8rgr3337KIEd9VVdz05OqQl8Fnq5EAb8yXtbOcFcQGdINMHBpHPuI5iYp9J4PkvDlZLuJOu3olf22sSGQF37SGzge4t9CuC1x0XKJdcO/iDKk/evgMC/I3VMHsXMnKcmn7Oe3upkIX5C+qcT1KWV1l2Y9gaV1dQv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743438487; c=relaxed/simple;
-	bh=BaWF2A5UazbVoXywtVIf3WKyRW8xn75zzoi+lh7sVLY=;
+	s=arc-20240116; t=1743438692; c=relaxed/simple;
+	bh=ehlkfaS9lKpFL24+Rr/vhdhKnZG7IHXo2LylZBw987I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eturTtH/w8MHg1nMQZuXC8PxXr8x2PYfu1eQUMhPe0jCCElGHVr0r+QMsTwjsVkjNVTeQtyg2AB4gnoBSqQHYCcLPzp+FBsrQb2yoLH0z3F5EVG77MLbE4Tl1+pN86ycPI747nXn4YSEYDk4U+pSJkMvev7RSgdioPyWiM9/02c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sFYGFS/Y; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z0HImZNY+S7qbwljjH0vcBlPZ/hMecEYhFoHQY1BlUzfX/A5HxfkHr2sj1eIYQVOs14yt9dVo/TZTjx5kfHhUAuuMJh1ACtrb1NQyRltv84X6k6kvPDgQkZlBmtkpv+NQQX9DpmUuCR/d7de0X0KaOtxZVEUq2/o5HmHwfmEOMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e6ypVXjM; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sFYGFS/Y"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7E947725;
-	Mon, 31 Mar 2025 18:26:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743438371;
-	bh=BaWF2A5UazbVoXywtVIf3WKyRW8xn75zzoi+lh7sVLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sFYGFS/Y050KZY567oV2PaASCow/xcPAQ/xlOR3uYPcbNzjyJJE620yXolocYAdG4
-	 kzQeowe8K1oPClMBDJIaAYXpNbNC1qZNg1l+peCbnKCAO7QkYUAh1xeFlkgMywDddc
-	 Bsd1tSLNmGZnsfcMDFrGjdAoZGdO/eZZUzpT5Mj0=
-Date: Mon, 31 Mar 2025 19:27:39 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	acopo Mondi <jacopo+renesas@jmondi.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
-Message-ID: <20250331162739.GG14432@pendragon.ideasonboard.com>
-References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
- <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
- <20250331120748.GB28722@pendragon.ideasonboard.com>
- <Z-qJOeeHUgWCtkTv@smile.fi.intel.com>
- <20250331153435.GB14432@pendragon.ideasonboard.com>
- <Z-rBQ8tsDHW9clYh@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6ypVXjM"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264aefc45dso117276645ad.0;
+        Mon, 31 Mar 2025 09:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743438690; x=1744043490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pGXUzRNndah0bIhWHa4wlLRiZRRMDWz7PNkLOu/SyKQ=;
+        b=e6ypVXjMP1Z3fiZ3j3sRMQz+WcHELqfcxp6U7TeerC6VhcTLcX7fLu0BYvYBtaAHWr
+         bbQqyRe68qHfgxJrqsoNckQMzb7LrH3BPBtGB42Iczvs4X+lUcRasPNo/yAv5D5NtMjq
+         ddHGvOyDiqS83PyLyzwejow6ihBM+8qXGRhTwUKFN6QdFtU/kZypnLKWkEWjqWqpuLyO
+         /7S/o13R+qmunTPfCO4NrUY4CGKolU9v4nGEkxYdxOZxNB8g2u5lxkKv+2qt8zLaXnnE
+         vFVm+Mmk7tRcRq/JTYSsm8bLssxHUpm4ukRgdf8+tL02eQLz+U8OHniL/3nUP4zZbxEO
+         EiGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743438690; x=1744043490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pGXUzRNndah0bIhWHa4wlLRiZRRMDWz7PNkLOu/SyKQ=;
+        b=I70t6EwuC3pXB+xnt9J98v4LGNWCX3f0510sQq9jWNXzFahXXn7lrL7dsvAYnKUZfN
+         j2o121PqpVXnEERBAZZkD1uhbH3hRsnToPv2rjHaaqhW9RJjsrICDNbmU+PaXfSqvx0C
+         /y6Timn6+wLQHNHvMG0tEJlvObxpahgFKb73KGVz+5fhCCK7q0LJgVzjf7umK1t7AIWU
+         mPbrd6uHH6lrQ6TJqNPBqMMoougirS2f4L/gUqQeWWnBmaz4LNABCe/Z4fgBqeaDPc50
+         JVCxjOz6/XC8ikL/IYz61HEaiASVd4eAYKiLAPTYOF2tg3SExSS4fAVLLqM0S6WziIEz
+         boCA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ubxA32nRATRP8n9zrCe1Hm45lxRK5z+/GFNisWfBegyb06GUAdeAIC9w4vFxuI+Zqy8eeuAlfbxtgCo=@vger.kernel.org, AJvYcCWQJoQ4VP7wyfYWxTv+ILb9geKXZk2cKKRuiWUKkvCs4if8X+fYfGtozOXzUyLg3U20WAjk4eG4A/r+d9ldd6wHcQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxV7OUhsAgJjriJgMt3YMmaxdfmXcoRVJKCY6Ns9Lr3JxQkQm8
+	mpKvv3JZPzoQp3i4YSOPxrytqCW59wwUzH3SE7S2/UfQk3cW9+Wc
+X-Gm-Gg: ASbGncuIeVn3acb1LAbGRTLPHQzF4MAkXOpvjUMeXveys9fMYgbhhVoI4l4YkQY0hEY
+	Trco5K79on50Z6YN8gsvCna/CUCrGifU4tmFwWK8euttTZMi4vlpWjrccjr09S+kEo4HsK4F7Nr
+	f6NsFcp4J/xYS8gyPmrch9opG6VKIuFwSPAWR23MdGzSqOWVXcTUu5PfUwLf3zq1fKh1ukAeSxH
+	Czq3O1kF5Aa7M+fyCv+bh8WDiAzAESF0aoQLNVyvpIn3dJMsJl1X12qhdSnp1WWYiPQ5S157sZT
+	L3CHKiw1xnwBxMJgpPds+yfyhik2IF3zCqrk2wyVwiFaK7Xo2Tg6FErFuBlktHIkRj2IZS0Ibxu
+	vd7Y=
+X-Google-Smtp-Source: AGHT+IG4tFl30LDPvdokscC5SmNTqPEZA266aLkDHCR4ADSz+/s4hQbQtbrw8GrXI1BtUL6RtlCEYQ==
+X-Received: by 2002:a05:6a00:180b:b0:736:baa0:2acd with SMTP id d2e1a72fcca58-73980487652mr16666540b3a.20.1743438689567;
+        Mon, 31 Mar 2025 09:31:29 -0700 (PDT)
+Received: from gmail.com (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deebd4sm7373735b3a.16.2025.03.31.09.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 09:31:29 -0700 (PDT)
+Date: Mon, 31 Mar 2025 09:31:26 -0700
+From: Howard Chu <howardchu95@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] perf trace: Fix possible insufficient allocation of
+ argument formats
+Message-ID: <Z-rDXsgIqvvd7hFk@gmail.com>
+References: <20250327150712.1966188-1-howardchu95@gmail.com>
+ <Z-jXFffv8MMuo2p3@z2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-rBQ8tsDHW9clYh@smile.fi.intel.com>
+In-Reply-To: <Z-jXFffv8MMuo2p3@z2>
 
-On Mon, Mar 31, 2025 at 07:22:27PM +0300, Andy Shevchenko wrote:
-> On Mon, Mar 31, 2025 at 06:34:35PM +0300, Laurent Pinchart wrote:
-> > On Mon, Mar 31, 2025 at 03:23:21PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Mar 31, 2025 at 03:07:48PM +0300, Laurent Pinchart wrote:
-> > > > On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
-> > > > > Quoting Andy Shevchenko (2025-03-31 08:34:35)
-> > > > > > Convert the module to be property provider agnostic and allow
-> > > > > > it to be used on non-OF platforms.
-> > > > > 
-> > > > > Looks reasonable to me.
-> > > > 
-> > > > Is that going to work out of the box though ? The calls below read the
-> > > > "reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
-> > > > addresses using ACPI-specific methods.
-> > > > 
-> > > > Andy, have you tested this patch on an ACPI system ?
-> > > 
-> > > Only compile-tested. But you are right, this is something different here
-> > > between OF and ACPI.
-> > > 
-> > > I can rephrase the commit message to just point out that fwnode.h shouldn't
-> > > be in the drivers and either converting to device property in an assumption
-> > > that later it can be easier to support non-OF cases, or using of.h.
+Hello Namhyung,
+
+On Sat, Mar 29, 2025 at 10:31:01PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Thu, Mar 27, 2025 at 08:07:12AM -0700, Howard Chu wrote:
+> > In my previous fix of runtime error(Link:
+> > https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
+> 
+> We usually handle this by adding a footnote style link like, [1].
+> 
+> > I made a mistake of decrementing one unconditionally, regardless of
+> > whether an extra 'syscall_nr' or 'nr' field was present in
+> > libtraceevent's tp_format. This may cause perf trace to allocate one
+> > fewer arg_fmt entry than needed for the accurate representation of syscall
+> > arguments.
 > > 
-> > I wasn't aware that fwnode.h shouldn't be used in drivers, could you
-> > explain that ?
+> > This patch corrects the mistake by checking the presence of'syscall_nr' or
+> > 'nr', and adjusting the length of arg_fmt[] accordingly.
+> > 
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
 > 
-> The fwnode.h provides the data types and definitions that are meant
-> to be used by the fwnode / device property API providers. The leaf drivers
-> shouldn't have any business with those definitions. Everything the drivers
-> need should be provided via property.h. property.h guarantees the necessary
-> data types to be visible to the users, when required (mostly think of
-> struct fwnode_reference_args). Yes, I am aware of v4l2-fwnode.h and it seems
-> it falls into the category of special device property API provider.
+> And add the link here.
 > 
-> > If this patch is part of an effort to eliminate usage of some APIs from
-> > all drivers, I'm fine with it. Otherwise, I'm not sure it's worth
-> > modifying the driver.
+> [1] (actual URL here)
+
+Thanks I'll update the commit message.
+
 > 
-> These drivers basically include the wrong header.
-> If you insist, I can patch fwnode.h to add a comment summarizing the above.
+> Also you need to keep three dashes "---" before the change log so that
+> it can be treated as comments (and not added to the commit message).
 
-No, it's fine. I mixed fwnode.h and property.h when writing my previous
-reply, but I don't think it's a matter of lack of documentation, more
-likely lack of sleep :-)
+Oopsie, got it thanks.
 
--- 
-Regards,
+> 
+> Please take a look at my previous posting.
+> 
+> https://lore.kernel.org/r/20250326044001.3503432-1-namhyung@kernel.org
+> 
+> Thanks,
+> Namhyung
 
-Laurent Pinchart
+Thanks,
+Howard
+> 
+> 
+> > 
+> > Changes in v4:
+> > - Make the patch apply
+> > 
+> > Changes in v3:
+> > - Add 'Fixes:' tag
+> > 
+> > Changes in v2:
+> > - Simplify the code (written by Namhyung)
+> > 
+> >  tools/perf/builtin-trace.c | 16 +++++-----------
+> >  1 file changed, 5 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index a102748bd0c9..439e152186da 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >  {
+> >  	int idx;
+> >  
+> > -	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+> > -		nr_args = sc->fmt->nr_args;
+> > -
+> >  	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+> >  	if (sc->arg_fmt == NULL)
+> >  		return -1;
+> > @@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >  			sc->arg_fmt[idx] = sc->fmt->arg[idx];
+> >  	}
+> >  
+> > -	sc->nr_args = nr_args;
+> >  	return 0;
+> >  }
+> >  
+> > @@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+> >  		return err;
+> >  	}
+> >  
+> > -	/*
+> > -	 * The tracepoint format contains __syscall_nr field, so it's one more
+> > -	 * than the actual number of syscall arguments.
+> > -	 */
+> > -	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+> > -		return -ENOMEM;
+> > -
+> >  	sc->args = sc->tp_format->format.fields;
+> > +	sc->nr_args = sc->tp_format->format.nr_fields;
+> > +
+> >  	/*
+> >  	 * We need to check and discard the first variable '__syscall_nr'
+> >  	 * or 'nr' that mean the syscall number. It is needless here.
+> > @@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+> >  		--sc->nr_args;
+> >  	}
+> >  
+> > +	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
+> > +		return -ENOMEM;
+> > +
+> >  	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+> >  	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+> >  
+> > -- 
+> > 2.45.2
+> > 
