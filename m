@@ -1,133 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8C0524B0
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6CB1E0DEB
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417982; cv=none; b=IWtxGc574DwYSQWWEphjdeeyNPZnVG2tIzpzr+ajt6OqkSKNxBfFnAGVc3EZcGkXOoPAHcSOix0A/+7E9KJ6ulktJfGK/GgVMLX+AB7rtUptGKUmquEdbQjDlQmHEWaFrQcoh/vcRhnS8S2uXujJsR89K6Zq0eEdHd/aN5cF+P8=
+	t=1743417989; cv=none; b=sqt/JpkcThbM+Jx6lSp9MqDCZHCqwqEeU6npDKw4aNj0hh7FsG456FDeIfem2vCvOX/zn7ZbxugH0RV433+xBY44Rvf8iqDTt9kYhDDTrGtuoq532X3CwaIeaQKyf0Ch5DCn8PmJuFtMiKgDk4+BxrP/tR1KMOOHEkwZQTIPT4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417982; c=relaxed/simple;
-	bh=M556UEmzfL5UmqqucIfqwbUIS+OZWZu7lx22pUnBB04=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yfg695odrs4cVM0Ti4yZZ0ZWm4ZidMRpaUFoTGSSvcL0Y14mnALcChqr1JWgYk87MqpQKY2dDA01fKTN+LFm6TYQ88l1MX2otQdHewTR5dZnoXL87R4+Xu6ytEL/5AQ1NI8iZgmAk3+0XDlKvKOKsTzBXQRiU4dllatG85pxr7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27FEA1F02;
-	Mon, 31 Mar 2025 03:46:23 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2FC93F63F;
-	Mon, 31 Mar 2025 03:46:17 -0700 (PDT)
-Message-ID: <83876902-d53f-48b2-95d3-79add3373452@arm.com>
-Date: Mon, 31 Mar 2025 12:46:02 +0200
+	s=arc-20240116; t=1743417989; c=relaxed/simple;
+	bh=64HaiMEYmy3ijfrwfU+1bfvGwD+STOpIlQVnF3qt2Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5VkTfZXudUiZbdeNauBnjz/s50ogZH2RoNNH1f2X6K5lg9P8khPr7dd7UskHg9F0DAjfh2/DdlUJVNUMi/9zypCaUKovfrSGyBUk+nlHYl25zFekIbctAaNgAwLXDk2UyRqfvxkRETETigKMaJ/nyEpEQeQaf21s8l5HNszIV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YoB6eldz; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YoB6eldz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=lmDz
+	XzjNgzjFisRxTIt3lxz6aQmh5NlFsLRwqSenSyM=; b=YoB6eldzzCx+zlCVmqVz
+	wu4nLbg24mzo3nZt8eipzJLQABS0qOEpomQc0FSXh2UKAylKKyZ4KdcAP/AoknTT
+	wuJXbRaBDMKCPuIINeO+ZQyWQveR5twYMPUjeTQ2bmsMYVu6/vWQdufiVAXRwsF1
+	FkK1Rl6ATQHP6BHsrW9zaOyzYqqiqvqbMcKobmVqmlWTLGrucbxiEDgjLj1TYu36
+	fDsp98MTYGyE2hiLNKplPUZjpT7BJx3ei6Fh+LHp+HnxblB62MztC6qtWullDb1o
+	KYFeIZOVvL2lBcN5w3FfcXTgKa+hxNgjwsBxujoDd80f/sJ+k+chfLpxZxkUIx1g
+	KQ==
+Received: (qmail 1202045 invoked from network); 31 Mar 2025 12:46:23 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 12:46:23 +0200
+X-UD-Smtp-Session: l3s3148p1@akWKIaExIzNtKjAP
+Date: Mon, 31 Mar 2025 12:46:22 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Avri Altman <Avri.Altman@sandisk.com>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mmc: core: Further avoid re-storing power to the
+ eMMC before a shutdown
+Message-ID: <Z-pyfv_7gJ72YWhz@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250320140040.162416-1-ulf.hansson@linaro.org>
+ <20250320140040.162416-3-ulf.hansson@linaro.org>
+ <PH7PR16MB6196C3AC7A7B7CA99A70E7DDE5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
+ <Z-pQj6ynnfMa77fM@shikoro>
+ <CAPDyKFr0MvQDxsi-Qd0F=1KuR4Gy6s5bhVdOXRt9K14Z9sO2Kw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Allow decaying util_est when util_avg > CPU
- capa
-To: Pierre Gondois <pierre.gondois@arm.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Chritian Loehle <christian.loehle@arm.com>,
- Hongyan Xia <hongyan.xia2@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-References: <20250325150542.1077344-1-pierre.gondois@arm.com>
- <CAKfTPtCfaH6SvBesbKBHRNfjZHJXXC1h4NF8GoFUczE5NiRunQ@mail.gmail.com>
- <3c21871b-4936-4143-bc78-38495a7995a6@arm.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <3c21871b-4936-4143-bc78-38495a7995a6@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="peD/GrQrOvzTjyv/"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFr0MvQDxsi-Qd0F=1KuR4Gy6s5bhVdOXRt9K14Z9sO2Kw@mail.gmail.com>
 
-On 27/03/2025 10:35, Pierre Gondois wrote:
->  
-> 
-> On 3/26/25 18:25, Vincent Guittot wrote:
->> On Tue, 25 Mar 2025 at 16:06, Pierre Gondois <pierre.gondois@arm.com>
->> wrote:
->>>
->>> commit 10a35e6812aa ("sched/pelt: Skip updating util_est when
->>> utilization is higher than CPU's capacity")
->>> prevents util_est from being updated if util_avg is higher than the
->>> underlying CPU capacity to avoid overestimating the task when the CPU
->>> is capped (due to thermal issue for instance). In this scenario, the
->>> task will miss its deadlines and start overlapping its wake-up events
->>> for instance. The task will appear as always running when the CPU is
->>> just not powerful enough to allow having a good estimation of the
->>> task.
 
-This one will be removed by your patch, right?
+--peD/GrQrOvzTjyv/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>
->>> commit b8c96361402a ("sched/fair/util_est: Implement faster ramp-up
->>> EWMA on utilization increases")
->>> sets ewma to util_avg when ewma > util_avg, allowing ewma to quickly
->>> grow instead of slowly converge to the new util_avg value when a task
->>> profile changes from small to big.
->>>
->>> However, the 2 conditions:
->>> - Check util_avg against max CPU capacity
+Hi Ulf,
 
-I assume this is the condition you remove and
+> > > > +static bool mmc_may_poweroff_notify(const struct mmc_host *host,
+> > > > +                               bool is_suspend)
+> >
+> > Maybe add some comments about the difference between
+> > mmc_can_poweroff_notify() and mmc_may_poweroff_notify()? Like make it
+> > super-obvious, so I will easily remember next year again :)
+>=20
+> mmc_can_* functions are mostly about checking what the card is capable
+> of. So mmc_can_poweroff_notify() should be consistent with the other
+> similar functions.
+>=20
+> For eMMC power-off notifications in particular, it has become more
+> complicated as we need to check the power-off scenario along with the
+> host's capabilities, to understand what we should do.
+>=20
+> I am certainly open to another name than mmc_may_power_off_notify(),
+> if that is what you are suggesting. Do you have a proposal? :-)
 
->>> - Check whether util_est > util_avg
+Initially, I didn't think of new names but some explanation in comments.
+But since you are mentioning a rename now, how about:
 
-this is:
+mmc_card_can_poweroff_notify() and mmc_host_can_poweroff_notify()?
 
- 4918 /*
- 4919  * Reset EWMA on utilization increases, the moving average is used
- 4920  * to smooth utilization decreases.
- 4921  */
- 4922  if (ewma <= dequeued) {
- 4923      ewma = dequeued;
- 4924      goto done;
- 4925  }
+Similar to the commit 32f18e596141 ("mmc: improve API to make clear
+hw_reset callback is for cards") where I renamed 'hw_reset' to
+'card_hw_reset' for AFAICS similar reasons.
 
-which is before the condition you remove?
+> > > >     if (mmc_can_poweroff_notify(host->card) &&
+> > > > -           !(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
+> > > > +       !mmc_may_poweroff_notify(host, true))
+> > > I guess this deserve some extra documentation because:
+> > > If MMC_CAP2_FULL_PWR_CYCLE is not set but MMC_CAP2_FULL_PWR_CYCLE_IN_=
+SUSPEND is set,
+> > > !mmc_may_poweroff_notify(host, true) will evaluate to false while !(h=
+ost->caps2 & MMC_CAP2_FULL_PWR_CYCLE) will evaluate to true.
+>=20
+> Right. See more below.
+>=20
+> >
+> > I agree, I neither get this. Another way to express my confusion is: Why
+> > do we set the 'is_suspend' flag to true in the shutdown function?
+> >
+>=20
+> I understand your concern and I agree that this is rather messy.
+> Anyway, for shutdown, we set the is_suspend flag to false. The
+> reasoning behind this is that during shutdown we know that the card
+> will be fully powered-down (both vcc and vccq will be cut).
+>=20
+> In suspend/runtime_suspend, we don't really know as it depends on what
+> the platform/host is capable of. If we can't do a full power-off
+> (maybe just vcc can be cut), then we prefer the sleep command instead.
 
-So maybe explain those conditions and their order more carefully? So
-it's easier to grasp.
+I do understand that. I don't see why this needs a change in the
+existing logic as Alan pointed out above.
 
->>> are placed in an order such as it is possible to set util_est to a
->>> value higher than the CPU capacity if util_est > util_avg, but
->>> util_est is prevented to decay as long as:
->>> CPU capacity < util_avg < util_est.
+> I was hoping that patch3 should make this more clear (using an enum
 
-Maybe mentioning 'util_avg eq. dequeued' and 'util_est eq. ewma' would
-help here for easier understanding.
+Sadly, it didn't. Using MMC_POWEROFF_SUSPEND first and then later
+MMC_POWEROFF_SHUTDOWN in mmc_shutdown() is still confusing. Do you want
+to return false in case none of the two PWR_CYCLE flags is set?
 
->>> Just remove the check as either:
->>> 1.
->>> There is idle time on the CPU. In that case the util_avg value of the
->>> task is actually correct. It is possible that the task missed a
->>> deadline and appears bigger, but this is also the case when the
->>> util_avg of the task is lower than the maximum CPU capacity.
->>> 2.
->>> There is no idle time. In that case, the util_avg value might aswell
->>> be an under estimation of the size of the task.
->>> It is possible that undesired frequency spikes will appear when the
->>> task is later enqueued with an inflated util_est value, but the
->>> frequency spike might aswell be deserved. The absence of idle time
->>> prevents from drawing any conclusion.
->>>
->>> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
->>
->> This change looks reasonable to me. Did you face problems related to
->> this in a particular use case ?
-> 
-> I think it was more related to the fact util_est is not decayed when:
-> (runnable - util_avg) > margin
-> 
-> This patch slightly helps to decay, but not that much.
+> type), but I can try to add some comment(s) in the code to further
+> clarify the policy.
 
-Some of the 'stress-ng --class scheduler' seem to be be sensitive in
-this regard. Haven't looked deeper into this.
+Please do.
 
-[...]
+All the best,
 
+   Wolfram
+
+
+--peD/GrQrOvzTjyv/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqcnkACgkQFA3kzBSg
+KbaiQA//dkFc0seaVdeLxN5dVKckn76uVsdr7AE0Q596zm2IshMyF+7AHyFq/AOJ
+KcXBybgkvwGdu6i88F5z2e4iTGO/cBPjmcfk5yopMaSur/z6OrstL0QpRpp2bEWs
+OnxLBVG8bFsmjs1d2ZsrvQ1mFyGJumOJsBKC5Ne0EFV3SkhNPrze6A6vwEFErYNI
+3liDyLp3wVrhWPw+SiC/MReil3gbP8cLgnVnQWoMpZfK4cOycUO5sUlkrZDRzDle
+Ke7/3rxnEc4bBQ8FmJpwc8hl3zsGFbPBBG4nVr3SIH+TmIvDfSdTFPT21pvM9ZX4
+bCmn52k5BI1FT7ccct2+pcOJhEeN6uK8Ivifz95Ps2foE3oNuZi3YX2e+x7erUOy
+FplGcJhie0EvzqRodJ5erc3Exq3pTDe7dQEqNoPCeD0XXfSokCVeq5ZaZ6cgyySE
+qb64iekC42gynfvR0KlcVwRTCLzkUShXDVOXpXOt0X2r9U3Pu+Qtv/r9INNYlZXo
+Q1lBWzGW/zvUDXpFlaWwjzvksg9lJ5uX/4GdRSiMs4CbMbpojydTuReFItt50kDb
+evhOJpcsW5pQTYi7LWDxhfqzAOspVoGM5hoQCAcLPU8GFt4nZotr30ZXQ0Ra+N5X
+IVa6RJwaIae51VgGY26FIk5IIxWRbeX54wIT0az6I8BymQv0TZg=
+=TQ8d
+-----END PGP SIGNATURE-----
+
+--peD/GrQrOvzTjyv/--
