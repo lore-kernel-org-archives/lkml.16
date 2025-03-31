@@ -1,150 +1,101 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F893234
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4508D21148F;
+	Mon, 31 Mar 2025 14:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743429988; cv=none; b=UWSVAoPZq/FyASHqvifD4Lqs3hh5FeP/JZBQSA6Q17FI5ml/r1mxSemhSTgzu/FGYuHa1B6OKnkjkgMqkjsxnaVpnIs5d3XqFqhKs0bAL7IordGEYeTwJ3oyYjXrGkPQyzp8YSOr6CFCYZSl3JcLA8B4s5XPU2qZsnvVkncGp+g=
+	t=1743430029; cv=none; b=IDTJ49y0Y+gJgiUDZl1VS+vM2hKrsRqsi5wK+FuRXTIZz+W7wWHQdAZdyfG2t18nANfRn1s6Ta0gcHvV5JI8UAxgjw9ZUilLIgJv514KzgRHaKxkZ55PRWt7PboLBNaqkq1NEdQj0RLfZQKT/2295lp2Sg8YT7s+IpxYPSqmxwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743429988; c=relaxed/simple;
-	bh=o58API7/MSUGGecLyCQOD9QENF0cJpxOJUXTJvS/ZY8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=i2TWCyDnawsKuDNJKFvvLmIJtuOZMT0eqF8huxUPQjBvmW2qsacvNsdsqzpOmnTa+Hgr6NIfYJYzwVoZj1bh6kvZsufR6IQ4VtHY7fyJkAKOnzmulGpuQOTNA6phUxSDZvc/d0QRdX/AEaHCgPYa8FDh4iVqanGTG34C2A592kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d5bb1708e4so89541035ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:06:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743429986; x=1744034786;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZOpejcwMdppDg0dMAfgX7XGjKXOhvdEBn+I8f9/ikIE=;
-        b=ucd2IwsDav0gnzW6UycngqXAIuMiZ/4HfwAS9jKgia7+PTurqgYDjzM+SJvc6ATrQh
-         8IpiFZQaSAMvJmh9X04f0hlohAox8S2svzItuLf035P1lCgfYuOfpNPzefJwGphLypSJ
-         SnAjcdUmUxpvM7NxhwOxmoTiPyCgch55xbjpZr/YWhD93ETkFAy1mmYJM4GwUEujXfBn
-         orcCHFrIwAPzqBjXrsFUXV9rZaJTXiOummUFyEMrJNgsmpTPMouGC/TR/uotGK+hVU8T
-         9PFNUPCvuJxQa3lWQYWI/EqAajhh6nSczWk2X5o8xv7sucx+jKHhYXi7FKNv4W0i4Wr7
-         vJQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa3nuZ9VAuV58/IsI10Idzr4uAgp9cqMCiW4NwritPs8e7PNxZYdkBmwlIO8YDLTrXFv96yWNG3Mo4lYo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVeiZNG4jpkQ61WJNOcksAo6WmCLT/zgFM60RNCWh2d4TS/9Uy
-	VJEP4vcRx4bT2QvvztZW6b2TZO5iouqPXmo+E/027kNgl7bW76ZquS69Pwl2l+PuS6UKjYt11rO
-	L9/nEtqFZn15ncv5xz/8e4FeHJqZ2yR+9qdUGHr/8mMVjw5A+R+wP2yw=
-X-Google-Smtp-Source: AGHT+IG9VYXT62i/paAthE79LI4prD6ZoYlm+FBsFiCPSC2k5ramWsYpdiQMy93RazuRM1LZUhDWiDp8RWJDF0196YBhBQyBNUXr
+	s=arc-20240116; t=1743430029; c=relaxed/simple;
+	bh=OD7JebTfU5MT1X8WCmBSw8FWuc6qyRDXMpQO0/Gvy4c=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=AnZNkJNHuFUPxX7/6NmZU/77VaspoSNZ5Ijqd+T8bIwTg9Khz22TzbzPrrmGREBKEiCcyCF7zfqHlbSZIrvTkHnraW3V7O0Bprib2HF6LB1XW8/6M66z8A0U9PqXgjY+ZwzIX4X7Lrbn9ImcAt/za/YxRbUSsYPYLBeScKX/H/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tnzgH5Xt; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tnzgH5Xt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743430025; x=1744034825; i=markus.elfring@web.de;
+	bh=gdvTQJalkKgGpg46yW+cy2ny+k+pwLnIsMQDuMyPfkk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tnzgH5Xt6wbTBSwDmUaMD/lstqW32+Rp0vHYm87h79/jovkdQxYxqyASF6nUlIX2
+	 JYQvprP2fZWfBPQSEgwVnGU3MsGbpAWtr0+3Kbnk2tiA05H37EFkgEuMUirncuG1P
+	 hifJhHhENYmvNW6Y+2UNWhRzWNe7XQihDSbZcgb42NzH0IukSoG6PAO+824iSZD3i
+	 rVhGQNag0kCEDj7bnQZZMvn3BhtDfydaCNbFJ+pFjQjmwmqoaIgliATq6vaDhz+3B
+	 8Goc7FZ7gY3alQyarryvGKHAtX179nNiPRgWoho3QqZ3q+LSkVwIDugmDyndwT9Sn
+	 ieM8wRRIAqww+c5cnQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N1d7i-1sxMZd0wnY-012Izn; Mon, 31
+ Mar 2025 16:07:05 +0200
+Message-ID: <96d7676a-ade7-4250-be3f-fd11728c23ee@web.de>
+Date: Mon, 31 Mar 2025 16:07:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1544:b0:3d3:f4fc:a291 with SMTP id
- e9e14a558f8ab-3d5e0a01a36mr78412185ab.19.1743429986078; Mon, 31 Mar 2025
- 07:06:26 -0700 (PDT)
-Date: Mon, 31 Mar 2025 07:06:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eaa162.050a0220.3c3d88.0044.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_copygc (2)
-From: syzbot <syzbot+cebfe3f22eeaff4ddd7c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Will Deacon <will@kernel.org>
+References: <20250331135128.11881-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v2] driver: tx2: Add NULL check in tx2_uncore_pmu_register
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250331135128.11881-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rvQsaVjLIcFHk0ZTJft0nYrW4clO8feC57kVZ0fPagvI4VIK5OJ
+ gJXQU8mFfXoHOVZUv2JL+JNymW9cYMIGUSEWsa3qJJDFBO7WQc0fgj/dKraZB5avpwPm4i0
+ Dl9H65dz80TjYJ3kNfFsS8b+vlESi7gOSnwZoZuFcO7mAHqU2r+g8tPOBqly1U+fBxs86g5
+ 0Ac7xuAxOhCtFS3FmtDjQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WvlePFoJq3k=;ekmxjxif54ej6eMwJALcA96UWfL
+ 6bd5F1fr/u2fBaXlLdwk0ay9iQ7IUqXJFubcZZ5xoa91ODYe9CtwEW/eAPcpZRlWTzMPFgKpH
+ 16exN+QxUyPiEEfnDYMOLyly8KiWkzaphRjfxdsJLrOVanvAvc3UBMbJYLasdG4KbrAko0PiG
+ 5Lx6HIPbAHsTRM+WSzJlj0oR+SA5+tsrLwpzD/D71Jpo4/0WQI6OlbiKJHQ4jvBUqr808V/CH
+ fyG4rTO3OZsD+Z0wGx9B8d5FhAMd1/5lzXu/LhS7dimjIuXfmd74QjYNWeVxpZBLaYzhsI1M2
+ Y00FfZeS7ND9NQVvpkzJbN3VOZw3SOXOtJIRG87Kj/hq55JiEvszca++dAxjxjFzlFYpVurH5
+ FZk3RExIEYs2z3cGmZDhiFLJTbY5p20ybD8tI3yGPf4TAOFB6DLvxmwKBNgEdOUFnKdye2s9n
+ 9pU1bNnBz1ynaE7hYzAsDga28tXzbZ3dmXxTyGROdZtyCYhHyaTkukvpaAjLPTK2DcdiP6U/M
+ m62vNSUXA43AVTrfEmZ+3QjKRe768wdH7tzpQxr8m5hg9yL6XKHalSnsKU9lnHS/hMPHfSeXi
+ ctGr81Wt5A8Q7oxYBCGcEtc1+X+MfVNZpDx4dI5XbmIwkpKBVuWfrpOEMXMoW/tYn2brQtPDL
+ kPBuQ3uLNBuNMx8rD8SKIHBrNoEMQV/Gc3SPmlQ+NibYD6zpgMPyMnBvOp2fHd2IYFBngH/L+
+ KNNYHx+n9/e+j0GRie83Rttk10z2e8VST+I0lSWqKI1qlliTUZpac/aKDQ/pEuYBr4MY/lj63
+ WqB7sMp11p7uyCHVaI86Qxn7hR5JQhiclRExhXx0RJhKGPnNrthGn4ifKSIlgMv6gYq+cV6/A
+ fIqd3dlUIAIMJYEzKxeJGtz8D6pLvUhjnLn7SY/NF60DR2e31+N/pIvQSb30dftB4lXfWm87Z
+ cy9AJo0t0BLtHidfTuEktogXGBoiy592Qg1yECrTN9oZlA1DWdXNPNqPgOuH/zpU/RH9sZR7N
+ NimNuTp5hOwtFYBQ+lK85C5fHOqbq+GM+T46FldEfDeBzT6siJThPz2DI0OmUzGT9/fxJTYxM
+ apoaiy6rkfpIA90/EW5djsYN/gZ3WwVsu3l3Maq3hCri0gLjSNxybMSMqe4Fm6DxM4HnOCGkW
+ SGMekUZi1ncUchtXd7bXyWgDqz8ckVbMsEj0qMgc3YNTCUFoVW4v0MPOQGpb9Ih4X2ICCptfP
+ bYbgvjufEy/EndarkVfr6GlHqdWLmal/nenJA4w1Ui6ywthfkdNJh1C7WKGacq+psEKd5ceGX
+ Fmx5pDS/3XKaHaW404xbIaSPkWkxtkqt8fUuUYw+CLPj7uq0VrNghEwCfuAEhd/j02qAeRRSD
+ tjpE3eFRil+nNBQEDqHrVWE0SKFYJPNraPbF8p5Hg7ZD7XYniuDkXFGgsjWMopIfZR/ouF/d1
+ ISwHuX4r0UM28LTdTFonSTrhnQNb+wXFLTvfguuiiaInYq3cM
 
-Hello,
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
 
-syzbot found the following issue on:
-
-HEAD commit:    1e1ba8d23dae Merge tag 'timers-clocksource-2025-03-26' of ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a8ede4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=887673359f1a92bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=cebfe3f22eeaff4ddd7c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/97b3a10186d9/disk-1e1ba8d2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/de4a9446d205/vmlinux-1e1ba8d2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/529352453703/bzImage-1e1ba8d2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cebfe3f22eeaff4ddd7c@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in rht_ptr_rcu include/linux/rhashtable.h:376 [inline]
-BUG: KMSAN: uninit-value in __rhashtable_lookup include/linux/rhashtable.h:607 [inline]
-BUG: KMSAN: uninit-value in rhashtable_lookup include/linux/rhashtable.h:646 [inline]
-BUG: KMSAN: uninit-value in rhashtable_lookup_fast include/linux/rhashtable.h:672 [inline]
-BUG: KMSAN: uninit-value in bucket_in_flight fs/bcachefs/movinggc.c:143 [inline]
-BUG: KMSAN: uninit-value in bch2_copygc_get_buckets fs/bcachefs/movinggc.c:169 [inline]
-BUG: KMSAN: uninit-value in bch2_copygc+0x1d5c/0x5e00 fs/bcachefs/movinggc.c:221
- rht_ptr_rcu include/linux/rhashtable.h:376 [inline]
- __rhashtable_lookup include/linux/rhashtable.h:607 [inline]
- rhashtable_lookup include/linux/rhashtable.h:646 [inline]
- rhashtable_lookup_fast include/linux/rhashtable.h:672 [inline]
- bucket_in_flight fs/bcachefs/movinggc.c:143 [inline]
- bch2_copygc_get_buckets fs/bcachefs/movinggc.c:169 [inline]
- bch2_copygc+0x1d5c/0x5e00 fs/bcachefs/movinggc.c:221
- bch2_copygc_thread+0x7d2/0xf80 fs/bcachefs/movinggc.c:383
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Local variable b214.i created at:
- bucket_in_flight fs/bcachefs/movinggc.c:-1 [inline]
- bch2_copygc_get_buckets fs/bcachefs/movinggc.c:169 [inline]
- bch2_copygc+0x159e/0x5e00 fs/bcachefs/movinggc.c:221
- bch2_copygc_thread+0x7d2/0xf80 fs/bcachefs/movinggc.c:383
-
-CPU: 1 UID: 0 PID: 5998 Comm: bch-copygc/loop Not tainted 6.14.0-syzkaller-03576-g1e1ba8d23dae #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-=====================================================
-Kernel panic - not syncing: kmsan.panic set ...
-CPU: 1 UID: 0 PID: 5998 Comm: bch-copygc/loop Tainted: G    B              6.14.0-syzkaller-03576-g1e1ba8d23dae #0 PREEMPT(undef) 
-Tainted: [B]=BAD_PAGE
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x216/0x2d0 lib/dump_stack.c:120
- dump_stack+0x1e/0x24 lib/dump_stack.c:129
- panic+0x4e5/0xcf0 kernel/panic.c:354
- kmsan_report+0x2ca/0x2d0 mm/kmsan/report.c:218
- __msan_warning+0x95/0x120 mm/kmsan/instrumentation.c:318
- rht_ptr_rcu include/linux/rhashtable.h:376 [inline]
- __rhashtable_lookup include/linux/rhashtable.h:607 [inline]
- rhashtable_lookup include/linux/rhashtable.h:646 [inline]
- rhashtable_lookup_fast include/linux/rhashtable.h:672 [inline]
- bucket_in_flight fs/bcachefs/movinggc.c:143 [inline]
- bch2_copygc_get_buckets fs/bcachefs/movinggc.c:169 [inline]
- bch2_copygc+0x1d5c/0x5e00 fs/bcachefs/movinggc.c:221
- bch2_copygc_thread+0x7d2/0xf80 fs/bcachefs/movinggc.c:383
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+                   call returns?                    failed?
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> tx2_uncore_pmu_register() does not check for this case, leading to a
+> possible NULL pointer dereference.
+=E2=80=A6
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+You may omit the word =E2=80=9Cpossible=E2=80=9D in such a change descript=
+ion.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Is any automated source code analysis involved here?
+https://cwe.mitre.org/data/definitions/252.html
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regards,
+Markus
