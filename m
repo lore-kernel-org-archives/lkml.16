@@ -1,349 +1,601 @@
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010007.outbound.protection.outlook.com [52.103.67.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE331D5147;
-	Mon, 31 Mar 2025 07:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407585; cv=fail; b=Hzx4tEPowmeLznVDuBsIdJVDAPVx/HL6sX5BvF6LHlJEYIvTThjBQ0Q9KTrBdMnhOzvK0SuA4jAuZcp1Pb9cTCF6v1Z5FyxSHlZAoMPVeuBiPkngmLBBEuxXyq0b0F547VihemURso/WYv36H2qMv6MFMdLt6DIKdKVFOgp73aE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407585; c=relaxed/simple;
-	bh=LCk9i/j/BhvloRvlrwVcZXldErQNzEJy0uNCdgACbtc=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=agduN9tk7AgL9opM8nBy0sF/mOE0Yme7mVkKHDSjco7KL4zM+3pmnZUP2qUtpu1KJky/HEWHz9bDFPeVjkBizgXBnHN9BCigambey0eQBBd8Xd+7GUck8kZSl3hGaECKFP6RSGvu4qtjscj2GWicv7NUxehIMJQsjLiYtuoWvUM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=uieJzZvk; arc=fail smtp.client-ip=52.103.67.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE4A1C5D4E
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743407612; cv=none; b=mbDazZe/wzdWtllzT5NuBs7SxAiKj/1u4IYTLtcVzzqhDtDv3+zp2ssGVG6Dg6sJxEKcGsuAg1+kZlAWIdPRGfjQ8eSvuT+lLhaFSHuRDWgcLYHfwgfnSb3MXd2/nwQ6jhz5lu/MyYTDxuILnXJDCUFLPU1WpUDXm06h1xS++mY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743407612; c=relaxed/simple;
+	bh=bbpD/3pok6sOic2LPw8HY8+645TZaYLXv3rmW+sxl/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WaciNhFOYKg4twuVQTS9frZhCqlP+xeTLoBR0JWiJFt5vomxrYzh0FJcSMiQkALYSAMizDRmaUvoWs9x/0fj917BgifuM45N7tJMsHnq7NfwlgkmHvfo1RD7x8i1fobbCEmBPg+Idkof3TbA/zLzaO1sFRLuqpSzkp981dNs09E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=flRjbZYl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O2cA2XCe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=flRjbZYl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O2cA2XCe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="uieJzZvk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x/LG0vcLCUneSqNrb4EbzcKrD+NiC3XMnN+CPfNuOug8G4sthavSmPNi+1P8r4Ak3TuaNfdZWeMr2UebYSU1BOYGLV0CRqobJWnUAG6MtCwVP2Wd5KjfxvQG1hQePqIDiuW+kamXiZwdlNiZ5Wd+6FJng0Uz7rrusyhTJbMitVJDi6sTFipY1ivnyPOeQpeTz0SwXsBfEaCpZP1/iY1IPXKAOKay4S73bi7hDAF2Rde0hIQczdxTf727z7uCkr6Kc6IhthQD3fAtk1jtrR7HPk0FlLDJtBDYGKCUUBci01fkFp6KNQi2FKuSE0PVnAOapDQx0jdhYdSG0iXVSZXH7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AfhgnReNOkT4JdoJm3g9gNI4Uz3uOoqKYEDdE0SAEG8=;
- b=HSHrhrCBH+wONAAg5QAQ8z18Wthq/Li5O7OarFfj5r2nudoSqOvlkOvbF+2uC9j/2apMeDHSrv1JD2f3HwIlmnGZzo8Jls+nQH7NnYQ5SY9rqmOeG0tL9L5c7xy3ebMi0pUsA+QyNVHiB+lj/El7hh92bEUQKdOutykK9Z8buwazgBB/Qrmv5DbnfgVfUj1yiilwsDWBxl0w3Lx9EVfsmdFapZLLbY4t52o60yStDmYObmN7oww9AwGX5AvrZY2cw76+FQYdKMeYjPR65EpKqgvmQmZnjC75WMZ+O4SYxhqYB1S8RjiJp3ZA/BvKgBJndoJwO/XQBm9lPFNBR3tnOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AfhgnReNOkT4JdoJm3g9gNI4Uz3uOoqKYEDdE0SAEG8=;
- b=uieJzZvkK40hgSxjnfGihaXKpCRdDKSP2ZB4cJn5D8CXhricKauPDc77G6fl1IcQjaBsSaQI95DHeGdhr9Z9+ZJL5eOksBHZuP0bgX43HSWp52V78FTt23Yh0nI8mlW7iHBaqni7gyuzR3mEJuBrkVXlPtzCdIIdaF25HtYGVnYcLc6+fSBiqJJrnc24HriII1mRBokR0fBkzUmDrnXBC2+hm5F+rxQYjtlQ6vuVv1IDNx2/vjXe/xYCCW1RP0tco/c594IdKL3TXW3oiezK3ajHzXBCzhHApFMVyBvWye0gJjTXPrCXdCvZCQh+F5LtvqZhjQDbUjK8YuFvgNd05w==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by MAZPR01MB8860.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:ce::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.38; Mon, 31 Mar
- 2025 07:52:58 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8583.033; Mon, 31 Mar 2025
- 07:52:58 +0000
-Message-ID:
- <PN3PR01MB95973E14FB234C6BCB6417A7B8AD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 31 Mar 2025 13:22:56 +0530
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: jikos@kernel.org, jkosina@suse.com, bentiss@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-From: Aditya Garg <gargaditya08@live.com>
-Subject: [PATCH v2] HID: magicmouse: Apple Magic Mouse 2 USB-C support
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0171.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:de::14) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <9f98dfe8-006b-4cb4-9ed3-a1c57b491f5e@live.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="flRjbZYl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O2cA2XCe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="flRjbZYl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O2cA2XCe"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C8EAC210F6;
+	Mon, 31 Mar 2025 07:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743407607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=flRjbZYlzMlvZ8zhNKajnyY5ZBfsrw05d+Wa9zmEdWZS784/vFmnrIAM1wAY4C+1unvQLA
+	Ine/2ObOkZJ75OZEXKa2lB4YNW1jIb7JyzzLZY+gVTXkUyRlaxwzsXVbR6I5ct0USTx7ue
+	lV2h9cacIMs52N+bmg8fzGC3FukUcU4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743407607;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=O2cA2XCe3r0gCDUcWWzDznsqZCle/kTiALcRmts2srrpII64QDAsH0uwKsLHwbI9mT6ZRI
+	DFqs4grz2G6cTxDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=flRjbZYl;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=O2cA2XCe
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743407607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=flRjbZYlzMlvZ8zhNKajnyY5ZBfsrw05d+Wa9zmEdWZS784/vFmnrIAM1wAY4C+1unvQLA
+	Ine/2ObOkZJ75OZEXKa2lB4YNW1jIb7JyzzLZY+gVTXkUyRlaxwzsXVbR6I5ct0USTx7ue
+	lV2h9cacIMs52N+bmg8fzGC3FukUcU4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743407607;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q2vARJRvNkPdRpoKwIMNRpIF5e+XCyM4elnS5tzw/So=;
+	b=O2cA2XCe3r0gCDUcWWzDznsqZCle/kTiALcRmts2srrpII64QDAsH0uwKsLHwbI9mT6ZRI
+	DFqs4grz2G6cTxDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EFEC13A1F;
+	Mon, 31 Mar 2025 07:53:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OlfHFfdJ6mclMAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 31 Mar 2025 07:53:27 +0000
+Message-ID: <67afd398-f039-4937-a859-cc4d5b0a53d5@suse.de>
+Date: Mon, 31 Mar 2025 09:53:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|MAZPR01MB8860:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf5e232a-5453-4389-66fa-08dd70290d96
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|8060799006|7092599003|6090799003|19110799003|5072599009|461199028|5062599005|440099028|3412199025|41001999003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dnZWMkdWd2xNdEpzaE80eDRFeHlMRU5sTm91d01jWWY3UmNvMG9zdmhYQ3pO?=
- =?utf-8?B?YXhnQzl2REd2ODJqSmdTdVh2bSszQm95R0lwTFlqbUhXblBTY08xdGFtNFdI?=
- =?utf-8?B?dkVTRFhtRmQ1VXQyNGZRYlBYc1VqWnZRZUM0MCs0ZmZyaUVQbVBrbk5wd3hh?=
- =?utf-8?B?RFV3bE5qbk9WRVpPVG5vc2pGU3VvNitTcE54QnRjeU9UUDJBTk1SOGZ1aDlR?=
- =?utf-8?B?ZmMxMEZoZlcwS3c5RGdwSWZmTlV1QkNxemhGZjUzUzBJUXpKekIzd0pNelYv?=
- =?utf-8?B?MTdQaFM0em5icEZLVGsyWjFTUVhsdXR6S1l2OWFIRjFqYTFoOE5aL3lXRGRh?=
- =?utf-8?B?SFZMbEdOaE9BM3hGbUx0OVZOTVREOHdvQlp1TW1RS0lGTDZnbGwrZ0pGQ3hq?=
- =?utf-8?B?Rk1jZENhMTdVVmtNcW1KMXd5dkN6M3NmbnRGL1hxeU9ydytpeXRQRFJET1VF?=
- =?utf-8?B?TlZTR2NwWDdxOEhOT2NuOUZsbFVjV2VoekJNRnc1dGxmVERlQ3M3a1hRWXJ2?=
- =?utf-8?B?Q0hzMGJKNVJiV092Mk5HM3ptcE1oTGlLaWtKVDZIb3ZFbmQ0UjNtSHhqWC9R?=
- =?utf-8?B?OXh4RzBIMS9Wc0QvVmJCcEp4VDc2Yzc2VHh5Y2ZJNSt6a2pCOGFMQ2gwbGU2?=
- =?utf-8?B?VU8rK3M0TmI5R2xOTU85azhKclBVS2RSem9MRkloNCs3REpPdERlNXlPbzlp?=
- =?utf-8?B?aUFTNElCU25TeWR0bzR1NlJzbGFGNlVYd0FRMlgvTysrM3l1aWE0OW0ySzRW?=
- =?utf-8?B?NGpIQldwTGV0Y0lmR2ZrSWJKQWhLTHBuUFFvN1Y4NkdJd1dpN1oyRjlyaUlG?=
- =?utf-8?B?L3hRT3VtZUpPNFpINGFtT2VKbkRjQ0VpSm9RcGVWUkxXQkxOTXgyTThEVEor?=
- =?utf-8?B?Y2dBVmlCaEdHRGJqK245bm5LK0dabzlPeUxTblpRVHovdXZ4ZUhvaEU3MitF?=
- =?utf-8?B?UW83OHdaUk5FNHBMS3JRaXozOU1BbFhLWHZ1UmlOOHRFaGR6KzFKbllwazEw?=
- =?utf-8?B?bE42MExmSGlHQ3puaU5UcVNEQlJzUng2dUpCWVpYQXQwVXcrVWsvdjRNWS9v?=
- =?utf-8?B?OHBCMkx5N0NZUTVueU9oeEU2Ny9XN3JrZFlsQlZLTDVYeGduakVJaDVDNmJE?=
- =?utf-8?B?cS9naUg3MFRBODVnTlZWVWQ5d2d2OTBYU3h6bjRqdXlLWHZQTWdMVmFwdTBU?=
- =?utf-8?B?REtVaXIrRysyRGZzTjA3Nk9yMFBjN045b1laQ2I2V2p1QjNsU1lXRUdmbTcr?=
- =?utf-8?B?R3BjVTdyQnpoUDRXY2lvaFZpT2cxc3RvZWRWWkFEa3hFNGNybG9pekYvR2l1?=
- =?utf-8?B?WkNpYTNjTEszdDdhTDNTbWxZNytCTlovaUxpM0kvWTlNSWRGOVFqNDZVTnM3?=
- =?utf-8?B?KzY4YWRqb3VTVllYcXRvSVdLWDJIczk0Sk5KM1p5RUVlbWUxTTlRNThYeFpv?=
- =?utf-8?B?anpydFZ5eEUrM1dEcU9KVEZXNGg2L3EvWE4yQmkyQUV2NDY2NUFRSlUzT2ky?=
- =?utf-8?B?QzdtcjM2VVRubjZHME1wRm1uL2JraUJEc01keGJiaUNyaHBWYUw3R1oyc2ZU?=
- =?utf-8?B?bk00K3psM2YvcU5RRGVra3Z3TTdoYk1UbmF5bGFob1VwaU5vZXQwZ0tzU2NB?=
- =?utf-8?B?a0s3KzFqbjBKZTdYY0hGWi9wOS8wNUE9PQ==?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L2RUcVhsdWdNWkZmNE1jR3djcjlhenJPNWcveFQvdWtPSSsvTkZCR0x5bStF?=
- =?utf-8?B?dEVnaGVVMmtBNDNOZ01iUWRobUhQZEdZRkthVTVVek85dzB6RXpRZ2d5blE4?=
- =?utf-8?B?ZytqWnBmTW9TVzRTVCtKSGFWS3lsTW1hdCtvWnBrbHpSSXUrK2Y3T0wwNlJu?=
- =?utf-8?B?ci9KQlloQkNFSjMrbGw0V3RYTC92NXovRi9LYndjS3U5WDJwSWJQWWd5TGEv?=
- =?utf-8?B?WkNSK2xuZDY3eEVtdDJ4ZjBmb0NCRDJmVHlWRDFjVW1ZUUZzT2ZWUzlRcndt?=
- =?utf-8?B?ajRqK0dLdEowd2tCc21CSk1BaXh0RUhtMFAzYlV4aElON1ErNkpNejhCV1hi?=
- =?utf-8?B?Z2tvVmFIdDRHNmlxRUs2S2laNEZsbUhkTG1JcmtsUVErUFlPR2JQWnNvYjhk?=
- =?utf-8?B?MUdDbWIwV2kvTTV1elFBNEgzNWtUSmJycndzNjVSUjczajhkL2ZzTVRhWTBn?=
- =?utf-8?B?Q0VjSXRyOXJ4eFNUdVJUdEpNaFh2c2V2ZVZBMks5dUt5dStRS1lQRFBhZmVS?=
- =?utf-8?B?ZVhCaXc5anpleW1JZXptMjlJaW83TU5PekdkbFNyY1VxZ016a1hINU9zM0VK?=
- =?utf-8?B?M2FGN1Q3TEFqMWo4QitLZXFIVm5wQjlMblljVDVyZnltVWp6MHBseTc1WVcz?=
- =?utf-8?B?dUtQSU9DTCtQT0FoWGx3NDE0SXI5VE1aMTlaQjFpRjhWOGtCazJOeDJVdFAv?=
- =?utf-8?B?OGcvbE14bzBqYlovY0RPTkdvYjlaOUJrekpwcXN0VlY1U2JKdjRTd1lNeWFO?=
- =?utf-8?B?bmcxM0hYYXljSTRpM1ZFSEl4V1FLYzd2MXphZ2ZWNkpybXJ6amo2Z1N5TTUx?=
- =?utf-8?B?TzZmQTl5b3g0aXJ3R2x0eHFRTlNObWRHTVZpc29RZ2R0UTlPKzlDWkdHREhJ?=
- =?utf-8?B?OEk3eGV0bGc0ck04WGt5aytaYTFDeVNTV0syU1hhVU1YRk04V3ROdU9QT01S?=
- =?utf-8?B?d0c5WU11ZlVydnQvcmpjbzBXL29MNUl0STF0UElnS1hPTjBtZHkxYnBWVWdY?=
- =?utf-8?B?SE1PN2k0MVFBL1lBbDF3bkVRcEF3KzkyNTFlUE95Z2FScnJqS2o5aUJNbXI2?=
- =?utf-8?B?UEhqdU5kcTZRUmY1Z1FOcFIyVno4QTJQSzJaSCtzeWNUMEVyL1g5VzArWHVR?=
- =?utf-8?B?Q1p6aTdOeFh3dUcvTW5GNTlad2hCUGQrRXdHYURNenBrV1ZDRGZ5ZEd2ZzRP?=
- =?utf-8?B?SnNlakFvMlFCVGkxeVRCTEs1bHg3VTVpa2JyOHFYRGVZTGVrVlR4czRRZUdL?=
- =?utf-8?B?QnZrZjdkZjhLdFdCam1LNmxUb1hKcWxtMkh5S0o2SG0zcDRlcDBzM0FUSVpZ?=
- =?utf-8?B?SW44VG5oUnFUM25xZXRuaHlOS0dIOUpOdjFIWlJBZDQrNHRYVzlSazVUV2pY?=
- =?utf-8?B?aUxsUWY0QmRVV3RoYi9uWk1Kbitkbm1jdERNVWh6L0dtWmhDanJZSFBRdGtE?=
- =?utf-8?B?ZmZYeWZhVTVuUUtkNWIyNUdGYno5WHFKWVRkL0dMRGpSbTlWaStNc1gwVVMx?=
- =?utf-8?B?NHNsVjdQdndQZEhUYi9xcCtZRWJHSWVod3ZxemdORXNqSU16OEZORVhzOGdE?=
- =?utf-8?B?dXdLeGtkU2lTK3RmcW54NEZkbFBHNXdBakh1TEJvVXhaeWNsd0JrcGJ5R3Zi?=
- =?utf-8?B?dXhBMENMb0FwRkRKNisrSVBPV0tRRzJqZk5SRFd5bzFyYTJpVU5waFJad2VP?=
- =?utf-8?B?Y1pzNiszL3JyV2U3dmkrT0ExcXdHVE82U0NCcHVFbWUxek5aWVJZU1dRYm5Q?=
- =?utf-8?Q?IKAfj74bPXcQgUINyMBB7mNzwa7PAH1ZUtxDviW?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf5e232a-5453-4389-66fa-08dd70290d96
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 07:52:58.2514
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB8860
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] drm/ls2kbmc: Add Loongson-2K BMC reset function
+ support
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+ Corey Minyard <minyard@acm.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>,
+ linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+References: <cover.1735550269.git.zhoubinbin@loongson.cn>
+ <b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.1735550269.git.zhoubinbin@loongson.cn>
+ <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
+ <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C8EAC210F6
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[loongson.cn,kernel.org,acm.org,linux.intel.com,gmail.com,ffwll.ch,vger.kernel.org,lists.sourceforge.net,lists.freedesktop.org,xen0n.name,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-From: Aditya Garg <gargaditya08@live.com>
+Hi
 
-This patch adds support for USB-C model of Apple Magic Mouse 2.
+Am 11.02.25 um 12:27 schrieb Binbin Zhou:
+> Hi Thomas:
+>
+> Sorry for my late reply and thanks for your advice.
 
-Except for the hardware ID, it should resemble the existing configuration
-for the older Magic Mouse 2.
+Apologies, I missed your email.
 
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
-v2: Fix broken patch
- drivers/hid/hid-ids.h        |  1 +
- drivers/hid/hid-magicmouse.c | 74 ++++++++++++++++++++++++------------
- 2 files changed, 51 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 288a2b864..2d3f96af6 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -92,6 +92,7 @@
- #define USB_DEVICE_ID_APPLE_MIGHTYMOUSE	0x0304
- #define USB_DEVICE_ID_APPLE_MAGICMOUSE	0x030d
- #define USB_DEVICE_ID_APPLE_MAGICMOUSE2	0x0269
-+#define USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC	0x0323
- #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD	0x030e
- #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2	0x0265
- #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC	0x0324
-diff --git a/drivers/hid/hid-magicmouse.c b/drivers/hid/hid-magicmouse.c
-index a76f17158..423d50702 100644
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -218,7 +218,8 @@ static void magicmouse_emit_touch(struct magicmouse_sc *msc, int raw_id, u8 *tda
- 	int pressure = 0;
- 
- 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
--	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
- 		id = (tdata[6] << 2 | tdata[5] >> 6) & 0xf;
- 		x = (tdata[1] << 28 | tdata[0] << 20) >> 20;
- 		y = -((tdata[2] << 24 | tdata[1] << 16) >> 20);
-@@ -370,7 +371,8 @@ static void magicmouse_emit_touch(struct magicmouse_sc *msc, int raw_id, u8 *tda
- 
- 		if (report_undeciphered) {
- 			if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
--			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
-+			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC)
- 				input_event(input, EV_MSC, MSC_RAW, tdata[7]);
- 			else if (input->id.product !=
- 					 USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
-@@ -497,7 +499,8 @@ static int magicmouse_raw_event(struct hid_device *hdev,
- 	}
- 
- 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
--	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
- 		magicmouse_emit_buttons(msc, clicks & 3);
- 		input_report_rel(input, REL_X, x);
- 		input_report_rel(input, REL_Y, y);
-@@ -519,7 +522,8 @@ static int magicmouse_event(struct hid_device *hdev, struct hid_field *field,
- 		struct hid_usage *usage, __s32 value)
- {
- 	struct magicmouse_sc *msc = hid_get_drvdata(hdev);
--	if (msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
-+	if ((msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	     msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) &&
- 	    field->report->id == MOUSE2_REPORT_ID) {
- 		/*
- 		 * magic_mouse_raw_event has done all the work. Skip hidinput.
-@@ -540,7 +544,8 @@ static int magicmouse_setup_input(struct input_dev *input, struct hid_device *hd
- 	__set_bit(EV_KEY, input->evbit);
- 
- 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
--	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
- 		__set_bit(BTN_LEFT, input->keybit);
- 		__set_bit(BTN_RIGHT, input->keybit);
- 		if (emulate_3button)
-@@ -625,7 +630,8 @@ static int magicmouse_setup_input(struct input_dev *input, struct hid_device *hd
- 	 * inverse of the reported Y.
- 	 */
- 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
--	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
- 		input_set_abs_params(input, ABS_MT_ORIENTATION, -31, 32, 1, 0);
- 		input_set_abs_params(input, ABS_MT_POSITION_X,
- 				     MOUSE_MIN_X, MOUSE_MAX_X, 4, 0);
-@@ -741,19 +747,25 @@ static int magicmouse_enable_multitouch(struct hid_device *hdev)
- 	int ret;
- 	int feature_size;
- 
--	if (hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
--	    hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
--		if (hdev->vendor == BT_VENDOR_ID_APPLE) {
-+	switch (hdev->product) {
-+	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2:
-+	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC:
-+		switch (hdev->vendor) {
-+		case BT_VENDOR_ID_APPLE:
- 			feature_size = sizeof(feature_mt_trackpad2_bt);
- 			feature = feature_mt_trackpad2_bt;
--		} else { /* USB_VENDOR_ID_APPLE */
-+			break;
-+		default: /* USB_VENDOR_ID_APPLE */
- 			feature_size = sizeof(feature_mt_trackpad2_usb);
- 			feature = feature_mt_trackpad2_usb;
- 		}
--	} else if (hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+		break;
-+	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
-+	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
- 		feature_size = sizeof(feature_mt_mouse2);
- 		feature = feature_mt_mouse2;
--	} else {
-+		break;
-+	default:
- 		feature_size = sizeof(feature_mt);
- 		feature = feature_mt;
- 	}
-@@ -787,6 +799,7 @@ static int magicmouse_fetch_battery(struct hid_device *hdev)
- 
- 	if (!hdev->battery || hdev->vendor != USB_VENDOR_ID_APPLE ||
- 	    (hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
-+	     hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC &&
- 	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
- 	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC))
- 		return -1;
-@@ -857,6 +870,7 @@ static int magicmouse_probe(struct hid_device *hdev,
- 
- 	if (id->vendor == USB_VENDOR_ID_APPLE &&
- 	    (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	     id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
- 	     ((id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
- 	       id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
- 	      hdev->type != HID_TYPE_USBMOUSE)))
-@@ -868,21 +882,27 @@ static int magicmouse_probe(struct hid_device *hdev,
- 		goto err_stop_hw;
- 	}
- 
--	if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE)
--		report = hid_register_report(hdev, HID_INPUT_REPORT,
--			MOUSE_REPORT_ID, 0);
--	else if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
--		report = hid_register_report(hdev, HID_INPUT_REPORT,
--			MOUSE2_REPORT_ID, 0);
--	else if (id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
--		 id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
--		if (id->vendor == BT_VENDOR_ID_APPLE)
-+	switch (id->product) {
-+	case USB_DEVICE_ID_APPLE_MAGICMOUSE:
-+		report = hid_register_report(hdev, HID_INPUT_REPORT, MOUSE_REPORT_ID, 0);
-+		break;
-+	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
-+	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
-+		report = hid_register_report(hdev, HID_INPUT_REPORT, MOUSE2_REPORT_ID, 0);
-+		break;
-+	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2:
-+	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC:
-+		switch (id->vendor) {
-+		case BT_VENDOR_ID_APPLE:
- 			report = hid_register_report(hdev, HID_INPUT_REPORT,
- 				TRACKPAD2_BT_REPORT_ID, 0);
--		else /* USB_VENDOR_ID_APPLE */
-+			break;
-+		default:
- 			report = hid_register_report(hdev, HID_INPUT_REPORT,
- 				TRACKPAD2_USB_REPORT_ID, 0);
--	} else { /* USB_DEVICE_ID_APPLE_MAGICTRACKPAD */
-+		}
-+		break;
-+	default: /* USB_DEVICE_ID_APPLE_MAGICTRACKPAD */
- 		report = hid_register_report(hdev, HID_INPUT_REPORT,
- 			TRACKPAD_REPORT_ID, 0);
- 		report = hid_register_report(hdev, HID_INPUT_REPORT,
-@@ -909,7 +929,8 @@ static int magicmouse_probe(struct hid_device *hdev,
- 		hid_err(hdev, "unable to request touch data (%d)\n", ret);
- 		goto err_stop_hw;
- 	}
--	if (ret == -EIO && id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
-+	if (ret == -EIO && (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+			    id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC)) {
- 		schedule_delayed_work(&msc->work, msecs_to_jiffies(500));
- 	}
- 
-@@ -945,6 +966,7 @@ static const __u8 *magicmouse_report_fixup(struct hid_device *hdev, __u8 *rdesc,
- 	 */
- 	if (hdev->vendor == USB_VENDOR_ID_APPLE &&
- 	    (hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	     hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
- 	     hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
- 	     hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
- 	    *rsize == 83 && rdesc[46] == 0x84 && rdesc[58] == 0x85) {
-@@ -971,6 +993,10 @@ static const struct hid_device_id magic_mice[] = {
- 		USB_DEVICE_ID_APPLE_MAGICMOUSE2), .driver_data = 0 },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE,
- 		USB_DEVICE_ID_APPLE_MAGICMOUSE2), .driver_data = 0 },
-+	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE,
-+		USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC), .driver_data = 0 },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE,
-+		USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC), .driver_data = 0 },
- 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_APPLE,
- 		USB_DEVICE_ID_APPLE_MAGICTRACKPAD), .driver_data = 0 },
- 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE,
+>
+> On Wed, Jan 15, 2025 at 2:57 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Hi
+>>
+>>
+>> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+>>> Since the display is a sub-function of the Loongson-2K BMC, when the
+>>> BMC reset, the entire BMC PCIe is disconnected, including the display
+>>> which is interrupted.
+>> To me, that's a strong indicator to set up the entire thing from scratch.
+>>
+>>> Not only do you need to save/restore the relevant PCIe registers
+>>> throughout the reset process, but you also need to re-push the display
+>>> to the monitor at the end.
+>>>
+>>> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+>>> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>>> ---
+>>>    drivers/gpu/drm/tiny/ls2kbmc.c | 284 ++++++++++++++++++++++++++++++++-
+>>>    1 file changed, 283 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/tiny/ls2kbmc.c b/drivers/gpu/drm/tiny/ls2kbmc.c
+>>> index 909d6c687193..4b440f20cb4d 100644
+>>> --- a/drivers/gpu/drm/tiny/ls2kbmc.c
+>>> +++ b/drivers/gpu/drm/tiny/ls2kbmc.c
+>> Move all the reset detection into the BMC core driver. When you see a
+>> reset, remove the display's platform device via
+>> platform_device_unregister(). This will release the device  and the DRM
+>> driver on top. We do this for simpledrm/efifb/etc. Hence user-space code
+>> is able to deal with it. Then set up a new platform device when the new
+>> framebuffer is available. Your DRM driver will bind to it and user-space
+>> code will continue with the new DRM device.
+> I tried to refactor the bmc restart part according to your scheme. I'm
+> not quite sure if the experimental results are exactly right.
+>
+> Key part:
+>
+> New solution:
+> 1. platform_device_unregister(simpledrm)
+> 2. wait and detect if the BMC reboot is complete;
+> 3. platform_device_register_resndata(simpledrm)
+
+You are doing this in the MFD driver, right?
+
+Apologies again, I find it very confusing which component does what.
+
+If the MFD driver created the initial graphics device, it should also 
+remove it on BMC resets. And then establish a new graphics device when 
+the reset has been complete. It shouldn't matter if the driver is 
+simpledrm or a custom driver for your hardware.
+
+
+>
+> Original solution:
+> 1. wait and detect if the BMC reboot is complete;
+> 2. ls2kbmc_push_drm_mode() pushes display data such as crtc.
+>
+> When the BMC reboot is completed, the display in the new solution will
+> lose all the information of the previous desktop and redisplay the
+> system login interface, while the original solution will keep the
+> desktop information.
+>
+> Is this normal for our new solution, or is there something wrong with
+> my implementation?
+
+The desktop should mostly remain as-is. Maybe flicker, but not go back 
+to the login screen. Is there any error in the log files of the desktop 
+or compositor?
+
+Best regards
+Thomas
+
+>
+>> Best regards
+>> Thomas
+>>
+>>> @@ -8,10 +8,12 @@
+>>>     */
+>>>
+>>>    #include <linux/aperture.h>
+>>> +#include <linux/delay.h>
+>>>    #include <linux/minmax.h>
+>>>    #include <linux/pci.h>
+>>>    #include <linux/platform_data/simplefb.h>
+>>>    #include <linux/platform_device.h>
+>>> +#include <linux/stop_machine.h>
+>>>
+>>>    #include <drm/drm_atomic.h>
+>>>    #include <drm/drm_atomic_state_helper.h>
+>>> @@ -32,9 +34,27 @@
+>>>    #include <drm/drm_panic.h>
+>>>    #include <drm/drm_probe_helper.h>
+>>>
+>>> +#define BMC_RESET_DELAY      (60 * HZ)
+>>> +#define BMC_RESET_WAIT       10000
+>>> +
+>>> +static const u32 index[] = { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x24,
+>>> +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 };
+>>> +static const u32 cindex[] = { 0x4, 0x10, 0x3c };
+>>> +
+>>> +struct ls2kbmc_pci_data {
+>>> +     u32 d80c;
+>>> +     u32 d71c;
+>>> +     u32 data[14];
+>>> +     u32 cdata[3];
+>>> +};
+>>> +
+>>>    struct ls2kbmc_pdata {
+>>>        struct pci_dev *pdev;
+>>> +     struct drm_device *ddev;
+>>> +     struct work_struct bmc_work;
+>>> +     unsigned long reset_time;
+>>>        struct simplefb_platform_data pd;
+>>> +     struct ls2kbmc_pci_data pci_data;
+>>>    };
+>>>
+>>>    /*
+>>> @@ -583,6 +603,265 @@ static struct ls2kbmc_device *ls2kbmc_device_create(struct drm_driver *drv,
+>>>        return sdev;
+>>>    }
+>>>
+>>> +static bool ls2kbmc_bar0_addr_is_set(struct pci_dev *ppdev)
+>>> +{
+>>> +     u32 addr;
+>>> +
+>>> +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
+>>> +     addr &= PCI_BASE_ADDRESS_MEM_MASK;
+>>> +
+>>> +     return addr ? true : false;
+>>> +}
+>>> +
+>>> +static void ls2kbmc_save_pci_data(struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     struct pci_dev *pdev = priv->pdev;
+>>> +     struct pci_dev *parent = pdev->bus->self;
+>>> +     int i;
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(index); i++)
+>>> +             pci_read_config_dword(parent, index[i], &priv->pci_data.data[i]);
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(cindex); i++)
+>>> +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.cdata[i]);
+>>> +
+>>> +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
+>>> +     priv->pci_data.d80c = (priv->pci_data.d80c & ~(3 << 17)) | (1 << 17);
+>>> +
+>>> +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
+>>> +     priv->pci_data.d71c |= 1 << 26;
+>>> +}
+>>> +
+>>> +static bool ls2kbmc_check_pcie_connected(struct pci_dev *parent, struct drm_device *dev)
+>>> +{
+>>> +     void __iomem *mmio;
+>>> +     int sts, timeout = 10000;
+>>> +
+>>> +     mmio = pci_iomap(parent, 0, 0x100);
+>>> +     if (!mmio)
+>>> +             return false;
+>>> +
+>>> +     writel(readl(mmio) | 0x8, mmio);
+>>> +     while (timeout) {
+>>> +             sts = readl(mmio + 0xc);
+>>> +             if ((sts & 0x11) == 0x11)
+>>> +                     break;
+>>> +             mdelay(1);
+>>> +             timeout--;
+>>> +     }
+>>> +
+>>> +     pci_iounmap(parent, mmio);
+>>> +
+>>> +     if (!timeout) {
+>>> +             drm_err(dev, "pcie train failed status=0x%x\n", sts);
+>>> +             return false;
+>>> +     }
+>>> +
+>>> +     return true;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_recove_pci_data(void *data)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = data;
+>>> +     struct pci_dev *pdev = priv->pdev;
+>>> +     struct drm_device *dev = priv->ddev;
+>>> +     struct pci_dev *parent = pdev->bus->self;
+>>> +     u32 i, timeout, retry = 0;
+>>> +     bool ready;
+>>> +
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
+>>> +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
+>>> +
+>>> +     timeout = 10000;
+>>> +     while (timeout) {
+>>> +             ready = ls2kbmc_bar0_addr_is_set(parent);
+>>> +             if (!ready)
+>>> +                     break;
+>>> +             mdelay(1);
+>>> +             timeout--;
+>>> +     };
+>>> +
+>>> +     if (!timeout)
+>>> +             drm_warn(dev, "bar not clear 0\n");
+>>> +
+>>> +retrain:
+>>> +     for (i = 0; i < ARRAY_SIZE(index); i++)
+>>> +             pci_write_config_dword(parent, index[i], priv->pci_data.data[i]);
+>>> +
+>>> +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
+>>> +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
+>>> +
+>>> +     /* Check if the pcie is connected */
+>>> +     ready = ls2kbmc_check_pcie_connected(parent, dev);
+>>> +     if (!ready)
+>>> +             return ready;
+>>> +
+>>> +     for (i = 0; i < ARRAY_SIZE(cindex); i++)
+>>> +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.cdata[i]);
+>>> +
+>>> +     drm_info(dev, "pcie recovered done\n");
+>>> +
+>>> +     if (!retry) {
+>>> +             /*wait u-boot ddr config */
+>>> +             mdelay(BMC_RESET_WAIT);
+>>> +             ready = ls2kbmc_bar0_addr_is_set(parent);
+>>> +             if (!ready) {
+>>> +                     retry = 1;
+>>> +                     goto retrain;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_push_drm_mode(struct drm_device *dev)
+>>> +{
+>>> +     struct ls2kbmc_device *sdev = ls2kbmc_device_of_dev(dev);
+>>> +     struct drm_crtc *crtc = &sdev->crtc;
+>>> +     struct drm_plane *plane = crtc->primary;
+>>> +     struct drm_connector *connector = &sdev->connector;
+>>> +     struct drm_framebuffer *fb = NULL;
+>>> +     struct drm_mode_set set;
+>>> +     struct drm_modeset_acquire_ctx ctx;
+>>> +     int ret;
+>>> +
+>>> +     mutex_lock(&dev->mode_config.mutex);
+>>> +     connector->funcs->fill_modes(connector, 4096, 4096);
+>>> +     mutex_unlock(&dev->mode_config.mutex);
+>>> +
+>>> +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
+>>> +                                DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret);
+>>> +
+>>> +     if (plane->state)
+>>> +             fb = plane->state->fb;
+>>> +     else
+>>> +             fb = plane->fb;
+>>> +
+>>> +     if (!fb) {
+>>> +             drm_dbg(dev, "CRTC doesn't have current FB\n");
+>>> +             ret = -EINVAL;
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     drm_framebuffer_get(fb);
+>>> +
+>>> +     set.crtc = crtc;
+>>> +     set.x = 0;
+>>> +     set.y = 0;
+>>> +     set.mode = &sdev->mode;
+>>> +     set.connectors = &connector;
+>>> +     set.num_connectors = 1;
+>>> +     set.fb = fb;
+>>> +
+>>> +     ret = crtc->funcs->set_config(&set, &ctx);
+>>> +
+>>> +out:
+>>> +     DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static void ls2kbmc_events_fn(struct work_struct *work)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = container_of(work, struct ls2kbmc_pdata, bmc_work);
+>>> +
+>>> +     /*
+>>> +      * The pcie is lost when the BMC resets,
+>>> +      * at which point access to the pcie from other CPUs
+>>> +      * is suspended to prevent a crash.
+>>> +      */
+>>> +     stop_machine(ls2kbmc_recove_pci_data, priv, NULL);
+>>> +
+>>> +     drm_info(priv->ddev, "redraw console\n");
+>>> +
+>>> +     /* We need to re-push the display due to previous pcie loss. */
+>>> +     ls2kbmc_push_drm_mode(priv->ddev);
+>>> +}
+>>> +
+>>> +static irqreturn_t ls2kbmc_interrupt(int irq, void *arg)
+>>> +{
+>>> +     struct ls2kbmc_pdata *priv = arg;
+>>> +
+>>> +     if (system_state != SYSTEM_RUNNING)
+>>> +             return IRQ_HANDLED;
+>>> +
+>>> +     /* skip interrupt in BMC_RESET_DELAY */
+>>> +     if (time_after(jiffies, priv->reset_time + BMC_RESET_DELAY))
+>>> +             schedule_work(&priv->bmc_work);
+>>> +
+>>> +     priv->reset_time = jiffies;
+>>> +
+>>> +     return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +#define BMC_RESET_GPIO                       14
+>>> +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
+>>> +#define LOONGSON_GPIO_REG_SIZE               0x18
+>>> +#define LOONGSON_GPIO_OEN            0x0
+>>> +#define LOONGSON_GPIO_FUNC           0x4
+>>> +#define LOONGSON_GPIO_INTPOL         0x10
+>>> +#define LOONGSON_GPIO_INTEN          0x14
+>>> +
+>>> +/* The gpio interrupt is a watchdog interrupt that is triggered when the BMC resets. */
+>>> +static int ls2kbmc_gpio_reset_handler(struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     int irq, ret = 0;
+>>> +     int gsi = 16 + (BMC_RESET_GPIO & 7);
+>>> +     void __iomem *gpio_base;
+>>> +
+>>> +     /* Since Loongson-3A hardware does not support GPIO interrupt cascade,
+>>> +      * chip->gpio_to_irq() cannot be implemented,
+>>> +      * here acpi_register_gsi() is used to get gpio irq.
+>>> +      */
+>>> +     irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
+>>> +     if (irq < 0)
+>>> +             return irq;
+>>> +
+>>> +     gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
+>>> +     if (!gpio_base) {
+>>> +             acpi_unregister_gsi(gsi);
+>>> +             return PTR_ERR(gpio_base);
+>>> +     }
+>>> +
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_OEN);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_FUNC);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_INTPOL);
+>>> +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_GPIO),
+>>> +            gpio_base + LOONGSON_GPIO_INTEN);
+>>> +
+>>> +     ret = request_irq(irq, ls2kbmc_interrupt, IRQF_SHARED | IRQF_TRIGGER_FALLING,
+>>> +                       "ls2kbmc gpio", priv);
+>>> +
+>>> +     acpi_unregister_gsi(gsi);
+>>> +     iounmap(gpio_base);
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static int ls2kbmc_pdata_initial(struct platform_device *pdev, struct ls2kbmc_pdata *priv)
+>>> +{
+>>> +     int ret;
+>>> +
+>>> +     priv->pdev = *(struct pci_dev **)dev_get_platdata(&pdev->dev);
+>>> +
+>>> +     ls2kbmc_save_pci_data(priv);
+>>> +
+>>> +     INIT_WORK(&priv->bmc_work, ls2kbmc_events_fn);
+>>> +
+>>> +     ret = request_irq(priv->pdev->irq, ls2kbmc_interrupt,
+>>> +                       IRQF_SHARED | IRQF_TRIGGER_RISING, "ls2kbmc pcie", priv);
+>>> +     if (ret) {
+>>> +             pr_err("request_irq(%d) failed\n", priv->pdev->irq);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     return ls2kbmc_gpio_reset_handler(priv);
+>>> +}
+>>> +
+>>>    /*
+>>>     * Platform driver
+>>>     */
+>>> @@ -598,12 +877,15 @@ static int ls2kbmc_probe(struct platform_device *pdev)
+>>>        if (IS_ERR(priv))
+>>>                return -ENOMEM;
+>>>
+>>> -     priv->pdev = *(struct pci_dev **)dev_get_platdata(&pdev->dev);
+>>> +     ret = ls2kbmc_pdata_initial(pdev, priv);
+>>> +     if (ret)
+>>> +             return ret;
+>>>
+>>>        sdev = ls2kbmc_device_create(&ls2kbmc_driver, pdev, priv);
+>>>        if (IS_ERR(sdev))
+>>>                return PTR_ERR(sdev);
+>>>        dev = &sdev->dev;
+>>> +     priv->ddev = &sdev->dev;
+>>>
+>>>        ret = drm_dev_register(dev, 0);
+>>>        if (ret)
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+>>
+>
+> --
+> Thanks.
+> Binbin
+
 -- 
-2.49.0.windows.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
