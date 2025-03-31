@@ -1,186 +1,123 @@
-Received: from mail-m3272.qiye.163.com (mail-m3272.qiye.163.com [220.197.32.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F192147F8
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5C22E630
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439906; cv=none; b=LsOhA36X4djb6Z0Hc6OabwnCVv2Z7a5OgXzeWSU8qq1AYGWCUF/KPUpfFe0VKqgCXz0ZwK7EbiB/cNiTpWy9lLlDTrXI+6/Go0xAp/BhhgGYM7bpnKnvI3cyRUWAMwk7BarJpv+JkHA5ncSwXTCfpQwBH1Exh9iN7+itbcbXaJg=
+	t=1743439994; cv=none; b=GPxEuzoQW+uIdtgfVgvTGkrgXJyXOU9q1PteZdGxNwV0z2B21rdRIV3DbxvlXzGRXXs4W15sRyZI2ZFDuSSGknNNcFQDKWAQFuwfBZQMQeQVtz7bviOPe2/JB++utjAZGIKKbsIhv04oWLpKDIJDcBNRnhrDN5sfT23iuMZSsKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439906; c=relaxed/simple;
-	bh=f97/nkeUTuQkuArGiJaplsBFm3ZSPyqqWG16TY3uKy4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=avxPFgWUSBYVU6ccgLkeljsUmPQkqnWmUPrheqZFqyrMGVUwN6RzXCNVikk7V+RpDhT4hSSfJifdnokX5bJJFmiIdAc0eJJ2W1l1oy+vrpQq70J3eDJbIXbXg3Mt0pxEHHJTm2fWM9qaum6pio6SiIWGi7skuVLPHzjF1Ru+dSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=220.197.32.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from localhost.localdomain (unknown [122.224.147.158])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 102faff97;
-	Mon, 31 Mar 2025 20:15:43 +0800 (GMT+08:00)
-From: HongBo Yao <andy.xu@hj-micro.com>
-To: will@kernel.org
-Cc: robin.murphy@arm.com,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	andy.xu@hj-micro.com,
-	allen.wang@hj-micro.com,
-	peter.du@hj-micro.com
-Subject: [PATCH v2] perf: arm-ni: Fix list_add() corruption in arm_ni_probe()
-Date: Mon, 31 Mar 2025 20:15:36 +0800
-Message-ID: <20250331121536.2626552-1-andy.xu@hj-micro.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1743439994; c=relaxed/simple;
+	bh=dGxdrcfn2W7G9AYcMDBtp/foFYPOpu6GpogE5T91uPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/GfY9MDpWLYsAR8MH35B5fTcYkWZL7vcxgVd4Yy54tqdWuncMRPzPUyTM6wCwEiXclJVJZUKaGBzW81JTQz4gubNuCjhQaUaN44j1cr0/53kRYK+/Xkvz8YcoX1mezb0TfOA8koJ3IiVid7kSO8xjNsQXLjj2A2Ioa2ORB7O24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=TBb/Dbyg; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="TBb/Dbyg"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so53555696d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743439991; x=1744044791; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
+        b=TBb/Dbygck0KuU34BkdZ22+mvgrE+EZyDSfQDIlriw0+Xu7da4afwOEh5csp5hlGKI
+         8zaPh/Pv11DchGesfJrgQWPd+nu+eU3WIacinKSv7jMz4JhlG8D0LVjOgpHUH0GEjxoj
+         vUOT24zVPG4XR2e+hK7AmrwDYSSzcTeM/AVne66uXIVGNykeecq0JcdcG0uBAPuko/rl
+         XdWJqYOdUaWuyy+XZf2b5YMIC+DXRIgfQGzuEjyYbByxCoeqxzQiNGjM9TvU7YNfhuB7
+         gQgLISjdwcayO+2iTrmYUgKLkQpmOTmEaA7VjktfYKiZhrIY+lVC19qhtr7D5Be0K8R/
+         YK1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743439991; x=1744044791;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
+        b=MLsHymOucsXmmVoHKsDGQmqZzq444X1T5V7U0cValuqlmu5MWRyRLRHfSiMGyumQd3
+         7v6WYEbrkBCsdZMn+dyJ4pwVFC/3zWcx3dPz6rc/ujXutEVFNujzDFw4Mew0YDRftSXC
+         0PeHtu/xqQ23233nFxVhjSobeSzxXLt5VEyU3iqNQCnt99KrylsOUQBlwp71PnlZ5ghu
+         BzJyB3bq9VL0r2SUeBoH7/DtPlctxJTAU7dWC2auCb1SNbw+SUvFb/ugpd0vUhftAJLS
+         KGJfSfJZwwZl+r5pkN2tzyJ+8HQTHiy/YruWmS5X1Srdln8CCEpRapkZClibmAZ9iEZ5
+         0dAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQV2SDB1Vpp5aTPsw313rVWArjYxPVb6oGqz7DzNhtfI4wNmhrxAF5qcOZ7LCAyI42K59QMo7uJ91hJ9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh4kNjSPriDpvAf6jHyFFFlw8nCxV/QtAOOSu4mP9pqiqbaLl+
+	t7J7vDTugiEWZOAhFnghRUb3khq0fy1Dcf92qzoN25sMDJWXdupyq0hA0IzOGDg=
+X-Gm-Gg: ASbGncu5z2OXFQIgDC9s1zqts0Htnq79LjE9UUqiS8Hy4d+3SHZI9AtX5U6U5wvRdj3
+	TRJ3QGUiry1DqVoL+reFIyEfR/zHXy2SKXAJwRTtMLDOHC3XvuKsIAojWg5XB14DvZFCDFFnVKj
+	tpQRXRNA9MOg3/v/ZY3VqAUbquLhJomNT8FXT3A1Hma90A7ZfEZOzd3VowvtBasLsS/+tTim67X
+	j3g/Nc1vl8FhsyiByLnaT+u7xwQUxsxulgqMFeFqcgMxbAzeEk6HHJh8VSCuXpoATVll7B298ua
+	95Irh0ok/XuiTR9m8qPCc2S+Gw32774O9FJp0nQ4f/c=
+X-Google-Smtp-Source: AGHT+IFd+qsosdQQtA0DsjOuFOjNzDgnTDzOhpn2WIRyqS+ggjdGBL/fAbxW/5YG2w4V0Rf+gmk9vg==
+X-Received: by 2002:a05:6214:1d2e:b0:6d8:846b:cd8d with SMTP id 6a1803df08f44-6eed627129bmr126446056d6.30.1743439991034;
+        Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eec9797218sm48420876d6.110.2025.03.31.09.53.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 09:53:10 -0700 (PDT)
+Date: Mon, 31 Mar 2025 12:53:06 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, chengming.zhou@linux.dev, sj@kernel.org,
+	kernel-team@meta.com, linux-kernel@vger.kernel.org,
+	gourry@gourry.net, willy@infradead.org,
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	minchan@kernel.org, senozhatsky@chromium.org
+Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering
+ systems
+Message-ID: <20250331165306.GC2110528@cmpxchg.org>
+References: <20250329110230.2459730-1-nphamcs@gmail.com>
+ <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHkNIVh1LTUwdTEMdHh8ZQ1YVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a95ec210c3303afkunm102faff97
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NzI6URw*GDJRDxY8EBITEBU8
-	ThVPFBNVSlVKTE9IT0lISE9PT0xPVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
-	SklJVUlJT1VKT0xVSk5DWVdZCAFZQU9OQ0k3Bg++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
 
-From: Hongbo Yao <andy.xu@hj-micro.com>
+On Sat, Mar 29, 2025 at 07:53:23PM +0000, Yosry Ahmed wrote:
+> March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+> 
+> > Currently, systems with CXL-based memory tiering can encounter the
+> > following inversion with zswap: the coldest pages demoted to the CXL
+> > tier can return to the high tier when they are zswapped out,
+> > creating memory pressure on the high tier.
+> > This happens because zsmalloc, zswap's backend memory allocator, does
+> > not enforce any memory policy. If the task reclaiming memory follows
+> > the local-first policy for example, the memory requested for zswap can
+> > be served by the upper tier, leading to the aformentioned inversion.
+> > This RFC fixes this inversion by adding a new memory allocation mode
+> > for zswap (exposed through a zswap sysfs knob), intended for
+> > hosts with CXL, where the memory for the compressed object is requested
+> > preferentially from the same node that the original page resides on.
+> 
+> I didn't look too closely, but why not just prefer the same node by
+> default? Why is a knob needed?
 
-When a resource allocation fails in one clock domain of an NI device,
-we need to properly roll back all previously registered perf PMUs in
-other clock domains of the same device.
++1 It should really be the default.
 
-Otherwise, it can lead to kernel panics.
+Even on regular NUMA setups this behavior makes more sense. Consider a
+direct reclaimer scanning nodes in order of allocation preference. If
+it ventures into remote nodes, the memory it compresses there should
+stay there. Trying to shift those contents over to the reclaiming
+thread's preferred node further *increases* its local pressure, and
+provoking more spills. The remote node is also the most likely to
+refault this data again. This is just bad for everybody.
 
-Calling arm_ni_init+0x0/0xff8 [arm_ni] @ 2374
-arm-ni ARMHCB70:00: Failed to request PMU region 0x1f3c13000
-arm-ni ARMHCB70:00: probe with driver arm-ni failed with error -16
-list_add corruption: next->prev should be prev (fffffd01e9698a18),
-but was 0000000000000000. (next=ffff10001a0decc8).
-pstate: 6340009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-pc : list_add_valid_or_report+0x7c/0xb8
-lr : list_add_valid_or_report+0x7c/0xb8
-Call trace:
- __list_add_valid_or_report+0x7c/0xb8
- perf_pmu_register+0x22c/0x3a0
- arm_ni_probe+0x554/0x70c [arm_ni]
- platform_probe+0x70/0xe8
- really_probe+0xc6/0x4d8
- driver_probe_device+0x48/0x170
- __driver_attach+0x8e/0x1c0
- bus_for_each_dev+0x64/0xf0
- driver_add+0x138/0x260
- bus_add_driver+0x68/0x138
- __platform_driver_register+0x2c/0x40
- arm_ni_init+0x14/0x2a [arm_ni]
- do_init_module+0x36/0x298
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Oops - BUG: Fatal exception
-SMP: stopping secondary CPUs
+> Or maybe if there's a way to tell the "tier" of the node we can
+> prefer to allocate from the same "tier"?
 
-Fixes: 4d5a7680f2b4 ("perf: Add driver for Arm NI-700 interconnect PMU")
-Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
----
- drivers/perf/arm-ni.c | 44 +++++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+Presumably, other nodes in the same tier would come first in the
+fallback zonelist of that node, so page_to_nid() should just work.
 
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index fd7a5e60e963..ee85577e86b9 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -102,6 +102,7 @@ struct arm_ni_unit {
- struct arm_ni_cd {
- 	void __iomem *pmu_base;
- 	u16 id;
-+	bool pmu_registered;
- 	int num_units;
- 	int irq;
- 	int cpu;
-@@ -571,10 +572,31 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 	err = perf_pmu_register(&cd->pmu, name, -1);
- 	if (err)
- 		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
-+	else
-+		cd->pmu_registered = true;
- 
- 	return err;
- }
- 
-+static void arm_ni_remove_cds(struct arm_ni *ni)
-+{
-+	for (int i = 0; i < ni->num_cds; i++) {
-+		struct arm_ni_cd *cd = ni->cds + i;
-+
-+		if (!cd->pmu_base)
-+			continue;
-+
-+		if (!cd->pmu_registered)
-+			continue;
-+
-+		writel_relaxed(0, cd->pmu_base + NI_PMCR);
-+		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
-+		perf_pmu_unregister(&cd->pmu);
-+		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
-+	}
-+}
-+
-+
- static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
- {
- 	u32 reg = readl_relaxed(base + NI_NODE_TYPE);
-@@ -593,6 +615,7 @@ static int arm_ni_probe(struct platform_device *pdev)
- 	void __iomem *base;
- 	static atomic_t id;
- 	int num_cds;
-+	int ret;
- 	u32 reg, part;
- 
- 	/*
-@@ -651,35 +674,28 @@ static int arm_ni_probe(struct platform_device *pdev)
- 			reg = readl_relaxed(vd.base + NI_CHILD_PTR(p));
- 			arm_ni_probe_domain(base + reg, &pd);
- 			for (int c = 0; c < pd.num_components; c++) {
--				int ret;
--
- 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
- 				arm_ni_probe_domain(base + reg, &cd);
- 				ret = arm_ni_init_cd(ni, &cd, res->start);
- 				if (ret)
--					return ret;
-+					goto init_cd_cleanup;
- 			}
- 		}
- 	}
- 
- 	return 0;
-+
-+init_cd_cleanup:
-+	arm_ni_remove_cds(ni);
-+
-+	return ret;
- }
- 
- static void arm_ni_remove(struct platform_device *pdev)
- {
- 	struct arm_ni *ni = platform_get_drvdata(pdev);
- 
--	for (int i = 0; i < ni->num_cds; i++) {
--		struct arm_ni_cd *cd = ni->cds + i;
--
--		if (!cd->pmu_base)
--			continue;
--
--		writel_relaxed(0, cd->pmu_base + NI_PMCR);
--		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
--		perf_pmu_unregister(&cd->pmu);
--		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
--	}
-+	arm_ni_remove_cds(ni);
- }
- 
- #ifdef CONFIG_OF
--- 
-2.43.0
+I wouldn't complicate this until somebody has real systems where it
+does the wrong thing.
+
+My vote is to stick with page_to_nid(), but do it unconditionally.
 
