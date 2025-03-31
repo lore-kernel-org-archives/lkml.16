@@ -1,100 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C35524B0;
-	Mon, 31 Mar 2025 08:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C47D142900
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410464; cv=none; b=V5avP1UNMTvNuTfZ3QtUkKfUtoNMJPGEflupCIThzZFJVzFFrKuZ8zPEpRKfR6d+ZJxhY03EPYvNaN6bjUIlhgttAAdm7fGWMuaBaIz07sly+huNTdSD17xC4LPyQxL8Fcpg8eQvXkJErodvzg/CGnCetEcKsRTTIBYU+MrLkZk=
+	t=1743410682; cv=none; b=MmOLVswpsmVgbGiJSevoDhh7y3hyB83MOwyWU1klDKleepIb0zn0nejCPbi4e34M+RVhQsl0hVjQ7ZYSadPAnXKmLbAIm/OREahspncQ83/LtncCwzs8mBE+Lb70YTuqz2Fu8W675Z8acqMfiYX6+CEt7u/p5yS+px8CC4w8Zgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410464; c=relaxed/simple;
-	bh=WutQ487qOILgzK3veqk4z1NcBGz1aX7aTncezPw28NI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P09hpGnfAVyQVjLBwFM1yhZS+duFQ4csGf2foIHd+5Zx2bG2+MWvU+Tp9HDsHxLKPwGfwFAwFCEc3JTCe/L75jRiu1nIfJl/PVDBn/KcDbsKVQNCwEq9neUm8VuMcpUfIesC87qeoJ0VxsqVnVSq1IK9IraAmHJZowcaY3cxybA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cxol9UGG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cxol9UGG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF1BC4CEE3;
-	Mon, 31 Mar 2025 08:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743410464;
-	bh=WutQ487qOILgzK3veqk4z1NcBGz1aX7aTncezPw28NI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cxol9UGGXNNgTGlIMNsCqkZsiaMxouPCuINRVkhpFotLHkGNqSQoWeZO51rYIFPjg
-	 MxMVNYlzECKiKwHpXD32PD9GdtdEldyHYCNBlteGrxsDjCfXJCcB07Xo5PYyNlfw2N
-	 nHPGP3pzRca/ROGKZBdaIEDCARZ1URT4Msui5e9+0yI8LlI/aGkxWAnNMl6t3DGdKW
-	 wHMoedWU4DuGp1U5vlPOtIIteNbdl/UCiz4ZgRcPmIEI8lYJLCPrx+A41A9qJ1Xyur
-	 fEwsok7pwVmf2D5Jg/9fnxDTqB1Fqx38jg2r0shxRqEjXBw9DA+H5eiAJ7s0L+R/nc
-	 6vAz+pHfGCXbw==
-Date: Mon, 31 Mar 2025 10:40:59 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: yangxingui <yangxingui@huawei.com>
-Cc: John Garry <john.g.garry@oracle.com>, Yihang Li <liyihang9@huawei.com>,
-	martin.petersen@oracle.com, James.Bottomley@hansenpartnership.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, liuyonglong@huawei.com,
-	prime.zeng@hisilicon.com, dlemoal@kernel.org
-Subject: Re: [PATCH 1/5] scsi: hisi_sas: Add host_tagset_enable module param
- for v3 hw
-Message-ID: <Z-pVGyZ1vMBhUfYH@ryzen>
-References: <20250329073236.2300582-1-liyihang9@huawei.com>
- <20250329073236.2300582-2-liyihang9@huawei.com>
- <f53505e6-9bfa-4553-91cc-497512a6977f@oracle.com>
- <e5ab4e5a-33d0-6102-1c5c-f1f83a752346@huawei.com>
+	s=arc-20240116; t=1743410682; c=relaxed/simple;
+	bh=l5eqc0C4HMu2i/7Vw0ixdGCDv5mPI6Lkr35xLYnO/IY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iNKm6OI/Di5UXLQhYv8v8gHiwlVuHY7FNWFZi+SMYoACvV4GfJ876EPzHX51hhtAK/hvLDzOCZ6n0v3vX9KcHYQVReWBHJxKMUlolc1jU5FfBrZzgfldUFV2S7Hj963vQtmL39+TwkPq/ZExE1bWjuJhvZnGYv0UOqIPCuZM90Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d3907524cso1748159241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:44:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743410678; x=1744015478;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KK/y5pjkyd8lRB9OXOepCyh3Rk+OQD2KlAMo3Fl+x+4=;
+        b=s2ME3M8NcJ8E2EUjwI0mirfeQY8zm9VQPkZx39fJHGxZ4QFAD6k9lEhUvB7kZUP5MF
+         D7HSIkKxF6JiqfYqXAN/inIyQIRap4YU7l2z8Objrsiy04AnajltjEJwB0y60+ONoCJf
+         IkTwqhzaaBE1mHJOM+WPgkyzpFcMHkhzW8gIvHsED+/EgjZ8Mp/Dt9j2l91QtUw+EJ07
+         8pr/nmpLjk6tjX2EBdpjOCVTSlnSYSmDlKj12Ub1heKaaS9tuXA5jwFko32eeZHKpG1P
+         /kFzGumrgZVCCWEZDWKO223r4dXHbLbHwG8JKOQjYWSywDXG8StHnLLOAd8KqBPqSaCm
+         a8mg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0gbdl8j3xrH3I126REcmtvj0sSDG5urufADbKVfj7t9VhEuvaT0Ba+QokNuuDBn6K8NR+Y0Zy2NgNFNo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNNt4lA1Wp3LObcDgaJhUn8PcYsw6xdhmuyxF8o/g8JsvtbGq5
+	KKYeuPnpoFry0/Lq+5NeBWq+4jOWSAJXYOfKe66lZzk/J4tENAK14D5Orz9t
+X-Gm-Gg: ASbGncvPbiAaW3ZjE27CbfIYAqm+3FJVzXyl8nDqVPs6o0Gxfky+o5KTAnNdMsBWQTg
+	cdWP6hlZMeW2KgWUC0LnAFo30wp0JdTvQdvlY78zzRp6Vpojm80SMbgX1HHomOul7QdgVS/9z5W
+	Hg3L/gdyo1x34RHTDdt53TyDPTVOCPr3sNjFgpEwtp6deViwBKWKM6FdKHrmRQqhC+XqPiQnA9A
+	MYZtQAo+bsj8tSpU4WdxedEDrt8n0u3RFwbt3OtaYiWkSv6LiFvn6/90B7RMBTtt3bTY4rlQ2Mz
+	UHqUCbnEo6sAFJtfOQMHcPS+mOmkwGHmK19FAwgt3VVfsdZMmEQ+gZnfNyhT6CUE3c7K2qZOVlp
+	ykMmoUpj4IZ8=
+X-Google-Smtp-Source: AGHT+IE/TYG7txlVWREhGnhBK2hC+9z04JrdlbheXIn+NTcDwBU/0dhkafVHCcf8rgeEVW/WPUNakA==
+X-Received: by 2002:a05:6102:41a5:b0:4c1:99cc:792 with SMTP id ada2fe7eead31-4c6d38904e5mr4344661137.13.1743410678143;
+        Mon, 31 Mar 2025 01:44:38 -0700 (PDT)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c6bfcf28d7sm1470743137.13.2025.03.31.01.44.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 01:44:37 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52446b21cfdso1808580e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:44:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUWCIwz0rkBtMWFgvBDMn6EMF5blJ4FibelFXGr533guK1fmgDkJCRJINIvnGDPxUv8rbJcK/mQl49iQmA=@vger.kernel.org
+X-Received: by 2002:a05:6102:149a:b0:4bb:e8c5:b164 with SMTP id
+ ada2fe7eead31-4c6d3847bb8mr4591245137.7.1743410677525; Mon, 31 Mar 2025
+ 01:44:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e5ab4e5a-33d0-6102-1c5c-f1f83a752346@huawei.com>
+References: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org>
+ <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com> <b8150223-8bce-32fb-c146-e14bcaa91134@linux-m68k.org>
+In-Reply-To: <b8150223-8bce-32fb-c146-e14bcaa91134@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 31 Mar 2025 10:44:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUZV96E4Xu-+yfV-FSO1a0WkJWr87s35M3QQDL-np3chA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq5LoKd7NFb6qFQASTYY2tKI7IkMQW81XTHTmiopvk1xqCDLyhTcF_8r-o
+Message-ID: <CAMuHMdUZV96E4Xu-+yfV-FSO1a0WkJWr87s35M3QQDL-np3chA@mail.gmail.com>
+Subject: Re: [PATCH] m68k/mvme147: Don't unregister boot console needlessly
+To: Finn Thain <fthain@linux-m68k.org>
+Cc: Daniel Palmer <daniel@0x0f.com>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Xingui,
+Hi Finn,
 
-On Sat, Mar 29, 2025 at 05:49:47PM +0800, yangxingui wrote:
-> Hi，John
-> 
-> On 2025/3/29 16:50, John Garry wrote:
-> > On 29/03/2025 07:32, Yihang Li wrote:
-> > 
-> > +
-> > 
-> > > From: Xingui Yang<yangxingui@huawei.com>
-> > > 
-> > > After driver exposes all HW queues and application submits IO to multiple
-> > > queues in parallel, if NCQ and non-NCQ commands are mixed to sata disk,
-> > > ata_qc_defer() causes non-NCQ commands to be requeued and possibly
-> > > repeated
-> > > forever.
-> > 
-> > I don't think that it is a good idea to mask out bugs with module
-> > parameters.
-> > 
-> > Was this the same libata/libsas issue reported some time ago?
-> 
-> Yeah，related to this issue: https://lore.kernel.org/linux-block/eef1e927-c9b2-c61d-7f48-92e65d8b0418@huawei.com/
-> 
-> And, Niklas tried to help fix this problem:
-> https://lore.kernel.org/linux-scsi/ZynmfyDA9R-lrW71@ryzen/
-> 
-> Considering that there is no formal solution yet. And our users rarely use
-> SATA disks and SAS disks together on a single machine. For this reason, they
-> can flexibly turn off the exposure of multiple queues in the scenario of
-> using only SATA disks. In addition, it is also convenient to conduct
-> performance comparison tests to expose multiple hardware queues and single
-> queues.
+On Fri, 28 Mar 2025 at 23:25, Finn Thain <fthain@linux-m68k.org> wrote:
+> On Fri, 28 Mar 2025, Geert Uytterhoeven wrote:
+> > > --- a/arch/m68k/kernel/early_printk.c
+> > > +++ b/arch/m68k/kernel/early_printk.c
+> > > @@ -60,7 +60,7 @@ early_param("earlyprintk", setup_early_printk);
+> > >
+> > >  static int __init unregister_early_console(void)
+> > >  {
+> > > -       if (!early_console || MACH_IS_MVME16x)
+> > > +       if (!early_console || MACH_IS_MVME147 || MACH_IS_MVME16x)
+> > >                 return 0;
+> > >
+> > >         return unregister_console(early_console);
+> >
+> > Perhaps the whole function and the late_initcall() can just be removed?
+> >
+>
+> A comment in arch/m68k/kernel/early_printk.c gives the reason why that
+> code exists: debug_cons_nputs() lives in .init.text. Platforms like MVME
+> which don't use that function to implement earlyprintk don't have to worry
+> about this.
 
-The solution I sent is not good since it relies on EH.
+Thanks, I had forgotten about that...
 
-One would need to come up with a better solution to fix libsas drivers,
-possibly a workqueue.
+> I suppose MACH_IS_FOO is not a great way to encode that requirement. But
+> it don't think it has to be self-documenting. It does have to be
+> consistent with the conditionals in head.S.
 
-I think Damien is planning to add a workqueue submit path to libata,
-if so, perhaps we could base a better solution on top of that.
+Alternatively, check if early_console_instance.write() lies within
+__init_begin..init_end?
+That doesn't work with the current setup, as .write() always points
+to the common debug_cons_write().  But it can be made to work
+by setting up .write() with the proper function pointer in
+setup_early_printk(), getting rid of repeated MACH_IS_*() checks in
+the process.
 
+Gr{oetje,eeting}s,
 
-Kind regards,
-Niklas
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
