@@ -1,194 +1,192 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EAB1DE3AA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1DB1DDC2A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743415132; cv=none; b=OBkm2PtWqXnHCBYiur9uB8FFzC+fv5iHUwAgS7xy4Zw6vuMZXSGGNDEObCY8r4c8ATtEsNq1vzc64/beALcvvFbJtJ0FCwJWfa23XakWtTqJienMgh7HZ63Ld4HC5JMJc1++FBkj2C7U8yCrZpRk8UGbDg1YiFu3eZwxOckcRKw=
+	t=1743415150; cv=none; b=JBpLmddoGsdC4m01kCxoYXqDmnpiY1shc6by5R0AGi6odC5bcGR9S+7HLc0jskTIWMBIMpDcTzQLAINERC6Yu6awFAiSQ69cQbJHOcCn2EnI73W8hLSj5HSPON/HeiUg5hRW6pIHOIi8pp0+2vYVuFMuTrFNcD/0TqFR7RBEPus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743415132; c=relaxed/simple;
-	bh=9QA8hAVA+DkW9LvznPOjFLZe0xQz71Xtbfr296v09Yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k00B/xF+FlV30O4BJsbrUirULLPpOG3V4zwCB+I3/vSdtpEXbGQUWOzfxmHro4KSQdjQBTBV6ju0wnzOYr0U5QAA6t8OF3MM5+U1Mj8C51RXTEXWBMAbWGuYOpZPhu3YjFaaF5YkHQxITeBzbhoy0w1BRwtWsd2KN7tMbkYKxDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RsCrGFAN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TDrN14Rr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p/v5NoU/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/G9fCVKm; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1743415150; c=relaxed/simple;
+	bh=fE2yV1EfWdOSDD3lTLSFSatOPo4QJYyHJ6sAYEeiirw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rGJ1BK7iy0FSUqd68eD/w5lrWeKeTHH+WiO9w5/zeev7sPndIggk4Y3KSWH6Fllc1RkzaVdkSs51UKranlvR2sO5GRQ4PY2TQ7OsRkQwYQJqVkglCHo0PiOEpNO7hc/6iqMUHSPp7wGFoDA4hXfKCTCiMB1ODMsyYNj0IpV52Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UJMBgGsb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Us48FF6g; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UJMBgGsb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Us48FF6g; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RsCrGFAN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TDrN14Rr";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p/v5NoU/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/G9fCVKm"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UJMBgGsb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Us48FF6g";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UJMBgGsb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Us48FF6g"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D6A421F38D;
-	Mon, 31 Mar 2025 09:58:47 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0C0BC1F38D;
+	Mon, 31 Mar 2025 09:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743415128; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1743415146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=16H+qm94B9aoAZ004+7XaQrFI+HIiFIaXKZ+FNQBVoM=;
-	b=RsCrGFANFPPLqr/9ZK3MG+LfZavGUKmGiTz02+RRv0F5psmmzVHC5q6fw53/HJ1WtEBxq9
-	G9f2Lu4lWq+MxvAXPZ3FNeOsYqgst6uiuOQtwW1IgxjBYATi1HRSLIh3OQRKPmAR8ugvE9
-	Y8OeiQUr9FT5WyX5v3PzDfJ5oBZGeq8=
+	bh=IdJX3EPh9zBNVXcfpydPnfMxZ6GfiCP+RhGRVnB0bTs=;
+	b=UJMBgGsb89hYXxoQNZR7fxon4nMOezI+Ogxs4FPU/uSPd488PWUX3t4XSkDzJGmPphfBWY
+	f6AZ8/j5NtpRLPIZ7pedpQtQAv1g7MYbR8rCAkugodzHyA/NapHfkGWYmXJDfR6NdFWUEM
+	W4Hn6hHmT4+qoE6MicMOHW2l31glqk8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743415128;
+	s=susede2_ed25519; t=1743415146;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=16H+qm94B9aoAZ004+7XaQrFI+HIiFIaXKZ+FNQBVoM=;
-	b=TDrN14RrGfg3KgUQ6K2HFejAJsvdlbRjWPYz0aKQCmbbeLkmrdLlbPsZck8L6OufxCiJx9
-	8Ioe9EevDYc80gCg==
+	bh=IdJX3EPh9zBNVXcfpydPnfMxZ6GfiCP+RhGRVnB0bTs=;
+	b=Us48FF6gfumWf0od57vWzU7yqIIbPhn9LfQpqRxMcSwD+7A8lb89Azbp/uIeoIhb0zNbJ1
+	34oigXPf6BORX6DA==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="p/v5NoU/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/G9fCVKm"
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UJMBgGsb;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Us48FF6g
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743415127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1743415146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=16H+qm94B9aoAZ004+7XaQrFI+HIiFIaXKZ+FNQBVoM=;
-	b=p/v5NoU/aSgNnQ6K3BNDiSRNU32hR4AyKf/5gDV5znJRfxH1o2Y2QBheO8OzyOGrL0NZFc
-	0STU4Cy3ok45VYvsNbPzBgyjZdnklScPof39RetwT3o80so5nFYQ4HnZRJ23/Q9/bjGGoJ
-	cs1NVW+nW/p02WKFuLn9XlCm7woWe2s=
+	bh=IdJX3EPh9zBNVXcfpydPnfMxZ6GfiCP+RhGRVnB0bTs=;
+	b=UJMBgGsb89hYXxoQNZR7fxon4nMOezI+Ogxs4FPU/uSPd488PWUX3t4XSkDzJGmPphfBWY
+	f6AZ8/j5NtpRLPIZ7pedpQtQAv1g7MYbR8rCAkugodzHyA/NapHfkGWYmXJDfR6NdFWUEM
+	W4Hn6hHmT4+qoE6MicMOHW2l31glqk8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743415127;
+	s=susede2_ed25519; t=1743415146;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=16H+qm94B9aoAZ004+7XaQrFI+HIiFIaXKZ+FNQBVoM=;
-	b=/G9fCVKmWeqX+ArZYKD+j/VLL8uw2tqhn6cBbK9XJ+wvUqzdQyFJHT4qhCkbqYb023Cq5g
-	pez9179otvLF9ZBA==
+	bh=IdJX3EPh9zBNVXcfpydPnfMxZ6GfiCP+RhGRVnB0bTs=;
+	b=Us48FF6gfumWf0od57vWzU7yqIIbPhn9LfQpqRxMcSwD+7A8lb89Azbp/uIeoIhb0zNbJ1
+	34oigXPf6BORX6DA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC05413A1F;
-	Mon, 31 Mar 2025 09:58:47 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DFA2F13A1F;
+	Mon, 31 Mar 2025 09:59:05 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5SLQMVdn6mdCWwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 31 Mar 2025 09:58:47 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 90DABA08D2; Mon, 31 Mar 2025 11:58:39 +0200 (CEST)
-Date: Mon, 31 Mar 2025 11:58:39 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, rafael@kernel.org, 
-	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 2/6] super: simplify user_get_super()
-Message-ID: <apzp52dtiqmcnyrapztovqmw7lhfw7c4yefvup2rapcdes527n@l2r7v2noqxek>
-References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <20250329-work-freeze-v2-2-a47af37ecc3d@kernel.org>
+	id q6IeNmln6mdWWwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 31 Mar 2025 09:59:05 +0000
+Message-ID: <39586553-6185-4b83-b18a-3716caf2f3cf@suse.cz>
+Date: Mon, 31 Mar 2025 11:59:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250329-work-freeze-v2-2-a47af37ecc3d@kernel.org>
-X-Rspamd-Queue-Id: D6A421F38D
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.51 / 50.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
+Content-Language: en-US
+To: Sebastian Sewior <bigeasy@linutronix.de>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf
+ <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Michal Hocko <mhocko@suse.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
+ <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
+ <CAHk-=whVcfPyL3PhmSoQyRQZpYUDaKTFA+MOR9w8HCXDdQX8Uw@mail.gmail.com>
+ <CAADnVQKBg0ESvDRvs_cHHrwLrpkar9bAZ9JJRnxUwe4zfGym6w@mail.gmail.com>
+ <20250331071409.ycI7q6Q2@linutronix.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250331071409.ycI7q6Q2@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 0C0BC1F38D
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
+	TO_DN_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
 	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[linutronix.de,gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,hansenpartnership.com,kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
 	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.cz:dkim,suse.cz:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -2.51
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:dkim,linux-foundation.org:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Sat 29-03-25 09:42:15, Christian Brauner wrote:
-> Make it easier to read and remove one level of identation.
+On 3/31/25 09:14, Sebastian Sewior wrote:
+> On 2025-03-30 14:49:25 [-0700], Alexei Starovoitov wrote:
+>> On Sun, Mar 30, 2025 at 1:56 PM Linus Torvalds
+>> <torvalds@linux-foundation.org> wrote:
+>> > So maybe "nmisafe_local_lock_t" or something in that vein?
+>> >
+>> > Please fix this up, There aren't *that* many users of
+>> > "localtry_xyzzy", let's get this fixed before there are more of them.
+>> 
+>> Ok. Agree with the reasoning that the name doesn't quite fit.
+>> 
+>> nmisafe_local_lock_t name works for me,
+>> though nmisafe_local_lock_irqsave() is a bit verbose.
+>> 
+>> Don't have better name suggestions at the moment.
+>> 
+>> Sebastian, Vlastimil,
+>> what do you prefer ?
 > 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> nmisafe_local_lock_t sounds okay assuming the "nmisafe" part does not
+> make it look like it can be used without the trylock part in NMI context.
 
-Looks good. Feel free to add:
+Yes I was going to point out that e.g. "nmisafe_local_lock_irqsave()" seems
+rather misleading to me as this operation is not a nmisafe one?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+I think it comes back to what we discussed in previous versions of the
+patchset. IMHO conceptually it's still a local_lock, it just supports the
+new trylock operations. However, to make them possible (on non-RT) if a
+particular lock instance is to be used with the trylock anywhere, it needs
+the new "acquired" field, and for the non-trylock operations to work with
+the field too.
 
-								Honza
+So (to inform Linus) the earlier attempt [1] was to just change the existing
+local_lock_t, but that adds the overhead of the field and manipulating it
+for instances that don't use trylock.
 
-> ---
->  fs/super.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
+The following attempt [2] meant there would be only a new local_trylock_t
+type, but the existing locking operations would remain the same, relying on
+_Generic() parts inside them.
+
+It was preferred to make the implementation more obvious, but then we have
+the naming issue for the operations in addition to the type...
+
+[1]
+https://lore.kernel.org/bpf/20241218030720.1602449-4-alexei.starovoitov@gmail.com/
+[2]
+https://lore.kernel.org/bpf/20250124035655.78899-4-alexei.starovoitov@gmail.com/
+
+> But yeah, it sounds better than the previous one.
 > 
-> diff --git a/fs/super.c b/fs/super.c
-> index dc14f4bf73a6..b1acfc38ba0c 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -987,20 +987,21 @@ struct super_block *user_get_super(dev_t dev, bool excl)
->  
->  	spin_lock(&sb_lock);
->  	list_for_each_entry(sb, &super_blocks, s_list) {
-> -		if (sb->s_dev == dev) {
-> -			bool locked;
-> -
-> -			sb->s_count++;
-> -			spin_unlock(&sb_lock);
-> -			/* still alive? */
-> -			locked = super_lock(sb, excl);
-> -			if (locked)
-> -				return sb; /* caller will drop */
-> -			/* nope, got unmounted */
-> -			spin_lock(&sb_lock);
-> -			__put_super(sb);
-> -			break;
-> -		}
-> +		bool locked;
-> +
-> +		if (sb->s_dev != dev)
-> +			continue;
-> +
-> +		sb->s_count++;
-> +		spin_unlock(&sb_lock);
-> +
-> +		locked = super_lock(sb, excl);
-> +		if (locked)
-> +			return sb;
-> +
-> +		spin_lock(&sb_lock);
-> +		__put_super(sb);
-> +		break;
->  	}
->  	spin_unlock(&sb_lock);
->  	return NULL;
-> 
-> -- 
-> 2.47.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Sebastian
+
