@@ -1,198 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775273FFD;
-	Mon, 31 Mar 2025 11:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108583FFD;
+	Mon, 31 Mar 2025 11:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421808; cv=none; b=XqSJYNN8IkzYOgY5Rd7Mp+krjXgLbguEhlrgGQad4E55NbA3e1oKW+EbhjwOHnBo4To3OLyVVw42kWRjc2OvrZq0IMziNK02vYUAUTRy1wXtCG4Eu7AOUwbtJKal6Wgjzd4d4IM/dWtsWtbmm87Da1o9LSZQZk0INumCAtXmhTE=
+	t=1743421868; cv=none; b=V+/tdAjdenoYN5DfuELcUrdsUdI4MVKxlDfuq1UgON2pFCk6ZaACSUIOU4bru9H/Wdk3RIRWrG6nfEWpbb1TSopPv0tIDxLT4SPKAvBimQUPPVwMCze0M58dYWC8pJjEhDJIuZxztbWqrEjYXsoSwC01GFqyEHF9GynlDlH0wxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421808; c=relaxed/simple;
-	bh=MYEy3KUt4Vziuf3JPdcDXA+dmtuT4BAZ42zdVk0TC14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s/gwcur3ewuB8W/avkVKo7heo9SaQWVAtmHVlLTTvKwnC9X4wm19TWEEHJmp8uZS4EjCWP8DEOn4lsnk+reOODjj2S4PX68c5zeoQ2my1NT4/Dj1P12Kyca7ap0upWVbQbSOnTTRmgTkQlAvKrVyjaS2raq+Asmt3TeMiFkGadU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIv1oXhp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743421868; c=relaxed/simple;
+	bh=08Ig/ejtnrWAAxY/gsnODYpQJfHXrmhC4T01cYFxZIQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=hLg12djjox22QSkwuN0WaXaaoTtTsvCdQ/XoVeIIHwoIPN/eQGxqQCgKtunVH1VptzVi5YMJnbnkzUxPZssKqZvqqth0r2uWPKx0RXh/qleWNChAvGX0ATWlc7dvhbVe2LxFsKJPDgrMzk6kXwfU4pmG/lYJw4UaJLMW7nej67U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U2/7PLMN; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIv1oXhp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB235C4CEE3;
-	Mon, 31 Mar 2025 11:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743421806;
-	bh=MYEy3KUt4Vziuf3JPdcDXA+dmtuT4BAZ42zdVk0TC14=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FIv1oXhpvZPPeMxx1R1IeY1UAUPFP1ksGYI8b0mXkOCBRaefEFq9mYIbkEtwxLjpt
-	 kzWcQ3CgI8V9qFWbWVaqgXawe7YNn3jirf2OuHFY+3TkNIFVL2StoXfcsmFTCJv/Xn
-	 8cyGIK1Jcnp8JAQEFg8VHTVsGhYYvucgEYR08ljSWmrYJRk5t76KKklxQdKjbqjn1c
-	 nPHdLSz/zmn1UPwS7DVnYU8XtTboaCBNbG4+vHFPUgB3ZrdFpVHtb5EWKEDlftwW6O
-	 gfSwlejDBacF8HKsphvoHEEg3TzHdmJllUiWDfStS7DCKIuikFdHjd5bSScoFy8S3W
-	 YzA2E/pN75Lbg==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c1c9b7bd9aso2682936fac.0;
-        Mon, 31 Mar 2025 04:50:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvf9/ixt/t0gdkJY+12G9zUts2MantV9DDFEGrFUqsnk5iTrRSlFjHfOFpUY0mmlTDv9Y/YZf7ixB2@vger.kernel.org, AJvYcCXJVwMMgX7mYxX6YaXtPQaFS1OVk5wUylI4DNdQTxbGFGlEkDUgg3xJjfudc5nREJO0zPJMxy4H5ssVNuF8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEtAxUFjO+DUXnX3RDiHU243gXbOyrTftEe//VTg58oyRYKj9T
-	350mmQUZvmDck/np+rKDOhojorTY+hqijs4RCT+hGBWGRDBmIlPld8D59knBjK3ar2oMeXTl33x
-	lwnpwaDS+KTcLt5m+pWJii5//5J4=
-X-Google-Smtp-Source: AGHT+IGAS5yDWFEFJD3s+MA6DWL9PmQhkyiwCFUbwNJ1LDK8hbKi0POX4g+kLtMf+P6LdYYnbqoxQmFDip0J8SyPyPk=
-X-Received: by 2002:a05:6870:330a:b0:29e:69a9:8311 with SMTP id
- 586e51a60fabf-2cbcf7e09acmr5225647fac.36.1743421805209; Mon, 31 Mar 2025
- 04:50:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U2/7PLMN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743421837; x=1744026637; i=markus.elfring@web.de;
+	bh=TVPznMmgvtOTQGHG9dQFnDWblNXq5SWHs7cRlxqIIBU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U2/7PLMNWMiVZLnqu+F2Sf/pnzUEuI7Geuuw0K9YAlHpoyQRIqyqo5ZC4k5DFYOX
+	 nM3Y8O0VwdZ5dtX05bDLYZK2CBu2VwFcub6Eph7hlvBft/Y7gbNzcsW5BmOrNMfk8
+	 zrVxX6bLoUxdCni83DiC9mK6v/6lrAdGG5ucfkc83lyJ3V2UvzX1y3hsNHr78Q8W0
+	 we0kLgj1v/V07SyzigLAXj2cvR+c8vesal0C8Db60xgtXR5in4ThQ4JTqWKzBW9cY
+	 a97Dn+C55XjxsTQE0uHKhtT2gE5iCWd9uGExq3pU3dv3j4OvFuhdw1iP9Jse8UATq
+	 WnQrbw+CZt37Pxsd3w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ma0Pm-1teRhJ1r6q-00LO3i; Mon, 31
+ Mar 2025 13:50:37 +0200
+Message-ID: <1ec61529-09f2-44d8-9324-b94da82158c4@web.de>
+Date: Mon, 31 Mar 2025 13:50:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743313252.git.x0rw3ll@gmail.com> <a9bd2a1b490b4305c18f8473aab21c97e8902fb8.1743313252.git.x0rw3ll@gmail.com>
-In-Reply-To: <a9bd2a1b490b4305c18f8473aab21c97e8902fb8.1743313252.git.x0rw3ll@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 31 Mar 2025 13:49:53 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jUO-7t4F09TjpX_Ea-U8i61N=9DWwB3urJ6KQGzFX_-g@mail.gmail.com>
-X-Gm-Features: AQ5f1JpRv_w6bLxRrGY0x0g8SVq3IMWuvsT4Jt1SrCNg-I2JCv7dvVmBcx274Ns
-Message-ID: <CAJZ5v0jUO-7t4F09TjpX_Ea-U8i61N=9DWwB3urJ6KQGzFX_-g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] ACPI: mark ACPI_COPY_NAMESEG destinations with
- __nonstring attribute
-To: Ahmed Salem <x0rw3ll@gmail.com>
-Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org, 
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-fbdev@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Thompson
+ <danielt@kernel.org>, Daniel Thompson <daniel@riscstar.com>,
+ Helge Deller <deller@gmx.de>, Jingoo Han <jingoohan1@gmail.com>,
+ Lee Jones <lee@kernel.org>
+References: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] backlight: qcom-wled: Add NULL check in the
+ wled_configure
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7SsMn2wJgXRiuoievwieoWQ0ugNrKUFxHLUISgQYGEL/GdYBhn2
+ K7mDW8JkYzDHDMR4tahn4hOeh3vuMGcWYhK5N15fPjf8jk9jHVjXHNbwO6lzen945JMJhUi
+ Xt7Wz1zwYCzSQthYpiEfOro20w6QF36Z6i9RPc68m9mRNF8nLhokA2ye0A/bNmf+IPBnKZV
+ BsSCJ4DfntREhAwDNyRzw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TX2hSyP+jTg=;di9CvYZZ/LcOKQJzTwOxYTaVrj7
+ H5cwQX0UaVtv0z0YCQwTciZbUxOF8z/ej01KbQFdZ42CU45JdS3yq8NOVi9BJsu8qLda6kwVT
+ +AW5eC3GtUqB8THB4qA3XADVz0GPs/+tB/NX4W9GNee4nPodH3CNGQRqDPKdp05clgRQPTR0d
+ FXME1sWL8Muzo1+kiuTYr+sqhfOuWOsVj7ZWGRO6P7eqsj/CKQFNJ6t9PLq0OJSsr+9jXls0Z
+ csAJsxEqM67AnuPKe5mJ6Jjq2NA72Ta8vKnxe2hFUCFpLwUZbtEGMaZTNekxOAexCheHEbtRw
+ KWLnQysIXesHiP6A7yGFV38aDUmtXAlrabGTUWGkWBKJEBvQj4lfRITsR3rZTds5XdCuG6MtV
+ VcrFUZKakY5gPTv85sn/x3HhXIbp/EVlx9xvfiCW4kNd7UzPF1D4oGRCjBh5VcfdOq4Le3XJT
+ XnJrxeyMy7Ro76msigt27AOS+wEbSdIDpR3r/NuUbJjzE8J2KapfN8+pQyA+lj+WS/Z+Hck15
+ nYx8Wmdr3LJGCfe07gnpFqVPtGzqIVkAEmmRsNA5Fpjg2rHuqfhji1NJUmti9VQb94igPWmW+
+ nWis8EGwkSsdhPSUKw9a6LlC09vYdTx9ddejYB9xydDnWMOZWGQfBfGrSZTTOKJdAUs+49GFY
+ 0j8WdS1MZMJ1rJ8sOs43W4ytdF3CHAIb/zb5Kj6/uirOl3Igwt+5tKTPLih4hNjBdWblALz4B
+ cIh0X6vvwDMaaKQVWFq+VWYWy1CLupDI9Wr2PIE8KU3OHN0aoOvpcBj0W0fIMmMWnlfs/cDhj
+ 0D6a7IEVNRH8AewjgDxDw7R14h5DyV6Ur96c7DvP0yuLUf3FSvE/1ULtDg7adlxnHlTEjqFD4
+ O0AVxzTpu8X5huFeCwNPo1DJG5CTrawWaj3RpXwx20AgvkMXULrIQFqZs2Ro+Q8ME7e3fDPfQ
+ B5N9ZtDwpC5l+E/J+485YQmJdSlxJ+rkNoKXqePhQC3dpl6LpS2XG6mWiwcjNE6dYQdwwGuSu
+ MaLvadAuU7KJOVdkmwOT4lpTOmgjbPHJngWf/r4hiorGY3qZ4oRFeJK7Kw/5H7oSV+WLxjfkz
+ yCoH0i7HsB4xBYVeh8Vumz/aiBUYP5zNkbwOKTaq/v737QBzBTzzvUITXpDtOBrx79z+e+ELC
+ q0DZX2rvV/7HnshQv6RrJy84ljqY8Y1CgQ8BCJWiifgODchmda7YkvoMzCzyIAy2OGbaZfjEK
+ SAp/cAlnok2pf2Q02AGk4irOFClvLqCP+BJV9ZcolqG5lQXFahLFtBiTxEPIoe8RxVNUlhBKG
+ vrjwleLbEVLhRWWuv1MC74uycJK7Jb9M4V6W/nA57Y5AmjK1y9asEhgPf14tZnEQKm0fNwOHs
+ AIxXSDloN7lR0CaNgYuatQ9ZcCBBkfcUCUeVX03pN4x/oIU1weR3zebgnDc0PkwvxCTIbXOeb
+ eS07o3LzjXH8Y3HHfqy5sO/1nrY1RB/ou7dNBcWz6HzS/UVwZuJR7ZOjvsc4MZI3nRvVDMg==
 
-On Sun, Mar 30, 2025 at 7:54=E2=80=AFAM Ahmed Salem <x0rw3ll@gmail.com> wro=
-te:
+> When devm_kasprintf() fails, it returns a NULL pointer. However, this re=
+turn value is not properly checked in the function wled_configure.
 >
-> strncpy(), which ACPI_COPY_NAMESEG currently uses, is deprecated[1].
->
-> This patch is the first of two, ultimately replacing strncpy() with
-> strtomem(), avoiding future compiler warnings about truncation.
->
-> [1] https://github.com/KSPP/linux/issues/90
->
-> Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
+> A NULL check should be added after the devm_kasprintf call to prevent po=
+tential NULL pointer dereference error.
 
-ACPICA material is primarily handled by the upstream ACPICA project on
-GitHub, so please avoid mixing ACPICA code changes with changes to the
-other code in one patch.
+* Please adhere to word wrapping preferences around 75 characters per text=
+ line.
 
-Also, ACPICA changes should first be submitted to upstream ACPICA, as
-indicated on this list for many times, see for instance:
+* How do you think about to choose the imperative mood for an improved cha=
+nge description?
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
 
-https://lore.kernel.org/linux-acpi/CAJZ5v0gUDxrAn4W+Rf3ifjrg8Z9ZzTTOZjPFSSN=
-5488mPqzXeA@mail.gmail.com/
 
-> ---
->  drivers/acpi/acpica/acdebug.h                            | 2 +-
->  drivers/acpi/prmt.c                                      | 2 +-
->  drivers/acpi/sysfs.c                                     | 4 ++--
->  include/acpi/actbl.h                                     | 6 +++---
->  tools/power/acpi/os_specific/service_layers/oslinuxtbl.c | 2 +-
->  tools/power/acpi/tools/acpidump/apfiles.c                | 2 +-
->  6 files changed, 9 insertions(+), 9 deletions(-)
+=E2=80=A6
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -1406,8 +1406,14 @@ static int wled_configure(struct wled *wled)
+>  	wled->ctrl_addr =3D be32_to_cpu(*prop_addr);
 >
-> diff --git a/drivers/acpi/acpica/acdebug.h b/drivers/acpi/acpica/acdebug.=
-h
-> index 911875c5a5f1..2b56a8178f43 100644
-> --- a/drivers/acpi/acpica/acdebug.h
-> +++ b/drivers/acpi/acpica/acdebug.h
-> @@ -37,7 +37,7 @@ struct acpi_db_argument_info {
->  struct acpi_db_execute_walk {
->         u32 count;
->         u32 max_count;
-> -       char name_seg[ACPI_NAMESEG_SIZE + 1];
-> +       char name_seg[ACPI_NAMESEG_SIZE + 1] __nonstring;
->  };
->
->  #define PARAM_LIST(pl)                  pl
-> diff --git a/drivers/acpi/prmt.c b/drivers/acpi/prmt.c
-> index e549914a636c..ca70f01c940c 100644
-> --- a/drivers/acpi/prmt.c
-> +++ b/drivers/acpi/prmt.c
-> @@ -40,7 +40,7 @@ struct prm_buffer {
->  };
->
->  struct prm_context_buffer {
-> -       char signature[ACPI_NAMESEG_SIZE];
-> +       char signature[ACPI_NAMESEG_SIZE] __nonstring;
->         u16 revision;
->         u16 reserved;
->         guid_t identifier;
-> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> index a48ebbf768f9..a05d4032d4f1 100644
-> --- a/drivers/acpi/sysfs.c
-> +++ b/drivers/acpi/sysfs.c
-> @@ -307,9 +307,9 @@ static struct kobject *hotplug_kobj;
->
->  struct acpi_table_attr {
->         struct bin_attribute attr;
-> -       char name[ACPI_NAMESEG_SIZE];
-> +       char name[ACPI_NAMESEG_SIZE] __nonstring;
->         int instance;
-> -       char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE];
-> +       char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE] __nonstring;
->         struct list_head node;
->  };
->
-> diff --git a/include/acpi/actbl.h b/include/acpi/actbl.h
-> index 451f6276da49..8aa60281e7db 100644
-> --- a/include/acpi/actbl.h
-> +++ b/include/acpi/actbl.h
-> @@ -66,12 +66,12 @@
->   ***********************************************************************=
-*******/
->
->  struct acpi_table_header {
-> -       char signature[ACPI_NAMESEG_SIZE];      /* ASCII table signature =
-*/
-> +       char signature[ACPI_NAMESEG_SIZE] __nonstring;  /* ASCII table si=
-gnature */
->         u32 length;             /* Length of table in bytes, including th=
-is header */
->         u8 revision;            /* ACPI Specification minor version numbe=
-r */
->         u8 checksum;            /* To make sum of entire table =3D=3D 0 *=
-/
-> -       char oem_id[ACPI_OEM_ID_SIZE];  /* ASCII OEM identification */
-> -       char oem_table_id[ACPI_OEM_TABLE_ID_SIZE];      /* ASCII OEM tabl=
-e identification */
-> +       char oem_id[ACPI_OEM_ID_SIZE] __nonstring;      /* ASCII OEM iden=
-tification */
-> +       char oem_table_id[ACPI_OEM_TABLE_ID_SIZE] __nonstring;  /* ASCII =
-OEM table identification */
->         u32 oem_revision;       /* OEM revision number */
->         char asl_compiler_id[ACPI_NAMESEG_SIZE];        /* ASCII ASL comp=
-iler vendor ID */
->         u32 asl_compiler_revision;      /* ASL compiler version */
-> diff --git a/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c b/t=
-ools/power/acpi/os_specific/service_layers/oslinuxtbl.c
-> index 9d70d8c945af..52026b9e389e 100644
-> --- a/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c
-> +++ b/tools/power/acpi/os_specific/service_layers/oslinuxtbl.c
-> @@ -19,7 +19,7 @@ ACPI_MODULE_NAME("oslinuxtbl")
->  typedef struct osl_table_info {
->         struct osl_table_info *next;
->         u32 instance;
-> -       char signature[ACPI_NAMESEG_SIZE];
-> +       char signature[ACPI_NAMESEG_SIZE] __nonstring;
->
->  } osl_table_info;
->
-> diff --git a/tools/power/acpi/tools/acpidump/apfiles.c b/tools/power/acpi=
-/tools/acpidump/apfiles.c
-> index 13817f9112c0..5a39b7d9351d 100644
-> --- a/tools/power/acpi/tools/acpidump/apfiles.c
-> +++ b/tools/power/acpi/tools/acpidump/apfiles.c
-> @@ -103,7 +103,7 @@ int ap_open_output_file(char *pathname)
->
->  int ap_write_to_binary_file(struct acpi_table_header *table, u32 instanc=
-e)
->  {
-> -       char filename[ACPI_NAMESEG_SIZE + 16];
-> +       char filename[ACPI_NAMESEG_SIZE + 16] __nonstring;
->         char instance_str[16];
->         ACPI_FILE file;
->         acpi_size actual;
-> --
-> 2.47.2
->
->
+>  	rc =3D of_property_read_string(dev->of_node, "label", &wled->name);
+> -	if (rc)
+> +	if (rc) {
+>  		wled->name =3D devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node)=
+;
+> +		if (!wled->name) {
+> +			dev_err(dev, "Failed to allocate memory for wled name\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+=E2=80=A6
+
+An extra error messages for a failed memory allocation may occasionally be=
+ omitted.
+
+Regards,
+Markus
