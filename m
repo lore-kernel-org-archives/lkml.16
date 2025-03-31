@@ -1,891 +1,738 @@
-Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1A521D3C7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718EA1C84CD
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743456639; cv=none; b=KX2GzdVDVTTYstdLeFmUq5XEmCzRpPLsZXhiTPCxlTsaEL8z88GThr3HJRUHg/GZ9B3H0FsWSn75OlwU+L2SN8QkN7yQHRVp2/EfcEaw8noOMsqDiTAw+NnIkn/7X/wU4b88KvLXiRvfLBhynfLJyJA8hComfOZFPjX9+qd7OoU=
+	t=1743456840; cv=none; b=fMRu1racglFuh6QMZ3kS0hxoM+EedUCGT4iCDATt/tH8WVjd0EPU3eAFYQVPC1ZVwwWTcf2iK61XDIAHHU/x6Gk5b9mg9W1gFSWr3cYCXUAVwxm4XI5C8eE+qmgdx9vmxMPZPvB/s9hafSqYY89IvsCbHx7PP1zCct/QYjzEwoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743456639; c=relaxed/simple;
-	bh=6+lraWvXc21zEAJqvuRM6lZPXoAwTUcYwwW83T26otU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P6inMSGO4Prgacy0uAkwiX0MN9Z7vVntY2giggmbC2AhYLurjYvteQdXGri8s0KKnLxJ5aCT9xOt0Nx77HNhzhKDwnJzgtk6kVebqxbnq92vHdYS3qaMWnEVa6JWxoBBIy6lPwEDodXdF1QF7lM6tKbzhdzZPNENEu5rEtoZi9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ugk02Kvr; arc=none smtp.client-ip=209.85.219.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	s=arc-20240116; t=1743456840; c=relaxed/simple;
+	bh=SvI4+iAGLTiHM92hNYqgU3kD1qhAQT77ZMC9105+LPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ADyBENdHSin92ZiCEaytQL0gwTkaWEP9YKniqkFcAgRckPnL5uSBfIaSuWmH/Mi77ebDz0/SF3RBymjnYUHQ5e9ZCrhZf7ANcXrsdIfbaCjFO+d+omhMMR9yE3fXtonm2Orv6K6itToVYlxKj3Uc4/WXCY0oOZq/wkTNayvDq3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hS/RNKty; arc=none smtp.client-ip=209.85.222.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ugk02Kvr"
-Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-6e9083404b7so91054946d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:30:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS/RNKty"
+Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7c55500d08cso440830285a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:33:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743456636; x=1744061436; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Sq4CMaYvrnwXwfxJaisSeaUnopobyqI3NDMrHM5jZs=;
-        b=Ugk02KvrHlOUeS1pwZ9mdjg3i5KOYtSzQi1hp6YiAr4F1TAF4TCwHK8/owpi24I5uH
-         uePkIAwmybBIRQofp81rkxfHTMqDcBwXtqech+7etTjlR4k62OsQIx4j+Fy4/wKxXXS5
-         H59+4Qt4v/XFOFPSQEuO7CzXnM3TK8qLVr0dOkAJBSSuMIVHoMayUoJXbu8fZPI0sGhn
-         BjBMGh7K+pnvQdAyKfuM+b+eMy9XGzEz22j2wsKD1CJS2504OfH2vTOakp90ds93W+jb
-         c012HTGzDXa4vLZMduc58BDhaoNeFP/amJ/pppnBEb17qsZo+FLgonwMRw6ooiVL2jeZ
-         1nFA==
+        d=gmail.com; s=20230601; t=1743456836; x=1744061636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7tEJ1wFPm3jkVhALABWguqUU8xeCdgYsuDfWLA4x5WU=;
+        b=hS/RNKtyTFbBHSKrfWNrt7dGN5mzIaeQbBgLRiI6Lu75Nd+EtIrhQ8xO7qC06BWtDK
+         Wg4Yd8RrfwpiJDqminIpz5oxOXYgTMqBqHm8X7PPSnZ4iAZs9LjD2C8VKDnI/57ZajvD
+         HBsyvlRc1xXNbvsyxpwbScZcvSlsoa7Rk3Mzhd3F8kbKjMl1SEI9lzLpO4qVM+OB7rml
+         plH2oLesVKkB5ekG8WTDLWa7EQ9ugy5ADK/YPePb5qaiWQbJQ0gaOLGNjVxqmuo17g7k
+         bS6Uv+klbmA08CfcMF7yVFeUUiDHnybEM2jnGGy8T1BmaxiFs20GjFACnfyUI9qgAylr
+         xiQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743456636; x=1744061436;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Sq4CMaYvrnwXwfxJaisSeaUnopobyqI3NDMrHM5jZs=;
-        b=bZJULHyoVuNBFOFfbRs8NYLb7KZIDTBU39J2CH9J65UEfD+Q0aiFEyo+X7KQa2lkxJ
-         a3cCok+5nMxYDZNRp24Tq60fTbOle5SRS4aoHzyRW2VuH6SodtcnAOuK/i90qj4gmLnO
-         Eg5+Okw9m7BSPGPTWc12P+Jtmzs7IkU5ujPwTJgM4JA8NJ7Qk429cUFnQTG3SvWzVvsV
-         xr0MhU4qfVEvNCiQpb3+pN5RhBfJERJNNtotqUHJ8twkEvNKom1dfH9ztgAMouXUClBS
-         mohc9cb9YFtnnHdsZwdxbLhuEEfBj/YdWhJFqAy+JAcq830VT2sIybxwQcMG+ss5OMRf
-         uYOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZX9rKyjAqQTGwz3w2GoiEixYlF83S4XJWiZECLaYgXLAyk0KNBxoZQeLELQbolifPN2Dw/YPkT5Ja/vE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYl6DDCAlr3lJUsNvubqoHP22bCW+dT5vy+brx83XVE2Phw2lr
-	KgIr71077fh+iAY7inEZiyfoZ2Iw5I5wRZ+Jb4NBy3iSV+aq4YRpQl50yHgqvCPud/eyGE5k7Oi
-	2F43IRbIt6FvGbTi8yg==
-X-Google-Smtp-Source: AGHT+IEmgPcS3rl2NGqYjqldiwr5tRYuLarjy6S5hHY3IYfTpAjdzo/WiGs26s8YiQOqlH7IQGwXKnLWg3/VSIaE
-X-Received: from qvbpb3.prod.google.com ([2002:a05:6214:4843:b0:6ec:f38a:d191])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6214:5297:b0:6e8:9a2a:145b with SMTP id 6a1803df08f44-6eed60bd410mr153091676d6.23.1743456635791;
- Mon, 31 Mar 2025 14:30:35 -0700 (PDT)
-Date: Mon, 31 Mar 2025 21:30:25 +0000
-In-Reply-To: <20250331213025.3602082-1-jthoughton@google.com>
+        d=1e100.net; s=20230601; t=1743456836; x=1744061636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7tEJ1wFPm3jkVhALABWguqUU8xeCdgYsuDfWLA4x5WU=;
+        b=eSj85SRVMI/9TmdC0RjVnZqftdBepmhiTOiD8ir5cWYmFdnLzB0/j4YwNrcFo3XJ7i
+         5h2e0eL3+Iuva03QjcJgsCU/Fv/4Fmx9YbxTzznMEB6Ax95kXhYc2A83Z7M9GWtvTX0O
+         R1bH09FCsSql1HJEnNGMuWLuVAocoQp/ulMxtFIoKlcVaoDRFl1tjDyuC2KEdhqB8Oqc
+         V/QEKo9GcHKwy+droZrA6u7Ncs7YgC/ZjeOHhVGqldsBaEWLNk/D7XlhDr+YX+4hq2d5
+         UmxGxoqHgcJMUawOYq9kf9oZKOsQWn0O2FdbsfmzCv4Y/+0g/zY/UOxTwtLW9aPrDrhy
+         OyBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCut+sBHLXM5y/hJ8Kte7ReuzXSuF4UaoqKzudauAHWb51ki87bf+PHfOKwt4qlLC5udhQ9ELQmOC8mEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlwWWWiC7TFcqHtXz1WSY+jwjYkHAC/VenSL4qEaykQQ6DiCnk
+	emLk/5aVMy6WCno2WfzXeVV038fpne6x/tguNqUq53pCmz9B5N90
+X-Gm-Gg: ASbGncsfjmgBx+vNOc/qwLqJGhJ87tuU5RN5138iL0bwCsqyjxiFlkOUnXfh0WFsiFX
+	/cEa38r9Da0EdjJWvpeuA7bl+5NZvV82iQwNdbp5hCKnotVa/ff0l1gLnkOxvpj5e7AXFnOfUz5
+	fl0hu75cx5RCOkcAEGDoVHi5QAfvBYiwcojFUo4NpKK28xmIMg6SerVuVGlNze2HEs5ojdTLFif
+	dearUVbkek8eQ23X7MKqbPwzRRKEFvkUPErYaqmwehg+6Jg0pq7tHOMicHpFENDgnNA2GcDpp+j
+	B3bu+sYWZ5Htf0DpBTx/AcrpycFQZV7OooCzbDsziotPsWp+xwqLGyYcB6We+sJ5VO9d+c9CYds
+	hoF0GECKk7ZCB6yol8ZyNqA==
+X-Google-Smtp-Source: AGHT+IEFxalrJlq0+JMFGrsZjGtwnzd/nNhPXdgkAW1KvbTlhxj3uTDPqBntpYHL3YNJMNpvUi7mEg==
+X-Received: by 2002:a05:620a:1929:b0:7c5:6ba5:dd65 with SMTP id af79cd13be357-7c6908d3e9bmr1359435085a.55.1743456836165;
+        Mon, 31 Mar 2025 14:33:56 -0700 (PDT)
+Received: from UbuntuDev.. (syn-074-067-077-020.res.spectrum.com. [74.67.77.20])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7682e57sm549849485a.39.2025.03.31.14.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 14:33:55 -0700 (PDT)
+From: gpittala <ganeshkpittala@gmail.com>
+To: johan@kernel.org,
+	elder@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: hvaibhav.linux@gmail.com,
+	vaibhav.sr@gmail.com,
+	mgreer@animalcreek.com,
+	rmfrfs@gmail.com,
+	pure.logic@nexus-software.ie,
+	greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ganeshkpittala@gmail.com
+Subject: [PATCH] staging: greybus: Multiple cleanups and refactors
+Date: Mon, 31 Mar 2025 21:33:37 +0000
+Message-ID: <20250331213337.6171-1-ganeshkpittala@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250331213025.3602082-1-jthoughton@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250331213025.3602082-6-jthoughton@google.com>
-Subject: [PATCH v2 5/5] KVM: selftests: access_tracking_perf_test: Use MGLRU
- for access tracking
-From: James Houghton <jthoughton@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Yu Zhao <yuzhao@google.com>, 
-	James Houghton <jthoughton@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-By using MGLRU's debugfs for invoking test_young() and clear_young(), we
-avoid page_idle's incompatibility with MGLRU, and we can mark pages as
-idle (clear_young()) much faster.
+This patch includes multiple meaningful cleanups for the Greybus staging driver:
 
-The ability to use page_idle is left in, as it is useful for kernels
-that do not have MGLRU built in. If MGLRU is enabled but is not usable
-(e.g. we can't access the debugfs mount), the test will fail, as
-page_idle is not compatible with MGLRU.
+1. firmware.c: Replaced deprecated 'strncpy()' with 'strscpy()'
+2. sysfs show functions: Replaced 'sprintf()' with 'sysfs_emit()'
+3. loopback.c: Refactored a large function (gp_loopback_fn) to improve readability
+4. audio_gb.c: Split logic in get_topology() into separate calls as per TODO
 
-cgroup utility functions have been borrowed so that, when running with
-MGLRU, we can create a memcg in which to run our test.
+All changes are tested and pass checkpatch.pl
 
-Other MGLRU-debugfs-specific parsing code has been added to
-lru_gen_util.{c,h}.
-
-Co-developed-by: Axel Rasmussen <axelrasmussen@google.com>
-Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
-Signed-off-by: James Houghton <jthoughton@google.com>
+Signed-off-by: gpittala <ganeshkpittala@gmail.com>
 ---
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../selftests/kvm/access_tracking_perf_test.c | 207 ++++++++--
- .../selftests/kvm/include/lru_gen_util.h      |  51 +++
- .../testing/selftests/kvm/lib/lru_gen_util.c  | 383 ++++++++++++++++++
- 4 files changed, 616 insertions(+), 26 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/include/lru_gen_util.h
- create mode 100644 tools/testing/selftests/kvm/lib/lru_gen_util.c
+ .../greybus/Documentation/firmware/firmware.c |  32 ++--
+ drivers/staging/greybus/arche-apb-ctrl.c      |  11 +-
+ drivers/staging/greybus/arche-platform.c      |  11 +-
+ drivers/staging/greybus/audio_gb.c            |  37 +++-
+ .../staging/greybus/audio_manager_module.c    |  13 +-
+ drivers/staging/greybus/gbphy.c               |   3 +-
+ drivers/staging/greybus/light.c               |   5 +-
+ drivers/staging/greybus/loopback.c            | 170 ++++++++++--------
+ 8 files changed, 159 insertions(+), 123 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index c86a680f52b28..6ab0441238a7f 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -8,6 +8,7 @@ LIBKVM += lib/elf.c
- LIBKVM += lib/guest_modes.c
- LIBKVM += lib/io.c
- LIBKVM += lib/kvm_util.c
-+LIBKVM += lib/lru_gen_util.c
- LIBKVM += lib/memstress.c
- LIBKVM += lib/guest_sprintf.c
- LIBKVM += lib/rbtree.c
-diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-index a2ac6fa2ba141..d4ef201b67055 100644
---- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
-+++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-@@ -7,9 +7,11 @@
-  * This test measures the performance effects of KVM's access tracking.
-  * Access tracking is driven by the MMU notifiers test_young, clear_young, and
-  * clear_flush_young. These notifiers do not have a direct userspace API,
-- * however the clear_young notifier can be triggered by marking a pages as idle
-- * in /sys/kernel/mm/page_idle/bitmap. This test leverages that mechanism to
-- * enable access tracking on guest memory.
-+ * however the clear_young notifier can be triggered either by
-+ *   1. marking a pages as idle in /sys/kernel/mm/page_idle/bitmap OR
-+ *   2. adding a new MGLRU generation using the lru_gen debugfs file.
-+ * This test leverages page_idle to enable access tracking on guest memory
-+ * unless MGLRU is enabled, in which case MGLRU is used.
-  *
-  * To measure performance this test runs a VM with a configurable number of
-  * vCPUs that each touch every page in disjoint regions of memory. Performance
-@@ -17,10 +19,11 @@
-  * predefined region.
-  *
-  * Note that a deterministic correctness test of access tracking is not possible
-- * by using page_idle as it exists today. This is for a few reasons:
-+ * by using page_idle or MGLRU aging as it exists today. This is for a few
-+ * reasons:
-  *
-- * 1. page_idle only issues clear_young notifiers, which lack a TLB flush. This
-- *    means subsequent guest accesses are not guaranteed to see page table
-+ * 1. page_idle and MGLRU only issue clear_young notifiers, which lack a TLB flush.
-+ *    This means subsequent guest accesses are not guaranteed to see page table
-  *    updates made by KVM until some time in the future.
-  *
-  * 2. page_idle only operates on LRU pages. Newly allocated pages are not
-@@ -48,9 +51,17 @@
- #include "guest_modes.h"
- #include "processor.h"
- 
-+#include "cgroup_util.h"
-+#include "lru_gen_util.h"
-+
-+static const char *TEST_MEMCG_NAME = "access_tracking_perf_test";
-+
- /* Global variable used to synchronize all of the vCPU threads. */
- static int iteration;
- 
-+/* The cgroup v2 root. Needed for lru_gen-based aging. */
-+char cgroup_root[PATH_MAX];
-+
- /* Defines what vCPU threads should do during a given iteration. */
- static enum {
- 	/* Run the vCPU to access all its memory. */
-@@ -75,6 +86,12 @@ static bool overlap_memory_access;
-  */
- static int idle_pages_warn_only = -1;
- 
-+/* Whether or not to use MGLRU instead of page_idle for access tracking */
-+static bool use_lru_gen;
-+
-+/* Total number of pages to expect in the memcg after touching everything */
-+static long total_pages;
-+
- struct test_params {
- 	/* The backing source for the region of memory. */
- 	enum vm_mem_backing_src_type backing_src;
-@@ -133,8 +150,24 @@ static void mark_page_idle(int page_idle_fd, uint64_t pfn)
- 		    "Set page_idle bits for PFN 0x%" PRIx64, pfn);
- }
- 
--static void mark_vcpu_memory_idle(struct kvm_vm *vm,
--				  struct memstress_vcpu_args *vcpu_args)
-+static void too_many_idle_pages(long idle_pages, long total_pages, int vcpu_idx)
-+{
-+	char prefix[18] = {};
-+
-+	if (vcpu_idx >= 0)
-+		snprintf(prefix, 18, "vCPU%d: ", vcpu_idx);
-+
-+	TEST_ASSERT(idle_pages_warn_only,
-+		    "%sToo many pages still idle (%lu out of %lu)",
-+		    prefix, idle_pages, total_pages);
-+
-+	printf("WARNING: %sToo many pages still idle (%lu out of %lu), "
-+	       "this will affect performance results.\n",
-+	       prefix, idle_pages, total_pages);
-+}
-+
-+static void pageidle_mark_vcpu_memory_idle(struct kvm_vm *vm,
-+					   struct memstress_vcpu_args *vcpu_args)
- {
- 	int vcpu_idx = vcpu_args->vcpu_idx;
- 	uint64_t base_gva = vcpu_args->gva;
-@@ -188,20 +221,81 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
- 	 * access tracking but low enough as to not make the test too brittle
- 	 * over time and across architectures.
- 	 */
--	if (still_idle >= pages / 10) {
--		TEST_ASSERT(idle_pages_warn_only,
--			    "vCPU%d: Too many pages still idle (%lu out of %lu)",
--			    vcpu_idx, still_idle, pages);
--
--		printf("WARNING: vCPU%d: Too many pages still idle (%lu out of %lu), "
--		       "this will affect performance results.\n",
--		       vcpu_idx, still_idle, pages);
--	}
-+	if (still_idle >= pages / 10)
-+		too_many_idle_pages(still_idle, pages,
-+				    overlap_memory_access ? -1 : vcpu_idx);
- 
- 	close(page_idle_fd);
- 	close(pagemap_fd);
- }
- 
-+int find_generation(struct memcg_stats *stats, long total_pages)
-+{
-+	/*
-+	 * For finding the generation that contains our pages, use the same
-+	 * 90% threshold that page_idle uses.
-+	 */
-+	int gen = lru_gen_find_generation(stats, total_pages * 9 / 10);
-+
-+	if (gen >= 0)
-+		return gen;
-+
-+	if (!idle_pages_warn_only) {
-+		TEST_FAIL("Could not find a generation with 90%% of guest memory (%ld pages).",
-+			   total_pages * 9 / 10);
-+		return gen;
-+	}
-+
-+	/*
-+	 * We couldn't find a generation with 90% of guest memory, which can
-+	 * happen if access tracking is unreliable. Simply look for a majority
-+	 * of pages.
-+	 */
-+	puts("WARNING: Couldn't find a generation with 90% of guest memory. "
-+	     "Performance results may not be accurate.");
-+	gen = lru_gen_find_generation(stats, total_pages / 2);
-+	TEST_ASSERT(gen >= 0,
-+		    "Could not find a generation with 50%% of guest memory (%ld pages).",
-+		    total_pages / 2);
-+	return gen;
-+}
-+
-+static void lru_gen_mark_memory_idle(struct kvm_vm *vm)
-+{
-+	struct timespec ts_start;
-+	struct timespec ts_elapsed;
-+	struct memcg_stats stats;
-+	int found_gens[2];
-+
-+	/* Find current generation the pages lie in. */
-+	lru_gen_read_memcg_stats(&stats, TEST_MEMCG_NAME);
-+	found_gens[0] = find_generation(&stats, total_pages);
-+
-+	/* Make a new generation */
-+	clock_gettime(CLOCK_MONOTONIC, &ts_start);
-+	lru_gen_do_aging(&stats, TEST_MEMCG_NAME);
-+	ts_elapsed = timespec_elapsed(ts_start);
-+
-+	/* Check the generation again */
-+	found_gens[1] = find_generation(&stats, total_pages);
-+
-+	/*
-+	 * This function should only be invoked with newly-accessed pages,
-+	 * so pages should always move to a newer generation.
-+	 */
-+	if (found_gens[0] >= found_gens[1]) {
-+		/* We did not move to a newer generation. */
-+		long idle_pages = lru_gen_sum_memcg_stats_for_gen(found_gens[1],
-+								  &stats);
-+
-+		too_many_idle_pages(min_t(long, idle_pages, total_pages),
-+				    total_pages, -1);
-+	}
-+	pr_info("%-30s: %ld.%09lds\n",
-+		"Mark memory idle (lru_gen)", ts_elapsed.tv_sec,
-+		ts_elapsed.tv_nsec);
-+}
-+
- static void assert_ucall(struct kvm_vcpu *vcpu, uint64_t expected_ucall)
- {
- 	struct ucall uc;
-@@ -241,7 +335,7 @@ static void vcpu_thread_main(struct memstress_vcpu_args *vcpu_args)
- 			assert_ucall(vcpu, UCALL_SYNC);
- 			break;
- 		case ITERATION_MARK_IDLE:
--			mark_vcpu_memory_idle(vm, vcpu_args);
-+			pageidle_mark_vcpu_memory_idle(vm, vcpu_args);
- 			break;
- 		}
- 
-@@ -293,15 +387,18 @@ static void access_memory(struct kvm_vm *vm, int nr_vcpus,
- 
- static void mark_memory_idle(struct kvm_vm *vm, int nr_vcpus)
- {
-+	if (use_lru_gen)
-+		return lru_gen_mark_memory_idle(vm);
-+
- 	/*
- 	 * Even though this parallelizes the work across vCPUs, this is still a
- 	 * very slow operation because page_idle forces the test to mark one pfn
--	 * at a time and the clear_young notifier serializes on the KVM MMU
-+	 * at a time and the clear_young notifier may serialize on the KVM MMU
- 	 * lock.
- 	 */
- 	pr_debug("Marking VM memory idle (slow)...\n");
- 	iteration_work = ITERATION_MARK_IDLE;
--	run_iteration(vm, nr_vcpus, "Mark memory idle");
-+	run_iteration(vm, nr_vcpus, "Mark memory idle (page_idle)");
- }
- 
- static void run_test(enum vm_guest_mode mode, void *arg)
-@@ -318,6 +415,14 @@ static void run_test(enum vm_guest_mode mode, void *arg)
- 	pr_info("\n");
- 	access_memory(vm, nr_vcpus, ACCESS_WRITE, "Populating memory");
- 
-+	if (use_lru_gen) {
-+		struct memcg_stats stats;
-+
-+		lru_gen_read_memcg_stats(&stats, TEST_MEMCG_NAME);
-+		TEST_ASSERT(lru_gen_sum_memcg_stats(&stats) >= total_pages,
-+			    "Not all pages accounted for. Was the memcg set up correctly?");
-+	}
-+
- 	/* As a control, read and write to the populated memory first. */
- 	access_memory(vm, nr_vcpus, ACCESS_WRITE, "Writing to populated memory");
- 	access_memory(vm, nr_vcpus, ACCESS_READ, "Reading from populated memory");
-@@ -354,7 +459,12 @@ static int access_tracking_unreliable(void)
- 		puts("Skipping idle page count sanity check, because NUMA balancing is enabled");
- 		return 1;
+diff --git a/drivers/staging/greybus/Documentation/firmware/firmware.c b/drivers/staging/greybus/Documentation/firmware/firmware.c
+index 765d69faa9cc..8e375c88c881 100644
+--- a/drivers/staging/greybus/Documentation/firmware/firmware.c
++++ b/drivers/staging/greybus/Documentation/firmware/firmware.c
+@@ -47,12 +47,12 @@ static int update_intf_firmware(int fd)
+ 	ret = ioctl(fd, FW_MGMT_IOC_GET_INTF_FW, &intf_fw_info);
+ 	if (ret < 0) {
+ 		printf("Failed to get interface firmware version: %s (%d)\n",
+-			fwdev, ret);
++		       fwdev, ret);
+ 		return -1;
  	}
+ 
+ 	printf("Interface Firmware tag (%s), major (%d), minor (%d)\n",
+-		intf_fw_info.firmware_tag, intf_fw_info.major,
++	       intf_fw_info.firmware_tag, intf_fw_info.major,
+ 		intf_fw_info.minor);
+ 
+ 	/* Try Interface Firmware load over Unipro */
+@@ -63,25 +63,25 @@ static int update_intf_firmware(int fd)
+ 	intf_load.major = 0;
+ 	intf_load.minor = 0;
+ 
+-	strncpy((char *)&intf_load.firmware_tag, firmware_tag,
++	strscpy((char *)&intf_load.firmware_tag, firmware_tag,
+ 		GB_FIRMWARE_U_TAG_MAX_SIZE);
+ 
+ 	ret = ioctl(fd, FW_MGMT_IOC_INTF_LOAD_AND_VALIDATE, &intf_load);
+ 	if (ret < 0) {
+ 		printf("Failed to load interface firmware: %s (%d)\n", fwdev,
+-			ret);
++		       ret);
+ 		return -1;
+ 	}
+ 
+ 	if (intf_load.status != GB_FW_U_LOAD_STATUS_VALIDATED &&
+ 	    intf_load.status != GB_FW_U_LOAD_STATUS_UNVALIDATED) {
+ 		printf("Load status says loading failed: %d\n",
+-			intf_load.status);
++		       intf_load.status);
+ 		return -1;
+ 	}
+ 
+ 	printf("Interface Firmware (%s) Load done: major: %d, minor: %d, status: %d\n",
+-		firmware_tag, intf_load.major, intf_load.minor,
++	       firmware_tag, intf_load.major, intf_load.minor,
+ 		intf_load.status);
+ 
+ 	/* Initiate Mode-switch to the newly loaded firmware */
+@@ -101,35 +101,35 @@ static int update_backend_firmware(int fd)
+ 	/* Get Backend Firmware Version */
+ 	printf("Getting Backend Firmware Version\n");
+ 
+-	strncpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
++	strscpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
+ 		GB_FIRMWARE_U_TAG_MAX_SIZE);
+ 
+ retry_fw_version:
+ 	ret = ioctl(fd, FW_MGMT_IOC_GET_BACKEND_FW, &backend_fw_info);
+ 	if (ret < 0) {
+ 		printf("Failed to get backend firmware version: %s (%d)\n",
+-			fwdev, ret);
++		       fwdev, ret);
+ 		return -1;
+ 	}
+ 
+ 	printf("Backend Firmware tag (%s), major (%d), minor (%d), status (%d)\n",
+-		backend_fw_info.firmware_tag, backend_fw_info.major,
++	       backend_fw_info.firmware_tag, backend_fw_info.major,
+ 		backend_fw_info.minor, backend_fw_info.status);
+ 
+ 	if (backend_fw_info.status == GB_FW_U_BACKEND_VERSION_STATUS_RETRY)
+ 		goto retry_fw_version;
+ 
+-	if ((backend_fw_info.status != GB_FW_U_BACKEND_VERSION_STATUS_SUCCESS)
+-	    && (backend_fw_info.status != GB_FW_U_BACKEND_VERSION_STATUS_NOT_AVAILABLE)) {
++	if ((backend_fw_info.status != GB_FW_U_BACKEND_VERSION_STATUS_SUCCESS) &&
++	    (backend_fw_info.status != GB_FW_U_BACKEND_VERSION_STATUS_NOT_AVAILABLE)) {
+ 		printf("Failed to get backend firmware version: %s (%d)\n",
+-			fwdev, backend_fw_info.status);
++		       fwdev, backend_fw_info.status);
+ 		return -1;
+ 	}
+ 
+ 	/* Try Backend Firmware Update over Unipro */
+ 	printf("Updating Backend Firmware\n");
+ 
+-	strncpy((char *)&backend_update.firmware_tag, firmware_tag,
++	strscpy((char *)&backend_update.firmware_tag, firmware_tag,
+ 		GB_FIRMWARE_U_TAG_MAX_SIZE);
+ 
+ retry_fw_update:
+@@ -148,10 +148,10 @@ static int update_backend_firmware(int fd)
+ 
+ 	if (backend_update.status != GB_FW_U_BACKEND_FW_STATUS_SUCCESS) {
+ 		printf("Load status says loading failed: %d\n",
+-			backend_update.status);
++		       backend_update.status);
+ 	} else {
+ 		printf("Backend Firmware (%s) Load done: status: %d\n",
+-				firmware_tag, backend_update.status);
++		       firmware_tag, backend_update.status);
+ 	}
+ 
+ 	return 0;
+@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
+ 		fw_timeout = strtoul(argv[4], &endptr, 10);
+ 
+ 	printf("Trying Firmware update: fwdev: %s, type: %s, tag: %s, timeout: %u\n",
+-		fwdev, fw_update_type == 0 ? "interface" : "backend",
++	       fwdev, fw_update_type == 0 ? "interface" : "backend",
+ 		firmware_tag, fw_timeout);
+ 
+ 	printf("Opening %s firmware management device\n", fwdev);
+diff --git a/drivers/staging/greybus/arche-apb-ctrl.c b/drivers/staging/greybus/arche-apb-ctrl.c
+index 90ab32638d3f..9862188e8367 100644
+--- a/drivers/staging/greybus/arche-apb-ctrl.c
++++ b/drivers/staging/greybus/arche-apb-ctrl.c
+@@ -17,6 +17,7 @@
+ #include <linux/pm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/spinlock.h>
++#include <linux/sysfs.h>
+ #include "arche_platform.h"
+ 
+ static void apb_bootret_deassert(struct device *dev);
+@@ -299,16 +300,16 @@ static ssize_t state_show(struct device *dev,
+ 
+ 	switch (apb->state) {
+ 	case ARCHE_PLATFORM_STATE_OFF:
+-		return sprintf(buf, "off%s\n",
++		return sysfs_emit(buf, "off%s\n",
+ 				apb->init_disabled ? ",disabled" : "");
+ 	case ARCHE_PLATFORM_STATE_ACTIVE:
+-		return sprintf(buf, "active\n");
++		return sysfs_emit(buf, "active\n");
+ 	case ARCHE_PLATFORM_STATE_STANDBY:
+-		return sprintf(buf, "standby\n");
++		return sysfs_emit(buf, "standby\n");
+ 	case ARCHE_PLATFORM_STATE_FW_FLASHING:
+-		return sprintf(buf, "fw_flashing\n");
++		return sysfs_emit(buf, "fw_flashing\n");
+ 	default:
+-		return sprintf(buf, "unknown state\n");
++		return sysfs_emit(buf, "unknown state\n");
+ 	}
+ }
+ 
+diff --git a/drivers/staging/greybus/arche-platform.c b/drivers/staging/greybus/arche-platform.c
+index d48464390f58..2e706c1169d5 100644
+--- a/drivers/staging/greybus/arche-platform.c
++++ b/drivers/staging/greybus/arche-platform.c
+@@ -21,6 +21,7 @@
+ #include <linux/time.h>
+ #include <linux/greybus.h>
+ #include <linux/of.h>
++#include <linux/sysfs.h>
+ #include "arche_platform.h"
+ 
+ #if IS_ENABLED(CONFIG_USB_HSIC_USB3613)
+@@ -374,15 +375,15 @@ static ssize_t state_show(struct device *dev,
+ 
+ 	switch (arche_pdata->state) {
+ 	case ARCHE_PLATFORM_STATE_OFF:
+-		return sprintf(buf, "off\n");
++		return sysfs_emit(buf, "off\n");
+ 	case ARCHE_PLATFORM_STATE_ACTIVE:
+-		return sprintf(buf, "active\n");
++		return sysfs_emit(buf, "active\n");
+ 	case ARCHE_PLATFORM_STATE_STANDBY:
+-		return sprintf(buf, "standby\n");
++		return sysfs_emit(buf, "standby\n");
+ 	case ARCHE_PLATFORM_STATE_FW_FLASHING:
+-		return sprintf(buf, "fw_flashing\n");
++		return sysfs_emit(buf, "fw_flashing\n");
+ 	default:
+-		return sprintf(buf, "unknown state\n");
++		return sysfs_emit(buf, "unknown state\n");
+ 	}
+ }
+ 
+diff --git a/drivers/staging/greybus/audio_gb.c b/drivers/staging/greybus/audio_gb.c
+index 9d8994fdb41a..c7f8df7b4cbe 100644
+--- a/drivers/staging/greybus/audio_gb.c
++++ b/drivers/staging/greybus/audio_gb.c
+@@ -8,21 +8,28 @@
+ #include <linux/greybus.h>
+ #include "audio_codec.h"
+ 
+-/* TODO: Split into separate calls */
+-int gb_audio_gb_get_topology(struct gb_connection *connection,
+-			     struct gb_audio_topology **topology)
++static int gb_audio_gb_get_topology_size(struct gb_connection *connection,
++					 u16 *size)
+ {
+-	struct gb_audio_get_topology_size_response size_resp;
+-	struct gb_audio_topology *topo;
+-	u16 size;
++	struct gb_audio_get_topology_size_response resp;
+ 	int ret;
+ 
+ 	ret = gb_operation_sync(connection, GB_AUDIO_TYPE_GET_TOPOLOGY_SIZE,
+-				NULL, 0, &size_resp, sizeof(size_resp));
++				NULL, 0, &resp, sizeof(resp));
+ 	if (ret)
+ 		return ret;
+ 
+-	size = le16_to_cpu(size_resp.size);
++	*size = le16_to_cpu(resp.size);
 +	return 0;
 +}
- 
-+int run_test_in_cg(const char *cgroup, void *arg)
-+{
-+	for_each_guest_mode(run_test, arg);
- 	return 0;
- }
- 
-@@ -372,7 +482,7 @@ static void help(char *name)
- 	printf(" -v: specify the number of vCPUs to run.\n");
- 	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
- 	       "     them into a separate region of memory for each vCPU.\n");
--	printf(" -w: Control whether the test warns or fails if more than 10%\n"
-+	printf(" -w: Control whether the test warns or fails if more than 10%%\n"
- 	       "     of pages are still seen as idle/old after accessing guest\n"
- 	       "     memory.  >0 == warn only, 0 == fail, <0 == auto.  For auto\n"
- 	       "     mode, the test fails by default, but switches to warn only\n"
-@@ -383,6 +493,12 @@ static void help(char *name)
- 	exit(0);
- }
- 
-+void destroy_cgroup(char *cg)
-+{
-+	printf("Destroying cgroup: %s\n", cg);
-+	cg_destroy(cg);
-+}
 +
- int main(int argc, char *argv[])
- {
- 	struct test_params params = {
-@@ -390,6 +506,7 @@ int main(int argc, char *argv[])
- 		.vcpu_memory_bytes = DEFAULT_PER_VCPU_MEM_SIZE,
- 		.nr_vcpus = 1,
- 	};
-+	char *new_cg = NULL;
- 	int page_idle_fd;
- 	int opt;
++static int gb_audio_gb_read_topology(struct gb_connection *connection,
++				     struct gb_audio_topology **topology,
++				     u16 size)
++{
++	struct gb_audio_topology *topo;
++	int ret;
++
+ 	if (size < sizeof(*topo))
+ 		return -ENODATA;
  
-@@ -424,15 +541,53 @@ int main(int argc, char *argv[])
- 		}
+@@ -38,9 +45,21 @@ int gb_audio_gb_get_topology(struct gb_connection *connection,
  	}
  
--	page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
--	__TEST_REQUIRE(page_idle_fd >= 0,
--		       "CONFIG_IDLE_PAGE_TRACKING is not enabled");
--	close(page_idle_fd);
-+	if (lru_gen_usable()) {
-+		if (cg_find_unified_root(cgroup_root, sizeof(cgroup_root), NULL))
-+			ksft_exit_skip("cgroup v2 isn't mounted\n");
-+
-+		new_cg = cg_name(cgroup_root, TEST_MEMCG_NAME);
-+		printf("Creating cgroup: %s\n", new_cg);
-+		if (cg_create(new_cg) && errno != EEXIST)
-+			ksft_exit_skip("could not create new cgroup: %s\n", new_cg);
-+
-+		use_lru_gen = true;
-+	} else {
-+		page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
-+		__TEST_REQUIRE(page_idle_fd >= 0,
-+			       "Couldn't open /sys/kernel/mm/page_idle/bitmap. "
-+			       "Is CONFIG_IDLE_PAGE_TRACKING enabled?");
-+
-+		close(page_idle_fd);
-+	}
- 
- 	if (idle_pages_warn_only == -1)
- 		idle_pages_warn_only = access_tracking_unreliable();
- 
--	for_each_guest_mode(run_test, &params);
-+	/*
-+	 * If guest_page_size is larger than the host's page size, the
-+	 * guest (memstress) will only fault in a subset of the host's pages.
-+	 */
-+	total_pages = params.nr_vcpus * params.vcpu_memory_bytes /
-+		      max(memstress_args.guest_page_size,
-+			  (uint64_t)getpagesize());
-+
-+	if (use_lru_gen) {
-+		int ret;
-+
-+		puts("Using lru_gen for aging");
-+		/*
-+		 * This will fork off a new process to run the test within
-+		 * a new memcg, so we need to properly propagate the return
-+		 * value up.
-+		 */
-+		ret = cg_run(new_cg, &run_test_in_cg, &params);
-+		destroy_cgroup(new_cg);
-+		if (ret)
-+			return ret;
-+	} else {
-+		puts("Using page_idle for aging");
-+		for_each_guest_mode(run_test, &params);
-+	}
- 
+ 	*topology = topo;
+-
  	return 0;
  }
-diff --git a/tools/testing/selftests/kvm/include/lru_gen_util.h b/tools/testing/selftests/kvm/include/lru_gen_util.h
-new file mode 100644
-index 0000000000000..d32ff5d8ffd05
---- /dev/null
-+++ b/tools/testing/selftests/kvm/include/lru_gen_util.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Tools for integrating with lru_gen, like parsing the lru_gen debugfs output.
-+ *
-+ * Copyright (C) 2025, Google LLC.
-+ */
-+#ifndef SELFTEST_KVM_LRU_GEN_UTIL_H
-+#define SELFTEST_KVM_LRU_GEN_UTIL_H
 +
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <stdlib.h>
-+
-+#include "test_util.h"
-+
-+#define MAX_NR_GENS 16 /* MAX_NR_GENS in include/linux/mmzone.h */
-+#define MAX_NR_NODES 4 /* Maximum number of nodes supported by the test */
-+
-+#define LRU_GEN_DEBUGFS "/sys/kernel/debug/lru_gen"
-+#define LRU_GEN_ENABLED_PATH "/sys/kernel/mm/lru_gen/enabled"
-+#define LRU_GEN_ENABLED 1
-+#define LRU_GEN_MM_WALK 2
-+
-+struct generation_stats {
-+	int gen;
-+	long age_ms;
-+	long nr_anon;
-+	long nr_file;
-+};
-+
-+struct node_stats {
-+	int node;
-+	int nr_gens; /* Number of populated gens entries. */
-+	struct generation_stats gens[MAX_NR_GENS];
-+};
-+
-+struct memcg_stats {
-+	unsigned long memcg_id;
-+	int nr_nodes; /* Number of populated nodes entries. */
-+	struct node_stats nodes[MAX_NR_NODES];
-+};
-+
-+void lru_gen_read_memcg_stats(struct memcg_stats *stats, const char *memcg);
-+long lru_gen_sum_memcg_stats(const struct memcg_stats *stats);
-+long lru_gen_sum_memcg_stats_for_gen(int gen, const struct memcg_stats *stats);
-+void lru_gen_do_aging(struct memcg_stats *stats, const char *memcg);
-+int lru_gen_find_generation(const struct memcg_stats *stats,
-+			    unsigned long total_pages);
-+bool lru_gen_usable(void);
-+
-+#endif /* SELFTEST_KVM_LRU_GEN_UTIL_H */
-diff --git a/tools/testing/selftests/kvm/lib/lru_gen_util.c b/tools/testing/selftests/kvm/lib/lru_gen_util.c
-new file mode 100644
-index 0000000000000..783a1f1028a26
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/lru_gen_util.c
-@@ -0,0 +1,383 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025, Google LLC.
-+ */
-+
-+#include <time.h>
-+
-+#include "lru_gen_util.h"
-+
-+/*
-+ * Tracks state while we parse memcg lru_gen stats. The file we're parsing is
-+ * structured like this (some extra whitespace elided):
-+ *
-+ * memcg (id) (path)
-+ * node (id)
-+ * (gen_nr) (age_in_ms) (nr_anon_pages) (nr_file_pages)
-+ */
-+struct memcg_stats_parse_context {
-+	bool consumed; /* Whether or not this line was consumed */
-+	/* Next parse handler to invoke */
-+	void (*next_handler)(struct memcg_stats *,
-+			     struct memcg_stats_parse_context *, char *);
-+	int current_node_idx; /* Current index in nodes array */
-+	const char *name; /* The name of the memcg we're looking for */
-+};
-+
-+static void memcg_stats_handle_searching(struct memcg_stats *stats,
-+					 struct memcg_stats_parse_context *ctx,
-+					 char *line);
-+static void memcg_stats_handle_in_memcg(struct memcg_stats *stats,
-+					struct memcg_stats_parse_context *ctx,
-+					char *line);
-+static void memcg_stats_handle_in_node(struct memcg_stats *stats,
-+				       struct memcg_stats_parse_context *ctx,
-+				       char *line);
-+
-+struct split_iterator {
-+	char *str;
-+	char *save;
-+};
-+
-+static char *split_next(struct split_iterator *it)
++int gb_audio_gb_get_topology(struct gb_connection *connection,
++			     struct gb_audio_topology **topology)
 +{
-+	char *ret = strtok_r(it->str, " \t\n\r", &it->save);
++	u16 size;
++	int ret;
 +
-+	it->str = NULL;
-+	return ret;
++	ret = gb_audio_gb_get_topology_size(connection, &size);
++	if (ret)
++		return ret;
++
++	return gb_audio_gb_read_topology(connection, topology, size);
 +}
-+
-+static void memcg_stats_handle_searching(struct memcg_stats *stats,
-+					 struct memcg_stats_parse_context *ctx,
-+					 char *line)
+ EXPORT_SYMBOL_GPL(gb_audio_gb_get_topology);
+ 
+ int gb_audio_gb_get_control(struct gb_connection *connection,
+diff --git a/drivers/staging/greybus/audio_manager_module.c b/drivers/staging/greybus/audio_manager_module.c
+index 4a4dfb42f50f..781144be4eec 100644
+--- a/drivers/staging/greybus/audio_manager_module.c
++++ b/drivers/staging/greybus/audio_manager_module.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ 
+ #include "audio_manager.h"
+ #include "audio_manager_private.h"
+@@ -76,7 +77,7 @@ static void gb_audio_module_release(struct kobject *kobj)
+ static ssize_t gb_audio_module_name_show(struct gb_audio_manager_module *module,
+ 					 struct gb_audio_manager_module_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%s", module->desc.name);
++	return sysfs_emit(buf, "%s\n", module->desc.name);
+ }
+ 
+ static struct gb_audio_manager_module_attribute gb_audio_module_name_attribute =
+@@ -85,7 +86,7 @@ static struct gb_audio_manager_module_attribute gb_audio_module_name_attribute =
+ static ssize_t gb_audio_module_vid_show(struct gb_audio_manager_module *module,
+ 					struct gb_audio_manager_module_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%d", module->desc.vid);
++	return sysfs_emit(buf, "%d\n", module->desc.vid);
+ }
+ 
+ static struct gb_audio_manager_module_attribute gb_audio_module_vid_attribute =
+@@ -94,7 +95,7 @@ static struct gb_audio_manager_module_attribute gb_audio_module_vid_attribute =
+ static ssize_t gb_audio_module_pid_show(struct gb_audio_manager_module *module,
+ 					struct gb_audio_manager_module_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%d", module->desc.pid);
++	return sysfs_emit(buf, "%d\n", module->desc.pid);
+ }
+ 
+ static struct gb_audio_manager_module_attribute gb_audio_module_pid_attribute =
+@@ -104,7 +105,7 @@ static ssize_t gb_audio_module_intf_id_show(struct gb_audio_manager_module *modu
+ 					    struct gb_audio_manager_module_attribute *attr,
+ 					    char *buf)
+ {
+-	return sprintf(buf, "%d", module->desc.intf_id);
++	return sysfs_emit(buf, "%d\n", module->desc.intf_id);
+ }
+ 
+ static struct gb_audio_manager_module_attribute
+@@ -115,7 +116,7 @@ static ssize_t gb_audio_module_ip_devices_show(struct gb_audio_manager_module *m
+ 					       struct gb_audio_manager_module_attribute *attr,
+ 					       char *buf)
+ {
+-	return sprintf(buf, "0x%X", module->desc.ip_devices);
++	return sysfs_emit(buf, "0x%X\n", module->desc.ip_devices);
+ }
+ 
+ static struct gb_audio_manager_module_attribute
+@@ -126,7 +127,7 @@ static ssize_t gb_audio_module_op_devices_show(struct gb_audio_manager_module *m
+ 					       struct gb_audio_manager_module_attribute *attr,
+ 					       char *buf)
+ {
+-	return sprintf(buf, "0x%X", module->desc.op_devices);
++	return sysfs_emit(buf, "0x%X\n", module->desc.op_devices);
+ }
+ 
+ static struct gb_audio_manager_module_attribute
+diff --git a/drivers/staging/greybus/gbphy.c b/drivers/staging/greybus/gbphy.c
+index 6adcad286633..72d72aa7cb0f 100644
+--- a/drivers/staging/greybus/gbphy.c
++++ b/drivers/staging/greybus/gbphy.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/device.h>
+ #include <linux/greybus.h>
++#include <linux/sysfs.h>
+ 
+ #include "gbphy.h"
+ 
+@@ -31,7 +32,7 @@ static ssize_t protocol_id_show(struct device *dev,
+ {
+ 	struct gbphy_device *gbphy_dev = to_gbphy_dev(dev);
+ 
+-	return sprintf(buf, "0x%02x\n", gbphy_dev->cport_desc->protocol_id);
++	return sysfs_emit(buf, "0x%02x\n", gbphy_dev->cport_desc->protocol_id);
+ }
+ static DEVICE_ATTR_RO(protocol_id);
+ 
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index e509fdc715db..db0e98faec08 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/greybus.h>
++#include <linux/sysfs.h>
+ #include <media/v4l2-flash-led-class.h>
+ 
+ #define NAMES_MAX	32
+@@ -173,7 +174,7 @@ static ssize_t fade_##__dir##_show(struct device *dev,			\
+ 	struct led_classdev *cdev = dev_get_drvdata(dev);		\
+ 	struct gb_channel *channel = get_channel_from_cdev(cdev);	\
+ 									\
+-	return sprintf(buf, "%u\n", channel->fade_##__dir);		\
++	return sysfs_emit(buf, "%u\n", channel->fade_##__dir);		\
+ }									\
+ 									\
+ static ssize_t fade_##__dir##_store(struct device *dev,			\
+@@ -220,7 +221,7 @@ static ssize_t color_show(struct device *dev, struct device_attribute *attr,
+ 	struct led_classdev *cdev = dev_get_drvdata(dev);
+ 	struct gb_channel *channel = get_channel_from_cdev(cdev);
+ 
+-	return sprintf(buf, "0x%08x\n", channel->color);
++	return sysfs_emit(buf, "0x%08x\n", channel->color);
+ }
+ 
+ static ssize_t color_store(struct device *dev, struct device_attribute *attr,
+diff --git a/drivers/staging/greybus/loopback.c b/drivers/staging/greybus/loopback.c
+index 1f19323b0e1a..0c1b45aa8b7b 100644
+--- a/drivers/staging/greybus/loopback.c
++++ b/drivers/staging/greybus/loopback.c
+@@ -26,6 +26,7 @@
+ #include <linux/atomic.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/greybus.h>
++#include <linux/sysfs.h>
+ #include <asm/div64.h>
+ 
+ #define NSEC_PER_DAY 86400000000000ULL
+@@ -125,7 +126,7 @@ static ssize_t field##_show(struct device *dev,			\
+ 			    char *buf)					\
+ {									\
+ 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
+-	return sprintf(buf, "%u\n", gb->field);			\
++	return sysfs_emit(buf, "%u\n", gb->field);			\
+ }									\
+ static DEVICE_ATTR_RO(field)
+ 
+@@ -137,8 +138,8 @@ static ssize_t name##_##field##_show(struct device *dev,	\
+ 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
+ 	/* Report 0 for min and max if no transfer succeeded */		\
+ 	if (!gb->requests_completed)					\
+-		return sprintf(buf, "0\n");				\
+-	return sprintf(buf, "%" #type "\n", gb->name.field);		\
++		return sysfs_emit(buf, "0\n");				\
++	return sysfs_emit(buf, "%\n" #type "\n", gb->name.field);		\
+ }									\
+ static DEVICE_ATTR_RO(name##_##field)
+ 
+@@ -158,7 +159,7 @@ static ssize_t name##_avg_show(struct device *dev,		\
+ 	rem = do_div(avg, count);					\
+ 	rem *= 1000000;							\
+ 	do_div(rem, count);						\
+-	return sprintf(buf, "%llu.%06u\n", avg, (u32)rem);		\
++	return sysfs_emit(buf, "%llu.%06u\n", avg, (u32)rem);		\
+ }									\
+ static DEVICE_ATTR_RO(name##_avg)
+ 
+@@ -173,7 +174,7 @@ static ssize_t field##_show(struct device *dev,				\
+ 			    char *buf)					\
+ {									\
+ 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
+-	return sprintf(buf, "%" #type "\n", gb->field);			\
++	return sysfs_emit(buf, "%\n" #type "\n", gb->field);			\
+ }									\
+ static ssize_t field##_store(struct device *dev,			\
+ 			    struct device_attribute *attr,		\
+@@ -199,7 +200,7 @@ static ssize_t field##_show(struct device *dev,		\
+ 			    char *buf)					\
+ {									\
+ 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
+-	return sprintf(buf, "%u\n", gb->field);				\
++	return sysfs_emit(buf, "%u\n", gb->field);				\
+ }									\
+ static DEVICE_ATTR_RO(field)
+ 
+@@ -209,7 +210,7 @@ static ssize_t field##_show(struct device *dev,				\
+ 			    char *buf)					\
+ {									\
+ 	struct gb_loopback *gb = dev_get_drvdata(dev);			\
+-	return sprintf(buf, "%" #type "\n", gb->field);			\
++	return sysfs_emit(buf, "%\n" #type "\n", gb->field);			\
+ }									\
+ static ssize_t field##_store(struct device *dev,			\
+ 			    struct device_attribute *attr,		\
+@@ -679,7 +680,7 @@ static int gb_loopback_request_handler(struct gb_operation *operation)
+ 		}
+ 
+ 		if (!gb_operation_response_alloc(operation,
+-				len + sizeof(*response), GFP_KERNEL)) {
++						 len + sizeof(*response), GFP_KERNEL)) {
+ 			dev_err(dev, "error allocating response\n");
+ 			return -ENOMEM;
+ 		}
+@@ -831,109 +832,120 @@ static void gb_loopback_async_wait_to_send(struct gb_loopback *gb)
+ 				  kthread_should_stop());
+ }
+ 
+-static int gb_loopback_fn(void *data)
++static bool gb_loopback_should_stop(struct gb_loopback *gb,
++				    struct gb_bundle *bundle)
 +{
-+	struct split_iterator it = { .str = line };
-+	char *prefix = split_next(&it);
-+	char *memcg_id = split_next(&it);
-+	char *memcg_name = split_next(&it);
-+	char *end;
-+
-+	ctx->consumed = true;
-+
-+	if (!prefix || strcmp("memcg", prefix))
-+		return; /* Not a memcg line (maybe empty), skip */
-+
-+	TEST_ASSERT(memcg_id && memcg_name,
-+		    "malformed memcg line; no memcg id or memcg_name");
-+
-+	if (strcmp(memcg_name + 1, ctx->name))
-+		return; /* Wrong memcg, skip */
-+
-+	/* Found it! */
-+
-+	stats->memcg_id = strtoul(memcg_id, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed memcg id '%s'", memcg_id);
-+	if (!stats->memcg_id)
-+		return; /* Removed memcg? */
-+
-+	ctx->next_handler = memcg_stats_handle_in_memcg;
-+}
-+
-+static void memcg_stats_handle_in_memcg(struct memcg_stats *stats,
-+					struct memcg_stats_parse_context *ctx,
-+					char *line)
-+{
-+	struct split_iterator it = { .str = line };
-+	char *prefix = split_next(&it);
-+	char *id = split_next(&it);
-+	long found_node_id;
-+	char *end;
-+
-+	ctx->consumed = true;
-+	ctx->current_node_idx = -1;
-+
-+	if (!prefix)
-+		return; /* Skip empty lines */
-+
-+	if (!strcmp("memcg", prefix)) {
-+		/* Memcg done, found next one; stop. */
-+		ctx->next_handler = NULL;
-+		return;
-+	} else if (strcmp("node", prefix))
-+		TEST_ASSERT(false, "found malformed line after 'memcg ...',"
-+				   "token: '%s'", prefix);
-+
-+	/* At this point we know we have a node line. Parse the ID. */
-+
-+	TEST_ASSERT(id, "malformed node line; no node id");
-+
-+	found_node_id = strtol(id, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed node id '%s'", id);
-+
-+	ctx->current_node_idx = stats->nr_nodes++;
-+	TEST_ASSERT(ctx->current_node_idx < MAX_NR_NODES,
-+		    "memcg has stats for too many nodes, max is %d",
-+		    MAX_NR_NODES);
-+	stats->nodes[ctx->current_node_idx].node = found_node_id;
-+
-+	ctx->next_handler = memcg_stats_handle_in_node;
-+}
-+
-+static void memcg_stats_handle_in_node(struct memcg_stats *stats,
-+				       struct memcg_stats_parse_context *ctx,
-+				       char *line)
-+{
-+	char *my_line = strdup(line);
-+	struct split_iterator it = { .str = my_line };
-+	char *gen, *age, *nr_anon, *nr_file;
-+	struct node_stats *node_stats;
-+	struct generation_stats *gen_stats;
-+	char *end;
-+
-+	TEST_ASSERT(it.str, "failed to copy input line");
-+
-+	gen = split_next(&it);
-+
-+	if (!gen)
-+		goto out_consume; /* Skip empty lines */
-+
-+	if (!strcmp("memcg", gen) || !strcmp("node", gen)) {
-+		/*
-+		 * Reached next memcg or node section. Don't consume, let the
-+		 * other handler deal with this.
-+		 */
-+		ctx->next_handler = memcg_stats_handle_in_memcg;
-+		goto out;
++	if (!gb->type) {
++		gb_pm_runtime_put_autosuspend(bundle);
++		wait_event_interruptible(gb->wq,
++					 gb->type || kthread_should_stop());
++		if (kthread_should_stop())
++			return true;
++		gb_pm_runtime_get_sync(bundle);
 +	}
-+
-+	node_stats = &stats->nodes[ctx->current_node_idx];
-+	TEST_ASSERT(node_stats->nr_gens < MAX_NR_GENS,
-+		    "found too many generation lines; max is %d",
-+		    MAX_NR_GENS);
-+	gen_stats = &node_stats->gens[node_stats->nr_gens++];
-+
-+	age = split_next(&it);
-+	nr_anon = split_next(&it);
-+	nr_file = split_next(&it);
-+
-+	TEST_ASSERT(age && nr_anon && nr_file,
-+		    "malformed generation line; not enough tokens");
-+
-+	gen_stats->gen = (int)strtol(gen, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed generation number '%s'", gen);
-+
-+	gen_stats->age_ms = strtol(age, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed generation age '%s'", age);
-+
-+	gen_stats->nr_anon = strtol(nr_anon, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed anonymous page count '%s'",
-+		    nr_anon);
-+
-+	gen_stats->nr_file = strtol(nr_file, &end, 10);
-+	TEST_ASSERT(*end == '\0', "malformed file page count '%s'", nr_file);
-+
-+out_consume:
-+	ctx->consumed = true;
-+out:
-+	free(my_line);
++	return kthread_should_stop();
 +}
 +
-+static void print_memcg_stats(const struct memcg_stats *stats, const char *name)
++static void gb_loopback_handle_completion(struct gb_loopback *gb,
++					  struct gb_bundle *bundle)
 +{
-+	int node, gen;
++	gb_loopback_async_wait_all(gb);
 +
-+	pr_debug("stats for memcg %s (id %lu):\n", name, stats->memcg_id);
-+	for (node = 0; node < stats->nr_nodes; ++node) {
-+		pr_debug("\tnode %d\n", stats->nodes[node].node);
-+		for (gen = 0; gen < stats->nodes[node].nr_gens; ++gen) {
-+			const struct generation_stats *gstats =
-+				&stats->nodes[node].gens[gen];
++	mutex_lock(&gb->mutex);
++	if (gb->iteration_count == gb->iteration_max) {
++		gb->type = 0;
++		gb->send_count = 0;
++		sysfs_notify(&gb->dev->kobj, NULL, "iteration_count");
++		dev_dbg(&bundle->dev, "load test complete\n");
++	} else {
++		dev_dbg(&bundle->dev, "continuing on with new test set\n");
++	}
++	mutex_unlock(&gb->mutex);
++}
 +
-+			pr_debug("\t\tgen %d\tage_ms %ld"
-+				 "\tnr_anon %ld\tnr_file %ld\n",
-+				 gstats->gen, gstats->age_ms, gstats->nr_anon,
-+				 gstats->nr_file);
++static void gb_loopback_dispatch_operation(struct gb_loopback *gb, int type,
++					   u32 size)
+ {
+ 	int error = 0;
+-	int us_wait = 0;
+-	int type;
+-	int ret;
+-	u32 size;
+ 
++	if (gb->async) {
++		if (type == GB_LOOPBACK_TYPE_PING)
++			error = gb_loopback_async_ping(gb);
++		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
++			error = gb_loopback_async_transfer(gb, size);
++		else if (type == GB_LOOPBACK_TYPE_SINK)
++			error = gb_loopback_async_sink(gb, size);
++
++		if (error) {
++			gb->error++;
++			gb->iteration_count++;
 +		}
++	} else {
++		if (type == GB_LOOPBACK_TYPE_PING)
++			error = gb_loopback_sync_ping(gb);
++		else if (type == GB_LOOPBACK_TYPE_TRANSFER)
++			error = gb_loopback_sync_transfer(gb, size);
++		else if (type == GB_LOOPBACK_TYPE_SINK)
++			error = gb_loopback_sync_sink(gb, size);
++
++		if (error)
++			gb->error++;
++		gb->iteration_count++;
++		gb_loopback_calculate_stats(gb, !!error);
 +	}
 +}
 +
-+/* Re-read lru_gen debugfs information for @memcg into @stats. */
-+void lru_gen_read_memcg_stats(struct memcg_stats *stats, const char *memcg)
++static void gb_loopback_delay_if_needed(int us_wait)
 +{
-+	FILE *f;
-+	ssize_t read = 0;
-+	char *line = NULL;
-+	size_t bufsz;
-+	struct memcg_stats_parse_context ctx = {
-+		.next_handler = memcg_stats_handle_searching,
-+		.name = memcg,
-+	};
-+
-+	memset(stats, 0, sizeof(struct memcg_stats));
-+
-+	f = fopen(LRU_GEN_DEBUGFS, "r");
-+	TEST_ASSERT(f, "fopen(%s) failed", LRU_GEN_DEBUGFS);
-+
-+	while (ctx.next_handler && (read = getline(&line, &bufsz, f)) > 0) {
-+		ctx.consumed = false;
-+
-+		do {
-+			ctx.next_handler(stats, &ctx, line);
-+			if (!ctx.next_handler)
-+				break;
-+		} while (!ctx.consumed);
++	if (us_wait) {
++		if (us_wait < 20000)
++			usleep_range(us_wait, us_wait + 100);
++		else
++			msleep(us_wait / 1000);
 +	}
-+
-+	if (read < 0 && !feof(f))
-+		TEST_ASSERT(false, "getline(%s) failed", LRU_GEN_DEBUGFS);
-+
-+	TEST_ASSERT(stats->memcg_id > 0, "Couldn't find memcg: %s\n"
-+		    "Did the memcg get created in the proper mount?",
-+		    memcg);
-+	if (line)
-+		free(line);
-+	TEST_ASSERT(!fclose(f), "fclose(%s) failed", LRU_GEN_DEBUGFS);
-+
-+	print_memcg_stats(stats, memcg);
 +}
 +
-+/*
-+ * Find all pages tracked by lru_gen for this memcg in generation @target_gen.
-+ *
-+ * If @target_gen is negative, look for all generations.
-+ */
-+long lru_gen_sum_memcg_stats_for_gen(int target_gen,
-+				     const struct memcg_stats *stats)
++static int gb_loopback_fn(void *data)
 +{
-+	int node, gen;
-+	long total_nr = 0;
++	int us_wait = 0, type;
++	u32 size;
+ 	struct gb_loopback *gb = data;
+ 	struct gb_bundle *bundle = gb->connection->bundle;
+ 
+-	ret = gb_pm_runtime_get_sync(bundle);
+-	if (ret)
+-		return ret;
++	if (gb_pm_runtime_get_sync(bundle))
++		return -EIO;
+ 
+ 	while (1) {
+-		if (!gb->type) {
+-			gb_pm_runtime_put_autosuspend(bundle);
+-			wait_event_interruptible(gb->wq, gb->type ||
+-						 kthread_should_stop());
+-			ret = gb_pm_runtime_get_sync(bundle);
+-			if (ret)
+-				return ret;
+-		}
+-
+-		if (kthread_should_stop())
++		if (gb_loopback_should_stop(gb, bundle))
+ 			break;
+ 
+-		/* Limit the maximum number of in-flight async operations */
+ 		gb_loopback_async_wait_to_send(gb);
+ 		if (kthread_should_stop())
+ 			break;
+ 
+ 		mutex_lock(&gb->mutex);
+ 
+-		/* Optionally terminate */
+ 		if (gb->send_count == gb->iteration_max) {
+ 			mutex_unlock(&gb->mutex);
+-
+-			/* Wait for synchronous and asynchronous completion */
+-			gb_loopback_async_wait_all(gb);
+-
+-			/* Mark complete unless user-space has poked us */
+-			mutex_lock(&gb->mutex);
+-			if (gb->iteration_count == gb->iteration_max) {
+-				gb->type = 0;
+-				gb->send_count = 0;
+-				sysfs_notify(&gb->dev->kobj,  NULL,
+-					     "iteration_count");
+-				dev_dbg(&bundle->dev, "load test complete\n");
+-			} else {
+-				dev_dbg(&bundle->dev,
+-					"continuing on with new test set\n");
+-			}
+-			mutex_unlock(&gb->mutex);
++			gb_loopback_handle_completion(gb, bundle);
+ 			continue;
+ 		}
 +
-+	for (node = 0; node < stats->nr_nodes; ++node) {
-+		const struct node_stats *node_stats = &stats->nodes[node];
+ 		size = gb->size;
+ 		us_wait = gb->us_wait;
+ 		type = gb->type;
+ 		if (ktime_to_ns(gb->ts) == 0)
+ 			gb->ts = ktime_get();
+ 
+-		/* Else operations to perform */
+-		if (gb->async) {
+-			if (type == GB_LOOPBACK_TYPE_PING)
+-				error = gb_loopback_async_ping(gb);
+-			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
+-				error = gb_loopback_async_transfer(gb, size);
+-			else if (type == GB_LOOPBACK_TYPE_SINK)
+-				error = gb_loopback_async_sink(gb, size);
+-
+-			if (error) {
+-				gb->error++;
+-				gb->iteration_count++;
+-			}
+-		} else {
+-			/* We are effectively single threaded here */
+-			if (type == GB_LOOPBACK_TYPE_PING)
+-				error = gb_loopback_sync_ping(gb);
+-			else if (type == GB_LOOPBACK_TYPE_TRANSFER)
+-				error = gb_loopback_sync_transfer(gb, size);
+-			else if (type == GB_LOOPBACK_TYPE_SINK)
+-				error = gb_loopback_sync_sink(gb, size);
+-
+-			if (error)
+-				gb->error++;
+-			gb->iteration_count++;
+-			gb_loopback_calculate_stats(gb, !!error);
+-		}
++		gb_loopback_dispatch_operation(gb, type, size);
 +
-+		for (gen = 0; gen < node_stats->nr_gens; ++gen) {
-+			const struct generation_stats *gen_stats =
-+				&node_stats->gens[gen];
-+
-+			if (target_gen >= 0 && gen_stats->gen != target_gen)
-+				continue;
-+
-+			total_nr += gen_stats->nr_anon + gen_stats->nr_file;
-+		}
-+	}
-+
-+	return total_nr;
-+}
-+
-+/* Find all pages tracked by lru_gen for this memcg. */
-+long lru_gen_sum_memcg_stats(const struct memcg_stats *stats)
-+{
-+	return lru_gen_sum_memcg_stats_for_gen(-1, stats);
-+}
-+
-+/*
-+ * If lru_gen aging should force page table scanning.
-+ *
-+ * If you want to set this to false, you will need to do eviction
-+ * before doing extra aging passes.
-+ */
-+static const bool force_scan = true;
-+
-+static void run_aging_impl(unsigned long memcg_id, int node_id, int max_gen)
-+{
-+	FILE *f = fopen(LRU_GEN_DEBUGFS, "w");
-+	char *command;
-+	size_t sz;
-+
-+	TEST_ASSERT(f, "fopen(%s) failed", LRU_GEN_DEBUGFS);
-+	sz = asprintf(&command, "+ %lu %d %d 1 %d\n",
-+		      memcg_id, node_id, max_gen, force_scan);
-+	TEST_ASSERT(sz > 0, "creating aging command failed");
-+
-+	pr_debug("Running aging command: %s", command);
-+	if (fwrite(command, sizeof(char), sz, f) < sz) {
-+		TEST_ASSERT(false, "writing aging command %s to %s failed",
-+			    command, LRU_GEN_DEBUGFS);
-+	}
-+
-+	TEST_ASSERT(!fclose(f), "fclose(%s) failed", LRU_GEN_DEBUGFS);
-+}
-+
-+void lru_gen_do_aging(struct memcg_stats *stats, const char *memcg)
-+{
-+	int node, gen;
-+
-+	pr_debug("lru_gen: invoking aging...\n");
-+
-+	/* Must read memcg stats to construct the proper aging command. */
-+	lru_gen_read_memcg_stats(stats, memcg);
-+
-+	for (node = 0; node < stats->nr_nodes; ++node) {
-+		int max_gen = 0;
-+
-+		for (gen = 0; gen < stats->nodes[node].nr_gens; ++gen) {
-+			int this_gen = stats->nodes[node].gens[gen].gen;
-+
-+			max_gen = max_gen > this_gen ? max_gen : this_gen;
-+		}
-+
-+		run_aging_impl(stats->memcg_id, stats->nodes[node].node,
-+			       max_gen);
-+	}
-+
-+	/* Re-read so callers get updated information */
-+	lru_gen_read_memcg_stats(stats, memcg);
-+}
-+
-+/*
-+ * Find which generation contains at least @pages pages, assuming that
-+ * such a generation exists.
-+ */
-+int lru_gen_find_generation(const struct memcg_stats *stats,
-+			    unsigned long pages)
-+{
-+	int node, gen, gen_idx, min_gen = INT_MAX, max_gen = -1;
-+
-+	for (node = 0; node < stats->nr_nodes; ++node)
-+		for (gen_idx = 0; gen_idx < stats->nodes[node].nr_gens;
-+		     ++gen_idx) {
-+			gen = stats->nodes[node].gens[gen_idx].gen;
-+			max_gen = gen > max_gen ? gen : max_gen;
-+			min_gen = gen < min_gen ? gen : min_gen;
-+		}
-+
-+	for (gen = min_gen; gen < max_gen; ++gen)
-+		/* See if this generation has enough pages. */
-+		if (lru_gen_sum_memcg_stats_for_gen(gen, stats) > pages)
-+			return gen;
-+
-+	return -1;
-+}
-+
-+bool lru_gen_usable(void)
-+{
-+	long required_features = LRU_GEN_ENABLED | LRU_GEN_MM_WALK;
-+	int lru_gen_fd, lru_gen_debug_fd;
-+	char mglru_feature_str[8] = {};
-+	long mglru_features;
-+
-+	lru_gen_fd = open(LRU_GEN_ENABLED_PATH, O_RDONLY);
-+	if (lru_gen_fd < 0) {
-+		puts("lru_gen: Could not open " LRU_GEN_ENABLED_PATH);
-+		return false;
-+	}
-+	if (read(lru_gen_fd, &mglru_feature_str, 7) < 7) {
-+		puts("lru_gen: Could not read from " LRU_GEN_ENABLED_PATH);
-+		close(lru_gen_fd);
-+		return false;
-+	}
-+	close(lru_gen_fd);
-+
-+	mglru_features = strtol(mglru_feature_str, NULL, 16);
-+	if ((mglru_features & required_features) != required_features) {
-+		printf("lru_gen: missing features, got: %s", mglru_feature_str);
-+		return false;
-+	}
-+
-+	lru_gen_debug_fd = open(LRU_GEN_DEBUGFS, O_RDWR);
-+	__TEST_REQUIRE(lru_gen_debug_fd >= 0,
-+		       "lru_gen: Could not open " LRU_GEN_DEBUGFS ", "
-+		       "but lru_gen is enabled, so cannot use page_idle.");
-+	close(lru_gen_debug_fd);
-+	return true;
-+}
+ 		gb->send_count++;
+ 		mutex_unlock(&gb->mutex);
+ 
+-		if (us_wait) {
+-			if (us_wait < 20000)
+-				usleep_range(us_wait, us_wait + 100);
+-			else
+-				msleep(us_wait / 1000);
+-		}
++		gb_loopback_delay_if_needed(us_wait);
+ 	}
+ 
+ 	gb_pm_runtime_put_autosuspend(bundle);
+-
+ 	return 0;
+ }
+ 
 -- 
-2.49.0.472.ge94155a9ec-goog
+2.43.0
 
