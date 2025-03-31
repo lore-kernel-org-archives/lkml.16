@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A076221ADC5
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896ED21D004
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743459980; cv=none; b=uB2+8vrZEmPWi95eJkj3zX+3Mh0G2sf5YPHBHrX9pni5Zodd5pdL8dni9jra6ks7Z0mr5hudcw7KkHkgm+bGBMOaPRejhHfvpXzOospAWHLCCfge/Xw8eskq8M1zO/Gw+M0NLYbUZC3TuYBjVbtYSplM8OgSmmGMh4efeeHH4PY=
+	t=1743459983; cv=none; b=gbTHSezxaQF3kD6DzEnXYEU+AaqvNRrzN0tZWsGRznFDkGRgcauuSAqRIAhSG647p2xRUZXGl36oiwcCxDJEDjDyKd6IgfDGU1TOzTFfDqF+x3uZpOEBqNk4pBpBXt8hFF74H9FtVqkB70p4vOGt492ogm+j+Q9bm2RgeedDXhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743459980; c=relaxed/simple;
-	bh=b3NZd8lRjWdgZrRMhVMlVR9D82eGDjxo/v7uxmoT7Vs=;
+	s=arc-20240116; t=1743459983; c=relaxed/simple;
+	bh=G+h8Vv1nIonXTEqmPG0VP5c6zXmyRBtxfLm0szpz5h0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mlmEGAigToSr207fFG/H+7Sf3Y0ucHctG/3tzzRLRuZU3WOimRlrSrdTzgALfABNLrWANBXZoJthshfGpe/NbPA8erEvaz8IPCSg7vdOdJiJoCxSGHeYTxN6sdxf4nOSjchyrtOpFBr270aY/OTeorW1QXnph2QR78TNHoVxIro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZMECZZ52; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=mIEIRDFdW82qSwcbUlAXP+Ewy337iJu0erbiIOH0OBtCRZGaDtROY27ZzlrXRxmsjLvcy5BoxEn/3FFjLt4eTNIza+2Q5U/2qvuo2uaKxyLz1WYh7FCxe61VHDIN/4P9RDHCGAjzgaOZ49JGMQKooqu/njzGaQtUhobITePeN3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gASujaQr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZMECZZ52"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gASujaQr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743459977;
+	s=mimecast20190719; t=1743459980;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oL4VgFunpcFWrKBnGaiqT7XEJDD7E7ONd4E7vrw+V2I=;
-	b=ZMECZZ52bKfsKMqKqwcDEJFlU7KixfQ/WQg1A7lkDf5bu245HhRAiaVrHuxSQ4SxxqSXtQ
-	IE5XbjD0nQSHyt3Ht1cCmKYPKGtzl09Q6fIyXZ2U+Ne4EGyGBZmca1cUCiy06FzJBwenej
-	a9OBCInQFxtreVMsrr4v1mUedYKgcWg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Vazbmnh2p/8Y/HbtcgJOPCDcyzzw+Nh7b3+HJoKIob0=;
+	b=gASujaQrGD4Uy9xW1irGmHFMKD7TI50u54sSCF42SUzX2g+coSG+8V2HfnI5xJObxBG8Nr
+	aCZGak8CLskykKA1uwbQnG5F8awgKtNmOII6FULZCrUEr+SlUkxEISVTsCOBQr03xoUYV7
+	cSc/1DRMvUn+lzM5fMuSF9pPm65m0l8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-681-IeKpkbiKPMyI3CUGjl4DMA-1; Mon,
- 31 Mar 2025 18:26:11 -0400
-X-MC-Unique: IeKpkbiKPMyI3CUGjl4DMA-1
-X-Mimecast-MFC-AGG-ID: IeKpkbiKPMyI3CUGjl4DMA_1743459969
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-ZpWkDCeVOua9RMSeiF1dew-1; Mon,
+ 31 Mar 2025 18:26:15 -0400
+X-MC-Unique: ZpWkDCeVOua9RMSeiF1dew-1
+X-Mimecast-MFC-AGG-ID: ZpWkDCeVOua9RMSeiF1dew_1743459973
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2DAD2180AF50;
-	Mon, 31 Mar 2025 22:26:08 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91DA01800260;
+	Mon, 31 Mar 2025 22:26:12 +0000 (UTC)
 Received: from chopper.lyude.net (unknown [10.22.80.91])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 102491955D81;
-	Mon, 31 Mar 2025 22:26:03 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A09B7192C7C3;
+	Mon, 31 Mar 2025 22:26:08 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: Maxime Ripard <mripard@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -61,9 +61,9 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
 	rust-for-linux@vger.kernel.org (open list:RUST:Keyword:\b(?i:rust)\b)
-Subject: [PATCH v2 1/2] drm/edid: Use unsigned int in drm_add_modes_noedid()
-Date: Mon, 31 Mar 2025 18:23:54 -0400
-Message-ID: <20250331222556.454334-2-lyude@redhat.com>
+Subject: [PATCH v2 2/2] drm/mode_config: Make drm_mode_config.(max|min)_(width|height) unsigned
+Date: Mon, 31 Mar 2025 18:23:55 -0400
+Message-ID: <20250331222556.454334-3-lyude@redhat.com>
 In-Reply-To: <20250331222556.454334-1-lyude@redhat.com>
 References: <20250331222556.454334-1-lyude@redhat.com>
 Precedence: bulk
@@ -75,65 +75,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-A negative resolution doesn't really make any sense, so let's make these
-parameters unsigned. In C this doesn't make much of a difference, but Rust
-is stricter about signed/unsigned casts and additionally can check for
-arithmetic over/underflows if CONFIG_RUST_OVERFLOW_CHECKS is enabled.
+It doesn't make much sense to allow devices to specify their min/max
+resolution as signed integers, and in Rust with CONFIG_RUST_OVERFLOW_CHECKS
+enabled this provides us actual over/underflow checks. Similarly, it
+doesn't really make much sense for us to allow devices to specify their
+minimum/maximum resolution as signed.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Maxime Ripard <mripard@kernel.org>
 Cc: Thomas Zimmermann <tzimmermann@suse.de>
 
 ---
 
 V2:
-* Remove h/vdisplay < 0 checks in drm_add_modes_noedid()
+* No functional changes, just update the commit message w/r/t Thomas's
+  comments.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_edid.c | 10 ++--------
- include/drm/drm_edid.h     |  2 +-
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ include/drm/drm_mode_config.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 13bc4c290b17d..1e69326283dce 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -7099,18 +7099,12 @@ EXPORT_SYMBOL(drm_add_edid_modes);
-  * Return: The number of modes added or 0 if we couldn't find any.
-  */
- int drm_add_modes_noedid(struct drm_connector *connector,
--			int hdisplay, int vdisplay)
-+			 unsigned int hdisplay, unsigned int vdisplay)
- {
--	int i, count, num_modes = 0;
-+	int i, count = ARRAY_SIZE(drm_dmt_modes), num_modes = 0;
- 	struct drm_display_mode *mode;
- 	struct drm_device *dev = connector->dev;
+diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+index 271765e2e9f2d..4b8f0370b79bf 100644
+--- a/include/drm/drm_mode_config.h
++++ b/include/drm/drm_mode_config.h
+@@ -532,8 +532,8 @@ struct drm_mode_config {
+ 	 */
+ 	struct list_head privobj_list;
  
--	count = ARRAY_SIZE(drm_dmt_modes);
--	if (hdisplay < 0)
--		hdisplay = 0;
--	if (vdisplay < 0)
--		vdisplay = 0;
--
- 	for (i = 0; i < count; i++) {
- 		const struct drm_display_mode *ptr = &drm_dmt_modes[i];
+-	int min_width, min_height;
+-	int max_width, max_height;
++	unsigned int min_width, min_height;
++	unsigned int max_width, max_height;
+ 	const struct drm_mode_config_funcs *funcs;
  
-diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-index eaac5e665892a..b38409670868d 100644
---- a/include/drm/drm_edid.h
-+++ b/include/drm/drm_edid.h
-@@ -437,7 +437,7 @@ bool drm_detect_monitor_audio(const struct edid *edid);
- enum hdmi_quantization_range
- drm_default_rgb_quant_range(const struct drm_display_mode *mode);
- int drm_add_modes_noedid(struct drm_connector *connector,
--			 int hdisplay, int vdisplay);
-+			 unsigned int hdisplay, unsigned int vdisplay);
- 
- int drm_edid_header_is_valid(const void *edid);
- bool drm_edid_is_valid(struct edid *edid);
+ 	/* output poll support */
 -- 
 2.48.1
 
