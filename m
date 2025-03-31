@@ -1,140 +1,162 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CFD1BEF77;
-	Mon, 31 Mar 2025 11:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D23F3FE4;
+	Mon, 31 Mar 2025 11:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421543; cv=none; b=WJryaOHO9Y8f+2iParmhcDAtkDJRh8tKSnOTy+CQdY71K1bamsjTdMe7/Hp78q1EDii1dSURxWlsyB+uy2BaLWQzzSO3Dj4b2UxEHTeddISP0v5UwTLEiQ3n5rEVKROIt85Vxux6vD+5IFA5R4yCjN/wmm1Bgx06Inc+NgIFLsM=
+	t=1743421582; cv=none; b=mvQ3Qw/uL7wzLmoKO9hsQzsjR1PpRmErQn5cLUDo5E5cmu8Ne7GE47fD5B5Dw+ikVTjb9Z++ociFLkJHgLk42QC8OcXZXXuLbm1E389KR0E6nwUZE19Vklt/tctQKgvICwWtMhBpRkGDigKbecPnOCSg9lEWKF1qLCgVUg2rLZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421543; c=relaxed/simple;
-	bh=YjNj7isjZpaoY8aE2SSd4iBQGLVI1ommFerJ/LMFluU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QM4Rbp4CCESu1bgkXf8YMv0itzVJwpUGxf5+eelJD24v4cfYJhpGgWSZ36a/Em1g5V/UrmsFIrRDZmlh/lYPZDvzFHjFqLykNAR11/ADOi6p8p4a8Y1UOEG9UuxRFec54/4JXTg9CMzd+9aYUwjXL0OgPyuhWUlSoz2j2LGbwuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abbb12bea54so885859766b.0;
-        Mon, 31 Mar 2025 04:45:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743421540; x=1744026340;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WHaecyGu9k64BRqziBdIUjaEI9K4+K7PFPpeWvnnAAY=;
-        b=iDbsSm4VsZz8KG59mWFnsApPVSYbryXaOVy1GeWGvScfHB9DaTEvyXBS74tcbHr6Gr
-         1AuCIWSpSgM/neE9VQe8+YzQDQYeqMpBy01/iKPFP6De50Itjwium+t6QcD4z+JvDjro
-         DY/UiBKzxr2yQgrWFkoVE7Rrn1BVqBx6SWLGO2nHbOxNpDngvYn8yI3vlv9q1FQgN427
-         G8y6sk847Qsqgn/byYI2qevLxCyLQymB0pYnck8Bzc+Ppk7DAdkbmViXopGwGOg0U8+z
-         wx12TmY1o54WL0xH60wWYYMvP9ih9vNERoCvKb3TuoH6XYdp/xXTp0/Xg/aTCsX2gLR9
-         TITA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7maDtqbYXbM391mhySrBbp377A2iWHPs4jwXNGYYG/JxPVFvEW7Z9ltwG4AgWi+Z0Sh/o0jEWmKjoRi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAzEX/vnfbKNwnYxPOGiL6lAu9rD14jc119F1MQwBlciy1/6Xk
-	Am9R4dhC8qTvg2N7MH2JhPfMuIj54H47hFA7cVpFxVv4nqDfYMaq
-X-Gm-Gg: ASbGncuEOJgwIShMGz75t9N1u4RWDPMMDx3iaympnIw/MqnhN5ZDzl6cWlB27559W5H
-	9ALOTdeGLywOU5C0BSCLzNojc03MyKYrueEpr/o2wEB+QExWHlw6GTmUKYEWfQ2vil9EqcwIrUe
-	7PbPSUC3dRZzq6PKyDZDHqkvXLIX6FBJvcN9+ivmGcjoDZaYd3Jjh3+x61vHXMfkygY2YiMDzBT
-	etMZMZz5f02r2kU8BaeZhATv26GMLDqOoxDZv1i3aj4CYqgwKGrPompu4YtXV3nss0u0bO0G2KF
-	QfHmHy7gd+xmXzOGFE4mkaCakIZIuVl0+BLc
-X-Google-Smtp-Source: AGHT+IGBfH/XydCwbmLY8AYbkte/eSWnT9LoOEEI5ZVy6jIgtM7/Z/Y3vkPvuqLZQ9NNC9XMQl/grg==
-X-Received: by 2002:a17:906:7313:b0:ac6:d7d2:3221 with SMTP id a640c23a62f3a-ac738ae929bmr714290066b.24.1743421539939;
-        Mon, 31 Mar 2025 04:45:39 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b143sm617996766b.58.2025.03.31.04.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 04:45:39 -0700 (PDT)
-Date: Mon, 31 Mar 2025 04:45:37 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Stanislav Fomichev <sdf@fomichev.me>, kuniyu@amazon.com
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
-	michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
-	andrew+netdev@lunn.ch, Taehee Yoo <ap420073@gmail.com>
-Subject: Re: [PATCH net] bnxt_en: bring back rtnl lock in bnxt_shutdown
-Message-ID: <Z+qAYXmGY08pQKKb@gmail.com>
-References: <20250328174216.3513079-1-sdf@fomichev.me>
+	s=arc-20240116; t=1743421582; c=relaxed/simple;
+	bh=u9p15OXm9QZMTai0Gqz2IJw0gWsmXXWW9BWXZRpKvQs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EUMJ6dHVCr0nG/CKAZrnUEfNc56WrprzTllbgjlzagcOZ4xjQFJrTf2Jl6E2WF7Q+ScRwjBdoqJ4G24z+Y1emZ+lc/Otz03PfQ7RBm+vR4F1gmEkmHF5notG7iI8v4t0noIDi3EB/vN1LuRcEvJ1gFMoJ92hX4cTiUZdiyqIbfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEYtBSlO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEYtBSlO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E01C4CEE3;
+	Mon, 31 Mar 2025 11:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743421581;
+	bh=u9p15OXm9QZMTai0Gqz2IJw0gWsmXXWW9BWXZRpKvQs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fEYtBSlOFmnS9FWcnFnLjzCgnlu7b2kKqKIw2MwC6epbB64lpGjYpJAzNDcFNB64d
+	 HUL8cagWLDUpWkuXxeFhxZLJpgfy2SCg/zth7Wwh2VcSiUj40U1h224UBYOcH/Vo0r
+	 G+i3rMyfJePmIQ8SNvkS17L8STUl8Akw+9AI7u9PDNbXdYCX2+yTkuH0xOww4qffQ8
+	 DfkhtlfzOSqW7Bku5XGtGFvPaPQ6qON/iKiiWDGqN8VU7KVxEvGzxEx95NSGmjXFoB
+	 8S/nWukTs0YkAMte1jcgd+H2GXgvA4X0vFOPs7alu9LjcHt3eWFFJRNU0QoJpOmpaZ
+	 EeeJT6Af9u53g==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c764f2c223so1023045fac.0;
+        Mon, 31 Mar 2025 04:46:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUK6nq4ZBAayyJh/9U+8BK4UjThOYTo9H7l5x8U+q1EOJvGe3BGE1bvv8vfL5nPAZylcE6EkKGlSP0i@vger.kernel.org, AJvYcCXaZYuzOd+VD46e2RN5HcanvqvoIXv9LLKB3lcG6TXl7aUOVcvQ4L/VUgB0fkd6ZYEzO3hd38ZYYOvMVUww@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOeuzYwcNYJbNbVQ24GvS5wwkJpUvH6zXSRpJxcgAKJgfSfL2d
+	bmMCOZ7i8jTJ4Lz7UyYkbf4cTB7BnOeRMOuAQyiFIYzRToOd1ckFYH5jQ3/DNvS9eWGWjQJp2yM
+	VBgLIdMvgGrtO8bAcpyszlLkhXo4=
+X-Google-Smtp-Source: AGHT+IGLHSPjnj0ONYF56bwe4e8CV95FtIHFoYEUDj6FI0sTgHCoDe9OUqqcTrF3/hupBFyV4rvUitZaUVoNtiZpj4k=
+X-Received: by 2002:a05:6870:418d:b0:29e:255e:9551 with SMTP id
+ 586e51a60fabf-2cbcf474c3cmr4598743fac.2.1743421580976; Mon, 31 Mar 2025
+ 04:46:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328174216.3513079-1-sdf@fomichev.me>
+References: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
+In-Reply-To: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 31 Mar 2025 13:46:10 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpzlMUyTy2jsegu95KUagJIz4NmCHKhw5-yyzojW0dsktwnVlH68O3aG4M
+Message-ID: <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
+To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>
+Cc: Len Brown <lenb@kernel.org>, Alex Hung <alex.hung@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, linux-acpi@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Stanislav,
-
-On Fri, Mar 28, 2025 at 10:42:16AM -0700, Stanislav Fomichev wrote:
-> Taehee reports missing rtnl from bnxt_shutdown path:
-> 
-> inetdev_event (./include/linux/inetdevice.h:256 net/ipv4/devinet.c:1585)
-> notifier_call_chain (kernel/notifier.c:85)
-> __dev_close_many (net/core/dev.c:1732 (discriminator 3))
-> kernel/locking/mutex.c:713 kernel/locking/mutex.c:732)
-> dev_close_many (net/core/dev.c:1786)
-> netif_close (./include/linux/list.h:124 ./include/linux/list.h:215
-> bnxt_shutdown (drivers/net/ethernet/broadcom/bnxt/bnxt.c:16707) bnxt_en
-> pci_device_shutdown (drivers/pci/pci-driver.c:511)
-> device_shutdown (drivers/base/core.c:4820)
-> kernel_restart (kernel/reboot.c:271 kernel/reboot.c:285)
-
-I've got this issue as well.
-
-> 
-> Bring back the rtnl lock.
-> 
-> Link: https://lore.kernel.org/netdev/CAMArcTV4P8PFsc6O2tSgzRno050DzafgqkLA2b7t=Fv_SY=brw@mail.gmail.com/
-> Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
-> Reported-by: Taehee Yoo <ap420073@gmail.com>
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
-
-Tested-by: Breno Leitao <leitao@debian.org>
-
+On Fri, Mar 28, 2025 at 10:09=E2=80=AFPM Gergo Koteles <soyer@irl.hu> wrote=
+:
+>
+> The _DDC method should return a buffer, or an integer in case of an error=
+.
+> But some Lenovo laptops incorrectly return EDID as buffer in ACPI package=
+.
+>
+> Calling _DDC generates this ACPI Warning:
+> ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
+> found Package, expected Integer/Buffer (20240827/nspredef-254)
+>
+> Use the first element of the package to get the EDID buffer.
+>
+> The DSDT:
+>
+> Name (AUOP, Package (0x01)
+> {
+>         Buffer (0x80)
+>         {
+>         ...
+>         }
+> })
+>
+> ...
+>
+> Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
+> {
+>         If ((PAID =3D=3D AUID))
+>         {
+>                 Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
+>         }
+>         ElseIf ((PAID =3D=3D IVID))
+>         {
+>                 Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
+>         }
+>         ElseIf ((PAID =3D=3D BOID))
+>         {
+>                 Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
+>         }
+>         ElseIf ((PAID =3D=3D SAID))
+>         {
+>                 Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
+>         }
+>
+>         Return (Zero)
+> }
+>
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extension=
+s/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
+> Cc: stable@vger.kernel.org
+> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if availa=
+ble for eDP")
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
 > ---
->  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> index 934ba9425857..1a70605fad38 100644
-> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> @@ -16698,6 +16698,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
->  	if (!dev)
->  		return;
->  
-> +	rtnl_lock();
->  	netdev_lock(dev);
+> Changes in v2:
+>  - Added comment
+>  - Improved commit message
+>  - Link to v1: https://lore.kernel.org/all/4cef341fdf7a0e877c50b502fc95ee=
+8be28aa811.1743129387.git.soyer@irl.hu/
 
-can't we leverage the `struct net_device->lock` for the shutdown.
-Basically we have the lock the single device we are turning it down.
+Hans, any concerns here?
 
-I am wondering if we really need the big RTNL lock. This is my
-understanding of what is happening:
-
-pci_device_shutdown() is called for a single device
- - netdev_lock(dev)
- - netif_close(dev);
-    - dev_close_many(&single, true);
-      - __dev_close_many()
-        - ASSERT_RTNL();
-
-Basically we ware only closing one device, and the net_device->lock
-is already held. Shouldn't it be enough?
-
-Can we do something like this (from my naive point of view):
-
-	 static void __dev_close_many(struct list_head *head)
-	  {
-		  struct net_device *dev;
-
-	-         ASSERT_RTNL();
-		  might_sleep();
-
-		  list_for_each_entry(dev, head, close_list) {
-	+	  	ASSERT_RTNL_NET(dev);
-			...
-		  }
-
-Thanks
---breno
+>  drivers/acpi/acpi_video.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+> index efdadc74e3f4..103f29661576 100644
+> --- a/drivers/acpi/acpi_video.c
+> +++ b/drivers/acpi/acpi_video.c
+> @@ -649,6 +649,13 @@ acpi_video_device_EDID(struct acpi_video_device *dev=
+ice, void **edid, int length
+>
+>         obj =3D buffer.pointer;
+>
+> +       /*
+> +        * Some buggy implementations incorrectly return the EDID buffer =
+in an ACPI package.
+> +        * In this case, extract the buffer from the package.
+> +        */
+> +       if (obj && obj->type =3D=3D ACPI_TYPE_PACKAGE && obj->package.cou=
+nt =3D=3D 1)
+> +               obj =3D &obj->package.elements[0];
+> +
+>         if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER) {
+>                 *edid =3D kmemdup(obj->buffer.pointer, obj->buffer.length=
+, GFP_KERNEL);
+>                 ret =3D *edid ? obj->buffer.length : -ENOMEM;
+> @@ -658,7 +665,7 @@ acpi_video_device_EDID(struct acpi_video_device *devi=
+ce, void **edid, int length
+>                 ret =3D -EFAULT;
+>         }
+>
+> -       kfree(obj);
+> +       kfree(buffer.pointer);
+>         return ret;
+>  }
+>
+> --
+> 2.49.0
+>
