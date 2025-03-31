@@ -1,215 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A4D214A90
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC87214A90;
+	Mon, 31 Mar 2025 19:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743450239; cv=none; b=NwsSfCikE+9WQCxOFbOcKQCzGy88/gGnXbmIoS3OQs3Zyc049oYchCJ2iJsYEtLSpbAMGUejszRNQK2NagaoLCA+bANfNIQPAx7p8Bg2to5JRJl8dCwa9W9yRGh1c4Y1wGf+vwNzasm2zZyNijAQ2FbOJRPVtMd+n0ZnPn7pg4c=
+	t=1743450245; cv=none; b=qV9bcAll/dXa3xIIOlaaTlaIXYP4Vmtw+PbwbIIVPb85jnssqhqbbLzG+i1MGcUhV+7a4fpx2e86nTE6i6QCiUy/SO5ZW0xX9EOpbv9nSeiaCf4qaY80AKci9nQR8ONZMX9Y5CV7epA0pUpb5kQGHOP6ezATPo3Y80+hZnNXtQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743450239; c=relaxed/simple;
-	bh=KcD7JXVsuf+knMRP3v4w6UAyybilC2awFuE0kKm5tBM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=m2UAg52X7qfQuo5xt9CApijpjAX1LBr9Se1/rKnE5xlAvub547gA/jqp3dvNAqCb7z4aMfiFQqYhgqvGmPcNQb4+Cxk5kvlZ4rvMOQHcUoEcOB7v3wTYY7Monmllc7t/QkFKwPonDwA/TEeIvSzGjDA1Ld5ogwydTUK4bsu+tTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J5rPLNKb; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743450245; c=relaxed/simple;
+	bh=W5IkG6CzmoQxTTfBZXkRe1Tz4Qq4ydM2xIKYA5CEC+Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G5dNHVBBuwUdH56pd+4qPwGbsuI3wVqEiRE1Bi6V2CMCSNJb81iRmQCZ0+bTr4+Q9oNVz8bhee607WcAeKvXt1LB60Xsx38LTClLgjpL/M55+bnL8HBKIBjpy1tk3JrM27VkqFHobdKHv3g3BCOWwr5Z1FnWxJfAafdPWOGOw5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lde1OVph; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5rPLNKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743450238; x=1774986238;
-  h=date:from:to:cc:subject:message-id;
-  bh=KcD7JXVsuf+knMRP3v4w6UAyybilC2awFuE0kKm5tBM=;
-  b=J5rPLNKb1g6V0AGujSj8orgpOQcvweeUNnqDOzKLdrB4poL4DwNjEkyt
-   SZmGDcH0Cudja5htSyFaZNetJRE60HIWaZbPddaDyiHyRMUVEM0iINH6q
-   epvdtZJVqY2Xh3Go4kqdrX05Nh3TpQ5NNwjq2on354J4cuGwYNN9ofAaF
-   Lo16EMlI28mA5lPAg34oeCMkMcRBldv0ftiDyUtapzrjQKNv+/kotsxiB
-   C/ZxibRTA8Q0U5Tz4xl9RabiI5DT88Ke9c8Lh+hLUgF+ly7QPAO2Rux/l
-   XbMtFMLs7VTbyLMYKdTBvl++jyDuyF1JoStfG3L6B+MTQCHmR+biv7URL
-   g==;
-X-CSE-ConnectionGUID: EPvgtZMhS1uIh5T0AWyGzw==
-X-CSE-MsgGUID: 8JMswVFZThqvP9Dy8M5h/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="48538371"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="48538371"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 12:43:56 -0700
-X-CSE-ConnectionGUID: EMbxw5KnSuu7nJNoG7uRhQ==
-X-CSE-MsgGUID: 8hRVfxNOS+qpja1Jafu24w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="126646380"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 31 Mar 2025 12:43:54 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzL32-0009Pf-0L;
-	Mon, 31 Mar 2025 19:43:52 +0000
-Date: Tue, 01 Apr 2025 03:43:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 9939188c730d68b8b6b5210b7770021656181730
-Message-ID: <202504010306.5fv9KNnZ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lde1OVph"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A815C4CEE5;
+	Mon, 31 Mar 2025 19:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743450245;
+	bh=W5IkG6CzmoQxTTfBZXkRe1Tz4Qq4ydM2xIKYA5CEC+Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lde1OVphjSPpoSO4Hk6XylrdVbNeB3sDZ/ZzD8jJcL+B/FEvYjY7N47JOChudzgEI
+	 GpcO6EsjWMOerh+geFp87aMv6Cp9/2P8vYHVy4O1XsXc42HnHe8LfkFdbd+pZR8YAa
+	 mus1JeKDJNf2fsXfFJ3ZprnI0HJ+6z5gAsvEk4ZIaPBRqnGAB8map8SxVw+cHjckh6
+	 8Gq2AtsQCoTFSkjeIYFaIiq+AeX73iV79EctKNfRtXK2c3jt7pZCJ1olJL7eQueHf6
+	 4+4rtqw7b5LsReOCg7BDJ0IRKSMe4xa+LAiZFbGapZTJ1pyltKubYGpKI+6NUyggZg
+	 GkM23GbjZvM0w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: "FUJITA Tomonori" <fujita.tomonori@gmail.com>,  <tglx@linutronix.de>,
+  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <netdev@vger.kernel.org>,  <andrew@lunn.ch>,  <hkallweit1@gmail.com>,
+  <tmgross@umich.edu>,  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
+  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
+  <benno.lossin@proton.me>,  <a.hindborg@samsung.com>,
+  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
+  <frederic@kernel.org>,  <arnd@arndb.de>,  <jstultz@google.com>,
+  <sboyd@kernel.org>,  <mingo@redhat.com>,  <peterz@infradead.org>,
+  <juri.lelli@redhat.com>,  <vincent.guittot@linaro.org>,
+  <dietmar.eggemann@arm.com>,  <rostedt@goodmis.org>,
+  <bsegall@google.com>,  <mgorman@suse.de>,  <vschneid@redhat.com>,
+  <tgunders@redhat.com>,  <me@kloenk.dev>,  <david.laight.linux@gmail.com>
+Subject: Re: [PATCH v11 6/8] MAINTAINERS: rust: Add new sections for
+ DELAY/SLEEP and TIMEKEEPING API
+In-Reply-To: <Z-qgo5gl6Qly-Wur@Mac.home> (Boqun Feng's message of "Mon, 31 Mar
+	2025 07:03:15 -0700")
+References: <87jz8ichv5.fsf@kernel.org> <87o6xu15m1.ffs@tglx>
+	<67ddd387.050a0220.3229ca.921c@mx.google.com>
+	<20250322.110703.1794086613370193338.fujita.tomonori@gmail.com>
+	<8n9Iwb8Z00ljHvj7jIWUybn9zwN_JLhLSWrljBKG9RE7qQx4MTMqUkTJeVeBZtexynIlqH1Lgt6g0ofLLwnoyQ==@protonmail.internalid>
+	<Z96zstZIiPsP4mSF@Mac.home> <871puoelnj.fsf@kernel.org>
+	<RGjlasf3jfs3sL9TWhGeAJxH0MNvvn0DDqGl9FVo2JNvwTDpUqrr_V515QzLaEp0T4B1m6PJ0z7Jpw1obiG58w==@protonmail.internalid>
+	<Z-qgo5gl6Qly-Wur@Mac.home>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 31 Mar 2025 21:43:50 +0200
+Message-ID: <87ecyd3s09.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
-branch HEAD: 9939188c730d68b8b6b5210b7770021656181730  sched/isolation: Make CONFIG_CPU_ISOLATION depend on CONFIG_SMP
+"Boqun Feng" <boqun.feng@gmail.com> writes:
 
-elapsed time: 1444m
+> On Sat, Mar 22, 2025 at 11:40:21PM +0100, Andreas Hindborg wrote:
+>> Hi All,
+>>
+>> "Boqun Feng" <boqun.feng@gmail.com> writes:
+>>
+>> > On Sat, Mar 22, 2025 at 11:07:03AM +0900, FUJITA Tomonori wrote:
+>> >> Thank you all!
+>> >>
+>> >> On Fri, 21 Mar 2025 14:00:52 -0700
+>> >> Boqun Feng <boqun.feng@gmail.com> wrote:
+>> >>
+>> >> > On Fri, Mar 21, 2025 at 09:38:46PM +0100, Thomas Gleixner wrote:
+>> >> >> On Fri, Mar 21 2025 at 20:18, Andreas Hindborg wrote:
+>> >> >> >> Could you add me as a reviewer in these entries?
+>> >> >> >>
+>> >> >> >
+>> >> >> > I would like to be added as well.
+>> >> >>
+>> >> >> Please add the relevant core code maintainers (Anna-Maria, Frederi=
+c,
+>> >> >> John Stultz and myself) as well to the reviewers list, so that thi=
+s does
+>> >> >> not end up with changes going in opposite directions.
+>> >> >>
+>> >> >
+>> >> > Make sense, I assume you want this to go via rust then (althought we
+>> >> > would like it to go via your tree if possible ;-))?
+>> >>
+>> >
+>> > Given Andreas is already preparing the pull request of the hrtimer
+>> > abstraction to Miguel, and delay, timekeeping and hrtimer are related,
+>> > these timekeeping/delay patches should go via Andreas (i.e.
+>> > rust/hrtimer-next into rust/rust-next) if Thomas and Miguel are OK with
+>> > it. Works for you, Andreas? If so...
+>> >
+>> >> Once the following review regarding fsleep() is complete, I will subm=
+it
+>> >> patches #2 through #6 as v12 for rust-next:
+>> >>
+>> >> https://lore.kernel.org/linux-kernel/20250322.102449.8951743360606490=
+75.fujita.tomonori@gmail.com/
+>> >>
+>> >> The updated MAINTAINERS file will look like the following.
+>> >>
+>> >> diff --git a/MAINTAINERS b/MAINTAINERS
+>> >> index cbf84690c495..858e0b34422f 100644
+>> >> --- a/MAINTAINERS
+>> >> +++ b/MAINTAINERS
+>> >> @@ -10370,6 +10370,18 @@ F:	kernel/time/timer_list.c
+>> >>  F:	kernel/time/timer_migration.*
+>> >>  F:	tools/testing/selftests/timers/
+>> >>
+>> >> +DELAY AND SLEEP API [RUST]
+>> >> +M:	FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> >> +R:	Boqun Feng <boqun.feng@gmail.com>
+>> >> +R:	Andreas Hindborg <a.hindborg@kernel.org>
+>> >
+>> > ... this "R:" entry would be "M:",
+>> >
+>> >> +R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+>> >> +R:	Frederic Weisbecker <frederic@kernel.org>
+>> >> +R:	Thomas Gleixner <tglx@linutronix.de>
+>> >> +L:	rust-for-linux@vger.kernel.org
+>> >> +L:	linux-kernel@vger.kernel.org
+>> >
+>> > +T:	git https://github.com/Rust-for-Linux/linux.git hrtimer-next
+>> >
+>> >> +S:	Maintained
+>> >
+>> > I will let Andreas decide whether this is a "Supported" entry ;-)
+>> >
+>> >> +F:	rust/kernel/time/delay.rs
+>> >> +
+>> >>  HIGH-SPEED SCC DRIVER FOR AX.25
+>> >>  L:	linux-hams@vger.kernel.org
+>> >>  S:	Orphan
+>> >> @@ -23944,6 +23956,17 @@ F:	kernel/time/timekeeping*
+>> >>  F:	kernel/time/time_test.c
+>> >>  F:	tools/testing/selftests/timers/
+>> >>
+>> >> +TIMEKEEPING API [RUST]
+>> >
+>> > and similar things for this entry as well.
+>> >
+>> >> +M:	FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> >> +R:	Boqun Feng <boqun.feng@gmail.com>
+>> >> +R:	Andreas Hindborg <a.hindborg@kernel.org>
+>> >> +R:	John Stultz <jstultz@google.com>
+>> >> +R:	Thomas Gleixner <tglx@linutronix.de>
+>> >
+>> > +R:      Stephen Boyd <sboyd@kernel.org>
+>> >
+>> > ?
+>> >
+>> >> +L:	rust-for-linux@vger.kernel.org
+>> >> +L:	linux-kernel@vger.kernel.org
+>> >> +S:	Maintained
+>> >> +F:	rust/kernel/time.rs
+>> >> +
+>> >
+>> > Tomo, let's wait for Andreas' rely and decide how to change these
+>> > entries. Thanks!
+>>
+>> My recommendation would be to take all of `rust/kernel/time` under one
+>> entry for now. I suggest the following, folding in the hrtimer entry as
+>> well:
+>>
+>> DELAY, SLEEP, TIMEKEEPING, TIMERS [RUST]
+>> M:	Andreas Hindborg <a.hindborg@kernel.org>
+>
+> Given you're the one who would handle the patches, I think this make
+> more sense.
+>
+>> R:	Boqun Feng <boqun.feng@gmail.com>
+>> R:	FUJITA Tomonori <fujita.tomonori@gmail.com>
+>
+> Tomo, does this look good to you?
+>
+>> R:	Lyude Paul <lyude@redhat.com>
+>> R:	Frederic Weisbecker <frederic@kernel.org>
+>> R:	Thomas Gleixner <tglx@linutronix.de>
+>> R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+>> R:	John Stultz <jstultz@google.com>
+>
+> We should add:
+>
+> R:      Stephen Boyd <sboyd@kernel.org>
+>
+> If Stephen is not against it.
 
-configs tested: 138
-configs skipped: 6
+Yes =F0=9F=91=8D
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>
+>> L:	rust-for-linux@vger.kernel.org
+>> S:	Supported
+>> W:	https://rust-for-linux.com
+>> B:	https://github.com/Rust-for-Linux/linux/issues
+>> T:	git https://github.com/Rust-for-Linux/linux.git rust-timekeeping-next
+>> F:	rust/kernel/time.rs
+>> F:	rust/kernel/time/
+>>
+>> If that is acceptable to everyone, it is very likely that I can pick 2-6
+>> for v6.16.
+>>
+>
+> You will need to fix something because patch 2-6 removes `Ktime` ;-)
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                            hsdk_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250331    gcc-8.5.0
-arc                   randconfig-002-20250331    gcc-8.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         axm55xx_defconfig    clang-15
-arm                                 defconfig    clang-14
-arm                           h3600_defconfig    gcc-14.2.0
-arm                       imx_v6_v7_defconfig    clang-16
-arm                           imxrt_defconfig    clang-21
-arm                       omap2plus_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250331    clang-21
-arm                   randconfig-002-20250331    clang-21
-arm                   randconfig-003-20250331    clang-21
-arm                   randconfig-004-20250331    gcc-7.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250331    gcc-8.5.0
-arm64                 randconfig-002-20250331    clang-21
-arm64                 randconfig-003-20250331    clang-14
-arm64                 randconfig-004-20250331    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250331    gcc-10.5.0
-csky                  randconfig-002-20250331    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250331    clang-20
-hexagon               randconfig-002-20250331    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250331    clang-20
-i386        buildonly-randconfig-002-20250331    gcc-12
-i386        buildonly-randconfig-003-20250331    clang-20
-i386        buildonly-randconfig-004-20250331    clang-20
-i386        buildonly-randconfig-005-20250331    clang-20
-i386        buildonly-randconfig-006-20250331    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250331    gcc-14.2.0
-loongarch             randconfig-002-20250331    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                       m5275evb_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                       bmips_be_defconfig    gcc-14.2.0
-mips                      bmips_stb_defconfig    clang-21
-mips                          rb532_defconfig    clang-18
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250331    gcc-6.5.0
-nios2                 randconfig-002-20250331    gcc-6.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250331    gcc-9.3.0
-parisc                randconfig-002-20250331    gcc-11.5.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                 mpc8315_rdb_defconfig    clang-21
-powerpc               randconfig-001-20250331    clang-21
-powerpc               randconfig-002-20250331    clang-16
-powerpc               randconfig-003-20250331    clang-18
-powerpc64             randconfig-001-20250331    gcc-6.5.0
-powerpc64             randconfig-002-20250331    gcc-8.5.0
-powerpc64             randconfig-003-20250331    clang-19
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250331    clang-14
-riscv                 randconfig-002-20250331    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250331    clang-15
-s390                  randconfig-002-20250331    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                          landisk_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250331    gcc-10.5.0
-sh                    randconfig-002-20250331    gcc-10.5.0
-sh                          rsk7269_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250331    gcc-11.5.0
-sparc                 randconfig-002-20250331    gcc-7.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250331    gcc-7.5.0
-sparc64               randconfig-002-20250331    gcc-7.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250331    gcc-12
-um                    randconfig-002-20250331    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250331    clang-20
-x86_64      buildonly-randconfig-002-20250331    gcc-12
-x86_64      buildonly-randconfig-003-20250331    clang-20
-x86_64      buildonly-randconfig-004-20250331    clang-20
-x86_64      buildonly-randconfig-005-20250331    clang-20
-x86_64      buildonly-randconfig-006-20250331    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250331    gcc-11.5.0
-xtensa                randconfig-002-20250331    gcc-9.3.0
+Yea, but `Instant` is almost a direct substitution, right? Anyway, Tomo
+can send a new spin and change all the uses of Ktime, or I can do it. It
+should be straight forward. Either way is fine with me.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+Best regards,
+Andreas Hindborg
+
+
+
