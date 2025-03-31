@@ -1,105 +1,96 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29291C8637;
-	Mon, 31 Mar 2025 10:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C8E1BD00C
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743415345; cv=none; b=rm61I1A+1y1rlvXeu4wqoKXTH3xMOBnSxY363v/iGUE6TSha9bH65jtztRh53R3llvImD2PWctWCGZtCRwFsH9VNlWYOZ/OwGU8YwgCc84JCnKJb6qrl4FpkRih1TBSLPj9sUOAF/xPdhyAYNMOhDCUQy4r9v8JptdUeOeoozj8=
+	t=1743415401; cv=none; b=koZByBJTI+A9J9o3lngShJuEna2axg6bbhy6oqxg6FlQBOQWipW1TaEE4McVx5YKbQrLD1gu4pi0YoyfnBdZPKib8xdSLUauxgiPlqeYQzzKpoSuYpx7IrdrY/OqKZiiLxX9fkBUMEbaLyf0ZBnFk8m5Xgt6DkPzUdvB5KCNw3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743415345; c=relaxed/simple;
-	bh=leMvSXSuV9GwLo65xjqP0+a36WwP4pHfbm7Oh8Ak15E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xkvk9Vqz5sZPthKnJddtrWqIqzYth1oQQjmu6BYk21hjljYmtjzlEp5gX6Rcer5WMzC6RKBymv0wIECZNHha9HahqWzgGrohcuEDI/k84oikeYvUYq/9IEiyG5Ivayu7GDYOPJdKuB1IXWfTpSORnvlm0Nn0ED2ekggH3y8t39k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1887346241.1;
-        Mon, 31 Mar 2025 03:02:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743415339; x=1744020139;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QKU5ssgS9U8JIuOC1fvhct5e36R0RAbHOX6C6hmSOLQ=;
-        b=jZfc6cSisS6LehOzTm1l5pTW7HsTT83DE9pCLTDn7VFLl60m/A6j0Hwy+De0BBApKj
-         WZAU+rXmAofAFqLRsa3iP4Euxz0GY4cqoCl2wGlXzYk2SLurFW4Z7lCUkTgHIuxz26po
-         ihc9bpVgs09ykq+xT6O6UuTycCVTNDn9XCgSEL+QxTAb8wgXkkLQ9CPbBjIwzPtU1yUh
-         boV4Xh4aUlC5cEATwIOpvRwb4dUsvXOrLDev86q/t12kxnmF40vp3wVYJxaaTeJT0fVi
-         TaeL0PMN7dKcuuJgNoaBaxZzMQen5RYWixM11mzgr5eQx+ns1B/RzGJg5CCwCPD1x1GA
-         beQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKDOb4n9LMRsWKIQ1MOVlCGNgRreu2vWJaL+MgqkMWWMZOI1Q7zLCPmnrFJ4LSR/3M/pJYJzp8q/hQtXvm@vger.kernel.org, AJvYcCUlDIbHgC7Uclsy3ZGLE0byHDeBV+6EV7s91i8jIQSO7SFe8NtYqCD1ihH2O2DyNeP+AXsUUI0zloPn@vger.kernel.org, AJvYcCV3v/TMS0lG29qx7g/cx1neCIDhCLqE+sxS8JDcchOYji9f3RPZhzfsiP7+9xE5hwBI7QxvJrpXkfg3tKJE9yieSoU=@vger.kernel.org, AJvYcCVhCtDzKdWbkvQU2Kv09zMLt2lTsWx3XksM3aaLvy1i3qeYEneBtW/W9KhafM3filsIIKpfaQAAiTzJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnL0rdHfI1Z+BhBwJqh6SuA9j6Wm7per+tZ7lnRfqwRSTxyw0v
-	VPP/6yMe4LP7tj67MVWw2SeIPbSLIjlpdX9h4i7O74QJ1D1oq9VBXTLwZdqo
-X-Gm-Gg: ASbGncv2AoS5iaOGLepoMLjvkNQqqRe7+8Rg9HvXneV81RUhhkerHBReu/mDkgN9Bae
-	WDlohKhP53Ar+75HDC3lny3uUche8JcDXiz4tkzVCGodV+tNRaaXk4VbkU48gvUWxcwi7t7iFBK
-	MIRcSqCV1AjO2oIgmj6k0IikRSAnIKT6Xgkyn3nlgAH7oIQBvTj01cQX8E8wXVnmLMnHppsC3jr
-	8j/nuw30Y9Y0swRxNcWOmcJbt4LAMtplZanMnRJ/ldp5AxArpSvIObxGoMpN+yIH4Dq7Nr+x/MG
-	lrvSRpCSo1pxYZgN5hsOcOuDtEhubY0alsXbOBn1BhmpyzPnFbCANLLNUSuCcC1l/fV9toY9gOF
-	5I5pJHok=
-X-Google-Smtp-Source: AGHT+IGpRRmjXoI7vbAJKRn/QpM34fkuRcQOn5hm9wCvM2+J5Ep5yfxpjnZ8QGRlQqqgM2z3my4xCA==
-X-Received: by 2002:a05:6102:e14:b0:4bb:ecb9:b34d with SMTP id ada2fe7eead31-4c6d3950f6fmr4400564137.18.1743415339484;
-        Mon, 31 Mar 2025 03:02:19 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-871a33895dcsm1476859241.23.2025.03.31.03.02.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 03:02:18 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1887329241.1;
-        Mon, 31 Mar 2025 03:02:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrRAYimDgWZ5j6ChQCPO6+9TtnKLcWK96XUenq/NZ3QnEcUHftrptHKH/oEazTMiubcorRdqZz1E4F@vger.kernel.org, AJvYcCW1nWVdgY1v5oHKMFPb58GTYorO3gzKh6fQ8Oeg+c0LLnbHNoB28GhtW3WSzs53Zuxc+L/ang6n1YuPPvy+@vger.kernel.org, AJvYcCWuapyyfRRkVxFpcSY3kFHaDAsSA0aIaWRIc+zKw2yMC0XnVurpg1cty4VT8CwbN2wJiBa+CfspOuZwkuCRN0k3ZRk=@vger.kernel.org, AJvYcCXmKnL3SBwnFN1i2QNmetWtrkuwoL2VEpauW/dxJX+UojHS7avXLlQXfcF80Gfv1zCdyXwx+lysA7n2@vger.kernel.org
-X-Received: by 2002:a05:6102:510c:b0:4bb:c4ff:5cb9 with SMTP id
- ada2fe7eead31-4c6d388ae4fmr4100264137.15.1743415337988; Mon, 31 Mar 2025
- 03:02:17 -0700 (PDT)
+	s=arc-20240116; t=1743415401; c=relaxed/simple;
+	bh=x79NNq4wFQztyn0qJmZrRiChroiuK/mQs77suz6r/hY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Y2fDqcfvFLXHe2DHx2jSZoALbRr2Il6PUzF8dw3KlCK9ZORQDf5Rci5l065iv1PC//+2fKW8FFlzGp+Xvv0nQ+pNlpk5y4IlIVXuq2o6ughHcaHDFLX2YHZdjc+lLxSj7rYY9LoixKJma8nkYDk32L9bkfG3oYaWbP7L/Eeum6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A5Lqy4sT; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A5Lqy4sT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743415400; x=1774951400;
+  h=date:from:to:cc:subject:message-id;
+  bh=x79NNq4wFQztyn0qJmZrRiChroiuK/mQs77suz6r/hY=;
+  b=A5Lqy4sTx8NSkZG2n8RDcyMTr+gviZM+pVJSKa6MWLt/Fc1ptSZTkv7A
+   EOtfIJXi8t1dCBRFwtDiYpdbi6tCnBg3yLgchBrrwHVPOTfadgCp7Yn22
+   piySelTZrMOg3fzHpVoCIznN+Attz9w4TnY3uS3piBul2A9wyVmzatabH
+   SZk4fvaWqSpUAt36rID9+YURou4FjEU9Vvr+xOk0N9cVspHifLyNApwqT
+   KQlbipyaAQPfyLyIrV+lpWelvYHW/8GgMoU34f9dvZIL2TC6TNWGwEELf
+   /Eo9zysg0lzqpm8COkbo4T8Nylu3yuC9+Nh4p7iPfS+6rmTzroupk+riK
+   Q==;
+X-CSE-ConnectionGUID: aKusE/3sSB+NTyrXTtD6yA==
+X-CSE-MsgGUID: CQrKNmJ0Q4eNO1jImSxzJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="43848002"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="43848002"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:03:18 -0700
+X-CSE-ConnectionGUID: UwOfmKbTSR+plmstz4Dq2g==
+X-CSE-MsgGUID: 3B8oEEcbT0KzUWtnvch7uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="156974403"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 31 Mar 2025 03:03:17 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzBz5-0009A2-0a;
+	Mon, 31 Mar 2025 10:03:12 +0000
+Date: Mon, 31 Mar 2025 18:02:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:WIP.x86/alternatives] BUILD SUCCESS
+ 21e327420a672edd1070e6c947504dcaf41c341a
+Message-ID: <202503311827.uSDrFV1Q-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org> <20250330195715.332106-3-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250330195715.332106-3-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 31 Mar 2025 12:02:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVgHezvsk75D1Z=+ZQXW7=174QZDUAycErPFmmmmO9cEA@mail.gmail.com>
-X-Gm-Features: AQ5f1JqDdBD1I-JTXMgL1IxghxfY7n_rRBPJO23j4mio03-iZ44J2Q5D0QBXoMI
-Message-ID: <CAMuHMdVgHezvsk75D1Z=+ZQXW7=174QZDUAycErPFmmmmO9cEA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: vendor-prefixes: Add Retronix Technology Inc.
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
-	Kever Yang <kever.yang@rock-chips.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 30 Mar 2025 at 21:58, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> Add vendor prefix for Retronix Technology Inc.
-> https://www.retronix.com.tw/en/about.html
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/alternatives
+branch HEAD: 21e327420a672edd1070e6c947504dcaf41c341a  x86/alternatives: Add comment about noinstr expectations
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+elapsed time: 1445m
 
-Although too many companies are named "Retronix"...
+configs tested: 19
+configs skipped: 126
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Gr{oetje,eeting}s,
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250330    gcc-12
+i386    buildonly-randconfig-002-20250330    gcc-12
+i386    buildonly-randconfig-003-20250330    gcc-12
+i386    buildonly-randconfig-004-20250330    clang-20
+i386    buildonly-randconfig-005-20250330    gcc-11
+i386    buildonly-randconfig-006-20250330    clang-20
+i386                            defconfig    clang-20
+x86_64                        allnoconfig    clang-20
+x86_64                       allyesconfig    clang-20
+x86_64  buildonly-randconfig-001-20250330    clang-20
+x86_64  buildonly-randconfig-002-20250330    gcc-12
+x86_64  buildonly-randconfig-003-20250330    gcc-12
+x86_64  buildonly-randconfig-004-20250330    clang-20
+x86_64  buildonly-randconfig-005-20250330    clang-20
+x86_64  buildonly-randconfig-006-20250330    clang-20
+x86_64                          defconfig    gcc-11
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
