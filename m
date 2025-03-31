@@ -1,111 +1,99 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out0-198.mail.aliyun.com (out0-198.mail.aliyun.com [140.205.0.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2803136352
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23341876
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743392611; cv=none; b=Frtsa1DkYvg0OQ7lTd2B3x0ANulgwEc6YOfS+LCcqpHHgAiihI0nA+ejExNIUIbco78aX8yf3stMAQtYz1P3/WBbkiR8ydwqoUV6Rn8QHUaSUhraO4qZjTZjy/KqiH/YWxVchCvKJcl9gudEbDIlYBJeWdWKCaq4Y+aCyPDjBWE=
+	t=1743392800; cv=none; b=dbHYnqcvNdf3NyDZ4EDDtmiqfu9GrJ1Sq+QfyARgZKJmPSuXhk2OtvlY9Fmy77qqPoHrjNpvGBOOgoNvwByrrB+FC3a5SybpCb4xghgFAOIQOiefJoXIXaODGMP0tHqHaGKOdUr2iUE9mighXg7n4IVPQcwJD44EkDcBeLUWEq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743392611; c=relaxed/simple;
-	bh=5drt4LDcreC6eYFo2jy59Tu6vHmXQWJ9K7QNANTC9og=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E4QmMf/4MY0PZFSVyGG4JVa6uEMXpUcqsmPoyOrsdy3rkCiidY6PVm+5f28iekKWhKswMexwO0lQVOfOJyjzOBZWwaatsXRoMTxUIIk+R/BupH6lNkqhmrsIn8teAPMc/cNwBcAfw7NdIJ15nWbXt0e07KX6t9lwngLEpk3mSIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uSu1F0Cm; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743392800; c=relaxed/simple;
+	bh=TzBB0l6N4FbAR6mm5grZhlimbJljRz6duBfTSBBP3w8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9t7G3hT+Ddbh25NvRNEwK84z5RfT2HJnWrTiZsqyFrFf46zGoV4HeSB9cEHW0wqhk5BupEuQE8vt/jOtluymK2nDEO8n6NqjrTiK6U5gp+ERJh/ktfmA37fZEzZZia2cArUnwuKkl8kDenCMplqQFEPrREa+mfPXxAH+I3AQ0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=s3JaeCwj; arc=none smtp.client-ip=140.205.0.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uSu1F0Cm"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3b12e8518so772999366b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743392608; x=1743997408; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIgce8rYt4aTtV7PAuyGh5tPMio2I0JJh7iujL/QKs0=;
-        b=uSu1F0CmwU/LvdU6NgDNgYsF+E0lnV6fQFFUI/0te+sI9+6gdC6aFdTQgbqrGNl59b
-         BdBdbaIfc2Rm0RfKRjl+xfEIp8cBUGwRXE/8XHXaIiduQILJqSX9830UnPQ9bo2K4qct
-         oGdey9kGm4JrDv7C8YAZB8q4BvPiEiLNKu9fhj4jwmOP7EVxjCS5n8y5tAYGu6WYrFHU
-         ZvJyHsNnLmuA6//GCwSSaiZVHrairb4xiACKtr29Q7FFZ4mc122e9Oxz+QIVm/TBCrlb
-         Rk8Nl4iXeKGO2F/j5eKfPHaS0P72y6qZfl5F+N3/sfRoPIYYReG1Q2sPX6bhc7lZ5TjR
-         Y8RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743392608; x=1743997408;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VIgce8rYt4aTtV7PAuyGh5tPMio2I0JJh7iujL/QKs0=;
-        b=FDA7+8d6AXib8/o5LpZepTkNhjpXx5YHkzKCTBQd74nOEmVZspHMCX5x3b7LKeYY83
-         oZCRShpIW2kvMKSRl6nLMu8LsgIIUUVK1Bnm4Xgtj6OFiP5/HNW/osGbu4WGauzEerHU
-         4fmz9UFMwUM2EwBEwuUF3c26wmuCWqRytyKTTab63i3GIYNEE62OW99NaY6ykYnJARV6
-         ahu72L9xwTagQ5xUuzlm5+gJ/tv8gFWwStX0TWWnqtGAH5JY5liJ6ocSGzAcERWWlBON
-         MIAVQIAeq09BWu/9WBeIZu8vuFPbdVb44LHJcBpNMHn4dA4e7ayud1atA7ujnGTImo1A
-         5x+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVn55snBu+lz7LRYtKo8Y/ED+bsGv87x1n+65H9L+yBr3X4ypeO9AKBrxS5+/Lj+/CBuIwrLDU5wQ9Nq8w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoMmvY+U2pTqKNAXt2C9UV2mvQsw7UYMAGu+agqgHf+DEiEIoM
-	0+dKg5pHfDpXAunChSbUTvFE+mODKpkIx4R4amxP1mtUXXP9b0ROIpIiXjWRCE8TLZt5zXbvP1c
-	ie3oK0VdVbkAVcn0rJpsgHA4vX8H7J3DK3Ir8
-X-Gm-Gg: ASbGncvjgcQW98eLxXs3qPnis3EhokZUe0BDapddkzH5nwJHxNIsXS8ueIS0j76IYvE
-	ZwWKeCghTgJon1a9BSOFGo9FpCCW3kBrU0VeHoNKDPdTMh3tpXqxsnwyDYqpXVWIkzcujIDr1BY
-	cPJFwZroCLLQmLIntSizB1Aw==
-X-Google-Smtp-Source: AGHT+IESsld6VWFECGofP9BceQ8i/cdTOJdsfLxIy+vnI7DUGPMG0XrgDjfQez9ovs+KkU9eIO4UhtoV2gr60umX7eA=
-X-Received: by 2002:a17:907:97c9:b0:ac4:3d0:8bc6 with SMTP id
- a640c23a62f3a-ac7389e1864mr648782866b.13.1743392607844; Sun, 30 Mar 2025
- 20:43:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="s3JaeCwj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1743392787; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=FOECTYiRadUvXQOkdUdg2dMUu/42oly6B7QwQ5w5GPk=;
+	b=s3JaeCwjopKb9NEDQ+T3RLCs31U9/UG1IbK5ZG3EQuxnB0rg5iNI4oHR709Dj53YLRw0YrjON9P7yq/AZ/YEhml3JBkkc+79+6HbVDPXdSvp1x8e1ix1mkVWal2Vmjec3pbw4RGveDy3ALbCSQq0zmJkdFPHvPGpHJHFEw1Wg2o=
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c8Zkjm._1743392786 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Mar 2025 11:46:27 +0800
+Date: Mon, 31 Mar 2025 11:46:26 +0800
+From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 1/3] x86/mm: Correct the actual count of available global
+ ASIDs
+Message-ID: <20250331034626.GA88569@k08j02272.eu95sqa>
+References: <cover.1743250122.git.houwenlong.hwl@antgroup.com>
+ <0954cb7ec766d6d1e0b66a93876762b516ae9bae.1743250122.git.houwenlong.hwl@antgroup.com>
+ <a84047c77c1a5f16b0d25f0cee6fe86487d14a5b.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331022011.645533-1-dhavale@google.com> <20250331022011.645533-2-dhavale@google.com>
- <45548d9e-4cfa-476d-9eaa-b338f994478c@linux.alibaba.com> <CAB=BE-S6Brg0e277mdY-d3ZwrGeUe3idz37_FJVaTesAFTGfnQ@mail.gmail.com>
- <330276be-f9cb-4263-85f5-20fe2e10cf72@linux.alibaba.com>
-In-Reply-To: <330276be-f9cb-4263-85f5-20fe2e10cf72@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Sun, 30 Mar 2025 20:43:16 -0700
-X-Gm-Features: AQ5f1Jqr6eSN6rYZq4yyqWPR_jex1f2WbOqmzkzHp3p9RSlj0nqOhUgFQiq1T-g
-Message-ID: <CAB=BE-T_W_EFndyKN-61b9eup52YZw0M_OuTL=sOsZH3QFkrRw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-erofs mailing list <linux-erofs@lists.ozlabs.org>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a84047c77c1a5f16b0d25f0cee6fe86487d14a5b.camel@surriel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Sun, Mar 30, 2025 at 01:29:25AM +0800, Rik van Riel wrote:
+> On Sat, 2025-03-29 at 21:05 +0800, Hou Wenlong wrote:
+> > 
+> > +++ b/arch/x86/mm/tlb.c
+> > @@ -279,7 +279,7 @@ static DEFINE_RAW_SPINLOCK(global_asid_lock);
+> >  static u16 last_global_asid = MAX_ASID_AVAILABLE;
+> >  static DECLARE_BITMAP(global_asid_used, MAX_ASID_AVAILABLE);
+> >  static DECLARE_BITMAP(global_asid_freed, MAX_ASID_AVAILABLE);
+> > -static int global_asid_available = MAX_ASID_AVAILABLE -
+> > TLB_NR_DYN_ASIDS - 1;
+> > +static int global_asid_available = MAX_ASID_AVAILABLE -
+> > TLB_NR_DYN_ASIDS;
+> 
+> Unfortunately we are limited by the PCID space.
+> 
+> A process with ASID N will get PCID N+1.
+> 
+> The PCID space has the same size (and maximum value)
+> as the ASID space.
+> 
+> That means we cannot use the top ASID value.
 >
-> Is there a real use case in Android like this?  It
-> would be really useful to write down something in the
-> commit message.
->
-No, not that I am aware of.
-I was just trying to cover all the possibilities.
-> >
-> > Can you please expand a little bit more on your concern
-> >> it could cause many unnecessary init/uninit cycles.
-> > Did you mean on the cases where only one erofs fs
-> > is mounted at time? Just trying to see if there is a better
-> > way to address your concern.
->
-> My concern is that it could slow down the mount time (on
-> the single mount/unmount) if there are too many CPUs
-> (especially on the server side.. 96 CPUs or more...)
->
-Yeah, that would be slower.
-> Or I guess if kworker CPU hotplug is not used at all
-> for Android if "suspend and resume" latency is really
-> important, could we just add a mode to always initialize
-> pcpu kworkers for all possible CPUs.
->
-In Android CPU hotplug is used and has been working for
-couple of years without issues for devices. This was brought up
-to me for the devices which are not using erofs yet.
+Thank you for your quick reply!
 
-I will take your suggestion and work on V2.
+Since the size of the bitmap is 'MAX_ASID_AVAILABLE', the maximum ASID
+value that can be allocated from the bitmap is 'MAX_ASID_AVAILABLE-1'.
+This matches the comments stating that the valid ASID range for global
+ASID allocation is [TLB_NR_DYN_ASIDS, MAX_ASID_AVAILABLE-1]. It is a
+close interval so the size should be '(MAX_ASID_AVAILABLE-1)-TLB_NR_DYN_ASIDS+1',
+regardless of the value of 'MAX_ASID_AVAILABLE'. Moreover, 'MAX_ASID_AVAILABLE'
+has already taken the reserved PCID 0 into account; 'MAX_ASID_AVAILABLE-1' is a
+valid ASID, and the associated PCID 'MAX_ASID_AVAILABLE' is also a valid PCID.
+Did I miss something?
 
-Thanks for the feedback!
+> Alternatively, I suppose we could have ASID and PCID
+> line up, and always exclude ASID 0 from being used.
+> 
+> That might (maybe) be prettier code, but it isn't what
+> we have today.
+>
+Yes, I agree. Excluding ASID 0 and using PCID as ASID makes the code
+clearer in global ASID allocation.
 
-Regards,
-Sandeep.
+> 
+> -- 
+> All Rights Reversed.
