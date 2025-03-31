@@ -1,135 +1,85 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B0F1D89FD;
-	Mon, 31 Mar 2025 12:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98B51E47C2
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743422895; cv=none; b=PUdVwR8urf72FwqI7WTh91KT1a3l833vT1qVzO/0l7jQCW5vOkEeqS9dp05FQTVF39IIxfQKk9O6OC7Yr9lEPJsMLsEpxbuIC2nkEm2UsZWYEWsx1UITSs7DkBRCZ9KX9yAm9RpGiHUSFYYDqHW/T7M20jCrOT0jBKl9xvtQ2go=
+	t=1743422901; cv=none; b=Kvi3gUx4/6XDwnJP/sMqMuBfrpzPKqEX6NleDpuL69oX9SceMoLBmeblhz0obX6bzmquDaXNlX1L0eQwsJm8K2rsyz5dxMkogQmuBaUwuX2QlgafcwvDkljwvP23F2WzbhGcb9V7NfJ9LLkGpewzRqsewI5utebCP+5kQJLJvKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743422895; c=relaxed/simple;
-	bh=2SfSCQcYNxF578A2wNnE6Peexu1C8CZ9y0aZPHmZxeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7dEVlw6W6F0dzen56hugBDwRDeCRHcnd6g8LGtl2gPmYLCVgM30hD5zYAdShwqK5qd9fD8vDlEYMN80i94NbQ56//kod7IkXlXlyxBWcBjbGPnnbRYayo80rw/ogIswqxcLtRWWWY/S0X5hA+NFnwLm+74h6aSvRIbEEzCg0yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=odGzAfmV; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743422901; c=relaxed/simple;
+	bh=QuwsF68+q3snx8UQO0tlk6G2q4jfyRa42zURLKqW3PU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gIycfl9+uvMHeT/eLSGRwodMH6SxJhULAjZ7XmanvyodNPLsYS5I/XGxjGP/+1C31DoI8p1ezsD6J0e2iXAci8g60CcQevQkDFOQNvTGuZzTqGU0/jXmzDP+/UdJ4aUCuLXVnkS5cpiySaxJCfTW95lYxDRdJRKuAtfe9xIcjc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sPs4UG8j; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="odGzAfmV"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26B713DA;
-	Mon, 31 Mar 2025 14:06:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743422780;
-	bh=2SfSCQcYNxF578A2wNnE6Peexu1C8CZ9y0aZPHmZxeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=odGzAfmVMBGRnDbtLl0ZYvsMhchM5eYvEUDk32nmxL2t/zkBBUkGfY6MYBncQCepS
-	 ySrwD/eM7NzBCZ+UvWHPj0t5KGk7892ZTWpk4mdIsCDkOMaju52c9+O05Dj+YxO3rE
-	 wIIRs7UNq3nOuScaXS+UidiMLL7RlA3UQ7k72FME=
-Date: Mon, 31 Mar 2025 15:07:48 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	acopo Mondi <jacopo+renesas@jmondi.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
-Message-ID: <20250331120748.GB28722@pendragon.ideasonboard.com>
-References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
- <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sPs4UG8j"
+Message-ID: <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743422895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u1GWmMoHCvsubRoH93WkHaw6HXEFrK/VzVaX8jj4hCw=;
+	b=sPs4UG8jWktVkHSe8cvVWOu6j+50Z/ao9cJTDZ+VO6PtZ2s8yk3wYbKtpraNBurtnePyge
+	bBEv/GqIJ/KC/iXzkR3Ae5udUvGup6od/aKoDp1tByiXTb5NbKhN7f3QNEhR91qgIlirCT
+	O6hh/mlEMTs01zImwhtm0jU7sQOx6TE=
+Date: Mon, 31 Mar 2025 20:08:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
+Subject: Re: [PATCH v4] mm/page_alloc: Consolidate unlikely handling in
+ page_expected_state
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
+ Ye Liu <liuye@kylinos.cn>, Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20250328014757.1212737-1-ye.liu@linux.dev>
+ <Z-ayTt8o656AkGfz@casper.infradead.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <Z-ayTt8o656AkGfz@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
-> Quoting Andy Shevchenko (2025-03-31 08:34:35)
-> > Convert the module to be property provider agnostic and allow
-> > it to be used on non-OF platforms.
-> 
-> Looks reasonable to me.
 
-Is that going to work out of the box though ? The calls below read the
-"reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
-addresses using ACPI-specific methods.
+在 2025/3/28 22:29, Matthew Wilcox 写道:
+> On Fri, Mar 28, 2025 at 09:47:57AM +0800, Ye Liu wrote:
+>> Consolidate the handling of unlikely conditions in the 
+>> page_expected_state() function to reduce code duplication and improve 
+>> readability.
+> I don't think this is an equivalent transformation.
+Could you explain it in detail?
+> Please, stop with these tweaky patches to incredibly sensitive core code.
+> Fix a problem, or leave it alone.  We are primarily short of reviewer
+> bandwidth.  You could help with that by reviewing other people's patches.
+> Sending patches of your own just adds to other people's workload.
+Thank you for your feedback. I understand the sensitivity of core code
+and respect the limitations on reviewer bandwidth. However, I believe
+that reasonable optimizations should not be rejected solely because
+they involve core code. If an improvement enhances performance,
+readability, or maintainability without introducing risks, wouldn't
+it be worth considering for review?
 
-Andy, have you tested this patch on an ACPI system ?
+Regarding the reviewer shortage, I’d be happy to help by reviewing
+other patches as well. Could you please share the process for becoming
+a reviewer? What are the requirements or steps to get involved?
 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/media/i2c/rdacm20.c | 5 ++---
-> >  drivers/media/i2c/rdacm21.c | 5 ++---
-> >  2 files changed, 4 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/rdacm20.c b/drivers/media/i2c/rdacm20.c
-> > index b8bd8354d100..dcab63d19baf 100644
-> > --- a/drivers/media/i2c/rdacm20.c
-> > +++ b/drivers/media/i2c/rdacm20.c
-> > @@ -16,10 +16,10 @@
-> >   */
-> >  
-> >  #include <linux/delay.h>
-> > -#include <linux/fwnode.h>
-> >  #include <linux/init.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/module.h>
-> > +#include <linux/property.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/videodev2.h>
-> >  
-> > @@ -575,8 +575,7 @@ static int rdacm20_probe(struct i2c_client *client)
-> >         dev->dev = &client->dev;
-> >         dev->serializer.client = client;
-> >  
-> > -       ret = of_property_read_u32_array(client->dev.of_node, "reg",
-> > -                                        dev->addrs, 2);
-> > +       ret = device_property_read_u32_array(&client->dev, "reg", dev->addrs, 2);
-> >         if (ret < 0) {
-> >                 dev_err(dev->dev, "Invalid DT reg property: %d\n", ret);
-> 
-> But this is no longer a DT reg property ?
-> 
-> >                 return -EINVAL;
-> > diff --git a/drivers/media/i2c/rdacm21.c b/drivers/media/i2c/rdacm21.c
-> > index 3e22df36354f..5ea6988de48b 100644
-> > --- a/drivers/media/i2c/rdacm21.c
-> > +++ b/drivers/media/i2c/rdacm21.c
-> > @@ -11,10 +11,10 @@
-> >   */
-> >  
-> >  #include <linux/delay.h>
-> > -#include <linux/fwnode.h>
-> >  #include <linux/init.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/module.h>
-> > +#include <linux/property.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/videodev2.h>
-> >  
-> > @@ -551,8 +551,7 @@ static int rdacm21_probe(struct i2c_client *client)
-> >         dev->dev = &client->dev;
-> >         dev->serializer.client = client;
-> >  
-> > -       ret = of_property_read_u32_array(client->dev.of_node, "reg",
-> > -                                        dev->addrs, 2);
-> > +       ret = device_property_read_u32_array(&client->dev, "reg", dev->addrs, 2);
-> >         if (ret < 0) {
-> >                 dev_err(dev->dev, "Invalid DT reg property: %d\n", ret);
-> 
-> Same here ...
-> 
-> With those fixed,
-> 
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> >                 return -EINVAL;
+Additionally, I’d like to clarify that my intention in submitting
+patches is to improve the project, not to create unnecessary workload
+for others. If there’s a better way for me to contribute, please let
+me know I'm more than willing to collaborate.                         
 
--- 
-Regards,
 
-Laurent Pinchart
+Thanks,
+ Ye Liu
+
