@@ -1,96 +1,81 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4780524F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CEF21018F;
+	Mon, 31 Mar 2025 12:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743425375; cv=none; b=UjJNucLCjbYac04fkUkISDr7b+ptuP8Cy20SJJsb+/yuVZ6eMp9ZcbVD0xu/UBa4LKqhOLrFX1+qtVd3nqgtCtiLKeZznHDOnYDtMWMAvpehRdU+qEvBN8NdHF6NFW3Bzk2BDsdWFKImJ48Kbtr8Wp8b9s/tQZfJe5vCCr+HCTE=
+	t=1743425397; cv=none; b=PDn293XhyPzfgyAGRVhkw7BT2UcBq/3CUcuOhCTu2iHSXjTAyXWg3Ozo3UL7CYJ/PzNoyTuHWSCuerUgroxFb40c47QFHlA/JtZemU1uwOY/9bWlM+bLFGIyymSc9sKnEXahktWKTFbdoLLA7HeoE3eIRti25ruVVeJQC7SfSCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743425375; c=relaxed/simple;
-	bh=uZKGcVBYhpFMbuhsl5ANqmWXYozs46bnADj/Hn5QquE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PwU1NP0qgPH/6g1dnZp8XLMSPqu2l8rh3NTkAgsvsYHlD79OWVfetq7EzyMBfIkynGNxjao6yNsB1IOq8S8MgNCyAhae368iH3s2GQS8Z4cMTMxVkHXLMqmL63ypeod1ztsFGZM1+je39CHAMoiqdHisz1UAjqD1WpzzJ6f5KLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AVRSgelR; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743425397; c=relaxed/simple;
+	bh=/3b13lnPo/VYYO5b8/DZBpSBqhUe8AUyzzqrPS115y4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=dW1RljuyHjK0VAKw1EN/Ohcmbi9kGzM9duQqU285qlxj6TjNusRHkdLkMUivSgesRilmNf8CpEKfo878B+ROxXGS/Hopbi0l5D5s8EgnUgrBRfg7cJFwFzUBYeqJ0jaRBQZQIIoq3S7SK9wlrnMFqVTaRHeMogHYNCUwXxUQtrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDVvCj5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AVRSgelR"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 309F140E0215;
-	Mon, 31 Mar 2025 12:49:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HY6FgqEIX870; Mon, 31 Mar 2025 12:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743425367; bh=i4ZZg3Y6legd+FBIC9p1MNaHaWs74DOqujPlHLES004=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AVRSgelRKRl/Kzh9yJZyyPZ31M8UBs+dzsjH0HJ1OYqi+u5qlVT/xlM1qtSBB/w8F
-	 /wGnRiFgkISsbtre2NdxYvdQPaMdgu9YygczHrqergCdd9HG8vP4G1zOy8D69C3A27
-	 KSryUM5dN2Kc5GA5w+vLW+IHTShpCU3x5MtALh2Ig2A2QyRtNi3UlkK0E668AXr7zK
-	 lYYqOJkZFW0UQaPqARmKDBwbpiFow2o3/iInGavxQX46lSbfUaQCv+2rjGbwwTtvjE
-	 rn8cQ6AiwqwvOiL/fbL4W0N8XJ/3zzFDDtAV1R0qzhPyOVIOInNV1WS4R9Pc+NXxfx
-	 IsxAZfAH0X2QmY6MEIb2X4flBeGiAD23OiKsGi7z44bGb+ASddNaF18pn4kErgEWOA
-	 KQUOiPNJfWQBOUOTtUnqMANOFtVfW6sns6+8ReNdLo36HbW55SYJ1aHkGdLAPuMWQs
-	 lC4fr4iIeYZFP/18M3t3zsG2XFvOE2N4yhcRYIvXROLNk89uL6DSUBJzpLm2QoPBLc
-	 ESRo01ogCn9ydwnduLy+/3pUsRBSdKjSihLUDDafft8WHE7W9ijMEz9JVOv9tvrFiC
-	 0oqRfS+DJtgrHgFuOvmb9rNMy592SfqvNcRfXgmVwVfZz1IeAH95PblxBhqFM4Vbpf
-	 zYRJ6lEQb/TX7QndjNLlBErc=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3EA0640E015D;
-	Mon, 31 Mar 2025 12:49:18 +0000 (UTC)
-Date: Mon, 31 Mar 2025 14:49:17 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Philip Li <philip.li@intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, lkp@intel.com,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <20250331124917.GGZ-qPTTDyO7hsZkAT@fat_crate.local>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
- <Z-qCrbNvP2cil6jJ@gmail.com>
- <Z+qLDGvkY+TXdCjK@rli9-mobl>
- <20250331123649.GCZ-qMYfyI9gZWwFRm@fat_crate.local>
- <Z+qOKZ2xNK+hUP6x@rli9-mobl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDVvCj5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 932D3C4CEE3;
+	Mon, 31 Mar 2025 12:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743425396;
+	bh=/3b13lnPo/VYYO5b8/DZBpSBqhUe8AUyzzqrPS115y4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RDVvCj5/xkXv1t1Ca4h1QZRQILbJUXwrVvcO23QaHASjf8gIwRJlc3etiQ5PhjKmZ
+	 o5up2sndbFopyAA73otGTA7LPrN8lcwa4Wzj2xlyrAk4pmSepuD4CItmPJCoVl9zh7
+	 3uvy1D5eG3WvxI9NePoW97NelfDkECWRXzI/hLwfzQTnUkvtCG6KV8kGeJOREcsR56
+	 EF5kzhaD0NXtANtazcIvyoMAxn9VuHroFMHbdSfBjQ4J5axIlQx7+rFopdvQpqTgSq
+	 hkUi9hOZ6GEHrBRKRRLIVjSw8NzDkwUOuKZHSFB2GLMGMab4M9H3UrU1cJZTl452eo
+	 4wLnXQaiLaGtQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C98380AA7A;
+	Mon, 31 Mar 2025 12:50:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z+qOKZ2xNK+hUP6x@rli9-mobl>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [v4,net] net: phy: broadcom: Correct BCM5221 PHY model detection
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174342543327.4138497.3469603996591738687.git-patchwork-notify@kernel.org>
+Date: Mon, 31 Mar 2025 12:50:33 +0000
+References: <20250327062942.3597402-1-JJLIU0@nuvoton.com>
+In-Reply-To: <20250327062942.3597402-1-JJLIU0@nuvoton.com>
+To: Jim Liu <jim.t90615@gmail.com>
+Cc: JJLIU0@nuvoton.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
+ hkallweit1@gmail.com, kuba@kernel.org, linux@armlinux.org.uk,
+ edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
+ giulio.benetti+tekvox@benettiengineering.com,
+ bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org,
+ michal.swiatkowski@linux.intel.com
 
-On Mon, Mar 31, 2025 at 08:44:25PM +0800, Philip Li wrote:
-> I will also check this as it is designed to have link together with reported
-> error in the summary. It is another bug that the bot should be fixed.
+Hello:
 
-Please.
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-> Apologize again, we will continue improving the bot to make it really useful.
+On Thu, 27 Mar 2025 14:29:42 +0800 you wrote:
+> Correct detect condition is applied to the entire 5221 family of PHYs.
+> 
+> Fixes: 3abbd0699b67 ("net: phy: broadcom: add support for BCM5221 phy")
+> Signed-off-by: Jim Liu <jim.t90615@gmail.com>
+> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+> ---
+> v4:
+>    modify detect condition
+> 
+> [...]
 
-Thanks, I appreciate the effort.
+Here is the summary with links:
+  - [v4,net] net: phy: broadcom: Correct BCM5221 PHY model detection
+    https://git.kernel.org/netdev/net/c/4f1eaabb4b66
 
-If you need guinea pigs to look at reports and give you feedback, holler!
-
-:-)
-
-Thx.
-
+You are awesome, thank you!
 -- 
-Regards/Gruss,
-    Boris.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
