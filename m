@@ -1,154 +1,146 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06B322F166;
-	Mon, 31 Mar 2025 14:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9FD21D3EB;
+	Mon, 31 Mar 2025 14:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432879; cv=none; b=h5wMTH1kAeRrOJIu6Yp/IftVkcNB2TNdiC7eQ9oeM8SHn2NCplPFDMVqO9GohzvP3DLo2Em2fYLRPdX3sRS/IXfIjl+phTsrxl5fhVWNSu2h/aKF1XkaMFnWcJErZyrGy61S2bSW6Q4U+H8wzHGqcMIsl9ubvuhdk7nnQyWQj9M=
+	t=1743432888; cv=none; b=ikIF8iuZjfhMxPzZtoFcQ7VtR5ncNMhrS5pw4WjzdE6kg2EWZrAm/65Oivbi5cv25PRBqFMLXqY1F1bGAa9ZzT7dnCqG0nuuXVvKvmkKxgH7dsnpBw4dybuiqaFUW8yYBPivtHPqaBjDx4XIlZl6dFzm+hu3Fe8vOXw6LCEJ2dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432879; c=relaxed/simple;
-	bh=zR+wuro+r4rnXuqJeZdxGMuQG6Zw/ZgAj/YeJHwsL5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ca/9RP7cHwJRx3FntqSqlUqtIKkRMv7c/jynWq5EdE8k4Ymj4lWkRczyJ6o4itRwXDO6IaXrLmNkEry7FLxU+cvvpulv/XJdgQC9eINJ5W35JE+FVlFUb88NTzJ2tO6RsHnZcL6tIBEW0XmUaqETsyv6zp2j2LECH9ywSivYTg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=F3f6OHDF; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743432888; c=relaxed/simple;
+	bh=IlaMP7UxFkb+Nz46yLWcun00yuw5cDMRLZcwlKxGBLg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A88/9Y0BHiGsqZsU4UIYNFB9s0fbF6py1aZJDSWTDtPHOCTsTjRMGTN+6sMvqvS/5oLZS3UrwWiLiaXY9+D97PwubEcJYJDo0CvCJq8v0W1FOC9JJmtlCZnN0NZtg+oWuCO2y5PUkG3txyKLdegzCQpNySfnivEYHkxwIyaN+RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osOl1+ql; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="F3f6OHDF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HPcnOhRdd53xj4ndL5o1wFLEp2VkNlI8kdN53UFjnhg=; b=F3f6OHDFFH6FQttsDKRCCNG1cK
-	wWwHSeYsKPv+hnYTawudXWiiN08AoomTV4Drfe0f3vmHHSk3rhl6pVaKsoXTrmMljQrf8toegjLfc
-	zyEoSWns/BnymMsKH7B3jbt6rQHHJRtWs7YnSGtp8i7G7LWHP5+9tLRcgTkd9Y6jdE/4vkPqjgQPj
-	z1bBoFttbNwAmuVg9GmldXo0+1v7kGdQZkiBuPsncuWtvGr3eksArn/2eTSTpmHzxftMuU6/2xzke
-	IEM1shTTauu6d6W1PjNMrDhZCAu5tN5fFsDTgxAfU67CGseWezC4wJWWucKiilVuJGjNo3mQhu12Q
-	IM+r03aA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49000)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tzGWw-0004EQ-0s;
-	Mon, 31 Mar 2025 15:54:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tzGWq-0001lE-3B;
-	Mon, 31 Mar 2025 15:54:21 +0100
-Date: Mon, 31 Mar 2025 15:54:20 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-10-maxime.chevallier@bootlin.com>
- <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
- <20250328090621.2d0b3665@fedora-2.home>
- <CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
- <12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
- <CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
- <02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osOl1+ql"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A74C4CEE3;
+	Mon, 31 Mar 2025 14:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743432888;
+	bh=IlaMP7UxFkb+Nz46yLWcun00yuw5cDMRLZcwlKxGBLg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=osOl1+qlV4wP3lzUa4anADQnYXsoqw5AAukHgDYmhQaVpTmXPCc4M5ftzm49CLlRs
+	 cKxeCOAZVybsAFpzz7smIh0XBkR5YsSTo7yiW8Da33Fxrd56B1+/LVJHIHmhhub1OP
+	 UHobIiNpiuSkEBfOonJ9qhKbK0xzLdaDWda3dEqnY1i0HAbQEK2ci6yst070h3E8VI
+	 6Rtq+6KveDMheHkVtoabCpb1+hVQrTjsfAG4k1VpHWrhwXHqa+4+nJ2LnLVXBEm0/Y
+	 GB2yYm8ZqSSIl9+6M+8Q13XvEQQBRHnXNgDPVQiybwrBvrfqi1EmgQfxZ+ixWqI+0v
+	 EbaYtUakF7lrQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	ranjani.sridharan@linux.intel.com,
+	peterz@infradead.org,
+	u.kleine-koenig@baylibre.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 14/24] ASoC: amd: amd_sdw: Add quirks for Dell SKU's
+Date: Mon, 31 Mar 2025 10:53:54 -0400
+Message-Id: <20250331145404.1705141-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250331145404.1705141-1-sashal@kernel.org>
+References: <20250331145404.1705141-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.9
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 04:17:02PM +0200, Andrew Lunn wrote:
-> On Fri, Mar 28, 2025 at 04:26:04PM -0700, Alexander Duyck wrote:
-> > A serdes PHY is part of it, but not a traditional twisted pair PHY as
-> > we are talking about 25R, 50R(50GAUI & LAUI), and 100P interfaces. I
-> > agree it is a different beast, but are we saying that the fixed-link
-> > is supposed to be a twisted pair PHY only?
-> 
-> With phylink, the PCS enumerates its capabilities, the PHY enumerates
-> its capabilities, and the MAC enumerates it capabilities. phylink then
-> finds the subset which all support.
-> 
-> As i said, historically, fixed_link was used in place of a PHY, since
-> it emulated a PHY. phylinks implementation of fixed_link is however
-> different. Can it be used in place of both a PCS and a PHY? I don't
-> know.
+From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
 
-In fixed-link mode, phylink will use a PCS if the MAC driver says there
-is one, but it will not look for a PHY.
+[ Upstream commit 4bb5b6f13fd83b32c8a93fbd399e7558415d1ce0 ]
 
-> You are pushing the envelope here, and maybe we need to take a step
-> back and consider what is a fixed link, how does it fit into the MAC,
-> PCS, PHY model of enumeration? Maybe fixed link should only represent
-> the PHY and we need a second sort of fixed_link object to represent
-> the PCS? I don't know?
+This patch adds a quirk to include the codec amplifier function for Dell
+SKU's listed in quirk table.
 
-As I previously wrote today in response to an earlier email, the
-link modes that phylink used were the first-match from the old
-settings[] array in phylib which is now gone. This would only ever
-return _one_ link mode, which invariably was a baseT link mode for
-the slower speeds.
+Note: In these SKU's, the RT722 codec amplifier is excluded, and an
+external amplifier is used instead.
 
-Maxime's first approach at adapting this to his new system was to
-set every single link mode that corresponded with the speed. I
-objected to that, because it quickly gets rediculous when we end
-up with lots of link modes being indicated for e.g. 10, 100M, 1G
-but the emulated PHY for these speeds only indicates baseT. That's
-just back-compatibility but... in principle changing the link modes
-that are reported to userspace for a fixed link is something we
-should not be doing - we don't know if userspace tooling has come
-to rely on that.
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Link: https://patch.msgid.link/20250207062819.1527184-26-Vijendar.Mukunda@amd.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/amd/acp/acp-sdw-legacy-mach.c | 34 +++++++++++++++++++++++++
+ sound/soc/amd/acp/soc_amd_sdw_common.h  |  1 +
+ 2 files changed, 35 insertions(+)
 
-Yes, it's a bit weird to be reporting 1000baseT for a 1000BASE-X
-interface mode, but that's what we've always done in the past and
-phylink was coded to maintain that (following the principle that
-we shouldn't do gratuitous changes to the information exposed to
-userspace.)
-
-Maxime's replacement approach is to just expose baseT, which
-means that for the speeds which do not have a baseT mode, we go
-from supporting it but with a weird link mode (mostly baseCR*)
-based on first-match in the settings[] table, to not supporting the
-speed.
-
-> > In addition one advantage is that it makes it possible to support
-> > speeds that don't yet have a type in the phy_interface_t, so as I was
-> > enabling things it allowed some backwards compatibility with older
-> > kernels.
-> 
-> I don't like the sound of that. I would simply not support the older
-> kernels, rather than do some hacks.
-
-I think Alexander is referring to having a PHY interface modes that
-supports the speed - for example, if we didn't have a PHY interface
-mode that supported 100G speeds, then 100G speed would not be
-supported.
-
-Phylink has already restricted this and has done for quite some time.
-We only allow speeds that the selected interface mode can support,
-with the exception of PHY_INTERFACE_MODE_INTERNAL which supports
-everything.
-
+diff --git a/sound/soc/amd/acp/acp-sdw-legacy-mach.c b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
+index 9280cd30d19cf..a0defa5d15f73 100644
+--- a/sound/soc/amd/acp/acp-sdw-legacy-mach.c
++++ b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
+@@ -28,6 +28,8 @@ static void log_quirks(struct device *dev)
+ 			SOC_JACK_JDSRC(soc_sdw_quirk));
+ 	if (soc_sdw_quirk & ASOC_SDW_ACP_DMIC)
+ 		dev_dbg(dev, "quirk SOC_SDW_ACP_DMIC enabled\n");
++	if (soc_sdw_quirk & ASOC_SDW_CODEC_SPKR)
++		dev_dbg(dev, "quirk ASOC_SDW_CODEC_SPKR enabled\n");
+ }
+ 
+ static int soc_sdw_quirk_cb(const struct dmi_system_id *id)
+@@ -45,6 +47,38 @@ static const struct dmi_system_id soc_sdw_quirk_table[] = {
+ 		},
+ 		.driver_data = (void *)RT711_JD2,
+ 	},
++	{
++		.callback = soc_sdw_quirk_cb,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D80"),
++		},
++		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
++	},
++	{
++		.callback = soc_sdw_quirk_cb,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D81"),
++		},
++		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
++	},
++	{
++		.callback = soc_sdw_quirk_cb,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D82"),
++		},
++		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
++	},
++	{
++		.callback = soc_sdw_quirk_cb,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D83"),
++		},
++		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
++	},
+ 	{}
+ };
+ 
+diff --git a/sound/soc/amd/acp/soc_amd_sdw_common.h b/sound/soc/amd/acp/soc_amd_sdw_common.h
+index b7bae107c13e4..ed5aec9c01458 100644
+--- a/sound/soc/amd/acp/soc_amd_sdw_common.h
++++ b/sound/soc/amd/acp/soc_amd_sdw_common.h
+@@ -22,6 +22,7 @@
+ #define SOC_JACK_JDSRC(quirk)		((quirk) & GENMASK(3, 0))
+ #define ASOC_SDW_FOUR_SPK		BIT(4)
+ #define ASOC_SDW_ACP_DMIC		BIT(5)
++#define ASOC_SDW_CODEC_SPKR		BIT(15)
+ 
+ #define AMD_SDW0	0
+ #define AMD_SDW1	1
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.5
+
