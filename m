@@ -1,123 +1,105 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108583FFD;
-	Mon, 31 Mar 2025 11:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D443FFD
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421868; cv=none; b=V+/tdAjdenoYN5DfuELcUrdsUdI4MVKxlDfuq1UgON2pFCk6ZaACSUIOU4bru9H/Wdk3RIRWrG6nfEWpbb1TSopPv0tIDxLT4SPKAvBimQUPPVwMCze0M58dYWC8pJjEhDJIuZxztbWqrEjYXsoSwC01GFqyEHF9GynlDlH0wxU=
+	t=1743421915; cv=none; b=lTZa2ak/KfHlfBJzRC8bNKVgQOKPDIO6t7eeDt/62Vw5NBZhCMRe6ivsfFrMk1bKoEi6sx8CJZxCwbJOA0bGhty8XC7dgA5BCtW2m/6oDCxBb5dxhCMEKTM2ZHbAYp+gDW9pAZwvF0lKhq4Z2lsYywv53bsM1SJWq+qu0UDNeGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421868; c=relaxed/simple;
-	bh=08Ig/ejtnrWAAxY/gsnODYpQJfHXrmhC4T01cYFxZIQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=hLg12djjox22QSkwuN0WaXaaoTtTsvCdQ/XoVeIIHwoIPN/eQGxqQCgKtunVH1VptzVi5YMJnbnkzUxPZssKqZvqqth0r2uWPKx0RXh/qleWNChAvGX0ATWlc7dvhbVe2LxFsKJPDgrMzk6kXwfU4pmG/lYJw4UaJLMW7nej67U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U2/7PLMN; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743421915; c=relaxed/simple;
+	bh=JYasPDyd31+lthnRKb/rMR49kUASPtsi3cElSCnTw1g=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=czgXO0+lv9N3XZ390HFp04tpoxtLqXZE/S0Mp5YmJD8xAqSU+9ySCdzGm8ydTQouahka3pScqGXYVdNYiHRu32xbOAV7+lWt+MOjweGkonjOGPDQ5aDrgq8dnUUTQ13ErfpGvR10tAE2EdhYz7s/l+qh1Ng9Djy2ZRtKXeW5Xpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=po5Lu4iE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U2/7PLMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743421837; x=1744026637; i=markus.elfring@web.de;
-	bh=TVPznMmgvtOTQGHG9dQFnDWblNXq5SWHs7cRlxqIIBU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=U2/7PLMNWMiVZLnqu+F2Sf/pnzUEuI7Geuuw0K9YAlHpoyQRIqyqo5ZC4k5DFYOX
-	 nM3Y8O0VwdZ5dtX05bDLYZK2CBu2VwFcub6Eph7hlvBft/Y7gbNzcsW5BmOrNMfk8
-	 zrVxX6bLoUxdCni83DiC9mK6v/6lrAdGG5ucfkc83lyJ3V2UvzX1y3hsNHr78Q8W0
-	 we0kLgj1v/V07SyzigLAXj2cvR+c8vesal0C8Db60xgtXR5in4ThQ4JTqWKzBW9cY
-	 a97Dn+C55XjxsTQE0uHKhtT2gE5iCWd9uGExq3pU3dv3j4OvFuhdw1iP9Jse8UATq
-	 WnQrbw+CZt37Pxsd3w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ma0Pm-1teRhJ1r6q-00LO3i; Mon, 31
- Mar 2025 13:50:37 +0200
-Message-ID: <1ec61529-09f2-44d8-9324-b94da82158c4@web.de>
-Date: Mon, 31 Mar 2025 13:50:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="po5Lu4iE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0597C4CEE3
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743421914;
+	bh=JYasPDyd31+lthnRKb/rMR49kUASPtsi3cElSCnTw1g=;
+	h=From:Date:Subject:To:Cc:From;
+	b=po5Lu4iE6/RTvzsNy1hQadtjag//xTaWnIjqKv8+yv3Jhiion0V+1iqmPJl/YCw3n
+	 EhUXxUp/cPI6VDNo+K3adYf6SAmVA57ZXqwthTxI/p9pFE/Bdjw1Fe4zzIUdp0iIOA
+	 zFDh3GmhNkrOCBDi1eb/b4MkGjTzvkVg5hgIA8chYEozwXUp1hMczueptficdPhl6e
+	 oCtthfl5BpRh1ZlfybcD9F74CVcIrdpJKGPZJG6w+RbF5/AZKSSk29HH4/LMNuziOh
+	 NjNpxaW/5FFDrRve/nYIPt9FjD5rd6fYsHWVznauY6ygUpBnqLEjj9cWkFvANshchD
+	 cRxMmaTWHfigQ==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c82007eaadso1307032fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 04:51:54 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzB4XiJavVBFujmvOaIpD+E/tBdU+fc73meMoBRm2buRgng/zR3
+	DwEj33K4L8htlL5EHC0DD3crHb9pE7tV5ByM6gn72mQMhLNv3CoI4K+jquoJrAcWF/tY6MqVtIT
+	PUsogFPbqsjcrBpUhNidPbZ9Tpa8=
+X-Google-Smtp-Source: AGHT+IHY+ChbEZueJq5rkht6+r0myphBxVQC9Crs2thNcli2u2MNsq/ftoxwVrMl8Z7Wi0ixMWnDpC/EXUOQLgov9x8=
+X-Received: by 2002:a05:6871:7bc2:b0:29e:4578:5f74 with SMTP id
+ 586e51a60fabf-2cbcf474c24mr5183736fac.4.1743421914226; Mon, 31 Mar 2025
+ 04:51:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-fbdev@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Thompson
- <danielt@kernel.org>, Daniel Thompson <daniel@riscstar.com>,
- Helge Deller <deller@gmx.de>, Jingoo Han <jingoohan1@gmail.com>,
- Lee Jones <lee@kernel.org>
-References: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH] backlight: qcom-wled: Add NULL check in the
- wled_configure
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7SsMn2wJgXRiuoievwieoWQ0ugNrKUFxHLUISgQYGEL/GdYBhn2
- K7mDW8JkYzDHDMR4tahn4hOeh3vuMGcWYhK5N15fPjf8jk9jHVjXHNbwO6lzen945JMJhUi
- Xt7Wz1zwYCzSQthYpiEfOro20w6QF36Z6i9RPc68m9mRNF8nLhokA2ye0A/bNmf+IPBnKZV
- BsSCJ4DfntREhAwDNyRzw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TX2hSyP+jTg=;di9CvYZZ/LcOKQJzTwOxYTaVrj7
- H5cwQX0UaVtv0z0YCQwTciZbUxOF8z/ej01KbQFdZ42CU45JdS3yq8NOVi9BJsu8qLda6kwVT
- +AW5eC3GtUqB8THB4qA3XADVz0GPs/+tB/NX4W9GNee4nPodH3CNGQRqDPKdp05clgRQPTR0d
- FXME1sWL8Muzo1+kiuTYr+sqhfOuWOsVj7ZWGRO6P7eqsj/CKQFNJ6t9PLq0OJSsr+9jXls0Z
- csAJsxEqM67AnuPKe5mJ6Jjq2NA72Ta8vKnxe2hFUCFpLwUZbtEGMaZTNekxOAexCheHEbtRw
- KWLnQysIXesHiP6A7yGFV38aDUmtXAlrabGTUWGkWBKJEBvQj4lfRITsR3rZTds5XdCuG6MtV
- VcrFUZKakY5gPTv85sn/x3HhXIbp/EVlx9xvfiCW4kNd7UzPF1D4oGRCjBh5VcfdOq4Le3XJT
- XnJrxeyMy7Ro76msigt27AOS+wEbSdIDpR3r/NuUbJjzE8J2KapfN8+pQyA+lj+WS/Z+Hck15
- nYx8Wmdr3LJGCfe07gnpFqVPtGzqIVkAEmmRsNA5Fpjg2rHuqfhji1NJUmti9VQb94igPWmW+
- nWis8EGwkSsdhPSUKw9a6LlC09vYdTx9ddejYB9xydDnWMOZWGQfBfGrSZTTOKJdAUs+49GFY
- 0j8WdS1MZMJ1rJ8sOs43W4ytdF3CHAIb/zb5Kj6/uirOl3Igwt+5tKTPLih4hNjBdWblALz4B
- cIh0X6vvwDMaaKQVWFq+VWYWy1CLupDI9Wr2PIE8KU3OHN0aoOvpcBj0W0fIMmMWnlfs/cDhj
- 0D6a7IEVNRH8AewjgDxDw7R14h5DyV6Ur96c7DvP0yuLUf3FSvE/1ULtDg7adlxnHlTEjqFD4
- O0AVxzTpu8X5huFeCwNPo1DJG5CTrawWaj3RpXwx20AgvkMXULrIQFqZs2Ro+Q8ME7e3fDPfQ
- B5N9ZtDwpC5l+E/J+485YQmJdSlxJ+rkNoKXqePhQC3dpl6LpS2XG6mWiwcjNE6dYQdwwGuSu
- MaLvadAuU7KJOVdkmwOT4lpTOmgjbPHJngWf/r4hiorGY3qZ4oRFeJK7Kw/5H7oSV+WLxjfkz
- yCoH0i7HsB4xBYVeh8Vumz/aiBUYP5zNkbwOKTaq/v737QBzBTzzvUITXpDtOBrx79z+e+ELC
- q0DZX2rvV/7HnshQv6RrJy84ljqY8Y1CgQ8BCJWiifgODchmda7YkvoMzCzyIAy2OGbaZfjEK
- SAp/cAlnok2pf2Q02AGk4irOFClvLqCP+BJV9ZcolqG5lQXFahLFtBiTxEPIoe8RxVNUlhBKG
- vrjwleLbEVLhRWWuv1MC74uycJK7Jb9M4V6W/nA57Y5AmjK1y9asEhgPf14tZnEQKm0fNwOHs
- AIxXSDloN7lR0CaNgYuatQ9ZcCBBkfcUCUeVX03pN4x/oIU1weR3zebgnDc0PkwvxCTIbXOeb
- eS07o3LzjXH8Y3HHfqy5sO/1nrY1RB/ou7dNBcWz6HzS/UVwZuJR7ZOjvsc4MZI3nRvVDMg==
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Mon, 31 Mar 2025 20:51:40 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd_E0eM8dfoU1HVQ+DW4YKMsrzfJbGTsQELjfy=R+omndw@mail.gmail.com>
+X-Gm-Features: AQ5f1JrJdhXu6R9lCxriX6sA8cwbwS-r2QQ5-xffNh_2g-8QJXClWi6htIuJXNU
+Message-ID: <CAKYAXd_E0eM8dfoU1HVQ+DW4YKMsrzfJbGTsQELjfy=R+omndw@mail.gmail.com>
+Subject: [GIT PULL] exfat update for 6.15-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
+	"Yuezhang.Mo" <Yuezhang.Mo@sony.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> When devm_kasprintf() fails, it returns a NULL pointer. However, this re=
-turn value is not properly checked in the function wled_configure.
->
-> A NULL check should be added after the devm_kasprintf call to prevent po=
-tential NULL pointer dereference error.
+Hi Linus,
 
-* Please adhere to word wrapping preferences around 75 characters per text=
- line.
+This is exfat update pull request for v6.15-rc1. I add description of
+this pull request on below. Please pull exfat with following ones.
 
-* How do you think about to choose the imperative mood for an improved cha=
-nge description?
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
+Thanks!
 
+The following changes since commit 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95:
 
-=E2=80=A6
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -1406,8 +1406,14 @@ static int wled_configure(struct wled *wled)
->  	wled->ctrl_addr =3D be32_to_cpu(*prop_addr);
->
->  	rc =3D of_property_read_string(dev->of_node, "label", &wled->name);
-> -	if (rc)
-> +	if (rc) {
->  		wled->name =3D devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node)=
-;
-> +		if (!wled->name) {
-> +			dev_err(dev, "Failed to allocate memory for wled name\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
-=E2=80=A6
+  Merge tag 'net-next-6.15' of
+git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+(2025-03-26 21:48:21 -0700)
 
-An extra error messages for a failed memory allocation may occasionally be=
- omitted.
+are available in the Git repository at:
 
-Regards,
-Markus
+  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
+tags/exfat-for-6.15-rc1
+
+for you to fetch changes up to c73e680d1f84059e1b1ea82a537f6ccc1c563eb4:
+
+  exfat: call bh_read in get_block only when necessary (2025-03-29
+22:03:11 +0900)
+
+----------------------------------------------------------------
+Description for this pull request:
+ - Fix the random stack corruption and incorrect error returns in
+   exfat_get_block().
+ - Optimize exfat_get_block() by improving checking corner cases.
+ - Fix an endless loop by self-linked chain in exfat_find_last_cluster.
+ - Remove dead EXFAT_CLUSTERS_UNTRACKED codes.
+ - Add missing shutdown check.
+ - Improve the delete performance with discard mount option.
+
+----------------------------------------------------------------
+Sungjong Seo (3):
+      exfat: fix random stack corruption after get_block
+      exfat: fix potential wrong error return from get_block
+      exfat: call bh_read in get_block only when necessary
+
+Yuezhang Mo (4):
+      exfat: support batch discard of clusters when freeing clusters
+      exfat: remove count used cluster from exfat_statfs()
+      exfat: fix the infinite loop in exfat_find_last_cluster()
+      exfat: fix missing shutdown check
+
+ fs/exfat/balloc.c   |  14 ------
+ fs/exfat/exfat_fs.h |   2 -
+ fs/exfat/fatent.c   |  31 +++++++++++-
+ fs/exfat/file.c     |  29 ++++++++++-
+ fs/exfat/inode.c    | 142 ++++++++++++++++++++++++++++++----------------------
+ fs/exfat/super.c    |  10 ----
+ 6 files changed, 140 insertions(+), 88 deletions(-)
