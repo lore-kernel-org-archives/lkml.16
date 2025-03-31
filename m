@@ -1,136 +1,111 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217CD1E04BD;
-	Mon, 31 Mar 2025 10:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7EC1E1022;
+	Mon, 31 Mar 2025 11:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418735; cv=none; b=jzeYUrufkA9I0pE3XlDJiUd8Izhqu6dCYXVo7Fjym8C8mIkqecH0bOrvVbDB5yGJ9DXURjw4AwJtdgGGK3AdXXg0EjAGSalm/pkFve0IXPJ0XOJVTFktKbwxOquKNtihFF22usGo9QQwHe2Qsqg5/1bCsQljqUur78B/sC73khQ=
+	t=1743418808; cv=none; b=UyeV4e9Jj/Df2V1IlXZUExHkcxNqbERiG8OkrPsHn6AioB/5nKNbvE8lu78At9jStT3qN48pels5qkCULXOKgDqd9qiX+8vu2Kpfj6zizQNCEu9xVz+YIyBHbzx+VijpHqn1nUyhR2FaY5Nhqrn3Y15b0F2YVEM4rkWFz53uh4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418735; c=relaxed/simple;
-	bh=EdbgafNxYGu/0XTf7zfAz1bXaEoSlO/vk/i5SU4szcw=;
+	s=arc-20240116; t=1743418808; c=relaxed/simple;
+	bh=cld3lKxTDUu1Y017kQ5wCwIuFGJrB2vDX2SYmnv1YDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOlEoxSC1yL0IjSNIbKs3D/COmPLqQ52475a8SPgHOghFnOvTXV9pJ2KCVdvoq0C87ecUWV7sHlmgO2X1f9v+3kfSNHA0bcNxAmFaoLTQogVLK25lKUfgFPEGV0TSQkW9vN2yKq1vPj7zYj5IRjzTSWvZeSgTMQGjw+cE075vTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gg7dC1iF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XtEXfeJxOqeuWwynuN1w7GqE/ijkwtghDPt0/1GeeOCrvtwqkf/WWwTH3/fvQrOEgtsWJMDrsE7w7ADajizfaKu2u6N0QaAP9NEtcCwwmRTvmPpKAAw7LYkB78z4/VKWLIELueXLTDRxt23T9z7krvZuj3v851GVW5/DSqae34U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2NDbTtm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gg7dC1iF"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V4VTeq030864;
-	Mon, 31 Mar 2025 10:58:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1xzsUz
-	kznSz9Dr4e9xWfh0mKDxu6S+leuxvVC4YqcUY=; b=Gg7dC1iFI1bQpIB6cNFE2s
-	NQ+0wjFaUyb7435368UrRiMcSJjaxrTuR6POKTH2qUdf9uYe63FhpKLGuPHQfvwp
-	qmh7JkcUvCulBfAcINMKuZTYDwtxhl8J1jn2PANt4PEAIL76EnmS8xoqM+T9Efpl
-	WbTruD7YcOBDnu8Ze4KsR1STNLx+04YhKtrNNPnrSx8eYqpcoYikl5XSAG1ifg/6
-	6Ca0gNx+B9y5pM+tlsZTYjNobUdeP7UHAoFBkNxWw2g1jnXds0CK4lhk64KHtVE6
-	3uQYJTUvfV0sRLWvG1JKKkbVUiqk/ftddBefKN/Lm9rxseWSVDLDAEDHm5zcQT2Q
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45q602kyny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 10:58:47 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52V8uw38005213;
-	Mon, 31 Mar 2025 10:58:46 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pujynmd6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 10:58:46 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52VAwgWD19202414
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 31 Mar 2025 10:58:42 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 59FBA2004B;
-	Mon, 31 Mar 2025 10:58:42 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1527E20040;
-	Mon, 31 Mar 2025 10:58:41 +0000 (GMT)
-Received: from localhost (unknown [9.171.66.204])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 31 Mar 2025 10:58:41 +0000 (GMT)
-Date: Mon, 31 Mar 2025 12:58:39 +0200
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Matthew Rosato <mjrosato@linux.ibm.com>, Joerg Roedel <jroedel@suse.de>,
-        Will Deacon <will@kernel.org>, Gerd Bayer <gbayer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2] s390/pci: Fix dev.dma_range_map missing sentinel
- element
-Message-ID: <your-ad-here.call-01743418719-ext-6354@work.hours>
-References: <20250312-fix_dma_map_alloc-v2-1-530108d9de21@linux.ibm.com>
- <c6bcb10536005fd36966a97574e424c17cde1105.camel@linux.ibm.com>
- <your-ad-here.call-01743087110-ext-9280@work.hours>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2NDbTtm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B86C4CEE3;
+	Mon, 31 Mar 2025 11:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743418806;
+	bh=cld3lKxTDUu1Y017kQ5wCwIuFGJrB2vDX2SYmnv1YDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g2NDbTtm2fnQtfkndR19AJeXfOsg0aKBR2zhOLRbu/9G8MGRZ1S7rQHaG6x9vRzTy
+	 i3af8JbkRk75lFo8ihOyRc0MVCUuvUa8AujywyGInIhU+fKBi8VIrwUqZ7GjjkDd1c
+	 V7eYlKTZ+yvSEromo+SjihkEQY+NkhlsEtXc0RSyDGUtnuTQjmnORHU3InLe2ziFYx
+	 phqxJ12Hh7ynoTlbCRghVk9JXld7NPMhl2TsXaY6Vm3kAAYNRFtMpitT+LUGQoMlwa
+	 LmwWYmAI1sL5Eq8sEjFKyoVN1k1MzPHQIOjYO6veyU1OZbm8043mv5cZpZzdD3FbcY
+	 G+5t4zgAyjO1Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tzCsC-000000006dk-0laY;
+	Mon, 31 Mar 2025 13:00:08 +0200
+Date: Mon, 31 Mar 2025 13:00:08 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dmitry.baryshkov@oss.qualcomm.com,
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
+ WiFi/BT pwrseq
+Message-ID: <Z-p1uADNVAM9NcAW@hovoldconsulting.com>
+References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
+ <20250331073423.3184322-2-alex.vinarskis@gmail.com>
+ <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
+ <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <your-ad-here.call-01743087110-ext-9280@work.hours>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ru52HP92MBdeCfXZqx7EbOK2m9jmqgDq
-X-Proofpoint-ORIG-GUID: Ru52HP92MBdeCfXZqx7EbOK2m9jmqgDq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- adultscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310078
+In-Reply-To: <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
 
-On Thu, Mar 27, 2025 at 03:51:50PM +0100, Vasily Gorbik wrote:
-> On Thu, Mar 27, 2025 at 10:45:40AM +0100, Niklas Schnelle wrote:
-> > On Wed, 2025-03-12 at 11:32 +0100, Niklas Schnelle wrote:
-> > > The fixed commit sets up dev.dma_range_map but missed that this is
-> > > supposed to be an array of struct bus_dma_region with a sentinel element
-> > > with the size field set to 0 at the end. This would lead to overruns in
-> > > e.g. dma_range_map_min(). It could also result in wrong translations
-> > > instead of DMA_MAPPING_ERROR in translate_phys_to_dma() if the paddr
-> > > were to not fit in the aperture. Fix this by using the
-> > > dma_direct_set_offset() helper which creates a sentinel for us.
-> > > 
-> > > Fixes: d236843a6964 ("s390/pci: store DMA offset in bus_dma_region")
-> > > Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > > ---
-> > > Note: Based on iommu/next
-> > > 
-> > > v1 -> v2:
-> > > - Fixed typo, added trailers
-> > > - Link to v1: https://lore.kernel.org/r/20250306-fix_dma_map_alloc-v1-1-b4fa44304eac@linux.ibm.com
-> > > ---
-> > >  arch/s390/pci/pci_bus.c | 24 +++++++++++-------------
-> > >  1 file changed, 11 insertions(+), 13 deletions(-)
-> > > 
-> > 
-> > With the IOMMU pull request for Linux v6.15 the fixed commit is now in
-> > Linus tree (with the SHA as cited) but this fix isn't. Since this fix
-> > only touches s390 specific code I think it could go through the s390
-> > tree but that currently doesn't carry the fixed commit so would have to
-> > wait until the s390 tree pulls in v6.15-rc1. 
-> > 
-> > I don't think any breakage from the missing sentinel is visible outside
-> > of guests using the new IOMMU passthrough mode so I guess waiting until
-> > after v6.15-rc1 would be okay.
-> > 
-> > Heiko, Vasily, Alexander what do you think?
+On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
+> On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
+> >
+> > [ +CC: Stephan ]
+> >
+> > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
+> > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
+> > > combo chip using the new power sequencing bindings. All voltages are
+> > > derived from chained fixed regulators controlled using a single GPIO.
+> > >
+> > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
+> > > WiFi/BT pwrseq").
+> >
+> > Are you sure this is correct and that you don't need to worry about the
+> > "how do we model the supplies to an M.2 card" issue?
+> >
+> > See
+> >
+> >         https://lore.kernel.org/lkml/Z-KuG0aOwEnxuhp9@linaro.org/
 > 
-> Sure, I'll pick it up in the s390 tree for rc1 or rc2, depending on
-> whether there will be a second s390 tree pull request during the merge
-> window.
+> Dell XPS 9345 does not have an M.2 card, WLAN package is soldered
+> directly onboard, hence I am quite sure this is similar to QCP.
+> To be certain, perhaps @Tudor, Laurentiu or @Bryan O'Donoghue (if  you
+> have it?) could confirm from schematics?
 
-Applied, thank you!
+I checked now, it seems you are correct.
+
+Highly annoying that we need all this guess-work boiler plate (about
+chip internal details) for what is effectively just two supplies.
+
+Hopefully we can drop that again going forward, but that's a separate
+discussion.
+
+> > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
+> > > X1-based Dell XPS 13 9345")
+> >
+> > Not sure what happened here.
+> 
+> Bluetooth and WLAN definitions were missing, as at the time I only
+> knew the UART port being used for bluetooth, and was missing
+> everything else to describe it.
+
+Ah, ok. The above sentence looked like some left-over copy paste. I
+guess you don't need to mention it at all since this does not seem to
+warrant a proper Fixes tag.
+
+Johan
