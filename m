@@ -1,122 +1,243 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D0317A2E2;
-	Mon, 31 Mar 2025 14:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D372C17A2E2
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743430631; cv=none; b=FJ3jjq6EPKRjq7hageBLZDc63Lesc75KEAwW+3lfYRkukc0R53le2Xj6xeVG4q7y0oyJLD3McHYjlZ7VuPd2bDqh/b/ypUhbWC0OfeCdhcs19iqb2/Jhm0gKZgwNafKWX4liucbmjK6b2Hk15jB25HeoIsTHUdpXh9LookxxI0w=
+	t=1743430643; cv=none; b=DucyM6a52y2jEdRUDiOW6UPVrzKNLcK51pOEo5JzxgunfiHLUdm8EQxzImBUInsE7MpwkCXCSY7vE/DMyC6rYlST7kq8xoctp4JBSOx2FMGERyRo5rgBcifJLtsWJIlh0IeWibncrrtLoMjdFYyh4oxPvgVS7XdHIgXRltaRoxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743430631; c=relaxed/simple;
-	bh=MWgYKnOz2M7yTVHLLeQ7sOWAf7q+a3kJKSHe6cvrYmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uIer7XcHDBNGwRJ2BCNo/RNKKU5JlwFNgKgFMfnpdXPoksK5XWfVP0nJ3zSXVHSuARJqFk1fFmD4gVbKjDwUhiEvzzl59RxHld9oQqjnZkSWVT7NbDhvbMSztOwpcqaREw9T3oPfSPBZt5w6RipJ3fDKlzYKSKJBQI7mb45i8ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jtIWmmTk; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jtIWmmTk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=oeAm+G0R8MwSbWTJUOg8OxTZOg3adOagbUoCj/whS9U=; b=jt
-	IWmmTkOYvq5tnXXTHiFjP32orY6aWMgPaJ6IiadRAbGsb/eYsHINOrGMDFqPZVYEvagQJ1mXKxPYY
-	e4t+nTkrwXHa/ID0YCxKhsLl84AiYph7N+w1w01fE1C26rYmeQf197u18Aa5XlqYgSjYFQfKW8wZZ
-	pdsnrwq+1P4/ioA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tzFwk-007aEo-6c; Mon, 31 Mar 2025 16:17:02 +0200
-Date: Mon, 31 Mar 2025 16:17:02 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-Message-ID: <02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-10-maxime.chevallier@bootlin.com>
- <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
- <20250328090621.2d0b3665@fedora-2.home>
- <CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
- <12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
- <CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
+	s=arc-20240116; t=1743430643; c=relaxed/simple;
+	bh=bNUiw3kjNnY54qfS00GYE+/p+kWr3Rqi1g0RrhSOrSw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZCqkaLs2+Tv7bHMWB6dURxgqS3bDhY1DjWhovkqvYoSZrTMtCh0KXcEcUcu9yH/N13OnxZGmN7F7ThRqUqqZchl0oOblKG76wuXGeld8Zcpq5xxKpC8jgHtozh87Eb13BT32WdZ4L2r/kGiZGweP6CYBHKANWk3T8s+s+Tbl7L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so27785965ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:17:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743430641; x=1744035441;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SEnLau8C9yTFjycIROrk+DLt+cGTsSvTqjUBAy0+9oM=;
+        b=w3f47Zq9y19hrCYqE7XwrRPqnlSHSBPvnGlW6QsDgx4YVYHLZwWhdBCfHUpNQX4wog
+         5C+jncDYHJH3nGP4a3ZaM+r+otP/sEj8Sr7oGq3x7YaA86EwsdpNtV6HbCr6yDnVNdco
+         +kQty+jKhPZlAII+z3UNv/YdrrCnU+yjtBJzfk5eYpybeNnv7E4zqqnQSqqmqt1bHLUx
+         fon8Cyrhyth8j02VACgJWVD9gbeIidAA/U/Ukzh9S/gQJLxylMNZlvX5XPqes+mm39tE
+         6epcaA7rq4mSIkb3mkIjXwEVdohxcs4cTQ1qMakrOmO7rXM2PDQcKFAo1KjQrcvTytl2
+         xNZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3/0O9edbfSxhVYUklzQ42TQixNzM0igCgvocodfe+ZoiyFCPrvlRgw0btWo0R/ymq/wDDlGi8/qKoKDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvQTp+ia9nwmkpyBeoS5g0HzA65zKk1V1ciCEXZ67ZTlh+PGsW
+	ePr4bx8gFgI57JHFbaLwNNcQpWgKbpWsNcCnm/rC/p0evLny0YD+tYahAryQQnb7837j7NeQtxV
+	cnbvDIjygEhGjGrCnHExTVoq8AhpvtIiWLFHFgknUGnLyclulYKPMM5M=
+X-Google-Smtp-Source: AGHT+IE7qRDCDADzm3Rs83YYCtT1kPEmyIjVagY0VJ9AgQwZJ53xPbur/iphBcMlqyyotQm58dcMF4xMb5s/WfVS0KzCtCTHIZuI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
+X-Received: by 2002:a05:6e02:216a:b0:3d3:ddb3:fe4e with SMTP id
+ e9e14a558f8ab-3d5e09344f1mr86852135ab.13.1743430640947; Mon, 31 Mar 2025
+ 07:17:20 -0700 (PDT)
+Date: Mon, 31 Mar 2025 07:17:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eaa3f0.050a0220.3c3d88.0045.GAE@google.com>
+Subject: [syzbot] [block?] possible deadlock in queue_requests_store
+From: syzbot <syzbot+48928935f5008dde0a41@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 28, 2025 at 04:26:04PM -0700, Alexander Duyck wrote:
-> On Fri, Mar 28, 2025 at 2:45 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > Also I am not sure it makes sense to say we can't support multiple
-> > > modes on a fixed connection. For example in the case of SerDes links
-> > > and the like it isn't unusual to see support for CR/KR advertised at
-> > > the same speed on the same link and use the exact same configuration
-> > > so a fixed config could support both and advertise both at the same
-> > > time if I am not mistaken.
-> >
-> > Traditionally, fixed link has only supported one mode. The combination
-> > of speed and duplex fully describes a base-T link. Even more
-> > traditionally, it was implemented as an emulated C22 PHY, using the
-> > genphy driver, so limited to just 1G. With multigige PHY we needed to
-> > be a bit more flexible, so phylink gained its own fixed link
-> > implementation which did not emulate a PHY, just the results of
-> > talking to a multigige PHY.
-> >
-> > But i don't think you are actually talking about a PHY. I think you
-> > mean the PCS advertises CR/KR, and you want to emulate a fixed-link
-> > PCS? That is a different beast.
-> >
-> >         Andrew
-> 
-> A serdes PHY is part of it, but not a traditional twisted pair PHY as
-> we are talking about 25R, 50R(50GAUI & LAUI), and 100P interfaces. I
-> agree it is a different beast, but are we saying that the fixed-link
-> is supposed to be a twisted pair PHY only?
+Hello,
 
-With phylink, the PCS enumerates its capabilities, the PHY enumerates
-its capabilities, and the MAC enumerates it capabilities. phylink then
-finds the subset which all support.
+syzbot found the following issue on:
 
-As i said, historically, fixed_link was used in place of a PHY, since
-it emulated a PHY. phylinks implementation of fixed_link is however
-different. Can it be used in place of both a PCS and a PHY? I don't
-know.
+HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f16bb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c7163a109ac459a8
+dashboard link: https://syzkaller.appspot.com/bug?extid=48928935f5008dde0a41
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c1e198580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158cfa4c580000
 
-You are pushing the envelope here, and maybe we need to take a step
-back and consider what is a fixed link, how does it fit into the MAC,
-PCS, PHY model of enumeration? Maybe fixed link should only represent
-the PHY and we need a second sort of fixed_link object to represent
-the PCS? I don't know?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fc7dc9f0d9a7/disk-1a9239bb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f555a3ae03d3/vmlinux-1a9239bb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/55f6ea74eaf2/bzImage-1a9239bb.xz
 
-> In addition one advantage is that it makes it possible to support
-> speeds that don't yet have a type in the phy_interface_t, so as I was
-> enabling things it allowed some backwards compatibility with older
-> kernels.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+48928935f5008dde0a41@syzkaller.appspotmail.com
 
-I don't like the sound of that. I would simply not support the older
-kernels, rather than do some hacks.
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
+------------------------------------------------------
+syz-executor161/5834 is trying to acquire lock:
+ffff8881437b1958 (&q->elevator_lock){+.+.}-{4:4}, at: queue_requests_store+0x1c7/0x310 block/blk-sysfs.c:80
 
-	 Andrew
+but task is already holding lock:
+ffff8881437b1428 (&q->q_usage_counter(io)#29){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&q->q_usage_counter(io)#29){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4349
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
+       loop_add+0x496/0xb70 drivers/block/loop.c:2067
+       loop_init+0x164/0x270 drivers/block/loop.c:2302
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:3853 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:3867
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       xa_insert include/linux/xarray.h:783 [inline]
+       blk_mq_init_hctx block/blk-mq.c:3924 [inline]
+       blk_mq_alloc_and_init_hctx+0x503/0x11c0 block/blk-mq.c:4457
+       blk_mq_realloc_hw_ctxs+0x8f6/0xc00 block/blk-mq.c:4486
+       blk_mq_init_allocated_queue+0x3af/0x1230 block/blk-mq.c:4540
+       blk_mq_alloc_queue+0x1c2/0x290 block/blk-mq.c:4353
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
+       loop_add+0x496/0xb70 drivers/block/loop.c:2067
+       loop_init+0x164/0x270 drivers/block/loop.c:2302
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (&q->elevator_lock){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+       lock_acquire kernel/locking/lockdep.c:5866 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+       __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+       __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
+       queue_requests_store+0x1c7/0x310 block/blk-sysfs.c:80
+       queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+       sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
+       kernfs_fop_write_iter+0x349/0x510 fs/kernfs/file.c:334
+       iter_file_splice_write+0x91c/0x1150 fs/splice.c:738
+       do_splice_from fs/splice.c:935 [inline]
+       direct_splice_actor+0x18f/0x6c0 fs/splice.c:1158
+       splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+       do_splice_direct_actor fs/splice.c:1201 [inline]
+       do_splice_direct+0x174/0x240 fs/splice.c:1227
+       do_sendfile+0xafd/0xe50 fs/read_write.c:1368
+       __do_sys_sendfile64 fs/read_write.c:1429 [inline]
+       __se_sys_sendfile64 fs/read_write.c:1415 [inline]
+       __x64_sys_sendfile64+0x1d8/0x220 fs/read_write.c:1415
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#29
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#29);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#29);
+  lock(&q->elevator_lock);
+
+ *** DEADLOCK ***
+
+5 locks held by syz-executor161/5834:
+ #0: ffff88803625a420 (sb_writers#7){.+.+}-{0:0}, at: splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+ #1: ffff888028f3e488 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x287/0x510 fs/kernfs/file.c:325
+ #2: ffff888022fb55a8 (kn->active#47){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2aa/0x510 fs/kernfs/file.c:326
+ #3: ffff8881437b1428 (&q->q_usage_counter(io)#29){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+ #4: ffff8881437b1460 (&q->q_usage_counter(queue)#20){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5834 Comm: syz-executor161 Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+ __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
+ queue_requests_store+0x1c7/0x310 block/blk-sysfs.c:80
+ queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+ sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
+ kernfs_fop_write_iter+0x349/0x510 fs/kernfs/file.c:334
+ iter_file_splice_write+0x91c/0x1150 fs/splice.c:738
+ do_splice_from fs/splice.c:935 [inline]
+ direct_splice_actor+0x18f/0x6c0 fs/splice.c:1158
+ splice_direct_to_actor+0x342/0xa30 fs/splice.c:1102
+ do_splice_direct_actor fs/splice.c:1201 [inline]
+ do_splice_direct+0x174/0x240 fs/splice.c:1227
+ do_sendfile+0xafd/0xe50 fs/read_write.c:1368
+ __do_sys_sendfile64 fs/read_write.c:1429 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1415 [inline]
+ __x64_sys_sendfile64+0x1d8/0x220 fs/read_write.c:1415
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5e82d252e9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe14bb84d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007ffe14bb86a8 RCX: 00007f5e82d252e9
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 00007f5e82d98610 R08: 0000000000000000 R09: 00007ffe14bb86a8
+R10: 0000000000000002 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffe14bb8698 R14: 0000000000000001 R15: 0000000
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
