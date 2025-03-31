@@ -1,220 +1,133 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37C021B9D1;
-	Mon, 31 Mar 2025 21:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29225211285
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743457697; cv=none; b=esLA8WCniVjFzxSxu4xjx5aNEQbfjoVfMufrqoD6RU1cgxNVfdW6oB4yDMKJLUnKgayvzzNDbbNZ5SEmVs0WncZQ5r27ZB+2d0uhmq3o3jW0Q7rmZSy+CL8ImTg3koTXrxWlNpF5ldeGOjUnatc4p0uEZ+shZGfbNKCGphyKT7c=
+	t=1743457734; cv=none; b=QvqDPJ4vcy9qk7KHthfMRp8hA0aF2oEsscW36s0MlY9NRzNVPmWcUpAH2ISZRAmHfPaqpNzSxmgoJboaefsuU7Dj1QUN298RL7HTS/6uXXzXqIpFoOPYp8MhNH3UukzXBzkhFMK+EnRobrc0oCjT+MpBKjx5Jx4HzhrGyNo4oqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743457697; c=relaxed/simple;
-	bh=7tZiZd/j3y3N1NrmqeFd1/H8utQgf+EZTEsfLzvTK8Y=;
+	s=arc-20240116; t=1743457734; c=relaxed/simple;
+	bh=j8Q7TMqFjaeqW/xIuzrmGgP0NSuXMv5i+6zPVRBS2as=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gsbjchbYj3qK3dlJN0ML4oNvoASlHg5g3phDepvP0bZj75NKe+w32qlqSKfoHxWFgMdup6bqK20d+rFyeM8UGjp2irie6pDAdFaQS+iNz99witKNmE/B4izKYJuqq9TKWQ26jhhJVM+Gls4x9VyyDPHW9mvo2Xefr3tM3mXQKj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLif/QjF; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=PsJhQB0tiEmmdHtGYjdvxKZjKm3YBBtLVRIwMxWZTTKFGv+EIjpOXeuMH1K7+c52BUbsRzaXGELB+zBgngf0y19qwDb+wGpF1WpAE9zp2MTl0GEDCDS5QQiOh0ksvzcpKIU69mljToFwkEHc1mLDl5FE5GOeCO3XhsDzS1Kodq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CNYhjqEK; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLif/QjF"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476ab588f32so70425131cf.2;
-        Mon, 31 Mar 2025 14:48:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CNYhjqEK"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c05fd126cso41918151fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743457692; x=1744062492; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743457731; x=1744062531; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ad79aRTfa+0eNUhNq8HxKXJsgzRsdFq80zCNM0ZLlhc=;
-        b=dLif/QjFf4pw4mjTn+X+TgGyB0KhAyxkvQSwIts1HOhvLgcGAf71ZcCx/x/QdaIskH
-         +0PuLVjOrhWP94cObteRYFA2E55K5eRbJ6KjaqpbqQIePM27xR7e3TsgF9IY0hMYZEsM
-         uENeh9kIc5fBWYCvhueNH7aoeXoOe1By+c57ra3jmL5YjXDRtq0L1yEE/ATB1cjYoe5D
-         phK4H7Q+veC8jkAwr4aqD/BX10b+7z0bMbYLW43bJSL7sBy0AzujjA/8cWVnvhy5zmfk
-         Z38UnWcb3qpIqncvrvk0q7Bej9ULcNfQ/N+DdJhOg0ar960CJRWBFBtLzgYF0RSGA4FA
-         1UKQ==
+        bh=UYmC+MB3Ga1Qxmw+SnW2boDawQrt63Z6297wM2q9/LA=;
+        b=CNYhjqEK3U6gc/Vf9M4LG1dyy5ySuUIZN81akn7s9jzmE2CWy+4gtSoxdTqZnGN93I
+         LBULJLcb2+H0XqM2zw2XBL1+Ma14QssoXiGrtGyx7qkKG1htIr1a4AEdVi/XBhy0ipJq
+         jx2f3ZVp4o7JBzHzZH9IIodjkYZM5U5J9R7mlTU8XV93hWGIIl8jdzWbPfixBXytzZf2
+         g3lVr6jsN49cQpupKUPgjRro46z09ZiM1QmiD7npb8yioR9IJEgcTnc+ltG6OLaUg/Mf
+         ZKd/mC+2Z9rhTgcqAItyvHFz+ewNrDM9VJvq1WcdhkKKQ5jrfjgsgorFnavd/+Akg3m7
+         /FnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743457692; x=1744062492;
+        d=1e100.net; s=20230601; t=1743457731; x=1744062531;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ad79aRTfa+0eNUhNq8HxKXJsgzRsdFq80zCNM0ZLlhc=;
-        b=ktLG/kOR+fqFJqipcexM4R2dHRajjc5k1K8Yf67UepUIwTqIebZtm74GGJ+hrwSIBG
-         vvRiwUWI0Ta//yziPmHy6rJglbG2rxdbC8CoEh3sdDJ25uxoDrT9amDiPXeuOHVPhgmb
-         F4j/y4A7O538QqYC20Y6lFfQfWMEutAjEm7WfwW+229lAB39pNzYDzK9+Q0esRBcq0fM
-         xAZRQHjvcWginHYeZ7zrH5wU0cgE8I/CX26AYm6tGl5xWeErt4rvF88HKkCau0kYXtgq
-         l9cOX8SncNoNA4P986Ibl7+hgIXZQ9He8FsxzH+Lkhqoinb4i1BvH6Rs8RnbCfQD4HEo
-         9Z8A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3dRZyTSang68MAKkrkPGRzDppVDiSbbP460nqnsjENKOPxMZQmPHPxLpKQudRjcjClnVoCkhJzxpzitwk@vger.kernel.org, AJvYcCWLeQsNPtkODqWPC5W2XD/rUHkhHm9FXVXIi5OXxVdf8X4/QQvo4YjDpwYrlmIMdvi9QHNjuswQA7YZ/MWN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwzuS8BR/HBs331P7Hf62yV/TcEOughacutrA66aVZPMqHcHnY
-	DLtEc5ezyP8bzkTdUKcxzM9nosMti7Tn3V0/TztFQkkloNwZnv8ma536Rh5udvB/i+jTkQMW1fn
-	PiXO8MAyauMVrTY1RYnMTXgQ83F/DFg==
-X-Gm-Gg: ASbGnctwOgFG+DKfrQWWmUZH6vj2TtYZl+9U6hqWlFf+8+a4xuVBrsAGWl2cHrBWrDb
-	Dh+3aGEO1sGp7of8pQ+RACHN5haODRqURSCOviThK2a/aj/D+8bKdEG6YzM2oZhsIuVD4EzKM8s
-	ifjZuXbYv/IAfNnwwDuUmnwnYUYeee2/FxhH9t4VL00Q==
-X-Google-Smtp-Source: AGHT+IGM/dqVoDa9j5ggEk7chMrFfZiIoMyb+U/Wc91ud/PZ/ja3N9I52t+2/RfUF7hoOjpFwVMkQWJnxsO7791Hnd0=
-X-Received: by 2002:ac8:5893:0:b0:476:74de:81e2 with SMTP id
- d75a77b69052e-477ed75ba4dmr175711341cf.43.1743457692478; Mon, 31 Mar 2025
- 14:48:12 -0700 (PDT)
+        bh=UYmC+MB3Ga1Qxmw+SnW2boDawQrt63Z6297wM2q9/LA=;
+        b=l8rvE/KjGUK/8ScURccdCKgk6cnoVSa6QYeSeCUyJBlZeDHuNdXv6Uqsq1Wob7LWLi
+         5OwRFp9jqHhepM5DCtcgCp6gIJ+C4kQ4J688kwAx9rXH4qNAnhq3RyLSUboNRwkwG90N
+         aut6VPLNfjLj9zrV3k8qMoQrJgav267yeBG82Eadn7U8p0Wo94R8+kRl+q83IDX3vVg4
+         VKn+yo17sJLzWG1J7uB3hxfcZxCwa7s8qjPrnuRm23sAq+Ud96R3PF83McLrOJEu03mC
+         v0kh8sBbfytTPUGn/9JKC+/XufKrhPviWL3l+vXL9iNvRnm4im8hVMbcUl3THKjj3ASa
+         o+fA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqJAhjgGON1y46lzO2RN1Mp6k1MtCQy3joQIeJ0HtIM6ZM4v/f4fJG16dknzkj5VgEqHqq19t4tXV0EcQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUYK+RFhrbv52PbpWleKv7TmWrazyRmapZX2KIGhLWXK7LWaUd
+	OgMr2N16ZhbdqOAxFynI41BUeLCo+zpyQvz8jnlkntqrsX8MgMrMrDpUjXIGOJTdQvl3Gj+GdzF
+	p7fmU0HuIiy2kJz2sfPiOuk0ybGv90SuXJ2iKX9uzKSWYbH1cZf4=
+X-Gm-Gg: ASbGncvkcHp9KFUBMzlMzz7uZdejI+wP3teIggcv+SJf1V9ykL/BzdkgalI+xQuHTfO
+	3m7f71Um9WqH1UHfqZqNvzMK5t6QbRpSs7I2cPmn2Oa7LGvsez2KAo+qbx1nGzkQD7qvsnxpq4G
+	WfVRlkqFNN9PmEoRJlVnVPGVk=
+X-Google-Smtp-Source: AGHT+IFKrtOpiukzpK/NrtKRXlopAJBo1cfKVww6Xl2T8BzgUQUIQAgouqHZgZnMK2jF9lW8egUD6eakV7yGdbX7O68=
+X-Received: by 2002:a2e:87d8:0:b0:30d:e104:9ad1 with SMTP id
+ 38308e7fff4ca-30de1049debmr24835581fa.38.1743457731171; Mon, 31 Mar 2025
+ 14:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230727081237.18217-1-jaco@uls.co.za> <20250314221701.12509-1-jaco@uls.co.za>
- <20250314221701.12509-3-jaco@uls.co.za> <CAJnrk1YqO44P077UwJqS+nrSTNe9m9MrbKwnxsSZn2RCQsEvAQ@mail.gmail.com>
- <ffeb7915-a028-40d8-94d0-4c647ee8e184@uls.co.za>
-In-Reply-To: <ffeb7915-a028-40d8-94d0-4c647ee8e184@uls.co.za>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Mon, 31 Mar 2025 14:48:01 -0700
-X-Gm-Features: AQ5f1JrFlEqza0khvurwGBGniFhYg8BMDkqrK_HHWasuQlxjGlsZBHvQiGKjmbM
-Message-ID: <CAJnrk1ZBDLim8ZK-Fc9gXUVht9rJOdSTKO+fb+kxoGpWuwTu9w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
-To: Jaco Kroon <jaco@uls.co.za>
-Cc: bernd.schubert@fastmail.fm, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, miklos@szeredi.hu, rdunlap@infradead.org, 
-	trapexit@spawn.link
+References: <CACRpkdZCiiMTwf7eGJJ9aCKFOC3_xTGv1JKQUijjyp+_++cZ_A@mail.gmail.com>
+ <1277cefd-b080-42a5-bfe5-57296e7ccc3e@paulmck-laptop>
+In-Reply-To: <1277cefd-b080-42a5-bfe5-57296e7ccc3e@paulmck-laptop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 31 Mar 2025 23:48:40 +0200
+X-Gm-Features: AQ5f1JrgtZIoLPjqTsdbCrOeKTMwv3zR0VqKQ_FWWHTP-zQunZfEAsmN_dnyhxE
+Message-ID: <CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
+Subject: Re: [GIT PULL] Generic entry for ARM
+To: paulmck@kernel.org
+Cc: Russell King <rmk+kernel@armlinux.org.uk>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, frederic@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 1:43=E2=80=AFPM Jaco Kroon <jaco@uls.co.za> wrote:
->
-> Hi,
->
-> On 2025/03/31 18:41, Joanne Koong wrote:
-> > On Fri, Mar 14, 2025 at 3:39=E2=80=AFPM Jaco Kroon<jaco@uls.co.za> wrot=
-e:
-> >> Clamp to min 1 page (4KB) and max 128 pages (512KB).
-> >>
-> >> Glusterfs trial using strace ls -l.
-> >>
-> >> Before:
-> >>
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 616
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 624
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 624
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 600
-> >> getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) =3D 608
-> >> getdents64(3, 0x7f2d7d7a7040 /* 1 entries */, 131072) =3D 24
-> >> getdents64(3, 0x7f2d7d7a7040 /* 0 entries */, 131072) =3D 0
-> >>
-> >> After:
-> >>
-> >> getdents64(3, 0x7ffae8eed040 /* 276 entries */, 131072) =3D 6696
-> >> getdents64(3, 0x7ffae8eed040 /* 0 entries */, 131072) =3D 0
-> >>
-> >> Signed-off-by: Jaco Kroon<jaco@uls.co.za>
-> >> ---
-> >>   fs/fuse/readdir.c | 22 ++++++++++++++++++----
-> >>   1 file changed, 18 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
-> >> index 17ce9636a2b1..a0ccbc84b000 100644
-> >> --- a/fs/fuse/readdir.c
-> >> +++ b/fs/fuse/readdir.c
-> >> @@ -337,11 +337,25 @@ static int fuse_readdir_uncached(struct file *fi=
-le, struct dir_context *ctx)
-> >>          struct fuse_mount *fm =3D get_fuse_mount(inode);
-> >>          struct fuse_io_args ia =3D {};
-> >>          struct fuse_args_pages *ap =3D &ia.ap;
-> >> -       struct fuse_folio_desc desc =3D { .length =3D PAGE_SIZE };
-> >> +       struct fuse_folio_desc desc =3D { .length =3D ctx->count };
-> >>          u64 attr_version =3D 0, evict_ctr =3D 0;
-> >>          bool locked;
-> >> +       int order;
-> >>
-> >> -       folio =3D folio_alloc(GFP_KERNEL, 0);
-> >> +       if (desc.length < PAGE_SIZE)
-> >> +               desc.length =3D PAGE_SIZE;
-> >> +       else if (desc.length > (PAGE_SIZE << 7)) /* 128 pages, typical=
-ly 512KB */
-> >> +               desc.length =3D PAGE_SIZE << 7;
-> >> +
-> > Just wondering, how did 128 pages get decided as the upper bound? It
-> > seems to me to make more sense if the upper bound is fc->max_pages.
->
-> Best answer ... random/guess at something which may be sensible.
->
-> > Also btw, I think you can just use the clamp() helper from
-> > <linux/minmax.h> to do the clamping
->
-> Thanks.  Not a regular contributor to the kernel, not often that I've
-> got an itch that needs scratching here :).
->
-> So something like this then:
->
-> 345
-> 346     desc.length =3D clamp(desc.length, PAGE_SIZE, fm->fc->max_pages <=
-<
-> CONFIG_PAGE_SHIFT);
-> 347     order =3D get_count_order(desc.length >> CONFIG_PAGE_SHIFT);
-> 348
->
+On Wed, Mar 12, 2025 at 7:00=E2=80=AFPM Paul E. McKenney <paulmck@kernel.or=
+g> wrote:
 
-You can just use PAGE_SHIFT here instead of CONFIG_PAGE_SHIFT
+> Once you are confident that you have all the needed "noinstr"
+> and "__always_inline" instances in place, could you please add
+> ARCH_WANTS_NO_INSTR to the list of "select" clauses for "config ARM"
+> in arch/arm/Kconfig?
 
-> Note:  Can use ctx->count here in clamp directly due to it being signed,
-> where desc.length is unsigned.
->
-> I'm *assuming* get_count_order will round-up, so if max_pages is 7 (if
-> non-power of two is even possible) we will really get 8 pages here?
+I would love to do that, I'm just not sure what this really entails.
 
-Yes, if you have a max_pages of 7, this will round up and return to
-you an order of 3
+Surely this patchset tags a noinstr on every entry point from
+exceptions and syscall software interrupts.
+Documentation/core-api/entry.rst is pretty good at explaining this.
 
->
-> Compile tested only.  Will perform basic run-time test before re-submit.
->
-> >> +       order =3D get_count_order(desc.length >> CONFIG_PAGE_SHIFT);
-> >> +
-> >> +       do {
-> >> +               folio =3D folio_alloc(GFP_KERNEL, order);
-> > Folios can now be larger than one page size for readdir requests with
-> > your change but I don't believe the current page copying code in fuse
-> > supports this yet. For example, I think the kmapping will be
-> > insufficient in fuse_copy_page() where in the current code we kmap
-> > only the first page in the folio. I sent a patch for supporting large
-> > folios page copying [1] and am trying to get this merged in but
-> > haven't heard back about this patchset yet. In your local tests that
-> > used multiple pages for the readdir request, did you run into any
-> > issues or it worked fine?
->
-> My tests boiled down to running strace as per above, and then some basic
-> time trials using find /path/to/mount/point with and without the patch
-> over a fairly large structure containing about 170m inodes.  No problems
-> observed.  That said ... I've done similar before, and then introduced a
-> major memory leak that under load destroyed 100GB of RAM in minutes.
-> Thus why I'm looking for a few eyeballs on this before going to
-> production (what we have works, it's just on an older kernel).
->
-> If further improvements are possible that would be great, but based on
-> testing this is already at least a 10x improvement on readdir() performan=
-ce.
->
+But what makes me uncertain are things that are tagged
+"notrace", such as void notrace cpu_init(void) - surely we
+don't trace, but should that be "noinstr"? It's even marked
+"notrace" but not "noinstr" in arm64.
 
-I think you need the patch I linked to or this could cause crashes.
-The patch adds support for copying folios larger than 1 page size in
-fuse. Maybe you're not running into the crash because it's going
-through splice which will circumvent copying, but in the non-splice
-case, I believe the kmap is insufficient when you go to do the actual
-copying. IOW, I think that patch is a dependency for this one.
+cpu_init() is called from e.g.:
+asmlinkage void secondary_start_kernel(struct task_struct *task)
+OK should this also be noinstr? Or is that just implied because
+of asmlinkage?
 
-Thanks,
-Joanne
+<linux/compiler_types.h> will resolve to:
 
-> > [1]https://lore.kernel.org/linux-fsdevel/20250123012448.2479372-2-joann=
-elkoong@gmail.com/
-> Took a quick look, wish I could provide you some feedback but that's
-> beyond my kernel skill set to just eyeball.
->
-> Looks like you're primarily getting rid of the code that references the
-> pages inside the folio's and just operating on the folio's directly? A
-> side effect of which (your goal) is to enable larger copies rather than
-> small ones?
->
-> Thank you,
-> Jaco
+#if defined(CC_USING_HOTPATCH)
+#define notrace                 __attribute__((hotpatch(0, 0)))
+#elif defined(CC_USING_PATCHABLE_FUNCTION_ENTRY)
+#define notrace                 __attribute__((patchable_function_entry(0, =
+0)))
+#else
+#define notrace                 __attribute__((__no_instrument_function__))
+#endif
+
+which I read as three different ways of saying "don't patch here".
+
+Which is confusingly similar or identical to what noinstr does, I do see th=
+at
+noinstr pushes the code to separate section but that in turn might
+be what __attribute__((__no_instrument_function__)) and
+friends does?
+
+Are they equivalent?
+
+sched_clock_noinstr() is tagged noinstr and sched_clock() is
+tagged notrace, so there must be a difference here.
+
+secondary_start_kernel() is tagged "notrace" on arm64 but
+not on arm, should it be tagged "noinstr" or "notrace"?
+
+This kind of stuff makes me uncertain about how this is to be
+done. A "noinstr vs notrace" section in Documentation/core-api/entry.rst
+would help a lot I think!
+
+Yours,
+Linus Walleij
