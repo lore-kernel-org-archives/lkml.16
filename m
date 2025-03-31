@@ -1,46 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F891E1A18;
-	Mon, 31 Mar 2025 11:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75221DFE0A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743419634; cv=none; b=ctVMjNh+866Nrw8Y+lVlUVm8vVIp4ySdK1o467zSS14LfKehN000Thgo+YIAnc/wSI5CRYA44iXzf3nj3703X+LK8AbUQMKoTRYNEDTMYhSOcstP4jthaVl3rT6poWUlqtH9k9Q3anuCC5lad2gVweWujzTNXwRPlD93BP2igm8=
+	t=1743419635; cv=none; b=s+VCJKT78I6SAo8xz5tH71FzpHhrNlcF96iYkncnz0VXGzbS67/bIcTvmeB4VHSMLX5+Mad6kv1YPH/zCUpD8MsLmIImpBPTtyZwXqNFqaLqt/srqYZ3Vhiu66kZXBq3MbEBIZPaVb7K8UXaf0SESlpFjz5skl5ne1U+F546X04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743419634; c=relaxed/simple;
-	bh=3rCkGOmOkhpyde92kwpKR8IpDoKL9jWkmNM0tJmN/r8=;
+	s=arc-20240116; t=1743419635; c=relaxed/simple;
+	bh=HC26LdIq2V2ccwTjv1vB6lt05uNFtHGl0Y+NFc5qdMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MkCD5DdMOFBX5asT/Dp11qT8edY1wvSY2YEra8bDtMI1BTzjRT/sfnk9RGotmNKfmkrTvno2P4RgVdBabtTdtDafx4zwYAxUCcT36LMD3vlp7plj4Go1iTz3M5ReOTgbr2dzISf/fEmTR0k01r+ADuERR/6rPw+nbsvnkUMPAow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOS8xdNq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOS8xdNq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B692CC4CEE3;
-	Mon, 31 Mar 2025 11:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743419633;
-	bh=3rCkGOmOkhpyde92kwpKR8IpDoKL9jWkmNM0tJmN/r8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IOS8xdNqz4igVY5Qaf0VUmsfy15E3hrWl6ScN4ynzKdYWNlDvyKhQTCmK6ehsh5Z6
-	 Fyj2mqxvtvLzFRazN8r+e+lBPDVqMgsk9Pf84brEYX7v1o68hhDHLUIKqsKM//XId+
-	 hIlqJX+2lBc8UB70aPij+SF3Hn8JQsoyhsXrmOzl5p0bZB3q3M6kfFyPdf7Yfl7o0y
-	 WqjHMkl1buseU/KFXi1ip2wb+RNw8rMjsG34HlRZFbXl5Ym1p0zjJ8cRwbAuHddvhA
-	 3v0zZ/fOcLChkURvTnhr5RL96pPR3cyBGjKU08glUHiUxiQXXOMtUV7zOoj0N8dGD1
-	 xqTWEdLUCg+Uw==
-Date: Mon, 31 Mar 2025 12:13:44 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] iio: adc: ti-adc128s052: Use devm_mutex_init()
-Message-ID: <20250331121344.0d4af6a7@jic23-huawei>
-In-Reply-To: <c424b2c234fb82faf40a7832dc410e0178a3a8fd.1742474322.git.mazziesaccount@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<c424b2c234fb82faf40a7832dc410e0178a3a8fd.1742474322.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=aQ9T1l7KqDnqFDB8ml6mmxfgjxhOdv7Hp22XBwRlzeCNHgY1tPmFGbxgn/tEAIDiVANdsSEMI+yq0rbHr9Iio+d5O/bHveDbcgrKv/sqQ0CX68chk9BHBJ5acgSUuA5gftaflYYaehNqvRWlpYwNqaEzoU2957F13i5sA75jJPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC9A31F02;
+	Mon, 31 Mar 2025 04:13:55 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50AA33F694;
+	Mon, 31 Mar 2025 04:13:50 -0700 (PDT)
+Date: Mon, 31 Mar 2025 12:13:47 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>, Rob Herring
+ <robh@kernel.org>, Philippe Simons <simons.philippe@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Philipp Zabel
+ <p.zabel@pengutronix.de>, <dri-devel@lists.freedesktop.org>,
+ <linux-kernel@vger.kernel.org>, <linux-sunxi@lists.linux.dev>, Jernej
+ =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+Subject: Re: [PATCH 1/2] drm/panfrost: Add PM runtime flags
+Message-ID: <20250331121347.150d4f4f@donnerap.manchester.arm.com>
+In-Reply-To: <d102aa1b-61cf-4dcc-851e-fc56adf9fab8@arm.com>
+References: <20250312232319.25712-1-simons.philippe@gmail.com>
+	<20250312232319.25712-2-simons.philippe@gmail.com>
+	<20250327123628.3d33c68e@donnerap.manchester.arm.com>
+	<d102aa1b-61cf-4dcc-851e-fc56adf9fab8@arm.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,36 +47,147 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Mar 2025 11:03:30 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On Mon, 31 Mar 2025 11:32:58 +0100
+Steven Price <steven.price@arm.com> wrote:
 
-> Quoting Jonathan:
-> "Whilst it doesn't bring huge advantage, now we have devm_mutex_init()
-> it seems reasonable to use it and maybe catch a use after free for the
-> lock"
+> On 27/03/2025 12:36, Andre Przywara wrote:
+> > On Thu, 13 Mar 2025 00:23:18 +0100
+> > Philippe Simons <simons.philippe@gmail.com> wrote:
+> > 
+> > Hi Rob, Boris, Steven,
+> >   
+> >> When the GPU is the only device attached to a single power domain,
+> >> core genpd disable and enable it when gpu enter and leave runtime suspend.
+> >>
+> >> Some power-domain requires a sequence before disabled,
+> >> and the reverse when enabled.
+> >>
+> >> Add PM flags for CLK and RST, and implement in
+> >> panfrost_device_runtime_suspend/resume.  
+> > 
+> > So some Mali configuration and integration manual I am looking at says
+> > that this sequence should be always observed, as the powerdown sequence
+> > would include disabling the clocks first, then asserting the reset, then
+> > turning the power switches off (and the inverse sequence on powerup).
+> > 
+> > So should we make this unconditional, not depending on implementation
+> > specific flags?  
 > 
-> Switch to use devm_mutex_init() while working on this file.
+> I think you're right, this probably should be unconditional. My only
+> reservation is that "it works" currently and we'd need to test this
+> doesn't cause regressions on existing platforms. So unless someone with
+> a reasonable board farm is able to do that testing I think this solution
+> is reasonable. So:
 > 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Reviewed-by: Steven Price <steven.price@arm.com>
 > 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index dd1e405bf172..90b23c68daea 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -172,7 +172,7 @@ static int adc128_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> -	mutex_init(&adc->lock);
-> +	devm_mutex_init(&spi->dev, &adc->lock);
-	ret = devm_mutex_init(&spi->dev, &adc->lock);
-	if (ret)
-		return ret;
+> > And also I am wondering if panfrost_device_init() gets this wrong as well?
+> > As I see it enabling clock first, then reset, then pm_domain, where it
+> > should be exactly the opposite?  
+> 
+> I agree, that looks very wrong - the power needs to be enabled before
+> reset is deasserted. I'm somewhat surprised we've got away with that.
+> Fancy writing a patch? ;)
 
->  
->  	return devm_iio_device_register(&spi->dev, indio_dev);
->  }
+Seems like Philippe volunteered ;-) (on IRC). Actually we tried this
+already some weeks ago, but this alone didn't help. I think it's that this
+power domain in panfrost_device_init() doesn't trigger for some reason,
+but only in suspend()/resume(), so he came up with this patch here.
+
+Thanks!
+Andre
+
+> Steve
+> 
+> > Cheers,
+> > Andre
+> >   
+> >>
+> >> Signed-off-by: Philippe Simons <simons.philippe@gmail.com>
+> >> ---
+> >>  drivers/gpu/drm/panfrost/panfrost_device.c | 37 ++++++++++++++++++++++
+> >>  drivers/gpu/drm/panfrost/panfrost_device.h |  4 +++
+> >>  2 files changed, 41 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> >> index a45e4addcc19..189ad2ad2b32 100644
+> >> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> >> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> >> @@ -406,11 +406,38 @@ void panfrost_device_reset(struct panfrost_device *pfdev)
+> >>  static int panfrost_device_runtime_resume(struct device *dev)
+> >>  {
+> >>  	struct panfrost_device *pfdev = dev_get_drvdata(dev);
+> >> +	int ret;
+> >> +
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT)) {
+> >> +		ret = reset_control_deassert(pfdev->rstc);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +	}
+> >> +
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS)) {
+> >> +		ret = clk_enable(pfdev->clock);
+> >> +		if (ret)
+> >> +			goto err_clk;
+> >> +
+> >> +		if (pfdev->bus_clock) {
+> >> +			ret = clk_enable(pfdev->bus_clock);
+> >> +			if (ret)
+> >> +				goto err_bus_clk;
+> >> +		}
+> >> +	}
+> >>  
+> >>  	panfrost_device_reset(pfdev);
+> >>  	panfrost_devfreq_resume(pfdev);
+> >>  
+> >>  	return 0;
+> >> +
+> >> +err_bus_clk:
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS))
+> >> +		clk_disable(pfdev->clock);
+> >> +err_clk:
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT))
+> >> +		reset_control_assert(pfdev->rstc);
+> >> +	return ret;
+> >>  }
+> >>  
+> >>  static int panfrost_device_runtime_suspend(struct device *dev)
+> >> @@ -426,6 +453,16 @@ static int panfrost_device_runtime_suspend(struct device *dev)
+> >>  	panfrost_gpu_suspend_irq(pfdev);
+> >>  	panfrost_gpu_power_off(pfdev);
+> >>  
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS)) {
+> >> +		if (pfdev->bus_clock)
+> >> +			clk_disable(pfdev->bus_clock);
+> >> +
+> >> +		clk_disable(pfdev->clock);
+> >> +	}
+> >> +
+> >> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT))
+> >> +		reset_control_assert(pfdev->rstc);
+> >> +
+> >>  	return 0;
+> >>  }
+> >>  
+> >> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> >> index cffcb0ac7c11..f372d4819262 100644
+> >> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> >> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> >> @@ -36,10 +36,14 @@ enum panfrost_drv_comp_bits {
+> >>   * enum panfrost_gpu_pm - Supported kernel power management features
+> >>   * @GPU_PM_CLK_DIS:  Allow disabling clocks during system suspend
+> >>   * @GPU_PM_VREG_OFF: Allow turning off regulators during system suspend
+> >> + * @GPU_PM_RT_CLK_DIS: Allow disabling clocks during system runtime suspend
+> >> + * @GPU_PM_RST_ASRT: Allow asserting the reset control during runtime suspend
+> >>   */
+> >>  enum panfrost_gpu_pm {
+> >>  	GPU_PM_CLK_DIS,
+> >>  	GPU_PM_VREG_OFF,
+> >> +	GPU_PM_RT_CLK_DIS,
+> >> +	GPU_PM_RT_RST_ASRT
+> >>  };
+> >>  
+> >>  struct panfrost_features {  
+> >   
+> 
 
