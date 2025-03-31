@@ -1,51 +1,40 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64422144DD;
-	Mon, 31 Mar 2025 16:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF6F1DE892
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437774; cv=none; b=k0caFe2SNd9kF8ERCwjX1tvdUKnLxka08uoPj6ZFMb5FtwUWW2U4fhbnhw08TdCYMjEtxqZmcQiijwMAlX0WQYdIQ+tkj2CkLHzRR1Jps2MQ90VR8RqXcWonfpyUxAlQVJyZmYwPhVsuakrA+HmUKXVC8kGpxyyMtNHbfog8sKI=
+	t=1743437804; cv=none; b=VeZUBZOaigHuwY3sPz1ENgVNYkVBiVJ4gRZGoZ/UJpyDyp/a9Aid9yot4FyOAwtuhCGH0IKoGGYOT80mASGRnTYKxGJdGPXdz6JAbcuLTGesDm+dh/IWdhfqoCV5eX0AQG8Mdd/W/ZT5pZ0Irqb1vkIUGROan2qMPneGaRdmUmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437774; c=relaxed/simple;
-	bh=ohaNaBhj+Y57HbUllos35LAObiQZlEUZfWdHRxTq3iw=;
+	s=arc-20240116; t=1743437804; c=relaxed/simple;
+	bh=L3p+iZ9J1ufZiUj4QiuhyJYU/i7HVlzof5zvGChQIbg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O3IMemq3oaZudMLAtLQD2bfxqjt8pD+GqZDtdaLAOvnlXRlYkOrFbcxlM50UjrO82INRhNjwLqSmvAVM3LLH3FBGkrmMq4UDQpNty/hp82gzSmhNedSLuTI5qblfe1oZDIn3fePmNSd65P8J9C5/O2Hohx2SBJYrpMOuUeWzh2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=hcX5UORe; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDHONA69e9zCBB40k+UbDpvZ8fnmyHwCbcvTKa4RTEDRcK9KZXSJISuS9t10dE88YYbmWH4IjNB009ghwUTS4kODJUYV3L0xPSPE/hIb+ACiVI/8X9a6XvA06ZO51497ejphUO3HcnJq49PaD6iPmbHvdsLIizWWXolUER5NIKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fC9vTSbu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="hcX5UORe"
-Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id 738911F93B;
-	Mon, 31 Mar 2025 18:16:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743437770;
-	bh=YWSNkb+F757hQ68vbYeh999udDtklB+ehj/2llLix5U=; h=From:To:Subject;
-	b=hcX5UORefGPHNI1rks2hDaA1EZ/1f5EApHDGecoAVntw2erbATnNQ2AIv87SdDxk+
-	 t/G+DGeuQ8RecklguimTilkHHbq6Qg7tDIieZoFTEMp75ivU3GQ7MqjAtTOxvK4RYs
-	 4cZ5/Fi/ZaETHhHkyrt1rZLw19Sk3Zz/KlkKCP7ypmQtWqh2ilAYOVzPY5krcivhC+
-	 1/iKNK9YKL6TjE8ALztSTAwYK9eky+xATdTCYlyNH5JodgKfvvKI8crKmMOj7UzwYe
-	 n1ZvgdgEYSqVGbrEZ94ldWjmsTdus8xLBcYZbuchi8OnAPOw1wb93JgUwk4fmUGSjt
-	 IFNY2WMzW+Fow==
-Date: Mon, 31 Mar 2025 18:16:06 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Farouk Bouabid <farouk.bouabid@cherry.de>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
- output
-Message-ID: <20250331161606.GA148019@francesco-nb>
-References: <20250331155229.147879-1-francesco@dolcini.it>
- <20250331155229.147879-2-francesco@dolcini.it>
- <8064282a-17aa-4b97-b5d9-1b4a8b0dc40b@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fC9vTSbu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015E9C4CEE3;
+	Mon, 31 Mar 2025 16:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743437803;
+	bh=L3p+iZ9J1ufZiUj4QiuhyJYU/i7HVlzof5zvGChQIbg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fC9vTSbui93s7PPTGM37Hf7d8QH0k1+wOPoxAhfgSwJ+X1fslEuu2U9UBdJLdbXkU
+	 yiNExpemjRAjDn19IAHVjPXYMH8rCD0tQQt9qGQC7/Ah+zyP0Ce2YeM6IGi8z4X24B
+	 A9mmL+LqkLbSLRSW/krtBFijMmvAuE2/51cInQjA=
+Date: Mon, 31 Mar 2025 18:15:14 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 RESEND] intel_th: avoid using deprecated
+ page->mapping, index fields
+Message-ID: <2025033142-rack-viewer-80d4@gregkh>
+References: <20250331125608.60300-1-lorenzo.stoakes@oracle.com>
+ <Z-q5Gf57y9LEZcUE@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,83 +43,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8064282a-17aa-4b97-b5d9-1b4a8b0dc40b@roeck-us.net>
+In-Reply-To: <Z-q5Gf57y9LEZcUE@casper.infradead.org>
 
-Hello Guenter,
-
-
-On Mon, Mar 31, 2025 at 09:01:08AM -0700, Guenter Roeck wrote:
-> On 3/31/25 08:52, Francesco Dolcini wrote:
-> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Mon, Mar 31, 2025 at 04:47:37PM +0100, Matthew Wilcox wrote:
+> On Mon, Mar 31, 2025 at 01:56:08PM +0100, Lorenzo Stoakes wrote:
+> > Greg, as we're late in merge window obviously now, could you roll up into
+> > 6.15-rc1? Thanks!
 > > 
-> > Add properties to describe the fan and the PWM controller output.
-> > 
-> > Link: https://www.ti.com/lit/gpn/amc6821
-> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > ---
-> > v3:
-> >   - explicitly describe the fan, use standard PWM and FAN bindings
-> >   - pwm.yaml cannot be referenced, because of the $nodename pattern that is
-> >     enforced there
-> > v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
-> >   - no changes
-> > v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
-> > ---
-> >   .../devicetree/bindings/hwmon/ti,amc6821.yaml      | 14 +++++++++++++-
-> >   1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > index 5d33f1a23d03..94aca9c378e6 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > +++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
-> > @@ -28,6 +28,13 @@ properties:
-> >     i2c-mux:
-> >       type: object
-> > +  fan:
-> > +    $ref: fan-common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +  "#pwm-cells":
-> > +    const: 3
-> > +
-> >   required:
-> >     - compatible
-> >     - reg
-> > @@ -50,9 +57,14 @@ examples:
-> >           #address-cells = <1>;
-> >           #size-cells = <0>;
-> > -        fan@18 {
-> > +        fan_controller: fan@18 {
-> >               compatible = "ti,amc6821";
-> >               reg = <0x18>;
-> > +            #pwm-cells = <3>;
-> > +
-> > +            fan {
-> > +                pwms = <&fan_controller 0 40000 0>;
+> > This does not require backporting, as this is a critical change for mm
+> > moving forward, as page->index,mapping are deprecated and will be entirely
+> > removed extremely soon.
 > 
-> There is no explanation for the parameters. I guess that the first is the index and the
-> second is the frequency. The index is not used and can be dropped (there is just a single
-> channel), and the frequency only makes sense if it can actually be configured.
+> "extremely soon" as in "There are four places in the kernel which
+> currently use page->index, and three of them are gone once Andrew
+> sends his pull requests".  So this will be the last user, assuming
+> nobody else decides to add a user of page->index in the meantime.
 
-The PWM period can be configured, the HW supports it, so I think is a
-good idea to properly describe the HW now that I am modifying the
-binding and not have the situation in which we need it in 1 month.
+I'll get to it after -rc1 is out, thanks.
 
-The instance is just one, it's correct, but there is an assumption
-pretty much everywhere that these 3 #cells are
- - PWM instance
- - PWM period in ns
- - PWM flags
-
-I decided to keep the first cell there, with the PWM instance, for this
-reason, even as you correctly wrote it would not be required here.
-
-With that said, looking at existing binding, the description is almost
-never present.
-
-I would proceed this way for v4:
- - keep the first cell as PWM instance
- - add the description
-
-Francesco
-
+greg k-h
