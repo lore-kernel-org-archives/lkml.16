@@ -1,146 +1,103 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BB9211A0D
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A971E0B86;
+	Mon, 31 Mar 2025 16:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743438388; cv=none; b=oGs7HkU0d7RizHhGXHViS8ijaKyW8mZzVxrc0ivTSbis2lAbG1gHnBlt+KmE+QSMA8y0kPmse99a8EhDJCfQlCXSsZG8/DanCXZjUqWjRUACDFd2juv7W6V/nSVQwv0nm6/Vcdkm3vu/xfkCeUOWoI6iBT7AaqfhXy+k2RC50yw=
+	t=1743438487; cv=none; b=itvV8CKlHi6I8lZcG//WqL7GYdhM9e0/clmbELX4frR4b8Jq80i42Rp+OGELl1JVbUx0Sc8BkYp+ffVGFOO+zd88iKrXkGJRwbNRUoNcSqs5rhviJDGe5tdCzzBQKn4kEKetOv8+i5HneEgUDxGnP8BOU8WwQjdtyIVyvrwh6zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743438388; c=relaxed/simple;
-	bh=krhqzMzyRJGboTMvJZ1x5N8zbcD9XjssP/1YS+Dvs2s=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FPScALjRaJ0ZEwWWR/Nvq5b242gd//FkmRpV6Q0sn2WzIEPteanu7zeKZcTVcnPZYy72IlMUk2cuuNlqrj3Ns1CjAVRP4o7TVgspG2w4rQcpgPXJH8gDwyeFgwADVth2z75pR85RMEC7fltTVHS0/JaR6bK+BJ9ym/xrn/B8QV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85db3356bafso1094613639f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:26:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743438385; x=1744043185;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mz3TLPmwKhZz/v+PP8Eziw4Ts8qR9pufWd7yo3Whefw=;
-        b=VRMhEVFaxppwXfcJnTrjHrY0bzY2LpEA4MxOYU6xpziSyVHEQumljjvsdxO+sj5OUf
-         Iru7TIggB0ovNQe/lBBdnsKwOIazHIGgZQXX7dYhXL8PFIQ+CKLBlGESABAO8fnI5Jqp
-         EgAOvRJLFVYZRWI0jP+XVyKjyXPktAhu0Dlr04TUp6AmXay8cdDh7FgojI23cu+O61Hg
-         KYEsuK1WEDuYzbC6pU1myF9TL9LMtR8M7HOQf4x14I4cj7uND+dZ6h9D/29rhXKU7oxH
-         lWtRjbY6CLLfJezFpGHIm/HYg7dUM2CWyC/jhkl4eiguD5WFqcP8eJNN58vo7otRE6wi
-         HJIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBzGN0pfV+hGhUgrKbKP1DQxMPl9mbdR/SJNg8aIwRGF2kkgtXFRS0jKT+gBVWfzIuuj5DtPIPcSGAtK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9cn74L5D9DUu5EYRp36ZC0EDGabMZfBtW+8HD1JPHZW3MIF+k
-	JxLLbKVOMWmwNfRTK3uI62fy/88rqEGNj5UefN3niL6i7RxCggnnfT/ERc3R93ztsoez+Vmhcy0
-	5ycOQ2ExV238w+Eakg1XtX9xAJfROVzkQsbo7EojlKLNvgjpmyhHPIWg=
-X-Google-Smtp-Source: AGHT+IHniT1dbH2jFnDBbQerDknCGESfBUr4fqHSYAhnGi1cMHRj8xBqExGKd1dSl1cwawY/Ex4nw9ninO6VolkxynBWNXRlqwzQ
+	s=arc-20240116; t=1743438487; c=relaxed/simple;
+	bh=BaWF2A5UazbVoXywtVIf3WKyRW8xn75zzoi+lh7sVLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eturTtH/w8MHg1nMQZuXC8PxXr8x2PYfu1eQUMhPe0jCCElGHVr0r+QMsTwjsVkjNVTeQtyg2AB4gnoBSqQHYCcLPzp+FBsrQb2yoLH0z3F5EVG77MLbE4Tl1+pN86ycPI747nXn4YSEYDk4U+pSJkMvev7RSgdioPyWiM9/02c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sFYGFS/Y; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sFYGFS/Y"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7E947725;
+	Mon, 31 Mar 2025 18:26:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743438371;
+	bh=BaWF2A5UazbVoXywtVIf3WKyRW8xn75zzoi+lh7sVLY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sFYGFS/Y050KZY567oV2PaASCow/xcPAQ/xlOR3uYPcbNzjyJJE620yXolocYAdG4
+	 kzQeowe8K1oPClMBDJIaAYXpNbNC1qZNg1l+peCbnKCAO7QkYUAh1xeFlkgMywDddc
+	 Bsd1tSLNmGZnsfcMDFrGjdAoZGdO/eZZUzpT5Mj0=
+Date: Mon, 31 Mar 2025 19:27:39 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	acopo Mondi <jacopo+renesas@jmondi.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
+Message-ID: <20250331162739.GG14432@pendragon.ideasonboard.com>
+References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
+ <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
+ <20250331120748.GB28722@pendragon.ideasonboard.com>
+ <Z-qJOeeHUgWCtkTv@smile.fi.intel.com>
+ <20250331153435.GB14432@pendragon.ideasonboard.com>
+ <Z-rBQ8tsDHW9clYh@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:194e:b0:3d5:8103:1a77 with SMTP id
- e9e14a558f8ab-3d5e08eda71mr109875815ab.1.1743438385664; Mon, 31 Mar 2025
- 09:26:25 -0700 (PDT)
-Date: Mon, 31 Mar 2025 09:26:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eac231.050a0220.3c3d88.0047.GAE@google.com>
-Subject: [syzbot] [netfilter?] WARNING in __nf_unregister_net_hook (8)
-From: syzbot <syzbot+53ed3a6440173ddbf499@syzkaller.appspotmail.com>
-To: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, kadlec@netfilter.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, pabeni@redhat.com, pablo@netfilter.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z-rBQ8tsDHW9clYh@smile.fi.intel.com>
 
-Hello,
+On Mon, Mar 31, 2025 at 07:22:27PM +0300, Andy Shevchenko wrote:
+> On Mon, Mar 31, 2025 at 06:34:35PM +0300, Laurent Pinchart wrote:
+> > On Mon, Mar 31, 2025 at 03:23:21PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Mar 31, 2025 at 03:07:48PM +0300, Laurent Pinchart wrote:
+> > > > On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
+> > > > > Quoting Andy Shevchenko (2025-03-31 08:34:35)
+> > > > > > Convert the module to be property provider agnostic and allow
+> > > > > > it to be used on non-OF platforms.
+> > > > > 
+> > > > > Looks reasonable to me.
+> > > > 
+> > > > Is that going to work out of the box though ? The calls below read the
+> > > > "reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
+> > > > addresses using ACPI-specific methods.
+> > > > 
+> > > > Andy, have you tested this patch on an ACPI system ?
+> > > 
+> > > Only compile-tested. But you are right, this is something different here
+> > > between OF and ACPI.
+> > > 
+> > > I can rephrase the commit message to just point out that fwnode.h shouldn't
+> > > be in the drivers and either converting to device property in an assumption
+> > > that later it can be easier to support non-OF cases, or using of.h.
+> > 
+> > I wasn't aware that fwnode.h shouldn't be used in drivers, could you
+> > explain that ?
+> 
+> The fwnode.h provides the data types and definitions that are meant
+> to be used by the fwnode / device property API providers. The leaf drivers
+> shouldn't have any business with those definitions. Everything the drivers
+> need should be provided via property.h. property.h guarantees the necessary
+> data types to be visible to the users, when required (mostly think of
+> struct fwnode_reference_args). Yes, I am aware of v4l2-fwnode.h and it seems
+> it falls into the category of special device property API provider.
+> 
+> > If this patch is part of an effort to eliminate usage of some APIs from
+> > all drivers, I'm fine with it. Otherwise, I'm not sure it's worth
+> > modifying the driver.
+> 
+> These drivers basically include the wrong header.
+> If you insist, I can patch fwnode.h to add a comment summarizing the above.
 
-syzbot found the following issue on:
+No, it's fine. I mixed fwnode.h and property.h when writing my previous
+reply, but I don't think it's a matter of lack of documentation, more
+likely lack of sleep :-)
 
-HEAD commit:    4e82c87058f4 Merge tag 'rust-6.15' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=133ea3e4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f8721be6a767792
-dashboard link: https://syzkaller.appspot.com/bug?extid=53ed3a6440173ddbf499
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+-- 
+Regards,
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/020d6f490695/disk-4e82c870.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/36e4561ed263/vmlinux-4e82c870.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/37b68c422eec/bzImage-4e82c870.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+53ed3a6440173ddbf499@syzkaller.appspotmail.com
-
-RDX: 0000000000000000 RSI: 0000200000000080 RDI: 0000000000000003
-RBP: 00007fa126d94090 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007fa1261a5fa0 R15: 00007fa1262cfa28
- </TASK>
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 10727 at net/netfilter/core.c:501 __nf_unregister_net_hook+0x683/0x810 net/netfilter/core.c:501
-Modules linked in:
-CPU: 0 UID: 0 PID: 10727 Comm: syz.4.1505 Not tainted 6.14.0-syzkaller-10892-g4e82c87058f4 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:__nf_unregister_net_hook+0x683/0x810 net/netfilter/core.c:501
-Code: 41 5d 41 5e 41 5f 5d e9 cb f8 74 f7 e8 06 9d 8f f7 48 83 c4 38 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 ee 9c 8f f7 90 <0f> 0b 90 48 c7 c7 60 16 16 90 48 83 c4 38 5b 41 5c 41 5d 41 5e 41
-RSP: 0018:ffffc900038cee10 EFLAGS: 00010293
-RAX: ffffffff8a33e022 RBX: 0000000000000000 RCX: ffff88802b90bc00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: dffffc0000000000 R08: ffffffff8a33da61 R09: 1ffffffff20be9ce
-R10: dffffc0000000000 R11: fffffbfff20be9cf R12: ffff888035670000
-R13: ffff8880333ce480 R14: dffffc0000000000 R15: ffff8880573fa710
-FS:  00007fa126d946c0(0000) GS:ffff888124fb1000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000f20030 CR3: 00000000511d4000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- nf_tables_updchain+0x108e/0x1e00 net/netfilter/nf_tables_api.c:2917
- nf_tables_newchain+0x10f6/0x3390 net/netfilter/nf_tables_api.c:3039
- nfnetlink_rcv_batch net/netfilter/nfnetlink.c:524 [inline]
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:647 [inline]
- nfnetlink_rcv+0x12eb/0x28f0 net/netfilter/nfnetlink.c:665
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:727
- ____sys_sendmsg+0x523/0x860 net/socket.c:2566
- ___sys_sendmsg net/socket.c:2620 [inline]
- __sys_sendmsg+0x271/0x360 net/socket.c:2652
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa125f8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fa126d94038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fa1261a5fa0 RCX: 00007fa125f8d169
-RDX: 0000000000000000 RSI: 0000200000000080 RDI: 0000000000000003
-RBP: 00007fa126d94090 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007fa1261a5fa0 R15: 00007fa1262cfa28
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Laurent Pinchart
