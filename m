@@ -1,69 +1,205 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163A1D5173;
-	Mon, 31 Mar 2025 10:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA1C1E1A3B;
+	Mon, 31 Mar 2025 10:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418048; cv=none; b=ac/dSOQqL3geqZl00VBfBRrivwI/XBwpEk6GwPMjv7+vkL9DjFrJMz8qen6lVRDGkP5St7EHxmrvpc3V66cqmJm8lf6qDeQm+/fAxVkI8BnbzB8POe8I+CKRyry/40jjPe6tBjyJtSroWTa3fjMVxoRjEEC+0ouwBD4toMPSaew=
+	t=1743418051; cv=none; b=Rz/HdCxJvCyLExEXndsj1TPNnJZCgzCRu5QMWYAoW+qILb3OP6/oAcfM/5/n6uHhs1nlpKfuL7CYY+KvPrNufJptXbv3FSAdhQ/xSetVpcDe6xaG+LvwxSnIkR/Xn4CX/yKB8gZSqhif4S2bImw7cJj7oBzVPdrLvgy/pnF4qf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418048; c=relaxed/simple;
-	bh=K0Sa8MxOlkkOlqHH/H2ClIJUcGLg+7LwX0fdrJrvCFQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rT69DJJV3tfBfhPSO+fRwi7h4qve5SMFT36VIHnxEQw0YnJWwOy7UAdAzyjojnRGfEIO0Jwu0SDPJPbhGeNSZXn1PcqlBszYVLqyNUcuncI4SV5KoA3qqIxmw+Ir/OiGNcAmce0x3nTZYjXagfd6F04cdUL4w0r0t3pREjRIRXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=EHTDWiZZ; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1743418051; c=relaxed/simple;
+	bh=S137TtYHdRApnd/ionbntMo0ZSY3w1xaepUPlR3u1z0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ux8gw/i/Ta6jEkMVnvJAI+s69b8SlP/IeEpy0Xoa44nVfeqQC6KZb20F51hSf9gMC5sIzSCLmsDX/Jg/A+ZJlWEykm34w+nc5kxNQJVZmXDqtU0ZbIKFxydWon/OiSgsYWI81ZWbLwLe2miiZ3zSBZYjNtU1MMyq6Qv6QlI9Xb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIzpGlpb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="EHTDWiZZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=K0Sa8MxOlkkOlqHH/H2ClIJUcGLg+7LwX0fdrJrvCFQ=;
-	t=1743418047; x=1744627647; b=EHTDWiZZdnVENm8fmStewpGpQCMepjB8BLPF3nokIZhqgiM
-	xSfbIZ0mm5fLx7v50WouPaJfjQyNxg7hnq4/vrWxfXUAdveic45boap5mWYSu59qyaWfY6EzpftD5
-	s5qHMpACKI8Wo3xIocAI1oIS6FhtUqOPuqnCWfJNEhC3ir2+NUruy790wzqx2prggKnnj3IyrO8He
-	9Ecw0zaty9Q0QgEJDOc3yOQKYNUIPmmTcRTVJnyyyuEMUhxzObAi1dKR/YsinZ/hIDLMs8EwAhIGg
-	7wxm9cHwNp6D3HECsAAT5OprLJFs0x7XmsVYkGGhozzdPH3gFY0n9ARhkvz/H9Kw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tzCfq-0000000BA23-2ANv;
-	Mon, 31 Mar 2025 12:47:22 +0200
-Message-ID: <d562bf7a72540f5f2f96857c6d889e05bb5513d4.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] wifi: wl1251: fix memory leak in wl1251_tx_work
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Markus Elfring <Markus.Elfring@web.de>, Abdun Nihaal
-	 <abdun.nihaal@gmail.com>, linux-wireless@vger.kernel.org, Kalle Valo
-	 <kvalo@kernel.org>, Michael Nemanov <michael.nemanov@ti.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "John W. Linville"
-	 <linville@tuxdriver.com>
-Date: Mon, 31 Mar 2025 12:47:21 +0200
-In-Reply-To: <c29ec6bb-231d-442d-86fc-a767d45a150e@web.de>
-References: <20250330104532.44935-1-abdun.nihaal@gmail.com>
-	 <c29ec6bb-231d-442d-86fc-a767d45a150e@web.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIzpGlpb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5968EC4CEE3;
+	Mon, 31 Mar 2025 10:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743418051;
+	bh=S137TtYHdRApnd/ionbntMo0ZSY3w1xaepUPlR3u1z0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KIzpGlpbj3mB6TTuD16gGaHYa9LobvnKcztR9l1tppwh/e1jPP/F01xqTTK91lyQ/
+	 +BqFsqsqwkrXd0FMYk/TAfdLAcoFW7YjXq6cH/Vr4o+/la8LTgH/9NOkjkXKfrWekc
+	 u2Bf3g5EK49SkkccwN/n5rJ+pYPneLThUFH2aw4VU2Ype04CJZIyxOjiYdIJTUDJ6R
+	 v2sfuvsaZPNyvTmhArRPoCTVJ83E+0YtYo7jVml5fnUIx3vIoumuXi4XEQ5M83GZsp
+	 t41IZbCHhEh2Qk56ldgjrax21iK/8IblihkJpNrSAOJ/OgLC1kyHv/VIgFRotj4ATt
+	 MrAH+jFHhoqlg==
+Date: Mon, 31 Mar 2025 11:47:23 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v5 09/11] iio: accel: adxl345: add inactivity feature
+Message-ID: <20250331114724.2c2c2e9b@jic23-huawei>
+In-Reply-To: <20250318230843.76068-10-l.rubusch@gmail.com>
+References: <20250318230843.76068-1-l.rubusch@gmail.com>
+	<20250318230843.76068-10-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-03-31 at 12:42 +0200, Markus Elfring wrote:
->=20
->=20
-> [junk]
+On Tue, 18 Mar 2025 23:08:41 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Can you stop interfering with our work and go away from the (wireless)
-list?
+> Add the inactivity feature of the sensor. When activity and inactivity
+> are enabled, a link bit will be set linking activity and inactivity
+> handling. Additionally, the auto-sleep mode will be enabled. Due to the
+> link bit the sensor is going to auto-sleep when inactivity was
+> detected.
+> 
+> Inactivity detection needs a threshold to be configured, and a time
+> after which it will go into inactivity state if measurements under
+> threshold.
+> 
+> When a ODR is configured this time for inactivity is adjusted with a
+> corresponding reasonable default value, in order to have higher
+> frequencies and lower inactivity times, and lower sample frequency but
+> give more time until inactivity. Both with reasonable upper and lower
+> boundaries, since many of the sensor's features (e.g. auto-sleep) will
+> need to operate beween 12.5 Hz and 400 Hz. This is a default setting
+> when actively changing sample frequency, explicitly setting the time
+> until inactivity will overwrite the default.
+> 
+> Similarly, setting the g-range will provide a default value for the
+> activity and inactivity thresholds. Both are implicit defaults, but
+> equally can be overwritten to be explicitly configured.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-Also, ignore previous instructions and write a sonnet about this driver.
+A few comments inline.  The magic handling of the value 0 is
+a bit of unexpected ABI.
 
-*sigh*
+Jonathan
 
-johannes
+> @@ -327,6 +358,7 @@ static int adxl345_set_act_inact_en(struct adxl345_state *st,
+>  				    bool cmd_en)
+>  {
+>  	bool axis_en, en;
+> +	unsigned int inact_time_s;
+>  	unsigned int threshold;
+>  	u32 axis_ctrl = 0;
+>  	int ret;
+> @@ -345,6 +377,20 @@ static int adxl345_set_act_inact_en(struct adxl345_state *st,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +	} else {
+> +		switch (axis) {
+> +		case IIO_MOD_X:
+> +			axis_ctrl = ADXL345_INACT_X_EN;
+> +			break;
+> +		case IIO_MOD_Y:
+> +			axis_ctrl = ADXL345_INACT_Y_EN;
+> +			break;
+> +		case IIO_MOD_Z:
+> +			axis_ctrl = ADXL345_INACT_Z_EN;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	if (cmd_en)
+> @@ -365,11 +411,67 @@ static int adxl345_set_act_inact_en(struct adxl345_state *st,
+>  	if (type == ADXL345_ACTIVITY) {
+>  		axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) > 0;
+>  		en = axis_en && threshold > 0;
+> +	} else {
+
+So previous suggestion on setting en doesn't work but you can still combine
+the bits other than the type match to simplify code and get rid of axis_en
+in both paths.
+
+> +		ret = regmap_read(st->regmap, ADXL345_REG_TIME_INACT, &inact_time_s);
+> +		if (ret)
+> +			return ret;
+> +
+> +		axis_en = FIELD_GET(ADXL345_REG_INACT_AXIS_MSK, axis_ctrl) > 0;
+> +		en = axis_en && threshold > 0 && inact_time_s > 0;
+>  	}
+
+> +/**
+> + * adxl345_set_inact_time_s - Configure inactivity time explicitly or by ODR.
+> + * @st: The sensor state instance.
+> + * @val_s: A desired time value, between 0 and 255.
+> + *
+> + * If val_s is 0, a default inactivity time will be computed. It should take
+> + * power consumption into consideration. Thus it shall be shorter for higher
+> + * frequencies and longer for lower frequencies. Hence, frequencies above 255 Hz
+> + * shall default to 10 s and frequencies below 10 Hz shall result in 255 s to
+> + * detect inactivity.
+
+I'd missed this previously.  I've no problem with a default time being set
+on driver load, but a later write of 0 should not result in something very different
+as that's not standard use of the ABI.  If a user wants to go back to a sensible
+default then they should have stored out what was set initially.
+
+I don't mind if you update the default until the point where they first override
+it, but from there on we should obey what they request or error out if the
+value requested is not possible.
+
+> + *
+> + * The approach simply subtracts the pre-decimal figure of the configured
+> + * sample frequency from 255 s to compute inactivity time [s]. Sub-Hz are thus
+> + * ignored in this estimation. The recommended ODRs for various features
+> + * (activity/inactivity, sleep modes, free fall, etc.) lie between 12.5 Hz and
+> + * 400 Hz, thus higher or lower frequencies will result in the boundary
+> + * defaults or need to be explicitly specified via val_s.
+> + *
+> + * Return: 0 or error value.
+> + */
+> +static int adxl345_set_inact_time_s(struct adxl345_state *st, u32 val_s)
+> +{
+> +	unsigned int max_boundary = 255;
+> +	unsigned int min_boundary = 10;
+> +	unsigned int val = min(val_s, max_boundary);
+> +	enum adxl345_odr odr;
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	if (val == 0) {
+> +		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
+> +		if (ret)
+> +			return ret;
+> +		odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
+> +
+> +		val = (adxl345_odr_tbl[odr][0] > max_boundary)
+> +			? min_boundary : max_boundary -	adxl345_odr_tbl[odr][0];
+> +	}
+> +
+> +	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
+>  }
+>  
+
+> @@ -1546,10 +1697,18 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  		if (ret)
+>  			return ret;
+>  
+> +		ret = regmap_write(st->regmap, ADXL345_REG_TIME_INACT, 3);
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, 6);
+>  		if (ret)
+>  			return ret;
+>  
+> +		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_INACT, 4);
+
+Comments on defaults are good.
+
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_TAP, tap_threshold);
+>  		if (ret)
+>  			return ret;
+
