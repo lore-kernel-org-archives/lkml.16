@@ -1,167 +1,183 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2104.outbound.protection.outlook.com [40.92.23.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B46214A8F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.104
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743457750; cv=fail; b=h8cqRiBBADyHjJpTau2gYW6ExzclgBW6GQ4QYSesvc560+uXRYspG/MeR5Z8TPbAzoKxeVS9RqMVRbMEtEVpYs9QAwTo+ubypLYRfxA+u8jHhQt8w4cgmbgBCuT78/75FKXV8bTOmUiOtyHoKhRtYSfotM0Hn9yzfaK/xKDDEHE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743457750; c=relaxed/simple;
-	bh=i3z4cyUG9OnEXT6jrPovFb3kNjp5w3s2CVqIhnxwNhU=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JWnmSKHzCjNiccz5iPollelLOU2J5PNGeudPV+PwE/6WAVddk4I/c7v7G7RcIwKWHEzcrgd5JU/peAG4y442T6rgmyZ44H4YRopbTdtxF+CPjM8T+4oo+nWVp7VbC5zg6COvidub6qmC5Ch4aMyyp9JxXn42xkgJxQqvw/S930w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=T8nakCU5; arc=fail smtp.client-ip=40.92.23.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B41F214A8F;
+	Mon, 31 Mar 2025 21:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743457793; cv=none; b=FmKcYp2rN9vrht9v6oiuFDaavfd2I/eMzM8TjLMYvxws4jCn2dY+NOcMRtmqgR8Pi7B7Tvrk7zU5N8d5V/50mHVCd/QYhKrIpa8CS5ztgZVpPxRPqdkmS1R+dDb0xact/ih5tT5MpKM8aRouPlpC5kFy3W6e/BEx9PwkazJhV+U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743457793; c=relaxed/simple;
+	bh=AWpak+pu550+V4KBVwcURhmwvApWhG8AaMXUc5d76HI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qGtx4Z7Z1sXkWDKLN6A6yHfzshyp7z0hpydEKH0Is4CY8pLTotMlPfNBMKjb4O8SdAxnrDFjpGAfvXAAzOjrqjll84u93efWd4+dJkLTrA+K419sEoY5LWxibW5pxkCLsW/j45T0tsSPSfk2oBRObu9Nl+sJr0szUfjJvTwaAu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=morUWOEi; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="T8nakCU5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lyKYaaoyFlD3afqNfzgDPi7qc994w8pheYNKqADA8IHLS7598VmwJKA+CkRs+2EKXfM/kUCvYIKGvVQ6UJ4kiwF5go2BF42alhdfxv6hQ6iRjz+oivakxCVAc3+8S1JY7AAG9KmEMBFEYdZqEtnIz6I7MTYmKY1ETmIkkWLz94idP97EZ7aqF/46xBDVD/9m4jnrHMRlmhiHp9Lr5v2tEeDPUyBBgGWN2S/AtuNf0Qs3iFB18Q7lyquCRSqygg2z1+EP0mTTZHeOU2PDdAEMVCnshUx/7KozRj5MhrnQXQ/60jI8Ry2Ml3kiaYgun1ND/Cogf0zSirT/zPqCyZhKQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i3z4cyUG9OnEXT6jrPovFb3kNjp5w3s2CVqIhnxwNhU=;
- b=dz7bBddBqEtNOzu4uZf1kiasr7VQhS70hpL7HOmtKSVKQ3wEFtjgnPRNfBV4gPOIlHPGAgW9zjPTHBizzeZFUqVvubBce/YZyTsYEzUHAwWIZqU3j3KsxURO15BvFKSUDyko5zGSF8ZM1WIaZL694FYcGy1HkwRo5IQy2W4247Rqw/Z6kL5Dt0RwQTl79QOqI66YqGMS5rxfCqcsYME+n0vdyVDlSzETbSWptG7ATXjLXZEXz9S/27V7KpGBrnsOLgssIi457e3hYFBFIt4OMeDXnrKMh5m5bMtC6RYaopFvmdCH+CiHU5Dhmy8LTnqMLtYWIXukIsMVxLFvY7tARw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i3z4cyUG9OnEXT6jrPovFb3kNjp5w3s2CVqIhnxwNhU=;
- b=T8nakCU5e/g0emwUtMseXuNyOulaDBbs+Z9zSJkD8l8YsBal6NcPoNY0TSy9nqSEzTSAYGu6viKZ7GsEBwto04EWgGJUjb4pFyaT8qeBlytvubCNlYme0c2hXBjcVGoXKESRGmtI3gTXI12cBkJoxUOs9Y3iKG+WzhyX9QTRz9b7riYULpdH0l+5xxH8ZJhFIwujDgIzQ9w6VBFVXtGxQvXDznonCEr0hKTL1IEfZYNFgYYgN2Ao0yhHxbnaP0SlZKJV8nkWB0e80N9EqIOs15Pu6I8dCIkgIW4rhE10zmKy4mJ42NLcxeshUpLHsBts6QEH6irFoRpwxoCy3d3Lqg==
-Received: from BYAPR20MB2247.namprd20.prod.outlook.com (2603:10b6:a03:159::24)
- by PH7PR20MB5210.namprd20.prod.outlook.com (2603:10b6:510:1ad::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.34; Mon, 31 Mar
- 2025 21:49:07 +0000
-Received: from BYAPR20MB2247.namprd20.prod.outlook.com
- ([fe80::e60:961c:9981:2755]) by BYAPR20MB2247.namprd20.prod.outlook.com
- ([fe80::e60:961c:9981:2755%4]) with mapi id 15.20.8583.038; Mon, 31 Mar 2025
- 21:49:06 +0000
-From: Ben Graham <ben.usmarketingdata@outlook.com>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject:
- =?Windows-1252?Q?RE:_ProMat_2025_Attendees_List_=96_Ideal_for_Lead_Genera?=
- =?Windows-1252?Q?tion_Success?=
-Thread-Topic:
- =?Windows-1252?Q?RE:_ProMat_2025_Attendees_List_=96_Ideal_for_Lead_Genera?=
- =?Windows-1252?Q?tion_Success?=
-Thread-Index: AduiSw7nybHImEqdTo+p9/qVjJ3tKA==
-Date: Mon, 31 Mar 2025 21:49:06 +0000
-Message-ID:
- <BYAPR20MB2247160CB3D71D83B221DBDBE9AD2@BYAPR20MB2247.namprd20.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR20MB2247:EE_|PH7PR20MB5210:EE_
-x-ms-office365-filtering-correlation-id: 8723a011-0c57-405f-e3b2-08dd709ddc20
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8062599003|8060799006|19110799003|15080799006|440099028|3412199025|41001999003|102099032|56899033;
-x-microsoft-antispam-message-info:
- =?Windows-1252?Q?ZnDjrZoe6CHV323J1q7l53DRkCF7fy3RWw/j35nI/MGmPQYt+yP8jERn?=
- =?Windows-1252?Q?yu7rIW42QyOfWNQsF2YoVkzvtTvro0cMkcoFOQ9w8Lpctx6lZed2X7sz?=
- =?Windows-1252?Q?ztJA8wEfDu3CdDWi529s31uZ1uWVpjKRfJsgd2HeT2TpXH6HL8Vo97aW?=
- =?Windows-1252?Q?yf6UjL5LDt841DMHhhZx71rN5IEdLL4J4kMJWlYsEqUws19IOsEmFasr?=
- =?Windows-1252?Q?Ut0D00DTwM7R4XUTwbbv/km9shbppjiBtyQQ6IcSz50lOsGU0eijBDX4?=
- =?Windows-1252?Q?SIYfXKIUIj5UEpc/4eTX8V9pSeX4ZMX4mt6YemSr9H5uzrjDw9AKSKKU?=
- =?Windows-1252?Q?L8Y7aXigwGqxNN7bYmL3VwKAAOwTH0lgC5GUa9AAclkmm1dfHLBW1Iq/?=
- =?Windows-1252?Q?wPTU9XyHYG6D1ZAkvZ3+8nFRq1JFzKVHKigufcUJ7sxIM51TnhMkXLPX?=
- =?Windows-1252?Q?U1c/FWya8W4aUBVHoKmu+ryvZ4WHj1+OnzdeqODxxQK2E0kjc3EZxo+L?=
- =?Windows-1252?Q?Z0Q5CM/oHupbu4Pbilu2hXpLpUobB99y+Jbd8M5DVWb5SidjrN8zZ+Gr?=
- =?Windows-1252?Q?Z5OnohxAnxt7EPhsDXgOPTlm0PaDbnEBJS/fKkXFxhFRnhca6AS28W04?=
- =?Windows-1252?Q?6w8pYVXTFHJjfsTbxrHfy7wdT8tv1t+bWEmDrOBDBcOpDLaepdUd6jKy?=
- =?Windows-1252?Q?kmfBTZaFrJeHOicwRI+Sl/5dME3AJ3kRZrEOJKo8h255oE69DUlNwGOv?=
- =?Windows-1252?Q?gvhw/63tWzBgkNcFY0fOXad67a50494wlbHqzTc29N8poYmgKmeuwxbd?=
- =?Windows-1252?Q?mYR9+xJq3ceTWikoB6evYY6dIzl5p2MW17/W/U+6O32u/bHJ0kTxTq8T?=
- =?Windows-1252?Q?rxvGPrZ/+tkSR64Q58kS9DdMsJgNAMgDwN947j1D8gD91imdbZ6NUHYN?=
- =?Windows-1252?Q?A2OQ9YVwulBVB5WswObt4hJlac4CbeRaTja5aMQT7AcsZGY2Zf11R2R9?=
- =?Windows-1252?Q?91ymG+DNKvF/njCaCz99GAKB5SuClTrw/cukEfxQv48rMN/7pBH3jTPO?=
- =?Windows-1252?Q?tJeJDAc0PODFtq6D8LnQQiuhIUMsYVNDVuYKgiDd/7RS3VigQTTztDC7?=
- =?Windows-1252?Q?/L0PnesxeRjpdbbKLWTkX1B+oNP81IetTwVKLCy+XsjeBg2ZYweCvn1t?=
- =?Windows-1252?Q?a+xZg/SN/ZifxJLDDRf2PL9oOP07GmIj?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?SlfIdfgyk/ZZyavzznjCNpo9hjGdwh/bUYfx0lVo/UvSsJS39WsQ5tYt?=
- =?Windows-1252?Q?bWa7zfmdgEXW05+SRqmtOTbFqbZDwv7Q1Nil9nCV6k+38b+cpvSRR9eV?=
- =?Windows-1252?Q?G03DndB+f1hIWW4D+dDQvbwH5oAS4MftPOX5FLXtJgK5yc0XaP6p8tZ8?=
- =?Windows-1252?Q?4W2ir011eieFMjhLwUYB/DQDeFu1scj+OiZlLbYLCLcGcHE42+lWl7N5?=
- =?Windows-1252?Q?bmtmF2RLRifzqWvWoQw4L/17b1wPxG9JSV1Ip96mapmVO0VEZ25Cj+1Y?=
- =?Windows-1252?Q?Q8qPT6szC4g42LF2PxTv5bJIILp8Sv9l81eck5PqbubKPmjCb571AGhU?=
- =?Windows-1252?Q?OVl/4Qqbtl6Kh22W+DZFUeAx9bEv73Ovxkr2Iwmh6rajYH63tmeF49U1?=
- =?Windows-1252?Q?GnjAPuupLb94c6oVetSCdTxF0WzlIzM2cJLORtC+pscB4EVwTPdFUfWf?=
- =?Windows-1252?Q?VxHerwFhFGjTAUs+ZjwWgcOd/RruNdX9Jb+VmC3LNmYxJ7MOFCU3YX1C?=
- =?Windows-1252?Q?482qxtm/+293BDsp6Xdf0yhwUX4sKU13CH0xhUFM9VyJdzW37thuV7tN?=
- =?Windows-1252?Q?IRmCUA3ETpREhp37PfCLA9X6C1UhNXDIppXKPUR7QQj145fMCWP0B5SL?=
- =?Windows-1252?Q?4BGIvwF5yyxMuv3pwqGkWcL00gpfmNQmnwNJxspSzCazFECt/Br0XekF?=
- =?Windows-1252?Q?CDcuEMBmGfb9Oq5S1cGGPI6Qdsj6ejPQD/sDG//rB3Y9qtlsEFUuFCA4?=
- =?Windows-1252?Q?y8vIAc4R+WIpeTbYtLuhhhGYxMJnwUpcj5vjVoLztRQvAGNBalom39Iq?=
- =?Windows-1252?Q?RLg3XQKAh2628P82LSx7TpI3glJ4UBO2NTSb+thIdK7MFqU8uw5NDBO5?=
- =?Windows-1252?Q?UQAjpSk+pfxl/BvflM3q1iQNtxzr4RU5TTigqbxJbF0V26H3VwnVKPD/?=
- =?Windows-1252?Q?13SeDLVEmbw8w4QwGYY9y+gTrIYYo4voUIRPDoWe9A0XjqOGxsep+ICQ?=
- =?Windows-1252?Q?ZshkrRtcLIx0B28I2Jydeu37mLPolX70zDUwh3HUJ9SU7FpM/dRg8Ikf?=
- =?Windows-1252?Q?EsLtzh/J1sV0/InZ5en+wUtJfCvZUBP4P/+rU9WV+PY5JugZXIJZZdoM?=
- =?Windows-1252?Q?IlstWTwn/DsvrD1ym1RMulK2n3BV7bdT+5FMk7JrvV40o2ffmtF2MLZG?=
- =?Windows-1252?Q?OnYlBDDwS8aJPH/f5rnz3qT92xNC46xU88Tpe4oEuOBpsaRyJlm+uqDq?=
- =?Windows-1252?Q?B4W8gVktODDWL4/CCYoil+YC/uauzxPZRHAafn2cH7gMg8RpWfZdWMfK?=
- =?Windows-1252?Q?pEAvcUe3IwV/KrYTZxWUYjJxDTBSzfhvv2HBrdLd4GqVtnVMX9mjnPbn?=
- =?Windows-1252?Q?GMNwK+3arXmOuapCF4rmqHBLa2kH2E6E0DSxHk8Qc1+fBz+L6Zr7Udnn?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="morUWOEi"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39149bccb69so4353554f8f.2;
+        Mon, 31 Mar 2025 14:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743457790; x=1744062590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vdstssp5d3ULMv78iW5ykH4+Ki4j9LIskO4UfhbPQIo=;
+        b=morUWOEiSIHhr65OgWkLtpYzIKD+He8Q+R6m3H1i42TPB2PX4NB5OkXfVOaG+FQMeG
+         LvFwMfVv+5Pqh6EMHDe+tn6jv36XziePWgVd9jYjlmlKwUwYM0ohFZvzwM29f/tlGbJQ
+         PxqKNaV0doSFloJO+LMqlWil/OINdG1VdV7GVDhLoofTCJy18Ac3nqLtLQtnGJ7VOAe+
+         S7ygjO8CdFMUWaTTiLNaIZajPzc2Jmbzgqeewo4feO9KrkYQq2LRRdoXMm3O+9O+xS4A
+         C4j0GyrDKZYBCQXuZloE1gpsIOSO6AeHkckV/98z1HF4x+3EchLbtUlvlNmtGd8sDNJV
+         qF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743457790; x=1744062590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vdstssp5d3ULMv78iW5ykH4+Ki4j9LIskO4UfhbPQIo=;
+        b=UGFftaY4B2Yd7ZtTyQpGxsTJ0BmdOMfQZ3SSwepEit3uBbBu8W0V5mt6RusvtJ8llY
+         T03tnGNwMSTBsGq2KaR/I4ENrfCzZpgk99Bvfy6XJlvGC79vK7NfeQFUFfu23X7uNCgN
+         BEUTvHvtexDSBEnn47tY3XD73lpWni5fpEliT1Q1yP9hfohhzzspxAUBDwbPfQytUsK8
+         ri7QwtovOy0N1YZB0/MW49yaqGXeXyCJ106Uy+VBBKFAaz0APQAjp6aoiyeZXwndtWdw
+         geO11UUwc1GWh1BAAwzit3gteD7UQ0hUqb7oFtV+1JR83fm0VqZ2fn8BgMeBS4bQgIF1
+         XfHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQcrsm/Rm2ALVJDXwvFnMYrUCVo8Kv8Zhi1pZewpPOdr9979FqwqxsO8alwKtOPfMhYaxte5IHCukBxQ==@vger.kernel.org, AJvYcCUTlmbbTJUKmPlVs5zE0CTClYIKLv+YiSfPoWKHeVaPlKrSC99nGvgwJYkaUzm17WN9a8iJQXroKQPeuw==@vger.kernel.org, AJvYcCV+u0obV1qKfTzFWtDi/a9tFaczicDRR+MTBD9HyFghP+H6ea1mOqghzsRWSjiAyeY+bpI15iP3@vger.kernel.org, AJvYcCV3VTUdRtFhEepJaQVUiIxPDZJjBt+cPeM9E3KtkTUvZFi+wNEsQjAFu2A1PX+dyQgJyaG8pQ==@vger.kernel.org, AJvYcCVxsJ2f9xRExcW8qvMmoWKETcR48SM0BNtitGZR10bh15Sgg3kY31mmLW84diHbUbDSBH7hL5fJXCXR4w==@vger.kernel.org, AJvYcCVy7zgsn1xdsDRfdvNl6L9/G1QstXruhM1kOy96OmdYHP1zip4/g4pt206qE2PLQzILF4NeXvoKhraB4Q==@vger.kernel.org, AJvYcCWQW6S9sB5r8o5a3ES2+XHqYiWCZ/QaviVp1OWgJIG3AlDJ9JXBIR5yrvmohVaFaPwC6he/QbDNsA6U@vger.kernel.org, AJvYcCWd0CnBHpm9oGSaoSutr1uSk8t9RDqmQZvey058F4AwtAqXgBa9cUo3vSEZYoqwVIMgCxFs6iuPtfo=@vger.kernel.org, AJvYcCWf/hW4v5Lm8Om1qxlWiVNgQi8UeZY4HUu4fVnufalFezM8eQ+37KFobRV3NovVAZZhI6VwlVYc0fYieJVpLebU@vger.kernel.org, AJvYcCWoHEu1hy8W4gBFQROawwsCuc9FnrLszPYhxmLnrJqgnAg/XNwqy2qA9H+8fNzSSXz9inm4fFa0nezb@vger.kernel.org, AJvYcCWvpIFKoiyBYjMFKz/rG+hYi1VK3Z4glznhFXMdRRv4NBxKD17654yiZU4kOzi+P9zTwaM=@vger.kernel.org, AJvYcCX67/XFksifD4TezFPSCv1F9kzngqU6HXfgVMJiB/XmwylBSzKrT6DVzIHSTWipi1lr0eF1eZzrpWTwvDM/@vger.kernel.org, AJvYcCXTFBzPfTo1XAFstd6IUk2LWuJKbmfPUhZuaEqknpXCf4mofKjdsMDl2vBp2+F2c/J18vQwJ/Fg3ZVoaA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+Q9DPMWIWojZj8OA7uU+F+8KfYF0+xe0ak+WFqrAhfobvbQPa
+	FMQcXUxvr5vobBjBCVqoZJeX1GDe0s1rykPpKDWQmJ2Z+yLxFZMV
+X-Gm-Gg: ASbGnctNz9M+RQvskGSXU6sbRAaBhPoFm+GWB4B+ImTOwwqKt+fShMdbRY0vz1g02MB
+	Tykm3FdizCtQJoDDAUCj7Bp4XxkaVTROUXE5yLjJZu+vEc2qixt7J9OjoCouyvl2ok/bWSoU2Yt
+	ODcGvv5D/WLL1Jy2A0nFMVQir4R6hvHD/Z1eEtHj01/eEvXJRxDsTW8ayyqs6aOTzuiPx5rO7XH
+	Qn1ylFedeccUwdZOs9h6JY3z59/CMz/eKyHJKHJAmZ13Ja4tK+5D3wzqKAZrED6tHH8gXF7ND1y
+	xTTasyB9S/g1pHt9iytQExV5jrUxhJSfwIN4DE3sck6R/TG+FLNRqxz3PhO/5SDY4IxelzpEm6G
+	eL/IH630=
+X-Google-Smtp-Source: AGHT+IHDaz6qc5K6SYy9jlhEIozUCY4N2JwSt3T6Lks7AZ/C8EYmlUGrPLhFAhoyTSOCg3hYOLXzSQ==
+X-Received: by 2002:a05:6000:18a8:b0:399:6d53:68d9 with SMTP id ffacd0b85a97d-39c12118aedmr9281669f8f.38.1743457789764;
+        Mon, 31 Mar 2025 14:49:49 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4200sm12490080f8f.96.2025.03.31.14.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 14:49:48 -0700 (PDT)
+Date: Mon, 31 Mar 2025 22:49:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Stefan Metzmacher <metze@samba.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jens Axboe
+ <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>, Breno Leitao
+ <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig
+ <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>, Ayush Sawal
+ <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Kuniyuki
+ Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, David
+ Ahern <dsahern@kernel.org>, Marcelo Ricardo Leitner
+ <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Neal Cardwell
+ <ncardwell@google.com>, Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann
+ <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Luiz
+ Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp
+ <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, Robin van
+ der Gracht <robin@protonic.nl>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ kernel@pengutronix.de, Alexander Aring <alex.aring@gmail.com>, Stefan
+ Schmidt <stefan@datenfreihafen.org>, Miquel Raynal
+ <miquel.raynal@bootlin.com>, Alexandra Winter <wintera@linux.ibm.com>,
+ Thorsten Winkler <twinkler@linux.ibm.com>, James Chapman
+ <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>, Matt
+ Johnston <matt@codeconstruct.com.au>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Remi Denis-Courmont
+ <courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne
+ <marc.dionne@auristor.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan
+ Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, Tony
+ Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Jon Maloy
+ <jmaloy@redhat.com>, Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
+ <jonathan.lemon@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] net: pass a kernel pointer via 'optlen_t' to
+ proto[ops].getsockopt() hooks
+Message-ID: <20250331224946.13899fcf@pumpkin>
+In-Reply-To: <d482e207223f434f0d306d3158b2142dceac4631.1743449872.git.metze@samba.org>
+References: <cover.1743449872.git.metze@samba.org>
+	<d482e207223f434f0d306d3158b2142dceac4631.1743449872.git.metze@samba.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR20MB2247.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8723a011-0c57-405f-e3b2-08dd709ddc20
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 21:49:06.1345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR20MB5210
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi ,
-=A0
-Checking in to make sure my previous email was received.
-=A0
-I=92d be happy to discuss the numbers and expenses at your convenience.
-=A0
-Regards
-Ben Graham
-Demand Generation Manager
-US Marketing Data Inc.,
-=A0
-Please reply with REMOVE if you don=92t wish to receive further emails
-=A0
------Original Message-----
-From: Ben Graham
-To:=20
-Subject: ProMat 2025 Attendees List =96 Ideal for Lead Generation Success
-=A0
-Hi ,
-=A0
-Are you considering securing the attendee list for ProMat 2025?
-=A0
-=A0Expo Name: ProMat Expo 2025
-=A0Total Number of records: 35,000 records
-=A0List includes: Company Name, Contact Name, Job Title, Mailing Address, P=
-hone, Emails, etc.
-=A0
-Would you like to buy these leads? I=92ll be happy to share the pricing wit=
-h you.
-=A0
-Eager to receive your feedback
-=A0
-Regards
-Ben Graham
-Demand Generation Manager
-US Marketing Data Inc.,
-=A0
-Please reply with REMOVE if you don=92t wish to receive further emails
+On Mon, 31 Mar 2025 22:10:55 +0200
+Stefan Metzmacher <metze@samba.org> wrote:
+
+> The motivation for this is to remove the SOL_SOCKET limitation
+> from io_uring_cmd_getsockopt().
+> 
+> The reason for this limitation is that io_uring_cmd_getsockopt()
+> passes a kernel pointer.
+> 
+> The first idea would be to change the optval and optlen arguments
+> to the protocol specific hooks also to sockptr_t, as that
+> is already used for setsockopt() and also by do_sock_getsockopt()
+> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+> 
+> But as Linus don't like 'sockptr_t' I used a different approach.
+> 
+> Instead of passing the optlen as user or kernel pointer,
+> we only ever pass a kernel pointer and do the
+> translation from/to userspace in do_sock_getsockopt().
+> 
+> The simple solution would be to just remove the
+> '__user' from the int *optlen argument, but it
+> seems the compiler doesn't complain about
+> '__user' vs. without it, so instead I used
+> a helper struct in order to make sure everything
+> compiles with a typesafe change.
+> 
+> That together with get_optlen() and put_optlen() helper
+> macros make it relatively easy to review and check the
+> behaviour is most likely unchanged.
+
+I've looked into this before (and fallen down the patch rabbit hole).
+
+I think the best (final) solution is to pass a validated non-negative
+'optlen' into all getsockopt() functions and to have them usually return
+either -errno or the modified length.
+This simplifies 99% of the functions.
+
+The problem case is functions that want to update the length and return
+an error.
+By best solution is to support return values of -errno << 20 | length
+(as well as -errno and length).
+
+There end up being some slight behaviour changes.
+- Some code tries to 'undo' actions if the length can't be updated.
+  I'm sure this is unnecessary and the recovery path is untested and
+  could be buggy. Provided the kernel data is consistent there is
+  no point trying to get code to recover from EFAULT.
+  The 'length' has been read - so would also need to be readonly
+  or unmapped by a second thread!
+- A lot of getsockopt functions actually treat a negative length as 4.
+  I think this 'bug' needs to preserved to avoid breaking applications.
+
+The changes are mechanical but very widespread.
+
+They also give the option of not writing back the length if unchanged.
+
+	David
+ 
