@@ -1,274 +1,103 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9727213E91
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC524685;
+	Mon, 31 Mar 2025 16:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743436896; cv=none; b=uO8AIrcH8jwyjKCl62JPvtMCvs0ybTLvvyxRio/f89LCuLtSocF0ay57nfBccZPzqjpcK0Q7XuEGVUg7W87diGt1L7mDbsKUPkrXqiQ0/yqhJDOraoxYuWVnWjkE37q3s8/ljSXJzxMUfWukak/AT5VGYKddNAZSL1YL/BfiQLc=
+	t=1743437071; cv=none; b=WGX2/XVsXCYhck1m+vBx4h8ZI9ZLVVW1pwkcAVG5Tu7foDNYOm32C84GsvwIIND7s5H0HvxEbJdoeKOa7v8Uqua0dKOAJfJPMd+VO+rlk0xVM+CeX1/YAbw2faCNWZhqDFatMvN1u/9JJT6+YJ7e0Z1MzjmAfHTY1i+zFT+/wrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743436896; c=relaxed/simple;
-	bh=kSfxVxdF6fqvmlvDQrE77vwAPceFLZzgZh77oybhSNg=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=U8q555+oiJP/mXIgTgqOEGon78FkDie4mhp4ENQ3z64gai7hv0Cvn9b1hk9JYdHO/OXF73Qseu42Alll371DvC683wzrrqopAenjhzbc2638MDMzfTJkoAa8rZyauS/Afcjrz+PpheLcaxpCMYZccn2MUYVBommA9Ben3+gx090=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=iSjgoPLQ; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743437071; c=relaxed/simple;
+	bh=vht1Iberwe9SEyQjA0RuxdyfISFNIXIpFNZGxlXVcus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHgsU9x9BuL67+GYuqaBmGF/1njoj/ROrkJ3CNFHUpiFqQ3gKRFLh7o5sU0XRTLJqAURxJ/7/80L1fYvV859st9gZUopqmAqRmwdIchyI3jKjW0MjbkXtz0fHgqV+bBHCmwaD3QlG0Uvj7XFE0wGTwdxgB9TVy1a4niy0bOQXGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=R3wW+UyG; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="iSjgoPLQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=content-transfer-encoding:from:mime-version:subject:date:
-   message-id:references:cc:in-reply-to:to;
-  bh=vY8X0WYZci99O4C1r9fW4gTUb/On4EzlTK532BYsm0I=;
-  b=iSjgoPLQB01iPmqudzxQYTFV/K+8O9ny+K+qLqjd3gjR31rVsgoingwr
-   jCzODxIXZlrl6k5UJHjUmYyWmCzOlMHis42TO0wDrhean4xfrlLLzPpT1
-   RHtqfrkK42od/rFHcLWFlmUAS3XQYsOxC73wSdUMehSFZxc69UPcblGAY
-   8=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.14,291,1736809200"; 
-   d="scan'208";a="215648079"
-Received: from 3.153.128.77.rev.sfr.net (HELO smtpclient.apple) ([77.128.153.3])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 18:01:30 +0200
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Julia Lawall <Julia.Lawall@inria.fr>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="R3wW+UyG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9xQnbwDVP7S4C3Pg6DpMBzM5zbf4kbUH15XLw0VYsiM=; b=R3wW+UyGPRxQyDU30WQTd4H2NZ
+	tjl/pUEKpKD3SpcaPR/G03YMsmfFJ7Jg0ArMe2ZV2ttweyzPR3sTwcfLyvt+AXfDalAuiDiKNa9es
+	R64Kw23zn/qWmD1fTdckcJSbj29wJ45yHmjBP9Hw7b6XqQepR4JtLLNUi90pfEDpeIvB02dRObzvW
+	qJajwwdAs+/nxZ0oTZCPZ+ZnK5Tj9e07Nfj5PISMKLS/EzuAj6JiGvWWwmklRWAXEVDaEw7IXFHAB
+	gx6p5n3dBdCgL/oB6wtnGv0AujkioCNtjyWTjYIC+eUIkCtTYBCIoYg9TTFNY+HVhu8q7uLgwdF1t
+	pcv6o4jQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36008)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tzHce-0004Nz-15;
+	Mon, 31 Mar 2025 17:04:24 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tzHca-0001o1-2f;
+	Mon, 31 Mar 2025 17:04:20 +0100
+Date: Mon, 31 Mar 2025 17:04:20 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: pcs: lynx: fix phylink validation regression
+ for phy-mode = "10g-qxgmii"
+Message-ID: <Z-q9BCY9MUzLv-LE@shell.armlinux.org.uk>
+References: <20250331153906.642530-1-vladimir.oltean@nxp.com>
+ <Z-q44uKCRUtWmojl@shell.armlinux.org.uk>
+ <20250331155436.zmor5g3h67773qcc@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 4/5] staging: rtl8723bs: no space before tabs
-Date: Mon, 31 Mar 2025 18:01:19 +0200
-Message-Id: <1EC996B6-31CE-4548-8822-4E6B6FCE3C6B@inria.fr>
-References: <f4e52e87e0dbaf4c728bd0d2a2c641e8d465edd2.1743434232.git.karanja99erick@gmail.com>
-Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
- philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, Erick Karanja <karanja99erick@gmail.com>
-In-Reply-To: <f4e52e87e0dbaf4c728bd0d2a2c641e8d465edd2.1743434232.git.karanja99erick@gmail.com>
-To: Erick Karanja <karanja99erick@gmail.com>
-X-Mailer: iPhone Mail (22C152)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331155436.zmor5g3h67773qcc@skbuf>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Mon, Mar 31, 2025 at 06:54:36PM +0300, Vladimir Oltean wrote:
+> On Mon, Mar 31, 2025 at 04:46:42PM +0100, Russell King (Oracle) wrote:
+> > On Mon, Mar 31, 2025 at 06:39:06PM +0300, Vladimir Oltean wrote:
+> > > Added by commit ce312bbc2351 ("net: pcs: lynx: accept phy-mode =
+> > > "10g-qxgmii" and use in felix driver"), this mode broke when the
+> > > lynx_interfaces[] array was introduced to populate
+> > > lynx->pcs.supported_interfaces, because it is absent from there.
+> > 
+> > This commit is not in net-next:
+> > 
+> > $ git log -p ce312bbc2351
+> > fatal: ambiguous argument 'ce312bbc2351': unknown revision or path not in the working tree.
+> > 
+> > Checking Linus' tree, it's the same.
+> > 
+> > Are you sure lynx in mainline supports this mode?
+> > 
+> > -- 
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> Oops, you're right, please ignore me. I was working on a rebase and I
+> didn't even think to check whether the driver support for this new PHY
+> mode wasn't upstream. Now I'm starting to remember how the QCA8084 also
+> required it, and Luo Jie upstreamed the core support without users, and
+> without the Felix driver patch.
 
-> On 31 Mar 2025, at 17:47, Erick Karanja <karanja99erick@gmail.com> wrote:
->=20
-> =EF=BB=BFRemove spaces before tabs to comply with the Linux kernel coding s=
-tyle
-> guidelines. Proper indentation using tabs improves code consistency
-> and readability.
+Oh no. A feature merged that didn't get any users, which happened six
+months ago. :(
 
-In a lot of cases you are removing comments that contain code. You can also j=
-ust remove these comments.
+Can we please have a user of it in mainline soon?
 
-Julia=20
-
-
->=20
-> Reported by checkpatch:
->=20
->    WARNING: please, no space before tabs
->=20
-> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> ---
-> drivers/staging/rtl8723bs/hal/hal_btcoex.c | 42 +++++++++++-----------
-> 1 file changed, 21 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/=
-rtl8723bs/hal/hal_btcoex.c
-> index 9105594d2dde..b0e023d0435c 100644
-> --- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-> +++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-> @@ -9,14 +9,14 @@
-> #include <hal_btcoex.h>
-> #include <Mp_Precomp.h>
->=20
-> -/*        Global variables */
-> +/*Global variables */
->=20
-> struct btc_coexist GLBtCoexist;
-> static u8 GLBtcWiFiInScanState;
-> static u8 GLBtcWiFiInIQKState;
->=20
-> /*  */
-> -/*        Debug related function */
-> +/*Debug related function */
-> /*  */
-> static u8 halbtcoutsrc_IsBtCoexistAvailable(struct btc_coexist *pBtCoexist=
-)
-> {
-> @@ -401,9 +401,9 @@ static u8 halbtcoutsrc_Get(void *pBtcContext, u8 getTy=
-pe, void *pOutBuf)
->=20
->    case BTC_GET_U1_MAC_PHY_MODE:
->        *pu8 =3D BTC_SMSP;
-> -/*            *pU1Tmp =3D BTC_DMSP; */
-> -/*            *pU1Tmp =3D BTC_DMDP; */
-> -/*            *pU1Tmp =3D BTC_MP_UNKNOWN; */
-> +/* *pU1Tmp =3D BTC_DMSP; */
-> +/* *pU1Tmp =3D BTC_DMDP; */
-> +/* *pU1Tmp =3D BTC_MP_UNKNOWN; */
->        break;
->=20
->    case BTC_GET_U1_AP_NUM:
-> @@ -561,7 +561,7 @@ static u8 halbtcoutsrc_Set(void *pBtcContext, u8 setTy=
-pe, void *pInBuf)
-> }
->=20
-> /*  */
-> -/*        IO related function */
-> +/* IO related function */
-> /*  */
-> static u8 halbtcoutsrc_Read1Byte(void *pBtcContext, u32 RegAddr)
-> {
-> @@ -772,7 +772,7 @@ static void halbtcoutsrc_FillH2cCmd(void *pBtcContext,=
- u8 elementId, u32 cmdLen,
-> }
->=20
-> /*  */
-> -/*        Extern functions called by other module */
-> +/* Extern functions called by other module */
-> /*  */
-> static u8 EXhalbtcoutsrc_BindBtCoexWithAdapter(void *padapter)
-> {
-> @@ -900,14 +900,14 @@ void EXhalbtcoutsrc_IpsNotify(struct btc_coexist *pB=
-tCoexist, u8 type)
->        ipsType =3D BTC_IPS_ENTER;
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_IpsNotify(pBtCoexist, ipsType);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_IpsNotify(pBtCoexist, ipsType);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_LpsNotify(struct btc_coexist *pBtCoexist, u8 type)
-> @@ -952,14 +952,14 @@ void EXhalbtcoutsrc_ScanNotify(struct btc_coexist *p=
-BtCoexist, u8 type)
->    }
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_ScanNotify(pBtCoexist, scanType);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_ScanNotify(pBtCoexist, scanType);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_ConnectNotify(struct btc_coexist *pBtCoexist, u8 actio=
-n)
-> @@ -978,14 +978,14 @@ void EXhalbtcoutsrc_ConnectNotify(struct btc_coexist=
- *pBtCoexist, u8 action)
->        assoType =3D BTC_ASSOCIATE_FINISH;
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_ConnectNotify(pBtCoexist, assoType);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_ConnectNotify(pBtCoexist, assoType);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_MediaStatusNotify(struct btc_coexist *pBtCoexist, enum=
-
-> @@ -1006,14 +1006,14 @@ void EXhalbtcoutsrc_MediaStatusNotify(struct btc_c=
-oexist *pBtCoexist, enum
->        mStatus =3D BTC_MEDIA_DISCONNECT;
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_MediaStatusNotify(pBtCoexist, mStatus);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_MediaStatusNotify(pBtCoexist, mStatus);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_SpecialPacketNotify(struct btc_coexist *pBtCoexist, u8=
- pktType)
-> @@ -1037,14 +1037,14 @@ void EXhalbtcoutsrc_SpecialPacketNotify(struct btc=
-_coexist *pBtCoexist, u8 pktTy
->    }
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_SpecialPacketNotify(pBtCoexist, packetType);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_SpecialPacketNotify(pBtCoexist, packetType);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_BtInfoNotify(struct btc_coexist *pBtCoexist, u8 *tmpBu=
-f, u8 length)
-> @@ -1055,14 +1055,14 @@ void EXhalbtcoutsrc_BtInfoNotify(struct btc_coexis=
-t *pBtCoexist, u8 *tmpBuf, u8
->    pBtCoexist->statistics.cntBtInfoNotify++;
->=20
->    /*  All notify is called in cmd thread, don't need to leave low power a=
-gain */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_BtInfoNotify(pBtCoexist, tmpBuf, length);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_BtInfoNotify(pBtCoexist, tmpBuf, length);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /* halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_HaltNotify(struct btc_coexist *pBtCoexist)
-> @@ -1102,14 +1102,14 @@ void EXhalbtcoutsrc_Periodical(struct btc_coexist *=
-pBtCoexist)
->=20
->    /*  Periodical should be called in cmd thread, */
->    /*  don't need to leave low power again */
-> -/*    halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-> +    /*  halbtcoutsrc_LeaveLowPower(pBtCoexist); */
->=20
->    if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 2)
->        EXhalbtc8723b2ant_Periodical(pBtCoexist);
->    else if (pBtCoexist->boardInfo.btdmAntNum =3D=3D 1)
->        EXhalbtc8723b1ant_Periodical(pBtCoexist);
->=20
-> -/*    halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> +    /*  halbtcoutsrc_NormalLowPower(pBtCoexist); */
-> }
->=20
-> void EXhalbtcoutsrc_SetAntNum(u8 type, u8 antNum)
-> --
-> 2.43.0
->=20
->=20
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
