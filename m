@@ -1,102 +1,98 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2061BBBF7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3113192D96
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409839; cv=none; b=oe8bH1IKZNiIA/to6Ot8MjaL3Y3Ym9Vp7dyv463vKl0bYJfnwPLlT45PTl+P+q5llO6FAep8/eKbMyINRdJZv8Yip8dDmaQXJtnZfEXUdtlN9Wnt9eHOqWdemyTR7nFGxdd+tAbRaz62pTFPVe/J/4b0w5+XFTYpG63CPvWCQ/I=
+	t=1743409877; cv=none; b=ohxfygffVzqXymD6kGXNfXCRvFTqFHwX8NqvpmWc+tbCpCP4j16TtMvg+L0J/sY4joinCNcdIR3hKW+ku5MunUqu267l7x9/7p8UDsxFV6jI85B4wXA2RxO69MtOp7oD5uai7Try1S3InQVKdsAJaG2Aq/RgILBTjvXJl0eGEpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409839; c=relaxed/simple;
-	bh=iaZq6sGjaRxHwDJEyMvTcI6lmbcpvCdHZM2yjd9nPM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b06Y2i0a9iyfzMxAOCGTizMaB9cl8EVVPza4dr0FzfElWfaVO8yZ1pppDefOQqQBe8MBLtrVxBDL0zZqx28+DPxHcIby5Tn5i9EcYj6Be46h0FSRtw0AkSvsQ6mPDPdA4xx0gPdJW3XF03ShP0fruT+kxfxiR7jt69EdQtPBo3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hV2sMaJC; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743409877; c=relaxed/simple;
+	bh=VWjQ2H7Mg0vyopqPuveP+v7f2GD7fiSkOBSLr2u7ZHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PAufOb2RDaxkQKCg9yQFPRFHe9Lrub55o4TI0dtwczFWMmGLdiphzNC2ybQIyNiK6Se5mHuGrBazdPuDaduCmle2yy72VrWWc0qQo/VQO7o40qy/EZIPKQ4HPb2GgO1fR3jSLsjcDEqg2yAqhxkX6JSXyhw8ty57dGpYbW8XViY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pE2RVCZE; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hV2sMaJC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=iaZq
-	6sGjaRxHwDJEyMvTcI6lmbcpvCdHZM2yjd9nPM0=; b=hV2sMaJC+F2D/PdccPsa
-	HrJdLRzN8WZ8hlPzDQeN+aSojgP3Xf76B97SZaEDFujrvkqFJcDVpICyXZUjr8rf
-	G4TBYtffuczwzvoZ2P1sLaMdKVx/TL0wSdn/AeKJYprQ9IYERpBlNmj7EX2nNNdR
-	pSBLSL++4UzLTg/lbpQn4iH+0g8/Hk5Fj0AlXfTBoKGZm3ZNqZrT691QbGFX6YgD
-	+NV4/idQNkYQiUpTWmn24t2wgMUYly52JNq3ONy1vf3Wttik1sCaA36qc4Xj5aNE
-	8hrb5zMs7FjQF6RffV4BEv03gFT4xMcM90YxxXJ4kvmjcAqWWvaZ/vHwhYHw82ge
-	cw==
-Received: (qmail 1157512 invoked from network); 31 Mar 2025 10:30:35 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:30:35 +0200
-X-UD-Smtp-Session: l3s3148p1@1CHvO58xDNlQ8qei
-Date: Mon, 31 Mar 2025 10:30:35 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] mmc: core: Add support for graceful host removal for
- SD
-Message-ID: <Z-pSq5e9MXTX3qfe@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-6-ulf.hansson@linaro.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pE2RVCZE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743409867;
+	bh=VWjQ2H7Mg0vyopqPuveP+v7f2GD7fiSkOBSLr2u7ZHQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pE2RVCZE4RnwX43eixACBSUYVBy1GTtFkrPYe10s4OfMjKpnmVylTISQpTkVq603M
+	 DXamK5P4Z4XKDInpwM9haVyaEN7z974JImXzh5YmQOsHRzdBkK3on0neC34U2OcmSv
+	 XWhKveckwK6gzrqb2x0wjQXaXaFEM7o3HIHtjtjqCN5NwonVNHkLs89BO9FyJClcNX
+	 uDvkYAok+H/Iv6W4CL3rOQtGY3KMIc3Iv4jKPSX/jnk8/zt4wGqSOUHhhmrmuIDprp
+	 jbnQOAi/kghrkmY1Vp+WV4xfVgHK3iS3Yz2zTQx3FcJAxQZWnVIyykUkrkOe7ELVOD
+	 VAX7pzSGt9Acw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4B2F617E07F3;
+	Mon, 31 Mar 2025 10:31:07 +0200 (CEST)
+Date: Mon, 31 Mar 2025 10:31:02 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob
+ Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau
+ <liviu.dudau@arm.com>, kernel@collabora.com, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [RFC PATCH v2 0/6] Introduce sparse DRM shmem object
+ allocations
+Message-ID: <20250331103102.22be5363@collabora.com>
+In-Reply-To: <c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
+References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
+	<c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pAAbVRH9P5V3qP8x"
-Content-Disposition: inline
-In-Reply-To: <20250320140040.162416-6-ulf.hansson@linaro.org>
-
-
---pAAbVRH9P5V3qP8x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 03:00:36PM +0100, Ulf Hansson wrote:
-> An mmc host driver may allow to unbind from its corresponding host device.
-> If an SD card is attached to the host, the mmc core will just try to cut
-> the power for it, without obeying to the SD spec that potentially may
-> damage the card.
+Hi Thomas,
+
+On Mon, 31 Mar 2025 09:13:59 +0200
+Thomas Zimmermann <tzimmermann@suse.de> wrote:
+
+> Hi
 >=20
-> Let's fix this problem by implementing a graceful power-down of the card =
-at
-> host removal.
+> Am 26.03.25 um 03:14 schrieb Adri=C3=A1n Larumbe:
+> > This patch series is a proposal for implementing sparse page allocations
+> > for shmem objects. It was initially motivated by a kind of BO managed by
+> > the Panfrost driver, the tiler heap, which grows on demand every time t=
+he
+> > GPU faults on a virtual address within its drm_mm-managed ranged. =20
 >=20
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> I've looked at panfrost_gem.h and found that the driver's gem structure=20
+> has grown quite a bit. It seems to have outgrown gem-shmem already.=C2=A0=
+ I=20
+> think you should consider pulling a copy of gem-shmem into the driver=20
+> and building a dedicated memory manager on top.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Actually, it's not just something we need for panfrost. I plan to use
+the same non-blocking allocation mechanism for panthor's heap
+chunks/buffers, and lima could use it for its heap buffers too. The
+non-blocking page allocation is also something i915 has been
+open-coding here [1], and I believe that some of this logic could
+(and should IMHO) live in common code rather than each driver coming
+with its own solution, thus increasing the risk of bugs/inconsistencies.
+That's even more important if we provide a common gem-shmem shrinker
+like Dmitry's has been proposing.
 
-Testing needs another day, can't do this via remotelab.
+Best Regards,
 
+Boris
 
---pAAbVRH9P5V3qP8x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqUqsACgkQFA3kzBSg
-KbagIBAArZOtkaj5Se5cb5n8+eeOPL9H4Xo5SUN/nixyrZ1shcSoAk/H6LCVvfBD
-WrBOvbU8mR+yGkvtDnZL8Sa9reqK7KD/VNIgfQfKcusHlO24h5dht4iuY9ZRYiqg
-+MgW44aD2w7ajOR3h/OsNfuyXUY1DDIN6bGW6mawZtIUmj6l8eNKswIMLUEoeqmp
-il+6YeXcwjhzXGdPxc4nVdb1wZtRqqXKghyWqS43h2JWYWGlvAJjmHl9UQ+9sMTX
-eTQtFHet5Sx5B6TiAzepcI36qeSVY8jgWqxwCvy+divEhXS7RPfncBfH0L2iVpEW
-soagRwKhOst/UGLnyCH+L7Ge9kD84YPbqEiGt+crZSxQy2cxaqJBS7IMlGg/yMTD
-YGK4IBaU1JYz0UCc8vR1WIlOvsZHSnot+0X0oUSE4TOqq3kiQ/lX3tumzMRdEV5U
-/0ysXjS5DH3GfFKZHW9dZJuIkrXkt0lkEwS10+vTznXyGbNSiSguOmgfHByNkuHu
-oSOjO1SvZTmxBJix7gvqIaVmJtNAltrTHzOfwGiAu4m0OMsdyaJ3Sm8uAI6RM5Zo
-lYKp6aFaxTiedxu5FUhVu+rfHG+7Cg4qUfeXLqmWKzQU0KtrJTxLOh3Zkil/axv3
-ZKCFJ4P+j7laIc5iZRDHay3R5IU42sDZ9mb10z/6cyp0y5ggWcU=
-=MJMm
------END PGP SIGNATURE-----
-
---pAAbVRH9P5V3qP8x--
+[1]https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/i915/gem=
+/i915_gem_shmem.c#L89
