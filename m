@@ -1,253 +1,429 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AC71D54F7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424285; cv=fail; b=bZ+PDknS791CJ4pF0p132ufGQsmNIniNZm11B9a5kyttIoBkh8bn8Y9/qioh8Jk5qI84VuayErWciaCFeeYzi8/IJUIValN69cXhpKHx+t27GFFpR7eUBlCxyPp3TtIN8OhD9PFCioAZeVjbPRL3P8qvLsaKXiJgCMB03f2mLdU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3E417A2FA
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743424285; cv=none; b=jhCOhWA2jhAlaVgcz2wJmjm68C/ZIbySIp1TwQPxyi55EItYZOeA72v6V3wiSrsPVpeAKldI3CrrJdmAKop8Emx0B1wmfnY28npSKjS/rkGDlKu0umf5j8pDp45wrEz54F0SxSmEyYJLfBIiwlS8tfFISrbLU2llpeg1xclttZQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743424285; c=relaxed/simple;
-	bh=nDwyaokSLIoSR04GMXkU2Q0+p8HL7gYVNtHqRui//MI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nlyPYrF+SCkYaESX32byLMo67srPY5qYOrgkTuWa4sxVZpEbLZTipPS+AVoNPtvuHUyHV3rxbCNZBLx+XSGng8IbO3jQXJUh8xef22y/zRSkKaeho2cDTtjGRmQfsMw1pcpas1fP+VLu3Qbjl97Yn1bZVGRVzjoSKa5AQcb+Xy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJWzy6HK; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=xqAtN/TbCCA7DKGAfkHpOId1GLziI/YG+jt+tgsCs0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=grK2b9PDE8h/t0Ft9qPtHhogTv7MzxvCcm3KVQrpDPqK6jWtMGOxh51J/RRjeqtnl8+WX+eARaT9jyjMn/rTudDLASB5JWWjl2KvBmFcMiqmwOS7tzbaSg7iG1lwmb5ClaGOpR+AZG4d46+XC1WidDmPJRawvVnC6dGG1Cicvaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Oa0MvpIp; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJWzy6HK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743424284; x=1774960284;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=nDwyaokSLIoSR04GMXkU2Q0+p8HL7gYVNtHqRui//MI=;
-  b=ZJWzy6HK6DuO+4JAlpYWdmmqNCQX43K7AVc9pZYMlleHROn7c/JgfSxa
-   2saH2WMeYefCSmnIB7Z0j6wU7JSdSmoSADj6/q15iI8Ts66Itxt+2GtFj
-   qUmiQMRQstTxjlNHItJq162IawEyUViShwsiJVWw1I6aw20BsEu9C7yYW
-   Ln8HabzhSMrQg9XfAm2yDbtAzXkzcGQ6CH8BR+PkZWquLeybZ/LWI9ZIl
-   jfBUjp1+gcXwWxiwmTd1Wrv87naNpqiBvaJhurgOiko7f6hnfj+4qb4S5
-   SlVmjtdagk9gvH3xjNRXfRE1gAC+KgKP+M7oh0o7qDbsOOn6aHV59xxEO
-   w==;
-X-CSE-ConnectionGUID: yAY3BbrQRGKkcS947gdGmw==
-X-CSE-MsgGUID: wd2LJG/AQ8GUX89zJWhT6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44421270"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="44421270"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 05:31:24 -0700
-X-CSE-ConnectionGUID: 5u3tXpZwQXuLkzrM6qX2lg==
-X-CSE-MsgGUID: yMUR42lOQWenDUE7PQ2dZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="131185213"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Mar 2025 05:31:23 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 31 Mar 2025 05:31:22 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 31 Mar 2025 05:31:22 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 31 Mar 2025 05:31:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k4qEWKjOaKcdC/WMk59Apibbe2k7KAh0zqUQUvz1raiMZZIHu8W3EfH84YjZGEg+Sg0EvlEjSnO4nT/LK4R6PHcaqb1WRJpvj4z/5xXZYkKu5LlIgUuzVDmfQH3mbqsbVAoajOOlsXuQfbtAV3wUuSlmKYkJJ5f/BTmE6ECjSRWwzwXVbBbBLAT+WREWAwJIrNuuDOcqvs1KWwRpZJQAuZE5GbH3vK+CS1Vu+wbccCaiYyiUraUyTOWJAdGHv0dxt3Zawae+mPXuNtqHrEA5sgf2x24ZujdXOaWTbNmsmpXVAyvWl/gZIP8xRssRmdBsxDQJC6BhjVh5OVULbT77fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JT3Ta5yA07ZhYj7k2EEMgpFkGSGz12i4erhUY9ct7zM=;
- b=XwrjOqrtF3GzivgUppshzHqgR0EHvlV+oiLyTzCNopc33TuLK10UA4J5S61Jcr2Y0LiSRbNnWHqV1o0CFiEZ+eWT5krzj+geUHoiJKbGGfBGpUTYFPrm5nmaICVBRqnRAPVPk5KGQC9OocpB6hjWbZbPfNJDrDuW6kyYBSVEHHhf84vSTem1HvSNa+mwsk9W1qRvs/WbCaSX7hIGc0UGTQR5qGn18wgGk4YdWutxyu9ghUwBZpM8YMsBw8/pQPqqLS2qj+yRdSa7pFVSeeTLpmihWndZpWWZ2yGy42s6CFDZCgFKUBF6PhHENizTR4gnJ1imk8tUV6vfwJucCGXNXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5423.namprd11.prod.outlook.com (2603:10b6:5:39b::20)
- by IA1PR11MB7917.namprd11.prod.outlook.com (2603:10b6:208:3fe::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 12:31:19 +0000
-Received: from DM4PR11MB5423.namprd11.prod.outlook.com
- ([fe80::dffa:e0c8:dbf1:c82e]) by DM4PR11MB5423.namprd11.prod.outlook.com
- ([fe80::dffa:e0c8:dbf1:c82e%3]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 12:31:18 +0000
-Date: Mon, 31 Mar 2025 20:31:08 +0800
-From: Philip Li <philip.li@intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-CC: Borislav Petkov <bp@alien8.de>, <lkp@intel.com>, Linus Torvalds
-	<torvalds@linux-foundation.org>, <linux-kernel@vger.kernel.org>, "Peter
- Zijlstra" <a.p.zijlstra@chello.nl>, Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton
-	<akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <Z+qLDGvkY+TXdCjK@rli9-mobl>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
- <Z-qCrbNvP2cil6jJ@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z-qCrbNvP2cil6jJ@gmail.com>
-X-ClientProxiedBy: SG2PR04CA0156.apcprd04.prod.outlook.com (2603:1096:4::18)
- To DM4PR11MB5423.namprd11.prod.outlook.com (2603:10b6:5:39b::20)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Oa0MvpIp"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743424281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7XEWEmd5LWdFQWEvEb923ykZHXXlz1bJMpcel5KSrlk=;
+	b=Oa0MvpIpXxMjZP67+MGyMm07znRrgBk/7woerEUR91JCGfKX0ao4riXEcBgUZKdL4eJmlK
+	HLRw0sZrKd4OLPCwGa5kEdoVSsLOWBZyX9gFj4LpumWBEOOCEEHaW662OW8IBnZguoYSpj
+	xXGFfPlRfH9Vpg5iTewB44kqgOqpEFE=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Ingo Molnar <mingo@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86: Rename bts_buffer variables and use struct_size()
+Date: Mon, 31 Mar 2025 14:29:38 +0200
+Message-ID: <20250331122938.1837255-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5423:EE_|IA1PR11MB7917:EE_
-X-MS-Office365-Filtering-Correlation-Id: dac57250-ecd1-4e5e-3094-08dd704fefb8
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SipzZQ43XUFCD0a/hwlH/ql09BeY+0xt5xY0f9laPVNplrVA2tNpxTa2+mJI?=
- =?us-ascii?Q?Qbnee3GdA+D0bu4AUfLhOAr6sLjy45L5HtLrVgmLSTs+brkjg3846hUzavOP?=
- =?us-ascii?Q?VQwI/y+6mlcPPO8JVk0Es8Eh0tuAhgJ4juzT7dVq4x5d6R+hJpbtIaJTqAKB?=
- =?us-ascii?Q?P9Uo8Xu+Z9qyIJfGLsLZW6jYvKZfjEhF2Xaok807DTpTmRbJpLluIpR4jHOi?=
- =?us-ascii?Q?Oj72sCb+X8ar7ep8j558xh4DRvQvZBBR3v15Y4S0gKdCDbctIaOUSSsvXIdG?=
- =?us-ascii?Q?nIXdmCvf3bOeHiQ5dWpycxldCRIyaAH6/ibpmu7MfTnT1fRBoVNEK1z1AuK4?=
- =?us-ascii?Q?st2BYM/tfVD5maf+pYu/1/LFFM3aw8GmSNspmRrcLeoFv66cujLpMr35jsnQ?=
- =?us-ascii?Q?coVSq5DGFMVcozpmd6QQeZorUeokR9WqASSEe2yB0wNqzGe0fJh4/Oj+/ef1?=
- =?us-ascii?Q?QNUnWji4lLkEtlRU4Cc1d7gpN16cTID8TjVzc5//OgGEvnmm+AkzD6dh2sjy?=
- =?us-ascii?Q?79IJ63ifbed+ztobqCeFyGNzGVYjoHCpOdlMSVN1S8s9e/h2faNrXPopJRM9?=
- =?us-ascii?Q?YgBbqwlT4AAmZ7/z5WtfdWIppymElI0urcoSqCckPXgFZHCz0IVTESTH41hL?=
- =?us-ascii?Q?xTH6XdEPa4YR1A6kodBrfwSngme5odbgTtFQoBiACGhHaYlZrGuWGuuahRcH?=
- =?us-ascii?Q?maOGHZEvO1noxicPhyMn8EUNcrwKCEICkWnWUBs+y4XOBMP7zhuf2BBlNwWJ?=
- =?us-ascii?Q?FM/SBwaaDqKTSwaCz9o5vj36z/67Ap3FCUyPEqqQFEzZdWyAJCAJGyD+kHwz?=
- =?us-ascii?Q?X/47gpn0BdF3Ryxre0bAz0E+yDSojRESgi7toIWE4x0F/eNSfN8Z3Kdg0pbf?=
- =?us-ascii?Q?rAeLqDUBNpk96GjcdJ28y3wiJ3S0kh7ao3z+kJYunLboanUHkmnh1ZHes6sD?=
- =?us-ascii?Q?S6zhVrlqnN36PC6nmptn6tEBsFhIMbLsLYFb1SvGjYhGsNJ9f5R+MHuSNLFj?=
- =?us-ascii?Q?AHZg1EN/BXf+dNeulPmMldRZYW4+aRn4erBBQm6KLMn8N10jiMt+5PWu6oOX?=
- =?us-ascii?Q?S3FNqizE+7JFGjQdno8X3Fggmk3q411EsrWDniaZU8EuNC7WpTX+iuTvzeJy?=
- =?us-ascii?Q?k633a5LtKGlS+4D7nJNvIMRXZa46oXe7muA7I+35SE79YuPC3VCBAz0b5suD?=
- =?us-ascii?Q?uB01zTVqgV4gjI6jcCn01eDJW28/DfKzMP3mI9IjKZUewhpeP3DwPHSZHooL?=
- =?us-ascii?Q?AWTVldHTTxw5HvU5HE+IP5Og3J/bM1dSXHJEiyA1YmilPyubgJME+OXNfrZM?=
- =?us-ascii?Q?EgEJXw7oIRwjCRUh7rkRoIN55JakulRSNOsQi3/usVd28YdOYlpBKd5ZYyXr?=
- =?us-ascii?Q?do9z6BJ/ivK/qaSR17gZmQiDEt/W1+m0AdS4abOjRTI8Og24xw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5423.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dhoMzco22pU2con9+fE8lBNIu1h34QhJk8gVP6LQk8joyQPQe6Ed87t5Qz8S?=
- =?us-ascii?Q?huXrsCKRDhTWuW5K6gBhjXiubHoHEJdqvz/JvIyQFmIzowELbQxS8JOpQ9SL?=
- =?us-ascii?Q?ur95ii0s3Ap2mNqkUDJpWUW64hzAhufnsRaBWi8ECKTKsZYtzebBpybFgH7A?=
- =?us-ascii?Q?FLg9CnBZqZYFfJnYgHDBrUGUs1YkV0dalH01XxG3kylVpaGOaT7U2JGOA9Xf?=
- =?us-ascii?Q?QmiA+MUrrtkSA1T2GPlYX0W3QPbn8w/Bnt8kxpmzVIT2rEHuEPy5H0ox9dvL?=
- =?us-ascii?Q?gwPEVaxqa5W0+0M7eieL7vQMttJzrIkobisJpgU53CmPwXmMTOmpFIM1KAYH?=
- =?us-ascii?Q?opp/P1alsvGgAep0tKoZCZXUt6bqtdXRJcp1daHKPOqcovc9qgBq1fzz0clR?=
- =?us-ascii?Q?lwW0wKhXqJM1l82LXGa02NEGFr7BIPW1ZRLySYIuT7kzGKik7SKdWl8/+SfU?=
- =?us-ascii?Q?JgauLmG28YLrX9u4/+pVrajXt3zlp5NKZK5AA31K2n227AjaiqYNNLBrsVBU?=
- =?us-ascii?Q?N2toGrlPmd1napvgGRLRDZlNeUY6Mg9QDAPUuDoK4e2j6WikzjPxNx/+DJAd?=
- =?us-ascii?Q?GEgfPEEfmzxw1V+XVcYAp6DanSPhbjA84XGP8mHQMU6a/qwWWwe7xmkYQml0?=
- =?us-ascii?Q?ZY5NzRMRhoKia/uqAiI/1hd8u3lT+W9nW7oopWke7Zz3em7XFIm4KQl+sPAi?=
- =?us-ascii?Q?qDAuTsfCSLyaI+6p2P7ct4UF1N/KsjbqyQB6q5SP2OAkfyLKA/rVzPZ+VwR7?=
- =?us-ascii?Q?DjY8yfSsL3J1AtnOljK1NIxIEnlUyMVQbfAxfirMINs2M1hfzY4zAxdmCIiC?=
- =?us-ascii?Q?uVrfrOHmTwfZFefjE3oFEuqdlD2+Q+zFbAxFu0h3OZ62Jpc3aPl+0ND7ZMd0?=
- =?us-ascii?Q?UptSxgHfAiGvLNZf5Vwjy4Z3OZofiGdRF5S52EjUWnIFWYSlwsG/lZ8MW2CA?=
- =?us-ascii?Q?qnnEMSWTGBL6Q/1MhWoi1pF7guDLQp1nd9Am5NGHaNkJUVg9Da+HJ4ccKAbL?=
- =?us-ascii?Q?1kZyPKUw+VBZ6KdlzZQsXpQ0iKvtKknr1Ho2+oW0vz1HujotEpWiCGryLTxA?=
- =?us-ascii?Q?KoyW8TGzd/QDwSx/GMg66Kwpvlh9yW8D1X+gG0fvJ4qREOeTQT2C8LhqgPs2?=
- =?us-ascii?Q?hQgz4a0WLKRu/zrNuj4W9gxgSiF2yLanULrva+YCwkcQ2SjkU+99jIE3+WxJ?=
- =?us-ascii?Q?v2pPvoK38fLU37QrgMspD2C0g+3O/Ul4odmaf6eDmvRMKV47GbPv/MB4EoEc?=
- =?us-ascii?Q?fGyNGeYQsnpaJ5Myz2QDA0E/1ZhxUrYPgRxGexKhTqoRObBHfpQb1hEhrAYC?=
- =?us-ascii?Q?B6PGQpOz5O+3agpCJea4y0Bhn9AQgmcnklN9nSaBT5Tqih6zGo7uaTIpsp5V?=
- =?us-ascii?Q?f8QmsMsnB1SMPhIApg4K+Ndu1d0LmCO1TukS/vls05nbt9SQE7wXOuYG9nDl?=
- =?us-ascii?Q?BndOXbMjLAUOSFEhAkSmGc0CuuyselrQAeOz1HxC8Az7GA5bAOGXyhWa6ovF?=
- =?us-ascii?Q?YWtoqfm6BxmrW8OzoyPfpSLd7GFDTh8w1/n/1B9Wl61csuJFjuZNOxi4c3c0?=
- =?us-ascii?Q?YTycrRFOzPzXViAGrtjI6zphuTyguJKpnDHMN0Lg?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dac57250-ecd1-4e5e-3094-08dd704fefb8
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5423.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 12:31:18.6180
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xhpw8Q5xR403uEMxJJW2fqs44JqtInp09bvqom/oI4aY/WBkrDl7grGaVRnUcsbAicvi96JHNOUC17UXS/KWmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7917
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 31, 2025 at 01:55:25PM +0200, Ingo Molnar wrote:
-> 
-> * Borislav Petkov <bp@alien8.de> wrote:
-> 
-> > On Fri, Mar 28, 2025 at 10:18:57PM +0100, Ingo Molnar wrote:
-> > > Linus,
-> > > 
-> > > Please pull the latest objtool/urgent Git tree from:
-> > > 
-> > >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-03-28
-> > > 
-> > >    # HEAD: ae958b12940bcd4ffa32c44684e4f2878bc5e140 objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
-> > > 
-> > > [ Merge note: not all driver fixes below have maintainer acks. ]
-> > 
-> > Btw, test bot complains:
-> > 
-> > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
-> 
-> AFAICS that particular report is not a new regression, but essentially 
-> a test-bot false positive due to a reporting change, because the 
-> objtool warning output changed.
-> 
-> This can be seen in the full report:
-> 
->   https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
-> 
->   All warnings (new ones prefixed by >>):
-> 
->      arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
->      arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
->   >> arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: skipping duplicate warning(s)
-> 
-> Note how '>>' is the new warning - the summary line added recently that 
-> suggests that there's more warnings. It appears to me the test-bot 
-> considers the other warnings old regressions, but I couldn't find any 
-> trace of them being reported before. Maybe they weren't Cc:-ed to lkml.
-> 
-> Or maybe these *are* all new warnings. I've Cc:-ed the LKP folks.
+Rename struct bts_buffer objects from 'buf' to 'bb' to improve the
+readability when accessing the structure's 'buf' member. For example,
+'buf->buf[]' becomes 'bb->buf[]'.
 
-Hi Ingo and all, sorry for confusion, here only the line with >> is considered
-as new warning, due to the commit 0a7fb6f07e3a you mentioned.
+Use struct_size() to calculate the number of bytes to allocate for a new
+bts_buffer. Compared to offsetof(), struct_size() provides additional
+compile-time checks (e.g., __must_be_array()).
 
-From the bot logic, the "stack state mismatch" are not regression (not new warnings),
-which already exists in earlier commit.
+Indent line 327 using tabs to silence a checkpatch warning.
 
-> 
-> To add confusion to confusion, the test bot also incorrectly attributed 
-> ae958b1294 for that new warning line, and incorrectly categorized it as 
-> a 'recent_error':
-> 
->   recent_errors
->   `-- loongarch-randconfig-001-20250328
->       `-- arch-loongarch-kernel-traps.o:warning:objtool:show_stack:skipping-duplicate-warning(s)
-> 
-> While the commit that added this new reporting line is:
-> 
->   0a7fb6f07e3a ("objtool: Increase per-function WARN_FUNC() rate limit")
-> 
-> ... which is a few weeks old and already upstream. We didn't get a 
-> loongson related test-bot regression report for that commit or any 
-> other commits, other than the weeks-late & self-contradictory report 
-> against ae958b1294.
+No functional changes intended.
 
-For 0a7fb6f07e3a, the bot only reported 2 times on x86 [1][2]. For this loongarch report,
-the bisection is wrong and is a false positive, I will further check. Meanwhile, the bot
-will ignore the bisection of this new objtool message as it is not really a new kernel issue.
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/x86/events/intel/bts.c | 146 ++++++++++++++++++------------------
+ 1 file changed, 72 insertions(+), 74 deletions(-)
 
-[1] https://lore.kernel.org/oe-kbuild-all/202503191453.uFfxQy5R-lkp@intel.com/
-[2] https://lore.kernel.org/oe-kbuild-all/202503181736.zkZUBv4N-lkp@intel.com/
-
-> 
-> So something's wonky with the test-bot reporting in this particular 
-> case for loongson, or my parsing thereof.
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index a95e6c91c4d7..bbc7d914050c 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -80,54 +78,54 @@ static void *
+ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		     int nr_pages, bool overwrite)
+ {
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 	struct page *page;
+ 	int cpu = event->cpu;
+ 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+ 	unsigned long offset;
+ 	size_t size = nr_pages << PAGE_SHIFT;
+-	int pg, nbuf, pad;
++	int pg, nr_buf, pad;
+ 
+ 	/* count all the high order buffers */
+-	for (pg = 0, nbuf = 0; pg < nr_pages;) {
++	for (pg = 0, nr_buf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+ 		pg += buf_nr_pages(page);
+-		nbuf++;
++		nr_buf++;
+ 	}
+ 
+ 	/*
+ 	 * to avoid interrupts in overwrite mode, only allow one physical
+ 	 */
+-	if (overwrite && nbuf > 1)
++	if (overwrite && nr_buf > 1)
+ 		return NULL;
+ 
+-	buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
+-	if (!buf)
++	bb = kzalloc_node(struct_size(bb, buf, nr_buf), GFP_KERNEL, node);
++	if (!bb)
+ 		return NULL;
+ 
+-	buf->nr_pages = nr_pages;
+-	buf->nr_bufs = nbuf;
+-	buf->snapshot = overwrite;
+-	buf->data_pages = pages;
+-	buf->real_size = size - size % BTS_RECORD_SIZE;
++	bb->nr_pages = nr_pages;
++	bb->nr_bufs = nr_buf;
++	bb->snapshot = overwrite;
++	bb->data_pages = pages;
++	bb->real_size = size - size % BTS_RECORD_SIZE;
+ 
+-	for (pg = 0, nbuf = 0, offset = 0, pad = 0; nbuf < buf->nr_bufs; nbuf++) {
++	for (pg = 0, nr_buf = 0, offset = 0, pad = 0; nr_buf < bb->nr_bufs; nr_buf++) {
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+ 		__nr_pages = buf_nr_pages(page);
+-		buf->buf[nbuf].page = page;
+-		buf->buf[nbuf].offset = offset;
+-		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+-		buf->buf[nbuf].size = buf_size(page) - buf->buf[nbuf].displacement;
+-		pad = buf->buf[nbuf].size % BTS_RECORD_SIZE;
+-		buf->buf[nbuf].size -= pad;
++		bb->buf[nr_buf].page = page;
++		bb->buf[nr_buf].offset = offset;
++		bb->buf[nr_buf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
++		bb->buf[nr_buf].size = buf_size(page) - bb->buf[nr_buf].displacement;
++		pad = bb->buf[nr_buf].size % BTS_RECORD_SIZE;
++		bb->buf[nr_buf].size -= pad;
+ 
+ 		pg += __nr_pages;
+ 		offset += __nr_pages << PAGE_SHIFT;
+ 	}
+ 
+-	return buf;
++	return bb;
+ }
+ 
+ static void bts_buffer_free_aux(void *data)
+@@ -135,25 +133,25 @@ static void bts_buffer_free_aux(void *data)
+ 	kfree(data);
+ }
+ 
+-static unsigned long bts_buffer_offset(struct bts_buffer *buf, unsigned int idx)
++static unsigned long bts_buffer_offset(struct bts_buffer *bb, unsigned int idx)
+ {
+-	return buf->buf[idx].offset + buf->buf[idx].displacement;
++	return bb->buf[idx].offset + bb->buf[idx].displacement;
+ }
+ 
+ static void
+-bts_config_buffer(struct bts_buffer *buf)
++bts_config_buffer(struct bts_buffer *bb)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
+-	struct bts_phys *phys = &buf->buf[buf->cur_buf];
++	struct bts_phys *phys = &bb->buf[bb->cur_buf];
+ 	unsigned long index, thresh = 0, end = phys->size;
+ 	struct page *page = phys->page;
+ 
+-	index = local_read(&buf->head);
++	index = local_read(&bb->head);
+ 
+-	if (!buf->snapshot) {
+-		if (buf->end < phys->offset + buf_size(page))
+-			end = buf->end - phys->offset - phys->displacement;
++	if (!bb->snapshot) {
++		if (bb->end < phys->offset + buf_size(page))
++			end = bb->end - phys->offset - phys->displacement;
+ 
+ 		index -= phys->offset + phys->displacement;
+ 
+@@ -168,7 +166,7 @@ bts_config_buffer(struct bts_buffer *buf)
+ 	ds->bts_buffer_base = (u64)(long)page_address(page) + phys->displacement;
+ 	ds->bts_index = ds->bts_buffer_base + index;
+ 	ds->bts_absolute_maximum = ds->bts_buffer_base + end;
+-	ds->bts_interrupt_threshold = !buf->snapshot
++	ds->bts_interrupt_threshold = !bb->snapshot
+ 		? ds->bts_buffer_base + thresh
+ 		: ds->bts_absolute_maximum + BTS_RECORD_SIZE;
+ }
+@@ -184,16 +182,16 @@ static void bts_update(struct bts_ctx *bts)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
+-	struct bts_buffer *buf = perf_get_aux(&bts->handle);
++	struct bts_buffer *bb = perf_get_aux(&bts->handle);
+ 	unsigned long index = ds->bts_index - ds->bts_buffer_base, old, head;
+ 
+-	if (!buf)
++	if (!bb)
+ 		return;
+ 
+-	head = index + bts_buffer_offset(buf, buf->cur_buf);
+-	old = local_xchg(&buf->head, head);
++	head = index + bts_buffer_offset(bb, bb->cur_buf);
++	old = local_xchg(&bb->head, head);
+ 
+-	if (!buf->snapshot) {
++	if (!bb->snapshot) {
+ 		if (old == head)
+ 			return;
+ 
+@@ -205,9 +203,9 @@ static void bts_update(struct bts_ctx *bts)
+ 		 * old and head are always in the same physical buffer, so we
+ 		 * can subtract them to get the data size.
+ 		 */
+-		local_add(head - old, &buf->data_size);
++		local_add(head - old, &bb->data_size);
+ 	} else {
+-		local_set(&buf->data_size, head);
++		local_set(&bb->data_size, head);
+ 	}
+ 
+ 	/*
+@@ -218,7 +216,7 @@ static void bts_update(struct bts_ctx *bts)
+ }
+ 
+ static int
+-bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
++bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle);
+ 
+ /*
+  * Ordering PMU callbacks wrt themselves and the PMI is done by means
+@@ -232,17 +230,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
+ static void __bts_event_start(struct perf_event *event)
+ {
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf = perf_get_aux(&bts->handle);
++	struct bts_buffer *bb = perf_get_aux(&bts->handle);
+ 	u64 config = 0;
+ 
+-	if (!buf->snapshot)
++	if (!bb->snapshot)
+ 		config |= ARCH_PERFMON_EVENTSEL_INT;
+ 	if (!event->attr.exclude_kernel)
+ 		config |= ARCH_PERFMON_EVENTSEL_OS;
+ 	if (!event->attr.exclude_user)
+ 		config |= ARCH_PERFMON_EVENTSEL_USR;
+ 
+-	bts_config_buffer(buf);
++	bts_config_buffer(bb);
+ 
+ 	/*
+ 	 * local barrier to make sure that ds configuration made it
+@@ -261,13 +259,13 @@ static void bts_event_start(struct perf_event *event, int flags)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 
+-	buf = perf_aux_output_begin(&bts->handle, event);
+-	if (!buf)
++	bb = perf_aux_output_begin(&bts->handle, event);
++	if (!bb)
+ 		goto fail_stop;
+ 
+-	if (bts_buffer_reset(buf, &bts->handle))
++	if (bts_buffer_reset(bb, &bts->handle))
+ 		goto fail_end_stop;
+ 
+ 	bts->ds_back.bts_buffer_base = cpuc->ds->bts_buffer_base;
+@@ -306,27 +304,27 @@ static void bts_event_stop(struct perf_event *event, int flags)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf = NULL;
++	struct bts_buffer *bb = NULL;
+ 	int state = READ_ONCE(bts->state);
+ 
+ 	if (state == BTS_STATE_ACTIVE)
+ 		__bts_event_stop(event, BTS_STATE_STOPPED);
+ 
+ 	if (state != BTS_STATE_STOPPED)
+-		buf = perf_get_aux(&bts->handle);
++		bb = perf_get_aux(&bts->handle);
+ 
+ 	event->hw.state |= PERF_HES_STOPPED;
+ 
+ 	if (flags & PERF_EF_UPDATE) {
+ 		bts_update(bts);
+ 
+-		if (buf) {
+-			if (buf->snapshot)
++		if (bb) {
++			if (bb->snapshot)
+ 				bts->handle.head =
+-					local_xchg(&buf->data_size,
+-						   buf->nr_pages << PAGE_SHIFT);
++					local_xchg(&bb->data_size,
++						   bb->nr_pages << PAGE_SHIFT);
+ 			perf_aux_output_end(&bts->handle,
+-			                    local_xchg(&buf->data_size, 0));
++					    local_xchg(&bb->data_size, 0));
+ 		}
+ 
+ 		cpuc->ds->bts_index = bts->ds_back.bts_buffer_base;
+@@ -382,19 +380,19 @@ void intel_bts_disable_local(void)
+ }
+ 
+ static int
+-bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
++bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle)
+ {
+ 	unsigned long head, space, next_space, pad, gap, skip, wakeup;
+ 	unsigned int next_buf;
+ 	struct bts_phys *phys, *next_phys;
+ 	int ret;
+ 
+-	if (buf->snapshot)
++	if (bb->snapshot)
+ 		return 0;
+ 
+-	head = handle->head & ((buf->nr_pages << PAGE_SHIFT) - 1);
++	head = handle->head & ((bb->nr_pages << PAGE_SHIFT) - 1);
+ 
+-	phys = &buf->buf[buf->cur_buf];
++	phys = &bb->buf[bb->cur_buf];
+ 	space = phys->offset + phys->displacement + phys->size - head;
+ 	pad = space;
+ 	if (space > handle->size) {
+@@ -403,10 +401,10 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 	}
+ 	if (space <= BTS_SAFETY_MARGIN) {
+ 		/* See if next phys buffer has more space */
+-		next_buf = buf->cur_buf + 1;
+-		if (next_buf >= buf->nr_bufs)
++		next_buf = bb->cur_buf + 1;
++		if (next_buf >= bb->nr_bufs)
+ 			next_buf = 0;
+-		next_phys = &buf->buf[next_buf];
++		next_phys = &bb->buf[next_buf];
+ 		gap = buf_size(phys->page) - phys->displacement - phys->size +
+ 		      next_phys->displacement;
+ 		skip = pad + gap;
+@@ -431,8 +429,8 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 				 * anymore, so we must not be racing with
+ 				 * bts_update().
+ 				 */
+-				buf->cur_buf = next_buf;
+-				local_set(&buf->head, head);
++				bb->cur_buf = next_buf;
++				local_set(&bb->head, head);
+ 			}
+ 		}
+ 	}
+@@ -445,7 +443,7 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 		space -= space % BTS_RECORD_SIZE;
+ 	}
+ 
+-	buf->end = head + space;
++	bb->end = head + space;
+ 
+ 	/*
+ 	 * If we have no space, the lost notification would have been sent when
+@@ -462,7 +460,7 @@ int intel_bts_interrupt(void)
+ 	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
+ 	struct bts_ctx *bts;
+ 	struct perf_event *event;
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 	s64 old_head;
+ 	int err = -ENOSPC, handled = 0;
+ 
+@@ -485,8 +483,8 @@ int intel_bts_interrupt(void)
+ 	if (READ_ONCE(bts->state) == BTS_STATE_STOPPED)
+ 		return handled;
+ 
+-	buf = perf_get_aux(&bts->handle);
+-	if (!buf)
++	bb = perf_get_aux(&bts->handle);
++	if (!bb)
+ 		return handled;
+ 
+ 	/*
+@@ -494,26 +492,26 @@ int intel_bts_interrupt(void)
+ 	 * there's no other way of telling, because the pointer will
+ 	 * keep moving
+ 	 */
+-	if (buf->snapshot)
++	if (bb->snapshot)
+ 		return 0;
+ 
+-	old_head = local_read(&buf->head);
++	old_head = local_read(&bb->head);
+ 	bts_update(bts);
+ 
+ 	/* no new data */
+-	if (old_head == local_read(&buf->head))
++	if (old_head == local_read(&bb->head))
+ 		return handled;
+ 
+-	perf_aux_output_end(&bts->handle, local_xchg(&buf->data_size, 0));
++	perf_aux_output_end(&bts->handle, local_xchg(&bb->data_size, 0));
+ 
+-	buf = perf_aux_output_begin(&bts->handle, event);
+-	if (buf)
+-		err = bts_buffer_reset(buf, &bts->handle);
++	bb = perf_aux_output_begin(&bts->handle, event);
++	if (bb)
++		err = bts_buffer_reset(bb, &bts->handle);
+ 
+ 	if (err) {
+ 		WRITE_ONCE(bts->state, BTS_STATE_STOPPED);
+ 
+-		if (buf) {
++		if (bb) {
+ 			/*
+ 			 * BTS_STATE_STOPPED should be visible before
+ 			 * cleared handle::event
