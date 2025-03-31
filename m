@@ -1,234 +1,118 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6DC3234;
-	Mon, 31 Mar 2025 16:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439644; cv=pass; b=hFyhwFAtlxJp9eLBfzZwZ3V1yB/v2hPLEIrSzSj+KOB86LShQgQQfckT/h/868wBVQ5u/JUdNxTrKhWfRQPhIaODnk/SEdkfilUhxEQNJ6xI3yCymXpFrpWal3L2ZFuf9HIeQK+dNO+LbOE8ZV2Wb3PlPrjAh67l48ztoyulJA0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439644; c=relaxed/simple;
-	bh=0vlUCrk0+5RCAX0Hlm6MMaWOEWWn3iJwSKKyxtsb69M=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=RJ2hmWiav3O0q1+sxjgeLWgLkLrKHDDAHSWeuEXQf8pfVcEbnEitOH2OAAWT7I7wvFDTyMDAW+J1+19pTnv65ZbviAZKEn4NajA7y/DYFUwJBhv1H2gFnINg5pWEyqQa4wIO3V3B8mgrbrviPszOInJRqAG/hpFRC/O9Svln+SY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=jWgKUsa0; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="jWgKUsa0"
-ARC-Seal: i=1; a=rsa-sha256; t=1743439606; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QD7mAiUTvUL4jNnp9uEif+fQ5An18gxisD4YqnDAFEY2gmkLOG6ftvht+AN3zNTMEpTyQkFzT2yLQ6gzr7qV+ye4z+uGOd+hcqYr97UHxVJebvKr+3PWAWzTwAkRVlQ2l2Ds4mMjnVnNdwDrcYJ7xyr17wxb1s6fEXK4W+Rtf4g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743439606; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=F+Ki+s1FhlzIig2fQE6VQlydduQOlAiMcuRkAel+8Jw=; 
-	b=H2D3pboqyyEvyDLMw+hfm3bFZc6qSDqZ05FLiUcbwW6qjElHIjs/2VwhYYXBDtFoTZCs4DXev1FyLYmVbrIz9QNLSfNPr7aZIavX3d5U75RNhEAA0i0qbfCpYQHf3kBom5g6TXJtHraOATo0SayjCLob7vq7/FGYWz+m4onlKf0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743439606;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=F+Ki+s1FhlzIig2fQE6VQlydduQOlAiMcuRkAel+8Jw=;
-	b=jWgKUsa0p6R+JVR7Yzgf+pO/gH1I2G6011ECzfQMAmcOF/OwXrv4DQ7KOFInTsIX
-	pGpNU1iaywSwNtBGiSZVq09oVqhTh6QEakBuwZM5CexVhG0Ju89okGzkl2t5PcK4Z7o
-	mXqKU2tLjDAsh6t8/3kmrQETSkC1SEOjIUMbWDjU=
-Received: by mx.zohomail.com with SMTPS id 1743439604019510.32565357923045;
-	Mon, 31 Mar 2025 09:46:44 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3462E630;
+	Mon, 31 Mar 2025 16:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743439720; cv=none; b=pnLYCVOdT1KWbmYVJ4qIUzdcW9WT+ogURXbRnq8E15locRo4O83ubcShDv0lA4RTIBNvF8cYTvfUKw8QyMBNrUtwPQ17bzk2wPBrZGszCvnoAAs2p2vqWztXsa/NvG0B+7MgTFbBnXz6EMHxYH1ALTlJ9Q7ED8lEQXQzsHkhvdU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743439720; c=relaxed/simple;
+	bh=CHf4F+Vs2THX+O+eioOWULMiJfIIbhKmgIxfWXMsmMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T9MOQs67utp0cmEtV/2uGdCBESH5I3T4V8DNvs/wOSiVXGFJQDC0o6RxRDl1mA20plArmu2y9xqObUTGvAogUQMCJ6JIRLzlZCtiLOsz6CkqFkp4hDrU1bZL8UVYjVosAFxt6g+iU7FiHx/PVZsRbQYzrZjrB75XOn2cqpK7crA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so455795066b.3;
+        Mon, 31 Mar 2025 09:48:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743439717; x=1744044517;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5E8+H59wzbXfu7vdIDwS2i7uceTsCJ9EpwxfmQG2Njk=;
+        b=ZMWPTSVjR2eK4PcVTv96kWC6dmV7o9brf3sZZFNAHgC87ObVss6Vwa9lEvSsgmUc11
+         ptevtVjqo+wO3c0Qc4/uZpS9jCAy1cAlKqns8gmscKusKfYBdBv0DYs4i78hjje3zuIH
+         AA9fd42poZpLkOeh7FZVZXwywnS+lLH3z+Vk9Bj9QZHdWO/m+uAXimD5hfloTWFqjlKL
+         9UBOdUVvovFaxrRibnSEYiGwqwe3TYCb4cjfYjQefLj0ePv7dG026MMjwa2j0H02ryxE
+         e4t4ZTrXkBc9mWov8mZcsg1am6d8la77KRi7DlVYzU37AWSiIJtbBKftealmzKaDQPa/
+         VKew==
+X-Forwarded-Encrypted: i=1; AJvYcCUUsbXAr6Mq1GWiGbwy+hOyT4JVNHUld1q2Mav4XNUArZVy2Uuda/LDh7xDjUAe3ajSWjvvDiUj@vger.kernel.org, AJvYcCXeOHq5J48V8QQf77cG4Fn9stbQJPRfGnfJfYyWI93sjgfXrPWmyRljA79pYLmxAXSn0/T3gCpukIdbfP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC9AJewNlUMUumsXVKWRyMdKYOZRxA/11UR+1vjAUNnIOmBmmG
+	LG02ymjX6YjI0osBZRm/EgJUwhNX4HSlKVgx53+/Bm2cQtzAp16s
+X-Gm-Gg: ASbGncvZJlEQZYxkeAH9SSZ+NnX1pBAYAmLRKtHEZ8c7RJG7mjHcLE3rMr8E59NfOvV
+	Vj+PlrWev46mPa0KkORD0T3aLI3KgtCKY0IHTshneFdlIXWM6UanycW6fYVGI9FHhkPm1+UgPLE
+	aimoQFt/R5y84j8i4IRf9+Y+8YyMpV4Snnn/pvsbMkcQACKvVRA6g8cYpvHEa/hlMykqVjYx/Ez
+	KRTWJJ3WS13j/R7jemVndybkOHUV88zdwsGPRgT4XvO5H4TnjPX6XocL3FcFV1SbM4qr1l6Xt01
+	ILX+BdZL4c2xfb/vy6nccw3rWW/KsNlOixg=
+X-Google-Smtp-Source: AGHT+IG9Hetq4icmncBIQ+Sho5r6qqCRy3N2GORfFwLBOGtVM5myc3g/zvhQdJi3y87ufObaGZ6lBQ==
+X-Received: by 2002:a17:907:7fa5:b0:ac4:16a:1863 with SMTP id a640c23a62f3a-ac738a50991mr890792466b.26.1743439717179;
+        Mon, 31 Mar 2025 09:48:37 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b027sm639547066b.47.2025.03.31.09.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 09:48:36 -0700 (PDT)
+Date: Mon, 31 Mar 2025 09:48:34 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Waiman Long <llong@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	aeh@meta.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with
+ expedited RCU synchronization
+Message-ID: <Z+rHYq0ItKiyshMY@gmail.com>
+References: <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
+ <Z-MHHFTS3kcfWIlL@boqun-archlinux>
+ <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
+ <Z-OPya5HoqbKmMGj@Mac.home>
+ <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
+ <37bbf28f-911a-4fea-b531-b43cdee72915@redhat.com>
+ <Z-QvvzFORBDESCgP@Mac.home>
+ <712657fb-36bc-40d8-9acc-d19f54586c0c@redhat.com>
+ <1554a0dd-9485-4f09-8800-f06439d143e0@paulmck-laptop>
+ <67e44a9f.050a0220.31c403.3ad3@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v5 05/13] scripts: generate_rust_analyzer.py: drop
- `"is_proc_macro": false`
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250325-rust-analyzer-host-v5-5-385e7f1e1e23@gmail.com>
-Date: Mon, 31 Mar 2025 13:46:27 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C35C7A09-A25B-445B-8C35-D75FB2F6FBDE@collabora.com>
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
- <20250325-rust-analyzer-host-v5-5-385e7f1e1e23@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67e44a9f.050a0220.31c403.3ad3@mx.google.com>
 
-Hi Tamir
+Hello Boqun, Waimn
 
-> On 25 Mar 2025, at 17:06, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Add a dedicated `append_proc_macro_crate` function to reduce =
-overloading
-> in `append_crate`. This has the effect of removing `"is_proc_macro":
-> false` from the output; this field is interpreted as false if =
-absent[1]
-> so this doesn't change the behavior of rust-analyzer.
->=20
-> Link: =
-https://github.com/rust-lang/rust-analyzer/blob/8d01570b5e812a49daa1f08404=
-269f6ea5dd73a1/crates/project-model/src/project_json.rs#L372-L373 [1]
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> scripts/generate_rust_analyzer.py | 55 =
-+++++++++++++++++++++++++++------------
-> 1 file changed, 39 insertions(+), 16 deletions(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index 71e6038964f6..80eb21c0d082 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -41,13 +41,11 @@ def generate_crates(srctree, objtree, sysroot_src, =
-external_src, cfgs):
->         deps,
->         cfg=3D[],
->         is_workspace_member=3DTrue,
-> -        is_proc_macro=3DFalse,
->     ):
-> -        crate =3D {
-> +        return {
->             "display_name": display_name,
->             "root_module": str(root_module),
->             "is_workspace_member": is_workspace_member,
-> -            "is_proc_macro": is_proc_macro,
->             "deps": [{"crate": crates_indexes[dep], "name": dep} for =
-dep in deps],
->             "cfg": cfg,
->             "edition": "2021",
-> @@ -55,13 +53,6 @@ def generate_crates(srctree, objtree, sysroot_src, =
-external_src, cfgs):
->                 "RUST_MODFILE": "This is only for rust-analyzer"
->             }
->         }
-> -        if is_proc_macro:
-> -            proc_macro_dylib_name =3D subprocess.check_output(
-> -                [os.environ["RUSTC"], "--print", "file-names", =
-"--crate-name", display_name, "--crate-type", "proc-macro", "-"],
-> -                stdin=3Dsubprocess.DEVNULL,
-> -            ).decode('utf-8').strip()
-> -            crate["proc_macro_dylib_path"] =3D =
-f"{objtree}/rust/{proc_macro_dylib_name}"
-> -        return crate
->=20
->     def register_crate(crate):
->         crates_indexes[crate["display_name"]] =3D len(crates)
-> @@ -73,14 +64,48 @@ def generate_crates(srctree, objtree, sysroot_src, =
-external_src, cfgs):
->         deps,
->         cfg=3D[],
->         is_workspace_member=3DTrue,
-> -        is_proc_macro=3DFalse,
->     ):
->         register_crate(
->             build_crate(
-> -                display_name, root_module, deps, cfg, =
-is_workspace_member, is_proc_macro
-> +                display_name,
-> +                root_module,
-> +                deps,
-> +                cfg,
-> +                is_workspace_member,
->             )
->         )
->=20
-> +    def append_proc_macro_crate(
-> +        display_name,
-> +        root_module,
-> +        deps,
-> +        cfg=3D[],
-> +    ):
-> +        crate =3D build_crate(display_name, root_module, deps, cfg)
-> +        proc_macro_dylib_name =3D (
-> +            subprocess.check_output(
-> +                [
-> +                    os.environ["RUSTC"],
-> +                    "--print",
-> +                    "file-names",
-> +                    "--crate-name",
-> +                    display_name,
-> +                    "--crate-type",
-> +                    "proc-macro",
-> +                    "-",
-> +                ],
-> +                stdin=3Dsubprocess.DEVNULL,
-> +            )
-> +            .decode("utf-8")
-> +            .strip()
-> +        )
-> +        proc_macro_crate =3D {
-> +            **crate,
-> +            "is_proc_macro": True,
-> +            "proc_macro_dylib_path": =
-f"{objtree}/rust/{proc_macro_dylib_name}",
-> +        }
-> +        register_crate(proc_macro_crate)
-> +
->     def append_sysroot_crate(
->         display_name,
->         deps,
-> @@ -108,11 +133,10 @@ def generate_crates(srctree, objtree, =
-sysroot_src, external_src, cfgs):
->         [],
->     )
->=20
-> -    append_crate(
-> +    append_proc_macro_crate(
->         "macros",
->         srctree / "rust" / "macros" / "lib.rs",
->         ["std", "proc_macro"],
-> -        is_proc_macro=3DTrue,
->     )
->=20
->     append_crate(
-> @@ -121,12 +145,11 @@ def generate_crates(srctree, objtree, =
-sysroot_src, external_src, cfgs):
->         ["core", "compiler_builtins"],
->     )
->=20
-> -    append_crate(
-> +    append_proc_macro_crate(
->         "pin_init_internal",
->         srctree / "rust" / "pin-init" / "internal" / "src" / "lib.rs",
->         [],
->         cfg=3D["kernel"],
-> -        is_proc_macro=3DTrue,
->     )
->=20
->     append_crate(
->=20
-> --=20
-> 2.49.0
->=20
->=20
+On Wed, Mar 26, 2025 at 11:42:37AM -0700, Boqun Feng wrote:
+> On Wed, Mar 26, 2025 at 10:10:28AM -0700, Paul E. McKenney wrote:
+> > On Wed, Mar 26, 2025 at 01:02:12PM -0400, Waiman Long wrote:
+> [...]
+> > > > > > Thinking about it more, doing it in a lockless way is probably a good
+> > > > > > idea.
+> > > > > > 
+> > > > > If we are using hazard pointer for synchronization, should we also take off
+> > > > > "_rcu" from the list iteration/insertion/deletion macros to avoid the
+> > > > > confusion that RCU is being used?
+> > > > > 
+> > > > We can, but we probably want to introduce a new set of API with suffix
+> > > > "_lockless" or something because they will still need a lockless fashion
+> > > > similar to RCU list iteration/insertion/deletion.
+> > > 
+> > > The lockless part is just the iteration of the list. Insertion and deletion
+> > > is protected by lockdep_lock().
+> > > 
+> > > The current hlist_*_rcu() macros are doing the right things for lockless use
+> > > case too. We can either document that RCU is not being used or have some
+> > > _lockless helpers that just call the _rcu equivalent.
+> > 
+> > We used to have _lockless helper, but we got rid of them.  Not necessarily
+> > meaning that we should not add them back in, but...  ;-)
+> > 
+> 
+> I will probably go with using *_rcu() first with some comments, if this
+> "hazard pointers for hash table" is a good idea in other places, we can
+> add *_hazptr() or pick a better name then.
 
-In terms of testing, a diff shows that the only change to the output is =
-the removal of `is_proc_macro: false`
-as indicated by the commit message.
+I am trying to figure out what are the next steps to get this issue
+solve.
 
-This looks good to me.
+Would you mind help me to understand what _rcu() fuction you are
+suggesting and what will it replace?
 
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-
-=E2=80=94 Daniel
-
+Thank you,
+--breno
