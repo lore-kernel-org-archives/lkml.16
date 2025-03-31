@@ -1,117 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FAA1876
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31130487BE;
+	Mon, 31 Mar 2025 08:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743408456; cv=none; b=bARuf6VXj6R9TJnSQehQat00ENXO6T2RLy0mL4VopSe60rgnKbW9xn2uBI10KTMnm6hQyqdY6WDFMfHV9mn3wnSKhjIuAyo4u238tfVR9hatN7ek0rODilfGAV7nU9Z1Z7Sl7RS4mSBCCUaOhmIzoweNn2ax5hS8WbJ6liY/w/c=
+	t=1743408574; cv=none; b=fiYzglAByDpyUCgM7qxQLkCGK9LqtlFWg6m7MJ3bYMuVbIRxDDO5ZCaSeAQROjtsAVVOx3aULizSxj+G1BMJ+dtekOJTt5u93rRg+tTPNy58zav7zYU4fswRBZETQwHfbxcmxl5bcCrnBCdOH3az9TP6lZobYDDMl2pb4AFOhRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743408456; c=relaxed/simple;
-	bh=tv0nA08POILAAqGWy14m3N6kItXW+3kMFSaB74kI3N0=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=T9S8MrjCwY//jfhagmAih0zhkMwaax3E0gPYWmNIz02RHHGl1yHM+yxwW9rAFJ1V61v2GHFTIof7FY3qKcc9TxVp3CSqMSZVQGh+ELiFzS/rrFluhPdooqrKDqG+D2Kip4RprzZnSiXPtZJXT45T6nhNaC/2bA/pb28PA33b2Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WZ3Wm1hW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743408574; c=relaxed/simple;
+	bh=wh3Ef4aBpntCDkoqe//eDseW1k34c3jT5K5YmBy5R8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2H2L0JdZuTGSFTgMPsH9ufNwK5D6bRgaiEfMruJNl/jEwlX/TeBRfwKj2QSIceu55I+gph7AJfj5xAfQhx2/giE7FoYAkd/KrsPrfz4XMMGrynE2ynFgNdIX2vjL9AAU4S/kGTOrtsaWGvd+4NHEAzbV8QBESFAIeGKP/t6qPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVZxK4Mv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ3Wm1hW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743408452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rPsm0V0jwFb/CAGVhHad9xohOJQN3D43emc/SoqswrQ=;
-	b=WZ3Wm1hWDPQ4xBArW+x9aXmj3mpBKhGFtpDaZ3SUPwTQxyxPaAcijrakcU0MUubCkxdhu4
-	a4EbBGXK1HtQcu6NtCNvyJ2XzDyTdrJJ4y2OCeB/nSgww8qBLxZTAG0XotGmH+9NfxOYAv
-	P9LIh4j6hyr0flAdofT7SbdvsC9ffWw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-uuJCcDvUPr6b67F_9SHU7A-1; Mon,
- 31 Mar 2025 04:07:29 -0400
-X-MC-Unique: uuJCcDvUPr6b67F_9SHU7A-1
-X-Mimecast-MFC-AGG-ID: uuJCcDvUPr6b67F_9SHU7A_1743408448
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7AB2619560BB;
-	Mon, 31 Mar 2025 08:07:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED69E180A803;
-	Mon, 31 Mar 2025 08:07:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <67e93870.050a0220.1547ec.00a5.GAE@google.com>
-References: <67e93870.050a0220.1547ec.00a5.GAE@google.com>
-To: syzbot <syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
-    linux-kernel@vger.kernel.org, marc.dionne@auristor.com,
-    syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] KASAN: slab-use-after-free Read in afs_dynroot_readdir
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVZxK4Mv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0982C4CEE3;
+	Mon, 31 Mar 2025 08:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743408573;
+	bh=wh3Ef4aBpntCDkoqe//eDseW1k34c3jT5K5YmBy5R8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dVZxK4MvrqaZJbnEoAUUM+ton446gvY1jaHiSwlGtDGLozvG/yFxJOrTc1B/rooj2
+	 5Tbg9NwfQ0qBrL0PXJyX90IsWmGP5TOCNRFbFbeqckyEoeF919D8OQflcBCi9zq+QU
+	 QTDaKkIqWzFWRAhLbobsPoYx16hQpJIPPY30WAZFQNO3DxdO5yq1fuNYva8U7GF3CB
+	 v7SDMM2GC6LHrayIu+wSU9nyaFF7wu2Nf+yWUoYl5yyI3Wn6ZaTBSIWgBepu6/W+2X
+	 I26Rw1fnXDdDCuFbuNxl7b4DsOd9JEzGu7tRpq8EcvRVcw3FVp+e35Ls3b+s/O9fBn
+	 vcgIadcw1V2og==
+Date: Mon, 31 Mar 2025 10:09:30 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pin-yen Lin <treapking@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, 
+	linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: usb: Add binding for PS5511 hub
+ controller
+Message-ID: <20250331-loud-micro-booby-e0fd4a@krzk-bin>
+References: <20250328082950.1473406-1-treapking@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <164891.1743408445.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Mar 2025 09:07:25 +0100
-Message-ID: <164892.1743408445@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250328082950.1473406-1-treapking@chromium.org>
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
+On Fri, Mar 28, 2025 at 04:28:45PM +0800, Pin-yen Lin wrote:
+> +
+> +title: PS5511 4+1 Port USB 3.2 Gen 1 Hub Controller
 
-commit db7a516159869b19f237c73bd75599bbe0bfcc4d
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Mar 28 16:46:58 2025 +0000
+s/PS5511/Parade PS5511/
 
-    afs: Fix afs_dynroot_readdir() to not use the RCU read lock
-    =
+> +
+> +maintainers:
+> +  - Pin-yen Lin <treapking@chromium.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - usb1da0,5511
+> +      - usb1da0,55a1
+> +
+> +  reg: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  reset-gpios:
+> +    items:
+> +      - description: GPIO specifier for GRST# pin.
+> +
+> +  vddd11-supply:
+> +    description:
+> +      1V1 power supply to the hub
+> +
+> +  vdd33-supply:
+> +    description:
+> +      3V3 power supply to the hub
+> +
+> +  peer-hub:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to the peer hub on the controller.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
 
-    afs_dynroot_readdir() uses the RCU read lock to walk the cell list whi=
-lst
-    emitting cell automount entries - but dir_emit() may write to a usersp=
-ace
-    buffer, thereby causing a fault to occur and waits to happen.
-    =
+I don't understand why do you need OF graph here. Children are already
+defined in patternProperties as usb-devices.
 
-    Fix afs_dynroot_readdir() to get a shared lock on net->cells_lock inst=
-ead.
-    =
+Where is any upstream DTS using this schema?
 
-    Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand=
-")
-    Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: Marc Dionne <marc.dionne@auristor.com>
-    cc: linux-afs@lists.infradead.org
-    cc: linux-fsdevel@vger.kernel.org
+> +
+> +    properties:
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description:
+> +          1st downstream facing USB port
+> +
+> +      port@2:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description:
+> +          2nd downstream facing USB port
+> +
+> +      port@3:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description:
+> +          3rd downstream facing USB port
+> +
+> +      port@4:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description:
+> +          4th downstream facing USB port
+> +
+> +      port@5:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description:
+> +          5th downstream facing USB port
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - peer-hub
+> +
+> +patternProperties:
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 691e0ae607a1..8c6130789fde 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
-ct dir_context *ctx)
- 	}
- =
+patternProperties follow immediately properties, so move it up.
 
- 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
--		rcu_read_lock();
-+		down_read(&net->cells_lock);
- 		ret =3D afs_dynroot_readdir_cells(net, ctx);
--		rcu_read_unlock();
-+		up_read(&net->cells_lock);
- 	}
- 	return ret;
- }
+> +  '^.*@[1-5]$':
+> +    description: The hard wired USB devices
+> +    type: object
+> +    $ref: /schemas/usb/usb-device.yaml
+> +    additionalProperties: true
+> +
+> +additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: usb-device.yaml#
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            enum:
+> +              - usb1da0,usb55a1
+> +    then:
+> +      properties:
+> +        port@5: false
+
+No such property.
+
+Best regards,
+Krzysztof
 
