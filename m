@@ -1,147 +1,97 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C892AF10
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4E5214204
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743436526; cv=none; b=Kbv0YbhtANph1NWkR8efoHE0f94hDb6F7eccqT28BZvgPzye4dXXERlY0e/OZ8DHUmwIuhvqshUOBMV7eOYKalHOOouxb39fH3JWIW+tAn2f85gQ4cHRU7m91dU6vkqT87X94h2K0ougvo64SePQ/B1ue7MlW9K4DFWd+ogzXGE=
+	t=1743436602; cv=none; b=eEuRlZCbgdIL4MhTgmgO8YzNNVIGw6k1sHmE3XueATQHW9+oZqxjMHvQS7uVWh/s2Y4s2fCEp1snVczuBoMGerX0fMuHspw8ul9vStg6YDSj48eM2hs/LRdPyiyYZfhRLk3/0VWVf92ihcFE6OSWtILODnmLtlASv+g34ilN1t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743436526; c=relaxed/simple;
-	bh=IcngPgR6M5TB8qYn6mtbX/fvCkHZoBGXi45TirQJw64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VEjVyeGq8tPy8NPVf9uDu9Hb4AKwPy6Ec1TD6/bRE5gdlTLRkcKt5CUQoANfOzzicPxbCA3RbyQEMpGDCyVEgbilwZ//PLJwoLrNydmkGZTQaoeeUIDSiIm3wMRsQYVg+gFv4fL9LV0UswtuaZI4cT8N+GIocawpYAcd6+H81MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=0SI0X208; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743436602; c=relaxed/simple;
+	bh=2abXrR4+mWG+w1ZabCiucgs7zJIV275nfqlxRz+6dpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jHfXY++nVSVRBoUfghDOZuua0TAFlQTsNy3ee2iOVGqPI4NQq9Dp6wOODQcHyw4GnIzhpGBob5rEC13D77Qhue2+ELs8GdqEhaRHrLPq+qSM0WIQjIUU9FNs+jU3vq44IT16aC61JM4s2p84yO9vlawaT/+b2GZ8lLPr7HYYLio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ecnURH+E; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="0SI0X208"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c56a3def84so478715685a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743436522; x=1744041322; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b9rmBmcbSh4OaQUIolxNDWwr8B+JGcf4MNJtJY/uDPg=;
-        b=0SI0X208nCoubl4UPVRGn8qhYxMTLfiB96HKxEXcyHPLsXXOswvxirB7eKPlZRZnMt
-         HmBxe8CziiChP5rLMA05whUmC9boQhpuBx7f9LLwg/e+o1FSHFgLv6X6IJvH/WwzbiHe
-         qAmMFbP/Y8nzmY5UFNUEP9s68n9zAcB6kGva6SNCG2MP97K4YcZphcUHlXna20uqiQux
-         xi1R80AVU3gmQ7nKqGNz/RlcKkPEIseloDflPNyjglVVgkgSAsNralwkd/gAWb4WzdhQ
-         PL09fNEJkwzDRTkRU4mOTrdXlcc/4m09QN/jugYD/Xu24p1iLbzpvryUFO9uVZYExk75
-         pssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743436522; x=1744041322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b9rmBmcbSh4OaQUIolxNDWwr8B+JGcf4MNJtJY/uDPg=;
-        b=V49jU0vIYg+CPlYvN/iGdGtHmT0L37fMcIu/ge7tmQLP/I0MxtFMgHIu2hf/hnfUQw
-         5iiGbNd74+yoRdJbejPRb7WHpsaSNlO7FgymbaiX0RHV3B163Ss5JVP42x5Nl4Nb/gqd
-         QD6gQeoaHjA3T1QxebPwDnW8e3c5w/T2ekYHFIY+XVblK+q0BVwbEgYPNIET7glUatsI
-         ccWj5SQG505at8Vmizd8OGYav96OFRboERcAkeyfW/ot57vBtcavCwRSFT189TIV0gP4
-         KOS1QHEkVvKz1H6UfLEJl/Z9uYnoS+j1+q3uzBsLZlNffPwzeGTnXPut6jXsxp4VB14r
-         O37g==
-X-Forwarded-Encrypted: i=1; AJvYcCXD3599EbazDr5PeOMG2QiWpQXoMFpJTSVmDf4JcDwqp/X73+hvO+mSXCDO1jT2D2gr4wp050nKeZDQhr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlF4IVh6QTgVdIUWVeJB2/rMSql+JA2kzVMzy7LsVPzKrCLzrz
-	obrwmC0rvGo3Q1fh4lZPjKktlh5cPq3rIfYzZ+WgsLXAPshqAWhSvuH0ksWV+yBHhzbAWMVid6E
-	w
-X-Gm-Gg: ASbGncuHYbnSvF29KhkuTbxivLeWZG398VfgzKjLXXNJCuR5YM2qiFFtOUtzg2Mbs6W
-	tZxc8UuFqG6wmh2KqxVti23Sn9dpOB5+ibm1sLLW5Ps13uTn01nJBSnSzsOhLH7VNqvfqndq6Nl
-	pNNszLh7wj5EPw0SKYhWDr08CLXQ8gTC33/v6p8Rtc30FxoaYKYIYP8OBUUGeCes7ELpBkIEoES
-	4YSXEgiVWErIl/A2Qru5ORRkfiuV7ZzzCmwo70IeOLmEejySM6d8nXNUnkY7kXFdeIXf0z0UYcZ
-	7HaClW8jgWTztVyjtPWL2LepJDhfSVpLKpXJFAOWREo=
-X-Google-Smtp-Source: AGHT+IE/9Hreu+XjtQKS3KMlZ8K6ykg5PwpmolFGFyVQO4qrJ0x7e31qsA952paxEM+UPVjR9yTRbg==
-X-Received: by 2002:a05:620a:8110:b0:7c5:9769:3da8 with SMTP id af79cd13be357-7c69087dd3fmr1235417885a.43.1743436522201;
-        Mon, 31 Mar 2025 08:55:22 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-478bef25a69sm34846411cf.37.2025.03.31.08.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 08:55:21 -0700 (PDT)
-Date: Mon, 31 Mar 2025 11:55:17 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] mm: page_alloc: defrag_mode
-Message-ID: <20250331155517.GB2110528@cmpxchg.org>
-References: <20250313210647.1314586-1-hannes@cmpxchg.org>
- <20250313210647.1314586-4-hannes@cmpxchg.org>
- <D8MVZ8L12HJN.1LN4G4H0ESLY6@google.com>
- <20250323005823.GB1894930@cmpxchg.org>
- <20250323013405.GC1894930@cmpxchg.org>
- <20250323034657.GD1894930@cmpxchg.org>
- <D8NUEJHT150J.17YZMGLU54JG7@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ecnURH+E"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D699742D46;
+	Mon, 31 Mar 2025 15:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743436591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2abXrR4+mWG+w1ZabCiucgs7zJIV275nfqlxRz+6dpk=;
+	b=ecnURH+EgrNOfJqAbCnbQ0EtR5oarltkIX5/pZWQ7qgT7Jw6L3V3y9/D7+hZEseUKp7vwK
+	XIUQOTwmd8ow4qiwEh+MU41cxdl4pJTgUlV5TMoq2ELiMU2hEo2I4oU7s/hJOCJi6UsLpj
+	kD3xKkaPDxgwvVmNZzuNR//+rWOVLDQDR43v4TEY5xhPAd1bld5/Qk+SsRLGQpjzJTcuOs
+	USwgVecUeg/IfVzaCR/saQAejx08g2jWPMa3/6ThcZZovUFd9SWtzkTXcT73gROSqma5s9
+	oAvj/kjEemN+yJdyi7wh1n3ioPOamBvl8A+/AHUdF4n9oY29DwGxOHv1z9GJqg==
+Date: Mon, 31 Mar 2025 17:56:25 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] drm/panel/panel-simple: Use the new allocation
+ in place of devm_kzalloc()
+Message-ID: <20250331175625.505d616e@booty>
+In-Reply-To: <CAN9Xe3SzU0AohuBnyJtE0UWFkrW0iMGKH1F8cuUZYLZ-vbfkpw@mail.gmail.com>
+References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
+	<20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
+	<20250328095351.7bac2d4d@booty>
+	<CAN9Xe3SzU0AohuBnyJtE0UWFkrW0iMGKH1F8cuUZYLZ-vbfkpw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8NUEJHT150J.17YZMGLU54JG7@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfekieegtefhgeelieehhefgtdekffevgfegvdeggeelkeehjeetteethfevudfgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepjeekrddvtdelrdejfedrudelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeejkedrvddtledrjeefrdduleeipdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehquhhitggpjhgvshhsiihhrghnsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhin
+ hhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hi Brendan,
+On Fri, 28 Mar 2025 12:09:08 -0400
+Anusha Srivatsa <asrivats@redhat.com> wrote:
 
-On Sun, Mar 23, 2025 at 07:04:29PM +0100, Brendan Jackman wrote:
-> On Sun Mar 23, 2025 at 4:46 AM CET, Johannes Weiner wrote:
-> > On Sat, Mar 22, 2025 at 09:34:09PM -0400, Johannes Weiner wrote:
-> > > On Sat, Mar 22, 2025 at 08:58:27PM -0400, Johannes Weiner wrote:
-> > > > On Sat, Mar 22, 2025 at 04:05:52PM +0100, Brendan Jackman wrote:
-> > > > > On Thu Mar 13, 2025 at 10:05 PM CET, Johannes Weiner wrote:
-> > > > > > +	/* Reclaim/compaction failed to prevent the fallback */
-> > > > > > +	if (defrag_mode) {
-> > > > > > +		alloc_flags &= ALLOC_NOFRAGMENT;
-> > > > > > +		goto retry;
-> > > > > > +	}
-> > > > > 
-> > > > > I can't see where ALLOC_NOFRAGMENT gets cleared, is it supposed to be
-> > > > > here (i.e. should this be ~ALLOC_NOFRAGMENT)?
-> > > 
-> > > Please ignore my previous email, this is actually a much more severe
-> > > issue than I thought at first. The screwed up clearing is bad, but
-> > > this will also not check the flag before retrying, which means the
-> > > thread will retry reclaim/compaction and never reach OOM.
-> > > 
-> > > This code has weeks of load testing, with workloads fine-tuned to
-> > > *avoid* OOM. A blatant OOM test shows this problem immediately.
-> > > 
-> > > A simple fix, but I'll put it through the wringer before sending it.
+> On Fri, Mar 28, 2025 at 4:54=E2=80=AFAM Luca Ceresoli <luca.ceresoli@boot=
+lin.com>
+> wrote:
+>=20
+> > On Thu, 27 Mar 2025 10:55:42 -0400
+> > Anusha Srivatsa <asrivats@redhat.com> wrote:
+> > =20
+> > > Start using the new helper that does the refcounted
+> > > allocations.
+> > >
+> > > v2: check error condition (Luca) =20
 > >
-> > Ok, here is the patch. I verified this with intentional OOMing 100
-> > times in a loop; this would previously lock up on first try in
-> > defrag_mode, but kills and recovers reliably with this applied.
+> > Here as well, when you resend, move the changelog after the '---' line.
 > >
-> > I also re-ran the full THP benchmarks, to verify that erroneous
-> > looping here did not accidentally contribute to fragmentation
-> > avoidance and thus THP success & latency rates. They were in fact not;
-> > the improvements claimed for defrag_mode are unchanged with this fix:
-> 
-> Sounds good :)
-> 
-> Off topic, but could you share some details about the
-> tests/benchmarks you're running here? Do you have any links e.g. to
-> the scripts you're using to run them?
+> > =20
+> Hadn't noticed this. Saw some other series that do follow this method. I
+> will make this change.
 
-Sure! The numbers I quoted here are from a dual workload of kernel
-build and THP allocation bursts. The kernel build is an x86_64
-defconfig, -j16 on 8 cores (no ht). I boot this machine with mem=1800M
-to make sure there is some memory pressure, but not hopeless
-thrashing. Filesystem and conventional swap on an older SATA SSD.
+That's the general rule [0], even though not all maintainers are strict
+about this, so they sometimes get through.
 
-While the kernel builds, every 20s another worker mmaps 80M, madvises
-for THP, measures the time to memset-fault the range in, and unmaps.
+[0] https://docs.kernel.org/process/submitting-patches.html#commentary
 
-THP policy is upstream defaults: enabled=always, defrag=madvise. So
-the kernel build itself will also optimistically consume THPs, but
-only the burst allocations will direct reclaim/compact for them.
+Luca
 
-Aside from that - and this is a lot less scientific - I just run the
-patches on the machines I use every day, looking for interactivity
-problems, kswapd or kcompactd going crazy, and generally paying
-attention to how well they cope under pressure compared to upstream.
-My desktop is an 8G ARM machine (with zswap), so it's almost always
-under some form of memory pressure. It's also using 16k pages and
-order-11 pageblocks (32M THPs), which adds extra spice.
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
