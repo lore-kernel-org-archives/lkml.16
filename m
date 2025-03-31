@@ -1,95 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022D041AAC
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F4A41AAC
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407649; cv=none; b=fQ/GLjiuTPjBWsWtZuGfnhp0SCTiTs3vQe3rlMVKjmiUi6jpOPljuYWSq9ANnjIp2JV7WasceXZ6H2TRjN1eDFQoNoo2xYrCJwN1utCJe3dJ87nyDkRmJOZTiUPqzRTiFesQtIhRe+hJnEien4wGCd6ig32GG3z2b101daSHP3c=
+	t=1743407716; cv=none; b=iawXpj/1hXufV/k1Iny6NOClSEi3byPBEvW7cEfXHm9k01vLTmcTQAhi6GIhtdeNSRLlpXhkg9JmWi5TPh6bR6MdI7ExCXaQ3ui8/gy7hdq7sXBwmEbAJTyJankICWdwOon7rU/G0aHZ8amuVJJPULOUYRx7HvMoXook/+QXbn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407649; c=relaxed/simple;
-	bh=pSOWZdd/MbIKZjh443M8gHoV68P+KisZJPKaJJZIdxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRfp1QsIs3AavbvMrMv6pF3xoR6q/HfpGcxS1679usCyQHY7ZAxNOd2TVygwbcRgdq5wf7/Wa7YT+BvoBle40b6+A25TugzDdS6/QYVaZbWtfXfLXB4TqFDyziGI241DRGF48EOH9WIln931PoAZ6mm40vIJxOsShPz9T5/Ogak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+oaACnb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743407716; c=relaxed/simple;
+	bh=hNnHvg/wEfDA8E3MTGoSHM5qE6jH67fIgWI8rSNxFUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zkr/0dNBeYSgRku/kMhQpkPcLLaZs+bxuQ67+CLzhoAUFLq8clx27Pz8x53tFMd+rowBvmOsGtHhxlZY0X0x0YoS0K9+d5SgyXfbooHqyt1p5KZwq8YrGOyfqt5zcoy9t+4ucczidsHY/UjLL4ZMXbqDWGAak5yugAfbAIOECbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=bwCC02T9; arc=none smtp.client-ip=77.240.19.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+oaACnb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743407646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=snXUyEbtvmR9vqAWor24hXesFNJShZnkZEKY6CqFCEo=;
-	b=J+oaACnbMc9A2lcB/TB79BfJyVpO4okJMUgq4IX0XgE7D6S+mDXzGK7B91SxmhX54N0fhU
-	kUv7/1Kupt33WMGezN3XXs1GptZsLXnZj9wcWSFqTh6GMavjbY/+fbFoNefqzDfTFlQFl5
-	jJPFtDimWr6U0b+RdgcG8CqC5YfiXO4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-563-efZpDS6VPUyk1jmXzLmYFA-1; Mon,
- 31 Mar 2025 03:54:01 -0400
-X-MC-Unique: efZpDS6VPUyk1jmXzLmYFA-1
-X-Mimecast-MFC-AGG-ID: efZpDS6VPUyk1jmXzLmYFA_1743407640
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CA50180087D;
-	Mon, 31 Mar 2025 07:53:59 +0000 (UTC)
-Received: from localhost (unknown [10.43.135.229])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A119C180094A;
-	Mon, 31 Mar 2025 07:53:56 +0000 (UTC)
-Date: Mon, 31 Mar 2025 09:53:53 +0200
-From: Miroslav Lichvar <mlichvar@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
- _COARSE clockids
-Message-ID: <Z-pKEYr01vEaQDIw@localhost>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost>
- <874izezv3c.ffs@tglx>
- <Z-Vx8kV4M3khPknC@localhost>
- <87bjtmxtuc.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="bwCC02T9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sb9hcwin4tLRp3oqgDcx/MjqTaRYlwB2vSQozhYeOj4=; b=bwCC02T90+w20Rigll6t4LOJse
+	ncSrDoAbrpcYMOJlaUZabIrii55xXfB/50d2baNQ0o2q/k2uGQld46Amu876rqHxFKceZCSC3rfGl
+	cimnpaAsO8McDHHL2DCw/QZ4E8Y5M5/Z0xljp0HmVmY7E8qhG9t0wLrejPZ+y+U7uJfNJHxW+px+B
+	uUHpKajSPts78R9zJjsUUcs7hVK6X8/nD0BNDlLjOIHNsvFWeEwY7+k4j2dR1WnqQn5STbOqwc0h5
+	azEndrsep7ppw77ho/HbGrYMQGv8GAi4RrzoU7xT7gdAO/6D7L6YWn9jWFWt/TCra0sp0Cgy+OEOH
+	iA5QCBlQ==;
+Received: from [194.136.85.206] (port=34794 helo=eldfell)
+	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <pekka.paalanen@haloniitty.fi>)
+	id 1tz9z0-0000000021R-2b7A;
+	Mon, 31 Mar 2025 10:54:58 +0300
+Date: Mon, 31 Mar 2025 10:54:46 +0300
+From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Vishal Sagar
+ <vishal.sagar@amd.com>, Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250331105446.098f0fbe@eldfell>
+In-Reply-To: <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+	<20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+	<CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+	<b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+	<20250327112009.6b4dc430@eldfell>
+	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+	<20250327175842.130c0386@eldfell>
+	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bjtmxtuc.ffs@tglx>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: multipart/signed; boundary="Sig_/QZAnc9FdGv0CGGuBeb7Bgcd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - whm50.louhi.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - haloniitty.fi
+X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
+X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Thu, Mar 27, 2025 at 06:32:27PM +0100, Thomas Gleixner wrote:
-> On Thu, Mar 27 2025 at 16:42, Miroslav Lichvar wrote:
-> > On Thu, Mar 27, 2025 at 10:22:31AM +0100, Thomas Gleixner wrote:
-> > To clearly see the difference with the new code, I made an attempt
-> > to update the old linux-tktest simulation that was used back when the
-> > multiplier adjustment was reworked, but there are too many missing
-> > things now and I gave up.
-> 
-> Can you point me to that code?
+--Sig_/QZAnc9FdGv0CGGuBeb7Bgcd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It's this thing: https://github.com/mlichvar/linux-tktest
+On Thu, 27 Mar 2025 17:35:39 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> It would be probably useful to create a test mechanism which allows to
-> exercise all of this in a simulated way so we actually don't have to
-> wonder every time we change a bit what the consequences are.
+> Hi Pekka,
+>=20
+> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
+> <pekka.paalanen@haloniitty.fi> wrote:
+> > On Thu, 27 Mar 2025 16:21:16 +0200
+> > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote: =20
+> > > On 27/03/2025 11:20, Pekka Paalanen wrote: =20
+> > > > On Wed, 26 Mar 2025 15:55:18 +0200
+> > > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote: =20
+> > > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote: =20
+> > > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
+> > > >>> <tomi.valkeinen@ideasonboard.com> wrote: =20
+> > > >>>> Add greyscale Y8 format.
+> > > >>>>
+> > > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> =
+=20
+> > > >>>
+> > > >>> Thanks for your patch!
+> > > >>> =20
+> > > >>>> --- a/include/uapi/drm/drm_fourcc.h
+> > > >>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > > >>>> @@ -405,6 +405,9 @@ extern "C" {
+> > > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4'=
+) /* non-subsampled Cb (1) and Cr (2) planes */
+> > > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4'=
+) /* non-subsampled Cr (1) and Cb (2) planes */
+> > > >>>>
+> > > >>>> +/* Greyscale formats */
+> > > >>>> +
+> > > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y') =
+ /* 8-bit Y-only */ =20
+> > > >>>
+> > > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+> > > >>> the number of bits in the FOURCC format. What do you envision
+> > > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')? =20
+> > > >>
+> > > >> I wanted to use the same fourcc as on V4L2 side. Strictly speaking=
+ it's
+> > > >> not required, but different fourccs for the same formats do confus=
+e.
+> > > >>
+> > > >> So, generally speaking, I'd pick an existing fourcc from v4l2 side=
+ if
+> > > >> possible, and if not, invent a new one. =20
+> > > >
+> > > > what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y=
+8?
+> > > >
+> > > > Is the difference that when R8 gets expanded to RGB, it becomes (R,=
+ 0,
+> > > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 a=
+re
+> > > > defined by MatrixCoefficients (H.273 terminology)?
+> > > >
+> > > > That would be my intuitive assumption following how YCbCr is handle=
+d.
+> > > > Is it obvious enough, or should there be a comment to that effect? =
+=20
+> > >
+> > > You raise an interesting point. Is it defined how a display driver, t=
+hat
+> > > supports R8 as a format, shows R8 on screen? I came into this in the
+> > > context of grayscale formats, so I thought R8 would be handled as (R,=
+ R,
+> > > R) in RGB. But you say (R, 0, 0), which... also makes sense. =20
+> >
+> > That is a good question too. I based my assumption on OpenGL behavior
+> > of R8.
+> >
+> > Single channel displays do exist I believe, but being single-channel,
+> > expansion on the other channels is likely meaningless. Hm, but for the
+> > KMS color pipeline, it would be meaningful, like with a CTM.
+> > Interesting.
+> >
+> > I don't know. Maybe Geert does? =20
+>=20
+> I did some digging, and was a bit surprised that it was you who told
+> me to use R8 instead of Y8?
+> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
 
-Yes, that would be very nice if we could run the timekeeping code in a
-deterministic simulated environment with a configurable clocksource,
-timing of kernel updates, timing and values of injected adjtimex()
-calls, etc. The question is how to isolate it.
+Hi Geert,
 
--- 
-Miroslav Lichvar
+indeed I did. I never thought of the question of expansion to R,G,B
+before. Maybe that expansion is what spells R8 and Y8 apart?
 
+I do think that expansion needs to be specified, so that the KMS color
+pipeline computations are defined. There is a big difference between
+multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
+
+- (R, 0, 0)
+- (R, R, R)
+- (c1 * Y, c2 * Y, c3 * Y)
+
+I forgot to consider that in the discussion of single-channel displays,
+because the displays obviously do not consider any other channel than
+the one.
+
+Using DRM_FORMAT_Y8 FB with a single-channel display might even be
+surprising, because the proposed Y8 definition would result in c1 * Y,
+and not Y. The default c1 comes from the BT.601 matrix IIRC?
+
+Therefore I think the difference between R8 and Y8 has been found. Now
+we just need to determine whether R8 means (R, 0, 0) or (R, R, R) to
+nail down the color operations as well. There are questions like what
+is the outcome at the video signal level when we have one KMS plane
+with an R8 FB and another KMS plane with an RGBA8888 FB on the same
+CRTC? What about Y8 or NV12 in the mix? What if the video signal is
+single-channel, RGB, or YCbCr?
+
+
+Thanks,
+pq
+
+--Sig_/QZAnc9FdGv0CGGuBeb7Bgcd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmfqSkYACgkQI1/ltBGq
+qqc4pxAAnPZQ0QQxEZ5HZEAD/A561x3dmKYKf16AaBIpBhdwXvF672H3q7NOC3MH
+4qWNrJHlv5TQ+rhcwQJfYzqnOTfOwoQdpz0siUUjtSrxwfpQ2T9KmAT1sWHSudet
+kmEWqPBDXwmnUui4Hi6bXgiKqYsMW6PaXwT/3GO3UI8Matmu5D0yeIqqC+p4UnH7
+WCcZ4osqzkgxyRkw2r7+aZq6k0VsfYXjXTNQ1PXHCArJSx5Rwlucw96IvOvUSO/o
+EvA0h+UIqIiuq3Va7XfyeoTaVKZ52f8F5nkeTHYoc1X3AbOAiEIGANId3vGu8hZn
+9UG0SAMxJBl2BGdJpi+auNSS1Mq5J8RT/X4Tlq0L9UOg6w3gB1SwbdnQIgolYYGu
+MiwdyAry2zffnH5e3/pfsiM37IZNMX2bC8XzfvpK+pVxpfTE+lU15ffEA8++LisI
+zdpckbn440o9I074KglAGkZaB33++gNlemoVZE0nl+YY+o0frBXeObf1OMuPnZ2m
+K5uwHCbQLRnQkKnL2gcbwaMtZmkohGnksoD+pT7FF6ebMd4yv/7JyXnBezyccGhv
+Q0xATae0gNbooT4s0VrduWFRariMVz0WUUsoIb2rYx2MHXnahtmS/zXkwbYXU2U1
+1tg/KdcAxlpSiTCS+6UTRD1hai9FzgLLxz7vMUbdx2r2iEDjSPY=
+=dA9t
+-----END PGP SIGNATURE-----
+
+--Sig_/QZAnc9FdGv0CGGuBeb7Bgcd--
