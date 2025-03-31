@@ -1,168 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6305E155393
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1092B155393;
+	Mon, 31 Mar 2025 12:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743422420; cv=none; b=GIaGvp1XmigD6b2Dz8Jfw/MO3ufANtOe45R17npcc9aTiS3Ocb48IVl+yDxGvGARNWBOHUEsubShQ7k0ri2q3kX+dW/cLQxVunLa66yoXp3Q9DFS39AvDLsfEERh6YsmdYU36FunJGPgZH8FwnEYMvWL+lx7pBOkyAFGt4L6Ymw=
+	t=1743422570; cv=none; b=M8OfjDZWode6XBzTsLQXJaaw4op5qPdZNN37pb80NnuY9dtYPUA/QYfkXLFKHEaTvPUbni1fN/ZwERY9XrqAiW3wYDv6qJ5/Ej3NGyTYZdR34ppB8DzJgF/vVTNTk8DkzT84+j9XVTw4+2W8UtfPX0XA/lLWxz3siHtDpudg9Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743422420; c=relaxed/simple;
-	bh=76SU+zIo7WlCNaXWUl6aelYPfKu7lO0vioy9H+xSEnc=;
+	s=arc-20240116; t=1743422570; c=relaxed/simple;
+	bh=PL9eSqKHOu/dlIWfnxn/TfZ0nJbbzG4XeD7K4BWteb4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g6XUpKWkNYiqIgHmd4/fZeAtaWTQ8y5RmyQ8aLAMqWplPZfF+KgNwJTRLd/l3KftQTdns4Ql3kzDwbjxCdT0QCi52R2nJaT05ZF+fh7o7Q0rlheaY/VcEm2hLF+skSNhg56JyVBwGyno54nNa8dFked+K0y/CSm2TJQh+4Cr1K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PgxcX5KJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=HISv3AkO03YiT4FJYRm95TbzKPudzpzT/j1EYes1bGrOaxXOCQJsB5VVa+hKm6T+uj2Q5xQ2FwNptG7LzjoOsqF6Yr5AgEJNwox/RUOf52kG8YBfZLgBBbhSftb6wFpQJUZ/reD4Vong22IVPkaFhoAk2wKLU+rcFkGtA3jbrgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSnsAHZ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PgxcX5KJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743422417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SALfqHpaVZ7H1/T2YDaQ+8Ub/OE8/ksE1OnbpJljKQE=;
-	b=PgxcX5KJYBVcF13kaDHwhDeuMUC3TVEVFxGBNf2qlOga0148XC8lUDKGNCCQm4a21iR0zY
-	vOGtE5vPAWbXySwmoGt4+1Frm71MjtscTlwuKmrDWsafkQkd45c16xUF8HzUR3PAxdhb+u
-	UUYexB4m1D6PU2vyh1m/QgMkXg6fWFw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-6KdJV4xdN_ybXCYB8OcLNg-1; Mon, 31 Mar 2025 08:00:15 -0400
-X-MC-Unique: 6KdJV4xdN_ybXCYB8OcLNg-1
-X-Mimecast-MFC-AGG-ID: 6KdJV4xdN_ybXCYB8OcLNg_1743422415
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac293748694so417754066b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:00:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743422414; x=1744027214;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SALfqHpaVZ7H1/T2YDaQ+8Ub/OE8/ksE1OnbpJljKQE=;
-        b=b8oUpNh66KyVO1CQDAkxdRktLCxthC9mAwkOPhd0JALeBfOc5GdwO/J1xtXRV8m5CE
-         ElE00ACuZQKvI72UQUexvIcUlKhQVjCOM69/16e4bOlVGeIABgS31/73ggvpwELlZR0x
-         eZ3NXt3aTDcZX/NOwWaHxko+7yRKT8sNl8uJjTRsFRfCUSclZs2/9cOLdLrIePwA6UAi
-         wPBTiPgqMuFAtFnh04GOXiU6KSIrUnZ+clagkvNP+/XgTs94GMBPNiits0P8pTqdK6rz
-         ixHm3gcM8ymOliHxy+otaW/A+rgLxh7L9ls34s0ZbnYt0tHFCVQOQH7K1o8cj0RBZwPm
-         HhGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnMAr8YLD5laNjGNWtJeDfPNO1rTMaFLVVg+DbLI4GUC27QZIuryhy5Zl+Z4bfiG6Wf6UIyGYldkSHVNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOrU6frUJc30KT+F7uLVRC4GI9tvubZ+F38UzB/Q94fUMoM0TN
-	kC+VIFCsIeYLjCxZ3G0nYb93s7eXurQUT0Os07aoeY3B01S3Z3CC+3+2VJFVpTI90U+HUxJAjKD
-	/X/bmd5PKuMGD/fjHuFjegRORFZQ1rQl5ukoWY/QK0Rk6nptp42Fun2BQi/s4pV5d/qPoL6RITp
-	7+xkgvlr0/iRWT2+pHxt9WK2LABnAfLh/FCHIG
-X-Gm-Gg: ASbGncske9rqC7yvZkPYPM6jZXzq1K8bk7pJYlYvqh8l1QSiTJVtLzO5G9Fv2O2Lizb
-	bK6mnLxJplWXLp2xYWRM6TB5kUwY9H8R9lShk7uE0fYnE3t/ewSK5TdcUjeafi2xfIbLBoNad1w
-	==
-X-Received: by 2002:a17:907:a08a:b0:ac3:cff:80f1 with SMTP id a640c23a62f3a-ac738c880d3mr758638166b.54.1743422414484;
-        Mon, 31 Mar 2025 05:00:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDnA3ED+fmlUHGPDP9zSXTFcjlj2+EA7N/YnNwtisbC+ekVhCoZq1nyT+pnlJz/9pdqBVMe0AoZpt/YKM5Oao=
-X-Received: by 2002:a17:907:a08a:b0:ac3:cff:80f1 with SMTP id
- a640c23a62f3a-ac738c880d3mr758635266b.54.1743422414079; Mon, 31 Mar 2025
- 05:00:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSnsAHZ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F20C4CEED;
+	Mon, 31 Mar 2025 12:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743422569;
+	bh=PL9eSqKHOu/dlIWfnxn/TfZ0nJbbzG4XeD7K4BWteb4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eSnsAHZ8fcmCBVIPW5/3MtPKJG28EGKqZoln0hs2Z0NGV2j7wVktZED/CjwZfZDnB
+	 /d1lsFfrlh1yDZMocTnQnF7tyYVRST+KU2xHeKIjY/yIZ3NoNRrZ1+XysF+67lGOYR
+	 iUheCr+vYkxAcKv0uGA6WHt4VNw0FpA2bndfAICaMuStA29jywDk0q3NEwLvGyTjWc
+	 wetd3cSwePbD08PD5MdZTFodgN0ybjM77mIKVmWemaKQ2o93Jv6zG7ytOMnM/+FihK
+	 JiKiAq/54Lfb+w10R521wTED1dL5KI43J53HJ/PwgqvD4XxDcnUqaO0XSJTsldvoLq
+	 cgfKdAA90kS7w==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c1c9b7bd9aso2687968fac.0;
+        Mon, 31 Mar 2025 05:02:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVWEVvDZ9AsSeyYIV1/UhEB7rca6yL02vBZQWZmXWsBrew9VWoZ9ks4UtimqqL33mDKnDjokrYKKWBfhNIY@vger.kernel.org, AJvYcCXKHbPHDyuphZtYt9G4zpRiUKmlHeXHj6hiMkRsWVpuCZB3SO6FFdZZ3gxAR/AbVvwAo7/yAi6UMYkX@vger.kernel.org, AJvYcCXPsIf0zWaiPMQY7aa8juW5slnfpXsfmYPBEBXFhV/rVtgk1wKIHrvyXW/D1VnLlQhZLkXumAsWj84=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsDST7h5yDe3IP//baGmpLPkgIz5Ggny821WMBKdmnbwjprbxI
+	fzlhjOk4YOg4uvS/X3ZocKUXYnE+61twDLcfRHUZUpY8wS9inQnQnW6j8qSvF6P9TVVJC+kVo7M
+	4NTDs+Iadx45chXFsnbAFWh4v6Jc=
+X-Google-Smtp-Source: AGHT+IFnxwbIR38R3P0W2nuk1c+/yzug2edBWqFS7sb8O2cuqgfmBB0P3C0t0MUSle+/fFxcXPC7bpatmMaFUzvTnAs=
+X-Received: by 2002:a05:6870:ff8a:b0:2c8:340d:1076 with SMTP id
+ 586e51a60fabf-2cbcf7e01e5mr5298272fac.32.1743422568784; Mon, 31 Mar 2025
+ 05:02:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328100359.1306072-1-lulu@redhat.com>
-In-Reply-To: <20250328100359.1306072-1-lulu@redhat.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Mon, 31 Mar 2025 19:59:37 +0800
-X-Gm-Features: AQ5f1JroAFl0j8Y8E1rVmceWhY1UAp8ypP7a0k97xGC3a_KBzP4oWFz8KEo9czA
-Message-ID: <CAPpAL=x00fw7qV3GdOCQPZcry-VyQFFUq1NXu7uOH7zVmESNqA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/8] vhost: Add support of kthread API
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20250328143040.9348-1-ggherdovich@suse.cz> <55bc62e588f526ae964533cf2af612a4beea5d32.camel@intel.com>
+In-Reply-To: <55bc62e588f526ae964533cf2af612a4beea5d32.camel@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 31 Mar 2025 14:02:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ic-07asu50EMwFV5DyXtjT7rArdcsap1C3n8m4SwKx_A@mail.gmail.com>
+X-Gm-Features: AQ5f1JpdcuMZQmRSP49PHnPr0UtmSQDJJYsk8bKXnck5QUYOObX8X-4duTh9WhU
+Message-ID: <CAJZ5v0ic-07asu50EMwFV5DyXtjT7rArdcsap1C3n8m4SwKx_A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: processor: idle: Return an error if both
+ P_LVL{2,3} idle states are invalid
+To: "Zhang, Rui" <rui.zhang@intel.com>, "ggherdovich@suse.cz" <ggherdovich@suse.cz>
+Cc: "rafael@kernel.org" <rafael@kernel.org>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-QE tested this series of v8 with virtio-net regression tests,
-everything works fine.
+On Mon, Mar 31, 2025 at 3:09=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wr=
+ote:
+>
+> On Fri, 2025-03-28 at 15:30 +0100, Giovanni Gherdovich wrote:
+> > Prior to commit 496121c02127e9c460b436244c38260b044cc45a ("ACPI:
+> > processor:
+> > idle: Allow probing on platforms with one ACPI C-state"), the
+> > acpi_idle
+> > driver wouldn't load on systems without a valid C-State at least as
+> > deep
+> > as C2. The behavior was desirable for guests on hypervisors such as
+> > VMWare
+> > ESXi, which by default don't have the _CST ACPI method, and set the
+> > C2 and
+> > C3 latencies to 101 and 1001 microseconds respectively via the FADT,
+> > to
+> > signify they're unsupported.
+> >
+> > Since the above change though, these virtualized deployments end up
+> > loading
+> > acpi_idle, and thus entering the default C1 C-State set by
+> > acpi_processor_get_power_info_default(); this is undesirable for a
+> > system
+> > that's communicating to the OS it doesn't want C-States (missing
+> > _CST, and
+> > invalid C2/C3 in FADT).
+> >
+> > Make acpi_processor_get_power_info_fadt() return ENODEV in that case,
+> > so
+> > that acpi_processor_get_cstate_info() exits early and doesn't set
+> > pr->flags.power =3D 1.
+> >
+> > Fixes: 496121c02127 ("ACPI: processor: idle: Allow probing on
+> > platforms with one ACPI C-state")
+> > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+>
+> LGTM.
+>
+> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+Applied as 6.15-rc material, thanks!
 
-On Fri, Mar 28, 2025 at 6:04=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
+> > ---
+> >  drivers/acpi/processor_idle.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/acpi/processor_idle.c
+> > b/drivers/acpi/processor_idle.c
+> > index 586cc7d1d8aa..b181f7fc2090 100644
+> > --- a/drivers/acpi/processor_idle.c
+> > +++ b/drivers/acpi/processor_idle.c
+> > @@ -268,6 +268,10 @@ static int
+> > acpi_processor_get_power_info_fadt(struct acpi_processor *pr)
+> >                        ACPI_CX_DESC_LEN, "ACPI P_LVL3 IOPORT
+> > 0x%x",
+> >                        pr->power.states[ACPI_STATE_C3].address);
+> >
+> > +     if (!pr->power.states[ACPI_STATE_C2].address &&
+> > +         !pr->power.states[ACPI_STATE_C3].address)
+> > +             return -ENODEV;
+> > +
+> >       return 0;
+> >  }
+> >
 >
-> In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),
-> the vhost now uses vhost_task and operates as a child of the
-> owner thread. This aligns with containerization principles.
-> However, this change has caused confusion for some legacy
-> userspace applications. Therefore, we are reintroducing
-> support for the kthread API.
->
-> In this series, a new UAPI is implemented to allow
-> userspace applications to configure their thread mode.
->
-> Changelog v2:
->  1. Change the module_param's name to enforce_inherit_owner, and the defa=
-ult value is true.
->  2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
->
-> Changelog v3:
->  1. Change the module_param's name to inherit_owner_default, and the defa=
-ult value is true.
->  2. Add a structure for task function; the worker will select a different=
- mode based on the value inherit_owner.
->  3. device will have their own inherit_owner in struct vhost_dev
->  4. Address other comments
->
-> Changelog v4:
->  1. remove the module_param, only keep the UAPI
->  2. remove the structure for task function; change to use the function po=
-inter in vhost_worker
->  3. fix the issue in vhost_worker_create and vhost_dev_ioctl
->  4. Address other comments
->
-> Changelog v5:
->  1. Change wakeup and stop function pointers in struct vhost_worker to vo=
-id.
->  2. merging patches 4, 5, 6 in a single patch
->  3. Fix spelling issues and address other comments.
->
-> Changelog v6:
->  1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
->  2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM=
-_OWNER
->  3. reuse the function __vhost_worker_flush
->  4. use a ops sturct to support worker relates function
->  5. reset the value of inherit_owner in vhost_dev_reset_owner.
->
-> Changelog v7:
->  1. add a KConfig knob to disable legacy app support
->  2. Split the changes into two patches to separately introduce the ops an=
-d add kthread support.
->  3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
->  4. Rebased on the latest kernel
->  5. Address other comments
->
-> Changelog v8:
->  1. Rebased on the latest kernel
->  2. Address some other comments
->
-> Tested with QEMU with kthread mode/task mode/kthread+task mode
->
-> Cindy Lu (8):
->   vhost: Add a new parameter in vhost_dev to allow user select kthread
->   vhost: Reintroduce vhost_worker to support kthread
->   vhost: Add the cgroup related function
->   vhost: Introduce vhost_worker_ops in vhost_worker
->   vhost: Reintroduce kthread mode support in vhost
->   vhost: uapi to control task mode (owner vs kthread)
->   vhost: Add check for inherit_owner status
->   vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
->
->  drivers/vhost/Kconfig      |  15 +++
->  drivers/vhost/vhost.c      | 219 +++++++++++++++++++++++++++++++++----
->  drivers/vhost/vhost.h      |  21 ++++
->  include/uapi/linux/vhost.h |  16 +++
->  4 files changed, 252 insertions(+), 19 deletions(-)
->
-> --
-> 2.45.0
->
->
-
