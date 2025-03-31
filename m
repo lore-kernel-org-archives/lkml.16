@@ -1,207 +1,389 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2089.outbound.protection.outlook.com [40.107.22.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50959191F94;
-	Mon, 31 Mar 2025 11:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743420248; cv=fail; b=t61sgPeRyd2TT8jkUwZnCGhM1kiAh6iAH01r0OWl1fte/gvXjMGlehbBotrCDfREYBEdcHJIEtgD9nqe/C1iBwWJT+LevjHNAW2iFqmWxkW/G+uc7IYX8PcISIShNfAzxGznaORW3INvkbpp+F7u5dlHjMPAK6Eck1DIqkBl3X4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743420248; c=relaxed/simple;
-	bh=/I1YiUMpQTSqpxrWqDyuWyPuSQUWgLnb4+4PWrRcGKU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dI9+s7i40m65aixYxlgWsErTJ8ubkInMdIlI4B1Md+Q/3t5XppB1xIp2VXC9c/C0flsqHlvuPHzQmBj5NOAn+Ebh/Z6p6ohs4XmfN48DQ7pdcvqINqD2FWRXkbsZ1QG6RIwL0yxcsiR3DuEs0pMs79kQ8Iz9qYSeY2i61VhR2HM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=JRbf4NGu; arc=fail smtp.client-ip=40.107.22.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AAF13A265;
+	Mon, 31 Mar 2025 11:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743420377; cv=none; b=j7Q/PSzMTFYNFaSLjB2CN+Zsro0iwLe8ohzzP47DnGlKkxmg6kEIvEhoOkL+PkQMwupFATBgM7CgWuaN+5wIaBEKCcB7zwEEtLf5Meoseise536Hcdw5qD48eGYjH+hkqem25ewM4IRMl522ayJ61NeaaeiuZqQ1plD0DYPhtIM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743420377; c=relaxed/simple;
+	bh=vVFMSvecr4GOgVULKbwlJWbt2FlWc2kxeEwklQiHIuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dcozEOeOrYCikXga3gF4dsVdiMwCLXewa3XuCjT+4oTvHycice2GuKPC2+CYMAJL4LbMlooP6ItpkIBBKyHG0tXsN93V1u38EPcYtaXnLnXg7AqKykUQALpaVA8YKoEFmPBYewPlwVzxgc9LhXsAvYB4CQtRlSIsTye5nz+usA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2knXX/c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JRbf4NGu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PEDWlxAJrvxWAHXDZiINMAbgsxQhHEzPSWj3jPNEwhGdzKjN455uDNqTnH6AvsmQX83DCnvCMALIlU8DZjpSZKdXz7wDeE6ZQlCUpO1hzMTg/K8yzAGLdKw2G2j1dSOKuutR/S440eHBGSJ6OV/Laz05j7Gk6OWkVxRYGPlbhPXtHWeBu4bEh0EsbrI7hThdvy/kZG5XJfjs86AZjEDerATDS1ukpJ6ijL9Bg9sgrrV6FaM7kRblcQjUJMHGv4VAV3aFHYEISPVDMgktZbzZzJ1lfG2vSJHEfBjr5oBPxqrrBL02+yV8u4cKlKdWWhNZVqsA8FPUebRMwT9P6+pBlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wpl+zOtvHfhSrvLnU9vwpxlHNgY7HPO5Rwqdt0urMGo=;
- b=dAVkWx8r38GFWijB+NFt+4CCZn/p4saREMRA/DBiRASy/8hkYtGEYoyzfiHgDVNyiZl//lRiDB4Xfnw2DmcUlaTFz+IszGP8DX/vFX2oqTSGGZ0I7ze9N4eXh2J/n/jJCINqjKZKX+kcPL17ugwZFxIt0vK5hPOWZAhLj1rW69IgBMF2/DLlvlgxt9QvwxHDpGt1E2orSOYof4rhyb9xpMkyS6VlAi1YjNXqPHCc+tpQYDQI/nuXHGNKg0tth9GVxzc/A+P4DVsIbEc294OEr/uBHdmA6BIM6F86c7TeUPfCXLg/l8lpzuo3zcsLeuHHcar/vo9YnTkYq9TYjekWcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wpl+zOtvHfhSrvLnU9vwpxlHNgY7HPO5Rwqdt0urMGo=;
- b=JRbf4NGuO/ZOaKj1mKPSkvCNV/KLH7CgXo3xOi7jRA3MdW+R561DNZte4iDbmKOa06UirBLMd11xKyQ8olkoXpx91RA7+Rv0sEi7UVT2kF1POH//y/2rYeOg+5LscCSX2vyasqR/0R465/X41WWhZf7jiZ3VYca+o97ukpcx+ziOIpxqXj6upaH+0odo0bOQLoL8knpmMtJhrtG2hRjuPZHBx9mut+pflNjcdkGPAJPUK4lFCaveyf5MOOpvumz3NRa06JyatixIU8LKKD7+R7tvOOY3yrnaDkhKIgbwugJUobUKy53CgBmYuK8Np0C6lpkrHTWS07NnnBifodbM/Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GVXPR04MB10476.eurprd04.prod.outlook.com (2603:10a6:150:1e2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Mon, 31 Mar
- 2025 11:24:00 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
- 11:24:00 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] remoteproc: imx_rproc: Add mutex protection for workqueue
-Date: Mon, 31 Mar 2025 19:22:45 +0800
-Message-Id: <20250331112246.2407276-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0110.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2knXX/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7B8DC4CEE3;
+	Mon, 31 Mar 2025 11:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743420377;
+	bh=vVFMSvecr4GOgVULKbwlJWbt2FlWc2kxeEwklQiHIuw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=H2knXX/cPlYIWK8rRXT2cO4t5pOdTgUY2GP9Fs1TFkMRYn3kDmfOMCtWieZC3M6YH
+	 XpwLjUxsmRv/R+MedKcpt1hZb+ueAMdQdorJHW4aaBECicbmU2sAGsC31cCI+scxde
+	 +xzeaInbYguGCWX9kS9vx2JdmuQWrNjR6kHRGPhyha95HOVLMmlzdvG08s+PAm001f
+	 XfcrWGkyzo/KtRx0pG5vkRcOHz22bcZ5fR4tW8QCzqFYY3xwiPeyAjwQoizSJSd3Zk
+	 Jn0RzvCEFqoP9ds10ap23sYicjxlxB+gPrWu0GbuxaDZQohbavHVzWTICqodeiqe07
+	 QHEleuKYmNWiw==
+Date: Mon, 31 Mar 2025 12:26:09 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+Cc: Jean-Baptiste Maneyrol via B4 Relay
+ <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functionality
+ for Wake-on-Motion
+Message-ID: <20250331122609.508bc3e2@jic23-huawei>
+In-Reply-To: <FR3P281MB175775CD8CDB29D7ACE8B544CED92@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+References: <20250220-losd-3-inv-icm42600-add-wom-support-v1-0-9b937f986954@tdk.com>
+	<20250220-losd-3-inv-icm42600-add-wom-support-v1-2-9b937f986954@tdk.com>
+	<20250222162224.60059025@jic23-huawei>
+	<FR3P281MB17577B5BAF4C31E0C48F8504CED12@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+	<20250315181758.2aaaf10e@jic23-huawei>
+	<FR3P281MB175775CD8CDB29D7ACE8B544CED92@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GVXPR04MB10476:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9cc590e-6e46-451b-940b-08dd70468892
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?51zhq02UmDVpVbQ3RghY3VASp2o4oG/6Ix57f4LS2SWJv1OsmriSO1J7+fgU?=
- =?us-ascii?Q?2itlK7ZhVhZ1Ub/78O0VTqELivFPOFjZzAHhIp3t0rKuH4J6zBMqGpslTVCo?=
- =?us-ascii?Q?DS734ubdBpCwCQrg192rC1qycOiNvfBD1uxK6uwcQHXuMj3qn/r2GPJ7YT1r?=
- =?us-ascii?Q?4fQQ2VgFgrg3yNiVIELtW0TRAt+q/qkUpdmOjv6IHRKdIW7GaYtU9C+snv//?=
- =?us-ascii?Q?trPSYDM94DiQcid+RyDZRMkZluVI3ku/RoivEnuRHxrwxyXdRkDkSQ1zZ7SQ?=
- =?us-ascii?Q?aEvaR9ax+1dL9Q3A9jZj7nXitEcw/ysCfEE7C3U8DwL7OIyAk3aHVlVtARSS?=
- =?us-ascii?Q?u6tVgTvRZXPzKGx2ImNhQspo0hn/TQZqF2blr7D7YAk2OPlhw9P364ZfX5c2?=
- =?us-ascii?Q?ezB761xhXMAAa8z9HJs0CLTUr0xoVILTwhigRwO/lRrP4j9en13ByAWe0Leu?=
- =?us-ascii?Q?mYaUwVZRKLYHGzE19bgrz46C9QDkO698QHwp8VEzT+Si2xN0Rebxfx0t9hbF?=
- =?us-ascii?Q?o271Qz4Diqo5zAeM/4nmRrEC67AQdfxzWmp2iIiBVGYdw54fxp4NuqdxqBQV?=
- =?us-ascii?Q?mIQP9pz8+NEKJtmGBzIBjeCrqBRnNtxO4gakC9T8pBXMUCMIxZdgtW2swzec?=
- =?us-ascii?Q?cqedb7JzAIbRnU21o3DHJuHrNG+bRQCuJxEU1Xzs/WZBT/tkxNHnyVm9uQNk?=
- =?us-ascii?Q?0jHprIg4q0WrD6vFY6OfEqj79FChCzPf2N1c4rz+wNDtl68kVASFDDDdOWlN?=
- =?us-ascii?Q?tMZKA084l3kE0A6TIdYIFh59SpWzW39sfFtK0JfdBnNTiQjNwQeHENbHS3Kt?=
- =?us-ascii?Q?2RwH6QUqXyLdhV2gvARRGe2tgCJUiZS3Kae70SLgyM9rlMRmCTpJndA1D5aA?=
- =?us-ascii?Q?d1PAIqaypKG/81hc7yPVhV+ujylwA6XYtCK3bGsXDlGivJdygUHWTjST9FUd?=
- =?us-ascii?Q?lCqqO3Uxb7XZTYWkZF5CiMlM8CLa6502tjiIFJ2ldDxnseaKQsEtsgmPBinm?=
- =?us-ascii?Q?mapcADaOTJS2eXKL4xGs/81WTahM1JXKGJ+dAjOudt4QHPmJHooGR+KiHphH?=
- =?us-ascii?Q?5US045lKs6otjx0EeyiQccgbsTbhIIyS4n5naKbMKb57OTXt+izjTOnjI1m4?=
- =?us-ascii?Q?M1m4usZjmXkHd1EbN9WS57xf4f2IwWYDT34+wdAh3ma2doKFTw+dSfdNrWp7?=
- =?us-ascii?Q?3Wlrk11ZMTlrbWAlhL/J9nVUMfiv2SeTXNVo1jRn4LpYc+R+k98L7W48L2gA?=
- =?us-ascii?Q?7MTReFnix85hrUSpRVucgN03ifgx+GV9ppdMnxdPZETXFbNrK8QAon2bHjyt?=
- =?us-ascii?Q?GkakyGneAHVE5jWIgw+ZIQRi4lakdfHSqcTlndevHu53GS14tV/Ju+DkPJqi?=
- =?us-ascii?Q?CbKEcaLpY+9y8L0A4g82ien/x6tvDpKDHXsBr1LiuaHICOQjz7EJUrj7Tw+u?=
- =?us-ascii?Q?vrrIJESLzpMOVddTgLsZDdN8zTfoSVcv1/ylun628NIHwVrT0yG7Sg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?a/bwNfDJCNz40fzxWLvy6TRs4OtdSlbdGMeS+tBrmElkZSc/FHgkA9a15ilm?=
- =?us-ascii?Q?rVLXCfKthvC/H3KxVl+RiXuF+pSvsG2ozcubOlwwuelqNtQHYMAMaLenP7o+?=
- =?us-ascii?Q?et8QxcEbxN7z+oGrBskBME5h3zSFi7TRGBnVqCSyhH6Ui1m7ipNwrE6Twj8E?=
- =?us-ascii?Q?WHu79MRsYCagDLZVQ+T5Yj/TLY5OJioPbTaac+jDuNQoLNNMRCNzJ4+vUvth?=
- =?us-ascii?Q?qWeTGqoXr8vftGAaGRWU22ISsP9pGQxCbYcMyziGv0XjinoglqCvYyGOVsci?=
- =?us-ascii?Q?7dQQCHhgupRUzctBM/EYPAndApK2pv8+S5NAtfNdnDTyXHied0zzciqUFJbq?=
- =?us-ascii?Q?42lcdYxTQa38QwnuuOi0pSCrhrpLSWuAT4FVWyvAmn89mlFjg5gNgCmSt4na?=
- =?us-ascii?Q?hHzBGlSB5fzW3oj8WtD9dNpg1bIo3bFaoW12IMnTuOeRTOadRL29NBL5dhZ/?=
- =?us-ascii?Q?kWvjWDU2w/GzKGR8E9MvH7Iy5QSNomlpKEXyy2Wn27LlTjNhkfUKV3az18en?=
- =?us-ascii?Q?phV3UF9qeDX0ZYeih3n8x1e/Q6en40H9yj4AORd5pjMFTASjUgLFu69hdTaL?=
- =?us-ascii?Q?PYysjqYQVb0KYmZb1lenA07qCZMq3p4klI9KZOlgZe9R1+3dXyxHHAMWIVj5?=
- =?us-ascii?Q?jx9EeTFwiNQ+K3GpKbMl/jkpmiprOjKcDp6uXyLvnvBAIeyR1lCIemwVSThG?=
- =?us-ascii?Q?3/X9eMvVUj8goazxbB0bubdlx9aQMp7fK3c3kAMpNDwPGuYgVelNou+jORbc?=
- =?us-ascii?Q?fHCtK0VT+k0e5lPM353oBblqWnsOxnZk2FP0eWWjHgpLp72vmfDuOAPZuIo/?=
- =?us-ascii?Q?bvLJK4av8OoGQL2THtX8cOu0w/ty4haBAUqHYKbVgrEPAXCfzGJMP/+a8GmQ?=
- =?us-ascii?Q?4SRMvSG41WxJ4Fn1DXlF2xPPaGekwSivm4Z+f8GpzGuz7uG8ov9StSjaKJzO?=
- =?us-ascii?Q?cTu2ibnaIh5MmgMxQuSliH1QkZu7YacYptnl7H5rEiBojb106evphSuhLEnK?=
- =?us-ascii?Q?sw3+jQsbrLVdXhjeP8dfi5XUBmhqwQBZKSx+s/N3eWzRf7ug8vWUfFpQ2ES2?=
- =?us-ascii?Q?kSckQxhxYoDakUnGyfaB+xhyaVJ9g9rg1AuGaZgZNq8ziNaDN308CrnAAIgo?=
- =?us-ascii?Q?cpWeuwsuaLL7fkSbZx85cUA2KQqoJPy/+e63Ma2/q2glZ9u9zNf9nKlSkAyY?=
- =?us-ascii?Q?LS9/PxAwBHEb9JXreiUMbLKi97MheCnoI0LKecEBEOuu+wRlh7pAjADUVGPt?=
- =?us-ascii?Q?Qo1jrkfmU2Mlub7osQHKLhXAW8Tq2DZtqa6aSLcfCxyUtWKYc2NfJIqADNa9?=
- =?us-ascii?Q?eb03uyAvHENE3CxgeEwIg1zcjls+1AauPN1dsGmSwujY0PJQ/OTklX7qdFOn?=
- =?us-ascii?Q?wmDKMsgT4MDXvUNO/uhaK8B2HM9dw3+hghvBo4LRdRVWzrNYOV5N5dVVGfx+?=
- =?us-ascii?Q?VVZ3pSxoW+EVg8A7x2u9tDQLWL8A3F38LlkAG/0fwqoZXFWS/FqE+davKcn+?=
- =?us-ascii?Q?on7lffRVGWIA4OZKceIEHJvsnAetRrOkO0wv6gozQW/r8lo2+SuYCDLDwDRQ?=
- =?us-ascii?Q?3aWptQsCA3uAxrs0MWSwbPvEQcwNX3hhFeNABtmd?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9cc590e-6e46-451b-940b-08dd70468892
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 11:24:00.2123
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pNlo/pwITRVTkV+kMgvfgkqBVEohr6TMRUp6unCDOHWlJtd0BzvNDI2QnpCCtO+SvTBm2+jXTnU7P0O7idiJeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10476
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed, 19 Mar 2025 21:06:41 +0000
+Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
 
-Same as
-commit 47e6ab07018e ("remoteproc: imx_dsp_rproc: Add mutex
-protection for workqueue") and commit 35bdafda40cc ("remoteproc:
-stm32_rproc: Add mutex protection for workqueue"), imx_rproc driver
-also has similar issue, although no issue reported until now.
+> Hello Jonathan,
+>=20
+> I understand the issue, but using spi->irq for getting interrupt is somet=
+hing we are already doing inside the driver. I agree we need to fix that, b=
+ut I would prefer fixing it after adding WoM support.
+>=20
+> Is that OK for you? Or do I need to fix getting the right interrupt first?
 
-Reuse the commit log from the fix to imx_dsp_rproc:
+It's a pretty trivial fix to add the sanity check,
+but I don't mind if you do it as a follow up.
 
-The workqueue may execute late even after remoteproc is stopped or
-stopping, some resources (rpmsg device and endpoint) have been
-released in rproc_stop_subdevices(), then rproc_vq_interrupt()
-accessing these resources will cause kennel dump.
+Jonathan
 
-Call trace:
- virtqueue_add_split
- virtqueue_add_inbuf
- rpmsg_recv_done
- vring_interrupt
- rproc_vq_interrupt
- imx_rproc_vq_work
- process_one_work
- worker_thread
- kthread
- ret_from_fork
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/remoteproc/imx_rproc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 74299af1d7f1..f933c8f4fc8b 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/arm-smccc.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/firmware/imx/sci.h>
-@@ -785,6 +786,11 @@ static void imx_rproc_vq_work(struct work_struct *work)
- 					      rproc_work);
- 	struct rproc *rproc = priv->rproc;
- 
-+	guard(mutex)(&rproc->lock);
-+
-+	if (rproc->state != RPROC_RUNNING)
-+		return;
-+
- 	idr_for_each(&rproc->notifyids, imx_rproc_notified_idr_cb, rproc);
- }
- 
--- 
-2.37.1
+>=20
+> Thanks,
+> JB
+>=20
+> ________________________________________
+> From:=C2=A0Jonathan Cameron <jic23@kernel.org>
+> Sent:=C2=A0Saturday, March 15, 2025 19:17
+> To:=C2=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
+> Cc:=C2=A0Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maney=
+rol.tdk.com@kernel.org>; Lars-Peter Clausen <lars@metafoo.de>; linux-iio@vg=
+er.kernel.org <linux-iio@vger.kernel.org>; linux-kernel@vger.kernel.org <li=
+nux-kernel@vger.kernel.org>
+> Subject:=C2=A0Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup function=
+ality for Wake-on-Motion
+> =C2=A0
+> This Message Is From an External Sender
+> This message came from outside your organization.
+> =C2=A0
+> On Tue, 11 Mar 2025 15:31:44 +0000
+> Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
+>=20
+> > Hello Jonathan,
+> >=20
+> > still sorry for not being able to reply in-line.
+> >=20
+> > No problem for all changes, except handling the 2 interrupt lines. Curr=
+ently our driver only supports INT1 and cannot work with INT2, and this is =
+not related to Wake-on-Motion feature. This is something we could add in an=
+other series, and I prefer to have a dedicated series for that. =20
+>=20
+> You should check it isn't INT2 that you are getting via spi->irq etc.
+> Absolutely fine to reject that in the driver but you need to be
+> sure you have what you think you do and the spi->irq etc don't
+> provide that surety - they just give you the first one in the
+> dt-binding.
+>=20
+> Jonathan
+>=20
+>=20
+> >=20
+> > For the mutex rework, I will delete them. This is something we can also=
+ do in another dedicated patch not inside this series.
+> >=20
+> > Is that OK for you?
+> >=20
+> > Thanks,
+> > JB
+> >=20
+> > ________________________________________
+> > From:=C2=A0Jonathan Cameron <jic23@kernel.org>
+> > Sent:=C2=A0Saturday, February 22, 2025 17:22
+> > To:=C2=A0Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.man=
+eyrol.tdk.com@kernel.org>
+> > Cc:=C2=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>; Lars-=
+Peter Clausen <lars@metafoo.de>; linux-iio@vger.kernel.org <linux-iio@vger.=
+kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> > Subject:=C2=A0Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functi=
+onality for Wake-on-Motion
+> > =C2=A0
+> > This Message Is From an External Sender
+> > This message came from outside your organization.
+> > =C2=A0
+> > On Thu, 20 Feb 2025 21:52:07 +0100
+> > Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk=
+.com@kernel.org> wrote:
+> >  =20
+> > > From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> > >=20
+> > > When Wake-on-Motion is on, enable system wakeup and keep chip on for
+> > > waking up system with interrupt.
+> > >=20
+> > > Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com=
+> =C2=A0 =20
+> > Hi Jean-Baptiste,
+> >=20
+> > A few comments inline.
+> >  =20
+> > > ---
+> > > =C2=A0drivers/iio/imu/inv_icm42600/inv_icm42600.h =C2=A0 =C2=A0 =C2=
+=A0 | =C2=A02 +
+> > > =C2=A0drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c | =C2=A03 +
+> > > =C2=A0drivers/iio/imu/inv_icm42600/inv_icm42600_core.c =C2=A0| 89 +++=
+++++++++++++--------
+> > > =C2=A03 files changed, 63 insertions(+), 31 deletions(-)
+> > >=20
+> > > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/ii=
+o/imu/inv_icm42600/inv_icm42600.h
+> > > index 8dfbeaf1c768d7d25cb58ecf9804446f3cbbd465..baf1dcd714800e84ccd21=
+dc1d1e486849c77a9ae 100644
+> > > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> > > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> > > @@ -151,6 +151,7 @@ struct inv_icm42600_apex {
+> > > =C2=A0 * =C2=A0@map:		regmap pointer.
+> > > =C2=A0 * =C2=A0@vdd_supply:	VDD voltage regulator for the chip.
+> > > =C2=A0 * =C2=A0@vddio_supply:	I/O voltage regulator for the chip.
+> > > + * =C2=A0@irq:		chip irq. =C2=A0 =20
+> >=20
+> > Maybe say a little on what the variable is used for. It's not otherwise
+> > obvious why we need it. =C2=A0Also, does this chip really only have one=
+ irq line?
+> > Looks like there are two. So the drivers should be fixed to cope with t=
+he
+> > only one wired being irq2 =C2=A0unless I've found the wrong datasheet w=
+hich is
+> > certainly possible.
+> >=20
+> >  =20
+> > > =C2=A0 * =C2=A0@orientation:	sensor chip orientation relative to main=
+ hardware.
+> > > =C2=A0 * =C2=A0@conf:		chip sensors configurations.
+> > > =C2=A0 * =C2=A0@suspended:		suspended sensors configuration.
+> > > @@ -168,6 +169,7 @@ struct inv_icm42600_state {
+> > > =C2=A0	struct regmap *map;
+> > > =C2=A0	struct regulator *vdd_supply;
+> > > =C2=A0	struct regulator *vddio_supply;
+> > > +	int irq;
+> > > =C2=A0	struct iio_mount_matrix orientation;
+> > > =C2=A0	struct inv_icm42600_conf conf;
+> > > =C2=A0	struct inv_icm42600_suspended suspended;
+> > > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/driv=
+ers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+> > > index 8ce2276b3edc61cc1ea26810198dd0057054ec48..4240e8c576f4d07af5434=
+e9a91dfda532f87ffb9 100644
+> > > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+> > > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+> > > @@ -1149,6 +1149,9 @@ struct iio_dev *inv_icm42600_accel_init(struct =
+inv_icm42600_state *st)
+> > > =C2=A0	if (ret)
+> > > =C2=A0		return ERR_PTR(ret);
+> > > =C2=A0
+> > > +	/* accel events are wakeup capable */
+> > > +	device_set_wakeup_capable(&indio_dev->dev, true);
+> > > +
+> > > =C2=A0	return indio_dev;
+> > > =C2=A0}
+> > > =C2=A0
+> > > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drive=
+rs/iio/imu/inv_icm42600/inv_icm42600_core.c
+> > > index c0fd2770d66f02d1965fa07f819fd2db9a1d6bd2..f94bda5dc094d6cc85e3f=
+acbd480b830bfbaa3f9 100644
+> > > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> > > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> > > @@ -751,6 +751,7 @@ int inv_icm42600_core_probe(struct regmap *regmap=
+, int chip, int irq,
+> > > =C2=A0	mutex_init(&st->lock);
+> > > =C2=A0	st->chip =3D chip;
+> > > =C2=A0	st->map =3D regmap;
+> > > +	st->irq =3D irq;
+> > > =C2=A0
+> > > =C2=A0	ret =3D iio_read_mount_matrix(dev, &st->orientation);
+> > > =C2=A0	if (ret) {
+> > > @@ -829,44 +830,56 @@ EXPORT_SYMBOL_NS_GPL(inv_icm42600_core_probe, "=
+IIO_ICM42600");
+> > > =C2=A0static int inv_icm42600_suspend(struct device *dev)
+> > > =C2=A0{
+> > > =C2=A0	struct inv_icm42600_state *st =3D dev_get_drvdata(dev);
+> > > +	struct device *accel_dev;
+> > > +	bool wakeup;
+> > > +	int accel_conf;
+> > > =C2=A0	int ret;
+> > > =C2=A0
+> > > -	mutex_lock(&st->lock);
+> > > +	guard(mutex)(&st->lock); =C2=A0 =20
+> >=20
+> > As below. Pull these guard changes out as a precursor patch. That will =
+make
+> > it easier to spot the real changes here.
+> >  =20
+> > > =C2=A0
+> > > =C2=A0	st->suspended.gyro =3D st->conf.gyro.mode;
+> > > =C2=A0	st->suspended.accel =3D st->conf.accel.mode;
+> > > =C2=A0	st->suspended.temp =3D st->conf.temp_en;
+> > > -	if (pm_runtime_suspended(dev)) {
+> > > -		ret =3D 0;
+> > > -		goto out_unlock;
+> > > -	}
+> > > +	if (pm_runtime_suspended(dev))
+> > > +		return 0;
+> > > =C2=A0
+> > > =C2=A0	/* disable FIFO data streaming */
+> > > =C2=A0	if (st->fifo.on) {
+> > > =C2=A0		ret =3D regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,
+> > > =C2=A0				 =C2=A0 INV_ICM42600_FIFO_CONFIG_BYPASS);
+> > > =C2=A0		if (ret)
+> > > -			goto out_unlock;
+> > > +			return ret;
+> > > =C2=A0	}
+> > > =C2=A0
+> > > -	/* disable APEX features */
+> > > -	if (st->apex.wom.enable) {
+> > > -		ret =3D inv_icm42600_set_wom(st, false);
+> > > -		if (ret)
+> > > -			goto out_unlock;
+> > > +	/* keep chip on and wake-up capable if APEX and wakeup on */
+> > > +	accel_dev =3D &st->indio_accel->dev;
+> > > +	wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true : f=
+alse;
+> > > +
+> > > +	if (!wakeup) {
+> > > +		/* disable APEX features and accel if wakeup disabled */
+> > > +		if (st->apex.wom.enable) {
+> > > +			ret =3D inv_icm42600_set_wom(st, false);
+> > > +			if (ret)
+> > > +				return ret;
+> > > +		}
+> > > +		accel_conf =3D INV_ICM42600_SENSOR_MODE_OFF;
+> > > +	} else {
+> > > +		/* keep accel on and setup irq for wakeup */
+> > > +		accel_conf =3D st->conf.accel.mode;
+> > > +		enable_irq_wake(st->irq);
+> > > +		disable_irq(st->irq);
+> > > =C2=A0	}
+> > > =C2=A0
+> > > =C2=A0	ret =3D inv_icm42600_set_pwr_mgmt0(st, INV_ICM42600_SENSOR_MOD=
+E_OFF,
+> > > -					 INV_ICM42600_SENSOR_MODE_OFF, false,
+> > > -					 NULL);
+> > > +					 accel_conf, false, NULL);
+> > > =C2=A0	if (ret)
+> > > -		goto out_unlock;
+> > > +		return ret;
+> > > =C2=A0
+> > > -	regulator_disable(st->vddio_supply);
+> > > +	/* disable vddio regulator if chip is sleeping */
+> > > +	if (!wakeup)
+> > > +		regulator_disable(st->vddio_supply);
+> > > =C2=A0
+> > > -out_unlock:
+> > > -	mutex_unlock(&st->lock);
+> > > -	return ret;
+> > > +	return 0;
+> > > =C2=A0}
+> > > =C2=A0
+> > > =C2=A0/*
+> > > @@ -878,13 +891,25 @@ static int inv_icm42600_resume(struct device *d=
+ev)
+> > > =C2=A0	struct inv_icm42600_state *st =3D dev_get_drvdata(dev);
+> > > =C2=A0	struct inv_icm42600_sensor_state *gyro_st =3D iio_priv(st->ind=
+io_gyro);
+> > > =C2=A0	struct inv_icm42600_sensor_state *accel_st =3D iio_priv(st->in=
+dio_accel);
+> > > +	struct device *accel_dev;
+> > > +	bool wakeup;
+> > > =C2=A0	int ret;
+> > > =C2=A0
+> > > -	mutex_lock(&st->lock);
+> > > +	guard(mutex)(&st->lock); =C2=A0 =20
+> >=20
+> > Good change. =C2=A0But separate patch as not related to most of what is=
+ going on here.
+> >=20
+> >  =20
+> > > =C2=A0
+> > > -	ret =3D inv_icm42600_enable_regulator_vddio(st);
+> > > -	if (ret)
+> > > -		goto out_unlock;
+> > > +	/* check wakeup capability */
+> > > +	accel_dev =3D &st->indio_accel->dev;
+> > > +	wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true : f=
+alse;
+> > > +
+> > > +	/* restore vddio if cut off or irq state */
+> > > +	if (!wakeup) {
+> > > +		ret =3D inv_icm42600_enable_regulator_vddio(st);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +	} else {
+> > > +		enable_irq(st->irq);
+> > > +		disable_irq_wake(st->irq);
+> > > +	}
+> > > =C2=A0
+> > > =C2=A0	pm_runtime_disable(dev);
+> > > =C2=A0	pm_runtime_set_active(dev);
+> > > @@ -895,13 +920,15 @@ static int inv_icm42600_resume(struct device *d=
+ev)
+> > > =C2=A0					 st->suspended.accel,
+> > > =C2=A0					 st->suspended.temp, NULL);
+> > > =C2=A0	if (ret)
+> > > -		goto out_unlock;
+> > > +		return ret;
+> > > =C2=A0
+> > > -	/* restore APEX features */
+> > > -	if (st->apex.wom.enable) {
+> > > -		ret =3D inv_icm42600_set_wom(st, true);
+> > > -		if (ret)
+> > > -			goto out_unlock;
+> > > +	/* restore APEX features if disabled */
+> > > +	if (!wakeup) {
+> > > +		if (st->apex.wom.enable) {
+> > > +			ret =3D inv_icm42600_set_wom(st, true);
+> > > +			if (ret)
+> > > +				return ret;
+> > > +		}
+> > > =C2=A0	}
+> > > =C2=A0
+> > > =C2=A0	/* restore FIFO data streaming */
+> > > @@ -910,11 +937,11 @@ static int inv_icm42600_resume(struct device *d=
+ev)
+> > > =C2=A0		inv_sensors_timestamp_reset(&accel_st->ts);
+> > > =C2=A0		ret =3D regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,
+> > > =C2=A0				 =C2=A0 INV_ICM42600_FIFO_CONFIG_STREAM);
+> > > +		if (ret)
+> > > +			return ret;
+> > > =C2=A0	}
+> > > =C2=A0
+> > > -out_unlock:
+> > > -	mutex_unlock(&st->lock);
+> > > -	return ret;
+> > > +	return 0;
+> > > =C2=A0}
+> > > =C2=A0
+> > > =C2=A0/* Runtime suspend will turn off sensors that are enabled by ii=
+o devices. */
+> > > =C2=A0  =20
+> >  =20
+>=20
 
