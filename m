@@ -1,118 +1,106 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3462E630;
-	Mon, 31 Mar 2025 16:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E083234;
+	Mon, 31 Mar 2025 16:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439720; cv=none; b=pnLYCVOdT1KWbmYVJ4qIUzdcW9WT+ogURXbRnq8E15locRo4O83ubcShDv0lA4RTIBNvF8cYTvfUKw8QyMBNrUtwPQ17bzk2wPBrZGszCvnoAAs2p2vqWztXsa/NvG0B+7MgTFbBnXz6EMHxYH1ALTlJ9Q7ED8lEQXQzsHkhvdU=
+	t=1743439720; cv=none; b=lJXJSr3iFT/6JGUVOzoy/L3y61ILgEDnZA+9ink77JRTsrcoIL4ToZSsE8run8iTdarBKClefa8HEQJowURMhZb1KlQin6bFqnEH3cVTZHi+hFuA/NnieqeNV/ExZ5OHGR0w3wRxQzf3loGl8QbcJBE12sIhTCZKpev76zIEgI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743439720; c=relaxed/simple;
-	bh=CHf4F+Vs2THX+O+eioOWULMiJfIIbhKmgIxfWXMsmMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9MOQs67utp0cmEtV/2uGdCBESH5I3T4V8DNvs/wOSiVXGFJQDC0o6RxRDl1mA20plArmu2y9xqObUTGvAogUQMCJ6JIRLzlZCtiLOsz6CkqFkp4hDrU1bZL8UVYjVosAFxt6g+iU7FiHx/PVZsRbQYzrZjrB75XOn2cqpK7crA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so455795066b.3;
-        Mon, 31 Mar 2025 09:48:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743439717; x=1744044517;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5E8+H59wzbXfu7vdIDwS2i7uceTsCJ9EpwxfmQG2Njk=;
-        b=ZMWPTSVjR2eK4PcVTv96kWC6dmV7o9brf3sZZFNAHgC87ObVss6Vwa9lEvSsgmUc11
-         ptevtVjqo+wO3c0Qc4/uZpS9jCAy1cAlKqns8gmscKusKfYBdBv0DYs4i78hjje3zuIH
-         AA9fd42poZpLkOeh7FZVZXwywnS+lLH3z+Vk9Bj9QZHdWO/m+uAXimD5hfloTWFqjlKL
-         9UBOdUVvovFaxrRibnSEYiGwqwe3TYCb4cjfYjQefLj0ePv7dG026MMjwa2j0H02ryxE
-         e4t4ZTrXkBc9mWov8mZcsg1am6d8la77KRi7DlVYzU37AWSiIJtbBKftealmzKaDQPa/
-         VKew==
-X-Forwarded-Encrypted: i=1; AJvYcCUUsbXAr6Mq1GWiGbwy+hOyT4JVNHUld1q2Mav4XNUArZVy2Uuda/LDh7xDjUAe3ajSWjvvDiUj@vger.kernel.org, AJvYcCXeOHq5J48V8QQf77cG4Fn9stbQJPRfGnfJfYyWI93sjgfXrPWmyRljA79pYLmxAXSn0/T3gCpukIdbfP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC9AJewNlUMUumsXVKWRyMdKYOZRxA/11UR+1vjAUNnIOmBmmG
-	LG02ymjX6YjI0osBZRm/EgJUwhNX4HSlKVgx53+/Bm2cQtzAp16s
-X-Gm-Gg: ASbGncvZJlEQZYxkeAH9SSZ+NnX1pBAYAmLRKtHEZ8c7RJG7mjHcLE3rMr8E59NfOvV
-	Vj+PlrWev46mPa0KkORD0T3aLI3KgtCKY0IHTshneFdlIXWM6UanycW6fYVGI9FHhkPm1+UgPLE
-	aimoQFt/R5y84j8i4IRf9+Y+8YyMpV4Snnn/pvsbMkcQACKvVRA6g8cYpvHEa/hlMykqVjYx/Ez
-	KRTWJJ3WS13j/R7jemVndybkOHUV88zdwsGPRgT4XvO5H4TnjPX6XocL3FcFV1SbM4qr1l6Xt01
-	ILX+BdZL4c2xfb/vy6nccw3rWW/KsNlOixg=
-X-Google-Smtp-Source: AGHT+IG9Hetq4icmncBIQ+Sho5r6qqCRy3N2GORfFwLBOGtVM5myc3g/zvhQdJi3y87ufObaGZ6lBQ==
-X-Received: by 2002:a17:907:7fa5:b0:ac4:16a:1863 with SMTP id a640c23a62f3a-ac738a50991mr890792466b.26.1743439717179;
-        Mon, 31 Mar 2025 09:48:37 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b027sm639547066b.47.2025.03.31.09.48.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 09:48:36 -0700 (PDT)
-Date: Mon, 31 Mar 2025 09:48:34 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Waiman Long <llong@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	aeh@meta.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with
- expedited RCU synchronization
-Message-ID: <Z+rHYq0ItKiyshMY@gmail.com>
-References: <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
- <Z-MHHFTS3kcfWIlL@boqun-archlinux>
- <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
- <Z-OPya5HoqbKmMGj@Mac.home>
- <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
- <37bbf28f-911a-4fea-b531-b43cdee72915@redhat.com>
- <Z-QvvzFORBDESCgP@Mac.home>
- <712657fb-36bc-40d8-9acc-d19f54586c0c@redhat.com>
- <1554a0dd-9485-4f09-8800-f06439d143e0@paulmck-laptop>
- <67e44a9f.050a0220.31c403.3ad3@mx.google.com>
+	bh=BEoJklBXV1vZM5bd1fsHmqld4olk3qTu+UwIVHhloYg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=AgoJ3yLsgFvro6CA18PUzxUM54QpcwxZNDCnbhfQ649nMN7VBnTemSfu07xZD2UyUy9MHXHgO8nrGluRwrBuZT59kk2UQtFylaHjyBF7GtZKdZMV455p5hScXnBnlCnlL+uXOFLFUth7kKP76LLYWm+Ke47H2eiNYv/wS7eiuIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=O9NZqgw5; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="O9NZqgw5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743439715; x=1744044515; i=markus.elfring@web.de;
+	bh=l3A6fQIul5oJ7bHGs/rref7U3MM7aEcG6y1nK2fWykA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=O9NZqgw5yW9GeUqgjwQlMS9oxelL12j90TxTCo5mnaoYIjBMJeMuDgHQ0sfWd0u0
+	 Y+97FrOdVeupna5JIfhAZERtZPrWcoKWbtcjGPq6EZ8Grp65ZXiSnn1FkvP2V6BjL
+	 aoBr3pOfNRzdnWqAl784BKScmEvecRWk+tEkeRtaUSmtxiMMPW2Ap0Qo1qsqMPSGq
+	 D1Fg6d8A26b/4xHFp6ZEmERy1j5NGb6CxI/kkYM3Y+rL9p+qo1Wt9UwxWp6NU1xrg
+	 0kHs6ChcsBeQ8zSRFeSnApFiujwEMyjNiEO01NNRC7YLd7aJ4RkJfi4GObXckJu1p
+	 EWLg19OotDCInxLf6Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMpCg-1tiipj1JnY-00J5yj; Mon, 31
+ Mar 2025 18:48:35 +0200
+Message-ID: <17c07117-36a6-4fab-aca8-a4cd3a67f2b0@web.de>
+Date: Mon, 31 Mar 2025 18:48:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67e44a9f.050a0220.31c403.3ad3@mx.google.com>
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-fbdev@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Thompson
+ <danielt@kernel.org>, Helge Deller <deller@gmx.de>,
+ Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee@kernel.org>
+References: <20250331141654.12624-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v2] backlight: pm8941: Add NULL check in wled_configure()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250331141654.12624-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AUWM+maq9tcBe/mWR8Zs3MqF4GCROi9IeCzUazeKrnvu7/KZwiS
+ B7w/0xy7fGgnHZeTmSR0izEvnTM87cKipZJH1hDCYYlETKm0L4XWgBc/6qvJVUULDd8Xevj
+ jJNnE3mywQWpSHiB9dpdbKf+qjZPsdiAWri59QhikoWKKB8jDdwBunLWS8Z/c7jqFzjVFyP
+ UGAkHZbALjniQ97VQk3+A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SRCcPfgiUNY=;B3BVqxG5bQIJ3u5mi+9dPYWODkM
+ 442p39lLFzdEzjToNBAEbeoEOWnAbebT2S3tFK1QOSu5NHIEbBVqPPvFdJhdcmSzUo88rpMge
+ Yg0nW4D1PeupO2BLVI9RJ6KL9eBpd4HvAKA7L9x4hWnChyxkWVNDh49VUm4TTVcv4ueeqXWdb
+ mMWFsEt8YM5VXDY+PF+A+O9oD0E5GJv6T5/iNcP0iPr3cnq984uZzeP44SMlgtk1ArMMmI2ts
+ vyCRAGPidFpsemML6+y0M+PUpL/lM4YaIZxJ4EiIkaF9B2KCCm55k2aUP5XHPsRX/NmlcMqZ0
+ dXgJ9NOvLklTQQW3LdHinnQYYrSZu0nB7HIqvjDE4XtGSKJJo4x7/qsAp4NoL0hEExPqDcIhS
+ wZFgh4yZ26lDl48FJ6kIV8olc/tVCcerkiIP/KrPfW+vIScTgcVxGlyFgRhSIooHfOn3f8eFJ
+ QFQwFZXf/o17L8cNoePthvOE2+rPOLR0dOeO9VGpZE1fQUn8Q13TDd0ofPphYSXppI5wu/UuU
+ m+3Dc/wOKwo8/qY6LQnqfHaFdqg6nmnLfoBGAcGY64QC/qfwCeusZM9VTDUwqryYgUyTW9sO8
+ U5ElzEROkAW5H2syZYg2jbHlMeH0jmEGZNCh7MNmwnqLNdmAADgzjXdoh4Zw/GU6S0C1bCzOy
+ 0PBmU1/Of2cMm8pSM2JamnWRi+nKJh1oowmSmpzEmM71lKuBXxRbqoJ+O8Wf2Plq65TIVS4sW
+ ioKIAc4tJ4dEK2IiO//QIMkQiYj78e1sTF9p9/54MnMaQVZwGcukt2/rvbnb00ypPuP74wR1C
+ 8md3fBM2w1Xv9XrFIIaR3pR5Ci9EZ7xymJAYUO9VFZXnXtpJT5BJikLlKas1pSHRELS5e9+d9
+ mN8BB1+T244GT0jt2VfcM+vrc6nLGgnhq/I+e2zm3SW52jf5m/Cm0XuVwxqi3l0TX2H8Karj/
+ pE6iTtOC607bjcRMgktoSW4YVWacHT3sKG1ylRWPSMIDIwVRviBdRmvIIp9tSVJIE95tYO7vd
+ WZGFA2wATnIb9FZ4NwpxQoJc4NKta1hZcXfSywm2psBEAXXMzHHwCpAzzsaTsQ0CEkmCd6cTp
+ JA32EdpeGR4MqtNIzr8LmgUjQj0adW0978zf8H7DC2io5zvPXIZkNOcMxuJq0M3LFbGF6jPlZ
+ EF0H4z0YjA15hfM+V5JdBs/HjceUaJ3q70IRgohYYo8ip9uXwRkhm2FDA4kiPJtoP+RVY4K9p
+ XbND0ATjLLzNH/T3rZengQyIXGVe+lfXpv1YJplXwo9uO5O4x2zRPE8AwPGD6XaUBhceeR6YG
+ dmOghn6ZqQXjmSckDFdoRxVJN0TQCi/YPUxXi7XgZb1dZlKhdCTpn/DXT0PG/kbII+t33mIrJ
+ cGllZ2Mi2bv7Y8seAHnOOTSam5+bQeV2oZ16QVfFUu/9rqqHcvOwoLeDwR6wyH1bXkg5sjJ9u
+ YbarsZly/fYC9XWexUJu06i0yzPWjRfit0h2Pqvd/Sv2nPLY6
 
-Hello Boqun, Waimn
+> devm_kasprintf() return NULL if memory allocation fails. Currently,
 
-On Wed, Mar 26, 2025 at 11:42:37AM -0700, Boqun Feng wrote:
-> On Wed, Mar 26, 2025 at 10:10:28AM -0700, Paul E. McKenney wrote:
-> > On Wed, Mar 26, 2025 at 01:02:12PM -0400, Waiman Long wrote:
-> [...]
-> > > > > > Thinking about it more, doing it in a lockless way is probably a good
-> > > > > > idea.
-> > > > > > 
-> > > > > If we are using hazard pointer for synchronization, should we also take off
-> > > > > "_rcu" from the list iteration/insertion/deletion macros to avoid the
-> > > > > confusion that RCU is being used?
-> > > > > 
-> > > > We can, but we probably want to introduce a new set of API with suffix
-> > > > "_lockless" or something because they will still need a lockless fashion
-> > > > similar to RCU list iteration/insertion/deletion.
-> > > 
-> > > The lockless part is just the iteration of the list. Insertion and deletion
-> > > is protected by lockdep_lock().
-> > > 
-> > > The current hlist_*_rcu() macros are doing the right things for lockless use
-> > > case too. We can either document that RCU is not being used or have some
-> > > _lockless helpers that just call the _rcu equivalent.
-> > 
-> > We used to have _lockless helper, but we got rid of them.  Not necessarily
-> > meaning that we should not add them back in, but...  ;-)
-> > 
-> 
-> I will probably go with using *_rcu() first with some comments, if this
-> "hazard pointers for hash table" is a good idea in other places, we can
-> add *_hazptr() or pick a better name then.
+                 call?                               failed?
 
-I am trying to figure out what are the next steps to get this issue
-solve.
 
-Would you mind help me to understand what _rcu() fuction you are
-suggesting and what will it replace?
+> wled_configure() does not check for this case, leading to a possible NUL=
+L
+> pointer dereference.
 
-Thank you,
---breno
+You may omit the word =E2=80=9Cpossible=E2=80=9D in such a change descript=
+ion.
+(Would questionable data processing happen in other function implementatio=
+ns?)
+
+
+> Add NULL check after devm_kasprintf() to prevent this issue.
+
+Do you complete the error/exception handling also with the statement =E2=
+=80=9Creturn -ENOMEM;=E2=80=9D?
+
+Regards,
+Markus
