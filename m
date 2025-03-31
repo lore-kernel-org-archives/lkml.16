@@ -1,79 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0E12AE8D
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3851DF73C
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743426635; cv=none; b=iV4zY8hQHZ3rt0DJ+EMT9vALaP09nypSf99l8wOgxLpqpl4YSm73pWbSrWABAtT0BPFyqQ9CshlkFQGcUaiSEZTAUmYceVBH9skeCAPCLdUdHaocFMMB6s6QhMiwZYC8aqTPxTm/Ux6Gt8Mo04O/MphTovQP1E8FT2sEPH7GoWk=
+	t=1743426677; cv=none; b=UwbyJEoSX0OxhFUOHogfDQkfnICjFwcBhB3dq3kkBrtM//l+AjynyppBekxXe7daIJZG3arc5gcoelSSl1ppX5Hr/F50Rp4pH2qQtjIgEvD7l/KSlZLiJFxpDuVTYGJ8yAc99/yHkra+tRozGxbGFBUyzSGLlv/+T+dIeyEONp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743426635; c=relaxed/simple;
-	bh=y4hsUAeleINJKAjsEfMjkQCX6DhcCmEJQSIaQ7uyQmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cRAlc0ZZzKPkftqXk/UaV7TIuVdorKApT+AfxXWZv+pFFF/fiKSeO+l9tpgVl2Hw//Na4EajpIFdUtuY4ZjzLAtKs0MMFxJhG6MDQWdZTNtIRk0raWpyqAtzAsMUSHGeZq6RtuMjpALOq94Fb7Pm03O107Yoi3nkP8LYWZVkZ/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3ayn5hv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743426677; c=relaxed/simple;
+	bh=XsiVREOjhw29kcY3WPjKFPMMC7UkyCeZrRkUJaVt+SI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PPXJCq+zgAQ7cZH+iieeNFIBCq9dcsJhcxkpQ8V8KYJljUSu3dxGkkyjzOsY7zMWQH9l/3ZTKGYts6YBTeaH0NM6MH05CpFkETDntAQRxYp6VqWNx9XYDDAgy6M+O5DOPa1b4/qW2AuDqqXk7B3yKo9V2fX5w3XVinbP1uAyCZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x640sivD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3+KbWedF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x640sivD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3+KbWedF; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3ayn5hv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B09B4C4CEE5;
-	Mon, 31 Mar 2025 13:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743426635;
-	bh=y4hsUAeleINJKAjsEfMjkQCX6DhcCmEJQSIaQ7uyQmY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=o3ayn5hv4E6H3Vvx5/lUWwHoYHA5b3OUQiFmWmq5Lg7FunMCvjj1vJUNcab4mON/q
-	 q5Dy6HvPJNoNm0RCJk51+hZO6gueYgQxXaDx/V48WSBqyaKISb53K+iitHVQVWMeTG
-	 ImlpU5OKgZfoL/p/2Z8a/fBneAEXPWNgPDwF5SOCI7l3Xp4fbwB/xRoZaAGh22i7EM
-	 9orsb/E75fmei2Cn/9G8HqkLhlVaNk7iMuzteQJFJa42mzm6ng5Nlr2rSuVkRtWAjK
-	 k0TaMglOY0by66puSb7Yy2qfpbLx7QNm8VbEbspAHwLSfEglPECydRJB+9mRDP3vAa
-	 UGCPW1/pleJWA==
-Date: Mon, 31 Mar 2025 14:10:30 +0100
-From: Daniel Thompson <danielt@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jason Wessel <jason.wessel@windriver.com>, linux-kernel@vger.kernel.org,
-	Douglas Anderson <dianders@chromium.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Nir Lichtman <nir@lichtman.org>
-Subject: [GIT PULL] kgdb changes for v6.15
-Message-ID: <Z-qURoU3mrfusdBv@aspen.lan>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x640sivD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3+KbWedF";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x640sivD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3+KbWedF"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 599FF1F38E;
+	Mon, 31 Mar 2025 13:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743426674; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UgHcXmdY3VYM46vtSTqvA/3bmTusiv5oR1yMTgeGHpw=;
+	b=x640sivDOeNTg2VAWeZtzy9wMxv3xFubRMhWJtCop2T4kZSHhT9++QzXXWxWYC3yL819aX
+	l4hS+wBcyBtY3M128IFsHvd8w6uZCAmXud75W3tgglS3Yhzh8KY45j/bQbZ2KVg58gkQfU
+	4igBVLmji9aCytVcfN4Dw7BMRjqbz5Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743426674;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UgHcXmdY3VYM46vtSTqvA/3bmTusiv5oR1yMTgeGHpw=;
+	b=3+KbWedFrTOCKhtVcsXXdV7dLz3SQlwCNw37K5Ey76cxjk4s8nPzdOG3a4ysAsFjaCcLYc
+	vDSKQH/5OlGZm+Cg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743426674; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UgHcXmdY3VYM46vtSTqvA/3bmTusiv5oR1yMTgeGHpw=;
+	b=x640sivDOeNTg2VAWeZtzy9wMxv3xFubRMhWJtCop2T4kZSHhT9++QzXXWxWYC3yL819aX
+	l4hS+wBcyBtY3M128IFsHvd8w6uZCAmXud75W3tgglS3Yhzh8KY45j/bQbZ2KVg58gkQfU
+	4igBVLmji9aCytVcfN4Dw7BMRjqbz5Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743426674;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UgHcXmdY3VYM46vtSTqvA/3bmTusiv5oR1yMTgeGHpw=;
+	b=3+KbWedFrTOCKhtVcsXXdV7dLz3SQlwCNw37K5Ey76cxjk4s8nPzdOG3a4ysAsFjaCcLYc
+	vDSKQH/5OlGZm+Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 252E613A1F;
+	Mon, 31 Mar 2025 13:11:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6tu3CHKU6mdxHAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 31 Mar 2025 13:11:14 +0000
+Message-ID: <c50d94ff-cd22-426a-8ede-21d9d045e2a1@suse.cz>
+Date: Mon, 31 Mar 2025 15:11:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Sebastian Sewior <bigeasy@linutronix.de>,
+ Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>,
+ LKML <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
+References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
+ <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
+ <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
+ <CAHk-=wgpYOGdQ+f62nbAB4xKLRbxnuJD+2uPBmRzSWCo5XkEGA@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAHk-=wgpYOGdQ+f62nbAB4xKLRbxnuJD+2uPBmRzSWCo5XkEGA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[linux-foundation.org,gmail.com];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
+On 3/31/25 00:08, Linus Torvalds wrote:
+> On Sun, 30 Mar 2025 at 14:30, Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+>>
+>> But to avoid being finger pointed, I'll switch to checking alloc_flags
+>> first. It does seem a better trade off to avoid cache bouncing because
+>> of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
+>> others that it's faster to do trylock first to avoid branch misprediction.
+> 
+> Yes, the really hot paths (ie core locking) do the "trylock -> read
+> spinning" for that reason. Then for the normal case, _only_ the
+> trylock is in the path, and that's the best of both worlds.
 
-  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
+I've been wondering if spin locks could expose the contended slowpath so we
+can trylock, and on failure do the check and then call the slowpath directly
+that doesn't include another trylock.
 
-are available in the Git repository at:
+It would also be nice if the trylock part could become inline and only the
+slowpath would be a function call - even during normal spin_lock_*()
+operation. AFAIK right now everything is a function call on x86_64. Not sure
+how feasible would that be with the alternatives and paravirt stuff we do.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-6.15-rc1
+> And in practice, the "do two compare-and-exchange" operations actually
+> does work fine, because the cacheline will generally be sticky enough
+> that you don't actually get many extra cachline bouncing.
+> 
+> So I'm not sure it matters in the end, but I did react to it.
+> 
+>              Linus
 
-for you to fetch changes up to afdbe49276accb87a0c7414e75864c78289ece2f:
-
-  kdb: Remove optional size arguments from strscpy() calls (2025-03-28 21:28:28 +0000)
-
-----------------------------------------------------------------
-kgdb patches for 6.15
-
-Two clean ups this cycle. The larger of which is the removal of a private
-allocator within kdb and replacing it with regular memory allocation. The
-other adopts the simplified version of strscpy() in a couple of places in
-kdb.
-
-Signed-off-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
-
-----------------------------------------------------------------
-Nir Lichtman (1):
-      kdb: remove usage of static environment buffer
-
-Thorsten Blum (1):
-      kdb: Remove optional size arguments from strscpy() calls
-
- include/linux/kdb.h         |  2 +-
- kernel/debug/kdb/kdb_io.c   |  4 ++--
- kernel/debug/kdb/kdb_main.c | 48 ++++++++-------------------------------------
- 3 files changed, 11 insertions(+), 43 deletions(-)
