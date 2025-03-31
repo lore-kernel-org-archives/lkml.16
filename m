@@ -1,114 +1,101 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3489B1C84AA;
-	Mon, 31 Mar 2025 09:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D231C84AA
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743413187; cv=none; b=O5Py9ofy26ssww1rCp6RDvuJGZsthflAYH4V+WwLRZPjtNacR1m6UYmIWqaOKly3cqTuiMrZQNZ6Ufs/0atBevDav/b1RtqV4RgErg5mr2q26rMItrVtZPmgYEQZuzuSlvF6QM7nSedCo+BH9jEI+7pUTLCQdm+zAwTilIZJx08=
+	t=1743413242; cv=none; b=eWxByPUYdnkwnUO/Ev8/nfb2tVZHy0QH2EPCSX4ggwNGwST4JcBg7yFG5/9y21HNVCd5Ztin3mw0E97odC6ItawEdwz02pcmk1Z7HOdbz4vw0S76fhMY+gGs20Pyz+Z+s0ZnVG069DPx4K/FqwifAgsN2Gvq6I6LszOGNseJLMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743413187; c=relaxed/simple;
-	bh=V0QnODFma7S+d+i8t9LUBD0xftnJaXWgg/npE55QrOk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iw7tOBEpLEXoKkpZNjnPlmO1UjAlFylETaPi+gL20KYPoVFG3gy9bERuwOieZRCtwBU1sTrAEIWoZqJKtQdfNd58C+7XGLPF0HapejptXJL21jwrykna0gt3d+9gINiGCYVWwupUIWWUlAwXae9pHurwQUNEVemMbTlnoOkDB5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XjRCeMaG; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743413242; c=relaxed/simple;
+	bh=EljE4+siz7wRnryvAHj3Ttnk9GA/xxsBJoNqJJfLMlo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L8kjHRsQYC0/7bk/he8HEY6my1vF3+unygRZDz5SQT/CUyquDca5BAuTOeU6pDz+Fp5z3Kuz7NIAQz7fdj2YcPEL7wM0eEA1NFvnehLMrDus2XBApAkxBSGc8TBbUGWrK7gyH15iIqyHBTtHjTkJrwK3IjrWEhiHcDHtuyC+M78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SnumFeyH; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XjRCeMaG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743413183;
-	bh=V0QnODFma7S+d+i8t9LUBD0xftnJaXWgg/npE55QrOk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=XjRCeMaGKoIibd5ArzvYY4UhDyCmc+Kj4graExuUIoRBv11nQU/oDhdlNiurBiXLI
-	 Ycb7NLunmgbgTlsUuncORlnS2ugQVPl3s7SY0dbtFwaNVkAXNqEYDfUcnyKyOegEfl
-	 F7e5e993KjP8p2/NEK4Ok8XXByFdKLfAU/KtkxniJOj4jWb4ZtLg4djBAnJPuC9R1c
-	 isdY2zmd4Ti8UeAST1RR1WG/lKG6OY69eOgyLyJSysXLOR8yge1qQCe3JGmGSV/d8s
-	 1DZcMJ/ibVOCN20YyDU694ylCyx169opo2NlicD8pelofnp+1c59b7iDDvhy82YXb9
-	 1WGDAndx+MVEQ==
-Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85D7917E07F3;
-	Mon, 31 Mar 2025 11:26:22 +0200 (CEST)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Mon, 31 Mar 2025 11:25:52 +0200
-Subject: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Force ssusb2
- dual role mode to host
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnumFeyH"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2264aefc45dso108538525ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743413240; x=1744018040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mTJvGzIGMuULN2adPZjm/U1LArMT/vmHj5AlaPuCUw8=;
+        b=SnumFeyHxZqgAkHi4zqzOdZ0zNoKvLrLFrZvIUZkSNQJH20nvCRnAdalI189peVC4w
+         6upKmGU68XnvB9TRit1NBugJs39ujHzFnO5v58cGxC82s7Lpi7LU8HApuLtAtjryRwRt
+         PnrBqR0G1QnxuGbvtd/Xd2HZr21jDb07tM83eGwmW2rSj/VSfE385Evgzi6AX9+3D45z
+         J2qohhrOXtJtSD4pHqqv8zV8lrFdp3nxT+ogyzGaWZXuH3iWg7JxT0L82cPfZFG9IMBa
+         dKD9jKj2TTE23DW1wxoWyNHBTJ/CXNIGdUiYVEhiFZzLWaFiJ8tBP/WEbEADe+Gdz6fl
+         bQyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743413240; x=1744018040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mTJvGzIGMuULN2adPZjm/U1LArMT/vmHj5AlaPuCUw8=;
+        b=Cggt4WkuD8ecAcfGOWV43zJoKIpZSS9EjhVSZvO3a0sWHhf0KLGU/WrschQ+Ef2zw9
+         JknWCs+DUD6r/kZwhqMO5zl4INEVZSX2RLPvTAh+lps9BCRgC09m+FDEAq3hvu/hNdmd
+         895AVCkmwsufCJYNvzqNYcxGnhCGEx84yqxRJoKSnfCHUixZ3hmIB1Mj0uJ7mAk1WvRa
+         8mDLbjPyN9B9RAFJM20nxgKHtCkIYx665dr0rQ6QdEom/eUNsjT6u9zy81OVOQdYuguL
+         To2wrGFBt5R5an9+UaOz5invXbN25w1BEcS33uUOhLXTfw+MnYIBpAUoLF/IG2fcRdd0
+         Ej6w==
+X-Gm-Message-State: AOJu0YyVWmvef72PHfxFz59YN2GBoIAn8qXudYO1Imu2JI31d9zdF7WI
+	cfPkuiNdNSXbhA+MDox4QHNZPq+39Q0tDoeIZS2OuzilYe2mt2eOU1l1I60CT2c3Qc6N
+X-Gm-Gg: ASbGnctQPz8HBrXOTfWtNg7tw0zM7my4SOWffPRbFHZxpDl2GrZryoRHTkGYnZO+ku4
+	rJkVySA5v/zVLJzHrFgHY9E+EFiwtn/fskGoqGoP+kPJW1V00QNr0i2SCqIeuv6WPxAO4PuflPW
+	oytwT/08GExExbrrz8VuurDc6S7p7vyXWMasHUqost++/AvXBxMNmAGQh2vs50bPNruah0YG23w
+	ongI+6VvTnG0GXpU1iEBh2jxcdbgGPpO0wxJUMOEq8v4JzFcSlUm1Prr9f2LlJnsC/no3zN5xxp
+	MGiBVGIP9tTvdLSHnOVI/eRlsGy9sZm1i2TgUikXk65c83g/NQMkF8sd3qO0qptcIBpWFBg=
+X-Google-Smtp-Source: AGHT+IFwLPKjCdn9Q4/jE8PYPwdO/5MfEDHFgLlt8ZydrEEXEp/DNEDaFo4OXBF/xEcT6yOiA0lv9w==
+X-Received: by 2002:a17:903:2f85:b0:224:76f:9e45 with SMTP id d9443c01a7336-2292f963a1dmr103628575ad.21.1743413239756;
+        Mon, 31 Mar 2025 02:27:19 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dff072fsm9160138a91.14.2025.03.31.02.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 02:27:19 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH] uio: uio_fsl_elbc_gpcm: Add NULL check in the uio_fsl_elbc_gpcm_probe
+Date: Mon, 31 Mar 2025 17:27:12 +0800
+Message-Id: <20250331092712.7227-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAJ9f6mcC/yWNwQrDIBBEf0X23AU1DSn5lZJDNNt0KWqrmxII+
- fdKPb5hZt4BhTJTgVEdkOnLhVOsYC4K/HOOKyEvlcFq2+vO3jDIC1eKnLA3Gget8cE7OsGFhLz
- UOdrBGO+8c5auUI/emWrnL7lPjTN9tuqSFoKbC6FPIbCMKtIu2Hydgek8f9JfStGlAAAA
-X-Change-ID: 20250328-mtk-genio-510-700-fix-bt-detection-2711cbcbb2e4
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743413182; l=1967;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=V0QnODFma7S+d+i8t9LUBD0xftnJaXWgg/npE55QrOk=;
- b=8e0zsYdWGNiu/yvRlNY1uOiQBoNeYQPzIvLrdLdob0CYYVrRaPu9O2HT1NPa0DBmndQ9/SS0J
- 5ne4ZxT0a/8DLY94DhWT3DqJ4Soll0EGLzeupDpS88N3h2aAvP3IozF
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+Content-Transfer-Encoding: 8bit
 
-On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2 controller is
-one but has two ports: one is routed to the M.2 slot, the other is on
-the RPi header who does support full OTG.
-Since Mediatek Genio 700-EVK USB support was added, dual role mode
-property is set to otg for ssusb2. This config prevents the M.2
-Wifi/Bluetooth module, present on those boards and exposing Bluetooth
-as an USB device to be properly detected at startup, so configure for
-the ssusb2 dr_mode property as host instead.
+When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function uio_fsl_elbc_gpcm_probe.
 
-Fixes: 1afaeca17238 ("arm64: dts: mediatek: mt8390-genio-700: Add USB, TypeC Controller, MUX")
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error.
+
+Fixes: d57801c45f53e ("uio: uio_fsl_elbc_gpcm: use device-managed allocators")
+
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
-I've tested this patch on Mediatek Genio 510-EVK board with a kernel
-based on linux-next (tag: next-20250331).
----
- arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/uio/uio_fsl_elbc_gpcm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-index 60139e6dffd8e0e326690d922f3360d829ed026b..3a9d429f0f14b501ae41551dfe7272f242345138 100644
---- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-@@ -1199,7 +1199,13 @@ xhci_ss_ep: endpoint {
- };
+diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+index 81454c3e2484..59ba1a2dcfe3 100644
+--- a/drivers/uio/uio_fsl_elbc_gpcm.c
++++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+@@ -384,6 +384,10 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
  
- &ssusb2 {
--	dr_mode = "otg";
-+	/*
-+	 * the ssusb2 controller is one but we got two ports : one is routed
-+	 * to the M.2 slot, the other is on the RPi header who does support
-+	 * full OTG but we keep it disabled otherwise the BT on the M.2 slot
-+	 * USB line goes obviously dead if switching to gadget mode.
-+	 */
-+	dr_mode = "host";
- 	maximum-speed = "high-speed";
- 	usb-role-switch;
- 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-
----
-base-commit: 1c4df70331c0dc7f82f724166575c16931ec66b3
-change-id: 20250328-mtk-genio-510-700-fix-bt-detection-2711cbcbb2e4
-
-Best regards,
+ 	/* set all UIO data */
+ 	info->mem[0].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn", node);
++	if (!info->mem[0].name) {
++		dev_err(priv->dev, "devm_kasprintf failed for region name\n");
++		return -ENOMEM;
++	}
+ 	info->mem[0].addr = res.start;
+ 	info->mem[0].size = resource_size(&res);
+ 	info->mem[0].memtype = UIO_MEM_PHYS;
 -- 
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+2.34.1
 
