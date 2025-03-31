@@ -1,267 +1,179 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2049.outbound.protection.outlook.com [40.107.247.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3B1215F56
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743435537; cv=none; b=ch6uQ0itNKzj6F4ge6Y6Yx+IR+x6N96q+sN8wmdIjO4jpo8dNeXlB32/bupEDOBzm8F0XDmGjE7nGxmBfkwuUN57e++N9TsWBtc7eh/jtUm9Q1BE/ww9WM9AXnbM96JHQlBHiGm7OAnQQlzY1/IHV0A/t+hUcd5VdtX3/ksJxDs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743435537; c=relaxed/simple;
-	bh=XSmVkVeZdRqAgRBh6fbVg6tdGfHaB+Oq9/dh6pVnsnE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=os/cqzP1DO9uu7QhUD9g6bdFdjt6ngGs72U4xaiNXQyGsLyAxB+k8U9I0W3V0R0tWQ+ODuHacKYdcgd1mIv3By92gV5IZkpz9UCnN/eJq6WXr41BQNntsNgKYry8EhT2DcMlu/l2jU1SWCXUDlJCeeokRWbtKynraocNhXCYPLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/iFSTOg; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77E7218EBE;
+	Mon, 31 Mar 2025 15:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743435565; cv=fail; b=Z+avrlWMIafFO+hID/PFZDYcwcGuQWknDYuG679rIP7qGe+I+k8oyf3dKexkeBfm0tap5WHEh9m4KqPKIRXmmI/dTP2rtjHs0yGj9RvEMGibGq1uE+oJdAqpYhiucWdx53FvBoeuNKD0TVHBviS+Ria2VhJKz5p2oSTxIjKj2kM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743435565; c=relaxed/simple;
+	bh=CHWkmzpLKDU5qrd3PWC5/ezaSVvXyCMjTVbNiWWefLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=olGAFTvDXo4bzGqAK8Nbjqc4QvwN5qF7mogGlQLYe1ipCFHVPGlBDVBnxZ5/TQTXLaOzVZ1eOjBoSydqehCOXiHDEKmR32ILjGZCTSvk8an/nzVkK3N9zB3YNCmZ/CTdFi6pk+5tQBDbq2On7ACe/oEE3yv2DzNWjNkepdVHF7U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SYXoWuZ3; arc=fail smtp.client-ip=40.107.247.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/iFSTOg"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so29096195e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743435534; x=1744040334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3cV2X3A/AFNmBG0lPkf6t+LeaV66zSVbYS9oBEkGpMY=;
-        b=N/iFSTOgwbHCTLdDxhfPc5hwEasTUgSwLeO/xEGIWU5mk+27ej4vkAnukRN0HE9Ln1
-         oncmBecE5dWDKhBvD1RaAKmZJ7gizWDfS5fBA5I4TZr709YCAjIjMu4apJDvGl3ekZ2l
-         ifp3CIuWqe1EyKu3a7J7K+wddU+BK4L4tHTYiJXeAIMCbprU8UAwiHgkuxdwX9bpfaTl
-         kvWdJHSHx6stL/Ppyu9pfgu16Ob6j+abHMY92M2zk/n+HpB6bme8Hro0lkkJAbGcS7Hg
-         P1YVq5l9l192Z+7lYuzc0oEl+kmEa6iPUTioAmXuzbp2Rm0lkwg8cXvNbSozi3tL3bM6
-         2Tlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743435534; x=1744040334;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3cV2X3A/AFNmBG0lPkf6t+LeaV66zSVbYS9oBEkGpMY=;
-        b=CqMhMTkE5MjqlaA6RK/kCkaFvwvZDc7bCKbRdvkApbln7o3pxQzI5EVAcSktckqAt/
-         WwO7XmV3Af1ybChbZ8KwyYhFYEVqfijZy+dNK+gn39w28kSca9pSQmvfINQXAxPcEPXl
-         7MmfTbnP8OZMqG9+ZyRh16R08aI4TM/Ghu/HrvYF7n3zyeZsFISL17Nenvmfskn+qgGh
-         vpmUs068/PVCzW5jM6cy47KYUyscob81docy6QJMz3X9QJfFnZpCqBSkRlld8Mwb/WUK
-         b1XCtwZQGZqNjXdZCvOtBd1HWDloi6iEhTWGsMkNxZR0kJYnfmhlxavoEVOWLPOHnx6q
-         ntgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmthfF2zblwTiQl36rc4i1BAl6Uy/UfKxjbmS9lLo/wz5RO2SCs1R+o9fGHB6MmBvZhQaMVUZVIlN2k/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu7rB5Tf7pGM6/Cr6AOhcIjZwGlkNbBZHkes0rA8261GVPDpzo
-	t2eX7tNhuJP6JIHY/Ulf80Rly9mBZinNsdK9f+NbM7Kcn+40R4Qz
-X-Gm-Gg: ASbGncu+C0Nmn32kjnSz+x4N+Azc5fRdbfZbPSh3WMZFTM4M10p9UoMvJNO/Wf36BnM
-	zLnzIbehdvw74YqRRFtJKbxtJhY8n+5O4pqJQhhpO7WXB6sOL+xOMB7h4rpbKhgs3vPRfmcFzFl
-	8rWCWbUgzFRZWJeS9aEfZ/LvKYwuSVQWqNwbnlnZU1LLJWijvo233RoJzOxaB4m/R3LCyU3FJVE
-	xeJJtQyFtq8tntQQCJCEaxMJnve9gUsVvx0H57dttbTwYuRFNwnsUW+PIx/9seSx3Ga+i4jrCdg
-	Y3GWMpmRq+X/5KfgFxRCQast1yE0UHUywU0FEfw=
-X-Google-Smtp-Source: AGHT+IFHxPVBCNkh80Wi3fPvpwcdrU6K0fcLb5jPOJqwVZV5BBIXRjafmwnPOTESjluqIx/0l5a7hA==
-X-Received: by 2002:a05:6000:240a:b0:39c:1401:679c with SMTP id ffacd0b85a97d-39c140167cfmr6806416f8f.21.1743435534196;
-        Mon, 31 Mar 2025 08:38:54 -0700 (PDT)
-Received: from pc.. ([41.206.42.66])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm11419167f8f.7.2025.03.31.08.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 08:38:53 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev
-Cc: philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Erick Karanja <karanja99erick@gmail.com>
-Subject: [PATCH 4/5] staging: rtl8723bs: no space before tabs
-Date: Mon, 31 Mar 2025 18:37:57 +0300
-Message-ID: <f4e52e87e0dbaf4c728bd0d2a2c641e8d465edd2.1743434232.git.karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1743434232.git.karanja99erick@gmail.com>
-References: <cover.1743434232.git.karanja99erick@gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SYXoWuZ3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=obuOJLEf8sUw3gRnt4h29PDxMCb+fkfBiqhckv177mPbaxkK00XJQCvvH1nblYm8ScSGXRI7rL6BLx3i1AuuABZ9gUu15bSn6zW5D0qUeePMRgTx1Oo0yNKz6LlmtYfavXQa5gdFqWqR9mIDe/957XEU8qhr01ytKyFveEHiIeikQeNonoWtBxyKF0MNm72BOd0+zmZZLGx0aJOH5qaf15Oy4BzIeWhDntmanVopuBExRhlorSTT0m0RWoQ/mhqvZwrBoa7S9z4gnzO/MBRleAJpRRbKZPsgA9smMuV44s6d+NsBmW9ov7AGq70HhQBYRXGBNc275AqiSUOtcVAWAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y95unQB9meFHPmFlKQuD63xkRywz1bRc72oY0lHQRvE=;
+ b=IN5tY08zwpfcApshHyfd6/hix/1YsCrZHeEV3h44lFG9y43KghGjJl/s5D17PYu897XTM6x88XRFqXUFOGuBSMObp1EREbGKQ5HxhHP+/derlcbCQSvteACvAs6kEksQ5dDzvH8zK+cO/sB7ZhfBcHQiHe0bbtM7/uS4JRcyrKN4ZToLPMETQj6+vRaeTRva7xyaYuL/NsApnJv8hrDOYJVyJQlDIq1uyt5vmuuYTdM/vrPRIETxsRPnV44547EshuLoTlW58Al41vrzsz7XVM7NHNXVgCPtvCRQI+GQIbZIUbGuH+qxm4xAvIozd7Z24ZjfhIiaQrSLGzqg9VuyxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y95unQB9meFHPmFlKQuD63xkRywz1bRc72oY0lHQRvE=;
+ b=SYXoWuZ3F3t0MlOh/n6WUN3RI8xsgEg2DGYE047vMF9/1WDAqiNPVXL/zbkP+EbXkcWR+hhscV8yzwQq6Td4TBpvrBwKTZS0JKZwAbm/KJ1pQoyAvGwy6B9rOJFC7So+71F5Fvya6aCUNyFbrhM4Jl+zamcD3jNtnsKmkzg/vyLwgpksBNI85vAPpJ0X1+Ph77Q4Nooo9VMCfZCP3FHKRxFRWpc69bj6qBVHaaZ5J944hV4X0l/bQ+PohY9i4eF4GupU8lPXQjX0LRV6cDtfFlQ1uqUvOCb3V4x0nWuOw47yu2p75Uxk5qrqVHaGOOgU+0mEuEmK1w6Mm/Z39b5BxA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by DB9PR04MB9891.eurprd04.prod.outlook.com (2603:10a6:10:4c3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
+ 2025 15:39:20 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
+ 15:39:20 +0000
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: netdev@vger.kernel.org
+Cc: Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: pcs: lynx: fix phylink validation regression for phy-mode = "10g-qxgmii"
+Date: Mon, 31 Mar 2025 18:39:06 +0300
+Message-Id: <20250331153906.642530-1-vladimir.oltean@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS4P250CA0005.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5df::16) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DB9PR04MB9891:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5127f606-fe71-4d9d-d21d-08dd706a344d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ihvystSMb4l1Vi2goZtaJewGiYC7afcsQn+JJgld3mPe2aoQtS2Pd+L6dIiQ?=
+ =?us-ascii?Q?h/j4o7d+S13bUiCbHxkvc3zhdiabk4qsLCLsmG1Jwq1TfzItDuf+aY1JrIEW?=
+ =?us-ascii?Q?byLpqsOb30PI+WUr3k2YBU9otQ3go38oOePkT2t/nHRiY0iw0/ZOqVW/2rFF?=
+ =?us-ascii?Q?RYRhXwIh1RdiCngPgYmCB9kamHqKaKCU5/B1yDnT/l2jxuh4naVFs4Dyi6u9?=
+ =?us-ascii?Q?19bJ08pZl6W7sQNXhjM1/a6yXRREq1ftHfdKYF5sYQGYtCCujHdMRx2J2XPy?=
+ =?us-ascii?Q?f/EVweT0ex05O2RqI5QOMi2/qV/Irw5fr7+wX3nfm0lDuFAFSJfvqQhtMwMn?=
+ =?us-ascii?Q?IgkEJdyY+Zi78Egga0WZpSxjNAF5L+iZJZxiwKM8CGkoUuel+2+1FKiGae6P?=
+ =?us-ascii?Q?s+9IaU59VN3IulCWRlK/613EyIPI7kZqoK602wJ9lQdlSsqY/jlGeMsyeIk9?=
+ =?us-ascii?Q?hPpq4U9dZzRXAujfYTnSotf+/8ffuRckOlL3JpiSiEcwwG1YHWSF9bWt9Igt?=
+ =?us-ascii?Q?88M0hUYlJGjf1TMxplZs+1+Dxt33Ac8TS9LEW9Vt2st5MFf/TYGJDwyn3U00?=
+ =?us-ascii?Q?v4hcY2beyQTQasHN4CRjyvKYiTGQbZS0g2MrBvG9AB/zixHHVa9cBEhQeN1J?=
+ =?us-ascii?Q?9TNJmOjKPXhzGZKwXOf7VJpgddlm1IkzAJMrL2begAhxkwpG9soBU08c3q2u?=
+ =?us-ascii?Q?DZIlKy93TxhFhD80OSwd2srP72+UxkLR109JoiTEZPBc+3fDA5u/y5OqNaiH?=
+ =?us-ascii?Q?5HTKvnsgAaB9k9JAWS7rEoJ/klZTB2v7m6NnOL9z7FwNeuFYdJak8AW62A1h?=
+ =?us-ascii?Q?cmy6kjTqAxtxsp/1jBdUzS4Df5hfwDpwCeYPiQTIToMaesHGTg3YXd7uSCbS?=
+ =?us-ascii?Q?EfX8Wcdo3J6O7xNgRUe/0DjWEWDOuD1qCUEr0/MWqsgRlvspHEbEucAryy/5?=
+ =?us-ascii?Q?210Rg3UXcAkmJPPpd25hLJgq60qTD2sB/fmm71boGIe074RB8l+DwDwAQUOJ?=
+ =?us-ascii?Q?9c76CUaz2H5Y5aKlGFd7s3ig4LE+1fuQHRByCK8fuqWrEY3tKOyODmFoE3XC?=
+ =?us-ascii?Q?r1bQK5aziW2YODlCk8phoj/KspK07tuV4i6dkUwC26JCBJ1EYvnEnMvV3KnE?=
+ =?us-ascii?Q?W1pOk9dtGmw0u8hjHywbZBpNofasJBEHB5++DUo2gt2JPA9w+9k+E2FpK7Wn?=
+ =?us-ascii?Q?U518xAubY3flaDXBwp4XhUkWEGjxClwO1XKbUrj8FHUazozpeYbJ5rFUh9Fq?=
+ =?us-ascii?Q?U4NG6F0B2kFv0vkktvbNCyDRKwePTEfHtusHJnXUgutHMaT22DBhp4YMyzy/?=
+ =?us-ascii?Q?0oyHA+yzacnAXx84CyusH3r1jKyYN6CGH8VsgxtRNRvRZ6u7zAlhf2VerPv/?=
+ =?us-ascii?Q?/7yK63q6zC4AXVXJlIx3MfCVj3/oVJBq4Hsh8nv1AzI0RN8o8waNX9gxxw1C?=
+ =?us-ascii?Q?vEbsO1kUQ/yrE46fy17Cfvntk4DYC+fKTkyPQbq6tNEctVC+Lc/hZQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xBzW+TkkR+yON4r7688Vtdu8/LlLn0e8YvnViwoiBahAd7ZWdfO379FJV4Bl?=
+ =?us-ascii?Q?hjfXHrpN2j8VtjtSCNafYMxzJ7t4RxXg8Pol1wUPtv4+zRftuyogvxdftyct?=
+ =?us-ascii?Q?V7OtoOKotKkIISki8CRa9ISjH5x5ID+UZSU2wdQsMwviqreiEez1FKJVG1cH?=
+ =?us-ascii?Q?KAqithzJGnUKCQXGFdmr7HIj+qr4H6FK/rQleIYGHSwzgm+1U/LvKi8lUJvs?=
+ =?us-ascii?Q?KWuiV6iPYSZGl4PZ6AAr8WNiPIjUi57f6UmD0mPGxVgtmHxX/MqoSl/73yeS?=
+ =?us-ascii?Q?Sd2RBh5APOOKy2WZ8CpfNnyD+Yxw5ebeyYJ+efWqoInerV4EvKEfaGkfB3Fi?=
+ =?us-ascii?Q?bkCfID3uS9j1r98VVccDI4d+3D+UmRJygGISAlN8wpgBEoaT1jO6y+E48V4i?=
+ =?us-ascii?Q?oQwvdXbjlIRUERTqXfZJv/lEpmVt4jmzaxmqPiVDPU28F2tTRLeKJeZTKEkI?=
+ =?us-ascii?Q?oLm1uEpG0SizRWT/jIIspaq5GYPMFh72UQjPThDy21fyC5pojXY9/oKtlLqL?=
+ =?us-ascii?Q?XSogcTRJdSEImcd3fxSOI6SvvJWU9rxKJK7QnnzPdTPsOVGgRVNhnVviwftD?=
+ =?us-ascii?Q?EK8eSiXfIkYLHls4hRZrRqJbPgQ4PzjtQhdXVZxi6SI2aTf5RmaxwpG8wyQM?=
+ =?us-ascii?Q?JkFERFJm3svXn0Rh7lHtRR859xkK16VEIqLU42WmcHYhiuBUwJhckyNgcBO8?=
+ =?us-ascii?Q?G1xZ7XxCXdtP2Nw5M1LvwBZiuV6ZhW/tbkqrX7BGYmJU4AsNa1xT2kr/3LKt?=
+ =?us-ascii?Q?Tx01zSmO/ggcuUSrlE2AZ038mUqUBDhQAurwb3V5+2XTzXitZo2LJvczpmb/?=
+ =?us-ascii?Q?ZSXaH1spXCGQXp+CkokZqFmtFU2ZGhg2fO3ZiLiN1hOQS6Doq/SW2yV1E2/W?=
+ =?us-ascii?Q?0b4yV+fFqIyVNH+x3yJHQOAUYDo0xWEq+ORfIAifPnjYkyUy7Pv1erUD+3LR?=
+ =?us-ascii?Q?+V160h6wnhI0R4qIGCk0iRrbfGEbKwgpYDdQdlVXLzv7k7ypy3HaJto5Mrda?=
+ =?us-ascii?Q?d9P2zvxB8mWnsX+yx4jBLoqzjDcCKemwxPhvkGvwP8wj2QJjsxEV7I7SZ9uR?=
+ =?us-ascii?Q?7YIOoFXvRFz4vrufJiI7b8X49ySK2vv6psIsriqaErEvA19nZaZhcDPOHKAy?=
+ =?us-ascii?Q?Slbp6W43j75m1YhL+nvUdghxYy60YiyCBZPtpmt7uYxnXwV5hqYweH/Po/9v?=
+ =?us-ascii?Q?Kx24YXZR0cQNKVn8RSmD3sS7mb2txniXWJxhy37l6sh/u3ghNboQHQ4vfNtN?=
+ =?us-ascii?Q?A3XKFthvXRhHrJGoDnKnuaFcM5SdppWZglCseFAH64nuXpO1XllHQjcxipJ5?=
+ =?us-ascii?Q?Ckf64shO8a8Kl2onSyzh2dCswNKiooADz2GJGeB9Bn8V3a1wCZKwm/j+GcgH?=
+ =?us-ascii?Q?G4u0N0FXGW4sw1g5oqw8Y8/gpZAoQXv2yRLvCWqpWQRg+E9OVv1HKlkr+OkJ?=
+ =?us-ascii?Q?BgM9Vxdzn/QsOoO1U6Rbu/IMTDsStYIqyIJyjU911wjAYyLKWkKalNmPsD/V?=
+ =?us-ascii?Q?7Szz++UmfPaHkiBEt3zKQJnfwRfBkAsWzEszEVXiU9FYPA5dRA3Qd8m8HVtG?=
+ =?us-ascii?Q?7AKbE/o0rsdf6BzXKRNVfxH7rIVbrm+dzxIyicCc?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5127f606-fe71-4d9d-d21d-08dd706a344d
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 15:39:20.6961
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z9gwr8huDBlAn/8lSt8sjI5K6mPxmzM3GdU/9KFQ/W3KC1qFOw4w27TtYbnHkuEuuEwUhW/zO9q0s9jJaHnXdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9891
 
-Remove spaces before tabs to comply with the Linux kernel coding style
-guidelines. Proper indentation using tabs improves code consistency
-and readability.
+Added by commit ce312bbc2351 ("net: pcs: lynx: accept phy-mode =
+"10g-qxgmii" and use in felix driver"), this mode broke when the
+lynx_interfaces[] array was introduced to populate
+lynx->pcs.supported_interfaces, because it is absent from there.
 
-Reported by checkpatch:
+mscc_felix 0000:00:00.5: MAC returned PCS which does not support 10g-qxgmii
+mscc_felix 0000:00:00.5: failed to validate link configuration for inband
 
-    WARNING: please, no space before tabs
+In reality we should be querying the SerDes driver of the attached lane
+to restrict which PHY modes are truly supported, but we currently lack
+that infrastructure upstream, so just add 10g-qxgmii to the array.
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+Fixes: b0f88c1b9a53 ("net: pcs: lynx: fill in PCS supported_interfaces")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_btcoex.c | 42 +++++++++++-----------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/net/pcs/pcs-lynx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-index 9105594d2dde..b0e023d0435c 100644
---- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-@@ -9,14 +9,14 @@
- #include <hal_btcoex.h>
- #include <Mp_Precomp.h>
+diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+index c0238360eb40..07c570e2d7c1 100644
+--- a/drivers/net/pcs/pcs-lynx.c
++++ b/drivers/net/pcs/pcs-lynx.c
+@@ -536,6 +536,7 @@ static const phy_interface_t lynx_interfaces[] = {
+ 	PHY_INTERFACE_MODE_2500BASEX,
+ 	PHY_INTERFACE_MODE_10GBASER,
+ 	PHY_INTERFACE_MODE_USXGMII,
++	PHY_INTERFACE_MODE_10G_QXGMII,
+ };
  
--/* 		Global variables */
-+/*Global variables */
- 
- struct btc_coexist GLBtCoexist;
- static u8 GLBtcWiFiInScanState;
- static u8 GLBtcWiFiInIQKState;
- 
- /*  */
--/* 		Debug related function */
-+/*Debug related function */
- /*  */
- static u8 halbtcoutsrc_IsBtCoexistAvailable(struct btc_coexist *pBtCoexist)
- {
-@@ -401,9 +401,9 @@ static u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
- 
- 	case BTC_GET_U1_MAC_PHY_MODE:
- 		*pu8 = BTC_SMSP;
--/* 			*pU1Tmp = BTC_DMSP; */
--/* 			*pU1Tmp = BTC_DMDP; */
--/* 			*pU1Tmp = BTC_MP_UNKNOWN; */
-+/* *pU1Tmp = BTC_DMSP; */
-+/* *pU1Tmp = BTC_DMDP; */
-+/* *pU1Tmp = BTC_MP_UNKNOWN; */
- 		break;
- 
- 	case BTC_GET_U1_AP_NUM:
-@@ -561,7 +561,7 @@ static u8 halbtcoutsrc_Set(void *pBtcContext, u8 setType, void *pInBuf)
- }
- 
- /*  */
--/* 		IO related function */
-+/* IO related function */
- /*  */
- static u8 halbtcoutsrc_Read1Byte(void *pBtcContext, u32 RegAddr)
- {
-@@ -772,7 +772,7 @@ static void halbtcoutsrc_FillH2cCmd(void *pBtcContext, u8 elementId, u32 cmdLen,
- }
- 
- /*  */
--/* 		Extern functions called by other module */
-+/* Extern functions called by other module */
- /*  */
- static u8 EXhalbtcoutsrc_BindBtCoexWithAdapter(void *padapter)
- {
-@@ -900,14 +900,14 @@ void EXhalbtcoutsrc_IpsNotify(struct btc_coexist *pBtCoexist, u8 type)
- 		ipsType = BTC_IPS_ENTER;
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_IpsNotify(pBtCoexist, ipsType);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_IpsNotify(pBtCoexist, ipsType);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_LpsNotify(struct btc_coexist *pBtCoexist, u8 type)
-@@ -952,14 +952,14 @@ void EXhalbtcoutsrc_ScanNotify(struct btc_coexist *pBtCoexist, u8 type)
- 	}
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_ScanNotify(pBtCoexist, scanType);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_ScanNotify(pBtCoexist, scanType);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_ConnectNotify(struct btc_coexist *pBtCoexist, u8 action)
-@@ -978,14 +978,14 @@ void EXhalbtcoutsrc_ConnectNotify(struct btc_coexist *pBtCoexist, u8 action)
- 		assoType = BTC_ASSOCIATE_FINISH;
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_ConnectNotify(pBtCoexist, assoType);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_ConnectNotify(pBtCoexist, assoType);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_MediaStatusNotify(struct btc_coexist *pBtCoexist, enum
-@@ -1006,14 +1006,14 @@ void EXhalbtcoutsrc_MediaStatusNotify(struct btc_coexist *pBtCoexist, enum
- 		mStatus = BTC_MEDIA_DISCONNECT;
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_MediaStatusNotify(pBtCoexist, mStatus);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_MediaStatusNotify(pBtCoexist, mStatus);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_SpecialPacketNotify(struct btc_coexist *pBtCoexist, u8 pktType)
-@@ -1037,14 +1037,14 @@ void EXhalbtcoutsrc_SpecialPacketNotify(struct btc_coexist *pBtCoexist, u8 pktTy
- 	}
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_SpecialPacketNotify(pBtCoexist, packetType);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_SpecialPacketNotify(pBtCoexist, packetType);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_BtInfoNotify(struct btc_coexist *pBtCoexist, u8 *tmpBuf, u8 length)
-@@ -1055,14 +1055,14 @@ void EXhalbtcoutsrc_BtInfoNotify(struct btc_coexist *pBtCoexist, u8 *tmpBuf, u8
- 	pBtCoexist->statistics.cntBtInfoNotify++;
- 
- 	/*  All notify is called in cmd thread, don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_BtInfoNotify(pBtCoexist, tmpBuf, length);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_BtInfoNotify(pBtCoexist, tmpBuf, length);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/* halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_HaltNotify(struct btc_coexist *pBtCoexist)
-@@ -1102,14 +1102,14 @@ void EXhalbtcoutsrc_Periodical(struct btc_coexist *pBtCoexist)
- 
- 	/*  Periodical should be called in cmd thread, */
- 	/*  don't need to leave low power again */
--/* 	halbtcoutsrc_LeaveLowPower(pBtCoexist); */
-+	/*  halbtcoutsrc_LeaveLowPower(pBtCoexist); */
- 
- 	if (pBtCoexist->boardInfo.btdmAntNum == 2)
- 		EXhalbtc8723b2ant_Periodical(pBtCoexist);
- 	else if (pBtCoexist->boardInfo.btdmAntNum == 1)
- 		EXhalbtc8723b1ant_Periodical(pBtCoexist);
- 
--/* 	halbtcoutsrc_NormalLowPower(pBtCoexist); */
-+	/*  halbtcoutsrc_NormalLowPower(pBtCoexist); */
- }
- 
- void EXhalbtcoutsrc_SetAntNum(u8 type, u8 antNum)
+ void lynx_pcs_set_supported_interfaces(struct phylink_pcs *pcs,
 -- 
-2.43.0
+2.34.1
 
