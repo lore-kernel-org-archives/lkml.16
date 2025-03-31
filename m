@@ -1,114 +1,138 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293AD1876;
-	Mon, 31 Mar 2025 09:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA713CA97;
+	Mon, 31 Mar 2025 09:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412382; cv=none; b=ltCvk9Y+PwiSYB+ye6OkDRIvFLmgg7k/r75OAhlU2RLa8vJV0vh7z5CgqOqy8TLJxZFGwrGtuNeO/6hrVEIxkzWgdzLdNx2v2vHR/s0qWADjs1QsVbnbVDy0064ZplxT6DOVlQmaP3+cPtAoMmIB7pXzyDxUWFmFJ5MHLn+jYUE=
+	t=1743412408; cv=none; b=WKvJ9OB8QdtpriMkmwdCgxeVIoLKd+Ckd7szVT9StiAm3UaCXf4qcP5qz1cFmgV1ZwxaMDDUDGO48yDgqqurSMSIwIfyemdkyQihezpGPuQ/cgPcS04mDLR/L1HidLLKqN+GAsTtZ4qWj+p5w+7RhEVjL8dLJHaDj+zoeqBbkBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412382; c=relaxed/simple;
-	bh=1BCnRwBIdCzqQFieKBec6z0k5OCysP5SaPC0p2GcB0k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i7MU7fy5q74ROLjoAdhid8CK0Qg0sBFPvyJdtvZxU00X2w7pgsFmkK7O59WwGRUbuVe3cg8frxfdKnki2UL7tksqgEkNqzOPNqZrA3Xnu0syf46pGSovok+bAojcaX0I8eT9flIUUMfZjtQ8TliL0SBvn8ZCMNQefmPryih7qlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0nRmvIf; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743412408; c=relaxed/simple;
+	bh=P9fMSpSn4Svn5ww5bpg2gabNVZZWkbyy9tvOD2Nel8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1XDssszRQD+TpC9YnzkkMsOD7GSyBjYBYV4/TKrgjbO12P5DoAkt617iVOdLM12beRsuPISaoC+Xqs9fV1jN7VFgy3HKN7TL+mVsaqUxqCMCT4MKGlp9qFLIjnXckkkL4OJKB3dxsCWqFq08wHsyRu4rdhyepLvkCN/nnilt6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y21qwdpz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0nRmvIf"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-226185948ffso82532925ad.0;
-        Mon, 31 Mar 2025 02:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743412380; x=1744017180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aXfa9bgMsQdeUBd20MfPXF0A+XxOPRxIRG+U13SNVEE=;
-        b=A0nRmvIfHkJ6SeWACwGrjUWvFyFfnz7xmiwY9G/NBcqHKGMuqOvbrlFfiL4F32khZC
-         1WOuHaKA+wJtm2QEHRi+ccbglUALBXWi3o92+ljEAt+3+ntPuexKzf1LA/j6XIIPxi1M
-         1UCXT6v53O2flMveixHhM6GYMQ5FuOLHnlpkXybfOw7b0dE4FIXXv2w5LN+/uvx7QaAg
-         VLP/UVzs/w9zKz66LBIdsx3gGYQfh4o9tNdUbdjjKIjQoLWyr49iGvYZVZFfaUPZgEkT
-         47kXinM5fCe1LW8QfDZ89gnMdlumyMx+YH3Q28HKf3Ig52YxLrwEY2ETsyrKL3HbR+4C
-         vwaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743412380; x=1744017180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aXfa9bgMsQdeUBd20MfPXF0A+XxOPRxIRG+U13SNVEE=;
-        b=ovz9C2FaSpFOBMF8nqICHHg4FiGdFDmUvk0S5/rTz1yz3vk1wX+fRR7IjnZ9CnZ8rk
-         JiSujCldSwbToAgG4QPtf1VRoN+bEyYEuW9WhbEydVZCPAUdB7JrELoE5yO6TaprGBMp
-         DerEvllm2XA9fS8z5uWmXjRruMHntLoWCsYynS+GmaHf5iqX7tQTednGwlJ2QAhJz1W3
-         Q7Xe/yCsq1toShtMX0pxXhy0cZ51p+v7lYBBx7/RGdDtrNcq+7SBwkg0YwSR0M8AI5R8
-         ZTn1dzt8jCnA+VJr4A2W07of8lnrwmqp8fLfNIvuXYPpoEHz9JrNzX/FOTq6LymHROpD
-         nWyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNc0W00jSpX2WGbUaHK1ipDAIgc6IEs7Li9k8atTuNf5E9R71+CZbMCXUvnAlg5mT0Ejns0491UvrWeg==@vger.kernel.org, AJvYcCWnX65csOkLnte2SDguMSuKRiFFVDEBXhHKMRlmEeNbU/T07N6TiqpFdujWE8fv9MktuJZAEtKOGOcswpG+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDYytq4pNc6JFek8db6AEd1r77nmBUUn4tF2JV6PzdQcJcnpEG
-	v2iOkqV25GlzBoWxbSruum9MQ38XKVJZrRQLN5vCXB537kwyXQtw
-X-Gm-Gg: ASbGnctoXiuh69/iqQoWkFl3J0YqUqaYUB6KqOos76Ovxhq/8cU5et6dai2tJRT2S24
-	t636kbvm6mHDCqrJL8eLcssfqfiws5Gwsd3cGnt7gopJfECvlQ5Bmvi0wsrvCD2kmfU8aXB7RnZ
-	BVFtWX1mziesuew+98KK7Di/HIFzqXrQ9LD+WiuU5T1dmYCAUy2tPYDOIIIZOwSNpn7665B4TAI
-	pQgL1PwJQkejdtXKy+ff5soP4PzRgUHcQkLMNrqY+RLuY3q+uPTQebjTkCoBh7FBh1zwS810qqG
-	EQbqctmoT8xFwx2lpHNyaKdBbu+kgweBzo/xb9zvi13e5xTVMFggPgtP4mVPS78V0UiNP284cfR
-	EyV5ulw==
-X-Google-Smtp-Source: AGHT+IFEEh/emvRl57NiK87EmBBBQ4yLrU3pfC0mqT77RnMd2vcNv7HBRIC3yTEMkuLyR9iPqdxvVw==
-X-Received: by 2002:a17:902:e550:b0:224:c46:d167 with SMTP id d9443c01a7336-2292f95f1edmr137533305ad.16.1743412380165;
-        Mon, 31 Mar 2025 02:13:00 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1fa0a5sm64957295ad.240.2025.03.31.02.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 02:12:59 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: lee@kernel.org,
-	danielt@kernel.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH] backlight: qcom-wled: Add NULL check in the wled_configure
-Date: Mon, 31 Mar 2025 17:12:45 +0800
-Message-Id: <20250331091245.6668-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y21qwdpz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A95E4C4CEE3;
+	Mon, 31 Mar 2025 09:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743412407;
+	bh=P9fMSpSn4Svn5ww5bpg2gabNVZZWkbyy9tvOD2Nel8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y21qwdpzy3yp0rkjKWgyfcATC/8e28FkCoAaWRITgSNECYAorLOz4GR2pJ/ZVntc4
+	 +loHP0op04pdj4B6yAQqalZ9KCBCg+NZkNj3h5lx0jAgO1x8xWK7KFan+ZZffmRrr+
+	 mDf/yVgoWIlWT4RlmWmr7cdPF8v3Md1/KTGKSU6QLqOkSLBaTYXM4/GCkKEcH0ZyTH
+	 khT7mebsXCBUp/5O2QdBDV7aHioqQJveDJwfEuc1wibzCqozbEJPjtPJPuzSaVoNRZ
+	 e1Q9ms0+LNTiVeOVxK+ayaSIvvqCHP1UVEyVmsurbWb16XDgqUpGDH1lW1Z5GawjWW
+	 cRPip7WEwoKoA==
+Date: Mon, 31 Mar 2025 11:13:20 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH v2 0/6] Extend freeze support to suspend and hibernate
+Message-ID: <20250331-inkrafttreten-lieder-5396ffd0af7a@brauner>
+References: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
+ <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
+ <12ce8c18f4e16b1de591cbdfb8f6e7844e42807b.camel@HansenPartnership.com>
+ <9c0a24cd8b03539fd6b8ecd5a186a5cf98b5d526.camel@HansenPartnership.com>
+ <20250330-heimweg-packen-b73908210f79@brauner>
+ <3f140c076c3756e84d515b81ee9eeeaf13ca4b42.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3f140c076c3756e84d515b81ee9eeeaf13ca4b42.camel@HansenPartnership.com>
 
-When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function wled_configure.
+On Sun, Mar 30, 2025 at 10:00:56AM -0400, James Bottomley wrote:
+> On Sun, 2025-03-30 at 10:33 +0200, Christian Brauner wrote:
+> [...]
+> > > I found the systemd bug
+> > > 
+> > > https://github.com/systemd/systemd/issues/36888
+> > 
+> > I don't think that's a systemd bug.
+> 
+> Heh, well I have zero interest in refereeing a turf war between systemd
+> and dracut over mismatched expectations.  The point for anyone who
+> wants to run hibernate tests is that until they both sort this out the
+> bug can be fixed by removing the system identifier check from systemd-
+> hibernate-resume-generator.
+> 
+> > > And hacked around it, so I can confirm a simple hibernate/resume
+> > > works provided the sd_start_write() patches are applied (and the
+> > > hooks are plumbed in to pm).
+> > > 
+> > > There is an oddity: the systemd-journald process that would usually
+> > > hang hibernate in D wait goes into R but seems to be hung and can't
+> > > be killed by the watchdog even with a -9.  It's stack trace says
+> > > it's still stuck in sb_start_write:
+> > > 
+> > > [<0>] percpu_rwsem_wait.constprop.10+0xd1/0x140
+> > > [<0>] ext4_page_mkwrite+0x3c1/0x560 [ext4]
+> > > [<0>] do_page_mkwrite+0x38/0xa0
+> > > [<0>] do_wp_page+0xd5/0xba0
+> > > [<0>] __handle_mm_fault+0xa29/0xca0
+> > > [<0>] handle_mm_fault+0x16a/0x2d0
+> > > [<0>] do_user_addr_fault+0x3ab/0x810
+> > > [<0>] exc_page_fault+0x68/0x150
+> > > [<0>] asm_exc_page_fault+0x22/0x30
+> > > 
+> > > So I think there's something funny going on in thaw.
+> > 
+> > My uneducated guess is that it's probably an issue with ext4 freezing
+> > and unfreezing. xfs stops workqueues after all writes and pagefault
+> > writers have stopped. This is done in ->sync_fs() when it's called
+> > from freeze_super(). They are restarted when ->unfreeze_fs is called.
+> 
+> It is possible, but I note that if I do
+> 
+> fsfreeze --freeze /
 
-A NULL check should be added after the devm_kasprintf call to prevent potential NULL pointer dereference error.
+Freezing the root filesystem from userspace will inevitably lead to an
+odd form of deadlock eventually. Either the first accidental request for
+opening something as writable or even the call to fsfreeze --unfreeze /
+may deadlock.
 
-Fixes: f86b77583d88c ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
+The most likely explanation for this stacktrace is that the root
+filesystem isn't unfrozen. In userspace it's easy enough to trigger by
+leaving the filesystem frozen without also freezing userspace processes
+accessing that filesystem:
 
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/video/backlight/qcom-wled.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+[  243.232205] INFO: task systemd-journal:539 blocked for more than 120 seconds.
+[  243.239491]       Not tainted 6.14.0-g9ad3884269ca #131
+[  243.243771] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  243.248517] task:systemd-journal state:D stack:0     pid:539   tgid:539   ppid:1      task_flags:0x400100 flags:0x00000006
+[  243.253480] Call Trace:
+[  243.254641]  <TASK>
+[  243.255663]  __schedule+0x61e/0x1080
+[  243.257071]  ? percpu_rwsem_wait+0x149/0x1b0
+[  243.258473]  schedule+0x3a/0x120
+[  243.259533]  percpu_rwsem_wait+0x155/0x1b0
+[  243.260844]  ? __pfx_percpu_rwsem_wake_function+0x10/0x10
+[  243.262620]  __percpu_down_read+0x83/0x1c0
+[  243.263968]  btrfs_page_mkwrite+0x45b/0x890 [btrfs]
+[  243.266828]  ? find_held_lock+0x2b/0x80
+[  243.267765]  do_page_mkwrite+0x4a/0xb0
+[  243.268698]  do_wp_page+0x331/0xdc0
+[  243.269559]  __handle_mm_fault+0xb15/0x11d0
+[  243.270566]  handle_mm_fault+0xb8/0x2b0
+[  243.271557]  do_user_addr_fault+0x20a/0x700
+[  243.272574]  exc_page_fault+0x6a/0x200
+[  243.273462]  asm_exc_page_fault+0x26/0x30
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 9afe701b2a1b..db5eda8ec37e 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -1406,8 +1406,14 @@ static int wled_configure(struct wled *wled)
- 	wled->ctrl_addr = be32_to_cpu(*prop_addr);
- 
- 	rc = of_property_read_string(dev->of_node, "label", &wled->name);
--	if (rc)
-+	if (rc) {
- 		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
-+		if (!wled->name) {
-+			dev_err(dev, "Failed to allocate memory for wled name\n");
-+			return -ENOMEM;
-+		}
-+	}
-+
- 
- 	switch (wled->version) {
- 	case 3:
--- 
-2.34.1
+This happens because systemd-journald mmaps the journal file. It
+triggers a pagefault which wants to get pagefault based write access to
+the file. But it can't because pagefaults are frozen. So it hangs and as
+it's not frozen it will trigger hung task warnings.
 
+IOW, the most likely explanation is that the root filesystem wasn't
+unfrozen and systemd-journald wasn't frozen.
