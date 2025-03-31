@@ -1,111 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE511BD9E3;
-	Mon, 31 Mar 2025 18:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E3A1E0E13
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743446000; cv=none; b=cBe03CrOhHbXLh+sMNlRsWxGBGfwKrW3fKduWugI9woAlBrcDRyWkzMq8zuyPm51cIdLmmwXyMCKVgr3lpJ+jbTDdrnlBNyFIYVGN0etYptv+XfNZboR85k3q67IM4/vQnvwQpazkCBxYKp0wXzrC8oRejrJn+X3ULDstfrhNis=
+	t=1743446034; cv=none; b=lLX4FRBqUs7Ue4SDeQ2q8iqw42buUVBaH80w2FnRZTQc5SDtZ04l5glQgxHp21f8tm8UMfRgec+re0FcvwmRmf6mS6mgxgLwjPnuiV8/yXFHrc7S117p9nIYKqYIuJ4G0wa99NpVM5F4KXcSk5D6rXHhuZpNZFLw0OpNZnQTHiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743446000; c=relaxed/simple;
-	bh=zDWOwFQTHeMBAotV1k71vCBut0m7pH1xrfDhXj83BXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MW/o2tfxbqgyJP5/6kBBKwqQ2TBmslRy2VGf6WMoJmZY0pntbMizRoD0QJaTAi8dra+K0gxXgWRSFlAy3DU69UAnxzyzF+XqQj54lLJhNRkkNNymLzwZVhymE4MnP+DnAT2pEZ26sZfnz8qIpxyDleZoB7XcYLTmGpTPOH3uzHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmdaPVYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743446034; c=relaxed/simple;
+	bh=vrNk5gWMw7fslC/aSH1cmMvB6VpmLM4R+bB7EgWYcKs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P5CgCZddNnMDiudO7ZWFMXxI/z6Bj6tnJ9/ziFEt3bRcxs53uTCY6LER36VTvuHSncglU9QeOY7/sK32vP8ePNSoAe+ElBX8Yw5Nn7519ScRxJcEYpOYWZ8L6BxA9oIoj2PDPtGycKMFUiosZPkjbsgoMRYvPYnS+3yCQfzcZFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Cg6p1tLk; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmdaPVYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15568C4CEE3;
-	Mon, 31 Mar 2025 18:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743445996;
-	bh=zDWOwFQTHeMBAotV1k71vCBut0m7pH1xrfDhXj83BXU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=rmdaPVYD8I07t6FEch0gu8o46+cK/Kql1duOCBIaoLc1Czyos4g5xSA5cZN8FhOrU
-	 3rb2BJbjLgmpDGzRgqWMRN3QmvFUSB6TqqgUUEgBnK4FVd5CxK/FexgcUheiMjXQUu
-	 tlWotJh5kkhJiVFWtNe/+FxmH/0gwue3Xsjdu75cbqWl6Ae5TnbSXrFGXuCt3Pq80Z
-	 Y/olo8lScj2pJmyx/AOB8ecNmJ+24ODSWl3RcRgd5dVXz1uNvMFnIHNSyKP31Xok+M
-	 POavC+cAOWE/N7b4wFfPPgYGD06TDaZ/MhoGS+S3ZNpBg1RYHqG9RqeA3VAgqw40Ak
-	 Cj1fR68ZKsXWg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id AD420CE0869; Mon, 31 Mar 2025 11:33:15 -0700 (PDT)
-Date: Mon, 31 Mar 2025 11:33:15 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Eric Dumazet <edumazet@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, aeh@meta.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with
- expedited RCU synchronization
-Message-ID: <35039448-d8e8-4a7d-b59b-758d81330d4b@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <Z-Il69LWz6sIand0@Mac.home>
- <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
- <Z-L5ttC9qllTAEbO@boqun-archlinux>
- <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
- <Z-MHHFTS3kcfWIlL@boqun-archlinux>
- <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
- <Z-OPya5HoqbKmMGj@Mac.home>
- <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
- <Z-rQNzYRMTinrDSl@boqun-archlinux>
- <9f5b500a-1106-4565-9559-bd44143e3ea6@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Cg6p1tLk"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2aeada833so908589666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743446030; x=1744050830; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm1O3MAg26LYGeV9+5npvrxVPsd76nUJvpjvmTv2VoQ=;
+        b=Cg6p1tLkJR2D2vx01K5nBQTu4tFFyfVL0kOeK+K0z0AlZP8U430PIRNdSQMl5qnfCA
+         UXE+1PoaEY7dBg3k8Pqd1BlrTQFavuqbH1j4DHk2BKb4DUqcga+rDl+v2meqYwX7jO7Q
+         y76MYRKx79gnIi4ArI7iFQH42zY6Cuz/fE0Lc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743446030; x=1744050830;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qm1O3MAg26LYGeV9+5npvrxVPsd76nUJvpjvmTv2VoQ=;
+        b=iWgPFeufCwPtXSVrLYcOrZC4MYeeaka9ZxVNpX3uqRDsfVWGt9ORr+b6Wy5/T39cvc
+         WUj20fLsekh5ClSNa4KS2UANgveEBmKyxp7FtXbR5PEOFxVLPE/NbBqrY46/6olhFmW6
+         N7vWa/MJeFd3wE5phsTcFzua9QZbfZqhfYBrE1xjJY6nuqEaCZdn8xBSgjRYerLVSiJj
+         YpYEPIyN/5QjmjSdfvtsKATyxYnZidqHW6EBApk0gOj94FUhePLSFBFdksLzgCVrPyJD
+         a4iuunw4JTU+vVaSsT8YrEOQCoUxyZJ0pVRRBS0AhloeorLvwlrjsOXRrNBHwaWL6+u1
+         kpMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMvxEGISUiaxWC+iWebiIpOXZH/lcpaveY9DbE04wxo9qUM6hGeNDHzE63E40cQ2OtSAR3Uj3CPLyRjeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztSSnwIEaH+VrzzynSYIU7kAmQ48syAZfcqIX6Ja9aiAiNyTpV
+	6gUSFUiwe4BzvLSZcnF1basix0aaIJtcoeFzYgp1A+/RQwoxCGuXkcok6blXxLSU9q+7TwRHE3w
+	a70U=
+X-Gm-Gg: ASbGncuemZ/ktHf5N6hz0iIr4jnmLFtuz6Axj1dxHMSfzvRBPWhyh7PhD2rO5s9HTG5
+	dGkhSfHxAWVx7ZSoCIRPEqURHsQpysjQqBeiuBuq9AFpBwnp0xCSUi6OcnXMudpuRrAi7AuUww3
+	x9J6DwMpOpzAnDrhohoirf1Jv+l7z6P3ETP4uPZdndcU6E3wl9bdEyiSfDAyLUwq+l2hoAUBoKM
+	lQANOXTHJLt9WC30NazoAc6j8hwipdde6zMx3s5mL3hUtuy5DCk3GJKB0CcmmXtloWkg9MDOfVN
+	W8QaJDazp7kVtv2SggSKBqnQnu5g4bpXAvj6h+ppYqanokInANWhFhc6Z/I95PM9dCL7/giYhMG
+	qV4DOeDJmlBx+JcvSx6s=
+X-Google-Smtp-Source: AGHT+IH43otZg2CzpF9O6Sdc1Ut6tCGsCsh/EOCHzqw84QBNKEsHPbXNE/B5WkgT3jpYqGWc0h0H7w==
+X-Received: by 2002:a17:907:9808:b0:ac3:c6e:ffcf with SMTP id a640c23a62f3a-ac71eac5a2amr1254759766b.3.1743446030614;
+        Mon, 31 Mar 2025 11:33:50 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196ccfdasm652532566b.153.2025.03.31.11.33.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 11:33:50 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso10984671a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:33:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXai2pmYYz35SDeph3bzAXpfM1+v7xqK+qPJi1sMYZWpEpLVHMI9WVdKFH6O7tHJxxA/vDAEGsPI77bo0U=@vger.kernel.org
+X-Received: by 2002:a17:906:6a1e:b0:ac2:3a1:5a81 with SMTP id
+ a640c23a62f3a-ac7369c1867mr725809666b.26.1743446029615; Mon, 31 Mar 2025
+ 11:33:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f5b500a-1106-4565-9559-bd44143e3ea6@redhat.com>
+References: <20250331122926.607374-1-ojeda@kernel.org>
+In-Reply-To: <20250331122926.607374-1-ojeda@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 11:33:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgyOSX4tbq0qhAkk0OCZqwiCA4EtwKZOBXAdkBW6FOANQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq4JU66PPrn8dDycOvivpUoHu2ypgpPWx05AnaaKLgbL8gGe3Xow4zKumo
+Message-ID: <CAHk-=wgyOSX4tbq0qhAkk0OCZqwiCA4EtwKZOBXAdkBW6FOANQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Rust fixes for 6.15 merge
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 01:33:22PM -0400, Waiman Long wrote:
-> On 3/31/25 1:26 PM, Boqun Feng wrote:
-> > On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
-> > [...]
-> > > > > Anyway, that may work. The only problem that I see is the issue of nesting
-> > > > > of an interrupt context on top of a task context. It is possible that the
-> > > > > first use of a raw_spinlock may happen in an interrupt context. If the
-> > > > > interrupt happens when the task has set the hazard pointer and iterating the
-> > > > > hash list, the value of the hazard pointer may be overwritten. Alternatively
-> > > > > we could have multiple slots for the hazard pointer, but that will make the
-> > > > > code more complicated. Or we could disable interrupt before setting the
-> > > > > hazard pointer.
-> > > > Or we can use lockdep_recursion:
-> > > > 
-> > > > 	preempt_disable();
-> > > > 	lockdep_recursion_inc();
-> > > > 	barrier();
-> > > > 
-> > > > 	WRITE_ONCE(*hazptr, ...);
-> > > > 
-> > > > , it should prevent the re-entrant of lockdep in irq.
-> > > That will probably work. Or we can disable irq. I am fine with both.
-> > Disabling irq may not work in this case, because an NMI can also happen
-> > and call register_lock_class().
-> Right, disabling irq doesn't work with NMI. So incrementing the recursion
-> count is likely the way to go and I think it will work even in the NMI case.
-> 
-> > 
-> > I'm experimenting a new idea here, it might be better (for general
-> > cases), and this has the similar spirit that we could move the
-> > protection scope of a hazard pointer from a key to a hash_list: we can
-> > introduce a wildcard address, and whenever we do a synchronize_hazptr(),
-> > if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
-> > hence synchronize_hazptr() will still wait until it's zero'd. Not only
-> > this could help in the nesting case, it can also be used if the users
-> > want to protect multiple things with this simple hazard pointer
-> > implementation.
-> 
-> I think it is a good idea to add a wildcard for the general use case.
-> Setting the hazptr to the list head will be enough for this particular case.
+On Mon, 31 Mar 2025 at 05:29, Miguel Ojeda <ojeda@kernel.org> wrote:
+>
+> A small fix due to a typo during merge.
 
-Careful!  If we enable use of wildcards outside of the special case
-of synchronize_hazptr(), we give up the small-memory-footprint advantages
-of hazard pointers.  You end up having to wait on all hazard-pointer
-readers, which was exactly why RCU was troublesome here.  ;-)
+Well, duh.
 
-							Thanx, Paul
+Sometimes I have too much copy-paste, in this case I obviously didn't
+have enough of it, and just fixed the conflict - incorrectly - by
+hand.
+
+I obviously didn't see any bad effects of this typo in my build
+testing, which means that clearly this rust-analyzer thing isn't
+getting exercised by my normal build.
+
+Now that I know about the typo, I can see the error with
+
+    make rust-analyzer
+
+and it's not like I'm going to add this to my normal build rules, but
+maybe you can give a list of things that I should be doing when I see
+rust merge conflicts so that next time around I'll notice these things
+rather than have silly typo mistakes.
+
+Thanks,
+              Linus
