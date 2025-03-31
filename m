@@ -1,97 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C22312F399
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78382866
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743391353; cv=none; b=ldYIE8a4gBNTu+VvV65Gv2yDrYcX0tEWH54ZQkw3GrvvE02J/Kds1Quj5vUt0DBoGpqgbHpq4qf52orB+NGrVlcWYKjXjGRalkrXbtxkOT7yjoSzURVohUtqfCyZ3T4GHdEg/jJF9aC7zAYsWcHxCtAtSsnwu9/lrTnNnMtKY/M=
+	t=1743391366; cv=none; b=nCW23SXLeW0JjkSxOxgGSazo4feFwp/xvjcVqfNXF3O0SoJhbmSLFciox/Cbh0zTEgMvRwyUZv/bnJkGOz5lbXZLsYtp7iXvO552Dh49pq+mRJ0KdYOpm9hNBZLh02BDIra5OsTY0ZHfLag7Dt2vLer/ULd84IGJkn2Xs+Qp1dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743391353; c=relaxed/simple;
-	bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
+	s=arc-20240116; t=1743391366; c=relaxed/simple;
+	bh=jo4kV8v/aENUv2W2HZOl8ofUDDJdnNKMztdocm2n5PI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TqeAZtJPqQKJI7bb7W4cHcnoQ6GtMWHP12JkZOFr0VqUplegkN38HXlr7OJ4oUSzls9Wxk5KPN3lwTEz1dsXRJDbxYcFGtGnCQF8ct3dqnJwEciNKY2mdTTQoOOOmwEMtKCqft00NLhUdrLzdbsoaZzd7pUbmaORZy+q/PEwb+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JEwFdcXb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=ngZFZOf9mriKTDzVY+Vfh8Y+a9tfkxJtvEc15TqRHBSXuovy4h7Lj3vcozgOcRR71EL1kn+6lbpIzRfojhx8uCAC/EjilqrLVf4InloLNm5p4EC8YMmLaKmXrdUOx9KDUxuBmOZHpt8Y7CgyiFIaVY/OMWOYriut64Ya33V+h3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQd+mwpf; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JEwFdcXb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743391350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
-	b=JEwFdcXb4BArWGTfnD66tLS2NLniPug8c+GfVlIKCyX0Pyal/Ej5qMxiy246hnHuwrifTc
-	5NSJBFshaxssi3LlV4mGg66NuA3LDzdmgFAVioTdEaD04rCeXW+TG8mrevPovsJx/Cj5/7
-	xVqQnvPjQNfNmQiOZX2kOH9hFrrnPLI=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-3L09IBzDPYuHnqBVdWCNgw-1; Sun, 30 Mar 2025 23:22:28 -0400
-X-MC-Unique: 3L09IBzDPYuHnqBVdWCNgw-1
-X-Mimecast-MFC-AGG-ID: 3L09IBzDPYuHnqBVdWCNgw_1743391348
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so23149985ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:22:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQd+mwpf"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so6060950a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743391363; x=1743996163; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KRYx+m4X6QsBHhtE2dap7sXTHHBthKX/PSqlJw68O60=;
+        b=DQd+mwpfwNFPhunBKXyEn8Wzt/FCaJVfwVpH4wbK/9sEf2CQiKghQjn3OSd936IUIK
+         rxjBf4cnbIilpCYxCTqQem7O4zEOVzF8H2ImkUxUkTXDhkv4pE4C8UnLQ4393uXfxB5I
+         MkyxjVs1CB6u0qkVitODQ2F2HrHSfEqqjaIQEqxQLh00vGJgpap+uYBN5f6zxLvQ1lc2
+         EVViEVrJcOU2S/XUGdDZRYycwm6yOrKJcZrhzKvt8Dj1fA7POQ7pLe6x115DWF4fjwfE
+         uYcp04mwDmou1Pbk/WyCbDt4hyNsz/srrGd5tmVkaWuVs9ZqfcMaBbFt8PJU7CZiN7Xy
+         1fVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743391348; x=1743996148;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
-        b=peTClvn5wZEY4NmyLolgCE4YKpr3Z+cVGRiZgvPyrXHXD5ZkHnu9wccx20/dO+tbRP
-         7QREJa97/4Tz0xtovUXi73ElMFTNzlmUdFt5KzUnEusnl3FErfrqAbpAH1hqvy8hCXoF
-         MZ/h1cGBou6Ps71Jo7KgiA+lbNi+7rcJwkCXbOZ/KpW+wLsEYV+HWY9wDcLReDNho368
-         Ns40x6hXzaHbUM+ikcFQzzi7co5xMhvMfUs+aF+MFwtn+e0n9Q8KvyqLZDSW8m71spBw
-         hryJyFl6fRjbsV71dMQnpfzBah/8TLwOf0MIe+u76RFq+RftQoSrXi6FQRvR7Zaq17Zz
-         FqYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPJdTztgjVw4nbtp6xXMWDlFgDn7dAouCJudMsEUsnD0Je+Rvf8Kk0RXU987VA85rjckvqt4lZbljfXc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydiKRiXtj6EnPxooLKh+aYZWtbmMPH5ewYi9p5dJ07roWyEJn8
-	UaWQ7OAG0cTPrhskRtiUwvCi2gen2gykFswnhKka2i/yOSVWV0ZA0xH9aMt+no2uWKCbSUd8ell
-	p/+2PgJvFI54it/avxBh0mXsu/ibRtBSPWIIBuYqOKXipiLkuqIb9DKSoUxN6xQbvwwaKkrayya
-	0o84Q0xrxuxZ3qlBH4DruUJT2b+aBPGju2xL/E
-X-Gm-Gg: ASbGncvZSWUqMScX1x5Lr/SUjtrWy3vQiKFPycm8zotcCEEJdD11SbCJ3DbCxuw1fkA
-	eJLPS1TIa07qF7mRR6xAiCWS3P1aeOQwMIivAaTO4Na4/mq1rQOhb1CN9gyR1zDgaRSSfh3GqFQ
-	==
-X-Received: by 2002:a05:6e02:17ce:b0:3a7:820c:180a with SMTP id e9e14a558f8ab-3d5e0a093b2mr79161045ab.19.1743391347968;
-        Sun, 30 Mar 2025 20:22:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzaH25Vzm7n70KpLV36fle/W5sj7NSSdA8hJmo754X2wtwvaPhuyZSC58LigxxsFYAU0bQlbQf86JZovKBAVI=
-X-Received: by 2002:a05:6e02:17ce:b0:3a7:820c:180a with SMTP id
- e9e14a558f8ab-3d5e0a093b2mr79160885ab.19.1743391347656; Sun, 30 Mar 2025
- 20:22:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743391363; x=1743996163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KRYx+m4X6QsBHhtE2dap7sXTHHBthKX/PSqlJw68O60=;
+        b=lvq5WCbU+d09PaCmrbVhAmjlxrDvCRHCD7phfSbjkmOs13Q1HVrDggfZwoiQ3ojSyb
+         wzx6ySsxEgF4mwtuzNlveAV2Fvhr5urf+RUd9gfeG+LxOlAjkWQhozb2tytnigxobAJs
+         ++aUnZhmNnfgGj3zN8+tz25bgKkiZvgsPXpH56NDYhrQipHtIxUmV5NlXPrfEzj0HjWr
+         sOh2ceI09ryZDW5bhFY9DO3OrDG4ZmrzL5nzsT/knkNOmrX85LNrzUTHQLt7MIGe9Kmq
+         3Ss4CtR1FvG9TtSPh+qE+bjHP27ch+T0YtffHAXjcWhHSDssqRb3oPXkjmC6pvriUmsZ
+         vc8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOdeK7V+sroru+FwaeYM0L+EXt2uct36O13UaKuAtnbwEr2rhbwsHRgQXNTzfrWM/Ki3uWd+54xTyCPp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5zMep79+rC+GB/0YeMPA49D3Ngm8IrXL3zU50wghhilwhCSyH
+	fUwuwsmFAwaSTvjgI8JBsRDup68SaabAfhALTlRPHgkNiglCjpL6K2Tu2f5ezIuOCBvXd4k07fY
+	mVPjBG8hE1iAiqW6lIyP7GPxc03X51g==
+X-Gm-Gg: ASbGncv/dj14j21QJwYYhJy4h3hMNxxZB9O8xhnGMcj+QxYmP7owcnXcQDQfNxHKvBM
+	4r4P06OABsVM70UvOI1t2HqYFQI+DPUjdNCTWhfeGF/I8NY3rJPln/6wtgIE6jCiMyhmWTi9lZA
+	E8m5fru1tpbV1B2nQkl1ftB9JV
+X-Google-Smtp-Source: AGHT+IFr03gYElReDkk2cft2Hu8/w0ithkNgrI6pJXTx0/Gv+zCKyM2ZCp0EfTISo4aCXfbHX4/0AFMA14nNrWM0nc4=
+X-Received: by 2002:a05:6402:26c8:b0:5e7:8d40:8d80 with SMTP id
+ 4fb4d7f45d1cf-5edfcc07956mr6599143a12.4.1743391362815; Sun, 30 Mar 2025
+ 20:22:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z4WFjBVHpndct7br@desktop0a> <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a> <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv> <Z-hYWc9LtBU1Yhtg@desktop0a>
-In-Reply-To: <Z-hYWc9LtBU1Yhtg@desktop0a>
-From: Dave Young <dyoung@redhat.com>
-Date: Mon, 31 Mar 2025 11:22:50 +0800
-X-Gm-Features: AQ5f1Jq_A3xmC-EmSPquFgYtTSaWdlNOr-d-et357PEEYRDXHWaZEck-6AeRlpk
-Message-ID: <CALu+AoTrPZS7ukuLsCTCwKNKVd8=PUN8nXwh9BdicyV-==-W=g@mail.gmail.com>
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from hibernation
-To: Roberto Ricci <io@r-ricci.it>
-Cc: Baoquan He <bhe@redhat.com>, ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz, 
-	ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org, 
-	akpm@linux-foundation.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <202503311019.7d50fa1b-lkp@intel.com>
+In-Reply-To: <202503311019.7d50fa1b-lkp@intel.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Mon, 31 Mar 2025 05:22:30 +0200
+X-Gm-Features: AQ5f1JoWcqxwg2zWq2o5ZUVnPL-mJCZQ7LgCYfRaRjTccAHD-5GwEsJgJz1-FdE
+Message-ID: <CAGudoHFpQyxOx7SU4O5XMSK--JCtkOFc_He13UdtCYQLLwGu8w@mail.gmail.com>
+Subject: Re: [linus:master] [wait] 84654c7f47: reaim.jobs_per_min 3.0% regression
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> With v4.9.337, kexec (via kexec_load) + hibernation works.
-> With v5.4.291 it doesn't.
-> I'm not sure how bisection could be done in this case.
+On Mon, Mar 31, 2025 at 4:58=E2=80=AFAM kernel test robot <oliver.sang@inte=
+l.com> wrote:
 >
+>
+>
+> Hello,
+>
+> kernel test robot noticed a 3.0% regression of reaim.jobs_per_min on:
+>
+>
+> commit: 84654c7f47307692d47ea914d01287c8c54b3532 ("wait: avoid spurious c=
+alls to prepare_to_wait_event() in ___wait_event()")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+> [still regression on linus/master      1a9239bb4253f9076b5b4b2a1a4e8d7def=
+d77a95]
+> [still regreasion on linux-next/master db8da9da41bced445077925f8a886c776a=
+47440c]
+>
+> testcase: reaim
+> config: x86_64-rhel-9.4
+> compiler: gcc-12
+> test machine: 192 threads 2 sockets Intel(R) Xeon(R) Platinum 8468V  CPU =
+@ 2.4GHz (Sapphire Rapids) with 384G memory
+> parameters:
+>
+[snip]
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> compiler/cpufreq_governor/disk/fs/kconfig/nr_task/rootfs/runtime/tbox_gro=
+up/test/testcase:
+>   gcc-12/performance/1SSD/ext4/x86_64-rhel-9.4/100%/debian-12-x86_64-2024=
+0206.cgz/300s/igk-spr-2sp4/disk/reaim
+>
+> commit:
+>   46af8e2406 ("pipe: cache 2 pages instead of 1")
+>   84654c7f47 ("wait: avoid spurious calls to prepare_to_wait_event() in _=
+__wait_event()")
+>
+> 46af8e2406c27cc2 84654c7f47307692d47ea914d01
+> ---------------- ---------------------------
+>          %stddev     %change         %stddev
+>              \          |                \
+[snip]
+>      75.63            +4.3%      78.87        iostat.cpu.idle
+>       2.05            -2.9%       1.99        iostat.cpu.iowait
+>      21.28 =C4=85  2%     -14.8%      18.12        iostat.cpu.system
+>       1.04            -2.7%       1.01        iostat.cpu.user
+[snip]
 
-Not confident, but maybe you can try latest mainline kernel see if the
-below commit helps:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a2498e5c453b3d8d054d77751487cd593332f8c2
+So this test spends most of the time off CPU and with my change there
+was some drop in system time, which most likely affected timings
+elsewhere and there is *more* idle.
 
-I noticed the e820 export is different for v4.9.337 and v5.4.291
+The actual perf problem is the locks and this is not a real regression
+in the sense there would be a clear speed up if it was not for those.
 
-Thanks
-Dave
+I don't remember the details now, but there was something funky on
+last dequeue from adaptive spinning, where threads would refuse to
+spin when they *could*. I suspect this is part of the problem here
+(the fact that there is contention aside ofc). Maybe I'll get around
+to writing a proper writeup about that, but could not bring myself to
+seriously dig into it.
 
+In the meantime I don't believe this report warrants any action
+concerning the patch at hand.
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
