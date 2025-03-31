@@ -1,158 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D47D21B199;
-	Mon, 31 Mar 2025 14:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDD521B9FD;
+	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431670; cv=none; b=Tm0d7b+TJIWk6ehFyxZsShKt5a01JMNMqDgqhx8YgPXnwbfFvwUT7mELHCws20ifSwyT54fpW6uzvIS7GGiOqcpgKYMt+xvx0Q9Zxlt5Wu55LNQSYBjeljLHzb8xPshevvngkDEpDNz56EL9Scgvhj8AcGdmddusUDy4T4YYeDU=
+	t=1743431674; cv=none; b=ZFrdNkF4e9RglB2dSejEDwylqbCVMzFHthk7ElzhLeYWHtNXcYKAs3c9e8bRO5CWD7OC+VThcKNyKiTPQ72f5zuF4d9h84+J0CBUZ6GBAx/EuWIKSjeMjxMW29D2iT964mkw/5Qhwe1oLyjt5z+ufRV5DGrHE0GCnpQtyMd7O0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431670; c=relaxed/simple;
-	bh=wrCbQOfWrO8dfQCLZHtxBu3/reMj+qBJ8zLouLJDmT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E5cRbJanbsjS1eZc05y5mUHgMKbmzO+At+FV5mjVD0ncmq8KWwDYMtRkeUhf1rqqbWWTrvDrl+uLyF7LWlQwRNh2v8AXTNoMkSGuqpD4DsIalufI1ZUb9QVvwXu7/DDcVnnuC2EXmRdacRG64KqaSw8IxVo/2IfFcqtmVTOu2Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6k5TTh+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6k5TTh+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED633C4CEE3;
-	Mon, 31 Mar 2025 14:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431669;
-	bh=wrCbQOfWrO8dfQCLZHtxBu3/reMj+qBJ8zLouLJDmT8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q6k5TTh+jq/yiSap//vFSWnyq+1l4GMb7izftevC0JDp0h8lBnWUwXGQEyh9aIMvo
-	 iDqWSoYpQtwaeWU4JYDgQ3/JAlj/y/2BOoh7/71bpwbqMwdZo7RuWnPmRRPqYMhaA6
-	 dF3eLBjrBxUuX+4vVdS3cr5rr8s83ncwKCXo+HwZtcUrqAje70nE3FdHbIUeKLcDRT
-	 RwrcsiF6fiRbnxIauGucxPok1wS5RW5BjYRKjHPCoYaBwYq1a1aHDnVe5A9mRbeq/o
-	 o9vYk8xN0E7T5D55agQgekUnCjRPGU8NvovagD2/dBI1ZTI7Ark3T3CoCfqELwylQV
-	 sbmo7BPu78Jcw==
-From: Sasha Levin <sashal@kernel.org>
+	s=arc-20240116; t=1743431674; c=relaxed/simple;
+	bh=UJFg1dao4GQMCub2MUS4ClAwY2RgA/iCJuXqVOviieY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Z4tahidy7p/xejeg1N0ZCjA82/9ynUfcjUZjLPGjRqaAkO6io1qoYYg9Gdeg5DQRoMyV0xkT0xYkZf4u0ogBvSXv13/IttvgMleJWUPCe0ANa+qC59d3ZHCPnvP1JRf4H4E6jS7HkCLXzAvj01yOQ35xP5va56Ej0sN6nRlybDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E36C4CEE3;
+	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tzGEe-00000005pAG-1o8S;
+	Mon, 31 Mar 2025 10:35:32 -0400
+Message-ID: <20250331143426.947281958@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 31 Mar 2025 10:34:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Max Grobecker <max@grobecker.info>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	riel@surriel.com,
-	thomas.lendacky@amd.com,
-	mario.limonciello@amd.com,
-	bigeasy@linutronix.de,
-	john.allen@amd.com,
-	darwi@linutronix.de,
-	mjguzik@gmail.com
-Subject: [PATCH AUTOSEL 6.14 07/18] x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual machine
-Date: Mon, 31 Mar 2025 10:33:57 -0400
-Message-Id: <20250331143409.1682789-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331143409.1682789-1-sashal@kernel.org>
-References: <20250331143409.1682789-1-sashal@kernel.org>
+ linux-trace-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v2 0/2] ring-buffer: Allow persistent memory to be user space mmapped
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
-Content-Transfer-Encoding: 8bit
 
-From: Max Grobecker <max@grobecker.info>
 
-[ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
+Allow the persistent memory mapped memory to be memory mapped to user
+space as well. Currently, the user space memory mapping requires the
+buffers to have been allocated via page_alloc() and converted to virtual
+address via page_address(). But the persistent memory is memory mapped
+via vmap() and a simple virt_to_page() can not be used. Move the control
+of the physical mapping via vmap() to the ring buffer code so that it
+can then use the saved physical and virtual mapping to find the pages
+needed for memory mapping user space.
 
-When running in a virtual machine, we might see the original hardware CPU
-vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
-hypervisor. In case we run on AMD hardware and the hypervisor sets a model
-ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
-capabilities present to circumvent a bug with some BIOSes in conjunction with
-AMD K8 processors.
+The first patch moves the memory mapping of the physical memory returned
+by reserve_mem from the tracing code to the ring buffer code. This makes
+sense as this gives more control over to the ring buffer in knowing exactly
+how the pages were created. It keeps track of where the physical memory
+that was mapped and also handles the freeing of this memory (removing the
+burden from the tracing code from having to do this). It also handles
+knowing if the buffer may be memory mapped or not. The check is removed
+from the tracing code, but if the tracing code tries to memory map the
+persistent ring buffer, the call to the ring buffer code will fail with
+the same error as before.
 
-Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
-bash scripts and prebuilt Docker containers, as it does not need to have
-additionals tools present – even though more reliable ways like using "kcpuid",
-which calls the CPUID instruction instead of parsing a list, should be preferred.
-Scripts, that use /proc/cpuinfo to determine if the current CPU is
-"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
-claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missing
-in that flags list.
+The second patch implements the user space memory mapping of the persistent
+ring buffer. It does so by adding several helper functions to annotate
+what the code is doing. Note, there's two meta pages here. One is mapped
+between the kernel and user space and is used to inform user space of updates
+to the ring buffer. The other is inside the persistent memory that is used to
+pass information across boots. The persistent memory meta data is never exposed
+to user space. The meta data for user space mapping is always allocated via the
+normal memory allocation.
 
-This can prevent some docker containers from starting or build scripts to create
-unoptimized binaries.
+The helper functions are:
 
-Admittably, this is more a small inconvenience than a severe bug in the kernel
-and the shoddy scripts that rely on parsing /proc/cpuinfo
-should be fixed instead.
+ rb_struct_page() - This is the rb_get_page() from our discussions, but
+                    I renamed it because "get" implies "put".
+                    This function will return the struct page for a given
+                    buffer page by either virt_to_page() if the page was
+                    allocated via the normal memory allocator, or it
+                    is found via pfn_to_page() by using the saved physical
+                    and virtual address of the mapped location. It uses
+                    that to calculate the physical address from the virtual
+                    address of the page and then pfn_to_page() can be used
+                    from that.
 
-This patch adds an additional check to see if we're running inside a
-virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
-understanding, can't be present on a real K8 processor as it was introduced
-only with the later/other Athlon64 models.
+  rb_fush_buffer_page() - this calls the above rb_struct_page() and then
+                    calls flush_dcache_folio() to make sure the kernel
+                    and user space is coherent.
 
-Example output with the "lahf_lm" flag missing in the flags list
-(should be shown between "hypervisor" and "abm"):
+  rb_flush_meta() - This just uses virt_to_page() and calls flush_dcache_folio()
+                    as it is always allocated by the normal memory allocator.
+                    I created it just to be consistent.
 
-    $ cat /proc/cpuinfo
-    processor       : 0
-    vendor_id       : AuthenticAMD
-    cpu family      : 15
-    model           : 6
-    model name      : Common KVM processor
-    stepping        : 1
-    microcode       : 0x1000065
-    cpu MHz         : 2599.998
-    cache size      : 512 KB
-    physical id     : 0
-    siblings        : 1
-    core id         : 0
-    cpu cores       : 1
-    apicid          : 0
-    initial apicid  : 0
-    fpu             : yes
-    fpu_exception   : yes
-    cpuid level     : 13
-    wp              : yes
-    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
-                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp
-                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
-                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
-                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
-                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
+  rb_page_id() - The mappings require knowing where they are mapped.
+                 As the normal allocated pages are done in a way that they
+                 may exist anywhere from the kernel's point of view, they
+                 need to be labelled to know where they are mapped in user
+                 space. The bpage->id is used for this. But for the persistent
+                 memory, that bpage->id is already used for knowing the order
+                 of the pages that are still active in the write part of
+                 the buffer. This means that they are not consecutive. For
+                 the user space mapping, the index of where the pages exist
+                 in the physical memory is used for the placement in user
+                 space. In order to manage this difference between how the
+                 ids are used, this helper function handles that.
 
-... while kcpuid shows the feature to be present in the CPU:
+These helper functions make the code obvious to what is being mapped
+and how they are mapped.
 
-    # kcpuid -d | grep lahf
-         lahf_lm             - LAHF/SAHF available in 64-bit mode
+Changes since v1: https://lore.kernel.org/all/20250328220836.812222422@goodmis.org/
 
-[ mingo: Updated the comment a bit, incorporated Boris's review feedback. ]
+- Changed map_pages counters page_count and i to unsigned long
 
-Signed-off-by: Max Grobecker <max@grobecker.info>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  In case someone uses over 4 billion pages on a 64 bit machine to map
+  the memory, have the counters be unsigned long and unsigned int.
+  The way machine memory is growing, this may just happen in the near future!
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 54194f5995de3..d747515ad0130 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -632,7 +632,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
- 	 * (model = 0x14) and later actually support it.
- 	 * (AMD Erratum #110, docId: 25759).
- 	 */
--	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
-+	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
- 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
- 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
- 			value &= ~BIT_64(32);
--- 
-2.39.5
 
+Steven Rostedt (2):
+      tracing: ring-buffer: Have the ring buffer code do the vmap of physical memory
+      ring-buffer: Allow persistent ring buffers to be mmapped
+
+----
+ include/linux/ring_buffer.h |  19 ++---
+ kernel/trace/ring_buffer.c  | 180 +++++++++++++++++++++++++++++++++++++++-----
+ kernel/trace/trace.c        |  65 ++++------------
+ 3 files changed, 186 insertions(+), 78 deletions(-)
