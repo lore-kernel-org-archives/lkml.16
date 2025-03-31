@@ -1,236 +1,162 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CA221A43B;
-	Mon, 31 Mar 2025 20:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0DC13C918
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743451974; cv=none; b=nBAO4jZROEXUGTIc3sOsgmY22N6fhzOz4ceL9OK6LMOW6YMU6vsz52lg/qAba4JCzBLNR3SR3Xd23mN1qfEPCoUrvBc4Ep6zPWzUYZgpGMK9hR7k7s0FPhiT4DNbQw6M3jYTU+3tPHuqsyPq692yaA6QPdC2oSz/4v38WGgXdHk=
+	t=1743452125; cv=none; b=XVLn8Zxsdq0QmcTeGThhsJgh+9V1tJy99RvwoLtbTwcopnR9P0bTXxy2eKEe4knhkcmEzfYemlXWpSw/LyWXfShyMkGwifUg+fTf02OTQYoFPUtN6mFj3u3WTNRmKp3nXwtm2REkU+OHEXwczK55s/7v9dM/nMQqqik10Uf5gFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743451974; c=relaxed/simple;
-	bh=lvZ73xzz3mMkJwAURa9e3ydTBqQTchnZWwnxcU8/e2g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hhfm8zsbolBQSWPKHcIBq0cWmcze9816XLKuQTyfyCwrG+tWwDTBpM/EE91HeOo5ULTyZSPyZIcLuQhhiDF7JHXmR3M6fkV0BlIiR4qJMzjdQjuk8yVKJRLKaGQRs393KH4TmV52a8SaXTqatKmG055HxfWzbttmc6dH9KSNxxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=Xak0cnp3; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1743452125; c=relaxed/simple;
+	bh=oEJY2EVDpbVKzLnNdc4SsWD4KYiEEXQWdxvbRXqQlzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PK9GoOdA9bl9XhLEi5tiYNo1C/P72sjxTwNPONtV2rqoDl3OKazD+xzNFmIO7FzBcWjNQ6/t7c/jY1dIMl6kOIQ3wTDNxWCsdYhzBy9wZ74WvZTm8F/Ab4rMk1DoIySArsCtn2Pk4wtVQp2cJhSwoaYUWMzM7EPS4xH7bOiUu2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Zl9sGznp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="Xak0cnp3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=Message-Id:Date:Cc:To:From;
-	bh=+UPgsoYyuTHoMpsEKfJbS83mget/Pt2RmairKSJfS28=; b=Xak0cnp3eC8vOcjRAmxhSzY8or
-	2ms51j9kwZ1j9gIgrhniOYdwKhaCSLkvMAzSsB13j5fW24Fn9N4r0G7o+JLiV4Jim2ehU9QMjLI/x
-	MT1xKsKlR048ZocTScVzlgzGvLIn86CkVMKH+3vlZd8IVmXEl1AtfZJmysQ/w1i5/w1s1EDLVd2EU
-	lmqtgGDBeVOMHtDw3AH38UOjan0N79BO8U3ne3Y6gpiRU9WwuNUpelZlVKnzxv4g0hnoLKJOV7yds
-	VUQ3iGNNMyE1r1ujQccxBuvwnA6ubRqR+LTje4X0ZZjlBuJ4YQEmbPxfE2LAjlzZ+0T53syP9/Ds9
-	w8gMyZ6VWeVNfn2lt+dc3VKBYUAl98jEsFqoe+OYds4YpSjRk9iNBvGnWXbNlmJDWcln+mLRk75WB
-	FO0XUUIsIiNT/TqLX8q+GxomIf5bbiv/WLO3mQnFCgN74NWzI7vElK7sMVqnIlGxQCsxx1OksawWH
-	wFYOTpCl6/Ns2jtL/6xPHTZv;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1tzLUy-007Y96-2f;
-	Mon, 31 Mar 2025 20:12:45 +0000
-From: Stefan Metzmacher <metze@samba.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Stefan Metzmacher <metze@samba.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Breno Leitao <leitao@debian.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Ayush Sawal <ayush.sawal@chelsio.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
-	James Chapman <jchapman@katalix.com>,
-	Jeremy Kerr <jk@codeconstruct.com.au>,
-	Matt Johnston <matt@codeconstruct.com.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Jon Maloy <jmaloy@redhat.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Martin Schiller <ms@dev.tdt.de>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	linux-hams@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com,
-	linux-afs@lists.infradead.org,
-	tipc-discussion@lists.sourceforge.net,
-	virtualization@lists.linux.dev,
-	linux-x25@vger.kernel.org,
-	bpf@vger.kernel.org,
-	isdn4linux@listserv.isdn4linux.de,
-	io-uring@vger.kernel.org
-Subject: [RFC PATCH 4/4] io_uring: let io_uring_cmd_getsockopt() allow level other than SOL_SOCKET
-Date: Mon, 31 Mar 2025 22:10:56 +0200
-Message-Id: <330de91a48996e6dc5cdc844b74fb17fb933326c.1743449872.git.metze@samba.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1743449872.git.metze@samba.org>
-References: <cover.1743449872.git.metze@samba.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Zl9sGznp"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFD4ea026983
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:15:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=P7h2H2RFCRb2YsO4A892b5k/
+	ijCEEmlIfVrXjiYPjNQ=; b=Zl9sGznp5LDLRfqQ2jmXtpyabN7IlCPZdjV1ocVW
+	jgp/gRZQ0npLfeT0UsNezchWnplSBF3NgKh9z/SytoAyX6nLVRLWzfUSQ1rvwhgO
+	aWlk7bFhQAGXglIUJfcxLitiThKcAUYzVn+/Uvv8M+LeTY543Sv+5fGfyiNq3xSB
+	VflJhDAWuwESJEc7/DaNmpOOrRHAIc3BR135VoQqw3CkT1LeExzEq3JK30qbGwiX
+	Tk0tz4QHJiYCY8SJr2f0leGDaZW9+azVK+JA1ndTLpTbMmIlvhr4JQSvddErcNHl
+	9uIwvkuvgutYsv+aklVAoaGSsjf/k2iaLQKdHlJu8/hOCA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhnqs2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:15:22 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5c77aff78so380112285a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:15:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743452121; x=1744056921;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P7h2H2RFCRb2YsO4A892b5k/ijCEEmlIfVrXjiYPjNQ=;
+        b=Ar+cz70l9owRxue6xHihC7jN6uSPoWC0YPeLq5FSBKfodBi6GWgdIgh17RxTOpHEhr
+         /tHtsOyL3052Q7fjEzNQQxndXeK+96VFtgUkFD7O/kB1OQpGknJMr2iTbxzJtQki42cq
+         C+ps+sc9bJQ2GSZimCxXlgn0L9N/Cl4ySSoMlkGB+lRB3nveNr7I9E++BK6ADWAZNbPf
+         tkRKkEr2MzeTgUbeptnnkOpjV6FLSp5irwg5ynZzBHoIknAdlFBscBbxVagfmJ/DHviR
+         jFehvXEnICwSLeINssZoQ4hBtzQfamycoYlmPE4/BwQUQ21AU03q4I6SoM7/1m8zrWQ3
+         HVXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdtsEK7RpZCXSr0pSL0WumcRIAxkydBELW806McXZbesXd7x8Zafa1c7M2HKLDE5B6s5PziR9vpcbVs5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySt0133/4jgeOJ7qbqD3RgeeGVBp8SnQk0ii5CVTNhyIfwDDL3
+	Uo+mDThJ0QhRP3cMQWqR/8xAHdXeMP1ONA8Np8Q4kk23sf2EpUmC0MMzpugKT5nK2BknbLVdAi1
+	CLz+yEzl35XjgoCo7aqT/x/0wYY3r1bMKUyxd6mAkACEpegQ+kM91v6EK8suzCHg=
+X-Gm-Gg: ASbGnct0Vxtp7x76sSurVcK+Ld6f7oSv14XwoAWH4Aq2wWGl0eKdp7jcoWHGXZFfNmr
+	SzcmWkFvX5kcby9xh0GWG9syPnbW56d9wdmnJwE9n442hfSvmm+NaBGJlcQqAlrRpR44ZUNPNVR
+	/tkSBGPynLqtT4IBi6H6BRJKvClzS1prFU9YL7tycLMBxbX7ITmPvP3TllOmgnkWWK3gISFFe9t
+	D4Xtlesv0cm7rVXxQRSWnWeeimBIbATKuz5S0H3TBYRgh3/Sqa+Yw9k8JnrLN5vkB2p1kQmXu6f
+	MWwh4oDLoPWjSb/n1UG/7LX7A5sXY9casOrqNabqfCndqLciAGEra4BD7CAqH5+3o7rYNeb2O8/
+	DvvU=
+X-Received: by 2002:a05:620a:280d:b0:7c5:592c:c26 with SMTP id af79cd13be357-7c69071e24emr1336194885a.19.1743452121300;
+        Mon, 31 Mar 2025 13:15:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFygEmRexkMbZHd10mpwj4qICazFurscUAIaegGy19d58q/5qJ2VH9/SymkMH9e6R4pPM1+A==
+X-Received: by 2002:a05:620a:280d:b0:7c5:592c:c26 with SMTP id af79cd13be357-7c69071e24emr1336184485a.19.1743452120123;
+        Mon, 31 Mar 2025 13:15:20 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c1682sm1203296e87.66.2025.03.31.13.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 13:15:17 -0700 (PDT)
+Date: Mon, 31 Mar 2025 23:15:14 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
+ WiFi/BT pwrseq
+Message-ID: <siktv5i4fnkbjgzfwkztp3px3cxlhxuoxssmksr4ww5voe5heq@ttzkhisnyxl6>
+References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
+ <20250331073423.3184322-2-alex.vinarskis@gmail.com>
+ <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
+ <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
+ <Z-p1uADNVAM9NcAW@hovoldconsulting.com>
+ <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
+ <Z-rnvSKEysdDyj4s@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-rnvSKEysdDyj4s@hovoldconsulting.com>
+X-Proofpoint-GUID: J9jGPjLyrwD4sYkpa2daTfbH30GmYQ7v
+X-Proofpoint-ORIG-GUID: J9jGPjLyrwD4sYkpa2daTfbH30GmYQ7v
+X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67eaf7da cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=OER9kIcIPobgsStsnq8A:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_09,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310140
 
-do_sock_getsockopt() works with a kernel pointer for optlen now.
+On Mon, Mar 31, 2025 at 09:06:37PM +0200, Johan Hovold wrote:
+> On Mon, Mar 31, 2025 at 06:51:03PM +0200, Aleksandrs Vinarskis wrote:
+> > On Mon, 31 Mar 2025 at 13:00, Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
+> > > > On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
+> > > > > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
+> > > > > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
+> > > > > > combo chip using the new power sequencing bindings. All voltages are
+> > > > > > derived from chained fixed regulators controlled using a single GPIO.
+> > > > > >
+> > > > > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
+> > > > > > WiFi/BT pwrseq").
+> 
+> > > > > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
+> > > > > > X1-based Dell XPS 13 9345")
+> > > > >
+> > > > > Not sure what happened here.
+> > > >
+> > > > Bluetooth and WLAN definitions were missing, as at the time I only
+> > > > knew the UART port being used for bluetooth, and was missing
+> > > > everything else to describe it.
+> > >
+> > > Ah, ok. The above sentence looked like some left-over copy paste. I
+> > > guess you don't need to mention it at all since this does not seem to
+> > > warrant a proper Fixes tag.
+> > 
+> > It was a suggestion from Dmitry in v1. Though indeed it does not
+> > warrant a proper Fixed tag, as it is something  that was left out from
+> > the initial series, I think it's fine to keep it like this, if it's
+> > okay with you?
+> 
+> I think you misinterpreted Dmitry here. He just said that after you
+> added the reference to the commit you based this on to the commit
+> message you could add his reviewed-by tag ("With that fixed: R-B: Dmitry
+> ...")
+> 
+> 	https://lore.kernel.org/all/ou7w4hvbbz72nzrm45gfhpq2uzkuwpfudqeh2o34tcnbnazxgz@glmuryu5dh3s/
+> 
+> As it stands it's hard to understand what that sentence means and why
+> it is there (looks like a copy paste mistake). I suggest you just drop
+> it.
 
-Link: https://lore.kernel.org/io-uring/86b1dce5-4bb4-4a0b-9cff-e72f488bf57d@samba.org/T/#t
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Karsten Keil <isdn@linux-pingi.de>
-Cc: Ayush Sawal <ayush.sawal@chelsio.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc: Xin Long <lucien.xin@gmail.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Cc: Joerg Reuter <jreuter@yaina.de>
-Cc: Marcel Holtmann <marcel@holtmann.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Robin van der Gracht <robin@protonic.nl>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de
-Cc: Alexander Aring <alex.aring@gmail.com>
-Cc: Stefan Schmidt <stefan@datenfreihafen.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Alexandra Winter <wintera@linux.ibm.com>
-Cc: Thorsten Winkler <twinkler@linux.ibm.com>
-Cc: James Chapman <jchapman@katalix.com>
-Cc: Jeremy Kerr <jk@codeconstruct.com.au>
-Cc: Matt Johnston <matt@codeconstruct.com.au>
-Cc: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Remi Denis-Courmont <courmisch@gmail.com>
-Cc: Allison Henderson <allison.henderson@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Marc Dionne <marc.dionne@auristor.com>
-Cc: Wenjia Zhang <wenjia@linux.ibm.com>
-Cc: Jan Karcher <jaka@linux.ibm.com>
-Cc: "D. Wythe" <alibuda@linux.alibaba.com>
-Cc: Tony Lu <tonylu@linux.alibaba.com>
-Cc: Wen Gu <guwen@linux.alibaba.com>
-Cc: Jon Maloy <jmaloy@redhat.com>
-Cc: Boris Pismenny <borisp@nvidia.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Cc: "Björn Töpel" <bjorn@kernel.org>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Cc: Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-CC: Stefan Metzmacher <metze@samba.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-sctp@vger.kernel.org
-Cc: linux-hams@vger.kernel.org
-Cc: linux-bluetooth@vger.kernel.org
-Cc: linux-can@vger.kernel.org
-Cc: dccp@vger.kernel.org
-Cc: linux-wpan@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: mptcp@lists.linux.dev
-Cc: linux-rdma@vger.kernel.org
-Cc: rds-devel@oss.oracle.com
-Cc: linux-afs@lists.infradead.org
-Cc: tipc-discussion@lists.sourceforge.net
-Cc: virtualization@lists.linux.dev
-Cc: linux-x25@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: isdn4linux@listserv.isdn4linux.de
-Cc: io-uring@vger.kernel.org
-Signed-off-by: Stefan Metzmacher <metze@samba.org>
----
- io_uring/uring_cmd.c | 3 ---
- 1 file changed, 3 deletions(-)
+I disliked the original phrase "Derived from: commit subject". Instead I
+suggested a different, more standard way, '... commit abcdefabcdef
+("commit subject")'. With that phrase in place Aleksandrs can add my R-B
+tag.
 
-diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
-index f2cfc371f3d0..8b0cc919a60c 100644
---- a/io_uring/uring_cmd.c
-+++ b/io_uring/uring_cmd.c
-@@ -312,9 +312,6 @@ static inline int io_uring_cmd_getsockopt(struct socket *sock,
- 	void __user *optval;
- 
- 	level = READ_ONCE(cmd->sqe->level);
--	if (level != SOL_SOCKET)
--		return -EOPNOTSUPP;
--
- 	optval = u64_to_user_ptr(READ_ONCE(cmd->sqe->optval));
- 	optname = READ_ONCE(cmd->sqe->optname);
- 	optlen = READ_ONCE(cmd->sqe->optlen);
 -- 
-2.34.1
-
+With best wishes
+Dmitry
