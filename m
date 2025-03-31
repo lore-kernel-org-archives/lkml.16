@@ -1,142 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AA521CC68;
-	Mon, 31 Mar 2025 15:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0009621CC4E
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743435531; cv=none; b=IcSi7/HrxetCkzckbZXZgmFYM93q1SdVcHi5N5UpH8gGtokhEWcVr3/SD2X6jrnObhKxRcFJG0p/YQTsa7+Ga2tXEtuiOj1MN/Nj91xSMXO1bMtUVeXYY/Ygexsbqfny5xx44LNoD90G5Iv18gIlvpMmPzTXwCn76Lsi/dbNroA=
+	t=1743435531; cv=none; b=Yh1mAc/iokd8YFf5leWYKAf+Gyj89KML7mONiOw6KGZdJ4XTSWWv3OrgYXPzB253dLjjAWiQPdyiGYrb7jkRo5n3kyUQk/IVk/bG3ovuuMZoDJ41VCMG2/mMlZrumSwZAAkfN/EdjuI1CYyzP0tRdnFxblRuoBe1S8JdGgpaguo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743435531; c=relaxed/simple;
-	bh=Oz77cFlqw5DPmwbKSrlj7neM+agoaLjuUmLJLZuKvZE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XNyul2JeVoaW5UneBKU0SWvzygEMT7sgwsrdU9uSC9uPC/0hg7BOPTdPdU2wij5YZMmTEDicy055jIQt8fc6BF+KtGswMMjwEF375MiULo8R8UrzDQG7JBE7IBSMzdb8XAI7wEoF69sIHvXBDCy72YGJ4d1NXAQSUbhGqklcIVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naDzZhIn; arc=none smtp.client-ip=10.30.226.201
+	bh=8Z/Q1Yqqxhozl8RrcKexRki6sw2jFiBNt//dnoasYvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fcKA1iQjuL4eVECPhRZ3tkQLN8wFIUFm401w5k3/1ILORvDxgPjwjS4wGpl6OevBfeztcauPkeyyGbEmLe8eqtK1tmx7urij7bSsxNJb4rtb8wNnVKOzF6jUPAhdZ4KZ5A/ys62G/FhYWp7Vvf9HjZeX4k4QGI0BOBkz6M1kct4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IcpNEA+0; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naDzZhIn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D94C4CEE9;
-	Mon, 31 Mar 2025 15:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743435530;
-	bh=Oz77cFlqw5DPmwbKSrlj7neM+agoaLjuUmLJLZuKvZE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=naDzZhInFIu7ojKFiE8dgAYcoFhZb/uIZH6bS5xW0FHt4854cJKMrKMCT7ylBppTK
-	 DrKPQDCxW92veNEgLnRbgUv8RfkiX3ur23VbuZEIbsQocPOSE+JvNoFs6iE64lY7Xh
-	 Zm9hnFGIPLzXGCg0V4zMcpPImfUmAJ9spViTxp9cqdRWQLqBp/1gP7Kw0e9HXkU48Q
-	 +sN0D6ztAgulbdQcml0rNrb8ErEEFE9X3GSOkQOkqM78/rDupZbSvJUWoebjiRQmM6
-	 QZWZ88R/NKDkaa5gloS0bZ1f2kwY9p2J7uVS/eubsdeouKWrt6HUjXmqs73VNzSjca
-	 yuq8mumUiGJBg==
-Date: Tue, 1 Apr 2025 00:38:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] tracing: fprobe events: Fix possible UAF on
- modules
-Message-Id: <20250401003846.0e4c0176c3410281dee27c05@kernel.org>
-In-Reply-To: <174343533593.843280.8788277038071990492.stgit@devnote2>
-References: <174343532655.843280.15317319860632975273.stgit@devnote2>
-	<174343533593.843280.8788277038071990492.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcpNEA+0"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso20822285e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743435528; x=1744040328; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2gIv3lfUsZudSX+4KjXfNYnF9gzZiOWchSCAyXPUHRA=;
+        b=IcpNEA+0yYIFv1ul2Bism8dnWcV2lXS8Rl1MCzK/mOhzQB/sn+iR2EhxA63dH1e9yQ
+         Soip5zw9ugNPYURKBiv/Ve9mcfCQ70IsJEiVIaicAD4IoGBY0BYC8twMDrXoApWyp9wF
+         muerxqn5u7EZhstChwDyv6B67/cJ7WvTxBSaGxMH4O61UHVh1ui2H2ANZKz0UMQhAsDq
+         UadQiGlTe0wj0KkvS+4k6SMAJuHNUDAakDZ401ptorLz8wVVaKU5BSSHweX5fE64gQ3S
+         QkaHzOI3c7Vya5KxDMCzcsm8E/cr1qxQzo6MJiNEPHRnGOdmaOArv9XjAm1csrhtJ1YB
+         vS6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743435528; x=1744040328;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2gIv3lfUsZudSX+4KjXfNYnF9gzZiOWchSCAyXPUHRA=;
+        b=Tkuw8zPTr84CHuHADPbgYtm8QX1sZEzdbo4M9zE6la5Q4WiDALanty13Ou8k+STlYJ
+         41wo1Sy/RwqkbY4desc5zJrvYTV+qK3KGUVYQYBd4rRFOS2Dymvup0iYP1jQEJN1H8Q8
+         x2+Ux1uZ0b5fUJpYxABX/bweRKAezy3Oj+NrveY8q1durk41syoubH7C8M8QXJ7J0Zl3
+         5OU6biC4MEZENA7WEbdMdhqkDz9xuqU0WhJohBG4yJ20VgjZJpJgYuNu7acOBSub9cwo
+         OC0zLTv8tg4iqbhl4qaM/nJjcbPnhzXrjLF6jiApRQEw/1a0A9wFH3nrd2mB9aub6iSO
+         T1vA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLB/omgMnoXAEAAL8lnTzD/bhnD8qYaTA5jI9sFXWI9s4lZhkIKsD88Pg5dOdsAPFs8gFEatJGuNLHxYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIwwTBuHyV0fwogLDEVDztAaKb28y1QUTI1+VxNIC7qm0QqjUX
+	fON2SIvDbksMb38bzvs7G4NhrqzbERgV01NVX671PUc2ckmWoCdI
+X-Gm-Gg: ASbGncuhC224aM8gqzsLuFuLOGQoj7zQAHaIfRu1++laqTjWVAo1mU3PC3QWRei+kNl
+	FJnEX9kpL5218FvsuGcmVvygpIFcs2DqCCoeYhutiO0wVA+RNrN4mFgNINPvuhl9aS9cjCyNcvz
+	JrnshWkKGIPSFFzXrWAK/iBzOIkgMJDH6qePxsqWtoXhvc2kSzX8oRvtcFmDYdjWNsmJSUlnai9
+	vTOss8AwRcDryiqBFCYFJj+9dNDc7PZqpGnYaOIQw2ZyjZVWrQNgzmX09sdCIQaIcLsa0H9qw11
+	8l3toqa1gVDPXWD6al76lzD/mewgJNbhbykklwE=
+X-Google-Smtp-Source: AGHT+IFdato1T3vrZMd1epyk3zNNbsohtGqaDLeyTFEjiVWS1VpusMu2h3hzcFrdgYDV0ky7Ie0dww==
+X-Received: by 2002:a7b:c85a:0:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43dfa59cd30mr61311035e9.33.1743435528129;
+        Mon, 31 Mar 2025 08:38:48 -0700 (PDT)
+Received: from pc.. ([41.206.42.66])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm11419167f8f.7.2025.03.31.08.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 08:38:47 -0700 (PDT)
+From: Erick Karanja <karanja99erick@gmail.com>
+To: gregkh@linuxfoundation.org,
+	outreachy@lists.linux.dev
+Cc: philipp.g.hortmann@gmail.com,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Erick Karanja <karanja99erick@gmail.com>
+Subject: [PATCH 3/5] staging: rtl8723bs: add spaces between ternary and binary operators
+Date: Mon, 31 Mar 2025 18:37:56 +0300
+Message-ID: <84e4e73f3224ee37d5d203c9b7adbcb43f4fc144.1743434232.git.karanja99erick@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1743434232.git.karanja99erick@gmail.com>
+References: <cover.1743434232.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Oops, I have already sent this as;
+Fix spacing around binary arithmetic (`+`) and shift (`>>`) operators
+to improve readability and adhere to the Linux kernel coding style.
 
-https://lore.kernel.org/all/174342990779.781946.9138388479067729366.stgit@devnote2/
+Reported by checkpatch:
 
-please ignore this.
+	CHECK: spaces needed around 'operator'
 
-On Tue,  1 Apr 2025 00:35:36 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/odm_CfoTracking.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Commit ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module
-> refcount") moved try_module_get() from __find_tracepoint_module_cb()
-> to find_tracepoint() caller, but that introduced a possible UAF
-> because the module can be unloaded before try_module_get(). In this
-> case, the module object should be freed too. Thus, try_module_get()
-> does not only fail but may access to the freed object.
-> 
-> To avoid that, try_module_get() in __find_tracepoint_module_cb()
-> again.
-> 
-> Fixes: ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module refcount")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_fprobe.c |   26 +++++++++++++++++---------
->  1 file changed, 17 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 985ff98272da..2cd9ff1049f1 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -919,9 +919,15 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
->  	struct __find_tracepoint_cb_data *data = priv;
->  
->  	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
-> -		data->tpoint = tp;
-> -		if (!data->mod)
-> +		/* If module is not specified, try getting module refcount. */
-> +		if (!data->mod && mod) {
-> +			/* If failed to get refcount, ignore this tracepoint. */
-> +			if (!try_module_get(mod))
-> +				return;
-> +
->  			data->mod = mod;
-> +		}
-> +		data->tpoint = tp;
->  	}
->  }
->  
-> @@ -933,7 +939,11 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
->  		data->tpoint = tp;
->  }
->  
-> -/* Find a tracepoint from kernel and module. */
-> +/*
-> + * Find a tracepoint from kernel and module. If the tracepoint is on the module,
-> + * the module's refcount is incremented and returned as *@tp_mod. Thus, if it is
-> + * not NULL, caller must call module_put(*tp_mod) after used the tracepoint.
-> + */
->  static struct tracepoint *find_tracepoint(const char *tp_name,
->  					  struct module **tp_mod)
->  {
-> @@ -962,7 +972,10 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
->  	}
->  }
->  
-> -/* Find a tracepoint from specified module. */
-> +/*
-> + * Find a tracepoint from specified module. In this case, this does not get the
-> + * module's refcount. The caller must ensure the module is not freed.
-> + */
->  static struct tracepoint *find_tracepoint_in_module(struct module *mod,
->  						    const char *tp_name)
->  {
-> @@ -1169,11 +1182,6 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	if (is_tracepoint) {
->  		ctx->flags |= TPARG_FL_TPOINT;
->  		tpoint = find_tracepoint(symbol, &tp_mod);
-> -		/* lock module until register this tprobe. */
-> -		if (tp_mod && !try_module_get(tp_mod)) {
-> -			tpoint = NULL;
-> -			tp_mod = NULL;
-> -		}
->  		if (tpoint) {
->  			ctx->funcname = kallsyms_lookup(
->  				(unsigned long)tpoint->probestub,
-> 
-
-
+diff --git a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+index 928c58be6c9b..3b43f8cfd6f4 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
++++ b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+@@ -155,9 +155,9 @@ void ODM_CfoTracking(void *pDM_VOID)
+ 		/* 4 1.6 Big jump */
+ 		if (pCfoTrack->bAdjust) {
+ 			if (CFO_ave > CFO_TH_XTAL_LOW)
+-				Adjust_Xtal = Adjust_Xtal+((CFO_ave-CFO_TH_XTAL_LOW)>>2);
++				Adjust_Xtal = Adjust_Xtal + ((CFO_ave-CFO_TH_XTAL_LOW) >> 2);
+ 			else if (CFO_ave < (-CFO_TH_XTAL_LOW))
+-				Adjust_Xtal = Adjust_Xtal+((CFO_TH_XTAL_LOW-CFO_ave)>>2);
++				Adjust_Xtal = Adjust_Xtal + ((CFO_TH_XTAL_LOW-CFO_ave) >> 2);
+ 		}
+ 
+ 		/* 4 1.7 Adjust Crystal Cap. */
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
