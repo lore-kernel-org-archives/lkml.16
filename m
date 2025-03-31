@@ -1,33 +1,33 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B51189F36
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF8B189F36
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421078; cv=none; b=RUaggW9iWszWer4MhgBNbaYmztbHBq8X/FGs7pDXQyE1pEfJQVSlsFgVQ7DKAEh21aplIzWqIJn5FE4H+KJqBVBV74zOCWDLYuhVkLxPAV/j7GaLzxLaO+6K0ydOzUyKuuut8r5+UJqBJ4xwI5Z5ut5ioNfny/tpD/XiH4Y0Hfo=
+	t=1743421165; cv=none; b=AfnT/92gA6wX6dcf9MV9edg8bZYLnvBRdRdnQC3ZJ82P/YijoCBSTwjM20JWRDUKp2+v3pNAoWOMpBo6rFnoo+yA0ahZQUnbpLtQ3gCeztcztD0s13qS5cU8QKA4dRZwfC7BEPkxloUPLq5Vx5Zfg9eSB7raP7Ab0ZxpX/RUqDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421078; c=relaxed/simple;
-	bh=fhjjBv2eIKP3UTkyHFQb4hg2T8JcFRpc2QNw54u90kI=;
+	s=arc-20240116; t=1743421165; c=relaxed/simple;
+	bh=SZDcK968uCMAlfHGmsf/1LFNLrcil0dWfQhsP0uYMKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lL7dizppb0YZr5e2ulwaUJiaGQAs7olswb/K5v+dxUMv+9YX1kczys/Y3+9qsZ2Cu5uB2ad7ycRjIxzetZHIz+FlBRR/AJ2gTjEEJJYG9xEoWoxiqGKQNmgNZWflO0dqd6nrgugz6RMpbTsLcLkcR8sl3lH7nEHWS8O/opHNYII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ncX0ZzRZ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=PMOEe7c+hxKUEo0OdzfNgBEEh58guBeNDCbG+0M7JDLR8x/wX6nTmssqjkd3vhC0rENAluIT5hxMAQt/c0vo8ZQqFw5Ecb9koi6/O52BeV7px0bBu0BEEZRXstMcWFlG8qsRUXo0LEgZpumvnoFUZ5ZldGR2ijHUSa06SlkClHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I38MsDT3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ncX0ZzRZ"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCF10703;
-	Mon, 31 Mar 2025 13:35:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743420957;
-	bh=fhjjBv2eIKP3UTkyHFQb4hg2T8JcFRpc2QNw54u90kI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I38MsDT3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39D6C4CEE3;
+	Mon, 31 Mar 2025 11:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743421165;
+	bh=SZDcK968uCMAlfHGmsf/1LFNLrcil0dWfQhsP0uYMKk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ncX0ZzRZ+jM6USFckRkzBceTc5VoiY5YQGklLG9BOd1Syyz1bqFcutuXMgX1AiW4w
-	 3RlNOUCpf+aI/zygWsheT2GtBu0krGinFmNkLL1I2q4F5OeMP7B+91LkwhMcWRAmdb
-	 VhSwEncuP4e6vnWSs5qLRoo1KK5dFeStwpU+9hMs=
-Message-ID: <1f3d7c22-6848-471d-b41e-fbdae0535c86@ideasonboard.com>
-Date: Mon, 31 Mar 2025 14:37:45 +0300
+	b=I38MsDT3haOaJW/qK4tukieImvBa1oq38ud5z2u85PbsF2gLEkFaaNWDOdvertJ9K
+	 o9/VwVbHdXALcse4oxSk9amy2/v6rNH+YsyKRJe0KU+n0juf25V40vWl2o2C/Ni/4H
+	 kg7Z4XwpL2YncuF9oYLo8PYXKvbwVV7/CAMcoJxBpfhpJzI9Rr4hKST+0cJwKqnLqH
+	 zKCc8yzcfPwVp5KhNOc/cHclCtgdkJMMcCtDLwhU+uy2vV2RfJ3kzMQt3oTpFG3Xls
+	 2zayUaw93mSu5HQttXu058RbPOtpVici7QoR+0zfEprfSSnfcgZCjiI5jpL6Y9Qmxm
+	 n01Pbqp/fSJiw==
+Message-ID: <0b99b7e5-a035-4a15-8389-dcb3ca81f96d@kernel.org>
+Date: Mon, 31 Mar 2025 13:39:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,143 +35,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/11] drm: xlnx: zynqmp: Add support for Y8 and
- Y10_P32
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-9-322a300c6d72@ideasonboard.com>
- <20250327225209.GB16629@pendragon.ideasonboard.com>
+Subject: Re: [PATCH] uio: uio_fsl_elbc_gpcm: Add NULL check in the
+ uio_fsl_elbc_gpcm_probe
+To: Henry Martin <bsdhenrymartin@gmail.com>, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250331092712.7227-1-bsdhenrymartin@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250327225209.GB16629@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250331092712.7227-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 31/03/2025 11:27, Henry Martin wrote:
+> When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function uio_fsl_elbc_gpcm_probe.
+> 
+> A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error.
+> 
+> Fixes: d57801c45f53e ("uio: uio_fsl_elbc_gpcm: use device-managed allocators")
+> 
 
-On 28/03/2025 00:52, Laurent Pinchart wrote:
-> Hi Tomi,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Mar 26, 2025 at 03:22:52PM +0200, Tomi Valkeinen wrote:
->> Add support for Y8 and Y10_P32 formats. We also need to add new csc
->> matrices for the y-only formats.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>   drivers/gpu/drm/xlnx/zynqmp_disp.c | 26 +++++++++++++++++++++++++-
->>   1 file changed, 25 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> index 1dc77f2e4262..ae8b4073edf6 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> @@ -307,6 +307,16 @@ static const struct zynqmp_disp_format avbuf_vid_fmts[] = {
->>   		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YV16CI_10,
->>   		.swap		= false,
->>   		.sf		= scaling_factors_101010,
->> +	}, {
->> +		.drm_fmt	= DRM_FORMAT_Y8,
->> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_MONO,
->> +		.swap		= false,
->> +		.sf		= scaling_factors_888,
->> +	}, {
->> +		.drm_fmt	= DRM_FORMAT_Y10_P32,
->> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YONLY_10,
->> +		.swap		= false,
->> +		.sf		= scaling_factors_101010,
-> 
-> Assuming the DRM format definitions get approved, this looks good to me.
-> 
->>   	},
->>   };
->>   
->> @@ -697,6 +707,16 @@ static const u32 csc_sdtv_to_rgb_offsets[] = {
->>   	0x0, 0x1800, 0x1800
->>   };
->>   
->> +static const u16 csc_sdtv_to_rgb_yonly_matrix[] = {
-> 
-> TODO: Add support for colorspaces to the driver.
-> 
->> +	0x0, 0x0, 0x1000,
->> +	0x0, 0x0, 0x1000,
->> +	0x0, 0x0, 0x1000,
-> 
-> This surprises me a bit, I was expecting 0x1000 to be in the first
-> column. What am I missing ?
 
-All this is undocumented (afaics). But my understanding is that as this 
-is a single channel format, the Y data is in the "lowest" channel, which 
-is handled by the rightmost column in the matrix.
+Same comments as for other patches.
 
->> +};
->> +
->> +static const u32 csc_sdtv_to_rgb_yonly_offsets[] = {
->> +	0x1800, 0x1800, 0x0
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+>  drivers/uio/uio_fsl_elbc_gpcm.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Why do you need offsets ? Those values correspond to -128 in a 8-bit
-> range, and that's what would need to be applied to the chroma values.
-> There's no chroma here. I think you could use csc_zero_offsets.
+> diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+> index 81454c3e2484..59ba1a2dcfe3 100644
+> --- a/drivers/uio/uio_fsl_elbc_gpcm.c
+> +++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+> @@ -384,6 +384,10 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
+>  
+>  	/* set all UIO data */
+>  	info->mem[0].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn", node);
+> +	if (!info->mem[0].name) {
+> +		dev_err(priv->dev, "devm_kasprintf failed for region name\n");
 
-Indeed, the values are not needed. The only value in the offsets that 
-matters is the last one (matching the rightmost column in the matrix), 
-which needs to be 0. But I think it makes sense to have the array here, 
-otherwise one needs to dig into the code to see what are the offsets for 
-y-only.
 
-  Tomi
+There is never a printk after memory allocation failure.
 
+Also, just like in some of the other patches, you did not really analyze
+the code - you leak here resource map. Just look at the entire code
+instead of blindly pasting the same code here and there.
+
+Best regards,
+Krzysztof
