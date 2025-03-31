@@ -1,193 +1,202 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C197189F56;
-	Mon, 31 Mar 2025 21:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FCF7080D;
+	Mon, 31 Mar 2025 21:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743455613; cv=none; b=aINpSGwSlW9Jh7kC/UOGwszmJgV5vaSdrVxCGMGQq5NVyHfF91JYwQeKWrQrl5c5tPpr3mZoAHa+ksIOvnm+w0c/3NiQeTtMAZq6zqgOOvlDEuK4MDTfXY0qRj0UVaW52kjWkT1noHY+5d6wa46vpmDoAYkmi/wgeGAhuah8Xiw=
+	t=1743455651; cv=none; b=BSZ1208/A9zqRx0tM7TEzeY84mbudY8fA+hXfXpv1zxAEgWqsRPna8NX6JPiXbvy8dsmWvHjQKkd66HC5oc/AFxfZ/aZbu9kelSKGRz/JfaVGCAIZeriMOZttux2Da5qFw+eeyz2GQrUiyKwb5u1Mi8//PKYoit44LPfjBQ2Ux4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743455613; c=relaxed/simple;
-	bh=F1YikHRXUSSHRhz2d6p0uniSRuNAg/hbswSJp4j6w/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQNJGNOMryqUdNu7CdcLX0cAwgYD2VFUlwGyqbtKJklc3ifLh7GbAe6oAEscpmxJn1kK8QBT4NoUUp+s/OKqe3qpd6wCrQucYDgfI4kABGOgAbqS2GeVerfZBNlpZQxeNBGB8qJkVVjZlBS4p0vIoJNuoVSGu41uPNOcmG1rW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=gWrFEaiD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FBgJSrPo; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1743455651; c=relaxed/simple;
+	bh=hMQSMUh44erp4N8q6IyW/OEe5dQ0e24JRgxyticPm3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YGEiwruhNqHfxmBrQyI8wgGpZU9a4a++039TGEAQp45/weYN6hJ/UMfaJAsK9fPYaDvRWsYUNBsm+VUt+IR2wBiSNU8xFiYoDWG/Qd8H92QhiP6LpfbFTl68LJN/3BV14IdrK+yAHIHX8vqwEpTrHkjkiCD6SQx6xIhVzRsMDuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=q8FbJJ2U; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="gWrFEaiD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FBgJSrPo"
-Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id EFDBA11401F6;
-	Mon, 31 Mar 2025 17:13:30 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-13.internal (MEProxy); Mon, 31 Mar 2025 17:13:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743455610;
-	 x=1743542010; bh=iG61YoYfBsUHoXvyDbXxE5zBVIGZRgRxOozAF7+tnC4=; b=
-	gWrFEaiDbekocnNrpbiPbVUWnCeOD610Ww2EdCKwcX7hHYHvxJicqFSJn0zYmyp1
-	OcutYFCEXbVExn1V2usTDoGE/o28MtQlhUcmuKgBBiMCnHmlTVOKyTixqR9Bq+Tk
-	8pZx/UqBcf2hgSK/g8DShaUGCDtJ2zBx03PKLG2JDniFT6e7iOW6Nd8/ScI0YVKw
-	J/Wkta/cfk9iUfHwsGwuEJRWWtcBEeKR9CjSBQ803GCGfqCfSa7B5alm0lj/zh9b
-	zsnYgeFip5VlKrTRr4qMn6aTA0UPeZ9qgIXthuYfaTP84vegoL2/LcksD8JO43xu
-	vhtSGNiYeKe0DgLe1kHR2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743455610; x=
-	1743542010; bh=iG61YoYfBsUHoXvyDbXxE5zBVIGZRgRxOozAF7+tnC4=; b=F
-	BgJSrPoJs7Ok60bRIwBkdi5CHE9XqTKO0JizNQ8KFYHzO5sqLJtQ6IGrs8ZQeYW6
-	yT2yUNeLaB2h/RdEQ4pXsDr2B8njYvnDCYyD8VFm4LE+4nAEl4m1OUUxrgJY4jvT
-	kiKO9sb9wezBRKPwBmtEiYK9l+jAfRcqRSh/NRGmiJbc0qJczYfY24jF4J19nPkU
-	SRHHSid3to/2MG2XNbwUOhfzpZ2HJRlZkKIZ9Miz/kPAuVF6VKHRQP2g/LwD7KNQ
-	gzeh5A5xbp/lgqZtB6ta9chQ/N/dUecCYMEdTCRPGd9xEozbzS6UAgWKgm6X3FLY
-	vStzqNfSWBXt8bLIr+qKA==
-X-ME-Sender: <xms:egXrZ9XFpJ0pomNCTYGGlnF7Tb5Gk0uNp3dZk2j0MjpQkNHhizkzBA>
-    <xme:egXrZ9m1N4cSS5byW72mN03N-mi7_5L8xO431HV992LjvKAAQd6TLbWa_O3oRoeuU
-    22N1c_rxktI0PQZbN8>
-X-ME-Received: <xmr:egXrZ5a7hWkxtpYL3imCVukAqmuTf00TKu1U0OMmFFz9Ros8QafpDgB-lOEDNFBZybap-wBrWKvZXk7Ed4-krYHmK49yx7VaRw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtleejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeev
-    teegtddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdr
-    shhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeejpd
-    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdo
-    rhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthh
-    gvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhs
-    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghs
-    rghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgv
-    hhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:egXrZwUPpVt6PAhk1jDApteSrnz4CaJIQShWOGweiyY7vatI2No5KQ>
-    <xmx:egXrZ3mnpbsgWhwOAwr3eulDq4Cf376KQaOos4K2PFBnGFgiy3zEPQ>
-    <xmx:egXrZ9egcYzFH61zEciIGRFaKqsjezlHB6yQoqYPku_riz_b0fzXJA>
-    <xmx:egXrZxE3tA1N79AMeJ0Zoi0VQV7i4J7TTyqZ-IAsri9EfL2X59-WDQ>
-    <xmx:egXrZ1VoTn1J0ccLueGsTvgmX1cVs6s5d9HkEbP72BJnzMABlCXUS868>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 31 Mar 2025 17:13:30 -0400 (EDT)
-Date: Mon, 31 Mar 2025 23:13:28 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH 1/3] media: rcar-vin: Add RCAR_GEN4 model value
-Message-ID: <20250331211328.GB1240431@ragnatech.se>
-References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
- <20250324-rcar-fix-raw-v1-1-ae56c1c7a2f6@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="q8FbJJ2U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1743455646; x=1744060446; i=quwenruo.btrfs@gmx.com;
+	bh=Uso56pb8SuJXJToitq1Sfh07PwWrBACFK0dG374DTk4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=q8FbJJ2UfY4cmIwgU9PRtc2lIKi8FKBWD62DAPlGgVSBvUTVLksPbKi8y/oBT/OF
+	 /MvjYtWEC1fjqoIjWAEbRLAZuSgdChXIT3Hr/bckyaYfmFfC2K08Wv9dU5yehAsl1
+	 1bwI9pWFJ20+8Q+72BR3726k2bBkmga+u9SPbbSZ12I7JU62+NwaowHeNVNbBbG/l
+	 dvdNDAqGk/bQLT5mQiyUtCBXj455y+PiwWadCkAmzPot4xFlTerbHtIkJ3jKub6iu
+	 MGPdTruiGoX59x1xUqFnepJs/3SdRd4jxx9AECzdcAu0VBkKKQZ+D+Fk2qQhUlIDp
+	 6RaC731SSpv0Ofh0Zg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MWigq-1tbIAA03lA-00LO1K; Mon, 31
+ Mar 2025 23:14:06 +0200
+Message-ID: <b1437d32-8c85-4e5d-9c68-76938dcf6573@gmx.com>
+Date: Tue, 1 Apr 2025 07:44:01 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250324-rcar-fix-raw-v1-1-ae56c1c7a2f6@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
+ modes
+To: Daniel Vacek <neelx@suse.com>, Qu Wenruo <wqu@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250331082347.1407151-1-neelx@suse.com>
+ <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
+ <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
+Content-Language: en-US
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
+ sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
+ xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
+ naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
+ tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
+ 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
+ VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
+ CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
+ B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
+ Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
+ +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
+ HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
+In-Reply-To: <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Wyx1ID2SLyDtKGYljXxoQ4MsjwjnTHtepavDI4MKCE8h/yCJYEP
+ TKJsHqtwjUlf9+ZyGRMEua1vyg7u8allsbi/G6M1naWFvewEAbkDdmq4xJhiraZCjfh/pdk
+ xaAXxHCFJfB1d8tO0qA5RKSqr50gsmqnE3yB2BTqqW8fwGSw/rj0KAqPUYMAWrovuAXPZNa
+ qC1ixGSzS8V63L0doP47Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:GUz/ptwjjPw=;LCFY6SXiqxR/zNFzbS/PXjWpnTh
+ bkQdCjL3vos4cMu1EONFTcf7sU8CLI0EXpaGXjTgNLEPscIRPdAH4rZw/tQFzazfRTri0uzCs
+ aVhphBdmG24PryrKr7CeFd/JyYVYq9sxxwoxR2zinSP4vNjWYE5wOl5JgtR8uJGih8TbZgnuv
+ QaK13KqAOYjI7yCPWStdkzdc8Uqv8yl6SvZ4x9gef9Jd9kGro/xsexGzKnW/ZqYNXXTUFtZJi
+ m5ll0n2dxsUI2UKTXOxKk58Bg4B6R5q3tUBDTUOJIgkHksJkNjG+SQxh062moyNeWbl/HcuXU
+ hRDKnXNEd9GXyohBik7fw1TZdgAFb40SKhJzWOvXwexuJXiNbOFdvaEAvCoVPjxA6N240Lrjw
+ tYQsxPFSFlab3N1bWh9B0W2uB/60e3ulikbLKH+H7hmP9NsW87XH4l+S7gimu/0e3M93NXlR7
+ 5mqXGcbFoCQ1RTIZ7xwZ38JhWlOrpCImVHVljlFwGHZWwcPYQmI5I6+yEodl6Po6RCY2X2j/D
+ /iaXPqeZ4yL95Gvpx5YOmWiqak6NSxZiB2tvmRhmI56aQW1oq8rXj0DOPCobbX8wpbNB00qUo
+ zLztBPRauFEieidjpoiH8lAP8Zpovy52ZczwfIuWEQh5JZsvFogubCDpNs3cR2VX//pvYz43Q
+ UUfFMn/UFaanU8CZWS8Tf+agyG4edJuuwjY1qmIpPpvRoCsYaypfgA7HjF38oooQv04sfPVcq
+ 3vAMY2diNonG0b/Nbx0krkV0xfgWKXIe5WezTbTkgk/bWrnnnwDZDBNhk4a8HIQqJC3v8FGO7
+ EuVDI1HcKQhcjnaWhYZXB3TFUxzgkicVL1X7qYVfEOCQwWtyAPfggAB2srokgVbbKVLycXwnA
+ DaApJNh+rL5ufD23br3ryvQJGQFAAOA5VvIerw++etZGxuaHi+Z1cpYECITk2IfqJ9Eo+9P+c
+ Xpu+Xzi3M4dxZdr1mKV7wWf2Dcp+B04PvozoJWsrYG7mkfWPHK8f/yP3zRSFkHLTCmE8fjo5i
+ GPNsFF6jaysjgI9Me+v8W3J6mJ3PuNj+zWqIJzS9cpaIRXLGsoAjeRNbZFZk3okV0LEMkQeTa
+ U3MOiZmMSfQfgKIpcEuybXgd7HcWuMudc1LpKPE6QMKv8AbKfN4CHOeIEn0AS1rZ/hG/q1+xs
+ ZMtDPdRlCBDuhhZLKWk+Zgz5BfCZ/XMzJWktkSeWthbQerbeCxjC4q48nxihqNMdSzvbe0Jf7
+ 0w3G2qN2OrJrwNMuuJY4JKGWaBMYpdBFpZBqi/IpbaMD2LWla7txnhkIPPwnh0JIOSH4/OaJ9
+ 1wOTnHeW2l6FB3j0bugRPDYwgBhV9Jq0B+P861bN3+YJC1bTe1T0nOBm8t0RZ6B5VnTJj256v
+ Poukc5u5FsMzDfVarDQ82VcXIfeB4RCc6ORhe1Z/GBaeCgQ7VffrQFTd+yJWlKHo0puUkVqCE
+ KKXrIfg==
 
-Hi Tomi,
 
-Thanks for your work.
 
-On 2025-03-24 13:48:52 +0200, Tomi Valkeinen wrote:
-> Currently Gen4 VINs are marked as RCAN_GEN3 models. Add a new enum
-> value, RCAR_GEN4, and use it for Gen4 VINs. No functional changes in
-> this patch.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+=E5=9C=A8 2025/3/31 20:36, Daniel Vacek =E5=86=99=E9=81=93:
+[...]
+>>>                        btrfs_set_opt(ctx->mount_opt, COMPRESS);
+>>>                        btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+>>>                        btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+>>> +             } else if (strncmp(param->string, "zstd-fast", 9) =3D=3D=
+ 0) {
+>>> +                     ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
+>>> +                     ctx->compress_level =3D
+>>> +                             -btrfs_compress_str2level(BTRFS_COMPRESS=
+_ZSTD,
+>>> +                                                       param->string =
++ 9
+>>
+>> Can we just use some temporary variable to save the return value of
+>> btrfs_compress_str2level()?
+>
+> I don't see any added value. Isn't `ctx->compress_level` temporary
+> enough at this point? Note that the FS is not mounted yet so there's
+> no other consumer of `ctx`.
+>
+> Or did you mean just for readability?
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Doing all the same checks and flipping the sign of ctx->compress_level
+is already cursed to me.
 
-> ---
->  drivers/media/platform/renesas/rcar-vin/rcar-core.c | 2 +-
->  drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 8 ++++----
->  drivers/media/platform/renesas/rcar-vin/rcar-vin.h  | 1 +
->  3 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-core.c b/drivers/media/platform/renesas/rcar-vin/rcar-core.c
-> index ddfb18e6e7a4..88989c5fe636 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-core.c
-> @@ -1275,7 +1275,7 @@ static const struct rvin_info rcar_info_r8a77995 = {
->  };
->  
->  static const struct rvin_info rcar_info_gen4 = {
-> -	.model = RCAR_GEN3,
-> +	.model = RCAR_GEN4,
->  	.use_mc = true,
->  	.use_isp = true,
->  	.nv12 = true,
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> index 8de871240440..972ae2cb3314 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> @@ -803,7 +803,7 @@ static int rvin_setup(struct rvin_dev *vin)
->  	}
->  
->  	/* Make sure input interface and input format is valid. */
-> -	if (vin->info->model == RCAR_GEN3) {
-> +	if (vin->info->model == RCAR_GEN3 || vin->info->model == RCAR_GEN4) {
->  		switch (vnmc & VNMC_INF_MASK) {
->  		case VNMC_INF_YUV8_BT656:
->  		case VNMC_INF_YUV10_BT656:
-> @@ -826,7 +826,7 @@ static int rvin_setup(struct rvin_dev *vin)
->  	}
->  
->  	/* Enable VSYNC Field Toggle mode after one VSYNC input */
-> -	if (vin->info->model == RCAR_GEN3)
-> +	if (vin->info->model == RCAR_GEN3 || vin->info->model == RCAR_GEN4)
->  		dmr2 = VNDMR2_FTEV;
->  	else
->  		dmr2 = VNDMR2_FTEV | VNDMR2_VLV(1);
-> @@ -926,7 +926,7 @@ static int rvin_setup(struct rvin_dev *vin)
->  		if (input_is_yuv == output_is_yuv)
->  			vnmc |= VNMC_BPS;
->  
-> -		if (vin->info->model == RCAR_GEN3) {
-> +		if (vin->info->model == RCAR_GEN3 || vin->info->model == RCAR_GEN4) {
->  			/* Select between CSI-2 and parallel input */
->  			if (vin->is_csi)
->  				vnmc &= ~VNMC_DPINE;
-> @@ -1351,7 +1351,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
->  
->  	if (rvin_scaler_needed(vin)) {
->  		/* Gen3 can't scale NV12 */
-> -		if (vin->info->model == RCAR_GEN3 &&
-> +		if ((vin->info->model == RCAR_GEN3 || vin->info->model == RCAR_GEN4) &&
->  		    vin->format.pixelformat == V4L2_PIX_FMT_NV12)
->  			return -EPIPE;
->  
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-vin.h b/drivers/media/platform/renesas/rcar-vin/rcar-vin.h
-> index f87d4bc9e53e..34bbd1343bf6 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-vin.h
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-vin.h
-> @@ -39,6 +39,7 @@ enum model_id {
->  	RCAR_M1,
->  	RCAR_GEN2,
->  	RCAR_GEN3,
-> +	RCAR_GEN4,
->  };
->  
->  enum rvin_csi_id {
-> 
-> -- 
-> 2.43.0
-> 
+Isn't something like this easier to understand?
 
--- 
-Kind Regards,
-Niklas Söderlund
+	level =3D btrfs_compress_str2level();
+	if (level > 0)
+		ctx->compress_level =3D -level;
+	else
+		ctx->compress_level =3D level;
+
+>
+>> );
+>>> +                     if (ctx->compress_level > 0)
+>>> +                             ctx->compress_level =3D -ctx->compress_l=
+evel;
+>>
+>> This also means, if we pass something like "compress=3Dzstd-fast:-9", i=
+t
+>> will still set the level to the correct -9.
+>>
+>> Not some weird double negative, which is good.
+>>
+>> But I'm also wondering, should we even allow minus value for "zstd-fast=
+".
+>
+> It was meant as a safety in a sense that `s/zstd:-/zstd-fast:-/` still
+> works the same. Hence it defines that "fast level -3 <=3D=3D=3D> fast le=
+vel
+> 3" (which is still level -3 in internal zstd representation).
+> So if you mounted `compress=3Dzstd-fast:-9` it's understood you actually
+> meant `compress=3Dzstd-fast:9` in the same way as if you did
+> `compress=3Dzstd:-9`.
+>
+> I thought this was solid. Or would you rather bail out with -EINVAL?
+
+I prefer to bail out with -EINVAL, but it's only my personal choice.
+
+You'd better wait for feedbacks from other people.
+
+Thanks,
+Qu>
+>>> +                     btrfs_set_opt(ctx->mount_opt, COMPRESS);
+>>> +                     btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+>>> +                     btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+>>>                } else if (strncmp(param->string, "zstd", 4) =3D=3D 0) =
+{
+>>>                        ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
+>>>                        ctx->compress_level =3D
+>>
+>> Another thing is, if we want to prefer using zstd-fast:9 other than
+>> zstd:-9, should we also change our compress handling in
+>> btrfs_show_options() to show zstd-fast:9 instead?
+>
+> At this point it's not about preference but about compatibility. I
+> actually tested changing this but as a side-effect it also had an
+> influence on `btrfs.compression` xattr (our `compression` property)
+> which is rather an incompatible on-disk format change. Hence I falled
+> back keeping it simple. Showing `zstd:-9` is still a valid output.
+>
+> --nX
+>
+>> Thanks,
+>> Qu
+>
+
