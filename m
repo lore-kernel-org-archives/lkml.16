@@ -1,236 +1,158 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2081.outbound.protection.outlook.com [40.107.244.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16E221577E;
-	Mon, 31 Mar 2025 14:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431665; cv=fail; b=awyYmtr0QON5k0/x05VrJeWQP3k5aclr5yb5L3qn3X4bnJdNwKPBilKMIAYSWT/pobcJAeFrG1IVVHRnCPdJGbyKbnzWWU61Tgyn6fIHZd2jXE55DUlPLvK9EMaDX1Ry0tm0oVWVllkNQLVw3jHQkYHIf+1i3wd2r6SnKNMARVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431665; c=relaxed/simple;
-	bh=47pZGroAsK/2MpWX4X1QXasealCE/qRmQTtTQhPCMvc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MVDjXR3GqzcEtVhTOsnIorc+IBB62QwQKwFrQjt3iVH5otAKb/g7YeYPLQguq6xRr9P8PFA5HywRTIfH1J/fIbLIC7Th20J6EzaXNFxFLI9w0hPxozxdnecPVh4IjVUpa4zt5qXIkgH5GROi6nevkK4O8ZKUpvR8zGy5jYRV0vo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yk2QFb6c; arc=fail smtp.client-ip=40.107.244.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D47D21B199;
+	Mon, 31 Mar 2025 14:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743431670; cv=none; b=Tm0d7b+TJIWk6ehFyxZsShKt5a01JMNMqDgqhx8YgPXnwbfFvwUT7mELHCws20ifSwyT54fpW6uzvIS7GGiOqcpgKYMt+xvx0Q9Zxlt5Wu55LNQSYBjeljLHzb8xPshevvngkDEpDNz56EL9Scgvhj8AcGdmddusUDy4T4YYeDU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743431670; c=relaxed/simple;
+	bh=wrCbQOfWrO8dfQCLZHtxBu3/reMj+qBJ8zLouLJDmT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E5cRbJanbsjS1eZc05y5mUHgMKbmzO+At+FV5mjVD0ncmq8KWwDYMtRkeUhf1rqqbWWTrvDrl+uLyF7LWlQwRNh2v8AXTNoMkSGuqpD4DsIalufI1ZUb9QVvwXu7/DDcVnnuC2EXmRdacRG64KqaSw8IxVo/2IfFcqtmVTOu2Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6k5TTh+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yk2QFb6c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u5iGpNStNl0IXN9/zq9Ps+Wh9d+QB/IFlhiOCMXxtzE/N0V0XsaZTtygAuDVaUVBTL8u1qfv6EiLEBwdRKmMpoRvJ3lnxBzxklRGiaIQRdMiSiFXcdeNcp6kw+oRbQnl07yr5Q1fOSGIK0xKrOqZSXRBRftqdctdtezY0+/k/n49+Ibwm4rZUd3YOv/Ws7q9HQM2sRqLK7yVwAEQHNgfKiiphO4TMddPjQnSLLJlEOrLraUt9oGUpSJ5SuN5T15GYJPEJfERYkQQUW+i0uog/ewPhrG6hD4gCxJTVuVF78BP09MlxSejzU3tW+00fWe/7Nlxz1zeHZVMw2E22w2/Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VuiztvmF8rYrvqAJDjvNjMSUWD6R3brnJiGmsw6zLNI=;
- b=fncGNzwnfdNZiMfhihNdZb8v4M1t8jvEytyOAbys0LQzHE31/Ag9GPDgJ7o7OqY8H3IVgkF5x2+t2yY5KsVEMBi03tEAlUKc0qD/xAkCBMmk5z2AcSWBFLnuxz4ZC2FUSlWjq6YZ6gmNaKArHuD140eWDF2HsTIodprq6TolwAusZPs7q3QjJL9QSNSEUUdHcAz3nJZdsNdOt0nJiKgoZFrXn3iuWeRINk01ECkFlEg2JhqAVF/TeYu3/WSvOHqZ/q9NEpKXPeqFsFH48YrxZmsW36f2LYQOw7T9tWNgbx1WMPmL57L3BhUox5uOGfQk8PbnaXkMtBJ6oEV2Ct36Ig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VuiztvmF8rYrvqAJDjvNjMSUWD6R3brnJiGmsw6zLNI=;
- b=yk2QFb6clsHG2QkHo1XWQR1c4Vy/x+rKVVezgWf6Zib3rgDHCJNvOO8PokALkhAmBiweEwQ8xGcxkc5LzR9xlmTDvB7faeLGOpm8OuKaizJCu6s1vaNJJWhBInWxugzD3cGVTvCA8YPiUoDz+WYjSv5pOCjWg2o8jsnehvSu3io=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW6PR12MB8913.namprd12.prod.outlook.com (2603:10b6:303:247::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 14:34:21 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 14:34:21 +0000
-Message-ID: <492a990e-0af4-4acb-be4c-8821fceea2a0@amd.com>
-Date: Mon, 31 Mar 2025 09:34:19 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>, Gergo Koteles <soyer@irl.hu>
-Cc: Len Brown <lenb@kernel.org>, Alex Hung <alex.hung@amd.com>,
- Rodrigo Siqueira <siqueira@igalia.com>,
- Alex Deucher <alexander.deucher@amd.com>, linux-acpi@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
- <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com>
- <d3dfe61a-1d4d-4aa6-870c-61249799e6da@redhat.com>
- <CAJZ5v0hy7ge+vPgNXzo89=qu7pP-tPgbjUPRHUMdwUnSTpVXQQ@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAJZ5v0hy7ge+vPgNXzo89=qu7pP-tPgbjUPRHUMdwUnSTpVXQQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0017.namprd04.prod.outlook.com
- (2603:10b6:806:f2::22) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6k5TTh+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED633C4CEE3;
+	Mon, 31 Mar 2025 14:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743431669;
+	bh=wrCbQOfWrO8dfQCLZHtxBu3/reMj+qBJ8zLouLJDmT8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q6k5TTh+jq/yiSap//vFSWnyq+1l4GMb7izftevC0JDp0h8lBnWUwXGQEyh9aIMvo
+	 iDqWSoYpQtwaeWU4JYDgQ3/JAlj/y/2BOoh7/71bpwbqMwdZo7RuWnPmRRPqYMhaA6
+	 dF3eLBjrBxUuX+4vVdS3cr5rr8s83ncwKCXo+HwZtcUrqAje70nE3FdHbIUeKLcDRT
+	 RwrcsiF6fiRbnxIauGucxPok1wS5RW5BjYRKjHPCoYaBwYq1a1aHDnVe5A9mRbeq/o
+	 o9vYk8xN0E7T5D55agQgekUnCjRPGU8NvovagD2/dBI1ZTI7Ark3T3CoCfqELwylQV
+	 sbmo7BPu78Jcw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Max Grobecker <max@grobecker.info>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Sasha Levin <sashal@kernel.org>,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	riel@surriel.com,
+	thomas.lendacky@amd.com,
+	mario.limonciello@amd.com,
+	bigeasy@linutronix.de,
+	john.allen@amd.com,
+	darwi@linutronix.de,
+	mjguzik@gmail.com
+Subject: [PATCH AUTOSEL 6.14 07/18] x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual machine
+Date: Mon, 31 Mar 2025 10:33:57 -0400
+Message-Id: <20250331143409.1682789-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250331143409.1682789-1-sashal@kernel.org>
+References: <20250331143409.1682789-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW6PR12MB8913:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80132f1f-16d9-4e66-6fe4-08dd7061200e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WFFHOFYvc0oxY2hoUURBL3pBYUZVVEJhcHFqWmlTTEt1UDNlbkxXS0pZdyt4?=
- =?utf-8?B?Y3hDeE9BamhmcWhXRkMrNkFROCtrbUlPaS9hbHNYdHdydFZEbHRFM2J0TEJa?=
- =?utf-8?B?T21DVmVwM0NkSUx4VXdwUzdleG1FRjExcnh3Sm1vSXlBb0d2bGE5cU5tUDNl?=
- =?utf-8?B?ZDZSUFNsQnJReG5iWG5YaldjZ2U3MC9QTDNVaWJnZkNzeFhTK2hMM2IrazU4?=
- =?utf-8?B?U1dxK2dIS25ZRDlzTUJ0OEdBSVphbTAzOTRVdzg2YmRYSlVpckhSOWVrV2VQ?=
- =?utf-8?B?SkJKRjJkM3NTZkpaSEJnR2Vsd0dTd2NxYm1PRE5QS212S2pFaGEwWVdjc3d2?=
- =?utf-8?B?RFNia3l0QWp4S2pNcWtzellVOTFLbnRsRCtreUN5K1haaFhPY3Q2Y0xaSDda?=
- =?utf-8?B?R3p4a2s2SXlRaXFpU2VqWmNVeHh6ZnJ1SFdRZWRKc0R2Y2lEbzNHOUN1MWJw?=
- =?utf-8?B?VTJmVXNKSEVCeXpVRHZ4VWRMU2czbnFITjVVckI1dHZiaEs2UmFGbHl4QmVm?=
- =?utf-8?B?RUJpR0pNQTh3UnZNQTdhdFY3VnVTSjFKZmZSUVdMNGlKT3VrdWNOeXFkZE95?=
- =?utf-8?B?d2lFUmZkN0dYWEM3RVVEYkFEb1lqd1VFSys1dWJkWFEvTGhXQUJtekhsbTB0?=
- =?utf-8?B?T2YyTFlSVFM2UXNuQU0zOWpmSGtTTDhNWWZWZ3R5eUdOajJ5anhwWWQycTBi?=
- =?utf-8?B?dUVmNk5SVXhTcit4dm9JMmtaQy96ZG4rUjl5eHo0MmwrNWdYSTRXa2dkRTF0?=
- =?utf-8?B?cDZKVFpySkJPZVFBbW9HMUN2WXdIbFRuajloQ3pnVk00aUg4aHpwaWo4ejBS?=
- =?utf-8?B?YWxGTFh0bW80NlQ4bElFa0FUNk13Qlh2VUllSU5TbnZ1ZWJpSU9Lc2xpVndr?=
- =?utf-8?B?M2RsU256Rm8zWDRURTEzSHo0K3N3Vys3L1Q2T2F0TnFvTW1ETndKZElMODdC?=
- =?utf-8?B?bzZHNGxxWHMxV3M4ZVBOS1poak9jdzM2enlpbklnRldqUytMZTNRSng2ZlNR?=
- =?utf-8?B?bXJFUFFReVAwMWY2Ny9KelNiQlVxbXBtclJ2dmJzN2Q1L0ZrSUNxc21ENEIx?=
- =?utf-8?B?WlVCcDdwWGZOTkw3VG1URzN6N1dza29zdWxTMlpnOXQ0eGJwZm4zdDNCQ2hL?=
- =?utf-8?B?RTJxeHNsWXFzTW5DOGwwU0hqMmovUEhBY013aDFWbHJTb2ZFWkx3UjRSMlhZ?=
- =?utf-8?B?YVp6YkdROHl5Umw0TEFPcCswdVR0VTdob3BGak5oTzZ2UHJzQlRQdi94VUZq?=
- =?utf-8?B?Y0o1MmxDM1BPUEpqaW0wamVuTzdsQjNTWExGWXdoSFRRNVZ0K1N1M1lzd3lj?=
- =?utf-8?B?RVU0M0hNZVpDeW1reEhHQzNSUkJuOHVMQyt6cklkZExYMEZIK2VzWkdCUGZF?=
- =?utf-8?B?Qi9kaldnT0dVWWh0Q0NsSWNNUTZoK1pnTXM1ajBpa1hjTkNmMDRQWW9EeFRT?=
- =?utf-8?B?aWdhRCtuL2xHakw3ekxxc0hMb1E1SWFmNzZVMEdBcWxaK2gyQ1hxaUJ3eDJY?=
- =?utf-8?B?NzVWeEVkQzY0N2tZTUorSStDdUxBbmpCVmVWTW9nYThvb0VHZ3lsRy9VZXpy?=
- =?utf-8?B?Y2FscW5EQ0g2WGwwTFk3ZXBTTlNBSVNHc3lOMzBuQUVDWi8zcHR5U1FXL09P?=
- =?utf-8?B?OFp1S2lPK2d5OERGYURydmlFWU16WFh3d2NZQ0MxUHNyZ1FCTjNMT0hzeGEx?=
- =?utf-8?B?di80NUVQM3g5ZXJTYWNwZjNQby9DUHZjTjhBMG5VaFRsMG9zUkZYRmRuNmdt?=
- =?utf-8?B?RWkrL0JLSFY3Q2gwTEM4YkdOQlh4L1BJbHRqWUNpb0tkeCt2L1d1eExILzdG?=
- =?utf-8?B?cXhBTzlwb2dHQmRkYi9qeVgyM3hjZXVQMy9MU0FXazZqUU0rYzdqWGxYSHJZ?=
- =?utf-8?Q?PjyGeRYqKzzGu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?KzIrRDNoY3orVDVCa041ejVkZmZyZ2hFa1M0MjBud0Q1TElkeGFDbjVQQkwv?=
- =?utf-8?B?TGJqVER2bjVtWmxQZ0xUcXlVZDJuNXJzNEEzZEsrVGJVbHpqcVYwRTlOUUxM?=
- =?utf-8?B?V2c2UUxPYTZndUdwbFRlUGgrbTVQTTR6czNaUGVPYjlMK1RlVmNDM1I2TW43?=
- =?utf-8?B?b2d3K3hYenVDM0NtQVB3bVppZ0tjcDNHNXRvUmFnRFRPTVZmbURZN0laN1Qv?=
- =?utf-8?B?VjVBK1lEMkdyZE85cS9pdnp1S1pCZUdtODVlKzE4WG5GVFUybU1hS2t1U3U1?=
- =?utf-8?B?czY5UldyVlY0RnZtZmN5cnlFbUlhV1BUOWUwQ0hpaXNPUnIrVml4OTRrUFls?=
- =?utf-8?B?Ry9xQ3hLUG5Ub0FHYkNzL1lmOWFOVjBZUVJGb29DRjNUbjF5NFYyVjBiNjRt?=
- =?utf-8?B?WHNLWDliTWFEOVU1ZmtOVElXUTJEZ3o3aEdVUjBWcnB5Y201bk0yMDFtZ1dD?=
- =?utf-8?B?RlV6b0tkQ3lnczduZlQ1QUVFdWRJWXRFOEtCaEhINXNpeFp4ZlBmNFVqYk1Y?=
- =?utf-8?B?blB1SHRYeXpMYzFBZDV0SVZZa2tEc0pCL3RpRTNHck0xc0tkT3FrRys4eDRZ?=
- =?utf-8?B?SGFNUVdtMC9tN21wSkRVZklmeXgxMGh6N2JwUHQ5aGdpei9nOTlNZVpkQS9v?=
- =?utf-8?B?VFFJa2Fzc0ZuL3Fjbk1Vb2lCd3BISFJGK2g0OGt6TyttMHNOVEx4TkVtMkZF?=
- =?utf-8?B?UWNDQmUvOGtHWWZwK0pmY0JmcVFYVml4WEtYYXc1cXd3cFVXR0NoSjhBQ3VZ?=
- =?utf-8?B?cE9NYnFEdkJvbWMrVFFBZFNOa05uNjl0WDB6eE5DMXMyUkRnUTA4SjVKc0Fa?=
- =?utf-8?B?dS9maC8wZk5oeG5Qd05Fcy9sU3NwbFBKV3VvdkhQTWFLTFRBRnhOVDBuZDJ3?=
- =?utf-8?B?UUxIaVF4QmpYK1RsMnhMdXZQeWdOWXkyblBaZEI5ZTIxYUFTY1lOeGFic3lQ?=
- =?utf-8?B?YWpQM2RYaE0yNERCY2VPemNLeXFyaFZncDVXb0YrWmt2eURTVW9MYVY1RjhU?=
- =?utf-8?B?K3crMjdIdk9kRzJSenFiTVNZbXJoYmlnWDNTY3l0YTQyQVJ2elZlWnBqdUJS?=
- =?utf-8?B?NWM5LzdYZ283NHlabWM1WUJMUTZRYTdQY0VTUlhuTzc5ZlRaY2x1cGdXSVp5?=
- =?utf-8?B?dy9JVzZpSU5TTEs5M2U5eVk3WTlZRUlkM213K2JYUFVFM1Y0WEpJK3lpYnBD?=
- =?utf-8?B?aXY4NTMzR1RwT2FnOWd0Ym13ZEN3QTlFZ0lqZ1loUlFCM0FWcXdUZCtORkxZ?=
- =?utf-8?B?aTdBUDdlSTR0MnM3cVU3Mk1XUDNJTitNdlJFRmUrSCtuWWZOZ0pEN3U1Nkwr?=
- =?utf-8?B?SEs5TVVXaVFIV2RWYUYxUVpUaDd5T042MWx0VVhhVEtoMDVXeUdYNjR1NWth?=
- =?utf-8?B?c3piMlNLMkxVaHIvdmNYdEF6bnVXZzdJemM3WThHM1c2bWVxSG91OWhjMGFF?=
- =?utf-8?B?cWZNQnk5bklranE0TjJabGNKWHRSVUxGRVpFNnA1VlpXQ2NrMytEWHVjZTl1?=
- =?utf-8?B?WXR6Y1FIMFZpai9tRDgwR25kVWZibUgyRzBqWVVhMFFWR29wRDNxUHkxbWFu?=
- =?utf-8?B?cm5rR2FpM2tlSXoxY21SV3FHTCtaT0NOTk1jd0xaRnNQSEtxd2FMZzBtMTFq?=
- =?utf-8?B?aDFrKytVVjJWdVM4TElRTlhPMitJVE5JVUhQeDJ1RnBBc1NYMHZUN3FnV0sy?=
- =?utf-8?B?RUR3aEVlL0ZtSjIyT0JGcldzVHhFa0dTNUo4WE5oYlQ5eWZZK3RJN3YwR2Fx?=
- =?utf-8?B?U3M2NXBDZDFtNENNemJJT0owTkhoY2JGWHBkTFpBb1F0WkVFR0psOWhrbUN4?=
- =?utf-8?B?bGpYMExlMGRBRUh1b21SUHI2Wm5WZTdIUXBSTEVHTW5ZZ21PVE9Ca09ZcDVn?=
- =?utf-8?B?MXZCSFowSXR4L1NQRGhCWXc5VGxkYjFEZndDZjUrZnNWck1TanoyeHNlVW44?=
- =?utf-8?B?ZDlsL0lBVTdKSmxuZ3dZb3BSN05Qem5icVJGZlg0TUtabEZ4N3N2RllEa1VH?=
- =?utf-8?B?VG01UWlCTll4ZlNhOHVFQzJTYmF4c3Z3cVdiY0kxSnV3amsxeGoxak1qVEFk?=
- =?utf-8?B?YXhHSE43ZUIzNUVvdjlFcXYybzFqVCt1RjNFckt1SGhldXZhQjU3SHN1b0dN?=
- =?utf-8?Q?vcm+L06k5ic49P3Kda4M1kDsg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80132f1f-16d9-4e66-6fe4-08dd7061200e
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 14:34:21.1158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ayGdlqRYIEiX2mRGB2ZA/3kV3RdglZstPVilH/2GiRZ/mX+PSuZwA8BdWWJy+rBSQ9wSmimMKXTMZup3EeVy4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8913
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14
+Content-Transfer-Encoding: 8bit
 
-On 3/31/2025 08:23, Rafael J. Wysocki wrote:
-> On Mon, Mar 31, 2025 at 3:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 31-Mar-25 1:46 PM, Rafael J. Wysocki wrote:
->>> On Fri, Mar 28, 2025 at 10:09 PM Gergo Koteles <soyer@irl.hu> wrote:
->>>>
->>>> The _DDC method should return a buffer, or an integer in case of an error.
->>>> But some Lenovo laptops incorrectly return EDID as buffer in ACPI package.
->>>>
->>>> Calling _DDC generates this ACPI Warning:
->>>> ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
->>>> found Package, expected Integer/Buffer (20240827/nspredef-254)
->>>>
->>>> Use the first element of the package to get the EDID buffer.
->>>>
->>>> The DSDT:
->>>>
->>>> Name (AUOP, Package (0x01)
->>>> {
->>>>          Buffer (0x80)
->>>>          {
->>>>          ...
->>>>          }
->>>> })
->>>>
->>>> ...
->>>>
->>>> Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
->>>> {
->>>>          If ((PAID == AUID))
->>>>          {
->>>>                  Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
->>>>          }
->>>>          ElseIf ((PAID == IVID))
->>>>          {
->>>>                  Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
->>>>          }
->>>>          ElseIf ((PAID == BOID))
->>>>          {
->>>>                  Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
->>>>          }
->>>>          ElseIf ((PAID == SAID))
->>>>          {
->>>>                  Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
->>>>          }
->>>>
->>>>          Return (Zero)
->>>> }
->>>>
->>>> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extensions/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
->>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
->>>> Signed-off-by: Gergo Koteles <soyer@irl.hu>
->>>> ---
->>>> Changes in v2:
->>>>   - Added comment
->>>>   - Improved commit message
->>>>   - Link to v1: https://lore.kernel.org/all/4cef341fdf7a0e877c50b502fc95ee8be28aa811.1743129387.git.soyer@irl.hu/
->>>
->>> Hans, any concerns here?
->>
->> No the patch looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> OK, applied as 6.15-rc material, thanks!
+From: Max Grobecker <max@grobecker.info>
 
-Sorry I'm a bit late to the party; but this looks good to me as well. 
-Thanks Gergo for the solution!
+[ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+When running in a virtual machine, we might see the original hardware CPU
+vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
+hypervisor. In case we run on AMD hardware and the hypervisor sets a model
+ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
+capabilities present to circumvent a bug with some BIOSes in conjunction with
+AMD K8 processors.
+
+Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
+bash scripts and prebuilt Docker containers, as it does not need to have
+additionals tools present – even though more reliable ways like using "kcpuid",
+which calls the CPUID instruction instead of parsing a list, should be preferred.
+Scripts, that use /proc/cpuinfo to determine if the current CPU is
+"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
+claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missing
+in that flags list.
+
+This can prevent some docker containers from starting or build scripts to create
+unoptimized binaries.
+
+Admittably, this is more a small inconvenience than a severe bug in the kernel
+and the shoddy scripts that rely on parsing /proc/cpuinfo
+should be fixed instead.
+
+This patch adds an additional check to see if we're running inside a
+virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
+understanding, can't be present on a real K8 processor as it was introduced
+only with the later/other Athlon64 models.
+
+Example output with the "lahf_lm" flag missing in the flags list
+(should be shown between "hypervisor" and "abm"):
+
+    $ cat /proc/cpuinfo
+    processor       : 0
+    vendor_id       : AuthenticAMD
+    cpu family      : 15
+    model           : 6
+    model name      : Common KVM processor
+    stepping        : 1
+    microcode       : 0x1000065
+    cpu MHz         : 2599.998
+    cache size      : 512 KB
+    physical id     : 0
+    siblings        : 1
+    core id         : 0
+    cpu cores       : 1
+    apicid          : 0
+    initial apicid  : 0
+    fpu             : yes
+    fpu_exception   : yes
+    cpuid level     : 13
+    wp              : yes
+    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
+                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp
+                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
+                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
+                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
+                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
+
+... while kcpuid shows the feature to be present in the CPU:
+
+    # kcpuid -d | grep lahf
+         lahf_lm             - LAHF/SAHF available in 64-bit mode
+
+[ mingo: Updated the comment a bit, incorporated Boris's review feedback. ]
+
+Signed-off-by: Max Grobecker <max@grobecker.info>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/cpu/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 54194f5995de3..d747515ad0130 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -632,7 +632,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
+ 	 * (model = 0x14) and later actually support it.
+ 	 * (AMD Erratum #110, docId: 25759).
+ 	 */
+-	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
++	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+ 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
+ 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
+ 			value &= ~BIT_64(32);
+-- 
+2.39.5
+
