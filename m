@@ -1,95 +1,118 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82801D54E2
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641A51D6DB5;
+	Mon, 31 Mar 2025 08:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743408869; cv=none; b=e8EZIyNG9IMkHjr9GBLKj/0FYm02TUT8CAWVjYvAyMkALhECIpLyYY1Ged1v1vXPweurSdZ5DLAxFTq7ChNcpGej72kzyc4uv/OoCo2d7dJQmzywM9LaHaTWj8aZ9JlyIECIngK4Sk40wY0vs8c16QR7kVT6gWkPHQDu07hmjFw=
+	t=1743408900; cv=none; b=jkRNHETwNeeHRSbFv/AHAbnL7gv4aZJCbdSWb3ZNleWwDBjd+EOoM0TZXyhrrv0F8QeFzd+DRyjqCNIGCVyW8tSCsNMxKK8bFLp3wQ34A6++HVEEiLEQlbSKyRe6suLnQt169oYz6ysCy2R796V2u7Qs2Gzei2YrxHbZLgK5Npc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743408869; c=relaxed/simple;
-	bh=J67HmmeYLO7n+t/u6NZpetMD18ifvOyhhcWGwldly7g=;
+	s=arc-20240116; t=1743408900; c=relaxed/simple;
+	bh=XjyVzl74+jrKX0O0T7NTmStcxYaO1IpfPs7SA2e466o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eM9lmYUqwrnVtQVMAf5nDWAXZ0T4OmO6Rop+Iq9GWCwv8lW1KBXQFp9L5caLQgsSYmslZwNz+7i8sWMkQdFIoqNbL9JGoGiUnJkUwbPKvi2jA6bicTX5VQTW4iMDiz8r47sp35BPhdPkOHikBNrjd4OqgxbnTET6dfhWBOPFEcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=k9j2SveD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yl5EhiMPOvRtAgLFcx4B6W5sJbOSoQj0tqgaimRJvgqE1hv21lG2LvF/8P4ZEMTR4IkmOK7pq/m8lKaGCfE0T1SnEraNtIirooK6eHLWqUlyNMDx5Zp2UgXmgH+oLuqELz69WX9qbORJJFMAn4QKUeFgG5yGSEQbbyVsBZJsHwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG0w5F5F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="k9j2SveD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=J67H
-	mmeYLO7n+t/u6NZpetMD18ifvOyhhcWGwldly7g=; b=k9j2SveDIxumKT/2cXlR
-	ckfBIni41Z5DDWA/pL3JVP83eLjdqFdi1QrwBOsGiDdqVrYGG9ca6CutHmEwGEwF
-	GO8cVNSBelBJ7uR7dMgrv+EIdypVwY+m09GmLrNq3cCSXRCK72Q08RwcmLqoErp9
-	tmpY9IlMVNAg+W2a69vhGgT4D/BfSGBu8uZeAGYnTizQG5s5IwGnA8UBjIpBbMj3
-	BILTIdMKxim/G8CDkAUurW8Kb3SRBUjCDkJd0rKZ4RAsX7l0aW+LUpvUFuiZLGJ7
-	PKJmLamQAEf4IDsI65kUYzNA9thmpL3PrWUFu6Ufx1Daz8yki2BI+8HO/PMtiRSW
-	DA==
-Received: (qmail 1151884 invoked from network); 31 Mar 2025 10:14:25 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:14:25 +0200
-X-UD-Smtp-Session: l3s3148p1@RjIdAp8xFsRQ8qei
-Date: Mon, 31 Mar 2025 10:14:25 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG0w5F5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4FBC4CEE3;
+	Mon, 31 Mar 2025 08:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743408898;
+	bh=XjyVzl74+jrKX0O0T7NTmStcxYaO1IpfPs7SA2e466o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MG0w5F5FVw4PjrkuzT6GTQoxAwhdzlHzDZw9jLKAvZ5ztVvaCVTKmDNA/5cco7VjE
+	 3kCqOVMkSk0PJ7eU7sHasPLUVqgm2dbfMj4U2p11ggCfv5ioGGefSzuAx5jp0K0kpY
+	 HVldTwr8YQpa8O1zlMA0W2muMnhjFDAVFI5Sww1b7kujuPhUFsacQxd3IHGlyLl3Wm
+	 fxiH/SCywQuXw9JKqxZJv9m3ah/BW1ksdfy/8JPZDfD0ddbVpi/X1pJnBpIbxnqBOL
+	 yKG6LZrvIB9uCOr8T1h3fzM1zkDpzP4CxIs27m3NgLJcG6j/Nh+/vzBWMrVym6f7D8
+	 smX9r1hxAooUg==
+Date: Mon, 31 Mar 2025 10:14:53 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] mmc: core: Convert mmc_can_poweroff_notify() into a
- bool
-Message-ID: <Z-pO4coI3HtAMQt9@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-2-ulf.hansson@linaro.org>
+	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ntb@lists.linux.dev, dlemoal@kernel.org
+Subject: Re: [PATCH 1/2] PCI: endpoint: strictly apply bar fixed size to
+ allocate space
+Message-ID: <Z-pO_c2zXxDqvIsU@ryzen>
+References: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
+ <20250328-pci-ep-size-alignment-v1-1-ee5b78b15a9a@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MmTMFJb7JcFkqH2F"
-Content-Disposition: inline
-In-Reply-To: <20250320140040.162416-2-ulf.hansson@linaro.org>
-
-
---MmTMFJb7JcFkqH2F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250328-pci-ep-size-alignment-v1-1-ee5b78b15a9a@baylibre.com>
 
-On Thu, Mar 20, 2025 at 03:00:32PM +0100, Ulf Hansson wrote:
-> It's really a true/false value that matters, let's make it clear by
-> returning a bool instead.
->=20
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Hello Jerome,
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Fri, Mar 28, 2025 at 03:53:42PM +0100, Jerome Brunet wrote:
+> When trying to allocate space for an endpoint function on a BAR with a
+> fixed size, that size should be used regardless of the alignment.
+
+Why?
 
 
---MmTMFJb7JcFkqH2F
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Some controller may have specified an alignment, but do have a BAR with a
+> fixed size smaller that alignment. In such case, pci_epf_alloc_space()
+> tries to allocate a space that matches the alignment and it won't work.
 
------BEGIN PGP SIGNATURE-----
+Could you please elaborate "won't work".
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqTuAACgkQFA3kzBSg
-KbZXUBAAq8KZ034aKKSV6ThQSeEOTZy4D3SWnJk3bzUBcuF35UWaj+BI4mwa816m
-9zOa98gi/xs3GrCIq0eP2MrzUMD4Q+lr9oWX9FMsAhpFfuQ1R2ihPkYiphpgsTFX
-sLSCS8EmBSdWw+3cwljFcWYEKwHTxBvVe1s+L+E47ZC+nZvlYyGarLT5kY8hs5sD
-D6LxXQwBZ1H3p5fzXmOiYPoh5MnWHHqGoCl9lm45wWqY+ddabEguDWXkWFoqHb28
-1DZRFNHEs6nEi9Z6tM3qrc1gSBozK1h/bq9Sw5iK9eM+wtXyOgxecIvxc1GbO9CV
-lMh1m8XhBCfYgLuG6doR1lZHgZ/7bnWouBSG8Mi7Cw/PbBWXNVAMbe90n/Wxef2Z
-zbV0mQTvX6rool49shHNEue5uMo41c1gOiiik/UG637GGqrAnIWx4aoezU/16+e+
-q3PvZlog82z0LjDuip5/Ymx+ZM9cwmULtPQEGyrw+Dd0mnIykfg3Xz2XOeRHbOB4
-Qfcfe37vC4kioIpzijTrknJwKxTfYg0BoYBoD61STbAQavS98REapZb02wqlhHT3
-dR33idNw4qXncuwDcDHGuFv5UBjTj3RBDCeaK+QhA5u1GPsJq5Thf2wIMnJ+FnER
-dsgM71AdB8nEcubSle3xXac7HPfeJ1nmxUGaAjIiLLB6QfqgxZA=
-=yQUp
------END PGP SIGNATURE-----
 
---MmTMFJb7JcFkqH2F--
+> 
+> When the BAR size is fixed, pci_epf_alloc_space() should not deviate
+> from this fixed size.
+
+I think that this commit is wrong.
+
+In your specific SoC:
+ 	.msix_capable = false,
+ 	.bar[BAR_1] = { .type = BAR_RESERVED, },
+ 	.bar[BAR_3] = { .type = BAR_RESERVED, },
+	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256 },
+ 	.bar[BAR_5] = { .type = BAR_RESERVED, },
+ 	.align = SZ_1M,
+
+fixed_size is 256B, inbound iATU alignment is 1 MB, which means that the
+smallest area that the iATU can map is 1 MB.
+
+I do think that it makes sense to have backing memory for the whole area
+that the iATU will have mapped.
+
+
+The reason why the the ALIGN() is done, is so that the size sent in to
+dma_alloc_coherent() will return addresses that are aligned to the inbound
+iATU alignment requirement.
+
+
+I guess the problem is that your driver has a fixed size BAR that is smaller
+than the inbound iATU alignment requirement, something that has never been a
+problem before, because no SoC has previously defined such a fixed size BAR.
+
+I doubt the problem is allocating such a BAR, so where is it you actually
+encounter a problem? My guess is in .set_bar().
+
+Perhaps the solution is to add another struct member to struct pci_epf_bar,
+size (meaning actual BAR size, which will be written to the BAR mask register)
+and backing_mem_size.
+
+Or.. we modify pci_epf_alloc_space() to allocate an aligned size, but the
+size that we store in (struct pci_epf_bar).size is the unaligned size.
+
+
+Kind regards,
+Niklas
