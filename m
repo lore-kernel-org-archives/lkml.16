@@ -1,167 +1,68 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D832216E24;
-	Mon, 31 Mar 2025 20:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46FC13D8A4;
+	Mon, 31 Mar 2025 21:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743454647; cv=none; b=ACPIdPR4fhGFOqtrFlSbyvgegUTlA8G63EVCFYDmc348cMS1wnl/CeH17XZiRMOVPhCuwKekWyfDksahv8hpMBmkXm/QmShL2AKNr1eAbuztvVuJL4daef4NvHOEiIhdm7GhBK7KB2D8QKekk49R8IdqGrqgNgNlEGnz5zvLiXQ=
+	t=1743454874; cv=none; b=Hv8K8CyOHv8GpTGrM+4w2G7sYU0/g93ipSYm419ThzdO0rvzRfsFFr9GWJ9OZ+jSiuc4/hkahytdW2WVk++aLIWE7/o6YkbAy2Imqc5yAQ5Mrx05nCgHYAHpZ+t6nObVG6u/KJyB8mR6nm9YA2FG/ynqzA31KMobpBjIglUZ86I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743454647; c=relaxed/simple;
-	bh=10bv2ci8Gq6q+ywpbgUZb11BTLKgedTDu+zcEPWmeN0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=msjov1frB92gd2WoBbWubIY9zHA29Y3AZ5refKJgx2KaoN3zFXv4dxBuScXXWY/Iw6iRq4nwxnUALtvKmgSDDOck1LEN/V5kdMjc/7ge0U4BYpGP9inMjGeQ+Yidl/PjW5eJn482MvwizzHNoR9h4ovsvVrIzA1FcNja57z7JbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=d28vV6/y; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1743454874; c=relaxed/simple;
+	bh=PXB9+IIdexxKf88I2wNQQL6Ymiw74kkfsgF8CJopTpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3fpLBxYDddG/D5v1Q9ALqeF6VxfxZxUSohpfmwYvjYV6mIcKQhfRzgFP119PrPp5uSFp/OFqgbM+t14W4T34QYH3q65BWcHGHUhx7yPVyp+nysXNmCC3AjfMstqYYi3B8EaAtqBK+nAr70ohJGX3p5d73EEBacIi5zmq6ARxgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGCGKDjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d28vV6/y"
-Received: from narnia (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4D2A1210237A;
-	Mon, 31 Mar 2025 13:57:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D2A1210237A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743454645;
-	bh=5XsgAWUoFJ8EmLqO+z62iuJCHz41nTI4m6vFV/nAFDg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=d28vV6/yHuGZDGRY+KhqOML58EhHOZvrywvgHDZb0obC9gbdEWtd1vkSN7MEHX4P2
-	 e9a2D4VWMXQWHWQ2FoVJfkcWg1HevVpml0wySPWlEGN/IQiIxN2AtXipKVvyu9vvC9
-	 c0uwH1dLc9NLCkUNPgqOf5hVIXGc82dBCH4f5l54=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
- <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
- =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
- Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jan Stancek <jstancek@redhat.com>,
- Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com,
- teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
-Subject: Re: [RFC PATCH security-next 0/4] Introducing Hornet LSM
-In-Reply-To: <Z97xvUul1ObkmulE@kernel.org>
-References: <20250321164537.16719-1-bboscaccy@linux.microsoft.com>
- <Z97xvUul1ObkmulE@kernel.org>
-Date: Mon, 31 Mar 2025 13:57:15 -0700
-Message-ID: <871puc7wb8.fsf@microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGCGKDjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5971C4CEE3;
+	Mon, 31 Mar 2025 21:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743454874;
+	bh=PXB9+IIdexxKf88I2wNQQL6Ymiw74kkfsgF8CJopTpY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WGCGKDjtaPWgg8JQDlWXwrCTej0iosz6GowAQnbt+UNvEnb6XRI3zuaOS6YBODI5R
+	 h/EewDHMaLPST9inTzzyOI0ScqAh1WqjvYaRZPDmKXfI2h1aGAth8uIFGtXdsh1bSF
+	 HEPCDHohIuI+xHqPzr8ZNX/teuZH4Og4i6uVD07ywY83czZEvH53II0GQj2HtRMVY7
+	 es0z/yifpGD1MdAe/4rvw/jSWbAGJkgvLHDU8ykTijC6aGB8cFr4SkNcINBHhz/KCP
+	 DyqCPe5IdhPNjG0ni7Tp9PyzNXBT8vk5vUuzLl3Dv+y3toUEe/7m8Xj8zkdvcanQ7N
+	 DG+5iV8f3JBKQ==
+Date: Mon, 31 Mar 2025 16:01:12 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Caleb James DeLisle <cjd@cjdns.fr>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	benjamin.larsson@genexis.eu, devicetree@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 02/10] dt-bindings: interrupt-controller: Add EcoNet
+ EN751221 INTC
+Message-ID: <174345487191.2817170.10410972908712434627.robh@kernel.org>
+References: <20250330170306.2584136-1-cjd@cjdns.fr>
+ <20250330170306.2584136-3-cjd@cjdns.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-Jarkko Sakkinen <jarkko@kernel.org> writes:
-
-Hi Jarkko,
-
-Thanks for the comments. Paul did a very nice job providing some
-background info, allow me to provide some additional data.
-
-> On Fri, Mar 21, 2025 at 09:45:02AM -0700, Blaise Boscaccy wrote:
->> This patch series introduces the Hornet LSM.
->> 
->> Hornet takes a simple approach to light-skeleton-based eBPF signature
->
-> Can you define "light-skeleton-based" before using the term.
->
-> This is the first time in my life when I hear about it.
->
-
-Sure. Here is the patchset where this stuff got introduced if you are
-curious.
-https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gmail.com/
-
-eBPF has similar requirements to that of modules when it comes to
-loading: find kallysym addresses, fix up elf relocations, some
-struct field offset handing stuff called CO-RE (compile-one
-run-anywhere), and some other miscellaneous bookkeeping.  During eBPF
-program compilation, pseudo-values get written to the immedate operands
-of instructions.  During loading, those pseudo-values get rewritten with
-concrete addresses or data applicable to the currently running system,
-e.g. a kallsym address or a fd for a map. This needs to happen before
-the instructions for a bpf program are loaded into the kernel via the
-bpf() syscall.
-
-Unlike modules, an in-kernel loader unfortunately doesn't
-exist. Typically, the instruction rewriting is done dynamically in
-userspace via libbpf (or the rust/go/python loader). What skeletons do
-is generate a script of required instruction-rewriting operations which
-then gets played back at load-time against a hard-coded blob of raw
-instruction data. This removes the need to distribute source-code or
-object files.
-
-There are two flavors of skeletons, normal skeletons, and light
-skeletons. Normal skeletons utilize relocation logic that lives in
-libbpf, and the relocations/instruction rewriting happen in userspace.
-The second flavor, light skeletons, uses a small eBPF program that
-contains the relocation lookup logic. As it's running in in the kernel,
-it unpacks the target program, peforms the instruction rewriting, and
-loads the target program. Light skeletons are currently utilized for
-some drivers, and BPF_PRELOAD functionionality since they can operate
-without userspace.
-
-Light skeletons were recommended on various mailing list discussions as
-the preffered path to performing signature verification. There are some
-PoCs floating around that used light-skeletons in concert with
-fs-verity/IMA and eBPF LSMs. We took a slightly different approach to
-Hornet, by utilizing the existing PCKS#7 signing scheme that is used for
-kernel modules.
-
->> verification. Signature data can be easily generated for the binary
->
-> s/easily//
->
-> Useless word having no measure.
->
-
-Ack, thanks.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250330170306.2584136-3-cjd@cjdns.fr>
 
 
->> data that is generated via bpftool gen -L. This signature can be
->
-> I have no idea what that command does.
->
-> "Signature data can be generated for the binary data as follows:
->
-> bpftool gen -L
->
-> <explanation>"
->
-> Here you'd need to answer to couple of unknowns:
->
-> 1. What is in exact terms "signature data"?
+On Sun, 30 Mar 2025 17:02:58 +0000, Caleb James DeLisle wrote:
+> Document the device tree binding for the interrupt controller in the
+> EcoNet EN751221 MIPS SoC.
+> 
+> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+> ---
+>  .../econet,en751221-intc.yaml                 | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
+> 
 
-That is a PKCS#7 signature of a data buffer containing the raw
-instructions of an eBPF program, followed by the initial values of any
-maps used by the program. 
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> 2. What does "bpftool gen -L" do?
->
-
-eBPF programs often have 2 parts. An orchestrator/loader program that
-provides load -> attach/run -> i/o -> teardown logic and the in-kernel
-program.
-
-That command is used to generate a skeleton which can be used by the
-orchestrator prgoram. Skeletons get generated as a C header file, that
-contains various autogenerated functions that open and load bpf programs
-as decribed above. That header file ends up being included in a
-userspace orchestrator program or possibly a kernel module.
-
-> This feedback maps to other examples too in the cover letter.
->
-> BR, Jarkko
-
-
-I'll rework this with some definitions of the eBPF subsystem jargon
-along with your suggestions.
-
--blaise
