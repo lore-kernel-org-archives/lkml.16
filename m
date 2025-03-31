@@ -1,135 +1,103 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738C418F2FC
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB6B18F2FC
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412832; cv=none; b=WXEgQPpXp6g1G58iQWwFtAfiFzl4r5I4p32d6SshiC9QrA0y6OU47Wv37KspU59R38CD5pSYekXUQS/vGDrjIHtubsqBQGN3q12IMDYP+r6FIdCMT5ybaG/fTi6dQJQRgzVDrVKMgLM9QSKV02068MIrMYq+xX/L6I054rSUrHQ=
+	t=1743412882; cv=none; b=Pp5FGL5pZM1dGsacbuWwxVOphg0xglQuzlmxsTWHbGz8m+ky9O9y5kMudwybSryCryzlkv/NS+GswNlGHDGw8guOdcVtt2PJC8LT0in0o+hBc+owCzUa/JASr951zgkrsB0jAjBjOgTjlFW+fe9VCpjfPb3GBjGiXFtSlNSq0Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412832; c=relaxed/simple;
-	bh=FH4g3fvpXV3lHKpvSvhwmjnLhb7FANS7ey999xYBE4E=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egS2O+yk5YEw1+fkZCoSahSCDroGQRcbPMUCeHzIXcePYw0f9FVTdKFwj47vV01n2zs0e4rxRNjWqGDBnMIdxqHqTaSYkGEhv3x2Y+EJbWj6EFugfo8JLZFV9tpBVb0dR0YYSoWTAjP4l8r1igNT6R30afpo5EhF23ASYeDoWg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KRiVozBi; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743412882; c=relaxed/simple;
+	bh=A/q95Mszo7oI+7BMFg+K7gqrw3B5Kfb6DstaYhYmUfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tG/gz129McFq6hZ8jDAaEQuy5+QuKP7Lx2Ee4Ipdh53e9fkTTyCuvimbvFa78z0kZKK0Il6r/PH8AAwUePyp2VHtkN8kE+COcN+vVpsc4UdmuTS46SRfLPouVbTslNNBUywPbKF6J08553X+5QVp+mAw5JAhLVTssCluYlXQbaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPQzH+Ep; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KRiVozBi"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5ed1ac116e3so7170026a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:20:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743412829; x=1744017629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vkzLnbFVOYDObQyUvRiCdFcMVyW9LHfEzzCWp7sSsRM=;
-        b=KRiVozBiaD6Kw3Pe2tHxOX3+sF2WPnMfxe0qGzETpUM24tWd+QSYBSVGbtoOH+Lf/v
-         +R3mO75sLVqqRD1xFpXQBHW4As8vEdAEylmTBrkzoqpnk1WNOkCUbSDImGqk3izW2ANz
-         tpjuW/L7I/Objb1MWNXG7mK+GkgoscDi/8K8Kc4Wa2wT8y2qo8sBAeDxWPxXfQOgV9Y9
-         KB6/5qy/9zWilcUFunTXHLVUZZF7mkz6b8+Z8VRVXHyXiTxn5bWvs+3dkYKuZw5rltDU
-         A0BfzLCeqaYRDnGdUiq7KSGZUsrjwJnRQGSyLmEcJ61kaI7wvFyb9YEnXfI9EgO+iyE2
-         sMfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743412829; x=1744017629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vkzLnbFVOYDObQyUvRiCdFcMVyW9LHfEzzCWp7sSsRM=;
-        b=PXfZ+cKWX+ZaEwjmMqC155S68ia/M5rLfeI2lJu5UGf4YyUKeMxBz3WnPWQsSJBSlU
-         +HrCfW0xtgh1IgTGmWDQeadaXNKI//EGs0cEcMfFztQgnRGP5xzjXpde51rE71zU/lt3
-         EIAp4Iwca/DR4UbuBRIyairyJUrXadUJ2+xyLYF2iVcIqlRibHURWKImCuCKTj8ZcdPQ
-         /YTyPv92Q/mnjeAm3MKKL9Rw/bra6Zkd4rqu3vbq6dcSAkCP4kEO+6bL2oPxrBj3vxv1
-         Rg3Ap9v6iN7MBdViAJPtY09eHNAhGUaAqOqDvFxJ6VjFCfX/8ZzrzwZKx2mXaJNOdMex
-         FuVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXa/4qNHuAh2kzfIal7jY0zmIGnAx7R2d6YxNfkL7xB4biPTD8iplfkeVchIL+qy4VIcQEHiFGMRUyrY6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcsx5KFoPYiocvGem6mNP/QB+ABi8iGQvz1rysqu45MbOCnnCb
-	/L248MTpkqqg9CkIXW31L9TAw108XePCA3+xmV8zVgu8ZkmALo5jBzpHF8F5SHQ=
-X-Gm-Gg: ASbGncubphBsqpf4PmYkxFUmvqFSJhZCxR3ULldBZOlWFMEEuBBGaNwbDJgseWI/kyt
-	VzU8pp5ar1zpr+RugIVHSY9xJ+pp6PL1ejUVO7rAwI1Nw/GXi5tQDnCDV7tsmrVrRW19jx48sb6
-	LCsuCVMs90GODE2G3lJH3h9aCDsMGDqT5rxSfaE8NEQGtR9/x0TnLX9eQp9tnc46WxnA5FCPkDn
-	7xEWq4jmLKfdwvaciBiypBbZNVRhpIP69zljHebLrXKy75jOlpK9cSRS8ymWD32nLXBM0MzeBJE
-	HCKK/xq06XYGAMEPrDdzMfwUJAG4e1FO+wE9T9BWMIC4YyEFck2izqaf6pYiOHl3EfAE5QZh6oC
-	soUVrgqbgggBLqxTh2vFw19I=
-X-Google-Smtp-Source: AGHT+IFw4ZQBM4RCOBDHsaOKEO0WJ/K/tqyXI3QtId7X55gIJKhmKgjgqUxtnj7DaAzH7tFUE8PTlQ==
-X-Received: by 2002:a17:907:8686:b0:ac3:ef11:8787 with SMTP id a640c23a62f3a-ac738b910e3mr830432866b.54.1743412828665;
-        Mon, 31 Mar 2025 02:20:28 -0700 (PDT)
-Received: from localhost (host-87-5-222-245.retail.telecomitalia.it. [87.5.222.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192f0c66sm591000666b.78.2025.03.31.02.20.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 02:20:28 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 31 Mar 2025 11:21:45 +0200
-To: Krzysztof Wilczynski <kw@linux.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z-peqcNpvIbKa1MT@apocalypse>
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
- <20250323114945.GD1902347@rocinante>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPQzH+Ep"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743412879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BPld2TMVKNvxrI6q1VRGJO7d7XjErhaFH+sNM1huaWs=;
+	b=UPQzH+Epv0mf9gj1j1Eh1YygIXhLw7+OlFtJNIfw9RL6kUth0JhDcD7VC5CWzd84fCkXS2
+	oZmjNCIAOfBCirgZeQi5eyvNtbxXgmjlmb3wjKeY4aH3liXk0aL5S3OnCRr/bzJ3SSXbxZ
+	ogS5SSVbyX7FTzZjb8MU3vKL3R3S6Xk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-519-YYmS3ViWNMejKwcS_KtyHw-1; Mon,
+ 31 Mar 2025 05:21:15 -0400
+X-MC-Unique: YYmS3ViWNMejKwcS_KtyHw-1
+X-Mimecast-MFC-AGG-ID: YYmS3ViWNMejKwcS_KtyHw_1743412874
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DB971956087;
+	Mon, 31 Mar 2025 09:21:13 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.27])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60FA41955BC0;
+	Mon, 31 Mar 2025 09:21:06 +0000 (UTC)
+Date: Mon, 31 Mar 2025 17:21:01 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Jens Axboe <axboe@kernel.dk>,
+	linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: Re: next-20250327 - lockdep whine and USB issues at boot
+Message-ID: <Z-peffTZ7lVo3m5n@fedora>
+References: <8775.1743185453@turing-police>
+ <Z-dVr6cIyrOID0J0@fedora>
+ <7755.1743228130@turing-police>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250323114945.GD1902347@rocinante>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7755.1743228130@turing-police>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Krzysztof,
+On Sat, Mar 29, 2025 at 02:02:10AM -0400, Valdis Klētnieks wrote:
+> On Sat, 29 Mar 2025 10:06:39 +0800, Ming Lei said:
+> > On Fri, Mar 28, 2025 at 02:10:53PM -0400, Valdis Kl??tnieks wrote:
+> > > Saw this during boot on a Dell Inspiron 5559 laptop.  
+> > > 
+> > > In addition, the external USB ports all gave up, rendering a USB mouse and a
+> > > USB external drive totally dead in the water.  May or may not be related, I didn't
+> > > dig too far into it.
+> >
+> > It shouldn't be related to the warning.
+> 
+> > For this lockdep warning, feel free to try patch in the following link:
+> >
+> > https://lore.kernel.org/linux-block/Z-dUCLvf06SfTOHy@fedora/
+> 
+> After applying that patch, USB *didn't* die during boot.  So apparently
+> *something* changed.  
 
-On 20:49 Sun 23 Mar     , Krzysztof Wilczynski wrote:
-> Hello,
-> 
-> Thank you for sending new version.  Appreciated.
-> 
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		dev_dbg(&rp1->pdev->dev, "MSIX IACK EN for irq %u\n", hwirq);
-> > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
-> > +		rp1->level_triggered_irq[hwirq] = true;
-> 
-> [...]
-> > +		if (!irq) {
-> > +			dev_err(&pdev->dev, "Failed to create irq mapping\n");
-> > +			err = -EINVAL;
-> > +			goto err_unregister_interrupts;
-> > +		}
-> 
-> A small nitpick: "IRQ" in both of the above.  Not a blocker, though, so
-> feel free to ignore this feedback.
-
-Ack.
-
-Many thanks,
-Andrea
+That is surprising, and maybe the USB die isn't 100% thing.
 
 > 
-> 	Krzysztof
+> Also, the patch merely caused a *different* lockdep warning.
+> Rather than  &q->q_usage_counter(io) and &q->elevator_lock, the
+> new one is &q->elevator_lock versus pcpu_alloc_mutex...
+> 
+> Looks like it's a bit more convoluted than first looked?
+
+That is another story wrt. freeze lock, fs_reclaim & percpu allocator
+lock, looks one real risk, I will try to work one patch and see if
+all can be addressed.
+
+
+
+Thanks,
+Ming
+
