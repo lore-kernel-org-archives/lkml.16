@@ -1,123 +1,95 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EC816D4E6;
-	Mon, 31 Mar 2025 07:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56A886250;
+	Mon, 31 Mar 2025 07:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743404824; cv=none; b=ZwFmnz7pEI33NyWl2e2A9Wz6u1fC/SNEjJaQTG8+xgac0Wlot3sTeTotgkGoH+7OH9jxCxQeElr0ZljajeBLvS86OhTFerAU+6JJQEWHu5Ubm7zJFw13HpwjFkhKUMda7oLkhbvfYXOOd1FmadREArmE5C9960woclDInzc4rGc=
+	t=1743404894; cv=none; b=usnBU2m+g+m/zo+he0HEQfHIBr8XuFRxtgKYQ4nK7LWFRqVTQa6kMsfTBZbd0czcn3C3M+0FkCrQphaaDP004b16CrCMAYuED+qZuWMu2kdtxdP1h7sjBhV9qLYQZvsELcbqmb8kVW1qsAhzpkbkllSPEKeSdVXCHi+V4+vIDwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743404824; c=relaxed/simple;
-	bh=L/bIiuR31JmWrffan0ULn1ZabMYljjs5pHQ5mMtdg4k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=sma8Cg9YK9qFaKtiLVtF0gpeEd9rBU0skSeQbFE425Bog25GWr4pYpnaL5Qft5M25OpQaWvdNwejGc/O0EPO6uzhEygUXJctlLCFzX+N3ZqokJRIMZQCh4Y/RMH7Byi9TUbNtOoQegVvhjZFB+Vo6NeXarXItxPsEvee/1m80IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MWW4bfBS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743404894; c=relaxed/simple;
+	bh=tD5tfTS4WH5AtYJNkSnk/LkniVjgN+9AKK8eT5IyK5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GY47Ly2VjUS05BWMZBUTyo5r2oKf6NWerThu1XPNEYe2TpUt5Vrvlk6tj7ynLzFQ8CvVp3bhYczcq2a6qbpP5yMi7JwIK9eZ4xY6GCZuRQ5nL+gVdq2m0tDj9w82jEyABBeYDXxeSI5Nc9eMh2NqHCmJxXQ4D8Sh3UJmdxu4WHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pe1N58hr; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MWW4bfBS"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kcuv007217;
-	Mon, 31 Mar 2025 07:06:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	22pAVRsd8PHlcilVo6JsAJE+xEez+n8nCt5fo3b0y1I=; b=MWW4bfBS8I81dl3h
-	2pyrdHy1KwMOOeTYXezh3vF593cuFazh1aTI3htoW4Pi9PqsMVbSv8xE4whtK3H9
-	hciwpVVR6E6LiT/+Ubzj0MzyTNdfL2VXln9F+x2/QwkJ4AbbvMKH4A14lMQYMBDg
-	Zx18lmOIa39I3jviqRWW0uqT/rxceROtCQADIBp3xKLJ9rs7uofIFIklRwU+DAZA
-	CfN8QHQDQolI4O5vvDWWrVDpSql6e/9oIJXzdFkS/6c/0xzCzBQxEWO3AyioR0sI
-	NnZSQJEdriYS3Lc4VCCBy9hUNJNBe9lgUh6O0QB6lG3dhft90YBCTqBmjxvvazcy
-	gdnmkQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p9893rnd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 07:06:53 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52V76q7K015747
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 07:06:52 GMT
-Received: from [10.216.38.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 31 Mar
- 2025 00:06:48 -0700
-Message-ID: <336dc6ad-6e9e-439d-b7c4-7fea1c5cd8e9@quicinc.com>
-Date: Mon, 31 Mar 2025 12:36:45 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pe1N58hr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743404892; x=1774940892;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tD5tfTS4WH5AtYJNkSnk/LkniVjgN+9AKK8eT5IyK5c=;
+  b=Pe1N58hrkNIv10t3OwZRr9QNQNzTLuzaYgVedmNGmN3Loax5VequC+WB
+   vBwsHZ9SxCt4zCvhG6WmUJ7+NMpLs9bhaePtAOdSGzy2clCMkxElDlDoH
+   PyEvH5GVOu8a/eUqLkEMC+yJz6lJ7R+vsBtrF+J3CCYme9ar2WdmBfPBm
+   or/xY+YsVcLjlF6Qptqp6parpeUGCP+Os0jl5bFyhNOrc7YDmHjgF8F3n
+   sXGkrGbCimIuIhiGD9JK3YNYLqrPG3t2SyAQNgCPm7HIGsbj55gByroFj
+   I5qfLTtJFPIuau6q9HAX/XLR+a3VwU/I2I6ru01yjGrZfB/hwyHKeKYik
+   w==;
+X-CSE-ConnectionGUID: VLTRN6e9SweqFXcToe+pSg==
+X-CSE-MsgGUID: o76VEjCSTdSKA6wEfxqXxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="67159555"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="67159555"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:08:02 -0700
+X-CSE-ConnectionGUID: J+0zYREwQDiqny65CW1kog==
+X-CSE-MsgGUID: rwCGXI9HRHiELv0zwrvt5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="130720345"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 31 Mar 2025 00:08:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 894A81B4; Mon, 31 Mar 2025 10:07:59 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Takashi Iwai <tiwai@suse.de>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] ALSA/hda: intel-sdw-acpi: Remove (explicitly) unused header
+Date: Mon, 31 Mar 2025 10:07:58 +0300
+Message-ID: <20250331070758.3986134-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: i3c: Add Qualcomm I3C master
- controller
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
- <20250326141641.3471906-2-quic_msavaliy@quicinc.com>
- <991b0652-76f2-40d6-b49b-1e6f76e254ac@kernel.org>
- <661e1a21-0f3a-497a-9b3b-fab284e30d19@quicinc.com>
- <36b67f9c-5905-4fa6-8190-ab980850b3a2@kernel.org>
- <e997bd15-728c-4316-8050-d461f115fd9f@quicinc.com>
- <04945ad2-1372-4c73-beae-fc6449fb9a76@kernel.org>
- <838dfc8d-24c3-4f03-9c24-863259bb22b1@quicinc.com>
- <b68559e6-fc2b-493b-9f37-3125ff924a65@kernel.org>
- <c6370b99-efde-46ab-a1a4-65b979ca2dfa@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <c6370b99-efde-46ab-a1a4-65b979ca2dfa@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=fIk53Yae c=1 sm=1 tr=0 ts=67ea3f0d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=qDEyJHh0b9D76DOg5wAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: sohM14mVqFSexODKJv_cmJzMVZqcEf-j
-X-Proofpoint-ORIG-GUID: sohM14mVqFSexODKJv_cmJzMVZqcEf-j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_03,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310049
 
+The fwnode.h is not supposed to be used by the drivers as it
+has the definitions for the core parts for different device
+property provider implementations. Drop it.
 
+Note, that fwnode API for drivers is provided in property.h
+which is included here.
 
-On 3/31/2025 12:22 PM, Mukesh Kumar Savaliya wrote:
-> Thanks Krzysztof  !
-> 
-> On 3/30/2025 3:12 PM, Krzysztof Kozlowski wrote:
->> On 29/03/2025 15:31, Mukesh Kumar Savaliya wrote:
->>> dt-binding file name: qcom,i3c-geni-qcom.yaml
->>
->> No. I already asked to use compatible as filename. Don't create your own
->> rules.
->>
-> okay, no problem. I was trying to follow previous i2c,spi, serial uart.
-> Let me make a cleanup patch for them also next as mentioned earlier.
-> 
-> For i3c, compatible will be "geni-i3c" as suggested by you , Rob.
-> dt-binding filename  "qcom,i3c-geni.yaml" OR "qcom,geni-i3c.yaml" ?
->>> compatible = "qcom,geni-i3c";
-Please Ignore previous ask. I will go with filename = qcom,geni-i3c.yaml
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ sound/hda/intel-sdw-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>
->>
->> Best regards,
->> Krzysztof
-> 
-> 
+diff --git a/sound/hda/intel-sdw-acpi.c b/sound/hda/intel-sdw-acpi.c
+index 49d3e0e30073..8686adaf4531 100644
+--- a/sound/hda/intel-sdw-acpi.c
++++ b/sound/hda/intel-sdw-acpi.c
+@@ -11,8 +11,8 @@
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+-#include <linux/fwnode.h>
+ #include <linux/module.h>
++#include <linux/property.h>
+ #include <linux/soundwire/sdw_intel.h>
+ #include <linux/string.h>
+ 
+-- 
+2.47.2
 
