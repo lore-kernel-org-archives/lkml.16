@@ -1,406 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2121.outbound.protection.outlook.com [40.107.103.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAC52033A;
-	Mon, 31 Mar 2025 06:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2F324B26;
+	Mon, 31 Mar 2025 06:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.121
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743400885; cv=fail; b=MkmSiVspgbJatw4ZI4+G5jd/atzG4FOXEqqSvObVibCxHTsPbMYtQJAsQ7MNzSpMJBNvH8CjGn3+oGIl6IcUsb72U012NlGtj/NU/B4mTXQaLwvbK/WyR+gKffRtRzgl/VBTqp2ZpuMLVIY9LgZY5ndxaIeiAOVHbaskWq2HoqU=
+	t=1743400993; cv=fail; b=a/oG8xZpWwrpt9TV6dzzttWU0MlsUZEBtg8SWOz7mgBXjDFb3zJZuw2EtpkxHlOutGYo4zIT5JZpuVSmurnCWR7GkljI1qohPZqOcUyboPbs/0nTe0OhfIiokTQQP+KuTIRKPnxflo5DFYzWvTcTjlAbazIMZvSqj2OQkfKmP4Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743400885; c=relaxed/simple;
-	bh=jwGHTNZOdseYixo678oYdhRk6gM8PKJMakCgOxw1Z2A=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=L2a9XvZwGXv+4rlQcC8aubywiEzDajHPWRxAcL1G2X+HkD/qQn6eTUxhk/bm4bUz63Oa94cFDMcLqFJkuYwIisY68moeQW+AIa89MGBFmn4xi3QXkEB89RZ5i9i7ye4lwUZZGasQ+mJOOItHgGjwUIM8J2Bg7dFuq656a0M6muY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llVCYjKJ; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743400993; c=relaxed/simple;
+	bh=Va5jgNu29Yv/iyb2r8JMq3uKCzVeFhEJDMo1ktVYYcU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=c4lo4FWOZoerni/UV5Bh6DVR3kRVBSnLXHeXqH8ftwoN8IU9xVOKcIIE9RDFGn0gKC8gN7ds2MkCJJzW/3EtBRa9dUEDoU+2QaqivEetKyYvF1ggtH3LB7Rq80HlrDfhW8Q6T+3XEGRgAGDPAAuxGkMedN0UdgDLunCNObVa8Fs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=bUbzDclR; arc=fail smtp.client-ip=40.107.103.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llVCYjKJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743400883; x=1774936883;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=jwGHTNZOdseYixo678oYdhRk6gM8PKJMakCgOxw1Z2A=;
-  b=llVCYjKJtaU8waWAlcqfvoWCJwARGpVlnJb6xchdRDXx4hS5173i42ii
-   nNPCPhzlfs0lQ+qLJJOLsBcLA/FwXvUABdYBW/XguTU7fAsR8OHNKZ+gz
-   3Kkgp0Zw7knt1XGVnguXunKBmUi91juXYp2mhLIaKK1gky7rwQKV3Hsek
-   xiKR1+eLtdgfFGAMa3OYkvYF97UacTkJCogfrp2tEawFmiFfiqVfjGlEg
-   K2DYT1oSHVSUWAyzwRc+kavPbQyjJ9OfuxtAAkOGq47jRE4HYUfqHHCKi
-   5q1b/39VERCbiT24F9twbNPH1vqH0K1d8RfzBGtLkVUgcW/Y7zR9RbXBa
-   w==;
-X-CSE-ConnectionGUID: SXwTP0LXRbqK5SANt28TQQ==
-X-CSE-MsgGUID: 7ABRhz3kTYGTI/mo33wjEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44561507"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="44561507"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2025 23:01:13 -0700
-X-CSE-ConnectionGUID: 9vIxhMwATlCziMWFRjE4pw==
-X-CSE-MsgGUID: 6FnavmfERayx7QKmV5/eRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="126908734"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Mar 2025 23:01:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Sun, 30 Mar 2025 23:01:13 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Sun, 30 Mar 2025 23:01:13 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 30 Mar 2025 23:01:10 -0700
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="bUbzDclR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vepa7FsXhLVjmMG2v2aJF/4a4CDYtMmSglAVTHudtJanHAchVVKP+5udNOldrlwpY4xHbVcoGs406lUttLNFQvPM6ChYDLWMcNZcKmqeD+80Vw2IBEjypEB7H6VviZhQCyzmnUPwzcVIaCL0DIW5LhwcXCQ5w7IAK+uzeDD2L8uQdT+w0CJ6uZbvhITDpmZx59NdmaoMb6wdcuwnB4ahL3frF9gz7gox7kfsJ4kBsYIWmVBXRdDf0QqVnRF0I26WFK21IbZEjhbxX2Ng61vXYWBUdPbQ8m4dzrnlhPdKKb4LONGXHyAfobY9eEFeE/EQyRGC+r/SL7zZjjl+lies6Q==
+ b=A+T3tc7h/fiMI7NMIEZvilzNc7iQit57BhdU1FzlG16/A9H3D5FtdynSQ7HttWpsHd7gKaAzsLeFxcZGFn5V3Gsb7FWxkqDIx5rtEU+ZXVEjoaVgwJrXfJINICjUvBFJ092ZlA2TtUpKk5NS9kaVQpFGXu9qHChNtlpS1+nkBIU6Y/H8W27+Lepf/REY8Q+rLo3zCVuLeoI9qSxPmsjswPS2D7V3rcTdjZ/YpYynDulMfXQH10LXJCZ4BKitBm9pZ9WWSMM37tsFPGLUyobGeegBGGGboux5lFFkxJ2gGxmQHu+6mAF0Q+Vy80LhKOchaTvT/vrah63NnW2mNkg1HQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KLW6EgA96kGVZCgw1eKXT2N6oumXJnVeM3V8HsVDp2Q=;
- b=kyHgLkVFp4RYQgAlyEOIizZRx5AczY49IOwi1Or+z03daN0VZQP6tk0kwsMZSw95ZLADnMEQBcLVgrHuYFbEiE2NzJNITyMcHrOiz6+XDLLS37MuDMdHj5l8Mx2thT6Obp8SG/S5KAUzqmmF0I5zJQ6C847vaIFAVDZj5kDZ5mAyOZGgFRaIc8coBpEgFZZu4+IWZoS1FVGfp4yn409cszIO5RChQPEdJVZq6/krSgQzhtr/YKIlCEpVCAEZZiGeQK9nqiATP3IGFphS2+zg+mEd83MFMlBwuUzp3MjKzF9xtEc4kdEYXXrFubAKqEdd15J5n6hK0bgvpE9DuEpoMA==
+ bh=Va5jgNu29Yv/iyb2r8JMq3uKCzVeFhEJDMo1ktVYYcU=;
+ b=eCIq8Ald9E4P7EpB/d337ENptVZsULpw+LYp/sh8HqhtgOmK14+vZSswqRQjnp5Dv7YX2BXYSu8e+RqXJwgYbg9PTSPtbAQcECxBOGYpXDChVbSM+lNeNimx7Q0d2K4InItQe8zXmsAUzXEa+5hP89WWLQENA1UjR472gSdUswqXPK2Z/KTqSgXZy0j0WMMYoPu9SknAFvhclDZt4zPTdgR90+C3/NO79YoGPMDsMdaAJYNLNG/cmTGnhtw1q7rWCyL8EuRUl18e1MpfgsSHMmNujPPet9TcOmXhjfRqrqZS7KDiXltq6Ss5zT1OEwB71uSfyfCIboW7SQQ/59vYPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by PH7PR11MB8034.namprd11.prod.outlook.com (2603:10b6:510:247::22) with
+ smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
+ dkim=pass header.d=phytec.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Va5jgNu29Yv/iyb2r8JMq3uKCzVeFhEJDMo1ktVYYcU=;
+ b=bUbzDclRexbzytgMjLPlw/rPPGFYBPkI25QRzZCDPyo4VhcUQGi/KCRjFGWYv0IkU0Cym7lLHTVhv3nsgQaxsrizeJ6Q+jFJpJUyxjnQKNh4EJm2+YO9Fx97IhWzfqLqBykWuo0AaAecHrotvBzyrM7vyBbR6LzqECF3GKg7+LqtR7nOcmfeAKSgGbXU6UsIeLDX/+N6ZMAUfBbtjIVwobSbuTcsskwdD6uzTCqYFrtyLTWz9ehui8/3sDGQx6EDSFF39WhW3ds6cVaUPyNLVQ4odqWypvEaOj0VstHsyjByFwnlWYuoIgwJcFhb6LtGyYdHrRMjUYzuap05lOD3WQ==
+Received: from AM0P195MB0386.EURP195.PROD.OUTLOOK.COM (2603:10a6:208:b4::32)
+ by AS8P195MB2213.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:5bb::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.48; Mon, 31 Mar
- 2025 06:00:41 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 06:00:41 +0000
-Date: Mon, 31 Mar 2025 14:00:31 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Ted Ts'o <tytso@mit.edu>, "Matthew
- Wilcox" <willy@infradead.org>, Mateusz Guzik <mjguzik@gmail.com>, Dave
- Chinner <david@fromorbit.com>, <linux-fsdevel@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linus:master] [filemap]  665575cff0:  will-it-scale.per_thread_ops
- 3.6% improvement
-Message-ID: <202503311302.a2bb29e1-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR01CA0134.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::14) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
+ 2025 06:03:05 +0000
+Received: from AM0P195MB0386.EURP195.PROD.OUTLOOK.COM
+ ([fe80::3f8f:9315:c279:d35f]) by AM0P195MB0386.EURP195.PROD.OUTLOOK.COM
+ ([fe80::3f8f:9315:c279:d35f%6]) with mapi id 15.20.8534.045; Mon, 31 Mar 2025
+ 06:03:05 +0000
+From: Yannic Moog <Y.Moog@phytec.de>
+To: "krzk@kernel.org" <krzk@kernel.org>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>, "robh@kernel.org"
+	<robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+CC: Benjamin Hahn <B.Hahn@phytec.de>, Yashwanth Varakala
+	<Y.Varakala@phytec.de>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "upstream@lists.phytec.de"
+	<upstream@lists.phytec.de>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, Jan Remmet <J.Remmet@phytec.de>, Teresa Remmet
+	<T.Remmet@phytec.de>
+Subject: Re: [PATCH 1/3] dt-bindings: add imx8mp-libra-rdk-fpsc
+Thread-Topic: [PATCH 1/3] dt-bindings: add imx8mp-libra-rdk-fpsc
+Thread-Index: AQHbn+IXjghHnLXC/kS8W1MVDYh/QLOIkxSAgAQySQA=
+Date: Mon, 31 Mar 2025 06:03:05 +0000
+Message-ID: <4610469e0002796fb0de9feabd3fe328d5bf7aa9.camel@phytec.de>
+References:
+ <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-0-28324c7f81fa@phytec.de>
+	 <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-1-28324c7f81fa@phytec.de>
+	 <9a8635d8-631e-483f-9d31-33cf0bea7daf@kernel.org>
+In-Reply-To: <9a8635d8-631e-483f-9d31-33cf0bea7daf@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=phytec.de;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM0P195MB0386:EE_|AS8P195MB2213:EE_
+x-ms-office365-filtering-correlation-id: acbbc23b-0387-4cc2-808d-08dd7019b3ed
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ZFc5dnlZZk9qYmZYM01FRi9QaG1rTVV2cHFiV29Wa2R1Z2puR1IxVm1QNU01?=
+ =?utf-8?B?aXdaMDA0aGJ5TkFNdUh0UEJhb0x1S01TRTdOeG5GS09rSjV3Z3VuMWRGcE55?=
+ =?utf-8?B?czZCODdKYjFiYjg2QTVmK0dXRHNkSm52VmtCVHM5Uy9MQ1psZEcvMHI0ZTNO?=
+ =?utf-8?B?SGpoTWNnbDcrNUxjWU91czR6K2FOU2dsR3ZocW5YU0F6UUl3cFFXVlZYSFlk?=
+ =?utf-8?B?RVd3bHR5OHRMTGNFU0twVHpQVklFZzlNVmU4Rk1pN3BPQmRRb0JzZm8xMTZz?=
+ =?utf-8?B?K21GcWVlVmR5MjAyUm1UTlY1Z0Z0TTJ6R3JiMnFkaDdROUMzQ2ZDMzE5VWhB?=
+ =?utf-8?B?bjZ5cTFrSmh6NXEreW9RS0NkV2JtTTFMUXA1Q2E5dmlucFpvWk9DYWo5R1Zz?=
+ =?utf-8?B?dFlTV05hTlNQTVNKZlB2RTdIY05lUi9hZHNFelFiRU1wN283dWlGTWtEemNX?=
+ =?utf-8?B?UDRWZ2xMbk43MU51SmVJTG5FcDNseWhxaVJlSjRnZHcreXBpSk5ZWjdOdDB0?=
+ =?utf-8?B?YWdadGgyaU5FUlhFdnRXNzVSTTBUc0JpNG82ZVBWMncwZzdnMjdBbXY2Rmt5?=
+ =?utf-8?B?WlhHOTBDMVhpVE83dUZLZ2JCZmh6SzI2TkZyVFEwVXFvZ1hjYkd4eUp1cTBQ?=
+ =?utf-8?B?MFJ0K2pwQ3psL3IzWGRXK1VsTXRNbzJrRndMNmpQMlg5OHRmMkZ5cjFFRU5n?=
+ =?utf-8?B?WkZUcXFFd1FMYlluQXBEb0ZpZTdqQVBrYUE2ZlBGSlNXdGQxTUtwU1VGK0ky?=
+ =?utf-8?B?NVpZTm4wTjhPVXVrcE90RU5XUk55MWswVytwSEhvS3hoQ2llT1h5WlRCRjlE?=
+ =?utf-8?B?NWZ3R3Y4Y0RJWEJUTkxxbW15emJ2WU8wWVVsRzhVbkk5eWN4cnQ4Z3F2cUdi?=
+ =?utf-8?B?emZqc0ZKQWVZVFdYMGVVeER1eTM5VnUzMzEyc2xobWFlWXdRKy9wNnhnQjdM?=
+ =?utf-8?B?ek5pS3loMktQdzFRWmdLc1VUM2lQSG9HTEFrUTF5Q0lNYkJqTjFmdU1pVzdM?=
+ =?utf-8?B?R1VyWHU3eTRZTG16dUlBVXU5d05wTHljM2xSQm1veVUrUUprYlhMV2NySVBC?=
+ =?utf-8?B?bEFXMnRNanZpSjhNT0RTZHUvbjFVNWNCeUdnK2J1UjB5NEd3cTE5V0N2OGs5?=
+ =?utf-8?B?SkEvOFh5blNpRjNtejExRUJsTURCYkR4RVdkWTZUZHk4aGJqMnVqdkhSMCtM?=
+ =?utf-8?B?S25qMzVxMHZYUG5OWFVaQ0RUb09EZ05Gdk8vN0picE5BTFVRb0twelNuVDBS?=
+ =?utf-8?B?S3drRUxoZmgwakxGYnVxb1JNQVUvT2V0WkwxTEs1WnYxYWExbk1yVElvQWN4?=
+ =?utf-8?B?ZUZ4V0ZCL3d3b0EweVRKN0FsM3ZIUUhJbFFlYnpTdmgxbldhMGgxeWpqNmJG?=
+ =?utf-8?B?aDl2YjE0YUd6TFJBTFZQR1dEbk5XdFlIV3JNRlh5cDgybHFRekdieDFxZlBv?=
+ =?utf-8?B?NU5WeUdnekt4aTE0Z2p1OTJTWE9TWFk1U1ZMaHNncGZEQUFSTUNFOFQzS3Ru?=
+ =?utf-8?B?SUxDMGloeHplWGJTc1lLdmUyOEY5TzJPMFVLa0VOdVVFbEJ6cmhPUzAyRy9v?=
+ =?utf-8?B?VUpNOE1QbTBSRU5XUXBCeEE1TktDVjZHajVmM3FkaE5EMEpkOHUvQWEvVjdw?=
+ =?utf-8?B?KzhpbitGMEFmNDFKeFdYQzJteTZwNnlxRCs1RmVtMTMxOEh1WHRjUXl3Uk1o?=
+ =?utf-8?B?WnMzTWFqUC91RHo5RExEM3lSUkdpUWxxdUNXS0U5RDdxV0RWclFudDVZTkZt?=
+ =?utf-8?B?Y1I0am8rNGoxTGViNGdCdy9nRmx4cDlWd0F0amY4eWhzU3liU2JDN1Jlc1gy?=
+ =?utf-8?B?RWdNek1WUDc1S1haalg5MSsxc3VCaEdQNlg3enIybWU5ZVVDMmRrQktXQzkw?=
+ =?utf-8?B?VGJza3FwTmwzZUx6THc1Vk1lMmExSmcwM2w4bVBkcGVPY1hSYlBGbGRQaVFB?=
+ =?utf-8?Q?ZjECHhIbijX3lEWLHGhW1B/Wlmj6MyM9?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0P195MB0386.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Y2xIckVuQzdMb3dnbk1DREdsWXQrU3RBNTJEVTJIWjdFSkVwUDVYbVFiK21R?=
+ =?utf-8?B?eEpaZlNSMGVwQkxEZ0c5TXNzTStSQmU1V1VsWDVIanBXVk0rTGVNeEt0ZzFH?=
+ =?utf-8?B?MzJuMmhlNmVnLzcyTTJzNk9NTWJudHZDZFc4V3FtNk9qVUcrbmJZNSthTlBu?=
+ =?utf-8?B?MGVWVjRSaTFPY2UzSDN4Yi9NckI3dEJyOHBSaGdwZU5oMGxRUHc4THhXT085?=
+ =?utf-8?B?VTV0NlQzWjBKdUNpdjVLdEg2RjUwR2MzN2l2NFhlQjZ6dnAxSm5iQ3kxaGh3?=
+ =?utf-8?B?UFpvRnNRT0ovVk8vekFXaUtxVzYxRXA4V3ZoUytmeGlLemhCSjI1WGVMU0FS?=
+ =?utf-8?B?UThEYkJBTndTQk42Nk5KeERtTVBRczRTSHFHRGhCRlhyeTgwUy9Rc3NjTWdw?=
+ =?utf-8?B?czFNQkxWWEM3cXZnV1cxWUNja0hHejJtLzJHaFl5ZDdwTjBVUlZaZ0hEWjJw?=
+ =?utf-8?B?akhONUpTRklwV0FmTjdzeUFHOWdZRzRZWlVDNk5yZzc4R1g2dC81TCtHa3hy?=
+ =?utf-8?B?aHBCUWx1QTVtaGt5aCtoVkt6djBkbDk2WnJvMVVUNnVUdG9WeTVSOGRaOTdo?=
+ =?utf-8?B?Rk5WT0VVNlE5NXpVWGEyZ25oV1BUYlBqTDVrb3lFVytUSC8rOVNZK0F4b1NT?=
+ =?utf-8?B?OTlhUmF5K1pJM1U5T2QvUGlKVzdNZ0puY2pzRTdzdlhUTDhiMjg2d0JTQjZD?=
+ =?utf-8?B?Y3pBUEg4NnlWaTYvSmJRcEtlQ2dNTjhySzVYWkJ5UCtDcU53OURVUzRzaUMy?=
+ =?utf-8?B?Mk5Xa3JCK2JwaVFkWkdjN2RWdlpWb256Q3RxR01XYjNOeS9JV1RiYXhBT1N5?=
+ =?utf-8?B?czhrT0FsRlk2VUlqanRGcHpDUU1CeDV2ZmlCUmh2eVVCN3oybFdVUDNSNVZL?=
+ =?utf-8?B?ZWNwOUxHaFlKZklHTCtFZUl2d1A3SFFCajlSSGd2cGZOU1liVmw1bnk2bkRC?=
+ =?utf-8?B?bW9xZDMzdTFydWxlUUpnaGs0d1Jaa2lxSERTRVpNUnlOMHZ1SjNZUEp3VTNJ?=
+ =?utf-8?B?Qm1xVGVmYmRRcmlHN0ZubUM1WDUwZnQ2bVZSdy8vNFVwRklxcmZDbG5VcXNN?=
+ =?utf-8?B?ZGJsclAvQUdxMTc4MTJIR2pyM1g2ZmhZRUFWQnRoQm5JVEQ4NVd6QTRLRy9M?=
+ =?utf-8?B?ZVIzVnNqRjFVSUQxNExVd043bjVkR0E1ZldVT2YvN0J5aG8wbVJ5NGxEamZo?=
+ =?utf-8?B?NE9iYVBJaENVWFVOVnVLQUZhVVFHbHZZMDc5Z3ZGMUNuTHJMWFRBRG9ZdGhy?=
+ =?utf-8?B?aDlweDQ0eUNva3cvZkFoSGxIY3l4NnNJWVRiWnE4aVlmWk5ERDRJWThrWmdI?=
+ =?utf-8?B?RWphQ3h1aXJqS3l5L1FoTkErc1k2K3pWWjJaZHRYclk0T0dWa1U0ZlFaQ2RQ?=
+ =?utf-8?B?MytCREMySks3OUp3U1ptdTl4TG1CdVlNK2hBeW5VVUlKZHo3TFN6eVViOHJC?=
+ =?utf-8?B?NDdvV053NjZNaEl4K2JVb1V3bDZQWndjblIxQ1plelJzckpobGYranhlSE5t?=
+ =?utf-8?B?ZTFEeWlFSDR2dUY1QlFZVzlmM3oxLzNBL3lSRGJUZFB0VEt1eVJ5RlhWZWZt?=
+ =?utf-8?B?cDJXZVEzYmF1Wjkyd003eitMMWEzZVFoWWhTZEJUTE1mK2pYRE51aDZBRzZQ?=
+ =?utf-8?B?ZVFWb0w0Z0llZHV4UXNjK1NYNWtaZkEvNG83Y3FleGNBVFdkbW0wbWplTGxH?=
+ =?utf-8?B?ZnRPMHB5MUE5OEp6elErTndPZzhlQTJLYWx2bXlYNzFlU2QzQ2o3SGsrVVFt?=
+ =?utf-8?B?dnRqYTVTZDRHT3JKemNqZHVUVG5CR25mTjUyeW8rTy9FOThCb1dlT2JiTTlk?=
+ =?utf-8?B?dFZkSWRyalVMalV6ZitkODZXZDExTzQycE0xR04yMVVCMzhncXVUTWM3c3lC?=
+ =?utf-8?B?Z0RMdVdPOEJvZTIyWFgxYUhINm5NeVh0dXF6VTk3aU1SMUs2YjdIVmpCRThN?=
+ =?utf-8?B?NVdkV1FOU3JrdGkvRkFQQjlFRWRtOXUzQkh1TjkrZUswTlpWZ3Joa2kzQUtB?=
+ =?utf-8?B?Vk5mdHN2UWt4U1RNdzFSK3AwbU9BTWtqNmx1dkFaTzRQbWpGQlhLNkFJK3RM?=
+ =?utf-8?B?ZU1SRTN4ZTh6UUhOVFhGS0J6YkQ0V2hLRGtJNEtuYnNkSHdQWmFtOWphWmF1?=
+ =?utf-8?Q?waeViMI5JAxQIfdKeRxez910t?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CC075BCAF9F3B34E8312BF2C9FEF969B@EURP195.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|PH7PR11MB8034:EE_
-X-MS-Office365-Filtering-Correlation-Id: e18d2d85-4835-437f-0b49-08dd70195e06
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?dJiTEw0E805M7a0vQbdf3CWlODP42BeH8gSL6kZDaWPUdtp/PStGUEVdDv?=
- =?iso-8859-1?Q?GJuKjHLov7zfnErP/zXXhratU1kZO6oFmIcbfCyi2KI7QWuJZIq+rbJVJa?=
- =?iso-8859-1?Q?D+4BK8cIz62uhbi1nJTPY5NS4ZrDDsAQYV54nRfTBFZbhJPjkWyrPRQg3z?=
- =?iso-8859-1?Q?r2AupIsRB9QgIOYJTKLgijqROr7kVNIvx6ejjRLbLOUNID72N1RJySDzS8?=
- =?iso-8859-1?Q?FJ+V4tHmlzo/7JhvpfgKy3mrPvf20iEhG1g3pPz3wnGdzvcXRYChqs+nuf?=
- =?iso-8859-1?Q?p6kNmv7Gxf9/7smxwpV9VEWUevqUX0Aw5HoaDTWtVIEiZU+w7Aw1rbs5JG?=
- =?iso-8859-1?Q?SujOq5PkyCwKa3ISqLsdbKhICRplws5WdXfX4ZqpfYn/qE0bOJaKc/EiGn?=
- =?iso-8859-1?Q?F29WUPFKSNsdfwzH2v+iyPCgyov5VnW7pVpw3M1iNNRFa30Y5rEiMTb/e7?=
- =?iso-8859-1?Q?SY8qd88qe27kdw2JIqEy0f86z5zZhmQNmR8MF7mD667giBJe5tmDTs8OuD?=
- =?iso-8859-1?Q?mARwRwYfL1jyXRoy0xgYQGYZMqVOQaeg53zSiTQU476LmcPUPDjMnkrzbb?=
- =?iso-8859-1?Q?0S9ShkzUHK0WJud+jaVlYsCOS5Nbvo0HU8ImxD0rjunDkbk58OJ5VetMLj?=
- =?iso-8859-1?Q?IJ+Jko2Fe6xKio3Sja1QrBXcyEJcW9h5VBi8I5gJ7Qii2xlVjUu/R5v7Yw?=
- =?iso-8859-1?Q?EiJkd5XUjmgg/xbWfvwybY2ZQDlXkE2kEJPZ2L8pxEuD/Wg5QP0KRpulPk?=
- =?iso-8859-1?Q?CYVbKsV2yJlJ5xEnzizyX3wu1JY3YdHNhR06Eoba/wSO1YkU9PpeKCbKhE?=
- =?iso-8859-1?Q?U5w1Uo6tlV6ng7D0I6upthXmFGpMp4mINEHSatNlop2hA0qCWxaBAca/AV?=
- =?iso-8859-1?Q?B5zaFV6SdQ3XKCpMg8cr21IPyatbkhiClLdgKn2e6Bj0XFbZ6G/hx0LwY8?=
- =?iso-8859-1?Q?6MIsJXlEJuROKpwu1MzcBaZF430RF5QHDAdRKJkl3933xzb2vJc9zSDFHI?=
- =?iso-8859-1?Q?fORfJO1rCnZsQa0EpBOhIPrDa+wra9v1jxCx7bNVHcLojE/WXVRyDttkHI?=
- =?iso-8859-1?Q?kkzFfXEE74oL+jbl2r4Yw9xP9F2TMso8MH8oimjKVwXbLQ62FIE2wD+kCG?=
- =?iso-8859-1?Q?dNywvAdDm8mBEm44gjD3QhLKXkdaCU7Xm+L/UJfMiS9KKCFvAecDlnMzqT?=
- =?iso-8859-1?Q?l1L3FA9gdJJGyQ2gLilUDMxg9Py53nLxz4SEfvJt3XDWNdfBESq4QMPkiM?=
- =?iso-8859-1?Q?zqQWfA3I+NRw+ZQLFFW98fG6zzf2n4BJDbz5oILqmyNHpZ8L7FeNkMVkjp?=
- =?iso-8859-1?Q?wrHi9WRXlMAkVoMBRdlpn8PKOslNI+jh1vFEcYEUm85x+NiUyK4fVsMsma?=
- =?iso-8859-1?Q?YIq0OpxUS6vYGNGAC/DQOnfqeWbpXq0ZdAkT2AVTAoagYz+XQAklaKc3R0?=
- =?iso-8859-1?Q?VI1nNAOqxu//cPFS?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?O608zDcJU5Br/RgFsu2mhBBkC/OHrK1+HJ/5Rc93LEw2EcFaCQbdqa8yJi?=
- =?iso-8859-1?Q?nggTFIAfoj5Wzm9jzWx1Kx7a15JV0Fx3mIDeSMqOsidSct72gw+KHFyiIi?=
- =?iso-8859-1?Q?8pK8AzgN5v6RVRoz3Yj5droFi85xiH5xXDQB87IG1dkglUSW63CZlI15Nk?=
- =?iso-8859-1?Q?XBut8WN+h36GNzHIqkE2ZvovZYf2JbmuNgm07Srqy869pRnV7a59yJdVG8?=
- =?iso-8859-1?Q?J8Jz2SniQwGAu0jjLfnx89ng9ZLzT1LKBKtjrunGtwKtdUp1LLmP/xfMCD?=
- =?iso-8859-1?Q?Tz9Ly2vc5csv1H9QuS/Wk3PAl2aTy6UcAZWouATsOphLRBUG9U2g2bxCtg?=
- =?iso-8859-1?Q?JhzN+m1FlzfrfxHX4WtoWWSR9x1okdylKhtGqGB+6MMwhJGqgYINLIR5f4?=
- =?iso-8859-1?Q?K6gMm6eRiOisrMYmaH0oZWvgoQzpuKGWFd/K7Xcm+Lt9MArCIqGCgPlWUB?=
- =?iso-8859-1?Q?g7/A5sjqvIvGiMSg2LRVtrEywrDvPTjwiJEGMEdgXmYu5lvRLJF+vsRQDJ?=
- =?iso-8859-1?Q?XzxLdUnm0v834dXEdh4VMZcrcFaMNADI7pcJHpi9HBomHrMruKW9wY7kcp?=
- =?iso-8859-1?Q?Jglx0uq3WP0ioEI/i3gP2tDsyufU9OPk7Hy3SMOgaGt3OCUxXQ8tmP6KMT?=
- =?iso-8859-1?Q?BjpjiD+JQLiJq65zq9CAnaJkQ0UbWNobKrJJ6P7pO5xIrRq97ZNoaF3bIW?=
- =?iso-8859-1?Q?LI0Dj/cM0MW8NlP8MOGBuiRm1sxEyQ1byo8hjCoiar57hn+McUTEnzgbTS?=
- =?iso-8859-1?Q?JZDYip3aorWeZtd4bdP6TJSqG8tNvQUYUk+fCaPD8FzRou/q+nYwV7N+A0?=
- =?iso-8859-1?Q?isut7KrFXcfwzoRjQZfbGNfYOMf3hFaicnGcJdnIfnrY3LA2vxyQ7KZcia?=
- =?iso-8859-1?Q?S5mXKKM25pfHgMS30qZ2MDJhnNvAOkYelCLbGT4Vh7m68n1/DWx3vNxA4S?=
- =?iso-8859-1?Q?3/amds9IGHFMBuc2xTVe6kDUpKMgAxVwNwhjNOoOmHdvdhXrXtarMAoEP1?=
- =?iso-8859-1?Q?9SNNt07Fe289LNsFhuAOlLf3e7p/fj/HRBdQ2yH69V4FY+P0GHgb2k34pD?=
- =?iso-8859-1?Q?5CuKZ6fSH2wIy31n+1f8gUKMsE9MyggsJUsfzqZsX9OWv2CU1MYhT7rNpB?=
- =?iso-8859-1?Q?RZm7DVThjThLdUM1CoWFh2OTbQK/5JnU7ZKCG2s1vtBYkix0LoHRfk7RD5?=
- =?iso-8859-1?Q?RqWxAvkQ1E+z8j76KDawAHJopklsq37UIWhH+fjhjKwXkF5doZTbYrgKCl?=
- =?iso-8859-1?Q?psswQ4Xlv/Fa3XPqyR35Wpf7hbamKVYWkbHL+nNjdlnkOjYlhxGxkTzp78?=
- =?iso-8859-1?Q?TQQcp+34tg+saVcn9uo9Gqzj0Y+AKFkc/7zshoz7RvugAW8E4WHHI0peTX?=
- =?iso-8859-1?Q?/+qoHU+azGdivxw27fvnpfp0gRRci223sFTDGhP0Vs3+6VQhXdBzZqmsRd?=
- =?iso-8859-1?Q?qlylCWdTViBOURDM58hQEQ4jgH2/lb1gxIbWOscGA1kuSJAx+x/GPjzkM4?=
- =?iso-8859-1?Q?lRO97P6vSG3L1Hv8ei0PC328Wl79veEjEJgC/hsTokIJZ1oRGuZIcgUA4v?=
- =?iso-8859-1?Q?W2ckwUE/or8+brFrryG9z1p8WJzfCRmwWY8aT0KoOAYssnTEYhSjE0WRn/?=
- =?iso-8859-1?Q?SrYcQ29nXpuGAihaCmPLgNeOJd9jqdws6hEAmwhHKvm2yDa9gu4dmFMQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e18d2d85-4835-437f-0b49-08dd70195e06
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-OriginatorOrg: phytec.de
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 06:00:41.1598
+X-MS-Exchange-CrossTenant-AuthSource: AM0P195MB0386.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: acbbc23b-0387-4cc2-808d-08dd7019b3ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 06:03:05.1117
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iySUyyDXqBZqoOI2wPBMnCUmZUYc4MwxUmXphMv/7ZNuwlnpDt1lpUuJSzr7QbMTDPP1uaCEDYRBsvTBrR7KKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8034
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nHtcPv2uLVqQ7iNDPDiQxUAWfh9BJnJvbe433llgE95qyx09kOVZHPMsl7SiR0q1TmtmxtvCLDi8WUnsOrW8dQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8P195MB2213
 
-
-
-Hello,
-
-kernel test robot noticed a 3.6% improvement of will-it-scale.per_thread_ops on:
-
-
-commit: 665575cff098b696995ddaddf4646a4099941f5e ("filemap: move prefaulting out of hot write path")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-
-testcase: will-it-scale
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-parameters:
-
-	nr_task: 100%
-	mode: thread
-	test: writeseek1
-	cpufreq_governor: performance
-
-
-In addition to that, the commit also has significant impact on the following tests:
-
-+------------------+-------------------------------------------------------------------------------------------+
-| testcase: change | unixbench: unixbench.throughput 4.6% improvement                                          |
-| test machine     | 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory |
-| test parameters  | cpufreq_governor=performance                                                              |
-|                  | nr_task=100%                                                                              |
-|                  | runtime=300s                                                                              |
-|                  | test=fsbuffer-w                                                                           |
-+------------------+-------------------------------------------------------------------------------------------+
-
-
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250331/202503311302.a2bb29e1-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/kconfig/mode/nr_task/rootfs/tbox_group/test/testcase:
-  gcc-12/performance/x86_64-rhel-9.4/thread/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp7/writeseek1/will-it-scale
-
-commit: 
-  654b33ada4 ("proc: fix UAF in proc_get_inode()")
-  665575cff0 ("filemap: move prefaulting out of hot write path")
-
-654b33ada4ab5e92 665575cff098b696995ddaddf46 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
- 1.171e+08 ± 11%     +30.4%  1.526e+08 ± 18%  cpuidle..time
-     96.67 ± 15%     -38.6%      59.33 ± 15%  perf-c2c.HITM.local
-     91.33 ± 22%     -37.8%      56.83 ± 18%  perf-c2c.HITM.remote
-  77338762            +3.6%   80146917        will-it-scale.64.threads
-   1208417            +3.6%    1252295        will-it-scale.per_thread_ops
-  77338762            +3.6%   80146917        will-it-scale.workload
-      0.02 ±  3%      +0.0        0.03 ± 19%  perf-stat.i.branch-miss-rate%
-   9721738 ±  4%      +8.9%   10586240 ±  5%  perf-stat.i.branch-misses
-      0.02 ±  3%      +0.0        0.02 ±  5%  perf-stat.overall.branch-miss-rate%
-    683007            -3.3%     660149        perf-stat.overall.path-length
-   9685250 ±  4%      +8.9%   10545947 ±  5%  perf-stat.ps.branch-misses
-     31.54            -2.4       29.18        perf-profile.calltrace.cycles-pp.generic_perform_write.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64
-     40.31            -1.9       38.39        perf-profile.calltrace.cycles-pp.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     46.03            -1.9       44.17        perf-profile.calltrace.cycles-pp.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-     53.97            -1.7       52.30        perf-profile.calltrace.cycles-pp.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-     58.43            -1.4       56.98        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-     59.33            -1.4       57.92        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.write
-     74.17            -0.8       73.38        perf-profile.calltrace.cycles-pp.write
-      0.55            +0.0        0.57        perf-profile.calltrace.cycles-pp.x64_sys_call.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-      0.97            +0.0        1.01        perf-profile.calltrace.cycles-pp.folio_unlock.shmem_write_end.generic_perform_write.shmem_file_write_iter.vfs_write
-      0.57 ±  3%      +0.0        0.60        perf-profile.calltrace.cycles-pp.file_remove_privs_flags.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64
-      1.01            +0.0        1.04        perf-profile.calltrace.cycles-pp.fput.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-      1.08            +0.0        1.12        perf-profile.calltrace.cycles-pp.up_write.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64
-      0.54            +0.0        0.59        perf-profile.calltrace.cycles-pp.syscall_return_via_sysret.llseek
-      0.99            +0.0        1.04        perf-profile.calltrace.cycles-pp.mutex_unlock.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-      1.60            +0.1        1.67        perf-profile.calltrace.cycles-pp.down_write.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64
-      0.68 ±  2%      +0.1        0.75 ±  3%  perf-profile.calltrace.cycles-pp.ktime_get_coarse_real_ts64_mg.current_time.inode_needs_update_time.file_update_time.shmem_file_write_iter
-      1.61            +0.1        1.69        perf-profile.calltrace.cycles-pp.mutex_lock.fdget_pos.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      0.94            +0.1        1.02        perf-profile.calltrace.cycles-pp.folio_mark_accessed.shmem_get_folio_gfp.shmem_write_begin.generic_perform_write.shmem_file_write_iter
-      3.19            +0.1        3.27        perf-profile.calltrace.cycles-pp.shmem_write_end.generic_perform_write.shmem_file_write_iter.vfs_write.ksys_write
-      0.87            +0.1        0.96        perf-profile.calltrace.cycles-pp.rw_verify_area.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      2.23            +0.1        2.32        perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.llseek
-      2.21            +0.1        2.31        perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-      1.57            +0.2        1.72        perf-profile.calltrace.cycles-pp.current_time.inode_needs_update_time.file_update_time.shmem_file_write_iter.vfs_write
-      4.90            +0.2        5.08        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64.write
-      0.60 ±  3%      +0.2        0.80 ±  5%  perf-profile.calltrace.cycles-pp.balance_dirty_pages_ratelimited_flags.generic_perform_write.shmem_file_write_iter.vfs_write.ksys_write
-      6.44            +0.2        6.66        perf-profile.calltrace.cycles-pp.clear_bhb_loop.llseek
-      2.30            +0.2        2.52        perf-profile.calltrace.cycles-pp.inode_needs_update_time.file_update_time.shmem_file_write_iter.vfs_write.ksys_write
-      2.24            +0.2        2.48        perf-profile.calltrace.cycles-pp.filemap_get_entry.shmem_get_folio_gfp.shmem_write_begin.generic_perform_write.shmem_file_write_iter
-      6.06            +0.2        6.30        perf-profile.calltrace.cycles-pp.clear_bhb_loop.write
-      2.82            +0.3        3.09        perf-profile.calltrace.cycles-pp.file_update_time.shmem_file_write_iter.vfs_write.ksys_write.do_syscall_64
-      4.78            +0.3        5.06        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64.llseek
-      5.77            +0.5        6.26        perf-profile.calltrace.cycles-pp.shmem_get_folio_gfp.shmem_write_begin.generic_perform_write.shmem_file_write_iter.vfs_write
-      0.00            +0.5        0.52        perf-profile.calltrace.cycles-pp.__cond_resched.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
-      0.00            +0.5        0.52        perf-profile.calltrace.cycles-pp.shmem_file_llseek.ksys_lseek.do_syscall_64.entry_SYSCALL_64_after_hwframe.llseek
-      0.00            +0.5        0.54 ±  2%  perf-profile.calltrace.cycles-pp.xas_load.filemap_get_entry.shmem_get_folio_gfp.shmem_write_begin.generic_perform_write
-      6.65            +0.5        7.20        perf-profile.calltrace.cycles-pp.shmem_write_begin.generic_perform_write.shmem_file_write_iter.vfs_write.ksys_write
-     14.05            +0.8       14.81        perf-profile.calltrace.cycles-pp.copy_page_from_iter_atomic.generic_perform_write.shmem_file_write_iter.vfs_write.ksys_write
-     28.53            +0.9       29.47        perf-profile.calltrace.cycles-pp.llseek
-     32.10            -2.4       29.69        perf-profile.children.cycles-pp.generic_perform_write
-     40.86            -1.9       38.96        perf-profile.children.cycles-pp.shmem_file_write_iter
-     46.47            -1.8       44.64        perf-profile.children.cycles-pp.vfs_write
-     54.38            -1.6       52.74        perf-profile.children.cycles-pp.ksys_write
-     72.02            -1.1       70.92        perf-profile.children.cycles-pp.do_syscall_64
-     73.76            -1.1       72.66        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
-     74.63            -0.7       73.89        perf-profile.children.cycles-pp.write
-      0.59 ±  2%      -0.0        0.54        perf-profile.children.cycles-pp.entry_SYSCALL_64_safe_stack
-      0.20            +0.0        0.21        perf-profile.children.cycles-pp.file_remove_privs
-      0.33            +0.0        0.35        perf-profile.children.cycles-pp.__f_unlock_pos
-      0.53            +0.0        0.54        perf-profile.children.cycles-pp.generic_file_llseek_size
-      0.89            +0.0        0.92        perf-profile.children.cycles-pp.testcase
-      2.29            +0.0        2.32        perf-profile.children.cycles-pp.fput
-      0.68 ±  2%      +0.0        0.71        perf-profile.children.cycles-pp.syscall_exit_to_user_mode_prepare
-      0.38            +0.0        0.42 ±  2%  perf-profile.children.cycles-pp.security_file_permission
-      0.42            +0.0        0.46 ±  2%  perf-profile.children.cycles-pp.write@plt
-      1.17            +0.0        1.21        perf-profile.children.cycles-pp.x64_sys_call
-      1.04            +0.0        1.08        perf-profile.children.cycles-pp.folio_unlock
-      1.14            +0.0        1.19        perf-profile.children.cycles-pp.up_write
-      0.63 ±  2%      +0.0        0.67        perf-profile.children.cycles-pp.file_remove_privs_flags
-      0.53 ±  2%      +0.0        0.58        perf-profile.children.cycles-pp.shmem_file_llseek
-      1.59            +0.1        1.65        perf-profile.children.cycles-pp.rcu_all_qs
-      2.19            +0.1        2.26        perf-profile.children.cycles-pp.mutex_unlock
-      0.75            +0.1        0.82 ±  3%  perf-profile.children.cycles-pp.ktime_get_coarse_real_ts64_mg
-      0.22 ±  3%      +0.1        0.29 ±  2%  perf-profile.children.cycles-pp.inode_to_bdi
-      0.44 ±  2%      +0.1        0.52 ±  2%  perf-profile.children.cycles-pp.xas_start
-      1.73            +0.1        1.80        perf-profile.children.cycles-pp.down_write
-      3.40            +0.1        3.48        perf-profile.children.cycles-pp.shmem_write_end
-      1.00            +0.1        1.08        perf-profile.children.cycles-pp.folio_mark_accessed
-      3.53            +0.1        3.62        perf-profile.children.cycles-pp.mutex_lock
-      0.65            +0.1        0.75        perf-profile.children.cycles-pp.xas_load
-      1.00            +0.1        1.10        perf-profile.children.cycles-pp.rw_verify_area
-      1.48 ±  3%      +0.1        1.59 ±  2%  perf-profile.children.cycles-pp.syscall_return_via_sysret
-      3.58            +0.2        3.74        perf-profile.children.cycles-pp.__cond_resched
-      1.71            +0.2        1.86        perf-profile.children.cycles-pp.current_time
-      4.70            +0.2        4.90        perf-profile.children.cycles-pp.syscall_exit_to_user_mode
-      4.36            +0.2        4.57        perf-profile.children.cycles-pp.entry_SYSRETQ_unsafe_stack
-      0.74 ±  2%      +0.2        0.95 ±  4%  perf-profile.children.cycles-pp.balance_dirty_pages_ratelimited_flags
-      2.43            +0.2        2.66        perf-profile.children.cycles-pp.inode_needs_update_time
-      2.38            +0.2        2.62        perf-profile.children.cycles-pp.filemap_get_entry
-      5.53            +0.3        5.78        perf-profile.children.cycles-pp.entry_SYSCALL_64
-      2.96            +0.3        3.23        perf-profile.children.cycles-pp.file_update_time
-     12.62            +0.5       13.10        perf-profile.children.cycles-pp.clear_bhb_loop
-      6.04            +0.5        6.54        perf-profile.children.cycles-pp.shmem_get_folio_gfp
-      6.79            +0.6        7.35        perf-profile.children.cycles-pp.shmem_write_begin
-     14.14            +0.8       14.90        perf-profile.children.cycles-pp.copy_page_from_iter_atomic
-     28.74            +0.9       29.66        perf-profile.children.cycles-pp.llseek
-      0.58 ±  3%      -0.0        0.54        perf-profile.self.cycles-pp.entry_SYSCALL_64_safe_stack
-      0.13            +0.0        0.14        perf-profile.self.cycles-pp.__f_unlock_pos
-      0.47            +0.0        0.48        perf-profile.self.cycles-pp.generic_file_llseek_size
-      0.36            +0.0        0.38        perf-profile.self.cycles-pp.folio_mark_dirty
-      0.27 ±  2%      +0.0        0.29        perf-profile.self.cycles-pp.xas_load
-      1.56            +0.0        1.58        perf-profile.self.cycles-pp.shmem_write_end
-      1.14            +0.0        1.17        perf-profile.self.cycles-pp.down_write
-      0.31            +0.0        0.34 ±  2%  perf-profile.self.cycles-pp.security_file_permission
-      0.54 ±  3%      +0.0        0.58        perf-profile.self.cycles-pp.syscall_exit_to_user_mode_prepare
-      1.02            +0.0        1.06        perf-profile.self.cycles-pp.x64_sys_call
-      0.56 ±  2%      +0.0        0.60        perf-profile.self.cycles-pp.file_remove_privs_flags
-      0.52            +0.0        0.56 ±  2%  perf-profile.self.cycles-pp.file_update_time
-      0.41 ±  2%      +0.0        0.45        perf-profile.self.cycles-pp.shmem_file_llseek
-      0.96            +0.0        1.00        perf-profile.self.cycles-pp.folio_unlock
-      1.07            +0.0        1.12        perf-profile.self.cycles-pp.up_write
-      1.36            +0.0        1.41        perf-profile.self.cycles-pp.entry_SYSCALL_64
-      0.80            +0.0        0.85        perf-profile.self.cycles-pp.ksys_lseek
-      0.86 ±  2%      +0.0        0.91        perf-profile.self.cycles-pp.generic_write_checks
-      1.20            +0.0        1.24        perf-profile.self.cycles-pp.rcu_all_qs
-      0.75            +0.1        0.80 ±  2%  perf-profile.self.cycles-pp.shmem_write_begin
-      0.16 ±  4%      +0.1        0.21 ±  4%  perf-profile.self.cycles-pp.inode_to_bdi
-      2.05            +0.1        2.11        perf-profile.self.cycles-pp.mutex_unlock
-      0.62 ±  2%      +0.1        0.69        perf-profile.self.cycles-pp.rw_verify_area
-      0.69 ±  2%      +0.1        0.75 ±  3%  perf-profile.self.cycles-pp.ktime_get_coarse_real_ts64_mg
-      0.72            +0.1        0.79        perf-profile.self.cycles-pp.inode_needs_update_time
-      0.31 ±  2%      +0.1        0.38 ±  3%  perf-profile.self.cycles-pp.xas_start
-      0.93            +0.1        1.01        perf-profile.self.cycles-pp.folio_mark_accessed
-      1.98            +0.1        2.07        perf-profile.self.cycles-pp.__cond_resched
-      2.34            +0.1        2.43        perf-profile.self.cycles-pp.llseek
-      0.94            +0.1        1.04        perf-profile.self.cycles-pp.current_time
-      1.48 ±  3%      +0.1        1.59 ±  2%  perf-profile.self.cycles-pp.syscall_return_via_sysret
-      2.50            +0.1        2.62        perf-profile.self.cycles-pp.do_syscall_64
-      0.52 ±  4%      +0.1        0.66 ±  7%  perf-profile.self.cycles-pp.balance_dirty_pages_ratelimited_flags
-      1.72            +0.1        1.87        perf-profile.self.cycles-pp.filemap_get_entry
-      4.03            +0.2        4.19        perf-profile.self.cycles-pp.syscall_exit_to_user_mode
-      2.97            +0.2        3.15        perf-profile.self.cycles-pp.write
-      2.14            +0.2        2.33        perf-profile.self.cycles-pp.shmem_get_folio_gfp
-      4.22            +0.2        4.42        perf-profile.self.cycles-pp.entry_SYSRETQ_unsafe_stack
-     12.49            +0.5       12.96        perf-profile.self.cycles-pp.clear_bhb_loop
-     13.95            +0.7       14.70        perf-profile.self.cycles-pp.copy_page_from_iter_atomic
-
-
-***************************************************************************************************
-lkp-icl-2sp9: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_task/rootfs/runtime/tbox_group/test/testcase:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/300s/lkp-icl-2sp9/fsbuffer-w/unixbench
-
-commit: 
-  654b33ada4 ("proc: fix UAF in proc_get_inode()")
-  665575cff0 ("filemap: move prefaulting out of hot write path")
-
-654b33ada4ab5e92 665575cff098b696995ddaddf46 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-  32471117            +4.6%   33974569        unixbench.throughput
-      1819            +4.0%       1892        unixbench.time.user_time
- 1.201e+10            +4.8%  1.259e+10        unixbench.workload
-      0.33 ±  2%      +3.1%       0.34        perf-stat.i.MPKI
- 4.577e+10            +1.4%   4.64e+10        perf-stat.i.branch-instructions
-      0.02            -0.0        0.02        perf-stat.overall.branch-miss-rate%
-      6053            -4.0%       5808        perf-stat.overall.path-length
- 4.566e+10            +1.4%  4.629e+10        perf-stat.ps.branch-instructions
-
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+SGkgS3J6eXN6dG9mLA0KDQpPbiBGcmksIDIwMjUtMDMtMjggYXQgMTQ6NTggKzAxMDAsIEtyenlz
+enRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIDI4LzAzLzIwMjUgMTQ6MDQsIFlhbm5pYyBNb29n
+IHdyb3RlOg0KPiA+IGlteDhtcC1saWJyYS1yZGstZnBzYyBpcyBhIGRldmVsb3BtZW50IGJvYXJk
+IGJhc2VkIG9uIHRoZSBwaHlDT1JFLWkuTVggOE0NCj4gPiBQbHVzIEZQU0MgU29NLiBBZGQgaXRz
+IGRlc2NyaXB0aW9uIGFuZCBiaW5kaW5nLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFlhbm5p
+YyBNb29nIDx5Lm1vb2dAcGh5dGVjLmRlPg0KPiA+IC0tLQ0KPiA+IMKgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbCB8IDcgKysrKysrKw0KPiA+IMKgMSBmaWxl
+IGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+ID4gaW5kZXggMWI5MDg3MDk1
+OGEyMmU0OTM1NWRkMWY5MzJiZjNkODRjZDg2NGI1Zi4uMjJmMDVlNjcwOWZkNjBiZWYxZDIyYTM3
+OGNmMGJkNTcwOTA3NzRkNCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KPiA+IEBAIC0xMTU2LDYgKzExNTYsMTMgQEAgcHJv
+cGVydGllczoNCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBrb250cm9uLGlteDht
+cC1vc20tc8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBLb250cm9uIGkuTVg4TVAgT1NN
+LVMgU29NDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLSBjb25zdDogZnNsLGlteDhtcA0KPiA+
+IMKgDQo+ID4gK8KgwqDCoMKgwqAgLSBkZXNjcmlwdGlvbjogUEhZVEVDIHBoeUNPUkUtaS5NWDhN
+UCBGUFNDIGJhc2VkIGJvYXJkcw0KPiA+ICvCoMKgwqDCoMKgwqDCoCBpdGVtczoNCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgIC0gZW51bToNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+LSBwaHl0ZWMsaW14OG1wLWxpYnJhLXJkay1mcHNjwqAgIyBpLk1YIDhNIFBsdXMgTGlicmEgUkRL
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoCAtIGNvbnN0OiBwaHl0ZWMsaW14OG1wLXBoeWNvcmUt
+ZnBzYyAjIHBoeUNPUkUtaS5NWCA4TSBQbHVzIEZQU0MNCj4gDQo+IEFuZCB0aGF0J3MgZGlmZmVy
+ZW50IHRoYW4gZXhpc3RpbmcgcGh5Y29yZSBzb20/IFlvdSBoYXZlIGVudGlyZSBjb21taXQNCj4g
+bXNnIHRvIGV4cGxhaW4gdGhhdC4NCg0KWWVzLCBpdCBpcyBkaWZmZXJlbnQgdG8gdGhlIGV4aXN0
+aW5nIHBoeWNvcmUgc29tLg0KSSBleHBsYWluZWQgdGhlIGRpZmZlcmVuY2VzIGluIHRoZSBzZWNv
+bmQgcGF0Y2ggd2hpY2ggaW50cm9kdWNlcyB0aGUgZGV2aWNlIHRyZWVzLg0KV291bGQgeW91IGxp
+a2UgbWUgdG8gYWxzbyBhZGQgdGhlIGV4cGxhbmF0aW9uIHRvIHRoaXMgcGF0Y2gsIG9yIG1vdmUg
+aXQgaGVyZSBmcm9tIHRoZSBzZWNvbmQgcGF0Y2g/DQoNCllhbm5pYw0KDQo+IA0KPiBCZXN0IHJl
+Z2FyZHMsDQo+IEtyenlzenRvZg0K
