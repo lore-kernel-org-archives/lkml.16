@@ -1,319 +1,136 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C2A26AF6
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64422144DD;
+	Mon, 31 Mar 2025 16:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437766; cv=none; b=hW+73Rb4jppZ4haXuS/0TVrrYceuz1oMcvwbAm27jtS7ofP4KVFDzP/57o4rKR3Nzfu20LvaO/5+v6hvQCDpFNBjOj1q4ZaG2nz0ommmtXVdVEL2R+8kLPIYqoX4OBNSMjJbl+60JJvkjEDOk9MK3qhFRjgkI/ChGmMNGzlgTTA=
+	t=1743437774; cv=none; b=k0caFe2SNd9kF8ERCwjX1tvdUKnLxka08uoPj6ZFMb5FtwUWW2U4fhbnhw08TdCYMjEtxqZmcQiijwMAlX0WQYdIQ+tkj2CkLHzRR1Jps2MQ90VR8RqXcWonfpyUxAlQVJyZmYwPhVsuakrA+HmUKXVC8kGpxyyMtNHbfog8sKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437766; c=relaxed/simple;
-	bh=zUI6fTqYH/DnZU3D3wD7gOpmhPH+9GO/HBAjmPmp2eI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MSNCOw2u8ceoQSEe1+7XQ4vRdL7hczUhxF6FEIbMgFV1Jf4eQvO8ctknr54rGgZRARgeGPHfvlYIY7VPjc++S8lINoOWKWHzS3Esbci1kgWtwot4Q6ZlYPEXh0SGakX4YnAhUsEuEEwre18tJ+SeTkTDTyzg47jdlBJw19gMnNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCZppGQK; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743437774; c=relaxed/simple;
+	bh=ohaNaBhj+Y57HbUllos35LAObiQZlEUZfWdHRxTq3iw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O3IMemq3oaZudMLAtLQD2bfxqjt8pD+GqZDtdaLAOvnlXRlYkOrFbcxlM50UjrO82INRhNjwLqSmvAVM3LLH3FBGkrmMq4UDQpNty/hp82gzSmhNedSLuTI5qblfe1oZDIn3fePmNSd65P8J9C5/O2Hohx2SBJYrpMOuUeWzh2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=hcX5UORe; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCZppGQK"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2260c91576aso73720895ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743437764; x=1744042564; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=32bd+4WU1DygbAHbysKUy0FZhXcvnuwbKsO8ps8kv08=;
-        b=mCZppGQKQoPgR+ooIpAofPL9zv/Z7VnWFE6pta8Ie1skxbMIjB9XeKHlALqLci3WCU
-         4/xakw+BB53XyR4XLzS6ACXBWGAdQ00biKjGiu9cVAnRdRVi7thw2wM3+EMIphiwG0Oe
-         Lmt/t1kPxOuoZ8bwQ+iHRIZbEkCfHKVWZpyOBXr5hkZ4SpuBQ9r+tuniOYI70wc+rEXW
-         UQnenJc9Nnx5BTNar1NrbSUsq0sVPKVHAg92CXP4EPGQwOJBLjU4NN3VKO8vhYiUwur/
-         z36iY90gPJ18NPe/OGsGV4FglLtPgZU8X97XRaKWyC8AGdgaR/+SU4r11lkbM6u7wDdc
-         +O9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743437764; x=1744042564;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=32bd+4WU1DygbAHbysKUy0FZhXcvnuwbKsO8ps8kv08=;
-        b=udx8FeqUMu4bSQKzqQmyyxrWCPTiFZF2tmVTKJ7NB7X4vlHs7bi4e9FJGvZc8ntWEI
-         hp0e1bMix47C7zNa/iX2pamwvXCuJ79a5E1I3NDSYyfdC4uxuWl0gei6tK/CgR7qkXbo
-         /JXB6LCgEeOokIlKn5t8jKTn65WOdNgCflgRbwGkN+2WJMQexa6XQIFFSHlExvowvrlY
-         5bvXS4h0iG4rWKswbD6sCqqj3c5B3VuQxw/onzU2oNQCecCeCh135Ucir2lvnRvbaHx2
-         Km98V6u9K8uNh0z+FjN+z8rSK0KuhYo9OS1csITf2BKiwEDlZajouq6DGuXMVnN/dTEL
-         vINQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUd6LNzQVlF0W8iurmRY6ukZFT9/1iDlCVw55twVXCYtEznovJVapRXUVdZNsGyY6jzKKFAavwvPSf0Buc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU+0Ev8+pLgjMPpsp1z7C09x8fz/wzpKAfkmHOzM0UrIl6pMZQ
-	4Jo48cVceIVAGi911IUh/XsKpqZAgm08X+VBx6efG3h89PVhNvCV
-X-Gm-Gg: ASbGncsz4aV4fbQgbCBvDvizLZnwlRtqsHzmnq6/Rb3jkF9L8EF3QDZ5b5+33+NULg/
-	qQAX4GKNpw5vmV6oo7VY0nophTG2us//TRIAiLtSUZF0j6in4Z9jtpHJWdb3malz+YQD6xZ21+p
-	s6MVCgTbJJq1I1iHWR5wT9hgmI1jMmAGfc4rt62zMHnLQ+rXmV4ZvViyGhq0guiBbxq1fYFvrvm
-	75KDIffmoh/k460nadrVWqO4gomElCOd/RcZjkoLRFQF/63tu7MbsO1M8X2HkE/jdvCtViE/03V
-	nVSM6vm1vlesLslmz82cLs9DxAVK8mkw3ww4jmDKd6Xff50A3hU=
-X-Google-Smtp-Source: AGHT+IFq34IJqsQCFZdeoT9wP/Jnw+8SIAHV25r6mxakLM5VltpGIBIQxBHcz6Kp92UN6c5Ie0iZKg==
-X-Received: by 2002:a17:902:ec85:b0:223:54e5:bf4b with SMTP id d9443c01a7336-2292f9736a3mr153317055ad.25.1743437763996;
-        Mon, 31 Mar 2025 09:16:03 -0700 (PDT)
-Received: from localhost ([147.11.105.124])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cec2fsm70872195ad.117.2025.03.31.09.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 09:16:03 -0700 (PDT)
-From: Liwei Song <liwei.song.lsong@gmail.com>
-To: MiquelRaynal <miquel.raynal@bootlin.com>,
-	RichardWeinberger <richard@nod.at>,
-	VigneshRaghavendra <vigneshr@ti.com>,
-	TudorAmbarus <tudor.ambarus@linaro.org>,
-	PratyushYadav <pratyush@kernel.org>,
-	MichaelWalle <mwalle@kernel.org>
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	liwei.song.lsong@gmail.com
-Subject: [PATCH v2] mtd: core: add sync between read/write and unbind device
-Date: Tue,  1 Apr 2025 00:15:20 +0800
-Message-ID: <20250331161542.3040005-1-liwei.song.lsong@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
-References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="hcX5UORe"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id 738911F93B;
+	Mon, 31 Mar 2025 18:16:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1743437770;
+	bh=YWSNkb+F757hQ68vbYeh999udDtklB+ehj/2llLix5U=; h=From:To:Subject;
+	b=hcX5UORefGPHNI1rks2hDaA1EZ/1f5EApHDGecoAVntw2erbATnNQ2AIv87SdDxk+
+	 t/G+DGeuQ8RecklguimTilkHHbq6Qg7tDIieZoFTEMp75ivU3GQ7MqjAtTOxvK4RYs
+	 4cZ5/Fi/ZaETHhHkyrt1rZLw19Sk3Zz/KlkKCP7ypmQtWqh2ilAYOVzPY5krcivhC+
+	 1/iKNK9YKL6TjE8ALztSTAwYK9eky+xATdTCYlyNH5JodgKfvvKI8crKmMOj7UzwYe
+	 n1ZvgdgEYSqVGbrEZ94ldWjmsTdus8xLBcYZbuchi8OnAPOw1wb93JgUwk4fmUGSjt
+	 IFNY2WMzW+Fow==
+Date: Mon, 31 Mar 2025 18:16:06 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Farouk Bouabid <farouk.bouabid@cherry.de>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: amc6821: add fan and PWM
+ output
+Message-ID: <20250331161606.GA148019@francesco-nb>
+References: <20250331155229.147879-1-francesco@dolcini.it>
+ <20250331155229.147879-2-francesco@dolcini.it>
+ <8064282a-17aa-4b97-b5d9-1b4a8b0dc40b@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8064282a-17aa-4b97-b5d9-1b4a8b0dc40b@roeck-us.net>
 
-When unbind mtd device or qspi controller with a high frequency
-reading to /dev/mtd0 device, there will be Calltrace as below:
+Hello Guenter,
 
-$ while true; do cat /dev/mtd0 >/dev/null; done &
-$ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
 
-Internal error: synchronous external abort: 0000000096000210 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
-Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
-lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
-Call trace:
- cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
- cqspi_exec_mem_op+0x8bc/0xe40
- spi_mem_exec_op+0x3e0/0x478
- spi_mem_no_dirmap_read+0xa8/0xc8
- spi_mem_dirmap_read+0xdc/0x150
- spi_nor_read_data+0x120/0x198
- spi_nor_read+0xf0/0x280
- mtd_read_oob_std+0x80/0x98
- mtd_read_oob+0x9c/0x168
- mtd_read+0x6c/0xd8
- mtdchar_read+0xdc/0x288
- vfs_read+0xc8/0x2f8
- ksys_read+0x70/0x110
- __arm64_sys_read+0x24/0x38
- invoke_syscall+0x5c/0x130
- el0_svc_common.constprop.0+0x48/0xf8
- do_el0_svc+0x28/0x40
- el0_svc+0x30/0xd0
- el0t_64_sync_handler+0x144/0x168
- el0t_64_sync+0x198/0x1a0
-Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
----[ end trace 0000000000000000 ]---
+On Mon, Mar 31, 2025 at 09:01:08AM -0700, Guenter Roeck wrote:
+> On 3/31/25 08:52, Francesco Dolcini wrote:
+> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > 
+> > Add properties to describe the fan and the PWM controller output.
+> > 
+> > Link: https://www.ti.com/lit/gpn/amc6821
+> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > ---
+> > v3:
+> >   - explicitly describe the fan, use standard PWM and FAN bindings
+> >   - pwm.yaml cannot be referenced, because of the $nodename pattern that is
+> >     enforced there
+> > v2: https://lore.kernel.org/all/20250224180801.128685-2-francesco@dolcini.it/
+> >   - no changes
+> > v1: https://lore.kernel.org/all/20250218165633.106867-2-francesco@dolcini.it/
+> > ---
+> >   .../devicetree/bindings/hwmon/ti,amc6821.yaml      | 14 +++++++++++++-
+> >   1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > index 5d33f1a23d03..94aca9c378e6 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > +++ b/Documentation/devicetree/bindings/hwmon/ti,amc6821.yaml
+> > @@ -28,6 +28,13 @@ properties:
+> >     i2c-mux:
+> >       type: object
+> > +  fan:
+> > +    $ref: fan-common.yaml#
+> > +    unevaluatedProperties: false
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +
+> >   required:
+> >     - compatible
+> >     - reg
+> > @@ -50,9 +57,14 @@ examples:
+> >           #address-cells = <1>;
+> >           #size-cells = <0>;
+> > -        fan@18 {
+> > +        fan_controller: fan@18 {
+> >               compatible = "ti,amc6821";
+> >               reg = <0x18>;
+> > +            #pwm-cells = <3>;
+> > +
+> > +            fan {
+> > +                pwms = <&fan_controller 0 40000 0>;
+> 
+> There is no explanation for the parameters. I guess that the first is the index and the
+> second is the frequency. The index is not used and can be dropped (there is just a single
+> channel), and the frequency only makes sense if it can actually be configured.
 
-Or:
-$ while true; do cat /dev/mtd0 >/dev/null; done &
-$ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
+The PWM period can be configured, the HW supports it, so I think is a
+good idea to properly describe the HW now that I am modifying the
+binding and not have the situation in which we need it in 1 month.
 
-Unable to handle kernel paging request at virtual address 00000000000012e8
-Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
-Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : spi_mem_exec_op+0x3e8/0x478
-lr : spi_mem_exec_op+0x3e0/0x478
-Call trace:
- spi_mem_exec_op+0x3e8/0x478 (P)
- spi_mem_no_dirmap_read+0xa8/0xc8
- spi_mem_dirmap_read+0xdc/0x150
- spi_nor_read_data+0x120/0x198
- spi_nor_read+0xf0/0x280
- mtd_read_oob_std+0x80/0x98
- mtd_read_oob+0x9c/0x168
- mtd_read+0x6c/0xd8
- mtdchar_read+0xdc/0x288
- vfs_read+0xc8/0x2f8
- ksys_read+0x70/0x110
- __arm64_sys_read+0x24/0x38
- invoke_syscall+0x5c/0x130
- el0_svc_common.constprop.0+0x48/0xf8
- do_el0_svc+0x28/0x40
- el0_svc+0x30/0xd0
- el0t_64_sync_handler+0x144/0x168
- el0t_64_sync+0x198/0x1a0
-Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
----[ end trace 0000000000000000 ]---
+The instance is just one, it's correct, but there is an assumption
+pretty much everywhere that these 3 #cells are
+ - PWM instance
+ - PWM period in ns
+ - PWM flags
 
-when unbind is running, the memory allocated to qspi controller and
-mtd device is freed during unbinding, but open/close and reading device
-are still running, if the reading process get read lock and start
-excuting, there will be above illegal memory access. This issue also
-can be repruduced on many other platforms like ls1046 and nxpimx8 which
-have qspi flash.
+I decided to keep the first cell there, with the PWM instance, for this
+reason, even as you correctly wrote it would not be required here.
 
-In this patch, register a spi bus notifier which will be called before
-unbind process freeing device memory, add a new member mtd_event_remove
-to block mtd open/read, then waiting for the running task to be finished,
-after that, memory is safe to be free.
+With that said, looking at existing binding, the description is almost
+never present.
 
-Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
----
+I would proceed this way for v4:
+ - keep the first cell as PWM instance
+ - add the description
 
-Hi Maintainer,
-
-This is an improved patch compared with the original one:
-(https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.3699535-1-liwei.song.lsong@gmail.com/),
-This v2 patch move notifier to spi-nor to avoid crash other types of flash.
-now this patch only aim at fixing nor-flash "bind/unbind while reading" calltrace,
-but for other types of flash like nand also have this issue.
-
-Thanks,
-Liwei.
-
----
- drivers/mtd/mtdcore.c       |  3 +++
- drivers/mtd/spi-nor/core.c  | 46 +++++++++++++++++++++++++++++++++++++
- include/linux/mtd/mtd.h     |  1 +
- include/linux/mtd/spi-nor.h |  1 +
- 4 files changed, 51 insertions(+)
-
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 724f917f91ba..a78044ee603e 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -1243,6 +1243,9 @@ int __get_mtd_device(struct mtd_info *mtd)
- 	struct mtd_info *master = mtd_get_master(mtd);
- 	int err;
- 
-+	if (master->mtd_event_remove)
-+		return -ENODEV;
-+
- 	if (master->_get_device) {
- 		err = master->_get_device(mtd);
- 		if (err)
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 19eb98bd6821..ae879d445046 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -16,6 +16,7 @@
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/spi-nor.h>
- #include <linux/mutex.h>
-+#include <linux/of_device.h>
- #include <linux/of_platform.h>
- #include <linux/regulator/consumer.h>
- #include <linux/sched/task_stack.h>
-@@ -44,6 +45,9 @@
- #define SPI_NOR_SRST_SLEEP_MIN 200
- #define SPI_NOR_SRST_SLEEP_MAX 400
- 
-+static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-+					unsigned long event, void *data);
-+
- /**
-  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
-  *			   extension type.
-@@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
- 	if (nor->controller_ops && nor->controller_ops->prepare)
- 		ret = nor->controller_ops->prepare(nor);
- 
-+	if (nor->mtd.mtd_event_remove)
-+		return -ENODEV;
-+
- 	return ret;
- }
- 
-@@ -3649,6 +3656,11 @@ static int spi_nor_probe(struct spi_mem *spimem)
- 	if (ret)
- 		return ret;
- 
-+	if (!nor->spi_nor_remove_nb.notifier_call) {
-+		nor->spi_nor_remove_nb.notifier_call = spi_nor_remove_notifier_call;
-+		bus_register_notifier(&spi_bus_type, &nor->spi_nor_remove_nb);
-+	}
-+
- 	return mtd_device_register(&nor->mtd, data ? data->parts : NULL,
- 				   data ? data->nr_parts : 0);
- }
-@@ -3659,6 +3671,9 @@ static int spi_nor_remove(struct spi_mem *spimem)
- 
- 	spi_nor_restore(nor);
- 
-+	bus_unregister_notifier(&spi_bus_type, &nor->spi_nor_remove_nb);
-+	memset(&nor->spi_nor_remove_nb, 0, sizeof(nor->spi_nor_remove_nb));
-+
- 	/* Clean up MTD stuff. */
- 	return mtd_device_unregister(&nor->mtd);
- }
-@@ -3737,6 +3752,37 @@ static const struct of_device_id spi_nor_of_table[] = {
- };
- MODULE_DEVICE_TABLE(of, spi_nor_of_table);
- 
-+static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-+				    unsigned long event, void *data)
-+{
-+	struct device *dev = data;
-+	struct spi_device *spi;
-+	struct spi_mem *mem;
-+	struct spi_nor *nor;
-+
-+	if (!of_match_device(spi_nor_of_table, dev))
-+		return 0;
-+
-+	switch (event) {
-+	case BUS_NOTIFY_DEL_DEVICE:
-+	case BUS_NOTIFY_UNBIND_DRIVER:
-+		spi = to_spi_device(dev);
-+		mem = spi_get_drvdata(spi);
-+		if (!mem)
-+			return NOTIFY_DONE;
-+		nor = spi_mem_get_drvdata(mem);
-+
-+		mutex_lock(&nor->lock);
-+		nor->mtd.mtd_event_remove = true;
-+		mutex_unlock(&nor->lock);
-+		msleep(300);
-+
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- /*
-  * REVISIT: many of these chips have deep power-down modes, which
-  * should clearly be entered on suspend() to minimize power use.
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 8d10d9d2e830..134bfa6fcf76 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -290,6 +290,7 @@ struct mtd_info {
- 	/* Kernel-only stuff starts here. */
- 	const char *name;
- 	int index;
-+	bool mtd_event_remove;
- 
- 	/* OOB layout description */
- 	const struct mtd_ooblayout_ops *ooblayout;
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index cdcfe0fd2e7d..d176af8fe2f2 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -420,6 +420,7 @@ struct spi_nor {
- 	} dirmap;
- 
- 	void *priv;
-+	struct notifier_block spi_nor_remove_nb;
- };
- 
- static inline void spi_nor_set_flash_node(struct spi_nor *nor,
--- 
-2.40.0
+Francesco
 
