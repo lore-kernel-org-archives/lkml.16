@@ -1,107 +1,134 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA011D89FD;
-	Mon, 31 Mar 2025 14:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10686213E6A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431300; cv=none; b=WUKT+eVQNdDPrmOvIiFr6qw035Tle+0fjHvM8dxPL7PPPtFktOwfRpcAUdd3Kd5aCKV1G3V1AVEycvQ/Oluq8jEx1CZME0yXakv3yOscd5/nWOoIqGogCIUK8lOjnq7vzViBWkvpkwByFganEGt8IF/llus2cAB7xvxwV2bGssw=
+	t=1743431306; cv=none; b=k9S+kYedQ2AjRj/F835x+SxlBoMwXKQ75022Zqw6lMMEVygN+1PJZggNH3hRMMMVIVl7PTgFlLzpF4GeyJha660K4toz+2/DiTYia8eW6FGmuDYAHg2aaa5e3stC/lMCWYiE5qYN6XDpEy7feCw/6zCBH8g7UbKOjMGF3aQ6zoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431300; c=relaxed/simple;
-	bh=rdp+7SmbHx2MDpmjbmMeQvz1BzYF8QNfJzE3RtZF8Mk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u5TsueEadcY8UEeeE2aU0t4UZY+qLWCX9DTuetwt9886+PyBKCaqy/AzOcTQHgwFlq75UZFvzpO0t30VjvTSuZl7LX/16yKRZCpSAmKiK2eB1/KH2J9oWutVh/FkOLOo+DghsBugtvG03KtvZTAzh24BA+HVGgkuCU2DS3nQ8Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2260c91576aso71868365ad.3;
-        Mon, 31 Mar 2025 07:28:17 -0700 (PDT)
+	s=arc-20240116; t=1743431306; c=relaxed/simple;
+	bh=ZzkiXXn42kQLm+AeupOqLsN1hoor69FujEmlUSHdTEs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lziyvSuzNq+AWi+gQ23d3KI9QeT51N0vY4fQbnUjyxAGUv7NJt9wAD/O5cTO0cHqMCK88hv7MTC6xICzU6BTX+yH26lsglvrNM90uN4uYNfl79aMfe9XaJbdQzjV6cRHb4KjWD4/6uZtRSFVQNOQRg2tkVHh/pwTTMXgsU5snt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce3bbb2b9dso50140775ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:28:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743431296; x=1744036096;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7pIThaHs+FLtjAGsieixrT5JLF7IdEj6iYw9YHCNduo=;
-        b=CO/TjkTDyQVq5kFuIccHZ9HrcgrI8OpJi3cFRh7nfTL7x4FIoQ+SrWwXT0ar1cVS0h
-         nsTFZgYsw/955yMEVSVjH07UiP4oudeS/YyOZJnsnoSg1vpIrb9U7eq0CnFf4mmP6TSN
-         qEnsqk+vpOQ+U2uLzA3/LdRITFjY1IzbkKavWya167hij/jhPdp4tnsYVmcpF4siGwP5
-         cuaYqIHmAHMElOwDqYz8X74k/R13PlX/6sW+9zFj7K+j5VF6puqv68TUTY3ZOxIu5hKb
-         Zi/9V25PuWdYNDh7rNywboOFay3qRa38gzNACNdqauKGgqcFnUypyrp8Sw0esptmlhh+
-         Vwvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSBSNoCK7b8GGx5tcFpFLwOIl7S2NdapkdfG8B9zQdiOOPNHPNhdlKq0a8vxGO2QebyWRnh0WB@vger.kernel.org, AJvYcCWNzq38rLtseWkS58E6Sh/FOmvMzidK0ggpiJJs6D7+APpsbECUh+mvEQicGBF8Bm/AQuMHLicVgz2JVGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+4DN/Uo5LEZSCHjM/RQFWVZSjtsc39gparl5qUE48kdjxAeRA
-	gUAS/9RRrmK/+viSKvHHl1Au0MIk18+xFBsTA7oGd2u0R6CqfRZ1xM26
-X-Gm-Gg: ASbGnctk+lgi7TH7q72J4jVPO90Hq5i1nCNWwxCsV9Tztlo7kHrGz9rShzdChb1G8yo
-	kNI1S47QAfZs7qmmbmDHD5hn9lbGeTvbSeI/ERqVYdx1GWOOvYPZmponCGWLqE1/llwjeFO3u8X
-	a/15aNCSUQDtH/X7rS8oNgDwPlXFhQG0cgJdTZYdKHiZ35+/CBLyVSbYTb0VkiFpOD2N1bb+/BZ
-	6vPhcKzZTSCb5K2Sr9DuvYTzdY12abQNUcvmVsAiql+Q6F///4I/50H/Ic32xr4DitvpYvdH9gu
-	qj4RCvViXGSkEydI78yZYo4NvUv1Nnb0X1PsXlfGhmhj
-X-Google-Smtp-Source: AGHT+IEwykwTGdoKzzKD5abl3GEKIsWHwwiPxmvoLbNPIptX+CQYaKwHTKORDO7eWuymmETq2FYuHA==
-X-Received: by 2002:a17:902:f54a:b0:216:53fa:634f with SMTP id d9443c01a7336-2292f9ef20emr146929925ad.48.1743431296207;
-        Mon, 31 Mar 2025 07:28:16 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eee377esm69891775ad.97.2025.03.31.07.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 07:28:15 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: bpf@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yhs@fb.com,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	hawk@kernel.org,
-	sdf@fomichev.me,
-	syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-Subject: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
-Date: Mon, 31 Mar 2025 07:28:14 -0700
-Message-ID: <20250331142814.1887506-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1743431304; x=1744036104;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DOboF1VqiyOWrqOVlRtUfXDsHfrUgLNrZ4C7SELmtCw=;
+        b=XjkuyNwlkiPO5OLwJZ/TsHXVC+TDTFCzeNiw1B9QuZx2aymhY75Nh+DWxTnkWYs8rU
+         hTFMrktkGxfIg9sHZQBYM/ompH+1StH90FgA0Is97RaEkAnyO8zkmPW4bUhpKMJHhqMq
+         2xPqSSun3zQpov2ymUqC/IGJixUVqRZudsrT8E9ResPdZXndzzJ6ksFUrjndAjcrdw4d
+         XlDish4hROPKm2FaJGS6J+91Pv1lPDg4tN0MZmXF9Tsysgmd6iSoKJflXTFiAX4f9itY
+         a8hhClaT6dC5PkqhwzAWS7zInodAY+18WLRMAlDLLNnzJRl81CD0hmzcZDaYf4DMt9b3
+         1n4A==
+X-Forwarded-Encrypted: i=1; AJvYcCX4ZDwNUvIBln6HcCvSPdczda4oizm88/RPdXMbGEwCzjF0IZT9TGVZqNbBqPPMeUd2OqkX3OKGZnue7PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQbo+Zg7klc8rWF6U5wiS1ZM7F2QWjhUETBBWWzm3wZUGzsFBu
+	LVKNt+wcb0WXzU8Ut63hU2M9JaL/HL9e1FEOuZvbmhE+b5KJyykvgspO5MW0iOXc5Bnjb2PtJtq
+	EqXOm5ygayKgvIle+1wOwP8zK/Qrwej4C6dCT5HDvKNZV5eNn0N2Es58=
+X-Google-Smtp-Source: AGHT+IHokRbR5Vv8AVU/qDS+yOFdsWBXdmYDkOPKWvTwa1q0CavVsWfcTYGnq1ci/jpzdYqQYZs5ob2gIlG6SuB5XpsrTof49PSf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1b03:b0:3d5:df34:b21c with SMTP id
+ e9e14a558f8ab-3d5e0907411mr77349565ab.6.1743431304209; Mon, 31 Mar 2025
+ 07:28:24 -0700 (PDT)
+Date: Mon, 31 Mar 2025 07:28:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eaa688.050a0220.1547ec.014a.GAE@google.com>
+Subject: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in hci_devcd_dump
+From: syzbot <syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Syzkaller points out that create_link path doesn't grab ops lock,
-add it.
+Hello,
 
-Cc: Jakub Kicinski <kuba@kernel.org>
-Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@google.com/
-Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+syzbot found the following issue on:
+
+HEAD commit:    4e82c87058f4 Merge tag 'rust-6.15' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17454e4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f51da9763f36e4c7
+dashboard link: https://syzkaller.appspot.com/bug?extid=ac3c79181f6aecc5120c
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/a9052db6d173/disk-4e82c870.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9398a2c8040b/vmlinux-4e82c870.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8589baa292f3/bzImage-4e82c870.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in skb_put_data include/linux/skbuff.h:2752 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in hci_devcd_dump+0x142/0x240 net/bluetooth/coredump.c:258
+Read of size 140 at addr ffffc90004ed5000 by task kworker/u9:2/5844
+
+CPU: 1 UID: 0 PID: 5844 Comm: kworker/u9:2 Not tainted 6.14.0-syzkaller-10892-g4e82c87058f4 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: hci0 hci_devcd_timeout
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ __asan_memcpy+0x23/0x60 mm/kasan/shadow.c:105
+ skb_put_data include/linux/skbuff.h:2752 [inline]
+ hci_devcd_dump+0x142/0x240 net/bluetooth/coredump.c:258
+ hci_devcd_timeout+0xb5/0x2e0 net/bluetooth/coredump.c:413
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+The buggy address ffffc90004ed5000 belongs to a vmalloc virtual mapping
+Memory state around the buggy address:
+ ffffc90004ed4f00: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90004ed4f80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+>ffffc90004ed5000: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+                   ^
+ ffffc90004ed5080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90004ed5100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+==================================================================
+
+
 ---
- net/core/dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index be17e0660144..5d20ff226d5e 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10284,7 +10284,9 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
- 		goto unlock;
- 	}
- 
-+	netdev_lock_ops(dev);
- 	err = dev_xdp_attach_link(dev, &extack, link);
-+	netdev_unlock_ops(dev);
- 	rtnl_unlock();
- 
- 	if (err) {
--- 
-2.48.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
