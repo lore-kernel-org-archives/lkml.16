@@ -1,227 +1,108 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9A4215073
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15748157A5A;
+	Mon, 31 Mar 2025 17:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743442978; cv=none; b=FQ7a5raeaffqelH0OSWpkGOF/JDDBN6urbgOztvyjjWiu3Cdg7wn6UV/Yw/By47x8nHPuzmLB0sKjAZBIbqbbYp18S0xYKoonl/AsNkf1W/J31QGjbBdLokJw9E0C6zq0dPk2KvNeVv4t32MUbVKuiqJ9BML2+A3Aon2YXK971w=
+	t=1743443203; cv=none; b=moMywVngvg3mnXgf2RiNgwe7WH61xqQ3P+dppEhTlAqJEmobZVB19ApSrjlArbfbG25kXlnmhuAJ9634XUIHfJ+YZxCTbeHRTAcopoYOVZtNm4divr6YR/5kD1hKM8O+mfmmugxPN1w4nvNr9Cf1eBvVAOPOY3glrhMM9OFIkcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743442978; c=relaxed/simple;
-	bh=DjdZITVl1P+PGZS6GuULUNzMohmS5YvO2xYitU40iNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KoqEGs31/yYQXqeY+L21APCr1m/KMpTTN4AP2tpgeVVmSd2xZY6UDMgTlQgHua9j/sDbEthmEx076Y8CwGoCZCmT3p43Kfzqaw5WABWX2xWtOg1Z+bQj2AocT9NBSdQmJGYEXLy0gUCnYlB5r8WpHqucCY7UCudMHQzum+vpglQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sBk4co78; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743443203; c=relaxed/simple;
+	bh=hz0ih5RSQaFvOri/b2YgUookxzob3UAMF9e951iei0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y24BpfGKeVRpNlo7aTmznwTMfzjXSsMpKtdwb81KmKeNiv2v3Ly/TRjXq3X+j5uYoY4Xh8ju/WSG2J9Iqw1XalPfJb1L1lBoOZQNza5+MMv8LPvgbtg6QQxokJc3bHFEPfIVyu2S7dKDsVwjYwpGgF4jwLfZu+qzk07SU7O8t7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzNmX/Th; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sBk4co78"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55b53a459so498383585a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743442975; x=1744047775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=My8uhixiibhggK7Xb+4LFtDtHM4swzPwMY30T/cp9Dw=;
-        b=sBk4co78rc+KuGFAk3H3ryog0cWhKLBxtXb2iol48e6qLcm1Mk3WT42woiYGWOBuCB
-         PzX3xQVejspbYuRCMDISB9ojQqLbxTPigV6YG6WTCi3LK70QG1sA7Ig6+dVG/gIw66gn
-         f4yGTVwEarsNamM2hHDIWqcbj0VnyJ3g5baeMG+R4qL5AES8pyeL+GFhwukK1hqxwYLA
-         uNSS02EV41qAyPH2sWQr1gmXKTQ/QtNEzVaRDgV2geEZ3+JucmZCfZkxSvZ5dQyerINg
-         i+IP5B1Put8sgGgWvjRyu1sHDC5tUizgwBuTSLvBnetcIrt3cYRb+K8hDgdBnkgHL1ko
-         kq6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743442975; x=1744047775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=My8uhixiibhggK7Xb+4LFtDtHM4swzPwMY30T/cp9Dw=;
-        b=Dqe7WrON/hStGxJhbh8TVaZOucpKhnKSdvhmJ4obMV4KXCYA11L746Jojw4lcNsJSl
-         q0GlACUCyGAKxg6OIhXanVV20JCz2Eb0r9Xxrtde6jVMpjMbFT11thwd0THEoT3q3aPy
-         4G7gGHz28oEBNCiHxH3gOkC+y8GNTfMw4/doavoVkwiBWNFlTFGOKtHTYxM8DQxpNaNz
-         Glb4Wd6tz0Ycbbt2LRVahjLwGbZZr88JiQ17zA6EmECL75afOt5lodiRAxoXYfAc/6EL
-         jXyhX7dmeOimSh7tqffuS8HJnSsKWKnP6LZN/cVHRTCBdvPMRu3aCVhxO5ADxIKiaQ1+
-         05DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUalU/lYnour7P4TNv407x2Zhv/kjQQ+DuFmbwu6RXJIKuR1qbixJSBaFBWPSm/zvsEhYPHcvOCo4yYLYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaCwzUMYR8N3ba8czCgZimr7H+EiiUPsilR8eeTMd5eB26N6kV
-	P0CV3yAgXbqfhNSl2I60B+p4Fuo0rkzbqbdH/7gm8l82rMfxD8wpHeWonUTeGrciN+mLfFQEken
-	FO+WDuCjX5Sbb1nGu6NsRk16YH5b+vFjoH+fE
-X-Gm-Gg: ASbGnct34yLMw5vZ48yGIB3XJHCBPS85PenZjNdvDMLNjwfQw0ZzPMdWEWRsSCAe+wz
-	S9zhFdchjo9SsuTnKWtNvLzbSpTbbI3XhNNJrB/QUg2nJqxvFwz9met9ULlebNVM/x3vGX/ypyL
-	LkUTXCsTSNKZHitPDFoOP75our
-X-Google-Smtp-Source: AGHT+IFVYeXdtz8CMmMU3r4guNsVjIFuRiY1o3vm/KhYGXO0UfVI67k7g7GlfbcLm9vxymX/IVsqshiItVdG+n6JtD0=
-X-Received: by 2002:a05:620a:2483:b0:7c5:55be:7bff with SMTP id
- af79cd13be357-7c69087585fmr1356768685a.43.1743442974849; Mon, 31 Mar 2025
- 10:42:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzNmX/Th"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A5CC4CEE3;
+	Mon, 31 Mar 2025 17:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743443201;
+	bh=hz0ih5RSQaFvOri/b2YgUookxzob3UAMF9e951iei0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EzNmX/ThqrXPhR0b5PDKiyvuc1bICvWTVev4ra2QiztbJFpjX7oic5bcPmQbYGAPN
+	 fNax9JWvhPFEulbkIlF8I5S2Pti4DRID//9r3HMQVoKzCm/SntDN4gI4NGrHpdpXOH
+	 7AMwo4776CyuGGBrMGzv5unEeowSd1z0RPbIBZ0SbgXUwIoNXIa4Z7t67DDDspF1UX
+	 pU91/wu/94FCvN4T44boObhSdGXbmEOYPMtqbFvrqe9v0UDuwVWOFgej4G+GkMg8ao
+	 RKAX10IaeGvbTGgOhqI2b5PhnIBWQEnvUe22laEeN1hJgqGUCFutDAmR3RC1LgfGV3
+	 21aseYmJ19YUQ==
+Date: Mon, 31 Mar 2025 20:46:36 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z-rU_JXWn0vCdBr_@kernel.org>
+References: <20250328125859.73803-1-elena.reshetova@intel.com>
+ <20250328125859.73803-3-elena.reshetova@intel.com>
+ <Z-bhczXA6aHdCYHq@kernel.org>
+ <Z-blOQ94ymUsDwPn@kernel.org>
+ <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e1fd15.050a0220.bc49a.766e@mx.google.com> <c0a9a0d5-400b-4238-9242-bf21f875d419@redhat.com>
- <Z-Il69LWz6sIand0@Mac.home> <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
- <Z-L5ttC9qllTAEbO@boqun-archlinux> <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
- <Z-MHHFTS3kcfWIlL@boqun-archlinux> <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
- <Z-OPya5HoqbKmMGj@Mac.home> <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com> <Z-rQNzYRMTinrDSl@boqun-archlinux>
-In-Reply-To: <Z-rQNzYRMTinrDSl@boqun-archlinux>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 31 Mar 2025 19:42:43 +0200
-X-Gm-Features: AQ5f1JoLvOmmtYvJq2bkf46RVtrKhW7rLor1IMlgcRlpTIfmTPZnYqRALBM5hWk
-Message-ID: <CANn89iLvu_ijSV+FnrZ6qei_Ty2c9V-RjwLMk24+oOS91bNjaQ@mail.gmail.com>
-Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
- RCU synchronization
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Waiman Long <llong@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, aeh@meta.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com, 
-	kernel-team@meta.com, Erik Lundgren <elundgren@meta.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-On Mon, Mar 31, 2025 at 7:26=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
-> [...]
-> > > > Anyway, that may work. The only problem that I see is the issue of =
-nesting
-> > > > of an interrupt context on top of a task context. It is possible th=
-at the
-> > > > first use of a raw_spinlock may happen in an interrupt context. If =
-the
-> > > > interrupt happens when the task has set the hazard pointer and iter=
-ating the
-> > > > hash list, the value of the hazard pointer may be overwritten. Alte=
-rnatively
-> > > > we could have multiple slots for the hazard pointer, but that will =
-make the
-> > > > code more complicated. Or we could disable interrupt before setting=
- the
-> > > > hazard pointer.
-> > > Or we can use lockdep_recursion:
+On Mon, Mar 31, 2025 at 07:26:45AM +0000, Reshetova, Elena wrote:
+> > > > +	default:
+> > > > +		pr_err("EUPDATESVN: unknown error %d\n", ret);
+> > > > +		break;
+> > > > +	}
 > > >
-> > >     preempt_disable();
-> > >     lockdep_recursion_inc();
-> > >     barrier();
+> > > Overall, I think you're right in that "inversion" does make sense,
+> > > now that other stuff is better aligned.
 > > >
-> > >     WRITE_ONCE(*hazptr, ...);
+> > > At least when there is spurious error, I think ioctl's should stop
+> > > responding and driver should not do anything useful anymore. I.e.,
+> > > it should go out-of-service.
 > > >
-> > > , it should prevent the re-entrant of lockdep in irq.
-> > That will probably work. Or we can disable irq. I am fine with both.
->
-> Disabling irq may not work in this case, because an NMI can also happen
-> and call register_lock_class().
->
-> I'm experimenting a new idea here, it might be better (for general
-> cases), and this has the similar spirit that we could move the
-> protection scope of a hazard pointer from a key to a hash_list: we can
-> introduce a wildcard address, and whenever we do a synchronize_hazptr(),
-> if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
-> hence synchronize_hazptr() will still wait until it's zero'd. Not only
-> this could help in the nesting case, it can also be used if the users
-> want to protect multiple things with this simple hazard pointer
-> implementation.
+> > > I don't think the driver should tear-down, just stop servicing
+> > > VM's and responding ioctl's.
+> > >
+> > > Possibly thish should be also right action for other errors than
+> > > "insufficient entropy" but I'm open for comments for this.
+> > 
+> > Or actually actually I take one step back with my suggestions
+> > because this really should be a question for which I don't have
+> > the definitive answer.
+> > 
+> > The current code works like this: if anything that we don't
+> > like happens, we re-iterate.
+> > 
+> > Should some of the "exceptional conditions" have a different
+> > recovery or not?
+> 
+> None of these exceptional conditions are fatal or present an
+> immediate danger to the system security. So, allowing the re-tries
+> seems logical in this case. In case re-tries also fail, the system
+> admin will have an option of gracefully shutting down all enclaves
+> and doing either a full reboot (if SVN is the only concern) or other
+> necessary actions like taking the physical node out of use, etc. 
+> 
+> Does this sound reasonable? 
 
-For the record this was my suggestion.
+Uknown error I don't think would hold that premise.
 
-Breno, what do you think ? Feel free to grab, test, add comments and a
-nice changelog, thanks !
+> 
+> Best Regards,
+> Elena.
+> 
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 67964dc4db952ea11d4b88554383ea0ec5946ef9..fb56bcb887ca163525f003cb788=
-0c76511d166e7
-100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -117,7 +117,12 @@ do {
-         \
- } while (0)
-
- extern void lockdep_register_key(struct lock_class_key *key);
--extern void lockdep_unregister_key(struct lock_class_key *key);
-+
-+extern void __lockdep_unregister_key(struct lock_class_key *key, bool sync=
-);
-+static inline void lockdep_unregister_key(struct lock_class_key *key)
-+{
-+       return __lockdep_unregister_key(key, true);
-+}
-
- /*
-  * These methods are used by specific locking variants (spinlocks,
-@@ -372,8 +377,12 @@ static inline void lockdep_register_key(struct
-lock_class_key *key)
- {
- }
-
-+static inline void __lockdep_unregister_key(struct lock_class_key
-*key, bool sync)
-+{
-+}
- static inline void lockdep_unregister_key(struct lock_class_key *key)
- {
-+       return __lockdep_unregister_key(key, true);
- }
-
- #define lockdep_depth(tsk)     (0)
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index b15757e6362615aeecb1629f8e60375e13a87e6d..3b754c7fdaf19887734b1ee37f7=
-c058f8f751a4e
-100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6574,7 +6574,7 @@ void lockdep_reset_lock(struct lockdep_map *lock)
-  * key irrespective of debug_locks to avoid potential invalid access to fr=
-eed
-  * memory in lock_class entry.
-  */
--void lockdep_unregister_key(struct lock_class_key *key)
-+void lockdep_unregister_key(struct lock_class_key *key, bool sync)
- {
-        struct hlist_head *hash_head =3D keyhashentry(key);
-        struct lock_class_key *k;
-@@ -6610,8 +6610,11 @@ void lockdep_unregister_key(struct lock_class_key *k=
-ey)
-        if (need_callback)
-                call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
-
--       /* Wait until is_dynamic_key() has finished accessing k->hash_entry=
-. */
--       synchronize_rcu();
-+       /* Wait until is_dynamic_key() has finished accessing k->hash_entry=
-.
-+        * @sync is false for callers dealing with the sync themselves.
-+        */
-+       if (sync)
-+               synchronize_rcu();
- }
- EXPORT_SYMBOL_GPL(lockdep_unregister_key);
-
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 14ab2f4c190a1e201dd1788b413a06e799a829f2..9affef187237a13559642d435e1=
-a196a909f75f9
-100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -988,8 +988,8 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_queu=
-e,
-
-        return sch;
- errout1:
--       lockdep_unregister_key(&sch->root_lock_key);
--       kfree(sch);
-+       __lockdep_unregister_key(&sch->root_lock_key, false);
-+       kfree_rcu(sch, rcu);
- errout:
-        return ERR_PTR(err);
- }
-@@ -1077,7 +1077,7 @@ static void __qdisc_destroy(struct Qdisc *qdisc)
-        if (ops->destroy)
-                ops->destroy(qdisc);
-
--       lockdep_unregister_key(&qdisc->root_lock_key);
-+       __lockdep_unregister_key(&qdisc->root_lock_key, false);
-        module_put(ops->owner);
-        netdev_put(dev, &qdisc->dev_tracker);
+BR, Jarkko
+> 
