@@ -1,93 +1,109 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4AF33EA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60495139D1B
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743390776; cv=none; b=GQYHhVdlBOw0nQvBHovBv4fX6wJNxE6P7kAFhHczPdR9NfJsBPHm+YyMCrFQ+TdQqaODD+K0VNx2Ycj97g3rh1LIX0mlbLHM+b71CRctv+lEEhamctV9V5IVLJXGTf9J50Y/aS+hehMHhgdM98bN63y5feMgNvllETcNGH9gpB0=
+	t=1743390878; cv=none; b=OnRBhBcYX+6ucb2b/N5cGyiASpdepjkKrs+GygvA3Duo3j/Gmk3nSxnrRJLWsfye2huCRXqBmbQpiMAAMuYHrnM8LEd5qrjFKOkJ+k8QFG5xHjhereNQOtUSbGqXHOsk0ZH3X4x3BfAYgj/NWGxiCGCG9e7m+nhx2rahw6fvrM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743390776; c=relaxed/simple;
-	bh=71JvYHEOJBqqrlUmSjKO/E+aVnas33vMdNyB/Q0ZQuY=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Bx/cFD3BDJNmmlstHSrna6Bxcqm2KigSc1Z8kg1mHIKtkfQelC+8NiAKhYU3a4CBqBRJJcGgBBH5fKIqPVnadCO3kmpnBhmpq5dL9fjHUDUODsG5NZIwDtfChLMKPV7NZzGClzD5hM4bLqROCW5IBuEibcfLO/DD/3yeSR0JzYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZQx060jvxz1jBP9;
-	Mon, 31 Mar 2025 11:08:06 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 49FBB14011F;
-	Mon, 31 Mar 2025 11:12:51 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 31 Mar 2025 11:12:50 +0800
-CC: <yangyicong@hisilicon.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <mhiramat@kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <fanghao11@huawei.com>,
-	<prime.zeng@hisilicon.com>, <xuwei5@huawei.com>,
-	<jonathan.cameron@huawei.com>, Barry Song <baohua@kernel.org>,
-	<chris.zjh@huawei.com>
-Subject: Re: [PATCH v7] arm64: kprobe: Enable OPTPROBE for arm64
-To: Qinxin Xia <xiaqinxin@huawei.com>
-References: <20250216070044.1792872-1-xiaqinxin@huawei.com>
- <9ce3dfac-e6b2-1b2c-ae09-b0dd509d1581@huawei.com>
- <704bf3e2-be54-4463-b59b-3c1b867e7df0@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <5a096fa2-4b3b-931d-453c-ad709e9ba687@huawei.com>
-Date: Mon, 31 Mar 2025 11:12:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1743390878; c=relaxed/simple;
+	bh=Sc5ObmbImI/vSISRN/11Dhe0athtts0hKi7q/ZDxr5M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dN5IrE8brpTD2opNBktf1jS032PmiNKmoVa3bIttTZpz6Fx/C+AjHP57sE0qozDt+Iitlemfq7UelQSr04ffvbZ+fNOraQzx8TC2xJYOaK6Dt00V+qGYVrtvLjyWZB7JNJQ5qJTr38e76V3E6YY8CwK87YpAYA21JVI+Kc/MJtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1MAehcQZ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1MAehcQZ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so726751466b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743390874; x=1743995674; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMO1QGK0kZtFj1xGxtjV8T/YmC7nhGXlI25kqEbZCC0=;
+        b=1MAehcQZw+1HgCKk6++A7fwX/zDTbl48a4VQneRM3qjjJwZtIVhztn8PUmHyb1+OG5
+         y/niPHwB5zJDlfGxhB729wIcLCiDsKJZ2s0q/+1uzw/urYzFq+MQ4ma93BEPA4lF396M
+         3B+Q/zIMtnFTsXBzN8NI9O3IDjXF7BlKV98khbPC0A85mBbvpwmKIkNo8VYDa97DxFO2
+         cwj+Ae3WAVZwx5qJ5HZ8dWQ7keo1wY2S/zwNjBS91kavPKj3CVhyQShiNs2Xxa+yRg9h
+         mIA8J8JSRo5n9frcVp61KG2jDVTNO+OydKM55t0q0D64FVRRYPzrSm/44/JSsWHjV/bA
+         mDSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743390874; x=1743995674;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VMO1QGK0kZtFj1xGxtjV8T/YmC7nhGXlI25kqEbZCC0=;
+        b=aapRiQXtPkqXk1QzWxsEVLjALRAXFU3LsSQ5bY8dn7hQ5R/qTZUONW+ihZNQdeqmKQ
+         tncvzk+Zb8Kn9WBkiLDMzccaX2OhD6Vi38a8t/+MvLdhkjVWFNtnt8WVq79lqrd99cZi
+         fpa4CbQOohS7UaaIka2GbHZTOPTUS3hggFr7CXLebZOxJO6jOqgaD8jSPffh8Hz5Re21
+         PFUybacQ961qmuuRsnzbtODK6tjGJRYB9462NtcwI3Hh5v6L8ouxVtwWg5VtSqc8vCa7
+         HzmSPpPNyFV7POksb4dke59AtL2LxWPKHPXP62Nvlgvl7HctirDoyDwDQ81XoXuEaQaj
+         derA==
+X-Forwarded-Encrypted: i=1; AJvYcCV87fpI+kcjoM7UwWj/sW3xAkBalqOcPvKivKdCgYDuW750kVjQ+FR6JFqnfiz2TwgU4NoFZQdrT2nPDx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCbEpnnFmboGLxkhgN4D9Yh5EXqPZiTVo5+J6kerX2yJzNilEx
+	m1UC3Exn6OGOqpEEfi6/dYB+i23S6I8P7Z9ThFXwiRmSmKTSInPz4+Nstakck62yFaEsXqxQdj5
+	fNOCalG1ND1lx8TzScWkBOePm8eC+gMjN2mzk
+X-Gm-Gg: ASbGncv2eJIWGCFql55RDQ+bt//O26O+Szp2d9SltWgp//veceMdtSFKkqzJGwf7Zuo
+	OhSshgz43nP1SGhKGPVNtxM8dGzJajy1K/fGpTZYJXZtXGuLqge3p1gqZxeigc74UP9fSZyeGs1
+	rjsaP0SC6yMkk8bJR+2boN5Q==
+X-Google-Smtp-Source: AGHT+IEcjCiEdaVFhcaOLq6mYf51/rkQa4ioe/o8LrmJDJwCNxC3Y52svPuxkHyAq3hpvK2OLIxqMGFAGsTRXjA4wrs=
+X-Received: by 2002:a17:906:5657:b0:ac7:391a:e159 with SMTP id
+ a640c23a62f3a-ac7391ae30emr508952466b.60.1743390874365; Sun, 30 Mar 2025
+ 20:14:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <704bf3e2-be54-4463-b59b-3c1b867e7df0@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+References: <20250331022011.645533-1-dhavale@google.com> <20250331022011.645533-2-dhavale@google.com>
+ <45548d9e-4cfa-476d-9eaa-b338f994478c@linux.alibaba.com>
+In-Reply-To: <45548d9e-4cfa-476d-9eaa-b338f994478c@linux.alibaba.com>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Sun, 30 Mar 2025 20:14:21 -0700
+X-Gm-Features: AQ5f1JroCNq4Yy5sw2hbu7GoipaHkBCgmdnmK2oAA_WFw0A02wR6icNSL4dPg3U
+Message-ID: <CAB=BE-S6Brg0e277mdY-d3ZwrGeUe3idz37_FJVaTesAFTGfnQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-erofs mailing list <linux-erofs@lists.ozlabs.org>, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025/3/25 20:06, Qinxin Xia wrote:
-> 
-> 在 2025/3/17 12:01, Yicong Yang 写道:
->> On 2025/2/16 15:00, Qinxin Xia wrote:
->>> This patch introduce optprobe for ARM64. In optprobe, probed
->>> instruction is replaced by a branch instruction to trampoline.
->>>
->>> Performance of optprobe on Hip08 platform is test using kprobe
->>> example module to analyze the latency of a kernel function,
->>> and here is the result:
->>>
+Hi Gao,
+> Do we really need to destroy workers on the last mount?
+> it could cause many unnecessary init/uninit cycles.
+>
+> Or your requirement is just to defer per-CPU workers to
+> the first mount?
+>
+> If your case is the latter, I guess you could just call
+> erofs_init_percpu_workers() in z_erofs_init_super().
+>
+> > +{
+> > +     if (atomic_dec_and_test(&erofs_mount_count))
+>
+> So in that case, we won't need erofs_mount_count anymore,
+> you could just add a pcpu_worker_initialized atomic bool
+> to control that.
+>
+Android devices go through suspend and resume cycles aggressively.
 
-[...]
+And currently long running traces showed that erofs_workers being
+created and destroyed without active erofs mount.
+Your suggestion is good and could work for devices which do not use
+erofs at all. But if erofs is used once (and unmounted later),
+we will not destroy the percpu workers.
 
->>> +
->>> +void optprobe_optimized_callback(struct optimized_kprobe *op, struct pt_regs *regs)
->> need to be static.
-> ok, I will fix it in the next version.
-> It must be referenced by 'optprobe_trampoline.S' and cannot be covered by the static scope.
+Can you please expand a little bit more on your concern
+> it could cause many unnecessary init/uninit cycles.
+Did you mean on the cases where only one erofs fs
+is mounted at time? Just trying to see if there is a better
+way to address your concern.
 
-Then it should be marked as "asmlinkage" and declared in the header.
-
->>> +{
->>> +    if (kprobe_disabled(&op->kp))
->>> +        return;
->>> +
->>> +    guard(preempt)();
->>> +
->>> +    if (kprobe_running()) {
->>> +        kprobes_inc_nmissed_count(&op->kp);
->>> +    } else {
->>> +        __this_cpu_write(current_kprobe, &op->kp);
->>> +        get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
->>> +        opt_pre_handler(&op->kp, regs);
->>> +        __this_cpu_write(current_kprobe, NULL);
->>> +    }
->>> +}
->>> +NOKPROBE_SYMBOL(optprobe_optimized_callback)
+Thanks,
+Sandeep.
