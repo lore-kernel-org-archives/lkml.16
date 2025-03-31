@@ -1,99 +1,82 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C814A35;
-	Mon, 31 Mar 2025 07:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394861C3BEE;
+	Mon, 31 Mar 2025 07:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743406472; cv=none; b=pDESc1KdUPxhIveY7Y++4gWFjW9b9lqGEsETEoUjzyiOM/5DPXstRTZ3YENPSB0hlZDHETuAv3j55dReygkZ51o3GVJY8orJn/e9l1X94cYqPf3uxPR9VTxeQP7od/WQ4h2FOc2ZsNGV0xoPKaJHE3Ohs9/y+bkN85t5uh0Kelg=
+	t=1743406474; cv=none; b=GsZ09ZEz36ZNro6YuEJcJ5e2qrhgomAbBdS18IgzcBdF0SCFIFRTuklgX/QuSi3izSvhyG873GVBfS5jluiYwXOZaydXfye+6H2FD//cVsGBqUO8+6p6HUijoN3oLIOpDEwd0Ss2BHjnUt7l5OTFXLWTZlDTX4miO/Z4Evt0sbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743406472; c=relaxed/simple;
-	bh=Xp6rgIULGMK6ODHcRCYxrh/7fOLdQFf6tsWDjILa068=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qS9c+RTBnLouViwRdVNZJOP0v0BGokiG8v2wO8p3jBRnLwos+as4hJCDHCwIdf4Gu5Oy+SKCrVfwcJ/KPJCAXId0YmMzpmXn7T3Q1sF3nXSy8gDio4gM/8DeIiXZ4SNEpUg5bsY0A2gYYwoUVeO8MnzIxC3TkzmpoDgTxkLgxOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGOHlNuP; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743406474; c=relaxed/simple;
+	bh=tGc0yZ9S56lmGZ8X3yzmu/RRoHPLD+50b87kiWJPefo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dXavvwHUz434sCQ4vRUHUs8m5ZWxYv5P7TLp4VO2xHpgB9bzBvqg4GxSWlYEnFKx8tC8oxjbrLHrxxq4GoKd8QrqT30JjM31vctmMXxNWFt0B4YEQV2WvqzvzWDDHOcY9XuuKGgokYiGAi3EXRaB1ELlbmkM4PBjlHdGyzws1bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JA7vlAxJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGOHlNuP"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so25472285e9.0;
-        Mon, 31 Mar 2025 00:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743406470; x=1744011270; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUxp3S2dqfaEV5aPQPhb7Pjd2GvGLFIPTzA3dPHuiWE=;
-        b=nGOHlNuP9MrGJf58i/a86VztAIHEZNiXqemaK5oycySLNdM2oq7e1zNLsB4QA+VV2W
-         tO1zMoygE2LNsD/FKTeDxV9aEsuM34QJT2Ko38KpS43YgakvlAAiTzehwMWgt7Negmmf
-         yJ814dgwqw1b1/WeYALtaVisprhu5LxS0crcKwb+8DYoulY+/nRSeWoDsdmMhz8H8U1i
-         9p6h99Ck5T/JTJ7qvD40mkfGxHXS0olt5X1HDEP8OTs6614tjqGOd/JCcaHEw78UGthH
-         zCB/+LG0+UJH45S5a00wfAwdrDd13cDhdU9Jx/6RN3ySieVVZYTw581ALETfb6EXfUWk
-         BSFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743406470; x=1744011270;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZUxp3S2dqfaEV5aPQPhb7Pjd2GvGLFIPTzA3dPHuiWE=;
-        b=QMIXwfJ1HakvAqHhPIG53sjLan022L15s+D258Yu7o65pcVNaF+X2Uo9nSDz2S2C5W
-         r3kdFPa8HayGMsG3bswsCU7HM6YsV9XvnDE5UNvam0yeK0oZS+dgbUg4vxLTrFV1qeUl
-         Y1sfiCl+sVzoEecgE6yWs3zs0ty5jxXmQxrY1hoUNozWX0mtZctg4JPuL2EnBvLOirUy
-         vtpFXxUt7HDopnORUHooVnqGy8bBylPc6cPJNv43X+vBBUbyS4tflvKY5JNcXLyWXc/E
-         DXjo9ka8o4ZDksFSJwA/+PmxuwL9jej8oe35qlCKH1TrVuCSlKEtfZdaT2J++RW16xkm
-         gU3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUxlbYl0zCiNCWxZVKb2NdnNvlp7OzD9Ssw9aqTdAvLQuA0VaprW8AdgX3KjsBJKBc0y4CdGBj58ne/@vger.kernel.org, AJvYcCVf2L6GGHkNb159mspe6Ih+K1VfO2xxacerTeHqFqvI1D6rsXo4QwZaIjIZ5+iKADskyiSaDKHEhTg36R7T5w==@vger.kernel.org, AJvYcCVfLVijSLAEp+iG1flhHunu9VMXCDX6JLx+knyMD4JetN3G/vR2ETrtx+VMzVQHnQIciTsy8zDzLFq6LVuE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvj/tLhipagc5OUc9lcQjfTRL0hYfv7j8kxckWkgh5je9/dP7G
-	8PRrBntAxtjOQ8oiZkZnB5vsFN1j2AmHw2siShU1zF5btY9v1V4=
-X-Gm-Gg: ASbGncs33Ywt/OI5fQtbQyGzrxWNYo++O7GFGOMVX0t3Kn9Xn4L8ERNzci75hDHctgf
-	nXXKRo08eq2X8SRa98xVX2xBPNtNZMIbhFwozW1995CY6Ktu3AgR4auMd5XKwDrh4whT7TDXDM/
-	vMqsc586gGi5gQy5whwEftrmMYfptu9ahv8fsnhFqltvDt2G0dYcA8TcIne3ZZRniqi2R2dBd1N
-	Y1eDEN7bpf7/xyMFBfCU+7lexB3wDyvMKsyJfrDIs+qewby+mfHUOo/Tp0rdt7ODeG4sFQq72kT
-	nCjCGQWcvw6GmNOESabiEyoj+VIRhkKJ7qVkYBGrkHn30gTUZ8cIuFTs9F4fA21hbf+jG4FPaYh
-	gH2KtxBtKFQJm
-X-Google-Smtp-Source: AGHT+IE2fbHYxPjaH6uwrsY8Z0TXyjZuqPt9P3oR1B6GfKL25s/cfOBFZpUhBtQu27JOhS+7h/7qUg==
-X-Received: by 2002:a05:600c:3d8e:b0:43d:5ec:b2f4 with SMTP id 5b1f17b1804b1-43db6228293mr76135775e9.10.1743406469160;
-        Mon, 31 Mar 2025 00:34:29 -0700 (PDT)
-Received: from alex-x1e.. (mob-194-230-148-227.cgn.sunrise.net. [194.230.148.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fba4b4fsm115704195e9.1.2025.03.31.00.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 00:34:28 -0700 (PDT)
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	laurentiu.tudor1@dell.com,
-	dmitry.baryshkov@oss.qualcomm.com,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Subject: [PATCH v2 0/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add WiFi/BT pwrseq
-Date: Mon, 31 Mar 2025 08:33:46 +0100
-Message-ID: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JA7vlAxJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC2EBC4CEE3;
+	Mon, 31 Mar 2025 07:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743406473;
+	bh=tGc0yZ9S56lmGZ8X3yzmu/RRoHPLD+50b87kiWJPefo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JA7vlAxJVj2TwXGWhCabmFcSVxMEKKF3aRsKpopNTz2ticno+FLbcLVgFcmtf0Vas
+	 By1vbkN+enGJyD3jRzncriHofarLHaGjIhoFKZyShCdI5FtUWgrXcSXJsDtDLfDrQ0
+	 uc9oOBml+OtZAGgKPKGXE/aCQjL40uyFJfZcD2jhzFITcAe1IHQBckm7qwXfEUD49l
+	 ON3EokiRJBeugtYhk2p7WaksPBaPuPVH9drZe1+KBb+NISycPFJoLzFPTzuyyTTTcG
+	 U4ZMY5iPH/D8YR+QspDyTmmZG7d7IgiU0EGZx+X7xuBhF+RtBvshoTqg2ZsiXzF7vo
+	 ckgiVFefF4O7A==
+Date: Mon, 31 Mar 2025 09:34:29 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 01/32] dt-bindings: mfd: samsung,s2mps11: add s2mpg10
+Message-ID: <20250331-prophetic-convivial-dinosaur-efb1af@krzk-bin>
+References: <20250328-s2mpg10-v2-0-b54dee33fb6b@linaro.org>
+ <20250328-s2mpg10-v2-1-b54dee33fb6b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250328-s2mpg10-v2-1-b54dee33fb6b@linaro.org>
 
-Add bluetooth to mentioned device.
+On Fri, Mar 28, 2025 at 01:28:47PM +0000, Andr=C3=A9 Draszik wrote:
+>  allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: samsung,s2mpg10-pmic
+> +    then:
+> +      properties:
+> +        reg: false
+> +        samsung,s2mps11-acokb-ground: false
+> +        samsung,s2mps11-wrstbi-ground: false
+> +
+> +      oneOf:
+> +        - required: [interrupts]
+> +        - required: [interrupts-extended]
 
-Changes to V1:
-* Fixed commit message
-* Picked Dmitry's R-by
-* Link to v1: https://lore.kernel.org/all/20250330212729.3062485-1-alex.vinarskis@gmail.com/
+Drop, you should require only interrupts.
 
-Aleksandrs Vinarskis (1):
-  arm64: dts: qcom: x1e80100-dell-xps-9345: Add WiFi/BT pwrseq
+OTOH, why regulators subnode is not needed? Commit msg mentions they
+exist, so they should be required. Binding does not change because you
+added or did not add yet some driver support.
 
- .../dts/qcom/x1e80100-dell-xps13-9345.dts     | 144 ++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
--- 
-2.45.2
+Best regards,
+Krzysztof
 
