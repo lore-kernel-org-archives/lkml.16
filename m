@@ -1,123 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AAF19CC20;
-	Mon, 31 Mar 2025 07:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D7B189F5C;
+	Mon, 31 Mar 2025 07:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743405998; cv=none; b=aky14UY1A/u7Y+AD5HZg/TYRZ6D4FQ+fFn6ILNLgT43avKfv8HrkHCV1GVA0ujvWp3BP87kFQVA/1T6Bk58bZTxAmxDAWD8xXiS02jBCxH2Fq6ID1mQNMDdNlnPKV9MQZbr8IRKr9z7mBrIcdzED/hKqSLk6j5d1er2enxdwItY=
+	t=1743406013; cv=none; b=kKb5Hf9ua4sys5BHphcmPSVzUXgp0mLwv5Rq2pCaibvlOSF8shTkiZI3MJ4dKkXjEa1KMxJk5ffgpgyzCpkvL6EsRoS2SMmPH3RXZRHmvKfnxSF1PvQhwoDppcwSCbbHWipps3P6U0xclGC26ye4hqE9n/FIcF11jmUCb6HcWVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743405998; c=relaxed/simple;
-	bh=CxW7x+INpZV3W3lDl8PzSZ5Dw2S4l00pksh94iYdH0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=u0PmOkJ5wq4TXOpjf1ft1vVIfFF+40wXckRSXKSUBxOMxqSlKN1oJ/kRHE7rw2btPcGeHqBXln6E0J2A0bwCHEnIabtPoP9FrokaygFOZb0J5CYmNyYczfZUsblRgkOGdqq2Err8vap8B8UKoWqkr640H0XfMnHFqV4tTh06RGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C8AC4CEE3;
-	Mon, 31 Mar 2025 07:26:35 +0000 (UTC)
-Message-ID: <f1d4d88f-1ca0-4be8-84cd-3ef0d224feb4@xs4all.nl>
-Date: Mon, 31 Mar 2025 09:26:34 +0200
+	s=arc-20240116; t=1743406013; c=relaxed/simple;
+	bh=ImD49gdDmDYlZTkp7M0NVN+yOHdJ7XrwbCjzrlRQaoU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GdpcpafLghje60pRw03o9HTWO743wKT0/cR5lKvkLzNL2HBN3PM4nOdkyo3JZJxLpzAFVDKZCUUa3R6pI3M7gzSjNmj7Bn1+CN/bas3Thz98BS+jC70O6904F3yMVx62rWw6H1gbgY6QCVM8djYUYYfRYVG5Qo/ze1QIVZqNcNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=y99+ovFX; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="y99+ovFX"
+Received: from francesco-nb.corp.toradex.com (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0107A1F8BC;
+	Mon, 31 Mar 2025 09:26:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1743406009;
+	bh=qT9n/x5EVrHs2Hytr9ErCBtPkRKqtQ/58Ll/FePj4rs=; h=From:To:Subject;
+	b=y99+ovFXvKfqLunkMarmVumUcsN1OMMh8nnAY2ssB6mtY5DLWjWQyRFu3zqtvgglP
+	 487I4WxhG0asGJFQagrOnEGrNxVK9n9VVc9Dyf4geNo4DWaovD0TyIpi3x0R7IwucG
+	 saO69vSa6KJLfYIZoDMi13hXSKyvkUG4gOPm6ca4I8J0W3s9M63V5dERKc0HddwBVu
+	 nFrRPx7PPETsMyeQeRHMezDQiMIcRsv2vEHNCpSDw3Rge40qxPbDWhT7xGu1yiLkjo
+	 tZvKn5vSAi5DqqF6JJKjOt9rtbkXM6ZBJnIQY7+AOC2M0vI5dei/X9gZIjLL1gzpuX
+	 DNZyVTNpFWOww==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: [PATCH v2] dt-bindings: gpio: pca95xx: add Toradex ecgpiol16
+Date: Mon, 31 Mar 2025 09:26:44 +0200
+Message-Id: <20250331072644.17921-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: MAINTAINERS: Switch from venus Reviewer to
- Maintainer
-To: Trilok Soni <quic_tsoni@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- stanimir.k.varbanov@gmail.com, quic_vgarodia@quicinc.com,
- quic_dikshita@quicinc.com, mchehab@kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-0-0ec1007fde3c@linaro.org>
- <20250329-b4-25-03-29-media-committers-venus-iris-maintainers-v1-1-0ec1007fde3c@linaro.org>
- <93ca218a-71a2-4751-860c-025ec29b9180@quicinc.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <93ca218a-71a2-4751-860c-025ec29b9180@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29/03/2025 02:38, Trilok Soni wrote:
-> On 3/28/2025 6:26 PM, Bryan O'Donoghue wrote:
->> I'd like to volunteer my help in keeping venus maintained upstream.
->>
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>  MAINTAINERS | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 29b4471574982bf3f8d03158cd5edcb94bc9fab9..5ccddd2030efd96324e53fcee8048120990a85d5 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -19592,7 +19592,7 @@ F:	drivers/usb/typec/tcpm/qcom/
->>  QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
->>  M:	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-> 
-> Is Stanimir still an active maintainer here? 
+From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-He's no longer maintaining venus.
+The Toradex ecgpiol16 is a 16-bit I2C I/O expander implemented using a
+small MCU.
+Its register interface and behavior are compatible with the PCAL6416.
 
-Bryan, can you post a v2 removing Stan as maintainer? Stan, can you Ack
-that v2?
+Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+v2: compatible changed from embedded-controller-io16 to ecgpiol16
+v1: https://lore.kernel.org/all/20250328122917.43273-1-francesco@dolcini.it/
+---
+ Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Regards,
-
-	Hans
-
-> 
->>  M:	Vikash Garodia <quic_vgarodia@quicinc.com>
->> -R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> +M:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>  L:	linux-media@vger.kernel.org
->>  L:	linux-arm-msm@vger.kernel.org
->>  S:	Maintained
->>
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+index 7b1eb08fa055..4d3f52f8d1b8 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+@@ -16,6 +16,9 @@ description: |+
+ properties:
+   compatible:
+     oneOf:
++      - items:
++          - const: toradex,ecgpiol16
++          - const: nxp,pcal6416
+       - items:
+           - const: diodes,pi4ioe5v6534q
+           - const: nxp,pcal6534
+@@ -132,6 +135,7 @@ allOf:
+               - maxim,max7325
+               - maxim,max7326
+               - maxim,max7327
++              - toradex,ecgpiol16
+     then:
+       properties:
+         reset-gpios: false
+-- 
+2.39.5
 
