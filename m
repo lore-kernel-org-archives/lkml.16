@@ -1,156 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED8B21C9F3
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A762F155725;
+	Mon, 31 Mar 2025 22:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743460194; cv=none; b=ot874NZ+6faa3o7RWV++IAnxPw2wJjXQwBGfGh+D5ZZU54oZH1BhdkIh6eToUjQIESXaH8jxbdW5y7ODkPi3uwBUupUdb9/pjQWz4UX0DbC8L/dOj6uEHToVwNiTbio3Rb3z1uPldU+EQec8HNX2phUFrPLQtKsUs3AJ9sQvEbw=
+	t=1743460288; cv=none; b=o1Dac8OFhiQ/m12TEX5OAOyQlmSUMEBoiwc52gN2BYlZlC9lNjEhAjdPOBOLUPh6EL+guIsfwbXnIvN2C3sI0hzXnaVlFsuDKhqM0fmN3Zbj2OdmdTTc/SioBQW4nOCBrB3aPXBpdAOghtlGEu+TE1NNRJ9tDtm4vYhvwGh7XjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743460194; c=relaxed/simple;
-	bh=dmaYoJ3xIKd2ptaybOmMo55rxMw5JSNXVhC0cyeQVA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWwLRemrzEFeik/aZIhpJGMHlLczi/jfRzxR7XC2v4hz34xYQpVmHH2bRgprUqBa6cZKTODruIm49rDy+92XSLo0q2Y8A6Cf7bw5igO5wbE7OEVWycKuObAHeB7Ia4S/90r5kTN3294HZt8u696K9jog+M2GHxH5+WFAZyOCPr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ey1JrvV+; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743460288; c=relaxed/simple;
+	bh=/eph3P8RyPGameA3eIwpoUcHG51qfNue0hkqn9BsHgo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Hqg4rELJO/WXmuvSibtBnjfA4o9L1wzNbHTqad2xzuziWMsDn/CFHOE+LYu3YVnm7ibLBy9Fr799tgP6XQeURxf8xn8gtY2XNGVZ7Q42HawAYazUK5uJpPQo292R3Hkfk599kV8JzUG+wg3QItrc3hq9zwR85ydUIhLb6PwoyTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pzkxfby+; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ey1JrvV+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743460194; x=1774996194;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dmaYoJ3xIKd2ptaybOmMo55rxMw5JSNXVhC0cyeQVA0=;
-  b=Ey1JrvV+kzhYj+SE5Iwe8zodjMixaQw32jA4fFGXYfuHtIGg25xWc1Lw
-   bp52hX/op3upfr5YZZHwsIo5OPfeNjhxmsc17FMokcXtixznNniPTVMe8
-   i2Ryd8TWAD0aUX1USmSrAKOHOnRTj8yooXvv4DQBQzHZ26fuoixDuDEIH
-   5ZjtOAcK4AcaPxrRgXZm1tuDQnf3AhtHm+e32ZAYvRB94OSvFmgZqV7ew
-   YnkQnGXcQVCmv64ofXdNaZL4RaUr43PC9TLIwfuSrzhDCMvxN3uO8+p5n
-   L68d1ju7v3mOj3k++twsOUCYYP/xmv+6UIKf+KzeS7MXmi8zNCdlAdcfO
-   A==;
-X-CSE-ConnectionGUID: eFRtW6wBQ6OH1BDW77KG+g==
-X-CSE-MsgGUID: ++mNL50XSLuirkWyu3fAEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44674934"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="44674934"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:29:51 -0700
-X-CSE-ConnectionGUID: BQwwTpHLQ7WI+CfjIujVvw==
-X-CSE-MsgGUID: eu5YQbnhRdW/zP3FEugUxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="157121900"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:29:50 -0700
-Date: Mon, 31 Mar 2025 15:29:48 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 11/16] x86/resctrl: Link known events onto
- RDT_RESOURCE_INTEL_AET.evt_list
-Message-ID: <Z-sXXAYQA5iMiMzN@agluck-desk3>
-References: <20250321231609.57418-1-tony.luck@intel.com>
- <20250321231609.57418-12-tony.luck@intel.com>
- <10df8cbf-3b7c-461f-8a0d-bcc6b87444c0@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pzkxfby+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22438c356c8so96825865ad.1;
+        Mon, 31 Mar 2025 15:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743460286; x=1744065086; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/x38y9D+bvULPl9mRXR1jnQ3ZFxCTMyxYRseHkuGiqE=;
+        b=Pzkxfby+RQTalq3Y3tkHx3msbH5Ph60wdFR2w33E0URk0fnf0jjtELd8EbvY57pqN+
+         j9kH4+T561NmR6bd7HhYeZckniff9QkzD8K8TJGx0Tz46sO7SqizmWbq16BI9oKA13ln
+         AMpj9UVbKjETdHS4/XqSSOCdPBbesUaX86iNeIJgJHYMHmLXCu3M4vrMtgS9yiJFyANw
+         ttxb4K22nR4CQTulQzGYWfRnwJltot0QcZDQy2RR26JKoUew91dogFiuTOv1PViMb1hg
+         JH9xbtG/9GTzQyhLXKnRr55VhEc1aEsQPRd5TLmy/W5g8Drgt59ocqT765cUqdMk2zRg
+         NaLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743460286; x=1744065086;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/x38y9D+bvULPl9mRXR1jnQ3ZFxCTMyxYRseHkuGiqE=;
+        b=ruZ1hkIm6ZvSsHAf1tHf9sM7ahUulJiC+Mr7aRNg4JaP6rdZCRNSRJ7TkH1P/Y9Vts
+         bBA1VyrDAFk6o67yi9SqP0aBZBhUxlvbPwPgrC8/nbRFVKb7ELBcOtrxF7smp5/wm2Hx
+         NcQj2yXXfLwZZ5TUsV6kI3isaeE5KfdrrehITFOvtPhyh4cCDBJKUW3ZUyP/zX9enofD
+         otmoq6goOcD/TpdFJsb7Gz1exGM4T0WB2R9/H3bKLKAE90dlu5ZzDL1fGdIIJCFg6T7z
+         I8c/WaKbznHbiK1WlZsxGqIUHJQml3fiW1GlkePQXYPu1qvg+c2QWErwm3zkkHCRTbk1
+         NBeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJD6ZLEt+3yqkcL+sg0wpPShokIIgpLMWMQ4/daXeApD/xqbXFfcYJCwONrQtJ2T4fbIscxu/4C171cn4=@vger.kernel.org, AJvYcCWxuH+mYk9bVDZqSkS1pGDCbxeKotGL/MAOXEPe4h7Wm1FY6+eZH6Lf0Plpoo9aEPWSgXjXblBd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlGbJkOECL2yDBC5c3sF8jwDWW1SaHSuppuXyf9JxhGhL4mtyU
+	VuU+/VVJa/LrPkW9Fq24gsvDEC1in0XxXUUUpWgASUfZULQrr3ds
+X-Gm-Gg: ASbGncvPvY9YVrucApt50hLu4clW0XPn3jYUU0f8K5Db6WIUinGxZbgNaKqmiLlPD3T
+	/pzg6mWz15cSYDCsH+9RnbdIFmePozHvI3DVoM8ZAekjKh3A3hCtAhGBwNOwy4tfs+/ezQ3qz4z
+	QS8mz5vy5GVWALZp9Qh0PhTCjpIEECk8fohmYm1/3vNftlFOkaPLR7svAASBKdvQVAtJBtvCRg3
+	u45yS34tEfBrbScWBMqVlROfBFkgYxgTcZOClMGjlUK29ejMTC3EJRAqf1OPgSd7q3feNbY8KzV
+	fZ3WLCrDMD7hOR9fPQ6io08R2WQ+nza1jVz2b1QSJTtDs4IThpAKffKfxyGKB0b6o3iINWjGI8G
+	GFvpMoeGFBmltusAitRcOA6cBmjfqwGUU7uo=
+X-Google-Smtp-Source: AGHT+IF/JompVVPMEUWrVSbGF3Fm7fHmvyqZCfgc6BpS0nNlvNEwE++JBwgxQucv/KQpsd5yTnFYyg==
+X-Received: by 2002:a05:6a21:7a4c:b0:1fd:f48b:f397 with SMTP id adf61e73a8af0-2009f649022mr18125913637.23.1743460285791;
+        Mon, 31 Mar 2025 15:31:25 -0700 (PDT)
+Received: from ?IPv6:2605:59c8:829:4c00:82ee:73ff:fe41:9a02? ([2605:59c8:829:4c00:82ee:73ff:fe41:9a02])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73970deecbfsm7536215b3a.33.2025.03.31.15.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 15:31:25 -0700 (PDT)
+Message-ID: <44f5c55e5fac60c118cb4d4e99b49e6bf6561295.camel@gmail.com>
+Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
+ fixed-link configuration
+From: Alexander H Duyck <alexander.duyck@gmail.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>, "Russell King
+ (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>,  =?ISO-8859-1?Q?K=F6ry?=
+ Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Date: Mon, 31 Mar 2025 15:31:23 -0700
+In-Reply-To: <20250331182000.0d94902a@fedora.home>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	 <20250307173611.129125-10-maxime.chevallier@bootlin.com>
+	 <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
+	 <20250328090621.2d0b3665@fedora-2.home>
+	 <CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
+	 <12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
+	 <CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
+	 <02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
+	 <Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
+	 <20250331182000.0d94902a@fedora.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10df8cbf-3b7c-461f-8a0d-bcc6b87444c0@intel.com>
 
-On Mon, Mar 31, 2025 at 09:23:14AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 3/21/25 4:16 PM, Tony Luck wrote:
-> > Core code uses this list to populate "mon_data" directories.
-> > 
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/resctrl/intel_aet.c | 23 ++++++++++++++++++++++-
-> >  1 file changed, 22 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> > index e2d8eab997fc..9ac912742ef1 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> > +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> > @@ -13,6 +13,7 @@
-> >  
-> >  #include <linux/cpu.h>
-> >  #include <linux/cleanup.h>
-> > +#include <linux/minmax.h>
-> >  #include <linux/slab.h>
-> >  #include "fake_intel_aet_features.h"
-> >  #include <linux/intel_vsec.h>
-> > @@ -308,14 +309,34 @@ void rdt_get_intel_aet_mount(void)
-> >  {
-> >  	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_INTEL_AET].r_resctrl;
-> >  	struct rdt_core_mon_domain *d, *tmp;
-> > +	struct telem_entry **tentry;
-> >  	static int do_one_time;
-> > +	struct mon_evt *evt;
-> > +	bool ret = false;
-> >  
-> >  	if (do_one_time)
-> >  		return;
-> >  
-> >  	do_one_time = 1;
-> >  
-> > -	if (!get_events()) {
-> > +	if (!get_events())
-> > +		goto done;
-> > +
-> > +	for (tentry = telem_entry; *tentry; tentry++) {
-> > +		if (!(*tentry)->active)
-> > +			continue;
-> > +		for (int i = 0; (*tentry)->evts[i].evt.name; i++) {
-> > +			evt = &(*tentry)->evts[i].evt;
-> > +			list_add_tail(&evt->list, &r->evt_list);
-> > +			ret = true;
-> > +		}
-> 
-> Architecture code should not be doing this. I expect this will be something
-> similar to l3_mon_evt_init() done by fs code after the architecture had
-> opportunity to configure which events are supported. 
+On Mon, 2025-03-31 at 18:20 +0200, Maxime Chevallier wrote:
+> On Mon, 31 Mar 2025 15:54:20 +0100
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-If we do put all possible events into the architecture code, then it can
-do something like:
+...
 
-	for_each_set_bit(evt, &rdt_mon_features, NUM_EVENTS)
-		list_add(...);
+> I was hoping Alexander could give option 1 a try, but let me know if
+> you think we should instead adopt option 2, which is probably the safer
+> on.
+>=20
+> Maxime
 
-My speculative patch:
-	https://lore.kernel.org/all/20250314202609.5753-1-tony.luck@intel.com/
-did this for the existing events, so could build on it.
+So I gave it a try, but the results weren't promising. I ended up
+getting the lp_advertised spammed with all the modes:
 
-> I wonder if resctrl_mon_resource_init() could be moved to rdt_get_tree()
-> to be called after the new (yet to be named) "resctrl_arch_for_arch_to_do_needed_on_resctrl_mount()"
-> resctrl_mon_resource_init() could be enhanced to do any needed resctrl fs
-> initialization for this new feature. This will include being able to 
-> learn the accurate counts of rmid supported by the system to be able to
-> create monitor groups that can be supported by all monitoring resources?
-> 
-> > +		if (!r->num_rmid)
-> > +			r->num_rmid = (*tentry)->num_rmids;
-> > +		else
-> > +			r->num_rmid = min(r->num_rmid, (*tentry)->num_rmids);
-> > +	}
-> > +done:
-> > +	if (!ret) {
-> >  		list_for_each_entry_safe(d, tmp, &r->mon_domains, hdr.list)
-> >  			kfree(d);
-> >  		r->mon_capable = false;
-> 
-> Reinette
+    Link partner advertised link modes:  100000baseKR4/Full
+                                         100000baseSR4/Full
+                                         100000baseCR4/Full
+                                         100000baseLR4_ER4/Full
+                                         100000baseKR2/Full
+                                         100000baseSR2/Full
+                                         100000baseCR2/Full
+                                         100000baseLR2_ER2_FR2/Full
+                                         100000baseDR2/Full
+                                         100000baseKR/Full
+                                         100000baseSR/Full
+                                         100000baseLR_ER_FR/Full
+                                         100000baseCR/Full
+                                         100000baseDR/Full
 
--Tony
+
+In order to resolve it I just made the following change:
+@@ -713,9 +700,7 @@ static int phylink_parse_fixedlink(struct phylink
+*pl,
+                phylink_warn(pl, "fixed link specifies half duplex for
+%dMbps link?\n",
+                             pl->link_config.speed);
+=20
+-       linkmode_zero(pl->supported);
+-       phylink_fill_fixedlink_supported(pl->supported);
+-
++       linkmode_fill(pl->supported);
+        linkmode_copy(pl->link_config.advertising, pl->supported);
+        phylink_validate(pl, pl->supported, &pl->link_config);
+
+
+
+Basically the issue is that I am using the pcs_validate to cleanup my
+link modes. So the code below this point worked correctly for me. The
+only issue was the dropping of the other bits.
+
+That is why I mentioned the possibility of maybe adding some sort of
+follow-on filter function that would go through the upper bits and or
+them into the filter being run after the original one.
+
+For example there is mask which is used to filter out everything but
+the pause and autoneg bits. Perhaps we should assemble bits there
+depending on the TP, FIBER, and BACKPLANE bits to clean out everything
+but CR, KR, and TP types if those bits are set.
