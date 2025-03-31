@@ -1,106 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BC91DF258
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B40E22A813;
+	Mon, 31 Mar 2025 14:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432850; cv=none; b=TxPgKcQOMrwgFmj5Vg0h0YmXeSEE3fuiibdX3rrK3PpS2kudyzzyFoEtJhznQcZF3Va8VenMyeqXwVgotb2zumOirRwiG72pMUoVXCrLdAWzI85CF4gp7WB6dmgGmG5DkpUlpsExtQifBYMOXbXgUDiD4KeZePecxBYNj8BgZHw=
+	t=1743432851; cv=none; b=SqjVX751msEfRnJ78omelsDLB5Z/qSwodyS9irbJAn8mbb5q6lKkpMZqs5bEsLtLUTf2tC/fiEO7xqeMwmja0WTZ+IeMKfuB5U99n2e5u4wMBx1glZxq+kZ5oN9aH7CABBZIcARh+sItLE+qcodtJ7Tw/iFuGbRSz2TMKwUBVQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432850; c=relaxed/simple;
-	bh=z3Jo4cVEz82S1Hhr9IzTyltq1FXq8pBHA6uwkGyfZCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dc2Ev3c27MkE2lOlEQGiajNcbUD6qYD1iI2mCwyCFxaXS4DBjRBXyhUvgX4FvH3i9iSfnSS5NS8NumzXIyHHQhVlQrGHpSd9hBzi8PTRgZ6BJM+HowwIlxM8hgqbN68jiMLovd/IERdK2YlbrTnQY1yrS1m9y0Gek8f33gnt0+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRXn7Wrb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743432851; c=relaxed/simple;
+	bh=WwKf7qEzym3fm1+PYCXiS5nCEC8E5Q7PGj26QpqD5CM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pw/fsJm1roUrU6iXHdIgxPH2asdSJhcNfpJlMUUOTpn0tFsyIHPgVe0gcg1vFLsSQltznwoJuSPT5V59CsWAaAdfw3HDosu2YGdEmrPgxgS3SBEb0N8HRHH34s+s42ffyi4OThm2CF/Koa8coOncvYMhRojKnMjXxQ6utzNfg/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdrOSUG2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRXn7Wrb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743432847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iG+qEN/dmB4J+30yyi3d8IQq23oAU9zL+9Eq8FKspqc=;
-	b=IRXn7Wrbx80KpkR31UwB/rvNbXCbxu1ixpSdWdVZbNKRpjEDqKrqGN5gfhsYwDixKQxVHz
-	nDpF2A8wPeCZydD8giAlsORZmLhcPkOAMCMOkxwZP6mcWn9ytubhjj3ZbUipmdUl0U25G5
-	R1zHd/VhtaDOFuZ0ytaL4nJ4G5WxLUU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-Agcw7EsOPYiuCYdqwpm4Rw-1; Mon,
- 31 Mar 2025 10:54:03 -0400
-X-MC-Unique: Agcw7EsOPYiuCYdqwpm4Rw-1
-X-Mimecast-MFC-AGG-ID: Agcw7EsOPYiuCYdqwpm4Rw_1743432842
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A3C180035C;
-	Mon, 31 Mar 2025 14:54:01 +0000 (UTC)
-Received: from localhost (unknown [10.43.135.229])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A2F618009BC;
-	Mon, 31 Mar 2025 14:53:58 +0000 (UTC)
-Date: Mon, 31 Mar 2025 16:53:55 +0200
-From: Miroslav Lichvar <mlichvar@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
- _COARSE clockids
-Message-ID: <Z-qsg6iDGlcIJulJ@localhost>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost>
- <874izezv3c.ffs@tglx>
- <Z-Vx8kV4M3khPknC@localhost>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdrOSUG2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94FEC4CEE4;
+	Mon, 31 Mar 2025 14:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743432851;
+	bh=WwKf7qEzym3fm1+PYCXiS5nCEC8E5Q7PGj26QpqD5CM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hdrOSUG2xkty73iLfHYTRksou6yQfLT6dBZaKeweNUXTCeyTK1n71XVxRfoehW4Mr
+	 AFtKGvjTbCf30xGHtlPkoO7Rxl9Un2Num6UZfRdrD3tTjYiqNy2BjdrVU4xzCXHGpR
+	 dwMXWWtq/hakgbvXGYefNUpZXKHwK2HxXy7tmKdaMEMTS7MeDuuO3P43Wke+eglJFj
+	 UI7TnZHsfFKMIVQsnGBsTgXT1+Ekpj3phzvSvrXM9WivKvYEb+dn9PpMKn4xiHfiHx
+	 n87KK2DOXjyE0qXLsUN+I9bPxgDLKucZpNV0xCG4uJBHMqj/il2Z6NPFK0RreH5anx
+	 zL2meW4IFxpDw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Tomasz=20Paku=C5=82a?= <tomasz.pakula.oficjalny@gmail.com>,
+	Makarenko Oleg <oleg@makarenk.ooo>,
+	=?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal@nozomi.space>,
+	Paul Dino Jones <paul@spacefreak18.xyz>,
+	=?UTF-8?q?Crist=C3=B3ferson=20Bueno?= <cbueno81@gmail.com>,
+	Pablo Cisneros <patchkez@protonmail.com>,
+	Jiri Kosina <jkosina@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 03/24] HID: pidff: Convert infinite length from Linux API to PID standard
+Date: Mon, 31 Mar 2025 10:53:43 -0400
+Message-Id: <20250331145404.1705141-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250331145404.1705141-1-sashal@kernel.org>
+References: <20250331145404.1705141-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-Vx8kV4M3khPknC@localhost>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.9
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 04:42:49PM +0100, Miroslav Lichvar wrote:
-> Maybe I could simply patch the kernel to force a small clock
-> multiplier to increase the rate at which the error accumulates.
+From: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
 
-I tried that and it indeed makes the issue clearly visible. The COARSE
-fix makes the clock less stable. It's barely visible with the normal
-multiplier, at least for the clocksource I tested, but a reduced
-multiplier forces a larger NTP error and raises it above the precision
-and instability of the system and reference clocks.
+[ Upstream commit 37e0591fe44dce39d1ebc7a82d5b6e4dba1582eb ]
 
-The test was done on a machine with a TSC clocksource (3GHz CPU with
-disabled frequency scaling - normal multplier is 5592407) and tried a
-multiplier reduced by 4, 16, 64 with this COARSE-fixing patch not
-applied and applied. Each test ran for 1 minute and produced an
-average value of skew - stability of the clock frequency as reported
-by chronyd in the tracking log when synchronizing to a free-running
-PTP clock at 64, 16, and 4 updates per second. It's in parts per
-million (resolution in the chrony log is limited to 0.001 ppm).
+Software uses 0 as de-facto infinite lenght on Linux FF apis (SDL),
+Linux doesn't actually define anythi as of now, while USB PID defines
+NULL (0xffff). Most PID devices do not expect a 0-length effect and
+can't interpret it as infinite. This change fixes Force Feedback for
+most PID compliant devices.
 
-Mult reduction	Updates/sec	Skew before	Skew after
-1		4		0.000		0.000
-1		16		0.001		0.002
-1		64		0.002		0.006
-4		4		0.001		0.001
-4		16		0.003		0.005
-4		64		0.005		0.015
-16		4		0.004		0.009
-16		16		0.011		0.069
-16		64		0.020		0.117
-64		4		0.013		0.012
-64		16		0.030		0.107
-64		64		0.058		0.879
+As most games depend on updating the values of already playing infinite
+effects, this is crucial to ensure they will actually work.
 
+Previously, users had to rely on third-party software to do this conversion
+and make their PID devices usable.
+
+Co-developed-by: Makarenko Oleg <oleg@makarenk.ooo>
+Signed-off-by: Makarenko Oleg <oleg@makarenk.ooo>
+Signed-off-by: Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
+Reviewed-by: Michał Kopeć <michal@nozomi.space>
+Reviewed-by: Paul Dino Jones <paul@spacefreak18.xyz>
+Tested-by: Paul Dino Jones <paul@spacefreak18.xyz>
+Tested-by: Cristóferson Bueno <cbueno81@gmail.com>
+Tested-by: Pablo Cisneros <patchkez@protonmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/usbhid/hid-pidff.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/usbhid/hid-pidff.c b/drivers/hid/usbhid/hid-pidff.c
+index 3b4ee21cd8111..5fe4422bb5bad 100644
+--- a/drivers/hid/usbhid/hid-pidff.c
++++ b/drivers/hid/usbhid/hid-pidff.c
+@@ -21,6 +21,7 @@
+ #include "usbhid.h"
+ 
+ #define	PID_EFFECTS_MAX		64
++#define	PID_INFINITE		0xffff
+ 
+ /* Report usage table used to put reports into an array */
+ 
+@@ -301,7 +302,12 @@ static void pidff_set_effect_report(struct pidff_device *pidff,
+ 		pidff->block_load[PID_EFFECT_BLOCK_INDEX].value[0];
+ 	pidff->set_effect_type->value[0] =
+ 		pidff->create_new_effect_type->value[0];
+-	pidff->set_effect[PID_DURATION].value[0] = effect->replay.length;
++
++	/* Convert infinite length from Linux API (0)
++	   to PID standard (NULL) if needed */
++	pidff->set_effect[PID_DURATION].value[0] =
++		effect->replay.length == 0 ? PID_INFINITE : effect->replay.length;
++
+ 	pidff->set_effect[PID_TRIGGER_BUTTON].value[0] = effect->trigger.button;
+ 	pidff->set_effect[PID_TRIGGER_REPEAT_INT].value[0] =
+ 		effect->trigger.interval;
 -- 
-Miroslav Lichvar
+2.39.5
 
