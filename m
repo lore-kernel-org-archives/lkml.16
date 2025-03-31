@@ -1,212 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF1E21480A
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437812; cv=fail; b=lMpKtxx/HGUsHUGD+/M3BJgMzRK124D3g0XiMyHHBK+dv88Mh/2yhfOTiOy0pjYBRFxc26+AwltICa8MOksxJjO7nEn4ugfchlGQffmrdUGKP5MpWq/Iy2I+q5MjRwlcJv19eGf1l3U6U9NWUwN0smfmd9GL+YSCTr7Hv34ZvW4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437812; c=relaxed/simple;
-	bh=ZRodS+rWfOnwi9cvnRPVHnmj0EqcRnMOBC6q3gRTeD0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Svkmjn2sdbLintRESGa7XxIpaLtCV2Dy0Ad+A+h5rXvlwHadyKFLE3PGCM5fdItI9xeJYPl+VOnTcORuGdDkmeWJAo1Mvpqa3S+yAp6/Ci3sjndb1FVgmDvHDxfkqYQX7AojQrhml+gQctCGRkyTegEac32hOPJYsFd3Cady/t8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFZk63xK; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCE42147F6
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743437822; cv=none; b=frNm54X6d5i/gMWHbyNu41h3G9P7QSQ2Ioh5pt/baBJ3EHxBEB9aXDXpjDNFCtc+Y1MSvR56a4N+alxGw9raEjJFw8p+MC9G9Mgb3TGpnGNl8goM0M0g0OK5jVh7doeAx5bmkpfrpY/kQlCK80CSOKVIKJrI7VfY94B09uo8pMI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743437822; c=relaxed/simple;
+	bh=MRdcYUkF4Pe4Wr0aSbQoo3p6MhneDKW8+5FisJSdyXo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OwKpZZASOytw2EoflIcBhBd9aPonV6o0FPheX6H82RRyTPytpF9+NFRSZ0a8RL9it03H2rIhlbVksxKL/R2dyPWhRS/aNEAwxIf4WdJTTxFROeI4hzo6mURQjoPfQmIUz9NH5ZLcYcJd+MfSY76/Q0vSlhzUyOQZwi7B7xUoMVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoYmZDMO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFZk63xK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743437811; x=1774973811;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ZRodS+rWfOnwi9cvnRPVHnmj0EqcRnMOBC6q3gRTeD0=;
-  b=BFZk63xKomezy7ov8N/aBCKodyyX8rmBCSruUq8GJJb3j8592HinYYpa
-   BKYvS6mB9Pb7H7669j0lAqHAIcTz41v9/ALbJ8g+iwZVOmhbeP5xtjUoW
-   eQoEy3eOI0FFQnfyGoBKFjK65/t0TexYx8IGjql0RzWTGVYWFyLwDa9H/
-   EaaSa+5ATRrnesJtN7wNs1vYlV3vaUA4yi55AGECuvOk6ZZ0yMCDrv65u
-   N9wRQkvvzcKARg1nwsJFm8l0OlhLtgpv8dN2yUv+joHMNDqaRrcqN76EI
-   sYUUme+IdXhYgmGpB7uKqSjc0lVf3SVrItjCdrisdahL7YxoLXOfhAQcF
-   w==;
-X-CSE-ConnectionGUID: uZM9MMy/RmCrtu2p6Nf2lg==
-X-CSE-MsgGUID: uYfWWktFR8euJnerk+EXfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44742198"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="44742198"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:15:45 -0700
-X-CSE-ConnectionGUID: SWQ4RPTCTyic5kfbY3ORSA==
-X-CSE-MsgGUID: 77n55fPUQ2iwUsJ+mTqSxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="131134068"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:15:44 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 31 Mar 2025 09:15:43 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 31 Mar 2025 09:15:43 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 31 Mar 2025 09:15:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dpsbivv+kkRpkde3ur/ubAyyVrk9lCWRdpIwBrdCpoVWDI/Zb8a40r+iys6iLMy3KCeUmEGbt0cqGln1JLSmxREsJ5VS91UHxzt6Em+QCqKhiRyOHqt6oFTRavuEiA9sCtwtWX44DovsyI10p2OXnK9VTq9TxhqGcXj5PRFm5yC1uCFu3T9hGyKdK/hfFyy3t38TjuV1xGy1injE0Thk3oSFwiX29CxpZZ9vXm9YdsZUFYrIRzghsGkz+58QbOWkmASIbp9v6Ab9PAN0D6XGDjzwu5LScmwC8liRItaH94z6xfcs+agfq/zflNOVrCMjb4d/RMMHYAjTyJ5/y2dUiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZRodS+rWfOnwi9cvnRPVHnmj0EqcRnMOBC6q3gRTeD0=;
- b=hjdvS9xIGAq/SI2L7fl9Um4MA2jzpUSgayUk4DpvZHZTTnpSG1F1rVj1UUwkcVtLHH5273tdMxtFNl0IPA21nK7En01U1eAHn5d31gtrX1MVb8p21RbfosWHgrfhnlu3zKS9HE3xZs6C/RhlHAZc7ODGE4cI8G0vyBL1oS2YryeUPA3189pdrdgrkY48YAvkSz9mJTmh4VDzba4dWB0VfLK8f+6l70eoBJMFLXcvq/aOkeEkcN+z/ujRfQWc4EBv15n4te6qELS95EZn4c+Kej//z8vnmJV2Qx9AzBRTa+bl4bwdR1k1ovVPV9ZA2X5QxTy8k9Sp0e/gDp0vWmws3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH7PR11MB5768.namprd11.prod.outlook.com (2603:10b6:510:131::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 16:15:38 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 16:15:38 +0000
-Message-ID: <012377fd-e292-42fc-b348-4bb5e5becb97@intel.com>
-Date: Mon, 31 Mar 2025 09:15:36 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/16] x86/resctrl: Change generic monitor functions to
- use struct rdt_domain_hdr
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-References: <20250321231609.57418-1-tony.luck@intel.com>
- <20250321231609.57418-5-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250321231609.57418-5-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:303:8f::17) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoYmZDMO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743437819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qNIFuWAVVY5MdpvZ+wT0vBuHY2Nn/EWRcs2vVYB5g6k=;
+	b=NoYmZDMOFbrg7icDWJY1GTizM6zOas7fUoulb299pKwTB1tDiT9Fn6mdRopgnXvTmzLmrW
+	47HL1GEIAXGl9wT2K7SZwxh44kjqCwHtRYH7vDbiyweoTJFOmMNSCi/MZ3c6YzQTdt6xjr
+	cniSvfE0gQT9l1PvI9+Be6AR+Cb1Xw4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-WUxdeIj8Pi69WALUlgP4Pg-1; Mon,
+ 31 Mar 2025 12:16:56 -0400
+X-MC-Unique: WUxdeIj8Pi69WALUlgP4Pg-1
+X-Mimecast-MFC-AGG-ID: WUxdeIj8Pi69WALUlgP4Pg_1743437814
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51BFD180AB16;
+	Mon, 31 Mar 2025 16:16:54 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 102A419560AD;
+	Mon, 31 Mar 2025 16:16:51 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Subject: [PATCH v4 0/4] drm/panel: Panel Refcounting infrastructure
+Date: Mon, 31 Mar 2025 11:15:24 -0400
+Message-Id: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB5768:EE_
-X-MS-Office365-Filtering-Correlation-Id: af399a70-ca7b-4e34-011b-08dd706f464a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Tk1DMFYxYzlyNDAzb2xKR3NLSEhPVW1HcUtRUEYwdUFOUEtOQWVjeFhLVjlK?=
- =?utf-8?B?WThNUnVCUkI3UHQzR1crQXNZMDNoZ0FrcVNodkJRazY3SE4vVGN3TTc0MG9E?=
- =?utf-8?B?NC9yRXVDTm9JQ2dCc1l4SGVvYWZiZjJQM0UwUXBiZkM2Q0FHOG1DU1IrMVNJ?=
- =?utf-8?B?K0Q3OFdrbTFXWmhGZ2NkNEQzQjFza0N2TDZqYTJudjJPemRwNXpoeEJOL3gv?=
- =?utf-8?B?OWZaZXQ0WUExOXN5cGI2a3EwQmZvVGRhYTlDTFgzbklTd3JQTXJVSjRnckh4?=
- =?utf-8?B?Uzh0clIybGE0dHJNcTJtNnlmR1JETTlJU1F4RmhBVUhIc081d1BlUHJFcjFX?=
- =?utf-8?B?eVAzenU0NWdaVzc3dXBramplVko2RXNESXhkamdXejRvTVd4NWFuK2QrbHJm?=
- =?utf-8?B?TjFtR3VvdExybkJPZllsTm43Q3RIR09nRVJDQ1FCT0dDcUQwUzhyK0gvd24z?=
- =?utf-8?B?ajMyaU16UytJTGFhUHdzUkJQRDdSZDQ1VURBWG5rcm9pdXA3eHdjQ1JMUXNS?=
- =?utf-8?B?NHJRYzgyMUo4alozQ0ZpUXdlSkxQQlV0c3ZIWFY1V0tOT054Yk9lYllDbHkz?=
- =?utf-8?B?RmFHd2ZlTENuNWZuUUliYWN2ZWd4T0ZrdEk1bUpMQnZxQzVmWEpLczRhNFZP?=
- =?utf-8?B?TWdoR0lQNEZLcWE2a3pmRmRsaTV0YWNMZ1FiUUpmaGFYNE9nMk1JUUNOc0V2?=
- =?utf-8?B?Y2tJTzRmck1YbWk0b2M4SmRhOTlKODBTL202MU5DWXdFcWpyUmUwTTVUcDBs?=
- =?utf-8?B?M1dQdGgzNXVBVU9rSVp1SDJjNVE2OGc3TTdlYk5NWmovOWQ3VmU5SXlIWDVq?=
- =?utf-8?B?bTc2ZHRkMUlGNkplbWpkT0J0cm5RMzRrRHlKV1UzMTA4MGJwQm15VkowRUtU?=
- =?utf-8?B?TFpJOEE2SkhxMzV4WU5WU3JZYWNEWk1sOUF2NGZ5WlQwdUlzZWpuTnZ4SDNZ?=
- =?utf-8?B?RjJTTjh3U3BpRDgwNzN3eVZlTFIxcGs3U3kxOFJaYWpIVXFFdW9ld3cvQk5M?=
- =?utf-8?B?WEZmUW50eFE0N2NyZXhQWnJuL0RHSVpsQkhaWXFLenZmNUpybldYYVU2NURs?=
- =?utf-8?B?Z3FDUFhZa0x3emxDUFd1T2ZRWkFFYkRzRnVBSitqM0R6NzFhb1p1YkQzaG1R?=
- =?utf-8?B?Z0Juc09WUWxVKzdyZTgxQVNTbmU0LzQ3WXdOUFg2alNSMmFjMGoreGVkZ3ZB?=
- =?utf-8?B?NDRROS9xcHVtWFAxQTI3MlN3Zm5qTEpPWWcxMS8rd1ZDY1h4L295MFh4T0x4?=
- =?utf-8?B?d2RIekdJcFA4YVFlVjUvcDU1QzR5RG95TW9CVzl5Y21INkpZcjZCQ3B6Vk9j?=
- =?utf-8?B?cFdUOU5ab1V2OG5UTlZ5cUY4QXJJVTRVVFgvY0ZZUXFUWXpsMWY1MHNRQ28z?=
- =?utf-8?B?YjErOURnSjd6ZEN4WG5SWTd4cERHN2ZBYUc5ZW83Qlp2R0E1d1J0RjJnWG5H?=
- =?utf-8?B?MU9JTnVXcWUveWIwclBIMUhheEVyL2NkUlZGZ25veGFRb25kTFJrSjV0a3Rn?=
- =?utf-8?B?cklsRWErR1EydE9TS1ZkdUdPQUZMWlpkUVI0SFl3QlpVYmdLVjJRb2xWRTg4?=
- =?utf-8?B?MEJ2a0p5MGxCVThnOWIvd1hWNDcveG9yRHcrQmFJN0RhYnpUNDdib0l5bCtk?=
- =?utf-8?B?TzB2MFUrcnRWOVZGWElqNUZXZmorR3lCdWt5Zy9xcVZhVWlKaDlhOWhWSG5z?=
- =?utf-8?B?Rkt0ZGZmMFVTTnpnOXRXdkJQTUVKWE9KR285ems0emk2QXpZaE1xTXIyMSs3?=
- =?utf-8?B?MnZPQSswc01nZGZOejBqdld5SnhxUnlFRWF1amdTT1E4dGhBK2g4MVBsVVRt?=
- =?utf-8?B?MUdZMWdPMytSLzVKSVprRG94RGVrc1V5OGppRUMyN3JOQkVKdnZ4Uk9hdHUw?=
- =?utf-8?Q?+OaqIOHnb2JCk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VUhKMDZOUmFrVG1Mcko5aGpibUI0UEV2ckY3S3lIS0VHeTRXK3RFTDNacTVj?=
- =?utf-8?B?V0lQZDNHSjBvTGpCSnVxV3RjK05CY205VVVGbVBYNjlGaHNoYy9yWlVNS0RL?=
- =?utf-8?B?cWt1c044QXlGdllIN2kxaEhNazhTUVJaVHU1N0VjdDVySEpCanp6SUd6NFlH?=
- =?utf-8?B?bkJ2UCs1VE8yNWFybmQzTjFMNmMrSDJVWXU2QTlJUjh5V0lCQktZOXJFLzZK?=
- =?utf-8?B?a2d0YXF6TzNFRytwVHkwbkhrZjVNbGdCckMxZGt0VFBFUG02WWcwRjBjalBE?=
- =?utf-8?B?TkJneGx0WWtxeWZVZThiaHhRajZVV2JTaHBTRU5HNjNUMU1Bci81V2s0TkZm?=
- =?utf-8?B?bHpJTkFDWW9UaG5QOURvYllOaXBvWXFuYWlxTGQ4S0RUZFRCeXhTTU0wREJP?=
- =?utf-8?B?RDZpV0JWSk9FZGZIdFV0UXZuMEtWRHpOeE9QSkg5MlRYdkEzQjdyYTRKM3Jp?=
- =?utf-8?B?M09MWHk0L1NWY2tVQ0lnNUpIOExjM2ZPN1p6TTR1U1FLWTdHVVVoNDgrU1Vh?=
- =?utf-8?B?NkhPQnRFbUN4eDd4aVhWSHFRMjJQakU4YjJVZUpoV2RoU0kxcE5KV2tUdldv?=
- =?utf-8?B?R2pnempsbCtRcUozV2txMERib0grSzRlWjcyNWd6YUtvQlUrdnBkTUNHdWpt?=
- =?utf-8?B?cWI0ZjkrTEF0ZVNDVWNBOG82ZlpOMzhIeEJyT0VCWDNuSWlOdkJvaGFuaVFP?=
- =?utf-8?B?aXZWaFR1bzNlenhOS2FUR3BrUE8yYVJleG9vZEtQdzhPdy9rU2lkT09uUkdx?=
- =?utf-8?B?eUxvZklwLzkxY2xIang2RSt4VFNDcVZvYWhHc1lNc1dDRzdIekJZai8xZHVT?=
- =?utf-8?B?L3hvWDNmclNLa0RoMHNxbmJaWWpIdlRrUWxDa1BjR1RPYnpTZUNvb1VGZ2Z1?=
- =?utf-8?B?RVhyeSttWk44VEVGaFRmeVhKNVJvTnVLTXE0R0xpU3k2U3JKdGRZM201ckVH?=
- =?utf-8?B?N1BBMXZrdVdlNFFIZDdNeUgyQ01hTG9QWENWcjhKNFBpTTkvNWRRaW91aUFV?=
- =?utf-8?B?TjJLT3lPc1hyRDdpY2tZTjZXQ0hyRUh2RWFZazJpd2V2Wlg0clcvdFVlVVR6?=
- =?utf-8?B?NUNmcjVHUmtqSWFsTmJ1ZitNYllBRHZ3c0l3dHdhT2xyTHEvbzl0QWFFN1N0?=
- =?utf-8?B?ZVkwVk9RSWd4U3dIZWFYWFI1c29GckxjaDlyMW9aeVVwek5UQlNZN1F6dkY3?=
- =?utf-8?B?VzZleGFQNm1kamhmSW0xMnc1TXh2dEJOOEYveVFyNXJrRVdEU3UxL0wzajB0?=
- =?utf-8?B?LzlzL3QzcXp0ak10TW02NHNlQkNScktGeFRUQ0Qyd21EMjdDZDZabE9GMitm?=
- =?utf-8?B?NjhTV1MwK3RvVVlMZ0dIMitua2FkaysrMFBVd1hNL0UxVWhFR0ZPblgvL0Mz?=
- =?utf-8?B?Qy9Xd2doRVRYRHhXSHVHemFzMmZKVDBuTjJHZnJJZDhYL3pNT1dEY2JSKzJh?=
- =?utf-8?B?WGliaFN5aitiK2I5bmlSajdFSXBGVUhRcWRFNzhkVDcrTy9IcS9ocFR4UERL?=
- =?utf-8?B?Rm4rSDIxWW9scHpVNkk4dlNWN005UUd4RFB0bGJVeGY2MzVLb2NFam15ZHRX?=
- =?utf-8?B?VGFlVVp1WXhoOGcrY1BLMWIxOHN1MkN1NXRmc2YwRHJPZGhHQjN2ZU1nVXFL?=
- =?utf-8?B?SlRTcDdKVnBPWGFJd1VxKzhNSmtmZkRza0hqb0JpcloxbWU2bGduWGpheXpz?=
- =?utf-8?B?S0JraFh3aTVXUVdXRlllVFZURi9TWkREQnlwMTZPcytQZWVjRUtBR1pmdGhV?=
- =?utf-8?B?VFRaalZvcktiVmRWRnR2dWtGSjloMzFhTUhKTkg4TFR2SEhJUi9GQlFwNkVU?=
- =?utf-8?B?LzhFbjBUNWpyTldXZElZdHRSSUNOMmMzZmlWOEoxTjNWRUJXSEozRm1BeE9p?=
- =?utf-8?B?VkNnTEtPWE5mM29xWGtybDJVdVIvbktJbkxoRWY0ZS9peWtIN1hRckd2SWJj?=
- =?utf-8?B?NEhTV2xDVjdhNUVmOW44QUN3bVByVWlYNS9PT1dldFRGc1FrZ3h5RVZHaCt3?=
- =?utf-8?B?RURFVU1JZ1pxY1hscEsrZ05IUDcrVldHUDROTjBucHJaR1lNTllBa0o2T2JS?=
- =?utf-8?B?bFJHdWp3MEhiaUI2akpGaVV5ekVRZ1QyVm9YV1ZNQktXeHVmVVNlWVFvNU8z?=
- =?utf-8?B?amhJbERKWlNvenppWmI4TGhPalh2U0p4UnNsTWxjZ24xVnhrYmJmV3lFZFhp?=
- =?utf-8?B?ZWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: af399a70-ca7b-4e34-011b-08dd706f464a
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 16:15:38.1213
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JQ8RswfmaTzvbatwVbf1tP8vyDlchXA2WbbfA93SlB4M9sDt0wC2iX0VAm2Mh+986wzZeXKFsxtd/Hwft893Xd9YKt5dakSrToRlNZLXR6E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5768
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIyx6mcC/3XNSwrCMBCA4atI1kbymFHqynuIizwmNqBpSWtRp
+ Hc3FoSKdvnPMN88WUc5Usf2qyfLNMQuNqkErFfM1SadiUdfmimhUGgF3AJvTaILzxRcc0t9TGc
+ OwljcGqMh7Fg5bcsy3if2eCpdx65v8mP6Msj39APif3CQXHAgZQN6WTn0h0y+Nv3GNVf2Fgc1V
+ 3YLiiqKxYDOIMpQ4Y+iZ4oWC4ouiiDhgWALkuyXMo7jCwLvwWVFAQAA
+X-Change-ID: 20250324-b4-panel-refcounting-40ab56aa34f7
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743434129; l=2504;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=MRdcYUkF4Pe4Wr0aSbQoo3p6MhneDKW8+5FisJSdyXo=;
+ b=pUAnnm/mVOXK5jpk0gamctKrxamaXOg3KZpcdfYaGn9OWz3cfTNND+8HRYUKKjkMTAc9PaTwQ
+ LUmfh+Sk5GJCeaoQS7r/jqFc3d8BEEKtjJdz26WV4b82wu5NEaL/Q3o
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi Tony,
+This series adds the infrastructure needed for the refcounting
+allocations for panels similar to Luca's efforts with bridges.
+Underlying intention and idea is the same - avoid use-after-free
+situations in panels. Get reference to panel when in use and put
+the reference back (down) when not in use.
+Once this gets approved, rest of the drivers will have to be
+mass converted to use this API.  All the callers of of_drm_find_panel()
+will have to be converted too.
 
-On 3/21/25 4:15 PM, Tony Luck wrote:
-> Functions that don't need the internal details of the rdt_mon_domain
-> can operate on just the rdt_domain_hdr.
+Tried to split the patches as suggested in the RFC series[1].
+Also fixed the connector used during panel_init to be the one
+passed by driver.
 
-This does not seem accurate. The functions are modified to take rdt_domain_hdr
-as parameter but then the functions are modified to extract rdt_mon_domain
-based on rdt_domain_hdr .... and proceeds to operate on internals of
-rdt_mon_domain in a way that contradicts the changelog.
+Patch 4 was not suggested or part of my initial work. Added it
+after looking at the comments Luca's v8 of the bridge series
+received.[2]
 
-Considering what comes later this seems risky to me to rely on the
-code flow to interpret which structure rdt_domain_hdr forms part of. I think
-that it will be safer if rdt_domain_hdr gets an identifier that reflects which
-structure it forms part of so that the accessors could be made explicit and
-have error checking.
+[1] -> https://patchwork.freedesktop.org/series/146236/
+[2] -> https://patchwork.freedesktop.org/series/146306/#rev2
 
-Reinette
+Suggested-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+Changes in v4:
+- Move refcounting documentation from Patch 1 to Patch 2 
+- Link to v3: https://lore.kernel.org/r/20250330-b4-panel-refcounting-v3-0-0e0d4e4641eb@redhat.com
+
+Changes in v3:
+- Move the include from patch 1 to patch 2 where it is actually used
+- Move the refcounting documentation out from the returns section to the
+  actual helper socumentation.
+- Code style changes. Move the version changes after the s-o-b.
+- Link to v2: https://lore.kernel.org/r/20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com
+
+Changes in v2:
+- Change drm_panel_put() to return void.
+- Export drm_panel_get()/put()
+- Code cleanups: add missing return documentation, improve documentation
+  in commit logs. 
+- Link to v1: https://lore.kernel.org/r/20250325-b4-panel-refcounting-v1-0-4e2bf5d19c5d@redhat.com
+
+---
+Anusha Srivatsa (4):
+      drm/panel: Add new helpers for refcounted panel allocatons
+      drm/panel: Add refcount support
+      drm/panel: deprecate old-style panel allocation
+      drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()
+
+ drivers/gpu/drm/drm_panel.c          | 92 +++++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/panel/panel-simple.c |  9 ++--
+ include/drm/drm_panel.h              | 41 ++++++++++++++++
+ 3 files changed, 135 insertions(+), 7 deletions(-)
+---
+base-commit: 372a9ca3c1f2ea10dd05a5d5008d055bc9536ced
+change-id: 20250324-b4-panel-refcounting-40ab56aa34f7
+
+Best regards,
+-- 
+Anusha Srivatsa <asrivats@redhat.com>
+
