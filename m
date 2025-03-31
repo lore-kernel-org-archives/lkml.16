@@ -1,317 +1,259 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492021D516F;
-	Mon, 31 Mar 2025 23:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AA93232;
+	Mon, 31 Mar 2025 23:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743465159; cv=none; b=KpvfRkQ7OY0ZdABci1tT0134JPpW60bzgTyH4aJs8zzs78ZSaSM9b8d4r0xHYT32gB+zO6klMXxkRHyBSDP46mxBfrm0bXEx+b/PhqguqP+gcEGQDgXXSRrIXgiF1pAZ3LW30R2NMf5XY7caLitQ7Rf8YmZOdMuyHegpBgY9+p4=
+	t=1743465321; cv=none; b=hqOnaxti7GI71CbbrMRJWiM7diERrJZ0RYtFgpEyVV1Q62RtR6+muQ8pKN7sG8qcwoKCyezwVZCAL/4bevYRwbVUdCzsjewIDqKW32JQDYeh4d5ZmPnoddmxvJcIXUJA8yi0hVYUKR/epFydfwKBsDGFqWDGqbYdEhrCGGjj9gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743465159; c=relaxed/simple;
-	bh=Sg57offXsIHBWNK+7oN9SDLq90T+Zz2dR0KE6WYXe5Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jAPO2LWFSG1q3qA+SLlMncKVwrB2K7NO59ykuQCJdDJ0eld062deU/szz2AkWHunlv58hSnNHY/PuCa/TnbMEW64DKTOVX0C+FOTmtojey2EdIqoWQ3uanWvirxGwu7m0c/Hk21N/6oOm4uM4OJ3ilOacJrwpRoObTsijiH6vys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=kvTAqs7o; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1743465321; c=relaxed/simple;
+	bh=JdSp6kFwin/i7mnHMSnOd2RVt7VK6HD80ILiGQo5gMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+Re9Zm9EKOJ8yDNjI/saf8s9N5R+chSfOzq6oJ3el9DvgTKwnAneNl+DtIGpnOs+//ZDBUMkb9CC6X8j9vBwIogJXNlJhDF5Xl0Iq7ZlScobRAp6txQ72kdj4507g8thhRJslOrdD8VDMfi8+JFtAKQrOK9rWkpnkIltEGUePA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHDDz8SV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kvTAqs7o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743465158; x=1775001158;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L01yvsJ3ehPpvSuIebX8N6gTvSRLh5l18zHWQXoSgv0=;
-  b=kvTAqs7ollS6IrBeSk0mDnAMdgABb+dEQqsYpCjb43m7SAlZ4VOqbLU9
-   yLob/7suSRELPIOWW+g05N0Utdwvg7EFgwcbmXNB4ugI4unzLtxhZYVtD
-   pI3nHy2gz/yWwDv5B5/QHeyUpa7B7dntZ6KhbzCahXhu9/vO98osMlT9C
-   M=;
-X-IronPort-AV: E=Sophos;i="6.14,291,1736812800"; 
-   d="scan'208";a="731601810"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 23:52:33 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:24203]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.201:2525] with esmtp (Farcaster)
- id 8fa15dfc-c34c-4c11-a26d-7857e5492504; Mon, 31 Mar 2025 23:52:31 +0000 (UTC)
-X-Farcaster-Flow-ID: 8fa15dfc-c34c-4c11-a26d-7857e5492504
-Received: from EX19D018EUC004.ant.amazon.com (10.252.51.172) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 31 Mar 2025 23:52:31 +0000
-Received: from EX19MTAUEB001.ant.amazon.com (10.252.135.35) by
- EX19D018EUC004.ant.amazon.com (10.252.51.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 31 Mar 2025 23:52:30 +0000
-Received: from email-imr-corp-prod-iad-all-1a-059220b4.us-east-1.amazon.com
- (10.43.8.2) by mail-relay.amazon.com (10.252.135.35) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Mon, 31 Mar 2025 23:52:30 +0000
-Received: from dev-dsk-apanyaki-2b-4798319e.us-west-2.amazon.com (dev-dsk-apanyaki-2b-4798319e.us-west-2.amazon.com [10.2.90.201])
-	by email-imr-corp-prod-iad-all-1a-059220b4.us-east-1.amazon.com (Postfix) with ESMTPS id 808E6403A7;
-	Mon, 31 Mar 2025 23:52:29 +0000 (UTC)
-From: Andrew Paniakin <apanyaki@amazon.com>
-To: <stable@vger.kernel.org>
-CC: Benjamin Herrenschmidt <benh@amazon.com>, Hazem Mohamed Abuelfotoh
-	<abuehaze@amazon.com>, Paulo Alcantara <pc@manguebit.com>, Paulo Alcantara
-	<pc@cjr.nz>, Steve French <stfrench@microsoft.com>, Andrew Paniakin
-	<apanyaki@amazon.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
-	<lsahlber@redhat.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey
-	<tom@talpey.com>, "open list:COMMON INTERNET FILE SYSTEM CLIENT (CIFS and
- SMB3)" <linux-cifs@vger.kernel.org>, "moderated list:COMMON INTERNET FILE
- SYSTEM CLIENT (CIFS and SMB3)" <samba-technical@lists.samba.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 6.1 V2] cifs: use origin fullpath for automounts
-Date: Mon, 31 Mar 2025 23:50:22 +0000
-Message-ID: <20250331235023.107494-1-apanyaki@amazon.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHDDz8SV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170D6C4CEE5;
+	Mon, 31 Mar 2025 23:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743465319;
+	bh=JdSp6kFwin/i7mnHMSnOd2RVt7VK6HD80ILiGQo5gMs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YHDDz8SV6vszt08Lsqy5BvxReOYcxncujzPlqWcLXpmrKq4mH6nWeyEuvG/HXcRxn
+	 t6XFFVMrBl3/M8xPDsKJXzYXf7nnbkJoLbFTb4mNRwiI6kthHlNRYa5w5hTTlYiNuT
+	 IXpqa2XqGn2F54BmhW/mNrjWo1ORYcD4M1u7JAYJji4bGrBGUEd5N2AJIkemzLjl/b
+	 DrI+6sCxT1ifA3huldlmiP9CBE8nE4B1dyL6i1r0DzhFUUiTp5eygjyj7XRYmr0SZr
+	 n4ITR6Jgf0EODRQA0bWOA4nHTGfgaAyN3kciceBQ04axLvArnH+xu4MrCkAsm1caNZ
+	 OsFWB1/AW004Q==
+Date: Mon, 31 Mar 2025 18:55:18 -0500
+From: Rob Herring <robh@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add MTIP L2 switch description
+Message-ID: <20250331235518.GA2823373-robh@kernel.org>
+References: <20250331103116.2223899-1-lukma@denx.de>
+ <20250331103116.2223899-2-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331103116.2223899-2-lukma@denx.de>
 
-From: Paulo Alcantara <pc@cjr.nz>
+On Mon, Mar 31, 2025 at 12:31:13PM +0200, Lukasz Majewski wrote:
+> This patch provides description of the MTIP L2 switch available in some
+> NXP's SOCs - e.g. imx287.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v2:
+> - Rename the file to match exactly the compatible
+>   (nxp,imx287-mtip-switch)
+> 
+> Changes for v3:
+> - Remove '-' from const:'nxp,imx287-mtip-switch'
+> - Use '^port@[12]+$' for port patternProperties
+> - Drop status = "okay";
+> - Provide proper indentation for 'example' binding (replace 8
+>   spaces with 4 spaces)
+> - Remove smsc,disable-energy-detect; property
+> - Remove interrupt-parent and interrupts properties as not required
+> - Remove #address-cells and #size-cells from required properties check
+> - remove description from reg:
+> - Add $ref: ethernet-switch.yaml#
+> ---
+>  .../bindings/net/nxp,imx287-mtip-switch.yaml  | 154 ++++++++++++++++++
+>  1 file changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> new file mode 100644
+> index 000000000000..98eba3665f32
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nxp,imx287-mtip-switch.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/nxp,imx287-mtip-switch.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
+> +
+> +maintainers:
+> +  - Lukasz Majewski <lukma@denx.de>
+> +
+> +description:
+> +  The 2-port switch ethernet subsystem provides ethernet packet (L2)
+> +  communication and can be configured as an ethernet switch. It provides the
+> +  reduced media independent interface (RMII), the management data input
+> +  output (MDIO) for physical layer device (PHY) management.
+> +
+> +$ref: ethernet-switch.yaml#
 
-commit 7ad54b98fc1f141cfb70cfe2a3d6def5a85169ff upstream.
+This needs to be: ethernet-switch.yaml#/$defs/ethernet-ports
 
-Use TCP_Server_Info::origin_fullpath instead of cifs_tcon::tree_name
-when building source paths for automounts as it will be useful for
-domain-based DFS referrals where the connections and referrals would
-get either re-used from the cache or re-created when chasing the dfs
-link.
+With that, you can drop much of the below part. More below...
 
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[apanyaki: backport to v6.1-stable]
-Signed-off-by: Andrew Paniakin <apanyaki@amazon.com>
----
-Please do not include follow-up fix d5a863a153e9 ("cifs: avoid dup
-prefix path in dfs_get_automount_devname()"). It works correctly only
-when all patches applied in a following order:
-1. 7ad54b98fc1f1 ("cifs: use origin fullpath for automounts")
-2. a1c0d00572fc ("cifs: share dfs connections and supers")  (not ported to linux-6.1)
-3. d5a863a153e9 ("cifs: avoid dup prefix path in dfs_get_automount_devname()")
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx287-mtip-switch
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  phy-supply:
+> +    description:
+> +      Regulator that powers Ethernet PHYs.
+> +
+> +  clocks:
+> +    items:
+> +      - description: Register accessing clock
+> +      - description: Bus access clock
+> +      - description: Output clock for external device - e.g. PHY source clock
+> +      - description: IEEE1588 timer clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +      - const: ahb
+> +      - const: enet_out
+> +      - const: ptp
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Switch interrupt
+> +      - description: ENET0 interrupt
+> +      - description: ENET1 interrupt
+> +
+> +  pinctrl-names: true
+> +
 
-The reason is that patch a1c0d00572fc ("cifs: share dfs connections and
-supers") changes origin_fullpath contents from just a namespace root to
-a full path eg. from '//corp.fsxtest.local/namespace/' to
-'//corp.fsxtest.local/namespace/folderA/fs1-folder/'. But the prefix
-path '/folderA/' is also stored in a cifs superblock info and it was
-copied twice. With patch d5a863a153e9 ("cifs: avoid dup prefix path in
-dfs_get_automount_devname()") prepath string from superblock info is not
-used in path construction and result is correct.
+> +  ethernet-ports:
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '^port@[12]+$':
 
+Note that 'ethernet-port' is the preferred node name though 'port' is 
+allowed.
 
-But the patch a1c0d00572fc ("cifs: share dfs connections and supers")
-was not ported to linux-6.1, probably because it's a part of huge cifs
-driver update series merged in linux-6.2, not just a bug fix. So if we
-apply patches in following order:
-1. 7ad54b98fc1f1 ("cifs: use origin fullpath for automounts")
-2. d5a863a153e9 ("cifs: avoid dup prefix path in dfs_get_automount_devname()")
-then constructed fullpath will be '//corp.fsxtest.local/namespace/fs1-folder/'
-instead of '//corp.fsxtest.local/namespace/folderA/fs1-folder/' because prefix
-path was not copied from the superblock info.
+> +        type: object
+> +        description: MTIP L2 switch external ports
+> +
+> +        $ref: ethernet-controller.yaml#
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          reg:
+> +            items:
+> +              - enum: [1, 2]
+> +            description: MTIP L2 switch port number
+> +
+> +          label:
+> +            description: Label associated with this port
+> +
+> +        required:
+> +          - reg
+> +          - label
+> +          - phy-mode
+> +          - phy-handle
 
-Changelog:
-v2:
-- added CONFIG_CIFS_DFS_UPCALL wrapper to fix build issue [1]
+All the above under 'ethernet-ports' can be dropped though you might 
+want to keep 'required' part.
 
-v1: (updates made to upstream version of this patch)
-- set_dest_addr() converts DFS address to sockaddr differently: in
-  kernel 6.1 dns_resolve_server_name_to_ip() returns a string which
-  needs to be converted to sockaddr with cifs_convert_address().
-- removed hunk to init tmp.leaf_fullpath, it was introduced later in
-  a1c0d00572fc ("cifs: share dfs connections and supers")
-- __build_path_from_dentry_optional_prefix() and
-  dfs_get_automount_devname() functions were added to
-  fs/smb/client/cifsproto.h instead of fs/cifs/dfs.h as it doesn't exist
-  in 6.1
-- Link to v1: https://lore.kernel.org/all/20240713031147.20332-1-apanyaki@amazon.com/
-
-Testing:
-1. tested that these steps do not work without this backport and work
-with it:
-- mount DFS namespace root:
-  mount -t cifs -o cred=/mnt/creds,noserverino //corp.fsxtest.local
-- shutdown the namespace server that is in use
-- access DFS link (triggers automount):
-  ls /mnt/dfs-namespace/fs1-folder
-Reported verbose logs which demonstrate backport correctness in
-regression ML thread [2].
-
-2. build kernel with debug options listed in the patch submission
-checklist[3], executed cifs test suite of the xfstests [4], no errors.
-
-3. confirmed compilation works with all y/m/n combinations for
-CONFIG_CIFS and CONFIG_CIFS_DFS_UPCALL.
-
-4. confirmed allmodconfig and allnoconfig cross-compilation works on
-arm, arm64, mips, powerpc, risc.
-
-[1] https://lore.kernel.org/all/aaccd8cc-2bfe-4b2e-b690-be50540f9965@gmail.com/
-[2] https://lore.kernel.org/all/Z9cZuBxOscqybcMy@3c06303d853a.ant.amazon.com/
-[3] https://www.kernel.org/doc/html/latest/process/submit-checklist.html
-[4] https://web.git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-
- fs/smb/client/cifs_dfs_ref.c | 34 ++++++++++++++++++++++++++++++++--
- fs/smb/client/cifsproto.h    | 21 +++++++++++++++++++++
- fs/smb/client/dir.c          | 21 +++++++++++++++------
- 3 files changed, 68 insertions(+), 8 deletions(-)
-
-diff --git a/fs/smb/client/cifs_dfs_ref.c b/fs/smb/client/cifs_dfs_ref.c
-index 020e71fe1454..876f9a43a99d 100644
---- a/fs/smb/client/cifs_dfs_ref.c
-+++ b/fs/smb/client/cifs_dfs_ref.c
-@@ -258,6 +258,31 @@ char *cifs_compose_mount_options(const char *sb_mountdata,
- 	goto compose_mount_options_out;
- }
- 
-+static int set_dest_addr(struct smb3_fs_context *ctx, const char *full_path)
-+{
-+	struct sockaddr *addr = (struct sockaddr *)&ctx->dstaddr;
-+	char *str_addr = NULL;
-+	int rc;
-+
-+	rc = dns_resolve_server_name_to_ip(full_path, &str_addr, NULL);
-+	if (rc < 0)
-+		goto out;
-+
-+	rc = cifs_convert_address(addr, str_addr, strlen(str_addr));
-+	if (!rc) {
-+		cifs_dbg(FYI, "%s: failed to convert ip address\n", __func__);
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	cifs_set_port(addr, ctx->port);
-+	rc = 0;
-+
-+out:
-+	kfree(str_addr);
-+	return rc;
-+}
-+
- /*
-  * Create a vfsmount that we can automount
-  */
-@@ -295,8 +320,7 @@ static struct vfsmount *cifs_dfs_do_automount(struct path *path)
- 	ctx = smb3_fc2context(fc);
- 
- 	page = alloc_dentry_path();
--	/* always use tree name prefix */
--	full_path = build_path_from_dentry_optional_prefix(mntpt, page, true);
-+	full_path = dfs_get_automount_devname(mntpt, page);
- 	if (IS_ERR(full_path)) {
- 		mnt = ERR_CAST(full_path);
- 		goto out;
-@@ -315,6 +339,12 @@ static struct vfsmount *cifs_dfs_do_automount(struct path *path)
- 		goto out;
- 	}
- 
-+	rc = set_dest_addr(ctx, full_path);
-+	if (rc) {
-+		mnt = ERR_PTR(rc);
-+		goto out;
-+	}
-+
- 	rc = smb3_parse_devname(full_path, ctx);
- 	if (!rc)
- 		mnt = fc_mount(fc);
-diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
-index f37e4da0fe40..81d2761cd00a 100644
---- a/fs/smb/client/cifsproto.h
-+++ b/fs/smb/client/cifsproto.h
-@@ -57,8 +57,29 @@ extern void exit_cifs_idmap(void);
- extern int init_cifs_spnego(void);
- extern void exit_cifs_spnego(void);
- extern const char *build_path_from_dentry(struct dentry *, void *);
-+char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
-+					       const char *tree, int tree_len,
-+					       bool prefix);
- extern char *build_path_from_dentry_optional_prefix(struct dentry *direntry,
- 						    void *page, bool prefix);
-+
-+#ifdef CONFIG_CIFS_DFS_UPCALL
-+static inline char *dfs_get_automount_devname(struct dentry *dentry, void *page)
-+{
-+	struct cifs_sb_info *cifs_sb = CIFS_SB(dentry->d_sb);
-+	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
-+	struct TCP_Server_Info *server = tcon->ses->server;
-+
-+	if (unlikely(!server->origin_fullpath))
-+		return ERR_PTR(-EREMOTE);
-+
-+	return __build_path_from_dentry_optional_prefix(dentry, page,
-+							server->origin_fullpath,
-+							strlen(server->origin_fullpath),
-+							true);
-+}
-+#endif
-+
- static inline void *alloc_dentry_path(void)
- {
- 	return __getname();
-diff --git a/fs/smb/client/dir.c b/fs/smb/client/dir.c
-index 863c7bc3db86..477302157ab3 100644
---- a/fs/smb/client/dir.c
-+++ b/fs/smb/client/dir.c
-@@ -78,14 +78,13 @@ build_path_from_dentry(struct dentry *direntry, void *page)
- 						      prefix);
- }
- 
--char *
--build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
--				       bool prefix)
-+char *__build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
-+					       const char *tree, int tree_len,
-+					       bool prefix)
- {
- 	int dfsplen;
- 	int pplen = 0;
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(direntry->d_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
- 	char dirsep = CIFS_DIR_SEP(cifs_sb);
- 	char *s;
- 
-@@ -93,7 +92,7 @@ build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
- 		return ERR_PTR(-ENOMEM);
- 
- 	if (prefix)
--		dfsplen = strnlen(tcon->tree_name, MAX_TREE_SIZE + 1);
-+		dfsplen = strnlen(tree, tree_len + 1);
- 	else
- 		dfsplen = 0;
- 
-@@ -123,7 +122,7 @@ build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
- 	}
- 	if (dfsplen) {
- 		s -= dfsplen;
--		memcpy(s, tcon->tree_name, dfsplen);
-+		memcpy(s, tree, dfsplen);
- 		if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_POSIX_PATHS) {
- 			int i;
- 			for (i = 0; i < dfsplen; i++) {
-@@ -135,6 +134,16 @@ build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
- 	return s;
- }
- 
-+char *build_path_from_dentry_optional_prefix(struct dentry *direntry, void *page,
-+					     bool prefix)
-+{
-+	struct cifs_sb_info *cifs_sb = CIFS_SB(direntry->d_sb);
-+	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
-+
-+	return __build_path_from_dentry_optional_prefix(direntry, page, tcon->tree_name,
-+							MAX_TREE_SIZE, prefix);
-+}
-+
- /*
-  * Don't allow path components longer than the server max.
-  * Don't allow the separator character in a path component.
-
-base-commit: 8e60a714ba3bb083b7321385054fa39ceb876914
--- 
-2.43.0
-
+> +
+> +  mdio:
+> +    type: object
+> +    $ref: mdio.yaml#
+> +    unevaluatedProperties: false
+> +    description:
+> +      Specifies the mdio bus in the switch, used as a container for phy nodes.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - mdio
+> +  - ethernet-ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include<dt-bindings/interrupt-controller/irq.h>
+> +    switch@800f0000 {
+> +        compatible = "nxp,imx287-mtip-switch";
+> +        reg = <0x800f0000 0x20000>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
+> +        phy-supply = <&reg_fec_3v3>;
+> +        interrupts = <100>, <101>, <102>;
+> +        clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+> +        clock-names = "ipg", "ahb", "enet_out", "ptp";
+> +
+> +        ethernet-ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            mtip_port1: port@1 {
+> +                reg = <1>;
+> +                label = "lan0";
+> +                local-mac-address = [ 00 00 00 00 00 00 ];
+> +                phy-mode = "rmii";
+> +                phy-handle = <&ethphy0>;
+> +            };
+> +
+> +            mtip_port2: port@2 {
+> +                reg = <2>;
+> +                label = "lan1";
+> +                local-mac-address = [ 00 00 00 00 00 00 ];
+> +                phy-mode = "rmii";
+> +                phy-handle = <&ethphy1>;
+> +            };
+> +        };
+> +
+> +        mdio_sw: mdio {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            reset-gpios = <&gpio2 13 0>;
+> +            reset-delay-us = <25000>;
+> +            reset-post-delay-us = <10000>;
+> +
+> +            ethphy0: ethernet-phy@0 {
+> +                reg = <0>;
+> +            };
+> +
+> +            ethphy1: ethernet-phy@1 {
+> +                reg = <1>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.39.5
+> 
