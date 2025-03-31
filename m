@@ -1,80 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BC21531DB
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93E82AEE1;
+	Mon, 31 Mar 2025 11:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743419250; cv=none; b=SjtMk5i5SWSdp3OaUffI6Et89i7j2tlVeuujZDQX4WVis0akq4JflGoMt79XkkpV6VGpmxXev9jrWJnDqaxoyiYZsyupJGkJlYCLB2nOXD4wuqvyKKGMPmBND48Zh1DpWKY8ywPUGC3iEORMziuO4jyosx8H2W7KrobPQyrFpwI=
+	t=1743419293; cv=none; b=LLR8NeHFkZE+9kNCgetJJBJ3Vi93U/Q06kLcg7ljkZjMvsNkfH5OK35sBANE7WTLSskUTBmOt3q4Sw0QZm+P6uIfNpbHk/86z9VK8xxn7QTv+NCUbSTa+IwbTibowISeZV+hfIiXKcz+dvKNCdzmotGPgsMTvLBJHHKQrJLkR/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743419250; c=relaxed/simple;
-	bh=5nUQOqXnNbAY01Qsh80HSPwqDkJ9sAaeGhdDdlSe+YQ=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=kz36rKdxZzmsY5DQQ+r6PMnuRWEtjzPA1fGEiSA7UssyVhA/bM3GLOU8U+TJ1Zb5k8NdsPMdCLBF6XN77bFP25lIbIEvTpRT/yRQmg9Y17olHLGPFJ8im3W08cL/mEC6BhezHrWTqUM3Oq/4jMno7IImT4+o9YcQmFrrQH4YUCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KtrjAeHY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743419293; c=relaxed/simple;
+	bh=ABbYmkdZot2xo1j9ZE43O5qMAIZuh7Wo1WZXf7p9nQ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HPDyAWi2JmSFEZvabpuwiMZgdJUZI70GAGR4OOS/1l2qD+83/U8IIhL7vcdYiEr0D6JYUWIJM9OZU6scdO/2KLENOndp1YySv1fOaxqbsq6k8DR0JYxfBZhqU31nw3zvFKbU7CH6FHbLJ8speQh/4q273XRqMWLvHPyp+85+gnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwAhWdBb; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KtrjAeHY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743419248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5nUQOqXnNbAY01Qsh80HSPwqDkJ9sAaeGhdDdlSe+YQ=;
-	b=KtrjAeHYUIVns7GaoJQJMYHUXiIX3u7drzpT1n9uZ0AL7u2n3FTlPm0nXGQZoxXulCmP05
-	3/ekhjR9ELPtTTferY40zfrkTyMnWla7yJGgODAeuazLHMAehwIHbHrIPUiOVmWg2fgGPY
-	P4WzxZbcnH0IKmMkrFPxXnTufj3YwZQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-317-wWV-G8rSO2OuESFQT2wetw-1; Mon,
- 31 Mar 2025 07:07:22 -0400
-X-MC-Unique: wWV-G8rSO2OuESFQT2wetw-1
-X-Mimecast-MFC-AGG-ID: wWV-G8rSO2OuESFQT2wetw_1743419241
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BEA3C180AF49;
-	Mon, 31 Mar 2025 11:07:19 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 76272180175A;
-	Mon, 31 Mar 2025 11:07:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <67ea546d.050a0220.1547ec.0124.GAE@google.com>
-References: <67ea546d.050a0220.1547ec.0124.GAE@google.com>
-To: syzbot <syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, almaz.alexandrovich@paragon-software.com,
-    linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-    marc.dionne@auristor.com, ntfs3@lists.linux.dev,
-    syzkaller-bugs@googlegroups.com
-Subject: Is "unregister_netdevice: waiting for batadv0 to become free" fixed somewhere else?
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwAhWdBb"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2240b4de12bso55787585ad.2;
+        Mon, 31 Mar 2025 04:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743419291; x=1744024091; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NQQM3Yu8f39BKq2Mg/PjZ0Uv+SRmBe59/r9UjuQMsco=;
+        b=KwAhWdBb9yClGr6oBYYq7h0Uce6u9C/fr4gs6276sgoisCEJoEHRjimA+0U+fCfutp
+         TxBLzlXr1BWHhKLRffUxWUD0yJ+2TVS2NF792s4DFrysWmFWvgy6EhM5mctCihOPaaYm
+         gbSQJlEvQLoeoFC7B/cWAz3yV+MaNPiwJovyqDwRGARGGoHtHfcLqSw6U7IcT315iWZZ
+         esPNmqjnUlbWqYde0+Ud2+RFR04/+QR4OGPHQoii5nyeikGWsMQHeXv6zBbBUk5Sx7ns
+         KbPSRm4Cz2vzZbnsHr3kaUYv5H+WgJu3rufmoVk8hJuOUS8V28pyi+RHAbC9nGs324WF
+         +oKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743419291; x=1744024091;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQQM3Yu8f39BKq2Mg/PjZ0Uv+SRmBe59/r9UjuQMsco=;
+        b=PrbdtSBxBTdvy8AoZWUh1GPEb/wxnzuQgUQZI4gOfRoFdO1aMNCtGSg7CBqbx8/i11
+         LmKEUNUci/d4hmf0z8oZNIHbIuTjVJUaQieG3s4yxakYa8YuYGdUXh9q1JRegFT04h8Q
+         s/ggBA30uNjKoFBkWlPuc90L3UKn5YsR9jwja+RLd4EZUKhZBlFNdVGAr4uuohsPVTFX
+         Knt9TfMdBJrElC6QKOUAm60iMtjnuYKymmReqYFms9tl/9TrriejYBcxX3QDu4I7ythw
+         HnY8H1N1krLIQD5oossitbmQkTrfN0MdN8RSapmb7iSXUOH6Oezg066+eeW31nyVt8Zv
+         XrKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4h8dDwjdG2z+7mGTtPAczcXDanXwBCtNxMz1X77gHGZE7mv5pT04NZEDk2QariRFXDNvoqHm0mrjkSSsoaIrFEhE=@vger.kernel.org, AJvYcCWc/dovgWD6Ld/kTGB3hLzfJZ1IC94SCpoxfz+qR7+02pxQrwHHa2j533YIGqczx3fwtc3s0PEXCyxVW8o=@vger.kernel.org, AJvYcCXYc5veThWirG4Lhvo0wB4703gkMQxO17y5Ptjnkbd0LRfeVgu/lAz/3GmwxX/41cstoNs7D8oenq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz22YuOsE6xo/bp7d2xGqCriCsrOhD/fzWnMTcDXRNGhvQT8ZaT
+	8lPsGzhA32Njk3tuhIYD+YXCDUHuuVV/HS01ATq2MnuFYekg3hgw
+X-Gm-Gg: ASbGnctrc3OQDlmNR9vFMxRPv9FFEeIyCqZWT9srtXqjtlhJP8ojWnanK3gfGW10HOu
+	7Fqpka0R/XiReuWK2jljCwe1Y8dYCxfBmfhhWtuY0WwgbRpp4Ddfq0PZOeIbwbT0uNS5mIDSJad
+	59lu+4UOE5T6fuL/Q3vZNumAPp/Nq1L+UWt186uyv33TLHi2Q0TbCpgk71fbaVukW4o/W9JPLxp
+	iMOe22oTw+D4uc+Z6dtP3q6HQdX3RKOwQz9WCE9QtkaiUesbWTfCwyeYEicFo+cNSYiPfsktJIy
+	iAAFxdQKUKnbQ0cv0Kgr0arRdevLe9xRzUuHqMOCAArt5IUxCokfE8hVw7kcoV+y3D8jlyg=
+X-Google-Smtp-Source: AGHT+IEfDTgHboSZ6iP2dwOP4vEW2XdDO0sbdpyybIi/mimcrNizy0gR6Y/LkkD3gFM65fgc+CAQ5Q==
+X-Received: by 2002:a17:902:c408:b0:220:cb6c:2e30 with SMTP id d9443c01a7336-2292fa010cemr150564165ad.49.1743419290986;
+        Mon, 31 Mar 2025 04:08:10 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dfbb4sm66890615ad.198.2025.03.31.04.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 04:08:10 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: djakov@kernel.org,
+	krzk@kernel.org
+Cc: s.nawrocki@samsung.com,
+	a.swigon@samsung.com,
+	alim.akhtar@samsung.com,
+	linux-pm@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH] interconnect: Add NULL check in exynos_generic_icc_probe
+Date: Mon, 31 Mar 2025 19:08:02 +0800
+Message-Id: <20250331110802.9658-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <255828.1743419236.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Mar 2025 12:07:16 +0100
-Message-ID: <255830.1743419236@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
 
-syzbot <syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com> wrote:
+When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function exynos_generic_icc_probe.
 
-> syzbot has tested the proposed patch but the reproducer is still trigger=
-ing an issue:
-> unregister_netdevice: waiting for DEV to become free
-> =
+A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error. This is similar to the commit 050b23d081da.
 
-> unregister_netdevice: waiting for batadv0 to become free. Usage count =3D=
- 3
+Fixes: 2f95b9d5cf0b3 ("interconnect: Add generic interconnect driver for Exynos SoCs")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/interconnect/samsung/exynos.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
+index 9e041365d909..3dccc84f72cf 100644
+--- a/drivers/interconnect/samsung/exynos.c
++++ b/drivers/interconnect/samsung/exynos.c
+@@ -134,6 +134,8 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
+ 	priv->node = icc_node;
+ 	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
+ 					bus_dev->of_node);
++	if (!icc_node->name)
++		return -ENOMEM;
+ 	if (of_property_read_u32(bus_dev->of_node, "samsung,data-clock-ratio",
+ 				 &priv->bus_clk_ratio))
+ 		priv->bus_clk_ratio = EXYNOS_ICC_DEFAULT_BUS_CLK_RATIO;
+-- 
+2.34.1
 
