@@ -1,46 +1,74 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3FA1DA4E
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857FB218EBE
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743447952; cv=none; b=k9zouT7BjQXlmX2aCWgh1JYFtyJM35LaHB1IKPFPpHe10cF+bIw68rqKxntDrOv0afEglap9yDmOZ+Y4RBWzAXnnEyY/vLZjGrUUuBPHV7r/fXwAFzPMLZ9Hsyh+7Z8qO4jzVGpirpog9S6FhIMLvTnh3KPfToGep/WvNUZUfKs=
+	t=1743447961; cv=none; b=L7Stw7321bJg/X3mhzmlFlspHhZHTS/CbzI/XQysQqJdw9uYim+L341I0wM5pj1yC+0I0LrmsySW3pCiZ0H9OVyOOXKZX5e6TBByxFwRiF12A827FWyXreKOqnFAfu//PiDdEwtbbCD3oqPkttS/doUilQ3t0fLXfZgPM3Mo1AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743447952; c=relaxed/simple;
-	bh=WMl20F6JpmqJilOJfkGLEHer+duH1E6nC1WJZj7VejQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=n/aiYJztXzdJI5BbjGDSYliEvR/5hH42Rxs+5B+/f56IgeT3Ffi8mBL+e1zpTZnQXeave6P1Dcn00TC894BIZyu3UHfyv4MHn4Cd4NKh7BSvBcMDyUxGl4UCaqLGoBXEReAvvXTEhS05V4Nm95dtu1ig8yFWYL1fsEoBolyVbjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=abnPhXJg; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743447961; c=relaxed/simple;
+	bh=ymtz3LKXQelnMrMnB1EtIZhse9Mr3gBZyo+pb7yu+nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GCiLMQY/gFUAM5UzbJOyhMzwTZTDHa8MwVk3zzA+wQGq796P3U/Fb2DqEQJMF5iDS1cMET0+Ne/IRPOzUshJhn5EZ1VmW+7vFcxeeBRiFer7oFNwLXheZAPUqfmCeITTsL7vxLdspPD/Sd1nncqI1pMNxjKS5sM48kDUp6W8Tys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZldkI6CD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="abnPhXJg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=sihKOfS8lYFo9Xhf2LxC2A7NzXIY9IgPrC4IE7FxJ40=;
-  b=abnPhXJg9t6awNZhXFUU6NGdo15lhaaq09LNiW5iLyo3F/EElb0yApXM
-   Tfxa8hnCXOwGWnKseX7Pd5KO5FZZ59K8iSLHhXAVySvl6/tXHTSpbKetZ
-   I+EaBaOdBOZlPWsiZMUTnRg8H4H5iyzq4wABgz0JKWKvak3/S3wU/w0R0
-   g=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.14,291,1736809200"; 
-   d="scan'208";a="215667369"
-Received: from static.ip-78-108-136-42.signet.nl (HELO hadrien) ([78.108.136.42])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 21:05:47 +0200
-Date: Mon, 31 Mar 2025 21:05:46 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Erick Karanja <karanja99erick@gmail.com>
-cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
-    philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] staging: rtl8723bs: replace kmalloc + memset with
- kzalloc
-In-Reply-To: <d68a05a05966167f8e54f2fc779af2f1cfe32e07.1743434232.git.karanja99erick@gmail.com>
-Message-ID: <ef73e566-5a1d-961-73b1-839579811ba5@inria.fr>
-References: <cover.1743434232.git.karanja99erick@gmail.com> <d68a05a05966167f8e54f2fc779af2f1cfe32e07.1743434232.git.karanja99erick@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZldkI6CD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743447958;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uzKnw77swTeh7HXFgYoBa2NfI5F2/BsDtkjgKan+l0U=;
+	b=ZldkI6CDx9gDDRLRMeeoUBGlZ+c+bw9e5EGwpOnBmxRaOoA63OcmA745BrU7TkQi7Cj+0p
+	+l90blBPAy3xaZy99ICx7sJj74GlWk9AnBhTOKktOawmvvF4tnWJ3fQ+LeOBTD4Zj8gvGO
+	1QLQLmbAa/2klck6JlVdY3qE15gsyKk=
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
+ [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-41-Gd2I49WLNXamVOseeTb39Q-1; Mon, 31 Mar 2025 15:05:56 -0400
+X-MC-Unique: Gd2I49WLNXamVOseeTb39Q-1
+X-Mimecast-MFC-AGG-ID: Gd2I49WLNXamVOseeTb39Q_1743447956
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-603f3a4c58dso13714eaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:05:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743447956; x=1744052756;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uzKnw77swTeh7HXFgYoBa2NfI5F2/BsDtkjgKan+l0U=;
+        b=TVtT0IV+V7dhZie+exneW1eZZp3G1jN0mYFgc8ghnn6nqoZj7hxRF9aI+saSkTr5n5
+         +Z/mUG6SR56DKPGNyU7vQ8XKQDgWuXomtroG4c6olTWeuhd01Z+BOMk+DFGV4tmKBPNs
+         rx7n8qsJk5QFuR4u9TcdcK3uzdJxL2UAVEPwUfVfHEyP5HKKScWfHvVaImZLKRptdljb
+         qdgRvlvRmAA4fetXG/wIgQElCQE9f08aaZ4zcy/edMhFZnhbt3YfFsCb1oko5YN7VTKt
+         AG0IZsxpg+5ExW5xxlWU/NtIGJUDZqr1Jg50xjDSOUDqe4bipKLbuur+FLVkDVkV40kQ
+         v1iA==
+X-Gm-Message-State: AOJu0YyewXVU3y9lZ1PgEkmU+yAHCMH3V3iEvJLqzWU0obvGGLFdVCed
+	haOuYfyrr/PaB9iSRZ+zLW315lPQ74ZDAN/JGSWnDJ394zJ6WIvlOxAakBHk2BFMrTQ63Y7AuCQ
+	a/JsN7dBbTkt3mR+sStmTiTGeMEM27dCh5QTq42I231cm8V4pMlUmQgC8TTYy7A==
+X-Gm-Gg: ASbGncsdEMTASZH8EobzVuMBENrNt6zhmgLduwvtUP9On7EeErqZful1DYYpER8+0gM
+	Td86snDRR41WO072uHvh5caJcFQoS3ZIkfwVGzg0egi/sKJiFd5Y5112traI0fdiuI6uJ2fthAD
+	F/WxS1NGHl0m2Es7kKhGTSk8IT4Yl4qt8tEqPJm//UBi8w+iiwcqj1mCu1PyIzibbVIx6Znbxe1
+	gTk4pCjPVhr17E3nK6T4kz6+cRfNDLTw4Qd6rAiln/wqxCYwWrLqIxNDVNiUVvIj1Muevr6Aku/
+	kEqfiuZf1M+iCNV0wJM=
+X-Received: by 2002:a05:6871:4f12:b0:2cc:36b1:8c19 with SMTP id 586e51a60fabf-2cc36b1dd66mr41789fac.0.1743447955852;
+        Mon, 31 Mar 2025 12:05:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGI7UGahoFOzLlam2TphSYmw3If0g3Dxd3FZsZxKkq/Qcp8nUCuQBdZUJ41G/+wxHja5olD4Q==
+X-Received: by 2002:a05:6871:4f12:b0:2cc:36b1:8c19 with SMTP id 586e51a60fabf-2cc36b1dd66mr41781fac.0.1743447955518;
+        Mon, 31 Mar 2025 12:05:55 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a90e132sm1970717fac.45.2025.03.31.12.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 12:05:54 -0700 (PDT)
+Date: Mon, 31 Mar 2025 13:05:50 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
+ <kvm@vger.kernel.org>
+Subject: [GIT PULL] VFIO updates for v6.15-rc1
+Message-ID: <20250331130550.2f9ba79e.alex.williamson@redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,52 +76,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Hi Linus,
 
+The following changes since commit d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
 
-On Mon, 31 Mar 2025, Erick Karanja wrote:
+  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
 
-> Replace a call to kmalloc followed by memset with a single call to
-> kzalloc, which both allocates memory and zeroes it in one step.
->
-> This change improves readability and reduces redundant code.
->
-> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/os_dep/osdep_service.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/os_dep/osdep_service.c b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-> index a00f9f0c85c5..be46132a533a 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-> @@ -24,12 +24,7 @@ void *_rtw_malloc(u32 sz)
->
->  void *_rtw_zmalloc(u32 sz)
->  {
-> -	void *pbuf = _rtw_malloc(sz);
-> -
-> -	if (pbuf)
-> -		memset(pbuf, 0, sz);
-> -
-> -	return pbuf;
-> +	return kzalloc(sz, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
->  }
+are available in the Git repository at:
 
-So _rtw_malloc calls kmalloc?
+  https://github.com/awilliam/linux-vfio.git tags/vfio-v6.15-rc1
 
-How about gettind rid of both _rtw_malloc and _rtw_zmalloc and calling
-kmalloc and kzalloc instead?  You should try to figure out if GFP_ATOMIC
-or GFP_KERNEL should be used based on the context.  If you search for
-those constants, you should be able to find some explanations about when
-they should be used.
+for you to fetch changes up to 860be250fc32de9cb24154bf21b4e36f40925707:
 
-julia
+  vfio/pci: Handle INTx IRQ_NOTCONNECTED (2025-03-17 15:15:17 -0600)
 
->
->  inline struct sk_buff *_rtw_skb_alloc(u32 sz)
-> --
-> 2.43.0
->
->
->
+----------------------------------------------------------------
+VFIO updates for v6.15-rc1
+
+ - Relax IGD support code to match display class device rather than
+   specifically requiring a VGA device. (Tomita Moeko)
+
+ - Accelerate DMA mapping of device MMIO by iterating at PMD and PUD
+   levels to take advantage of huge pfnmap support added in v6.12.
+   (Alex Williamson)
+
+ - Extend virtio vfio-pci variant driver to include migration support
+   for block devices where enabled by the PF. (Yishai Hadas)
+
+ - Virtualize INTx PIN register for devices where the platform does
+   not route legacy PCI interrupts for the device and the interrupt
+   is reported as IRQ_NOTCONNECTED. (Alex Williamson)
+
+----------------------------------------------------------------
+Alex Williamson (7):
+      vfio/type1: Catch zero from pin_user_pages_remote()
+      vfio/type1: Convert all vaddr_get_pfns() callers to use vfio_batch
+      vfio/type1: Use vfio_batch for vaddr_get_pfns()
+      vfio/type1: Use consistent types for page counts
+      mm: Provide address mask in struct follow_pfnmap_args
+      vfio/type1: Use mapping page mask for pfnmaps
+      vfio/pci: Handle INTx IRQ_NOTCONNECTED
+
+Tomita Moeko (1):
+      vfio/pci: match IGD devices in display controller class
+
+Yishai Hadas (1):
+      vfio/virtio: Enable support for virtio-block live migration
+
+ drivers/vfio/pci/vfio_pci.c         |   4 +-
+ drivers/vfio/pci/vfio_pci_config.c  |   3 +-
+ drivers/vfio/pci/vfio_pci_core.c    |  10 +--
+ drivers/vfio/pci/vfio_pci_igd.c     |   6 ++
+ drivers/vfio/pci/vfio_pci_intrs.c   |   2 +-
+ drivers/vfio/pci/vfio_pci_priv.h    |   6 ++
+ drivers/vfio/pci/virtio/Kconfig     |   6 +-
+ drivers/vfio/pci/virtio/legacy_io.c |   4 +-
+ drivers/vfio/pci/virtio/main.c      |   5 +-
+ drivers/vfio/vfio_iommu_type1.c     | 123 ++++++++++++++++++++++--------------
+ include/linux/mm.h                  |   2 +
+ mm/memory.c                         |   1 +
+ 12 files changed, 106 insertions(+), 66 deletions(-)
+
