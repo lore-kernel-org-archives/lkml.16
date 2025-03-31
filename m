@@ -1,159 +1,135 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5911DF755;
-	Mon, 31 Mar 2025 12:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B0F1D89FD;
+	Mon, 31 Mar 2025 12:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743422869; cv=none; b=TkoiA4QwjEvOIpX7eYToTW9qwVKWcx47iIFNnXMiEPTne61aAqBX85KxUuRINl/B5Du0WGNbdtu5u5t0AKimLkepxJNv/Js+/d5ai7p93GgWxR+MBbCqNtl86wOyBec70hjmFb70EOW2mMIKfmcKjhVZv2V3JyX3iqL+so09cHU=
+	t=1743422895; cv=none; b=PUdVwR8urf72FwqI7WTh91KT1a3l833vT1qVzO/0l7jQCW5vOkEeqS9dp05FQTVF39IIxfQKk9O6OC7Yr9lEPJsMLsEpxbuIC2nkEm2UsZWYEWsx1UITSs7DkBRCZ9KX9yAm9RpGiHUSFYYDqHW/T7M20jCrOT0jBKl9xvtQ2go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743422869; c=relaxed/simple;
-	bh=3exQ9/6ggKwU/NkBxZMzxeThcK58sDIudztgsIwZLkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HszcFIWNQdGi4a7eCnze+6o0toBH7jbnwIrUuNsCe7Tg7KQyQugVU0GasvfB2jBfayfy1Sc6s0ZIYaRgQIarZeAIO6Tbg/gtaKW0vAOzLr95N+A7Ho8l/pGeUYVWr+3Q+FnaXcXmUEqO6gScgbIS+0Hwdi+26GaTxw5nQRBjRZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l72e3j8T; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743422895; c=relaxed/simple;
+	bh=2SfSCQcYNxF578A2wNnE6Peexu1C8CZ9y0aZPHmZxeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7dEVlw6W6F0dzen56hugBDwRDeCRHcnd6g8LGtl2gPmYLCVgM30hD5zYAdShwqK5qd9fD8vDlEYMN80i94NbQ56//kod7IkXlXlyxBWcBjbGPnnbRYayo80rw/ogIswqxcLtRWWWY/S0X5hA+NFnwLm+74h6aSvRIbEEzCg0yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=odGzAfmV; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l72e3j8T"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso42455541fa.3;
-        Mon, 31 Mar 2025 05:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743422865; x=1744027665; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s5kjq5zrFz8CVB5pT2WH//d/o13BOBbZYV51NDz9WZQ=;
-        b=l72e3j8TSA1Rzl5j6lO/Tsj0yrh9aUfk61XJ7n4XS1VuNHYoMck5ZdCxYlnmd6HfqL
-         HiLeIRobK4+be3hYcsawA+IvtneXs+CJyheofpCAtnrqblz+xfj3HF9m9V5micd4Na+A
-         +UHJgYOBQT1uZ7UcnJ53uHP4XmABIKCT6eHko2CkZL1dg8J9KNI6bihC+KnzQe2VgSfB
-         rHNEqmXPbxiGNgCdTTJQLvFDST7xiM5dY2UMWYMJJUv3Fdfp+e2reg+sl1QXcg4cwadu
-         Hs9Zf116vnV1rwTAN2sX7QH8vzSHrRLGpDka9H/8Oh8PellPL9mCBG8MWA62E0La1dkx
-         tJoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743422865; x=1744027665;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s5kjq5zrFz8CVB5pT2WH//d/o13BOBbZYV51NDz9WZQ=;
-        b=lNFeYVBfHhJa71VEVRcaQw/8+ykH70w77qbMGZwD0U9pB4SajwZAChojub79jsbcem
-         J2/zqelhBNKruCZkvdrvYL47z8HQ7qN4cQmcJW/u9ZhR5frOcO0hO07QY3BQDQCgxfdk
-         KvGDhlExMe8sGtC0Ra78cIy6bh1fF6fI9RYKm7+v+27YgX8Pmnbj/YAq4mrA+rtq/IGY
-         l/314xqoeIzDlDMYoZjqFEk6PGkRAtUCXJER2ibEtIfYkHDhjXBlRNngFg5ULk0njJIG
-         IX9od7Bt34bmljS5YsTgQ6Bmh6IhTXLDDk1/TBKc4zhnsSBXAuU0mwE+JV08da7r8U9W
-         cvng==
-X-Forwarded-Encrypted: i=1; AJvYcCUC+kNjQqdovdZsSSRfrHf6HvgG2A4K+cMiSuq4pBbnLdl2re41uu7T3d6xSufBtxHLO18D003vuw0k@vger.kernel.org, AJvYcCUKI8HHeagcwS3gnrgqHubN/P/n1dGB9GnfpOX3Jxq5/woPQI3nOe+kSH3l4yC+FdGiPsDySu+YD1ek@vger.kernel.org, AJvYcCVaiSkP/M8tSZGoW8jCjc4RFZBgClQP4H+XD5GMmtjCNCl/7N5zf59pbdB4uO5wcF0/JTrs2X3EM3aNBZX2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTrvbTSET9zka4w7VWzSl6Ewwelai1jEZB1smOSq7IOi22v4U+
-	UoIYC+2742XwkuU3N7VtGmDKzhctB9nLOzRYTq+aDy3tM5wQE9Y6O/uCBA==
-X-Gm-Gg: ASbGnctxiL460n8JrR03E6M4QDw6G1MzyH7Bg9zuzvbyRxYoiN/hwOzZYoO4xC5fUUM
-	Q/wBdXmIu2m91IpXe5mKX0Eu91XC6fZzMKs8jt6UO3qo9YO2JWVhjhTzp+TNOLJeTg76MPEwpUx
-	9qE+x1IFLoytPRAzTEc9hci5b4xQru4pNHu6YR89vlTJ+/kBYFCTxTVi3fttlzt3mA4Vh5L8x1U
-	HZdRkeytKrGdA+L817TWKjX15h6Sr53Ws0a1jszp600+DhKaqk1+ImEGPQ8EBPuWYBk0SOhPQGc
-	By2wU4LObV+XV0fqDsVkoaiKiKs5S9CPW/XY7kUfnGywlyfs1/aF6Di3Hpuk0OPYRiPKGB7aYzC
-	NoSlqyMqlCOoXbDvN340NbIwRHA==
-X-Google-Smtp-Source: AGHT+IE3331El1knlH/omYZdMA2rZGtSzPZCFYb5QwIwuGeGaKBWYPPbgDndpBvlw7lX3KA4+u7MWw==
-X-Received: by 2002:a2e:bd0a:0:b0:306:501:4772 with SMTP id 38308e7fff4ca-30de034b2c1mr25584491fa.37.1743422865244;
-        Mon, 31 Mar 2025 05:07:45 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2b8f92dsm13781341fa.114.2025.03.31.05.07.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 05:07:44 -0700 (PDT)
-Message-ID: <7d871d2d-bb42-43d5-96b0-88f24987d522@gmail.com>
-Date: Mon, 31 Mar 2025 15:07:43 +0300
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="odGzAfmV"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26B713DA;
+	Mon, 31 Mar 2025 14:06:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743422780;
+	bh=2SfSCQcYNxF578A2wNnE6Peexu1C8CZ9y0aZPHmZxeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=odGzAfmVMBGRnDbtLl0ZYvsMhchM5eYvEUDk32nmxL2t/zkBBUkGfY6MYBncQCepS
+	 ySrwD/eM7NzBCZ+UvWHPj0t5KGk7892ZTWpk4mdIsCDkOMaju52c9+O05Dj+YxO3rE
+	 wIIRs7UNq3nOuScaXS+UidiMLL7RlA3UQ7k72FME=
+Date: Mon, 31 Mar 2025 15:07:48 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	acopo Mondi <jacopo+renesas@jmondi.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
+Message-ID: <20250331120748.GB28722@pendragon.ideasonboard.com>
+References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
+ <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] iio: adc: ti-adc128s052: Fix ADC value on BE systems
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
- <babe1eac3de30aa22e09266de1f5521fa9e0decd.1742474322.git.mazziesaccount@gmail.com>
- <20250331121124.4fed1d44@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250331121124.4fed1d44@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
 
-On 31/03/2025 14:11, Jonathan Cameron wrote:
-> On Mon, 31 Mar 2025 11:02:55 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
+> Quoting Andy Shevchenko (2025-03-31 08:34:35)
+> > Convert the module to be property provider agnostic and allow
+> > it to be used on non-OF platforms.
 > 
->> ADCs supported by the ti-adc128s052 driver do return the ADC data in 16
->> bits using big-endian format. The driver does unconditionally swap the
->> bytes. This leads to wrong values being reported to users on big endian
->> systems.
->>
->> Fix this by using the be16_to_cpu() instead of doing unconditional byte
->> swapping.
+> Looks reasonable to me.
 
-Appears this was one of the patches I should've never written. Nothing 
-went right :) Sorry for the noise. I'll try improving for the v2
+Is that going to work out of the box though ? The calls below read the
+"reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
+addresses using ACPI-specific methods.
 
-> It's not doing unconditional byte swap that I can see. The
-> adc->buffer[0] << 8 | adc->buffer[1]
-> will work on big or little endian systems as we are explicitly saying
-> which byte represents higher bit values in a 16 bit output so on little
-> endian it's a byte swap, but on big endian it's a noop (the compiler might
-> noticed that and replace this code sequence with an assignment)
+Andy, have you tested this patch on an ACPI system ?
+
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/media/i2c/rdacm20.c | 5 ++---
+> >  drivers/media/i2c/rdacm21.c | 5 ++---
+> >  2 files changed, 4 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/rdacm20.c b/drivers/media/i2c/rdacm20.c
+> > index b8bd8354d100..dcab63d19baf 100644
+> > --- a/drivers/media/i2c/rdacm20.c
+> > +++ b/drivers/media/i2c/rdacm20.c
+> > @@ -16,10 +16,10 @@
+> >   */
+> >  
+> >  #include <linux/delay.h>
+> > -#include <linux/fwnode.h>
+> >  #include <linux/init.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/module.h>
+> > +#include <linux/property.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/videodev2.h>
+> >  
+> > @@ -575,8 +575,7 @@ static int rdacm20_probe(struct i2c_client *client)
+> >         dev->dev = &client->dev;
+> >         dev->serializer.client = client;
+> >  
+> > -       ret = of_property_read_u32_array(client->dev.of_node, "reg",
+> > -                                        dev->addrs, 2);
+> > +       ret = device_property_read_u32_array(&client->dev, "reg", dev->addrs, 2);
+> >         if (ret < 0) {
+> >                 dev_err(dev->dev, "Invalid DT reg property: %d\n", ret);
 > 
-> Good cleanup, but not a fix as such unless I'm missing something.
-
-No, you're not missing anything. I am the one who just got confused. I 
-am not exactly sure what I was thinking. :rolleyes: This definitely 
-isn't a fix. And, as a not a fix needing porting, I may squash this with 
-some other patch. I need to take another look at this :)
-
->> Fixes: 913b86468674 ("iio: adc: Add TI ADC128S052")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->> ---
->> I have no big endian machines on my hands to test this. Problem was
->> spotted by reading the code, which leaves some room for errors.
->> Careful reviewing is appreciated!
->> ---
->>   drivers/iio/adc/ti-adc128s052.c | 13 +++++++------
->>   1 file changed, 7 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
->> index a456ea78462f..d1e31122ea0d 100644
->> --- a/drivers/iio/adc/ti-adc128s052.c
->> +++ b/drivers/iio/adc/ti-adc128s052.c
->> @@ -28,19 +28,20 @@ struct adc128 {
->>   	struct regulator *reg;
->>   	struct mutex lock;
->>   
->> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
->> +	__be16 buffer __aligned(IIO_DMA_MINALIGN);
->>   };
->>   
->>   static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->>   {
->>   	int ret;
->> +	char *msg = (char *)&adc->buffer;
->>   
->> -	mutex_lock(&adc->lock);
->> +	msg[0] = channel << 3;
->> +	msg[1] = 0;
+> But this is no longer a DT reg property ?
 > 
-> Given you are writing shared state why move this out of the lock?
+> >                 return -EINVAL;
+> > diff --git a/drivers/media/i2c/rdacm21.c b/drivers/media/i2c/rdacm21.c
+> > index 3e22df36354f..5ea6988de48b 100644
+> > --- a/drivers/media/i2c/rdacm21.c
+> > +++ b/drivers/media/i2c/rdacm21.c
+> > @@ -11,10 +11,10 @@
+> >   */
+> >  
+> >  #include <linux/delay.h>
+> > -#include <linux/fwnode.h>
+> >  #include <linux/init.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/module.h>
+> > +#include <linux/property.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/videodev2.h>
+> >  
+> > @@ -551,8 +551,7 @@ static int rdacm21_probe(struct i2c_client *client)
+> >         dev->dev = &client->dev;
+> >         dev->serializer.client = client;
+> >  
+> > -       ret = of_property_read_u32_array(client->dev.of_node, "reg",
+> > -                                        dev->addrs, 2);
+> > +       ret = device_property_read_u32_array(&client->dev, "reg", dev->addrs, 2);
+> >         if (ret < 0) {
+> >                 dev_err(dev->dev, "Invalid DT reg property: %d\n", ret);
+> 
+> Same here ...
+> 
+> With those fixed,
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> >                 return -EINVAL;
 
-Very Valid Point. I'm not 100% sure what I thought of, probably assumed 
-IIO core would serialize the calls. That would've been nasty bug! I 
-appreciate your sharp eyes :)
+-- 
+Regards,
 
-Thanks!
-
-Yours,
-	-- Matti
-
+Laurent Pinchart
