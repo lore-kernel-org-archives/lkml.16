@@ -1,208 +1,160 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BB21B423C;
-	Mon, 31 Mar 2025 10:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787591DF98B
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417232; cv=none; b=OZVcSND4W4l0nExqp69UptVhJfvkpq9cheY/LcudslyGl+mIPlbxdLUAjwS5qOGN+hGBdlVDanKLwlkY81cJ6NYGJlXvmxu4fMKdZanj8i4HnKed4qRk78BpalzMB/47MqcnMgWI93LZD898J+Kp965UE1UXuY7BPFMWnBCp0TU=
+	t=1743417242; cv=none; b=duMz4pwQXweBXPkcg7f/oHGoIPobdISbFm1gWkzs1uzfzjNcsBPqyM4semf/F0wH8jytPaEj75V8zdlGXTlV9WcBezcn5r6mfGFQ3rxiFOI8QqhxxtJLbNCiMNnkr7wvwCU2wtmCGXZa0s+cf/06b6d3IZj36YV25CLlcXyow4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417232; c=relaxed/simple;
-	bh=V+nvJHEKSc7RVyDkt/rWuaHqycBDDiUWYXIVgWOh9/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BJKzDljmpg7OgGN7d510KtfRlvTLrTptXVxWiopIZPoxaD2M/J/oeaPDycVd6JZPwXwePrFEsl9DyLDt/uM7LHdalwA4y5CNZKHIwvfzDdMz8t05/SdxqeFYUGYKlJrnfanqvrz+OMWEUJIas9KiXkMW+PH6V8ZTfnJMhC8+6jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAP1+gMQ; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743417242; c=relaxed/simple;
+	bh=QdePJzntHBFPog0fZh36LJ0GzufJKGYvG0XKRdPn5FU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yl+4RrVlTVoLFbGJP3hy+FHz8N+YCfkW4MeaNi21qXxlu586Ilfy0/KoJiZdwB8mp922RKFsCz5EbC/W2EhhQImk1Gtjjdb3hL8BSUH4EIikvuM2aHxdFOa2lIzx7m7m+MKvNSa6DZJ9lFwOFpGSi2KokmuqVx9Mt073LvVjTgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b+m+bsl3; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAP1+gMQ"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so911299a91.0;
-        Mon, 31 Mar 2025 03:33:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b+m+bsl3"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso40428215e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:34:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743417230; x=1744022030; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ymg/Cdc7QMPeQSgZgpVdKX0gHjsRWWGovJfMrOlttUw=;
-        b=iAP1+gMQ5G8AhcGhcpjzEPU7yUMUvlPT+L3EkTS1TAr78zA6BmJXA2F4N03G5OK5iM
-         tHWGMeSOAd6Vv0wQnTuMpWETv95TFHjQDFxGKoz22ErpPxy2HGacnpCOaClEm68xWx+P
-         mAoYPXGC6nI+xoeW4TcHHV1kdP+qf02ZP2fhIFRtmyXX7qj+rixu4nBh2Hh+yqJjZMJ2
-         2gxOPW5AeXN7LtSthvrkffBJUKf2QRCwKCQCvKC130PD1/PhEIdglGSQu7PBvS5YFZWo
-         oAgUYV8QNS2i7MD5+pujV1yy48Z8Ke8WUCLxPpMSdkG91jnuNDpJ9WmCZ44BZyjVQcdl
-         /LwQ==
+        d=linaro.org; s=google; t=1743417239; x=1744022039; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VWZgGDwlAbPbiL5FveYelCRSDG0LmvCzE51A2ZLXHiM=;
+        b=b+m+bsl3nwarUItsAAGodeVUe8HNi2UptsAh7KzFGHPE2SC4hikGP7yWqDQy06Ubyp
+         SiVnSwGtlT2IZ71tGiwPyiLbtOEk38QeK4nfahiKIx8+d27hWwi6OVJzSfx6nUW5kVT7
+         5Omc4ATj76SkRyjOF4pjob1ZqdyaBtgLD3tnRnx+ZKgLp0XBHGMQTwM1sMc+UJeM+/vc
+         HRp3Cfq0wTHR0OSgqOPJhvIQKKtDwVby7nO1GIRgnoWjYoCJjahaTOHcCWEzzhDtBads
+         qksqGXlvEzWtEGkbZpN2RIpe6lslliN/+54jmbNkELc7XuvM3LOEIBfIWAP9pdmtUlY1
+         yc+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743417230; x=1744022030;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ymg/Cdc7QMPeQSgZgpVdKX0gHjsRWWGovJfMrOlttUw=;
-        b=JXWvPAMe3PL3ceM17JFAow6Wv0D+j5NPuGeC66Ui0mmZP+SL3pKRM1ZzDOeTrpEXVc
-         ows3ZLvSvrfY633pWaEqXOxuCyn2bf5ao2VVwNZIS0CUg5fWAT2hHKMPsygEzs3GIs9S
-         MjFsXGSRMm5t/f7cG+XFdFfb/axAeWxc1aBaZQxNGFbQXF+5ofm9gW2bDyyek97pQOHQ
-         MrdI5XG/HmqJ03qIWZ4IzjEY023fY7a9OiSDUmHKA5p2akP3GtQnyWBd/+Xeg6PJykpH
-         1O+2yX9UWfgf6gDjxnlsBNzl4he9u5A4+ydwC/Sdg9QrBnHb7H2C3+044Qhubkt7DGhy
-         vEww==
-X-Forwarded-Encrypted: i=1; AJvYcCU0jaBVPphGQ92u25NYParcBtaHM5l/0o/+1g9NoF+KICoH3REXrEbGaA4GuP85SPsXEBNEzRhFbdDAOvHF@vger.kernel.org, AJvYcCVLFtUTHYbGnGynBn8MVvfsPnLYOmo4EnGG9XjJPJaI0bBkKjuLrY3X/6jVGVq49DkJgoAwo2WtczuJVUE=@vger.kernel.org, AJvYcCVW15h2G03tFvtVoyWymecso6oIprb0x80sT5vlM1PCw9pbI5vfX6QXkQNB0ouBtwgSBXifJcAmTuF5BQSS4g==@vger.kernel.org, AJvYcCXxpBBarqZhc/x3JkVaY0iFbtYUjps1+UL9LiqULlFCCUyFl/CKlnXiTdUUVgHBD8MzsKZmzXcoQMgtvTlllZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBlwd1i1TFX71ooP5m+oJJrhf0EWQyftzyf8TQBvDjIc3NBWBQ
-	RAy0iw6zIk/f69EUqnFMlEaxXfVCNmXATyYHzQ0r2mlBsCXpfEYgjfkDbgEdaHc/ueKnYSUcK9l
-	bSeZohIHBSp8Our2N6gVuTnhtR0I=
-X-Gm-Gg: ASbGncsmkUloRsasf0rH8B4FfTDhRJ3BcdBy25YMjKg29RyGf3FfsThDJUDlGR5BGx+
-	i4F1hLETaL6TMfI7s7CahQKfcoTQJN8bgtwc+PvMl5phoXw3vLkR1C0qq6u5nFiyeLw83zrxJjX
-	QaWdViPIjM1AYqCeOy3yql9fYjRQ==
-X-Google-Smtp-Source: AGHT+IG1yvyZqQKBWgCd3SOpveKkgZdUKWVgbzbrCVkuqPBmcDYK+FCWjv+bFl07sW/u5TQeP4FhQ0382rqxZVtC0ng=
-X-Received: by 2002:a17:90b:224e:b0:2fe:7f51:d2ec with SMTP id
- 98e67ed59e1d1-30531e89641mr4687661a91.0.1743417230239; Mon, 31 Mar 2025
- 03:33:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743417239; x=1744022039;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VWZgGDwlAbPbiL5FveYelCRSDG0LmvCzE51A2ZLXHiM=;
+        b=GW2jgM4wRs+AWvR/LRB3TfJk+jfiyW9LmDHJT78FZuhyQkXlRJn55UCsELl/mcmu/I
+         blumgV/Xj6AaqSfq5ASsPS1xXPDgPvFX2J8Z8hckrbM3tRyhgpslhTSehOE/9lNNBbQ4
+         m3EqR4/4EBz89ipPKorLVIFtKRLWCK7CMYLZrVqJ6tm30V137wIrDm8e3V5Auus1+45l
+         PwfoFfyVd4hmEW8qAiqYciSbQGBT2sSvSK/4O7ZhO6SAnUBEaszPqWRzK9pux7yNWR2W
+         QpN4ieJgjPYNooiuXUSafe/hU2/EUDtMM6c44fQewq526LkjsbdLDPyMxCS/ZoFGb8i7
+         JA6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVE+iSFWPXdB2dnm3tXHJM0JVtUeZbMvDv02VACLPuyMqPE7HPAHnSA5X3kaE0zpObVgn8s3GUQop4MwRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU9tGQkzR9D5twouQks7bBxgb40zDaQ3FXJ3uN3eJzXYGFjfOe
+	fYVIDyWspGk+Er/CuwcB8im6OttMh4K6eEKFgNOOCxeQPh7Aw7F6jT5qBp7CBdY=
+X-Gm-Gg: ASbGncshK1oVHW6DgND/DpXZ1SHQF5/kdYvH5oPj7wXxW5Iyq2MloU/vuyQv3v5uVhP
+	Jv0t3D5z7l21v5q62+CzxKa7++Q08+2LcoGj1GI5AMEtF6C+8nDtBCTYOMCyZiSYerKamy70XKK
+	9ZzfhifKH44KNZUe22Kp4lTS59LeyAipXCxplKFEc0z9wArT07zLpejdFwxrMxLh5+lD5vruHK0
+	SsWn4IOyJNOEaVr7JlvjCmjDPBOzRj+rKq4x1qCj+7DwtcJAHQnWodwpi5cup0IZ7XZ7uDbZgp7
+	ZwIMIshUUTH8qs+qN0WwRSVpH0BpWaX8qGr0IXOtvDg6GYwiLahj8tipys/X
+X-Google-Smtp-Source: AGHT+IHO9cBoSvB3iVCumQWnhZfL9iEojBiJlN66/O1EAjClqWvOe7pPJkr3sXgzdj/O31fvLFiy8A==
+X-Received: by 2002:a5d:47c1:0:b0:391:2995:5ef2 with SMTP id ffacd0b85a97d-39c12114e24mr6628557f8f.37.1743417238699;
+        Mon, 31 Mar 2025 03:33:58 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d82efdffdsm159335275e9.18.2025.03.31.03.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 03:33:58 -0700 (PDT)
+Date: Mon, 31 Mar 2025 13:33:55 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Bryan O'Donoghue <bod.linux@nxsw.ie>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux Media Mailing List <linux-media@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, rfoss@kernel.org,
+	Todor Tomov <todor.too@gmail.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: stable-rc-6.13.8-rc1: Dragonboard 845c: kernel NULL pointer
+ dereference - camss_find_sensor
+Message-ID: <0e3e469f-f8cd-410b-aac3-d7a9c7207411@stanley.mountain>
+References: <CA+G9fYuquxGrt81z4FBSEDuvAMpu2qYAoFXwYKpfSuw2YYNS0w@mail.gmail.com>
+ <b8624ef5-d806-4016-b51d-1f23ddb65054@nxsw.ie>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-module-params-v3-v9-0-28b905f2e345@kernel.org> <20250321-module-params-v3-v9-1-28b905f2e345@kernel.org>
-In-Reply-To: <20250321-module-params-v3-v9-1-28b905f2e345@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 31 Mar 2025 12:33:37 +0200
-X-Gm-Features: AQ5f1Jr7JBoFjUI1hhmX2VMHXtyRsO5wHz0E3PuoYks4mfWi7JFnTrFKfia5rWc
-Message-ID: <CANiq72kSG8oGi9P4=AQ+JjgZk0q31PcZkHRYNF5tCxn9mvcJ0A@mail.gmail.com>
-Subject: Re: [PATCH v9 1/3] rust: str: add radix prefixed integer parsing functions
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000b4446b0631a0f4ea"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8624ef5-d806-4016-b51d-1f23ddb65054@nxsw.ie>
 
---000000000000b4446b0631a0f4ea
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 20, 2025 at 05:15:40PM +0000, Bryan O'Donoghue wrote:
+> On 20/03/2025 09:50, Naresh Kamboju wrote:
+> > Regressions on arm64 Dragonboard 845c boot failed with stable-rc 6.13.8-rc1
+> > 
+> > Regressions found on Dragonboard 845c :
+> >   - boot (debug Kconfigs)
+> > 
+> > Regression Analysis:
+> >   - New regression? Not sure. But the crash looks new.
+> >   - Reproducible? Intermittent
+> > 
+> > Since it is not easy to reproduce this crash, it is hard to bisect.
+> > 
+> > Boot regression: Dragonboard 845c kernel NULL pointer dereference
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > 
+> > ## Boot log
+> > [    7.871211] xhci-pci-renesas 0000:01:00.0: failed to load firmware
+> > renesas_usb_fw.mem, fallback to ROM
+> > [    7.877652] CAN device driver interface
+> > [    7.879182] Bluetooth: hci0: setting up wcn399x
+> > [    7.884439] Bluetooth: HCI UART protocol Marvell registered
+> > [    7.890767] xhci-pci-renesas 0000:01:00.0: xHCI Host Controller
+> > [    7.938433] xhci-pci-renesas 0000:01:00.0: new USB bus registered,
+> > assigned bus number 3
+> > [    7.941274] spi_master spi0: will run message pump with realtime priority
+> > [    7.946642] xhci-pci-renesas 0000:01:00.0: Zeroing 64bit base
+> > registers, expecting fault
+> > [    7.969396] ath10k_snoc 18800000.wifi: Adding to iommu group 16
+> > [    7.983424] mcp251xfd spi0.0 can0: MCP2517FD rev0.0 (-RX_INT -PLL
+> > +MAB_NO_WARN +CRC_REG +CRC_RX +CRC_TX +ECC -HD o:40.00MHz c:40.00MHz
+> > m:10.00MHz rs:10.00MHz es:0.00MHz rf:10.00MHz ef:0.00MHz) successfully
+> > initialized.
+> > [    7.987793] Unable to handle kernel NULL pointer dereference at
+> > virtual address 0000000000000030
+                                  ^^
 
-On Fri, Mar 21, 2025 at 10:18=E2=80=AFAM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->
-> Add the trait `ParseInt` for parsing string representations of integers
-> where the string representations are optionally prefixed by a radix
-> specifier. Implement the trait for the primitive integer types.
->
-> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+drivers/media/platform/qcom/camss/camss.c
 
-I had applied the following comments in v8 when I originally took it
-before discovering the UB -- since this patch may finally go through
-modules (or not), Andreas asked me to put them here:
+  1700  struct media_entity *camss_find_sensor(struct media_entity *entity)
+  1701  {
+  1702          struct media_pad *pad;
+  1703  
+  1704          while (1) {
+  1705                  pad = &entity->pads[0];
+  1706                  if (!(pad->flags & MEDIA_PAD_FL_SINK))
 
-    [ Added integer type suffixes to `assert!`s for consistency with the
-      others. Changed links to docs.kernel.org. Applied Markdown and
-      intra-doc links where possible. Changed to `///` for `mod` docs.
-      Slightly reworded comment. Pluralized section name. Hid
-      `use`s. Removed `#[expect]` for the `rusttest` target. - Miguel ]
 
-Attached range diff of what I did.
+0x30 matches really nicely with a NULL entity->pad pointer.
 
-I hope that helps!
+  1707                          return NULL;
+  1708  
+  1710                  pad = media_pad_remote_pad_first(pad);
+  1710                  if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+  1711                          return NULL;
+  1712  
+  1713                  entity = pad->entity;
+  1714  
+  1715                  if (entity->function == MEDIA_ENT_F_CAM_SENSOR)
+  1716                          return entity;
+  1717          }
+  1718  }
 
-Cheers,
-Miguel
+Hand waving ensues:
 
---000000000000b4446b0631a0f4ea
-Content-Type: text/x-patch; charset="US-ASCII"; name="rd.diff"
-Content-Disposition: attachment; filename="rd.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m8wxk5nf0>
-X-Attachment-Id: f_m8wxk5nf0
+The fact that it's intermittent suggests that we're calling video open
+before the subdevices are registered.  So maybe either
+camss_subdev_notifier_bound() or camss_subdev_notifier_complete() needs
+to set a flag and then vfe_set_power() could do if (!everything_configured)
+return -EPROBE_DEFER or something.
 
-K0BAIHJ1c3Qva2VybmVsL3N0ci5yczogbWFjcm9fcnVsZXMhIGNfc3RyIHsKKyB9CisKKyAjW2Nm
-Zyh0ZXN0KV0KKy0jW2V4cGVjdChjbGlwcHk6Oml0ZW1zX2FmdGVyX3Rlc3RfbW9kdWxlKV0KKyBt
-b2QgdGVzdHMgeworICAgICB1c2Ugc3VwZXI6Oio7CisKIEBAIHJ1c3Qva2VybmVsL3N0ci5yczog
-Zm4gZm10KCZzZWxmLCBmOiAmbXV0IGZtdDo6Rm9ybWF0dGVyPCdfPikgLT4gZm10OjpSZXN1bHQg
-ewogIG1hY3JvX3J1bGVzISBmbXQgewogICAgICAoJCgkZjp0dCkqKSA9PiAoIGNvcmU6OmZvcm1h
-dF9hcmdzISgkKCRmKSopICkKICB9CiArCisrLy8vIEludGVnZXIgcGFyc2luZyBmdW5jdGlvbnMg
-Zm9yIHBhcnNpbmcgc2lnbmVkIGFuZCB1bnNpZ25lZCBpbnRlZ2VycworKy8vLyBwb3RlbnRpYWxs
-eSBwcmVmaXhlZCB3aXRoIGAweGAsIGAwb2AsIG9yIGAwYmAuCiArcHViIG1vZCBwYXJzZV9pbnQg
-ewotKyAgICAvLyEgSW50ZWdlciBwYXJzaW5nIGZ1bmN0aW9ucyBmb3IgcGFyc2luZyBzaWduZWQg
-YW5kIHVuc2lnbmVkIGludGVnZXJzCi0rICAgIC8vISBwb3RlbnRpYWxseSBwcmVmaXhlZCB3aXRo
-IGAweGAsIGAwb2AsIG9yIGAwYmAuCi0rCiArICAgIHVzZSBjcmF0ZTo6cHJlbHVkZTo6KjsKICsg
-ICAgdXNlIGNyYXRlOjpzdHI6OkJTdHI7CiArICAgIHVzZSBjb3JlOjpvcHM6OkRlcmVmOwpAQCBy
-dXN0L2tlcm5lbC9zdHIucnM6IGZuIGZtdCgmc2VsZiwgZjogJm11dCBmbXQ6OkZvcm1hdHRlcjwn
-Xz4pIC0+IGZtdDo6UmVzdWx0IHsKICsgICAgICAgIC8vIFRoaXMgaXMgcmVxdWlyZWQgYmVjYXVz
-ZSB0aGUgYGZyb21fc3RyX3JhZGl4YCBmdW5jdGlvbiBvbiB0aGUgcHJpbWl0aXZlCiArICAgICAg
-ICAvLyBpbnRlZ2VyIHR5cGVzIGlzIG5vdCBwYXJ0IG9mIGFueSB0cmFpdC4KICsgICAgICAgIHB1
-YiB0cmFpdCBGcm9tU3RyUmFkaXg6IFNpemVkIHsKLSsgICAgICAgICAgICAvLy8gUGFyc2UgYHNy
-Y2AgdG8gYFNlbGZgIHVzaW5nIHJhZGl4IGByYWRpeGAuCisrICAgICAgICAgICAgLy8vIFBhcnNl
-IGBzcmNgIHRvIFtgU2VsZmBdIHVzaW5nIHJhZGl4IGByYWRpeGAuCiArICAgICAgICAgICAgZm4g
-ZnJvbV9zdHJfcmFkaXgoc3JjOiAmQlN0ciwgcmFkaXg6IHUzMikgLT4gUmVzdWx0PFNlbGYsIGNy
-YXRlOjplcnJvcjo6RXJyb3I+OwogKwotKyAgICAgICAgICAgIC8vLyBSZXR1cm4gdGhlIGFic29s
-dXRlIHZhbHVlIG9mIFNlbGY6Ok1JTi4KKysgICAgICAgICAgICAvLy8gUmV0dXJuIHRoZSBhYnNv
-bHV0ZSB2YWx1ZSBvZiBbYFNlbGY6Ok1JTmBdLgogKyAgICAgICAgICAgIGZuIGFic19taW4oKSAt
-PiB1NjQ7CiArCiArICAgICAgICAgICAgLy8vIFBlcmZvcm0gYml0d2lzZSAyJ3MgY29tcGxlbWVu
-dCBvbiBgc2VsZmAuCkBAIHJ1c3Qva2VybmVsL3N0ci5yczogZm4gZm10KCZzZWxmLCBmOiAmbXV0
-IGZtdDo6Rm9ybWF0dGVyPCdfPikgLT4gZm10OjpSZXN1bHQgewogKyAgICAgICAgICAgIFtiJzAn
-LCBiJ28nIHwgYidPJywgcmVzdCBAIC4uXSA9PiAoOCwgcmVzdC5hc19yZWYoKSksCiArICAgICAg
-ICAgICAgW2InMCcsIGInYicgfCBiJ0InLCByZXN0IEAgLi5dID0+ICgyLCByZXN0LmFzX3JlZigp
-KSwKICsgICAgICAgICAgICAvLyBOT1RFOiBXZSBhcmUgaW5jbHVkaW5nIHRoZSBsZWFkaW5nIHpl
-cm8gdG8gYmUgYWJsZSB0byBwYXJzZQotKyAgICAgICAgICAgIC8vIGxpdGVyYWwgMCBoZXJlLiBJ
-ZiB3ZSByZW1vdmVkIGl0IGFzIGEgcmFkaXggcHJlZml4LCB3ZSB3b3VsZCBub3QKKysgICAgICAg
-ICAgICAvLyBsaXRlcmFsIGAwYCBoZXJlLiBJZiB3ZSByZW1vdmVkIGl0IGFzIGEgcmFkaXggcHJl
-Zml4LCB3ZSB3b3VsZCBub3QKICsgICAgICAgICAgICAvLyBiZSBhYmxlIHRvIHBhcnNlIGAwYC4K
-ICsgICAgICAgICAgICBbYicwJywgLi5dID0+ICg4LCBzcmMpLAogKyAgICAgICAgICAgIF8gPT4g
-KDEwLCBzcmMpLApAQCBydXN0L2tlcm5lbC9zdHIucnM6IGZuIGZtdCgmc2VsZiwgZjogJm11dCBm
-bXQ6OkZvcm1hdHRlcjwnXz4pIC0+IGZtdDo6UmVzdWx0IHsKICsgICAgLy8vIHBlcm1pdHRlZC4g
-QW55IHN0cmluZyBwYXJzZWQgYnkgW2Brc3RydG9sKClgXSBvciBbYGtzdHJ0b3VsKClgXSB3aWxs
-IGJlCiArICAgIC8vLyBzdWNjZXNzZnVsbHkgcGFyc2VkLgogKyAgICAvLy8KLSsgICAgLy8vIFtg
-a3N0cnRvbCgpYF06IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0bWwvbGF0ZXN0L2NvcmUt
-YXBpL2tlcm5lbC1hcGkuaHRtbCNjLmtzdHJ0b2wKLSsgICAgLy8vIFtga3N0cnRvdWwoKWBdOiBo
-dHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9jb3JlLWFwaS9rZXJuZWwtYXBp
-Lmh0bWwjYy5rc3RydG91bAorKyAgICAvLy8gW2Brc3RydG9sKClgXTogaHR0cHM6Ly9kb2NzLmtl
-cm5lbC5vcmcvY29yZS1hcGkva2VybmVsLWFwaS5odG1sI2Mua3N0cnRvbAorKyAgICAvLy8gW2Br
-c3RydG91bCgpYF06IGh0dHBzOi8vZG9jcy5rZXJuZWwub3JnL2NvcmUtYXBpL2tlcm5lbC1hcGku
-aHRtbCNjLmtzdHJ0b3VsCiArICAgIC8vLwotKyAgICAvLy8gIyBFeGFtcGxlCi0rICAgIC8vLyBg
-YGAKLSsgICAgLy8vIHVzZSBrZXJuZWw6OnN0cjo6cGFyc2VfaW50OjpQYXJzZUludDsKLSsgICAg
-Ly8vIHVzZSBrZXJuZWw6OmJfc3RyOworKyAgICAvLy8gIyBFeGFtcGxlcwogKyAgICAvLy8KLSsg
-ICAgLy8vIGFzc2VydF9lcSEoT2soMCksIHU4Ojpmcm9tX3N0cihiX3N0ciEoIjAiKSkpOworKyAg
-ICAvLy8gYGBgCisrICAgIC8vLyAjIHVzZSBrZXJuZWw6OnN0cjo6cGFyc2VfaW50OjpQYXJzZUlu
-dDsKKysgICAgLy8vICMgdXNlIGtlcm5lbDo6Yl9zdHI7CisrICAgIC8vLyBhc3NlcnRfZXEhKE9r
-KDB1OCksIHU4Ojpmcm9tX3N0cihiX3N0ciEoIjAiKSkpOwogKyAgICAvLy8KICsgICAgLy8vIGFz
-c2VydF9lcSEoT2soMHhhMnU4KSwgdTg6OmZyb21fc3RyKGJfc3RyISgiMHhhMiIpKSk7CiArICAg
-IC8vLyBhc3NlcnRfZXEhKE9rKC0weGEyaTMyKSwgaTMyOjpmcm9tX3N0cihiX3N0ciEoIi0weGEy
-IikpKTsKQEAgcnVzdC9rZXJuZWwvc3RyLnJzOiBmbiBmbXQoJnNlbGYsIGY6ICZtdXQgZm10OjpG
-b3JtYXR0ZXI8J18+KSAtPiBmbXQ6OlJlc3VsdCB7CiArICAgIC8vLyBhc3NlcnRfZXEhKE9rKDBi
-MTAwMWkxNiksIGkxNjo6ZnJvbV9zdHIoYl9zdHIhKCIwYjEwMDEiKSkpOwogKyAgICAvLy8gYXNz
-ZXJ0X2VxIShPaygtMGIxMDAxaTE2KSwgaTE2Ojpmcm9tX3N0cihiX3N0ciEoIi0wYjEwMDEiKSkp
-OwogKyAgICAvLy8KLSsgICAgLy8vIGFzc2VydF9lcSEoT2soMTI3KSwgaTg6OmZyb21fc3RyKGJf
-c3RyISgiMTI3IikpKTsKKysgICAgLy8vIGFzc2VydF9lcSEoT2soMTI3aTgpLCBpODo6ZnJvbV9z
-dHIoYl9zdHIhKCIxMjciKSkpOwogKyAgICAvLy8gYXNzZXJ0IShpODo6ZnJvbV9zdHIoYl9zdHIh
-KCIxMjgiKSkuaXNfZXJyKCkpOwotKyAgICAvLy8gYXNzZXJ0X2VxIShPaygtMTI4KSwgaTg6OmZy
-b21fc3RyKGJfc3RyISgiLTEyOCIpKSk7CisrICAgIC8vLyBhc3NlcnRfZXEhKE9rKC0xMjhpOCks
-IGk4Ojpmcm9tX3N0cihiX3N0ciEoIi0xMjgiKSkpOwogKyAgICAvLy8gYXNzZXJ0IShpODo6ZnJv
-bV9zdHIoYl9zdHIhKCItMTI5IikpLmlzX2VycigpKTsKLSsgICAgLy8vIGFzc2VydF9lcSEoT2so
-MjU1KSwgdTg6OmZyb21fc3RyKGJfc3RyISgiMjU1IikpKTsKKysgICAgLy8vIGFzc2VydF9lcSEo
-T2soMjU1dTgpLCB1ODo6ZnJvbV9zdHIoYl9zdHIhKCIyNTUiKSkpOwogKyAgICAvLy8gYXNzZXJ0
-ISh1ODo6ZnJvbV9zdHIoYl9zdHIhKCIyNTYiKSkuaXNfZXJyKCkpOwogKyAgICAvLy8gYGBgCiAr
-ICAgIHB1YiB0cmFpdCBQYXJzZUludDogcHJpdmF0ZTo6RnJvbVN0clJhZGl4ICsgVHJ5RnJvbTx1
-NjQ+IHsKQEAgcnVzdC9rZXJuZWwvc3RyLnJzOiBmbiBmbXQoJnNlbGYsIGY6ICZtdXQgZm10OjpG
-b3JtYXR0ZXI8J18+KSAtPiBmbXQ6OlJlc3VsdCB7CiArICAgICAgICAgICAgICAgICAgICAvLyAy
-J3MgY29tcGxlbWVudCB2YWx1ZXMgcmFuZ2UgZnJvbSAtMl4oYi0xKSB0byAyXihiLTEpLTEuCiAr
-ICAgICAgICAgICAgICAgICAgICAvLyBTbyBpZiB3ZSB3YW50IHRvIHBhcnNlIG5lZ2F0aXZlIG51
-bWJlcnMgYXMgcG9zaXRpdmUgYW5kCiArICAgICAgICAgICAgICAgICAgICAvLyBsYXRlciBtdWx0
-aXBseSBieSAtMSwgd2UgaGF2ZSB0byBwYXJzZSBpbnRvIGEgbGFyZ2VyCi0rICAgICAgICAgICAg
-ICAgICAgICAvLyBpbnRlZ2VyLiBXZSBjaG9vc2UgdTY0IGFzIHN1ZmZpY2llbnRseSBsYXJnZS4g
-Tk9URTogMTI4Ci0rICAgICAgICAgICAgICAgICAgICAvLyBiaXQgaW50ZWdlcnMgYXJlIG5vdCBh
-dmFpbGFibGUgb24gYWxsIHBsYXRmb3JtcywgaGVuY2UKLSsgICAgICAgICAgICAgICAgICAgIC8v
-IHRoZSBjaG9pY2Ugb2YgNjQgYml0LgorKyAgICAgICAgICAgICAgICAgICAgLy8gaW50ZWdlci4g
-V2UgY2hvb3NlIGB1NjRgIGFzIHN1ZmZpY2llbnRseSBsYXJnZS4KKysgICAgICAgICAgICAgICAg
-ICAgIC8vCisrICAgICAgICAgICAgICAgICAgICAvLyBOT1RFOiAxMjgtYml0IGludGVnZXJzIGFy
-ZSBub3QgYXZhaWxhYmxlIG9uIGFsbAorKyAgICAgICAgICAgICAgICAgICAgLy8gcGxhdGZvcm1z
-LCBoZW5jZSB0aGUgY2hvaWNlIG9mIDY0LWJpdC4KICsgICAgICAgICAgICAgICAgICAgIGxldCB2
-YWwgPSB1NjQ6OmZyb21fc3RyX3JhZGl4KAogKyAgICAgICAgICAgICAgICAgICAgICAgIGNvcmU6
-OnN0cjo6ZnJvbV91dGY4KGRpZ2l0cykubWFwX2Vycih8X3wgRUlOVkFMKT8sCiArICAgICAgICAg
-ICAgICAgICAgICAgICAgcmFkaXgsCg==
---000000000000b4446b0631a0f4ea--
+regards,
+dan carpenter
