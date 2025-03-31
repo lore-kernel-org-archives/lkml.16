@@ -1,48 +1,60 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D7B189F5C;
-	Mon, 31 Mar 2025 07:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F50D1B0F1E;
+	Mon, 31 Mar 2025 07:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743406013; cv=none; b=kKb5Hf9ua4sys5BHphcmPSVzUXgp0mLwv5Rq2pCaibvlOSF8shTkiZI3MJ4dKkXjEa1KMxJk5ffgpgyzCpkvL6EsRoS2SMmPH3RXZRHmvKfnxSF1PvQhwoDppcwSCbbHWipps3P6U0xclGC26ye4hqE9n/FIcF11jmUCb6HcWVM=
+	t=1743406033; cv=none; b=bX441eCdAQbPA6eg6j2v7khxqhrlhnPFdaha/MkoFRQWQxuIRUrHHoRuU4SJHE8FAGfhaWnrle6PC8WgwsbQdRnVUlRhjwTzvn9agHZ20lEY+lBxl2UE/rPdY7/6CTtXdaTx1Ok95OTFfYE62yy7YBgVuo93SlbFIdng7QmBu9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743406013; c=relaxed/simple;
-	bh=ImD49gdDmDYlZTkp7M0NVN+yOHdJ7XrwbCjzrlRQaoU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GdpcpafLghje60pRw03o9HTWO743wKT0/cR5lKvkLzNL2HBN3PM4nOdkyo3JZJxLpzAFVDKZCUUa3R6pI3M7gzSjNmj7Bn1+CN/bas3Thz98BS+jC70O6904F3yMVx62rWw6H1gbgY6QCVM8djYUYYfRYVG5Qo/ze1QIVZqNcNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=y99+ovFX; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1743406033; c=relaxed/simple;
+	bh=QnyA2drDcaRjY2HSPxHWOm2mNvWNYANzuDvW0722WNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pwVNF8Wpa6GMhkXIpJxLeZbgg3wjSCAv7yzyaCj1djeOnOow5elauBHCyXvsW7sa6cSevENFrnieR9XDwtgsv1gatYckkDeSQ8bhMAO25OVpWTJSsMsvTXezuOfaItbEDOsJZikPIVtHYzgpiikybAKPHMdJeMk0MNw22Y9EiHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iT6qfbdx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="y99+ovFX"
-Received: from francesco-nb.corp.toradex.com (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id 0107A1F8BC;
-	Mon, 31 Mar 2025 09:26:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743406009;
-	bh=qT9n/x5EVrHs2Hytr9ErCBtPkRKqtQ/58Ll/FePj4rs=; h=From:To:Subject;
-	b=y99+ovFXvKfqLunkMarmVumUcsN1OMMh8nnAY2ssB6mtY5DLWjWQyRFu3zqtvgglP
-	 487I4WxhG0asGJFQagrOnEGrNxVK9n9VVc9Dyf4geNo4DWaovD0TyIpi3x0R7IwucG
-	 saO69vSa6KJLfYIZoDMi13hXSKyvkUG4gOPm6ca4I8J0W3s9M63V5dERKc0HddwBVu
-	 nFrRPx7PPETsMyeQeRHMezDQiMIcRsv2vEHNCpSDw3Rge40qxPbDWhT7xGu1yiLkjo
-	 tZvKn5vSAi5DqqF6JJKjOt9rtbkXM6ZBJnIQY7+AOC2M0vI5dei/X9gZIjLL1gzpuX
-	 DNZyVTNpFWOww==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v2] dt-bindings: gpio: pca95xx: add Toradex ecgpiol16
-Date: Mon, 31 Mar 2025 09:26:44 +0200
-Message-Id: <20250331072644.17921-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iT6qfbdx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743406032; x=1774942032;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QnyA2drDcaRjY2HSPxHWOm2mNvWNYANzuDvW0722WNQ=;
+  b=iT6qfbdxFX8Q+dImCOVsr4D1bMgyChV66FGMQ+hlY5PcJ4wmZEBQI9bq
+   PMO76E6zf0/7DKyQchf3drtAbdd+IdMq0oLNSdKqPMa49r/skG7mRQGsi
+   QwE2hZeXtzeR/w9a8TxkqwqrNwccp+rJ4qSkPRsquZ/v1oFvIvzwHUyU2
+   o1pv0lqvT3ksM4Xei0nf0qySKe8nGQmQD8Ksufduf9atTU1LOCmBdFFj7
+   xJnytTaWoqYyKZQxeZSM9WE4w2oC5mWEiyFT7hTSAhIx/E94l86pwBz66
+   JTtxerkPlNdwFihk0alX5sQeii59iUppMldJ6WpbYQKCLL4jmqujMyWzf
+   Q==;
+X-CSE-ConnectionGUID: 513c/ToKQ1SZa6fvX8hdMQ==
+X-CSE-MsgGUID: lO5Gpy6aR0ijVEXTZr9vSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44859023"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="44859023"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:27:11 -0700
+X-CSE-ConnectionGUID: d5F13biLS32CCIlvR2pPqQ==
+X-CSE-MsgGUID: oWJ15AaZQoC46P2UOm+fLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="163256597"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 31 Mar 2025 00:27:09 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id AB2141B4; Mon, 31 Mar 2025 10:27:08 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] media: i2c: max9671x: Remove (explicitly) unused header
+Date: Mon, 31 Mar 2025 10:27:07 +0300
+Message-ID: <20250331072707.3988687-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,43 +63,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+The fwnode.h is not supposed to be used by the drivers as it
+has the definitions for the core parts for different device
+property provider implementations. Drop it.
 
-The Toradex ecgpiol16 is a 16-bit I2C I/O expander implemented using a
-small MCU.
-Its register interface and behavior are compatible with the PCAL6416.
+Note, that fwnode API for drivers is provided in property.h
+which is included here.
 
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v2: compatible changed from embedded-controller-io16 to ecgpiol16
-v1: https://lore.kernel.org/all/20250328122917.43273-1-francesco@dolcini.it/
----
- Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/i2c/max96714.c | 2 +-
+ drivers/media/i2c/max96717.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-index 7b1eb08fa055..4d3f52f8d1b8 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -16,6 +16,9 @@ description: |+
- properties:
-   compatible:
-     oneOf:
-+      - items:
-+          - const: toradex,ecgpiol16
-+          - const: nxp,pcal6416
-       - items:
-           - const: diodes,pi4ioe5v6534q
-           - const: nxp,pcal6534
-@@ -132,6 +135,7 @@ allOf:
-               - maxim,max7325
-               - maxim,max7326
-               - maxim,max7327
-+              - toradex,ecgpiol16
-     then:
-       properties:
-         reset-gpios: false
+diff --git a/drivers/media/i2c/max96714.c b/drivers/media/i2c/max96714.c
+index 159753b13777..3cc1b1ae47d1 100644
+--- a/drivers/media/i2c/max96714.c
++++ b/drivers/media/i2c/max96714.c
+@@ -7,11 +7,11 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+-#include <linux/fwnode.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/i2c-mux.h>
+ #include <linux/module.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ 
+diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
+index 30c5ca0e817a..23fb7e67d1a4 100644
+--- a/drivers/media/i2c/max96717.c
++++ b/drivers/media/i2c/max96717.c
+@@ -9,10 +9,10 @@
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/delay.h>
+-#include <linux/fwnode.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/i2c-mux.h>
+ #include <linux/i2c.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
+ #include <media/v4l2-cci.h>
 -- 
-2.39.5
+2.47.2
 
