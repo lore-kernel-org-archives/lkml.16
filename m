@@ -1,97 +1,90 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896C7155A4E;
-	Mon, 31 Mar 2025 17:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6DD21638D;
+	Mon, 31 Mar 2025 17:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440809; cv=none; b=CKUtctTyzevd6N3AKKe85WKnwVvmw3nbrlp57DCrLhLxPvgrpoZBdYnStrb15SNlQ4QOyYv2wNDeKZR+VxYy8St5zPCmzMP/6xG96hvQlYwwMpr0Yw7UESQaJp6y13mtWIJHZ8HhjHSNBWjAu8ToBMbJHhlU0aaJZTXV/rAtaJk=
+	t=1743440831; cv=none; b=qSrqkT9wmY04S0Rql4JnpiacMXo9ej+WIiTWECmsNBncHNgwehPCB9/NsGVqtFP7Sxi7bT3bCuo+ewd40famUHYhMh+PmC+YbE6Bw4Hm85m5ICOworkeKPrdeU6ua0FKGvftOiUc5v3aqhFQGosmAANCpNOyiDeFBkBH+sRFxxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440809; c=relaxed/simple;
-	bh=wLh2PCKk48jUc7EBaf6K1kJZ/4C6o96prpD2NdUESZY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Iy3WKH49Col//gF0bRrHe4dgE7oJbVH4HqRwm6e+RhhBiWS70no1CQJe5/qIyDs8rALAms21h6z+YJeZUo8ZYjadSuYkOUEHJkqkE8aD43YtE8PluQWmJM/lfqrCFxhVgHS+Xi2v8ITBPElzUQnZmymCOqy9PRjGyUc84hLiUIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MRPAxrqI; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743440831; c=relaxed/simple;
+	bh=7MaHULDzaSkG4icC7UMxUlSRMLE4Y/Cwy2XIplf4Sao=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=UU9MLqpYGXxd/ViYEyWXlskVCw9gI3AmD/viW/yVrnLjq9d3TonWIDjPh94vO4lZ3xBmzinhDQYhnvIaN0w9Xl7PiZCH7lUV0xGMQ8FtmSp1lElxQpktvNkWAbmPqMMAMj/MKlqKMMC0AuORk6wBPCeAVycNH5qJkj5ZINWF7yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=SfVskHiX; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MRPAxrqI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743440797; x=1744045597; i=markus.elfring@web.de;
-	bh=wLh2PCKk48jUc7EBaf6K1kJZ/4C6o96prpD2NdUESZY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MRPAxrqIm4JJ4pf7Sfv84ijOffHu/tQgu48DJyrJZxLAylsbWubwvvfw0hIvft77
-	 iFkooJtpAwBiz6hiPZYj7cgdZmd6SHoTkryKgW+i7Tu/gqNVO5evab77rITYM60Tm
-	 a9li8zphFSTlmyVTuzwRBjJK8aQauqXEt3yXEax4OP2EmmZzpaIpY0B1RBfVeSMUR
-	 w+zGs8+XHLFZ04VQJ3o1+pRIg7S6rQETw7HHTML7rpfB0WWCZUWKanWf+Cu7EzU6W
-	 wpLFjBVwvAg4jpB0lImGZeA4zFbUbJQyh/xK5SJbHiejrWcYg6YDDTmM9W2t4fCvw
-	 af82sCY4937LlZxycQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MREzO-1tn9WT2WzU-00UDcJ; Mon, 31
- Mar 2025 19:06:37 +0200
-Message-ID: <e87f2369-204f-431f-b434-bff4b8e78742@web.de>
-Date: Mon, 31 Mar 2025 19:06:36 +0200
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="SfVskHiX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1743440814;
+	bh=aSQCO39e/yaHq1IGMJwSXvNPWc0Kwg4k8lBUzMa7krs=;
+	h=From:To:Cc:Subject:Date;
+	b=SfVskHiXlyC1qKk+LmUSm6f2iUThFITYC9mHy8HIy/StbvMVEqI8w/ZrKccDUrnL5
+	 EDgcb8KccJKTIzUA+DIZiy/849cowOg/1ATPE3GEGAn+cnvOc2gEjmwkWEcLyM8XB2
+	 mrkJyceChwRa6fKh+hOFiBUqswFxitFVZFML1U60=
+Received: from localhost.localdomain ([124.90.110.106])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 2FB2C33; Tue, 01 Apr 2025 01:00:47 +0800
+X-QQ-mid: xmsmtpt1743440447t36xhxnmq
+Message-ID: <tencent_3E06CE338692017B5809534B9C5C03DA7705@qq.com>
+X-QQ-XMAILINFO: MJ4PQBQ4NCwQ5AhMwf/qMy8AICzZpbCOK3OTKLMLo9WrJ9C5O6BsUTwsV3uBqP
+	 D+mS5BShXobmRPgsU+jubnL/mpg2rsVfq6TPGlqfYGYm/+yy0ZVWK4jUiL87g0uEbIFEe4jcXqO4
+	 ASEvS8RarGeneW5sWjrl01xezSH5uiuPQ90m2aIMnx+fu2kWsXtVx9RdnnGWW/S2KqKDTfutegw4
+	 yYM6TUqlllzLoK8g32ivuTaRpvUJqMz4EVhwJgGwqgFlKdF/mc4vMuHJCoJ88Yrsr90tKS+pEzn0
+	 p7YPLbBgV5mzght1DCd/v+AXJj7xHxLC4VJ1qb7JI2agNTE0J4Ja6mzXt2lZ2SbgDpxQojPdlLN1
+	 nGQUDlwu44zCd71+tg1zw+++8zhLgAJM0hwiA2wwf6QdGONJ1Xll5SWm4sIBFk6LRSa+lbR0mfVe
+	 m8DDyimknkZOoGqlgsL7NzXt40bpS/1sHAF0+zW+ki37PBzQaNdPc15JVu72V1JBjd4+aMo/sRnU
+	 +SPHzAtfyvTc8swH4QIA9RpbY/FOit7A/uu3ZPa1KYIuQcP4pskxDOC4ySl5UFnOyoPx5PzG8Tm+
+	 g82HNx87H8AVavWQQW2nlfB1VUbUxfaswtQVGvBJYnIb+zRIQnEqsZ30jX/hrIdNKjFf8B4p2qH4
+	 dn8BUzTE51LQPTpyAhyZiGifWCwJMiKEqWKB/7ebP+hHDuMNPa8UKo8z1iGxvz5PpsO/edu0Y7kV
+	 m/u4S+Bm1/7eixL3LeYebMYo/kJIgVcfbMm9rnjayPive4POY14wEcRPdd2qCcCpcgUabpoiIFwB
+	 fi5dbxJknMu+Ow9E/lF/RzGIZbbFzL0b2O9SsnAYUUksENkg6BbvFtX1H96H2+f1yK00yfg7vspQ
+	 t0szuyUdKgL0l+dh7aauFk+lAHqiHGUdRjPPBhvQ9OpgJeOobB3WpBISXwRwFwIGBGTYhUyjvVGJ
+	 F5NaW5piBEF8u2snTkBeWEFOFyau4qkFIMyQbmL7oCVOJgcTI4ofy6EyxgV/bA18FzVkmKqs4cZ2
+	 zcXZeQ7UFinHVEfJ2i42uzRsYam1npH36PVFeFeE3TX0aNmOB1iFoAgZW2lKU=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: zhoumin <teczm@foxmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	zhoumin <teczm@foxmail.com>
+Subject: [PATCH] ftrace: add cond resched to ftrace_graph_set_hash
+Date: Tue,  1 Apr 2025 01:00:34 +0800
+X-OQ-MSGID: <20250331170034.27276-1-teczm@foxmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-input@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>
-References: <20250331113732.10722-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH] HID: uclogic: Add NULL check in uclogic_input_configured
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250331113732.10722-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:44aS7CidGP84GY/uY/53O2eNAf1G0g+8zz83JFCGyMgIa+T04SA
- A8SgVliLP0T+onAx0wNSYWmsVQe/yGiByiRv9LV8RL7g3f38KYyU7snIe/VGC/2talKMzdd
- tHrslX22PAJ3UpROA9ouXTjD+cF7vkyt4SeND9ne6hd2lVSr8e2OZLN+aT4013tj8pP6N19
- 1RMXETHbjAXZhHWATGfOQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7npyd/PNj1I=;VoNh9lFBcG1qqsbSEmFiqe+M9c1
- 6zKgjlhjKwg+qkuooSD2QHY38SHQ+bhkTwQlpJqqqeBTrMxqgRmor4PjgRtU0UTr6euXQgcAh
- staDA6cTB0RP1d4rR3hNC92WRDnkcgXtkflYJDVVxnc7Z4y8TJRTKyvkA+6eEj85pDszFExY8
- UcarCy3PG3B/AlJRrWZHR8/TzmtnFoT+b+lLH4RjKC5BoXmGTwxP/YbbBRMgYyzEWvQrRmEjx
- aLyRBI+GhELYooi5co2e8EG01eP9+L/SlopdUE5/KG+s4RxGOvfPU2MPPHugJ5GwP7qCRG6Cz
- QMY8kgYphK2L/4Eq2/86wzt/vEW8Pr+Q2eD4xEaA64KF3tqaZbGljRHSJoQjS6D8LOyolivsQ
- PmQxrHL/gCi6cGOpFU5esi5MD/YWkbjijy/h5b2Rpe+4PDSMIDuUmYSPR3jdWZ7NGczip1DMM
- cxhBGWIdE/rQmIH59OZa0ZedOEwCdpIAtaAqDKvPuG525nT1pdvn9Iuw/2srMWvmox+/TCoyL
- s7BtG6DvjZBo+174PDwLMDZt8PH4dD2Tz7Rixy7XsKNtRW4OC3mzyx91s1B7WaFtb5Erxr5hm
- HStaj5ajmDLgaBJaegsjEcnNx4vzqYMkr0GzCZmWW+T7mApixJBT0kOKrZjlyeshGnzO/b405
- w1oHbyGPZ9iTfCMcY7uWb7cYpB25Hc5Yb0LX2Sg4dBtEtBZEu1CwRX9resMemaRqIjsUPa7od
- +nDssUx0oEBEMV4i/AFQescjKJuO/bfXIu+y896LP7+ogwrwOb59xRc82wvdfGbCDDELIRqoV
- MKElIcZv/7TCk761cWcg+SmIirXY8LA//1VrSVVVbjTUT73iALk6u7btbHzqbZetwto+RTACE
- RdCLK1o/HBmjrWTD7jx744CcLApchSjESElyPpo05318n3DUX6jvChevGqUadydl2KOJJNy3Z
- yruxn7oY9wJGxTs71dxbK6X+GWVD6vEDRKaYaDZlacmdH7vwA6Vp77ZRU4Y9okP/PKcgHyNz/
- 3FnMWn1F45kHa2G3m6s6iWLrriEAyjzPDk53nswDbsOf48ERJ638UBo/lw0gWwdHTS06tux28
- +hyQ59Ei3XvWyCM9teaukZPsyRjhYeFxNnnVxx+XJKkNhskg4wb8ZjeH/hz5XgZnY/diQmumU
- iv2ubOaTelmwyQPVMlEOm5tt8F78wQNtVZDC0R5gMkUlN0nCAx9gw06tuktmQc1KTfwkIsADP
- yhHTMvdpWbBJAtY+rmZaCwkk4UKxDRAYSZ9WterTEaSEOJz6u/sCkqy10b6DKslYyNN2XJzXX
- LV72ddchhyy2M013yu08hk9aTtIdUsr/9E7rRzktSrb2VSeOUM/raMomY34i/KYfQOApRE+Zq
- ON2mVm2n1SfgHv2rlYdo4pfNWZ2jEr+F6af8/ibucm1LCD5jko6WzvFGmNx2+bCHD3gg1I8Ir
- aGHBv6ObmWQeZ4v1LN0G7iRaXnj/Yj/s0jyKoUw1+Z0G9Ate24kD8S2hKaz974y1ZmAfQfA==
 
-=E2=80=A6
-> Add NULL check in uclogic_input_configured, to handle kernel NULL
-> pointer dereference error.
+When the kernel contains a large number of symbos,loop in
+ftrace_graph_set_hash function may take a lot of time to
+execute.This may trigger softlockup watchdog.
 
-Do you complete the error/exception handling also with the statement =E2=
-=80=9Creturn -ENOMEM;=E2=80=9D?
+Add cond _resched within loop. This ensures  the kernel
+remains responsive even when processing a large number of symbols.
 
+Signed-off-by: zhoumin <teczm@foxmail.com>
+---
+ kernel/trace/ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-By the way:
-I suggest to simplify the handling of the condition =E2=80=9Csuffix=E2=80=
-=9D
-with if/else branches a bit.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 92015de6203d..1a48aedb5255 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6855,6 +6855,7 @@ ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
+ 				}
+ 			}
+ 		}
++		cond_resched();
+ 	} while_for_each_ftrace_rec();
+ 
+ 	return fail ? -EINVAL : 0;
+-- 
+2.17.1
 
-Regards,
-Markus
