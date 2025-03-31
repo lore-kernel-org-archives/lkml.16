@@ -1,295 +1,315 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011030.outbound.protection.outlook.com [52.103.67.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9395B1E492;
-	Mon, 31 Mar 2025 07:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407777; cv=none; b=IDiJtAUf/hLHeVx32a7SgcozkpUAHi+dqt9XOJFnD7H1qwzzIhym9iz6HhSiMc32FhbnOVnvQlF98oLZYNsZ1+UD8PhSEMadluP/NU2FEoauyEE6QSEUaa7TEpyBjmo95GA0eP3ePY69WUBENID+XfnmjZqBpHvstvJkhEpPtnA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407777; c=relaxed/simple;
-	bh=OrcnH/DOn4L8xTW6TbFqicpCzco8GgKR6E1ku1bu6Dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZX6LiAjSu/6HdYKwxblBNNSeoxSOvbF/67nTTIL4VJqkYWFy4b8m94Pq1o9blhCq4fbz2t2SXd/M75MyN9v9zyDaKcqxxxcm7q+61vIYoHOwajL+4RVeW4n9ICQmF5AndlHm/CuTRemG/g+LdiyXjEieW+HV9CUHdFYAuUP0PcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oadPzksd; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD321E492;
+	Mon, 31 Mar 2025 07:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743407810; cv=fail; b=h66G2iiMgw/vwfkcEoqrsn6g7Pxn9KLfLh2RujECYHbLah15ChIBUqYEB0BuapYQJHqr7pfNpTfQBcsouR+57BhxZroH5kZGMfP4SgpASumJpubrZVNIok+q1UnA4HJS6KbyYFSA2MTuVH+09SALBsiThjoldDyDiqzYtAmzrms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743407810; c=relaxed/simple;
+	bh=746apK782TEIPrr2yhn4YbH40o3PfXBPGpE2HV3s3G0=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cs63l0RDjzgjnZbd143G4+YOMLdzY3JEVew5XIPYoe0m8sH1q1gPDtJ8s8bLg252aO9mcM72eCyzRD7dWAe3Es9Y5STP+EPyOGyxxGMcevPTS0YVcuQfx9vZHod9pEaTbWg4QzMRU8f9o6G5pQC/lPwpDywpVhXRtBA9AEE1IjE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Yex423K+; arc=fail smtp.client-ip=52.103.67.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oadPzksd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56D3C4CEEA;
-	Mon, 31 Mar 2025 07:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743407777;
-	bh=OrcnH/DOn4L8xTW6TbFqicpCzco8GgKR6E1ku1bu6Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oadPzksdNErrDN7uyBK0IYwANENa311Vbf6tj08FbJvbDN1Jpfuw7D0RuRkJBHOa8
-	 PC9zfJJ/J7lr+SCmTdchWhR3flvJdqRfp69SgpPS6UlVCloCCGDS8nbSipJRPYCkzU
-	 cpYDHJe5KcAKBCm3JwhLPWrFagy9zk7bVk3M95oxbF+Dz0ul7/TTmhVARYf2gpqmAf
-	 G/wm5aEQQ5fmlcJ7nDyBYbKVGpbEpB4ROrKNnBfo45bg/pmulSvlcHKgBrPiokWOaf
-	 1PhAkWQTNgB2E+3msnG1WELnUf0HNPqIBdRXM7OXu+cdmZT2ycXSQUqxFglQ8onv8U
-	 9lnTP6DSru0Og==
-Date: Mon, 31 Mar 2025 09:56:12 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, riteshh@linux.ibm.com, 
-	linux-xfs@vger.kernel.org
-Subject: Re: [linux-next-20250324]Kernel OOPs while running xfs/206 Test
-Message-ID: <ddm6vhsyqmqkkwifofev4onnewtumnmxw7gej5irsvqtovzk2f@n5dtb22xnpzr>
-References: <ux6hTu_zJy2VgEGB-hjkyjPgrnYiSkCDnVw0L7oLB_OvUh6zy3hYQrm_hazL9iuSUuuwoQbiLBlyyO5sGjInGQ==@protonmail.internalid>
- <6564c3d6-9372-4352-9847-1eb3aea07ca4@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Yex423K+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rd7PXrbV9nM7RUC2akILrIDZ8tIa0Y6RZflTIpx5TW8fp3i0kLSTyA9wFhnn1GlmyQaaFI/PbO23ISrqhrYAkIbD44OllLJ7B+4DQVXKw8mEqR2mucEd2i9N9tqblZdIgyEQktJAVm/qmZzmTp/qi8yDNUa924JI3PWDyHwe/zfGxXu19k8dD0Eam5nzeNBkKTKiSOp3zylX305KL0rTB2FI+li9faefK7cg5eWhXPFAzky3nlz+EKexieVoHAtdAdeeoYGNUjN6nHvMFME8BbDueXsHt2u0QGxCKu6g0eQGanmF+RxBVZSILdE8PycJIQeeeykhtBlxzSpWDR5JxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6kbmo5WXv9b8sBYXXsPFZ0D0JXS2qwh+j7efRfXSzqs=;
+ b=gt7HBVppV0FBll4t7Xw25vLXgh4huwMziE4KMY6Vunc65Ov26lBE7JAcFjGJDIh2S/apkI2VJ6R+KwKLqdqv2mcedY411IAQrc253gqTE6hjhaGc1tmAcpXitXaAw/0+QK2mEYhd9l7UWrbMDIZShKF/yH6X1XtV/JKrg7AgEMCjNjdU9zBr8nNwNQTYApZz7jc3/bdCBTAxwvsP71YG06unJV/4vkTktK92eHHhqucc/hEt8aWo8760WBKIPi6TXWR1iqpJlTDeDRbrbRryDCn47g9uVViQHrU2+81nSjJMqEd40+1YeiSulmMdUlTdTipPggnH8/MGj3Qssjf4EQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6kbmo5WXv9b8sBYXXsPFZ0D0JXS2qwh+j7efRfXSzqs=;
+ b=Yex423K+L7ff86iZJkXacteyXloTLOCYgDvulqzuIHteRiU1lNe7gmw8WBmBd9Iyr4MUEU6BO+FaHEBXU+t+SGGfTjwpRGpKEe+KoUjWp+A1yuww7TUg16sMi0GCFEixmv69q4kkcI7Pq/d2rmFgdX24eyKSSd1hjDzVhn9bT0HGdpD+MoKFSQmVmBmWy4vwGBGgQ+L12e+HitdHG3pXeRo/mVLYuw/K16qmY9e8ZJl+39EWD7NX5GxVLngOpiioLIU9afMgdnj2sfkwwtDL/+Fh8r6A98KWnBbPFeEyQhg51MmebSlsznlLoT0FWxakcg4Q8Ov/lyI47WDEaJkqjw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by MAZPR01MB8860.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:ce::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.38; Mon, 31 Mar
+ 2025 07:56:44 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8583.033; Mon, 31 Mar 2025
+ 07:56:43 +0000
+Message-ID:
+ <PN3PR01MB9597C4CE02EC5DE00DAAD43EB8AD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 31 Mar 2025 13:26:42 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: magicmouse: Apple Magic Mouse 2 USB-C support
+From: Aditya Garg <gargaditya08@live.com>
+To: jikos@kernel.org, jkosina@suse.com, bentiss@kernel.org,
+ benjamin.tissoires@redhat.com
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <PN3PR01MB9597EF3E56A1EE2191490E92B8AD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+In-Reply-To: <PN3PR01MB9597EF3E56A1EE2191490E92B8AD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0148.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::18) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <a29eee9c-64fe-47d7-8a11-71aa9fb0433e@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6564c3d6-9372-4352-9847-1eb3aea07ca4@linux.ibm.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|MAZPR01MB8860:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce71b1ad-357f-468a-2cb9-08dd7029941b
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|8060799006|7092599003|6090799003|19110799003|5072599009|461199028|10035399004|440099028|4302099013|3412199025|41001999003|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cldCTnN3MUo4aDBZbm5oQlYrdWprUmJLMDdWaVNmYXFObGViSFZtL0N1V1pn?=
+ =?utf-8?B?aDJ0RlJnL1JPSkRsVlczSGRnOHVZd0NDbWdHSENITXFzQ3YxVk1oeGhrOUJB?=
+ =?utf-8?B?UUhkUTdIWmIvUHJ2N1dKYjBYMVVZV1o2MUQxUnJXTHJnMERuT1ZoWnh4ZHRz?=
+ =?utf-8?B?WSswRHZKQkJWWTY3dk50eHhCNXNVdGRMK3lPOEhrRTV0ZDJTRFc4YnRhZktV?=
+ =?utf-8?B?WDdVTEd6NiszVjZpVWkyTGtUQW8xY0NaQm4xZjJ5TVh0SkpMQUdqNzhTdjdS?=
+ =?utf-8?B?VGg3c3VkYVF6Z1pLSjdIUkV1dXR0T3NLZklNaGcxbHFzem5MNGtnNldsa0RL?=
+ =?utf-8?B?ajh0WUtneVhZK3N3aGNVU3ROcytCbzlCaWxjcElnVlNmNTBrV0xGZ0JaNE8v?=
+ =?utf-8?B?Zk9ZT0RlU2pGdGRZRmhYRk5zRjkxSjZsc1IzZDJiUXljSy9ZTWVIZE5TZExa?=
+ =?utf-8?B?SU5ERUhJSTZMUStZRkF6YW5ZTXZhVlNRZSsxVFdWRFNSd053QVg0UXFiT1lC?=
+ =?utf-8?B?V3A1bUcreEFaN3pnTkp2ZWx4UWxwVkEyYnBWYTV2RTJ3VzBRUFNET1ZIOS9u?=
+ =?utf-8?B?Y3N6MTZkWXF1V1pxQWtFeTlWd2dtbUdrb1dSc2s4WUxpaE1uNXJOakF5ajhr?=
+ =?utf-8?B?SlVnTVZsSlJ3aENUNTBRSWNQTUF1UXdaRmhKRWw1Y1ppSjlQTHlRMDRzL2Fq?=
+ =?utf-8?B?T3psMlZvRjk3TklQTGZjUE9xWktuajZvT3dwZHFNYk03YStTL05TcDV3b3oz?=
+ =?utf-8?B?MGNuY3BZb3RGSzc4WWx5cUhKcXhVWjNWK0pVMFZ3bmpsRE1vdko0UEgvL21I?=
+ =?utf-8?B?VGltVXpJMTN4d1lCbXpNeE5sK0N5ME5oRXltYXA3QkhVVkxOYzM0dS9tZVRj?=
+ =?utf-8?B?NmhkbURjY3pYYUlsNmhNRmpUSFpwaGQxQXJjVjRaNXpTTmRIclpYSGpMdHM0?=
+ =?utf-8?B?MG4rcTV4WVBxZHZLeUdNNWN3ZmdLamdtUnNRTHVrQ202amJJdnJmaHhMbTBn?=
+ =?utf-8?B?SW8rRWt2TlNvZ1BWMTdFK08vV0NzdWNVWGhpMWRJQ200N0k0YzJDbW1INTBS?=
+ =?utf-8?B?RjdwNUczSHZmbzJRK1dmNFRwYzlnKytHUGhNNWx6MVJodUxMajlUMS8vUVQ2?=
+ =?utf-8?B?VzNFaVJ1c3JCb3NURk1ZbEdOSnBCNlJJOXo4b1doRmJGajEveFNyS010Z1hj?=
+ =?utf-8?B?R0ZKWGF5NXNhNDJTQ09IRTJqaERWS21KRkJxeWVjOFdOWUcxV0RHd2w3aFRU?=
+ =?utf-8?B?aTBvU1FZTTNLQmhKZXVqcjVSNFd5aDN5SG40Wmk5VWFKdHZHWVJGRW9nUGxY?=
+ =?utf-8?B?ODJqSm1XeVExeVErS2dVcEpObjV4Rm5xdkJwVXZDU0JLZHBBTjJlRGFnQzZ1?=
+ =?utf-8?B?ZXlRcVREelUrdVhVVzFKeWltU1JZeFJSMWZ5TWlrZktyUXZBdWM3cStvcGtD?=
+ =?utf-8?B?YTNQU0xyL05wMTdObFlWNGFqM0RpaVhnd090bTlMcHc4cjdsWmFyNVh5V1lz?=
+ =?utf-8?B?ZGN4RHZmei91M041SEZKVEV2ajVXWTd1SXZMZ3FpQWN2Z0gwalNOWDRMTzMv?=
+ =?utf-8?B?NUovUHlpQm1LMlg3R2lLc3RoK0JOc0Iwck9sWUdsMkhKVjJpZkJRODhlcGJo?=
+ =?utf-8?B?N01iT2xWUXRWcGZQYW93b2VJTG9wZFMzcXJRQ1FUUlUzZXhUSkVrYXJ6V1d6?=
+ =?utf-8?B?TnUvZXVzSlY2clRmM3dham5VbDBORUNjZDJHRWtqMEdnOGVxZmZQSk1BPT0=?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZkFyeTVzK01nWUhzRXl6ekRPTjJNYWhBTk9obFlxWUl1cVlaMjA1cDFCUHNq?=
+ =?utf-8?B?eHkvSzFSWWlDeXZZaStDbFM0ZG13Um5BQy9yK0NuSmF1ajNTYlpQSUdMOUxi?=
+ =?utf-8?B?SzhWcDBUQjFZVmk3b05pd1FMUTh1eWtUVWhGWDRQKy9Gc0tpcUVGbU52Ukoy?=
+ =?utf-8?B?eXE4ckllS3JvZWZpbWEzaHpIU1U2OUFDVG9hS3ZnRXdKbVhWZjQvTVRUL1Ey?=
+ =?utf-8?B?ZExpbkV0bTZzU1lVNkJ6amhITzJ4VTg5VWJ5ci83NnMrL1FTR3AxUUNLTmEr?=
+ =?utf-8?B?dWxNMlNuYm1xa2hsMHdBQVlKemM4MldMOHNyaytnbEJjS2xpVzdNM1RncnRY?=
+ =?utf-8?B?aFp3Y01XaUh2aUREZWI0QXV1R25XbFpZWmhyN1RxQ1kzZGVUT1RsTkpLNTkz?=
+ =?utf-8?B?NnN5a0Q5NHkyb0dpbUdnM0JHazBOTEpuN3k3Y20rUW9uMDJacjBFbTc4K0lS?=
+ =?utf-8?B?NmFncWJwMHp4dWxpZ1lxb3kwMFQxVHNaWTQ4NHJkdEE2bXYreWxYZ2tGNVJS?=
+ =?utf-8?B?MStLeHYzYm5pdzZwU3pyM3NBS2xvRGo4TzdDODlYYW95Mmx2N0VoTDFVSXdO?=
+ =?utf-8?B?SGswOVpxV2hPODh4S1JTSk9WWVFMYytyalNLL0xnZmlNcjgxUm4ybEUwY0hx?=
+ =?utf-8?B?YUV3c211WnVTWm5ZOXJHUStISGZvbExRZnZ1dUtaWGFxYm56Vlk3L3VXenBl?=
+ =?utf-8?B?L08zd3J6MGlvNE4rZDVHTk4zUXRSMXE4Z0FyRUVLeUdJUDFPYXRmMTEwQ1Fk?=
+ =?utf-8?B?emYzUkJIZjZYdEVmZWhITmJSdDVOdnBxTjJlWlhTcmI3WjRGWDFNZGtYNjBC?=
+ =?utf-8?B?azgxUjRGRERBNE43TFZ0cjhMWnpmMjBoZUEzbnNOT21ZSUI3eVE5RDBxV3VI?=
+ =?utf-8?B?SDBkczkwV3puNkk1Y01uMFFlNThwckpPQzAyY2h2SmxRZ09vMlBEWVlJaW1N?=
+ =?utf-8?B?MHdiakFyZ1ZIODFwQW4xdzdUb2tEdkJEUFJESWlvVDl5dnp3TGN4ekFURW9I?=
+ =?utf-8?B?NzREMmhyUThvenRxbXZ3NThQdTJoYkVKWFVzclpsR0RqWGJmZ1BKZ25BNnow?=
+ =?utf-8?B?OUlIOWVnZWhla0I2RHQ5cnlVYUl0anR0R01FTm41RjYxUG0yYmR1QTF0R2hk?=
+ =?utf-8?B?US9IMFpsMjdVUkFqMkR3b0MxTzhHSDhqWlJUaVVmY2Evb1JrK29TKzdPQkF3?=
+ =?utf-8?B?eUdpOGhjWlNwQWJDMGYzZU5YK2pZdm5ZYTVQZy9JeXAwMnN1L3B0cFFvbmd3?=
+ =?utf-8?B?bDFaQWF4QytRK2g1S21vU2UvNVFiZXdYc1BzL0h0UmtFSUpHY2JEeWNPSERi?=
+ =?utf-8?B?R3dsNTN0UHFQNzV2S1FzWGltRkFmUmtIbFJ3ZlQ0VHA2NlBpcVcwQ1FnOVQr?=
+ =?utf-8?B?WVdpSExXOVJ4YmttbE1RcFhaWU5CZFFaWTdFaWVUcldoUlg2dlFhK1RDRUtD?=
+ =?utf-8?B?bWswV2tWRW5GSzhHMTNTSWJYS0tIb2xJSmVjV0NmWGNISHFEV0g1WDRaMHV6?=
+ =?utf-8?B?d0YyWGFEL2JHZWJMWHpHc0d1cFFaK2M0RzNuMDhIdUNNSHRBVUhOWVVpWDlS?=
+ =?utf-8?B?ckxmOFVqaFhlb25SK1BhcjhWOEdqNWttN2xQZHVoNmJra1J1Q3FKbjJiMFdR?=
+ =?utf-8?B?b2NXc0VnNkFuTm13aThGNTM5UnlncXk2NElYT1ZJV3dTakNsUkdrSi9GNE54?=
+ =?utf-8?B?UkFPNzdGWXo3YTREY0tjZm1WTUExZi9ZV0pMVUlUb3VhMytXbnRDai9vcm5Z?=
+ =?utf-8?Q?wJVLzQb9FuXGm3TN2VFJjt7ZnJnMcizdBpAxos3?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce71b1ad-357f-468a-2cb9-08dd7029941b
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 07:56:43.9369
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB8860
 
-On Wed, Mar 26, 2025 at 09:32:07PM +0530, Venkat Rao Bagalkote wrote:
-> Greetings!!!
-> 
-> I observed kernel oops, while running xfs/206 test case on
-> 6.14.0-rc7-next-20250324 only once. I am not able to reporduce this. But
-> posting it here anyway, if anyone gets any clue.
-> 
-> Please ignore, if it dosent help.
-> 
-> 
-> ---- Steps to Reproduce ----
-> 1. git clone git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-> 2. cd xfstests-dev/
-> 3. mkdir /mnt/loop-device /mnt/test /mnt/scratch
-> 4. for i in $(seq 0 1); do fallocate -o 0 -l 9GiB
-> /mnt/loop-device/file-$i.img; done
-> 5. for i in $(seq 0 1); do losetup /dev/loop$i
-> /mnt/loop-device/file-$i.img; done
-> 6. mkfs.xfs -f /dev/loop0; mkfs.xfs -f /dev/loop1
-> 7. vim local.config
-> 8. make
-> 9. ./check xfs/206
-> 
-> local.config >>>
-> [xfs_4k]
-> export RECREATE_TEST_DEV=true
-> export TEST_DEV=/dev/loop0
-> export TEST_DIR=/mnt/test
-> export SCRATCH_DEV=/dev/loop1
-> export SCRATCH_MNT=/mnt/scratch
-> export MKFS_OPTIONS="-b size=4096"
-> export FSTYP=xfs
-> export MOUNT_OPTIONS=""-
-> 
-> 
-> Traces:
-> 
-> [ 2272.236489] ------------[ cut here ]------------
-> [ 2272.236502] WARNING: CPU: 3 PID: 1 at kernel/cgroup/rstat.c:231
-> cgroup_rstat_updated_list+0x228/0x330
-> [ 2272.236512] Modules linked in: overlay dm_zero dm_thin_pool
-> dm_persistent_data dm_bio_prison dm_snapshot dm_bufio dm_flakey xfs loop
-> dm_mod nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
-> nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct bonding nft_chain_nat
-> nf_nat tls nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill sunrpc
-> ip_set nf_tables nfnetlink pseries_rng vmx_crypto fuse ext4 mbcache jbd2
-> sd_mod sg ibmvscsi ibmveth scsi_transport_srp [last unloaded: scsi_debug]
-> [ 2272.236556] CPU: 3 UID: 0 PID: 1 Comm: systemd Kdump: loaded Not
-> tainted 6.14.0-rc7-next-20250324 #1 VOLUNTARY
-> [ 2272.236564] Hardware name: IBM,9080-HEX
-> [ 2272.236572] NIP:  c0000000002d3af0 LR: c0000000002d3948 CTR:
-> c0000000005f3728
-> [ 2272.236578] REGS: c000000004b276f0 TRAP: 0700   Not tainted
-> (6.14.0-rc7-next-20250324)
-> [ 2272.236584] MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR:
-> 28228442  XER: 2004006c
 
-> [ 2272.236599] CFAR: c0000000002d399c IRQMASK: 1
-> [ 2272.236599] GPR00: c0000000002d3948 c000000004b27990 c0000000016b8100
-> 0000000000000001
-> [ 2272.236599] GPR04: 0000000000000003 0000000000000003 0000000000000000
-> 0000000ef9220000
-> [ 2272.236599] GPR08: c000000091b66000 c009fffff4ca0140 c000000091b66000
-> 0000000000008000
-> [ 2272.236599] GPR12: c0000000005f3728 c000000effffb300 0000000000000000
-> 0000000000000000
-> [ 2272.236599] GPR16: 0000000000000000 0000000000000000 0000000000000000
-> c0000000ac5043e0
-> [ 2272.236599] GPR20: 0000000000000001 0000000000000000 c0000000015d11d8
-> c0000000ac504000
-> [ 2272.236599] GPR24: c009fffff4ca9000 c0000000ac504000 0000000000000000
-> c000000efb49c4bc
-> [ 2272.236599] GPR28: c000000002d0a668 0000000000000018 0000000000000003
-> c000000091b66000
-> [ 2272.236645] NIP [c0000000002d3af0] cgroup_rstat_updated_list+0x228/0x330
-> [ 2272.236650] LR [c0000000002d3948] cgroup_rstat_updated_list+0x80/0x330
-> [ 2272.236656] Call Trace:
-> [ 2272.236658] [c000000004b27990] [c0000000015d11d8]
-> __cpu_possible_mask+0x0/0x400 (unreliable)
-> [ 2272.236665] [c000000004b279f0] [c0000000002d3f50]
-> cgroup_rstat_flush+0xc8/0x5d0
-> [ 2272.236672] [c000000004b27a90] [c0000000002d47d0]
-> cgroup_base_stat_cputime_show+0x5c/0x2fc
-> [ 2272.236678] [c000000004b27b40] [c0000000002c7fb0]
-> cpu_stat_show+0x2c/0x1a4
-> [ 2272.236683] [c000000004b27b80] [c0000000002c60e0]
-> cgroup_seqfile_show+0x74/0x158
-> [ 2272.236688] [c000000004b27bf0] [c000000000735974]
-> kernfs_seq_show+0x44/0x58
-> [ 2272.236693] [c000000004b27c10] [c000000000676440]
-> seq_read_iter+0x264/0x6a8
-> [ 2272.236700] [c000000004b27cf0] [c0000000007364c0]
-> kernfs_fop_read_iter+0x4c/0x60
-> [ 2272.236704] [c000000004b27d10] [c000000000628a9c] vfs_read+0x2cc/0x3a0
-> [ 2272.236710] [c000000004b27dc0] [c000000000629904] ksys_read+0x84/0x144
-> [ 2272.236715] [c000000004b27e10] [c000000000033498]
-> system_call_exception+0x138/0x330
-> [ 2272.236721] [c000000004b27e50] [c00000000000d05c]
-> system_call_vectored_common+0x15c/0x2ec
-> [ 2272.236728] --- interrupt: 3000 at 0x7fffa5f33d94
-> [ 2272.236732] NIP:  00007fffa5f33d94 LR: 00007fffa5f33d94 CTR:
-> 0000000000000000
-> [ 2272.236736] REGS: c000000004b27e80 TRAP: 3000   Not tainted
-> (6.14.0-rc7-next-20250324)
-> [ 2272.236740] MSR:  800000000280f033
-> <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48222442  XER: 00000000
-> [ 2272.236751] IRQMASK: 0
-> [ 2272.236751] GPR00: 0000000000000003 00007fffebb75a30 00007fffa6667400
-> 0000000000000029
-> [ 2272.236751] GPR04: 000000014998e9e0 0000000000002000 0000000000000001
-> 00007fffa6bb53a0
-> [ 2272.236751] GPR08: 00007fffa6badc68 0000000000000000 0000000000000000
-> 0000000000000000
-> [ 2272.236751] GPR12: 0000000000000000 00007fffa6bb53a0 0000000000000000
-> 0000000000000807
-> [ 2272.236751] GPR16: 0000000000000000 0000000000000000 0000000003ffffff
-> 0000000004000000
-> [ 2272.236751] GPR20: 0000000003fffffe 0000000000000000 0000000000000000
-> 00007fffebb75e18
-> [ 2272.236751] GPR24: 0000000000000000 00007fffa602ce18 00007fffa602d9e8
-> 00007fffa602ce18
-> [ 2272.236751] GPR28: 00007fffa602d748 000000014998e9e0 0000000000000000
-> 0000000000002000
-> [ 2272.236793] NIP [00007fffa5f33d94] 0x7fffa5f33d94
-> [ 2272.236796] LR [00007fffa5f33d94] 0x7fffa5f33d94
-> [ 2272.236799] --- interrupt: 3000
-> [ 2272.236801] Code: eb01ffc0 eb21ffc8 eb41ffd0 eb61ffd8 eb81ffe0
-> eba1ffe8 ebc1fff0 ebe1fff8 7c0803a6 4e800020 60000000 60000000
-> <0fe00000> 4bfffeac 60000000 60000000
-> [ 2272.236815] ---[ end trace 0000000000000000 ]---
-> [ 2272.236819] Kernel attempted to read user page (3d8) - exploit
-> attempt? (uid: 0)
-> [ 2272.236824] BUG: Kernel NULL pointer dereference on read at 0x000003d8
-> [ 2272.236828] Faulting instruction address: 0xc0000000002d3994
-> [ 2272.236832] Oops: Kernel access of bad area, sig: 11 [#1]
-> [ 2272.236835] LE PAGE_SIZE=64K MMU=Radix  SMP NR_CPUS=8192 NUMA pSeries
-> [ 2272.236839] Modules linked in: overlay dm_zero dm_thin_pool
-> dm_persistent_data dm_bio_prison dm_snapshot dm_bufio dm_flakey xfs loop
-> dm_mod nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
-> nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct bonding nft_chain_nat
-> nf_nat tls nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill sunrpc
-> ip_set nf_tables nfnetlink pseries_rng vmx_crypto fuse ext4 mbcache jbd2
-> sd_mod sg ibmvscsi ibmveth scsi_transport_srp [last unloaded: scsi_debug]
-> [ 2272.236875] CPU: 3 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted:
-> G        W           6.14.0-rc7-next-20250324 #1 VOLUNTARY
-> [ 2272.236881] Tainted: [W]=WARN
-> [ 2272.236883] Hardware name: IBM,9080-HEX
-> [ 2272.236888] NIP:  c0000000002d3994 LR: c0000000002d3948 CTR:
-> c0000000005f3728
-> [ 2272.236892] REGS: c000000004b276f0 TRAP: 0300   Tainted: G       
-> W            (6.14.0-rc7-next-20250324)
-> [ 2272.236897] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR:
-> 48228442  XER: 2004006c
-> [ 2272.236905] CFAR: c0000000002d39a8 DAR: 00000000000003d8 DSISR:
-> 40000000 IRQMASK: 1
-> [ 2272.236905] GPR00: c0000000002d3948 c000000004b27990 c0000000016b8100
-> 0000000000000001
-> [ 2272.236905] GPR04: 0000000000000003 0000000000000003 0000000000000000
-> 0000000ef9220000
-> [ 2272.236905] GPR08: c000000091b66000 c009fffff4ca0140 0000000000000000
-> 0000000000008000
-> [ 2272.236905] GPR12: c0000000005f3728 c000000effffb300 0000000000000000
-> 0000000000000000
-> [ 2272.236905] GPR16: 0000000000000000 0000000000000000 0000000000000000
-> c0000000ac5043e0
-> [ 2272.236905] GPR20: 0000000000000001 0000000000000000 c0000000015d11d8
-> c0000000ac504000
-> [ 2272.236905] GPR24: c009fffff4ca9000 c0000000ac504000 0000000000000000
-> c000000efb49c4bc
-> [ 2272.236905] GPR28: c000000002d0a668 0000000000000018 0000000000000003
-> c000000091b66000
-> [ 2272.236975] NIP [c0000000002d3994] cgroup_rstat_updated_list+0xcc/0x330
-> [ 2272.236981] LR [c0000000002d3948] cgroup_rstat_updated_list+0x80/0x330
-> [ 2272.236986] Call Trace:
-> [ 2272.236988] [c000000004b27990] [c0000000015d11d8]
-> __cpu_possible_mask+0x0/0x400 (unreliable)
-> [ 2272.236995] [c000000004b279f0] [c0000000002d3f50]
-> cgroup_rstat_flush+0xc8/0x5d0
-> [ 2272.237001] [c000000004b27a90] [c0000000002d47d0]
-> cgroup_base_stat_cputime_show+0x5c/0x2fc
-> [ 2272.237008] [c000000004b27b40] [c0000000002c7fb0]
-> cpu_stat_show+0x2c/0x1a4
-> [ 2272.237013] [c000000004b27b80] [c0000000002c60e0]
-> cgroup_seqfile_show+0x74/0x158
-> [ 2272.237018] [c000000004b27bf0] [c000000000735974]
-> kernfs_seq_show+0x44/0x58
-> [ 2272.237022] [c000000004b27c10] [c000000000676440]
-> seq_read_iter+0x264/0x6a8
-> [ 2272.237028] [c000000004b27cf0] [c0000000007364c0]
-> kernfs_fop_read_iter+0x4c/0x60
-> [ 2272.237033] [c000000004b27d10] [c000000000628a9c] vfs_read+0x2cc/0x3a0
-> [ 2272.237037] [c000000004b27dc0] [c000000000629904] ksys_read+0x84/0x144
-> [ 2272.237042] [c000000004b27e10] [c000000000033498]
-> system_call_exception+0x138/0x330
-> [ 2272.237048] [c000000004b27e50] [c00000000000d05c]
-> system_call_vectored_common+0x15c/0x2ec
-> [ 2272.237054] --- interrupt: 3000 at 0x7fffa5f33d94
-> [ 2272.237057] NIP:  00007fffa5f33d94 LR: 00007fffa5f33d94 CTR:
-> 0000000000000000
-> [ 2272.237061] REGS: c000000004b27e80 TRAP: 3000   Tainted: G       
-> W            (6.14.0-rc7-next-20250324)
-> [ 2272.237066] MSR:  800000000280f033
-> <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48222442  XER: 00000000
-> [ 2272.237076] IRQMASK: 0
-> [ 2272.237076] GPR00: 0000000000000003 00007fffebb75a30 00007fffa6667400
-> 0000000000000029
-> [ 2272.237076] GPR04: 000000014998e9e0 0000000000002000 0000000000000001
-> 00007fffa6bb53a0
-> [ 2272.237076] GPR08: 00007fffa6badc68 0000000000000000 0000000000000000
-> 0000000000000000
-> [ 2272.237076] GPR12: 0000000000000000 00007fffa6bb53a0 0000000000000000
-> 0000000000000807
-> [ 2272.237076] GPR16: 0000000000000000 0000000000000000 0000000003ffffff
-> 0000000004000000
-> [ 2272.237076] GPR20: 0000000003fffffe 0000000000000000 0000000000000000
-> 00007fffebb75e18
-> [ 2272.237076] GPR24: 0000000000000000 00007fffa602ce18 00007fffa602d9e8
-> 00007fffa602ce18
-> [ 2272.237076] GPR28: 00007fffa602d748 000000014998e9e0 0000000000000000
-> 0000000000002000
-> [ 2272.237118] NIP [00007fffa5f33d94] 0x7fffa5f33d94
-> [ 2272.237121] LR [00007fffa5f33d94] 0x7fffa5f33d94
-> [ 2272.237124] --- interrupt: 3000
-> [ 2272.237127] Code: 4182013c e91900c0 2c280000 41820044 7cfce82a
-> e92803d8 7d293a14 e94900a0 7c395040 41820268 60000000 7c285040
-> <e92a03d8> 7d274a14 41820154 e94900a8
-> [ 2272.237140] ---[ end trace 0000000000000000 ]--
-> 
-> 
-> If you happen to fix this, please add below tag.
-> 
-> 
-> Reproted-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-There is nothing in this report that appears to point to a XFS problem other
-than the fact you hit it while running xfstests. Is there anything I'm missing
-here? This just looks like to be cgroups related.
+On 31-03-2025 01:06 pm, Aditya Garg wrote:
+> From: Aditya Garg <gargaditya08@live.com>
+> 
+> This patch adds support for USB-C model of Apple Magic Mouse 2.
+> 
+> Except for the hardware ID, it should resemble the existing configuration
+> for the older Magic Mouse 2.
+> 
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> ---
+>  drivers/hid/hid-ids.h        |  1 +
+>  drivers/hid/hid-magicmouse.c | 74 ++++++++++++++++++++++++------------
+>  2 files changed, 51 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 288a2b864..2d3f96af6 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -92,6 +92,7 @@
+>  #define USB_DEVICE_ID_APPLE_MIGHTYMOUSE	0x0304
+>  #define USB_DEVICE_ID_APPLE_MAGICMOUSE	0x030d
+>  #define USB_DEVICE_ID_APPLE_MAGICMOUSE2	0x0269
+> +#define USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC	0x0323
+>  #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD	0x030e
+>  #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2	0x0265
+>  #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC	0x0324
+> diff --git a/drivers/hid/hid-magicmouse.c b/drivers/hid/hid-magicmouse.c
+> index a76f17158..423d50702 100644
+> --- a/drivers/hid/hid-magicmouse.c
+> +++ b/drivers/hid/hid-magicmouse.c
+> @@ -218,7 +218,8 @@ static void magicmouse_emit_touch(struct
+> magicmouse_sc *msc, int raw_id, u8 *tda
+>  	int pressure = 0;
+> 
+>  	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+> -	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+>  		id = (tdata[6] << 2 | tdata[5] >> 6) & 0xf;
+>  		x = (tdata[1] << 28 | tdata[0] << 20) >> 20;
+>  		y = -((tdata[2] << 24 | tdata[1] << 16) >> 20);
+> @@ -370,7 +371,8 @@ static void magicmouse_emit_touch(struct
+> magicmouse_sc *msc, int raw_id, u8 *tda
+> 
+>  		if (report_undeciphered) {
+>  			if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+> -			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
+> +			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC)
+>  				input_event(input, EV_MSC, MSC_RAW, tdata[7]);
+>  			else if (input->id.product !=
+>  					 USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
+> @@ -497,7 +499,8 @@ static int magicmouse_raw_event(struct hid_device *hdev,
+>  	}
+> 
+>  	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+> -	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+>  		magicmouse_emit_buttons(msc, clicks & 3);
+>  		input_report_rel(input, REL_X, x);
+>  		input_report_rel(input, REL_Y, y);
+> @@ -519,7 +522,8 @@ static int magicmouse_event(struct hid_device *hdev,
+> struct hid_field *field,
+>  		struct hid_usage *usage, __s32 value)
+>  {
+>  	struct magicmouse_sc *msc = hid_get_drvdata(hdev);
+> -	if (msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
+> +	if ((msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	     msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) &&
+>  	    field->report->id == MOUSE2_REPORT_ID) {
+>  		/*
+>  		 * magic_mouse_raw_event has done all the work. Skip hidinput.
+> @@ -540,7 +544,8 @@ static int magicmouse_setup_input(struct input_dev
+> *input, struct hid_device *hd
+>  	__set_bit(EV_KEY, input->evbit);
+> 
+>  	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+> -	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+>  		__set_bit(BTN_LEFT, input->keybit);
+>  		__set_bit(BTN_RIGHT, input->keybit);
+>  		if (emulate_3button)
+> @@ -625,7 +630,8 @@ static int magicmouse_setup_input(struct input_dev
+> *input, struct hid_device *hd
+>  	 * inverse of the reported Y.
+>  	 */
+>  	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+> -	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+>  		input_set_abs_params(input, ABS_MT_ORIENTATION, -31, 32, 1, 0);
+>  		input_set_abs_params(input, ABS_MT_POSITION_X,
+>  				     MOUSE_MIN_X, MOUSE_MAX_X, 4, 0);
+> @@ -741,19 +747,25 @@ static int magicmouse_enable_multitouch(struct
+> hid_device *hdev)
+>  	int ret;
+>  	int feature_size;
+> 
+> -	if (hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+> -	    hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
+> -		if (hdev->vendor == BT_VENDOR_ID_APPLE) {
+> +	switch (hdev->product) {
+> +	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2:
+> +	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC:
+> +		switch (hdev->vendor) {
+> +		case BT_VENDOR_ID_APPLE:
+>  			feature_size = sizeof(feature_mt_trackpad2_bt);
+>  			feature = feature_mt_trackpad2_bt;
+> -		} else { /* USB_VENDOR_ID_APPLE */
+> +			break;
+> +		default: /* USB_VENDOR_ID_APPLE */
+>  			feature_size = sizeof(feature_mt_trackpad2_usb);
+>  			feature = feature_mt_trackpad2_usb;
+>  		}
+> -	} else if (hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
+> +		break;
+> +	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
+> +	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
+>  		feature_size = sizeof(feature_mt_mouse2);
+>  		feature = feature_mt_mouse2;
+> -	} else {
+> +		break;
+> +	default:
+>  		feature_size = sizeof(feature_mt);
+>  		feature = feature_mt;
+>  	}
+> @@ -787,6 +799,7 @@ static int magicmouse_fetch_battery(struct
+> hid_device *hdev)
+> 
+>  	if (!hdev->battery || hdev->vendor != USB_VENDOR_ID_APPLE ||
+>  	    (hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
+> +	     hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC &&
+>  	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
+>  	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC))
+>  		return -1;
+> @@ -857,6 +870,7 @@ static int magicmouse_probe(struct hid_device *hdev,
+> 
+>  	if (id->vendor == USB_VENDOR_ID_APPLE &&
+>  	    (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
+> +	     id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
+>  	     ((id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+>  	       id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
+>  	      hdev->type != HID_TYPE_USBMOUSE)))
+> @@ -868,21 +882,27 @@ static int magicmouse_probe(struct hid_device *hdev,
+>  		goto err_stop_hw;
+>  	}
+> 
+> -	if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE)
+> -		report = hid_register_report(hdev, HID_INPUT_REPORT,
+> -			MOUSE_REPORT_ID, 0);
+> -	else if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
+> -		report = hid_register_report(hdev, HID_INPUT_REPORT,
+> -			MOUSE2_REPORT_ID, 0);
+> -	else if (id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+> -		 id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
+> -		if (id->vendor == BT_VENDOR_ID_APPLE)
+> +	switch (id->product) {
+> +	case USB_DEVICE_ID_APPLE_MAGICMOUSE:
+> +		report = hid_register_report(hdev, HID_INPUT_REPORT, MOUSE_REPORT_ID, 0);
+> +		break;
+> +	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
+> +	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
+> +		report = hid_register_report(hdev, HID_INPUT_REPORT,
+> MOUSE2_REPORT_ID, 0);
 
-Carlos.
-
-> 
-> 
-> Regards,
-> 
-> Venkat.
-> 
-> 
+The patch is broken here. Fix sent here: https://lore.kernel.org/linux-input/PN3PR01MB95973E14FB234C6BCB6417A7B8AD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM/T/#u
