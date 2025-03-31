@@ -1,147 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CDA1DEFDC
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5981D13A265;
+	Mon, 31 Mar 2025 10:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743416589; cv=none; b=jmF5PIXAXbCa2yw3GQum9UgQlojfddGG59CYMfp5nL8owFu5b+4l2qmd6PJQ9JS8j6JRpEygQ5L+FNQyi9o/TNpHeA4FMHYCHXoxOj9LrceSWrD0wyk2oXgPvXAoM/bswp5vLGjOzEm/NaKHZ9u4qfkaYsdbLR7U05OkIRpuCcQ=
+	t=1743416641; cv=none; b=sbgZ/4/glOjiFaX1TsZ3HcwRNThjy31PwMJ72EuRtLYWqK+BNBmVsgsmGv0wZVgpFexy1Hpuh0KJMJjlgK7IlCocIyEXBAOe5ZPWTaqtjUYt0g7UFc0JwMQ2dfnKSCMjZgu4w1POn5q/kKmpzWL7qbOkvm/BtcJTlFbgajZ7rQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743416589; c=relaxed/simple;
-	bh=l8PvKRcSsLN4ao3W7HdWxJP12qa4qZ5iZVTm3CWuWV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ma/1PxbqCAkPcMxREf7uN8vKUAnR4TRRKulZm9N+vu65tQQAGn6pZGAVWD+KKXKik1lJ5shAVy9iArjD0bi4DVzdl/xPkPQe3oWyLPSyHlI27ByheQnY6c95ozTGoOree5VFG6KSpBLUq9kkFSqvZmfGD4aMGoPTv79LWzhPAzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ly+t2ecv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8mNmAeGq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ISFrtwC1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GVP2JhAn; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743416641; c=relaxed/simple;
+	bh=+oxYkuhrp6URVoi8ZfZtcgS1qVnWtosXRc+y8vkiEtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fWUk8tBjqyRh8L34D3eDvO8MqQJLcNhSPjdqWFYzio9y3AN6ZwQlYuee+vM4DCP8ckjQNjkreA4Wgla5x94s4wWl3+vZ3qR7sSyrGWeKgNOGikNP3boJji2uoAv9tfcEHQHWQD48T0cEahFs6i6m+eaUaATiQctN95se7zhYnU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LN/h6bnI; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ly+t2ecv";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8mNmAeGq";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ISFrtwC1";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GVP2JhAn"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4CA6D211EA;
-	Mon, 31 Mar 2025 10:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743416586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y/EhlsjlzL8xhWkkTno252qvfZYol3zYDVGlp4BRXx4=;
-	b=ly+t2ecvY3w/u2NomZsJiCaK9fgzBHdINxz5jBLdcBn/Gd0dtUM5wHV4tCBGYT9qduqxze
-	1RQuVAAbuX6UFn1BUHgU8TBI/JGoQfjNHI3Z8Fwz5K7PSWZiJp6XZGWmA7PDOkSg4lhkGQ
-	YQph1LbReNPYDzgHlVID72Cb4j4G8NY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743416586;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y/EhlsjlzL8xhWkkTno252qvfZYol3zYDVGlp4BRXx4=;
-	b=8mNmAeGqV4Dd55uJegs8sV+3gm6ETneiHtRPVXiGZqbPOkBv25W1iT91YC16IaKG95vE6Q
-	b0iLbIHJRkeEFZCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743416585; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y/EhlsjlzL8xhWkkTno252qvfZYol3zYDVGlp4BRXx4=;
-	b=ISFrtwC16oWaWRjg3iau593opZshgp00YBzwPnEXfxfUBqShX6NU1h/X93JeYjdCHg56sA
-	PiWyiEawQX+y2BDxu+BrE8fhhQrSmzMIaYubg4QNcvU48blX/FtNSyPX9oHvKqFv2opOGk
-	EkgBWp0wVoi44bDEHdbP6eWJbqm5Yf4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743416585;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y/EhlsjlzL8xhWkkTno252qvfZYol3zYDVGlp4BRXx4=;
-	b=GVP2JhAnWYh2g/84zhoeOoEEvSXYBJmKuOI/GvcOFy1aG/X3cmxMoIOixpK5P0uXTkVg6x
-	Ps1zCctcYkX0zoDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 406DD139A1;
-	Mon, 31 Mar 2025 10:23:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5RSwDwlt6meGYwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 31 Mar 2025 10:23:05 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E61E1A08D2; Mon, 31 Mar 2025 12:23:04 +0200 (CEST)
-Date: Mon, 31 Mar 2025 12:23:04 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, rafael@kernel.org, 
-	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 6/6] super: add filesystem freezing helpers for
- suspend and hibernate
-Message-ID: <k2xbbfnkklbndjbrrnp5lpyrajp3uuw4oxe6xksbtskb2p4myy@o4ypfbabhuu5>
-References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <20250329-work-freeze-v2-6-a47af37ecc3d@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LN/h6bnI"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-224171d6826so51850915ad.3;
+        Mon, 31 Mar 2025 03:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743416639; x=1744021439; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qV7xKYxy0jYGd0Qm2mj0JBA759UToJ3LiAjKa48PaqQ=;
+        b=LN/h6bnIxEOTPk/3uA2G8FEWXTHza2OrKCT0N8vMDj7CzwGV3fXiTwISjfkFiCXmIT
+         d/O1sL1A2WErpTDCm6J20IEoCeg6knkIfCKDLr3zCeyRl6UEfCRdHEPSGvM78XYBye37
+         /SSuUUSE0/9N+fz6yq1e7U0FlSILgikRo22YS9WS0+RCJ57+4OKnsqoUTdAsFdRpDkzM
+         8RBj4fHQO7AUt28m17xhbQoEyO3CjwWrJvl7YmI92PydMGJfg2Fzfev+Yj9ZpTpGHbDW
+         LdyKoVY9ppt4jdn2k06KK0gm2N672R1U++aDil0e5y0WLbmn9UFwOt0OxSRF+bg6FGvO
+         XLMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743416639; x=1744021439;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qV7xKYxy0jYGd0Qm2mj0JBA759UToJ3LiAjKa48PaqQ=;
+        b=qNguwIAYmWwqUwGYPB6378TNH5OjeCHvCFbMfqXlQjR1UZSIGf15fvYxFNHhgUXh3a
+         wxySuuWcn7/POxtjOnxR3g8dRxx3CvGFd0vlCOJ699H9Z05sEor55y6w4ykmrgVrn0qS
+         GtRp6DW1Z3qjdZfwMqpRJh6GCKSFBhVcIpYV14bw5TMY98BpXw+uIGn762vVhlBusN3d
+         WSqJhmi4ioFc1OWg04noCPWlct1nsGwvts2CBqJESrU3wAlbHqAl2g+X6wLoVBftHEZ8
+         JCVrrTxauYs0da5GyVaoEZcBE0KPHSAj22I6zCL/SqximVHSIp9Tj30PbJ84ppKA9s/Q
+         7gzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsDhRMbS/2xHr9HQR7/+qODMwWp6X6AAnLGgAANuG8MPrGaXYVWozTwkrGMx2khf+aY3yWS0PUpgmXxsW45RR0uQ==@vger.kernel.org, AJvYcCVDAZ/gMX4zUdNIZZZbTyXGP0Vcyu22Dg/0MztxckdQvdq5efa/7DH75sZbrY8LQ3FN2JqlqV3AKzRqxnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNCIHC5qE6F6GkDh4/nvQt1QMmbAKQvhKtn4PXebfqhIyJ/r5r
+	FP1a3faAkui8A3C+yahUoopNXATliKNUWv4CR1JZo+WA1W7u+Jw4
+X-Gm-Gg: ASbGncs80EgniKi3mWXgkIADfxfJ+gen8pzieVYzcluWaYvO+HAnCoQnZWe5ETUZlwF
+	YDdXu9MtcM9d11wXzN0G5Smo1c3vBNiLDyCllhCb8pIgLGP2nTfuPTSGW0YUBiEcqPMmFmK71Qr
+	q/daTvg4pRZGWE+X/C2YxnGRIqAecx68QklBP0rgS2tVn3YOtIWjirK9puQc9Dh2RY8jxMAY/BL
+	mmSn11PaGiqX9e4Pi14lU1PUZdrEbDVvvspwljcg15Ewlmat02fmUtznbvp39FBwsDwF74vzP2D
+	/c74bUbJpsmZdii5smQ/FH5Yyx2v07zBeZGvQKlbSxPRQquD7JYiO07tUCgH5tFCh1P6TUw=
+X-Google-Smtp-Source: AGHT+IGp4CoHfPPUsld+NS1s2r/2vq7ZsLc+k42RNLjPQwX//XT+3GZe04D3h7pNubLVfwGnIeLbPg==
+X-Received: by 2002:a17:90b:544b:b0:2ff:4f04:4261 with SMTP id 98e67ed59e1d1-30532178e8dmr11706279a91.34.1743416639470;
+        Mon, 31 Mar 2025 03:23:59 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eeca203sm65873385ad.30.2025.03.31.03.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 03:23:58 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: will@kernel.org,
+	mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH] drivers/perf: Add NULL check in tx2_uncore_pmu_register
+Date: Mon, 31 Mar 2025 18:23:46 +0800
+Message-Id: <20250331102346.8772-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250329-work-freeze-v2-6-a47af37ecc3d@kernel.org>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,hansenpartnership.com,kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Sat 29-03-25 09:42:19, Christian Brauner wrote:
-> Allow the power subsystem to support filesystem freeze for
-> suspend and hibernate.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function tx2_uncore_pmu_register.
 
-One comment below. Otherwise feel free to add:
+A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Fixes: 69c32972d5938 ("Add Cavium ThunderX2 SoC UNCORE PMU driver")
 
-> +void filesystems_thaw(bool hibernate)
-> +{
-> +	__iterate_supers(filesystems_thaw_callback, NULL,
-> +			 SUPER_ITER_UNLOCKED | SUPER_ITER_REVERSE);
-> +}
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/perf/thunderx2_pmu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I think we should thaw in normal superblock order, not in reverse one? To
-thaw the bottommost filesystem first? The filesystem thaw callback can
-write to the underlying device and this could cause deadlocks...
-
-								Honza
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index 6ed4707bd6bb..ea36a82c3577 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -738,7 +738,8 @@ static int tx2_uncore_pmu_register(
+ 
+ 	tx2_pmu->pmu.name = devm_kasprintf(dev, GFP_KERNEL,
+ 			"%s", name);
+-
++	if (!tx2_pmu->pmu.name)
++		return -ENOMEM
+ 	return perf_pmu_register(&tx2_pmu->pmu, tx2_pmu->pmu.name, -1);
+ }
+ 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
