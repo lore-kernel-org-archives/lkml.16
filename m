@@ -1,65 +1,33 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EB0BE67;
-	Mon, 31 Mar 2025 05:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EF62033A
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743399583; cv=none; b=MEdF4Kd1w0ZwHhOgepeqw88+dIMkUv900YD9Qg9QrRn5XewoKP6cersaWnNfU9xhTSRguaPpNxkl2NCMiaKCPkTkpetX/rOnG0G928u8M3m7iDkm4AmjbGPWu8Q3fLJulbwqrNABVA/eFKDdQZZWz/ZMbj/BGFPu71w9BPZ7Vhs=
+	t=1743399692; cv=none; b=S1w7tIqdPi6OE8zJulJtc69YFXE50iRdLhd4VWyqnYSJdhN1c/kBb0TQdyg7DFCoz8r+6TXn7xozerpAmR3ScEYXyEZQECrLghFf3Q0BHHH5xeObGKoLqhYg1QXhm70+WlWoaSFa8U74KPwapy9O53De6/gWY79m+DgJqaJMxDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743399583; c=relaxed/simple;
-	bh=IeA4lf0PVKOwd3spaqPGr7Zxq2RRfIFFLFhFKVVuUcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tIksl1ugw3oPC7wIeUTeI9BDW51xHMERSQfOXzlmS+L4QVdnVEhpzsRM6X9+Bt6nC+C4fzPWuKI+UFq77soCPI4lm9gFw0ULrfjNLh1jEfAHBiM8aWSvJ7ogIUR8UXbfaH6q59WXqoGWAXN9M2SfENg89ANK0e9siy0bQmnlVPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZY4OSTr7; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743399692; c=relaxed/simple;
+	bh=nx32tzfKZRETSu9i/nSiqKkG5dZFoR1Si3UZOHA8/sM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DqV4IY1HETS6aFK376RqhchKftOAsiXun67Kol/pLiYDya0nUcpZ2GXoxS+r1Jk61qO6gLT5+Wf9lfK0iKRT5o62+Q2EdUu+dPjYuDWfB40FUneV4Pk5RmR/Coj+wLj9ozxH2TiDMk0VKY3vVirW9+VFpvbmZHxjb/Bn73Y+/B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iriTtZ6u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZY4OSTr7"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so23491061fa.0;
-        Sun, 30 Mar 2025 22:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743399580; x=1744004380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4AaMaaA3HgI5ZgkbFyIrsVuNy6uPjPTFn+suKBrfMsc=;
-        b=ZY4OSTr72WzdjJeJvP0suomh0HCPqGDkURJ9VgF5eFfbGuBc8n3/kc+SLlGZ+y5dOz
-         xud+2ysgtOUbMhc7Q+9IzKtG/G6Ei1502AodJH4tS9js+amMeM2PgSnNbjKdqV3SJZdI
-         kiokw/+F4QYD9FXyC5ziqYwV/hVRPOGHHUIrQMND0vnnnH/Yj84a9cN9RDGFSvdW44LE
-         wQTeBzi+fmq/1VK11sEfeAv2k4u4TTjv9WJkmhCJQdDXJ6fJ2+gpNNo2GxgjMWSwZY8K
-         nJ6L8Qf06A1a93YxIamofc4rNLzAp+KIxiDOJoMb4mJEnY7oxJyYp2snIu6JRkzTXEK0
-         9mDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743399580; x=1744004380;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4AaMaaA3HgI5ZgkbFyIrsVuNy6uPjPTFn+suKBrfMsc=;
-        b=BpX/2toMHoBfOE47Ws+uJl4qw5EbrTntBT40HkT+HyF07EHBksKsQ6DIh8a4R4ZHKP
-         VGo8TxJxN/dzcFWHNsNB7IIKPC6Jws9mvOA/VNfdTxVDNSIHKz0+ciqIF5fP/rtHM449
-         jYfOKjTCoWh2BMGNibbg89v0SiIrmsfURLmF68r3wnoDfzvWZaVpa6fFsqhsEKMOHrTg
-         r4TODRYDrnFYFr+qrMJcJbT3L25baDjgsHzZM0xrStSlDQe8f6jwa83Oz4oX5N69YgBV
-         /CbM4le2ltj8lXwzk6UYQht7tXCQBZQPCwDCkywYn8E8QaXv1lbXy4HkP/7pHkrjFyUJ
-         yW5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVN7Wl44qdLb02feQ6LMfKgH/9CUyXpY3wByIjZQTPW9ecNkunpQDwiK1QGYtgg5zrgbwi/A0ZMrji7@vger.kernel.org, AJvYcCVPG+5dpr+ov/BoyKewwloBdnPtQnP/MWnKv70UIobzwauuLKUetGJjELwAS+BrWfBh6Tq86aRHaZKkxmts@vger.kernel.org, AJvYcCW9CFZhraHSvU/TIg2xxFgvPBb/aqjV07rByAQrhVdhSCiXOsK30k7YNkvbR8ggBamBqBbqI7QpZswK3pGle5bjHY8=@vger.kernel.org, AJvYcCWtVrDzWloN1TWnWCY1MQzse1q57SmtXFBuU2fxPTbb24zfGBnnhlJcrN46zi8owFe+ZC5wa0Hnzyk09g==@vger.kernel.org, AJvYcCXG6b3ipXy1JySOkLEkCwg569GiKL1V4MmdrYG89cO+D0d2sESRS51uS/pyikb94X0eX2syvHCIzVkE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUu64qcpESBT4wHZxTPef69NmNythEyverB3MWk1jZ/ErVX5xU
-	ezPRyvg1t7LoPGbV/h40DwoNVCfhOfpvGkJFge/ZzoSmvQgRITkf7q6CXQ==
-X-Gm-Gg: ASbGncuiD8XdpvJRCg5wEllFaRs72UpEVuNMP4MjBk8J1MOlV2CQ73N4jYducPWB9OC
-	nSd0A6s49R/mzMBMb7GCpR+bw3iYrq96GbWjdSAVKuCM0ZNY64S3B5mCFQxt8cABGWT7FmjDn3X
-	XpNIhrWa7YBuqRWyrnfQSsREMxQcnRodjVH6xcbaQZtQQeigX2GybPUI3d+3hqn1o9vVaLl+ZVm
-	Z1I97/zqd9Pw78/VlEIUAp8WRPqYdcwSwB0dPEoYQxqYB2ur6mvSOsUY0mTJInBylMNVXOyHaXp
-	oF4OGK5mSl2Uafu6WLTIY6mGBwywUxCNJKAqxOfocUJjJvQGqt9RO+uK5/5cK1hjKztsiKuOAQO
-	hBEC0IdswqWSKk9CJOU4A9SkSwFQ5AxM2VSQZ
-X-Google-Smtp-Source: AGHT+IEax/bYtDNpsnoS8lp2/Xv0SOwDw+X/Qx+Fp6+LfV4yGOljFnL11rqq5UXPyHcC3DYhadI4bQ==
-X-Received: by 2002:a05:651c:1590:b0:30b:b132:43e5 with SMTP id 38308e7fff4ca-30de0278988mr32677431fa.19.1743399579629;
-        Sun, 30 Mar 2025 22:39:39 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30dd2b4ccdesm12941591fa.67.2025.03.30.22.39.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 22:39:37 -0700 (PDT)
-Message-ID: <4d66b3b5-bfcb-42f0-9096-7c448c863dfc@gmail.com>
-Date: Mon, 31 Mar 2025 08:39:35 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iriTtZ6u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAB3C4CEE3;
+	Mon, 31 Mar 2025 05:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743399691;
+	bh=nx32tzfKZRETSu9i/nSiqKkG5dZFoR1Si3UZOHA8/sM=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=iriTtZ6uzGsEXE3P1eTK+01eW0OnO+EmTY1R4UhFIYGA8sGn7RujfwlEqe+1FDrJa
+	 gm+Lu8CD3nEDScoo9SuYYFMhwvwOfx4i2gqalqFbLfW0Evdn/69t3lldKw2JLaMBWG
+	 DA4XLHzX+Jt3LKB5tdaRVldU8IUd/HaLhP2DO/SpsJC8V+5LxQFD8m/7BQYdZP1eSF
+	 dYhExM1r8j8XQOZj5z+QCUCYhzxBJBydjwSslsAfZOG66KXmX4OZWIWzFKMrKfDHau
+	 /N8EeIk3NO/dlfWUxQPMG7O0QE5dygO3uaKgfIBjJxY/t/RLuub7ot3AAIgBZ0c+xa
+	 37aNKkczz7vfw==
+Message-ID: <9b617cde-0dfd-4dc1-8dde-4fc3c8a7fe04@kernel.org>
+Date: Mon, 31 Mar 2025 13:41:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,155 +35,160 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 3/8] iio: adc: add helpers for parsing ADC nodes
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Guillaume Stols <gstols@baylibre.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <cover.1742560649.git.mazziesaccount@gmail.com>
- <f1d8b3e15237947738912c0d297b3e1e21d8b03e.1742560649.git.mazziesaccount@gmail.com>
- <Z-mnNtYLkwsTYjMh@debian-BULLSEYE-live-builder-AMD64>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <Z-mnNtYLkwsTYjMh@debian-BULLSEYE-live-builder-AMD64>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, Daeho Jeong <daehojeong@google.com>
+Subject: Re: [PATCH v2 1/2] f2fs: zone: fix to calculate first_zoned_segno
+ correctly
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250325080646.3291947-1-chao@kernel.org>
+ <Z-YXqKOIgYCpfuL0@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Z-YXqKOIgYCpfuL0@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Marcelo,
+On 3/28/25 11:29, Jaegeuk Kim wrote:
+> It seems this patch breaks the multi-partition cases.
 
-Thanks for the review!
+Which case did you test w/ this patch?
 
-On 30/03/2025 23:19, Marcelo Schmitt wrote:
-> Hi Matti,
+Thanks,
+
 > 
-> The new helpers for ADC drivers look good to me.
-> I am now very late to complain about anything but am leaving some minor comments
-> below that can be completely ignored.
-> 
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> 
-> Thanks,
-> Marcelo
-> 
-> On 03/24, Matti Vaittinen wrote:
->> There are ADC ICs which may have some of the AIN pins usable for other
->> functions. These ICs may have some of the AIN pins wired so that they
->> should not be used for ADC.
+> On 03/25, Chao Yu wrote:
+>> A zoned device can has both conventional zones and sequential zones,
+>> so we should not treat first segment of zoned device as first_zoned_segno,
+>> instead, we need to check zone type for each zone during traversing zoned
+>> device to find first_zoned_segno.
 >>
->> (Preferred?) way for marking pins which can be used as ADC inputs is to
->> add corresponding channels@N nodes in the device tree as described in
->> the ADC binding yaml.
-> Not sure it's preferred to have ADC channels always declared in dt. That
-> question was somewhat also raised during ADC doc review [1].
-
-I had missed that doc and the review. Interesting read, thanks for 
-pointing it :)
-
-We did also do a bit discussion about this during the review of the 
-earlier versions. I am not sure if we found an ultimate common consensus 
-though :)
-
-A recap as seen through my eyes:
-
-- It is preferred to have either _all_ or _none_ of the channels 
-described in the device tree.
-https://lore.kernel.org/all/20250201162631.2eab9a9a@jic23-huawei/
-
-- This, however, is not _always_ required to be followed, and it may be 
-impractical in some cases:
-https://lore.kernel.org/linux-iio/6f6e6550-5246-476f-9168-5e24151ab165@baylibre.com/#t
-
-- We do have bunch of existing drivers which we need to support. With 
-some very different approaches to bindings.
-https://lore.kernel.org/linux-iio/20250302032054.1fb8a011@jic23-huawei/
-
-
-My _personal_ thinking is that:
-
-This means that we can't hide the binding parsing in the IIO-core. We 
-can't go and change the channels in existing drivers.
-
-But, we can provide helpers (like this one) for drivers to use. I also 
-believe we should still try to have common (and preferred!) approach for 
-the _new_ drivers. Eventually, the new ones will be majority. Some of 
-the old ones die, and if we keep same practices for new ones, the old 
-ones will become rare exceptions while majority follows same principles ;)
-
-> In short, ADC
-> channel may and may not be declared under ADC dt node. ADC bindings often don't
-> enforce channels to be declared. On IIO side of things, many ADC drivers just
-> populate channels even if they are not declared in dt.
-> The ADCs you are supporting in the other patches of this series seem to require
-> dt declared channels though.
-> 
-> [1]: https://lore.kernel.org/linux-iio/20250118155153.2574dbe5@jic23-huawei/
-> 
-> Would something like
-> 
-> A common way of marking pins that can be used as ADC inputs is to add
-> corresponding channel@N nodes in the device tree as described in the ADC
-> binding yaml.
-> 
-> be a good rephrasing of the above paragraph?
-
-Yes, if we don't want to guide new drivers to either have all usable 
-channels, or no channels in the device tree.
-
-I think Jonathan said he'll be rebasing this to rc1. I am a newcomer and 
-I should not enforce my view over more experienced ones ;) So, feel free 
-to reword the description as Marcelo suggests if you don't think we 
-should prefer one direction or the other.
-
+>> Otherwise, for below case, first_zoned_segno will be 0, which could be
+>> wrong.
 >>
->> Add couple of helper functions which can be used to retrieve the channel
->> information from the device node.
+>> create_null_blk 512 2 1024 1024
+>> mkfs.f2fs -m /dev/nullb0
 >>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Fixes: 9703d69d9d15 ("f2fs: support file pinning for zoned devices")
+>> Cc: Daeho Jeong <daehojeong@google.com>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>> v2:
+>> - traverse w/ zone unit in get_first_zoned_segno()
+>>  fs/f2fs/f2fs.h    | 18 +++++++++++++-----
+>>  fs/f2fs/segment.c |  2 +-
+>>  fs/f2fs/super.c   | 37 +++++++++++++++++++++++++++++++++----
+>>  3 files changed, 47 insertions(+), 10 deletions(-)
 >>
-> ...
->> +static inline int iio_adc_device_num_channels(struct device *dev)
->> +{
->> +	return device_get_named_child_node_count(dev, "channel");
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index ca884e39a5ff..3dea037faa55 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -4630,12 +4630,16 @@ F2FS_FEATURE_FUNCS(readonly, RO);
+>>  F2FS_FEATURE_FUNCS(device_alias, DEVICE_ALIAS);
+>>  
+>>  #ifdef CONFIG_BLK_DEV_ZONED
+>> -static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+>> -				    block_t blkaddr)
+>> +static inline bool f2fs_zone_is_seq(struct f2fs_sb_info *sbi, int devi,
+>> +							unsigned int zone)
+>>  {
+>> -	unsigned int zno = blkaddr / sbi->blocks_per_blkz;
+>> +	return test_bit(zone, FDEV(devi).blkz_seq);
 >> +}
-> I wonder if this function name can eventually become misleading.
-> 
-> In Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml we have
-> temperature sensor with channel nodes named after external hardware connected to
-> the sensor, leading to channels having different node names. Can anything like
-> that ever be accepted for ADC bindings?
+>>  
+>> -	return test_bit(zno, FDEV(devi).blkz_seq);
+>> +static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+>> +								block_t blkaddr)
+>> +{
+>> +	return f2fs_zone_is_seq(sbi, devi, blkaddr / sbi->blocks_per_blkz);
+>>  }
+>>  #endif
+>>  
+>> @@ -4711,9 +4715,13 @@ static inline bool f2fs_valid_pinned_area(struct f2fs_sb_info *sbi,
+>>  					  block_t blkaddr)
+>>  {
+>>  	if (f2fs_sb_has_blkzoned(sbi)) {
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>  		int devi = f2fs_target_device_index(sbi, blkaddr);
+>>  
+>> -		return !bdev_is_zoned(FDEV(devi).bdev);
+>> +		return !f2fs_blkz_is_seq(sbi, devi, blkaddr);
+>> +#else
+>> +		return true;
+>> +#endif
+>>  	}
+>>  	return true;
+>>  }
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index 396ef71f41e3..dc360b4b0569 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -3311,7 +3311,7 @@ int f2fs_allocate_pinning_section(struct f2fs_sb_info *sbi)
+>>  
+>>  	if (f2fs_sb_has_blkzoned(sbi) && err == -EAGAIN && gc_required) {
+>>  		f2fs_down_write(&sbi->gc_lock);
+>> -		err = f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk),
+>> +		err = f2fs_gc_range(sbi, 0, sbi->first_zoned_segno - 1,
+>>  				true, ZONED_PIN_SEC_REQUIRED_COUNT);
+>>  		f2fs_up_write(&sbi->gc_lock);
+>>  
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 011925ee54f8..9a42a1323f42 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -4307,12 +4307,33 @@ static void f2fs_record_error_work(struct work_struct *work)
+>>  
+>>  static inline unsigned int get_first_zoned_segno(struct f2fs_sb_info *sbi)
+>>  {
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	unsigned int zoneno, total_zones;
+>>  	int devi;
+>>  
+>> -	for (devi = 0; devi < sbi->s_ndevs; devi++)
+>> -		if (bdev_is_zoned(FDEV(devi).bdev))
+>> -			return GET_SEGNO(sbi, FDEV(devi).start_blk);
+>> -	return 0;
+>> +	if (!f2fs_sb_has_blkzoned(sbi))
+>> +		return NULL_SEGNO;
+>> +
+>> +	for (devi = 0; devi < sbi->s_ndevs; devi++) {
+>> +		if (!bdev_is_zoned(FDEV(devi).bdev))
+>> +			continue;
+>> +
+>> +		total_zones = GET_ZONE_FROM_SEG(sbi, FDEV(devi).total_segments);
+>> +
+>> +		for (zoneno = 0; zoneno < total_zones; zoneno++) {
+>> +			unsigned int segs, blks;
+>> +
+>> +			if (!f2fs_zone_is_seq(sbi, devi, zoneno))
+>> +				continue;
+>> +
+>> +			segs = GET_SEG_FROM_SEC(sbi,
+>> +					zoneno * sbi->secs_per_zone);
+>> +			blks = SEGS_TO_BLKS(sbi, segs);
+>> +			return GET_SEGNO(sbi, FDEV(devi).start_blk + blks);
+>> +		}
+>> +	}
+>> +#endif
+>> +	return NULL_SEGNO;
+>>  }
+>>  
+>>  static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+>> @@ -4349,6 +4370,14 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+>>  #endif
+>>  
+>>  	for (i = 0; i < max_devices; i++) {
+>> +		if (max_devices == 1) {
+>> +			FDEV(i).total_segments =
+>> +				le32_to_cpu(raw_super->segment_count_main);
+>> +			FDEV(i).start_blk = 0;
+>> +			FDEV(i).end_blk = FDEV(i).total_segments *
+>> +						BLKS_PER_SEG(sbi);
+>> +		}
+>> +
+>>  		if (i == 0)
+>>  			FDEV(0).bdev_file = sbi->sb->s_bdev_file;
+>>  		else if (!RDEV(i).path[0])
+>> -- 
+>> 2.48.1
 
-My initial thinking is that the hardware which is connected to the ADC 
-should have it's own node - and there should be only a reference from 
-the ADC to the other hardware's description. I think the connected 
-hardware should not be a property of the ADC channel.
-
-Anyways, the current ADC binding (bindings/iio/adc/adc.yaml) says the 
-node name must be channel[@xxx] (which, I believe makes sense as it 
-makes it easier to understand device-trees for ICs which may provide 
-other nodes but ADC channels too).
-
-properties:
-   $nodename:
-     pattern: "^channel(@[0-9a-f]+)?$"
-     description:
-       A channel index should match reg.
-
-Yours,
-	-- Matti
