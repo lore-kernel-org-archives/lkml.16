@@ -1,162 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D23F3FE4;
-	Mon, 31 Mar 2025 11:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7151E25F2
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421582; cv=none; b=mvQ3Qw/uL7wzLmoKO9hsQzsjR1PpRmErQn5cLUDo5E5cmu8Ne7GE47fD5B5Dw+ikVTjb9Z++ociFLkJHgLk42QC8OcXZXXuLbm1E389KR0E6nwUZE19Vklt/tctQKgvICwWtMhBpRkGDigKbecPnOCSg9lEWKF1qLCgVUg2rLZ0=
+	t=1743421679; cv=none; b=P1EVjAl5Kb0FUR6n9jnbO26BGmDJzBlApyZ3XMoI7PKMkz7XwqSIH+/wy0FPsClsgrd0SZ2B+FVTvbRCbvDId5kGJLcfCwcojS1McNuxhd2PqNDO3fRJMnJomDyQUPw/3Zy5YchMxQ4uVjzy1NrLerAa2gWgVCjNWL/cLSUbSPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421582; c=relaxed/simple;
-	bh=u9p15OXm9QZMTai0Gqz2IJw0gWsmXXWW9BWXZRpKvQs=;
+	s=arc-20240116; t=1743421679; c=relaxed/simple;
+	bh=pArKK9G7xodDbemAOrxPr3k38aDwYAqpgkxAXEAWrXM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EUMJ6dHVCr0nG/CKAZrnUEfNc56WrprzTllbgjlzagcOZ4xjQFJrTf2Jl6E2WF7Q+ScRwjBdoqJ4G24z+Y1emZ+lc/Otz03PfQ7RBm+vR4F1gmEkmHF5notG7iI8v4t0noIDi3EB/vN1LuRcEvJ1gFMoJ92hX4cTiUZdiyqIbfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEYtBSlO; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=B/1kvINIanb6gXU8eYI4aV6YRH538JNDUD9V9M0iOfbZ8/FPqCmz/m2Rs/kdUHqRHB668b/LGqOKFgNmO2pqWoIHLZ3ENJ6ka27MNgYinIuCq4+sCEPNC74+bhrhL3ZiW/uFtPrmf6YhFiH+gpNmrFSVJNraaVDdcnlmNft/9iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EdKnZb6z; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEYtBSlO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E01C4CEE3;
-	Mon, 31 Mar 2025 11:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743421581;
-	bh=u9p15OXm9QZMTai0Gqz2IJw0gWsmXXWW9BWXZRpKvQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fEYtBSlOFmnS9FWcnFnLjzCgnlu7b2kKqKIw2MwC6epbB64lpGjYpJAzNDcFNB64d
-	 HUL8cagWLDUpWkuXxeFhxZLJpgfy2SCg/zth7Wwh2VcSiUj40U1h224UBYOcH/Vo0r
-	 G+i3rMyfJePmIQ8SNvkS17L8STUl8Akw+9AI7u9PDNbXdYCX2+yTkuH0xOww4qffQ8
-	 DfkhtlfzOSqW7Bku5XGtGFvPaPQ6qON/iKiiWDGqN8VU7KVxEvGzxEx95NSGmjXFoB
-	 8S/nWukTs0YkAMte1jcgd+H2GXgvA4X0vFOPs7alu9LjcHt3eWFFJRNU0QoJpOmpaZ
-	 EeeJT6Af9u53g==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c764f2c223so1023045fac.0;
-        Mon, 31 Mar 2025 04:46:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUK6nq4ZBAayyJh/9U+8BK4UjThOYTo9H7l5x8U+q1EOJvGe3BGE1bvv8vfL5nPAZylcE6EkKGlSP0i@vger.kernel.org, AJvYcCXaZYuzOd+VD46e2RN5HcanvqvoIXv9LLKB3lcG6TXl7aUOVcvQ4L/VUgB0fkd6ZYEzO3hd38ZYYOvMVUww@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOeuzYwcNYJbNbVQ24GvS5wwkJpUvH6zXSRpJxcgAKJgfSfL2d
-	bmMCOZ7i8jTJ4Lz7UyYkbf4cTB7BnOeRMOuAQyiFIYzRToOd1ckFYH5jQ3/DNvS9eWGWjQJp2yM
-	VBgLIdMvgGrtO8bAcpyszlLkhXo4=
-X-Google-Smtp-Source: AGHT+IGLHSPjnj0ONYF56bwe4e8CV95FtIHFoYEUDj6FI0sTgHCoDe9OUqqcTrF3/hupBFyV4rvUitZaUVoNtiZpj4k=
-X-Received: by 2002:a05:6870:418d:b0:29e:255e:9551 with SMTP id
- 586e51a60fabf-2cbcf474c3cmr4598743fac.2.1743421580976; Mon, 31 Mar 2025
- 04:46:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EdKnZb6z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743421676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pArKK9G7xodDbemAOrxPr3k38aDwYAqpgkxAXEAWrXM=;
+	b=EdKnZb6zkUKjBIu+rJcTmCga2IeX5wB9MnZM60mRPZJ93+wvEDa2EjeKspOP6qXu+HdMPs
+	yVAlmrMZGUSqKJ5p6KW6p/aVqkhL8bp3Ibjb5PMbr0DDhoHr6kwKZDWMIK+o9A0JkB7/Bx
+	HhDQAiqkyAmGBvpFf1ue2kxDwnQ5jxY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-312-EGXLr96YPe-ZrG170BSXXg-1; Mon, 31 Mar 2025 07:47:55 -0400
+X-MC-Unique: EGXLr96YPe-ZrG170BSXXg-1
+X-Mimecast-MFC-AGG-ID: EGXLr96YPe-ZrG170BSXXg_1743421674
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so3524350a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 04:47:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743421674; x=1744026474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pArKK9G7xodDbemAOrxPr3k38aDwYAqpgkxAXEAWrXM=;
+        b=gp8rWASPLFQx6uwGvOvY6jzJxOIx4SuxMmPE+Hhrbv6CXRWGmIil1iWNdfmed+hPxM
+         mQTJmrPkovyZecDYOKrv/tEnzz4G1gcuqfY2rJ2/Zwl3X4Mj5EpbQ4KqZHVO/B+Nf3N3
+         5oj+qRLzNAXumE9WtuUItaCDN6kvPylb0WZ5rhOS3/X2BTWPOo8hKT6/fihgW9sHrvFk
+         +SAs/zq8yDlL/b6YdTvPJgTIY4tkJ+aR4xOa25qjjyh3b7Wlja/JRiCNKEGUJprAzwIV
+         JlVpdyi8MdEa5tNKx1ogyK41IgEixB5bW3YdOUppkNREfqSBU7Wz6Fk2Oe8XzidT7wDf
+         a4zg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6qLEDmbBusD5wkhbsHQ5AwJgT2czCc71Ob2RwwhpcRg2Y1nY6wKHXHupItNF6/3kJmPHQTxJfhohk38s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMBrG+D+coH5AsI8ftu8+IeJ0l3w+Vx9Zur9Wc1mypC17RbVz1
+	BHrzeJqwr7JySYpxXj91RJF93bl/uyO7NmV5548Ucp0baw8C30UetqYEBgXOprIwHNsxHYoI0Rb
+	cBtxlYGay/20l6TmZgrH5PUBBqamReHlKgAzFRG3NXhYezOQ4Zd3fjBEXtN61lPiS6Bnqyz8035
+	sziC6PG0XbpYKMR/+lWPKAVp0Doim8ZCi+9Xb0
+X-Gm-Gg: ASbGncuAlNrd9hKJ5frHEO+vr7o+v0k9tEaa0uBD8VhfnahD3iplrfftpKZzgKnxzxg
+	0r4XJIwyvzxGdmOsv20qngHak9BZVel5Sy3+toktcoasfyDIfyRWyvQz7E/lmYIeZrHU97jPkVg
+	==
+X-Received: by 2002:a17:907:7e88:b0:abf:4b6e:e107 with SMTP id a640c23a62f3a-ac738a374efmr776687866b.25.1743421674146;
+        Mon, 31 Mar 2025 04:47:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRmb2sP6u1Kcqc9voC0cuFc8cG9X4wanJkzT5G0J8qfH5D6leVLiwsM+zFjfRL7h+LKaFEAz4OgYXd5DAAjI4=
+X-Received: by 2002:a17:907:7e88:b0:abf:4b6e:e107 with SMTP id
+ a640c23a62f3a-ac738a374efmr776685266b.25.1743421673726; Mon, 31 Mar 2025
+ 04:47:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
-In-Reply-To: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 31 Mar 2025 13:46:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com>
-X-Gm-Features: AQ5f1JpzlMUyTy2jsegu95KUagJIz4NmCHKhw5-yyzojW0dsktwnVlH68O3aG4M
-Message-ID: <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
-To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>
-Cc: Len Brown <lenb@kernel.org>, Alex Hung <alex.hung@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, linux-acpi@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250327134122.399874-1-jiayuan.chen@linux.dev>
+ <67e5be3c65de3_10636329488@willemb.c.googlers.com.notmuch>
+ <17a3bc7273fac6a2e647a6864212510b37b96ab2@linux.dev> <20250328043941.085de23b@kernel.org>
+In-Reply-To: <20250328043941.085de23b@kernel.org>
+From: Lei Yang <leiyang@redhat.com>
+Date: Mon, 31 Mar 2025 19:47:16 +0800
+X-Gm-Features: AQ5f1JpaEdK08-KL1Gf8Ek3oojs8QnopOUqDVrhQ8D9XsTzqJ71WtMtHpHShaOE
+Message-ID: <CAPpAL=y2ysE6jJgVYAOOx9DQXOYkR627LF1nusb2-Jwx6gXR8A@mail.gmail.com>
+Subject: Re: [PATCH net v1] net: Fix tuntap uninitialized value
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, netdev@vger.kernel.org, 
+	jasowang@redhat.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net, 
+	hawk@kernel.org, john.fastabend@gmail.com, linux-kernel@vger.kernel.org, 
+	syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com, bpf@vger.kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org, 
+	jolsa@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 10:09=E2=80=AFPM Gergo Koteles <soyer@irl.hu> wrote=
-:
->
-> The _DDC method should return a buffer, or an integer in case of an error=
-.
-> But some Lenovo laptops incorrectly return EDID as buffer in ACPI package=
-.
->
-> Calling _DDC generates this ACPI Warning:
-> ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
-> found Package, expected Integer/Buffer (20240827/nspredef-254)
->
-> Use the first element of the package to get the EDID buffer.
->
-> The DSDT:
->
-> Name (AUOP, Package (0x01)
-> {
->         Buffer (0x80)
->         {
->         ...
->         }
-> })
->
-> ...
->
-> Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
-> {
->         If ((PAID =3D=3D AUID))
->         {
->                 Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
->         }
->         ElseIf ((PAID =3D=3D IVID))
->         {
->                 Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
->         }
->         ElseIf ((PAID =3D=3D BOID))
->         {
->                 Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
->         }
->         ElseIf ((PAID =3D=3D SAID))
->         {
->                 Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
->         }
->
->         Return (Zero)
-> }
->
-> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extension=
-s/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
-> Cc: stable@vger.kernel.org
-> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if availa=
-ble for eDP")
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
-> Changes in v2:
->  - Added comment
->  - Improved commit message
->  - Link to v1: https://lore.kernel.org/all/4cef341fdf7a0e877c50b502fc95ee=
-8be28aa811.1743129387.git.soyer@irl.hu/
+QE tested this patch with virtio-net regression tests, everything works fin=
+e.
 
-Hans, any concerns here?
+Tested-by: Lei Yang <leiyang@redhat.com>
 
->  drivers/acpi/acpi_video.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+
+On Fri, Mar 28, 2025 at 7:39=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index efdadc74e3f4..103f29661576 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -649,6 +649,13 @@ acpi_video_device_EDID(struct acpi_video_device *dev=
-ice, void **edid, int length
+> On Fri, 28 Mar 2025 09:15:53 +0000 Jiayuan Chen wrote:
+> > I'm wondering if we can directly perform a memset in bpf_xdp_adjust_hea=
+d
+> > when users execute an expand header (offset < 0).
 >
->         obj =3D buffer.pointer;
+> Same situation happens in bpf_xdp_adjust_meta(), but I'm pretty
+> sure this was discussed and considered too high cost for XDP.
+> Could you find the old discussions and double check the arguments
+> made back then? Opinions may have changed but let's make sure we're
+> not missing anything. And performance numbers would be good to have
+> since the main reason this isn't done today was perf.
 >
-> +       /*
-> +        * Some buggy implementations incorrectly return the EDID buffer =
-in an ACPI package.
-> +        * In this case, extract the buffer from the package.
-> +        */
-> +       if (obj && obj->type =3D=3D ACPI_TYPE_PACKAGE && obj->package.cou=
-nt =3D=3D 1)
-> +               obj =3D &obj->package.elements[0];
-> +
->         if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER) {
->                 *edid =3D kmemdup(obj->buffer.pointer, obj->buffer.length=
-, GFP_KERNEL);
->                 ret =3D *edid ? obj->buffer.length : -ENOMEM;
-> @@ -658,7 +665,7 @@ acpi_video_device_EDID(struct acpi_video_device *devi=
-ce, void **edid, int length
->                 ret =3D -EFAULT;
->         }
->
-> -       kfree(obj);
-> +       kfree(buffer.pointer);
->         return ret;
->  }
->
-> --
-> 2.49.0
->
+
