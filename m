@@ -1,228 +1,309 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7FD1DE4E3;
-	Mon, 31 Mar 2025 19:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743448768; cv=fail; b=JWTPP7K9QXC1lqiylEnE7sMLYyHPF9xCgFbVj1sMHQ+WOXfHahRONv8cY8vEN2m6aTipD3ZtcCV0l9O1CEt4qj0IjkFnu2SGWWh0pW4+5SlmO+AyDrEkaotByrdgEQPfo/+frVbmgLjwSa4dW3pPLjdBsGDdyQz9SYIuHCBNDMU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743448768; c=relaxed/simple;
-	bh=Ns6evJ+iWdEbIude3bIZJTcv6R0KruqwzWaPsQDcS4s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mxV4n+gVXcpnQv3x2oQbVHZESvNtV1jaF9Qou34IqM2IDl36IacfHafs2hW8evNRVyxjLAgvlmSbKY+jX5QWwbuyhoWvRaWr59PgVcY3jl+I7rARwy/aIIzb+tA9U5kaaV4eEAt+ogEQCluO10hTaobKluXBybnutU3uxxb1OoE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pw6VPBiP; arc=fail smtp.client-ip=40.107.243.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D7193079
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743449091; cv=none; b=PFzGW9Sy325FflaaVG2o60FvvkC3aBKBNEs43ATo5Up7expYoFtgd+TmYdCf8lfyq9e901MLV43ev//KyEZ88ebEr6iSBRFPN0V+znyx4C4TRof930NDVgBrzrDoGyE1ukx3zUwLvoHkUsPDZ5XDttwPcsbZgSqwtxAEtF0reBY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743449091; c=relaxed/simple;
+	bh=VYNlyZ27WDW+K1NGm92+9R++6AJIimE1cv42eG8h00M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eb0H47kq2g8XAzjNm8a7oIuP7YcJnZKeLsH3R+lv9FYI8T397tbvHcvlX5Zw6tpzPTu7rk7DKm0xb4yE/hNyLPne1lBPi9yzgpFyCpCocfuUQeAOxtEgk0z2O2xCQ1OKy6gM9opXN15gBejZTqUhxx/CVnOG7FXfl55zi1As01M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfvVRYzC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pw6VPBiP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WOijUjk+DcQbTqq987SH6ISitmLZmrEt1URWgAGePOWxOSBpBk0X/Cp8+WiS9vz1pWrbT406aHwTkD9twFZlHp+Z4iUOZLxBSE8lhAjUHZc10kChouJ9jAojU4nqt4qa+3id3m5C0EckAnRyXAOZLDpp46uZLCeDD3IzO5wfE9HoqQzW0I0099ACN1O6+R6wLL1JHrFgpeTlPTwwzqleUQmvfZlot9RUFFbb/0WV260qkuFeMdIfR1lAOkgavISCr0NWGsJJRdyVYKRgshagUK7u7FAdQvLpUSs4Rq2UXjPlBPwEJA4gbEH2WxYL7Ke4ufjxbyVbQeg+qS9ZAG3Jgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DRG06wFY/0O59myBfSfYC7Auw2VPYaCU8B/2kZZQBJ4=;
- b=TKfAnVfzcVi6zrQ+Vs4H9v7BywpvP0Ma4JzT1qxkaTFoEuQr+tpkQKEaj9+9HOPw9GTpWOlUkBOeHf9bVi+2NA3CWKhRx76NlxRgrFN0gFhmlnMTy0mMVtW7CX5m8oRrumayaPyZBKicN4FvWsfpZdnyguBf/EGDylkcHmCEofeXEKWetBPsQ8qrNAsqA2XLjfZTArlTyJzK1YFhZgdWOU0Ntr0Kn1SQeFeB9VnD9bGSTlyEuiH1LdLVvB/Gvb70jIio/cNgBVuTRR/T0VR2yTw5NgsCC7ScTdMq6ebb8ZALCiSA+fTVS0KKOIV18fwjau9+5u2b7rUYo7otLMAAXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DRG06wFY/0O59myBfSfYC7Auw2VPYaCU8B/2kZZQBJ4=;
- b=pw6VPBiPEWVbxJ6SdpxNCGK0FPqpRKj42q56htLDKgAKxKApQMNQSmNU8TXGe5E2iWK71xsN2IP0wcMKx+QXTNIBlUuDmW/cGvc7KnZ+C8N3y4ktmaXQytgEKtRQOolv/VGrB/Qt7hbkF9lOpxwTaKdXqGy+MZhkLMYaco9z4WQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
- by MW4PR12MB7359.namprd12.prod.outlook.com (2603:10b6:303:222::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.46; Mon, 31 Mar
- 2025 19:19:24 +0000
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 19:19:23 +0000
-Message-ID: <2cce157d-eaba-44c1-89d1-7e5088ee361f@amd.com>
-Date: Mon, 31 Mar 2025 15:19:20 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: i2c: Add OV05C10 camera sensor driver
-Content-Language: en-GB
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
- sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
- laurent.pinchart@ideasonboard.com, dave.stevenson@raspberrypi.com,
- dan.carpenter@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
- dantony@amd.com, Venkata Narendra Kumar Gutta <vengutta@amd.com>
-References: <20250328214706.1516566-1-pratap.nirujogi@amd.com>
- <e94d3ba7-78ad-453a-86c0-a71662e02922@kernel.org>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <e94d3ba7-78ad-453a-86c0-a71662e02922@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBPR0101CA0340.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:6b::17) To CY5PR12MB6429.namprd12.prod.outlook.com
- (2603:10b6:930:3b::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfvVRYzC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DD17C4CEE3;
+	Mon, 31 Mar 2025 19:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743449090;
+	bh=VYNlyZ27WDW+K1NGm92+9R++6AJIimE1cv42eG8h00M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XfvVRYzCJ3iqYLJH20hov3a1hl5FE5VVJisIIhh4fAf0ZGmXzvNJu0e4cXd0Lp7LJ
+	 xQoVKoJCZ76MIrjHpcaulzloaBGIQ9CxV3t3XMpuDotp3pHk6c7BsyzWp2Q9KKFeiQ
+	 D4wHk8la4Pfytu1ohFWW26zPu+ACQ12EsWP7ltVxfeCmn3cppk3U67YIMBCkKUhIIv
+	 DCA6f+tZvzGeD/aaucyo9IBp5+qhPCSVtPs8q4QsM9ROO279vwADPjCVNrYBD1HO9J
+	 Ea29oyvj5RCs/HoN8V8uWIVLIqXbOK4+s4RV5+rAzXTaS6R127Mh0zx1TkqNeW+aLk
+	 31cMzR/zEg3uQ==
+Date: Mon, 31 Mar 2025 21:24:47 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Oleg Nesterov <oleg@redhat.com>, Yi Lai <yi1.lai@linux.intel.com>,
+	syzbot+3c4321e10eea460eb606@syzkaller.appspotmail.com
+Subject: Re: [PATCH] perf: Fix hang while freeing sigtrap event
+Message-ID: <Z-rr_2OkAoeAUSzg@pavilion.home>
+References: <20250304135446.18905-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|MW4PR12MB7359:EE_
-X-MS-Office365-Filtering-Correlation-Id: d89144cf-584b-43ad-f849-08dd7088f225
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N1djL0l6Q242ZUhkL1lrSnBqMjIzUUdTWjZNYVlwTmMwWVFNUERyL2xpeDdq?=
- =?utf-8?B?SFhtNVdweS9tckFoWGdHRkowdlk3MHNPTEtzU2xhN01FQmYzN21DUm83YVh1?=
- =?utf-8?B?U05XYldBbC9yVzNhcG8yeWQ1N2V3c2ZHcWl2Wm9LaWxidll0cFVFT2JMcThi?=
- =?utf-8?B?VDhpWHp2MUFhc2pGQzdrbGdqUlBlZVhVSDd2Y3QxdTdOeW44NWpvMGpCUnYr?=
- =?utf-8?B?anJsRFdwbWl1bGpRZ08yUStwVGd6cGt5THFvampKNTRETnJCZUtlNTdpQW96?=
- =?utf-8?B?cDlEQlZ4bTVza2hsdXAxY1VJR21obGo5VFg0Mi9UeGRRY2JRSnUrZCtTY2pM?=
- =?utf-8?B?djd2YmcrbVMrTGczMVZicmErbGRXN1JWUlAxd2tLRVk1d016T2x1eUM2L3Ur?=
- =?utf-8?B?SzJyZW5QbVQ1Mm5acDhMWGQ4Nm5DbFFKWlQxeWpGNWhwQ2pHWTFmMTI5NTRO?=
- =?utf-8?B?cHowZ1FUOWZjUUE0L1Q1cDBOYjhpTExTSW5oQnBlb0ZTWko5blRhNXRPczFI?=
- =?utf-8?B?YkwyNEpoTGxneGdiV0R4dEdGa0VhU3pNV3B1UHJwN0tBazBPc1ZRNDByOXRm?=
- =?utf-8?B?U3NHRjNCSk8xSnRHRVlXTjBTdG1JNWZXTTB2Rk52b2RxNkNhMFJYOWNzSWpV?=
- =?utf-8?B?WTZVb3hUWlo4YUR0NVQ1cnMxVkhhK2RubkZhN0VxK0NCdk9KU2FoVlQ4WUxx?=
- =?utf-8?B?MDNScW1VejZweVUvWXJHRkhONklvQlNkVkdCZ3RmeThhMFllZWxrcjhSdkxF?=
- =?utf-8?B?SVVzWkpkWXI3Y1l2TXFOQVQrSWRLOTArMjFGY0tvdk5OR3ZaOFFaNm9OT1NY?=
- =?utf-8?B?UWgzblpQcWFYeDk1SGJpQmI0TTdlN2NqSENFR1RIOG5YUEFkUGliSE1nQm1l?=
- =?utf-8?B?Z3lLZHQvVUgzNjlHamcrNTZCTjYvZnp3bVV0Szh6UXNHLzlGQVVXSUJ1WVZU?=
- =?utf-8?B?NHRhbmFqcWVhTFFLc0ErdUd4TzNVY0JjNzdRTG1uU1NyczBsdEdEb3QxV3Na?=
- =?utf-8?B?am92WFp4VUJ0QUxPaDhsNUF2RmpxV0VKMEt1VFZhMXFqa2lUQU9VcGY1R1JO?=
- =?utf-8?B?NU5GeUNRV0RoM1hEcnFCMzNCUENCYjZDK2JZY1ZXY1hrVFJkZHQxR0tEeC81?=
- =?utf-8?B?Y2dVWnJ2Nmp0Sll0STdLNkhNNEwrRmJMak0xTzJvZjY1RS92UzdoemVhMGxP?=
- =?utf-8?B?dFd4Nzc4ei84M2pGRklMZzU2c3JIZzZaV1ZPdnNzOWFkQlpJd0xQNFR4d1cz?=
- =?utf-8?B?S2EvRkoxNzludlpWUTNrTG4xclhXRHY1TVVZZmY5MVdpYXhQMWI0V1ZUMHN5?=
- =?utf-8?B?dDNkaXFUWGtJcUEzYlQvdGtUTXpPaGFiUFFSNytaOU81WG9FMHhmR1Zqbzh4?=
- =?utf-8?B?Qno3d2N1c0dlRlVpemptalZWWjZLNlBmd3JPbE1SQnJsT1M2Rnc4eTBqVzli?=
- =?utf-8?B?b0pLSjF4SG84MDMxZTE4QUFJWlFpMHJWU1BIYTh0OXk1Y1JhQU5SR09xcHBn?=
- =?utf-8?B?MWZ0anJNZnRQRXluZ1BoQTdXbkhBcGYyS2JzWVEvdjJPY1BLUmJVNWpHUzY0?=
- =?utf-8?B?VzRML0Z5NmxmYkNqOXJuREFFUVJndElqYUw3Tm1WNHBTU3RjL3BsK0YvbjZy?=
- =?utf-8?B?dkh6aHNCS2hPODBCd3plNFRlNFFFUGs0b04yakdFZGtFSnByS3BwU0x5WnZ1?=
- =?utf-8?B?NFkvRHB2Wk5XTlBDYy9qSmduWjdKL0IxaEN1WklaZzNOc0VDV243Sm5OdEZr?=
- =?utf-8?B?UENnODJzdUw2ZEdLL011djdwU2g5YS9BS0JNMi8zTDR0d2h4RlY2M2NYQjl5?=
- =?utf-8?B?UktHNHBabzdHMXI0ZklYMXpaQnJSenRrb3NSVzJpd09rTmNtbU0wMDVHNk1s?=
- =?utf-8?Q?AJhvRXLvUY9EU?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bjRPTlg3L1BBR0lmQ244MjQ2YVN0RW1odUJQWFltMElpUUZtcHg0dXE5bWhn?=
- =?utf-8?B?MDBDUVFtYTluUGNZR2pjNEpYWUdhOERCSnNBeHVtZUU2cTYwL0Nrc0s2RUF0?=
- =?utf-8?B?RkFxd3dPcU9zdEpGZTRDeThMTVJWVW9iSnNWMFUyZDlwU0s0UEhnN0JWVVBx?=
- =?utf-8?B?Y0hZeGkyNGFiQWZhbGJsb3QrMEcxVHFhUFprcStPZXQ3aG8raHhYbGlHbUcy?=
- =?utf-8?B?VlJXR1RHcE1VSjdyNTdsMFNJYkswa05hbEwyWW42UnlPbS9QZnFrRDRCY0Fq?=
- =?utf-8?B?YnN5eTVBQ2lOS1JmOGVwZk9NeTgxNm9lcW5JbkpDZ1FiNkc0QnVpRldJTVdJ?=
- =?utf-8?B?NkxaZjBKK2Y1ZXVRNVJsREdBWGRVYnBzNk5vclA0cXBBcXNiOXFWcWlCUngw?=
- =?utf-8?B?RzFIMGxDa05RNi9BbjVwdFRZLy92S01LTXlybGFwZ3FYa3c5eWJGZEVzWFdn?=
- =?utf-8?B?MTFYbVN5bE5SN3dWbVlHTGpBRXo3Um84OTRiMG1HSnJ6N0FIVitKNWE1QVJp?=
- =?utf-8?B?K29lVVVrU2xuOFpsc3hFcUtGNjlBRUxONEp1S2h3bCthZUEzampUZTM0WGw5?=
- =?utf-8?B?YVFrTG0yU0VJc2xxNmdiNUFtcWFHUC9MUjd0TlNEK2pLb2UrbFNZTnZSUUJs?=
- =?utf-8?B?dE5zUEdKTWpLcFFadDI2blluZjdVdFhYeEJvbGFSZUo4MGJnclU2aUJmamFO?=
- =?utf-8?B?TktRVHVIMEFCNDAwVVNLMmI2SDc5T3B4Q0VDM2xvTTZ5LzQvQ1ZteUIzeGNK?=
- =?utf-8?B?clQxY1BYZXhXV3N2QjZ5Zi80M043UUJiZW5YNEJiTUNWNkUvVjQzcmxzQjNl?=
- =?utf-8?B?WktIL1BXMVQwZXR3K3NFVEU1U2dxK1ZQR1JSMS9EQlhReUVaRlArbmthazdM?=
- =?utf-8?B?YVBNcGtFRmZWeHUzMmpOZzQyM2drQ3NXL0ZBZENOSUhXNWJLSUw1RlE5Q3Jj?=
- =?utf-8?B?eGhUWlgvc0k4VGtZSGNCdXJCYTduT1VvbHFjQnFManpBTnI1aHR3VjJmZzhQ?=
- =?utf-8?B?dDVwb3ZoV2RhVHZ0a3NrVW51bU4xbEdhS3IwcjFMcEhnYmhSK1FhZ0g0dmsz?=
- =?utf-8?B?LzVmZjNFZGxQcWh6VjNNcGxOZHYwcVhnUC80cEtHS2sxYlROeDlQb1JGMlBP?=
- =?utf-8?B?NkVTaFI2MUZFWDJWSVExQ0UxVUM5SGdaTzdhV1BJczRERmUxWnB5MVpMbzBa?=
- =?utf-8?B?ckJZWkQxaHo5cUwrNExXVjd1S2ZvWVJ2NGV1ckVGZzZvYi9vQ1VlRkFPMG1C?=
- =?utf-8?B?cStoMVR0VThMQ0tvUk1hVEZIRXVIaU1MU1g2aXFiMjdlRENyaXNySFMwSmJS?=
- =?utf-8?B?SCtXMzl6RUVURzU0cG9JT3E4RGhFY3d3SHQ0REtTQmF2aUJzVk8yaTErU1h5?=
- =?utf-8?B?b2VrNmNPQUJ2aFg3dDN4R1ZabmJsM1BMelBYckM0WVNyMzhnWm1zQjdPZGlG?=
- =?utf-8?B?SlJCekQ1dzQ3RWkxcVpVRzVmMzFtZkRpKy9iM0s5YW04ZmszT1B4aWFZaG90?=
- =?utf-8?B?bU03WkRZU3FJVkhNV3dFemxpSEJ6dHNJWlhZa1dnbW9icEpjYW52eFVzdHM4?=
- =?utf-8?B?UDJ2Y1NJaUJOQmxVZURINzJ5N21LcDJpSUdLNlVldEUyM3kzeVkyQW1BaW5a?=
- =?utf-8?B?V0lIb1pPVy9ZWVBzdWF3TWhVaFpVN2EwbDk4VERXNTNPTFRkb0ovcmlSbTFB?=
- =?utf-8?B?UmFLMElyYURmZnI2UjNGeW1ESjZOL3c5SGNXL2Z6STgzQnZRcFhtTW5pdHhP?=
- =?utf-8?B?NEdML1lLWFNOMTBRcHdnUStVUXJnaTNlZC9NbXZ6UHJwaGZkaWR0NXJMbnUv?=
- =?utf-8?B?SkFteVRzTDljSzI1N3hRa2h5cG81UnNiSTlKVVdlUDlGT0cxVzdoOWxaTktm?=
- =?utf-8?B?cTYyeUZaNm5tYjh6TC9XTWxYeTVHUWZKVEhCd1hnaHo4bjljZ0RZdkJDVzFa?=
- =?utf-8?B?UE5wTHNpTE9EUjNWSXRvaXJSN2U4SUxQUGlveTF3bzMxRXJ0SHIweVlQRWIv?=
- =?utf-8?B?cXlQV0dKUDhQMXNIS20rM1pUMGpuM1laS1RXQmZNWkcrbnV4STI2czA3cjRw?=
- =?utf-8?B?UnlwZGZsZFpkeFpuaVMyVGxWcVBoV3lqbUkxYjBPRUlBTUJOSTF2amllZitO?=
- =?utf-8?Q?AqW0/XjBMRGBuogWDREE4VAMN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d89144cf-584b-43ad-f849-08dd7088f225
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 19:19:23.8798
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1XJZjcQdOaZxe9ebe78IMvBWpMkbNl3ydbp5dsG65Hkf2jeTVWD9khsTg+QASOxxsXWm0m2Wfq+n7lx5wvNH6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7359
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304135446.18905-1-frederic@kernel.org>
 
-Hi Krzysztof,
+Ping.
 
-Thanks for the review.
-
-Thanks,
-Pratap
-
-On 3/29/2025 12:30 AM, Krzysztof Kozlowski wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+Le Tue, Mar 04, 2025 at 02:54:46PM +0100, Frederic Weisbecker a écrit :
+> Perf can hang while freeing a sigtrap event if a related deferred
+> signal hadn't managed to be sent before the file got closed:
 > 
+> perf_event_overflow()
+>    task_work_add(perf_pending_task)
 > 
-> On 28/03/2025 22:42, Pratap Nirujogi wrote:
->> +static int ov05c10_probe(struct i2c_client *client)
->> +{
->> +     struct ov05c10 *ov05c10;
->> +     u32 refclk;
->> +     int ret;
->> +
->> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), GFP_KERNEL);
->> +     if (!ov05c10)
->> +             return -ENOMEM;
->> +
->> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
->> +
->> +     ret = fwnode_property_read_u32(fwnode, "refclk", &refclk);
+> fput()
+>    task_work_add(____fput())
 > 
-> Use existing properties, like clock-frequency. refclk means this is the
-> clock, not it's frequency.
+> task_work_run()
+>     ____fput()
+>         perf_release()
+>             perf_event_release_kernel()
+>                 _free_event()
+>                     perf_pending_task_sync()
+>                         task_work_cancel() -> FAILED
+>                         rcuwait_wait_event()
 > 
-sure, will replace "refclk" with "clock-frequency" variable in the next 
-V3 patch.
-
->> +     if (ret)
->> +             return  dev_err_probe(&client->dev, -EINVAL,
->> +                                   "fail to get refclk\n");
->> +     if (refclk != OV05C10_REF_CLK)
->> +             return dev_err_probe(&client->dev, -EINVAL,
->> +                                  "failbad refclk %u, %lu expected\n",
->> +                                  refclk, OV05C10_REF_CLK);
->> +
->> +     ret = ov05c10_parse_endpoint(&client->dev, fwnode);
->> +     if (ret)
->> +             return dev_err_probe(&client->dev, -EINVAL,
->> +                                  "fail to parse endpoint\n");
->> +
->> +     ov05c10->enable_gpio = devm_gpiod_get(&client->dev, "sensor0_enable",
->> +                                           GPIOD_OUT_LOW);
+> Once task_work_run() is running, the list of pending callbacks is
+> removed from the task_struct and from this point on task_work_cancel()
+> can't remove any pending and not yet started work items, hence the
+> task_work_cancel() failure and the hang on rcuwait_wait_event().
 > 
-> Nothing improved and you did not bothered to wait for my feedback. You
-> just sent v2.
+> Task work could be changed to remove one work at a time, so a work
+> running on the current task can always cancel a pending one, however
+> the wait / wake design is still subject to inverted dependencies when
+> remote targets are involved, as pictured by Oleg:
 > 
-sorry, I should have waited for your feedback before submitting V2. I 
-will use the suggested name "enable" in the next V3 submission.
-
-> There is no second GPIO, otherwise would be present here.
+> T1                                                      T2
+> ---                                                    ---
+> fd = perf_event_open(pid => T2->pid);                  fd = perf_event_open(pid => T1->pid);
+> close(fd)                                              close(fd)
+>     <IRQ>                                                  <IRQ>
+>     perf_event_overflow()                                  perf_event_overflow()
+>        task_work_add(perf_pending_task)                        task_work_add(perf_pending_task)
+>     </IRQ>                                                 </IRQ>
+>     fput()                                                 fput()
+>         task_work_add(____fput())                              task_work_add(____fput())
 > 
-I rechecked both GPIOs. Only one is relevant for sensor driver and other 
-one is for the ISP driver. Sorry for the confusion caused.
-
-> NAK.
+>     task_work_run()                                        task_work_run()
+>         ____fput()                                             ____fput()
+>             perf_release()                                         perf_release()
+>                 perf_event_release_kernel()                            perf_event_release_kernel()
+>                     _free_event()                                          _free_event()
+>                         perf_pending_task_sync()                               perf_pending_task_sync()
+>                             rcuwait_wait_event()                                   rcuwait_wait_event()
 > 
+> Therefore the only option left is to acquire the event reference count
+> upon queueing the perf task work and release it from the task work, just
+> like it was done before 3a5465418f5f ("perf: Fix event leak upon exec and file release")
+> but without the leaks it fixed.
 > 
+> Some adjustments are necessary to make it work:
 > 
-> Best regards,
-> Krzysztof
-
+> * A child event might dereference its parent upon freeing. Care must be
+>   taken to release the parent last.
+> 
+> * Some places assuming the event doesn't have any reference held and
+>   therefore can be freed right away must instead put the reference and
+>   let the reference counting to its job.
+> 
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Reported-by: "Yi Lai" <yi1.lai@linux.intel.com>
+> Closes: https://lore.kernel.org/all/Zx9Losv4YcJowaP%2F@ly-workstation/
+> Reported-by: syzbot+3c4321e10eea460eb606@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/673adf75.050a0220.87769.0024.GAE@google.com/
+> Fixes: 3a5465418f5f ("perf: Fix event leak upon exec and file release")
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  include/linux/perf_event.h |  1 -
+>  kernel/events/core.c       | 64 +++++++++++---------------------------
+>  2 files changed, 18 insertions(+), 47 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 76f4265efee9..4e8970da6953 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -832,7 +832,6 @@ struct perf_event {
+>  	struct irq_work			pending_disable_irq;
+>  	struct callback_head		pending_task;
+>  	unsigned int			pending_work;
+> -	struct rcuwait			pending_work_wait;
+>  
+>  	atomic_t			event_limit;
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index b2334d27511b..253791d99e21 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5355,30 +5355,6 @@ static bool exclusive_event_installable(struct perf_event *event,
+>  
+>  static void perf_free_addr_filters(struct perf_event *event);
+>  
+> -static void perf_pending_task_sync(struct perf_event *event)
+> -{
+> -	struct callback_head *head = &event->pending_task;
+> -
+> -	if (!event->pending_work)
+> -		return;
+> -	/*
+> -	 * If the task is queued to the current task's queue, we
+> -	 * obviously can't wait for it to complete. Simply cancel it.
+> -	 */
+> -	if (task_work_cancel(current, head)) {
+> -		event->pending_work = 0;
+> -		local_dec(&event->ctx->nr_no_switch_fast);
+> -		return;
+> -	}
+> -
+> -	/*
+> -	 * All accesses related to the event are within the same RCU section in
+> -	 * perf_pending_task(). The RCU grace period before the event is freed
+> -	 * will make sure all those accesses are complete by then.
+> -	 */
+> -	rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_UNINTERRUPTIBLE);
+> -}
+> -
+>  /* vs perf_event_alloc() error */
+>  static void __free_event(struct perf_event *event)
+>  {
+> @@ -5433,7 +5409,6 @@ static void _free_event(struct perf_event *event)
+>  {
+>  	irq_work_sync(&event->pending_irq);
+>  	irq_work_sync(&event->pending_disable_irq);
+> -	perf_pending_task_sync(event);
+>  
+>  	unaccount_event(event);
+>  
+> @@ -5526,10 +5501,17 @@ static void perf_remove_from_owner(struct perf_event *event)
+>  
+>  static void put_event(struct perf_event *event)
+>  {
+> +	struct perf_event *parent;
+> +
+>  	if (!atomic_long_dec_and_test(&event->refcount))
+>  		return;
+>  
+> +	parent = event->parent;
+>  	_free_event(event);
+> +
+> +	/* Matches the refcount bump in inherit_event() */
+> +	if (parent)
+> +		put_event(parent);
+>  }
+>  
+>  /*
+> @@ -5613,11 +5595,6 @@ int perf_event_release_kernel(struct perf_event *event)
+>  		if (tmp == child) {
+>  			perf_remove_from_context(child, DETACH_GROUP);
+>  			list_move(&child->child_list, &free_list);
+> -			/*
+> -			 * This matches the refcount bump in inherit_event();
+> -			 * this can't be the last reference.
+> -			 */
+> -			put_event(event);
+>  		} else {
+>  			var = &ctx->refcount;
+>  		}
+> @@ -5643,7 +5620,8 @@ int perf_event_release_kernel(struct perf_event *event)
+>  		void *var = &child->ctx->refcount;
+>  
+>  		list_del(&child->child_list);
+> -		free_event(child);
+> +		/* Last reference unless ->pending_task work is pending */
+> +		put_event(child);
+>  
+>  		/*
+>  		 * Wake any perf_event_free_task() waiting for this event to be
+> @@ -5654,7 +5632,11 @@ int perf_event_release_kernel(struct perf_event *event)
+>  	}
+>  
+>  no_ctx:
+> -	put_event(event); /* Must be the 'last' reference */
+> +	/*
+> +	 * Last reference unless ->pending_task work is pending on this event
+> +	 * or any of its children.
+> +	 */
+> +	put_event(event);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(perf_event_release_kernel);
+> @@ -7065,12 +7047,6 @@ static void perf_pending_task(struct callback_head *head)
+>  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
+>  	int rctx;
+>  
+> -	/*
+> -	 * All accesses to the event must belong to the same implicit RCU read-side
+> -	 * critical section as the ->pending_work reset. See comment in
+> -	 * perf_pending_task_sync().
+> -	 */
+> -	rcu_read_lock();
+>  	/*
+>  	 * If we 'fail' here, that's OK, it means recursion is already disabled
+>  	 * and we won't recurse 'further'.
+> @@ -7081,9 +7057,8 @@ static void perf_pending_task(struct callback_head *head)
+>  		event->pending_work = 0;
+>  		perf_sigtrap(event);
+>  		local_dec(&event->ctx->nr_no_switch_fast);
+> -		rcuwait_wake_up(&event->pending_work_wait);
+>  	}
+> -	rcu_read_unlock();
+> +	put_event(event);
+>  
+>  	if (rctx >= 0)
+>  		perf_swevent_put_recursion_context(rctx);
+> @@ -10030,6 +10005,7 @@ static int __perf_event_overflow(struct perf_event *event,
+>  		    !task_work_add(current, &event->pending_task, notify_mode)) {
+>  			event->pending_work = pending_id;
+>  			local_inc(&event->ctx->nr_no_switch_fast);
+> +			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+>  
+>  			event->pending_addr = 0;
+>  			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> @@ -12382,7 +12358,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	init_irq_work(&event->pending_irq, perf_pending_irq);
+>  	event->pending_disable_irq = IRQ_WORK_INIT_HARD(perf_pending_disable);
+>  	init_task_work(&event->pending_task, perf_pending_task);
+> -	rcuwait_init(&event->pending_work_wait);
+>  
+>  	mutex_init(&event->mmap_mutex);
+>  	raw_spin_lock_init(&event->addr_filters.lock);
+> @@ -13512,8 +13487,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+>  		 * Kick perf_poll() for is_event_hup();
+>  		 */
+>  		perf_event_wakeup(parent_event);
+> -		free_event(event);
+> -		put_event(parent_event);
+> +		put_event(event);
+>  		return;
+>  	}
+>  
+> @@ -13631,13 +13605,11 @@ static void perf_free_event(struct perf_event *event,
+>  	list_del_init(&event->child_list);
+>  	mutex_unlock(&parent->child_mutex);
+>  
+> -	put_event(parent);
+> -
+>  	raw_spin_lock_irq(&ctx->lock);
+>  	perf_group_detach(event);
+>  	list_del_event(event, ctx);
+>  	raw_spin_unlock_irq(&ctx->lock);
+> -	free_event(event);
+> +	put_event(event);
+>  }
+>  
+>  /*
+> -- 
+> 2.48.1
+> 
