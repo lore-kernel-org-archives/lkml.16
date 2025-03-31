@@ -1,58 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5871E104E;
-	Mon, 31 Mar 2025 11:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B4B186E26;
+	Mon, 31 Mar 2025 11:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743422186; cv=none; b=sXecmRNKt0OlusZPbj2l3Rmx6TkHnKGxtSLbcea4DTO6ViWhV9KZ+RrlAQrvA8+w7YiFAnvNbg8akXzdM0eWHPNre6L9cV3AZrVVzC2C9u/IVT4Ps8GBLR4sE6Y31fReHJcZYuLhBkHptgmQz0rO4SA4YVc4Y0af7Qbvm8k4l5U=
+	t=1743422335; cv=none; b=TECoeiBpDgpy4mCVe9yeXldJk2VHNIFko7VdGTzHCIWN0G8AJ3i6BzkXYhF5EgH7OgYulDjAgSbJ4UcScX3tw7gy+C1ZjyzWKaLA+l06XF/EyZTad5sCyCZFZ4jym4JStwIVFkH0fg85RZ9JUODxC9Ki12dGBEssSz+gknfHwe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743422186; c=relaxed/simple;
-	bh=+2tIP000T17A8Oc7t3JMilpXBYVfCrNZDt+OW//gigc=;
+	s=arc-20240116; t=1743422335; c=relaxed/simple;
+	bh=RoUnhbjaNYgHZl/Z3GXAaL4Alhva+vya60vU6QOyoaw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKeLwxvrC0cxzWJy6YnTZpVv9WNqRLcOnj5f80V3wMogMFsMT2MtRceUz0mMdOVkxdoI9GL0282jLPnaSqkTgYS3pGQD07Tqy8DVd6Za4KRu2F0u9gsd6yMVj0YVcOx7LQw6uNReCsewTG3URZevs6v2orjBavzn+obxL5NtwQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKpUSAvL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mAx/ZhnPEiaCC99wV5LRWTrmTivfO1nKS1or3MngWUJsABJiUg8PI6Ara+zY+opE175HHpQsFykICh/a/jYxom502UoY6XgAxRdFMYfZmuVWHq81RKv9gavZ4PV6W+/Ticd2j/JK9pXqqinLlyuLo1PyOz0RmvQ4DbYYWY0tHtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T309ikXq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKpUSAvL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB87C4CEE3;
-	Mon, 31 Mar 2025 11:56:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T309ikXq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F46DC4CEE5;
+	Mon, 31 Mar 2025 11:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743422186;
-	bh=+2tIP000T17A8Oc7t3JMilpXBYVfCrNZDt+OW//gigc=;
+	s=k20201202; t=1743422334;
+	bh=RoUnhbjaNYgHZl/Z3GXAaL4Alhva+vya60vU6QOyoaw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jKpUSAvL1CD7IFs2UvGzkDo6iHdIfzQXRDwjWfHvPmUJXwX5VGnSEK1Dc8jjBYk/Y
-	 d/fwhHzvd1jUrQg/Pr6jlSYhv3ZOImcnFKf8CXC/qPn449d14yAFi8NkZkC8WNDVbE
-	 o8vKw8u26lGFPt26pgXotQ0+SOEgLIeQJTun+kMtKE37T6cJ12XoRp6DyfW7g1J/4s
-	 Oq9G75tUw4lGyZVDZ06iFHAhfXkEWNX8NeLhmb9q1WM47lsb/87ahYEq0qBRP1o59F
-	 J6fh9Ha6fLZQOhtzpk69py7w7LeXSzchJlb/ermD0d7mBLIu2ZHhwgqXbsEeShvoJF
-	 Rs05onYuLQpvg==
-Date: Mon, 31 Mar 2025 12:56:19 +0100
+	b=T309ikXq7aE+8/HgKX8jdcItIU88OnbtC4Wmm+oKUyEL1moZ125WmHXp/PYfGyIFc
+	 sDwhsZgWPqEuhk8kAzUmh96Mj4u8ppibNtYc4KCPh4Itd0SpXmOpsPN8xc3djs5/0p
+	 2QcHRbuNDqujW9uydsv7Q0JEoRH2GAPY8fuW73sM8cxl7PGNfr3f1WiYqSjY35Sd08
+	 X0+FhBGET0QSXRB/L/x9rkde8QVUu5QnvrkpaxC13xEJdHsPhsEyt6s9eyXffq0Vo9
+	 0CFFQ+xtc8lOLE2N7Fo5AKb9V0hC4lP7F2rUnHhckPeD5Sb8X6hiwuHxliR8oqzgzk
+	 Wu3Wg6p/DNq8g==
+Date: Mon, 31 Mar 2025 12:58:48 +0100
 From: Mark Brown <broonie@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Lutomirski <luto@kernel.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 12/16] selftests: vDSO: parse_vdso: Use UAPI headers
- instead of libc headers
-Message-ID: <708e303e-4de6-4322-8065-1dacf0cc0d53@sirena.org.uk>
-References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
- <20250226-parse_vdso-nolibc-v2-12-28e14e031ed8@linutronix.de>
- <af553c62-ca2f-4956-932c-dd6e3a126f58@sirena.org.uk>
- <c7bea938-ee3b-477e-9ed0-db29ca02a538@sirena.org.uk>
- <75ea2dcf-0ba3-4076-9a54-6b39e4e72a3d@linuxfoundation.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 00/75] 6.6.85-rc3 review
+Message-ID: <f4416603-37c3-4d5a-8aac-5b90d211a7c3@sirena.org.uk>
+References: <20250328145011.672606157@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,49 +46,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KalBa86xIdoMygpC"
+	protocol="application/pgp-signature"; boundary="60hqtlt4YgjpDmdK"
 Content-Disposition: inline
-In-Reply-To: <75ea2dcf-0ba3-4076-9a54-6b39e4e72a3d@linuxfoundation.org>
+In-Reply-To: <20250328145011.672606157@linuxfoundation.org>
 X-Cookie: The Ranger isn't gonna like it, Yogi.
 
 
---KalBa86xIdoMygpC
+--60hqtlt4YgjpDmdK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Mar 28, 2025 at 05:08:26PM -0600, Shuah Khan wrote:
-> On 3/26/25 07:02, Mark Brown wrote:
+On Fri, Mar 28, 2025 at 03:50:54PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.85 release.
+> There are 75 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-> > This bug is now in mainline.  A fix was posted by Thomas the day after
-> > the original report:
+Tested-by: Mark Brown <broonie@kernel.org>
 
-> >     https://lore.kernel.org/r/20250321-uapi-consistency-v1-1-439070118dc0@linutronix.de
-
-> > but it has apparently slipped through the cracks.
-
-> If this is going through tip
-
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-> Otherwise, I can send this up
-
-Given that this hasn't had a response from tip for several weeks it's
-probably as well for you to pick it up - I was considering sending it
-directly to Linus myself.
-
---KalBa86xIdoMygpC
+--60hqtlt4YgjpDmdK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqguIACgkQJNaLcl1U
-h9AmYwgAhU5OAjRIyrT55ORFUEnAgksOlpfOa+SMX3JjNaLJjSNnBKc9lpq1L0Zv
-3Gzudpo//l44I7kiHFHhujQhH1A5FwGBd8pghgzbu6lICqABVXqdBaQ/6x6qE/VW
-v2N8s9oVgeEtybhAtZb2MGo1Z43LrIzHVV6p1aJI8EHklaNqTzQHXCabK+hEVZKx
-QC8tTWgy2uNqxzGGmJTXrW949sTqpO2nhk0EqnejnjCEjI9C8iR01GCj0XOum4sT
-mk3BX8OdBX1pdZO8PhSgfnsccB11czt+FR+gGO3QcqiuJ4bnkm4ypOKJqrYdMDfc
-rR7IUBjoKGYr/QFro/1Uae0npyqFtg==
-=u7w3
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqg3cACgkQJNaLcl1U
+h9B0/wf/dKA62N5h3MlKo/2pXL2hAJ9Q4OZV5rRoE0QGY74OW06ipOazKDrW7M7O
+cVrpsl/z0dFKHtzB7r1k31SPB1lYNhPbzl4GzKv8UVH/ZrpAoohh7fMFKI5+HJGU
+XuIbEhqz4siWGYqGR3psEU9u+WVZU/pdnTBiaLbpFO1rzfDc9ifZbG300lLio6UN
+PSmLxEJWbLFvSmaFEcM+ihROD4Um6us81YQhXtGfIYnWv9/W3iuwlgxng0TG3hyE
+U2SII/qUd1Yrld84lHykfmuBEzwQPnMei743A1OHajDEunHBsHtaGtQ2VdbAWfI+
+r8/xNa7F28k90glB6HNZbRFBjj25UA==
+=9XO6
 -----END PGP SIGNATURE-----
 
---KalBa86xIdoMygpC--
+--60hqtlt4YgjpDmdK--
