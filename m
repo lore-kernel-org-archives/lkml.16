@@ -1,98 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D2A155393;
-	Mon, 31 Mar 2025 12:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799B1E32A3;
+	Mon, 31 Mar 2025 12:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743423807; cv=none; b=t6S6SFjl/hNlv19J/aODwLMzX/6zoukEetqw0LYAIJqjxkvPvMytmX+37Vnl3BTqC5b5egRVCsDEbujAxq0zG0/zVe8UpP2gtdSdR60RR+fzFt+jcvOBmoyKyGXuwImpIzQSwdQA14W19wL13Gb3FIdQR+MrZ2utHCNWb9ef2Mo=
+	t=1743423823; cv=none; b=hKtpJB+TvQDXP4AJKXdPSkEWaEMvdjljREp/dpOVxNUeDnB4vwg/im4ki0PQEU5MBcPAKWLtz4iPVdbpnhAk+R3anANZwf8L3YeGyoaHjP/RHuekp2u8LFHYQAFBQCupxCu0HZ0yrUKE2DQUKkzIGHTIjloqSKPWvWjHqi9OUdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743423807; c=relaxed/simple;
-	bh=EWi5wLB7Wj6tdZhL6cBkn1q8F5l/GoBCMtA+/cgU3ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYK6+jn8FTNw9RcNpHLBvQt1iHZwEuD/f5vVhwuiR/ZIk0qGtDn3YpvPDMP2zHzLSBE8f7YcN7q5bgV9Hle/vuaBiLT5H1pwZJ77WE3hPWUv8BdVrZabdiAOGgs7BWyUEVgYOQQSTvxs9UauaYCOvnUS8xNeP9WsW135JfkgSj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOZ9PRp1; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743423823; c=relaxed/simple;
+	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lECgUX5tu9knLt2FlR5aQ/2+KkmRngS+lQ03S5nZPCNqP20absDupSUO0VptYQsyvdLtyCHBMQiG3uCO+GAJixLzflkKAQOhq1lFb/9UubuxvLydUwptf6JBmiOK85j9AGgIV0KL263EPBnkOvVDLCznVsW0qVLQHOmBWlPWBro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AavBOCrt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOZ9PRp1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743423807; x=1774959807;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EWi5wLB7Wj6tdZhL6cBkn1q8F5l/GoBCMtA+/cgU3ac=;
-  b=LOZ9PRp1XpLCFkmY6F7Dkc3f9sKIT8COYxTTEv2h2+TTGu0DVvBJDLG2
-   sdzjrv8aUorD7uuejRChcje60pkqqs4rN5yv3ch1nGqOskyKV1l+QgsC9
-   VNOofQoc6EVEoTMXwpSVJsiIUUr2e+I/GaBMpd7zkI0NzangzcgDW2V0w
-   E1wXr0Ed3uWNf2JVy00UMZxfndHsoV3cavq+Cn80TYhKEa/UQEeAX5sin
-   3JMRBWMP73eIQxo/F/PSCsGIucgPrFOjf5lPlgKUjr3yCuri8UhzI0syI
-   SMWEfLd0OH0RW3vr9KW1cNt5iJ6PN9VuS0B9ayiy8W46X1zU6begWwkhY
-   A==;
-X-CSE-ConnectionGUID: fqiUbfAfT6GeIgjRBAwmPw==
-X-CSE-MsgGUID: c+ssvwIpQuaxVThanwDibg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="54905682"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="54905682"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 05:23:26 -0700
-X-CSE-ConnectionGUID: Um1B+pBuTl2FsDe6/uB38w==
-X-CSE-MsgGUID: 0LwPE9hdQJu83eFjcxWQCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="126061692"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 05:23:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tzEAj-00000007f3o-1a7D;
-	Mon, 31 Mar 2025 15:23:21 +0300
-Date: Mon, 31 Mar 2025 15:23:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	acopo Mondi <jacopo+renesas@jmondi.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
-Message-ID: <Z-qJOeeHUgWCtkTv@smile.fi.intel.com>
-References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
- <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
- <20250331120748.GB28722@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AavBOCrt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE58FC4CEE3;
+	Mon, 31 Mar 2025 12:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743423822;
+	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AavBOCrty/NkMy1yF1lq2/E5BFrj8LLFvrYNwVI0RFpwvmJ4X5bq1+41189Rt7+kY
+	 66MppxJDtuKU5+ctmLwFDd1cqLIqfZ6M8QU6m7y6z2MazWPrMlZpqjZw9Y4QVdHWXi
+	 ako2wn8tqCFhEsH/6+jau68O9I2MKM1OyfArI1josJKeyOqQwvVo9v4n0MsqhsS7HG
+	 nYseLIooXuj1o8obu6RsVQj3yyFUgnFAx8ihM6b7oUlYG08T52vMWrXFw527ARu4CI
+	 UcskJghq1+P3Jl9gyvQr/7iyR6CUdXLeFLx1YAyDG7D8560jMuIZyFb9aa3MHLvSPm
+	 IOLSuRs4x0a6w==
+Date: Mon, 31 Mar 2025 21:23:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Brian Masney <bmasney@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ aruiz@redhat.com
+Subject: Re: [PATCH 0/2] tools/bootconfig: allow overriding CFLAGS and
+ LDFLAGS
+Message-Id: <20250331212337.3e9e4a5c50f5d3f16a95b120@kernel.org>
+In-Reply-To: <20250328183858.1417835-1-bmasney@redhat.com>
+References: <20250328183858.1417835-1-bmasney@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331120748.GB28722@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 03:07:48PM +0300, Laurent Pinchart wrote:
-> On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
-> > Quoting Andy Shevchenko (2025-03-31 08:34:35)
-> > > Convert the module to be property provider agnostic and allow
-> > > it to be used on non-OF platforms.
-> > 
-> > Looks reasonable to me.
+On Fri, 28 Mar 2025 14:38:56 -0400
+Brian Masney <bmasney@redhat.com> wrote:
+
+> Allow the user to override the CFLAGS and LDFLAGS similar to what's
+> currently done on other kernel tools. These changes allows bootconfig to
+> be compiled with the hardened compiler and linker flags.
 > 
-> Is that going to work out of the box though ? The calls below read the
-> "reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
-> addresses using ACPI-specific methods.
+> Brian Masney (2):
+>   tools/bootconfig: allow overriding CFLAGS assignment
+>   tools/bootconfig: specify LDFLAGS as an argument to CC
 > 
-> Andy, have you tested this patch on an ACPI system ?
 
-Only compile-tested. But you are right, this is something different here
-between OF and ACPI.
+Both looks good to me. Let me pick those up.
 
-I can rephrase the commit message to just point out that fwnode.h shouldn't
-be in the drivers and either converting to device property in an assumption
-that later it can be easier to support non-OF cases, or using of.h.
+Thanks!
+
+>  tools/bootconfig/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.47.0
+> 
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
