@@ -1,95 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56A886250;
-	Mon, 31 Mar 2025 07:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDEF86250
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743404894; cv=none; b=usnBU2m+g+m/zo+he0HEQfHIBr8XuFRxtgKYQ4nK7LWFRqVTQa6kMsfTBZbd0czcn3C3M+0FkCrQphaaDP004b16CrCMAYuED+qZuWMu2kdtxdP1h7sjBhV9qLYQZvsELcbqmb8kVW1qsAhzpkbkllSPEKeSdVXCHi+V4+vIDwU=
+	t=1743404944; cv=none; b=tKTfgvni+f/UDBBxWX6Kdwc6qYHplTQsZ6bzD5xDU9BK0EXpEXITDFl+dkjWm9A4oKcc9w6fGuzG/hewjDiwHZsFZQsmh12Ro0TE/t2ckiT+hkWrP8wtm8IgZQ/zZSNgjTS8l6qo/SBu4hdkmUx6JFtzV9oxR7yw9/nfWa/qY2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743404894; c=relaxed/simple;
-	bh=tD5tfTS4WH5AtYJNkSnk/LkniVjgN+9AKK8eT5IyK5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GY47Ly2VjUS05BWMZBUTyo5r2oKf6NWerThu1XPNEYe2TpUt5Vrvlk6tj7ynLzFQ8CvVp3bhYczcq2a6qbpP5yMi7JwIK9eZ4xY6GCZuRQ5nL+gVdq2m0tDj9w82jEyABBeYDXxeSI5Nc9eMh2NqHCmJxXQ4D8Sh3UJmdxu4WHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pe1N58hr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743404944; c=relaxed/simple;
+	bh=aWbltxvtMTmFAC9RzuN7Goj6EyYq4o81xgiIJAi2FVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JHyJDdXy79JT9dNySr5+R4DM04vLi7uQQ4A1NG/OxYiYQaxuFxjgz0ergV5YdXhgjLZGZqg4cUPU+Lv7uD4ibbwiHX7qbIh5tZStBKcVQfPpWqBvT/Z4KJ26oEf7sLShpIBrgwMOV4/LL5P2ARW5d9c6+FLxii94R+dSgMkkRxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qdwbg5CK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pe1N58hr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743404892; x=1774940892;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tD5tfTS4WH5AtYJNkSnk/LkniVjgN+9AKK8eT5IyK5c=;
-  b=Pe1N58hrkNIv10t3OwZRr9QNQNzTLuzaYgVedmNGmN3Loax5VequC+WB
-   vBwsHZ9SxCt4zCvhG6WmUJ7+NMpLs9bhaePtAOdSGzy2clCMkxElDlDoH
-   PyEvH5GVOu8a/eUqLkEMC+yJz6lJ7R+vsBtrF+J3CCYme9ar2WdmBfPBm
-   or/xY+YsVcLjlF6Qptqp6parpeUGCP+Os0jl5bFyhNOrc7YDmHjgF8F3n
-   sXGkrGbCimIuIhiGD9JK3YNYLqrPG3t2SyAQNgCPm7HIGsbj55gByroFj
-   I5qfLTtJFPIuau6q9HAX/XLR+a3VwU/I2I6ru01yjGrZfB/hwyHKeKYik
-   w==;
-X-CSE-ConnectionGUID: VLTRN6e9SweqFXcToe+pSg==
-X-CSE-MsgGUID: o76VEjCSTdSKA6wEfxqXxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="67159555"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="67159555"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:08:02 -0700
-X-CSE-ConnectionGUID: J+0zYREwQDiqny65CW1kog==
-X-CSE-MsgGUID: rwCGXI9HRHiELv0zwrvt5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="130720345"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 31 Mar 2025 00:08:00 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 894A81B4; Mon, 31 Mar 2025 10:07:59 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Takashi Iwai <tiwai@suse.de>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] ALSA/hda: intel-sdw-acpi: Remove (explicitly) unused header
-Date: Mon, 31 Mar 2025 10:07:58 +0300
-Message-ID: <20250331070758.3986134-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qdwbg5CK"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UKZtvw019563;
+	Mon, 31 Mar 2025 07:08:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2ptddE
+	/+SBlIy+ghCLNcJdMAeZZM2QTbagP73i9CGN0=; b=qdwbg5CKcUiP/7/oFPU6pT
+	ZNq7nJ0K1ac7dBENYv9pnvM0NTvQt/eRKCg6Q6y2erOsPOaPYPviPOUrxy559eGT
+	EtmpGFXohABwlwado4pdpaofktoa+miupnjmAJeTkjI6/3K+lKxwaO0NqvttmSc6
+	yDdUBSM/Mr/7KUbVetxluKHG921Vhnan+ACs0VuCAO1jtbg3yaIAiBaRi64np4mN
+	/XWe/VmmJxNgB9h40MrhSDuYop+ayH6u4E3m1MH8SghdxOALRCdmAI5TyXW7j9pW
+	rNW2nzY0zqIlRLFCW96qsTDpoMB8ETOdc/gF8WNXw8WEbmTLgFTVojs6/WmHv1Qw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q1sx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 07:08:32 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52V71Pbt004271;
+	Mon, 31 Mar 2025 07:08:31 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q1sx2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 07:08:31 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52V5CVCq014576;
+	Mon, 31 Mar 2025 07:08:31 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pvpkvptb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 07:08:30 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52V78RFr52560254
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 31 Mar 2025 07:08:27 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1094820043;
+	Mon, 31 Mar 2025 07:08:27 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F29E920040;
+	Mon, 31 Mar 2025 07:08:23 +0000 (GMT)
+Received: from [9.39.16.8] (unknown [9.39.16.8])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 31 Mar 2025 07:08:23 +0000 (GMT)
+Message-ID: <698a3509-8bcd-4b80-870b-0473fc53f59b@linux.ibm.com>
+Date: Mon, 31 Mar 2025 12:38:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/defconfigs: Set HZ=1000 on ppc64 and powernv
+ defconfigs
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yosry Ahmed <yosry.ahmed@linux.dev>,
+        Tamir Duberstein <tamird@gmail.com>,
+        Srikar Dronamraju <srikar@linux.ibm.com>
+References: <20250330074734.16679-1-vineethr@linux.ibm.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250330074734.16679-1-vineethr@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: H0py6wwJnWAg03kr2fyHbe3XpE0Iw7tt
+X-Proofpoint-ORIG-GUID: Wiy3Rk-KKOoT0ENuYlCSkBIf3xmUGRw4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_03,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ bulkscore=0 clxscore=1011 mlxscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310048
 
-The fwnode.h is not supposed to be used by the drivers as it
-has the definitions for the core parts for different device
-property provider implementations. Drop it.
 
-Note, that fwnode API for drivers is provided in property.h
-which is included here.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- sound/hda/intel-sdw-acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/30/25 13:17, Madadi Vineeth Reddy wrote:
+> Commit 030bdc3fd080 ("powerpc/defconfigs: Set HZ=100 on pseries and ppc64
+> defconfigs") lowered CONFIG_HZ from 250 to 100, citing reduced need for a
+> higher tick rate due to high-resolution timers and concerns about timer
+> interrupt overhead and cascading effects in the timer wheel.
+> 
+> However, improvements have been made to the timer wheel algorithm since
+> then, particularly in eliminating cascading effects at the cost of minor
+> timekeeping inaccuracies. More details are available here
+> https://lwn.net/Articles/646950/. This removes the original concern about
+> cascading, and the reliance on high-resolution timers is not applicable
+> to the scheduler, which still depends on periodic ticks set by CONFIG_HZ.
+> 
+> With the introduction of the EEVDF scheduler, users can specify custom
+> slices for workloads. The default base_slice is 3ms, but with CONFIG_HZ=100
+> (10ms tick interval), base_slice is ineffective. Workloads like stress-ng
+> that do not voluntarily yield the CPU run for ~10ms before switching out.
+> Additionally, setting a custom slice below 3ms (e.g., 2ms) should lower
+> task latency, but this effect is lost due to the coarse 10ms tick.
+> 
 
-diff --git a/sound/hda/intel-sdw-acpi.c b/sound/hda/intel-sdw-acpi.c
-index 49d3e0e30073..8686adaf4531 100644
---- a/sound/hda/intel-sdw-acpi.c
-+++ b/sound/hda/intel-sdw-acpi.c
-@@ -11,8 +11,8 @@
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/export.h>
--#include <linux/fwnode.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/soundwire/sdw_intel.h>
- #include <linux/string.h>
- 
--- 
-2.47.2
+It makes sense since base_slice is the only tunable available under EEVDF.
+This would allow the users to make use of it.
+
+Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+
+> By increasing CONFIG_HZ to 1000 (1ms tick), base_slice is properly honored,
+> and user-defined slices work as expected. Benchmark results support this
+> change:
+> 
+> Latency improvements in schbench with EEVDF under stress-ng-induced noise:
+> 
+> Scheduler       CONFIG_HZ  Custom Slice  99th Percentile Latency (µs)
+> --------------------------------------------------------------------
+> EEVDF           1000       No            0.30x
+> EEVDF           1000       2 ms          0.29x
+> EEVDF (default) 100        No            1.00x
+> 
+> Switching to HZ=1000 reduces the 99th percentile latency in schbench by
+> ~70%. This improvement occurs because, with HZ=1000, stress-ng tasks run
+> for ~3ms before yielding, compared to ~10ms with HZ=100. As a result,
+> schbench gets CPU time sooner, reducing its latency.
+> 
+> Daytrader Performance:
+> 
+> Daytrader results show minor variation within standard deviation,
+> indicating no significant regression.
+> 
+> Workload (Users/Instances)  Throughput 1000HZ vs 100HZ (Std Dev%)
+> --------------------------------------------------------------------------
+> 30 u, 1 i                   +3.01% (1.62%)
+> 60 u, 1 i                   +1.46% (2.69%)
+> 90 u, 1 i                   –1.33% (3.09%)
+> 30 u, 2 i                   -1.20% (1.71%)
+> 30 u, 3 i                   –0.07% (1.33%)
+> 
+> Avg. Response Time: No Change (=)
+> 
+> pgbench select queries:
+> 
+> Metric                         1000HZ vs 100HZ (Std Dev%)
+> ------------------------------------------------------------------
+> Average TPS Change             +2.16% (1.27%)
+> Average Latency Change         –2.21% (1.21%)
+> 
+> Average TPS: Higher the better
+> Average Latency: Lower the better
+> 
+> pgbench shows both throughput and latency improvements beyond standard
+> deviation.
+> 
+> Given these results and the improvements in timer wheel implementation,
+> increasing CONFIG_HZ to 1000 ensures that powerpc benefits from EEVDF’s
+> base_slice and allows fine-tuned scheduling for latency-sensitive
+> workloads.
+> 
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>   arch/powerpc/configs/powernv_defconfig | 2 +-
+>   arch/powerpc/configs/ppc64_defconfig   | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
+> index 6b6d7467fecf..8abf17d26b3a 100644
+> --- a/arch/powerpc/configs/powernv_defconfig
+> +++ b/arch/powerpc/configs/powernv_defconfig
+> @@ -46,7 +46,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+>   CONFIG_CPU_FREQ_GOV_USERSPACE=y
+>   CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+>   CONFIG_CPU_IDLE=y
+> -CONFIG_HZ_100=y
+> +CONFIG_HZ_1000=y
+>   CONFIG_BINFMT_MISC=m
+>   CONFIG_PPC_TRANSACTIONAL_MEM=y
+>   CONFIG_PPC_UV=y
+> diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+> index 5fa154185efa..45d437e4c62e 100644
+> --- a/arch/powerpc/configs/ppc64_defconfig
+> +++ b/arch/powerpc/configs/ppc64_defconfig
+> @@ -57,7 +57,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+>   CONFIG_CPU_FREQ_GOV_USERSPACE=y
+>   CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+>   CONFIG_CPU_FREQ_PMAC64=y
+> -CONFIG_HZ_100=y
+> +CONFIG_HZ_1000=y
+>   CONFIG_PPC_TRANSACTIONAL_MEM=y
+>   CONFIG_KEXEC=y
+>   CONFIG_KEXEC_FILE=y
 
