@@ -1,83 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDC4214227;
-	Mon, 31 Mar 2025 20:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFD21ABDE
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743453653; cv=none; b=pAgWb71oy+W0jLVdqIkB182KPPLrjrhNtFIShj0UBfMq+YejDjUjVSGnW8udsEQktOECmKrY2kcirvls6jA/A7t6I4xkU9hhNeJMQsIY5/vrnlYM7JfN0m/43V0PG8PNxKLQq3otJMZf4IcHVOquPl671dPNYdFXxjVkQ1ii2Vg=
+	t=1743453708; cv=none; b=flE8xsCyP2zwpOntroMX22kzIHH7NSpmxXyG+jFfVfC4d3SpwQ9hTWyGh0YNMN1YLE7cgBa8hXzRCDDj1bEnwjMznzKLZa3ZUthCQrfP1ZpqbR7Ga172KjmfIQMaSFZrOCrYBwsV2j+AHGBdky+cYtAJghs+GZVfI6bxR0yLbgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743453653; c=relaxed/simple;
-	bh=I0pww8VqJBHBfu1PWz4L5zWozNIoPBm6Vts7A/QmhsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KnY5fAU738v/vT/YzMKODzDfpPaQDlKLmpR1av0xC4ZvXi2a38kYzVz3YIpwE8IaqVqUkIYhr0MTFcH5tHQttXegPZk3V//l4OzJRGzBol0ZuY8iLGxZCIKiNHVOEyfl0756CTMc/aEYfE3tfOY89tWMLhxMTRBROz7NkN6uKKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZnsVzoz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743453708; c=relaxed/simple;
+	bh=281CTHNc0Yoohn4OzLyEWIKCtbnzk6BtpsrO75OnLdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RsT2dxvMfvEEx57HlZMrDLIJKZtYtkVQOSaV9zzbF74zDWnWGmLq+fy4pZrmhr31uYux/U7YwCj8Y75W9FBu9lVF1LkN7EomTeuaHNKI3jqk21f8v2Y65N9pZ8A1EB9xYwFGzo2QzrSnmjDTQWdPZiKKujvUDvFHm4zFt0PQJM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=WafMnNSj; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZnsVzoz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96F4C4CEE3;
-	Mon, 31 Mar 2025 20:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743453653;
-	bh=I0pww8VqJBHBfu1PWz4L5zWozNIoPBm6Vts7A/QmhsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VZnsVzozdNfu5X8UMeTfgCssrlEL5caMO3Y4haUBvmkL4T0VpNWst9+N+9bWopezF
-	 dWQPDBPbtA1QhnUQmYaHQJNHu5SdZRBm+vIDa1kdG5BcsmbPiNgq1TIRpfvEJI/ZnC
-	 Wjm7JgV7584sBvEGNVP43cgT3+c1lgb19xo66DyPQJRkgr6JsRbUpsPa0DexBiBaYt
-	 KVNsL2G09JBLeYQL98P/VzX8U1iarWdiSGnZHEWenN+7h2L/tZtFbfbLkK03Fosvc9
-	 FuQwgdKo8Ya/EEgf2iYJFbIxg3lUTQqowgZhc2QktN++nGejnxT5I66ou80Nnspl5t
-	 nqvA7oHo8gXnA==
-Date: Mon, 31 Mar 2025 15:40:51 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Andrei Botila <andrei.botila@oss.nxp.com>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Eric Woudstra <ericwouds@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH v4 6/6] dt-bindings: net: Document support
- for Aeonsemi PHYs
-Message-ID: <20250331204051.GA2764400-robh@kernel.org>
-References: <20250327224529.814-1-ansuelsmth@gmail.com>
- <20250327224529.814-7-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="WafMnNSj"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf848528aso42671235e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1743453704; x=1744058504; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rGJAe0UQZxK4zMdJovc/1efMoUHDDD05RrKDXkqIC1k=;
+        b=WafMnNSjVr02J5wVJuxWjLCpEmfG2f+6lKrXHAx4PBaEx8bM5U/yh7tlzpxOkpEoer
+         HdIOzttKJAcuENLIaZBO85ShS5Q20XrptmErz2gf9aTqCIo3H6GGL029Je84e6nvP+ce
+         fL66rt0W0S8pYQLGfUcaUY+QtIKPiad/Lz+Q8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743453704; x=1744058504;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rGJAe0UQZxK4zMdJovc/1efMoUHDDD05RrKDXkqIC1k=;
+        b=bRo0jVETqndj0dxdYGyNNSKmlNMWUiunaCAIy3bmGUiOaCoBtIQ19/1kv/AlrI9TKy
+         0uEZGNRp6KUcCa5rmys2Bb8eIMfQO75rN17IbpbZWm7da0sVwC0XFiCetE/N8/uIOFDs
+         SqvcY26WHUNOCWIBdF+V9m5qfZiPiMG5PSgfPOjTJQSMcm8ifZUJdGvhCBCb9xvxgnZw
+         Fcpuq3FUbzjndby8TA68TxRpzHmpUK1vti/oxNT8myh1ex8BZ26J+ay5QcPI5Z5lOubK
+         eiIdn3qAPij6mW8VZHikJQjf44DPxsEXVtRlJHXRtzWz6os0Zi2nxz1G//x2cdwSI4GX
+         bc7Q==
+X-Gm-Message-State: AOJu0YzxRIstcUMrg3GtwQFeL0Jh9q5JLlN/j/Fw11CHZtak7dIJiOu9
+	KdUBcvWV0Vr2ar0YQNna3LRch2Q3OeEbIoUv/Lu9H1yyk7SHF3yJB9x8OLdS6f4xK8SBngPNQi9
+	cwQM=
+X-Gm-Gg: ASbGncuTl4wO+3EM+zfEqLqx8EVFPBFy+ytJj54Npsj/MD8L9iR2+2VgTTq2P44aPvG
+	s1mlPw98Miik+U9SyjfEgOTqFTdRI40EoZNn+W+kS3NRdCXRxNNf5lS/ARDJFsziDZepjqZr+wc
+	VezwWTQJHHSU9UXLH3NlYVuQdAgk9xZvpht/0wBEuSh0P5tcVc/UidiKaBa2e2U1LgVsImWBT2p
+	ORXkcsbA5vaQ8K79m0hGldyK5VHuZvJ8y9+GcU2FEZEwZbfh2eEirtEaoWMRrd4B/na9MD6+dWv
+	rmSKZmL45RJYvf6nIqKK7z4/JY9MqDNQXzrX1TVJtyTHWnxR1NGXLvw7vP1072VCGuPaiv3uGZr
+	mUsmwPDlpcQ==
+X-Google-Smtp-Source: AGHT+IELgOL2ZFTcYBUrFSIuo2rwMKxJQe2rD/asVJqxQr19K+w0UzLYi4yoZPeCFXyQFMNepUNBpg==
+X-Received: by 2002:a05:6000:420a:b0:391:487f:2828 with SMTP id ffacd0b85a97d-39c120cd1d0mr8781705f8f.10.1743453704261;
+        Mon, 31 Mar 2025 13:41:44 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0d1sm12187246f8f.70.2025.03.31.13.41.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 13:41:43 -0700 (PDT)
+Message-ID: <fde11fbb-4b3f-44f1-90cf-6aaefb6bb7c1@citrix.com>
+Date: Mon, 31 Mar 2025 21:41:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327224529.814-7-ansuelsmth@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
+ when available
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+ linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, jgross@suse.com,
+ peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-11-xin@zytor.com>
+ <Z-r6qxmk7niRssee@char.us.oracle.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ xsFNBFLhNn8BEADVhE+Hb8i0GV6mihnnr/uiQQdPF8kUoFzCOPXkf7jQ5sLYeJa0cQi6Penp
+ VtiFYznTairnVsN5J+ujSTIb+OlMSJUWV4opS7WVNnxHbFTPYZVQ3erv7NKc2iVizCRZ2Kxn
+ srM1oPXWRic8BIAdYOKOloF2300SL/bIpeD+x7h3w9B/qez7nOin5NzkxgFoaUeIal12pXSR
+ Q354FKFoy6Vh96gc4VRqte3jw8mPuJQpfws+Pb+swvSf/i1q1+1I4jsRQQh2m6OTADHIqg2E
+ ofTYAEh7R5HfPx0EXoEDMdRjOeKn8+vvkAwhviWXTHlG3R1QkbE5M/oywnZ83udJmi+lxjJ5
+ YhQ5IzomvJ16H0Bq+TLyVLO/VRksp1VR9HxCzItLNCS8PdpYYz5TC204ViycobYU65WMpzWe
+ LFAGn8jSS25XIpqv0Y9k87dLbctKKA14Ifw2kq5OIVu2FuX+3i446JOa2vpCI9GcjCzi3oHV
+ e00bzYiHMIl0FICrNJU0Kjho8pdo0m2uxkn6SYEpogAy9pnatUlO+erL4LqFUO7GXSdBRbw5
+ gNt25XTLdSFuZtMxkY3tq8MFss5QnjhehCVPEpE6y9ZjI4XB8ad1G4oBHVGK5LMsvg22PfMJ
+ ISWFSHoF/B5+lHkCKWkFxZ0gZn33ju5n6/FOdEx4B8cMJt+cWwARAQABzSlBbmRyZXcgQ29v
+ cGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXguY29tPsLBegQTAQgAJAIbAwULCQgHAwUVCgkI
+ CwUWAgMBAAIeAQIXgAUCWKD95wIZAQAKCRBlw/kGpdefoHbdD/9AIoR3k6fKl+RFiFpyAhvO
+ 59ttDFI7nIAnlYngev2XUR3acFElJATHSDO0ju+hqWqAb8kVijXLops0gOfqt3VPZq9cuHlh
+ IMDquatGLzAadfFx2eQYIYT+FYuMoPZy/aTUazmJIDVxP7L383grjIkn+7tAv+qeDfE+txL4
+ SAm1UHNvmdfgL2/lcmL3xRh7sub3nJilM93RWX1Pe5LBSDXO45uzCGEdst6uSlzYR/MEr+5Z
+ JQQ32JV64zwvf/aKaagSQSQMYNX9JFgfZ3TKWC1KJQbX5ssoX/5hNLqxMcZV3TN7kU8I3kjK
+ mPec9+1nECOjjJSO/h4P0sBZyIUGfguwzhEeGf4sMCuSEM4xjCnwiBwftR17sr0spYcOpqET
+ ZGcAmyYcNjy6CYadNCnfR40vhhWuCfNCBzWnUW0lFoo12wb0YnzoOLjvfD6OL3JjIUJNOmJy
+ RCsJ5IA/Iz33RhSVRmROu+TztwuThClw63g7+hoyewv7BemKyuU6FTVhjjW+XUWmS/FzknSi
+ dAG+insr0746cTPpSkGl3KAXeWDGJzve7/SBBfyznWCMGaf8E2P1oOdIZRxHgWj0zNr1+ooF
+ /PzgLPiCI4OMUttTlEKChgbUTQ+5o0P080JojqfXwbPAyumbaYcQNiH1/xYbJdOFSiBv9rpt
+ TQTBLzDKXok86M7BTQRS4TZ/ARAAkgqudHsp+hd82UVkvgnlqZjzz2vyrYfz7bkPtXaGb9H4
+ Rfo7mQsEQavEBdWWjbga6eMnDqtu+FC+qeTGYebToxEyp2lKDSoAsvt8w82tIlP/EbmRbDVn
+ 7bhjBlfRcFjVYw8uVDPptT0TV47vpoCVkTwcyb6OltJrvg/QzV9f07DJswuda1JH3/qvYu0p
+ vjPnYvCq4NsqY2XSdAJ02HrdYPFtNyPEntu1n1KK+gJrstjtw7KsZ4ygXYrsm/oCBiVW/OgU
+ g/XIlGErkrxe4vQvJyVwg6YH653YTX5hLLUEL1NS4TCo47RP+wi6y+TnuAL36UtK/uFyEuPy
+ wwrDVcC4cIFhYSfsO0BumEI65yu7a8aHbGfq2lW251UcoU48Z27ZUUZd2Dr6O/n8poQHbaTd
+ 6bJJSjzGGHZVbRP9UQ3lkmkmc0+XCHmj5WhwNNYjgbbmML7y0fsJT5RgvefAIFfHBg7fTY/i
+ kBEimoUsTEQz+N4hbKwo1hULfVxDJStE4sbPhjbsPCrlXf6W9CxSyQ0qmZ2bXsLQYRj2xqd1
+ bpA+1o1j2N4/au1R/uSiUFjewJdT/LX1EklKDcQwpk06Af/N7VZtSfEJeRV04unbsKVXWZAk
+ uAJyDDKN99ziC0Wz5kcPyVD1HNf8bgaqGDzrv3TfYjwqayRFcMf7xJaL9xXedMcAEQEAAcLB
+ XwQYAQgACQUCUuE2fwIbDAAKCRBlw/kGpdefoG4XEACD1Qf/er8EA7g23HMxYWd3FXHThrVQ
+ HgiGdk5Yh632vjOm9L4sd/GCEACVQKjsu98e8o3ysitFlznEns5EAAXEbITrgKWXDDUWGYxd
+ pnjj2u+GkVdsOAGk0kxczX6s+VRBhpbBI2PWnOsRJgU2n10PZ3mZD4Xu9kU2IXYmuW+e5KCA
+ vTArRUdCrAtIa1k01sPipPPw6dfxx2e5asy21YOytzxuWFfJTGnVxZZSCyLUO83sh6OZhJkk
+ b9rxL9wPmpN/t2IPaEKoAc0FTQZS36wAMOXkBh24PQ9gaLJvfPKpNzGD8XWR5HHF0NLIJhgg
+ 4ZlEXQ2fVp3XrtocHqhu4UZR4koCijgB8sB7Tb0GCpwK+C4UePdFLfhKyRdSXuvY3AHJd4CP
+ 4JzW0Bzq/WXY3XMOzUTYApGQpnUpdOmuQSfpV9MQO+/jo7r6yPbxT7CwRS5dcQPzUiuHLK9i
+ nvjREdh84qycnx0/6dDroYhp0DFv4udxuAvt1h4wGwTPRQZerSm4xaYegEFusyhbZrI0U9tJ
+ B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
+ d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
+ 6+ahAA==
+In-Reply-To: <Z-r6qxmk7niRssee@char.us.oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 11:45:17PM +0100, Christian Marangi wrote:
-> Document support for Aeonsemi PHYs and the requirement of a firmware to
-> correctly work. Also document the max number of LEDs supported and what
-> PHY ID expose when no firmware is loaded.
+On 31/03/2025 9:27 pm, Konrad Rzeszutek Wilk wrote:
+> On Mon, Mar 31, 2025 at 01:22:46AM -0700, Xin Li (Intel) wrote:
+>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+>> ---
+>>  arch/x86/include/asm/msr-index.h |  6 ++++++
+>>  arch/x86/kvm/vmx/vmenter.S       | 28 ++++++++++++++++++++++++----
+>>  2 files changed, 30 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+>> index e6134ef2263d..04244c3ba374 100644
+>> --- a/arch/x86/include/asm/msr-index.h
+>> +++ b/arch/x86/include/asm/msr-index.h
+>> @@ -1226,4 +1226,10 @@
+>>  						* a #GP
+>>  						*/
+>>  
+>> +/* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
+>> +#define ASM_WRMSRNS		_ASM_BYTES(0x0f,0x01,0xc6)
+>> +
+>> +/* Instruction opcode for the immediate form RDMSR/WRMSRNS */
+>> +#define ASM_WRMSRNS_RAX		_ASM_BYTES(0xc4,0xe7,0x7a,0xf6,0xc0)
+>> +
+>>  #endif /* _ASM_X86_MSR_INDEX_H */
+>> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+>> index f6986dee6f8c..9fae43723c44 100644
+>> --- a/arch/x86/kvm/vmx/vmenter.S
+>> +++ b/arch/x86/kvm/vmx/vmenter.S
+>> @@ -64,6 +64,29 @@
+>>  	RET
+>>  .endm
+>>  
+>> +/*
+>> + * Write EAX to MSR_IA32_SPEC_CTRL.
+>> + *
+>> + * Choose the best WRMSR instruction based on availability.
+>> + *
+>> + * Replace with 'wrmsrns' and 'wrmsrns %rax, $MSR_IA32_SPEC_CTRL' once binutils support them.
+>> + */
+>> +.macro WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
+>> +	ALTERNATIVE_2 __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
+>> +				  xor %edx, %edx;				\
+>> +				  mov %edi, %eax;				\
+>> +				  ds wrmsr),					\
+>> +		      __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
+>> +				  xor %edx, %edx;				\
+>> +				  mov %edi, %eax;				\
+>> +				  ASM_WRMSRNS),					\
+>> +		      X86_FEATURE_WRMSRNS,					\
+>> +		      __stringify(xor %_ASM_AX, %_ASM_AX;			\
+>> +				  mov %edi, %eax;				\
+>> +				  ASM_WRMSRNS_RAX; .long MSR_IA32_SPEC_CTRL),	\
+>> +		      X86_FEATURE_MSR_IMM
+>> +.endm
+>> +
+>>  .section .noinstr.text, "ax"
+>>  
+>>  /**
+>> @@ -123,10 +146,7 @@ SYM_FUNC_START(__vmx_vcpu_run)
+>>  	movl PER_CPU_VAR(x86_spec_ctrl_current), %esi
+>>  	cmp %edi, %esi
+>>  	je .Lspec_ctrl_done
+>> -	mov $MSR_IA32_SPEC_CTRL, %ecx
+>> -	xor %edx, %edx
+>> -	mov %edi, %eax
+>> -	wrmsr
+> Is that the right path forward?
+>
+> That is replace the MSR write to disable speculative execution with a
+> non-serialized WRMSR? Doesn't that mean the WRMSRNS is speculative?
 
-If you respin, in the subject: s/Document support for/Add/
+MSR_SPEC_CTRL is explicitly non-serialising, even with a plain WRMSR.
 
-> 
-> Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
-> AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
-> AS21210PB1 that all register with the PHY ID 0x7500 0x9410 on C45
-> registers before the firmware is loaded.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../bindings/net/aeonsemi,as21xxx.yaml        | 122 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+non-serialising != non-speculative.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Although WRMSRNS's precise statement on the matter of
+non-speculativeness is woolly, given an intent to optimise it some more
+in the future.
+
+~Andrew
