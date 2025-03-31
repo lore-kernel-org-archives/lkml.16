@@ -1,95 +1,222 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819E418BBBB;
-	Mon, 31 Mar 2025 20:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5851518BBBB;
+	Mon, 31 Mar 2025 20:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743451797; cv=none; b=DSqDon6MWNssbR6pGMVpgb0QDcgcZbUATH6W6oDl2Ezj6yWFMHIGMiqCdgjNGfLsgYLIB0idW3HNkx/hKkFdZVfAX3YJXSchAP9w7P2/b0gchDBlL446XQbBlChsMFYTchz+FC0m+GoAhtKJkYMjZeFjKOWNVrMTTbR29hu+J8M=
+	t=1743451807; cv=none; b=G29lI7PA/yd3Q1uzsV65QVymh0Y/Qmk48bTLJvnZYlYhbUI+MUoeSrQ55N9Vj2ucsoV6yoJiwEZJaCXFFqRPSnlXFHbM8oHEpmfg0UYlMTKKGWs32DKlDGU+LnKHxneluhMjwSpm3BNnyuGuX4VYAWgOLzwdmzHEV+ly//YHfGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743451797; c=relaxed/simple;
-	bh=SUjN1fXZmPO+4wQ5IRPnLqyQNV1W24RxEWdffl0oD+8=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pZZVEsC1lYYtmJwwKM+OrQf9RtEp71gnskMRSFJRzMqGJXmvRAmrGVrJQtzT3XJC/gUmko9jtxSs6LKgDXcRxaOf7mr2oc/+KSd9pzLDQq5/JmKfYN6RfyHfqANzwDIx+9grE/KWjitJj9ZDITDH1eW0EFSkjkhqLSLTd0/SWic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MoaImwsj; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MoaImwsj"
-Received: from narnia (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C9D71210237D;
-	Mon, 31 Mar 2025 13:09:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C9D71210237D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743451795;
-	bh=ssME+pbJ+oVtKydIuNRLX638d5Z4zg+HsBKaQBu0NhY=;
-	h=From:To:Subject:In-Reply-To:References:Date:From;
-	b=MoaImwsjPspShh4Gs1war4lg9WGKeAQEW5nRI2hedV0oTE5iSWza056H2bQedwuHx
-	 vKmZKuMfgni2U17IdRVzSpxiKaLtaMa1RYSogkkXGG4RplA+UcWo0iujq4CYdojjfx
-	 dt/i+e6wmL+MfkSa3c2Rpet4T5LYBglbLz/9ksBU=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, "David S.
- Miller" <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James
- Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro
- Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>,
- =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BC?=
- =?utf-8?Q?nther?= Noack <gnoack@google.com>, Nick
- Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Jan
- Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- llvm@lists.linux.dev, nkapron@google.com, teknoraver@meta.com,
- roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
-Subject: Re: [RFC PATCH security-next 1/4] security: Hornet LSM
-In-Reply-To: <87frj6l26a.fsf@trenco.lwn.net>
-References: <20250321164537.16719-1-bboscaccy@linux.microsoft.com>
- <20250321164537.16719-2-bboscaccy@linux.microsoft.com>
- <87frj6l26a.fsf@trenco.lwn.net>
-Date: Mon, 31 Mar 2025 13:09:44 -0700
-Message-ID: <874iz96jxz.fsf@microsoft.com>
+	s=arc-20240116; t=1743451807; c=relaxed/simple;
+	bh=U3q9aimAB43eG1j3611rsmgpp5AzU5aSFce0DJ/oQDU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kgUt3OhhcwUrCRzvgm6ku/FwvfvD+NM6Txrzn9CvmRGGnZnmGPQpQw2y5Mbq88TdUcQ9cZunEMzgMgd42dVmU1Cs/e4xW9eWckb0wn19ozhdtdw8NVIwacbiGnQXm/+oUb2dH93oLaml52Up/FLN7bSdg6Qqgjc7TTGN9kd7KoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 8130592009C; Mon, 31 Mar 2025 22:09:56 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 7ADA792009B;
+	Mon, 31 Mar 2025 21:09:56 +0100 (BST)
+Date: Mon, 31 Mar 2025 21:09:56 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Marco Crivellari <marco.crivellari@suse.com>
+cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Frederic Weisbecker <frederic@kernel.org>, 
+    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
+In-Reply-To: <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
+References: <20250315194002.13778-1-marco.crivellari@suse.com> <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk> <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
+ <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk> <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com> <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk> <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
+ <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-Jonathan Corbet <corbet@lwn.net> writes:
+On Mon, 31 Mar 2025, Marco Crivellari wrote:
 
-> Blaise Boscaccy <bboscaccy@linux.microsoft.com> writes:
->
->> This adds the Hornet Linux Security Module which provides signature
->> verification of eBPF programs.
->>
->> Hornet uses a similar signature verification scheme similar to that of
->> kernel modules. A pkcs#7 signature is appended to the end of an
->> executable file. During an invocation of bpf_prog_load, the signature
->> is fetched from the current task's executable file. That signature is
->> used to verify the integrity of the bpf instructions and maps which
->> where passed into the kernel. Additionally, Hornet implicitly trusts any
->> programs which where loaded from inside kernel rather than userspace,
->> which allows BPF_PRELOAD programs along with outputs for BPF_SYSCALL
->> programs to run.
->>
->> Hornet allows users to continue to maintain an invariant that all code
->> running inside of the kernel has been signed and works well with
->> light-skeleton based loaders, or any statically generated program that
->> doesn't require userspace instruction rewriting.
->>
->> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
->> ---
->>  Documentation/admin-guide/LSM/Hornet.rst |  51 +++++
->
-> You will need to add that file to .../index.rst, or it won't be included
-> in the docs build.
->
-> Thanks,
->
-> jon
+> > There's some complication here coming from the need to factor in the ISA
+> > bit in the microMIPS mode; something that hasn't been discussed so far.
+> > The `.fill 0' approach is a hack and it has struck me that we need to add
+> > a `.noinsn' pseudo-op to GAS for this purpose, complementing `.insn', but
+> > we need to stick with the hack for now anyway as it will take years until
+> > we can rely on a new feature in the assembler.
+> 
+> Ah, interesting. So de facto having the "repeat" to 0, will generate nothing.
 
-Good catch, will get that fixed. Thanks Jon. 
+ Correct, and as a side effect this pseudo-op clears the ISA bit on any 
+label attached, as it is not an instruction.
+
+> > I can't imagine how we'd advance past WAIT without these instructions,
+> > what do you have in mind?
+> 
+> I've not been precise, sorry.
+> I meant to remove the instructions like they are now because the
+> region would have
+> been different, then.
+> So, those instructions would have needed a change, in practice.
+
+ OK, so this is precisely what happened here with my proposal.  Thanks for 
+clarifying.
+
+> > NB how do you actually verify this stuff with QEMU?  Is it by injecting
+> > an interrupt by hand at a chosen code location via GDB attached to QEMU's
+> > built-in debug stub?
+> 
+> Short answer: I am not able to fully test this, I can only boot.
+> 
+> The reason is that gdb-multiarch is not working as expected.
+> The binary in my distribution has the python support broken. So when I try to
+> inject the interrupt, I'm receiving a python error (actually, I receive the same
+> error after the "target remote" command).
+> I've also tried to compile the binary from source, but again,
+> I understand why in OBS the build I found is broken...
+
+ Well, you should be able to set a breakpoint at `rollback_handle_int' and 
+fiddle with $epc by hand to see if the code sequence correctly skips over 
+WAIT.  Though I reckon QEMU used to have an issue with presenting the MIPS 
+privileged context over its debug stub.  Has the issue been fixed?  Either 
+way you should be able to just operate on the copy in $k0 retrieved with 
+(D)MFC0.
+
+> > Below I've included a complete change based on the outline above.  It
+> > seems to do the right thing for a couple of my configurations, but I've
+> > only eyeballed the resulting code and haven't tried running it.  Most of
+> > my hardware doesn't implement the WAIT instruction anyway.
+> 
+> It means it would be better to have someone else try the resulting
+> patch, I guess.
+
+ Exhaustive run-time verification is not always necessary if you can 
+demonstrate that your code is correct via other means, including 
+proofreading.
+
+ FAOD I have one MIPS32r2 system wired for testing, but that might not be 
+the most interesting configuration to verify as it'll now just use EI/EHB 
+to enable interrupts ahead of WAIT.  I could try an R1 kernel instead, but 
+I'm not sure if it can be made to work owing to the differences in the FPU 
+between R1 and R2 for the MIPS32 ISA.  I used to have a MIPS64 (R1) system 
+there, but the CPU daughtercard sadly stopped working 3 years ago and I 
+wasn't able to repair it, owing to the lack of available spare parts (it's 
+most likely a dead CPU).
+
+> > Let me know if you find anything here unclear or have any questions or
+> > comments.
+> 
+> 1)
+> 
+> > /* Keep the ISA bit clear for calculations on local labels here. */
+> 
+> The ISA bit should be the bit 0, correct?
+> So, also in the macro code, it's done to preserve that bit.
+
+ Correct, the bit will be set according to the ISA mode at the time the 
+originating machine instruction is executed, in EPC or any other register 
+the PC is copied to, e.g. $ra.  Likewise any instruction setting the PC 
+such as JR or ERET will set the ISA mode from the ISA bit of the source 
+register (the ISA bit for exception entry is set from CP0 Config3.ISAOnExc 
+register bit).
+
+ All code labels in microMIPS code will have the bit set, so that 
+relocations correctly calculate immediates used to make register jumps.  
+
+ The ISA mode can be switched explicitly with the JALX instruction (you 
+can mix regular MIPS and microMIPS code as long as hardware supports the 
+other ISA mode; either or both can be implemented in a given piece of 
+silicon).
+
+ Other immediate jumps and branches preserve the current ISA mode, but the 
+assembler and linker verify you don't attempt to use these instructions to 
+pass control to code in the other mode; this is an assembly or link error 
+depending at what stage the label reference is resolved.
+
+ FYI the documents for the microMIPS mode of operation are respectively:
+
+- "MIPS Architecture For Programmers Volume I-B: Introduction to the
+   microMIPS32 Architecture"
+
+- "MIPS Architecture for Programmers Volume II-B: The microMIPS32 
+   Instruction Set"
+
+and their microMIPS64 counterparts (although the first document is almost 
+an exact copy of its regular MIPS variant).  Be sure to download revision 
+5.xx, because revision 6.xx describes an entirely different ISA which we 
+currently have no support for (downstream patches were never submitted; 
+also microMIPSr6 removed branch delay slots, which caused all sorts of 
+portability issues).  See Section 3.5 of the latter manual for further 
+discussion of the ISA bit.
+
+> 2)
+> .section .cpuidle.text,"ax"
+> 
+> This should be a single patch, right?
+> Based on what I understood, 'a' should be the allocation, and 'x' the
+> executable attribute.
+
+ Both correct (see the GAS manual for the section flags); this just 
+matches the __cpuidle macro from <linux/compiler_types.h>.
+
+> This should be in order to mark those symbols like "cpuidle text":
+> 
+> $ nm -n vmlinux | grep -A3 "cpuidle_text"
+> ffffffff80a127e0 T __cpuidle_text_start
+> ffffffff80a127e0 T r4k_wait
+> ffffffff80a12800 t r4k_wait_insn
+> ffffffff80a12804 t r4k_wait_exit
+> --
+> ffffffff80a12c00 T __cpuidle_text_end
+> ffffffff80a12c00 T __noinstr_text_end
+> ffffffff80a12c00 t rest_init
+> ffffffff80a12ccc t kernel_init
+> 
+> I guess it is used in order to understand if the instruction pointer is inside
+> one of these functions / labels.
+
+ See the comment at said macro in <linux/compiler_types.h> and also commit 
+6727ad9e206c ("nmi_backtrace: generate one-line reports for idle cpus").
+
+> How does a commit description sound like this?
+> 
+> "
+> mips: Add dedicated .cpuidle.text section for CPU idle routines
+> 
+> Add a dedicated executable section for CPU idle code to properly organize
+> and identify idle-related functions inside the .text section.
+> "
+
+ How about:
+
+"
+MIPS: Move __r4k_wait() to .cpuidle.text section
+
+Fix missing .cpuidle.text section assignment for __r4k_wait() to correct 
+backtracing with nmi_backtrace().
+
+Fixes: 97c8580e85cf ("MIPS: Annotate cpu_wait implementations with __cpuidle")
+"
+
+or suchlike (based on the commit referred)?
+
+ This probably does not itself qualify for linux-stable as the issue is 
+only annoying rather than fatal, but I think the annotation should be 
+there in case someone wants to backport it downstream.
+
+> 3)
+> 
+> > I think we also need to replace "rollback" with
+> > another name as with new code we don't roll back anymore.
+> 
+> Should be changed with "region", instead of rollback, maybe?
+> Do you have something better to suggest?
+
+ Hmm, "skipover" maybe?
+
+  Maciej
