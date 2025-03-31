@@ -1,161 +1,85 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8DF13A258
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0B413A258;
+	Mon, 31 Mar 2025 09:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743414241; cv=none; b=D8167FiF9OxsgOtm6C75pFRG65waSTbc/ErqLbTIE3MseHwfDsurzII0cz9nLY3x4Hj365D1I9vbbi//gmyAnTaop3cXsFZgdhqz+IIVW5nfJvUIqOvigQdq+7729Dvzi/H/LWeNkME2Gz96Gd9hEy1/yPX4Keev6Nq9ebUPdWI=
+	t=1743414275; cv=none; b=FYtx0Zzs10wIbFmeIxemusMc9AtfnX6rIkgU0baVB/uq5skjg1jp3gQFo827qC9wSCssNBhmOerX/17jdDV+0/KL4lH4SvrVs+Dod67R/KOFhJ4u7ypVfj94K2gUym5ThJBFs0azAIOjIQl47L7+mCJlsAn8vUsmicUml3kv/4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743414241; c=relaxed/simple;
-	bh=uUjD/JplIhUXWecod63ucSrmW7jQiOn8s98ndmFloPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DKVZdiRPIlY+dhBWCbRIHHpi0bUTZJS8P//B77qqn1JpKTdC7fMIErFjKOv6aKPCdqIZ1Ub62Hdnm1En8Q2Cq2TTIxmle4/bSQ+Cyi24nBIQWss6f/R0Tony1F7lR/wHGvpZXA1UDp4R383xc61vISjmrRldME7XxzgsQ1Rnr7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A28jRfxv; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743414275; c=relaxed/simple;
+	bh=tN6etfzxU77e6hXydd6b4k5v0fg8n79AGyUaCxasxw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqNIxynsw4oscVuJ02e/cDXiNAeX3DKcauoxFbbVdHmoVpR14+rn9Xk3k8tRVcK9bPyrWhkiQQKia0zlMagVK2gsuxf2S3LZYauIvqASkRXzAbA7yjtDnfYU9sdgCtVx5mHvLmMvTp2ybdsJshxyo54ryyHOVp/esvDIK8BXqyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FevU2XEL; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A28jRfxv"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso139612f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743414238; x=1744019038; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/GLv/TlK6NwyIX5eMw+b9bXsE/bqtOYXg8Tuj7RGPR8=;
-        b=A28jRfxvIu8GBjwAYzRMv6lOu0+owUfyBnAUwGYZQ2+D7TqD5bXpO0IJX8McvIxNs5
-         jqZJpKzkWzgoGquqmtKethcEr+DDgeO02HvoU62WgwQE4VFMpiiTRKNyIpGsFZEwUcTz
-         xNKfgJE4r1wyktZs8LrZbSBrKlCbxEeOjQhp6e+csRzU624SE7v7u3OOItVgdMqOy9BQ
-         kOHLtJdtUxFWlCkP/IQoy/+x178IXOMgNbwjLAH1t9Bd3+h/OPQ1WnoI3tUeYUKU6h8h
-         XFPLfINH+JUYRzfk4RoplojEEGh1aDX03SB8UF4ydAfBYvqBya/gYTt/k/+IdWlKTCdN
-         bvUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743414238; x=1744019038;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/GLv/TlK6NwyIX5eMw+b9bXsE/bqtOYXg8Tuj7RGPR8=;
-        b=mnsKZFiejzpNu5PKNXTm6IcDeO336j1L14xwb4cLTZJDdkxYov2gCgoDBKNLZR4uqS
-         pHS9uSgIqk75VexfFpuN7iNblx7QzYmQcJseco4ZfYxhIJylvMEWNv24QgnS4YmRemmJ
-         VLL0Zo5mk3uYSKrbxFPgkZfRqTU1SLTP2vS3+VW6loJasqZr7n5SrtUYyyOpsgpTpyk1
-         yJ9wJ/P7NEKYgDnnP45CA5T9sHszlEkU8J1YPDCWrzcwKKMw08NqgVz2ieB/a0PFiqDW
-         nt/13BA8Xl60W7SOOHPWX1Y3pQaKTECJldjpLS+d6slfSO6sMvKHXaFBzmx0ZqzGrVqP
-         z0ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXMYXhSHcvuHscrYIKGQe6LG270pU4l9lXRg20U5cjaGVCuKcQZ5cKYf1SheMv5uYA9U21qXxCYpvfjDKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3pwsabAxonmM86II3GoYv2lqK6uodjDgZDoX8WTyPKF6B15BC
-	pDvB3Wq84b5v5Zm1wE5kyjHwe3dyqqhmZRjPJONB/vz3L2B55BtCbrI6mmy3GzE=
-X-Gm-Gg: ASbGnctloeoI28rPq5YAbwN5xqxSzwqgG3bPw9CZdneS7HkSppxrWfxee+Syh42EX0x
-	6ucgkffv+e8xcvENammcUN9bJjcaSI8Xa0FGzpLA1JGjJk5AYroBxG2U0FK1jFiPNJM7i1in+K1
-	hVo/ZLPJaaE20YS4Nqf8dHaI+XP62SL+EsUxJhkksviXGDv9eqcnbG/iZGe7XBmTnoW4khIosbi
-	gG0t777t0jtJkBG4FzR9NnyJw49Jq4wWE/drqU0avlwcpmEaDVGTFNh2oKO7Lc18VR2Srygqp5T
-	5qEvwQ6VYq56BFVLjaHbLkZGqMHoACEKlvmOW6hedNMkmoKEhA==
-X-Google-Smtp-Source: AGHT+IGs/AIKyAlURq/RRfCeu90iBXK3gpoSTRjgemLZoshu9Cg+ZXrGip1/5AfFeNfBa9hppYpv6A==
-X-Received: by 2002:a05:6000:2a8:b0:391:3156:6be with SMTP id ffacd0b85a97d-39c11b7dae8mr6990133f8f.7.1743414237995;
-        Mon, 31 Mar 2025 02:43:57 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b79e0afsm10922362f8f.65.2025.03.31.02.43.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 02:43:57 -0700 (PDT)
-Date: Mon, 31 Mar 2025 12:43:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Gabriele Monaco <gmonaco@redhat.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: kernel/trace/rv/rv.c:838 rv_register_monitor() warn: inconsistent
- returns 'global &rv_interface_lock'.
-Message-ID: <bc1fe7c1-a042-42b2-8d40-7621ef0087b9@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FevU2XEL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0176843349;
+	Mon, 31 Mar 2025 09:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743414266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n1haYXwSDfLoyUzdskKRx546yxBk0+SAnC6Wt/ZsG0Q=;
+	b=FevU2XELa05ufzVSvCVRwpM2ooN3CCusOtTsHKdk/4fJkAFc1TicFKMPBOsqm0PrgN3bs1
+	XqNQing+Ht1zXLTvWYaRAyPS1/mqTYiW8c7LWGxltD0GnMp1wE2WXmGVYwuzHZXBW6zjq5
+	7/0dcV9aMI1mMnNLSpqhxby2GaLFHwsUfpxXiaejSpFTd365FTJBe19c8Hti/P3oC5Gtk5
+	gRYiQ9NhUSqUvFhTWsqxvuhIal0Vcm+f1q7gkT94Rvgg3ilycR5ykfuVzOg3tQK1hNLWLM
+	Q95PKVWXlezSVs9eKFmojuErpRH0sEqUP6DP5mBF/i9lfgRVDJV1sTJUgrB9Rg==
+Date: Mon, 31 Mar 2025 11:44:24 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: arnd@arndb.de, gregkh@linuxfoundation.org, bbrezillon@kernel.org,
+	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+	frank.li@nxp.com,
+	Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
+Cc: rvmanjumce@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH v6] i3c: Add NULL pointer check in i3c_master_queue_ibi()
+Message-ID: <174341425769.1100556.13422322396999492211.b4-ty@bootlin.com>
+References: <20250326123047.2797946-1-manjunatha.venkatesh@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250326123047.2797946-1-manjunatha.venkatesh@nxp.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujeeliedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedviefghedvvefhheevjefghedujeekfeeuvdfhgeduffduveehgfdvgeejheejvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrt
+ ghpthhtohepsggsrhgviihilhhlohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhifegtsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhrrghnkhdrlhhisehngihprdgtohhmpdhrtghpthhtohepmhgrnhhjuhhnrghthhgrrdhvvghnkhgrthgvshhhsehngihprdgtohhmpdhrtghpthhtoheprhhvmhgrnhhjuhhmtggvsehgmhgrihhlrdgtohhm
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7f2ff7b6261742ed52aa973ccdf99151b7cc3a50
-commit: cb85c660fcd4b3a03ed993affa0b2d1a8af2f06b rv: Add option for nested monitors and include sched
-config: parisc-randconfig-r073-20250331 (https://download.01.org/0day-ci/archive/20250331/202503310539.7BDDOPxq-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 8.5.0
+On Wed, 26 Mar 2025 18:00:46 +0530, Manjunatha Venkatesh wrote:
+> The I3C master driver may receive an IBI from a target device that has not
+> been probed yet. In such cases, the master calls `i3c_master_queue_ibi()`
+> to queue an IBI work task, leading to "Unable to handle kernel read from
+> unreadable memory" and resulting in a kernel panic.
+> 
+> Typical IBI handling flow:
+> 1. The I3C master scans target devices and probes their respective drivers.
+> 2. The target device driver calls `i3c_device_request_ibi()` to enable IBI
+>    and assigns `dev->ibi = ibi`.
+> 3. The I3C master receives an IBI from the target device and calls
+>    `i3c_master_queue_ibi()` to queue the target device driver’s IBI
+>    handler task.
+> 
+> [...]
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202503310539.7BDDOPxq-lkp@intel.com/
+Applied, thanks!
 
-smatch warnings:
-kernel/trace/rv/rv.c:838 rv_register_monitor() warn: inconsistent returns 'global &rv_interface_lock'.
+[1/1] i3c: Add NULL pointer check in i3c_master_queue_ibi()
+      https://git.kernel.org/abelloni/c/bd496a44f041
 
-vim +838 kernel/trace/rv/rv.c
-
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  779  int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  780  {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  781  	struct rv_monitor_def *r, *p = NULL;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  782  	int retval = 0;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  783  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  784  	if (strlen(monitor->name) >= MAX_RV_MONITOR_NAME_SIZE) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  785  		pr_info("Monitor %s has a name longer than %d\n", monitor->name,
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  786  			MAX_RV_MONITOR_NAME_SIZE);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  787  		return -EINVAL;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  788  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  789  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  790  	mutex_lock(&rv_interface_lock);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  791  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  792  	list_for_each_entry(r, &rv_monitors_list, list) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  793  		if (strcmp(monitor->name, r->monitor->name) == 0) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  794  			pr_info("Monitor %s is already registered\n", monitor->name);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  795  			retval = -EEXIST;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  796  			goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  797  		}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  798  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  799  
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  800  	if (parent) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  801  		list_for_each_entry(r, &rv_monitors_list, list) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  802  			if (strcmp(parent->name, r->monitor->name) == 0) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  803  				p = r;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  804  				break;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  805  			}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  806  		}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  807  	}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  808  
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  809  	if (p && rv_is_nested_monitor(p)) {
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  810  		pr_info("Parent monitor %s is already nested, cannot nest further\n",
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  811  			parent->name);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  812  		return -EINVAL;
-
-mutex_unlock(&rv_interface_lock);
-
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  813  	}
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  814  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  815  	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  816  	if (!r) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  817  		retval = -ENOMEM;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  818  		goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  819  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  820  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  821  	r->monitor = monitor;
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  822  	r->parent = parent;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  823  
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  824  	retval = create_monitor_dir(r, p);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  825  	if (retval) {
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  826  		kfree(r);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  827  		goto out_unlock;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  828  	}
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  829  
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  830  	/* keep children close to the parent for easier visualisation */
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  831  	if (p)
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  832  		list_add(&r->list, &p->list);
-cb85c660fcd4b3a Gabriele Monaco            2025-03-05  833  	else
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  834  		list_add_tail(&r->list, &rv_monitors_list);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  835  
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  836  out_unlock:
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  837  	mutex_unlock(&rv_interface_lock);
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29 @838  	return retval;
-102227b970a1525 Daniel Bristot de Oliveira 2022-07-29  839  }
+Best regards,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
