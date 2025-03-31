@@ -1,124 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D924015530C;
-	Mon, 31 Mar 2025 09:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685FA19259F
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743414387; cv=none; b=LCQtycd/+8l7RNjEc3SRpjJ2Nq4xLcO/uYDrtpAcjbOufl/jqAO24som3h6wbsDN/yrC58D/H7+okOYfWeDCpDOJLJhl/uKGPkSK2j5bpHFslY6C3nEqkf4ImF67WUS+9D+se5edfHHW6wYs/rqLJWlsX1wxUj5hGtQUdGD/BWo=
+	t=1743414489; cv=none; b=sFWHZF3LRzXye7jbm2uTGyEULqHDr03nn7EHVdMlkgFs25FthOAfdlTXS2IOUMzvAskX8QWtAoVy0KEYv6Sx724C3oJw4sLLHsl2vSf4+ULx3vcIGCJaCHVXYSGyJraWFT1X28VEZ4pwkIsg6OcfwKdllv0fpPMRAUwg7/FTCXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743414387; c=relaxed/simple;
-	bh=g1+ij7m0OuhsbiPM4u6lgUBTe8ieZRUPTVC9ILI4Mfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LITJHDBVhSGboapM9ynD6Fo9Zu3IKIyyeFT81iCREAV0r2RpWOFhrNMw82GRTTOdKEZGibv2RE3JZ2otL7Y7AD59bCF8q1M6/I6IQwcHW80kJvb+GXaXvvyn9I3IQIrOKFS7RIGiyx22s21jSZWfTq4kqQt4dS3I0pAeGzhvY4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTaQDn90; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743414489; c=relaxed/simple;
+	bh=qW71JueQyZ8CXYAUt8EBBRnReSVMaIj7h1nmuaJsu6o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X9OVDecILnBOIRMFiYUUgDeBqo7RBVhA4SyHkisrLzUlmddrnHpJJ+UmP0GBj9jerciuOLWtyvPvzRy8/j7pntXtiQ2HOeGPvZCJUUrP3pkX/Mk0fKGO/j/e30ZJfwoCFhs0UFbz2vK6VJL48xxkiCjOxmLp7gR1D0hokKnNYJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lCdrsYKV; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTaQDn90"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BA57C4CEE3;
-	Mon, 31 Mar 2025 09:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743414386;
-	bh=g1+ij7m0OuhsbiPM4u6lgUBTe8ieZRUPTVC9ILI4Mfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RTaQDn909pe4vv4mKnVRT7nCZ0o2An68NrLMEUGsTiHFtaYXbtAC2Paz51E6bzasG
-	 0nQpnj526W+XVS4ETeWdV0TrNC86cLGT/XCJ4ucXA/JXVlRlYKbiIUWTue1L8s4c+w
-	 RMT6hmuRZUWLKBbppzGYc1l4AevCX+3TGzMcgEawVC7PiSi2boQfxjb7oUNChhBHf1
-	 R3wVq+mRvTwz+UU70ghJ1ZKWiPleUmOGGuiDaGYCcnwOOS/WHm0+dgkwkto3RkNDSN
-	 vCfNAnSQmjJDqZeQgTjHAe0BG5kq8bVIUQdD27oyoNqqVcbtGLKjbda6TfjwedAjUI
-	 bP4ATE+jt9AoA==
-Date: Mon, 31 Mar 2025 10:46:20 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
-	Lama Kayal <lkayal@nvidia.com>
-Subject: Re: [PATCH net] net/mlx5e: SHAMPO, Make reserved size independent of
- page size
-Message-ID: <20250331094620.GA185681@horms.kernel.org>
-References: <1742732906-166564-1-git-send-email-tariqt@nvidia.com>
- <20250325140431.GQ892515@horms.kernel.org>
- <ea6a499b-c267-4fa3-8ed6-983ab96b3b9e@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lCdrsYKV"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743414473;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tn2VNzmzUAUwZ48Xp6pSAVp7xWEWB+IDyqbSXAEKDQ4=;
+	b=lCdrsYKV0grW61XBMQGFyJbZWBRN6OKpdzI1/e+ZFet5tXIdb4gAyR9dyn0K51eUVxPVY9
+	2t4cIyr1I9ZnR1Il9xt754tFEcdahVSs1qbAQB2PM3H8XTd4bcJLQrN4NJzJX/BP8SxI62
+	4A3JVjrBOP/gxlZNotTa+ofPO76l8I0=
+From: Tao Chen <chen.dylane@linux.dev>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	laoar.shao@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next 1/2] bpf: Check link_create parameter for multi_kprobe
+Date: Mon, 31 Mar 2025 17:47:44 +0800
+Message-Id: <20250331094745.336010-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea6a499b-c267-4fa3-8ed6-983ab96b3b9e@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 27, 2025 at 07:58:30PM +0200, Tariq Toukan wrote:
-> 
-> 
-> On 25/03/2025 16:04, Simon Horman wrote:
-> > On Sun, Mar 23, 2025 at 02:28:26PM +0200, Tariq Toukan wrote:
-> > > From: Lama Kayal <lkayal@nvidia.com>
-> > > 
-> > > When hw-gro is enabled, the maximum number of header entries that are
-> > > needed per wqe (hd_per_wqe) is calculated based on the size of the
-> > > reservations among other parameters.
-> > > 
-> > > Miscalculation of the size of reservations leads to incorrect
-> > > calculation of hd_per_wqe as 0, particularly in the case of large page
-> > > size like in aarch64, this prevents the SHAMPO header from being
-> > > correctly initialized in the device, ultimately causing the following
-> > > cqe err that indicates a violation of PD.
-> > 
-> > Hi Lama, Tariq, all,
-> > 
-> > If I understand things correctly, hd_per_wqe is calculated
-> > in mlx5e_shampo_hd_per_wqe() like this:
-> > 
-> > u32 mlx5e_shampo_hd_per_wqe(struct mlx5_core_dev *mdev,
-> >                              struct mlx5e_params *params,                                                    struct mlx5e_rq_param *rq_param)
-> > {
-> >          int resv_size = BIT(mlx5e_shampo_get_log_rsrv_size(mdev, params)) * PAGE_SIZE;
-> >          u16 num_strides = BIT(mlx5e_mpwqe_get_log_num_strides(mdev, params, NULL));
-> >          int pkt_per_resv = BIT(mlx5e_shampo_get_log_pkt_per_rsrv(mdev, params));
-> >          u8 log_stride_sz = mlx5e_mpwqe_get_log_stride_size(mdev, params, NULL);
-> >          int wqe_size = BIT(log_stride_sz) * num_strides;                                u32 hd_per_wqe;
-> > 
-> >          /* Assumption: hd_per_wqe % 8 == 0. */
-> >          hd_per_wqe = (wqe_size / resv_size) * pkt_per_resv;                             mlx5_core_dbg(mdev, "%s hd_per_wqe = %d rsrv_size = %d wqe_size = %d pkt_per_resv = %d\n",                                                                                    __func__, hd_per_wqe, resv_size, wqe_size, pkt_per_resv);
-> >          return hd_per_wqe;
-> > }
-> > 
-> > I can see that if PAGE_SIZE was some multiple of 4k, and thus
-> > larger than wqe_size, then this could lead to hd_per_wqe being zero.
-> > 
-> > But I note that mlx5e_mpwqe_get_log_stride_size() may return PAGE_SHIFT.
-> > And I wonder if that leads to wqe_size being larger than expected by this
-> > patch in cases where the PAGE_SIZE is greater than 4k.
-> > 
-> > Likewise in mlx5e_shampo_get_log_cq_size(), which seems to have a large overlap
-> > codewise with mlx5e_shampo_hd_per_wqe().
-> > 
-> > > 
-> 
-> Hi Simon,
-> 
-> Different settings lead to different combinations of num_strides and
-> stride_size. However, they affect each other in a way that the resulting
-> wqe_size has the expected (~preset) value.
-> 
-> In mlx5e_mpwqe_get_log_num_strides() you can see that if stride_size grows,
-> then num_strides decreases accordingly.
-> 
-> In addition, to reduce mistakes/bugs, we have a few WARNs() along the
-> calculations, in addition to a verifier function
-> mlx5e_verify_rx_mpwqe_strides().
+The target_fd and flags in link_create no used in multi_kprobe
+, return -EINVAL if they assigned, keep it same as other link
+attach apis.
 
-Hi Tariq,
+Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/trace/bpf_trace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Sorry for the slow response, I was AFK for a few days.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 13bef2462..2f206a2a2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2993,6 +2993,9 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	if (sizeof(u64) != sizeof(void *))
+ 		return -EOPNOTSUPP;
+ 
++	if (attr->link_create.target_fd || attr->link_create.flags)
++		return -EINVAL;
++
+ 	if (!is_kprobe_multi(prog))
+ 		return -EINVAL;
+ 
+-- 
+2.43.0
 
-Thanks for confirming that this is as expected.
