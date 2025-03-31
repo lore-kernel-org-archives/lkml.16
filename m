@@ -1,105 +1,136 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDEB1E008B
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954A51D6DBC
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409442; cv=none; b=JUjBCimH+ekIFMUViRg7irOxazCIKbSOWrlF+nW94le+WV0MX4tZuhn8EcaB492/jAsQMWi6hb0jt3lsykSJqFEhvzK0HvkAmKpEo01TGOPyT6Z6RObazLet/0oIe/FI/8wffCEYpnHUew0p+FzsYsl3VaVVDAWbGrr5d0n6nG0=
+	t=1743409454; cv=none; b=YFVyWXsQTPUJ+3TadYrRTjIyvRG6jUoPC0e3mwIA+SJOg+ucx8w76GnQb7LuQQBteox1TWy4m6s+xoEAU4AUiOD3Ev6qAHQF+U/NwjHM+cXtKe/Ywh8Q/w+elMXLuAJQwvYrgi09DbdRjDhzVTEz8bSZ4FYe1BPH0bKnMX1zB6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409442; c=relaxed/simple;
-	bh=F35N7TWFYjJ7ANI3dLJVqWx0xveYHlvK0H63K4OxevQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7S469/d4e5+0N3rXHkfEwUHIc09ZEs9/yRvIoYrRHBpGr3YwQNQyWx36Rg52TrgpDfnkgcXYXCeYpcJ/NTrtQoWRlr3ID4zC9GoT9hu7XnFoI9eDrKDr5KLN+yQAjefsggTB8bTfHwy7y5zsn7ULhk277RC1DSXu41nFSV8ll4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=VfHsMOgy; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743409454; c=relaxed/simple;
+	bh=M7wtuTQCfxk+2Ir3eEuB3u1i9IwUiZF8u71ymhhlSn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SbLzN8LEeS2YAEBYH+AqBZ14N3BtmS1vgS7Odz4NPJqFznDNP1WTN/r4xvwirZ5ts3isxzvCi/Bb1f+GsNqFR9A/tuvXzlvdbFv7R4JVyiffkaqC628yBeIMc8GCwJB+Fj34Y8iFMtNIt+gMVSkMx571k5RGk6EPCGipEsnxnfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YPxQlua5; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YPxQlua5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="VfHsMOgy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=F35N
-	7TWFYjJ7ANI3dLJVqWx0xveYHlvK0H63K4OxevQ=; b=VfHsMOgyQjZcR4NYHIEm
-	Dtd+/EBQJXi97Vwg03rqoC/oFt6WfibjsFy/nPqW8XPz9A2WfXG3obW3gK/T5VxG
-	9TFdxPiouKXrh3daLuOTux8Iac6GpMRHvmdwEEfxqLo83SPiN/81H2Wg44PtWMlj
-	csVMlPHHfuOKBXLipa5h6XEn1fLO+Hlr10bwdRjJv11IVQwsSkcVbdbIH+ygn78s
-	8GatMGJvomW5JuYjsFolW4aJVWpR+8knwtycNGAPSg0WuCkjuSsCpXqCXjFip4pH
-	AvAhqU2z3OVi6Kmo8B0aPuioONUT6UsxXvDjFVQRVSYPp7aLdV20lx/KyZ3ydTUY
-	qw==
-Received: (qmail 1155060 invoked from network); 31 Mar 2025 10:23:58 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:23:58 +0200
-X-UD-Smtp-Session: l3s3148p1@zDJDJJ8xsMxQ8qei
-Date: Mon, 31 Mar 2025 10:23:58 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] mmc: core: Add support for graceful host removal for
- eMMC
-Message-ID: <Z-pRHlwL1ntGgUuv@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-5-ulf.hansson@linaro.org>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YPxQlua5";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YPxQlua5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 970CF1F38D;
+	Mon, 31 Mar 2025 08:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1743409449; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=of4F53MvI3MwYC0W4LgWxfmyhWpzolPUajwOpDqYLPU=;
+	b=YPxQlua5FJ9y/qq2oMb95LSy2L/HX7NQFw3QYiX6i89vKsDrBaPp+RlCg0aUktg4GiGjZl
+	+lP+D+8kWswhXKE95h27nOy4Xq97SO7ZZ+ydk4lFDd/qmBhmFzA0p7km1rE1Fe0R8MYPVf
+	Cpww8pm3BCrIxUcCbPuKqRdzMhx6QM8=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=YPxQlua5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1743409449; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=of4F53MvI3MwYC0W4LgWxfmyhWpzolPUajwOpDqYLPU=;
+	b=YPxQlua5FJ9y/qq2oMb95LSy2L/HX7NQFw3QYiX6i89vKsDrBaPp+RlCg0aUktg4GiGjZl
+	+lP+D+8kWswhXKE95h27nOy4Xq97SO7ZZ+ydk4lFDd/qmBhmFzA0p7km1rE1Fe0R8MYPVf
+	Cpww8pm3BCrIxUcCbPuKqRdzMhx6QM8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7D409139A1;
+	Mon, 31 Mar 2025 08:24:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wFIMHilR6mc0OwAAD6G6ig
+	(envelope-from <neelx@suse.com>); Mon, 31 Mar 2025 08:24:09 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Nick Terrell <terrelln@fb.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast modes
+Date: Mon, 31 Mar 2025 10:23:46 +0200
+Message-ID: <20250331082347.1407151-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ly1LidqAp204xhiy"
-Content-Disposition: inline
-In-Reply-To: <20250320140040.162416-5-ulf.hansson@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 970CF1F38D
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+Now that zstd fast compression levels are allowed with `compress=zstd:-N`
+mount option, allow also specifying the same using the `compress=zstd-fast:N`
+alias.
 
---ly1LidqAp204xhiy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Upstream zstd deprecated the negative levels in favor of the `zstd-fast`
+label anyways so this is actually the preferred way now. And indeed it also
+looks more human friendly.
 
-On Thu, Mar 20, 2025 at 03:00:35PM +0100, Ulf Hansson wrote:
-> An mmc host driver may allow to unbind from its corresponding host device.
-> If an eMMC card is attached to the host, the mmc core will just try to cut
-> the power for it, without obeying to the eMMC spec.
->=20
-> Potentially this may damage the card and it may also prevent us from
-> successfully doing a re-initialization of it, which would typically happen
-> if/when we try to re-bind the mmc host driver.
->=20
-> To fix these problems, let's implement a graceful power-down of the card =
-at
-> host removal.
->=20
-> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Daniel Vacek <neelx@suse.com>
+---
+ fs/btrfs/super.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 40709e2a44fce..c1bc8d4db440a 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -368,6 +368,16 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
++		} else if (strncmp(param->string, "zstd-fast", 9) == 0) {
++			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
++			ctx->compress_level =
++				-btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
++							  param->string + 9);
++			if (ctx->compress_level > 0)
++				ctx->compress_level = -ctx->compress_level;
++			btrfs_set_opt(ctx->mount_opt, COMPRESS);
++			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
++			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+ 		} else if (strncmp(param->string, "zstd", 4) == 0) {
+ 			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
+ 			ctx->compress_level =
+-- 
+2.47.2
 
-
---ly1LidqAp204xhiy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqUR0ACgkQFA3kzBSg
-KbZmsA/+MSe5j+xssfRcbFVm0zOVlROt+nNdJ/JizmteUo1q6fkUSIbZyglzfnjl
-JsFGVO65GtyCNf1rGdLNXhA85MlKcturETyxFErHRVPcTSlNQRelMghiJ/7KU/0R
-YJdEkneR1fCnPVkFdZs9ILCfrHl71tULXKzB9HSa+iMHGIgeHIKvxiWIJvpYsBpJ
-ronFMkxruEOH2/bOlZ6EwHDH4SMzyYSgo0OZENkGO+pMC0KJtvXQFm34r5VfZBxX
-uTh3RzeWd8Rzs47ey6qUq7lnLis3FWAYxojXHuJ/AS5zkNXXQEqbq9fhizS0eiZW
-PEFkYwT9liykQ9qnMuhPYebTeMdmuS4lJtr8je0/Ym+v75eDR8Ju3zmi70fDmlJ0
-6CVZCCMRS9xWcm0e7xAKJ79T4VUng3sU5GucpFVolfQlWu/Dn41pCdS9GcTQH5dN
-hF6s5BeK4tSqYqTkgUYs6iJgONPc3R4N6G/H3VonY6nmF1utf6alPxhEKig/xKP7
-uYQ4NXzX4ZBn1JpJu2DjagMq6LPHUdyhS/o+yE5F0o8yHHGs/Zh5F5DY7hejhf4t
-jEi1qKhVBGUhwt3XwF1G+3TTZsUWcWzP5QTkevbqyxNKnD6JCxNfyl6Wt4sbjr/V
-4VAM58/jRJDTS/Nk+adKdg/tqUTaWCb/5hSYbr870YqnQpGYiKQ=
-=aA/r
------END PGP SIGNATURE-----
-
---ly1LidqAp204xhiy--
