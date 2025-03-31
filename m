@@ -1,64 +1,40 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1664198A2F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE8E524B0;
+	Mon, 31 Mar 2025 08:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410303; cv=none; b=OWKmNxNfO71Aqinn28VJMK0LvzTFRmpletaurPZKcNiOXiIG26q13c7y9nXlYPu+14AthdYEbdTFm+hNam+/9z5RwOfmODPWCcilFfQx/n9euVcCywO2vyrh7FHw0jKdbEHgvLYsBMZ+nvjC/T1tE9oNuPeuomC9b9/9Kp0b2Cc=
+	t=1743410418; cv=none; b=B06sfAHEiPVSm5jQoHSdxJ1ga/l5G7GmlD/kT8fit3fVxYSE92XqhyqF9O7aPNcyPnLYsAzeD20hLuW831O6GnZUWj5z5CZDJF7yOhacxyHjqOpqMj0Odtxw2eIuX18xkSubyPrjM+VZJ53LB/TzG0idAS7iofZZBLE3pW/9wtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410303; c=relaxed/simple;
-	bh=C6W79Pn/Wc6018sYDbU26845EKRSckUDtwme8tsuYbg=;
+	s=arc-20240116; t=1743410418; c=relaxed/simple;
+	bh=ypcrZAQMEpvhOWeBUP5X3m7CMpEjeUmAFI7M8hG6qVo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bpDlwgiZc/vmnS997D4fHIQOiQanrIYH3ALhlrmGWMkhs2BOoC9tmNjJMmh3z1N/VGhfdpcYEfCUD48YQZuCRyMs4ctNmyRqsD+50xCkKg0ruA07WU+jZEZdlRCymTm04W7kHxAIL92spmeozcLrcVoT5VevqPn23WxCLiHSwXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zieLHvui; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=gjxCPrsHeKxkcFO5C09unRVI3jV/LH58sER7YPPWUQ/gmjIsANh0tTc7VP6+gWBND982vtOfSWHCn/6wsuFJVsRVwYKncqiPqyZ83YAk/kr6tviwcCilvAZG7LNjvEUz+X7KjxNsc4F3Yz7bK1mzoYnaw+irh7yhTV9h2w6kDPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=g2ZSF3sz; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zieLHvui"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf848528aso37585345e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743410300; x=1744015100; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sSvzNDeWLA9j3MF9b45BUxK0OhrQzBBAn5lDkDpSzqk=;
-        b=zieLHvui9XmWRTpftBJi0g7mhVjaq6kfvzTbSeDj5QMmU3sWJSTkB5RpLRAHBhvO9a
-         ZB22fbF+yLvfA27BKG8t1+BHvlYW6O95UpENV4DMnLnvwtoEbb6A6LRRXOjkCae9ZMJs
-         LGLjOlPXMWSY8uCbSfR+w4AWaxAARUvWBG+jiHSvStchPoo0v//W7oPdv4hA+6AlfYTm
-         9G4u5eg2GO1vIpwu/bH8aXjEGhT1xVT3tnL4UCgx/dvHHeUDsSTpGWNJKxJ2ZddbxBtG
-         0+Q3ho6hdNEZRi9uCnIRLisfMOnHjv2s1DVsiNceC8JjLZFrwymGXxqXIhp9iZkD8BuL
-         z5Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743410300; x=1744015100;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sSvzNDeWLA9j3MF9b45BUxK0OhrQzBBAn5lDkDpSzqk=;
-        b=Nuaxi4ZENd5I/PugNSGTyarOxGvDzcp2Fr3yRkht9eoaA4hJAV1LqmkoYS9Pc1z1yt
-         XViGOUlz4zTVdEmv4ws1t3L6rFXebtH5G3+Q9N/3RBcuk+OidJ0Cj8/1hOIKzV6iUEwO
-         9fPN3x0hY4Ek0T2TEZ/Q+RAmt/f4Ayh1RP5vSv31olqILOaKBwVdBiTZDdWpC/nEzyVH
-         Is2KwroofowcQYt3rZcUZOKPBTwD0rZ7lQaCjGqcX27Em4arZVY53x70NhOFHDwcdsLD
-         1GrOTEG8Y+8+UxNSAt2S5WF9WAv+bKFqrYYU0sY0A11sGNcuTkVfM495lFKaGg4vYAgk
-         KudA==
-X-Gm-Message-State: AOJu0YxI8Por3hxnnbizBkrmuRo0vnGnlX7GiBz1iVX5id+KfLTHHKn4
-	624+F7uZDa4rnb30IiDA5GuGxnfm0WrzDsNC4AsfZe8x4P9qKVKbyg1jSpS4JQ4=
-X-Gm-Gg: ASbGnctWGwkbwpNQzW00+jRl0WEkVVzW0CRQeLffitQ8L8LM96urd+DDwhtHfslXfqw
-	nWWa/ggZneQejjgHYRqJNSfk05hOZjyWOxnvd8DpJhI/adA2kGIxIIXKLoIdff7GmkdyqYEtooJ
-	MZNUSpBSOQEf5e+1yVT3iNmhbttWO0NQcDCkN9awaXF+/h0xY2AaHZq/BPxajCYfgIewaA2DNQl
-	qniNmKQx0uTNr4hpLbN3JeK9pmJSrn1WYLqKXdMghPHIKwNGSPLDjZc1pLJXa6/YxLAUA4ZistQ
-	uq0ko3MFRyMyczODG94++kJLFZW2cxFTz57L6iouagUrt3POH7t3gxf7kR8l/7cXHBZ+fGNyUE2
-	9fZ85FjqY
-X-Google-Smtp-Source: AGHT+IHnymAzt9wzLtLJDSjlzRXQxVPcbpSsh6FvhFdIm6eixK9JeGM+C1pvqMUaMqG2vD0oiiyYsQ==
-X-Received: by 2002:a05:600c:310c:b0:43b:c0fa:f9cd with SMTP id 5b1f17b1804b1-43db6227ac9mr57538675e9.7.1743410299906;
-        Mon, 31 Mar 2025 01:38:19 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d82dedd6fsm163362265e9.7.2025.03.31.01.38.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 01:38:18 -0700 (PDT)
-Message-ID: <6bca05ac-13d0-4197-b4af-5509884c83c6@linaro.org>
-Date: Mon, 31 Mar 2025 10:38:17 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="g2ZSF3sz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743410414;
+	bh=ypcrZAQMEpvhOWeBUP5X3m7CMpEjeUmAFI7M8hG6qVo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g2ZSF3szLbk4CKxgx5lsyICscYAmAzRVfUHo6ib/UJMZ56Eq6wfxwG7AcfTdQtssx
+	 thF9QOf3CU/ngGOAA3mri8RbjKhItKS7SHYmVPU6xLMwHmqs1P12EFQK+7sVWieGQ3
+	 e0OD2Bj9bpVZIPBj1Dde06Pk7GTMlSTCbF0pjbb5ixRz9F0cErBOba0pix8JMxjlzD
+	 LG4bPSi1+QnzhwQSB/ye0aEMJilKVO4k8fSfKomy0kS4paebpCGuX6QIewdhZCRyZp
+	 ejs4IE6VOUSHF54K6Iq3g1MRoi0hmXULMTu6YCZ6L43RVLn2c48BpcpVamvv8ZQ2/n
+	 c+NKvyoR4Rc0w==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EF98717E0860;
+	Mon, 31 Mar 2025 10:40:13 +0200 (CEST)
+Message-ID: <86725036-4204-49a8-a841-4f9eff69aa6f@collabora.com>
+Date: Mon, 31 Mar 2025 10:40:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,103 +42,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: timer: Add NXP System Timer Module
-To: Krzysztof Kozlowski <krzk@kernel.org>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
- Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>
-References: <20250328134208.2183653-1-daniel.lezcano@linaro.org>
- <20250328134208.2183653-2-daniel.lezcano@linaro.org>
- <a81c615a-a1f5-4dfc-81ce-6235abed0820@kernel.org>
+Subject: Re: [PATCH v9 1/2] dt-bindings: arm: mediatek: Add MT8186 Ponyta
+ Chromebook
+To: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>,
+ sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch,
+ dianders@google.com, hsinyi@google.com, matthias.bgg@gmail.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ knoxchiou@google.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20250328094034.3400233-1-cengjianeng@huaqin.corp-partner.google.com>
+ <20250328094034.3400233-2-cengjianeng@huaqin.corp-partner.google.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <a81c615a-a1f5-4dfc-81ce-6235abed0820@kernel.org>
+In-Reply-To: <20250328094034.3400233-2-cengjianeng@huaqin.corp-partner.google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 29/03/2025 06:03, Krzysztof Kozlowski wrote:
-> On 28/03/2025 14:42, Daniel Lezcano wrote:
->> Add the System Timer Module description found on the NXP s32 platform
->> and the compatible for the s32g2 variant.
->>
->> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
->> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Cc: Thomas Fossati <thomas.fossati@linaro.org>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
+Il 28/03/25 10:40, Jianeng Ceng ha scritto:
+> Ponyta is a custom label Chromebook based on MT8186. It is a
+> self-developed project of Huaqin and has no fixed OEM.
 > 
-> I got only this patch, no cover letter, no changelog. What happened here?
+> Signed-off-by: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
+> ---
+> Chage in V9:
+> - No change.
+> 
+> Changes in v8:
+> - PATCH 1/2: Remove custom label.
+> - Link to v7:https://lore.kernel.org/all/01020191ea98a643-2d0be5d1-e00b-48e0-b823-bfe2c65b0d00-000000@eu-west-1.amazonses.com/
+> 
+> Chage since V6:
+> - No change.
+> 
+> Changes in v5:
+> - PATCH 1/2: Remove sku2147483647.
+> - Link to v4:https://lore.kernel.org/all/20240906085739.1322676-2-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Changes in v4:
+> - PATCH 1/2: Add more info for Ponyta custom label in commit.
+> - Link to v3:https://lore.kernel.org/all/20240904081501.2060933-1-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Changes in v3:
+> - PATCH 1/2: Modify lable to label.
+> - Link to v2:https://lore.kernel.org/all/20240903061603.3007289-1-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Chage since V2:
+> - No change.
+> 
+> ---
+>   Documentation/devicetree/bindings/arm/mediatek.yaml | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> index 108ae5e0185d..fdc57c140af7 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> @@ -285,6 +285,16 @@ properties:
+>             - const: google,steelix-sku393218
+>             - const: google,steelix
+>             - const: mediatek,mt8186
+> +      - description: Google Ponyta
+> +        items:
 
-My bad, my scripts needs some more work :)
+            items:
+              - enum:
+                  - google,ponyta-sku0
+                  - google,ponyta-sku1
 
-Will Cc you in the next version
+> +          - const: google,ponyta-sku0
+> +          - const: google,ponyta
+> +          - const: mediatek,mt8186
 
->>   .../bindings/timer/nxp,stm-timer.yaml         | 50 +++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
->> new file mode 100644
->> index 000000000000..a9c0151d62be
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> 
-> Filename following compatible.
-> 
->> @@ -0,0 +1,50 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/timer/nxp,stm-timer.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: NXP System Timer Module (STM)
->> +
->> +maintainers:
->> +  - Daniel Lezcano <daniel.lezcano@kernel.org>
->> +
->> +description:
->> +  The System Timer Module supports commonly required system and application
->> +  software timing functions. STM includes a 32-bit count-up timer and four
->> +  32-bit compare channels with a separate interrupt source for each channel.
->> +  The timer is driven by the STM module clock divided by an 8-bit prescale
->> +  value.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - nxp,s32g-stm
-> 
-> Previously it was told to me there is no such soc as s32g but they are
-> named differently, e.g. s32g2. See other bindings.
-> 
-> Please consult internally and come with one unified approach to all NXP
-> bindings. Otherwise, if this is a real soc, fix this for top level
-> compatibles, because there is no s32g there either.
-> 
-> This applies to all NXP-related patches (which I am sure was previously
-> discussed on the lists).
-> 
-> What is confusing: previous compatible was correct and I did not ask to
-> change it.
+Regards,
+Angelo
 
-Yeah, I think the answer is straightforward. It is s32g2 and s32g3, the 
-two platforms having the STM. I'll will fix the compatibles.
+> +      - description: Google Ponyta
+> +        items:
+> +          - const: google,ponyta-sku1
+> +          - const: google,ponyta
+> +          - const: mediatek,mt8186
+>         - description: Google Rusty (Lenovo 100e Chromebook Gen 4)
+>           items:
+>             - const: google,steelix-sku196609
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
