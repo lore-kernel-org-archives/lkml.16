@@ -1,99 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F491E8337;
-	Mon, 31 Mar 2025 18:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4CB1D86DC;
+	Mon, 31 Mar 2025 18:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743445411; cv=none; b=ZeK/RbNXeYgFSk7zSGny+yeiSBd4qSkwosIDGXO7X126jN9AX/HTP6V4jCJRSMZVsLY79MJaFT5A2kS7Qq5XRABrz5PEMHlD/eEFov5zxhLgaKtXDFEDYvtnp2bppXZXUkAaInuPZmEaICnTjmJ71TkeGw1pYGmFfinQNuqgnTM=
+	t=1743445471; cv=none; b=hpHQiLARkmq1527YVuQpBJpYxc+59wn/hRdMQqAiaqDN7trsUJZ+vVrZncNG/vf1yrYHTd6C5Laeu4pww+h5k/PDPkb4T+j3FwYhXzhSPJGnIY2gYrQz/u0sE8pwJBMANgG1boGwGIQpC2I9uS7MwBzL4BkqMq3F0/vCBuw+8T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743445411; c=relaxed/simple;
-	bh=L1e3qp2TrMMmW2/yyUo2BhZEpkokq1ICKclytliROm0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JPVgAJAuQla3t5a+KjSPPxW6J2prjPMVm0EZiAaEKBjp+T+bQdFP3Vf5SklelpT+2kEsbq/JzqCUJU6Zbz+pfNnzyUlJzK2R9CnJwZMg1rpyGT66RRH2CW+KDebgVcx8aWHS3rlEFR4Mc9nKFVornFofxu2+fKKsIAaB5Ul35UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WayCWVAx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743445471; c=relaxed/simple;
+	bh=/OoLqC17kj12wDqfq3a1fHvRklEU4G7YwC/tD2Y/xWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8e/q/dbmI73b0pRZ9zhwoKpKCBNSZHPDqvIDgW+GuwJizwJtpNMlVlhxy6Yp7NHluuq22SOwxz66NCodw5o3//Bzcb4Ab/4vW2oo5B0BVLv7TfOiXcJUT9VRgrJQfilQoKV5S5+dVgeABzmBfEp9MMdpEP7LuhS3BX0j0dUMCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oXR5XqEE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WayCWVAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27DD8C4CEE3;
-	Mon, 31 Mar 2025 18:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743445410;
-	bh=L1e3qp2TrMMmW2/yyUo2BhZEpkokq1ICKclytliROm0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WayCWVAxNR6Bo/rxK9ykqVvuk4zGixPqTW6fCBwE9B3qpxjauRWYeMu31MB3yxdGd
-	 gAOZwfvqFFZVYzsoAx4ZK2VtMQ4o1bxJympLsZFvi9msbxjz3Tnq20xL02142vAqKu
-	 0MzYiuynyvlLWQdZBBhgJDee/nT9hOFzXCNe+sKudbfq/UWdSkMngrzaWsG24h12uv
-	 LfjvxO+6Wc5+lhw8i6+BHgaiJOd15t29T97pEL6v9KftADaJI5dUPqAQNZSMSQjAo0
-	 6LC0v6xcPitOqtMNzjRNVchW6poq9HWj6kbA7vhHEObNEh1eCDfti3nVUVBsFjWJ4r
-	 hQxZKsELhahzg==
-From: Mark Brown <broonie@kernel.org>
-To: srinivas.kandagatla@linaro.org
-Cc: perex@perex.cz, tiwai@suse.com, krzysztof.kozlowski@linaro.org, 
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org, 
- johan+linaro@kernel.org
-In-Reply-To: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
-References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 0/5] ASoC: q6apm: fix under runs and fragment sizes
-Message-Id: <174344540887.168242.14373975206597931512.b4-ty@kernel.org>
-Date: Mon, 31 Mar 2025 19:23:28 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oXR5XqEE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vWFEuEO/6YJYPBwwKhBAOHb1eqQNmBxHho1hmUZQsoI=; b=oXR5XqEEjcgfAd7B8Ov2hNAFIe
+	jecO8Ffsz4DVviTdWCtZAZYg5VpHwlu/XuEsdMU/Ty+2GYG8DNjJnL1E+08fU4fXiugC2+DOz+RU3
+	dZOsHNytAKX3gVc3DbQn93VucBZZyLbCfvTuCOz7ZvoDwTRzDKhFaCVAkKKsjQTsBblctaNuKoNXG
+	wmSwkCQW79JYc+zWi4hqqFcqetvhsLR715UYpfpt35NfpPnxa0NeHnOk+HIvuVYKjupzh8rcFftx1
+	ahsFYhG2YWObDPQGwYStrsO4GpdpNO7QQM9KJipr+Njh81nq00CJbaM2Y9d53P+3YR2+aZA+gS7mf
+	L6MsyDZw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzJo9-00000001PEm-2dvX;
+	Mon, 31 Mar 2025 18:24:25 +0000
+Date: Mon, 31 Mar 2025 19:24:25 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Daniel Gomez <da.gomez@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+	Daniel Gomez <da.gomez@samsung.com>
+Subject: Re: [PATCH] radix-tree: add missing cleanup.h
+Message-ID: <Z-rd2arGtdpSgDdC@casper.infradead.org>
+References: <20250321-fix-radix-tree-build-v1-1-838a1e6540e2@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321-fix-radix-tree-build-v1-1-838a1e6540e2@samsung.com>
 
-On Fri, 14 Mar 2025 17:47:55 +0000, srinivas.kandagatla@linaro.org wrote:
-> On Qualcomm Audioreach setup, some of the audio artifacts are seen in
-> both recording and playback. These patches fix issues by
-> 1. Adjusting the fragment size that dsp can service.
-> 2. schedule available playback buffers in time for dsp to not hit under runs
-> 3. remove some of the manual calculations done to get hardware pointer.
-> 
-> With these patches, am able to see significant Audio quality improvements.
-> I have few more patches to optimize the dsp drivers, but for now am
-> keeping this series simple to address the underruns and overruns issues
-> noticed in pipewire setup.
-> 
-> [...]
+On Fri, Mar 21, 2025 at 08:24:33PM +0000, Daniel Gomez wrote:
+> Fixes: 6c8b0b835f00 ("perf/core: Simplify perf_pmu_register()")
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/5] ASoC: q6apm-dai: schedule all available frames to avoid dsp under-runs
-      commit: 3d4a4411aa8bbc3653ff22a1ff0432eb93d22ae0
-[2/5] ASoC: q6apm: add q6apm_get_hw_pointer helper
-      commit: 0badb5432fd525a00db5630c459b635e9d47f445
-[3/5] ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
-      commit: a93dad6f4e6a04a5943f6ee5686585f24abf7063
-[4/5] ASoC: qdsp6: q6apm-dai: set 10 ms period and buffer alignment.
-      commit: 3107019501842c27334554ba9d6583b1f200f61f
-[5/5] ASoC: qdsp6: q6apm-dai: fix capture pipeline overruns.
-      commit: 5d01ed9b9939b4c726be74db291a982bc984c584
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Ugh.  I'm not happy that new functionality is being added to IDR.
+Peter, why aren't you using an allocating XArray?
 
