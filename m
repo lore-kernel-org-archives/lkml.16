@@ -1,117 +1,131 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E004C41760;
-	Mon, 31 Mar 2025 09:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2241760
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743413921; cv=none; b=F7rdlYni7rVfkUhauwiy++iy0QO+HeirUqNTmLZqZijkICmj6t+1MUpKFNxDyonaas3ao4UNq9RdPQW8jjwXnDj3pEE9ANVXYKlTF5IhFLaQlGOSPczs1iE/vkRTngRcmXoiJZv053GDy/mAdR+WIedS647Fad9+2Z3nC+/yboQ=
+	t=1743413959; cv=none; b=POKuQGl/jNne9ZTa9+ynkGd72Ez4rhT+8+S1ZrXXlF05/5Fw3ug4YUsxC0iAt9aJgATuU6cD31a8458MkfQIMFv8QBxbaJY7dW6iy4lSkWrDw3+AqZlwmyzi/ZiC74a8n3dMMlt5e5ibn35aX4y+D9IAlX12pxOA+LuK+F2C+pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743413921; c=relaxed/simple;
-	bh=9YPjz+RyoRn4SCXr9t22WJBTFRjnSBTnL648syX2VMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G/z6PFv+7Jm18487GalkIkG+J0IqQVJvQrzZ1LW1syWiEZjt99RXomcuv2XutQ6E2OZDzuDppTuam3EWoGPB2vNsn3haveehX9poSRdqBUc/7+TsFTj1UlnoVLMHwHltsk04373E24BCj7i4pK4xO3+8hWd0mf5UEpkx/PebTRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV5/wwld; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743413959; c=relaxed/simple;
+	bh=kZaYLmlN7c8N/Ctja7CV0elUZ5dx9/sUPM5JPhGaNpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XL04rqhylD0WTTSV6/sCIRjTXbkrY2Eid5/zMqz/dtN9DRX+D4R7iqZY61VsiEUNzTNoG/XF0B6CMMo7x8AHsNCSPh5cA8ssK1J24jKu5AR9ZYPySjfdjc/kMJlrWcEKe9XhOe+5t6tQH4jEQwKJ59hTp5/H4AM8cHy6qNWrfPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZkCluNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV5/wwld"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso26834405e9.3;
-        Mon, 31 Mar 2025 02:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743413918; x=1744018718; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vM2Bji0R6GGuRmN2IdJF15qTp2dswLKSOfwXsGQQXU0=;
-        b=OV5/wwldsUu5CJ6ibr4/wS1I+qczuwL2dutQOePg9IJDQt7kTlQRK01kNC40JeO+Uh
-         yrNRW8N2w4zhtsBbJ0vIFl2pIaPILqSOiIQh4aRm8fdUNGz6HU8OZLQOQGQwPSiGYyf2
-         5PIDo0qJN1mUlCiPSOvJBK7JFpIIo+Fkdw+hqd6enyeQcaEjsYJTAFaRSu1T5CCPsCMx
-         apjDielMcAKrn7RNeAQmZwJor9mUtOHpwYr2O+5KZBQAL8CQyehVQcp9f4TgHG96gsF2
-         icX/aHhRHeLindPIp9PskH00KLS8U4f/8NxMgtoJmVp3TlmZRenS0sWh4Xo/hnH/WBqR
-         Ghyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743413918; x=1744018718;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vM2Bji0R6GGuRmN2IdJF15qTp2dswLKSOfwXsGQQXU0=;
-        b=XvMtokIm0sa3Whxxo0wqp9T/5jL2NBcLboO4lsbZEBZYUAP/WWYSWK5kh8kGdQbgsE
-         sqAjYdNbr3AjtwJFh1HbBJN4XsCgJ6QCm8Rrhn8x00/FxPpeqVUg+W2fj+BFojfK/GMA
-         BMG8CXeLE2oMP8U/b0owvAx3oi1mPNS+344j+upaT0uQvPkWOq0ApgMCZ3r2CLnxKL0+
-         oucXRnmHICiZ9ULMKy0+83GJUpdMlluyDgdbrDDNqCpo14jfvDrI/D2k0uVLIivJzbWL
-         E/RtpnZarCOjZckT7udox35z63ds8jbiVMdDyqHhSl3B2Z/SSoQuYBc3NCfdrsRyCwjQ
-         7CUA==
-X-Forwarded-Encrypted: i=1; AJvYcCV97YIXl6kDEEqVifFEha+tKhYgGrImLlcnZLn0ogmDAABH74rW87ZDLiQ/xl0JI8cTpMR1tS0QOGqMjMIL@vger.kernel.org, AJvYcCWsqY0G/SNOAUfCq1I+dkzTRk9SaDLWpm5rG+mY545CqBeE0MeK/HL7ExyyCUJaa1y2zH+tUmZ8LjwB@vger.kernel.org, AJvYcCXEbBCO9Po8MBwypqRLowv/YoHli1HsoEAeKx9mwBv0pmFPseT4EeTt5FTzSGoI0IZZho2ApIj+6EtdEn0bGw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4orN9SCDi/sHLkRoN0cNntPb5Z/WmdCjjRnHx5i2iTIZZI8Bh
-	CUyWHzpfawiTOnPVHmzXddJbPfUkbcbLS3kv6Tk2bhQzHROh/Bnu8dVsaSDoUEz+VMYVvi6uDHW
-	Axlf3WZW6HwOUBfdh9X7f6MX+SQ==
-X-Gm-Gg: ASbGncu13IK1EkRZE5s5s517RugdsWAAMm90tJl2UoqCJ8I+bl1n2sGu7hKaP1URopV
-	edoAUW1D698SLgSGHCzfztE6lkvPSM3blHFC977d5F32sakdU8mIITnh7+CEdVJw2cNMjMOHcBY
-	7b7nFMQ4ZWIOH0m9E5ovg7oN9GfoI=
-X-Google-Smtp-Source: AGHT+IHDxLwJLs5M+ervsVqXlAF/ZqEKs+3clpKlQi/t/SoyKWcahheha0ZbkTZT1eaBgifJRMbqFBBUWwfdSR3VMi4=
-X-Received: by 2002:a05:600c:83cc:b0:43d:cc9:b09d with SMTP id
- 5b1f17b1804b1-43db62bc26fmr62005255e9.20.1743413917702; Mon, 31 Mar 2025
- 02:38:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZkCluNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A32C4CEE3;
+	Mon, 31 Mar 2025 09:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743413956;
+	bh=kZaYLmlN7c8N/Ctja7CV0elUZ5dx9/sUPM5JPhGaNpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EZkCluNt5vKwZe+CXwbpF0Zo+XnJigW9/al/1oaeo7ryRYEDkl4xhVb9Ek0r9j5ZL
+	 uFTWnoCCN35Mu6Y2o/m6M0yyJxHl3355WTP4TC9NnlfCec7NNXUHXii04ALfRRrZt+
+	 oZ/n2bYkhUpNH/zonu1aahhnUEJlZJkIg2p9MOjzYit29ZprySmCt0DoosHeZKe8Eh
+	 fCDeZdhwqlv17put2CkcX2gHoqPYyLcmtbgkBHA+9tMc3LbDICoN6xqCKznjHpEe52
+	 +b6nCT0lthj+GX2wJYOGJW6rW2gZAbCZYiIzX+rWzaUoHC3wgVFQ0uyOtvxiP5Ihlk
+	 vT1NHA7fxVN1w==
+Date: Mon, 31 Mar 2025 11:39:13 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <Z-piwUbLx-OitJrv@gmail.com>
+References: <Z-cSQXJKMyBSfAAc@gmail.com>
+ <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+ <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
+ <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
+ <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
- <20250331073423.3184322-2-alex.vinarskis@gmail.com> <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
-In-Reply-To: <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Mon, 31 Mar 2025 11:38:25 +0200
-X-Gm-Features: AQ5f1JqsOf-wdERM54oCL2d4gBWWd4xshSkcvSWrMpNLnl4usGWtzA_0SkbQh0s
-Message-ID: <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
- WiFi/BT pwrseq
-To: Johan Hovold <johan@kernel.org>, "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dmitry.baryshkov@oss.qualcomm.com, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
 
-On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
->
-> [ +CC: Stephan ]
->
-> On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
-> > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
-> > combo chip using the new power sequencing bindings. All voltages are
-> > derived from chained fixed regulators controlled using a single GPIO.
-> >
-> > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
-> > WiFi/BT pwrseq").
->
-> Are you sure this is correct and that you don't need to worry about the
-> "how do we model the supplies to an M.2 card" issue?
->
-> See
->
->         https://lore.kernel.org/lkml/Z-KuG0aOwEnxuhp9@linaro.org/
 
-Dell XPS 9345 does not have an M.2 card, WLAN package is soldered
-directly onboard, hence I am quite sure this is similar to QCP.
-To be certain, perhaps @Tudor, Laurentiu or @Bryan O'Donoghue (if  you
-have it?) could confirm from schematics?
+* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
->
-> > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
-> > X1-based Dell XPS 13 9345")
->
-> Not sure what happened here.
+> On Mon, Mar 31, 2025 at 01:13:55AM +0200, Borislav Petkov wrote:
+> > On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
+> > > On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
+> > > >
+> > > > Btw, test bot complains:
+> > > >
+> > > > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+> > > 
+> > > That's not a very helpful error message
+> > 
+> > I found this:
+> > 
+> > https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
+> > 
+> > which looks like the original report.
+> > 
+> > Looks unsolved yet...
+> 
+> The "new" warning is just the "skipping duplicate warning", which was
+> already merged with commit 0a7fb6f07e3a ("objtool: Increase per-function
+> WARN_FUNC() rate limit").  So none of the warnings are specific to this
+> pull request.
+> 
+> Tiezhu, can you please look at this warning?
+>   
+>    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+>    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
 
-Bluetooth and WLAN definitions were missing, as at the time I only
-knew the UART port being used for bluetooth, and was missing
-everything else to describe it.
+I'm wondering why LKP didn't pick up the primary warning, only the 
+final warning that skips duplicate warnings, which is kinda totally 
+useless in isolation:
 
-Alex
+    `-- arch-loongarch-kernel-traps.o:warning:objtool:show_stack:skipping-duplicate-warning(s)
 
->
-> Johan
+Maybe we should just do what is below - output a single warning, a bit 
+like lockdep.
+
+Or delay the reporting to until the entire pass is finished, and 
+output something like:
+
+  warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160 [2+ more warnings]
+
+Note: we shouldn't output the real warning count - just that it's 
+multiple warnings that might or might not be resolved by fixing the 
+primary warning.
+
+Or something like that.
+
+Thanks,
+
+	Ingo
+
+============>
+ tools/objtool/include/objtool/warn.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
+index b29ac144e4f5..69dd29a3c267 100644
+--- a/tools/objtool/include/objtool/warn.h
++++ b/tools/objtool/include/objtool/warn.h
+@@ -57,7 +57,7 @@ static inline char *offstr(struct section *sec, unsigned long offset)
+ 	free(_str);					\
+ })
+ 
+-#define WARN_LIMIT 2
++#define WARN_LIMIT 1
+ 
+ #define WARN_INSN(insn, format, ...)					\
+ ({									\
+@@ -69,8 +69,6 @@ static inline char *offstr(struct section *sec, unsigned long offset)
+ 		if (_insn->sym)						\
+ 			_insn->sym->warnings++;				\
+ 	} else if (_insn->sym && _insn->sym->warnings == WARN_LIMIT) {	\
+-		WARN_FUNC("skipping duplicate warning(s)",		\
+-			  _insn->sec, _insn->offset);			\
+ 		_insn->sym->warnings++;					\
+ 	}								\
+ })
