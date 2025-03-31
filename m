@@ -1,183 +1,167 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2051.outbound.protection.outlook.com [40.107.95.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D19742A94;
-	Mon, 31 Mar 2025 17:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743441552; cv=fail; b=OogD+jdI5kIPvZ8zVxyF8ZudideZcJso9n1goSSi/iHN29oqzVSwERqg2AqBkGtWZYXhlMOixu6bUb0ajOkE/RDo6d+J5QEllbvVmQcly09nbbpasxAvPEmVl7DSA+CEd/nMBNQm0PIcqVuhqZBW9xEP5i+N/yp8S2YiamO+iCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743441552; c=relaxed/simple;
-	bh=r7rkbX612GBzOEwOQbcn/lT8ErrywXOvOCqpXutnMHg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=huuHSMtgbObUUUa0G8vQftr94wwWWr69qzicjHwkRNKS3NdsfSBxzJ40EyZSx8kGosuRVOqffBgVcrHhj3cGnNiXTQqSsm09POmosRaZANyJ9ZTPp9RY5l4GahdWKvvMJKedVaUd40aGT/qI8SO5E/nlwjdmQ7qjPRRACZHDfRA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RIw6FQJn; arc=fail smtp.client-ip=40.107.95.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A157542A94;
+	Mon, 31 Mar 2025 17:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743441841; cv=none; b=QDE5/qPnXNlzOBIrYmmkgT+C6w1YulitcGxSTkIE+3C6qt5olSIGvHb1u7CRT4d4zdEHBpVqJem1r/jupQNHl64/oMhzyPQeLTl5I8YxeP9k9UlKdn/nUJow4mIFIpsKUycqJtTX2s6RLqRWF3cEWr4wKU7V8rmAH0D8Sb9RVxA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743441841; c=relaxed/simple;
+	bh=bVJ061wVgNRKZRJHbB/7eTIRMbIioUYkRMdIyide3+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MsGy5iKidYhBIbS3gLHWwQ02YYqlzLtDcZiCTadIx4aEfl6cIIySROe1tv9b18C/Bxtl04vSs7Ld1bwhyv4qN28kHH0RrR2tO8bM9C/PzdxTn/MSJGDVI1Iiovi0FHMBVM9DuC/R/6YAVa8y+8vdYjTSxyZdf2eysbehkQl2CIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcOCNgVc; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RIw6FQJn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oC6rujEphLfkWjWp5stVloInzCPDtNthiqkRbI0FjWSb9xX1iW5hZGT62gtzBv1INfFYfZHk4LyzmxxyUlG/ldHOPFSUwIhzCQ9a6EcPS1wDFecoY/g3rVorp6VDKKgBD8d+qEnkpslZYJP8xckf5EZ0DwfR5m+usU2xcb3GxmGqSvVKm1JVpI1DrqgWvp2s4w5lErQxZaMEAO2i9SYDRoKND5+bo9htanW/ux1dn8GmIXIl+6RQcxnGeeTIgKN01aLqNez8Fs3/7s36SuhL0kp7yZQC+V+25elx3qWqL2rJ9qne9lvO2BGRkn5TnLm0AU3jHtt+Qx6y6pLJyVteBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=msdUo3wzjzr8XFwzKi5515/1w+Y5mSvWR+VVIcgmn0c=;
- b=s4G5KRdUh2LGGhO131M9xhln4H5FFnFQrzRtDbxkM1JVFf8nA5S8Mb28J4f3Phw9TK1BkysGcbiu2ZfdonyESX2ktPRA/LhMRl7KNFXtF65YmSsjz5n/nh3YMI3D/+Sq4yUbmXt+MSypPxmY93p5HFg1Id3cGlbvLhnwhugmYJ5ZXPU9A+Vl58uiByNtZbrenO4tzN3FaJxBZWktfR7e43JiIHsBd0E2YhbzgE0EM2MofXvPa4pd7v8vJWmGgxJJSHhjlOmeU+eXCsYM2zSE5zFpMV/wMw8aelQqTZ9lFoPO0Uqu+0Av0GmT1mYy/idetJyQBnrEQ8vnEPA/tcRNzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=codeconstruct.com.au
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=msdUo3wzjzr8XFwzKi5515/1w+Y5mSvWR+VVIcgmn0c=;
- b=RIw6FQJn1u2Fs7E1lIvDYyFu9xwVDJE0/gYyQr2uc+9sbph0yfUH7ygsnDPVx4sW82lKsZWFXRtCjN0Z/CWOwn25qJm44iJM6ncIXRAPCuz9Llbwq+UjTOQiUAOzV/oZ62p2TFMxKbXaVuMiX96yzuTmpjcshd/AQNf+72wRTqG0tux2daL1JYfSnO0VyC5j7cKErYbpVzesaaiwKX5SbD9PfSx76ig/kraceH08Pw9Fz4l9s2Y/rH7xRjYEB0EhKsPouEVjSG/C21PGm/XXAdie6YRmj1u/WWaF2apyoZCjdMByhJapr1pFc+RuXwHlrUoVZy6ZHJahXXjzm/7FIQ==
-Received: from CH0PR13CA0046.namprd13.prod.outlook.com (2603:10b6:610:b2::21)
- by SJ2PR12MB8036.namprd12.prod.outlook.com (2603:10b6:a03:4c1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Mon, 31 Mar
- 2025 17:19:07 +0000
-Received: from CH1PEPF0000AD74.namprd04.prod.outlook.com
- (2603:10b6:610:b2:cafe::81) by CH0PR13CA0046.outlook.office365.com
- (2603:10b6:610:b2::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.26 via Frontend Transport; Mon,
- 31 Mar 2025 17:19:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH1PEPF0000AD74.mail.protection.outlook.com (10.167.244.52) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8606.22 via Frontend Transport; Mon, 31 Mar 2025 17:19:05 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 31 Mar
- 2025 10:18:58 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 31 Mar
- 2025 10:18:58 -0700
-Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Mon, 31 Mar 2025 10:18:57 -0700
-From: Willie Thai <wthai@nvidia.com>
-To: <andrew@codeconstruct.com.au>
-CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<dkodihalli@nvidia.com>, <gpiccoli@igalia.com>, <joel@jms.id.au>,
-	<kees@kernel.org>, <krzk+dt@kernel.org>, <leohu@nvidia.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<openbmc@lists.ozlabs.org>, <robh@kernel.org>, <tingkaic@nvidia.com>,
-	<tony.luck@intel.com>, <wthai@nvidia.com>, <harrys@nvidia.com>
-Subject: Re: Re: [PATCH v4 2/3] dt-bindings: pinctrl: aspeed,ast2600-pinctrl
-Date: Mon, 31 Mar 2025 17:18:57 +0000
-Message-ID: <20250331171857.262649-1-wthai@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <d0f7003c22e19c8fc7617610043edc7be925a180.camel@codeconstruct.com.au>
-References: <d0f7003c22e19c8fc7617610043edc7be925a180.camel@codeconstruct.com.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcOCNgVc"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e63dbd3d135so611675276.3;
+        Mon, 31 Mar 2025 10:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743441838; x=1744046638; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o07hwfiMpLEBbCh4LVHZ84R+SoFB1PtcMrDSIEkGBBc=;
+        b=bcOCNgVcj6ZIoF44rc+8+480EedwRMwjTPVzgYf5l6dgbRhsQQEEX6y/24rj10Wmh+
+         EhHCNB9Zh4tzh/Z9pMiBifMZZWFBmRAur2Ta9AnAEU/8LC2Fax4MOQ72coqgrttpLrth
+         0PBYUzKB8OtFyCpXg14mztYgzQvwgDS82L+91eVsb8gbyUThRrxDFylcE5P1Qtkdeoyj
+         4zpyTJrKrd3ayCgwEkLWQzkw9qFo2goBhkWznanWjq0z6iY2Hnfy/N4cb54Gne25hnjg
+         1tBOvmXgYwKL4EMi1pqntw5rbkW7hUylY+/cgeumhOm/Qhxa0LdH+5uyajlWe8djkw7C
+         xJfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743441838; x=1744046638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o07hwfiMpLEBbCh4LVHZ84R+SoFB1PtcMrDSIEkGBBc=;
+        b=ay9tfz7nCaNiGsYQ6g47YnO9/rm2MmtwyndQJ72IoQQl6SOdrEOZxG/qyssqM6Dycp
+         nE6BgS/yhkD8Kcbixmr13iG02ORqwcRQfpdEyPZqfLCilPDF58b8AajUg6uhyhf93Ogc
+         BMiMdyLUl4OReiyOvVmv5HwSIKNLXBAuOg7vqsEgWAnaQkkSiogcAs8RMTJB8N3b69ox
+         72JrIYH/4uE3PfuVDO7Dw8KUbLRe1WFOaXb0p8/MpObHEByrh9QsqWu10UmWlOiq+pCj
+         NaRpcSbTGU8L9sGqKIAag4zCoBhQcctKcXIc7WvlQn6Chso7+OrFbC5mJQru9gSk7FTR
+         VYTg==
+X-Forwarded-Encrypted: i=1; AJvYcCULLRW4t87C2SQmJR/mpCg7TE66rb+ItLzuuCqtQgaBtp5Pc7kr+uiKcEcGXVLirH224ikxqhoZBzU=@vger.kernel.org, AJvYcCWn377U+6M6zcbkmdgyfnx6Exw/OOBKV+nBmxu+3p2OQwTVfqxx2qQ5Vd9VAhjh/Hes3jiz4MMC3Qjx6NFk@vger.kernel.org
+X-Gm-Message-State: AOJu0YweJT6y6svSL7KxHbQ+gI4ofT5OoLj5ebKST5+RxBiw6wHFgK1I
+	pJdiVs4Oi8Vw0s6Y83hCAN1Zrf9sxRnrZP+/qKbftcGXVB+rzuQ3fQqOr4YwL/I0iW3DnVpWbhQ
+	2nXNtuyZkMzsYZ5em4XQIBAaKbFe+hQ==
+X-Gm-Gg: ASbGncucNhzql4/hNNGsMdSoh4GgmUp1Sdkg7ZVDp/6+J98l4K+KLRmQGEr8afmbFLV
+	8kdPBpG9wMRBrdbr/VHS39zqUWZAFkVeIUueVyo6DB8Ott+00DDX7dBNi05vVT7+d5eetk7wxSf
+	SHej+046eLvV+UdTh2WTv9EafxRQ==
+X-Google-Smtp-Source: AGHT+IGmw3c2+Lwdd/F8uB5cjr+TUjvNtqnjp7SE2z5kFo0mehDfyHaZ7uEe6fqIMMscsB6teQR3bzJnKdrps/YT3rE=
+X-Received: by 2002:a05:6902:2e0c:b0:e5b:4019:50fb with SMTP id
+ 3f1490d57ef6-e6b83acc996mr5516246276.8.1743441838300; Mon, 31 Mar 2025
+ 10:23:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD74:EE_|SJ2PR12MB8036:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2824fea-25dd-4a5b-ca71-08dd707823e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|36860700013|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?69GcHvvXw0bhH6IMfhhzrtqSF/fk50FFXR9doWMGF9yDG3qnM5uK742E5GUQ?=
- =?us-ascii?Q?ZGV65vcOBU/gXLEb3OAdNrBj6QF1zPmiCE5Uok9Q/2UB8OKZyH+10qqaJxNd?=
- =?us-ascii?Q?jMKSlnk/qEipOh/Nw7Edfi8AeBnyz4bFtqqYDeTA49oJAH79X/ZF9XELIkte?=
- =?us-ascii?Q?pHFllSv10b/f3S1xfQ23MDji7z6vjRL3HLey++q4m6bY5dbYM0SpesRvG6vD?=
- =?us-ascii?Q?StD0jvRO/pmtVDphF+rqiy/ISuIoE0e2ylKiyUs+sa7HnHg4saDYOm+OD38Z?=
- =?us-ascii?Q?jidakGUmUer96BXEwzjam/KV38gW3Jep8dFcZiv3toq1HXv9zYCB8AMiovXa?=
- =?us-ascii?Q?3rsn8qTM5CArjBFE7nzPvixIrCrOOz1Vr+1+9j16WuTfh6lpAxzbUc46Fkuj?=
- =?us-ascii?Q?6EQiiiF4YlYV0KkbDczmw+NKmvVWRwtJHqB4QGf0bEchqe+c1D2waLPvErm+?=
- =?us-ascii?Q?A+WIh+96RvjqdebJEWehzxaj6KTqC5nAGqBK02mbTdYuttEM9MgloPt4U4uf?=
- =?us-ascii?Q?8UXtVjabFigpg4pFv1nmBQC3kTPq7Uw+Jey8lLHTht93XTiTzUidw559KYNV?=
- =?us-ascii?Q?VXnzMjZCMpCWS5q5Z5iGBsfPSsK3sC0K4OmVYqkKjuYVDvjcEWfPDlpgWoGv?=
- =?us-ascii?Q?l69xQI7C6fDpCkiza0xixJxVpDfL62RA1Hlf+KFBIZJELMwmQi7Kzeh8pA+d?=
- =?us-ascii?Q?0WFaRjsjiEsJl4drbLgvbVffhrmq+7f3WYbruZrjskkC6Xan3ShO9lJIdpCm?=
- =?us-ascii?Q?Y4hEVaVtf73dQM6Ibbpo3lf+SoBCEZhrmT0sZKJ8B6ydMhqgx1GN9xt1bHAA?=
- =?us-ascii?Q?QasiZ3D+zXYcUolc5p7LSlgiZxq/Ko+jzQGGhbnhkZ8OReAJ7ytfEwnMXLdS?=
- =?us-ascii?Q?iTPI1aCXZ7sSRf0kF4KTjmOELok9LWI8yGqxlqhU0/O/EFV+iEPfLNuBGX72?=
- =?us-ascii?Q?jC5p29lEJf1vdl7F4qsurwdWMw0kZMFP8IfhayQiJjtcHZdiyan9/JgGWkGh?=
- =?us-ascii?Q?iOc/8/0gKKnOhmbve75c+cxPm4HZsF0ZFvLJfkBDqJDPRUXaxXuAfU5bomZG?=
- =?us-ascii?Q?gIs34tkS+EUhGmPGIJbCODf0RR6Rm9WSp7J/F+P2ZExQH3uCIaC+l4rV2ccc?=
- =?us-ascii?Q?V7QGjGQ/Ypnn+A2H4TQl9/t5sneLY8VGk31E5B3O9Jvo+SuFBUXOcJIATeDA?=
- =?us-ascii?Q?xzbivS58fCAfShaF/9KoBfr42+SrHFaDWNZfZrP1jda7ApTWVaUFsHhFdr30?=
- =?us-ascii?Q?qTZSb3xX/SQSvIKLVLcoXvsqfHt99Y+qqsSTs9LmZQuZLrtFQ8gyz7H9vHED?=
- =?us-ascii?Q?zOWf7POx9rQO6a2gxINUCPuKg+RH38jpDYrcvkuQQEuD0H2ratzD2txSeEJK?=
- =?us-ascii?Q?1JzCHdyV8SENYPSXXaOtr4PwlbLzC8/iINhJaqwxp+5qlNA9P5waSREUwxnN?=
- =?us-ascii?Q?pt1NEeezXfwmQddel4G2d1fTPskRj0ONhoWdq8ppgot1YQAXjEFYdMUK0gS7?=
- =?us-ascii?Q?RTTfetdPMPAMe//iab58wFdywqgwQUI5aGOB?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(36860700013)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 17:19:05.5226
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2824fea-25dd-4a5b-ca71-08dd707823e7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD74.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8036
+References: <20250318230843.76068-1-l.rubusch@gmail.com> <20250318230843.76068-6-l.rubusch@gmail.com>
+ <20250331112839.78c2bc71@jic23-huawei>
+In-Reply-To: <20250331112839.78c2bc71@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Mon, 31 Mar 2025 19:23:22 +0200
+X-Gm-Features: AQ5f1JrqaKUNLa2CyJwwV4UIormZlXTOJ6wU_endFPTyRK4uIqsxzUGfErFD7V0
+Message-ID: <CAFXKEHYMgv1-rt6Sc65fCoki14v==NqQTY6J3WnQBG+ASoLeaw@mail.gmail.com>
+Subject: Re: [PATCH v5 05/11] iio: accel: adxl345: add freefall feature
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> Add EMMCG5 enum to compatible list of pinctrl binding for emmc
->> enabling.
->> 
->> Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
->> Signed-off-by: Willie Thai <wthai@nvidia.com>
->> ---
->>  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml      | 1
->> +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git
->> a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-
->> pinctrl.yaml
->> b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-
->> pinctrl.yaml
->> index 80974c46f3ef..cb75e979f5e0 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-
->> pinctrl.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-
->> pinctrl.yaml
->> @@ -276,6 +276,7 @@ additionalProperties:
->>          - BMCINT
->>          - EMMCG1
->>          - EMMCG4
->> +        - EMMCG5
-> 
-> What pin configuration does this correspond to for the eMMC controller?
-> These groups aren't arbitrary, they correspond to the 1, 4 and 8-bit
-> bus modes.
-> 
-> You may have added this squash a warning, but I suspect the pinctrl
-> configuration in your devicetree is incorrect.
-> 
-> Andrew
-> 
+Hi Jonathan & IIO Mailing List'ers
 
-Thanks for your feedback !
-We want to exclude AC5 pin in the default EMMCG4 pin group, because that pin is used for other purpose.
-We define a new group called EMMCG5 as:
-GROUP_DECL(EMMCG5, AB4, AA4, AC4, AA5, Y5, AB5, AB6)
-The bus mode is still 4-bit mode.
-Could you please advise if we can use the name "EMMCG5" ?
+On Mon, Mar 31, 2025 at 12:28=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Tue, 18 Mar 2025 23:08:37 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add the freefall detection of the sensor together with a threshold and
+> > time parameter. A freefall event is detected if the measuring signal
+> > falls below the threshold.
+> >
+> > Introduce a freefall threshold stored in regmap cache, and a freefall
+> > time, having the scaled time value stored as a member variable in the
+> > state instance.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> Hi Lothar,
+>
+> Apologies for the slow review!  Just catching up after travel
+> and I did it reverse order.
 
->>          - EMMCG8
->>          - ESPI
+No problem a all, hope you had a great trip! I'm glad this goes for
+another version. In the meanwhile I was messing with the zephyr driver
+implementation for this sensor and had some findings and final
+thoughts about the ADXL345.
+
+First, set_measure_en() I use to enable/disable the measurement by
+setting a bit in the POWER_CTL register using regmap_write(). This was
+ok until adding the act/inact feature. For adding power modes to
+inactivity, I'm going to set the link bit in the same POWER_CTL reg.
+So you already guess, yet another call  to set_measure_en() simply
+wipes this link bit out immediately. I'll probably replace
+regmap_write() using regmap_update_bits() still in this series.
+
+Second, while playing with the zephyr driver and another setup I
+discovered, that probably the sensor is capable of mapping events to
+both interrupt lines in parallel. Currently, either all events to to
+INT1 or to INT2, not both. This affects actually 8 interrupt events:
+data ready, single tap, double tap, activity, inactivity, free fall,
+watermark, overrun. Actually they could individually be mapped either
+to INT1 or INT2.
+Initially I assumed they all need to go either to INT1 or INT2
+altogether. I appologize for this, I was wrong due to the breakout
+board I was using. That's a kind of crazy feature, and I think of
+implement it perhaps in a follow up series. Anyway, I was curisous
+about the approach, currently only can think of introducing 8x new DTS
+properties. Are you aware of sensors with similar features, what is
+usually the approach how to implement that? What is your oppinion on
+this?
+
+Third item, there are 4 FIFO modes: Bypass and Streaming are currently
+used. There is another FIFO mode and further a Trigger mode i.e. only
+when the sensor got triggered it fills up the FIFO with data (also
+this is mappable by the INT1 or INT2 line then). What would be a way
+to configure such feature? I know many of the Analog accelerometers
+seem to have FIFO modes. Is this to be configured by DT properties?
+What would be means to configure it? Also, this would be a separate
+patch set.
+
+Best,
+L
+
+>
+> > +
+> > +static int adxl345_set_ff_en(struct adxl345_state *st, bool cmd_en)
+> > +{
+> > +     unsigned int regval, ff_threshold;
+> > +     const unsigned int freefall_mask =3D 0x02;
+>
+> Where did this mask come from?   Feels like it should be a define
+> (just use ADXL345_INT_FREE_FALL probably)
+> or if not that at lest use BIT(1) to make it clear it's a bit rather
+> than the number 2.
+>
+> > +     bool en;
+> > +     int ret;
+> > +
+> > +     ret =3D regmap_read(st->regmap, ADXL345_REG_THRESH_FF, &ff_thresh=
+old);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     en =3D cmd_en && ff_threshold > 0 && st->ff_time_ms > 0;
+> > +
+> > +     regval =3D en ? ADXL345_INT_FREE_FALL : 0x00;
+> > +
+> > +     return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
+> > +                               freefall_mask, regval);
+> > +}
+>
+> Jonathan
