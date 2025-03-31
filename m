@@ -1,69 +1,95 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AAE1E25FA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83EE1D63F7
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409933; cv=none; b=ABA3HT4lOrxYeW/6c6jf2iSG9xStBU92EmQhpWIfRysjZDlVSpvofU9bmI6KfzBxskIRU2dQcKknyRV8kd9MBgQR+tuO5YXHMmjLXqIJ8XGXDAV01LzXoYC9rf2m4IkiHGVT+TRJYfVc+rKBXY31KeG0CUjrTo60WjlIYauyx0U=
+	t=1743409957; cv=none; b=FEf6Yj01kgeDB7admcFLR6gh6jQMEu6VqrCUU0Q1Dm+ZyCryC40D2MVUS6AZBTzFOIj6fJfvigPiNmPXtZ9Te4SiozUI1njU0L0bBE0rLT36ZG0BJo+F5l1FexwW/OwrVGgF48OkMVee7Q8Kzb/Vo+HiNZ+7QeAWIR5UmI3pWoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409933; c=relaxed/simple;
-	bh=teJLxYycI0zXLPTmB13xMHCoEl1UawMH+6dJgIVfFEU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MijxDlHoQIqd1cxXwf0RQFLpbl+sKMCMcpItV55ZTFYGCrKUR4F0jJJaiYhoF46/+228R2MqrwjiJ0tnCl4zccyYsZPK7BZdnVgmeU935fsMCR5svZ2kPOF9/+5xN6I0/T7EtdMQa/ZL47K1+ky2ZYVuwVIUVikBd9nRraVqgiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cfL3JBdE; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1743409957; c=relaxed/simple;
+	bh=LSk+dlqox64Q4e4rKwf3ODiueaI41xX8vDf3gV7VJ+E=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqzzrDMM6gg3b5j2PxkRV0JrkhbZcfMWKNC6loE9zQbHxQW5tskQYdYeJM4JZF9liEgKY3SroDXL6cYvqJHpr1psllLOGZScaWEqFlmk1FBcsNd/J9ETuCWdMI3b+P9qhl9Z0SuwhRI2v/i/jQz9aA/4xTczhju2pxraHuMccd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=igrMAOWV; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cfL3JBdE"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743409922; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=EySq0RpGRnjPjfZiO1DIFrP4JjQDtf0CP/IzZpcVHto=;
-	b=cfL3JBdEVgtpXnXYd7X7i40hzvS7Ogz1gZlEpHaFomwWL9YWrRXa4DkLML04nXMilRilbo+G8OFqacunAYoJmWnl5RrHy4BoznPDG0/C6LPmn1p7kCAkTv5Z7tdHYdByHUU4agXZ2d5T70ZbxRSrLb9RmHzf57DbIqTlIiiDJqY=
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WTVlcrf_1743409912 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 31 Mar 2025 16:32:01 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: richard@nod.at
-Cc: anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	linux-um@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] um: Remove duplicate arch.h header
-Date: Mon, 31 Mar 2025 16:31:50 +0800
-Message-Id: <20250331083150.72598-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="igrMAOWV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=LSk+
+	dlqox64Q4e4rKwf3ODiueaI41xX8vDf3gV7VJ+E=; b=igrMAOWVfFekRogWtdLY
+	Mm6fvTfU3n17CRWQIyT81TZQMUrrNDNZF7wjyas7Zs7BdkyTJ0xD0zGqscgoDQTJ
+	CHFbfcY6/fm+8Ihf1Gd3nVswq6EgNkl9YmGSiMBE3HdqUzREpOeXr3HBiaGi+dEQ
+	SiL8h0rWdfdSsrKTZecLwdCY2xB0WeFdUNDa3UFgmeC7I1/+dmJ6aP3oIFSoVTq5
+	mO1c3neP32nRgAOD63bGG9sm4fctEIhKrsxZo9WZ6pJPUO/xjkUEdg7R2AqafrhM
+	uItw4RlE28X2zk3JjutWAOV+LHfF/AUaXuueqeX2HLx0DVw4JDlPJpPOFtxnJ4nn
+	ow==
+Received: (qmail 1158313 invoked from network); 31 Mar 2025 10:32:33 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:32:33 +0200
+X-UD-Smtp-Session: l3s3148p1@WBT8Qp8xdsNQ8qei
+Date: Mon, 31 Mar 2025 10:32:33 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] mmc: core: Add support for graceful host removal for
+ eMMC/SD
+Message-ID: <Z-pTIYmFXxOBe2xs@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250320140040.162416-1-ulf.hansson@linaro.org>
+ <Z9w5SZmytn5g9SA9@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="H2SuczBNSEJZj+2v"
+Content-Disposition: inline
+In-Reply-To: <Z9w5SZmytn5g9SA9@shikoro>
 
-./arch/um/kernel/trap.c: arch.h is included more than once.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19877
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- arch/um/kernel/trap.c | 1 -
- 1 file changed, 1 deletion(-)
+--H2SuczBNSEJZj+2v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/um/kernel/trap.c b/arch/um/kernel/trap.c
-index ce073150dc20..39820bde49e6 100644
---- a/arch/um/kernel/trap.c
-+++ b/arch/um/kernel/trap.c
-@@ -16,7 +16,6 @@
- #include <kern_util.h>
- #include <os.h>
- #include <skas.h>
--#include <arch.h>
- 
- /*
-  * Note this is constrained to return 0, -EFAULT, -EACCES, -ENOMEM by
--- 
-2.32.0.3.g01195cf9f
 
+> Awesome! Thank you. Will surely check it out. Not before next week I am
+> afraid. But already looking forward to testing it!
+
+So, I tested this with a Renesas Spider board (R-Car S4). The three
+cases (shutdown, suspend, unbind) all lead to proper flagging if notify
+can't be used or not. Only the question from patch 2 is left open.
+
+But thank you, this has come a long way :)
+
+
+--H2SuczBNSEJZj+2v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqUyEACgkQFA3kzBSg
+KbaLmA//UldyM/hVAW4YYDj93tKxOktK8T9DX8DyCxGiVaTBbv+6onVXpJ2S3qp5
+OjwfIQ8MdtG2AvoSRJsACiqgFNDxcv3Tq28JnsOtAwvWcGqeHvWJ9JEUodEdG5/K
+xobw+cYJyVCRgtKpppnN6fGXKTptZ+8q0XEfWeZWvTYoSRekvZbTIEDj8Se5AHJ9
+HiPDTrrz+BkNcXR5a19joItbDZRwEHjwTptSBzvgVLqgTWcYvoPYU5RQfCkGJYVy
+mxpb2KeqMxtJq0Mkzi3qPA5up2jbsx5djWuxrUruxSvsJoBKOiJ5OOkPMKUdHawD
+lT+0folQYVQZElF5DZwC18iP9qXhksXw0/PeAQv6DDDfH0QOWYgk2do/VWkRhJf1
+F/+Hiy3cyREelkMmUBW3sXbl325zyv83TYm3dem809angOqRVCf8faXrqGaP/YXM
+bNUK2t0vJPSIVfqmYCs8dFWs29MjtM5kGUtTaaKo6fFWfwQvwhkPNZsGZ983nKLP
+s2vScJCyd8ohSGyz2q0WxqRarCjgE/tERYx9qMxOuweyhTnVC+d0VMtSHxX/eQyD
+AK/jr6jLkXHsO7+fGI320wgyKBtpR8dbvx35t/wD3kGpmnnzBchLJrcKtpU92jaR
+ZAl9kko5RauxK9/A1aByl7HXeYn/bwxoODRufSwu+2Px0DysERU=
+=3780
+-----END PGP SIGNATURE-----
+
+--H2SuczBNSEJZj+2v--
