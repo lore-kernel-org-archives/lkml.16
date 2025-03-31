@@ -1,113 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D53234
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A250B3234
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743430189; cv=none; b=L1E5o7HuwdkCjl8iHf+B5ULjhECbAQgwV2GGL+IxyiLZeysuypnD7YDTjPhb2qW0MxYz34y4/bPo2+VakICI3I73UyDeW2J0urDPU6IUQEvGBy9rrHXs/6D6ELG2T7mMUQkoDEGpfgY695UW83qR0r7bxl+4FsJgJ70FVL5Q2Nk=
+	t=1743430258; cv=none; b=bdgYj1SfhK+OBpiC+aArPTL1uuo/Pcj8WgRdsk+u6pAtQOQ/W7+LTNYEaVvYNnT/XnOxFBC3mN1fnsGgbCi2cLc0ZWYD/MX4h3buoZ3E2rj41JC4qJTKPIk9mg/WFYHv/TlrYOC26uKiWZYnt2/wN/dbzs5m46QhrPLZQilW4Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743430189; c=relaxed/simple;
-	bh=TwSbUk2bexhBRfYZh2O2px1+cAq6T4pwFbXJLNozjNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIVHQxZb30fxAhFV2WEDiboka49HaRQaaZAaSUI00kmTJZ0mBaP9d0vWhAY7o2zCXeYKnb+y8SCMG0S5KJdZt2Gktt2Gl5aC2WJz2Z7duMejZRL7dBiERjNW/6EcrKaUvlfUUV8HUoBEiwfxg1LrZGBW/tCpsGQkENYDaNZjByM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgWE4TFT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743430258; c=relaxed/simple;
+	bh=o6YiP+hfdJ1vSNRtwyyAk/naULoqj66JwmyD1tDu4q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e3ZoIB41idqOuKO29f5SpJCOuWAnE0gX535NfOLFsqfW4PVSchhsm3buRQqnBX63QYHAlU5N7z/7cyq5hcetPbfVV22VOhv2ocLx1wn5UsRvpW67L926mNLf/MjIF2em+C2K0cp+md3/p7L4SJ22YKy+fF8m7l/PJEpPHKc1J9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kycF3tPT; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgWE4TFT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460D0C4CEE3;
-	Mon, 31 Mar 2025 14:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743430188;
-	bh=TwSbUk2bexhBRfYZh2O2px1+cAq6T4pwFbXJLNozjNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgWE4TFT5TJnnKd32XnTxF64gPG34kwjwETYZ+oclfBfZhMpSdc2PrGfO0zI22S30
-	 u1Vlj2Qx4I/F/mSDM+f7B84WEYnRKmfaH0Kkf3oec8INZyZ1Fj0vw8hmmsZEG3hLWM
-	 3HtHgfK79276QhgtSR77rl3GZb/m78EZFfFEzZAJB+XFBNoX8V405FbQoxsnGAlv7b
-	 nsocigMJTqfkngSDmTIRQqKIvTuhnBFaC1xeiAlLUOExbbdJUwW5Gz+UIKRbWeaM5V
-	 iEkaGYwa+E9wkFo73tue119OyEuENr4ZWz6UIGplaZE4L7vMI+TO4LeTpgTx8/9Cyv
-	 YePjfSwKCe8OQ==
-Date: Mon, 31 Mar 2025 16:09:45 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v3 1/4] drm/panel: Add new helpers for refcounted panel
- allocatons
-Message-ID: <20250331-defiant-jackrabbit-of-culture-cffe6a@houat>
-References: <20250330-b4-panel-refcounting-v3-0-0e0d4e4641eb@redhat.com>
- <20250330-b4-panel-refcounting-v3-1-0e0d4e4641eb@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kycF3tPT"
+Message-ID: <d9a00203-a744-4d9e-b86a-51703e1a135a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743430252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WY9rTWqlWYUdXrsjV4+jqRxNBOZeu76XLfJnw4sSWRc=;
+	b=kycF3tPT9QrKetZdCxdw8Hlpcrq3xkS3oFLWKWa4AZVtrJ4rQAVk9v3GoOnPUA9EF74lrD
+	BhLnfNE+2PVHO3zW4vlovcYDPzHBaQ2nv6v3APhj0iOtCRlB2CyIVHNZ8scBr3+FPTw2nZ
+	jlGDcxcw5Wva4Q9iOHNHjHpWiR+6XOs=
+Date: Mon, 31 Mar 2025 16:10:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="imf3y3eouv67rpth"
-Content-Disposition: inline
-In-Reply-To: <20250330-b4-panel-refcounting-v3-1-0e0d4e4641eb@redhat.com>
+Subject: Re: [PATCH V4 for-6.10/block] loop: Fix a race between loop detach
+ and loop open
+To: Gulam Mohamed <gulam.mohamed@oracle.com>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: yukuai1@huaweicloud.com, hch@lst.de, axboe@kernel.dk
+References: <20240607190607.17705-1-gulam.mohamed@oracle.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20240607190607.17705-1-gulam.mohamed@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
+On 07.06.24 21:06, Gulam Mohamed wrote:
+> 1. Userspace sends the command "losetup -d" which uses the open() call
+>     to open the device
+> 2. Kernel receives the ioctl command "LOOP_CLR_FD" which calls the
+>     function loop_clr_fd()
+> 3. If LOOP_CLR_FD is the first command received at the time, then the
+>     AUTOCLEAR flag is not set and deletion of the
+>     loop device proceeds ahead and scans the partitions (drop/add
+>     partitions)
+> 
+>          if (disk_openers(lo->lo_disk) > 1) {
+>                  lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
+>                  loop_global_unlock(lo, true);
+>                  return 0;
+>          }
+> 
+>   4. Before scanning partitions, it will check to see if any partition of
+>      the loop device is currently opened
+>   5. If any partition is opened, then it will return EBUSY:
+> 
+>      if (disk->open_partitions)
+>                  return -EBUSY;
+>   6. So, after receiving the "LOOP_CLR_FD" command and just before the above
+>      check for open_partitions, if any other command
+>      (like blkid) opens any partition of the loop device, then the partition
+>      scan will not proceed and EBUSY is returned as shown in above code
+>   7. But in "__loop_clr_fd()", this EBUSY error is not propagated
+>   8. We have noticed that this is causing the partitions of the loop to
+>      remain stale even after the loop device is detached resulting in the
+>      IO errors on the partitions
+> Fix:
+> Defer the detach of loop device to release function, which is called
+> when the last close happens, by setting the lo_flags to LO_FLAGS_AUTOCLEAR
+> at the time of detach i.e in loop_clr_fd() function.
+> 
+> Test case involves the following two scripts:
+> 
+> script1.sh:
+> 
+> while [ 1 ];
+> do
+>          losetup -P -f /home/opt/looptest/test10.img
+>          blkid /dev/loop0p1
+> done
+> 
+> script2.sh:
+> 
+> while [ 1 ];
+> do
+>          losetup -d /dev/loop0
+> done
+> 
+> Without fix, the following IO errors have been observed:
+> 
+> kernel: __loop_clr_fd: partition scan of loop0 failed (rc=-16)
+> kernel: I/O error, dev loop0, sector 20971392 op 0x0:(READ) flags 0x80700
+>          phys_seg 1 prio class 0
+> kernel: I/O error, dev loop0, sector 108868 op 0x0:(READ) flags 0x0
+>          phys_seg 1 prio class 0
+> kernel: Buffer I/O error on dev loop0p1, logical block 27201, async page
+>          read
+> 
+> Signed-off-by: Gulam Mohamed <gulam.mohamed@oracle.com>
 
---imf3y3eouv67rpth
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/4] drm/panel: Add new helpers for refcounted panel
- allocatons
-MIME-Version: 1.0
+This is for v6.10 stable, should add "Cc: stable@vger.kernel.org"?
+So the engineers who work the stable branch can find this commit and 
+apply it?
 
-On Sun, Mar 30, 2025 at 10:24:12PM -0400, Anusha Srivatsa wrote:
-> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> index a9c042c8dea1a82ef979c7a68204e0b55483fc28..97a5457b64fbbe9c91c6a4f41=
-b8e1fbfe4fa604e 100644
-> --- a/include/drm/drm_panel.h
-> +++ b/include/drm/drm_panel.h
-> @@ -268,6 +268,30 @@ struct drm_panel {
->  	bool enabled;
->  };
-> =20
-> +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t off=
-set,
-> +			     const struct drm_panel_funcs *funcs,
-> +			     int connector_type);
-> +
-> +/**
-> + * devm_drm_panel_alloc - Allocate and initialize a refcounted panel.
-> + * The reference count is initialised to 1 and is automatically  given b=
-ack
-> + * by devm action.
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
 
-No. I told you in my previous email that it needed to be between the argume=
-nts and returns
-sections ...
+Zhu Yanjun
 
-> + * @dev: struct device of the panel device
-> + * @type: the type of the struct which contains struct &drm_panel
-> + * @member: the name of the &drm_panel within @type
-> + * @funcs: callbacks for this panel
-> + * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) correspond=
-ing to
-> + * the panel interface
+> ---
+> v4<-v3:
+> 1. Defer the loop detach to last close of loop device
+> 2. Removed the use of lo_open due to following reasons:
+> 
+> Setting the lo_state to Lo_rundown in loop_clr_fd() may not help in
+> stopping the incoming open(), when the loop is being detached, as the
+> open() could invoke the lo_open() before the lo_state is set to Lo_rundown
+> and increment the disk_openers refcnt later.
+> As the actual cleanup is deferred to last close, in release, there is no
+> chance for the open() to kick in to take the reference. Because both open()
+> and release() are protected by open_mutex and hence they cannot run in
+> parallel.
+> So, lo_open() and setting lo_state to Lo_rundown is not needed. Removing
+> the loop state Lo_rundown as its not used anymore.
+> 
+>   drivers/block/loop.c | 44 ++++++++------------------------------------
+>   1 file changed, 8 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 28a95fd366fe..4936cadc1a63 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -41,7 +41,6 @@
+>   enum {
+>   	Lo_unbound,
+>   	Lo_bound,
+> -	Lo_rundown,
+>   	Lo_deleting,
+>   };
+>   
+> @@ -1131,7 +1130,7 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+>   	return error;
+>   }
+>   
+> -static void __loop_clr_fd(struct loop_device *lo, bool release)
+> +static void __loop_clr_fd(struct loop_device *lo)
+>   {
+>   	struct file *filp;
+>   	gfp_t gfp = lo->old_gfp_mask;
+> @@ -1139,14 +1138,6 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+>   	if (test_bit(QUEUE_FLAG_WC, &lo->lo_queue->queue_flags))
+>   		blk_queue_write_cache(lo->lo_queue, false, false);
+>   
+> -	/*
+> -	 * Freeze the request queue when unbinding on a live file descriptor and
+> -	 * thus an open device.  When called from ->release we are guaranteed
+> -	 * that there is no I/O in progress already.
+> -	 */
+> -	if (!release)
+> -		blk_mq_freeze_queue(lo->lo_queue);
+> -
+>   	spin_lock_irq(&lo->lo_lock);
+>   	filp = lo->lo_backing_file;
+>   	lo->lo_backing_file = NULL;
+> @@ -1164,8 +1155,6 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+>   	mapping_set_gfp_mask(filp->f_mapping, gfp);
+>   	/* This is safe: open() is still holding a reference. */
+>   	module_put(THIS_MODULE);
+> -	if (!release)
+> -		blk_mq_unfreeze_queue(lo->lo_queue);
+>   
+>   	disk_force_media_change(lo->lo_disk);
+>   
+> @@ -1180,11 +1169,7 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
+>   		 * must be at least one and it can only become zero when the
+>   		 * current holder is released.
+>   		 */
+> -		if (!release)
+> -			mutex_lock(&lo->lo_disk->open_mutex);
+>   		err = bdev_disk_changed(lo->lo_disk, false);
+> -		if (!release)
+> -			mutex_unlock(&lo->lo_disk->open_mutex);
+>   		if (err)
+>   			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
+>   				__func__, lo->lo_number, err);
+> @@ -1232,25 +1217,8 @@ static int loop_clr_fd(struct loop_device *lo)
+>   		loop_global_unlock(lo, true);
+>   		return -ENXIO;
+>   	}
+> -	/*
+> -	 * If we've explicitly asked to tear down the loop device,
+> -	 * and it has an elevated reference count, set it for auto-teardown when
+> -	 * the last reference goes away. This stops $!~#$@ udev from
+> -	 * preventing teardown because it decided that it needs to run blkid on
+> -	 * the loopback device whenever they appear. xfstests is notorious for
+> -	 * failing tests because blkid via udev races with a losetup
+> -	 * <dev>/do something like mkfs/losetup -d <dev> causing the losetup -d
+> -	 * command to fail with EBUSY.
+> -	 */
+> -	if (disk_openers(lo->lo_disk) > 1) {
+> -		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
+> -		loop_global_unlock(lo, true);
+> -		return 0;
+> -	}
+> -	lo->lo_state = Lo_rundown;
+> +	lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
+>   	loop_global_unlock(lo, true);
+> -
+> -	__loop_clr_fd(lo, false);
+>   	return 0;
+>   }
+>   
+> @@ -1724,15 +1692,19 @@ static void lo_release(struct gendisk *disk)
+>   	if (disk_openers(disk) > 0)
+>   		return;
+>   
+> +	/*
+> +	 * Clear the backing device information if this is the last close of
+> +	 * a device that's been marked for auto clear, or on which LOOP_CLR_FD
+> +	 * has been called.
+> +	 */
+>   	mutex_lock(&lo->lo_mutex);
+>   	if (lo->lo_state == Lo_bound && (lo->lo_flags & LO_FLAGS_AUTOCLEAR)) {
+> -		lo->lo_state = Lo_rundown;
+>   		mutex_unlock(&lo->lo_mutex);
+>   		/*
+>   		 * In autoclear mode, stop the loop thread
+>   		 * and remove configuration after last close.
+>   		 */
+> -		__loop_clr_fd(lo, true);
+> +		__loop_clr_fd(lo);
+>   		return;
+>   	}
+>   	mutex_unlock(&lo->lo_mutex);
 
-=2E.. So here, just like you did for all the other functions you introduced.
-
-Also, there's no reference counting yet, so that paragraph should be in
-your second patch.
-
-Maxime
-
---imf3y3eouv67rpth
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+qiKQAKCRDj7w1vZxhR
-xdJRAQCHNMX/G/Wz1zDjAtn+FlQ+3vGE7rpJ3/FEU94kH5uBIgEAlXtggqh5ttPL
-ZlOzl5oF4hEn2BkxYrkpcsHty9iH5ws=
-=txRs
------END PGP SIGNATURE-----
-
---imf3y3eouv67rpth--
