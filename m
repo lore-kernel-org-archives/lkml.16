@@ -1,367 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EAC155393;
-	Mon, 31 Mar 2025 12:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A7635966;
+	Mon, 31 Mar 2025 12:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424957; cv=none; b=fHWDNBckRva9Q4Wvo4Jp1GO+sWDWW32QKy8MekYLk5+SflUIyhEgnuZovdpxFKGceQJit6wm/iP9ekrQgm+Jk7uKfNIsRAm6hypcB4OC4CqR4f55qHTz992ty2rowaJU+3KOWegIcw9//9JRbDh9zMTb3s/g2bV/tymy3rNJ+xk=
+	t=1743425048; cv=none; b=HaG3yjKFc698M1WYbiRJkkXHRztRhvZ6YhI75jCIXDWqt02F3DDiQHD/jIFTCgDR5oAVuHWXV90S3fHCD+wq0tuB2SjOCq6/d2m4vyh88q7Nq3ESqAUcwPiCZsq7+0/m2aAFpZcP+lIhMQJNfoykAogFlSOynss5kPf4ByFUAhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424957; c=relaxed/simple;
-	bh=Lc007aEuHorTCRuZvzw28cSxiGhASElsj7NvgrkOgYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p0WD69ofDI91QBQ70EhIcEBLU19GEb6YMb/nNJ5uEyXKzU0FgXo2Je19C/onQfRbm8uQTgI0AYXs5Vu7pkQol7NyN7EXpDpBFLHFMELdokglUjp2XEOJpyn+0he0bAKONXlll6BXgqwKbrYfhPFV6yCMytFbbjI2RlxttCkf7jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7LaTGKH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743425048; c=relaxed/simple;
+	bh=M+Zpsq+2fQJBF4phueO5N390x+xYhEstLHKDuqJ7UAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iDHtXgPSuRtkOy2LLVyRmH2IqzTRSj600/24irCA5b5sO/90a2t7nZFD8dYiF7dVL24UJczIS4ocgP5b6dChzCHx3+oTHgbz1wIZUderv/oWrG5durO3zdIEkxzfWBgTpbFfjpvJ7XVABJpP2nQw7XEhDd1/fIkXZin3BgAaWDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ry2wnQ/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7LaTGKH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA213C4CEE3;
-	Mon, 31 Mar 2025 12:42:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ry2wnQ/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF01C4CEE3;
+	Mon, 31 Mar 2025 12:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743424956;
-	bh=Lc007aEuHorTCRuZvzw28cSxiGhASElsj7NvgrkOgYs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M7LaTGKHqdUHMM0pXPj6gOmSihJKJdBMj4Au4tJtko8uaBbEDzdQ8zzL8rgtBBbI3
-	 t/VPts7zPkmr8UVhXzMauI74VYmZyySh+//J2jX4XsWbTfHiVJxfGsybkhJNmknLVN
-	 J4MWDpOZUBZzE3ldtgIMdwUaVPfRsl1+E+R7/g6SWkOUAIeTDZrDihsAjqSyoDP/ZP
-	 DrdUhpvIac0dILZchQSNJoWusUJyiWBMxwf3EA1v7pAe8NIqa665VCXPxGAENsPgc+
-	 IjeCLlnNVzAzY1mnstXtoVcfhFOUbgZBoAIOLDcMrpOZCEiSBZFPqK1S2sqZBkDy48
-	 BtqwSPAsSj6Qw==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	jack@suse.cz,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	mcgrof@kernel.org,
-	hch@infradead.org,
-	david@fromorbit.com,
-	rafael@kernel.org,
-	djwong@kernel.org,
-	pavel@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	boqun.feng@gmail.com
-Subject: [PATCH 2/2] efivarfs: support freeze/thaw
-Date: Mon, 31 Mar 2025 14:42:12 +0200
-Message-ID: <20250331-work-freeze-v1-2-6dfbe8253b9f@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
-References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
+	s=k20201202; t=1743425047;
+	bh=M+Zpsq+2fQJBF4phueO5N390x+xYhEstLHKDuqJ7UAQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ry2wnQ/JM9nkOpzz6eW2JETb66SDqhjL0XdldII2Dgg2bE9KpjsWSmutA3VqiIkT6
+	 AvKV+rpYB5BO+XrXF+/5wTf0hgdTfX1fUjd0yCqog9yd5R7yPdSppsL1IQhRt9skVx
+	 oNMzkIgLGBwncII15H4RKbz+7naZRHCEiAnANY3dN8mtPa8veyUcifrXjW7Ei5uMYs
+	 KVsMOI42UrXJ7MifbGvmlSBuCpAU7jad2CEqSXDAuucWWLZetyDea1wLuJmPrkP/el
+	 8FKDdynVb+b4cgY+IrwsnzUVhV4VlEQux/LZbF+i1Clr0v8vKMBSiA9+qo+N2kMzAc
+	 AB6Vz1WVHvcvw==
+Message-ID: <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
+Date: Mon, 31 Mar 2025 14:43:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8738; i=brauner@kernel.org; h=from:subject:message-id; bh=Lc007aEuHorTCRuZvzw28cSxiGhASElsj7NvgrkOgYs=; b=kA0DAAoWkcYbwGV43KIByyZiAGfqjaXIK1bKyoFYvCIgxTtX1GQG972OLpjX6oTaIkTOsBCkO Yh1BAAWCgAdFiEEQIc0Vx6nDHizMmkokcYbwGV43KIFAmfqjaUACgkQkcYbwGV43KI5IgD/VDI8 M3DEtkFFvDpvtrma4iu8MK7c80H4hNeXBrALV8ABAIku4X5VRZb0ihP5WxZ2f4OaaVbm3/7XNsV CZm1++uoG
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
+To: Sam Winchenbach <sam.winchenbach@framepointer.org>
+Cc: linux-kernel@vger.kernel.org, mdf@kernel.org, hao.wu@intel.com,
+ yilun.xu@intel.com, trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, michal.simek@amd.com, linux-fpga@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Sam Winchenbach <swinchenbach@arka.org>
+References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
+ <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
+ <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Allow efivarfs to partake to resync variable state during system
-hibernation and suspend. Add freeze/thaw support.
+On 31/03/2025 14:30, Sam Winchenbach wrote:
+>>
+>>> +    type: boolean
+>>> +    description: If present, the ICAP controller will be enabled when
+>>> +      the driver probes. This is useful if the fabric is loaded
+>>> +      during the boot process and contains a core, such as the SEM,
+>>
+>> I don't get how this is suitable for DT. If you decide to load the
+>> fabric from driver, that's driver decision so not DT.
+> 
+> Before writing the fabric to the FPGA the driver disables the ICAP, enabling
+> the PCAP. Once writing is complete it unconditionally disables the PCAP,
+> enabling the ICAP. This patch just makes it so, depending on the use case,
+> the ICAP can be enabled at boot. This will not prevent the system from being
+> able to load a fabric through the driver. I added in this boolean so existing
+> behavior would be maintained.
+> 
+> Do you recommend another approach such as writing to a sysfs attribute to
+> switch from PCAP to ICAP?
+Not sure yet. Can't you check the status of ICAP before programming and
+then enable it only if was enabled before?
 
-This is a pretty straightforward implementation. We simply add regular
-freeze/thaw support for both userspace and the kernel. This works
-without any big issues and congrats afaict efivars is the first
-pseudofilesystem that adds support for filesystem freezing and thawing.
-
-The simplicity comes from the fact that we simply always resync variable
-state after efivarfs has been frozen. It doesn't matter whether that's
-because of suspend, userspace initiated freeze or hibernation. Efivars
-is simple enough that it doesn't matter that we walk all dentries. There
-are no directories and there aren't insane amounts of entries and both
-freeze/thaw are already heavy-handed operations. We really really don't
-need to care.
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/efivarfs/internal.h |   1 -
- fs/efivarfs/super.c    | 196 +++++++++++++------------------------------------
- 2 files changed, 51 insertions(+), 146 deletions(-)
-
-diff --git a/fs/efivarfs/internal.h b/fs/efivarfs/internal.h
-index ac6a1dd0a6a5..f913b6824289 100644
---- a/fs/efivarfs/internal.h
-+++ b/fs/efivarfs/internal.h
-@@ -17,7 +17,6 @@ struct efivarfs_fs_info {
- 	struct efivarfs_mount_opts mount_opts;
- 	struct super_block *sb;
- 	struct notifier_block nb;
--	struct notifier_block pm_nb;
- };
- 
- struct efi_variable {
-diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-index 0486e9b68bc6..567e849a03fe 100644
---- a/fs/efivarfs/super.c
-+++ b/fs/efivarfs/super.c
-@@ -20,6 +20,7 @@
- #include <linux/printk.h>
- 
- #include "internal.h"
-+#include "../internal.h"
- 
- static int efivarfs_ops_notifier(struct notifier_block *nb, unsigned long event,
- 				 void *data)
-@@ -119,12 +120,18 @@ static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- 
- 	return 0;
- }
-+
-+static int efivarfs_freeze_fs(struct super_block *sb);
-+static int efivarfs_unfreeze_fs(struct super_block *sb);
-+
- static const struct super_operations efivarfs_ops = {
- 	.statfs = efivarfs_statfs,
- 	.drop_inode = generic_delete_inode,
- 	.alloc_inode = efivarfs_alloc_inode,
- 	.free_inode = efivarfs_free_inode,
- 	.show_options = efivarfs_show_options,
-+	.freeze_fs = efivarfs_freeze_fs,
-+	.unfreeze_fs = efivarfs_unfreeze_fs,
- };
- 
- /*
-@@ -367,8 +374,6 @@ static int efivarfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
--	register_pm_notifier(&sfi->pm_nb);
--
- 	return efivar_init(efivarfs_callback, sb, true);
- }
- 
-@@ -393,48 +398,6 @@ static const struct fs_context_operations efivarfs_context_ops = {
- 	.reconfigure	= efivarfs_reconfigure,
- };
- 
--struct efivarfs_ctx {
--	struct dir_context ctx;
--	struct super_block *sb;
--	struct dentry *dentry;
--};
--
--static bool efivarfs_actor(struct dir_context *ctx, const char *name, int len,
--			   loff_t offset, u64 ino, unsigned mode)
--{
--	unsigned long size;
--	struct efivarfs_ctx *ectx = container_of(ctx, struct efivarfs_ctx, ctx);
--	struct qstr qstr = { .name = name, .len = len };
--	struct dentry *dentry = d_hash_and_lookup(ectx->sb->s_root, &qstr);
--	struct inode *inode;
--	struct efivar_entry *entry;
--	int err;
--
--	if (IS_ERR_OR_NULL(dentry))
--		return true;
--
--	inode = d_inode(dentry);
--	entry = efivar_entry(inode);
--
--	err = efivar_entry_size(entry, &size);
--	size += sizeof(__u32);	/* attributes */
--	if (err)
--		size = 0;
--
--	inode_lock_nested(inode, I_MUTEX_CHILD);
--	i_size_write(inode, size);
--	inode_unlock(inode);
--
--	if (!size) {
--		ectx->dentry = dentry;
--		return false;
--	}
--
--	dput(dentry);
--
--	return true;
--}
--
- static int efivarfs_check_missing(efi_char16_t *name16, efi_guid_t vendor,
- 				  unsigned long name_size, void *data)
- {
-@@ -474,111 +437,59 @@ static int efivarfs_check_missing(efi_char16_t *name16, efi_guid_t vendor,
- 	return err;
- }
- 
--static void efivarfs_deactivate_super_work(struct work_struct *work)
--{
--	struct super_block *s = container_of(work, struct super_block,
--					     destroy_work);
--	/*
--	 * note: here s->destroy_work is free for reuse (which
--	 * will happen in deactivate_super)
--	 */
--	deactivate_super(s);
--}
--
- static struct file_system_type efivarfs_type;
- 
--static int efivarfs_pm_notify(struct notifier_block *nb, unsigned long action,
--			      void *ptr)
-+static int efivarfs_freeze_fs(struct super_block *sb)
- {
--	struct efivarfs_fs_info *sfi = container_of(nb, struct efivarfs_fs_info,
--						    pm_nb);
--	struct path path;
--	struct efivarfs_ctx ectx = {
--		.ctx = {
--			.actor	= efivarfs_actor,
--		},
--		.sb = sfi->sb,
--	};
--	struct file *file;
--	struct super_block *s = sfi->sb;
--	static bool rescan_done = true;
--
--	if (action == PM_HIBERNATION_PREPARE) {
--		rescan_done = false;
--		return NOTIFY_OK;
--	} else if (action != PM_POST_HIBERNATION) {
--		return NOTIFY_DONE;
--	}
--
--	if (rescan_done)
--		return NOTIFY_DONE;
--
--	/* ensure single superblock is alive and pin it */
--	if (!atomic_inc_not_zero(&s->s_active))
--		return NOTIFY_DONE;
--
--	pr_info("efivarfs: resyncing variable state\n");
-+	/* Nothing for us to do. */
-+	return 0;
-+}
- 
--	path.dentry = sfi->sb->s_root;
-+static int efivarfs_unfreeze_fs(struct super_block *sb)
-+{
-+	struct dentry *child = NULL;
- 
- 	/*
--	 * do not add SB_KERNMOUNT which a single superblock could
--	 * expose to userspace and which also causes MNT_INTERNAL, see
--	 * below
-+	 * Unconditionally resync the variable state on a thaw request.
-+	 * Given the size of efivarfs it really doesn't matter to simply
-+	 * iterate through all of the entries and resync. Freeze/thaw
-+	 * requests are rare enough for that to not matter and the
-+	 * number of entries is pretty low too. So we really don't care.
- 	 */
--	path.mnt = vfs_kern_mount(&efivarfs_type, 0,
--				  efivarfs_type.name, NULL);
--	if (IS_ERR(path.mnt)) {
--		pr_err("efivarfs: internal mount failed\n");
--		/*
--		 * We may be the last pinner of the superblock but
--		 * calling efivarfs_kill_sb from within the notifier
--		 * here would deadlock trying to unregister it
--		 */
--		INIT_WORK(&s->destroy_work, efivarfs_deactivate_super_work);
--		schedule_work(&s->destroy_work);
--		return PTR_ERR(path.mnt);
-+	pr_info("efivarfs: resyncing variable state\n");
-+	for (;;) {
-+		int err;
-+		size_t size;
-+		struct inode *inode;
-+		struct efivar_entry *entry;
-+
-+		child = find_next_child(sb->s_root, child);
-+		if (!child)
-+			break;
-+
-+		inode = d_inode(child);
-+		entry = efivar_entry(inode);
-+
-+		err = efivar_entry_size(entry, &size);
-+		if (err)
-+			size = 0;
-+		else
-+			size += sizeof(__u32);
-+
-+		inode_lock(inode);
-+		i_size_write(inode, size);
-+		inode_unlock(inode);
-+
-+		if (!err)
-+			continue;
-+
-+		/* The variable doesn't exist anymore, delete it. */
-+		simple_recursive_removal(child, NULL);
- 	}
- 
--	/* path.mnt now has pin on superblock, so this must be above one */
--	atomic_dec(&s->s_active);
--
--	file = kernel_file_open(&path, O_RDONLY | O_DIRECTORY | O_NOATIME,
--				current_cred());
--	/*
--	 * safe even if last put because no MNT_INTERNAL means this
--	 * will do delayed deactivate_super and not deadlock
--	 */
--	mntput(path.mnt);
--	if (IS_ERR(file))
--		return NOTIFY_DONE;
--
--	rescan_done = true;
--
--	/*
--	 * First loop over the directory and verify each entry exists,
--	 * removing it if it doesn't
--	 */
--	file->f_pos = 2;	/* skip . and .. */
--	do {
--		ectx.dentry = NULL;
--		iterate_dir(file, &ectx.ctx);
--		if (ectx.dentry) {
--			pr_info("efivarfs: removing variable %pd\n",
--				ectx.dentry);
--			simple_recursive_removal(ectx.dentry, NULL);
--			dput(ectx.dentry);
--		}
--	} while (ectx.dentry);
--	fput(file);
--
--	/*
--	 * then loop over variables, creating them if there's no matching
--	 * dentry
--	 */
--	efivar_init(efivarfs_check_missing, sfi->sb, false);
--
--	return NOTIFY_OK;
-+	efivar_init(efivarfs_check_missing, sb, false);
-+	pr_info("efivarfs: finished resyncing variable state\n");
-+	return 0;
- }
- 
- static int efivarfs_init_fs_context(struct fs_context *fc)
-@@ -598,9 +509,6 @@ static int efivarfs_init_fs_context(struct fs_context *fc)
- 	fc->s_fs_info = sfi;
- 	fc->ops = &efivarfs_context_ops;
- 
--	sfi->pm_nb.notifier_call = efivarfs_pm_notify;
--	sfi->pm_nb.priority = 0;
--
- 	return 0;
- }
- 
-@@ -608,9 +516,7 @@ static void efivarfs_kill_sb(struct super_block *sb)
- {
- 	struct efivarfs_fs_info *sfi = sb->s_fs_info;
- 
--	blocking_notifier_chain_unregister(&efivar_ops_nh, &sfi->nb);
- 	kill_litter_super(sb);
--	unregister_pm_notifier(&sfi->pm_nb);
- 
- 	kfree(sfi);
- }
-
--- 
-2.47.2
-
+Best regards,
+Krzysztof
