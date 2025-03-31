@@ -1,55 +1,55 @@
 Received: from mail-vk1-f201.google.com (mail-vk1-f201.google.com [209.85.221.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CC63C47B
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DED21CA07
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743456634; cv=none; b=sWD+PGgcfgtz5MUGREUvbwtP7mnCgHwYTTWimk8qdCwMempWhMt83MhBRr4mtFfVFVW/J6K5CfpMuTfxRycs4UApUgRLvj9r0mVBZUEOk2XMuDb7853PaRiAJEOnSiiEBkpVdEjwTB2F/2qdBs35U6M8BuJBNf5v67K38AQg3sE=
+	t=1743456637; cv=none; b=RFxw4T0cHHEAXCvq369io6qL+KgSIxAp1BAf8IiCrsEWssTPcKF+/GdFBOE2gS0G9gL5pHijasgj9CeR8GcbTQupEwDhe/8zTbRCSq7u9Q3aG07XpbdVmfPHqml1ctRElhO9KSmLSsyJpcfsj6V0EboNDtM6AqxO6zpUxH5Kr5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743456634; c=relaxed/simple;
-	bh=QVzyFescXVWpRPbHhysiEv6lNMR7Z84PTEV+3tefm0Q=;
+	s=arc-20240116; t=1743456637; c=relaxed/simple;
+	bh=DlDaNBmiP+Lmsrd4wjzooOyHQDU6I4mrrw8YnqHQ8qs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qTZRLo8w4EEMvaNzFpy2IixeqfbBrkp2JRX4PRiczmw+AKU+yp1Gi4rgWgH4xazjBK8FTi8a0E5opyPC4xHuhwbxDlsk2Fl+iY21aULk4ruT1uvHKorEN7tmuBUZxEON8E5CA30EfXaNDYeumzKQqw4ozDjej4RxLeEa3DtgO1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fz+Uxl4Y; arc=none smtp.client-ip=209.85.221.201
+	 To:Cc:Content-Type; b=q4euzHGSzXSiHyq+eadarjOGF7hxB0CaNRSH6kjJ4MKHMsgyFIjGZG40y/zO47s3vfzRSqGAbPIA8kq/ehtRMtTfcx4LvNAEr3hRStoWxABUdKbE+Fhj1hSGEYMYrdMsWFC9nwTKtBcrMA2IEvQyL24D/2CqbP74v0w5glyoozk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FTL77fvC; arc=none smtp.client-ip=209.85.221.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fz+Uxl4Y"
-Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-523f74690afso1063497e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:30:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FTL77fvC"
+Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-523fa15384aso5541729e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:30:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743456632; x=1744061432; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743456634; x=1744061434; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=42KzVy5OOxbX2nRYaugEY43/RWNtB+bmjk11XtO+x8A=;
-        b=Fz+Uxl4YzmkYqXYrJ/sJbzTzRTBjv7YsGcxg9+0rWaOTL/jX4IsGuxInosI0ACCvLD
-         5DL0DbKrHF5J479+gC1oIn3zzqszj4oo6JbuNYqFtb9wdyZTORHU3TYFcc5pygfQMLAd
-         tICNtGbfEhk6voOu5iCX0tDP+L4zkorV1zR+0WYiAr1fFFa/qUbSMHWR/nnrDIt7e6Oe
-         KPkl81PAtQsYB7t2MzpOph8gI07eoVx573LHr9fdLlWuu0n704umZOpj0sq/9+I6pWME
-         zTmVKRmndHo5hLjmzo32iihKCGrrVjWp6QAfrG24KfEQtlgz/CRZ/HXHWCJEq5yQw5jb
-         cWLw==
+        bh=AMmGEtr9mP14oGMDJzQtzY0m4v3Phg9hGuUxD5cZ2iA=;
+        b=FTL77fvCQVtYAynoxFLfrCKwL2TWhbtip/uZrh7MwoQwZHIe0OcufFIVKRXD8QSHH+
+         MXlDo994VrUlcxIPN6ZPz+K0ozVg/bQwBhtUQ4kSXH3MZTFY0JCmGScoHbzp5nU4QJGx
+         yabGCM/5+cOZTFggRExme76lJWWJ0erUuEwZJ0KqFIpc58H6gAJ1L7rSOR7YmDSzp8vm
+         lK8sSJIoazEirB5k5SNdZ6CVXTh+17irrstWMJ24D7DdkC8V0hha/vP7PFY6TzSeUj8C
+         +r6u11tZ2AX7dksyADFy93cxn2v2rC2k1fWRgYMw2daiYV7ZHYuEAfq9i2XRifimB369
+         ofiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743456632; x=1744061432;
+        d=1e100.net; s=20230601; t=1743456634; x=1744061434;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=42KzVy5OOxbX2nRYaugEY43/RWNtB+bmjk11XtO+x8A=;
-        b=mgQHxm3ZF9ee+D08UfnfK0ECgjynL0s/ImqX/hZ8gNUGroCGIFEJyBElMGdmBur67r
-         yzttxwEBmqvPqZmv9Gv9PT3CxW8MMpCn7BaFOeSBikLIBmwzhlAyhBgoVeNRj0g/M872
-         T4wRlMhZ9WLZ7xpx/UFuQtcyE7tq/gZOreBrLounpHh332oXQ0UuvTnu7Hk3Vcad+1xl
-         YdHR73H86FAdUsdAuNMla5isKUzvYWaMPIa0scV//NXgMHslEPEKCP7Bc1chmTAOpRFU
-         OS9OzjpV6C1nCY85N7pevmdh5yWwD6Cy1Z/c+EQsk69eMmjPEDLwSjhA44tSKZPyTyz4
-         1f0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXI8qvP6CSyUhu3COE7MW0YlUj01VIYdbVQPZUS7QSoeURFDAa/u8SlPPew6fNHuEtEcxs96om/BP5ca2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygT125y1qaIkAFjTWpmXUGIaQ+9P7zQFeGPQqXkTt7pIb9/lOz
-	Jw92FK4FI3CWUk2KQi8hYCcPZxhzRiEaMVRrr9V5yTDSsFKpWVVO6VZLC8gXjqT3BpW9CvwcoXn
-	Cd2iszZMB5o4nIdA3wQ==
-X-Google-Smtp-Source: AGHT+IH1S5Pqrxcnd6Psp4+cbC6TmHHG0jz3SYfEB8vHri/pTtyy440S8+fa1zRdaeI5w8d7xLGt0MgU/VoSpbkI
-X-Received: from vkci17.prod.google.com ([2002:a05:6122:62f1:b0:526:98a:f3d2])
+        bh=AMmGEtr9mP14oGMDJzQtzY0m4v3Phg9hGuUxD5cZ2iA=;
+        b=DHunywufH/zRqGSaPEZMDG61PUYlMMKLwy+rnllVAWN/ZoFSo4mfcAiKInJZifOnVC
+         MVJQkbfuvP56lrKq8C5RWC8McIYJZAD4HQ1BveB5Lc0drCaq3ikkGgrx23gBLsoUQUMg
+         b5jCwWpFt89mrx8mnsBY5kbHSW64bI4EhTEZA1UlutzuGU1uDFZ8kMt9qVqKM6NZShnl
+         c0l75WslwWmzmz2azsgiOLdx1siPR84iVhunsql3nu8jVqMZ4wWfJfVe0tQJRs/zSfW0
+         OQgje3Y8mCwKyxJ/WWibU1uh5p0NURuMtqM+3H4Bekdt0hoDXRSul27c2fzoPRLsaoCi
+         JDyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbS4OTzyeyxFXG9lBUnRpaAxot33DgeiwIWFbHRHxiYJTBN87TvYDR6KG6CpY9RRsmiQI6JaUMU+sfKSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMzXXUClIItX9zuOjVtwKLxfvsJcRUDfh9X/QCNI/Bz4Nb+LsW
+	a6iFzezjc7qDJsVvielZs1qqg8F79B9k/4+cdX0WW1sPquyGVpzVqe95OMAcPtHmap1gurl+D/c
+	ovERg+lJyU3D0fy5TIg==
+X-Google-Smtp-Source: AGHT+IHgagkSKWGlDovr5gDvy/QEUbGDo/w32g+pQ7uHEVkF+t8NIV8URx2AUHB2qjSBJFbxSuIK8xNpCMDSjF+R
+X-Received: from vkbes13.prod.google.com ([2002:a05:6122:1b8d:b0:523:79d3:7e63])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6122:218b:b0:520:51a4:b81c with SMTP id 71dfb90a1353d-5261d478794mr5909701e0c.6.1743456632248;
- Mon, 31 Mar 2025 14:30:32 -0700 (PDT)
-Date: Mon, 31 Mar 2025 21:30:21 +0000
+ 2002:a05:6122:3c8b:b0:523:7c70:bc9c with SMTP id 71dfb90a1353d-5261d3ca2b3mr7267971e0c.5.1743456634617;
+ Mon, 31 Mar 2025 14:30:34 -0700 (PDT)
+Date: Mon, 31 Mar 2025 21:30:24 +0000
 In-Reply-To: <20250331213025.3602082-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250331213025.3602082-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250331213025.3602082-2-jthoughton@google.com>
-Subject: [PATCH v2 1/5] KVM: selftests: Extract guts of THP accessor to
- standalone sysfs helpers
+Message-ID: <20250331213025.3602082-5-jthoughton@google.com>
+Subject: [PATCH v2 4/5] KVM: selftests: Build and link selftests/cgroup/lib
+ into KVM selftests
 From: James Houghton <jthoughton@google.com>
 To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
 Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
@@ -71,87 +71,36 @@ Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.c
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Sean Christopherson <seanjc@google.com>
+libcgroup.o is built separately from KVM selftests and cgroup selftests,
+so different compiler flags used by the different selftests will not
+conflict with each other.
 
-Extract the guts of thp_configured() and get_trans_hugepagesz() to
-standalone helpers so that the core logic can be reused for other sysfs
-files, e.g. to query numa_balancing.
-
-Opportunistically assert that the initial fscanf() read at least one byte,
-and add a comment explaining the second call to fscanf().
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- tools/testing/selftests/kvm/lib/test_util.c | 35 ++++++++++++++-------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ tools/testing/selftests/kvm/Makefile.kvm | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index 8ed0b74ae8373..3dc8538f5d696 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -132,37 +132,50 @@ void print_skip(const char *fmt, ...)
- 	puts(", skipping test");
- }
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index f773f8f992494..c86a680f52b28 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -219,6 +219,7 @@ OVERRIDE_TARGETS = 1
+ # importantly defines, i.e. overwrites, $(CC) (unless `make -e` or `make CC=`,
+ # which causes the environment variable to override the makefile).
+ include ../lib.mk
++include ../cgroup/lib/libcgroup.mk
  
--bool thp_configured(void)
-+static bool test_sysfs_path(const char *path)
- {
--	int ret;
- 	struct stat statbuf;
-+	int ret;
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+@@ -272,7 +273,7 @@ LIBKVM_S := $(filter %.S,$(LIBKVM))
+ LIBKVM_C_OBJ := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBKVM_C))
+ LIBKVM_S_OBJ := $(patsubst %.S, $(OUTPUT)/%.o, $(LIBKVM_S))
+ LIBKVM_STRING_OBJ := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBKVM_STRING))
+-LIBKVM_OBJS = $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ) $(LIBKVM_STRING_OBJ)
++LIBKVM_OBJS = $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ) $(LIBKVM_STRING_OBJ) $(LIBCGROUP_O)
+ SPLIT_TEST_GEN_PROGS := $(patsubst %, $(OUTPUT)/%, $(SPLIT_TESTS))
+ SPLIT_TEST_GEN_OBJ := $(patsubst %, $(OUTPUT)/$(ARCH)/%.o, $(SPLIT_TESTS))
  
--	ret = stat("/sys/kernel/mm/transparent_hugepage", &statbuf);
-+	ret = stat(path, &statbuf);
- 	TEST_ASSERT(ret == 0 || (ret == -1 && errno == ENOENT),
--		    "Error in stating /sys/kernel/mm/transparent_hugepage");
-+		    "Error in stat()ing '%s'", path);
- 
- 	return ret == 0;
- }
- 
--size_t get_trans_hugepagesz(void)
-+bool thp_configured(void)
-+{
-+	return test_sysfs_path("/sys/kernel/mm/transparent_hugepage");
-+}
-+
-+static size_t get_sysfs_val(const char *path)
- {
- 	size_t size;
- 	FILE *f;
- 	int ret;
- 
--	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
--
--	f = fopen("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", "r");
--	TEST_ASSERT(f != NULL, "Error in opening transparent_hugepage/hpage_pmd_size");
-+	f = fopen(path, "r");
-+	TEST_ASSERT(f, "Error opening '%s'", path);
- 
- 	ret = fscanf(f, "%ld", &size);
-+	TEST_ASSERT(ret > 0, "Error reading '%s'", path);
-+
-+	/* Re-scan the input stream to verify the entire file was read. */
- 	ret = fscanf(f, "%ld", &size);
--	TEST_ASSERT(ret < 1, "Error reading transparent_hugepage/hpage_pmd_size");
--	fclose(f);
-+	TEST_ASSERT(ret < 1, "Error reading '%s'", path);
- 
-+	fclose(f);
- 	return size;
- }
- 
-+size_t get_trans_hugepagesz(void)
-+{
-+	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
-+
-+	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
-+}
-+
- size_t get_def_hugetlb_pagesz(void)
- {
- 	char buf[64];
 -- 
 2.49.0.472.ge94155a9ec-goog
 
