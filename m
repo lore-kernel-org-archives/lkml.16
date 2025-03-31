@@ -1,202 +1,285 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E076742A94;
-	Mon, 31 Mar 2025 22:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC8221C19A;
+	Mon, 31 Mar 2025 22:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743459602; cv=none; b=UzKQJ45/qKihhMNE0d2DlOipYozkmpWMG6vLws6NLRRAF9vChIuhnT674jqLnF+N+125Md9CTjWy6Fd8E7f5+GNuzGJa6V1v1m33y9yo0AR7tiHxhVw3MhdEQiDedpewrPlNYB2lOXwK1kGqAyRXM2/9oYYa6HZEWL8NFgOXhZw=
+	t=1743459769; cv=none; b=Xm72Xi8xqthg67x2BDYDnJUXUy3Cz2jBKrIXkxkFy9xusR0jWqoAfv89639FKtK1Tbe/Zu7xxnsarJ0aMT3Tzifv3ksAN/bb+AZ7BkqZ//+sP9Vg6nsl+OpZNxfdzjg3JRjcn7bIc2chlajYCnjOlSYV/rgGVZvAJINArkVEyMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743459602; c=relaxed/simple;
-	bh=6Imi+mj6K0Ur5HmqiOzqPpY5VuUrlHSMhZMS4R6+nSY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YmxzzIWmlNMsaru5Kny3rlKB6rvcYSaD1d8fykBtoxYrnHq852bzgRUXL3qrEeL+vLp1WaBIQktFki5kXm384lavYmBWCk3/wsGly2oEUqvzRU1/LZBWsAxoAZtUF2uCij3p32coQAXAfA6IdD0p2VQ1ER/Wz4KIUgh6WdY9LAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fL/Swizj; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743459769; c=relaxed/simple;
+	bh=Jtp6wQ6r4GPlx2rZ16W9Ir0MyjHkgbNWjAamv8b1jk0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SkK3Snr64Bf/mLXMPqU2DCo4/IJ7hU23IkZnLR+72uMj7IeeQk1w8wysdcCheuOfPiIutfpo/T6sQZzWoEgcZ0fQGJf9yBngaUJ62hAdXeIP9Bmhr2/REl2SfjlHbWQ97NrVgJyOB5UIU8qqMOcJsjURMvo6f019cm95HnB84F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JiGwb7fF; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fL/Swizj"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so2454915f8f.1;
-        Mon, 31 Mar 2025 15:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743459599; x=1744064399; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+hSR1+tIbx5yMHcV2MZCy95L6aErMxELApRXynVAjg=;
-        b=fL/SwizjMfW0NmLG8kUirG28IRChM7w+Wa/FmxfFHZ/qT0tD0yzbtwzL0kdgROtczA
-         vQ7TF2fdUJXHv91lnP0TtoMabBEKeGx1GtOo0Yup2oPCbVrlw7wgkBdFaG9Sqod6jli7
-         80gFlMD7ZBpqxJgRGkydhoRBNzmTcpg2Mno9Kg8mKhSWj93tRRH5J+O5Kap/QXuLhp2i
-         /OgjJ23FsBkrU/Am4bCK1vwDbCsrvTIVe5lw/iID7rHx1i3xAwEUm2ZHoL55oV5yunTR
-         k4RF1g5melvdYk/5FUWYO+rpC0nxv9x074fHHKagj0PDY04rcu8nYAA6grKBmlL0QyEw
-         g7cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743459599; x=1744064399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b+hSR1+tIbx5yMHcV2MZCy95L6aErMxELApRXynVAjg=;
-        b=S/RdeawxSM2/Ic5uAmCTnT8jf27eKgs88zAwYBvAWN0j86r7TaD9AnEHyA3nL1vW2V
-         XcStewyHGAsW+ny31EOfiHBKtXJR2cPMRwHb5GDuJCo4PRFWjDldOw5BbqPwkmviAm9S
-         LZsQGhyA4YGtB4VcmUdGd+QQWEkx64S2TVoi8zm3kB4IBDM6ijiUiQkmWPLppKn9SkEB
-         w0guGaYvoh9QjTF+ZQs8EMXXXsPDoHj/dewO7Ba9Q+f1sKHR1h1c4PFhBDsfoGEL1jC8
-         Tv3X4f/313IasP1rDzNEjftWWkmsI3h4p6CY87z5qBgFlIflaw5iXg0Rwu9lkMQU2xJ4
-         idNw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/KIKQHvMmnoo/URt7InBvIgUyTFdnactCEXsZTyTnHvqdspPffjpGZ4zqiAvGzskoPFjTGIm9Pd0Ai3w=@vger.kernel.org, AJvYcCXAigFtG/jCn3O3igbrlaI1kCAuLgHGe9MezoDyMujPr/cIHCN9MCia99KulP3WTjaXJopWVeNV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvXfFLYXFjOddjPMAdUGgSehqGjURatMKX+tPZlZdI40aaxR9T
-	YYCjvbgZVWkoHlI+c0BGG0APJGf0x3raNhEiCj0NYSfu9rz2jOBENd4SWee4gpXwXU0V9iu+wVM
-	oGVVaxzmThMW2Ygd+C2HIcB8FG+U=
-X-Gm-Gg: ASbGncsf2UEvhp621mAOV85TBLjK0nDXL7TqZo4RpDfRs/YxMEB/TsdcVw/xuiEX3jZ
-	2JucOrQvPDpTeGZv+2VhoSnLHFs+Z3K6SFkZ7yetIurdOPMg75K+zH7GyqMmqZcYoQgB18Q5gHS
-	skvwjoBWPQ8zljgLcIcl8p2P4Z3ZBaODHWneAmyUpLG4BNeodmTdf1C2ICFEY=
-X-Google-Smtp-Source: AGHT+IFgSysh56KurewSd3Nk/bNUGW3qwrcRPIQP/JUmaMtg6PyNAGFcsjnPPM0EApLH1ebhQAo8saKc84XBpk9ytY0=
-X-Received: by 2002:a05:6000:2405:b0:39c:140b:feec with SMTP id
- ffacd0b85a97d-39c140bff36mr6815630f8f.7.1743459598932; Mon, 31 Mar 2025
- 15:19:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JiGwb7fF"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VE39wJ006354;
+	Mon, 31 Mar 2025 22:22:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=JzihdS
+	bg/SgWNVVNKINk8CKQR/API8qYfxFTRXc4ce8=; b=JiGwb7fF6vFYvL3dksJExI
+	D0NfQ3EfZScWm1jLaGzqFccl0DyEdTUlqN1VgmYS/C9VdxC0AYGSdvyg7h7Y0oZ+
+	sSCQQVocJpiB/Vm6HXgWdEJvSzLUsO/f0Q3S4Sjx41b79TOdAWap/nitwM19cAt2
+	Q+HRNqtOQAb7XFJVv6kAF+UcIBcSGmvegliv8TcDubO8Uuhpngut56SbNmntXk1n
+	q4+rjcgWnMbtxVNWEC+TN7b+gA+QFtZfXheTc9wB0FPt3NWUGAfFjaWFgAVPhQqx
+	jbHAD9xVKHajKWp2bh1U005/ifB9B4CvL6XTY4axD9eeLkaSDFyY/6YNjqj73AvA
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qvfpt72k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 22:22:46 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52VLfC7n019391;
+	Mon, 31 Mar 2025 22:22:45 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45pu6t01mm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 22:22:45 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52VMMg90393964
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 31 Mar 2025 22:22:42 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0A5958062;
+	Mon, 31 Mar 2025 22:22:43 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 42C545805D;
+	Mon, 31 Mar 2025 22:22:43 +0000 (GMT)
+Received: from [9.61.7.200] (unknown [9.61.7.200])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 31 Mar 2025 22:22:43 +0000 (GMT)
+Message-ID: <156b71cf-b94f-4fa0-a149-62bb8c2a797b@linux.ibm.com>
+Date: Mon, 31 Mar 2025 18:22:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-10-maxime.chevallier@bootlin.com> <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
- <Z-qPs7y8C09xh5_b@shell.armlinux.org.uk>
-In-Reply-To: <Z-qPs7y8C09xh5_b@shell.armlinux.org.uk>
-From: Alexander Duyck <alexander.duyck@gmail.com>
-Date: Mon, 31 Mar 2025 15:19:22 -0700
-X-Gm-Features: AQ5f1JoSBA9-etYU7M7NADKlb-o6h_I8MawO0ZvLruH8CUNhEKhc15qJBi4pe_E
-Message-ID: <CAKgT0Ud1ZRBiaDGzHmgWWNjZgGHTbcGUNFzftD3e0ndy2E9nyw@mail.gmail.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net, 
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	linux-arm-kernel@lists.infradead.org, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
-	=?UTF-8?Q?K=C3=B6ry_Maincent?= <kory.maincent@bootlin.com>, 
-	Oleksij Rempel <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, 
-	Romain Gantois <romain.gantois@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] s390/vio-ap: Fix no AP queue sharing allowed message
+ written to kernel log
+From: Anthony Krowiak <akrowiak@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: gor@linux.ibm.com, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20250311103304.1539188-1-akrowiak@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250311103304.1539188-1-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bHV9AG7GPmlV1d9mO8vEyHcUNoXYjesL
+X-Proofpoint-GUID: bHV9AG7GPmlV1d9mO8vEyHcUNoXYjesL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_10,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310151
 
-On Mon, Mar 31, 2025 at 5:51=E2=80=AFAM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Mar 27, 2025 at 06:16:00PM -0700, Alexander H Duyck wrote:
-> > On Fri, 2025-03-07 at 18:36 +0100, Maxime Chevallier wrote:
-> > > When phylink creates a fixed-link configuration, it finds a matching
-> > > linkmode to set as the advertised, lp_advertising and supported modes
-> > > based on the speed and duplex of the fixed link.
-> > >
-> > > Use the newly introduced phy_caps_lookup to get these modes instead o=
-f
-> > > phy_lookup_settings(). This has the side effect that the matched
-> > > settings and configured linkmodes may now contain several linkmodes (=
-the
-> > > intersection of supported linkmodes from the phylink settings and the
-> > > linkmodes that match speed/duplex) instead of the one from
-> > > phy_lookup_settings().
-> > >
-> > > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > > ---
-> > >  drivers/net/phy/phylink.c | 44 +++++++++++++++++++++++++++----------=
---
-> > >  1 file changed, 31 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> > > index cf9f019382ad..8e2b7d647a92 100644
-> > > --- a/drivers/net/phy/phylink.c
-> > > +++ b/drivers/net/phy/phylink.c
-> > > @@ -802,12 +802,26 @@ static int phylink_validate(struct phylink *pl,=
- unsigned long *supported,
-> > >     return phylink_validate_mac_and_pcs(pl, supported, state);
-> > >  }
-> > >
-> > > +static void phylink_fill_fixedlink_supported(unsigned long *supporte=
-d)
-> > > +{
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, supported);
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT, supported);
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, supported);
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT, supported);
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, supported)=
-;
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, supported)=
-;
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, supported)=
-;
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT, supported)=
-;
-> > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10000baseT_Full_BIT, supported=
-);
-> > > +}
-> > > +
-> >
-> > Any chance we can go with a different route here than just locking
-> > fixed mode to being only for BaseT configurations?
-> >
-> > I am currently working on getting the fbnic driver up and running and I
-> > am using fixed-link mode as a crutch until I can finish up enabling
-> > QSFP module support for phylink and this just knocked out the supported
-> > link modes as I was using 25CR, 50CR, 50CR2, and 100CR2.
-> >
-> > Seems like this should really be something handled by some sort of
-> > validation function rather than just forcing all devices using fixed
-> > link to assume that they are BaseT. I know in our direct attached
-> > copper case we aren't running autoneg so that plan was to use fixed
-> > link until we can add more flexibility by getting QSFP support going.
->
-> Please look back at phylink's historical behaviour. Phylink used to
-> use phy_lookup_setting() to locate the linkmode for the speed and
-> duplex. That is the behaviour that we should be aiming to preserve.
->
-> We were getting:
->
-> speed   duplex  linkmode
-> 10M     Half    10baseT_Half
-> 10M     Full    10baseT_Full
-> 100M    Half    100baseT_Half
-> 100M    Full    100baseT_Full
-> 1G      Half    1000baseT_Half
-> 1G      Full    1000baseT_Full (this changed over time)
-> 2.5G    Full    2500baseT_Full
-> 5G      Full    5000baseT_Full
->
-> At this point, things get weird because of the way linkmodes were
-> added, as we return the _first_ match. Before commit 3c6b59d6f07c
-> ("net: phy: Add more link modes to the settings table"):
->
-> 10G     Full    10000baseKR_Full
-> Faster speeds not supported
->
-> After the commit:
-> 10G     Full    10000baseCR_Full
-> 20G     Full    20000baseKR2_Full
-> 25G     Full    25000baseCR_Full
-> 40G     Full    40000baseCR4_Full
-> 50G     Full    50000baseCR2_Full
-> 56G     Full    56000baseCR4_Full
-> 100G    Full    100000baseCR4_Full
->
-> It's all a bit random. :(
 
-I agree. I was using pcs_validate to overcome some of that by limiting
-myself to *mostly* one link type at each speed. The only spot that got
-a bit iffy was the 50G as I support 50GAUI and LAUI-2. I was
-overcoming that by tracking the number of lanes expected and filtering
-for one or the other.
+Gentlemen,
 
-One thought I had proposed in another email was to look at adding more
-data to the fields. In the case of duplex we could overload it to also
-be the number of lanes as they represent full duplex lanes anyway.
-With that you could sort out some of the CR vs CR2 noise.
+I got some review comments from Heiko for v1 and implemented his 
+suggested changes. I have not heard from anyone else, but I think if 
+Heiko agrees that the changes are sufficient, I think this can go 
+upstream via the s390 tree. What say you?
 
-In addition I wonder if we shouldn't also look at including port type
-in the data. Using that you could essentially go through the
-post-validated supported values and OR in the types that belong to the
-various link modes for TP, FIBER, DA, ect. That would sort out some of
-the KR vs CR vs SR vs LR noise.
+Kind regards,
+Tony Krowiak
+
+On 3/11/25 6:32 AM, Anthony Krowiak wrote:
+> An erroneous message is written to the kernel log when either of the
+> following actions are taken by a user:
+>
+> 1. Assign an adapter or domain to a vfio_ap mediated device via its sysfs
+>     assign_adapter or assign_domain attributes that would result in one or
+>     more AP queues being assigned that are already assigned to a different
+>     mediated device. Sharing of queues between mdevs is not allowed.
+>
+> 2. Reserve an adapter or domain for the host device driver via the AP bus
+>     driver's sysfs apmask or aqmask attribute that would result in providing
+>     host access to an AP queue that is in use by a vfio_ap mediated device.
+>     Reserving a queue for a host driver that is in use by an mdev is not
+>     allowed.
+>
+> In both cases, the assignment will return an error; however, a message like
+> the following is written to the kernel log:
+>
+> vfio_ap_mdev e1839397-51a0-4e3c-91e0-c3b9c3d3047d: Userspace may not
+> re-assign queue 00.0028 already assigned to \
+> e1839397-51a0-4e3c-91e0-c3b9c3d3047d
+>
+> Notice the mdev reporting the error is the same as the mdev identified
+> in the message as the one to which the queue is being assigned.
+> It is perfectly okay to assign a queue to an mdev to which it is
+> already assigned; the assignment is simply ignored by the vfio_ap device
+> driver.
+>
+> This patch logs more descriptive and accurate messages for both 1 and 2
+> above to the kernel log:
+>
+> Example for 1:
+> vfio_ap_mdev 0fe903a0-a323-44db-9daf-134c68627d61: Userspace may not assign
+> queue 00.0033 to mdev: already assigned to \
+> 62177883-f1bb-47f0-914d-32a22e3a8804
+>
+> Example for 2:
+> vfio_ap_mdev 62177883-f1bb-47f0-914d-32a22e3a8804: Can not reserve queue
+> 00.0033 for host driver: in use by mdev
+>
+> Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 82 +++++++++++++++++++++----------
+>   1 file changed, 55 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index bc8669b5c304..7c34fdaa2a27 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -873,48 +873,68 @@ static void vfio_ap_mdev_remove(struct mdev_device *mdev)
+>   	vfio_put_device(&matrix_mdev->vdev);
+>   }
+>   
+> -#define MDEV_SHARING_ERR "Userspace may not re-assign queue %02lx.%04lx " \
+> -			 "already assigned to %s"
+> +#define MDEV_SHARING_ERR "Userspace may not assign queue %02lx.%04lx to mdev: already assigned to %s"
+>   
+> -static void vfio_ap_mdev_log_sharing_err(struct ap_matrix_mdev *matrix_mdev,
+> -					 unsigned long *apm,
+> -					 unsigned long *aqm)
+> +#define MDEV_IN_USE_ERR "Can not reserve queue %02lx.%04lx for host driver: in use by mdev"
+> +
+> +static void vfio_ap_mdev_log_sharing_err(struct ap_matrix_mdev *assignee,
+> +					 struct ap_matrix_mdev *assigned_to,
+> +					 unsigned long *apm, unsigned long *aqm)
+> +{
+> +	unsigned long apid, apqi;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			dev_warn(mdev_dev(assignee->mdev), MDEV_SHARING_ERR,
+> +				 apid, apqi, dev_name(mdev_dev(assigned_to->mdev)));
+> +		}
+> +	}
+> +}
+> +
+> +static void vfio_ap_mdev_log_in_use_err(struct ap_matrix_mdev *assignee,
+> +					unsigned long *apm, unsigned long *aqm)
+>   {
+>   	unsigned long apid, apqi;
+> -	const struct device *dev = mdev_dev(matrix_mdev->mdev);
+> -	const char *mdev_name = dev_name(dev);
+>   
+> -	for_each_set_bit_inv(apid, apm, AP_DEVICES)
+> -		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS)
+> -			dev_warn(dev, MDEV_SHARING_ERR, apid, apqi, mdev_name);
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			dev_warn(mdev_dev(assignee->mdev), MDEV_IN_USE_ERR,
+> +				 apid, apqi);
+> +		}
+> +	}
+>   }
+>   
+>   /**
+>    * vfio_ap_mdev_verify_no_sharing - verify APQNs are not shared by matrix mdevs
+>    *
+> + * @assignee: the matrix mdev to which @mdev_apm and @mdev_aqm are being
+> + *            assigned; or, NULL if this function was called by the AP bus
+> + *            driver in_use callback to verify none of the APQNs being reserved
+> + *            for the host device driver are in use by a vfio_ap mediated device
+>    * @mdev_apm: mask indicating the APIDs of the APQNs to be verified
+>    * @mdev_aqm: mask indicating the APQIs of the APQNs to be verified
+>    *
+> - * Verifies that each APQN derived from the Cartesian product of a bitmap of
+> - * AP adapter IDs and AP queue indexes is not configured for any matrix
+> - * mediated device. AP queue sharing is not allowed.
+> + * Verifies that each APQN derived from the Cartesian product of APIDs
+> + * represented by the bits set in @mdev_apm and the APQIs of the bits set in
+> + * @mdev_aqm is not assigned to a mediated device other than the mdev to which
+> + * the APQN is being assigned (@assignee). AP queue sharing is not allowed.
+>    *
+>    * Return: 0 if the APQNs are not shared; otherwise return -EADDRINUSE.
+>    */
+> -static int vfio_ap_mdev_verify_no_sharing(unsigned long *mdev_apm,
+> +static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *assignee,
+> +					  unsigned long *mdev_apm,
+>   					  unsigned long *mdev_aqm)
+>   {
+> -	struct ap_matrix_mdev *matrix_mdev;
+> +	struct ap_matrix_mdev *assigned_to;
+>   	DECLARE_BITMAP(apm, AP_DEVICES);
+>   	DECLARE_BITMAP(aqm, AP_DOMAINS);
+>   
+> -	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+> +	list_for_each_entry(assigned_to, &matrix_dev->mdev_list, node) {
+>   		/*
+> -		 * If the input apm and aqm are fields of the matrix_mdev
+> -		 * object, then move on to the next matrix_mdev.
+> +		 * If the mdev to which the mdev_apm and mdev_aqm is being
+> +		 * assigned is the same as the mdev being verified
+>   		 */
+> -		if (mdev_apm == matrix_mdev->matrix.apm &&
+> -		    mdev_aqm == matrix_mdev->matrix.aqm)
+> +		if (assignee == assigned_to)
+>   			continue;
+>   
+>   		memset(apm, 0, sizeof(apm));
+> @@ -924,15 +944,22 @@ static int vfio_ap_mdev_verify_no_sharing(unsigned long *mdev_apm,
+>   		 * We work on full longs, as we can only exclude the leftover
+>   		 * bits in non-inverse order. The leftover is all zeros.
+>   		 */
+> -		if (!bitmap_and(apm, mdev_apm, matrix_mdev->matrix.apm,
+> -				AP_DEVICES))
+> +		if (!bitmap_and(apm, mdev_apm, assigned_to->matrix.apm,
+> +				AP_DEVICES)) {
+>   			continue;
+> +		}
+>   
+> -		if (!bitmap_and(aqm, mdev_aqm, matrix_mdev->matrix.aqm,
+> -				AP_DOMAINS))
+> +		if (!bitmap_and(aqm, mdev_aqm, assigned_to->matrix.aqm,
+> +				AP_DOMAINS)) {
+>   			continue;
+> +		}
+>   
+> -		vfio_ap_mdev_log_sharing_err(matrix_mdev, apm, aqm);
+> +		if (assignee) {
+> +			vfio_ap_mdev_log_sharing_err(assignee, assigned_to,
+> +						     apm, aqm);
+> +		} else {
+> +			vfio_ap_mdev_log_in_use_err(assigned_to, apm, aqm);
+> +		}
+>   
+>   		return -EADDRINUSE;
+>   	}
+> @@ -961,7 +988,8 @@ static int vfio_ap_mdev_validate_masks(struct ap_matrix_mdev *matrix_mdev)
+>   					       matrix_mdev->matrix.aqm))
+>   		return -EADDRNOTAVAIL;
+>   
+> -	return vfio_ap_mdev_verify_no_sharing(matrix_mdev->matrix.apm,
+> +	return vfio_ap_mdev_verify_no_sharing(matrix_mdev,
+> +					      matrix_mdev->matrix.apm,
+>   					      matrix_mdev->matrix.aqm);
+>   }
+>   
+> @@ -2516,7 +2544,7 @@ int vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
+>   
+>   	mutex_lock(&matrix_dev->guests_lock);
+>   	mutex_lock(&matrix_dev->mdevs_lock);
+> -	ret = vfio_ap_mdev_verify_no_sharing(apm, aqm);
+> +	ret = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
+>   	mutex_unlock(&matrix_dev->mdevs_lock);
+>   	mutex_unlock(&matrix_dev->guests_lock);
+>   
+
