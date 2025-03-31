@@ -1,178 +1,117 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9931C134BD
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919533234;
+	Mon, 31 Mar 2025 13:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743428634; cv=none; b=cSzWf2XZfpVIZ8JKITeWCwNvoPs7pAtm2XlC9Ju6r+oNKXKntl85EwKbWM6+qIGOVKIvxzeXcEz/Jr8lf1PG+/AT/5RMm1JlukCTD0UR/vobUzmzqmsQC2Xj3SRjsfIhekBYm0lkyEHHKqzNowU2jU2g7wBKZLJdeeIp9kMUDGI=
+	t=1743428736; cv=none; b=WiP1P124RdgJCcsO+49dYH+WcG65mIp9e5GrqJrVamxnKra+5YkhLxg7VvpgzMa/hG4iOPK9Ez/fMEv4E4yZ7yKSb/nYEDJnh253P6bRCPtLWkxN6l5gZagkY9mfq9wdPzvIIy/HeDwLSF6FM8Z/BdKzkhX6DaLYmhX4f3dj3mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743428634; c=relaxed/simple;
-	bh=sKGQYZYdqcsj0/jlpSudpr+IAb0SOvz1vgVsAAV0WUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TKWQzaaMN95Hi63g4S6RkkWOv2udL2llN40Nf4EPXckTGw+qfY0DbTiIqn+DzfwHUM/PDEv6v8HTFsMp4Qy8VTtVSpPV66bSDkmDHhTmJqmzd9pOLf84TdE/38BN+6u+qp0zjyjiaPtMYrO2IKujXir2w94g4l+mskOLqRoTmhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUsAgemX; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743428736; c=relaxed/simple;
+	bh=NTCru1twM6AuoKrQ04g241v64utTJ5vRDXMNNtjc05w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zm7QXZUyK0c030F9rS/fy3Pe3WfSnHZYnVnxqxG3q3D0J8wbtSvBLYBHhI5n20Ml6hHTAldOpFt02gPt1vQKEMAFy/oh7cyn38l0Z2GDRmGF5ojXwOO6UJ8HRT0pA1mZn2IqEYIlxIhNfZH4emfvMsB1Kv3M2AX1+JiCrZH/JXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=O6MG2Tei; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUsAgemX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-225477548e1so79563955ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:43:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743428632; x=1744033432; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=acRC261SaEKC/7/W6BFAn2cHMzShm+CQ8Ads6iAgzlw=;
-        b=lUsAgemX/5H7rtQy8yk+tqitET0Hd0H5VfqpndqrhMArYGYVuHwMn5Yl6F+1a3Gk1V
-         FZuEy3S7tteIxtAmInTmpRzq1pr3g7KxEj7UmsLA3BKnlU/vvl3pNSsAaPKOKDfYHRXF
-         jlmUc7SzP4ySizilbXGYVKEP0xqON4XiXKQbpVhgb1Tq1IQBedqFzTPHdMF6lP9Erjxf
-         65VnJuNyOT9uVuVOefVDBopMvETaDjzSioR52hehqEaOz4XFnLDUH92T9TrdgeXTiPsh
-         HCZV2MGqclCZ2yX6CwfRTW8B0Hk/Ym4MfgIdJWksfs+t03QkvvkSoKLw3cJKrPUR72wI
-         bWJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743428632; x=1744033432;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=acRC261SaEKC/7/W6BFAn2cHMzShm+CQ8Ads6iAgzlw=;
-        b=MFUcOipCboTte43CgbSaBNEvX71uIwsIv+bke8ZDRZdmdJCIaynUFxn+laAN6Xg+/M
-         eikJzWUjCoLKGlD8ckbDbLDIgT1+9ALwqDtHun82Mw8zSY5dVobJb/gRrc8/cfapeX06
-         0T775r9abIVV2gD/Dx7rnN4VcLFx6wPlbyHK7vD+yzTCkwCiy4qpvxGuzyLUSbfGBK3H
-         u6zWlqByrnc+h9xQoMjyZ27pTI4dJwG8IwnWURU1ON8j55atLB6yPlk9J15LZZzDo+BJ
-         IAINsxSMDinqcxYOVzmZLP7lBNOO5rrj7dhqHdAeFvq0oKpNcMl8segGCm7ScfWw3r1b
-         tq2w==
-X-Forwarded-Encrypted: i=1; AJvYcCV2+E/1tM0L5+KncHwmH7h1YkJ85gttoJFktRcEBuSvlIQ9aBu09JhdVSKCyeF075qIcakOmbdmfDPuHrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKJTzMdfpd/GvFlytB+iwIt7laT1U8wR4+xB2118tFl6/v8M0J
-	TL/n271NMX4MOTqq3+2MOkEI0CQN1yMiy2jjIPCw/EMTxxMMo3HyFauOY1GVZOwhpTTcGovjwaH
-	mXkcT+jVYYqB6jdd8b6Xy3rbahXg=
-X-Gm-Gg: ASbGnctd/piPmzoF0sT16JuyLyJNuEZvLp3n+fW4F715+L2qmvd6hr3z1nANzYuRWhP
-	DFUAolteaXBhza7mbPvjRY9142BRj3614XERkGGmJO8u6JkEISf6V0+qIba6yxB0DnkRW6ieJeH
-	0ExvLZXnAYfo/v9tYlWAGFs6HWmsJcMe6whlGi
-X-Google-Smtp-Source: AGHT+IEPmbA0/4hiOM9hOsW56MQXEn4vU5JkEnSFv38ADOJ8A89PqZHuvxqXawZEyBTy1YJmlUmc91EzpBLa2NbxWV8=
-X-Received: by 2002:a17:90b:510a:b0:2ee:ab29:1a63 with SMTP id
- 98e67ed59e1d1-30531f7c897mr14182798a91.3.1743428631746; Mon, 31 Mar 2025
- 06:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="O6MG2Tei"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZRC7S75H4z9v2m;
+	Mon, 31 Mar 2025 15:45:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1743428725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yNki/BaaXgqFuAU7Rhxq4DYyRe0qZNwLMs+MQ5hVwvM=;
+	b=O6MG2TeioBcAI1Qnb54BydAhuwf7Sbw68IacAKC7rClD0YCZTkxWf+oANHet08+Q4rOb3R
+	of0jNuOcN2rTJxe1WpK5J3ZVocemDBwGWUlGpft0fVQN7oElFkngn/CJO3Cujk/s7uOApj
+	rXtfDcWpqazz3Fjb0n6pCkvas8UIh4i40VO8lqjO5bWo4S0XyZ2E0RzgQPNu8IJGJPJmDU
+	QbIeQzaZ7uTSPQsEifpXENxQU1cD7sBJ3VbtXtBOshefcFPeHQaiKmSD+4X5RFHNysx8hP
+	lNAg0ssWH1K9brcMEa9uCjOj5LFO3BQREHj/rjRSJgquUE9C5BzN6XYq5cHeBw==
+Message-ID: <4b5fc903-f2c1-4e7e-8a4f-629566bff3ad@mailbox.org>
+Date: Mon, 31 Mar 2025 15:45:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310-8ulp_hdmi-v1-1-a2f231e31987@atmark-techno.com>
- <v57uy3gddzcoeg3refyv7h6j3ypx23mobctybt27xzdyqy6bgb@atzdlqlytz3c> <Z861gsaGY6bGSisf@atmark-techno.com>
-In-Reply-To: <Z861gsaGY6bGSisf@atmark-techno.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Mon, 31 Mar 2025 08:43:38 -0500
-X-Gm-Features: AQ5f1JpJG3x3SEs9GIv1mzubPpNEg-PfTCQ359LMo2SckOQ0fNPeeBD-j5SgQEM
-Message-ID: <CAHCN7xKUdveqVnOXXRL-RhXFrN4OUjJC+VgZguy1kYjx230wCw@mail.gmail.com>
-Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: return closest rate
- instead LUT
-To: Dominique Martinet <dominique.martinet@atmark-techno.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Frieder Schrempf <frieder.schrempf@kontron.de>, Marco Felsch <m.felsch@pengutronix.de>, 
-	Lucas Stach <l.stach@pengutronix.de>, linux-phy@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Makoto Sato <makoto.sato@atmark-techno.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
+ optional aux clock
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84sk?=
+ =?UTF-8?Q?i?= <kw@linux.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
+ <20250330195715.332106-2-marek.vasut+renesas@mailbox.org>
+ <20250331-excellent-nautilus-of-apotheosis-fbd30a@krzk-bin>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <20250331-excellent-nautilus-of-apotheosis-fbd30a@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: 8qjyfopxbb8111g3aaicaxtrreq91134
+X-MBO-RS-ID: a0dc09d5d8d0cbf734d
 
-On Mon, Mar 10, 2025 at 4:49=E2=80=AFAM Dominique Martinet
-<dominique.martinet@atmark-techno.com> wrote:
->
-> Uwe Kleine-K=C3=B6nig wrote on Mon, Mar 10, 2025 at 10:14:23AM +0100:
-> > > for 83.5mHz, the integer divider generates 83.2mHz (-0.36%), but the
-> > > next LUT value (82.5mHz) is 1.2% off which incorrectly rejects modes
-> > > requiring this frequency.
-> >
-> > Is the unit here MHz or mHz? I suspect the former?
->
-> Err, yes MHz; I was still half asleep when I added that example to the
-> commit message..
->
-> > Without having looked in detail, I think it would be nice to reduce cod=
-e
-> > duplication between phy_clk_round_rate() and phy_clk_set_rate(). The
-> > former has
-> >
-> >       if (rate > 297000000 || rate < 22250000)
-> >               return -EINVAL;
-> >
-> > which seems to be lacking from the latter so I suspect there are more
-> > differences between the two functions than fixed here?
->
-> For this particular rate check, I believe that if phy_clk_round_rate()
-> rejected the frequency then phy_clk_set_rate() cannot be called at all
-> with the said value (at least on this particular setup going through the
-> imx8mp-hdmi-tx bridge validating frequencies first before allowing
-> modes), not that it'd hurt to recheck.
+On 3/31/25 10:19 AM, Krzysztof Kozlowski wrote:
+> On Sun, Mar 30, 2025 at 09:56:09PM +0200, Marek Vasut wrote:
+>> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+>> index bb3f843c59d91..5e2624d4c62c7 100644
+>> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+>> @@ -46,12 +46,14 @@ properties:
+>>         - const: app
+>>   
+>>     clocks:
+>> -    maxItems: 2
+>> +    minItems: 2
+>> +    maxItems: 3
+>>   
+>>     clock-names:
+> 
+> missing minItems: 2
+> 
+> (xxx and xxx-names are always synced in dimensions)
 
-I believe that is true.  I considered adding it, but when I put debug
-code in to trace what was happening, it was being rejected, in one
-place, so the other didn't need to.  If the general consensus is to
-have it in both places, I can add it.
+Fixed, noted, thanks !
 
->
->
-> In general though I agree these are doing pretty much the same thing,
-> with clk_round_rate() throwing away the pms values and there's more
-> duplication than ideal...
+> I understand that clock is optional? Your diagram in commit msg suggests
+> that clock is there always.
 
-I've been working on creating some caching to determine the best
-values for the PHY and remember them, so the work doesn't have to be
-done again if the next call uses the same clock rate.  I'm not quite
-ready to submit it, because I need to rebase it on Linux-Next with
-some of the other updates requested by Uwe.  My updates also remove
-the look-up table completely and use an algorithm to determine the
-fractional divider values - thanks to Frieder's python code that I
-ported to C.  I experimented quite a bit with which values have more
-impact and reorganized his nested for-loops to keep track of how many
-iterations are done and also measuring the time it takes to do the
-calculations, so the code doesn't really look like his as much as one
-would think.
+The clocks which supply the PCIe controller ("ref" clock) and PCIe bus 
+("aux" clock) can be modeled as either, single clock (one clock for both 
+controller AND bus, i.e. single "ref" clock), or two separate clocks 
+(one for controller AND one for bus, i.e. "ref" clock AND "aux" clock).
 
-The downside with my updates is that running 'modetest'  on the 4K
-monitor that I use has so many entries, the time it takes to calculate
-all the values for the monitor takes a second or two longer than
-before, because searching the LUT is quick and doing a series of
-for-loops to find the nominal values is more time consuming.  We could
-potentially keep the LUT and only use this new calculation if the
-entry isn't in the LUT.  I am not generally a fan of LUT's if the
-values can be calculated, but I can also see the advantage of speed.
+That depends on whether the clock generator (the 9FGV0441 brick in the 
+ASCII schematic in the commit message in this case) has one flip switch 
+to enable both clock (controller and bus, i.e. "ref" clock only), or has 
+separate flip switches to enable the different outputs (controller or 
+bus, i.e. "ref" and "aux" clock).
 
-> Unfortunately the code that computes registers for the integer divider
-> does it in a global variable so just computing everything in
-> round_rate() would forget what last setting was actually applied and
-> break e.g. resume, but yes that's just refactoring that should be done.
->
-> While we're here I also have no idea what recalc_rate() is supposed to
-> do but that 'return 74250000;' is definitely odd, and I'm sure there are
-> other improvements that could be made at the edges.
+So yes, the "aux" is optional from the software side, but on the 
+hardware side, the "aux" bus clock are always there. They however do not 
+always have separate flip switch to enable/disable them.
 
-I am not sure where these values came from either.
-
->
->
-> That's quite rude of me given I just sent the patch, but we probably
-> won't have time to rework this until mid-april after some urgent work
-> ends (this has actually been waiting for testing for 3 months
-> already...)
-> If this doesn't bother anyone else we can wait for a v2 then, but
-
-If you want, I can submit my stuff as an RFC to give it a try and
-solicit feedback.
-
-> otherwise it might be worth considering getting as is until refactoring
-> happens (and I pinky promise I'll find time before this summer -- I can
-> send a v2 with commit message fixed up as Frieder suggested if this is
-> acceptable to you)
->
-
-adam
->
->
-> Thanks for the quick feedback either way, and sorry for the long delay.
-> --
-> Dominique
->
->
+-- 
+Best regards,
+Marek Vasut
