@@ -1,121 +1,64 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D32F21A45F;
-	Mon, 31 Mar 2025 21:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D2021B90B
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743456109; cv=none; b=pUSeaBCsN3P4K10bLDpcqFp6M/9bWDJ/PATyxLwn7FsfRMfjxR09wvTT+kxMhMIHMCbh5sUPWGZV7XuaibTVLLIsSd1tKc2NK3R+Qx1VHMJdj1/tKn5DXltupJbJxV+l700yPZTDPYO0Cg4b+q7kVAN+5XgBEytgS5OC42JTK8U=
+	t=1743456145; cv=none; b=lLE1Rd8fDij1VneeHe3J0hKmR+37XuOY4OxP3YR1+k5uosGMCGsXVRepEAnngA8dCykY1eNYsQqB4pSIrEJ3C5Rl0XfEoO4Fcx3eGhRsmFwRS/y7GVYehhtvY+UwE+gUruTHYkwUD9cSMtmEauaSyyD5R3jk+ITPVfVRzDcak/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743456109; c=relaxed/simple;
-	bh=pt7lnExktj71TQdLPtKq2v2O2M4D3Ml4XArqoPjoZ/U=;
+	s=arc-20240116; t=1743456145; c=relaxed/simple;
+	bh=rKav0JmmyVgTRwoYHiKEDVHyDTN/Jdtmh/51Tpk45Zs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWGtoSSeZ52t7TwiYB+6PDFC130SX3bqbjwdBwTT9pmsrc9YEm2WuVfH6WOaQXSg4MnMhZ4MKfxeRcpjEGhf2nOKkWa8JuGRiTckYp9iB7CSQKRaZTG+KX8N6fgMYgIbMBJv7oMtdnG4eL0VWArlFR6Q5XaA0wOcv+dOawcDfR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k8nG79Dv; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/98igF/iXsRbGA8xGaioHT5gYuzf6hKrKCRdUdB8reytfgbIXYynC+uXv5zkwGX/kiG80RHfm3ME+syPumXJ9PdzDUDNNIltAn+R1hO6dIjAC7EcHAVDKNvkz1iW/eoicKXZKs5bO/fV3gNfr11EG7Joe4JJKFZz+4dPaNecCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6y+J5VL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8nG79Dv"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so55804226d6.0;
-        Mon, 31 Mar 2025 14:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743456106; x=1744060906; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HuLwdD/d3kWZQrIQyhz8gsUtIDe+p+pTo64F1sYYb40=;
-        b=k8nG79DvrjibULWPB3gxrLTp/6yX9QolKzQHOwM+qIWK+/lqKlm02U0S3HaLCoNdWn
-         rCFz0KcTsFxJmoRltuBwOzNag9YC1dvWzI/dUgYuTS7xbCTSWomKMDbciPKtCQ99neg6
-         oSdQszQrUnX/h2HNoGJMBtl0cFK0dq+ONbkZjhzJf6efIQ2P/9r99zAdiriUvtI4GhO1
-         PxukVBNLepwa+97wZaam+TcYNxsETcL3Rq3EzOYPK4mFe4yAFLGOCv2/QnNmkIN3Dwym
-         LOmhW8TEwnYrwKbfEqOk30+DStmisc5z2wLldZghm9Q9Aqi0sAhKCr9Tw+44vLTrKAMI
-         9AkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743456106; x=1744060906;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HuLwdD/d3kWZQrIQyhz8gsUtIDe+p+pTo64F1sYYb40=;
-        b=ZuGthAc47d59QnStM9yIW2P87PsyTEYVYbNEMuR8Ygt0Cb/J7+Hrgf/cUfIxM/UIQ5
-         0PytGp6mR7LEJb4KgJ+29LqcTNNWvwE/H6bU7Qjv0cB03qTBlz16buzSkDkOLojyvYcR
-         8tsYStGkPsZt/H+kJNotarLErE9NDkADjgN2ZzufjH35Xe7oH7wotyVjg2TTRFISCX9V
-         YLYicYeLB9ld7Kn/w2uJNI+Uzt7U2KVadlElaHPKXiPh2j+INLfEngwPqVtY5GwSVCAu
-         4VeB7wGHtnwONAE9KJ6wbp/bgZYusHy3kkQRzAf4NdrK82LzmNNV+sCPMxcODzqQxIgx
-         F+rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUntde0a5O2IlwVfVHFdJenaXomXV4HS2vnvNwRYbNqME0/inqTQFl1e5fH8xoHkK2v/glCdEmO@vger.kernel.org, AJvYcCX4/nvyV+Ji/zMA7tez34oJn/DVPtrYRuyJpxItON7dBCNK7mMMCUHVH1lPnPPFdEveBCIjU4g9QqhUzyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2jsS8rtg90QFDOl647S+7WnY4omuEDSMor0C2goRF9I59rzIN
-	WS+AcK0HyCaCK9RrHRkTnkVuDsG10DgUKcsRwG7xXuChlRWioOQn
-X-Gm-Gg: ASbGncvoy35D5WlCRjVb+iAY1C7yKTz5i/O9esGMM3wBntoV2p9+D36J1hLk/HF1e/A
-	+h53ykYLd88rBEWk/xJXPVvJ3Qg/8nKgwwRYvEOU7Le3NbVZxWooP1EZ9/RxAxnCkICfyM98pXP
-	e9YK8twBQE8Dah2sZ8EIMpaIH/26M8M4gLtt0jcWgzLpKg0cV7NJgqKsA5UGBtQ2cbvlLhO16F4
-	aaHWp4+QHleWkGhT+RoPoChJrypPJaw2qIEK5yhaQ9N6Cg8KAuaNlsG7PIQTMz/clP1o30/FfnV
-	SH26KM6ka2OgJvINSGDtmDqXSiBMrzT34Hi6ZdaD0ThfYP4bFq4h7dZwLzJ9PVFA5kXegyT3rM/
-	YdLAdDctV10QIYlah7MfDMnZwNi3g1Km23bk=
-X-Google-Smtp-Source: AGHT+IEUuCr4Y8iWcydXMoRJyuChOkNdR02ZlhsDE49aVFL+35x8X+J7ddPYEn9XPDnoN/1yABHz8A==
-X-Received: by 2002:a05:6214:4005:b0:6e8:f701:f6d9 with SMTP id 6a1803df08f44-6eed604eac6mr130492316d6.12.1743456106259;
-        Mon, 31 Mar 2025 14:21:46 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec965a3c8sm51382826d6.58.2025.03.31.14.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 14:21:45 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1495A120007C;
-	Mon, 31 Mar 2025 17:21:45 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Mon, 31 Mar 2025 17:21:45 -0400
-X-ME-Sender: <xms:aAfrZ7Gwslxo75JT2QicoikUpn74jnC6xNffKdIJsNVHuHTgECv-nw>
-    <xme:aAfrZ4Vd9qsmowB5KTmJdARZcssMk6PCuu-uk1I9PKIcnlL_pS3JWtyTkWSXoyrRB
-    ybHZAKDftqfksV6ZQ>
-X-ME-Received: <xmr:aAfrZ9Kn5xOLc1vkLyWNQPhByML0db-4-Y0p77zaV3iNmiN1we54zshuERY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
-    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheplhhlohhnghesrhgvughhrghtrdgtohhmpdhrtghpthhtohepphgruhhlmhgtkhes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphht
-    thhopehlvghithgrohesuggvsghirghnrdhorhhgpdhrtghpthhtohepmhhinhhgohesrh
-    gvughhrghtrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopegrvghhsehmvghtrgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnh
-    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:aQfrZ5GM5LBlwrtkQrMD7m0VAEfJIJRwmtpnJCHAJZYnhIorgrKCOA>
-    <xmx:aQfrZxXkiTebM2mLN4Zigo04vCzP2uU_FA4_d-kh_bMQhxAAR79v_A>
-    <xmx:aQfrZ0OX44IJZ0aUa6nLXAjr2fGJMmSSM-2SEtOSjoDbwN7g7SfADg>
-    <xmx:aQfrZw0rLzMOissZ92LNF4CWSuspVSlSG7epdYc5sIisBtF_7qthsA>
-    <xmx:aQfrZ2XPbyoPsGitZS4Vxp6ukFUoCNMa_8JaZHYN0vVZTITt_r8yWqjO>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 31 Mar 2025 17:21:44 -0400 (EDT)
-Date: Mon, 31 Mar 2025 14:21:28 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Waiman Long <llong@redhat.com>
-Cc: paulmck@kernel.org, Eric Dumazet <edumazet@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, aeh@meta.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with
- expedited RCU synchronization
-Message-ID: <Z-sHWAQ2TnLMEIls@boqun-archlinux>
-References: <Z-L5ttC9qllTAEbO@boqun-archlinux>
- <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
- <Z-MHHFTS3kcfWIlL@boqun-archlinux>
- <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com>
- <Z-OPya5HoqbKmMGj@Mac.home>
- <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
- <Z-rQNzYRMTinrDSl@boqun-archlinux>
- <9f5b500a-1106-4565-9559-bd44143e3ea6@redhat.com>
- <35039448-d8e8-4a7d-b59b-758d81330d4b@paulmck-laptop>
- <69592dc7-5c21-485b-b00e-1c34ffb4cee8@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6y+J5VL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743456144; x=1774992144;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rKav0JmmyVgTRwoYHiKEDVHyDTN/Jdtmh/51Tpk45Zs=;
+  b=d6y+J5VL47lMweCVPetwvBRNUga/WCY1jEwYB1qYbweQSuBulGIL3P97
+   UhC2mBRWHuP/ORGu8DPkSi4OMUZTHJjg3zln5iL78vjzGa+u3tJ/DE9Du
+   tt47mzfA5Z2pVMKUARia8OZtPujNKDwupuVUWMfigqk6qO6ADMOC9j/+I
+   DKl6g55jELanOD0IacrpZLvWNb1RXP001LQiw9+BmJm/6qYjzO3deVrVl
+   AbUjtQBanlqBZy0HA/7SJz2vPg0bv+nvme7nvWwjXQJqFnAOLu0e20yDL
+   WF43lPMuuswZkTaFDxL1U/5nxx42KKr/LOxMjs3w31HAVE34i5rQCQz0v
+   A==;
+X-CSE-ConnectionGUID: SKA2co1mSFWWQHedwQG14A==
+X-CSE-MsgGUID: yrCda5ZXRTiZcx2cE8ysaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44670580"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="44670580"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:22:24 -0700
+X-CSE-ConnectionGUID: LJTqj3IGRFyOACY+wGOrPQ==
+X-CSE-MsgGUID: FZyT9hCsRB6ZSzOJMLYz9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="126423139"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:22:22 -0700
+Date: Mon, 31 Mar 2025 14:22:21 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v2 05/16] x86/resctrl: Add and initialize rdt_resource
+ for package scope core monitor
+Message-ID: <Z-sHjRxLDwGDP68i@agluck-desk3>
+References: <20250321231609.57418-1-tony.luck@intel.com>
+ <20250321231609.57418-6-tony.luck@intel.com>
+ <1dcd185a-17b9-446f-a19f-fc2355c4c6ea@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -124,112 +67,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69592dc7-5c21-485b-b00e-1c34ffb4cee8@redhat.com>
+In-Reply-To: <1dcd185a-17b9-446f-a19f-fc2355c4c6ea@intel.com>
 
-On Mon, Mar 31, 2025 at 02:57:20PM -0400, Waiman Long wrote:
-> On 3/31/25 2:33 PM, Paul E. McKenney wrote:
-> > On Mon, Mar 31, 2025 at 01:33:22PM -0400, Waiman Long wrote:
-> > > On 3/31/25 1:26 PM, Boqun Feng wrote:
-> > > > On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
-> > > > [...]
-> > > > > > > Anyway, that may work. The only problem that I see is the issue of nesting
-> > > > > > > of an interrupt context on top of a task context. It is possible that the
-> > > > > > > first use of a raw_spinlock may happen in an interrupt context. If the
-> > > > > > > interrupt happens when the task has set the hazard pointer and iterating the
-> > > > > > > hash list, the value of the hazard pointer may be overwritten. Alternatively
-> > > > > > > we could have multiple slots for the hazard pointer, but that will make the
-> > > > > > > code more complicated. Or we could disable interrupt before setting the
-> > > > > > > hazard pointer.
-> > > > > > Or we can use lockdep_recursion:
-> > > > > > 
-> > > > > > 	preempt_disable();
-> > > > > > 	lockdep_recursion_inc();
-> > > > > > 	barrier();
-> > > > > > 
-> > > > > > 	WRITE_ONCE(*hazptr, ...);
-> > > > > > 
-> > > > > > , it should prevent the re-entrant of lockdep in irq.
-> > > > > That will probably work. Or we can disable irq. I am fine with both.
-> > > > Disabling irq may not work in this case, because an NMI can also happen
-> > > > and call register_lock_class().
-> > > Right, disabling irq doesn't work with NMI. So incrementing the recursion
-> > > count is likely the way to go and I think it will work even in the NMI case.
-> > > 
-> > > > I'm experimenting a new idea here, it might be better (for general
-> > > > cases), and this has the similar spirit that we could move the
-> > > > protection scope of a hazard pointer from a key to a hash_list: we can
-> > > > introduce a wildcard address, and whenever we do a synchronize_hazptr(),
-> > > > if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
-> > > > hence synchronize_hazptr() will still wait until it's zero'd. Not only
-> > > > this could help in the nesting case, it can also be used if the users
-> > > > want to protect multiple things with this simple hazard pointer
-> > > > implementation.
-> > > I think it is a good idea to add a wildcard for the general use case.
-> > > Setting the hazptr to the list head will be enough for this particular case.
-> > Careful!  If we enable use of wildcards outside of the special case
-> > of synchronize_hazptr(), we give up the small-memory-footprint advantages
-> > of hazard pointers.  You end up having to wait on all hazard-pointer
-> > readers, which was exactly why RCU was troublesome here.  ;-)
-
-Technically, only the hazard-pointer readers that have switched to
-wildcard mode because multiple hazptr critical sections ;-)
-
+On Mon, Mar 31, 2025 at 09:18:12AM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> If the plan is to have one global set of hazard pointers for all the
-
-A global set of hazard pointers for all the possible use cases is the
-current plan (at least it should be when we have fully-featured hazptr
-[1]). Because the hazard pointer value already points the the data to
-protect, so no need to group things into "domain"s.
-
-> possible use cases, supporting wildcard may be a problem. If we allow
-
-I had some off-list discussions with Paul, and I ended up with the idea
-of user-specific wildcard (i.e. different users can have different
-wildcards) + one global set of hazard pointers. However, it just occured
-to me that it won'd quite work in this simple hazard pointer
-implementation (one slot per-CPU) :( Because you can have a user A's
-hazptr critical interrupted by a user B's interrupt handler, and if both
-A & B are using customized wildcard but they don't know each other, it's
-not going to work by setting either wildcard value into the slot.
-
-To make it clear for the discussion, we have two hazard pointer
-implementations:
-
-1. The fully-featured one [1], which allow users to provide memory for
-   hazptr slots, so no issue about nesting/re-entry etc. And wildcard
-   doesn't make sense in this implemenation.
-
-2. The simple variant, which is what I've proposed in this thread, and
-   since it only has one slot per CPU, either all the users need to
-   prevent the re-entries or we need a global wildcard. Also the readers
-   of the simple variant need to disable preemption regardlessly because
-   it only has one hazptr slot to use. That means its read-side critical
-   section should be short usually.
-
-I could try to use the fully-featured one in lockdep, what I need to do
-is creating enough hazard_context so we have enough slots for lockdep
-and may or may not need lockdep_recursion to prevent reentries. However,
-I still believe (or I don't have data to show otherwise) that the simple
-variant with one slot per CPU + global wildcard will work fine in
-practice.
-
-So what I would like to do is introducing the simple variant as a
-general API with a global wildcard (because without it, it cannot be a
-general API because one user have to prevent entering another user's
-critical section), and lockdep can use it. And we can monitor the
-delay of synchronize_shazptr() and if wildcard becomes a problem, move
-to a fully-featured hazptr implementation. Sounds like a plan?
-
-[1]: https://lore.kernel.org/lkml/20240917143402.930114-2-boqun.feng@gmail.com/
-
-Regards,
-Boqun
-
-> different sets of hazard pointers for different use cases, it will be less
-> an issue. Anyway, maybe we should skip wildcard for the current case so that
-> we have more time to think through it first.
+> On 3/21/25 4:15 PM, Tony Luck wrote:
+> > New resource for monitoring core events reported at package level.
 > 
-> Cheers,
-> Longman
+> Could you please add proper (per Documentation/process/maintainer-tip.rst)
+> changelogs to all patches in the series?
+
+Will do.
+
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  include/linux/resctrl.h            |  1 +
+> >  include/linux/resctrl_types.h      |  1 +
+> >  fs/resctrl/internal.h              |  2 ++
+> >  arch/x86/kernel/cpu/resctrl/core.c | 11 +++++++++++
+> >  fs/resctrl/rdtgroup.c              |  2 ++
+> >  5 files changed, 17 insertions(+)
+> > 
+> > diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> > index 25c3ee78de3d..6c895ec220fe 100644
+> > --- a/include/linux/resctrl.h
+> > +++ b/include/linux/resctrl.h
+> > @@ -233,6 +233,7 @@ enum resctrl_scope {
+> >  	RESCTRL_L2_CACHE = 2,
+> >  	RESCTRL_L3_CACHE = 3,
+> >  	RESCTRL_L3_NODE,
+> > +	RESCTRL_PACKAGE,
+> >  };
+> >  
+> >  /**
+> > diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+> > index a7faf2cd5406..8f967e03af5a 100644
+> > --- a/include/linux/resctrl_types.h
+> > +++ b/include/linux/resctrl_types.h
+> > @@ -39,6 +39,7 @@ enum resctrl_res_level {
+> >  	RDT_RESOURCE_L2,
+> >  	RDT_RESOURCE_MBA,
+> >  	RDT_RESOURCE_SMBA,
+> > +	RDT_RESOURCE_INTEL_AET,
 > 
+> This is fs code so architecture specific code needs to be avoided. Any other
+> architecture that may need to report similar data would be forced to use this
+> resource name.
+
+Maybe  RDT_RESOURCE_PERF?
+
+> >  
+> >  	/* Must be the last */
+> >  	RDT_NUM_RESOURCES,
+> > diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
+> > index ec3863d18f68..3a100007301d 100644
+> > --- a/fs/resctrl/internal.h
+> > +++ b/fs/resctrl/internal.h
+> > @@ -240,6 +240,8 @@ struct rdtgroup {
+> >  
+> >  #define RFTYPE_DEBUG			BIT(10)
+> >  
+> > +#define RFTYPE_RES_PKG			BIT(11)
+> 
+> "PKG" is not the resource but instead the scope, no?
+
+Correct. I missed this one when doing some renaming. It should
+get a "perf" name (to match what we pick for the RDT_RESOURCE)
+
+> > +
+> >  #define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
+> >  
+> >  #define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
+> > diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> > index c316268b4442..c8cc3104f56c 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/core.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> > @@ -99,6 +99,15 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+> >  			.schema_fmt		= RESCTRL_SCHEMA_RANGE,
+> >  		},
+> >  	},
+> > +	[RDT_RESOURCE_INTEL_AET] =
+> > +	{
+> > +		.r_resctrl = {
+> > +			.rid			= RDT_RESOURCE_INTEL_AET,
+> > +			.name			= "PKG",
+> 
+> The resource name should not be the scope. It should be a name that reflects the
+> resource being monitored. In this case it is "core"/"cpu"? I understand that this may
+> create confusion since the data is provided at package scope so perhaps the "resource"
+> can be "perf" and then all the events can include "core" in their name? If the intention
+> is to guide user space in how to interpret the domain IDs then we could consider
+> something like "perf_pkg" or even "phys_pkg_perf" that prepares resctrl for future perf
+> events that may need reporting at a different scope?
+
+"perf_pkg" looks like a good option. Should it be "PERF_PKG". It appears
+to the user in the names of the "mon_data/mon_%s_%.2d" directories. Also
+in info/%s_MON.
+
+Resctrl uses "L3" in captitals in those places.
+
+> > +			.mon_scope		= RESCTRL_PACKAGE,
+> > +			.mon_domains		= mon_domain_init(RDT_RESOURCE_INTEL_AET),
+> > +		},
+> > +	},
+> >  };
+> >  
+> >  u32 resctrl_arch_system_num_rmid_idx(void)
+> > @@ -430,6 +439,8 @@ static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
+> >  		return get_cpu_cacheinfo_id(cpu, scope);
+> >  	case RESCTRL_L3_NODE:
+> >  		return cpu_to_node(cpu);
+> > +	case RESCTRL_PACKAGE:
+> > +		return topology_physical_package_id(cpu);
+> >  	default:
+> >  		break;
+> >  	}
+> > diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> > index dbfb7d3bc3bc..a90291f57330 100644
+> > --- a/fs/resctrl/rdtgroup.c
+> > +++ b/fs/resctrl/rdtgroup.c
+> > @@ -2179,6 +2179,8 @@ static unsigned long fflags_from_resource(struct rdt_resource *r)
+> >  	case RDT_RESOURCE_MBA:
+> >  	case RDT_RESOURCE_SMBA:
+> >  		return RFTYPE_RES_MB;
+> > +	case RDT_RESOURCE_INTEL_AET:
+> > +		return RFTYPE_RES_PKG;
+> >  	}
+> >  
+> >  	return WARN_ON_ONCE(1);
+> 
+> 
+> Reinette
