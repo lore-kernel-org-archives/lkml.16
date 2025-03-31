@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B0E1D79BE
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C261D79BE;
+	Mon, 31 Mar 2025 11:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421226; cv=none; b=kLZrtzqEd5Onhd9ZAMoASjsWijtgHZ48ZymsYj9GT0ROiWNScqLHRjR+eoePmLnY5T1Z7T3LpFYF1gvSiu6OI5FWtUzTorL7AMbnWVIWvJzazrEPyRvyjJxNN5ebLZvqbaLX7fE5ao6pfotU97QnswmtCf2CHSah8jRdg+FVl/M=
+	t=1743421376; cv=none; b=V+xmv/fsIhL31KOZUxBsZzIycpl3fzF0H8qw/gISHzXNjUU9lxzWwTLLWt0vtUtA8J+xVfwmi48ACUWVZcMqgCEWCCGqXeEqNvuTigkWWAzX0ocIGztwYzKNeTiSKsxWPmWZIfyTvrdRgA8nURkjFXNIB6AH9MOjRKrjGpuNSGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421226; c=relaxed/simple;
-	bh=8VPwvE7nroIn4qX7iRxUTzYwalguHuJJ6RLLoQP7biM=;
+	s=arc-20240116; t=1743421376; c=relaxed/simple;
+	bh=myufhgnLCToJtD6oqnZVDewrsMSXadLudT3o18eA5PE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s3Voo/QImlxAejJafNSy0W23AV4AzsQ+Qt373MZkci5nHb56nUnmNm2GFUqfTEJxhwYn9jPBuCVW4k8NaSJWGGUhJPbS0zC5n4TyOJo1XjNb0MU+a0eJe9/sfJp1E3N7hhREj87Hbc8CQN40LhNzH2GuXG/b34JvIY8OyKpXYwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8IIP1rl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rkaGjBeENL0BTWQMvJhpl7FQzM620MRo9+tXb6/cg1R/hURqxTinXU3if1T4O4ECLA/oggl0HIr9o8N1J0h8qdPK0okHNh5KctTuQFX5ryYATgFdeIV06JScnS9yMB5FY83pVxVxqyH8WTaZJVtR1WBgCkmYMBVKvnYVnhouGSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcAwTnXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8IIP1rl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B596EC4CEE3;
-	Mon, 31 Mar 2025 11:40:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcAwTnXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF556C4CEE3;
+	Mon, 31 Mar 2025 11:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743421226;
-	bh=8VPwvE7nroIn4qX7iRxUTzYwalguHuJJ6RLLoQP7biM=;
+	s=k20201202; t=1743421375;
+	bh=myufhgnLCToJtD6oqnZVDewrsMSXadLudT3o18eA5PE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u8IIP1rlvKjjLRCg1eAM6jyns/uGT7ThhjsxWvMuLZrttY1fcwZExpj4LO/SF5w3n
-	 bwvtjoIs3iUq2JLrSVRkgzOocXa+DyW9KFkiSaxp+RgKfWeG9C74RC4fWYPv9mjjzU
-	 UHwx1yOV60Ic3IuWozMvpGLYrtOuuoztk1UHxKtVUC/lxtjXZaYw/FO8EjEOLkiWVL
-	 xhelraIUSTXm5dV6vwKehYd0pWiNwWVN92HYP+jYutdLBC0tfZFvNUshIoSrDEnDIk
-	 tA1LLSTsGDNNgURP+SF34hEPFiS4kpdzMnp0xmVAbsAYjgsZ8evm64NUuUFepNH+LS
-	 6zFTOIXjDQ8EQ==
-Message-ID: <76836050-a701-4d6e-859e-8aed23d234a2@kernel.org>
-Date: Mon, 31 Mar 2025 13:40:19 +0200
+	b=OcAwTnXaKy9kMGIDISk/XEXdxPnb0NXpJSjyzoLhWdz6/aCP8zkb+aCnnBZvJ8X1m
+	 3qZJYPKqmSNPUJlipqP6WNrS9Bcjy1x5pj9so+XLJN/ma8V2dm5MdNQipadsBntSnh
+	 Kf8OA1vAQikiFmB4uR+zpYhPO3aryTqQnfMrnnRn6djHG9fh3Mn9fevU6pEkoKb7+a
+	 645bkmX3KwzGzl4wVjpm81n17eJpy0Z5ns1nQdcCf+WRFzaqCnNR/yt7qhFirN9769
+	 9X3XrRZPSqPrSiD9iGD51aQqxn7tG3r9lskGHql6rLJLRfN1/PUi3t97RIE7Gcmvxs
+	 Ca4xvGvVJDtaQ==
+Message-ID: <b14718f2-add3-436d-95a5-908eb9217120@kernel.org>
+Date: Mon, 31 Mar 2025 13:42:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers/misc: Add NULL check in aspeed_lpc_enable_snoop
-To: Henry Martin <bsdhenrymartin@gmail.com>, joel@jms.id.au,
- andrew@codeconstruct.com.au
-Cc: herve.codina@bootlin.com, gsomlo@gmail.com, heiko@sntech.de,
- andersson@kernel.org, u.kleine-koenig@baylibre.com,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20250331093922.7735-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+ <c433c28d-c88d-4647-b472-7bc81b332d8c@kernel.org>
+ <0638eb8c-d87f-44aa-9f1c-eee529b1e1a1@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,40 +94,51 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250331093922.7735-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <0638eb8c-d87f-44aa-9f1c-eee529b1e1a1@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 31/03/2025 11:39, Henry Martin wrote:
-> When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function aspeed_lpc_enable_snoop.
+On 31/03/2025 09:57, Daniel Lezcano wrote:
+> On 29/03/2025 06:04, Krzysztof Kozlowski wrote:
+>> On 28/03/2025 16:15, Daniel Lezcano wrote:
+>>> +description:
+>>> +  The System Timer Module supports commonly required system and
+>>> +  application software timing functions. STM includes a 32-bit
+>>> +  count-up timer and four 32-bit compare channels with a separate
+>>> +  interrupt source for each channel. The timer is driven by the STM
+>>> +
+>>> +allOf:
+>>> +  - $ref: watchdog.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - nxp,s32g-wdt
+>> This wasn't tested, so limited review - this also has wrong compatible,
+>> There is no such soc as s32g in the kernel. If that's a new soc, come
+>> with proper top-level bindings and some explanation, because I am sure
+>> previously we talked with NXP that this is not s32g but something else.
 > 
-> A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error.
+> If I refer to Documentation/devicetree/bindings/arm/fsl.yaml
 > 
-
-Same comments.
-
-> Fixes: 3772e5da44542 ("Aspeed LPC snoop output using misc chardev")
+> We found the entries:
 > 
-
-There is never a blank line between tags.
-
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> ---
->  drivers/soc/aspeed/aspeed-lpc-snoop.c | 2 ++
->  1 file changed, 2 insertions(+)
+>        - description: S32G2 based Boards
+>          items:
+>            - enum:
+>                - nxp,s32g274a-evb
+>                - nxp,s32g274a-rdb2
+>            - const: nxp,s32g2
 > 
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> index 9ab5ba9cf1d6..376b3a910797 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> @@ -200,6 +200,8 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	lpc_snoop->chan[channel].miscdev.minor = MISC_DYNAMIC_MINOR;
->  	lpc_snoop->chan[channel].miscdev.name =
->  		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, channel);
-> +	if (!lpc_snoop->chan[channel].miscdev.name)
-> +		return -ENOMEM;
-
-Missing cleanup.
+>        - description: S32G3 based Boards
+>          items:
+>            - enum:
+>                - nxp,s32g399a-rdb3
+>            - const: nxp,s32g3
+> 
+> I guess it should nxp,s32g2-wdt and nxp,s32g3-wdt
+> 
+Yes, with one being the fallback.
 
 Best regards,
 Krzysztof
