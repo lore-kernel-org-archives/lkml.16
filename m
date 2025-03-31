@@ -1,209 +1,139 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011006.outbound.protection.outlook.com [40.107.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228801C84AA;
-	Mon, 31 Mar 2025 10:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418555; cv=fail; b=X6JKb1gCvDphoDCDdTZZldFdxusIyy/4eROQU+w64lwK+h5I8IBBEp1ZLBE5wJ7uBoUmdeTsv5Jc8cKcuPFtV13oaXRNhlzE5Y5NSwZOVBG9qs2RLXwh7XinRm+diaDO0CqJ7+i4Fe0bQ25QkTmNIDNlgLmB1rZAGdC3Fqh0xQ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418555; c=relaxed/simple;
-	bh=fjGNCXTsihS+4ID+VPJb983MAB/ZyA+YiowYERS8J1Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HxEBqsqYt2yWjK9sd7Z/CPu3ajE873ox1iBdywWY047FWKr3dYwWbVTzujEcw4HZG0immgEgi4ymbZf8wRUOCswnuF7fvXPvXkIzCMZMc3wUfGAsPEfJbymJLKn57hzEvlOgBvFAtiRtixhxUls9gfe6s1OBRu5a9/mjMAH4J7s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=e7lAF4ZL; arc=fail smtp.client-ip=40.107.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C5D1C84AA
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743418650; cv=none; b=qrbYIMdCtdJ0VidPIuhEGcpJtAIGszXIGRkI7vUcA/g3dpztnpC3752CeaKbArzCM8rYO8BMYSDGbdqmLYArIqUz09K/K8Q4ySNyXD79u7ia0tyWUNcZdN/hwsg/odDdaIbTn6L27M24fuqjFHaft53sP08CMekIsQv3lHf+GI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743418650; c=relaxed/simple;
+	bh=vZc4WLoF722KufXOX/s3fWR9QlQ5ECV3mb4MtzX7J4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tW0Uqot5FjnXKJFT32oYY0zSLjqVZ9TJFxPXNtgfVzdEN0sI0jdlCc3Ok28ftIXLSsEybyCssS5ODf69RDotDIwuR/1l2YZvIwyKUEU8be3gxWeWDZLTcfvPFHvUcckomKlOdEndBWkxawlbaCDadvCaCIonFWQEAmlJT5Fards=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YF2RlIl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jCEmoNfH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YF2RlIl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jCEmoNfH; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="e7lAF4ZL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xL5unRF7OTgfpwmfwTWkpFy/1lBn1D1eSdLS9F0d1lYmvLfqK3ZYHL8K2mx83vR31oIqDJGe0YzfBk9MOeGgO6qo9WPlU/tBrNilFjIhGpzSOBzF6A40VzJCGr6KXpiBLj9/Oqp6Njl84HlxGnaA3wDWuM5p+uPmWQcDWPaUKTRfB4BeoGfLt5XLt+hrXaot2YBsOnO2kDLdvZr8x+JsWRYo0mAJqGTAOFfWNtLMRQBVFL6GgIooaXJg4m0x/BYkXTUBxk/9X5pAWA8vBrZnYDSnEjp0RxwYfA0Q5nFI+btJFB4xKa4wL4tSFG0yPtsp+OQpiVYI7tCfwrZAp89dgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ko23p1A9Pq4hh30mGMMUOycci3gR9lw3S9ibUl/+Hk=;
- b=jFbcAgowlFjkgMQJQyywgJDDt7ubC9Sugg3VgVvR8zut1aifiq/oi9WMHym1wf8toKXoDdjpuSA8fkiywr/arex19ZSoQe8gFZHiqt+XmHzywWYXmSTUIRXtMJFKDpE5bguM5lxPnmLZqAVoVzEIFsnDmnjhJDxjiCPD9dtg0Cj6JPrieTuMl6okQGSivd5xHEgvZj03HKb3qQCyn6S5PcbX3ZY4IilzEScM7Xj1duZaNCj34RIlB5wIqGCSDeN3JQgZQgQ+HvN/SOgyep9lilDKOmPWYfgB2GMCTqp6B6RBw9mCLzY4ItLaPHcIFNn0WjlHm2h/RKWspqGOJkTRYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ko23p1A9Pq4hh30mGMMUOycci3gR9lw3S9ibUl/+Hk=;
- b=e7lAF4ZLWgNDQuQd7C9PwAc7vJ9SVnn7d72mzpuK0ynBIItuvV3eDRcDOaX4Qx13/PUybp1ftsEMDDO87nfJDkAay7KIUqw3wOieDgnsVIP4moqXbJIBSrV4469qgD/6zljlQIpbsi4Fvy/capFAB3/3z4O6cAMk/pNjcAn3w9d7s4uqDyQStbuwWpeWijiwupIqWZlA4gvcuK5mSqi4n1IiviswpeMaGWrdzeOqzpa/rd0As4h99tOXvtiGC8zOSDwbYR3O3zwDmoy3a2yL/JcwOWos3wO79YZEtuTK8nPCDId7exrMqiTLtKfD4VlZzMUfe0jtTH7YwbfwlT3JJA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24)
- by GVXPR04MB10491.eurprd04.prod.outlook.com (2603:10a6:150:1eb::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 10:55:49 +0000
-Received: from DU2PR04MB8582.eurprd04.prod.outlook.com
- ([fe80::c96e:12f1:67b7:ed74]) by DU2PR04MB8582.eurprd04.prod.outlook.com
- ([fe80::c96e:12f1:67b7:ed74%5]) with mapi id 15.20.8534.052; Mon, 31 Mar 2025
- 10:55:49 +0000
-Message-ID: <4267a636-d858-55f0-01fe-c5d7265ed3c6@oss.nxp.com>
-Date: Mon, 31 Mar 2025 13:55:45 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-Content-Language: en-US
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Thomas Fossati <thomas.fossati@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
-From: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-In-Reply-To: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P190CA0009.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:20b:5de::16) To DU2PR04MB8582.eurprd04.prod.outlook.com
- (2603:10a6:10:2d9::24)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YF2RlIl6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jCEmoNfH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YF2RlIl6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jCEmoNfH"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 8F78D1F38D;
+	Mon, 31 Mar 2025 10:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743418646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
+	b=YF2RlIl6UxN8gjtKv0fke8bouCvvzRT47LyJmr4ULr/9KeRuP9MYy/Zsjz2D7FzQQ0N9Ym
+	9N3yo1NLUQKL3ggQB8T4Mw+2GTh5BNCtI/o42NQCbs/3sMi1UXLBstsuqCa6hvDkNa5Un4
+	B34+bCrrCeqc4z5SMf6hQb/B66alz84=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743418646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
+	b=jCEmoNfHFOR5dPqJlRHSH7G3ktjTYy1SPRHbig7fqJuMu1xf/bPM+2YX9xT+M53/SOpXGj
+	6LUkv7dq+/o9aCDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743418646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
+	b=YF2RlIl6UxN8gjtKv0fke8bouCvvzRT47LyJmr4ULr/9KeRuP9MYy/Zsjz2D7FzQQ0N9Ym
+	9N3yo1NLUQKL3ggQB8T4Mw+2GTh5BNCtI/o42NQCbs/3sMi1UXLBstsuqCa6hvDkNa5Un4
+	B34+bCrrCeqc4z5SMf6hQb/B66alz84=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743418646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=akuXqyCZOSdlrQSLt/Khb4sbew/avXeSTkqZbTZoVGA=;
+	b=jCEmoNfHFOR5dPqJlRHSH7G3ktjTYy1SPRHbig7fqJuMu1xf/bPM+2YX9xT+M53/SOpXGj
+	6LUkv7dq+/o9aCDw==
+From: Michal Suchanek <msuchanek@suse.de>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Michal Suchanek <msuchanek@suse.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Nysal Jan K.A." <nysal@linux.ibm.com>
+Subject: [PATCH v3] powerpc/boot: Fix build with gcc 15
+Date: Mon, 31 Mar 2025 12:57:19 +0200
+Message-ID: <20250331105722.19709-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <875xjsjj6b.fsf@mpe.ellerman.id.au>
+References: <875xjsjj6b.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8582:EE_|GVXPR04MB10491:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4a114d8-1421-41eb-170b-08dd704298af
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bmFXdmo2bys0N3BORk5zNWsxajV2UVUrMjBhU2RPK3E4dENMYWV4NVRRbEov?=
- =?utf-8?B?dHNPa0dIL1dCeWNTamo5bVUrTkJsdEpaYlQwTmsrTWU0Ty85TytpTms3NmZH?=
- =?utf-8?B?WEs2Y0RiV2ttQyt1ZnpqNnhieHZJY3hGU1FnUytHSWxSelFTb1dKcEo1eUh0?=
- =?utf-8?B?S2VZSE5TNUNxQlVwRGRKOFQ2QzdWU1g5eHd5bVZSZHJNYnIzWG9xUmJsT21X?=
- =?utf-8?B?eXBnOGttdUdKemhtd0ltWVBVcGdtNlIyRk5iVlBUdGlyWC9FU1BoK2dERUxl?=
- =?utf-8?B?SDlVeDg4Y1dNWCtyTHNtMVJjMEpkbHhHcXdiNVNqNHUvVU12VkJCVGNOTGFi?=
- =?utf-8?B?RUY0cWFmZE1lRmIvRGJtaERTQjBxb3IvRGM0Y3hWblEvT25XOFpOSVBtTW1j?=
- =?utf-8?B?NXY4dHF5VmpOU0pieTkyRTdEZlp5TnlTQ1hWcVArVkZLRDJqM0xqV1ZrQ05t?=
- =?utf-8?B?aHNMaTdYTHd3L3U5ZjhZTVJSRXJWN2RJZnZIYVBFWHFJSUtDelc4R3FHdHlY?=
- =?utf-8?B?eSttWmNmTHR0a1VUM2FnTEJkUkMvRmx5SjBYRE5XMWo3RTZwQTE3azlaS3Nq?=
- =?utf-8?B?YUczT0VoN1NIWTc4N0FpZnorVFlaMENpTUdHOUpXN1lVdHRDRGtWUlp5ZThX?=
- =?utf-8?B?UUhhY2MzVG5LMk55cVVCTlBXSlp6M1A2RTdiMVNRNHNvR3Rpd3RtZHJ3VVBq?=
- =?utf-8?B?b0NjWlp3RUVsaVZqQnNTVk5QRlU1dkJibGJPbDZMenJ6TVN4RXFHSHY3c0JX?=
- =?utf-8?B?em01c2pYQWRBQU96aVlvSVlyY2l5cHV3S2craDJIbHJoTjdmRkE1MjRoOG10?=
- =?utf-8?B?a3pyOVJHZnYwOUdXQ1NMVjRtWmd6RGV2ZmRZRWRnZlUyS1Y0dkVkVGFKM3JR?=
- =?utf-8?B?YU5sYkZPeWx1UDJUYXc2SThTbm55QllXdEhYUHAxNWV4b0pnZnVIYkloZGQx?=
- =?utf-8?B?YjZCcFZ2M1hZc2tjQzFNVnF1M2o3KzRxQyt6ejdhR0tORXptdHNzY0s4NmhU?=
- =?utf-8?B?VmFVRFdBci9XTHlPMCs1cEZiN3I1REtVNzBib2IyNjFjbUV6L2hsWjl6MCt0?=
- =?utf-8?B?eTU3MnRWaVRGYTNHY281V2ZKK210M1VKSEtwMW1XZ3g1YmxmM083MmFGa0Vh?=
- =?utf-8?B?NXNvZmVmMEdmRXk2eUJwRnM1SkhrazhZRkJDSExIUUg3S0tDczFoLzIxYzhJ?=
- =?utf-8?B?VGFaWmZYUUdEODNLcHVsazNQUldndnpHSm5xd0FHTkNEekwrSkJKTkFUMGdz?=
- =?utf-8?B?dGFTZkJLaWtXUTFuNDh4ZU5YaHRLMFRaZkNXYW9xMlVmbStkRTFVdm0zNXIr?=
- =?utf-8?B?U2syVjRaeWJ3QlpqdjNnT09Na0pBdlQybmc1REF6ZCtiTnBURi9zamNoUzc2?=
- =?utf-8?B?cnFKQTZJZTRTd01XK2pEc1FxOE5ydG9kaEFxUHIvbEN6K0pkNTVSOUVLS0Vm?=
- =?utf-8?B?R3ozTXFyRkVQbVhRZ3JRNmdVQ0FxVFJHR0k4cGs0YVJBUHRVYTRUVlQ5clJr?=
- =?utf-8?B?YkRuUTU3ZTZ6bm1YZjA5dldmdU9wV3FPWFd5YTErUkFjbXNrcUtGT0s2YzE5?=
- =?utf-8?B?Sm9BMENzMlpaQmhKbGFwN1RCQUlBWVdVdVVET1VMakJ6b2JkZEVLaTdCWVl6?=
- =?utf-8?B?T3gxc2crTnovUTJ0REE4Q3BRWEZBZ0NVcEpIcHdQRmxjMERFRk5BNTIzeFRa?=
- =?utf-8?B?Q0d0Y1YrZ3RLZzFaNkYyVWRQakxWSDlySWR4Tld3YTJ5MWYveUkxdTZhZnJu?=
- =?utf-8?B?WVJPdGJOWjltaVZQOHBQbktCcXR2K3JmZWlFOGpqeGp5MjQweGlkMXdicXVQ?=
- =?utf-8?B?TEErcUNJdXZoL3pGeTBxdz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8582.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M096dHZuN1k2djUwV1RhaExXL0hZN3BnZ3AvaThWWklJRUJZOGE5NHh4NUZx?=
- =?utf-8?B?ZjFLalp6S2R3QUlXc2ozazIxWHdRbzdLSGx4QVZMQ3RBQVFhMkxLTloxT1Az?=
- =?utf-8?B?ajlqRi9yOGZIOGJUZnRVVWNXTXROUEs3bGgvRnh0R3RmeXNHWVhVWklKdFFK?=
- =?utf-8?B?UWZoeTh2dFI5eDhkZDh6UEV4bklWakpPeWJNdW1TL3lRd3NSeHh5MnJLK2tl?=
- =?utf-8?B?dmJJaEdEVzQwUWt2SmttWmpOYmVTQXd5cSt5dkhjSzd5Q0FiU0hUNkc2Z091?=
- =?utf-8?B?eGpoc3g5YzlVV2ZYZGxhT1lmbmZ5czlBRmVMTGlPZm1vNGZyUzhYZjkrRWFH?=
- =?utf-8?B?bkN0NWdEOGhQQ00rVmJPOEloWTZIemhhV3BqNXpTZ1BvLzRTZEhGUkpyV0NG?=
- =?utf-8?B?dTAyNkRZU2pvWFR2bC9tVm10K1F3bnk5V0g2UHBMTkVsNWM2SVNRTS9BRUlE?=
- =?utf-8?B?VDZwaG1Cc3c5TXRBa1V4ZTB1cDJMMEV2M1RPbzJ0SnF0Z3NwenFxckNYSnk0?=
- =?utf-8?B?Z1hRVnJ6My9EOUdVTkUrWVNJT2QrSDZ1NmZZQUNkazNraEFES3JnVWxib08v?=
- =?utf-8?B?TExEbzd4bEszWk9hNEpyclFVUVpaemVxdC90S1UzMGdzS0E1d0d6QkdWRHFD?=
- =?utf-8?B?UVNaUkJncURlNk1OVllzbldqaDRsc3lJZzZGQW4wbEVMRUF1cUUyQXUvYW1q?=
- =?utf-8?B?b3RkM3hKd2hDRnR0T1Uya0JoWDlNZlU4MmlvaVlOOW0xZDM1OWVDcXQ4QzRV?=
- =?utf-8?B?ZGJIVzNNbk52RUhRU1l4ajQyc2tSczZnTUozd01CY1FaWkIzY1FENkgyZ2VY?=
- =?utf-8?B?WWljTm1uZkV6OHhIbFpSalMweVhRRW4vbk94Z0VuWmhJQm12eGRMU2wrTEl0?=
- =?utf-8?B?cU82VkVKYkNKZk9ocEZpM3p4VzFxQThzYXhhNy9Fc0lKVTdmT2t1UjNsY2xB?=
- =?utf-8?B?dDNxMDc3aEZMSFliekhMMnZoRjE5b1k1d1FaRmppelIya3JqRWU2ZnM0V0ly?=
- =?utf-8?B?RGxoRlVDRDF2Nm96eFpUOWpRaG1zd2JtNnBQdEQ3VEhYb2g4RVZZZW1qaUxF?=
- =?utf-8?B?SlphM0ZGWmRqcXZ4YWZpZFVXOG80aFQwTCtkTm5yOGtkOVJOVjhGN3pZeWEr?=
- =?utf-8?B?L3NKYXNmemxkZFRrU1VOa3dweXQwdWVoK1FVR3VwVktzeWJqTHNWYWZkYjJ6?=
- =?utf-8?B?ZHRzbkFQY29oSG9Ib0tGZEFrNmZobHg1RS9Ea3B3OXFQOG8rZEFTMDQ2dFJS?=
- =?utf-8?B?clpBczUvcWgxL09LTW15OFkwdnZNZmdRZEJ2ZXdVNFUycVF4Z1RwajA2d0I2?=
- =?utf-8?B?MFRWdmFKMHpXY0lsVXF0cjkrUjdNMmd3RjBPMU1nUFZYQldvTHpqZjdiMjZo?=
- =?utf-8?B?dEhKTlBDVW9rdFdXaFQxbmdsSzJBLzJ2dUJORnpDUHB5N3FKcHpUL0ZGcG02?=
- =?utf-8?B?N1VCK25ONXpkaEhFRjlUUEpiaEJ6TkREcnVINDk4blBNakQ1NmJLT1ZBa2dQ?=
- =?utf-8?B?bmN1RWo1SVBJWHh4Y2tKbGFIUHZCT3hLUVpJc09INlRCSzhnSEliOGhRallC?=
- =?utf-8?B?TDF4RUFXR1lVSm5jVzBseHR5di9Wdnpaa1dHQXkvQnlURGo4RzM4UWl1ZG1j?=
- =?utf-8?B?MW1aQnQvQzVhZDlXYmlSZDF0eTdsS1ArK0svSTZtVUZxbG9KTHR2THdpYWpO?=
- =?utf-8?B?SWNJL1FQOTd3cm9TOTZRblMrVjdiNGE3NG9Yb2ZlbUh2clhlcXIzbUFFRGJY?=
- =?utf-8?B?WjNzMmpTbU9zYTRpNXQ2KzViYUhudHNKS0s2c1hkb0xQYnNuR0VsOUFQUGZM?=
- =?utf-8?B?ZVhvQ3VvVEVncm5zZmZXeXpSMXB3bUptLzRLdGx1ZXhhY3hZVTUwQ0dtTVpI?=
- =?utf-8?B?WlMxREJ3VDJlczc1RzNVV2xjVXNoT25DbklVYUJLNHFzaWw0ckgrckI5V3hi?=
- =?utf-8?B?TkxxM2hhTHYwOTNJdTlGeGcrTVhqSlhncnkwSVhYNnZQelNuWVBrR1JIMzBX?=
- =?utf-8?B?Z21mTk9rU01HbXFpME5vVFFOS0RWbW1FdjFxbmxLc2hPeDU0ZFpTQnk2Q2hM?=
- =?utf-8?B?NHNNd1BTamd2WVZMTnUzTXZRbU8weGg2SW5lRDdCajFQblVXTHJaRGNLZzA4?=
- =?utf-8?B?dlZRTHpOZXNxTjA1bkVQa3NQUjFRNCtXT0s3NlFIMk9acWJRSXlxelJ4dEpx?=
- =?utf-8?Q?pHkvaB3ZY1bcSWmCr0VKTCc=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4a114d8-1421-41eb-170b-08dd704298af
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8582.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 10:55:49.0416
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OJq8K3+nndk+MuZc096vK4eK2WwTvuRfMVwuq6tXQKrQcMmTo0NoLgteiWITxWV/peEZPztAVVnT3OmV4ItXPzgDcxUKU0teklA470NSld0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10491
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org,google.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On 3/28/2025 5:15 PM, Daniel Lezcano wrote:
-> Describe the Software Watchdog Timer available on the S32G platforms.
-> 
-> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Cc: Thomas Fossati <thomas.fossati@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  .../bindings/watchdog/nxp,s32g-wdt.yaml       | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml b/Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml
-> new file mode 100644
-> index 000000000000..06ead743d5c1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/nxp,s32g-wdt.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/nxp,s32g-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP Software Watchdog Timer
-> +
-> +maintainers:
-> +  - Daniel Lezcano <daniel.lezcano@kernel.org>
-> +
-> +description:
-> +  The System Timer Module supports commonly required system and
-> +  application software timing functions. STM includes a 32-bit
-> +  count-up timer and four 32-bit compare channels with a separate
-> +  interrupt source for each channel. The timer is driven by the STM
-> +
+Similar to x86 the ppc boot code does not build with GCC 15.
 
-Please update the description, as this one refers to STM instead of SWT.
+Copy the fix from
+commit ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
 
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+v2: Move the fix outside of ifdef to apply to all subarchitectures
+v3: Change BOOTCFLAGS rather than BOOTTARGETFLAGS
+---
+ arch/powerpc/boot/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 184d0680e661..a7ab087d412c 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -70,6 +70,7 @@ BOOTCPPFLAGS	:= -nostdinc $(LINUXINCLUDE)
+ BOOTCPPFLAGS	+= -isystem $(shell $(BOOTCC) -print-file-name=include)
+ 
+ BOOTCFLAGS	:= $(BOOTTARGETFLAGS) \
++		   -std=gnu11 \
+ 		   -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+ 		   -fno-strict-aliasing -O2 \
+ 		   -msoft-float -mno-altivec -mno-vsx \
 -- 
-Regards,
-Ghennadi
+2.47.1
 
