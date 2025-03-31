@@ -1,51 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333EF221F10;
-	Mon, 31 Mar 2025 14:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7AA221F24;
+	Mon, 31 Mar 2025 14:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431712; cv=none; b=hWnOwBSkaaLr8M/d1Y3U8bXGkOWljPhauKF4p4/BDa3+84vHimFpH+NtCWovjJ/ADzyuU6TFlGGoKuZaioNWMoLIyjA1OLeUV6UGr2lutJXuid04b5FNhdfm3Ay/okCfEOYblbyyFqmY4+Eqj8O6A46SLQ9Er7xjD++V/aPgx4g=
+	t=1743431713; cv=none; b=Wjbxlyr4ty3bZ8w7zohClRYNPLE6OJWafYhxzSavTbJuDcryNVsn2InYMN87tcemAZyaf73fTct0Dx9RbKhAHFNWUhuVxP8ePOeWRU8cZveN6yYl/3djSLuesiw2dNasD5EtQK0K9wU5eYyMid0sOu6kToiVQ9DdB4v6acxf0ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431712; c=relaxed/simple;
-	bh=iJ7msZkpLbraiucr8yp0RmjshWTIEMF4uP3X9n+Q7PA=;
+	s=arc-20240116; t=1743431713; c=relaxed/simple;
+	bh=JqI6exjjN8uxNSKa+vUX2BGVkSh6tDPWGkpGiWMorQo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N/LzZ6PTFvkzyjbnCk0qyvqCjY9LnBMkV3tz1O77vEheOs+X/y99XfVx2orvIvhQPgUJ54d6HVB8h/nP6F5uBVC6mfvsqDfOH9XpVcI53eJvUJS0BrjUEvGoQSMXD2j8enUCueI8lgRU7YHXrsbX20DXdxNhFGGCD+WvAStdc6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjgK35UY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XoeUJH3LfiEIPZ3/7+/7fArzpvOxM7YTVP/xKpQ3VZ8e4bHHjADVpOLSXLDIQlV9O9XbHjevtxm/2MsIwaWwDJd5IGuYL/lElFOxNYsqWmhgLybrKodc4+p+nLULCTFsfDQHXstEWTVNwwrMat8rwhoNhJvD5fcytn7/bfYDZeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6hu8dG6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjgK35UY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49E0C4CEE9;
-	Mon, 31 Mar 2025 14:35:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6hu8dG6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C423CC4CEE3;
+	Mon, 31 Mar 2025 14:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431709;
-	bh=iJ7msZkpLbraiucr8yp0RmjshWTIEMF4uP3X9n+Q7PA=;
+	s=k20201202; t=1743431712;
+	bh=JqI6exjjN8uxNSKa+vUX2BGVkSh6tDPWGkpGiWMorQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rjgK35UYh8/u45xivYnSk5lQWx82vmZrP33rjXTlSloGORPrQ2BX5Gt2QDylvhyRY
-	 Y+zoRBc/+iPWfaINkRe7UhUlmMUyPKhSt+6T0L+qu6/StuqQ0r2fGJNuBW0Wn1n4/K
-	 Z9efslt+gyIieoDIKnks8TyJMwJ4Q/rs5VMk1W4NFTULRSBaEBQxRh/pyh9nRdD6uk
-	 wdiCGLnFohWCLKxJ7r1rDZpIONdET2tsglW6AsFeLeum/NYg/E8IOD4eP+gT/nTtgx
-	 VyQ9/P0gL4nCoRS3FiZdbajz6OjhjJw4d8SXscOwfpJiUDdEU6SLJHqDmAoWB3VTHh
-	 Qk2+nuuCULjoA==
+	b=B6hu8dG6fOQesGYuvhwLnJt5UPt5VVkFKreGvalRoV9v4wXmAzQUGxa9fkuPXGa2A
+	 8pSwEIqaSo5glkLJlXyURK82Ehz3rrU+hfBgIa4EHXdDap22khk5Gl+LsLqM1sxtpH
+	 d4zsRWhFtQJEpom03CTn2HipAxHalhR6XCjOJsckOnl4mW7fPTALXfcmJpLzRDcgcm
+	 v0ny3fogj35eEOSyk+lMumRl++a0gVmxfZukC7LPxNKdG/96eK9SsZKyQjpfK6UOQc
+	 SAojrHSxAlWx+dKwRrgImy+R+u3pOaUBHFBSxq/X0RJgdYODNoJMhrFZgKwTtTlSOl
+	 L5g4PdTEAVjaA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Max Grobecker <max@grobecker.info>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	mario.limonciello@amd.com,
-	riel@surriel.com,
-	thomas.lendacky@amd.com,
-	john.allen@amd.com,
-	darwi@linutronix.de,
-	mjguzik@gmail.com
-Subject: [PATCH AUTOSEL 6.13 07/16] x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual machine
-Date: Mon, 31 Mar 2025 10:34:41 -0400
-Message-Id: <20250331143450.1685242-7-sashal@kernel.org>
+	renyu.zj@linux.alibaba.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 09/16] perf/dwc_pcie: fix some unreleased resources
+Date: Mon, 31 Mar 2025 10:34:43 -0400
+Message-Id: <20250331143450.1685242-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250331143450.1685242-1-sashal@kernel.org>
 References: <20250331143450.1685242-1-sashal@kernel.org>
@@ -55,103 +49,112 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: Max Grobecker <max@grobecker.info>
+From: Yunhui Cui <cuiyunhui@bytedance.com>
 
-[ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
+[ Upstream commit 6eb1e8ef586ac4a3dcdc20248f9cb45e4ceb141f ]
 
-When running in a virtual machine, we might see the original hardware CPU
-vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
-hypervisor. In case we run on AMD hardware and the hypervisor sets a model
-ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
-capabilities present to circumvent a bug with some BIOSes in conjunction with
-AMD K8 processors.
+Release leaked resources, such as plat_dev and dev_info.
 
-Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
-bash scripts and prebuilt Docker containers, as it does not need to have
-additionals tools present – even though more reliable ways like using "kcpuid",
-which calls the CPUID instruction instead of parsing a list, should be preferred.
-Scripts, that use /proc/cpuinfo to determine if the current CPU is
-"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
-claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missing
-in that flags list.
-
-This can prevent some docker containers from starting or build scripts to create
-unoptimized binaries.
-
-Admittably, this is more a small inconvenience than a severe bug in the kernel
-and the shoddy scripts that rely on parsing /proc/cpuinfo
-should be fixed instead.
-
-This patch adds an additional check to see if we're running inside a
-virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
-understanding, can't be present on a real K8 processor as it was introduced
-only with the later/other Athlon64 models.
-
-Example output with the "lahf_lm" flag missing in the flags list
-(should be shown between "hypervisor" and "abm"):
-
-    $ cat /proc/cpuinfo
-    processor       : 0
-    vendor_id       : AuthenticAMD
-    cpu family      : 15
-    model           : 6
-    model name      : Common KVM processor
-    stepping        : 1
-    microcode       : 0x1000065
-    cpu MHz         : 2599.998
-    cache size      : 512 KB
-    physical id     : 0
-    siblings        : 1
-    core id         : 0
-    cpu cores       : 1
-    apicid          : 0
-    initial apicid  : 0
-    fpu             : yes
-    fpu_exception   : yes
-    cpuid level     : 13
-    wp              : yes
-    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
-                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp
-                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
-                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
-                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
-                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
-
-... while kcpuid shows the feature to be present in the CPU:
-
-    # kcpuid -d | grep lahf
-         lahf_lm             - LAHF/SAHF available in 64-bit mode
-
-[ mingo: Updated the comment a bit, incorporated Boris's review feedback. ]
-
-Signed-off-by: Max Grobecker <max@grobecker.info>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20250220121716.50324-2-cuiyunhui@bytedance.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 79d2e17f6582e..425bed00b2e07 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -627,7 +627,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
- 	 * (model = 0x14) and later actually support it.
- 	 * (AMD Erratum #110, docId: 25759).
- 	 */
--	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
-+	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
- 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
- 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
- 			value &= ~BIT_64(32);
+diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+index 9cbea9675e21a..a7e7864e73a8e 100644
+--- a/drivers/perf/dwc_pcie_pmu.c
++++ b/drivers/perf/dwc_pcie_pmu.c
+@@ -567,8 +567,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+ 		return PTR_ERR(plat_dev);
+ 
+ 	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
+-	if (!dev_info)
++	if (!dev_info) {
++		platform_device_unregister(plat_dev);
+ 		return -ENOMEM;
++	}
+ 
+ 	/* Cache platform device to handle pci device hotplug */
+ 	dev_info->plat_dev = plat_dev;
+@@ -724,6 +726,15 @@ static struct platform_driver dwc_pcie_pmu_driver = {
+ 	.driver = {.name = "dwc_pcie_pmu",},
+ };
+ 
++static void dwc_pcie_cleanup_devices(void)
++{
++	struct dwc_pcie_dev_info *dev_info, *tmp;
++
++	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
++		dwc_pcie_unregister_dev(dev_info);
++	}
++}
++
+ static int __init dwc_pcie_pmu_init(void)
+ {
+ 	struct pci_dev *pdev = NULL;
+@@ -736,7 +747,7 @@ static int __init dwc_pcie_pmu_init(void)
+ 		ret = dwc_pcie_register_dev(pdev);
+ 		if (ret) {
+ 			pci_dev_put(pdev);
+-			return ret;
++			goto err_cleanup;
+ 		}
+ 	}
+ 
+@@ -745,35 +756,35 @@ static int __init dwc_pcie_pmu_init(void)
+ 				      dwc_pcie_pmu_online_cpu,
+ 				      dwc_pcie_pmu_offline_cpu);
+ 	if (ret < 0)
+-		return ret;
++		goto err_cleanup;
+ 
+ 	dwc_pcie_pmu_hp_state = ret;
+ 
+ 	ret = platform_driver_register(&dwc_pcie_pmu_driver);
+ 	if (ret)
+-		goto platform_driver_register_err;
++		goto err_remove_cpuhp;
+ 
+ 	ret = bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
+ 	if (ret)
+-		goto platform_driver_register_err;
++		goto err_unregister_driver;
+ 	notify = true;
+ 
+ 	return 0;
+ 
+-platform_driver_register_err:
++err_unregister_driver:
++	platform_driver_unregister(&dwc_pcie_pmu_driver);
++err_remove_cpuhp:
+ 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+-
++err_cleanup:
++	dwc_pcie_cleanup_devices();
+ 	return ret;
+ }
+ 
+ static void __exit dwc_pcie_pmu_exit(void)
+ {
+-	struct dwc_pcie_dev_info *dev_info, *tmp;
+-
+ 	if (notify)
+ 		bus_unregister_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
+-	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node)
+-		dwc_pcie_unregister_dev(dev_info);
++	dwc_pcie_cleanup_devices();
+ 	platform_driver_unregister(&dwc_pcie_pmu_driver);
+ 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+ }
 -- 
 2.39.5
 
