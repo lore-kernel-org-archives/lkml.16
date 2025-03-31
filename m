@@ -1,245 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D7F1DFE0A;
-	Mon, 31 Mar 2025 10:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCDA27726;
+	Mon, 31 Mar 2025 10:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743416150; cv=none; b=BYjXf+u75lukLAPyDEoPgVAXi9diSeGPbnPxKjC/eXLtu599lAi/4lz0rXY1fSF9e+N8CYbBrsX0LjcKjhNhsncR1oAOrmjZQ1XwkFb/SsFD84cixHvq6bADV1/iPlVuKBMQeazqITQp82ZX7R+iIco/yhDnXYbWgI8Em+6j4jI=
+	t=1743416214; cv=none; b=qG0eelpA1jl53QWKlVgitLwKToCIfqX0gBaretbernJZiSYi3DqNLipP/Uxx/po5KX99cSL+j+1YGqVGc7bbuE7EnzfmobWQJVXxy2pxf+UAcwKN5+AZesWaP98CxRxepA5ywHa/AdUNwVFyNv7olTFvHQ+WtGbYuq0JLaLH3fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743416150; c=relaxed/simple;
-	bh=xarSw2oz1TBNPFF+FSxuyylvE8IEaEtSettU4JXkkpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cR4ycbl6LAn2UUi8jAkMeacwW5gwOMKtlyGJ9he/oe/Hby5Rp1irNgzjhLFn0n1AspE9PA+IrxDJly/4DXY2/5VyyWlo9PIY1I3tMr5o+w7ZF3Dh0/Wm4SbJxHNhAgH1fCLKkiOnOo2WjGKVnlmE5ckgBmCh4vr1ObO7z144iNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcTfgHME; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743416214; c=relaxed/simple;
+	bh=WqVq2up8e5qTqJfd90zclKxq9683pGIF8UmDoxOfr1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=If+51s9lOVh44BdH0sgBMeoZ8Bsx+2O5X+4mbAAAsdi4P2UYd3/qmwVr/7/nQGOjq7AajZW8IYQEYCsIzENnYJ68ewj+wnU06A+lojpIa96S+EUqw0JEmwmBXlxDuSDS9G1b578hHtrPS0+5UPJGj4p40AbaCzKUnoWzyiby+qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kyHGEpNg; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcTfgHME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F45C4CEE5;
-	Mon, 31 Mar 2025 10:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743416149;
-	bh=xarSw2oz1TBNPFF+FSxuyylvE8IEaEtSettU4JXkkpA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BcTfgHMEUEaC8K52fmXTZnfu0oETja8uENtB5qW1p1/Ja2g4nGtbaYInr1/k25Dcc
-	 rD/QbluJMu8KCOPxNVkfQ/flYOQhMgO/NO1xFS2RDLFotK5ShMVmvd0mYU6p8CrEwy
-	 JnYi4zccN8IldfouC8sp6WCr6n9J0kod143SS9nKSWDwSu00pIWY7s/cuZ7BX9ey26
-	 +Cplm4kReeftb7KCrApqczaDI/pQy9u8Dnh74/4cqCVa3bsFhpV5ao52O7QG7aq1N1
-	 3aNdcX6K5Kz1AAs2YhkVArIGs42FiBimWw4HyiFBD3nns9VYfEZNPkqgVxGqDrZrA+
-	 798TjxZgFMidQ==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so2977908a12.3;
-        Mon, 31 Mar 2025 03:15:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSHBUKzCvR6MBDtkguGhEltHZlxVHPAZOp+yHax4ojX6IRAB6Li7K+f8XVq2V0gj+wKdAcsMuESIqoJaXv@vger.kernel.org, AJvYcCWCCvTczNpRXj5vVsdbyTL5j0QQ7SgHgp4IMRMHuExCLpo/4dm1eaUkVD73qNBtAqKHugQ8a5i2+Ag8s9I=@vger.kernel.org, AJvYcCWm5wW7Ax8XSpq2PSO6pLM4vyKldlLVCIJA9YbzX7RuFIWLTF65b/tQLsABZ3j7LNQcOtTXFUVJMvunTTTU/3Ww@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/JciHJYlVACtAJgJv8lv1+n5Bufud86Bs8nBPs1A3MlvWKZmv
-	X2DTFLCTfUEtUSpUyptRU028bKC59i1jvmoUBtjRxONQGMbhtYD/fo3koIg2ZF1Cvsx1EdsrvZv
-	bqzG8PzBcsEn32BeRcjk3i7U4jYQ=
-X-Google-Smtp-Source: AGHT+IHiIrpZ2r0gNJCQ9+/qDMx0Judo1MQ99Nq9zc5YVsgXIa3hjRhHSC6dQuQWbnnMcx9BOEvpj1KCZR5pfIzWXVI=
-X-Received: by 2002:a17:907:9726:b0:ac7:33d0:dbe with SMTP id
- a640c23a62f3a-ac738b5472amr703832466b.33.1743416148255; Mon, 31 Mar 2025
- 03:15:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kyHGEpNg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743416213; x=1774952213;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WqVq2up8e5qTqJfd90zclKxq9683pGIF8UmDoxOfr1Y=;
+  b=kyHGEpNgef0FmzlhtcqRIiPJsxotGH1iquLvVkhjZw7t9jij7mah1Qr9
+   I/fa9kWzWBzeRJXHkA/8gwrLXZme//ERI+GnuNA0TMRR/4EIGBJTRby0r
+   yTghIcZNCr6yB8Bflo2LPiM4Wac0CRI52WAvV+I+/oY9blATJBmcU/V9J
+   dC0chHR58RmchiooH0ziOJrl1SFXdI9DLoJldc/sWlZ3MjqvYH1CPzO9n
+   U8yhdPU91HgT7Gh3IRXXL4/gOK0KzG7Qbd6klFW489BML9JfEDp+floxU
+   CPoxYVf1gCfXHpZE9w544jX/lBFaL9Nf5l59UagDSQmaY2YHLdMSAoTfh
+   A==;
+X-CSE-ConnectionGUID: +A7Q8oIXTAmxfvxRqpKTTA==
+X-CSE-MsgGUID: K89owBSDSduxCSUI7d/Rhw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44704089"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="44704089"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:16:52 -0700
+X-CSE-ConnectionGUID: wuvqW3DLRFSI/kC/p9L7Zg==
+X-CSE-MsgGUID: +c203wkvRnqc3a/j+uTYUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="130758783"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 31 Mar 2025 03:16:51 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id AC1141CE; Mon, 31 Mar 2025 13:16:49 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] spi: Group CS related fields in struct spi_device
+Date: Mon, 31 Mar 2025 13:16:48 +0300
+Message-ID: <20250331101649.4054627-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
-In-Reply-To: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 31 Mar 2025 18:15:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5aYiOCpXNsEvGCdPnS1KxYgjygvPFPP7pWXDoMPncTtg@mail.gmail.com>
-X-Gm-Features: AQ5f1JrfZCA-ToCif9d9SrkW_m4ahIxqz6Q5tFtp2lPQpLXSI-cSKQifmwe6XOo
-Message-ID: <CAAhV-H5aYiOCpXNsEvGCdPnS1KxYgjygvPFPP7pWXDoMPncTtg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] tpm: Add a driver for Loongson TPM device
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, 
-	Yinggang Gu <guyinggang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Qunqin,
+The CS related fields are sparse in the struct spi_device. Group them.
+While at it, fix the comment style of cs_index_mask.
 
-On Thu, Mar 27, 2025 at 10:18=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.c=
-n> wrote:
->
-> Loongson security engine supports random number generation, hash,
-> symmetric encryption and asymmetric encryption. Based on these
-> encryption functions, TPM2 have been implemented in the Loongson
-> security engine firmware. This driver is responsible for copying data
-> into the memory visible to the firmware and receiving data from the
-> firmware.
->
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> ---
-> v6: Replace all "ls6000se" with "loongson"
->     Prefix all with tpm_loongson instead of tpm_lsse.
->     Removed Jarkko's tag cause there are some changes in v6
->
-> v5: None
-> v4: Prefix all with tpm_lsse instead of tpm.
->     Removed MODULE_AUTHOR fields.
->
-> v3: Added reminder about Loongson security engine to git log.
->
->  drivers/char/tpm/Kconfig        |   9 +++
->  drivers/char/tpm/Makefile       |   1 +
->  drivers/char/tpm/tpm_loongson.c | 103 ++++++++++++++++++++++++++++++++
->  3 files changed, 113 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_loongson.c
->
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index 0fc9a510e..5d0e7a1f8 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -225,5 +225,14 @@ config TCG_FTPM_TEE
->         help
->           This driver proxies for firmware TPM running in TEE.
->
-> +config TCG_LOONGSON
-> +       tristate "Loongson TPM Interface"
-> +       depends on MFD_LOONGSON_SE
-> +       help
-> +         If you want to make Loongson TPM support available, say Yes and
-> +         it will be accessible from within Linux. To compile this
-> +         driver as a module, choose M here; the module will be called
-> +         tpm_loongson.
-Moving this entry between TCG_IBMVTPM and TCG_XEN is better
-(alpha-betical order), others look good to me.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/spi/spi.h | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index dcc79c9af8ed..9591655cf1a6 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -138,13 +138,6 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  * @max_speed_hz: Maximum clock rate to be used with this chip
+  *	(on this board); may be changed by the device's driver.
+  *	The spi_transfer.speed_hz can override this for each transfer.
+- * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
+- *	the corresponding physical CS for logical CS i.
+- * @mode: The spi mode defines how data is clocked out and in.
+- *	This may be changed by the device's driver.
+- *	The "active low" default for chipselect mode can be overridden
+- *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
+- *	each word in a transfer (by specifying SPI_LSB_FIRST).
+  * @bits_per_word: Data transfers involve one or more words; word sizes
+  *	like eight or 12 bits are common.  In-memory wordsizes are
+  *	powers of two bytes (e.g. 20 bit samples use 32 bits).
+@@ -152,6 +145,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  *	default (0) indicating protocol words are eight bit bytes.
+  *	The spi_transfer.bits_per_word can override this for each transfer.
+  * @rt: Make the pump thread real time priority.
++ * @mode: The spi mode defines how data is clocked out and in.
++ *	This may be changed by the device's driver.
++ *	The "active low" default for chipselect mode can be overridden
++ *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
++ *	each word in a transfer (by specifying SPI_LSB_FIRST).
+  * @irq: Negative, or the number passed to request_irq() to receive
+  *	interrupts from this device.
+  * @controller_state: Controller's runtime state
+@@ -164,8 +162,7 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  *	the device will bind to the named driver and only the named driver.
+  *	Do not set directly, because core frees it; use driver_set_override() to
+  *	set or clear it.
+- * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
+- *	(optional, NULL when not using a GPIO line)
++ * @pcpu_statistics: statistics for the spi_device
+  * @word_delay: delay to be inserted between consecutive
+  *	words of a transfer
+  * @cs_setup: delay to be introduced by the controller after CS is asserted
+@@ -173,8 +170,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  * @cs_inactive: delay to be introduced by the controller after CS is
+  *	deasserted. If @cs_change_delay is used from @spi_transfer, then the
+  *	two delays will be added up.
+- * @pcpu_statistics: statistics for the spi_device
++ * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
++ *	the corresponding physical CS for logical CS i.
+  * @cs_index_mask: Bit mask of the active chipselect(s) in the chipselect array
++ * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
++ *	(optional, NULL when not using a GPIO line)
+  *
+  * A @spi_device is used to interchange data between an SPI slave
+  * (usually a discrete chip) and CPU memory.
+@@ -189,7 +189,6 @@ struct spi_device {
+ 	struct device		dev;
+ 	struct spi_controller	*controller;
+ 	u32			max_speed_hz;
+-	u8			chip_select[SPI_CS_CNT_MAX];
+ 	u8			bits_per_word;
+ 	bool			rt;
+ #define SPI_NO_TX		BIT(31)		/* No transmit wire */
+@@ -220,23 +219,29 @@ struct spi_device {
+ 	void			*controller_data;
+ 	char			modalias[SPI_NAME_SIZE];
+ 	const char		*driver_override;
+-	struct gpio_desc	*cs_gpiod[SPI_CS_GPIO_MAX];	/* Chip select gpio desc */
++
++	/* The statistics */
++	struct spi_statistics __percpu	*pcpu_statistics;
++
+ 	struct spi_delay	word_delay; /* Inter-word delay */
++
+ 	/* CS delays */
+ 	struct spi_delay	cs_setup;
+ 	struct spi_delay	cs_hold;
+ 	struct spi_delay	cs_inactive;
+ 
+-	/* The statistics */
+-	struct spi_statistics __percpu	*pcpu_statistics;
++	u8			chip_select[SPI_CS_CNT_MAX];
+ 
+-	/* Bit mask of the chipselect(s) that the driver need to use from
+-	 * the chipselect array.When the controller is capable to handle
++	/*
++	 * Bit mask of the chipselect(s) that the driver need to use from
++	 * the chipselect array. When the controller is capable to handle
+ 	 * multiple chip selects & memories are connected in parallel
+ 	 * then more than one bit need to be set in cs_index_mask.
+ 	 */
+ 	u32			cs_index_mask : SPI_CS_CNT_MAX;
+ 
++	struct gpio_desc	*cs_gpiod[SPI_CS_GPIO_MAX];	/* Chip select gpio desc */
++
+ 	/*
+ 	 * Likely need more hooks for more protocol options affecting how
+ 	 * the controller talks to each chip, like:
+-- 
+2.47.2
 
-Huacai
-
-> +
->  source "drivers/char/tpm/st33zp24/Kconfig"
->  endif # TCG_TPM
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 9bb142c75..e84a2f7a9 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) +=3D xen-tpmfront.o
->  obj-$(CONFIG_TCG_CRB) +=3D tpm_crb.o
->  obj-$(CONFIG_TCG_VTPM_PROXY) +=3D tpm_vtpm_proxy.o
->  obj-$(CONFIG_TCG_FTPM_TEE) +=3D tpm_ftpm_tee.o
-> +obj-$(CONFIG_TCG_LOONGSON) +=3D tpm_loongson.o
-> diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loong=
-son.c
-> new file mode 100644
-> index 000000000..91e0390c8
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_loongson.c
-> @@ -0,0 +1,103 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mfd/loongson-se.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/wait.h>
-> +
-> +#include "tpm.h"
-> +
-> +struct tpm_loongson_msg {
-> +       u32 cmd;
-> +       u32 data_off;
-> +       u32 data_len;
-> +       u32 info[5];
-> +};
-> +
-> +struct tpm_loongson_dev {
-> +       struct lsse_ch *se_ch;
-> +       struct completion tpm_loongson_completion;
-> +};
-> +
-> +static void tpm_loongson_complete(struct lsse_ch *ch)
-> +{
-> +       struct tpm_loongson_dev *td =3D ch->priv;
-> +
-> +       complete(&td->tpm_loongson_completion);
-> +}
-> +
-> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t coun=
-t)
-> +{
-> +       struct tpm_loongson_dev *td =3D dev_get_drvdata(&chip->dev);
-> +       struct tpm_loongson_msg *rmsg;
-> +       int sig;
-> +
-> +       sig =3D wait_for_completion_interruptible(&td->tpm_loongson_compl=
-etion);
-> +       if (sig)
-> +               return sig;
-> +
-> +       rmsg =3D td->se_ch->rmsg;
-> +       memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
-> +
-> +       return rmsg->data_len;
-> +}
-> +
-> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t coun=
-t)
-> +{
-> +       struct tpm_loongson_dev *td =3D dev_get_drvdata(&chip->dev);
-> +       struct tpm_loongson_msg *smsg =3D td->se_ch->smsg;
-> +
-> +       memcpy(td->se_ch->data_buffer, buf, count);
-> +       smsg->data_len =3D count;
-> +
-> +       return se_send_ch_requeset(td->se_ch);
-> +}
-> +
-> +static const struct tpm_class_ops tpm_loongson_ops =3D {
-> +       .flags =3D TPM_OPS_AUTO_STARTUP,
-> +       .recv =3D tpm_loongson_recv,
-> +       .send =3D tpm_loongson_send,
-> +};
-> +
-> +static int tpm_loongson_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct tpm_loongson_msg *smsg;
-> +       struct tpm_loongson_dev *td;
-> +       struct tpm_chip *chip;
-> +
-> +       td =3D devm_kzalloc(dev, sizeof(struct tpm_loongson_dev), GFP_KER=
-NEL);
-> +       if (!td)
-> +               return -ENOMEM;
-> +
-> +       init_completion(&td->tpm_loongson_completion);
-> +       td->se_ch =3D se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
-> +                              2 * sizeof(struct tpm_loongson_msg), td,
-> +                              tpm_loongson_complete);
-> +       if (!td->se_ch)
-> +               return -ENODEV;
-> +       smsg =3D td->se_ch->smsg;
-> +       smsg->cmd =3D SE_CMD_TPM;
-> +       smsg->data_off =3D td->se_ch->off;
-> +
-> +       chip =3D tpmm_chip_alloc(dev, &tpm_loongson_ops);
-> +       if (IS_ERR(chip))
-> +               return PTR_ERR(chip);
-> +       chip->flags =3D TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-> +       dev_set_drvdata(&chip->dev, td);
-> +
-> +       return tpm_chip_register(chip);
-> +}
-> +
-> +static struct platform_driver tpm_loongson_driver =3D {
-> +       .probe   =3D tpm_loongson_probe,
-> +       .driver  =3D {
-> +               .name  =3D "loongson-tpm",
-> +       },
-> +};
-> +module_platform_driver(tpm_loongson_driver);
-> +
-> +MODULE_ALIAS("platform:loongson-tpm");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Loongson TPM driver");
-> --
-> 2.45.2
->
->
