@@ -1,113 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475871E1E13;
-	Mon, 31 Mar 2025 11:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A43B191F94
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743419703; cv=none; b=OdNStPAWKmXWMzutdNseG/VAYM9kNk1uJYXeQtMZuX60xXH5FNN5GzvgkGD91un3eYPR1qL8CgwUIABjPYbHhUlPxkbKHnj9aN4FTxfXsl3ToMImcg3M9hQ0XTIB+gwXXIU5IU5MCBptQk7+b78DxELoBgDGkFjxetnnZGxJqJk=
+	t=1743419720; cv=none; b=QGPDtUbVh4mad5FUz+ouv8qo0nGrpB13wNAdii3fnIwnKTBecFgvJZ2qCW+FDnF0prue0im1KCJfGlu0t4Dc+CJI9EdMyeLftfIKB2Y0vB78mVta1uZpy4zTWlKf5RbuOW9SpED2WTNJf6uIYhdWP+7wzyMF2kCmxwL3q2Qh7Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743419703; c=relaxed/simple;
-	bh=nLlydRF7GjIqMiKieOsgcX9xT9XN72KxiEV9LmXP8N4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=syPQUBuC8Rm7lGYsmr4dzYOpdSw8QPNVMtddsxWSaji0/bsLJj7xjnNd5tIz5SuYvq40MP7GYdUewOElP6LXIqmG38H9N1QxNQX5odnwC4XxubLvqKBAO/Wi4Oz8MsRiMskFJi7+tc9miEqmV4Ap2tgpbQN4rNJkGDrMpum4/Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdzXXBSe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdzXXBSe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2554AC4CEE3;
-	Mon, 31 Mar 2025 11:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743419702;
-	bh=nLlydRF7GjIqMiKieOsgcX9xT9XN72KxiEV9LmXP8N4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rdzXXBSeHugK1gkHaEL3OjX2zNy9EStsQbhroiPL4OTd/3N58y2VCflDcku+iOdw/
-	 OLijwlfMjBt6GJ7VOMshJFAfzGDsSTRWoURff4E3LgkyUw/uoJwKwlAySMaWLKvwJL
-	 kOut+N2bodGxnDcBQzTHRx+WkERZcrypJKijk7wQ3rI7qY9+HSD4vlJyJwmHOPi0XM
-	 dgI/fWwNnfBVH53xKO/KkRSPLWJcwztSmlQ9p2KME7J2bGBPaRaEx8J/k82q2ttT9I
-	 CgcfnTEI8Y0ZooJMWRS4H5m/CaZPBLlI2Y7bt7WpN5wl9O1ucXVsLZFIOkETv8J3Wk
-	 RrLRdG44En05g==
-Date: Mon, 31 Mar 2025 12:14:53 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] iio: adc: ti-adc128s052: Simplify using
- guard(mutex)
-Message-ID: <20250331121453.690642f7@jic23-huawei>
-In-Reply-To: <93a9d7ab74cd045949a2e2b6301f29c7d83d72ea.1742474322.git.mazziesaccount@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<93a9d7ab74cd045949a2e2b6301f29c7d83d72ea.1742474322.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743419720; c=relaxed/simple;
+	bh=D8Em8BVNXif9GajVEZqCWriTDda1ygYzADo5cDz4z0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eJMxbyoymibvT5WTrtNgtKvTkVdzKTsPz5+9I4FiCJcjx9PZL/+5+bnNAeol13I7M/rAJ4GdVq748JNf7jef1aeIwIt5vv9Bb5SsVT7bbPwimglBGmMFJ9Z4CLmYoHq4C9C1gpgsGw5z2siMzxmXeMuUmlmVEEF/Ib57KgyOumw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30B251F02;
+	Mon, 31 Mar 2025 04:15:22 -0700 (PDT)
+Received: from [10.57.15.213] (unknown [10.57.15.213])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8830B3F694;
+	Mon, 31 Mar 2025 04:15:14 -0700 (PDT)
+Message-ID: <2aa3bf07-924b-4359-b566-0db57d53cdf5@arm.com>
+Date: Mon, 31 Mar 2025 12:15:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] drm/panfrost: Add support for AARCH64_4K page
+ table format
+To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: boris.brezillon@collabora.com, robh@kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, kernel@collabora.com,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ sjoerd@collabora.com, angelogioacchino.delregno@collabora.com,
+ =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>
+References: <20250324185801.168664-1-ariel.dalessandro@collabora.com>
+ <20250324185801.168664-5-ariel.dalessandro@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250324185801.168664-5-ariel.dalessandro@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Mar 2025 11:03:44 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-
-> Error path in ADC reading function can be slighly simplified using the
-> guard(mutex). Do just that.
+On 24/03/2025 18:57, Ariel D'Alessandro wrote:
+> Currently, Panfrost only supports MMU configuration in "LEGACY" (as
+> Bifrost calls it) mode, a (modified) version of LPAE "Large Physical
+> Address Extension", which in Linux we've called "mali_lpae".
 > 
-> Also, document the mutex purpose while at it.
-Ah. I should have read on before earlier comment!
-
-That's what I get for an efficient linear pass of patches :)
+> This commit adds support for conditionally enabling AARCH64_4K page
+> table format. To achieve that, a "GPU optional quirks" field was added
+> to `struct panfrost_features` with the related flag.
 > 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Note that, in order to enable AARCH64_4K mode, the GPU variant must have
+> the HW_FEATURE_AARCH64_MMU feature flag present.
+> 
+> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+(one very minor nit below)
+
 > ---
->  drivers/iio/adc/ti-adc128s052.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+>  drivers/gpu/drm/panfrost/panfrost_device.h |  16 +++
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c    | 140 +++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_regs.h   |  34 +++++
+>  3 files changed, 183 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index 90b23c68daea..c68ee4e17a03 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -9,6 +9,7 @@
->   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
->   */
->  
-> +#include <linux/cleanup.h>
->  #include <linux/err.h>
->  #include <linux/iio/iio.h>
->  #include <linux/mod_devicetable.h>
-> @@ -26,6 +27,7 @@ struct adc128 {
->  	struct spi_device *spi;
->  
->  	struct regulator *reg;
-> +	/* Serialize the SPI 'write-channel + read data' accesses */
->  	struct mutex lock;
->  
->  	__be16 buffer __aligned(IIO_DMA_MINALIGN);
-> @@ -39,18 +41,13 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->  	msg[0] = channel << 3;
->  	msg[1] = 0;
->  
-> -	mutex_lock(&adc->lock);
-> +	guard(mutex)(&adc->lock);
-As per earlier comment, I think you need to protect msg as well.
 
->  
->  	ret = spi_write(adc->spi, msg, 2);
-> -	if (ret < 0) {
-> -		mutex_unlock(&adc->lock);
-> +	if (ret < 0)
->  		return ret;
-> -	}
->  
->  	ret = spi_read(adc->spi, &adc->buffer, 2);
-> -
-> -	mutex_unlock(&adc->lock);
-> -
->  	if (ret < 0)
->  		return ret;
->  
+[...]
+
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> index 294f86b3c25e..ccf51fd5f9c0 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+[...]
+> +
+> +static int panfrost_mmu_cfg_init(struct panfrost_mmu *mmu,
+> +				  enum io_pgtable_fmt fmt)
+
+NIT: It's always hard to see in the diff, but the alignment of the
+second line is wrong. But I'll fix this up when merging.
+
+Thanks,
+Steve
 
