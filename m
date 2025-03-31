@@ -1,107 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58FC1E0E14;
-	Mon, 31 Mar 2025 20:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDC4214227;
+	Mon, 31 Mar 2025 20:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743453556; cv=none; b=iSRV/IN6nQxHuPiGgGT4ppH0VZXPc5ZKRuGw6Or73XDnFdVA084HjKs7MFDuBM3TAjPhfoKmJkR0uxvInXbCfqoD4u/7pTFDUQJEXdNy1Jy0wsXWcSA8b2DtmmBqGNOVRHpmFpbmeqoxOE3g4op9jgug4qNoQNXuXy6ZmAlGaDE=
+	t=1743453653; cv=none; b=pAgWb71oy+W0jLVdqIkB182KPPLrjrhNtFIShj0UBfMq+YejDjUjVSGnW8udsEQktOECmKrY2kcirvls6jA/A7t6I4xkU9hhNeJMQsIY5/vrnlYM7JfN0m/43V0PG8PNxKLQq3otJMZf4IcHVOquPl671dPNYdFXxjVkQ1ii2Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743453556; c=relaxed/simple;
-	bh=zeVINXMb/01mGZrBfhpTJgMRXJBpTOtPkCDCxl2+D44=;
+	s=arc-20240116; t=1743453653; c=relaxed/simple;
+	bh=I0pww8VqJBHBfu1PWz4L5zWozNIoPBm6Vts7A/QmhsY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llh28Rac8T1PmaYtI5kn9lbIp7ARAqI2TmNNpCzU5/Aesu2OlGWtueLfgCUPT7FKKVdZu1KnF5zXFmGTo2wItGPEqVIbZLOnR50M6RrCZh58SiGd0GoRHE94+TfpFMPZ1ayhUr9UBy+i7fjIu2iVzB3R2cPkenozbE0mV8S9y28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=F8o5RaNF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnY5fAU738v/vT/YzMKODzDfpPaQDlKLmpR1av0xC4ZvXi2a38kYzVz3YIpwE8IaqVqUkIYhr0MTFcH5tHQttXegPZk3V//l4OzJRGzBol0ZuY8iLGxZCIKiNHVOEyfl0756CTMc/aEYfE3tfOY89tWMLhxMTRBROz7NkN6uKKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZnsVzoz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="F8o5RaNF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8E35D40E0219;
-	Mon, 31 Mar 2025 20:39:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id hCZ-tIlyS7we; Mon, 31 Mar 2025 20:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743453540; bh=/G/aKVJEvh+BK78jU3R26aPND/GQH52x97woE6DFwhw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZnsVzoz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96F4C4CEE3;
+	Mon, 31 Mar 2025 20:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743453653;
+	bh=I0pww8VqJBHBfu1PWz4L5zWozNIoPBm6Vts7A/QmhsY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F8o5RaNF3wWAqRLnTqi/8tHi7xkMgpKiN8syntrCDDi2HsW0ZteAq1vHxftuVDtEM
-	 cGldDTW3HAyOII383lFtqZ8kjPjJ4cSMMQfZiMs2i75K92ljQxK+B976L1H8wpzDw3
-	 qBq06saJEtD83EHlZGDTbn2Zrkjdn/pwU8XSUo89HvNJ5HrM4jKMmVBY/vqWzOGZAs
-	 YMW9m5mTnDMA2/H7Mc2kS6IohGQx9CIGf8UFDrLzc7i1zbdiFLx+LurM0lT0p+r++K
-	 xEE/rCcJDi/j7xqbBgk5XLjKmFoXPTIY8xiaG6nY2M2HoVZUHdlffKXc5AXjOsjk3h
-	 bXWm4T/N6Gzr7tBdHvVBTC9fABhXTGLNWEaMUMRerH2SrcucWBS7Q76YE/0gGMLqzP
-	 CqnJj5s+MxEXI5KS+enCYMAbhBo+MWFpsW8Kykxy0tXn0BVbIXqfGDdwlFwzMacC8O
-	 wk0mK5nC05VUHquiE5jhJgdoZX9HEiHuFW4xPMnCFYz2SfZ/QITV5Kj74oo3FyeTUi
-	 lHFVgGPccdky6om9VHQjHwlCkorANK8owgOFCwgm7tlqdg27yNAxCe8hVJ6wqynD9T
-	 GmKhQh3WsSnbfRxcHEl1wAa+FmSiCk8yZbj+eB5Ssk9ytAfGykALiBs591qReXfIrj
-	 SZqE/RALHdS8Q8yfLauzWt/Q=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A5FD540E0215;
-	Mon, 31 Mar 2025 20:38:17 +0000 (UTC)
-Date: Mon, 31 Mar 2025 22:38:11 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
-	bpf@vger.kernel.org, llvm@lists.linux.dev, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-	pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com
-Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
- when available
-Message-ID: <20250331203811.GCZ-r9M9Zrww_b7IjJ@fat_crate.local>
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-11-xin@zytor.com>
- <Z-r6qxmk7niRssee@char.us.oracle.com>
+	b=VZnsVzozdNfu5X8UMeTfgCssrlEL5caMO3Y4haUBvmkL4T0VpNWst9+N+9bWopezF
+	 dWQPDBPbtA1QhnUQmYaHQJNHu5SdZRBm+vIDa1kdG5BcsmbPiNgq1TIRpfvEJI/ZnC
+	 Wjm7JgV7584sBvEGNVP43cgT3+c1lgb19xo66DyPQJRkgr6JsRbUpsPa0DexBiBaYt
+	 KVNsL2G09JBLeYQL98P/VzX8U1iarWdiSGnZHEWenN+7h2L/tZtFbfbLkK03Fosvc9
+	 FuQwgdKo8Ya/EEgf2iYJFbIxg3lUTQqowgZhc2QktN++nGejnxT5I66ou80Nnspl5t
+	 nqvA7oHo8gXnA==
+Date: Mon, 31 Mar 2025 15:40:51 -0500
+From: Rob Herring <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Andrei Botila <andrei.botila@oss.nxp.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Eric Woudstra <ericwouds@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH v4 6/6] dt-bindings: net: Document support
+ for Aeonsemi PHYs
+Message-ID: <20250331204051.GA2764400-robh@kernel.org>
+References: <20250327224529.814-1-ansuelsmth@gmail.com>
+ <20250327224529.814-7-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-r6qxmk7niRssee@char.us.oracle.com>
+In-Reply-To: <20250327224529.814-7-ansuelsmth@gmail.com>
 
-On Mon, Mar 31, 2025 at 04:27:23PM -0400, Konrad Rzeszutek Wilk wrote:
-> Is that the right path forward?
+On Thu, Mar 27, 2025 at 11:45:17PM +0100, Christian Marangi wrote:
+> Document support for Aeonsemi PHYs and the requirement of a firmware to
+> correctly work. Also document the max number of LEDs supported and what
+> PHY ID expose when no firmware is loaded.
+
+If you respin, in the subject: s/Document support for/Add/
+
 > 
-> That is replace the MSR write to disable speculative execution with a
-> non-serialized WRMSR? Doesn't that mean the WRMSRNS is speculative?
+> Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
+> AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
+> AS21210PB1 that all register with the PHY ID 0x7500 0x9410 on C45
+> registers before the firmware is loaded.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/net/aeonsemi,as21xxx.yaml        | 122 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
 
-Ha, interesting question.
-
-If the WRMSR is non-serializing, when do speculative things like indirect
-branches and the like get *actually* cleared and can such a speculation window
-be used to leak branch data even if IBRS is actually enabled for example...
-
-Fun.
-
-This change needs to be run by hw folks and I guess until then WRMSRNS should
-not get anywhere near mitigation MSRs like SPEC_CTRL or PRED_CMD...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
