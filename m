@@ -1,79 +1,77 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CF518D643;
-	Mon, 31 Mar 2025 21:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFED321B9D9
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743456219; cv=none; b=U+gwlU/KZfmgGiD0mWETPB4aNaT7CX2u7qedzJdjmv/4WUUMKVAZQQdyN5KeUBR/nUMhbrXUrtI4HXtW15kFi4OHMlsdNAzoEUIWpdYlgvcEE/5N1DVRgcr8/eJy8V4f/es7alcG3QbQhfPvX2iX9dR3re07u6i6WK+jHHBIOnE=
+	t=1743456228; cv=none; b=s3OLKBcPVJGiTdCtsa93nWb+wgPC2sa0eYAG2gyuQKRomLZhigDLEDOfN1SODqa94+BByUfeZ/Wx9Zr1vTQM14d5DaByiR4odFCfK55kVSvlTrMWWoKJ9BvEwwDJAjOLF5o0rNvD8UCr8Bpr/tZSmpPwRXpgWMa9UjYL+2XSBJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743456219; c=relaxed/simple;
-	bh=zzzoir/NKVG2Rvcc8WCrzNv1DRhYxgVfZRBrhklaH/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d06ksY1KwvlAZU0wfaw/J+wm4PA93WDsIrV3wYvADu0rOMfZG71dwJodGnhKDtBGhJHGtFT5yTU74njkeVVI6a0JFGidDMgf/snLBo55rWD+VvFxfusIXjA4xR/mjr9OpN8MC9KVq2SWwL38c538G91c/GcgLhVwVKc6/ARfDe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkLcBe6R; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1743456228; c=relaxed/simple;
+	bh=2PjEA6PEqXvUEzDs93/qP1FFZhf+Fl56SKt1x3Lq+AQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cnUJ2MK7E/6wyX8bHZx2CaWuOc9GspJiOuXn6iA1LQcVcPP8GJP7cFrc+Gaf4DJaLb0/GMSaDWp2UH23/I6rHvCaWHvKn1rSjf+F2quGTJf3OZBD3b1i/FHfc4cG0hu0Qo+5eNBXtCdWgZ//KhlL/nTvFk1jF8PxN353vavjBIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTTRvQQ/; arc=none smtp.client-ip=209.85.128.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkLcBe6R"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso9344765ad.1;
-        Mon, 31 Mar 2025 14:23:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTTRvQQ/"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6feab7c5f96so44333397b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:23:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743456217; x=1744061017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oarhOv17S6NDCgmBz46l+qZChOY53z83EqBIJ4rTMrQ=;
-        b=KkLcBe6R4sJKNHdj6NcGB3WuGkCgmSC0szSlI9iKdgjUDNh4h0E4wD4ZQaLYCpgBSY
-         HGqGV/z9f7m95rHtM51cmovcQH6k0/JqCcZTvVCtdEfrojBcdAvCbDSO7xiUdp7bGBV2
-         /MOQ7K18JDSAsWkexhNxad//WHPJu77YivbnkgpMWrSdJlJyahiYHb/Bla1VRI68gQB2
-         beEZsGgBmfDX26CMYXSOExSgzRSG8KhkeSVU8QILRwaWAFjs4MgRYc3CyWa47kDondX+
-         Up7b/PVqr/Smx2e7U2VASeBdLs1mCp9PYDRQuTvqSqZqsrwggmX3fyF/4zCuJRGZp7YE
-         6nXw==
+        d=gmail.com; s=20230601; t=1743456226; x=1744061026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ToiqwXTNWbSOaWmF/3nfIhcFQB86VWKA/YOyk/TfLa4=;
+        b=hTTRvQQ/rIE0tVqoDGljL6rGGtgMK8UnvVtG86JbJORAdJIM9FzXkRNHSlXRlCVrX0
+         yK2Q3cxMxQ46YL5wiXvcEVJH1xTbPrfhfKJsPzhzp6JeFmhPQr7qhM3KMMPY1VDHaVUV
+         glZZEjopNLkJRxm8FOUMOMnWpyo2BEuciOjyebaUFMJbMqecIYDDnIDFnnnxJA82qW7K
+         tTB/3c/4oKDnYZDo1aO4UCNCsKfe+XCJVcPUPwG+EfaxJnpOIv8PxZ8nKseNaFNtstSG
+         Kv4mbqs9oapabCBa1h5hWbnSgtD49CPHfcLG+NdlLWV3UBOT5JLjWaJDniWQJ2R+z5uc
+         NYIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743456217; x=1744061017;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oarhOv17S6NDCgmBz46l+qZChOY53z83EqBIJ4rTMrQ=;
-        b=CBMh7hr9gMBqaQf+mS8GY6ItH6Fn3JPXVtshEUKwm6TOxmBf8fHdDPZUBrizCBSsd9
-         RrdeZXl12wtox1y34E+LOiQzj5lzUdGaenMmQUIr0Wm4/q3eAEJcDHvnNZ8sgUVe8cKZ
-         iCNBKe7h8w6NsR1XVg7Wi/Cc4XAWvj2RIRLDqoQ346ovxfn+i7SVswxjwONKNvxFY4Uj
-         l0sjWMfdF8btATKirEoJJeiBVQt5UgMUty9D919/mjoPd1or/NDll0AWBIxeGYOmh1dN
-         7MLdD4ZgzP0yoRL1gFr0MYp28URNJy2OsqJ9Yam8srjW45c2l9TsClMZYlnPNQqyTNmK
-         +Hjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2sVFAlYScWXyN8SZJjqeNY2/xMd4VYSV4N5oBOBaktckHd6zgOfz5InxdEui9uNH2j3D3oyFED+rMYZM=@vger.kernel.org, AJvYcCXXZYcXikukVzbMfbq4fU4aQqz9UBdnivjXOv2U5/4k2OY95zLLwtDxDNzmH9pPA5EM/uB0B7TXAESVLr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEGV/+PdyGqeHYRByTXI2h4BIdPlN+ZPa2TSgk4v0CW10q8x3K
-	YI2KrM6dDl0fwyIArxYetzuQJSkYR+2UTw7dZebSk09i2A7l9GLP
-X-Gm-Gg: ASbGnct+W+ELY2yqnHmdPQk5pJqhlnjwOAc4YETSZCtlHpynjC7TNMePGqmMzC3PqK7
-	gaGXlIxxBori44/ClLX4Z9BNJ63BkrgHbS5zR9FkiNxaYYE+2fcxZ+gk1fYL+u++bKxD+RbLSSc
-	mErN/YOQ8wa74lAFCJcFfswgYCmWzufyj8gQSzRb9U/P64l8YynROBR6rLiTFtd8GfBzrYEJ8O4
-	63jhnxBVfZQT232DQ9pmylbHyeoVl2Okm7EA9ORMBdfNLfiwER7RavHcc/78vHziat4iZ4qynFz
-	AEYHlpWxzJEWjKYADrGwYX1/LgtmJepPeEYx315DwMBMsjZdwnxYf9qaZnXWZVhU0bSdiCXSPUO
-	oZIOFMpqFXxLD3pLNEP7p21CzjRzj2w==
-X-Google-Smtp-Source: AGHT+IGpFHC2qe1Je4WLPc7fUp41YqQI35b103OmAbhxl9meKcz7jNtqw9rDYNQRmlxEKTc350gKaA==
-X-Received: by 2002:a05:6a21:1190:b0:1f8:d245:616d with SMTP id adf61e73a8af0-2009f645256mr16990239637.21.1743456217342;
-        Mon, 31 Mar 2025 14:23:37 -0700 (PDT)
-Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69d996sm6839433a12.22.2025.03.31.14.23.35
+        d=1e100.net; s=20230601; t=1743456226; x=1744061026;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ToiqwXTNWbSOaWmF/3nfIhcFQB86VWKA/YOyk/TfLa4=;
+        b=Zl1HB2lJvLEC9ZW4yEiQda4UG3NI5p2WtpdNnRCTnLQqXTgnpLk1je2pH41CAl02yf
+         ziOImfuacxCuglJyemyUy/B6HA9efJXSTKVQmzbry3SCdM208uDQgDNJ/p5II2YAofeY
+         wW+iAjlRPTgm6EczKe5CdSeNLJ0RSllJWDd0YYIDyPxJl6hACtm19xUGkEbzFpNk1+wn
+         +kPLhdN+lfLdS7p7Nx6cKFfOc55mpL0uanR2cmxwl2+dkad/XfPsnBNPEXdAs1C9Z1Yb
+         z+AuPzr30Walth5W8ON9j8GkNNwr0+zBd/mv7TtCSiWvTct5CeG4LA2AXvlZ6hGXQ2Vm
+         ut6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWV/be0Ts+TpmpJCFHAnBvx7Prq5ejyhwK8UhMCc7rMSeCZAfDX4p+lo9TcRF0JJuHqvqZvtyhfIAZDW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLlIh4R9uLWLraHehV1bzbYFNWx30DY9F3o+kMht1MuXQCtJE2
+	qjm/rNJsYjNqFhJlJfSpCZDVcQ1V1C6amOtj2q0/AZxwnZHG9G9F4meTKA==
+X-Gm-Gg: ASbGnctJ70yjCjNRhTNYXnX27tZCPGl9VeVL9TfMrwCymLvW9xcTTqWr/+u0Hvc5gMh
+	i/pUsrMnG0vcen3tMiTpF76SeWAVZxKwfawntgICeOMPZgEvXPq7Ru2eAFLjftVnMngN04cPFZI
+	5+ImbgYBfo3otkZH4TQiMShQVsKJxLsSaP7z/YrycOgQoEo5sP526H9OsQnsxL0/C2tcVPWmBWl
+	ML1d1t5tXIm+iRK0Uw/2MPRR1Xlw1+dNOo5pRmJttbvMJL/LuESov8MpgqUQYzprdw5bTmNdePY
+	SXzQ6SqaFm9xJFGaXES7T/VnQBb/hK90bZTRsPyq3pYHN5HQBmmoTg==
+X-Google-Smtp-Source: AGHT+IF2ccfX+N8GaDhZWoT7fQ4TPsL1iJZI+VlKe+DiDxzY0SY30WKJtzZwgizskXCPz7NweIs+fQ==
+X-Received: by 2002:a05:690c:74c9:b0:6fd:390d:5a9c with SMTP id 00721157ae682-70257119196mr148843427b3.10.1743456225544;
+        Mon, 31 Mar 2025 14:23:45 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:4::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023aa07ce3sm23481337b3.116.2025.03.31.14.23.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 14:23:35 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
-	linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
-Subject: [PATCH v5] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs
-Date: Mon, 31 Mar 2025 14:23:32 -0700
-Message-ID: <20250331212333.16029-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Mon, 31 Mar 2025 14:23:45 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Wupeng Ma <mawupeng1@huawei.com>
+Cc: akpm@linux-foundation.org,
+	mike.kravetz@oracle.com,
+	david@redhat.com,
+	muchun.song@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [RFC PATCH] mm: hugetlb: Fix incorrect fallback for subpool
+Date: Mon, 31 Mar 2025 14:23:41 -0700
+Message-ID: <20250331212343.66780-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250325061634.2118202-1-mawupeng1@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,163 +80,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, 25 Mar 2025 14:16:34 +0800 Wupeng Ma <mawupeng1@huawei.com> wrote:
 
-Add support for exporting a dma_fence fd for a specific point on a
-timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
-syncobj support, as it needs a way to turn a point on a timeline back
-into a dma_fence fd.  It also closes an odd omission from the syncobj
-UAPI.
+> During our testing with hugetlb subpool enabled, we observe that
+> hstate->resv_huge_pages may underflow into negative values. Root cause
+> analysis reveals a race condition in subpool reservation fallback handling
+> as follow:
+> 
+> hugetlb_reserve_pages()
+>     /* Attempt subpool reservation */
+>     gbl_reserve = hugepage_subpool_get_pages(spool, chg);
+> 
+>     /* Global reservation may fail after subpool allocation */
+>     if (hugetlb_acct_memory(h, gbl_reserve) < 0)
+>         goto out_put_pages;
+> 
+> out_put_pages:
+>     /* This incorrectly restores reservation to subpool */
+>     hugepage_subpool_put_pages(spool, chg);
+> 
+> When hugetlb_acct_memory() fails after subpool allocation, the current
+> implementation over-commits subpool reservations by returning the full
+> 'chg' value instead of the actual allocated 'gbl_reserve' amount. This
+> discrepancy propagates to global reservations during subsequent releases,
+> eventually causing resv_huge_pages underflow.
+> 
+> This problem can be trigger easily with the following steps:
+> 1. reverse hugepage for hugeltb allocation
+> 2. mount hugetlbfs with min_size to enable hugetlb subpool
+> 3. alloc hugepages with two task(make sure the second will fail due to
+>    insufficient amount of hugepages)
+> 4. with for a few seconds and repeat step 3 which will make
+>    hstate->resv_huge_pages to go below zero.
+> 
+> To fix this problem, return corrent amount of pages to subpool during the
+> fallback after hugepage_subpool_get_pages is called.
+> 
+> Fixes: 1c5ecae3a93f ("hugetlbfs: add minimum size accounting to subpools")
+> Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
 
-[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
-[2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
+Hi Wupeng,
+Thank you for the fix! This is a problem that we've also seen happen in
+our fleet at Meta. I was able to recreate the issue that you mentioned -- to
+explicitly lay down the steps I used:
 
-v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
-v3: Add unstaged uabi header hunk
-v4: Also handle IMPORT_SYNC_FILE case
-v5: Address comments from Dmitry
+1. echo 1 > /proc/sys/vm/nr_hugepages
+2. mkdir /mnt/hugetlb-pool
+3.mount -t hugetlbfs -o min_size=2M none /mnt/hugetlb-pool
+4. (./get_hugepage &) && (./get_hugepage &)
+    # get_hugepage just opens a file in /mnt/hugetlb-pool and mmaps 2M into it.
+5. sleep 3
+6. (./get_hugepage &) && (./get_hugepage &)
+7. cat /proc/meminfo | grep HugePages_Rsvd
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/drm_syncobj.c | 45 +++++++++++++++++++++++++++--------
- include/uapi/drm/drm.h        |  4 ++++
- 2 files changed, 39 insertions(+), 10 deletions(-)
+... and (6) shows that HugePages_Rsvd has indeed underflowed to U64_MAX!
 
-diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
-index 4f2ab8a7b50f..b0a4c58fe726 100644
---- a/drivers/gpu/drm/drm_syncobj.c
-+++ b/drivers/gpu/drm/drm_syncobj.c
-@@ -741,7 +741,7 @@ static int drm_syncobj_fd_to_handle(struct drm_file *file_private,
- }
- 
- static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
--					      int fd, int handle)
-+					      int fd, int handle, u64 point)
- {
- 	struct dma_fence *fence = sync_file_get_fence(fd);
- 	struct drm_syncobj *syncobj;
-@@ -755,14 +755,22 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
- 		return -ENOENT;
- 	}
- 
--	drm_syncobj_replace_fence(syncobj, fence);
-+	if (point) {
-+		struct dma_fence_chain *chain = dma_fence_chain_alloc();
-+		if (!chain)
-+			return -ENOMEM;
-+		drm_syncobj_add_point(syncobj, chain, fence, point);
-+	} else {
-+		drm_syncobj_replace_fence(syncobj, fence);
-+	}
-+
- 	dma_fence_put(fence);
- 	drm_syncobj_put(syncobj);
- 	return 0;
- }
- 
- static int drm_syncobj_export_sync_file(struct drm_file *file_private,
--					int handle, int *p_fd)
-+					int handle, u64 point, int *p_fd)
- {
- 	int ret;
- 	struct dma_fence *fence;
-@@ -772,7 +780,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
- 	if (fd < 0)
- 		return fd;
- 
--	ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
-+	ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
- 	if (ret)
- 		goto err_put_fd;
- 
-@@ -869,6 +877,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
- 				   struct drm_file *file_private)
- {
- 	struct drm_syncobj_handle *args = data;
-+	unsigned valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
-+			       DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
-+	u64 point = 0;
- 
- 	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
- 		return -EOPNOTSUPP;
-@@ -876,13 +887,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
- 	if (args->pad)
- 		return -EINVAL;
- 
--	if (args->flags != 0 &&
--	    args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
-+	if (args->flags & ~valid_flags)
- 		return -EINVAL;
- 
-+	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
-+		point = args->point;
-+
- 	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
- 		return drm_syncobj_export_sync_file(file_private, args->handle,
--						    &args->fd);
-+						    point, &args->fd);
-+
-+	if (args->point)
-+		return -EINVAL;
- 
- 	return drm_syncobj_handle_to_fd(file_private, args->handle,
- 					&args->fd);
-@@ -893,6 +909,9 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
- 				   struct drm_file *file_private)
- {
- 	struct drm_syncobj_handle *args = data;
-+	unsigned valid_flags = DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE |
-+			       DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE;
-+	u64 point = 0;
- 
- 	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
- 		return -EOPNOTSUPP;
-@@ -900,14 +919,20 @@ drm_syncobj_fd_to_handle_ioctl(struct drm_device *dev, void *data,
- 	if (args->pad)
- 		return -EINVAL;
- 
--	if (args->flags != 0 &&
--	    args->flags != DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
-+	if (args->flags & ~valid_flags)
- 		return -EINVAL;
- 
-+	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE)
-+		point = args->point;
-+
- 	if (args->flags & DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE)
- 		return drm_syncobj_import_sync_file_fence(file_private,
- 							  args->fd,
--							  args->handle);
-+							  args->handle,
-+							  point);
-+
-+	if (args->point)
-+		return -EINVAL;
- 
- 	return drm_syncobj_fd_to_handle(file_private, args->fd,
- 					&args->handle);
-diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
-index 7fba37b94401..e63a71d3c607 100644
---- a/include/uapi/drm/drm.h
-+++ b/include/uapi/drm/drm.h
-@@ -905,13 +905,17 @@ struct drm_syncobj_destroy {
- };
- 
- #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
-+#define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_TIMELINE         (1 << 1)
- #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
-+#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
- struct drm_syncobj_handle {
- 	__u32 handle;
- 	__u32 flags;
- 
- 	__s32 fd;
- 	__u32 pad;
-+
-+	__u64 point;
- };
- 
- struct drm_syncobj_transfer {
--- 
-2.49.0
+I've also verified that applying your fix and then re-running the reproducer
+shows no underflow.
+
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+
+Sent using hkml (https://github.com/sjp38/hackermail)
 
