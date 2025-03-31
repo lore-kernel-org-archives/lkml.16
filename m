@@ -1,138 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA713CA97;
-	Mon, 31 Mar 2025 09:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F65A155A30;
+	Mon, 31 Mar 2025 09:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412408; cv=none; b=WKvJ9OB8QdtpriMkmwdCgxeVIoLKd+Ckd7szVT9StiAm3UaCXf4qcP5qz1cFmgV1ZwxaMDDUDGO48yDgqqurSMSIwIfyemdkyQihezpGPuQ/cgPcS04mDLR/L1HidLLKqN+GAsTtZ4qWj+p5w+7RhEVjL8dLJHaDj+zoeqBbkBE=
+	t=1743412424; cv=none; b=fPq/RQ/XbkHeJQROKp9X9JbYJSBLKnfwKf+bQUt8NckUCFptrqJKhpDIlGPZ1xsmOcSAKjR3TL+LKWet1M4kBsEyhPV8w3uYetroaqeaEEd7JZ0ceZm3BHsFeXjW13d9Z1/V2fnokgPvEamD53n2RgxoSzBLiyI+Im47cJp9+oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412408; c=relaxed/simple;
-	bh=P9fMSpSn4Svn5ww5bpg2gabNVZZWkbyy9tvOD2Nel8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1XDssszRQD+TpC9YnzkkMsOD7GSyBjYBYV4/TKrgjbO12P5DoAkt617iVOdLM12beRsuPISaoC+Xqs9fV1jN7VFgy3HKN7TL+mVsaqUxqCMCT4MKGlp9qFLIjnXckkkL4OJKB3dxsCWqFq08wHsyRu4rdhyepLvkCN/nnilt6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y21qwdpz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y21qwdpz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A95E4C4CEE3;
-	Mon, 31 Mar 2025 09:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743412407;
-	bh=P9fMSpSn4Svn5ww5bpg2gabNVZZWkbyy9tvOD2Nel8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y21qwdpzy3yp0rkjKWgyfcATC/8e28FkCoAaWRITgSNECYAorLOz4GR2pJ/ZVntc4
-	 +loHP0op04pdj4B6yAQqalZ9KCBCg+NZkNj3h5lx0jAgO1x8xWK7KFan+ZZffmRrr+
-	 mDf/yVgoWIlWT4RlmWmr7cdPF8v3Md1/KTGKSU6QLqOkSLBaTYXM4/GCkKEcH0ZyTH
-	 khT7mebsXCBUp/5O2QdBDV7aHioqQJveDJwfEuc1wibzCqozbEJPjtPJPuzSaVoNRZ
-	 e1Q9ms0+LNTiVeOVxK+ayaSIvvqCHP1UVEyVmsurbWb16XDgqUpGDH1lW1Z5GawjWW
-	 cRPip7WEwoKoA==
-Date: Mon, 31 Mar 2025 11:13:20 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 0/6] Extend freeze support to suspend and hibernate
-Message-ID: <20250331-inkrafttreten-lieder-5396ffd0af7a@brauner>
-References: <20250328-work-freeze-v1-0-a2c3a6b0e7a6@kernel.org>
- <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <12ce8c18f4e16b1de591cbdfb8f6e7844e42807b.camel@HansenPartnership.com>
- <9c0a24cd8b03539fd6b8ecd5a186a5cf98b5d526.camel@HansenPartnership.com>
- <20250330-heimweg-packen-b73908210f79@brauner>
- <3f140c076c3756e84d515b81ee9eeeaf13ca4b42.camel@HansenPartnership.com>
+	s=arc-20240116; t=1743412424; c=relaxed/simple;
+	bh=Lg/kjQ8+BXnYP2pnKclvS2rFLRLs9Np0/eWDe1t6oRw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MXGoG87BX+sHvRUHibCE6tCAN2Vz+/U7Dwx5Jps4S8GC/mX0SOMf8/m15e3vI1908urvTF2R/yNXn3foxMRA1gLdRFGYVpCjVtQ6KpLL1J6XCzCgdK3mzta4LG7MNYKHC0EXcUcjEDZ0al23fIF/W5wmMmdqxklAu/2w5ocLYwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowABHhw+oXOpn3vw8BA--.61420S2;
+	Mon, 31 Mar 2025 17:13:21 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: eajames@linux.ibm.com,
+	ninad@linux.ibm.com,
+	jk@ozlabs.org,
+	joel@jms.id.au
+Cc: linux-fsi@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] fsi/core: fix error handling in fsi_slave_init()
+Date: Mon, 31 Mar 2025 17:13:11 +0800
+Message-Id: <20250331091311.2233000-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f140c076c3756e84d515b81ee9eeeaf13ca4b42.camel@HansenPartnership.com>
+X-CM-TRANSID:zQCowABHhw+oXOpn3vw8BA--.61420S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryrKw4rWw17XFW8GFyDJrb_yoW8Wr4kpa
+	1DGa4FyrWUGr1kKrsrZas7Z3s8CrWIv34furW8Gw1IkrZxX34Yyryjg340ya48JaykJF48
+	Xr9rXrykWF1DXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUQvtAUUUUU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Sun, Mar 30, 2025 at 10:00:56AM -0400, James Bottomley wrote:
-> On Sun, 2025-03-30 at 10:33 +0200, Christian Brauner wrote:
-> [...]
-> > > I found the systemd bug
-> > > 
-> > > https://github.com/systemd/systemd/issues/36888
-> > 
-> > I don't think that's a systemd bug.
-> 
-> Heh, well I have zero interest in refereeing a turf war between systemd
-> and dracut over mismatched expectations.  The point for anyone who
-> wants to run hibernate tests is that until they both sort this out the
-> bug can be fixed by removing the system identifier check from systemd-
-> hibernate-resume-generator.
-> 
-> > > And hacked around it, so I can confirm a simple hibernate/resume
-> > > works provided the sd_start_write() patches are applied (and the
-> > > hooks are plumbed in to pm).
-> > > 
-> > > There is an oddity: the systemd-journald process that would usually
-> > > hang hibernate in D wait goes into R but seems to be hung and can't
-> > > be killed by the watchdog even with a -9.  It's stack trace says
-> > > it's still stuck in sb_start_write:
-> > > 
-> > > [<0>] percpu_rwsem_wait.constprop.10+0xd1/0x140
-> > > [<0>] ext4_page_mkwrite+0x3c1/0x560 [ext4]
-> > > [<0>] do_page_mkwrite+0x38/0xa0
-> > > [<0>] do_wp_page+0xd5/0xba0
-> > > [<0>] __handle_mm_fault+0xa29/0xca0
-> > > [<0>] handle_mm_fault+0x16a/0x2d0
-> > > [<0>] do_user_addr_fault+0x3ab/0x810
-> > > [<0>] exc_page_fault+0x68/0x150
-> > > [<0>] asm_exc_page_fault+0x22/0x30
-> > > 
-> > > So I think there's something funny going on in thaw.
-> > 
-> > My uneducated guess is that it's probably an issue with ext4 freezing
-> > and unfreezing. xfs stops workqueues after all writes and pagefault
-> > writers have stopped. This is done in ->sync_fs() when it's called
-> > from freeze_super(). They are restarted when ->unfreeze_fs is called.
-> 
-> It is possible, but I note that if I do
-> 
-> fsfreeze --freeze /
+Once cdev_device_add() failed, we should use put_device() to decrement
+reference count for cleanup. Or it could cause memory leak. Although
+operations in err_free_ida are similar to the operations in callback
+function fsi_slave_release(), put_device() is a correct handling
+operation as comments require when cdev_device_add() fails.
 
-Freezing the root filesystem from userspace will inevitably lead to an
-odd form of deadlock eventually. Either the first accidental request for
-opening something as writable or even the call to fsfreeze --unfreeze /
-may deadlock.
+As comment of device_add() says, 'if device_add() succeeds, you should
+call device_del() when you want to get rid of it. If device_add() has
+not succeeded, use only put_device() to drop the reference count'.
 
-The most likely explanation for this stacktrace is that the root
-filesystem isn't unfrozen. In userspace it's easy enough to trigger by
-leaving the filesystem frozen without also freezing userspace processes
-accessing that filesystem:
+Found by code review.
 
-[  243.232205] INFO: task systemd-journal:539 blocked for more than 120 seconds.
-[  243.239491]       Not tainted 6.14.0-g9ad3884269ca #131
-[  243.243771] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  243.248517] task:systemd-journal state:D stack:0     pid:539   tgid:539   ppid:1      task_flags:0x400100 flags:0x00000006
-[  243.253480] Call Trace:
-[  243.254641]  <TASK>
-[  243.255663]  __schedule+0x61e/0x1080
-[  243.257071]  ? percpu_rwsem_wait+0x149/0x1b0
-[  243.258473]  schedule+0x3a/0x120
-[  243.259533]  percpu_rwsem_wait+0x155/0x1b0
-[  243.260844]  ? __pfx_percpu_rwsem_wake_function+0x10/0x10
-[  243.262620]  __percpu_down_read+0x83/0x1c0
-[  243.263968]  btrfs_page_mkwrite+0x45b/0x890 [btrfs]
-[  243.266828]  ? find_held_lock+0x2b/0x80
-[  243.267765]  do_page_mkwrite+0x4a/0xb0
-[  243.268698]  do_wp_page+0x331/0xdc0
-[  243.269559]  __handle_mm_fault+0xb15/0x11d0
-[  243.270566]  handle_mm_fault+0xb8/0x2b0
-[  243.271557]  do_user_addr_fault+0x20a/0x700
-[  243.272574]  exc_page_fault+0x6a/0x200
-[  243.273462]  asm_exc_page_fault+0x26/0x30
+Cc: stable@vger.kernel.org
+Fixes: 371975b0b075 ("fsi/core: Fix error paths on CFAM init")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/fsi/fsi-core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-This happens because systemd-journald mmaps the journal file. It
-triggers a pagefault which wants to get pagefault based write access to
-the file. But it can't because pagefaults are frozen. So it hangs and as
-it's not frozen it will trigger hung task warnings.
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index e2e1e9df6115..1373e05e3659 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1084,7 +1084,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	rc = cdev_device_add(&slave->cdev, &slave->dev);
+ 	if (rc) {
+ 		dev_err(&slave->dev, "Error %d creating slave device\n", rc);
+-		goto err_free_ida;
++		put_device(&slave->dev);
++		return rc;
+ 	}
+ 
+ 	/* Now that we have the cdev registered with the core, any fatal
+@@ -1110,8 +1111,6 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 
+ 	return 0;
+ 
+-err_free_ida:
+-	fsi_free_minor(slave->dev.devt);
+ err_free:
+ 	of_node_put(slave->dev.of_node);
+ 	kfree(slave);
+-- 
+2.25.1
 
-IOW, the most likely explanation is that the root filesystem wasn't
-unfrozen and systemd-journald wasn't frozen.
