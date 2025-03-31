@@ -1,33 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EF62033A
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE305FB95
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743399692; cv=none; b=S1w7tIqdPi6OE8zJulJtc69YFXE50iRdLhd4VWyqnYSJdhN1c/kBb0TQdyg7DFCoz8r+6TXn7xozerpAmR3ScEYXyEZQECrLghFf3Q0BHHH5xeObGKoLqhYg1QXhm70+WlWoaSFa8U74KPwapy9O53De6/gWY79m+DgJqaJMxDE=
+	t=1743399910; cv=none; b=MNONYutqYN2dHo1wzavs2oXIiKC3zqQLkKAVBLioRkndFWLpldg1QDBl8Q4tbyyIAFEcZpenhCb68H1yiNIWFbfITVGBD8DtoKjmdwXkU6nNRiGeU4goxU2IYjl7rjDBMGJSesIiioJccxmigDEsMenHCaqxpO6N+AjBk9y1S1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743399692; c=relaxed/simple;
-	bh=nx32tzfKZRETSu9i/nSiqKkG5dZFoR1Si3UZOHA8/sM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DqV4IY1HETS6aFK376RqhchKftOAsiXun67Kol/pLiYDya0nUcpZ2GXoxS+r1Jk61qO6gLT5+Wf9lfK0iKRT5o62+Q2EdUu+dPjYuDWfB40FUneV4Pk5RmR/Coj+wLj9ozxH2TiDMk0VKY3vVirW9+VFpvbmZHxjb/Bn73Y+/B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iriTtZ6u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743399910; c=relaxed/simple;
+	bh=nseH7wfMiCXDNqnHGuESu2Fyb2jbzz3QJpKZB/0z02Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m3ROGSMDNkNP63z3GoapdK3KSOp7MF+ygjrpOEhvVne6OgseFGSADzlbLFiHDa0cmhol2UIzS2kqGqVAygH2M/bJHn2BFcA4aK9BNpcMrqMIjXn9QRzW8L/lI+ylHLtwkMfZ0NTnDs1VxyRooSaRepX1Bw07/sPHwSeYt08ghrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QSHzCEmq; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iriTtZ6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAB3C4CEE3;
-	Mon, 31 Mar 2025 05:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743399691;
-	bh=nx32tzfKZRETSu9i/nSiqKkG5dZFoR1Si3UZOHA8/sM=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=iriTtZ6uzGsEXE3P1eTK+01eW0OnO+EmTY1R4UhFIYGA8sGn7RujfwlEqe+1FDrJa
-	 gm+Lu8CD3nEDScoo9SuYYFMhwvwOfx4i2gqalqFbLfW0Evdn/69t3lldKw2JLaMBWG
-	 DA4XLHzX+Jt3LKB5tdaRVldU8IUd/HaLhP2DO/SpsJC8V+5LxQFD8m/7BQYdZP1eSF
-	 dYhExM1r8j8XQOZj5z+QCUCYhzxBJBydjwSslsAfZOG66KXmX4OZWIWzFKMrKfDHau
-	 /N8EeIk3NO/dlfWUxQPMG7O0QE5dygO3uaKgfIBjJxY/t/RLuub7ot3AAIgBZ0c+xa
-	 37aNKkczz7vfw==
-Message-ID: <9b617cde-0dfd-4dc1-8dde-4fc3c8a7fe04@kernel.org>
-Date: Mon, 31 Mar 2025 13:41:28 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QSHzCEmq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743399903; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=jYiHigV/9QVCUX/RST2nWsvZk5MllFtjrbF7BcIgPaE=;
+	b=QSHzCEmqnJ+8IRP5lyao16CtkbTsr57J4oeOXgOf4VE9o4doB7vS4YHL7IOcwhaimPk/ZMM6811XWMZlH3mSzAhPIcFxG7k46XpCrlug6ToJcGUeC3A5lIv9Vl4FsaAVsw03Kak0f4bfIS9hS8FQQ9ksH+Ae/pDyY+xmXZ33xcg=
+Received: from 30.221.130.198(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WTQwMDe_1743399902 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Mar 2025 13:45:02 +0800
+Message-ID: <0725c2ec-528c-42a8-9557-4713e7e35153@linux.alibaba.com>
+Date: Mon, 31 Mar 2025 13:45:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,160 +33,257 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, Daeho Jeong <daehojeong@google.com>
-Subject: Re: [PATCH v2 1/2] f2fs: zone: fix to calculate first_zoned_segno
- correctly
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-References: <20250325080646.3291947-1-chao@kernel.org>
- <Z-YXqKOIgYCpfuL0@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Z-YXqKOIgYCpfuL0@google.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 2/2] erofs: add 'offset' mount option for file-backed &
+ bdev-based mounts
+To: Sheng Yong <shengyong2021@gmail.com>, xiang@kernel.org, chao@kernel.org,
+ zbestahu@gmail.com, jefflexu@linux.alibaba.com, dhavale@google.com,
+ linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, wangshuai12@xiaomi.com,
+ Sheng Yong <shengyong1@xiaomi.com>
+References: <20250331022938.4090283-1-shengyong1@xiaomi.com>
+ <20250331022938.4090283-2-shengyong1@xiaomi.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250331022938.4090283-2-shengyong1@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/28/25 11:29, Jaegeuk Kim wrote:
-> It seems this patch breaks the multi-partition cases.
 
-Which case did you test w/ this patch?
+
+On 2025/3/31 10:29, Sheng Yong wrote:
+> From: Sheng Yong <shengyong1@xiaomi.com>
+> 
+> When attempting to use an archive file, such as APEX on android,
+> as a file-backed mount source, it fails because EROFS image within
+> the archive file does not start at offset 0. As a result, a loop
+> device is still needed to attach the image file at an appropriate
+> offset first. Similarly, if an EROFS image within a block device
+> does not start at offset 0, it cannot be mounted directly either.
+> 
+> To address this issue, this patch adds a new mount option `offset=x'
+> to accept a start offset for both file-backed and bdev-based mounts.
+> The offset should be aligned to PAGE_SIZE. EROFS will add this offset
+> before performing read requests.
+> 
+> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
+> ---
+>   Documentation/filesystems/erofs.rst |  1 +
+>   fs/erofs/data.c                     |  8 ++++++--
+>   fs/erofs/fileio.c                   |  8 ++++++--
+>   fs/erofs/internal.h                 |  2 ++
+>   fs/erofs/super.c                    | 29 ++++++++++++++++++++++++++++-
+>   fs/erofs/zdata.c                    | 13 +++++++++++--
+>   6 files changed, 54 insertions(+), 7 deletions(-)
+> ---
+> Hi, all
+> 
+> Sorry for late :-(
+> 
+> v2: * add a new mount option `offset=X' for start offset, and offset
+>        should be aligned to PAGE_SIZE
+>      * add start offset for both file-backed and bdev-based mounts
+> v1: https://lore.kernel.org/all/20250324022849.2715578-1-shengyong1@xiaomi.com/
+> 
+> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+> index c293f8e37468..44dbfa6cffb1 100644
+> --- a/Documentation/filesystems/erofs.rst
+> +++ b/Documentation/filesystems/erofs.rst
+> @@ -128,6 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
+>   fsid=%s                Specify a filesystem image ID for Fscache back-end.
+>   domain_id=%s           Specify a domain ID in fscache mode so that different images
+>                          with the same blobs under a given domain ID can share storage.
+> +offset=%s              Specify image offset for file-backed or bdev-based mounts.
+>   ===================    =========================================================
+>   
+>   Sysfs Entries
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 2409d2ab0c28..8dfdd0352c79 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
+>   
+>   void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
+>   {
+> -	pgoff_t index = offset >> PAGE_SHIFT;
+> +	pgoff_t index;
+>   	struct folio *folio = NULL;
+>   
+> +	offset += buf->offs;
+> +	index = offset >> PAGE_SHIFT;
+> +
+>   	if (buf->page) {
+>   		folio = page_folio(buf->page);
+>   		if (folio_file_page(folio, index) != buf->page)
+> @@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
+>   	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>   
+>   	buf->file = NULL;
+> +	buf->offs = sbi->dif0.offs;
+>   	if (erofs_is_fileio_mode(sbi)) {
+>   		buf->file = sbi->dif0.file;	/* some fs like FUSE needs it */
+>   		buf->mapping = buf->file->f_mapping;
+> @@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>   		iomap->private = buf.base;
+>   	} else {
+>   		iomap->type = IOMAP_MAPPED;
+> -		iomap->addr = mdev.m_pa;
+> +		iomap->addr = EROFS_SB(sb)->dif0.offs + mdev.m_pa;
+>   		if (flags & IOMAP_DAX)
+>   			iomap->addr += mdev.m_dif->dax_part_off;
+>   	}
+> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+> index 4fa0a0121288..d213bcb8c6c2 100644
+> --- a/fs/erofs/fileio.c
+> +++ b/fs/erofs/fileio.c
+> @@ -47,15 +47,19 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+>   
+>   static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+>   {
+> +	struct erofs_sb_info *sbi;
+
+	struct erofs_sb_info *sbi = EROFS_SB(rq->sb);
+
+>   	struct iov_iter iter;
+>   	int ret;
+>   
+>   	if (!rq)
+>   		return;
+> -	rq->iocb.ki_pos = rq->bio.bi_iter.bi_sector << SECTOR_SHIFT;
+> +
+> +	sbi = EROFS_SB(rq->sb);
+> +	rq->iocb.ki_pos = sbi->dif0.offs +
+> +				(rq->bio.bi_iter.bi_sector << SECTOR_SHIFT);
+>   	rq->iocb.ki_ioprio = get_current_ioprio();
+>   	rq->iocb.ki_complete = erofs_fileio_ki_complete;
+> -	if (test_opt(&EROFS_SB(rq->sb)->opt, DIRECT_IO) &&
+> +	if (test_opt(&sbi->opt, DIRECT_IO) &&
+>   	    rq->iocb.ki_filp->f_mode & FMODE_CAN_ODIRECT)
+>   		rq->iocb.ki_flags = IOCB_DIRECT;
+>   	iov_iter_bvec(&iter, ITER_DEST, rq->bvecs, rq->bio.bi_vcnt,
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 4ac188d5d894..93fc111fa675 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -43,6 +43,7 @@ struct erofs_device_info {
+>   	char *path;
+>   	struct erofs_fscache *fscache;
+>   	struct file *file;
+> +	loff_t offs;
+
+I think `off` is enough..
+
+>   	struct dax_device *dax_dev;
+>   	u64 dax_part_off;
+>   
+> @@ -199,6 +200,7 @@ enum {
+>   struct erofs_buf {
+>   	struct address_space *mapping;
+>   	struct file *file;
+> +	loff_t offs;
+
+same here...
+
+>   	struct page *page;>   	void *base;
+>   };
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index cadec6b1b554..0569f62a76a8 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -356,7 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
+>   
+>   enum {
+>   	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
+> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_offset,
+>   	Opt_err
+>   };
+>   
+> @@ -384,6 +384,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+>   	fsparam_string("fsid",		Opt_fsid),
+>   	fsparam_string("domain_id",	Opt_domain_id),
+>   	fsparam_flag_no("directio",	Opt_directio),
+> +	fsparam_string("offset",	Opt_offset),
+>   	{}
+>   };
+>   
+> @@ -411,6 +412,22 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+>   #endif
+>   }
+>   
+> +static bool erofs_fc_set_offset(struct fs_context *fc,
+> +				struct fs_parameter *param)
+> +{
+> +	struct erofs_sb_info *sbi = fc->s_fs_info;
+> +	loff_t offs;
+> +
+> +	if (kstrtoll(param->string, 0, &offs) < 0 ||
+> +	    offs < 0 || offs & ~PAGE_MASK) {
+> +		errorfc(fc, "Invalid offset %s", param->string);
+> +		return false;
+> +	}
+
+
+Can we validate this offset in blocks rather than
+PAGE_SIZE, I mean, we could validate it in fill_super().
+
+> +	sbi->dif0.offs = offs;
+> +
+> +	return true;
+> +}
+> +
+>   static int erofs_fc_parse_param(struct fs_context *fc,
+>   				struct fs_parameter *param)
+>   {
+> @@ -507,6 +524,10 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+>   		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
+>   #endif
+>   		break;
+> +	case Opt_offset:
+> +		if (!erofs_fc_set_offset(fc, param))
+> +			return -EINVAL;
+> +		break;
+>   	}
+>   	return 0;
+>   }
+> @@ -697,6 +718,10 @@ static int erofs_fc_get_tree(struct fs_context *fc)
+>   		file = filp_open(fc->source, O_RDONLY | O_LARGEFILE, 0);
+>   		if (IS_ERR(file))
+>   			return PTR_ERR(file);
+> +		if (sbi->dif0.offs + PAGE_SIZE >= i_size_read(file_inode(file))) {
+> +			fput(file);
+> +			return invalf(fc, "Start offset too large");
+> +		}
+
+same here.
+
+>   		sbi->dif0.file = file;
+>   
+>   		if (S_ISREG(file_inode(sbi->dif0.file)->i_mode) &&
+> @@ -948,6 +973,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+>   	if (sbi->domain_id)
+>   		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
+>   #endif
+> +	if (sbi->dif0.offs)
+> +		seq_printf(seq, ",offset=%lld", sbi->dif0.offs);
+>   	return 0;
+>   }
+>   
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..dc2aa3418094 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1619,6 +1619,15 @@ static void z_erofs_endio(struct bio *bio)
+>   		bio_put(bio);
+>   }
+>   
+> +static void z_erofs_submit_bio(struct bio *bio)
+> +{
+> +	struct z_erofs_decompressqueue *q = bio->bi_private;
+> +	struct erofs_sb_info *sbi = EROFS_SB(q->sb);
+> +
+> +	bio->bi_iter.bi_sector += sbi->dif0.offs >> SECTOR_SHIFT;
+
+just update bi_sector inline?
 
 Thanks,
-
-> 
-> On 03/25, Chao Yu wrote:
->> A zoned device can has both conventional zones and sequential zones,
->> so we should not treat first segment of zoned device as first_zoned_segno,
->> instead, we need to check zone type for each zone during traversing zoned
->> device to find first_zoned_segno.
->>
->> Otherwise, for below case, first_zoned_segno will be 0, which could be
->> wrong.
->>
->> create_null_blk 512 2 1024 1024
->> mkfs.f2fs -m /dev/nullb0
->>
->> Fixes: 9703d69d9d15 ("f2fs: support file pinning for zoned devices")
->> Cc: Daeho Jeong <daehojeong@google.com>
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->> v2:
->> - traverse w/ zone unit in get_first_zoned_segno()
->>  fs/f2fs/f2fs.h    | 18 +++++++++++++-----
->>  fs/f2fs/segment.c |  2 +-
->>  fs/f2fs/super.c   | 37 +++++++++++++++++++++++++++++++++----
->>  3 files changed, 47 insertions(+), 10 deletions(-)
->>
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index ca884e39a5ff..3dea037faa55 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -4630,12 +4630,16 @@ F2FS_FEATURE_FUNCS(readonly, RO);
->>  F2FS_FEATURE_FUNCS(device_alias, DEVICE_ALIAS);
->>  
->>  #ifdef CONFIG_BLK_DEV_ZONED
->> -static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
->> -				    block_t blkaddr)
->> +static inline bool f2fs_zone_is_seq(struct f2fs_sb_info *sbi, int devi,
->> +							unsigned int zone)
->>  {
->> -	unsigned int zno = blkaddr / sbi->blocks_per_blkz;
->> +	return test_bit(zone, FDEV(devi).blkz_seq);
->> +}
->>  
->> -	return test_bit(zno, FDEV(devi).blkz_seq);
->> +static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
->> +								block_t blkaddr)
->> +{
->> +	return f2fs_zone_is_seq(sbi, devi, blkaddr / sbi->blocks_per_blkz);
->>  }
->>  #endif
->>  
->> @@ -4711,9 +4715,13 @@ static inline bool f2fs_valid_pinned_area(struct f2fs_sb_info *sbi,
->>  					  block_t blkaddr)
->>  {
->>  	if (f2fs_sb_has_blkzoned(sbi)) {
->> +#ifdef CONFIG_BLK_DEV_ZONED
->>  		int devi = f2fs_target_device_index(sbi, blkaddr);
->>  
->> -		return !bdev_is_zoned(FDEV(devi).bdev);
->> +		return !f2fs_blkz_is_seq(sbi, devi, blkaddr);
->> +#else
->> +		return true;
->> +#endif
->>  	}
->>  	return true;
->>  }
->> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->> index 396ef71f41e3..dc360b4b0569 100644
->> --- a/fs/f2fs/segment.c
->> +++ b/fs/f2fs/segment.c
->> @@ -3311,7 +3311,7 @@ int f2fs_allocate_pinning_section(struct f2fs_sb_info *sbi)
->>  
->>  	if (f2fs_sb_has_blkzoned(sbi) && err == -EAGAIN && gc_required) {
->>  		f2fs_down_write(&sbi->gc_lock);
->> -		err = f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk),
->> +		err = f2fs_gc_range(sbi, 0, sbi->first_zoned_segno - 1,
->>  				true, ZONED_PIN_SEC_REQUIRED_COUNT);
->>  		f2fs_up_write(&sbi->gc_lock);
->>  
->> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->> index 011925ee54f8..9a42a1323f42 100644
->> --- a/fs/f2fs/super.c
->> +++ b/fs/f2fs/super.c
->> @@ -4307,12 +4307,33 @@ static void f2fs_record_error_work(struct work_struct *work)
->>  
->>  static inline unsigned int get_first_zoned_segno(struct f2fs_sb_info *sbi)
->>  {
->> +#ifdef CONFIG_BLK_DEV_ZONED
->> +	unsigned int zoneno, total_zones;
->>  	int devi;
->>  
->> -	for (devi = 0; devi < sbi->s_ndevs; devi++)
->> -		if (bdev_is_zoned(FDEV(devi).bdev))
->> -			return GET_SEGNO(sbi, FDEV(devi).start_blk);
->> -	return 0;
->> +	if (!f2fs_sb_has_blkzoned(sbi))
->> +		return NULL_SEGNO;
->> +
->> +	for (devi = 0; devi < sbi->s_ndevs; devi++) {
->> +		if (!bdev_is_zoned(FDEV(devi).bdev))
->> +			continue;
->> +
->> +		total_zones = GET_ZONE_FROM_SEG(sbi, FDEV(devi).total_segments);
->> +
->> +		for (zoneno = 0; zoneno < total_zones; zoneno++) {
->> +			unsigned int segs, blks;
->> +
->> +			if (!f2fs_zone_is_seq(sbi, devi, zoneno))
->> +				continue;
->> +
->> +			segs = GET_SEG_FROM_SEC(sbi,
->> +					zoneno * sbi->secs_per_zone);
->> +			blks = SEGS_TO_BLKS(sbi, segs);
->> +			return GET_SEGNO(sbi, FDEV(devi).start_blk + blks);
->> +		}
->> +	}
->> +#endif
->> +	return NULL_SEGNO;
->>  }
->>  
->>  static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
->> @@ -4349,6 +4370,14 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
->>  #endif
->>  
->>  	for (i = 0; i < max_devices; i++) {
->> +		if (max_devices == 1) {
->> +			FDEV(i).total_segments =
->> +				le32_to_cpu(raw_super->segment_count_main);
->> +			FDEV(i).start_blk = 0;
->> +			FDEV(i).end_blk = FDEV(i).total_segments *
->> +						BLKS_PER_SEG(sbi);
->> +		}
->> +
->>  		if (i == 0)
->>  			FDEV(0).bdev_file = sbi->sb->s_bdev_file;
->>  		else if (!RDEV(i).path[0])
->> -- 
->> 2.48.1
-
+Gao Xiang
