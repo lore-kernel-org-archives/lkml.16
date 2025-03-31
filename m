@@ -1,170 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCDA27726;
-	Mon, 31 Mar 2025 10:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FCE27726
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743416214; cv=none; b=qG0eelpA1jl53QWKlVgitLwKToCIfqX0gBaretbernJZiSYi3DqNLipP/Uxx/po5KX99cSL+j+1YGqVGc7bbuE7EnzfmobWQJVXxy2pxf+UAcwKN5+AZesWaP98CxRxepA5ywHa/AdUNwVFyNv7olTFvHQ+WtGbYuq0JLaLH3fc=
+	t=1743416256; cv=none; b=MfGpVxK+c2ICTqm7lXy7o1yEQWLGe3ei4fY//UKYgEnue0xPb+QaWZXYRiNo6bmVpGYkj6yID8otZBcMdMcMsacENKAv7YeuJzEMRTg9ef19HIJPePnmbaW4xqh8YmGOEViSV0wfIxwMEyVwNVF6ntNeo3xU2KoevyFB6Vz7Iz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743416214; c=relaxed/simple;
-	bh=WqVq2up8e5qTqJfd90zclKxq9683pGIF8UmDoxOfr1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=If+51s9lOVh44BdH0sgBMeoZ8Bsx+2O5X+4mbAAAsdi4P2UYd3/qmwVr/7/nQGOjq7AajZW8IYQEYCsIzENnYJ68ewj+wnU06A+lojpIa96S+EUqw0JEmwmBXlxDuSDS9G1b578hHtrPS0+5UPJGj4p40AbaCzKUnoWzyiby+qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kyHGEpNg; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1743416256; c=relaxed/simple;
+	bh=P3ae9o2zkDLTx09+K++AB9fYk/TKSV28NS5F5x/wtcU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pIRSlg5BjN5Uo/NYRaj/6JXGVmlKzbGHifO7i2OradRl7uwuJRYcbj62P5XXS9oVGu1poWRoVBzR/CxnC59HkePKsLoo33NMmpfU8V/mxVdSQNuw170uv8jSqRevnGHS4a/SbX6pEc6A2Opk42QQflQyAJQ/GV9fC/jnm7YWyT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YU5wCZY2; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kyHGEpNg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YU5wCZY2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743416213; x=1774952213;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WqVq2up8e5qTqJfd90zclKxq9683pGIF8UmDoxOfr1Y=;
-  b=kyHGEpNgef0FmzlhtcqRIiPJsxotGH1iquLvVkhjZw7t9jij7mah1Qr9
-   I/fa9kWzWBzeRJXHkA/8gwrLXZme//ERI+GnuNA0TMRR/4EIGBJTRby0r
-   yTghIcZNCr6yB8Bflo2LPiM4Wac0CRI52WAvV+I+/oY9blATJBmcU/V9J
-   dC0chHR58RmchiooH0ziOJrl1SFXdI9DLoJldc/sWlZ3MjqvYH1CPzO9n
-   U8yhdPU91HgT7Gh3IRXXL4/gOK0KzG7Qbd6klFW489BML9JfEDp+floxU
-   CPoxYVf1gCfXHpZE9w544jX/lBFaL9Nf5l59UagDSQmaY2YHLdMSAoTfh
-   A==;
-X-CSE-ConnectionGUID: +A7Q8oIXTAmxfvxRqpKTTA==
-X-CSE-MsgGUID: K89owBSDSduxCSUI7d/Rhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44704089"
+  t=1743416254; x=1774952254;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=P3ae9o2zkDLTx09+K++AB9fYk/TKSV28NS5F5x/wtcU=;
+  b=YU5wCZY2nwB3WU/dhushPENET5xZTYrWbbNAa89D/vwhqMsaPuR+qTri
+   K/H4PmtBC5uOammVTS/FVIs28XHmrSOI8LIPcfDEtCkXCnhx7rZLZSry1
+   fUgecG0CmQBfvXm52ZApn/YM/i46pF6rMfC31DsWw2klJjwdG81cWMzwE
+   lNQK/8k5tRzfxT97RJD1K5QakOVeumYHpgxif2Fi3TIeEw1L/EkaGtfS+
+   YqZDrl+XBQvVvn3Rc+1Vd4quFAnekxRDH1zeOqyirxArgqL2MDBjKT4an
+   dBWOntcDGya3dMVzTSJMjVXijE/01erLYN7Z6sdCOCdgjYlSca3QBcPKK
+   Q==;
+X-CSE-ConnectionGUID: IROWBOfeSjGTsrNRq5tjUg==
+X-CSE-MsgGUID: 3khtYnYlQ/W2ouLwV5GBwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="48364530"
 X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="44704089"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:16:52 -0700
-X-CSE-ConnectionGUID: wuvqW3DLRFSI/kC/p9L7Zg==
-X-CSE-MsgGUID: +c203wkvRnqc3a/j+uTYUQ==
+   d="scan'208";a="48364530"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:17:33 -0700
+X-CSE-ConnectionGUID: paWjvvQDQ7OT5YVewgiQLg==
+X-CSE-MsgGUID: rMYsm2X9R4++SHo22bhuXA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="130758783"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 31 Mar 2025 03:16:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id AC1141CE; Mon, 31 Mar 2025 13:16:49 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] spi: Group CS related fields in struct spi_device
-Date: Mon, 31 Mar 2025 13:16:48 +0300
-Message-ID: <20250331101649.4054627-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+   d="scan'208";a="157057222"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.182])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:17:31 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Dave Airlie
+ <airlied@gmail.com>
+Cc: simona.vetter@ffwll.ch, dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [git pull] drm for 6.15-rc1
+In-Reply-To: <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAPM=9tyx=edsZ3ajuAUAv4vjfa=WNEzobqAsYbBTjCfLbuEeFQ@mail.gmail.com>
+ <CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com>
+Date: Mon, 31 Mar 2025 13:17:28 +0300
+Message-ID: <87h6394i87.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The CS related fields are sparse in the struct spi_device. Group them.
-While at it, fix the comment style of cs_index_mask.
+On Fri, 28 Mar 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> If you want to do that hdrtest thing, do it as part of your *own*
+> checks. Don't make everybody else see that disgusting thing and have
+> those turds in their trees.
+>
+> I'll just disable it by marking it BROKEN for now. You guys can figure
+> out what you want to do, but no, forcing others to see those things is
+> not the answer.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fair. I hear you.
+
+> I would suggest you *not* make this part of the Kconfig setup and
+> normal build at all, but be something where *you* can run it as part
+> of your tests (ie do it as a "make drm-hdrtest" kind of thing, not as
+> part of regular builds).
+
+I would very much prefer for this to be part of the build, just hidden
+behind Kconfig. We're doing build-time checks, and kbuild gives us all
+the machinery to make it happen. Without the dependency tracking you'd
+have to check everything every time, and that's just going to mean
+people won't run it.
+
+I suggest a Kconfig knob to truly make this opt-in, only for developers
+who actually want it. Not enabled by allmodconfig or allyesconfig or
+even allnoconfig. Only if you manually enable it. And yes, that's how it
+should've been from the start. My bad.
+
+Below's a patch to make it happen. We'll probably want to add more
+checks like this in the future. We want to catch a whole bunch of build
+issues up front. We want to be clean of e.g. W=1 and kernel-doc issues
+pre-merge instead of doing extra rounds of fixes afterwards.
+
+BR,
+Jani.
+
+
+
+From 8c709510caab4b4ad6aa73cbcd972f32b58cad8d Mon Sep 17 00:00:00 2001
+From: Jani Nikula <jani.nikula@intel.com>
+Date: Mon, 31 Mar 2025 12:25:45 +0300
+Subject: [PATCH] drm: add config option for extra build-time checks
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Cc: Jani Nikula <jani.nikula@intel.com>
+
+The DRM subsystem contains additional build-time checks, primarily aimed
+at DRM developers and CI systems. The checks may be overzealous. They
+may slow down or fail the build altogether. They may create excessive
+dependency files in the build tree. They should not be enabled for
+regular builds, and certainly not forced on unsuspecting developers
+running an allyesconfig or allmodconfig build.
+
+Add config DRM_DISABLE_EXTRA_BUILD_CHECKS, enabled by default as well as
+by allyesconfig/allmodconfig, hiding the extra checks from anyone but
+people who intentionally opt-in for the checks.
+
+For example, to enable header tests:
+
+$ scripts/config --disable CONFIG_DRM_DISABLE_EXTRA_BUILD_CHECKS --enable CONFIG_DRM_HEADER_TEST
+$ make olddefconfig
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Closes: https://lore.kernel.org/r/CAHk-=wjcdfrDTjzm6J6T-3fxtVyBG7a_0BXc2=mgOuM6KPFnCg@mail.gmail.com
+Fixes: 62ae45687e43 ("drm: ensure drm headers are self-contained and pass kernel-doc")
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 ---
- include/linux/spi/spi.h | 37 +++++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/Kconfig | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index dcc79c9af8ed..9591655cf1a6 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -138,13 +138,6 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
-  * @max_speed_hz: Maximum clock rate to be used with this chip
-  *	(on this board); may be changed by the device's driver.
-  *	The spi_transfer.speed_hz can override this for each transfer.
-- * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
-- *	the corresponding physical CS for logical CS i.
-- * @mode: The spi mode defines how data is clocked out and in.
-- *	This may be changed by the device's driver.
-- *	The "active low" default for chipselect mode can be overridden
-- *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
-- *	each word in a transfer (by specifying SPI_LSB_FIRST).
-  * @bits_per_word: Data transfers involve one or more words; word sizes
-  *	like eight or 12 bits are common.  In-memory wordsizes are
-  *	powers of two bytes (e.g. 20 bit samples use 32 bits).
-@@ -152,6 +145,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
-  *	default (0) indicating protocol words are eight bit bytes.
-  *	The spi_transfer.bits_per_word can override this for each transfer.
-  * @rt: Make the pump thread real time priority.
-+ * @mode: The spi mode defines how data is clocked out and in.
-+ *	This may be changed by the device's driver.
-+ *	The "active low" default for chipselect mode can be overridden
-+ *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
-+ *	each word in a transfer (by specifying SPI_LSB_FIRST).
-  * @irq: Negative, or the number passed to request_irq() to receive
-  *	interrupts from this device.
-  * @controller_state: Controller's runtime state
-@@ -164,8 +162,7 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
-  *	the device will bind to the named driver and only the named driver.
-  *	Do not set directly, because core frees it; use driver_set_override() to
-  *	set or clear it.
-- * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
-- *	(optional, NULL when not using a GPIO line)
-+ * @pcpu_statistics: statistics for the spi_device
-  * @word_delay: delay to be inserted between consecutive
-  *	words of a transfer
-  * @cs_setup: delay to be introduced by the controller after CS is asserted
-@@ -173,8 +170,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
-  * @cs_inactive: delay to be introduced by the controller after CS is
-  *	deasserted. If @cs_change_delay is used from @spi_transfer, then the
-  *	two delays will be added up.
-- * @pcpu_statistics: statistics for the spi_device
-+ * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
-+ *	the corresponding physical CS for logical CS i.
-  * @cs_index_mask: Bit mask of the active chipselect(s) in the chipselect array
-+ * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
-+ *	(optional, NULL when not using a GPIO line)
-  *
-  * A @spi_device is used to interchange data between an SPI slave
-  * (usually a discrete chip) and CPU memory.
-@@ -189,7 +189,6 @@ struct spi_device {
- 	struct device		dev;
- 	struct spi_controller	*controller;
- 	u32			max_speed_hz;
--	u8			chip_select[SPI_CS_CNT_MAX];
- 	u8			bits_per_word;
- 	bool			rt;
- #define SPI_NO_TX		BIT(31)		/* No transmit wire */
-@@ -220,23 +219,29 @@ struct spi_device {
- 	void			*controller_data;
- 	char			modalias[SPI_NAME_SIZE];
- 	const char		*driver_override;
--	struct gpio_desc	*cs_gpiod[SPI_CS_GPIO_MAX];	/* Chip select gpio desc */
-+
-+	/* The statistics */
-+	struct spi_statistics __percpu	*pcpu_statistics;
-+
- 	struct spi_delay	word_delay; /* Inter-word delay */
-+
- 	/* CS delays */
- 	struct spi_delay	cs_setup;
- 	struct spi_delay	cs_hold;
- 	struct spi_delay	cs_inactive;
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 2cba2b6ebe1c..5a3fce9ef998 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -489,9 +489,26 @@ config DRM_PRIVACY_SCREEN
+ 	bool
+ 	default n
  
--	/* The statistics */
--	struct spi_statistics __percpu	*pcpu_statistics;
-+	u8			chip_select[SPI_CS_CNT_MAX];
- 
--	/* Bit mask of the chipselect(s) that the driver need to use from
--	 * the chipselect array.When the controller is capable to handle
-+	/*
-+	 * Bit mask of the chipselect(s) that the driver need to use from
-+	 * the chipselect array. When the controller is capable to handle
- 	 * multiple chip selects & memories are connected in parallel
- 	 * then more than one bit need to be set in cs_index_mask.
- 	 */
- 	u32			cs_index_mask : SPI_CS_CNT_MAX;
- 
-+	struct gpio_desc	*cs_gpiod[SPI_CS_GPIO_MAX];	/* Chip select gpio desc */
++# Reversed option to disable on allyesconfig/allmodconfig builds
++config DRM_DISABLE_EXTRA_BUILD_CHECKS
++	bool "Disable DRM subsystem extra build-time checks"
++	default y
++	help
++	  The DRM subsystem contains additional build-time checks, primarily
++	  aimed at DRM developers and CI systems. The checks may be
++	  overzealous. They may slow down or fail the build altogether. They may
++	  create excessive dependency files in the tree. They should not be
++	  enabled for regular builds, and thus they are disabled by default.
 +
- 	/*
- 	 * Likely need more hooks for more protocol options affecting how
- 	 * the controller talks to each chip, like:
++# Proxy config to allow simple "depends on DRM_EXTRA_BUILD_CHECKS"
++config DRM_EXTRA_BUILD_CHECKS
++	bool
++	depends on DRM && EXPERT && DRM_DISABLE_EXTRA_BUILD_CHECKS=n
++	default !DRM_DISABLE_EXTRA_BUILD_CHECKS
++
+ config DRM_WERROR
+ 	bool "Compile the drm subsystem with warnings as errors"
+-	depends on DRM && EXPERT
++	depends on DRM_EXTRA_BUILD_CHECKS
+ 	depends on !WERROR
+ 	default n
+ 	help
+@@ -505,7 +522,7 @@ config DRM_WERROR
+ 
+ config DRM_HEADER_TEST
+ 	bool "Ensure DRM headers are self-contained and pass kernel-doc"
+-	depends on DRM && EXPERT && BROKEN
++	depends on DRM_EXTRA_BUILD_CHECKS
+ 	default n
+ 	help
+ 	  Ensure the DRM subsystem headers both under drivers/gpu/drm and
 -- 
-2.47.2
+2.39.5
 
+
+-- 
+Jani Nikula, Intel
