@@ -1,75 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A48157A5A;
-	Mon, 31 Mar 2025 17:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938A0152E02;
+	Mon, 31 Mar 2025 17:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743443312; cv=none; b=kAphWf0yD49Fx7vLBkc84oRkYluJ4QlptvLaYYhjj3ruRJABSiaeuCzRNojEXkd7m4OUQ1/8YlaqaHfDEbc7gXU6PElyxZudsosxyyoPFpBM7lsYGlYoTQFCJnwehWyomxxyzRUNBDK6JMkHiHYJCZDhp6imLH9U+t4Z9+GKzQ4=
+	t=1743443358; cv=none; b=aRiI26xL3JQBgB1PlzwmfN5ooZSo1nFlPUoBu8aRLbSJIikanlqp40XDMwjaH2PTWhw9cUS1t71OwasgYy1VgnQ6S2CXqEix+x1t8emYBiB/UmgYugKPV+BCg+22a82vC7v4fUMga3XUQI9T0pdRR2KdhZDtPhOukwA+RTTFb9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743443312; c=relaxed/simple;
-	bh=UAJ7sdgWjDqfKgktWG8PXeAilNlu4G4TAMpwTEgD9y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKDYcSOw8RKCnglxI6XgZyK3fjv61Q4GILlJskc76CbuXyC8aDWNfL32LGS7ga/ZjP310D66RLH72bhnFGoEZGYXB/0UZ+bau0XuLyzCzd8sNikeUateTjEEPYJ2sO8caSNQkBmbjJp/m6ZyqINTPRQFE4p+BmOXSRTQvIu+ZTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDUMMWVy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743443358; c=relaxed/simple;
+	bh=r9T6LdVle4KC8nugrBNKg8wutcTzmSRH332+mnl/2Tw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=g7ue93HP74lZBOKv4ImagsnF97yD2UJmIkZ/prNKQIqI/AC7NI0sbZnpNQJKBS52Cf5YxP90U8Wv1+nTcJuOK4iQIny6p1OJ24Zz8c0iB2h1v9mRTtj0o3W3K3Ok+ZLMWp6TjPvvHqvs2QHfIznShCZ9RwYAcQ73iCnfG0Ja6KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlGt2+lS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDUMMWVy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41201C4CEE3;
-	Mon, 31 Mar 2025 17:48:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlGt2+lS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51168C4CEE3;
+	Mon, 31 Mar 2025 17:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743443311;
-	bh=UAJ7sdgWjDqfKgktWG8PXeAilNlu4G4TAMpwTEgD9y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LDUMMWVyqOui83/kSPrg94Z8JwpkYGNE5oFILMkMy+yfZRQVlEex1l/CQgR7aUnOG
-	 O0lDLhzOy2lB4oYsQIGFIDanAc5vpNlylvlkpSm91QpfSkNm7prqGPqrBkfeLOiTTD
-	 0nFno6uMseaztwyOzlN9Cgua2Y5mi0FSr3UGoyFurcL7GoICC71qJwt4a9NhQcvjgf
-	 r750PglYMlqpYlHkXsIWh1b7fE2GvQ47GUBlUNSeL4y4aXMWQqp3GhZYchsQeT1VBN
-	 QXp27aSisMv5aJvLuigw646FRKL2RNN4dgHGwH7C4fimf1zsFAX+81GUmF6Wc4vG6U
-	 qs8kGrkodDVeA==
-Date: Mon, 31 Mar 2025 20:48:27 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: Re: [RFC PATCH v2] KEYS: Add a list for unreferenced keys
-Message-ID: <Z-rVa23rud62nyQN@kernel.org>
-References: <20250330111649.13547-1-jarkko@kernel.org>
+	s=k20201202; t=1743443358;
+	bh=r9T6LdVle4KC8nugrBNKg8wutcTzmSRH332+mnl/2Tw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=hlGt2+lS0Rt8N+SRV44QqzCei0+jALgVdFbtzodpDk7/lBe6lHUKKp45sZD0OvnnV
+	 hrWuISJnEgrmU51G04fOPKKKnsW5oytOaJg5OQ/qzVhGr4cNBaW9RMtI2Hu7O5+JzP
+	 UWrhI3eIqQqElpBipsu5fGZGJt8B2Q3fsNgNSDcmwq+qkAMSxPb3w5hyZWNPywGuhD
+	 /2seZLdyav0Bd7FLnEaMkF5R+wFzEJXSvsVvJXjxKnAer18jRbeQGILv0Reoo3oPzC
+	 B1Hhv/yFnBj6I9a+SxXbE6hN+ERGoXyE1VdhCFeAMI9OBAMW18nBw2ODDMfz6yrcp8
+	 y+xSvvv9CAviQ==
+From: Mark Brown <broonie@kernel.org>
+To: Oder Chiou <oder_chiou@realtek.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bard Liao <bardliao@realtek.com>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+ linux-sound@vger.kernel.org
+In-Reply-To: <e3c2aa1b2fdfa646752d94f4af968630c0d58248.1742629525.git.christophe.jaillet@wanadoo.fr>
+References: <e3c2aa1b2fdfa646752d94f4af968630c0d58248.1742629525.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] ASoC: codecs: rt5665: Fix some error handling paths in
+ rt5665_probe()
+Message-Id: <174344335604.156807.17437043302594599763.b4-ty@kernel.org>
+Date: Mon, 31 Mar 2025 18:49:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250330111649.13547-1-jarkko@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, Mar 30, 2025 at 02:16:49PM +0300, Jarkko Sakkinen wrote:
-> Add an isolated list for unreferenced keys. This splits key deletion as
-> separate phase, after the key reaper. This makes the whole process more
-> rigid, as these two distinct tasks don't intervene each other.
+On Sat, 22 Mar 2025 08:45:49 +0100, Christophe JAILLET wrote:
+> Should an error occur after a successful regulator_bulk_enable() call,
+> regulator_bulk_disable() should be called, as already done in the remove
+> function.
 > 
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v2:
-> - Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
->   function.
-> ---
->  include/linux/key.h      |  1 -
->  security/keys/gc.c       | 27 +++++++--------------------
->  security/keys/internal.h |  1 +
->  security/keys/key.c      |  7 +++++--
->  4 files changed, 13 insertions(+), 23 deletions(-)
+> Instead of adding an error handling path in the probe, switch from
+> devm_regulator_bulk_get() to devm_regulator_bulk_get_enable() and
+> simplify the remove function and some other places accordingly.
+> 
+> [...]
 
-kernel-test-bot reported:
+Applied to
 
-https://lore.kernel.org/oe-lkp/202503312252.bef52733-lkp@intel.com/
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I.e., v3 is coming.
+Thanks!
 
-BR, Jarkko
+[1/1] ASoC: codecs: rt5665: Fix some error handling paths in rt5665_probe()
+      commit: 1ebd4944266e86a7ce274f197847f5a6399651e8
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
