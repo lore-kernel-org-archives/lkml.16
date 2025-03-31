@@ -1,127 +1,96 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD5C524F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4780524F
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743425362; cv=none; b=ulUrUHfPKx6BxBYCT2VWybNHcivyf8gVlqCQKBSstorZdHVp4u9yw6e5PPrUyNJKg2guZooGyzqEpjaF7wk66DkB4R3s51J4Ou+C9olgjiTiI94Uyyn86ix3BUPqxMV2c9lFpyLhiwsCC/OQcSm+2R3bGoPqrn6/3qRJBI5rOow=
+	t=1743425375; cv=none; b=UjJNucLCjbYac04fkUkISDr7b+ptuP8Cy20SJJsb+/yuVZ6eMp9ZcbVD0xu/UBa4LKqhOLrFX1+qtVd3nqgtCtiLKeZznHDOnYDtMWMAvpehRdU+qEvBN8NdHF6NFW3Bzk2BDsdWFKImJ48Kbtr8Wp8b9s/tQZfJe5vCCr+HCTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743425362; c=relaxed/simple;
-	bh=e8e+ZLCe1/BC7oiKkwQqMWbwKPF2Ef+vtU3RbkXYK/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CsIHP85zLs/kUTKLI0Q2tesW2UQgKa6BQE6FFc70XpueXIMik6d005Bi1+KlB+jBHODkj1Tfm2ZyUmYiLTuCnDobOTrUYQ21IF87SwC6hzYYXWAKMb5sKPhtGHl2xZtnyqO9OJerpBU1IZNhjxvMbNw6H8+XwgBYZ+VXBIv9H5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hwyAq8sz; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743425375; c=relaxed/simple;
+	bh=uZKGcVBYhpFMbuhsl5ANqmWXYozs46bnADj/Hn5QquE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PwU1NP0qgPH/6g1dnZp8XLMSPqu2l8rh3NTkAgsvsYHlD79OWVfetq7EzyMBfIkynGNxjao6yNsB1IOq8S8MgNCyAhae368iH3s2GQS8Z4cMTMxVkHXLMqmL63ypeod1ztsFGZM1+je39CHAMoiqdHisz1UAjqD1WpzzJ6f5KLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AVRSgelR; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hwyAq8sz"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-300fefb8e06so6978932a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743425360; x=1744030160; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eXfK9/CzmvNOHSqXAuOrYNlbjmDJeqXQ4wjHvzz2BV4=;
-        b=hwyAq8sz5ZPTKHU6sDVnz8AKS5XON1P7bD5/wHQ0OZZUzmu7ScQK5jbO8HP2rm29dF
-         8PSpSAmtpCXohWiheVoFvaQlWbdIekLsbnhiOQrROaJaWLfdkYP2Im32FYY2tuph0wu2
-         c9m5G8BV2tAL+0prFJMH16+rB3MdjjCwKH4E8psnNP9J6XyRNf/KEGzCd/ltVJBkefK4
-         xjQYYe42Uq1n9sk09yNGFndMerU7qA9re3AWrcVSMpownwicn/UN69TZ8+o43/69dtzl
-         cJd/BuQEfRYn2rBsZnHdKBSiGbd3DQYb3FJVlUeg/TQIgZjgdOpBVo8YcwA6v2R/YU0T
-         mmLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743425360; x=1744030160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eXfK9/CzmvNOHSqXAuOrYNlbjmDJeqXQ4wjHvzz2BV4=;
-        b=Wv9OUI+3HAMvUOTZaitjRYxUIo1Dy9BcP7Y1g5znrCddhn0N5A3zB1hHPfmrUzXIi2
-         3GRS5bV9n/qXZnrFQzDMXMruX9BUHBZjHVLJPs/343/wknZdViKyWobXI3zJPiP3eG1i
-         ewxkAGKrW7Q6eKgZt00AucTF3p1broxfK2jtlr+0BxFtCdswGrzNNkCp5ZLIv1aXVH/p
-         AY83LrfCc6oZny2La4eunuMMTTNBbMpCt4isMukblTloMeolI06OSY8pYVFggU0ZZrU2
-         mgdRM79JtmbgzArjcUaAI48YCCtJ6a+He1vTcTTIU+5IOCjtyNDyP/RzOq98t4/MTuLp
-         CERw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKximuBieyJd6Iaxo5t3UpJwCcFmSq6x7AKg4HC0L4VOD/2GS01WAVMr2A/5CC3tcRdJtjaTZ6j84yjV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFz5awQ8TNHNn8nvR4P7peq4fc6w4sUamX74ptD26Dk31uy3yW
-	o/ePHFdNb6j0+NP2zj/EsN/egas5BXYNhnoTo4IlyduaaN8DC+8MJhuJWs+W4n3qOVmo7hHO4JT
-	R1Hol+R6K64CAhaB+690IBazWm0ZZHA8Psirq
-X-Gm-Gg: ASbGncukVv1T8mamzNByv1jpmxB9yrch0/BhKRMXx4v2012FzOIkWhMYDhqJrR5LuHZ
-	4dz/RaEOu+Zhs9JZHzypHxKyNZYvD6HrkCmtkB1iV18RtUjf33CQTS4NcISYGCU/F7xpjuDXqqh
-	AJ6jZHEY41iiexG2qK8iyL/Y2niC6prZW5G65t2Zhd3qMr6s5eM0G1
-X-Google-Smtp-Source: AGHT+IEuo0GwyHsj1Yfg/oHEVZUEu0Eq1NSgwkxD8nIvU62R7F/L2ivlqyMpAatSmy/sTVD11f/BHYP+bF+iZz6REw4=
-X-Received: by 2002:a17:90b:1b0f:b0:2ff:5e4e:861 with SMTP id
- 98e67ed59e1d1-305321653f4mr14556436a91.24.1743425359977; Mon, 31 Mar 2025
- 05:49:19 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AVRSgelR"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 309F140E0215;
+	Mon, 31 Mar 2025 12:49:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id HY6FgqEIX870; Mon, 31 Mar 2025 12:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743425367; bh=i4ZZg3Y6legd+FBIC9p1MNaHaWs74DOqujPlHLES004=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AVRSgelRKRl/Kzh9yJZyyPZ31M8UBs+dzsjH0HJ1OYqi+u5qlVT/xlM1qtSBB/w8F
+	 /wGnRiFgkISsbtre2NdxYvdQPaMdgu9YygczHrqergCdd9HG8vP4G1zOy8D69C3A27
+	 KSryUM5dN2Kc5GA5w+vLW+IHTShpCU3x5MtALh2Ig2A2QyRtNi3UlkK0E668AXr7zK
+	 lYYqOJkZFW0UQaPqARmKDBwbpiFow2o3/iInGavxQX46lSbfUaQCv+2rjGbwwTtvjE
+	 rn8cQ6AiwqwvOiL/fbL4W0N8XJ/3zzFDDtAV1R0qzhPyOVIOInNV1WS4R9Pc+NXxfx
+	 IsxAZfAH0X2QmY6MEIb2X4flBeGiAD23OiKsGi7z44bGb+ASddNaF18pn4kErgEWOA
+	 KQUOiPNJfWQBOUOTtUnqMANOFtVfW6sns6+8ReNdLo36HbW55SYJ1aHkGdLAPuMWQs
+	 lC4fr4iIeYZFP/18M3t3zsG2XFvOE2N4yhcRYIvXROLNk89uL6DSUBJzpLm2QoPBLc
+	 ESRo01ogCn9ydwnduLy+/3pUsRBSdKjSihLUDDafft8WHE7W9ijMEz9JVOv9tvrFiC
+	 0oqRfS+DJtgrHgFuOvmb9rNMy592SfqvNcRfXgmVwVfZz1IeAH95PblxBhqFM4Vbpf
+	 zYRJ6lEQb/TX7QndjNLlBErc=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3EA0640E015D;
+	Mon, 31 Mar 2025 12:49:18 +0000 (UTC)
+Date: Mon, 31 Mar 2025 14:49:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Philip Li <philip.li@intel.com>
+Cc: Ingo Molnar <mingo@kernel.org>, lkp@intel.com,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <20250331124917.GGZ-qPTTDyO7hsZkAT@fat_crate.local>
+References: <Z-cSQXJKMyBSfAAc@gmail.com>
+ <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+ <Z-qCrbNvP2cil6jJ@gmail.com>
+ <Z+qLDGvkY+TXdCjK@rli9-mobl>
+ <20250331123649.GCZ-qMYfyI9gZWwFRm@fat_crate.local>
+ <Z+qOKZ2xNK+hUP6x@rli9-mobl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e57c41.050a0220.2f068f.0034.GAE@google.com> <241600.1743418721@warthog.procyon.org.uk>
-In-Reply-To: <241600.1743418721@warthog.procyon.org.uk>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Mon, 31 Mar 2025 14:49:08 +0200
-X-Gm-Features: AQ5f1Jq7LGEiAfaquUrRoAilTtpSdAXsBTPIoQ20NUDfCVi_3LPGk6RVYz2JPM4
-Message-ID: <CANp29Y6gGYaQVeMHciMF5WrfueHZyWx+MJ_U4ccgJQrUyQUwog@mail.gmail.com>
-Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid
- context in __alloc_frozen_pages_noprof
-To: David Howells <dhowells@redhat.com>
-Cc: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>, 
-	linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	marc.dionne@auristor.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z+qOKZ2xNK+hUP6x@rli9-mobl>
 
-Hi David,
+On Mon, Mar 31, 2025 at 08:44:25PM +0800, Philip Li wrote:
+> I will also check this as it is designed to have link together with reported
+> error in the summary. It is another bug that the bot should be fixed.
 
-Thanks for letting us know!
+Please.
 
-I've left a note in our issue tracker:
-https://github.com/google/syzkaller/issues/1020#issuecomment-2766118626
+> Apologize again, we will continue improving the bot to make it really useful.
 
-On Mon, Mar 31, 2025 at 12:58=E2=80=AFPM 'David Howells' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> Note to syzbot maintainers: the C test program contains a compressed ext3
-> image and decompression code that I think is entirely unnecessary.  All i=
-t
-> does is provide a directory that the afs dynroot can be mounted upon.
->
-> This is the only bit of the test that is actually necessary:
->
->   NONFAILING(memcpy((void*)0x2000000001c0, "./file0\000", 8));
->   NONFAILING(memcpy((void*)0x2000000002c0, "afs\000", 4));
->   NONFAILING(memcpy((void*)0x200000000400, "dyn", 3));
->   NONFAILING(*(uint8_t*)0x200000000403 =3D 0x2c);
->   NONFAILING(*(uint8_t*)0x200000000404 =3D 0);
->   syscall(__NR_mount, /*src=3D*/0ul, /*dst=3D*/0x2000000001c0ul,
->           /*type=3D*/0x2000000002c0ul, /*flags=3D*/0ul, /*opts=3D*/0x2000=
-00000400ul);
->   NONFAILING(memcpy((void*)0x2000000000c0, "./file0\000", 8));
->   syscall(__NR_chdir, /*dir=3D*/0x2000000000c0ul);
->   NONFAILING(memcpy((void*)0x200000000240, "./file1\000", 8));
->   syscall(__NR_lstat, /*file=3D*/0x200000000240ul, /*statbuf=3D*/0ul);
->   NONFAILING(memcpy((void*)0x2000000000c0, ".\000", 2));
->   res =3D syscall(__NR_open, /*file=3D*/0x2000000000c0ul, /*flags=3D*/0ul=
-,
->                 /*mode=3D*/0ul);
->   if (res !=3D -1)
->     r[0] =3D res;
->   syscall(__NR_getdents, /*fd=3D*/r[0], /*ent=3D*/0x200000001fc0ul,
->           /*count=3D*/0xb8ul);
->
-> Basically:
->
->   mount(NULL, "./file0", "afs", 0, "dyn,") =3D 0
->   chdir("./file0")                  =3D 0
->   lstat("./file1", NULL)            =3D -1 EFAULT (Bad address)
->   open(".", O_RDONLY)               =3D 4
->   getdents(4, 0x200000001fc0 /* 5 entries */, 184) =3D 168
->
-> David
->
+Thanks, I appreciate the effort.
 
---=20
-Aleksandr
+If you need guinea pigs to look at reports and give you feedback, holler!
+
+:-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
