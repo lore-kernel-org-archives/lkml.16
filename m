@@ -1,97 +1,99 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4E5214204
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D253B1E0E13
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743436602; cv=none; b=eEuRlZCbgdIL4MhTgmgO8YzNNVIGw6k1sHmE3XueATQHW9+oZqxjMHvQS7uVWh/s2Y4s2fCEp1snVczuBoMGerX0fMuHspw8ul9vStg6YDSj48eM2hs/LRdPyiyYZfhRLk3/0VWVf92ihcFE6OSWtILODnmLtlASv+g34ilN1t0=
+	t=1743436761; cv=none; b=ErbXT3WrR+/mBcq8gU/e57gGr1lxz+PoHJmeKTaEeFaj98DHEkUTVgd+CekWzglXjnXPV2DnRkHDaDxuAWvQaPZY2h93vuB2FmAQZBi1OK12+9sDLYG7LAH8CpW79InC4nnBjOXR4Dl7Epn39rBdgigSfp0hBUtTVGl6Lo6qoX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743436602; c=relaxed/simple;
-	bh=2abXrR4+mWG+w1ZabCiucgs7zJIV275nfqlxRz+6dpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jHfXY++nVSVRBoUfghDOZuua0TAFlQTsNy3ee2iOVGqPI4NQq9Dp6wOODQcHyw4GnIzhpGBob5rEC13D77Qhue2+ELs8GdqEhaRHrLPq+qSM0WIQjIUU9FNs+jU3vq44IT16aC61JM4s2p84yO9vlawaT/+b2GZ8lLPr7HYYLio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ecnURH+E; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743436761; c=relaxed/simple;
+	bh=tma55MFNAw/GJDKtckvQxQu0LVPdFFI5mA9H4aKzVco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+Cud+lzxl7zpg991+GU91KcE5BsHTV01C9EANIEitzbYIt/aoIW2k0HZXkB/XPJS1Ax3Jj76LXDSHB6XhNiMAw5GUkQ7odPZDvLFBA1NkyREmJCuQWMp3Iv1gf1CJea/aMKoMd/cU+epworoQDSK3eXacgNBV05vv1a9dyLoEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wBmUbAH2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ecnURH+E"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D699742D46;
-	Mon, 31 Mar 2025 15:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743436591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2abXrR4+mWG+w1ZabCiucgs7zJIV275nfqlxRz+6dpk=;
-	b=ecnURH+EgrNOfJqAbCnbQ0EtR5oarltkIX5/pZWQ7qgT7Jw6L3V3y9/D7+hZEseUKp7vwK
-	XIUQOTwmd8ow4qiwEh+MU41cxdl4pJTgUlV5TMoq2ELiMU2hEo2I4oU7s/hJOCJi6UsLpj
-	kD3xKkaPDxgwvVmNZzuNR//+rWOVLDQDR43v4TEY5xhPAd1bld5/Qk+SsRLGQpjzJTcuOs
-	USwgVecUeg/IfVzaCR/saQAejx08g2jWPMa3/6ThcZZovUFd9SWtzkTXcT73gROSqma5s9
-	oAvj/kjEemN+yJdyi7wh1n3ioPOamBvl8A+/AHUdF4n9oY29DwGxOHv1z9GJqg==
-Date: Mon, 31 Mar 2025 17:56:25 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] drm/panel/panel-simple: Use the new allocation
- in place of devm_kzalloc()
-Message-ID: <20250331175625.505d616e@booty>
-In-Reply-To: <CAN9Xe3SzU0AohuBnyJtE0UWFkrW0iMGKH1F8cuUZYLZ-vbfkpw@mail.gmail.com>
-References: <20250327-b4-panel-refcounting-v2-0-b5f5ca551f95@redhat.com>
-	<20250327-b4-panel-refcounting-v2-4-b5f5ca551f95@redhat.com>
-	<20250328095351.7bac2d4d@booty>
-	<CAN9Xe3SzU0AohuBnyJtE0UWFkrW0iMGKH1F8cuUZYLZ-vbfkpw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wBmUbAH2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Wnh8uoRPkusnTEUMr7tAStK6YSVlZsb7i2nO0MdBKcQ=; b=wBmUbAH2KymnttpDPouzeQslac
+	U3mrhK679+29flucbG8YWnreKR7BnEgby9ro26L5g2UmxRDc1wFLnsaaih58pgNz/nwJk9ELMJgaJ
+	WSg7cDAvG84YUuXbmNA/s1AqMz+h5piobg9qScpB4zdj7zxN3w26nLX7sdMy4Uf2tN0fZjzh8J16x
+	UKLgZU3MCmiQ1RqOA2QZgqrQIoqG108yJbFSBxhSPlsWp5JDUA1Uo4S9DWlKIbAQQ9F3fGChYfrzi
+	vhsodcK9NbLfLLy2tWbxDQ13PeazJa50K56ZmWQ8IT3PTCyRA8g5PDiBBWIYTo5E+sY59BXyCHjXS
+	m+7XQ/HQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzHXh-0000000F0SR-0ZRA;
+	Mon, 31 Mar 2025 15:59:17 +0000
+Date: Mon, 31 Mar 2025 16:59:16 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
+	Ye Liu <liuye@kylinos.cn>,
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v4] mm/page_alloc: Consolidate unlikely handling in
+ page_expected_state
+Message-ID: <Z-q71LlcCQ5I-2D-@casper.infradead.org>
+References: <20250328014757.1212737-1-ye.liu@linux.dev>
+ <Z-ayTt8o656AkGfz@casper.infradead.org>
+ <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfekieegtefhgeelieehhefgtdekffevgfegvdeggeelkeehjeetteethfevudfgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepjeekrddvtdelrdejfedrudelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeejkedrvddtledrjeefrdduleeipdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehquhhitggpjhgvshhsiihhrghnsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhin
- hhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
 
-On Fri, 28 Mar 2025 12:09:08 -0400
-Anusha Srivatsa <asrivats@redhat.com> wrote:
+On Mon, Mar 31, 2025 at 08:08:01PM +0800, Ye Liu wrote:
+> 
+> 在 2025/3/28 22:29, Matthew Wilcox 写道:
+> > On Fri, Mar 28, 2025 at 09:47:57AM +0800, Ye Liu wrote:
+> >> Consolidate the handling of unlikely conditions in the 
+> >> page_expected_state() function to reduce code duplication and improve 
+> >> readability.
+> > I don't think this is an equivalent transformation.
+> Could you explain it in detail?
 
-> On Fri, Mar 28, 2025 at 4:54=E2=80=AFAM Luca Ceresoli <luca.ceresoli@boot=
-lin.com>
-> wrote:
->=20
-> > On Thu, 27 Mar 2025 10:55:42 -0400
-> > Anusha Srivatsa <asrivats@redhat.com> wrote:
-> > =20
-> > > Start using the new helper that does the refcounted
-> > > allocations.
-> > >
-> > > v2: check error condition (Luca) =20
-> >
-> > Here as well, when you resend, move the changelog after the '---' line.
-> >
-> > =20
-> Hadn't noticed this. Saw some other series that do follow this method. I
-> will make this change.
+page_expected_state() is called both at free and alloc.  I think
+the correct behaviour on encountering a HWPOISON page should be
+different at alloc and free, don't you?
 
-That's the general rule [0], even though not all maintainers are strict
-about this, so they sometimes get through.
+> > Please, stop with these tweaky patches to incredibly sensitive core code.
+> > Fix a problem, or leave it alone.  We are primarily short of reviewer
+> > bandwidth.  You could help with that by reviewing other people's patches.
+> > Sending patches of your own just adds to other people's workload.
+> Thank you for your feedback. I understand the sensitivity of core code
+> and respect the limitations on reviewer bandwidth. However, I believe
+> that reasonable optimizations should not be rejected solely because
+> they involve core code. If an improvement enhances performance,
+> readability, or maintainability without introducing risks, wouldn't
+> it be worth considering for review?
 
-[0] https://docs.kernel.org/process/submitting-patches.html#commentary
+If it's a reasonable optimisation, absolutely!  But if it's an
+optimisation, it should be accompanied with a benchmark showing an
+improvement.  As far as improving readability, I'm not yet convinced
+that you have the expertise to make that call.  Every change that is
+made invalidates everybody else's mental model of "how this works".
+So all changes carry a cost.  Sometimes that cost is worth paying,
+other times it isn't.
 
-Luca
+> Regarding the reviewer shortage, I’d be happy to help by reviewing
+> other patches as well. Could you please share the process for becoming
+> a reviewer? What are the requirements or steps to get involved?
 
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+There is no process!  Choose a patch, read it, think about it.  What
+problems might there be with it?  What may have been overlooked?
+Is the commit message unclear to you, how could it be improved?
+When you're done, send a Reviewed-by: tag (read the kernel process
+documents for the full meaning of that tag).
+
