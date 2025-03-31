@@ -1,64 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D624E339A1;
-	Mon, 31 Mar 2025 07:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D717D41760;
+	Mon, 31 Mar 2025 07:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743405704; cv=none; b=qpIM9JDsF8EYJ6IlPyeIoguzwVXhOE71nL3WLsEDpulL97oZNz4f4FMB0T1I4BTL8XRJtLArTOr/oR867xJrDcnWSbhWuq01955GXR5KEZcbOZG+YruFLEw/9Yop63iaDBODBHYGR03pGzdzmrpacP7rX6jeAvi9MLdYXWHR2gw=
+	t=1743405798; cv=none; b=LhwZarlsbKydlHTi9ua+9gpzyBO9AL/UN6eRo9+0stF7rx+Qi+SqgSC1Ny3NDt5kme3b/gu3q+Fq963JXDibSA6xMPlpQ2CIoS+R2PX67XbJdNOC5o95DCS+VEGyRoB0yNspsOFspWTYWpEFdv6ZIo3b/3zn3qfe/gY9i/8S0Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743405704; c=relaxed/simple;
-	bh=5XkEjuyV2van/BQCwUUXEpOlzawQC5PT+p/CBGgu1kc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gJPas/hyFMq7JudgBSSkSqHuz8h00OgGvA3NdoD1q9rLahuBoxwUX72JxNoYNn9oyjNCLY2nUz5W82v1P7O75Q1nsAiF8ePKugfeFAuICtFK/e+nJZJSm5vpCir8ifahBNdLmWX7uGHDduE/cDWNtwinZn3QxTnq+LmpucVUcY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a0J4j8u8; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1743405798; c=relaxed/simple;
+	bh=J72FR0c0pkPAoRPukKWi2UAtfRD5G9v+Zv6nBsRj8H0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XeGauArbbB0rMbGoRRVYGqccnygsqzJO8GuZvwJu7g/Mk4+C0jVjfmEDKmuCnYZkp30K8RdTBA8h8DuWIXrT+ccBNlZKPL1dkCcYkT9s6NSqJLGBOt2U3WzIk2skF6189xh4V0rNb78TuKLq3n4h8+NXjYftGIeK2x2mL4xhA5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VAz+ZZxT; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a0J4j8u8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAz+ZZxT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743405703; x=1774941703;
+  t=1743405797; x=1774941797;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=5XkEjuyV2van/BQCwUUXEpOlzawQC5PT+p/CBGgu1kc=;
-  b=a0J4j8u8a7ll6dtdnATSGi+VeRJJAEiQd0Pl64nuR+H3LWoPAAVE/iyt
-   0u6Jzm9RlWVCe6HBoGFkoBVuiwQjMXzykEU+ZJCu7WZUimCH4LfEJOtC4
-   b9JMFimqfCWGbAil+gI/Lgnr7xG7Y8t/rVDwaKWt4ucZK6nQaJxyxkQ10
-   Hu9FtKL3PtE4+0Vnjs6CSFDDho/1f0Mvbsc3eCaU0E3qgQUVcGZ0RJ/wq
-   RTpfwAYYakzi0KAjK5w+Ii5SF5Dmm9WDAX8M74N8nqxzNUxULwKBYl1xA
-   AmqTFPTFe21fhv0C7dzuUxTDAj6rtI9GQyGyKFH/G5uYs/oDvwcTSh2uG
-   g==;
-X-CSE-ConnectionGUID: LeAWOrZPQea+Cug3vM8+Rw==
-X-CSE-MsgGUID: TLLW8E+WQ0eX71tM1OR2gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="48466720"
+  bh=J72FR0c0pkPAoRPukKWi2UAtfRD5G9v+Zv6nBsRj8H0=;
+  b=VAz+ZZxTN+a1grO8+CW/HawA2YzuMBHbTv5XjYDticHbQfoilZej1DHa
+   PQ2a/wyaVTSVsccTKjpDAnUbtDblF+/lZ2sUaKUGdlf05oV6vrjjzDnf3
+   xmnHl8nk/SEL7VWtyJCfxwvONNCyZzISLXd24MOPHIRjkpDmrEklGD4jC
+   SnDPT1rx8YD3DaeHwpeYNnk5girzFxbeSl6vAtpqf2LC5gOLMrSQMxw0m
+   mdBrALIHacODvokb9vvP2oCtVJFo+kixjP0xsFmywLDFQ/tCZQiGUWPhZ
+   9F8EL9gy3XLEGQ3fuwvULi0lrVnqN3wH/epRIIRQy6yw491qjBgU5Wakr
+   w==;
+X-CSE-ConnectionGUID: ZnQVbmYBTxySXwXoPR7m8Q==
+X-CSE-MsgGUID: R0BPARL2TAOyTYFeflcmUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44858641"
 X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="48466720"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:21:42 -0700
-X-CSE-ConnectionGUID: Bnu6NutjTYW/R0x5YADX4w==
-X-CSE-MsgGUID: FCUgQ0auR/SrITSB1Sovvw==
+   d="scan'208";a="44858641"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:23:16 -0700
+X-CSE-ConnectionGUID: zy3YoCT2TUm8qijMD71ikQ==
+X-CSE-MsgGUID: MV8kfjhNRuW0IUQb1scrEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="126247204"
+   d="scan'208";a="125765167"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 31 Mar 2025 00:21:39 -0700
+  by orviesa009.jf.intel.com with ESMTP; 31 Mar 2025 00:23:14 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 79D331B4; Mon, 31 Mar 2025 10:21:38 +0300 (EEST)
+	id 8DFB61B4; Mon, 31 Mar 2025 10:23:12 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	linux-media@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+To: Robin Murphy <robin.murphy@arm.com>,
+	linux-acpi@vger.kernel.org,
+	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] media: raspberrypi: rp1-cfe: Remove (explicitly) unused header
-Date: Mon, 31 Mar 2025 10:21:36 +0300
-Message-ID: <20250331072136.3987653-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] ACPI: VIOT: Remove (explicitly) unused header
+Date: Mon, 31 Mar 2025 10:23:11 +0300
+Message-ID: <20250331072311.3987967-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -77,21 +74,26 @@ which is included here.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/media/platform/raspberrypi/rp1-cfe/cfe.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/acpi/viot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-index 69a5f23e7954..fcadb2143c88 100644
---- a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-+++ b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-@@ -12,7 +12,6 @@
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
+diff --git a/drivers/acpi/viot.c b/drivers/acpi/viot.c
+index 2aa69a2fba73..c13a20365c2c 100644
+--- a/drivers/acpi/viot.c
++++ b/drivers/acpi/viot.c
+@@ -19,11 +19,11 @@
+ #define pr_fmt(fmt) "ACPI: VIOT: " fmt
+ 
+ #include <linux/acpi_viot.h>
 -#include <linux/fwnode.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
+ #include <linux/iommu.h>
+ #include <linux/list.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ 
+ struct viot_iommu {
+ 	/* Node offset within the table */
 -- 
 2.47.2
 
