@@ -1,116 +1,125 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F698635B
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64808635B;
+	Mon, 31 Mar 2025 18:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743446954; cv=none; b=IX+vzR5Z+Wm0Ug9RXAXc4htox1s3PGNAqlDmKGfyxbR/ErtPgJ6i7OLFTrFJajnYIWTG9cMeEgiLOLPNFTWhzRblnv3CTEP6TVPk7K/cgU2BhdyWv0obrHIrO+rm22C4zXnmexIyNEvtOg4p9ICJtgEz5NNvpOeuBXmkJegDlP4=
+	t=1743447162; cv=none; b=jVqfzbumNYjDcHp3hdvqv5AO+UTdlqTmHNMO0ueHQ/zZEhho9U7GhzgGYPVOv1uU/VAyMyHOkyzmhpZB+MRerWAfTGjINq04al0mKMTUPoHxLcsZTGNifGm1ctBXJWEAOtWYrFJIRKkvOiP/i+IMAVgBi8XX5Y8gMxkIfqUDiI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743446954; c=relaxed/simple;
-	bh=fP5nJMhdUikXpEYDfwduvae1UDi/nvJhhgFt6V/JW4s=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZZTNgLfO/LGUxsbba90mh8XlDgOW/ED0UB0ZDH+GTpbkaUFogWtiKLU9FITKyKMjbVmKiWI4FtEgoWEn17wPOE1lVSsoY9saS2uLJKO9gSdnEqRgDouaKfbxrR92FynLQaXLewtQ121yJtpfkrko2DigjIypC/+L06poxDg+L84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=GDiT5x+V; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1743447162; c=relaxed/simple;
+	bh=drfaP2yE98Rco29b/ny5O2lcVF6+W5Bnqs+feOf0X/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EAdFxoWbwMgiK5m3eL8Gpkm/UOo98wnxMvXbLDkI5+f0qSPcRy5LHZHvgwQK8Jf+mTGE/+Qn9bE59FmbaM+7q/+Jt8C6vcTNz9ylSV/06uk+nXoY/xfL8JyK7YuKl6kJpPmebTdW+MG946smBK9Bf5dyk2rtd+XDtXEE8P7/bZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8BRyF5P; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="GDiT5x+V"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab771575040so1146165566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:49:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8BRyF5P"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223f7b10cbbso11670035ad.3;
+        Mon, 31 Mar 2025 11:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1743446950; x=1744051750; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Kl0dov9VrLyOk8gwNhMGQPqf9rUFgQMxrLRugxXZN4M=;
-        b=GDiT5x+V0eaznkxsk11JWb5hvVCR+4wtazofhPe13TFg6z8MzAq+L4UAi9IGLmFZW2
-         TQcFxRVF3DZJa2uZLMhmdkrkrOmMBDKTIK77vxgV09+8tHwRAWMgMacytkiOs4QiZCgU
-         g6YAg/49u7KiBzYos00jh3p4Dlgg4HXqM4PoVlBvPk0GY5TIHeYqcK2DekHnLBvL+P7b
-         Nbd7l8ujErxt8NXASyG59u6vlWXfTOQfpqdXfT7hGYULaWm8+43TpNhAaTFR9NyarpT6
-         XlWM27zImqfyGa0kFJq/FaZ80DWd85a02kDMZFVBwuEOvOKWCQrgbiVYdVshm7Cn1j1r
-         bEmQ==
+        d=gmail.com; s=20230601; t=1743447160; x=1744051960; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GzZeJysI7elY14cefHBV0630yeRDEoEFnaTTGe6JujU=;
+        b=m8BRyF5PIsBJofOiC6Y0pBdaEU7ls5KBDD6OEPNv85xnr1hU7Sg+Bx/YHHXa5gu0RH
+         ijkPr7SF9xOlz+dl8MdF1XO1Zk9S9VHh0URKWpNUq+UGxkpqBjPHDNd+Ox6nshyVUkpB
+         KIdtMj2Tmk3mwM3u02D3a5yIks24+u1N0mcTfmK8xE5RH3tiXKeqgaGjXVcNu7eDzK/4
+         I94D/bDHHkczprLczVcpntltzK6fSTUL7V+viag/lM2rcHDS45VBYus8NuE2LAxZO3aQ
+         FbuYvzRkZQ/9tgNWYAer08RV1PGjSeu06+DUupaiw+85r5Il5eutVw+vx1yy1ckC4nqu
+         sqhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743446950; x=1744051750;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kl0dov9VrLyOk8gwNhMGQPqf9rUFgQMxrLRugxXZN4M=;
-        b=PM4FLs26BTKkSHVgNrXW2V9OZ1/SFe48NcEK4/1izeAHSyRCPmwqHJcaBS2bmgAv8u
-         hkWPC3doKYzd2vVuNbHlYbHny7yQCCmwRuhQDE1qDrvsSCnHHMN+0VxeFiIkuXtesdQL
-         j6ZYlbA0W30iMNSvxdJnnIBxhdUckzOM1NbewZR4gl6ek4GknvIePqfdIqgWVEKM/8eV
-         iIsKonYaTtHN6+XJhywhkrxYuHqxliL56R4NM7DrMmr6GTUiXU38KMXQ9SlQtqy6hZtg
-         XrjldHTTxfn+8LFyPtkT5et1Np1FVhzS5kxmKjfoTNUDOtuvVm9ITgfOw9QRW0/L4RUz
-         snfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcNUQt0ploJliiI1BEqOjlB9XPwsNKzkQQJdCCxmHV3k8KZ7iyTKoxmKhQlPpa9B7UYhKQSiKEAUX3KaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrdSqj1EsDjgKhj0S3ug6vYIFBf1iJEs/rWy9VTGQ9ypmbXuvH
-	s1hJI8tdNB2SHG1REXhPYfBRdi+CsBcgRqX6APzsh2DmC6KwFF/aTL62AJTOEA==
-X-Gm-Gg: ASbGncsiZ3Psll7I9GPQWvEl9+M9GaBz8O1sgqW1dUCzKO9wDtP7rayNgvTl3PyXHUB
-	C/utIyqSoDem+zoAQPwsZKWbKTfPqEmXmwtqTrU3TWMj+CWBYXBj/Rqh9efxCSQLCsaDkhVp4v4
-	H43PHLOx8dQ38OG3NgDkVgsxs2tip2SU4fRcGVnN2TmpPVC9CDhYe8BqN0if5uQg+I3IevweCpg
-	1Maz1QjTMM7g7H3YwEYH54dkoOYdEIvMzoypITXf6kXaPX+i1VvyavOcOP7dkLRUQPU2yVZ6QhY
-	kjiCpenA8rg8rk4Flk0By+HyrrApyE3fflU9SMoDZoDEspDHfwU7PtYe8h6R9r63GNFyABGisEr
-	rl+PwHA==
-X-Google-Smtp-Source: AGHT+IFeXyOVxpJBuKLqwlWNeeKwHSVbkp2ZEQUHlSwJKNVeuE2vj2Ime+ulaGAN6UWBY/kDRbu4Vw==
-X-Received: by 2002:a17:907:971d:b0:ac7:7c45:e9ab with SMTP id a640c23a62f3a-ac77c45f89emr132662966b.16.1743446950276;
-        Mon, 31 Mar 2025 11:49:10 -0700 (PDT)
-Received: from ?IPV6:2a0a:2300:1:1fe:e2e5:1eb0:886e:bbbf? ([2a0a:2300:1:1fe:e2e5:1eb0:886e:bbbf])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196ddfebsm650656166b.164.2025.03.31.11.49.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 11:49:09 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <45b7a842-02d2-4b9d-851f-022ce2b9e694@jacekk.info>
-Date: Mon, 31 Mar 2025 20:49:08 +0200
+        d=1e100.net; s=20230601; t=1743447160; x=1744051960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GzZeJysI7elY14cefHBV0630yeRDEoEFnaTTGe6JujU=;
+        b=FMNHNcToTNCltGBt0oz5TdTVbl3P9RqlCt3/+cQmjr9jIVLUqSrchciY1Wd4s7Ne8a
+         3HyNKx2SIwu680MxHCBa3xN5+R6D/Aro5/MgfzCQFptobHmhWZiwewEkhPxfBz0bCQcE
+         2shqZ3853jaOJp3/enyBo7HsslMTwsO02+r1fGuWMquvDpaZxM3txFmUsUlzJVB/W08P
+         wvdU8lZw5MwhDiBeBs0Zr9Bc1j2BvcuX7TVNU0KXmyxgoSwwXH4w84QoTXIzHx1568Ts
+         sxKaXF/HWqD1LXwfLKzzDSdCdOlliiU5HdaBTmLNqqdZPuRDco97sl3CE8ncY+8X2qmf
+         a3EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYdJf0HNL1Y2Ff4H3Dp1mbCCwxBQpDwiF52lOxaGzSurgLWTM3SWaWYQZIlfiPHDCZWfSlb/0/DcyWE8I=@vger.kernel.org, AJvYcCWSBs+ZNdf9fyE4rgnHA8XU0EFkZNkcy2BkX28ZWjoAi5Sd/XAsyuwVVLM/3Xg1VjHEkn7fByYbp1radwOOxhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb3VTf3Y6q1zP3jgTdGauoEZqH0Y5OF/bWdRhVcwgIGSOuj6X+
+	C/3TZHN+uSITKlr2aoUYrjX7Rj2qaFID1Eef4QQ4ElXbFUlnzbOHpCVbBskEe46Uaf1K6u2nKby
+	glFOdNRPCaEnE1/SjgUVsyUMSiqo=
+X-Gm-Gg: ASbGncuEQplCcooFgkYq0BLrzrdNoeFELN9SyoaN3dwAu60G8S0uqssLAwuRzstOyPR
+	BYnLW7rG6QpP9uOcFOw9WnlNUJoJvroIf+y0LfX1CI6/GnnyIpz9z35ZZ4ct2JdNIIlKvThApyN
+	EuxVkO0x/sKDBtRi9iZ/xfWhSMhA==
+X-Google-Smtp-Source: AGHT+IE2Hzqjn1wZsG8WMjIPZkN86wCbBmOKgSfsBufV5hXuNCms6bbYyYzTIEoPZRDM3asooEkFXsY/Uzbx6gF26AI=
+X-Received: by 2002:a17:903:41d0:b0:224:88c:9255 with SMTP id
+ d9443c01a7336-2292f949195mr65692125ad.3.1743447159886; Mon, 31 Mar 2025
+ 11:52:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: add option not to verify NVM
- checksum
-To: Andrew Lunn <andrew@lunn.ch>, "Lifshits, Vitaly"
- <vitaly.lifshits@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <c0435964-44ad-4b03-b246-6db909e419df@jacekk.info>
- <9ad46cc5-0d49-8f51-52ff-05eb7691ef61@intel.com>
- <978d1158-c419-4a59-b0dd-ad5be9869991@lunn.ch>
-Content-Language: en-US, pl
-In-Reply-To: <978d1158-c419-4a59-b0dd-ad5be9869991@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250327161617.117748-1-bqe@google.com> <Z-rFPhrNTB8t5xTF@thinkpad>
+In-Reply-To: <Z-rFPhrNTB8t5xTF@thinkpad>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 31 Mar 2025 20:52:26 +0200
+X-Gm-Features: AQ5f1JpLXWuXf1PUorNOb4IdBwcnHekI9O3T_4z-8lZajxumI29YOGcJZ3rNN7E
+Message-ID: <CANiq72kSVHsgZGULhy+t4XyD2xGAKdiyKshC1VgKjTFoHUbMNg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] rust: adds Bitmap API, ID pool and bindings
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> From a technical perspective, your patch looks correct. However, if the
->> checksum validation is skipped, there is no way to distinguish between the
->> simple checksum error described above, and actual NVM corruption, which may
->> result in loss of functionality and undefined behavior. This means, that if
->> there is any functional issue with the network adapter on a given system,
->> while checksum validation was suspended by the user, we will not be able to
->> offer support
-> 
-> We handle this by adding quirks. We know which vendors/products have
-> FUBAR checksums, and allow them to be used when the checksum is
-> FUBAR. You could do something similar here, add a list of vendors with
-> known FUBAR checksums and allow them to be used, but taint the kernel,
-> and print a warming that the device is unsupported because the vendor
-> messed up the CRC.
+On Mon, Mar 31, 2025 at 6:39=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> I didn't find any discussions related to the bit_set in kernel context.
+> Is it possible to use it in kernel? If not, can you mention that in commi=
+t
 
-Unfortunately at the device level I don't know what is the motherboard 
-manufacturer and model to be able to determine whether I have the 
-checksum messed up.
+In principle, from a very quick look, yes, it supports `no_std` and
+should be very easy to vendor since they don't have dependencies (i.e.
+`bit_set` and `bit_vec`).
 
-I could peek up MAC address in NVM, but even then there is no reliable 
-way to know which ranges of MAC addresses are indeed affected.
+> message? If yes, I think you should consider to use internal language
+> tools.
 
--- 
-Best regards,
-   Jacek Kowalski
+Hmm... if by "internal language tools" you mean a normal library (like
+that one you mention), then yeah, they can be considered.
 
+In general, we have been prudent about using third-party libraries so
+far, but it is possible if it is the right choice -- please see:
+
+    https://rust-for-linux.com/third-party-crates#suitability-of-a-crate
+
+So if everyone agrees that or another library would be the best fit
+than mimicking or using the C side (performance-wise,
+maintainability-wise, etc.), then I am happy to integrate it.
+
+> I encourage you to implement the tests as normal kernel tests - in
+> source files that may be enabled in config. I can't insist on that,
+> and will not block the series because of lack of benchmarks and
+> tests written in a traditional way.
+>
+> But to me, scattered wrongly formatted commented-out in-place way of
+> writing tests is something fundamentally wrong. Not mentioning that
+> it bloats source files, making them harder to read.
+
+I don't think documentation makes things harder to read; quite the
+opposite -- if the docs are good.
+
+But, yeah, if it is an actual test that is not suitable as an example,
+then it should be a separate test (whether as a `#[test]` one, if that
+works already for this use case, or as a sample module otherwise).
+
+Thanks!
+
+Cheers,
+Miguel
