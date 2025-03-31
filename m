@@ -1,137 +1,206 @@
-Received: from ksmg01.maxima.ru (ksmg01.mt-integration.ru [81.200.124.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887518F5B;
-	Mon, 31 Mar 2025 09:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68326259C;
+	Mon, 31 Mar 2025 09:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412627; cv=none; b=DDti0MmSh1egqNmb2xkZGpkKxj1fY3RLvNbmuEPgk5DtjsKX4RDqlRibDJhm8QREbqmxPbXD2uND4+QyHu88DL45UU0wCDk6wK/8GxPl1gpA9HlpnDj5u6MVyfvWF7VgMFVWG9Bnw6hMUrigWpJgmzctO/jXJNj8Lr0oivsYjXM=
+	t=1743412661; cv=none; b=oF9AoRvAKhXd4npsuBMTA2bIzviRhueNSV2JxGlGJ5vBvQfI1aIZaLDa5fD7vt3qHYZe/eGCJiPjHXcFCixzhuf4KGXGb7S20pHPHnkleWJmZ5q3w7q2NEdP4eLwmUsmnMjdrDjO2ZEHJ8pmf+yUoha/74Xijo3Vq+ifvuW52KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412627; c=relaxed/simple;
-	bh=8kxyGR/ALBwR79HqLnezj+mUMnJfHNpRH1xsTTPiYwg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SpDGa4YgDQMeKdkGMfvbDgO4usGZYRAytobkSjnNNZJ9yyLMUgpg2EuW1oGdVpWQoRHLZN45ltkCteRm2mNb2THMXcU+bzZqzVmqxWJBkUmRvn8iHk8oWJwVLZRcCKMdmhinIQm+zRCRUZ7oYNWDiGucW9V9FNEwxg1VbZHXuDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=f/gyGRfj; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1743412661; c=relaxed/simple;
+	bh=kaiELQkqTr0E/qcyQ8OuqflCAPZzOhc6NAzCCXMQDE8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=rfrJ3qr1BR6WCRQ8u0kIKm1Vip/iEemdj0x8VU6OwEW4mVLeLfcJBVIOQu53Km6vJWblLMYdUg/J73Y5i4wvw0Zce67wMh9F0XwFf5zyqaK5ajNydws38crORWo6kHRYPIb/FMegTu9s3YXwik7s5e+ZjeEwiILcoRwDNurl2oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9r1LbAn; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="f/gyGRfj"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id 52E50C0003;
-	Mon, 31 Mar 2025 12:16:53 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 52E50C0003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1743412613; bh=aa+0Ow3pdQVvuCdmcpUG2+fTL+6z0OP1WtnTcfFt9dA=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=f/gyGRfjIYax9ZDP3V5GCHnvh+YGc+2705kZc3FEbgNN49uIgSjMnhjJOFb1jR/Ne
-	 c1iZEc+G4uDNzg6ftcqvZp9NC9Y7vtVT4bdBUkdDBjA0puTtQyN57kqk11+UQMY5C5
-	 X/EQK9j4j8TvkrfOVXJCB0rbhxH00tXdzxBiHOLZsjP47CAOQcY3YcNDQtInT9Wh1p
-	 s2XCB43DLcjaGRa2QttfWFRJRrdStDSNG+uvLzALwP58QYFbdYeCyHiPYcqCm7e7Uy
-	 spBfHN1pZ1P+wSGNlpVLI63zCLbVS8tLooZ+ky3iDu8vIKz2/odaBcIaB+1WeDZ2Wu
-	 dFnvDwB7N1D9g==
-Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Mon, 31 Mar 2025 12:16:53 +0300 (MSK)
-Received: from ws-8313-abramov.mti-lab.com (172.25.5.19) by
- mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 31 Mar 2025 12:16:52 +0300
-Date: Mon, 31 Mar 2025 12:17:07 +0300
-From: Ivan Abramov <i.abramov@mt-integration.ru>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, <aleksander.lobakin@intel.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
-	<jdamato@fastly.com>, <kuba@kernel.org>, <leitao@debian.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in
- __dev_change_net_namespace()
-Message-ID: <20250331121707.5fcc75e026c2f3d0233abcd5@mt-integration.ru>
-In-Reply-To: <875xjtb5o9.fsf@email.froward.int.ebiederm.org>
-References: <20250328011302.743860-1-i.abramov@mt-integration.ru>
-	<20250328022204.12804-1-kuniyu@amazon.com>
-	<875xjtb5o9.fsf@email.froward.int.ebiederm.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; i686-pc-mingw32)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9r1LbAn"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so90006475ad.1;
+        Mon, 31 Mar 2025 02:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743412660; x=1744017460; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QznPLJKqzWPL35Cepg1nAB4/tw1/hzZeJhITfjvZmpQ=;
+        b=T9r1LbAn6JdD0Qzi4lKRi6D378uAI9duAk1SXfw+HsXvsrY+jm2jgjqwSK9GXDFc8b
+         PqJT6H4izKeKvZXXm/e+KkJm+Z2olYi3323nCJag3RYTxeIzvEdrlNcIxkki7iFHqUGP
+         gx1RdHbc8p4JpxSjet+uUcQWuO6Avg82401uwSGigBHXZCD75rqVgyrB3lYfuTLGaQkN
+         Xbb2dcxR3PEEBwdTB+ZsgGgNb07xJ8WqCxT1Ddb0ZfaD5H8elFO6R2CLPJO7xnPoqk9J
+         AaQbrYhaLcnq5BTDMp6WX7eAuyS4cblp3kF0vDjTZCJDpR99dPi/6qOwKNddwQLCcNUw
+         ahsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743412660; x=1744017460;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QznPLJKqzWPL35Cepg1nAB4/tw1/hzZeJhITfjvZmpQ=;
+        b=gar/eknsqdG24yy5rFsCWluCbhEb8e+nKn6aNAZU0QkZqpsgu/3Cs8cR8snkeq2GsR
+         43ej3BR9Hdj1OAkOtazBfAMR1VSBSHa2AfCfjK8k37Yo8kvd5Ha/dI483egWHIaxjIsB
+         LCdsM5yK5K1GdHf5hNIIIWr3UCjc3OiD5qf/BHrC6iLTO1YtZOaEDct6HHJUzzNerB1I
+         LjYCuiFbfIjPIZvKE8kqa+aboX970NCRoy9BONVjT8MP+NohntG/3xS/pRZhqBUqmH4p
+         KAum5fL7qF06S7eLqtw4nDIkBMZAo56R4/aLQbWfZo6LE9hf7RxEULRkUiaDnWjQ0FON
+         LheQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBbHR0Ax9C+eAqB3++zq/yF4OmNvZ48SeZVoFRy4vxZt7CJ43TJgF+TXgflq4pkNFwil78Wa9+GMXty/59@vger.kernel.org, AJvYcCXkFJqRCsE/cGa7gkreyEoINZsTbWDK4gpeS1m0vYivKkK4QzDK3FpnHPui5pUWw6XeLjmzT0AFR754DN4k@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc/zuSr/Z04sM9x61KlvJzJqoK2Yt+JWvKn6EJBUEO0MH8iYez
+	DTiDy/5j1xCXscNxffNRGsWb1GD+QjIv8c0W4slvjSQ2UjX4841L
+X-Gm-Gg: ASbGncuLDuNV8Tt9CxLidhB+xePsC/JscA7insClMZvT0jq7CIHg7LFVcgakw5b8pZ0
+	eMCvrLbDsFVwlfK4oJEXw9Fui4+63ygYXJVos+mlDR+AE1ki9TIwuPmdwDoV2AOSciyH3cESeBW
+	DwiC2Rxhb14fc6FnuniaIhiYYbH1VSS3jN8YVohGELkJY9rbp/7pz1FbIolnR/LPgU9mjZBxxBx
+	TnoaoXGJOQ2b21vUR9tYrHwAKbMfiAEdoA429zre3seH8RroDBmEGvcqb5LlaxNUwCn7+r1jNaV
+	kR/pwceQPAK5fr2rmPDndvNteV1Q99+8t5s4QhsFYZHMqsbjgydwxy7W7ZZQxepLuZNWHBW9sQ=
+	=
+X-Google-Smtp-Source: AGHT+IH+90jBd+jyhuEi5x/gEVYfwAW5yK2+2Vf5DhsZy52DOKGxwEc7qUKBE9+aHjxyyxVburC4yw==
+X-Received: by 2002:a17:902:d550:b0:220:fe51:1aab with SMTP id d9443c01a7336-2292f9e84a5mr166869355ad.38.1743412659660;
+        Mon, 31 Mar 2025 02:17:39 -0700 (PDT)
+Received: from localhost.localdomain ([221.214.202.225])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d61799sm6754474a91.23.2025.03.31.02.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 02:17:39 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: akpm@linux-foundation.org
+Cc: adrian.ratiu@collabora.com,
+	brauner@kernel.org,
+	felix.moessbauer@siemens.com,
+	jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mjguzik@gmail.com,
+	superman.xpt@gmail.com,
+	syzbot+02e64be5307d72e9c309@syzkaller.appspotmail.com,
+	syzbot+f9238a0a31f9b5603fef@syzkaller.appspotmail.com,
+	tglx@linutronix.de,
+	viro@zeniv.linux.org.uk,
+	xu.xin16@zte.com.cn
+Subject: [PATCH V3] proc: Fix the issue of proc_mem_open returning NULL
+Date: Mon, 31 Mar 2025 02:16:35 -0700
+Message-Id: <20250331091635.36547-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250327122445.cbd211c3216aa754917f3677@linux-foundation.org>
+References: <20250327122445.cbd211c3216aa754917f3677@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
- mmail-p-exch01.mt.ru (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Prob_CN_TRASH_MAILERS}, {Tracking_from_domain_doesnt_match_to}, 81.200.124.61:7.1.2;127.0.0.199:7.1.2;ksmg01.maxima.ru:7.1.1;mt-integration.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 192233 [Mar 31 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 40
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/31 06:14:00 #27842604
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
 
-On Fri, 28 Mar 2025 09:17:42 -0500, Eric W. Biederman wrote:
-> Kuniyuki Iwashima <kuniyu@amazon.com> writes:
+On Thu, 27 Mar 2025 12:24:45 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
 
->>> Subject: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in __dev_change_net_namespace()
->>
->> s/__dev_change_net_namespace/netif_change_net_namespace/
->>
->> Also, please specify the target tree: [PATCH v2 net]
->>
->>
->> From: Ivan Abramov <i.abramov@mt-integration.ru>
->> Date: Fri, 28 Mar 2025 04:12:57 +0300
->>> It's pointless to call WARN_ON() in case of an allocation failure in
->>> device_rename(), since it only leads to useless splats caused by deliberate
->>> fault injections, so avoid it.
+> On Mon, 24 Mar 2025 21:14:48 -0700 Penglei Jiang <superman.xpt@gmail.com> wrote:
+>
+> > > >  if (IS_ERR(mm))
+> > > > -return mm == ERR_PTR(-ESRCH) ? NULL : mm;
+> > > > +return mm;
+> > > >
+> > > >  /* ensure this mm_struct can't be freed */
+> > > >  mmgrab(mm);
+> > > > --
+> > > > 2.17.1
+> > > >
+> >
+> > Mateusz Guzik provides valuable suggestions.
+> >
+> > Complete the missing NULL checks.
+>
+> proc_mem_open() can return errno, NULL or mm_struct*.  It isn't obvious
+> why.
+>
+> While you're in there can you please add documentation to
+> proc_mem_open() which explains its return values?
 
-> No.  It is not pointless.  The WARN_ON is there because the code can not
-> rollback if device_rename fails in
-> __dev_change_net_namespace/netif_change_net_namespace.
+I apologize for the delayed response.
 
-It's pointless in the sense that failure to allocate a few hundred bytes is
-practically impossible and can only happen due to deliberate fault
-injection during testing/fuzzing. The proposition is to avoid just that,
-not to remove WARN_ON() altogether.
+Add documentation comments to proc_mem_open() and add NULL checks in
+several call sites.
 
-> If device_rename fails it means that the kernel's device tree
-> are inconsistent with the actual network devices.
+Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+---
+ fs/proc/base.c       | 12 +++++++++---
+ fs/proc/task_mmu.c   | 12 ++++++------
+ fs/proc/task_nommu.c |  4 ++--
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
-> If anything we need a way to guarantee that the device_rename will
-> succeed, so that all of the parts that may fail may be performed
-> before we commit ourselves by notifying userspace that the device
-> is being renamed.
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 5538c4aee8fa..cbe4e7d557e1 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -827,7 +827,13 @@ static const struct file_operations proc_single_file_operations = {
+ 	.release	= single_release,
+ };
  
-> As for Breno Leitao <leitao@debian.org>'s question should we fail
-> immediately.  That will put us in a far worse state.
-
-> As I recall the WARN_ON exists there because someone at the last minute
-> stuffed network devices into sysfs, and no one has taken the time to
-> handle the practically impossible case of a device_rename failure.
-
-> If you are going to do something with this logic please figure out how
-> to handle a failure instead just shutting up the error message that
-> let's you know something bad is wrong in the kernel.
-
-Although the issue of properly handling failure of device_rename deserves
-a good thought and another patch/series, it's a much bigger problem to
-solve, compared to what I try to achieve here.
-
-> Eric
-
-Thank you for detailed response! 
-
+-
++/*
++ * proc_mem_open() can return errno, NULL or mm_struct*.
++ *
++ *   - Returns NULL if the task has no mm (task->flags & PF_KTHREAD)
++ *   - Returns mm_struct* on success
++ *   - Returns error code on failure
++ */
+ struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
+ {
+ 	struct task_struct *task = get_proc_task(inode);
+@@ -854,8 +860,8 @@ static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
+ {
+ 	struct mm_struct *mm = proc_mem_open(inode, mode);
+ 
+-	if (IS_ERR(mm))
+-		return PTR_ERR(mm);
++	if (IS_ERR_OR_NULL(mm))
++		return mm ? PTR_ERR(mm) : -ESRCH;
+ 
+ 	file->private_data = mm;
+ 	return 0;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index f02cd362309a..14d1d8d3e432 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -212,8 +212,8 @@ static int proc_maps_open(struct inode *inode, struct file *file,
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		int err = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		seq_release_private(inode, file);
+ 		return err;
+@@ -1312,8 +1312,8 @@ static int smaps_rollup_open(struct inode *inode, struct file *file)
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		ret = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		ret = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		single_release(inode, file);
+ 		goto out_free;
+@@ -2045,8 +2045,8 @@ static int pagemap_open(struct inode *inode, struct file *file)
+ 	struct mm_struct *mm;
+ 
+ 	mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(mm))
+-		return PTR_ERR(mm);
++	if (IS_ERR_OR_NULL(mm))
++		return mm ? PTR_ERR(mm) : -ESRCH;
+ 	file->private_data = mm;
+ 	return 0;
+ }
+diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
+index bce674533000..59bfd61d653a 100644
+--- a/fs/proc/task_nommu.c
++++ b/fs/proc/task_nommu.c
+@@ -260,8 +260,8 @@ static int maps_open(struct inode *inode, struct file *file,
+ 
+ 	priv->inode = inode;
+ 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+-	if (IS_ERR(priv->mm)) {
+-		int err = PTR_ERR(priv->mm);
++	if (IS_ERR_OR_NULL(priv->mm)) {
++		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
+ 
+ 		seq_release_private(inode, file);
+ 		return err;
 -- 
-Ivan Abramov <i.abramov@mt-integration.ru>
+2.17.1
+
