@@ -1,95 +1,138 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E46D1DE3A5;
-	Mon, 31 Mar 2025 18:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47C41E0E13;
+	Mon, 31 Mar 2025 18:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743445907; cv=none; b=QttzNOICLOiW7SPLk5RU35m/C+DanAnOfgm8L/FFP7O/ywN3ulBQ2lK9LkB1Gh2Ywp+NW7Di4b4AQZIw2vVonAbY1924yyL/zpAIktyrROxydDxQa2oq9euIcTrVEvbCZIgwaPjkNKcCJYAfa8kXvkNKFZhcC1KBzw58pcNLlg8=
+	t=1743445930; cv=none; b=NwB5N0tWp28N4zonlqWZ7bVVSYEefxuYYibxm1iYWs1KSBm014EadtF2UEW9B0Z/RImj6MkZqeyHzA2G5IkCtsXbTBMJx+4mDs2GQSS+pM8JjQgNOhP9pIwWj7Woq5VfCD5E5WFjtDPKAlhzLMNblUfwJA5HbDqNd6GM+4/qOy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743445907; c=relaxed/simple;
-	bh=Ryh0YL1/glEMLDYhovf0G+MET7UjsHYY7E9OvB3iRs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QDgzDWKNxPgSNCYdp0hKAPhopa97EbtJRzXWc+4uGPvZSFTuVOpP0jQha39/tpw9o/sYozOoGR3y6SCD1C53tiylC/5pdDgEpYbtDXJ7krx3bdUeyTArjLlTtOywE1mK2OB10F8oCK/AAm+DewDZbDPZjVE+6tzeuYAlRUqtEGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mL2Cc24u; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743445930; c=relaxed/simple;
+	bh=hCHGLIQRlS81v4saVTJQKp++mO53XYCzWBbD9/uwNc4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kR+aF+qIAq33WfDpzzxzw8UoDgOBNH76zbcNKxp53FG40ADfLn1ViRCdGSEdq8IWV9DhRkVXYvSZ28IdgcsYgotlBX9MpSmik9ddabZacJtXf5m853Vww46H4bizTESnGYGmhmPUMdIXG8IGkOC9vUfCzioF1zNGbQn0UImA9iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ZHSG+/3g; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mL2Cc24u"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so1056322a91.0;
-        Mon, 31 Mar 2025 11:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743445906; x=1744050706; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ryh0YL1/glEMLDYhovf0G+MET7UjsHYY7E9OvB3iRs0=;
-        b=mL2Cc24uc+/m24APX0gKDPlbqNrLmrG11a/FH3mWmYYBgEQ13BnpmU4OvG0MzdwJD0
-         oYpN/4T/WMXyjQ/mEU9yj0l8sqA1dN6g0vy59hm+kOBKPZqiIzRW80xqM7F8LITYJ3/X
-         4HHRSCjrvkslZzFCeRNhtN6sX6Z2k6IqaxgaaN+9DW3Z3Cf87FmRvdY9hanpuh1J4X8C
-         ueHT7geQ+jBGbGiDXOfSJPxBvj7+NMNNzgZ564aWutz+PHMQvk8p2TvFh80wQ53w/RxP
-         0AYQYf82si6AsdD/9ECgym0KputOgALjqwGZnAiHd6MxOmDFQaURNLuuJRbBlX/h8XAc
-         jW1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743445906; x=1744050706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ryh0YL1/glEMLDYhovf0G+MET7UjsHYY7E9OvB3iRs0=;
-        b=KZQJiayKXGUESHPl2xBgaZ+5gdWwYpWDu9KXfErdtmQut4tG70mMQdmXWDUEEQiahU
-         Efrjeefb4Ek0KQ4js07tmqxO37+muhcPzBccs+JgABaVhoTck4ZDI0DDFZsqnUtCFWXQ
-         Kk4v1b0RvDcKkpKhGjDpr3YF1wYUwElXUSsKfk5E5d09CMonSRvbMhzRuGpncM8fwCx/
-         l+VlLPD3Yg4K+ibsm2J98diFfdaXJw7MD2ilYJjgwWXaDUSXnZQjg4R1GdhXhN7sx2UD
-         k8YIun2tn2N5lFX2OLJOyS/NzxdXAlg7uYIQhL7IK+3/pJbLuSHY+zsoMtbv7eK2Mk2z
-         DElg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNKY9YyckW3ccwvR+j3tnKgM1UbSLvgyE9FoeiP+fN58SAsi0jXvPw8HKzlCVTw5eIEyiufkniMoYpZU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc5KErN2Bg/FQY2NDHqdAc2oLMNn21pneZ0s04Ld1gpIelD/6n
-	TNsZoNm+r70JnL9pOOnh+K+t45KBbcfWCttc+A0N7AE6lccLeIkfBFXiDh/Ed2rjx7UBLKDTjNo
-	+OyimFoMfz5gi1VJEtdlXokUfuj0=
-X-Gm-Gg: ASbGncuMqMekVCaaBwp8etnuhLJ8m2yIGC+b6sCcDuvFO4z9lK85/Gq7y5E2UOjbAFj
-	ZS9ljbPWIg9nbo9sBeJTCp+gfPO1l8XZHB2gMPjAXSGF2T54F6izy8v0o+xk/AJKUMyixGr92Uj
-	7KW9LegCmG6qEvQfhErIYNsdUo4Q==
-X-Google-Smtp-Source: AGHT+IExcKaWB2a/1tgKfOwDy66H8kdPcVShSGcwccJM3AQzOSIBJFBWGCgs6XPOYp08SDi9M9EdzX5sWLy0eBdIhKM=
-X-Received: by 2002:a17:90b:3e8d:b0:301:1c11:aa7a with SMTP id
- 98e67ed59e1d1-305321512bdmr6000911a91.3.1743445905701; Mon, 31 Mar 2025
- 11:31:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ZHSG+/3g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743445924;
+	bh=hCHGLIQRlS81v4saVTJQKp++mO53XYCzWBbD9/uwNc4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZHSG+/3g6fYVOaFci988hLr4Ulh49rqUJRa62h9ABOKeiJz+tbVY0ZanB/YyJHi/6
+	 8VNM+jIKWeqjqs8uQC6yBFRBMfe72xl4iUubXv4aIsR8v5laS1he6w/dtIG5J+FcmF
+	 4NrO0UDJQG3oG8HtaMF53Fie8KawmfJoipP0R/1c=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 31 Mar 2025 20:29:47 +0200
+Subject: [PATCH] MAINTAINERS: consistently use my dedicated email address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250330234039.29814-1-christiansantoslima21@gmail.com>
- <20250330234039.29814-2-christiansantoslima21@gmail.com> <CANiq72=GWwhMEfwBgUFpEUFoT2Wga2=uhH6Nw7fotQYjz2G=EA@mail.gmail.com>
- <CABm2a9ek5+KYaX9fGqXVQhG-hV1esn5EnD0PxKR29D_pwfZUeg@mail.gmail.com>
-In-Reply-To: <CABm2a9ek5+KYaX9fGqXVQhG-hV1esn5EnD0PxKR29D_pwfZUeg@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 31 Mar 2025 20:31:32 +0200
-X-Gm-Features: AQ5f1JqeX5XxF7_IM_NbyI2yON3IxrzIQpRw8ymtxMwge62n-Poad1wJkf3AP20
-Message-ID: <CANiq72=++3SO+VcxmyxQGK9hXEu-=jaumGiwhExdykrKkfuihA@mail.gmail.com>
-Subject: Re: [PATCH] rust: transmute: Add methods for FromBytes trait
-To: Christian <christiansantoslima21@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250331-email-correction-v1-1-4c0e92862202@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIABrf6mcC/x2MWwqAIBAAryL7neCjILtK9CG21kJprBFBdPekz
+ 4GZeaAgExYYxAOMFxXKqYJuBITVpwUlzZXBKNMpa7XE3dMmQ2bGcFZZamd73YZoXTRQs4Mx0v0
+ vx+l9P8PUmD1iAAAA
+X-Change-ID: 20250331-email-correction-193814cf39f2
+To: Tzung-Bi Shih <tzungbi@kernel.org>, Benson Leung <bleung@chromium.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ chrome-platform@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743445923; l=2962;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=hCHGLIQRlS81v4saVTJQKp++mO53XYCzWBbD9/uwNc4=;
+ b=Tp0HEruAidpJojz6x3Rwemd36RYaKTRqh0VwqC4u3VxhSrEGurR0Yoat1Nw0gaURCZHNI4vGO
+ TS7YlRn5eluAJMqLC3BxI18Cw6hfYK0iXGgFzcVzBKA0E03qoGJ6jjI
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Christian
-<christiansantoslima21@gmail.com> wrote:
->
-> Hi, Miguel. Idk what happened seems the git send-email took the commit
-> and the .patch together. Sorry about that and I forgot to reply all. :(
->
-> Should I submit another patch because of duplication?
+I use a dedicated address for kernel development.
+Unfortunately at some point I used another address and later copied it
+around to other places.
 
-No worries, there is no need to resend for that reason.
+Consistently use the dedicated address everywhere.
 
-Thanks!
+As the old address does in fact work, an update to mailmap is
+not necessary.
 
-Cheers,
-Miguel
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+Could this be merged either through the chrome platform or pdx86 tree?
+---
+ MAINTAINERS                         | 8 ++++----
+ drivers/platform/x86/gigabyte-wmi.c | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 306b1384eb6d4cb7a310ada44605eaeb88cc732f..dedd5a82886ac564cb7751b9c71ef86a087b4a8b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5506,12 +5506,12 @@ F:	Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+ F:	sound/soc/codecs/cros_ec_codec.*
+ 
+ CHROMEOS EC CHARGE CONTROL
+-M:	Thomas Weißschuh <thomas@weissschuh.net>
++M:	Thomas Weißschuh <linux@weissschuh.net>
+ S:	Maintained
+ F:	drivers/power/supply/cros_charge-control.c
+ 
+ CHROMEOS EC HARDWARE MONITORING
+-M:	Thomas Weißschuh <thomas@weissschuh.net>
++M:	Thomas Weißschuh <linux@weissschuh.net>
+ L:	chrome-platform@lists.linux.dev
+ L:	linux-hwmon@vger.kernel.org
+ S:	Maintained
+@@ -5519,7 +5519,7 @@ F:	Documentation/hwmon/cros_ec_hwmon.rst
+ F:	drivers/hwmon/cros_ec_hwmon.c
+ 
+ CHROMEOS EC LED DRIVER
+-M:	Thomas Weißschuh <thomas@weissschuh.net>
++M:	Thomas Weißschuh <linux@weissschuh.net>
+ S:	Maintained
+ F:	drivers/leds/leds-cros_ec.c
+ 
+@@ -9992,7 +9992,7 @@ F:	Documentation/hwmon/gigabyte_waterforce.rst
+ F:	drivers/hwmon/gigabyte_waterforce.c
+ 
+ GIGABYTE WMI DRIVER
+-M:	Thomas Weißschuh <thomas@weissschuh.net>
++M:	Thomas Weißschuh <linux@weissschuh.net>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/gigabyte-wmi.c
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index f6ba88baee4da8734809013067a8ecbd17ff7d3d..f42c85607a6bc8a751ec215b1818edf160acf644 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
++ *  Copyright (C) 2021 Thomas Weißschuh <linux@weissschuh.net>
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+@@ -159,6 +159,6 @@ static struct wmi_driver gigabyte_wmi_driver = {
+ module_wmi_driver(gigabyte_wmi_driver);
+ 
+ MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
+-MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
++MODULE_AUTHOR("Thomas Weißschuh <linux@weissschuh.net>");
+ MODULE_DESCRIPTION("Gigabyte WMI temperature driver");
+ MODULE_LICENSE("GPL");
+
+---
+base-commit: 609706855d90bcab6080ba2cd030b9af322a1f0c
+change-id: 20250331-email-correction-193814cf39f2
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
+
