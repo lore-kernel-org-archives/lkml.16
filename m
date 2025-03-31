@@ -1,222 +1,218 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5851518BBBB;
-	Mon, 31 Mar 2025 20:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A830B21507C;
+	Mon, 31 Mar 2025 20:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743451807; cv=none; b=G29lI7PA/yd3Q1uzsV65QVymh0Y/Qmk48bTLJvnZYlYhbUI+MUoeSrQ55N9Vj2ucsoV6yoJiwEZJaCXFFqRPSnlXFHbM8oHEpmfg0UYlMTKKGWs32DKlDGU+LnKHxneluhMjwSpm3BNnyuGuX4VYAWgOLzwdmzHEV+ly//YHfGY=
+	t=1743451915; cv=none; b=Zm1pX6//h0nks5tGkmcrJTf1WCOY+ASFsvlA9bG/mT0OZZQ7Y3YQpe2MeFLolf0a62/VttI9imDKCbmI2Awo81syZRwksb6RJYhp/BAIqR1haQPM6vHjzxDDZnC8ujE+kh3sSTVcu7fBkZrDpkW/QHO6q1Drd1ehJq+8ia9qmZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743451807; c=relaxed/simple;
-	bh=U3q9aimAB43eG1j3611rsmgpp5AzU5aSFce0DJ/oQDU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kgUt3OhhcwUrCRzvgm6ku/FwvfvD+NM6Txrzn9CvmRGGnZnmGPQpQw2y5Mbq88TdUcQ9cZunEMzgMgd42dVmU1Cs/e4xW9eWckb0wn19ozhdtdw8NVIwacbiGnQXm/+oUb2dH93oLaml52Up/FLN7bSdg6Qqgjc7TTGN9kd7KoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 8130592009C; Mon, 31 Mar 2025 22:09:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 7ADA792009B;
-	Mon, 31 Mar 2025 21:09:56 +0100 (BST)
-Date: Mon, 31 Mar 2025 21:09:56 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Marco Crivellari <marco.crivellari@suse.com>
-cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-In-Reply-To: <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk>
-References: <20250315194002.13778-1-marco.crivellari@suse.com> <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk> <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
- <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk> <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com> <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk> <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
- <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1743451915; c=relaxed/simple;
+	bh=OBzbiRgekCpil9D7mX+5gJrMZSeLnL5vGhu0E44lgKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hV6X5lDQR93EqO4c9Nl2qpR5+N/6llGAWbtXsBBDwjvXF9ufAW7jqUcmLR2jzKkAI8rD5SSRls9/qikOaBHOgIUS856JQFe6yIHWn/ansCKCG4T4A0gwGuw1HlVWXSI8xxlUPcMp2pe8VY6kLjFbAWGvAP/OD8PAfcE0EzG5bNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IprQjvxa; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IprQjvxa"
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e6cea43bb31so444981276.0;
+        Mon, 31 Mar 2025 13:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743451911; x=1744056711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LR1OgG1N7YtLAYw3VdmcuwXI0YdDXSMCdXCbozGI5l8=;
+        b=IprQjvxat1qAyqLiHmxeaRZyzVXqYEMHMMqw4EnSj8ST4VyX0fXotXr+PfDkWih1x6
+         joQotgVIE/UHQT22gunaLiCVjSC17JElah1LiH7nJtW39Pyqs1crXW1sLrp1mU4TZ4SC
+         JEZBV+R+0OVf0VYZZURkNJJCvDVB7AFNkgMOkwm4gqf7JzBAVwuHQPILkUgp4HMsz/Zw
+         +kPA+gFgPklS4GDqVeJFz97VejRuDtDs6AhlPDDOe01o6S6Old6VpRi55w3WB1WZyikG
+         aaQEICKZACdfP8y4MglHlfM6kHi0liIIcUpUAmhu2yihOsmcAFX+Vx6o/MLOpdSf2Sko
+         65Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743451911; x=1744056711;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LR1OgG1N7YtLAYw3VdmcuwXI0YdDXSMCdXCbozGI5l8=;
+        b=UOuzQ9be2uQsXKpr2cFtPku2ny6u/tbPlz0JIY5gO8ATCvqN/Td9XiGtvj+2FIHtCV
+         YwEM60J7swQeU0RQd9LHKzRUxIVezYf6W+46SmsnmYtY/AzW2r8+v3bsUc2Jp4JjPO8N
+         slHKxdZnm1fE2W+NoydxbYVqTuyrbxqE6LGucbrVSnn7mUyn2PAaIVPYCcQY+sRv9JpD
+         VJTsnV7kINH4mKbBRnOyKpZ6e6uSSQycG7E+9LZ2At+jtqEQueSeOKVAu2EIpYlxRikM
+         gSjYaT5/kv6moZzFAZ3BaA0/zSqjeIc6NI8k0B59qrPFzl58FuwytEovn9ZB/W79O6cn
+         EGbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUc8BYzrnAvt0D2ccjPKoE4ePXzeQf9E00XKv0vSdR66GhGvs7L6rANt4kAcVa0M+NVoDid9swNQypB6QE=@vger.kernel.org, AJvYcCWHIk+gCrgSfJ291q1J4JxTy07t/P+cq9gn0niJSaCE5FHn/EdXLAElpnxr/m01cMgX9RRMTTP8@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxNQ9oJ7Om4xTOukit7RQU2u5NZQQS0TX8XWkPePOUsRk0+34P
+	HCfF5ydfzphhWvnmzMQlyUCyNNDOXr0muXW3dWixK/tDp6oy302G
+X-Gm-Gg: ASbGncuTjx1dssVVpudKajJ14sZn2fQ7Tjun1QYXVupOCv4eSW5tLsdrDm3uObaSd/6
+	rns6xuw+pEa+YW5yToeA09QMa56ndqgNUnn9ygQ0jerBpefc2+1mb6Oi0qfOCr0biUaMjrCA4mj
+	1u7bjrEMBpcFGZF3k5cPVjkVWvtGbLF23rA+WiiLUn/ZukrEzyz8Wau2QUG1lQRL52qhs5s7/JD
+	QkqXmVhWsyX26kKKmFd4aofyYRT5fyOrkFHzW0gyKGpRvsI3LqsZamhPPjidsfCo49FYAr+2NNV
+	hxqeb1Vr99nMJ12Ld32JQbwbQ9x8hC9V+u6LNxNIeiJc2DDtEqjm+9CLhi3mwS+5//k=
+X-Google-Smtp-Source: AGHT+IH766RK/hwM7mkPwql2PqHI7sNoGHRERLD30OsqqydvJaXG//mcrrrJ8IvYqM/qPgbCxFEohQ==
+X-Received: by 2002:a05:690c:6f90:b0:6ef:94db:b208 with SMTP id 00721157ae682-702572ffee4mr138081477b3.24.1743451911527;
+        Mon, 31 Mar 2025 13:11:51 -0700 (PDT)
+Received: from [10.102.6.66] ([208.97.243.82])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023a341a69sm23270557b3.25.2025.03.31.13.11.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 13:11:51 -0700 (PDT)
+Message-ID: <5d93f576-1d27-4d3f-8b37-0b2127260cca@gmail.com>
+Date: Mon, 31 Mar 2025 16:11:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch net-next 2/3] net: bridge: mcast: Notify on offload flag
+ change
+To: Nikolay Aleksandrov <razor@blackwall.org>,
+ Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250318224255.143683-1-Joseph.Huang@garmin.com>
+ <20250318224255.143683-3-Joseph.Huang@garmin.com>
+ <d9a8d030-7cac-4f5f-b422-1bae7f08c74f@blackwall.org>
+Content-Language: en-US
+From: Joseph Huang <joseph.huang.2024@gmail.com>
+In-Reply-To: <d9a8d030-7cac-4f5f-b422-1bae7f08c74f@blackwall.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Mar 2025, Marco Crivellari wrote:
-
-> > There's some complication here coming from the need to factor in the ISA
-> > bit in the microMIPS mode; something that hasn't been discussed so far.
-> > The `.fill 0' approach is a hack and it has struck me that we need to add
-> > a `.noinsn' pseudo-op to GAS for this purpose, complementing `.insn', but
-> > we need to stick with the hack for now anyway as it will take years until
-> > we can rely on a new feature in the assembler.
+On 3/21/2025 4:47 AM, Nikolay Aleksandrov wrote:
+>> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
+>> index 68dccc2ff7b1..5b09cfcdf3f3 100644
+>> --- a/net/bridge/br_switchdev.c
+>> +++ b/net/bridge/br_switchdev.c
+>> @@ -504,20 +504,41 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
+>>   	struct net_bridge_mdb_entry *mp;
+>>   	struct net_bridge_port *port = data->port;
+>>   	struct net_bridge *br = port->br;
+>> +	bool offload_changed = false;
+>> +	bool failed_changed = false;
+>> +	u8 notify;
+>>   
+>>   	spin_lock_bh(&br->multicast_lock);
+>>   	mp = br_mdb_ip_get(br, &data->ip);
+>>   	if (!mp)
+>>   		goto out;
+>> +
+>> +	notify = br->multicast_ctx.multicast_mdb_notify_on_flag_change;
 > 
-> Ah, interesting. So de facto having the "repeat" to 0, will generate nothing.
+> let's not waste cycles if there was an error and notify == 0, please keep the original
+> code path and avoid walking over the group ports.
 
- Correct, and as a side effect this pseudo-op clears the ISA bit on any 
-label attached, as it is not an instruction.
+But we do want to keep the error flag so that the error shows up in 
+'bridge mdb show', right? Notify should only affect the real-time 
+notifications, and not the error status itself.
 
-> > I can't imagine how we'd advance past WAIT without these instructions,
-> > what do you have in mind?
 > 
-> I've not been precise, sorry.
-> I meant to remove the instructions like they are now because the
-> region would have
-> been different, then.
-> So, those instructions would have needed a change, in practice.
-
- OK, so this is precisely what happened here with my proposal.  Thanks for 
-clarifying.
-
-> > NB how do you actually verify this stuff with QEMU?  Is it by injecting
-> > an interrupt by hand at a chosen code location via GDB attached to QEMU's
-> > built-in debug stub?
+>> +
+>>   	for (pp = &mp->ports; (p = mlock_dereference(*pp, br)) != NULL;
+>>   	     pp = &p->next) {
+>>   		if (p->key.port != port)
+>>   			continue;
+>>   
+>> -		if (err)
+>> +		if (err) {
+>> +			if (!(p->flags & MDB_PG_FLAGS_OFFLOAD_FAILED))
+>> +				failed_changed = true;
+>>   			p->flags |= MDB_PG_FLAGS_OFFLOAD_FAILED;
+>> -		else
+>> +		} else {
+>> +			if (!(p->flags & MDB_PG_FLAGS_OFFLOAD))
+>> +				offload_changed = true;
+>>   			p->flags |= MDB_PG_FLAGS_OFFLOAD;
+>> +		}
+>> +
+>> +		if (notify == MDB_NOTIFY_ON_FLAG_CHANGE_DISABLE ||
+>> +		    (!offload_changed && !failed_changed))
+>> +			continue;
+>> +
+>> +		if (notify == MDB_NOTIFY_ON_FLAG_CHANGE_FAIL_ONLY &&
+>> +		    !failed_changed)
+>> +			continue;
+>> +
+>> +		br_mdb_flag_change_notify(br->dev, mp, p);
 > 
-> Short answer: I am not able to fully test this, I can only boot.
+> This looks like a mess.. First you need to manage these flags properly as I wrote in my
+> other reply, they must be mutually exclusive and you can do this in a helper. Also
+> please read the old flags in the beginning, then check what flags changed, make a mask
+> what flags are for notifications (again can come from a helper, it can be generated when
+> the option changes so you don't compute it every time) and decide what to do if any of
+> those flags changed.
+> Note you have to keep proper flags state regardless of the notify option.
 > 
-> The reason is that gdb-multiarch is not working as expected.
-> The binary in my distribution has the python support broken. So when I try to
-> inject the interrupt, I'm receiving a python error (actually, I receive the same
-> error after the "target remote" command).
-> I've also tried to compile the binary from source, but again,
-> I understand why in OBS the build I found is broken...
-
- Well, you should be able to set a breakpoint at `rollback_handle_int' and 
-fiddle with $epc by hand to see if the code sequence correctly skips over 
-WAIT.  Though I reckon QEMU used to have an issue with presenting the MIPS 
-privileged context over its debug stub.  Has the issue been fixed?  Either 
-way you should be able to just operate on the copy in $k0 retrieved with 
-(D)MFC0.
-
-> > Below I've included a complete change based on the outline above.  It
-> > seems to do the right thing for a couple of my configurations, but I've
-> > only eyeballed the resulting code and haven't tried running it.  Most of
-> > my hardware doesn't implement the WAIT instruction anyway.
+>>   	}
+>>   out:
+>>   	spin_unlock_bh(&br->multicast_lock);
 > 
-> It means it would be better to have someone else try the resulting
-> patch, I guess.
 
- Exhaustive run-time verification is not always necessary if you can 
-demonstrate that your code is correct via other means, including 
-proofreading.
+How does this look:
 
- FAOD I have one MIPS32r2 system wired for testing, but that might not be 
-the most interesting configuration to verify as it'll now just use EI/EHB 
-to enable interrupts ahead of WAIT.  I could try an R1 kernel instead, but 
-I'm not sure if it can be made to work owing to the differences in the FPU 
-between R1 and R2 for the MIPS32 ISA.  I used to have a MIPS64 (R1) system 
-there, but the CPU daughtercard sadly stopped working 3 years ago and I 
-wasn't able to repair it, owing to the lack of available spare parts (it's 
-most likely a dead CPU).
+--- a/net/bridge/br_switchdev.c
++++ b/net/bridge/br_switchdev.c
+@@ -496,6 +496,21 @@ struct br_switchdev_mdb_complete_info {
+         struct br_ip ip;
+  };
 
-> > Let me know if you find anything here unclear or have any questions or
-> > comments.
-> 
-> 1)
-> 
-> > /* Keep the ISA bit clear for calculations on local labels here. */
-> 
-> The ISA bit should be the bit 0, correct?
-> So, also in the macro code, it's done to preserve that bit.
++static void br_multicast_set_pg_offload_flags(int err,
++                                             struct 
+net_bridge_port_group *p)
++{
++       p->flags &= ~(MDB_PG_FLAGS_OFFLOAD | MDB_PG_FLAGS_OFFLOAD_FAILED);
++       p->flags |= (err ? MDB_PG_FLAGS_OFFLOAD_FAILED : 
+MDB_PG_FLAGS_OFFLOAD);
++}
++
++static bool br_multicast_should_notify(struct net_bridge *br,
++                                      u8 old_flags, u8 new_flags)
++{
++       return (br_boolopt_get(br, 
+BR_BOOLOPT_FAILED_OFFLOAD_NOTIFICATION) &&
++               ((old_flags & MDB_PG_FLAGS_OFFLOAD_FAILED) !=
++               (new_flags & MDB_PG_FLAGS_OFFLOAD_FAILED)));
++}
++
+  static void br_switchdev_mdb_complete(struct net_device *dev, int err, 
+void *priv)
+  {
+         struct br_switchdev_mdb_complete_info *data = priv;
+@@ -504,23 +519,25 @@ static void br_switchdev_mdb_complete(struct 
+net_device *dev, int err, void *pri
+         struct net_bridge_mdb_entry *mp;
+         struct net_bridge_port *port = data->port;
+         struct net_bridge *br = port->br;
+-
+-       if (err)
+-               goto err;
++       u8 old_flags;
 
- Correct, the bit will be set according to the ISA mode at the time the 
-originating machine instruction is executed, in EPC or any other register 
-the PC is copied to, e.g. $ra.  Likewise any instruction setting the PC 
-such as JR or ERET will set the ISA mode from the ISA bit of the source 
-register (the ISA bit for exception entry is set from CP0 Config3.ISAOnExc 
-register bit).
+         spin_lock_bh(&br->multicast_lock);
+         mp = br_mdb_ip_get(br, &data->ip);
+         if (!mp)
+                 goto out;
+         for (pp = &mp->ports; (p = mlock_dereference(*pp, br)) != NULL;
+              pp = &p->next) {
+                 if (p->key.port != port)
+                         continue;
+-               p->flags |= MDB_PG_FLAGS_OFFLOAD;
++
++               old_flags = p->flags;
++               br_multicast_set_pg_offload_flags(err, p);
++               if (br_multicast_should_notify(br, old_flags, p->flags))
++                       br_mdb_flag_change_notify(br->dev, mp, p);
+         }
+  out:
+         spin_unlock_bh(&br->multicast_lock);
+-err:
+         kfree(priv);
+  }
 
- All code labels in microMIPS code will have the bit set, so that 
-relocations correctly calculate immediates used to make register jumps.  
-
- The ISA mode can be switched explicitly with the JALX instruction (you 
-can mix regular MIPS and microMIPS code as long as hardware supports the 
-other ISA mode; either or both can be implemented in a given piece of 
-silicon).
-
- Other immediate jumps and branches preserve the current ISA mode, but the 
-assembler and linker verify you don't attempt to use these instructions to 
-pass control to code in the other mode; this is an assembly or link error 
-depending at what stage the label reference is resolved.
-
- FYI the documents for the microMIPS mode of operation are respectively:
-
-- "MIPS Architecture For Programmers Volume I-B: Introduction to the
-   microMIPS32 Architecture"
-
-- "MIPS Architecture for Programmers Volume II-B: The microMIPS32 
-   Instruction Set"
-
-and their microMIPS64 counterparts (although the first document is almost 
-an exact copy of its regular MIPS variant).  Be sure to download revision 
-5.xx, because revision 6.xx describes an entirely different ISA which we 
-currently have no support for (downstream patches were never submitted; 
-also microMIPSr6 removed branch delay slots, which caused all sorts of 
-portability issues).  See Section 3.5 of the latter manual for further 
-discussion of the ISA bit.
-
-> 2)
-> .section .cpuidle.text,"ax"
-> 
-> This should be a single patch, right?
-> Based on what I understood, 'a' should be the allocation, and 'x' the
-> executable attribute.
-
- Both correct (see the GAS manual for the section flags); this just 
-matches the __cpuidle macro from <linux/compiler_types.h>.
-
-> This should be in order to mark those symbols like "cpuidle text":
-> 
-> $ nm -n vmlinux | grep -A3 "cpuidle_text"
-> ffffffff80a127e0 T __cpuidle_text_start
-> ffffffff80a127e0 T r4k_wait
-> ffffffff80a12800 t r4k_wait_insn
-> ffffffff80a12804 t r4k_wait_exit
-> --
-> ffffffff80a12c00 T __cpuidle_text_end
-> ffffffff80a12c00 T __noinstr_text_end
-> ffffffff80a12c00 t rest_init
-> ffffffff80a12ccc t kernel_init
-> 
-> I guess it is used in order to understand if the instruction pointer is inside
-> one of these functions / labels.
-
- See the comment at said macro in <linux/compiler_types.h> and also commit 
-6727ad9e206c ("nmi_backtrace: generate one-line reports for idle cpus").
-
-> How does a commit description sound like this?
-> 
-> "
-> mips: Add dedicated .cpuidle.text section for CPU idle routines
-> 
-> Add a dedicated executable section for CPU idle code to properly organize
-> and identify idle-related functions inside the .text section.
-> "
-
- How about:
-
-"
-MIPS: Move __r4k_wait() to .cpuidle.text section
-
-Fix missing .cpuidle.text section assignment for __r4k_wait() to correct 
-backtracing with nmi_backtrace().
-
-Fixes: 97c8580e85cf ("MIPS: Annotate cpu_wait implementations with __cpuidle")
-"
-
-or suchlike (based on the commit referred)?
-
- This probably does not itself qualify for linux-stable as the issue is 
-only annoying rather than fatal, but I think the annotation should be 
-there in case someone wants to backport it downstream.
-
-> 3)
-> 
-> > I think we also need to replace "rollback" with
-> > another name as with new code we don't roll back anymore.
-> 
-> Should be changed with "region", instead of rollback, maybe?
-> Do you have something better to suggest?
-
- Hmm, "skipover" maybe?
-
-  Maciej
+Thanks,
+Joseph
