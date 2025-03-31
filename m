@@ -1,176 +1,658 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2098.outbound.protection.outlook.com [40.107.223.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847BA1CAA87
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409707; cv=none; b=SSbRjGGS0DGEg+ynHam8K5ZzpxuRefjd2BXASFBLCzuBgMH+tW3fVRuzs1YuLflNekRCTtNrIsYa/+1YHu6xhnTM5itWPi74sNR90llcM1uSTF21DvGmut3r6JyeC6GjNvB6+o1MDQQWHpBlUh7pXbM2GEPgt2ePL+geGK6twwQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409707; c=relaxed/simple;
-	bh=lxTzjdnUlqwd1wh7uCrpKmj4jJohE91AjWU0MottzVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AEtMiW9VHgtMz7vd5T5+CQm3UM7sOwipiEfNHagu9SS43fIAeldoy0545NGBZgFo8aPSNOEjpXBFR4gIWUA8wi/PsNQvTfbfIu30yqykTuPyN89B2NDjL8++b8LtS6l7cHr8hrA8wtixnqjt4g55DL2dwpaXrMGBrstggySbr14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RmaafcCx; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA94A1DF72E
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743409718; cv=fail; b=rNhNty0HDBRei2kJ55C5g/qF77cGvjzpl26tmxX9IGkOxty0NaHQUdWVMOBDS8a82scGhvvvWut4zeJOHJxHjPX2zxpJpJ7VsTlE43gcpxyUDfUKaALTU7PB9qy/FzbaoDP7NC1JGfGl8u06MXIzuvj/FsVc90z1BQYPZOjVoRQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743409718; c=relaxed/simple;
+	bh=kB1+9MJ9fSffB0tBjJ7u2JeJ0mmzAmec3BOhZb05RqQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZM6yyLBl5DLPG7vPnwDd/NauHt/WVW2PMMp7Vt+k1gYpCUR4+50HA4vKeKvahFwY3gJ55kgkskbUuUODJb4xqLInbtcypKtBggHy6sqSOI/6sbCm2tcn7X4jSCwDK0Glqk6dwhR9xh54gOOECTgu5OBOK10+/z2WSYwARDDrp6I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analogixsemi.com; spf=pass smtp.mailfrom=analogixsemi.com; dkim=pass (1024-bit key) header.d=analogixsemi.com header.i=@analogixsemi.com header.b=T3R9lMPl; arc=fail smtp.client-ip=40.107.223.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analogixsemi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analogixsemi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmaafcCx"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3326508f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743409704; x=1744014504; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6lBFYadEH0JYr+A7Tag8qSHkvFrIqZwuIEnr/hAhq2Q=;
-        b=RmaafcCxIew7u3vdPLidKSNse9OUFvIEoclp9cUK0LBbozIldX2mW2naXnhDljjYHN
-         yzq617AIqk7R3qSJodFpRVp8dlA1Ew6Vrb9FF3M7SpgjzTTM8l0q5fWV4BMEXAuG7hwM
-         VXFZuNyYgMEWht9PCRi8S/Gls+OiZf2MMS/S3mYbYdv2SGhiCERDacYJVnhrSoSG4Ymh
-         bP+yANrtkERdbbcZ0hnUXm/JIbC7oj47/WZuo6FRaMOdIxsyptWc5DQpA9znESrS9Zsd
-         vtIDhbt8AtN1t0XGxj+fN9nBMrcn2mULQrQY5DiS1j4Jnrl/jZ/JHVDWuM31rCjcg+8a
-         7+GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743409704; x=1744014504;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6lBFYadEH0JYr+A7Tag8qSHkvFrIqZwuIEnr/hAhq2Q=;
-        b=HNEnJM00Li86vMYDLw4d3d/Aet7t62E1u+IvFWO74JmAiOgvNiHrcV1YIEpMLg2+am
-         7rS4vMJTyDW4GA7NRi3Yia98S8towSOQdSrCdkFjUw2sZWPB70TdT3avHuFnjUhGSS/M
-         Tax27T917QOf6nEYAlABiIN+1VG2yHmGgtjcjDUkYs9nKlYAb57EzQi8NO6SmcngAxZt
-         vHiWPzxIucNRyv/H9rkfeC59d2LL//8GlZCU8s0KWzCFb5pA5SD4dV/0nW2tX5fd3PxF
-         FYQuRKERGTxR2n1c1nsMO2ogRYNJjzli0F8EdlJOMWAVxane0HkzQKiWx56qE6CIHRJx
-         s/3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXLSYFCMIXngQybHRAPnNCFHVnCcRvldyY3v13cImA/r9klLP4uJL5MttmxW3mF7EVWlyjMBVfT3WlD5xA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiFLJbQ49DIaX9GOqNvvOsiFO47g46Y4andH5cmNAex1s7HtKu
-	NsrBzSsV/MnqAC+DQswDhcKdawC6W0NtUyPGNI+X3vg3WWOeDPnWqrST+1qWbJk=
-X-Gm-Gg: ASbGncvM58/yfh0wG5+rasLFuyf7IktNMATDubPg9xFYUneqQPA6ejPPc246qHLLvS5
-	4kXGXvl5SGEro/9H68/7C+af8zC78k9ObiazCQFoUZMTs0xz/YwE+O+MArE2lbq3AbLL97VZ8Gp
-	mKJfx+45xC1fSArGJobLuMafjkcJq3gIc1zqgc8xTIJ5EayIEE3Kff6R4awnn38KPRTvGwmJKqm
-	OX2lphEa8kUjQ3v6YHuNc8TzkQWJ+D6cVfB+ELgbuUTdt75+qxoVSf/weC3tlOajP8UbKMFjZLo
-	AU7aKML4WZGaEF260hYpRr4QjMLNd6HuzRRd64y1hzrRC8HdOxIe97nuknTkZcKnEIgXIuuqNJz
-	z1RTOkJksg7SJrCFmY8o=
-X-Google-Smtp-Source: AGHT+IG+QqD1a/f3WhMCZ1jy40WeCRBd/LiAu07w3st8nU2ZWaYZZ+kyOq/5OHtkc3dfLikLwis98w==
-X-Received: by 2002:a5d:6d8d:0:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-39c12117d1cmr5883612f8f.38.1743409703819;
-        Mon, 31 Mar 2025 01:28:23 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0basm10781860f8f.63.2025.03.31.01.28.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 01:28:23 -0700 (PDT)
-Message-ID: <8e74c3b4-a4fd-407b-aef7-ccdc94490f11@linaro.org>
-Date: Mon, 31 Mar 2025 10:28:22 +0200
+	dkim=pass (1024-bit key) header.d=analogixsemi.com header.i=@analogixsemi.com header.b="T3R9lMPl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wbiYZmM1WGeUmx2AoM46qeAif3gClZcFe+vRVAYX2Z+QzHWU5MuT4Py8Oic6g0srwKj6QP5vfxJjPZFopQiZ/ocmdpy1GsDXDvZchEwathXN3DBOPuCVfGnp2092zMOnGqzOrwYuAtqh3r7zI2M5SOnzlFq8dRje9eVOY4/xfjJ4eFVP9n6wGZwYGq/ir7DOpUS82WvuXZ0mpQSBSVk/AmhMKFzo5BwI3lResGIz702FbzahfVtL0oZagHsHpp9IO9kYaNHucvYj39Xhwcf540dwwLWYydpk6XjR9Z/6rl1aL2jyDC1c4rUUpOprXR2iyqN81DWFTB/MgChWkpPd7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xOE2TGaUPGFMXACiWLwO92nk7vazocyEwmCWrJgY4Sk=;
+ b=SweYCF4tyafrVEjN0Oi/sHg0R+ChwimgQuAq/4sFj0M59BItb48QmG1sDgFzqFCVOMQvYtnO36EhkjbN7pdAlVDeZWDn3zNtpxn6luyDCEyspe6vgS2ExUu2qt85k2uo7E3Sv+vaUXTDeK3Q21g9tj1c3FXG85w/ZRM7gR3Hh2sTUZQTL/dJzmaPoBZDiPc4btTVEAtFDNJbQtxlZt5W1IzO2CS/OpatZQL2wKvcDIOA7b2jk5of0Vaj9fFwXaz+uZ99rqTtN8GW+6IO0WgjIcPhzyHBdX36Y3rM0n5PQWJ+jpjGeAfjHAoA1PEC0sWrJO3PbWtojTYjT4JY/yZR6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analogixsemi.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xOE2TGaUPGFMXACiWLwO92nk7vazocyEwmCWrJgY4Sk=;
+ b=T3R9lMPlxzPdJXVpeM/WWho8aqrNUPseSa2AuzOsPS+ZWaCG2Gj8Z1gOV7q64cShI3V2IxGdGJIITmNGO9YNHjMBZj2CgXOxFMcfqe0g35G2mnodiidcYXkIIZjkEn/fh1GgodkxC3zBpvDmxC8gAhpDfJ/+QB5Pe5VxMkYvry4=
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by SA1PR04MB9042.namprd04.prod.outlook.com (2603:10b6:806:388::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
+ 2025 08:28:32 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::5a7e:9e8c:138f:1815]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::5a7e:9e8c:138f:1815%5]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
+ 08:28:31 +0000
+From: Xin Ji <xji@analogixsemi.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Bernie Liang <bliang@analogixsemi.com>,
+	Qilin Wen <qwen@analogixsemi.com>, "treapking@chromium.org"
+	<treapking@chromium.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] drm/bridge:anx7625: Enable DSC feature
+Thread-Topic: [PATCH v2] drm/bridge:anx7625: Enable DSC feature
+Thread-Index: AQHbnw9SQTT4hmIf/0SCVgI7dUd8+LOL9jcAgADH4BCAACCmAIAAD/tg
+Date: Mon, 31 Mar 2025 08:28:31 +0000
+Message-ID:
+ <BY5PR04MB6739C321FE74A642AEDEB6B2C7AD2@BY5PR04MB6739.namprd04.prod.outlook.com>
+References: <20250327115616.1271635-1-xji@analogixsemi.com>
+ <gs2pn7o33hjzfpljzjprorof3xehhui5mvsrbnnpu4gwyncw5u@zvlez4dpgv3f>
+ <BY5PR04MB6739BEDCE701FBC346106E21C7AD2@BY5PR04MB6739.namprd04.prod.outlook.com>
+ <z5uepwsk6t6j5zlkrfrkcuodcmx477b7wr7smziwj4nf3avhv2@p7bqiun4yxb7>
+In-Reply-To: <z5uepwsk6t6j5zlkrfrkcuodcmx477b7wr7smziwj4nf3avhv2@p7bqiun4yxb7>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=analogixsemi.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY5PR04MB6739:EE_|SA1PR04MB9042:EE_
+x-ms-office365-filtering-correlation-id: 59d80ed8-2448-4a33-fe1e-08dd702e053a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?fCsV6KVpnjJGO2drEeuaF/mx7JfyJNVBSQbyMkfhOoCcnB3HgZmaTd7n33zt?=
+ =?us-ascii?Q?B/s+HWCv1BkPRwT19JsBl/bPODoboQu8tR9NtNciJeGbUToYYw5FXvs6vH5W?=
+ =?us-ascii?Q?Sb1vUbIpeKNSsyrYSK4iKRhAIbLhHdr85toP59sqGXY/w847xk6yPcEPyzYw?=
+ =?us-ascii?Q?W7wxRJIVrK0/3H8OrzIQwHKJz4OhLvf5gdDCBsIBetObAsKjBJlcuPekA+hj?=
+ =?us-ascii?Q?BZNfAQSZ6ZuDHoeiLD4eMiUbDhDWoxJvPRFX8/KeGFert1qOoUMZmnuhkYQf?=
+ =?us-ascii?Q?XfD3l8X7PQP3Ctzym+2gZPVOwuMEjt7p/c5Z6lXs3fYb7QrrYHvPIQd5q0ui?=
+ =?us-ascii?Q?PwygQ5cBcVcwkgVSWh2k4LL2R+3UXWpo6lx3M4G6hUhKRWsdDi4JflVIzrL9?=
+ =?us-ascii?Q?6a1+mL9W/cCpJjvt30fCg7jhXxGByooL/5n31Ek5So1KgezXxz271OG5zkqX?=
+ =?us-ascii?Q?TDrEZXmx2c5a98alkGcONq0s+7w9qY1GvTPpoSEYGCZ7fKwwYOwwzkzda9o0?=
+ =?us-ascii?Q?YcoiWjmQovgZhPdYninCmgTLHcxEZfSD9kbEo/UpYSaADo1Z4i6oKexLh2wT?=
+ =?us-ascii?Q?q9R4VOs4re7gccJBId6L4WiLU1mnMTF3rZ7czrtnEWqWfntW/82VvH6LE4TU?=
+ =?us-ascii?Q?5w4Hn6dLyY7Cki1h7OF1O9mWipSmWFISRbgS6+f3gUNiXB7oYHZz4AR2J+J6?=
+ =?us-ascii?Q?1ATzsF7cSr2kJ44tVbBkXKKxD88uBVWONSUTOKGP/quJsfCQoA+jgDu8pzFk?=
+ =?us-ascii?Q?+ifo8vT1sO1Gthh/Sgyae8Us9pRh8xOwGcwHk+4DAXEPUrPWesbka+BDA5Mw?=
+ =?us-ascii?Q?utVyBgcCrZMGqwc2l1chQISKl6yg58zxSNRcY7XIQ6TJ1dhS4nRPIHBk5s4H?=
+ =?us-ascii?Q?siDqSlbXbXIz0XMXQyisQB5cR/3gtlt5IhTdHwsLiz0F6idLVl9PqHOs3OBQ?=
+ =?us-ascii?Q?LX8PkDuHyGvjF3IhMfR062rDcEdMLaQcxEE4I3IdlzC1CMYpcPSj7/3xk7zP?=
+ =?us-ascii?Q?EC4U/qCsfyZPGE+nBshOHbK7p3WcRpp++AKPsbi5F3Ye/zfGP+nFmze2cfcf?=
+ =?us-ascii?Q?N+3Vjn8/8xTgCU0+0405WPcM1deGG7xR7GE0N/H4OcZpFAf5Sgfzv0Anerff?=
+ =?us-ascii?Q?DPFkLDMrZD0bLGAC9Bhx9Gg7B70yM6rJuUVKwJ5PEIf/o0+nWj9kVtcuzLG8?=
+ =?us-ascii?Q?cl3GuHk/iKynqc3AjCDQ+iOI38nqX4kV2bnI3s+KdZEdCBAEHAyaP7+SHocZ?=
+ =?us-ascii?Q?QgdQAZv46bmnAsgLDrw7pHu4xvRcT/XhgT1507c8UrDZxyxmxLX/KN92Z0/1?=
+ =?us-ascii?Q?la0zdkuPKVZmE1/1nNUu58ZOoPeaDfV6LErI4mjC3D8XiMf+ztKXDy3HQTY9?=
+ =?us-ascii?Q?JXRB8fuuIG0eWkGAcs2mHG8XexAQKUHd3mYkN55BU2KARqFjtWNot3mfvvCt?=
+ =?us-ascii?Q?0G7h/Z3EaElGyaDeHZ1spxBaBhB15/oP?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?+Jwo/63tXXQuXT3pHTZq/3nD5APwIrOHS1TzWTUqZJ/gW5hKf3DF2DCouwxH?=
+ =?us-ascii?Q?XUsRCunn6rualqfORYOQ1x5ziHghwAsrDR/VqMSzI3pDAwlSyvvHhuCJJC+d?=
+ =?us-ascii?Q?+SZzzxSrmsJH9vOY07JeP5t0K0TApdAfFL1nyjFmTnDo3mQbZ7k5IaBxd3BH?=
+ =?us-ascii?Q?c4rgncZKhF7zmRtWeNuMyR2ZLZmeSepjjCEGeFcaEq7DZSoka/QD4OrVsgat?=
+ =?us-ascii?Q?r0d4ph6TYQG3eMqY9U7q/PeyyxpXmpw6LQ8MbqemREndbyWbSzBQ6wwQlDCg?=
+ =?us-ascii?Q?r5lleiWPq0aouUoQdIQjiLao8xnkZKgqVC4NYXaQb2DZGT8kbz8yw1JSzjVL?=
+ =?us-ascii?Q?olWrUIhw8ba/KCzIADfqbV5Y2IDpnosRA57trRse9pv6MNW4ebSpUDwGZZzH?=
+ =?us-ascii?Q?G0WWlKMeyYZn1T3g9r+OXqA0OFijDKPaQVtuKjrTKyURLtLeWHCMiPELF07w?=
+ =?us-ascii?Q?QylORfikJvp3PTGaEJ+2b2AwNoKdkYPwvbUwV6bivGPqj+ItNCP3bJsUx545?=
+ =?us-ascii?Q?xISJ6yCLzJNXH4ZwozvOh5/Z+om7YpOjDHB8L7ufN2KC+2Fiyodcx0gmazaX?=
+ =?us-ascii?Q?Kv0NH7EBP/aw4Yf9w6pK32NFLJv+li0v1fPGyYxCJtbWcPDfDBk7h3xg1Ewh?=
+ =?us-ascii?Q?N6ECZ5RMuapphukBVzzrXRFSDwpGSYC5zk6qDUAV0iBQHBoYONuFGiIk6NO+?=
+ =?us-ascii?Q?BebAcBNmnLqhgEUs45oxne+9Glkvph3EyWn04FbY1lnaO63iomRtIBmMCHY0?=
+ =?us-ascii?Q?e13Mpswq3Bi0BR1KKXU14++3FerfpyMmJVdZNWwFwZxNpH3wqjQwm+ZnsQ5t?=
+ =?us-ascii?Q?ROal7dWHzmDjTCZn0P6YfHcpQKcgkLFvp/7Sf3ZrGSUH6x8/gAJMC15evq7+?=
+ =?us-ascii?Q?lSyAvGtMBJHv3Q/G/jjqYqDTix97WExPVdeGAG0yqu7RStF+Q4sv3b9Qtjav?=
+ =?us-ascii?Q?OEbUQ2XeDlffj8nEovbWo/OFj2/Sh8FrY12EMkL65xirDdAuGrFfN0bEyACe?=
+ =?us-ascii?Q?eEKZgy+m+kWwuF0vTFZqok9TmXNFlesLYj1q6EtseQsVNRTcEC25Qa1ZPxsF?=
+ =?us-ascii?Q?Qs/nucBxUnndKbaMdqsunb6aezMi8rddt5cKQ5bQwNwfdBH4Yv/+TGwoxdYg?=
+ =?us-ascii?Q?7dLLqVB28goiUsxBr64h283FIqLGmgOVF6WNKGbTw3ukTgzCf9BVtOc2GFQR?=
+ =?us-ascii?Q?ETBlLHvDMmUCzTBIZDDSRb0qtBu9Ju2bnvbdC716C+P29Ll8DC+T1dC139js?=
+ =?us-ascii?Q?GoyDQtKuCp2X6GzY2RvhjmBIA0HiViRHvl/O4wppD+8icw6+LAbmeU19+hZN?=
+ =?us-ascii?Q?Qpt8GLdexnOH3BZtaFvHaY7cd3XkizcKfOEMG09fAPMO3diZ6CfL6MNNMrcK?=
+ =?us-ascii?Q?E//m42mYLHPnSQP//mvLr5f04vO4ugS9Xo6+1sGcwqRnUxCm55c0ZdT/luI5?=
+ =?us-ascii?Q?U67C4Iw/WsKpz+ohm+q73xyBWT4C6ja+r2rQonbKNfTWnWCx8lNcOHPcnM4J?=
+ =?us-ascii?Q?GjIUCtVQjB28Z3crKOpVuWooBn9Rcx6Vgfrjho+tHx3o0BXmSSPzhmaCTy6t?=
+ =?us-ascii?Q?IJ4iUKLGoCMBDLwcJ6cJE9PZpfKnRGfvxsXbbG7D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] watchdog: Add the Software Watchdog Timer for the NXP
- S32 platform
-To: Krzysztof Kozlowski <krzk@kernel.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Thomas Fossati <thomas.fossati@linaro.org>
-References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
- <20250328151516.2219971-2-daniel.lezcano@linaro.org>
- <1873723e-de75-4e9f-b61c-a22f3b85758b@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <1873723e-de75-4e9f-b61c-a22f3b85758b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6739.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59d80ed8-2448-4a33-fe1e-08dd702e053a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 08:28:31.4783
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +hoi6qqztGsFjrwjimaetpbKjsFRGpOcZjSzD8zne3D6arAX6dOwOlXxdmPFvdsZjmrHJ2BKxXolXCXnM8t3Mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR04MB9042
 
-On 29/03/2025 05:55, Krzysztof Kozlowski wrote:
-> On 28/03/2025 16:15, Daniel Lezcano wrote:
->> +
->> +struct s32g_wdt_device {
->> +	int rate;
->> +	void __iomem *base;
->> +	struct watchdog_device wdog;
->> +};
->> +
->> +static bool nowayout = WATCHDOG_NOWAYOUT;
->> +module_param(nowayout, bool, 0);
->> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->> +
->> +static unsigned int timeout_param = S32G_WDT_DEFAULT_TIMEOUT;
->> +module_param(timeout_param, uint, 0);
->> +MODULE_PARM_DESC(timeout_param, "Watchdog timeout in seconds (default="
->> +		 __MODULE_STRING(S32G_WDT_DEFAULT_TIMEOUT) ")");
-> 
-> Timeout is provided by DT.
+> > > > 4K30(3840x2160 30Hz) timing pixel clock around 297M, for 24bits
+> > > > RGB pixel data format, total transport bandwidth need 297M*24(at
+> > > > least
+> > > > 7.2Gbps) more than anx7625 mipi rx lane bandwidth(maximum 6Gbps,
+> > > > 4lanes, each lane 1.5Gbps). Without DSC function, anx7625 cannot
+> > > > receive 4K30 video timing.
+> > > >
+> > > > When display pixel clock exceed 250M, driver will enable DSC
+> > > > feature, and the compression ratio is 3:1, eg: 4K30's pixel clock
+> > > > around 297M, bandwidth 7.2G will be compressed to 7.2G/3 =3D 2.4G.
+> > > > Then anx7625 can receive 4K30 video timing and do decompress, then
+> > > > package video data and send to sink device through DP link.
+> > > >
+> > > > Anx7625 is bridge IC, sink monitor only receive normal DP signal
+> > > > from anx7625, sink device didn't know DSC information between SOC
+> > > > and
+> > > > anx7625
+> > > >
+> > > > v2:
+> > > > 1. Add more commit message
+> > > > 2. Remove unused code
+> > > > 3. Add more comment
+> > >
+> > > This part is useless, it adds no information. It is as good as 'chang=
+ed it'.
+> > OK, I'll remove it
+> > >
+> > > > 4. Remove dsc_en flag
+> > > >
+> > > > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > > > ---
+> > > >  drivers/gpu/drm/bridge/analogix/anx7625.c | 299
+> > > > ++++++++++++++++++----  drivers/gpu/drm/bridge/analogix/anx7625.h
+> > > > ++++++++++++++++++|
+> > > > 31 +++
+> > > >  2 files changed, 274 insertions(+), 56 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > > b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > > index 4be34d5c7a3b..bae76d9a665f 100644
+> > > > --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > > +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > > @@ -9,6 +9,7 @@
+> > > >  #include <linux/interrupt.h>
+> > > >  #include <linux/iopoll.h>
+> > > >  #include <linux/kernel.h>
+> > > > +#include <linux/math64.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/mutex.h>
+> > > >  #include <linux/pm_runtime.h>
+> > > > @@ -22,6 +23,7 @@
+> > > >
+> > > >  #include <drm/display/drm_dp_aux_bus.h>  #include
+> > > > <drm/display/drm_dp_helper.h>
+> > > > +#include <drm/display/drm_dsc_helper.h>
+> > > >  #include <drm/display/drm_hdcp_helper.h>  #include
+> > > > <drm/drm_atomic_helper.h>  #include <drm/drm_bridge.h> @@ -476,11
+> > > > +478,159 @@ static int anx7625_set_k_value(struct anx7625_data
+> > > > +*ctx)
+> > > >                                MIPI_DIGITAL_ADJ_1, 0x3D);  }
+> > > >
+> > > > +static bool anx7625_dsc_check(struct anx7625_data *ctx) {
+> > > > +     if (ctx->dt.pixelclock.min > DSC_PIXEL_CLOCK)
+> > > > +             return true;
+> > >
+> > > So, now DSC is enabled unconditionally just because the clock is too
+> > > high. Let's see...
+> > Yes
+> > >
+> > > > +
+> > > > +     return false;
+> > > > +}
+> > > > +
+> > > > +static inline int anx7625_h_timing_reg_write(struct anx7625_data *=
+ctx,
+> > > > +                                          struct i2c_client *clien=
+t,
+> > > > +                                          u8 reg_addr, u16 val,
+> > > > +                                          bool dsc_check) {
+> > > > +     int ret;
+> > > > +
+> > > > +     if (dsc_check && anx7625_dsc_check(ctx))
+> > > > +             val =3D dsc_div(val);
+> > > > +
+> > > > +     ret =3D anx7625_reg_write(ctx, client, reg_addr, val);
+> > > > +     ret |=3D anx7625_reg_write(ctx, client, reg_addr + 1, val >>
+> > > > + 8);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int anx7625_h_timing_write(struct anx7625_data *ctx,
+> > > > +                               struct i2c_client *client,
+> > > > +                               bool rx_h_timing) {
+> > > > +     u16 htotal;
+> > > > +     int ret;
+> > > > +
+> > > > +     htotal =3D ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
+> > > > +                      ctx->dt.hback_porch.min + ctx->dt.hsync_len.=
+min;
+> > > > +     /* Htotal */
+> > > > +     ret =3D anx7625_h_timing_reg_write(ctx, client,
+> > > HORIZONTAL_TOTAL_PIXELS_L,
+> > > > +                                      htotal, rx_h_timing);
+> > > > +     /* Hactive */
+> > > > +     ret |=3D anx7625_h_timing_reg_write(ctx, client,
+> > > HORIZONTAL_ACTIVE_PIXELS_L,
+> > > > +                                       ctx->dt.hactive.min, rx_h_t=
+iming);
+> > > > +     /* HFP */
+> > > > +     ret |=3D anx7625_h_timing_reg_write(ctx, client,
+> > > HORIZONTAL_FRONT_PORCH_L,
+> > > > +                                       ctx->dt.hfront_porch.min, r=
+x_h_timing);
+> > > > +     /* HWS */
+> > > > +     ret |=3D anx7625_h_timing_reg_write(ctx, client,
+> > > HORIZONTAL_SYNC_WIDTH_L,
+> > > > +                                       ctx->dt.hsync_len.min, rx_h=
+_timing);
+> > > > +     /* HBP */
+> > > > +     ret |=3D anx7625_h_timing_reg_write(ctx, client,
+> > > HORIZONTAL_BACK_PORCH_L,
+> > > > +                                       ctx->dt.hback_porch.min,
+> > > > + rx_h_timing);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int anx7625_v_timing_write(struct anx7625_data *ctx,
+> > > > +                               struct i2c_client *client) {
+> > > > +     int ret;
+> > > > +
+> > > > +     /* Vactive */
+> > > > +     ret =3D anx7625_reg_write(ctx, client, ACTIVE_LINES_L,
+> > > > +                             ctx->dt.vactive.min);
+> > > > +     ret |=3D anx7625_reg_write(ctx, client, ACTIVE_LINES_H,
+> > > > +                              ctx->dt.vactive.min >> 8);
+> > > > +     /* VFP */
+> > > > +     ret |=3D anx7625_reg_write(ctx, client, VERTICAL_FRONT_PORCH,
+> > > > +                              ctx->dt.vfront_porch.min);
+> > > > +     /* VWS */
+> > > > +     ret |=3D anx7625_reg_write(ctx, client, VERTICAL_SYNC_WIDTH,
+> > > > +                              ctx->dt.vsync_len.min);
+> > > > +     /* VBP */
+> > > > +     ret |=3D anx7625_reg_write(ctx, client, VERTICAL_BACK_PORCH,
+> > > > +                              ctx->dt.vback_porch.min);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int anx7625_set_dsc_params(struct anx7625_data *ctx) {
+> > > > +     int ret, i;
+> > > > +     u16 htotal, vtotal;
+> > > > +
+> > > > +     if (!anx7625_dsc_check(ctx))
+> > > > +             return 0;
+> > > > +
+> > > > +     /* Video Horizontal timing */
+> > > > +     ret =3D anx7625_h_timing_write(ctx, ctx->i2c.tx_p2_client,
+> > > > + false);
+> > > > +
+> > > > +     /* Video Vertical timing */
+> > > > +     ret |=3D anx7625_v_timing_write(ctx, ctx->i2c.tx_p2_client);
+> > > > +
+> > > > +     /* Vtotal */
+> > > > +     vtotal =3D ctx->dt.vactive.min + ctx->dt.vfront_porch.min +
+> > > > +              ctx->dt.vback_porch.min + ctx->dt.vsync_len.min;
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_=
+LINES_L,
+> > > > +                              vtotal);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_=
+LINES_H,
+> > > > +                              vtotal >> 8);
+> > > > +     /* Htotal */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> TOTAL_PIXEL_L_7E,
+> > > > +                              htotal);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> TOTAL_PIXEL_H_7E,
+> > > > +                              htotal >> 8);
+> > > > +     /* Hactive */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              ACTIVE_PIXEL_L_7E, ctx->dt.hactive.m=
+in);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              ACTIVE_PIXEL_H_7E, ctx->dt.hactive.m=
+in >> 8);
+> > > > +     /* HFP */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_FRONT_PORCH_L_7E,
+> > > > +                              ctx->dt.hfront_porch.min);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_FRONT_PORCH_H_7E,
+> > > > +                              ctx->dt.hfront_porch.min >> 8);
+> > > > +     /* HWS */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_SYNC_WIDTH_L_7E,
+> > > > +                              ctx->dt.hsync_len.min);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_SYNC_WIDTH_H_7E,
+> > > > +                              ctx->dt.hsync_len.min >> 8);
+> > > > +     /* HBP */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_BACK_PORCH_L_7E,
+> > > > +                              ctx->dt.hback_porch.min);
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > > +                              HORIZON_BACK_PORCH_H_7E,
+> > > > +                              ctx->dt.hback_porch.min >> 8);
+> > > > +
+> > > > +     /* Config DSC decoder internal blank timing for decoder to st=
+art */
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > > > +                              H_BLANK_L,
+> > > > +                              dsc_div(htotal - ctx->dt.hactive.min=
+));
+> > > > +     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > > > +                              H_BLANK_H,
+> > > > +                              dsc_div(htotal -
+> > > > + ctx->dt.hactive.min)
+> > > > + >> 8);
+> > > > +
+> > > > +     /* Compress ratio  RATIO bit[7:6] */
+> > > > +     ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client, R_I2C_=
+1, 0x3F);
+> > > > +     ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client, R_I2C_1=
+,
+> > > > +                             (5 - DSC_COMPRESS_RATIO) << 6);
+> > > > +     /*PPS table*/
+> > > > +     for (i =3D 0; i < PPS_SIZE; i +=3D PPS_BLOCK_SIZE)
+> > > > +             ret |=3D anx7625_reg_block_write(ctx, ctx->i2c.rx_p2_=
+client,
+> > > > +                                            R_PPS_REG_0 + i, PPS_B=
+LOCK_SIZE,
+> > > > +                                            &ctx->pps_table[i]);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > >  static int anx7625_dsi_video_timing_config(struct anx7625_data
+> > > > *ctx) {
+> > > >       struct device *dev =3D ctx->dev;
+> > > >       unsigned long m, n;
+> > > > -     u16 htotal;
+> > > >       int ret;
+> > > >       u8 post_divider =3D 0;
+> > > >
+> > > > @@ -506,48 +656,12 @@ static int
+> > > > anx7625_dsi_video_timing_config(struct
+> > > anx7625_data *ctx)
+> > > >       ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p1_client,
+> > > >                               MIPI_LANE_CTRL_0,
+> > > > ctx->pdata.mipi_lanes
+> > > > - 1);
+> > > >
+> > > > -     /* Htotal */
+> > > > -     htotal =3D ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
+> > > > -             ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_TOTAL_PIXELS_L, htotal & 0xFF);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
+> > > > -     /* Hactive */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.m=
+in & 0xFF);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.m=
+in >> 8);
+> > > > -     /* HFP */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porc=
+h.min);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_FRONT_PORCH_H,
+> > > > -                     ctx->dt.hfront_porch.min >> 8);
+> > > > -     /* HWS */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.mi=
+n);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.mi=
+n >> 8);
+> > > > -     /* HBP */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.=
+min);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.=
+min >> 8);
+> > > > -     /* Vactive */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE=
+_LINES_L,
+> > > > -                     ctx->dt.vactive.min);
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE=
+_LINES_H,
+> > > > -                     ctx->dt.vactive.min >> 8);
+> > > > -     /* VFP */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     VERTICAL_FRONT_PORCH, ctx->dt.vfront_porch.mi=
+n);
+> > > > -     /* VWS */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     VERTICAL_SYNC_WIDTH, ctx->dt.vsync_len.min);
+> > > > -     /* VBP */
+> > > > -     ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > > -                     VERTICAL_BACK_PORCH, ctx->dt.vback_porch.min)=
+;
+> > > > +     /* Video Horizontal timing */
+> > > > +     ret |=3D anx7625_h_timing_write(ctx, ctx->i2c.rx_p2_client,
+> > > > + true);
+> > > > +
+> > > > +     /* Video Vertical timing */
+> > > > +     ret |=3D anx7625_v_timing_write(ctx, ctx->i2c.rx_p2_client);
+> > > > +
+> > >
+> > > Please split this part into two commits: one refactoring timing
+> > > programming into two functions and another one introducing DSC suppor=
+t.
+> > > It is hard to review timing programming otherwise.
+> >
+> > OK
+> >
+> > >
+> > > >       /* M value */
+> > > >       ret |=3D anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > > >                       MIPI_PLL_M_NUM_23_16, (m >> 16) & 0xff); @@
+> > > > -663,9 +777,15 @@ static int anx7625_dsi_config(struct
+> > > > anx7625_data
+> > > > *ctx)
+> > > >
+> > > >       DRM_DEV_DEBUG_DRIVER(dev, "config dsi.\n");
+> > > >
+> > > > -     /* DSC disable */
+> > > > -     ret =3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
+> > > > -                             R_DSC_CTRL_0, ~DSC_EN);
+> > > > +     ret =3D anx7625_set_dsc_params(ctx);
+> > > > +     if (anx7625_dsc_check(ctx))
+> > > > +             /* DSC enable */
+> > > > +             ret |=3D anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
+> > > > +                                     R_DSC_CTRL_0, DSC_EN);
+> > > > +     else
+> > > > +             /* DSC disable */
+> > > > +             ret |=3D anx7625_write_and(ctx, ctx->i2c.rx_p0_client=
+,
+> > > > +                                      R_DSC_CTRL_0, ~DSC_EN);
+> > > >
+> > > >       ret |=3D anx7625_api_dsi_config(ctx);
+> > > >
+> > > > @@ -2083,6 +2203,7 @@ static int anx7625_setup_dsi_device(struct
+> > > anx7625_data *ctx)
+> > > >               MIPI_DSI_MODE_VIDEO_HSE |
+> > > >               MIPI_DSI_HS_PKT_END_ALIGNED;
+> > > >
+> > > > +     dsi->dsc =3D &ctx->dsc;
+> > > >       ctx->dsi =3D dsi;
+> > > >
+> > > >       return 0;
+> > > > @@ -2187,19 +2308,69 @@ anx7625_bridge_mode_valid(struct
+> > > > drm_bridge
+> > > *bridge,
+> > > >       struct device *dev =3D ctx->dev;
+> > > >
+> > > >       DRM_DEV_DEBUG_DRIVER(dev, "drm mode checking\n");
+> > > > +     if (mode->clock > SUPPORT_PIXEL_CLOCK)
+> > > > +             return MODE_CLOCK_HIGH;
+> > > > +
+> > > > +     if (mode->clock < SUPPORT_MIN_PIXEL_CLOCK)
+> > > > +             return MODE_CLOCK_LOW;
+> > > >
+> > > > -     /* Max 1200p at 5.4 Ghz, one lane, pixel clock 300M */
+> > > > -     if (mode->clock > SUPPORT_PIXEL_CLOCK) {
+> > > > -             DRM_DEV_DEBUG_DRIVER(dev,
+> > > > -                                  "drm mode invalid, pixelclock to=
+o high.\n");
+> > >
+> > > Any reason for dropping debug message?
+> >
+> > I'll keep this message.
+> >
+> > >
+> > > > +     /*
+> > > > +      * If hdisplay cannot be divided by DSC compress ratio, then =
+display
+> > > > +      * will have overlap/shift issue
+> > > > +      */
+> > > > +     if (mode->clock > DSC_PIXEL_CLOCK &&
+> > > > +         (mode->hdisplay % DSC_COMPRESS_RATIO !=3D 0))
+> > >
+> > >
+> > > ... and there still no check that the DSI host supports generating
+> > > DSC data. Nor there is an atomic_check() that will check if the mode =
+can be
+> enabled.
+> >
+> > I cannot know whether the DSI host supports DSC or not. Anx7625 driver
+> > force enable DSC feature if pixel clock higher than DSC_PIXEL_CLOCK.
+>=20
+> This is called upstream. Please work on necessary API changes rather than
+> claiming that it is not possible. Enabling DSC support when DSC is not ha=
+ndled by
+> the DSI host is not acceptable.
+>=20
+> Few semi-random ideas:
+> - Add DSC checking callbacks to struct mipi_dsi_host_ops. Assume that
+>   DSC support is not available if callback is not present. The callback
+>   should accept struct drm_dsc_config and populate const and RC params.
+>=20
+> - Add DSC-related flags to struct mipi_dsi_host, describing DSC feature
+>   availability. Make anx7625 check those flags.
 
-Yes, but we may want to change the default timeout when loading the driver.
+OK, I'll discuss with Chromium team and MTK DSI host team.
 
-[ ... ]
+>=20
+> >
+> > >
+> > > >               return MODE_CLOCK_HIGH;
+> > > > -     }
+> > > >
+> > > >       DRM_DEV_DEBUG_DRIVER(dev, "drm mode valid.\n");
+> > > >
+> > > >       return MODE_OK;
+> > > >  }
+> > > >
+> > > > +static void anx7625_dsc_enable(struct anx7625_data *ctx, bool en) =
+{
+> > > > +     int ret;
+> > > > +     struct device *dev =3D ctx->dev;
+> > > > +
+> > > > +     if (en) {
+> > > > +             ctx->dsc.dsc_version_major =3D 1;
+> > > > +             ctx->dsc.dsc_version_minor =3D 1;
+> > > > +             ctx->dsc.slice_height =3D 8;
+> > > > +             ctx->dsc.slice_width =3D ctx->dt.hactive.min / DSC_SL=
+ICE_NUM;
+> > > > +             ctx->dsc.slice_count =3D DSC_SLICE_NUM;
+> > > > +             ctx->dsc.bits_per_component =3D 8;
+> > > > +             ctx->dsc.bits_per_pixel =3D 8 << 4; /* 4 fractional b=
+its */
+> > > > +             ctx->dsc.block_pred_enable =3D true;
+> > > > +             ctx->dsc.native_420 =3D false;
+> > > > +             ctx->dsc.native_422 =3D false;
+> > > > +             ctx->dsc.simple_422 =3D false;
+> > > > +             ctx->dsc.vbr_enable =3D false;
+> > > > +             ctx->dsc.convert_rgb =3D 1;
+> > > > +             ctx->dsc.vbr_enable =3D 0;
+> > >
+> > > Aren't those 'false' and '0' defaults? If so, you don't need to write=
+ those
+> fields.
+> > Ok
+> >
+> > >
+> > > > +
+> > > > +             drm_dsc_set_rc_buf_thresh(&ctx->dsc);
+> > > > +             drm_dsc_set_const_params(&ctx->dsc);
+> > > > +
+> > > > +             ctx->dsc.initial_scale_value =3D drm_dsc_initial_scal=
+e_value(&ctx-
+> >dsc);
+> > > > +             ctx->dsc.line_buf_depth =3D ctx->dsc.bits_per_compone=
+nt + 1;
+> > > > +             ret =3D drm_dsc_setup_rc_params(&ctx->dsc, DRM_DSC_1_=
+2_444);
+> > > > +             if (ret < 0)
+> > > > +                     dev_warn(dev, "drm_dsc_setup_rc_params ret
+> > > > + %d\n", ret);
+> > > > +
+> > > > +             ret =3D drm_dsc_compute_rc_parameters(&ctx->dsc);
+>=20
+> BTW: these calls belong to the DSI host driver. See msm/dsi/dsi_host.c an=
+d DSC-
+> enabled panel drivers.
+I'm not sure, this interface is suggested by MIPI host. Seems MTK MIPI host=
+ driver didn't
+call this interface.
 
->> +static int s32g_wdt_ping(struct watchdog_device *wdog)
->> +{
->> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
->> +
->> +	__raw_writel(S32G_WDT_SEQ1, S32G_SWT_SR(wdev->base));
->> +	__raw_writel(S32G_WDT_SEQ2, S32G_SWT_SR(wdev->base));
-> 
-> I am confused why you do not use standard writel or don't have any
-> barriers here. I think this is very error prone and in general
-> discouraged practice (was for example raised by Arnd multiple times on
-> the lists).
+>=20
+> > > > +             if (ret)
+> > > > +                     dev_warn(dev, "drm dsc compute rc parameters
+> > > > + failed ret %d\n", ret);
+>=20
+> I think this should become an error rather than a warning.
+OK
 
-Yes, that's a good point. I'll sort it out with Arnd
-
->> +static int s32g_wdt_start(struct watchdog_device *wdog)
->> +{
->> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
->> +	unsigned long val;
->> +
->> +	val = __raw_readl(S32G_SWT_CR(wdev->base));
->> +
->> +	val |= S32G_SWT_CR_WEN;
->> +
->> +	__raw_writel(val, S32G_SWT_CR(wdev->base));
->> +
->> +	return 0;
->> +}
->> +
-> 
-> ...
-
-[ ... ]
-
->> +static struct platform_driver s32g_wdt_driver = {
->> +	.probe = s32g_wdt_probe,
->> +	.driver = {
->> +		.name = DRIVER_NAME,
->> +		.owner = THIS_MODULE,
-> 
-> Drop, that's some ancient downstream code.
-> 
->> +		.of_match_table = s32g_wdt_dt_ids,
->> +	},
->> +};
->> +
->> +module_platform_driver(s32g_wdt_driver);
->> +
->> +MODULE_AUTHOR("NXP");
->> +MODULE_DESCRIPTION("Watchdog driver for S32G SoC");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:" DRIVER_NAME);
-> 
-> Drop, not needed. Fix your table module device Id instead... or start
-> from other recent driver as a skeleton to avoid repeating the same
-> issues we already fixed.
-
-Ok, thanks for spotting it
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>=20
+> > > > +
+> > > > +             drm_dsc_pps_payload_pack((struct
+> > > > + drm_dsc_picture_parameter_set
+> > > *)&ctx->pps_table,
+> > > > +                                      &ctx->dsc);
+> > > > +             dev_dbg(dev, "anx7625 enable dsc\n");
+> > > > +     } else {
+> > > > +             ctx->dsc.dsc_version_major =3D 0;
+> > > > +             ctx->dsc.dsc_version_minor =3D 0;
+> > > > +             dev_dbg(dev, "anx7625 disable dsc\n");
+> > > > +     }
+> > > > +}
+> > > > +
+>=20
+> --
+> With best wishes
+> Dmitry
