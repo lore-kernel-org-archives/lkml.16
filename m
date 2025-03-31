@@ -1,158 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6101B423C;
-	Mon, 31 Mar 2025 10:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C2027726
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418711; cv=none; b=LrTXSOict4dTiWf4dckBRPCWtS65+EPqasAohgOITjbL4GhFfFPcK2haeNztsdgQ3YEC6ujB9AxK/scJgS/uBeI51X1nU+ud5t27FYpzVXOseRh7jfqjBbQPxzF1dRIOhBlV203ItR+t3dfEp4No+ZSUxpuqsaQuASyxBVJS9wU=
+	t=1743418733; cv=none; b=eGMgZNU2fxHuhAn5HeEvTEOmecd2Wf2ezd6fzCA5337xh21zZ/imttantIPjn9L9QKg5Xp7xeEto6XCKh97w/qtkqJtL809IHCkfokWb3EvVijTTB6/25/IgGAWrw+cxX8mlMxuNcUWHQso3uEPqvgi9rBt3+gZyezHDRL8Ks+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418711; c=relaxed/simple;
-	bh=CTlH+g2+HuA9vbv12bz+ImaQjIZbbactsMh++cN1GI4=;
-	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
-	 In-Reply-To; b=PhHdIegval8oLr8rCTdfAGXLyi5r2XcjSu3xorzs0ouUc7VKr3HBng1IiSQfrQBhlhEz9Rmgc+gK2TO7sKEB+XX9EtOt6W4Ae6G5kUJaNgUMc49sufyrOkU0AbwBOYlCcl6o+JOqrL4RZfpwBO2UxFdCi0YNsARWoJE7j5TbGo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkSqrkpI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743418733; c=relaxed/simple;
+	bh=psEBahj7VoXf5BDmQJg6N1MhT2Zw8Jg1zsV6pXB500k=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=D/vDQC8m40vr0YLWMG9TEDBhavazv8tpf6SI1ADXytcfq+1WguZrMXIlhh2kmYhMXkkH/vBEIY6wYY3+4waLtBZo6Vs+KtA+Eo/ZRIToj6xX5KPIo4Bl1txNsgwqei+BxJ+i/CFmjK24O9OPoYZpyC18eRln0N0nGmkuzjWExtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GreVspFX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkSqrkpI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4A2C4CEE5;
-	Mon, 31 Mar 2025 10:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743418710;
-	bh=CTlH+g2+HuA9vbv12bz+ImaQjIZbbactsMh++cN1GI4=;
-	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
-	b=PkSqrkpIkH/7OzaaxJ6wbsMQMmgWRl5eEdFES3St71VRm5H+dk1F6VyKWslwo4JA7
-	 4pyTCcYTZii9Gm1D7Yeb1W2RiTTY4rNAiNSmZd7BMZdjc42yt1Sd9XKrwFewVPLafF
-	 uY1C814Uf0ZsL5omntg7q91K3n9syNGDOM0CuU/JqgTJhE2XkkEnFnglqlsEkBiu6k
-	 SI3qSKP/WdNpJW2GX93YXisUK+bLsVBRJTKup30Jz23M9G16AiIlA0biCTp3t5R1W8
-	 E/YlpNGGQ/2Lpbucy7Vlgs0UyxiTLM7L61FOiOcXZRWVtBl1XC8IuT164xCx7PL4Oh
-	 16bhAg71L6VfA==
-Content-Type: multipart/signed;
- boundary=afa0541fe8431cb3d37f46b7af78c11e8bfa2698ff6820e4842879430dbc;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 31 Mar 2025 12:58:25 +0200
-Message-Id: <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
-To: "Kumar, Udit" <u-kumar1@ti.com>, "Nishanth Menon" <nm@ti.com>, "Vignesh
- Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
-Cc: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20250313144155.2382316-1-mwalle@kernel.org>
- <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
-In-Reply-To: <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GreVspFX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743418730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=93tK4DRtwDWGVyoA7NmKuVzLCQ6rWQ4QQB+PjsDLqfw=;
+	b=GreVspFXn+i5h71BqvgpS7ryaZTxdwL6fqy19rQtG9HZM7s6Qd8kfVTWjI3xKjBrgAtpYv
+	/w68hG1l9nLbfZGtUFBu0HtGx25y/f6egXtn6JnLenR/ll1iyUMu39ynlYIl5ZZZzlA1l6
+	cCi1b/NfnbIXxTksvqOG3F8AuIzSBpw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-264-l18-nn5cPAqdlq9ANEiJog-1; Mon,
+ 31 Mar 2025 06:58:46 -0400
+X-MC-Unique: l18-nn5cPAqdlq9ANEiJog-1
+X-Mimecast-MFC-AGG-ID: l18-nn5cPAqdlq9ANEiJog_1743418725
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1866B1955DCC;
+	Mon, 31 Mar 2025 10:58:45 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50B21180B48A;
+	Mon, 31 Mar 2025 10:58:43 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+References: <67e57c41.050a0220.2f068f.0034.GAE@google.com>
+To: syzbot <syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
+    linux-kernel@vger.kernel.org, marc.dionne@auristor.com,
+    syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [afs?] BUG: sleeping function called from invalid context in __alloc_frozen_pages_noprof
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---afa0541fe8431cb3d37f46b7af78c11e8bfa2698ff6820e4842879430dbc
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <241599.1743418721.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Date: Mon, 31 Mar 2025 11:58:41 +0100
+Message-ID: <241600.1743418721@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Udit,
+Note to syzbot maintainers: the C test program contains a compressed ext3
+image and decompression code that I think is entirely unnecessary.  All it
+does is provide a directory that the afs dynroot can be mounted upon.
 
-> > Add the node for the random number generator inside the crypto module.
-> >
-> > Signed-off-by: Michael Walle <mwalle@kernel.org>
-> > ---
-> > This was tested on a J722S/AM67A. Also, according to the TRM this is th=
-e
->
-> Could you re-confirm please , after adding this node.=C2=A0 you selected =
-trng=20
-> offered by Linux
+This is the only bit of the test that is actually necessary:
 
-# cat /sys/devices/virtual/misc/hw_random/rng_current
-40910000.rng
-# cat /sys/devices/virtual/misc/hw_random/rng_available
-40910000.rng
-# dd if=3D/dev/hwrng bs=3D16 count=3D1 | hexdump -C
-1+0 records in
-1+0 records out
-00000000  92 f5 44 09 fd 86 6b a2  39 d6 ad f3 e6 ec 03 4a  |..D...k.9.....=
-.J|
-00000010
-# dd if=3D/dev/hwrng bs=3D16 count=3D1 | hexdump -C
-1+0 records in
-1+0 records out
-00000000  a3 73 da d2 5b 94 83 2a  75 11 ca b3 99 d3 87 88  |.s..[..*u.....=
-..|
-00000010
+  NONFAILING(memcpy((void*)0x2000000001c0, "./file0\000", 8));
+  NONFAILING(memcpy((void*)0x2000000002c0, "afs\000", 4));
+  NONFAILING(memcpy((void*)0x200000000400, "dyn", 3));
+  NONFAILING(*(uint8_t*)0x200000000403 =3D 0x2c);
+  NONFAILING(*(uint8_t*)0x200000000404 =3D 0);
+  syscall(__NR_mount, /*src=3D*/0ul, /*dst=3D*/0x2000000001c0ul,
+          /*type=3D*/0x2000000002c0ul, /*flags=3D*/0ul, /*opts=3D*/0x20000=
+0000400ul);
+  NONFAILING(memcpy((void*)0x2000000000c0, "./file0\000", 8));
+  syscall(__NR_chdir, /*dir=3D*/0x2000000000c0ul);
+  NONFAILING(memcpy((void*)0x200000000240, "./file1\000", 8));
+  syscall(__NR_lstat, /*file=3D*/0x200000000240ul, /*statbuf=3D*/0ul);
+  NONFAILING(memcpy((void*)0x2000000000c0, ".\000", 2));
+  res =3D syscall(__NR_open, /*file=3D*/0x2000000000c0ul, /*flags=3D*/0ul,
+                /*mode=3D*/0ul);
+  if (res !=3D -1)
+    r[0] =3D res;
+  syscall(__NR_getdents, /*fd=3D*/r[0], /*ent=3D*/0x200000001fc0ul,
+          /*count=3D*/0xb8ul);
 
-> > MCU instance of the SA3UL. But it's defined in -main.dtsi. Is this
-> > correct?
->
-> Yes this is correct,
->
-> please refer
->
-> https://www.ti.com/lit/zip/sprujb3=C2=A0 SPRUJB3A.pdf
->
-> table 2.1 Main Memory map, this node falls under main domain
+Basically:
 
-Ok. Not sure, how I came to the conclusion that this is an MCU
-instance.
+  mount(NULL, "./file0", "afs", 0, "dyn,") =3D 0
+  chdir("./file0")                  =3D 0
+  lstat("./file1", NULL)            =3D -1 EFAULT (Bad address)
+  open(".", O_RDONLY)               =3D 4
+  getdents(4, 0x200000001fc0 /* 5 entries */, 184) =3D 168
 
-> > ---
-> >   arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/a=
-rch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-> > index 6e3beb5c2e01..e868e006318e 100644
-> > --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-> > +++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-> > @@ -227,9 +227,17 @@ crypto: crypto@40900000 {
-> >   		reg =3D <0x00 0x40900000 0x00 0x1200>;
-> >   		#address-cells =3D <2>;
-> >   		#size-cells =3D <2>;
-> > +		ranges =3D <0x00 0x40900000 0x00 0x40900000 0x00 0x30000>;
-> > +
-> >   		dmas =3D <&main_pktdma 0xf501 0>, <&main_pktdma 0x7506 0>,
-> >   		       <&main_pktdma 0x7507 0>;
-> >   		dma-names =3D "tx", "rx1", "rx2";
-> > +
-> > +		rng: rng@40910000 {
-> > +			compatible =3D "inside-secure,safexcel-eip76";
-> > +			reg =3D <0x00 0x40910000 0x0 0x7d>;
-> > +			interrupts =3D <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
->
-> For completeness , this is ok to add this node but should be kept disable=
-d
+David
 
-Shouldn't it be "reserved" then, see [1].
-
-> similar to
->
-> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j=
-7200-mcu-wakeup.dtsi#L662=20
-
-j784s4, j721e and j721s2 have them enabled. What is the rule here?
-
-You also disable the hwrng in optee in your evm according to [2]:
-CFG_WITH_SOFTWARE_PRNG=3Dy
-
--michael
-
-[1] https://devicetree-specification.readthedocs.io/en/latest/chapter2-devi=
-cetree-basics.html?highlight=3Dreservered#status
-[2] https://docs.u-boot.org/en/latest/board/ti/j722s_evm.html
-
---afa0541fe8431cb3d37f46b7af78c11e8bfa2698ff6820e4842879430dbc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ+p1UhIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/j8pwGA48YnnE9XmW12Xb9i0N07RIC3iMPccKhd
-cjprpG75JZaQmW/v8ZcZZd/K8uJSE+VgAYDPVCPTWLrtYn9/oDmr+W4bVK9RMMvx
-4f0ciSTzQAxeV2R2AEjz1GcqFgnzpW68JgE=
-=t5tD
------END PGP SIGNATURE-----
-
---afa0541fe8431cb3d37f46b7af78c11e8bfa2698ff6820e4842879430dbc--
