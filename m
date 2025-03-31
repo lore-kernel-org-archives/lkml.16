@@ -1,162 +1,178 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D521DE4D8
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA7E1531DB
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743415590; cv=none; b=iuMwjpr58qW5O1nJf1RlFiJUPTenmdLu9D/+SYto/jjwainJxJDvTAKcfXfECn5cY2IQls/P50DBGEBpn6U/+gFAA8sQXOimHhacGb2sRp69HCgmM3QnA2nodgFWkhVpvezf05l0HQCUupjiPL8oFn9Fd2CvjCGh+Lep5nnIn/w=
+	t=1743415635; cv=none; b=mGOUbK67Z7TpWL6fkNYqCgTVONqgzXAmERcw+hYikyG+TZlyky+waZYjr0KFJdTWDWssf57TbZ4dVX2iyEn86tY5C62HW8l0KYzrQP04Yio2tBONzqJygeXfbZufKXrykIwzt3o0cu8OdKoGH8eVNHBMQRlNS4BjJbg5GnJNJzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743415590; c=relaxed/simple;
-	bh=j3gsOeQ0J9+h4s5tv+MEM7+H2Ks6tViGWPgQEYxS5yU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZFKbEhU2H1PO/rUA//7redBmP3J+tMXk82EGULqlMOVw37OXRzEvJs10d0zH9qNb4sax27OA2KUI6OsQdiC+WkipdTtCSO+HeUEPXDij5mV8S7UiH8xqxUkEg9v0LZD439hX6MPfPaMetmqsZIvcRm+DR9EKSgZ/7DiXzH/B7wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VHn7t6T+; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743415635; c=relaxed/simple;
+	bh=G32fO3JLad6IzN+TyCWyAuJlVsBgLclIpshmQmh4fXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NpglhhODnfrzsXU9qjF3t5l6y7sfSd/UZrc/OrprxALGZ4GyPTEMs4VglF3z/sjsf7mA6m8lLVZUuDFpLejrsh3MsDs2rNK+EmT6QYgHeDBHbtmKGNf4To37g+HP5am0gyFAqmrvjtp8f8GKUAGciX4lcUm+dsJFrcPQlVSlqiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KnajPwFO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cpjoI/yf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KnajPwFO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cpjoI/yf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VHn7t6T+"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso674772266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743415587; x=1744020387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TrMN6LZWukOmN0j90Re+qVcywcRqKb8H+Y3qDOVIMVY=;
-        b=VHn7t6T+nmF/wANvZ2lSQBW04ipnnR8CtYUH4V5tY9zBvWTOXHzC1BrW2YdECd/OLs
-         1efTKIUKvWAap9hWhrD+Q5HcNH9s5JrwW3vT9WzcwEZ81oXCnKxcKre0L5FXRPT4YwgT
-         4C12ddLK/LnfO0dyx9EnK46w6jLyTq0Ry5411dVqn57ZxCw3+dZ8+pHBJ+4jGaLwNWm4
-         lTc2bVMWzu2qM1OnPZUyG5HZdTblI4jnqWYMXrOS3ZeE3kUAGh3Dc9TP1GgX5D7n8+m5
-         C0xP2ixduom22pMsyVDpJu7VNd6nCM48zV9os9lGe4cwmVvyN2OWYC3ttxAK0qo+kypT
-         qgYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743415587; x=1744020387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TrMN6LZWukOmN0j90Re+qVcywcRqKb8H+Y3qDOVIMVY=;
-        b=RzLrFbU3sF8Vn2fSTbAuW0/9ztBWx/VvzbLNmOmrn7WSeTUc9XzIg2llcGMcLM94aB
-         r6hRbeNJjXG0X5h6EO/hX7BBMcAYyl71Kmd6Y91u+Qu7uEY446tGt3X9/rbOlS27fZE7
-         3kAYJv0iocr57fZ0pCzz21XX1q+vMmPouqW4u1mleKa6gXhjgKvvakpXRc0YKsxxd3ym
-         AeKeQt6BXolhbBhjAQzBRQIyZ0IuzyEJz6Q5GZ9rvlTJxx4ChNJWZx3QIi4PlFqDUnyY
-         K73bkIsXylyf66qPk48wMCkAVyuAT2mW7MnnauUMpxLxkx9HO+kR9l70nWp3BmIKlk1o
-         g+XA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuwD44k3xOChn45ozxiDpo7Rb9TyR4gehdGgr6/FeSbyhwZvfSKAxQ1sBEUuQaAye8OnK5lDPMzFp6l80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOeDczkYFnDxmbS4teP7d5C2G8dCr4K7e6geuvmLOWz4Bj63Ol
-	s7ock3CURHJ461EW7UG+jvOG3MCsfHEKdg/0tDiKf2pPN00LpFTey3BeT4dQR4QfavVpE6gDzKr
-	bIMRwVKoYR2expsIo5nDSFKMveiwRoma+szHsaw==
-X-Gm-Gg: ASbGncv7VlWFfCcEsdpSlgvOWtntG7WHwTuGpheCHgsrbEs5EAfGwDOzraz3zz01X92
-	+o/EODAnH/gkmtucPs6sk5Q1f+rWCxsRF9e9qbvE4fb/HDwGUbF8NJNS/Bpi8v9hZ4gCNEf0L6I
-	pwT+386JJWuET5kl/WlzcxfCy9
-X-Google-Smtp-Source: AGHT+IFjoxRROSQJ2QQqf9HRlr+wmpb/KClLSvPvp1nnV8qvUH1qPNSLpAY2JcZAclvPhNIvsCQu1LAjYR7TxgXQO58=
-X-Received: by 2002:a17:906:4a94:b0:ac7:a2:b6d6 with SMTP id
- a640c23a62f3a-ac738bae0eemr656150266b.57.1743415586921; Mon, 31 Mar 2025
- 03:06:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KnajPwFO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cpjoI/yf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KnajPwFO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cpjoI/yf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 836EA211E4;
+	Mon, 31 Mar 2025 10:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743415632; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zf7GU5WugshLecU3OJwnpajVE6FXpnp9GQVpmxdv1+I=;
+	b=KnajPwFOrPrUVwouvJcFYNlWM2T5ywwbWUmdO1NE8LeQWg3vZ0ABa/Yl7amSDkBUEXpfRo
+	1TXg5s9zf4o2qJmy6oSUYgAvJiIWMovqjHdIL4PVozY6rzBQK5KG/v5ykZRGfyYnq1QMVI
+	6L8WD26IdO+QHaApyb8HCuQ3S8JseUA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743415632;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zf7GU5WugshLecU3OJwnpajVE6FXpnp9GQVpmxdv1+I=;
+	b=cpjoI/yfpbVWWngLPYMaK/rL4xJMefqzkpNMfnQ80Zp0xV3vaBooVNsYn9FhE8v49LJmGd
+	25Z629UQtMTLTjBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KnajPwFO;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="cpjoI/yf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743415632; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zf7GU5WugshLecU3OJwnpajVE6FXpnp9GQVpmxdv1+I=;
+	b=KnajPwFOrPrUVwouvJcFYNlWM2T5ywwbWUmdO1NE8LeQWg3vZ0ABa/Yl7amSDkBUEXpfRo
+	1TXg5s9zf4o2qJmy6oSUYgAvJiIWMovqjHdIL4PVozY6rzBQK5KG/v5ykZRGfyYnq1QMVI
+	6L8WD26IdO+QHaApyb8HCuQ3S8JseUA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743415632;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zf7GU5WugshLecU3OJwnpajVE6FXpnp9GQVpmxdv1+I=;
+	b=cpjoI/yfpbVWWngLPYMaK/rL4xJMefqzkpNMfnQ80Zp0xV3vaBooVNsYn9FhE8v49LJmGd
+	25Z629UQtMTLTjBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 736C0139A1;
+	Mon, 31 Mar 2025 10:07:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id L0AoHFBp6mf0XQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 31 Mar 2025 10:07:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2EB3FA08D2; Mon, 31 Mar 2025 12:07:12 +0200 (CEST)
+Date: Mon, 31 Mar 2025 12:07:12 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, rafael@kernel.org, 
+	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH v2 5/6] super: use common iterator (Part 2)
+Message-ID: <mmzfke3c6ioply3ezhushtoxnca5e3kx3ynteie6sf7cye3bqm@yu7wpqctwbrb>
+References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
+ <20250329-work-freeze-v2-5-a47af37ecc3d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331082347.1407151-1-neelx@suse.com> <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
-In-Reply-To: <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 31 Mar 2025 12:06:15 +0200
-X-Gm-Features: AQ5f1JqutY5B58lKkBXLsgmMnOxey8gmhV-G874E52O3tluKYg9BOIh6iYZZcLU
-Message-ID: <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast modes
-To: Qu Wenruo <wqu@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250329-work-freeze-v2-5-a47af37ecc3d@kernel.org>
+X-Rspamd-Queue-Id: 836EA211E4
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,hansenpartnership.com,kernel.org,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.51
+X-Spam-Flag: NO
 
-On Mon, 31 Mar 2025 at 10:49, Qu Wenruo <wqu@suse.com> wrote:
-> =E5=9C=A8 2025/3/31 18:53, Daniel Vacek =E5=86=99=E9=81=93:
-> > Now that zstd fast compression levels are allowed with `compress=3Dzstd=
-:-N`
-> > mount option, allow also specifying the same using the `compress=3Dzstd=
--fast:N`
-> > alias.
-> >
-> > Upstream zstd deprecated the negative levels in favor of the `zstd-fast=
-`
-> > label anyways so this is actually the preferred way now. And indeed it =
-also
-> > looks more human friendly.
-> >
-> > Signed-off-by: Daniel Vacek <neelx@suse.com>
-> > ---
-> >   fs/btrfs/super.c | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> >
-> > diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-> > index 40709e2a44fce..c1bc8d4db440a 100644
-> > --- a/fs/btrfs/super.c
-> > +++ b/fs/btrfs/super.c
-> > @@ -368,6 +368,16 @@ static int btrfs_parse_param(struct fs_context *fc=
-, struct fs_parameter *param)
-> >                       btrfs_set_opt(ctx->mount_opt, COMPRESS);
-> >                       btrfs_clear_opt(ctx->mount_opt, NODATACOW);
-> >                       btrfs_clear_opt(ctx->mount_opt, NODATASUM);
-> > +             } else if (strncmp(param->string, "zstd-fast", 9) =3D=3D =
-0) {
-> > +                     ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
-> > +                     ctx->compress_level =3D
-> > +                             -btrfs_compress_str2level(BTRFS_COMPRESS_=
-ZSTD,
-> > +                                                       param->string +=
- 9
->
-> Can we just use some temporary variable to save the return value of
-> btrfs_compress_str2level()?
+On Sat 29-03-25 09:42:18, Christian Brauner wrote:
+> Use a common iterator for all callbacks. We could go for something even
+> more elaborate (advance step-by-step similar to iov_iter) but I really
+> don't think this is warranted.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-I don't see any added value. Isn't `ctx->compress_level` temporary
-enough at this point? Note that the FS is not mounted yet so there's
-no other consumer of `ctx`.
+Looks good, one nit below. With that fixed feel free to add:
 
-Or did you mean just for readability?
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> );
-> > +                     if (ctx->compress_level > 0)
-> > +                             ctx->compress_level =3D -ctx->compress_le=
-vel;
->
-> This also means, if we pass something like "compress=3Dzstd-fast:-9", it
-> will still set the level to the correct -9.
->
-> Not some weird double negative, which is good.
->
-> But I'm also wondering, should we even allow minus value for "zstd-fast".
+> +#define invalid_super list_entry_is_head
 
-It was meant as a safety in a sense that `s/zstd:-/zstd-fast:-/` still
-works the same. Hence it defines that "fast level -3 <=3D=3D=3D> fast level
-3" (which is still level -3 in internal zstd representation).
-So if you mounted `compress=3Dzstd-fast:-9` it's understood you actually
-meant `compress=3Dzstd-fast:9` in the same way as if you did
-`compress=3Dzstd:-9`.
+Why do you have this invalid_super define? I find it rather confusing in
+the loop below and list_entry_is_head() would be much more
+understandable...
 
-I thought this was solid. Or would you rather bail out with -EINVAL?
+								Honza
 
-> > +                     btrfs_set_opt(ctx->mount_opt, COMPRESS);
-> > +                     btrfs_clear_opt(ctx->mount_opt, NODATACOW);
-> > +                     btrfs_clear_opt(ctx->mount_opt, NODATASUM);
-> >               } else if (strncmp(param->string, "zstd", 4) =3D=3D 0) {
-> >                       ctx->compress_type =3D BTRFS_COMPRESS_ZSTD;
-> >                       ctx->compress_level =3D
->
-> Another thing is, if we want to prefer using zstd-fast:9 other than
-> zstd:-9, should we also change our compress handling in
-> btrfs_show_options() to show zstd-fast:9 instead?
-
-At this point it's not about preference but about compatibility. I
-actually tested changing this but as a side-effect it also had an
-influence on `btrfs.compression` xattr (our `compression` property)
-which is rather an incompatible on-disk format change. Hence I falled
-back keeping it simple. Showing `zstd:-9` is still a valid output.
-
---nX
-
-> Thanks,
-> Qu
+> +
+> +static void __iterate_supers(void (*f)(struct super_block *, void *), void *arg,
+> +			     enum super_iter_flags_t flags)
+>  {
+>  	struct super_block *sb, *p = NULL;
+> +	bool excl = flags & SUPER_ITER_EXCL;
+>  
+> -	spin_lock(&sb_lock);
+> -	list_for_each_entry(sb, &super_blocks, s_list) {
+> -		bool locked;
+> +	guard(spinlock)(&sb_lock);
+>  
+> +	for (sb = first_super(flags); !invalid_super(sb, &super_blocks, s_list);
+> +	     sb = next_super(sb, flags)) {
+>  		if (super_flags(sb, SB_DYING))
+>  			continue;
+>  		sb->s_count++;
+>  		spin_unlock(&sb_lock);
+>  
+> -		locked = super_lock(sb, excl);
+> -		if (locked) {
+> +		if (flags & SUPER_ITER_UNLOCKED) {
+> +			f(sb, arg);
+> +		} else if (super_lock(sb, excl)) {
+>  			f(sb, arg);
+>  			super_unlock(sb, excl);
+>  		}
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
