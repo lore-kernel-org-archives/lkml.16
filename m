@@ -1,210 +1,227 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2054.outbound.protection.outlook.com [40.107.96.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967D41922F4
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743448591; cv=none; b=YcFXb+lWNKxu5rKtapt7pDU6cHaVQy5JP402qyeRqfQnH5y6KlYPT+4EgSLlgGTjhK/a7NFyqSqOLd5LyTCjRx7HhwRTQCMs91SSzaa/NA7f42wNnoi5p4EqrpEazwY54coxHI2XXvQ5ja7biq4TZgCUSatKpj4KIi7x8E+3L/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743448591; c=relaxed/simple;
-	bh=18Pw0mgUTZPK6P3rxpC6vM29vU41Kw7fYKYXkuisqMc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kR1BRNYFnNtyvrmA7y6CIEgA/4BPtOGnMSkzoiWTen3qId97vmBRLgRU1aJ7biU0/dvb/2LVLEPcus/IsRE56vDi/qLLFC6K8EwbabZIQ7GP/LwFI1aaZkB4etN5ShKHMMtz8Ic3lyouyD3tsAqCeU55lrlqr04HzzTGHtlGLGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2b3882febso37854495ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:16:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743448588; x=1744053388;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=esh/XtQtyGPq1g1MswoyRQBQUBrrz1SRiJehCq4juCg=;
-        b=dmABRoPVE5hZdUYUkd8UtyOWsLY8QUGaJ8uQJe5DQG5HrqXFGPsH70duLlTN45N8r9
-         lRFwYF08JbL4SdQsB5VJOIAB16DYkIuzyLVYxLPLHr+lzdjndHi5O3hl+vF4zgovlr5f
-         zBq9uONsGILr9TfDmgX7t6/ldgns2VmTWPcmmmpI3Y+7YF+rVtRjhxSySUjrCpV7NXeA
-         3TnXFfMii3FqFFPDPcVDQdZxuPqtUj1NPOZgFVOsXi11PPY/aXsv1176bLmKMohRnhkE
-         c6qjrZZFctpX0hSPaBGsQGFarX0IoeVpNVAVEpE6d9zpUH353Khv6owr+oT7Ugy8TwOE
-         aMTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMApZN4rr89xrHUtQqHTzzdT64MmV2n5UGq61NzYlhh3Gi+DwvnbFln9s/fBEpNhMcKD+8Ax0N6S1WxKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzimAnzAos96mRMLNGjJrXZ8bUVezpar26DZSgZrKfiTXUf26py
-	Bo6t4oaZe7ADPmTioQn/+IvKKvyfzJappoev+fUCuM4m4Omm1S4HOw2GXEYUAS7479w2AeQFNCe
-	e4RlvoBkGcsUInZYUeOkCsJGJ6CzZevgo1citQRJzRVC532cs4mlYUfM=
-X-Google-Smtp-Source: AGHT+IEbgHgnETiMVNyl6WIXU+Hf6kIrwoytDIPpcB5qnXjh0TKIEkGAZ57DjxqmDQ70TQhiF+15zv8Y993ejzn4suF+C3R3d9gT
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A8C189906;
+	Mon, 31 Mar 2025 19:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743448652; cv=fail; b=df+rlJ1NK4PllBuY2arFm4aECcshMWcknhr4uRC0PRLQ4vq+J+Lbr+P1G54Au+dP2ic1Zb4Qy35MBvPvT9MJfBEohlIAKd2Fwv0WMxPVzWq3/aEfRAAE2i+wyv/IM7wnnH7ipI4xd1BRFkjAuQ26xmAZgep5lO7S+yfAkHb4vBI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743448652; c=relaxed/simple;
+	bh=U6AHXB8NwsS8KeyMoILa5R4JiBFBW9tvxYvXARcb1tw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KHJeBK9Uzs20c2gzMD8JfOTZ6lMlpgD9B+0uwI1AiEVmDNZNGc3OL89bb9t4wSZ2+c3Dxw0W/S36t21vxRBFXXATpaZb3KO7Sivzy86x8+flkdpS+/kCYH4kIQrZg7mrd0JfbCpRhxoYZzHceQyqayG1wM9DAfL2AyP8r0HuGss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g9VNNHzU; arc=fail smtp.client-ip=40.107.96.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g9VNNHzU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Is0cckvo8V20B3Vsomta9GvA50UuwverDsdk0ROsz5H4WRZluTze6xVJpOscw5fpkYHLZ5E9Tt1tGqXLGq5ndUtCa56nVuIIeTtvJt1qpKSGHP9jVZ6LFloofd4Ih+IsApICMv4h5hTmZpeFJSU1hGyXGpBSY8GMM4CvRfb9UIgRLfSb7DGGgXFoY3UM7Y73zqs0CHI1mr0ysdHxw3v5KzR7OsDsswtBWWHd6OyHBFbH2GI+LCIY3ujzfcsHjyN8qEpgJFeNTQpGiL+0GI+iswsbt1O4LHFUtkijeSF0oPwfpxDsxe4DSd+BGrX4E91GAv43sCWOf0t7nKwxCIoUbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yhCeS1XLaxk0oLnAgI16Mh0KzRGWlUal5RhrdRrirSk=;
+ b=ZRzdHMQednzdfEjnS7OIVIAUPGQzzUC5tJbBZtFxidn/Zl7zRAF6EmEt3RPKhXiEF6G6KirHjYOLSjBx8mO0gcQ8cJvZ0yqw3Y7HQjfgLITRJskUiBC846xQaofugYeFE0m3CzoL9vs/4kGrmPuRZyhbzkOTp2dV9xMmwW/QyZKxgDHh/2a4hhp/frZx6E/Eszdx4a26dg6yV2rI11Mr4yUyiDO13/7GFrp+WK/3zhyH7qk5VRFvjbBUsGs8cJjOn3JsrsODow/FzIsaa/+ht0sXOz4Cky44+yDZNhr8tTeJ0YzvyTA6C39ViF9R4Qsy68h5z6mwlgkvGzj9fUkVAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yhCeS1XLaxk0oLnAgI16Mh0KzRGWlUal5RhrdRrirSk=;
+ b=g9VNNHzUThN4by8kBgKcFEU2Kta5Q5PIZbYaONKkAkjiRp7UOh8KYuvf9fBnqie5oHimvjxekWYXB1EjD/S9hHlTe9Fug1t7N/Hy+n27lo4zkjqw6tQAIQwZAPtRhRJaVmNbslkpFHGqYxjXjy4Vr+FhL0K3hUvQOL4q5GwkQ5M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by DM4PR12MB5868.namprd12.prod.outlook.com (2603:10b6:8:67::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Mon, 31 Mar
+ 2025 19:17:27 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
+ 19:17:25 +0000
+Message-ID: <6ba024ef-4757-4db0-b12a-d56622329bb0@amd.com>
+Date: Mon, 31 Mar 2025 15:17:22 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] media: i2c: Add OV05C10 camera sensor driver
+Content-Language: en-GB
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+ laurent.pinchart@ideasonboard.com, dave.stevenson@raspberrypi.com,
+ krzk@kernel.org, dan.carpenter@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, Venkata Narendra Kumar Gutta <vengutta@amd.com>
+References: <MhUYQD7uWnfZQAPq7VslFWPHOmx2B2UfAIpbMhLq1-7GC_i5bI2hhns_-ov_AAVpEH_VmDDFYkS5aOKBwnY61g==@protonmail.internalid>
+ <20250328214706.1516566-1-pratap.nirujogi@amd.com>
+ <fef11ce6-b3b6-4677-9387-13332b9a9d43@linaro.org>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <fef11ce6-b3b6-4677-9387-13332b9a9d43@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0287.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6d::13) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3183:b0:3d5:e002:b8ac with SMTP id
- e9e14a558f8ab-3d5e0908e3emr98854025ab.9.1743448588540; Mon, 31 Mar 2025
- 12:16:28 -0700 (PDT)
-Date: Mon, 31 Mar 2025 12:16:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eaea0c.050a0220.1547ec.016b.GAE@google.com>
-Subject: [syzbot] [bluetooth?] possible deadlock in l2cap_conn_del
-From: syzbot <syzbot+b71bb48c13bf3fed3692@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|DM4PR12MB5868:EE_
+X-MS-Office365-Filtering-Correlation-Id: caddf8ce-f536-45cf-c274-08dd7088ab65
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WTBqS0g2Q0NaK05iOU5pbXZJT1pQMjQvbGlhUW05Q21wSGVhWE9VUjFDalFz?=
+ =?utf-8?B?MGJzWjhvSmxpZUlsSWVOOFljYzlsNkpITkVtQjQ2V1poa0M2TktZUVM5cVRs?=
+ =?utf-8?B?TEdsSFBLQUxhWFZjTExTaFZ0aFc2OFN5eVFxaDEzNllqODhwZUtjQkhiYUNy?=
+ =?utf-8?B?b2RqdGw4TWJlVkhqTWI2REMxNXFHUmtEc0pWdG9va0EydThOK3IrbXV4RVBo?=
+ =?utf-8?B?Zmd5VUZOVDdUcm1pYU9rQnRVM2J2UHUxYmk1a3U5MTk5SUpQV2h0ZEtpQmpB?=
+ =?utf-8?B?M2YwT3lDNEN5VkhKQkhFRllkVWxwdDB6OFFvcnZHS29JaVZtRlhneUxLODE5?=
+ =?utf-8?B?b3NSK1cwa0hSZU9jZGNobW9lSnM4aFJXeENYQ0JXTmIvWnlrRFlXVXBoWHF4?=
+ =?utf-8?B?WkpEQStjNVRmeUx6VERLN3Iwd0laME05NlFSZGJ1ZjBXLzNJZnRSUU5yVWJL?=
+ =?utf-8?B?S0VaRnBXeHA1ZE9UT2tpL3k5anVzSThmUWYzczJaSlY3VVBxbGhmOEt4QzlZ?=
+ =?utf-8?B?Zy9FeDZxUWdCNHBkU0pxbzBwbGJVYWtBWHRKV3VXVk1EeVdBeUZXV1VZcGpz?=
+ =?utf-8?B?eTl1eEFHSnVCK3ltT0RLaEkwemFHdjRVZnkyWE9pUHZUQVBLa1g1V281WkNl?=
+ =?utf-8?B?M2dyem5rejlIZmNJZE02UFpkL0lqcWFPa01BcHdmQUR1ZEtKWk5HL05zZmFK?=
+ =?utf-8?B?bDlwOUZNcnJHbnV5a2srU2M0amt2WmFVc0NYN2VUcEYwQnpKeTNvS2o0Nkh3?=
+ =?utf-8?B?ZWtyVE11cG1McFpJYXhIR2NJdXJTVnRCMksva0xoczRFenlNWldaWjh6ZmFx?=
+ =?utf-8?B?aTlUQm01N2pzUThQOWxyb2hMbFdWcTdMS3hETlN5bFl2S0ZwbWJaODRqb0Rn?=
+ =?utf-8?B?TXBqQ1FNWWgrVm5WaXU0UjlyamVTdVgya2ZrRTFJOTBlT21Ob3lNSWxpMjEw?=
+ =?utf-8?B?MWw1RlNveTlxVThWZHFqU2NZM0lTcjg2cjN4ZkRVS3RpY2MvdGIxTE1UQzNt?=
+ =?utf-8?B?NURFZGplSHp4bTNNWldCTzA4YmF6YloyQTROelZ6b1o3WUhPVEIrTGZvN3Nl?=
+ =?utf-8?B?VHlreWFKTFpVR2MrajFhbnZxbVl6Z211aTdIVmdXenFUek55bW01a0lYYWto?=
+ =?utf-8?B?aHl4amFlUlQydU5rc1ZGWGxHR2ZhYVRSQjBBS21vNE9aTkpudmMxTG0raXN2?=
+ =?utf-8?B?WkZETG1WemZac3U1eVlFVjNtaHR4YVQwY3F6NENmUHIyS0g4MzdzV0pueHdS?=
+ =?utf-8?B?RUFhQnhkOWZhQ1F6S0MwcDNGNzBTaWltVm5BQmlXZExENW5OM0YzcVI3aHdM?=
+ =?utf-8?B?anZEMENqQTA1NS9JTEVBQStUUTRuOElZR3h2R3JsZXBkQjVPT2l2aDZpMGJ0?=
+ =?utf-8?B?NitUOVY5V1kwcGFieHhBS09iNjU1YzQ1NE0rNWxLWHhDeDc0TE5mU09RRWgz?=
+ =?utf-8?B?cldnNHltVGhjeEJuMm9vdTkvSHVkSytXR04rVExaVG40QWdwVHVYbERBY2sw?=
+ =?utf-8?B?RmQ2Y0xmMkFsdzNoR3lQK2Y3WnVia2c0dGd3YXdXQ256MG9kakdibEMzdTV1?=
+ =?utf-8?B?bHBEV0J6TzRDUTRzOE8xL3krK09qc2taYnZEVjVoQlA3VUR1SFpWZDRHNkxx?=
+ =?utf-8?B?SXFYRUF0ZVp1YXFadjJCb2dRYmpDNGRpbEJNMjdpS2J1M1orS1hqVnN5Sk9y?=
+ =?utf-8?B?MVEzYjFtQXJFVXpRQk9OL1AwN0VuYktxYytRQUdQdkRwR1FzZnhBcUdoOElE?=
+ =?utf-8?B?NVJFUnF0Y292Z1c2ZUl2QXFSMzEzRDBnUWZ2cXpEZUovSGlGVUM4VGRTa09V?=
+ =?utf-8?B?YjZ2M0xlYXlzdlR5cXkxUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ejU4azVTdTlZSGltT3ZMeFU5K3RDSjlqWHdwTVkzd0p0VjdSY1BZUlAxY0dq?=
+ =?utf-8?B?KzJidXRFTUZCYmZwNnI3cjhDNWIzOUR3cFlmS3MzdCtTSFhqWFdlSW5IVlFi?=
+ =?utf-8?B?c1hzNDRNa1J3M0g3TUJiTmVkUnQ3R0d5U3orSS9mOW5xUEZib1Q3Uy9Fakcr?=
+ =?utf-8?B?cFJSV0d6Nk0wOFVFSVpGaFR2VGFPWnc3by9JM2htY3krL1c1cXFHdWM4ZHNC?=
+ =?utf-8?B?QW5XcmVWZkoway82UEJ0UjliSnpNUG5EbXFCcStSMWJiOU9ueTFxbnU0cWxj?=
+ =?utf-8?B?UG1MclBpd1M2aVlZWHcxeG94RTdPNXlWQ2Y4NHhJV2ZsbVVqNjdQWnZsdUZt?=
+ =?utf-8?B?ckFsRUJxNUJkZktKRHRLV0VDaXR0MFJDNHpJajFRUHBQMWhVVjJYdUszSEU2?=
+ =?utf-8?B?Q1N1MkovaVZTM2NKcWhmZHNLdy80cHE0VkpOYmJMTVQ1UEI0VTBHZGVLU2lY?=
+ =?utf-8?B?QTRMbm8yOFVNbGZDdDBVR2FscUNDaDhDL1RsTStLWHUzUHo2U0VpYmtYaE5N?=
+ =?utf-8?B?V1dIclBkN1loOVBacWlmdjhqSkJ6VFpkS0lGbXp1eDQ3b0QyUEJFZVJaY1dT?=
+ =?utf-8?B?aG42MXplbWVIM281SzBoU2c4ZDVmUjRFWFdUT3NQZjcrWkxLZXRrOEFCbjN3?=
+ =?utf-8?B?VXQ1R3p2UU8yckNWS3dTak1QNm8vUFRHbUY5VW5rWmVmeDdLUjJJL2pzZDJl?=
+ =?utf-8?B?eVB1S1Z4MkhudXlWc2NoN1lqVFV3eWlXRlNHdTRab05zbFEyUmJXQWZXYmpu?=
+ =?utf-8?B?QUJyKysyNWVad3I0MFBwODFuaTgwQmJIT3QxN0FxdC9UUk5QRGdMWFIyYnlO?=
+ =?utf-8?B?a01ibVJwaWdhV1FaNm5JRjBrcVlxS0ZyaHcxdG1yc0tUYnZ5WDlISjJFeVRZ?=
+ =?utf-8?B?Q3BTL3FrMm9EdGJoUFpQZytBdTdETWRvWHRwVldrZ0ZXaUF5MzZjc0h6d1FW?=
+ =?utf-8?B?b1RJUCtzOWJIdGNORCtnWmFWMTh6ZldrOXdQdG1QQUFNUnRnT09ZVlEycEd0?=
+ =?utf-8?B?MHdPTjJIVk1xN09PN0xHbWthdjRiN25oM2J6aDhtNWFYWUR4K2xMYmI4VVVW?=
+ =?utf-8?B?bFg5ZE9jL2hHcWQ3Ly9Ya1RqM1M4QUpDbjdEd3owaENmd0FjSkxaOTlMVFBI?=
+ =?utf-8?B?VEtiZFVJMW44aDVpcWx5Q1J3UmhmMHkyUTI5c09YQUxnTmo5NEhpKy93YU9p?=
+ =?utf-8?B?SFVmWXZTMXFSR213MFlUU3lSSXRHWms2Yk44bmhBekdDSmZRdGtmS1FwdHhI?=
+ =?utf-8?B?VisvQ3FxL29DNmF1U1JNeDJNdWJpM1NYNnJaSHEreVZXMkRMbDZaZElWK2NM?=
+ =?utf-8?B?ZUpQQVNrZE1FMVVNeXh5dzhBTzE3ZXlkT3hZKzVPS1VacjZrSWM0NDgrd3Jr?=
+ =?utf-8?B?OXVhbyszYjRTKzZUbU0yU1RvWWJkYk4vSFc4bm5JKzRnYThHMUJFTTNQRUNW?=
+ =?utf-8?B?Y1FxUjRadzg5T2NKS2RlNG9yM2FTbWgzT2JpbGxBQW1OTVN4OVFkRzhuOEpB?=
+ =?utf-8?B?SmpyaXpTMmxvYnFjWEloSGViYjlnVGVwbFJkWVppNS9OMjYxUk16SEJwNlEx?=
+ =?utf-8?B?d3MyTHFBUmgydGZ6SU5jays2Y2ZPZGN5NzBQVDN2clU3SEFGOHVYc0xMWU9i?=
+ =?utf-8?B?bXpwRUNxT1E5VVpXUkpjdmJIbDFGc3dpa0FOYnBTbG8ydHRNR0ZFUG80ZGM5?=
+ =?utf-8?B?K3JQQklUWS90Z2ZXdHJ5eWR0aW1aTFBZenFFN3N3T2xTaENGY091V0ZmSy9T?=
+ =?utf-8?B?Q0dFc1ArbjUxRkpRZ3NuUXBtbFAxZ09TSWVXRW00ZVZFVk1KM3VJcEZXVkJz?=
+ =?utf-8?B?R1FiT3RCb2Fpc2h5OGRtcTgyTmhKck1nSzIvd1BoQTQyUDUrRXR6Wjc4QTJL?=
+ =?utf-8?B?Qjl4S0Fkd1QxWXVUMnFtQm9jVDVtZEo1a0oxSUtYYmxKWHp0WTRDL1FlQ3dT?=
+ =?utf-8?B?REF2M3FVR0N0cUQ2QjRHbjNmSkNpbGxVWGNCV2FRNzFneVkwOW9ObUx1Q0pM?=
+ =?utf-8?B?L2w4OTJrS3l0dHNOMHViS1VpbWh1eS9TR1RHUmg5UHJFb2tIYUxZa1M4M0dB?=
+ =?utf-8?B?S1VrbXZBb1hOQWdmYitjaGtSSGlZaTJZTVBIU1hBOGhLbUpIWWE0NlBJaGZ3?=
+ =?utf-8?Q?zwJ5d+6IsweRHPppZj9DQZNS3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caddf8ce-f536-45cf-c274-08dd7088ab65
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 19:17:25.1710
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R7YoTbFVNJFZkvQg92QU4VG1Krfflk88hXkv+d95aKAG+X0gkR7cjiynVr87tVbhxW1su8Lkz8ueTOk+veG85Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5868
 
-Hello,
+Hi Bryan,
 
-syzbot found the following issue on:
+Thanks for the review.
 
-HEAD commit:    6537cfb395f3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=160183a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6cc40dfe827ffb85
-dashboard link: https://syzkaller.appspot.com/bug?extid=b71bb48c13bf3fed3692
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179c6498580000
+Thanks,
+Pratap
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/742bdd7166fc/disk-6537cfb3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9c22363533ce/vmlinux-6537cfb3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2197dde515b2/bzImage-6537cfb3.xz
+On 3/28/2025 9:18 PM, Bryan O'Donoghue wrote:
+> Caution: This message originated from an External Source. Use proper 
+> caution when opening attachments, clicking links, or responding.
+> 
+> 
+> On 28/03/2025 21:42, Pratap Nirujogi wrote:
+>> From: Bin Du <Bin.Du@amd.com>
+> 
+>> +static const struct i2c_device_id ov05c10_id[] = {
+>> +     {"ov05c10", 0 },
+>> +     { }
+>> +};
+> 
+> There's an IPU6/IPU7 version of this driver.
+> 
+> https://github.com/intel/ipu6-drivers/blob/master/drivers/media/i2c/ 
+> ov05c10.c
+> 
+> Perhaps you could import the Intel ACPI name contained in there too.
+> 
+sure, will add Intel ACPI names too in V3. To be specific, I'm going to 
+add the below table in addition to the existing "struct i2c_device_id 
+ov05c10_id[]" table:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b71bb48c13bf3fed3692@syzkaller.appspotmail.com
+static const struct acpi_device_id ov05c10_acpi_ids[] = {
+	{ "OVTI05C1" },
+	{}
+};
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-rc3-syzkaller-00060-g6537cfb395f3 #0 Not tainted
-------------------------------------------------------
-kworker/u9:0/53 is trying to acquire lock:
-ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
-ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
-ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4148 [inline]
-ffff888035a42840 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: __flush_work+0xe9/0xc60 kernel/workqueue.c:4206
+>> +
+>> +MODULE_DEVICE_TABLE(i2c, ov05c10_id);
+>> +
+>> +static struct i2c_driver ov05c10_i2c_driver = {
+>> +     .driver = {
+>> +             .name = DRV_NAME,
+>> +             .pm = pm_ptr(&ov05c10_pm_ops),
+>> +     },
+>> +     .id_table = ov05c10_id,
+>> +     .probe = ov05c10_probe,
+>> +     .remove = ov05c10_remove,
+>> +};
+>> +
+>> +module_i2c_driver(ov05c10_i2c_driver);
+>> +
+>> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
+>> +MODULE_AUTHOR("Venkata Narendra Kumar Gutta <vengutta@amd.com>");
+>> +MODULE_AUTHOR("Bin Du <bin.du@amd.com>");
+>> +MODULE_DESCRIPTION("OmniVision OV05C1010 sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> Why v2 ? Checkpatch will complain about v2 and BTW the IPU6 driver above
+> is GPL not GPL v2.
+> 
+sure, will replace "GPL v2" with "GPL" in V3.
 
-but task is already holding lock:
-ffff888035a42b38 (&conn->lock#2){+.+.}-{4:4}, at: l2cap_conn_del+0x71/0x690 net/bluetooth/l2cap_core.c:1760
+> ---
+> bod
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&conn->lock#2){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       l2cap_info_timeout+0x60/0xa0 net/bluetooth/l2cap_core.c:1666
-       process_one_work kernel/workqueue.c:3236 [inline]
-       process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #0 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       touch_work_lockdep_map kernel/workqueue.c:3920 [inline]
-       start_flush_work kernel/workqueue.c:4174 [inline]
-       __flush_work+0x739/0xc60 kernel/workqueue.c:4206
-       __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4362
-       l2cap_conn_del+0x507/0x690 net/bluetooth/l2cap_core.c:1794
-       l2cap_connect_cfm+0xcc/0x1090 net/bluetooth/l2cap_core.c:7195
-       hci_connect_cfm include/net/bluetooth/hci_core.h:2051 [inline]
-       hci_conn_failed+0x287/0x400 net/bluetooth/hci_conn.c:1266
-       hci_abort_conn_sync+0xd27/0x1340 net/bluetooth/hci_sync.c:5588
-       hci_cmd_sync_work+0x22b/0x400 net/bluetooth/hci_sync.c:332
-       process_one_work kernel/workqueue.c:3236 [inline]
-       process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&conn->lock#2);
-                               lock((work_completion)(&(&conn->info_timer)->work));
-                               lock(&conn->lock#2);
-  lock((work_completion)(&(&conn->info_timer)->work));
-
- *** DEADLOCK ***
-
-6 locks held by kworker/u9:0/53:
- #0: ffff888024bc9148 ((wq_completion)hci5){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
- #0: ffff888024bc9148 ((wq_completion)hci5){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3317
- #1: ffffc90000bd7c60 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
- #1: ffffc90000bd7c60 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
- #2: ffff88805cf6cd80 (&hdev->req_lock){+.+.}-{4:4}, at: hci_cmd_sync_work+0x1ec/0x400 net/bluetooth/hci_sync.c:331
- #3: ffff88805cf6c078 (&hdev->lock){+.+.}-{4:4}, at: hci_abort_conn_sync+0x9ee/0x1340 net/bluetooth/hci_sync.c:5569
- #4: ffff888035a42b38 (&conn->lock#2){+.+.}-{4:4}, at: l2cap_conn_del+0x71/0x690 net/bluetooth/l2cap_core.c:1760
- #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: start_flush_work kernel/workqueue.c:4148 [inline]
- #5: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: __flush_work+0xe9/0xc60 kernel/workqueue.c:4206
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 53 Comm: kworker/u9:0 Not tainted 6.14.0-rc3-syzkaller-00060-g6537cfb395f3 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: hci5 hci_cmd_sync_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- touch_work_lockdep_map kernel/workqueue.c:3920 [inline]
- start_flush_work kernel/workqueue.c:4174 [inline]
- __flush_work+0x739/0xc60 kernel/workqueue.c:4206
- __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4362
- l2cap_conn_del+0x507/0x690 net/bluetooth/l2cap_core.c:1794
- l2cap_connect_cfm+0xcc/0x1090 net/bluetooth/l2cap_core.c:7195
- hci_connect_cfm include/net/bluetooth/hci_core.h:2051 [inline]
- hci_conn_failed+0x287/0x400 net/bluetooth/hci_conn.c:1266
- hci_abort_conn_sync+0xd27/0x1340 net/bluetooth/hci_sync.c:5588
- hci_cmd_sync_work+0x22b/0x400 net/bluetooth/hci_sync.c:332
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
