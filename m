@@ -1,172 +1,212 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F137017C7CA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D935C1876
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412227; cv=none; b=La4+Y0y+ADVdCZma4bZ2KjRKkATr75xNUTWB7IkGaY4iQb0IonWi59b/Xy9MCi1JgB0SLjdsveERVI6hP1yXqtYT3w6EKvgAqDLzbTlJNNDyuLZxdt6jbTca6oj3s7IEUEEIOfb/S3l1TpaBCrCQesK3RG4DdkowzkVrzEtYsns=
+	t=1743412336; cv=none; b=CGqwF0eHrXvHQ3GYw1xKUAMQsUiiC6g3ByHyIlMeAuSOBT+62+rj5hJbddOCgL3AqKgBGDNZjAzDEfssFq0hhzTd4xlxgnH/N/TpQu/M7uRWj9aL2+myOMITPTUF4x1xwGZGeK4WCFDVtiPcHNWZOzd52K5ay2uV+6zLDLeU5vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412227; c=relaxed/simple;
-	bh=0Fp3Y5nHaVqfdk0s9zEmEU2EBx8pL1dRo6UL/IIA2Rk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lKbsrAYn0bSON3CVI6zAM7r/Mms3o5DgT5xpBV371pLAMcBrzPE2V7S88nddiR11xq1xfE3LmK00S8UPQci1qDIb1JzLcuUEr0kBJqyPB5UfXaooUAMe/pkGrcGX8hDkyizj2FVJmIFS/2wmE70Zh78MVU/8RMX5GRLsbZfAiTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85dd46b20bfso396592239f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:10:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743412225; x=1744017025;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qYJ5qslhquxdKXWOfBZbZNFTCfev/Er7026JBNDLSJU=;
-        b=GAiaWdrAUo70UYyH2iT6z046fDfvF/FlHonTwTocM/bejdPQDApuKKLPYUbUp1e37C
-         Yt71ZlZH57vqL+1MHNa6jWDYFVxAxbERniLCBCS9K8PHb3y3AzrX2JRtzCxagbAPLS3S
-         2rfCqt3y5C91G31mXG0hlTckHj4q7LbFN+0dh6rjFZB9i6XB24BAGTIO75WWi9FMwLoz
-         P//V982fvWeJ0xjya2bBwXVDvPCJDvo9+8EQd2DxzNmTdjWFkw0SaIFrbP0749FX52qd
-         fnaHsB9GHja1qlJjygkLiVsKp0dl+KmUR0e2QqP+GrtGN3PsXR1AOsYN9SBwa8DhRRq1
-         rCXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMULLhkVXXhSsKd6Vg6nX5DpcaWNNfH5vbpduSsMqezLSiI+x7Jys6BxhJWffLBtyEdwPnacw2arDSIOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy75m72LUWSIgT7HHMmgPxTfG38jEep7E9cwK9Pal2pCvQW/cX5
-	O/iPv66u6CtPOy9Ul4tZXa7szKYqDCA6crphxLwBe2Zr3zJOY+JH8mnKyB5SCPrzIeMU6+Wsrw0
-	z+8ByEyBqQEbCo19N9M1j82GEQBEQI4vwk5H3IPrnl05ifv3ms5yyZAY=
-X-Google-Smtp-Source: AGHT+IH7RCxgjWEkseAVDE0s/VYe7EUPYobaVOoeQjK4P+v5Gn9LH7UbN48xhkezAex7Vgupvtor+3aRgs01LfyeYkXc+aFCQOwM
+	s=arc-20240116; t=1743412336; c=relaxed/simple;
+	bh=jQEefqsaFQ5JVl1WyD7y4k8V3KJl31aWu30TIrr7DYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fN76DhPWFWdcW2lErZzdByzJlTYj2WKYFn2Qr9fDj4uFFQ8pBUFrM0teP55UVvwFDTWBqrqNC+M3yuc3fhiooAPi8/6ti/E9oReU4NVRpwclQsw3J2CA2daj8cC03bby45ljhmpUV7HExBJH0beNWmiVlILR4y3b6U0E+1/6xUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0Ky7qT/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5xNYbIDA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0Ky7qT/4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5xNYbIDA; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0Ky7qT/4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5xNYbIDA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0Ky7qT/4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5xNYbIDA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B0FAC211E5;
+	Mon, 31 Mar 2025 09:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743412332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
+	b=0Ky7qT/4CPAWKoJK20bS0zRSUYBw4mVpm1FMtakdX28HNzw+tBLvP4cerHS8wQz4MDR4op
+	htsVQvf+vE+2g8nMA1luQ3XzQ4kFQVkrPiY6o+OOpf3tOrpgbVuc+orz12f9XnGo+yz+eJ
+	TisSybQgCG8rwWHp9/T8l9ghq3iVa2A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743412332;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
+	b=5xNYbIDAPWPYR+qBthBJgb2fUcAJG7MHIGLcQ+Tapv05LkCi/4xt49aO12emtH0H8brQ4P
+	eSO5NEsRMhhZxKBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="0Ky7qT/4";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5xNYbIDA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743412332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
+	b=0Ky7qT/4CPAWKoJK20bS0zRSUYBw4mVpm1FMtakdX28HNzw+tBLvP4cerHS8wQz4MDR4op
+	htsVQvf+vE+2g8nMA1luQ3XzQ4kFQVkrPiY6o+OOpf3tOrpgbVuc+orz12f9XnGo+yz+eJ
+	TisSybQgCG8rwWHp9/T8l9ghq3iVa2A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743412332;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FBNvhUODLr5wrTft+mbN6gA9NBfsMyAzWYEeziZemCM=;
+	b=5xNYbIDAPWPYR+qBthBJgb2fUcAJG7MHIGLcQ+Tapv05LkCi/4xt49aO12emtH0H8brQ4P
+	eSO5NEsRMhhZxKBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C77613A1F;
+	Mon, 31 Mar 2025 09:12:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Pii9FGxc6mdlSwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 31 Mar 2025 09:12:12 +0000
+Message-ID: <08b645e4-1a48-4f73-a26d-419966533de0@suse.de>
+Date: Mon, 31 Mar 2025 11:12:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1569:b0:3d3:ff09:432c with SMTP id
- e9e14a558f8ab-3d5e08ea12emr74159725ab.4.1743412225069; Mon, 31 Mar 2025
- 02:10:25 -0700 (PDT)
-Date: Mon, 31 Mar 2025 02:10:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ea5c01.050a0220.1547ec.012b.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in kernel_sock_shutdown (3)
-From: syzbot <syzbot+fae49d997eb56fa7c74d@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/6] Introduce sparse DRM shmem object allocations
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ kernel@collabora.com, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
+ <c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
+ <20250331103102.22be5363@collabora.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250331103102.22be5363@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: B0FAC211E5
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[collabora.com,linux-foundation.org,linux.intel.com,kernel.org,gmail.com,ffwll.ch,arm.com,vger.kernel.org,lists.freedesktop.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+Hi
 
-syzbot found the following issue on:
+Am 31.03.25 um 10:31 schrieb Boris Brezillon:
+> Hi Thomas,
+>
+> On Mon, 31 Mar 2025 09:13:59 +0200
+> Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+>> Hi
+>>
+>> Am 26.03.25 um 03:14 schrieb Adrián Larumbe:
+>>> This patch series is a proposal for implementing sparse page allocations
+>>> for shmem objects. It was initially motivated by a kind of BO managed by
+>>> the Panfrost driver, the tiler heap, which grows on demand every time the
+>>> GPU faults on a virtual address within its drm_mm-managed ranged.
+>> I've looked at panfrost_gem.h and found that the driver's gem structure
+>> has grown quite a bit. It seems to have outgrown gem-shmem already.  I
+>> think you should consider pulling a copy of gem-shmem into the driver
+>> and building a dedicated memory manager on top.
+> Actually, it's not just something we need for panfrost. I plan to use
+> the same non-blocking allocation mechanism for panthor's heap
+> chunks/buffers, and lima could use it for its heap buffers too. The
+> non-blocking page allocation is also something i915 has been
+> open-coding here [1], and I believe that some of this logic could
+> (and should IMHO) live in common code rather than each driver coming
+> with its own solution, thus increasing the risk of bugs/inconsistencies.
+> That's even more important if we provide a common gem-shmem shrinker
+> like Dmitry's has been proposing.
 
-HEAD commit:    d082ecbc71e9 Linux 6.14-rc4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16f8ec98580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1635bf4c5557b92
-dashboard link: https://syzkaller.appspot.com/bug?extid=fae49d997eb56fa7c74d
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d197a4580000
+Thanks for the note.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/323a5d590eec/disk-d082ecbc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f7c4b6e33fd9/vmlinux-d082ecbc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c518bbd55334/bzImage-d082ecbc.xz
+Best regards
+Thomas
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fae49d997eb56fa7c74d@syzkaller.appspotmail.com
+>
+> Best Regards,
+>
+> Boris
+>
+> [1]https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/i915/gem/i915_gem_shmem.c#L89
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000000d: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
-CPU: 0 UID: 0 PID: 6092 Comm: syz.0.24 Not tainted 6.14.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:kernel_sock_shutdown+0x47/0x70 net/socket.c:3660
-Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 33 48 b8 00 00 00 00 00 fc ff df 4c 8b 63 20 49 8d 7c 24 68 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 1a 49 8b 44 24 68 89 ee 48 89 df 5b 5d 41 5c ff e0
-RSP: 0018:ffffc90002f27700 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff888060d6f800 RCX: 0000000000000000
-RDX: 000000000000000d RSI: ffffffff8925a602 RDI: 0000000000000068
-RBP: 0000000000000002 R08: 0000000000000001 R09: fffffbfff2dd7dae
-R10: ffffffff96ebed77 R11: 0000000000000001 R12: 0000000000000000
-R13: ffff888024c5ae00 R14: ffff888024c59e40 R15: 0000000000000000
-FS:  00007f57dba706c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000062018000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- udp_tunnel_sock_release+0x68/0x80 net/ipv4/udp_tunnel_core.c:181
- sctp_udp_sock_stop+0xf5/0x160 net/sctp/protocol.c:937
- proc_sctp_do_udp_port+0x261/0x450 net/sctp/sysctl.c:553
- proc_sys_call_handler+0x3c6/0x5a0 fs/proc/proc_sysctl.c:601
- iter_file_splice_write+0x90f/0x10b0 fs/splice.c:743
- do_splice_from fs/splice.c:941 [inline]
- direct_splice_actor+0x18f/0x6c0 fs/splice.c:1164
- splice_direct_to_actor+0x346/0xa40 fs/splice.c:1108
- do_splice_direct_actor fs/splice.c:1207 [inline]
- do_splice_direct+0x178/0x250 fs/splice.c:1233
- do_sendfile+0xafb/0xe40 fs/read_write.c:1363
- __do_sys_sendfile64 fs/read_write.c:1424 [inline]
- __se_sys_sendfile64 fs/read_write.c:1410 [inline]
- __x64_sys_sendfile64+0x1da/0x220 fs/read_write.c:1410
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f57dab8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f57dba70038 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00007f57dada6080 RCX: 00007f57dab8d169
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000003
-RBP: 00007f57dac0e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f57dada6080 R15: 00007ffea4fcc208
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:kernel_sock_shutdown+0x47/0x70 net/socket.c:3660
-Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 33 48 b8 00 00 00 00 00 fc ff df 4c 8b 63 20 49 8d 7c 24 68 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 1a 49 8b 44 24 68 89 ee 48 89 df 5b 5d 41 5c ff e0
-RSP: 0018:ffffc90002f27700 EFLAGS: 00010202
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-----------------
-Code disassembly (best guess), 2 bytes skipped:
-   0:	df 48 89             	fisttps -0x77(%rax)
-   3:	fa                   	cli
-   4:	48 c1 ea 03          	shr    $0x3,%rdx
-   8:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-   c:	75 33                	jne    0x41
-   e:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  15:	fc ff df
-  18:	4c 8b 63 20          	mov    0x20(%rbx),%r12
-  1c:	49 8d 7c 24 68       	lea    0x68(%r12),%rdi
-  21:	48 89 fa             	mov    %rdi,%rdx
-  24:	48 c1 ea 03          	shr    $0x3,%rdx
-* 28:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
-  2c:	75 1a                	jne    0x48
-  2e:	49 8b 44 24 68       	mov    0x68(%r12),%rax
-  33:	89 ee                	mov    %ebp,%esi
-  35:	48 89 df             	mov    %rbx,%rdi
-  38:	5b                   	pop    %rbx
-  39:	5d                   	pop    %rbp
-  3a:	41 5c                	pop    %r12
-  3c:	ff e0                	jmp    *%rax
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
