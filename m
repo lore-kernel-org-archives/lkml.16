@@ -1,108 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15748157A5A;
-	Mon, 31 Mar 2025 17:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F50157A5A;
+	Mon, 31 Mar 2025 17:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743443203; cv=none; b=moMywVngvg3mnXgf2RiNgwe7WH61xqQ3P+dppEhTlAqJEmobZVB19ApSrjlArbfbG25kXlnmhuAJ9634XUIHfJ+YZxCTbeHRTAcopoYOVZtNm4divr6YR/5kD1hKM8O+mfmmugxPN1w4nvNr9Cf1eBvVAOPOY3glrhMM9OFIkcY=
+	t=1743443270; cv=none; b=B/FM7w8KYkDxAOH6T1D2LNoMUa7/OPiu0GCTvojLV3rG3gYibbN3tHyYiD3hACW0Vjs/FZOsy4XABMmQ+AmbeuIaSKTmBHwF+kyFheLGyeOIKb7UOdp51dF0Xb3cEdecGD4Yt/L830fQQkBPKFk5jIcGxn2oOoId5E+uYr9zVUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743443203; c=relaxed/simple;
-	bh=hz0ih5RSQaFvOri/b2YgUookxzob3UAMF9e951iei0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y24BpfGKeVRpNlo7aTmznwTMfzjXSsMpKtdwb81KmKeNiv2v3Ly/TRjXq3X+j5uYoY4Xh8ju/WSG2J9Iqw1XalPfJb1L1lBoOZQNza5+MMv8LPvgbtg6QQxokJc3bHFEPfIVyu2S7dKDsVwjYwpGgF4jwLfZu+qzk07SU7O8t7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzNmX/Th; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743443270; c=relaxed/simple;
+	bh=cohf0xBe3HVe1w14VXyw62vPoN3cbVjN+P9XlAIuHy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wf67RZnOwdd0KPOGsBDYRrl53cnkwR/CKPIHFk7cvCFkS3/ukvcHY82A61Z2NgCQgfkZGhOMRq2mReFaG+kMUKt3FN3XBs/uwkLk0uJdH79Y6c3+D3yxx/EQRRZ9OJUfppwOKDR/qXGzc640GfbvgXptyr5l05MG28z5tIvEyVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF10vOic; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzNmX/Th"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A5CC4CEE3;
-	Mon, 31 Mar 2025 17:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743443201;
-	bh=hz0ih5RSQaFvOri/b2YgUookxzob3UAMF9e951iei0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EzNmX/ThqrXPhR0b5PDKiyvuc1bICvWTVev4ra2QiztbJFpjX7oic5bcPmQbYGAPN
-	 fNax9JWvhPFEulbkIlF8I5S2Pti4DRID//9r3HMQVoKzCm/SntDN4gI4NGrHpdpXOH
-	 7AMwo4776CyuGGBrMGzv5unEeowSd1z0RPbIBZ0SbgXUwIoNXIa4Z7t67DDDspF1UX
-	 pU91/wu/94FCvN4T44boObhSdGXbmEOYPMtqbFvrqe9v0UDuwVWOFgej4G+GkMg8ao
-	 RKAX10IaeGvbTGgOhqI2b5PhnIBWQEnvUe22laEeN1hJgqGUCFutDAmR3RC1LgfGV3
-	 21aseYmJ19YUQ==
-Date: Mon, 31 Mar 2025 20:46:36 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
-	"Cai, Chong" <chongc@google.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"bondarn@google.com" <bondarn@google.com>,
-	"Raynor, Scott" <scott.raynor@intel.com>
-Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Message-ID: <Z-rU_JXWn0vCdBr_@kernel.org>
-References: <20250328125859.73803-1-elena.reshetova@intel.com>
- <20250328125859.73803-3-elena.reshetova@intel.com>
- <Z-bhczXA6aHdCYHq@kernel.org>
- <Z-blOQ94ymUsDwPn@kernel.org>
- <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF10vOic"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so38302161fa.2;
+        Mon, 31 Mar 2025 10:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743443266; x=1744048066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rheJE/Hf8MWC1TGs8GVAsH8XEAExyurG2WRPYBbS4h0=;
+        b=WF10vOicDIUvo9LTpBguHmlE1kuCKi43zV498CzKCJmWv9oeFcsAK1iBNa5dYRK1hr
+         VIDqM3PMKCvyWYRAPkNh6ZNcRQ+h+5ulMi6Ros2NWk1+aZ3h9W0PjrTV5z3J+KbbuGur
+         i7CeslS9IekO48nxc/3P3XELzegHVNlmMmg+d9B7WXsoDoLhrCL7JBhTEYuqgBk0pUpy
+         0EYF0VZFHeis1ozeAFskZJjlX/s538leUI6HYKg+d6Fa8yYGgZgJc2k/pW7Wu43vvOKa
+         FEOjWqSkHjuWMUJFf1XY0TSZ/aE2HQ1HGWJR1kel5kXtROvSeeugsnjlXZJnJhqaR+86
+         FjPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743443266; x=1744048066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rheJE/Hf8MWC1TGs8GVAsH8XEAExyurG2WRPYBbS4h0=;
+        b=v42uLczmR230SLpp56nNOvngyIsS+qC1xLKbKXrMaLspgmirKnktH/5WW3GURNw6rB
+         KIiagGEbUtuY2bH272/c1N4o21CnWDsyZL2becqhfwz+knZtl6pzyfV2F7yBDkZtnuhd
+         HI+U+K+z3We9qFpEGwWb+jYnXjIVny38AnStHgpV0lhsWFDJlCQqIf4chTNM0wPrTCun
+         VH/prPYTFwjuKVIjd2rLP1NaPwDn1mv9/ZM+0eaBZgxxPRkPHMLgNzeLxST3TU2cHODZ
+         2E3FLjBQu8okk94nBD+Y9eSlO4q2nwUVYCkYKNYizU9Q9tfMxAcKF0MYMVQJ9oduUNZm
+         mDAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVa8zAFOTnXVGMka7UjG+qDumg64nkM9hR27TgLHOJgsDXlOpvvtZp94YBq6jeJuY4x3szHC7vteqJQ5OA=@vger.kernel.org, AJvYcCXXWgClWq7vVyn9onhTTkPiNdam8WhcHE7bXSBhC5wB19djULRpI4uV5OWCyCskgkmGliKNeoZWoxNbpph2JSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJmDULJ2V+CTXY2d19wrxNFNJ2o0TM0w6fWExuNkiJ7MiHo5ke
+	hyhwHmiUxwPaoiRdnBmk+gk6GLMnFlzt78dSbWk1c/xBOZ7nOIzC7p8v+kcCAxHjrvc1R3fGDVU
+	0WdWB/WbXRdGKIlFTw1WCsfCdq/M=
+X-Gm-Gg: ASbGncu6WNF+Qp/zWx1I9Zt7Oh4rGXg+B821aF6ShYdwBuQMNkgqD+RKVVlmRcvxaAQ
+	zu52xWgzXEOO7yf3x5faWKoyzjflPG5cowSgA+t4WrAnKIc/hJDLzAUu9KB7R+dA8m/YmYUPESh
+	37XquQOf5a4ebwp/vQBn4wIJnp7m1VO3kmacMnKfutsAl1IIDh2yQj6nJLu1I=
+X-Google-Smtp-Source: AGHT+IE7S+V/7NxXtdAKfO+zcdu3prC+4SQmecRjM7LaccjG7RPfjXfeRLFWVn7FPFcV8cgJwszMiQ4hLmnqdwE86Yg=
+X-Received: by 2002:a2e:bd81:0:b0:30b:b8e6:86d7 with SMTP id
+ 38308e7fff4ca-30de0278867mr32487441fa.22.1743443266425; Mon, 31 Mar 2025
+ 10:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+ <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com> <1B186177-16B9-4D2D-9603-F713F0FE9BEC@collabora.com>
+In-Reply-To: <1B186177-16B9-4D2D-9603-F713F0FE9BEC@collabora.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 31 Mar 2025 13:47:10 -0400
+X-Gm-Features: AQ5f1JoZKdRywN2Xd2gVKe_V6-VgwdXu-_yeOvVB_NhalhvBi3F6FP99Fv4lNRg
+Message-ID: <CAJ-ks9mNZWrAaHChU6kXHOKcwUkL4MJ1ENjuTPBaE8CKrEYQPA@mail.gmail.com>
+Subject: Re: [PATCH v5 06/13] scripts: generate_rust_analyzer.py: add type hints
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, 
+	Fiona Behrens <me@kloenk.dev>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 07:26:45AM +0000, Reshetova, Elena wrote:
-> > > > +	default:
-> > > > +		pr_err("EUPDATESVN: unknown error %d\n", ret);
-> > > > +		break;
-> > > > +	}
-> > >
-> > > Overall, I think you're right in that "inversion" does make sense,
-> > > now that other stuff is better aligned.
-> > >
-> > > At least when there is spurious error, I think ioctl's should stop
-> > > responding and driver should not do anything useful anymore. I.e.,
-> > > it should go out-of-service.
-> > >
-> > > I don't think the driver should tear-down, just stop servicing
-> > > VM's and responding ioctl's.
-> > >
-> > > Possibly thish should be also right action for other errors than
-> > > "insufficient entropy" but I'm open for comments for this.
-> > 
-> > Or actually actually I take one step back with my suggestions
-> > because this really should be a question for which I don't have
-> > the definitive answer.
-> > 
-> > The current code works like this: if anything that we don't
-> > like happens, we re-iterate.
-> > 
-> > Should some of the "exceptional conditions" have a different
-> > recovery or not?
-> 
-> None of these exceptional conditions are fatal or present an
-> immediate danger to the system security. So, allowing the re-tries
-> seems logical in this case. In case re-tries also fail, the system
-> admin will have an option of gracefully shutting down all enclaves
-> and doing either a full reboot (if SVN is the only concern) or other
-> necessary actions like taking the physical node out of use, etc. 
-> 
-> Does this sound reasonable? 
+On Mon, Mar 31, 2025 at 1:09=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> Hi Tamir,
+>
+> [snip]
+>
+> >     rust_project =3D {
+> > -        "crates": generate_crates(args.srctree, args.objtree, args.sys=
+root_src, args.exttree, args.cfgs),
+> > +        "crates": generate_crates(
+> > +            args.srctree,
+> > +            args.objtree,
+> > +            args.sysroot_src,
+> > +            args.exttree,
+> > +            defaultdict(
+> > +                list,
+> > +                {
+> > +                    crate: vals.lstrip("--cfg").split()
+> > +                    for crate, vals in map(lambda cfg: cfg.split("=3D"=
+, 1), args.cfgs)
+> > +                },
+> > +            ),
+> > +        ),
+> >         "sysroot": str(args.sysroot),
+> >     }
+> >
+> >
+> > --
+> > 2.49.0
+> >
+>
+> I found `args_crates_cfgs()` a lot easier to understand, but I guess this=
+ is a
+> matter of taste. I also find that this `defaultdict()` call slightly poll=
+utes
+> the surrounding code, but again, that might be just me.
 
-Uknown error I don't think would hold that premise.
+Would extracting a local variable suffice?
 
-> 
-> Best Regards,
-> Elena.
-> 
+> Regardless, running `mypy` still passes, and there is no change to the ou=
+tput.
+>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-BR, Jarkko
-> 
+Thanks!
