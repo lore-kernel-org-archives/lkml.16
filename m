@@ -1,202 +1,227 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46FF214228
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF49217654;
+	Mon, 31 Mar 2025 15:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743434827; cv=none; b=O3aV1YTJBzG0ubu2GhVzw+/mBRaPFRRGJ1tZd1i90NFkbA0E5yXNW7i/+WKrbS0t4PLPEaPuMOdBYgud4JupWiP69Ov6AEL2lUvLYH0Ah7XOYboi3Z0XaLHyyn/RIh76JbKdq4K8yfUun+J28N1GvazJvLTIl0dOVu3+PP1/Z7I=
+	t=1743434871; cv=none; b=smaXMOrQyMueOuQ3HbOjBQRPshbxqGjvUYBp4N0ztiLkwbYLQERgqjrRiCsghjW8H2PhDeXLQEoEHtIsZ8Gjm3hPK9HRtwxmWyaw5QWbeHcc/vyHE4p5SI1O3aGKUkxKryCC3eV8XdhLs020kcrlGsZ9lDN2V/UoyO2e46ak+kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743434827; c=relaxed/simple;
-	bh=XZVhDaAbSWOhuHkFG6pSknas5KywrNraRFIzSsDs2lk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tyjnc/FrY0/JUpKjbruU9xxstLKuBgwlWKL8bbF5WEVTNn6Cf09kHh0UR/sSGDJAACCkN4WzNcf1ZBLrzK/xM2Dswge4bMPbI28hiul+URG70Qw46mh4f4V2frGnenadT16rhdJQO4fyq17en2Ws0zSHFMQd4mChOCXspFsCMeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PG1R0xZB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVSaERfW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PG1R0xZB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVSaERfW; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743434871; c=relaxed/simple;
+	bh=zcSxldy4tZU7YfrKElgKAUBlHkircEvdrhseClZd4cA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OFkwUAhR7yLosR6AwXUYxq3q9qBjGBZSa/ZALMRKOanZX74rrroJeP16OHgud3RIbaCws41LPbAYonpwD2NhXzEKy+hITt6Ci9U6/lOjJXk7R9IFPMw/mAoDW/46cWxv8Wr/yUXX7QNR9Nw8UMiSXNSWlBrAs4E+5gvdtha3uGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DkNoj1h4; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PG1R0xZB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVSaERfW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PG1R0xZB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVSaERfW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 900AD1F452;
-	Mon, 31 Mar 2025 15:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743434823; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
-	b=PG1R0xZB4srxpCoyuH2P41oVFOJsjMmPoaQPknpS8bJWB4wn8Qli+H9X+gSO/zmrk6TpnG
-	gdxcxHlmpf5mER4nOUpiMFbcBgqY4/QJi8fKU2J2LKoVkP+qx3KzzPgE2e3+PBZmjs/SKy
-	ccaeIZoGWxywORZOsbDM9fXt3cMrDg8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743434823;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
-	b=ZVSaERfW5JJCTJi7/qkZABWr/oHYliNOrFrxThZKR14OsGj5eZLKkMGqzP1GUzLNY0z1Kc
-	Og+3SYCiVnwFHEAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PG1R0xZB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZVSaERfW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743434823; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
-	b=PG1R0xZB4srxpCoyuH2P41oVFOJsjMmPoaQPknpS8bJWB4wn8Qli+H9X+gSO/zmrk6TpnG
-	gdxcxHlmpf5mER4nOUpiMFbcBgqY4/QJi8fKU2J2LKoVkP+qx3KzzPgE2e3+PBZmjs/SKy
-	ccaeIZoGWxywORZOsbDM9fXt3cMrDg8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743434823;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
-	b=ZVSaERfW5JJCTJi7/qkZABWr/oHYliNOrFrxThZKR14OsGj5eZLKkMGqzP1GUzLNY0z1Kc
-	Og+3SYCiVnwFHEAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11AC513A1F;
-	Mon, 31 Mar 2025 15:27:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kmiKAEe06mc7SwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Mon, 31 Mar 2025 15:27:03 +0000
-Date: Mon, 31 Mar 2025 16:26:56 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.15] mm/vma: add give_up_on_oom option on modify/merge,
- use in uffd release
-Message-ID: <sniaixyko3mirqm3hdnyrm56sge6bzuhyyq2o4dtmwxykifs7k@dqwlk6qlj2d7>
-References: <20250321100937.46634-1-lorenzo.stoakes@oracle.com>
- <1f9436a5-65e4-4027-a22d-9e5500e34dba@lucifer.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkNoj1h4"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5259327a93bso1980807e0c.2;
+        Mon, 31 Mar 2025 08:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743434868; x=1744039668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AJLE1nyFkXIStchbJmUYwAf5Y0djUvjW8TujtP3j8yU=;
+        b=DkNoj1h4r+LJi38WrELGOy/eSInyRan3u+YN/ziVo43HVPsql033S2njcMogS7eGRV
+         eH7RuL0C1xWF78AwNPeKg4LxInDkJMBx+MkXUoWePWj9Vms+4+pFTBnGh2EkRQVuv9Jn
+         2HCqDK+MT9TiJw6/YwAaJeFOfH9Pm5zqvavqv/ITucQvW5MBi/H/0GfX6wTVgzJrJhRB
+         Gqo2EK6T5SQlOmXSPZI/CpgeE/keDy0nP8MpYd4GT/r1LYbUoTd1kIf5eI0Nm703LYDv
+         zuW/JYfSVzaW/3QXvt44/hKA8OpoPF/az2rlQ795yscWxrgOmIploVF5pUiaWrTeObjK
+         vZ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743434868; x=1744039668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AJLE1nyFkXIStchbJmUYwAf5Y0djUvjW8TujtP3j8yU=;
+        b=owDlLDUs1I1pPw+Q+moF48vvQBiUAAvY7zkIuxINEi5TvnRwYYYYOLmLbSE1Dzgcof
+         LUFxzWEXWR5paB++dO6LuEnH5cr14uYzBlv+rtL9SkjadOL72uXc1bl8bjs37hpn07my
+         FLSydJvNJwo0z7ZreVX3xK4qy6pLYxaj353ENSjZ2BJ8p5gsHwNo9zDbkcXs9JX1FSm0
+         0MHCa1MccvvrcwudgNSZXzCxvwqaWqAtxYkzEcBjjKDkcZtxWyP/H4ylhWDGJZ7lyTH2
+         ym4SuKoabkZgXSkhRNNdSnjsmwa5+X/ScBKIcy9js/B3Aa7oCk3AYbWNCSgnYfzGvk5r
+         4J1A==
+X-Forwarded-Encrypted: i=1; AJvYcCU8622wKOTfX2zklgM2mDrHjT+XkCWRYwaq49z25sUUxjd2VbwvJeY1+NAKyNiPHcYDThgIqqw2skoDmYY=@vger.kernel.org, AJvYcCVL+g1IAGZS36swLHcyiJ8TfxV400fQnNZlbKgo0fzI4pGL3kyrxF9OsSME1etN4Bam6Hq2xq7p7QD4@vger.kernel.org, AJvYcCVj4t7PQ56bspUKbTI9LGoNdOhpk7FDJNlsOROOal0U+FFMN6VQrsYaL71HXznWxysn3yyqlmb0TJVXEif2/hlBPU8=@vger.kernel.org, AJvYcCVnRBkJpQUMfDgoRRwgAxKDi0jszoKQbf9ICk+aN1ptzERPy1hGHy+LI/snVMaL4P9Se7+3etCavP6D@vger.kernel.org, AJvYcCWgopVe+BbdGj/Q4GPIUZDQVGT4VovIodPP/lbqOVft+tQLJZEhqhZGIuFEt5m2YgIoIFy5HoVLGxBeCvmx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYNh0F2gGrq3AR9VfMQK90ksLV7RmPMcJe3Tt8TBGuzdf6Z5Kd
+	sw8YrFxDszbWi/RIxW1PzOapIfL4eRirF2noeCQY4YwlYqP3PmSgshocgaHC0pT5qw/7sv/f6xb
+	4FkicHb5m4qzcV9YR4E/1jMlaFTQ=
+X-Gm-Gg: ASbGncvzUZQit1TnmPdiJtiewzmDa3PrT4YaSmZB+YCrm//0Kqbu2WlqLjDUb5agiM9
+	URLWqUxLyzS9mpGzdcm79jswEp1tsVdxeLiGgAVDMLEa/YbZNFuMt5w6F78xg2v4BPf4M8nYjc0
+	kWC3t+G8SmYJC/kaFqySlyzvAFBt/FNPCugPrEC3JMvdFCvcTWOBOx5XA2P3Y=
+X-Google-Smtp-Source: AGHT+IHt9arRYtbTiWA3a1qC4COLXXXBtiSB4ldzFyRPQHHbGdLcelunUNrve5R2ts6bPGCsAQ1tFbamLH6ltA8kfs8=
+X-Received: by 2002:a05:6122:2021:b0:516:230b:eec with SMTP id
+ 71dfb90a1353d-5261d3c9f51mr5111452e0c.5.1743434868285; Mon, 31 Mar 2025
+ 08:27:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f9436a5-65e4-4027-a22d-9e5500e34dba@lucifer.local>
-X-Rspamd-Queue-Id: 900AD1F452
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,oracle.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,appspotmail.com:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+References: <20250330210717.46080-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250330210717.46080-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB113463B37FE6B1AAE8CF0F51F86AD2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CA+V-a8v0K_tWA=LnyHDptoBjtgPHSbgwpJp4L1rw4Uv6KC+-JA@mail.gmail.com>
+ <TYCPR01MB11332F548F3770F0C70C9051A86AD2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+ <CA+V-a8tVQaDBzLXVJUonmV6eW3i_KLTTjVm3L0Kf2A1xrMoUHQ@mail.gmail.com> <TYCPR01MB11332EB9F2552938B490E62F886AD2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB11332EB9F2552938B490E62F886AD2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 31 Mar 2025 16:27:22 +0100
+X-Gm-Features: AQ5f1JqriXw8-7MBvStm3Uj9LY3nQv7H2_O7UWqukRvxQWRVF12UvsymQ4KnIQs
+Message-ID: <CA+V-a8uh-LUmLEs_85dXwuiYecJTyLt3zd06vyGE749Ye+9moQ@mail.gmail.com>
+Subject: Re: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF data support
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 04:10:41PM +0100, Lorenzo Stoakes wrote:
-> I know that none of us love this, but seemed to be consensus that this was
-> a viable, if semi-vom-inducing solution - can we go ahead with this?
+Hi Biju,
 
-/me barfs
+On Mon, Mar 31, 2025 at 4:04=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+>
+> Hi Prabhakar,
+>
+> > -----Original Message-----
+> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: 31 March 2025 15:44
+> > Subject: Re: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF data s=
+upport
+> >
+> > Hi Biju,
+> >
+> > On Mon, Mar 31, 2025 at 3:14=E2=80=AFPM Biju Das <biju.das.jz@bp.renesa=
+s.com> wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > > > Sent: 31 March 2025 14:59
+> > > > To: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Andrzej Hajda
+> > > > <andrzej.hajda@intel.com>; Neil Armstrong
+> > > > <neil.armstrong@linaro.org>; Robert Foss <rfoss@kernel.org>;
+> > > > laurent.pinchart <laurent.pinchart@ideasonboard.com>; Jonas Karlman
+> > > > <jonas@kwiboo.se>; Jernej Skrabec <jernej.skrabec@gmail.com>; David
+> > > > Airlie <airlied@gmail.com>; Simona Vetter <simona@ffwll.ch>; Maarte=
+n
+> > > > Lankhorst <maarten.lankhorst@linux.intel.com>; Maxime Ripard
+> > > > <mripard@kernel.org>; Thomas Zimmermann <tzimmermann@suse.de>; Rob
+> > > > Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>=
+;
+> > > > Conor Dooley <conor+dt@kernel.org>; Mauro Carvalho Chehab
+> > > > <mchehab@kernel.org>; Kieran Bingham
+> > > > <kieran.bingham+renesas@ideasonboard.com>; Stephen Boyd
+> > > > <sboyd@kernel.org>; Philipp Zabel <p.zabel@pengutronix.de>;
+> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > linux-renesas- soc@vger.kernel.org; linux-media@vger.kernel.org;
+> > > > linux-clk@vger.kernel.org; Fabrizio Castro
+> > > > <fabrizio.castro.jz@renesas.com>; Prabhakar Mahadev Lad
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Subject: Re: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF
+> > > > data support
+> > > >
+> > > > Hi Biju,
+> > > >
+> > > > Thank you for the review.
+> > > >
+> > > > On Mon, Mar 31, 2025 at 1:38=E2=80=AFPM Biju Das <biju.das.jz@bp.re=
+nesas.com> wrote:
+> > > > >
+> > > > > Hi Prabhakar,
+> > > > >
+> > > > > Thanks for the patch.
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > > > > > Sent: 30 March 2025 22:07
+> > > > > > Subject: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF
+> > > > > > data support
+> > > > > >
+> > > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > >
+> > > > > > In preparation for adding support for the Renesas RZ/V2H(P) SoC=
+,
+> > > > > > this patch introduces a mechanism to pass SoC-specific
+> > > > > > information via OF data in the DSI driver. This enables the
+> > > > > > driver to adapt dynamically to various SoC-
+> > > > specific requirements without hardcoding configurations.
+> > > > > >
+> > > > > > The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical
+> > > > > > to the one on the RZ/G2L SoC. While the LINK registers are
+> > > > > > shared between the two SoCs, the D-PHY registers differ. Also
+> > > > > > the VCLK range differs on both these SoCs. To accommodate these
+> > > > > > differences `struct rzg2l_mipi_dsi_hw_info`
+> > > > is introduced and as now passed as OF data.
+> > > > > >
+> > > > > > These changes lay the groundwork for the upcoming RZ/V2H(P) SoC
+> > > > > > support by allowing SoC-specific data to be passed through OF.
+> > > > > >
+> > > > <snip>
+> > > > > > +
+> > > > > >       ret =3D drm_of_get_data_lanes_count_ep(dsi->dev->of_node,=
+ 1, 0, 1, 4);
+> > > > > >       if (ret < 0)
+> > > > > >               return dev_err_probe(dsi->dev, ret, @@ -729,10
+> > > > > > +750,12 @@ static int rzg2l_mipi_dsi_probe(struct platform_devi=
+ce *pdev)
+> > > > > >       if (IS_ERR(dsi->vclk))
+> > > > > >               return PTR_ERR(dsi->vclk);
+> > > > > >
+> > > > > > -     dsi->rstc =3D devm_reset_control_get_exclusive(dsi->dev, =
+"rst");
+> > > > > > -     if (IS_ERR(dsi->rstc))
+> > > > > > -             return dev_err_probe(dsi->dev, PTR_ERR(dsi->rstc)=
+,
+> > > > > > -                                  "failed to get rst\n");
+> > > > > > +     if (dsi->info->has_dphy_rstc) {
+> > > > > > +             dsi->rstc =3D
+> > > > > > + devm_reset_control_get_exclusive(dsi->dev,
+> > > > > > + "rst");
+> > > > >
+> > > > > Maybe use devm_reset_control_get_optional_exclusive by dropping h=
+as_dphy_rstc.
+> > > > >
+> > > > As the dtbs_check doesn't enforce this,  `has_dphy_rstc` flag was
+> > > > added. Recently the same was done for the CRU [0] based on the rece=
+nt comment received.
+> > > >
+> > >
+> > > RZ/V2H has "arst" and "prst". So, If you add "rst" for RZ/V2H then yo=
+u should get dtbs warning,
+> > right?
+> > >
+> > No we dont [0], note DT binding is written based on the recent feedback=
+ received.
+>
+> That is strange. It is triggering warning for me, if I just update the ex=
+ample.
+>
+Ahh right I missed that. The current implementation is based on this
+comment received [0] (same being applied for reset). Please let me
+know if you still want me to use
+devm_reset_control_get_optional_exclusive() (and same for the clk).
 
-> Would appreciate ack's (even if queasy) if so, so this doesn't get
-> stalled. We can always revisit this (in fact, it's on my list...).
-> 
-> On Fri, Mar 21, 2025 at 10:09:37AM +0000, Lorenzo Stoakes wrote:
-> > Currently, if a VMA merge fails due to an OOM condition arising on commit
-> > merge or a failure to duplicate anon_vma's, we report this so the caller
-> > can handle it.
-> >
-> > However there are cases where the caller is only ostensibly trying a
-> > merge, and doesn't mind if it fails due to this condition.
-> >
-> > Since we do not want to introduce an implicit assumption that we only
-> > actually modify VMAs after OOM conditions might arise, add a 'give up on
-> > oom' option and make an explicit contract that, should this flag be set, we
-> > absolutely will not modify any VMAs should OOM arise and just bail out.
-> >
-> > Since it'd be very unusual for a user to try to vma_modify() with this flag
-> > set but be specifying a range within a VMA which ends up being split (which
-> > can fail due to rlimit issues, not only OOM), we add a debug warning for
-> > this condition.
-> >
-> > The motivating reason for this is uffd release - syzkaller (and Pedro
-> > Falcato's VERY astute analysis) found a way in which an injected fault on
-> > allocation, triggering an OOM condition on commit merge, would result in
-> > uffd code becoming confused and treating an error value as if it were a VMA
-> > pointer.
-> >
-> > To avoid this, we make use of this new VMG flag to ensure that this never
-> > occurs, utilising the fact that, should we be clearing entire VMAs, we do
-> > not wish an OOM event to be reported to us.
-> >
-> > Many thanks to Pedro Falcato for his excellent analysis and Jann Horn for
-> > his insightful and intelligent analysis of the situation, both of whom were
-> > instrumental in this fix.
-> >
-> > Reported-by: syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com
-> > Closes: https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001e.GAE@google.com/
-> > Fixes: 47b16d0462a4 ("mm: abort vma_modify() on merge out of memory failure")
-> > Suggested-by: Pedro Falcato <pfalcato@suse.de>
-> > Suggested-by: Jann Horn <jannh@google.com>
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+[0] https://lore.kernel.org/lkml/20250223181955.GD8330@pendragon.ideasonboa=
+rd.com/
 
-Alright, I'm not a huge fan of the solution, but if you feel like it's the best course of action,
-I'll trust your instincts. The patch itself LGTM.
-
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-
-> >  	if (vma->vm_start < start) {
-> >  		int err = split_vma(vmg->vmi, vma, start, 1);
-> > @@ -1602,12 +1642,15 @@ struct vm_area_struct
-> >  		       struct vm_area_struct *vma,
-> >  		       unsigned long start, unsigned long end,
-> >  		       unsigned long new_flags,
-> > -		       struct vm_userfaultfd_ctx new_ctx)
-> > +		       struct vm_userfaultfd_ctx new_ctx,
-> > +		       bool give_up_on_oom)
-> >  {
-> >  	VMG_VMA_STATE(vmg, vmi, prev, vma, start, end);
-> >
-> >  	vmg.flags = new_flags;
-> >  	vmg.uffd_ctx = new_ctx;
-> > +	if (give_up_on_oom)
-> > +		vmg.give_up_on_oom = true;
-
-Why not just
-	vmg.give_up_on_oom = give_up_on_oom;
-with no if?
-
---
-Pedro
+Cheers,
+Prabhakar
