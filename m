@@ -1,165 +1,116 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B8E2135DE
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440875; cv=none; b=UVR5S/reoaT0ryldN6iVEuSL2/nGGhKnCxXlr+/RRWvTmCoPz439yODSEoWA17GU9ZhwVAxiIvnXOOGQyDo/Lx+M0neLAze0VueGROrZ8b6n/JhDbnNV8GKdbloXk+Q8F5AFOEv8X9lHfA9Kz41bsYqTkpF1Nu9BWP1g7r9253k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440875; c=relaxed/simple;
-	bh=0XXHvVH3uTDCMxcR0WdIaNLdp3YBldH2uI8GRVxW53s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lOoHfI3obwQKo14EJlTV6PSmyN4E1L4ImniUlti2/hoOL/SFTOAS5iOI70Cr8kVBA3qtuKdeMGUUV4FGskBjrndXlSVP/gFIHopF7zrXd2uHN7SJ8cvSDMxHl53tBa9KG1Td3dW6KOdEwWb6OuR0XrqPFIOrQHPYGbf55F31VCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fPehXRci; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B2130A54;
+	Mon, 31 Mar 2025 17:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743440990; cv=pass; b=oZ4QZaQ0nCnSIPmgMTo4HmFGnP6YQwxIRF9joXJdETUBKoYLHEl5ik3M8Q8n4kRIM795UrqcdTo5sbfccj/b1aDIwy/HDGatfs2kLuLlc5TcD/4mq/rMB0c/7lMJ2XFL1aGSlUhk15O9QWUwcNJFFSPcVLNWvIw1zN4IxeSE5nI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743440990; c=relaxed/simple;
+	bh=XY4Lz8nmOhMCJfx5G9//aIEqVmxe+7WPFPY77en7ljQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ebp3QI+KGcGXPu/UrmmsQ/Yn0TJFhloD6HAJd78nin9wJLKKZZ4EfkGZjOb7zfX9tmat7SW/89zok5MbM/y2XNIF2ts+Y+/IAs0ofvejHdQhy7256cTQ08vwodD3Vg9QGDYDVDiwqk7h53QOQYlwciY8Hu8Id55ydMpDWqC39EY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WRvu1IZs; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fPehXRci"
-Date: Mon, 31 Mar 2025 13:07:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743440859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=5OupMGobLMAwcSJf51wqGLHPQ4jZkY1BiImmx9cF0Dg=;
-	b=fPehXRci0Usgern7GARpYrL022EgKSkHiT2ifiNiDLZ7nRJ9q7skctJBP84hIECOFcFSeb
-	ZViJuCPxxknN6nvxOkzNz+vwMfk7LpKtWqYVKbUP2x6UaSd+t+/L9g3JY21fGVsl06sM9l
-	nadt6Ba9UIp0BuEBMI7Y8UbigRqqDbU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs updates for 6.15 part 2
-Message-ID: <insmfmxhkgbdvnnqaxkxfllhrea25hojvjaetxgdu3jr6txyjv@i44r2xo2virt>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="WRvu1IZs"
+ARC-Seal: i=1; a=rsa-sha256; t=1743440961; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IZNFBj8lLYb431hC4EdDVb+eCljK5x9WopO21wV+b2w9WICI/o8Tit+PoipHWqIAxlwUBv8+eUOFdBu+C7PsHUt9ytcFLcmW7jPF8AW/S6r6/pYADeQE/OZX0Qlw/rpuHC+h7CB/EBJMuqQ3ntAIvxa6nQv4iNxpgVCUoFHKFUQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743440961; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=eRBZ3dXnGZXHdDQufzHIdL1aCFdXcn3+mx27ydvwC+w=; 
+	b=QkZEsL+5X5dn2Aq1x49IvYcyeHvLd2tP4prnmmgw0kt3tN0G43vvFZkiM9UTWQi/jDmFo1Pg/Ykb6UgrWbOBLeLsLDz853aG7SpHMQ5+yM70vKKhx5DL7HeivzFBEJVI5EeuBCJnmGMRP+4xaFZkRtq7/v3+5Lols79MlzAIqe0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743440961;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=eRBZ3dXnGZXHdDQufzHIdL1aCFdXcn3+mx27ydvwC+w=;
+	b=WRvu1IZsZEnlRHbV+H1uw8jZgVGDqvH/Usx/K60ryHAYDq7jzoJsFjz2bZ835ZHk
+	jTlnkNfvrqO9OI/+IVmX/Wc0XoFw/91Gwolg0Hm8oraEM8Z0dBgTom747d17FLndUHX
+	kRvnEibtXFfnjse5qFKYfqvbXduM/EbXVCGT7F7g=
+Received: by mx.zohomail.com with SMTPS id 1743440958770263.33762723850737;
+	Mon, 31 Mar 2025 10:09:18 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v5 06/13] scripts: generate_rust_analyzer.py: add type
+ hints
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
+Date: Mon, 31 Mar 2025 14:09:02 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1B186177-16B9-4D2D-9603-F713F0FE9BEC@collabora.com>
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+ <20250325-rust-analyzer-host-v5-6-385e7f1e1e23@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-The following changes since commit d8bdc8daac1d1b0a4efb1ecc69bef4eb4fc5e050:
+Hi Tamir,
 
-  bcachefs: Kill unnecessary bch2_dev_usage_read() (2025-03-24 09:50:37 -0400)
+[snip]
 
-are available in the Git repository at:
+>     rust_project =3D {
+> -        "crates": generate_crates(args.srctree, args.objtree, =
+args.sysroot_src, args.exttree, args.cfgs),
+> +        "crates": generate_crates(
+> +            args.srctree,
+> +            args.objtree,
+> +            args.sysroot_src,
+> +            args.exttree,
+> +            defaultdict(
+> +                list,
+> +                {
+> +                    crate: vals.lstrip("--cfg").split()
+> +                    for crate, vals in map(lambda cfg: cfg.split("=3D",=
+ 1), args.cfgs)
+> +                },
+> +            ),
+> +        ),
+>         "sysroot": str(args.sysroot),
+>     }
+>=20
+>=20
+> --=20
+> 2.49.0
+>=20
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-03-31
+I found `args_crates_cfgs()` a lot easier to understand, but I guess =
+this is a
+matter of taste. I also find that this `defaultdict()` call slightly =
+pollutes
+the surrounding code, but again, that might be just me.
 
-for you to fetch changes up to 650f5353dcc9b6e690a1c763754fa1e98d217bfc:
+Regardless, running `mypy` still passes, and there is no change to the =
+output.
 
-  bcachefs: fix bch2_write_point_to_text() units (2025-03-30 20:04:16 -0400)
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-----------------------------------------------------------------
-bcachefs updates for 6.15, part 2
-
-All bugfixes and logging improvements.
-
-Minor merge conflict, see:
-https://lore.kernel.org/linux-next/20250331092816.778a7c83@canb.auug.org.au/T/#u
-
-CI says the fs-next tree is good:
-https://evilpiepirate.org/~testdashboard/ci?user=fs-next&branch=master
-
-----------------------------------------------------------------
-Florian Albrechtskirchinger (1):
-      bcachefs: Fix bch2_fs_get_tree() error path
-
-Kent Overstreet (34):
-      bcachefs: Fix nonce inconsistency in bch2_write_prep_encoded_data()
-      bcachefs: Fix silent short reads in data read retry path
-      bcachefs: Fix duplicate checksum error messages in write path
-      bcachefs: Use print_string_as_lines() for journal stuck messages
-      bcachefs: Validate number of counters for accounting keys
-      bcachefs: Document disk accounting keys and conuters
-      bcachefs: Don't unnecessarily decrypt data when moving
-      bcachefs: Fix btree iter flags in data move (2)
-      bcachefs: Fix 'hung task' messages in btree node scan
-      bcachefs: cond_resched() in journal_key_sort_cmp()
-      bcachefs: Fix permissions on version modparam
-      bcachefs: Recovery no longer holds state_lock
-      bcachefs: Fix bch2_seek_hole() locking
-      bcachefs: Don't return 0 size holes from bch2_seek_hole()
-      bcachefs: Fix WARN() in bch2_bkey_pick_read_device()
-      bcachefs: print_string_as_lines: fix extra newline
-      bcachefs: add missing newline in bch2_trans_updates_to_text()
-      bcachefs: fix logging in journal_entry_err_msg()
-      bcachefs: bch2_time_stats_init_no_pcpu()
-      bcachefs: Add an "ignore unknown" option to bch2_parse_mount_opts()
-      bcachefs: Consistent indentation of multiline fsck errors
-      bcachefs: Better helpers for inconsistency errors
-      bcachefs: bch2_count_fsck_err()
-      bcachefs: Better printing of inconsistency errors
-      bcachefs: Change btree_insert_node() assertion to error
-      bcachefs: Clear fs_path_parent on subvolume unlink
-      bcachefs: bch2_ioctl_subvolume_destroy() fixes
-      bcachefs: fix units in rebalance_status
-      bcachefs: Silence errors after emergency shutdown
-      bcachefs: Don't use designated initializers for disk_accounting_pos
-      bcachefs: Reorder error messages that include journal debug
-      bcachefs: BCH_JSET_ENTRY_log_bkey
-      bcachefs: Log original key being moved in data updates
-      bcachefs: fix bch2_write_point_to_text() units
-
- fs/bcachefs/alloc_background.c       |  22 ++--
- fs/bcachefs/alloc_foreground.c       |   2 +-
- fs/bcachefs/backpointers.c           |  43 ++++---
- fs/bcachefs/bcachefs_format.h        |   3 +-
- fs/bcachefs/btree_cache.c            |   2 +-
- fs/bcachefs/btree_gc.c               |  23 ++--
- fs/bcachefs/btree_io.c               |  63 +++++-----
- fs/bcachefs/btree_iter.c             |  14 +--
- fs/bcachefs/btree_iter.h             |   1 -
- fs/bcachefs/btree_journal_iter.c     |   2 +
- fs/bcachefs/btree_node_scan.c        |  14 ++-
- fs/bcachefs/btree_update.c           |  13 ++
- fs/bcachefs/btree_update.h           |   2 +
- fs/bcachefs/btree_update_interior.c  |  91 ++++++++------
- fs/bcachefs/buckets.c                | 161 ++++++++++++++-----------
- fs/bcachefs/chardev.c                |   6 +-
- fs/bcachefs/data_update.c            |  22 +++-
- fs/bcachefs/data_update.h            |  12 ++
- fs/bcachefs/disk_accounting.c        |  40 ++++---
- fs/bcachefs/disk_accounting.h        |   8 +-
- fs/bcachefs/disk_accounting_format.h |  80 +++++++++++--
- fs/bcachefs/ec.c                     |  22 ++--
- fs/bcachefs/errcode.h                |   3 +
- fs/bcachefs/error.c                  | 226 ++++++++++++++++++++++++++---------
- fs/bcachefs/error.h                  |  48 ++++----
- fs/bcachefs/extents.c                |   7 +-
- fs/bcachefs/fs-io-buffered.c         |   2 +-
- fs/bcachefs/fs-io.c                  |  31 +++--
- fs/bcachefs/fs-ioctl.c               |   6 +-
- fs/bcachefs/fs.c                     |   9 +-
- fs/bcachefs/fsck.c                   |  22 ++--
- fs/bcachefs/io_read.c                |   4 +-
- fs/bcachefs/io_read.h                |   6 +-
- fs/bcachefs/io_write.c               |  44 ++++---
- fs/bcachefs/journal.c                |  19 +--
- fs/bcachefs/journal_io.c             |  38 ++++--
- fs/bcachefs/lru.c                    |   7 +-
- fs/bcachefs/move.c                   |  37 +++++-
- fs/bcachefs/namei.c                  |   4 +-
- fs/bcachefs/opts.c                   |  49 ++++----
- fs/bcachefs/opts.h                   |   3 +-
- fs/bcachefs/printbuf.c               |  19 +++
- fs/bcachefs/printbuf.h               |   1 +
- fs/bcachefs/progress.c               |   6 +-
- fs/bcachefs/rebalance.c              |   5 +-
- fs/bcachefs/recovery_passes.c        |  12 +-
- fs/bcachefs/reflink.c                |  12 +-
- fs/bcachefs/sb-errors_format.h       |   6 +-
- fs/bcachefs/snapshot.c               |  16 +--
- fs/bcachefs/str_hash.c               |   2 +-
- fs/bcachefs/subvolume.c              |   1 +
- fs/bcachefs/super.c                  |  38 +++---
- fs/bcachefs/sysfs.c                  |   9 +-
- fs/bcachefs/time_stats.c             |  20 +++-
- fs/bcachefs/time_stats.h             |   1 +
- fs/bcachefs/util.c                   |   2 +-
- fs/bcachefs/util.h                   |   1 +
- 57 files changed, 856 insertions(+), 506 deletions(-)
+=E2=80=94 Daniel=
