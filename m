@@ -1,74 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799B1E32A3;
-	Mon, 31 Mar 2025 12:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FD87E107
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743423823; cv=none; b=hKtpJB+TvQDXP4AJKXdPSkEWaEMvdjljREp/dpOVxNUeDnB4vwg/im4ki0PQEU5MBcPAKWLtz4iPVdbpnhAk+R3anANZwf8L3YeGyoaHjP/RHuekp2u8LFHYQAFBQCupxCu0HZ0yrUKE2DQUKkzIGHTIjloqSKPWvWjHqi9OUdE=
+	t=1743423858; cv=none; b=ZiBlAaTBzBuQeTodwLe8LwONSmo0iKFVeb4h/SX9B/lusfHkskp+kYwFzLtiUJILihgKqETk/CPGaDaLSJqhEBJTKnpn+oPLIUU/UQlPPVdEccq+p78mdLyoBZ8oy3qNbJdexFMY1FXfKhOvHwY5SLCIPwX5OcSVRZQ8xmBkRO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743423823; c=relaxed/simple;
-	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lECgUX5tu9knLt2FlR5aQ/2+KkmRngS+lQ03S5nZPCNqP20absDupSUO0VptYQsyvdLtyCHBMQiG3uCO+GAJixLzflkKAQOhq1lFb/9UubuxvLydUwptf6JBmiOK85j9AGgIV0KL263EPBnkOvVDLCznVsW0qVLQHOmBWlPWBro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AavBOCrt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743423858; c=relaxed/simple;
+	bh=8V6MZolbBu0RkcT5v7DFgbsZxd1EYVkVQphvjU4J4P0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
+	 References:In-Reply-To; b=MkQoX/5iLbrgfikOIYv5YRjHQ+2hPS0KU8fEUX5aEE+GCbZCFr2Z/LD3E6eM9OygM6sdHRSlhCY4Ykjmje3tyLus9KVP3fjyv+cu6G0vQvJS3gduPMcLrc/ViKrs5coy5XecCqQCPonGfqtkoZLe6b81IgoaBZS29O3qw5FnVss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lmoH1vBD; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AavBOCrt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE58FC4CEE3;
-	Mon, 31 Mar 2025 12:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743423822;
-	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AavBOCrty/NkMy1yF1lq2/E5BFrj8LLFvrYNwVI0RFpwvmJ4X5bq1+41189Rt7+kY
-	 66MppxJDtuKU5+ctmLwFDd1cqLIqfZ6M8QU6m7y6z2MazWPrMlZpqjZw9Y4QVdHWXi
-	 ako2wn8tqCFhEsH/6+jau68O9I2MKM1OyfArI1josJKeyOqQwvVo9v4n0MsqhsS7HG
-	 nYseLIooXuj1o8obu6RsVQj3yyFUgnFAx8ihM6b7oUlYG08T52vMWrXFw527ARu4CI
-	 UcskJghq1+P3Jl9gyvQr/7iyR6CUdXLeFLx1YAyDG7D8560jMuIZyFb9aa3MHLvSPm
-	 IOLSuRs4x0a6w==
-Date: Mon, 31 Mar 2025 21:23:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Brian Masney <bmasney@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- aruiz@redhat.com
-Subject: Re: [PATCH 0/2] tools/bootconfig: allow overriding CFLAGS and
- LDFLAGS
-Message-Id: <20250331212337.3e9e4a5c50f5d3f16a95b120@kernel.org>
-In-Reply-To: <20250328183858.1417835-1-bmasney@redhat.com>
-References: <20250328183858.1417835-1-bmasney@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmoH1vBD"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-226185948ffso85216275ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 05:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743423856; x=1744028656; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PV3YrT1ToPWZYkDmrC9eX8kRa+b45YH2VkISR+Wcp0Y=;
+        b=lmoH1vBDnmTyT0McgM/knMtKwcvpIR7lslM7kn5Y6Jd374ddMECXeu/exTjhabfrkn
+         O10Aiq0dHM/zGkp1regjVEnRlhR6uEhmh7Qr5D42CX/NwcOWbXghRMA6i7mmC+5ToVVQ
+         pJYSZFZRJ7hoMIxO3fV/aM1wCcz07nWsh9Ovv7RQ7PF+0e7An35jMBt7xNp8sILBi+w5
+         hMpPJ1gSKjsmJIx+5NMxsiwkXNvwdwEr519umgKWNKguZCkk6jQAf/xGkz7Ka510gl6i
+         YmCuDVCzMh7RP1DkcxzAXqmllsioNKdnVej+50al6O8Z6svuH5/qMNVb6W6t8rR+lmMj
+         CYwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743423856; x=1744028656;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PV3YrT1ToPWZYkDmrC9eX8kRa+b45YH2VkISR+Wcp0Y=;
+        b=Jnbg2otSuu+/fJghT5A8ljpXzNudYejgHHh4cNtJaj9D8j7pbJeZf6jlv/PoTnJMat
+         Jx7GV/SgeaOSLQFR6k5BjSvKtxr6xDIeKGd5i2JHEIvOs5mX1uQdpGAMwJurBplhpL8J
+         LOCeTnNttO/nI/UCg3ZEp/3ECqkNpq9LCmnwjA9lsFpyfoju0qiJ0OrKolU41Ki5OpE2
+         lqK/7/I71R90RtuSwJ3UK0DgAozeQGzPwTpfOkGrarYq85t2VEOxyZQFq85htgbOsSOh
+         0tXJDINaFvcOkSUbJfU8lQRwEnLoCZHx5vJerMZPckhaDbi4Iy5aGRqBWDhK1Lq3ErtB
+         R+CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNKRqGbXz4sMSajPHlj500kmUKf/wHsIis/m1q2F3obLh2k+MFhi6TnkLz4psnPow9VP9pF9/iqrl7vfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN4uVJYVE8SqZJUMJq73N7mYN0L5ygpv/RLoU1Zs2ef8uaW0qQ
+	97TRsvtAiWN4yIt8ShaErGT60uJhJO4NvI+f7bya8EyDjuO9eYOK
+X-Gm-Gg: ASbGnctzYCQp/ZGfDU3qBT6rG32MgJnaHCpRFW3ysLJF7mq5tZCSIN2mLyB4cgNmO/U
+	eCDV6vJ7SXJIxgT6eAcjwpW9gih3eO15zIbofkwWXESU7DIP+5ErKGBE5IvTwNGnwDbRDpPITeW
+	PkMF1N+2S1Xxp+bq/11XY1elWfn5wbIECu31nSqybBmLzLWg6uqb3dFfJa80EMErgtp9MSb2Qco
+	rAV/2Rzb2bwiJLbqucKWplmlSCxUuGyZ6n2k6l60sU35Yr+Jmk8+PnuTFqRpnWcSlkpzEeD72/w
+	KnMlDnDi6d7Ud0t62iTx7fzk5Ih+ssS16OEAqw==
+X-Google-Smtp-Source: AGHT+IEaDUcJDrwjsxu4qOgNJXp0yGw/nEOHDZ3MzLdQ/GLzpYmpg1hRj8ZvOBsmmoKJd2HK9uh8Eg==
+X-Received: by 2002:a05:6a20:c70e:b0:1ee:e655:97ea with SMTP id adf61e73a8af0-2009f78cc53mr13848774637.41.1743423856329;
+        Mon, 31 Mar 2025 05:24:16 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6dd5d1sm6324292a12.46.2025.03.31.05.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 05:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 31 Mar 2025 09:24:13 -0300
+Message-Id: <D8UG6DGW1FKI.HZ5UFH4EVY9R@gmail.com>
+Subject: Re: platform/x86: thinkpad_acpi causing kernel oops commit
+ 38b9ab80db31cf993a8f3ab2baf772083b62ca6f
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Jeff Chua" <jeff.chua.linux@gmail.com>, "lkml"
+ <linux-kernel@vger.kernel.org>, "Mark Pearson" <mpearson-lenovo@squebb.ca>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <CAAJw_Zt1cYcg-Fa_rCecwHnWKMi7uO2UGNEhMsxPiQa-pgUMnw@mail.gmail.com>
+In-Reply-To: <CAAJw_Zt1cYcg-Fa_rCecwHnWKMi7uO2UGNEhMsxPiQa-pgUMnw@mail.gmail.com>
 
-On Fri, 28 Mar 2025 14:38:56 -0400
-Brian Masney <bmasney@redhat.com> wrote:
+Hi Jeff,
 
-> Allow the user to override the CFLAGS and LDFLAGS similar to what's
-> currently done on other kernel tools. These changes allows bootconfig to
-> be compiled with the hardened compiler and linker flags.
-> 
-> Brian Masney (2):
->   tools/bootconfig: allow overriding CFLAGS assignment
->   tools/bootconfig: specify LDFLAGS as an argument to CC
-> 
+On Mon Mar 31, 2025 at 4:51 AM -03, Jeff Chua wrote:
+> This commit prevents the latest linux git from booting. Only those
+> with thinkpad-acpi will see this.
+> There's no clean way to revert this. I took the thinkpad_acpi.c from
+> vanilla 6.14.0 and that booted up with the latest linux git
+> (4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209).
 
-Both looks good to me. Let me pick those up.
+I submitted a fix for this that you can test here:
 
-Thanks!
+	https://lore.kernel.org/platform-driver-x86/20250330-thinkpad-fix-v1-1-490=
+6b3fe6b74@gmail.com/
 
->  tools/bootconfig/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.47.0
-> 
+Thank you for reporting!
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+ ~ Kurt
