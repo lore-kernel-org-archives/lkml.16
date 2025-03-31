@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C4D1EB5CA;
-	Mon, 31 Mar 2025 08:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2141A1D5178;
+	Mon, 31 Mar 2025 08:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409466; cv=none; b=u5f6pP53XCtskYLwDh4x7r02vYZOFStTcl1mXs/nvwnJ5jPcUD0mqHlYVZVlRaonfAE3HPz/hFqGRoq3kW1bebYWt//djE3viHTSrQHBTXwHOTlE6E/GUXJlPF85TMN9T0QPIOMD7aggyF9kuXkwKnrTwDle0zn9aE3L3tbg/LM=
+	t=1743409468; cv=none; b=OWutZy+o3b4e0Y4kOznJl8kNGnVOYAcf2FMfpN+BiaaPGvnVW9zowXp1fK8bVZTAst6iIexSJ/E4ehKFORtiNEudZ3h4A3ZD392/duKIh1NH89O0UwUh7kYwvzM+x3l1jG6K6DjV2JmWWEom/aO3kuN01KsasVKKj/YiKaYXrNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409466; c=relaxed/simple;
-	bh=FN5g8giJJxRRxCOVXKjUG367o7XXihVRjnOAVof1uB0=;
+	s=arc-20240116; t=1743409468; c=relaxed/simple;
+	bh=6EPdz8aFjQ1ednZahrkNwc2//BReoieOSPgWhzZZxB0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WSa83U4b6t0/eOTnBjucFOxOxCDUgTxSlT0C+Mp6OecvukFNRzH5yjLMvdAhmDQ75eVVcXcxhyCBojDRK8j5v8FjND5/ygsoo0BrUglwdBurlfhzNnhEI7QmKlGLUKrik+KoujYT2WnmDUt36zBleJzdOjekAWEcWs7M/00sDKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=jg4QkVHW; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=LxudXpiOokoouJgFdxoCxJ3WYjAvrSK1vCqJtxkgyoxJE1T4QTG7uPmQaig4GJ3+fvr+8B/7kUvc39JS8gNdxFSSbYAeMBtQU/3IZkvY2yQywjim2eVinuobglDxu8EokglOBeB0t27VdBVJe16efpa5vv3gchyvJRuM/evbus8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gZFEitNC; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jg4QkVHW"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gZFEitNC"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp083171319
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52V8Mp033171319
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 31 Mar 2025 01:23:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp083171319
+	Mon, 31 Mar 2025 01:23:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52V8Mp033171319
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743409396;
-	bh=LUf6J4OHKn6Yqz/cuiPFW5gyz7UWQzJR/hPRWef8Heg=;
+	s=2025032001; t=1743409386;
+	bh=5yXzAEblnWuewwiM+2a2MBWdk0hE50lz5zB2BZNESnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jg4QkVHWmuNxTSaNr3aLQCDAx0pfc5MzZ6zHM+wqM8DSTcQ3v/RsKHxoUQpqWtNbJ
-	 m458JdmtvOkoM5D9ageqtKl9oHpcXzkGBie1zx4Z64jnAGFmPZKoyTrDoCRBO1dSLT
-	 mR0rsGe9H8URcFY2CBgpai+T0h9txzTfzfHRjKd6U95Ungph1Kwv+yEPzL4fhScW5l
-	 Ab8OKE5fJ02Tagt2yFWbB7GGJh/377QIshI1xuLWxMSYTo8yAwJfG0LGkBemhVlVjc
-	 tTZHvLjVyjNvdRXxd7vUQNm4YDAIWKVIT4qPZoTRRR4mD09RG0QuehmydgeXZydpxd
-	 2Z/C61/mQ2MUw==
+	b=gZFEitNCvpKZCut95fXZKAqZjYVexIRqqCsmMBp2CZW5W/F+F8YdgBRq7Jas48oEm
+	 jA/8QUCfk2D6k8vYesJGOnrzZv+XWetZsr8GnENjabojFMIx710C0/l2qUvpne52/U
+	 BKRmW6qbXZJEaaZotvS+ZyspM+SBZxcPiUz0OolK8l3PTAJGgcrhaoBd8FoI0axiFO
+	 UYJY19A43VO/nzu4JfIPKLbCPKuIQ+Fm3xRSaESxcKaXZ3m3Z/51sVm6ksmFV/kMOP
+	 i/pGDQotEM9rWQRUfcKCF7CHn9HUUQ60/HHqfKDisSlMtrPlhTUBKsDUSIOgBvisE7
+	 KhHjRSIG4ujjQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
@@ -49,9 +49,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
         seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
         kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-Subject: [RFC PATCH v1 08/15] x86/cpufeatures: Add a CPU feature bit for MSR immediate form instructions
-Date: Mon, 31 Mar 2025 01:22:44 -0700
-Message-ID: <20250331082251.3171276-9-xin@zytor.com>
+Subject: [RFC PATCH v1 03/15] x86/msr: Simplify pmu_msr_{read,write}()
+Date: Mon, 31 Mar 2025 01:22:39 -0700
+Message-ID: <20250331082251.3171276-4-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331082251.3171276-1-xin@zytor.com>
 References: <20250331082251.3171276-1-xin@zytor.com>
@@ -63,62 +63,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The immediate form of MSR access instructions are primarily motivated
-by performance, not code size: by having the MSR number in an immediate,
-it is available *much* earlier in the pipeline, which allows the
-hardware much more leeway about how a particular MSR is handled.
+Remove calling native_{read,write}_msr{_safe}() in pmu_msr_{read,write}(),
+and have them return false to let their caller to do that instead.
 
-Use a scattered CPU feature bit for MSR immediate form instructions.
+Refactor pmu_msr_write() to take the input MSR value in an u64 argument,
+replacing the current dual u32 arguments.
 
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Sign-off-by: Xin Li (Intel) <xin@zytor.com>
 ---
- arch/x86/include/asm/cpufeatures.h | 19 ++++++++++---------
- arch/x86/kernel/cpu/scattered.c    |  1 +
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ arch/x86/xen/enlighten_pv.c |  6 +++++-
+ arch/x86/xen/pmu.c          | 27 ++++-----------------------
+ arch/x86/xen/xen-ops.h      |  4 ++--
+ 3 files changed, 11 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 6c2c152d8a67..a742a3d34712 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -472,15 +472,16 @@
-  *
-  * Reuse free bits when adding new feature flags!
-  */
--#define X86_FEATURE_AMD_LBR_PMC_FREEZE	(21*32+ 0) /* "amd_lbr_pmc_freeze" AMD LBR and PMC Freeze */
--#define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history at syscall entry using SW loop */
--#define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control available */
--#define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
--#define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch history at vmexit using SW loop */
--#define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
--#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
--#define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
--#define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to downclocking */
-+#define X86_FEATURE_AMD_LBR_PMC_FREEZE		(21*32+ 0) /* "amd_lbr_pmc_freeze" AMD LBR and PMC Freeze */
-+#define X86_FEATURE_CLEAR_BHB_LOOP		(21*32+ 1) /* Clear branch history at syscall entry using SW loop */
-+#define X86_FEATURE_BHI_CTRL			(21*32+ 2) /* BHI_DIS_S HW control available */
-+#define X86_FEATURE_CLEAR_BHB_HW		(21*32+ 3) /* BHI_DIS_S HW control enabled */
-+#define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
-+#define X86_FEATURE_AMD_FAST_CPPC		(21*32+ 5) /* Fast CPPC */
-+#define X86_FEATURE_AMD_HETEROGENEOUS_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
-+#define X86_FEATURE_AMD_WORKLOAD_CLASS		(21*32+ 7) /* Workload Classification */
-+#define X86_FEATURE_PREFER_YMM			(21*32+ 8) /* Avoid ZMM registers due to downclocking */
-+#define X86_FEATURE_MSR_IMM			(21*32+ 9) /* MSR immediate form instructions */
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index dcc2041f8e61..2bfe57469ac3 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1133,6 +1133,8 @@ static void set_seg(unsigned int which, unsigned int low, unsigned int high,
+ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+ 			     unsigned int high, int *err)
+ {
++	u64 val;
++
+ 	switch (msr) {
+ 	case MSR_FS_BASE:
+ 		set_seg(SEGBASE_FS, low, high, err);
+@@ -1159,7 +1161,9 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+ 		break;
  
- /*
-  * BUG word(s)
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 16f3ca30626a..9eda656e9793 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -27,6 +27,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_APERFMPERF,		CPUID_ECX,  0, 0x00000006, 0 },
- 	{ X86_FEATURE_EPB,			CPUID_ECX,  3, 0x00000006, 0 },
- 	{ X86_FEATURE_INTEL_PPIN,		CPUID_EBX,  0, 0x00000007, 1 },
-+	{ X86_FEATURE_MSR_IMM,			CPUID_ECX,  5, 0x00000007, 1 },
- 	{ X86_FEATURE_RRSBA_CTRL,		CPUID_EDX,  2, 0x00000007, 2 },
- 	{ X86_FEATURE_BHI_CTRL,			CPUID_EDX,  4, 0x00000007, 2 },
- 	{ X86_FEATURE_CQM_LLC,			CPUID_EDX,  1, 0x0000000f, 0 },
+ 	default:
+-		if (!pmu_msr_write(msr, low, high, err)) {
++		val = (u64)high << 32 | low;
++
++		if (!pmu_msr_write(msr, val)) {
+ 			if (err)
+ 				*err = native_write_msr_safe(msr, low, high);
+ 			else
+diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+index f06987b0efc3..1364cd3fb3ef 100644
+--- a/arch/x86/xen/pmu.c
++++ b/arch/x86/xen/pmu.c
+@@ -313,37 +313,18 @@ static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+ 	return true;
+ }
+ 
+-bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err)
++bool pmu_msr_read(u32 msr, u64 *val, int *err)
+ {
+ 	bool emulated;
+ 
+-	if (!pmu_msr_chk_emulated(msr, val, true, &emulated))
+-		return false;
+-
+-	if (!emulated) {
+-		*val = err ? native_read_msr_safe(msr, err)
+-			   : native_read_msr(msr);
+-	}
+-
+-	return true;
++	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+ }
+ 
+-bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err)
++bool pmu_msr_write(u32 msr, u64 val)
+ {
+-	uint64_t val = ((uint64_t)high << 32) | low;
+ 	bool emulated;
+ 
+-	if (!pmu_msr_chk_emulated(msr, &val, false, &emulated))
+-		return false;
+-
+-	if (!emulated) {
+-		if (err)
+-			*err = native_write_msr_safe(msr, low, high);
+-		else
+-			native_write_msr(msr, low, high);
+-	}
+-
+-	return true;
++	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
+ }
+ 
+ static unsigned long long xen_amd_read_pmc(int counter)
+diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+index 63c13a2ccf55..4a0a1d73d8b8 100644
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -274,8 +274,8 @@ void xen_pmu_finish(int cpu);
+ static inline void xen_pmu_init(int cpu) {}
+ static inline void xen_pmu_finish(int cpu) {}
+ #endif
+-bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err);
+-bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err);
++bool pmu_msr_read(u32 msr, u64 *val, int *err);
++bool pmu_msr_write(u32 msr, u64 val);
+ int pmu_apic_update(uint32_t reg);
+ unsigned long long xen_read_pmc(int counter);
+ 
 -- 
 2.49.0
 
