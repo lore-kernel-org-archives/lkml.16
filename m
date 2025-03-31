@@ -1,161 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF21B155725;
-	Mon, 31 Mar 2025 16:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69682135DE;
+	Mon, 31 Mar 2025 16:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440193; cv=none; b=traVi86yAwuUk3s9Q2iahZoq5ZGAcpIETY5deA4FFOhRHWotCVPfsfQqTonRxOJr8NmTiGbBriPGDfu1WG0Z5UcT4o9sCrSNvbsDsxXgpsD9ILNUW5dSIa59AnxbbfpaaGaLRI9H80i+b+e/2/6ypOB/vJUGdpNOhbtvaw7iOk8=
+	t=1743440223; cv=none; b=aqd8U0AS6k0BNSOVaKJMS9+uSgGQWgqxcQqGFixzhHXpNpyl8caUTOXiqEH4JlALZw681ujqDavXYgJjkOh8OGJWKwUYqveSU5e06sdy+MiT3zmlxM8P2Rt25KpWdNrHw+fSZm6ShvDVRsow3VyTG1wxlPOuzGmJ9iXxq3rkM9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440193; c=relaxed/simple;
-	bh=5pFinEz7ke1siiunzxiqlXX2duHMmNQpekzCsvcdZf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Isg59lfv+HqQ93vRRzuxzMiAAfIiMvJaJjmqswSS94pTEy4+kKweqDggcBYzh7WCRFDYkjzYzPG80gAtzRW5hHeQKLBfSQNETWVckvJK5+IhRDd2otItQsywaCVP95Mt5LcCCO0qTWneorwffwXM67FAHilAYzMsL6H9l5z58/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlqON7MA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743440223; c=relaxed/simple;
+	bh=KXzfr50z8suH/Zn+DK4mQrLrvFQqWPegMJXUym/r4y0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gqv0q32Vfzc2C7xCc5j8ngUO79JpWnOEZBShbrc9s5PORxWkXDebHfHjB1LZtp9FWuffrMMjWzrwEuXjVRdyj076tKuhx5RgggY8XsyMfQoJ/dAcQNXkYve4ughkFP2Wxo8lk/ivZa614lVWN5VYQLEWsOMt3OVH/dOhKI5am9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=buAbKnPe; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlqON7MA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 362ACC4CEE3;
-	Mon, 31 Mar 2025 16:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743440192;
-	bh=5pFinEz7ke1siiunzxiqlXX2duHMmNQpekzCsvcdZf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nlqON7MAMS8h43V+Wdv2AVwCQAV5bVHeHNBiaxUtbElCsnji7qxsCNlk7N8b8MTbv
-	 +NOnz4IUxFnOc4A7EMIYgPXSNNGhrTOQI//YOLh0x+v8On9kzBK1bQrHVLmBCJz0cj
-	 MT0WwQLuRUVGWa4cTLVQTFFSZCUZKMBHAh/PS6bScIiZyf3edwKj54E6TP4/bT7Lsw
-	 +LPdhw809nbBUGMekvgF0MfaemAlmF4IIwFyrlxfB/h12wLshSbXae6Z8aTtIPeH4w
-	 +MwGgiUVn6zItlKnU7ujYGkPEinkR4zH8gD5d9sOeEPMeXkJtbkhJGxlDyAVWbu59B
-	 u+UpcURuxHHfA==
-Date: Mon, 31 Mar 2025 16:56:30 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Chaining is dead
-Message-ID: <20250331165630.GA3893920@google.com>
-References: <ZuetBbpfq5X8BAwn@gondor.apana.org.au>
- <ZzqyAW2HKeIjGnKa@gondor.apana.org.au>
- <Z5Ijqi4uSDU9noZm@gondor.apana.org.au>
- <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au>
- <20250325152541.GA1661@sol.localdomain>
- <Z-NdGvErMGS5OT7X@gondor.apana.org.au>
- <Z-NjarWmWSmQ97K0@gondor.apana.org.au>
- <20250326033404.GD1661@sol.localdomain>
- <Z-N55Yjve6wTnPqm@gondor.apana.org.au>
- <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buAbKnPe"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2254e0b4b79so120380065ad.2;
+        Mon, 31 Mar 2025 09:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743440221; x=1744045021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gRlw5rYFCnNVSj1ZUd6YWmxU/HMSu1RH7ZjmPPT8mtI=;
+        b=buAbKnPeRc+sORhgUDzOGkqoGMUqzRKZjc/PWCMp81ri+BOBrqOyz1lyge1thejrsV
+         E6UmgWb0km7Vav3aQSPj3PECni+yqJqJclB6CzNv3WBZBbgfQgtipMAeYl+ygNEdHiGC
+         OtEyLVVsUH+XMYFHug5DEMuvPAV9Uvl4xAb0SDOaIxVjN0ZHwhkcNd/MsL3uvZc5tZ/q
+         bl+P1btlrTN/90l24LS7/aTzWRhcsZLfL2Sg+M+55HOCsJ4zHkmGZlOQdNsL4HA5nqmR
+         U18DC+5DUxBmNXaTCnIq4fNurgkiNxohl58YnYeVABKXaWjFSsGXnaOnzVNLsHea1TSK
+         2csQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743440221; x=1744045021;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gRlw5rYFCnNVSj1ZUd6YWmxU/HMSu1RH7ZjmPPT8mtI=;
+        b=j9UEd0/9fGLJHVMWiHlrdJGhWD7qGRLr3aKHgywxH8BcarcoTG9uRoLxvpup33XbkT
+         52GlSMIJhAG5irXESp7DLUqgd0lwgYplTxgSbmITaTwBQaRH6qfMQam4uv3r4DJmr3S3
+         4HtpLuQpQV6BsKOH9WX/8I+wVi/fFp+X5+J2+pdalUansHoBACCaMOcDVEYxLDaq2BOU
+         X9EdrYX9ZunEqerUVkJVbeHjxYmCmXRmbdLTaKFSU+0xcVa4SMiUNJ8Sc6hOEaaxBmIo
+         PKQajAmKM3L8GNbIVKCl9xE3gClhowjNDUuR3xu4DeTcmoUGzf1mCKX/51TYmiknf3eR
+         x+fg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTx+SU0SCcPxfmr7+fImwnMfny2HlnmzI+eb7//QgHOPTQdR0ShoKxDgBkWUfdRzXxecUWWO4zULgHuxk=@vger.kernel.org, AJvYcCXNhNv9VLiH8+HUjcOkVInKUr802RVttSatW5vRCIAxlOdyYM2ReWvUEokgPlaxvoZB/1evhcPdvezi8gRf5qL1yQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm3CsH44937BjAOIm3WqFhk6rMV++vXrSHpH/o4SPF1vmhC9hV
+	cGNpXCagcgk7wWHzqq2mLaZYxXkbtTFJfURnDpykjKrFUGsD55rG
+X-Gm-Gg: ASbGncvzNDiFEWs0xvSS+LXwCqeRsbBkevUoRDrC+Xh66KUeEgwPvK3q2c6e3bbdKiI
+	DdQKb7T9l6p1aB834ekJ9mKKzz12wTvfDFxd4AMQkbQec0rS5CiS4DprHgDU5qtIkncHReKVIEb
+	n1iLwcFIieQCI8D63pdsxmrMx1HdiTUI/c3J6sTIUvv14UN2KPKKdCA/YPnb1XQVbqFpnbUfqGz
+	U2+Yy/C2YXML6l/phqc8Asf2g7M73UvniR48QsZq1kmRoGWvtWxdAUWJHN9pDWQBbGc/bt9ecMe
+	/6bN0lUhVY6gbEBdLqATbflN0Rq0cfNtEaJYuvUvFpqESvVfsTpWkIoIYgFnrOZjrFxuffr8lFo
+	pewnLFrCtTV1lqE0=
+X-Google-Smtp-Source: AGHT+IE8OCRlIaQnjODeJL17gbi8prQ1mqRT+j0dJHleO8pau6UyhjbDiw7gnlGIGUUCFF/gb7NCgg==
+X-Received: by 2002:a05:6a00:1309:b0:737:678d:fb66 with SMTP id d2e1a72fcca58-7398033f18dmr12362785b3a.5.1743440220955;
+        Mon, 31 Mar 2025 09:57:00 -0700 (PDT)
+Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e22496sm7436011b3a.50.2025.03.31.09.56.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 09:57:00 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v5] perf trace: Fix possible insufficient allocation of argument formats
+Date: Mon, 31 Mar 2025 09:56:58 -0700
+Message-ID: <20250331165658.2566079-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 30, 2025 at 10:33:23AM +0800, Herbert Xu wrote:
-> On Wed, Mar 26, 2025 at 11:52:05AM +0800, Herbert Xu wrote:
-> >
-> > they don't need it.  Take ext4 as an example:
-> > 
-> > 	ext4 calls verity
-> > 	schedule_work(verity_work);
-> > 	return asynchronously!
-> > 
-> > verity_work:
-> > 	do the crypto work
-> > 	__read_end_io(bio);
-> 
-> I went ahead and removed the work queue for fsverity and fscrypt
-> (except for the reading of the Merkle tree which is still done in
-> a work queue because I'm too lazy to make that async), and it
-> actually turned out to be slower than using a work queue.
-> 
-> I was testing with an encrypted 8GB file over ext4 mounted over a
-> loopback device in tmpfs.  The encryption is with xts-vaes.  It turns
-> out that not using a work queue actually made reading the entire file
-> go from 2.4s to 2.5s.
-> 
-> I then tried passing the whole bio (256KB per crypto request in my
-> test as opposed to the data unit size of 4KB per crypto request)
-> through using chaining to skcipher, with xts-vaes doing the requests
-> one-by-one.  Against my expectations, this didn't speed things up at
-> all (but at least it didn't slow things down either).  All the
-> benefits of aggregating the data were offset by the extra setup cost
-> of creating the chained requests.
+In my previous fix of runtime error [1], I made a mistake of
+decrementing one unconditionally, regardless of whether an extra
+'syscall_nr' or 'nr' field was present in libtraceevent's tp_format.
+This may cause perf trace to allocate one fewer arg_fmt entry than
+needed for the accurate representation of syscall arguments.
 
-Yes, your chaining API has poor performance and is difficult to test, as I've
-been saying all along.
+This patch corrects the mistake by checking the presence of'syscall_nr' or
+'nr', and adjusting the length of arg_fmt[] accordingly.
 
-> So chaining is clearly not the way to go because it involves cutting
-> up into data units at the start of the process, rather than the end.
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
+[1]: https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/
+---
+Changes in v5:
+- Move the link to the bottom, and keep the triple dash (suggested by Namhyung)
 
-Certainly agreed that chaining is not the way to go, but I think you're
-overlooking that Linus's suggestion to use the libraries directly would also
-solve this, while also not being restricted to bios and folios (note that not
-all filesystems are block-based, for example...).  That would avoid the
-per-request overhead from the generic crypto infrastructure, which is the real
-source of the problem.
+Changes in v4:
+- Make the patch apply
 
-> Finally I hacked up a patch (this goes on top of the skcipher branch
-> in cryptodev) to pass the whole bio through the Crypto API all the
-> way to xts-vaes which then unbundled it.  This turned out to be a
-> winner, taking the read time for 8GB from 2.4s down to 2.1s.
-> 
-> In view of this result, I'm going to throw away chaining, and instead
-> work on an interface that can take a whole bio (or folio), then cut
-> it up into the specified data unit size before processing.
-> 
-> The bottom-end of the interface should be able to feed two (or whatever
-> number you fancy) data units to the actual algorithm.
-> 
-> This should work just as well for compression, since their batching
-> input is simply a order-N folio.  The compression output is a bit
-> harder because the data unit size is not constant, but I think I
-> have a way of making it work by adding a bit to the scatterlist data
-> structure to indicate the end of each data unit.
-> 
-> PS For fsverity a 256KB bio size equates to 64 units of hash input.
-> My strategy is to allocate the whole thing if we can (2KB or 4KB
-> depending on your digest size), and if that fails, fall back to
-> a stack buffer of 512 bytes (or whatever number that keeps the
-> compiler quiet regarding stack usage).  Even if we're on the stack,
-> it should still give more than enough to data to satiate your
-> multibuffer hash code.
+Changes in v3:
+- Add 'Fixes:' tag
 
-Extending the generic crypto infrastructure to support bios and folios is an
-interesting idea.
+Changes in v2:
+- Simplify the code (written by Namhyung)
 
-But TBH I think it's worse than Linus's suggestion of just extending lib/crypto/
-to support the needed functionality and using that directly.  Your proposal is
-again solving a problem created by the generic crypto infrastructure being too
-complex, by making the generic crypto infrastructure even more complex.
+ tools/perf/builtin-trace.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-With the bio and folio support in the generic crypto infrastructure, there would
-be lots of work to do with adding support in all the underlying algorithms, and
-adding tests for all the new APIs.
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a102748bd0c9..439e152186da 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ {
+ 	int idx;
+ 
+-	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+-		nr_args = sc->fmt->nr_args;
+-
+ 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+ 	if (sc->arg_fmt == NULL)
+ 		return -1;
+@@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 			sc->arg_fmt[idx] = sc->fmt->arg[idx];
+ 	}
+ 
+-	sc->nr_args = nr_args;
+ 	return 0;
+ }
+ 
+@@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		return err;
+ 	}
+ 
+-	/*
+-	 * The tracepoint format contains __syscall_nr field, so it's one more
+-	 * than the actual number of syscall arguments.
+-	 */
+-	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+-		return -ENOMEM;
+-
+ 	sc->args = sc->tp_format->format.fields;
++	sc->nr_args = sc->tp_format->format.nr_fields;
++
+ 	/*
+ 	 * We need to check and discard the first variable '__syscall_nr'
+ 	 * or 'nr' that mean the syscall number. It is needless here.
+@@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		--sc->nr_args;
+ 	}
+ 
++	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
++		return -ENOMEM;
++
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-- 
+2.45.2
 
-For hashing, users would need to allocate an array to hold the digest for every
-block in the bio or folio.  That would add an additional memory allocation to
-every I/O.  You said you'd like to fall back to a smaller buffer if the memory
-allocation fails.  But that's silly; if we have to support that anyway, we might
-as well do it that way only.  In which case the bio interface is pointless.
-
-Also note that the kernel also *already* has an abstraction layer that allows
-doing en/decryption on bios.  It's called blk-crypto, and it makes it possible
-to do the en/decryption using either inline encryption hardware (i.e., the newer
-style of crypto accelerator that is actually commonly used and doesn't use the
-Crypto API at all) or the Crypto API.  I have plans to remove the fs-layer bio
-en/decryption code from fscrypt and always use blk-crypto instead.
-
-Adding bio support to the Crypto API feels duplicative of blk-crypto, and we'd
-end up with too many abstraction layers.  I think my preferred approach is that
-blk-crypto-fallback would directly call the library functions.  The legacy
-Crypto API really has no useful role to play anymore.
-
-FWIW, there are also people thinking about developing inline hashing hardware,
-in which case something similar would apply to blk-integrity.
-
-- Eric
