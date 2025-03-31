@@ -1,99 +1,173 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23911E104E;
-	Mon, 31 Mar 2025 10:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55001A7046;
+	Mon, 31 Mar 2025 10:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417360; cv=none; b=cJVmI+kiulT6gDbLIoyvJ9ZRmsHQQn5BMgsjff6/wEjOSr3cJHX0TZtMTR/z9Tby99yO1716L6rSgGHGNkAGSzFne3iQ5HYRNXVj7KdQbE5xVVnNX/Yv3n1aaJc7YUljjNPaJ9COJetbB8BQuHrFQ8dXCriEmKaM7+sWhA8vePY=
+	t=1743417376; cv=none; b=AQHa1Y24Cvi5itKz467LONlUckW1/McsBe2Shya1FvSp2l7SYNaML1Spt/YgCXewCx7lL948jC9+CEKoZRcClF3YTvKqj1oFPZvIA2clBabEy/6rBuTP4bQOHr6L5DFTvuHmHuxV03wumlcXv4Ci32HQMy0dl7KD0nmEcMfDglk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417360; c=relaxed/simple;
-	bh=zEx2JSo8gPZeBZTI9W4vS+vidGbe5gNazL7FMc9cv0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SKPYPvAdsAQC7pZk7B47o+vQGlWg1Z8QH0+9H3Ecgk3IUAWwhRlFRNXNax1VA3iPRYYCuqCpefxGvhkEU/cqgqZTLjUAvV9ltar+qIN9M9tSZevP+4u1zNiVeaYthq8KsQmaBNZO0YuUA95mJOvtWgitg6brNyR1ScTdVFx1vXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cchEgHQN; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743417376; c=relaxed/simple;
+	bh=WHHBDa6ne12H1fKPIha7nBKDfW1fudV7sPBpeiBdnRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMDxTDgbWCyW35UHzWTepIG0WjMh4niQnsMXt0OI5eCPJzJOLlP3eycM1kkJyY9tgUzJQOxnxZ94qNaHCvg4vuXtbMWyEgcP6BfBCk8We7WrWr3LjWoC4kfNPjQIbUj1zsMUCbAiF7SVWrL82JIzSg49T598y9gtJTHwTkomP20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nw2dJP0v; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cchEgHQN"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30363975406so940134a91.0;
-        Mon, 31 Mar 2025 03:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743417358; x=1744022158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ikawffa1XmcNQB6fB+w/X6uLSEh0RtsRAvVfBOkcps=;
-        b=cchEgHQNQZ++aI5A/K/8dTQVPqryW11Sk6nWCW1XnDpfE14iFag9U7tDE6mgbR14FA
-         Hofq47O0t9N8ZNq/ZPpUywOwDBOO1AKSqda0dYskI/zalPu/bHNvHINKpgc9J1vHep6T
-         Fo24iPUS4gpPA76TciS1fonAuhb0HWW6EORY35Dsih4N/FWoqOkYfvruvbqZ6FPARNWM
-         1YG+snKTPGMFbEjGHHDk+C2TCb7ZB12SA4C2vH50yPC+AbEDiAhNBrWuggRA4MR2NmaW
-         uVzCG+NO0j7diwfJ9NKOk7/VSxZVo+s/RYw5aBoEQk6HPIwX4rA2DYKUt6rQKvvI74OU
-         d1Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743417358; x=1744022158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ikawffa1XmcNQB6fB+w/X6uLSEh0RtsRAvVfBOkcps=;
-        b=EOPPiTZqrfTgj7c/HCSNrVjNXHd1puNJcBXBKihZWufmCvnJqS27OF9TkYRkA68Xej
-         Ur3w1oq0sbeGcSQzUf33fOJGHj60w3ZNFTEyqZV+Qw3Vu8YXcJIMDCaOuD/AIlRNEFvI
-         Q0viMFYiHmAmkGule9QD0yQiT8fm9Pk9KWRZrJDADhaer8yorD3Cq49umwD+VGK83V9j
-         DULFh9zmzee/xYYaZLkoLcG24Gunjpzo8mrBHKgfrnG6XebHCHOekxRMhYbv75giX8Ou
-         NbEOLnN1JmtsUnb8eJ0Z71G0NzdR4AyFisBl29IXaVCv3iMBdPx2ozRkdW0ikhtH09Ap
-         YOMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQZqazqQpJFdyuQi/WB1xrcL1nznbGMRaKmkxIg6qA0Zmm1zlhBvNTj2PT+ATLQfnVGhHUsQHChWWfjkLr27c=@vger.kernel.org, AJvYcCXgRyMUA6FBNnjl0V+P+uUjqYoCzYcs4XDaGVnFc5fhtoMHUPKfWoDWhlmabaKbQdeLk738tPi6pMtuit4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLxQrYrZoSw0Zlpryo9rkSa35xMjja9pcI7vqqg9oVydPkzizU
-	h+JVXndRjmKZaScMO9svM9VU1lPf0Rd/1o1EOVMEEiDqLpzvdXuB2GzuakqAHqAKysBpe/DqG9o
-	dbB53smSpw5Ns2x8wSTHlCl3d2jE=
-X-Gm-Gg: ASbGnctS1tyEfLWJDjacOlcsr1y8ro6HzJKlRq+Dh6+LN3zKkXpLaR96KgZgqnhPtVW
-	2jzWl2L3mzDY5No4eCef18s4Rwev8XmTdB4S5i2UAoK9sg+pxXGKUZLXkfOFXp8pjK0OGd96tkb
-	9LM0nGnhxmpfeXcGOid/UujKDKAA==
-X-Google-Smtp-Source: AGHT+IFbGuLneGYpnuyEhh8uJOR/MpPwOlhYxV5IF/XJUNKXyWcu8vBabQFZWHhKg5lpN74yT8V4DcbGLN9aOfA8OH0=
-X-Received: by 2002:a17:90b:1d88:b0:2ff:7970:d2b6 with SMTP id
- 98e67ed59e1d1-30532153722mr5089126a91.5.1743417358223; Mon, 31 Mar 2025
- 03:35:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nw2dJP0v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743417375; x=1774953375;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WHHBDa6ne12H1fKPIha7nBKDfW1fudV7sPBpeiBdnRE=;
+  b=Nw2dJP0vcXnIuGtKkVZ3ot1SIoHogmcDdJLQb0kk2WjleNvlEUmodhr5
+   kVutY5kybN3wUu5lsAgKtW9NTqk5gkzXpTGoI8FZmeQJ9P0Sf5Kn326AG
+   4R/MjWF8XVUT+3ERUpkD1EIq8mvEFgIOXTCfXhoDv3395Kq3sigbvaiel
+   eS0tAsY+ipBAvqmTgEqpYNLGAXJw8JSFqK8ipM99d3ePrtZhcGR5UHys+
+   fATV2nm/tQ7j/cQ8vbmBURWg7R/8y4kW0921LGNpH5e8mEDKlC0yzzpC/
+   YTmTtWqavlUIP4TdI/wmcM6dNPuotUgdaroyIQrCSvv0ULbMEmqM6Dd9x
+   w==;
+X-CSE-ConnectionGUID: 8OXfLxLZQjmwoDuOvabt7A==
+X-CSE-MsgGUID: ar1zcvyPQnqr/vFfpPXIVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44876076"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="44876076"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 03:36:14 -0700
+X-CSE-ConnectionGUID: muj2aYzDR8O4Ecqvo3OClg==
+X-CSE-MsgGUID: YdTG/3YESEeLVufUHJCl/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="131065560"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 31 Mar 2025 03:36:13 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 363531CE; Mon, 31 Mar 2025 13:36:11 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] spi: Group CS related fields in struct spi_device
+Date: Mon, 31 Mar 2025 13:35:59 +0300
+Message-ID: <20250331103609.4160281-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AM9PR03MB7074692E5D24C288D2BBC801C8AD2@AM9PR03MB7074.eurprd03.prod.outlook.com>
-In-Reply-To: <AM9PR03MB7074692E5D24C288D2BBC801C8AD2@AM9PR03MB7074.eurprd03.prod.outlook.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 31 Mar 2025 12:35:46 +0200
-X-Gm-Features: AQ5f1JrA_HUQGTb26le5i8LBG7p-dCwE2p3QTHv9TG0yhM3IU280MSaJkHxNHcU
-Message-ID: <CANiq72mH+tudajJvYVmdLP+F8krMAUytvbtkox3gKeX3_oympw@mail.gmail.com>
-Subject: Re: [PATCH] scripts: generate_rust_analyzer: fix pin-init name in
- kernel deps
-To: "Lalaev, Andrei" <andrei.lalaev@anton-paar.com>
-Cc: "ojeda@kernel.org" <ojeda@kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "gary@garyguo.net" <gary@garyguo.net>, 
-	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, 
-	"benno.lossin@proton.me" <benno.lossin@proton.me>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>, 
-	"aliceryhl@google.com" <aliceryhl@google.com>, "tmgross@umich.edu" <tmgross@umich.edu>, 
-	"dakr@kernel.org" <dakr@kernel.org>, 
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 8:18=E2=80=AFAM Lalaev, Andrei
-<andrei.lalaev@anton-paar.com> wrote:
->
-> Because of different crate names ("pin-init" and "pin_init") passed to
-> "append_crate" and "append_crate_with_generated", the script fails with
-> "KeyError: 'pin-init'".
-> To overcome the issue, pass the same name to both functions.
->
-> Signed-off-by: Andrei Lalaev <andrei.lalaev@anton-paar.com>
+The CS related fields are sparse in the struct spi_device. Group them.
+While at it, fix the comment style of cs_index_mask.
 
-Applied to `rust-fixes` -- thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-    [ Made author match the Signed-off-by one. Added newline. - Miguel ]
+v2: used correct base
 
-If the author is wrong, please let me know, thanks!
+ include/linux/spi/spi.h | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-Cheers,
-Miguel
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 8497f4747e24..e934f9cc6a4d 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -134,13 +134,6 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  * @max_speed_hz: Maximum clock rate to be used with this chip
+  *	(on this board); may be changed by the device's driver.
+  *	The spi_transfer.speed_hz can override this for each transfer.
+- * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
+- *	the corresponding physical CS for logical CS i.
+- * @mode: The spi mode defines how data is clocked out and in.
+- *	This may be changed by the device's driver.
+- *	The "active low" default for chipselect mode can be overridden
+- *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
+- *	each word in a transfer (by specifying SPI_LSB_FIRST).
+  * @bits_per_word: Data transfers involve one or more words; word sizes
+  *	like eight or 12 bits are common.  In-memory wordsizes are
+  *	powers of two bytes (e.g. 20 bit samples use 32 bits).
+@@ -148,6 +141,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  *	default (0) indicating protocol words are eight bit bytes.
+  *	The spi_transfer.bits_per_word can override this for each transfer.
+  * @rt: Make the pump thread real time priority.
++ * @mode: The spi mode defines how data is clocked out and in.
++ *	This may be changed by the device's driver.
++ *	The "active low" default for chipselect mode can be overridden
++ *	(by specifying SPI_CS_HIGH) as can the "MSB first" default for
++ *	each word in a transfer (by specifying SPI_LSB_FIRST).
+  * @irq: Negative, or the number passed to request_irq() to receive
+  *	interrupts from this device.
+  * @controller_state: Controller's runtime state
+@@ -160,8 +158,7 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  *	the device will bind to the named driver and only the named driver.
+  *	Do not set directly, because core frees it; use driver_set_override() to
+  *	set or clear it.
+- * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
+- *	(optional, NULL when not using a GPIO line)
++ * @pcpu_statistics: statistics for the spi_device
+  * @word_delay: delay to be inserted between consecutive
+  *	words of a transfer
+  * @cs_setup: delay to be introduced by the controller after CS is asserted
+@@ -169,8 +166,11 @@ extern void spi_transfer_cs_change_delay_exec(struct spi_message *msg,
+  * @cs_inactive: delay to be introduced by the controller after CS is
+  *	deasserted. If @cs_change_delay is used from @spi_transfer, then the
+  *	two delays will be added up.
+- * @pcpu_statistics: statistics for the spi_device
++ * @chip_select: Array of physical chipselect, spi->chipselect[i] gives
++ *	the corresponding physical CS for logical CS i.
+  * @cs_index_mask: Bit mask of the active chipselect(s) in the chipselect array
++ * @cs_gpiod: Array of GPIO descriptors of the corresponding chipselect lines
++ *	(optional, NULL when not using a GPIO line)
+  *
+  * A @spi_device is used to interchange data between an SPI slave
+  * (usually a discrete chip) and CPU memory.
+@@ -185,7 +185,6 @@ struct spi_device {
+ 	struct device		dev;
+ 	struct spi_controller	*controller;
+ 	u32			max_speed_hz;
+-	u8			chip_select[SPI_CS_CNT_MAX];
+ 	u8			bits_per_word;
+ 	bool			rt;
+ #define SPI_NO_TX		BIT(31)		/* No transmit wire */
+@@ -216,23 +215,29 @@ struct spi_device {
+ 	void			*controller_data;
+ 	char			modalias[SPI_NAME_SIZE];
+ 	const char		*driver_override;
+-	struct gpio_desc	*cs_gpiod[SPI_CS_CNT_MAX];	/* Chip select gpio desc */
++
++	/* The statistics */
++	struct spi_statistics __percpu	*pcpu_statistics;
++
+ 	struct spi_delay	word_delay; /* Inter-word delay */
++
+ 	/* CS delays */
+ 	struct spi_delay	cs_setup;
+ 	struct spi_delay	cs_hold;
+ 	struct spi_delay	cs_inactive;
+ 
+-	/* The statistics */
+-	struct spi_statistics __percpu	*pcpu_statistics;
++	u8			chip_select[SPI_CS_CNT_MAX];
+ 
+-	/* Bit mask of the chipselect(s) that the driver need to use from
+-	 * the chipselect array.When the controller is capable to handle
++	/*
++	 * Bit mask of the chipselect(s) that the driver need to use from
++	 * the chipselect array. When the controller is capable to handle
+ 	 * multiple chip selects & memories are connected in parallel
+ 	 * then more than one bit need to be set in cs_index_mask.
+ 	 */
+ 	u32			cs_index_mask : SPI_CS_CNT_MAX;
+ 
++	struct gpio_desc	*cs_gpiod[SPI_CS_CNT_MAX];	/* Chip select gpio desc */
++
+ 	/*
+ 	 * Likely need more hooks for more protocol options affecting how
+ 	 * the controller talks to each chip, like:
+-- 
+2.47.2
+
