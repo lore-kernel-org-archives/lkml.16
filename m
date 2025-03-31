@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC0E1DFDB9
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 561E427726
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417192; cv=none; b=tpn62Cf0gfTKu/hQMffh6z85HBfC9qhYKDGX9u6Lq1uADHWQ8LAHmDv4jY3if7PBh5/5TOgziJjm+ZRTJHk9OHfkK+PM7WeeAFOGvuJUN+qizvy1RJ3LNfEBwkszN9pV4uEWPYLFLqg6fIr3TDcYykqB/Kg4xfxWPdQ0HnMuFvE=
+	t=1743417215; cv=none; b=BvocOproTV0yJ5bPCJBc//pKjpgagHmlPPtodW3//n+DxwZXVvhLm4Twi+SmkDN+IXhCG8WN2iabIow02PaLHMDZGNodCPikgDilLT/1Sz4iU18IHJxbNWJ8y7yiTXtVfyyBF+Sr37C3K5f6Mzro0ziaBSK6nLPwR1ZnTw4ADHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417192; c=relaxed/simple;
-	bh=TsgfG93FsSWagg0s6IUuPBqZfdjAGnYnzQSu/ztjL3I=;
+	s=arc-20240116; t=1743417215; c=relaxed/simple;
+	bh=YbneYaTomW9dZSD5vTT9pDDz1x90pUmjETImdeKO5/E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XEEa1UurHflYGFexuvM6Qe94sbeGL/T6nCRju0G1ZxY2oOSfTa0gozOYoAcZeq8OCulqSNTqMNH5AfJQMH8i/PrWfBVXIQeRH4/IkCruVBLnvSjtm7rp8Ahf57OTjjQxKeNR/vQLu6KOSSmmJrKcoy3lHrkyTC9dsw/Om/Rl1hc=
+	 In-Reply-To:Content-Type; b=qlCxUhmU7Mpuz0e4quOJ3ImuTKh/ib5WNE9LRqf/qsX+5uADRvshlyw0dw/wuWiZK1r+D4bAA5NRbVlhm/XYLKpLo1oTA/52QojJMU+rksphgfp72tLg8rOpns5d5QLTxJb2TswNfVw4pMBahJFtv/vKrAUUbcAOgxxos6FnQS4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ADE01F37;
-	Mon, 31 Mar 2025 03:33:09 -0700 (PDT)
-Received: from [10.57.15.213] (unknown [10.57.15.213])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F21C33F63F;
-	Mon, 31 Mar 2025 03:33:02 -0700 (PDT)
-Message-ID: <9ad57d16-5977-4542-8598-d23d41227e7a@arm.com>
-Date: Mon, 31 Mar 2025 11:32:58 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CEDF1F02;
+	Mon, 31 Mar 2025 03:33:37 -0700 (PDT)
+Received: from [10.57.40.234] (unknown [10.57.40.234])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 201F13F63F;
+	Mon, 31 Mar 2025 03:33:31 -0700 (PDT)
+Message-ID: <48408728-f062-46f8-867f-61c6d91d410d@arm.com>
+Date: Mon, 31 Mar 2025 11:33:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,71 +27,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/panfrost: add h616 compatible string
-To: Philippe Simons <simons.philippe@gmail.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Andre Przywara <andre.przywara@arm.com>,
- =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>
-References: <20250312232319.25712-1-simons.philippe@gmail.com>
- <20250312232319.25712-3-simons.philippe@gmail.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250312232319.25712-3-simons.philippe@gmail.com>
+Subject: Re: [PATCHSET v6 0/4] Split iowait into two states
+To: Pavel Begunkov <asml.silence@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, tglx@linutronix.de,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20240819154259.215504-1-axboe@kernel.dk>
+ <8380f7f3-fd9f-45a0-b66b-85ec0b5d0144@gmail.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <8380f7f3-fd9f-45a0-b66b-85ec0b5d0144@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/03/2025 23:23, Philippe Simons wrote:
-> Tie the Allwinner compatible string to the two features bits that will
-> toggle the clocks and the reset line whenever the power domain is changing
-> state.
-
-This looks fine, but we need the new compatible string to be documented
-in the bindings:
-
-Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-
-I'm not sure what the situation is for the device tree for this
-platform, but it would be good to get that all sorted before we merge
-the compatible into panfrost.
-
-Thanks,
-Steve
-
-> Signed-off-by: Philippe Simons <simons.philippe@gmail.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_drv.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On 3/31/25 10:02, Pavel Begunkov wrote:
+> On 8/19/24 16:39, Jens Axboe wrote:
+>> Hi,
+>>
+>> This is v6 of the patchset where the current in_iowait state is split
+>> into two parts:
+>>
+>> 1) The "task is sleeping waiting on IO", and would like cpufreq goodness
+>>     in terms of sleep and wakeup latencies.
+>> 2) The above, and also accounted as such in the iowait stats.
+>>
+>> The current ->in_iowait covers both, this series splits it into two types
+>> of state so that each can be controlled seperately.
+>>
+>> Patches 1..3 are prep patches, changing the type of
+>> task_struct->nr_iowait and adding helpers to manipulate the iowait counts.
+>>
+>> Patch 4 does the actual splitting.
+>>
+>> This has been sitting for a while, would be nice to get this queued up
+>> for 6.12. Comments welcome!
 > 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index 0f3935556ac7..f13743fe6bad 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -776,6 +776,13 @@ static const struct panfrost_compatible default_data = {
->  	.pm_domain_names = NULL,
->  };
->  
-> +static const struct panfrost_compatible allwinner_h616_data = {
-> +	.num_supplies = ARRAY_SIZE(default_supplies) - 1,
-> +	.supply_names = default_supplies,
-> +	.num_pm_domains = 1,
-> +	.pm_features = BIT(GPU_PM_RT_CLK_DIS) | BIT(GPU_PM_RT_RST_ASRT),
-> +};
-> +
->  static const struct panfrost_compatible amlogic_data = {
->  	.num_supplies = ARRAY_SIZE(default_supplies) - 1,
->  	.supply_names = default_supplies,
-> @@ -859,6 +866,7 @@ static const struct of_device_id dt_match[] = {
->  	{ .compatible = "mediatek,mt8186-mali", .data = &mediatek_mt8186_data },
->  	{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
->  	{ .compatible = "mediatek,mt8192-mali", .data = &mediatek_mt8192_data },
-> +	{ .compatible = "allwinner,sun50i-h616-mali", .data = &allwinner_h616_data },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, dt_match);
+> Good day,
+> 
+> Did anything good happened with these patches or related work?
+> Christian> 
+
+Hi Pavel,
+so for cpuidle part we've had commit ("38f83090f515 cpuidle: menu: Remove iowait influence")
+for a while now without much complaints, hopefully that means it stays in.
+So I'd really like to know how the results still compare for relevant workloads.
+
+cpufreq iowait boosting is still a thing in schedutil and intel_pstate,
+and so far I've failed to convince Rafael and Peter to get rid of it.
+I still think that is the right thing to do, but it does come with a
+regression in most of the simple synthetic fio tests.
+
+> Reminder: the goal is to let io_uring to keep using iowait boosting
+> but avoid reporting it in the iowait stats, because the jump in the
+> stat spooks users. I know at least several users carrying out of tree
+> patches to work it around. And, apparently, disabling the boosting
+> causes perf regressions.
+
+Details would be appreciated, I looked the the postgres workload that
+justified it initially and that was on cpuidle iowait which is no
+longer a thing.
+
+> 
+> I'm reading through the thread, but unless I missed something, it looks
+> like the patchset is actually aligned with future plans on iowait
+> mentioned in the thread, in a sense that it reduces the exposure to
+> the user space, and, when it's time, a better approach will be able
+> replaces it with no visible effect to the user.
+
+I'm not against $subject necessarily, it's clearly a hack tapering
+over this but as I've mentioned I'm fine carrying a revert of $subject
+for a future series on iowait boosting.
+
+> 
+> On the other hand, there seems to be a work around io_uring patch
+> queued for, which I quite dislike from io_uring perspective but also
+> because it exposes even more of iowait to the user.
+> I can understand why it's there, it has been over a year since v1,
+> but maybe we can figure something out before it's released? Would
+> it be fine to have something similar to this series? Any other
+> ideas?
+
+Ah thank you, I've missed this
+https://lore.kernel.org/io-uring/f548f142-d6f3-46d8-9c58-6cf595c968fb@kernel.dk/
+Would be nice if this lead to more numbers comparing the two at least.
 
