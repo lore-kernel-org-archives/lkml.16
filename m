@@ -1,122 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38460214815
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB89211A35
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437833; cv=none; b=t4/gP90wNC4+p0fCarn5hxkVvBirBsYJEetuywPkLzVQsEgu1Ng2hKyEhYpA2O9rr6roUDr0e+ES2FS3yUuxW2Ls08iVl7VQnq3FGX49G1+IR20OUvkJj/8o5taiXW2Xu1iJAXuy2I7gXxBKEMlAAnPdaBwgrddm2Jq1z8SnPSU=
+	t=1743437890; cv=none; b=pXoT/jx6AnorW8diCqVkzNWaa2gD/8ZcdF0LeuUNk4rbiwgdzkFDunV8CEwNL5MHCKMyqv6KzeElPL3CM+DB+zMN8gbxExemu76L/IlC4f7MAxOq99kS3wDXObIXd5YOrNSs9XIkugb7dY8vCuCAPQfrXj8ivHPtqGbMTaOsEWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437833; c=relaxed/simple;
-	bh=Z5nYVXi/n0DZaKeP9EMIATjTYHSvhfc6wg0Q/NsaJ9s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dTq0dfzr1AlBd7Z6D3gHH1bcv5BR3zDg8htP6x7iI47E+CSyuEKiB8H0SLJqYmBBDyoHJtV/QA07XfFGtzLd2BFU/+qC0CxEO6eqFfwWXaj/eFaYXsbnPuM/relSyo4aZYfREDJ/DdLBUVIiALqH96w1c6yv8SjR45s49F5gDEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gy4+AsuU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743437890; c=relaxed/simple;
+	bh=aTg6yYXpHoM2puFiQpgt/tSsBDbhEsa9a6e7au0koPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6nbOQ53HQ5amzx5eZO/00rkCcvPqioIRI+yKzWwHiYppiON3FWbCzzrbon2brJNXsiY7s923cm/tgewZtYjizYYbsBWam2nrQBQQdQ5UAJGtuHWiu1vdAph+ISVVPNNU6/t2KruG4pJxq4P0K5TkYz9JYiNnZyy6FKFIovAVu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=h9wtvXaO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IncMXsAx; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy4+AsuU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743437830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXGoc6eNWHgPyvL59/knt6bfbN2WAIb4QRVcgXHCRwY=;
-	b=Gy4+AsuUJ+RGdPEe/psVs42v3zQOz0fdYQxLsVLEUQUW9Dmx2j1bvDrlSOQjSYz1X0CU50
-	eVf2Aoie/VHWHZw9EOxxFXLgrTEJijWvI/r2vzAMr/0ebIBZHX0Plgth4fvhmEU+FTC+bL
-	qBO/Wydzyhe7XLZwygVb077ay0L4Ea4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-501-nX5MjEheOYmm7nWRuTQKLQ-1; Mon,
- 31 Mar 2025 12:17:06 -0400
-X-MC-Unique: nX5MjEheOYmm7nWRuTQKLQ-1
-X-Mimecast-MFC-AGG-ID: nX5MjEheOYmm7nWRuTQKLQ_1743437825
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE9EA19560BB;
-	Mon, 31 Mar 2025 16:17:04 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C6F1E19560AD;
-	Mon, 31 Mar 2025 16:17:02 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Mon, 31 Mar 2025 11:15:28 -0400
-Subject: [PATCH v4 4/4] drm/panel/panel-simple: Use the new allocation in
- place of devm_kzalloc()
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="h9wtvXaO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IncMXsAx"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5F622138456A;
+	Mon, 31 Mar 2025 12:18:07 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Mon, 31 Mar 2025 12:18:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1743437887; x=1743524287; bh=0PKpSpAP/D
+	7a8SfehCwf+MgvErJcuIyK4tm4G4WThW4=; b=h9wtvXaODk83Gta8YoZenzfwtQ
+	V6U7B6gOVQSS6iC+beGokGSAydYp5rOP782rw/vOwtMdk9ITbQtJHyA2yBOUFshg
+	MRxqa7DUDbLU1clvib7R8OTc80HEFnHIaFiW9IE05hx43U/C+ytt5CpnVW0AdWtA
+	xTfBivAROm5JmQGaaIC8RjX7dmE8x3hmp4DTPM/pZAxCr22s2h4idTt2CR9OaXLP
+	f7R0VYU6L2039E9CHrdtv6rx2PgVu5JirI3G6fbGgVeJWyVDMSlinBPAIyoIa6f/
+	q5KpnlGKJH/vfxHNCrBYA3PUzckuXCb26KGlnDwSSyMOuOYfvy9MaquMDmOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743437887; x=1743524287; bh=0PKpSpAP/D7a8SfehCwf+MgvErJcuIyK4tm
+	4G4WThW4=; b=IncMXsAxfrDJxq2YCcmDzFe1MpN2yllVRjRhm4EtyKoy9fWz3Nc
+	IIVeMs7vhFQZWIdgYitIwHGu/MkpxouKlKnW/ZVVbomYzGIsnxzMG0+qylBa6veF
+	250g/xqhkUc3Euw8s+RFEV36spxPo5Nu8RZNOzkHxxD25Ar9h4e6vi9z3JkfZtvm
+	z1grYVPzLLF0nq0HOki6l3OfF34i3G60EWn7PEPM45qAMbRBGKHzp0c+2gPw60zB
+	O5Ig7eq8X7rQyXfbiAdWHImLAItyaYe6O0Bz+oOQ7xcdOdKIt/N4BHfBS2Xuysu6
+	YGrVeGlM+vndbBpRSaQpnDJzVx+in+k1mkw==
+X-ME-Sender: <xms:P8DqZ7Rk9otQZRjcawkrYL-CFptxW2x8E06cUZdiZ0epwqi4tcq2QQ>
+    <xme:P8DqZ8y0SCyqFBkh8fRp0ZRVT2XMP0XOsHsc6jNG_26Cf6CLMemOU3r-WxZ-9jIDT
+    VtQuyjGAlDeqA>
+X-ME-Received: <xmr:P8DqZw2b1Lg83EMnjYAVxv2wtBkvBQFrNmsUQdXTNupE9XZQ9IVvip8ka0SW>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtfeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopehjohhsvghphhgrnhhgvghlfhhrihgvnhguudesgh
+    hmrghilhdrtghomhdprhgtphhtthhopeguphgvnhhklhgvrhesghhmrghilhdrtghomhdp
+    rhgtphhtthhopehlihhnuhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvg
+    hvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:P8DqZ7AeszAceFQg2zhRRqCUiUw0vWAybDikCML2dmwd5KtoGXOLwg>
+    <xmx:P8DqZ0j1WdBDK_kt-a6SyC6a8MXmofIxJmLrX8MATHXACxbf_llr-A>
+    <xmx:P8DqZ_q78pcAWtRPyKT6XHUjPdpf-7g0OyBziJtOY1lt-7Qor9lyeA>
+    <xmx:P8DqZ_g2UlBBN6uM-9j7svOKX4EVwvXL0IhvsG0XwmchW6Z9WxyHoA>
+    <xmx:P8DqZ9VgxPB0fi6Am3gScjdUlaulmetfjRIyLMdNoLbJXzV6Bnb-iSOg>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 31 Mar 2025 12:18:06 -0400 (EDT)
+Date: Mon, 31 Mar 2025 18:16:36 +0200
+From: Greg KH <greg@kroah.com>
+To: Joseph Friend <josephangelfriend1@gmail.com>
+Cc: dpenkler@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: gpib: Fixed comments and misaligned code
+Message-ID: <2025033107-ice-docile-10cf@gregkh>
+References: <20250331143941.758600-1-josephangelfriend1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250331-b4-panel-refcounting-v4-4-dad50c60c6c9@redhat.com>
-References: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
-In-Reply-To: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743434129; l=1504;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=Z5nYVXi/n0DZaKeP9EMIATjTYHSvhfc6wg0Q/NsaJ9s=;
- b=VRKcVruy50ncSpHKM4ig1iTQg0vWl8QIuHkau4lEzcxxdqiCLEj6OPMPTCYHGB9RgcY2PIZMF
- zTtsLhMiwiuD1NjNEan1qQr4jAX1oS6Incx4X4dS0SiQmk24zt8/QRp
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331143941.758600-1-josephangelfriend1@gmail.com>
 
-Start using the new helper that does the refcounted
-allocations.
+On Mon, Mar 31, 2025 at 07:39:41AM -0700, Joseph Friend wrote:
+> Fixed style issues for gpib_bitbang.c on comments.
+>   for usage of "//" instead of "/* */"
+>   and for multi-line comments
+> 
+> Fixed misaligned macro backslashes and comments.
+> 
+> Signed-off-by: Joseph Friend <josephangelfriend1@gmail.com>
+> ---
+>  drivers/staging/gpib/gpio/gpib_bitbang.c | 142 ++++++++++++-----------
+>  1 file changed, 72 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/staging/gpib/gpio/gpib_bitbang.c b/drivers/staging/gpib/gpio/gpib_bitbang.c
 
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+Hi,
 
----
-v4: none.
-v3: none.
-v2: check error condition (Luca)
----
- drivers/gpu/drm/panel/panel-simple.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 6ba600f97aa4c8daae577823fcf17ef31b0eb46f..df718c4a86cb7dc0cd126e807d33306e5a21d8a0 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -579,9 +579,10 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 	u32 bus_flags;
- 	int err;
- 
--	panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
--	if (!panel)
--		return -ENOMEM;
-+	panel = devm_drm_panel_alloc(dev, struct panel_simple, base,
-+				     &panel_simple_funcs, desc->connector_type);
-+	if (IS_ERR(panel))
-+		return PTR_ERR(panel);
- 
- 	panel->desc = desc;
- 
-@@ -694,8 +695,6 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 	pm_runtime_set_autosuspend_delay(dev, 1000);
- 	pm_runtime_use_autosuspend(dev);
- 
--	drm_panel_init(&panel->base, dev, &panel_simple_funcs, connector_type);
--
- 	err = drm_panel_of_backlight(&panel->base);
- 	if (err) {
- 		dev_err_probe(dev, err, "Could not find backlight\n");
+You are receiving this message because of the following common error(s)
+as indicated below:
 
--- 
-2.48.1
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
