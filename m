@@ -1,114 +1,319 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89AF26AF6
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C2A26AF6
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437756; cv=none; b=SGtzHdvLeUtP+2TApjNVBoY2zBu1YqtGaHZ1TLyw/ji5Cbz7OQIpFKXStBl6okba/OnuiERegHVMA2FfJMpbWIlrAti1TKcapHT80GBbYB7rZtfkIJi+mRm8BDSkqDz5IEh7fPZARhjwi3Uocn2ou7Nc8JyeNQeIq87RTnNetRg=
+	t=1743437766; cv=none; b=hW+73Rb4jppZ4haXuS/0TVrrYceuz1oMcvwbAm27jtS7ofP4KVFDzP/57o4rKR3Nzfu20LvaO/5+v6hvQCDpFNBjOj1q4ZaG2nz0ommmtXVdVEL2R+8kLPIYqoX4OBNSMjJbl+60JJvkjEDOk9MK3qhFRjgkI/ChGmMNGzlgTTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437756; c=relaxed/simple;
-	bh=rsNT2EyyVKP7W0jVQKPse/fkZO51TPccG1UPTt3TxbQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OVQc+WBvCyGIKLqdNurTjhTJ5qDonUg2mZp+2R4e5ADSz7ndkN/b5H6hnqHRfTyjsePTJ2eUDHU3Wy5KIbFMFG7fQltf+cmCXMYgk8ZW3eYSXSck1pkSVs+N+aVg573F39PYgdyPo/J9Cw5M0GpQOSQoXcbLJnVmOIICYzrLQsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=H6mOFW8O; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743437766; c=relaxed/simple;
+	bh=zUI6fTqYH/DnZU3D3wD7gOpmhPH+9GO/HBAjmPmp2eI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MSNCOw2u8ceoQSEe1+7XQ4vRdL7hczUhxF6FEIbMgFV1Jf4eQvO8ctknr54rGgZRARgeGPHfvlYIY7VPjc++S8lINoOWKWHzS3Esbci1kgWtwot4Q6ZlYPEXh0SGakX4YnAhUsEuEEwre18tJ+SeTkTDTyzg47jdlBJw19gMnNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCZppGQK; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="H6mOFW8O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743437749; x=1744042549; i=markus.elfring@web.de;
-	bh=ongIBo++HFbn0NqFF6/15Jg95xn4PjVawgwlrGYSnys=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=H6mOFW8OD8FstaGCGFkhdJ03x8v7LkcTu/U4KUm4pCi3rt4guHvMf3V/BNf6h1uk
-	 KPQCPxc3lH7S8VjLLn7tsmUs5rW7hoaqJOnShwOpwlaOiP6X1EIdLl6JWTO4dmdN1
-	 h2NeeUxTpcvshsf170R4kT5E0Mu2MRhsKz9IgrCY663Tm9kFPHiWmmGUlWpTQUCpZ
-	 AeaeWVBfyzu7w4emavadcQEAari8nIaIpweqHdhFlm2FIHwdzwCbZ1GptSN0oQo2K
-	 IW0HZ6xO/wYQ7X14JrvKzAPCmlC0eaKu/UmlKZHHwydA86F4BtbPQOC3GiW/bIVYn
-	 5OuYTr1/i8rEOnaBUw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIL4Y-1tvvjk3V7U-00EZdU; Mon, 31
- Mar 2025 18:15:48 +0200
-Message-ID: <8cd011a2-67af-47bd-a05a-905eb333180b@web.de>
-Date: Mon, 31 Mar 2025 18:15:46 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCZppGQK"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2260c91576aso73720895ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743437764; x=1744042564; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=32bd+4WU1DygbAHbysKUy0FZhXcvnuwbKsO8ps8kv08=;
+        b=mCZppGQKQoPgR+ooIpAofPL9zv/Z7VnWFE6pta8Ie1skxbMIjB9XeKHlALqLci3WCU
+         4/xakw+BB53XyR4XLzS6ACXBWGAdQ00biKjGiu9cVAnRdRVi7thw2wM3+EMIphiwG0Oe
+         Lmt/t1kPxOuoZ8bwQ+iHRIZbEkCfHKVWZpyOBXr5hkZ4SpuBQ9r+tuniOYI70wc+rEXW
+         UQnenJc9Nnx5BTNar1NrbSUsq0sVPKVHAg92CXP4EPGQwOJBLjU4NN3VKO8vhYiUwur/
+         z36iY90gPJ18NPe/OGsGV4FglLtPgZU8X97XRaKWyC8AGdgaR/+SU4r11lkbM6u7wDdc
+         +O9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743437764; x=1744042564;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=32bd+4WU1DygbAHbysKUy0FZhXcvnuwbKsO8ps8kv08=;
+        b=udx8FeqUMu4bSQKzqQmyyxrWCPTiFZF2tmVTKJ7NB7X4vlHs7bi4e9FJGvZc8ntWEI
+         hp0e1bMix47C7zNa/iX2pamwvXCuJ79a5E1I3NDSYyfdC4uxuWl0gei6tK/CgR7qkXbo
+         /JXB6LCgEeOokIlKn5t8jKTn65WOdNgCflgRbwGkN+2WJMQexa6XQIFFSHlExvowvrlY
+         5bvXS4h0iG4rWKswbD6sCqqj3c5B3VuQxw/onzU2oNQCecCeCh135Ucir2lvnRvbaHx2
+         Km98V6u9K8uNh0z+FjN+z8rSK0KuhYo9OS1csITf2BKiwEDlZajouq6DGuXMVnN/dTEL
+         vINQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd6LNzQVlF0W8iurmRY6ukZFT9/1iDlCVw55twVXCYtEznovJVapRXUVdZNsGyY6jzKKFAavwvPSf0Buc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU+0Ev8+pLgjMPpsp1z7C09x8fz/wzpKAfkmHOzM0UrIl6pMZQ
+	4Jo48cVceIVAGi911IUh/XsKpqZAgm08X+VBx6efG3h89PVhNvCV
+X-Gm-Gg: ASbGncsz4aV4fbQgbCBvDvizLZnwlRtqsHzmnq6/Rb3jkF9L8EF3QDZ5b5+33+NULg/
+	qQAX4GKNpw5vmV6oo7VY0nophTG2us//TRIAiLtSUZF0j6in4Z9jtpHJWdb3malz+YQD6xZ21+p
+	s6MVCgTbJJq1I1iHWR5wT9hgmI1jMmAGfc4rt62zMHnLQ+rXmV4ZvViyGhq0guiBbxq1fYFvrvm
+	75KDIffmoh/k460nadrVWqO4gomElCOd/RcZjkoLRFQF/63tu7MbsO1M8X2HkE/jdvCtViE/03V
+	nVSM6vm1vlesLslmz82cLs9DxAVK8mkw3ww4jmDKd6Xff50A3hU=
+X-Google-Smtp-Source: AGHT+IFq34IJqsQCFZdeoT9wP/Jnw+8SIAHV25r6mxakLM5VltpGIBIQxBHcz6Kp92UN6c5Ie0iZKg==
+X-Received: by 2002:a17:902:ec85:b0:223:54e5:bf4b with SMTP id d9443c01a7336-2292f9736a3mr153317055ad.25.1743437763996;
+        Mon, 31 Mar 2025 09:16:03 -0700 (PDT)
+Received: from localhost ([147.11.105.124])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cec2fsm70872195ad.117.2025.03.31.09.16.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 09:16:03 -0700 (PDT)
+From: Liwei Song <liwei.song.lsong@gmail.com>
+To: MiquelRaynal <miquel.raynal@bootlin.com>,
+	RichardWeinberger <richard@nod.at>,
+	VigneshRaghavendra <vigneshr@ti.com>,
+	TudorAmbarus <tudor.ambarus@linaro.org>,
+	PratyushYadav <pratyush@kernel.org>,
+	MichaelWalle <mwalle@kernel.org>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	liwei.song.lsong@gmail.com
+Subject: [PATCH v2] mtd: core: add sync between read/write and unbind device
+Date: Tue,  1 Apr 2025 00:15:20 +0800
+Message-ID: <20250331161542.3040005-1-liwei.song.lsong@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
+References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-aspeed@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, Arnd Bergmann <arnd@arndb.de>,
- Gabriel Somlo <gsomlo@gmail.com>, Herve Codina <herve.codina@bootlin.com>,
- Joel Stanley <joel@jms.id.au>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-References: <20250331154002.14128-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v3] drivers/misc: Add NULL check in
- aspeed_lpc_enable_snoop
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250331154002.14128-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lYijUOEiHoRB9NGC01Dedke5GNycctJPJmpQkQahVipGe7YJ0+q
- hbLKpicLEn97cVSUWr0mcHqONoddhsJevKtRBS6wwWTEQIZMoXZRTIwnpZznhy5YxKFSrEv
- aG9bVbuwCq/xPV0uR6lt4OYA97ipJpTT1gVPcS4dIG+YE7qiWNAJvPXqVqhFIsN9s6flPOq
- 5xA9OFtw/KJ/8Ka+HXLcQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5oG7VCXH8og=;P15nKdTwkUBxynx5MUowVvpmB3b
- FRjy02zxityj2sJk+NqUkCD4kdFgK3chCFghCvQprY841gpT4B1iPmDbt3CBKDFSj4sr6d5+Z
- L7FyuCAtsq1nNIOMo0GGlPZG7fGXQNytTbd5sPL+p7CXjizlWE0ZlYgnFe/vzPiGcqzZUXpSa
- YsmwuMOQ1pVncNaiRa0TtJhm8lmsLY1DVRBRvmohb7BBUv2EX7PlFcBPgP79+BYGPm0YzuZH9
- OrP+xxPZxKfSIspxJ3qxZZp6D8tzTJqs3KiYAqXrUbmiLOnOTzkxYJ3Mr+BBhfa3XjeVaXO5e
- vO4O2uUAF4eNfojJjLbF6MxzirBw+02KGeoLTYLW7C3S1bbHuRTylCgAFy3Yd1M9z2cExFhdH
- 9/4kU7N2WZDehcjvwdTexXxJr9Fq4jcFwII1/DWCfiZwgc0K9LV4xKE5NaDg0CWxy/skROK1D
- EhhLGyrlCeKgVQiKYuyw4KnoA6kdlCba3pQOoLS9ly+E8LpdOReQUyVMDixuEVIRd7XP5Eouf
- xNXqqIxKw7HTaJwygubijjNtlNiRPaVCoZfoc1yRbYEsZUthHMw+g4dJrBhBHC2SApZp1RqGE
- QimUsR4AvtCblSmqevdKPCXK972Y1vJ3wZ0Q841z/jwsVuguu0cixPncQs5oihwwTdJEuXQhQ
- NMYLwItlrJ18oen9Qbonl2GZlmjxM9New8qoJp1LyHtm1urZkgdd9AMhPeZCsWJI/uAL7Uv/F
- XGQc5PT4GoWC/uZ20U21bmKtAsQB8BxlgJxjC2UAluLBzUqQpfohb3z+ar4YHWANqIJ8xp5gd
- gScUWf6CIIToIa2c99R8VsimZz1n7o3k9UqoNNcmQbx8n580qf4/rZFJ+bpF6PRcOIiwJO37j
- Almw5Grpb5yItYtBnN3PxAjGGVrMqYec6jLWiIqFVR8ZV97E3niesur+uCcYO3qkGbv137lAB
- 0HosRDEQZMtboFp8lLsGfCkMQZ/HCy0WQeDyOpYo/RHwRK3jfiXCbN89NPBqzXLkESRNp1tWY
- Iv3Y0h7bb/+iTZy2JXXc87NWmFuWx/5e9k9kaFVmCazZZBpimTca3GUGG5Tn8zgEv+0HB+OIR
- Q5SMRcoveP/bX8nJmLI1nXqUOBBLI8hizrEtaNf+ffHdd2BvCqePHmYY/wpXaU2nQLdkLiZ3w
- 6U/TFqgleP9oBJlM7bq4qsXatAnI+Egk00g4X9fdh6kBCRQ4RbWXLKxqQ4duosaDLT/JDID3D
- mYHBtoXnLlVuwA+Zio8vdN5GtK9FC5iN+qAc5mMyZnzfV/WM0+tjlElLMhARCaoijDVORjxyO
- A3HM+ZLgbHYfkdIlcRNnwxszJeFLlkIbreBB0HSwQRaAT2qaYTKkm2qv1q/WmjS/Klo5JzAjJ
- RRhIrUt4aONDCFI50yCm8QhCwnaVEPf9JvCKSIn6FFTP7DjSxzVomsM9QeWjZhTE4fpEm9G36
- AqVxRT5xIT3bnintaqAKFdbmweB742Qe0fdv9h/35V+VO9kkDpEF8Nbx2ENv/O2Ckjjy8mw==
+Content-Transfer-Encoding: 8bit
 
-> devm_kasprintf() returns NULL if memory allocation fails. Currently,
-=E2=80=A6
-                 call?                               failed?
+When unbind mtd device or qspi controller with a high frequency
+reading to /dev/mtd0 device, there will be Calltrace as below:
 
+$ while true; do cat /dev/mtd0 >/dev/null; done &
+$ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
 
-> The corrected code adds error checking and optimizes resource release lo=
-gic
-=E2=80=A6
+Internal error: synchronous external abort: 0000000096000210 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
+Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
+lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
+Call trace:
+ cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
+ cqspi_exec_mem_op+0x8bc/0xe40
+ spi_mem_exec_op+0x3e0/0x478
+ spi_mem_no_dirmap_read+0xa8/0xc8
+ spi_mem_dirmap_read+0xdc/0x150
+ spi_nor_read_data+0x120/0x198
+ spi_nor_read+0xf0/0x280
+ mtd_read_oob_std+0x80/0x98
+ mtd_read_oob+0x9c/0x168
+ mtd_read+0x6c/0xd8
+ mtdchar_read+0xdc/0x288
+ vfs_read+0xc8/0x2f8
+ ksys_read+0x70/0x110
+ __arm64_sys_read+0x24/0x38
+ invoke_syscall+0x5c/0x130
+ el0_svc_common.constprop.0+0x48/0xf8
+ do_el0_svc+0x28/0x40
+ el0_svc+0x30/0xd0
+ el0t_64_sync_handler+0x144/0x168
+ el0t_64_sync+0x198/0x1a0
+Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
+---[ end trace 0000000000000000 ]---
 
-See also once more:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
+Or:
+$ while true; do cat /dev/mtd0 >/dev/null; done &
+$ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
 
+Unable to handle kernel paging request at virtual address 00000000000012e8
+Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
+Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : spi_mem_exec_op+0x3e8/0x478
+lr : spi_mem_exec_op+0x3e0/0x478
+Call trace:
+ spi_mem_exec_op+0x3e8/0x478 (P)
+ spi_mem_no_dirmap_read+0xa8/0xc8
+ spi_mem_dirmap_read+0xdc/0x150
+ spi_nor_read_data+0x120/0x198
+ spi_nor_read+0xf0/0x280
+ mtd_read_oob_std+0x80/0x98
+ mtd_read_oob+0x9c/0x168
+ mtd_read+0x6c/0xd8
+ mtdchar_read+0xdc/0x288
+ vfs_read+0xc8/0x2f8
+ ksys_read+0x70/0x110
+ __arm64_sys_read+0x24/0x38
+ invoke_syscall+0x5c/0x130
+ el0_svc_common.constprop.0+0x48/0xf8
+ do_el0_svc+0x28/0x40
+ el0_svc+0x30/0xd0
+ el0t_64_sync_handler+0x144/0x168
+ el0t_64_sync+0x198/0x1a0
+Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
+---[ end trace 0000000000000000 ]---
 
-An other subsystem specification might be more desirable.
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/lo=
-g/drivers/soc/aspeed/aspeed-lpc-snoop.c?h=3Dnext-20250331
+when unbind is running, the memory allocated to qspi controller and
+mtd device is freed during unbinding, but open/close and reading device
+are still running, if the reading process get read lock and start
+excuting, there will be above illegal memory access. This issue also
+can be repruduced on many other platforms like ls1046 and nxpimx8 which
+have qspi flash.
 
+In this patch, register a spi bus notifier which will be called before
+unbind process freeing device memory, add a new member mtd_event_remove
+to block mtd open/read, then waiting for the running task to be finished,
+after that, memory is safe to be free.
 
-* May the array access be simplified another bit here?
-* How do you think about to store a pointer to a corresponding data struct=
-ure member
-  in an additional local variable?
+Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
+---
 
+Hi Maintainer,
 
-Regards,
-Markus
+This is an improved patch compared with the original one:
+(https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.3699535-1-liwei.song.lsong@gmail.com/),
+This v2 patch move notifier to spi-nor to avoid crash other types of flash.
+now this patch only aim at fixing nor-flash "bind/unbind while reading" calltrace,
+but for other types of flash like nand also have this issue.
+
+Thanks,
+Liwei.
+
+---
+ drivers/mtd/mtdcore.c       |  3 +++
+ drivers/mtd/spi-nor/core.c  | 46 +++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/mtd.h     |  1 +
+ include/linux/mtd/spi-nor.h |  1 +
+ 4 files changed, 51 insertions(+)
+
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 724f917f91ba..a78044ee603e 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -1243,6 +1243,9 @@ int __get_mtd_device(struct mtd_info *mtd)
+ 	struct mtd_info *master = mtd_get_master(mtd);
+ 	int err;
+ 
++	if (master->mtd_event_remove)
++		return -ENODEV;
++
+ 	if (master->_get_device) {
+ 		err = master->_get_device(mtd);
+ 		if (err)
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 19eb98bd6821..ae879d445046 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -16,6 +16,7 @@
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/spi-nor.h>
+ #include <linux/mutex.h>
++#include <linux/of_device.h>
+ #include <linux/of_platform.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/sched/task_stack.h>
+@@ -44,6 +45,9 @@
+ #define SPI_NOR_SRST_SLEEP_MIN 200
+ #define SPI_NOR_SRST_SLEEP_MAX 400
+ 
++static int spi_nor_remove_notifier_call(struct notifier_block *nb,
++					unsigned long event, void *data);
++
+ /**
+  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
+  *			   extension type.
+@@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
+ 	if (nor->controller_ops && nor->controller_ops->prepare)
+ 		ret = nor->controller_ops->prepare(nor);
+ 
++	if (nor->mtd.mtd_event_remove)
++		return -ENODEV;
++
+ 	return ret;
+ }
+ 
+@@ -3649,6 +3656,11 @@ static int spi_nor_probe(struct spi_mem *spimem)
+ 	if (ret)
+ 		return ret;
+ 
++	if (!nor->spi_nor_remove_nb.notifier_call) {
++		nor->spi_nor_remove_nb.notifier_call = spi_nor_remove_notifier_call;
++		bus_register_notifier(&spi_bus_type, &nor->spi_nor_remove_nb);
++	}
++
+ 	return mtd_device_register(&nor->mtd, data ? data->parts : NULL,
+ 				   data ? data->nr_parts : 0);
+ }
+@@ -3659,6 +3671,9 @@ static int spi_nor_remove(struct spi_mem *spimem)
+ 
+ 	spi_nor_restore(nor);
+ 
++	bus_unregister_notifier(&spi_bus_type, &nor->spi_nor_remove_nb);
++	memset(&nor->spi_nor_remove_nb, 0, sizeof(nor->spi_nor_remove_nb));
++
+ 	/* Clean up MTD stuff. */
+ 	return mtd_device_unregister(&nor->mtd);
+ }
+@@ -3737,6 +3752,37 @@ static const struct of_device_id spi_nor_of_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, spi_nor_of_table);
+ 
++static int spi_nor_remove_notifier_call(struct notifier_block *nb,
++				    unsigned long event, void *data)
++{
++	struct device *dev = data;
++	struct spi_device *spi;
++	struct spi_mem *mem;
++	struct spi_nor *nor;
++
++	if (!of_match_device(spi_nor_of_table, dev))
++		return 0;
++
++	switch (event) {
++	case BUS_NOTIFY_DEL_DEVICE:
++	case BUS_NOTIFY_UNBIND_DRIVER:
++		spi = to_spi_device(dev);
++		mem = spi_get_drvdata(spi);
++		if (!mem)
++			return NOTIFY_DONE;
++		nor = spi_mem_get_drvdata(mem);
++
++		mutex_lock(&nor->lock);
++		nor->mtd.mtd_event_remove = true;
++		mutex_unlock(&nor->lock);
++		msleep(300);
++
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ /*
+  * REVISIT: many of these chips have deep power-down modes, which
+  * should clearly be entered on suspend() to minimize power use.
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 8d10d9d2e830..134bfa6fcf76 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -290,6 +290,7 @@ struct mtd_info {
+ 	/* Kernel-only stuff starts here. */
+ 	const char *name;
+ 	int index;
++	bool mtd_event_remove;
+ 
+ 	/* OOB layout description */
+ 	const struct mtd_ooblayout_ops *ooblayout;
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index cdcfe0fd2e7d..d176af8fe2f2 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -420,6 +420,7 @@ struct spi_nor {
+ 	} dirmap;
+ 
+ 	void *priv;
++	struct notifier_block spi_nor_remove_nb;
+ };
+ 
+ static inline void spi_nor_set_flash_node(struct spi_nor *nor,
+-- 
+2.40.0
+
