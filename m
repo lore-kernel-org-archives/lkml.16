@@ -1,110 +1,88 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A474431;
-	Mon, 31 Mar 2025 00:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECC2BE4E;
+	Mon, 31 Mar 2025 01:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743381222; cv=none; b=aW64WM7IG7yRzgLhuXOSoVhiYsU7NZ1VqLKW0y/CEncnoiC6+eUXWc7uqEMEbTKjBaov2AUHSnWgH84otLOgBqlGNCh7GNWwqEFSL2BfCLogZwubeEHP4ZNF8E/VA6sZ4qCJ4X3eNm9ojvMf9p2oJvBNfvWvvtnPSPg5KG8ZcAQ=
+	t=1743383024; cv=none; b=ON9ymCUMLu0/sdQy1ZYin5x8egWQ3gJLZjua5IyjLynjEJLACRUhVe6cI7AyILNrJ6U5dH9bsGFddXDnX8DeiELZ8w5zoxivNsFBxZHWK5F0hJqm7ik8gC7Zeef6WE7UBm5WX42JL33OBkInv2JxmmChMnnwl40AzGUDYYeBn4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743381222; c=relaxed/simple;
-	bh=L8vYvjniuuHXtnrlVonbHiqLVeqTCECrkAOh7jtvTiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tLN8CfaVARW6SLzl850/ZNTOX24GvOUF2AmkPrrDShyCWYWu+82MpCWl4Zi7gOYuCXSbYh5jgaVmuIyI2j2mwnhsXVe5BZLTdAtLQTyKqGmblCvTSxm2B1fkgji5r61+R8I3/UgUalY4iTVTHS3l3TQLAUHrxCR7Cwrmjky00s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxCmx0xe; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743383024; c=relaxed/simple;
+	bh=xxr4kEsgZm5+2+HuzKzeOm+9e2L0bL0d2mUVJDK1eHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pyqwPK0pdaG91tM0O8oE1uWVjhRi3Z6Rn4/q+nPv+HUveABpullZQXW5dq/iwgFvNqPYmdghqxriqqF7GvIJizkh6iq1Vg0MfhPwMDMT1zupuftWR6Uphix4Bl31b5/96sc52yKd9DEfBgRtJBVAPvzEinjqk9q6gDh5YVAYtY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=mzB6FnyR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxCmx0xe"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3914a5def6bso2125885f8f.1;
-        Sun, 30 Mar 2025 17:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743381219; x=1743986019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L8vYvjniuuHXtnrlVonbHiqLVeqTCECrkAOh7jtvTiA=;
-        b=jxCmx0xeywlIgD/ac4gka82NxgTzKSBtaDeNicK9/AR/QcJ+piqFqIf0czh+7911l2
-         EQyDP4dEY5c/jAdQaSnsFmwrIixbY36Dsmw4Ii7Ne7YCwe2KUQ9fb509vT2WdQtaXIw8
-         NvMetP04LRzUoGPV8IpnJ8vNKAC2nRkvphj5eT+iHpwj9PUphH6OJMo6Vx6gcQJ+Jyam
-         6L1CVPnZ0bYA+gqlINBD0lsoMa8fi7oa4RyFiAHlg3uK1e6okDjaRXfA1gyQET5TOAGv
-         +OdcL5DGMK7Q96IfzETM/yxrjmyMsO3BdnxqiYnPIEZtGC3aqqpiVvmNKeOhtruweYLG
-         J4dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743381219; x=1743986019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L8vYvjniuuHXtnrlVonbHiqLVeqTCECrkAOh7jtvTiA=;
-        b=WJJNRdvNY1MkV9Fmu6IVobAk/F1skunBFJQE8KOFvC41kXA4f1K/zUd8NOdABLgpAI
-         PMOHNmT9QOxoLG7uI0MV8S9giEHbVGf2QewHTwl5GXLwFXb0+0z6QkVGRL3NaAxMiFLZ
-         1dIPOwFn+7gL6BDhBHH4M6/u9ohRslTj6Qtn5cWnl5xm66eoPV+ujxKB7gE2TvduPLGG
-         8Wy2rnmFHGP4IoLuh8KZ5T268lphvAPZ4mvmUhisPw00thCmp/W/7/zC6K6CZa0AusCO
-         tEBHTBV2KuJmbSDv11i+O8SJVE80BVm72QbwFqlSpo0adB3Vsb+xL2Tz5B1ExpTq5ehU
-         wJcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXz7yoTUqjO2Kh3QDkMiis7fGsRtFrBFapUjF6mfeoWR+EhFcz6BDyXI7VGkwydN5Xvz9QR6+hEGYRQK9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1+/BkvQ3Kchzeh0Fe4ULWzz+ZGX82M9M1rq98hTVFKBLaKVXo
-	QKTA/qov6vbMOhSiBigqRIZJ91kNPyhBrJ6jSSUU8EjVmeGyG1MHzfEe88G9VfiJHXmDePm8g67
-	qT8nqaosjlOPMbbb35wRHjWuPisc=
-X-Gm-Gg: ASbGncsp4LcSqFoyEbZXhEmejpXMRMu/G0KAZWTpbi8cRxITisqu7O4JnEG+742qOlV
-	UDKJrydVkPwbbgC2OEclHZliGxxAhhICq5/K631qB47wMT3LEh6IB2ktYAbf+3pkA5qREz94yRj
-	xbRQIlhP30zJ2ZmYrJfhj5Cdhv+CGeW8IkJrXMzpbLjg==
-X-Google-Smtp-Source: AGHT+IEW82DydmHWVqGAX3xsLqsTlUpNFLFk4sTCjRjrhmVm2MYZgCOaa0nMvU/lgRqAUTY/Hsh6/N9G1ZRckDVe99w=
-X-Received: by 2002:a05:6000:2a4:b0:391:23de:b1b4 with SMTP id
- ffacd0b85a97d-39c1211d57cmr5510100f8f.45.1743381218883; Sun, 30 Mar 2025
- 17:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mzB6FnyR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743383018;
+	bh=GONU/CLn5hrNGzoqR4IbD6bUfOKOeQExLbN7yrioLg4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mzB6FnyRbtwH64/KQlp7Vni2s/QoH56rrscbCHFXSvKplCg8K65dwgiHcN3uGPGPP
+	 m7ndKOcnxSCePnCm4+tKFvAmGC1TjdBBJQDk/WL1P0qEsLgQUar/22388fbt0sMrzI
+	 oU0IlJ66F0SUPs/cAxEKp7huaNiPqnvdNSeWmdwvOCAw+AevFmJYbs9yC3tLFqRbPW
+	 mw3dMSfFdwoBdpaCkEhcDPSrNZJsVaczEF581HZCv4W3ghe0L7cmimZAPwXTdsdEqZ
+	 pjV06fV0kAFylEQe0aW3Cf6MJlUaY7INNdBcF3K7hk5V1He5stOE04WIMl/cgvE0aP
+	 d2S1h6JM7Q3JQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZQtDT5xQ8z4wnp;
+	Mon, 31 Mar 2025 12:03:37 +1100 (AEDT)
+Date: Mon, 31 Mar 2025 12:03:36 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the arm64 tree
+Message-ID: <20250331120336.55510248@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
- <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
- <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com> <CAHk-=wgpYOGdQ+f62nbAB4xKLRbxnuJD+2uPBmRzSWCo5XkEGA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgpYOGdQ+f62nbAB4xKLRbxnuJD+2uPBmRzSWCo5XkEGA@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 30 Mar 2025 17:33:27 -0700
-X-Gm-Features: AQ5f1JpyJasy1EetBb0EPDXVvxj7a-WElI4Df5726-Ae6PTOOKnWWxxCvkucDjI
-Message-ID: <CAADnVQKyLod8gNz-RR2=bs=vJJWiGhZ5GB4t68aNPNWndptr0w@mail.gmail.com>
-Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Sebastian Sewior <bigeasy@linutronix.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@suse.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-mm <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/X=Pu4fWI+=pa27.PSgJuglI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/X=Pu4fWI+=pa27.PSgJuglI
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 30, 2025 at 3:08=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, 30 Mar 2025 at 14:30, Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > But to avoid being finger pointed, I'll switch to checking alloc_flags
-> > first. It does seem a better trade off to avoid cache bouncing because
-> > of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
-> > others that it's faster to do trylock first to avoid branch mispredicti=
-on.
->
-> Yes, the really hot paths (ie core locking) do the "trylock -> read
-> spinning" for that reason. Then for the normal case, _only_ the
-> trylock is in the path, and that's the best of both worlds.
->
-> And in practice, the "do two compare-and-exchange" operations actually
-> does work fine, because the cacheline will generally be sticky enough
-> that you don't actually get many extra cachline bouncing.
+Hi all,
 
-Right, but I also realized that in the contended case there is
-an unnecessary irq save/restore pair.
-Posted the fix:
-https://lore.kernel.org/bpf/20250331002809.94758-1-alexei.starovoitov@gmail=
-.com/
+The following commit is also in the mm tree as a different commit (but
+the same patch):
 
-maybe apply directly?
+  0fff2aa96f6b ("arm64: mm: Drop dead code for pud special bit handling")
 
-I'll send the renaming fix once we converge on a good name.
+This is commit
+
+  a4d7be474004 ("mm/arm64: drop dead code for pud special bit handling")
+
+in the mm-unstable branch of the mm tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/X=Pu4fWI+=pa27.PSgJuglI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfp6egACgkQAVBC80lX
+0Gz2Awf/QdENypPfqLdywpm5xSBSIuFffUHTBERpTOY37GG6tTj4V3On+RUfcjSh
+Y0Cx8W7Q4izTNa0+mpEDkHYeLbOikMiBZXLT6Z01MLWZxMvaHNwXm/3YUln47HyL
+fZ3+LHtKa8XRA0Bb4kTILBpVtm/T4U/xMEeoN6nqKjglrj7OUYz0PCNVbSI4kTZK
+adYTPnbBrEX9TtBxpNzoUv2XjVE+acIuYnlOpHOfYEfY8icRsbFKQ5vx+nksDEeT
+IqkNZttU6AcDrMPYN/hWFCJBBQNhprbMdoXqkqD3cye7qtQg7Z1OhJ5hdEd+HVjv
+NOPu0Rmylc+KjUcxnoqboSMa/fPK2g==
+=pRCF
+-----END PGP SIGNATURE-----
+
+--Sig_/X=Pu4fWI+=pa27.PSgJuglI--
