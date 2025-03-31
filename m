@@ -1,93 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D084E15748F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022D041AAC
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407630; cv=none; b=Docp0U1Qj+AlTlBValm7vL7EbZP8xPhuOnHDvZ1VuqW1nrMZMLu2x3TjsWgmXQEHOtzZT8Fl1EJQAxB4cG3GoqVxH9wcv5Bl6bjZQrhlvL5D+fFRipPfEkeYucAtLi0wJ3vi+jhvpgNTeubUI5uBACFHUQwE0S15N7WwUhJb2xs=
+	t=1743407649; cv=none; b=fQ/GLjiuTPjBWsWtZuGfnhp0SCTiTs3vQe3rlMVKjmiUi6jpOPljuYWSq9ANnjIp2JV7WasceXZ6H2TRjN1eDFQoNoo2xYrCJwN1utCJe3dJ87nyDkRmJOZTiUPqzRTiFesQtIhRe+hJnEien4wGCd6ig32GG3z2b101daSHP3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407630; c=relaxed/simple;
-	bh=pHSJnOBye+2M5W9r0QAOLNEwizHe+AOJ/A7x0NsoBYA=;
+	s=arc-20240116; t=1743407649; c=relaxed/simple;
+	bh=pSOWZdd/MbIKZjh443M8gHoV68P+KisZJPKaJJZIdxc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpiSLGbwRiY57BLbSh61zMDhO4UinDjtc8vjGah3X9fxSPtUiK8R1vTvE1G0ldQjIuj52utqWwV6kom/opjvc0RUWhq1nSvh3yIXOxu1AXYRPnle4/mdPZZ2nLUKrE8/vCshOIaneb4rK5RlbtEmIXlRG8z0JYaaAgROJCrAayA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LRbMtQme; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRfp1QsIs3AavbvMrMv6pF3xoR6q/HfpGcxS1679usCyQHY7ZAxNOd2TVygwbcRgdq5wf7/Wa7YT+BvoBle40b6+A25TugzDdS6/QYVaZbWtfXfLXB4TqFDyziGI241DRGF48EOH9WIln931PoAZ6mm40vIJxOsShPz9T5/Ogak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+oaACnb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LRbMtQme"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC6DC4CEE3;
-	Mon, 31 Mar 2025 07:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743407630;
-	bh=pHSJnOBye+2M5W9r0QAOLNEwizHe+AOJ/A7x0NsoBYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LRbMtQmeJestwFoj/OlDBdiajzkyM8riQrKtwWmajfMoSD3i5hdjSLMgJLAg2dQbm
-	 FnkmMeEqaNp+PhPBGf6iMZzY/tOFsEjBI9ZhT33XR/2q5wxsP2s/tkUtV/6QtTq98h
-	 aa+3AU/Wd38BKpG6tJtvjWMFW/UPVIAvE7C7lOiMX1UtlduRKcVviE1kM8DKWpz/94
-	 SuDCzSHjQf8O7ZK3rpqOu9wQcA4HtdLUE1IibuyjQMRokXw41UIJbFS8JgQimqwzK8
-	 gN/VWR/jXdBmJlukzxcRnxfpSCzRfKuyjCIxHB2R003VYbxSFdC85ZhwJTr5yoahVM
-	 Mk3bFnJh0wO8w==
-Date: Mon, 31 Mar 2025 09:53:47 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Vignesh Raman <vignesh.raman@collabora.com>, 
-	dri-devel@lists.freedesktop.org, daniels@collabora.com, helen.fornazier@gmail.com, 
-	airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com, 
-	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
-	lumag@kernel.org, quic_abhinavk@quicinc.com, maarten.lankhorst@linux.intel.com, 
-	tzimmermann@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
-Message-ID: <20250331-amphibian-hopping-bobcat-e19a0b@houat>
-References: <20250327160117.945165-1-vignesh.raman@collabora.com>
- <20250327160117.945165-3-vignesh.raman@collabora.com>
- <v4dhuuuvfk63bakncz43z3ndjdze5ac7nrv6qvtpdnonfpetsx@5hh3vzcj336x>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+oaACnb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743407646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=snXUyEbtvmR9vqAWor24hXesFNJShZnkZEKY6CqFCEo=;
+	b=J+oaACnbMc9A2lcB/TB79BfJyVpO4okJMUgq4IX0XgE7D6S+mDXzGK7B91SxmhX54N0fhU
+	kUv7/1Kupt33WMGezN3XXs1GptZsLXnZj9wcWSFqTh6GMavjbY/+fbFoNefqzDfTFlQFl5
+	jJPFtDimWr6U0b+RdgcG8CqC5YfiXO4=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-563-efZpDS6VPUyk1jmXzLmYFA-1; Mon,
+ 31 Mar 2025 03:54:01 -0400
+X-MC-Unique: efZpDS6VPUyk1jmXzLmYFA-1
+X-Mimecast-MFC-AGG-ID: efZpDS6VPUyk1jmXzLmYFA_1743407640
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CA50180087D;
+	Mon, 31 Mar 2025 07:53:59 +0000 (UTC)
+Received: from localhost (unknown [10.43.135.229])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A119C180094A;
+	Mon, 31 Mar 2025 07:53:56 +0000 (UTC)
+Date: Mon, 31 Mar 2025 09:53:53 +0200
+From: Miroslav Lichvar <mlichvar@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
+ _COARSE clockids
+Message-ID: <Z-pKEYr01vEaQDIw@localhost>
+References: <20250320200306.1712599-1-jstultz@google.com>
+ <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx>
+ <Z-Vx8kV4M3khPknC@localhost>
+ <87bjtmxtuc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wbv3572a4nxzn66s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <v4dhuuuvfk63bakncz43z3ndjdze5ac7nrv6qvtpdnonfpetsx@5hh3vzcj336x>
+In-Reply-To: <87bjtmxtuc.ffs@tglx>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+On Thu, Mar 27, 2025 at 06:32:27PM +0100, Thomas Gleixner wrote:
+> On Thu, Mar 27 2025 at 16:42, Miroslav Lichvar wrote:
+> > On Thu, Mar 27, 2025 at 10:22:31AM +0100, Thomas Gleixner wrote:
+> > To clearly see the difference with the new code, I made an attempt
+> > to update the old linux-tktest simulation that was used back when the
+> > multiplier adjustment was reworked, but there are too many missing
+> > things now and I gave up.
+> 
+> Can you point me to that code?
 
---wbv3572a4nxzn66s
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
-MIME-Version: 1.0
+It's this thing: https://github.com/mlichvar/linux-tktest
 
-On Sun, Mar 30, 2025 at 08:06:45PM +0300, Dmitry Baryshkov wrote:
-> On Thu, Mar 27, 2025 at 09:31:11PM +0530, Vignesh Raman wrote:
-> > Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
-> > exit with a non-zero error code while configuring them as warning in
-> > the GitLab CI pipeline.
->=20
-> Can it really succeed or is it going to be an always-failing job? The
-> dt_binding_check generally succeed, dtbs_check generates tons of
-> warnings. We are trying to make progress there, but it's still very far
-> from being achevable.
+> It would be probably useful to create a test mechanism which allows to
+> exercise all of this in a simulated way so we actually don't have to
+> wonder every time we change a bit what the consequences are.
 
-It depends on the platforms I guess. Some are 100% covered and any
-warning should be treated as a failure, and some have not started the
-effort.
+Yes, that would be very nice if we could run the timekeeping code in a
+deterministic simulated environment with a configurable clocksource,
+timing of kernel updates, timing and values of injected adjtimex()
+calls, etc. The question is how to isolate it.
 
-I guess we could solve it with some kind of expectation list, but I do
-wonder if it's something *we* should be focusing on :)
+-- 
+Miroslav Lichvar
 
-Maxime
-
---wbv3572a4nxzn66s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+pKCgAKCRDj7w1vZxhR
-xdagAP0XnRYBnSj/dqwFP4OvDmsR0IobwdXIfMWh/qcY9V+UwQEArf0CcTvB/9a/
-mOirpItBhtP6MZgwnpQk0Hrn1eE82Q8=
-=CE5q
------END PGP SIGNATURE-----
-
---wbv3572a4nxzn66s--
