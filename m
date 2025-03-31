@@ -1,195 +1,122 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9003573451;
-	Mon, 31 Mar 2025 16:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088BA214A71
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743438692; cv=none; b=FEaYL5IX6W8rgr3337KIEd9VVdz05OqQl8Fnq5EAb8yXtbOcFcQGdINMHBpHPuI5iYp9J4PkvDlZLuJOu3olf22sSGQF37SGzge4t9CuC1x0XKJdcO/iDKk/evgMC/I3VMHsXMnKcmn7Oe3upkIX5C+qcT1KWV1l2Y9gaV1dQv0=
+	t=1743438696; cv=none; b=NLSatl44Rd7928s3NFG0zIW+5Lud/H52xXJAfqrseXTMv/EjjLVXkpW0oxb11SGUhlePQNHyCiLSDx52lVVI2Z+9K8nDtQpVa0+Euox9yFAhnVaHxc8WS+emaogM+cfS0yp0RH+PPSwukAsxx5vTNLRidTzV8oR6qi+14iy3W0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743438692; c=relaxed/simple;
-	bh=ehlkfaS9lKpFL24+Rr/vhdhKnZG7IHXo2LylZBw987I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z0HImZNY+S7qbwljjH0vcBlPZ/hMecEYhFoHQY1BlUzfX/A5HxfkHr2sj1eIYQVOs14yt9dVo/TZTjx5kfHhUAuuMJh1ACtrb1NQyRltv84X6k6kvPDgQkZlBmtkpv+NQQX9DpmUuCR/d7de0X0KaOtxZVEUq2/o5HmHwfmEOMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e6ypVXjM; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743438696; c=relaxed/simple;
+	bh=+t3bAIeqzZXzoFUWAcJIndn2INiDi7746DRbaGLLSiM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MsfpAFi7EPwiq8XrC+un3FQEGml7pc/vhpAnUeGca32fsRsKOcfj8GaXeu1hb6qd37XwBhDUnC/8IXskNlV/aojtfY9QecoJieWSav7hLFMXnEgf3Ok0CmXxey6EWInpn8ypJ9yX6f8ulh/ZCKqXwNbGKp535gDZwZJeEY+gSzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hXfmfFKw; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6ypVXjM"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264aefc45dso117276645ad.0;
-        Mon, 31 Mar 2025 09:31:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hXfmfFKw"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so51a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:31:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743438690; x=1744043490; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pGXUzRNndah0bIhWHa4wlLRiZRRMDWz7PNkLOu/SyKQ=;
-        b=e6ypVXjMP1Z3fiZ3j3sRMQz+WcHELqfcxp6U7TeerC6VhcTLcX7fLu0BYvYBtaAHWr
-         bbQqyRe68qHfgxJrqsoNckQMzb7LrH3BPBtGB42Iczvs4X+lUcRasPNo/yAv5D5NtMjq
-         ddHGvOyDiqS83PyLyzwejow6ihBM+8qXGRhTwUKFN6QdFtU/kZypnLKWkEWjqWqpuLyO
-         /7S/o13R+qmunTPfCO4NrUY4CGKolU9v4nGEkxYdxOZxNB8g2u5lxkKv+2qt8zLaXnnE
-         vFVm+Mmk7tRcRq/JTYSsm8bLssxHUpm4ukRgdf8+tL02eQLz+U8OHniL/3nUP4zZbxEO
-         EiGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743438690; x=1744043490;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1743438692; x=1744043492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pGXUzRNndah0bIhWHa4wlLRiZRRMDWz7PNkLOu/SyKQ=;
-        b=I70t6EwuC3pXB+xnt9J98v4LGNWCX3f0510sQq9jWNXzFahXXn7lrL7dsvAYnKUZfN
-         j2o121PqpVXnEERBAZZkD1uhbH3hRsnToPv2rjHaaqhW9RJjsrICDNbmU+PaXfSqvx0C
-         /y6Timn6+wLQHNHvMG0tEJlvObxpahgFKb73KGVz+5fhCCK7q0LJgVzjf7umK1t7AIWU
-         mPbrd6uHH6lrQ6TJqNPBqMMoougirS2f4L/gUqQeWWnBmaz4LNABCe/Z4fgBqeaDPc50
-         JVCxjOz6/XC8ikL/IYz61HEaiASVd4eAYKiLAPTYOF2tg3SExSS4fAVLLqM0S6WziIEz
-         boCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ubxA32nRATRP8n9zrCe1Hm45lxRK5z+/GFNisWfBegyb06GUAdeAIC9w4vFxuI+Zqy8eeuAlfbxtgCo=@vger.kernel.org, AJvYcCWQJoQ4VP7wyfYWxTv+ILb9geKXZk2cKKRuiWUKkvCs4if8X+fYfGtozOXzUyLg3U20WAjk4eG4A/r+d9ldd6wHcQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxV7OUhsAgJjriJgMt3YMmaxdfmXcoRVJKCY6Ns9Lr3JxQkQm8
-	mpKvv3JZPzoQp3i4YSOPxrytqCW59wwUzH3SE7S2/UfQk3cW9+Wc
-X-Gm-Gg: ASbGncuIeVn3acb1LAbGRTLPHQzF4MAkXOpvjUMeXveys9fMYgbhhVoI4l4YkQY0hEY
-	Trco5K79on50Z6YN8gsvCna/CUCrGifU4tmFwWK8euttTZMi4vlpWjrccjr09S+kEo4HsK4F7Nr
-	f6NsFcp4J/xYS8gyPmrch9opG6VKIuFwSPAWR23MdGzSqOWVXcTUu5PfUwLf3zq1fKh1ukAeSxH
-	Czq3O1kF5Aa7M+fyCv+bh8WDiAzAESF0aoQLNVyvpIn3dJMsJl1X12qhdSnp1WWYiPQ5S157sZT
-	L3CHKiw1xnwBxMJgpPds+yfyhik2IF3zCqrk2wyVwiFaK7Xo2Tg6FErFuBlktHIkRj2IZS0Ibxu
-	vd7Y=
-X-Google-Smtp-Source: AGHT+IG4tFl30LDPvdokscC5SmNTqPEZA266aLkDHCR4ADSz+/s4hQbQtbrw8GrXI1BtUL6RtlCEYQ==
-X-Received: by 2002:a05:6a00:180b:b0:736:baa0:2acd with SMTP id d2e1a72fcca58-73980487652mr16666540b3a.20.1743438689567;
-        Mon, 31 Mar 2025 09:31:29 -0700 (PDT)
-Received: from gmail.com (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deebd4sm7373735b3a.16.2025.03.31.09.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 09:31:29 -0700 (PDT)
-Date: Mon, 31 Mar 2025 09:31:26 -0700
-From: Howard Chu <howardchu95@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf trace: Fix possible insufficient allocation of
- argument formats
-Message-ID: <Z-rDXsgIqvvd7hFk@gmail.com>
-References: <20250327150712.1966188-1-howardchu95@gmail.com>
- <Z-jXFffv8MMuo2p3@z2>
+        bh=bCUNVEwXQjN/ZYMFDi8yyefx1Qb62gH/JvVinJDVFL0=;
+        b=hXfmfFKwXrrnOUzBDe2fRQ86yMZ2S4Atx76yknNni32dNF1kRG025/YGv8ufsHf15G
+         HtB6CkhGvMq/d73sxVibN9gAoQJidwkvvwwU36lc1qSCj7dvnJPRr9nXbCH/JmvDlc83
+         vkAeXyRL58r2ESuFIHojaFNwSWmgaOI8DTc+mMOzu+2vpUH+rC1Uk0E6t/x2tCRFULNU
+         yJYdjlsVFL52M3LWk3CD0V5d2FEL5e7AWpgt8f0x6v1MucB5pkNROeH3um0RDAeHpOcK
+         /6uoXKez5ZGyfPQ2OMHYFWLgqhgyAiO6UBltqSbJRNmD8+IFCnsdUsXGuie3ZVkuii9G
+         92fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743438692; x=1744043492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bCUNVEwXQjN/ZYMFDi8yyefx1Qb62gH/JvVinJDVFL0=;
+        b=s5/lUG9sA7QJvNdTDUa7nN+PlK3iSJstRCP5IzSTuHiNS7p1t1Gvl5Lz2p1Ks+Y7gi
+         MFAOqsReDXjvZ0JnazgcEuhr1Mked8IU6CS8sWZiYM5Q176aaaBOkUMC2MQ9SAxaqfiz
+         sapYMtXkALDQjZl1rvNBvKJ19X86jH4lEhaGFxVefpAv9cZIOwD849Q74w6glVsOoa8R
+         QDsJLuYEAxxGi3kooiVi7XLA863jCmS9SimlydqgGBoyUAB1KtFyAVOQ60bbP8BQ9Nai
+         iVaL9yMnVzG+um7CJQiFUX/ru8Kyv7hsyZOBtHETCThuaZ2j1W7pPO4ZFgWnHDnBB/KO
+         1Exw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQImN37GE2eE85TN3qDmSmfPhqRdS7D+SrTkyksh+aAXGaccqJ3HcQL2Wn/Nz6vYQOywGQ5jHXlw7jcAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7dXr3FBaO1f7OhAHXuGZlHblW0+7pdDh5xcKIc83f5zAcchAs
+	kfwwScgLJXMGAH74Uk62FikMx8HtQgx7du5rGD0xRm38Jdv8oCezUBsqk0BBs7JRJGwwWXcY0Gg
+	tCVOzy85Bgg7nfQjJ0XJjV4Q+Ea4OquZr0+Y2
+X-Gm-Gg: ASbGncv/jnihOfAat1TfEh7HFfDVfm6+gx8w+lQ3V9AeNkjmsR/VXAapY7ATwRuS8Hr
+	TY94ydQgbCpjosuFe37wSL5R1hXZeEllBQzev80iy9pHuBgCzSP0dFL7cWYYwkROhKgOoCOjEWz
+	BuX63DHpRfVMB3ncAm2EYaqty+h3ZZAVg1m3sCU+qa9OnrKlHAKyCno700
+X-Google-Smtp-Source: AGHT+IFS75Z0XM5wuiNpOfgrNbtyh5kI8h29Nwu2aeDt7jd1u7vYMcdG/HRw0PtOOdN+1JfXFoeOy3TjhzP1Z5z0xXA=
+X-Received: by 2002:a05:6402:1496:b0:5eb:5d50:4fec with SMTP id
+ 4fb4d7f45d1cf-5edfd9f7c30mr193132a12.0.1743438691972; Mon, 31 Mar 2025
+ 09:31:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-jXFffv8MMuo2p3@z2>
+References: <20250331025416.478380-1-chao@kernel.org>
+In-Reply-To: <20250331025416.478380-1-chao@kernel.org>
+From: Daniel Lee <chullee@google.com>
+Date: Mon, 31 Mar 2025 09:31:20 -0700
+X-Gm-Features: AQ5f1Jo40vcwgWkYkmTPvqs1vtSU5KqyB2uPVh5Oo9YyNkgBQNmuj1T35rlyJpU
+Message-ID: <CALBjLoDnzALdShsEzii6pK+fxgbeNVh8weKVtb=PyFJ3XgS1NA@mail.gmail.com>
+Subject: Re: [PATCH] f2fs: support to disable linear lookup fallback
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org, Gabriel Krisman Bertazi <krisman@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+On Sun, Mar 30, 2025 at 7:54=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
+>
+> After commit 91b587ba79e1 ("f2fs: Introduce linear search for
+> dentries"), f2fs forced to use linear lookup whenever a hash-based
+> lookup fails on casefolded directory, it may affect performance
+> for scenarios: a) create a new file w/ filename it doesn't exist
+> in directory, b) lookup a file which may be removed.
+>
+> This patch supports to disable linear lookup fallback, so, once there
+> is a solution for commit 5c26d2f1d3f5 ("unicode: Don't special case
+> ignorable code points") to fix red heart unicode issue, then we can
+> set an encodeing flag to disable the fallback for performance recovery.
+>
+> The way is kept in line w/ ext4, refer to commit 9e28059d5664 ("ext4:
+> introduce linear search for dentries").
+>
+> Cc: Daniel Lee <chullee@google.com>
+> Cc: Gabriel Krisman Bertazi <krisman@suse.de>
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/dir.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+> index 5a63ff0df03b..e12445afb95a 100644
+> --- a/fs/f2fs/dir.c
+> +++ b/fs/f2fs/dir.c
+> @@ -366,7 +366,8 @@ struct f2fs_dir_entry *__f2fs_find_entry(struct inode=
+ *dir,
+>
+>  out:
+>  #if IS_ENABLED(CONFIG_UNICODE)
+> -       if (IS_CASEFOLDED(dir) && !de && use_hash) {
+> +       if (IS_CASEFOLDED(dir) && !de && use_hash &&
+> +               !sb_no_casefold_compat_fallback(dir->i_sb)) {
 
-On Sat, Mar 29, 2025 at 10:31:01PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Thu, Mar 27, 2025 at 08:07:12AM -0700, Howard Chu wrote:
-> > In my previous fix of runtime error(Link:
-> > https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
-> 
-> We usually handle this by adding a footnote style link like, [1].
-> 
-> > I made a mistake of decrementing one unconditionally, regardless of
-> > whether an extra 'syscall_nr' or 'nr' field was present in
-> > libtraceevent's tp_format. This may cause perf trace to allocate one
-> > fewer arg_fmt entry than needed for the accurate representation of syscall
-> > arguments.
-> > 
-> > This patch corrects the mistake by checking the presence of'syscall_nr' or
-> > 'nr', and adjusting the length of arg_fmt[] accordingly.
-> > 
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
-> 
-> And add the link here.
-> 
-> [1] (actual URL here)
 
-Thanks I'll update the commit message.
+Would it be beneficial to evaluate
+!sb_no_casefold_compat_fallback(dir->i_sb) first for short-circuiting?
 
-> 
-> Also you need to keep three dashes "---" before the change log so that
-> it can be treated as comments (and not added to the commit message).
 
-Oopsie, got it thanks.
-
-> 
-> Please take a look at my previous posting.
-> 
-> https://lore.kernel.org/r/20250326044001.3503432-1-namhyung@kernel.org
-> 
-> Thanks,
-> Namhyung
-
-Thanks,
-Howard
-> 
-> 
-> > 
-> > Changes in v4:
-> > - Make the patch apply
-> > 
-> > Changes in v3:
-> > - Add 'Fixes:' tag
-> > 
-> > Changes in v2:
-> > - Simplify the code (written by Namhyung)
-> > 
-> >  tools/perf/builtin-trace.c | 16 +++++-----------
-> >  1 file changed, 5 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index a102748bd0c9..439e152186da 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
-> >  {
-> >  	int idx;
-> >  
-> > -	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
-> > -		nr_args = sc->fmt->nr_args;
-> > -
-> >  	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
-> >  	if (sc->arg_fmt == NULL)
-> >  		return -1;
-> > @@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
-> >  			sc->arg_fmt[idx] = sc->fmt->arg[idx];
-> >  	}
-> >  
-> > -	sc->nr_args = nr_args;
-> >  	return 0;
-> >  }
-> >  
-> > @@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
-> >  		return err;
-> >  	}
-> >  
-> > -	/*
-> > -	 * The tracepoint format contains __syscall_nr field, so it's one more
-> > -	 * than the actual number of syscall arguments.
-> > -	 */
-> > -	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
-> > -		return -ENOMEM;
-> > -
-> >  	sc->args = sc->tp_format->format.fields;
-> > +	sc->nr_args = sc->tp_format->format.nr_fields;
-> > +
-> >  	/*
-> >  	 * We need to check and discard the first variable '__syscall_nr'
-> >  	 * or 'nr' that mean the syscall number. It is needless here.
-> > @@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
-> >  		--sc->nr_args;
-> >  	}
-> >  
-> > +	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
-> > +		return -ENOMEM;
-> > +
-> >  	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
-> >  	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
-> >  
-> > -- 
-> > 2.45.2
-> > 
+>
+>                 use_hash =3D false;
+>                 goto start_find_entry;
+>         }
+> --
+> 2.49.0
+>
