@@ -1,103 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB6B18F2FC
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431CD1465B4
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412882; cv=none; b=Pp5FGL5pZM1dGsacbuWwxVOphg0xglQuzlmxsTWHbGz8m+ky9O9y5kMudwybSryCryzlkv/NS+GswNlGHDGw8guOdcVtt2PJC8LT0in0o+hBc+owCzUa/JASr951zgkrsB0jAjBjOgTjlFW+fe9VCpjfPb3GBjGiXFtSlNSq0Zg=
+	t=1743413159; cv=none; b=ot4zlbJQMIdWYn52ZQsGPoo8EozhJihogchgyCTZKYVpkSpmRqlf9t0H+Q3/YhKFJD4/A0bJ6Jn+zPNt2JWKrSSKL0qQzmTxN5E0hAv+ZZqqX1e3y/gG9NnLI1+303V7Q+UGxH4Wh3C5FJFW03eMpOxnn8ceBnHhskXLyWc7DFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412882; c=relaxed/simple;
-	bh=A/q95Mszo7oI+7BMFg+K7gqrw3B5Kfb6DstaYhYmUfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tG/gz129McFq6hZ8jDAaEQuy5+QuKP7Lx2Ee4Ipdh53e9fkTTyCuvimbvFa78z0kZKK0Il6r/PH8AAwUePyp2VHtkN8kE+COcN+vVpsc4UdmuTS46SRfLPouVbTslNNBUywPbKF6J08553X+5QVp+mAw5JAhLVTssCluYlXQbaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPQzH+Ep; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPQzH+Ep"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743412879;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BPld2TMVKNvxrI6q1VRGJO7d7XjErhaFH+sNM1huaWs=;
-	b=UPQzH+Epv0mf9gj1j1Eh1YygIXhLw7+OlFtJNIfw9RL6kUth0JhDcD7VC5CWzd84fCkXS2
-	oZmjNCIAOfBCirgZeQi5eyvNtbxXgmjlmb3wjKeY4aH3liXk0aL5S3OnCRr/bzJ3SSXbxZ
-	ogS5SSVbyX7FTzZjb8MU3vKL3R3S6Xk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-519-YYmS3ViWNMejKwcS_KtyHw-1; Mon,
- 31 Mar 2025 05:21:15 -0400
-X-MC-Unique: YYmS3ViWNMejKwcS_KtyHw-1
-X-Mimecast-MFC-AGG-ID: YYmS3ViWNMejKwcS_KtyHw_1743412874
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	s=arc-20240116; t=1743413159; c=relaxed/simple;
+	bh=fohpss/wNGT/gEs99DlJDYOaeDjgMuopm0PMrT3kozw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=MqAwf4mhGYHTYAoSm9uGVfskDfXHa3RxSaqo880gISNostOg80RXl3S8Y3/h9eXzeEEecFB/C56I0K8+gmQx5CtAUL9PcGuPapj1y4udhgTQ0dCIf8LQgSfJs/GTOqwypLr+j+PPDqyN47a3JW8r9n2kYvjsrsQNIgJ0/So6Zqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DB971956087;
-	Mon, 31 Mar 2025 09:21:13 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.27])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60FA41955BC0;
-	Mon, 31 Mar 2025 09:21:06 +0000 (UTC)
-Date: Mon, 31 Mar 2025 17:21:01 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Jens Axboe <axboe@kernel.dk>,
-	linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: Re: next-20250327 - lockdep whine and USB issues at boot
-Message-ID: <Z-peffTZ7lVo3m5n@fedora>
-References: <8775.1743185453@turing-police>
- <Z-dVr6cIyrOID0J0@fedora>
- <7755.1743228130@turing-police>
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZR5Ms4BDzz51SXw;
+	Mon, 31 Mar 2025 17:25:45 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 52V9PVjp073794;
+	Mon, 31 Mar 2025 17:25:31 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Mon, 31 Mar 2025 17:25:34 +0800 (CST)
+Date: Mon, 31 Mar 2025 17:25:34 +0800 (CST)
+X-Zmail-TransId: 2af967ea5f8effffffffc4e-3c31b
+X-Mailer: Zmail v1.0
+Message-ID: <20250331172534353mkMR1nv-dsjFTZTXCPY0a@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7755.1743228130@turing-police>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <j@jannau.net>, <liviu.dudau@arm.com>, <chunkuang.hu@kernel.org>
+Cc: <fnkl.kernel@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+        <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
+        <asahi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <p.zabel@pengutronix.de>, <matthias.bgg@gmail.com>,
+        <angelogioacchino.delregno@collabora.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <tang.dongxing@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIDAvNF0gUmVwbGFjZSBjdXN0b20gY29tcGFyZV9kZXYgd2l0aCBjb21wb25lbnRfY29tcGFyZV9vZiBpbiBkcm0=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 52V9PVjp073794
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67EA5F99.002/4ZR5Ms4BDzz51SXw
 
-On Sat, Mar 29, 2025 at 02:02:10AM -0400, Valdis Klētnieks wrote:
-> On Sat, 29 Mar 2025 10:06:39 +0800, Ming Lei said:
-> > On Fri, Mar 28, 2025 at 02:10:53PM -0400, Valdis Kl??tnieks wrote:
-> > > Saw this during boot on a Dell Inspiron 5559 laptop.  
-> > > 
-> > > In addition, the external USB ports all gave up, rendering a USB mouse and a
-> > > USB external drive totally dead in the water.  May or may not be related, I didn't
-> > > dig too far into it.
-> >
-> > It shouldn't be related to the warning.
-> 
-> > For this lockdep warning, feel free to try patch in the following link:
-> >
-> > https://lore.kernel.org/linux-block/Z-dUCLvf06SfTOHy@fedora/
-> 
-> After applying that patch, USB *didn't* die during boot.  So apparently
-> *something* changed.  
+From: Tang Dongxing <tang.dongxing@zte.com.cn>
 
-That is surprising, and maybe the USB die isn't 100% thing.
+Remove the custom device comparison function compare_dev and replace it
+with the existing kernel helper component_compare_of, as suggested in
+the review feedback. This simplifies the code by eliminating redundant
+logic and aligns with the pattern used in other DRM drivers like
+hdlcd_drv.c and malidp_drv.c.
 
-> 
-> Also, the patch merely caused a *different* lockdep warning.
-> Rather than  &q->q_usage_counter(io) and &q->elevator_lock, the
-> new one is &q->elevator_lock versus pcpu_alloc_mutex...
-> 
-> Looks like it's a bit more convoluted than first looked?
+Tang Dongxing (4):
+  drm: adp: Replace custom compare_dev with component_compare_of
+  drm: arm: hdlcd: Replace custom compare_dev with component_compare_of
+  drm: malidp: Replace custom compare_dev with component_compare_of
+  drm: mediatek: Replace custom compare_dev with component_compare_of
 
-That is another story wrt. freeze lock, fs_reclaim & percpu allocator
-lock, looks one real risk, I will try to work one patch and see if
-all can be addressed.
+ drivers/gpu/drm/adp/adp_drv.c          | 7 +------
+ drivers/gpu/drm/arm/hdlcd_drv.c        | 7 +------
+ drivers/gpu/drm/arm/malidp_drv.c       | 9 +--------
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 7 +------
+ 4 files changed, 4 insertions(+), 26 deletions(-)
 
-
-
-Thanks,
-Ming
-
+-- 
+2.25.1
