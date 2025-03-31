@@ -1,115 +1,110 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF76638F80;
-	Mon, 31 Mar 2025 06:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1587192D96
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743403985; cv=none; b=DKjUrLsRTOPkk91zo1XRIYGrqz5Nglcgz/weFib0X9vQShRtU+J9akUdr3skrkJUv5yycn9ecdk/sojNdZ5+PMhSc8G5GVkw9FDigRmSCJuHq17L/O5PrrOtAwshFtKiNoIZBW7ih0gnPnpFqpyNMdYuMLVrgJyuduiTrpR6lV4=
+	t=1743404075; cv=none; b=PrfR+fGGLElbo8vy5oOff2UL6W3HbTUTggAJLFYw3uJX/md8nuN+Z+EXslXWgQQ1TE5As3JWdLVT2FHMgTkV5mS6gXSN6xYZ5tNljOIMr/3pE2Y9rX1wgf7xA9HELPAEn4B6LJvMC/ggnIr7DUWQM0/JAcHa4ABx5Xb07h/+VK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743403985; c=relaxed/simple;
-	bh=yj/pxwHPLCCFPyOXDGMHSC1v/c4IiWOY0gjc+KrXFV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mPjY2Noy7tlMAkAbKtpnQ09E3oz3qgBcWfbmZpppfyVCisAiPyE+MkE1JPq3AdaovFASj4WpELzK6Vu8wcx1l/p91GoCab5xrSXsO/w4Xgd/XhxEZt0hJI2kwrdmU5luDvZfSb+PweEKqsvXarBcYvJq3ZPPA0trpQqKrzsLsTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IuDv8R2S; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IuDv8R2S"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kcHs014189;
-	Mon, 31 Mar 2025 06:52:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BZ+YTWORFfoODnOFnZUutcfl5JuliNWq21uLksy5p30=; b=IuDv8R2Sogzg7psJ
-	8aRBkWboIffzBLq1eymTkCz0zq1XUhM5NV0fPmC2EuBg+WWSO4dIOb1Q6bkw++II
-	sMr/tWLFpa6pPksJ4e90feoIPsJ3VjUOqpfOUjyVRh6vp1LNEgs0iKHHSsXaVrfU
-	4GrjvbliEEPV8pTyiHN7WuhDSX80PcKMWcnDvhCbUgnVXSqo6A7XGtSycvRHoLaU
-	oFvFwZiQ38ZTJ63ecIAwvvkMLjy4Rf7E6W0n6CWXVQq9cH+p/ihuWbC1Y+9LXN2c
-	sjG7tY5lg+jyAylpdEBw1iM1tmH5CAMzQ791mAJtq+imWlEO6vH3hDtwiIZaPynj
-	o3UI5A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa1num8a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 06:52:55 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52V6qt99006487
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 06:52:55 GMT
-Received: from [10.216.38.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 30 Mar
- 2025 23:52:50 -0700
-Message-ID: <c6370b99-efde-46ab-a1a4-65b979ca2dfa@quicinc.com>
-Date: Mon, 31 Mar 2025 12:22:47 +0530
+	s=arc-20240116; t=1743404075; c=relaxed/simple;
+	bh=YVZprOIJjhTejkn+2yrh+GejzKo3uE8v8jqzT2YetXI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ERW+Dw3JSclsdoQZILlrI7GU8rDh1GoSCo5DFQrqYdreEpjayxOcT1iS+LRhd8gVVn98TnKL0CxdDJI9ahnJPCRwwWvE94Vh6czGmi6Oz4eyF4faxtmg+NTii18Em5mrx3UQLeApoA2gCa+fUHvHC57HxXQMJWVwE5kUXNfpLEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZR1x40ZN5z6M4hZ;
+	Mon, 31 Mar 2025 14:50:48 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FD01140257;
+	Mon, 31 Mar 2025 14:54:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (7.182.85.71) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 31 Mar 2025 08:54:23 +0200
+Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
+ frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
+ Mon, 31 Mar 2025 08:54:23 +0200
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: Oliver Upton <oliver.upton@linux.dev>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Lorenzo
+ Pieralisi" <lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>
+Subject: RE: [PATCH] smccc: kvm_guest: Align with DISCOVER_IMPL_CPUS ABI
+Thread-Topic: [PATCH] smccc: kvm_guest: Align with DISCOVER_IMPL_CPUS ABI
+Thread-Index: AQHbnzaiWLoM4Pr1N0ylxjrv88F9hLOM1NNw
+Date: Mon, 31 Mar 2025 06:54:23 +0000
+Message-ID: <e670c3778d794d82878d0b4cdd3d11d5@huawei.com>
+References: <20250327163613.2516073-1-oliver.upton@linux.dev>
+In-Reply-To: <20250327163613.2516073-1-oliver.upton@linux.dev>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: i3c: Add Qualcomm I3C master
- controller
-To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
- <20250326141641.3471906-2-quic_msavaliy@quicinc.com>
- <991b0652-76f2-40d6-b49b-1e6f76e254ac@kernel.org>
- <661e1a21-0f3a-497a-9b3b-fab284e30d19@quicinc.com>
- <36b67f9c-5905-4fa6-8190-ab980850b3a2@kernel.org>
- <e997bd15-728c-4316-8050-d461f115fd9f@quicinc.com>
- <04945ad2-1372-4c73-beae-fc6449fb9a76@kernel.org>
- <838dfc8d-24c3-4f03-9c24-863259bb22b1@quicinc.com>
- <b68559e6-fc2b-493b-9f37-3125ff924a65@kernel.org>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <b68559e6-fc2b-493b-9f37-3125ff924a65@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vNeAZpDF50fZftzFKNSLKpbkfEJNRyTU
-X-Proofpoint-GUID: vNeAZpDF50fZftzFKNSLKpbkfEJNRyTU
-X-Authority-Analysis: v=2.4 cv=MPlgmNZl c=1 sm=1 tr=0 ts=67ea3bc7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=yguuy8DFeHIEintHG0IA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_03,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 clxscore=1015
- bulkscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503310047
 
-Thanks Krzysztof  !
 
-On 3/30/2025 3:12 PM, Krzysztof Kozlowski wrote:
-> On 29/03/2025 15:31, Mukesh Kumar Savaliya wrote:
->> dt-binding file name: qcom,i3c-geni-qcom.yaml
-> 
-> No. I already asked to use compatible as filename. Don't create your own
-> rules.
-> 
-okay, no problem. I was trying to follow previous i2c,spi, serial uart.
-Let me make a cleanup patch for them also next as mentioned earlier.
 
-For i3c, compatible will be "geni-i3c" as suggested by you , Rob.
-dt-binding filename  "qcom,i3c-geni.yaml" OR "qcom,geni-i3c.yaml" ?
->> compatible = "qcom,geni-i3c";
->>>
->>> Best regards,
->>> Krzysztof
->>
-> 
-> 
-> Best regards,
-> Krzysztof
+> -----Original Message-----
+> From: Oliver Upton <oliver.upton@linux.dev>
+> Sent: Thursday, March 27, 2025 4:36 PM
+> To: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> Mark Rutland <mark.rutland@arm.com>; Lorenzo Pieralisi
+> <lpieralisi@kernel.org>; Sudeep Holla <sudeep.holla@arm.com>; Catalin
+> Marinas <catalin.marinas@arm.com>; Marc Zyngier <maz@kernel.org>;
+> Oliver Upton <oliver.upton@linux.dev>; Shameerali Kolothum Thodi
+> <shameerali.kolothum.thodi@huawei.com>
+> Subject: [PATCH] smccc: kvm_guest: Align with DISCOVER_IMPL_CPUS ABI
+>=20
+> The ABI of the hypercall requires that R2 and R3 are 0. Explicitly pass
+> 0 for these parameters.
+>=20
+> Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> Fixes: 86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on
+> implementation CPUs")
+> Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+
+Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+
+Thanks,
+Shameer
+
+> ---
+>  drivers/firmware/smccc/kvm_guest.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/firmware/smccc/kvm_guest.c
+> b/drivers/firmware/smccc/kvm_guest.c
+> index 5767aed25cdc..ac2d3cf8a776 100644
+> --- a/drivers/firmware/smccc/kvm_guest.c
+> +++ b/drivers/firmware/smccc/kvm_guest.c
+> @@ -95,7 +95,7 @@ void  __init kvm_arm_target_impl_cpu_init(void)
+>=20
+>  	for (i =3D 0; i < max_cpus; i++) {
+>=20
+> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_DISCOVE
+> R_IMPL_CPUS_FUNC_ID,
+> -				     i, &res);
+> +				     i, 0, 0, &res);
+>  		if (res.a0 !=3D SMCCC_RET_SUCCESS) {
+>  			pr_warn("Discovering target implementation CPUs
+> failed\n");
+>  			goto mem_free;
+>=20
+> base-commit: 369c0122682c4468a69f2454614eded71c5348f3
+> --
+> 2.39.5
 
