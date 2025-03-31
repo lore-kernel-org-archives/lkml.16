@@ -1,79 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-14.pe-a.jellyfish.systems (out-14.pe-a.jellyfish.systems [198.54.127.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0581E5B76;
-	Mon, 31 Mar 2025 12:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31E44C9D;
+	Mon, 31 Mar 2025 12:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424187; cv=none; b=lRbTibMh7jcAnkJemY+bg/+v9W0Up+MghYiiaGSKrNU3Fr+sY/LsvvoQ7g9WD3zaW0/ttHPFypAyq096Eff7QLGdq6/Llk/zGRTAXWpY719ddKdt0GDjpQjr5LWSfX8rrw8IUpCVlk/K07ENL3bSjcbZR4X9XJHCjIZzvinaWA4=
+	t=1743424261; cv=none; b=IlsbSFaqJzP/or4mvreTkfgrWIhp2TAQFl7qvoNxYPc9VdOKciqJJGKIfZACtuFM/cv9VE7dUkgIVEwaEhiSWfds2brpVgU05bjBA9TGP3cPQr281tGMz9Q7b2hwqBxNkqwQe3BhxK9pvbd5yETTDWruj5NdmAGLpu6vPLxlkT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424187; c=relaxed/simple;
-	bh=Q0uMus4E1XkPX9O5u3vzmN3QB+2Nx+b7VVilwTqYSGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Srbb6SPnavMdgDpSIEEjPoI5MUDLOZa+kqqFA2xkgA+0zIycWLl40HZM8d3xtQuulaufQDutrZdpEfw054Ukbk7YhHXnN7Ex0mDRxGyPtDL5FXmXHd/WZuZNBTPOI5UTU4bWTC2cJdO8WeXolMI8CBG4lFldVo3FnqFm1bVCtms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXo+cz57; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743424261; c=relaxed/simple;
+	bh=oA0qd1nicMZSBrlxjfG3/k0n2p/I87faDWnmX4g1KxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ssLjoYumto1OY201p9ML5dPU/Jwh/OfUx4WqcGdI37SokR0b0jo1W6U5b0C6RBQf+9B3Vpzs0IjZaUJ4jm9QxIk24P2cRyjfE3jGzuEUo0czydqSxLBa8krO4Y7K93zM+yOnJsV6yZHAGmoXtYTDLntCOYOeKrYemO1bS8mGqX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=A58LaWNz; arc=none smtp.client-ip=198.54.127.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXo+cz57"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFC4C4CEE3;
-	Mon, 31 Mar 2025 12:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743424187;
-	bh=Q0uMus4E1XkPX9O5u3vzmN3QB+2Nx+b7VVilwTqYSGc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SXo+cz57pkOnm+kSCCxSUJBNpjoFROzKrb2V8ym7xf5lTrY3/3VRyVO6yti9WvZVL
-	 7Qm/72sIzXYTzo4nPJ5Qlco1KHi+pZe18uE7SUqqEWW8/0LCuI4m76qK8jtajgj1QE
-	 ahnajdygLEL2QT0eNZ5uA6yS+QS00gIF/j6rtWdp3h5uFd53AbIjvDcO43hEY8A8WM
-	 W30qp/SMdUL9cvBwDEBB9t2Yqq+HpGjVHmV3hAXxTnmGZBmrk1ZiaTA2dQ3bHqk6+O
-	 VNI5DGvuX8u778DD3SziBk+fzps3maDMmzq7q5YwBpCYAxA25r2fUwbq4ZaCKd4tOK
-	 OXFZ0gSmHIfKg==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Rust fixes for 6.15 merge
-Date: Mon, 31 Mar 2025 14:29:26 +0200
-Message-ID: <20250331122926.607374-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="A58LaWNz"
+Received: from prod-lbout-phx.jellyfish.systems (new-01-3.privateemail.com [66.29.159.56])
+	by pe-a.jellyfish.systems (Postfix) with ESMTPA id 4ZR9TS5WnBz3xLy;
+	Mon, 31 Mar 2025 12:30:52 +0000 (UTC)
+Received: from MTA-15.privateemail.com (unknown [10.50.14.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by NEW-01-3.privateemail.com (Postfix) with ESMTPS id 4ZR9TS51wGz2Sd0T;
+	Mon, 31 Mar 2025 08:30:52 -0400 (EDT)
+Received: from mta-15.privateemail.com (localhost [127.0.0.1])
+	by mta-15.privateemail.com (Postfix) with ESMTP id 4ZR9TS3hXsz3hhV6;
+	Mon, 31 Mar 2025 08:30:52 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
+	s=default; t=1743424252;
+	bh=oA0qd1nicMZSBrlxjfG3/k0n2p/I87faDWnmX4g1KxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A58LaWNzi547O0g1lcPpQkt1fmRxCRizs+iU6osyiLjwmazUaJJmhDnUL6NtYe4zL
+	 0zhiP+kMaEgndo4r/gMFZaLh7jmILRCVUJeZOt2/krkFzoyOr8v6/3QIOZMHfvB8bw
+	 sMkATcN5hmgd7Zjr4lfhC1Wt7vqfpHXRflbM5uJRPq6QTUuWI1TsGjzQlKAnDzRBDl
+	 ym9087dR1JQl57i7Zicg4ThVwo7s6TpUPdYrkG5RTxwy6zcx5NzMo0TZq5ZsFlhDnC
+	 QglYHB3ZzAD8daM3yevrvlWB7Kb3QxoIFFW6coR45mgeltyFuEpI0hXI3z9FEiOfL7
+	 3PpEArkj3LkEg==
+Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
+	by mta-15.privateemail.com (Postfix) with ESMTPA;
+	Mon, 31 Mar 2025 08:30:36 -0400 (EDT)
+Date: Mon, 31 Mar 2025 08:30:38 -0400
+From: Sam Winchenbach <sam.winchenbach@framepointer.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, mdf@kernel.org, hao.wu@intel.com, 
+	yilun.xu@intel.com, trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, michal.simek@amd.com, linux-fpga@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Sam Winchenbach <swinchenbach@arka.org>
+Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
+Message-ID: <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
+References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
+ <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-Hi Linus,
+On Sat, Mar 29, 2025 at 05:59:07AM +0100, Krzysztof Kozlowski wrote:
+> On 28/03/2025 15:19, Sam Winchenbach wrote:
+> > From: Sam Winchenbach <swinchenbach@arka.org>
+> > 
+> > Documents the ability to enable the ICAP interface on boot.
+> > 
+> > Signed-off-by: Sam Winchenbach <swinchenbach@arka.org>
+> > ---
+> >  .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml     | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> > index 04dcadc2c20e9..bb2781ae126ca 100644
+> > --- a/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> > +++ b/Documentation/devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml
+> > @@ -31,6 +31,13 @@ properties:
+> >      description:
+> >        Phandle to syscon block which provide access to SLCR registers
+> >  
+> > +  enable-icap-on-load:
+> 
+> Missing vendor prefix.
 
-A small fix due to a typo during merge.
+I will add this to a v2 patch, assuming we come to an agreement on the
+suitability of this approach.
 
-Since Andrei had already sent a fix for it, I am sending this as a PR in
-case you prefer that, but of course please feel free to directly apply
-it as a patch instead.
+> 
+> > +    type: boolean
+> > +    description: If present, the ICAP controller will be enabled when
+> > +      the driver probes. This is useful if the fabric is loaded
+> > +      during the boot process and contains a core, such as the SEM,
+> 
+> I don't get how this is suitable for DT. If you decide to load the
+> fabric from driver, that's driver decision so not DT.
 
-Thanks!
+Before writing the fabric to the FPGA the driver disables the ICAP, enabling
+the PCAP. Once writing is complete it unconditionally disables the PCAP,
+enabling the ICAP. This patch just makes it so, depending on the use case,
+the ICAP can be enabled at boot. This will not prevent the system from being
+able to load a fabric through the driver. I added in this boolean so existing
+behavior would be maintained.
 
-Cheers,
-Miguel
+Do you recommend another approach such as writing to a sysfs attribute to
+switch from PCAP to ICAP?
 
-The following changes since commit 4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209:
-
-  Merge tag 'rust-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux (2025-03-30 17:03:26 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-merge
-
-for you to fetch changes up to c1f4534b213d7be41b5d8b815a42d201a8f2978f:
-
-  scripts: generate_rust_analyzer: fix pin-init name in kernel deps (2025-03-31 10:50:54 +0200)
-
-----------------------------------------------------------------
-Rust fixes for v6.15 merge
-
-Fix 'generate_rust_analyzer.py' due to typo during merge.
-
-----------------------------------------------------------------
-Andrei Lalaev (1):
-      scripts: generate_rust_analyzer: fix pin-init name in kernel deps
-
- scripts/generate_rust_analyzer.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> > +      that requires access to ICAP interface to operate properly.
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> 
+> 
+> Best regards,
+> Krzysztof
