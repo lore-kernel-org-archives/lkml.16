@@ -1,148 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8047E1E2823
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D491D514E;
+	Mon, 31 Mar 2025 10:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743417570; cv=none; b=Ppv7FiCtyADPHTHf369gVv3Q+iRNu/JsU5/07MnC2Zu4wB+Hp84UtEFTMl4fUpMJ746jg8NWjNvS98dCtxQXCmQa65a7BWZtD/TUZHVLnqXqPJaPfzSUNaIdJagU1Ivlz8uv6sBlx44CCmFRTrDvHuJgtB2nN0CawGc/uSujY1w=
+	t=1743417636; cv=none; b=WhmpZqw4QCjNgWox5a+F0kpylUGqd3Mzi5zmFgwg5U6u1GA3GY1j/d7/trxaz7ojEuHpXuC5rf/nojVmSgqZZ5Ov7/nd7hkSYRgCkkX1/eIYQC5nPsebFbArk9CpwlO30xhpfEfM57Wip7cUqhd5RE3J0j15uPpR94WvJ+lYJgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743417570; c=relaxed/simple;
-	bh=VSwSVqTTPnbOpmlHq9MOfH3OWqH+XBMIsW4BP4w9E5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sfEta+Rh1WgimIbtaqnvkjArsx6Cny8aiwjwtIY+3lT5qLcVwQdzVLEerCeWoK70X5ozU7DrNG9VbQb1dhbZjxGCRuglIzByzba47gcRUBATwCo9pOuaYdhqWGVnVGLJwADWmGFxKbEZ/Z5BKnDLE4HWtXXMXLT5Dnt8w31QQUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZObhcvX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743417636; c=relaxed/simple;
+	bh=xNHvghKTAooo5rUet2CY72pCirZRWaZON5GFTGGSXn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kS5EtBoILvCzGzKQJ/L4olY0xbFEvywgHwOOjBMqId8MG5vo7hoIEtIPsCpF/kYsULcYE+81NaW2p+FUJn7kYeoiraXUSxPvzhDSpzmJIZrUhn/DUuyit3Kt2CTxf/PZ7+WvfmFKcAzGLa59FPRFamK/uLPaDy0vOXD8upQw9uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpgrFv7/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZObhcvX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743417567;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fxR3joWDLb15zwEwdHZI3rgw4qmSYJti26bFJQ+VcA=;
-	b=GZObhcvXyfF7iA8YydQsQvJbOc3FP9u7DpQdwron7cXoc0RbR34FoF17jT2exALcjMJZ0s
-	hxeaTcSPxzmKqXDElD9m4e27WdPNuuMmv0CH3G8C06TnN4qqa1DNBIFn2qRo66VpMgfYu3
-	BobWCpL1S9pNbnMIJpF30FAnBgDrwoo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-48-a6EVyczlOWeZeDLLVrW6SA-1; Mon, 31 Mar 2025 06:39:25 -0400
-X-MC-Unique: a6EVyczlOWeZeDLLVrW6SA-1
-X-Mimecast-MFC-AGG-ID: a6EVyczlOWeZeDLLVrW6SA_1743417564
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so3125485e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:39:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743417563; x=1744022363;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4fxR3joWDLb15zwEwdHZI3rgw4qmSYJti26bFJQ+VcA=;
-        b=Z7NPVjhI/S2EALaUW/k8Cc9WIo6gV41c/Jb1dm7kG6ylsRZDh/DDt/kMV7zbrU9qpW
-         KPXDWfEULvwh7XIF1iowhloB6lyMfhocFOe6V489UWf5kw89MkyaiyAj39Kzy3edfhZq
-         sinl8bNVP3q8HpNx93u18YyheClWVh1qHx5PtlqjYHTfRcHCnhFwhZtsPuWbLjduX4D7
-         cSlim13KLheZ3Cy7LaNI0713fmHzWUu+947kdubjXl5K2A7nEVy3tHTw6F6J5iRsW6YX
-         OP1DiivRanaBY0kH3FDMC+AYEIBI4rAfnwnMgLsjLrzJY9gymKqOCAX/tWL73XC9LVz2
-         as6A==
-X-Gm-Message-State: AOJu0Yyzfljfpy0gCgVvkzjlr8SzMr5GtO/rlIB+dGkHPmSQQtFFNqnS
-	FNXs6ncrlQiQH78nm7MznXO1vfQAKism1XF68q95YzOZxOkK+Vu5fTSabu0Xht6r5q0uYQd+eoW
-	G5lk949GcYJeIPaBblOawR2+Z/HyS1eqWX1J5oCLk1xLwdaxyyH1PjV28cO9D70q57kQ7pSPL
-X-Gm-Gg: ASbGncuRnJ+SCRR4t7oeEMJv0+bxbJijU7mdOjvVUMpomZYGy6gQEUblRciJMdpUZSh
-	TCou8lOtWFhZSEIXRamQhLFsbBBIMs9nhsm6/upchthNqoGA29rmHyFm+2iZWMJ8ecaFcOkuwjs
-	2Z59YMiFRXffuZ3ah3GkL1aUPdufFMg4HFeL/D2tEWGDlpoLM0WRZ50teVdIBmzdcXlmgx2p0UN
-	wjuZ0xiafbaX6I2cFbx9CRTrShbEiuDKvdVngTAFuI2Pq4h2WTly5nH7ZLkXpMYeyst+CnPY2Wi
-	wlps3fFAgwFj3fBKHulrOJuTLJeLDWqyWUJ4LmN99Aa9+6zOaOQ5czPJthdAQZdf0w==
-X-Received: by 2002:a05:600c:1d83:b0:43c:f64c:447f with SMTP id 5b1f17b1804b1-43db62bf772mr81331255e9.29.1743417563544;
-        Mon, 31 Mar 2025 03:39:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFSEY2IAvMlONrWW/ecIZqpU4KW8seEtaraLsrYv8QTUi3aO8abB8sFiMZjGmzhLkOrU2UPdg==
-X-Received: by 2002:a05:600c:1d83:b0:43c:f64c:447f with SMTP id 5b1f17b1804b1-43db62bf772mr81330855e9.29.1743417563067;
-        Mon, 31 Mar 2025 03:39:23 -0700 (PDT)
-Received: from stex1.redhat.com (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66363fsm11273542f8f.36.2025.03.31.03.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 03:39:22 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	linux-integrity@vger.kernel.org,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-coco@lists.linux.dev,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <jroedel@suse.de>,
-	x86@kernel.org,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH v5 4/4] x86/sev: register tpm-svsm platform device
-Date: Mon, 31 Mar 2025 12:38:57 +0200
-Message-ID: <20250331103900.92701-5-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250331103900.92701-1-sgarzare@redhat.com>
-References: <20250331103900.92701-1-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpgrFv7/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841BAC4CEE3;
+	Mon, 31 Mar 2025 10:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743417636;
+	bh=xNHvghKTAooo5rUet2CY72pCirZRWaZON5GFTGGSXn4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bpgrFv7/XH6Y2DdGNw/jrtUgbqUcrPo/VpBGiCAx2Td12l45EXOifI1O7FvgvKvsy
+	 mLYJTGz2T2EAMG9x44+7BrlcXDdiU2CTsiz04aIthXkJJl29Chyh+ilA3bqeGWwAlw
+	 I5N7jm8QIQcmL+oTdTcl3waCUsN/W4Xv3JPs8vvtLMAOPVT1rqW6wZZjn9BnxK01oJ
+	 8HgU1Z0wvmsv+Mn8fo5dv2UvCXCuHD0pn1vmX/4l8bzNolxnh2afBMbzQFE5CUIdXP
+	 oE6pRDIsQcOMlMDxIQ4WCFm8S0t/umA3J7ILq1UpludgdcpKfMQRxJg2oQzv2s23g3
+	 2muOKQk71l23Q==
+Date: Mon, 31 Mar 2025 11:40:29 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v5 08/11] iio: accel: adxl345: add activity event
+ feature
+Message-ID: <20250331114029.2d828b19@jic23-huawei>
+In-Reply-To: <20250318230843.76068-9-l.rubusch@gmail.com>
+References: <20250318230843.76068-1-l.rubusch@gmail.com>
+	<20250318230843.76068-9-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On Tue, 18 Mar 2025 23:08:40 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-SNP platform can provide a vTPM device emulated by SVSM.
+> Make the sensor detect and issue interrupts at activity. Activity
+> events are configured by a threshold stored in regmap cache. Initialize
+> the activity threshold register to a reasonable default value in probe.
+> The value is taken from the older ADXL345 input driver, to provide a
+> similar behavior. Reset the activity/inactivity direction enabling
+> register in probe. Reset and initialization shall bring the sensor in a
+> defined initial state to prevent dangling settings when warm restarting
+> the sensor.
+> 
+> Activity, ODR configuration together with the range setting prepare the
+> activity/inactivity hystersesis setup, implemented in a follow up patch.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-The "tpm-svsm" device can be handled by the platform driver added
-by the previous commit in drivers/char/tpm/tpm_svsm.c
+> +static int adxl345_is_act_inact_en(struct adxl345_state *st,
+> +				   enum iio_modifier axis,
+> +				   enum adxl345_activity_type type, bool *en)
+> +{
+> +	unsigned int regval;
+> +	bool axis_en;
+> +	u32 axis_ctrl;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &axis_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (type == ADXL345_ACTIVITY) {
+> +		switch (axis) {
+> +		case IIO_MOD_X:
+> +			axis_en = FIELD_GET(ADXL345_ACT_X_EN, axis_ctrl);
+> +			break;
+> +		case IIO_MOD_Y:
+> +			axis_en = FIELD_GET(ADXL345_ACT_Y_EN, axis_ctrl);
+> +			break;
+> +		case IIO_MOD_Z:
+> +			axis_en = FIELD_GET(ADXL345_ACT_Z_EN, axis_ctrl);
+Same as in earlier patch; axis_en is never used.
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*en = (adxl345_act_int_reg[type] & regval) > 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_set_act_inact_en(struct adxl345_state *st,
+> +				    enum iio_modifier axis,
+> +				    enum adxl345_activity_type type,
+> +				    bool cmd_en)
+> +{
+> +	bool axis_en, en;
+> +	unsigned int threshold;
+> +	u32 axis_ctrl = 0;
+> +	int ret;
+> +
+> +	if (type == ADXL345_ACTIVITY) {
+> +		switch (axis) {
+> +		case IIO_MOD_X:
+> +			axis_ctrl = ADXL345_ACT_X_EN;
+> +			break;
+> +		case IIO_MOD_Y:
+> +			axis_ctrl = ADXL345_ACT_Y_EN;
+> +			break;
+> +		case IIO_MOD_Z:
+> +			axis_ctrl = ADXL345_ACT_Z_EN;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (cmd_en)
+> +		ret = regmap_set_bits(st->regmap,
+> +				      ADXL345_REG_ACT_INACT_CTRL, axis_ctrl);
+> +	else
+> +		ret = regmap_clear_bits(st->regmap,
+> +					ADXL345_REG_ACT_INACT_CTRL, axis_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, adxl345_act_thresh_reg[type], &threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	en = false;
+> +
+> +	if (type == ADXL345_ACTIVITY) {
+> +		axis_en = FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) > 0;
+The > 0 doesn't add anything as this can't be negative.
 
-Register the device unconditionally. The support check (e.g. SVSM, cmd)
-is in snp_svsm_vtpm_probe(), keeping all logic in one place.
-This function is called during the driver's probe along with other
-setup tasks like memory allocation.
+Drag declaration of axis_en down here as only used in this block.
+or just combine with previous and next bit as
+		en = (type === ADXL345_ACTIVITY) &&
+		     FIELD_GET(ADXL345_REG_ACT_AXIS_MSK, axis_ctrl) &&
+		     (threshold > 0);
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v4:
-- explained better why we register it anyway in the commit message
----
- arch/x86/coco/sev/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> +		en = axis_en && threshold > 0;
+> +	}
+> +
+> +	return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
+> +				  adxl345_act_int_reg[type],
+> +				  en ? adxl345_act_int_reg[type] : 0);
+> +}
+> +
+>  /* tap */
+>  
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index efb43c9d3d30..acbd9bc526b1 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2689,6 +2689,11 @@ static struct platform_device sev_guest_device = {
- 	.id		= -1,
- };
- 
-+static struct platform_device tpm_svsm_device = {
-+	.name		= "tpm-svsm",
-+	.id		= -1,
-+};
-+
- static int __init snp_init_platform_device(void)
- {
- 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-@@ -2697,6 +2702,9 @@ static int __init snp_init_platform_device(void)
- 	if (platform_device_register(&sev_guest_device))
- 		return -ENODEV;
- 
-+	if (platform_device_register(&tpm_svsm_device))
-+		return -ENODEV;
-+
- 	pr_info("SNP guest platform device initialized.\n");
- 	return 0;
- }
--- 
-2.49.0
+
+
+> @@ -1347,6 +1542,14 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  		if (ret)
+>  			return ret;
+>  
+> +		ret = regmap_write(st->regmap, ADXL345_REG_ACT_INACT_CTRL, 0);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, 6);
+
+6 is a fairly random number. Add a comment for why this default.
+
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_TAP, tap_threshold);
+>  		if (ret)
+>  			return ret;
 
