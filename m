@@ -1,144 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480462AE8D;
-	Mon, 31 Mar 2025 10:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D5670820
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 10:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743418331; cv=none; b=aD0Sv+RVTZ4berLwl970B0UPjcHrrz+w7RjLXiFX7aP/HQ/2ghjwnaNBDq1hNVqnBv7P2mV1+eeidPaX85wLkrO3qnJyxi2ovW4lFavbvfCa8dF6xyRsklP60nONdoPo26kiWaJ3X8XiplG+xrbVWdw+9qFFQz0fx5zdhqDpiyI=
+	t=1743418380; cv=none; b=rSipxa9lgqRTXL/4cRfuc/Mos+Buh6HFAAnbfcRb/RDQPvhnqjmeqhGgOoCKNuEySmTAv61dC9fa9iIf43K67o+lOfJtPQoytHudTFZaKuTV9HRbcfl9fmdy5oxoHj3ItPXMJMdN8R89J92pkXgflup2GDLP7LgLQ+/47aHbHvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743418331; c=relaxed/simple;
-	bh=ybGEwyvbDY+OFGgpRswWwTvumhQ8Sdx9Rxl7GJAJoM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=POUzF0exHS3f5bm11bJd61PHFTpzG6FzGXhvpb6Zu7XXNvpy3eWoLwcbrAePYZ3lQmazOKIHyGNVHDLHFEm58blX5RZvMplbnseNUDc3cDxA7zHqtLGDkN096FzlN/+YWsGJhzpLwc5g/+ZJ7Ty5SJ5Cr909HgdqLPbPzqqmdFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxcum8VA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743418380; c=relaxed/simple;
+	bh=h1HpzViZ3BjGOFn1CidaT9F4YiMczr4ZKexz9ka0o5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dyz06Y5YcCQH/UpQw3T1EZw1o+Z2qUgb2rqIB+qb4r2NHZuB3rHidn/2QXjllvpAN12OvgmIxNCkWzOv4u0UMYiXtqSMrbEHkcFGxNsTA/RhUIi76urH//+4sn04K4FXTOZpTlUdIUT2mENdQ/klKv5RDNkz6j5O9DoD8InSAis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Su1QJpmS; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxcum8VA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D55BC4CEE3;
-	Mon, 31 Mar 2025 10:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743418330;
-	bh=ybGEwyvbDY+OFGgpRswWwTvumhQ8Sdx9Rxl7GJAJoM0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rxcum8VAXm2raNF0VdLu6koj9w6TmeXtDgiV7gPPfd/1AjpvK+UDqflM5Ex4VSaKg
-	 PImTJrjo+v+18bi1UVJcUEfu9qE57Xor+26zXlF/R4GF+kur3soJJUFL3jVGpm+JSL
-	 vkXbd8TNyU34IzRocFm+fRNqshVozGBnpF/PWUuzoF4BN55S/M+2FcuxH6cHAYg71a
-	 mlHe/1jrWF6VXE0DFB+wDVimTTaBnxitwOuvCT5h4HVMdzpOAFYsbZ8rrUaFvF60n2
-	 oOCJhaUi0CSdm6Fb/QFmUockPHJwFsT809otjPv4X/rpms0nOpDn4GBQSE7Fca5/wf
-	 62ZTM2dXII3Nw==
-Date: Mon, 31 Mar 2025 11:52:03 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v5 10/11] iio: accel: adxl345: add coupling detection
- for activity/inactivity
-Message-ID: <20250331115203.578c69eb@jic23-huawei>
-In-Reply-To: <20250318230843.76068-11-l.rubusch@gmail.com>
-References: <20250318230843.76068-1-l.rubusch@gmail.com>
-	<20250318230843.76068-11-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Su1QJpmS"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so953081a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743418377; x=1744023177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uLzxNg5j/t2QO8pYd3KuhubdixjbDcFsY5dnvsuInnI=;
+        b=Su1QJpmS+WEJ11WLVwPPlO9Z97JIKAcsfD6BnKK28T1cBJDnieDtibo8tmCFhSDAGX
+         welB+9/NL+NgzMWVSmNGQr532Sen9qKDh7BZnE1CbHBqAGSN3isAwRaOBs0ZQloLaJBV
+         HPIxE7t5Vgmn+5ZV6lmu2cX28Jp0tYo1cATcicWeleqYezFTLCGRvjWSmwecJUcOIvHL
+         UjgAAVwn3E91iF06vK+MBWkwbscnsyG8YVaig65dUezIrEF1S20i65AgbRmE2u4kLDq7
+         K++wGH7Wjbz54Lflny6xpUM1EBfMwpghr6uFxMNQTJGM2njfRiNG443JnRKeila3zA5z
+         FwVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743418377; x=1744023177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uLzxNg5j/t2QO8pYd3KuhubdixjbDcFsY5dnvsuInnI=;
+        b=K4iUchJ0uoG+9TMzS8EKqqTQTSCKucyk9skIjsI7/rgZyMOkj6mqWOprqU3kGQGws6
+         MVW2x2vEi7eFWsmwGgAYdJMDrwa9JPSLEjWzVDYVuGADDVRj5Zx4BCBsUeUmHkzfCy6V
+         0MeyQLoN1xlh/175glX9Kg9NXugLxa7iyhUd+HbsHZ3O5KwEYz4rr3TvY7pc2EnPI1vr
+         X66/nsf5VwCwMzwwRpHGhHsneNymirPyH52oNHnsbSHkGkJEwtcnJn+N6ixfhoeVeTsn
+         lGOHAt3kc3nE4yobs5Co5yS1nBI/05uO/Lk7W5EfNLCVREFexnLJo1bqO5wRCRqWMWuE
+         +ahg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdG3cT9OcTOSyclBQa8BLf08FEj6AxqXp0QeLorl5wM6VD14g0bcsJ6Q/uDWRTMpVv6XZ4+rK4mKjADDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXCENxmzx9t5z4zXtiG5XCE9gR3Swv1Aq84in0K2lpafl7ivz/
+	LDiKT5zQ5pqmIsj4MOyjZpXRkAuQ2XWGMjdsZt+lBhRL1PzpamiEkk6zIJRBnco=
+X-Gm-Gg: ASbGncsKMM2Rx4WlK0feUAjk7QwiSsZLbztrj89fyfnRUb+uUEew1F3rIrpiHy4DnR4
+	E8fPjhZqnaZgLCv6LZhcB71uw0DuKao/YmTBn9siMSZYPfrAg53fYXsBO7TvWKq92RXxACof3Ly
+	OUT33UfrB+i9KFbACwBfxi0qhR4HF9Ud5AJa2OF7KS0G2gqSQNwWZT0+NmaGLUzT/Da1N2K55VJ
+	PMjjCXkEEkcABpdDhpH06dhoashTmxwiVWSgdyFPu/REXyuYTt0KjT30w9iGu3g75lt17hG9mlh
+	ndkeLuuaCuCMVq+tUwafaRdud/6XPKSytLQ=
+X-Google-Smtp-Source: AGHT+IEXRs3zxTgQlHAMazbr0bvhWUFwCFDuedD5ulDZkwXkLhjmf3hl/TEWnlk1pA0aBh0cVkLlIg==
+X-Received: by 2002:a05:6402:4310:b0:5e0:8c55:536 with SMTP id 4fb4d7f45d1cf-5edfcbd2529mr8073398a12.4.1743418376707;
+        Mon, 31 Mar 2025 03:52:56 -0700 (PDT)
+Received: from localhost ([193.86.92.181])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5edc16efb06sm5451617a12.37.2025.03.31.03.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 03:52:56 -0700 (PDT)
+Date: Mon, 31 Mar 2025 12:52:55 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, bpf@vger.kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	akpm@linux-foundation.org, peterz@infradead.org, vbabka@suse.cz,
+	bigeasy@linutronix.de, rostedt@goodmis.org, shakeel.butt@linux.dev,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH mm] mm/page_alloc: Avoid second trylock of zone->lock
+Message-ID: <Z-p0B27EtOW_lswI@tiehlicka>
+References: <20250331002809.94758-1-alexei.starovoitov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331002809.94758-1-alexei.starovoitov@gmail.com>
 
-On Tue, 18 Mar 2025 23:08:42 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
-
-> Add coupling activity/inactivity detection by the AC/DC bit. This is an
-> addititional enhancement for the detection of activity states and
-> completes the activity / inactivity feature of the ADXL345.
+On Sun 30-03-25 17:28:09, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
 > 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> spin_trylock followed by spin_lock will cause extra write cache
+> access. If the lock is contended it may cause unnecessary cache
+> line bouncing and will execute redundant irq restore/save pair.
+> Therefore, check alloc/fpi_flags first and use spin_trylock or
+> spin_lock.
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Fixes: 97769a53f117 ("mm, bpf: Introduce try_alloc_pages() for opportunistic page allocation")
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+
+Makes sense. Fixes tag is probably over reaching but whatever.
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks!
+
 > ---
-
-> @@ -300,6 +319,69 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
+>  mm/page_alloc.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index e3ea5bf5c459..ffbb5678bc2f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1268,11 +1268,12 @@ static void free_one_page(struct zone *zone, struct page *page,
+>  	struct llist_head *llhead;
+>  	unsigned long flags;
 >  
->  /* act/inact */
->  
-> +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
-> +				   enum adxl345_activity_type type, bool *ac)
-> +{
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (type == ADXL345_ACTIVITY)
-> +		*ac = (FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval) > 0);
-> +	else
-> +		*ac = (FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regval) > 0);
-
-The > 0 doesn't add anything so I'd drop those.
-Get used to non 0 integer == true for booleans takes some time but
-is commonly assumed in kernel code (it is true in C in general but
-some coding styles don't assume it!)
-
-> +
-> +	return 0;
-> +}
-
-
->  static int adxl345_read_avail(struct iio_dev *indio_dev,
-> @@ -919,6 +1050,8 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
->  {
->  	struct adxl345_state *st = iio_priv(indio_dev);
->  	bool int_en;
-> +	bool act_ac;
-> +	bool inact_ac;
-Could stick those 3 bools on one line without loosing readability I think.
-Save a tiny bit of scrolling ;)
-or push them down to context where they are used.
-
-
->  	int ret;
->  
->  	switch (type) {
-> @@ -963,6 +1096,21 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
->  		if (ret)
->  			return ret;
->  		return int_en;
-> +	case IIO_EV_TYPE_MAG_REFERENCED:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			ret = adxl345_is_act_inact_ac(st, ADXL345_ACTIVITY, &act_ac);
-> +			if (ret)
-> +				return ret;
-> +			return act_ac;
-> +		case IIO_EV_DIR_FALLING:
-> +			ret = adxl345_is_act_inact_ac(st, ADXL345_INACTIVITY, &inact_ac);
-> +			if (ret)
-> +				return ret;
-> +			return inact_ac;
-> +		default:
-> +			return -EINVAL;
-> +		}
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -999,6 +1147,16 @@ static int adxl345_write_event_config(struct iio_dev *indio_dev,
+> -	if (!spin_trylock_irqsave(&zone->lock, flags)) {
+> -		if (unlikely(fpi_flags & FPI_TRYLOCK)) {
+> +	if (unlikely(fpi_flags & FPI_TRYLOCK)) {
+> +		if (!spin_trylock_irqsave(&zone->lock, flags)) {
+>  			add_page_to_zone_llist(zone, page, order);
+>  			return;
 >  		}
->  	case IIO_EV_TYPE_MAG:
->  		return adxl345_set_ff_en(st, state);
-> +	case IIO_EV_TYPE_MAG_REFERENCED:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			return adxl345_set_act_inact_ac(st, ADXL345_ACTIVITY, state);
-> +		case IIO_EV_DIR_FALLING:
-> +			return adxl345_set_act_inact_ac(st, ADXL345_INACTIVITY, state);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
->  	default:
->  		return -EINVAL;
+> +	} else {
+>  		spin_lock_irqsave(&zone->lock, flags);
 >  	}
+>  
+> @@ -2341,9 +2342,10 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+>  	unsigned long flags;
+>  	int i;
+>  
+> -	if (!spin_trylock_irqsave(&zone->lock, flags)) {
+> -		if (unlikely(alloc_flags & ALLOC_TRYLOCK))
+> +	if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
+> +		if (!spin_trylock_irqsave(&zone->lock, flags))
+>  			return 0;
+> +	} else {
+>  		spin_lock_irqsave(&zone->lock, flags);
+>  	}
+>  	for (i = 0; i < count; ++i) {
+> @@ -2964,9 +2966,10 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
+>  
+>  	do {
+>  		page = NULL;
+> -		if (!spin_trylock_irqsave(&zone->lock, flags)) {
+> -			if (unlikely(alloc_flags & ALLOC_TRYLOCK))
+> +		if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
+> +			if (!spin_trylock_irqsave(&zone->lock, flags))
+>  				return NULL;
+> +		} else {
+>  			spin_lock_irqsave(&zone->lock, flags);
+>  		}
+>  		if (alloc_flags & ALLOC_HIGHATOMIC)
+> -- 
+> 2.47.1
 
+-- 
+Michal Hocko
+SUSE Labs
