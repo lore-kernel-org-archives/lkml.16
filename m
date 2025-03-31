@@ -1,118 +1,159 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F2D2A1D7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA2B154426;
+	Mon, 31 Mar 2025 13:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743426950; cv=none; b=Wnu96P+2ez9T7vqXtaPa6E6wv4eVInnsKPa1JtIYZ0Q1dHHJ1b01SqM2Ve9cDY7M6Jh1ukFdQfcDXXeLCCg/h8EPwv3BqsIffx5GGrG78aCyo/bnE/jXM7GSeAUavD2TIbzmqorDxEP/eSlarfdStEs3V3b341JcwoiI12rGMyw=
+	t=1743426973; cv=none; b=WAR4/ckvfJSZenD++DfAPfsT/8R3eMCHXowP0zr+oRS+hFYfyb8pusqK4HViupOvaMXpJUu65yppvV7rikrm64oLmpA6A5uLABvwq4PS1yVtozgwbFlBtuSbfyo9au50oD8CfdeRrRgChaD4uXKQCZNKa3epY9XmF0hZY4zQb6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743426950; c=relaxed/simple;
-	bh=TJf2cLWDa6TYKjo0C76hJtuoh8UwAG/Rjz1lFqOav/4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gbpsw94SwVEvGgt2yEzLnrAFMGOFPzmzgLHQekazZ2KjBcalY6L7Ei/Qqnfzt8FxEPgYxZGgcGxe7LhCcGxZrIX6aKuOTAMSl5iNC6I9Fm0Tkn4pFsO0ytbV7OKKPYuCjwVh4Uf/A3+9NCJYVbJQeu1L+CvpKaXaDDojVDNcscI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Y5hYQ/KQ; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743426973; c=relaxed/simple;
+	bh=rWfEuNwcKHtCIL0c17eLn20Nora+MC+za1Oc/I7rVtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u+ol2RoEx06ioZyqb3b/hqSRcmqRqaPgxIVkkFpfVbNy39cEqRrMnX39rXF+s6yGRIi9u+rId4mjSa+F/3IQuiUUcKPp8UFyRlG1Bn6+UCH0ukoiFsXAjzZpUezT9zaAjmTcw3ItEiMXQxTpPqb493vcKGnb2XM6A8/Q8QgOH4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ea0CNQcW; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Y5hYQ/KQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743426919; x=1744031719; i=markus.elfring@web.de;
-	bh=BMiqQCMxbQwce1KOTSZq9sTx1HqFGg9Shvfl8jiPWWs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Y5hYQ/KQrO7sb+qGFPO/hjoYlGOr0eDckrU4WQxUlO9GV+AxE6nKgbk5L1aDJyZz
-	 Q4LjafB+CZtKp+UXQeHz/VsC3GoTD0gtUCSXlSixL9DO3CraQYrv4h3MyKUqGERVz
-	 GJqPKGtg6+7J8/qMWrcwVouho1poYmmsV20V4Gl3Huk7n7fN7fwMiTuFRP8AdIGJS
-	 G2/A1mJFOS9Wc/4aVxLdfesBwdymbpuPdyK+uJTybSx6NzZdRwjNOtaIUJruaJ94J
-	 f9DRDp8xp7YCzXRtVDu9kV67lezM2Bx9wJZ1LMZp5IopwfA0K2tos6Lpv073NQvx9
-	 6ncyqkxvhk0D89zOvg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIya8-1teyHF2Ejy-00VtF9; Mon, 31
- Mar 2025 15:15:19 +0200
-Message-ID: <fdba0c3b-dd83-4fb4-a8ad-950facc68127@web.de>
-Date: Mon, 31 Mar 2025 15:15:17 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea0CNQcW"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47745b4b9aaso7614631cf.0;
+        Mon, 31 Mar 2025 06:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743426971; x=1744031771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UEdh5n3v4O9CUTz4DVjNN2gzKd4SqkS8/2Z3RLisCe0=;
+        b=ea0CNQcW0CyfWUTnomWolxZxmHVcm2diiQilOKcJUnw1ddJPUWC1OySI7D2nD/kyjf
+         kli6OZhOZFqQsGsexLjjiL0DJp0HFuTNJrOy04/lDXTdu4cfApTd29D+drgY9CspxPdF
+         IHVRJxUMGOHHmv4gmmpPzqf5PiqDUpsF/axWDZjF9511azLccUN6pcO4dsy3mU1T2TJO
+         M8VCqsqcibFaa40jsCN62JolupJ87igvfRbcVeO0tHjrcWZfZNonK5e3KFi2FrSwUoGu
+         JhMuFqSKVig3B134NOh/FoDaUwzT/bD7fSiJsR9VFV/9P1iU5g9dF37kV0a3LPQzbZjl
+         rVlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743426971; x=1744031771;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UEdh5n3v4O9CUTz4DVjNN2gzKd4SqkS8/2Z3RLisCe0=;
+        b=W8xoRJMTnnmIxQorDZfg66xiefohPwJp5AYl4KU2X87CRN2zOz4x1JvSlVSrX/iw0U
+         573pOUmrNdvR6aMJ9Vej+CPnvk7NNjhg3nmpwVoTRrkyeoVKGC+FkWGAYKEZ2Nwq6pLc
+         rymkbQAIPOOkfEqaJureDF54/XQpyDJvyDvm/wSx4xOCbTpzexv8tIPSbswUqZ2HY3nA
+         FFo7CvqzNRgt1TXES5NMzOaKwSwC0LtQD0yOS+u6i0hFDB37CxhkF8l6nJe9E46MdMqs
+         +XIOuLxhauTdiUOPaL2+wr2g5MzNiW3snP/5Z5guYcXbk78zbFHYyx4sVoX6ubzALmCq
+         h5Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUP7AgGE9JZox2sH8BSD/HiK/0OfEpcWiFU9xbXTB1U/fhCexG7yJ6v/ujtXFn3YKKzoLTmQn/+McJq@vger.kernel.org, AJvYcCVUaYhFY1RwhbgiCFBltvPP/fo2Xnp/fdlKtP1D4oXzNVWplG+Jyln0Jq9c0yGShFb2IV8Alb0FZE2UzQ==@vger.kernel.org, AJvYcCVjLZsFxaxhEKIgcMfRKf/SPbGrsf5aXP4bJjfcH2tDF30pbw5/daEVkVPA/HbdjcqoGssFKrhYLuq436mm@vger.kernel.org, AJvYcCWXgvlQwPdIMEB/fL5m7uJTEMBK+FaacYQero/RyQDpSiR9dmCkHfpQU1r1CUDYAJnV6LUmX3iBhjZD@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUDUfDOjoGAZ3CGMPNNo3M1Kj907EIzbgEeTVFAAT1jk887SMf
+	0LDt0C05kmzwm067BXubc8+U+Ra+ru9eySWcp5r04Aftg1VqgFdi
+X-Gm-Gg: ASbGnctnYG+tCbGWzBGb5OhT3mlbvRMkrssj21v9ng6UoRmrkn8Z7XoCak2KY08vT/8
+	4eg5t50ky2aOfJWIECmjJ6ahsIR0srSZAAbSbjt9Z2/1hR/H6bpoKtxclAW49VRo+DY+Khanlwn
+	j5SDbrhWXIfH+Zsb36h49W9k3+aU8wr/bIvNS94I7bU7ORx0j9z55pnDOEaZEjqEYuQU53EWhF4
+	XSZyl+mJCZ/bHelwH1tUrngM6R3wSP3td7HEcYg0ql5Ka9b5lmpLPTZl3sjTTXxYreSdJqLCXz1
+	/QBoa2CO4/8qDB8rByiE59IFGfdkhTwPpXsBYD7BaH16NlDUhw6tmN6Jd/RXYrvoIA==
+X-Google-Smtp-Source: AGHT+IFbQB72U31Q4YJeUMQOLjGE1lX5Y09sxOvcCF0DSUNo9Di2my+wxe5+TnGGeJSgg6MGYVqeAg==
+X-Received: by 2002:a05:620a:29d6:b0:7c3:c406:ec10 with SMTP id af79cd13be357-7c6908c8bd4mr476835885a.14.1743426970925;
+        Mon, 31 Mar 2025 06:16:10 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f765f94fsm498470285a.20.2025.03.31.06.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 06:16:10 -0700 (PDT)
+Date: Mon, 31 Mar 2025 10:16:05 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v4 02/17] iio: adc: ad7768-1: set MOSI idle state to
+ prevent accidental reset
+Message-ID: <Z+qVlYCj5G6j3FIS@JSANTO12-L01.ad.analog.com>
+Reply-To: Z8rhWLz32fdySDyN@debian-bullseye-live-builder-amd64
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <c2a2b0f3d54829079763a5511359a1fa80516cfb.1741268122.git.Jonathan.Santos@analog.com>
+ <Z8rhWLz32fdySDyN@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v4] mm/page_alloc: Consolidate unlikely handling in
- page_expected_state
-To: Ye Liu <liuye@kylinos.cn>, linux-mm@kvack.org
-Cc: Ye Liu <ye.liu@linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Matthew Wilcox <willy@infradead.org>,
- Sidhartha Kumar <sidhartha.kumar@oracle.com>
-References: <20250328014757.1212737-1-ye.liu@linux.dev>
- <Z-ayTt8o656AkGfz@casper.infradead.org>
- <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
- <05ebb2eb-5f66-4613-a39e-40194c96341f@web.de>
- <9ee54186-b56c-4876-a36f-1e4fb1835d09@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <9ee54186-b56c-4876-a36f-1e4fb1835d09@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sBx7LaCk3pshpDXgZTnnj7mHU6ZWA46u/hedLVvT3YSRn5QRibK
- F6rYsfzCNug8haqJlCbgTsZn6t4gmLkTvoRP+881Y5UJpGyrDlQRAUqBK7eezinQq8VxmoC
- 4os8V3V2ljfXzcKA/C1vD1bvWYeDZoYck452WwglkBfsYzv7GZG4FiF63y53Ey9cN82E/pf
- SjoLm6VqJC6kOwtjKyPEQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sob06aztCDo=;sg5KEWIspUoUURjlrrFVRkASxY2
- qWyuvnYbF5HW8l6HyMD9cHW4DtTB8cd/xQYhUH0M/XsYe89wpeHbHCBuUJH4sGw5cdgrSJrh5
- ZLTFWLhfVzEEI9fNGxH8kDytWjwbV+GPBZ0ue0ezLbowzjfNjD2QjVwppehNmAzMLhHnY+vp5
- X/0ojHvLZoWcrxUFDK9+Geac3D/aLnbsDwjmSM4WKLxMRCJTbICRg73TyQCz7QCurrq45pH13
- jcoYTd6CbwIQ1kysOtfJiyxw7FgsAblqYSNgPkKkIZxvTSpAkE7hGxsgtFc8y3ci/8O45JuoD
- V6A6oA3YLyDicMFRbnmxHEWhB1TASxDI/vg+HCDsR2RPAVWwuJkFszvMucssWGgiW8NB691Fi
- 2O4YVk+W7kMiHrfsnE9dNE26hE+ndpWQtLJqRsMi9UaKuMJnN10V6GIeysLL2o2RX3JPK8s/6
- GGQjfvJ4BWNg97toM+Efx6v70+FxXuTSnz4bvNlam8RSJ+62iUpzSKLmxjQyXT42NDe908wjL
- 9cZ6s4+tzjyp5wyc0piANJXqkSCNKa6eHLZJo64nStu47AE+3IWMNs7W91kvtt2uyFB8QboeR
- sN1lP0+8+uAljnvlB3sH+khdXmdToUTpGwozgu9DQflEqoS/45j1ADkuSmE74l5mHELBhAPXZ
- 7ojwGo8TI6YQxzIEgNQV5//J6pEGXlMmGdROEIU+Iz644Kv5wqyTgN7OoEOK+tSs/WwRdZDjp
- PWlSIhhBr+2seXCCtHtzSrq0QVVhJXdI1W2PvDeo7YGKcQqw+GXrmjD4TgtkFRdizXcxZROLI
- aOsgoKFS3umBbcI8UPPCdUlJC81/dII+tlHcUXG57eVctlQsx9Hsz+CmTEeDwHlQH7F3O1QSn
- NaMpgkE+MIizfqQiN4sDvEEm0HeAmCXbCS54kBe00Ov/Bz062MX3wp/pDRtOSCya0zyFAsD77
- 5GnMaCyJjhPPwUtY5Gs+UqSvUNCcUBkEXRMlAlxqOMcvWsk6KE+p0fOEEvU9IyU0fn6mKdtYo
- MDh4DUyg9BugObhkXHZjx2Pdvyv0VXx/Q7Bg38staqFvmSmZHwIAHK+1EJRWQh4kITnUJqZ9b
- DHh+j3GDIBi6JwYak1mntuRtnqWZgDQv/23GT1FPgZm+5XEVv5YTDxsE5RU7PNkDBkW7n/lID
- ssMXUTMHuLqgm0mmT0nfLKQ8hboR/PzqEgNfo+47dMVGcT/Zl1IDFdtA2BvOwH3c77rTYNREq
- L/iZx28a4hks71kBXKa+ltJFBsW8K/kFpjVtQ21PshIpW9sfUwYDFiVVbPLpM1iOG5V9xqP8b
- Zpe5I898j0qzEal5gCUV2qTor+xdKrC2Am+dzNKGB/C5K+3T/6rfaiVPwIQZVE+qxaFJxMzMU
- /g2gsKWJk7IN5GyMqKAYnG2eyftDc4kuR1Umb6i7d1tm+uz6o5XIpK/vsWDq3q4trDAczTFCU
- YUGGTYEBrc6XNuJwf4O4LpCH2cZSAo+fqgM+Eg1Pn+xxycoKCWjsptV90T0sLns0UTEjDig==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8rhWLz32fdySDyN@debian-BULLSEYE-live-builder-AMD64>
 
->>>             What are the requirements or steps to get involved?
->> You can try to improve communication skills as needed.
->
-> I don=E2=80=99t see how I=E2=80=99ve offended anyone.
+On 03/07, Marcelo Schmitt wrote:
+> On 03/06, Jonathan Santos wrote:
+> > Datasheet recommends Setting the MOSI idle state to high in order to
+> > prevent accidental reset of the device when SCLK is free running.
+> > This happens when the controller clocks out a 1 followed by 63 zeros
+> > while the CS is held low.
+> > 
+> > Check if SPI controller supports SPI_MOSI_IDLE_HIGH flag and set it.
+> > 
+> > Fixes: a5f8c7da3dbe ("iio: adc: Add AD7768-1 ADC basic support")
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > ---
+> 
+> LGTM
+> 
+> Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> 
+> > v4 Changes:
+> > * None.
+> > 
+> > v3 Changes:
+> > * Patch moved closer to the start of the patch set.
+> > 
+> > v2 Changes:
+> > * Only setup SPI_MOSI_IDLE_HIGH flag if the controller supports it, otherwise the driver
+> >   continues the same. I realized that using bits_per_word does not avoid the problem that
+> >   MOSI idle state is trying to solve. If the controller drives the MOSI low between bytes
+> >   during a transfer, nothing happens.
+> 
+> When you say nothing happens if the controller drives MOSI low between data
+> bytes you mean the data is still good in that case? Just trying to understand
+> the device behavior.
 
-This might not have happened so far.
+Yes, it means that it does not affect the buffered reads and data is
+still OK.
 
-But some information from communication approaches can occasionally make
-participants feel uncomfortable.
-
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- I was simply asking =
-about the process to become a reviewer.
-> What exactly is the issue with that?
-
-There needs to be a desire to review selected items.
-https://en.wikipedia.org/wiki/Code_review
-
-
-> How did you interpret my message to warrant such a response?
-I would like to help another bit with corresponding clarifications.
-You can get further impressions and experiences from published review appr=
-oaches,
-can't you?
-
-Regards,
-Markus
+> 
+> Thanks,
+> Marcelo
+> 
+> > ---
+> >  drivers/iio/adc/ad7768-1.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> > index c3cf04311c40..2e2d50ccb744 100644
+> > --- a/drivers/iio/adc/ad7768-1.c
+> > +++ b/drivers/iio/adc/ad7768-1.c
+> > @@ -574,6 +574,21 @@ static int ad7768_probe(struct spi_device *spi)
+> >  		return -ENOMEM;
+> >  
+> >  	st = iio_priv(indio_dev);
+> > +	/*
+> > +	 * Datasheet recommends SDI line to be kept high when data is not being
+> > +	 * clocked out of the controller and the spi clock is free running,
+> > +	 * to prevent accidental reset.
+> > +	 * Since many controllers do not support the SPI_MOSI_IDLE_HIGH flag
+> > +	 * yet, only request the MOSI idle state to enable if the controller
+> > +	 * supports it.
+> > +	 */
+> > +	if (spi->controller->mode_bits & SPI_MOSI_IDLE_HIGH) {
+> > +		spi->mode |= SPI_MOSI_IDLE_HIGH;
+> > +		ret = spi_setup(spi);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> > +
+> >  	st->spi = spi;
+> >  
+> >  	st->vref = devm_regulator_get(&spi->dev, "vref");
+> > -- 
+> > 2.34.1
+> > 
