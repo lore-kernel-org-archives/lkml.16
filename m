@@ -1,87 +1,130 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86E521B90B;
-	Mon, 31 Mar 2025 20:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546E321B9C1;
+	Mon, 31 Mar 2025 20:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743454601; cv=none; b=cQYZGUTiuIOlkK6raMbktleKLeOUfp+peqXbbwPCCLd4PH1bxmf5dynlQ9FhvQcKe+WxOC5A8SXqgTlmfeFaWQEnvvFlmcnpKGGLEatX8e5V0PMwbdxt6WwGDWhz3El70I1JLO0CLqDSzYZEG6boqFeLgb5e6LFteSJdcQ6nC5E=
+	t=1743454625; cv=none; b=pr7doJOrsnoThz0a4b0oq9WqNP4Oe7cH/4GvshacpRCQiN+OuODmizAj7+uhnBn3XwFN+RATL1J/JQnWj3kTWJDVLVgSVK4bTV4cBtxvWjvTxnsO+03aZlmFqDqTrelDaO1hrPI7GaTqDgkpffk1Phbn91O1Qe25lF96rIySyNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743454601; c=relaxed/simple;
-	bh=P/sdOzjELHSLJJ9C/09DXKbX1k444N0TOsx1VRDNn1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sGzBZmq0KeybzZ6VUP4tJ0ZnWLiFSWiRce9Vp2ajLHW41vwVSH+nOeoVUYUzAirbgfnOmpM1TCFjmbT3BIu63Ah0Dkq+0EYsausw7BMuXFQA+w4fTEvfNP07SNeNzEZzUq098oOk7C0xLvnF4GKJ0jDa6SxvCQCXz8my12VOBuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=aH2U2qFj; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aH2U2qFj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1743454593;
-	bh=uTWAjVbNN88UhtAgPAK/Vp3NKR30ljP31iJDKc5Wa9Y=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aH2U2qFjxdmM0W0mqFhvaj/kvMa6Oe1NhIFUGWLtzT47OkHXncWvp5gMaXwpusFnh
-	 4OGQxYaC7OpGF9BoTJUo4DyEmb4DO7OVcHlakmWeN8lka4R7v6E5ztV33LSXVkoQTC
-	 HqtKyeCkxVKIZtsgxVajj13serqkfsnekpTeVQZNty81IyUAtHdgY9l5A/CY6f6d6B
-	 xgEvH/Qu2R09cYWjqMDrKpgrP8dboZp/H6OImDrS9ytzdLlIC+B0K1qV7ZtIwfJkCG
-	 glkxHFUYho0dlPf0iwF128GTwXdF5HnbdbAOyfDq04YGxWgeEhqU7pZaL8cLehML7H
-	 KfXDOcnI3g0NQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZRNhx3CYVz4xG8;
-	Tue,  1 Apr 2025 07:56:32 +1100 (AEDT)
-Date: Tue, 1 Apr 2025 07:55:55 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the fuse tree
-Message-ID: <20250401075555.58704b6e@canb.auug.org.au>
+	s=arc-20240116; t=1743454625; c=relaxed/simple;
+	bh=grjGL6ZIKMvZ89GhSxoNkBZGfmrbW7YwQq6dlnLMIhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KFg9PnrYAW5ZK70ClaggW7NLKztYZNI0Cx9rrdsP8/Ya3ijhtIUCybBnFALa6QZHJpMmy5iCIClTLCPKVe5yfHCykw5lUfeNcnalbw4jyGoclcE302iV9LcbzEs3J3qNHhJaCSrLQ2FKrQVuTZoNxYF4n9xULKJ/IbCRJZu21kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A55C4CEE3;
+	Mon, 31 Mar 2025 20:57:03 +0000 (UTC)
+Date: Mon, 31 Mar 2025 16:58:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
+ Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <20250331165801.715aba48@gandalf.local.home>
+In-Reply-To: <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+References: <20250331143426.947281958@goodmis.org>
+	<20250331143532.459810712@goodmis.org>
+	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+	<20250331133906.48e115f5@gandalf.local.home>
+	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gg65qDZRA85OFm7/NmBAN/P";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/gg65qDZRA85OFm7/NmBAN/P
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Mon, 31 Mar 2025 12:12:08 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-The following commit is also in Linus Torvalds' tree as a different commit
-(but the same patch):
 
-  1dfe2a220e9c ("fuse: fix uring race condition for null dereference of fc")
+> > OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+> > same thing as pstore. And it looks like pstore should be updated too.  
+> 
+> Please just stop copying code from random drivers or filesystems.
 
-This is commit
+Note, I did not blindly copy it. I knew ramoops did exactly what I wanted
+to do, so I looked at how it did it. I read the code, it looked reasonable,
+and I mapped it.
 
-  d9ecc77193ca ("fuse: fix uring race condition for null dereference of fc")
+I needed a way to map physical memory to vmap memory. How am I supposed to
+know it was not doing it the proper way?
 
-in Linus' tree.
+> 
+> Christ.
+> 
+> I've said this before: core kernel code has higher quality
+> requirements than random drivers (or even random filesystems).
 
---=20
-Cheers,
-Stephen Rothwell
+I did not believe pstore was a random file system. It does similar code
+that tracing does.
 
---Sig_/gg65qDZRA85OFm7/NmBAN/P
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+> You can't copy crazy incorrect snippets from random sources and put it
+> in core kernel code.
 
------BEGIN PGP SIGNATURE-----
+Note, even though this code lives in kernel/, it is not much different than
+pstore code. It's a way to trace / debug the kernel, very much like pstore
+in that it's used to debug. I saw that code was written in 2012 and thought
+it was mature. It made sense, and yes I could have looked for a range, but
+I trusted the people who wrote that code. This wasn't just a random looking
+at something and copying it. I really wanted to understand how it worked.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfrAVsACgkQAVBC80lX
-0GzL1wgAjbAsjrDCvAwqDgFQNvCjO6fViU3h4nm8cGsK7PkX77aC03h/dywBzypm
-qIZS/djn8nFi/pXYsk0eJfiTqnt12Y74ss999GL1JPYPcnqPl5+tSyj8qa61hsuO
-HX24w+LWMf9+6N4Mhq3RinGOybhnSFeRiaVBqk/jA1+Uu3lNQy5sb69Vkv7Bu10/
-PLhszlCEw3cEWALWnjPaiFUUV3KiYS5hjQtXn5Oj9NZy4ISSRYAyEc+iUklxrfZQ
-fBemPyOQdYPCr4hUkbvGgS0Efi35EQQynquh0KHn8aKoz0N6s3aQPHjffQP72Mco
-9yYQTyf8dKK4VFX1/LYvy5JpFH9fSA==
-=497T
------END PGP SIGNATURE-----
+And I did talk with some of the mm folks, and they seemed OK with this.
 
---Sig_/gg65qDZRA85OFm7/NmBAN/P--
+
+> If it's not part of the kernel memory allocator, it does not
+> necessarily have a "struct page *" associated with it. Using a pointer
+> to 'struct page' and passing it off is just fundamentally more than a
+> bug: it's seriously and deeply broken.
+> 
+> It's probably much more obviously broken if the physical addresses
+> came from a PCI device, and this all just happens to work because it's
+> actually real RAM and we ended up having a 'struct page []' for it for
+> some random reason.
+
+Note, this only works with RAM.
+
+
+> Or it might just be because that memory *has* been in the E280 memory
+> map before it was reserved, and the 'strict page' arrays may have been
+> sized for the original E280 information, not the "after stealing"
+> information.
+
+I guess you mean E820.
+
+Mike can correct me if I'm wrong, but the memory that was stolen was actual
+memory returned by the system (E820 in x86). It reserves the memory before
+the memory allocation reserves this memory. So what reserve_mem returns is
+valid memory that can be used by memory allocator, but is currently just
+"reserved" which means it wants to prevent the allocator from using it.
+
+
+> And yes, I'm not at all surprised that we'd have other mis-users of
+> this. We have some very historical code that depends on reserved pages
+> going back all the way to linux-0.01 I suspect, because things like
+> the original VGA code knew that the physical addresses were in the
+> BIOS hole region that was backed by 'struct page'.
+
+I believe this is what Mike set up. A way to have normal RAM reserved
+before it gets added to the memory allocator. This was by design.
+
+In fact, if you do pull my v2[*] pull request of the ring buffer code (that
+removes this user space mapping of the persistent ring buffer logic) it
+actually adds the ability to free the memory and add it back into the memory
+allocator.
+
+ https://lore.kernel.org/linux-trace-kernel/173989134814.230693.18199312930337815629.stgit@devnote2/
+
+-- Steve
+
+[*] https://lore.kernel.org/all/20250328173533.7fa7810d@gandalf.local.home/
