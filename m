@@ -1,133 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0E5189F36;
-	Mon, 31 Mar 2025 11:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB7C1D7E5B;
+	Mon, 31 Mar 2025 11:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421000; cv=none; b=kX9iXtWQmTwoa4x1uHa4koDA5f86t7v8yib4Lt6uynjYS13FWN2ZAcbZ0UFpCkz7rV6Vh2D2xrXvozQi5EkhEjWtE1MC7/NGOnbHyEB3JRCmZ3UD70e30Rrw4GhV43XaIS5bzZnYIYUrQ0dqPDEuAKQoQdgozuY4dSoOX8s+Vx4=
+	t=1743421062; cv=none; b=nhMplA7QZicLKgGqJyqbg6UEu0CVGIocnRoFy9yPcsa6/NlrZv5q+K40cTIXlKGqU02LUCYX03UYnoo13TL4Tutl781kURIOF8dVl0AhcEHge8Mtuayb343YgVGrXvzM6rfPw0faNGjXrL/ww2SWlU3bub/DWXXUptPgYWnjuzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421000; c=relaxed/simple;
-	bh=vYroxuavsWveUhCjqbhjCVioW/F+uO8YLlLOjYDeL0I=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eIX22IqIj4rsO0PBH7TCw1Efu5NNhDyQKaQnPuWDg7DZWUlIdRJZfzBw4P4+Uab+bhmO+NTyzjKIuq4W0sUrs20r85NSYHIlWGvYTEUO8s+on9WPga5+NSKHZBkUegzGQFt17r8zFPvAfNHfjlbnW/cdF/Ie7ol0pZc1DdiKZS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UScGGvhY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hauMgtrX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743421062; c=relaxed/simple;
+	bh=zGtNUXqAQQW9cH2PjdXTsqRsui5IoWGLxVdUJrY1rFA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bHNixXJ18rUQpkYlYIoI3lQuPo9zwEUGbgCkV2L8ZbmzckfgaVuDDHi5BQej3Pjv4ph6y+WysnqCFaFRSn7wXXeBopp4ymgAFgjnl2zS9jUOwOuG4SNgHWroIUpxoCpr14aztGfcIVuq2SwFr8RUbiky4lcUV1yTsPjZ2qYg2fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2SY7TaY; arc=none smtp.client-ip=209.85.216.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UScGGvhY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hauMgtrX"
-Date: Mon, 31 Mar 2025 11:36:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743420996;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4ZGhP5sU+Kl/E1O24FEL/O6QCvbfJI8HJONEw+cxvhA=;
-	b=UScGGvhYN5qlTLf0XFdNvqNIKxnq1Ib9wONDfKJbQodkTNn07z5+UgQX56KPn9/odWPkgJ
-	PVZp8NUAkikdBz/pyZmMEfLE/NgMFSW0L6Z7DukJniLd/CPqW3D2mPSWgyt1tOnTFv3rNX
-	DFukycNfzTcdI8QdXQXnm9uYdAoIDRwdZgenrb3g1GB/rkOjo+kHKoxQIs7kpxa0PcBN9d
-	yo7NQP0o1BpD26/bn/Wsmb3l1Y++wIehkbkvmKhRkf5nPsjKr24xGGlDsLaVAdou0So4j5
-	5bp0dcZCR4TIAruc6cxBji9deJhDZRQ0Rq++ysoP5qEBmZhwa2z3SboVWwtTiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743420996;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4ZGhP5sU+Kl/E1O24FEL/O6QCvbfJI8HJONEw+cxvhA=;
-	b=hauMgtrX6ugdgmm+5Y+dN9KF+HPwZpeyRTvd2VunIihgSejEFTacUivYgDcJWhDzO5XGBM
-	cxj/FHiE0fmb5qCA==
-From: "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] rseq: Eliminate useless task_work on execve
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250327132945.1558783-1-mathieu.desnoyers@efficios.com>
-References: <20250327132945.1558783-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2SY7TaY"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-301e05b90caso7596399a91.2;
+        Mon, 31 Mar 2025 04:37:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743421060; x=1744025860; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAZERK3TWTrI50uxBupeJ5lJIuhLMzB6184AqIPg9T8=;
+        b=B2SY7TaYTVXCpd6zsu8ZEcqje7uYVpg9hONqLGvyd8Iv+WadVYRAhLlys168ziOH0y
+         yemrdOdx8p3f/HjtRQqTSpzEUI8RY/n2hipy8gxKufj6ucuXwhbzTdFh8In0JbwipcIg
+         xqqPzqk28QgSpP6hFPCAULYy7pWlX7vSvJylYah80/kwhyieiCQ/PeAvEQVGdwnzUy7P
+         Iuhxo6ysIPgWrnn8nQ7KfmWF1sPwIa2aGKphPUUhpQ1IIxELpDth/WECXnDW3f1cka8H
+         KCP/ougDEku3jZXMsvT72K6wJUCRGf9gVKcWktVoUbIlOSN/DCvy7nCCKQNBXDFlX7eC
+         VHJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743421060; x=1744025860;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAZERK3TWTrI50uxBupeJ5lJIuhLMzB6184AqIPg9T8=;
+        b=LqTa5FFCt/NXSXj0lEYmpq7ndAkJPKpn8JaAKuRvNMA1iKZd0XFxiGEjAa/YieXs2p
+         PKp3frYH5fYAcrW7iNvXWeI3QRYFOglvnwGizqJSVVqy4lxinFlYCmULF0eNKgraL4B4
+         l3r4muyfxThssfsiJJG+JilaveLLuHIcAjl1vUTtu5YF/CBruJGUjOA7Mgo6GcjXvN/E
+         JnzRoX9oZsfVEuZ+RWq16ph0vh6ENZWtNKLg6ZnsmuPtkUCKt1MD9Fgg8D4B2jIkkGf9
+         zL5FWY520c4iXTvLCfhQ5o6nwL3azpMSYcZkAgAOmJaTvF2Wg21IlLDaT4WY41JKAOK1
+         7npg==
+X-Forwarded-Encrypted: i=1; AJvYcCWi/9lObHWNPXjFTc4Nwzq6t2rgi3toJCboyuinTNMpVoodT+lsSogRx9l5w79I6DekmFhqSKIrubAPAfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcFQKXwTTaM+nSN1E81OGeQ1Xvg05kZF3eQnyfsDUGMke4fWm1
+	THxZRyXOaef2BPi7jXCs+M/RxxlNbr/C6F8ipE26itOnNXqi3NsJPovSMnKxdBVKhQ==
+X-Gm-Gg: ASbGnctJo+vRJCKk8ZfzuPaBstqvvpgyxBXic8SCkP8glBmeP6K8QtYU9jUvoHy8ZAl
+	/BC6u8//BPWzIaz7MEQaEVc7sZ3eQLZAqSWQaAD+06+USnLPFkr+eFP97UC9sk21WwTZUlZPu7D
+	e8Gj3VSKosTEkVKjmp/VjxGbQHczwSIQ43VrDGxQSP4BT6BV6VimF5MtxsjouV/Y/q9/L7sJ7s4
+	ERenmRUiheWWoBrbKrL1Cph2nKhJpqyWA43aXIApOHE70+xDPsEoe/mjDYnLByiah3txY7siDWr
+	QpcW9jFSZ+WuFQSW8OiI0gbESAyU05sDsUcbadEIY0qaDVL7I9Ex1HlP5aI0zOThqTVczMNITpI
+	nnjCHUQ==
+X-Google-Smtp-Source: AGHT+IGsatLibM086u8+LkY4mlbeaehvenUN3fIYGbHsW5uzoklPvG41UxpitqHcehvR+B8WOelEuQ==
+X-Received: by 2002:a17:90b:2e88:b0:2ff:6a5f:9b39 with SMTP id 98e67ed59e1d1-305320af145mr14739300a91.18.1743421059841;
+        Mon, 31 Mar 2025 04:37:39 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d55fbasm7028733a91.15.2025.03.31.04.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 04:37:39 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH] HID: uclogic: Add NULL check in uclogic_input_configured
+Date: Mon, 31 Mar 2025 19:37:32 +0800
+Message-Id: <20250331113732.10722-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174342099606.14745.8266804278210076386.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the sched/core branch of tip:
+devm_kasprintf() can return a NULL pointer on failure, but this
+returned value in uclogic_input_configured is not checked.
 
-Commit-ID:     328802738e1cd091d04076317f3c2174125c5916
-Gitweb:        https://git.kernel.org/tip/328802738e1cd091d04076317f3c2174125c5916
-Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate:    Thu, 27 Mar 2025 09:29:45 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 31 Mar 2025 12:30:01 +02:00
+Add NULL check in uclogic_input_configured, to handle kernel NULL
+pointer dereference error.
 
-rseq: Eliminate useless task_work on execve
-
-Eliminate a useless task_work on execve by moving the call to
-rseq_set_notify_resume() from sched_mm_cid_after_execve() to the error
-path of bprm_execve().
-
-The call to rseq_set_notify_resume() from sched_mm_cid_after_execve() is
-pointless in the success case, because rseq_execve() will clear the rseq
-pointer before returning to userspace.
-
-sched_mm_cid_after_execve() is called from both the success and error
-paths of bprm_execve(). The call to rseq_set_notify_resume() is needed
-on error because the mm_cid may have changed.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250327132945.1558783-1-mathieu.desnoyers@efficios.com
+Fixes: dd613a4e45f8d("HID: uclogic: Correct devm device reference for hidinput input_dev name")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
- fs/exec.c           | 3 ++-
- kernel/sched/core.c | 1 -
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-uclogic-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index f45859a..f511409 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1859,10 +1859,10 @@ static int bprm_execve(struct linux_binprm *bprm)
- 		goto out;
- 
- 	sched_mm_cid_after_execve(current);
-+	rseq_execve(current);
- 	/* execve succeeded */
- 	current->fs->in_exec = 0;
- 	current->in_execve = 0;
--	rseq_execve(current);
- 	user_events_execve(current);
- 	acct_update_integrals(current);
- 	task_numa_free(current, false);
-@@ -1879,6 +1879,7 @@ out:
- 		force_fatal_sig(SIGSEGV);
- 
- 	sched_mm_cid_after_execve(current);
-+	rseq_set_notify_resume(current);
- 	current->fs->in_exec = 0;
- 	current->in_execve = 0;
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index cfaca30..c81cf64 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -10703,7 +10703,6 @@ void sched_mm_cid_after_execve(struct task_struct *t)
- 		smp_mb();
- 		t->last_mm_cid = t->mm_cid = mm_cid_get(rq, t, mm);
+diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
+index d8008933c052..f8708a1ec7cc 100644
+--- a/drivers/hid/hid-uclogic-core.c
++++ b/drivers/hid/hid-uclogic-core.c
+@@ -144,9 +144,12 @@ static int uclogic_input_configured(struct hid_device *hdev,
+ 		}
  	}
--	rseq_set_notify_resume(t);
- }
  
- void sched_mm_cid_fork(struct task_struct *t)
+-	if (suffix)
++	if (suffix) {
+ 		hi->input->name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
+ 						 "%s %s", hdev->name, suffix);
++		if (!hi->input->name)
++			return -ENOMEM;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
+
