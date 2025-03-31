@@ -1,142 +1,186 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m3272.qiye.163.com (mail-m3272.qiye.163.com [220.197.32.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FC62147FC;
-	Mon, 31 Mar 2025 16:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F192147F8
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439881; cv=none; b=fEugFb/Zj0qglEfSSyP9JxqOkq/yxKAVEq7b5YC291OekqIr50hzy3lAifX1riMJ2cnWzhvxAXX+ve2RBHxogWqCcf8z6TGKSz2mrXg5cnsIr6KB9XF+XsRuQzmyzlpp1oQhanr3Zf75+5t7Xg5E0T1iUi0k9JTPU84v3lX83NQ=
+	t=1743439906; cv=none; b=LsOhA36X4djb6Z0Hc6OabwnCVv2Z7a5OgXzeWSU8qq1AYGWCUF/KPUpfFe0VKqgCXz0ZwK7EbiB/cNiTpWy9lLlDTrXI+6/Go0xAp/BhhgGYM7bpnKnvI3cyRUWAMwk7BarJpv+JkHA5ncSwXTCfpQwBH1Exh9iN7+itbcbXaJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439881; c=relaxed/simple;
-	bh=Maq2pGNPcQTL9i4L2U60OMwgOEC1wzel9CslYZpKRBE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hUIizU23kOKuPrVo5PL5ccj1Lmns2EPZdj2HI8F/JEXsRwMo8CxPrLEOSBHtopeZpPvaxnFhvs4vqnekheMEkJ8Rxq2Z1VocDOGiqH+jGfbCsoig7WCAPB4tn1/CwS8MfgQyyPYTe5UKs6Xek1HUUUBE5+LzapFQjgS0Qtq4kYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lv8KYt7Q; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lv8KYt7Q"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so32739035e9.1;
-        Mon, 31 Mar 2025 09:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743439876; x=1744044676; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MunBujQnIRxhYaTX5/fqcElXhgmT8GPSyJRl5CxG2CI=;
-        b=lv8KYt7QT7NceqwP0xGK1Z/DfKVPx38+S9aVAzv0U2IxDI25qgf4FYZE0N150iQGhX
-         DLsnJpzON8/Lstry+q+fRXdCBRR3WhFn86uBNCMuN14DGMQakiyVyvky4aS2SInOy7Po
-         Sp3c8gIVqYkbhWKFENBXji6XKFenQEgViQnZLubjJkh8nR4wm5f8nPHnKg01IkluL8M4
-         XwoEfGFHyTvpCZGenQX03VRTjtmihuBnS3GYmn6PzxW94EpM38ZwszOvtHbZGOjEW4Mp
-         4S9NrUEEJT4of3VnWsdLW7O7I5o/DbchRLifqVeJl25B0MuraqcA46oS/TSTwrHn/1bQ
-         vjrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743439876; x=1744044676;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MunBujQnIRxhYaTX5/fqcElXhgmT8GPSyJRl5CxG2CI=;
-        b=QwcFGJeRnd3q7JhTpLFq0o/ED0Cz5I4WsRIUFGCMwhGrxhrpqyxSZL4A6+0RyXOL6X
-         Fsrdkd6ugX033l4XyjFu0cPdaE4aslhMLqaJ7LL6hbOOpmRYG9V/tbDePec4qdhszkRo
-         LuacrAQulIP2blRXbXTJ1GZ3iGeKDUiiRe1sQCqprXvw/DfpnMvors5kcZ6ESzdLevMY
-         JZ39tjtaYnj2B8I/x5S9fVbReviTlMqh1d9T9dI9xg3veQM6vVZ4KJfNAIl9TmeC5EvV
-         sDnmaImdydKKCTfVmusQjnlwyUZYWBNM+S8Hdj8j24dD9HkgtyH4JW0nyoTv51mi0wHg
-         Y5Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWV38O7+NUTT5x2Rs8FFMeX+EI8cQfrQl2cDBC5Aa08bmIVKTXu3l26SdLgVqEBQKOwY14E5U/VavYlOmj@vger.kernel.org, AJvYcCWlPBkjLYFoiBgpjBnfGFVq9DtXXKNOw/eU7si6gQJtuXXdCwytbIIDN1noNfJhPl6zIQnZXzKLnCTR6Hr5uA==@vger.kernel.org, AJvYcCXpQjBQ0lPwIAufbtagHuRlBwUVbQVrJfGwA8A2tZjOiYXs5sToJmgfM4eRdRriLmTo5ibktbzgobu/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIpKNM+FAZfVHUukm4qKUsyD3ibyqrwVhG3Haw0ZD7k2eyUKjD
-	5ZhQzMX9rAKeAqAiFfQiT/38sDPw1Ly8AO+wiJ6a7EjeJHEbGijARGiFqiLYHn6aEY4jCzpBf5O
-	DgiOXmkyhpAoVoHxsNnszbOXY7A==
-X-Gm-Gg: ASbGncv0XMJOt0xpasc/SwdpoLhM7qrECN8sSRZnVsY/H596HgY+4zYNXYnoL1jy/S0
-	Ksr6wWQvKcBPTNJUL/DNa/d6jPnscAiUelnzpLntZzCffNKwQrxvkJl4izSh5GtHr6VPGK5AxZU
-	QvyJGFBiyBwdBa4JJ8UBgQN0aJF3M=
-X-Google-Smtp-Source: AGHT+IFcrnYpK2ItJPg2dckClf5edSa4GwLBqr08Q7cH7QCgI51gAHqY61tiKSt8aZJ55Gx4hHXlA4MeoNKjd9b3YUo=
-X-Received: by 2002:a05:600c:c8d:b0:43d:ed:acd5 with SMTP id
- 5b1f17b1804b1-43db61d0e8amr138014625e9.10.1743439875876; Mon, 31 Mar 2025
- 09:51:15 -0700 (PDT)
+	s=arc-20240116; t=1743439906; c=relaxed/simple;
+	bh=f97/nkeUTuQkuArGiJaplsBFm3ZSPyqqWG16TY3uKy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=avxPFgWUSBYVU6ccgLkeljsUmPQkqnWmUPrheqZFqyrMGVUwN6RzXCNVikk7V+RpDhT4hSSfJifdnokX5bJJFmiIdAc0eJJ2W1l1oy+vrpQq70J3eDJbIXbXg3Mt0pxEHHJTm2fWM9qaum6pio6SiIWGi7skuVLPHzjF1Ru+dSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=220.197.32.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
+Received: from localhost.localdomain (unknown [122.224.147.158])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 102faff97;
+	Mon, 31 Mar 2025 20:15:43 +0800 (GMT+08:00)
+From: HongBo Yao <andy.xu@hj-micro.com>
+To: will@kernel.org
+Cc: robin.murphy@arm.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	andy.xu@hj-micro.com,
+	allen.wang@hj-micro.com,
+	peter.du@hj-micro.com
+Subject: [PATCH v2] perf: arm-ni: Fix list_add() corruption in arm_ni_probe()
+Date: Mon, 31 Mar 2025 20:15:36 +0800
+Message-ID: <20250331121536.2626552-1-andy.xu@hj-micro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
- <20250331073423.3184322-2-alex.vinarskis@gmail.com> <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
- <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com> <Z-p1uADNVAM9NcAW@hovoldconsulting.com>
-In-Reply-To: <Z-p1uADNVAM9NcAW@hovoldconsulting.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Mon, 31 Mar 2025 18:51:03 +0200
-X-Gm-Features: AQ5f1JpJ5Mo4mJo4anfnZhdRws7WGyHmZLFHxcDsiHdzr1srWLr67ol82WD7zFg
-Message-ID: <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
- WiFi/BT pwrseq
-To: Johan Hovold <johan@kernel.org>
-Cc: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dmitry.baryshkov@oss.qualcomm.com, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHkNIVh1LTUwdTEMdHh8ZQ1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
+	tLVUpCS0tZBg++
+X-HM-Tid: 0a95ec210c3303afkunm102faff97
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NzI6URw*GDJRDxY8EBITEBU8
+	ThVPFBNVSlVKTE9IT0lISE9PT0xPVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
+	SklJVUlJT1VKT0xVSk5DWVdZCAFZQU9OQ0k3Bg++
 
-On Mon, 31 Mar 2025 at 13:00, Johan Hovold <johan@kernel.org> wrote:
->
-> On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
-> > On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > [ +CC: Stephan ]
-> > >
-> > > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
-> > > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
-> > > > combo chip using the new power sequencing bindings. All voltages are
-> > > > derived from chained fixed regulators controlled using a single GPIO.
-> > > >
-> > > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
-> > > > WiFi/BT pwrseq").
-> > >
-> > > Are you sure this is correct and that you don't need to worry about the
-> > > "how do we model the supplies to an M.2 card" issue?
-> > >
-> > > See
-> > >
-> > >         https://lore.kernel.org/lkml/Z-KuG0aOwEnxuhp9@linaro.org/
-> >
-> > Dell XPS 9345 does not have an M.2 card, WLAN package is soldered
-> > directly onboard, hence I am quite sure this is similar to QCP.
-> > To be certain, perhaps @Tudor, Laurentiu or @Bryan O'Donoghue (if  you
-> > have it?) could confirm from schematics?
->
-> I checked now, it seems you are correct.\
+From: Hongbo Yao <andy.xu@hj-micro.com>
 
-Ah perfect, thanks.
+When a resource allocation fails in one clock domain of an NI device,
+we need to properly roll back all previously registered perf PMUs in
+other clock domains of the same device.
 
->
-> Highly annoying that we need all this guess-work boiler plate (about
-> chip internal details) for what is effectively just two supplies.
->
-> Hopefully we can drop that again going forward, but that's a separate
-> discussion.
->
-> > > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
-> > > > X1-based Dell XPS 13 9345")
-> > >
-> > > Not sure what happened here.
-> >
-> > Bluetooth and WLAN definitions were missing, as at the time I only
-> > knew the UART port being used for bluetooth, and was missing
-> > everything else to describe it.
->
-> Ah, ok. The above sentence looked like some left-over copy paste. I
-> guess you don't need to mention it at all since this does not seem to
-> warrant a proper Fixes tag.
+Otherwise, it can lead to kernel panics.
 
-It was a suggestion from Dmitry in v1. Though indeed it does not
-warrant a proper Fixed tag, as it is something  that was left out from
-the initial series, I think it's fine to keep it like this, if it's
-okay with you?
+Calling arm_ni_init+0x0/0xff8 [arm_ni] @ 2374
+arm-ni ARMHCB70:00: Failed to request PMU region 0x1f3c13000
+arm-ni ARMHCB70:00: probe with driver arm-ni failed with error -16
+list_add corruption: next->prev should be prev (fffffd01e9698a18),
+but was 0000000000000000. (next=ffff10001a0decc8).
+pstate: 6340009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+pc : list_add_valid_or_report+0x7c/0xb8
+lr : list_add_valid_or_report+0x7c/0xb8
+Call trace:
+ __list_add_valid_or_report+0x7c/0xb8
+ perf_pmu_register+0x22c/0x3a0
+ arm_ni_probe+0x554/0x70c [arm_ni]
+ platform_probe+0x70/0xe8
+ really_probe+0xc6/0x4d8
+ driver_probe_device+0x48/0x170
+ __driver_attach+0x8e/0x1c0
+ bus_for_each_dev+0x64/0xf0
+ driver_add+0x138/0x260
+ bus_add_driver+0x68/0x138
+ __platform_driver_register+0x2c/0x40
+ arm_ni_init+0x14/0x2a [arm_ni]
+ do_init_module+0x36/0x298
+---[ end trace 0000000000000000 ]---
+Kernel panic - not syncing: Oops - BUG: Fatal exception
+SMP: stopping secondary CPUs
 
-Regards,
-Alex
+Fixes: 4d5a7680f2b4 ("perf: Add driver for Arm NI-700 interconnect PMU")
+Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
+---
+ drivers/perf/arm-ni.c | 44 +++++++++++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
->
-> Johan
+diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+index fd7a5e60e963..ee85577e86b9 100644
+--- a/drivers/perf/arm-ni.c
++++ b/drivers/perf/arm-ni.c
+@@ -102,6 +102,7 @@ struct arm_ni_unit {
+ struct arm_ni_cd {
+ 	void __iomem *pmu_base;
+ 	u16 id;
++	bool pmu_registered;
+ 	int num_units;
+ 	int irq;
+ 	int cpu;
+@@ -571,10 +572,31 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
+ 	err = perf_pmu_register(&cd->pmu, name, -1);
+ 	if (err)
+ 		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
++	else
++		cd->pmu_registered = true;
+ 
+ 	return err;
+ }
+ 
++static void arm_ni_remove_cds(struct arm_ni *ni)
++{
++	for (int i = 0; i < ni->num_cds; i++) {
++		struct arm_ni_cd *cd = ni->cds + i;
++
++		if (!cd->pmu_base)
++			continue;
++
++		if (!cd->pmu_registered)
++			continue;
++
++		writel_relaxed(0, cd->pmu_base + NI_PMCR);
++		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
++		perf_pmu_unregister(&cd->pmu);
++		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
++	}
++}
++
++
+ static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
+ {
+ 	u32 reg = readl_relaxed(base + NI_NODE_TYPE);
+@@ -593,6 +615,7 @@ static int arm_ni_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	static atomic_t id;
+ 	int num_cds;
++	int ret;
+ 	u32 reg, part;
+ 
+ 	/*
+@@ -651,35 +674,28 @@ static int arm_ni_probe(struct platform_device *pdev)
+ 			reg = readl_relaxed(vd.base + NI_CHILD_PTR(p));
+ 			arm_ni_probe_domain(base + reg, &pd);
+ 			for (int c = 0; c < pd.num_components; c++) {
+-				int ret;
+-
+ 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
+ 				arm_ni_probe_domain(base + reg, &cd);
+ 				ret = arm_ni_init_cd(ni, &cd, res->start);
+ 				if (ret)
+-					return ret;
++					goto init_cd_cleanup;
+ 			}
+ 		}
+ 	}
+ 
+ 	return 0;
++
++init_cd_cleanup:
++	arm_ni_remove_cds(ni);
++
++	return ret;
+ }
+ 
+ static void arm_ni_remove(struct platform_device *pdev)
+ {
+ 	struct arm_ni *ni = platform_get_drvdata(pdev);
+ 
+-	for (int i = 0; i < ni->num_cds; i++) {
+-		struct arm_ni_cd *cd = ni->cds + i;
+-
+-		if (!cd->pmu_base)
+-			continue;
+-
+-		writel_relaxed(0, cd->pmu_base + NI_PMCR);
+-		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
+-		perf_pmu_unregister(&cd->pmu);
+-		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
+-	}
++	arm_ni_remove_cds(ni);
+ }
+ 
+ #ifdef CONFIG_OF
+-- 
+2.43.0
+
