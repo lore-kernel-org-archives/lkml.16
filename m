@@ -1,146 +1,145 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF751D5CEA;
-	Mon, 31 Mar 2025 09:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E169259C
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412520; cv=none; b=G31Lj6Fdg9u2vmlWf04gvBgzpN4q3rJXq6jPoIiRH/+w0xEls7pevSK/KcUmPcnDy7VhZc5+L8yUjzR1osV/EDMBkwKtTZKrU5UBq6fOYrUUn+q7aAafAyJO+jRufv/QICLA6Hwdku1IBnkvT6OoBAAmwG/pcYnd7LvzWgLyrFk=
+	t=1743412523; cv=none; b=A/iWVF7WscDExtt35tjZJAW929jPjSyeDMcbJtVQ7EqEjV6JpcZEHkjcAVexjewTizT+JSNJP106doeDoHheRqrOuK621vcmrbzHLV0dK06V9WXznqHigjgzOVZ3BmBCieVuk1sBAuU2vWh9eYbZA/njJ4g0LULYbLBeSOGtkhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412520; c=relaxed/simple;
-	bh=KlrxH/fPLdOyko3ZuF/Ylr9/egR0t8CZiXQy3CK+cwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=V7pT9lCfnA74HLXF+025UrzcC9mkrGyjBZETmAcQggul5lZW53GoRaXsMtQjwIEb9AN9AyKYyOEj8Hw3frgqo6q+Pzq550WTs+8tBIKSOs+uTW2+OGgdfgjZB/w1VdLdqZwylqKKA8MzB8Fsrs4wM6wTE7NY8a28CytGoZ/FXOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G0X9+3mE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743412523; c=relaxed/simple;
+	bh=kuXGuwZLBAEvO3zrtZrXIH3dXjoHkCX2f+iTyQUest8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Csa0hEwd+9F83IODupYkEiEX/oCEWfAiDJa4nhmXTsnSC9RHcccZwTNn5oOTMCG5r0W/8WfV4uNK+UeegHCTPvqIhBgwO+q7ps9cgTuWSzrv0/uUGrXcahxWFFHi89V3V4P5d+3fCBVsn0owcD2LZp2DPeXI3Lvfx6yddH+p6n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z1if2ENR; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G0X9+3mE"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kbB4007189;
-	Mon, 31 Mar 2025 09:15:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nEpx60HZ0imJLIebaYfsG4riJUfLcjjdp4ZTxj34Ops=; b=G0X9+3mEQ6PHzsh1
-	4RMBt8idz1r4U0cMnVCWL1qCyhLKP1JeDYuparMA7bDty1jOzM8spA917zEwAwj+
-	BDnquWPIg3D1NT24FyF/mGpEsxtz86NHL6U6oQRDQagecsuA5RAs5WkR0lLq6LGP
-	/PSjQxFiO1YWN1poFH68PMW5WNtmYDlfDR4chb/KcI+9kS+tGo7ShDB/nf8B63Z1
-	bA+TDT+2K0dUJcZiZtFlq/UZ5caSam3ZJGBVZQ7WtwP523ihNgf26IcxLWfkMTbA
-	GcFDs8FljZuPGCkLXaJ/qhztsTv+yXY5qbyHxtzG6xrWM/1G1EgcvKhWmRvbqPKt
-	WaQh9A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p989430v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 09:15:09 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52V9F8rE026506
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 09:15:08 GMT
-Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 31 Mar
- 2025 02:15:04 -0700
-Message-ID: <b9e0ab16-f17c-4880-af23-a4aa93f2da34@quicinc.com>
-Date: Mon, 31 Mar 2025 17:15:00 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z1if2ENR"
+Message-ID: <08d75be1-e8e4-434e-a9d8-6a4503043872@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743412516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVIGD1+F33cfMPqMr31omIeVJR7X9HmYfzJAZ5aAg/k=;
+	b=Z1if2ENRa8PC80bOfXWcpZ6ad4MbltSZUDFoV/8WQ1v1YScZF4Us1xdBchsWIm4K3siICm
+	BBYx07NCY06Fv7htimQQHkKQ4Tp2Dv85gbXibNJ0hsm2ke4nJvYSJR/tXCTYtnutTTZ9up
+	DlYMwgIFF594nTCYdScBddm7GeIEmqE=
+Date: Mon, 31 Mar 2025 17:14:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_cang@quicinc.com>, <mrana@quicinc.com>,
-        yuqiang
-	<quic_qianyu@quicinc.com>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
-Content-Language: en-US
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-In-Reply-To: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=fIk53Yae c=1 sm=1 tr=0 ts=67ea5d1d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=T5eSNwPAh3uAPVkemP4A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: logPyLmu-ybid1oRvkfAMx5K8wpO-kX0
-X-Proofpoint-ORIG-GUID: logPyLmu-ybid1oRvkfAMx5K8wpO-kX0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1011 lowpriorityscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310065
+Subject: Re: [RFC PATCH 2/7] sched/fair: Handle throttle path for task based
+ throttle
+To: Aaron Lu <ziqianlu@bytedance.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
+ <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, linux-kernel@vger.kernel.org,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>
+References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
+ <CANCG0GcFF7cnR4rCbU5MmY1Gq3M+r4gPXv39QPXXC=Cdr6sRww@mail.gmail.com>
+ <58e0515a-ed67-4d1a-825f-bfc2b31d1d18@linux.dev>
+ <20250314094249.GC1633113@bytedance>
+ <a257205f-525f-48cf-b8d9-101ad8a95081@linux.dev>
+ <20250331064204.GB1571554@bytedance>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250331064204.GB1571554@bytedance>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 12/12/2024 4:19 PM, Wenbin Yao (Consultant) wrote:
-> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
-> indicates the number of lanes to check for exit from Electrical Idle in
-> Polling.Active and L2.Idle. It is used to limit the effective link 
-> width to
-> ignore broken or unused lanes that detect a receiver to prevent one or 
-> more
-> bad Receivers or Transmitters from holding up a valid Link from being
-> configured.
->
-> In a PCIe link that support muiltiple lanes, setting 
-> PORT_LOGIC_LINK_WIDTH
-> to 1 will not affect the link width that is actually intended to be used.
-> But setting it to a value other than 1 will lead to link training fail if
-> one or more lanes are broken.
->
-> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
-> port actually supports to make linking up more robust. Link can still be
-> established with one lane at least if other lanes are broken.
->
-> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
-> b/drivers/pci/controller/dwc/pcie-designware.c
-> index 6d6cbc8b5b2c..d40afe74ddd1 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -752,22 +752,19 @@ static void 
-> dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->      /* Set link width speed control register */
->      lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->      lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-> +    lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->      switch (num_lanes) {
->      case 1:
->          plc |= PORT_LINK_MODE_1_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->          break;
->      case 2:
->          plc |= PORT_LINK_MODE_2_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
->          break;
->      case 4:
->          plc |= PORT_LINK_MODE_4_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
->          break;
->      case 8:
->          plc |= PORT_LINK_MODE_8_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
->          break;
->      default:
->          dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
+On 2025/3/31 14:42, Aaron Lu wrote:
+> Hi Chengming,
+> 
+> On Fri, Mar 14, 2025 at 07:07:10PM +0800, Chengming Zhou wrote:
+>> On 2025/3/14 17:42, Aaron Lu wrote:
+>>> On Fri, Mar 14, 2025 at 04:39:41PM +0800, Chengming Zhou wrote:
+>>>> On 2025/3/13 15:21, Aaron Lu wrote:
+>>>>> From: Valentin Schneider <vschneid@redhat.com>
+>>>>>
+>>>>> Once a cfs_rq gets throttled, for all tasks belonging to this cfs_rq,
+>>>>> add a task work to them so that when those tasks return to user, the
+>>>>> actual throttle/dequeue can happen.
+>>>>>
+>>>>> Note that since the throttle/dequeue always happens on a task basis when
+>>>>> it returns to user, it's no longer necessary for check_cfs_rq_runtime()
+>>>>> to return a value and pick_task_fair() acts differently according to that
+>>>>> return value, so check_cfs_rq_runtime() is changed to not return a
+>>>>> value.
+>>>>
+>>>> Previously with the per-cfs_rq throttling, we use update_curr() -> put() path
+>>>> to throttle the cfs_rq and dequeue it from the cfs_rq tree.
+>>>>
+>>>> Now with your per-task throttling, maybe things can become simpler. That we
+>>>> can just throttle_cfs_rq() (cfs_rq subtree) when curr accouting to mark these
+>>>> throttled.
+>>>
+>>> Do I understand correctly that now in throttle_cfs_rq(), we just mark
+>>> this hierarchy as throttled, but do not add any throttle work to these
+>>> tasks in this hierarchy and leave the throttle work add job to pick
+>>> time?
+>>
+>> Right, we can move throttle_cfs_rq() forward to the curr accouting time, which
+>> just mark these throttled.
+> 
+> While preparing the next version, I found that if I move
+> throttle_cfs_rq() to accounting time, like in __account_cfs_rq_runtime(),
+> then it is possible on unthrottle path, the following can happen:
+> unthrottle_cfs_rq() -> enqueue_task_fair() -> update_curr() ->
+> account_cfs_rq_runtime() -> throttle_cfs_rq()...
 
-Hello, do you have any futher comments?
+Ah, right, then it's best to leave throttle_cfs_rq() where it is.
 
--- 
-With best wishes
-Wenbin
+> 
+> Initially I was confused why update_curr() can notice a non-null curr
+> when this cfs_rq is being unthrottled but then I realized in this task
+> based throttling model, it is possible some task woke up in that
+> throttled cfs_rq and have cfs_rq->curr set and then cfs_rq gets
+> unthrottled.
+> 
+> So I suppose I'll keep the existing way of marking a cfs_rq as
+> throttled by calling check_cfs_rq_runtime() in the following two places:
+> - in pick_task_fair(), so that the to-be-picked cfs_rq can be marked for
+>    throttle;
+> - in put_prev_entity() for prev runnable task's cfs_rq.
+> 
+>> And move setup_task_work() afterward to the pick task time, which make that task
+>> dequeue when ret2user.
+> 
+> No problem for this part as far as my test goes :-)
 
+Good to hear.
+
+Thanks!
+
+> 
+> Thanks,
+> Aaron
+> 
+>>>
+>>>> Then then if we pick a task from a throttled cfs_rq subtree, we can setup task work
+>>>> for it, so we don't botter with the delayed_dequeue task case that Prateek mentioned.
+>>>
+>>> If we add a check point in pick time, maybe we can also avoid the check
+>>> in enqueue time. One thing I'm thinking is, for a task, it may be picked
+>>> multiple times with only a single enqueue so if we do the check in pick,
+>>> the overhead can be larger?
+>>
+>> As Prateek already mentioned, this check cost is negligeable.
+>>
+>>>
+>>>> WDYT?
+>>>
+>>> Thanks for your suggestion. I'll try this approach and see how it turned
+>>> out.
