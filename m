@@ -1,160 +1,292 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9009C21B199;
-	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8529221C190;
+	Mon, 31 Mar 2025 14:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431673; cv=none; b=aTiZXibPJpr15BUpPBXW93J7MkQZMa4M5KkqQwuhkgaka4gVI3VUiV9UBzm0fktBT/mPdp4ET4oS+hj9wXiNKQL0U/wGrjriIzQ3FQsb9Jw3vLrWo0k+JLwbOjl35ZXuIgnb80+DONkhJSmJe0ydA7n6DMbonulVg4aWPJqf3Xw=
+	t=1743431674; cv=none; b=gKiVniE2cnqrDAZPgyVNxD9Csbm0SHOhF2iFbORvF1Y5gSmqoGKBYeN+VtWNAzQjYEJcDjiuYZYe6dygoJbx2Nv5hjo61hvzTPG2kVkqMHf0QRLj9N5mqm9XebX41ST0XC2oziqigHqwnMxVkU3fZoVu+quNwElhJog/j0Ipdy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431673; c=relaxed/simple;
-	bh=pC02LxYEhOQX0acsiBSpSAp+XyktTgRqcV1taCsvBIc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OyUXGWkJCGk8jiu+4hzz4JS6Gl/Ec/g1K7bNzFsB8O0rPJTJ5iIleGqWUVITOdVZtMDNqssGPrKJjOqpNIuaoJ3EUFEfTkwrumwsZB+RGho+twEufsbImySnoh7KSnegUXZUcqFg8unn3QbcOLqYd+q8ueoudYipS0gRViZFUDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMIIJ3s4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMIIJ3s4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BD4C4CEE3;
-	Mon, 31 Mar 2025 14:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431673;
-	bh=pC02LxYEhOQX0acsiBSpSAp+XyktTgRqcV1taCsvBIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YMIIJ3s4V8cDnjbW441hLoEMOlUMf4VTyr7gNpt8PkbjyaCDCiPkAZyh//c7Mq/y/
-	 lgMoBrGmFL9hNZm1qjeWJ8982Imu+KxeM7/B6lQqnV8zQb5XhU/1GrGHma67D7r1ou
-	 zAIO8N7pKW38xZM5xnytXWjaAsPqLsEx/SU9ID9HHBfYgxwRNtrRuO8amWCIEnM+ci
-	 ZgQtpWNTESAgz9KU46Zmrh0is9qre9Wkqt0ys3TlF79dvZhWwXiW0QH3y4xg+fvpuF
-	 qtglZ7lvlykP855GEuUONbJZLG5guml1NJNJWRbeCuyHSqsWYeRHTvP91ByTsWAF2f
-	 Yhpn9p2IxcRpQ==
-From: Sasha Levin <sashal@kernel.org>
+	s=arc-20240116; t=1743431674; c=relaxed/simple;
+	bh=QK0iMtmHe/fpoIG5UIR046tnnV3BgOIQDLWpxeUCYok=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=J5VC89P+k9w7bAHQ8zMxBVRGPgdFZDQsLB+/k/rSjqYZ6Lc1Jicbe9Btatpih7BltaBAz8hWTYaPQyii21klSW6GDSpa8AIhbPlvDtp/3l3TXmpfppsGEcChMnedveKxMHs5GIPMOh0YEHzFHMq/w9o68wH25poJxL8Qn1TqX0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00522C4CEEB;
+	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tzGEe-00000005pBG-3G8C;
+	Mon, 31 Mar 2025 10:35:32 -0400
+Message-ID: <20250331143532.630811525@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 31 Mar 2025 10:34:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Will Deacon <will@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	renyu.zj@linux.alibaba.com,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 09/18] perf/dwc_pcie: fix some unreleased resources
-Date: Mon, 31 Mar 2025 10:33:59 -0400
-Message-Id: <20250331143409.1682789-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331143409.1682789-1-sashal@kernel.org>
-References: <20250331143409.1682789-1-sashal@kernel.org>
+ linux-trace-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v2 2/2] ring-buffer: Allow persistent ring buffers to be mmapped
+References: <20250331143426.947281958@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-From: Yunhui Cui <cuiyunhui@bytedance.com>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[ Upstream commit 6eb1e8ef586ac4a3dcdc20248f9cb45e4ceb141f ]
+The persistent ring buffer uses vmap()'d memory to map the reserved memory
+from boot. But the user space mmap() to the ring buffer requires
+virt_to_page() to return a valid page. But that only works for core kernel
+addresses and not for vmap() addresses.
 
-Release leaked resources, such as plat_dev and dev_info.
+To address this, save the physical and virtual address of where the
+persistent memory is mapped. Create a rb_struct_page() helper function
+that returns the page via virt_to_page() for normal buffer pages that were
+allocated with page_alloc() but for the physical memory vmap()'d pages, it
+uses the saved physical and virtual addresses of where the memory was
+located to calculate the physical address of the virtual page that needs
+the struct page. Then it uses pfn_to_page() to get the page for that
+physical address.
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20250220121716.50324-2-cuiyunhui@bytedance.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+New helper functions are created for flushing the cache for architectures
+that need it between user and kernel space.
+
+Also, the persistent memory uses the page->id for its own purpose where as
+the user mmap buffer currently uses that for the subbuf array mapped to
+user space. If the buffer is a persistent buffer, use the page index into
+that buffer as the identifier instead of the page->id.
+
+That is, the page->id for a persistent buffer, represents the order of the
+buffer is in the link list. ->id == 0 means it is the reader page.
+When a reader page is swapped, the new reader page's ->id gets zero, and
+the old reader page gets the ->id of the page that it swapped with.
+
+The user space mapping has the ->id is the index of where it was mapped in
+user space and does not change while it is mapped.
+
+Since the persistent buffer is fixed in its location, the index of where
+a page is in the memory range can be used as the "id" to put in the meta
+page array, and it can be mapped in the same order to user space as it is
+in the persistent memory.
+
+A new rb_page_id() helper function is used to get and set the id depending
+on if the page is a normal memory allocated buffer or a physical memory
+mapped buffer.
+
+Link: https://lore.kernel.org/all/CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com/
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ kernel/trace/ring_buffer.c | 110 +++++++++++++++++++++++++++++++------
+ 1 file changed, 93 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index cccecae9823f6..19fa2ba8dd670 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -572,8 +572,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
- 		return PTR_ERR(plat_dev);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 36665754340f..c95cb1e0cc0a 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -558,6 +558,7 @@ struct trace_buffer {
+ 	struct ring_buffer_meta		*meta;
  
- 	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
--	if (!dev_info)
-+	if (!dev_info) {
-+		platform_device_unregister(plat_dev);
- 		return -ENOMEM;
-+	}
+ 	unsigned long			phys_start;
++	unsigned long			virt_start;
  
- 	/* Cache platform device to handle pci device hotplug */
- 	dev_info->plat_dev = plat_dev;
-@@ -730,6 +732,15 @@ static struct platform_driver dwc_pcie_pmu_driver = {
- 	.driver = {.name = "dwc_pcie_pmu",},
- };
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+@@ -2455,6 +2456,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
  
-+static void dwc_pcie_cleanup_devices(void)
+ 		start = addr;
+ 		end = start + size;
++		buffer->virt_start = start;
+ 
+ 		/* scratch_size needs to be aligned too */
+ 		scratch_size = ALIGN(scratch_size, sizeof(long));
+@@ -6058,6 +6060,80 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ 	page->read = 0;
+ }
+ 
++/*
++ * Get the struct page for the given buffer page.
++ *
++ * For normal ring buffer pages that are allocated via page_alloc()
++ * the struct page can simply be retrieved via virt_to_page().
++ *
++ * But if the buffer was created via a physical mapping and vmap()
++ * was used to get to the virtual addresses, use the stored virtual
++ * and physical of the start address to calculate the original
++ * physical address of the given page and use pfn_to_page() to return
++ * the struct page.
++ */
++static struct page *rb_struct_page(struct trace_buffer *buffer, void *vaddr)
 +{
-+	struct dwc_pcie_dev_info *dev_info, *tmp;
++	if (buffer->flags & RB_FL_PHYSICAL) {
++		unsigned long addr = (unsigned long)vaddr;
 +
-+	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
-+		dwc_pcie_unregister_dev(dev_info);
++		addr -= buffer->virt_start;
++		addr += buffer->phys_start;
++		return pfn_to_page(addr >> PAGE_SHIFT);
 +	}
++	return virt_to_page(vaddr);
 +}
 +
- static int __init dwc_pcie_pmu_init(void)
++/* Some archs do not have data cache coherency between kernel and user-space */
++static void rb_flush_buffer_page(struct trace_buffer *buffer,
++				 struct buffer_page *bpage)
++{
++	struct page *page = rb_struct_page(buffer, bpage->page);
++
++	flush_dcache_folio(page_folio(page));
++}
++
++/* The user mapped meta page is always allocated via page_alloc() */
++static void rb_flush_meta(void *meta)
++{
++	struct page *page = virt_to_page(meta);
++
++	flush_dcache_folio(page_folio(page));
++}
++
++/*
++ * When the buffer is memory mapped to user space, each sub buffer
++ * has a unique id that is used by the meta data to tell the user
++ * where the current reader page is.
++ *
++ * For a normal allocated ring buffer, the id is saved in the buffer page
++ * id field, and updated via this function.
++ *
++ * But for a physical memory mapped buffer, the id is already assigned for
++ * memory ording in the physical memory layout and can not be used. Instead
++ * the index of where the page lies in the memory layout is used.
++ *
++ * For the normal pages, set the buffer page id with the passed in @id
++ * value and return that.
++ *
++ * For memory mapped pages, get the page index in the physical memory layout
++ * and return that as the id.
++ */
++static int rb_page_id(struct ring_buffer_per_cpu *cpu_buffer,
++		      struct buffer_page *bpage, int id)
++{
++	/*
++	 * For boot buffers, the id is the index,
++	 * otherwise, set the buffer page with this id
++	 */
++	if (cpu_buffer->ring_meta)
++		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta, bpage->page);
++	else
++		bpage->id = id;
++
++	return id;
++}
++
+ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
  {
- 	struct pci_dev *pdev = NULL;
-@@ -742,7 +753,7 @@ static int __init dwc_pcie_pmu_init(void)
- 		ret = dwc_pcie_register_dev(pdev);
- 		if (ret) {
- 			pci_dev_put(pdev);
--			return ret;
-+			goto err_cleanup;
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+@@ -6066,15 +6142,16 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return;
+ 
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+-	meta->reader.id = cpu_buffer->reader_page->id;
++	meta->reader.id = rb_page_id(cpu_buffer, cpu_buffer->reader_page,
++				     cpu_buffer->reader_page->id);
++
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+ 
+ 	meta->entries = local_read(&cpu_buffer->entries);
+ 	meta->overrun = local_read(&cpu_buffer->overrun);
+ 	meta->read = cpu_buffer->read;
+ 
+-	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	rb_flush_meta(meta);
+ }
+ 
+ static void
+@@ -6982,23 +7059,29 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+ 	struct buffer_page *first_subbuf, *subbuf;
++	int cnt = 0;
+ 	int id = 0;
+ 
+-	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+-	cpu_buffer->reader_page->id = id++;
++	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
++	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	cnt++;
+ 
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+ 	do {
++		id = rb_page_id(cpu_buffer, subbuf, id);
++
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+ 		subbuf_ids[id] = (unsigned long)subbuf->page;
+-		subbuf->id = id;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
++		cnt++;
+ 	} while (subbuf != first_subbuf);
+ 
++	WARN_ON(cnt != nr_subbufs);
++
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+@@ -7134,6 +7217,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (!pgoff) {
+ 		unsigned long meta_page_padding;
+ 
++		/* The meta page is always allocated via alloc_page() */
+ 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+ 
+ 		/*
+@@ -7163,7 +7247,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			goto out;
  		}
- 	}
  
-@@ -751,35 +762,35 @@ static int __init dwc_pcie_pmu_init(void)
- 				      dwc_pcie_pmu_online_cpu,
- 				      dwc_pcie_pmu_offline_cpu);
- 	if (ret < 0)
--		return ret;
-+		goto err_cleanup;
+-		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		page = rb_struct_page(cpu_buffer->buffer,
++				      (void *)cpu_buffer->subbuf_ids[s]);
  
- 	dwc_pcie_pmu_hp_state = ret;
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+@@ -7196,14 +7281,6 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	unsigned long flags, *subbuf_ids;
+ 	int err = 0;
  
- 	ret = platform_driver_register(&dwc_pcie_pmu_driver);
- 	if (ret)
--		goto platform_driver_register_err;
-+		goto err_remove_cpuhp;
- 
- 	ret = bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
- 	if (ret)
--		goto platform_driver_register_err;
-+		goto err_unregister_driver;
- 	notify = true;
- 
- 	return 0;
- 
--platform_driver_register_err:
-+err_unregister_driver:
-+	platform_driver_unregister(&dwc_pcie_pmu_driver);
-+err_remove_cpuhp:
- 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+-	/*
+-	 * Currently, this does not support vmap()'d buffers.
+-	 * Return -ENODEV as that is what is returned when a file
+-	 * does not support memory mapping.
+-	 */
+-	if (buffer->flags & RB_FL_PHYSICAL)
+-		return -ENODEV;
 -
-+err_cleanup:
-+	dwc_pcie_cleanup_devices();
- 	return ret;
- }
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return -EINVAL;
  
- static void __exit dwc_pcie_pmu_exit(void)
- {
--	struct dwc_pcie_dev_info *dev_info, *tmp;
--
- 	if (notify)
- 		bus_unregister_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
--	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node)
--		dwc_pcie_unregister_dev(dev_info);
-+	dwc_pcie_cleanup_devices();
- 	platform_driver_unregister(&dwc_pcie_pmu_driver);
- 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
- }
+@@ -7384,8 +7461,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 	goto consume;
+ 
+ out:
+-	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	rb_flush_buffer_page(buffer, cpu_buffer->reader_page);
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ 
 -- 
-2.39.5
+2.47.2
+
 
