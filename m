@@ -1,124 +1,119 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDBF215764
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2780F1CAA90;
+	Mon, 31 Mar 2025 20:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452326; cv=none; b=oi8T2HrsqPj2d1iB3L0QBIk/nRb2fuH4xiSUPQZ5xCkluz4uvKfSVeo0M84yVZqU0pgcLAkGDZHeGa4Fe2ywe26ZY0om6dn8ZRTU6caLyaO+mnxbLyD8uXdaFAy3KEETiBTd+wrmQwvOXc+H+Pmx4aGRqPIe7S09HqTK/VoyHiE=
+	t=1743452536; cv=none; b=pMjjm65nC9fV+7I/pb9hxrhO0zXyJcTzsaEgynkfP7/if6+pCRAVtC2VpqG14Fn7L053gIMZT8gzzUYotNS7JT6RdohHexW0LkCRvb93E/6z68b2poxqeCGjJ7b6N6Yr+70RJrJWe02LTSe96/q+eTTgeMQK0+jgSN4GJH4rM0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452326; c=relaxed/simple;
-	bh=PYMtYl96JcBRAqsapGFiaNuGnexhsTUE5yatrVZ43ak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QnDSx1BKI0RLSq1TVhZvu5bsnpLEprB/e2DTyx/in49DHoeHJ/n+hE7UKlnKBfbJnKFjfG5KG9s6QpB/QtMg3NuvFNm7kaTre84umWNU1UP6Tftzi6zaAoo5hPFLVi/kXQ/Qb37bVrM/huDx4n7LaORp+uvKXiA1cs6oGkhTPwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h6e+Qg2u; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743452536; c=relaxed/simple;
+	bh=plzVs98fA256QsqGGJNd59GaLDLiouTzzaLTM9twSlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UH/+MGQn51oqsTpoAV7eIdEmuZNn+NCVI9A4PuVtuBQz4IL476nWHxPVZjocBKXCszlWhcW/86IGLcwL3OgPDaQ1vvk0Xfoq81AD/MOi1+RlSWeHWnen6tIQWH973XndgHHFBpivKSXDweT/hiOroWcfN/7AolOluAYEAS1wSWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sTC81XOF; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6e+Qg2u"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2240aad70f2so54275ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743452322; x=1744057122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HH9ugR7ohl5FyibYV7g8QOpVEDbx2dyyKdGZjKHgMmo=;
-        b=h6e+Qg2uwW+FA1wFSfbfNomOeFNaXA+R0aATTy7Slc+iAhwiEk23hFtJhMFlcgNKWH
-         2sA47WV/XUDQR5gYkIkyzzraE+ru7kja/FcP+CnIPEALMDqjV8C13UG/utQHN1dftahd
-         CBxQa7vgeh+i+i9nqsHUrX+nnM42n7U6qk1I+K2LEOreBONKQCkDRK0u+tImabtJcuuG
-         WOVwU/fjNA0VzecADooWsO5UU9vK2jnWfUYDj6durRi7dQPwTrfuoi6M0XjQ5UCCOu9Y
-         YVrs7Mf378TL2Ppgb8CmDHwakSqb3fhUoxaRIiiF++V81qDpGOr3aY9EsL7DOvsqUcdS
-         d8pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743452322; x=1744057122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HH9ugR7ohl5FyibYV7g8QOpVEDbx2dyyKdGZjKHgMmo=;
-        b=uT0Cg7WxtB7MtpfJ5FrJhedJdIdRHa8eID+o00SEHv/6Lwn/8f44LtilMkj4Ymvq5O
-         /s0+jkI9/PaEFZy69bd7KdhM2x1e5W3rJYds4GmlRSJqlgt92WCQoI/bbPJgnNJuZnM6
-         5xQc0TOkPpfB760JqMIG/yS7f1IPRBtD/snoHvzAcoKEbQCKoR8yvdyJpK9xpHueQ6Pw
-         /GCZ2AIpaDXRX9acvX98GJb0pHV4zdGxHqcGtLOdIVKSIjbBAsAJyXeTUGgqOxf2lg/q
-         bOAMQ+YkyiQYm6jn1F6Uc7bb0CMlP2RBIGkLTCEZ+Ves0NqVyln8UjDH8zO2oBV9faZi
-         dXbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2wzAgCn4LJ4yy6VMkl49LH+p47Zj4JTGozFwP0xtLaY4Rd+WbOIDL79HbEmAZOGg8vl6dVMkLf62bXG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJpY1ae06ravQ7+jpJ2jlBUwZ8bS2hm3+Vcrw4J8ja+ZDqL1ic
-	GHiGkyXR09EWofJ5wpRgT/KGGga2yRC3EgZHLsAbU4nz+G1vrJ28X12lX6ziDXZh9HfszI3NJNd
-	LSokJEDvWs8+KLG+vrA1qUKA6hKf9Rb0g2v2S
-X-Gm-Gg: ASbGnctz1BytDjRV5DoZ/dhfn/cuQDkqj8GemWApVpzdLzEyTL5z6uFgjf+AdADjmQ3
-	no5OCO5TQ8BNDw1u/vaEwZZMYdGly/TB6O1dZPaF+bjfa1hUNStacY4iiVCodvCGaD+Og0migzu
-	ESXlsIgnHsVOWGxIhKnFXz0gaAd7ykP0zoeDDdkKa6e0+Q/87vW2kHtYI=
-X-Google-Smtp-Source: AGHT+IFL+rqYMbMSKezzEmH9uYCqvoFOtP8dbcbBgT2uz7t4kPEwNc1ulvIn1uNlGvnsBU7pLVmLH1JIMQOY9KUsFcA=
-X-Received: by 2002:a17:903:2a90:b0:21f:40e8:6398 with SMTP id
- d9443c01a7336-2295b086e65mr688595ad.26.1743452322203; Mon, 31 Mar 2025
- 13:18:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sTC81XOF"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VDXTR2020195;
+	Mon, 31 Mar 2025 20:22:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=PXthgOzdfVDDzrQfquLGmUN3HkV/FmIKtNPzXw3U2
+	/U=; b=sTC81XOFAtmklwtXzfMk1zs1LtOk7CvCWezFMFhpwfFd2IlhwKpKBcZpf
+	Ok0RaXL0KGzrlxleNPSwVPA0Vcp3rliPgsLq+imHYSCG9N+jqoHzAUcsEfhHHaI8
+	pFYtIf0DnDELJFU9KZrse9g0swLhCAFipbCnHC41QjVKOZVq11tQumTTOrnhOyBv
+	wMNmIVmUE/irFM3O4Qi4ftF61k7M2g/C0wmBb4EqlRbr++Z9B5pLuVQA3E5WMmTA
+	pwbL8J73oHP2uiXocYiam2PG5UWshJQIJXpiupdTKI1EHKqDMmq2VCHsYOULKbX6
+	jvvtX2e1Bzhi9HhQW7d/XT6phzjlA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qke9m4vf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 20:22:04 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52VI1si7010313;
+	Mon, 31 Mar 2025 20:22:03 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6nqd27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 20:22:03 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52VKM1Xf27525714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 31 Mar 2025 20:22:02 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A0BF558053;
+	Mon, 31 Mar 2025 20:22:01 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0EFD158043;
+	Mon, 31 Mar 2025 20:22:00 +0000 (GMT)
+Received: from li-2311da4c-2e09-11b2-a85c-c003041e9174.ibm.com.com (unknown [9.61.39.63])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 31 Mar 2025 20:21:59 +0000 (GMT)
+From: Matthew Rosato <mjrosato@linux.ibm.com>
+To: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+        gerald.schaefer@linux.ibm.com, schnelle@linux.ibm.com
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, borntraeger@linux.ibm.com, clg@redhat.com,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v4 0/5] iommu/s390: support additional table regions
+Date: Mon, 31 Mar 2025 16:21:54 -0400
+Message-ID: <20250331202159.85956-1-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331172759.115604-1-leo.yan@arm.com>
-In-Reply-To: <20250331172759.115604-1-leo.yan@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 31 Mar 2025 13:18:31 -0700
-X-Gm-Features: AQ5f1JoUf2iRDSaddKTe28EiQsiYENfLfeNwASpTQpr1ndGUoNWAL0jYQr3RGTQ
-Message-ID: <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: veeLgI50lUi7d8tHrcA9p2pY8r7dg-j5
+X-Proofpoint-ORIG-GUID: veeLgI50lUi7d8tHrcA9p2pY8r7dg-j5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_09,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 spamscore=0 mlxlogscore=621 suspectscore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310138
 
-On Mon, Mar 31, 2025 at 10:28=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> The test might fail on the Arm64 platform with the error:
->
->   perf test -vvv "Track with sched_switch"
->   Missing sched_switch events
->
-> The issue is caused by incorrect handling of timestamp comparisons. The
-> comparison result, a signed 64-bit value, was being directly cast to an
-> int, leading to incorrect sorting for sched events.
->
-> Fix this by explicitly returning 0, 1, or -1 based on whether the result
-> is zero, positive, or negative.
+The series extends the maximum table size allowed by s390-iommu by
+increasing the number of table regions supported.  It also adds logic to
+construct the table use the minimum number of regions based upon aperture
+calculation.
 
-I'm reminded of a Java check I wrote for this:
-https://errorprone.info/bugpattern/BadComparable
-In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-clean those warnings up a bit.
+Changes for v4:
+- rebase onto master after iommu/next PR merge
+- convert patch 3 per Niklas to remove gotos
+- convert patch 4 to also remove gotos
+- add review tags
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Changes for v3:
+- rebase onto iommu-next
+- move IOTA region type setting into s390-iommu
+- remove origin_type and max_table_size from zdev
+- adjust reserved region calculation to be dependent on the domain
 
-Thanks,
-Ian
+Changes for v2:
+- rebase onto 6.13
+- remove 'iommu/s390: add basic routines for region 1st and 2nd tables'
+  and put routines in first patch that uses each.  No functional change.
 
-> Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sched_swit=
-ch")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/tests/switch-tracking.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch=
--tracking.c
-> index 8df3f9d9ffd2..6b3aac283c37 100644
-> --- a/tools/perf/tests/switch-tracking.c
-> +++ b/tools/perf/tests/switch-tracking.c
-> @@ -264,7 +264,7 @@ static int compar(const void *a, const void *b)
->         const struct event_node *nodeb =3D b;
->         s64 cmp =3D nodea->event_time - nodeb->event_time;
->
-> -       return cmp;
-> +       return cmp < 0 ? -1 : (cmp > 0 ? 1 : 0);
->  }
->
->  static int process_events(struct evlist *evlist,
-> --
-> 2.34.1
->
+Matthew Rosato (5):
+  iommu/s390: set appropriate IOTA region type
+  iommu/s390: support cleanup of additional table regions
+  iommu/s390: support iova_to_phys for additional table regions
+  iommu/s390: support map/unmap for additional table regions
+  iommu/s390: allow larger region tables
+
+ arch/s390/include/asm/pci_dma.h |   3 +
+ drivers/iommu/s390-iommu.c      | 346 ++++++++++++++++++++++++++++----
+ 2 files changed, 314 insertions(+), 35 deletions(-)
+
+-- 
+2.49.0
+
