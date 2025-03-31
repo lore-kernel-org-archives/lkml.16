@@ -1,74 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25041DF244;
-	Mon, 31 Mar 2025 10:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5811B12F399;
+	Mon, 31 Mar 2025 10:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743416741; cv=none; b=cbUoh5/2970FQzf3OTcI3gOiEZSeY53cipbpyt4ZDVhthGwklOdMsUPV68oooMrzfmQ2zWbXQuHRhWViFqvDYhgwUfV4FMFAUtu91wMNm96UMQ21TWbiooiMxm1WELvboE5AYlzK3pkwlI7E89jddlWgs4PIBlrzp7/+dUlhXxU=
+	t=1743416764; cv=none; b=Zmd/7NQ3Zw2I5AHEpbNKfCv//rqIUvzLkK1JbOH3lXAvYNZxMAY8PNkZjmWKILsjD3ZVC9cbw8TSLOW1IIQr058q2F1uRA4UqmRTwETNRPxldh4Ynv6yYPkHDRsGlNyQTEAXdDS1G5Q1oV3I2AaxyoSTONtILHfCqdQfZVaHjco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743416741; c=relaxed/simple;
-	bh=mmOyZTYzFrsIc3BpeorotLXoS3/nnmtIz+2gGycd45w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVThJrGoRZrTlWU6wZjjj3EtOiWGWlO1/LOVL9zdCVL0Fztk+eoskRuIztI/N2GwnWeducgUjwr3x/4KJWXhn+jI9n4J9Cf34RC8TJpXaGpRReeS1Js/zg6Vl6sd5ytdT+BKP8bz4foFTNufYgR31sihZnscoMBQIj89Xer84HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAivgiKt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743416764; c=relaxed/simple;
+	bh=4yD9jPLYgaXm8vmLTe2+wDd2wod870ynkjwI3jYgihc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=GC34AxOyyRkJlhNxkmWxYyjnC9AnNSPp8g8tCUz07BkrOtraK5gikPAD1ZusjYi2JJhV0Frby1D10wH06tO/+qKhjhbTnBu1qkOLg28U4l6JAtaoIBcY13mRRux81/PSi4Pi6UTxAmYIAaEcdwczn8zXBiarJ5W72aoOWGc4yhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tUzObpq8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ep05b4cJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAivgiKt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF588C4CEE3;
-	Mon, 31 Mar 2025 10:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743416741;
-	bh=mmOyZTYzFrsIc3BpeorotLXoS3/nnmtIz+2gGycd45w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eAivgiKttyt/D0UZhjMbl6KA50ZzDbqyKboVcSsVGQS0T1Z8dAZbKwNa4lC0hkKml
-	 P4nitoKBL6RcfdH92bLNtijTiKMyyPLEi8XE+5+Cn05GQraNOLxoPUOSPINkXmZEHD
-	 dPmxi5wK/hF0rUWTFIYe++Q3gwuLvP9uLW/oKqYto2apDRcHrCQIDIi7o8E/fWQzDe
-	 u4/2duWKn+JzF+wboJJ1+YpgjRLBolqUcvsmCz6MBZx+Rzc4dPhOe/CFPSSt0C4UKd
-	 0Ljxth/ew9C/jmMoOH95DLbMlZQ6JY6e0MHQpM1qnU268hlAZo9vGf8GScBc2G432c
-	 rWsEtnmlVYnyw==
-Date: Mon, 31 Mar 2025 12:25:34 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 6/6] super: add filesystem freezing helpers for
- suspend and hibernate
-Message-ID: <20250331-postfach-suchaktion-b7f7c696b632@brauner>
-References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
- <20250329-work-freeze-v2-6-a47af37ecc3d@kernel.org>
- <k2xbbfnkklbndjbrrnp5lpyrajp3uuw4oxe6xksbtskb2p4myy@o4ypfbabhuu5>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tUzObpq8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ep05b4cJ"
+Date: Mon, 31 Mar 2025 10:25:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743416761;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNTE/j9H5Q2+3y4vlARKsb/IkEO2sDB7gjtf1vvoFa4=;
+	b=tUzObpq8qVzHH11XGVXZ3xfKxMgD8tOTM5ZJI7fpuDnoYcHyVBYNWkN1ZPqg4w9VKG+SrQ
+	2CWfYVey0PUmhfiMfvfdTnSanIr+KHWPELXaYt0kgB2KKlFvHN0epf9BdQh+vyvU6OyzL2
+	LVrz0EkIw+E9rNMIQwtAZUZImXfkxxJLLpED+QXJB+63v+qrABgId4yNFutVbdjCM/uYY9
+	y0l3SpgZOaAhOn1Aa7EPf38FZuejO5wb8CdSGckybj2VDUUjonFoIQOXYQVFP4Mc4d/k86
+	fws3243sOJtx9rTVBuFDfiERVPY5e0Q5QoFzpZVDNWHIFAgnYT8qvA/TGzHJaw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743416761;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jNTE/j9H5Q2+3y4vlARKsb/IkEO2sDB7gjtf1vvoFa4=;
+	b=ep05b4cJTDdIxwqyxMiw52dZ8MPxUXPFj4XGT//pcZg2w7gGPVTMozJTGMo3kMDtD2rDIb
+	+BB9+ErhqGn7dkDQ==
+From: "tip-bot2 for Baoquan He" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/mm] x86/mm: Simplify the pgd_leaf() and p4d_leaf() checks a bit
+Cc: Baoquan He <bhe@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250331081327.256412-6-bhe@redhat.com>
+References: <20250331081327.256412-6-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <k2xbbfnkklbndjbrrnp5lpyrajp3uuw4oxe6xksbtskb2p4myy@o4ypfbabhuu5>
+Message-ID: <174341675280.14745.10833304422189217673.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 12:23:04PM +0200, Jan Kara wrote:
-> On Sat 29-03-25 09:42:19, Christian Brauner wrote:
-> > Allow the power subsystem to support filesystem freeze for
-> > suspend and hibernate.
-> > 
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> One comment below. Otherwise feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> > +void filesystems_thaw(bool hibernate)
-> > +{
-> > +	__iterate_supers(filesystems_thaw_callback, NULL,
-> > +			 SUPER_ITER_UNLOCKED | SUPER_ITER_REVERSE);
-> > +}
-> 
-> I think we should thaw in normal superblock order, not in reverse one? To
-> thaw the bottommost filesystem first? The filesystem thaw callback can
-> write to the underlying device and this could cause deadlocks...
+The following commit has been merged into the x86/mm branch of tip:
 
-Yep, I've fixed that already up in vfs-6.16.super yesterday.
-Sorry, forgot to mention that here. Thanks for noticing!
+Commit-ID:     e62c7a4bd1d1e99e1ddd947cb526f833992c5bd4
+Gitweb:        https://git.kernel.org/tip/e62c7a4bd1d1e99e1ddd947cb526f833992c5bd4
+Author:        Baoquan He <bhe@redhat.com>
+AuthorDate:    Mon, 31 Mar 2025 16:13:25 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 31 Mar 2025 12:08:17 +02:00
+
+x86/mm: Simplify the pgd_leaf() and p4d_leaf() checks a bit
+
+The functions return bool, simplify the checks.
+
+[ mingo: Split off from two other patches. ]
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250331081327.256412-6-bhe@redhat.com
+---
+ arch/x86/mm/pti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 5f0d579..1902998 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -185,7 +185,7 @@ static p4d_t *pti_user_pagetable_walk_p4d(unsigned long address)
+ 
+ 		set_pgd(pgd, __pgd(_KERNPG_TABLE | __pa(new_p4d_page)));
+ 	}
+-	BUILD_BUG_ON(pgd_leaf(*pgd) != 0);
++	BUILD_BUG_ON(pgd_leaf(*pgd));
+ 
+ 	return p4d_offset(pgd, address);
+ }
+@@ -206,7 +206,7 @@ static pmd_t *pti_user_pagetable_walk_pmd(unsigned long address)
+ 	if (!p4d)
+ 		return NULL;
+ 
+-	BUILD_BUG_ON(p4d_leaf(*p4d) != 0);
++	BUILD_BUG_ON(p4d_leaf(*p4d));
+ 	if (p4d_none(*p4d)) {
+ 		unsigned long new_pud_page = __get_free_page(gfp);
+ 		if (WARN_ON_ONCE(!new_pud_page))
