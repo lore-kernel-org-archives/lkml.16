@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF8B189F36
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B0E1D79BE
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421165; cv=none; b=AfnT/92gA6wX6dcf9MV9edg8bZYLnvBRdRdnQC3ZJ82P/YijoCBSTwjM20JWRDUKp2+v3pNAoWOMpBo6rFnoo+yA0ahZQUnbpLtQ3gCeztcztD0s13qS5cU8QKA4dRZwfC7BEPkxloUPLq5Vx5Zfg9eSB7raP7Ab0ZxpX/RUqDM=
+	t=1743421226; cv=none; b=kLZrtzqEd5Onhd9ZAMoASjsWijtgHZ48ZymsYj9GT0ROiWNScqLHRjR+eoePmLnY5T1Z7T3LpFYF1gvSiu6OI5FWtUzTorL7AMbnWVIWvJzazrEPyRvyjJxNN5ebLZvqbaLX7fE5ao6pfotU97QnswmtCf2CHSah8jRdg+FVl/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421165; c=relaxed/simple;
-	bh=SZDcK968uCMAlfHGmsf/1LFNLrcil0dWfQhsP0uYMKk=;
+	s=arc-20240116; t=1743421226; c=relaxed/simple;
+	bh=8VPwvE7nroIn4qX7iRxUTzYwalguHuJJ6RLLoQP7biM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PMOEe7c+hxKUEo0OdzfNgBEEh58guBeNDCbG+0M7JDLR8x/wX6nTmssqjkd3vhC0rENAluIT5hxMAQt/c0vo8ZQqFw5Ecb9koi6/O52BeV7px0bBu0BEEZRXstMcWFlG8qsRUXo0LEgZpumvnoFUZ5ZldGR2ijHUSa06SlkClHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I38MsDT3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=s3Voo/QImlxAejJafNSy0W23AV4AzsQ+Qt373MZkci5nHb56nUnmNm2GFUqfTEJxhwYn9jPBuCVW4k8NaSJWGGUhJPbS0zC5n4TyOJo1XjNb0MU+a0eJe9/sfJp1E3N7hhREj87Hbc8CQN40LhNzH2GuXG/b34JvIY8OyKpXYwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8IIP1rl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I38MsDT3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39D6C4CEE3;
-	Mon, 31 Mar 2025 11:39:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8IIP1rl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B596EC4CEE3;
+	Mon, 31 Mar 2025 11:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743421165;
-	bh=SZDcK968uCMAlfHGmsf/1LFNLrcil0dWfQhsP0uYMKk=;
+	s=k20201202; t=1743421226;
+	bh=8VPwvE7nroIn4qX7iRxUTzYwalguHuJJ6RLLoQP7biM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I38MsDT3haOaJW/qK4tukieImvBa1oq38ud5z2u85PbsF2gLEkFaaNWDOdvertJ9K
-	 o9/VwVbHdXALcse4oxSk9amy2/v6rNH+YsyKRJe0KU+n0juf25V40vWl2o2C/Ni/4H
-	 kg7Z4XwpL2YncuF9oYLo8PYXKvbwVV7/CAMcoJxBpfhpJzI9Rr4hKST+0cJwKqnLqH
-	 zKCc8yzcfPwVp5KhNOc/cHclCtgdkJMMcCtDLwhU+uy2vV2RfJ3kzMQt3oTpFG3Xls
-	 2zayUaw93mSu5HQttXu058RbPOtpVici7QoR+0zfEprfSSnfcgZCjiI5jpL6Y9Qmxm
-	 n01Pbqp/fSJiw==
-Message-ID: <0b99b7e5-a035-4a15-8389-dcb3ca81f96d@kernel.org>
-Date: Mon, 31 Mar 2025 13:39:21 +0200
+	b=u8IIP1rlvKjjLRCg1eAM6jyns/uGT7ThhjsxWvMuLZrttY1fcwZExpj4LO/SF5w3n
+	 bwvtjoIs3iUq2JLrSVRkgzOocXa+DyW9KFkiSaxp+RgKfWeG9C74RC4fWYPv9mjjzU
+	 UHwx1yOV60Ic3IuWozMvpGLYrtOuuoztk1UHxKtVUC/lxtjXZaYw/FO8EjEOLkiWVL
+	 xhelraIUSTXm5dV6vwKehYd0pWiNwWVN92HYP+jYutdLBC0tfZFvNUshIoSrDEnDIk
+	 tA1LLSTsGDNNgURP+SF34hEPFiS4kpdzMnp0xmVAbsAYjgsZ8evm64NUuUFepNH+LS
+	 6zFTOIXjDQ8EQ==
+Message-ID: <76836050-a701-4d6e-859e-8aed23d234a2@kernel.org>
+Date: Mon, 31 Mar 2025 13:40:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,11 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] uio: uio_fsl_elbc_gpcm: Add NULL check in the
- uio_fsl_elbc_gpcm_probe
-To: Henry Martin <bsdhenrymartin@gmail.com>, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250331092712.7227-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] drivers/misc: Add NULL check in aspeed_lpc_enable_snoop
+To: Henry Martin <bsdhenrymartin@gmail.com>, joel@jms.id.au,
+ andrew@codeconstruct.com.au
+Cc: herve.codina@bootlin.com, gsomlo@gmail.com, heiko@sntech.de,
+ andersson@kernel.org, u.kleine-koenig@baylibre.com,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20250331093922.7735-1-bsdhenrymartin@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -85,43 +88,40 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250331092712.7227-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <20250331093922.7735-1-bsdhenrymartin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 31/03/2025 11:27, Henry Martin wrote:
-> When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function uio_fsl_elbc_gpcm_probe.
+On 31/03/2025 11:39, Henry Martin wrote:
+> When devm_kasprintf() fails, it returns a NULL pointer. However, this return value is not properly checked in the function aspeed_lpc_enable_snoop.
 > 
 > A NULL check should be added after the devm_kasprintf() to prevent potential NULL pointer dereference error.
 > 
-> Fixes: d57801c45f53e ("uio: uio_fsl_elbc_gpcm: use device-managed allocators")
+
+Same comments.
+
+> Fixes: 3772e5da44542 ("Aspeed LPC snoop output using misc chardev")
 > 
 
-
-Same comments as for other patches.
+There is never a blank line between tags.
 
 > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 > ---
->  drivers/uio/uio_fsl_elbc_gpcm.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
-> index 81454c3e2484..59ba1a2dcfe3 100644
-> --- a/drivers/uio/uio_fsl_elbc_gpcm.c
-> +++ b/drivers/uio/uio_fsl_elbc_gpcm.c
-> @@ -384,6 +384,10 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
->  
->  	/* set all UIO data */
->  	info->mem[0].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn", node);
-> +	if (!info->mem[0].name) {
-> +		dev_err(priv->dev, "devm_kasprintf failed for region name\n");
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index 9ab5ba9cf1d6..376b3a910797 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -200,6 +200,8 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  	lpc_snoop->chan[channel].miscdev.minor = MISC_DYNAMIC_MINOR;
+>  	lpc_snoop->chan[channel].miscdev.name =
+>  		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, channel);
+> +	if (!lpc_snoop->chan[channel].miscdev.name)
+> +		return -ENOMEM;
 
-
-There is never a printk after memory allocation failure.
-
-Also, just like in some of the other patches, you did not really analyze
-the code - you leak here resource map. Just look at the entire code
-instead of blindly pasting the same code here and there.
+Missing cleanup.
 
 Best regards,
 Krzysztof
