@@ -1,85 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014D4AD23;
-	Mon, 31 Mar 2025 09:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FD81D63D8;
+	Mon, 31 Mar 2025 09:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412081; cv=none; b=QHgN0avs4HBr2BwGgLQXmCzUEKUJgEQ/zU7xbZZOZgZwHWlVGAlHmvyX2EuGa+2j11+flayc0hqL53yrZCBN92n4mDY1/xnOgBSN3p+4U86QT9DtOpJS9pQ9Ye+HmYZ8o8an5eQtxYRnqLziCpJ/fwk8gIVteyIAExlmadjgZ+I=
+	t=1743412104; cv=none; b=S5YCb4epuL6iKWl4r3kQo0XAmwuyYItiDtdsrH4G7PUJ/XzRXopLHk5fzdw3jOs6Fbf0F2YUiwTPojqBIBvvViFAOfJi4HZV1TUinAm1MTkZFCC7arN605NVCVCVLHv8xSwos5uHswoES5dqDq55B7Yiy77/+9q4YZYqVrS+B0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412081; c=relaxed/simple;
-	bh=cJpsG0NuVPyTrNtoLgQWDGGd++w5Px7qO6TwmxaM6KA=;
+	s=arc-20240116; t=1743412104; c=relaxed/simple;
+	bh=wj8xpmWgK5yX9tmvccKgarihUFYI3+6qfieaV0vte8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4HFzwnQ7jeg/7y4+AU+WAjix9pdM204nspRRLC3Ei4eSsM9gEgcCR6vPrb40mXJ/iP/goWEISxNQrxfztWKosH1pxzwyq79SMe2HyVQzpPGkJW7d5cMj88y+mhTYoUuF2NZiTzOEQo3ZFfgpEbsHaX0H6JIuzySoDsdixECt0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ljapDT1U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q66gDQxo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmlVFqFVMIQ+7yRNIuD8oKBcTpT59BeNf9Il2gplybcY5CvXoWYvqU0yCuD/XRf+ubS4g/BthWgFWB3kcmq3dtMReZgZfRlz7wsSanyW0UJow3j9x/Sq4DLpSNGmXl1EKkXX+06zMhp26ixmuVhN4wNKxiJgCDrvEObFqHVA2p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G0UXm+E5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ljapDT1U";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q66gDQxo"
-Date: Mon, 31 Mar 2025 11:07:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743412077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJpsG0NuVPyTrNtoLgQWDGGd++w5Px7qO6TwmxaM6KA=;
-	b=ljapDT1U59tqFPqTNSUBYDGOV93YFhboQJkTd95+tbNoESkCXOr+YiUuFn/HZRdQ+7GZeg
-	HapYHJNVe9jzE2X5qk9aUdQAB2X1im997mh73gLD+XelCoPFM35X/WsbzfSK8K6JzkQtwX
-	IRiT9Ks+43+UXItNNPFdbvMp8l8od3ikZI0p8+9vkrgt5AyjsUxcSu6SnOYwHIO92wITeC
-	x9SI+r5n4EHS4/O6qmXbem1GgMXoZmpMvWgUMOfFkGCed5jnAcf25yN2QOeYC8SvPdguw1
-	r3HbnhdPv4GLMkRygqm7XSGKOsP9f1XPm4UI6lD4vR1Kqm8uKffUfriEgIORvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743412077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJpsG0NuVPyTrNtoLgQWDGGd++w5Px7qO6TwmxaM6KA=;
-	b=Q66gDQxoAFrIFRlfBtupn6o7SJo99Hdz2bxCh9rlU+qsBsGft9E9GEVtc1hjd8p3pXzf+T
-	M/ISyYGZwoFeOQAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	Mike Galbraith <efault@gmx.de>,
-	Peter Collingbourne <pcc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Kristina Martsenko <kristina.martsenko@arm.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH 1/1] arm64: enable PREEMPT_LAZY
-Message-ID: <20250331090756.L7iXi1Ee@linutronix.de>
-References: <20250305104925.189198-1-vschneid@redhat.com>
- <20250305104925.189198-2-vschneid@redhat.com>
- <Z8hAZ09Q40fxLJSk@J2N7QTR9R3>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G0UXm+E5"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 3F07D211251B; Mon, 31 Mar 2025 02:08:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F07D211251B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743412102;
+	bh=fABQHcWYZ8fxGq7/i5KjcTNIPf7v1OtIahvQKBq53HY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G0UXm+E5pJvBajFQAcgChgjbeLApGtSbrxm9PWAclRtmiFjZyrAzZfd6CDJl13g1m
+	 I76jORF5O8NDRWT/5uzAmJHGD8H2GDyt0Ig6fpcSuPIZrnPaZ7D4/nfUQl/udaVP3R
+	 j+BsyYfKaJaGYkuAQjd3kUS0nwRLhWXkOO3pxoGs=
+Date: Mon, 31 Mar 2025 02:08:22 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"brett.creeley@amd.com" <brett.creeley@amd.com>,
+	"surenb@google.com" <surenb@google.com>,
+	"schakrabarti@linux.microsoft.com" <schakrabarti@linux.microsoft.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+	"erick.archer@outlook.com" <erick.archer@outlook.com>,
+	"rosenp@gmail.com" <rosenp@gmail.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>
+Subject: Re: [EXTERNAL] Re: [PATCH 2/3] net: mana: Implement
+ set_link_ksettings in ethtool for speed
+Message-ID: <20250331090822.GA22061@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
+ <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
+ <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
+ <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <adaaa2b0-c161-4d4f-8199-921002355d05@lunn.ch>
+ <20250325122135.14ffa389@kernel.org>
+ <MN0PR21MB3437DA2C43930B08036BB146CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <6396c1f7-756d-476a-833e-7ea35ae41da8@lunn.ch>
+ <MN0PR21MB34376199FAFAE4901EF18E75CAA72@MN0PR21MB3437.namprd21.prod.outlook.com>
+ <f2619b80-8d5d-4484-a154-18f902d43d63@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8hAZ09Q40fxLJSk@J2N7QTR9R3>
+In-Reply-To: <f2619b80-8d5d-4484-a154-18f902d43d63@lunn.ch>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 2025-03-05 12:15:35 [+0000], Mark Rutland wrote:
-> Catalin, Will, given this is small and self-contained, I reckon it makes
-> sense to pick this up ahead of Jinjie's series to move arm64 over to the
-> generic entry library (which is on my queue of things to review). Even
-> if we pick up both, it'll be easier to bisect and debug issues caused by
-> this patch alone.
+Thank you Andrew, Jakub for pointing out all the available options. 
 
-Any updates here? I know it is the merge window but I don't know if
-upstream considers this or wants to sit on it until the generic entry
-gets in.
-In the meantime I stuff it into my RT tree so it does not get lost.
-
-> Mark.
-
-Sebastian
+We are currently investigating their feasibility based on our use case.
+Would update the thread/get in touch, about our findings before sending
+out the next version.
