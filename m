@@ -1,153 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8956A2144B7
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D1A1DA4E;
+	Mon, 31 Mar 2025 19:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743447447; cv=none; b=S/V9Oz7zOkt/PvlBlKRfJv/OKYnByYQy4LkoOEbaf+eOtVSGuRjLEWAaq4lLWPlwKraxdQszFYH6hZUEoQ/1+2gjYzunIi4R84pqBf98YA5ehJl7daJumq2X5+Yz2JSfu31TlSaPgV+3Y4l9tM1Y5eLhGOiwivZCClLDVveY/5g=
+	t=1743447701; cv=none; b=KVFGxlBglSTuI8dimx5ZRgzzhoukFH4BZxBj0KEZmS5tk+8gbe5Wo1lliLyiw5MGZclqw8CAJJJCiKNiFeHAjRD8dpXBCbEzGMOpIxDZby/0kZBFk9V84WTS+15D7vM78xjyqfiFhuy5qIDgY8BcbqCUUbAHNznVxlu80AQ3qFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743447447; c=relaxed/simple;
-	bh=YmflCkYghetjuTqEta5HLi3//mMy8HqvUxvXAbpe6nE=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sbyZSCZLmVDchqkR39CDNtwQSfQYYgpv8Seu52tCkAQaEMy8c7UP6cyfxjo+ZzbFND1OtyRnVH3VGTsQid6XiIXe3D9tASgsf2e+77yIuM4c/qd+RRytomhRpIIHQ+P2vx2YSaOXKv02tBbM0MNYTFelJ/OjTfhoWCXNr8tSM3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TPHStNMh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743447701; c=relaxed/simple;
+	bh=y6YMr3baPj0fmKAXg+1TRjlsnvp6i7akFQbajbrsnAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Af3s/m6+X8QFxjC9wFiG77HX6/I/1DaW53FSI1WPqe3FveYcsV33Cs9fifsX1+2UQMdUqaz9YXQjL4iNWASMJwNUJBwUeoCp2EZVBT9lOuclF/ugItOP7W5mCWMaRqLUyXkaJ4amcDBhleB0dAhlvzHn4orxzEk42j4wJrFoP2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNY/7mMc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPHStNMh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743447444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4uxGqI8XHlSWUG0vUbjqkpMVF/NlTmqGXy4qbepua0s=;
-	b=TPHStNMhhYuoTUzXUqEKhqVrCxZn27dFKvkMRZ4YStNKu+TVaQbRYCqqu49Ozomz4J5wdj
-	MEaM4E6AYX+sskFFQQJ5c5f7HLa33WLv8reNYqr/qjYdifngz+HTFIrhCMP5/2SifgfsFH
-	F6aNAccUGr1YJrXo/ifz+VDqo44bhR0=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-F8Pp2PZLOKKNGVFXJKpAQA-1; Mon, 31 Mar 2025 14:57:23 -0400
-X-MC-Unique: F8Pp2PZLOKKNGVFXJKpAQA-1
-X-Mimecast-MFC-AGG-ID: F8Pp2PZLOKKNGVFXJKpAQA_1743447442
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c9abdbd3so467768485a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:57:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743447442; x=1744052242;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4uxGqI8XHlSWUG0vUbjqkpMVF/NlTmqGXy4qbepua0s=;
-        b=vwTGQMJMPZEWBAVU6MbzCsSyeVDK5UUt1xgd6mN0hl/alIFhAEwcRpSjF1qhlHA6Jp
-         6yZUDR3T7GwV/mQkRv92fH3rbv79GWfjB2Fsqn1yWiq92s+zBcV4scC34EjNvofbDZOG
-         JJNmx5oLP+iZDhx4MCmtrPLvM371xa88eoXEaZxV0tL+0l7F9bphyVDnVhqD5Oiawzgf
-         oIWHwMMfXABKvUgw+7uDiTH4cvOPk1n7ODDURDmdSkOUj4+3irHJTec2qUMdBAyLZ4Ox
-         cOttxeZVFCvIX4t0qwQRn0BulXaB8Jq08a9U+FdHDhQRO5FC0ZnZEr/5A170xADyiaK1
-         Rjbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbvytJG1SjlAoRyqKqXdWa7S7foSqsKjoHsMK6uKLPFr0GrXMpMQsx8l9j3pQAWJsNhNmwOsGQ50rcyIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAFeGJNljsLZRcVunohlaYAKfKPNkY0Mv6CAZ5hl0SDYslvhSA
-	0HUdohCj4IYpwoadD3f7Or13hHng8CKxcU6Rhqed7sdMqT/juHmX7axhEi/gs386h5V6pQTVSrr
-	xTQFYOZQ8uGfIY50Fvu6NsBMLTNXk5d8mN4/fiU0FAiFjkS2ee04lrJywqrnfWw==
-X-Gm-Gg: ASbGnctODZttBBiD8L5Y6YC9P5+iDv/GNMATawob8NMf+xQoLOnwXijyqqdXI9gZQ9a
-	xXqbzwuv+8xuN2Lrsk5Pvu5dXHv82d3gnTmYz+PAA/KjDamYaFriaD2r/2QqHiiJTanF1csUsN5
-	lQx7DqH6uVxUCNJ2S5PADeFeZd1xqSqyVWg6/dtBPMqZNKIzWarhOAoO112Zf9U8eGyECP/9YtU
-	Pv4MdRv0tXSR9oHFesGIMB8WHzZDcpRjYKOV4kUF5QPVq6ImMaHFc6mMP8Z1EVeAEuaByojVSd6
-	qCiIcHwxXtR9/A2+Ezsn5McB7M/cRPuLF2gbgZs7/DRRWLUBmeCasJNxXGlXkg==
-X-Received: by 2002:a05:620a:2992:b0:7c5:4463:29aa with SMTP id af79cd13be357-7c69087def9mr1592718585a.40.1743447442656;
-        Mon, 31 Mar 2025 11:57:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IESQYDsfnezfjUkx7Y5slcu+4vSypZZz7O52dCEgLcLpGd4fd2d2RSisyzUxxCGuahqVd1Ibw==
-X-Received: by 2002:a05:620a:2992:b0:7c5:4463:29aa with SMTP id af79cd13be357-7c69087def9mr1592715585a.40.1743447442363;
-        Mon, 31 Mar 2025 11:57:22 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f76838ccsm528423685a.40.2025.03.31.11.57.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 11:57:21 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <69592dc7-5c21-485b-b00e-1c34ffb4cee8@redhat.com>
-Date: Mon, 31 Mar 2025 14:57:20 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNY/7mMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FF7C4CEE3;
+	Mon, 31 Mar 2025 19:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743447701;
+	bh=y6YMr3baPj0fmKAXg+1TRjlsnvp6i7akFQbajbrsnAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WNY/7mMcf4YEoeD5x5Yf4QpbX2DiZhW2OObckB8SEDRc+6hFMVjLaZOoZrOm4chvo
+	 96E6l0Pkn8vkAox5o5KDSgw9h8QhGKjjktMr0KvtzBIi711FRf2JkwD/+qLhyFqAEM
+	 POmf+wBYaiB4hw3XJofMxtCAHQhr2ZJLuEY2Nk0v042hePQ0lqYVIAN1x6957T+xSl
+	 FqKzFLhwsCFVJ6JPZozDprMsGm47Hov5828L900sfFT2pV5sBXiIjs/YjGfdIB5Qbu
+	 fsnwtrisvQvN+yfHl86XPkc+ka73NIdIACxfAieHA+bcHvs9nuxyFsoM+mOsFXIrPB
+	 bXIt3v9Dna5qg==
+Date: Mon, 31 Mar 2025 20:01:34 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Sandy Huang <hjc@rock-chips.com>,
+	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre ARNOUD <aarnoud@me.com>, kernel@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: Enable HDMI1 on rock-5b
+Message-ID: <6d168284-01c7-4da4-8fc9-1b12e38b554f@sirena.org.uk>
+References: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
+ <20241211-rk3588-hdmi1-v2-4-02cdca22ff68@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
- RCU synchronization
-To: paulmck@kernel.org, Waiman Long <llong@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Eric Dumazet <edumazet@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Breno Leitao <leitao@debian.org>,
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, aeh@meta.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com,
- kernel-team@meta.com, Erik Lundgren <elundgren@meta.com>
-References: <Z-Il69LWz6sIand0@Mac.home>
- <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
- <Z-L5ttC9qllTAEbO@boqun-archlinux>
- <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
- <Z-MHHFTS3kcfWIlL@boqun-archlinux>
- <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com> <Z-OPya5HoqbKmMGj@Mac.home>
- <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
- <Z-rQNzYRMTinrDSl@boqun-archlinux>
- <9f5b500a-1106-4565-9559-bd44143e3ea6@redhat.com>
- <35039448-d8e8-4a7d-b59b-758d81330d4b@paulmck-laptop>
-Content-Language: en-US
-In-Reply-To: <35039448-d8e8-4a7d-b59b-758d81330d4b@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+3CwgnGsvSSr2pL1"
+Content-Disposition: inline
+In-Reply-To: <20241211-rk3588-hdmi1-v2-4-02cdca22ff68@collabora.com>
+X-Cookie: You will have a long and boring life.
 
-On 3/31/25 2:33 PM, Paul E. McKenney wrote:
-> On Mon, Mar 31, 2025 at 01:33:22PM -0400, Waiman Long wrote:
->> On 3/31/25 1:26 PM, Boqun Feng wrote:
->>> On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
->>> [...]
->>>>>> Anyway, that may work. The only problem that I see is the issue of nesting
->>>>>> of an interrupt context on top of a task context. It is possible that the
->>>>>> first use of a raw_spinlock may happen in an interrupt context. If the
->>>>>> interrupt happens when the task has set the hazard pointer and iterating the
->>>>>> hash list, the value of the hazard pointer may be overwritten. Alternatively
->>>>>> we could have multiple slots for the hazard pointer, but that will make the
->>>>>> code more complicated. Or we could disable interrupt before setting the
->>>>>> hazard pointer.
->>>>> Or we can use lockdep_recursion:
->>>>>
->>>>> 	preempt_disable();
->>>>> 	lockdep_recursion_inc();
->>>>> 	barrier();
->>>>>
->>>>> 	WRITE_ONCE(*hazptr, ...);
->>>>>
->>>>> , it should prevent the re-entrant of lockdep in irq.
->>>> That will probably work. Or we can disable irq. I am fine with both.
->>> Disabling irq may not work in this case, because an NMI can also happen
->>> and call register_lock_class().
->> Right, disabling irq doesn't work with NMI. So incrementing the recursion
->> count is likely the way to go and I think it will work even in the NMI case.
->>
->>> I'm experimenting a new idea here, it might be better (for general
->>> cases), and this has the similar spirit that we could move the
->>> protection scope of a hazard pointer from a key to a hash_list: we can
->>> introduce a wildcard address, and whenever we do a synchronize_hazptr(),
->>> if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
->>> hence synchronize_hazptr() will still wait until it's zero'd. Not only
->>> this could help in the nesting case, it can also be used if the users
->>> want to protect multiple things with this simple hazard pointer
->>> implementation.
->> I think it is a good idea to add a wildcard for the general use case.
->> Setting the hazptr to the list head will be enough for this particular case.
-> Careful!  If we enable use of wildcards outside of the special case
-> of synchronize_hazptr(), we give up the small-memory-footprint advantages
-> of hazard pointers.  You end up having to wait on all hazard-pointer
-> readers, which was exactly why RCU was troublesome here.  ;-)
 
-If the plan is to have one global set of hazard pointers for all the 
-possible use cases, supporting wildcard may be a problem. If we allow 
-different sets of hazard pointers for different use cases, it will be 
-less an issue. Anyway, maybe we should skip wildcard for the current 
-case so that we have more time to think through it first.
+--+3CwgnGsvSSr2pL1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Longman
+On Wed, Dec 11, 2024 at 01:06:17AM +0200, Cristian Ciocaltea wrote:
+> Add the necessary DT changes to enable the second HDMI output port on
+> Radxa ROCK 5B.
+>=20
+> While at it, switch the position of &vop_mmu and @vop to maintain the
+> alphabetical order.
 
+We're seeing failures in the Arm lab the IGT tests on this board in
+Linus' tree which bisect to 77cea7ca1368 which is this patch.
+core_getversion fails:
+
+<14>[   21.933549] [IGT] core_getversion: executing
+IGT-Version: 2.0-g8b20280 (aarch64) (Linux: 6.14.0 aarch64)
+Using IGT_SRANDOM=3D1741272980 for randomisation
+(core_getversion:284) CRITICAL: Test assertion failure function __igt_uniqu=
+e____real_main84, file ../tests/core_getversion.c:91:
+(core_getversion:284) CRITICAL: Failed assertion: fd >=3D 0
+(core_getversion:284) CRITICAL: Last errno: 2, No such file or directory
+(core_getversion:284) CRITICAL: file descriptor fd failed
+Stack trace:
+  #0 ../lib/igt_core.c:2055 __igt_fail_assert()
+  #1 [<unknown>+0xe31a129c]
+  #2 [<unknown>+0xe31a0dac]
+  #3 [__libc_init_first+0x80]
+  #4 [__libc_start_main+0x98]
+  #5 [<unknown>+0xe31a0df0]
+Test core_getversion failed.
+**** DEBUG ****
+(core_getversion:284) igt_core-INFO: IGT-Version: 2.0-g8b20280 (aarch64) (L=
+inux: 6.14.0 aarch64)
+(core_getversion:284) igt_core-INFO: Using IGT_SRANDOM=3D1741272980 for ran=
+domisation
+(core_getversion:284) drmtest-DEBUG: Force option used: Using driver rockch=
+ip
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+
+(core_getversion:284) drmtest-DEBUG: Condition stat(path, &new) !=3D 0 occu=
+rred in function _is_already_opened, file ../lib/drmtest.c:407
+(core_getversion:284) CRITICAL: Test assertion failure function __igt_uniqu=
+e____real_main84, file ../tests/core_getversion.c:91:
+(core_getversion:284) CRITICAL: Failed assertion: fd >=3D 0
+
+(core_getversion:284) CRITICAL: Last errno: 2, No such file or directory
+(core_getversion:284) CRITICAL: file descriptor fd failed
+(core_getversion:284) igt_core-INFO: Stack trace:
+(core_getversion:284) igt_core-INFO:   #0 ../lib/igt_core.c:2055 __igt_fail=
+_assert()
+(core_getversion:284) igt_core-INFO:   #1 [<unknown>+0xe31a129c]
+(core_getversion:284) igt_core-INFO:   #2 [<unknown>+0xe31a0dac]
+(core_getversion:284) igt_core-INFO:   #3 [__libc_init_first+0x80]
+(core_getversion:284) igt_core-INFO:   #4 [__libc_start_main+0x98]
+(core_getversion:284) igt_core-INFO:   #5 [<unknown>+0xe31a0df0]
+****  END  ****
+[1mSubtest basic: FAIL (0.000s)[0m
+
+and all the other tests refuse to run.  Previously the test passed:
+
+<14>[   22.491231] [IGT] core_getversion: executing
+IGT-Version: 2.0-g8b20280 (aarch64) (Linux: 6.14.0 aarch64)
+<14>[   22.492030] [IGT] core_getversion: starting subtest basic
+Using IGT_SRANDOM=3D1741272980 for randomisation
+Opened device: /<14>[   22.492835] [IGT] core_getversion: finished subtest =
+basic, SUCCESS
+dev/dri/card0
+Starting subtest: basic
+0: rockchip v1.0 0 RockC<14>[   22.494233] [IGT] core_getversion: exiting, =
+ret=3D0
+hip Soc DRM
+[1mSubtest basic: SUCCESS (0.000s)[0m
+
+The board is running fine in -next so hopefully there's a fix already
+there which will make it's way to Linus' tree during the merge window.
+We're also seeing something broken with the HDMI audio devices, but I
+didn't look into that.
+
+Bisection log:
+
+git bisect start
+# status: waiting for both good and bad commits
+# good: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+git bisect good 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+# status: waiting for bad commit, 1 good commit known
+# bad: [01d5b167dc230cf3b6eb9dd7205f6a705026d1ce] Merge tag 'modules-6.15-r=
+c1' of git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux
+git bisect bad 01d5b167dc230cf3b6eb9dd7205f6a705026d1ce
+# good: [cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c] Merge tag 'drm-intel-gt-=
+next-2025-03-12' of https://gitlab.freedesktop.org/drm/i915/kernel into drm=
+-next
+git bisect good cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c
+# bad: [72885116069abdd05c245707c3989fc605632970] Merge tag 'landlock-6.15-=
+rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/mic/linux
+git bisect bad 72885116069abdd05c245707c3989fc605632970
+# bad: [b2e7b0ffa56185d04871c6fe317b36d30ce2861d] Merge tag 'erofs-for-6.15=
+-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+git bisect bad b2e7b0ffa56185d04871c6fe317b36d30ce2861d
+# bad: [c9869f9073bacfa9b6030fd7670f737793277a85] Merge tag 'imx-dt64-6.15'=
+ of https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into soc=
+/dt
+git bisect bad c9869f9073bacfa9b6030fd7670f737793277a85
+# bad: [d1221aeb5a44f1bbfe16a6efd8bc8b0bc3f565a6] Merge tag 'v6.15-rockchip=
+-dts64-1' of https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-ro=
+ckchip into soc/dt
+git bisect bad d1221aeb5a44f1bbfe16a6efd8bc8b0bc3f565a6
+# good: [c4991aabc1f90359970c17db38342adf2678a181] Merge tag 'mtk-dts64-for=
+-v6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux i=
+nto soc/dt
+git bisect good c4991aabc1f90359970c17db38342adf2678a181
+# bad: [b2e668a60ed866ba960acb5310d1fb6bf81d154f] arm64: dts: rockchip: Add=
+ HDMI1 PHY PLL clock source to VOP2 on RK3588
+git bisect bad b2e668a60ed866ba960acb5310d1fb6bf81d154f
+# bad: [91abdc6b36e12a2c3a477bde90e9f1dd8c2413bf] arm64: dts: rockchip: add=
+ overlay test for Edgeble NCM6A/NCM6B
+git bisect bad 91abdc6b36e12a2c3a477bde90e9f1dd8c2413bf
+# good: [f62f325a586682b7fff643c9fd8edc348bff6abc] dt-bindings: vendor-pref=
+ixes: Add prefix for Ariaboard
+git bisect good f62f325a586682b7fff643c9fd8edc348bff6abc
+# good: [bed6964e779b5853de042da14320edf9f79506fe] arm64: dts: rockchip: Ad=
+d HDMI1 node on RK3588
+git bisect good bed6964e779b5853de042da14320edf9f79506fe
+# bad: [b3dc2a9315c4046b330a784c0527c671fd236414] arm64: dts: rockchip: rem=
+ove rk3588 optee node
+git bisect bad b3dc2a9315c4046b330a784c0527c671fd236414
+# bad: [4a2fdf91e1239d9659d0317f3e8e37681ac555a4] arm64: dts: rockchip: Ena=
+ble HDMI1 out for Edgeble-6TOPS Modules
+git bisect bad 4a2fdf91e1239d9659d0317f3e8e37681ac555a4
+# bad: [77cea7ca13680e14119a3b9635c7ef16cd7ee44e] arm64: dts: rockchip: Ena=
+ble HDMI1 on rock-5b
+git bisect bad 77cea7ca13680e14119a3b9635c7ef16cd7ee44e
+# first bad commit: [77cea7ca13680e14119a3b9635c7ef16cd7ee44e] arm64: dts: =
+rockchip: Enable HDMI1 on rock-5b
+
+--+3CwgnGsvSSr2pL1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfq5o4ACgkQJNaLcl1U
+h9DZsAf+ODL7cizdRuXEfFw2qwrf5hrYVGHEHbKxng/eNUh4pn9+XNX+5i0H+teX
+ydwp0gUmxzuiklLEplQ8FLLVb/jPpR4tr9vzM+6tcioezoLo9RhqiUJu/on03i2Q
+tzr2RR46BPej44hNho5kJBY4pwmD8D6KS/WuTlKnaDxl/J2dLHDyWzxI2BN0+5Mo
+br7T0PvDuSCAyYxuDeXfIs4dETkIeB1qdnzZHPBTf4rXKJPZ+RSEju/ucPdizBoq
+yhOkj3pLgvtW92ZnUz0Vyk4J5GFEFtk0yq0Wt/n/L5ga6hzRTaIYlGBC0yHYUUC9
+uW1p7ztFpuxYll+Olgv8PSnKNRktJA==
+=ry+H
+-----END PGP SIGNATURE-----
+
+--+3CwgnGsvSSr2pL1--
