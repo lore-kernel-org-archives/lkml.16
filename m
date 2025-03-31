@@ -1,112 +1,113 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145CD1DB12D;
-	Mon, 31 Mar 2025 08:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6E41DC994
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409426; cv=none; b=R1GDqqoquI14KoRUyixmWrFASLrN6j6dZ0srXvbFHnYJf2DDotdmirlNaP8PVAqhq3jSwyL0z2YW3I/wWQUPDMVdax+U+ELK6pbAg34trYcfagsTVuClbRSyMNeGTOykMGsZ7NFugWijN4/pOYUOcGqvCvsz/P/XeZyGeKI1Ygw=
+	t=1743409425; cv=none; b=PzWxkZYek/pwY8BE4zS4uW96lsvXGtrc5FZha2fLNfTcbrx9QlItFm6WJCQoyeKyaimnaEAmS52oadxaWhK7jC51LYMXLfMVtUWgpv6MEqUmPl9DscdpvE5FEPJYQKEavv+VZiz/NWmmwST35Y/tiEkijX4QRF20RKBttREtiHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409426; c=relaxed/simple;
-	bh=6xZI7M/xMltiZq1WTRGYM2XVR9GGLoDnoskC5hcPgWc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dWlpK/kx1QEVG4i9y2KeAI6ZhpJTa7I+0OCC0kGG6MBviUJXSBqkhO+K72Uf1yYe6VdbFX9fh1pOEVIlZqf/h3kMNPvTyWNG44D2iIPxSa0RPSvrN9x0/vAmmh7z9QcoXaXFHA77MYPdFe/QJ7YyReU3WRmSEPGUmUAJqsCJ/y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from inp1wst083.omp.ru (81.22.207.138) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 31 Mar
- 2025 11:23:29 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N
-	<sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Bharath SM
-	<bharathsm@microsoft.com>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sachin Prabhu <sprabhu@redhat.com>,
-	Shirish Pargaonkar <shirishpargaonkar@gmail.com>,
-	<linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH 2/2] cifs: remove unreachable code in cifs_get_tcp_session()
-Date: Mon, 31 Mar 2025 11:22:50 +0300
-Message-ID: <20250331082251.123381-3-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250331082251.123381-1-r.smirnov@omp.ru>
-References: <20250331082251.123381-1-r.smirnov@omp.ru>
+	s=arc-20240116; t=1743409425; c=relaxed/simple;
+	bh=ERwV/SnUIQ4OHPGNRv4Tp+NTvJ/Vyjhm4B9Sc83K5dE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=B2PemZSj/bau71T7PTvqTLVi/ksd1LzEo55UlWYdp/fwmXgxz5cjMacGELoxGTvA+l2m1l4yKT5eVIJlXBbrRiGCBb5lo2a76J8YhDXg7QaHRC+7JMKUUawp0jyZjeq8d1oi+1wh78vit1WJx1c1C0b+peaZgxAMqSRD0HegF80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mmvqv5Zm; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mmvqv5Zm"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso39773555e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743409422; x=1744014222; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QK2g3FGZIjasAQ7VSmorolGoY5GKHH9MhFTld7ZjnJs=;
+        b=Mmvqv5Zm+6prIa5/5c4NAYohHs7sZ43JWGVT+BMeFbttcsAHtlK+q8ywOZdS850k8m
+         uJQMQPuOLNhGKPUtwfGjFegOWk9119gN3zc9tuF1JPbQUQYimN3+xQsfRRIGkZkAChfe
+         8CRmChoSoVNOFNtYMcyeyC/9r7ee3j5MD9CCw6z+Mi4LkfxxrbBm1yEE42+JnoKyn3M9
+         46YJTMULCMKlNqCnsPqOkydTYdftZD8cKVg9D7Qf1OT70andvUcK7ENZQCTzJzGj8uME
+         n9VOttFSppcDOSQUfAiEaqH+FkIOoIqQBaKmAOdtVdrkBbvpBmBhe8GpTFMFvfzFczLG
+         eukg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743409422; x=1744014222;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QK2g3FGZIjasAQ7VSmorolGoY5GKHH9MhFTld7ZjnJs=;
+        b=cRdaq1VcA2OmUr3sDY0lrFwU9XdIDCZdcL7KyDwHeVlLHPMtxhOnmNoYct3kclhhnh
+         gaQHO046P1nFQJOimXqeM1TM3JkacDNoREGeRuE5t0xhUKbOYhOeQl8nSXHdWH5vXs8P
+         lKii6dLCzun2JmuHwwMk+bH1KiFuv0SbY68MRoRo68I45UTnAXGhTCt7pJLssSqdmNqq
+         L84mZazf+OvPqWflAeK5TSkXkA7M7lX7F8YB4YaLTeFKYVkumSNa50MDD08XCkijFVx9
+         cEf81Fle7UwzFlwei2kdU6FhNhcQu/oJ8E9/7cY/LBBjAYL9Ig3yojb1O0Fc4zXSN3DZ
+         MWhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEkW+5CCcAHbMWlMzrmtruTOTaDaFF7K228l7yJxyc4B7Gj414Qqhaz1+xML4xWWS+tSAiqtQUfi9gBZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjj2bTdjPzQTgaYQtQY/kigKigCWCmcobXx4eP+j7cZhYP9qYZ
+	QbWqyS1LBxzZ1rX9Tt4y0kTr5T37sSC3U8eE0ffYTetGK3Vr3hmm3L8DWmurp3o=
+X-Gm-Gg: ASbGncstgADBKfH+867UIle8nVSh08RnhzYynl2rQTdTQDqCKzg4ODX3x6ZDWt8XOWR
+	3xobVL3N3Fb1/7nWL7LObKCpu2AzqBuih5Z81zgrz0V4ALwT147MAnMD4kZ5ONYeg48I0C21nFK
+	ZWas9vAkMe/KoNyO8wm9wNyUKLgTmXQlqmIgm9dIe3QW1WAEa7/Pmb+5dP67TJGbeobB9qDMu+E
+	6EFlsBT7+W0yd3iqkszLovXFHx37nwSnXfEv3mG3HM4+KUd8oi9vk6NmV3sVNTzz0sJyJqTLJEU
+	nc6lw9MqBF+7MdJWNMtSixufWiOwvagVHqd5TCW5YlqETCyKtZCbf+Za/PV2m9CCqxuTRehDeGZ
+	bgeCwdDjTEsYyr7URfwwx
+X-Google-Smtp-Source: AGHT+IEISWKcgsRTpQ3Z0Z0qNZlwTz1sZpCHybyqtuv68X05X4q1wH/e/XIbVecbpVDX03fLTSyYhw==
+X-Received: by 2002:a05:600c:34d3:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-43db8526487mr85580955e9.30.1743409422187;
+        Mon, 31 Mar 2025 01:23:42 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a8e0asm10520079f8f.101.2025.03.31.01.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 01:23:41 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Date: Mon, 31 Mar 2025 09:23:34 +0100
+Subject: [PATCH v2 1/2] media: MAINTAINERS: Switch from venus Reviewer to
+ Maintainer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/31/2025 08:06:54
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 192231 [Mar 31 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2;inp1wst083.omp.ru:7.1.1;81.22.207.138:7.1.2
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/31/2025 08:08:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/31/2025 5:23:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250331-b4-25-03-29-media-committers-venus-iris-maintainers-v2-1-036222fa383a@linaro.org>
+References: <20250331-b4-25-03-29-media-committers-venus-iris-maintainers-v2-0-036222fa383a@linaro.org>
+In-Reply-To: <20250331-b4-25-03-29-media-committers-venus-iris-maintainers-v2-0-036222fa383a@linaro.org>
+To: stanimir.k.varbanov@gmail.com, hverkuil@xs4all.nl, 
+ quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, mchehab@kernel.org, 
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
 
-echo_interval is checked at mount time, the code has become
-unreachable.
+Stan has stepped back from active venus development as a result I'd like to
+volunteer my help in keeping venus maintained upstream.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Many thanks to Stan for his hard work over the years from originating this
+driver upstream to his many years of maintenance of it too.
+
+Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- fs/smb/client/connect.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 73f93a35eedd..84efcb541ab2 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -1729,12 +1729,8 @@ cifs_get_tcp_session(struct smb3_fs_context *ctx,
- 	 */
- 	tcp_ses->tcpStatus = CifsNew;
- 	++tcp_ses->srv_count;
-+	tcp_ses->echo_interval = ctx->echo_interval * HZ;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 29b4471574982bf3f8d03158cd5edcb94bc9fab9..9571d042c7f4f7d3b0eb3e627f3b5ae20cf52e99 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19590,9 +19590,8 @@ F:	Documentation/devicetree/bindings/usb/qcom,pmic-*.yaml
+ F:	drivers/usb/typec/tcpm/qcom/
  
--	if (ctx->echo_interval >= SMB_ECHO_INTERVAL_MIN &&
--		ctx->echo_interval <= SMB_ECHO_INTERVAL_MAX)
--		tcp_ses->echo_interval = ctx->echo_interval * HZ;
--	else
--		tcp_ses->echo_interval = SMB_ECHO_INTERVAL_DEFAULT * HZ;
- 	if (tcp_ses->rdma) {
- #ifndef CONFIG_CIFS_SMB_DIRECT
- 		cifs_dbg(VFS, "CONFIG_CIFS_SMB_DIRECT is not enabled\n");
+ QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
+-M:	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
+ M:	Vikash Garodia <quic_vgarodia@quicinc.com>
+-R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++M:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+ L:	linux-media@vger.kernel.org
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+
 -- 
-2.34.1
+2.49.0
 
