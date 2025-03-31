@@ -1,144 +1,100 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3F51D86F7;
-	Mon, 31 Mar 2025 20:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743453056; cv=none; b=AwzxPwRtMClObwcYb/5Et3GiZNReJyYa9O9GUplCe/QrQSt9pxNsSLNiKb/20o69tVthPBtJTlEIZqcjrYq3+W6qpgYX98PvCbJEP+KTik1qBpMbvA2Lm9keFp9gUd+DBZ8e9Z2LmW2p/LD3YGNo3ddeQqLq4NgoAQFFJlBoOIE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743453056; c=relaxed/simple;
-	bh=oSgO4eBDnIoUqaBokqlhEpgWsqEDw8Ac1dYf3mCoSAA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF36721A45F;
+	Mon, 31 Mar 2025 20:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743453093; cv=pass; b=aU5jhmgPV10EsJpULVTer3BXGAYrhR++jkHX9mkIzuBZyx5mc+JE2b8uaaNMo382YtIQQY4Oio5HdyWvRRFVsooBx49nyBUQFCWwuyBntChuZ8Nn5TTJS7Lbgr/TuNZEuoH7tU+Musb87kd/7WHmnRaRNsTIbcDwqnv53sAy400=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743453093; c=relaxed/simple;
+	bh=hHLCVMcAOvExqoZizkO/pzm1hnQKeEK7fJw+UzQd8xU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mjrIaFQkW56KT1jAyBg8/qilnemyvVL3UVNQF7VerddIZjcBcHlwuJaZiVlkazXqX2G5z3FWnz0ieMG7mc/iOwoT47oHtPYHx0YrkU2Rn+JwbZjMfhuViOHCs5Kty9WEzuKZqEUQ2iUK8nHdv4l94ZIaLLYhVvXJtejHsPD/w1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Up4u0ZtG; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmxqS9eRXt/215QCyL4dCz5dAUSOLQL/hY4BOzDCJKqa97uqM2xdoKy43L1ClWoKlPlU8Rfdni1YhCVoHO3UymuDFdLssNITmFeYXSIY2YEDnBJoIXxq1LPv2urmO6v11ymAWGz6dkEW9udHubrimKo7PLZR7AGa56QInKnWitQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=gXVfDhV9; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Up4u0ZtG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bwgUmQ/Ln+vl6Ggzqf2YmSZ7HB+LoNBmRfI1Y27KDkA=; b=Up4u0ZtG1+H47e4FsrNKSaV3o8
-	3eDeJC82AW9n1sRD92fm7KDWTFxTlKyVYZkALIOZ8v3lqVlbgS4tKxO6tohdct1W0suaUXUPBw/vy
-	nK+4MK+9EMi1TY9eDu0nvxRN4EbMm1sLlZQ3F3an+fF2Unme7J1RP2aW1qxVbw+U/yaqOgyRb9VER
-	t7CcYkvNr02rp6F5f/P7MUBu0xpg7Yfk56v3d3IEvx15X2xJjSdunMDG9w8AvtwNWSCGR+LuXkJKw
-	AvRUAYvC/r3H9c5G6KWGnYgiWy3Q/2qrZ6zZIlDzU6/LmAhDX3sjUVbomWh95H2aII31UVfXXTBBr
-	wlHheixQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59730)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tzLmQ-0004lN-2S;
-	Mon, 31 Mar 2025 21:30:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tzLmN-0001zI-1U;
-	Mon, 31 Mar 2025 21:30:43 +0100
-Date: Mon, 31 Mar 2025 21:30:43 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Da Xue <da@lessconfused.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Da Xue <da@libre.computer>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Jakub Kicinski <kuba@kernel.org>, linux-amlogic@lists.infradead.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2] net: mdio: mux-meson-gxl: set 28th bit in eth_reg2
-Message-ID: <Z-r7c1bAHJK48xhD@shell.armlinux.org.uk>
-References: <20250331074420.3443748-1-christianshewitt@gmail.com>
- <17cfc9e2-5920-42e9-b934-036351c5d8d2@lunn.ch>
- <Z-qeXK2BlCAR1M0F@shell.armlinux.org.uk>
- <CACdvmAijY=ovZBgwBFDBne5dJPHrReLTV6+1rJZRxxGm42fcMA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="gXVfDhV9"
+ARC-Seal: i=1; a=rsa-sha256; t=1743453045; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=MSLaKXxjKKtON9fuDG4zOsSKcnNFNMLGsBM6kco91FZVNCF5lGm2icBtJly6AmJhGrKhCTjgeEqnxhG5waGIQWbyKN+4pzsoKprd0uyzz6z3EoseE7x6YGC256XuLQDJxg7tmrr1XoQ2yCmiUV/HjYvw9QXpLE00dnJL4G76lnU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743453045; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9XcWWOjwTWx+dFyKcS/Axtzqwu1aqI3lz+g6+tOHQQc=; 
+	b=jGpKKAJbYyFAL/iAA4hTHo2pGHLOwjrfgzQ6Z46OuvuMjYP4aSQOsAuy5ts12VUrG21SvK/NTSkD34ZYpFJUshBvPn77xz+P2x/I3rWonNSLg7xhZp2eiDlOdbyL1+CW/75ZuJ2NPCl+URI7ccnFhxKwAaOmE0BJT4RIid5KYb0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743453045;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=9XcWWOjwTWx+dFyKcS/Axtzqwu1aqI3lz+g6+tOHQQc=;
+	b=gXVfDhV9eQ12VNtE6AYu4yUqt8nB7Yz+Exsfo5OlQ4wDwkiVkFuzeEb4tpb6cM/w
+	5VzV+h/6HJmKPGq6M3/t1eP2CsnWNutxoN5VRu7xmAGXvbAaj2cJN8et5Q+Lz7Aiucy
+	dMoVKOMHgf10oH+zto4TAfbrCBo983FhxBp/omx4=
+Received: by mx.zohomail.com with SMTPS id 1743453043292322.9326378894983;
+	Mon, 31 Mar 2025 13:30:43 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id EBBC4180D0E; Mon, 31 Mar 2025 22:30:36 +0200 (CEST)
+Date: Mon, 31 Mar 2025 22:30:36 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
+	Andy Yan <andy.yan@rock-chips.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre ARNOUD <aarnoud@me.com>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: Enable HDMI1 on rock-5b
+Message-ID: <jmb6f6beax3rmyutbkyl2hthlzzaguh2qlfdeibrbjdu44y6ea@rbuf6yjoo4v4>
+References: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
+ <20241211-rk3588-hdmi1-v2-4-02cdca22ff68@collabora.com>
+ <6d168284-01c7-4da4-8fc9-1b12e38b554f@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACdvmAijY=ovZBgwBFDBne5dJPHrReLTV6+1rJZRxxGm42fcMA@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <6d168284-01c7-4da4-8fc9-1b12e38b554f@sirena.org.uk>
+X-ZohoMailClient: External
 
-On Mon, Mar 31, 2025 at 03:09:00PM -0400, Da Xue wrote:
-> On Mon, Mar 31, 2025 at 9:55 AM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Mon, Mar 31, 2025 at 03:43:26PM +0200, Andrew Lunn wrote:
-> > > On Mon, Mar 31, 2025 at 07:44:20AM +0000, Christian Hewitt wrote:
-> > > > From: Da Xue <da@libre.computer>
-> > > >
-> > > > This bit is necessary to enable packets on the interface. Without this
-> > > > bit set, ethernet behaves as if it is working, but no activity occurs.
-> > > >
-> > > > The vendor SDK sets this bit along with the PHY_ID bits. U-boot also
-> > > > sets this bit, but if u-boot is not compiled with networking support
-> > > > the interface will not work.
-> > > >
-> > > > Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support");
-> > > > Signed-off-by: Da Xue <da@libre.computer>
-> > > > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> > > > ---
-> > > > Resending on behalf of Da Xue who has email sending issues.
-> > > > Changes since v1 [0]:
-> > > > - Remove blank line between Fixes and SoB tags
-> > > > - Submit without mail server mangling the patch
-> > > > - Minor tweaks to subject line and commit message
-> > > > - CC to stable@vger.kernel.org
-> > > >
-> > > > [0] https://patchwork.kernel.org/project/linux-amlogic/patch/CACqvRUbx-KsrMwCHYQS6eGXBohynD8Q1CQx=8=9VhqZi13BCQQ@mail.gmail.com/
-> > > >
-> > > >  drivers/net/mdio/mdio-mux-meson-gxl.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/net/mdio/mdio-mux-meson-gxl.c b/drivers/net/mdio/mdio-mux-meson-gxl.c
-> > > > index 00c66240136b..fc5883387718 100644
-> > > > --- a/drivers/net/mdio/mdio-mux-meson-gxl.c
-> > > > +++ b/drivers/net/mdio/mdio-mux-meson-gxl.c
-> > > > @@ -17,6 +17,7 @@
-> > > >  #define  REG2_LEDACT               GENMASK(23, 22)
-> > > >  #define  REG2_LEDLINK              GENMASK(25, 24)
-> > > >  #define  REG2_DIV4SEL              BIT(27)
-> > > > +#define  REG2_RESERVED_28  BIT(28)
-> > >
-> > > It must have some meaning, it cannot be reserved. So lets try to find
-> > > a better name.
-> >
-> > Indeed, that was my thoughts as well, but Andrew got his reply in
-> > before I got around to replying!
+Hi,
+
+On Mon, Mar 31, 2025 at 08:01:34PM +0100, Mark Brown wrote:
+> On Wed, Dec 11, 2024 at 01:06:17AM +0200, Cristian Ciocaltea wrote:
+> > Add the necessary DT changes to enable the second HDMI output port on
+> > Radxa ROCK 5B.
+> > 
+> > While at it, switch the position of &vop_mmu and @vop to maintain the
+> > alphabetical order.
 > 
-> The datasheets don't have much in the way of information about this
-> register bit. The Amlogic GXL datasheet is notoriously inaccurate.
-> 
-> ETH_REG2 0XC8834558
-> 29:28 R 0x1 reserved
-> 
-> It claims the bit is read only while the BSP hard codes the setting of
-> this register. I am open to any name for this register bit.
-> This is the only thing holding up distro netbooting for these very
-> popular chip family.
+> We're seeing failures in the Arm lab the IGT tests on this board in
+> Linus' tree which bisect to 77cea7ca1368 which is this patch.
+> core_getversion fails:
+>
+>[...]
+>
+> The board is running fine in -next so hopefully there's a fix already
+> there which will make it's way to Linus' tree during the merge window.
+> We're also seeing something broken with the HDMI audio devices, but I
+> didn't look into that.
 
-Which interface mode do we think this affects?
+I guess the root cause for the problem is, that the pull request for
+the PHY subsystem [0] has not yet been merged. It contains [1]
+("phy: phy-rockchip-samsung-hdptx: Don't use dt aliases to determine phy-id"),
+a fix for properly handling the second RK3588 HDMI PHY instance.
 
-As a suggestion, maybe call it:
+[0] https://lore.kernel.org/all/Z+pFou7KOQZJ1iy4@vaman/
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=next&id=f08d1c08563846f9be79a4859e912c8795d690fd
 
-REG2_<interfacemode>_EN
+Greetings,
 
-and possibly add a comment "This bit is documented as reserved, but
-needs to be set so that <interfacemode> can pass traffic. This is
-an unofficial name."
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+-- Sebastian
