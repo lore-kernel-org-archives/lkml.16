@@ -1,129 +1,202 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8093BBC9
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46FF214228
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743434730; cv=none; b=M9QZahIChvcrtKhpxLm52n5TSRkQ2lV7XnyM8wzIac/yvo5iQKGVTvpZp37EEmw9QgUbHeiJgNnjv3duXqACkjaGfy/HyoGbpb3A+kk0aOd5J8F3kdHpsNFlHTntb/uvBqIhNM3iJRhT/hJZ0oxu+X1IdVHC1nQN6M3czqRaJlg=
+	t=1743434827; cv=none; b=O3aV1YTJBzG0ubu2GhVzw+/mBRaPFRRGJ1tZd1i90NFkbA0E5yXNW7i/+WKrbS0t4PLPEaPuMOdBYgud4JupWiP69Ov6AEL2lUvLYH0Ah7XOYboi3Z0XaLHyyn/RIh76JbKdq4K8yfUun+J28N1GvazJvLTIl0dOVu3+PP1/Z7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743434730; c=relaxed/simple;
-	bh=MxYicsa7zNpBg/ssHY5baMXjK0/Qg9EI1tX2qcTcxAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OT+h3Ov9MvXbIYtaVAsLlR7T876Jw2TfmlzH4xp4TxTJH6dwYcCxPNq8bjKLpEjE4b5JT4jXamRvjpV5+o1w5EM2Pca97JKblc37dBkcusKZV0hIEGsCpr3uT+/YQFuL1rOqaPwRrWMVZgY2Ywgn83vhwZXPi7isqA/4PRmA4fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vd0sS36I; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743434827; c=relaxed/simple;
+	bh=XZVhDaAbSWOhuHkFG6pSknas5KywrNraRFIzSsDs2lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tyjnc/FrY0/JUpKjbruU9xxstLKuBgwlWKL8bbF5WEVTNn6Cf09kHh0UR/sSGDJAACCkN4WzNcf1ZBLrzK/xM2Dswge4bMPbI28hiul+URG70Qw46mh4f4V2frGnenadT16rhdJQO4fyq17en2Ws0zSHFMQd4mChOCXspFsCMeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PG1R0xZB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVSaERfW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PG1R0xZB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVSaERfW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vd0sS36I"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso46722315e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743434726; x=1744039526; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w1tt8qzUuinVbzUW/8V4BmxV1MSQ9WRk7iYpGOY8Di8=;
-        b=vd0sS36IcdyNu7Vjt4uhx4t4R3vE5vpPR10uRRqHWVV98rtmXRghRxFopoyBWi9AqK
-         RmnFp+62u+kDhjPM8AzVSkuPccMv31MaZuRcc6iuVcQ8ZjCAcinRMwroa3GlPPXNClJN
-         aOAs7zS5ek5L30B+zMLymZLSXtUtxqskGvIMPvZGektkmss+mJsqETrfnqfBrsZQR7Xz
-         MhbvEJiDif4WmVdx88ND7EFN73M5DtCMLXzOZL4pjshQjVk/4jy8nPuJp2ASAJhG2+qD
-         KSXthrSdht4ae+CxAqUaETPHDN3vKnIkTA+PTuw+necJghD5bP5/uJqCko7ZOEAKCLjE
-         VEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743434726; x=1744039526;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w1tt8qzUuinVbzUW/8V4BmxV1MSQ9WRk7iYpGOY8Di8=;
-        b=lmrccYGLXvqVcSUuctfexIe6SyNuK0UvkmMfhl13wHSM2toXUPi0Fzd/5wFN+QnlNZ
-         KatZo4mb1JokhzSgUzSvgEZscd+kLsQluRNm6vzCPvrPUVd3sz0XVmwZm9zURqBXGCeE
-         KiKZ2oxjiBhXaM421CG5HgOL0TfprBdSxeBbk81kfowOrUZn32KkWTINR6WB/4B4eRkK
-         9Aac5Jifcn/be8AFjEKDGN/7oYeI+Wnc2/I/Wq/OaBvKHCSeAMF5r2zqUwltgzvBrget
-         aCeT24RChugViLSI7o7EeKxjhBrK3TQTggyOpdMi2NSntVYan7v8IiHGHfH13dsoW4GD
-         BEeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUApV6pmYovdziBQer/s1RUJWw25YVJSL/W6A+mT9wVjxlZT412QnFFy6Qlt+PcdPhPypxdbtKmA5z/HoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk4Riu9c9U7cT9RZGPsfbqte4MYBh+plkBthpILGGyu/JZJEfm
-	ZXPQqbODx+NsXV2CUICE7Zw64W1NeVOUPg74UsSUD6PCCkCyleQjMb3UcQs91Tg=
-X-Gm-Gg: ASbGncvH8giQ1/P1CAeK9sR9veRa7Aw45A1PNO35l1uGjT7WgjK+GRNB3s1NctIWWfl
-	h1SV4vFWzf8T/sAJZHTKi8SLNREQQA0FNn/QJj3r4FgkFVcy9Q/eO8hH1CK09VNKLelHMDMIm4+
-	ijzucLGJmSbNZ8T1fcrVC2rSHM8dbzoUS6Yhp8QD+NxV6xeJcuONegGk28iVi6XWpkE1aBHEJwC
-	lSH1H8t91piYK9xz1FSPPnOCcyzIPKMEQs8hUAY7uYnw/q6p08HnY2nW/pcHZjhmoxCtV1M+VK0
-	h/iOzv9TQPNfHtSZSX6hDxze+vcIp5di9NcnKmiaCT9xsJEEzkdJ0Py7ihZKeB027P641Jzr
-X-Google-Smtp-Source: AGHT+IGoa9qAtKWuSlEZcX3/2RvJysHoPsI6Azqau9m89jMS4DNcYUxcGwtiVa9xvo1/t6HIzaO4PA==
-X-Received: by 2002:a05:6000:2511:b0:39c:13fd:e50e with SMTP id ffacd0b85a97d-39c13fde631mr7481977f8f.10.1743434725542;
-        Mon, 31 Mar 2025 08:25:25 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:355:6b90:e24f:43ff:fee6:750f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e33asm11708596f8f.66.2025.03.31.08.25.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 08:25:24 -0700 (PDT)
-From: Frode Isaksen <fisaksen@baylibre.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>,
-	Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>
-Cc: Frode Isaksen <frode@meta.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] binder: do not crash on bad transaction in binder_thread_release()
-Date: Mon, 31 Mar 2025 17:24:14 +0200
-Message-ID: <20250331152515.113421-1-fisaksen@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PG1R0xZB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVSaERfW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PG1R0xZB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVSaERfW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 900AD1F452;
+	Mon, 31 Mar 2025 15:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743434823; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
+	b=PG1R0xZB4srxpCoyuH2P41oVFOJsjMmPoaQPknpS8bJWB4wn8Qli+H9X+gSO/zmrk6TpnG
+	gdxcxHlmpf5mER4nOUpiMFbcBgqY4/QJi8fKU2J2LKoVkP+qx3KzzPgE2e3+PBZmjs/SKy
+	ccaeIZoGWxywORZOsbDM9fXt3cMrDg8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743434823;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
+	b=ZVSaERfW5JJCTJi7/qkZABWr/oHYliNOrFrxThZKR14OsGj5eZLKkMGqzP1GUzLNY0z1Kc
+	Og+3SYCiVnwFHEAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=PG1R0xZB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZVSaERfW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743434823; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
+	b=PG1R0xZB4srxpCoyuH2P41oVFOJsjMmPoaQPknpS8bJWB4wn8Qli+H9X+gSO/zmrk6TpnG
+	gdxcxHlmpf5mER4nOUpiMFbcBgqY4/QJi8fKU2J2LKoVkP+qx3KzzPgE2e3+PBZmjs/SKy
+	ccaeIZoGWxywORZOsbDM9fXt3cMrDg8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743434823;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HMmFCsqLjK22XQFPm+Ppg3nveLJ+YQdxYvvixpi6H1s=;
+	b=ZVSaERfW5JJCTJi7/qkZABWr/oHYliNOrFrxThZKR14OsGj5eZLKkMGqzP1GUzLNY0z1Kc
+	Og+3SYCiVnwFHEAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11AC513A1F;
+	Mon, 31 Mar 2025 15:27:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kmiKAEe06mc7SwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Mon, 31 Mar 2025 15:27:03 +0000
+Date: Mon, 31 Mar 2025 16:26:56 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.15] mm/vma: add give_up_on_oom option on modify/merge,
+ use in uffd release
+Message-ID: <sniaixyko3mirqm3hdnyrm56sge6bzuhyyq2o4dtmwxykifs7k@dqwlk6qlj2d7>
+References: <20250321100937.46634-1-lorenzo.stoakes@oracle.com>
+ <1f9436a5-65e4-4027-a22d-9e5500e34dba@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f9436a5-65e4-4027-a22d-9e5500e34dba@lucifer.local>
+X-Rspamd-Queue-Id: 900AD1F452
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,oracle.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,appspotmail.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Flag: NO
 
-From: Frode Isaksen <frode@meta.com>
+On Mon, Mar 31, 2025 at 04:10:41PM +0100, Lorenzo Stoakes wrote:
+> I know that none of us love this, but seemed to be consensus that this was
+> a viable, if semi-vom-inducing solution - can we go ahead with this?
 
-Instead of calling BUG(), set the binder_thread to NULL,
-as is done in other parts of the code.
-Log if it is a bad transaction (other than in or out).
-The BUG in binder_thread_release() was preceded by
-these warning logs:
-binder: 1198:1217 got reply transaction with bad transaction stack,
- transaction 49693 has target 1198:0
-binder: 1198:1217 transaction failed 29201/-71, size 4-0 line 3065
-...
-binder: release 954:1333 transaction 49693 out, still active
-...
-binder: release 1198:1217 transaction 49693 out, still active
-kernel BUG at drivers/android/binder.c:5070!
+/me barfs
 
-Signed-off-by: Frode Isaksen <frode@meta.com>
----
-This bug was discovered, tested and fixed (no more crashes seen) on Meta Quest 3 device.
+> Would appreciate ack's (even if queasy) if so, so this doesn't get
+> stalled. We can always revisit this (in fact, it's on my list...).
+> 
+> On Fri, Mar 21, 2025 at 10:09:37AM +0000, Lorenzo Stoakes wrote:
+> > Currently, if a VMA merge fails due to an OOM condition arising on commit
+> > merge or a failure to duplicate anon_vma's, we report this so the caller
+> > can handle it.
+> >
+> > However there are cases where the caller is only ostensibly trying a
+> > merge, and doesn't mind if it fails due to this condition.
+> >
+> > Since we do not want to introduce an implicit assumption that we only
+> > actually modify VMAs after OOM conditions might arise, add a 'give up on
+> > oom' option and make an explicit contract that, should this flag be set, we
+> > absolutely will not modify any VMAs should OOM arise and just bail out.
+> >
+> > Since it'd be very unusual for a user to try to vma_modify() with this flag
+> > set but be specifying a range within a VMA which ends up being split (which
+> > can fail due to rlimit issues, not only OOM), we add a debug warning for
+> > this condition.
+> >
+> > The motivating reason for this is uffd release - syzkaller (and Pedro
+> > Falcato's VERY astute analysis) found a way in which an injected fault on
+> > allocation, triggering an OOM condition on commit merge, would result in
+> > uffd code becoming confused and treating an error value as if it were a VMA
+> > pointer.
+> >
+> > To avoid this, we make use of this new VMG flag to ensure that this never
+> > occurs, utilising the fact that, should we be clearing entire VMAs, we do
+> > not wish an OOM event to be reported to us.
+> >
+> > Many thanks to Pedro Falcato for his excellent analysis and Jann Horn for
+> > his insightful and intelligent analysis of the situation, both of whom were
+> > instrumental in this fix.
+> >
+> > Reported-by: syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com
+> > Closes: https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001e.GAE@google.com/
+> > Fixes: 47b16d0462a4 ("mm: abort vma_modify() on merge out of memory failure")
+> > Suggested-by: Pedro Falcato <pfalcato@suse.de>
+> > Suggested-by: Jann Horn <jannh@google.com>
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
- drivers/android/binder.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Alright, I'm not a huge fan of the solution, but if you feel like it's the best course of action,
+I'll trust your instincts. The patch itself LGTM.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 76052006bd87..c21d7806e42b 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -5302,7 +5302,8 @@ static int binder_thread_release(struct binder_proc *proc,
- 			     "release %d:%d transaction %d %s, still active\n",
- 			      proc->pid, thread->pid,
- 			     t->debug_id,
--			     (t->to_thread == thread) ? "in" : "out");
-+			     (t->to_thread == thread) ? "in" :
-+			     (t->from == thread) ? "out" : "bad");
- 
- 		if (t->to_thread == thread) {
- 			thread->proc->outstanding_txns--;
-@@ -5317,7 +5318,7 @@ static int binder_thread_release(struct binder_proc *proc,
- 			t->from = NULL;
- 			t = t->from_parent;
- 		} else
--			BUG();
-+			t = NULL;
- 		spin_unlock(&last_t->lock);
- 		if (t)
- 			spin_lock(&t->lock);
--- 
-2.49.0
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
+> >  	if (vma->vm_start < start) {
+> >  		int err = split_vma(vmg->vmi, vma, start, 1);
+> > @@ -1602,12 +1642,15 @@ struct vm_area_struct
+> >  		       struct vm_area_struct *vma,
+> >  		       unsigned long start, unsigned long end,
+> >  		       unsigned long new_flags,
+> > -		       struct vm_userfaultfd_ctx new_ctx)
+> > +		       struct vm_userfaultfd_ctx new_ctx,
+> > +		       bool give_up_on_oom)
+> >  {
+> >  	VMG_VMA_STATE(vmg, vmi, prev, vma, start, end);
+> >
+> >  	vmg.flags = new_flags;
+> >  	vmg.uffd_ctx = new_ctx;
+> > +	if (give_up_on_oom)
+> > +		vmg.give_up_on_oom = true;
+
+Why not just
+	vmg.give_up_on_oom = give_up_on_oom;
+with no if?
+
+--
+Pedro
