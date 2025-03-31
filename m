@@ -1,127 +1,135 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD92B126BFA
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743442224; cv=fail; b=nBSZitjCXsVNcir3TYwluktXfI/oV9YmuIzeb10szM1GpG/+GXB1TWj3wyUotBhvkUsCwqC9zbjOuSYug4O0YgAaKrO7U12t6iA2EpxtJxr/Rps/JsK2UagqS+iv2mZq+qPJMQZGJzHUvmW/vCByopUAScUuBPSuqS4HiRUxYvc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743442224; c=relaxed/simple;
-	bh=/M0zQp2mYjTNfDufutYAC6n9+5eisyFQuGvd4puR838=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NT7g161TD10hShoFh5RrEIW1vSnCduFB++Z51OHOstDGkVEqJeSP014qUrU1DUBenEqUuHJPcX93hz2Le/RjBRTT05lbKjOW2EoV5A65RoXAug/GnJ9ffzP5I2s2x3DCzgknve1kGnTjLgxlqSdc8jh/iJt4+JS4VUhcFuPlR68=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=fI4jWdz6; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=fmKVEPTD; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010CE126BFA;
+	Mon, 31 Mar 2025 17:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743442336; cv=none; b=Fvr5iaBTudRjzBfbBciMKComQNQhiw2pSekvfLWI3W7NP8+BqrUccBjMCFr7LLbRqw8E322ACiEp3/2fJE/g85wWXtnDZr+/dTbrdCVmxlrq8cq7ilWgZvg4kMAcd/+6YvhIuvpmyzIIsi3CfOAM+QPQVWivFNQHMHU/04IdFSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743442336; c=relaxed/simple;
+	bh=zySoybPr1LS9gCbTUTDnbZKO2E3W6qo//cfUHqXvqPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W0x0ncXOLGPaQZI8fwM5KCJeMS3X1dmxkAzibGDEVYnCiuUaQZt3teFHNROG5AnsTjKFuWvsL+U37wVZa/bKLhT0WmNxpZZBC9iNWM+QQ9838b9e7mI3XxXCsXDJ50HOPnJBgxGOs/HiYmadiXvjaOOJZZh1NA7Thfc1U9BX0P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hn2oRuto; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="fI4jWdz6";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="fmKVEPTD"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id B2236480AAE;
-	Mon, 31 Mar 2025 13:30:21 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1743442221;
- h=message-id : subject : from : to : date : in-reply-to : references :
- content-type : mime-version : from;
- bh=/M0zQp2mYjTNfDufutYAC6n9+5eisyFQuGvd4puR838=;
- b=fI4jWdz6O4XjzW2OljXjM+/U6Vn6FXwYt51g3cqcMM2SBXwz2ehHHzQzlZDfbgxYQvCrZ
- tTGmvVB/a0IqiswDA==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1743442221;
-	cv=none; b=gft2Rk0NUl1qYVbWyIVKc0Dpl3DQuDwsjyeTzrTymIDhuAJXh+UDgKFFZgF0cUpB7QDfV83isc+q7DJKkERoxhrys3Cex8kFlZvWCQmcyk+Dytf9jW+lDIbsHshWMmlAD/gnw6CKkMBWd6GDSeoeJL7oOcQMPrLEMjXVk7gHU37Ii6kysVySAoJpOiBf57+vCrmug6bP4fGNQeiVg3eNP96n9uQiuzeq0R7F/07jbF/UU6A6gEI1k0Xh/g9obwz1pceGu0K34G7KOlFPsAycMhtr6lAdw0NznY+g4G7/56w92nc2iMYRPGTVZ1LQp5KfSXpSyXCKm/1elzBTgwgaUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1743442221; c=relaxed/simple;
-	bh=/M0zQp2mYjTNfDufutYAC6n9+5eisyFQuGvd4puR838=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=RadahWr56nZlVJ3bQGCfWg9CxD2nwNCczg71yW71pEiVJhamSkVx2yVZtYFCG1K4yE9a1Dobhgy9AznvoQ+7YewobH3fa7GNxd4gW+WCucvZ879j1wfTy1DnizgEB6tFUQt03geRUCKj0dx7Rr9ESb3//6kUkmGiJNmGuaPOkWJbR9h/f5r+d6QuYFPzoXfBMg4AxdHa5A/fdunz9MstOCPulFn8x32ellqJEdg661olGcfFkdcBmgAaC8uxKqe9FFpQkNCGdJXIFf6b03fqxVzoZ2v8l4VVtFrJd+CPVxe8RCNSJp/rvnDv0TNLrlDV5/x9GnyIWm2EtIV/ouDhFg==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1743442221;
- h=message-id : subject : from : to : date : in-reply-to : references :
- content-type : mime-version : from;
- bh=/M0zQp2mYjTNfDufutYAC6n9+5eisyFQuGvd4puR838=;
- b=fmKVEPTDPwSqXHRjSLzIXAxFWM+TNy8lcR6gATwZ7Xp5xf8rMefeo240EGeDBcDTVtVRa
- 40CQKFqt4BjOk/glTHQvGVKengj1MzfkkbLQ1uuiZq1XFQOHpvcBiN/wTrYf2dB6etL9otH
- fLV0D82KRNP/F9tIYarvi0F/M9OUvHwr2KQN/vKLLjWiA5FClBOEYFzn+8Uw8Jikw8Kwi/e
- FmLTKxQAAkS/A/x5bKNLmA+yPcDfnerZs2Crcl8OwDy9RbVKQf10i8D2L3QFUBdmXcgNBaS
- fyoftV8mdz+tmz5QNWwmifB2tD4nETXsgAwn5N3qUtecd84+fZ/w5O3Uhdgw==
-Received: by srv8.prv.sapience.com (Postfix) id 782CA280409;
-	Mon, 31 Mar 2025 13:30:21 -0400 (EDT)
-Message-ID: <ead550cacbdaca4667bd67ca0d353863c41c14e8.camel@sapience.com>
-Subject: Re: platform/x86: thinkpad_acpi causing kernel oops commit
- 38b9ab80db31cf993a8f3ab2baf772083b62ca6f
-From: Genes Lists <lists@sapience.com>
-To: Kurt Borja <kuurtb@gmail.com>, Jeff Chua <jeff.chua.linux@gmail.com>,
- lkml	 <linux-kernel@vger.kernel.org>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 31 Mar 2025 13:30:21 -0400
-In-Reply-To: <D8UKVCL4JHTO.1SFF4L6LPUE3O@gmail.com>
-References: 
-	<CAAJw_Zt1cYcg-Fa_rCecwHnWKMi7uO2UGNEhMsxPiQa-pgUMnw@mail.gmail.com>
-	 <D8UG6DGW1FKI.HZ5UFH4EVY9R@gmail.com>
-	 <f63160cde06665bc4bf0e0a18402074e3843f9eb.camel@sapience.com>
-	 <D8UKVCL4JHTO.1SFF4L6LPUE3O@gmail.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-c64WQJ1o0afgmOxPN6L2"
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hn2oRuto"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1954443e0c.2;
+        Mon, 31 Mar 2025 10:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743442334; x=1744047134; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zySoybPr1LS9gCbTUTDnbZKO2E3W6qo//cfUHqXvqPA=;
+        b=Hn2oRutogl8qbBuTGm/ej9ili1oV5qo3WxF1XiONqlzv6Q4aDOf9bEO/geGujdO8dE
+         tmyxtftHYgJAudUakYYYgEdvJJ7VDSZfph8SjfZUZzyZQIEYawRstL3f6wy+K0lQf4UQ
+         0YYNR6CN42nW9qSdDMfccYOx8qJh4f7qM05lIkNN4S4W1ZrJRmusQE4y4yUPvlpT8Ar+
+         7bWl89DsvzCKdLQuMiNknG9jItpHOSjKB5gTCnsOZeyOXemGNKM/oc+OATHjD+o3gWEC
+         RhQGpL/xT1Y22hogEimm5u/ysiCYJR+8rgicFJbO8GcpGUsaskXGi/WvZ5wHs1uQMA9F
+         RFeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743442334; x=1744047134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zySoybPr1LS9gCbTUTDnbZKO2E3W6qo//cfUHqXvqPA=;
+        b=OG4v0Q4/nNmQEHyDFN0SE2EJhUPBUi5iniiSJPRXJQI2KJhgKNvbdpdP/xnTpdvKjc
+         x86AnwSwPI0NLoNS2lLrgsgiKiNGlbfSZI4JPHzbhPVhvth+LKl+lCndX96eJ/y6QLNf
+         d7tEFWWoprvlkh8eyl5x8LojWzK/hoQxxJ2yH3DH39aPU4nWQ/z6PfG44xETKYbEzcMI
+         Er4Zqo8u2RlE1bD/G5UqYBnIN1UAhFviTQ3gGmVB+tnFSJfrnZREwDOxJ611SUPWNegG
+         9Q9yLyK6DL1QQvt6NGga/e0rPFKu7ObfKeHfpNrcUuThwDECYuHX9DpBxLO1ntstBrb3
+         7lJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlWxYYBvkqhiyndYmu5UnMcv1CZsKS31YuoLfi8d/HoFuNzfPN/rojEeXWQwPnFEZOcMzt5dZDZjJTsRwm@vger.kernel.org, AJvYcCX5mW2UXz0/emJCtJfyrsGF6gxUTupUMMQE750Ys+/mtkCvqdBjwBbQ2LfaPMWbI4Ugz8wkXQeg21A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrbSkISQr5hhqm755TyEc1fMfdmzClTebsJ/6Pcp/8nQS4Cnk9
+	apeNOVsWRKeqDNPzimvcEX5wj+b0qKVw50zus4W246gpEpOpUblFdEp562nc0aTylgXtmPuT60g
+	M4oY82ZYdYwZstxK5eGBz0xSJcf4=
+X-Gm-Gg: ASbGncvfQUqrDIi5mJ6PvusBTkjZ13ZPJyFl/KJsV7lDC0nSJQjS9jPS02dcPUIHgLK
+	nZVoNxSEI3oQKjRKGfQZlp0j4GWFgoLimA6lK6fvBNdG6xCf66pkNsYENcVgSEwvHGAoR57XmFp
+	ndmrK70kSFYxi1t8ej1x9a4QgjzOqA2rS99pL7jQ3hYmVkTabsORWn
+X-Google-Smtp-Source: AGHT+IFRt7nEawEZeSSAGR/c7AAI9W5lRTtFBUHzbaU2PE6O+vekjVBeiEfpVtBmNdr2HXdWKp1eXSD0GadA5yFaBwY=
+X-Received: by 2002:a05:6122:50b:b0:526:7f3:16e0 with SMTP id
+ 71dfb90a1353d-5261d35fd7amr5348864e0c.1.1743442333680; Mon, 31 Mar 2025
+ 10:32:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-
---=-c64WQJ1o0afgmOxPN6L2
+References: <20250329110230.2459730-1-nphamcs@gmail.com> <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+ <20250331165306.GC2110528@cmpxchg.org>
+In-Reply-To: <20250331165306.GC2110528@cmpxchg.org>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Mon, 31 Mar 2025 10:32:01 -0700
+X-Gm-Features: AQ5f1JrIIZgKp1cRUxc-JOkq-RdPa2Tf7EGPfmg76yBDjQaf_dXAo3NsY6ZhY-U
+Message-ID: <CAKEwX=Nw8PZYKd4TcC2+VW7URzT67aM0wJyYMu5X01ngbFO_Yg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering systems
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	chengming.zhou@linux.dev, sj@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, gourry@gourry.net, willy@infradead.org, 
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, minchan@kernel.org, 
+	senozhatsky@chromium.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-03-31 at 13:04 -0300, Kurt Borja wrote:
-> On Mon Mar 31, 2025 at 12:05 PM -03, Genes Lists wrote:
-> ...
-> Are all this driver's features present before the regression still
-> present after the fix?
+On Mon, Mar 31, 2025 at 9:53=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Sat, Mar 29, 2025 at 07:53:23PM +0000, Yosry Ahmed wrote:
+> > March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+> >
+> > > Currently, systems with CXL-based memory tiering can encounter the
+> > > following inversion with zswap: the coldest pages demoted to the CXL
+> > > tier can return to the high tier when they are zswapped out,
+> > > creating memory pressure on the high tier.
+> > > This happens because zsmalloc, zswap's backend memory allocator, does
+> > > not enforce any memory policy. If the task reclaiming memory follows
+> > > the local-first policy for example, the memory requested for zswap ca=
+n
+> > > be served by the upper tier, leading to the aformentioned inversion.
+> > > This RFC fixes this inversion by adding a new memory allocation mode
+> > > for zswap (exposed through a zswap sysfs knob), intended for
+> > > hosts with CXL, where the memory for the compressed object is request=
+ed
+> > > preferentially from the same node that the original page resides on.
+> >
+> > I didn't look too closely, but why not just prefer the same node by
+> > default? Why is a knob needed?
+>
+> +1 It should really be the default.
+>
+> Even on regular NUMA setups this behavior makes more sense. Consider a
+> direct reclaimer scanning nodes in order of allocation preference. If
+> it ventures into remote nodes, the memory it compresses there should
+> stay there. Trying to shift those contents over to the reclaiming
+> thread's preferred node further *increases* its local pressure, and
+> provoking more spills. The remote node is also the most likely to
+> refault this data again. This is just bad for everybody.
 
-Fixed the crash and machine seems to function normally.
+Makes a lot of sense. I'll include this in the v2 of the patch series,
+and rephrase this as a generic, NUMA system fix (with CXL as one of
+the examples/motivations).
 
->=20
-> Also would you mind re-sending your Tested-by tag to the patch
-> thread?
+Thanks for the comment, Johannes! I'll remove this knob altogether and
+make this the default behavior.
 
-Done.
+>
+> > Or maybe if there's a way to tell the "tier" of the node we can
+> > prefer to allocate from the same "tier"?
+>
+> Presumably, other nodes in the same tier would come first in the
+> fallback zonelist of that node, so page_to_nid() should just work.
+>
+> I wouldn't complicate this until somebody has real systems where it
+> does the wrong thing.
+>
+> My vote is to stick with page_to_nid(), but do it unconditionally.
 
-thanks =C2=A0for fixing !
+SGTM.
 
->=20
-
---=20
-Gene
-
---=-c64WQJ1o0afgmOxPN6L2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ+rRLQAKCRA5BdB0L6Ze
-2xYZAQC23INuLv4VA8j8dGvgLYFwtIEpe6wC1oakHrCo5g+HhQD+N7llWDT8Tb+g
-/8l5FTfq627HyeD16duiaUndcDTQDgM=
-=hicd
------END PGP SIGNATURE-----
-
---=-c64WQJ1o0afgmOxPN6L2--
+>
