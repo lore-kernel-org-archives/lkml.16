@@ -1,81 +1,44 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7213D8A4;
-	Mon, 31 Mar 2025 07:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE401E492;
+	Mon, 31 Mar 2025 07:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407069; cv=none; b=aE28NAYH1E/jl326v+ZyjSSARJ5HvU7o+AzVEvxP9TIp6txGsdpxxv3WKLdzBKgUAWhs7bfokiT9BFlAnx/virlnMlmghbj0vwvgVpIB6nqHotatevcJb/sL9lxwDj32XqHLeT6RHbNVTezcMihwfevPL3HSgHtSpNpnT07zdpE=
+	t=1743407125; cv=none; b=UvZOgC3rKlJZge8KnNi0jfIKgnBH7byaz45EF++jQj655BZIvs34e8+pTUdzQrNhwYoK5e2NMr5T1gd545BQBbnYGa1dDBckyNpVwIeNC1i7J33eyXn/WQi+12LqFqA3xM1xjI3hv0wvFDAaWzAyFbiAo4ZygKAJXeeVKqnhiTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407069; c=relaxed/simple;
-	bh=xmT1Q5a6AFUPK9f/ucAFOyzxGK4M6ko0iruMsYTwOog=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kWIk0Y5J5VuxeMioxdUYierfYJasQYC9aag3ZmbAANOgcE5hVju0q3Ta517ErRWrS5J9uam8qLdidMV7djNlksnrIm+KATaABtGfDTY05eZRjrKQj913YJ+9iopGxDTA9bUqyuUPnynboMIQlEXVaFyUDKKKs1H/DOfEXpgNbnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwxUtLTB; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743407125; c=relaxed/simple;
+	bh=LNXjH/AYu3T8jMXUfQS1IQ2NyOdLgzMfHNz0sBh7xn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ISCiIqGWwdoJstIvUxw0KOTy+t7q5pXlBN+++lHh/Z00sH0Hq0CdlWYsWxI4t7Jwqfu/i1jemCwjyBQDkdlR8y9ILD71pgovT/YZX47l+Ox5/b7kC/5a/O+22YmT3O7Q3P2j3GNWfE228MDBByIili0KMB0N8TJVOySu2mpo3RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ZW/ZIn1L; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwxUtLTB"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso26111025e9.3;
-        Mon, 31 Mar 2025 00:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743407066; x=1744011866; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8L3gLHE0iXx8zQGDJ8LlLcTKVC/8dXUo9ajwXYWTFg=;
-        b=NwxUtLTBsC5GdkchlO9r7BjGTBt6UkIcPcs9ls+YjHNpqwtzhdjAtxRLqkiwCOBfAq
-         FSYuwvOLFUzcmObNsqhTz5fBfoAQ5aPnARKu6B8sSis5rlZmRiGpJ3jtFb9pbuMfq3al
-         DrO6SDfAzOl+CuTjF0Z4Mi7qHlHa3oOkND1TFri86eQD73GWS8yIr54RCIX6i65Q52U5
-         YeYYew+JGT6h9Z2fJ2PLbd1lhA+TX/ls2t+v1LQVZiW9yuW1ruM6As4GnLhav0dIKkvA
-         487+9GCaEcY8UpAHR7+4YgpSHzuXXo8NN53eqv99A64QIhUlsn7uEIMw94PlMT21WiOy
-         wA5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743407066; x=1744011866;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B8L3gLHE0iXx8zQGDJ8LlLcTKVC/8dXUo9ajwXYWTFg=;
-        b=uutd2oy2OTly3p0ypqv4qJgWZ2tzw/0qXDK+Etq76smp6vEye7c9cI+uLYcXAMbMkv
-         4vkyuQf+bS00xBHqVEzVaKhWuwt0Fo8J0Kw20xQbiRN2ttA6bMkZHPXUKd8SYf3+b8wx
-         OqB0KcTEUq8DL3H4hFUqlZKlS9w1frsxuYw5hQgzs7LnPJcjRu0Bdi6HpyA6dlEokXyb
-         6EhQmkpAXB+hB2fS5EJYZjvbB+kjz6N5ZCSrEO2ihOU0lZtw96KxbIL/9inmZU7Vlo7w
-         ErLXAE2Wdy2gtJFz0Fdx01BVm+alr26QhLTzkRaJtjTDHNk5ekDU6ktLHOcT5x7Iz34v
-         XG/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV7xXW4cXXSbWMz3gWBY+du7gpv8PtXYk3/wyMnh187vnVjSwdoFK8b1O2J/+2uMbLlZXVYVCzG@vger.kernel.org, AJvYcCXVaVAis6mKHnxOU7e8pNh+si+dyTh351uKBsyw9vjKs2ApAiUMgMcLBOD5Ttkqdysuj1XCxZLYDzme86A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy53LUtWMSY9HiqNoJQCW6CS6spnoqTSuBHR/S8pjXFyqkMFg3W
-	GWMRGf0qFGHp2mwTPOOYf4ptdhcSWwgshbcOlL069inQMTlLdK9J
-X-Gm-Gg: ASbGnctkJcSUA+2uYnuc/rG7Fs9t5YMimA97a+U3mxTd7VqdPP1cISg8pViedhdaH7U
-	Z/LksQEy98gHa+af1yx3yU1oGw8hCBshpHa00hLU0/0q1CdlmfBbhpUYTgDEhhxgqG3XZMqsn6P
-	iNRPLz50hE1eG8BQ96DTHAHKHPNMZ6TT8jIL4iF9BmFqWq4iZL5tasBUYmFTNhpEX4Ci1mk21rq
-	O9X9XJCTCJFJC/yI7DMJip7fyqUoFyUOTTzjwLdhbg6zTOJ6M5f5H2XnezJF2VRi1SIsAU8qeoQ
-	uhcY8iQQbtGH3m/yWZMn7df6exuSyJSvk/4d8Tyg9H2HHBsiAA==
-X-Google-Smtp-Source: AGHT+IEU6fWpjT/iTPyqpawIrj8kideGZRhmNQegpvlEXo12tPGNrAQ7TR+EVkOdgUcKFpnGqAnuvw==
-X-Received: by 2002:a05:600c:5119:b0:43d:526:e0ce with SMTP id 5b1f17b1804b1-43db62bb97dmr49667695e9.21.1743407066132;
-        Mon, 31 Mar 2025 00:44:26 -0700 (PDT)
-Received: from toolbox.. ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588e9sm10812284f8f.14.2025.03.31.00.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 00:44:25 -0700 (PDT)
-From: Christian Hewitt <christianshewitt@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ZW/ZIn1L"
+Received: from canonical.com (118-163-61-247.hinet-ip.hinet.net [118.163.61.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 87CB03F2BB;
+	Mon, 31 Mar 2025 07:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1743407110;
+	bh=AxheEsUpH3+mm6//tzaZVFca3XzAr4o+WFeNiTzYoY8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=ZW/ZIn1Lkcmvrj4h5PSOaH3UNIJMTsOkLN6dvA/DFAwImorHXmIyBGdH6GBZjuTiZ
+	 TJNS5SIrS2fBWVDcb9X7OLVRSFfloAKvAd312GMU8W2AiTcxiT6FDy30zEPZzS7b+P
+	 D5/C83+GFEZcC3SPEv4u7PV+8GOIVgOUWPkFNZq5Ix0LROaI9kFZ7BTxGB/VFErA8Q
+	 aprV3HTNInnjNnoT806lCUUD9AYR23/VvykylhOf+Og/fVbTRUV7NNRLFIV8ki7V3w
+	 9TCF2tm7Wd7G+qv0hwvLXoR+6I7cTahvJddQUyfKHQ+Lbp/8A3PD1INZPXa/6jETo+
+	 PbZCsWksFqS1g==
+From: Ivan Hu <ivan.hu@canonical.com>
+To: ardb@kernel.org,
+	ivan.hu@canonical.com
+Cc: linux-efi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Da Xue <da@libre.computer>
-Subject: [PATCH v2] net: mdio: mux-meson-gxl: set 28th bit in eth_reg2
-Date: Mon, 31 Mar 2025 07:44:20 +0000
-Message-Id: <20250331074420.3443748-1-christianshewitt@gmail.com>
+Subject: [PATCH] efi/efi_test: Fix missing pending status update in getwakeuptime
+Date: Mon, 31 Mar 2025 15:45:04 +0800
+Message-Id: <20250331074504.4096087-1-ivan.hu@canonical.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -85,51 +48,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Da Xue <da@libre.computer>
+The pending status was not being passed to user space, leading to
+false test alarms when using the pending status. This patch ensures
+that the pending status is correctly updated and exposed to user space
+when calling getwakeuptime, preventing incorrect handling of the pending
+status.
 
-This bit is necessary to enable packets on the interface. Without this
-bit set, ethernet behaves as if it is working, but no activity occurs.
-
-The vendor SDK sets this bit along with the PHY_ID bits. U-boot also
-sets this bit, but if u-boot is not compiled with networking support
-the interface will not work.
-
-Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support");
-Signed-off-by: Da Xue <da@libre.computer>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
 ---
-Resending on behalf of Da Xue who has email sending issues.
-Changes since v1 [0]:
-- Remove blank line between Fixes and SoB tags
-- Submit without mail server mangling the patch
-- Minor tweaks to subject line and commit message
-- CC to stable@vger.kernel.org
+ drivers/firmware/efi/test/efi_test.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-[0] https://patchwork.kernel.org/project/linux-amlogic/patch/CACqvRUbx-KsrMwCHYQS6eGXBohynD8Q1CQx=8=9VhqZi13BCQQ@mail.gmail.com/
-
- drivers/net/mdio/mdio-mux-meson-gxl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/mdio/mdio-mux-meson-gxl.c b/drivers/net/mdio/mdio-mux-meson-gxl.c
-index 00c66240136b..fc5883387718 100644
---- a/drivers/net/mdio/mdio-mux-meson-gxl.c
-+++ b/drivers/net/mdio/mdio-mux-meson-gxl.c
-@@ -17,6 +17,7 @@
- #define  REG2_LEDACT		GENMASK(23, 22)
- #define  REG2_LEDLINK		GENMASK(25, 24)
- #define  REG2_DIV4SEL		BIT(27)
-+#define  REG2_RESERVED_28	BIT(28)
- #define  REG2_ADCBYPASS		BIT(30)
- #define  REG2_CLKINSEL		BIT(31)
- #define ETH_REG3		0x4
-@@ -65,7 +66,7 @@ static void gxl_enable_internal_mdio(struct gxl_mdio_mux *priv)
- 	 * The only constraint is that it must match the one in
- 	 * drivers/net/phy/meson-gxl.c to properly match the PHY.
- 	 */
--	writel(FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
-+	writel(REG2_RESERVED_28 | FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
- 	       priv->regs + ETH_REG2);
+diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
+index 9e2628728aad..77b5f7ac3e20 100644
+--- a/drivers/firmware/efi/test/efi_test.c
++++ b/drivers/firmware/efi/test/efi_test.c
+@@ -361,6 +361,10 @@ static long efi_runtime_get_waketime(unsigned long arg)
+ 						getwakeuptime.enabled))
+ 		return -EFAULT;
  
- 	/* Enable the internal phy */
++	if (getwakeuptime.pending && put_user(pending,
++						getwakeuptime.pending))
++		return -EFAULT;
++
+ 	if (getwakeuptime.time) {
+ 		if (copy_to_user(getwakeuptime.time, &efi_time,
+ 				sizeof(efi_time_t)))
 -- 
 2.34.1
+
