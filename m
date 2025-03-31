@@ -1,127 +1,141 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5358472;
-	Mon, 31 Mar 2025 21:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6FA21C178
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743457357; cv=none; b=t4oqw6vBfh7o+PKwSXkAKtKXSVbtIFGxHFQL2NvlbvfgvR2w50m/nC4Om7aeVmnPeARRrrcUXzY2VP/DqxdLvpnoMyCPrynGvkYCIplWKXXKAajayTCqRS/tjxf4wYPcHyOgf9gJItg5cpFBFc9yLg7fkythr1Nea1Tg9Rup3hQ=
+	t=1743457381; cv=none; b=Bo3eVGUz8yoFLgFLcm1on7o19p1DDgCYhO59uNx2G+HmK3J5sRpwBFd2EHxbPOc8KUPOUqbw5MApLAKki+bVgCjqtHPfnrrAlQjJb88bWrkDCwAJ45AjwJHcVID/JWn7411O2Z9eSdno4WYcC8yI64ndrwVep6yJU8SCr8HzVfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743457357; c=relaxed/simple;
-	bh=eKy1iJR4g5U3s+aFBDikNbhsOoPfWdMM3ym1vPp2i0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AGx8myDV3VP0SlSfuOiAk/WuaNPG3zjqrMyR/+2BTQQcwAtBznOc8UnlCBFeP8odvP047PAQNF6vMnU9i7WXb/gJU7/3x+Crw5MOKe0uURmLzdKSXTFKZsG7qAA0VZiNK5ryeO6pAN2Kg74i/77jVBJXNfuavF2chTH1yb+w0J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=FuSaIXew; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743457381; c=relaxed/simple;
+	bh=Lm23pDBVwGuHLb5lixyGc1iJK3RuhTeNRxc+ez3eQY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JF0tNzRZGPV59OF9ME0SJTaDWbAvCmwOTHi9Vd8Z9n1KB8TGIDt681SfNqLbqql6FnfcxzbaxKvHf9glkK2Wj5t0UQgVN/leTxJZnAQIvjFGvuFFHoEWw4ED5c6gpUgUjIv3OQvjAL3Szv9Ns+opKTf0CrwJRmMFWqkRXD3kb5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Tah7GTQX; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="FuSaIXew"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1C99410252BE4;
-	Mon, 31 Mar 2025 23:42:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743457353; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=UCntAeEomuMLgqZmqZj4SrvGP+3DLTO8xxLbbymA6n8=;
-	b=FuSaIXewAfF7+H7TSOGHjWpA+pkSIOEwwXyr4uTcTv25w23zJORlyoZajX3yHZ9cxSFd/h
-	TRg/I1Bum6UAfwWPzsTmbQOGMTvdldauacrYXlWWyzysy+LqoPAPa7OIYAdLbM2AHvM1mn
-	esi3dRDPCrS8TE9Pyt7YGBWySxHpfaZGRotIdeC8zCK/dQULXeiQLU5XvTIJd+aUgufKQd
-	6Oxyft17aC5rtHT6vRBlmSLWXkHX6SHTy/FiVzQN6atxZtlgnfbcHIsMVWxPnC82lrnq6/
-	pvh23yqBTVlI1/pgsIYjelfif3LZod1cKxlnUJgSpoybxWWyRdz0dbfJEFOCdQ==
-Date: Mon, 31 Mar 2025 23:42:28 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/4] net: mtip: Add support for MTIP imx287 L2 switch
- driver
-Message-ID: <20250331234228.5d8249ac@wsk>
-In-Reply-To: <ec703b87-91a4-4ed0-a604-aceb90769ab0@gmx.net>
-References: <20250331103116.2223899-1-lukma@denx.de>
-	<20250331101036.68afd26a@kernel.org>
-	<20250331211125.79badeaf@wsk>
-	<ec703b87-91a4-4ed0-a604-aceb90769ab0@gmx.net>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Tah7GTQX"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so9209704a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743457377; x=1744062177; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MPuGyIJoDDjA0SSObIP3jFx1wV25IQcopdyUBR+aHdQ=;
+        b=Tah7GTQX+lFoyKRrzi+6yl2dPRi39cxdosD/lBFo7V4dD5X/BByt9YsBEpbWc/Y0tE
+         LQwr3jEz0cHc/fQqfZm7NXjOCn/pyr3XCEBs9sz84iFO7x75+UDz7G5l8CzagNfQA2kC
+         6yQtL8SOTPp2PAIEp43lmPvVeq3qsr2IWpYCw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743457377; x=1744062177;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MPuGyIJoDDjA0SSObIP3jFx1wV25IQcopdyUBR+aHdQ=;
+        b=tTreL29h5AuuBA7bNfVeuV7bVu8sRi1VKdUZ13FIcQ9RyXeMGNNfNFTNU6lOfZuT1y
+         h0MmvJacQZ2mi7QYD0bAxgKQ2IE8I85orSrFbvIbhGVGJaYea3AIFstareKaKYFC6ylf
+         A67yKOWDhAzxW/Zfl7ur+FKfkA9rM+kMrKDStyiXCCxJLxhsvPABAgxBXMNPWlKBmFW9
+         J6IJcqM/R5rD+OXjVD3k/2JzKl2BY6lT6j9NH3J8uspV3XNY11UJNeCeQGjkSQizjw0P
+         NQWzt6KpS4ir18X+lEvT8bHvw8J8oMm0xtt5z18lZm6YUuOmCZC4Da9PtSVkfCXpE2pW
+         hB1g==
+X-Gm-Message-State: AOJu0Yxk3KsFmAn6fk9v8vnI+/yQPMQ2EMUJL4AkOYzQHQ6fCs906+Xr
+	z7zxfujrGgNTlV7tDr7qhgRPWTWuTso8E7aMazSKZJ4payHhtpT3XctBrpswkrZ4QIims3lSyIa
+	1u+o=
+X-Gm-Gg: ASbGnctFOUXbd8/dTCKuu/t6WPxcBS3ydjLZvxCVK5RgXcZZA3XuZ7oeC9mW3B6P4je
+	ies43ifVqJdZOydP46B2U8xEyAto7UNRD2yWkjz8JXeKxiAQUdqo6UH0y0SZZkKNraw7uDWJvOf
+	B4WXdTyE2OMiHIcs8IqJbDOO8Mz8ZwSMQVZvuppdvGnkg3lcHH2EkW9A1UY9QYH+J0UN7m5GzmS
+	UpX4lkCz1XJEf6hzs0Hrc7XK1oIEzdgiIEHEfeOTySC3MeCSxtntyU3BK27NjNNOAed4S9eFGnM
+	JmmR+inwdhQZr7TOOHoRnXUgExsEF/obJ7LGKzcQJZGxLP5TUk5WDtYLh2yAKjkU0s3QeZlP+xU
+	Kd46NqtedJkYCfWYSQRY=
+X-Google-Smtp-Source: AGHT+IGM4VCewRMrmLphsEHiM5GHlwXSF8aXEC/Oq5X8thMrTgeA3JRwkXhZM/hEk2nlfQX+7jAaOQ==
+X-Received: by 2002:a17:907:9629:b0:ac3:991:a631 with SMTP id a640c23a62f3a-ac738a9a6b5mr853507666b.34.1743457377246;
+        Mon, 31 Mar 2025 14:42:57 -0700 (PDT)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719278dc4sm676530666b.41.2025.03.31.14.42.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 14:42:55 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso9001696a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:42:55 -0700 (PDT)
+X-Received: by 2002:a17:906:c113:b0:ac3:8988:deda with SMTP id
+ a640c23a62f3a-ac738be3371mr773843566b.40.1743457375081; Mon, 31 Mar 2025
+ 14:42:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/okte2gjYXUvf+jGnOR83L_j";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+ <20250331133906.48e115f5@gandalf.local.home> <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+ <20250331165801.715aba48@gandalf.local.home>
+In-Reply-To: <20250331165801.715aba48@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 14:42:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr_8h8f6PhcZPJ4rHbzRksFJUiGmqKEAvAP7bvcH_lEJ4Zf6XawSyFboTU
+Message-ID: <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
+ the vmap of physical memory
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/okte2gjYXUvf+jGnOR83L_j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 31 Mar 2025 at 13:57, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Note, this only works with RAM.
 
-Hi Stefan,
+That's not the issue, actually.
 
-> Hi Lukasz,
->=20
-> Am 31.03.25 um 21:11 schrieb Lukasz Majewski:
-> > Hi Jakub,
-> > =20
-> >> On Mon, 31 Mar 2025 12:31:12 +0200 Lukasz Majewski wrote: =20
-> >>> This patch series adds support for More Than IP's L2 switch driver
-> >>> embedded in some NXP's SoCs. This one has been tested on imx287,
-> >>> but is also available in the vf610. =20
-> >> Lukasz, please post with RFC in the subject tags during the merge
-> >> window. As I already said net-next is closed. =20
-> > Ach, Ok.
-> >
-> > I hope, that we will finish all reviews till 07.04, so v4 would be
-> > the final version. =20
-> well i appreciate your work on this driver,
+The issue is whether there's a 'struct page'. And "being RAM" does not
+mean that a struct page exists.
 
-Do you maintain some vf610 or imx28 devices, which would like to use L2
-switch?
+For example, using "mem=" on the kernel command line will literally
+limit the amount of RAM the kernel will use, and in doing so will
+limit the page allocations too.
 
-> but this is not how it's
-> going to work. No version of this patch series had a review time of a
-> week.
+IOW, all of these kernel command line things are *subtle*.
 
-I just pointed out that patches would not be pulled (or anything else
-would be done with them) until the merge window is re-opened.
+Don't mis-use them by then making assumptions about how they work
+today (or how they will work tomorrow).
 
-> It's about quality not about deadlines.
->=20
+> I guess you mean E820.
 
-:-D
+Yes. Thankfully it's been years since I had to use the BIOS
+interfaces, so I no longer remember the exact line noise numbers...
 
-> Regards
+> Mike can correct me if I'm wrong, but the memory that was stolen was actual
+> memory returned by the system (E820 in x86). It reserves the memory before
+> the memory allocation reserves this memory. So what reserve_mem returns is
+> valid memory that can be used by memory allocator, but is currently just
+> "reserved" which means it wants to prevent the allocator from using it.
 
-Best regards,
+That may indeed be true of reserve_mem.
 
-Lukasz Majewski
+That doesn't make it any better to then use it for 'struct page' when
+the MM layer has explicitly been told to ignore it.
 
---
+Particularly since my first reaction wasn't from "that's wrong", but
+from "that's stupid". Generating that temporary array of pages is just
+bogus overhead.
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+> In fact, if you do pull my v2[*] pull request of the ring buffer code (that
+> removes this user space mapping of the persistent ring buffer logic) it
+> actually adds the ability to free the memory and add it back into the memory
+> allocator.
 
---Sig_/okte2gjYXUvf+jGnOR83L_j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+.. and *after* you've given it back to the memory allocator, and it
+gets allocated using the page allocators, at that point ahead and use
+'struct page' as much as you want.
 
------BEGIN PGP SIGNATURE-----
+Before that, don't. Even if it might work. Because you didn't allocate
+it as a struct page, and for all you know it might be treated as a
+different hotplug memory zone or whatever when given back.
 
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfrDEQACgkQAR8vZIA0
-zr3zwggAgZ8Wu0bOaQkLLopJTM9SIopbyU4MrpYpKkdbWhImV32dIF9o6jegDmy0
-e/o+Pm2UHCf5eoGg5BuqSjiGZ0tPXSHPMWn6j82p6AtMWaHLq8taHYdJcLBXM/uW
-Gyrg1W9Vedntq/vh2vigjnBod/vvmFbSEZgPX4tPMckPvaATJy7BwD04HnvdR5aU
-TfXVgDB4KeS13WGXI0wfSadRBUS6AjhAtj93SeQcbbhWOG8hRLvzFaVPKvF5pRzF
-UDK1yojMqgDgpAfvCuz2EUH+r8olSz8EAui3nhyMhyI/nqp6HY6VQtkFZOdY9vYu
-xUNZIw4qn2L3rsFBbxsdxrDzj3MLuw==
-=7djP
------END PGP SIGNATURE-----
-
---Sig_/okte2gjYXUvf+jGnOR83L_j--
+               Linus
