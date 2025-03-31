@@ -1,356 +1,547 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F4B1C1F22;
-	Mon, 31 Mar 2025 07:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743406039; cv=fail; b=R2aHOSYpzzt+IgDp5C2WL110LfaijUQZsCrvZX+DtWdQrSL5twchb0BuL/Gbn4wWhVOj5RAEmVU4bj4HbZ4thwfduIyMa+Pvw6CYrcf+996jibO49eVYm0fZv8IvTk+uxfE7+djaCi0L0lbMVckPGzXLIeAsG16mIF743eLbYCo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743406039; c=relaxed/simple;
-	bh=jT5RVgsx6i7o3pHO9rdyIQOs4JaImNbZ7ejwqpvoZRA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TwsowrwDb5Lzbq74hP9G+knU4JR49ZnbZI5SNsUydoo/xkPv+5To3AcucEt2+xYo8cVJ0SuFDppy2BZae+FLeuzbgGfG0RzqOCeWMqX51HN8b1kmq1wJUmYQa4rxPXSElvwysYFxBsOwAKRT+wcY0FfCZeYWIv3Pc+vWSGroTyg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3dYFr8O; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E4F3E47B
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743406091; cv=none; b=Z/zkq1TfVY0/wr19+3RXt8CwSinlN2F87DZypH9RqW47JdGvWfMExV2iWctkXQuw8AA0nVC7OyXgu0571aX3yqXBQWm/oz9he2VlwWXtvG3SNiNfzHZCxw+i4m8mP6/aiOHtl34H141MDGJyF9TP+JUtVNF2z6hpI2bYpNnxqMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743406091; c=relaxed/simple;
+	bh=G3+SLx1S+eQfbmOPWq+MSxweKtTaJj5eojS/glD+ZDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FULK7txa0taP4W2diYX1WTnb4MTMVYWSrZB2LllQ56aPvKrh+RjwS5nCA8ACDHMCzZQfafx3K6Cp+eMIRGi08wZD+vcIW0BQ4Klwu/yyGRt3Hl8DKLYDIc/GRbKhjcOu6wdyGnB+ZoZPdUV06VuMzLjc0JQtD6G4UIUfcm+ebww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QHc/iNTr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3dYFr8O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743406038; x=1774942038;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=jT5RVgsx6i7o3pHO9rdyIQOs4JaImNbZ7ejwqpvoZRA=;
-  b=W3dYFr8ON3lyfvXJ5p2r2GND6ByX9z4aco5iwZDJ9mNXLw9by3OuxEQ/
-   +qhh2x9wrXXVVlyisGl5/anbmKYESfp6qijJ/nCgTi5e+otNjBW2XXjcT
-   dU4gF4VuIWJXfwETJ3yiLkUAMZmCGKKMlnNhIM4djTVDVGcn2B1OCirZ3
-   HTbiCNg9LMpu0FU3XsGWG/I+efl4vLFmsohkMVxOHTo1n6SHtOYMGDggT
-   Qsn+tyemcql/iWXIfdQ/+8RjnjDQ6wuQctB75yh4HUCq8qd+tWt6QrjU+
-   Lbc/9h3YWDdkSRtCvlhNB6ENiwZyuaS1QIhGee+U3Bi6wonuOU6suClqD
-   Q==;
-X-CSE-ConnectionGUID: F8lA1XimR/Sj7zlZrQ7bMQ==
-X-CSE-MsgGUID: vaY10BUFSqiZqCUFlB41fg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="44573475"
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="44573475"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:27:17 -0700
-X-CSE-ConnectionGUID: uk3OiXSNRWazNJg7Uk+nGw==
-X-CSE-MsgGUID: Sa5YFn9ORLqoKGp4L0wOdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
-   d="scan'208";a="130723116"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 00:27:11 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Mon, 31 Mar 2025 00:27:10 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 31 Mar 2025 00:27:10 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 31 Mar 2025 00:27:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JiV3pjp5GPcGWqgvx5K53Pd2DoF/CXEA0U4QQxzpbMBYFWNlvTxz/i1Ag4iXx1lpJ+l9RSXBH4qdqZq2Bf/NDtiP7DZ/N8/6wOKFxSy7OhI1OTAkpHOoUDcCfxoJI0ZQ1uhz/OlcZSYwCCt6Yj+vwu3nJcPW7dh5a72HwY1yqGDhdxxAS2MdLn5lN3pGk4wweB7BMn4V057xgfoKPZSRFsx5qYKk7+Jy0eHqs3cbdGwQvgBXLHhXvuWcz0wN+tU8ktVi6/kzad/+dbkMLlgubbeU1JQyja0xqIqQxz9o/hCkNUjryiHvTrhuYGzlESjv/KvhGN0Cl4cn3RaDAm3lUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jT5RVgsx6i7o3pHO9rdyIQOs4JaImNbZ7ejwqpvoZRA=;
- b=UxJeBLmOzUWlNItS2nOazSI+W5RXBEkddHTD2cI5eH8oTNS9xv7DADmsxodjHaPgKma3gwhUtvBRY595BB9WmZuXvMNG0RNhMfCAHFsaNNJtPzNn2SRO9zv8smsLC2RZ1fHPBZ9SSHYl7udD81vcLhgiZeCcw3DWmHhsJ297Ra4tYj7ROZx0kej2ENayhR9AG1E6HmXxRwSKMSuPAa7B8lefVNcmVjlHT0pfhQbCDGh4NfnvwRcfhPX0RyIoziDAN4ltiwfcMgYCzd2GwZN/gYI/S7kVvQ1oj9YbLDzywczuDMFZ3z8ov90gafPiZRg83GViCx+zn11ZUiY4lJshYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
- LV1PR11MB8849.namprd11.prod.outlook.com (2603:10b6:408:2b3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 07:26:45 +0000
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a%4]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
- 07:26:45 +0000
-From: "Reshetova, Elena" <elena.reshetova@intel.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-CC: "Hansen, Dave" <dave.hansen@intel.com>, "linux-sgx@vger.kernel.org"
-	<linux-sgx@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "Mallick,
- Asit K" <asit.k.mallick@intel.com>, "Scarlata, Vincent R"
-	<vincent.r.scarlata@intel.com>, "Cai, Chong" <chongc@google.com>, "Aktas,
- Erdem" <erdemaktas@google.com>, "Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>, "bondarn@google.com"
-	<bondarn@google.com>, "Raynor, Scott" <scott.raynor@intel.com>
-Subject: RE: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Topic: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Index: AQHbn+FDiJjsRSw2cUyPYDKGfVHjnbOI1BeAgAAEgICABAKjsA==
-Date: Mon, 31 Mar 2025 07:26:45 +0000
-Message-ID: <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
-References: <20250328125859.73803-1-elena.reshetova@intel.com>
- <20250328125859.73803-3-elena.reshetova@intel.com>
- <Z-bhczXA6aHdCYHq@kernel.org> <Z-blOQ94ymUsDwPn@kernel.org>
-In-Reply-To: <Z-blOQ94ymUsDwPn@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|LV1PR11MB8849:EE_
-x-ms-office365-filtering-correlation-id: dc27c91b-de79-47a8-4122-08dd7025641e
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?VzQwZ1ZNandJMFlaZzlmclZJQnZxOGRBZ3dySy82cDBWOTJMdUhYVWNBOHlu?=
- =?utf-8?B?UTNzRFladjZLdVUrbmV6QzdpOGN2VDN6MDg5QlROWUlFNVc0ejM5MjZDaTM2?=
- =?utf-8?B?bVp3ZStBemtxZ1VCN3lwSkdQcHBTWlFRbGU3ZTNudTB0OFIrcXA1QStyN3BI?=
- =?utf-8?B?VVUvM0tsVE9Ra01BalBheXoxL1Z3SWV3OFRwZVdhajJEZGdKRU9aSHg5ZTI3?=
- =?utf-8?B?TUJqc2piRkRxRktaZWoxc1U2MlhSbnJ5UjRaK0VkWkcrVjE0UGZZYmx4OEFR?=
- =?utf-8?B?allVSGVGRTdRTXduU0RPdE5ucS85T2I1Z2RiS0pjb3V5aUN4akF6cE5KcC9i?=
- =?utf-8?B?VFVYaGNiRllGRWFIYWlFbzk2MEhoakExWmRWTGNERkphVWloY1YrRS9FN0pJ?=
- =?utf-8?B?WWs3eWthdnFIRjJlTWtVU1g5MmtHcW1laU5UUy9Fd0RqaWtKSmg3bzJ5OWVY?=
- =?utf-8?B?aWJ1a3lENGpQR2hEMFIreUtSYi9LU1doOWJNRTl6VTc4MmVZdmYvV1dUdHNK?=
- =?utf-8?B?MXkzU3NRWDU1a29SWWllZTZSOC9zZHV6WWpjSmRGcFdmd1ZqczQ1eXQxQmxU?=
- =?utf-8?B?VVB2NC9wOWx0c2hDZUc3S1NmQ2NrUk9mMzM4UkdIWU15VkQxNHNTdmV3WWhj?=
- =?utf-8?B?Z052QVlBY2srcGswOTdWN2tMSjBlMENWaFRld1M3R2kzd3lzV3JxUDhMdHBl?=
- =?utf-8?B?NzZjNDVCWFNDalJGUzEzT1pvYytIdjgxWXNFZ2F4bG11Vy9XZzJvTm9IblA4?=
- =?utf-8?B?MTAyQTdlRnBRaU1CZzd6T1ZYM0pKSjNhcWhDaVI1Q3NBZk9LNzlWQ1hHdUVU?=
- =?utf-8?B?eDUvN3ZDWDBIdVVXaVhqQkplMHV0VzFHUFJ4Ri9mUmI1cEJZRnY0L1QvUVpk?=
- =?utf-8?B?ZVJLMy9keFpkNWkwckpjbllnVitFc0d5dFFicFhFMXR4OG5HTDUzQnlCNUcz?=
- =?utf-8?B?TFlqWStzMks4ajF4Z2xuU01GZW85V2dkRXg1SFlYY2pyNHZtek9FOFk0V0h1?=
- =?utf-8?B?akdTYWhUSk8wbnB2YmVyelFscmhaT1BXMVl4cklXZE41eGoyeEFGcFdDUEFa?=
- =?utf-8?B?WnZaTlVVd3ByQlhxcFJiclhJcG1LWmZpYi9NeFFWMEM4U3FjY0pDTHpzWnJF?=
- =?utf-8?B?QWhhS3VkSUJzWENPemFSeURzR0E2d2xLbGZNbkhnVlJHdFN5NDRJNy9pOXpx?=
- =?utf-8?B?YUxFUGFzMWNkRHRKSnJTeERpODBDc1ZrNnRmVnZtLzN1UzJhZU5tVTAvSm1l?=
- =?utf-8?B?cWsvbzBiNGtVbWRHVVA2WCttTjUxK2xKeGJQWDFWOUo4OG9PQmhuRnhTOEM5?=
- =?utf-8?B?RXFPaFBjZFp4VWd6cHVRbXlHd2tnS1ZUTXUrdzlQZU0zc1JDZENCSzJlUDBR?=
- =?utf-8?B?VGZUcFFhUXUwYVRaY3ZCV0NieWg4ZjFkMGtZMUNmeW12T1lXdUtCYWQySXBl?=
- =?utf-8?B?V0RYemt3b3cvWGVpSjV4ckdqR3MrTmMxOHFlNG12a1JhWXdSZzZFTEdhWFNq?=
- =?utf-8?B?WTJ4REZjN1ZhQzIrYmw0ZmthNDAxYkN5allvSmJtYUhQekJBa3BzZEJCak8r?=
- =?utf-8?B?WTgzWDR1cnphRmlpMHZnSng0TFpaR3hPVUpZcFJDbU9kNUZFM25jYlViSzM1?=
- =?utf-8?B?OFU2dnBWbkNLYjlNNjhzT0tTOGliNG5IajVFMmhDejBVeXUxQU05TzI2MHpW?=
- =?utf-8?B?Sjhham1ZWjRMUWZPYXp3Zll5U1FQMHZnckp4OFhMU1FLbEVWd05TaU91RWdR?=
- =?utf-8?B?UmlIbjhBdlRhUzkwT3JmWE9LdEZyZHJ2NE1IcWoreE1wSlhPYTlBQlZKdFFs?=
- =?utf-8?B?MUZ0MWpXVy9PRjFDZDgzOFNwUytQblRpV2tZMmxTaG0rb1Z3elE3MDA3bXpO?=
- =?utf-8?B?elRCVlBZdmhycUkvc3NKeVNCdU9ZUXA2NGNIVnc4T1plWXZmclU3UktiVmNv?=
- =?utf-8?B?TnFUUEw2aTVBMEVtMXdiaEVQZG5EYnk1d2tZUWxaZTgrMHRHeE9rWG56VzRv?=
- =?utf-8?Q?ihgha1WArk6l2jAJCgzCB2L07hoe8U=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MGpYYmtBd1ZWS05MZlAyQlp1K25TLzhNQXhqNUdJbEw4SWRZeWhIejY0NFNN?=
- =?utf-8?B?TXRXYnRuY1NSOGdQaldVYTFldTRoR21LT3Q0dkxMM0F4RDNlRitYQTYraUQ5?=
- =?utf-8?B?VzRodEJrbUZjQ1luUFVkTDNCWU9SWGlXbUxhcXBxbUo2MUZEWUlaSGltNE12?=
- =?utf-8?B?QWJqMmx1ZEltVTBWYVptZEF1RXd6ZFpTelF5cWRSTlp5M09BSFVyT2U2ZGZw?=
- =?utf-8?B?S2dDWGtQZlA1dlZMaG53cUR6T3AvTmVhVmdlWDR5Nlo1WWlwNGVEMjM1NkxZ?=
- =?utf-8?B?Q2JEeHU1U0hZbUNQRWpOK2ZNV3RtUDFieHhWVGJHaytBK3lLZWtoemdyWjA4?=
- =?utf-8?B?NWhZTmhpQjZFcklCaDZGL3M1cFJ6SVA2RkJPYitpQUdtd0t5ZjRUYUZuR0pJ?=
- =?utf-8?B?ZVZRRnJZcGcxTFN3UzBXQmJBVnlJeCtrb1pqcnM3am9rcENqUStDS25JRHJ4?=
- =?utf-8?B?UklFVi9sK2thbDZCWE5MUXFsY2ZGcVMrWjEzTmJQSW5VanpWM2MwbjY3VGlu?=
- =?utf-8?B?aVBaamp3SWtJV0J6dHNIMWRuVTFadm9LaHZuNE8vSldSQ0JlWGxQVzUxUVJW?=
- =?utf-8?B?SjBQdFdJdnF6RzVUT0xLWWttRldtUEZNOGFVZUxzZVFZK2dsaTBkam5WcGll?=
- =?utf-8?B?WVNXaXl0U2ZlK09NS1ZXRWc3WmxVMnU0VXF1TmFLK25DU2lLT2VxTHNwazlQ?=
- =?utf-8?B?R0xnb2NSM1g3VGNqS2liUThINDRtOHJuMjI4UDBWZzJ0WFJzTUt5MTQvVGxz?=
- =?utf-8?B?Z3lvdkI5cmlOZ3VlcmxDQXkxV0IwT2FrOTBDUkwrSzRKSkhkVHdpNjhRazVC?=
- =?utf-8?B?eHFncGQ2Mm5tUkRkWUdaWHpoN0JBNkV6ODFxN25sVE5WdVRpbUpscjZuaDFW?=
- =?utf-8?B?bEFTeDd5cTdJUGNvT2p1d0FDekZIZCtlZDBwL1p2T1E4ZlorUGExVis2M2Ji?=
- =?utf-8?B?ZkZoZTcxeSs3MEJIL21SYmpqM3ZvVEtKVXNiWjU5VHpTanp5Qk5HUnRlUlpw?=
- =?utf-8?B?L0dGdS9aL1l2RTNncURkS0thZDBqQ1orN29YSmJqNko4TGt3elNCemo1R09I?=
- =?utf-8?B?QzN6L1Q3L3NjSGZVRVFEZmN0bTdDUXZzYVZNVmhwNUxqTDZJb1NOK0VvV2RQ?=
- =?utf-8?B?elVxVDM5VFNmeWZpQjJVSVZaZFhSWFU3YzJzWXhzNE1NZHA4RjhEMkZUaERD?=
- =?utf-8?B?Z3VRbm1kZ2RzbDB4ckZaZ1ErZHVmbzVKVzZiTEt3cWlPNXkrVytDMTd3WUlO?=
- =?utf-8?B?eDFXUmlYS0x2Q3VPSkd4RzFTMTJ6MXFaS2hyM0hiN0t2Q2Jvd2x4TjBKblBq?=
- =?utf-8?B?MTZmOER0d1BJaS94bXk0TzdpNGZYQXVKS3RXRzBCLzQwdExqbUFER3k4elFv?=
- =?utf-8?B?eUd4Q0xhQVduWlF5QTl0dFpQZHhVUmhCdThPdWdsZ3B6UWowYmJLT1NLQmRR?=
- =?utf-8?B?T0xZQWZzT21DUHpwMytQeER0TUlKZHNNYy8xbUkzOThJa1dKNVNxV0h3TFVM?=
- =?utf-8?B?bk1oL2VnNHh1bkNVLzJTN0JhUy9rREVhSkR3eEE0U294QkRxZTExL3p6cGZt?=
- =?utf-8?B?a2Q5WHQvbWJxdnJ1YURHbVlIdHBrNHExUVZ1R2o3cHgxcHcwajFjRTdZWDZt?=
- =?utf-8?B?dm1GOEhrcVFWcjBKK2JaQThLVHBBQ1JRVmdmeS81ZXJJYnVUL1N1R0VTOVNm?=
- =?utf-8?B?WkFVMFJqZHhSQWQ1VDFHOTFtM1hlQThLOWZhUjJwQUpUWFhVeTNLUzBoeklI?=
- =?utf-8?B?SURZaVpFOW5DODJaS3kvNkdvc0hnR201RlRSdkJyK2VjYkFpRlZ3S1Q2MEZm?=
- =?utf-8?B?MnZsZVFlY2VZQnZIbE5jSjVURkxtNzRGcG9nRFdrTEdIN2N0TVJFa0g4Rm44?=
- =?utf-8?B?bVdSYld6WnZBZTBNTnl0c2xZTGFDemxMVWZCeXJwMnMwTGVMS1lpU2hIRk00?=
- =?utf-8?B?ZzdaaW5vQzdMWmdGeWZPQ0xpRS9vM2I4YnB0VEFGTVc4WDViUUx5ak9nV1Vj?=
- =?utf-8?B?OWFZVGQzNDdSdlFtRGFrYnNHeUVQTGdVU1FUZE44cHZ3ZE1oVnhsVU50UTMz?=
- =?utf-8?B?TVFjR01kck44MHN0eTZ5N0lRVFQ4NElVNS9qem1Ub0l6cXR1Q25qQ2FhYjFW?=
- =?utf-8?Q?8gEzxfVgVePrecQxuSka5rJNm?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QHc/iNTr"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kdVd014223
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:28:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=hZyUpa3rAkBi+PARgDkDOefn
+	jJbsZvmSzJyud7QTZuA=; b=QHc/iNTrhIoDH/lrk7ZWrABa82aIXTq0QgXUE5jK
+	J7PVxBuV1BwIeMhT+VNT8yqPxwbfDkZ/pZjDambkRESYAjgvJHaa6RoGPRpADlI8
+	myH9ZVzg002HjAY49ZvKRuiTnCckJFl3G+GJznbIUGtWrx+nWsbl24sPJJ3ov5Jl
+	CM0nVotoBMSx7ZBptBQ6r1+JTL4kf0afkzBeCC3aG1HHWPgxpD4Gc9L7uZJ7kvwl
+	NjOO6MaeHS2o6+G8OIFL9XeglyeMRs23xKRvw9vZwRh6jo+b5xIwzJ2ObsCbjZzx
+	NdOGp3jaUHQRCP9Klbl/QgL798tVSriqqG0SHdGtODlzTA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45pa1nupt1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:28:08 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5750ca8b2so696299685a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 00:28:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743406086; x=1744010886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hZyUpa3rAkBi+PARgDkDOefnjJbsZvmSzJyud7QTZuA=;
+        b=hlawo4nLF9wX9P2CCmRrARfRezCORkltoD0LJB+nlsgnnlsHjpU1vD9RLWNRShUW2z
+         tdLNSr5HhyqKfuEXJkcmhwO6JJMDNqiG9sXKoIdGQopOzDbbpehmTstLdyDKmxlmDZMW
+         FOfYLQFj174h4AL94HA3xaVHESXkdoH/va3yPD0mx1/6jZqAr664otQtulkBFN3smkAj
+         Vrq8zx//e6QkthFEX14BjzIyQKBuDMKi36ybcxpqcty+sAoZHidXjvDL9Ft2hKMA89wy
+         Zq0gbUTNaW3zKZCy4cA1aNXSedj2deDtPpa/crEV6XMuTmCMHabyLt/5F/+f5aPTqT12
+         VNEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrX5cOOzMRLr+IrpOI4qWR3JSV6j+dVoJ0CEobWV8PUYShkCE9SCQjbOpefSOqgXlCjPlu0YYU8QQoQFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK1WzNQbgftgKwcUazBynj6bq5+a5tfADT0ST9Sd1VXI30IXFA
+	lOiXSOSVbE589EoYMpAeoz/hkqHxt1O4SIGuD6fxj0mIGZo8NxmUcLrcZrVDpxflr8BZJ2gT2mX
+	OUGUIjRPYvVLuB9HrKT7+jdwAovAtCjhc11/GG/UImBoF9mbwq5DsR9whYwA7CjY=
+X-Gm-Gg: ASbGnctO+AW/NSP0fQiIQ0FAdtQE9NMzI2uCwNxbs66WwmAJ63A6qYTkiKUbPgIT17l
+	UQvq0/HolxkZSLW50wbCbYOd0sviU6gE4ljpM8F2lnL5p8LE+tTdWqQFFxH/20g9ZXxugAo9X+X
+	C2ifWvZSPGC8vpx7vsuWTbOkDRgcOS+RSmzPj4vV8c+m8DbafQT+DCjSmd6G9f6gwU9Igrk8Rcy
+	G4dRstWB2kfRjkc9HcmvMJvjytuJinYm0TDYRiwwkHRDDOij/CBhl2j8yiGkZxg54ASWEhRS4kU
+	Q3kD6d486N5O4vUtj0I85/SSRzRVmjrUMQGM/stOQUX+wcLCSHpJGnBlSBObF1S6uAeOIvHV0LC
+	acGA=
+X-Received: by 2002:a05:620a:470f:b0:7c5:9731:3c7b with SMTP id af79cd13be357-7c69087d968mr1350297585a.36.1743406086439;
+        Mon, 31 Mar 2025 00:28:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHdlYf0Zt8oO7dWXCZz8tMTpvz1k8xD57XWx7S84EqWU/TjVkwdon5MCGQ3y9pcpy5ZttFRg==
+X-Received: by 2002:a05:620a:470f:b0:7c5:9731:3c7b with SMTP id af79cd13be357-7c69087d968mr1350294685a.36.1743406085964;
+        Mon, 31 Mar 2025 00:28:05 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094bb427sm1061141e87.49.2025.03.31.00.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 00:28:03 -0700 (PDT)
+Date: Mon, 31 Mar 2025 10:28:00 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Xin Ji <xji@analogixsemi.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Bernie Liang <bliang@analogixsemi.com>,
+        Qilin Wen <qwen@analogixsemi.com>,
+        "treapking@chromium.org" <treapking@chromium.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/bridge:anx7625: Enable DSC feature
+Message-ID: <z5uepwsk6t6j5zlkrfrkcuodcmx477b7wr7smziwj4nf3avhv2@p7bqiun4yxb7>
+References: <20250327115616.1271635-1-xji@analogixsemi.com>
+ <gs2pn7o33hjzfpljzjprorof3xehhui5mvsrbnnpu4gwyncw5u@zvlez4dpgv3f>
+ <BY5PR04MB6739BEDCE701FBC346106E21C7AD2@BY5PR04MB6739.namprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc27c91b-de79-47a8-4122-08dd7025641e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 07:26:45.1732
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oNpF26Ij4SCyeVEuSEjjnzcrRNkT2CxtNyT8b2XV8UhOphQr7QPEAztnVc0AzxdvuK3lQ7ijrZ6vJH1kObhx1Cw++0wK7PDrvD6W5/64RGc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV1PR11MB8849
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BY5PR04MB6739BEDCE701FBC346106E21C7AD2@BY5PR04MB6739.namprd04.prod.outlook.com>
+X-Proofpoint-ORIG-GUID: szTGb5HMiZ59WC-_sYAB6csthCMWeVUY
+X-Proofpoint-GUID: szTGb5HMiZ59WC-_sYAB6csthCMWeVUY
+X-Authority-Analysis: v=2.4 cv=MPlgmNZl c=1 sm=1 tr=0 ts=67ea4408 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=bbNUuHX0AAAA:8 a=O8w02n9TKN_3-gt52VEA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+ a=3b-t3vAtY4IUXy2q2Ylb:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-31_03,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 clxscore=1015
+ bulkscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503310052
 
-PiANCj4gT24gRnJpLCBNYXIgMjgsIDIwMjUgYXQgMDc6NTA6NDNQTSArMDIwMCwgSmFya2tvIFNh
-a2tpbmVuIHdyb3RlOg0KPiA+IE9uIEZyaSwgTWFyIDI4LCAyMDI1IGF0IDAyOjU3OjQxUE0gKzAy
-MDAsIEVsZW5hIFJlc2hldG92YSB3cm90ZToNCj4gPiA+IFNHWCBhcmNoaXRlY3R1cmUgaW50cm9k
-dWNlZCBhIG5ldyBpbnN0cnVjdGlvbiBjYWxsZWQgRVVQREFURVNWTg0KPiA+ID4gdG8gSWNlIExh
-a2UuIEl0IGFsbG93cyB1cGRhdGluZyBzZWN1cml0eSBTVk4gdmVyc2lvbiwgZ2l2ZW4gdGhhdCBF
-UEMNCj4gPiA+IGlzIGNvbXBsZXRlbHkgZW1wdHkuIFRoZSBsYXR0ZXIgaXMgcmVxdWlyZWQgZm9y
-IHNlY3VyaXR5IHJlYXNvbnMNCj4gPiA+IGluIG9yZGVyIHRvIHJlYXNvbiB0aGF0IGVuY2xhdmUg
-c2VjdXJpdHkgcG9zdHVyZSBpcyBhcyBzZWN1cmUgYXMgdGhlDQo+ID4gPiBzZWN1cml0eSBTVk4g
-dmVyc2lvbiBvZiB0aGUgVENCIHRoYXQgY3JlYXRlZCBpdC4NCj4gPiA+DQo+ID4gPiBBZGRpdGlv
-bmFsbHkgaXQgaXMgaW1wb3J0YW50IHRvIGVuc3VyZSB0aGF0IHdoaWxlIEVOQ0xTW0VVUERBVEVT
-Vk5dDQo+ID4gPiBydW5zLCBubyBjb25jdXJyZW50IHBhZ2UgY3JlYXRpb24gaGFwcGVucyBpbiBF
-UEMsIGJlY2F1c2UgaXQgbWlnaHQNCj4gPiA+IHJlc3VsdCBpbiAjR1AgZGVsaXZlcmVkIHRvIHRo
-ZSBjcmVhdG9yLiBMZWdhY3kgU1cgbWlnaHQgbm90IGJlIHByZXBhcmVkDQo+ID4gPiB0byBoYW5k
-bGUgc3VjaCB1bmV4cGVjdGVkICNHUHMgYW5kIHRoZXJlZm9yZSB0aGlzIHBhdGNoIGludHJvZHVj
-ZXMNCj4gPiA+IGEgbG9ja2luZyBtZWNoYW5pc20gdG8gZW5zdXJlIG5vIGNvbmN1cnJlbnQgRVBD
-IGFsbG9jYXRpb25zIGNhbiBoYXBwZW4uDQo+ID4gPg0KPiA+ID4gSXQgaXMgYWxzbyBlbnN1cmVk
-IHRoYXQgRU5DTFNbRVVQREFURVNWTl0gaXMgbm90IGNhbGxlZCB3aGVuIHJ1bm5pbmcNCj4gPiA+
-IGluIGEgVk0gc2luY2UgaXQgZG9lcyBub3QgaGF2ZSBhIG1lYW5pbmcgaW4gdGhpcyBjb250ZXh0
-IChtaWNyb2NvZGUNCj4gPiA+IHVwZGF0ZXMgYXBwbGljYXRpb24gaXMgbGltaXRlZCB0byB0aGUg
-aG9zdCBPUykgYW5kIHdpbGwgY3JlYXRlDQo+ID4gPiB1bm5lY2Vzc2FyeSBsb2FkLg0KPiA+ID4N
-Cj4gPiA+IFRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gcHJldmlvdXMgc3VibWlzaW9uIGJ5IENhdGh5
-IFpoYW5nDQo+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyMjA1MjAxMDM5MDQu
-MTIxNi0xLQ0KPiBjYXRoeS56aGFuZ0BpbnRlbC5jb20vDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogRWxlbmEgUmVzaGV0b3ZhIDxlbGVuYS5yZXNoZXRvdmFAaW50ZWwuY29tPg0KPiA+ID4g
-LS0tDQo+ID4gPiAgYXJjaC94ODYvaW5jbHVkZS9hc20vc2d4LmggICAgICB8IDQxICsrKysrKysr
-KysrKystLS0tLS0tLQ0KPiA+ID4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4L2VuY2xzLmggfCAg
-NiArKysrDQo+ID4gPiAgYXJjaC94ODYva2VybmVsL2NwdS9zZ3gvbWFpbi5jICB8IDYzDQo+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ID4gIGFyY2gveDg2L2tlcm5lbC9j
-cHUvc2d4L3NneC5oICAgfCAgMSArDQo+ID4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA5NSBpbnNlcnRp
-b25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYvaW5jbHVkZS9hc20vc2d4LmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9zZ3guaA0KPiA+ID4g
-aW5kZXggNmEwMDY5NzYxNTA4Li41Y2FmNWMzMWViYzYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9zZ3guaA0KPiA+ID4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20v
-c2d4LmgNCj4gPiA+IEBAIC0yNiwyMyArMjYsMjYgQEANCj4gPiA+ICAjZGVmaW5lIFNHWF9DUFVJ
-RF9FUENfU0VDVElPTgkweDENCj4gPiA+ICAvKiBUaGUgYml0bWFzayBmb3IgdGhlIEVQQyBzZWN0
-aW9uIHR5cGUuICovDQo+ID4gPiAgI2RlZmluZSBTR1hfQ1BVSURfRVBDX01BU0sJR0VOTUFTSygz
-LCAwKQ0KPiA+ID4gKy8qIEVVUERBVEVTVk4gcHJlc2VuY2UgaW5kaWNhdGlvbiAqLw0KPiA+ID4g
-KyNkZWZpbmUgU0dYX0NQVUlEX0VVUERBVEVTVk4JQklUKDEwKQ0KPiA+ID4NCj4gPiA+ICBlbnVt
-IHNneF9lbmNsc19mdW5jdGlvbiB7DQo+ID4gPiAtCUVDUkVBVEUJPSAweDAwLA0KPiA+ID4gLQlF
-QURECT0gMHgwMSwNCj4gPiA+IC0JRUlOSVQJPSAweDAyLA0KPiA+ID4gLQlFUkVNT1ZFCT0gMHgw
-MywNCj4gPiA+IC0JRURHQlJECT0gMHgwNCwNCj4gPiA+IC0JRURHQldSCT0gMHgwNSwNCj4gPiA+
-IC0JRUVYVEVORAk9IDB4MDYsDQo+ID4gPiAtCUVMRFUJPSAweDA4LA0KPiA+ID4gLQlFQkxPQ0sJ
-PSAweDA5LA0KPiA+ID4gLQlFUEEJPSAweDBBLA0KPiA+ID4gLQlFV0IJPSAweDBCLA0KPiA+ID4g
-LQlFVFJBQ0sJPSAweDBDLA0KPiA+ID4gLQlFQVVHCT0gMHgwRCwNCj4gPiA+IC0JRU1PRFBSCT0g
-MHgwRSwNCj4gPiA+IC0JRU1PRFQJPSAweDBGLA0KPiA+ID4gKwlFQ1JFQVRFCQk9IDB4MDAsDQo+
-ID4gPiArCUVBREQJCT0gMHgwMSwNCj4gPiA+ICsJRUlOSVQJCT0gMHgwMiwNCj4gPiA+ICsJRVJF
-TU9WRQkJPSAweDAzLA0KPiA+ID4gKwlFREdCUkQJCT0gMHgwNCwNCj4gPiA+ICsJRURHQldSCQk9
-IDB4MDUsDQo+ID4gPiArCUVFWFRFTkQJCT0gMHgwNiwNCj4gPiA+ICsJRUxEVQkJPSAweDA4LA0K
-PiA+ID4gKwlFQkxPQ0sJCT0gMHgwOSwNCj4gPiA+ICsJRVBBCQk9IDB4MEEsDQo+ID4gPiArCUVX
-QgkJPSAweDBCLA0KPiA+ID4gKwlFVFJBQ0sJCT0gMHgwQywNCj4gPiA+ICsJRUFVRwkJPSAweDBE
-LA0KPiA+ID4gKwlFTU9EUFIJCT0gMHgwRSwNCj4gPiA+ICsJRU1PRFQJCT0gMHgwRiwNCj4gPiA+
-ICsJRVVQREFURVNWTgk9IDB4MTgsDQo+ID4gPiAgfTsNCj4gPiA+DQo+ID4gPiAgLyoqDQo+ID4g
-PiBAQCAtNzMsNiArNzYsMTEgQEAgZW51bSBzZ3hfZW5jbHNfZnVuY3Rpb24gew0KPiA+ID4gICAq
-CQkJCXB1YmxpYyBrZXkgZG9lcyBub3QgbWF0Y2gNCj4gSUEzMl9TR1hMRVBVQktFWUhBU0guDQo+
-ID4gPiAgICogJVNHWF9QQUdFX05PVF9NT0RJRklBQkxFOglUaGUgRVBDIHBhZ2UgY2Fubm90IGJl
-IG1vZGlmaWVkDQo+IGJlY2F1c2UgaXQNCj4gPiA+ICAgKgkJCQlpcyBpbiB0aGUgUEVORElORyBv
-ciBNT0RJRklFRCBzdGF0ZS4NCj4gPiA+ICsgKiAlU0dYX0lOU1VGRklDSUVOVF9FTlRST1BZOglJ
-bnN1ZmZpY2llbnQgZW50cm9weSBpbiBSTkcuDQo+ID4gPiArICogJVNHWF9FUENfTk9UX1JFQURZ
-OgkJRVBDIGlzIG5vdCByZWFkeSBmb3IgU1ZOIHVwZGF0ZS4NCj4gPiA+ICsgKiAlU0dYX05PX1VQ
-REFURToJCUVVUERBVEVTVk4gd2FzIHN1Y2Nlc3NmdWwsIGJ1dA0KPiBDUFVTVk4gd2FzIG5vdA0K
-PiA+ID4gKyAqCQkJCXVwZGF0ZWQgYmVjYXVzZSBjdXJyZW50IFNWTiB3YXMgbm90IG5ld2VyDQo+
-IHRoYW4NCj4gPiA+ICsgKgkJCQlDUFVTVk4uDQo+ID4gPiAgICogJVNHWF9VTk1BU0tFRF9FVkVO
-VDoJCUFuIHVubWFza2VkIGV2ZW50LCBlLmcuDQo+IElOVFIsIHdhcyByZWNlaXZlZA0KPiA+ID4g
-ICAqLw0KPiA+ID4gIGVudW0gc2d4X3JldHVybl9jb2RlIHsNCj4gPiA+IEBAIC04MSw2ICs4OSw5
-IEBAIGVudW0gc2d4X3JldHVybl9jb2RlIHsNCj4gPiA+ICAJU0dYX0NISUxEX1BSRVNFTlQJCT0g
-MTMsDQo+ID4gPiAgCVNHWF9JTlZBTElEX0VJTklUVE9LRU4JCT0gMTYsDQo+ID4gPiAgCVNHWF9Q
-QUdFX05PVF9NT0RJRklBQkxFCQk9IDIwLA0KPiA+ID4gKwlTR1hfSU5TVUZGSUNJRU5UX0VOVFJP
-UFkJPSAyOSwNCj4gPiA+ICsJU0dYX0VQQ19OT1RfUkVBRFkJCT0gMzAsDQo+ID4gPiArCVNHWF9O
-T19VUERBVEUJCQk9IDMxLA0KPiA+ID4gIAlTR1hfVU5NQVNLRURfRVZFTlQJCT0gMTI4LA0KPiA+
-ID4gIH07DQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcHUvc2d4
-L2VuY2xzLmgNCj4gYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9lbmNscy5oDQo+ID4gPiBpbmRl
-eCA5OTAwNGIwMmUyZWQuLjNkODNjNzZkYzkxZiAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gveDg2
-L2tlcm5lbC9jcHUvc2d4L2VuY2xzLmgNCj4gPiA+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9jcHUv
-c2d4L2VuY2xzLmgNCj4gPiA+IEBAIC0yMzMsNCArMjMzLDEwIEBAIHN0YXRpYyBpbmxpbmUgaW50
-IF9fZWF1ZyhzdHJ1Y3Qgc2d4X3BhZ2VpbmZvDQo+ICpwZ2luZm8sIHZvaWQgKmFkZHIpDQo+ID4g
-PiAgCXJldHVybiBfX2VuY2xzXzIoRUFVRywgcGdpbmZvLCBhZGRyKTsNCj4gPiA+ICB9DQo+ID4g
-Pg0KPiA+ID4gKy8qIFVwZGF0ZSBDUFVTVk4gYXQgcnVudGltZS4gKi8NCj4gPiA+ICtzdGF0aWMg
-aW5saW5lIGludCBfX2V1cGRhdGVzdm4odm9pZCkNCj4gPiA+ICt7DQo+ID4gPiArCXJldHVybiBf
-X2VuY2xzX3JldF8xKEVVUERBVEVTVk4sICIiKTsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiAg
-I2VuZGlmIC8qIF9YODZfRU5DTFNfSCAqLw0KPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tl
-cm5lbC9jcHUvc2d4L21haW4uYw0KPiBiL2FyY2gveDg2L2tlcm5lbC9jcHUvc2d4L21haW4uYw0K
-PiA+ID4gaW5kZXggYjYxZDNiYWQwNDQ2Li4yNDU2MzExMDgxMWQgMTAwNjQ0DQo+ID4gPiAtLS0g
-YS9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9tYWluLmMNCj4gPiA+ICsrKyBiL2FyY2gveDg2L2tl
-cm5lbC9jcHUvc2d4L21haW4uYw0KPiA+ID4gQEAgLTMyLDYgKzMyLDExIEBAIHN0YXRpYyBERUZJ
-TkVfWEFSUkFZKHNneF9lcGNfYWRkcmVzc19zcGFjZSk7DQo+ID4gPiAgc3RhdGljIExJU1RfSEVB
-RChzZ3hfYWN0aXZlX3BhZ2VfbGlzdCk7DQo+ID4gPiAgc3RhdGljIERFRklORV9TUElOTE9DSyhz
-Z3hfcmVjbGFpbWVyX2xvY2spOw0KPiA+ID4NCj4gPiA+ICsvKiBUaGlzIGxvY2sgaXMgaGVsZCB0
-byBwcmV2ZW50IG5ldyBFUEMgcGFnZXMgZnJvbSBiZWluZyBjcmVhdGVkDQo+ID4gPiArICogZHVy
-aW5nIHRoZSBleGVjdXRpb24gb2YgRU5DTFNbRVVQREFURVNWTl0uDQo+ID4gPiArICovDQo+ID4g
-PiArc3RhdGljIERFRklORV9TUElOTE9DSyhzZ3hfZXBjX2V1cGRhdGVzdm5fbG9jayk7DQo+ID4g
-PiArDQo+ID4gPiAgc3RhdGljIGF0b21pY19sb25nX3Qgc2d4X25yX3VzZWRfcGFnZXMgPSBBVE9N
-SUNfTE9OR19JTklUKDApOw0KPiA+ID4gIHN0YXRpYyB1bnNpZ25lZCBsb25nIHNneF9ucl90b3Rh
-bF9wYWdlczsNCj4gPiA+DQo+ID4gPiBAQCAtNDU3LDcgKzQ2MiwxNyBAQCBzdGF0aWMgc3RydWN0
-IHNneF9lcGNfcGFnZQ0KPiAqX19zZ3hfYWxsb2NfZXBjX3BhZ2VfZnJvbV9ub2RlKGludCBuaWQp
-DQo+ID4gPiAgCXBhZ2UtPmZsYWdzID0gMDsNCj4gPiA+DQo+ID4gPiAgCXNwaW5fdW5sb2NrKCZu
-b2RlLT5sb2NrKTsNCj4gPiA+IC0JYXRvbWljX2xvbmdfaW5jKCZzZ3hfbnJfdXNlZF9wYWdlcyk7
-DQo+ID4gPiArDQo+ID4gPiArCWlmICghYXRvbWljX2xvbmdfaW5jX25vdF96ZXJvKCZzZ3hfbnJf
-dXNlZF9wYWdlcykpIHsNCj4gPiA+ICsJCXNwaW5fbG9jaygmc2d4X2VwY19ldXBkYXRlc3ZuX2xv
-Y2spOw0KPiA+ID4gKwkJLyogT25seSBjYWxsIHNneF91cGRhdGVzdm4oKSBvbmNlIHRoZSBmaXJz
-dCBlbmNsYXZlJ3MNCj4gPiA+ICsJCSAqIHBhZ2UgaXMgYWxsb2NhdGVkIGZyb20gRVBDDQo+ID4g
-PiArCQkgKi8NCj4gPiA+ICsJCWlmIChhdG9taWNfbG9uZ19yZWFkKCZzZ3hfbnJfdXNlZF9wYWdl
-cykgPT0gMCkNCj4gPiA+ICsJCQlzZ3hfdXBkYXRlc3ZuKCk7DQo+ID4gPiArCQlhdG9taWNfbG9u
-Z19pbmMoJnNneF9ucl91c2VkX3BhZ2VzKTsNCj4gPiA+ICsJCXNwaW5fdW5sb2NrKCZzZ3hfZXBj
-X2V1cGRhdGVzdm5fbG9jayk7DQo+ID4gPiArCX0NCj4gPiA+DQo+ID4gPiAgCXJldHVybiBwYWdl
-Ow0KPiA+ID4gIH0NCj4gPiA+IEBAIC05NzAsMyArOTg1LDQ5IEBAIHN0YXRpYyBpbnQgX19pbml0
-IHNneF9pbml0KHZvaWQpDQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+ICBkZXZpY2VfaW5pdGNhbGwo
-c2d4X2luaXQpOw0KPiA+ID4gKw0KPiA+ID4gKy8qKg0KPiA+ID4gKyAqIHNneF91cGRhdGVzdm4o
-KSAtIElzc3VlIEVOQ0xTW0VVUERBVEVTVk5dDQo+ID4gPiArICogSWYgRVBDIGlzIHJlYWR5LCB0
-aGlzIGluc3RydWN0aW9uIHdpbGwgdXBkYXRlIENQVVNWTiB0byB0aGUgY3VycmVudGx5DQo+ID4g
-PiArICogbG9hZGVkIG1pY3JvY29kZSB1cGRhdGUgU1ZOIGFuZCBnZW5lcmF0ZSBuZXcgY3J5cHRv
-Z3JhcGhpYyBhc3NldHMuDQo+ID4gPiArICovDQo+ID4gPiArdm9pZCBzZ3hfdXBkYXRlc3ZuKHZv
-aWQpDQo+ID4gPiArew0KPiA+ID4gKwlpbnQgcmV0cnkgPSAxMDsNCj4gPiA+ICsJaW50IHJldDsN
-Cj4gPiA+ICsNCj4gPiA+ICsJbG9ja2RlcF9hc3NlcnRfaGVsZCgmc2d4X2VwY19ldXBkYXRlc3Zu
-X2xvY2spOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAoIShjcHVpZF9lYXgoU0dYX0NQVUlEKSAmIFNH
-WF9DUFVJRF9FVVBEQVRFU1ZOKSkNCj4gPiA+ICsJCXJldHVybjsNCj4gPiA+ICsNCj4gPiA+ICsJ
-LyogRG8gbm90IGV4ZWN1dGUgRU5DTFNbRVVQREFURVNWTl0gaWYgcnVubmluZyBpbiBhIFZNIHNp
-bmNlDQo+ID4gPiArCSAqIG1pY3JvY29kZSB1cGRhdGVzIGFyZSBvbmx5IG1lYW5pbmdmdWwgdG8g
-YmUgYXBwbGllZCBvbiB0aGUgaG9zdC4NCj4gPiA+ICsJICovDQo+ID4gPiArCWlmIChib290X2Nw
-dV9oYXMoWDg2X0ZFQVRVUkVfSFlQRVJWSVNPUikpDQo+ID4gPiArCQlyZXR1cm47DQo+ID4gPiAr
-DQo+ID4gPiArCWRvIHsNCj4gPiA+ICsJCXJldCA9IF9fZXVwZGF0ZXN2bigpOw0KPiA+ID4gKwkJ
-aWYgKHJldCAhPSBTR1hfSU5TVUZGSUNJRU5UX0VOVFJPUFkpDQo+ID4gPiArCQkJYnJlYWs7DQo+
-ID4gPiArDQo+ID4gPiArCX0gd2hpbGUgKC0tcmV0cnkpOw0KPiA+ID4gKw0KPiA+ID4gKwlzd2l0
-Y2ggKHJldCkgew0KPiA+ID4gKwljYXNlIDA6DQo+ID4gPiArCQlwcl9pbmZvKCJFVVBEQVRFU1ZO
-OiBzdWNjZXNzXG4iKTsNCj4gPiA+ICsJCWJyZWFrOw0KPiA+ID4gKwljYXNlIFNHWF9FUENfTk9U
-X1JFQURZOg0KPiA+ID4gKwljYXNlIFNHWF9JTlNVRkZJQ0lFTlRfRU5UUk9QWToNCj4gPiA+ICsJ
-Y2FzZSBTR1hfRVBDX1BBR0VfQ09ORkxJQ1Q6DQo+ID4gPiArCQlwcl9lcnIoIkVVUERBVEVTVk46
-IGVycm9yICVkXG4iLCByZXQpOw0KPiA+ID4gKwkJYnJlYWs7DQo+ID4gPiArCWNhc2UgU0dYX05P
-X1VQREFURToNCj4gPiA+ICsJCWJyZWFrOw0KPiA+ID4gKwlkZWZhdWx0Og0KPiA+ID4gKwkJcHJf
-ZXJyKCJFVVBEQVRFU1ZOOiB1bmtub3duIGVycm9yICVkXG4iLCByZXQpOw0KPiA+ID4gKwkJYnJl
-YWs7DQo+ID4gPiArCX0NCj4gPg0KPiA+IE92ZXJhbGwsIEkgdGhpbmsgeW91J3JlIHJpZ2h0IGlu
-IHRoYXQgImludmVyc2lvbiIgZG9lcyBtYWtlIHNlbnNlLA0KPiA+IG5vdyB0aGF0IG90aGVyIHN0
-dWZmIGlzIGJldHRlciBhbGlnbmVkLg0KPiA+DQo+ID4gQXQgbGVhc3Qgd2hlbiB0aGVyZSBpcyBz
-cHVyaW91cyBlcnJvciwgSSB0aGluayBpb2N0bCdzIHNob3VsZCBzdG9wDQo+ID4gcmVzcG9uZGlu
-ZyBhbmQgZHJpdmVyIHNob3VsZCBub3QgZG8gYW55dGhpbmcgdXNlZnVsIGFueW1vcmUuIEkuZS4s
-DQo+ID4gaXQgc2hvdWxkIGdvIG91dC1vZi1zZXJ2aWNlLg0KPiA+DQo+ID4gSSBkb24ndCB0aGlu
-ayB0aGUgZHJpdmVyIHNob3VsZCB0ZWFyLWRvd24sIGp1c3Qgc3RvcCBzZXJ2aWNpbmcNCj4gPiBW
-TSdzIGFuZCByZXNwb25kaW5nIGlvY3RsJ3MuDQo+ID4NCj4gPiBQb3NzaWJseSB0aGlzaCBzaG91
-bGQgYmUgYWxzbyByaWdodCBhY3Rpb24gZm9yIG90aGVyIGVycm9ycyB0aGFuDQo+ID4gImluc3Vm
-ZmljaWVudCBlbnRyb3B5IiBidXQgSSdtIG9wZW4gZm9yIGNvbW1lbnRzIGZvciB0aGlzLg0KPiAN
-Cj4gT3IgYWN0dWFsbHkgYWN0dWFsbHkgSSB0YWtlIG9uZSBzdGVwIGJhY2sgd2l0aCBteSBzdWdn
-ZXN0aW9ucw0KPiBiZWNhdXNlIHRoaXMgcmVhbGx5IHNob3VsZCBiZSBhIHF1ZXN0aW9uIGZvciB3
-aGljaCBJIGRvbid0IGhhdmUNCj4gdGhlIGRlZmluaXRpdmUgYW5zd2VyLg0KPiANCj4gVGhlIGN1
-cnJlbnQgY29kZSB3b3JrcyBsaWtlIHRoaXM6IGlmIGFueXRoaW5nIHRoYXQgd2UgZG9uJ3QNCj4g
-bGlrZSBoYXBwZW5zLCB3ZSByZS1pdGVyYXRlLg0KPiANCj4gU2hvdWxkIHNvbWUgb2YgdGhlICJl
-eGNlcHRpb25hbCBjb25kaXRpb25zIiBoYXZlIGEgZGlmZmVyZW50DQo+IHJlY292ZXJ5IG9yIG5v
-dD8NCg0KTm9uZSBvZiB0aGVzZSBleGNlcHRpb25hbCBjb25kaXRpb25zIGFyZSBmYXRhbCBvciBw
-cmVzZW50IGFuDQppbW1lZGlhdGUgZGFuZ2VyIHRvIHRoZSBzeXN0ZW0gc2VjdXJpdHkuIFNvLCBh
-bGxvd2luZyB0aGUgcmUtdHJpZXMNCnNlZW1zIGxvZ2ljYWwgaW4gdGhpcyBjYXNlLiBJbiBjYXNl
-IHJlLXRyaWVzIGFsc28gZmFpbCwgdGhlIHN5c3RlbQ0KYWRtaW4gd2lsbCBoYXZlIGFuIG9wdGlv
-biBvZiBncmFjZWZ1bGx5IHNodXR0aW5nIGRvd24gYWxsIGVuY2xhdmVzDQphbmQgZG9pbmcgZWl0
-aGVyIGEgZnVsbCByZWJvb3QgKGlmIFNWTiBpcyB0aGUgb25seSBjb25jZXJuKSBvciBvdGhlcg0K
-bmVjZXNzYXJ5IGFjdGlvbnMgbGlrZSB0YWtpbmcgdGhlIHBoeXNpY2FsIG5vZGUgb3V0IG9mIHVz
-ZSwgZXRjLiANCg0KRG9lcyB0aGlzIHNvdW5kIHJlYXNvbmFibGU/IA0KDQpCZXN0IFJlZ2FyZHMs
-DQpFbGVuYS4NCg0KDQo=
+On Mon, Mar 31, 2025 at 05:44:58AM +0000, Xin Ji wrote:
+> > > 4K30(3840x2160 30Hz) timing pixel clock around 297M, for 24bits RGB
+> > > pixel data format, total transport bandwidth need 297M*24(at least
+> > > 7.2Gbps) more than anx7625 mipi rx lane bandwidth(maximum 6Gbps,
+> > > 4lanes, each lane 1.5Gbps). Without DSC function, anx7625 cannot
+> > > receive 4K30 video timing.
+> > >
+> > > When display pixel clock exceed 250M, driver will enable DSC feature,
+> > > and the compression ratio is 3:1, eg: 4K30's pixel clock around 297M,
+> > > bandwidth 7.2G will be compressed to 7.2G/3 = 2.4G. Then anx7625 can
+> > > receive 4K30 video timing and do decompress, then package video data
+> > > and send to sink device through DP link.
+> > >
+> > > Anx7625 is bridge IC, sink monitor only receive normal DP signal from
+> > > anx7625, sink device didn't know DSC information between SOC and
+> > > anx7625
+> > >
+> > > v2:
+> > > 1. Add more commit message
+> > > 2. Remove unused code
+> > > 3. Add more comment
+> > 
+> > This part is useless, it adds no information. It is as good as 'changed it'.
+> OK, I'll remove it
+> > 
+> > > 4. Remove dsc_en flag
+> > >
+> > > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > > ---
+> > >  drivers/gpu/drm/bridge/analogix/anx7625.c | 299
+> > > ++++++++++++++++++----  drivers/gpu/drm/bridge/analogix/anx7625.h |
+> > > 31 +++
+> > >  2 files changed, 274 insertions(+), 56 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > index 4be34d5c7a3b..bae76d9a665f 100644
+> > > --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/iopoll.h>
+> > >  #include <linux/kernel.h>
+> > > +#include <linux/math64.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/mutex.h>
+> > >  #include <linux/pm_runtime.h>
+> > > @@ -22,6 +23,7 @@
+> > >
+> > >  #include <drm/display/drm_dp_aux_bus.h>  #include
+> > > <drm/display/drm_dp_helper.h>
+> > > +#include <drm/display/drm_dsc_helper.h>
+> > >  #include <drm/display/drm_hdcp_helper.h>  #include
+> > > <drm/drm_atomic_helper.h>  #include <drm/drm_bridge.h> @@ -476,11
+> > > +478,159 @@ static int anx7625_set_k_value(struct anx7625_data *ctx)
+> > >                                MIPI_DIGITAL_ADJ_1, 0x3D);  }
+> > >
+> > > +static bool anx7625_dsc_check(struct anx7625_data *ctx) {
+> > > +     if (ctx->dt.pixelclock.min > DSC_PIXEL_CLOCK)
+> > > +             return true;
+> > 
+> > So, now DSC is enabled unconditionally just because the clock is too high. Let's
+> > see...
+> Yes
+> > 
+> > > +
+> > > +     return false;
+> > > +}
+> > > +
+> > > +static inline int anx7625_h_timing_reg_write(struct anx7625_data *ctx,
+> > > +                                          struct i2c_client *client,
+> > > +                                          u8 reg_addr, u16 val,
+> > > +                                          bool dsc_check) {
+> > > +     int ret;
+> > > +
+> > > +     if (dsc_check && anx7625_dsc_check(ctx))
+> > > +             val = dsc_div(val);
+> > > +
+> > > +     ret = anx7625_reg_write(ctx, client, reg_addr, val);
+> > > +     ret |= anx7625_reg_write(ctx, client, reg_addr + 1, val >> 8);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int anx7625_h_timing_write(struct anx7625_data *ctx,
+> > > +                               struct i2c_client *client,
+> > > +                               bool rx_h_timing) {
+> > > +     u16 htotal;
+> > > +     int ret;
+> > > +
+> > > +     htotal = ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
+> > > +                      ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
+> > > +     /* Htotal */
+> > > +     ret = anx7625_h_timing_reg_write(ctx, client,
+> > HORIZONTAL_TOTAL_PIXELS_L,
+> > > +                                      htotal, rx_h_timing);
+> > > +     /* Hactive */
+> > > +     ret |= anx7625_h_timing_reg_write(ctx, client,
+> > HORIZONTAL_ACTIVE_PIXELS_L,
+> > > +                                       ctx->dt.hactive.min, rx_h_timing);
+> > > +     /* HFP */
+> > > +     ret |= anx7625_h_timing_reg_write(ctx, client,
+> > HORIZONTAL_FRONT_PORCH_L,
+> > > +                                       ctx->dt.hfront_porch.min, rx_h_timing);
+> > > +     /* HWS */
+> > > +     ret |= anx7625_h_timing_reg_write(ctx, client,
+> > HORIZONTAL_SYNC_WIDTH_L,
+> > > +                                       ctx->dt.hsync_len.min, rx_h_timing);
+> > > +     /* HBP */
+> > > +     ret |= anx7625_h_timing_reg_write(ctx, client,
+> > HORIZONTAL_BACK_PORCH_L,
+> > > +                                       ctx->dt.hback_porch.min,
+> > > + rx_h_timing);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int anx7625_v_timing_write(struct anx7625_data *ctx,
+> > > +                               struct i2c_client *client) {
+> > > +     int ret;
+> > > +
+> > > +     /* Vactive */
+> > > +     ret = anx7625_reg_write(ctx, client, ACTIVE_LINES_L,
+> > > +                             ctx->dt.vactive.min);
+> > > +     ret |= anx7625_reg_write(ctx, client, ACTIVE_LINES_H,
+> > > +                              ctx->dt.vactive.min >> 8);
+> > > +     /* VFP */
+> > > +     ret |= anx7625_reg_write(ctx, client, VERTICAL_FRONT_PORCH,
+> > > +                              ctx->dt.vfront_porch.min);
+> > > +     /* VWS */
+> > > +     ret |= anx7625_reg_write(ctx, client, VERTICAL_SYNC_WIDTH,
+> > > +                              ctx->dt.vsync_len.min);
+> > > +     /* VBP */
+> > > +     ret |= anx7625_reg_write(ctx, client, VERTICAL_BACK_PORCH,
+> > > +                              ctx->dt.vback_porch.min);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int anx7625_set_dsc_params(struct anx7625_data *ctx) {
+> > > +     int ret, i;
+> > > +     u16 htotal, vtotal;
+> > > +
+> > > +     if (!anx7625_dsc_check(ctx))
+> > > +             return 0;
+> > > +
+> > > +     /* Video Horizontal timing */
+> > > +     ret = anx7625_h_timing_write(ctx, ctx->i2c.tx_p2_client, false);
+> > > +
+> > > +     /* Video Vertical timing */
+> > > +     ret |= anx7625_v_timing_write(ctx, ctx->i2c.tx_p2_client);
+> > > +
+> > > +     /* Vtotal */
+> > > +     vtotal = ctx->dt.vactive.min + ctx->dt.vfront_porch.min +
+> > > +              ctx->dt.vback_porch.min + ctx->dt.vsync_len.min;
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_LINES_L,
+> > > +                              vtotal);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.tx_p2_client, TOTAL_LINES_H,
+> > > +                              vtotal >> 8);
+> > > +     /* Htotal */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, TOTAL_PIXEL_L_7E,
+> > > +                              htotal);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client, TOTAL_PIXEL_H_7E,
+> > > +                              htotal >> 8);
+> > > +     /* Hactive */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              ACTIVE_PIXEL_L_7E, ctx->dt.hactive.min);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              ACTIVE_PIXEL_H_7E, ctx->dt.hactive.min >> 8);
+> > > +     /* HFP */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_FRONT_PORCH_L_7E,
+> > > +                              ctx->dt.hfront_porch.min);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_FRONT_PORCH_H_7E,
+> > > +                              ctx->dt.hfront_porch.min >> 8);
+> > > +     /* HWS */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_SYNC_WIDTH_L_7E,
+> > > +                              ctx->dt.hsync_len.min);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_SYNC_WIDTH_H_7E,
+> > > +                              ctx->dt.hsync_len.min >> 8);
+> > > +     /* HBP */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_BACK_PORCH_L_7E,
+> > > +                              ctx->dt.hback_porch.min);
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+> > > +                              HORIZON_BACK_PORCH_H_7E,
+> > > +                              ctx->dt.hback_porch.min >> 8);
+> > > +
+> > > +     /* Config DSC decoder internal blank timing for decoder to start */
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > > +                              H_BLANK_L,
+> > > +                              dsc_div(htotal - ctx->dt.hactive.min));
+> > > +     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > > +                              H_BLANK_H,
+> > > +                              dsc_div(htotal - ctx->dt.hactive.min)
+> > > + >> 8);
+> > > +
+> > > +     /* Compress ratio  RATIO bit[7:6] */
+> > > +     ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client, R_I2C_1, 0x3F);
+> > > +     ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client, R_I2C_1,
+> > > +                             (5 - DSC_COMPRESS_RATIO) << 6);
+> > > +     /*PPS table*/
+> > > +     for (i = 0; i < PPS_SIZE; i += PPS_BLOCK_SIZE)
+> > > +             ret |= anx7625_reg_block_write(ctx, ctx->i2c.rx_p2_client,
+> > > +                                            R_PPS_REG_0 + i, PPS_BLOCK_SIZE,
+> > > +                                            &ctx->pps_table[i]);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > >  static int anx7625_dsi_video_timing_config(struct anx7625_data *ctx)
+> > > {
+> > >       struct device *dev = ctx->dev;
+> > >       unsigned long m, n;
+> > > -     u16 htotal;
+> > >       int ret;
+> > >       u8 post_divider = 0;
+> > >
+> > > @@ -506,48 +656,12 @@ static int anx7625_dsi_video_timing_config(struct
+> > anx7625_data *ctx)
+> > >       ret |= anx7625_write_or(ctx, ctx->i2c.rx_p1_client,
+> > >                               MIPI_LANE_CTRL_0, ctx->pdata.mipi_lanes
+> > > - 1);
+> > >
+> > > -     /* Htotal */
+> > > -     htotal = ctx->dt.hactive.min + ctx->dt.hfront_porch.min +
+> > > -             ctx->dt.hback_porch.min + ctx->dt.hsync_len.min;
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_TOTAL_PIXELS_L, htotal & 0xFF);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_TOTAL_PIXELS_H, htotal >> 8);
+> > > -     /* Hactive */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_ACTIVE_PIXELS_L, ctx->dt.hactive.min & 0xFF);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_ACTIVE_PIXELS_H, ctx->dt.hactive.min >> 8);
+> > > -     /* HFP */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_FRONT_PORCH_L, ctx->dt.hfront_porch.min);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_FRONT_PORCH_H,
+> > > -                     ctx->dt.hfront_porch.min >> 8);
+> > > -     /* HWS */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_SYNC_WIDTH_L, ctx->dt.hsync_len.min);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_SYNC_WIDTH_H, ctx->dt.hsync_len.min >> 8);
+> > > -     /* HBP */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_BACK_PORCH_L, ctx->dt.hback_porch.min);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     HORIZONTAL_BACK_PORCH_H, ctx->dt.hback_porch.min >> 8);
+> > > -     /* Vactive */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_L,
+> > > -                     ctx->dt.vactive.min);
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client, ACTIVE_LINES_H,
+> > > -                     ctx->dt.vactive.min >> 8);
+> > > -     /* VFP */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     VERTICAL_FRONT_PORCH, ctx->dt.vfront_porch.min);
+> > > -     /* VWS */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     VERTICAL_SYNC_WIDTH, ctx->dt.vsync_len.min);
+> > > -     /* VBP */
+> > > -     ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p2_client,
+> > > -                     VERTICAL_BACK_PORCH, ctx->dt.vback_porch.min);
+> > > +     /* Video Horizontal timing */
+> > > +     ret |= anx7625_h_timing_write(ctx, ctx->i2c.rx_p2_client, true);
+> > > +
+> > > +     /* Video Vertical timing */
+> > > +     ret |= anx7625_v_timing_write(ctx, ctx->i2c.rx_p2_client);
+> > > +
+> > 
+> > Please split this part into two commits: one refactoring timing programming into
+> > two functions and another one introducing DSC support.
+> > It is hard to review timing programming otherwise.
+> 
+> OK
+> 
+> > 
+> > >       /* M value */
+> > >       ret |= anx7625_reg_write(ctx, ctx->i2c.rx_p1_client,
+> > >                       MIPI_PLL_M_NUM_23_16, (m >> 16) & 0xff); @@
+> > > -663,9 +777,15 @@ static int anx7625_dsi_config(struct anx7625_data
+> > > *ctx)
+> > >
+> > >       DRM_DEV_DEBUG_DRIVER(dev, "config dsi.\n");
+> > >
+> > > -     /* DSC disable */
+> > > -     ret = anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
+> > > -                             R_DSC_CTRL_0, ~DSC_EN);
+> > > +     ret = anx7625_set_dsc_params(ctx);
+> > > +     if (anx7625_dsc_check(ctx))
+> > > +             /* DSC enable */
+> > > +             ret |= anx7625_write_or(ctx, ctx->i2c.rx_p0_client,
+> > > +                                     R_DSC_CTRL_0, DSC_EN);
+> > > +     else
+> > > +             /* DSC disable */
+> > > +             ret |= anx7625_write_and(ctx, ctx->i2c.rx_p0_client,
+> > > +                                      R_DSC_CTRL_0, ~DSC_EN);
+> > >
+> > >       ret |= anx7625_api_dsi_config(ctx);
+> > >
+> > > @@ -2083,6 +2203,7 @@ static int anx7625_setup_dsi_device(struct
+> > anx7625_data *ctx)
+> > >               MIPI_DSI_MODE_VIDEO_HSE |
+> > >               MIPI_DSI_HS_PKT_END_ALIGNED;
+> > >
+> > > +     dsi->dsc = &ctx->dsc;
+> > >       ctx->dsi = dsi;
+> > >
+> > >       return 0;
+> > > @@ -2187,19 +2308,69 @@ anx7625_bridge_mode_valid(struct drm_bridge
+> > *bridge,
+> > >       struct device *dev = ctx->dev;
+> > >
+> > >       DRM_DEV_DEBUG_DRIVER(dev, "drm mode checking\n");
+> > > +     if (mode->clock > SUPPORT_PIXEL_CLOCK)
+> > > +             return MODE_CLOCK_HIGH;
+> > > +
+> > > +     if (mode->clock < SUPPORT_MIN_PIXEL_CLOCK)
+> > > +             return MODE_CLOCK_LOW;
+> > >
+> > > -     /* Max 1200p at 5.4 Ghz, one lane, pixel clock 300M */
+> > > -     if (mode->clock > SUPPORT_PIXEL_CLOCK) {
+> > > -             DRM_DEV_DEBUG_DRIVER(dev,
+> > > -                                  "drm mode invalid, pixelclock too high.\n");
+> > 
+> > Any reason for dropping debug message?
+> 
+> I'll keep this message.
+> 
+> > 
+> > > +     /*
+> > > +      * If hdisplay cannot be divided by DSC compress ratio, then display
+> > > +      * will have overlap/shift issue
+> > > +      */
+> > > +     if (mode->clock > DSC_PIXEL_CLOCK &&
+> > > +         (mode->hdisplay % DSC_COMPRESS_RATIO != 0))
+> > 
+> > 
+> > ... and there still no check that the DSI host supports generating DSC data. Nor
+> > there is an atomic_check() that will check if the mode can be enabled.
+> 
+> I cannot know whether the DSI host supports DSC or not. Anx7625 driver force
+> enable DSC feature if pixel clock higher than DSC_PIXEL_CLOCK.
+
+This is called upstream. Please work on necessary API changes rather
+than claiming that it is not possible. Enabling DSC support when DSC is
+not handled by the DSI host is not acceptable.
+
+Few semi-random ideas:
+- Add DSC checking callbacks to struct mipi_dsi_host_ops. Assume that
+  DSC support is not available if callback is not present. The callback
+  should accept struct drm_dsc_config and populate const and RC params.
+
+- Add DSC-related flags to struct mipi_dsi_host, describing DSC feature
+  availability. Make anx7625 check those flags.
+
+> 
+> > 
+> > >               return MODE_CLOCK_HIGH;
+> > > -     }
+> > >
+> > >       DRM_DEV_DEBUG_DRIVER(dev, "drm mode valid.\n");
+> > >
+> > >       return MODE_OK;
+> > >  }
+> > >
+> > > +static void anx7625_dsc_enable(struct anx7625_data *ctx, bool en) {
+> > > +     int ret;
+> > > +     struct device *dev = ctx->dev;
+> > > +
+> > > +     if (en) {
+> > > +             ctx->dsc.dsc_version_major = 1;
+> > > +             ctx->dsc.dsc_version_minor = 1;
+> > > +             ctx->dsc.slice_height = 8;
+> > > +             ctx->dsc.slice_width = ctx->dt.hactive.min / DSC_SLICE_NUM;
+> > > +             ctx->dsc.slice_count = DSC_SLICE_NUM;
+> > > +             ctx->dsc.bits_per_component = 8;
+> > > +             ctx->dsc.bits_per_pixel = 8 << 4; /* 4 fractional bits */
+> > > +             ctx->dsc.block_pred_enable = true;
+> > > +             ctx->dsc.native_420 = false;
+> > > +             ctx->dsc.native_422 = false;
+> > > +             ctx->dsc.simple_422 = false;
+> > > +             ctx->dsc.vbr_enable = false;
+> > > +             ctx->dsc.convert_rgb = 1;
+> > > +             ctx->dsc.vbr_enable = 0;
+> > 
+> > Aren't those 'false' and '0' defaults? If so, you don't need to write those fields.
+> Ok
+> 
+> > 
+> > > +
+> > > +             drm_dsc_set_rc_buf_thresh(&ctx->dsc);
+> > > +             drm_dsc_set_const_params(&ctx->dsc);
+> > > +
+> > > +             ctx->dsc.initial_scale_value = drm_dsc_initial_scale_value(&ctx->dsc);
+> > > +             ctx->dsc.line_buf_depth = ctx->dsc.bits_per_component + 1;
+> > > +             ret = drm_dsc_setup_rc_params(&ctx->dsc, DRM_DSC_1_2_444);
+> > > +             if (ret < 0)
+> > > +                     dev_warn(dev, "drm_dsc_setup_rc_params ret
+> > > + %d\n", ret);
+> > > +
+> > > +             ret = drm_dsc_compute_rc_parameters(&ctx->dsc);
+
+BTW: these calls belong to the DSI host driver. See msm/dsi/dsi_host.c
+and DSC-enabled panel drivers.
+
+> > > +             if (ret)
+> > > +                     dev_warn(dev, "drm dsc compute rc parameters
+> > > + failed ret %d\n", ret);
+
+I think this should become an error rather than a warning.
+
+> > > +
+> > > +             drm_dsc_pps_payload_pack((struct drm_dsc_picture_parameter_set
+> > *)&ctx->pps_table,
+> > > +                                      &ctx->dsc);
+> > > +             dev_dbg(dev, "anx7625 enable dsc\n");
+> > > +     } else {
+> > > +             ctx->dsc.dsc_version_major = 0;
+> > > +             ctx->dsc.dsc_version_minor = 0;
+> > > +             dev_dbg(dev, "anx7625 disable dsc\n");
+> > > +     }
+> > > +}
+> > > +
+
+-- 
+With best wishes
+Dmitry
