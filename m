@@ -1,100 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706521DD0F2;
-	Mon, 31 Mar 2025 11:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4301F1DD0F2;
+	Mon, 31 Mar 2025 11:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743419605; cv=none; b=OHuA86zyh76dVAlUpTnlJdjC/93cGhw75D76nAeHCpxqgUjh1RJQBm7pAYsuOksRSb+LiuZE/UXZtUwuBDYugV4+cJfsFz39eU9jf4nZCmhtcvXh4oLorcRkx1fcUvEhEjySJDz81btO9PT587prSeEOP1pEDdw/iqtTW9xdrjM=
+	t=1743419613; cv=none; b=mqqAFMOhPCfO6dJbI1lHVD8KcmE2swUpoyz4FsxSxAk1OxYdqHTfS55+qXFp/P27fIKsgBASrBtbXPtSyDzBYoQVpeOwUJWgi2LjhSmjpGOiZ2a/tSELMECrh53aAVHlWrkIHFpmGkKOnoiggZqkJ9s4uQCRP+laz2Peq7pdm/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743419605; c=relaxed/simple;
-	bh=xC5d5HV9g/QMKwpUqadQc8/+qiEuKkPATB2RIFwwMkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HqJCqyl8r4jt9bI4u+Y6BMxOBw/d1NMK81/dGrFKWMkOGNN7xftQWCEjHhM2qOXLywl9xD0qXixicbuskx3iPqxyPqZfBiC4EITF0qvtr2eVYuRjC8yA/N9IepZ65NGCLtRb/PCKdNiZbfsaSDMez5MTWJfjZ0knrb0DwVIn5w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVnYzOuL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743419613; c=relaxed/simple;
+	bh=iMfWAYRdW5Zi9V6Q1JebZXoBiDtrLzoc62lGRJziAk0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=l0t5JlGIZXohybo7KVr2w1gfbgz9olWb1rc4f8y26MFPh8lmFYSYT5fTLg6hSSjniLhdp6raUTr51st74BFEADtHEJ7D5HqIX/gtuZ/1GPKibUYGBNyYm7t3OjZ+Rki37CNOaPSJgOEueO7v52FBISDi+kMNvnKcQc5WTPtRxMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=DuCYBdDh; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVnYzOuL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A707DC4CEE3;
-	Mon, 31 Mar 2025 11:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743419604;
-	bh=xC5d5HV9g/QMKwpUqadQc8/+qiEuKkPATB2RIFwwMkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SVnYzOuLQJw6S/ItccfCmmtnOXug52M/1LqdxqbL8wGZTQCmSvmvteJ7Sx61sI/UV
-	 1X7w5cGglO4PkHOhCPOmCfdmBB/0HwWaIIMKuO0EZDGrDVQJfACDhO3tHdAxSpgcax
-	 EX5Qzxd7iDeQTj+Hi2mJhZ0M0wqzFnz23IKlTV9uJE2XQs8A/2JDyORkPOWSA+4wL2
-	 r9HeNuVGOthM8KB6j2AVoVesarBWe4CJU1dC6AB4EI8vmHbU4f7p/90reaO4YgkcXD
-	 LjZ7pbt5zb/dsoZVD6FdekcMpnR+L36xZViV5lav5XcV/a9EbR9FYp61mQ7i8zZlRG
-	 q2GzqhiiNwNzw==
-Date: Mon, 31 Mar 2025 12:13:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] iio: adc: ti-adc128s052: Be consistent with arrays
-Message-ID: <20250331121315.78178349@jic23-huawei>
-In-Reply-To: <49966043aabecad8db8eb81908d0d2995b0cfc38.1742474322.git.mazziesaccount@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<49966043aabecad8db8eb81908d0d2995b0cfc38.1742474322.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="DuCYBdDh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743419609; x=1744024409; i=markus.elfring@web.de;
+	bh=63qFvfIzijRRXeWjG7Gdgug6Q2YIRJCYz23Ir1lfV7k=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=DuCYBdDhF8Fy4JQuEISj/xxgWJGxhskPvt7avwMknr9RnkdPIVq1ioV167HlIkwP
+	 9jk277vaZTgu97yDUC6b2cQPnNu7vv1oCd2LzGq08lS8tusYDGCSZcG36L8k2GGN+
+	 uSUUUqiojCVcpL99WiWvwrYWr5ltqW1wfyARA5wOUiGCx8Xv9oRHJcm1wUp++M2y0
+	 7VdvBHsujjBwumoQTEfrvRYqU01apYwTZ9NDK98YuO6c7vDeyCaoSKRi+VcvXsHoW
+	 9Mh+fBM/E7kMkALgFuN2rfzeKCIcFTKtgOnR6UyPYx/rg5D8tQdEpBTjAccq6LA7W
+	 ipVscRTofRR5LHuWvw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MXoYQ-1tbzEb0Sjc-00JC9a; Mon, 31
+ Mar 2025 13:13:29 +0200
+Message-ID: <a2ba5805-3e2a-4967-9c78-2702bf55304c@web.de>
+Date: Mon, 31 Mar 2025 13:13:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-wireless@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Felix Fietkau <nbd@nbd.name>, Howard Hsu <howard-yh.hsu@mediatek.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Peter Chiu <chui-hao.chiu@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ StanleyYP Wang <StanleyYP.Wang@mediatek.com>
+References: <20250331103543.9154-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] wifi: mt76: mt7996: Add NULL check in mt7996_thermal_init
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250331103543.9154-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:E43tro449Ol30lrF617necoQPncpjixgFyA64Up7dJH5TVfM12a
+ hD/dqOom0bt25Jfaze2XNBarwKvOa1LS/m55Bc5iA/sBhQuCwrh7au622dfxiJia06I2OGZ
+ cG/sSUU3rJ1Ez5QzZ36FLlM27NtFxYzhukaLhdZOtgMvC37BSK9drd6Yb0NeywLyBhmSfIQ
+ 791+ixOhWFt8ZhSqv6t5A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XgyDYicIh3M=;bQjk5pLYYjSB6PgM7fpD2zt5rkv
+ j/Fd0srC+6SyjkmrZoyiw8Y+OzYhoxJHWVddoodtmtMmK2R5wkM6MzbLbPjHP07XTb7OVpiGd
+ eFhSBuvgcfo6wzo4sYYjYq9BeLGcFHgMu65B309H54/zMdMSRoXIj3/DQQ9qQ5K3V8o4RXb3h
+ 2wNwWtFgcsxC5wqnW2Gqbck+7gHOtpp6gh/LNfBtnzoyCshTS+RbVB3S3NCw6A4bXGkXQBFWV
+ 4w5o2BAQqW7PE+K7WkkCBpk8ylEf3nFxAL7TBf6nXFWUkjpX9K6JDgXjAdmWf2wOps86cbVp3
+ s8yDi3p87ZSgXD9bX25akKMkhk0tzFuZnhYS3hz9i73W99hw+AJuxIje5VnjVTwzOw2tfJSKP
+ qTgesIXsoxHHlAOT7CIUR8yFYSQgjUjtdrrrrtlih739Cc0SYI0YI5/l0afpsGQzOR2fjlVrs
+ 0v3SJeHMtqvXnxC34SCdDUHfR9WHnVlfrIBSnvl5xIXoop0x5iwLwwalFijB+YNNTI49EXmrL
+ /0oiAIjNUDFXY0yvdFrDTVD4x5DEx8HDJ5p7vkP0wE8x2LnChFfMSVnI80aWh0AOeHDnMRwMj
+ y+g6KtyVVi9Sa4cZihCC+r7QP+nX912uKPcG8uJyg171lOWEyvaikcOoixUahqaKFbxsQ6XhJ
+ zEhOqgiX57GvIHskk8gkCmFC0Y5AXnHHA/82PzF1o93Cc9UR7nMfViWfcIAFZFaa2e/HtucYk
+ uaUUPpIZ6eu+WFGUy1BJdvCBggbfxReYuwGs0kGV01aS918t+fUbuIGCy1ocuZ/fOqDrZ+6Xs
+ CKvx0qJocSxTnq6WDBogfwtg76u0kQqa7f9FepQBR0sMYhOdAwW40N0HojT7JAK7N5L9ptdFh
+ BZj/V3Mzvb5Kr++h8OD479/RJi/p8cdr/ZhhrIHITs2r8XCxcMc96oNjXoF81eYlOk6Vqft3o
+ v3To9SmOnP0z2S6k+DOdEUlCOSpZ60Aj7Dk0RhAI4wKoNzurNygP7RPcEuCmiYE9o/I9iH++C
+ qTJJ1vCLk4TupbwswCqUhbq5X6MKtD+7sMZRykWqTJ3hNYcRrReR1PJDZac47lcSYnbkhHDgA
+ XH+OYIziDKs092Wvp2CdoqZr461kz/Jo1yGtSVIWfe68MNjrBjM3OlHYhf5J6RGxfidhMj86G
+ /4Inwo8Q1smp/X7Mnz8Slbipxjn6asyIooHZq+6ezca4R4D1MhqGt7OvJoJYoqBYt399dWF4N
+ AH5eYqkJ5fPXay6DBIx2UPVNuHJD9+Qerb2rhvzQzLMJ4qdRctMKSDEimt+lTUcnJAv249Cx4
+ WpaKgQN0ouxDKp4vxBGBaOwpX8Pio2O6eb2ux7zwwciPmo8Q0uaVrt+1+lXI3og77Aw6FF7zK
+ c+gLrM3HzHHDIr7Mfp6F6UM2EqDBQa9QQr1U4y82rDto/zlXaECUt3npPP7tvuRJw43DPsWtF
+ B35sLEqCMaxXjiiLt8p5+VOl7VvxbatTDjfuklmGX/yv2xSou
 
-On Mon, 31 Mar 2025 11:03:13 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> When devm_kasprintf() fails, it returns a NULL pointer. However, this re=
+turn value is not properly checked in the function mt7996_thermal_init.
+>
+> A NULL check should be added after the devm_kasprintf() to prevent poten=
+tial NULL pointer dereference error.
 
-> The ti-adc128s052 driver has NULL terminated ID arrays for the
-> of_device_id, spi_device_id and acpi_device_id. All of these are
-> terminated by having an empty string as the last member of an array.
-> Only the of_device_id array uses the /* sentinel */ comment.
-> 
-> It's better to be consistent.
-> 
-> This /* sentinel */ comment serves no real purpose these days as people
-> are used to seeing these ID lists terminated with an empty array
-> element.
-> 
-> Drop the /* sentinel */ from the of_device_id.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index d1e31122ea0d..dd1e405bf172 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -185,7 +185,7 @@ static const struct of_device_id adc128_of_match[] = {
->  	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
->  	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
->  	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
-> -	{ /* sentinel */ },
-> +	{ },
+* Please adhere to word wrapping preferences around 75 characters per text=
+ line.
 
-Whilst here, drop the trailing ,
+* How do you think about to choose the imperative mood for an improved cha=
+nge description?
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
 
-More 'modern' style in kernel tends not to use them as we don't want to make it
-easy to put anything after it.
-
-If there is another such case drop the comma on that as well as part of this
-patch.
-
-I don't care that much about the /* sentinel */ though as I've let at least
-one more of those in over the weekend. Still consistency is a valid argument.
-
-
->  };
->  MODULE_DEVICE_TABLE(of, adc128_of_match);
->  
-
+Regards,
+Markus
