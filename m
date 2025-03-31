@@ -1,106 +1,98 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1D0155393
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D2A155393;
+	Mon, 31 Mar 2025 12:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743423714; cv=none; b=OVuVZ15COXBWFzlG9VuvhpcoHHhFYiOLox1SlJE3cSREnqVPNVB4j8f3AvSg6DT6wMDyAKLqR6B60RqozYYoSQJPhi8bKW5qZc9XZRMQ+jBVwZEMocYXf08YYNrWRlbR4tvbLEPqyuW6RXzYdQpB69YUu1Q+57Qm8a65tXjHyCY=
+	t=1743423807; cv=none; b=t6S6SFjl/hNlv19J/aODwLMzX/6zoukEetqw0LYAIJqjxkvPvMytmX+37Vnl3BTqC5b5egRVCsDEbujAxq0zG0/zVe8UpP2gtdSdR60RR+fzFt+jcvOBmoyKyGXuwImpIzQSwdQA14W19wL13Gb3FIdQR+MrZ2utHCNWb9ef2Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743423714; c=relaxed/simple;
-	bh=2ev02OPAZCcfKnCjdtmiNypsC+78ymrjGNiBfTGbmT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzSsvCj9DO1aLXmxoz7tptjZA0Z5shIK2zvNUtCwARczK95mtpB2Wta9s8iHaRcA/euuQAw2rK+PICO9EL+ooPvfuPwQ1B7p0F/O7RGXkotuim1bV160VdmAPKuHxon6HfTkjobbPuR4kvupUfXpxtksdNFAIMCyPCq/8r990HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rLn/2ux3; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743423807; c=relaxed/simple;
+	bh=EWi5wLB7Wj6tdZhL6cBkn1q8F5l/GoBCMtA+/cgU3ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uYK6+jn8FTNw9RcNpHLBvQt1iHZwEuD/f5vVhwuiR/ZIk0qGtDn3YpvPDMP2zHzLSBE8f7YcN7q5bgV9Hle/vuaBiLT5H1pwZJ77WE3hPWUv8BdVrZabdiAOGgs7BWyUEVgYOQQSTvxs9UauaYCOvnUS8xNeP9WsW135JfkgSj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOZ9PRp1; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rLn/2ux3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743423679; x=1744028479; i=markus.elfring@web.de;
-	bh=DjDoYxmvCVWYmhn6yiewCABDUAnyg1UkNh7/ZQXPA5A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rLn/2ux3iYS+HLWcF3HNUwMZUoSRA7xig6Br2ymUdLIOOnkPzCPedUy8bzLNcTjl
-	 FtDIKdWS8Hdwp8WGwPhI3iiYOlq8PvBvwn+lLP8yOZZdYxP9OzSfCJN/HkSn+FJyT
-	 MCAMDXcIStLVG6jLh2ZWlXOPGBK9jREZWztFLi7l4orUFfWMrsa+Ha1CGMHol4ZEL
-	 SAIDm4k0dd0+8j0Ty4joB4VC2ggp2Lxu0cuBPGESBbKrC0KE0Vbjo+oq2wUxge4lB
-	 XTPUZN6muXAEQWAehQ+ziPra8fy3Xyr6xy1+APvmBfM39BLsfTT2mbybCadJHG68h
-	 kDjHkq/ZVSTzmrCCiQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1My6pZ-1tBP040Ktz-011MWB; Mon, 31
- Mar 2025 14:21:19 +0200
-Message-ID: <05ebb2eb-5f66-4613-a39e-40194c96341f@web.de>
-Date: Mon, 31 Mar 2025 14:21:13 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOZ9PRp1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743423807; x=1774959807;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EWi5wLB7Wj6tdZhL6cBkn1q8F5l/GoBCMtA+/cgU3ac=;
+  b=LOZ9PRp1XpLCFkmY6F7Dkc3f9sKIT8COYxTTEv2h2+TTGu0DVvBJDLG2
+   sdzjrv8aUorD7uuejRChcje60pkqqs4rN5yv3ch1nGqOskyKV1l+QgsC9
+   VNOofQoc6EVEoTMXwpSVJsiIUUr2e+I/GaBMpd7zkI0NzangzcgDW2V0w
+   E1wXr0Ed3uWNf2JVy00UMZxfndHsoV3cavq+Cn80TYhKEa/UQEeAX5sin
+   3JMRBWMP73eIQxo/F/PSCsGIucgPrFOjf5lPlgKUjr3yCuri8UhzI0syI
+   SMWEfLd0OH0RW3vr9KW1cNt5iJ6PN9VuS0B9ayiy8W46X1zU6begWwkhY
+   A==;
+X-CSE-ConnectionGUID: fqiUbfAfT6GeIgjRBAwmPw==
+X-CSE-MsgGUID: c+ssvwIpQuaxVThanwDibg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="54905682"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="54905682"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 05:23:26 -0700
+X-CSE-ConnectionGUID: Um1B+pBuTl2FsDe6/uB38w==
+X-CSE-MsgGUID: 0LwPE9hdQJu83eFjcxWQCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="126061692"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 05:23:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tzEAj-00000007f3o-1a7D;
+	Mon, 31 Mar 2025 15:23:21 +0300
+Date: Mon, 31 Mar 2025 15:23:21 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	acopo Mondi <jacopo+renesas@jmondi.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: i2c: rdacm2x: Make use of device properties
+Message-ID: <Z-qJOeeHUgWCtkTv@smile.fi.intel.com>
+References: <20250331073435.3992597-1-andriy.shevchenko@linux.intel.com>
+ <174340899625.3687388.14660711739063778026@ping.linuxembedded.co.uk>
+ <20250331120748.GB28722@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v4] mm/page_alloc: Consolidate unlikely handling in
- page_expected_state
-To: Ye Liu <liuye@kylinos.cn>, linux-mm@kvack.org,
- Matthew Wilcox <willy@infradead.org>
-Cc: Ye Liu <ye.liu@linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Sidhartha Kumar <sidhartha.kumar@oracle.com>
-References: <20250328014757.1212737-1-ye.liu@linux.dev>
- <Z-ayTt8o656AkGfz@casper.infradead.org>
- <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:15MxX/BlGGioOW8kCn4cYZi8i6GsG3ln3MiPcEY4lZhyrEmQykM
- n1PpaYxD3jewkBeN/Tvq4KEyUpgcIrnZdIXCxDHFjy/uet+i3lPCLXecRsuWobRV/hoM73/
- YzCDPXyXQW9kL3HMxuMhMgIgi4DjxulUvFxO9kvCxebB050oMbqlP+CgVh/Ney7fL0YiGwU
- QOpdOiFOUiT5C/EpqVGXg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6ng9HWNU9GU=;wg0s6oOGJkFi/x+hb6OZf/OvQJ7
- 9OaNWauUB0azf3olt6qMvzaTHXUuZN/+/I/cwKubSqOgaZ//q62x+ShOLJ8XDh1ZGtUvfRHPI
- PrlUVShQjYy3Wva/3Ajy24LDlUXfJk0x2WfIed0eT3NZIELhOdN7mfiQA2o9G1rYbbZqRzcOT
- 4sS4KB6eV+5rQ/7OO2tq4rO+Nt2fN09NKiyHJIVs5XnckZddzfdis3uXNl2XvoO+nKwsK9YwV
- ECsPVqpPl06mSYpw8V5IP5RG9VweWRYSEMkw4a5vQ7+Gl7yHPa3dlGoDe9w7C3DtuH+oyXNpX
- XzWKjujjoDjgiFHpk0gq5Qyb+OiEWyMnFGmjx7RKfpXF/fTv6VYXWapX8WdxZ7ciasxIQNJyf
- 5QS9T+iVw5FOKbM4SV0VFCkUlAIG/q61KBMH7Pv+wvWnW0wy1duVxbWCUwWWqf9utFgLR8lMw
- wiMbQgh+DSPKKZlUjAvnStB+8tX9EiEvs9ROD98850e1SB3dCU3k9P/jtGYkVDycUZmdszkUe
- R5PI0clM2J41q57ijIT+qKEEz4k/fSvumMRFDIoUunGV6CztevTrWCgmS47AayCmJGF8p0Bdf
- B6psA8QVBYdh5eAygHWCkNkVOZ1OeImLiX6DF+1WpSGGgn4Sir8DpGO1zkERuYRbDS93IFqCS
- CaL9oEzLWBsUE4U8t2vHGZOZH+sigcmywfqEX9UQg1Tm5RS5RBjc73m1dajCzW+aE2bIxdSd8
- M3UswrUYnguzAFef2D2IAhCu8btOVAXbKHLx5wAtbyamDRAdzvSjeF8ZAvs9JVSFOjimgAu6m
- IRLnX1XoDYB1hXm4jIEM2M961QlE1WSvBxR+FMIG7iXx76yypijRAZ4jG2/AIjWplUOe2I14A
- 8BPCnQBriMDyDryNt5IdN3vHxF3GIEGDVF9uvauiAfRpb8eM0W6Df/ES73jnbld0rrIQe2vJk
- M9EWdpOyIbAY/a5QUakLSss0DqCCF7shk6nJC+FjN3G/k8fPKvD9ZBUUBqR9MrpIA/WUQX6we
- l8DSEaWd08Jfqf5UYbWZ/CvCZnLm7syJqFKh7EiJUQiDjfSSElgJDzaGKom4iP5DBLRQORHvp
- UlRqcbq4WY5ihXKfXhiNrFRTVqG2EDdp0BCboxQm5wQpXHFiZ1bo8d/8v5us9nCCBGO+qpzwi
- rXQKTAjKCA7syO6CMYoeTj+qhIaJiHbcjLjzk+X+JIclZJmXFa7Cg8g9F9luNVyVEnOkmfIpD
- y7AajkBotVX+2P0MS4YaWsf977iNCBZNEcHyZsEf6qK5ifTSB22OeQj7iL/w8y15fh1KbtnC5
- v2PhZrlum3/IlpA4YIGHenMB2vJXwhtC5xJ9mAGTEbv5/Oh8lTgvwkN7t59o9IsIaVXg1ye20
- i4mbihXqEM7P8p2Q7RoXToT5yEjyEpA3TAY2JwHUR67Ne7foBurW86hsxGV1j1WBHKbzDcU2m
- 3tltOVbODc2V/v83vK63KlgW5/BYR+KHO2Crsv2hiOrguRHtc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331120748.GB28722@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-> Regarding the reviewer shortage, I=E2=80=99d be happy to help by reviewi=
-ng
-> other patches as well. Could you please share the process for becoming
-> a reviewer?
+On Mon, Mar 31, 2025 at 03:07:48PM +0300, Laurent Pinchart wrote:
+> On Mon, Mar 31, 2025 at 09:16:36AM +0100, Kieran Bingham wrote:
+> > Quoting Andy Shevchenko (2025-03-31 08:34:35)
+> > > Convert the module to be property provider agnostic and allow
+> > > it to be used on non-OF platforms.
+> > 
+> > Looks reasonable to me.
+> 
+> Is that going to work out of the box though ? The calls below read the
+> "reg" property to get the device I2C addresses. AFAIK, ACPI handles I2C
+> addresses using ACPI-specific methods.
+> 
+> Andy, have you tested this patch on an ACPI system ?
 
-Under which circumstances would you dare to comment information from
-other contributors?
+Only compile-tested. But you are right, this is something different here
+between OF and ACPI.
 
-How will your development interests evolve further?
+I can rephrase the commit message to just point out that fwnode.h shouldn't
+be in the drivers and either converting to device property in an assumption
+that later it can be easier to support non-OF cases, or using of.h.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
->             What are the requirements or steps to get involved?
-
-You can try to improve communication skills as needed.
-
-Regards,
-Markus
