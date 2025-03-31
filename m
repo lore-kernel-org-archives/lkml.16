@@ -1,130 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AEC21A45A;
-	Mon, 31 Mar 2025 20:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3F51D86F7;
+	Mon, 31 Mar 2025 20:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452967; cv=none; b=Kc4rGvK3bnfmL/RM9OBqUIjRDXHsjgbzm1pcMt9l8qbDP6zTT/O/qAC6GGsFut+6qThYEwvlJAQ4WG6UCBlnaDRObMGBQLK/dlAV71ISrzWTtKYdWWZP2BdcTYsEIsH/Jki1nbl3/hX2oNXn3osU6QkvVSke6OsPK0brAbdxwTk=
+	t=1743453056; cv=none; b=AwzxPwRtMClObwcYb/5Et3GiZNReJyYa9O9GUplCe/QrQSt9pxNsSLNiKb/20o69tVthPBtJTlEIZqcjrYq3+W6qpgYX98PvCbJEP+KTik1qBpMbvA2Lm9keFp9gUd+DBZ8e9Z2LmW2p/LD3YGNo3ddeQqLq4NgoAQFFJlBoOIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452967; c=relaxed/simple;
-	bh=qrHamV6jaiuFnZizd0nUtJBmUrT9qGDrGOwrWzjYKZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tlTeb0q1yHEM3djhEyLyPNYKpMj6hiPAxw73vazrlaFHrCY0V6dMJLRGChja0EhirAhugqrgkuKNJP7EbXyCmbi7QnijWG4fAy18TU7zUyfn2Ark5foWVILp9S61RI/YmPqOvRfqqzdvM7oVQVlRdE32003RvoL3evKcSbAZlmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/+2mW+y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743453056; c=relaxed/simple;
+	bh=oSgO4eBDnIoUqaBokqlhEpgWsqEDw8Ac1dYf3mCoSAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjrIaFQkW56KT1jAyBg8/qilnemyvVL3UVNQF7VerddIZjcBcHlwuJaZiVlkazXqX2G5z3FWnz0ieMG7mc/iOwoT47oHtPYHx0YrkU2Rn+JwbZjMfhuViOHCs5Kty9WEzuKZqEUQ2iUK8nHdv4l94ZIaLLYhVvXJtejHsPD/w1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Up4u0ZtG; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/+2mW+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E978BC4CEE3;
-	Mon, 31 Mar 2025 20:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452966;
-	bh=qrHamV6jaiuFnZizd0nUtJBmUrT9qGDrGOwrWzjYKZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V/+2mW+yHhqtKcbzaLf8i5CXTcfYLBL+PTIhxRRZGHzb4BOGFJ9aqglEbzspXYtjI
-	 HrAvqS/s6I5Iqj2zTEq3wuaaRmTFtZptBTsteO+QeKLsfqGSacXfMOKZbb3i+LqDFK
-	 MF0/mkSYcQJo7Aapn7w7Oe+t6Bv4Xe01mWXTTNxNyZDvfYygsfuAAcJAUpsFDdSTbS
-	 RWyDkCZUDMyCSDnt6b7ltOtHX3oaFQ2kD88ect/O+rgnypaniODdkrFV926IDlIupX
-	 dIT9NH/T1rLqugqDRTfi3ZEBF3z6m3G5xh/sFEilLfOWIca/UsGAdP4PAYbZkIWW6p
-	 BTraSG5Ob5/7g==
-From: Danilo Krummrich <dakr@kernel.org>
-To: bhelgaas@google.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	abdiel.janulgue@gmail.com
-Cc: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	daniel.almeida@collabora.com,
-	robin.murphy@arm.com,
-	linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 9/9] rust: dma: require a bound device
-Date: Mon, 31 Mar 2025 22:28:02 +0200
-Message-ID: <20250331202805.338468-10-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250331202805.338468-1-dakr@kernel.org>
-References: <20250331202805.338468-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Up4u0ZtG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bwgUmQ/Ln+vl6Ggzqf2YmSZ7HB+LoNBmRfI1Y27KDkA=; b=Up4u0ZtG1+H47e4FsrNKSaV3o8
+	3eDeJC82AW9n1sRD92fm7KDWTFxTlKyVYZkALIOZ8v3lqVlbgS4tKxO6tohdct1W0suaUXUPBw/vy
+	nK+4MK+9EMi1TY9eDu0nvxRN4EbMm1sLlZQ3F3an+fF2Unme7J1RP2aW1qxVbw+U/yaqOgyRb9VER
+	t7CcYkvNr02rp6F5f/P7MUBu0xpg7Yfk56v3d3IEvx15X2xJjSdunMDG9w8AvtwNWSCGR+LuXkJKw
+	AvRUAYvC/r3H9c5G6KWGnYgiWy3Q/2qrZ6zZIlDzU6/LmAhDX3sjUVbomWh95H2aII31UVfXXTBBr
+	wlHheixQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59730)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tzLmQ-0004lN-2S;
+	Mon, 31 Mar 2025 21:30:46 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tzLmN-0001zI-1U;
+	Mon, 31 Mar 2025 21:30:43 +0100
+Date: Mon, 31 Mar 2025 21:30:43 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Da Xue <da@lessconfused.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Da Xue <da@libre.computer>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Jakub Kicinski <kuba@kernel.org>, linux-amlogic@lists.infradead.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2] net: mdio: mux-meson-gxl: set 28th bit in eth_reg2
+Message-ID: <Z-r7c1bAHJK48xhD@shell.armlinux.org.uk>
+References: <20250331074420.3443748-1-christianshewitt@gmail.com>
+ <17cfc9e2-5920-42e9-b934-036351c5d8d2@lunn.ch>
+ <Z-qeXK2BlCAR1M0F@shell.armlinux.org.uk>
+ <CACdvmAijY=ovZBgwBFDBne5dJPHrReLTV6+1rJZRxxGm42fcMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACdvmAijY=ovZBgwBFDBne5dJPHrReLTV6+1rJZRxxGm42fcMA@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Require the Bound device context to be able to create new
-dma::CoherentAllocation instances.
+On Mon, Mar 31, 2025 at 03:09:00PM -0400, Da Xue wrote:
+> On Mon, Mar 31, 2025 at 9:55 AM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Mon, Mar 31, 2025 at 03:43:26PM +0200, Andrew Lunn wrote:
+> > > On Mon, Mar 31, 2025 at 07:44:20AM +0000, Christian Hewitt wrote:
+> > > > From: Da Xue <da@libre.computer>
+> > > >
+> > > > This bit is necessary to enable packets on the interface. Without this
+> > > > bit set, ethernet behaves as if it is working, but no activity occurs.
+> > > >
+> > > > The vendor SDK sets this bit along with the PHY_ID bits. U-boot also
+> > > > sets this bit, but if u-boot is not compiled with networking support
+> > > > the interface will not work.
+> > > >
+> > > > Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support");
+> > > > Signed-off-by: Da Xue <da@libre.computer>
+> > > > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> > > > ---
+> > > > Resending on behalf of Da Xue who has email sending issues.
+> > > > Changes since v1 [0]:
+> > > > - Remove blank line between Fixes and SoB tags
+> > > > - Submit without mail server mangling the patch
+> > > > - Minor tweaks to subject line and commit message
+> > > > - CC to stable@vger.kernel.org
+> > > >
+> > > > [0] https://patchwork.kernel.org/project/linux-amlogic/patch/CACqvRUbx-KsrMwCHYQS6eGXBohynD8Q1CQx=8=9VhqZi13BCQQ@mail.gmail.com/
+> > > >
+> > > >  drivers/net/mdio/mdio-mux-meson-gxl.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/net/mdio/mdio-mux-meson-gxl.c b/drivers/net/mdio/mdio-mux-meson-gxl.c
+> > > > index 00c66240136b..fc5883387718 100644
+> > > > --- a/drivers/net/mdio/mdio-mux-meson-gxl.c
+> > > > +++ b/drivers/net/mdio/mdio-mux-meson-gxl.c
+> > > > @@ -17,6 +17,7 @@
+> > > >  #define  REG2_LEDACT               GENMASK(23, 22)
+> > > >  #define  REG2_LEDLINK              GENMASK(25, 24)
+> > > >  #define  REG2_DIV4SEL              BIT(27)
+> > > > +#define  REG2_RESERVED_28  BIT(28)
+> > >
+> > > It must have some meaning, it cannot be reserved. So lets try to find
+> > > a better name.
+> >
+> > Indeed, that was my thoughts as well, but Andrew got his reply in
+> > before I got around to replying!
+> 
+> The datasheets don't have much in the way of information about this
+> register bit. The Amlogic GXL datasheet is notoriously inaccurate.
+> 
+> ETH_REG2 0XC8834558
+> 29:28 R 0x1 reserved
+> 
+> It claims the bit is read only while the BSP hard codes the setting of
+> this register. I am open to any name for this register bit.
+> This is the only thing holding up distro netbooting for these very
+> popular chip family.
 
-DMA memory allocations are only valid to be created for bound devices.
+Which interface mode do we think this affects?
 
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- rust/kernel/dma.rs | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+As a suggestion, maybe call it:
 
-diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index 8cdc76043ee7..605e01e35715 100644
---- a/rust/kernel/dma.rs
-+++ b/rust/kernel/dma.rs
-@@ -6,7 +6,7 @@
- 
- use crate::{
-     bindings, build_assert,
--    device::Device,
-+    device::{Bound, Device},
-     error::code::*,
-     error::Result,
-     transmute::{AsBytes, FromBytes},
-@@ -22,10 +22,10 @@
- /// # Examples
- ///
- /// ```
--/// use kernel::device::Device;
-+/// # use kernel::device::{Bound, Device};
- /// use kernel::dma::{attrs::*, CoherentAllocation};
- ///
--/// # fn test(dev: &Device) -> Result {
-+/// # fn test(dev: &Device<Bound>) -> Result {
- /// let attribs = DMA_ATTR_FORCE_CONTIGUOUS | DMA_ATTR_NO_WARN;
- /// let c: CoherentAllocation<u64> =
- ///     CoherentAllocation::alloc_attrs(dev, 4, GFP_KERNEL, attribs)?;
-@@ -143,16 +143,16 @@ impl<T: AsBytes + FromBytes> CoherentAllocation<T> {
-     /// # Examples
-     ///
-     /// ```
--    /// use kernel::device::Device;
-+    /// # use kernel::device::{Bound, Device};
-     /// use kernel::dma::{attrs::*, CoherentAllocation};
-     ///
--    /// # fn test(dev: &Device) -> Result {
-+    /// # fn test(dev: &Device<Bound>) -> Result {
-     /// let c: CoherentAllocation<u64> =
-     ///     CoherentAllocation::alloc_attrs(dev, 4, GFP_KERNEL, DMA_ATTR_NO_WARN)?;
-     /// # Ok::<(), Error>(()) }
-     /// ```
-     pub fn alloc_attrs(
--        dev: &Device,
-+        dev: &Device<Bound>,
-         count: usize,
-         gfp_flags: kernel::alloc::Flags,
-         dma_attrs: Attrs,
-@@ -194,7 +194,7 @@ pub fn alloc_attrs(
-     /// Performs the same functionality as [`CoherentAllocation::alloc_attrs`], except the
-     /// `dma_attrs` is 0 by default.
-     pub fn alloc_coherent(
--        dev: &Device,
-+        dev: &Device<Bound>,
-         count: usize,
-         gfp_flags: kernel::alloc::Flags,
-     ) -> Result<CoherentAllocation<T>> {
+REG2_<interfacemode>_EN
+
+and possibly add a comment "This bit is documented as reserved, but
+needs to be set so that <interfacemode> can pass traffic. This is
+an unofficial name."
+
 -- 
-2.49.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
