@@ -1,121 +1,146 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C47D142900
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE6A1D90A9;
+	Mon, 31 Mar 2025 08:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410682; cv=none; b=MmOLVswpsmVgbGiJSevoDhh7y3hyB83MOwyWU1klDKleepIb0zn0nejCPbi4e34M+RVhQsl0hVjQ7ZYSadPAnXKmLbAIm/OREahspncQ83/LtncCwzs8mBE+Lb70YTuqz2Fu8W675Z8acqMfiYX6+CEt7u/p5yS+px8CC4w8Zgc=
+	t=1743410685; cv=none; b=fYja0e94QWolP55E2nxOqeIhru3IHCy6qcIog+ic7/i3zWbGdnsHO8gPMxjvZMLTwyRjE8Ax9vqXWLBSS4J7NAUUFfzbu5jdouNRd9dX5oxfDNPybYBhDJTjFQx09fjSbr7kPrxI5s/xbCD0n7oKh1jdmsORORJ06zb1EQ8MXJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410682; c=relaxed/simple;
-	bh=l5eqc0C4HMu2i/7Vw0ixdGCDv5mPI6Lkr35xLYnO/IY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iNKm6OI/Di5UXLQhYv8v8gHiwlVuHY7FNWFZi+SMYoACvV4GfJ876EPzHX51hhtAK/hvLDzOCZ6n0v3vX9KcHYQVReWBHJxKMUlolc1jU5FfBrZzgfldUFV2S7Hj963vQtmL39+TwkPq/ZExE1bWjuJhvZnGYv0UOqIPCuZM90Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1743410685; c=relaxed/simple;
+	bh=9Eo5YorzB1znbDgWJg/+008nXJznjveNUK50EHiJXHE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=iGnK8rImtUfqM9cFMSt6C466MLGbeTVvSuyj+s7xUtpbBIKr6cQ9NMtyvk0kcggCy3ubvHcY/Uxyl8JrDqbeC19p2BCh6y6aOCB9e/08Fx/s14Y8yRFqoCJsL7wpSvwgIHQjSiUxCCANQDalcxcZK4Cgd3fnmg6nv26rSD31sIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnwFOV3c; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d3907524cso1748159241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:44:39 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnwFOV3c"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43690d4605dso27324965e9.0;
+        Mon, 31 Mar 2025 01:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743410682; x=1744015482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7k8QAqyn6gLKSVxlNTUb4WI8Fi44pPrnGBNadeFjOuw=;
+        b=TnwFOV3czeyYkaAbmCHzosqb1YAp/+EPKVvN0dHHS+VNO73dKygWRBbS54Lqf3j+Hh
+         98PgoNQXnaDavyV6KLg3cJA5T14hptHBDnHFGg5wEBX87Jh8ybeOvvImlRwGlF2B4eDL
+         L1rXNvu16mfClxfgk1BfkuyTLG0I2EJiZWWuW9+sX+FRJwE0s2l/lzv3BwDkuGw/DPGH
+         9I+TAX94tcwcY0tcrtGNO8RnG5YDmqv3BfqwUIJi9ERUCUMkhTlcrDUNk8q3FN0ZSsuZ
+         VXhgfsSpuszbaQG2GdLR38ejD5dY5CHop9tKJSDS27cFWN/P2l9ooSQTLso26vtV4GRl
+         0zyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743410678; x=1744015478;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KK/y5pjkyd8lRB9OXOepCyh3Rk+OQD2KlAMo3Fl+x+4=;
-        b=s2ME3M8NcJ8E2EUjwI0mirfeQY8zm9VQPkZx39fJHGxZ4QFAD6k9lEhUvB7kZUP5MF
-         D7HSIkKxF6JiqfYqXAN/inIyQIRap4YU7l2z8Objrsiy04AnajltjEJwB0y60+ONoCJf
-         IkTwqhzaaBE1mHJOM+WPgkyzpFcMHkhzW8gIvHsED+/EgjZ8Mp/Dt9j2l91QtUw+EJ07
-         8pr/nmpLjk6tjX2EBdpjOCVTSlnSYSmDlKj12Ub1heKaaS9tuXA5jwFko32eeZHKpG1P
-         /kFzGumrgZVCCWEZDWKO223r4dXHbLbHwG8JKOQjYWSywDXG8StHnLLOAd8KqBPqSaCm
-         a8mg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0gbdl8j3xrH3I126REcmtvj0sSDG5urufADbKVfj7t9VhEuvaT0Ba+QokNuuDBn6K8NR+Y0Zy2NgNFNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNNt4lA1Wp3LObcDgaJhUn8PcYsw6xdhmuyxF8o/g8JsvtbGq5
-	KKYeuPnpoFry0/Lq+5NeBWq+4jOWSAJXYOfKe66lZzk/J4tENAK14D5Orz9t
-X-Gm-Gg: ASbGncvPbiAaW3ZjE27CbfIYAqm+3FJVzXyl8nDqVPs6o0Gxfky+o5KTAnNdMsBWQTg
-	cdWP6hlZMeW2KgWUC0LnAFo30wp0JdTvQdvlY78zzRp6Vpojm80SMbgX1HHomOul7QdgVS/9z5W
-	Hg3L/gdyo1x34RHTDdt53TyDPTVOCPr3sNjFgpEwtp6deViwBKWKM6FdKHrmRQqhC+XqPiQnA9A
-	MYZtQAo+bsj8tSpU4WdxedEDrt8n0u3RFwbt3OtaYiWkSv6LiFvn6/90B7RMBTtt3bTY4rlQ2Mz
-	UHqUCbnEo6sAFJtfOQMHcPS+mOmkwGHmK19FAwgt3VVfsdZMmEQ+gZnfNyhT6CUE3c7K2qZOVlp
-	ykMmoUpj4IZ8=
-X-Google-Smtp-Source: AGHT+IE/TYG7txlVWREhGnhBK2hC+9z04JrdlbheXIn+NTcDwBU/0dhkafVHCcf8rgeEVW/WPUNakA==
-X-Received: by 2002:a05:6102:41a5:b0:4c1:99cc:792 with SMTP id ada2fe7eead31-4c6d38904e5mr4344661137.13.1743410678143;
-        Mon, 31 Mar 2025 01:44:38 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c6bfcf28d7sm1470743137.13.2025.03.31.01.44.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 01:44:37 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52446b21cfdso1808580e0c.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:44:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWCIwz0rkBtMWFgvBDMn6EMF5blJ4FibelFXGr533guK1fmgDkJCRJINIvnGDPxUv8rbJcK/mQl49iQmA=@vger.kernel.org
-X-Received: by 2002:a05:6102:149a:b0:4bb:e8c5:b164 with SMTP id
- ada2fe7eead31-4c6d3847bb8mr4591245137.7.1743410677525; Mon, 31 Mar 2025
- 01:44:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743410682; x=1744015482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7k8QAqyn6gLKSVxlNTUb4WI8Fi44pPrnGBNadeFjOuw=;
+        b=OfwwGr0tcr5FN0KxGciH0mx5esDWfFeB4Os6ydeKyDgHn4HVIeLUcf8/uuhxSZ4CUQ
+         VEj10RjqPrDGpEPBzTGmmtwJwNNRJ2GnF8kZ+5lm7xmIiWKTFJDRCguYmhjYTtNTQTex
+         +h2xA1PGQzObB+ci78FpMW10isRJVrhvjoL/atZf+ekQA/c2f04AbBzp28zAODLTMnil
+         4vJYQJWvkfuSNSkSuMaFL/YjVPGg4G8DkVIoVIsH7NYnsVcNjq5rQ4EkW0N1nhSoFclb
+         A2Y22G1YhM/bvkbAlk3uUGnaO+SuTlgQ11ggbwBT0P85gfNm7D3pHR2Y2J9BTRt+p9wg
+         6d0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWX2HZeAgJ9uOp4yPcIcQONVaZY9iJNBwyWVd4ekG27TPO+FM1Vr7Ze1ldFYsMjN5e4pGmnal4aW4larBo=@vger.kernel.org, AJvYcCWmMzOKNnwf1ck9t/WKblIDwY8IVtTJBsFK+aHpJjAeMHaVOZgRGhGNbet823X6qLPoZrxglTxzSBJMQIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL8zGcCpPg65B6VKvlspd1ZY9kmQv72btgeEvZR/x0USSQmNns
+	JLE+QsLVRIeLzxprmVXauLkwiSJUqqXyQ2p9uROjHz68HjbpuvyneBLPgLXIaEE=
+X-Gm-Gg: ASbGncsRk6f0Ale6rjyLU/WBjhYfOFhz+5MwP14sVsyLeT1yzBaW0ozpsyenkE32HAU
+	x6zq/An/q40TTNsYhOAlKgkguO7L6tBtkNIRXaNZz1UoGM/QX7moUYXpQv3LQyXRSdulHLCl40Y
+	IdkL0/yKmUEYVi13LhBepYoG2+MOwE/IJmcNpCWT4+oWBVIPEuKA1HTeRinTGNQUbgew+DM2fbQ
+	LUXvD/StdsPPNWwRh63SkLIO4MwUSqm7Zl2c6AxYEZCX1TkjNla2Y0/iMzqlLJs3QG4d2xgE6gp
+	Vh+2WMkueau4ibC2fDaCJgK5ELPqG/K6Pin3yCHexaEJss5tRwPms0+iuv+X
+X-Google-Smtp-Source: AGHT+IGqlAOUPlYMNJdvGKhA43+8DFYtcqrURoBfLI0cjmzp73RPTqDXDf90ynGOUdQDFxYR3VTfYw==
+X-Received: by 2002:a05:600c:3b9d:b0:43d:7588:6699 with SMTP id 5b1f17b1804b1-43db6221b07mr57375675e9.7.1743410681820;
+        Mon, 31 Mar 2025 01:44:41 -0700 (PDT)
+Received: from toolbox.. ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fbc12bbsm114834015e9.13.2025.03.31.01.44.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 01:44:41 -0700 (PDT)
+From: Christian Hewitt <christianshewitt@gmail.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: si2168: increase cmd execution timeout value
+Date: Mon, 31 Mar 2025 08:44:37 +0000
+Message-Id: <20250331084437.3974648-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org>
- <CAMuHMdUxe3gwsWdb37P+SOxL3twEf9_Fdr82naR+R3yxHCObOA@mail.gmail.com> <b8150223-8bce-32fb-c146-e14bcaa91134@linux-m68k.org>
-In-Reply-To: <b8150223-8bce-32fb-c146-e14bcaa91134@linux-m68k.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 31 Mar 2025 10:44:25 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUZV96E4Xu-+yfV-FSO1a0WkJWr87s35M3QQDL-np3chA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jq5LoKd7NFb6qFQASTYY2tKI7IkMQW81XTHTmiopvk1xqCDLyhTcF_8r-o
-Message-ID: <CAMuHMdUZV96E4Xu-+yfV-FSO1a0WkJWr87s35M3QQDL-np3chA@mail.gmail.com>
-Subject: Re: [PATCH] m68k/mvme147: Don't unregister boot console needlessly
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: Daniel Palmer <daniel@0x0f.com>, linux-m68k@lists.linux-m68k.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Finn,
+Testing with a MyGica T230C v2 USB device (0572:c68a) shows occasional
+cmd timeouts that cause Tvheadend services to fail:
 
-On Fri, 28 Mar 2025 at 23:25, Finn Thain <fthain@linux-m68k.org> wrote:
-> On Fri, 28 Mar 2025, Geert Uytterhoeven wrote:
-> > > --- a/arch/m68k/kernel/early_printk.c
-> > > +++ b/arch/m68k/kernel/early_printk.c
-> > > @@ -60,7 +60,7 @@ early_param("earlyprintk", setup_early_printk);
-> > >
-> > >  static int __init unregister_early_console(void)
-> > >  {
-> > > -       if (!early_console || MACH_IS_MVME16x)
-> > > +       if (!early_console || MACH_IS_MVME147 || MACH_IS_MVME16x)
-> > >                 return 0;
-> > >
-> > >         return unregister_console(early_console);
-> >
-> > Perhaps the whole function and the late_initcall() can just be removed?
-> >
->
-> A comment in arch/m68k/kernel/early_printk.c gives the reason why that
-> code exists: debug_cons_nputs() lives in .init.text. Platforms like MVME
-> which don't use that function to implement earlyprintk don't have to worry
-> about this.
+Jan 28 12:23:46.788180 LibreELEC kernel: si2168 1-0060: cmd execution took 0 ms
+Jan 28 12:23:46.790799 LibreELEC kernel: si2168 1-0060: cmd execution took 0 ms
+Jan 28 12:23:46.878158 LibreELEC kernel: si2168 1-0060: cmd execution took 80 ms
+Jan 28 12:23:46.879158 LibreELEC kernel: si2168 1-0060: failed=-110
+Jan 28 12:23:46.879908 LibreELEC kernel: si2168 1-0060: failed=-110
+Jan 28 12:23:46.948234 LibreELEC kernel: si2168 1-0060: cmd execution took 60 ms
+Jan 28 12:23:46.949121 LibreELEC kernel: si2168 1-0060: cmd execution took 0 ms
+Jan 28 12:23:46.949940 LibreELEC kernel: si2168 1-0060: cmd execution took 10 ms
+..
+Jan 28 12:23:57.457216 LibreELEC tvheadend[3126]: subscription: 009B: service instance is bad, reason: No input detected
+Jan 28 12:23:57.457392 LibreELEC tvheadend[3126]: linuxdvb: Silicon Labs Si2168 #0 : DVB-T #0 - stopping 778MHz in DVB-T Network
+..
+Jan 28 12:23:57.457584 LibreELEC tvheadend[3126]: subscription: 009B: No input source available for subscription "127.0.0.1 [ | Kodi Media Center ]" to channel "XXXXXXX"
 
-Thanks, I had forgotten about that...
+The original timeout of 50ms was extended to 70ms in commit 551c33e729f6
+("[media] Si2168: increase timeout to fix firmware loading") but testing
+shows there are other demux commands that take longer. The largest value
+observed from user reports/logs is 150ms so increase timeout to 200ms.
 
-> I suppose MACH_IS_FOO is not a great way to encode that requirement. But
-> it don't think it has to be self-documenting. It does have to be
-> consistent with the conditionals in head.S.
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+Changes from v1 [0]:
+- Rename TIMEOUT to CMD_TIMEOUT and move below #include
+- Add Wolfram's review tag
 
-Alternatively, check if early_console_instance.write() lies within
-__init_begin..init_end?
-That doesn't work with the current setup, as .write() always points
-to the common debug_cons_write().  But it can be made to work
-by setting up .write() with the proper function pointer in
-setup_early_printk(), getting rid of repeated MACH_IS_*() checks in
-the process.
+[0] https://patchwork.linuxtv.org/project/linux-media/patch/20250331075838.3444332-1-christianshewitt@gmail.com/
 
-Gr{oetje,eeting}s,
+ drivers/media/dvb-frontends/si2168.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-                        Geert
-
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index d6b6b8bc7d4e..843f1e01318e 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -9,6 +9,8 @@
+ 
+ #include "si2168_priv.h"
+ 
++#define CMD_TIMEOUT 200
++
+ static const struct dvb_frontend_ops si2168_ops;
+ 
+ static void cmd_init(struct si2168_cmd *cmd, const u8 *buf, int wlen, int rlen)
+@@ -40,8 +42,7 @@ static int si2168_cmd_execute(struct i2c_client *client, struct si2168_cmd *cmd)
+ 
+ 	if (cmd->rlen) {
+ 		/* wait cmd execution terminate */
+-		#define TIMEOUT 70
+-		timeout = jiffies + msecs_to_jiffies(TIMEOUT);
++		timeout = jiffies + msecs_to_jiffies(CMD_TIMEOUT);
+ 		while (!time_after(jiffies, timeout)) {
+ 			ret = i2c_master_recv(client, cmd->args, cmd->rlen);
+ 			if (ret < 0) {
+@@ -58,7 +59,7 @@ static int si2168_cmd_execute(struct i2c_client *client, struct si2168_cmd *cmd)
+ 
+ 		dev_dbg(&client->dev, "cmd execution took %d ms\n",
+ 				jiffies_to_msecs(jiffies) -
+-				(jiffies_to_msecs(timeout) - TIMEOUT));
++				(jiffies_to_msecs(timeout) - CMD_TIMEOUT));
+ 
+ 		/* error bit set? */
+ 		if ((cmd->args[0] >> 6) & 0x01) {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
