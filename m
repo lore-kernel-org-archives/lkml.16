@@ -1,166 +1,164 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3E18E02A
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FCD19D8A7
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743403330; cv=none; b=Tuwwz/Qjdp23cMqQU6GbTh8uSWKAxXV6QL3RH5XEZl7KrfCgroWRKuUz+gfx34pp+S5xZfkx/y4RE7/WSa8PTSWS9pJL6PL7NeBHjaVFiHtPQE3ZD4XNoHeJ539ARhZjOWrqaelYfccr7T9FRPw3ZeucKOf7X55vPGzDI9e5jG8=
+	t=1743403336; cv=none; b=dBq7seYxsDf0rf/ArOvNZUw+uL8RsT79BlIWQ8JjdlnRmTC0LLV/440YE1Y2x5i/D0kiz1KdUTpqSOGtGL3Wk1+vOui+82wyEDl8582aaS7szjbSU2iUOWhvcH2E+qVXtp4pG1fK+fjkqFtATlBNqOSzM1bTlxYwZTtXRf+XQg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743403330; c=relaxed/simple;
-	bh=+2rhNhl4SB84aYUqvJfZumo57DfkJ75LYelGCFBJ7Bc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QwHCvsu8WH40GV5pMDAF+RIkidMxiCH56d10JLrOCF3PntysOdlp7c2oNzQbDdCYtgnXumwwc4RIsKx+QqBCYYmATcfTwn1ark4nqVi5VxzmsQMF5kLqAkm7mR8tBCbtSmRGRQal5rT5lJ+lN5af7Uwgwjugseg5M4yqt1fzdfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tSurU/6I; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743403336; c=relaxed/simple;
+	bh=BJi+9bf1F6qHuObyRl4fO3iNK7sHQ6yjiGr4zBnOcCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+vVFarOv/N6wDqADUXH7ZJ8A8v6oBhaaqcox0OVCAbxQX+myPW7uJoi53wIsCttJ7LoYrxEiG+2Q+JwiXTV7XGNJK4bRwpQ6bIxrkm+GWQSLX/vYjQ33zN/kqTrgJbqllxlagiY+fO7/27J0Jh4+4sq+3FU7X+U2xf1eJSetVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gdpCURQA; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSurU/6I"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f2f391864so2379961f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:42:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gdpCURQA"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-301c4850194so5586305a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:42:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743403325; x=1744008125; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pSZWvc98awNxNS7sUp2CK9I3oZgb0IYq+6Zaom/DnwM=;
-        b=tSurU/6IpnpamumyLYHJjLYEtuQv8MUAl5iapyedqqKHiOuznymvN8a2hU3y/Vlc3w
-         oWSRN8/6Apu6OOkM8Sy0lKHVFKKNHB5hzGQ/2L05cKkNhSRqCnc5UeGTn4kAAU4WoZq7
-         PqbKOobLEzh6wKe7ssxAA941RrXSE9T4qQ+9UWnEw/r0O2iHxzzoezxY4WGnUhRi7+aM
-         QowigQ2v3C90GJj2zp0lbKzDqLtAd5YT/QwNnlwkAllkUeYCpQ+H9k6L1Gjow14piL10
-         vAwSwcgEV8b+iLgZl4nz/vL/rWIoPv+/KsBGmIGRgC2o9zrWGshx49eoSbNUzKPUqnNA
-         NkUg==
+        d=bytedance.com; s=google; t=1743403333; x=1744008133; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2S1fWwrkT5+T3LFHqqOb7SfD5kyoqceUCC1Z1vFxwmQ=;
+        b=gdpCURQAPQKABydYndxrBdUNmKpLawu1KdSgExLjQblWP0qz/CqnjC7uhRvWXK6bPU
+         r8TuHm+yRN7UP66YAtq1vWWeyzAZPvBhG39/BuUcUbja8PLlgDoov6oS5aPUouSjQo5A
+         l/UF8jbTTgXYqSBEL4nPcl3MztP7jumhfIAlirHbr2VzTWsTEtMdM3+F3qBwyciM1cz5
+         UZby3OPRjMdB24u7yCmbXm3XUtI8/50D+741VmIh4y2hbq9Jq6k8/kaI7uNk1EgaD+zW
+         xkK4vJtw/3QelOcuQk2/ItfKcpp9bagasbAYi4Z/8kvV5n1oAjVpG9mX4StkPZyTx9Lz
+         0YxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743403325; x=1744008125;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pSZWvc98awNxNS7sUp2CK9I3oZgb0IYq+6Zaom/DnwM=;
-        b=j5TqoivGswpAvzQQ+oEi8gRpWcoA3zyAdiijmrDbNqh4mHbjhNlry3siGijQKovc+Y
-         eL+nUN5bIBSA9Y2h1x4ti/YEu9Dpnsg3dS7xViM7WYY9LJeG88OdxTsxtHGwGtW2WUOO
-         6XXENxVT0nN3PGJI2JigXiuac5GjjfKk6b+pqGAM5RqBQfgJc+effHg1pasQNBsWo92X
-         l8eBKxazWG2ikzcUswzgikBmhVIJviAOFTEsIo+4nPghwisUm2S28AXpBzGUhlBmFIVf
-         c+L5u98bw4LauIvmtsITNxZBMck6DJda5IJ5HgRjSeyJjtTyZOacaL1s1J44dSvukIt3
-         BIXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDRQIzqZg2i/O67pHsqH37jqcneZzPIdkbW/8mqKeiTmmeUD9EMeUIGmDE8KryZhgfUZSOxW75u8Q5IOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYcGb1sTLYUry5tSXswUs9hX87xK+vxr3m/kWXlfJwSch+w1/X
-	2pU/GC8qcJZ69h38w+LNVhtQDD6+RTRosHrMHhKo1d/nDWfKeRRX1kOjarfNa/I=
-X-Gm-Gg: ASbGncvAkSpRe9wSwSGq6q/zze6YyH7iE3drKxvOEtyoywYjKM4YazO9/xyJwWja74Z
-	AC9rQKV8hc7Yy9h+8OZVadqOyS9qyBndPx1oyC+CZR2pAA9nTR3G8j3LKE8ZG0LX9uU0lLubkZv
-	Fgt2PuKu5/6g07b1eRhj90iBKLxG9gv+Bzv8NCCggjgJNZ28pBvBkePf8J7lAqL/vyR8IcZ0dNn
-	ienRKv41OQoE6N1frVfXn0L2ZhkyaGYVMOa1W136wYRx2fUlozh/uSSMAt4PN6UiPyBUxBmB9eO
-	FqJmZNwqVyf8S3rKWgzhLy1ESI6u8K03n7DVMLUzh2iubk+HejzWkCuOnvMV2RIvtRVpvoRNp3m
-	VYygvQtE5HoPR6k+8Zd1zCjz1pus=
-X-Google-Smtp-Source: AGHT+IFaaiFJvSkuFgpzRjmFl4ky713HsFznh//e5XklchpgjCOz6VUhATdj7MkI4kwAKPb/DPGB1g==
-X-Received: by 2002:a05:6000:178c:b0:391:29f:4f87 with SMTP id ffacd0b85a97d-39c1211c8f4mr5516473f8f.49.1743403325590;
-        Sun, 30 Mar 2025 23:42:05 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:143:2e3d:45f1:fd2? ([2a01:e0a:3d9:2080:143:2e3d:45f1:fd2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fccf0a9sm111590335e9.17.2025.03.30.23.42.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 23:42:05 -0700 (PDT)
-Message-ID: <04c47466-b1a3-4eb2-8f28-95faa29ff45f@linaro.org>
-Date: Mon, 31 Mar 2025 08:42:04 +0200
+        d=1e100.net; s=20230601; t=1743403333; x=1744008133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2S1fWwrkT5+T3LFHqqOb7SfD5kyoqceUCC1Z1vFxwmQ=;
+        b=nhu82x3DevOx5bQJHg05A4VYvfq58BeC75zsKkLfsR/sMQvJuOCap7dz5uz8V5ThnS
+         iw3H+t9EEdN98/DxCtqvhpeD1AIBOcOgTXwRI9CV7uT9Sg3WGYslsN2aN3jyruWnjVpL
+         jTi/qmry954c5RZsD7iGdvTHWZbA/eeey+rOl53C6BLD6ZMPIyn8KTCaPSXIgvxu08od
+         OMl4Iq9fBgKY2+Qu5LXCDufLnJCTHRdAaLt0eS1m13SJ7XmQ8MpkMURecJR7GMzGZtkX
+         L6N7BnHCfrGbqJ3n67gDcjrDCv+Z9gbn4u2Fw9gQ3i/bVwhhd0+U5nYFHXjpfgAfhcnO
+         DCUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUVq/NiHKJ3yAstCu9zU0QYs4j0lgcfxn2HM+/3ld4hUwtw1Egiv3X3xD1C6PJz4hqBW4/RDMCNmGoGmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQFTwT2wUyTkbwpEWusWxPcLElKqxg7j/CSmhvCVSG3VN6+tmI
+	RgYAZVBSNvIzvjLPZqfLcRm1pj6fGB982ekUXOs579kY+AmVVAzwgoT8h10HyQ==
+X-Gm-Gg: ASbGncsM72r6WDGxzVErxYyJWJMGZlMUl+O0IKcmLdZAD5glQFAq+ZVxdh0mS9kHBkB
+	En+0beQ9AXOcdJ3L2azrEr/Qb8iAFJUwWi6cc1z8sndUf0VAV+bQobgrRaZOiV/QOhp35mDkXeE
+	P2jZEwf/wt41PWz6ECYhqdqdlAwI/rsb75BaPVnPwmtyrj0IxPym3QSVmUbUg16J97HbLQlJrLT
+	2XEUeUyR/brMEOYb289A+/Uk64WKqYk7uihwI2kiHz81yjYdk6vYvLKglnBh6Jy4/EqGaxa8Nyq
+	cZhE8Bf56bxdOy7M2fmixiIC6eKtdO0FQBLO+PPqcS4I
+X-Google-Smtp-Source: AGHT+IHAUGne7EWQjusN2K4LfniicNgTIn86AVc8uYbPk847VJkpJ4EheBEVGlWROzG6KQzOX8OMOQ==
+X-Received: by 2002:a17:90a:da8f:b0:2ee:aa28:79aa with SMTP id 98e67ed59e1d1-30531f7a5e0mr11680650a91.6.1743403333401;
+        Sun, 30 Mar 2025 23:42:13 -0700 (PDT)
+Received: from bytedance ([115.190.40.14])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dfd38a6sm8817742a91.10.2025.03.30.23.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 23:42:12 -0700 (PDT)
+Date: Mon, 31 Mar 2025 14:42:04 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>
+Subject: Re: [RFC PATCH 2/7] sched/fair: Handle throttle path for task based
+ throttle
+Message-ID: <20250331064204.GB1571554@bytedance>
+References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
+ <CANCG0GcFF7cnR4rCbU5MmY1Gq3M+r4gPXv39QPXXC=Cdr6sRww@mail.gmail.com>
+ <58e0515a-ed67-4d1a-825f-bfc2b31d1d18@linux.dev>
+ <20250314094249.GC1633113@bytedance>
+ <a257205f-525f-48cf-b8d9-101ad8a95081@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/7] dts: amlogic: enable UART RX and TX pull up by
- default
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-amlogic@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, jbrunet@baylibre.com, khilman@baylibre.com,
- christianshewitt@gmail.com
-References: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250329185855.854186-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a257205f-525f-48cf-b8d9-101ad8a95081@linux.dev>
 
-On 29/03/2025 19:58, Martin Blumenstingl wrote:
-> On the LibreELEC forum there have been reports that Odroid-C2 does not
-> boot when UART is left disconnected [0]. It turns out that this can be
-> solved by enabling the SoCs pull-up resistor on the UART RX and TX
-> pads [1].
-> It's not clear whether that specific Odroid-C2 board has a broken
-> resistor, the resistor is not populated (either by accident or on
-> purpose) or if there's another reason.
-> 
-> Testing on an SM1 X96-Air shows that pull-ups being enabled on UART
-> RX and TX is actually the default (either set in vendor u-boot or an
-> actual hardware default).
-> 
-> This series enables the UART RX and TX pull up resistors in the
-> default pin configuration on all supported SoCs.
-> 
-> Testing has been done on:
-> - GXBB Odroid-C1 on u-boot by a user in the LibreELEC forums [2]
-> - Meson8b Odroid-C1 on Linux (with vendor u-boot)
-> - SM1 X96-Air on Linux (with vendor u-boot)
-> 
-> Please include this early so the various CI systems can test these
-> patches.
-> 
-> 
-> [0] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195481#post195481
-> [1] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195667#post195667
-> [2] https://forum.libreelec.tv/thread/28586-odroid-c2-gxbb-s905-and-le-11-06-or-12-does-not-boot/?postID=195674#post195674
-> 
-> 
-> Martin Blumenstingl (7):
->    ARM: dts: amlogic: meson8: enable UART RX and TX pull up by default
->    ARM: dts: amlogic: meson8b: enable UART RX and TX pull up by default
->    arm64: dts: amlogic: gxbb: enable UART RX and TX pull up by default
->    arm64: dts: amlogic: gxl: enable UART RX and TX pull up by default
->    arm64: dts: amlogic: g12: enable UART RX and TX pull up by default
->    arm64: dts: amlogic: axg: enable UART RX and TX pull up by default
->    arm64: dts: amlogic: a1: enable UART RX and TX pull up by default
-> 
->   arch/arm/boot/dts/amlogic/meson8.dtsi             |  4 ++--
->   arch/arm/boot/dts/amlogic/meson8b.dtsi            |  4 ++--
->   arch/arm64/boot/dts/amlogic/meson-a1.dtsi         |  1 +
->   arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 12 ++++++------
->   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 10 +++++-----
->   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 10 +++++-----
->   arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 12 ++++++------
->   7 files changed, 27 insertions(+), 26 deletions(-)
-> 
+Hi Chengming,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+On Fri, Mar 14, 2025 at 07:07:10PM +0800, Chengming Zhou wrote:
+> On 2025/3/14 17:42, Aaron Lu wrote:
+> > On Fri, Mar 14, 2025 at 04:39:41PM +0800, Chengming Zhou wrote:
+> > > On 2025/3/13 15:21, Aaron Lu wrote:
+> > > > From: Valentin Schneider <vschneid@redhat.com>
+> > > > 
+> > > > Once a cfs_rq gets throttled, for all tasks belonging to this cfs_rq,
+> > > > add a task work to them so that when those tasks return to user, the
+> > > > actual throttle/dequeue can happen.
+> > > > 
+> > > > Note that since the throttle/dequeue always happens on a task basis when
+> > > > it returns to user, it's no longer necessary for check_cfs_rq_runtime()
+> > > > to return a value and pick_task_fair() acts differently according to that
+> > > > return value, so check_cfs_rq_runtime() is changed to not return a
+> > > > value.
+> > > 
+> > > Previously with the per-cfs_rq throttling, we use update_curr() -> put() path
+> > > to throttle the cfs_rq and dequeue it from the cfs_rq tree.
+> > > 
+> > > Now with your per-task throttling, maybe things can become simpler. That we
+> > > can just throttle_cfs_rq() (cfs_rq subtree) when curr accouting to mark these
+> > > throttled.
+> > 
+> > Do I understand correctly that now in throttle_cfs_rq(), we just mark
+> > this hierarchy as throttled, but do not add any throttle work to these
+> > tasks in this hierarchy and leave the throttle work add job to pick
+> > time?
+> 
+> Right, we can move throttle_cfs_rq() forward to the curr accouting time, which
+> just mark these throttled.
 
-I'll apply them now so they can be tested on -next for this whole cycle.
+While preparing the next version, I found that if I move
+throttle_cfs_rq() to accounting time, like in __account_cfs_rq_runtime(),
+then it is possible on unthrottle path, the following can happen:
+unthrottle_cfs_rq() -> enqueue_task_fair() -> update_curr() ->
+account_cfs_rq_runtime() -> throttle_cfs_rq()...
+
+Initially I was confused why update_curr() can notice a non-null curr
+when this cfs_rq is being unthrottled but then I realized in this task
+based throttling model, it is possible some task woke up in that
+throttled cfs_rq and have cfs_rq->curr set and then cfs_rq gets
+unthrottled.
+
+So I suppose I'll keep the existing way of marking a cfs_rq as
+throttled by calling check_cfs_rq_runtime() in the following two places:
+- in pick_task_fair(), so that the to-be-picked cfs_rq can be marked for
+  throttle;
+- in put_prev_entity() for prev runnable task's cfs_rq.
+
+> And move setup_task_work() afterward to the pick task time, which make that task
+> dequeue when ret2user.
+
+No problem for this part as far as my test goes :-)
 
 Thanks,
-Neil
+Aaron
+
+> > 
+> > > Then then if we pick a task from a throttled cfs_rq subtree, we can setup task work
+> > > for it, so we don't botter with the delayed_dequeue task case that Prateek mentioned.
+> > 
+> > If we add a check point in pick time, maybe we can also avoid the check
+> > in enqueue time. One thing I'm thinking is, for a task, it may be picked
+> > multiple times with only a single enqueue so if we do the check in pick,
+> > the overhead can be larger?
+> 
+> As Prateek already mentioned, this check cost is negligeable.
+> 
+> > 
+> > > WDYT?
+> > 
+> > Thanks for your suggestion. I'll try this approach and see how it turned
+> > out.
