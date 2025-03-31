@@ -1,158 +1,111 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A762F155725;
-	Mon, 31 Mar 2025 22:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF00B211466
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743460288; cv=none; b=o1Dac8OFhiQ/m12TEX5OAOyQlmSUMEBoiwc52gN2BYlZlC9lNjEhAjdPOBOLUPh6EL+guIsfwbXnIvN2C3sI0hzXnaVlFsuDKhqM0fmN3Zbj2OdmdTTc/SioBQW4nOCBrB3aPXBpdAOghtlGEu+TE1NNRJ9tDtm4vYhvwGh7XjQ=
+	t=1743460335; cv=none; b=Y9GDKroQkU2eDAxKnnkwTUx5dO/OholeOZ1I2g98kz6Bbcqitpv/3HrCj81Sgyp5TCqudTZwkIK9/90B1Ja1SNxU/QkgLx11vkBI+LIpsBrYECSMcrJNRaf3f14CrRtJyraPu/7cW+iY8YruRjL1/CJJZDcaRtZqcDPwTbtOKAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743460288; c=relaxed/simple;
-	bh=/eph3P8RyPGameA3eIwpoUcHG51qfNue0hkqn9BsHgo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Hqg4rELJO/WXmuvSibtBnjfA4o9L1wzNbHTqad2xzuziWMsDn/CFHOE+LYu3YVnm7ibLBy9Fr799tgP6XQeURxf8xn8gtY2XNGVZ7Q42HawAYazUK5uJpPQo292R3Hkfk599kV8JzUG+wg3QItrc3hq9zwR85ydUIhLb6PwoyTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pzkxfby+; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743460335; c=relaxed/simple;
+	bh=duYComVcSrZm1zivb0WaYUxmTcBo+rXMqqI6zBYJuSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrLsz6AWRrm9DHPdlE5kvdP8jZU9Fu0sj7rmaqSXSQ3AX0irQDN3FZXt5cFGsBCw3p4KVteDnkl4ouJ7dyfAvOn5YteNocyVWJbADnt3c5Kkl1VHriiXFRIKHuol+sMcabVfDLwvseDHxhHeJwAqHqmOsi90SU5+zgcf5CViR6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=M7b6tEPX; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pzkxfby+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22438c356c8so96825865ad.1;
-        Mon, 31 Mar 2025 15:31:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="M7b6tEPX"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2295d78b45cso2052075ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743460286; x=1744065086; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/x38y9D+bvULPl9mRXR1jnQ3ZFxCTMyxYRseHkuGiqE=;
-        b=Pzkxfby+RQTalq3Y3tkHx3msbH5Ph60wdFR2w33E0URk0fnf0jjtELd8EbvY57pqN+
-         j9kH4+T561NmR6bd7HhYeZckniff9QkzD8K8TJGx0Tz46sO7SqizmWbq16BI9oKA13ln
-         AMpj9UVbKjETdHS4/XqSSOCdPBbesUaX86iNeIJgJHYMHmLXCu3M4vrMtgS9yiJFyANw
-         ttxb4K22nR4CQTulQzGYWfRnwJltot0QcZDQy2RR26JKoUew91dogFiuTOv1PViMb1hg
-         JH9xbtG/9GTzQyhLXKnRr55VhEc1aEsQPRd5TLmy/W5g8Drgt59ocqT765cUqdMk2zRg
-         NaLA==
+        d=fastly.com; s=google; t=1743460333; x=1744065133; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=42+7vZzvv2CakOTy9WwTzv8BPs/2UH1AMqRL6fkeS9E=;
+        b=M7b6tEPXIsr38AcJXY3EZWX6gL1xHlmkAJK1MJTejdlfRGgaC+iybsV8KLQRfP5W1r
+         qj/zpkbjHqhs/NpjMfUuWZ2LCIHm6NPkga8jFbjn1w5lHrVODzPn/bmTiQB67N4jLmQA
+         XXc/YGSDjoV1oi3KMQisSkibJcdKyKqhdY/Kk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743460286; x=1744065086;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/x38y9D+bvULPl9mRXR1jnQ3ZFxCTMyxYRseHkuGiqE=;
-        b=ruZ1hkIm6ZvSsHAf1tHf9sM7ahUulJiC+Mr7aRNg4JaP6rdZCRNSRJ7TkH1P/Y9Vts
-         bBA1VyrDAFk6o67yi9SqP0aBZBhUxlvbPwPgrC8/nbRFVKb7ELBcOtrxF7smp5/wm2Hx
-         NcQj2yXXfLwZZ5TUsV6kI3isaeE5KfdrrehITFOvtPhyh4cCDBJKUW3ZUyP/zX9enofD
-         otmoq6goOcD/TpdFJsb7Gz1exGM4T0WB2R9/H3bKLKAE90dlu5ZzDL1fGdIIJCFg6T7z
-         I8c/WaKbznHbiK1WlZsxGqIUHJQml3fiW1GlkePQXYPu1qvg+c2QWErwm3zkkHCRTbk1
-         NBeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJD6ZLEt+3yqkcL+sg0wpPShokIIgpLMWMQ4/daXeApD/xqbXFfcYJCwONrQtJ2T4fbIscxu/4C171cn4=@vger.kernel.org, AJvYcCWxuH+mYk9bVDZqSkS1pGDCbxeKotGL/MAOXEPe4h7Wm1FY6+eZH6Lf0Plpoo9aEPWSgXjXblBd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlGbJkOECL2yDBC5c3sF8jwDWW1SaHSuppuXyf9JxhGhL4mtyU
-	VuU+/VVJa/LrPkW9Fq24gsvDEC1in0XxXUUUpWgASUfZULQrr3ds
-X-Gm-Gg: ASbGncvPvY9YVrucApt50hLu4clW0XPn3jYUU0f8K5Db6WIUinGxZbgNaKqmiLlPD3T
-	/pzg6mWz15cSYDCsH+9RnbdIFmePozHvI3DVoM8ZAekjKh3A3hCtAhGBwNOwy4tfs+/ezQ3qz4z
-	QS8mz5vy5GVWALZp9Qh0PhTCjpIEECk8fohmYm1/3vNftlFOkaPLR7svAASBKdvQVAtJBtvCRg3
-	u45yS34tEfBrbScWBMqVlROfBFkgYxgTcZOClMGjlUK29ejMTC3EJRAqf1OPgSd7q3feNbY8KzV
-	fZ3WLCrDMD7hOR9fPQ6io08R2WQ+nza1jVz2b1QSJTtDs4IThpAKffKfxyGKB0b6o3iINWjGI8G
-	GFvpMoeGFBmltusAitRcOA6cBmjfqwGUU7uo=
-X-Google-Smtp-Source: AGHT+IF/JompVVPMEUWrVSbGF3Fm7fHmvyqZCfgc6BpS0nNlvNEwE++JBwgxQucv/KQpsd5yTnFYyg==
-X-Received: by 2002:a05:6a21:7a4c:b0:1fd:f48b:f397 with SMTP id adf61e73a8af0-2009f649022mr18125913637.23.1743460285791;
-        Mon, 31 Mar 2025 15:31:25 -0700 (PDT)
-Received: from ?IPv6:2605:59c8:829:4c00:82ee:73ff:fe41:9a02? ([2605:59c8:829:4c00:82ee:73ff:fe41:9a02])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73970deecbfsm7536215b3a.33.2025.03.31.15.31.24
+        d=1e100.net; s=20230601; t=1743460333; x=1744065133;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=42+7vZzvv2CakOTy9WwTzv8BPs/2UH1AMqRL6fkeS9E=;
+        b=kn2lGplJna6OokB8o//lKNRWDLaYmOIq8wtQELUl9nULz90kYUIATd5cW9mI8DFui6
+         73PvPNEtpN5439UXJGvE7QezCl5f0VEplwdZD5P5cFehh/nF0ZDaWu/41pA6qENeqI0Z
+         wuJN4D8KPGFVky9hXAzzmBCy+zLmC/L5gbv44AkUI6Ts+2iAy/tj7r8hyWJZ/xtkv/z3
+         O4HzF26s+wMonw5tkDSFwZBFqXdNgGf4d0TcfdNjoB5ZSLsDNyLffMzQUVk6R5kjdGi2
+         y/qnlw33h68p3c2fAdtD1ZIgjDUQeF3Jgs5Xv7wpZ3jTs/v3xSm9C54+b+bhRtO4870k
+         APOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9gkPyyP3fYB6e7GI0WHrQHhb6shOuFrqSeZx8fg4TkAYLlukJ63JJ7pMWktvjc7/iLcw5xU0m24HyZYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+UYmKBqF3JNd9na6TIVLKlOuvBEA+Sxz6aaSCKIfL7r1qUrQP
+	n283UiJqoT9iD8TstDk3nKjJ0fbSrF4/FhgnnaQ7+6iDHpmo+tCibVJVgGZkUNM=
+X-Gm-Gg: ASbGncuStmNt13e1Lve9BvaYCcBkrHjn+eT5PA2LkUebpRm9FersKeeOgzWhAZyO+ia
+	rHvjFaxVrltinX61+vCmPVDCnw+lynTb4iMe36L/Q8PKLGt1OFInOc9OlOoXMExfB4phdOYLSqw
+	EZr00dP2hLVtcVByMJTfhnjkZjPFZMURgCs5INS1Z78Hscc7tx6fXasaeVu0cleBYRTwx6lfhsa
+	dPcRlgcWexJjNmtHYouaMeUFwbRtzj3btbed3s9Wpu2DXc4OoDhPWXI6Uy43QSwI6r+K/YcPZrZ
+	P3G6icrunzTrNSkAIF6D5abo9YxbH6oo8JthSpFPB29lsLA95TUKQ1Ui28Za7jlKlMcsJcEqX0z
+	Xrw4+M/EU5tz93eVv
+X-Google-Smtp-Source: AGHT+IGNbfbH3q4AAENJHHgORst/ra/i/SeRQsORO8675vroqpkxmTpWUqZCdVNz26ksHRE6FCMRSw==
+X-Received: by 2002:a05:6a00:170c:b0:730:8a0a:9f09 with SMTP id d2e1a72fcca58-7398041c86amr15268867b3a.18.1743460333136;
+        Mon, 31 Mar 2025 15:32:13 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710dccbdsm7765619b3a.179.2025.03.31.15.32.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 15:31:25 -0700 (PDT)
-Message-ID: <44f5c55e5fac60c118cb4d4e99b49e6bf6561295.camel@gmail.com>
-Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
- fixed-link configuration
-From: Alexander H Duyck <alexander.duyck@gmail.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, "Russell King
- (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>,  =?ISO-8859-1?Q?K=F6ry?=
- Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
- <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
- <romain.gantois@bootlin.com>
-Date: Mon, 31 Mar 2025 15:31:23 -0700
-In-Reply-To: <20250331182000.0d94902a@fedora.home>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
-	 <20250307173611.129125-10-maxime.chevallier@bootlin.com>
-	 <8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
-	 <20250328090621.2d0b3665@fedora-2.home>
-	 <CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
-	 <12e3b86d-27aa-420b-8676-97b603abb760@lunn.ch>
-	 <CAKgT0UcZRi1Eg2PbBnx0pDG_pCSV8tfELinNoJ-WH4g3CJOh2A@mail.gmail.com>
-	 <02c401a4-d255-4f1b-beaf-51a43cc087c5@lunn.ch>
-	 <Z-qsnN4umaz0QrG0@shell.armlinux.org.uk>
-	 <20250331182000.0d94902a@fedora.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        Mon, 31 Mar 2025 15:32:12 -0700 (PDT)
+Date: Mon, 31 Mar 2025 15:32:09 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [RFC net 0/1] Fix netdevim to correctly mark NAPI IDs
+Message-ID: <Z-sX6cNBb-mFMhBx@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+References: <20250329000030.39543-1-jdamato@fastly.com>
+ <20250331133615.32bd59b8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331133615.32bd59b8@kernel.org>
 
-On Mon, 2025-03-31 at 18:20 +0200, Maxime Chevallier wrote:
-> On Mon, 31 Mar 2025 15:54:20 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+On Mon, Mar 31, 2025 at 01:36:15PM -0700, Jakub Kicinski wrote:
+> On Sat, 29 Mar 2025 00:00:28 +0000 Joe Damato wrote:
+> > If this net-next material: I'll wait until it reopens and send this
+> > patch + an update to busy_poller.c as described above.
+> 
+> Let's stick to net-next. 
 
-...
+Sure, sounds good. I'll drop the fixes tag when I resend when
+net-next is open, of course.
 
-> I was hoping Alexander could give option 1 a try, but let me know if
-> you think we should instead adopt option 2, which is probably the safer
-> on.
->=20
-> Maxime
+> Would it be possible / make sense to convert the test to Python
+> and move it to drivers/net ?
 
-So I gave it a try, but the results weren't promising. I ended up
-getting the lp_advertised spammed with all the modes:
+Hmm. We could; I think originally the busy_poller.c test was added
+because it was requested by Paolo for IRQ suspension and netdevsim
+was the only option that I could find that supported NAPI IDs at the
+time.
 
-    Link partner advertised link modes:  100000baseKR4/Full
-                                         100000baseSR4/Full
-                                         100000baseCR4/Full
-                                         100000baseLR4_ER4/Full
-                                         100000baseKR2/Full
-                                         100000baseSR2/Full
-                                         100000baseCR2/Full
-                                         100000baseLR2_ER2_FR2/Full
-                                         100000baseDR2/Full
-                                         100000baseKR/Full
-                                         100000baseSR/Full
-                                         100000baseLR_ER_FR/Full
-                                         100000baseCR/Full
-                                         100000baseDR/Full
+busy_poller.c itself seems more like a selftests/net thing since
+it's testing some functionality of the core networking code.
 
-
-In order to resolve it I just made the following change:
-@@ -713,9 +700,7 @@ static int phylink_parse_fixedlink(struct phylink
-*pl,
-                phylink_warn(pl, "fixed link specifies half duplex for
-%dMbps link?\n",
-                             pl->link_config.speed);
-=20
--       linkmode_zero(pl->supported);
--       phylink_fill_fixedlink_supported(pl->supported);
--
-+       linkmode_fill(pl->supported);
-        linkmode_copy(pl->link_config.advertising, pl->supported);
-        phylink_validate(pl, pl->supported, &pl->link_config);
-
-
-
-Basically the issue is that I am using the pcs_validate to cleanup my
-link modes. So the code below this point worked correctly for me. The
-only issue was the dropping of the other bits.
-
-That is why I mentioned the possibility of maybe adding some sort of
-follow-on filter function that would go through the upper bits and or
-them into the filter being run after the original one.
-
-For example there is mask which is used to filter out everything but
-the pause and autoneg bits. Perhaps we should assemble bits there
-depending on the TP, FIBER, and BACKPLANE bits to clean out everything
-but CR, KR, and TP types if those bits are set.
+Maybe mixing the napi_id != 0 test into busy_poller.c is the wrong
+way to go at a higher level. Maybe there should be a test for
+netdevsim itself that checks napi_id != 0 and that test would make
+more sense under drivers/net vs mixing a check into busy_poller.c?
