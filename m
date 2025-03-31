@@ -1,284 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1061215764;
-	Mon, 31 Mar 2025 17:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B399139D1B;
+	Mon, 31 Mar 2025 17:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743442487; cv=none; b=AnWZVkUAobex6w5LADNstXCNUEWYmhE9nuq1WBOUKGdLskkRaEHtaT17Milup5OHxNMcqt4t/hanwmVdfSDb81m8q2ZIk9LGCgUPiHym0LNbL1Vo5BU7vzXUUh7nbu+bmSwnPF62ETDkIdh1LexHbS+Fm5kJxyPqCaQu2B7tseA=
+	t=1743442690; cv=none; b=uXkl+5cGKXO6UUoI/QRQV507Z9UCZh7d4/dVawCFySKS6A4MZ+ZIUC4a9rz3g+glQlHqXg5j0zEuSvMtPYypZW+R77mrGpBOtnEpxjnBvO6g/3GBBDP0VmG9d/l2yWIvFvyXSs6vDfgF2jZ7zOoLt6ydzUOQt184JeXdGZisEy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743442487; c=relaxed/simple;
-	bh=oHfW4Q77wwd5sIbs0XisTVlJY2vIGqRoh4soyGO4ux4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d+gesjoU42wG0QLXGpSC6jKdeNWEjlPhYeuRXewDei5kdO2p7NThopdNF5dDCXqQSS+r05XkdJFpYmA+dne6yx5LtTOtIeAcdOMD5DkTrbjNi/Dl7OuCa9iPcp3LOWgILqJxyKYcGsbclbSnvPCD9y7IP3vK5BXKMGW9bvJquLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrX5JWWF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrX5JWWF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB99C4CEE4;
-	Mon, 31 Mar 2025 17:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743442487;
-	bh=oHfW4Q77wwd5sIbs0XisTVlJY2vIGqRoh4soyGO4ux4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PrX5JWWFNKwjIjl8NcS/hC/zdhk0slrDGgJNGNs60kvEZBmb+3oFc0eLpAzMFG4n/
-	 6fd2/ZVtObWHu5JVyVfkj7ZWiwegm5FpBcjI/e5hc51UUk1gM7kQj94UMjBN0YEnXv
-	 sit+grGlYDyzWBdE3cheFf+BJxmtUpi/NMFrTWe8OeldaC6g9H+SmnlrMb6cqH1DG2
-	 IcnO77btN8S5mx9J2N+EwTazhjQi5lOjSl0NfQuD6OfdL3wq1UrfhXTTswN31UjFMd
-	 +7LHe0IwnmcydxVGF/qGCJyGEHWyoZ5gAUvQ3hwAo3vbHNU+0w1WkpDC0cZ26cDRXT
-	 Lgp2AC7Ot6dEQ==
-Date: Mon, 31 Mar 2025 20:34:42 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>, linux-integrity@vger.kernel.org,
-	Peter Huewe <peterhuewe@gmx.de>, Ingo Molnar <mingo@redhat.com>,
-	linux-coco@lists.linux.dev, Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <jroedel@suse.de>, x86@kernel.org,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v5 3/4] tpm: add SNP SVSM vTPM driver
-Message-ID: <Z-rSMi2uCvShLbLS@kernel.org>
-References: <20250331103900.92701-1-sgarzare@redhat.com>
- <20250331103900.92701-4-sgarzare@redhat.com>
+	s=arc-20240116; t=1743442690; c=relaxed/simple;
+	bh=4iXrT9ZY4Xoqd9GGuS3SRMQkL/GITaKNwVGMJSBVvCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uWUrxolAoASE25IYDpdQTjB2YqMbu+XhelmddvTwd7nkDexPg4XdMNO4qxy8lsctxprxXj5a2hlLgoOnwoWwYO0/BzXtwqc8CbIVMS+L8PWxS3SW6RijmtXc5+QQll6QzQgCsno53MR55fIv4I3pbBiQLa0gF68YztfuggdBtW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D453C4CEE3;
+	Mon, 31 Mar 2025 17:38:08 +0000 (UTC)
+Date: Mon, 31 Mar 2025 13:39:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
+ Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <20250331133906.48e115f5@gandalf.local.home>
+In-Reply-To: <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+References: <20250331143426.947281958@goodmis.org>
+	<20250331143532.459810712@goodmis.org>
+	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331103900.92701-4-sgarzare@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 12:38:56PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> Add driver for the vTPM defined by the AMD SVSM spec [1].
-> 
-> The specification defines a protocol that a SEV-SNP guest OS can use to
-> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> in the guest context, but at a more privileged level (VMPL0).
-> 
-> The new tpm-svsm platform driver uses two functions exposed by x86/sev
-> to verify that the device is actually emulated by the platform and to
-> send commands and receive responses.
-> 
-> The device cannot be hot-plugged/unplugged as it is emulated by the
-> platform, so we can use module_platform_driver_probe(). The probe
-> function will only check whether in the current runtime configuration,
-> SVSM is present and provides a vTPM.
-> 
-> This device does not support interrupts and sends responses to commands
-> synchronously. In order to have .recv() called just after .send() in
-> tpm_try_transmit(), the .status() callback returns 0, and both
-> .req_complete_mask and .req_complete_val are set to 0.
-> 
-> [1] "Secure VM Service Module for SEV-SNP Guests"
->     Publication # 58019 Revision: 1.00
-> 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v5:
-> - removed cancel/status/req_* ops after rebase on master that cotains
->   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
-> v4:
-> - moved "asm" includes after the "linux" includes [Tom]
-> - allocated buffer separately [Tom/Jarkko/Jason]
-> v3:
-> - removed send_recv() ops and followed the ftpm driver implementing .status,
->   .req_complete_mask, .req_complete_val, etc. [Jarkko]
-> - removed link to the spec because those URLs are unstable [Borislav]
-> ---
->  drivers/char/tpm/tpm_svsm.c | 135 ++++++++++++++++++++++++++++++++++++
->  drivers/char/tpm/Kconfig    |  10 +++
->  drivers/char/tpm/Makefile   |   1 +
->  3 files changed, 146 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_svsm.c
-> 
-> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> new file mode 100644
-> index 000000000000..04c532421ff2
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_svsm.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-> + *
-> + * Driver for the vTPM defined by the AMD SVSM spec [1].
-> + *
-> + * The specification defines a protocol that a SEV-SNP guest OS can use to
-> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> + * in the guest context, but at a more privileged level (usually VMPL0).
-> + *
-> + * [1] "Secure VM Service Module for SEV-SNP Guests"
-> + *     Publication # 58019 Revision: 1.00
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/tpm_svsm.h>
-> +
-> +#include <asm/sev.h>
-> +
-> +#include "tpm.h"
-> +
-> +struct tpm_svsm_priv {
-> +	void *buffer;
-> +	u8 locality;
-> +};
-> +
-> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +{
-> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +	int ret;
-> +
-> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, priv->locality, buf, len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The SVSM call uses the same buffer for the command and for the
-> +	 * response, so after this call, the buffer will contain the response
-> +	 * that can be used by .recv() op.
-> +	 */
-> +	return snp_svsm_vtpm_send_command(priv->buffer);
-> +}
-> +
-> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-> +{
-> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +
-> +	/*
-> +	 * The internal buffer contains the response after we send the command
-> +	 * to SVSM.
-> +	 */
-> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-> +}
-> +
-> +static struct tpm_class_ops tpm_chip_ops = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
-> +	.recv = tpm_svsm_recv,
-> +	.send = tpm_svsm_send,
-> +};
-> +
-> +static int __init tpm_svsm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct tpm_svsm_priv *priv;
-> +	struct tpm_chip *chip;
-> +	int err;
-> +
-> +	if (!snp_svsm_vtpm_probe())
-> +		return -ENODEV;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
-> +	 * in tpm_svsm.h).
-> +	 */
-> +	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
-> +	if (!priv->buffer)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * FIXME: before implementing locality we need to agree what it means
-> +	 * for the SNP SVSM vTPM
-> +	 */
-> +	priv->locality = 0;
+On Mon, 31 Mar 2025 09:55:28 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I don't think we want FIXME's to mainline. Instead, don't declare the
-field at all if you don't use it. Just pass zero to *_request_fill().
 
-Maybe "not have the field" is even a better reminder than a random fixme
-comment?
-
-> +
-> +	chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	dev_set_drvdata(&chip->dev, priv);
-> +
-> +	err = tpm2_probe(chip);
-> +	if (err)
-> +		return err;
-> +
-> +	err = tpm_chip_register(chip);
-> +	if (err)
-> +		return err;
-> +
-> +	dev_info(dev, "SNP SVSM vTPM %s device\n",
-> +		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit tpm_svsm_remove(struct platform_device *pdev)
-> +{
-> +	struct tpm_chip *chip = platform_get_drvdata(pdev);
-> +
-> +	tpm_chip_unregister(chip);
-> +}
-> +
-> +/*
-> + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
-> + * module_platform_driver_probe() this is ok because they cannot get unbound
-> + * at runtime. So mark the driver struct with __refdata to prevent modpost
-> + * triggering a section mismatch warning.
-> + */
-> +static struct platform_driver tpm_svsm_driver __refdata = {
-> +	.remove = __exit_p(tpm_svsm_remove),
-> +	.driver = {
-> +		.name = "tpm-svsm",
-> +	},
-> +};
-> +
-> +module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
-> +
-> +MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:tpm-svsm");
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index fe4f3a609934..dddd702b2454 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -234,5 +234,15 @@ config TCG_FTPM_TEE
->  	help
->  	  This driver proxies for firmware TPM running in TEE.
->  
-> +config TCG_SVSM
-> +	tristate "SNP SVSM vTPM interface"
-> +	depends on AMD_MEM_ENCRYPT
-> +	help
-> +	  This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
-> +	  OS can use to discover and talk to a vTPM emulated by the Secure VM
-> +	  Service Module (SVSM) in the guest context, but at a more privileged
-> +	  level (usually VMPL0).  To compile this driver as a module, choose M
-> +	  here; the module will be called tpm_svsm.
-> +
->  source "drivers/char/tpm/st33zp24/Kconfig"
->  endif # TCG_TPM
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 2b004df8c04b..9de1b3ea34a9 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
->  obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
->  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
->  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-> +obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
-> -- 
-> 2.49.0
+> > +       /* Make sure the mappings are page aligned */
+> > +       *start = ALIGN(*start, PAGE_SIZE);  
 > 
+> The above is *completely* unacceptable.
+> 
+> There is no way in hell that ALIGN() can ever be right.
 
-BR, Jarkko
+I just did this to be robust in case what was passed in was not aligned. In
+all my use cases, it is.
+
+> 
+> You don't even fix up the low bits of the returned virtual address, so
+> you literally return the virtual address of something that doesn't
+> match what was passed in.
+> 
+> So if you pass it a starting area that isn't page-aligned, it now
+> randomly gives you complete crap back, and includes some random
+> unrelated part in the mapping.
+> 
+> So no. That needs to be a
+> 
+>         if (*start & PAGE_MASK)
+>                 return NULL;
+
+No problem, will update. As I said, I just added that to not map something
+that wasn't part of what was passed in. But returning error if it's not
+page aligned works for me too.
+
+> 
+> or whatever. Because just randomly corrupting the base address by
+> ignoring the low bits is not ok.
+> 
+> > +       /* The size must fit full pages */
+> > +       page_count = size >> PAGE_SHIFT;  
+> 
+> This part works, simply because truncating the size is fine. It won't
+> all get mapped, but that's the caller's problem, at least the code
+> isn't returning random crap that has random other data in it.
+> 
+> That said, I don't see the point. If you want to virtually map
+> physical pages, they need to be full pages, otherwise the end result
+> gets randomly truncated. So I think that while this is much better
+> than the "return random crap that doesn't make any sense", it should
+> be the same rule: just don't allow mapping partial pages.
+> 
+> So make it be
+> 
+>         if (size & PAGE_MASK)
+>                 return NULL;
+> 
+> instead, and just enforce the fact that allocations have to be sanely
+> aligned for vmap.
+
+Again, I'm happy to error out on non alignment. I'll just update the
+documentation to say it must be page size aligned. Currently it shows an
+example of using 4096 for alignment, but that should be changed to
+explicitly say to have it page aligned, as some archs (ppc) have 64K pages.
+
+> 
+> Anyway, that takes care of the horrific interface. However, there's
+> another issue:
+> 
+> > +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);  
+> 
+> you create this pointless array of pages. Why? It's a physically
+> contiguous area.
+> 
+> You do that just because you want to use vmap() to map that contiguous
+> area one page at a time.
+> 
+> But this is NOT a new thing. It's exactly what every single PCI device
+> with a random physical memory region BAR needs to do. And no, they
+> don't create arrays of 'struct page *', because they use memory that
+> doesn't even have page backing.
+> 
+> So we actually have interfaces to do linear virtual mappings of
+> physical pages that *predate* vmap(), and do the right thing without
+> any of these games.
+
+[ Added the pstore folks ]
+
+OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+same thing as pstore. And it looks like pstore should be updated too.
+
+> 
+> Yes, the legacy versions of interfaces are all for IO memory, but we
+> do have things like vmap_page_range() which should JustWork(tm).
+> 
+> Yeah, you'll need to do something like
+> 
+>         unsigned long vmap_start, vmap_end;
+> 
+>         area = get_vm_area(size, VM_IOREMAP);
+>         if (!area)
+>                 return NULL;
+> 
+>         vmap_start = (unsigned long) area->addr;
+>         vmap_end = vmap_start + size;
+> 
+>         ret = vmap_page_range(vmap_start, vmap_end,
+>                 *start, prot_nx(PAGE_KERNEL));
+> 
+>         if (ret < 0) {
+>                 free_vm_area(area);
+>                 return NULL;
+>         }
+> 
+> and the above is *entirely* untested and maybe there's something wrong
+> there, but the concept should work, and when you don't do it a page at
+> a time, you not only don't need the kmalloc_array(), it should even do
+> things like be able to use large page mappings if the alignment and
+> size work out.
+> 
+> That said, the old code is *really* broken to begin with. I don't
+> understand why you want to vmap() a contiguous physical range. Either
+> it's real pages to begin with, and you can just use "page_address()"
+> to get a virtual address, it's *not* real pages, and doing
+> "pfn_to_page()" is actively wrong, because it creates a fake 'struct
+> page *' pointer that isn't valid.
+> 
+> Is this all just for some disgusting HIGHMEM use (in which case you
+> need the virtual mapping because of HIGHMEM)? Is there any reason to
+> support HIGHMEM in this area at all?
+> 
+> So I'm not sure why this code does all this horror in the first place.
+> Either it's all just confused code that just didn't know what it was
+> doing and just happened to work (very possible..) or there is
+> something odd going on.
+
+[ Adding Mike Rapoport ]
+
+This is due to what the "reserve_mem" kernel command line feature gives
+back. It reserves physical memory that is not part of the kernel memory
+allocator (it also works with memmap ie. memmap=12M$0x284500000, which also
+requires physical memory addresses that are not part of the memory
+allocator).
+
+It's up to the user to map it to virtual memory. The same is true for
+ramoops in pstore.
+
+-- Steve
