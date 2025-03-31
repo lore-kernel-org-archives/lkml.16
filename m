@@ -1,137 +1,69 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5550A1DE4E9;
-	Mon, 31 Mar 2025 08:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AAE1E25FA
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409926; cv=none; b=OBgtd4yJw98ts8eoP47Pt/km1oDqn+htmAJx9Ws9KjK8sLWJKqPvRsVZSDwF7tM/S8BThq6vnSlPF15+e9MzZCLk3EJd0UCrk5b1FNgz+dNWVaBoC0sZW606LwdP2/Q+oCAcmkiKVFOsIz0J05R/vq8HsBHZQsXWxKMnzukCTWo=
+	t=1743409933; cv=none; b=ABA3HT4lOrxYeW/6c6jf2iSG9xStBU92EmQhpWIfRysjZDlVSpvofU9bmI6KfzBxskIRU2dQcKknyRV8kd9MBgQR+tuO5YXHMmjLXqIJ8XGXDAV01LzXoYC9rf2m4IkiHGVT+TRJYfVc+rKBXY31KeG0CUjrTo60WjlIYauyx0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409926; c=relaxed/simple;
-	bh=Ox2GO5lQKYVL4kYsRQotXKfVSyMyuluCQgezA+8ZxZs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=qmFXOJNXf8By1FNy8rsRoaPKtltgu0K8RHSKKZWGZ81OtHbhw9RvWZlez8zT3Vp1BmtIogBeqViYb+09sFlKffEydSrgFWOUyHVNYticwUGBCjvZYWn9tbCzxf2wExfqjZMORu0x0sPVmRdPEC8FmDTWq3vWVKay5MrtfznSEVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDIMiaM8; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743409933; c=relaxed/simple;
+	bh=teJLxYycI0zXLPTmB13xMHCoEl1UawMH+6dJgIVfFEU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MijxDlHoQIqd1cxXwf0RQFLpbl+sKMCMcpItV55ZTFYGCrKUR4F0jJJaiYhoF46/+228R2MqrwjiJ0tnCl4zccyYsZPK7BZdnVgmeU935fsMCR5svZ2kPOF9/+5xN6I0/T7EtdMQa/ZL47K1+ky2ZYVuwVIUVikBd9nRraVqgiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cfL3JBdE; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDIMiaM8"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-399749152b4so1622001f8f.3;
-        Mon, 31 Mar 2025 01:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743409922; x=1744014722; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+tMNbKgRiLB8lJVsYqkKDo0KO7uHRjBBHK5RlY3Vjg=;
-        b=lDIMiaM8K2H2h2L0ki1QBp8vNsXbPN2NjToE+QUFTgCDN41OPJ64AnW+LAyOs+0msD
-         VrtuUp6Aq7QyGyAz2DLDZFaj/3malFuKnuCcldXsU0Yez0WH0JnVNsj41LiQayBXKuBN
-         vJ7b4Yu/NV6/85UEnLrguFa8aAEgK5XdVkNQg57XkpUQ/gnVbwRYpDYOXw611HCW3HRk
-         aTXRQeS5mwEBJJkDeWBDEZ07AaTHjEj2jGkS9JkaVNN7zZeJYHlA/tQ+K790OYt6HCVM
-         bzonvlro10zVkgiZrxdE87RQdV8zrxrZT4VbnbEwZGSH/j12JWQ8oEUT6MgqJxBQwdGY
-         9YuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743409922; x=1744014722;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k+tMNbKgRiLB8lJVsYqkKDo0KO7uHRjBBHK5RlY3Vjg=;
-        b=O/Zf5wm3JlXQwtooXKF5H5E7MkFf3spjq7AIPdhSqvSmt0oA2DOqUS8OtaJeYBv1Do
-         oy89z/mDrJy7R/nLHWSa1bP10lN7SEi1bFFhOrZfJwcsA6PXRMb4KRoxQo7zCn0J+sOY
-         1FuZApz+w5CVLizXodfOrEvJCslUe/XtaiBRKBA6f7pfS75mZ9dQxpTUML1dSpvcLAo8
-         640zizVU4F8OcNMDki/ZSOB0C5c5MpU1D19jmg4UuQ9ztmKN2QAUTi+k2BQLjIAoT+i2
-         Ejx2sn8SlUg4tCdqHfO9aX1B8l6utcUzTZzTcripl7/GazO/hE3Qu8XbN+Tt7BPyofFm
-         5BKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMy5rpCD7qZQXT6I7M7VsEjlXVaJbb9xDtB8AQKFszsNBZa2YMIwPr+2+CwcqxBXsu2cpjFU3Q9cMVCqs=@vger.kernel.org, AJvYcCXZm51sFDtmWeaVCV03LfeoSKpX9ssFsn0jLoIEiowj2nAzge1riCXEbynje3aEM0NoTZjmBlZPvQpIJhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPpGmxdNs0LhCtgp4xlgp+oPnluKcIIhc+2k6PlMWtuDGb8Q29
-	CKvie7FHQ9YZA4rlN93UFidgpW7+4dXQqCBvRVCfPV87SOBDtHz8Yj0aa9dvwsM=
-X-Gm-Gg: ASbGncu1TeHTSePzh6TWNv1+VlsRZFbfPKQS+eO9OGGYyZqOlNb8bV2BsJUhKd6w+12
-	7CJ8VA0MR69j9Qp8XYC5W/HPVvsGNz2GdwqipWbB9FU0z8A4mo/bv5khpw0aMM8V0Z4o7+1LGPu
-	BMM4SHgvoOo3rLDvmUHlu+Tdp2x8WX0WHQL3LDgl5TeqRFMeGpANLRdswF2rlMoyM6oXepIhbDj
-	D/1ka4/sE3uI+tsAICmXzvIST8o25dSB3kt6vUHy1U6sdLMUhmZlqF2LDbWwiL9MNdMu7QXBhCp
-	FlGMTH+GNagNXx8Il5IzaHP2PX+6jF6dnLzV6PVizcUxyTEBjZczQlLD7FgWGTwI9xjzzxzIFe2
-	OmfRN
-X-Google-Smtp-Source: AGHT+IF3IIX8Y8HMwmC2JofIJWbpvEKbvMkmKYJ0OfZmqccgguuLGNeaHlQct7nTtg1tmqoXIiA+NQ==
-X-Received: by 2002:a05:6000:1842:b0:397:3900:ef8c with SMTP id ffacd0b85a97d-39c12117d11mr5330258f8f.35.1743409922427;
-        Mon, 31 Mar 2025 01:32:02 -0700 (PDT)
-Received: from smtpclient.apple ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e082sm10814632f8f.69.2025.03.31.01.32.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Mar 2025 01:32:02 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cfL3JBdE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743409922; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=EySq0RpGRnjPjfZiO1DIFrP4JjQDtf0CP/IzZpcVHto=;
+	b=cfL3JBdEVgtpXnXYd7X7i40hzvS7Ogz1gZlEpHaFomwWL9YWrRXa4DkLML04nXMilRilbo+G8OFqacunAYoJmWnl5RrHy4BoznPDG0/C6LPmn1p7kCAkTv5Z7tdHYdByHUU4agXZ2d5T70ZbxRSrLb9RmHzf57DbIqTlIiiDJqY=
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WTVlcrf_1743409912 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Mar 2025 16:32:01 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: richard@nod.at
+Cc: anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	linux-um@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] um: Remove duplicate arch.h header
+Date: Mon, 31 Mar 2025 16:31:50 +0800
+Message-Id: <20250331083150.72598-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH] media: si2168: increase cmd execution timeout value
-From: Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <Z-pNBAVhUwrcwDQe@shikoro>
-Date: Mon, 31 Mar 2025 12:31:48 +0400
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Peter Rosin <peda@axentia.se>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0073F061-994E-4DE6-AC0E-E7E03DD30275@gmail.com>
-References: <20250331075838.3444332-1-christianshewitt@gmail.com>
- <Z-pNBAVhUwrcwDQe@shikoro>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> On 31 Mar 2025, at 12:06=E2=80=AFpm, Wolfram Sang =
-<wsa+renesas@sang-engineering.com> wrote:
->=20
->=20
->> if (cmd->rlen) {
->> /* wait cmd execution terminate */
->> - #define TIMEOUT 70
->> + #define TIMEOUT 200
->=20
-> While we are here, can we rename it to CMD_TIMEOUT and put it next to
-> the #includes?
+./arch/um/kernel/trap.c: arch.h is included more than once.
 
-I=E2=80=99m at the novice end of kernel contributors, so like this?
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19877
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ arch/um/kernel/trap.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/media/dvb-frontends/si2168.c
-+++ b/drivers/media/dvb-frontends/si2168.c
-@@ -9,6 +9,8 @@
-=20
- #include "si2168_priv.h"
-=20
-+#define CMD_TIMEOUT 200
-+
- static const struct dvb_frontend_ops si2168_ops;
-=20
- static void cmd_init(struct si2168_cmd *cmd, const u8 *buf, int wlen, =
-int rlen)
-@@ -40,8 +42,7 @@ static int si2168_cmd_execute(struct i2c_client =
-*client, struct si2168_cmd *cmd)
-=20
-        if (cmd->rlen) {
-                /* wait cmd execution terminate */
--               #define TIMEOUT 200
--               timeout =3D jiffies + msecs_to_jiffies(TIMEOUT);
-+               timeout =3D jiffies + msecs_to_jiffies(CMD_TIMEOUT);
-                while (!time_after(jiffies, timeout)) {
-                        ret =3D i2c_master_recv(client, cmd->args, =
-cmd->rlen);
-                        if (ret < 0) {
-@@ -58,7 +59,7 @@ static int si2168_cmd_execute(struct i2c_client =
-*client, struct si2168_cmd *cmd)
-=20
-                dev_dbg(&client->dev, "cmd execution took %d ms\n",
-                                jiffies_to_msecs(jiffies) -
--                               (jiffies_to_msecs(timeout) - TIMEOUT));
-+                               (jiffies_to_msecs(timeout) - =
-CMD_TIMEOUT));
-=20
-                /* error bit set? */
-                if ((cmd->args[0] >> 6) & 0x01) {
+diff --git a/arch/um/kernel/trap.c b/arch/um/kernel/trap.c
+index ce073150dc20..39820bde49e6 100644
+--- a/arch/um/kernel/trap.c
++++ b/arch/um/kernel/trap.c
+@@ -16,7 +16,6 @@
+ #include <kern_util.h>
+ #include <os.h>
+ #include <skas.h>
+-#include <arch.h>
+ 
+ /*
+  * Note this is constrained to return 0, -EFAULT, -EACCES, -ENOMEM by
+-- 
+2.32.0.3.g01195cf9f
 
-Christian=
