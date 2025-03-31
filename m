@@ -1,74 +1,84 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D23C1E377F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A9113B59B
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743423282; cv=none; b=DOF8+dHh0nknj45bLV9Ssg9QG3Mbsl/arPq8RFhq6VG8OkWIbYD9O3T5syRzfc1EGcak5RUD/IYcU4nUNbwCXdCp2tlYGm4+z4fUzVn8+8evpygTjGBCFGnZuWjttjB6xxKqLKSMVGQ+L3njvcDyl5UeeHpHGnv+sOC5m/2e1nc=
+	t=1743423364; cv=none; b=JnyiVX2wvwQv+Gd3a6s2tVm/jjf1yBlivSjcRmHmMFf4Km5Cs5A7QgO/Um4GDN8Vf0ibv8aJC9cscDM0DtqqwzMCvaYnN34AD/UtgWKFDbf1F+mb3B4khj+xnsr5vO9519ilS1hDaNR3wV+Ir+HzOPlm/Kbg2pjr0AFeRDyqVfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743423282; c=relaxed/simple;
-	bh=gVlxyrwyqplJnvQbj0nH7yIPZkaBYx6wgVpLYbMhhE8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=ALctp8ix0GE0jRiGbsJYEtxCKvFfUYADKncAxi3MYbKQtOT1IB2+gcq2VW1QTuAGOQ6nK+K4X2NPSqA/EbuRferVRSax2vmtSiu5IknKabKE1mcXQylxeiIYOphObQJJbP0bh+FFB8bxlEccQuCNPipZ5QkC7KzNF/n0m/c0qrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZR96d1Gsjz8QrkZ;
-	Mon, 31 Mar 2025 20:14:33 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 52VCEMZl054991;
-	Mon, 31 Mar 2025 20:14:22 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 31 Mar 2025 20:14:25 +0800 (CST)
-Date: Mon, 31 Mar 2025 20:14:25 +0800 (CST)
-X-Zmail-TransId: 2afa67ea8721444-29a24
-X-Mailer: Zmail v1.0
-Message-ID: <20250331201425296l4h98bZjxHzs08fdvHrGO@zte.com.cn>
+	s=arc-20240116; t=1743423364; c=relaxed/simple;
+	bh=wUTUKz+IrV1b4kGMI/raV5aXx1ThKF09bUAHq2ryA9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3d6yRTxeB1fKH/K1qTLK4gF1K67nZTg5e62gKXicPeLwOAOsnVW/y16TGQ42IBl7HQ/BRBligT9iuboApZyYMyJfAK+c0dM3s3pJcMiescB00EFdCOOUyKVO8MpSRdPMNf+noQClDTJVspIub6U51FheWImq+04wFZq413oIBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OX1qncjj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OX1qncjj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD11CC4CEE3;
+	Mon, 31 Mar 2025 12:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743423364;
+	bh=wUTUKz+IrV1b4kGMI/raV5aXx1ThKF09bUAHq2ryA9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OX1qncjjatxJmBWPzqGePwqdfI44j7y9cGite5XzwPSG5jEnYCOD5YbKalNjj4djQ
+	 Vlm9HQoZj9mR06Q07vqjONNPMhw/kSxXBP9RKNS6cOwNxX7a49IjBkukzEq1WnTiMl
+	 EdUEbF+4j32ZoSLvOho8nBjjZ2yZulyk2ph1qXwyi0ATFG613bYcKHbX9qU8cLhc25
+	 8KiYLYAX2e7CTk6q2zWtAkxDHrffQN8kMbs8+34dBkqcuzc4YAZ0AMqEPlJzmrUEnG
+	 J8MTZZ/IRcHvSnPWCF8g06AyCUDAu+YLzt13kN5l4vuj9ixDJoYj7IXmSPWJxKnMou
+	 uwBvUu0mF/yLA==
+Date: Mon, 31 Mar 2025 13:16:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Witold Sadowski <wsadowski@marvell.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] spi: cadence: Fix out-of-bounds array access in
+ cdns_mrvl_xspi_setup_clock()
+Message-ID: <4f589f15-7531-46cf-9ed9-0e4c6afdcda3@sirena.org.uk>
+References: <008546505c6c5973a1c119a41b74e665a3e29b71.1743178029.git.jpoimboe@kernel.org>
+ <gs2ooxfkblnee6cc5yfcxh7nu4wvoqnuv4lrllkhccxgcac2jg@7snmwd73jkhs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <nm@ti.com>
-Cc: <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <ssantosh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <tang.dongxing@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBzb2M6IHRpOiBrMy1yaW5nYWNjOiBVc2UgZGV2aWNlX21hdGNoX29mX25vZGUoKQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 52VCEMZl054991
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EA8729.000/4ZR96d1Gsjz8QrkZ
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YKhR3hbcL3sSR/FU"
+Content-Disposition: inline
+In-Reply-To: <gs2ooxfkblnee6cc5yfcxh7nu4wvoqnuv4lrllkhccxgcac2jg@7snmwd73jkhs>
+X-Cookie: The Ranger isn't gonna like it, Yogi.
 
-From: Tang Dongxing <tang.dongxing@zte.com.cn>
 
-Replace the open-code with device_match_of_node().
+--YKhR3hbcL3sSR/FU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Tang Dongxing <tang.dongxing@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/soc/ti/k3-ringacc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Mar 28, 2025 at 09:36:30PM -0700, Josh Poimboeuf wrote:
+> If requested_clk > 128, cdns_mrvl_xspi_setup_clock() iterates over the
+> entire cdns_mrvl_xspi_clk_div_list array without breaking out early,
+> causing 'i' to go beyond the array bounds.
 
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 82a15cad1c6c..7602b8a909b0 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -1291,7 +1291,7 @@ struct k3_ringacc *of_k3_ringacc_get_by_phandle(struct device_node *np,
+> -	while (i < ARRAY_SIZE(cdns_mrvl_xspi_clk_div_list)) {
+> +	while (i < ARRAY_SIZE(cdns_mrvl_xspi_clk_div_list)-1) {
 
- 	mutex_lock(&k3_ringacc_list_lock);
- 	list_for_each_entry(entry, &k3_ringacc_list, list)
--		if (entry->dev->of_node == ringacc_np) {
-+		if (device_match_of_node(entry->dev, ringacc_np)) {
- 			ringacc = entry;
- 			break;
- 		}
--- 
-2.25.1
+The usual coding style would be to have spaces around the - here.
+
+--YKhR3hbcL3sSR/FU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqh38ACgkQJNaLcl1U
+h9A2AQf9E9/9Vc7Zl0gW/VCRfB4ZvGGgmhvpvg5qrsQRAMlne1vxkd3C2tzk18QR
+oQBwmeUECptEnhWuErwZ7qse8vYtuJcACJ1on8OlTZOtR0HkLLQFwVyt6mQHHwlL
+1FLAcTZ+4FMLx1fn2FMhSkx1Mydye7a+IkVtsWpPnuUrKntCRjxQkPoRlLhblyW3
+rJmPvMvVDGfbUBZztwmpRS6a/aFfesCVmIshD3oe0lSUNv6Jni3ejvaAydgEojHq
+AktvqrOjvfVnqNKMoicNL+3SFimdyIH8hBSmtG14VMne7ENva5niRlrDxlN61XnK
+PtUw5jSgTFFqeSePtSo0/+GAtzjd8A==
+=vOsi
+-----END PGP SIGNATURE-----
+
+--YKhR3hbcL3sSR/FU--
