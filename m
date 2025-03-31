@@ -1,87 +1,175 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0A1BE67;
-	Mon, 31 Mar 2025 05:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0720917A2E2;
+	Mon, 31 Mar 2025 05:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743399462; cv=none; b=h/iGYargWj3GzyOv1qZP/ebdAAs5TI8QASJI3RFE3vwa3kDYSiY+x+ctREAkxz08gMCsaxs68lVUPlxPO/plpoeccQGCmngjwducHBrekX/s+seGBCeD/Q09Y8KGIR+hGp58tcZsoL9L194wquUgcbIzrllm/HuzB+WBnKGPwfk=
+	t=1743399529; cv=none; b=DoVRUx0y+rrg5Xoj5zMaAQ145GBX2f7Y+QqQhPEDrLSf3KLAbzM7iB9UN0jcTT2UbOYdIbtidlAOTOMxk1JEfFUzXVE2jo5L7zCiEFhOp2oTfgyjkQ8ePzY9t3mjP5ZOlz9K9Qk99SoOEp+kS0QJgiCHjNJ1NTILiqUUL5erO8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743399462; c=relaxed/simple;
-	bh=WwucmVL5LzYqVX/Z61kDgFO/qm2byy8jxxXIbXDLma0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=C4Rk6KLdp2zBvvG1IuzuXS0gBQxwZYlh004zXAX8Sk1hu/35tIzwdo9itsm/j6Ce4UECZ/w8MFdj/jeT7LrKPp0YdRw3Rt7yGWrgMW0RUAtpe9RcbMLWUnw85bFGrPA7Kg8yUBCefwX5vk02y/moOYVb+r8O8upbMVZX0LLt1cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OLuv+pBW; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1743399529; c=relaxed/simple;
+	bh=O+nGkDYvtL7d3Qqm+1UtASwmM5sd23/5AKPzIlKKH14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ECm1KpuNKeDENrDdGbLf1mRJvpngYv9n0IPEaF6sG5vdLx7wQQ03LFzEdW0Chm1lKeg25AFDb8MCQUcezQPAyffunh9kLPzijTmth708yWLmqg0jP1+BX5hnJa/+9G4A2t0EGloyu1+rKDnTAi+aT5F/hg0c4a4QwWTNoMSyPO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Icr85zrj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OLuv+pBW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1743399456;
-	bh=ehQd6wS2LA/9H/uzSHIV8HfKk5qez93cnM1n7WuqGuY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OLuv+pBWZM2U4jvgkKyCa/SGW2h5ywAdVYKWv1kndDFcbwQ4NKnQpe3FgiMxr4FsM
-	 iXuvXxfYf/FnOTleAJ9kQPTK6tDk5ekzm6Yqt5MsrIga7qcK63k3WMCbrbfUgLbmbq
-	 Wqtl/rQfWIcYcauSSkP0WlqvFBKuKKDeHVrP0kacmDQdw9JEGUpa5cxIQw1bfAy6EG
-	 VVwEw/WJi0Z3XZTGe6uFLTtaoKbDQ5NUNq90XvJ5zOmXmgPq1kgbRHDSEfO1aFHzLE
-	 V5iIfmgrjd7xVjTqJ/UrZosIEXVcKlB3hhGf/c2uU1LPACeZM1dCKTSRas7WqbUzSB
-	 g7hTbMSI+J4mg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZR0Jc3LD3z4wyl;
-	Mon, 31 Mar 2025 16:37:35 +1100 (AEDT)
-Date: Mon, 31 Mar 2025 16:37:34 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20250331163734.7dc27905@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Icr85zrj"
+Received: from [10.95.65.22] (unknown [167.220.238.22])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3B0282111439;
+	Sun, 30 Mar 2025 22:38:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B0282111439
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743399521;
+	bh=Ga+JCIeKoiFxHXkSSUu0P9tSi9JTYZkWrviPT8lbSaI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Icr85zrj5xsXnf7Gyrpdb9y6S9lOLkFGBRaQtrlBEHyPnyEv2SKPtbOIuTsGXPeSX
+	 mC54kMNRj0rNjatFaqG8FkMBqyWJ6Gvt+AASzNMJ0n3KoK2xQdl7SKnOcXzbWieRZC
+	 0KbXu+eUE+7xC5ZYEAC7dtlLbBPlXuw/mDY+rQf4=
+Message-ID: <32de9597-d609-4e12-8219-ea7205bdc7d8@linux.microsoft.com>
+Date: Mon, 31 Mar 2025 11:08:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/InRd+2Xb_HB58bzqmBnN.Wd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Stephen Hemminger <stephen@networkplumber.org>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@kernel.org" <stable@kernel.org>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>
+References: <20250328052745.1417-1-namjain@linux.microsoft.com>
+ <20250328052745.1417-2-namjain@linux.microsoft.com>
+ <SN6PR02MB4157C74E0E83E63175278153D4A22@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157C74E0E83E63175278153D4A22@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/InRd+2Xb_HB58bzqmBnN.Wd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the block tree, today's linux-next build (htmldocs)
-produced this warning:
+On 3/30/2025 9:05 PM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, March 27, 2025 10:28 PM
+>>
+>> On regular bootup, devices get registered to VMBus first, so when
+>> uio_hv_generic driver for a particular device type is probed,
+>> the device is already initialized and added, so sysfs creation in
+>> uio_hv_generic probe works fine. However, when device is removed
+>> and brought back, the channel rescinds and device again gets
+>> registered to VMBus. However this time, the uio_hv_generic driver is
+>> already registered to probe for that device and in this case sysfs
+>> creation is tried before the device's kobject gets initialized
+>> completely.
+>>
+>> Fix this by moving the core logic of sysfs creation for ring buffer,
+>> from uio_hv_generic to HyperV's VMBus driver, where rest of the sysfs
+>> attributes for the channels are defined. While doing that, make use
+>> of attribute groups and macros, instead of creating sysfs directly,
+>> to ensure better error handling and code flow.
+>>
+>> Problem path:
+>> vmbus_process_offer (new offer comes for the VMBus device)
+>>    vmbus_add_channel_work
+>>      vmbus_device_register
+>>        |-> device_register
+>>        |     |...
+>>        |     |-> hv_uio_probe
+>>        |           |...
+>>        |           |-> sysfs_create_bin_file (leads to a warning as
+>>        |                 primary channel's kobject, which is used to
+>>        |                 create sysfs is not yet initialized)
+>>        |-> kset_create_and_add
+>>        |-> vmbus_add_channel_kobj (initialization of primary channel's
+>>                                    kobject happens later)
+>>
+>> Above code flow is sequential and the warning is always reproducible in
+>> this path.
+>>
+>> Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
+>> Cc: stable@kernel.org
+>> Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   drivers/hv/hyperv_vmbus.h    |   6 ++
+>>   drivers/hv/vmbus_drv.c       | 110 ++++++++++++++++++++++++++++++++++-
+>>   drivers/uio/uio_hv_generic.c |  33 +++++------
+>>   include/linux/hyperv.h       |   6 ++
+>>   4 files changed, 134 insertions(+), 21 deletions(-)
+>>
+> 
+> [snip]
+> 
+>> +/**
+>> + * hv_create_ring_sysfs() - create "ring" sysfs entry corresponding to ring buffers for a channel.
+>> + * @channel: Pointer to vmbus_channel structure
+>> + * @hv_mmap_ring_buffer: function pointer for initializing the function to be called on mmap of
+>> + *                       channel's "ring" sysfs node, which is for the ring buffer of that channel.
+>> + *                       Function pointer is of below type:
+>> + *                       int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
+>> + *                                                  struct vm_area_struct *vma))
+>> + *                       This has a pointer to the channel and a pointer to vm_area_struct,
+>> + *                       used for mmap, as arguments.
+>> + *
+>> + * Sysfs node for ring buffer of a channel is created along with other fields, however its
+>> + * visibility is disabled by default. Sysfs creation needs to be controlled when the use-case
+>> + * is running.
+>> + * For example, HV_NIC device is used either by uio_hv_generic or hv_netvsc at any given point of
+>> + * time, and "ring" sysfs is needed only when uio_hv_generic is bound to that device. To avoid
+>> + * exposing the ring buffer by default, this function is reponsible to enable visibility of
+>> + * ring for userspace to use.
+>> + * Note: Race conditions can happen with userspace and it is not encouraged to create new
+>> + * use-cases for this. This was added to maintain backward compatibility, while solving
+>> + * one of the race conditions in uio_hv_generic while creating sysfs.
+>> + *
+>> + * Returns 0 on success or error code on failure.
+>> + */
+>> +int hv_create_ring_sysfs(struct vmbus_channel *channel,
+>> +			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
+>> +						    struct vm_area_struct *vma))
+>> +{
+>> +	struct kobject *kobj = &channel->kobj;
+>> +	struct vmbus_channel *primary_channel = channel->primary_channel ?
+>> +		channel->primary_channel : channel;
+>> +
+>> +	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
+>> +	channel->ring_sysfs_visible = true;
+>> +
+>> +	/*
+>> +	 * Skip updating the sysfs group if the primary channel is not yet initialized and sysfs
+>> +	 * group is not yet created. In those cases, the 'ring' will be created later in
+>> +	 * vmbus_device_register() -> vmbus_add_channel_kobj().
+>> +	 */
+>> +	if  (!primary_channel->device_obj->channels_kset)
+>> +		return 0;
+> 
+> This test doesn't accomplish what you want. It tests if the "channels" directory
+> has been created, but not if the numbered subdirectory for this channel has been
+> created. sysfs_update_group() operates on the numbered subdirectory and
+> could still fail because it hasn't been created yet.
+> 
+> My recommendation is to not try to do a test, and just let sysfs_update_group()
+> fail in that case (and ignore the error).
+> 
+> Michael
+> 
 
-Documentation/block/ublk.rst:353: WARNING: Footnote [#] is not referenced. =
-[ref.footnote]
+Thanks Michael. Will remove it.
 
-Introduced by commit
+Regards,
+Naman
 
-  17970209167d ("ublk: document zero copy feature")
+>> +
+>> +	return sysfs_update_group(kobj, &vmbus_chan_group);
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/InRd+2Xb_HB58bzqmBnN.Wd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfqKh4ACgkQAVBC80lX
-0GywFwf/X51edsyMGg6Y8ig2rnef8JHv1//Gf8C3DRFK42dGcCSzHIDsCiKIvKEx
-nlM/6Dlf8WSoh/WeahIVBb71zhTX9W6aSwNIi94WKRXry41M68m/+2w9ynA+mPqY
-0Hfl69j5F3VbnNuD9C3MGVru3uPg5AGUsXTO/rvqTEmZqjZP41U1SCDQn3f0a2eX
-W1WqC/HsSHfKqq8gr+0mdtGzr0CWKY8Mx9FC8E4pW+TxRu4atlLsV5jQgb5RWi+8
-fKKOQDEOOzq2fiNLIJpY0jb7j3z29ZQ92E3w2tyfsIlwCwW8N7pxFS2I76IU493I
-8ya5IPgyLnzkluJyYhPB1UgwCMYatQ==
-=6pPi
------END PGP SIGNATURE-----
-
---Sig_/InRd+2Xb_HB58bzqmBnN.Wd--
