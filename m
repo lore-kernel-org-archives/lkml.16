@@ -1,140 +1,212 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEA0214A8F
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D312E215073
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743457624; cv=none; b=cLLzEaGKyQrJi4Pv4NmFh7ses12lwj3uVOwBUDkLw5iZtu3WCx6DC7vtJCCpBt3DW2J+PpfJucogpVaEFXLVGDu89Yn/yr8X530k2ZTkE6GX+Jn0cLLcMhhGgqq2AoKnYWc+iIBhg4MV/Xta8E1RdHdjTk/+cHsd3dfNidYPldU=
+	t=1743457667; cv=none; b=ue5iZBOdidZjfT9yoRqhrKOclbbGn30iuLQbguR8yZCMlt/RGPcpTA/3eFTtBrdSjn9VR/bcf1vl82ao9wP6N9RncCY5WO1x+n+cp1o0NjdGRVZxJpWoCwi8EJlLTHvFEhBBMf8XPTsG469Ap5v85yO0RKqFtlhOm11B/cIOwzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743457624; c=relaxed/simple;
-	bh=0W8Yhf56VLA+zLbZceUmvUaPvdsvvqd7uiFVijCU4ho=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rN8JIEUped7DsiCzkGj1kf0CGEzbtkikHKlwf6AgNLMGQGdG5BE++xlr1QJAoSDvA/t5V7Na3YgOuhkMVFdqKbQT6soTM/YN73HCKoUTV01D7IBJK5VBDJlpjkR0pSXx9JM6Uxs0kPtLkrxXKENK45qtnwW5RBWBUzh396n7elE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GXeqDmld; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743457667; c=relaxed/simple;
+	bh=6BurWuxDIhUOOXVLTYnfhaXSK23mdZmlzzymf8T3KCI=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tCZ/Yx7HzRZ2CR4RtBC/xyvivjDE5W2/c18uHqrYEDV/1YCNcrFqP/qv9eEoQEQmAKae2gRU6s2KTzuEaezzyDyQppte6cf6pLW4ZSvBbwVMWqzXccn+qP5GN+q9OJCQxWhc09ySd5d+pObl/a+RUxuqA1wyOuwJRbx6ectq3Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C4SZKNK2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GXeqDmld"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFCuqV026705
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:47:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NS2zcXptxcgcU0tPvmrUCO30qFIX1zPhS7qEmUqi3zU=; b=GXeqDmldmketFn1n
-	5ygpr8H2o8Lt2ywjHkHaf4PWtDpwiIavmK31LWe9vNRtgKJF7i5k1BamQb+L7CtW
-	F17QVAxNjHNJYwaCRYRxwcXBJB5vZhqgyAMYqry7xpGTcBQruPCXNLtl3KJOX+ci
-	ddKbaX+fUnUnLOdGYR5hZow7t6n8lsmFXKPT8saDkC4oE7Ls1ExXlgswTVCeWguQ
-	WfuXVMmHaVO0S5rV3ENbtL07FMzc3XXEI5lzEmqRDReh6lieNhxt8Iu0ucAIbdz6
-	Jn6sg+ySihX30vBNtRK+jGlOY6Lf5sTYfERIHH+WTRRts97rXrzqxnFlk1xsuMKa
-	c1OO9g==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p7v8dsty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:47:00 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-225974c6272so75779025ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:47:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C4SZKNK2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743457664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VDJbnUrOniIR2J6H6BkhNER/mfCp9Qw+yHpfNn5RwqU=;
+	b=C4SZKNK2+uanTa8EPPps3UQ8QhHScGvDt3kQxaOAL8P/H8pCX38j7NYdVpPDnzB2/XVzAu
+	Kr2+HXcshB9Vg7syPlPtVPOJiu6aBJ7e60W7pzLqgbnq8GxJZxTowZcpOvttQzcegTlepT
+	iuVqm2bKLak4P1TqVk6GEhEYbbh7JEk=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-563-sy9tI4OpODuVSTJD8u_nIg-1; Mon, 31 Mar 2025 17:47:43 -0400
+X-MC-Unique: sy9tI4OpODuVSTJD8u_nIg-1
+X-Mimecast-MFC-AGG-ID: sy9tI4OpODuVSTJD8u_nIg_1743457662
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so52172685ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:47:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743457619; x=1744062419;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NS2zcXptxcgcU0tPvmrUCO30qFIX1zPhS7qEmUqi3zU=;
-        b=WLQqeSnYddxABWg0z+IxzSqgXuoTkDhRiAHHgaTgPYMCFMKcxlIIXqos0fC/y/eFVY
-         j3oAy2YQ2jAkONAow99Q5sduk4d56NXGXVYWKU/eqmaG3eczgYPwPKmtrN/YeY1VlHx5
-         bleVYU/cW4hpFtgGS35gD/Q4NIMcIawl+RnrS1lJ0nCn5jpQDYFUw97FYzHc/ofvAjBB
-         prhxxqYoEUz9PV1jIIzayUkVollQb3N0S8FB+kwJaP0GamgQtO2V0dYr0D0C5S8mkZvh
-         V4nkv3wQnlhOtQyMHizgGa3duDWlPaledAsKWH955odxC9AVJxNC1RTGgfQCpTMBZhN8
-         MVGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzcnDVYSbJSnBVG2h0NOtUmPvdvtbQszvA3cMZDNJ9zJ/W47uwgmP7vS4bt77o9HUQjYIeXs8b/aqoRw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAfjkV3p+NMfDl5vf4mND+zwTO4cfmIt7/jgoyv4B60qNpszpP
-	whVCwKgzoKu4uHKkNTW//EFN4N1p5h8hWAx1Qkl0msCh9vBhFvQK5f3YVODRfvSCn0I2mxboh8t
-	rVAE7xqINJIko4Gd2pHcqcMb1dTzyg04mbrurQsXFzDNWxIePJo5/Z/ab4w8b7bmdh+sRLR8=
-X-Gm-Gg: ASbGncuhKFUt1kH7qq/yLA99c+I7JiGCJnH6764n8ES+oHcn6vcogOgQwJsO/47uKPy
-	Gprmk0fqvS5g3hPgA3+vFojv+zrVBlhhO5//yQFUPVTI0FuNRlovsckFdfVur5C6hyHYtC8BY9D
-	ei2lJyWIhwjMAVfxscbg309d8uWI3skLWlIwq9QM4QoZx9mI6ejMf/JxUk9F+6kGurOudHIYTKw
-	aUT2Wkq8i3uKOYA3rehI7Db13gsTk+ciFbZNrHd9gfcrmoJkpKw3LpXiPIWBYLICR22SdzfmK+x
-	dQN6DigE4US91h1odYGkcdimH9e25Jx88rPSKa6Y5ZuTNxQxQees
-X-Received: by 2002:a17:903:98b:b0:224:7a4:b31 with SMTP id d9443c01a7336-2292ee06c99mr163911585ad.6.1743457619539;
-        Mon, 31 Mar 2025 14:46:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtOEsVjvWiGJctpJPUZiJwd6njJX7AeXk869duUJ/FtkKLtpSuBHJ8GhZpYHgaGaLnzk8gTg==
-X-Received: by 2002:a17:903:98b:b0:224:7a4:b31 with SMTP id d9443c01a7336-2292ee06c99mr163911265ad.6.1743457618981;
-        Mon, 31 Mar 2025 14:46:58 -0700 (PDT)
-Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7dcdsm74092055ad.216.2025.03.31.14.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 14:46:58 -0700 (PDT)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Takashi Iwai <tiwai@suse.de>
-In-Reply-To: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
-References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
-Subject: Re: [PATCH ath-next v3 0/6] wifi: ath11k: bring hibernation
- support back
-Message-Id: <174345761819.1161294.6011866628558951179.b4-ty@oss.qualcomm.com>
-Date: Mon, 31 Mar 2025 14:46:58 -0700
+        d=1e100.net; s=20230601; t=1743457662; x=1744062462;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDJbnUrOniIR2J6H6BkhNER/mfCp9Qw+yHpfNn5RwqU=;
+        b=Oizg3gPfu0RB4WHN11J3QHst/2OzANG1tgWjsG1qqPrZLeDX8u7ReMKlgDY5ij8O3+
+         GV5HfX9LCZghUS1d26Rk2Eub3K3FUJNpX8aGzIxPQvHgZsUyeczZDsKYjz8YHkmsqRYa
+         bEJFve3aDyHc+2oRlNcWCqzXUv2E9eBRqIgmnFbdO0HROnYqBgnPAK5C5PFcQTGqJKCW
+         lYehuhrS1GanQSm1oJ2y5ky34cS1Mko+FMnGQsjdrMD/p0YhuK0A89TDd747JNW0y7tD
+         +F3RJ5cWu7rYxae+KYOt+EiHN2UgMhkH1dzlqt4hbKWtGsrdvUO64cmuW3AT4hiGNqQh
+         RoKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlubWTPg7LN4BfZzuNu8NJY0NX55RVrk4bjZuHCNq5lqzjSnN85oSP9xFY4vU7NjKstSpBVHQPoN7DWZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQE6a0RsswIaEE4C/ymIIxsmNxWC4KHuepGqVeRmtPGrTdmiEI
+	VLr6Efy/WfCvTA6KEtNrvBOaNy9BWzxxZt6C1qYJDNuHb3SnUbejxpk+1s8iSLSLSz5rTTy6j6V
+	L++GLBdPjNBXAs3veTPePVmvTRGy6tRHMBaC3Xwd56/Nwp4TQDwI8WWZJU4KYYQ==
+X-Gm-Gg: ASbGncsK2tUKmWOwFOJ2exNoz1K4pHqsJz9ZlaiqtaTOzz0SBx3zNjDx7bnuatSSYwN
+	kY9q/pNi0ZiARZxnMJZnqYZ23+IEtIA1W6Qbx4DVVqNPAK1WXcVSmfw9gbPLq9JqwxpDvSsD/MH
+	t7VK72NY8FLjIHIxWO/yvTCERuj2osU1VVu/VoTP3OgDEXGxhQZrFh+9cAyeQKfi1bpI8fcORtw
+	GwrcPenwdOF/V/moqLZG/SIIpeOJhTIkGcoRJPp6a/Gkm9k8rDV/KCJ+sn/sjyodVJSeKA0JpWK
+	zNaQnv+ukbhuYwh9ktIuFGZlT92HMk7cXqT2UchNtWL+Porl8cEmXNu+SM9YmA==
+X-Received: by 2002:a05:6e02:194c:b0:3d3:dece:3dab with SMTP id e9e14a558f8ab-3d5e08edf07mr110960175ab.1.1743457662370;
+        Mon, 31 Mar 2025 14:47:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBGBOzEXu+JrcUBSFzxSpUz21XUJZCsbyiZxYzdOIp5SIemYXEPArY5yCXN4IgVSefrR39dw==
+X-Received: by 2002:a05:6e02:194c:b0:3d3:dece:3dab with SMTP id e9e14a558f8ab-3d5e08edf07mr110959925ab.1.1743457661886;
+        Mon, 31 Mar 2025 14:47:41 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f464871f77sm2070867173.77.2025.03.31.14.47.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 14:47:41 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <b23d56c5-da54-4fbd-81ec-743cc53e0162@redhat.com>
+Date: Mon, 31 Mar 2025 17:47:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
+ RCU synchronization
+To: Boqun Feng <boqun.feng@gmail.com>, Waiman Long <llong@redhat.com>
+Cc: paulmck@kernel.org, Eric Dumazet <edumazet@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Breno Leitao <leitao@debian.org>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, aeh@meta.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com,
+ kernel-team@meta.com, Erik Lundgren <elundgren@meta.com>
+References: <Z-L5ttC9qllTAEbO@boqun-archlinux>
+ <f1ae824f-f506-49f7-8864-1adc0f7cbee6@redhat.com>
+ <Z-MHHFTS3kcfWIlL@boqun-archlinux>
+ <1e4c0df6-cb4d-462c-9019-100044ea8016@redhat.com> <Z-OPya5HoqbKmMGj@Mac.home>
+ <df237702-55c3-466b-b51e-f3fe46ae03ba@redhat.com>
+ <Z-rQNzYRMTinrDSl@boqun-archlinux>
+ <9f5b500a-1106-4565-9559-bd44143e3ea6@redhat.com>
+ <35039448-d8e8-4a7d-b59b-758d81330d4b@paulmck-laptop>
+ <69592dc7-5c21-485b-b00e-1c34ffb4cee8@redhat.com>
+ <Z-sHWAQ2TnLMEIls@boqun-archlinux>
+Content-Language: en-US
+In-Reply-To: <Z-sHWAQ2TnLMEIls@boqun-archlinux>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.0
-X-Proofpoint-ORIG-GUID: IBJyRN6WJPEIgkKviWbZOhS-bxhAG12H
-X-Authority-Analysis: v=2.4 cv=fdaty1QF c=1 sm=1 tr=0 ts=67eb0d55 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=EgwDjV4hzmH0pz7qutYA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-GUID: IBJyRN6WJPEIgkKviWbZOhS-bxhAG12H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_10,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=826 clxscore=1015 adultscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503310149
 
+On 3/31/25 5:21 PM, Boqun Feng wrote:
+> On Mon, Mar 31, 2025 at 02:57:20PM -0400, Waiman Long wrote:
+>> On 3/31/25 2:33 PM, Paul E. McKenney wrote:
+>>> On Mon, Mar 31, 2025 at 01:33:22PM -0400, Waiman Long wrote:
+>>>> On 3/31/25 1:26 PM, Boqun Feng wrote:
+>>>>> On Wed, Mar 26, 2025 at 11:39:49AM -0400, Waiman Long wrote:
+>>>>> [...]
+>>>>>>>> Anyway, that may work. The only problem that I see is the issue of nesting
+>>>>>>>> of an interrupt context on top of a task context. It is possible that the
+>>>>>>>> first use of a raw_spinlock may happen in an interrupt context. If the
+>>>>>>>> interrupt happens when the task has set the hazard pointer and iterating the
+>>>>>>>> hash list, the value of the hazard pointer may be overwritten. Alternatively
+>>>>>>>> we could have multiple slots for the hazard pointer, but that will make the
+>>>>>>>> code more complicated. Or we could disable interrupt before setting the
+>>>>>>>> hazard pointer.
+>>>>>>> Or we can use lockdep_recursion:
+>>>>>>>
+>>>>>>> 	preempt_disable();
+>>>>>>> 	lockdep_recursion_inc();
+>>>>>>> 	barrier();
+>>>>>>>
+>>>>>>> 	WRITE_ONCE(*hazptr, ...);
+>>>>>>>
+>>>>>>> , it should prevent the re-entrant of lockdep in irq.
+>>>>>> That will probably work. Or we can disable irq. I am fine with both.
+>>>>> Disabling irq may not work in this case, because an NMI can also happen
+>>>>> and call register_lock_class().
+>>>> Right, disabling irq doesn't work with NMI. So incrementing the recursion
+>>>> count is likely the way to go and I think it will work even in the NMI case.
+>>>>
+>>>>> I'm experimenting a new idea here, it might be better (for general
+>>>>> cases), and this has the similar spirit that we could move the
+>>>>> protection scope of a hazard pointer from a key to a hash_list: we can
+>>>>> introduce a wildcard address, and whenever we do a synchronize_hazptr(),
+>>>>> if the hazptr slot equal to wildcard, we treat as it matches to any ptr,
+>>>>> hence synchronize_hazptr() will still wait until it's zero'd. Not only
+>>>>> this could help in the nesting case, it can also be used if the users
+>>>>> want to protect multiple things with this simple hazard pointer
+>>>>> implementation.
+>>>> I think it is a good idea to add a wildcard for the general use case.
+>>>> Setting the hazptr to the list head will be enough for this particular case.
+>>> Careful!  If we enable use of wildcards outside of the special case
+>>> of synchronize_hazptr(), we give up the small-memory-footprint advantages
+>>> of hazard pointers.  You end up having to wait on all hazard-pointer
+>>> readers, which was exactly why RCU was troublesome here.  ;-)
+> Technically, only the hazard-pointer readers that have switched to
+> wildcard mode because multiple hazptr critical sections ;-)
+>
+>> If the plan is to have one global set of hazard pointers for all the
+> A global set of hazard pointers for all the possible use cases is the
+> current plan (at least it should be when we have fully-featured hazptr
+> [1]). Because the hazard pointer value already points the the data to
+> protect, so no need to group things into "domain"s.
+>
+>> possible use cases, supporting wildcard may be a problem. If we allow
+> I had some off-list discussions with Paul, and I ended up with the idea
+> of user-specific wildcard (i.e. different users can have different
+> wildcards) + one global set of hazard pointers. However, it just occured
+> to me that it won'd quite work in this simple hazard pointer
+> implementation (one slot per-CPU) :( Because you can have a user A's
+> hazptr critical interrupted by a user B's interrupt handler, and if both
+> A & B are using customized wildcard but they don't know each other, it's
+> not going to work by setting either wildcard value into the slot.
+>
+> To make it clear for the discussion, we have two hazard pointer
+> implementations:
+>
+> 1. The fully-featured one [1], which allow users to provide memory for
+>     hazptr slots, so no issue about nesting/re-entry etc. And wildcard
+>     doesn't make sense in this implemenation.
+>
+> 2. The simple variant, which is what I've proposed in this thread, and
+>     since it only has one slot per CPU, either all the users need to
+>     prevent the re-entries or we need a global wildcard. Also the readers
+>     of the simple variant need to disable preemption regardlessly because
+>     it only has one hazptr slot to use. That means its read-side critical
+>     section should be short usually.
+>
+> I could try to use the fully-featured one in lockdep, what I need to do
+> is creating enough hazard_context so we have enough slots for lockdep
+> and may or may not need lockdep_recursion to prevent reentries. However,
+> I still believe (or I don't have data to show otherwise) that the simple
+> variant with one slot per CPU + global wildcard will work fine in
+> practice.
+>
+> So what I would like to do is introducing the simple variant as a
+> general API with a global wildcard (because without it, it cannot be a
+> general API because one user have to prevent entering another user's
+> critical section), and lockdep can use it. And we can monitor the
+> delay of synchronize_shazptr() and if wildcard becomes a problem, move
+> to a fully-featured hazptr implementation. Sounds like a plan?
+>
+> [1]: https://lore.kernel.org/lkml/20240917143402.930114-2-boqun.feng@gmail.com/
 
-On Fri, 28 Mar 2025 13:32:23 +0800, Baochen Qiang wrote:
-> To handle the Lenovo unexpected wakeup issue [1], previously we revert
-> commit 166a490f59ac ("wifi: ath11k: support hibernation"). However we
-> need to bring it back, of course with additional changes such that Lenovo
-> machines would not break.
-> 
-> For suspend (S3), as those machines work well in WoWLAN mode, the thought
-> here is that we put WLAN target into WoWLAN mode on those machines while
-> into non-WoWLAN mode (which is done in the reverted commit) on other
-> machines. This requires us to identify Lenovo machines from others. For
-> that purpose, read machine info from DMI interface, match it against all
-> known affected machines. If there is a match, choose WoWLAN suspend mode,
-> else choose non-WoWLAN mode. This is done in patches [1 - 4/6]
-> 
-> [...]
+Thank for the detailed explanation. I am looking forward to your new 
+hazptr patch series.
 
-Applied, thanks!
+Cheers,
+Longman
 
-[1/6] wifi: ath11k: determine PM policy based on machine model
-      commit: ce8669a27016354dfa8bf3c954255cb9f3583bae
-[2/6] wifi: ath11k: introduce ath11k_core_continue_suspend_resume()
-      commit: 3d2ce6ad9126b96a721542c6299a2f0967b5a63f
-[3/6] wifi: ath11k: refactor ath11k_core_suspend/_resume()
-      commit: 662cc5b92c327e94587a959d7ed75862eda4b059
-[4/6] wifi: ath11k: support non-WoWLAN mode suspend as well
-      commit: 88fd03cf51a7d67dac976ecce079ccfc79376966
-[5/6] wifi: ath11k: choose default PM policy for hibernation
-      commit: 32d93b51bc7e2e557771abe4a88da69c609e3d52
-[6/6] Reapply "wifi: ath11k: restore country code during resume"
-      commit: 3b199a58cc585f423a85af2e57045c9a783361bb
-
-Best regards,
--- 
-Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+>
+> Regards,
+> Boqun
+>
+>> different sets of hazard pointers for different use cases, it will be less
+>> an issue. Anyway, maybe we should skip wildcard for the current case so that
+>> we have more time to think through it first.
+>>
+>> Cheers,
+>> Longman
+>>
 
