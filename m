@@ -1,115 +1,140 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1731CAA90;
-	Mon, 31 Mar 2025 20:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB8C217664;
+	Mon, 31 Mar 2025 20:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452850; cv=none; b=Lhg80K6y8Dzrx91Bb2sFMP+edgB7vyicOTFxAuss6umDBAokQ8mNwM7Rj1fFLAq8+CSgbfugbicd8Q/0RuCOCiyUWe1Uu2wfZWdXzZCN07BkadYATqW7T4s4+BXipxLyMugG6kh3Na8kIRQG54Z6tBbOQiLDkpXGrIoVsCVuRqY=
+	t=1743452883; cv=none; b=Hzc22ijfBETppyRm5DsEx1wmrILzZQ8JcpFWBF50axqHUsydxe+YTNIuJDQCHliQOFxyMOrjsTJCopvxJB8gtGZiMMlHlw/j3by3oWKSaDlZIkVl445wcvy/3aSlQ7M9tFO2mT3x7G6O2TtyDijl5/J2zVtkR0tdd65RJ3gyPyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452850; c=relaxed/simple;
-	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TV9/ltKq0hSU4b99KrjQw53lKSGHTMpeiJAoGPsq/FLoPDvE/yACVUTteLELLmwvA5MBKTWocw6dlfwwWK5Dvqhy/h57zEhoF/cf9jX1npvvM50x0JZt6+AmxiVAZ3diYqleCL2wdI0vmhOZonOO2AeCw9nMEnQU9165Fs9Uezw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=1xyxNhXA; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1743452883; c=relaxed/simple;
+	bh=PguanBqMDkb5To9BTN3sgW0idJGAj6XtvhMWRpcqrEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RO1BHfu5cBuzdgtnT/AnCx2kgzrjYWk37PgRrvAM+9clcu7f8DX4cC+op7svx5UA7qzbdMJVB5fsVbD9GbpGqnQ8a0SzfouxJsyz4XP17PP9Ded54YOnFLV1gcXzczdU5EQmtIG0qI/h7GU6XFLc3fahBqRuJRrmz37sgQQFxuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZoA0utL; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="1xyxNhXA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=; b=1xyxNhXAAZkumfn+rj9gjbDgJq
-	Cac07i2SbLbMyd3WejpqlYAZVYYUr44gazhhYrd4YT8aNL7InIJUa8HDHDKrH39rL+yAODAtOH/7W
-	O4j8vi/2JqQUU3hGyXW+acp0G6EuYTesgDP9t4I9fOHGiXRet9y7HD+n8rGRvNAOznCzq5roEUY1m
-	7BoGjfNMB6lVKOw406lFzYc91MyD8ADG8uM9jOeXlxWWzT+NqbO0Sr5tRTkGP8ry5YaR6uzAZQ3rt
-	ykbUgPvgPMRkNTbX7AqOM/i8CQiNgBDue667YAS2zuEXYboBuiyDbB0DNmEUv/4KIaGtzEw0IHpur
-	YBO6gx7cElsGJEN1IsJxDEiAO4N3dhfj+icUDr4RWA6qGmhE/J1uSHf0gocR9WXKmoZDAvdVBjjMC
-	T5H55JVmt3id6TXT5t3Q0YgS8tKzB4WMMNOB4EQYHjzySVUlsBn/xb34lZ6+LVMKIgkQ6MV+AO7RS
-	d1XvbBcwupfsWYYJr0+8JKjv;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1tzLj6-007YEh-3D;
-	Mon, 31 Mar 2025 20:27:21 +0000
-Message-ID: <62ef4f1e-a726-423a-a765-ee584ee681c0@samba.org>
-Date: Mon, 31 Mar 2025 22:27:17 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZoA0utL"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3851574f8f.2;
+        Mon, 31 Mar 2025 13:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743452880; x=1744057680; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QUt09F+DYIFnC8f7XCRnOh1byr9Dt+QFf/4SpMdh7mY=;
+        b=HZoA0utLuFN2BrJ95ZDkBizPVqRHTMNgdDxGWJczPGza6qpKP4RdteZ7fy71RskKPK
+         KbGaOJL+iDpQgiq+IvLpaEZLjAQlrnS1OzDIbGNDtzpsyVMpYiZdzD4xBEOGtwNdXOVP
+         rGBQSWrGw5Q5GLNyTWGpgngMw8qSwJ5bo1W+CR/+5SxiQaUhf9dxTlvN/Jy013Zvm2eb
+         7xVIZV/FoC7DvJAyk77KhWuOqZy01tTBxyXPkr+3Yy3klal4KoIgUbCFrIaJQBlmvvnQ
+         jYixHaVHjXHuKlffqYij6DxViMig5LVdzkczw0h/zlBbBf3/5ilQrFC5NmsU56DSVvIo
+         2czQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743452880; x=1744057680;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QUt09F+DYIFnC8f7XCRnOh1byr9Dt+QFf/4SpMdh7mY=;
+        b=xIdq+kxhGoQqJVWqORXduhdp3qdGAedtraLbpzMj4+bdTpmgSEqe5Nnd260CTIDT3U
+         +pA4in3BkZUw+vQgKCQhLLrKuIDruqJdz4xQutfSeTyZJmg1NI1fVyg+T1xKp4T0HmAK
+         n+LqtrdVQBUIVkMrHp1G6IIiwzr+H9OtVgw3tUqBDO8L7bMWqwi54hgOQj+npLBy+ZRZ
+         zKguL6u0cDt/MYQsnLOqoOI5T7ViXaUh3lWM+Pz/1Dwc+5NZgWEO//fi4e6gujT7crFz
+         iFyE/2yDF7YzFNwdJrU/xE7mVUjbDipiuPD59R99G0bszdfbXGXHaO607Q+dycPPl/ZG
+         7Wbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCX4VnzFeizDKQxKOTKziaOuDXTRG6n4qrxJzaRdBT+4TcesUhll+L0XVU4u9tv8hx/vvy9X3Q2u2JN7nN@vger.kernel.org, AJvYcCX3IF3trOOy4BJvSaMpKI4VdQK0kc3LRpU7e67pZvpSVBEKF0SZsXkiCTFU9gbJALrHypyfvXxq0AiS@vger.kernel.org, AJvYcCXisxc3nxFznaeEvlAgTAukqZ1HdVHMDM9iqhofEI/NwhCALH335/WyqyxlpJbdJ55Jb2YrG8txWHEUX4dgWg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpzcwFB+dHTE2llz9/gPZc7RkZESu9cohnIol0KrOuHQxkMXiF
+	INxlgiC4UCOakUrTdo4OvDvSQZnenB76YXbZmWKX8CosqZL6aa1L2NKWB5rjbC8o4hJ84OAOtH2
+	mOKHxykcpTYfWMIO3fup4KTbdpw==
+X-Gm-Gg: ASbGncvxKTWcNnMmCKuVG40oH5Muw42zw1qv8zxc021NwZ4SzGDkFeCgl1Dy5zY37qJ
+	VN5sekhRhUEqeXdUOxAyZ0y8LsXPuDpc9EHVWCLwpt4VSp71wzVP2YSF8u/C9gdQIrwlGbJek3A
+	qFU85zIZ2KqxNDMABi9V0GT6AUvg==
+X-Google-Smtp-Source: AGHT+IGZ7aD+wTuJCUUTIE2voBO6WaNR+M71hW0FwWuRHRO+nbuXUQt2yRpKAIAzsQ1Ki+hHiXULVp/okC5PD1K/ujA=
+X-Received: by 2002:a05:6000:1848:b0:391:4b8e:a200 with SMTP id
+ ffacd0b85a97d-39c120e3f45mr7986223f8f.32.1743452879739; Mon, 31 Mar 2025
+ 13:27:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/4] net: pass 'optlen_t' to proto[ops].getsockopt()
- hooks
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, Breno Leitao
- <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
- Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, David Ahern <dsahern@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
- Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Robin van der Gracht <robin@protonic.nl>,
- Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
- Alexander Aring <alex.aring@gmail.com>,
- Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>,
- James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
- Matt Johnston <matt@codeconstruct.com.au>,
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Remi Denis-Courmont <courmisch@gmail.com>,
- Allison Henderson <allison.henderson@oracle.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
- Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
- Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
- Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
- Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jonathan Lemon <jonathan.lemon@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
- virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
- bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
- io-uring@vger.kernel.org
-References: <cover.1743449872.git.metze@samba.org>
- <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
-Content-Language: en-US, de-DE
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
+ <20250331073423.3184322-2-alex.vinarskis@gmail.com> <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
+ <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
+ <Z-p1uADNVAM9NcAW@hovoldconsulting.com> <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
+ <Z-rnvSKEysdDyj4s@hovoldconsulting.com> <siktv5i4fnkbjgzfwkztp3px3cxlhxuoxssmksr4ww5voe5heq@ttzkhisnyxl6>
+In-Reply-To: <siktv5i4fnkbjgzfwkztp3px3cxlhxuoxssmksr4ww5voe5heq@ttzkhisnyxl6>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Mon, 31 Mar 2025 22:27:47 +0200
+X-Gm-Features: AQ5f1JrvxkAG2q5VhnZZeDDpnCGBUwNe0xLpshq81zgzYXlp6gvsgRPSqtO2KTU
+Message-ID: <CAMcHhXrUZxG07OOA20FRkO+j+U0iiT0B4CpRaV2uZ0dwfyQpYA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
+ WiFi/BT pwrseq
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Johan Hovold <johan@kernel.org>, "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-PiBkaWZmIC0tZ2l0IGEvbmV0L3NvY2tldC5jIGIvbmV0L3NvY2tldC5jDQo+IGluZGV4IDlh
-MGU3MjBmMDg1OS4uZmEyZGUxMmMxMGU2IDEwMDY0NA0KPiAtLS0gYS9uZXQvc29ja2V0LmMN
-Cj4gKysrIGIvbmV0L3NvY2tldC5jDQo+IEBAIC0yMzUwLDEyICsyMzUwLDE1IEBAIGludCBk
-b19zb2NrX2dldHNvY2tvcHQoc3RydWN0IHNvY2tldCAqc29jaywgYm9vbCBjb21wYXQsIGlu
-dCBsZXZlbCwNCj4gICAJfSBlbHNlIGlmICh1bmxpa2VseSghb3BzLT5nZXRzb2Nrb3B0KSkg
-ew0KPiAgIAkJZXJyID0gLUVPUE5PVFNVUFA7DQo+ICAgCX0gZWxzZSB7DQo+IC0JCWlmIChX
-QVJOX09OQ0Uob3B0dmFsLmlzX2tlcm5lbCB8fCBvcHRsZW4uaXNfa2VybmVsLA0KPiArCQlv
-cHRsZW5fdCBfb3B0bGVuID0geyAudXAgPSBOVUxMLCB9Ow0KPiArDQo+ICsJCWlmIChXQVJO
-X09OQ0Uob3B0dmFsLmlzX2tlcm5lbCwNCg0KU29ycnksIHRoZSByZW1vdmFsIG9mICd8fCBv
-cHRsZW4uaXNfa2VybmVsJyBzaG91bGQgYmUgaW4gdGhlIG5leHQgY29tbWl0Li4uDQoNCj4g
-ICAJCQkgICAgICAiSW52YWxpZCBhcmd1bWVudCB0eXBlIikpDQo+ICAgCQkJcmV0dXJuIC1F
-T1BOT1RTVVBQOw0KDQoNCg==
+On Mon, 31 Mar 2025 at 22:15, Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Mon, Mar 31, 2025 at 09:06:37PM +0200, Johan Hovold wrote:
+> > On Mon, Mar 31, 2025 at 06:51:03PM +0200, Aleksandrs Vinarskis wrote:
+> > > On Mon, 31 Mar 2025 at 13:00, Johan Hovold <johan@kernel.org> wrote:
+> > > > On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
+> > > > > On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
+> > > > > > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
+> > > > > > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
+> > > > > > > combo chip using the new power sequencing bindings. All voltages are
+> > > > > > > derived from chained fixed regulators controlled using a single GPIO.
+> > > > > > >
+> > > > > > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
+> > > > > > > WiFi/BT pwrseq").
+> >
+> > > > > > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
+> > > > > > > X1-based Dell XPS 13 9345")
+> > > > > >
+> > > > > > Not sure what happened here.
+> > > > >
+> > > > > Bluetooth and WLAN definitions were missing, as at the time I only
+> > > > > knew the UART port being used for bluetooth, and was missing
+> > > > > everything else to describe it.
+> > > >
+> > > > Ah, ok. The above sentence looked like some left-over copy paste. I
+> > > > guess you don't need to mention it at all since this does not seem to
+> > > > warrant a proper Fixes tag.
+> > >
+> > > It was a suggestion from Dmitry in v1. Though indeed it does not
+> > > warrant a proper Fixed tag, as it is something  that was left out from
+> > > the initial series, I think it's fine to keep it like this, if it's
+> > > okay with you?
+> >
+> > I think you misinterpreted Dmitry here. He just said that after you
+> > added the reference to the commit you based this on to the commit
+> > message you could add his reviewed-by tag ("With that fixed: R-B: Dmitry
+> > ...")
+> >
+> >       https://lore.kernel.org/all/ou7w4hvbbz72nzrm45gfhpq2uzkuwpfudqeh2o34tcnbnazxgz@glmuryu5dh3s/
+> >
+> > As it stands it's hard to understand what that sentence means and why
+> > it is there (looks like a copy paste mistake). I suggest you just drop
+> > it.
+>
+> I disliked the original phrase "Derived from: commit subject". Instead I
+> suggested a different, more standard way, '... commit abcdefabcdef
+> ("commit subject")'. With that phrase in place Aleksandrs can add my R-B
+> tag.
+
+SMH just re-read it... apologies for the confusion. Will fix it now.
+
+Alex
+
+>
+> --
+> With best wishes
+> Dmitry
