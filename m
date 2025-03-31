@@ -1,117 +1,102 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919533234;
-	Mon, 31 Mar 2025 13:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5589213227
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743428736; cv=none; b=WiP1P124RdgJCcsO+49dYH+WcG65mIp9e5GrqJrVamxnKra+5YkhLxg7VvpgzMa/hG4iOPK9Ez/fMEv4E4yZ7yKSb/nYEDJnh253P6bRCPtLWkxN6l5gZagkY9mfq9wdPzvIIy/HeDwLSF6FM8Z/BdKzkhX6DaLYmhX4f3dj3mc=
+	t=1743428740; cv=none; b=ZXg33ljPBVmZtHfglisORkqaR2/njgR1vUs1VaEBZLbzo/K/xXsZPefA5v0eMYUdyR7g5psicO3mHwJKY/Oy+qRDLttTe+U8Ps6vJsllycRpKG/2HvOy6vkU/eTevYpKi5v+kq0i79mkI2haqsdYrXkDgOZxHvrpEfD0lj39sBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743428736; c=relaxed/simple;
-	bh=NTCru1twM6AuoKrQ04g241v64utTJ5vRDXMNNtjc05w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zm7QXZUyK0c030F9rS/fy3Pe3WfSnHZYnVnxqxG3q3D0J8wbtSvBLYBHhI5n20Ml6hHTAldOpFt02gPt1vQKEMAFy/oh7cyn38l0Z2GDRmGF5ojXwOO6UJ8HRT0pA1mZn2IqEYIlxIhNfZH4emfvMsB1Kv3M2AX1+JiCrZH/JXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=O6MG2Tei; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1743428740; c=relaxed/simple;
+	bh=aOlmFBzZTr+Z4QaTguhR409fdizg8sxch+ZSAM+K3/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QqwRDfAek3Wtqx/t5mcoI/J1OUHu7k3A+hKhZDc+qfS0A0Y8elyz8C5RZ7AqUY5ijgRFvlysUHbf9/pYRRGsRAUcO5r8VpsKLFiL3ZVrrk01pfjZudzDx9Pj+lcUF5gn5MG8JB8Uuqd6T6gznGtnCjiTWTzCN9rCtcuskgkp2fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNz77ELw; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="O6MG2Tei"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZRC7S75H4z9v2m;
-	Mon, 31 Mar 2025 15:45:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743428725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yNki/BaaXgqFuAU7Rhxq4DYyRe0qZNwLMs+MQ5hVwvM=;
-	b=O6MG2TeioBcAI1Qnb54BydAhuwf7Sbw68IacAKC7rClD0YCZTkxWf+oANHet08+Q4rOb3R
-	of0jNuOcN2rTJxe1WpK5J3ZVocemDBwGWUlGpft0fVQN7oElFkngn/CJO3Cujk/s7uOApj
-	rXtfDcWpqazz3Fjb0n6pCkvas8UIh4i40VO8lqjO5bWo4S0XyZ2E0RzgQPNu8IJGJPJmDU
-	QbIeQzaZ7uTSPQsEifpXENxQU1cD7sBJ3VbtXtBOshefcFPeHQaiKmSD+4X5RFHNysx8hP
-	lNAg0ssWH1K9brcMEa9uCjOj5LFO3BQREHj/rjRSJgquUE9C5BzN6XYq5cHeBw==
-Message-ID: <4b5fc903-f2c1-4e7e-8a4f-629566bff3ad@mailbox.org>
-Date: Mon, 31 Mar 2025 15:45:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNz77ELw"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff6a98c638so8979643a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743428738; x=1744033538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDFIPcBuRwgxrj+1+ohFmqtx+8KcK/O1S+ZXl0ksL7M=;
+        b=RNz77ELwRYHAs/KccwKdfOUhf6OasbVTE+HfUAOT/eRvOIdDo4jnBrnAkkk9gjNrL8
+         y3oEfsGY7pTHMru0QGcQQMe1y/I9B21DGbFJSDmjaN9tzD/R+WSs6PhOe7GPRTc/yebz
+         DzXR5dheBSuJaOUFh6yupCE3XPPjhHRD5AiZUAUJF5kCZhlYL93Hv27tVDhF1bxOeQTu
+         HzuTMzUw4sq5Ky1GOwH54/ztVnqN9kqZmidOMxcxJl8CLWPlFGjAe/IcOi+tTH7wveJu
+         HftkMjB668Ka4RXTS06S1i4pr1l6kc41cz9hwkluDofJmnzOuJWmYohxLLzz9hzNFWzw
+         O0JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743428738; x=1744033538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SDFIPcBuRwgxrj+1+ohFmqtx+8KcK/O1S+ZXl0ksL7M=;
+        b=GcMe3FG9FgivlMUIeWciaEXjOMQR8oat08zLd9QhOIoY9j3uTr6EMUniBZLkmxLVX6
+         ju5DxfFpr/ObfhdHc/emFFVCwOMFgXVO5xQs3lmHMjITjJ2mmULjGEnM6tN+VutyM5Cq
+         UsC0nIBfHKzWLNDE7X9x2T8raVfQ4Iuy9Yjr2Qg6Etj0L1mPIehZSYaOGmFnnpi6GH0I
+         otsnRsfd0bCAxHSS1TFePxr6qVdSy/FAGT0cwof2W1nBaqKxxgyQMLlsSRjflQP7eTCe
+         1jV1XM0bDBzlpbQA4kXZU2NbZc8tEQjccNCQaXhDSo3psYdjhc25pmvXsb7AIj3aYH6j
+         OiWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCE5IicsaHq62fF74V5nIG1jDXTZzfWA+1d1u22agOql4D+1WQtfhqZgO1OdzuHfSGcQ71FDY8zaxQVaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDgw/Cxsb7KRkwqxjdDAeS03uDjo8pJtG64ikRMgsQzdcHR7yh
+	sy+bn35L7vYmwF69gVDkFdNd5CqivxUTWxkse76IcRlD9zPu7p29FfB0o5Xly921qQe0cTjB9P6
+	OgD5phIJkyqgHEgem3535rB25uMs=
+X-Gm-Gg: ASbGnctFKgZjVFDBUyGYpgvXskvDAnQ1WDWloaP9cEMv+UARdv7lfWkfV58YGHTAi1h
+	Sz9dUU5ywYJYnnuzHvBH+8EWuGS4Mv7gkykAlNSz5XSIWxkXuWLuV196ZkD3DifG/ERcc8f0ZKs
+	wBiDHKyFlZuIaaED/SGqAqnt7iQQ==
+X-Google-Smtp-Source: AGHT+IG7eQvdLCXANjec8cgwFbTcMdCEAl8hgA2sYHgLaM5vanRKu3K7Py+t4ipQtdbmLb1st3IQAzxH09+63ff1xS0=
+X-Received: by 2002:a17:90b:3d09:b0:2ff:6f88:b04a with SMTP id
+ 98e67ed59e1d1-305320adb7emr15434423a91.15.1743428738260; Mon, 31 Mar 2025
+ 06:45:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
- optional aux clock
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84sk?=
- =?UTF-8?Q?i?= <kw@linux.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
- Kever Yang <kever.yang@rock-chips.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
- <20250330195715.332106-2-marek.vasut+renesas@mailbox.org>
- <20250331-excellent-nautilus-of-apotheosis-fbd30a@krzk-bin>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <20250331-excellent-nautilus-of-apotheosis-fbd30a@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: 8qjyfopxbb8111g3aaicaxtrreq91134
-X-MBO-RS-ID: a0dc09d5d8d0cbf734d
+References: <20250310-8ulp_hdmi-v1-1-a2f231e31987@atmark-techno.com>
+ <v57uy3gddzcoeg3refyv7h6j3ypx23mobctybt27xzdyqy6bgb@atzdlqlytz3c>
+ <Z861gsaGY6bGSisf@atmark-techno.com> <b2qwqacogz5vzfekhk5276owld6isgewu5a2iw3roag3lbtsgm@67vqf54c5tdh>
+In-Reply-To: <b2qwqacogz5vzfekhk5276owld6isgewu5a2iw3roag3lbtsgm@67vqf54c5tdh>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 31 Mar 2025 08:45:26 -0500
+X-Gm-Features: AQ5f1Jo2z6kzfmKJSOyma8wBydMAEZlyvY8zlwOFHnubdHzs4pQsCeI5AKenTec
+Message-ID: <CAHCN7x+WkhPQGLUqJ40SjtmhTXx=Fn2rkqw8NQ=qgaNnpK97zQ@mail.gmail.com>
+Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: return closest rate
+ instead LUT
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Dominique Martinet <dominique.martinet@atmark-techno.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Frieder Schrempf <frieder.schrempf@kontron.de>, 
+	Marco Felsch <m.felsch@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, 
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Makoto Sato <makoto.sato@atmark-techno.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/31/25 10:19 AM, Krzysztof Kozlowski wrote:
-> On Sun, Mar 30, 2025 at 09:56:09PM +0200, Marek Vasut wrote:
->> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
->> index bb3f843c59d91..5e2624d4c62c7 100644
->> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
->> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
->> @@ -46,12 +46,14 @@ properties:
->>         - const: app
->>   
->>     clocks:
->> -    maxItems: 2
->> +    minItems: 2
->> +    maxItems: 3
->>   
->>     clock-names:
-> 
-> missing minItems: 2
-> 
-> (xxx and xxx-names are always synced in dimensions)
+On Mon, Mar 10, 2025 at 11:12=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> Hello Dominique,
+>
+> On Mon, Mar 10, 2025 at 06:48:50PM +0900, Dominique Martinet wrote:
+> > [...] and I'm sure there are other improvements that could be made at
+> > the edges.
+>
+> One thing that irritated me is the function names. `phy_clk_round_rate`
+> sounds too generic. `fsl_samsung_hdmi_phy_clk_round_rate` is long, but
+> I'd say would be a better match.
 
-Fixed, noted, thanks !
+If Dominique won't have time, I can try to clean this up a bit.  I was
+not liking the names either, but I was trying to keep them small.
+I'll default to this convention more in the future, based on your
+feedback.
 
-> I understand that clock is optional? Your diagram in commit msg suggests
-> that clock is there always.
-
-The clocks which supply the PCIe controller ("ref" clock) and PCIe bus 
-("aux" clock) can be modeled as either, single clock (one clock for both 
-controller AND bus, i.e. single "ref" clock), or two separate clocks 
-(one for controller AND one for bus, i.e. "ref" clock AND "aux" clock).
-
-That depends on whether the clock generator (the 9FGV0441 brick in the 
-ASCII schematic in the commit message in this case) has one flip switch 
-to enable both clock (controller and bus, i.e. "ref" clock only), or has 
-separate flip switches to enable the different outputs (controller or 
-bus, i.e. "ref" and "aux" clock).
-
-So yes, the "aux" is optional from the software side, but on the 
-hardware side, the "aux" bus clock are always there. They however do not 
-always have separate flip switch to enable/disable them.
-
--- 
-Best regards,
-Marek Vasut
+adam
+>
+> Best regards
+> Uwe
