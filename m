@@ -1,111 +1,232 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF00B211466
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743460335; cv=none; b=Y9GDKroQkU2eDAxKnnkwTUx5dO/OholeOZ1I2g98kz6Bbcqitpv/3HrCj81Sgyp5TCqudTZwkIK9/90B1Ja1SNxU/QkgLx11vkBI+LIpsBrYECSMcrJNRaf3f14CrRtJyraPu/7cW+iY8YruRjL1/CJJZDcaRtZqcDPwTbtOKAQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743460335; c=relaxed/simple;
-	bh=duYComVcSrZm1zivb0WaYUxmTcBo+rXMqqI6zBYJuSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RrLsz6AWRrm9DHPdlE5kvdP8jZU9Fu0sj7rmaqSXSQ3AX0irQDN3FZXt5cFGsBCw3p4KVteDnkl4ouJ7dyfAvOn5YteNocyVWJbADnt3c5Kkl1VHriiXFRIKHuol+sMcabVfDLwvseDHxhHeJwAqHqmOsi90SU5+zgcf5CViR6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=M7b6tEPX; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF21E1DE3BE;
+	Mon, 31 Mar 2025 22:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743460552; cv=pass; b=GclLbCbMoaLxMRKHkk24Sf8BzkJElg3zRDYoogu4Mx0aAn8nqdSiNrbmKniufaQZwq6wc6328Zib7ph1oRU6SucZzpQtDTrcJd5pAb5IvK9cPrwzZFjPJPERi5aHd5N1vG4v9qqDJokcTKfNh109hCd78zy2fH0fp2gVCOmmV6U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743460552; c=relaxed/simple;
+	bh=CxAxPDZ5Yt8xLBwYUA5+ikXJ/5H9zBfzuEnXUkl1tqo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=PoKri+UabSFyiP8lt+j/kl4VDaY+zf2wx6nk8vkr5/sh0ReCgW8+3RGWvLRbSMod0/otfcfeR3XB4Iarc/JKguE0ngIKG8G7fQJGfTgRkbW7dQE/3kKvgj1V3oZ/y2+8ZZr/EEdFLnkToWmOQPzxFvvw65ryj3UVU85fQtxSVjo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=UHkZdidX; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="M7b6tEPX"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2295d78b45cso2052075ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1743460333; x=1744065133; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=42+7vZzvv2CakOTy9WwTzv8BPs/2UH1AMqRL6fkeS9E=;
-        b=M7b6tEPXIsr38AcJXY3EZWX6gL1xHlmkAJK1MJTejdlfRGgaC+iybsV8KLQRfP5W1r
-         qj/zpkbjHqhs/NpjMfUuWZ2LCIHm6NPkga8jFbjn1w5lHrVODzPn/bmTiQB67N4jLmQA
-         XXc/YGSDjoV1oi3KMQisSkibJcdKyKqhdY/Kk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743460333; x=1744065133;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=42+7vZzvv2CakOTy9WwTzv8BPs/2UH1AMqRL6fkeS9E=;
-        b=kn2lGplJna6OokB8o//lKNRWDLaYmOIq8wtQELUl9nULz90kYUIATd5cW9mI8DFui6
-         73PvPNEtpN5439UXJGvE7QezCl5f0VEplwdZD5P5cFehh/nF0ZDaWu/41pA6qENeqI0Z
-         wuJN4D8KPGFVky9hXAzzmBCy+zLmC/L5gbv44AkUI6Ts+2iAy/tj7r8hyWJZ/xtkv/z3
-         O4HzF26s+wMonw5tkDSFwZBFqXdNgGf4d0TcfdNjoB5ZSLsDNyLffMzQUVk6R5kjdGi2
-         y/qnlw33h68p3c2fAdtD1ZIgjDUQeF3Jgs5Xv7wpZ3jTs/v3xSm9C54+b+bhRtO4870k
-         APOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9gkPyyP3fYB6e7GI0WHrQHhb6shOuFrqSeZx8fg4TkAYLlukJ63JJ7pMWktvjc7/iLcw5xU0m24HyZYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+UYmKBqF3JNd9na6TIVLKlOuvBEA+Sxz6aaSCKIfL7r1qUrQP
-	n283UiJqoT9iD8TstDk3nKjJ0fbSrF4/FhgnnaQ7+6iDHpmo+tCibVJVgGZkUNM=
-X-Gm-Gg: ASbGncuStmNt13e1Lve9BvaYCcBkrHjn+eT5PA2LkUebpRm9FersKeeOgzWhAZyO+ia
-	rHvjFaxVrltinX61+vCmPVDCnw+lynTb4iMe36L/Q8PKLGt1OFInOc9OlOoXMExfB4phdOYLSqw
-	EZr00dP2hLVtcVByMJTfhnjkZjPFZMURgCs5INS1Z78Hscc7tx6fXasaeVu0cleBYRTwx6lfhsa
-	dPcRlgcWexJjNmtHYouaMeUFwbRtzj3btbed3s9Wpu2DXc4OoDhPWXI6Uy43QSwI6r+K/YcPZrZ
-	P3G6icrunzTrNSkAIF6D5abo9YxbH6oo8JthSpFPB29lsLA95TUKQ1Ui28Za7jlKlMcsJcEqX0z
-	Xrw4+M/EU5tz93eVv
-X-Google-Smtp-Source: AGHT+IGNbfbH3q4AAENJHHgORst/ra/i/SeRQsORO8675vroqpkxmTpWUqZCdVNz26ksHRE6FCMRSw==
-X-Received: by 2002:a05:6a00:170c:b0:730:8a0a:9f09 with SMTP id d2e1a72fcca58-7398041c86amr15268867b3a.18.1743460333136;
-        Mon, 31 Mar 2025 15:32:13 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710dccbdsm7765619b3a.179.2025.03.31.15.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 15:32:12 -0700 (PDT)
-Date: Mon, 31 Mar 2025 15:32:09 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
-	Eric Dumazet <edumazet@google.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [RFC net 0/1] Fix netdevim to correctly mark NAPI IDs
-Message-ID: <Z-sX6cNBb-mFMhBx@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
-	Eric Dumazet <edumazet@google.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-References: <20250329000030.39543-1-jdamato@fastly.com>
- <20250331133615.32bd59b8@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="UHkZdidX"
+ARC-Seal: i=1; a=rsa-sha256; t=1743460522; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=exVukdtysCb5OXZTJgDGh4+oDDujkcNrn2kXT1QUGD9SxY6zmaXnrIP5EAZx2vCJssUrmfRKkZPh6yGdlooVCD8H8pjv6ZiMf5JLsdzOSiSTvyj8wS/4fyhEfcRF4K5MGPtnrv1S9/elYm8u8nkty/wWjqNdziqIuOmfdbPdm7I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743460522; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2msDgzabCeuIJDum9dR+ovgiMk1K6LSZBK/IDwpF0IM=; 
+	b=gn4onwP/SLLeXdcxEwvNINxu1E699ou+coo0xKi2oqK/rtI1dYav20bFtYC26rtbkJohdjhHZ6hj/YOqSIN5RL8o9D4INhTXCeL6rIOdCjmxWZAVochBbGViLsMZv/IjPCbxWjWZcAxJQFH5mv4keXMxcv5xAG1L9vgfcE+XCyo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743460522;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=2msDgzabCeuIJDum9dR+ovgiMk1K6LSZBK/IDwpF0IM=;
+	b=UHkZdidX22fcA7ORTQKmRLT44Q3veQ+m2kF1kL3klqywreREPaijYtMe2RkQvPv3
+	3gQv/vjigf1ldrmY6qZdloWPFu53v2+Ye4fJGo5TIEO3KcfzafWRtBgITpHC7Ay0PaD
+	XJAHWweZ9d5+7POaMiDUEWflBeyFIYDfZ+4qf9fM=
+Received: by mx.zohomail.com with SMTPS id 1743460518368106.31940124900552;
+	Mon, 31 Mar 2025 15:35:18 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331133615.32bd59b8@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v2] rust: add new macro for common bitmap operations
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <ca81003c84618e7f8e73f777b9aa6576ffcc03e1.camel@redhat.com>
+Date: Mon, 31 Mar 2025 19:35:02 -0300
+Cc: Filipe Xavier <felipeaggger@gmail.com>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ rust-for-linux@vger.kernel.org,
+ felipe_life@live.com,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <16B126B0-DC90-480C-80F5-93EE9F922C71@collabora.com>
+References: <20250325-feat-add-bitmask-macro-v2-1-d3beabdad90f@gmail.com>
+ <ca81003c84618e7f8e73f777b9aa6576ffcc03e1.camel@redhat.com>
+To: Lyude Paul <lyude@redhat.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On Mon, Mar 31, 2025 at 01:36:15PM -0700, Jakub Kicinski wrote:
-> On Sat, 29 Mar 2025 00:00:28 +0000 Joe Damato wrote:
-> > If this net-next material: I'll wait until it reopens and send this
-> > patch + an update to busy_poller.c as described above.
-> 
-> Let's stick to net-next. 
+Hi Lyude,
 
-Sure, sounds good. I'll drop the fixes tag when I resend when
-net-next is open, of course.
+> On 31 Mar 2025, at 19:29, Lyude Paul <lyude@redhat.com> wrote:
+>=20
+> Sorry this took me a while to get back to, last week was a bit hectic. =
+I
+> realized there's a couple of changes we still need to make here (in =
+addition
+> to the other ones mentioned on the mailing list):
+>=20
+> On Tue, 2025-03-25 at 10:10 -0300, Filipe Xavier wrote:
+>> We have seen a proliferation of mod_whatever::foo::Flags
+>> being defined with essentially the same implementation
+>> for BitAnd, BitOr, contains and etc.
+>>=20
+>> This macro aims to bring a solution for this,
+>> allowing to generate these methods for user-defined structs.
+>> With some use cases in KMS and VideoCodecs.
+>>=20
+>> Small use sample:
+>> `
+>> const READ: Permission =3D Permission(1 << 0);
+>> const WRITE: Permission =3D Permission(1 << 1);
+>>=20
+>> impl_flags!(Permissions, Permission, u32);
+>>=20
+>> let read_write =3D Permissions::from(READ) | WRITE;
+>> let read_only =3D read_write & READ;
+>> `
+>>=20
+>> Link: =
+https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/=
+We.20really.20need.20a.20common.20.60Flags.60.20type
+>> Signed-off-by: Filipe Xavier <felipeaggger@gmail.com>
+>> Suggested-by: Daniel Almeida <daniel.almeida@collabora.com>
+>> Suggested-by: Lyude Paul <lyude@redhat.com>
+>> ---
+>> Changes in v2:
+>> - rename: change macro and file name to impl_flags.
+>> - negation sign: change char for negation to `!`.=20
+>> - transpose docs: add support to transpose user provided docs.
+>> - visibility: add support to use user defined visibility.
+>> - operations: add new operations for flag,=20
+>> to support use between bit and bitmap, eg: flag & flags.
+>> - code style: small fixes to remove warnings.
+>> - Link to v1: =
+https://lore.kernel.org/r/20250304-feat-add-bitmask-macro-v1-1-1c2d2bcb476=
+b@gmail.com
+>> ---
+>> rust/kernel/impl_flags.rs | 214 =
+++++++++++++++++++++++++++++++++++++++++++++++
+>> rust/kernel/lib.rs        |   1 +
+>> rust/kernel/prelude.rs    |   1 +
+>> 3 files changed, 216 insertions(+)
+>>=20
+>> diff --git a/rust/kernel/impl_flags.rs b/rust/kernel/impl_flags.rs
+>> new file mode 100644
+>> index =
+0000000000000000000000000000000000000000..e7cf00e14bdcd2acea47b8c158a984ac=
+0206568b
+>> --- /dev/null
+>> +++ b/rust/kernel/impl_flags.rs
+>> @@ -0,0 +1,214 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! impl_flags utilities for working with flags.
+>> +
+>> +/// Declares a impl_flags type with its corresponding flag type.
+>> +///
+>> +/// This macro generates:
+>> +/// - Implementations of common bitmask operations ([`BitOr`], =
+[`BitAnd`], etc.).
+>> +/// - Utility methods such as `.contains()` to check flags.
+>> +///
+>> +/// # Examples
+>> +///
+>> +/// Defining and using impl_flags:
+>> +///
+>> +/// ```
+>> +/// impl_flags!(
+>> +///     /// Represents multiple permissions.
+>> +///     pub Permissions,
+>> +///     /// Represents a single permission.
+>> +///     pub Permission,
+>> +///     u32
+>> +/// );
+>> +///
+>> +/// // Define some individual permissions.
+>> +/// const READ: Permission =3D Permission(1 << 0);
+>> +/// const WRITE: Permission =3D Permission(1 << 1);
+>> +/// const EXECUTE: Permission =3D Permission(1 << 2);
+>> +///
+>> +/// // Combine multiple permissions using operation OR (`|`).
+>> +/// let read_write =3D Permissions::from(READ) | WRITE;
+>> +///
+>> +/// assert!(read_write.contains(READ));
+>> +/// assert!(read_write.contains(WRITE));
+>> +/// assert!(!read_write.contains(EXECUTE));
+>> +///
+>> +/// // Removing a permission with operation AND (`&`).
+>> +/// let read_only =3D read_write & READ;
+>> +/// assert!(read_only.contains(READ));
+>> +/// assert!(!read_only.contains(WRITE));
+>> +///
+>> +/// // Toggling permissions with XOR (`^`).
+>> +/// let toggled =3D read_only ^ Permissions::from(READ);
+>> +/// assert!(!toggled.contains(READ));
+>> +///
+>> +/// // Inverting permissions with negation (`!`).
+>> +/// let negated =3D !read_only;
+>> +/// assert!(negated.contains(WRITE));
+>> +/// ```
+>> +#[macro_export]
+>> +macro_rules! impl_flags {
+>> +    (
+>> +        $(#[$outer_flags:meta])* $vis_flags:vis $flags:ident,
+>> +        $(#[$outer_flag:meta])* $vis_flag:vis $flag:ident,
+>=20
+> So we might want to make sure we have one of the other rfl folks look =
+at this
+> first but: ideally I'd like to be able to the type for an individual =
+bitflag
+> like this:
+>=20
+> /// An enumerator representing a single flag in [`PlaneCommitFlags`].
+> ///
+> /// This is a non-exhaustive list, as the C side could add more later.
+> #[derive(Copy, Clone, PartialEq, Eq)]
+> #[repr(u32)]
+> #[non_exhaustive]
+> pub enum PlaneCommitFlag {
+>    /// Don't notify applications of plane updates for newly-disabled =
+planes. Drivers are encouraged
+>    /// to set this flag by default, as otherwise they need to ignore =
+plane updates for disabled
+>    /// planes by hand.
+>    ActiveOnly =3D (1 << 0),
+>    /// Tell the DRM core that the display hardware requires that a =
+[`Crtc`]'s planes must be
+>    /// disabled when the [`Crtc`] is disabled. When not specified,
+>    /// [`AtomicCommitTail::commit_planes`] will skip the atomic =
+disable callbacks for a plane if
+>    /// the [`Crtc`] in the old [`PlaneState`] needs a modesetting =
+operation. It is still up to the
+>    /// driver to disable said planes in their =
+[`DriverCrtc::atomic_disable`] callback.
+>    NoDisableAfterModeset =3D (1 << 1),
+> }
+>=20
+> It seems like we can pass through docs just fine, but could we get =
+something
+> to handle specifying actual discriminant values for the flag enum as =
+well?
+>=20
 
-> Would it be possible / make sense to convert the test to Python
-> and move it to drivers/net ?
+This should be possible, as the bitflags crate lets you do that in =
+userspace. Their syntax is a bit different than what
+we currently have in `impl_flags` though.
 
-Hmm. We could; I think originally the busy_poller.c test was added
-because it was requested by Paolo for IRQ suspension and netdevsim
-was the only option that I could find that supported NAPI IDs at the
-time.
-
-busy_poller.c itself seems more like a selftests/net thing since
-it's testing some functionality of the core networking code.
-
-Maybe mixing the napi_id != 0 test into busy_poller.c is the wrong
-way to go at a higher level. Maybe there should be a test for
-netdevsim itself that checks napi_id != 0 and that test would make
-more sense under drivers/net vs mixing a check into busy_poller.c?
+=E2=80=94 Daniel=
