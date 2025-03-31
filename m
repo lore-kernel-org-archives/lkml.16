@@ -1,77 +1,106 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675CC1ADC93;
-	Mon, 31 Mar 2025 07:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A201C84A0
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 07:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743407733; cv=none; b=e8aArKlqPlkSdueqoIoQLaOG6UfZW5EMOtzC3UBursk2DzELQMnWEf0X1Rm/6qdbgUMWZrPmrs2U3RHIMS+LD897UDazzcfOTJ8EjKD0PqR94jjTt4SZgwcLK+nliVr/tzpOFE2yX4T8sdmQGr8MheS8OfSMrHSLMLMDzDjcMfk=
+	t=1743407739; cv=none; b=LUXaNw4cBaI9/WQ03+koV6jH1uNH0iHWyHhE5Y62Ti5EkhUnhe4ARqO98K3eMZtL/Rk/D1RvISdLz1kuZSTd28WhxGlhAcIBdUHLB11JiV/dPt8BB25h+W2OlHaD9gfJq/MYKhRWzoaWPHxsilqK5XyruRdSHxZCysVyBqFvf2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743407733; c=relaxed/simple;
-	bh=VUKbKBaVh3xlTZoUznJu12czNySEyMf6Vn5I0VYQZ78=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=feG2jWO7/jb9B5+MD+rFu28a0KvtkIRfQN9TNUOJ56BPrlLQP2S7ajfxaGsNuHcIlwpWeaLzWVcyDVy9dc/BAKVFF5A651vTZUzuttc6LLP15T/7xUOQkXO7dNIiHzHJqPT15yQWKwhYSRP6JuyKB+epw8StDunS8sLfjwEdhyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZR3MZ5SVBz5B1L5;
-	Mon, 31 Mar 2025 15:55:22 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 52V7t8AT046377;
-	Mon, 31 Mar 2025 15:55:08 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 31 Mar 2025 15:55:11 +0800 (CST)
-Date: Mon, 31 Mar 2025 15:55:11 +0800 (CST)
-X-Zmail-TransId: 2afc67ea4a5fffffffffb7a-972eb
-X-Mailer: Zmail v1.0
-Message-ID: <202503311555115618U8Md16mKpRYOIy2TOmB6@zte.com.cn>
+	s=arc-20240116; t=1743407739; c=relaxed/simple;
+	bh=WliF8U1ILHCsiMwS8P6jdATTIx02Pcdpo5FUAcN+sys=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GQjZ26wJ3t9mGTeI9ODXg4VA7a3JSZO+kUqTgSdkOLoNOUablPe9wyqUHa6Mr4rcTDAEpxN3qB5kGYrll21AmHjKW4R8cVBGCoW4canmMn26GAsVMHDpEEYXSmUGMAhqIpaaGYK16G9vUbPq/NymfPoN1/XRG305pCsi+WSlj9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g3E22Phb; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3E22Phb"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abec8b750ebso653064966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 00:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743407736; x=1744012536; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jhSDhknLfaKoAskNTlrl4k31o/FzwCgA7zXF8gqAJQg=;
+        b=g3E22PhbAYCXUhB5r1OZd2gRUVG91QT1qletnkOwtFoqx8YKMWpVC7M6hnCmxO/8wY
+         K1Bo5MctP0xNruDs54o5D/eHvS34YOmoPvkAKB8hfiwn9NdD57d2V+TlMpwUvpFGyI6q
+         sQwmoeaLQn/KN1Hzt1kLztUZ4LqdIkgzZ24enrGu/CyuZ2oAUUvweFdeuBSGcUj+3UoX
+         eOM1JI3+fAJs9Yt/h8j9OHjMpx42FhuPuk311qKhyxLNMssa7D8GfgIbAhAqcTwPupeB
+         5Pfk2L5PSz3aHYk0KVQdWTzI8odY1H86DB8N+dbiPKUNXbKn3Lh4LV37tFcN/uwC8y38
+         8Imw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743407736; x=1744012536;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jhSDhknLfaKoAskNTlrl4k31o/FzwCgA7zXF8gqAJQg=;
+        b=u8AY4MQA0fjdXGHv2uO6dAlcz4KQoa2PIEBTSQhEUfWa4yN3X7M+gcGcWu3jNMCLFV
+         jN0JKxVAYfl5rVVLw/UycJ6x1fVqGSWQbErsXrfRwbxgDhylnezBaK2omIv2bojQpmTF
+         cbi6BqKplfCvYyBrqR2zMmcBA5KTQvUgFzwUkxVWcjgXSgLfZrwV7/6wJpJHSTPkbkJY
+         +pl1b5gI0p2FICtZgQWVY33/giit/BBoFq4u0XOQRbp6/tNX6wCECQAi2XYcR1hS6EUd
+         +zRoaT/9cVWXaMkk9MnB8kEoVIPpgmKUCTJkPXw338D0dN3Iq6F0k0BY4xzbQNZcCyZY
+         wiDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpL9Hsy2vNpuQOFeK6gtooJVMyNNROBVXuJSeVzvNuTSzclClAm15+ab3iQNYxhzeEdI3MJGdbG0ItY70=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYTSRV9ib0fVnXcdbqsTvcRUJgiswLcy0xhDq6VyGeE9rNHu79
+	GlLSS8mBTVSHY+3ypk+F6F9xN3Zu/xnQqRipjj7GZcahM2PXI1SXgDVzMYitHqsT0KQv6AC+rKA
+	by2WnM/rTmcjuzf416X28fiTPVXY=
+X-Gm-Gg: ASbGncsEIjaTUxHYkp5Vkx3pQ0gXJvinGLBC02iYgfXzckw1WKmcb2HpsqfOguKhKTv
+	HCpEynVFo6KID8Ai70UtiHj9085czENCjHppGJHcZ3kYcpHlImhyE8IYt/yhSXQ5WMEJqHAswlN
+	rOsIWXwth8N+6mfEJFkRtrO3ZlIg==
+X-Google-Smtp-Source: AGHT+IG+P9tkPvhVhRPKISalG/60ZULdT19cun5J/nPAl6qjbLOBD+JT+BRWsBqhaBCLHd4636n+W5g3kjd2i/Cb1f8=
+X-Received: by 2002:a17:907:2ce6:b0:ac3:413b:69c7 with SMTP id
+ a640c23a62f3a-ac738be07f4mr640242066b.39.1743407735884; Mon, 31 Mar 2025
+ 00:55:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <james.bottomley@hansenpartnership.com>
-Cc: <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <li.haoran7@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBzY3NpOiBzY3NpX3RyYW5zcG9ydF9zcnA6IHJlcGxhY2UgbWluL21heCBuZXN0aW5nIHdpdGgKCiBjbGFtcCgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52V7t8AT046377
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EA4A6A.007/4ZR3MZ5SVBz5B1L5
+MIME-Version: 1.0
+References: <20250327160117.945165-1-vignesh.raman@collabora.com>
+ <20250327160117.945165-3-vignesh.raman@collabora.com> <v4dhuuuvfk63bakncz43z3ndjdze5ac7nrv6qvtpdnonfpetsx@5hh3vzcj336x>
+ <20250331-amphibian-hopping-bobcat-e19a0b@houat>
+In-Reply-To: <20250331-amphibian-hopping-bobcat-e19a0b@houat>
+From: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Date: Mon, 31 Mar 2025 10:55:23 +0300
+X-Gm-Features: AQ5f1JpQ9fyxYtLdrUedBGMD-ND6srXxfnPbzw0qqt2zxCvy4-i4JXwyMC3DrT8
+Message-ID: <CALT56yO-=nQnTB=H4L-qnta4js3FB=-WCOFj8q57PPWjLY+JKA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Vignesh Raman <vignesh.raman@collabora.com>, dri-devel@lists.freedesktop.org, 
+	daniels@collabora.com, helen.fornazier@gmail.com, airlied@gmail.com, 
+	simona.vetter@ffwll.ch, robdclark@gmail.com, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
+	lumag@kernel.org, quic_abhinavk@quicinc.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Li Haoran <li.haoran7@zte.com.cn>
+On Mon, 31 Mar 2025 at 10:53, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Sun, Mar 30, 2025 at 08:06:45PM +0300, Dmitry Baryshkov wrote:
+> > On Thu, Mar 27, 2025 at 09:31:11PM +0530, Vignesh Raman wrote:
+> > > Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
+> > > exit with a non-zero error code while configuring them as warning in
+> > > the GitLab CI pipeline.
+> >
+> > Can it really succeed or is it going to be an always-failing job? The
+> > dt_binding_check generally succeed, dtbs_check generates tons of
+> > warnings. We are trying to make progress there, but it's still very far
+> > from being achevable.
+>
+> It depends on the platforms I guess. Some are 100% covered and any
+> warning should be treated as a failure, and some have not started the
+> effort.
+>
+> I guess we could solve it with some kind of expectation list, but I do
+> wonder if it's something *we* should be focusing on :)
 
-This patch replaces min(a, max(b, c)) by clamp(val, lo, hi) in the SRP
-transport layer. The clamp() macro explicitly expresses the intent of
-constraining a value within bounds, improving code readability.
+I think that we might want to limit this to `make dt_bindings_check
+DT_SCHEMA_FILES=display`, checking all GPU / display schema files.
 
-Signed-off-by: Li Haoran <li.haoran7@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/scsi/scsi_transport_srp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/scsi_transport_srp.c b/drivers/scsi/scsi_transport_srp.c
-index 64f6b22e8cc0..aeb58a9e6b7f 100644
---- a/drivers/scsi/scsi_transport_srp.c
-+++ b/drivers/scsi/scsi_transport_srp.c
-@@ -388,7 +388,7 @@ static void srp_reconnect_work(struct work_struct *work)
- 			     "reconnect attempt %d failed (%d)\n",
- 			     ++rport->failed_reconnects, res);
- 		delay = rport->reconnect_delay *
--			min(100, max(1, rport->failed_reconnects - 10));
-+			clamp(rport->failed_reconnects - 10, 1, 100);
- 		if (delay > 0)
- 			queue_delayed_work(system_long_wq,
- 					   &rport->reconnect_work, delay * HZ);
 -- 
-2.25.1
+With best wishes
+Dmitry
