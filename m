@@ -1,54 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF02610C
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7B91D5CFE
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743408824; cv=none; b=Y8da/sAqZqQLlhdAWbi8OJSGzlRDIK9at7zsCeh+OSqZZavIcYKPfZQlF8yc/MpZO/rl9BiA7F+YYoYxUrsUKy94m1r4E7Fekgk1JCfiy0Od+8kERS4PkdksCHPLDuNqejaek32gLUUQw9JiQ5+r2mrjLnOCj1cfH9bV5HhJgsc=
+	t=1743408827; cv=none; b=Q5T4OGVwH5v3Zyp++KcSqmz2RDN/wSFgZFt5vVZJjd2cICEbDmgh0r3w9JAeA/WYo40NHXLsZP2BU9fcCRLl1msLObyjHdriumF6UMs9SyIWB1TJklfj5Sg0FlQ6I0Y4GqpBJiIRU3xMQWqVhB6LrEwr96yXwzXV+COEcBoNJ7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743408824; c=relaxed/simple;
-	bh=2JiYrpBVl6XdvWKj7WaOEE8WJ6+5V+5El6+IWhvBs+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=dVD+Q4pTeMladquJkR16FvJdqD/yz99pdeRCxeAG6f7OZGZFjWQ2yIK4b6Gp2L4g5pw5EgbVXtYaJSodNHrqDHZ1Yq2XkjbUPn+tWYrHD4VMiiXy4Uem/WssjGZeAlFu/r2iZ9CcvFrvuZZExnQEL6TfkmAAnYW39QnAp5OuV0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Th8CXlfU; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743408827; c=relaxed/simple;
+	bh=+4UX5hB7LOlseY8IDtLpOfVYFgMUwmkqQHjZeqNpum4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-type; b=AGEimkxhY7mluxPROGiwJEArYElRYRBXKpBbzydM1ddshSsfhu3L+NChwhyxMS8DOYSHBhLnSf0oTYp2VVxy7Yd+kdBG3dzw3aHvGyBsh2rB6YvB3/RV4Bk+l6IXLMljcehPxSU62PeIBy1BikF8XPw7bWPm41i1+bQTFSjR/VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NRhd73CI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Th8CXlfU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRhd73CI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743408820;
+	s=mimecast20190719; t=1743408824;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=U1L4z4A5qQuRlFgaFIiqebIixA+hbv9JLJ45IqQcZKE=;
-	b=Th8CXlfUqAy8+cx9ZmtRIUhTQ4xZ+c1ViFNayr8Bod0WGqH/RPY9EtyxUL3lDGuWcZ7LZ4
-	90FZ+kIHAumoSB1bE0Rjyr4554kz65TGwIqa5wIxrW5215ktPHpGebVs5jz9HHjasOZOn6
-	eXgGsrYxdY7lxK9lZZAIN6tyVVTk8wM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpQkE/o6UqynMHBaEyGhtuzDswvJwtgU/N8i6Bf76yI=;
+	b=NRhd73CIQN8UkT2dFrd0s1LgIJdbQUIDN3OAy28DKPdMpTqdry9AvkYzEaK1FaqwHUvM0K
+	+aSNoc1PXM7QqGE2um7t9w1Py1ex2/i1iMgfh83BzPI2l2Ljcvi87JEetFl5VqEEky+fBU
+	R/vh55GiCBJX3hlKrZqX5c71efMjPD8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-335-pGbmkiK7OkygVN7Kj_WL9g-1; Mon,
- 31 Mar 2025 04:13:36 -0400
-X-MC-Unique: pGbmkiK7OkygVN7Kj_WL9g-1
-X-Mimecast-MFC-AGG-ID: pGbmkiK7OkygVN7Kj_WL9g_1743408815
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-fGwKGbB3NxqKefEQ3WVoQw-1; Mon,
+ 31 Mar 2025 04:13:39 -0400
+X-MC-Unique: fGwKGbB3NxqKefEQ3WVoQw-1
+X-Mimecast-MFC-AGG-ID: fGwKGbB3NxqKefEQ3WVoQw_1743408818
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2008C1955DAC;
-	Mon, 31 Mar 2025 08:13:34 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C260180882E;
+	Mon, 31 Mar 2025 08:13:38 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.9])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A3141955BEF;
-	Mon, 31 Mar 2025 08:13:30 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2BCB11955BF1;
+	Mon, 31 Mar 2025 08:13:34 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: akpm@linux-foundation.org
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	yanjun.zhu@linux.dev,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 0/7] mm/gup: Minor fix, cleanup and improvements
-Date: Mon, 31 Mar 2025 16:13:20 +0800
-Message-ID: <20250331081327.256412-1-bhe@redhat.com>
+Subject: [PATCH v2 1/7] mm/gup: fix wrongly calculated returned value in fault_in_safe_writeable()
+Date: Mon, 31 Mar 2025 16:13:21 +0800
+Message-ID: <20250331081327.256412-2-bhe@redhat.com>
+In-Reply-To: <20250331081327.256412-1-bhe@redhat.com>
+References: <20250331081327.256412-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,38 +63,37 @@ Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-These are made when I explore codes in mm/gup.c.
+Not like fault_in_readable() or fault_in_writeable(), in
+fault_in_safe_writeable() local variable 'start' is increased page
+by page to loop till the whole address range is handled. However,
+it mistakenly calcalates the size of handled range with 'uaddr - start'.
 
+Fix it here.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
 v1->v2:
-- In patch 1, I carelessly copied the fault_in_readable() as
-  fault_in_writeable(). Thanks to Yanjun for pointing it out.
+- Fix a patch log typo caused by copy-and-paste error. Thanks
+  to Yanjun.
 
-- In patch 2, I copied the code in follow_page_pte() to
-  __get_user_pages() directly w/o adjustment which is done but not
-  merged to patch. That failed testing taken by lkp test robot, thanks
-  for reporting. 
+ mm/gup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Baoquan He (7):
-  mm/gup: fix wrongly calculated returned value in
-    fault_in_safe_writeable()
-  mm/gup: check if both GUP_GET and GUP_PIN are set in
-    __get_user_pages() earlier
-  mm/gup: Fix the outdated code comments above get_user_pages_unlocked()
-  mm/gup: remove gup_fast_pgd_leaf() and clean up the relevant codes
-  x86/mm: remove pgd_leaf definition in arch
-  x86/mm: remove p4d_leaf definition
-  mm/pgtable: remove unneeded pgd_devmap()
-
- arch/arm64/include/asm/pgtable.h             |  5 --
- arch/loongarch/include/asm/pgtable.h         |  1 -
- arch/powerpc/include/asm/book3s/64/pgtable.h |  5 --
- arch/riscv/include/asm/pgtable-64.h          |  5 --
- arch/x86/include/asm/pgtable.h               | 15 ----
- arch/x86/mm/pti.c                            |  4 +-
- include/linux/pgtable.h                      |  4 -
- mm/gup.c                                     | 79 ++++----------------
- 8 files changed, 15 insertions(+), 103 deletions(-)
-
+diff --git a/mm/gup.c b/mm/gup.c
+index 855ab860f88b..73777b1de679 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2207,8 +2207,8 @@ size_t fault_in_safe_writeable(const char __user *uaddr, size_t size)
+ 	} while (start != end);
+ 	mmap_read_unlock(mm);
+ 
+-	if (size > (unsigned long)uaddr - start)
+-		return size - ((unsigned long)uaddr - start);
++	if (size > start - (unsigned long)uaddr)
++		return size - (start - (unsigned long)uaddr);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(fault_in_safe_writeable);
 -- 
 2.41.0
 
