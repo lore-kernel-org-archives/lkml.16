@@ -1,113 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B041E2853
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 11:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5871E104E;
+	Mon, 31 Mar 2025 11:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743422130; cv=none; b=i2bzhAxD9pkFTa+gknWiq1O8ct7dISbfVtO5iFCXyYA4yMMjpnvhAv67KlC9HoD2LiO1iATBjBLfOnTiMnBfP/iPoh2e91+rTVYebN7uy0v3a2Elro3y4PFHkJoRhgEildRGmxxf3Vi7aEOrkeW2L4ArcIuQyyi8i17UhdM3HFw=
+	t=1743422186; cv=none; b=sXecmRNKt0OlusZPbj2l3Rmx6TkHnKGxtSLbcea4DTO6ViWhV9KZ+RrlAQrvA8+w7YiFAnvNbg8akXzdM0eWHPNre6L9cV3AZrVVzC2C9u/IVT4Ps8GBLR4sE6Y31fReHJcZYuLhBkHptgmQz0rO4SA4YVc4Y0af7Qbvm8k4l5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743422130; c=relaxed/simple;
-	bh=IfKoGBus3XxnOx/EbhJyIHcZAT8tY6wMOpjs9940+9E=;
+	s=arc-20240116; t=1743422186; c=relaxed/simple;
+	bh=+2tIP000T17A8Oc7t3JMilpXBYVfCrNZDt+OW//gigc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jho4lHZQGzdANmQoGlonnu0c2kruCdT6qlNTh40e+IYnuJYwL6/fKeXsXOTov3xgvZ6wU0ZhSEllv8I3MCYqP+b5hlCi0PVnIGWrYoEAE6Fd5/6zeThwIdoGYX8ufuYOa1SqwCR2+4fr4cMmOyCNfNR1qIPQnyt8gMeKqozU7wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKsX9Vti; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKeLwxvrC0cxzWJy6YnTZpVv9WNqRLcOnj5f80V3wMogMFsMT2MtRceUz0mMdOVkxdoI9GL0282jLPnaSqkTgYS3pGQD07Tqy8DVd6Za4KRu2F0u9gsd6yMVj0YVcOx7LQw6uNReCsewTG3URZevs6v2orjBavzn+obxL5NtwQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKpUSAvL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKsX9Vti"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 102B2C4CEE3;
-	Mon, 31 Mar 2025 11:55:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKpUSAvL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB87C4CEE3;
+	Mon, 31 Mar 2025 11:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743422130;
-	bh=IfKoGBus3XxnOx/EbhJyIHcZAT8tY6wMOpjs9940+9E=;
+	s=k20201202; t=1743422186;
+	bh=+2tIP000T17A8Oc7t3JMilpXBYVfCrNZDt+OW//gigc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKsX9VtiaObQCNuzdJ5wcupoBxXA4yB//8z8dR6AH2ESnFasctuhbwsz8DY+/Pnq8
-	 grpyxY/OmQs5lGr/2F9GtdERJDBcWIdF39q4HmnyAIU1N9s5gknBYp9i+lHRC84wCL
-	 t+RTDe62zzZ/w8lW5bFN8iVfEDwQXP9E2kTlgJgazAIYlZHd7gajdEh9gClj1rfsOm
-	 B0nw4LCVVPCOWU6xH09R5ZFS3IPZhyp/0M60Syk1d+Pzk6PmO9Gt3HbgSx3Qk2VGQg
-	 aK3B5/hEdGAaeqh88Z3XZrBe9m+8ZZIdwgrI2sbIcjljG7hAME7oNKNGc5pBgh+D+N
-	 xTSD9izmuGcKA==
-Date: Mon, 31 Mar 2025 13:55:25 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>, lkp@intel.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
+	b=jKpUSAvL1CD7IFs2UvGzkDo6iHdIfzQXRDwjWfHvPmUJXwX5VGnSEK1Dc8jjBYk/Y
+	 d/fwhHzvd1jUrQg/Pr6jlSYhv3ZOImcnFKf8CXC/qPn449d14yAFi8NkZkC8WNDVbE
+	 o8vKw8u26lGFPt26pgXotQ0+SOEgLIeQJTun+kMtKE37T6cJ12XoRp6DyfW7g1J/4s
+	 Oq9G75tUw4lGyZVDZ06iFHAhfXkEWNX8NeLhmb9q1WM47lsb/87ahYEq0qBRP1o59F
+	 J6fh9Ha6fLZQOhtzpk69py7w7LeXSzchJlb/ermD0d7mBLIu2ZHhwgqXbsEeShvoJF
+	 Rs05onYuLQpvg==
+Date: Mon, 31 Mar 2025 12:56:19 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes and updates
-Message-ID: <Z-qCrbNvP2cil6jJ@gmail.com>
-References: <Z-cSQXJKMyBSfAAc@gmail.com>
- <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Lutomirski <luto@kernel.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2 12/16] selftests: vDSO: parse_vdso: Use UAPI headers
+ instead of libc headers
+Message-ID: <708e303e-4de6-4322-8065-1dacf0cc0d53@sirena.org.uk>
+References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
+ <20250226-parse_vdso-nolibc-v2-12-28e14e031ed8@linutronix.de>
+ <af553c62-ca2f-4956-932c-dd6e3a126f58@sirena.org.uk>
+ <c7bea938-ee3b-477e-9ed0-db29ca02a538@sirena.org.uk>
+ <75ea2dcf-0ba3-4076-9a54-6b39e4e72a3d@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KalBa86xIdoMygpC"
+Content-Disposition: inline
+In-Reply-To: <75ea2dcf-0ba3-4076-9a54-6b39e4e72a3d@linuxfoundation.org>
+X-Cookie: The Ranger isn't gonna like it, Yogi.
+
+
+--KalBa86xIdoMygpC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
 
+On Fri, Mar 28, 2025 at 05:08:26PM -0600, Shuah Khan wrote:
+> On 3/26/25 07:02, Mark Brown wrote:
 
-* Borislav Petkov <bp@alien8.de> wrote:
+> > This bug is now in mainline.  A fix was posted by Thomas the day after
+> > the original report:
 
-> On Fri, Mar 28, 2025 at 10:18:57PM +0100, Ingo Molnar wrote:
-> > Linus,
-> > 
-> > Please pull the latest objtool/urgent Git tree from:
-> > 
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-03-28
-> > 
-> >    # HEAD: ae958b12940bcd4ffa32c44684e4f2878bc5e140 objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
-> > 
-> > [ Merge note: not all driver fixes below have maintainer acks. ]
-> 
-> Btw, test bot complains:
-> 
-> https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+> >     https://lore.kernel.org/r/20250321-uapi-consistency-v1-1-439070118dc0@linutronix.de
 
-AFAICS that particular report is not a new regression, but essentially 
-a test-bot false positive due to a reporting change, because the 
-objtool warning output changed.
+> > but it has apparently slipped through the cracks.
 
-This can be seen in the full report:
+> If this is going through tip
 
-  https://lore.kernel.org/oe-kbuild-all/202503280703.OARM8SrY-lkp@intel.com/
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-  All warnings (new ones prefixed by >>):
+> Otherwise, I can send this up
 
-     arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
-     arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
-  >> arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: skipping duplicate warning(s)
+Given that this hasn't had a response from tip for several weeks it's
+probably as well for you to pick it up - I was considering sending it
+directly to Linus myself.
 
-Note how '>>' is the new warning - the summary line added recently that 
-suggests that there's more warnings. It appears to me the test-bot 
-considers the other warnings old regressions, but I couldn't find any 
-trace of them being reported before. Maybe they weren't Cc:-ed to lkml.
+--KalBa86xIdoMygpC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Or maybe these *are* all new warnings. I've Cc:-ed the LKP folks.
+-----BEGIN PGP SIGNATURE-----
 
-To add confusion to confusion, the test bot also incorrectly attributed 
-ae958b1294 for that new warning line, and incorrectly categorized it as 
-a 'recent_error':
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqguIACgkQJNaLcl1U
+h9AmYwgAhU5OAjRIyrT55ORFUEnAgksOlpfOa+SMX3JjNaLJjSNnBKc9lpq1L0Zv
+3Gzudpo//l44I7kiHFHhujQhH1A5FwGBd8pghgzbu6lICqABVXqdBaQ/6x6qE/VW
+v2N8s9oVgeEtybhAtZb2MGo1Z43LrIzHVV6p1aJI8EHklaNqTzQHXCabK+hEVZKx
+QC8tTWgy2uNqxzGGmJTXrW949sTqpO2nhk0EqnejnjCEjI9C8iR01GCj0XOum4sT
+mk3BX8OdBX1pdZO8PhSgfnsccB11czt+FR+gGO3QcqiuJ4bnkm4ypOKJqrYdMDfc
+rR7IUBjoKGYr/QFro/1Uae0npyqFtg==
+=u7w3
+-----END PGP SIGNATURE-----
 
-  recent_errors
-  `-- loongarch-randconfig-001-20250328
-      `-- arch-loongarch-kernel-traps.o:warning:objtool:show_stack:skipping-duplicate-warning(s)
-
-While the commit that added this new reporting line is:
-
-  0a7fb6f07e3a ("objtool: Increase per-function WARN_FUNC() rate limit")
-
-... which is a few weeks old and already upstream. We didn't get a 
-loongson related test-bot regression report for that commit or any 
-other commits, other than the weeks-late & self-contradictory report 
-against ae958b1294.
-
-So something's wonky with the test-bot reporting in this particular 
-case for loongson, or my parsing thereof.
-
-Thanks,
-
-	Ingo
+--KalBa86xIdoMygpC--
