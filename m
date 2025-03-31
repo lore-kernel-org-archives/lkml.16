@@ -1,131 +1,125 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6D1524B0;
-	Mon, 31 Mar 2025 08:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A6038F80
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743411598; cv=none; b=ikdevxV3vkHZyvl1MfeYGJK6Ngkme13jNStungHlMnAKYENXhkfYyVt407v6RLIaAf+hPFq9Hb3PMzTZbCGHaALIoEhAcvgc7Bn0/HIBxEFHhQB6OZa6GHNXLSM2cmajEhdDcQUc0iEwP/6XR5TS6qnUzXBfVXi1yynLrPDhNRg=
+	t=1743411621; cv=none; b=SvaAmzGGPwiZue07NSIyC7pRpltLjG/82omFwVaBLJKDLFHHqzoUhJPJKnB03k/xTJEb4A5/23MK6z1zVMoGZnL/QPTr1FWILwfhCRVNkcRmIhaCNctXCJ55rKS3+onJ0Q+W9DGQuhbGIIpDPXXRp5Q7fECOxXaxKmtrcvt2dGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743411598; c=relaxed/simple;
-	bh=wlyMiRRTUhq1gI4BBk63IVi+E60IuUm2kFWUlnj55KY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=anLL3HMs/zkyfjP981rxq3J+yKe6vMw/Iy9+qDZkF46yW0Du00MddZsigZRef4/235vVoNGmd6bpHonOWX4rpcCp3XrxFz2Y5/UzGcoXFss3rDUWMiXBYJI6xBSRhz+fXTuHwwSgXUmg34bpSMWI6xMqRSPgNzk8OHJYm8G+M3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P63v/gXs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743411621; c=relaxed/simple;
+	bh=v7tLcJ4KCEXdgMy0Z4f5e53nvxHCOsUKT/C3dzcNbdo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M43INo13TGsqkJ0a/cXX0MoWnELdhgkKDJ//KTgNdjt4cywupNKbyiywTTQDprdJ2czNk7cyHvdIM4yjDCUSy05uEAk3MoQJksVYvmGX38eElgUmzT3Az1WG+nfRzllULfash8ThugS6znl74MycFzcEsBd2pk8qONMKtdrXqmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TFBpf9t1; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P63v/gXs"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UKauVs020777;
-	Mon, 31 Mar 2025 08:59:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=/02MeeTgr+edfUre6+XCDI7lrRPKBN
-	s5wpBz5Bd11FQ=; b=P63v/gXsRF4hDLy7ssEBBwh/kzsyGiOtp0mumcM5+A/LNj
-	gdY0eBuzdPTmuXOhURZupJ1YyCReKhjV+btHVIxdh6bjRaJyvFsMnji9ym0MycpW
-	FQ/tEiPUhIT3tmZjgUk0k8RfDGEkMM5umV5et3jPN0aBemzHNEpTH7otsAqg2D2s
-	IgiQKjGXwzD3QmqVQYFZ00JQ3UFfmml/HrvUYzWU2spcPKwRznX4azB8E9B4uB+1
-	1QpX2jha71AOh/TNdKabH257Nmy0qCW899l9HxKC4fFcsNGdaAqFdrftLmaLGGiG
-	2KPUxEHGLnOeqqSwgqWBfYVrpnKHZUpIb/RQpJew==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q286v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 08:59:20 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52V8pdhP010589;
-	Mon, 31 Mar 2025 08:59:19 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q286t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 08:59:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52V5GId8014560;
-	Mon, 31 Mar 2025 08:59:18 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pvpkw19g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 08:59:18 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52V8xEMj54460792
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 31 Mar 2025 08:59:14 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B244A20067;
-	Mon, 31 Mar 2025 08:59:14 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D62920065;
-	Mon, 31 Mar 2025 08:59:13 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.74.246])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 31 Mar 2025 08:59:13 +0000 (GMT)
-Date: Mon, 31 Mar 2025 10:59:11 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Steven Price <steven.price@arm.com>,
-        Ryan Roberts <ryan.roberts@arm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/ptdump: Split note_page() into level specific
- callbacks
-Message-ID: <Z+pZX2QmFnNnnjZ5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250317061818.16244-1-anshuman.khandual@arm.com>
- <20250317061818.16244-2-anshuman.khandual@arm.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TFBpf9t1"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39143200ddaso2703641f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743411617; x=1744016417; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N1IBOWlmSPjl/qOULwvIZ+UlkPZzTg2mkUy3jia7vS4=;
+        b=TFBpf9t1DjuLXpW9CQlhVPxg8CxRxQ17r5lGGbOR+m/raDUpvSCUQl2ZhnGFAICnM8
+         5M1LgfSgOAtmyQvOwy5DoJj1SYvJC2NsybK8NVloLRq+iHB4yoW2AKVtD3Jixb4epc0o
+         zqXFbH7a7gD8ZPMElueG0Wmpls5X8mdwLOSRtvv+BAMSqVedlWDXkXm/ZgR7DSxLvG6g
+         zJPndJXVFWsstJ6ZtLXpBfHMabiXB7VQzBBowmvroZ0F4xwewZcJvjJdoHSAtV1pKvuU
+         ZM0uwPIod7Pb73gWmmnLqniiXap0Ky5JlItyGTT4cYlTMXuzbGOoX2Ibju00ixGsGwNH
+         eecQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743411617; x=1744016417;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N1IBOWlmSPjl/qOULwvIZ+UlkPZzTg2mkUy3jia7vS4=;
+        b=hn0+n3uycwIqsUraROicxlY6cQORlR1RzvXhHbT5O5l8SW1kZsxwkXnkQ6cOxdhW6P
+         obQ7InNvJrSOBX/nzYzryEwkhNpemyQ/NJGnm7IuwYCoWwwWXbjoZDR1muRy03CGwhuI
+         8iv8WclHKj0q+J9h3bWaRl3iAj94nTRqPrwRiNtYl6y0bNVDZzNmCnUU+OFC9XyiFKke
+         768VYM0PNZBmDdIJpxG1+DBLWBvIyO0eCGJACtKcHZ4ZODLyVEwmvj35wPZB1/bJ+6a2
+         ATqpxhldsaGFLzHgJASY0iugHILkCIxWmfp+prMuN0fkoIfAuNeVhdDpacvI2fcPjzpH
+         SOtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWF98ATP8Z/RiGi3JK4eS1/B4LLQ3qyAgmJ55DOpfhY4FgH9b1xZXZ0u8ycducya3eixHYOPYHoqhZJDZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa5vh5zP7gYOrs8zjgCT8m+jGdiOyLHDeDCYbWt19F8yaQpKjI
+	F35v09j9sa6+b/6Vubj4TYWv1fXO/VGK6lfeXFTQRcskhu8ponvmlfYzRjnL9QoCIvWy92an5zj
+	O
+X-Gm-Gg: ASbGncuRt6Oc6hPqrddPFfVynqAG1nPOr/X0hkha+OmjeFl/umIegdQtedJr0rBhsgp
+	a/vm9X9eNy5DPuhnY3oRtS+r4I5uyv5dIMW0sytUvPg5pAhFlR4lSBh/M1McIDhSvAyvs+M55n+
+	TVwX67hcYpMwyc5iky/06eqPQuTjvuLCSak5dyP9+V51sdgb7OmMjGbCf32tx0qVcre7F8XHml2
+	gO5UetMIh198doJx2IvGIY1CX+MmT48e/TXKu1MXi/evlYtivlDfLUpMKZQ/3SwvyoNCy2cLVlO
+	3PNhzZjeZncf5/ahrV+UQA2qGtIv9++IsPPNMA==
+X-Google-Smtp-Source: AGHT+IF6GtxsUjy8b8ARooWkJGdAr6pfTmfW20nD+iszVDzmwRSBmVVIz43PDzQ5UHRtJQ1GaC8qHg==
+X-Received: by 2002:a05:6000:4007:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39c1211cfe1mr6348863f8f.47.1743411617316;
+        Mon, 31 Mar 2025 02:00:17 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c1db:ad07:29d1:fc13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff042bcsm114534115e9.28.2025.03.31.02.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 02:00:17 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/3] gpio: deprecate and track the removal of the
+ GPIOD_FLAGS_BIT_NONEXCLUSIVE flag
+Date: Mon, 31 Mar 2025 11:00:08 +0200
+Message-Id: <20250331-gpio-todo-remove-nonexclusive-v1-0-25f72675f304@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317061818.16244-2-anshuman.khandual@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: FB8uw0hSchlofFmG1jPA1lzwCpmzLf0-
-X-Proofpoint-ORIG-GUID: 3iKHP7Q1z45fUexTKfPdZicsNHs_J4-s
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- bulkscore=0 clxscore=1011 mlxscore=0 adultscore=0 mlxlogscore=741
- malwarescore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310063
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJhZ6mcC/x3MTQqDMBAG0KvIrDvgX6J4ldJFTb7aAc1I0oog3
+ t3g8m3eQQlRkGgoDorYJImGjOpRkPu+wwQWn011WZuyaSqeVlH+qVeOWHQDBw3Y3fxPkgHfd6a
+ 1HUZjKR9rxEf2+3++zvMCBrlDPm8AAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1121;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=v7tLcJ4KCEXdgMy0Z4f5e53nvxHCOsUKT/C3dzcNbdo=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn6lmcK5t7/9VzwMytuOcenSGVV4qaCDE685JL2
+ n7aLadrheWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ+pZnAAKCRARpy6gFHHX
+ cvrIEACCd7r/j4TDt245ntgK+F5T0BJrFQInhKBFcVBVL/TK1eRIgANzfVTWjb7BQs67MyUeBt4
+ 1VHXbJuQhhzaBsPZKLKOX/OxbHTYlXcxu7Cwrh5gOAM6ccL3p85unFpdxkZufrtEBk8KYTE5k18
+ ojcBGreZ9VPS8eSKU4Ud1KsE6F+ye2+I9IQ0yk7h+Nu51oC14RpiUKSFjzOM3WkLJEPBPuEl4nk
+ bEYHjiK5INrWFldsk7zxOOdwz5Ohl4k+1hi+i2uDEoM1BUxyL5/l98iH+7M7psHRS5rQ1ooUNzz
+ TM2vmLsHyOR67Ai5gYXrogx/qFSHuV79/RgY35SFze226tBlOG4JHLtQbfyRl9p/5Zuv9cP9LpZ
+ PuGqy6PTwOMVxCAQA4R06h9YYTzJ19YF9OX9vxOvGXAbHYgg+J5r8qpnCf5YTrMLTMv51qO6KZt
+ Ct1/rsUCOuSHgRvF9Nw7CwZNiAw6Rj5/aDej4qoAj52fznkDjiSOc8CD52MV8pYG7tAx+HF9vh/
+ WjpRl5UxHE52qnCSWzsf3KjCiadFsrYxCDicRiX/H1vdMKbtwZ6VUSlyhHm70FYaTSnX+SUyEfQ
+ lt1t7E+w+JTXJGcLhWLhbpmo/BT50bYw10QV3tHw54Hzl/KObJQnghu8HUzuwzYzbjBlwBBvBg/
+ 1wK/xU30lxoz7kg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Mon, Mar 17, 2025 at 11:48:17AM +0530, Anshuman Khandual wrote:
+This feature is another pet-peeve of mine. It's a hack that people
+started using and now it's in all kinds of drivers. It doesn't really
+explain what it actually does, and it implements it badly.
 
-Hi Anshuman,
+Let's deprecate it officially, add it to MAINTAINERS keywords so that it
+pops up on our radars when used again, add a task to track it and I plan
+to use the power sequencing subsystem to handle the cases where
+non-exclusive access to GPIOs is required.
 
-...
-> --- a/include/linux/ptdump.h
-> +++ b/include/linux/ptdump.h
-> @@ -11,9 +11,12 @@ struct ptdump_range {
->  };
->  
->  struct ptdump_state {
-> -	/* level is 0:PGD to 4:PTE, or -1 if unknown */
-> -	void (*note_page)(struct ptdump_state *st, unsigned long addr,
-> -			  int level, u64 val);
-> +	void (*note_page_pte)(struct ptdump_state *st, unsigned long addr, pte_t pte);
-> +	void (*note_page_pmd)(struct ptdump_state *st, unsigned long addr, pmd_t pmd);
-> +	void (*note_page_pud)(struct ptdump_state *st, unsigned long addr, pud_t pud);
-> +	void (*note_page_p4d)(struct ptdump_state *st, unsigned long addr, p4d_t p4d);
-> +	void (*note_page_pgd)(struct ptdump_state *st, unsigned long addr, pgd_t pgd);
-> +	void (*note_page_flush)(struct ptdump_state *st);
->  	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (3):
+      gpio: deprecate the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag
+      MAINTAINERS: add another keyword for the GPIO subsystem
+      gpio: TODO: track the removal of GPIOD_FLAGS_BIT_NONEXCLUSIVE
 
-Should you treat effective_prot() similarly?
+ MAINTAINERS                   |  1 +
+ drivers/gpio/TODO             | 14 ++++++++++++++
+ include/linux/gpio/consumer.h |  1 +
+ 3 files changed, 16 insertions(+)
+---
+base-commit: 405e2241def89c88f008dcb899eb5b6d4be8b43c
+change-id: 20250331-gpio-todo-remove-nonexclusive-ed875467eb56
 
->  	const struct ptdump_range *range;
->  };
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
