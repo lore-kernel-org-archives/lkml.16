@@ -1,121 +1,325 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05842165F3
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0856E21ABDD
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452590; cv=none; b=GHMu2w4wMw4QVx0VH49pz5VJywd8dGrGYpwEbnsUOyrMIcgzeZ2oaNlbUU7VGzFSKP0NRKFvWZBSDVg8TVwySVmyO3YPWbP7/Sux5/BB4jWy/ldzQKLNDH7VyWehFaJl8jKg3YaLsJEBszIafbjyJvudJmP2h1PHZPmqF6FPOzQ=
+	t=1743452603; cv=none; b=U9xMpLMAniM1VPnut8piYBOu+Ti3ibnksxNm16D9q+XOB2OIgwzyceykci3Jf/7ssWY/ZOwJE0/XkIVkK5xqe7MAyzdeVp14JEib09UJiSM4/H94mP4YylFx4xhHQGfHI+RIvEA8cq1mXFdewoNYtbIbIm56Ou/r1qCj8jftVHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452590; c=relaxed/simple;
-	bh=2GfGlNKbYEd6eGd8KETFvs5J/4h7n1NwKtdRzeRnc5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXbpfO2Be/0wuY7SpyPFZn/7lqSXzrI6WQIHgJYRbGMUZkugVjqNcqSaDG8xyoz7W3oK5gZCOaL017xckt+DyM2TxKuIUdQsfCKkRcPNBU9XkEo4wYApYReuXLx3qOX9PzFPaFY3ZbcAEJ/RiAYpDp+Mi5l4pOETQIpJHn8g2/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KBJvjflR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KBJvjflR"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFCuZm024673
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:23:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=/XDH4np/11kTXmxJhc43+oag
-	MOQJnczYYqLJy3cdvic=; b=KBJvjflRmuDdRLdfTA89gJtezMY912+9wModq5w/
-	+b0yGderQ9faUPoMJV2sKTHYL4gSGLcqrYRh6xrv3PLUwKaIul+sImZLawy4kuBX
-	VaFpGrf3iF7lyRsdu5sGrPPMhf+OIZrfB5oGD8AgUgHcCh9q+ZToHxWLUylbxWF6
-	s162OJMAzC0ZaFGCLXGX0zVzdWC3l0XWsIUcPlcAl+jnknWcX8DUXjTSndZOH0/U
-	V1jfeblkBKAnySt94ZD0n91novqsa60pAFsVMZz8VSuIcUbNcRQnAKpkHZZyOGeS
-	875ke73XIJcta+bOQUZjfHerJjFpmmMtADNhhkTIpmawzg==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p86knm54-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:23:07 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c548e16909so459643585a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:23:07 -0700 (PDT)
+	s=arc-20240116; t=1743452603; c=relaxed/simple;
+	bh=3PY05xnMoMY5l0MLOVsaY4dzTB65DW9ZAGjtkWZLVh0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cDoRxjYTrqZtT3vSue4GsGlQ8a4IhCp3+QVHZXYGt0vFvaAEK2dBqXFTHfYCoitnoxGe4QLNxxnnhrOaFO6WiJBuUj250qsT7/9joLK7m6jleGXZleHw23+eUK6FMf4d76Wo9BAdcPMx5DKyQk4ZSMkOzEaS+LBYaYhWNtY9kb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso50752435ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 13:23:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743452586; x=1744057386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/XDH4np/11kTXmxJhc43+oagMOQJnczYYqLJy3cdvic=;
-        b=FyguDYyzyFW3JrLloqj7M2DnvneeirY13OkHPrQz1D5hUFcTOGv0A1dFoNGI4Ytq7+
-         jCNA/fE1mwQMp8myrdlYwqq7s4Fvb+NlV5l8gt+oNuSqSAG9dJgO1KkVYDpEanjo6rL6
-         uf1WPHspCcfo8wbmKtui9ZjxP2SV9NH3Uv9IN7NHNeYydsxHFhBVl4viwaFXrvZ7aU4f
-         4AYml1gO7oPaXxK+QwFqeDRKUO6HjUXgMsInB5w4IVDkQ12e2/VTVMCT9IV0i6+5j2p6
-         bAGO7ItVDtWdN4w7pcoXricIztFfMMlUqTCCZ7B8oXl8ARCd59NptqSkF8KB5TG+RFm5
-         erbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXA/THq07hQJPWYp/2yHVwdmj2hBkHcu8c4N2Z1MdsMceCvX8f38O9SK1DSbJ0RRzKC7IsyICNt6/LU3K0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPKZTitAcH+FB5jjOGlL+v/Bi57pvJiYSO56Ks2vPof6RpZMX8
-	nheFMNINJJQhDJLLcEBkC5P51Rcx1JC6N/diVb+rfmhZeb6yTmQD49K+LmdxR3E1lheyW2HcsI1
-	5a5Bu2znBaEDNxOD/439ul5ZjJt1kn3C0LUJFZhXbOtQaaVn7oJ3jkokeFwJA6vQ=
-X-Gm-Gg: ASbGncvtLYJjuEZMbGZZssCTe9LuwWV5ke9SY+602FK2iTfdZ96LuSQJfEjlnQLWwXV
-	dMqUpqiFEQeAim5pzytqDSgdTKb4m4ALmQuEdPzVJ4A8kSpKvIfxs731XuwTL9nUiVsZw7tWUQc
-	6wJsA/VSczjef6aiJIjUlSGdAKhFq19DKScI2EzxSuN6OsLkP4k5PwKQ7/y2dmBnZS5j8p7Gcxy
-	j6ONwKpy3EJb496PnmcHOAZkMUf+J8xrJoHyeDWlEkzoz8DpGb9fmjxEmIT+6pYBDyIYxcrFXg5
-	Y20xk0NgXzPuQUI8qWlbsT34BBJYLOw0aow+GRK0QcT3jtGN467QrHfGn5Msun817j32tQ65P6c
-	MIGA=
-X-Received: by 2002:a05:620a:2a03:b0:7c5:6375:144c with SMTP id af79cd13be357-7c69071e2cbmr1183407385a.23.1743452586467;
-        Mon, 31 Mar 2025 13:23:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYPejo3kER5dNDXDvNgrSMesprgR2DDS2npUVvqdvd1MymJqIcUXKNSnahqXjg6Ltaa4Rclg==
-X-Received: by 2002:a05:620a:2a03:b0:7c5:6375:144c with SMTP id af79cd13be357-7c69071e2cbmr1183404185a.23.1743452586084;
-        Mon, 31 Mar 2025 13:23:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c1ab6sm1203757e87.97.2025.03.31.13.23.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 13:23:03 -0700 (PDT)
-Date: Mon, 31 Mar 2025 23:23:00 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] backlight: pm8941: Add NULL check in wled_configure()
-Message-ID: <rub2lfc27qef33iziydwd4qoaxia3ycs4iq7o7hujfaccznma7@hyavk23v7rbh>
-References: <20250331141654.12624-1-bsdhenrymartin@gmail.com>
+        d=1e100.net; s=20230601; t=1743452600; x=1744057400;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3IdS2CIIBxydV1hM12Yq4u+yxRM3vbbwLHZJ/Jv2v1U=;
+        b=sYGeaRbiHUvRRNnt7mhH1bC1OTbjDaVIaTALuwEBNEEAs46/V6lbliVfXqNxR6+9Ln
+         LTh8oIVT6AEeL8noUjwASm+grhRSBsCge38XlRs31yxMhUYrVYy8D3wUcfuyjVmIbCbM
+         13cLGGuUX+LRQfjErHaSOxF2hWIwN+Hl6Ba9puoK9JnKAZ7QqjzVDodq+BREDTphJukf
+         rITcEaBpCoLenLQDnCGvxmFjcCA9dv5vHkeWUzHpXv8fZxlRLWT6LQfxxqqqVTlweCcP
+         6TIXUV1bZ4+XOR+fogaep51U3BBwg3tHp0d3gJCjJr2Dug/8WDSxACsIxARl1NI7og2s
+         BNUw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/m4sV/TqH1Gmx+dSJzqSYK/qqqac5ljNiY1VrY91cyWp27BxRIYxeMpA4tZ+G+ly7i1btrDVyqRgJwaw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvQpUhcHCFFPSchTkDMF4DIPhzZMe1EDcNSOopMsy5vEyVNxMp
+	VwQ90ObNRqG7mbAXn6JjAj5Ggmuh3pvk1elJi6fIxtf5Y9kev/miAPmmPqdXBTltyEszsvzZGVE
+	lDCn4+xKutLR53ik7s/3lH2xB242ppWNz2sUbILk42n6aBZvHV988mIE=
+X-Google-Smtp-Source: AGHT+IHLSJS1wU9leOVUk3T6cwy7hiPNlkyZgl8AGQuBu7QPD/fBMTwXXwdHHtraXgZq65fv4E9K737nJXsbQyEFMVQY9/Ey77Hg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331141654.12624-1-bsdhenrymartin@gmail.com>
-X-Authority-Analysis: v=2.4 cv=W8g4VQWk c=1 sm=1 tr=0 ts=67eaf9ab cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=cQ1TuvgcctVPKzGXpFYA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: 1KXhqQUhCHRqSXDsNkMz9p0IGb3w1D4M
-X-Proofpoint-ORIG-GUID: 1KXhqQUhCHRqSXDsNkMz9p0IGb3w1D4M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_09,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=971 mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310140
+X-Received: by 2002:a05:6e02:238a:b0:3d3:fa0a:7242 with SMTP id
+ e9e14a558f8ab-3d5e0912eb8mr90641135ab.9.1743452600121; Mon, 31 Mar 2025
+ 13:23:20 -0700 (PDT)
+Date: Mon, 31 Mar 2025 13:23:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eaf9b8.050a0220.3c3d88.004a.GAE@google.com>
+Subject: [syzbot] [rdma?] [s390?] [net?] KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
+From: syzbot <syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com>
+To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, davem@davemloft.net, 
+	edumazet@google.com, guwen@linux.alibaba.com, horms@kernel.org, 
+	jaka@linux.ibm.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
+	tonylu@linux.alibaba.com, wenjia@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 10:16:54PM +0800, Henry Martin wrote:
-> devm_kasprintf() return NULL if memory allocation fails. Currently,
-> wled_configure() does not check for this case, leading to a possible NULL
-> pointer dereference.
-> 
-> Add NULL check after devm_kasprintf() to prevent this issue.
-> 
-> Fixes: f86b77583d88 ("backlight: pm8941: Convert to using %pOFn instead of device_node.name")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> ---
-> V1 -> V2: Fix commit message to use imperative mood and wrap lines to 75
-> characters.
-> 
->  drivers/video/backlight/qcom-wled.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+Hello,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+syzbot found the following issue on:
 
--- 
-With best wishes
-Dmitry
+HEAD commit:    850925a8133c Merge tag '9p-for-6.12-rc5' of https://github..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1227aa87980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=17c0d505695d6b0
+dashboard link: https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15489230580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6d8177e17058/disk-850925a8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5d88252f39ff/vmlinux-850925a8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7a675a61b90d/bzImage-850925a8.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com
+
+TCP: request_sock_TCP: Possible SYN flooding on port [::]:20002. Sending cookies.
+TCP: request_sock_TCP: Possible SYN flooding on port [::]:20002. Sending cookies.
+==================================================================
+BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: null-ptr-deref in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+BUG: KASAN: null-ptr-deref in smc_tcp_syn_recv_sock+0xa7/0x4b0 net/smc/af_smc.c:131
+Read of size 4 at addr 00000000000009d4 by task syz.4.10809/28966
+
+CPU: 1 UID: 0 PID: 28966 Comm: syz.4.10809 Not tainted 6.12.0-rc4-syzkaller-00261-g850925a8133c #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ smc_tcp_syn_recv_sock+0xa7/0x4b0 net/smc/af_smc.c:131
+ tcp_get_cookie_sock+0xd5/0x790 net/ipv4/syncookies.c:204
+ cookie_v4_check+0xcf8/0x1d40 net/ipv4/syncookies.c:485
+ tcp_v4_cookie_check net/ipv4/tcp_ipv4.c:1864 [inline]
+ tcp_v4_do_rcv+0x98e/0xa90 net/ipv4/tcp_ipv4.c:1923
+ tcp_v4_rcv+0x3cd2/0x4390 net/ipv4/tcp_ipv4.c:2340
+ ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:460 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_rcv+0x2c3/0x5d0 net/ipv4/ip_input.c:569
+ __netif_receive_skb_one_core+0x199/0x1e0 net/core/dev.c:5666
+ __netif_receive_skb+0x1d/0x160 net/core/dev.c:5779
+ process_backlog+0x443/0x15f0 net/core/dev.c:6111
+ __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:6775
+ napi_poll net/core/dev.c:6844 [inline]
+ net_rx_action+0xa92/0x1010 net/core/dev.c:6966
+ handle_softirqs+0x216/0x8f0 kernel/softirq.c:554
+ do_softirq kernel/softirq.c:455 [inline]
+ do_softirq+0xb2/0xf0 kernel/softirq.c:442
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:382
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
+ __dev_queue_xmit+0x887/0x4350 net/core/dev.c:4455
+ dev_queue_xmit include/linux/netdevice.h:3094 [inline]
+ neigh_hh_output include/net/neighbour.h:526 [inline]
+ neigh_output include/net/neighbour.h:540 [inline]
+ ip_finish_output2+0x16d7/0x2530 net/ipv4/ip_output.c:236
+ __ip_finish_output net/ipv4/ip_output.c:314 [inline]
+ __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:296
+ ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:324
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:434
+ dst_output include/net/dst.h:450 [inline]
+ ip_local_out+0x33e/0x4a0 net/ipv4/ip_output.c:130
+ __ip_queue_xmit+0x747/0x1940 net/ipv4/ip_output.c:536
+ __tcp_transmit_skb+0x2a4c/0x3dc0 net/ipv4/tcp_output.c:1466
+ __tcp_send_ack.part.0+0x390/0x720 net/ipv4/tcp_output.c:4268
+ __tcp_send_ack net/ipv4/tcp_output.c:4274 [inline]
+ tcp_send_ack+0x82/0xa0 net/ipv4/tcp_output.c:4274
+ tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6576 [inline]
+ tcp_rcv_state_process+0x4332/0x4f30 net/ipv4/tcp_input.c:6770
+ tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1938
+ sk_backlog_rcv include/net/sock.h:1115 [inline]
+ __release_sock+0x31b/0x400 net/core/sock.c:3072
+ release_sock+0x5a/0x220 net/core/sock.c:3626
+ mptcp_connect+0xc14/0xee0 net/mptcp/protocol.c:3800
+ __inet_stream_connect+0x3ca/0x1020 net/ipv4/af_inet.c:679
+ inet_stream_connect+0x57/0xa0 net/ipv4/af_inet.c:750
+ __sys_connect_file+0x150/0x190 net/socket.c:2071
+ __sys_connect+0x147/0x180 net/socket.c:2088
+ __do_sys_connect net/socket.c:2098 [inline]
+ __se_sys_connect net/socket.c:2095 [inline]
+ __x64_sys_connect+0x72/0xb0 net/socket.c:2095
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f68acb7e719
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f68ada08038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 00007f68acd35f80 RCX: 00007f68acb7e719
+RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 00007f68acbf132e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f68acd35f80 R15: 00007ffdea14cb48
+ </TASK>
+==================================================================
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000013a: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x00000000000009d0-0x00000000000009d7]
+CPU: 1 UID: 0 PID: 28966 Comm: syz.4.10809 Tainted: G    B              6.12.0-rc4-syzkaller-00261-g850925a8133c #0
+Tainted: [B]=BAD_PAGE
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
+RIP: 0010:smc_tcp_syn_recv_sock+0xb8/0x4b0 net/smc/af_smc.c:131
+Code: ad d4 09 00 00 be 04 00 00 00 44 8b bb 1c 04 00 00 4c 89 ef e8 69 94 2e f7 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 34
+RSP: 0018:ffffc90000a18668 EFLAGS: 00010217
+RAX: dffffc0000000000 RBX: ffff88805b9cb600 RCX: ffffffff814e856f
+RDX: 000000000000013a RSI: ffffffff81ee031e RDI: 0000000000000007
+RBP: 0000000000000000 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 6e696c6261736944 R12: ffff88807df5bd00
+R13: 00000000000009d4 R14: ffffc90000a186e8 R15: 0000000000000000
+FS:  00007f68ada086c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f68ad9e7d58 CR3: 000000005e3fa000 CR4: 0000000000350ef0
+Call Trace:
+ <IRQ>
+ tcp_get_cookie_sock+0xd5/0x790 net/ipv4/syncookies.c:204
+ cookie_v4_check+0xcf8/0x1d40 net/ipv4/syncookies.c:485
+ tcp_v4_cookie_check net/ipv4/tcp_ipv4.c:1864 [inline]
+ tcp_v4_do_rcv+0x98e/0xa90 net/ipv4/tcp_ipv4.c:1923
+ tcp_v4_rcv+0x3cd2/0x4390 net/ipv4/tcp_ipv4.c:2340
+ ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:460 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_rcv+0x2c3/0x5d0 net/ipv4/ip_input.c:569
+ __netif_receive_skb_one_core+0x199/0x1e0 net/core/dev.c:5666
+ __netif_receive_skb+0x1d/0x160 net/core/dev.c:5779
+ process_backlog+0x443/0x15f0 net/core/dev.c:6111
+ __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:6775
+ napi_poll net/core/dev.c:6844 [inline]
+ net_rx_action+0xa92/0x1010 net/core/dev.c:6966
+ handle_softirqs+0x216/0x8f0 kernel/softirq.c:554
+ do_softirq kernel/softirq.c:455 [inline]
+ do_softirq+0xb2/0xf0 kernel/softirq.c:442
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:382
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
+ __dev_queue_xmit+0x887/0x4350 net/core/dev.c:4455
+ dev_queue_xmit include/linux/netdevice.h:3094 [inline]
+ neigh_hh_output include/net/neighbour.h:526 [inline]
+ neigh_output include/net/neighbour.h:540 [inline]
+ ip_finish_output2+0x16d7/0x2530 net/ipv4/ip_output.c:236
+ __ip_finish_output net/ipv4/ip_output.c:314 [inline]
+ __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:296
+ ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:324
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:434
+ dst_output include/net/dst.h:450 [inline]
+ ip_local_out+0x33e/0x4a0 net/ipv4/ip_output.c:130
+ __ip_queue_xmit+0x747/0x1940 net/ipv4/ip_output.c:536
+ __tcp_transmit_skb+0x2a4c/0x3dc0 net/ipv4/tcp_output.c:1466
+ __tcp_send_ack.part.0+0x390/0x720 net/ipv4/tcp_output.c:4268
+ __tcp_send_ack net/ipv4/tcp_output.c:4274 [inline]
+ tcp_send_ack+0x82/0xa0 net/ipv4/tcp_output.c:4274
+ tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6576 [inline]
+ tcp_rcv_state_process+0x4332/0x4f30 net/ipv4/tcp_input.c:6770
+ tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1938
+ sk_backlog_rcv include/net/sock.h:1115 [inline]
+ __release_sock+0x31b/0x400 net/core/sock.c:3072
+ release_sock+0x5a/0x220 net/core/sock.c:3626
+ mptcp_connect+0xc14/0xee0 net/mptcp/protocol.c:3800
+ __inet_stream_connect+0x3ca/0x1020 net/ipv4/af_inet.c:679
+ inet_stream_connect+0x57/0xa0 net/ipv4/af_inet.c:750
+ __sys_connect_file+0x150/0x190 net/socket.c:2071
+ __sys_connect+0x147/0x180 net/socket.c:2088
+ __do_sys_connect net/socket.c:2098 [inline]
+ __se_sys_connect net/socket.c:2095 [inline]
+ __x64_sys_connect+0x72/0xb0 net/socket.c:2095
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f68acb7e719
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f68ada08038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 00007f68acd35f80 RCX: 00007f68acb7e719
+RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 00007f68acbf132e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f68acd35f80 R15: 00007ffdea14cb48
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
+RIP: 0010:smc_tcp_syn_recv_sock+0xb8/0x4b0 net/smc/af_smc.c:131
+Code: ad d4 09 00 00 be 04 00 00 00 44 8b bb 1c 04 00 00 4c 89 ef e8 69 94 2e f7 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 34
+RSP: 0018:ffffc90000a18668 EFLAGS: 00010217
+RAX: dffffc0000000000 RBX: ffff88805b9cb600 RCX: ffffffff814e856f
+RDX: 000000000000013a RSI: ffffffff81ee031e RDI: 0000000000000007
+RBP: 0000000000000000 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 6e696c6261736944 R12: ffff88807df5bd00
+R13: 00000000000009d4 R14: ffffc90000a186e8 R15: 0000000000000000
+FS:  00007f68ada086c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f68ad9e7d58 CR3: 000000005e3fa000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	09 00                	or     %eax,(%rax)
+   2:	00 be 04 00 00 00    	add    %bh,0x4(%rsi)
+   8:	44 8b bb 1c 04 00 00 	mov    0x41c(%rbx),%r15d
+   f:	4c 89 ef             	mov    %r13,%rdi
+  12:	e8 69 94 2e f7       	call   0xf72e9480
+  17:	4c 89 ea             	mov    %r13,%rdx
+  1a:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  21:	fc ff df
+  24:	48 c1 ea 03          	shr    $0x3,%rdx
+* 28:	0f b6 14 02          	movzbl (%rdx,%rax,1),%edx <-- trapping instruction
+  2c:	4c 89 e8             	mov    %r13,%rax
+  2f:	83 e0 07             	and    $0x7,%eax
+  32:	83 c0 03             	add    $0x3,%eax
+  35:	38 d0                	cmp    %dl,%al
+  37:	7c 08                	jl     0x41
+  39:	84 d2                	test   %dl,%dl
+  3b:	0f                   	.byte 0xf
+  3c:	85                   	.byte 0x85
+  3d:	34                   	.byte 0x34
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
