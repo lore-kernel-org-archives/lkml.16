@@ -1,172 +1,90 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59B11D7E57;
-	Mon, 31 Mar 2025 08:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B4B1D63F7
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743410173; cv=none; b=MX4IxnN3bxjHDvpa8Erj1faJ2ytwpxgQrxATyS0hkRxEbY1nkDpG9yreT/v9xm1nmBCFw5RaR5LJ1xcFzjHXxJVG/P2xDVx6TYAuwpDCANpzTCVblboqgU4ctUNQZOdbjwjvfP2osEBLFLG+zM2aGxlNqDKfmrg3ys38QWH9Bq0=
+	t=1743410199; cv=none; b=B1ofEIMnYbj/edGwbd0wY+BvtbMpUMDpWbtQbP+yhFzPMzdg3s5Bqns3QKvAtwiZanGzYT7HFEXb9vhzLwVY5Fbf3K4A8hdpY2B/DzrIawyjwaq+fxGBlylkuV7VniMaV/6NHYrjYQMNcHoAezIhrKLelwufZxY6ef/nCEA4Ads=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743410173; c=relaxed/simple;
-	bh=DI90Fv72oQlEdDRAnNvlmspBMg85bwitY3HL32Kb9oQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4xh82K9yIw/zPcAJfgNU0cOUAgWoFLOhK8zHHN5GEd0JA/0ZFnfavZXXPL/CekHqH4vsvDjUNML+ufvoiJ96mIfKjVcksWP+n/1DF8B8E+6d+eMOMJDtwtwucfTEhLPguFqGjFj7JbT/KstO0F4Akg1ctVguCw6LtuOjdMO7Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=loquEBlS; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1743410199; c=relaxed/simple;
+	bh=Kd88/Ls2zS42L2QD93mYpM5+t/RD4xvC04BRh0kG648=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=fmyPoQSA7l2Armv7QnFJEj1WkVCDbSZmPmxAxLkFcGyxWGGue9JtP2XuNWGTIlld2PMt972sQLoGdMnQ7KZkcZ41GDZLddV0SkCR36D8oC1gO+KT3oo0klEXZlCMYCu95lNJa8juPsCQX3cxglIAXHa8zcms5XhNmkQIbLL/16Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IHNbisAq; arc=none smtp.client-ip=162.62.57.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="loquEBlS"
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 4DBE42E07B1A;
-	Mon, 31 Mar 2025 11:36:03 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1743410168;
-	bh=DI90Fv72oQlEdDRAnNvlmspBMg85bwitY3HL32Kb9oQ=;
-	h=Received:From:Subject:To;
-	b=loquEBlSZohbbq2y1xdaRR7/Ldo1m0EeItX87OyGZH4APfy37G+0xTlnDjy/yjiv1
-	 Qumptpy0roII7Z3HlMIU80Gmb/racyY15WrslNOLbs/KQMcA2FCE5kZZ6YN6Jee9ox
-	 G5QsHp7gciIBdgWvjPGlkSZu3a/IZueNK4hN/8I4=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f181.google.com with SMTP id
- 38308e7fff4ca-307325f2436so41522171fa.0;
-        Mon, 31 Mar 2025 01:36:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVUHzutR/m0mEVRWygymVCLW/7ZGfps5q//X7n3HqcavYdjq2pd9i5WQU9uUQyzg5zwczF7v2jKZ9YNaRTcVN0ugeptgg==@vger.kernel.org,
- AJvYcCWDHFf+3q1o0VNvNWC0ajOwmOSRO1WQCR3gggYyxWOX7ndd4Y58BpR1cG4aIwQrIprWYJNQdDfRmLwa0Ftz@vger.kernel.org,
- AJvYcCXr2CT/kt4+0MEaffMrxWeRxDO1y9OYt/6wSX3rGOTozMlhWNddAyNbFnrBOT6k/yqLEi5rxafcoBjfWw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgzBPJ/GxB2So0w9Ru8dr8yhoLAAV3vyQFKYJy1ABOvI/mpz4d
-	xZrrAgydwUc1ZaCMwO1i2Xvck9o38Uk1/hddkUB0HjxvfkzOOdfHtYTJukGMVbAf84euvRhIcun
-	TgLM3Csw8ID/kTf2mtNefPv6/+OE=
-X-Google-Smtp-Source: 
- AGHT+IH/vVp8jM3walb22/hze2eC/gxUBtQBU+F1MYf7U+5sHREAjclNITYFdwHBGLV1TXz5MAqf64689vv7zxGnKOY=
-X-Received: by 2002:a05:651c:50a:b0:30d:7c12:5725 with SMTP id
- 38308e7fff4ca-30de032f85cmr29440651fa.33.1743410162685; Mon, 31 Mar 2025
- 01:36:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IHNbisAq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743410172; bh=Kd88/Ls2zS42L2QD93mYpM5+t/RD4xvC04BRh0kG648=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IHNbisAqUPp+GzpYDZIBquAW0m5xBEdMJYQZYD5sEp9F2EKMHZmz5Ns3iivHagykh
+	 dKQT6XEAAUx2N2dW19PusixNMUpCkUKdh2vPzjZ/gk33rk7pnUcjLkNDPAIf6i9Tp3
+	 M0RC3QYvuPSmwpjX+yKGDOgUYiQxbdH3DEDHjJE0=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 75B0A84B; Mon, 31 Mar 2025 16:29:27 +0800
+X-QQ-mid: xmsmtpt1743409767tz8xrf3uq
+Message-ID: <tencent_F967B6C3FF5405F2D17EF660590BFD213C0A@qq.com>
+X-QQ-XMAILINFO: MpvVxjO9l39xxt6E8UMbjpgTfOvMvWwD+cI4qVBLj9WK8K3TesHSFSNSdOXTeS
+	 R1IxZcOHITpKQC5eJXL19OPBsgQAkgcmAphNYVeqJTYQdkCCX9jAh51RRZsfbqaiRooKoQ3U7DDY
+	 NCVsENHQl7j1/dgvQYZY1/+EvRlThf4G2tNKCfqBHzcdZ+HXir9bGD3uqA8aW8sWeSg/1SeTyTtu
+	 j+yu7L/xZNuDGIQQe3GiEm096IuCAWfbZJ59QEpiY70FnE0an4oaMZY90e0jXEMUIkqd6/6Ok9+c
+	 YnFK24M6t0jNZ+vUK6tTpoay4/RBzCIDwy8Edsct6KOrk1jRE3StfbB/14QGsRc0eymDBXqPig79
+	 H6XKHRM3hrFFNncyp5Ar49ix1gEk2w+DeZwgfsc0lqWkEHbLWBGeomI1EEpSSfX8A4pR5dOULbgP
+	 aad8cR9RFsZ/KCqPsjbyLwZMdAHWCi9s+PSPH8QKVZmMiyVyEO+nHIEJYTWatbBJjRepsxRKmaEc
+	 bCD2wD6cmw8KtjjCDOvBpk7x8DO/8EWkRXV3M1VKqglzjwjbdoJO/MtwN0dmv+dAMzDNOtiP3kPY
+	 DkfXisLv9Ty0mSGASvRv1/tVjAU0SGWEzLJwcOlhsLtqWb30G/tCUtO1Oj4WUgvbgZbIXaIxy29u
+	 FdU87u4IMo++hHkxX/6InmFBjhuNKVXXYzNBQ443qz0LAOiPJCR8LDSLgdD33FS9Q0r5SgLRu344
+	 y9fMwu7WlzxASCSYwpQxDjt8eKU6TKtZw3xnIa0fVz7ZwqqprGUMfNaS8kuV3jDBldiWiwCH8OyZ
+	 kIk3WGbgq9NY16CchmTBl9OS2ltp50M/Sg9BZFVKzRn5eyQ4lQ/40v6oYZnSculo9pffFZU1NsZw
+	 uTe9Bort4CweQX2svbSqrDd6kMy0m8z6AloOGNLbqL1im7nh6kT/EENjb77G6x/OQ9Ow2nXA2MrX
+	 smbAsMmL51a8UiMdVmmEQ3xqa8N+h0
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+Sender: yeking@red54.com
+From: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>
+To: linux@armlinux.org.uk
+Cc: Yeking@red54.com,
+	ardb@kernel.org,
+	bjorn.andersson@sonyericsson.com,
+	dave@vasilevsky.ca,
+	ebiggers@google.com,
+	linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	liuyuntao12@huawei.com,
+	lumag@kernel.org,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	nico@fluxnic.net,
+	oskar.andero@sonyericsson.com,
+	ruanjinjie@huawei.com,
+	victor.boivie@sonyericsson.com
+Subject: Re: Re: [PATCH] ARM: Fix support for CMDLINE_EXTEND
+Date: Mon, 31 Mar 2025 08:29:21 +0000
+X-OQ-MSGID: <20250331082921.120679-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z-aWPqAUOIDEzzpZ@shell.armlinux.org.uk>
+References: <Z-aWPqAUOIDEzzpZ@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-10-lkml@antheas.dev>
- <f04e6a59-cb72-9ca9-2c98-85702b6194fa@linux.intel.com>
- <CAGwozwF8PZczpqOFm3ONDdJTVCgcWOZ8mXrASbmiAXUhQvOhdg@mail.gmail.com>
- <43c4dd17-de34-804f-7080-b287ac4a0cac@linux.intel.com>
- <26s13395-1ro2-37o8-01q5-6r4p09p69174@xreary.bet>
- <CAGwozwHbZHk_eSe-ZEM6jYM2HC4GxwnUrreZSh=+xJrKquEi9g@mail.gmail.com>
- <11155669-5168-4460-aa4f-849b764a5ec2@ljones.dev>
-In-Reply-To: <11155669-5168-4460-aa4f-849b764a5ec2@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 31 Mar 2025 10:35:51 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFBcmawucqfyTOD-S0Ah6dnKBao75Z3J0K0J3FbVhth-Q@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr0VBOwvDyv0QVadOGIJqE6C_--iyCZm29a1wlqzeHFDQ0vz6BQ1VE0RVY
-Message-ID: 
- <CAGwozwFBcmawucqfyTOD-S0Ah6dnKBao75Z3J0K0J3FbVhth-Q@mail.gmail.com>
-Subject: Re: [PATCH v5 09/11] HID: asus: add basic RGB support
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: Jiri Kosina <jikos@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <174341016396.1750.14664751593540199959@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Mar 2025 at 10:19, Luke D. Jones <luke@ljones.dev> wrote:
->
-> On 30/03/25 21:39, Antheas Kapenekakis wrote:
-> > On Wed, 26 Mar 2025 at 12:00, Jiri Kosina <jikos@kernel.org> wrote:
-> >>
-> >> On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
-> >>
-> >>> You don't need to "pause" for the merge window, in some subsystem
-> >>> there's mandatory pause during merge window but I find that unnecessa=
-ry.
-> >>> I know people on pdx86 do review during merge window so no need to wa=
-it
-> >>> when working with patches related to pdx86. Just don't expect patches
-> >>> get applied during the merge window or right after it (the latter ten=
-ds to
-> >>> be the most busiest time of cycle for me) :-).
-> >>>
-> >>> It's more about the frequency, how often to send a series which is
-> >>> relatively large. Large number of versions end up just filling inboxe=
-s
-> >>> (and patchwork's pending patches list) and we don't have time to read=
- them
-> >>> all through so I suggest waiting like 3 days at minimum between versi=
-ons
-> >>> when the series is large or complex to give time to go through the se=
-ries.
-> >>>
-> >>> This is not a hard rule, so if there are e.g. many significant change=
-s,
-> >>> feel free to "violate" it in that case.
-> >>
-> >> Exactly. I am unlikely to do much review during the merge window mysel=
-f,
-> >> but I'll pick up the patchset and followup once the merge window is ov=
-er,
-> >> so feel free to keep discussing and polishing it with me on CC :)
-> >>
-> >> Thanks,
-> >
-> > I think we have reached a good point with this series. We can pick up
-> > again when you guys are ready.
-> >
-> > I will switch gears and look a bit into msi-wmi-platform for the MSI
-> > Claw with Armin and we can revisit this come rc1.
-> >
-> > Let's try to get through it early in 6.16 so that Luke can also do
-> > what he wants to with the Ally, and let's push the oxpec move as well,
-> > so I can get those two off my plate.
->
-> I see Ilpo and Jiri mentioned no need to pause development. But it does
-> look like everything is in good state so far, and no doubt you might
-> have some ideas after a few days (plus that did of helpful info asus
-> dropped in my lap).
->
-> If you do anything significant and would like someone to test on a few
-> variety of laptop please let me know privately and I'll do what I can.
+> Later arguments override earlier arguments. Any compiled-in command line
+> needs to be overridable by user supplied input from the boot loader. The
+> current behaviour is correct.
 
-Yeah, I think the comments I got so far I could fix in an hour or so,
-so I would like some more to pool in.
+CMDLINE_EXTEND is for the built-in command line to "Extend bootloader kernel
+arguments", not for the bootloader command line to extend/override built-in
+command line.
 
-It is good we have a way to parse the keyboard check [1] now, but all
-this boils down to removing the RGB quirk and tweaking how the result
-of that function is parsed.
+Don't forget that the default empty CMDLINE already gives the bootloader the
+ability to override everything. Not to mention that even if CMDLINE is not
+empty, the default CMDLINE_FROM_BOOTLOADER continues to give the bootloader the
+ability to override all.
 
-If you have some deadtime atm, you can check the MSI Claw draft I am
-working on [2]. It is still too early to send. The fwupd integration
-is causing some issues, such as it being picky and requiring all
-optional vars are implemented, and I think the potential interference
-with shift mode (platform profile in MSI laptops) will be confusing as
-well. But the same issues are present in Asus and Lenovo Legion too,
-so MSI is not unique in that regard.
-
-Antheas
-
-[1] https://github.com/torvalds/linux/blob/4e82c87058f45e79eeaa4d5bcc3b38dd=
-3dce7209/drivers/hid/hid-asus.c#L402-L434
-[2] https://github.com/bazzite-org/patchwork/tree/msi
-
-> Cheers,
-> Luke.
->
-> > Antheas
-> >
-> >> --
-> >> Jiri Kosina
-> >> SUSE Labs
-> >>
->
