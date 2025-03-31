@@ -1,124 +1,117 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7751DA61B;
-	Mon, 31 Mar 2025 09:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E004C41760;
+	Mon, 31 Mar 2025 09:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743413854; cv=none; b=lWuuLutjgVroVqHPd1mWRW7vUjIByXboWLztDQSoYFgd2Q6JeWHVCoBZQLbcVEJ3E5lPqnPHoOwG2oDMb1I8aKQXuHyFkcuQPFJTVYzi9XJWJXJ5/tZBVgRpdI5HVWZEPaiIS5d++DmfD0sAKNHY1fBgxodrcLacUabvznCUQJc=
+	t=1743413921; cv=none; b=F7rdlYni7rVfkUhauwiy++iy0QO+HeirUqNTmLZqZijkICmj6t+1MUpKFNxDyonaas3ao4UNq9RdPQW8jjwXnDj3pEE9ANVXYKlTF5IhFLaQlGOSPczs1iE/vkRTngRcmXoiJZv053GDy/mAdR+WIedS647Fad9+2Z3nC+/yboQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743413854; c=relaxed/simple;
-	bh=6fcgwOk+8wNUUaFsbSNlxBhyEV6KkpckX5akAmDZO+8=;
+	s=arc-20240116; t=1743413921; c=relaxed/simple;
+	bh=9YPjz+RyoRn4SCXr9t22WJBTFRjnSBTnL648syX2VMI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UKUvGnvZJGO+5NdJMOw/umTHYHWnF/iQ1bmksRlbNJMZiHPfKwIL12cypthcqyXmNeDP7kp0qCQbKn1YeHIJLCTd+X5zMK/XK0qb8wzaMhxuahABY6TJ7IYgmuiaSeXWIP0fwpZFZHQdp0KOxz7S1pfuSp7JkVGqiMVGT0opLis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=G/z6PFv+7Jm18487GalkIkG+J0IqQVJvQrzZ1LW1syWiEZjt99RXomcuv2XutQ6E2OZDzuDppTuam3EWoGPB2vNsn3haveehX9poSRdqBUc/7+TsFTj1UlnoVLMHwHltsk04373E24BCj7i4pK4xO3+8hWd0mf5UEpkx/PebTRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV5/wwld; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523dc366e42so1763977e0c.2;
-        Mon, 31 Mar 2025 02:37:31 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV5/wwld"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso26834405e9.3;
+        Mon, 31 Mar 2025 02:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743413918; x=1744018718; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vM2Bji0R6GGuRmN2IdJF15qTp2dswLKSOfwXsGQQXU0=;
+        b=OV5/wwldsUu5CJ6ibr4/wS1I+qczuwL2dutQOePg9IJDQt7kTlQRK01kNC40JeO+Uh
+         yrNRW8N2w4zhtsBbJ0vIFl2pIaPILqSOiIQh4aRm8fdUNGz6HU8OZLQOQGQwPSiGYyf2
+         5PIDo0qJN1mUlCiPSOvJBK7JFpIIo+Fkdw+hqd6enyeQcaEjsYJTAFaRSu1T5CCPsCMx
+         apjDielMcAKrn7RNeAQmZwJor9mUtOHpwYr2O+5KZBQAL8CQyehVQcp9f4TgHG96gsF2
+         icX/aHhRHeLindPIp9PskH00KLS8U4f/8NxMgtoJmVp3TlmZRenS0sWh4Xo/hnH/WBqR
+         Ghyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743413850; x=1744018650;
+        d=1e100.net; s=20230601; t=1743413918; x=1744018718;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6m7H5ReoZEvaLRIBb3Br+Zs8xyEGgvSo9d0sSfCKoN8=;
-        b=XLmbNAvxJeyQ9vI9JZNuEIu9zjr4kf2uygmGoNg6OdF6KPYcQFOav7ArwTvo0nMsIb
-         oeBYiPbtBbuJefj0lmtPeqGzOE6fY1q5S6OBTHMrpR+QybwWm3xuHHMjnTKhPlHzog/k
-         KzDd36pKzgGLdfqdOi+u2uxsgZ7fLKgncGnmrExVuXfCi2t2t91Vh3SxW1x1XNR28uWE
-         VqrW7YqlRM/FjPJ2HKAp0Q/hoOCQnQjcO2WGvn3rNnhfHkxnzNh6n/RZ9nGclMfDz6H6
-         VUM4PUZRrmW4wMJcpZ3yrZJegTnEUulmiMfLCfOvt/k1e0zgdfb8fe4pBxorXZZGwJx5
-         W3rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdufYCCyNi5cMS5s74BrlW2i3t6Adldn/cGj9QUINqX/9oyukRGriOuviiLVdlVTxNjuGr1+duMbxX9g4=@vger.kernel.org, AJvYcCWhLYRmGsXclOlQbV2tF1ncDwsVmpqRPCQuTHgzCDuPkJV3Vz5W1RytuRbhqPW5jA4Y7T+9V4hMZZ4B@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXCas9TLziYtCWVZUP9RcvPxtM+wA0i3/AIyVYKAjauyCRHU/E
-	G5pRQNFlSUzuL6p/2xV+v7eM1fWqH/VzVY3o+X+TA9LLhcsOYTy5tyhFx6C7
-X-Gm-Gg: ASbGncu9CwscO5oTFo/3xHAYCaVMBll4qOQApERB1Dhz1XalEdvHamxoWr8WhuukBM0
-	0+5/vD+6QP6N2WD99BICfw0NtYYFdFgguz7oUyq3tgMVN9YEofN/bz5+N6WT4cd0xT84HphdWIf
-	cm/+5XqjRvrIqdoO+kRICTQTztvWgJemilIebfUIUjvhpeCLNoTVUbISJNptmumb5Afy2Ifz17o
-	nbLI+UFyIgC2ClGSGtkmjSK9FYJLr8p5B3xuZeBN/T9HLO/uMyYIuRqJLDq3yDRWFoEanauh4c6
-	b5SxcGwdxEYu3hwuFcI+OerTP1jFxdYohYF6zxhjT4VQvQlNq3eOdk3c+BWDI8khFmuMhAqgfu5
-	XhjZqo9tVqAKZTVzc0g==
-X-Google-Smtp-Source: AGHT+IEQIocDEt9LkN5FyKkmTLUdSHE04eAovarsXTIuwlflGRoCLqjYh8LM4eP+RKBj72+w2JXqSA==
-X-Received: by 2002:a05:6122:2a4c:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-5261d357a48mr4629567e0c.2.1743413849727;
-        Mon, 31 Mar 2025 02:37:29 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5260e6a2cd5sm1472523e0c.2.2025.03.31.02.37.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 02:37:29 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86d42f08135so1660337241.0;
-        Mon, 31 Mar 2025 02:37:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVWi6C6lzsQlVxoZfvnPplYKwascKG3JLVoy+bt9Zm0SC1PVufnwJ1oXXUNuSDMGjyxY8ZyXzLIdwjK@vger.kernel.org, AJvYcCWgqLFYWQH7rxKo2Hk0VES5oNyeCw/goWzJrIL8pRRbKzcbXHw/YbUoo0JoCi8fV+jJSuh5ERXHCtHcF0A=@vger.kernel.org
-X-Received: by 2002:a05:6102:3f88:b0:4bb:eb4a:f9ec with SMTP id
- ada2fe7eead31-4c6d39af7cdmr4510008137.16.1743413848827; Mon, 31 Mar 2025
- 02:37:28 -0700 (PDT)
+        bh=vM2Bji0R6GGuRmN2IdJF15qTp2dswLKSOfwXsGQQXU0=;
+        b=XvMtokIm0sa3Whxxo0wqp9T/5jL2NBcLboO4lsbZEBZYUAP/WWYSWK5kh8kGdQbgsE
+         sqAjYdNbr3AjtwJFh1HbBJN4XsCgJ6QCm8Rrhn8x00/FxPpeqVUg+W2fj+BFojfK/GMA
+         BMG8CXeLE2oMP8U/b0owvAx3oi1mPNS+344j+upaT0uQvPkWOq0ApgMCZ3r2CLnxKL0+
+         oucXRnmHICiZ9ULMKy0+83GJUpdMlluyDgdbrDDNqCpo14jfvDrI/D2k0uVLIivJzbWL
+         E/RtpnZarCOjZckT7udox35z63ds8jbiVMdDyqHhSl3B2Z/SSoQuYBc3NCfdrsRyCwjQ
+         7CUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV97YIXl6kDEEqVifFEha+tKhYgGrImLlcnZLn0ogmDAABH74rW87ZDLiQ/xl0JI8cTpMR1tS0QOGqMjMIL@vger.kernel.org, AJvYcCWsqY0G/SNOAUfCq1I+dkzTRk9SaDLWpm5rG+mY545CqBeE0MeK/HL7ExyyCUJaa1y2zH+tUmZ8LjwB@vger.kernel.org, AJvYcCXEbBCO9Po8MBwypqRLowv/YoHli1HsoEAeKx9mwBv0pmFPseT4EeTt5FTzSGoI0IZZho2ApIj+6EtdEn0bGw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4orN9SCDi/sHLkRoN0cNntPb5Z/WmdCjjRnHx5i2iTIZZI8Bh
+	CUyWHzpfawiTOnPVHmzXddJbPfUkbcbLS3kv6Tk2bhQzHROh/Bnu8dVsaSDoUEz+VMYVvi6uDHW
+	Axlf3WZW6HwOUBfdh9X7f6MX+SQ==
+X-Gm-Gg: ASbGncu13IK1EkRZE5s5s517RugdsWAAMm90tJl2UoqCJ8I+bl1n2sGu7hKaP1URopV
+	edoAUW1D698SLgSGHCzfztE6lkvPSM3blHFC977d5F32sakdU8mIITnh7+CEdVJw2cNMjMOHcBY
+	7b7nFMQ4ZWIOH0m9E5ovg7oN9GfoI=
+X-Google-Smtp-Source: AGHT+IHDxLwJLs5M+ervsVqXlAF/ZqEKs+3clpKlQi/t/SoyKWcahheha0ZbkTZT1eaBgifJRMbqFBBUWwfdSR3VMi4=
+X-Received: by 2002:a05:600c:83cc:b0:43d:cc9:b09d with SMTP id
+ 5b1f17b1804b1-43db62bc26fmr62005255e9.20.1743413917702; Mon, 31 Mar 2025
+ 02:38:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329164145.3194284-1-arnd@kernel.org>
-In-Reply-To: <20250329164145.3194284-1-arnd@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 31 Mar 2025 11:37:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVY7Ekc1c_CO1g715ht7hPU5Zc9ZoWtaxkeWOahycVNFA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpvnZ7nTB6rW3kOMJVkbUBZ7ytnocmYlZrvcPNgRHoBHXHWNow-4n4hiUQ
-Message-ID: <CAMuHMdVY7Ekc1c_CO1g715ht7hPU5Zc9ZoWtaxkeWOahycVNFA@mail.gmail.com>
-Subject: Re: [PATCH] [v2] mmc: renesas_sdhi: add regulator dependency
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
+ <20250331073423.3184322-2-alex.vinarskis@gmail.com> <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
+In-Reply-To: <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Mon, 31 Mar 2025 11:38:25 +0200
+X-Gm-Features: AQ5f1JqsOf-wdERM54oCL2d4gBWWd4xshSkcvSWrMpNLnl4usGWtzA_0SkbQh0s
+Message-ID: <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
+ WiFi/BT pwrseq
+To: Johan Hovold <johan@kernel.org>, "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dmitry.baryshkov@oss.qualcomm.com, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Arnd,
-
-On Sat, 29 Mar 2025 at 17:41, Arnd Bergmann <arnd@kernel.org> wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
 >
-> The driver started using the regulator subsystem and fails to build without
-> a dependeny on CONFIG_REGULATOR:
+> [ +CC: Stephan ]
 >
-> ERROR: modpost: "rdev_get_drvdata" [drivers/mmc/host/renesas_sdhi_core.ko] undefined!
-> ERROR: modpost: "devm_regulator_register" [drivers/mmc/host/renesas_sdhi_core.ko] undefined!
+> On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
+> > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
+> > combo chip using the new power sequencing bindings. All voltages are
+> > derived from chained fixed regulators controlled using a single GPIO.
+> >
+> > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
+> > WiFi/BT pwrseq").
 >
-> The 'select RESET_CONTROLLER' needs to either go away or get changed to a dependency
-> in order to avoid Kconfig dependency loops here. It also turns out the the superh
-> version needs neither RESET_CONTROLLER nor REGULATOR, and this works because
-> CONFIG_OF is not set there.
-
-Both the reset controller and regulator are needed only on a subset
-of the supported SoCs.  However, unlike the reset subsystem, the
-regulator subsystem does not provide dummies when disabled.
-
-Fortunately most regulator code in the SDHI driver is optimized away
-by the compiler when CONFIG_OF is not enabled, and the remaining call
-to mmc_regulator_set_vqmmc() is harmless, as the MMC core does provide
-a dummy in case regulator support is disabled.
-
-So e.g. an sh7724_generic_defconfig + CONFIG_MMC + CONFIG_MMC_SDHI +
-CONFIG_OF build indeed failed because of missing regulator symbols.
-
-Note that it is a bit strange sh7724_generic_defconfig and
-ecovec24_defconfig do not enable regulator support, as
-arch/sh/boards/mach-ecovec24/setup.c does contain regulators.
-
-> Change both to a 'depends on', but add '|| OF' for the superh case.
+> Are you sure this is correct and that you don't need to worry about the
+> "how do we model the supplies to an M.2 card" issue?
 >
-> Fixes: fae80a99dc03 ("mmc: renesas_sdhi: Add support for RZ/G3E SoC")
-> Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> See
+>
+>         https://lore.kernel.org/lkml/Z-KuG0aOwEnxuhp9@linaro.org/
 
-With the typo pointed out by Wolfram fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Dell XPS 9345 does not have an M.2 card, WLAN package is soldered
+directly onboard, hence I am quite sure this is similar to QCP.
+To be certain, perhaps @Tudor, Laurentiu or @Bryan O'Donoghue (if  you
+have it?) could confirm from schematics?
 
-Gr{oetje,eeting}s,
+>
+> > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
+> > X1-based Dell XPS 13 9345")
+>
+> Not sure what happened here.
 
-                        Geert
+Bluetooth and WLAN definitions were missing, as at the time I only
+knew the UART port being used for bluetooth, and was missing
+everything else to describe it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Alex
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Johan
