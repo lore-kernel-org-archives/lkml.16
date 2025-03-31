@@ -1,76 +1,61 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5C22E630
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69B52E630;
+	Mon, 31 Mar 2025 16:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439994; cv=none; b=GPxEuzoQW+uIdtgfVgvTGkrgXJyXOU9q1PteZdGxNwV0z2B21rdRIV3DbxvlXzGRXXs4W15sRyZI2ZFDuSSGknNNcFQDKWAQFuwfBZQMQeQVtz7bviOPe2/JB++utjAZGIKKbsIhv04oWLpKDIJDcBNRnhrDN5sfT23iuMZSsKg=
+	t=1743440003; cv=none; b=ZXDGEd3nvuPn9XRyb9YT7K1J2b9OU7oRCD+BgGOlddXzE7Z6B45O3UnTwnTxzNas/00D2r1po3c6qQPCsISFCqKaMqAeqSOE+KfymiWiNhZcqe0zJNaxhCDUsLqotlPlfJ4jwEwFSR+3HLEzDQaNlGvlFFAbJs+fgB/w2fMIYIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439994; c=relaxed/simple;
-	bh=dGxdrcfn2W7G9AYcMDBtp/foFYPOpu6GpogE5T91uPs=;
+	s=arc-20240116; t=1743440003; c=relaxed/simple;
+	bh=uirsi74QMRbhTLgK3RPciSRM0kf+D7K0c6QkNNYUlww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/GfY9MDpWLYsAR8MH35B5fTcYkWZL7vcxgVd4Yy54tqdWuncMRPzPUyTM6wCwEiXclJVJZUKaGBzW81JTQz4gubNuCjhQaUaN44j1cr0/53kRYK+/Xkvz8YcoX1mezb0TfOA8koJ3IiVid7kSO8xjNsQXLjj2A2Ioa2ORB7O24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=TBb/Dbyg; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="TBb/Dbyg"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so53555696d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743439991; x=1744044791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
-        b=TBb/Dbygck0KuU34BkdZ22+mvgrE+EZyDSfQDIlriw0+Xu7da4afwOEh5csp5hlGKI
-         8zaPh/Pv11DchGesfJrgQWPd+nu+eU3WIacinKSv7jMz4JhlG8D0LVjOgpHUH0GEjxoj
-         vUOT24zVPG4XR2e+hK7AmrwDYSSzcTeM/AVne66uXIVGNykeecq0JcdcG0uBAPuko/rl
-         XdWJqYOdUaWuyy+XZf2b5YMIC+DXRIgfQGzuEjyYbByxCoeqxzQiNGjM9TvU7YNfhuB7
-         gQgLISjdwcayO+2iTrmYUgKLkQpmOTmEaA7VjktfYKiZhrIY+lVC19qhtr7D5Be0K8R/
-         YK1Q==
+	 Content-Type:Content-Disposition:In-Reply-To; b=UptlIVMnfq1QXGYTMS5zuYwWbICMUlYtTAmK9TRslT/aoCsagIIApkjiCZ2Y9rvVWSApmx7g5Ol+OIZ5VnVwKOh+TEVxYsutzAI1jYcg1dejfm7/iYsWcl4R++Xp1zuS91nPNVpzT3OynkFZcXw3t5YVh4JMIdcDUFybh3RSOPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac41514a734so773716666b.2;
+        Mon, 31 Mar 2025 09:53:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743439991; x=1744044791;
+        d=1e100.net; s=20230601; t=1743440000; x=1744044800;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
-        b=MLsHymOucsXmmVoHKsDGQmqZzq444X1T5V7U0cValuqlmu5MWRyRLRHfSiMGyumQd3
-         7v6WYEbrkBCsdZMn+dyJ4pwVFC/3zWcx3dPz6rc/ujXutEVFNujzDFw4Mew0YDRftSXC
-         0PeHtu/xqQ23233nFxVhjSobeSzxXLt5VEyU3iqNQCnt99KrylsOUQBlwp71PnlZ5ghu
-         BzJyB3bq9VL0r2SUeBoH7/DtPlctxJTAU7dWC2auCb1SNbw+SUvFb/ugpd0vUhftAJLS
-         KGJfSfJZwwZl+r5pkN2tzyJ+8HQTHiy/YruWmS5X1Srdln8CCEpRapkZClibmAZ9iEZ5
-         0dAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQV2SDB1Vpp5aTPsw313rVWArjYxPVb6oGqz7DzNhtfI4wNmhrxAF5qcOZ7LCAyI42K59QMo7uJ91hJ9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh4kNjSPriDpvAf6jHyFFFlw8nCxV/QtAOOSu4mP9pqiqbaLl+
-	t7J7vDTugiEWZOAhFnghRUb3khq0fy1Dcf92qzoN25sMDJWXdupyq0hA0IzOGDg=
-X-Gm-Gg: ASbGncu5z2OXFQIgDC9s1zqts0Htnq79LjE9UUqiS8Hy4d+3SHZI9AtX5U6U5wvRdj3
-	TRJ3QGUiry1DqVoL+reFIyEfR/zHXy2SKXAJwRTtMLDOHC3XvuKsIAojWg5XB14DvZFCDFFnVKj
-	tpQRXRNA9MOg3/v/ZY3VqAUbquLhJomNT8FXT3A1Hma90A7ZfEZOzd3VowvtBasLsS/+tTim67X
-	j3g/Nc1vl8FhsyiByLnaT+u7xwQUxsxulgqMFeFqcgMxbAzeEk6HHJh8VSCuXpoATVll7B298ua
-	95Irh0ok/XuiTR9m8qPCc2S+Gw32774O9FJp0nQ4f/c=
-X-Google-Smtp-Source: AGHT+IFd+qsosdQQtA0DsjOuFOjNzDgnTDzOhpn2WIRyqS+ggjdGBL/fAbxW/5YG2w4V0Rf+gmk9vg==
-X-Received: by 2002:a05:6214:1d2e:b0:6d8:846b:cd8d with SMTP id 6a1803df08f44-6eed627129bmr126446056d6.30.1743439991034;
-        Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eec9797218sm48420876d6.110.2025.03.31.09.53.10
+        bh=x8kiN7eLFUJac7lbxd3vfgS9gP5HfsbkmZxnPYONZp0=;
+        b=WkvmaKl9ulGX2Zb2x9kLn5HQg+Craaa+dUnarGaq/LvqaC087Wkykcc4R3b+n1xTP8
+         2152CF7KwvWWx88VS0yq2Vy5BcGU0dYZ2PBfs4iPxpDwrS3biLbYWI9uYrzzHWpk7UEb
+         pxOxTDQS2LwtzBrBJNxxYQ4iMR7v/ldI+2/xkygtX/X/U9nCV9o01cLIqEXn4SQIisAa
+         be9jojHUzELDPMagAhxBM3exmXIVLmzrSaMdxDD/995jpC4FmdZghqyjyZ10S68miqss
+         5GiVTxIVdtKYHNd/1UpH/ufd/V7ZJbEWrKSqeudg0cnuNmYaFeSsU9LewXPR0UzSU57W
+         +zEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5GGbNNWDLFCgEfIUkA2vz6DKSX949Oia/FsebUbu8ll1o1+8RK8JhgJFWHIV0v8KmuHJ2uKdm@vger.kernel.org, AJvYcCXdBPHDooctdlXiGv7to7V4ObnTAB3ZDh9PrO5fO717C7bbCbq6t53TMYXzB/aBgvCT7qC32c4dY2GRyiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo4r5YhGStiN7pMjWMvNoiXbKFRC6ACMnIyQZirG2/88S4izCj
+	6tODHkacsJCdg5Zf5s6n7pqBn4Wk+4P3b6P527mGNPCiqjKtRxmd
+X-Gm-Gg: ASbGncv/AmCEoBw1Q4VUo8brat51OOUFyzlmHitIeS3sfLMeCTnjvmvnil+pcrtCLxh
+	zoJFVIppi25GMWB2RvVPJzn/380vnTsrFvk5pZW+w0AZkrtxjZA4PR7yEMwRMMUfcvVZh9Cneij
+	tMyZEqCiU1raAoLU3ZW1k88a9O51609PQM05Loe2S2nSZoXuwFF8OTuF9+WZDePNebwXoZYF+41
+	c68dKFBcAG25SwUK3thjHZrMhOtp/v7sNA0verA76V/2h3b+g1BcVoWe49NPeAtI5cVeFCf+afZ
+	nkPPcYCDObVdkZSqq8GLCv7gOVvxfxeMU07LhjY5yeox/ys=
+X-Google-Smtp-Source: AGHT+IE9922MjUJICjoSdt3gXr1RrTL9yHFwi15eZ1VjaW34j4d0GksH32LkpPOC7971G4TdagihHg==
+X-Received: by 2002:a17:907:2d29:b0:ac2:a447:770b with SMTP id a640c23a62f3a-ac7389e6bfcmr859276166b.21.1743439999694;
+        Mon, 31 Mar 2025 09:53:19 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:71::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719223e1esm648292366b.7.2025.03.31.09.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 09:53:10 -0700 (PDT)
-Date: Mon, 31 Mar 2025 12:53:06 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, chengming.zhou@linux.dev, sj@kernel.org,
-	kernel-team@meta.com, linux-kernel@vger.kernel.org,
-	gourry@gourry.net, willy@infradead.org,
-	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	minchan@kernel.org, senozhatsky@chromium.org
-Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering
- systems
-Message-ID: <20250331165306.GC2110528@cmpxchg.org>
-References: <20250329110230.2459730-1-nphamcs@gmail.com>
- <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+        Mon, 31 Mar 2025 09:53:19 -0700 (PDT)
+Date: Mon, 31 Mar 2025 09:53:16 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Stanislav Fomichev <sdf@fomichev.me>, kuniyu@amazon.com,
+	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+	andrew+netdev@lunn.ch, Taehee Yoo <ap420073@gmail.com>
+Subject: Re: [PATCH net] bnxt_en: bring back rtnl lock in bnxt_shutdown
+Message-ID: <Z+rIfMYoinNfz820@gmail.com>
+References: <20250328174216.3513079-1-sdf@fomichev.me>
+ <Z+qAYXmGY08pQKKb@gmail.com>
+ <Z-q08YfJMq8Q76ki@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,45 +64,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+In-Reply-To: <Z-q08YfJMq8Q76ki@mini-arch>
 
-On Sat, Mar 29, 2025 at 07:53:23PM +0000, Yosry Ahmed wrote:
-> March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+On Mon, Mar 31, 2025 at 08:29:53AM -0700, Stanislav Fomichev wrote:
+> On 03/31, Breno Leitao wrote:
+> > Hello Stanislav,
+> > 
+> > On Fri, Mar 28, 2025 at 10:42:16AM -0700, Stanislav Fomichev wrote:
+> > > Taehee reports missing rtnl from bnxt_shutdown path:
+> > > 
+> > > inetdev_event (./include/linux/inetdevice.h:256 net/ipv4/devinet.c:1585)
+> > > notifier_call_chain (kernel/notifier.c:85)
+> > > __dev_close_many (net/core/dev.c:1732 (discriminator 3))
+> > > kernel/locking/mutex.c:713 kernel/locking/mutex.c:732)
+> > > dev_close_many (net/core/dev.c:1786)
+> > > netif_close (./include/linux/list.h:124 ./include/linux/list.h:215
+> > > bnxt_shutdown (drivers/net/ethernet/broadcom/bnxt/bnxt.c:16707) bnxt_en
+> > > pci_device_shutdown (drivers/pci/pci-driver.c:511)
+> > > device_shutdown (drivers/base/core.c:4820)
+> > > kernel_restart (kernel/reboot.c:271 kernel/reboot.c:285)
+> > 
+> > I've got this issue as well.
+> > 
+> > > 
+> > > Bring back the rtnl lock.
+> > > 
+> > > Link: https://lore.kernel.org/netdev/CAMArcTV4P8PFsc6O2tSgzRno050DzafgqkLA2b7t=Fv_SY=brw@mail.gmail.com/
+> > > Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
+> > > Reported-by: Taehee Yoo <ap420073@gmail.com>
+> > > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> > 
+> > Tested-by: Breno Leitao <leitao@debian.org>
+> > 
+> > > ---
+> > >  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> > > index 934ba9425857..1a70605fad38 100644
+> > > --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> > > +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> > > @@ -16698,6 +16698,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+> > >  	if (!dev)
+> > >  		return;
+> > >  
+> > > +	rtnl_lock();
+> > >  	netdev_lock(dev);
+> > 
+> > can't we leverage the `struct net_device->lock` for the shutdown.
+> > Basically we have the lock the single device we are turning it down.
+> > 
+> > I am wondering if we really need the big RTNL lock. This is my
+> > understanding of what is happening:
+> > 
+> > pci_device_shutdown() is called for a single device
+> >  - netdev_lock(dev)
+> >  - netif_close(dev);
+> >     - dev_close_many(&single, true);
+> >       - __dev_close_many()
+> >         - ASSERT_RTNL();
+> > 
+> > Basically we ware only closing one device, and the net_device->lock
+> > is already held. Shouldn't it be enough?
 > 
-> > Currently, systems with CXL-based memory tiering can encounter the
-> > following inversion with zswap: the coldest pages demoted to the CXL
-> > tier can return to the high tier when they are zswapped out,
-> > creating memory pressure on the high tier.
-> > This happens because zsmalloc, zswap's backend memory allocator, does
-> > not enforce any memory policy. If the task reclaiming memory follows
-> > the local-first policy for example, the memory requested for zswap can
-> > be served by the upper tier, leading to the aformentioned inversion.
-> > This RFC fixes this inversion by adding a new memory allocation mode
-> > for zswap (exposed through a zswap sysfs knob), intended for
-> > hosts with CXL, where the memory for the compressed object is requested
-> > preferentially from the same node that the original page resides on.
+> [..]
 > 
-> I didn't look too closely, but why not just prefer the same node by
-> default? Why is a knob needed?
+> > Can we do something like this (from my naive point of view):
+> > 
+> > 	 static void __dev_close_many(struct list_head *head)
+> > 	  {
+> > 		  struct net_device *dev;
+> > 
+> > 	-         ASSERT_RTNL();
+> > 		  might_sleep();
+> > 
+> > 		  list_for_each_entry(dev, head, close_list) {
+> > 	+	  	ASSERT_RTNL_NET(dev);
+> > 			...
+> > 		  }
+> 
+> - netif_close adds dev->close_list to the list (if it was up)
 
-+1 It should really be the default.
+Right, but that list has only one net_device entry, right?
 
-Even on regular NUMA setups this behavior makes more sense. Consider a
-direct reclaimer scanning nodes in order of allocation preference. If
-it ventures into remote nodes, the memory it compresses there should
-stay there. Trying to shift those contents over to the reclaiming
-thread's preferred node further *increases* its local pressure, and
-provoking more spills. The remote node is also the most likely to
-refault this data again. This is just bad for everybody.
+netif_close() instanciates a single list and merges it into `dev->close_list`
 
-> Or maybe if there's a way to tell the "tier" of the node we can
-> prefer to allocate from the same "tier"?
+> - __dev_close_many walks over that list, so your new assert should
+>   trigger as well
 
-Presumably, other nodes in the same tier would come first in the
-fallback zonelist of that node, so page_to_nid() should just work.
+Why? Isn't the list only contain the dev that is already protected by
+netdev_lock()?
 
-I wouldn't complicate this until somebody has real systems where it
-does the wrong thing.
+> But also in general, it would be nice to keep existing
+> rtnl+instance_lock scheme for now (except were we want to explicitly opt
+> out, as in queue apis); we can follow up later to un-rtnl the rest.
 
-My vote is to stick with page_to_nid(), but do it unconditionally.
-
+I am just wondering if the code as-is is already safe from a locking
+perspecting, and just the warning (ASSERT_RTNL) is wrong.
