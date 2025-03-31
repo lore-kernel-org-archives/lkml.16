@@ -1,180 +1,134 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6301D2144C9
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93FB210186;
+	Mon, 31 Mar 2025 15:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743433206; cv=none; b=uaksriFxpAcq25DmeFH+s2tvpXAUziHPbqqpOk7IQNEXhyoTVIuVSBk0vgQ3yss0p2xqxOy+Ov2BO8D8NOH99n0GBoJXlXC0J9a+kg54/TPTVkl4GN99/HBBFDYDa9iLyzHYSsrkhxrmVvV5Ltub5SsGPsCf7kbpmn0Tc17tJgw=
+	t=1743433227; cv=none; b=QrZKUivAhI0MRyvr6DaxYDv8tuxoODiVH4LRurpbaAtdTj/yk5T7qVsXpTcdWl38RbmpklWPFpavVDUcJwT/UL6wU9FfMZ3yyFd9fPWgXfspwkmj/8kMM6NBrpVF4C9ihSEP8IgK6ommAAg2upzBG0PVBuFuzq9koc0zD4LWAuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743433206; c=relaxed/simple;
-	bh=1EN/cIMgUtWr0qWN49ERSHoJ6jcvO58c2E3XnD9QX1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O//5BzukTUKCIo47/VhGdQghvA+zHyNNyXvhgB/NiR5013R7iTheVV8PjMWlBYhIhHtfbkD67BacqjOLtTpPh3gtFMqIKdvx+Sx+tCq/+dlx9pAuz1qe9EDE9X5hZ4lIcicSZtvo07Pu8+MCpQZpre3oI+ZSRDvluxQgbgq91fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VvKN2nlt; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743433227; c=relaxed/simple;
+	bh=BlHwWo/OKseWfoggWADzoDSruDVCELXc6amipdix5Ws=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=IJiB7igqwzlQ0qDseR041L5XyI/t7gksuYhwUZ7PfyzKvlShzOHRoLMtsk2Nz1fTi2aV7jwd5w5ZN3qlJZqY8pwFKJykdAyB01bJXBbzYxfB1Lbx/PhPsBndSS66iPseC19QfxJ2X7bkB74pgt+nbr6gjm2YYmMPw34UqKwYZM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wB+Cd8iE; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VvKN2nlt"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476b89782c3so50772441cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743433203; x=1744038003; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q/XP5iQdJ2sfX5iQDsDzT/UIhpAdSsTpMGtKs110k1o=;
-        b=VvKN2nlt3tFyCTyT+cKUdfgSwQVwkP6ps/amL+FYl7nSq5S5noWmOp3e+UCPYSZs6K
-         SPKddWdgvScKp4PfnOujme1iYrAgAbIFnNin4aFXrCeimA7ZMNL5R4yKpHD7l/awwD0u
-         uPRevIz4sRx+qGuDNlbLnQ0A+uzESW1JUhyhrTdbgG7Vntb9G2lHp9+zTEma0gx2GXwa
-         JlzWbr8r974q94aGwiIDTWcJ8IuJHpF/yWqJzY0kIKCVPt/c4JMo8AGh8ugYQZYLq+YB
-         W83Iy/rQUELTUrrrTOIvwvQBQPWOAU5W2a9i7SUZzbBzQ7ZnM7/NhWQUatqTSyYxAPqA
-         zHqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743433203; x=1744038003;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/XP5iQdJ2sfX5iQDsDzT/UIhpAdSsTpMGtKs110k1o=;
-        b=VB+rla4WXAsCeNgEKx+KgTBGBq9dXY39t3KFnIUC6HB4mhInmNthhDui2BhW5CoPls
-         m242MOfQM4t/p5IbGbp7hYO5LdylCQKKzWg2tei6iLK5kzAVz3eeehl/tBXTWAhUbaQZ
-         iMnXKKgerIAAJ4XBBYn93cFJzvE8R6d8lzujvWexu/VowkVMatiWjJT5IGisoE5s6tI3
-         /C042mGBMNqTZnq7+ISgrgnRcs8tGnZgAyoCf3QiygKUKpH2TEbVpTxCCjoP7c7rnly3
-         zvbFLhuZMK8VoujsWpDLJehTH7TdAxyOzQDvpNSxb0MGyIitKoeBZEf2gvv4/UFLzAEx
-         BYkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnRi/a7yMiXTUS2HdUmwyLOsbxzTQ84w9bbBro0/0pXadEVSlPTZKpcmlTCjfO8qvkFKRkecziyQCvw0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsIwy0EvtBGeyUwwLAIeqb0krKMwen+KPvgfvHlxzCOU5WxiCl
-	Rjat2ARMEUWFszxw0+O4fuyOVodIhBmQ/JriqVF7A9o0faCY8HMYjjCKLlDBXIk=
-X-Gm-Gg: ASbGncsUhZTqGauMObXDrMptUrlkQfDKyaStMPSACRXy5VGhcZwnV1TDILI465RM3Wc
-	UyeUb5lMXtleS8WWh5Ay451LLrGnUaV7ZeC75MMH8Rw6yP/hw/+8FGlAEk46q77yl6vrmLozzuf
-	tb9A+W2i59gjmQt7nhlAsR1G7sX3UT6VJs63m2y74Lw56634XpWz8CGZusVmPMbMOL95KbephT5
-	XGWuHVylqiHbfIEBpGaeG+y9X28GM8yju3Ybn36V068PzyDNM0tm2EKth3qX4LoM4foWiDv9Sqm
-	RTBIdlxZhodA98+5zZdptpX3j1TJkhRISFzyDdgdNQk=
-X-Google-Smtp-Source: AGHT+IE9kLbI8h0rUyhUxntQ/fxPgI58b5Kb5NuIQENL4V46jZPC7rePLkR5c64cC1zxLsKy2I1Ivg==
-X-Received: by 2002:ac8:7d08:0:b0:471:cdae:ac44 with SMTP id d75a77b69052e-477ed78e91cmr123041321cf.47.1743433202781;
-        Mon, 31 Mar 2025 08:00:02 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47782a49facsm50913661cf.31.2025.03.31.08.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 08:00:01 -0700 (PDT)
-Date: Mon, 31 Mar 2025 10:59:57 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Sewior <bigeasy@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Introduce try_alloc_pages for 6.15
-Message-ID: <20250331145957.GA2110528@cmpxchg.org>
-References: <20250327145159.99799-1-alexei.starovoitov@gmail.com>
- <CAHk-=wgRbk2ezu1TNewZQSrT1MCzP-xAXrcHXULMeW=RRSak5A@mail.gmail.com>
- <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wB+Cd8iE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743433222; x=1744038022; i=markus.elfring@web.de;
+	bh=ONG0BJhYcdFcbdbbG9uUilO0npdYdFa1cy8TdF6a93M=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=wB+Cd8iE+DqToF1NS/R3/YV9BZsYuknrDQn3p5akJ0SVzAMCEHX0umWWZlMUhUps
+	 W7uQGq/7H+hutF2zICuzeE/r5iN92kLrdaUILMhfECNYHrTOh1+6YYtjax8IbG/59
+	 ElMx24D/63//ezeRHpxiXB8HyTMCtcj7ThqIwsyoL0EChx+y3aGx/lm6pHkqwukGX
+	 xHXWdy6r1Io8y2X2eAC6DKNok/6Mxl3kRfdqQm1oDXNax/fiWpTCQ250ytfjNHdCx
+	 HLwUm65mDLBPH5PvhuzP4OeoCF9Z6JAodzpeZn0xU86jHxVKbCvKx/IKPI9wfAsKV
+	 dj89YU14+pnVH+oFTQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MJFhJ-1tfFjZ2Zz9-00Vc5g; Mon, 31
+ Mar 2025 17:00:22 +0200
+Message-ID: <b1749989-ae58-4b1d-b228-62c996dfe87d@web.de>
+Date: Mon, 31 Mar 2025 17:00:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJBHPbq6+TQhM2kmWNBTiPoB50_fnVcwC+yLOtpjUWujA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Will Deacon <will@kernel.org>
+References: <20250331144324.12940-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v3] driver: tx2: Add NULL check in tx2_uncore_pmu_register
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250331144324.12940-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Kk9i/dDmIdF1mDcszJt+OqM6Us9gi274qI3kCBdJbalGiQIIJUi
+ cnj5SZU15ThuDoXnTCc4+50LqBRM1qeAqJlnkrZKvk8hSECSzOAxp+dYPwe+ehMJVijdxQH
+ aaa5aNCNyGNHhyRMfn9rJG957R67+ydkg0hvIYr8G7h5yRIdUA0T8rzOE2ZAZml7X0lRQG0
+ 1oWNjZUXcweWzSgerSJqg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5wmAebdhJ6A=;DEPTNbWInGLhXRlQgnpQ1+Q1V0s
+ NLDq0/gV/aPjY/DxmczBTdB85kA5Dd0cmkzI7pJ5EcP1hyi6cWWQpoBOx9CyZCSR52+FCb3Oe
+ jxidFSrMeUQOR8spo0ETqUck1iPGfOGo7wVhkA9WcbOjwmkfi2tewgnI5VDuD6iFMGYXFwGql
+ Y1QoaforH7Eg6b4yITKRHSiHzi7ZXiABHcHOEvfD0j1t6whbK7AAk0K2KIcbCQlCnVLxagXaW
+ yzcL0v7fTr8ua1ENQvZFkWOoRE3Y8ewWnVni+cUhGvlbheoxJ5FtDGxSL+HwEud0nW1OpKVnE
+ Y4CvbT9wzq8/Vu1RhAVk0HzuR7vJ9qPJb0mt21gxwL42+IL0rqQ5MWawEAckFmjBwHTxNjeBW
+ HL0iwBJFMTB8w7VeQwqBZ0A15u4hbn2XVZPOk+U3pfWVMja0tfzB5L10A5sWCJAvThT7J2mtr
+ jlFCEwe/Nn4OWDBzGN0uHXZIJROM6VqcE7nVyDC1f1ZDodgwgdn5E6rWbAlGFSjHkKAIFAvfa
+ aoIbQQxGVztVge3CE1b68P6lXhUj1RyY/fhJFcXoCAj1tgxAxSFOxfL3DtwBNv/LbVRcWm0C6
+ UtZbxuu/3KkdC+RSmCfQyq4eHQtrpgG7qSNn6Pcbe98xXaaJdxTUyZ28kys7/3UsEUQiWFwMQ
+ ghPpW3GgprY0bg0QeE1somZRTiPl02OFblGfnkP/7ZQfoLAPc45sJuz4EMrMDeXs+fCJrDg42
+ 8PWb0IXz7fiUELX7PscK3kDdxFHI30bpXlaud12IsIGBjtonRCwbyMT5HLxzdJskL9Ambl1zy
+ wkQdKrjPXgWObYB2+nbky5pcJI0rZqCSJzHpMHER9LkZRY0rEosdSEtqlUAmVzaRTCuPk4axc
+ kOB4l5h+zhciijlhc1k9PDwZD0lpmJ3kg3NkY+vCLlm2cuQPg0JNTJo5OrThwYHrQLQMhvthD
+ mAomd63icEwafFTGnSPhrydakAWv2MaCfX6Q5s56Prvgnwi1vSKw3AvkeeNL2iUud5r9E0H2C
+ RXg5bVEiHMOtT5GUv8tJEqPjKUIEgkgm8uONKNAd9gREyQ5uW1VYQPHOxnAZs56oF25o+vUPJ
+ DlB2NubSuNWyxYAeKyPZSu9+yNhBvUbPsREdj6Wpgo+fIRqlqUcubaKqiS4FUxl7anj9JZBWX
+ HRMxQ6kGfuK/948/QuFcJbSJJuK+gn0GTTg/W7mlaLpTx6sDoovj98vzfd/D/uCKpsgNgbo7A
+ fT+cK5iRJ5lyk0BfsEumOFA4myjuzxM6AtVNpSLp/gIKa7nMO20PCL/g+yFPus1YTh8kcEW4S
+ kJzmef2vKRd9AGnuxIvK7P45/0C1cylTTG2kROoRZQ9X/rM4AbHR3MQEpi+7B+5YLa9/1I49Z
+ DS8gf/Hgys2eMFTkL8IXuyrDEBZ5fgFI5rnZJ7pVtZ3S2rPWkpGZu0xKAYCNeNCrcID4WfOiw
+ TN8QN/TO9pGPHWyAuxnEtHJ4QGqQfLyhMUdm28CMgxyWSM1JV/AcwY+H3oopk6gfMCPJkhg==
 
-On Sun, Mar 30, 2025 at 02:30:15PM -0700, Alexei Starovoitov wrote:
-> On Sun, Mar 30, 2025 at 1:42 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Thu, 27 Mar 2025 at 07:52, Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > The pull includes work from Sebastian, Vlastimil and myself
-> > > with a lot of help from Michal and Shakeel.
-> > > This is a first step towards making kmalloc reentrant to get rid
-> > > of slab wrappers: bpf_mem_alloc, kretprobe's objpool, etc.
-> > > These patches make page allocator safe from any context.
-> >
-> > So I've pulled this too, since it looked generally fine.
-> 
-> Thanks!
-> 
-> > The one reaction I had is that when you basically change
-> >
-> >         spin_lock_irqsave(&zone->lock, flags);
-> >
-> > into
-> >
-> >         if (!spin_trylock_irqsave(&zone->lock, flags)) {
-> >                 if (unlikely(alloc_flags & ALLOC_TRYLOCK))
-> >                         return NULL;
-> >                 spin_lock_irqsave(&zone->lock, flags);
-> >         }
-> >
-> > we've seen bad cache behavior for this kind of pattern in other
-> > situations: if the "try" fails, the subsequent "do the lock for real"
-> > case now does the wrong thing, in that it will immediately try again
-> > even if it's almost certainly just going to fail - causing extra write
-> > cache accesses.
-> >
-> > So typically, in places that can see contention, it's better to either do
-> >
-> >  (a) trylock followed by a slowpath that takes the fact that it was
-> > locked into account and does a read-only loop until it sees otherwise
-> >
-> >      This is, for example, what the mutex code does with that
-> > __mutex_trylock() -> mutex_optimistic_spin() pattern, but our
-> > spinlocks end up doing similar things (ie "trylock" followed by
-> > "release irq and do the 'relax loop' thing).
-> 
-> Right,
-> __mutex_trylock(lock) -> mutex_optimistic_spin() pattern is
-> equivalent to 'pending' bit spinning in qspinlock.
-> 
-> > or
-> >
-> >  (b) do the trylock and lock separately, ie
-> >
-> >         if (unlikely(alloc_flags & ALLOC_TRYLOCK)) {
-> >                 if (!spin_trylock_irqsave(&zone->lock, flags))
-> >                         return NULL;
-> >         } else
-> >                 spin_lock_irqsave(&zone->lock, flags);
-> >
-> > so that you don't end up doing two cache accesses for ownership that
-> > can cause extra bouncing.
-> 
-> Ok, I will switch to above.
-> 
-> > I'm not sure this matters at all in the allocation path - contention
-> > may simply not be enough of an issue, and the trylock is purely about
-> > "unlikely NMI worries", but I do worry that you might have made the
-> > normal case slower.
-> 
-> We actually did see zone->lock being contended in production.
-> Last time the culprit was an inadequate per-cpu caching and
-> these series in 6.11 fixed it:
-> https://lwn.net/Articles/947900/
-> I don't think we've seen it contended in the newer kernels.
+> devm_kasprintf() returns NULL if memory allocation fails.
+
+                call                                 failed?
+
+
+>                                                           Currently,
+> tx2_uncore_pmu_register() does not check for this case, leading to a
+> NULL pointer dereference.
+
+This (temporary) view should be reconsidered in more detail.
+
+
+> No automated tools were used;
+
+Further development tools can help for such analysis attempts.
+
+
+>                               this was found during manual code review.
+
+This approach might be misleading so far.
+
+
+=E2=80=A6
+> +++ b/drivers/perf/thunderx2_pmu.c
+> @@ -738,7 +738,8 @@ static int tx2_uncore_pmu_register(
 >
-> Johannes, pls correct me if I'm wrong.
+>  	tx2_pmu->pmu.name =3D devm_kasprintf(dev, GFP_KERNEL,
+>  			"%s", name);
+> -
+> +	if (!tx2_pmu->pmu.name)
+> +		return -ENOMEM;
+>  	return perf_pmu_register(&tx2_pmu->pmu, tx2_pmu->pmu.name, -1);
+>  }
+=E2=80=A6
 
-Contention should indeed be rare in practice. This has become a very
-coarse lock, with nowadays hundreds of HW threads hitting still only
-one or two zones. A lot rides on the fastpath per-cpu caches, and it
-becomes noticable very quickly if those are sized inappropriately.
+Should your source code analysis approaches take further implementation de=
+tails
+better into account?
 
-> But to avoid being finger pointed, I'll switch to checking alloc_flags
-> first. It does seem a better trade off to avoid cache bouncing because
-> of 2nd cmpxchg. Though when I wrote it this way I convinced myself and
-> others that it's faster to do trylock first to avoid branch misprediction.
+Example:
+perf_pmu_register()
+https://elixir.bootlin.com/linux/v6.14-rc6/source/kernel/events/core.c#L11=
+859-L11862
+=E2=80=A6
+	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
+		ret =3D -EINVAL;
+=E2=80=A6
 
-If you haven't yet, it could be interesting to check if/where branches
-are generated at all, given the proximity and the heavy inlining
-between where you pass the flag and where it's tested.
+
+Regards,
+Markus
