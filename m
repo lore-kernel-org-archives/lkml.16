@@ -1,98 +1,137 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3113192D96
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5550A1DE4E9;
+	Mon, 31 Mar 2025 08:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409877; cv=none; b=ohxfygffVzqXymD6kGXNfXCRvFTqFHwX8NqvpmWc+tbCpCP4j16TtMvg+L0J/sY4joinCNcdIR3hKW+ku5MunUqu267l7x9/7p8UDsxFV6jI85B4wXA2RxO69MtOp7oD5uai7Try1S3InQVKdsAJaG2Aq/RgILBTjvXJl0eGEpQ=
+	t=1743409926; cv=none; b=OBgtd4yJw98ts8eoP47Pt/km1oDqn+htmAJx9Ws9KjK8sLWJKqPvRsVZSDwF7tM/S8BThq6vnSlPF15+e9MzZCLk3EJd0UCrk5b1FNgz+dNWVaBoC0sZW606LwdP2/Q+oCAcmkiKVFOsIz0J05R/vq8HsBHZQsXWxKMnzukCTWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409877; c=relaxed/simple;
-	bh=VWjQ2H7Mg0vyopqPuveP+v7f2GD7fiSkOBSLr2u7ZHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PAufOb2RDaxkQKCg9yQFPRFHe9Lrub55o4TI0dtwczFWMmGLdiphzNC2ybQIyNiK6Se5mHuGrBazdPuDaduCmle2yy72VrWWc0qQo/VQO7o40qy/EZIPKQ4HPb2GgO1fR3jSLsjcDEqg2yAqhxkX6JSXyhw8ty57dGpYbW8XViY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pE2RVCZE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743409926; c=relaxed/simple;
+	bh=Ox2GO5lQKYVL4kYsRQotXKfVSyMyuluCQgezA+8ZxZs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=qmFXOJNXf8By1FNy8rsRoaPKtltgu0K8RHSKKZWGZ81OtHbhw9RvWZlez8zT3Vp1BmtIogBeqViYb+09sFlKffEydSrgFWOUyHVNYticwUGBCjvZYWn9tbCzxf2wExfqjZMORu0x0sPVmRdPEC8FmDTWq3vWVKay5MrtfznSEVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDIMiaM8; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pE2RVCZE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743409867;
-	bh=VWjQ2H7Mg0vyopqPuveP+v7f2GD7fiSkOBSLr2u7ZHQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pE2RVCZE4RnwX43eixACBSUYVBy1GTtFkrPYe10s4OfMjKpnmVylTISQpTkVq603M
-	 DXamK5P4Z4XKDInpwM9haVyaEN7z974JImXzh5YmQOsHRzdBkK3on0neC34U2OcmSv
-	 XWhKveckwK6gzrqb2x0wjQXaXaFEM7o3HIHtjtjqCN5NwonVNHkLs89BO9FyJClcNX
-	 uDvkYAok+H/Iv6W4CL3rOQtGY3KMIc3Iv4jKPSX/jnk8/zt4wGqSOUHhhmrmuIDprp
-	 jbnQOAi/kghrkmY1Vp+WV4xfVgHK3iS3Yz2zTQx3FcJAxQZWnVIyykUkrkOe7ELVOD
-	 VAX7pzSGt9Acw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4B2F617E07F3;
-	Mon, 31 Mar 2025 10:31:07 +0200 (CEST)
-Date: Mon, 31 Mar 2025 10:31:02 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>, Andrew
- Morton <akpm@linux-foundation.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob
- Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau
- <liviu.dudau@arm.com>, kernel@collabora.com, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [RFC PATCH v2 0/6] Introduce sparse DRM shmem object
- allocations
-Message-ID: <20250331103102.22be5363@collabora.com>
-In-Reply-To: <c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
-References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
-	<c1809502-e9b7-43f7-9d88-0e615bf1ff94@suse.de>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDIMiaM8"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-399749152b4so1622001f8f.3;
+        Mon, 31 Mar 2025 01:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743409922; x=1744014722; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k+tMNbKgRiLB8lJVsYqkKDo0KO7uHRjBBHK5RlY3Vjg=;
+        b=lDIMiaM8K2H2h2L0ki1QBp8vNsXbPN2NjToE+QUFTgCDN41OPJ64AnW+LAyOs+0msD
+         VrtuUp6Aq7QyGyAz2DLDZFaj/3malFuKnuCcldXsU0Yez0WH0JnVNsj41LiQayBXKuBN
+         vJ7b4Yu/NV6/85UEnLrguFa8aAEgK5XdVkNQg57XkpUQ/gnVbwRYpDYOXw611HCW3HRk
+         aTXRQeS5mwEBJJkDeWBDEZ07AaTHjEj2jGkS9JkaVNN7zZeJYHlA/tQ+K790OYt6HCVM
+         bzonvlro10zVkgiZrxdE87RQdV8zrxrZT4VbnbEwZGSH/j12JWQ8oEUT6MgqJxBQwdGY
+         9YuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743409922; x=1744014722;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k+tMNbKgRiLB8lJVsYqkKDo0KO7uHRjBBHK5RlY3Vjg=;
+        b=O/Zf5wm3JlXQwtooXKF5H5E7MkFf3spjq7AIPdhSqvSmt0oA2DOqUS8OtaJeYBv1Do
+         oy89z/mDrJy7R/nLHWSa1bP10lN7SEi1bFFhOrZfJwcsA6PXRMb4KRoxQo7zCn0J+sOY
+         1FuZApz+w5CVLizXodfOrEvJCslUe/XtaiBRKBA6f7pfS75mZ9dQxpTUML1dSpvcLAo8
+         640zizVU4F8OcNMDki/ZSOB0C5c5MpU1D19jmg4UuQ9ztmKN2QAUTi+k2BQLjIAoT+i2
+         Ejx2sn8SlUg4tCdqHfO9aX1B8l6utcUzTZzTcripl7/GazO/hE3Qu8XbN+Tt7BPyofFm
+         5BKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMy5rpCD7qZQXT6I7M7VsEjlXVaJbb9xDtB8AQKFszsNBZa2YMIwPr+2+CwcqxBXsu2cpjFU3Q9cMVCqs=@vger.kernel.org, AJvYcCXZm51sFDtmWeaVCV03LfeoSKpX9ssFsn0jLoIEiowj2nAzge1riCXEbynje3aEM0NoTZjmBlZPvQpIJhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPpGmxdNs0LhCtgp4xlgp+oPnluKcIIhc+2k6PlMWtuDGb8Q29
+	CKvie7FHQ9YZA4rlN93UFidgpW7+4dXQqCBvRVCfPV87SOBDtHz8Yj0aa9dvwsM=
+X-Gm-Gg: ASbGncu1TeHTSePzh6TWNv1+VlsRZFbfPKQS+eO9OGGYyZqOlNb8bV2BsJUhKd6w+12
+	7CJ8VA0MR69j9Qp8XYC5W/HPVvsGNz2GdwqipWbB9FU0z8A4mo/bv5khpw0aMM8V0Z4o7+1LGPu
+	BMM4SHgvoOo3rLDvmUHlu+Tdp2x8WX0WHQL3LDgl5TeqRFMeGpANLRdswF2rlMoyM6oXepIhbDj
+	D/1ka4/sE3uI+tsAICmXzvIST8o25dSB3kt6vUHy1U6sdLMUhmZlqF2LDbWwiL9MNdMu7QXBhCp
+	FlGMTH+GNagNXx8Il5IzaHP2PX+6jF6dnLzV6PVizcUxyTEBjZczQlLD7FgWGTwI9xjzzxzIFe2
+	OmfRN
+X-Google-Smtp-Source: AGHT+IF3IIX8Y8HMwmC2JofIJWbpvEKbvMkmKYJ0OfZmqccgguuLGNeaHlQct7nTtg1tmqoXIiA+NQ==
+X-Received: by 2002:a05:6000:1842:b0:397:3900:ef8c with SMTP id ffacd0b85a97d-39c12117d11mr5330258f8f.35.1743409922427;
+        Mon, 31 Mar 2025 01:32:02 -0700 (PDT)
+Received: from smtpclient.apple ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e082sm10814632f8f.69.2025.03.31.01.32.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Mar 2025 01:32:02 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH] media: si2168: increase cmd execution timeout value
+From: Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <Z-pNBAVhUwrcwDQe@shikoro>
+Date: Mon, 31 Mar 2025 12:31:48 +0400
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Peter Rosin <peda@axentia.se>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <0073F061-994E-4DE6-AC0E-E7E03DD30275@gmail.com>
+References: <20250331075838.3444332-1-christianshewitt@gmail.com>
+ <Z-pNBAVhUwrcwDQe@shikoro>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-Hi Thomas,
-
-On Mon, 31 Mar 2025 09:13:59 +0200
-Thomas Zimmermann <tzimmermann@suse.de> wrote:
-
-> Hi
+> On 31 Mar 2025, at 12:06=E2=80=AFpm, Wolfram Sang =
+<wsa+renesas@sang-engineering.com> wrote:
 >=20
-> Am 26.03.25 um 03:14 schrieb Adri=C3=A1n Larumbe:
-> > This patch series is a proposal for implementing sparse page allocations
-> > for shmem objects. It was initially motivated by a kind of BO managed by
-> > the Panfrost driver, the tiler heap, which grows on demand every time t=
-he
-> > GPU faults on a virtual address within its drm_mm-managed ranged. =20
 >=20
-> I've looked at panfrost_gem.h and found that the driver's gem structure=20
-> has grown quite a bit. It seems to have outgrown gem-shmem already.=C2=A0=
- I=20
-> think you should consider pulling a copy of gem-shmem into the driver=20
-> and building a dedicated memory manager on top.
+>> if (cmd->rlen) {
+>> /* wait cmd execution terminate */
+>> - #define TIMEOUT 70
+>> + #define TIMEOUT 200
+>=20
+> While we are here, can we rename it to CMD_TIMEOUT and put it next to
+> the #includes?
 
-Actually, it's not just something we need for panfrost. I plan to use
-the same non-blocking allocation mechanism for panthor's heap
-chunks/buffers, and lima could use it for its heap buffers too. The
-non-blocking page allocation is also something i915 has been
-open-coding here [1], and I believe that some of this logic could
-(and should IMHO) live in common code rather than each driver coming
-with its own solution, thus increasing the risk of bugs/inconsistencies.
-That's even more important if we provide a common gem-shmem shrinker
-like Dmitry's has been proposing.
+I=E2=80=99m at the novice end of kernel contributors, so like this?
 
-Best Regards,
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -9,6 +9,8 @@
+=20
+ #include "si2168_priv.h"
+=20
++#define CMD_TIMEOUT 200
++
+ static const struct dvb_frontend_ops si2168_ops;
+=20
+ static void cmd_init(struct si2168_cmd *cmd, const u8 *buf, int wlen, =
+int rlen)
+@@ -40,8 +42,7 @@ static int si2168_cmd_execute(struct i2c_client =
+*client, struct si2168_cmd *cmd)
+=20
+        if (cmd->rlen) {
+                /* wait cmd execution terminate */
+-               #define TIMEOUT 200
+-               timeout =3D jiffies + msecs_to_jiffies(TIMEOUT);
++               timeout =3D jiffies + msecs_to_jiffies(CMD_TIMEOUT);
+                while (!time_after(jiffies, timeout)) {
+                        ret =3D i2c_master_recv(client, cmd->args, =
+cmd->rlen);
+                        if (ret < 0) {
+@@ -58,7 +59,7 @@ static int si2168_cmd_execute(struct i2c_client =
+*client, struct si2168_cmd *cmd)
+=20
+                dev_dbg(&client->dev, "cmd execution took %d ms\n",
+                                jiffies_to_msecs(jiffies) -
+-                               (jiffies_to_msecs(timeout) - TIMEOUT));
++                               (jiffies_to_msecs(timeout) - =
+CMD_TIMEOUT));
+=20
+                /* error bit set? */
+                if ((cmd->args[0] >> 6) & 0x01) {
 
-Boris
-
-[1]https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/i915/gem=
-/i915_gem_shmem.c#L89
+Christian=
