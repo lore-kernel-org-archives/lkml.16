@@ -1,198 +1,140 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D103FE4;
-	Mon, 31 Mar 2025 11:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CFD1BEF77;
+	Mon, 31 Mar 2025 11:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421524; cv=none; b=O2jfAurnKh9fDhTeCsPRkhjQwVtgrDuK5oqztF3Lu+sArposOFZgQku9hou4o71yOf4eufTltKfJDtudxVxgASa01EOMV9CWkiImMJI65drumvJZu4U3WH3AeHhFsptRI/Z3930qHA4J+aBciPyDMg0M6Q3ZFGoJ4OQVtNmXfGE=
+	t=1743421543; cv=none; b=WJryaOHO9Y8f+2iParmhcDAtkDJRh8tKSnOTy+CQdY71K1bamsjTdMe7/Hp78q1EDii1dSURxWlsyB+uy2BaLWQzzSO3Dj4b2UxEHTeddISP0v5UwTLEiQ3n5rEVKROIt85Vxux6vD+5IFA5R4yCjN/wmm1Bgx06Inc+NgIFLsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421524; c=relaxed/simple;
-	bh=ECVyOQ4QJgwuY3BsSBfbArAjbpHavCxYsK47PAeOlRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m1+IHyTADtkuLb824j5redFhSozZcNiwTDUUDFb1M73ZBHO7Tg7EO6vOIozwJPH8SSlUQE4T+kxCZ0p5Nq8IEp4fGyHE2StF30sDsajH9A1GzsQnSgxmf6DucTNf2D2kMa+PWsXzjR5JsRUEj67zB8HntchZA9UeQhb1x6FC9ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ivdhCo7E; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1743421543; c=relaxed/simple;
+	bh=YjNj7isjZpaoY8aE2SSd4iBQGLVI1ommFerJ/LMFluU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QM4Rbp4CCESu1bgkXf8YMv0itzVJwpUGxf5+eelJD24v4cfYJhpGgWSZ36a/Em1g5V/UrmsFIrRDZmlh/lYPZDvzFHjFqLykNAR11/ADOi6p8p4a8Y1UOEG9UuxRFec54/4JXTg9CMzd+9aYUwjXL0OgPyuhWUlSoz2j2LGbwuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivdhCo7E"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso8066786a12.3;
-        Mon, 31 Mar 2025 04:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743421521; x=1744026321; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+WZetRp5ukCN3RFrLbUEaBdA30WIpXABNZMPxGA5CMM=;
-        b=ivdhCo7ENoa0caKzzBQvcDd9cRyqyPfibNVnGDwdl4bdOyP+haw2vXi8F8lpSpCBDB
-         YMt9DjPt5Fq/x2GhVZQgsVdXbRJNdsuGqXdkkOtcDG8lUi8dMmQUowsDE0WTfzw6lmkj
-         T837hxGLcW6zSIgzim7evfS4KM0MSwCopuoQHmcfWleJO0qoGhGCMe/CosmJoe4rCF7/
-         /BhF8VdRRMWXRaGSIxnT8cC+N+NWFp7GOaq7o/Oumy3s+9LvfM4btQoM4vH62SXAVcQw
-         ZUUn574xbz3bTQGbvHyji/jgZtIAyswc03t2fT1icg9bea3DMs+B0RnwwMVCuiWrNu2N
-         gysA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abbb12bea54so885859766b.0;
+        Mon, 31 Mar 2025 04:45:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743421521; x=1744026321;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+WZetRp5ukCN3RFrLbUEaBdA30WIpXABNZMPxGA5CMM=;
-        b=VZ8S/EfqfltEdwkcicFDUyMZt2+PF4v43MvXiLPkMJ0yhbX5X2/Lty1jiTNvbeBLTY
-         6tZZHmXcVG7chC0DqJjuxWawaVa1JBYz1sJypF+xA+Uudad9LTrZYLJ2b/4FE2u9CCvN
-         toBCnoMZH5XAr0nXMtBafhTQqgKeMLXU3uVuFMmLhSJWfuPV9Z0/lNW3etIo5TKXBRlF
-         bKSpmuk5VbZPS6TMQdgRMaS7XcDtFGSD9i8XFEbc/cU3m6hp+7xmttG3Z++PtI0D2bAP
-         tgB8VhOCx6LmoSod2EDQGS8leLS4c/J6JF6qHb+TR9bN9LZpKj6tmmUIldBqicj9UTy2
-         RRaA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8jyzQ8l3fbf4yibOxpcaQQqbykiMJi6E22j0cTyY8q9p2z3ylZbHsWE3URQXe4VGSbyDnatkxq3N2@vger.kernel.org, AJvYcCXGOyPYNxe/cb0ges+VEpN2zUWn8j5Tzs2NLZ73t+sA175+fxDo484dHLX8mMDRQT7WfQKQA8iAzB7ClrTf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIrX2DTY2vE/yEi8xmM8kRbXqFTwBQJkkbO8XwfL26nN5/t2SJ
-	GMKZ9Y1JAxR9dc5sNlsUYyp9TmmNvYXjj8Aoavf+K79YfLqnN8vf
-X-Gm-Gg: ASbGnctdL8vqgFs/wJT/WfAwlKcJf0MMxNDUR3jTf9FyPtvt9lgTZ1zEXR5AJUDZl4w
-	HTIgwXOC0E4/xm3sR+LjUXWImylzgPRyQS5SG3oTXiaQAiwxTy5XmDwh5uyD43WDXDp/mwMpf/F
-	fFJif/ST/7726RduPnnbWVhsEGayFgD1hr7A4hkCrSrTVpqZIJ1K4Gzk3b54Iz/lAj9XbuECgo9
-	+6IGNe1f2rU9IlGgbdJxRc4AfBttB5o/lpMD+naPT+s4UmHUZsXq0T1jONUbV8X6eHcceGvfX0L
-	aYfHYKg20xrb6/yAcuirQ5ltnWur48AxWkX5yrxU9ysPovMnr7u7VjzSoNVJtObfD4sOleI=
-X-Google-Smtp-Source: AGHT+IHcwdKHyjGn7qgKGCjwufvZuSvuzHtrMAol97MyCW4LRBy9QxYiA7v5eA7QLgnV+kdOOMmuBg==
-X-Received: by 2002:a05:6402:2709:b0:5e5:ca1b:c425 with SMTP id 4fb4d7f45d1cf-5edfd101725mr7051020a12.17.1743421520816;
-        Mon, 31 Mar 2025 04:45:20 -0700 (PDT)
-Received: from [192.168.5.165] ([92.120.5.14])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc1493d9dsm5532289a12.0.2025.03.31.04.45.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 04:45:20 -0700 (PDT)
-Message-ID: <e0d328e0-bc54-4763-9c55-694c0fd93746@gmail.com>
-Date: Mon, 31 Mar 2025 14:57:46 +0300
+        d=1e100.net; s=20230601; t=1743421540; x=1744026340;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WHaecyGu9k64BRqziBdIUjaEI9K4+K7PFPpeWvnnAAY=;
+        b=iDbsSm4VsZz8KG59mWFnsApPVSYbryXaOVy1GeWGvScfHB9DaTEvyXBS74tcbHr6Gr
+         1AuCIWSpSgM/neE9VQe8+YzQDQYeqMpBy01/iKPFP6De50Itjwium+t6QcD4z+JvDjro
+         DY/UiBKzxr2yQgrWFkoVE7Rrn1BVqBx6SWLGO2nHbOxNpDngvYn8yI3vlv9q1FQgN427
+         G8y6sk847Qsqgn/byYI2qevLxCyLQymB0pYnck8Bzc+Ppk7DAdkbmViXopGwGOg0U8+z
+         wx12TmY1o54WL0xH60wWYYMvP9ih9vNERoCvKb3TuoH6XYdp/xXTp0/Xg/aTCsX2gLR9
+         TITA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7maDtqbYXbM391mhySrBbp377A2iWHPs4jwXNGYYG/JxPVFvEW7Z9ltwG4AgWi+Z0Sh/o0jEWmKjoRi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAzEX/vnfbKNwnYxPOGiL6lAu9rD14jc119F1MQwBlciy1/6Xk
+	Am9R4dhC8qTvg2N7MH2JhPfMuIj54H47hFA7cVpFxVv4nqDfYMaq
+X-Gm-Gg: ASbGncuEOJgwIShMGz75t9N1u4RWDPMMDx3iaympnIw/MqnhN5ZDzl6cWlB27559W5H
+	9ALOTdeGLywOU5C0BSCLzNojc03MyKYrueEpr/o2wEB+QExWHlw6GTmUKYEWfQ2vil9EqcwIrUe
+	7PbPSUC3dRZzq6PKyDZDHqkvXLIX6FBJvcN9+ivmGcjoDZaYd3Jjh3+x61vHXMfkygY2YiMDzBT
+	etMZMZz5f02r2kU8BaeZhATv26GMLDqOoxDZv1i3aj4CYqgwKGrPompu4YtXV3nss0u0bO0G2KF
+	QfHmHy7gd+xmXzOGFE4mkaCakIZIuVl0+BLc
+X-Google-Smtp-Source: AGHT+IGBfH/XydCwbmLY8AYbkte/eSWnT9LoOEEI5ZVy6jIgtM7/Z/Y3vkPvuqLZQ9NNC9XMQl/grg==
+X-Received: by 2002:a17:906:7313:b0:ac6:d7d2:3221 with SMTP id a640c23a62f3a-ac738ae929bmr714290066b.24.1743421539939;
+        Mon, 31 Mar 2025 04:45:39 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:73::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b143sm617996766b.58.2025.03.31.04.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 04:45:39 -0700 (PDT)
+Date: Mon, 31 Mar 2025 04:45:37 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Stanislav Fomichev <sdf@fomichev.me>, kuniyu@amazon.com
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+	andrew+netdev@lunn.ch, Taehee Yoo <ap420073@gmail.com>
+Subject: Re: [PATCH net] bnxt_en: bring back rtnl lock in bnxt_shutdown
+Message-ID: <Z+qAYXmGY08pQKKb@gmail.com>
+References: <20250328174216.3513079-1-sdf@fomichev.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] dt-bindings: bus: add documentation for the IMX
- AIPSTZ bridge
-Content-Language: en-GB
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
- <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250324162556.30972-1-laurentiumihalcea111@gmail.com>
- <20250324162556.30972-2-laurentiumihalcea111@gmail.com>
- <20250325032303.GA1624882-robh@kernel.org>
- <2301b0f7-1a76-4823-8d3f-d346f8f8e865@gmail.com>
- <20250331064152.g4hlw6pbpzbnlsmp@pengutronix.de>
-From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
-In-Reply-To: <20250331064152.g4hlw6pbpzbnlsmp@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328174216.3513079-1-sdf@fomichev.me>
 
+Hello Stanislav,
 
-On 31.03.2025 09:41, Marco Felsch wrote:
-> On 25-03-28, Mihalcea Laurentiu wrote:
->> On 25.03.2025 05:23, Rob Herring wrote:
->>> On Mon, Mar 24, 2025 at 12:25:52PM -0400, Laurentiu Mihalcea wrote:
->>>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>>>
->>>> Add documentation for IMX AIPSTZ bridge.
->>>>
->>>> Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
->>>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
->>>> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>>> ---
->>>>  .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 107 ++++++++++++++++++
->>>>  1 file changed, 107 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml b/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->>>> new file mode 100644
->>>> index 000000000000..c0427dfcdaca
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->>>> @@ -0,0 +1,107 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/bus/fsl,imx8mp-aipstz.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Secure AHB to IP Slave bus (AIPSTZ) bridge
->>>> +
->>>> +description:
->>>> +  The secure AIPS bridge (AIPSTZ) acts as a bridge for AHB masters
->>>> +  issuing transactions to IP Slave peripherals. Additionally, this module
->>>> +  offers access control configurations meant to restrict which peripherals
->>>> +  a master can access.
->>> Wrap at 80 chars.
->>
->> fix in v4, thx
->>
->>>> +maintainers:
->>>> +  - Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: fsl,imx8mp-aipstz
->>>> +
->>>> +  reg:
->>>> +    maxItems: 2
->>>> +
->>>> +  reg-names:
->>>> +    items:
->>>> +      - const: bus
->>>> +      - const: ac
->>>> +
->>>> +  power-domains:
->>>> +    maxItems: 1
->>>> +
->>>> +  "#address-cells":
->>>> +    const: 1
->>>> +
->>>> +  "#size-cells":
->>>> +    const: 1
->>>> +
->>>> +  "#access-controller-cells":
->>>> +    const: 0
->>> With 0 cells, how do you identify which device it is?
->> we don't atm. We're relying on the default configuration.
-> I think Rob is speaking from DT API pov. What the driver is doing with
-> additional information is up to the driver.
->
->> we don't have any APIs for AC configuration so I left the
->> cell number to 0 thinking that the cell number might depend
->> on the API.
->>
->> if need be, I can set it to the value I was initially thinking of in
->> v4.
-> Which is?
->
-> According the TRM it's a bit tricky to define the API since you need to
-> describe two different types:
->  - master configuration
->  - peripheral configuration
->
-> One which came up in my mind is:
->
->   <&phandle TYPE ID VALUE>;
->
-> e.g.
->
->   <&aipstz AIPSTZ_MASTER 0 0xf>;
->   <&aipstz AIPSTZ_PERI 0 0xf>;
->
-> One could use a defien for the magic value of 0xf of course.
+On Fri, Mar 28, 2025 at 10:42:16AM -0700, Stanislav Fomichev wrote:
+> Taehee reports missing rtnl from bnxt_shutdown path:
+> 
+> inetdev_event (./include/linux/inetdevice.h:256 net/ipv4/devinet.c:1585)
+> notifier_call_chain (kernel/notifier.c:85)
+> __dev_close_many (net/core/dev.c:1732 (discriminator 3))
+> kernel/locking/mutex.c:713 kernel/locking/mutex.c:732)
+> dev_close_many (net/core/dev.c:1786)
+> netif_close (./include/linux/list.h:124 ./include/linux/list.h:215
+> bnxt_shutdown (drivers/net/ethernet/broadcom/bnxt/bnxt.c:16707) bnxt_en
+> pci_device_shutdown (drivers/pci/pci-driver.c:511)
+> device_shutdown (drivers/base/core.c:4820)
+> kernel_restart (kernel/reboot.c:271 kernel/reboot.c:285)
 
+I've got this issue as well.
 
-so, my original idea was to use 2 cells: <&phandle ID VALUE>, where bit 0 of ID is used
+> 
+> Bring back the rtnl lock.
+> 
+> Link: https://lore.kernel.org/netdev/CAMArcTV4P8PFsc6O2tSgzRno050DzafgqkLA2b7t=Fv_SY=brw@mail.gmail.com/
+> Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
+> Reported-by: Taehee Yoo <ap420073@gmail.com>
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
 
-to identify the IP type (master or slave/peripheral) and the rest of the bits are used to encode
+Tested-by: Breno Leitao <leitao@debian.org>
 
-the ID itself.
+> ---
+>  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> index 934ba9425857..1a70605fad38 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> @@ -16698,6 +16698,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+>  	if (!dev)
+>  		return;
+>  
+> +	rtnl_lock();
+>  	netdev_lock(dev);
 
+can't we leverage the `struct net_device->lock` for the shutdown.
+Basically we have the lock the single device we are turning it down.
 
-I think I like your idea a bit more though (i.e: have the TYPE as a separate cell)
+I am wondering if we really need the big RTNL lock. This is my
+understanding of what is happening:
 
-because I think it's easier to deal with/understand from the DTS user's perspective.
+pci_device_shutdown() is called for a single device
+ - netdev_lock(dev)
+ - netif_close(dev);
+    - dev_close_many(&single, true);
+      - __dev_close_many()
+        - ASSERT_RTNL();
 
+Basically we ware only closing one device, and the net_device->lock
+is already held. Shouldn't it be enough?
+
+Can we do something like this (from my naive point of view):
+
+	 static void __dev_close_many(struct list_head *head)
+	  {
+		  struct net_device *dev;
+
+	-         ASSERT_RTNL();
+		  might_sleep();
+
+		  list_for_each_entry(dev, head, close_list) {
+	+	  	ASSERT_RTNL_NET(dev);
+			...
+		  }
+
+Thanks
+--breno
