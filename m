@@ -1,159 +1,90 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B76211A3C;
-	Mon, 31 Mar 2025 13:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306D34A35;
+	Mon, 31 Mar 2025 14:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743429554; cv=none; b=gafJNywYIPNvrR0P/b4Q6/hybggULWL7GlnwTCXTxN4pxtdyflmUsyi8QgbMZuQeMVwsibnSits+a53qvFkY4skVzkmjGBHbR26OLotCVK6inPQpZp4FWllZUjQFkxWLHlOmNHvmpQf0qsPWjEhSqJt9PMQY6T5Zx9k13RjHpcA=
+	t=1743429659; cv=none; b=RlKcXPZeMkczPzCHLcCMMTl7LlOqJn77gPweGn8i6yS87KVmmAdaPhK7Nwqc1q8wiVjKVHfWypXMYiD9ao9ZQkOoBmf7IHTfStL7tvxAgLAcuA/66CDUr48nO56iZ6B2IOIOwie0uuJ1N0+n5XhdeQf5YqWVXMNb3m5Z2sF/PJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743429554; c=relaxed/simple;
-	bh=MIqhvXp8WBemNHMJVHGEFEWnP75tcOPHwOSzbrpeq1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I4BsV1KphoQmc6SQpCw+YdIlcisXmLnQJfgKQ+t41Eybbn8GLVm7uDYYVUPhk1v9uZdplxXk3VNo4kcY8gY7jDbTIO51iQuM4anngURbOjhX8Iz5Q4KmapZ98ClS0sIay3wyd1FEv95defW73c5HXIhBY42YVXOaMoELgZu2RAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcmBW1tJ; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743429659; c=relaxed/simple;
+	bh=qx7OAI2GDeAQiCeEnYoKh5egoJWKfbqbwDFIFemysCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RwnqlXcrzR87088cgCVzaYNUnxqmWA6xRIrtup++Mh93f9c7vAaohKOv9JMUEjGENhV/ywHNyW1v/PKol7sXyeJcOT6PryJynke9yZ2sX0rhxI0q9BhkOUqxnNBXTNF5N+HD6jUCcc7zt2KeKI7iAXfd7DEGyGBMjXt/LBDL7PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7QfCNsy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcmBW1tJ"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1848224e0c.2;
-        Mon, 31 Mar 2025 06:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743429552; x=1744034352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DQ6luDwotyYfo3kU9jPDlx/S5Xe1wNYednwyw4Of/y4=;
-        b=bcmBW1tJJa5AZXfW6k+gFCrFTY8EuBoY0v7W8OvS/uG1YDiaxQ6eTB9BPLHaobpG+X
-         bKd5SY230Rl96fOODJ6Jm99pGr+jvYwSAb5Avi3l5P4PBW+XbDSUx96hgVEAtlqrhdoD
-         RMJ43NErqXBHS36V3n+AI0icrR/acdNK6uZjfZNb5co6Zxxln+RKmdYlPIzrkINZdlGH
-         5Ou85/InouoSU5gTJngFN2c2SYUNeofV0Bcy1mOi91jo1eC7sAvbLGeKkBy780bxORuW
-         goyQ22xwH/vN6xtm1mQPXQjcn+NLNoYc2YADTgqTsG0pact9epcmNCBeu8g3GzwPijPI
-         STvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743429552; x=1744034352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DQ6luDwotyYfo3kU9jPDlx/S5Xe1wNYednwyw4Of/y4=;
-        b=S2w4dm09BA9omrOc8AC6csbqQcb4unZIEgN7nqSGuswEesKR3Ls1oPmjKOiRIPoeUz
-         kj0BUtZ3D+Kdzwxl8hsp4dvhLmuX3SyXz4l0aMQ1C0QMCY5EALENRj/LWHZf3hC0JwTS
-         YsVueiVLRXon+DR8EFRXTOlgY4EYqrn6np+zI7yUTmJfe2TnRPQx5ENDGuveZBtraNGf
-         2qg9E/8gzhAtncgURa5yRVy26tOGTZXXbIl+kScSxfqvCscH+mhY+E9VgBHLONVZSsB+
-         oh/Fdb3xAozB6tiBb4olPkgoDRgbkALwhr0Q+lCE/iqOIsi8hMaBAaiy49QpBMJwm3vi
-         xysA==
-X-Forwarded-Encrypted: i=1; AJvYcCUICM7vSBccz/gsNQ6AKVPFT4mb9onVrGDcGiVavcLGff5C+/VmzAPvHyA+WuKPJvD3Sij7kfuNashIPd8=@vger.kernel.org, AJvYcCVSGHiM+oDVQs0UW786N5YC4+IZCbPOQUiG3dwP7f29stSedIOSKVYGHv0LppX4Kxs/PkZjx4KhJStq@vger.kernel.org, AJvYcCVTQOl8F+qnD8GI2nyAmsVG/TFkfWN4v9nM+8RPHVEQjpvs3e5eu4YbSvpnoXuHsNMPKUScDQMKgYJikvbr@vger.kernel.org, AJvYcCW47bMW7bthCDzk6jQXVUTqDVwlN22JUuHipzgVx6oSqlyRPJaj+cJ9pUhGtcwonTI9tqfFU1b1jmlI@vger.kernel.org, AJvYcCX11Eu0Fw1Wd6m5c/ZvYEFMHc5jOECZcWQkn4zsqtA26NBDbx86Td0RKg1GhGZCYGcHAquSCztXJm97YbOwdIY+f4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9IZlGjiME5mOlXi3XUSGDb2q0Irv8b/WLR7cILRAVDMpP/U2D
-	Bl2QedsjHCTslnNUrbmKNqHMSewo8KnmOCKfMiYANc6ZgwNJmOCPPwahIcgOmWQ50P5BmRn1vAq
-	d8Rf23l1uWFrmp+6FHI+HDErjehw=
-X-Gm-Gg: ASbGncv99ANX5ciBFbCI5M8A6mO38j400aNQBePOOT4VXczaTxmAjhN6/cNfvQLvFjG
-	vT9sH+bL+rlZ4W5ZnIUq0VtpaqCLQvQZsxPri9Ko6hoVWuPgN1gJC/xbOpBGeHWleXcQULdK09C
-	nZQ9cY89iUH//Q3sw9mr4OU/vL6Ez0TzEv1mzAkcMw2k2qmCGUQHEynN4Gqbg=
-X-Google-Smtp-Source: AGHT+IH59r7nYpgJqARq5/wRAz+E8Nw+DigL2d0icCNSxu3ah+ivplUwdQEz1tpyBsv376wnQEYXz8gTxipo+KxFz9c=
-X-Received: by 2002:ac5:c5cc:0:b0:526:1ddd:8953 with SMTP id
- 71dfb90a1353d-5261ddd899cmr3242361e0c.0.1743429551689; Mon, 31 Mar 2025
- 06:59:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7QfCNsy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87872C4CEE3;
+	Mon, 31 Mar 2025 14:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743429657;
+	bh=qx7OAI2GDeAQiCeEnYoKh5egoJWKfbqbwDFIFemysCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l7QfCNsyPSw46Yzt3ILIAsnJy/+D/Ntx2rchwd/Ao9AXqmMITXb42v65oVlJ1IexH
+	 81Mr37M2bV5gzj/sBT5CC6Ve63CXhO8B6pdfzaoenI/iNkBqh4A/1ouAJrOB/pn4sj
+	 C9NZisBfS2Rh0PQiCNCvNzeMk9icndFHLLmnZVawYJzHye1jaMun2H9ez+lO5ogeRQ
+	 hb+oSgmPSBBMTFV0dnQygJm3EK5Zm6VAg91XX3au1X/78Vi1eFdJydKFC9pD+25/aF
+	 J5G2SEzluyoaPkK/pP4RP/eOGUnqEI8m7N0jzVdZHtcbfXMBJhDBtarh5uPQZwnQDa
+	 QFMhW7SNDkDxw==
+Date: Mon, 31 Mar 2025 15:00:52 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, perex@perex.cz, tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, johan+linaro@kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
+Message-ID: <78e8c1c8-8539-4b91-88ad-c802cceb8579@sirena.org.uk>
+References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
+ <20250314174800.10142-4-srinivas.kandagatla@linaro.org>
+ <74214537-ad4c-428f-8323-b79502788a66@sirena.org.uk>
+ <Z-qXBfrZOEkOpMHK@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250330210717.46080-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250330210717.46080-12-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB113463B37FE6B1AAE8CF0F51F86AD2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB113463B37FE6B1AAE8CF0F51F86AD2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 31 Mar 2025 14:58:45 +0100
-X-Gm-Features: AQ5f1JoxVlVsRyhVzBsX-4t-Gwb33Vc72UiPSFj6heP-a0WBV-318MF2ERV85w4
-Message-ID: <CA+V-a8v0K_tWA=LnyHDptoBjtgPHSbgwpJp4L1rw4Uv6KC+-JA@mail.gmail.com>
-Subject: Re: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF data support
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j0KmjnF/an9ogldR"
+Content-Disposition: inline
+In-Reply-To: <Z-qXBfrZOEkOpMHK@hovoldconsulting.com>
+X-Cookie: The Ranger isn't gonna like it, Yogi.
 
-Hi Biju,
 
-Thank you for the review.
+--j0KmjnF/an9ogldR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Mar 31, 2025 at 1:38=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the patch.
->
-> > -----Original Message-----
-> > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: 30 March 2025 22:07
-> > Subject: [PATCH 11/17] drm: renesas: rz-du: mipi_dsi: Add OF data suppo=
-rt
-> >
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > In preparation for adding support for the Renesas RZ/V2H(P) SoC, this p=
-atch introduces a mechanism to
-> > pass SoC-specific information via OF data in the DSI driver. This enabl=
-es the driver to adapt
-> > dynamically to various SoC-specific requirements without hardcoding con=
-figurations.
-> >
-> > The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical to the =
-one on the RZ/G2L SoC. While
-> > the LINK registers are shared between the two SoCs, the D-PHY registers=
- differ. Also the VCLK range
-> > differs on both these SoCs. To accommodate these differences `struct rz=
-g2l_mipi_dsi_hw_info` is
-> > introduced and as now passed as OF data.
-> >
-> > These changes lay the groundwork for the upcoming RZ/V2H(P) SoC support=
- by allowing SoC-specific data
-> > to be passed through OF.
-> >
-<snip>
-> > +
-> >       ret =3D drm_of_get_data_lanes_count_ep(dsi->dev->of_node, 1, 0, 1=
-, 4);
-> >       if (ret < 0)
-> >               return dev_err_probe(dsi->dev, ret,
-> > @@ -729,10 +750,12 @@ static int rzg2l_mipi_dsi_probe(struct platform_d=
-evice *pdev)
-> >       if (IS_ERR(dsi->vclk))
-> >               return PTR_ERR(dsi->vclk);
-> >
-> > -     dsi->rstc =3D devm_reset_control_get_exclusive(dsi->dev, "rst");
-> > -     if (IS_ERR(dsi->rstc))
-> > -             return dev_err_probe(dsi->dev, PTR_ERR(dsi->rstc),
-> > -                                  "failed to get rst\n");
-> > +     if (dsi->info->has_dphy_rstc) {
-> > +             dsi->rstc =3D devm_reset_control_get_exclusive(dsi->dev, =
-"rst");
->
-> Maybe use devm_reset_control_get_optional_exclusive by dropping has_dphy_=
-rstc.
->
-As the dtbs_check doesn't enforce this,  `has_dphy_rstc` flag was
-added. Recently the same was done for the CRU [0] based on the recent
-comment received.
+On Mon, Mar 31, 2025 at 03:22:13PM +0200, Johan Hovold wrote:
+> On Mon, Mar 31, 2025 at 01:32:36PM +0100, Mark Brown wrote:
+> > On Fri, Mar 14, 2025 at 05:47:58PM +0000, srinivas.kandagatla@linaro.org wrote:
 
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/2025032817=
-3032.423322-10-tommaso.merciai.xr@bp.renesas.com/
+> > > Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
 
-Cheers,
-Prabhakar
+> > This commit doesn't appear to exist.
+
+> I think some tool (e.g. b4) incorrectly indicated that that may be the
+> case here, but the commit does exist:
+
+Oh, actually it's a parse error with the way the tag is written - not
+quite sure why but for some reason adding the next digit to the hash
+massages things enough.
+
+--j0KmjnF/an9ogldR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfqoBQACgkQJNaLcl1U
+h9Bjiwf/VUSr9Yd9KkaDlTgIuPlbwQt58f3t6htOYFLumOB6nikv3gbF46KVEFk5
+4Jch+k1zO1ZdKpmXtXUEKEIYd70ywHFwMOj37NDKBMrFi4ytsdkAqDf46Mcs1hG7
+T/Tbv9wwDOx8kjB73Rf+fh5yCFZa7k7S6M4ALJFFX6TKvW7ghhzCSVT1A6CI4Q7R
+n4Q/jNymrMxhQhhODlRDYN5xLdlmL4+B+TZgWgaX9bpBt9OkDmzmXSsgRJ690Lu6
+Z1iHemZT+1kdmbtscCPxvnZoLRlMeAzPkFK68W/8Y5yJs/FPXuAE7/4Sc6U5gnCB
+Lvz1JEBUItNQLAPUzEX5wU/ChfT9gg==
+=jJyr
+-----END PGP SIGNATURE-----
+
+--j0KmjnF/an9ogldR--
