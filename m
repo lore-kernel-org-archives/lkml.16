@@ -1,142 +1,79 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3291B1E570D;
-	Mon, 31 Mar 2025 12:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0581E5B76;
+	Mon, 31 Mar 2025 12:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424180; cv=none; b=MIEgJtKS5cIZeX7FKRS+vSlO2yFzKI0oy5WCuFVVEFuo1hswKGcbkCqBcVh9nnKSvwUwW/mUnytuRfWY8tE2rv1WWDF6aCjYhi0JMshcLhKbtt1j72XQ25WPOwRs5h68+6RvYamgE56Fh+oIKceCeRIgx/0LjMFm6K9LBT6HLZE=
+	t=1743424187; cv=none; b=lRbTibMh7jcAnkJemY+bg/+v9W0Up+MghYiiaGSKrNU3Fr+sY/LsvvoQ7g9WD3zaW0/ttHPFypAyq096Eff7QLGdq6/Llk/zGRTAXWpY719ddKdt0GDjpQjr5LWSfX8rrw8IUpCVlk/K07ENL3bSjcbZR4X9XJHCjIZzvinaWA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424180; c=relaxed/simple;
-	bh=TY1jhOTEr3tWljFOOoITiNLFQXkN4A20pVuJGU9HBQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=axEXRsp7r3vh7ZtrKNOVMi1RO6+CtD/gjTvWCtSAcy6CCmFWlwMWrIkB5SRi450Yemg1X8Lw9R27CpD1oKEh1omGKOUV05uM42BAXKmhuEm2bSWSFCu781VjqNznyBSdIkboPI1Ur3eT5gJrlc73xrBOkoStaD/ASdEN77DYDwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5259331b31eso2103140e0c.0;
-        Mon, 31 Mar 2025 05:29:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743424176; x=1744028976;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a/hvjEUFixlRsZXguCUr03tOmwYEQ41nqruFxXBAttY=;
-        b=SZ7FcrN18TFt4s68EToZkMy32VogA5TuNBMuyBj0Yw64DytTf9xg7n9lT1SMxHa5YY
-         U+ePtx2ykWKtbR2DlIJGVd/hK9HZQkorx2TLX3PxBcUXHdvCZ6uU0ht5kQcO39TePlmH
-         f2JKKIl0193ydETOg5jhDlt2EZEeXs/XcTGgGY9y27JGbU7eTBq2ab14B5KaYgpnVIdL
-         bd9+6+Paz35YAkKj1S8+/WdhtqrIFh5e6DJM+1UVwHPmXZeRV4t6kusYDOnMnNQTvtUK
-         bY0qJH4+MFfNpAIBQQwjLGPBBStLCuoAR1zhzVaH96Dm/rmpenzG/s487m+MEZcq5yiU
-         tSMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6XH6AEpjhylbxkSyGfCPdXCNmvw3eUnzBbWCoHo+xfS6Tsw3yVIIOyjZHHmVvAQhNrh56vbw59BP2@vger.kernel.org, AJvYcCUtO6ntkRf6JHvMxgaRVA526ZFLMgIDiS2I4NWaUOp9n7QnB4yAo3e7B4sbX4+LVclpk+apc0EBvLI/GGz+Hbk1eoA=@vger.kernel.org, AJvYcCVFiNaEX7Fsd1JyJDA0LNjitta3UQNd3jN09oymoai6+3sT0cCGkId2ntoIs5PfjSjxtheHd0Kj1pkZuRIj@vger.kernel.org, AJvYcCVGlhsH1/1qMYHLsDo+bXRs/PWNksojWeME4I3lXoqH+cIZF0d/wff7MIDxVwyUpQ8LHTOwm1poNZrkP1I=@vger.kernel.org, AJvYcCW85uJGmu1KyuZq7X9InV0RYZ3EQct54LeyGct/VZCIMR/IMYyGriKw1zjYsRyD46dj3ptCDQMtv/UW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv/WFhF73GXwSAZwAfLssSqxhFtkA8iKMJ+SPJG0DYNCfiDneZ
-	AubXcHsg0jcv+Xwf/UEyPRluVghg1Y7cc6RyFm6seS4ZIc0Bi6v+EKghV01Q
-X-Gm-Gg: ASbGnct2XTKrQbFrEm38kJvVekhoDj1J3fqMyEx3L8YMTVK6QNETeq0MrrJB/kyiWze
-	k7mxf/F3/jqoL0hylfAEMWv/TeE/E0JIBN+mEIp5lWKEn4SVfWS/sZUXyU0jXy/bqa964962qCj
-	IjNjQh5rDzhUrP1rw8jMY68/kNrsvO7kA0lAD91UeBOCZJVw9wsXimY6fv0AhkA/ZLgLVifVA7n
-	Gj+/unSBwC6Rj0atAOKEkheTwPJL42Q/FEd+d3R/iGgGj1ThAyMuEfOuphym/hd0pbMwQl8V4qN
-	Fw/f8xX5IhHwsuxUaOm4g5VMSS47XqaAG5PAV1JaGFzWpz1Vjzrgvaxt3NV/Qm1D97RzFpSCBIL
-	T3ikh3y+GbXDxDWP5Dw==
-X-Google-Smtp-Source: AGHT+IGV9qrruQC8eD3r1v1TatdV7QAigdH5XkauM7J3ViCCNwHT2qsO4mEs8+7hu5HqXEL8XucMAg==
-X-Received: by 2002:a05:6122:2188:b0:520:64ea:c479 with SMTP id 71dfb90a1353d-5261d4adb01mr3822544e0c.10.1743424175976;
-        Mon, 31 Mar 2025 05:29:35 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5260e840eafsm1510772e0c.24.2025.03.31.05.29.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 05:29:35 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86feb848764so1930859241.0;
-        Mon, 31 Mar 2025 05:29:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUh3LlE3Z/eqgMEUJDXo9HBNtevNXgB+sAKxhXKpAgWp6gdbck85r+k9TyiDn8QqS3pJmw7N6QWMIFzZrAX@vger.kernel.org, AJvYcCUvy42TWp4Gd7XZoTPQb0K1ADvuqGTBq+4rqC9AKY2AnHqUaCnxiZfVIt/P4FcZr0QAKxQ0nck1UvRzL0neMdtNC9I=@vger.kernel.org, AJvYcCVHDl/mR3OT7KZU5XIAz4FGDlTNctnOVHTOCj2VwYlvxwhO5tJkKgVFiljI6rmb+n1nmnC1NOH0mUhj@vger.kernel.org, AJvYcCVRZjaXOlS0YmZlqsD0gP/f7Mo2gxZi6EMWfWTw482j1RAtRVwPJh0Y10EMHSYKdKrWMpUV/kxZIVDu@vger.kernel.org, AJvYcCVbGxv2MfGE6ZQ56ApexcqguOaWQiJGg197pNzvS8M5IUawwZkUBZbIhCoIGWylLvkFTcUB33pL1wmjIFU=@vger.kernel.org
-X-Received: by 2002:a05:6102:291e:b0:4c4:f128:3abb with SMTP id
- ada2fe7eead31-4c6d399e628mr4308764137.25.1743424174473; Mon, 31 Mar 2025
- 05:29:34 -0700 (PDT)
+	s=arc-20240116; t=1743424187; c=relaxed/simple;
+	bh=Q0uMus4E1XkPX9O5u3vzmN3QB+2Nx+b7VVilwTqYSGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Srbb6SPnavMdgDpSIEEjPoI5MUDLOZa+kqqFA2xkgA+0zIycWLl40HZM8d3xtQuulaufQDutrZdpEfw054Ukbk7YhHXnN7Ex0mDRxGyPtDL5FXmXHd/WZuZNBTPOI5UTU4bWTC2cJdO8WeXolMI8CBG4lFldVo3FnqFm1bVCtms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXo+cz57; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXo+cz57"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFC4C4CEE3;
+	Mon, 31 Mar 2025 12:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743424187;
+	bh=Q0uMus4E1XkPX9O5u3vzmN3QB+2Nx+b7VVilwTqYSGc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SXo+cz57pkOnm+kSCCxSUJBNpjoFROzKrb2V8ym7xf5lTrY3/3VRyVO6yti9WvZVL
+	 7Qm/72sIzXYTzo4nPJ5Qlco1KHi+pZe18uE7SUqqEWW8/0LCuI4m76qK8jtajgj1QE
+	 ahnajdygLEL2QT0eNZ5uA6yS+QS00gIF/j6rtWdp3h5uFd53AbIjvDcO43hEY8A8WM
+	 W30qp/SMdUL9cvBwDEBB9t2Yqq+HpGjVHmV3hAXxTnmGZBmrk1ZiaTA2dQ3bHqk6+O
+	 VNI5DGvuX8u778DD3SziBk+fzps3maDMmzq7q5YwBpCYAxA25r2fUwbq4ZaCKd4tOK
+	 OXFZ0gSmHIfKg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Rust fixes for 6.15 merge
+Date: Mon, 31 Mar 2025 14:29:26 +0200
+Message-ID: <20250331122926.607374-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250330210717.46080-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250330210717.46080-14-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250330210717.46080-14-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 31 Mar 2025 14:29:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUO+mh79ExahTiW-hG26QfxrBfBFRipO_B6QWXvP-+wHg@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp1eHcZ8sWmnLzl63q9yjCxoAPQRs9IgU0nL-PSWGK0iw87Vz5cicheX0E
-Message-ID: <CAMuHMdUO+mh79ExahTiW-hG26QfxrBfBFRipO_B6QWXvP-+wHg@mail.gmail.com>
-Subject: Re: [PATCH 13/17] drm: renesas: rz-du: mipi_dsi: Add feature flag for
- 16BPP support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+Hi Linus,
 
-On Sun, 30 Mar 2025 at 23:08, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Introduce the `RZ_MIPI_DSI_16BPP` feature flag in `rzg2l_mipi_dsi_hw_info`
-> to indicate support for 16BPP pixel formats. The RZ/V2H(P) SoC supports
-> 16BPP, whereas this feature is missing on the RZ/G2L SoC.
->
-> Update the `mipi_dsi_host_attach()` function to check this flag before
-> allowing 16BPP formats. If the SoC does not support 16BPP, return an error
-> to prevent incorrect format selection.
->
-> This change enables finer-grained format support control for different
-> SoC variants.
->
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+A small fix due to a typo during merge.
 
-Thanks for your patch!
+Since Andrei had already sent a fix for it, I am sending this as a PR in
+case you prefer that, but of course please feel free to directly apply
+it as a patch instead.
 
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -30,6 +30,8 @@
->
->  struct rzg2l_mipi_dsi;
->
-> +#define RZ_MIPI_DSI_16BPP      BIT(0)
-> +
->  struct rzg2l_mipi_dsi_hw_info {
->         int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long long hsfreq_mhz);
->         void (*dphy_exit)(struct rzg2l_mipi_dsi *dsi);
-> @@ -38,6 +40,7 @@ struct rzg2l_mipi_dsi_hw_info {
->         unsigned long max_dclk;
->         unsigned long min_dclk;
->         bool has_dphy_rstc;
-> +       u8 features;
+Thanks!
 
-Please settle on a single solution for all features: either use a
-boolean flag to indicate 16bpp, or a feature bit to indicate the need
-for the DPHY reset signal.
+Cheers,
+Miguel
 
->  };
->
->  struct rzg2l_mipi_dsi {
+The following changes since commit 4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209:
 
-Gr{oetje,eeting}s,
+  Merge tag 'rust-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux (2025-03-30 17:03:26 -0700)
 
-                        Geert
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-merge
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+for you to fetch changes up to c1f4534b213d7be41b5d8b815a42d201a8f2978f:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  scripts: generate_rust_analyzer: fix pin-init name in kernel deps (2025-03-31 10:50:54 +0200)
+
+----------------------------------------------------------------
+Rust fixes for v6.15 merge
+
+Fix 'generate_rust_analyzer.py' due to typo during merge.
+
+----------------------------------------------------------------
+Andrei Lalaev (1):
+      scripts: generate_rust_analyzer: fix pin-init name in kernel deps
+
+ scripts/generate_rust_analyzer.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
