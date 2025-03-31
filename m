@@ -1,85 +1,104 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5F41519AD;
-	Mon, 31 Mar 2025 06:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DC718C011;
+	Mon, 31 Mar 2025 06:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743403273; cv=none; b=eY5n+ydUQCE39daIU1F3szwIrDHerfYyLfjijnIek4QsmD8dSG9LOuEOWaZhTtBCRZj3W2kNbiq/nhQVHyJTBiRJc5bmeWVkCO1EEfi3wgsgNqxPfFDxfPclea1r7V8GK790VcPVoN3UvDzt4PRzwuWh1OS2/nd2GGzbXDEHAb4=
+	t=1743403293; cv=none; b=jO5HeFzKmQIHeYzdmHgknqaJwUsjGwA96idMWqKeWGsIiOB4O2e8ve/tivccHGrFqXJf+RruX05CS4OJP+HI/tzR5Fu5n15hOZUsccex0+Ect43V+4TpRenIKxBFRV6sB0A3+7AOObcoi0Fvl7ZMn6n20ErXicHgRcjy2U17tXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743403273; c=relaxed/simple;
-	bh=CQMUeawrnbn3960xAvV4VdQ6wKzEGLxky/5XdT+GlgI=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date; b=BiL9C1dbUMhMmlyoHSPHGSJQ2XhkNsRbBHyLehqOOkiDCYVNd4oCoUfRf+n4AZkkZBfW294Tau309k8Ir3N1AczqqBstSHHNpSjdSt95yb9mq6GYwwblLMmNZXQjTXep0OQW9NZlUZ188owCrmDfe26vdPYrjf69Ekorj5snOkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=FdI/Qh+m; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="FdI/Qh+m"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52V6f3D412916751, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1743403263; bh=CQMUeawrnbn3960xAvV4VdQ6wKzEGLxky/5XdT+GlgI=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date;
-	b=FdI/Qh+mYWsZPu9CMU91LdqqVZGhtK6gir8Xq51cBEdnCOGkFRwtJvh99UuxALhF+
-	 NXdHbROuFvMiJlHvgPrk3WX8uy//lzActtDlH6QCpAontTOPAuhuFU4pYXJ8rzPfYe
-	 5oYX9LPNaLzdcJQ9xVpcEtG+/OsG3NkChfZ5wmwjJM0Dpg/WO5eSqnUXFno9a+fy4c
-	 TgNGxoucWmyVsrEzCOxzS5qCeqjiyxOkBnQdFhisRkMI/sJ33Sk2QflT5DL39RnxXM
-	 PT7uvFPkRHCbVPZzuiyonFJYeSausdR1DQd/XI1YxNZEsHRzlCjHZCc9anTzYoGQR9
-	 k1uDC/xcWfcMA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52V6f3D412916751
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 31 Mar 2025 14:41:03 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 31 Mar 2025 14:41:03 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 31 Mar
- 2025 14:41:03 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Chen Ni <nichen@iscas.ac.cn>, <pkshih@realtek.com>,
-        <linux-wireless@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Chen Ni <nichen@iscas.ac.cn>
-Subject: Re: [PATCH] wifi: rtw88: sdio: Remove redundant 'flush_workqueue()' calls
-In-Reply-To: <20250324075910.407999-1-nichen@iscas.ac.cn>
-References: <20250324075910.407999-1-nichen@iscas.ac.cn>
+	s=arc-20240116; t=1743403293; c=relaxed/simple;
+	bh=XZphg2z8XmETxUp5JaJLewdPqU6Io3kpErklsQZIhBg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F0uWkiB8vxSA7X3K0pQzbPSZIbo37wD0ypa0QnjbzLVKLsq7xchXsZuqC47FucjVGvI0eZS5umrxyPW+oplGdY/JR0bpjXEKVJuwU7sTpZZ2k+UISisMjV6NYOG9z22qRI73i3leXYnKAenH1/g5Kha1kk5hNL/bEkfWG65V7/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8CxqmoQOepntSSsAA--.26652S3;
+	Mon, 31 Mar 2025 14:41:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMDxu8QNOepnBt9oAA--.50151S2;
+	Mon, 31 Mar 2025 14:41:18 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	si.yanteng@linux.dev,
+	tglx@linutronix.de,
+	jiaxun.yang@flygoat.com,
+	peterz@infradead.org,
+	wangliupu@loongson.cn,
+	lvjianmin@loongson.cn,
+	maobibo@loongson.cn,
+	siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn,
+	yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH v2 0/2]  Loongarch irq-redirect supprot
+Date: Mon, 31 Mar 2025 14:41:14 +0800
+Message-Id: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Message-ID: <6ca3cf39-3fe9-45db-af97-51dda65bd42e@RTEXMBS04.realtek.com.tw>
-Date: Mon, 31 Mar 2025 14:41:03 +0800
-X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxu8QNOepnBt9oAA--.50151S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrW7Ww47KrykXF1kJFW8GrX_yoW8JFyDpF
+	WDu3sYyrs5CFWfGFn7Ca4Uury5J3WxGrW2qayaq343ur98uryDZry8CF98ZFykGay7t340
+	gr1rWa4UWFyUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
 
-Chen Ni <nichen@iscas.ac.cn> wrote:
+This series of patches introduces support for interrupt-redirect
+controllers, and this hardware feature will be supported on 3C6000
+for the first time
 
-> 'destroy_workqueue()' already drains the queue before destroying it, so
-> there is no need to flush it explicitly.
-> 
-> Remove the redundant 'flush_workqueue()' calls.
-> 
-> This was generated with coccinelle:
-> 
-> @@
-> expression E;
-> @@
-> 
-> - flush_workqueue(E);
->   destroy_workqueue(E);
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+change log:
+	v0->v1:
+	1.Rename the model names in the document.
+	2.Adjust the code format.
+	3.Remove architecture - specific prefixes.
+	4.Refactor the initialization logic, and IR driver no longer set AVEC_ENABLE.
+	5.Enhance compatibility under certain configurations.
+	v1->v2:
+	1.Fixed an erroneous enabling issue.
 
-1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+Tianyang Zhang (2):
+  Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
+  irq/irq-loongarch-ir:Add Redirect irqchip support
 
-5c4cf36c538b wifi: rtw88: sdio: Remove redundant 'flush_workqueue()' calls
+ .../arch/loongarch/irq-chip-model.rst         |  38 ++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
+ arch/loongarch/include/asm/cpu-features.h     |   1 +
+ arch/loongarch/include/asm/cpu.h              |   2 +
+ arch/loongarch/include/asm/loongarch.h        |   6 +
+ arch/loongarch/kernel/cpu-probe.c             |   2 +
+ drivers/irqchip/Makefile                      |   2 +-
+ drivers/irqchip/irq-loongarch-avec.c          |  21 +-
+ drivers/irqchip/irq-loongarch-ir.c            | 561 ++++++++++++++++++
+ drivers/irqchip/irq-loongson.h                |  12 +
+ include/linux/cpuhotplug.h                    |   1 +
+ 11 files changed, 669 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/irqchip/irq-loongarch-ir.c
 
----
-https://github.com/pkshih/rtw.git
+-- 
+2.43.0
 
