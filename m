@@ -1,107 +1,176 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B791DC991
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847BA1CAA87
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409677; cv=none; b=cZLBDjPirGMuOFvVRbUfUNUA8DiFezBJuqfD8Lg06Q6AT8prT9agFFrmc9Vc3VMtRAAphdIOagB06HL2UBgzxzYwgIrfLgC0evqJcGL8rpJaRz7IleOtPewVEZn2V9VbGkogPM0ZmyL50YY6NtX7XQ06xl+7t9E4FAvktzjRztU=
+	t=1743409707; cv=none; b=SSbRjGGS0DGEg+ynHam8K5ZzpxuRefjd2BXASFBLCzuBgMH+tW3fVRuzs1YuLflNekRCTtNrIsYa/+1YHu6xhnTM5itWPi74sNR90llcM1uSTF21DvGmut3r6JyeC6GjNvB6+o1MDQQWHpBlUh7pXbM2GEPgt2ePL+geGK6twwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409677; c=relaxed/simple;
-	bh=LuRdzgXoM5Lbx5Q2Cf31vnPHyJv2y3gMctlPirZoxFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CE2zeLRX2ffZs8xlgvqE9BXulxVA14UhyMkBiWo495FmYzBhR73A4GR73mfzhDYB0IzFGYeJR0LNv8SNUEv7zIEGnaF+tvuLUkYNFZhEuX++SltBEgfXgc+8sI18s2y5WaOsDgWAVljAcRWdHKxzrKyeq5kRy1dXTLWv1cEOUE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Cg8MQ1T8; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743409707; c=relaxed/simple;
+	bh=lxTzjdnUlqwd1wh7uCrpKmj4jJohE91AjWU0MottzVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AEtMiW9VHgtMz7vd5T5+CQm3UM7sOwipiEfNHagu9SS43fIAeldoy0545NGBZgFo8aPSNOEjpXBFR4gIWUA8wi/PsNQvTfbfIu30yqykTuPyN89B2NDjL8++b8LtS6l7cHr8hrA8wtixnqjt4g55DL2dwpaXrMGBrstggySbr14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RmaafcCx; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Cg8MQ1T8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Ov13
-	fAx0VmUgZ8UrJlqsFp4uH1FjdZjiZpzlllgz1Jo=; b=Cg8MQ1T8+rDh+2TIWyot
-	CD1hcJAG65u2dq7OPZhfQl8boxEwk0KDELMnBtBoFSETuFjW9PD8af9lfoyeDxg4
-	LFS9GpqTP4nZS668Wun55Or8MVXwHdZo5pjSg9NDVsJu6T1V56DqMv1kopkZ0IaX
-	9dlFieAG7d/vy1qgc7v0nFOLXbOduMqAtCY6mpgCsxDk6t8stW4CbrTqiJR/tdDl
-	tOceOPQw9l258AlMCaeYr0Ssaq6wJCvqZpTnLeazsEb+7CwboJq+bfdEtG/BXHRM
-	aJiA1zdAZzARutISeMDltq0Cwo62me9TXkwLgIvcTmoTd0RAfMY1kepS/RX9Rivr
-	HQ==
-Received: (qmail 1156542 invoked from network); 31 Mar 2025 10:27:53 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 Mar 2025 10:27:53 +0200
-X-UD-Smtp-Session: l3s3148p1@eOJDMp8xEpNQ8qei
-Date: Mon, 31 Mar 2025 10:27:53 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Avri Altman <Avri.Altman@sandisk.com>,
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] mmc: core: Add support for graceful host removal for
- eMMC
-Message-ID: <Z-pSCVf9OJfCzKbS@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Avri Altman <Avri.Altman@sandisk.com>,
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
- <20250320140040.162416-5-ulf.hansson@linaro.org>
- <PH7PR16MB61960D396B3E5B61571F7F82E5A02@PH7PR16MB6196.namprd16.prod.outlook.com>
- <CAPDyKFreJu8jZXoBJ2J1Mgj+OOAJX5rjzX0D4ZfbTj_uVrPKPw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmaafcCx"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3326508f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 01:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743409704; x=1744014504; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6lBFYadEH0JYr+A7Tag8qSHkvFrIqZwuIEnr/hAhq2Q=;
+        b=RmaafcCxIew7u3vdPLidKSNse9OUFvIEoclp9cUK0LBbozIldX2mW2naXnhDljjYHN
+         yzq617AIqk7R3qSJodFpRVp8dlA1Ew6Vrb9FF3M7SpgjzTTM8l0q5fWV4BMEXAuG7hwM
+         VXFZuNyYgMEWht9PCRi8S/Gls+OiZf2MMS/S3mYbYdv2SGhiCERDacYJVnhrSoSG4Ymh
+         bP+yANrtkERdbbcZ0hnUXm/JIbC7oj47/WZuo6FRaMOdIxsyptWc5DQpA9znESrS9Zsd
+         vtIDhbt8AtN1t0XGxj+fN9nBMrcn2mULQrQY5DiS1j4Jnrl/jZ/JHVDWuM31rCjcg+8a
+         7+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743409704; x=1744014504;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6lBFYadEH0JYr+A7Tag8qSHkvFrIqZwuIEnr/hAhq2Q=;
+        b=HNEnJM00Li86vMYDLw4d3d/Aet7t62E1u+IvFWO74JmAiOgvNiHrcV1YIEpMLg2+am
+         7rS4vMJTyDW4GA7NRi3Yia98S8towSOQdSrCdkFjUw2sZWPB70TdT3avHuFnjUhGSS/M
+         Tax27T917QOf6nEYAlABiIN+1VG2yHmGgtjcjDUkYs9nKlYAb57EzQi8NO6SmcngAxZt
+         vHiWPzxIucNRyv/H9rkfeC59d2LL//8GlZCU8s0KWzCFb5pA5SD4dV/0nW2tX5fd3PxF
+         FYQuRKERGTxR2n1c1nsMO2ogRYNJjzli0F8EdlJOMWAVxane0HkzQKiWx56qE6CIHRJx
+         s/3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLSYFCMIXngQybHRAPnNCFHVnCcRvldyY3v13cImA/r9klLP4uJL5MttmxW3mF7EVWlyjMBVfT3WlD5xA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiFLJbQ49DIaX9GOqNvvOsiFO47g46Y4andH5cmNAex1s7HtKu
+	NsrBzSsV/MnqAC+DQswDhcKdawC6W0NtUyPGNI+X3vg3WWOeDPnWqrST+1qWbJk=
+X-Gm-Gg: ASbGncvM58/yfh0wG5+rasLFuyf7IktNMATDubPg9xFYUneqQPA6ejPPc246qHLLvS5
+	4kXGXvl5SGEro/9H68/7C+af8zC78k9ObiazCQFoUZMTs0xz/YwE+O+MArE2lbq3AbLL97VZ8Gp
+	mKJfx+45xC1fSArGJobLuMafjkcJq3gIc1zqgc8xTIJ5EayIEE3Kff6R4awnn38KPRTvGwmJKqm
+	OX2lphEa8kUjQ3v6YHuNc8TzkQWJ+D6cVfB+ELgbuUTdt75+qxoVSf/weC3tlOajP8UbKMFjZLo
+	AU7aKML4WZGaEF260hYpRr4QjMLNd6HuzRRd64y1hzrRC8HdOxIe97nuknTkZcKnEIgXIuuqNJz
+	z1RTOkJksg7SJrCFmY8o=
+X-Google-Smtp-Source: AGHT+IG+QqD1a/f3WhMCZ1jy40WeCRBd/LiAu07w3st8nU2ZWaYZZ+kyOq/5OHtkc3dfLikLwis98w==
+X-Received: by 2002:a5d:6d8d:0:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-39c12117d1cmr5883612f8f.38.1743409703819;
+        Mon, 31 Mar 2025 01:28:23 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0basm10781860f8f.63.2025.03.31.01.28.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 01:28:23 -0700 (PDT)
+Message-ID: <8e74c3b4-a4fd-407b-aef7-ccdc94490f11@linaro.org>
+Date: Mon, 31 Mar 2025 10:28:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J4VU7rKJoav/psgs"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFreJu8jZXoBJ2J1Mgj+OOAJX5rjzX0D4ZfbTj_uVrPKPw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] watchdog: Add the Software Watchdog Timer for the NXP
+ S32 platform
+To: Krzysztof Kozlowski <krzk@kernel.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Thomas Fossati <thomas.fossati@linaro.org>
+References: <20250328151516.2219971-1-daniel.lezcano@linaro.org>
+ <20250328151516.2219971-2-daniel.lezcano@linaro.org>
+ <1873723e-de75-4e9f-b61c-a22f3b85758b@kernel.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <1873723e-de75-4e9f-b61c-a22f3b85758b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 29/03/2025 05:55, Krzysztof Kozlowski wrote:
+> On 28/03/2025 16:15, Daniel Lezcano wrote:
+>> +
+>> +struct s32g_wdt_device {
+>> +	int rate;
+>> +	void __iomem *base;
+>> +	struct watchdog_device wdog;
+>> +};
+>> +
+>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>> +module_param(nowayout, bool, 0);
+>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>> +
+>> +static unsigned int timeout_param = S32G_WDT_DEFAULT_TIMEOUT;
+>> +module_param(timeout_param, uint, 0);
+>> +MODULE_PARM_DESC(timeout_param, "Watchdog timeout in seconds (default="
+>> +		 __MODULE_STRING(S32G_WDT_DEFAULT_TIMEOUT) ")");
+> 
+> Timeout is provided by DT.
+
+Yes, but we may want to change the default timeout when loading the driver.
+
+[ ... ]
+
+>> +static int s32g_wdt_ping(struct watchdog_device *wdog)
+>> +{
+>> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+>> +
+>> +	__raw_writel(S32G_WDT_SEQ1, S32G_SWT_SR(wdev->base));
+>> +	__raw_writel(S32G_WDT_SEQ2, S32G_SWT_SR(wdev->base));
+> 
+> I am confused why you do not use standard writel or don't have any
+> barriers here. I think this is very error prone and in general
+> discouraged practice (was for example raised by Arnd multiple times on
+> the lists).
+
+Yes, that's a good point. I'll sort it out with Arnd
+
+>> +static int s32g_wdt_start(struct watchdog_device *wdog)
+>> +{
+>> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+>> +	unsigned long val;
+>> +
+>> +	val = __raw_readl(S32G_SWT_CR(wdev->base));
+>> +
+>> +	val |= S32G_SWT_CR_WEN;
+>> +
+>> +	__raw_writel(val, S32G_SWT_CR(wdev->base));
+>> +
+>> +	return 0;
+>> +}
+>> +
+> 
+> ...
+
+[ ... ]
+
+>> +static struct platform_driver s32g_wdt_driver = {
+>> +	.probe = s32g_wdt_probe,
+>> +	.driver = {
+>> +		.name = DRIVER_NAME,
+>> +		.owner = THIS_MODULE,
+> 
+> Drop, that's some ancient downstream code.
+> 
+>> +		.of_match_table = s32g_wdt_dt_ids,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(s32g_wdt_driver);
+>> +
+>> +MODULE_AUTHOR("NXP");
+>> +MODULE_DESCRIPTION("Watchdog driver for S32G SoC");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> 
+> Drop, not needed. Fix your table module device Id instead... or start
+> from other recent driver as a skeleton to avoid repeating the same
+> issues we already fixed.
+
+Ok, thanks for spotting it
 
 
---J4VU7rKJoav/psgs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> > > +     _mmc_suspend(host, MMC_POWEROFF_UNBIND);
-> > Couldn't find how _mmc_suspend handles this new power off flag?
->=20
-> Right. You need to look closer at mmc_may_poweroff_notify() as it
-> should return false if MMC_POWEROFF_UNBIND, unless
-> MMC_CAP2_FULL_PWR_CYCLE.
-
-And this is what we need for Renesas SDHI which only has
-MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND. What this means is:
-For suspend, we have some blackbox firmware (PSCI) handling the power
-cycle. But for unbind, we cannot trigger the firmware, so we can't use
-the notification but need mmc_sleep().
-
---J4VU7rKJoav/psgs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfqUggACgkQFA3kzBSg
-KbZUCQ/8DQrGwjqvlKJSVu4Hon73aaH2GS5pG8nuib2zvLrRhg5EPX83bbgchSyB
-mG3yOmwPjsHbEjKh57LTnkbRKNPjt9jijYYstKsGuaw8opvqE0JwlO/kBEzMdllz
-UnVDQHQsZwjHvgmFaUaiIh8S8JoYRXuGKBoUm7jOp1wwPhjZTEu6WGYQobmAQQaB
-IzfVf9lv2CYZR2taIRD0s58Q9UMrwmRhJXGj/+4OKIoN7HY6iKK50tFyY6dz2H6t
-bSRwZZOmBHu1Jbz5KFvJaL5TR/6hQ1GzH7Cc4hXkHFyDEUeaTYlw4tII4gIdQYu1
-Iq0tBJJxgcKYd4M+EyTFC3JMSF8jvKkdVbyRzx+GDKFn1hIE6Dtkfn5O7/2kTnTa
-3o6MxG6LoN5nzIxLCP6uhSecTvIV22zwagF7YPoPNKevoZZIW8291ca25Tv/7fNC
-YaHR5poh2S1AzV2Z0sSzqvYe8N6xnoo8Q59Hp8U8B81GffAr5dERzZ8aVYliCKSO
-QxOAxn7h4ApkxzpsJ3eqfGc8RCSxYi1t2l5HrNLw8BwM/yGDopkYAvgcm5bo0ydD
-Rt1+OAPrRaWY8qO36Xs78YydNCfCIiGwt5TtJ9C73yEdFIP2O6+nI+FUYMaKNdNG
-kaDZIlXh6zoljQpyN73D207I4YAx/wQNI1mvdZAqd8iZkXD1PnA=
-=dGnG
------END PGP SIGNATURE-----
-
---J4VU7rKJoav/psgs--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
