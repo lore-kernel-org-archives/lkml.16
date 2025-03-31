@@ -1,303 +1,103 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0785D2B9A8;
-	Mon, 31 Mar 2025 16:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0845214801;
+	Mon, 31 Mar 2025 16:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743438946; cv=none; b=td4U5/J60sB5rptiWPv+Ufxieq3WOk3v14phSPoTuDUNyq0d6CngL/ZhiSvXIxRNsY5w+dsk46xcO3vkp0zkEFALPJDFxan9Fv+41bhS99wQ+31xE5jDUvt3aMIuRGgjXD0LTrIWuj2Dr/HqhhEDdS/ZeR7F+k/UaxP3Kp9x+dY=
+	t=1743438949; cv=none; b=lM7QFJG+8GBdXcuVEmfiovnuZ3vCS3lZZ5EFizk2APU6Yrv97gaCn8CzntdUBNRuY4TaR9vLspl+rSzcS8yf2un686Nsv/HfD61hgDeW+yB5M27JoC3o2VzZCubbqPbqiuOtr/CH5ugO60BnN7kqhEATpSTfS8Wb0y18JucCRJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743438946; c=relaxed/simple;
-	bh=Y5jbM88MAgn3wl6VGv2T/3V8FXFl/Ja/r03cNLJAc9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rf9MVPPzYDAt6qlzX3QEHaRUngGvAZi5F6GHCvPS51aH12FYSlScWokd1M9wui59Fn1iMmP+Dgopc+FkU/BapfEFysnTxEMjHh8Bt2JlYv6VV0T9KqcOC0Pshg3TMYmVrSL8RC+z+2qhDIVhNS+rAuFSWzF0jWABrLPMezCV6hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=GPUeFo9x; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1743438949; c=relaxed/simple;
+	bh=d3VM7U6pE4rZgkBEqC55l1d1U4Vy2P/BcFNrM4p0KZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D6qb/LcG/lcaKFMoajnLYvLfFXVtSobDnbyajjQMiYSvk0iqrLHXc0VqSrsz8BA6JH4Q2h0gnQ/zrXc4dS+xjRFZnzseEBb26BuYBcuoPj6JUQMdAuvxcsWlsHEgOPD3zdxukww51F/A/yeSsLVmxD8HZlcpfDrTb4PSCP2J/Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XeXlmuAk; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="GPUeFo9x"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id zI6htGlLKjmO8zI6ltQDaO; Mon, 31 Mar 2025 18:35:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743438932;
-	bh=lY7BeyveUH3AXOWViZpRYutnAaNNZPsSe/bRA8mdx0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=GPUeFo9xbQmzMQIIAaUMa7wDOXL3m658gUV3uNppLE896pHfTlFMG9rSARiJvzbwp
-	 G2LOKluvti6Iau9HYX1trNfd4g4aav2Wo/6W6sMrh69AkfV3xLNXIwDASW/Cyp+mdC
-	 jTEo8tXJV3Gw1FS6i4pWC9HxPrBlKaSzdpt7/CUnB+7gijjhWjOuT292OBaSpwF9AC
-	 gg7i9e5ruTnW6q969Pnj0YLjuR4wVKekAxqowGhtcuOCvvdED5pHR1XtV50It4A1E2
-	 R5dPVkZLUJJMPxkFhMn9myoI2WAEZjP8RxDIJmf5HfhzT4MQ0bin43DcNGItrvQ2xp
-	 +DhYQq1mF9ASA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 31 Mar 2025 18:35:32 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <3be3ca59-157d-4ceb-81bd-4a1acdbccb9c@wanadoo.fr>
-Date: Mon, 31 Mar 2025 18:35:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XeXlmuAk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743438947; x=1774974947;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=d3VM7U6pE4rZgkBEqC55l1d1U4Vy2P/BcFNrM4p0KZ0=;
+  b=XeXlmuAky0uM1oafYja850s045Pd0XoU3t/IOfuIzqtZ6HxtIfLy3rPr
+   xF3cMW3VcAnD+jDji2cryW/UJlPzC1OS5UtObbvrKVnGsxwuza8mNooA3
+   OqShd5RsaO4J/owEozZwjR+EtVx69AO8GwzX1PZgrMKA1J7uG0kwdyJPF
+   yK9+BzJPy1GZ/soiePwx834gfXKSRLupeXlwc+CHlyukccVTaS4IQFfY8
+   Ei+ROIbNXKgPm8qz/TEkdTeXXLrH4ntaoz+nki3pR88riBJdiYjSno3sj
+   BRzNm3FcrApY2wPfUQQ9zlK44RQqpcHWK6xJbMBTNJKf5anq141UMcKsH
+   Q==;
+X-CSE-ConnectionGUID: qeMIqjlDRPmK1ksIEFuU2Q==
+X-CSE-MsgGUID: c0kdEANtTQSUs/ZTRz6+Uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="55380215"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="55380215"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:35:47 -0700
+X-CSE-ConnectionGUID: SFoniIkkTxmrvKrDwH7BFg==
+X-CSE-MsgGUID: zT+743NcTOGYRVpEKZOPtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="125889682"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 31 Mar 2025 09:35:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 178FB141; Mon, 31 Mar 2025 19:35:41 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Zijun Hu <quic_zijuhu@quicinc.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 1/1] device property: Add a note to the fwnode.h
+Date: Mon, 31 Mar 2025 19:35:13 +0300
+Message-ID: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] leds: tlc5928: Driver for the TI 16 Channel spi LED
- driver
-To: Corentin Guillevic <corentin.guillevic@smile.fr>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-References: <20250326153535.158137-1-corentin.guillevic@smile.fr>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250326153535.158137-1-corentin.guillevic@smile.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 26/03/2025 à 16:35, Corentin Guillevic a écrit :
-> The TLC59928 is an SPI-connected bus controlled 16-channel LED driver.
-> A single 16-bit register handles the whole LEDs. Following a write, a
-> latch GPIO applies the new LED configuration. An "enable" GPIO (blank
-> in the TLC59928 datasheet) turns off the whole LEDs when active/high.
-> 
-> This driver is able to handle a daisy-chain case, so when several
-> TLC59928 controllers are connected in serie.
-> 
-> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
-> ---
+Add a note to the fwnode.h that the header should not be used
+directly in the leaf drivers, they all should use the higher
+level APIs and the respective headers.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-> +static int
-> +tlc5928_set_ledout(struct tlc5928_led *led, bool val)
-> +{
-> +	struct tlc5928_chip *chip;
-> +	struct tlc5928_chip *chip_owner = led->chip;
-> +	struct tlc5928_priv *priv = chip_owner->priv;
-> +	int ret;
-> +
-> +	mutex_lock(&priv->lock);
-> +
-> +	if (val)
-> +		chip_owner->leds_state |= (1 << led->led_no);
-> +	else
-> +		chip_owner->leds_state &= ~(1 << led->led_no);
-> +
-> +	list_for_each_entry_reverse(chip, &priv->chips_list, list) {
-> +		u16 leds_state = cpu_to_be16(chip->leds_state);
-> +
-> +		ret = spi_write(priv->spi, &(leds_state), sizeof(leds_state));
-> +
-> +		if (ret)
+v2: added "...into the driver" piece at the end to remove ambiguity
 
-Missing unlock.
-Or use guard()?
+ include/linux/fwnode.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> +			return ret;
-> +	}
-> +
-> +	gpiod_set_value(priv->latch_gpio, 0);
-> +	udelay(1);
-> +	gpiod_set_value(priv->latch_gpio, 1);
-> +
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +tlc5928_brightness_set(struct led_classdev *led_cdev,
-> +			enum led_brightness brightness)
-> +{
-> +	struct tlc5928_led *led = ldev_to_led(led_cdev);
-> +
-> +	/* TLC5928 only allows on/off, no brightness */
-> +	return tlc5928_set_ledout(led, !!brightness);
-> +}
-> +
-> +static const struct of_device_id of_tlc5928_leds_match[] __maybe_unused = {
-> +	{ .compatible = "ti,tlc5928" },
-> +	{},
-
-Unneeded trailing ,
-
-> +};
-> +MODULE_DEVICE_TABLE(of, of_tlc5928_leds_match);
-> +
-> +static int tlc5928_probe_chip_dt(struct device *dev, struct device_node *node,
-> +		struct tlc5928_chip *chip)
-> +{
-> +	struct device_node *child;
-> +	int count, err, reg;
-> +
-> +	count = of_get_available_child_count(node);
-> +	if (!count)
-> +		return -EINVAL;
-> +
-> +	chip->leds_state = 0;
-> +
-> +	for_each_available_child_of_node(node, child) {
-
-for_each_available_child_of_node_scoped()?
-
-> +		struct tlc5928_led *led;
-> +		struct led_init_data init_data = {};
-> +
-> +		init_data.fwnode = of_fwnode_handle(child);
-> +
-> +		err = of_property_read_u32(child, "reg", &reg);
-> +		if (err) {
-> +			dev_err(dev, "%pOF: failed to read reg\n", child);
-> +			of_node_put(child);
-> +			return err;
-> +		}
-> +
-> +		if (reg < 0 || reg >= TLC5928_MAX_LEDS ||
-> +				chip->leds[reg].active) {
-> +			of_node_put(child);
-> +			return -EINVAL;
-> +		}
-> +
-> +		led = &chip->leds[reg];
-> +
-> +		led->active = true;
-> +		led->chip = chip;
-> +		led->led_no = reg;
-> +		led->ldev.brightness_set_blocking = tlc5928_brightness_set;
-> +		err = devm_led_classdev_register_ext(dev, &led->ldev,
-> +							 &init_data);
-> +		if (err < 0) {
-> +			of_node_put(child);
-> +			dev_err(dev, "Failed to register LED for node %pfw\n",
-> +				init_data.fwnode);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tlc5928_probe(struct spi_device *spi)
-> +{
-> +	struct device_node *node, *child;
-> +	struct device *dev = &spi->dev;
-> +	struct list_head *pos;
-> +	struct tlc5928_chip *chip;
-> +	struct tlc5928_priv *priv;
-> +	int count, err, i;
-> +
-> +	node = dev_of_node(dev);
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	count = of_get_available_child_count(node);
-> +	if (!count)
-> +		return -EINVAL;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->spi = spi;
-> +	priv->latch_gpio = devm_gpiod_get(dev, "latch", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(priv->latch_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(priv->latch_gpio),
-> +				     "Failed to get latch GPIO\n");
-> +
-> +	mutex_init(&priv->lock);
-
-Maybe:
-err = devm_mutex_init(...);
-if (err)
-	return err;
-
-?
-
-> +	INIT_LIST_HEAD(&priv->chips_list);
-> +
-> +	i = 0;
-> +	for_each_available_child_of_node(node, child) {
-> +		chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +		if (!chip)
-> +			return -ENOMEM;
-> +
-> +		list_add_tail(&chip->list, &priv->chips_list);
-> +		chip->priv = priv;
-> +		chip->enable_gpio = devm_gpiod_get_index_optional(dev, "enable", i,
-> +				GPIOD_OUT_HIGH);
-> +		if (IS_ERR(chip->enable_gpio)) {
-> +			dev_err(dev, "Error getting enable GPIO %i property: %ld\n", i,
-> +					PTR_ERR(chip->enable_gpio));
-> +			return PTR_ERR(chip->enable_gpio);
-> +		}
-> +
-> +		err = tlc5928_probe_chip_dt(dev, child, chip);
-> +		if (err)
-> +			return err;
-> +
-> +		i++;
-> +	}
-> +
-> +	list_for_each(pos, &priv->chips_list) {
-
-list_for_each_entry()?
-
-> +		chip = container_of(pos, struct tlc5928_chip, list);
-> +		if (chip->enable_gpio)
-> +			gpiod_set_value(chip->enable_gpio, 0);
-> +	}
-> +
-> +	spi_set_drvdata(spi, priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tlc5928_remove(struct spi_device *spi)
-> +{
-> +	struct list_head *pos;
-> +	struct tlc5928_priv *priv = spi_get_drvdata(spi);
-> +	int i;
-> +
-> +	list_for_each(pos, &priv->chips_list) {
-
-list_for_each_entry()?
-
-> +		struct tlc5928_chip *chip = container_of(pos, struct tlc5928_chip,
-> +				list);
-> +
-> +		for (i = 0; i < TLC5928_MAX_LEDS; i++) {
-> +			if (chip->leds[i].active)
-> +				devm_led_classdev_unregister(&spi->dev,
-> +					     &chip->leds[i].ldev);
-
-Why is it needed?
-devm_led_classdev_register_ext() was used.
-
-> +		}
-> +
-> +		if (chip->enable_gpio) {
-> +			gpiod_set_value(chip->enable_gpio, 1);
-> +			gpiod_put(chip->enable_gpio);
-
-Why is it needed?
-devm_gpiod_get_index_optional() was used.
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct spi_device_id tlc5928_id[] = {
-> +	{ "tlc5928" },
-> +	{},
-
-Unneeded trailing ,
-
-> +};
-> +MODULE_DEVICE_TABLE(spi, tlc5928_id);
-
-...
-
-CJ
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 6fa0a268d538..4c4d3f93534c 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -2,6 +2,12 @@
+ /*
+  * fwnode.h - Firmware device node object handle type definition.
+  *
++ * Note, this header is not meant to be used by the leaf drivers.
++ * It provides the low level data types and definitions for the firmware
++ * and device property providers. The respective API headers should
++ * guarantee all the required data types and definitions without including
++ * this header directly into the driver.
++ *
+  * Copyright (C) 2015, Intel Corporation
+  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  */
+-- 
+2.47.2
 
