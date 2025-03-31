@@ -1,215 +1,291 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635F01E3DEB
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743460991; cv=fail; b=vFgpPCxgcIAxM8mpMHkfL3eUdRKYMSUr5yO7QKUGVM3h8qOqZOkVoiT7DX0Zz5rlFtKAbgykDRZH+LJsOyBTfdyX8Rnt8C35QhaDMacEllsWF/4G36QeCR+M5K1T6dWYUrDVE95BExVZF/Xwt9kJj000/CF624Dm4cM8bP/txxQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743460991; c=relaxed/simple;
-	bh=mJlGhoYSUqdFMbP/d63UddnpKc7VhHCgmgzj1uhtHz4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Bx81ltyr+I/eauRvTw5DWeUFTyoLASoYP27Tql+xSXZvU09Irpz7TonJcsHd03idLjI/wKyEETz3mgKRch2RsEVH4mW46BT5GQGpc6u3Zy/jXWztJoQzBhkSk9ZwfbN8AnApzjrse4xlIaZiqbySPdyc6Z+cxIxdGWMVcNCyGfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HD3zTtQK; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AD33232
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743461215; cv=none; b=Hezize6UgmGTG4NnIv3ZynjnAscf5Kf6bOuLCiNSdMRMMIKNRArjVP3qwO7UuzTi/oknlkEUn1oyIeZEI7YIowuTVTxSTMfJYHmKUjB2XOlvL/RBnHzvEfvDWaXfxGxBEdIuiiutcXFDOt9p9CwcZdWBRE+q3+Euqpm3e3rMA+U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743461215; c=relaxed/simple;
+	bh=0Sb6f7zDy8XsqRFEYtRFMI9gD1GYwRzOT9ujI6Lco6s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WRS2DoFMOO6vaXhq2VR62Hr2/DQfWMCMTUPsPbvzwhaH7KAMdhejiVsGXaWxMOihj660z2kwnsWURazjFnNrYsfEy04/MHNbttZvXUxQHRLNf09GHU4gfQRu/6lxRYPI1ShhoRDGyylgj2HEiqLYblPo1tuTEu/DB6ss+sOEnxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=G7POXj2I; arc=none smtp.client-ip=209.85.214.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HD3zTtQK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743460991; x=1774996991;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=mJlGhoYSUqdFMbP/d63UddnpKc7VhHCgmgzj1uhtHz4=;
-  b=HD3zTtQKG1dADRa0Xkeyr62j782XTOS6etRNGqqBb5fypDXdnxznrMOV
-   GLAg7EhlN42/ymmXnnImB/L1dgcTzOEEEnLsmAlDimXR0GOlV/XUaLior
-   mJTwEymyTsxgERseTLvEmZGwhehTG6y06q+ji4K8srXWCok7sV7uvAYPw
-   GiqaZuo810LgohXwePhg8m1poSBgvTa/ERRZamYyQUjmlZU6lk4cjeaEg
-   89VsCUfgvT4BAfWEzy339R9OKYGKwdxp1qihbaLdkVIezK2GbQU1G2mAS
-   M0BZP75/VHyjWaLNKCdpbVGaFNbdelM6fMU+MFdj84QuFwYAN/kdSQ3ee
-   w==;
-X-CSE-ConnectionGUID: 65Agc4wfQD25IebNTKfx/w==
-X-CSE-MsgGUID: oNV1jdTaRHyW5JMAzHcHNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="70127663"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="70127663"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:43:10 -0700
-X-CSE-ConnectionGUID: sA0BLxzgSCWlAkNgV6qQHQ==
-X-CSE-MsgGUID: djpNJo5STWaycJm6+nXCNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="125966264"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Mar 2025 15:43:09 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 31 Mar 2025 15:43:09 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 31 Mar 2025 15:43:09 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 31 Mar 2025 15:43:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BUKvZUkxgCu0YRJxfKTFwH089gFrZl2Ib5cJjL7Br7mR9k5W60nM6FuJezgGVY3ZL1sYT7vPBwkV8bymzRT0+wbYpLpfAk5nPMICy00ZYrRED4Z+S3V5GwmMEVhpMkSjXHst98fcl85bd9teEvdc/9+N0KVdTHDq6+V24bMBt1p6q/Cxf/QnMnBnYyE5bSlIvgev876opLeuY2KWS1I+gfHrGnB7S+LaAovPL1dJUtQo1QZ8dYBL3Qtan6IOgRLcINP0Ic+iZNvnnDyCAtI+0t8Upn6Z2VTDvM0SKyT3GFNCuAsVAcTu9r+FCAlZ8RaZPpsW8OUpdn+4ooRKq1YSLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mJlGhoYSUqdFMbP/d63UddnpKc7VhHCgmgzj1uhtHz4=;
- b=IcT8cX9/oU41Fv4bhGfx6ywWVGWdMC+m8xk3GujZhXZmjyORri1w0BfSW7tPu1a3qAQZLVsZLElGNWF205tEhW15+FtWcSvERERJd/e8UWmbt8Cv6+QMw6AeNFRpvfsxcnNCg8/TV2iwTlukoH3cpwzcqGF/E9oUca50SkZAj0eal/K9qgjsJOGzmi1j5yTxcsEav69OFxh9qKPfq+0Wvqj5ahrU986WkeuamKVJq3WbVS5EneR4RxXbZvy7YV/qWRUiEopC8CKiVbH3XBY4pQXhtMaIPApJwuTIvx/Ps36FRIkoCKcWWA2WyqFouLE6NaT8zSHAuMXNVXEQ511bVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by MN2PR11MB4613.namprd11.prod.outlook.com (2603:10b6:208:26d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.48; Mon, 31 Mar
- 2025 22:43:06 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::fdb:309:3df9:a06b%6]) with mapi id 15.20.8534.045; Mon, 31 Mar 2025
- 22:43:06 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "Mehta, Sohil" <sohil.mehta@intel.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "x86@kernel.org"
-	<x86@kernel.org>
-CC: "Nikula, Jani" <jani.nikula@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "hpa@zytor.com"
-	<hpa@zytor.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "rppt@kernel.org" <rppt@kernel.org>,
-	"bigeasy@linutronix.de" <bigeasy@linutronix.de>, "jpoimboe@kernel.org"
-	<jpoimboe@kernel.org>, "pmladek@suse.com" <pmladek@suse.com>, "xin@zytor.com"
-	<xin@zytor.com>, "Luck, Tony" <tony.luck@intel.com>
-Subject: Re: [PATCH 2/9] x86/nmi: Consolidate NMI panic variables
-Thread-Topic: [PATCH 2/9] x86/nmi: Consolidate NMI panic variables
-Thread-Index: AQHbn3LZZapA7fAReUqsEyYm7m1m27ON3Z8A
-Date: Mon, 31 Mar 2025 22:43:05 +0000
-Message-ID: <5a9949a785e25dd3fa5a258917fabe3a610f4110.camel@intel.com>
-References: <20250327234629.3953536-1-sohil.mehta@intel.com>
-	 <20250327234629.3953536-3-sohil.mehta@intel.com>
-In-Reply-To: <20250327234629.3953536-3-sohil.mehta@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|MN2PR11MB4613:EE_
-x-ms-office365-filtering-correlation-id: 50f4430d-ef4a-45a6-2db4-08dd70a56732
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?M2pZcmdKcmNZSmMyOGJrTzdNdU91K3F1MXhNODFGQWRBVDRubStTVEsxck5v?=
- =?utf-8?B?eHduRnh0VXk5VEJmbDZFZEYycnZ1bUh0cWpRNE9VOEhta05NRTZqU0hZZWFq?=
- =?utf-8?B?WXFVb2ZoaVB6dkxzcGh2cTViSnQzR0pWL1ExOWxsdnE5dmZ3ald2OUIzS2lp?=
- =?utf-8?B?VUdod3FpM1QvNkp5THNyQjc2cmhXdGxJdldUVFpFNnBuRVdRMEM1VnNjVVVH?=
- =?utf-8?B?cE0xVkNoQmdET05NTElGNi9wL05yRG1BVTNGU085M2RSY0FHNnI1YUQ3ZElD?=
- =?utf-8?B?cWh6L2VBSW0zM1o2ZFpDUlRkT080WGUwMGFVYmo0QWxsZjRXalA5b2ozQzRw?=
- =?utf-8?B?U3JDNWViQUlycUtDU3ZaYnJTMk1uWGhxOUxtdW9zaUJJTjVZeFZjUkxIcjRG?=
- =?utf-8?B?QVpveE9qYTBJbXZZZGlYbk82UEUvVDg1R2dkNGhPNm14cTlRVjFZVGg4UmJ3?=
- =?utf-8?B?KzF3NUkyYnM5U2kzM2pvQy9Td0J4SVJxdTBoWjJ4ZkRNaW1tZWRjSmVvNC90?=
- =?utf-8?B?REExbGl6TXI3WGJYeTJJcmhDUE5rZlM4aVIvWkdXSG9rSndIWGRlVDNzMFRV?=
- =?utf-8?B?QitUVVJLOC9PU0dxTXhLNlU2L28rYVVMdjU4Rmt6OFMyRGY1bDhyZkZTcjJ5?=
- =?utf-8?B?RUZ5OW43UExyaStzUG41L0JLNjgvblV0cW5kSkxscWxaSnphSVI1V09ETHI5?=
- =?utf-8?B?MThzQ2N0Yy9yRTNpbGp4aEVlRUVYdkhTZjBzblpVZ1NoYldHd1l6MVNzbW9J?=
- =?utf-8?B?c2NBb09wMFl0ZUNLMWpIVStzei9BbmpCS1QrcExOQk1GQTFJZ2JnOEtGQ21M?=
- =?utf-8?B?WmhseXhBNmwrL0doSTBkdDljSWtEMGVySEE0aDlMMVQ2RERKdFp1RFEvQ0da?=
- =?utf-8?B?TmlyY25tVlAwTmVwTVUzTVJHa3NTUVBHSEx1bDJORUgwdHc3WFAzU3ZTVSs0?=
- =?utf-8?B?UFp6V1JJWStjdllpekh0Z0w0QkZFTUlpNnB5L1RaeGswemllVyttVU42ODVO?=
- =?utf-8?B?aElrSkFjMDNINlJFZWE4bmR6T0JSYU9hdjhMVG03WG03WEszd3RUb2VmbHZu?=
- =?utf-8?B?ZGhXcXlRZmpZdlZiL3pmRkJZTjJqTmdaUFlkeXN6Tmt1MTJKMzEwY1dydTlJ?=
- =?utf-8?B?M0UzUEhwNnk0a2RsL2REcjRrTVNoV2VLTlJLSWo2My9seFhSL0YxNXVWdk1V?=
- =?utf-8?B?dm56eVpFWnNtS0Mwb1F0cEdpS29sc0RiekhhNVRYUmhnTERRVkJSOFUrMUdW?=
- =?utf-8?B?UEpGNzlmUndLN1BaQ2lSQlM0NUh1a3lUVjN3UjYrb20zaDVIcjdlRlRISit4?=
- =?utf-8?B?RXJXZ0VBWjdzamJGamZqOE84eUsvZFFDZzlrbmg0M1VjWXNFbzQwVFowakQ0?=
- =?utf-8?B?NEZVNk41ZUV0QUlRQjZhUU90ZTJuTVY3U3VtNnh6MDVtVHV0YjVUWnhpQWgy?=
- =?utf-8?B?L0x6NDg2OHR6bGpseEtFK3BHcXRsU04wODVCUFVBMHZaZ0Z6MDV1WklpeVBn?=
- =?utf-8?B?UjhWWTFsbzhjWVhMRVdMTDcydGRVU2xKbVY3YVBSSi9ULzBPNUdGa0o2YStj?=
- =?utf-8?B?WmtaUldqcnlPMXlHTERsWGlmaFprck5URkkycVJMZ0lZTCtTbmVFQThwdlBT?=
- =?utf-8?B?NktpWjczZEh4OVVmamxhOE9oS0hRZTNlZVQ2WTdiVjJHSHo3UUlHSUhCdlhs?=
- =?utf-8?B?NXVLTmFiVTluREMrMW0vTlAyS2h0YTRqTkxwOGREeXlPNDNFQ1Bha3dWNWxY?=
- =?utf-8?B?UUJoT01pRjJ5Z0tBUm02U3BCUHJSTmtzdkJNbHhkWDlHRng5RFFLSkJGL3pa?=
- =?utf-8?B?YXQwMGM2blh6ZUdhVzFuOVhlbGVWem96cVVNb2pUN2Q2WFJUOVQ5akdRN0lB?=
- =?utf-8?B?ckFLZXYyM1RrVDczamtMblE2dWF4Qm41YzYybVFXcEU1MDBDMWtUVitIUHJ0?=
- =?utf-8?Q?lqT1iX5Jkhrtr9IgKBZaNy/PcoSbuofP?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eEVvZUZnaU1aakV6MzdyMENOdG1JZFJrSUFxN0YxUFVva3FPZHhVTGxaR1BJ?=
- =?utf-8?B?TExpSUFDZzB1V1c0VHY1dTlFK3VGZGxQNnJhZHI4eVRmM1FWZmVMbzhIclRq?=
- =?utf-8?B?OFN4eHJWa3drdXpHbjhCbTJkRjNwTC9wSFRrT2xNVkRneWdQbjF5d05NUGZK?=
- =?utf-8?B?andSeE4vVWt4NzVwUlFHY1ZFSXBMR2NPTzVPN2RwUW5wYVM0K0EyOEVGU3k2?=
- =?utf-8?B?Mkc3cWlBNUR2YTlBV1hqaHY2QUZ5T1psMXZ5Tk5FRHZGWk5kT0FsMHhBN0Fu?=
- =?utf-8?B?ZmF5aFpHWG5ncVdHTW9KeUxJN0I5N21EVkIxNU51VVlzT0ZOQVlyeDRYZnFV?=
- =?utf-8?B?VFVENGs0cFdoTnJpY1JRT1FoeHpIWFRIRXNlTHd3MlFRS21lQ09EYVNKalZy?=
- =?utf-8?B?RUNmdWZoZldXNzAxQWE2RnI3YnRGZU5jOXptZnFUOUNsNjNkNWRGOU15Rlg3?=
- =?utf-8?B?NWRuZkNCU3FWdDNRaUIrMFd3LzdJSkg0WWFSbWsyeTlCVUdWeUR6UVZ6UVFr?=
- =?utf-8?B?OE1FNGtneGtYWXcwbVUxZW5BdFlXYUZlMmgvQ2ttdVhUemFMUG5zelEwMkJH?=
- =?utf-8?B?R0lFVzZtVTZyMmZ4S0lNY1YrNHlEMjNRNE5TRTk3QndYa0IvNVhBeW5ER0Fn?=
- =?utf-8?B?UWg0OWJaM0pVT1Z6Wk9ROG81YldEZDU3SDFHSDhROFhGSjVrQXpHcjc1cDd4?=
- =?utf-8?B?d3dHeU1oTXRiWmZ5TXRQYVdTTHp5TFN0S2FNK0VpeUhlMXdoVW1RalN1eERK?=
- =?utf-8?B?cDhYWnFBcFNEMXUwMDhidWpNYVRldVFTM1RHcUNrbmNOL2dnaHMzaC9nVkNT?=
- =?utf-8?B?bExwdDRiK0RnOGFYeFljVjkvNGZRM1lWaHRhSzFjc1hTTWJJQloraXZYQ3ow?=
- =?utf-8?B?NVhpalk1bHl5SmRCdlhPS0gyUE1yLzRvRzV3emdoSnE1eFQvQ1RWMy9iaGZB?=
- =?utf-8?B?RHh4Q1Z1ZCszejF5bmRXTUNkRnFVSGpmZjVCZG9Kb3AraFhtWmZFWHpYY1Zi?=
- =?utf-8?B?NkdrTHpFdUJIY3FlamVwOE5vNWdUNEhoaHF1RzFmOTZVZ0ZpNWZ0R2FSenhI?=
- =?utf-8?B?UHNCWFFONG9yMENTaEs4YUdXRmZtRUxGa1V4NmczRWprT01wdXhvTkhYbENq?=
- =?utf-8?B?WVFRc2VpakxaUE16cFJOYUVJMzV0SXcxU0I3a2ZQbEp6OXpuL0l2OU05RVd2?=
- =?utf-8?B?L1JRWjRnQ2N5QXA1TFdrZEgyUTlRSXVyNUJsR1RnZFB6ejcwcnNCQSs4ZXlw?=
- =?utf-8?B?MUpKZUVtMzEzcWJQKzFFaCswMXJQUVNWMTdNTXJBUkxIdE5Wb0l5aTdzRVIz?=
- =?utf-8?B?TGYwS1pwcEdTT0FZc0pyOVNQMURJaU01YXlFZElpV3IyQlQ2OFg5OFV4Z1do?=
- =?utf-8?B?eUlFaE1hWkY5SS9TSlBISnFTVVo1VzdiamJZd0VkUmRTNHZQblVzTVVNUmxZ?=
- =?utf-8?B?RHBNbEFmRHNYSWZwN041VlNUTWNtUzFlNG85MTVTWXVjVTk1dWd1dFVRaC9r?=
- =?utf-8?B?Ris5eDYvTXU5WG9oVStBWG5ZZlZwRThXOERHSngvRis1NFV4bFNNbWsweGhZ?=
- =?utf-8?B?UUdydTN5YTlaTDZ6UmFpSGtKUGNZTUgrbmZXYnRPZW9vdzROR3J1UGs4a01u?=
- =?utf-8?B?UXd5QkRVb3NSMGJlelVMbUtObDRXcVZzWG5aL20zQktuTmQremtObFNONlI0?=
- =?utf-8?B?THhEdVROUm5MTW9Lczl4VUhTTEwwWW94eDBuaGxzMzdkdTllQ3d1Ly9pY0J2?=
- =?utf-8?B?aktkZ2M1YWRlNmZIYWJjaU85UFR3NDU0YnpoWUtXRTZFVENHZlZjOFdMREMz?=
- =?utf-8?B?S0NmYS8wMlR3Uitwb2xzSkk4NVplb1RoWnhkc29BMVFKMU5vYWJmdEVycEhK?=
- =?utf-8?B?WFk2bWdCQ3RqakRmOXcrWmUyNUJveWJwZUI4NU43aFBHUlpLeDRSaTFOTEFH?=
- =?utf-8?B?UDJ3SzZBek1WNm1OMUtPaFU5MkRmOSs2Z0M2OTlqUFVJNzB6SXozeS9STDIv?=
- =?utf-8?B?VHBFYXVDcDc0Tm5sWVEwTk0rQXBSS0t4WXFlNWpiTk1OOWFMbXpzdDA4OUdz?=
- =?utf-8?B?UmJ2d3FyQ0ZKdWF2UStEQUhRekEvSUljZzdPcWdEWVNpUi91YlVwYXI0VTgr?=
- =?utf-8?Q?t14W07+nrnO/6s/4rfxiziYIW?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5C08354C0D396C4BBC6C102CC29DC6D7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="G7POXj2I"
+Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-227b828de00so85014465ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743461211; x=1744066011; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XRaVM3CNehJvGQTGmZQ6mGENLfDCUn3HpGA973y7kNY=;
+        b=G7POXj2Ikv/xpk5/WGqWN/EJU2bP0XRHcIJX7nynkn1WNqsDaoXK45DBZIVlbuvUYo
+         bJXxiU+bC/aE7ptRk7fwodS9ICkXDCVdO5z2trXDIcw8966GnmE3PODnS/adEzCCgtyX
+         NV13bkitW1HyVxsyXA8TzAGFyCmr4J/TmTfCfWE1n/d1oKGM3HxgA5awE9E6eJaWYYS8
+         51ii0Xd2vNQKaxHcKhirJD09QBUsGBD6jVs1P7fYOVCfhjm+QRXO3NaES+hWK6+d4vhv
+         tXRYViXuq+WPcNAPUP1RDcYV2E0AMHNQA9+6Nyu6zWCGqLl/FNLwPbZew/u/HkjRcaBM
+         HZZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743461211; x=1744066011;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XRaVM3CNehJvGQTGmZQ6mGENLfDCUn3HpGA973y7kNY=;
+        b=lQwEMpKF20tqYXbRIZ1eOmkqDjIw7QgTHrycihRCk4cOwKLXFvKMCLRAAplxGndB78
+         l4f5/sPck51a95OlOxqTbibaPj/2YdIgndoFNFzNAu7CgLnkKPf7DT29h/vVppkU8GzV
+         HkDfnKzhGLbxgyYVpf97jsR/LxV4/zdIoKS4jQec0Juw+f5FtCsXb6oLN8HuK3EuRB8x
+         DoghUd/ShjzszdQJPiV/EGiSQ2rj69OglmAjTNOjfNozHUgp7x51hFYBaGlm9PTj/FEy
+         xHUestFNSy57PpqaLJemlOOEzHT2EE7JRyezcA7TQeusfQfESssbQ5AfKJiSmx+W6evt
+         T1zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8dGbsJ+q4Ov1Ee3vHL1BXv9o1igE9osMJHHetElpWNyZDC5anc7zM+5u2zS7lQyVSezh7Rdip3IauVqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVF4kSXkPnDTtcIGNNOZ0KtYT//kP1yqTPRXptV+RHrF/dg9RT
+	MlGY2BGSaJ4ReQn7B8zQovuyGcJcwhpy/zBaV4qGDBLQuvPnj10+NNZ1HBUctUas4KdH6KzK2bq
+	9nOasNyl2hycrPhbg72q7M3FCw3gR9R0Z
+X-Gm-Gg: ASbGnctBsggX3UkunSdcV0AF3BBkXt3+Pkz6ID16RwVbXvvQu73OzNYrwhllhRRqwsY
+	K0X3KQRc+ICF/US5wiza1p6l93DKXCbakS/eCGut4To/XE2Wy7mThrhUj5xhrPRqPcChkO3TlWa
+	a+ly53mBuMgLj6mSSmqRgf81x5rAeL8Of07Vfn4OQGORrA1FMVE7xTJbJrvm6JoZKtE5q8/fyWa
+	3ndRnO5XbaL2vCA7IxwlCvhGHzy+CRCrbbwi52Fct8SnfU6G+PMvoGg+NmGTo3K8eXDifoBbhr4
+	SD5CzsXZ3BE/qdUhKiXb+64NhhGVB0J2d5b+nenWPDvAYSL3UQ==
+X-Google-Smtp-Source: AGHT+IH2hAavKdByNIIMuRkYpDbpoBagrgf9U61ZuF5CCGjY7hMQp8IuGIzRkHuArE4d7Oc71Ya3BkmsH/oY
+X-Received: by 2002:a17:902:f548:b0:223:3ef1:a30a with SMTP id d9443c01a7336-2292f9fb9b8mr154143745ad.45.1743461211561;
+        Mon, 31 Mar 2025 15:46:51 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2291eec553csm6147055ad.14.2025.03.31.15.46.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 15:46:51 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id AF928340235;
+	Mon, 31 Mar 2025 16:46:50 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id A45EEE41615; Mon, 31 Mar 2025 16:46:50 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Date: Mon, 31 Mar 2025 16:46:32 -0600
+Subject: [PATCH v2] kbuild: rpm-pkg: build a debuginfo RPM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50f4430d-ef4a-45a6-2db4-08dd70a56732
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 22:43:05.9463
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rxDpRf79pPH8u++bBaZj1Ah9Isyq8HT89JiWycXoAlizpVC9C63wcZaQsVgwlTmSIZpUm2aUiblz63qHs3wRbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4613
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250331-debuginfo-v2-1-fb460999a5b3@purestorage.com>
+X-B4-Tracking: v=1; b=H4sIAEcb62cC/03MQQ6CMBCF4auQWVvTDqLAynsYFoVOyyykpJVGQ
+ 7i7hbhw+U/mfStECkwR2mKFQIkj+ykHngoYRj05EmxyA0qsJMpGGOoXx5P1YjClaS7qpi0qyP9
+ zIMvvw3p0uUeOLx8+B53Ufv0pSv4pSQkpymttqa9qbFDf5yXQvtSOzoN/Qrdt2xedCqpaqAAAA
+ A==
+X-Change-ID: 20250209-debuginfo-cd3d9417af21
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-T24gVGh1LCAyMDI1LTAzLTI3IGF0IDIzOjQ2ICswMDAwLCBNZWh0YSwgU29oaWwgd3JvdGU6DQo+
-IENvbW1pdCBmZWVhZjU1MTI5NDcgKCJ4ODY6IE1vdmUgc3lzY3RscyBpbnRvIGFyY2gveDg2IikN
-Cg0KQUZBSUNUIHRoZSBjb21taXQgaGFzaCBpcyB3cm9uZy4gIEl0IHNob3VsZCBiZSBjMzA1YTRl
-OTgzNzguDQoNCj4gcmVjZW50bHkgbW92ZWQgdGhlIHN5c2N0bCBoYW5kbGluZyBvZiBwYW5pY19v
-bl91bnJlY292ZXJlZF9ubWkgYW5kDQo+IHBhbmljX29uX2lvX25taSB0byB4ODYtc3BlY2lmaWMg
-Y29kZS4gVGhlc2UgdmFyaWFibGVzIG5vIGxvbmdlciBuZWVkIHRvDQo+IGJlIGRlY2xhcmVkIGlu
-IHRoZSBnZW5lcmljIGhlYWRlciBmaWxlLg0KPiANCj4gUmVsb2NhdGUgdGhlIHZhcmlhYmxlIGRl
-ZmluaXRpb25zIGFuZCBkZWNsYXJhdGlvbnMgY2xvc2VyIHRvIHdoZXJlIHRoZXkNCj4gYXJlIHVz
-ZWQuIFRoaXMgbWFrZXMgYWxsIHRoZSBOTUkgcGFuaWMgb3B0aW9ucyBjb25zaXN0ZW50IGFuZCBl
-YXNpZXIgdG8NCj4gdHJhY2suDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTb2hpbCBNZWh0YSA8c29o
-aWwubWVodGFAaW50ZWwuY29tPg0KDQpSZXZpZXdlZC1ieTogS2FpIEh1YW5nIDxrYWkuaHVhbmdA
-aW50ZWwuY29tPg0KDQo=
+The rpm-pkg make target currently suffers from a few issues related to
+debuginfo:
+1. debuginfo for things built into the kernel (vmlinux) is not available
+   in any RPM produced by make rpm-pkg. This makes using tools like
+   systemtap against a make rpm-pkg kernel impossible.
+2. debug source for the kernel is not available. This means that
+   commands like 'disas /s' in gdb, which display source intermixed with
+   assembly, can only print file names/line numbers which then must be
+   painstakingly resolved to actual source in a separate editor.
+3. debuginfo for modules is available, but it remains bundled with the
+   .ko files that contain module code, in the main kernel RPM. This is a
+   waste of space for users who do not need to debug the kernel (i.e.
+   most users).
+
+Address all of these issues by additionally building a debuginfo RPM
+when the kernel configuration allows for it, in line with standard
+patterns followed by RPM distributors. With these changes:
+1. systemtap now works (when these changes are backported to 6.11, since
+   systemtap lags a bit behind in compatibility), as verified by the
+   following simple test script:
+
+   # stap -e 'probe kernel.function("do_sys_open").call { printf("%s\n", $$parms); }'
+   dfd=0xffffffffffffff9c filename=0x7fe18800b160 flags=0x88800 mode=0x0
+   ...
+
+2. disas /s works correctly in gdb, with source and disassembly
+   interspersed:
+
+   # gdb vmlinux --batch -ex 'disas /s blk_op_str'
+   Dump of assembler code for function blk_op_str:
+   block/blk-core.c:
+   125     {
+      0xffffffff814c8740 <+0>:     endbr64
+
+   127
+   128             if (op < ARRAY_SIZE(blk_op_name) && blk_op_name[op])
+      0xffffffff814c8744 <+4>:     mov    $0xffffffff824a7378,%rax
+      0xffffffff814c874b <+11>:    cmp    $0x23,%edi
+      0xffffffff814c874e <+14>:    ja     0xffffffff814c8768 <blk_op_str+40>
+      0xffffffff814c8750 <+16>:    mov    %edi,%edi
+
+   126             const char *op_str = "UNKNOWN";
+      0xffffffff814c8752 <+18>:    mov    $0xffffffff824a7378,%rdx
+
+   127
+   128             if (op < ARRAY_SIZE(blk_op_name) && blk_op_name[op])
+      0xffffffff814c8759 <+25>:    mov    -0x7dfa0160(,%rdi,8),%rax
+
+   126             const char *op_str = "UNKNOWN";
+      0xffffffff814c8761 <+33>:    test   %rax,%rax
+      0xffffffff814c8764 <+36>:    cmove  %rdx,%rax
+
+   129                     op_str = blk_op_name[op];
+   130
+   131             return op_str;
+   132     }
+      0xffffffff814c8768 <+40>:    jmp    0xffffffff81d01360 <__x86_return_thunk>
+   End of assembler dump.
+
+3. The size of the main kernel package goes down substantially,
+   especially if many modules are built (quite typical). Here is a
+   comparison of installed size of the kernel package (configured with
+   allmodconfig, dwarf4 debuginfo, and module compression turned off)
+   before and after this patch:
+
+   # rpm -qi kernel-6.13* | grep -E '^(Version|Size)'
+   Version     : 6.13.0postpatch+
+   Size        : 1382874089
+   Version     : 6.13.0prepatch+
+   Size        : 17870795887
+
+   This is a ~92% size reduction.
+
+Note that a debuginfo package can only be produced if the following
+configs are set:
+- CONFIG_DEBUG_INFO=y
+- CONFIG_MODULE_COMPRESS=n
+- CONFIG_DEBUG_INFO_SPLIT=n
+
+The first of these is obvious - we can't produce debuginfo if the build
+does not generate it. The second two requirements can in principle be
+removed, but doing so is difficult with the current approach, which uses
+a generic rpmbuild script find-debuginfo.sh that processes all packaged
+executables. If we want to remove those requirements the best path
+forward is likely to add some debuginfo extraction/installation logic to
+the modules_install target (controllable by flags). That way, it's
+easier to operate on modules before they're compressed, and the logic
+can be reused by all packaging targets.
+
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+Changes in v2:
+- Check config requirements more explicitly (Masahiro Yamada)
+- Ensure modules stay non-executable (Masahiro Yamada)
+- Always combine debuginfo and debugsource package
+- Link to v1: https://lore.kernel.org/r/20250210-debuginfo-v1-0-368feb58292a@purestorage.com
+---
+ scripts/package/kernel.spec | 46 +++++++++++++++++++++++++++++++++++++++++++--
+ scripts/package/mkspec      | 10 ++++++++++
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+index ac3e5ac01d8a4daa031bc9e70b792a68f74c388b..726f34e1196018165adf350933a5f816faeeef0b 100644
+--- a/scripts/package/kernel.spec
++++ b/scripts/package/kernel.spec
+@@ -2,8 +2,6 @@
+ %{!?_arch: %define _arch dummy}
+ %{!?make: %define make make}
+ %define makeflags %{?_smp_mflags} ARCH=%{ARCH}
+-%define __spec_install_post /usr/lib/rpm/brp-compress || :
+-%define debug_package %{nil}
+ 
+ Name: kernel
+ Summary: The Linux Kernel
+@@ -46,6 +44,36 @@ This package provides kernel headers and makefiles sufficient to build modules
+ against the %{version} kernel package.
+ %endif
+ 
++%if %{with_debuginfo}
++# list of debuginfo-related options taken from distribution kernel.spec
++# files
++%undefine _include_minidebuginfo
++%undefine _find_debuginfo_dwz_opts
++%undefine _unique_build_ids
++%undefine _unique_debug_names
++%undefine _unique_debug_srcs
++%undefine _debugsource_packages
++%undefine _debuginfo_subpackages
++%global _find_debuginfo_opts -r
++%global _missing_build_ids_terminate_build 1
++%global _no_recompute_build_ids 1
++%{debug_package}
++%endif
++# some (but not all) versions of rpmbuild emit %%debug_package with
++# %%install. since we've already emitted it manually, that would cause
++# a package redefinition error. ensure that doesn't happen
++%define debug_package %{nil}
++
++# later, we make all modules executable so that find-debuginfo.sh strips
++# them up. but they don't actually need to be executable, so remove the
++# executable bit, taking care to do it _after_ find-debuginfo.sh has run
++%define __spec_install_post \
++	%{?__debug_package:%{__debug_install_post}} \
++	%{__arch_install_post} \
++	%{__os_install_post} \
++	find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type f \\\
++		| xargs --no-run-if-empty chmod u-x
++
+ %prep
+ %setup -q -n linux
+ cp %{SOURCE1} .config
+@@ -89,8 +117,22 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
+ 	echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
+ } > %{buildroot}/kernel.list
+ 
++# make modules executable so that find-debuginfo.sh strips them. this
++# will be undone later in %%__spec_install_post
++find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type f \
++	| xargs --no-run-if-empty chmod u+x
++
++%if %{with_debuginfo}
++# copying vmlinux directly to the debug directory means it will not get
++# stripped (but its source paths will still be collected + fixed up)
++mkdir -p %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
++cp vmlinux %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
++%endif
++
+ %clean
+ rm -rf %{buildroot}
++rm -f debugfiles.list debuglinks.list debugsourcefiles.list debugsources.list \
++	elfbins.list
+ 
+ %post
+ if [ -x /usr/bin/kernel-install ]; then
+diff --git a/scripts/package/mkspec b/scripts/package/mkspec
+index 4dc1466dfc815c110eb7206f83dd874b17f5170f..c7375bfc25a9ad3ae98c088273bd76375ea6962e 100755
+--- a/scripts/package/mkspec
++++ b/scripts/package/mkspec
+@@ -23,6 +23,16 @@ else
+ echo '%define with_devel 0'
+ fi
+ 
++# debuginfo package generation uses find-debuginfo.sh under the hood,
++# which only works on uncompressed modules that contain debuginfo
++if grep -q CONFIG_DEBUG_INFO=y include/config/auto.conf &&
++   (! grep -q CONFIG_MODULE_COMPRESS=y include/config/auto.conf) &&
++   (! grep -q CONFIG_DEBUG_INFO_SPLIT=y include/config/auto.conf); then
++echo '%define with_debuginfo %{?_without_debuginfo: 0} %{?!_without_debuginfo: 1}'
++else
++echo '%define with_debuginfo 0'
++fi
++
+ cat<<EOF
+ %define ARCH ${ARCH}
+ %define KERNELRELEASE ${KERNELRELEASE}
+
+---
+base-commit: 2c8725c1dca3de043670b38592b1b43105322496
+change-id: 20250209-debuginfo-cd3d9417af21
+
+Best regards,
+-- 
+Uday Shankar <ushankar@purestorage.com>
+
