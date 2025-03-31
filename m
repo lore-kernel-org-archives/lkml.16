@@ -1,139 +1,117 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7519E7D07D
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E97D07D
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743460847; cv=none; b=W9iSRWpWMg1dN4njV/FwfwGQ0URqMSm4/lzQYza/OJQ8+4afXc9alSMvOqahBszf8kv8veK1cpzxnuPgu7N4b3YnJ7yTSvCFyrkztzj7cdSR14Lft3Qol6VmGPJ3VGx790goF9W1zow4jxMGE3EThZ+LenA5hz87ustB8/g6pi0=
+	t=1743460926; cv=none; b=Gd78A1M5o8kxIldnom+ODE6fgvdZoU8adLqu52DXfXtO8DMmtrfYlkAE7YwgnC5kcbwhY0dGO135y0V49rMKfa06hy25K9kOBwaAVAktPp5oXEDbnexJ6sPmI4Q5MQTOplDyFy1wun2dMOoPxr++mp10Y+Tfh3EUgq80g5+7h8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743460847; c=relaxed/simple;
-	bh=tXqRqXowsU7XunEQdMvzX7NJWL3NtObw53Bzh8tLBDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RyZIihViW+AN5n3TtDVReteWjcwiNx2u3Hfkasvtd5i/Tc6r6MvW7HUERveJtVu7Cr8SU4r+XMQmQLVWhoE+aYdlE94LinhjdtAWiZXA/Z7uldy3lcgCo0imx1yXtU+9XgS97pKKdy1YPoKJHvdRXBRuOJAbsdM9d99lKL1G1F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K6byX9oa; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743460926; c=relaxed/simple;
+	bh=1THhMP195YYDmMD2h5H3KfvN8N3O3voYonfAzP+gNkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFI29BArqDGb6b3xa7iui4I8lauXkLK1hQduZ4hpkjQzqXIU0Rix2DPhyFdBiuV2MUrFeNF6qFMfOVJRdfPs6wK3fFfHkwkIDACR5oN6hOHf1eX2XVhjv9hGXp4ZUdR+MpUdGq2wReh3GsYvG2Si2Hk/j9ubxcJSweyrzvu9Rbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZxZ2w1J3; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K6byX9oa"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5499e3ec54dso5599923e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743460841; x=1744065641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FLO6XpWwJP6wry6Kl4202qxPqF3pJF3nyfU3KzxEbD0=;
-        b=K6byX9oa/tA8pz6SzuY6j0SbAW2GB3AwyL3tRD1Kt5BvOD7WBhTyZioejBiWGjRd6l
-         KJ885Tl81wqHXkqp3MszQtuXQXJaGFtdDxT7OdakoJ82g+0FDv9nxEEgvg9FhukhiHm7
-         jGruxjo0jB4PPEyKOI5mCRbbquWTlhiKcUHMo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743460841; x=1744065641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FLO6XpWwJP6wry6Kl4202qxPqF3pJF3nyfU3KzxEbD0=;
-        b=rB4sxwkm3hjxkaZyOlzGIlA+1od+gOhThBC240SrXzpVou1rvwQaUsAv88fbm0TTF/
-         QeRgb4HMXTtDtrGankWQXc8p/T78RcNfvTVhnFyi6SCeHol4u1iHfr9OxNGsuuWJN4xm
-         v5Ih1/8jHrfkcvdcfd5UNWm0y0w6lDRGh9KjV0FGzayep8tVy4eIl3lQkpphlUyL2yr6
-         wE4EsO583Oxc0ztUc71bhdf91JSOlsNpT/Qzm4RmCuzdQNss47pn3+PmJxoD+f7D7bF9
-         Enrseom1JRQvIZPoqKpJ5sZhziOozUxitaPmB327+wYf2YLb+5lEYgPOv70NgDQzQUZn
-         6GNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJL3RDutZ2z363wN2tS1LIvvTrcqM7Z/9VpZvNcYFgQ/uYwQpRax+E2KUrefdx+idccP5S91+ZuZAcW7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFlCVmJ0lKxSFF8a8lbh6AmjSP5wUfr9jzHmmL9S8BMqKk5X9x
-	iP4PWDMfVOIguWZ7qucXFmweaLp5TdUYGOnJy8Mivwf3zY5BILzuLBojHAlzEw26iyrVKMiDD/N
-	lRw==
-X-Gm-Gg: ASbGnct8aKDdiFIi3eKGRDA4EcdLPXxP2ucC6jWxvlCyAAG74sJErBffOOZQ9JEEPO+
-	y+0Dlvy4OR9fFnVqvEQziS8QBV2b5g2HjoopoQCphhGCBi6FgPTAr/aGXfqPSqsnUZWe1LcB5Oe
-	3kGIDy7aUelUxz7IKBOde7isMDMDSZqlUVAGTYn3QN9ikhwxfzsQPhNyye7OORywuhwSuvBpxyb
-	d0ULCcFloFHeBBHZ8qE7UgnUBREApSYlIMhqRm1m0FtBeDVPz+lq0xzUxBf6uKG5yX9Q15D/puQ
-	6/POnZiDQKcfUTnmOjoF9X8O3k2kwAzRHg9OonjE8v7P1qv0MJyWCYkRnaUej2ZXYYyklBj2xT0
-	yIjBOnq45a39A
-X-Google-Smtp-Source: AGHT+IGEx95a6ml2TQgZLv+cIhkKvKwJGhcngAQh85cAJSLF2JhWRV5RIX4UoJVMtbU5wT2+G13T3w==
-X-Received: by 2002:a05:6512:224d:b0:549:9078:dd4a with SMTP id 2adb3069b0e04-54b10dc8233mr3002532e87.14.1743460841150;
-        Mon, 31 Mar 2025 15:40:41 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095a0cc4sm1196176e87.226.2025.03.31.15.40.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 15:40:40 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bf1d48843so42836611fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:40:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWR1VWW+QgqNhY2QQxB2X+GCNA1MUPWIu8sm20c9MTLwIVA3fh6uRWt/tSsQfOu0G2Oe8IGZxZAOwymCiI=@vger.kernel.org
-X-Received: by 2002:a2e:b8d2:0:b0:30b:ed8c:b1e7 with SMTP id
- 38308e7fff4ca-30de0266e3bmr28654361fa.18.1743460838770; Mon, 31 Mar 2025
- 15:40:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZxZ2w1J3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743460926; x=1774996926;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1THhMP195YYDmMD2h5H3KfvN8N3O3voYonfAzP+gNkA=;
+  b=ZxZ2w1J3diLT6dUIL1vZEwRrk+jmYj15Ywpm7WSWXVIc7KEwZNutNsrc
+   4vx10QwQ1vu/JRbZq/FX38ooZkwnBE+WW2gQLjc88y7JVg7oo4Kri7Rll
+   8khcO07gaNa2k+xIpWUWJ6b3Tb+jaI4Zm5CdG07yLtZ8cQFbd0ofCuZ+z
+   TfGKLyzxCGf5caxNdIlRxJ6/YbpmLydun1pX4RDAoCeK+XO00B4C1G4Ow
+   g4U/2jmTsGZMvr0iny+e10sRLW6I3ZA2DxA5J8OXYUYzwZISUfHD0v3+f
+   YIQ1GFRViAv0r49NaNyBWigAU2OoTKkEX1XKbZT7XTtxRmPu6B3b6hAA1
+   Q==;
+X-CSE-ConnectionGUID: z8Z82+2uSu+jkIRI+yb3jw==
+X-CSE-MsgGUID: W4CGo4NfR9CWd2Qbl28pGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="70127529"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="70127529"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:42:05 -0700
+X-CSE-ConnectionGUID: Blfg9Kj6TLq8B9bkheorxQ==
+X-CSE-MsgGUID: IwzK/hHgRZS9pIjtkfB9Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="126729615"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:42:04 -0700
+Date: Mon, 31 Mar 2025 15:42:02 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v2 13/16] x86/resctrl: Add code to display core telemetry
+ events
+Message-ID: <Z-saOq25hb8sPV7r@agluck-desk3>
+References: <20250321231609.57418-1-tony.luck@intel.com>
+ <20250321231609.57418-14-tony.luck@intel.com>
+ <bb1ceb6c-e855-41c6-b15b-cf3eeafd7da8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331061838.167781-1-tejasvipin76@gmail.com>
- <CAD=FV=UbUqNf4WoWzqMe5bDQmxiT+bRG_cn0n1dBrkFRijx0Cw@mail.gmail.com> <jlqxx47vzlp6rmwpi3tskig4qu4bgyqd7vletxbzzn7xdpep72@42tzrjkg65lh>
-In-Reply-To: <jlqxx47vzlp6rmwpi3tskig4qu4bgyqd7vletxbzzn7xdpep72@42tzrjkg65lh>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 31 Mar 2025 15:40:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XeHeed5KhHPVVQoF1YPS1-ysmyPu-AAyHRjBLrfqa_aA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpOrGXDTZ_nS7pJWSblyYvrcC_GXOuMLBACzEl5VhUwUaaZ1leG8b3O40k
-Message-ID: <CAD=FV=XeHeed5KhHPVVQoF1YPS1-ysmyPu-AAyHRjBLrfqa_aA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
- wrapped functions
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, quic_jesszhan@quicinc.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	asrivats@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb1ceb6c-e855-41c6-b15b-cf3eeafd7da8@intel.com>
 
-Hi,
+On Mon, Mar 31, 2025 at 09:23:48AM -0700, Reinette Chatre wrote:
+> Hi Tony,
+> 
+> (nit: "Add code to" can be dropped from shortlog)
+> 
+> On 3/21/25 4:16 PM, Tony Luck wrote:
+> > These can be read from any CPU. Rely on the smp_call*() functions
+> > picking the current CPU when given a free choice from cpu_online_mask.
+> > 
+> > There may be multiple devices tracking each package, so scan all of them
+> > and add up counters.
+> > 
+> > Output format depends on the data type. Either a 63 bit integer, or a
+> > fixed point decimal.
+> > 
+> 
+> At this point the architecture and fs code is very intertwined. I hope that
+> some of the items I mentioned in earlier patches will help to support a clear
+> separation that will make the code that follows from here on easier to split
+> between arch and fs. 
+> For example, I think this may end up with the new event enums defined in
+> include/linux/resctrl_types.h to support new architectural helpers
+> that take the enum as argument that the fs code can use to request the
+> event value from the architecture. 
 
-On Mon, Mar 31, 2025 at 1:28=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
->
-> On Mon, Mar 31, 2025 at 08:06:36AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Sun, Mar 30, 2025 at 11:18=E2=80=AFPM Tejas Vipin <tejasvipin76@gmai=
-l.com> wrote:
-> > >
-> > > @@ -157,7 +137,6 @@ static int boe_bf060y8m_aj0_prepare(struct drm_pa=
-nel *panel)
-> > >
-> > >         ret =3D boe_bf060y8m_aj0_on(boe);
-> > >         if (ret < 0) {
-> > > -               dev_err(dev, "Failed to initialize panel: %d\n", ret)=
-;
-> > >                 gpiod_set_value_cansleep(boe->reset_gpio, 1);
-> > >                 return ret;
-> >
-> > It's not new, but the error handling here looks wrong to me. Instead
-> > of just returning after setting the GPIO, this should be turning off
-> > the regulators, shouldn't it? That would mean adding a new error label
-> > for turning off "BF060Y8M_VREG_VCI" and then jumping to that.
->
-> We should not be turning off the regulator in _prepare(), there will be
-> an unmatched regulator disable call happening in _unprepare(). Of course
-> it can be handled by adding a boolean, etc, but I think keeping them on
-> is a saner thing.
+I have a solution for the separtion for this. Each mon_evt structure
+gets two new fields.
 
-Hrmmmm.
+The first is "bool any_cpu;" if this is set to true the event can
+be read from any CPU (and we can use James suggestion to pick from
+"online_cpu_mask" instead of "d->hdr.cpu_mask" and let the optimizations
+in smp_call*() avoid the IPI.
 
-The issue is that if we're returning an error from a function the
-caller should expect that the function undid anything that it did
-partially. It _has_ to work that way, right? Otherwise we've lost the
-context of exactly how far we got through the function so we don't
-know which things to later undo and which things to later not undo.
+The second is a "enum format" field that specifies how to display the
+value returned to FS code from architecture. Existing events all
+print as a decimal number. I need to add the binary fixed point with
+18 binary places to be printed as a floating point number.
 
-...although I think you said that the DRM framework ignores errors
-from prepare() and still calls unprepare(). I guess this is in
-panel_bridge_atomic_pre_enable() where drm_panel_prepare()'s error
-code is ignored? This feels like a bug waiting to happen. Are you
-saying that boe_bf060y8m_aj0_unprepare() has to be written such that
-it doesn't hit regulator underflows no matter which fail path
-boe_bf060y8m_aj0_prepare() hit? That feels wrong.
+Note that this solution needs to copy these fields from the
+mon_evt structure to the mon_data_bits union (this is easier
+if James' pending patch to convert to a mon_data structure removes the
+restriction that all fields fit into 32-bits).
+> 
+> Reinette
 
-
--Doug
+-Tony
