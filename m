@@ -1,188 +1,256 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2135.outbound.protection.outlook.com [40.107.247.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C981ACA;
-	Mon, 31 Mar 2025 06:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743401883; cv=fail; b=UByvfsC9m/9NBS4XscwAI5TLt0iWrZupexmiBryBHQGtnIQU9arYOxMJND5ReZgF2lcYKaNaSwJbybpYjTzt6GS4wFIPbl86j3CAnglUp+N6Vlwgg/GGnHS7babm+3vX8bzzhPDO3WsySDmMu9OPuP03orxW2ur5hnWfrT4u87Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743401883; c=relaxed/simple;
-	bh=908SgiF6mmhL+p2LUjbHSpo0053IXM9JbWxTegU96SU=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=l9kuZM75PtMsX017awI1i4nTAwsmi+gZiUtMKzbqkuBxjcPfqJdeiHfcTXEHeq7U9/sIKTvI5+wu4cOJyWFHoGmePsKYjMiWv+GOuy2QP0rF8bihSrotEg9nxSdjs6t+R9OKqUYJZejLbg20ynuDOylOAqIDzcvXr5V71zyBH2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=anton-paar.com; spf=pass smtp.mailfrom=anton-paar.com; dkim=pass (1024-bit key) header.d=antonpaar.onmicrosoft.com header.i=@antonpaar.onmicrosoft.com header.b=P8dRXzPK; arc=fail smtp.client-ip=40.107.247.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=anton-paar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anton-paar.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B62BA2D
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 06:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743401930; cv=none; b=RshClMSHvYYxVMwggb+RlltNE2Lkqqi5kbpMiv6vAvyGWxwFbIi/7H++1E+Yvz3gr1Ecsr1T4vdXwwjbOfTCFotmpRZwNPgao387VpjG+LpBfVWbZUYoGyIR/ZS8RTs8cPn3w7CE6vbjchbtoL7UWF7o4dYp4fKiML856JgtZR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743401930; c=relaxed/simple;
+	bh=cmceu9nxQ1oQMczlRk0uySnSPdGX5s0U7qK53gpiOr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dnpH+rC4quSpc2r0vg5/IMFOYS6XhsYlz0t4i7jHCWW6OhE/GQpkcStToDa5ZPhOgazJ5KbvfSHnsxV19E02/Z51k6u/YcGAwvafRjWB5lhi7jTQJOsIaQMcNLrwjKN309WHSgfDhkXxXZwkFcDV+B7tDqolQLH1RbfidY8Zm4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfdrP4q/; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antonpaar.onmicrosoft.com header.i=@antonpaar.onmicrosoft.com header.b="P8dRXzPK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kmW2y2mu1S7mayUiTCOwh1Z4VMToW7JwUgyVCXzao6nIRs2rdbFBh/4lI19fS8hJU4WlzVgYuepy1i9awEUZNx1lnx129IpyHLGB7phE65TO/6qaivzrShH8Xd250ne9fq3I9bfPyE+4KIUpggN/vK+K3S3Jyr3PkrUBn5vBMVJLRbBzNR2XUJ0Vu20OcBlM/hB/azCb4zBLtec5JtBYtaaSmOAU4pwG4nTxx7GYckrEFCJQMJKIxFjB6b28UbWkDw0qQhAMcyfEgV76aDWiLyxtcAcYFWUm7FoGqIsTJvQvP9DigfQxC/H66pgHgHQxady+DAqHskVhJSnL5PQADg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VmUtCnMs7gjRWYgDbsUV4fUBBYqqjiSnwKChaaQCSX8=;
- b=SnW28CvQ83s0qv+Rh9ptM/qocQCZjGS6Qb+qD2xeeqph6ZnC5O70dWP9uZPZLDoWc81/GTuCeYxGABjE4Ybbv4nDR/EMRzN0Ch+o2zC/69keqFpZh9I+goGUVYSC/iGfJnj/XAjQXjbh6c7YL7FP5fn22x5MIhzuwsFjT084wamQ4xE/BjEPV6ytzEoI144w4J1uLyf2JRab62X1n43odQ9jnmPzXNWMRxU4HtKFWI56W7MLO7IH8UzxIcbN/rayh2gI/iOCn1bA2jB1D5qpVoP+aH8L1rye9gu0amu7zIDeOhUoPX1QmYDRuGuskyX0gHV2gtZmczoxfNUQrcZA6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=anton-paar.com; dmarc=pass action=none
- header.from=anton-paar.com; dkim=pass header.d=anton-paar.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfdrP4q/"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so7044283a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 23:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=antonpaar.onmicrosoft.com; s=selector1-antonpaar-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VmUtCnMs7gjRWYgDbsUV4fUBBYqqjiSnwKChaaQCSX8=;
- b=P8dRXzPKUGNgVwuXevB1vi8rQLUi5hRdOVljN3fGsROwofIdWWy9KVYVNA5/7kXlq5nNf/RajTTUcs4iiM1TV0652IJsEOD4Uk9DREmbZ2d8fADgoFXDDncAqcCrmbqddBMKLZ/QcIxlZEmyWoERfnUZQBpy/YTEtp8eRvcMx3c=
-Received: from AM9PR03MB7074.eurprd03.prod.outlook.com (2603:10a6:20b:2dc::20)
- by DB4PR03MB9602.eurprd03.prod.outlook.com (2603:10a6:10:3f2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 06:17:53 +0000
-Received: from AM9PR03MB7074.eurprd03.prod.outlook.com
- ([fe80::412f:8c76:f36c:13c8]) by AM9PR03MB7074.eurprd03.prod.outlook.com
- ([fe80::412f:8c76:f36c:13c8%6]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 06:17:52 +0000
-From: "Lalaev, Andrei" <andrei.lalaev@anton-paar.com>
-To: "ojeda@kernel.org" <ojeda@kernel.org>, "alex.gaynor@gmail.com"
-	<alex.gaynor@gmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-	"gary@garyguo.net" <gary@garyguo.net>, "bjorn3_gh@protonmail.com"
-	<bjorn3_gh@protonmail.com>, "benno.lossin@proton.me"
-	<benno.lossin@proton.me>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>,
-	"aliceryhl@google.com" <aliceryhl@google.com>, "tmgross@umich.edu"
-	<tmgross@umich.edu>, "dakr@kernel.org" <dakr@kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] scripts: generate_rust_analyzer: fix pin-init name in kernel
- deps
-Thread-Topic: [PATCH] scripts: generate_rust_analyzer: fix pin-init name in
- kernel deps
-Thread-Index: AQHbogPYbOUx/iCN1UWOO5t+F1cPWQ==
-Date: Mon, 31 Mar 2025 06:17:52 +0000
-Message-ID:
- <AM9PR03MB7074692E5D24C288D2BBC801C8AD2@AM9PR03MB7074.eurprd03.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=anton-paar.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM9PR03MB7074:EE_|DB4PR03MB9602:EE_
-x-ms-office365-filtering-correlation-id: 59bdbf38-79a5-45a3-7935-08dd701bc4e4
-x-ms-reactions: disallow
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?xIa8vQcyEDx4TaTzAoQS/GLJ7jScvncJYDmpgKrWhQdjWbogb4RZr4v6Z/?=
- =?iso-8859-1?Q?MLYY95cqPvnFHaGvtLy9XRQhIsetIXQRSsN/wZtaMPQ2rI8Ssw4eUPGhyd?=
- =?iso-8859-1?Q?QO+Z7Io24uO3YjOHs8+I8Z7ssg8VoziOEikSFAPfKqyQHStPVAy0qriH24?=
- =?iso-8859-1?Q?kbdO5IAniinOVEB94vozV4nQSKOvnwlOrbCrUi5zoDffM/zQNVV7IvnIdy?=
- =?iso-8859-1?Q?VbxM/wGXTCxxDOVDtGL+/VjlABs9tWVeA5N9LRsoKkk7DzWGerzciw+lL8?=
- =?iso-8859-1?Q?CrZOpdYo0RAts6NYba35qTI3OJZ2eLsgHdh0fJK2AtFsHHnOSvymUDpzQX?=
- =?iso-8859-1?Q?iYQPicBSlBSgfVvzKkPKkVGQbVoTWlQbSuaGrEN7fh5Pf9CEnePZpBPPKf?=
- =?iso-8859-1?Q?Ppe0iYD3wUCp7lEpcvu1+88ikiw7MZe/sHY3s7t+Ls1O35QkgW4T31+lNh?=
- =?iso-8859-1?Q?Qy6VXAUP4bYEj9qYSgnwRRj4m/BFofJUwjkFJyzzmctvm2ejPAzIjWzXfL?=
- =?iso-8859-1?Q?WFdcZ1siKBQJIdvrUTCsMfN5cBVrQvjrdMxJ1K5rk0nxC3AuYpXZRkuu5a?=
- =?iso-8859-1?Q?Zg9yUDO0lgd8xPI8a+R2oVMZt6FD+rzQho2YhOEuVFWY3y1LFvtRecU9Qr?=
- =?iso-8859-1?Q?7mi+WL8ZFuaop+QW6m9UcEnVIj0HZR9sxqX/xFOBJsWGqGwetwLKCgQ1NN?=
- =?iso-8859-1?Q?D5BzZxFmOFsddCgBeoUmIIcyum2gKjCrxwHsDZgAUQUX/7CugE+NYYX1x7?=
- =?iso-8859-1?Q?PCa5hocJ6NuDBRjgR+E9rMG3ZeyftFAqnKHKdCfH7LiAkvkw+f3zjw5gBF?=
- =?iso-8859-1?Q?1vi41zMXL25ItHrRKmsA00WXsgviPkwvIkUqrqqyqu2kRFv/wAk4xqdWyc?=
- =?iso-8859-1?Q?OUiIofdDI45d6ajlDQtj2lFZezub882ffxYteHRpTaLSzYuno3yV0GTgGG?=
- =?iso-8859-1?Q?EPMExlWRqkodW0ikXlPOfnKYroAM48WPtym9saWCnmzaG9m6AuJRCvzqCV?=
- =?iso-8859-1?Q?vy0ubCDmZCAFdloCOFonddOsYdjP5OkgGpuNJM0e8titGD0BBLVAXM66NX?=
- =?iso-8859-1?Q?G7NeqzqbEr6FFqJKLckxWgIVYtoDtDeBipCKxNRuZsgZwz+zZH9sJMVAw5?=
- =?iso-8859-1?Q?eQCUigndgNj0fH9aRIHtAIHioqhs5xzGYbytknH8PqiLE7quWbIF05Am+F?=
- =?iso-8859-1?Q?3zqywmkLjBLzofWjFBdQ/Qw8jBedFUal+aP1reEeu38J3Wy1M1hxGRqPwa?=
- =?iso-8859-1?Q?YqSBcs1jSvH5V3uWp2hnbhd6FvHNIwksr94pLf3cBL9mVF2iYXh+1x+STx?=
- =?iso-8859-1?Q?7053WLs6SbHuxtqNmWhffxK9S2QsLFKJvIIxS6brFp30DqSn23qNxnnB3Z?=
- =?iso-8859-1?Q?sroVdmnJiS4cLvzeNfmMpc5oww50nK76d3T+wNolrms0SliT/6eW1+tfvt?=
- =?iso-8859-1?Q?x8quEC24QEFqKEed7UTT/lLFrInJtPutULBfJhH3y5sLa98rBmdbvDPm3E?=
- =?iso-8859-1?Q?1SNBrWs8LZDg8q6JJ4CZfRESsE0xSBZx0krf8Se/aEHw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR03MB7074.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?kCQI6EHJIHpp9IDvGLOrAbtdMHeugh+m6oKer22eh+Pf/b3MYYEVM+g9sO?=
- =?iso-8859-1?Q?DznaBEeUQ1S77HLEKt3I1KHOEbJV42mw5h54CuCXXoq/eIEjcSEQGcfwmc?=
- =?iso-8859-1?Q?M8/crxv2pdiBoFbX8PlAT54PB30yLacFHKJ1J4ern8/xOA2UwMn2V/r0Cd?=
- =?iso-8859-1?Q?lsuVc4OYf3FgNQqPlj+CQTEG4K82nVGSGMGkrlgJgPn5yjEG1BU+CbG2ZL?=
- =?iso-8859-1?Q?5Z13lICdhLisg6L3VwGij2kGEBN/2qYU0Mooo/wpOG2KAe1sPS1TPOT4kV?=
- =?iso-8859-1?Q?axiri+6c+UAe1xjZj5dQAMKN+lgD4idCXzazwBoSYogOn9UAzagOBOAPFi?=
- =?iso-8859-1?Q?/NL+VvPJIPetxm+fZbQ278jSBL5Bkf7Z1BZNU82rud9uDClgD1UxVS42Ti?=
- =?iso-8859-1?Q?KqHMt5AHSWjz1g23nALSxdgVBHYC0WSlQrQvVaVvTOs55DX7blzrIXxgOc?=
- =?iso-8859-1?Q?yJ0+X9p7eZnxI9ArRKPQl+TC4Qqer9BAAd6QA3DfqGT4zXJ/txeqYyOcfI?=
- =?iso-8859-1?Q?nlysSORtxYA9r7nVCbm0kMIbQREzru/CVkvwR2hao/F6Eus7zODRdVXokV?=
- =?iso-8859-1?Q?+T+0eRJwmsDlij8G6Cxjy0b+Xcmrk8ueqmWqsmtPe3pIeY7PWLhhHcHAds?=
- =?iso-8859-1?Q?5IRno5jqeiXWNBozg0sMx3+JVpxBsQdTuKezccfd4WJLXU5c/vDtb3zxNn?=
- =?iso-8859-1?Q?Q6dJbeU8X6HHExI4/jczWY5jEO6rXAklaa5P9Eokg6juwoiMhs//gkLo96?=
- =?iso-8859-1?Q?7rTctNTR+XQAxpaipKXLZYQG4XMTU4pm1XMEG/zKD2JEt34/bDlpgfeFR5?=
- =?iso-8859-1?Q?2vt4wwWXqB3TI+oFLTOPK7q1m99GeRQVAMoBjazQcRNeVckgWu6FV5DfSF?=
- =?iso-8859-1?Q?cYYHSBz+yC7UzkxYBhWG2BxEyATjLcHKP3wA0jKjBRSuEjxM53fabB9fCX?=
- =?iso-8859-1?Q?fgWcsj0Oq0dRKG7TU6O2C/okr11QbY9P/xgenE7q44qLTp6wH3f+USphMg?=
- =?iso-8859-1?Q?q33ZnoLGU1vItq1uy2errnck9rQ6U8vdZDZbCxa0U8jPsuS8MAOKlzlTeK?=
- =?iso-8859-1?Q?Pk3TmGInCt7RctndXbp7YS7suyzPT5nzIb4/JCxLOieWQGzUMgVjJK4kpR?=
- =?iso-8859-1?Q?jYsOy6g8si6zig4c6yP3Uad+ZI8E3Ucdrp8/7VGpJys6m2TEfl/WsjC4pG?=
- =?iso-8859-1?Q?v24Kh6vp6vwf3Gr61KwterjyFyin7ommEchW4Pe2OKSGIZw7HZu5eCknGt?=
- =?iso-8859-1?Q?SAeXlEGCmweJTSgt/oJKZ+Uc8DJTYLm3Ry9KdPSRiFU7D/dnyp0IG6DXsF?=
- =?iso-8859-1?Q?JKbFUy+8a79iWYViIxBb/RVxKP7c+fBU9wPD8zNy6hlJ9AxUkyFqjGCsjw?=
- =?iso-8859-1?Q?3hrUwGGkEpl2P8LFscdZVk4tE5GG2ZAMId+tyL6xIlzyO2ssbAdhKnyJs6?=
- =?iso-8859-1?Q?gatf1sJFgLBSW0oVPacv55dGW3Wqy8JxZtGmFf9t8mJqeTo3MCjqxGK+Ct?=
- =?iso-8859-1?Q?RLdDErQqz7nSS5VUBPx/WQcLfrKz6NBvjtGew9FvU6ccx2nGoDItqPklQI?=
- =?iso-8859-1?Q?XsphYUCqA7d5PLHYuSXbQgfAZ63Q9X5/olNrMB3DE/NoAG6cked0maGHUs?=
- =?iso-8859-1?Q?MdCv6Hrsy9iIylJD97QuITSpDdJplkqfPiKh+hle7vBBJg+zJAIv7Xhg?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20230601; t=1743401928; x=1744006728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YqfZ9w/ImUwiK75rO1HvxehLxAen84p9wgdPi0LkNec=;
+        b=VfdrP4q/unQoLSZQqIIo0tRfndL9upcluMlMU9/M3ZGCbRWsGVKZujE5EAyThGgJEv
+         Gx/HJ/V5zujK4Emc9r4tvMNumpg8u48uPwly4vSupFAE7VvCyMrS9FsLK3hDsW5DEXbu
+         u9GDFg3b3D/sZEAp1Vjc6jSem0Ib3wInKDgVL25bK6LswZJPzyn3tueHeX8SNVz8xy/o
+         lBghyNd6kac57JlLT8rYjey4zlHi6ShZbY8rkn7PVIW0JdTyIwqj5ZGcoaPZtl1MmwJ4
+         uy1xlg3SBj0DHr6QQOrUbLzNcFMSV7HpOiF8LpUAS0HZFm/2rNA3Yy/SXDwrfwgoETmn
+         qxng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743401928; x=1744006728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YqfZ9w/ImUwiK75rO1HvxehLxAen84p9wgdPi0LkNec=;
+        b=itBdyQ2T81Nttq6gPRqUDO0e8H/zzvK2CtscslkjDzZBaJjfCu0rCNWHSQypxJ6XJS
+         3ZdLL+/IGglNmt/ZMbk3ZzXJlybV4mRbQ6iWXdDTiQbsBkqFmn2u0RE3LHigDeEULR2D
+         V+ccnjme+mxQNGsinZxtsVbIaD4ziFxdKgbJfT4+o8Hp1a833r16Au3IuyH5FampHSp0
+         1nFAF8Pictw1pcvg8Trfqmm73ofPUwMzSN33d+MoJtMewKOPXMM4vgVrl40thDt2cBPv
+         EF1fKcBhuGl/7ebq1b5+itFhKOon3Djbex+n4osJZ69K78sN4g5AQFU8fV01jkU9Jp3l
+         iTTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzB+CRIsniWll87k+6A0cX9u9dLWvIC8vfahiyg5wW7+fyeE8v7KXsPnlHdb0BrDgQNHlNr+AzGyC1oew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwGmfcYe7JTdhNtIli0+ifMq5ZqT/r+ZoMihVM1NBzaVKVBQRP
+	9YUW1F0izyPqd39E30yrfcLlwqt/Vb8Pq1vUbAnuEtuQ1gwNOUPd
+X-Gm-Gg: ASbGncuhLJIhcNpfWnAr/F/g2VgnUpbQ/qOJtyulIA3c1kAhEQHrvLpOueDgbn6GsGQ
+	mSoy3WmMxoC+SwMKcLGVmTGzVXQ3utcZcXZ0Qjs6oYjdByHB2YjWCHQBn9MDgjyK8+Z/sGLDIyR
+	W7I6rdOt8LmAkkIo6UxxJlZ/h570RmfV2eD8g+6oxpeJ6vI80EcwXZGf5ZiUWX59JEnRxIWwpJ/
+	S/Q6bkSG5wpx2ebFs9O1JwmOxwG+xDXgey3T+8JJpQYFmWN1CZ/o/GUkRtdMxbrlTbleXiY/PX7
+	shokOrgVpMz6L8gOONgD+BbIJKN7WQ/c1V3vYl8pmRR1z22Fdknf7cXIqyB6BIys
+X-Google-Smtp-Source: AGHT+IHaC2BICbj8uY5XRfbnRS9PlYZs2JBVZA/EL8010zewr1McTuIX82yBfpRHcKhShSMuoQVtFA==
+X-Received: by 2002:a17:90a:f946:b0:2ee:94d1:7a89 with SMTP id 98e67ed59e1d1-30531f7c875mr9920707a91.1.1743401928351;
+        Sun, 30 Mar 2025 23:18:48 -0700 (PDT)
+Received: from distilledx.SRMIST.EDU.IN ([103.4.222.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039e10c545sm8847841a91.23.2025.03.30.23.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 23:18:47 -0700 (PDT)
+From: Tejas Vipin <tejasvipin76@gmail.com>
+To: neil.armstrong@linaro.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: quic_jesszhan@quicinc.com,
+	dianders@chromium.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	asrivats@redhat.com,
+	Tejas Vipin <tejasvipin76@gmail.com>
+Subject: [PATCH v2] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi wrapped functions
+Date: Mon, 31 Mar 2025 11:48:38 +0530
+Message-ID: <20250331061838.167781-1-tejasvipin76@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: anton-paar.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR03MB7074.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59bdbf38-79a5-45a3-7935-08dd701bc4e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2025 06:17:52.5776
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 1650d056-0824-4040-8341-61f3c6069bbd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: unngyfCzLTb17sfQv5Nd7AJkDXxZkB8y52HAx+gX4D+Pum/K6rRy1v+HUnnC0lY8QMkJ+fS8qZSHQ1VNCL2SjaEBgoursiAkzQYMGHps27c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR03MB9602
+Content-Transfer-Encoding: 8bit
 
-Because of different crate names ("pin-init" and "pin_init") passed to=0A=
-"append_crate" and "append_crate_with_generated", the script fails with=0A=
-"KeyError: 'pin-init'".=0A=
-To overcome the issue, pass the same name to both functions.=0A=
-=0A=
-Signed-off-by: Andrei Lalaev <andrei.lalaev@anton-paar.com>=0A=
----=0A=
-=0A=
-P.S. I can't use `git-send-email`, so I hope, that the formatting=0A=
-is not destroyed by Outlook client.=0A=
-=0A=
- scripts/generate_rust_analyzer.py | 2 +-=0A=
- 1 file changed, 1 insertion(+), 1 deletion(-)=0A=
-=0A=
-diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_anal=
-yzer.py=0A=
-index b0d7dc1e9267..cd41bc906fbd 100755=0A=
---- a/scripts/generate_rust_analyzer.py=0A=
-+++ b/scripts/generate_rust_analyzer.py=0A=
-@@ -133,7 +133,7 @@ def generate_crates(srctree, objtree, sysroot_src, exte=
-rnal_src, cfgs):=0A=
- =0A=
-     append_crate_with_generated("bindings", ["core"])=0A=
-     append_crate_with_generated("uapi", ["core"])=0A=
--    append_crate_with_generated("kernel", ["core", "macros", "build_error"=
-, "pin-init", "bindings", "uapi"])=0A=
-+    append_crate_with_generated("kernel", ["core", "macros", "build_error"=
-, "pin_init", "bindings", "uapi"])=0A=
- =0A=
-     def is_root_crate(build_file, target):=0A=
-         try:=0A=
--- =0A=
-2.34.1=0A=
-=0A=
+Changes the boe-bf060y8m-aj0 panel to use multi style functions for
+improved error handling. Additionally the MIPI_DSI_MODE_LPM flag is set
+after the off commands are run in boe_bf060y8m_aj0_off regardless of any
+failures.
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+---
+Changes in v2:
+    - Always set MIPI_DSI_MODE_LPM in boe_bf060y8m_aj0_off
+
+Link to v1: https://lore.kernel.org/all/20250330151304.128417-1-tejasvipin76@gmail.com/
+---
+ .../gpu/drm/panel/panel-boe-bf060y8m-aj0.c    | 109 +++++++-----------
+ 1 file changed, 41 insertions(+), 68 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c b/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
+index 7e66db4a88bb..3b174b4a41b6 100644
+--- a/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
++++ b/drivers/gpu/drm/panel/panel-boe-bf060y8m-aj0.c
+@@ -55,71 +55,51 @@ static void boe_bf060y8m_aj0_reset(struct boe_bf060y8m_aj0 *boe)
+ static int boe_bf060y8m_aj0_on(struct boe_bf060y8m_aj0 *boe)
+ {
+ 	struct mipi_dsi_device *dsi = boe->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
+-
+-	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0xa5, 0x00);
+-	mipi_dsi_dcs_write_seq(dsi, 0xb2, 0x00, 0x4c);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_3D_CONTROL, 0x10);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, DCS_ALLOW_HBM_RANGE);
+-	mipi_dsi_dcs_write_seq(dsi, 0xf8,
+-			       0x00, 0x08, 0x10, 0x00, 0x22, 0x00, 0x00, 0x2d);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(30);
+-
+-	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0xa5, 0x00);
+-	mipi_dsi_dcs_write_seq(dsi, 0xc0,
+-			       0x08, 0x48, 0x65, 0x33, 0x33, 0x33,
+-			       0x2a, 0x31, 0x39, 0x20, 0x09);
+-	mipi_dsi_dcs_write_seq(dsi, 0xc1, 0x00, 0x00, 0x00, 0x1f, 0x1f,
+-			       0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
+-			       0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f);
+-	mipi_dsi_dcs_write_seq(dsi, 0xe2, 0x20, 0x04, 0x10, 0x12, 0x92,
+-			       0x4f, 0x8f, 0x44, 0x84, 0x83, 0x83, 0x83,
+-			       0x5c, 0x5c, 0x5c);
+-	mipi_dsi_dcs_write_seq(dsi, 0xde, 0x01, 0x2c, 0x00, 0x77, 0x3e);
+-
+-	msleep(30);
+-
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display on: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(50);
+-
+-	return 0;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
++
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0xa5, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb2, 0x00, 0x4c);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_3D_CONTROL, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_POWER_SAVE, DCS_ALLOW_HBM_RANGE);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf8,
++				     0x00, 0x08, 0x10, 0x00, 0x22, 0x00, 0x00, 0x2d);
++
++	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 30);
++
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0xa5, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0,
++				     0x08, 0x48, 0x65, 0x33, 0x33, 0x33,
++				     0x2a, 0x31, 0x39, 0x20, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0x00, 0x00, 0x00, 0x1f, 0x1f,
++				     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
++				     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe2, 0x20, 0x04, 0x10, 0x12, 0x92,
++				     0x4f, 0x8f, 0x44, 0x84, 0x83, 0x83, 0x83,
++				     0x5c, 0x5c, 0x5c);
++	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xde, 0x01, 0x2c, 0x00, 0x77, 0x3e);
++
++	mipi_dsi_msleep(&dsi_ctx, 30);
++
++	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 50);
++
++	return dsi_ctx.accum_err;
+ }
+ 
+-static int boe_bf060y8m_aj0_off(struct boe_bf060y8m_aj0 *boe)
++static void boe_bf060y8m_aj0_off(struct boe_bf060y8m_aj0 *boe)
+ {
+ 	struct mipi_dsi_device *dsi = boe->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+ 	/* OFF commands sent in HS mode */
+ 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+-	ret = mipi_dsi_dcs_set_display_off(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display off: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(20);
++	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 20);
+ 
+-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	usleep_range(1000, 2000);
++	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
++	mipi_dsi_usleep_range(&dsi_ctx, 1000, 2000);
+ 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+-
+-	return 0;
+ }
+ 
+ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
+@@ -157,7 +137,6 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
+ 
+ 	ret = boe_bf060y8m_aj0_on(boe);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to initialize panel: %d\n", ret);
+ 		gpiod_set_value_cansleep(boe->reset_gpio, 1);
+ 		return ret;
+ 	}
+@@ -178,15 +157,11 @@ static int boe_bf060y8m_aj0_prepare(struct drm_panel *panel)
+ static int boe_bf060y8m_aj0_unprepare(struct drm_panel *panel)
+ {
+ 	struct boe_bf060y8m_aj0 *boe = to_boe_bf060y8m_aj0(panel);
+-	struct device *dev = &boe->dsi->dev;
+-	int ret;
+ 
+-	ret = boe_bf060y8m_aj0_off(boe);
+-	if (ret < 0)
+-		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
++	boe_bf060y8m_aj0_off(boe);
+ 
+ 	gpiod_set_value_cansleep(boe->reset_gpio, 1);
+-	ret = regulator_bulk_disable(ARRAY_SIZE(boe->vregs), boe->vregs);
++	regulator_bulk_disable(ARRAY_SIZE(boe->vregs), boe->vregs);
+ 
+ 	return 0;
+ }
+@@ -234,13 +209,11 @@ static int boe_bf060y8m_aj0_bl_update_status(struct backlight_device *bl)
+ {
+ 	struct mipi_dsi_device *dsi = bl_get_data(bl);
+ 	u16 brightness = backlight_get_brightness(bl);
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+-	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
+-	if (ret < 0)
+-		return ret;
++	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, brightness);
+ 
+-	return 0;
++	return dsi_ctx.accum_err;
+ }
+ 
+ static int boe_bf060y8m_aj0_bl_get_brightness(struct backlight_device *bl)
+-- 
+2.49.0
+
