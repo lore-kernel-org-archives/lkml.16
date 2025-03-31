@@ -1,102 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A5342A94
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490C942A94
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743459538; cv=none; b=sTo2kvEFegBLQqM43oyAk08JDg0xnC/L5xfolUYQdkeNnjPTmIzHYvEpE4HwZBANytAsmTwue4obgOA9fQNocga814CPPpY/3jjQYe+zSPtqLSP1m6XeyiN2C5+ZuuanLJztervJ2olg351IeKFNx/0wfviI+Gxs1J79a91G5eg=
+	t=1743459566; cv=none; b=OpQ4oIsJ+jTZfOCpUBLqwla82w0mU9Wg/OCYdr/iIBiav5Sw3HHcWt5UVeVmyW6rQTVkQi9IN2LNOOYMo+xDNDAPg6kJMEmptDbE8Bgm5j0maALXMvM99XWTrsXia/l4fjA7OKhQ7QhVd/NbkLITV1YOjKNM1lctJflFNOzR1Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743459538; c=relaxed/simple;
-	bh=Sq/lHqzKBJX9vUWqQixxyY+Nvpc95yRL5aiI8/D7+Js=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=OitppMBdclOr+pRczyP/oBSFcoD8TH5LgoVKJdJss6eelLa51ydn3YCUaks2OFVynvi6QupDcDqE6jNxxbrK8maU8cxJVAK3H7so9GfoBAw/ft2M4NhbNgcabJYplPATTKUH0U4p+UQmzWJF/RweFo0ybOzYiXhYEAvgffH5ftQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WK1Lu5TX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743459566; c=relaxed/simple;
+	bh=K4QqaVNG1/f/xcD7VGSY5IQm2tQB3BU7pm5gDcvlZwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7v+I2KEyUZBMqmK6eZUefJbL/XGe1DBb4JzvTsPLr/zVvKvulZTZN106YvSOlxUfZGT3RTei2jOLc7D4pzMgUS7gY1QCGeGvB2dLT6oBSYQxdoqKfZ/HjZtJQlbSxiPaTeSdshMXzS8BcCxpowupPY373w7IcOR1RcvzFnwqlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYnXWGYi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WK1Lu5TX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743459536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iITEQ8m/+1n7Y9VKquwua3X7ZRDPpcptdjSbJeo6HRE=;
-	b=WK1Lu5TXScKp6s3PMQBbdy+SHhhQUiuAuQOYhH/rUyZlW+eBlG1lzmDQj1M0RK/RLdaHVK
-	h/x1eowIEw/z/GuQvEYJdRrexm8yeFTrGi65fjM6CkEtLZii697GeydlD5l6tKIy8lv3SS
-	6ViJAIba7kCcgIQWXMMVH/Cpogln7MQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-R4k5jFvpNiu98D-pKLTfKw-1; Mon, 31 Mar 2025 18:18:54 -0400
-X-MC-Unique: R4k5jFvpNiu98D-pKLTfKw-1
-X-Mimecast-MFC-AGG-ID: R4k5jFvpNiu98D-pKLTfKw_1743459533
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913d8d7c3eso2559438f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 15:18:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743459533; x=1744064333;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iITEQ8m/+1n7Y9VKquwua3X7ZRDPpcptdjSbJeo6HRE=;
-        b=PiUs//dMmnEdH8waLmvt+ztTos939fpfetzl+Q96sCRbhm0aYMBn6JfWxXeNFwJOxT
-         lxW2uk4vFQirb39MKQAriheQGm3oTu7E7OyHHfsowdpCMj400WKzvRVSUwIo/4/e0K3R
-         aGOXNWJAypi6LjVHUKgSRmwu7gN0OOiU6JDcazpJR4AVn2gmNFvcR+nPaPSrQZJIsyAy
-         2No/MArf/mSDKNjbv2RXPci7iP3irIXkY5fXNtRHamvxRWOdm82XCmvrL/O4h2YfludJ
-         0ytC7eGtsXhZqU4KrUWv33LhARSeB1bGR/KmjZEjaxF0iGI5a2iSghAbbZXfbLZU025X
-         rFUQ==
-X-Gm-Message-State: AOJu0Yx+D3gDBP3pCehn2FAgRb/ZRzWdqfUmbbz9z1G21QTjiyidKYBh
-	hqrGPRN7PEvjd+2RtEVf0VCP3d/OcTEArV9WV3VRCg/mY5zZfU7ueUIV/FLM55aiNm1AlCWJGLA
-	FA03TqhuYVzXRyYkf8C4ZPrY8jLXuc/ywKQ1sBK028n4HO4oJWtIlJuQPvzTRLadqTssYKkpQzi
-	vwtr/nF90DX3DkuhCGK8HTKpxBvI0MgDOOd8NkkeIPbLebQQ==
-X-Gm-Gg: ASbGncsIIO+vINFfFPavr3TxKgXP/ZWNSvHU7LaKHRpzJPhW2vcOJFBdIXJg1Oa/4tg
-	zLWnSSc4sCxPVEDj3lIReeea6YdNj8FUJuiyicdTDXxMhXhpTSGsHy0vEbQPKmV3lfiPPP2aYsl
-	+cIHd0Z4EQZgaIq/8+n8LvUsjG3NU/SLNQ8jAXhDQ90J6mh7mSCeHk4HAzKD76Bp0zVK0q01fCm
-	E7SqesK2IeN7z5PhxKkfrwcmKcCpkj/1Q3PTLhGtbvcmPQ7PeNuLg8guCqVPBg+pS7EP9SUhmYD
-	Sr7Q2rX5KwvMHjEJjw==
-X-Received: by 2002:a05:6000:2a2:b0:39b:fa24:94f5 with SMTP id ffacd0b85a97d-39c120cb51bmr7032569f8f.7.1743459532959;
-        Mon, 31 Mar 2025 15:18:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4S+/d4JTKy4IJo7qK99V5Xegqrsg28QeJcnUzqDCSkq1U4wV6u8m5ArteNUmEheoqOhZPEA==
-X-Received: by 2002:a05:6000:2a2:b0:39b:fa24:94f5 with SMTP id ffacd0b85a97d-39c120cb51bmr7032555f8f.7.1743459532546;
-        Mon, 31 Mar 2025 15:18:52 -0700 (PDT)
-Received: from [192.168.10.48] ([151.95.105.0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0ddeecc9sm11183248f8f.83.2025.03.31.15.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 15:18:52 -0700 (PDT)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH] selftests: kvm: bring list of exit reasons up to date
-Date: Tue,  1 Apr 2025 00:18:51 +0200
-Message-ID: <20250331221851.614582-1-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYnXWGYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADFB1C4CEE3;
+	Mon, 31 Mar 2025 22:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743459565;
+	bh=K4QqaVNG1/f/xcD7VGSY5IQm2tQB3BU7pm5gDcvlZwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JYnXWGYiVnyUTJXQJGjZAQVAuwF4TurNWKCQmvD/+TqIcYUs+N5wA/vB+WqJlEPjB
+	 nR+/ffAfZp/udKB8B+8NNq1kuOIixs/0Mydq8ZLufwgA2DWhbx4dqPoQlbe8eQ9Rm9
+	 76simU6tolhyIgsfnjjLV69u8OjF8tezlxVwu4GuFjZ8SKdDgK1IsKqbdoopwRU9TB
+	 FsaMsehb9xpDtr2SGyNDkivLvnP53auYm5h5zFqYbvk1lXP+yknNbwYjjq6GvqA8Uq
+	 GWxFTY3PQP944VvQP1UldR6LeuJaJ0u264HCdc97JcCzoeyCD+h9PdiqPtKaUii7Aj
+	 VwwBO+KwpAs1g==
+Date: Mon, 31 Mar 2025 15:19:23 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <ttv3iy3i57mvmkdp2mwh4cjwk3qx5eoyr7zmgjl5beohfxvwar@4na7dgto7r6m>
+References: <Z-cSQXJKMyBSfAAc@gmail.com>
+ <20250329153242.GAZ-gSmu8qiXufR04k@fat_crate.local>
+ <CAHk-=wjqLm+eTuyLR_84vWOZK+AkhV==r=PcuAt3+3nf68SjOw@mail.gmail.com>
+ <20250330231355.GFZ-nQM6NPcC7nWl__@fat_crate.local>
+ <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <sdjfftubzcheo3dpejml54t6axfjfrd7pk6mnbkpb2n7alpfzn@6l6bldqfturq>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/lib/kvm_util.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On Sun, Mar 30, 2025 at 06:39:51PM -0700, Josh Poimboeuf wrote:
+> On Mon, Mar 31, 2025 at 01:13:55AM +0200, Borislav Petkov wrote:
+> > On Sun, Mar 30, 2025 at 03:19:40PM -0700, Linus Torvalds wrote:
+> > > On Sat, 29 Mar 2025 at 08:33, Borislav Petkov <bp@alien8.de> wrote:
+> > > >
+> > > > Btw, test bot complains:
+> > > >
+> > > > https://lore.kernel.org/r/202503292202.Sge7ZEUc-lkp@intel.com
+> > > 
+> > > That's not a very helpful error message
+> > 
+> > I found this:
+> > 
+> > https://lore.kernel.org/r/202503280703.OARM8SrY-lkp@intel.com
+> > 
+> > which looks like the original report.
+> > 
+> > Looks unsolved yet...
+> 
+> The "new" warning is just the "skipping duplicate warning", which was
+> already merged with commit 0a7fb6f07e3a ("objtool: Increase per-function
+> WARN_FUNC() rate limit").  So none of the warnings are specific to this
+> pull request.
+> 
+> Tiezhu, can you please look at this warning?
+>   
+>    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+>    arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 279ad8946040..815bc45dd8dc 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -2019,9 +2019,8 @@ static struct exit_reason {
- 	KVM_EXIT_STRING(RISCV_SBI),
- 	KVM_EXIT_STRING(RISCV_CSR),
- 	KVM_EXIT_STRING(NOTIFY),
--#ifdef KVM_EXIT_MEMORY_NOT_PRESENT
--	KVM_EXIT_STRING(MEMORY_NOT_PRESENT),
--#endif
-+	KVM_EXIT_STRING(LOONGARCH_IOCSR),
-+	KVM_EXIT_STRING(MEMORY_FAULT),
- };
+Here's a fix.  Will post a real fix soon, along with another pile of
+fixes.
+
+diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
+index f23adb15f418..fc8b64773794 100644
+--- a/arch/loongarch/include/asm/stacktrace.h
++++ b/arch/loongarch/include/asm/stacktrace.h
+@@ -8,6 +8,7 @@
+ #include <asm/asm.h>
+ #include <asm/ptrace.h>
+ #include <asm/loongarch.h>
++#include <asm/unwind_hints.h>
+ #include <linux/stringify.h>
  
- /*
--- 
-2.49.0
-
+ enum stack_type {
+@@ -43,6 +44,7 @@ int get_stack_info(unsigned long stack, struct task_struct *task, struct stack_i
+ static __always_inline void prepare_frametrace(struct pt_regs *regs)
+ {
+ 	__asm__ __volatile__(
++		UNWIND_HINT_SAVE
+ 		/* Save $ra */
+ 		STORE_ONE_REG(1)
+ 		/* Use $ra to save PC */
+@@ -80,6 +82,7 @@ static __always_inline void prepare_frametrace(struct pt_regs *regs)
+ 		STORE_ONE_REG(29)
+ 		STORE_ONE_REG(30)
+ 		STORE_ONE_REG(31)
++		UNWIND_HINT_RESTORE
+ 		: "=m" (regs->csr_era)
+ 		: "r" (regs->regs)
+ 		: "memory");
+diff --git a/arch/loongarch/include/asm/unwind_hints.h b/arch/loongarch/include/asm/unwind_hints.h
+index a01086ad9dde..2c68bc72736c 100644
+--- a/arch/loongarch/include/asm/unwind_hints.h
++++ b/arch/loongarch/include/asm/unwind_hints.h
+@@ -23,6 +23,14 @@
+ 	UNWIND_HINT sp_reg=ORC_REG_SP type=UNWIND_HINT_TYPE_CALL
+ .endm
+ 
+-#endif /* __ASSEMBLY__ */
++#else /* !__ASSEMBLY__ */
++
++#define UNWIND_HINT_SAVE \
++	UNWIND_HINT(UNWIND_HINT_TYPE_SAVE, 0, 0, 0)
++
++#define UNWIND_HINT_RESTORE \
++	UNWIND_HINT(UNWIND_HINT_TYPE_RESTORE, 0, 0, 0)
++
++#endif /* !__ASSEMBLY__ */
+ 
+ #endif /* _ASM_LOONGARCH_UNWIND_HINTS_H */
