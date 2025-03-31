@@ -1,99 +1,142 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A79070820
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0C519938D
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743413519; cv=none; b=kBD33iHmhz+g0BXjL015LJdxXYKqCwuB6unHZVLwQ1IdiO0BKHD4mRp+McnpqD9GMAxI3BWivryS2t4RACQhCUjPARd0hRK60q71AQN2hVn/x26+SQjOJnmv/fqjgl5U+Evk43JpxWvhXgw15VCQPsCoSeTxWt77ScYvHm8NvoI=
+	t=1743413529; cv=none; b=si6mboSt4VCEKCh0s5bRdIP4xdFIuJrb4zDhV4VhuxrTTDbELwizii9CjSxo28WB/KZGNF4WQuM0SPHoYwxTUM7+b3gCcDtHDXEE+kKxTUa35cB9Oui0EPKez9N4f57Oj527a94S+KWkrnCQIXhhp1u9Zf8Ux6vdPw2NJmf8ByQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743413519; c=relaxed/simple;
-	bh=RyPG6DNoQyui9i8TOcuEsWS85V5E+NliVow2NS+8SKY=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=nUElzbxnviEG1AK2Rw5JDvzwTxwyeVfgWvCj9yylSi6iJ+BQUArxvdthRt41DXzTYiXLjPOqbKnhaHL5RJ04nKHSNyNwHCB9NsIVsOC30TRZ67rijNaA2kbZCgg4C/4Lpl7CKUFKenkOBmB0SvzDSnIjzBBDByfdtmUOUjZ0MLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	s=arc-20240116; t=1743413529; c=relaxed/simple;
+	bh=NSlEX9T4BVfKB62PAhMWD4/RnQEMD6rZwifLw7qooHU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pPKb4dkPgCm7BBvo03h564rAFhY+g7po0HwJEoOqeygRfuE9KvJEpLfIAPeckgdIWv3FgxvoDqI8GVod6Ilt70tRPNueHG8hrLXCOiwiEv52tUBuMGYK/Yd5DAq+AjvI37XVUSBMu0w+Gl7pmvgiQM6P2gCQ61UCRFL9fjc1ZJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gG4HUQ6X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YbHHiFZ6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=puYLkIQ6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J+spiZ1S; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gG4HUQ6X";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YbHHiFZ6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="puYLkIQ6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J+spiZ1S"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZR5Vv1Hrfz51SXr;
-	Mon, 31 Mar 2025 17:31:51 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 52V9VLLh081624;
-	Mon, 31 Mar 2025 17:31:21 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 31 Mar 2025 17:31:24 +0800 (CST)
-Date: Mon, 31 Mar 2025 17:31:24 +0800 (CST)
-X-Zmail-TransId: 2af967ea60ecffffffffa1c-480dd
-X-Mailer: Zmail v1.0
-Message-ID: <20250331173124559aCNI8BfX0ay0U5wryryME@zte.com.cn>
-In-Reply-To: <20250331172534353mkMR1nv-dsjFTZTXCPY0a@zte.com.cn>
-References: 20250331172534353mkMR1nv-dsjFTZTXCPY0a@zte.com.cn
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D35941F38D;
+	Mon, 31 Mar 2025 09:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743413526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffSjceT3CZ/KLIlLh4JmTbyT28397G+oT49jzaCS+uc=;
+	b=gG4HUQ6Xi32D21bzdBBfZym9DS1DVoLvf2y5rUwmxyD9HucAhtpJ/FJIJiHS0QVr6bWhgt
+	+fnWthZ6MKN1/RBkudgbD8tSb+WkCRoykBwq+07R3DfGVVArKeDkkR4gu5YWBrX05FF9vm
+	bQjhI1T46o8MRbn9pCl3+2/U7wpvS6s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743413526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffSjceT3CZ/KLIlLh4JmTbyT28397G+oT49jzaCS+uc=;
+	b=YbHHiFZ6NlJHH0hfny1kDvrWPiOxANcn3pBY81jSMspi4Bn9ziVZ+AgwT3joKd6r0OZphl
+	fERk0n5neuXJbnDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=puYLkIQ6;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=J+spiZ1S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743413525; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffSjceT3CZ/KLIlLh4JmTbyT28397G+oT49jzaCS+uc=;
+	b=puYLkIQ6ExoSFr+dsqzvmQVOZUs3tvmE1n8sWW+9eO4XFj2PNEde67tSKIfjhELgEAQRma
+	wbIPVe/ntqvU3XcDzhy0eaXkAF7Nlzwrh3dJuS789n5N1cCjgN4Xuy1Ojlx3fB8amjM3kK
+	mi2qom6XRjbM/5W6NyM+WqjPFGUBxC8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743413525;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffSjceT3CZ/KLIlLh4JmTbyT28397G+oT49jzaCS+uc=;
+	b=J+spiZ1Sg3T9dF2hyE6ZhXiq06lV3cgF9bPf4gW5/i6XcQWiBwP9KjC5IUQ306O2d5eGey
+	oRZ1auxru45EfCAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CE3113A1F;
+	Mon, 31 Mar 2025 09:32:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ocLoJBVh6megUgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 31 Mar 2025 09:32:05 +0000
+Date: Mon, 31 Mar 2025 11:32:05 +0200
+Message-ID: <877c454kbu.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v1 1/1] ALSA/hda: intel-sdw-acpi: Remove (explicitly) unused header
+In-Reply-To: <20250331070758.3986134-1-andriy.shevchenko@linux.intel.com>
+References: <20250331070758.3986134-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <j@jannau.net>, <liviu.dudau@arm.com>, <chunkuang.hu@kernel.org>
-Cc: <fnkl.kernel@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-        <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
-        <asahi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <p.zabel@pengutronix.de>, <matthias.bgg@gmail.com>,
-        <angelogioacchino.delregno@collabora.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <tang.dongxing@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIDMvNF0gZHJtOiBtYWxpZHA6IFJlcGxhY2UgY3VzdG9tIGNvbXBhcmVfZGV2IHdpdGjCoGNvbXBvbmVudF9jb21wYXJlX29m?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52V9VLLh081624
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EA6107.000/4ZR5Vv1Hrfz51SXr
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: D35941F38D
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,intel.com:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-From: Tang Dongxing <tang.dongxing@zte.com.cn>
+On Mon, 31 Mar 2025 09:07:58 +0200,
+Andy Shevchenko wrote:
+> 
+> The fwnode.h is not supposed to be used by the drivers as it
+> has the definitions for the core parts for different device
+> property provider implementations. Drop it.
+> 
+> Note, that fwnode API for drivers is provided in property.h
+> which is included here.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Remove the custom device comparison function compare_dev and replace it
-with the existing kernel helper component_compare_of
+Applied now.  Thanks.
 
-Signed-off-by: Tang Dongxing <tang.dongxing@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/gpu/drm/arm/malidp_drv.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-index e083021e9e99..e2e6fd1f64b0 100644
---- a/drivers/gpu/drm/arm/malidp_drv.c
-+++ b/drivers/gpu/drm/arm/malidp_drv.c
-@@ -910,13 +910,6 @@ static const struct component_master_ops malidp_master_ops = {
- 	.unbind = malidp_unbind,
- };
-
--static int malidp_compare_dev(struct device *dev, void *data)
--{
--	struct device_node *np = data;
--
--	return dev->of_node == np;
--}
--
- static int malidp_platform_probe(struct platform_device *pdev)
- {
- 	struct device_node *port;
-@@ -930,7 +923,7 @@ static int malidp_platform_probe(struct platform_device *pdev)
- 	if (!port)
- 		return -ENODEV;
-
--	drm_of_component_match_add(&pdev->dev, &match, malidp_compare_dev,
-+	drm_of_component_match_add(&pdev->dev, &match, component_compare_of,
- 				   port);
- 	of_node_put(port);
- 	return component_master_add_with_match(&pdev->dev, &malidp_master_ops,
--- 
-2.25.1
+Takashi
