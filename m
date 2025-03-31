@@ -1,64 +1,31 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4378726ACD
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C744526ACD
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 03:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743392873; cv=none; b=pIwNXakXZtWp3K5MPdhxDtUUDkyosHGRNy+D261bPQS/d5bWQsJuvgNvdVlra8AxlpGvjPqxl5AkNETgc7CrHGXmKpw4YhnYsL5+lUCvD8AOBV6gzyu8Lp36F+pWb6cbu0qVP3FCDvPLDvayOvLbT/zUxTTXm0/xra0EC7sNpwM=
+	t=1743392907; cv=none; b=SJcjbUk74HKiSYezwyvEdMxG4e1WT5YcDPtm5x+3/YVj0+uUVVoS6ZVH6iqz+JjwxF74x2CGjUYHuhFj81VLlFEXkVIaZvdyODa//oqpYvg6H7SLEDMb8ecBhOedpFXYwg6K4+r7wk0f0fCYcuk4SIdqRyGnocQyPG/XJdV+4Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743392873; c=relaxed/simple;
-	bh=FMfOvDnt30Fad/t5QfefmzJEN9WgnTdM+M+qb4cCDM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O79P9VfHOxb/yEXvi2V1lD+wZ/NXVJ8E3mQlhT+ihUIH1ODGuMnkUXQOJtd49i45tYj+ivzcvibndXBnObmEN4PuO3plIuG7lluE7vBj8D9IE75F9He2xY7KQVnSgLSQi/9coul5miK2mstjhlK76DaI79fHidJ9AJT/Xy8ll+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Yl1A3Cnb; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743392907; c=relaxed/simple;
+	bh=0VKRG3sPTHCNswUJ2CH75/nkqRx3tSrvLuZQ+az30JY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KDLMf9Q6EQEmhX47wqkUSH0iFJdxInVb6oJUgIgBPWxPhW4hl65yYluqRpS7qpUGYj1Mjbw24/Gr993ilZDsg1kqpv2clEzBDX/jEssKYcVno8WpzofnrJSkme1jqxfX0MDHEp6ihg11Mh78W3l2SfausKZ44dUM0vY/BZckiek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QUaOMl2I; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Yl1A3Cnb"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so3432095e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 20:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743392868; x=1743997668; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ox8RCPAc/PLiGZZEUysehX7JfG73ej3P9CWPn0N4YmE=;
-        b=Yl1A3CnbEbUx7kcJoWmV5tR3TRUbvndHeUHT8Ud1c3X+/zz1B2DLzoOw1ZnA+dsItt
-         f7qHapvr6CbA1GMunLJifgo8CSH9JicoN5JRHQVridB3C4eO4QvkAgXTsdfMl3UpKnpu
-         JMa2hwbDZOhHBlC8vDQ90Vh76IgB/WG4oTzswe7OlsodJXHipjcTLawhK1e+ki3PxJCz
-         WUp97fGuRPCCu7/DNSfar5Kzhhg4h8jMtCqrFb5BluBz3TF4lr4X3YwKNVD3Wouk5MJF
-         yW9BA1Crcdi1IgEnCPQN0F3qLCJ3Nd2chnMvTtwkXgmt0ldhCmfeOWdRAGQgb2hl2Btv
-         aSjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743392868; x=1743997668;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ox8RCPAc/PLiGZZEUysehX7JfG73ej3P9CWPn0N4YmE=;
-        b=mQre9CuQQuGxJtnkzWxxV23G8ovpAuAHfOtuYCESLi1wLpp5q8x842loNrld6gUOm8
-         CaxxRx1vJbu5N/VSstJ8O/cBZRBkez78ibjeS8BibcKxQCxCH1b8wCoo4CTHuLlCEWmu
-         Bc0sumlFANZ+x+atYCberZZQjvaSxen2eseJpgeG22wl7g3tRM6WWPYpEdG1zjCD24cx
-         2zasCqvFFMZ9QDODkUso1qmyo+gtOwGEA9SwDiaJIh/CNpP7KqXPTCUlvVvAFNo+KkFc
-         gg/qSrkvCoyfudgRE78G8rfDyBn4fpg67lykAzUl0RZTzLFbW479m0TkIYWgi+Ik7RRO
-         F4Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCU2P0ADOVlmrC/OYkYwwS6Rr2LebfpPhTEOJ132spuAIg2c8NXBskRKObcc50CjklcLvJb9rNYiPC1Hvdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMiO1xzF8UoAHmB/2dNh9UiOUs7lvDhXwvrrT17qhblsqw1Rbu
-	juXugD9CFdBet2pDHFZeH2xGPwIAfTOw9uUstiihj7pxvbZZMtXtAmJaTPKUz2E=
-X-Gm-Gg: ASbGnct1QSIw6v7LedRiry4f0NDSTsZy3vwVgwJ64rgv7OFCUxBTVaxN9ZJPDxrYXdN
-	OeP+nywINGoXYQeygVpH19ly2imMz2gV9DmOruGOsXhSzSrupnEHumzIONe8UqnPQsc0oHDS7am
-	4rqhsZqBB6HVvpXq22BAii6VK5xGRE1YZ31d6WGrKlpCB48obV88HWwFuLEq41kemGrC3eIQAMJ
-	ohxRGHnHJL/mg23hddyLuMWzLXa4J3+EpOWHR2Op7hhVFWHretUxyPFEOtfsyBQwCJbPLQ0VVtM
-	Lc3zql5HAHiW3pxa5zt9ZkT/GmXMQ06auELg/nxdnmZAQ0l1eapRb+BZVrtgvA==
-X-Google-Smtp-Source: AGHT+IEBdAYoQt/GGX/pCYZQo0++T7o+xAWHc1C/mbNvwv2Jivr8uhePRe+gs/gnSqzXM4Nti1FIiw==
-X-Received: by 2002:a05:600c:4e87:b0:43b:c962:ad29 with SMTP id 5b1f17b1804b1-43db61d8dc0mr18015015e9.1.1743392868489;
-        Sun, 30 Mar 2025 20:47:48 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e22449sm6033684b3a.49.2025.03.30.20.47.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 20:47:47 -0700 (PDT)
-Message-ID: <9390ba6d-8fc9-4cc0-b000-9d5ef0ec3393@suse.com>
-Date: Mon, 31 Mar 2025 11:47:44 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QUaOMl2I"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743392902; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=/1tccYnotOw1v33dWO3ti6U/9fTCRiTM35LlXUw0cOo=;
+	b=QUaOMl2IuVBrumBmRsdbBLH4oHK0+3EbJUwSaGhm6BMFN9HVhTQaf7lRInS3mBcssggJL8rv5KWpLYx3oDV9W4jN9dSLTXqoTAtfVLnhstmLkIj5APKlXEWTnqNMx8YtEyYt7tXOLGRwMvRpRkJwYknFas6etF5rUrT0GOzO5gM=
+Received: from 30.221.130.198(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WTPC6p8_1743392901 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Mar 2025 11:48:21 +0800
+Message-ID: <4492c013-4e59-425a-859f-5f8b30fb922d@linux.alibaba.com>
+Date: Mon, 31 Mar 2025 11:48:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,110 +33,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] ocfs2: Validate chain list bits per cluster to
- prevent div-by-zero
-To: Qasim Ijaz <qasdev00@gmail.com>, mark@fasheh.com, jlbec@evilplan.org,
- joseph.qi@linux.alibaba.com
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- syzbot <syzbot+e41e83af7a07a4df8051@syzkaller.appspotmail.com>,
- stable@vger.kernel.org
-References: <20250329111654.5764-1-qasdev00@gmail.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <20250329111654.5764-1-qasdev00@gmail.com>
+Subject: Re: [PATCH v1 1/1] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Sandeep Dhavale <dhavale@google.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org,
+ linux-erofs mailing list <linux-erofs@lists.ozlabs.org>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+References: <20250331022011.645533-1-dhavale@google.com>
+ <20250331022011.645533-2-dhavale@google.com>
+ <45548d9e-4cfa-476d-9eaa-b338f994478c@linux.alibaba.com>
+ <CAB=BE-S6Brg0e277mdY-d3ZwrGeUe3idz37_FJVaTesAFTGfnQ@mail.gmail.com>
+ <330276be-f9cb-4263-85f5-20fe2e10cf72@linux.alibaba.com>
+In-Reply-To: <330276be-f9cb-4263-85f5-20fe2e10cf72@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On 3/29/25 19:16, Qasim Ijaz wrote:
-> The call trace shows that the div error occurs on the following line where the code sets
-> the e_cpos member of the extent record while dividing bg_bits by the bits per
-> cluster value from the chain list:
-> 
-> 		rec->e_cpos = cpu_to_le32(le16_to_cpu(bg->bg_bits) /
-> 				  le16_to_cpu(cl->cl_bpc));
-> 				
-> Looking at the code disassembly we see the problem occurred during the divw instruction
-> which performs a 16-bit unsigned divide operation. The main ways a divide error can occur is
-> if:
-> 
-> 1) the divisor is 0
-> 2) if the quotient is too large for the designated register (overflow).
-> 
-> Normally the divisor being 0 is the most common cause for a division error to occur.
-> 
-> Focusing on the bits per cluster cl->cl_bpc (since it is the divisor) we see that cl is created in
-> ocfs2_block_group_alloc(), cl is derived from ocfs2_dinode->id2.i_chain. To fix this issue we should
 
-The cl (chain list) is created by ocfs2-tools during the execution of mkfs.ocfs2.
-ocfs2_block_group_alloc(), as its name, which creates block groups, not chain lists.
-
-> verify the cl_bpc member in the chain list to ensure it is valid and non-zero.
+On 2025/3/31 11:28, Gao Xiang wrote:
 > 
-> Looking through the rest of the OCFS2 code it seems like there are other places which could benefit
-> from improved checks of the cl_bpc members of chain lists like the following:
-
-Syzbot performs fuzz testing, in real-world it's very difficult to clear
-the cl_bpc value. For this issue, checking only the divisor value is sufficient.
-
 > 
-> In ocfs2_group_extend():
+> On 2025/3/31 11:14, Sandeep Dhavale wrote:
+>> Hi Gao,
+>>> Do we really need to destroy workers on the last mount?
+>>> it could cause many unnecessary init/uninit cycles.
+>>>
+>>> Or your requirement is just to defer per-CPU workers to
+>>> the first mount?
+>>>
+>>> If your case is the latter, I guess you could just call
+>>> erofs_init_percpu_workers() in z_erofs_init_super().
+>>>
+>>>> +{
+>>>> +     if (atomic_dec_and_test(&erofs_mount_count))
+>>>
+>>> So in that case, we won't need erofs_mount_count anymore,
+>>> you could just add a pcpu_worker_initialized atomic bool
+>>> to control that.
+>>>
+>> Android devices go through suspend and resume cycles aggressively.
+>>
+>> And currently long running traces showed that erofs_workers being
+>> created and destroyed without active erofs mount.
+>> Your suggestion is good and could work for devices which do not use
+>> erofs at all.
 > 
-> 	cl_bpc = le16_to_cpu(fe->id2.i_chain.cl_bpc);
-> 	if (le16_to_cpu(group->bg_bits) / cl_bpc + new_clusters >
-> 		le16_to_cpu(fe->id2.i_chain.cl_cpg)) {
-> 		ret = -EINVAL;
-> 		goto out_unlock;
-> 	}
+>> But if erofs is used once (and unmounted later),> we will not destroy the percpu workers.
 > 
-> Reported-by: syzbot <syzbot+e41e83af7a07a4df8051@syzkaller.appspotmail.com>
-> Closes: https://syzkaller.appspot.com/bug?extid=e41e83af7a07a4df8051
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
-> ---
->   fs/ocfs2/resize.c   | 4 ++--
->   fs/ocfs2/suballoc.c | 5 +++++
->   2 files changed, 7 insertions(+), 2 deletions(-)
+> Is there a real use case in Android like this?  It
+> would be really useful to write down something in the
+> commit message.
 > 
-> diff --git a/fs/ocfs2/resize.c b/fs/ocfs2/resize.c
-> index b0733c08ed13..22352c027ecd 100644
-> --- a/fs/ocfs2/resize.c
-> +++ b/fs/ocfs2/resize.c
-> @@ -329,8 +329,8 @@ int ocfs2_group_extend(struct inode * inode, int new_clusters)
->   	group = (struct ocfs2_group_desc *)group_bh->b_data;
->   
->   	cl_bpc = le16_to_cpu(fe->id2.i_chain.cl_bpc);
-> -	if (le16_to_cpu(group->bg_bits) / cl_bpc + new_clusters >
-> -		le16_to_cpu(fe->id2.i_chain.cl_cpg)) {
-> +	if (!cl_bpc || le16_to_cpu(group->bg_bits) / cl_bpc + new_clusters >
-> +		       le16_to_cpu(fe->id2.i_chain.cl_cpg)) {
+>>
+>> Can you please expand a little bit more on your concern
+>>> it could cause many unnecessary init/uninit cycles.
+>> Did you mean on the cases where only one erofs fs
+>> is mounted at time? Just trying to see if there is a better
+>> way to address your concern.
+> 
+> My concern is that it could slow down the mount time (on
+> the single mount/unmount) if there are too many CPUs
+> (especially on the server side.. 96 CPUs or more...)
+> 
+> Or I guess if kworker CPU hotplug is not used at all
+> for Android if "suspend and resume" latency is really
+> important, could we just add a mode to always initialize
+> pcpu kworkers for all possible CPUs.
 
-checking cl_bpc makes sense.
-
->   		ret = -EINVAL;
->   		goto out_unlock;
->   	}
-> diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-> index f7b483f0de2a..844cb36bd7ab 100644
-> --- a/fs/ocfs2/suballoc.c
-> +++ b/fs/ocfs2/suballoc.c
-> @@ -671,6 +671,11 @@ static int ocfs2_block_group_alloc(struct ocfs2_super *osb,
->   	BUG_ON(ocfs2_is_cluster_bitmap(alloc_inode));
->   
->   	cl = &fe->id2.i_chain;
-> +	if (!le16_to_cpu(cl->cl_bpc)) {
-> +		status = -EINVAL;
-> +		goto bail;
-> +	}
-> +
-
-See my previous comment, this part code is useless, please remove it.
+Ok, ignore this part after more thinking.
 
 Thanks,
-Heming
-
->   	status = ocfs2_reserve_clusters_with_limit(osb,
->   						   le16_to_cpu(cl->cl_cpg),
->   						   max_block, flags, &ac);
-
+Gao Xiang
