@@ -1,73 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B4021859F;
-	Mon, 31 Mar 2025 14:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AB5229B2B;
+	Mon, 31 Mar 2025 14:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431806; cv=none; b=K9lBTa1nziLW5SHIGDKm6hh1GYuFjc8DfcBIJjU9ir6Jh/dj7qflnslstLPDgWDSL5Lz5YcDyPSYErjcgEq6NxVDHzdIf3yynqJvb+PG0rKQLVweGIg/2wszv2riSkDRYmSApqUHbMNLLE9wPEiFTkVtANgoMNUf27NGcQXQmL8=
+	t=1743431808; cv=none; b=gg+yLmdO2Ae585ug4d4BT+I/9th8mRjLotP3skrEg2UKI+8ekCLbLSRHoSxT8lYmLdsLPe/jvqIDw+gabyQ9jqk30undQ2M7y9lPdWegMH7O4of7bLxfU8TTQIG9gHM2htBlpypzsAHUaSDzeVl9pMGUx8lJcwpZ0HCpX4BR11U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431806; c=relaxed/simple;
-	bh=saBfwSTx9+zrA2PPu4GkKVVeKaJUPYevf/A5oECr0ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Atx99MmGOBTo3I5oX869dZbc26YR8rrohPo/IyHqzWdqGIzJUV0gZInHmTBW+8r+8rRA/6hMG4yxzck/mfMxdWQerHjlggHyOOLS6eqAdKAN2UN2T40Ur7ZxZIxc0yAw5cOGQOUpwiwEHjROn348+XuYsuV9A+TuHJWnx9MXyxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIR7XGd4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743431808; c=relaxed/simple;
+	bh=xaEMZxbQp1Qr9ivAjB59KF4a/0OwWMSbOUS1BmmeD7w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NKdKxDJsENGnJLkYEmzULb4kXYl6EKnDfPfyC07ZdycESZiUKZ3KJ81ja9kFGY76wE6eRfit8QoJcJO3XP8yxNVppUAUWFASkNBNrEoBX9ccb1A7z6tXTcUqVU2yHsbBVVcgMmwTJuJGJdCvhXtBrb3myW44VEEwHcsfFjXm1Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eN1eq0Yt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIR7XGd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6394CC4CEED;
-	Mon, 31 Mar 2025 14:36:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eN1eq0Yt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D72C4CEEE;
+	Mon, 31 Mar 2025 14:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431806;
-	bh=saBfwSTx9+zrA2PPu4GkKVVeKaJUPYevf/A5oECr0ks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vIR7XGd4L3Iz9uJZYZ/LcQjWI9ZXFd2ChMXVauWYXRo3tIRGb1kn3kwp/B7V2Jskb
-	 6PDPr0nOrrCS2KTkQp8zwJPJ7qwsdTGnTHLyEHms9ZErYZE8aand4okT8pSWsLgXHQ
-	 ybNAiGdg6EORQ4xfV2u4PSKvE5dZq9+IMPgWcQ/IpFL5v5Jus3F7SKMhgEl9jTEds9
-	 Wm00667Wx3UtCd1xzPJQlVt1Tz5X0/tuZfQapA2UBXtEU7ZtX9FnNzBxCppbSfmspK
-	 86P63Vs1o3tDnvbXpDntX3NkoyoigIUZ4eX25iPgUUmI7g8jYBc1oCgkfIPG0LePEw
-	 p5IuDtle2V8Qg==
-Date: Mon, 31 Mar 2025 08:36:42 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org,
-	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] nvme/ioctl: move fixed buffer lookup to
- nvme_uring_cmd_io()
-Message-ID: <Z-qoevl5Jaf7WFsQ@kbusch-mbp.dhcp.thefacebook.com>
-References: <20250328154647.2590171-1-csander@purestorage.com>
- <CGME20250328155548epcas5p2368eb1a59883b133a9baf4ac39d6bac6@epcas5p2.samsung.com>
- <20250328154647.2590171-4-csander@purestorage.com>
- <48b9a876-0e3b-4c89-9aa3-b48f502868c3@samsung.com>
+	s=k20201202; t=1743431808;
+	bh=xaEMZxbQp1Qr9ivAjB59KF4a/0OwWMSbOUS1BmmeD7w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eN1eq0YtD4BVRafaWoALnEDXnSwnTuH7VOLwWEq/b4QMqGVUQNp48de4M0d4s/5Xb
+	 EzSeGLaNg0fEdSTB8xE2rldw9pzhUcYVAyq7Y7RRiug4SBU5+lJ2qYOb4NLCUeV6e6
+	 2DckbF+gqjk47QZYDAeHo2mQeG5NUH8UI1pMV3UG96FYRom0EvsN7dfBw4eNh9syFb
+	 cjVBMfuYP8Itt0GQd2mdU69TprsqI+xtQLXS7vrwPGxnvUqTDG4wx66sjkG7AHtfZg
+	 incyNnNjWco0DVUQMYl1OYqbvqZP0Y216SF+zqx9BDC1PrJThHLyOItk2g7lWo1xdC
+	 Aps8Cd/NJeO9Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	xen-devel@lists.xenproject.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 5/6] xen/mcelog: Add __nonstring annotations for unterminated strings
+Date: Mon, 31 Mar 2025 10:36:31 -0400
+Message-Id: <20250331143634.1686409-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250331143634.1686409-1-sashal@kernel.org>
+References: <20250331143634.1686409-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48b9a876-0e3b-4c89-9aa3-b48f502868c3@samsung.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.132
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 12:16:58PM +0530, Kanchan Joshi wrote:
-> On 3/28/2025 9:16 PM, Caleb Sander Mateos wrote:
-> > For NVMe passthru operations with fixed buffers, the fixed buffer lookup
-> > happens in io_uring_cmd_import_fixed(). But nvme_uring_cmd_io() can
-> > return -EAGAIN first from nvme_alloc_user_request() if all tags in the
-> > tag set are in use. This ordering difference is observable when using
-> > UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table. If
-> > the NVMe passthru operation is followed by UBLK_U_IO_UNREGISTER_IO_BUF
-> > to unregister the fixed buffer and the NVMe passthru goes async, the
-> > fixed buffer lookup will fail because it happens after the unregister.
-> 
-> while the patch looks fine, I wonder what setup is required to 
-> trigger/test this. Given that io_uring NVMe passthru is on the char 
-> device node, and ublk does not take char device as the backing file. 
-> Care to explain?
+From: Kees Cook <kees@kernel.org>
 
-Not sure I understand the question. A ublk daemon can use anything it
-wants on the backend. Are you just referring to the public ublksrv
-implementation? That's not used here, if that's what you mean.
+[ Upstream commit 1c3dfc7c6b0f551fdca3f7c1f1e4c73be8adb17d ]
+
+When a character array without a terminating NUL character has a static
+initializer, GCC 15's -Wunterminated-string-initialization will only
+warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+with __nonstring to and correctly identify the char array as "not a C
+string" and thereby eliminate the warning.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: xen-devel@lists.xenproject.org
+Signed-off-by: Kees Cook <kees@kernel.org>
+Acked-by: Juergen Gross <jgross@suse.com>
+Message-ID: <20250310222234.work.473-kees@kernel.org>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/xen/interface/xen-mca.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/xen/interface/xen-mca.h b/include/xen/interface/xen-mca.h
+index 464aa6b3a5f92..1c9afbe8cc260 100644
+--- a/include/xen/interface/xen-mca.h
++++ b/include/xen/interface/xen-mca.h
+@@ -372,7 +372,7 @@ struct xen_mce {
+ #define XEN_MCE_LOG_LEN 32
+ 
+ struct xen_mce_log {
+-	char signature[12]; /* "MACHINECHECK" */
++	char signature[12] __nonstring; /* "MACHINECHECK" */
+ 	unsigned len;	    /* = XEN_MCE_LOG_LEN */
+ 	unsigned next;
+ 	unsigned flags;
+-- 
+2.39.5
+
