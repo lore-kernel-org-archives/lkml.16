@@ -1,41 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3641A3BD7;
-	Mon, 31 Mar 2025 23:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D4F70820;
+	Mon, 31 Mar 2025 23:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743464514; cv=none; b=MQ5qAgnpVlZarPWWnuUQ3GNZxzubQ5FEpOAtabAkY59EL57+oq3mAcrdUGiYtrTBDBIbjsD9Zi1iIbI6oAMgEH+koc1AEEtGTotMPfnO4VhrohNsG1iFNEg+ogU3vkcdLuEvcVKz01/LMSSXPTYEDcQapZ+7e2vi7PVyXmlK9NU=
+	t=1743464642; cv=none; b=B/N52lZ/hJ7w5Vb3dHjuGvksRD/MQwxZgoUQaB4rDR7JCrYfuGmVljlMh4DuyDuXwhcV0bxiaO61FygsomvU6H0dw5pdgT6LjZHByj6Gq6MHVUhqCM/Y54yiLEfIRqShqHSDyOtGxFzKsl/pre9RsEPuUvIN0DujusQlZmk+FpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743464514; c=relaxed/simple;
-	bh=9KZxB4m0z1ElUoj2DcNAzurAKPTG9+rqDgzLzLTebUw=;
+	s=arc-20240116; t=1743464642; c=relaxed/simple;
+	bh=AUKDV8PfXoWdQ7r20oIN28kPP1yywQSrSDL04PCLG1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X9D+BH75P6xJuLyCnlr87lEfbcvg4a3NEGgInd+ojT+i5yQYY1lr3so6UdIXgMqVS+qje67cAVNuKBZ5u/Mi4/9ZuNSpy7FGiR+9NF4I09aPqRIgPtFZLOspc945tmq+i3Z2goQY0EFA5YLUc4wzULOuE2PbT0VptP4OA1igUWw=
+	 MIME-Version:Content-Type; b=RdbY6NRJoVGYHb1xkZd8e6lcViP5YavaqXlDSBsdknip3LW2XA3r0crI/H44iIoY9DDCqFLSLr1lBfARvEWj+5knBqFzLXa/rtyoJl598r7iCFBufwoJB/eqkUqKMGcp/ZkPl7MEAApaXrZdz5huY8Lc8XKIcCPVX7q0xMAotuM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977B2C4CEEA;
-	Mon, 31 Mar 2025 23:41:52 +0000 (UTC)
-Date: Mon, 31 Mar 2025 19:42:51 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 632E3C4CEE3;
+	Mon, 31 Mar 2025 23:44:01 +0000 (UTC)
+Date: Mon, 31 Mar 2025 19:45:00 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
- Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Matthew
- Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <20250331194251.02a4c238@gandalf.local.home>
-In-Reply-To: <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
-References: <20250331143426.947281958@goodmis.org>
-	<20250331143532.459810712@goodmis.org>
-	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-	<20250331133906.48e115f5@gandalf.local.home>
-	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
-	<20250331165801.715aba48@gandalf.local.home>
-	<CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patches in the ftrace tree
+Message-ID: <20250331194500.65eb9a71@gandalf.local.home>
+In-Reply-To: <20250401094014.4134abe1@canb.auug.org.au>
+References: <20250401094014.4134abe1@canb.auug.org.au>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,30 +34,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Mar 2025 14:42:38 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, 1 Apr 2025 09:40:14 +1100
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-> .. and *after* you've given it back to the memory allocator, and it
-> gets allocated using the page allocators, at that point ahead and use
-> 'struct page' as much as you want.
+> Hi all,
 > 
-> Before that, don't. Even if it might work. Because you didn't allocate
-> it as a struct page, and for all you know it might be treated as a
-> different hotplug memory zone or whatever when given back.
+> The following commits are also in Linus Torvalds' tree as different
+> commits (but the same patches):
+> 
+>   0e5d1a4b22bc ("ring-buffer: Remove the unused variable bmeta")
+>   186a3d01d596 ("module: Add module_for_each_mod() function")
+>   34c9862b1833 ("tracing: Skip update_last_data() if cleared and remove active check for save_mod()")
+>   45be9d6a4e4c ("ring-buffer: Use kaslr address instead of text delta")
+>   47d1b7233ae8 ("ring-buffer: Add ring_buffer_meta_scratch()")
+>   4cb6fa440707 ("tracing: Show module names and addresses of last boot")
+>   7f335d104d30 ("ring-buffer: Add buffer meta data for persistent ring buffer")
+>   9042bbf70203 ("tracing: Freeable reserved ring buffer")
+>   aad5fa4e9de1 ("mm/memblock: Add reserved memory release function")
+>   bab85a646dd9 ("tracing: Show last module text symbols in the stacktrace")
+>   c6a1b7c2e58d ("tracing: Update modules to persistent instances when loaded")
+>   dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
+>   dfc0b3249550 ("tracing: Initialize scratch_size to zero to prevent UB")
+>   e39a2f30d23c ("tracing: Fix a compilation error without CONFIG_MODULES")
+>   f20423262b36 ("tracing: Use _text and the kernel offset in last_boot_info")
+>   f5d0a66ca482 ("tracing: Have persistent trace instances save KASLR offset")
+>   ff700de3978f ("ring-buffer: Fix bytes_dropped calculation issue")
+> 
 
-Hmm, so if we need to map this memory to user space memory, then I can't
-use the method from this patch series, if I have to avoid struct page.
-
-Should I then be using vm_iomap_memory() passing in the physical address?
-
-As for architectures that do not have user/kernel data cache coherency, how
-does one flush the page when there's an update on the kernel side so that
-the user side doesn't see stale data?
-
-As the code currently uses flush_dcache_folio(), I'm guessing there's an
-easy way to create a folio that points to physical memory that's not part
-of the memory allocator?
-
-Matthew?
+Ah thanks. Linus didn't like the first patch in that series so I rebased
+without it, tested it, and sent a second pull request. I forgot to update
+my for-next branch to include that update. I'll do that now.
 
 -- Steve
