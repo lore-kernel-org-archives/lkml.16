@@ -1,99 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C13C21B9D1
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3907314601C;
+	Mon, 31 Mar 2025 21:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743455692; cv=none; b=QfEsAip/liG92kaabBUIbnjXqpMyVgUyNPY0KGDx0AJ8zD+f4N+CatU52TVaguvbhFtoIL3lak9cdGLJ307W31licOxWDL+Mdmf5D7mgqztr1eOZKAyaaD6dD7s5ZZ8qEdDksM2IQIj7VgWO3D16efr/hF2iHrEEuXsPtvWCZaY=
+	t=1743455786; cv=none; b=d+FM7FUClWse2M2zP/J5FXqap6kf3fXSHGAfcZxELx//4OpclSBWfsA+IjBWYhRp1azYSlZ3FhPJjDZHVCH2zA3W0ZSUX+j4tCHZzBofP/dC2tFrikKMEZ43Sx7dM3Go7ukTmt+1rdtP806mDAjcpYLX88ntKcixsJjiL+yuco0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743455692; c=relaxed/simple;
-	bh=wT9+Ex6zt8/02+6UehiAPV2rdCeodJx9xoDbISkZITM=;
+	s=arc-20240116; t=1743455786; c=relaxed/simple;
+	bh=0MsS3fEORZu0b4bxgp0Sf7f1Pjb1PR45/XZhsw0O3fs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0czkf8xOA6pWAal4t8ZcWt592iNZMrZair7eK4LQwPFKSPUR9AcuLDnwRKmyEo7FUimUc4ndCQnr9ndX2HU3N0uF6gCtuZ/62jfPHoVJTia2dytyvSrMRYzLaalrOwfu/Zbk6FvlY9NhNNGqRSFRRhOxz2uhRxGsZ3KkN/gNfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N0kkbmGb; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WeCJeqOk7bJmKWZI9piijcOl/J52roGcSBsq1tNVmhaizzUyN98MHyF0+JcM6XE/pGCUGQWjHv1QdMwT/cLkkbkJORVHdmwjjSrsKkNtHi2idniGHNCrzyb0PHj3zkJ4WNpD90NSulladi2mWwR3B97yuxQ0To/88CVeWCz5ShM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=fn/e1LwL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JU2Lwn5Y; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N0kkbmGb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743455691; x=1774991691;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wT9+Ex6zt8/02+6UehiAPV2rdCeodJx9xoDbISkZITM=;
-  b=N0kkbmGbzd7fyXwYYsQoIwdYlv0MaLWtHwCfMqYDQa0ydEZkgjZPPEWd
-   qaZPwWp/TWKDO65FUn3JtCx5/oJIvkDUw2qxEnG+GmDOW5q/5HgCxwyyG
-   44GS1OdMb7P1+98PIY/IYE72cLnkHBo0ymUxTgNdQsnpFBXRYdkf9e9J6
-   i1UYSFacWSQ0jmKCZeebXrOt6DZ0USz9pFxFr+mwa6ungiaUdZaBznVyq
-   DWYF9td79m+5Ozi1vufoiF8n2/wawm5/lzmi9XGfXhPeFWS8TDsNtjcC0
-   l6+LRwgAHfRP+7LZN9EB9e9/Xkn2yZbawFGnFVrO1io6x5K6Vsd1Y4jvW
-   A==;
-X-CSE-ConnectionGUID: tTyuyZhrRxqJ9L6HGeuI6A==
-X-CSE-MsgGUID: jgCte/mTQwKtTFx2mPBPYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44890315"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="44890315"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:14:51 -0700
-X-CSE-ConnectionGUID: zY54K0f1TVC2AhIJ/Bb1dg==
-X-CSE-MsgGUID: bM/hvU5MRt2lF7PHi6cEew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="130305243"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 14:14:50 -0700
-Date: Mon, 31 Mar 2025 14:14:49 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 04/16] x86/resctrl: Change generic monitor functions
- to use struct rdt_domain_hdr
-Message-ID: <Z-sFyQBsGgKFAVGn@agluck-desk3>
-References: <20250321231609.57418-1-tony.luck@intel.com>
- <20250321231609.57418-5-tony.luck@intel.com>
- <012377fd-e292-42fc-b348-4bb5e5becb97@intel.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="fn/e1LwL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JU2Lwn5Y"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id 38B77138443D;
+	Mon, 31 Mar 2025 17:16:24 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Mon, 31 Mar 2025 17:16:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743455784;
+	 x=1743542184; bh=mX+ZFzMAss4tBFVuniXnFZM3h0fUtgOUseN+LaFKoLA=; b=
+	fn/e1LwLt71b3jTWpEfFGkxDxENRil+LmkrFNz39YAjfBybZ89FL5PhGrp4hFMb7
+	pjuAgIMwYyW+/BVDTRX9+pGVzNBm/n+f+bCSN9IlqepK5wEqs4jrtAfn1xOEJuIg
+	Py5M5t0kdL7P0/QVFLJ71JVSYuy/D6wPMRTrZJ2GpQ8yryRWP9MNIisZghDWcwvP
+	P6o90rYYJF+XbPcW9gtlUBRJA3Nud4B5r3OEoX4s7/xl8mBuQ/5szaFeGYYNBGuy
+	bnu7++ov4qQVfV9O8Ed9ZTq5Gsr3IoWdxQ4JNG6pfz392fWFamkoNSKitBkKKzZy
+	s+OmLB0ZmD4jjZT40PKu8g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743455784; x=
+	1743542184; bh=mX+ZFzMAss4tBFVuniXnFZM3h0fUtgOUseN+LaFKoLA=; b=J
+	U2Lwn5YuAhxF4LKu1+qUAuB/cwyXrhnUr4YGL1BVbqLtpkhQq67F7ZHp5qcQ3Yrr
+	cyQfauyHSqzyFcX2PqrOStwp+TY0bTE8WjE5ryeb5Exh0P97S+f6jssluoxyb20A
+	g5ElJWEc3cF2shRoTjDa5C06x0a7GaSiJLS94tXW6b9eRBO9w1jqR+naWyFKNAOf
+	exukRJ6JnPpCfJVZkY2286UDiwT6AaXMFhjCxO2HIbOO8ZwH1GfvREf89zATEIKM
+	QHj+FUbpPnmLh4/jXozc39ueENQUOKsBgFXnnvtT/24JWfKtWa+X56xkyMKepkBW
+	XnGYafxZbeSgPrg3Rw1VQ==
+X-ME-Sender: <xms:JwbrZ_0FXVu60OLjqsTFP_w58H2wvip1mQl0vGeD-bJ1FlvLq8iO7w>
+    <xme:JwbrZ-H2Lq35I5S_z1TL2LTbS-UJFDtSy0GdRNZvXhXQDLJ1ZFCJ2R3YaJ5dG-HoQ
+    mBjCbmADDlQs2fTKZY>
+X-ME-Received: <xmr:JwbrZ_6bmZvA2AiHShDPstsCXIKN7UyW06b20V-It-9RCLxVgrT4_UwaOKeiNkUcD9Fqw0GG4dGISMGwSz6YKN2YPXiRw_jbSw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedtleejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeev
+    teegtddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdr
+    shhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeejpd
+    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdo
+    rhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthh
+    gvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhs
+    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghs
+    rghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
+    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgv
+    hhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:KAbrZ00LmZk7fkZU3HktcX69QwW8WJDqCibk70OWSuUyfyYHRxCDxA>
+    <xmx:KAbrZyHCkFOZ8izCbKXfu79nslcGGxrW3CZxuDaC4aGDLFNaZIM1TA>
+    <xmx:KAbrZ1_qXriEavJCKIz7uOUiACgRTfiolQrUq7mEJSixprxz7A2QJg>
+    <xmx:KAbrZ_m1LKvcKwNpbBG-yXrOyzZ-aJWrjiOGwdInQrymn1t7YQg8Qg>
+    <xmx:KAbrZ137N4d8ifcbdvS_zL_sDwi8kheACjzWF1FQiA-GZb2RK4DwG9b6>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 31 Mar 2025 17:16:23 -0400 (EDT)
+Date: Mon, 31 Mar 2025 23:16:21 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH 2/3] media: rcar-vin: Fix RAW8
+Message-ID: <20250331211621.GC1240431@ragnatech.se>
+References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
+ <20250324-rcar-fix-raw-v1-2-ae56c1c7a2f6@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <012377fd-e292-42fc-b348-4bb5e5becb97@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250324-rcar-fix-raw-v1-2-ae56c1c7a2f6@ideasonboard.com>
 
-On Mon, Mar 31, 2025 at 09:15:36AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 3/21/25 4:15 PM, Tony Luck wrote:
-> > Functions that don't need the internal details of the rdt_mon_domain
-> > can operate on just the rdt_domain_hdr.
-> 
-> This does not seem accurate. The functions are modified to take rdt_domain_hdr
-> as parameter but then the functions are modified to extract rdt_mon_domain
-> based on rdt_domain_hdr .... and proceeds to operate on internals of
-> rdt_mon_domain in a way that contradicts the changelog.
-> 
-> Considering what comes later this seems risky to me to rely on the
-> code flow to interpret which structure rdt_domain_hdr forms part of. I think
-> that it will be safer if rdt_domain_hdr gets an identifier that reflects which
-> structure it forms part of so that the accessors could be made explicit and
-> have error checking.
+Hi Tomi,
 
-This needs some more thought and cleanup. I ended up with a mix of
-places that really just wanted the header. E.g. adding second and subsequent
-CPUs to a domain, or deleting any but the last CPU from a domain, only
-need to update the cpu_mask. But other places end up clumsily using
-container_of() to get to the surrounding mon_domain. With different
-types of mon_domain a type field would help sanity checking.
-> 
-> Reinette
+Thanks for your patch.
 
--Tony
+On 2025-03-24 13:48:53 +0200, Tomi Valkeinen wrote:
+> On Gen4 we need to set VNMC's EXINF to a different value (1) than in
+> Gen3 (0). Add a define for this, and set the bit for Gen4.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/platform/renesas/rcar-vin/rcar-dma.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> index 972ae2cb3314..53046614f7a1 100644
+> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> @@ -94,6 +94,7 @@
+>  #define VNMC_INF_YUV16		(5 << 16)
+>  #define VNMC_INF_RGB888		(6 << 16)
+>  #define VNMC_INF_RGB666		(7 << 16)
+> +#define VNMC_EXINF_RAW8		(1 << 12) /* Gen4 specific */
+>  #define VNMC_VUP		(1 << 10)
+>  #define VNMC_IM_ODD		(0 << 3)
+>  #define VNMC_IM_ODD_EVEN	(1 << 3)
+> @@ -791,6 +792,8 @@ static int rvin_setup(struct rvin_dev *vin)
+>  	case MEDIA_BUS_FMT_SRGGB8_1X8:
+>  	case MEDIA_BUS_FMT_Y8_1X8:
+>  		vnmc |= VNMC_INF_RAW8;
+> +		if (vin->info->model == RCAR_GEN4)
+> +			vnmc |= VNMC_EXINF_RAW8;
+
+This is a partial fix for RAW8, but more was needed to capture it 
+correctly. But that issue covers more then just RAW8, I will send a 
+proper patch to fix that. For this patch,
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+>  		break;
+>  	case MEDIA_BUS_FMT_SBGGR10_1X10:
+>  	case MEDIA_BUS_FMT_SGBRG10_1X10:
+> 
+> -- 
+> 2.43.0
+> 
+
+-- 
+Kind Regards,
+Niklas Söderlund
