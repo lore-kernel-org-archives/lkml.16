@@ -1,108 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0665B1DE3D2
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676E8215073;
+	Mon, 31 Mar 2025 22:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743458832; cv=none; b=CYJNzu5ZKCqizmkCyPArAwVMMlHybhfMLylPQEewj3/df6zt4ZvLYBFfcS3iUhmnJLDxIS8LKLYm++gjZH+nALRKQskrLNQXzE9ai8yY1s1OqaPcgIE4vIzsozdC1b/h8slqh842iOUSV5lINhVCvzIB9rR65LsEkuCqDYn6owg=
+	t=1743459160; cv=none; b=aqN4JAgoY46t5BAxB+0JfFnb6nWA9s11i9nLzMW3sWh1yi8X3MUaWTPRO9ta+BjmfdCSWrkJisuvPjFTZPuuYKx0BZdFKqj3KvmbDMnoqRKVxWgdL6zo72Eeh/xPQ2Ge+l1qiSPN5Q0XwRG8/wizAes/q/C3Aj7Hobm/G+gCT/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743458832; c=relaxed/simple;
-	bh=2NqZpCA3qeuwU0Nn4e8zDBI0oTYQyEs2BI14MWKnkM0=;
+	s=arc-20240116; t=1743459160; c=relaxed/simple;
+	bh=ZmEEVOqTb0kAYM8Db95VajzFAGTnoSSniEzBUsF7BXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trVB+6ky24inENi7N17jD4/WmXz7up7aTm3JODQQ7wl0f2xMoreCnJcrlDSZ+AcYSjnMeJBhokLudeXTxoAAI4pjbBZ/R8aKSWJOV08aUHOMieJrMB4NfRGdXopMeTQAOC3pgz+RhdWjNndt39sprEQJdWXvUbWzQFvvb0rP4jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZpYYcTwX; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=N2nqlgSj0MSs4EIVXQ6JahsCkIzY1WKxw3oOJKCk+nX2/plphpGwcyh4rfHarmIoBmyWGmhb/uINBbMy46umW2uUkE7eCbd3SRg56Yvlos/xSBrYQ2RdGqleMJEb2ft3BrWE8Cve1Q0L6T+t2twUHZpAKsSh0vcgvJ9a1P8WtO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnDDnq9b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZpYYcTwX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743458830; x=1774994830;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2NqZpCA3qeuwU0Nn4e8zDBI0oTYQyEs2BI14MWKnkM0=;
-  b=ZpYYcTwXPEHiLIZIWHUlsG4lNF/fYpxzYi3Dcy2w4OUzzc6xM+OT4Wxf
-   1WsYPyibwf3xb2z148y4NwJY6QJD5R/JoToIHubvjAH6DIq2JimfzTshz
-   h1y/nvoc6pIQirBQL/ZhRhaxaFY3GTQgEcYK6lTCBu+ucdVl8+Gu+82Pg
-   m3jYsIWlTx5g9SjZwnQKRo7beP8aQnFEXDmdXTBIkCiENhnmDHTj3qbCy
-   HwXSf5nqVOg6RB6jfbeoI/R6jiHFzwL7yZuaWUW1egV565CoW0OYKyd5x
-   u5GhhHo/8IqNkZrQQKY0eikGoWoDRVg2ThXIh+iXks0d6AnBz4XHhobY7
-   g==;
-X-CSE-ConnectionGUID: FXTxR0sBQiqxBK24FUYCyQ==
-X-CSE-MsgGUID: 8EYBD62iTDGDE8uwvwap6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="67239073"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="67239073"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:07:09 -0700
-X-CSE-ConnectionGUID: eZrBjxbxTQaHukq1pM7yDA==
-X-CSE-MsgGUID: kFUlYBfGTumyCycU683KiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="126676066"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:07:10 -0700
-Date: Mon, 31 Mar 2025 15:07:07 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 09/16] x86/resctrl: Add detailed descriptions for
- Clearwater Forest events
-Message-ID: <Z-sSC48XsxFrzlVY@agluck-desk3>
-References: <20250321231609.57418-1-tony.luck@intel.com>
- <20250321231609.57418-10-tony.luck@intel.com>
- <03f00372-e863-4405-a077-86173e39368c@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnDDnq9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD63C4CEE3;
+	Mon, 31 Mar 2025 22:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743459159;
+	bh=ZmEEVOqTb0kAYM8Db95VajzFAGTnoSSniEzBUsF7BXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OnDDnq9bsQrWxj0kTdGfiQwJytwM9kxHt0KYlyOVE721H49iM0ylSbt/n+QdJFikO
+	 U4rIe8UGAHsj7MbhHL7zkISfF9gaiEWQIaq1oDXC0S+QMVyLxQz0xGcad0Red3Ou0m
+	 yZw75jzZ4c1IZPsVQ2IBMsJxMGoHuFMb9V3fYsg8Modz8ZhfPQukbW9GO1R4r4j31k
+	 Ubu9x3JLEgdVuetpg7XBr96CnnD19K5NGYnaSEa9kOCAIIDjTMcsmDsQrNg5PCz6Bt
+	 ARXg793U38EpFAITre6bmgL6yKfCbdFAIoWGSZOjYr5Semsntn47UFMuRKWauCg9yp
+	 s5xEVIIPe+Lng==
+Date: Mon, 31 Mar 2025 15:12:38 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, paulmck@kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Mar 31 (objtool warnings: RCU)
+Message-ID: <d5a6xgr5n4sw33doyzbkypt5uwovy6kaiq6cl444jgpkc2licx@qzufobtaoylq>
+References: <20250331171209.770159dd@canb.auug.org.au>
+ <d1eca076-fdde-484a-b33e-70e0d167c36d@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <03f00372-e863-4405-a077-86173e39368c@intel.com>
+In-Reply-To: <d1eca076-fdde-484a-b33e-70e0d167c36d@infradead.org>
 
-On Mon, Mar 31, 2025 at 09:21:11AM -0700, Reinette Chatre wrote:
-> Hi Tony,
+On Mon, Mar 31, 2025 at 02:22:23PM -0700, Randy Dunlap wrote:
 > 
-> On 3/21/25 4:15 PM, Tony Luck wrote:
-> > There are two event groups one for energy reporting and another
-> > for "perf" events.
+> 
+> On 3/30/25 11:12 PM, Stephen Rothwell wrote:
+> > Hi all,
 > > 
-> > See the XML description files in https://github.com/intel/Intel-PMT
-> > in the xml/CWF/OOBMSM/{RMID-ENERGY,RMID-PERF}/ for the detailed
-> > descriptions that were used to derive these descriptions.
+> > Changes since 20250328:
+> > 
 > 
-> It is unexpected to me that this is made model specific while the
-> implementation is built around a guid. What will happen when
-> a new system using the same event layout arrives? Will the url
-> above be duplicated for this new system's acronym and contain
-> duplicate data? How will the resctrl support change? If I understand
-> correctly resctrl will not need to be changed but instead the "CWF"
-> events will just automatically be used for this new hypothetical
-> system? This makes me think that this should not be so CWF specific.
+> on x86_64 with gcc (SUSE Linux) 14.2.1 20250220 [revision 9ffecde121af883b60bbe60d00425036bc873048]:
+> 
+> vmlinux.o: warning: objtool: irqentry_nmi_enter+0xa2: call to ct_nmi_enter() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: irqentry_nmi_exit+0x16: call to ct_nmi_exit() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: irqentry_exit+0x78: call to ct_irq_exit() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: __ct_user_enter+0x75: call to rcu_irq_work_resched() leaves .noinstr.text section
 
-I was told that we might expect to see new guid values to describe
-different event register layouts for the same CPU model. The event
-aggregators are all firmware driven. So a BIOS update could make changes.
+Yup, those need to be __always_inline.  Will fix.
 
-So I've left open the option to add additional structure defintions for
-Clearwater Forest with some future firmware update.
-
-If a future processor uses the exact same layout with the same guid value,
-then no Linux update would be needed. We'd just have the slight oddity
-that a structure named "cwf_*" would match and be used.
-
-Next system to implement these telemetry events has a very different
-list of supported events.
-
-> Reinette
-
--Tony
+-- 
+Josh
