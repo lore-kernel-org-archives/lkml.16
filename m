@@ -1,108 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D203215064;
-	Mon, 31 Mar 2025 19:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D857219A67
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743447994; cv=none; b=bWcJsbAMcvWhZ7gccPvPVdHkJ1rId6FFMd7jlYjg/XcQ/SsiS5YlMt5CntmQ2OQJIzu15PSN8JWujfydJiGQzUJbVVhcVqOUCPF1x7Rel0ODQvQCK8j1okDDdlIZDfpmJ26QE5BVmQEa0TaF1UuQ0xMY5voTg3gz2uwFl/69XU4=
+	t=1743447999; cv=none; b=FmIwB0R6lE/G5xR+kVIJLoqwTsD71Xkua+88LlWekPySXh0sLZneLe+f0dbaOS2k9fgRJ3XchYxDsH06vDdlPtAEeAS9dSGuJ1UeyJfbmYbeu9kIMpLsYgT6Jo2FQ/Lr56jzPLuqNY5hbYgRibrH22pAaTyIBdPjdvJ0qIeB6XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743447994; c=relaxed/simple;
-	bh=GSdezILBg9AMDpFKqDEOgXG/5H5Ir4ccpT5zJFC+l7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZcK8mQtFpGYr1NeEcVC35IdSF4n+jT8MTpR4jAksb48jBqhuyLKEeiNKoDDmoWGLDOEVqE3XXVtue310y0povy5kgnCKOPD9G+Yl/pKpD61emQ3/8BvPckhtP781wlagscIkcDzqZi/+Jh6UyCw6T8OlFB3BDls9FCDg5o58Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9dVvoYO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743447999; c=relaxed/simple;
+	bh=R6HoO9utzNAyt23BET7OrJlz4hwYGXX+QNpyGY6nmpQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DTT8dd9q2/Rirtu8lQRB+GLnayDfLbadcyB0EPtR658o/5ynt25Ze8SLw01eAsWMIHeiBO994cer2rlTBkNrWtGI2blUsxf2Tlw8GTTnUfUddiNiquJsr2NhImT9KdfL8UNPzm3u0lqTWgzNcndl411mQUcNdmFDLMdbBZlLmAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vecPV4+N; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9dVvoYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6166C4CEE3;
-	Mon, 31 Mar 2025 19:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743447994;
-	bh=GSdezILBg9AMDpFKqDEOgXG/5H5Ir4ccpT5zJFC+l7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B9dVvoYO+m2E0z+eIzLPbDNzONgi8HajZJ+BveufehFXOOD6oJv0c5fhvHRdOyOEk
-	 4oP3K8nwcpRWbz8XdzdaLL20UzQWo/eiYnJonoV4T0v59MEZEv4uzZslVwABnOg+E8
-	 +ISP62fh4ynBERZPr7i7PMgTHf5mvRMiSLP1boea0CHoVE7QAxjjR/w5T848kiy/1x
-	 C9Jaaz3rEuekkkzW5HP5M9GgCYhdUwGm1W/67/Mjv6HDhA4ZDLR9C/JZfsm4okGO60
-	 G1XzRyeVM5RTbfUof1e0oBS9vYtvmv64to/JGdMk6n0+19T7HiAmkKM6BdZ07BljGd
-	 rmx+0kYv2bUUQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tzKSz-000000004BU-2Amd;
-	Mon, 31 Mar 2025 21:06:37 +0200
-Date: Mon, 31 Mar 2025 21:06:37 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	dmitry.baryshkov@oss.qualcomm.com,
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add
- WiFi/BT pwrseq
-Message-ID: <Z-rnvSKEysdDyj4s@hovoldconsulting.com>
-References: <20250331073423.3184322-1-alex.vinarskis@gmail.com>
- <20250331073423.3184322-2-alex.vinarskis@gmail.com>
- <Z-pN1qloL2m4BWaq@hovoldconsulting.com>
- <CAMcHhXq9W64MHhOV5i3U4t+ZfKNC_GaBq5X3ZN7VOLt0cjPQPg@mail.gmail.com>
- <Z-p1uADNVAM9NcAW@hovoldconsulting.com>
- <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vecPV4+N"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ce886a2d5bso39143855ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743447995; x=1744052795; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HdVyUczeJWic0WGQFRDHoRFIuz1e6rkv6Z0rZI+fogM=;
+        b=vecPV4+NcjBKZxvci09ryChOORKh/n/VMIf2ER71IkShBfT/FNy+Ai/PmNuUWS7YsR
+         JWyOOVs1lEZaQ584VdEjgmh1oX9M2v3j7KVDDjOYHZaTcvaclcdyokQqPzKii9bkS3k9
+         RbEzjTfjHJy7RWFp6E+1W0V9VGIUbBxa+VutQdsZExmJTmr9xdjKzleliAedORnbpcqH
+         m2xKvQMXdS1KP+VD+dEFIrxq8Motc8xpIS7A24WSZWhUvvfVLbaGRg7A+/G5h6Ixnp4u
+         ulCwylZD0/0kLpxwgiqAbALs1bqk9aqTDdUmTHv36V6mmyWdf1ckFx55shPakKGQNb4p
+         PiMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743447995; x=1744052795;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HdVyUczeJWic0WGQFRDHoRFIuz1e6rkv6Z0rZI+fogM=;
+        b=u3WJU7uz/4az3V/SkrLy6H6RcSuWi641hGE7DO5rpXtpx1U9JNfrfLY35u0/PjzTeg
+         OotzALyr2RhjaqeY77bgPQKScGVHqcq5dr9OhhytVP36p7Ghzem1lOk/9dKKedVsoaPP
+         x+0ipeW0DcN331TSIytK0vVFxyiFdxqyarnl4sNXmLedl4zwJi2N6wVDIxkLaIQWSj8I
+         vM25i0DsA6Q9KUBgRSd8tgcJ0rTsyNC0mnwDNUjBDDKH45unWocWWBcESCk2QCPeliwB
+         soOxDVTTwsicEfIRM07hNTZAFubWL6LShZFpa1fOPY0IwBt9JcaH+OEH/AAhxPN1euNT
+         RLFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIh0LEwHNay2I+gZmMX5q9Rpdz0vKbwpWOEk3Ha2kaF1JcpEsKxJm2VhWM2STOTLKYtcXZqxwuL/VM+VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqylCqyZ/JC1pta/zGWaghx8QTKy/J5XGpT3omtGliSH1t0YLu
+	bnx1tx6vQXby/ZTwiFu4NFgj2XBz3fE0SA+6IRtjqKl/7Up8UniDWgbms3h/qbw=
+X-Gm-Gg: ASbGncvcJXhhSFAjU8aXO/FxE0AQ+yNFyrvkiosrY8KuC4JydSt9QD1Mas0d4b/HdMe
+	2YWY2ELr1jrWeF73K5dnesgco71TfAzMkQNwYjYuUo/OJdeLRw9+kZw7C549ZH//q4YZm/S8AOg
+	TOZY8fNH8woRIW6wD4h9uRE60CTf7knC1o7qzWEMKUOxhzcUnZXIMCNij/jmDDdHKUr0NYvpzgM
+	9F2gSURVT7+656OwFP3PMitBeZrfjRAf1I33LxTjLM+PwTxVBoTHHF/NfyVIowF1iX4jXxQxHFg
+	b5inNGU7Te9NEozzkFKYnErMV99m9L9wrRg8
+X-Google-Smtp-Source: AGHT+IFsxImJWmlzj0bwdAadBWG5vlsc90rZeFVRrBs5cjWqMGjs0KMH/Ata4U5Tofg9/H/MTEKVUg==
+X-Received: by 2002:a05:6e02:164b:b0:3d4:244b:db1d with SMTP id e9e14a558f8ab-3d5e090720amr97784525ab.6.1743447995215;
+        Mon, 31 Mar 2025 12:06:35 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f46487193dsm1995145173.79.2025.03.31.12.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 12:06:34 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Pavel Begunkov <asml.silence@gmail.com>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250329161527.3281314-1-csander@purestorage.com>
+References: <20250329161527.3281314-1-csander@purestorage.com>
+Subject: Re: [PATCH] io_uring/wq: avoid indirect do_work/free_work calls
+Message-Id: <174344799393.1769197.3886261668995690740.b4-ty@kernel.dk>
+Date: Mon, 31 Mar 2025 13:06:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMcHhXqO2Ej3UAej9QodX1NNCHAk956++=oakPxx-MkpOucJ2Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Mon, Mar 31, 2025 at 06:51:03PM +0200, Aleksandrs Vinarskis wrote:
-> On Mon, 31 Mar 2025 at 13:00, Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Mar 31, 2025 at 11:38:25AM +0200, Aleksandrs Vinarskis wrote:
-> > > On Mon, 31 Mar 2025 at 10:09, Johan Hovold <johan@kernel.org> wrote:
-> > > > On Mon, Mar 31, 2025 at 08:33:47AM +0100, Aleksandrs Vinarskis wrote:
-> > > > > Add the WiFi/BT nodes for XPS and describe the regulators for the WCN7850
-> > > > > combo chip using the new power sequencing bindings. All voltages are
-> > > > > derived from chained fixed regulators controlled using a single GPIO.
-> > > > >
-> > > > > Based on the commit d09ab685a8f5 ("arm64: dts: qcom: x1e80100-qcp: Add
-> > > > > WiFi/BT pwrseq").
 
-> > > > > With that fixed commit f5b788d0e8cd ("arm64: dts: qcom: Add support for
-> > > > > X1-based Dell XPS 13 9345")
-> > > >
-> > > > Not sure what happened here.
-> > >
-> > > Bluetooth and WLAN definitions were missing, as at the time I only
-> > > knew the UART port being used for bluetooth, and was missing
-> > > everything else to describe it.
-> >
-> > Ah, ok. The above sentence looked like some left-over copy paste. I
-> > guess you don't need to mention it at all since this does not seem to
-> > warrant a proper Fixes tag.
+On Sat, 29 Mar 2025 10:15:24 -0600, Caleb Sander Mateos wrote:
+> struct io_wq stores do_work and free_work function pointers which are
+> called on each work item. But these function pointers are always set to
+> io_wq_submit_work and io_wq_free_work, respectively. So remove these
+> function pointers and just call the functions directly.
 > 
-> It was a suggestion from Dmitry in v1. Though indeed it does not
-> warrant a proper Fixed tag, as it is something  that was left out from
-> the initial series, I think it's fine to keep it like this, if it's
-> okay with you?
+> 
 
-I think you misinterpreted Dmitry here. He just said that after you
-added the reference to the commit you based this on to the commit
-message you could add his reviewed-by tag ("With that fixed: R-B: Dmitry
-...")
+Applied, thanks!
 
-	https://lore.kernel.org/all/ou7w4hvbbz72nzrm45gfhpq2uzkuwpfudqeh2o34tcnbnazxgz@glmuryu5dh3s/
+[1/1] io_uring/wq: avoid indirect do_work/free_work calls
+      commit: 842b5d5f87039d978a9748f8728cabe07a676252
 
-As it stands it's hard to understand what that sentence means and why
-it is there (looks like a copy paste mistake). I suggest you just drop
-it.
+Best regards,
+-- 
+Jens Axboe
 
-Johan
+
+
