@@ -1,108 +1,108 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2F13232;
-	Mon, 31 Mar 2025 22:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0665B1DE3D2
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 22:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743458586; cv=none; b=WE8NRi0XuuEJEoIstXZf4mAbn69Vp2595ym03c3B1nTzhlPT1vs+kyNHd20qLaNyTw9tnRPXH1F/JBxmohtGvm3nXxJpjfBE2YaaFGkJLKdBV6u8zHvpWoylKLPZZG6wPhgweZnrzwpEA4pEEwvi9MBAo8lEMy2rR22ZhzabO38=
+	t=1743458832; cv=none; b=CYJNzu5ZKCqizmkCyPArAwVMMlHybhfMLylPQEewj3/df6zt4ZvLYBFfcS3iUhmnJLDxIS8LKLYm++gjZH+nALRKQskrLNQXzE9ai8yY1s1OqaPcgIE4vIzsozdC1b/h8slqh842iOUSV5lINhVCvzIB9rR65LsEkuCqDYn6owg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743458586; c=relaxed/simple;
-	bh=5Y1YNe48IJ6eHoWhlzWgmx+Ygr4JwdKwKal+H6jYeM0=;
+	s=arc-20240116; t=1743458832; c=relaxed/simple;
+	bh=2NqZpCA3qeuwU0Nn4e8zDBI0oTYQyEs2BI14MWKnkM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMyMPD+4OJ6aCAhjAWFZMXKceVVGyc4vVXop/yLEhKpV23vOzm0/ULD5rG9HrhAgVOTiFBXce5ptEqlzysFbbbvMSpxEEqsCtCnYyifS3jJ9+26QmNg4+Rcz0eP8ZoR+jdM4wHgiovLPPZlbUMt5w5XscVRdLzIpqcPisxChVLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X8Vdr8F4; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=trVB+6ky24inENi7N17jD4/WmXz7up7aTm3JODQQ7wl0f2xMoreCnJcrlDSZ+AcYSjnMeJBhokLudeXTxoAAI4pjbBZ/R8aKSWJOV08aUHOMieJrMB4NfRGdXopMeTQAOC3pgz+RhdWjNndt39sprEQJdWXvUbWzQFvvb0rP4jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZpYYcTwX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8Vdr8F4"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2260c915749so67699625ad.3;
-        Mon, 31 Mar 2025 15:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743458584; x=1744063384; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rhy55FXbjuSeWpQNxxQDj3nYTDnqUFwtJ+9Hxlmr8SU=;
-        b=X8Vdr8F4n2rhWODvXvK4ItqLWiWEr4Bp/G0U8Tbo8gE1EgxvUmXTZ/Z25lMN2xc7GB
-         UD6wWzwH+jFb0sR9PYZxGN42xqVrFn5karV/sj+ORRrPZ5Qv3Z066goss9anfKHdZVa9
-         V+MbM27iuPmhB0c1gYERAqxDyWmRdoOLmdqe2kRQfDkX3Q3lIvsReSaqadLkWGHxxL6N
-         euNcGtthclliHAfFXy5joSW0k4n6zkvSWlK2MmXkXk+ZF+u43s63IoBEnmnPlI5IOuzd
-         hdWw8OkCOwKj1/FqzYu7kWmzY9k/01TCVwrdC80ppgsFMh9CzPq1Eto1EXM/nVxHF58E
-         Z91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743458584; x=1744063384;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rhy55FXbjuSeWpQNxxQDj3nYTDnqUFwtJ+9Hxlmr8SU=;
-        b=bHGiTdee6RCixi8pP7d9VRDKNSDqPF6J+8fbYtuxN/F0MI+pl2m8l2Sx2rp2Ogtk/4
-         lW7/PZOE/c8pNBAsEKd7lHRjY01M9h9YmBd3B95KaLPyls4ln2+Uv93HDAa3gvnwHIks
-         b6e1z5e5krHXs+ApJAxQ1o2HIakfw3guVAsA1j/+5pTZ2XaVsX/Bj4d5amhoJR02IQ9j
-         m5vNaf/VSiyOrWI0Ays22KmhXnHi+8OCBJ+hGPBCr/TyhncZNbAil+kv6e5R0ycPKUMe
-         dopf/Wubad1emSKiNnXiTnfYgc7GMqSRjR0Vkcy2dCPirXR+L7iOi/xnfavcbKcprlGz
-         bZIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4CCY8JmMHcjPhx8d41vhFT+vNweT5IsXZNo9vJkPZkf646pbqV0Yl+70Wtks9Lh+c4BTxKW0M@vger.kernel.org, AJvYcCW/ZXeU07sIrromst+j5mmbtIiCRqQURpV4sXQ1jKpzU17+hYjkgdiqwmmIqvwUq5sHcbZaTDDSOqrkwOXv@vger.kernel.org, AJvYcCXye0d2fgIqgFPG4DS1Ky9yN4A0AR2j0B00qDOTVpxSNuwFDQCAsozJA7NZlwNOOo2p5dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM0crKybVRN26pTf4K0PgXPJZeuu2YB7ZhQNSdS4jBBp0ORjDB
-	D2uYe5y+/gjmHw2tJeNKwWBX8GaeWYwgl2GASx9513BzMg7Ovm0=
-X-Gm-Gg: ASbGnctAfuB2k0oQLFJy28EluDyGOW3nTl82mkfzlYk8x8rZf426gizejxKinvUhTVq
-	SS4VBEU17fWcnp6f4rl6wmLVYWX5xYPNpetQpyqHFeN6nr2LeoLAPQIX64FDXxHUGQN1LnGvtGr
-	nlgaek/MND4kN1EXY9G80PAL7fVPozFBV+/byzdZDJeavwu8Y+t1rdDAS72mYasXq+yrG6f9z/B
-	G4ki5XD1BTNlFlDadHdB3aHMzfedYAW3SpxK8uvHWNYq4xHOmFaQfEcmTdY+3H7jDUw1enB38AV
-	2z2j14ZGRdsSMXj9BmNr12aqzK5yizxWPLWB9MME0dvt
-X-Google-Smtp-Source: AGHT+IG5Ts6GaZrxroHurdYwZP83LnNuGfuRboC/7tFmI7N+BMLA3nuz8cOEWStQneT8WJodLpiGrg==
-X-Received: by 2002:a17:902:f643:b0:224:249f:9734 with SMTP id d9443c01a7336-2292f943ec9mr171156555ad.4.1743458584361;
-        Mon, 31 Mar 2025 15:03:04 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291f1deeaasm74257885ad.177.2025.03.31.15.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 15:03:03 -0700 (PDT)
-Date: Mon, 31 Mar 2025 15:03:03 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
-	yuehaibing@huawei.com, zhangchangzhong@huawei.com,
-	netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
-Message-ID: <Z-sRF0G43HpGiGwH@mini-arch>
-References: <20250329061548.1357925-1-wangliang74@huawei.com>
- <Z-qzLyGKskaqgFh5@mini-arch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZpYYcTwX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743458830; x=1774994830;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2NqZpCA3qeuwU0Nn4e8zDBI0oTYQyEs2BI14MWKnkM0=;
+  b=ZpYYcTwXPEHiLIZIWHUlsG4lNF/fYpxzYi3Dcy2w4OUzzc6xM+OT4Wxf
+   1WsYPyibwf3xb2z148y4NwJY6QJD5R/JoToIHubvjAH6DIq2JimfzTshz
+   h1y/nvoc6pIQirBQL/ZhRhaxaFY3GTQgEcYK6lTCBu+ucdVl8+Gu+82Pg
+   m3jYsIWlTx5g9SjZwnQKRo7beP8aQnFEXDmdXTBIkCiENhnmDHTj3qbCy
+   HwXSf5nqVOg6RB6jfbeoI/R6jiHFzwL7yZuaWUW1egV565CoW0OYKyd5x
+   u5GhhHo/8IqNkZrQQKY0eikGoWoDRVg2ThXIh+iXks0d6AnBz4XHhobY7
+   g==;
+X-CSE-ConnectionGUID: FXTxR0sBQiqxBK24FUYCyQ==
+X-CSE-MsgGUID: 8EYBD62iTDGDE8uwvwap6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="67239073"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="67239073"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:07:09 -0700
+X-CSE-ConnectionGUID: eZrBjxbxTQaHukq1pM7yDA==
+X-CSE-MsgGUID: kFUlYBfGTumyCycU683KiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="126676066"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 15:07:10 -0700
+Date: Mon, 31 Mar 2025 15:07:07 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v2 09/16] x86/resctrl: Add detailed descriptions for
+ Clearwater Forest events
+Message-ID: <Z-sSC48XsxFrzlVY@agluck-desk3>
+References: <20250321231609.57418-1-tony.luck@intel.com>
+ <20250321231609.57418-10-tony.luck@intel.com>
+ <03f00372-e863-4405-a077-86173e39368c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-qzLyGKskaqgFh5@mini-arch>
+In-Reply-To: <03f00372-e863-4405-a077-86173e39368c@intel.com>
 
-On 03/31, Stanislav Fomichev wrote:
-> On 03/29, Wang Liang wrote:
-> > The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_RING
-> > option but do not reserve tx ring. Because xsk_poll() try to wakeup the
-> > driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
-> > tx_ring_empty_descs count increases once the xsk_poll()is called:
-> > 
-> >   xsk_poll
-> >     xsk_generic_xmit
-> >       __xsk_generic_xmit
-> >         xskq_cons_peek_desc
-> >           xskq_cons_read_desc
-> >             q->queue_empty_descs++;
-> > 
-> > To avoid this count error, add check for tx descs before send msg in poll.
-> > 
-> > Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not support ndo_xsk_wakeup")
-> > Signed-off-by: Wang Liang <wangliang74@huawei.com>
+On Mon, Mar 31, 2025 at 09:21:11AM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> On 3/21/25 4:15 PM, Tony Luck wrote:
+> > There are two event groups one for energy reporting and another
+> > for "perf" events.
+> > 
+> > See the XML description files in https://github.com/intel/Intel-PMT
+> > in the xml/CWF/OOBMSM/{RMID-ENERGY,RMID-PERF}/ for the detailed
+> > descriptions that were used to derive these descriptions.
+> 
+> It is unexpected to me that this is made model specific while the
+> implementation is built around a guid. What will happen when
+> a new system using the same event layout arrives? Will the url
+> above be duplicated for this new system's acronym and contain
+> duplicate data? How will the resctrl support change? If I understand
+> correctly resctrl will not need to be changed but instead the "CWF"
+> events will just automatically be used for this new hypothetical
+> system? This makes me think that this should not be so CWF specific.
 
-Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
-cached prod/cons. How is it supposed to work when the actual tx
-descriptor is posted? Is there anything besides xskq_cons_peek_desc from
-__xsk_generic_xmit that refreshes cached_prod?
+I was told that we might expect to see new guid values to describe
+different event register layouts for the same CPU model. The event
+aggregators are all firmware driven. So a BIOS update could make changes.
+
+So I've left open the option to add additional structure defintions for
+Clearwater Forest with some future firmware update.
+
+If a future processor uses the exact same layout with the same guid value,
+then no Linux update would be needed. We'd just have the slight oddity
+that a structure named "cwf_*" would match and be used.
+
+Next system to implement these telemetry events has a very different
+list of supported events.
+
+> Reinette
+
+-Tony
