@@ -1,101 +1,97 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4508D21148F;
-	Mon, 31 Mar 2025 14:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C667A3234;
+	Mon, 31 Mar 2025 14:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743430029; cv=none; b=IDTJ49y0Y+gJgiUDZl1VS+vM2hKrsRqsi5wK+FuRXTIZz+W7wWHQdAZdyfG2t18nANfRn1s6Ta0gcHvV5JI8UAxgjw9ZUilLIgJv514KzgRHaKxkZ55PRWt7PboLBNaqkq1NEdQj0RLfZQKT/2295lp2Sg8YT7s+IpxYPSqmxwk=
+	t=1743430125; cv=none; b=QOAEgpHA5Fc4BxrXrPz8Eezx5jvhW3aQxhras0xYdHgwubP6ij6vZDzKywJ6OX1Z7X/hcYHBXcJZkFdzr7zIXfnyRNlyh2mROOPlVVnh5bXGU2Chjh4w8k9v0Ks2jpI47GfWLsyVCraUFl8hIBnHTVFvQJfJ2XtvLRONjYXrVbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743430029; c=relaxed/simple;
-	bh=OD7JebTfU5MT1X8WCmBSw8FWuc6qyRDXMpQO0/Gvy4c=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=AnZNkJNHuFUPxX7/6NmZU/77VaspoSNZ5Ijqd+T8bIwTg9Khz22TzbzPrrmGREBKEiCcyCF7zfqHlbSZIrvTkHnraW3V7O0Bprib2HF6LB1XW8/6M66z8A0U9PqXgjY+ZwzIX4X7Lrbn9ImcAt/za/YxRbUSsYPYLBeScKX/H/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tnzgH5Xt; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tnzgH5Xt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743430025; x=1744034825; i=markus.elfring@web.de;
-	bh=gdvTQJalkKgGpg46yW+cy2ny+k+pwLnIsMQDuMyPfkk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tnzgH5Xt6wbTBSwDmUaMD/lstqW32+Rp0vHYm87h79/jovkdQxYxqyASF6nUlIX2
-	 JYQvprP2fZWfBPQSEgwVnGU3MsGbpAWtr0+3Kbnk2tiA05H37EFkgEuMUirncuG1P
-	 hifJhHhENYmvNW6Y+2UNWhRzWNe7XQihDSbZcgb42NzH0IukSoG6PAO+824iSZD3i
-	 rVhGQNag0kCEDj7bnQZZMvn3BhtDfydaCNbFJ+pFjQjmwmqoaIgliATq6vaDhz+3B
-	 8Goc7FZ7gY3alQyarryvGKHAtX179nNiPRgWoho3QqZ3q+LSkVwIDugmDyndwT9Sn
-	 ieM8wRRIAqww+c5cnQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.37]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N1d7i-1sxMZd0wnY-012Izn; Mon, 31
- Mar 2025 16:07:05 +0200
-Message-ID: <96d7676a-ade7-4250-be3f-fd11728c23ee@web.de>
-Date: Mon, 31 Mar 2025 16:07:04 +0200
+	s=arc-20240116; t=1743430125; c=relaxed/simple;
+	bh=PToFCzKfDCXNFnIrJqTIZCDzDC0JavZmtnFBn7bZiJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VjPPcnJm+7UDN9brkiM74vzMJbLri3j09yggDBGBY8iUVnayyZZS4Bc2ZzW3dCEFAYiVgdNs6naZ1DHHocQuyA7ExtTSMHVzbQlNL+JUDBBYtwskyfsGjQh2Y4KWFfSERBcqaOCG8clT38GS+/mkY0ywLltlGbM7E00S8pZhHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E1BC4CEE3;
+	Mon, 31 Mar 2025 14:08:42 +0000 (UTC)
+Date: Mon, 31 Mar 2025 10:09:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Cc: "Naveen N. Rao" <naveen@kernel.org>, Hari Bathini
+ <hbathini@linux.ibm.com>, bpf@vger.kernel.org, Michael Ellerman
+ <mpe@ellerman.id.au>, Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, Nicholas
+ Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia
+ <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Miroslav Benes <mbenes@suse.cz>, Michal =?UTF-8?B?U3VjaMOhbmVr?=
+ <msuchanek@suse.de>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org
+Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch
+ (v6.14)
+Message-ID: <20250331100940.3dc5e23a@gandalf.local.home>
+In-Reply-To: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Will Deacon <will@kernel.org>
-References: <20250331135128.11881-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2] driver: tx2: Add NULL check in tx2_uncore_pmu_register
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250331135128.11881-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rvQsaVjLIcFHk0ZTJft0nYrW4clO8feC57kVZ0fPagvI4VIK5OJ
- gJXQU8mFfXoHOVZUv2JL+JNymW9cYMIGUSEWsa3qJJDFBO7WQc0fgj/dKraZB5avpwPm4i0
- Dl9H65dz80TjYJ3kNfFsS8b+vlESi7gOSnwZoZuFcO7mAHqU2r+g8tPOBqly1U+fBxs86g5
- 0Ac7xuAxOhCtFS3FmtDjQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WvlePFoJq3k=;ekmxjxif54ej6eMwJALcA96UWfL
- 6bd5F1fr/u2fBaXlLdwk0ay9iQ7IUqXJFubcZZ5xoa91ODYe9CtwEW/eAPcpZRlWTzMPFgKpH
- 16exN+QxUyPiEEfnDYMOLyly8KiWkzaphRjfxdsJLrOVanvAvc3UBMbJYLasdG4KbrAko0PiG
- 5Lx6HIPbAHsTRM+WSzJlj0oR+SA5+tsrLwpzD/D71Jpo4/0WQI6OlbiKJHQ4jvBUqr808V/CH
- fyG4rTO3OZsD+Z0wGx9B8d5FhAMd1/5lzXu/LhS7dimjIuXfmd74QjYNWeVxpZBLaYzhsI1M2
- Y00FfZeS7ND9NQVvpkzJbN3VOZw3SOXOtJIRG87Kj/hq55JiEvszca++dAxjxjFzlFYpVurH5
- FZk3RExIEYs2z3cGmZDhiFLJTbY5p20ybD8tI3yGPf4TAOFB6DLvxmwKBNgEdOUFnKdye2s9n
- 9pU1bNnBz1ynaE7hYzAsDga28tXzbZ3dmXxTyGROdZtyCYhHyaTkukvpaAjLPTK2DcdiP6U/M
- m62vNSUXA43AVTrfEmZ+3QjKRe768wdH7tzpQxr8m5hg9yL6XKHalSnsKU9lnHS/hMPHfSeXi
- ctGr81Wt5A8Q7oxYBCGcEtc1+X+MfVNZpDx4dI5XbmIwkpKBVuWfrpOEMXMoW/tYn2brQtPDL
- kPBuQ3uLNBuNMx8rD8SKIHBrNoEMQV/Gc3SPmlQ+NibYD6zpgMPyMnBvOp2fHd2IYFBngH/L+
- KNNYHx+n9/e+j0GRie83Rttk10z2e8VST+I0lSWqKI1qlliTUZpac/aKDQ/pEuYBr4MY/lj63
- WqB7sMp11p7uyCHVaI86Qxn7hR5JQhiclRExhXx0RJhKGPnNrthGn4ifKSIlgMv6gYq+cV6/A
- fIqd3dlUIAIMJYEzKxeJGtz8D6pLvUhjnLn7SY/NF60DR2e31+N/pIvQSb30dftB4lXfWm87Z
- cy9AJo0t0BLtHidfTuEktogXGBoiy592Qg1yECrTN9oZlA1DWdXNPNqPgOuH/zpU/RH9sZR7N
- NimNuTp5hOwtFYBQ+lK85C5fHOqbq+GM+T46FldEfDeBzT6siJThPz2DI0OmUzGT9/fxJTYxM
- apoaiy6rkfpIA90/EW5djsYN/gZ3WwVsu3l3Maq3hCri0gLjSNxybMSMqe4Fm6DxM4HnOCGkW
- SGMekUZi1ncUchtXd7bXyWgDqz8ckVbMsEj0qMgc3YNTCUFoVW4v0MPOQGpb9Ih4X2ICCptfP
- bYbgvjufEy/EndarkVfr6GlHqdWLmal/nenJA4w1Ui6ywthfkdNJh1C7WKGacq+psEKd5ceGX
- Fmx5pDS/3XKaHaW404xbIaSPkWkxtkqt8fUuUYw+CLPj7uq0VrNghEwCfuAEhd/j02qAeRRSD
- tjpE3eFRil+nNBQEDqHrVWE0SKFYJPNraPbF8p5Hg7ZD7XYniuDkXFGgsjWMopIfZR/ouF/d1
- ISwHuX4r0UM28LTdTFonSTrhnQNb+wXFLTvfguuiiaInYq3cM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> devm_kasprintf() return NULL if memory allocation fails. Currently,
+On Mon, 31 Mar 2025 21:19:36 +0800
+Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
 
-                   call returns?                    failed?
+> Hi all,
+> 
+> On ppc64le (v6.14, kernel config attached), I've observed that fentry
+> BPF programs stop being invoked after the target kernel function is live
+> patched. This occurs regardless of whether the BPF program was attached
+> before or after the live patch. I believe fentry/fprobe on ppc64le is
+> added with [1].
+> 
+> Steps to reproduce on ppc64le:
+> - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
+>   with fentry (kfunc is the older name bpftrace used for fentry, used
+>   here for max compatability)
+> 
+>     bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
+> 
+> - Run `cat /proc/cmdline` and observe bpftrace output
+> 
+> - Load samples/livepatch/livepatch-sample.ko
+> 
+> - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
+>   output, but no new bpftrace output.
+> 
+> Note: once the live patching module is disabled through the sysfs interface
+> the BPF program invocation is restored.
+> 
+> Is this the expected interaction between fentry BPF and live patching?
+> On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
+> unintended. Any insights appreciated.
 
+Hmm, I'm not sure how well BPF function attachment and live patching
+interact. Can you see if on x86 the live patch is actually updated when a
+BPF program is attached?
 
-> tx2_uncore_pmu_register() does not check for this case, leading to a
-> possible NULL pointer dereference.
-=E2=80=A6
+Would be even more interesting to see how BPF reading the return code works
+with live patching, as it calls the function directly from the BPF
+trampoline. I wonder, does it call the live patched function, or does it
+call the original one?
 
-You may omit the word =E2=80=9Cpossible=E2=80=9D in such a change descript=
-ion.
+-- Steve
 
 
-Is any automated source code analysis involved here?
-https://cwe.mitre.org/data/definitions/252.html
+> 
+> 
+> Thanks,
+> Shung-Hsi Yu
+> 
+> 1: https://lore.kernel.org/all/20241030070850.1361304-2-hbathini@linux.ibm.com/
 
-Regards,
-Markus
