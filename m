@@ -1,197 +1,168 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2137.outbound.protection.outlook.com [40.107.215.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35763D69;
-	Mon, 31 Mar 2025 02:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743386961; cv=fail; b=TXkEeA7Joki9JeR/dZz2NEy0vnvHc6uLwwR9LYZ/mcdOUMTxeTTJXRO+hMO7krW8B1sx21+B2BMyRQ4UPtmRkuUSL5jyB9D1iWvGR8mgjKQcaePHZTO/WemNbAOF2ot3c2TAFSguN1tZilURt/YxkPtf/Zt7nVVXAvpqsbuTGn4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743386961; c=relaxed/simple;
-	bh=HmLSMjPP/88gqeXB1sYxyQw9a5STD+5AijMxW625OKE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rg/4yUcc0mHT+I25ijGthka1skQ2D3WORTEHn1ZqEGfTiQ3hvQePh3dmGuDIxESEbkmbJaK2wMsAbsEm+hP+K/a0/DtYJyUejM42gH1twiNc2FafShqeNQIbK9pscx/qqP22zQ834LswVM/DiFz9EhmwRIWV7rKZ8E+EAGQt/M8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=gp/7Hb3v; arc=fail smtp.client-ip=40.107.215.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="gp/7Hb3v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WaTUuX5+v/zC8uKP1HhJCVjdICCJ4KfGDMqIRIoAfI+xAHwBDanHkvvWjKbbPc5P6aCm5RqCdq2R0lujRahcCzGUft6MuUJ+rtQVUUfHjMbxYbqHcW1pDwFqn+A0ZdS/ynpexMYvk5orhkI5hQu9ef6uKgfnh8V18C3MhiWvK0Ub+eOs2Eo7ZoAgjICJa0wSTZu3cnK/BBKuSKjTTb7aQqe9Ra5cSnsAOhUB9GfB6CAmrrbrU+4+F6l4Cd34/JYDN2XNPhTbGbGdx+KhVPaIsnGtSNyfOnA23xG1sNsF/G/TRwldlxsJ+iF1KSKSNg5UCH8KfI41iwSalPzuvCebgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YN8zYKNcFfnhjDTGtB4ICvIczTtKlOJ/yY5zufwdw2M=;
- b=ynDTW7TOnkZ9uvui50fYuydgi5AX4qtoTo1IdmyqgtxXzD6l8WZmsmmZaomVWvTnUZ/+3WOtIZihkMeFYpjTUrdAexP3WkH+eQAcAeyH/Md+t1slBHjfOUlpl5AQ2sJwFT6+yKPDoOz/UOiBC4IEWYN/Wb3EyKncCtjdxEA6VsbfL4mTKql5laJMo9lN8XW5KceCQ0ru/w+nvaTvWN+O5Y5eMsyx3+rdax/4d9qsP1E5aLwqcyp+ugpj4ep/QBGPL0bPsp6qD83QkW6jR4cJlsg9JYnLVnGHVEp/2TV1u5QBH3FzzJ+k4dKxS/TvAaaw81H7YDth8Z57TG88DdFyDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YN8zYKNcFfnhjDTGtB4ICvIczTtKlOJ/yY5zufwdw2M=;
- b=gp/7Hb3vXavMXb33jHg8G/guoxFfg2V3aWtMUf8K2/sucqSVAIj03+8yiDTnCxh8FTyqoXhyLRxrb5DehAmVuyD7boCxlffn8UZhR+v2v7n2WOFTh6Vkht15WtOEMKezJlJQ5/OEP1Au3CGDEm+S0Wq4rIO6BeEpExyox6w2oQkwaibhlpKmYSEneA1kp6Nhpila6PcVTBjvzlzmAi6mTjymEr8bzz5mlHjp51cPrOa1w//BMsixsMNGURs0b7rG1E5BLvBYlDHy/h+9lSz70+Vu1Fc2/LC8EFA8w9pHZEYXPHgoJ0S+1VB9ZvQ4QF4hj5rdr8fYLrsC/bBUNUKSvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYSPR03MB8627.apcprd03.prod.outlook.com (2603:1096:405:8a::9)
- by SEZPR03MB8664.apcprd03.prod.outlook.com (2603:1096:101:225::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.37; Mon, 31 Mar
- 2025 02:09:14 +0000
-Received: from TYSPR03MB8627.apcprd03.prod.outlook.com
- ([fe80::cf16:aa54:9bd5:26f]) by TYSPR03MB8627.apcprd03.prod.outlook.com
- ([fe80::cf16:aa54:9bd5:26f%3]) with mapi id 15.20.8583.036; Mon, 31 Mar 2025
- 02:09:11 +0000
-Message-ID: <547512d6-f3fd-4e04-8036-e4188d26de6e@amlogic.com>
-Date: Mon, 31 Mar 2025 10:09:07 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/10] media: platform: Add C3 ISP driver
-To: Markus Elfring <Markus.Elfring@web.de>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Scally <dan.scally@ideasonboard.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20250311-c3isp-v7-8-c3551bed9005@amlogic.com>
- <6ff5acac-4d41-4d4a-853c-9902e9673ef0@web.de>
-Content-Language: en-US
-From: Keke Li <keke.li@amlogic.com>
-In-Reply-To: <6ff5acac-4d41-4d4a-853c-9902e9673ef0@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR01CA0125.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::29) To TYSPR03MB8627.apcprd03.prod.outlook.com
- (2603:1096:405:8a::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD6838FB9
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 02:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743387269; cv=none; b=rP9k6o0/KrzSG2cmx61O8dWwswKuNAqGyvT2n29rLn8WugJfMifQmcFriH3qpUretn1NjjkfINggq+q7jYGUhJ2fyiMinGn7Cxkv+IAFBfnGU8S8xsTR10je0WSbGYfK0uGGUXXN5UgIc3UC/vRqgKkjUl8WtN23n7KpFjl+wZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743387269; c=relaxed/simple;
+	bh=otP5ppnT9Z1XPJMiBGLIWJxYif8WNzKhHlwtQdlMvUc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=H7tPp4ZGaWxd6WmROLeT9lWNXBOV5Q9bmuHgAAmPsGhucx4bmOWL3ZcYXdTR6maYeqEfoh3cefs3Y4y/vd412pYmIpvB53u6TJNIueLWosQvLp9CsdPI607GoPCWU4INRp09y70UIujRFoykEx1iLAtV9rJhk6BDCYRaxcjgUnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d44dc8a9b4so39948645ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Mar 2025 19:14:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743387266; x=1743992066;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zn4wsqECmycelK2HB+BPPSdvs//fE/pmKUurDQYNNO4=;
+        b=HAb1xc/RKAIFcj1vc+3KSypN0Fuo9s1BVNkkxFo/juu4OwpFe0tIExFDg6kAGThW5r
+         cCDgzDX/RkbP/eZrGUOAdWcSAq9EiBvuHLJxqrmq6rbBW6B+ZSeZKU6bTjRSUf6DR1yr
+         2xqOVNJvlEwFPbko/XWrVQiMGGNDByi8yIPBhaYG2Q9jGoGeBGs199fZkNlmQZLrpgrG
+         gjoEwpYnMEuClGE4ZKAPQGhX5mBkBucebTuZozent6Y3DG5xWekWSSNCSXNrsfLpvRIX
+         8jVMR9kzA/xthVLYYunoPDXZV9GRwY9WV454o7t97+wS62eAb75W/C9IdqljunXLwhRM
+         BxJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhMGfzbzOiBzNBgoC/+f3BV1gApBiOKnKq91MnDoVZnT7WWK+aQo1cTcMTLME+z4ect5KPUwZpQ6nt3os=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrxXPxOcuk2mBEHb5X+yY2rgpoHS3jlPNuolIZPDu0HHmTPM1V
+	POx511BwMJiBC7nnRdMaorCvBeXs33qFoLLtuRfyr5sF1vBdi06fu57u04d4JQ6Y+fo2Ta3Q5be
+	a3zkpr0ZEjfztUuF80mXDrmczZRNq0tST8SRnhljCEUvepgRmK9U6VDw=
+X-Google-Smtp-Source: AGHT+IHzaYoQ6A44D1gbKMagzp6/4TOHACf+Mx08YIPA7ACJMpaj92WyCyyf1pCWil+4DLIasr/vgutg399jYAaX6NfMvuhZXDIM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR03MB8627:EE_|SEZPR03MB8664:EE_
-X-MS-Office365-Filtering-Correlation-Id: 079ef714-32ff-473c-7c97-08dd6ff9072f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZXUzaEtheUIvU0RReHFjYVFqNUZLOG5GL2s4NEpseThYVU4xWVhKdDZlNjVE?=
- =?utf-8?B?dklvRGFVaE1ld0doZ2NSTDhDSmdFeVdUdzZQcmJwRys0UGoydGF0RFRCNXpY?=
- =?utf-8?B?VUNIVzlhdnpjNHBybzNLU0FicmtTMHp5bC85d1ptU1V6ZGhsTkRTeXJWaWJZ?=
- =?utf-8?B?MWhXVStlMEppeEJEUmYwMnFxejdLRFV1SVF5dXZDYmREOFE2R0NQelNFUjBW?=
- =?utf-8?B?amVXNkZNb2NJejczNGRJU3ZOVERLQWg2TVRCVnF3WEc0REVvQ3loenlQc2Ns?=
- =?utf-8?B?WlBySmxmMUtpUy9zWXR4S2ZZTXYwOWhoSDNRM3pSYngrZ0FPckk5VVNOU1Ew?=
- =?utf-8?B?WWJ0QzZDZjc2S2lyVDhZMXZlVGtXald4QVRlMGRhTTBxdVZmRUlyUDVleW1i?=
- =?utf-8?B?OTFVcHlrUGVhcU9DK0hDUmplWUVzbkhKVVJjSGNoOFMxYk5HU1NxNDVseUtW?=
- =?utf-8?B?QmVSRTNjT0dybzVUTE9GdmpZMlRrQWVSTU5HQ3c1U2VucEQ1a1ZrUkdvaWpk?=
- =?utf-8?B?SkV5WkZpLzJZeml4ZWp5S1dIZWRxNWtoMnFxQ2tsWEdqd24xemFtMWtPdEV5?=
- =?utf-8?B?eTYvWUhITjBpUXlrejhVQmdia1QweFJDUHRTTmF2Nk9EemVLVGY1WWtPS2hz?=
- =?utf-8?B?akVyaWFiYmRoQ0VuNm0weS9QNU1qQWZHNHArR1Y1T2VnbFVabTlSZkdXWjl3?=
- =?utf-8?B?R0FYWlF6bFNvV2ZMeUFsYXpRUW9INy9HckFkRnJSMnpHRnNZS014U1JiU0pT?=
- =?utf-8?B?aXVqYzc4WjFMdWd5d1pVRk41dGxyOVZpMUFRMFF1NWlOWU5RRzVVemFhY3J5?=
- =?utf-8?B?bUZVVTRPbWdXNXEwQ3J6anFlWW5WNjJyWHVpUlNaQnBLUGpoKzlvbnJ3cHBV?=
- =?utf-8?B?MC9UZWN6cElHalNMS0w0cWx6b2JKc2hXNWYyQmJRQkkySUt3VVR1dlMzNElL?=
- =?utf-8?B?WkNMNVUvNlNyZ1c3aUNFNFkyMG4xZDU5NG1sSXVHTmFiZFRUOVprWC90TkJZ?=
- =?utf-8?B?dWxESGZTSjRuVXdVSWxZeXBtazEySktEMk1qUDNMOUhVNnFNeGI0WGpQbGI4?=
- =?utf-8?B?MDArL0hsN3NYb0g0S2RjUnNRcnVTZlhYZ0JjUkdtZWZBYm9rVTZZeFV2Wnh0?=
- =?utf-8?B?Ylkvc3FZZEphc2IwYzJNT2p1a1pmZ2dXYXVjVkpOT1lWbVh1ME16cTVGcHJi?=
- =?utf-8?B?V3pGVE1URG5jMXA5VFd3TVNiNVdzZFlCaVduMms3czRWdzkrVng2Q3RYZG1Y?=
- =?utf-8?B?Z1ZKTUFiTmR1clRrbmwxVTRub1dwK3oxdWVoSGYzL3pTZ3d3TWtQVEhnSy9S?=
- =?utf-8?B?UVdld3BRU2JVUVZ5T2tqYW9lL2cxc2FTTDQwYVY5Zi83N3pwczBTTDljTHFp?=
- =?utf-8?B?dzhoWGwvOU5ZdFU1cmhQSXp2Nmd4RlZWTk9zZy9XZDJINUNwazZvVmhYSWU1?=
- =?utf-8?B?NVlRSFJuSklvY3hyRzFKOEozaWFQN0gwdzFYOHhQaHBJNHNMVXM0OFpEaVNE?=
- =?utf-8?B?Q3RXTjJPaXN0NEJSajdKK09DQ2xMYW9EYVFiV00zb2xzMmRPSUkzNWZjNnh1?=
- =?utf-8?B?ZEJrMHA4Qk15U0pJcEFESjVQa1RLYTBNbTFmeFprQ2xUVy93UHZXcWxHMndK?=
- =?utf-8?B?b3NiT0lGdzlUQU5NMjcwRS9EVTZhNmFnWGZuRVdlK08xTUt3UG1JV0EyMGhL?=
- =?utf-8?B?OGtXRloySFIzbGx2eDNPdDFxUUN1bVhTeWZDdEJ2VVlMTlhUVlFTQzl2QmhI?=
- =?utf-8?B?bXI2RXhObC81T1hqekVtV0lzZGFWa2xNYUFPdWFac3RVTVY2VkY5eFZ5dWsr?=
- =?utf-8?Q?ki+1GkGRU5+SII/78JXQbwjYKOz8oxu65o7oA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR03MB8627.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Vlo5MXg5NjhQZ0FORC9ZTXp3eW5oRi85bm5MVS9sUG4zSFpKWS95aGlHd2lK?=
- =?utf-8?B?cTNWVmxrSkhEdlZLa1pQM0FURlJiN3JvdzdadHlBQitiTHVLSm1OMW1RREUw?=
- =?utf-8?B?MERzRTNDVTFkSlFNbkZNbVN6a215Y3Iwd3hCNU9xbDExZkZqNFdsekdXVDNy?=
- =?utf-8?B?d2d0NVl4NDI0bkR1c1dVZ0dCQ1hCb2wvaFBLZUxRREtaMTJjbWxTcFdjRW1x?=
- =?utf-8?B?VGREYUlSRWNOYnUyVU1sQ3RIN1V3bWpIZXNSdnc3Vkcvc3ZJVjh6ZGk0K3pT?=
- =?utf-8?B?NTJ5K2FySDNPcHFCaWx1RkpkNms4VlpnSmpWOUJWczVsQ3k5MnJTNTJwRXFG?=
- =?utf-8?B?VlZDVnhjd09zMDJzMk9YN3gzUStxSW1TdWVOalBVY2FhbnYzZEQwdmpnQk1B?=
- =?utf-8?B?czUrVk5QTDhpMzVWRGZpdzJFVW5Qd1JGcC92SU5GVFZRT3Q5OHg1VmxaSnhp?=
- =?utf-8?B?ZGh3eUV1cG4zaE1Xeko3UDUzUG9mcDZmMEg4MzkzVStQUHJwSnZHTFFCL1VL?=
- =?utf-8?B?Q3NORExicWFRa2hpdVBhMm1halNSMnFLRjh0QmRqUXBiUWxLekxDMi84TTBJ?=
- =?utf-8?B?WkY1K0lSTXg5K1lLK2pTZXNuaDFFa1RmZXZCWlNFWWZNdWRoVkNRUXNEdnk4?=
- =?utf-8?B?RUk1c0NsdUpiNGhGYW8zaEticGpUMkRDV1JCVnQxbDRKM3RGWXVncm1wZHln?=
- =?utf-8?B?dXZreEJpSSs4TUEwbU5LWWxsUXUyTHVKamM0KzE5L3E3Q1pBRlllZmxBc3lK?=
- =?utf-8?B?bGhiTkZyaGwyVEt0eHNlYXhaY1ZPcjNlWUQ4eFowcW5sZ0xlbHkyU3FkTTdC?=
- =?utf-8?B?QWFWZXBPVU1LaUdwak5PZFQwVS9BdnRQZTJONjFvK3RDL1A3dWdjRm9qN3JQ?=
- =?utf-8?B?TzkzenQ3SnZwL2FjL0VENzVYdWMwbVR4RG1YM01OVTRVZE9Ta2ltNWtsQWhx?=
- =?utf-8?B?WjZpc29iNDZYMkRDcWNGaWtSR2ZNd2NMN296RXhpSzZlTG42MzE5MnhFeFJx?=
- =?utf-8?B?cVdrK0l3UTFKd3BlWW5xV1hYTlZ0RE05OC9NNWtvVXZseXo4RlRoWVZ2NzZP?=
- =?utf-8?B?eG1qNVFwWDlSSlNRL1F0alRPalFOb0YwQzhKWWNCZGVYT2wzUysxcG1MNWU3?=
- =?utf-8?B?N0J5S0lVc2VCeHVPVGQrMCt5RTBuTm9tKzhLQWpaNjF4eUNydno1OGo2d0xu?=
- =?utf-8?B?azlzYkExMVlQVURML3BRTWo0NWVGaElpeEpuUEV3WTVNWXhJZXlXSEg0Nld3?=
- =?utf-8?B?L3JrRGQ4Z29UVFhHVEY5NGxWUXdNZTFxSVRyc3ZHZmRCQUJYR2FGVkFabkNV?=
- =?utf-8?B?RmRCc0RPNzJVZkYvdGtjTzhpd0Vic1hCTWZYaHo4bUljMjd1Q0tsL0ltVzEz?=
- =?utf-8?B?Vm1CMldMa016dnQ1Zko1L1M1cXljVElRZWhuNG5uWW5GbW1ibk93ZkR6M0Vx?=
- =?utf-8?B?QmQwc0MzMWNCV2JMdUxONmVyRitnVVY4WXlIdmZ4am5RYkl4WDkreHY4ODJ1?=
- =?utf-8?B?Szl3dkxIQy9GeDB1KzFBdVErK3B1UnRwUEtlY1VMNmZTWWNLY2ZndE94WXlM?=
- =?utf-8?B?RFJkUHkzbWpZNWQzQ0pxSVZKbWhIdVJmQWNPbnlTeFEyL2ZSVDBFZ0d6b01G?=
- =?utf-8?B?MUI4WlgvbEdhZ01lT0JsUmdCUlFDQ3JLVnk2c2tpb01rYWEzdFYya1lIamQ4?=
- =?utf-8?B?WUp5eXFSVVVaOEtwNXJ6QW9WNFN5S1pNQ2NWSTZGazRUTUIrR1hkUVZZZ0Np?=
- =?utf-8?B?TWlMQjd1Q0E3c2kwSzhrVEpnUlMxTzFDeXkwekpkeW43a1B1ZFlsWEJ4UTVL?=
- =?utf-8?B?azdUZ0I2ZStXeWtJWUJEOXRiK1R1WlZyUVJRam1jSU9NNW8wbkRpQ215S1hK?=
- =?utf-8?B?bFJ5OC9IRHlaejNFb1V6TWQ3Q2FEUVU2NDk0cnJTTUhWUlRVelRqS2lvQVEy?=
- =?utf-8?B?ZnJNTURZWkZEQkxxd0V1Z280SXFyV01ES25hMVZzMUVYZytFL2UvbWtSTjRy?=
- =?utf-8?B?cVVGS0lvQWErYlQybVZMUFNtMGZSOE1TUTFGOTkxbFpGZ3A5bmNJME05RWVs?=
- =?utf-8?B?TjhrL3ZuajY1cVM3NXhqNkFJMEdYUG9iazlJTmI3MU9DQjZudkJuRnZsZDBo?=
- =?utf-8?Q?sLc+5siZg+8H9it6jLX+CYHhc?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 079ef714-32ff-473c-7c97-08dd6ff9072f
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR03MB8627.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 02:09:11.6709
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lE79Rp0qTbqR3KITF30e/IZCHINr5Rm0+w18RjTRDxTtHzVlFHylJlMmQpBv0udZNGbKlAr40mXXi3l8wFk5Uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8664
+X-Received: by 2002:a05:6e02:1646:b0:3d3:fdcc:8fb8 with SMTP id
+ e9e14a558f8ab-3d5e090cedfmr58623345ab.10.1743387266684; Sun, 30 Mar 2025
+ 19:14:26 -0700 (PDT)
+Date: Sun, 30 Mar 2025 19:14:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e9fa82.050a0220.1547ec.00e8.GAE@google.com>
+Subject: [syzbot] [input?] [usb?] UBSAN: shift-out-of-bounds in __kfifo_alloc
+From: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
+To: bentiss@kernel.org, jikos@kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-HI Markus
+Hello,
 
-Thanks for your reply.
+syzbot found the following issue on:
 
-On 2025/3/29 18:23, Markus Elfring wrote:
-> [You don't often get email from markus.elfring@web.de. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->
-> [ EXTERNAL EMAIL ]
->
->> The C3 ISP supports multi-camera and muti-exposure
->                                         multiexposure?
->
-Yes, will use multi-exposure.
->> high dynamic range (HDR). It brings together some
->> advanced imaging technologies to provide good image quality.
-> …
->
-> You may occasionally put more than 60 characters into text lines
-> of such a change description.
+HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ebabb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a15c3c5deef99cef
+dashboard link: https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e4a4c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d1d804580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-f6e0150b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/416c28ebba43/vmlinux-f6e0150b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/df554d24e7cb/bzImage-f6e0150b.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com
+
+usb 5-1: New USB device found, idVendor=056a, idProduct=00f8, bcdDevice= 0.00
+usb 5-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 5-1: config 0 descriptor??
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in ./include/linux/log2.h:57:13
+shift exponent 64 is too large for 64-bit type 'long unsigned int'
+CPU: 0 UID: 0 PID: 835 Comm: kworker/0:2 Not tainted 6.14.0-syzkaller-03565-gf6e0150b2003 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x27f/0x420 lib/ubsan.c:492
+ __roundup_pow_of_two include/linux/log2.h:57 [inline]
+ __kfifo_alloc.cold+0x18/0x1d lib/kfifo.c:32
+ wacom_devm_kfifo_alloc drivers/hid/wacom_sys.c:1308 [inline]
+ wacom_parse_and_register+0x28e/0x5d10 drivers/hid/wacom_sys.c:2368
+ wacom_probe+0xa1c/0xe10 drivers/hid/wacom_sys.c:2867
+ __hid_device_probe drivers/hid/hid-core.c:2717 [inline]
+ hid_device_probe+0x354/0x710 drivers/hid/hid-core.c:2754
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x23e/0xa90 drivers/base/dd.c:658
+ __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
+ driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
+ __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
+ bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0x1148/0x1a70 drivers/base/core.c:3666
+ hid_add_device+0x373/0xa60 drivers/hid/hid-core.c:2900
+ usbhid_probe+0xd38/0x13f0 drivers/hid/usbhid/hid-core.c:1432
+ usb_probe_interface+0x300/0x9c0 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x23e/0xa90 drivers/base/dd.c:658
+ __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
+ driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
+ __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
+ bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0x1148/0x1a70 drivers/base/core.c:3666
+ usb_set_configuration+0x1187/0x1e20 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0xb1/0x110 drivers/usb/core/generic.c:250
+ usb_probe_device+0xec/0x3e0 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x23e/0xa90 drivers/base/dd.c:658
+ __driver_probe_device+0x1de/0x440 drivers/base/dd.c:800
+ driver_probe_device+0x4c/0x1b0 drivers/base/dd.c:830
+ __device_attach_driver+0x1df/0x310 drivers/base/dd.c:958
+ bus_for_each_drv+0x156/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1e4/0x4b0 drivers/base/dd.c:1030
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0x1148/0x1a70 drivers/base/core.c:3666
+ usb_new_device+0xd07/0x1a20 drivers/usb/core/hub.c:2663
+ hub_port_connect drivers/usb/core/hub.c:5533 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5673 [inline]
+ port_event drivers/usb/core/hub.c:5833 [inline]
+ hub_event+0x2eb7/0x4fa0 drivers/usb/core/hub.c:5915
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c1/0xef0 kernel/workqueue.c:3400
+ kthread+0x3a4/0x760 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+---[ end trace ]---
 
 
-Will check this issue.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->
-> See also:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14#n94
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Will refer to this description.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
->
-> Regards,
-> Markus
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
