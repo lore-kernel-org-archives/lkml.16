@@ -1,84 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F164946BF;
-	Mon, 31 Mar 2025 08:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48EC13C9C4;
+	Mon, 31 Mar 2025 08:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743408963; cv=none; b=qxNVm+SYqR8F1Uem5yKjDD04vNAbDiicEYld0qRWfznWwWXaPuIAQQdkZm2LMLGTMqSN0rI6ve0DTvzRNq7qK9yqKDXejRx3T3ahVliIs7wuNLRKKbQ/NcXkg+Fs62uan8WAwTo/hS+9liORpyvJxh9Ww5noxsX/r8UvxMiUkA4=
+	t=1743408993; cv=none; b=Kxjwuy+WSNJQ9bbGskliMF7nciQ1IVP+oOaRAHmIPeuH3vEUqjhGcsILAYk2kwP1csilJdJ+68JPF0hljz3aInM4x3hBUfEoIv1lv2gcxvZ4Qo8H1kOY5qNGrCX+KkcWga9l95BlWuBo+bzBtlKrOLErnqkQ1mLyN6SlwrsVYP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743408963; c=relaxed/simple;
-	bh=n/AGtLCTuyDKU9z411GAmNJ6h/6MCP/tI1vTxsGxQ4Q=;
+	s=arc-20240116; t=1743408993; c=relaxed/simple;
+	bh=QGqKdfPSBPoe0ePQ6nTPzXqBmsVZuUhxOCBg+SqfvXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rjn646xeOtLd0pVajLy14bDynMSoOx2L9qVxyZSpRRYYVn0ur4t+9yxu9plCumoXlMdEXAFgBMo4xTSZdoUWVt6VrXtaYuYZIFeOsmoLhKMlJKy7eiKvX+TJmHm5b73KeekITJeaevfj8UPsuOTHPtHekJDCgjjy8Iq6RusESB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oc0sePzh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dyased7tdRRsz/6W6r+xz1CDDZRxCaGJpYJe6sA1aCu0codkyw0rDlMl7DYcbxw3FDiYxkAoiGHu8V6Xc777ZZ5QP2Qq/OspTg1HJRxcIcdyU8UYiX8+IAujXoMCQvJ3p8D8UMVLr/Z5g+G8evw0368iNQI31w8ziNHy/ZO9VAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSGrLJEd; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oc0sePzh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A3CC4CEE3;
-	Mon, 31 Mar 2025 08:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743408962;
-	bh=n/AGtLCTuyDKU9z411GAmNJ6h/6MCP/tI1vTxsGxQ4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oc0sePzhrGWkcxjuc4eQOHW6D1HRc4Em/XqacKGhSIXT4Cy2upsgVNfGakKfvcMRt
-	 KKYDYowkxiAoQb+R1IJOOE5UcKfO9CMJWVsWKwUGwa1niJXmD+kKUir9RXAVyOIqyd
-	 1RDxi4qUepfn9yUL+86ly1Eajqev/fW3aXIUWNirnLS/6ArdrlzSOG3h++aK/4ihCw
-	 kj4yY+XcUNQy4eYjqxkBi6gUrdHG/K/wRvvAVu+1ZlYa5xDBDFwxlPOyzGwklQ8I4e
-	 IraZFDeidJIc+ixalrvCaAsz6NfyJdcIdqCDuMPvGKFox0YYT49f/BRwAaZyq11N3p
-	 ukQLNMkvFawng==
-Date: Mon, 31 Mar 2025 10:15:58 +0200
-From: "krzk@kernel.org" <krzk@kernel.org>
-To: Yannic Moog <Y.Moog@phytec.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	Benjamin Hahn <B.Hahn@phytec.de>, Yashwanth Varakala <Y.Varakala@phytec.de>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "upstream@lists.phytec.de" <upstream@lists.phytec.de>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	Jan Remmet <J.Remmet@phytec.de>, Teresa Remmet <T.Remmet@phytec.de>
-Subject: Re: [PATCH 1/3] dt-bindings: add imx8mp-libra-rdk-fpsc
-Message-ID: <20250331-zippy-apricot-seriema-cbafe8@krzk-bin>
-References: <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-0-28324c7f81fa@phytec.de>
- <20250328-wip-y-moog-phytec-de-imx8mp-phycore-fpsc-v1-1-28324c7f81fa@phytec.de>
- <9a8635d8-631e-483f-9d31-33cf0bea7daf@kernel.org>
- <4610469e0002796fb0de9feabd3fe328d5bf7aa9.camel@phytec.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSGrLJEd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743408990; x=1774944990;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QGqKdfPSBPoe0ePQ6nTPzXqBmsVZuUhxOCBg+SqfvXg=;
+  b=LSGrLJEdB3mmXmkPNeheflDyKNofWu4JjzA78Hpg8tnTF8ph/aQX+Cem
+   X4a2CR4189ZRvmBEWPl0V062QKN5vQMkqkhKzNIWb4nY7qAJGg15+hqUL
+   +c9fBF3A5a4Nyc9nBHgjBq2sPtG66+8VBpAXniG25oAWy/q9/1CcO3Jin
+   k1ISyKNoI9qRlFgTYsCRBzXqVr5Ao0e3i9rj2KTF9WMU8hhSnQx3Hvy87
+   MAMpfhVlgd5tIzpJIVXEusPrlJ8kNT1cCr3D6BOtNBxLetb5k25MkMMGw
+   jba1BJWHTwViEf4rp4AFQTs/YFI/cf2t8TzP4srsi6IDpzf9Vgwxb0enP
+   Q==;
+X-CSE-ConnectionGUID: WYLdVE9wQ6O6nAl1J06ggw==
+X-CSE-MsgGUID: U15QznmsQkajbn3Jperi6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11389"; a="48350876"
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="48350876"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 01:16:30 -0700
+X-CSE-ConnectionGUID: 9FkABt1SRSqJZ+qcfb5pog==
+X-CSE-MsgGUID: tY7RLoEiRtijHRLb6HPV3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,290,1736841600"; 
+   d="scan'208";a="126932615"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 31 Mar 2025 01:16:27 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzAJk-00098A-0h;
+	Mon, 31 Mar 2025 08:16:24 +0000
+Date: Mon, 31 Mar 2025 16:15:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	Sebastian Fricke <sebastian.fricke@collabora.com>
+Subject: Re: [PATCH 4/5] media: vcodec: Implement manual request completion
+Message-ID: <202503311620.hhbFrG8T-lkp@intel.com>
+References: <20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-4-5e277a3d695b@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4610469e0002796fb0de9feabd3fe328d5bf7aa9.camel@phytec.de>
+In-Reply-To: <20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-4-5e277a3d695b@collabora.com>
 
-On Mon, Mar 31, 2025 at 06:03:05AM +0000, Yannic Moog wrote:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - description: PHYTEC phyCORE-i.MX8MP=
- FPSC based boards
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 items:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - enum:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - phytec,imx8mp-libra-rdk-fpsc=C2=A0 # i.MX 8M Plus Libra RDK
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: phyt=
-ec,imx8mp-phycore-fpsc # phyCORE-i.MX 8M Plus FPSC
-> >=20
-> > And that's different than existing phycore som? You have entire commit
-> > msg to explain that.
->=20
-> Yes, it is different to the existing phycore som.
-> I explained the differences in the second patch which introduces the devi=
-ce trees.
-> Would you like me to also add the explanation to this patch, or move it h=
-ere from the second patch?
+Hi Sebastian,
 
-Some explanation should be here.
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on f2151613e040973c868d28c8b00885dfab69eb75]
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/Sebastian-Fricke/media-mc-add-manual-request-completion/20250314-213005
+base:   f2151613e040973c868d28c8b00885dfab69eb75
+patch link:    https://lore.kernel.org/r/20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-4-5e277a3d695b%40collabora.com
+patch subject: [PATCH 4/5] media: vcodec: Implement manual request completion
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20250331/202503311620.hhbFrG8T-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250331/202503311620.hhbFrG8T-lkp@intel.com/reproduce)
 
-Best regards,
-Krzysztof
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503311620.hhbFrG8T-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   mips-linux-ld: drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.o: in function `state_to_str':
+>> mtk_vcodec_dec_drv.c:(.text.state_to_str+0x0): multiple definition of `state_to_str'; drivers/media/platform/chips-media/wave5/wave5-helper.o:wave5-helper.c:(.text.state_to_str+0x0): first defined here
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
