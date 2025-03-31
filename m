@@ -1,157 +1,131 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B970038F80;
-	Mon, 31 Mar 2025 08:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6D1524B0;
+	Mon, 31 Mar 2025 08:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743411537; cv=none; b=hJqUmG9dqJw+ZXe1BZE/hDKbFZYyV+SnoWEH+aMSLiz3fxUWgf1GA2SDXNydQx4mXOq6nyCvaqDxU6eBUZQ9XaSM+WzujlGdMYXExa72jRI4bcSzhEFnF2eSZMg6XuFyIMnC8fh7nI/O+5Pg4JBJKpQ84nH9zFdTa7ZDbKRfGw0=
+	t=1743411598; cv=none; b=ikdevxV3vkHZyvl1MfeYGJK6Ngkme13jNStungHlMnAKYENXhkfYyVt407v6RLIaAf+hPFq9Hb3PMzTZbCGHaALIoEhAcvgc7Bn0/HIBxEFHhQB6OZa6GHNXLSM2cmajEhdDcQUc0iEwP/6XR5TS6qnUzXBfVXi1yynLrPDhNRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743411537; c=relaxed/simple;
-	bh=ehR20YbGJsGjfG0ar/8lu1AY4PfXHfrgHoS614S9O6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iDP3LPMFhQXQb+eh65CMyvWy1Rhsd0ujdhMYTTVkRIHG4hfFqK647vOkQe56uHarqTFQXGDAWd+UAjPa5RkDq4QZQKy4vENoWeGCIaTIrp6W2BVo98fQmq4205r825RFa2o/8vNfCexmBiEFSilfCnUtRyez7uapjT44/NUHJe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JjhLup+Q; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743411598; c=relaxed/simple;
+	bh=wlyMiRRTUhq1gI4BBk63IVi+E60IuUm2kFWUlnj55KY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anLL3HMs/zkyfjP981rxq3J+yKe6vMw/Iy9+qDZkF46yW0Du00MddZsigZRef4/235vVoNGmd6bpHonOWX4rpcCp3XrxFz2Y5/UzGcoXFss3rDUWMiXBYJI6xBSRhz+fXTuHwwSgXUmg34bpSMWI6xMqRSPgNzk8OHJYm8G+M3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P63v/gXs; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JjhLup+Q"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kalQ018068;
-	Mon, 31 Mar 2025 08:58:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QV8GBKh3sQeIYtKF7q/MnzVhUuUgMdWKanrtEHlbBvg=; b=JjhLup+Q1j6zn7Zu
-	IJBBfmvI8JBlW1OMz3G8WQlUT5RMncT4kAI2eiNUzxz/FmMyupqVf/tPeMz6/x3q
-	GhSWMMiaY7BR5jA//84wjlsf3ui2zkGQghDPghlfkegKxcsu6YD++0LEvMQrFl7b
-	qKqejzSsSWvyY5vK+rgbyUVNv55vRWQcELYws87NpLsjfuVcZ9m0o4wpShwu/X8F
-	K2LTMy7ULqCi6SaDcDXtj86ilCUPSx6Eol5jDw9DTjzvx4SClyeH9P04VhYC57jQ
-	0y4lF4f08LvhbTwyjMuUIWwG3zN5ZoqNZbrs4RBm/X6CGUwmLpn8abkikbyOVYxM
-	ioGmcw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p7tvc2ht-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P63v/gXs"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52UKauVs020777;
+	Mon, 31 Mar 2025 08:59:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=/02MeeTgr+edfUre6+XCDI7lrRPKBN
+	s5wpBz5Bd11FQ=; b=P63v/gXsRF4hDLy7ssEBBwh/kzsyGiOtp0mumcM5+A/LNj
+	gdY0eBuzdPTmuXOhURZupJ1YyCReKhjV+btHVIxdh6bjRaJyvFsMnji9ym0MycpW
+	FQ/tEiPUhIT3tmZjgUk0k8RfDGEkMM5umV5et3jPN0aBemzHNEpTH7otsAqg2D2s
+	IgiQKjGXwzD3QmqVQYFZ00JQ3UFfmml/HrvUYzWU2spcPKwRznX4azB8E9B4uB+1
+	1QpX2jha71AOh/TNdKabH257Nmy0qCW899l9HxKC4fFcsNGdaAqFdrftLmaLGGiG
+	2KPUxEHGLnOeqqSwgqWBfYVrpnKHZUpIb/RQpJew==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q286v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 08:58:45 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52V8wieW002926
+	Mon, 31 Mar 2025 08:59:20 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52V8pdhP010589;
+	Mon, 31 Mar 2025 08:59:19 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qd4q286t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 08:58:44 GMT
-Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 31 Mar
- 2025 01:58:40 -0700
-Message-ID: <4c7059a0-46a0-424d-9068-60894c6cec1c@quicinc.com>
-Date: Mon, 31 Mar 2025 16:58:35 +0800
+	Mon, 31 Mar 2025 08:59:19 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52V5GId8014560;
+	Mon, 31 Mar 2025 08:59:18 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pvpkw19g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 31 Mar 2025 08:59:18 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52V8xEMj54460792
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 31 Mar 2025 08:59:14 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B244A20067;
+	Mon, 31 Mar 2025 08:59:14 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D62920065;
+	Mon, 31 Mar 2025 08:59:13 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.74.246])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 31 Mar 2025 08:59:13 +0000 (GMT)
+Date: Mon, 31 Mar 2025 10:59:11 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Steven Price <steven.price@arm.com>,
+        Ryan Roberts <ryan.roberts@arm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/ptdump: Split note_page() into level specific
+ callbacks
+Message-ID: <Z+pZX2QmFnNnnjZ5@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250317061818.16244-1-anshuman.khandual@arm.com>
+ <20250317061818.16244-2-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] phy: qcom: qmp-pcie: Add PCIe PHY no_csr reset
- support
-To: <vkoul@kernel.org>, <kishon@kernel.org>, <p.zabel@pengutronix.de>,
-        <dmitry.baryshkov@linaro.org>, <abel.vesa@linaro.org>,
-        <quic_qianyu@quicinc.com>, <neil.armstrong@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <quic_devipriy@quicinc.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250319094544.3980357-1-quic_wenbyao@quicinc.com>
-Content-Language: en-US
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-In-Reply-To: <20250319094544.3980357-1-quic_wenbyao@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=OIon3TaB c=1 sm=1 tr=0 ts=67ea5945 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=7YptvZ3fydEw2Y-QB6AA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Kamf8tevKSEoCK18clT0CMX_0XkzY-0f
-X-Proofpoint-GUID: Kamf8tevKSEoCK18clT0CMX_0XkzY-0f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317061818.16244-2-anshuman.khandual@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FB8uw0hSchlofFmG1jPA1lzwCpmzLf0-
+X-Proofpoint-ORIG-GUID: 3iKHP7Q1z45fUexTKfPdZicsNHs_J4-s
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-31_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1015
- adultscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503310063
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ bulkscore=0 clxscore=1011 mlxscore=0 adultscore=0 mlxlogscore=741
+ malwarescore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503310063
 
-On 3/19/2025 5:45 PM, Wenbin Yao wrote:
-> The series aims to skip phy register programming and drive PCIe PHY with
-> register setting programmed in bootloader by simply toggling no_csr reset,
-> which once togglled, PHY hardware will be reset while PHY registers are
-> retained.
->
-> First, determine whether PHY setting can be skipped by checking
-> QPHY_START_CTRL register and the existence of nocsr reset. If it is
-> programmed and no_csr reset is supported, do no_csr reset and skip BCR
-> reset which will reset entire PHY.
->
-> This series also remove has_nocsr_reset flag in qmp_phy_cfg structure and
-> decide whether the PHY supports nocsr reset by checking the existence of
-> nocsr reset in device tree.
->
-> The series are tested on X1E80100-QCP and HDK8550.
->
-> The commit messages of this patchset have been modified based on comments
-> and suggestions.
->
-> Changes in v6:
-> - Return -ENODATA instead of -EINVAL when init sequence is not available.
-> - Link to v5: https://lore.kernel.org/all/20250226103600.1923047-1-quic_wenbyao@quicinc.com/
->
-> Changes in v5:
-> - Add a check whether the init sequences are exist if the PHY needs to be
->    initialized to Patch 2/2.
-> - Link to v4: https://lore.kernel.org/all/20250220102253.755116-1-quic_wenbyao@quicinc.com/
->
-> Changes in v4:
-> - Add Philipp's Reviewed-by tag to Patch 1/2.
-> - Use PHY instead of phy in comments in Patch 2/2.
-> - Use "if (qmp->nocsr_reset)" instead of "if (!qmp->nocsr_reset)" in
->    function qmp_pcie_exit for readability in Patch 2/2.
-> - Use goto statements in function qmp_pcie_power_on and qmp_pcie_power_off
->    for readability in Patch 2/2.
-> - Refine the comment of why not checking qmp->skip_init when reset PHY in
->    function qmp_pcie_power_off in Patch 2/2.
-> - Link to v3: https://lore.kernel.org/all/20250214104539.281846-1-quic_wenbyao@quicinc.com/
->
-> Changes in v3:
-> - Replace devm_reset_control_get_exclusive with
->    devm_reset_control_get_optional_exclusive when get phy_nocsr reset
->    control in Patch 1/2.
-> - Do not ignore -EINVAL when get phy_nocsr reset control in Patch 1/2.
-> - Replace phy_initialized with skip_init in struct qmp_pcie in Patch 2/2.
-> - Add a comment to why not check qmp->skip_init in function
->    qmp_pcie_power_off in Patch 2/2.
-> - Link to v2: https://lore.kernel.org/all/20250211094231.1813558-1-quic_wenbyao@quicinc.com/
->
-> Changes in v2:
-> - Add Abel's and Manivannan's Reviewed-by tag to Patch 1/2.
-> - Refine commit msg of Patch 2/2.
-> - Link to v1: https://lore.kernel.org/all/20250121094140.4006801-1-quic_wenbyao@quicinc.com/
->
-> Konrad Dybcio (1):
->    phy: qcom: pcie: Determine has_nocsr_reset dynamically
->
-> Qiang Yu (1):
->    phy: qcom: qmp-pcie: Add PHY register retention support
->
->   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 86 +++++++++++++++++-------
->   1 file changed, 63 insertions(+), 23 deletions(-)
->
->
-> base-commit: b18ac9a805efdbc2e2720dded42b1ed26acadb24
+On Mon, Mar 17, 2025 at 11:48:17AM +0530, Anshuman Khandual wrote:
 
-Hello, do you have any futher comments?
+Hi Anshuman,
 
--- 
-With best wishes
-Wenbin
+...
+> --- a/include/linux/ptdump.h
+> +++ b/include/linux/ptdump.h
+> @@ -11,9 +11,12 @@ struct ptdump_range {
+>  };
+>  
+>  struct ptdump_state {
+> -	/* level is 0:PGD to 4:PTE, or -1 if unknown */
+> -	void (*note_page)(struct ptdump_state *st, unsigned long addr,
+> -			  int level, u64 val);
+> +	void (*note_page_pte)(struct ptdump_state *st, unsigned long addr, pte_t pte);
+> +	void (*note_page_pmd)(struct ptdump_state *st, unsigned long addr, pmd_t pmd);
+> +	void (*note_page_pud)(struct ptdump_state *st, unsigned long addr, pud_t pud);
+> +	void (*note_page_p4d)(struct ptdump_state *st, unsigned long addr, p4d_t p4d);
+> +	void (*note_page_pgd)(struct ptdump_state *st, unsigned long addr, pgd_t pgd);
+> +	void (*note_page_flush)(struct ptdump_state *st);
+>  	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
 
+Should you treat effective_prot() similarly?
+
+>  	const struct ptdump_range *range;
+>  };
