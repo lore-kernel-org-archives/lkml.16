@@ -1,133 +1,78 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCC1D5166;
-	Mon, 31 Mar 2025 08:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C0A13D8A4
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 08:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743411223; cv=none; b=FvrAc1AxWpkXc0kKRQ+NcF/kyGTWJFfPdUVRAlSN5AWfygfs6bRvyDHehhTJKsnIAbfVrZLnA2eFF1kcB472tZsQz7apI+vmajw4IfKaLPL1MbahHfscUgTdm+Qy8oFxhIUTIWKKQ8EMvph59NgUG73zV8Y5N7hHfQkVmoE3M/8=
+	t=1743411270; cv=none; b=K8g57Hx3rHC/N4tlp9Xm/a+/6SKZ348l4elw4oMb2wlxso2ulQyy++l0yvgiOiyANsGMKDlOjeqdOGWA7d9quKgJnoQ55TdkD70d1dfwVT9Q2BDOsYaya9kxAKky+79xOB6FHFkm7AXPyzagNhKZKtrWikA+bLATNYf2DJ2D2d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743411223; c=relaxed/simple;
-	bh=5EGtzJ1cMbOymkIecmlDD7A+m6NCguni7LbhMLAGmKM=;
-	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
-	 Content-Disposition; b=ENzmtpzUggoWcNbgdxrwOorhWk1irhUpIzxl1pDURrmcFBjC+rOlBWNlszg6adEl0AJtA5Wjik0EXFvW0+V6H4jYMkT+n+gwDe6u1p1ho7HGQO7YkGS49cYi0QX/1nCySvZFXvMsgYkx5unsu7lhTLUnO7YkwLErkqZPVlk5LzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QH30cafp; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743411270; c=relaxed/simple;
+	bh=P1L1oWqkO2vGFLrH2NV2fmlDtzER/uLfTvvEojAQFxw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RZQpBfN5atznPzQLmzyKwyE9dKcOAtKrx7gu4GVH9xqs5lCT4rBtioPmvYIw5g957Zmrcnrd0Mctj+h0yeHMUEe49jZ6LuKkg3hQeNnp+SzRA5kg4LY1BGXV/D2PKnj54tftG6zH8a1zOuC0lkvj2vDu5iZKRTWrmifsNGR1G/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kohPfrwP; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH30cafp"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso516461f8f.0;
-        Mon, 31 Mar 2025 01:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743411220; x=1744016020; darn=vger.kernel.org;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PtxUbrlQcpIDc0UcOWH0EPLAdbTyQEPVRfkNKbeKs9g=;
-        b=QH30cafpT9lTXYrYXAuOwda8t9uqbb7qYZYHLNdM/AaRHISMlu8UYlRPSInS1cKVF1
-         xT2y9MDY1/7FtZCLMfqxamXKPH4NgX6vlfjbsEWx3A4yIKx3ez/+7AfNHoXXbDeAbo3B
-         Qbog/636DG96HXKrb9OICUnrk3/l+zpxB6BSfU+KahEbso3QGn7a8cYw8c99O/91dcX1
-         AcLv5/+C6/rTD4lIuiPgyxHmz2EIpGwWCKxeRpOVzSFIjz69oMD5o77Ct2+fPLwO7c6O
-         KvFZKatgNPSJy15phWIAThuxfUdzyoKabv4ROIB7vkse2flRhS8UBdH9yzXs9dlYgt0o
-         tQDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743411220; x=1744016020;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PtxUbrlQcpIDc0UcOWH0EPLAdbTyQEPVRfkNKbeKs9g=;
-        b=GSM265i69uEmH5z4cTSrkB8kqLVniYYqagfqJ9veiLpJ6BWmB8g+iUyaFc6TPpMZFz
-         lWWzVTPBybHUumithHyobO0Z1dDKdBGUwGoq1S3e3KKgqDkDch8oRBbXV79Nb+aJUmhG
-         rYeXullJiLf4XvLxNIhSCZE2dsXu8d0qOHD8oeZnsZCPEi4+D6YDCtcRi399wWEbNV57
-         TV8ds5fBAQm0LIpMDZWM9FutwllCq04k+6HYgM5eZawLDl3X89PHdBECuoYSBZR48ILW
-         PJMLG8v6mvCrWWFx+R/BkB91NmzJFT0TGxfK/P10p9bfAvIwQQ7MKb2AKbYAVOHYDOvQ
-         94Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUokMztA87zBf5c/6eOdRQAEtYGUEaokvkFpzIoyNIiEJjv4i5nVZOp5Id+fFbSJ9xZBEgxnFCdRYJ3SQ==@vger.kernel.org, AJvYcCXla00bY6puuMUrxDudEsedFeIj3ceJRfX4tDW3c2VWvEMG/VWiyIowIIUt35sc6Fil1Lav104TrchvqzvU@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIbmcy3pxTYLjIMlUGWr17f/mzwm+NzLMJzUfd2hcEk4Je4QvG
-	ODefhn/qjYXSu9W0QhlIkXkdlO8LYghWIkpUDA4UvP/yRCkymM5SPFofagBs6a5bnw==
-X-Gm-Gg: ASbGncvf9Kwrh93lWVmOCMzQLkmhKPa99UnjolwcbTD5kqRs+f4O1o7FoeZb/wW9CYj
-	MR5YzmkNPd4oFNdyHNNlb1oW3tm3QLx+P9KAE0R/wlZi0nKGY0eWIlACrKoTdeE2/uj1p56rFh5
-	99yLRK+IAvfoygXdXOI5GlvOs0wnAmRKH57qCyAHwl5EnJjj761ZB5zuqWQb9ZpsWsXcqzYyq9q
-	ljL2B22HbGnurbXPbcLS3WikiMQlXz3s/PpHbOTqhViI284sAX1ni1/FJfesdfJrwtm9+Xg3iNR
-	DgIi8yUxcZ6hlkw+Sk/ltaNOoQ==
-X-Google-Smtp-Source: AGHT+IHwvB74wwNeidy3mQa+dv6lV/E0/a4qIZOa2bnY/+0tds3rmfJTIzcrSfjdOjcosUvg4F39WA==
-X-Received: by 2002:a05:6000:4282:b0:392:c64:9aef with SMTP id ffacd0b85a97d-39c120de0d9mr6626741f8f.20.1743411219944;
-        Mon, 31 Mar 2025 01:53:39 -0700 (PDT)
-Received: from parrot ([105.113.58.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a4200sm10813538f8f.96.2025.03.31.01.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 01:53:39 -0700 (PDT)
-Message-ID: <67ea5813.5d0a0220.293276.775e@mx.google.com>
-X-Google-Original-Message-ID: <Z-pYEL_knf6sSfZF@princerichard17a@gmail.com>
-Date: Mon, 31 Mar 2025 09:53:36 +0100
-From: Richard Akintola <princerichard17a@gmail.com>
-To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
-Subject: [PATCH] staging: sm750fb: modify function name to kernel code style
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kohPfrwP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=arHVJn2tq0pISdDGhQ9lW+/SSkCbwPoa2E5hcd62Z0M=; b=kohPfrwPEec576hyCbBc+RdrFv
+	0i6lgCR+Zao4kVxQ3twr61kw0uHdberku14BCwF6arFdfrQFl9RLyiD4tJ+PkMdHbJMEyE28moqyK
+	ZoOUj1arpvCLtHdUFsz6mDmyKs94U8YZjbi0ITH0EONzXYEQJ1vGvgmvL6jufPp5BPDTRjrV2qir2
+	BQigfuzYNqyxJESah/FP2Tb1xYAEdV3Gwg6qfVcckdTWIsOWHEMAKXitdUbkjoyrX4bb3UbbBtanP
+	UimXLy8MCCrrGxh7A6GN1phVvaQb9gBu/khHfNQDWLZPB/BcLdsPJkNOiemnL83wucWJCgmzBI7GZ
+	0fz7EXIw==;
+Received: from i59f7adb6.versanet.de ([89.247.173.182] helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tzAuT-0097Ke-Ku; Mon, 31 Mar 2025 10:54:21 +0200
+From: Angelos Oikonomopoulos <angelos@igalia.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	Angelos Oikonomopoulos <angelos@igalia.com>
+Subject: [PATCH] arm64: Don't call NULL in do_compat_alignment_fixup
+Date: Mon, 31 Mar 2025 10:54:01 +0200
+Message-ID: <20250331085415.122409-1-angelos@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Change camelCase function name sii164ResetChip to sii164_reset_chip
-as reported by checkpatch.pl
+do_alignment_t32_to_handler only fixes up alignment faults for specific
+instructions; it returns NULL otherwise. When that's the case, signal to
+the caller that it needs to proceed with the regular alignment fault
+handling (i.e. SIGBUS).
 
-CHECK: Avoid camelCase: <sii164ResetChip>
-
-Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
+Signed-off-by: Angelos Oikonomopoulos <angelos@igalia.com>
 ---
- drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
- drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
- drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/compat_alignment.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
-index 8b81e8642f9e..cc8ff3978d42 100644
---- a/drivers/staging/sm750fb/ddk750_dvi.c
-+++ b/drivers/staging/sm750fb/ddk750_dvi.c
-@@ -18,7 +18,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
- 		.get_vendor_id = sii164_get_vendor_id,
- 		.get_device_id = sii164GetDeviceID,
- #ifdef SII164_FULL_FUNCTIONS
--		.reset_chip = sii164ResetChip,
-+		.reset_chip = sii164_reset_chip,
- 		.get_chip_string = sii164GetChipString,
- 		.set_power = sii164SetPower,
- 		.enable_hot_plug_detection = sii164EnableHotPlugDetection,
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-index 2532b60245ac..795f8c86e3c0 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.c
-+++ b/drivers/staging/sm750fb/ddk750_sii164.c
-@@ -250,10 +250,10 @@ long sii164_init_chip(unsigned char edge_select,
- #ifdef SII164_FULL_FUNCTIONS
+diff --git a/arch/arm64/kernel/compat_alignment.c b/arch/arm64/kernel/compat_alignment.c
+index deff21bfa680..b68e1d328d4c 100644
+--- a/arch/arm64/kernel/compat_alignment.c
++++ b/arch/arm64/kernel/compat_alignment.c
+@@ -368,6 +368,8 @@ int do_compat_alignment_fixup(unsigned long addr, struct pt_regs *regs)
+ 		return 1;
+ 	}
  
- /*
-- *  sii164ResetChip
-+ *  sii164_reset_chip
-  *      This function resets the DVI Controller Chip.
-  */
--void sii164ResetChip(void)
-+void sii164_reset_chip(void)
- {
- 	/* Power down */
- 	sii164SetPower(0);
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
-index 71a7c1cb42c4..a9edc9474f87 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.h
-+++ b/drivers/staging/sm750fb/ddk750_sii164.h
-@@ -31,7 +31,7 @@ unsigned short sii164_get_vendor_id(void);
- unsigned short sii164GetDeviceID(void);
++	if (!handler)
++		return 1;
+ 	type = handler(addr, instr, regs);
  
- #ifdef SII164_FULL_FUNCTIONS
--void sii164ResetChip(void);
-+void sii164_reset_chip(void);
- char *sii164GetChipString(void);
- void sii164SetPower(unsigned char powerUp);
- void sii164EnableHotPlugDetection(unsigned char enableHotPlug);
+ 	if (type == TYPE_ERROR || type == TYPE_FAULT)
 -- 
-2.39.5
+2.49.0
 
