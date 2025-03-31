@@ -1,104 +1,166 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B5D21423E
-	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 16:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DB4158DAC;
+	Mon, 31 Mar 2025 16:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743437101; cv=none; b=azeO9sk3LX+6BqeNeWYQmW2HaZS8wZj3uEtS+3HocBhZZ9dMR7CQy3JM13AV38k09ZGwCb7zssYVKqrCuzQtAR3GYdAcfzqxJcZbYc5Rz6+Z0l7AYiEYrsxhPv7HimjsnbhXKZvw1YO/HsiFpqejjWaeylThbJ2ne0vVKAVAErM=
+	t=1743437205; cv=none; b=MZ7/HWD1drDaDEZCDaQumdSEcvoltdCUBm16lvRf4N5t7d0y2of3iIDF5wct6C+gx/hZYc/rIrLMNIlhZ6G4bv9Q4m5l1QTlEZTpA4lKEyg9bFyHRamv0/MN/YdxHhlX4eRXPkotXrofn7sKX8ZrcK6miz6SZ2j9P9OyNXfu8Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743437101; c=relaxed/simple;
-	bh=tZAxirX8RFz5t1WTOr8nUlZqMufXMzg6X5IFuo2Zrrw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
-	 References:In-Reply-To; b=tzToce/pPSbLLfLPYjtDdpnybwfKokc8fpT0Y6CmHMlFsFXQZs/5QHWAyw8wyHmTzrER8Ed60rYQGjVouObAuocB2UO4DTKVDw0Anv6Jy8pZXIpZMgwLMxy20IQk8XIA3mEQ6u8pGmtSi7APSG2sb8p9wK5s/LkpkRHUrgOSGc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=denO9aBB; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743437205; c=relaxed/simple;
+	bh=cUb/RshRxrSgIc+BtCKbzmSJr0YO9OhGNmoUs7cC7Pw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NSWHRoRKONUbcQDAhrQgSxHEJs4NZTlHve5TA+31f8dNLa2xYw/JTuDW0NS3VJptQG8iuo1QYWfys9E4R6XJdnJITSj3bc5Y2WWfLw8JUNewjazFmoTR+bJ/8IjsENsE+j9rtaFtl4IQOq/+w3gobcuEOkmCDgbkLfY1925ygIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GtlV08uz; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="denO9aBB"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-225df540edcso103856685ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743437099; x=1744041899; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tZAxirX8RFz5t1WTOr8nUlZqMufXMzg6X5IFuo2Zrrw=;
-        b=denO9aBBn2oexzDIFEcSKFUoCpZMUltFO/rgY7BNvXI1k3l+8tfJLISdO7FZ6yl0hg
-         eAk6QRqLGHJmNh41w7gAn4WUovsFAP9sPRvI4w3Q2bigqo92VsVt05d/L4PgFwYSQf4/
-         As02mmy9cc1M+6HyteE1N7YhBImD5KTwYPY2Zg4oNbhzLYs24vxB3+NTvXoqMYXqt2NQ
-         ee7Ek+soz00XDn+mKhixXZLhQ71j8o38FBpV5ujin/3SLoU4V1tfcXCGWP/s91CPH4QS
-         Z4y1ixsWa0KbbuXfsFaeATCPBGjLWTV5lh8ulsQWgmqmLWIA+xeKLg1hc2tuhL8gYa26
-         t4wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743437099; x=1744041899;
-        h=in-reply-to:references:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tZAxirX8RFz5t1WTOr8nUlZqMufXMzg6X5IFuo2Zrrw=;
-        b=jIPtbTLeORFT5co5BZqznx/uOEvne+3qDGCYAu/nxOsrz3kuMXXCyfrri0Qc+/5Tq+
-         jdr6JdrmsIa/5SS4eKwn3+rwKt0QltsA6S55A8J3hna6uSZ10Sb4TVrSWNHVcDHVa6SA
-         49lqOmkiuzjdBflBAV4sU/cuZBqYGawk4ardvj/zTThlOZ36r6RgRNFQmo1q3ZYpwNOu
-         IP5nybjlNL1V+M+qMZ55/7x1p/V5tNUYT/ET8/9J66MjkUeLQodEJzKOp4orJXDjAFDQ
-         fbLlXiD+y+ehpOF7hlcD4UsitCG8guTk1xzD/WvqnqwNhsvJAkM9PXSxpzIOlU2tzjl+
-         V29A==
-X-Forwarded-Encrypted: i=1; AJvYcCXuMyibwMgnErt0PauU8wP+IthVgMK2Y0eAZeH+wvUWA0eJgLl5E9/JwZnjpeCJj2s73C3v63dMdzRYmCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHmMVCGS35hovjGdA6n/XPK/C76cDzV7s2zS2aCXGBfTuhQM1m
-	7G6RiN6GMriE1uk1rOMiLlwVL/SBEemDKRif33UII8alVPog4BBA
-X-Gm-Gg: ASbGncu4IhW2ifjyYrNSEhp/yqVAkoc/d0KjCLwEHOaOuRPwMV189WITMbrDOly/Ir0
-	FjOL2HrIvm5ncXqXIP6tOrKsX4eberVfDQqRNDhCf4RAgj2y4/KKXDsJnq5LE79D5F1RcSHJ88G
-	WiDb0Bt2rLGD0H0pLU5e10vPk33YqmKTpJ3PVVt7JEh8/D1HZTGPcFh0KqNl32KqwwMVjRcm81W
-	L/w+LilFzuuZAdvoC9q5jreVgmf8fx9bIIGSTOQUQrAXpMhlzSrZ1zF+ZKEVqXhHLGSOu3+YQFc
-	ceH2h1MIG0AVlpsqbolDdi5baSPuajdSX+aVSQ==
-X-Google-Smtp-Source: AGHT+IHmZwSrBpBsX/AV97DyLLc+CTcTfbhytkmiLByPkxvlHuWUTWN4IeX4IPmKVEeP7c/h/Vgt7g==
-X-Received: by 2002:a05:6a00:35c7:b0:736:b923:5323 with SMTP id d2e1a72fcca58-7397273be9fmr23904034b3a.10.1743437099374;
-        Mon, 31 Mar 2025 09:04:59 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971068581sm7124895b3a.114.2025.03.31.09.04.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 09:04:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GtlV08uz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743437203; x=1774973203;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cUb/RshRxrSgIc+BtCKbzmSJr0YO9OhGNmoUs7cC7Pw=;
+  b=GtlV08uzHh3SLM6LxmsjM5IfRApkXwypGiFfv96zCX8Dml8rPrV/0tFp
+   Li4rbSpGuVLytgFRTcaod5ZnEPLcEmb9SoE4OhC/mz9txhVKkzz3sbv7G
+   LTOHPe1Yv4XXbCrjWPD+IkblNHhUmaTOIgGixqD3VQZPXBWptNMHDeIv1
+   pTyAca4erJoh2EOlzQ7FUAvl6rHDUDzAUWSY9Bq+4HgZaX0h3dcP0Zfhn
+   c7ZXKCBDe+4v8qxxY1O4rN/PhlCkxwxK4iWqk/lRJTOjwSW+aVFMooZOV
+   k3HEd+bKFkAOPuTqJnlRx9EeVjVAGBbFxnlFGoLAf49FhyOWN4Ht/NNLs
+   w==;
+X-CSE-ConnectionGUID: E2QGwm4UT5GSLixDiJvWwg==
+X-CSE-MsgGUID: PtRE4SEnSt+r7F/sor0Zbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="54929745"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="54929745"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:06:42 -0700
+X-CSE-ConnectionGUID: ZoEHd8JzSreqGWEGlbOM9A==
+X-CSE-MsgGUID: /dk3cqSDQjKLrFZOnPNing==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="126109242"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:06:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 31 Mar 2025 19:06:36 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 03/12] platform/x86: alienware-wmi-wmax: Improve
+ internal AWCC API
+In-Reply-To: <D8S7MF97YEGI.21PR2NBB42QRS@gmail.com>
+Message-ID: <663611d4-3def-248e-1db7-54be7202677f@linux.intel.com>
+References: <20250313-hwm-v6-0-17b57f787d77@gmail.com> <20250313-hwm-v6-3-17b57f787d77@gmail.com> <45699e14-6d51-8116-b252-a7a20ffe8e8b@linux.intel.com> <D8S7MF97YEGI.21PR2NBB42QRS@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1980786461-1743437196=:929"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1980786461-1743437196=:929
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 31 Mar 2025 13:04:55 -0300
-Message-Id: <D8UKVCL4JHTO.1SFF4L6LPUE3O@gmail.com>
-Subject: Re: platform/x86: thinkpad_acpi causing kernel oops commit
- 38b9ab80db31cf993a8f3ab2baf772083b62ca6f
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Genes Lists" <lists@sapience.com>, "Jeff Chua"
- <jeff.chua.linux@gmail.com>, "lkml" <linux-kernel@vger.kernel.org>, "Mark
- Pearson" <mpearson-lenovo@squebb.ca>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <CAAJw_Zt1cYcg-Fa_rCecwHnWKMi7uO2UGNEhMsxPiQa-pgUMnw@mail.gmail.com> <D8UG6DGW1FKI.HZ5UFH4EVY9R@gmail.com> <f63160cde06665bc4bf0e0a18402074e3843f9eb.camel@sapience.com>
-In-Reply-To: <f63160cde06665bc4bf0e0a18402074e3843f9eb.camel@sapience.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Mon Mar 31, 2025 at 12:05 PM -03, Genes Lists wrote:
-> On Mon, 2025-03-31 at 09:24 -0300, Kurt Borja wrote:
->>=20
->> I submitted a fix for this that you can test here:
->>=20
->> =C2=A0https://lore.kernel.org/platform-driver-x86/20250330-thinkpad-fix-=
-v1-1-4906b3fe6b74@gmail.com/
->>=20
->
-> FYI - Confirm it fixes the problem here as well - tested on mainline
-> commit 4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209
->
-> =C2=A0Tested-by: Gene C <arch@sapience.com>
+On Fri, 28 Mar 2025, Kurt Borja wrote:
 
-Thank you for testing!
+> On Fri Mar 28, 2025 at 11:51 AM -03, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 13 Mar 2025, Kurt Borja wrote:
+> >
+> >> Inline all AWCC WMI helper methods and directly return the newly
+> >> introduced __awcc_wmi_command() helper to simplify implementation.
+> >>=20
+> >> Drop awcc_thermal_control() in favor of awcc_op_activate_profile().
+> >>=20
+> >> Add awcc_op_get_resource_id(), awcc_op_get_current_profile() and a new
+> >> failure code.
+> >>=20
+> >> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> >> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 150 +++++++++++++++-=
+---------
+> >>  1 file changed, 91 insertions(+), 59 deletions(-)
+> >>=20
+> >> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/=
+platform/x86/dell/alienware-wmi-wmax.c
+> >> index 80aefba5b22d6b4ac18aeb2ca356f8c911150abd..b9dbfdc8096c571722b3c7=
+ac3e73989e235e2eb9 100644
+> >> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> >> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> >> @@ -32,6 +32,7 @@
+> >>  #define AWCC_THERMAL_MODE_GMODE=09=09=090xAB
+> >> =20
+> >>  #define AWCC_FAILURE_CODE=09=09=090xFFFFFFFF
+> >> +#define AWCC_FAILURE_CODE_2=09=09=090xFFFFFFFE
+> >>  #define AWCC_THERMAL_TABLE_MASK=09=09=09GENMASK(7, 4)
+> >>  #define AWCC_THERMAL_MODE_MASK=09=09=09GENMASK(3, 0)
+> >>  /* Some IDs have a BIT(8) flag that we ignore */
+> >> @@ -443,8 +444,7 @@ const struct attribute_group wmax_deepsleep_attrib=
+ute_group =3D {
+> >>  };
+> >> =20
+> >>  /*
+> >> - * Thermal Profile control
+> >> - *  - Provides thermal profile control through the Platform Profile A=
+PI
+> >> + * AWCC Helpers
+> >>   */
+> >>  static bool is_awcc_thermal_profile_id(u8 code)
+> >>  {
+> >> @@ -463,72 +463,107 @@ static bool is_awcc_thermal_profile_id(u8 code)
+> >>  =09return false;
+> >>  }
+> >> =20
+> >> -static int awcc_thermal_information(struct wmi_device *wdev, u8 opera=
+tion,
+> >> -=09=09=09=09    u8 arg, u32 *out_data)
+> >> +static int __awcc_wmi_command(struct wmi_device *wdev, u32 method_id,
+> >> +=09=09=09      struct wmax_u32_args *args, u32 *out)
+> >
+> > Why did you put __ into the name?
+> >
+> > Some people oppose __ prefix altogether, I don't entirely agree with th=
+eir=20
+> > stance but I don't really understand what the underscores here signify.
+> >
+> > Normally I see __ being used in three main cases:
+> > - non-__ variant does some locking around the call too the __ func (tho=
+ugh=20
+> >   many funcs use _locked postfix these days).
+> > - func is "dangerous" and caller has to really know what he/she is
+> >   doing / be careful for some reason.
+> > - non-__ variant exists and somebody cannot come up better name for the
+> >   internally called function (not very good use case, IMHO)
+>=20
+> Oh - I didn't know. Andy also mentioned this prefix is used for
+> non-atomic versions of some functions like __set_bit().
 
-Are all this driver's features present before the regression still
-present after the fix?
+I mentioned locking which relates to atomicity, however, here you don't=20
+have two variants, one without locking and the other with it so it becomes=
+=20
+very non-obvious what __ means. (I know you posted v7 without it, so=20
+this is just a clarifying comment.)
 
-Also would you mind re-sending your Tested-by tag to the patch thread?
-This way it can get automatically picked up by maintainer tools.
+> > I don't see any of those apply here, this looks just an ordinary wrappe=
+r=20
+> > function, thus the question.
+>=20
+> I did it to indicate it's a "private" method, so it's not used directly.
+> But ofc that's not the convention here, so I'll drop it.
+
+We have "static" for that. And it's called by something anyway or it would=
+=20
+be dead code :-).
 
 --=20
- ~ Kurt
+ i.
+
+--8323328-1980786461-1743437196=:929--
