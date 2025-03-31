@@ -1,145 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EA022A7EA;
-	Mon, 31 Mar 2025 14:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BC91DF258
+	for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 14:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432847; cv=none; b=MHMubc8NeW/WpmAyFJqia92trs3dZJZFUehaRwuOZUOOAq0IlSRjM2NxpCeQMP8W7VZwD5qERr/w0h0n9seYXiScAc100Ynql5w9KCRmvO9v0KBTWsqJXiN89skBZl4HhvJzembr1aDCD2mfix6Y8fZX2NY5jnZjRkk5BLwRAK0=
+	t=1743432850; cv=none; b=TxPgKcQOMrwgFmj5Vg0h0YmXeSEE3fuiibdX3rrK3PpS2kudyzzyFoEtJhznQcZF3Va8VenMyeqXwVgotb2zumOirRwiG72pMUoVXCrLdAWzI85CF4gp7WB6dmgGmG5DkpUlpsExtQifBYMOXbXgUDiD4KeZePecxBYNj8BgZHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432847; c=relaxed/simple;
-	bh=03GUPkvN3fUyT8jFdqABYHvz3SIz3uQ7nifCo28OzFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XJsPt07vQKrDUuxVSE07wNT+07xZf9Dvd5hiy3gEjibo2USXnzQ8ckCI6i7/FTivGctCw/FZ09oVIcsBzJC/Z0DuBMeNomZiXAUs0aE3pRR5gAyYolG8620E23gVpsbx5BTT63BIKkLv4XKMVwPNcpT7q9emITMBSgvvUN1vTBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+2uzKjK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743432850; c=relaxed/simple;
+	bh=z3Jo4cVEz82S1Hhr9IzTyltq1FXq8pBHA6uwkGyfZCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dc2Ev3c27MkE2lOlEQGiajNcbUD6qYD1iI2mCwyCFxaXS4DBjRBXyhUvgX4FvH3i9iSfnSS5NS8NumzXIyHHQhVlQrGHpSd9hBzi8PTRgZ6BJM+HowwIlxM8hgqbN68jiMLovd/IERdK2YlbrTnQY1yrS1m9y0Gek8f33gnt0+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRXn7Wrb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+2uzKjK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25601C4CEE3;
-	Mon, 31 Mar 2025 14:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743432847;
-	bh=03GUPkvN3fUyT8jFdqABYHvz3SIz3uQ7nifCo28OzFA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i+2uzKjKJd90xAWFxN+dKD4nG+0kc942kwvPkxhuo6NupY8dwncoP4sq5fG0xx7yg
-	 8zKd8E3omo1xnqgoiH8hXWgFjEXSeuSBA6f0qdM9tRrFvEv4zI7F9sNbiQ8gm8h6t6
-	 R2TLeeSoUCqdcKw9oCRcSZPUMf2Uj+yGgOGTr8j44zyngBhVqZQ+RGxBbYPt/tQqdb
-	 1xEF4W5Tps13pkk0ABE+dEom80VToNOqHAWerLz2I23QxxFTa7sjDypz89lNHmEuKp
-	 73K3gg2ExHF91CqyuRBfUyv9XrjYPJDIdvpId+Eni0kqwBxRE/RNacAz8tZEXkxXs2
-	 zlecPY83iluYg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Daniel Schaefer <dhs@frame.work>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	linux@frame.work,
-	"Dustin L . Howett" <dustin@howett.net>,
-	Sasha Levin <sashal@kernel.org>,
-	bleung@chromium.org,
-	chrome-platform@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.13 01/24] platform/chrome: cros_ec_lpc: Match on Framework ACPI device
-Date: Mon, 31 Mar 2025 10:53:41 -0400
-Message-Id: <20250331145404.1705141-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRXn7Wrb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743432847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iG+qEN/dmB4J+30yyi3d8IQq23oAU9zL+9Eq8FKspqc=;
+	b=IRXn7Wrbx80KpkR31UwB/rvNbXCbxu1ixpSdWdVZbNKRpjEDqKrqGN5gfhsYwDixKQxVHz
+	nDpF2A8wPeCZydD8giAlsORZmLhcPkOAMCMOkxwZP6mcWn9ytubhjj3ZbUipmdUl0U25G5
+	R1zHd/VhtaDOFuZ0ytaL4nJ4G5WxLUU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-Agcw7EsOPYiuCYdqwpm4Rw-1; Mon,
+ 31 Mar 2025 10:54:03 -0400
+X-MC-Unique: Agcw7EsOPYiuCYdqwpm4Rw-1
+X-Mimecast-MFC-AGG-ID: Agcw7EsOPYiuCYdqwpm4Rw_1743432842
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A3C180035C;
+	Mon, 31 Mar 2025 14:54:01 +0000 (UTC)
+Received: from localhost (unknown [10.43.135.229])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A2F618009BC;
+	Mon, 31 Mar 2025 14:53:58 +0000 (UTC)
+Date: Mon, 31 Mar 2025 16:53:55 +0200
+From: Miroslav Lichvar <mlichvar@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies in
+ _COARSE clockids
+Message-ID: <Z-qsg6iDGlcIJulJ@localhost>
+References: <20250320200306.1712599-1-jstultz@google.com>
+ <Z-KURRE_Gr72Xv_n@localhost>
+ <874izezv3c.ffs@tglx>
+ <Z-Vx8kV4M3khPknC@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-Vx8kV4M3khPknC@localhost>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Daniel Schaefer <dhs@frame.work>
+On Thu, Mar 27, 2025 at 04:42:49PM +0100, Miroslav Lichvar wrote:
+> Maybe I could simply patch the kernel to force a small clock
+> multiplier to increase the rate at which the error accumulates.
 
-[ Upstream commit d83c45aeec9b223fe6db4175e9d1c4f5699cc37a ]
+I tried that and it indeed makes the issue clearly visible. The COARSE
+fix makes the clock less stable. It's barely visible with the normal
+multiplier, at least for the clocksource I tested, but a reduced
+multiplier forces a larger NTP error and raises it above the precision
+and instability of the system and reference clocks.
 
-Load the cros_ec_lpc driver based on a Framework FRMWC004 ACPI device,
-which mirrors GOOG0004, but also applies npcx quirks for Framework
-systems.
+The test was done on a machine with a TSC clocksource (3GHz CPU with
+disabled frequency scaling - normal multplier is 5592407) and tried a
+multiplier reduced by 4, 16, 64 with this COARSE-fixing patch not
+applied and applied. Each test ran for 1 minute and produced an
+average value of skew - stability of the clock frequency as reported
+by chronyd in the tracking log when synchronizing to a free-running
+PTP clock at 64, 16, and 4 updates per second. It's in parts per
+million (resolution in the chrony log is limited to 0.001 ppm).
 
-Matching on ACPI will let us avoid having to change the SMBIOS match
-rules again and again.
+Mult reduction	Updates/sec	Skew before	Skew after
+1		4		0.000		0.000
+1		16		0.001		0.002
+1		64		0.002		0.006
+4		4		0.001		0.001
+4		16		0.003		0.005
+4		64		0.005		0.015
+16		4		0.004		0.009
+16		16		0.011		0.069
+16		64		0.020		0.117
+64		4		0.013		0.012
+64		16		0.030		0.107
+64		64		0.058		0.879
 
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: linux@frame.work
-Cc: Dustin L. Howett <dustin@howett.net>
-Signed-off-by: Daniel Schaefer <dhs@frame.work>
-Link: https://lore.kernel.org/r/20250128181329.8070-1-dhs@frame.work
-Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/chrome/cros_ec_lpc.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index 8470b7f2b1358..7924b79f84f1f 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -30,6 +30,7 @@
- 
- #define DRV_NAME "cros_ec_lpcs"
- #define ACPI_DRV_NAME "GOOG0004"
-+#define FRMW_ACPI_DRV_NAME "FRMWC004"
- 
- /* True if ACPI device is present */
- static bool cros_ec_lpc_acpi_device_found;
-@@ -460,7 +461,7 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
- 	acpi_status status;
- 	struct cros_ec_device *ec_dev;
- 	struct cros_ec_lpc *ec_lpc;
--	struct lpc_driver_data *driver_data;
-+	const struct lpc_driver_data *driver_data;
- 	u8 buf[2] = {};
- 	int irq, ret;
- 	u32 quirks;
-@@ -472,6 +473,9 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
- 	ec_lpc->mmio_memory_base = EC_LPC_ADDR_MEMMAP;
- 
- 	driver_data = platform_get_drvdata(pdev);
-+	if (!driver_data)
-+		driver_data = acpi_device_get_match_data(dev);
-+
- 	if (driver_data) {
- 		quirks = driver_data->quirks;
- 
-@@ -625,12 +629,6 @@ static void cros_ec_lpc_remove(struct platform_device *pdev)
- 	cros_ec_unregister(ec_dev);
- }
- 
--static const struct acpi_device_id cros_ec_lpc_acpi_device_ids[] = {
--	{ ACPI_DRV_NAME, 0 },
--	{ }
--};
--MODULE_DEVICE_TABLE(acpi, cros_ec_lpc_acpi_device_ids);
--
- static const struct lpc_driver_data framework_laptop_npcx_lpc_driver_data __initconst = {
- 	.quirks = CROS_EC_LPC_QUIRK_REMAP_MEMORY,
- 	.quirk_mmio_memory_base = 0xE00,
-@@ -642,6 +640,13 @@ static const struct lpc_driver_data framework_laptop_mec_lpc_driver_data __initc
- 	.quirk_aml_mutex_name = "ECMT",
- };
- 
-+static const struct acpi_device_id cros_ec_lpc_acpi_device_ids[] = {
-+	{ ACPI_DRV_NAME, 0 },
-+	{ FRMW_ACPI_DRV_NAME, (kernel_ulong_t)&framework_laptop_npcx_lpc_driver_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, cros_ec_lpc_acpi_device_ids);
-+
- static const struct dmi_system_id cros_ec_lpc_dmi_table[] __initconst = {
- 	{
- 		/*
-@@ -795,7 +800,8 @@ static int __init cros_ec_lpc_init(void)
- 	int ret;
- 	const struct dmi_system_id *dmi_match;
- 
--	cros_ec_lpc_acpi_device_found = !!cros_ec_lpc_get_device(ACPI_DRV_NAME);
-+	cros_ec_lpc_acpi_device_found = !!cros_ec_lpc_get_device(ACPI_DRV_NAME) ||
-+		!!cros_ec_lpc_get_device(FRMW_ACPI_DRV_NAME);
- 
- 	dmi_match = dmi_first_match(cros_ec_lpc_dmi_table);
- 
 -- 
-2.39.5
+Miroslav Lichvar
 
