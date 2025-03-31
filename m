@@ -1,104 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BC4211299;
-	Mon, 31 Mar 2025 13:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9617A2FA;
+	Mon, 31 Mar 2025 13:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743427331; cv=none; b=tTPzsC+oB86PYa+p5E9aIBRUnn4p+CsjT5dfuk7Wr3XHtKYkBZpQ/PZu0Jh10JMd/mQsQDzNPJF3HMgsXY84jo07hjzLZvUFXUi8ddP2Aie9wiVQvAad+h3+CcN0E4bhHc7msOC/kaTUfpoz0/YVdehga//j4jqqE3Ld41O4EfA=
+	t=1743427422; cv=none; b=WnpkjktzF5B6//7fTer4BYeWIGsZBPrQyFoy6nBo2PsDpR2xcJRDTtNEDo64PIExTFJTN8mqK1fi+1Qt7GQUOCGJVUWDBZLchDbXRnNz39QI6sMzXfMYgAvYDxrxBvyPsyUQ3BfiZLtVpf97GmFR9pMvcxemYMQiTQ4t7UV9aqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743427331; c=relaxed/simple;
-	bh=l+M8nz8oc9ljOq0XGbCmnbUsdV66Va4e9LDC63VS/RQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQMQswSRdI6hGrlfReKptoiRTLYG/r0HS6Da0TmchESYKf7ubZ0Be/X8UnU/qJuhCkrrxP9rSQkt4o4J0d4uyR9xyFQErTzMQLon41nBDeqeOZ30RD0NT1ORe0CmRIwroT6i789zDDaJ9uaYeMW0lN8gveLZPVZTGUFZLENwthM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnyIzlPK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743427422; c=relaxed/simple;
+	bh=BNvLxh5zFpguHH6d2CpK/g7iaez1WKqjMuDikvk/WsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HznKiv9JTDUMle4EGOCQzUhY/0eEt/u9kMDRlJ2yZph4c/kMA4xqnHMDarFoXRYIjo30LWgdhtylGJxFSWGxcY1sJdV3vVbVicP+z1E8XQj/CI3gq481N7lPX/28TKdGDkibGi5gw0IoVCNBVKCqt4wP11s9DaQAAF3Jun7e094=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/KMf7Ad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnyIzlPK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A61C4CEE3;
-	Mon, 31 Mar 2025 13:22:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/KMf7Ad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8212DC4CEE3;
+	Mon, 31 Mar 2025 13:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743427330;
-	bh=l+M8nz8oc9ljOq0XGbCmnbUsdV66Va4e9LDC63VS/RQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fnyIzlPKedFcQGQFpBxPZq3o7+kE3aifbdeMjmfIxdQ6WA5skDzc8ygdeK2ngFdEl
-	 7mWrht1oiAAhdBhKZLFxTxOdKrZwr4Pl2NGamo7v1T+9XOrqP66Vh6gA3rREVKmr6/
-	 UX25k/VdxPXJ9/5w8sqteMAJN7fOAzIE+mvhnlyv6fidycDxnSCUAND8Xp/k6YOL+4
-	 Sw94VKyMaeOVB3QW9H02sLnpTe04SzEAVSOTZVftSkKoXNe7VNy801qEFSRc2VaO+9
-	 rvEfN23VFBpYiOAKgh3Go/QIho0/tpai1J611RKC+mNgNRFe/6Xtu/SkHHLVOR6huG
-	 WOPWThWlcTC/g==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tzF5h-000000002kp-2i6k;
-	Mon, 31 Mar 2025 15:22:13 +0200
-Date: Mon, 31 Mar 2025 15:22:13 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: srinivas.kandagatla@linaro.org, perex@perex.cz, tiwai@suse.com,
-	krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmitry.baryshkov@linaro.org, johan+linaro@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
-Message-ID: <Z-qXBfrZOEkOpMHK@hovoldconsulting.com>
-References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
- <20250314174800.10142-4-srinivas.kandagatla@linaro.org>
- <74214537-ad4c-428f-8323-b79502788a66@sirena.org.uk>
+	s=k20201202; t=1743427420;
+	bh=BNvLxh5zFpguHH6d2CpK/g7iaez1WKqjMuDikvk/WsE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=t/KMf7AdlJOt6yO09WNRUYCsZ3Pg/d9as77b3kAXaKnYEqjsLo8zJ3dcYd/tW5K58
+	 adbprGvchIGbgCsCH1UH3FuL32t2/DGULEWY/fbhbYWhFWu22hebNSo0ZDEWrnhqa1
+	 /JnZ30HmAnK+1829u+jf/s+RBNs0+ZFtyAkg5iBLPovVsiUZvv6Y7YVWJkczF4XeeO
+	 r9yY2JimDoJRBXB+aOHMlNkedEvj77RZmrgIGWBV/2LBHZ8D5bz0DsTR2cjQob1v/Q
+	 a2t1sgLfv1ihcVaLEnO9Jh2N56BbXovPourDE1rjEski+PSMjBs4sMIjAmlKCUW5Qt
+	 glp+T9G4+mQ/w==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c77a5747e0so2640727fac.2;
+        Mon, 31 Mar 2025 06:23:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYdfwNB7IW9vwbqJYk002vOCfbBgg+yFHbb0g6Tg3iLFoJ34/vZhIa5gbHn94Xp6IKY/ovqvWhUm2e@vger.kernel.org, AJvYcCWwhdBbSAQTRRC7y5AfFPjbwFyTXPlNk+A71sDTyMB3AwZ4ljBzOS45ec2Hwpk7ogalBZEsrRb+nUknbOrU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD9s8WbvhQ4uOtozzjbH75/qFbKQGBpoG0PGtSNlcafLa11UCz
+	UOxf00V/zol9dy/c9+yHrweBcQbH0hdXL73dgEqHnbHouuwVenybwNRY193GYH/OWUF03HqdyTh
+	fpCSg/M6kLOyhsHpoC5+NAZTcGPA=
+X-Google-Smtp-Source: AGHT+IFpjRAG9jxkdHVT1kiTjIYNaocNQRJBpnWXCk7BJLlLGdHW5Rg4gN7sPQ9eXfl0WvbDapdST+EC1XbE9rhVC70=
+X-Received: by 2002:a05:6870:610d:b0:2c2:519e:d9a9 with SMTP id
+ 586e51a60fabf-2cbcf765ef8mr5111966fac.24.1743427419888; Mon, 31 Mar 2025
+ 06:23:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Rg65BCmxPKy11upH"
-Content-Disposition: inline
-In-Reply-To: <74214537-ad4c-428f-8323-b79502788a66@sirena.org.uk>
-
-
---Rg65BCmxPKy11upH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743195250.git.soyer@irl.hu>
+ <CAJZ5v0jBONZ7UFL0HCOV=7xmnUphL_UTV=_1PnYmR6n0oN4pcg@mail.gmail.com> <d3dfe61a-1d4d-4aa6-870c-61249799e6da@redhat.com>
+In-Reply-To: <d3dfe61a-1d4d-4aa6-870c-61249799e6da@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 31 Mar 2025 15:23:28 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hy7ge+vPgNXzo89=qu7pP-tPgbjUPRHUMdwUnSTpVXQQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq2qoSpp3qytZmIhGEF74CJIGeXYn3IZnod2sw1TIK9OOzCAOUj43B2Xj4
+Message-ID: <CAJZ5v0hy7ge+vPgNXzo89=qu7pP-tPgbjUPRHUMdwUnSTpVXQQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: video: Handle fetching EDID as ACPI_TYPE_PACKAGE
+To: Hans de Goede <hdegoede@redhat.com>, Gergo Koteles <soyer@irl.hu>
+Cc: Len Brown <lenb@kernel.org>, Alex Hung <alex.hung@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, linux-acpi@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 01:32:36PM +0100, Mark Brown wrote:
-> On Fri, Mar 14, 2025 at 05:47:58PM +0000, srinivas.kandagatla@linaro.org =
-wrote:
->=20
-> > Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
-> > Cc: stable@vger.kernel.org
->=20
-> This commit doesn't appear to exist.
+On Mon, Mar 31, 2025 at 3:04=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi,
+>
+> On 31-Mar-25 1:46 PM, Rafael J. Wysocki wrote:
+> > On Fri, Mar 28, 2025 at 10:09=E2=80=AFPM Gergo Koteles <soyer@irl.hu> w=
+rote:
+> >>
+> >> The _DDC method should return a buffer, or an integer in case of an er=
+ror.
+> >> But some Lenovo laptops incorrectly return EDID as buffer in ACPI pack=
+age.
+> >>
+> >> Calling _DDC generates this ACPI Warning:
+> >> ACPI Warning: \_SB.PCI0.GP17.VGA.LCD._DDC: Return type mismatch - \
+> >> found Package, expected Integer/Buffer (20240827/nspredef-254)
+> >>
+> >> Use the first element of the package to get the EDID buffer.
+> >>
+> >> The DSDT:
+> >>
+> >> Name (AUOP, Package (0x01)
+> >> {
+> >>         Buffer (0x80)
+> >>         {
+> >>         ...
+> >>         }
+> >> })
+> >>
+> >> ...
+> >>
+> >> Method (_DDC, 1, NotSerialized)  // _DDC: Display Data Current
+> >> {
+> >>         If ((PAID =3D=3D AUID))
+> >>         {
+> >>                 Return (AUOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.AUOP */
+> >>         }
+> >>         ElseIf ((PAID =3D=3D IVID))
+> >>         {
+> >>                 Return (IVOP) /* \_SB_.PCI0.GP17.VGA_.LCD_.IVOP */
+> >>         }
+> >>         ElseIf ((PAID =3D=3D BOID))
+> >>         {
+> >>                 Return (BOEP) /* \_SB_.PCI0.GP17.VGA_.LCD_.BOEP */
+> >>         }
+> >>         ElseIf ((PAID =3D=3D SAID))
+> >>         {
+> >>                 Return (SUNG) /* \_SB_.PCI0.GP17.VGA_.LCD_.SUNG */
+> >>         }
+> >>
+> >>         Return (Zero)
+> >> }
+> >>
+> >> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extens=
+ions/output-device-specific-methods.html#ddc-return-the-edid-for-this-devic=
+e
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if ava=
+ilable for eDP")
+> >> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+> >> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> >> ---
+> >> Changes in v2:
+> >>  - Added comment
+> >>  - Improved commit message
+> >>  - Link to v1: https://lore.kernel.org/all/4cef341fdf7a0e877c50b502fc9=
+5ee8be28aa811.1743129387.git.soyer@irl.hu/
+> >
+> > Hans, any concerns here?
+>
+> No the patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-I think some tool (e.g. b4) incorrectly indicated that that may be the
-case here, but the commit does exist:
-
-commit 9b4fe0f1cd791d540100d98a3baf94c1f9994647
-Author:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-AuthorDate: Tue Oct 26 12:16:52 2021 +0100
-Commit:     Mark Brown <broonie@kernel.org>
-CommitDate: Tue Oct 26 13:50:09 2021 +0100
-
-    ASoC: qdsp6: audioreach: add q6apm-dai support
-
-    Add support to pcm dais in Audio Process Manager.
-
-    Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-    Link: https://lore.kernel.org/r/20211026111655.1702-15-srinivas.kandaga=
-tla@linaro.org
-    Signed-off-by: Mark Brown <broonie@kernel.org>
-
-Johan
-
---Rg65BCmxPKy11upH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCZ+qXAQAKCRALxc3C7H1l
-CMpoAP9vVtWlHVyXeOMjM/V7JH4VDj3ljiWP12QIXAGMSsnwgwEAgc2vhIdSmbrj
-+5ze2fONomgE1YN7tAR1CM4ZoFdDpQs=
-=NYZe
------END PGP SIGNATURE-----
-
---Rg65BCmxPKy11upH--
+OK, applied as 6.15-rc material, thanks!
