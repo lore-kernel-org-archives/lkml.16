@@ -1,91 +1,86 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944C12E3398;
-	Tue,  1 Apr 2025 03:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203FA2E3398
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743479884; cv=none; b=YPNkWfsBDeWtYPtGOoxtJsJuFu2un5n87lhsd0uAk5QFS1BHyCasLnviCLQSWMSshzFq5+Iw+lp5AgWfrhXaA+Ho1v+CI45Fz/Q/EElNgwi9xZqk7lnleq51cw4YEtYrQ2CWxnLHweQhq44nqGMvySMQwLNJOspq1LNPAnRxdOc=
+	t=1743479889; cv=none; b=QjzCAaJNastY1WX0YCXyborwNBqOlyylHvvYGSyIUI/VxIys1Yclr3vb/74V/pwH3uRWPmtWIAPQZPARxkIP8gqL/go5w+GusM/70akLRafoUWuAociOISQvqIEKS3+yskcdUTU3v/rKM/plLDVIvLOWCex2hueUkwm8nx5gzSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743479884; c=relaxed/simple;
-	bh=N4flpkYP/Za3/civSejaZvQGaHmDOPJeQQV2Y68IlpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RrEy54F2mgQ0JTZGT2E8m4yuaOrZ+gQdTXw1Q6bBYQsixiXgQSutVl0f5999UDYWLwUkOSaCHrL9YDuJowbcFzdHod6bzy9Vfy6Z7QbFFJpkcKXgCTHQAuthuF9e3MoiicdaIFowfVHow++AzRZfxCh+dzmPqczpKeeH9ytihh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=DmoOT0ky; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1743479889; c=relaxed/simple;
+	bh=1TBiipQ5bL3J8DK3rX68uUimSVJ9/Yx0mbLiTLmPbCs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pKRvotqF7a3/P2j+1eG9SLdhgxFu7neHamY7Jn8rn6hnWoWoDWuOWiKSoNZHZ/7OWuqmEsrYDHOeiR/EqWiSV4lHTbC29DcvYg7IxNqLiZJCEQ1j/mo5cR6JU11UJv/SjRTEKfJf1F9+0Rz/UG80xISkUNxrAwU0wi4X8EPJN2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBqiZ59I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="DmoOT0ky"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id C5750604F7;
-	Tue,  1 Apr 2025 03:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1743479881;
-	bh=N4flpkYP/Za3/civSejaZvQGaHmDOPJeQQV2Y68IlpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DmoOT0ky1u9eyvTg1YhrribKaumYt8CKzHuuyKegEXX+HPaaqELpzW/DXTm5FYdWg
-	 3OYXsZYKWCq11s3Tshhp5npT6O6V9U77vKSYSwl93yN4fSftOakPJDO1C7X0rSBpkO
-	 c35rAv/8AoePcjw8s+4yBmjFUTj+qBbXKLg84HNl/LxH9pRJLJ4wAC+Z5W9huBNnPF
-	 jloplKJkYtDQ3f2LqVppq7lgbLDoi8CLv44QPlCewqXG2SuaODNpAfVdVZZEDi1VaF
-	 ti6OfyYyu/T40qjIxlqq6n7LOQNUtJMFuZ1/l+NAlUcj0/sver1mIoegjAT20iqfUf
-	 28kOmtKhVXLBw==
-Date: Tue, 1 Apr 2025 06:57:45 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: "A. Sverdlin" <alexander.sverdlin@siemens.com>,
-	linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
- interconnect devices first"
-Message-ID: <20250401035745.GG4957@atomide.com>
-References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
- <20250331110017.2b0aa9ae@akair>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBqiZ59I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69AD6C4CEE8;
+	Tue,  1 Apr 2025 03:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743479888;
+	bh=1TBiipQ5bL3J8DK3rX68uUimSVJ9/Yx0mbLiTLmPbCs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HBqiZ59IMke7Ae8d77JCZKlnF4hSWguWaWKFK960kMTJax6OQ8VyN45A8qIiZBaob
+	 FAZbY6evlq16Z+6eDYddOhgZ97yrrtZwJXX2nJqQ0vWVE2TaLOPtqyw8e6jUeTNGS5
+	 QETngR8aEy40RXFzqV0qh293cKrAiRiwwtwXoEw/VH4BggX0pifu81/nS6f66l9cLx
+	 LAcbTsf4aSD8D9gORa7rCzewH8OmTIbzQjAUBD8BnHK+gR4he+ixYly92eDbe8XcGg
+	 mSBTfbmP5rWCcZojoB0eCzbu4UlzVB5Dnbf8Vlaq/VqV3ueCDVj+ZvTT2CH8Tbyf7D
+	 ECAu9DQr9Ueww==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Daniel Lee <chullee@google.com>,
+	Gabriel Krisman Bertazi <krisman@suse.de>
+Subject: [PATCH v2] f2fs: support to disable linear lookup fallback
+Date: Tue,  1 Apr 2025 11:58:00 +0800
+Message-ID: <20250401035800.51504-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331110017.2b0aa9ae@akair>
+Content-Transfer-Encoding: 8bit
 
-* Andreas Kemnade <andreas@kemnade.info> [250331 09:00]:
-> Am Thu, 13 Mar 2025 10:47:06 +0100
-> schrieb "A. Sverdlin" <alexander.sverdlin@siemens.com>:
-> 
-> > From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> > 
-> > This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
-> > 
-> > It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
-> > when minimally-configured system tries to network-boot:
-> > 
-> > [    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
-> > [   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
-> > [   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
-> > [   26.878471] Waiting up to 100 more seconds for network.
-> > 
-> > Arbitrary 10 deferrals is really not a solution to any problem.
-> > Stable mmc enumeration can be achiever by filling /aliases node properly
-> > (4700a00755fb commit's rationale).
+After commit 91b587ba79e1 ("f2fs: Introduce linear search for
+dentries"), f2fs forced to use linear lookup whenever a hash-based
+lookup fails on casefolded directory, it may affect performance
+for scenarios: a) create a new file w/ filename it doesn't exist
+in directory, b) lookup a file which may be removed.
 
-Would be nice to update the description to make it clear it breaks in all
-cases if there are not enough devices.
+This patch supports to disable linear lookup fallback, so, once there
+is a solution for commit 5c26d2f1d3f5 ("unicode: Don't special case
+ignorable code points") to fix red heart unicode issue, then we can
+set an encodeing flag to disable the fallback for performance recovery.
 
-> > After revert:
-> > 
-> > [    9.006816] IP-Config: Complete:
-> > [    9.010058]      device=lan0, ...
-> > 
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> 
-> No regressions seen on GTA04, Pandaboard and BT200.
-> So
-> 
-> Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04, Panda, BT200
+The way is kept in line w/ ext4, refer to commit 9e28059d5664 ("ext4:
+introduce linear search for dentries").
 
-Good to hear, best that you or Kevin pick this up:
+Cc: Daniel Lee <chullee@google.com>
+Cc: Gabriel Krisman Bertazi <krisman@suse.de>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v2:
+- check sb_no_casefold_compat_fallback in prior to other condition
+ fs/f2fs/dir.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reviewed-by: Tony Lindgren <tony@atomide.com>
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 5a63ff0df03b..a9f21bc1915d 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -366,7 +366,8 @@ struct f2fs_dir_entry *__f2fs_find_entry(struct inode *dir,
+ 
+ out:
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	if (IS_CASEFOLDED(dir) && !de && use_hash) {
++	if (!sb_no_casefold_compat_fallback(dir->i_sb) &&
++		IS_CASEFOLDED(dir) && !de && use_hash) {
+ 		use_hash = false;
+ 		goto start_find_entry;
+ 	}
+-- 
+2.49.0
+
