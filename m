@@ -1,89 +1,122 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3211EB1AE;
-	Tue,  1 Apr 2025 11:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102D135942;
+	Tue,  1 Apr 2025 11:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743505516; cv=none; b=RZ5zx5UYfrLRJgO55rR3EcYrhE1p/GSKiWMzyoPWN36IbgXADDabje7jiZ5uRfpj8ubDR1QrCpEEcB+s+9eh3z6SI0kfFlSOZsox6HFbQJlRl700j0in/yhJkLmzTW/ofoPzeqzujQ/Jp4cZQDjmtw+SlWpgqtBU9lBIG14p4Fs=
+	t=1743505629; cv=none; b=E2ga6BHLw6jtlviKFxvpJyVXTGSxQuLClEPfZKTKfMA8q0KxMjVCndsdiT4hu4RDgI/zqhtyNe9lcO82fA9I8FwuuWi2+n421H4wlOUsxpGdMnMVkVRQ7nsJ+L9C4nUQST4OESyG2jRo/er3KzyBzKf3aumaPElHzYm+E0Vg3Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743505516; c=relaxed/simple;
-	bh=ARTupcEEq6i2EC2i9wAPjXR/Yra+qXyu0HmpTEAhmss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByOMpqrSYhVCRh646COGlCA5BD2HK4ek3LrifJuco4bPo5qreltfAiGbqNFFB82DXvUfoCz1uezOMFMpEt02zXdx1byhTwnwlQf/2LNCPw419jGok1ZEfKHCk77slTGPSzTGeRa5CdL88BndEhPvnP7jJtAV1oSml/3rSjcm3m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EQ967Y0m; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743505629; c=relaxed/simple;
+	bh=HpP45tlUj9k5nFCmol7sPovLnD/Pv2YvLR0S//RDm2o=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=MLPkzUtw1h/coOlr2FuAm2wnhpBPiHpCuD8ngQtygom2gU3lOwYIFtavMauv/FvWYAGLHCE7F4L7EyPzDUlVfJ7X39ofuTLKm5W25y7ulm7hrNfOXxbL28RvBcieRJcpoXajmJRa/42ZvJr/fRRSQkSKH663NcUpvaLUr0S6vj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Ret/io8W; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EQ967Y0m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=PeNjz/wIQdwEcnEqPbT7la4zvvEgpJe/lwAU4tRByNM=; b=EQ967Y0mThZx5krbbl7ew8Ufmn
-	WQZ9QciGjd74+3sWhd+ifXi/dCPB67GYWAH0iMn/RcHVFgVx8WVKqM3FZ0mMXI3RJz6D99yiY+qfR
-	t7GDQkGG5T5Y/KExtJB7Byf2YRuJ72Y3oSL2STynnU+L+tkfwzUyDCvrMDnIR+S72fz+sZ2a9OAB9
-	BuxdCz8+Bk86jWlVStCxPgd/bkXwdI1Ev/+KBzxYtHuRw2gFe4n86HOVIKT5bDmd50RWuOunzvNvz
-	fz8T3UzP+qWGkZdYYuSyLApt/GrW0b8W7j0wZlcesUROjVIWeTa9Kt5LloY2aE5jI4ffRSN2lRGJj
-	OWyhW2LA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1tzZQa-00000007BLA-43Un;
-	Tue, 01 Apr 2025 11:05:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5AD5630049D; Tue,  1 Apr 2025 13:05:08 +0200 (CEST)
-Date: Tue, 1 Apr 2025 13:05:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Frederic Weisbecker <fweisbecker@suse.com>
-Subject: Re: [PATCH v2 00/10] Add kernel cmdline option for rt_group_sched
-Message-ID: <20250401110508.GH25239@noisy.programming.kicks-ass.net>
-References: <20250310170442.504716-1-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Ret/io8W"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5316tjxU010077;
+	Tue, 1 Apr 2025 13:06:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=yQOjsrTOygO4w5JNn247mn
+	lqyBtWQHvzueG0y756GJU=; b=Ret/io8WgjjJgKb+puLebviLf6b/isU2zXT8Ok
+	wZtEy5WTqcwoiLaOHO0/RVhO81LN43F6TEQ5oEV1SrGLsXu/IQyF1jJHBfeeCUED
+	CimOwVBvLe05Aopd6uVsA6mJEvD+WPx+NloAteM2cqYYBQwKmd47q1+yv+BTtx+B
+	yuiW67RPg4SwOPziwijw/NafbkRPpA9XSWm4slIGTO0dqfCgOgA1aQDb2KdATb9H
+	l7qw2GtEF2xYuTRt10dXEcq2oc9Ol7s6f8xKVgS8/ciWLapIzm93KeoxLR5fjlu5
+	45aiRZsuxGrcnQL5mJ1lZ7q6cWsq7OxNH00tKI285JhHSxnA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45pua7te6s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 13:06:59 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9CAB34004A;
+	Tue,  1 Apr 2025 13:05:59 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 424D86975E1;
+	Tue,  1 Apr 2025 13:05:59 +0200 (CEST)
+Received: from localhost (10.130.73.167) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 1 Apr
+ 2025 13:05:59 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Subject: [PATCH v2 0/2] media: Add support for ST VD55G1 camera sensor
+Date: Tue, 1 Apr 2025 13:05:57 +0200
+Message-ID: <20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310170442.504716-1-mkoutny@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJXI62cC/22MQQ7CIBQFr9KwlgY+RYsr72G6gAItC4vhN0TT9
+ O5SdhqX8/JmNoIuBYfk2mwkuRwwxKUAnBoyznqZHA22MAEGkgFIajqarZQTp8YaxaxxQhlByv+
+ ZnA+v2roPheeAa0zvms78WP9VMqeMCis168Ezr9XNR8QW13aMjyNbHQH9r9NbfjadvigP386w7
+ /sHjlOSS9gAAAA=
+X-Change-ID: 20250225-b4-vd55g1-bdb90dbe39b3
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_04,2025-03-27_02,2024-11-22_01
 
-On Mon, Mar 10, 2025 at 06:04:32PM +0100, Michal Koutný wrote:
-> Despite RT_GROUP_SCHED is only available on cgroup v1, there are still
-> some (v1-bound) users of this feature. General purpose distros (e.g.
-> [1][2][3][4]) cannot enable CONFIG_RT_GROUP_SCHED easily:
-> - since it prevents creation of RT tasks unless RT runtime is determined
->   and distributed into cgroup tree,
-> - grouping of RT threads is not what is desired by default on such
->   systems,
-> - it prevents use of cgroup v2 with RT tasks.
-> 
-> This changeset aims at deferring the decision whether to have
-> CONFIG_RT_GROUP_SCHED or not up until the boot time.
-> By default RT groups are available as originally but the user can
-> pass rt_group_sched=0 kernel cmdline parameter that disables the
-> grouping and behavior is like with !CONFIG_RT_GROUP_SCHED (with certain
-> runtime overhead).
-> 
-> The series is organized as follows:
+Hi,
 
-Right, so at OSPM we had a proposal for a cgroup-v2 variant of all this
-that's based on deadline servers. And I am hoping we can eventually
-either fully deprecate the v1 thing or re-implement it sufficiently
-close without breaking the interface.
+This serie adds support for the STMicroelectronics VD55G1 camera sensor.
+The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
+resolution with RAW8 and RAW10 bytes per pixel.
+Datasheets and other documentation can be found at st.com [1].
+A lot of inspiration was taken from the imx219 and the vd56g3 serie.
+It is compatible with libcamera. Tested on Raspberry Pi 4 and 5, with and
+without libcamera.
 
-But this is purely about enabling cgroup-v1 usage, right?
+[1] https://www.st.com/en/imaging-and-photonics-solutions/vd55g1.html#documentation
 
-You meantion some overhead of having this on, is that measured and in
-the patches?
+Regards,
+Benjamin
 
-Anyway, I'll go have a peek now, finally :-)
+---
+Changes in v2:
+- Fix device tree binding mistakes
+- Drop linux media git from MAINTAINERS file
+- Fix coding style mistakes
+- Drop vd55g1_err_probe wrapper
+- Fix 32bits build
+- Fix config symbol help paragraph being too short for checkpatch
+- Link to v1: https://lore.kernel.org/r/20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com
+
+---
+Benjamin Mugnier (2):
+      media: dt-bindings: Add ST VD55G1 camera sensor binding
+      media: i2c: Add driver for ST VD55G1 camera sensor
+
+ .../devicetree/bindings/media/i2c/st,vd55g1.yaml   |  132 ++
+ MAINTAINERS                                        |    9 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/vd55g1.c                         | 1993 ++++++++++++++++++++
+ 5 files changed, 2146 insertions(+)
+---
+base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
+change-id: 20250225-b4-vd55g1-bdb90dbe39b3
+
+Best regards,
+-- 
+Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+
