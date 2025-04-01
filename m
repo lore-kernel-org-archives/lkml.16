@@ -1,137 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD32202961
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08401EFFB2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509346; cv=none; b=RuiJkjRlQ6qgOElqn0qk5/koLYxq1d4rZc+fMpBLZSMue1WoDgTr+Ttz/cdSFarpVSNegJbTBFvgJEiOBpW4y8JyzOPsXRljO6YzwWuPG2xxsZP5cDzlDvVwJmQPyZdl9dd1vDUUw3qB56rrjhpg68mGNhIJ6GmmDaAJdsz3cKY=
+	t=1743509448; cv=none; b=nvQFCjS/Pe9Hwaw0qPd1V6e3lplb5SIrRoYna5TfVTL5aWzGhFRJCLhRd6O4yf6mKasuUvacTEusaDv+6jnRt1TnDnWt0onFfQOhQl5Ti9Czdlfkj5nrgapuBz+oDk6sEmBmi10GTNk8FFFAkCn9U0H1MvnVBYjerpjysuIhcH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509346; c=relaxed/simple;
-	bh=ymWxHJh8c39lUSfpJKhiztgKbex2vJHoHlvT/jj0qw8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oEXhWbXJpdv6ONW7Y9ZU7Nyx4amvNRrn6yeSMMhm/V0mpJ1sm/qURnOTDnHfIGyMu//s0aZRV+Axfy0l1fVrHC3Gt9vhCCVF8s9OdYOJy0mh2obO2CZzELv0gpxTR1LQAwxRgsE+AWMrcTVY3SY27lZ5q+fQv43pXjWZG8+rlzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8Xl44Rd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743509448; c=relaxed/simple;
+	bh=YQ8tu7x+Ukps5x3s4anWDD7Vj6bx89t2M5F/63Ywx3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gy7LzprviUWcmHsbq+oLz8shygxMAUORehgnJNxE4ZTN1gSGXEq1w29wJIXaqm3LW9+uzwexDX74WX7lpssnLrboyfbXYOUqI+ob6JVh1FMv0LHiQDCsM7AhARriPzGofZEPMnriDYW4QS2s8yErnLNjy+MQ4MzKj9xhR2c9boc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NkheP0nk; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8Xl44Rd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ABC9C4CEE4;
-	Tue,  1 Apr 2025 12:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743509345;
-	bh=ymWxHJh8c39lUSfpJKhiztgKbex2vJHoHlvT/jj0qw8=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NkheP0nk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743509444;
+	bh=YQ8tu7x+Ukps5x3s4anWDD7Vj6bx89t2M5F/63Ywx3Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c8Xl44RdgcqzUYzufvsO+bwS9V8stcy/6+rGYQOF6yHaGEav3H/Xtu3wGshLiRTE5
-	 MnSNn/I5d6+jSWUz+jjyMEVCh0VlcCz8yGoolR6YcsqAHXJhumxidmXZWM4kWWaokZ
-	 oGblYRCEzVEufXJDPWR3a+dI/utNj/xC3fblwY4MAPkwNLx8MxKtVPXPHlBigmbdqX
-	 Dl+9ECoE8BkK5WJHJeZkdzOPcPKPNGfl5pimMqHQowo2v2q6fLWO+k+0IkEsEaMwrB
-	 1wCChtF/BBfJYSsqEhIK0X1LS8bSlC2Hn50wR0B54zSPoJrDRFRBp0teRoajsfCpMF
-	 v3slwexRKFk0A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tzaQR-001Jxh-F1;
-	Tue, 01 Apr 2025 13:09:03 +0100
-Date: Tue, 01 Apr 2025 13:09:04 +0100
-Message-ID: <87plhwytgf.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Morse
-	 <james.morse@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Mingcong Bai
- <jeffbai@aosc.io>
-Subject: Re: [PATCH] arm64: Add overrride for MPAM
-In-Reply-To: <46ed31b37b4b92720b26be66f3e6366a714024cf.camel@xry111.site>
-References: <20250401055650.22542-1-xry111@xry111.site>
-	<409f6d27-3efe-4c45-8319-d360ded80f16@arm.com>
-	<46ed31b37b4b92720b26be66f3e6366a714024cf.camel@xry111.site>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	b=NkheP0nk/x6W5AyxAZCzKQJSTd51b47L9ARfS1xcqAWPsb9EQzOuHewB410L4jRwr
+	 4O0Yrvlj/OoI4JO4JmM8Em1CPACIMKF8jZYlN0Kjt3n/3oivzdQHwlD9cMi2zXs01F
+	 6nkeH9OTM0X7Ublj6cuI5a2gOzh7wo/KpbM/2PfCQmAGgBTp8fZGmthnO4JcRNqdJZ
+	 Sz6uwwMh+RAnRxAMMmoAsMQHK+bojroLZhGpQvyyMH9dlUKeGz5iTKWdY7n45Tn+5S
+	 U7p5vOeA0HqqbG1OyB6xqwG5T25EKI7J5Kxd6yB4RVpWX2QibzLVmfNgOauiMQ3axT
+	 MXBKD7DdgfOpg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 512D617E0657;
+	Tue,  1 Apr 2025 14:10:44 +0200 (CEST)
+Date: Tue, 1 Apr 2025 14:10:41 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Heiko Stuebner
+ <heiko@sntech.de>, kernel@collabora.com, Daniel Stone
+ <daniels@collabora.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: Make the timeout per-queue instead of
+ per-job
+Message-ID: <20250401141041.535df992@collabora.com>
+In-Reply-To: <20250307155556.173494-1-ashley.smith@collabora.com>
+References: <20250307155556.173494-1-ashley.smith@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: xry111@xry111.site, anshuman.khandual@arm.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, jeffbai@aosc.io
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 01 Apr 2025 12:47:03 +0100,
-Xi Ruoyao <xry111@xry111.site> wrote:
->=20
-> On Tue, 2025-04-01 at 14:04 +0530, Anshuman Khandual wrote:
-> > On 4/1/25 11:26, Xi Ruoyao wrote:
-> > > As the message of the commit 09e6b306f3ba ("arm64: cpufeature: discov=
-er
-> > > CPU support for MPAM") already states, if a buggy firmware fails to
-> > > either enable MPAM or emulate the trap as if it were disabled, the
-> > > kernel will just fail to boot.=C2=A0 While upgrading the firmware sho=
-uld be
-> > > the best solution, we have some hardware of which the vender have made
-> > > no response 2 months after we requested a firmware update.=C2=A0 Allow
-> > > overriding it so our devices don't become some e-waste.
-> >
-> > There could be similar problems, where firmware might not enable arch
-> > features as required. Just wondering if there is a platform policy in
-> > place for enabling id-reg overrides for working around such scenarios
-> > to prevent a kernel crash etc ?
->=20
-> In https://lore.kernel.org/all/87jzcfsuep.wl-maz@kernel.org/:
->=20
->    > For such cases, when MPAM is incorrectly advertised, can we have ker=
-nel
->    > command line parameter like mpam=3D0 to override it's detection?
->   =20
->    We could, but only when we can confirm what the problem is.
->=20
-> And there was prior arts like:
->=20
-> commit 892f7237b3ffb090f1b1f1e55fe7c50664405aed
-> Author: Marc Zyngier <maz@kernel.org>
-> Date:   Wed Jul 20 11:52:19 2022 +0100
->=20
->     arm64: Delay initialisation of cpuinfo_arm64::reg_{zcr,smcr}
->    =20
->     Even if we are now able to tell the kernel to avoid exposing SVE/SME
->     from the command line, we still have a couple of places where we
->     unconditionally access the ZCR_EL1 (resp. SMCR_EL1) registers.
->    =20
->     On systems with broken firmwares, this results in a crash even if
->     arm64.nosve (resp. arm64.nosme) was passed on the command-line.
->    =20
->     To avoid this, only update cpuinfo_arm64::reg_{zcr,smcr} once
->     we have computed the sanitised version for the corresponding
->     feature registers (ID_AA64PFR0 for SVE, and ID_AA64PFR1 for
->     SME). This results in some minor refactoring.
+On Fri,  7 Mar 2025 15:55:52 +0000
+Ashley Smith <ashley.smith@collabora.com> wrote:
 
-That particular patch has caused quite a few issues, see d3c7c48d004f.
-So don't use it as a reference.
+> +static void
+> +queue_suspend_timeout(struct panthor_queue *queue)
+> +{
+> +	unsigned long qtimeout, now;
+> +	struct panthor_group *group;
+> +	struct panthor_job *job;
+> +	bool timer_was_active;
+> +
+> +	spin_lock(&queue->fence_ctx.lock);
+> +
+> +	/* Already suspended, nothing to do. */
+> +	if (queue->timeout.remaining != MAX_SCHEDULE_TIMEOUT)
+> +		goto out_unlock;
+> +
+> +	job = list_first_entry_or_null(&queue->fence_ctx.in_flight_jobs,
+> +				       struct panthor_job, node);
+> +	group = job ? job->group : NULL;
+> +
+> +	/* If the queue is blocked and the group is idle, we want the timer to
+> +	 * keep running because the group can't be unblocked by other queues,
+> +	 * so it has to come from an external source, and we want to timebox
+> +	 * this external signalling.
+> +	 */
+> +	if (group && (group->blocked_queues & BIT(job->queue_idx)) &&
+> +	    group_is_idle(group))
+> +		goto out_unlock;
+> +
+> +	now = jiffies;
+> +	qtimeout = queue->timeout.work.timer.expires;
+> +
+> +	/* Cancel the timer. */
+> +	timer_was_active = cancel_delayed_work(&queue->timeout.work);
 
-Now, while I think an option is probably acceptable in the face of an
-unresponsive vendor, I don't think the way you implement it is the
-correct approach.
+Looks like queue_suspend_timeout() is only called on a state update,
+and this won't happen if the group suspension/termination fails (FW
+hang), which will leave this delayed work behind, possibly leading
+to a UAF or a spurious queue_timeout_work() call when we don't expect
+one.
 
-It should be possible to handle the override in the assembly code,
-like we do for other bits and pieces, and deal with MPAMIDR_EL1 later
-down the line, once the sanitised ID registers are known to be valid.
-
-Overall, we don't have a great story with feature-specific ID
-registers that can undef when the feature isn't present (such as
-MPAMIDR_EL1, SMIDR_EL1, PMSIDR_EL1), and we should adopt a common
-behaviour for those.
-
-Thanks,
-
-	M.
-
---=20
-Jazz isn't dead. It just smells funny.
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index e96179ed74e6..1106967af0ac 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -2784,8 +2784,18 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+                         * automatically terminate all active groups, so let's
+                         * force the state to halted here.
+                         */
+-                       if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
++                       if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+                                csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
++
++                               /* Reset the queue slots manually if the termination
++                                * request failed.
++                                */
++                               for (i = 0; i < group->queue_count; i++) {
++                                       if (group->queues[i])
++                                               cs_slot_reset_locked(ptdev, csg_id, i);
++                               }
++                       }
++
+                        slot_mask &= ~BIT(csg_id);
+                }
+        }
