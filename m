@@ -1,116 +1,290 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F36C2C6;
-	Tue,  1 Apr 2025 14:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399531EF080
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517955; cv=none; b=GNSMXRCnpo6qsphAA+oW+TT/5KnrUrHtIFDkoFBXwDc/StY+6mZGHDrdw7kJ9UQ2zEHgPrkvgwYjQ5enHnhx47xKTNgVMXHn5hHn3G+3BbBeRJfIYo7LdeOwFarUy/WcjK+hZhzixiGiCpdwd5WXshdlR51uXG5nyp7TV1uyKzo=
+	t=1743518009; cv=none; b=S57p/1w6rGAAoUUU1+QCQoqEXxv09/ab3pBgWbFErtiY02Xw8WBq/KdM40QGXtWF7e7jwAGC7YI0rvpdQ7NyZeavl4Fli+5uFBh0V5MPnF338usA3yGT8hQ0mk4D6BYNbFA+s3maulil3juhE9RpL3SEjzZfsi7+2mh/gR2bFXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517955; c=relaxed/simple;
-	bh=hbq+gfrSP68NJ1N5XX18is7enUJgqkm8sza4WWJKW8c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N3MAdEt6IJDrVmlMxFDe+BmmzZbfOvd2TxE9A/PO3g4ZnyTR9radfb0HvbZpMlxQBY7PRoA6DKyWzbxKEPmZwctVqHSbNPrVOgJ2Faz1UTUO64HO5Ivt6jlwbYgvpNMA3NURq9OwLTkcovT9lqzSh3OzQVhrpRayvQe7VBqLywU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQxxJr9u; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743518009; c=relaxed/simple;
+	bh=1qV+NGwYbZPu0XItFUpoWENdE3DurPgEaHJba+V/ZL0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TOh2CgGchUOq8vSk6Y13Z7jCsaTGgoA4JQ5DWhJl9LmwTr4WYBGveCm1zuktntRV96P3VEhAOvdK3phzjVXUcuy1N1qg6LkCn7M9hGFsq0YI/KmlqkuwjjnCg6uNjk5pn7/145DP3OusHgBQi7A/i2DrgtR/0T2sE1yWhwGQF9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W9m5Pb5e; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQxxJr9u"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-224171d6826so84001715ad.3;
-        Tue, 01 Apr 2025 07:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743517953; x=1744122753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lQz6HN4WVo2BZhg1nM2qkj9xljoy6K5gdXERS2m6T2M=;
-        b=iQxxJr9uoD6VdgpDzIdlGQrdJw/PO9Fb50k8MvKT622kv001IgLIMn9Q8eIL/0yBCD
-         9aipCAR1CiAjmntfjeqR+90ZLR64W+TrKvIMzA80w6fO/apFg3ZxL3jxBTv8bOCBTkY8
-         CLYxHMnmrm4Os1Vn2W8PHQ3q8QB1uu64r0LsvuxLlTuLlZ0y21hELgC4+5Yc0pVX6hZ6
-         GS7N6CU7MRJJD9rx6FoRuTg3FIN8kCKHf1zTUpT2HAy9rEigiKG7bEcGjr90VzxiIbNw
-         biNjNqrgBwsxjViL3WyjZaXduPponGR9W2MX8fV5kAhndh07X8HHWCO+E64GNuit32Fv
-         Tijw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9m5Pb5e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743518005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rLhS4YZ2gbexqMjUMzexxo96ApT7iR1NdQR/sJS2UMs=;
+	b=W9m5Pb5ebKMEGqpWe3ggAYFbyP+8vREXnzi+2xRleXWLyt2Ajipd6WTVHajUCd8hSuPqGb
+	NleRYqgj9ijwXrNLo3D2h8zikZJ/J38vBqo9fJRxoy9ji+8Ksca9hZtNhWKZgpRjF97kR7
+	hLEGSrR+tTlwszgBj3q+RwiaBHyo2mQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-569-g8ObIuWGMWiVCoHmrG5w1g-1; Tue, 01 Apr 2025 10:33:23 -0400
+X-MC-Unique: g8ObIuWGMWiVCoHmrG5w1g-1
+X-Mimecast-MFC-AGG-ID: g8ObIuWGMWiVCoHmrG5w1g_1743518003
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so29332415e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:33:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517953; x=1744122753;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lQz6HN4WVo2BZhg1nM2qkj9xljoy6K5gdXERS2m6T2M=;
-        b=c787KWVV4WYVMLKTy/LfIQVcBK1zzPNfs4XCSjZsEbKdz7SSOzORH1mtL5wpi86Bd7
-         NVPN941XGAlzZwofq9CyqBkMM1KqPZofD2vB232Sh0jjg599P0r3h3Z2o+3xLSRttJ1f
-         t5Nu74OuzWelwB7Trzzvz9KrdERY073XVg1zzR9aPP42aarPsyLbNLUkSJXx8MXdQxjt
-         csJHVXJ3yklLhpY0IioqMg2UZ1fVtC+8XM4IhANtNKVcrnK1nuOORndTya2pfdP0b7xx
-         6pQQ2ouc0agoHhGcJV0vIaYWjTSzS/SSsQxB/jWth48DC67mK0uSrNuluVIOlcAAjJQw
-         BggQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU74a49YPHB0Ok23J66dmV+jhvnAE/2P/FU94+ASCjBlglvH8GojCUPEYBQ5ZLEE3LtZvPlftlPOHFnS2k=@vger.kernel.org, AJvYcCVY3jPJI9YRU0XtmrPcCACvVacyTP33x53+Jv5NS6mCU6mYViFhq/d2oioefi3Wats0wvpIrGajgeYkuIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0Q9kzGE4H8mZ2lmJh3p3uiJ81pTqr1H05SL6HYSLXghDVLIld
-	eAyILD7Yd23+GKIMJ5sCeitFFL+G5nuSY9Bor4MbHG8lkBr5QhMquzpd0ii43X3iow==
-X-Gm-Gg: ASbGnctyGDBI86XTkcMOgH70cWH/CwrjfFRJXlg9pjEGotuMMJiELiXJ2XFuK847T7o
-	7hlyM7YZ8JttEwrRDrni9Iq7KMX+SnxEZA+Z0OZEvC3VdWmEiq0AT9luScWoEqOcpYPNhO7iKIY
-	bXyLqiTJuQOQB0+hLMkvWZSmVmL5cJuWtMSEBCHTIxtzXxRfbwMgUG3/61T0rHL8VCyQjSqv2oc
-	wA/isIM+Sb6IivEeLY641iF48VaefpeSxZXfn6VmMy0wVnpZqi4QOACJQxTEn0gtT3Cxo4iVvCn
-	M1hu0npuPbzXoJLezF4P0Zcc3td5e/orOzGYJXqEmocIADk4/Y/mo6+VvgPCMgy1+vMwt3c=
-X-Google-Smtp-Source: AGHT+IHQlATV4czNANr3zOAV9cgx/Gc3dz18Sz7QLKNg40G8czZ9t2zuvL/IEt7vhKlS0crxjdo15w==
-X-Received: by 2002:a17:902:f550:b0:220:bd61:a337 with SMTP id d9443c01a7336-2292f972edemr215748525ad.23.1743517952898;
-        Tue, 01 Apr 2025 07:32:32 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedf925sm88877755ad.69.2025.04.01.07.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:32:32 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: cezary.rojewski@intel.com,
-	liam.r.girdwood@linux.intel.com,
-	peter.ujfalusi@linux.intel.com,
-	yung-chuan.liao@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	pierre-louis.bossart@linux.dev,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: amadeuszx.slawinski@linux.intel.com,
-	ethan@ethancedwards.com,
-	jbrunet@baylibre.com,
-	krzysztof.kozlowski@linaro.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] ASoC: Intel: avs: Add NULL check in avs_component_probe()
-Date: Tue,  1 Apr 2025 22:32:22 +0800
-Message-Id: <20250401143222.30344-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743518002; x=1744122802;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rLhS4YZ2gbexqMjUMzexxo96ApT7iR1NdQR/sJS2UMs=;
+        b=hUPGQKVI1VzswJSJG+YhLoyoBKiwhk83Ua8YCpWg4Z5ZidMChsMwpiWUxz7focozrU
+         0m1R/JcW2cf+xZ7buwVjj+EeDu2MW/jRu6t6PmzMXoBuUdI6Nu9d1tu/m0+1lRGfN2OF
+         a/mGxCkl9I2NA4wjUYg3lWKfCnXzK530mgkjSEwACru0qhZRxhH4HvMDoAeaftA4Jevb
+         K7L41ytA5hXcJfuuBkC4LckQ6k23n2xYaVLUrZjDfCktRvSw2wZz1uko2a3/Tn/uH/6p
+         Nefd0HFCF3vgqaCnKJx/k4JzpjKBZSSioPZksddLmNxDxEr/w7cwia66aTuJjQAP/sXb
+         Ly8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUd1ZC3JTTi+WHFlF+zKBiLeDBsYXo+u+536QF2O13kB3j4dj5J2yZYCmTzg8pLYOhxDISaIb0jMmAxetQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywefgg7TZvV0je5PrVQtl82i8Es6w98zORh5U5P0sO2ykFzIwPB
+	ytDA8MEekC+0GLLzo25+VooiFtmn+nsB2mxLH3PpwH8c2eucfBOce27QR2NQFqPFCGWLraeBbMN
+	BXlAR9WAoRPIhao8HiNp2DFBnuO1ZVmVPnJs5dI83FI6v838gMutqslYDY+b6oA==
+X-Gm-Gg: ASbGncvobf1PxlATikjeYFOjWxoDn1JDZYfgYpDHumA/whjNnmgQGEBKiTuUcLXgsv1
+	z0pN5A6hZ5S8zuLs73cZkWG/4W58IQSls23s5HLbf11yUTjYQBNs+rAszck1LlfTCo1tMmQAlHw
+	BWn3NjwgL/oxS6Vz6K7BCPcRq4yjQEEsxpInrvga3awuPqEr5CWVZD6CAY+kVuVYRDS+kANRDQU
+	uzqFqs8ASb7Zh6viWXvjRaW7SBrQZB/5/XlzIoOmsGhzumISnuPIfqgNijwRyipw03jGsUfUyEM
+	BBOd1vDgCV/D2uOXg5Pj0wXHiCtMrIzbNZeHeVjVh0hBU/906RgpNKj9nk+PPcNWktPOY7EIK2g
+	vwWCA94kWlBVnr7qUFuC2DelKLiOA5FDics2BmkeX
+X-Received: by 2002:a05:600c:6748:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43db6247dd7mr145919445e9.15.1743518002604;
+        Tue, 01 Apr 2025 07:33:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNhzaVlgu9DU/geLuwD47lPxBtoCagRnXFrCfvHssM2drvLkFRwfHnuIV1F5YdQjnlbSU6zQ==
+X-Received: by 2002:a05:600c:6748:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-43db6247dd7mr145918915e9.15.1743518002159;
+        Tue, 01 Apr 2025 07:33:22 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efeb11sm203009095e9.22.2025.04.01.07.33.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 07:33:21 -0700 (PDT)
+Message-ID: <26870d6f-8bb9-44de-9d1f-dcb1b5a93eae@redhat.com>
+Date: Tue, 1 Apr 2025 16:33:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding to
+ LRU batch
+To: Jinjiang Tu <tujinjiang@huawei.com>, yangge1116@126.com,
+ akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ 21cnbao@gmail.com, baolin.wang@linux.alibaba.com,
+ aneesh.kumar@linux.ibm.com, liuzixing@hygon.cn,
+ Kefeng Wang <wangkefeng.wang@huawei.com>
+References: <1720075944-27201-1-git-send-email-yangge1116@126.com>
+ <4119c1d0-5010-b2e7-3f1c-edd37f16f1f2@huawei.com>
+ <91ac638d-b2d6-4683-ab29-fb647f58af63@redhat.com>
+ <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-avs_component_probe() does not check for this case, which results in a
-NULL pointer dereference.
+On 27.03.25 12:16, Jinjiang Tu wrote:
+> 
+> 在 2025/3/26 20:46, David Hildenbrand 写道:
+>> On 26.03.25 13:42, Jinjiang Tu wrote:
+>>> Hi,
+>>>
+>>
+>> Hi!
+>>
+>>> We notiched a 12.3% performance regression for LibMicro pwrite
+>>> testcase due to
+>>> commit 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before
+>>> adding to LRU batch").
+>>>
+>>> The testcase is executed as follows, and the file is tmpfs file.
+>>>       pwrite -E -C 200 -L -S -W -N "pwrite_t1k" -s 1k -I 500 -f $TFILE
+>>
+>> Do we know how much that reflects real workloads? (IOW, how much
+>> should we care)
+> 
+> No, it's hard to say.
+> 
+>>
+>>>
+>>> this testcase writes 1KB (only one page) to the tmpfs and repeats
+>>> this step for many times. The Flame
+>>> graph shows the performance regression comes from
+>>> folio_mark_accessed() and workingset_activation().
+>>>
+>>> folio_mark_accessed() is called for the same page for many times.
+>>> Before this patch, each call will
+>>> add the page to cpu_fbatches.activate. When the fbatch is full, the
+>>> fbatch is drained and the page
+>>> is promoted to active list. And then, folio_mark_accessed() does
+>>> nothing in later calls.
+>>>
+>>> But after this patch, the folio clear lru flags after it is added to
+>>> cpu_fbatches.activate. After then,
+>>> folio_mark_accessed will never call folio_activate() again due to the
+>>> page is without lru flag, and
+>>> the fbatch will not be full and the folio will not be marked active,
+>>> later folio_mark_accessed()
+>>> calls will always call workingset_activation(), leading to
+>>> performance regression.
+>>
+>> Would there be a good place to drain the LRU to effectively get that
+>> processed? (we can always try draining if the LRU flag is not set)
+> 
+> Maybe we could drain the search the cpu_fbatches.activate of the local cpu in __lru_cache_activate_folio()? Drain other fbatches is meaningless .
 
-Add NULL check after devm_kasprintf() to prevent this issue.
+So the current behavior is that folio_mark_accessed() will end up calling folio_activate()
+once, and then __lru_cache_activate_folio() until the LRU was drained (which can
+take a looong time).
 
-Fixes: 739c031110da ("ASoC: Intel: avs: Provide support for fallback topology")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+The old behavior was that folio_mark_accessed() would keep calling folio_activate() until
+the LRU was drained simply because it was full of "all the same pages" ?. Only *after*
+the LRU was drained, folio_mark_accessed() would actually not do anything (desired behavior).
+
+So the overhead comes primarily from __lru_cache_activate_folio() searching through
+the list "more" repeatedly because the LRU does get drained less frequently; and
+it would never find it in there in this case.
+
+So ... it used to be suboptimal before, now it's more suboptimal I guess?! :)
+
+We'd need a way to better identify "this folio is already queued for activation". Searching
+that list as well would be one option, but the hole "search the list" is nasty.
+
+Maybe we can simply set the folio as active when staging it for activation, after having
+cleared the LRU flag? We already do that during folio_add.
+
+As the LRU flag was cleared, nobody should be messing with that folio until the cache was
+drained and the move was successful.
+
+
+Pretty sure this doesn't work, but just to throw out an idea:
+
+ From c26e1c0ceda6c818826e5b89dc7c7c9279138f80 Mon Sep 17 00:00:00 2001
+From: David Hildenbrand <david@redhat.com>
+Date: Tue, 1 Apr 2025 16:31:56 +0200
+Subject: [PATCH] test
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- sound/soc/intel/avs/pcm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+  mm/swap.c | 21 ++++++++++++++++-----
+  1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/intel/avs/pcm.c b/sound/soc/intel/avs/pcm.c
-index dac463390da1..7072bcf4e56f 100644
---- a/sound/soc/intel/avs/pcm.c
-+++ b/sound/soc/intel/avs/pcm.c
-@@ -927,7 +927,8 @@ static int avs_component_probe(struct snd_soc_component *component)
- 		else
- 			mach->tplg_filename = devm_kasprintf(adev->dev, GFP_KERNEL,
- 							     "hda-generic-tplg.bin");
+diff --git a/mm/swap.c b/mm/swap.c
+index fc8281ef42415..bbf9aa76db87f 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -175,6 +175,8 @@ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+  	folios_put(fbatch);
+  }
+  
++static void lru_activate(struct lruvec *lruvec, struct folio *folio);
++
+  static void __folio_batch_add_and_move(struct folio_batch __percpu *fbatch,
+  		struct folio *folio, move_fn_t move_fn,
+  		bool on_lru, bool disable_irq)
+@@ -191,6 +193,10 @@ static void __folio_batch_add_and_move(struct folio_batch __percpu *fbatch,
+  	else
+  		local_lock(&cpu_fbatches.lock);
+  
++	/* We'll only perform the actual list move deferred. */
++	if (move_fn == lru_activate)
++		folio_set_active(folio);
++
+  	if (!folio_batch_add(this_cpu_ptr(fbatch), folio) || folio_test_large(folio) ||
+  	    lru_cache_disabled())
+  		folio_batch_move_lru(this_cpu_ptr(fbatch), move_fn);
+@@ -299,12 +305,14 @@ static void lru_activate(struct lruvec *lruvec, struct folio *folio)
+  {
+  	long nr_pages = folio_nr_pages(folio);
+  
+-	if (folio_test_active(folio) || folio_test_unevictable(folio))
+-		return;
 -
-+		if (!mach->tplg_filename)
-+			return -ENOMEM;
- 		filename = kasprintf(GFP_KERNEL, "%s/%s", component->driver->topology_name_prefix,
- 				     mach->tplg_filename);
- 		if (!filename)
++	/*
++	 * We set the folio active after clearing the LRU flag, and set the
++	 * LRU flag only after moving it to the right list.
++	 */
++	VM_WARN_ON_ONCE(!folio_test_active(folio));
++	VM_WARN_ON_ONCE(folio_test_unevictable(folio));
+  
+  	lruvec_del_folio(lruvec, folio);
+-	folio_set_active(folio);
+  	lruvec_add_folio(lruvec, folio);
+  	trace_mm_lru_activate(folio);
+  
+@@ -342,7 +350,10 @@ void folio_activate(struct folio *folio)
+  		return;
+  
+  	lruvec = folio_lruvec_lock_irq(folio);
+-	lru_activate(lruvec, folio);
++	if (!folio_test_unevictable(folio)) {
++		folio_set_active(folio);
++		lru_activate(lruvec, folio);
++	}
+  	unlock_page_lruvec_irq(lruvec);
+  	folio_set_lru(folio);
+  }
 -- 
-2.34.1
+2.48.1
+
+
+-- 
+Cheers,
+
+David / dhildenb
 
