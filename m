@@ -1,133 +1,125 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC5E1EDA11;
-	Tue,  1 Apr 2025 11:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9061F130F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743505340; cv=none; b=tG2QYKLD9oQNCGzKqF3HSRjrmzc5kmmJaJRI+b2EwcENnLq82aia5fUYIhr9edynhuzbumPN5Osdg4pAiEWULxHCGQKeN4CSA+W4iPaOP15j7GP5IQQnaMXq8HuPqxMVpzRgLMsuL2Q5JkceL3tG9uMSspEcQA/xT5KrR7SEej8=
+	t=1743505371; cv=none; b=kOkM6nBvqejYC5vNoYsO9ULixqKW69XwdUacjRIlF+B72CoCi8r3twJi8Tmi/o71qAl9iqf3uYSAw5t6KeA0yVTeAiaL7nEF66ka1YQAB/oyz7QJQW5G/9sC0SB4raXaZo6ZbZGqjcWak1xOM1n44QZBOVQvSTFqIiyRLqTyzpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743505340; c=relaxed/simple;
-	bh=WM8uWp1n6LtHojEQ3XQ7/DrsURN0rpKjNln6ogHwAPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JAtBN4R0wtLcXqRZLydHxdIOJ31tmXkREoAYFQZlI49OnsD8GnP8eYckF4uN1E9JzhwSder/dghkNa+sA83iEV9QpXkN8pRsn/nhPT7XGTzcjrGcTAkMh5kS6nntl8lQD0PqhniK28ZdNMXXIwkYk12tkN0bYEf4687wweJd/oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZC6i3kcX; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743505371; c=relaxed/simple;
+	bh=91I7VCwI2OaO+lKf2oma9fDOGHKZ0uGAqM9i5HzTw+s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SCTACZVQgXAL0+f2c0Hi/RWT49183qssZ50oWIuOBSgwnTS1qGiIhwCI3b9NxG9WnT2lXG5EaoNeAXYWrqmfZspFZ4A5Vy9B6Br4npEAV9hXl+oMvKa6FgQQkzPyCX7TM9Td4ErJMuZuA4DA0TM+s1De+q5RvonucqWgT7O5/ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Nvyh6TOI; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZC6i3kcX"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so1162102a91.0;
-        Tue, 01 Apr 2025 04:02:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Nvyh6TOI"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47662449055so27741781cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 04:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743505337; x=1744110137; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIMYgWDoZA4nluKsAd+dlkqOPs7SwU4W2ipuyeJ7NLI=;
-        b=ZC6i3kcXDgCG5QMdujeO30jxG77DdPLSjlnEPS9Ylm9ZbYo7xS/sNYOvQCEvffP14E
-         UfJRq0+bXpIL/vWFlqxmfINGOjJsPLN23gj4LuPHmsqzxQMwGEKueOKUKSwZvuLmcye8
-         uQWJdTmI3yqQGkLF/NDZDjVPdSQJBGtkA3pGzaQfclRMCmfHiwGoZxe6PPlBfGy/Oj7+
-         ufT3432CPa1x0PWGe2UQpDUAZ8oouAhvBprYBiakADup3kcH6+SHCuEMAKFtbCSiXZvU
-         BvRLhj0e1my/jIyNOu8Hm466hVor5WdhLLy7tfNW2bs1z3Lva43ySDa2QFRXkUG2g/ve
-         m6cA==
+        d=szeredi.hu; s=google; t=1743505366; x=1744110166; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eZLpPVcVgTYBqMo2PsNN2kP6ptf4HAnoNVh2L3glhRc=;
+        b=Nvyh6TOIC4wPGZJo6k/wfjCaz8vADPIrxxaN9s+mo1M+1/u9dbH8uH9OGd1pC0RsCR
+         lZLYzPmhm+RiYVDmh80Y03YDWsz3gbpVfuD32HTu9+qH4hqTkZ4toxusu2f0SDL73K01
+         29mpXti+DgXWvuHngJkXIViV6ixrxof4jOMQE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743505337; x=1744110137;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KIMYgWDoZA4nluKsAd+dlkqOPs7SwU4W2ipuyeJ7NLI=;
-        b=PDvBjDDvdkS7Lln3GuorGCED4E0Y7L58Cp3cewbHvP2TXzOeYzSbwujc3bvbHxCPtV
-         kGT1IUc60pFTudP66B+fJ1nfI27XSBGhrKDJEJNl+8iHGVHR1VZN6K5N+OAfNU3Bs42m
-         3lO31tK/S3tlBiPWYYD9HmntNAks6+05hO4clJNTJVEQXt5v1HoJpRFxIk9QbA46LKrf
-         hIHOz4FM0WvI9HqXPTQDtU7aCezfS42zDTuhCPlw44Sg4+TA/kVwSYdJmy5m3NHJEJSm
-         q3sPEzEM6SM/+AvFRS4UrAuItGWUC8u9VEnPYX9JXwQMAxSmfWoMay+OUNrIXZiwbB+U
-         0GaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXPw/7pWnKKHmJtrCkfFE/X2l9epsnm9uJzrc2LXvrEyBb4UDvQYYKHgX/WtxJzRehdPbGjRxp0QqzQtQ=@vger.kernel.org, AJvYcCWBVu0eJxxGVl3oGiIoxJD5qzNS7ZL9iwiy670SbZAiYwIJxXrtLAEOzuwRqxJsSOStwFwx3D2dX5rMS0cBFbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu3yjTDmHNS4LfsFn0+Z0c96LN+LTSHagjxNlvOTiOiFQ8BFle
-	YxZLtYVOiO5jEf3qwA/S/MbTwJnhdEaL1q+okChgSAfyxSthIalWSIpT0kiw5+qHgBmaV5Q+Pnc
-	Y/ioLRDQeHk8v36Y9lAW0sc2QiYI=
-X-Gm-Gg: ASbGncuqy7ypsoNxt9WXJo6pV1E9BbBvuZ6du49+pArJNN1eEdF/QDPjC0NchVF/jmO
-	3BPIl7vzKibTmdkTZogczFR34NmFD3kdLxj3KENaqCHskfrZt+12D1g8LNdY/HEockkfj9CwUbP
-	D9GAMTb03btuA95a2aQP6cYrJ53A==
-X-Google-Smtp-Source: AGHT+IGWpGpW6d5ZIfdsFzWaamUgj+TZ7rfkoUKHNrFDGQXG2niCef3YklVtnipGJqAFbJCaUpCJyFAcq1X/5kdmbwA=
-X-Received: by 2002:a17:90b:1d87:b0:304:eacf:8bba with SMTP id
- 98e67ed59e1d1-30562e63830mr1176346a91.4.1743505337443; Tue, 01 Apr 2025
- 04:02:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743505366; x=1744110166;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eZLpPVcVgTYBqMo2PsNN2kP6ptf4HAnoNVh2L3glhRc=;
+        b=dJiWN9ZTbCETajgcVBItWW67Fr+uHM7akD3deB8EtrMgghzyorS0tGGVhF1kXyoEsj
+         hkG7fUUOf1vDBgFIRbHJrs7lIiHTYA+U4X/gQvSd+Zq2bxvkespxCjBgunYzaX0o460v
+         My9p6qoiVKMHUDnZ9/3PYRZLsYA6yoY5fn7lnFT93Ke9/Hs1w2nCUt+00F372IlPpRw+
+         tVGM4/r8qZpMLADsQXrPB9yIbrPRGqrJHoyamGKk5JECQ+ELTTZP7K1EgaEXGUxQhZi6
+         fF9WsQCJpBkX8a4JCO6YTVY1MKDVfNJlKOkOnz5C4EO/LR6d7migQch3dU3kubC78YAe
+         b0cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsrPhWSlolWvzjqJmVzRd30Ivv1/RQchOKr2nrBcicVr3B/Qw+STMpKBeqlue0bxD4UJ3q74Dpdw4UU7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRZSzUneKnDnDXabP8xoN1H1UxS9YhUlJayfagJCRvy7gHSUnO
+	gQCoQWl8hh8LlwW8W+JevRL61tHkgamMMGioe1DTLrd1kAnX5GJf3Inhts95EhTqooSqCUaKCI7
+	3NEfxglzhWOU5+tAkhDzrpcf5IZ3332+bvvDLNw==
+X-Gm-Gg: ASbGncuTBi4Qe8LAlahgse5zfwS30FGHptPMrLw67rsvlXVObtLJhVFdKF4ePIO31Fx
+	H7rHA3awqBrf9GyXJub/dqZNqilmb10IW8uDvrEhyN0MvVj7yJALlc0G3eocM1qbdZKa+DQLKR5
+	ZVOOxeDUZ7+EtFk3/L8JcHOEh4GQ==
+X-Google-Smtp-Source: AGHT+IFPzf50qEAiKAO3bJ55C+KdbNpjVoY2R+/BGwqhN6U1ohO1vzS/251ziWBwEk//3hNtrSTEJhH7mHBWNV/lxF4=
+X-Received: by 2002:a05:622a:11c4:b0:476:8a83:960f with SMTP id
+ d75a77b69052e-477ed7cbda0mr170062431cf.17.1743505366268; Tue, 01 Apr 2025
+ 04:02:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331122926.607374-1-ojeda@kernel.org> <CAHk-=wgyOSX4tbq0qhAkk0OCZqwiCA4EtwKZOBXAdkBW6FOANQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgyOSX4tbq0qhAkk0OCZqwiCA4EtwKZOBXAdkBW6FOANQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 1 Apr 2025 13:02:05 +0200
-X-Gm-Features: AQ5f1Jo1sOir9D-7T1Zekx56nDF09h48BlY5ge96gd19VdjjnO1UUJRm4FiPLCM
-Message-ID: <CANiq72kkjGVAtWNZjz5VGen4xoVLfRa+Wv399PUO=EfcA4TEfQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Rust fixes for 6.15 merge
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 1 Apr 2025 13:02:35 +0200
+X-Gm-Features: AQ5f1JphLYzOgtO2AjzpTqDO3lmO0DAlyHRcxy5cT4T4ZmLJYDIHHwELhtEkICw
+Message-ID: <CAJfpegsQDTYsEWHMK9skpNzUO=GA_DR7zGHftyO2sZH5wjaZLA@mail.gmail.com>
+Subject: [GIT PULL] fuse update for 6.15
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 8:33=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> maybe you can give a list of things that I should be doing when I see
-> rust merge conflicts so that next time around I'll notice these things
-> rather than have silly typo mistakes.
+Hi Linus,
 
-These are the ones we have:
+Please pull from:
 
-  - `make rustfmtcheck` (or `make rustfmt` to apply): This one you
-already know about.
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
+tags/fuse-update-6.15
 
-  - `make rust-analyzer`: The one from today.
+- Allow connection to server to time out (Joanne Koong)
 
-    Since it just generates a config file "blindly", the config file
-could still be completely broken even if the Python script succeeds.
-But running it is straightforward and quick, so there is no loss
-running it on merge conflicts.
+- If server doesn't support creating a hard link, return EPERM rather
+than ENOSYS (Matt Johnston)
 
-  - `make rustdoc`: What generates e.g. rust.docs.kernel.org.
+- Allow file names longer than 1024 chars (Bernd Schubert)
 
-    It could catch some issues, e.g. "broken intra-doc links".
-Warnings would not be a huge deal, but any errors here would be nice
-to avoid so that developers and rust.docs.kernel.org can always
-generate them.
+- Fix a possible race if request on io_uring queue is interrupted
+(Bernd Schubert)
 
-    This one (for the moment) always re-generates from scratch, but if
-you just run it on merge conflicts, it is fairly quick (more or less
-like building the Rust code).
+- Misc fixes and cleanups
 
-  - `make rusttest`: Runs a few userspace-only tests.
+Commit 1dfe2a220e9c ("fuse: fix uring race condition for null
+dereference of fc") in this queue has already been merged into
+v6.14-final through Christian's tree (commit d9ecc77193ca).   For some
+reason this causes a merge conflict, the resolution of which is to
+just take the version from this pull (i.e. remove the atomic_set()).
 
-    We don't really use or change the feature much, so it is unlikely
-you will have any merge conflicts here to begin with, but it is also
-quick to run. Perhaps in the future we may reuse the target for more
-things.
+Thanks,
+Miklos
+---
 
-  - `make CLIPPY=3D1`: A linter.
+Bernd Schubert (3):
+      fuse: {io-uring} Fix a possible req cancellation race
+      fuse: Allocate only namelen buf memory in fuse_notify_
+      fuse: Increase FUSE_NAME_MAX to PATH_MAX
 
-    I am not sure about this one, at least for the time being. It
-could spot something that is fishy after a merge, especially if you
-had to rearrange code, but they are lints after all, and sometimes it
-may not be clear what to do (e.g. `#[allow(...)]` locally) and you may
-hit bugs or false positives.
+Joanne Koong (4):
+      fuse: add kernel-enforced timeout option for requests
+      fuse: add default_request_timeout and max_request_timeout sysctls
+      fuse: fix uring race condition for null dereference of fc
+      fuse: remove unneeded atomic set in uring creation
 
-    We will probably end up defining a set of lints that we want to
-really, really keep clean, and then that would be what you could run
-on conflicts, and leave others to something like `W=3D` levels.
+Luis Henriques (1):
+      fuse: removed unused function fuse_uring_create() from header
 
-    Note that if you decide to try it, it is a different binary, like
-a twin of the compiler, which means rebuilding Rust code. Also, if you
-do `WERROR=3Dy` you may want `KRUSTFLAGS=3D-Wwarnings` when running Clippy
-if there happens to be a lint not cleaned up somewhere (e.g. right now
-there is one, its patch going through trees).
+Matt Johnston (1):
+      fuse: Return EPERM rather than ENOSYS from link()
 
-Thanks!
+Miklos Szeredi (1):
+      fuse: optmize missing FUSE_LINK support
 
-Cheers,
-Miguel
+---
+ Documentation/admin-guide/sysctl/fs.rst |  25 +++++
+ fs/fuse/dev.c                           | 162 +++++++++++++++++++++++++++-----
+ fs/fuse/dev_uring.c                     |  47 +++++++--
+ fs/fuse/dev_uring_i.h                   |  18 ++--
+ fs/fuse/dir.c                           |  11 ++-
+ fs/fuse/fuse_dev_i.h                    |   4 +
+ fs/fuse/fuse_i.h                        |  47 ++++++++-
+ fs/fuse/inode.c                         |  51 +++++++++-
+ fs/fuse/sysctl.c                        |  24 +++++
+ include/uapi/linux/fuse.h               |  12 ++-
+ 10 files changed, 358 insertions(+), 43 deletions(-)
