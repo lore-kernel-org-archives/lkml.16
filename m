@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC791372;
-	Tue,  1 Apr 2025 06:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327A01D54FE;
+	Tue,  1 Apr 2025 06:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743487602; cv=none; b=CnaZVPc+DwUnjN1Vnb9/oyQISEHNf6HBb6YViXz/3hzZkfmXbabCyOSXdAgprHXCdgQt2EfPeQZL0I8AvVM/hwY3zm8fcJM+Ka/kfiSZDCyMPYgBFvTQcDdJZs1aihHQIiHeHxY+/axiTA0iEUmFZYEpgUVRtIuqtTXjINeAshE=
+	t=1743487744; cv=none; b=RB8qq6s6HyNvKswYpOLj8nRrt1PzByRmsnbEjgXFonwDHz44ySknB+EQCQRKUs9ovJ23+FEx33wev37ji5PRZgJ8PmVwXvoM8uETvXAWvaRw/EVPnDylVlvWLIgI/PK8Z068yUNH3fLBI6UBMYiPZ1Oy16KYE7HOmXD1mWH8MoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743487602; c=relaxed/simple;
-	bh=oLzH5RkSicuMVNftyvLlNjjRZ70ibDG36k7ChxEokbQ=;
+	s=arc-20240116; t=1743487744; c=relaxed/simple;
+	bh=oFLcVum17dsPPO7U3U7d+AI2nZ0+RN/f/ABuNueQsNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqFbbrTgt/4vLyjIAWmwznEsjwnOt64VxQM5oj+MaW5MJKtzgDpw133fOi+Qmq0l7fipwn2x2yJFnUqCm9HOCG55govI5xkUqOVUQCch/qwbfv1nmjtudOEiTn/mhMztW92Wla/edkhYrkoV4hhTx/x2fcfcDGW8rdn3vcAD5Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlbyM+re; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=syVaNg71DGXqOfKhBm9CY5CapnH+BoWFr4jCdewkMKjrwStjYFiB831gIQZoBkszenzLbPzuKEdZ3Wt09LD40caGswgmMb73GRnyy3oIIbAzzzAtdCuTGHWPNHIDdCcLkkQoYtKGznCzSFXs5gEBgPhEtlbVli4wkLQgf02pDZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnmnMngH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlbyM+re"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECC0C4CEE8;
-	Tue,  1 Apr 2025 06:06:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnmnMngH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD63DC4CEEA;
+	Tue,  1 Apr 2025 06:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743487602;
-	bh=oLzH5RkSicuMVNftyvLlNjjRZ70ibDG36k7ChxEokbQ=;
+	s=k20201202; t=1743487743;
+	bh=oFLcVum17dsPPO7U3U7d+AI2nZ0+RN/f/ABuNueQsNI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YlbyM+reilMLWDp1hOkToL15MKp3RlG7mm7J+8Y/Z5KNotQYHe6yrnielSmpmknQM
-	 QxigIlTn9FKn0e46cZIiVtB5VNgMRPXZQzeWS7jYj12kEkGa8YMIHYVAS+WFbayUYR
-	 PzRlVHCmrVUz3Cs564m7WAQpWm+PSaZkZvEcSACVrwMUbfQUe8usjUqC3+/rDj//bi
-	 Cd8WixEmJqDtAHMbN69h0i6qQF2BKUuAAwD6YYo2b3bh706TzRgTUeWqxsVz+/gQEh
-	 Ya8bsQZ2Efn6+a9jYQexhwrkDch+tKsHfjEHTkpS3fCW5sn043fa1XbizeaO30HRTW
-	 PdjVz8I4fQ9pQ==
-Date: Tue, 1 Apr 2025 08:06:38 +0200
+	b=AnmnMngHBIzuTa08FKkl3KSGYM+3GAQiembj4xfO4XVGWhA9jZp/o1lEt2+FkxC5G
+	 dd0zvPn+RYTkVD4dx0T+1N6c13ExftFcO9X0pK/4206oShWeMpyoVgJIeUGp2rDv+e
+	 +418XNfX3IFhJQhNjTGFK5is0qr9H0D1IlrFma/S9XLTp5wncLQoyFn5/9MM1Fwg6M
+	 qCEzyQRCbbQIyHKJmD3smHXtdyVs4DaTIanExLs+I4TZU5D9iTDRmdICJ5Q+reVlxY
+	 y5fV/RWg1oAEC5xUPYu6A35Sf4ILCSmBO5ZKEe8FL1pssS4/f/tqm74LU7pBYRdFN3
+	 PaHmyoj/TY4/A==
+Date: Tue, 1 Apr 2025 08:09:00 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yong.mao@mediatek.com, 
-	Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com, Wenbin.Mei@mediatek.com, 
-	Andy-ld.Lu@mediatek.com, Guodong Liu <guodong.liu@mediatek.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: mediatek: Add support for
- mt8196
-Message-ID: <20250401-glittering-bouncy-yak-7e63ee@krzk-bin>
-References: <20250401054837.1551-1-ot_cathy.xu@mediatek.com>
- <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: power: supply: Document Maxim
+ MAX8971 charger
+Message-ID: <20250401-precious-rampant-prawn-9fa642@krzk-bin>
+References: <20250320072947.8174-1-clamor95@gmail.com>
+ <20250320072947.8174-2-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,17 +45,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
+In-Reply-To: <20250320072947.8174-2-clamor95@gmail.com>
 
-On Tue, Apr 01, 2025 at 01:48:10PM +0800, Cathy Xu wrote:
-> Add the new binding document for pinctrl on MediaTek mt8196.
+On Thu, Mar 20, 2025 at 09:29:46AM +0200, Svyatoslav Ryhel wrote:
+> Add bindings for Maxim MAX8971 charger.
 > 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 > ---
->  .../pinctrl/mediatek,mt8196-pinctrl.yaml      | 220 ++++++++++++++++++
->  1 file changed, 220 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+>  .../bindings/power/supply/maxim,max8971.yaml  | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max8971.yaml
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
