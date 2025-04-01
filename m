@@ -1,55 +1,55 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580E62206B8
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3361220685
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 18:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531910; cv=none; b=EqWJStAVSsyWaoYpc7IwImESmGk8bgIECM9cfORjDIAJviDqvzhEpc26GUV5wRTdw5LiwXSSoZg5QoF0fUjaZsizkwTX5R+sqze5HdpOy1uCwnSN81TRksEniS21W31GGohgs2tzA5tPWUmXijr0m+DQmDS/ZXS4dQVFHUt4TYQ=
+	t=1743531912; cv=none; b=hWJDFO4NyiRxTzVNo7fSLPgsz80h3VV820poqpQKuDh9tLoDCEYhBB20BOFJrLq8PRwkgo+uCMBzknwFvebcFFLrWUPANclYLvHWQVivmKRGo1oV+lIeRc9lel1VScxgLk3fd48rBbjLAupaiQk28Vxb3eBH32n6z8WZ0/AnRCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531910; c=relaxed/simple;
-	bh=LJ5bCbL+1daj73vhuubS5IIoYg4jtmiDU7rvTqttR9Q=;
+	s=arc-20240116; t=1743531912; c=relaxed/simple;
+	bh=qDrp7dk7UR2vIDZlNdoIiVlhsgl8sqEUeq30Rm4CVOQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=eqUmgqIau0EKTCVt3sDfKCtT6h53iuEN4icQXy+UAwchyxl9FHyZKFConM7g8DyYtq6rOZ1WGj2qldCmHrx71EK4IVhHSJ482EoJSFJ/88ao5JSFRiiMqrDSHloZ4fvBNRgA72XuRJQ3SFBUL3LvsMnSmoPA3Lpje6B+hrUSb94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ee1gaJVF; arc=none smtp.client-ip=209.85.160.74
+	 To:Content-Type; b=sOhQdlAkmTUUThjjk8NL3ZEkHWu/baCPr+M/Cdi88rPviPS2CsLiqG78Beu6fuuPs7lHI+LQN3Uur3rW823HeTVRPFTcoq3JgjTNRIIU2RAUfENKW/QzEFn9z/N5YRzsMMphznnFf43dWKj6D/FXnhgjmcKSGz6sI6VoEs8nAd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jHkKoPk3; arc=none smtp.client-ip=209.85.210.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ee1gaJVF"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2c8786a89d3so1239084fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jHkKoPk3"
+Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-72c0050a956so4464993a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 11:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531907; x=1744136707; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531905; x=1744136705; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Da5DUiJVSsEnsA3gzfAHXUpLTR3Ufuk1FvHZfSFlCg4=;
-        b=Ee1gaJVF00LEQ6hDSsNMINNiE9yL7LSeT9izMBg/ST1mSddj4XsNBnkPsBfP5rbIT+
-         DW9I/XnOi8ZnRgMro8xUyxDtJmNk2zPx0WMvDlFpPqfW9qx+kkwLCwJ8G0K7Ax2DxhRx
-         YdpTzyq3Xbt8VC+KaymsiJgT+U2aVA8jBjlIyG/bPICLP3TNP/XXXx536YrTaIOQ7vdF
-         a/D8pdpdyLiyEW7+OMyYk2lo1rHcGca+S69xgb1NOvDXfNsz21m3HDsiMlL3fub634R2
-         QsGiubqsgglNohJCBKDNbQZB1MP1COP1Jgzkos7hT4ZmFSq/ROAmmuhuPoSgHyVMCY6K
-         wqZw==
+        bh=O/8NQLM9l0NGLIoAsEqb7s+pejmq1A+sdW/bucy2qKA=;
+        b=jHkKoPk3JY1gJYE2gugJ+bnStU+pC6nzFly5P4QGTorn7+P3vMUV68Xz14GJ4v7gHK
+         tu1GG4YMfKOUx2ZKhMFGNaQju9imJEYtqnMOKzRoHXiuh8ixc5L1+tDuIyjYb1RezWRw
+         VL/v6BdasqSn/KSg5wTycAbH5N97G+kCEAQ2ychU02xeupNTex/+MuchX3Qa2Z7LaXxX
+         LzdMcOGwX6u7/XpxnH7g1njLBia2DI423eUrZWVmU1TlS3vclcet+iMF3VRCFPih5GJe
+         BE/8c7KqZQPh9fH3QAXByOI0zbtJAylicBNBVkhPT7hplOCXf8IJnXCruZJT9e1dTBpZ
+         pOfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531907; x=1744136707;
+        d=1e100.net; s=20230601; t=1743531905; x=1744136705;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Da5DUiJVSsEnsA3gzfAHXUpLTR3Ufuk1FvHZfSFlCg4=;
-        b=se2gMlM2pdqeOkLI05QgG6ok5s9PzGJ6R/fl1tCXyMVE2Dn1jaiizV7g0hbt/l6rUE
-         QY4XUpuJa8jx5TCRgka13ZHl1ntNozai3QdmpF1qqFiRcUzf/odejIDrIeQQChvTXf+9
-         jFFKb2ktKXwB1JqbnKWTWyZ+LGJntM2EUS+uSyyXv0Ccfjx6/ne99yOQ1r8ubEMsjbOx
-         5Ntqa/YOXNrZaeWme8/RTewxV0Glo4PIKlqkMplddXD2UTNhfxst8WDEVG9HcXTGgszr
-         mz17u0FudwI41H7HF6FPFfS1uoec2Yaq80fU7xOrx3ekh6Tg0R2zFOgtw8lSnGXJ38My
-         R99Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXRqY3SPHdFUVG1ew6izL0HeaPgJjzBOF1P3zfcdhnyG05L8lEnkcXWhTYtcUIlnqTDJEgk5Kn5JEx36Rw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn1fBt/tutJQESXVoJhDzRbqWv2IK2HrwqOY544qR5ZZPucrrl
-	xMh+Pnuv9zDrXKazZyEBIh9P0EOqMqZrhE21BWIKn7b6zKH/uEyIbG3RMJZEv5AdPYGeiXN8gK3
-	USBfoiQ==
-X-Google-Smtp-Source: AGHT+IHEwV4zAtKk0PBs2gzq5sOI+YyZoow9R1UWlEQXJU1TorP5CNFdlUvUeobymJBu8Fg99nd3p4RriyMG
-X-Received: from oabsc17.prod.google.com ([2002:a05:6871:2211:b0:2c1:665d:545e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:3a0b:b0:29e:5897:e9d1
- with SMTP id 586e51a60fabf-2cbcf825a7emr7646545fac.39.1743531907119; Tue, 01
- Apr 2025 11:25:07 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:13 -0700
+        bh=O/8NQLM9l0NGLIoAsEqb7s+pejmq1A+sdW/bucy2qKA=;
+        b=Bm4PwFgab8ynLi71lPCtZqqv5AlSD5ESfHchbHfiu+uBwOxpHFNakr7S26POLP+Ufk
+         SOme/Jnc+O970PrUqnY0lakcwn1LRWhGm6JqlDZ9WmQxAGr5u0isfTZ4pNTpKhCHm4aG
+         gKeWxd7TAeEu4s/m+T4Jja0k9W4r/6KU/ppsPQWYkmX1h0HtLnyADPnqcZ/dxuvhnzU1
+         99hdMLFocb7g7smfmzKCPY8vdhoRUJw3xSh9aANPXCcWgmU91PDEiKqRa4qxE/9sQXGG
+         7REt0stlshNnfzis1Asn560P+jq2enGqpEwf0vfKKMVYU/gcts+aJNrf2Du9oj8N7V6E
+         xGWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyTvg3bPSQbqmk3s/p1azVENi3GW4M4SY9nV1KaFqUYU/bMG2FvPp1Y8pypjaeeQ006L35xNsR2NhP5JI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwciMfZwXsdy3yX7tVY1VHE6c2olo270B0Rb6unGqn1/ugH5Llc
+	Sre9AuDVLw0pcqRp1/nbW7XwEhC7XPYord4uYIHUpWBW39OSar264POIo8AbhEuh9vf9JEUbQUC
+	22cJ+VA==
+X-Google-Smtp-Source: AGHT+IHwNaLSyfCZQ9yujF0xXANqRr9YjfymtsJ7oaqSCiXH/SKLc6pr1AzAS4LSQE5X0torr+Wm+aih3zPD
+X-Received: from oabvr7.prod.google.com ([2002:a05:6871:a0c7:b0:289:2c09:4e10])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6830:388c:b0:72b:8274:7c09
+ with SMTP id 46e09a7af769-72c6377e191mr9800632a34.4.1743531905060; Tue, 01
+ Apr 2025 11:25:05 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:12 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-16-irogers@google.com>
-Subject: [PATCH v1 15/48] perf pmu: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-15-irogers@google.com>
+Subject: [PATCH v1 14/48] perf jvmti: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,174 +114,139 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/hwmon_pmu.c |  8 ++++----
- tools/perf/util/pmu.c       |  9 ++++-----
- tools/perf/util/pmus.c      | 16 ++++++++--------
- tools/perf/util/tool_pmu.c  |  2 +-
- 4 files changed, 17 insertions(+), 18 deletions(-)
+ tools/perf/jvmti/jvmti_agent.c |  6 +++---
+ tools/perf/util/genelf.c       |  2 +-
+ tools/perf/util/jitdump.c      | 24 +++++++++++++-----------
+ 3 files changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-index 3cce77fc8004..6245eeb593c9 100644
---- a/tools/perf/util/hwmon_pmu.c
-+++ b/tools/perf/util/hwmon_pmu.c
-@@ -170,7 +170,7 @@ bool parse_hwmon_filename(const char *filename,
- 	for (size_t i = 0; fn_type[i] != '\0'; i++) {
- 		if (fn_type[i] >= '0' && fn_type[i] <= '9') {
- 			fn_type[i] = '\0';
--			*number = strtoul(&filename[i], (char **)&fn_item, 10);
-+			*number = (int)strtoul(&filename[i], (char **)&fn_item, 10);
- 			if (*fn_item == '_')
- 				fn_item++;
- 			break;
-@@ -194,7 +194,7 @@ bool parse_hwmon_filename(const char *filename,
- 		return false;
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 526dcaf9f079..2e2be9d8a118 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -377,7 +377,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	sym_len = strlen(sym) + 1;
+ 
+ 	rec.p.id           = JIT_CODE_LOAD;
+-	rec.p.total_size   = sizeof(rec) + sym_len;
++	rec.p.total_size   = (uint32_t)(sizeof(rec) + sym_len);
+ 	rec.p.timestamp    = perf_get_timestamp();
+ 
+ 	rec.code_size  = size;
+@@ -400,7 +400,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	 */
+ 	rec.code_index = code_generation++;
+ 
+-	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
++	ret = (int)fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+ 	fwrite_unlocked(sym, sym_len, 1, fp);
+ 
+ 	if (code)
+@@ -454,7 +454,7 @@ jvmti_write_debug_info(void *agent, uint64_t code,
+ 	 */
+ 	size += nr_lines * sizeof(struct debug_entry);
+ 	size += flen;
+-	rec.p.total_size = size;
++	rec.p.total_size = (uint32_t)size;
+ 
+ 	/*
+ 	 * If JVM is multi-threaded, multiple concurrent calls to agent
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index cdce7f173d00..6da8f3c53f7d 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -252,7 +252,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+ 	Elf_Shdr *shdr;
+ 	uint64_t eh_frame_base_offset;
+ 	char *strsym = NULL;
+-	int symlen;
++	size_t symlen;
+ 	int retval = -1;
+ 
+ 	if (elf_version(EV_CURRENT) == EV_NONE) {
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 624964f01b5f..874ced77d0a4 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -160,7 +160,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 	 */
+ 	flockfile(jd->in);
+ 
+-	ret = fread(buf, sizeof(header), 1, jd->in);
++	ret = (int)fread(buf, sizeof(header), 1, jd->in);
+ 	if (ret != 1)
+ 		goto error;
+ 
+@@ -226,7 +226,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 		bsz = bs;
+ 		buf = n;
+ 		/* read extra we do not know about */
+-		ret = fread(buf, bs - bsz, 1, jd->in);
++		ret = (int)fread(buf, bs - bsz, 1, jd->in);
+ 		if (ret != 1)
+ 			goto error;
  	}
- 
--	*type = elem - &hwmon_type_strs[0];
-+	*type = (enum hwmon_type)(elem - &hwmon_type_strs[0]);
- 	if (!item)
- 		return true;
- 
-@@ -213,7 +213,7 @@ bool parse_hwmon_filename(const char *filename,
- 			 fn_item, filename);
- 		return false;
- 	}
--	*item = elem - &hwmon_item_strs[0];
-+	*item = (enum hwmon_item)(elem - &hwmon_item_strs[0]);
- 	return true;
- }
- 
-@@ -352,7 +352,7 @@ struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir, const cha
+@@ -274,7 +274,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
+ 	/*
+ 	 * file is still locked at this point
+ 	 */
+-	ret = fread(prefix, sizeof(*prefix), 1, jd->in);
++	ret = (int)fread(prefix, sizeof(*prefix), 1, jd->in);
+ 	if (ret  != 1)
  		return NULL;
  
- 	hwm->hwmon_dir_fd = hwmon_dir;
--	hwm->pmu.type = PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name + 5, NULL, 10);
-+	hwm->pmu.type = PERF_PMU_TYPE_HWMON_START + (int)strtoul(sysfs_name + 5, NULL, 10);
- 	if (hwm->pmu.type > PERF_PMU_TYPE_HWMON_END) {
- 		pr_err("Unable to encode hwmon type from %s in valid PMU type\n", sysfs_name);
- 		goto err_out;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index b7ebac5ab1d1..5a940bf004fb 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1269,7 +1269,7 @@ __u64 perf_pmu__format_bits(struct perf_pmu *pmu, const char *name)
- {
- 	struct perf_pmu_format *format = pmu_find_format(&pmu->format, name);
- 	__u64 bits = 0;
--	int fbit;
-+	size_t fbit;
+@@ -304,7 +304,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
  
- 	if (!format)
- 		return 0;
-@@ -1314,9 +1314,8 @@ static void pmu_format_value(unsigned long *format, __u64 value, __u64 *v,
+ 	addr = ((void *)jd->buf) + sizeof(*prefix);
  
- static __u64 pmu_format_max_value(const unsigned long *format)
- {
--	int w;
-+	size_t w = bitmap_weight(format, PERF_PMU_FORMAT_BITS);
+-	ret = fread(addr, bs - sizeof(*prefix), 1, jd->in);
++	ret = (int)fread(addr, bs - sizeof(*prefix), 1, jd->in);
+ 	if (ret != 1)
+ 		return NULL;
  
--	w = bitmap_weight(format, PERF_PMU_FORMAT_BITS);
- 	if (!w)
- 		return 0;
- 	if (w < 64)
-@@ -1824,7 +1823,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
- 	if (!pmu->is_core)
- 		return 0;
+@@ -398,7 +398,7 @@ static uint64_t convert_timestamp(struct jit_buf_desc *jd, uint64_t timestamp)
+ 		return timestamp;
  
--	for (size_t i = 0; i < ARRAY_SIZE(terms); i++) {
-+	for (int i = 0; i < (int)ARRAY_SIZE(terms); i++) {
- 		int config = PERF_PMU_FORMAT_VALUE_CONFIG;
+ 	tc.time_shift = time_conv->time_shift;
+-	tc.time_mult  = time_conv->time_mult;
++	tc.time_mult  = (unsigned int)time_conv->time_mult;
+ 	tc.time_zero  = time_conv->time_zero;
  
- 		if (i < PERF_PMU_FORMAT_VALUE_CONFIG_END)
-@@ -2281,7 +2280,7 @@ static void perf_pmu__compute_config_masks(struct perf_pmu *pmu)
- 		return;
+ 	/*
+@@ -443,8 +443,8 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	nspid = jr->load.pid;
+ 	pid   = jr_entry_pid(jd, jr);
+ 	tid   = jr_entry_tid(jd, jr);
+-	csize = jr->load.code_size;
+-	usize = jd->unwinding_mapped_size;
++	csize = (int)jr->load.code_size;
++	usize = (int)jd->unwinding_mapped_size;
+ 	addr  = jr->load.code_addr;
+ 	sym   = (void *)((unsigned long)jr + sizeof(jr->load));
+ 	code  = (unsigned long)jr + jr->load.p.total_size - csize;
+@@ -465,8 +465,10 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
  
- 	list_for_each_entry(format, &pmu->format, list)	{
--		unsigned int i;
-+		size_t i;
- 		__u64 *mask;
+ 	size = PERF_ALIGN(size, sizeof(u64));
+ 	uaddr = (uintptr_t)code;
+-	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data, jd->nr_debug_entries,
+-			   jd->unwinding_data, jd->eh_frame_hdr_size, jd->unwinding_size);
++	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data,
++			   (int)jd->nr_debug_entries, jd->unwinding_data,
++			   (uint32_t)jd->eh_frame_hdr_size,
++			   (uint32_t)jd->unwinding_size);
  
- 		if (format->value >= PERF_PMU_FORMAT_VALUE_CONFIG_END)
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b99292de7669..0b9071219376 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -59,7 +59,7 @@ static void pmu_read_sysfs(unsigned int to_read_pmus);
+ 	if (jd->debug_data && jd->nr_debug_entries) {
+ 		zfree(&jd->debug_data);
+@@ -559,8 +561,8 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
  
- size_t pmu_name_len_no_suffix(const char *str)
- {
--	int orig_len, len;
-+	size_t orig_len, len;
- 	bool has_hex_digits = false;
+ 	nspid = jr->load.pid;
+ 	pid   = jr_entry_pid(jd, jr);
+-	tid   = jr_entry_tid(jd, jr);
+-	usize = jd->unwinding_mapped_size;
++	tid   = (int)jr_entry_tid(jd, jr);
++	usize = (int)jd->unwinding_mapped_size;
+ 	idr_size = jd->machine->id_hdr_size;
  
- 	orig_len = len = strlen(str);
-@@ -353,7 +353,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
- static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
--	int last_pmu_name_len = 0;
-+	size_t last_pmu_name_len = 0;
- 	const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
- 
- 	if (!pmu) {
-@@ -364,7 +364,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 
- 	if (use_core_pmus) {
- 		list_for_each_entry_continue(pmu, &core_pmus, list) {
--			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
-+			size_t pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 			if (last_pmu_name_len == pmu_name_len &&
- 			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-@@ -376,7 +376,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 		pmu = list_prepare_entry(pmu, &other_pmus, list);
- 	}
- 	list_for_each_entry_continue(pmu, &other_pmus, list) {
--		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
-+		size_t pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 		if (last_pmu_name_len == pmu_name_len &&
- 		    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-@@ -581,7 +581,7 @@ static int build_format_string(void *state, const char *name, int config,
- 			       const unsigned long *bits)
- {
- 	struct build_format_string_args *args = state;
--	unsigned int num_bits;
-+	size_t num_bits;
- 	int ret1, ret2 = 0;
- 
- 	(void)config;
-@@ -631,14 +631,14 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
- 			.long_string = STRBUF_INIT,
- 			.num_formats = 0,
- 		};
--		int len = pmu_name_len_no_suffix(pmu->name);
-+		size_t len = pmu_name_len_no_suffix(pmu->name);
- 		const char *desc = "(see 'man perf-list' or 'man perf-record' on how to encode it)";
- 
- 		if (!pmu->is_core)
- 			desc = NULL;
- 
--		strbuf_addf(&format_args.short_string, "%.*s/", len, pmu->name);
--		strbuf_addf(&format_args.long_string, "%.*s/", len, pmu->name);
-+		strbuf_addf(&format_args.short_string, "%.*s/", (int)len, pmu->name);
-+		strbuf_addf(&format_args.long_string, "%.*s/", (int)len, pmu->name);
- 		perf_pmu__for_each_format(pmu, &format_args, build_format_string);
- 
- 		if (format_args.num_formats > 3)
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index 97b327d1ce4a..155eea8a0a49 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -103,7 +103,7 @@ enum tool_pmu_event evsel__tool_event(const struct evsel *evsel)
- 
- const char *evsel__tool_pmu_event_name(const struct evsel *evsel)
- {
--	return tool_pmu__event_to_str(evsel->core.attr.config);
-+	return tool_pmu__event_to_str((enum tool_pmu_event)evsel->core.attr.config);
- }
- 
- static bool read_until_char(struct io *io, char e)
+ 	/*
 -- 
 2.49.0.504.g3bcea36a83-goog
 
