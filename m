@@ -1,114 +1,75 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32371EFFB9;
-	Tue,  1 Apr 2025 12:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101321EFFB9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743510504; cv=none; b=tSNCqA9g1KKrrfdswOvtcbJ+ouoPaySO2UW7hnGljNT0MV707gwjseCo1xEyjFGTWOeSZrsbUKBPxHu5BF+q8j5jg/RCqyNhujIv8QxItbaj6xwn1oCn4tcwjr7Awj1zzQWeA9IITdbMl4LM++fl+oCc8waOz4A9N/Mqzk1WYdk=
+	t=1743510559; cv=none; b=OaHsUTg1ZFUJWe3CD/uofWtZa475Xboo+mKemIXC4ncnWG06dy4DohVEuSH5q9DmWZgSGNCMyg7DDGe/sioaodXasX0ecD7Keyo8sZ98NBJnqQfvZPOt3zULe2JVejOjDNxOw5Byvr3rjuTmMYXUTzvKP+Zje3DF156zgxSfg+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743510504; c=relaxed/simple;
-	bh=m4laPdMmU46byYc56nGcmaELtOKUu7C5XqlobFaRd10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=syDD0B2Rgucz9fimwM6335Z2sFTKjBHDBEzzedPLnq3ZWJoseQeAagv6Tq/Th3zRWhceVY+VNG3+IRiS/C0d0PGGrRHhM/GmhvmkZqCLv2W/HBy3unrQOZKVHBbhVE3TPgmhPB+UcAYMsUOaA14oF3sUx+fCZ/DX2ddRBDB1kVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T1pmv1Fi; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743510559; c=relaxed/simple;
+	bh=/TBe84Nv855DIzlqljrHMdb04swyr2W1u+PYkAygaNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bcyv9r8Zylh20/a5ZPN1DRK3xScSlvu9ljXNzse14UEq2oWAWyoBTEHxN575bqTo9u/JWu7TAFgdjXovIfi4nw9TxzpsLEwzvj47HiOW1cCLhK0ZgIrVbNgaz3cz+HP9/oLjKMIr1HCphQpU0WuU8h91I3zvsC6B9sNZlFIZrFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/tevygv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1pmv1Fi"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abf3d64849dso845644166b.3;
-        Tue, 01 Apr 2025 05:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743510501; x=1744115301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4tYwt2cv0fFgVs6/0Lv6OgdTM1+86ji/NbaPbN5vO9g=;
-        b=T1pmv1FijRu2aGaoENBVI0O/ZO+CnbyThLl8JGxx1uVekMGOGk2Ldngc9V67kuW2mE
-         7bESmXc3CYnKYJ5/SHzYHj1GSWsKhARBdjutiDSqOX+an1+IuqwV/I9pIaNM63wzCaPV
-         Gu6mmbBMF9JxtL9DIpScR2l3XLhkEYgZJiSurMC8UHF5G6sMVjXZBJszdssLlDIrY4LM
-         KgZ6Ed+HsyqO7uYgRS+9TTtMaiYLMUoUqyDC0ax+jStBmxh/P0ulYDcKrsnEpqsjqGoM
-         tM/ZTPc/nO76ppOboDvixRVkyMwh+P1lgVuZx4PvNiKz80W/oOKqBQjaFSmVGx95XpUj
-         QBPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743510501; x=1744115301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4tYwt2cv0fFgVs6/0Lv6OgdTM1+86ji/NbaPbN5vO9g=;
-        b=BxV30vZnJ1TFe6XUkOiWDaENn2mEx82H3N4zBNayndRRQdH6apZ2r9YimaxcgyFJUl
-         VDWdulSDGki6uXtv9O6PCABWNRqRhsy5CWnhghGXGrjZ1tqcUeBRIY+jtZ3rIl/Wz8ar
-         g2uWGz+sm7z2D42AJDOzBMq5022Zh26/QK9KK7QB2EiGJ9tViLFlQQsrW7QT0LWZHElt
-         r35KtliFQlP7iGTNiwzpT4Sctcybw4GHCzdlo/NSN/5DZloGzX7SmFi68zLok6CpSdar
-         biwkWxqzXpVFTTQn5wquxoj6/qoMRMv2BIwudBbktoGmc+q6UtJWR1n938pgwl2WbDbP
-         eIug==
-X-Forwarded-Encrypted: i=1; AJvYcCUS8VDpmtPGPH6Yfd9eK00bo91pUCh5VJdUc7NBDFGHirLIsRtTltKq8QpvQVwTOACL+bhho9p6F0qj9wg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDgbZFpfjpIOG9zIrHSXKchcDm5ht/LNbkDSIGbNb9kZPHV8h7
-	ObhuFIwQqOQu6ypafjAwP43kkENygFV+gEp3xopYeUzsqIgAGDpL3wjNIKzjvGTXSVtHT8BzSGK
-	7yiHEFN7hxRnBEhYIhIP6pzacht1ey+3V
-X-Gm-Gg: ASbGnctZnCTt8MkjbNTlNVjw+V6EgYl2uL3zY1pxpYDnFp6Zeht8QkYZWKFwvqwd3Os
-	bcEycXwyffEY7Cy/Ufafl/zFenkd1sg7H94bzMQDrqjb1uxLWU1dlDrT6FpYZc1japacfy7N68K
-	T2/lYyVFiaWZyr2N7q7Ovy9ccH
-X-Google-Smtp-Source: AGHT+IHrbEHEVghunvMZXU/YsBgllcTk8T1ugLlKN0mOrZpfgHp/483PsY4Jm+oKLcnw9kgXwRxnrLARUM2byfYdiiA=
-X-Received: by 2002:a17:907:a08a:b0:ac7:1ba8:d2ce with SMTP id
- a640c23a62f3a-ac738a5a614mr1094831566b.32.1743510500931; Tue, 01 Apr 2025
- 05:28:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/tevygv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1FDC4CEE4;
+	Tue,  1 Apr 2025 12:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743510557;
+	bh=/TBe84Nv855DIzlqljrHMdb04swyr2W1u+PYkAygaNY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=W/tevygvJ5bG54xLStdAdDvuFpP/97m62PI3/ojJ7qwadu6KUdARqryOUY2TtJpVU
+	 s1oV9A3pTDEK5aQaOhYwt1rm+WZBe8nhDpR7iB0D09JGTTBcln5gXQZl6aPTURuENR
+	 Xw3B6W8gNWg+Jkk1DPXO8xTdaT2UoZ5WKkI1C1ywvtVvM4Msy6BPqYMCJyWpvvKlsz
+	 c4hp5JDlgEpGFVgja0LB3iwGh6BgHNcNMPohVO8mbQ2AhZJ2yr21B1Kxp1rh362kQD
+	 JZr7BUskn4YrKdhYUeNrBYXjcOCRY6kUhNkw9mhRMFdXTml+hZ+6r9svf/N+WuH9HU
+	 djcxUAcGZjW3g==
+From: Leon Romanovsky <leon@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH next 1/2] drivers/base: Extend documentation with preferred way to use auxbus
+Date: Tue,  1 Apr 2025 15:28:46 +0300
+Message-ID: <206e8c249f630abd3661deb36b84b26282241040.1743510317.git.leon@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401050847.1071675-1-mjguzik@gmail.com> <20250401-erwehren-zornig-bc18d8f139e6@brauner>
-In-Reply-To: <20250401-erwehren-zornig-bc18d8f139e6@brauner>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 1 Apr 2025 14:28:08 +0200
-X-Gm-Features: AQ5f1Jqhj1MVYH-m7Fclp96ASNuM72y_stkcpuGOzxOyF1APKBuiLznmh-uhSq0
-Message-ID: <CAGudoHF_Nfjq1nLZhMbFr3GJz-z=9Z4goacCgXbifxrQX7yiwA@mail.gmail.com>
-Subject: Re: [PATCH] fs: remove stale log entries from fs/namei.c
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 1, 2025 at 12:49=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Tue, 01 Apr 2025 07:08:46 +0200, Mateusz Guzik wrote:
-> >
->
-> I have zero attachment to these comments so I'm inclined to agree and
-> remove them. Please anyone who really really thinks we need them speak
-> up!
+Document the preferred way to use auxiliary bus.
 
-ouch man
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+---
+ drivers/base/auxiliary.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-this submission was a joke, which is why I only sent it to the list
-and skipped the maintainers as direct recipients
+diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+index afa4df4c5a3f..248d3508ca0e 100644
+--- a/drivers/base/auxiliary.c
++++ b/drivers/base/auxiliary.c
+@@ -156,6 +156,16 @@
+  *		},
+  *		.ops = my_custom_ops,
+  *	};
++ *
++ * Please note that such custom ops approach is valid, but it is hard to implement
++ * it right without global locks per-device to protect from auxiliary_drv removal
++ * during call to that ops. In addition, this implementation lacks proper module
++ * dependency, which causes to load/unload races between auxiliary parent and devices
++ * modules.
++ *
++ * The most easiest way to provide these ops reliably whtout need to have lock is
++ * to EXPORT_SYMBOL*() them and rely on already existing modules infrastructure for validity
++ * and correct dependencies chains.
+  */
+ 
+ static const struct auxiliary_device_id *auxiliary_match_id(const struct auxiliary_device_id *id,
+-- 
+2.48.1
 
-it *adds* the following:
->  /*[Apr 1 2024 Mateusz Guzik] Removed stale log entries.
-
-I can't tell if this actually landed because the url:
-> [1/1] fs: remove stale log entries from fs/namei.c
->       https://git.kernel.org/vfs/vfs/c/3dddecbd2b47
-
-says "bad object id" at the moment.
-
-I very much support removal of this kind of commentary, but this could
-be very flamewar inducing and I did not want to spend time on a
-non-tech discussion about it.
-
-However, if actually doing this, there is more to whack and I'll be
-happy to do a real submission with more files.
-
-Even in this file alone:
-> /* In order to reduce some races, while at the same time doing additional
-> * checking and hopefully speeding things up, we copy filenames to the
-> * kernel data space before using them..
-
-I think this comment also needs to get whacked. Copying the path is
-not optional.
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
