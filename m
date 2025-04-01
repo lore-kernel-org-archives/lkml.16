@@ -1,121 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13B20C030;
-	Tue,  1 Apr 2025 16:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D41C84AB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743524109; cv=none; b=X6sD7sJTFmqXaQDF9lKPs/vgLtafVJLqkNoFhAI525BaI/lzHo06atncUyuq7yY8a3/NzXaA/Y7ixxaKL77Zob5JR4RuRRE2UdIHpU5/MPagvd80+odQfHOolwB8iADZAbG1P7L/MjLOXs+4XPSO4bkL8IjtavOJYJrlfpNT4Pg=
+	t=1743524127; cv=none; b=GboFH1AqvG/mzxgQOSPVBGHn2af9qY+Q1R4l+kBRVQrugF8ta7xYyH/jO9d8AlqZRxVQI+NG7cF9A3C2LHHPWchF44wqHCAe2+CbLOKha3tbgM7+g2eM/RRbBJA0udXbHNTMI2P4/2Rl4J4GBrOEkl/nco9KbwfBHzRaNDHGz3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743524109; c=relaxed/simple;
-	bh=/ONfagkohhhiZRJPzYx2p+Vo1swPb6lMi17snaUkFH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ryglQj7zxj4FXIjBuYul0p1gx/cv3+BxDPX1DiXv77GlBq58E+qkzj4vMUytzMsLnVJaSmCqwf9wr/w4Hkc11vGQ7Rglcu0bsrC5DjFpinvVu1tr5z6VlpgQQwrN91n0N3RADqzjaURXhP8rcdNVrMA88IJL5Ik05RPD8yZkuIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqJ6YYP5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743524127; c=relaxed/simple;
+	bh=MCDRrc6gITw7ILHOzJNTmL2BGOeoJlccEAeGN1hnyDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XYZkVZ16gNI1JCqRoqxD2dFp1cF4r55mqhVOwc1tzSy5G2PWBNFwJbYoQMGKOH9PPyKLAJAFg+7iuNihdV01e7PrUrUzIdjEK+Giv+esv93YRV0R18PRUfuTKWy7JJhzeSgwZw0DdfP1StXfEAkCfBr34xThoLjCwNI50lzIZYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ox2cgNtr; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqJ6YYP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B391C4CEE4;
-	Tue,  1 Apr 2025 16:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743524109;
-	bh=/ONfagkohhhiZRJPzYx2p+Vo1swPb6lMi17snaUkFH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tqJ6YYP5IdrY2MGTWtph+dzGi1EKfds4HJTQCB41hKqrtu6Yf/+WOGReafdEgCf2N
-	 PAuSsHnuWBJyUqi7w18TfVYSSToRlijV+KwN1+0v9m14QXeLbN0zTI9oFw2CEt8NEd
-	 NqChL+aa4RsfrHsqMXxZpBALDPfaTe3uG9/nwoV/6hEHH/wOLgICHKyhYhb/kDqIKM
-	 TGFn/qNCoqkEiGnOHCrS6OI3oin9VBuECL30Hj/JY7/oJI5G8dQijS03iNkwgCA/yJ
-	 0aUUpqO9om4mSXD+vh24suwr+CqruzJL2Sfvh2ma5eNJLLgVAaOvNaojSgKYnx79ST
-	 GIP7Jv4iSTSqw==
-Date: Tue, 1 Apr 2025 09:15:08 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>,
-	hch <hch@lst.de>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: document zoned rt specifics in admin-guide
-Message-ID: <20250401161508.GT2803749@frogsfrogsfrogs>
-References: <20250331091333.6799-1-hans.holmberg@wdc.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ox2cgNtr"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7272f9b4132so4171662a34.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743524124; x=1744128924; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
+        b=Ox2cgNtrnIxNz8aG0aUMSR2rosHJfCY+GQRSrNdUVCK6mGUQ3XxVu878TmVFCE5+jR
+         EUe9x2BdE+QnpP+rMy1/D0VSOy32zu7KOHDXRnw3hvogEiiaBLIxici2yC1eV12j+LtR
+         saUsDBFjalGxEbzSzgdvjv9JQKWMYSxe6/j83Jld7scNrZJpHjLMcG2MK1v//VQ33F4o
+         1mtSlwX6s/4fGOhhQ99QiR5HaVF+umven+BKDy0nIzOEr7oJhv5hW64vYYDHftUqFJ1b
+         WnZX7m1kxcuZl9o0WB6Ri0OyF78rC1VJsb/MnA3Y/gPtufXeykZSqLNtOTLGZa8D7MXB
+         Jfbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743524124; x=1744128924;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KV6A6SkFyjP45lT34VumuzTtupTmw14mZAo1pKWFBns=;
+        b=uGI3OssxvBod/dZzafzDErgyBK0rRyGbBJilQZ7pWq8QJXE9knZtjQcL5MhD7xsDFv
+         nakwplxsrN8yNrX6ourTKNLB38Rm8zP+r2P47M2JjyAUCd3xL9u3ziMOhS/GbbhKlPDV
+         wYANm2qoH4Qe2mjnmEE7a9G3JgJT/uYZGPx9fEufvFbcKmG/raPk74G8gIIgDIfWFlVO
+         wsvTHzmYUoLTsgYIQyTgChkyLLgD0FpfryfLgUZ0UfPpWWzP8h/pJ/NgAqhKD/LNxBNd
+         YM1XSc4sNwkNuH7cDoXWBEf2TtaKwyOyfvuXCEfxhGhRDE6q8nIFnVNf+BYEHgizROg8
+         owAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1sdHZ7W3R+grShTwriomUYZP2dZlUTdqLa7SVp9R3vq13bfS+uOPH6qJ2O1MRVXC1BkRx8FK8n0AhG1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzSD+p3/bbCnmE5SYK+yROd+khAqz+sZNCnhfAQ/ThTcYPQdou
+	Bp1f/3726qGWXrNOhwfZMwdNo85m2Xln8r0vo9/tf4ZQlyhbxx5yVcqhtC6/eMI4PyBGJ+VJ5VD
+	9A3U=
+X-Gm-Gg: ASbGncuyunCibaU/KgNY+j8acABYGN+Bzpt0OT8dhAUOFQbba3z67rNDQBOH1L4KWKh
+	X85h7sppFC2HgmP6YTw0sPqjIgTy1W1Ygo87rVE7xRjpLmhQeMwLsbbVsAHzbzZgnoSH7aVUtWW
+	zcXqjXkoE6F4CJjMGiwe/8Ola0hoMYHFzGGJ1fvHkJ7PNvLsj0PFVaI9ygjz0JQyvW2GLGc20XT
+	CaIT6UyFqxjbZqX6ltp0dktII5bzADlmG2EXZ+gGiW69vlibF42Z0OzSjKq+vCVAb1CJG1xVZtQ
+	jpnJ+GlIfdK8baKHdASvkGcIuHw/dmlrX8sPH3gSMN4ryQ7jYYrK+lBuqefnburNiV2dysM3sxX
+	MOHZVyQ==
+X-Google-Smtp-Source: AGHT+IHkFB1qErKdOP/R3+n0pyHcdkpWGJYkUI8OIJLr5yCsfzswBCRj23kPPNNelf6fm+HG+W8KGA==
+X-Received: by 2002:a05:6830:3152:b0:729:ff76:5166 with SMTP id 46e09a7af769-72c637c450dmr8141400a34.14.1743524123806;
+        Tue, 01 Apr 2025 09:15:23 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c58092589sm1914991a34.2.2025.04.01.09.15.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 09:15:22 -0700 (PDT)
+Message-ID: <e609fff8-9fc8-425a-8362-9205c17ffc4d@baylibre.com>
+Date: Tue, 1 Apr 2025 11:15:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331091333.6799-1-hans.holmberg@wdc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/17] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+ marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
+References: <cover.1741268122.git.Jonathan.Santos@analog.com>
+ <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <4136b5259df75221fc314bcd4a57ecaeeab41a45.1741268122.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 09:15:00AM +0000, Hans Holmberg wrote:
-> Document the lifetime, nolifetime and max_open_zones mount options
-> added for zoned rt file systems.
+On 3/6/25 3:00 PM, Jonathan Santos wrote:
+> In addition to GPIO synchronization, The AD7768-1 also supports
+> synchronization over SPI, which use is recommended when the GPIO
+> cannot provide a pulse synchronous with the base MCLK signal. It
+> consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> a command via SPI to trigger the synchronization.
 > 
-> Also add documentation describing the max_open_zones sysfs attribute
-> exposed in /sys/fs/xfs/<dev>/zoned/
+> Add a new trigger-sources property to enable synchronization over SPI
+> and future multiple devices support. This property references the
+> main device (or trigger provider) responsible for generating the
+> SYNC_OUT pulse to drive the SYNC_IN of device.
 > 
-> Fixes: 4e4d52075577 ("xfs: add the zoned space allocator")
-> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
-
-This is consistent with what I saw when the code went by, so
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-
---D
-
+> While at it, add description to the interrupts property.
+> 
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 > ---
->  Documentation/admin-guide/xfs.rst | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+> v4 Changes:
+> * none
 > 
-> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-> index b67772cf36d6..9d0344ce81f1 100644
-> --- a/Documentation/admin-guide/xfs.rst
-> +++ b/Documentation/admin-guide/xfs.rst
-> @@ -124,6 +124,14 @@ When mounting an XFS filesystem, the following options are accepted.
->  	controls the size of each buffer and so is also relevant to
->  	this case.
->  
-> +  lifetime (default) or nolifetime
-> +	Enable data placement based on write life time hints provided
-> +	by the user. This turns on co-allocation of data of similar
-> +	life times when statistically favorable to reduce garbage
-> +	collection cost.
-> +
-> +	These options are only available for zoned rt file systems.
-> +
->    logbsize=value
->  	Set the size of each in-memory log buffer.  The size may be
->  	specified in bytes, or in kilobytes with a "k" suffix.
-> @@ -143,6 +151,14 @@ When mounting an XFS filesystem, the following options are accepted.
->  	optional, and the log section can be separate from the data
->  	section or contained within it.
->  
-> +  max_open_zones=value
-> +	Specify the max number of zones to keep open for writing on a
-> +	zoned rt device. Many open zones aids file data separation
-> +	but may impact performance on HDDs.
-> +
-> +	If ``max_open_zones`` is not specified, the value is determined
-> +	by the capabilities and the size of the zoned rt device.
-> +
->    noalign
->  	Data allocations will not be aligned at stripe unit
->  	boundaries. This is only relevant to filesystems created
-> @@ -542,3 +558,16 @@ The interesting knobs for XFS workqueues are as follows:
->    nice           Relative priority of scheduling the threads.  These are the
->                   same nice levels that can be applied to userspace processes.
->  ============     ===========
-> +
-> +Zoned Filesystems
-> +=================
-> +
-> +For zoned file systems, the following attribute is exposed in:
-> +
-> +  /sys/fs/xfs/<dev>/zoned/
-> +
-> +  max_open_zones                (Min:  1  Default:  Varies  Max:  UINTMAX)
-> +	This read-only attribute exposes the maximum number of open zones
-> +	available for data placement. The value is determined at mount time and
-> +	is limited by the capabilities of the backing zoned device, file system
-> +	size and the max_open_zones mount option.
-> -- 
-> 2.34.1
+> v3 Changes:
+> * Fixed dt-bindings errors.
+> * Trigger-source is set as an alternative to sync-in-gpios, so we
+>   don't break the previous ABI.
+> * increased maxItems from trigger-sources to 2.
 > 
+> v2 Changes:
+> * Patch added as replacement for adi,sync-in-spi patch.
+> * addressed the request for a description to interrupts property.
+> ---
+>  .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> index 3ce59d4d065f..4bcc9e20fab9 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> @@ -26,7 +26,19 @@ properties:
+>    clock-names:
+>      const: mclk
+>  
+> +  trigger-sources:
+> +    description:
+> +      Specifies the device responsible for driving the synchronization pin,
+> +      as an alternative to adi,sync-in-gpios. If the own device node is
+> +      referenced, The synchronization over SPI is enabled and the SYNC_OUT
+> +      output will drive the SYNC_IN pin.
+> +    maxItems: 2
+
+This says maxItems: 2 but the description only describes one, namely /SYNC_IN.
+IIRC, the 2nd one is for the optional /START input.
+
+> +
+>    interrupts:
+> +    description:
+> +      Specifies the interrupt line associated with the ADC. This refers
+> +      to the DRDY (Data Ready) pin, which signals when conversion results are
+> +      available.
+>      maxItems: 1
+>  
+>    '#address-cells':
+> @@ -57,6 +69,9 @@ properties:
+>    "#io-channel-cells":
+>      const: 1
+>  
+> +  "#trigger-source-cells":
+> +    const: 0
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -65,7 +80,6 @@ required:
+>    - vref-supply
+>    - spi-cpol
+>    - spi-cpha
+> -  - adi,sync-in-gpios
+>  
+>  patternProperties:
+>    "^channel@([0-9]|1[0-5])$":
+> @@ -89,6 +103,13 @@ patternProperties:
+>  allOf:
+>    - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>  
+> +  - oneOf:
+> +      - required:
+> +          - trigger-sources
+> +          - "#trigger-source-cells"
+> +      - required:
+> +          - adi,sync-in-gpios
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+> @@ -99,7 +120,7 @@ examples:
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>  
+> -        adc@0 {
+> +        adc0: adc@0 {
+>              compatible = "adi,ad7768-1";
+>              reg = <0>;
+>              spi-max-frequency = <2000000>;
+> @@ -108,7 +129,8 @@ examples:
+>              vref-supply = <&adc_vref>;
+>              interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+>              interrupt-parent = <&gpio>;
+> -            adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
+> +            trigger-sources = <&adc0 0>;
+
+# cells is 0 but this has one cell specified. So one or the other is incorrect.
+Since there are other outputs that could be used as triggers, e.g. /DRDY could
+be used as a SPI offload trigger, having 1 cell seems prudent.
+
+> +            #trigger-source-cells = <0>;
+>              reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+>              clocks = <&ad7768_mclk>;
+>              clock-names = "mclk";
+
