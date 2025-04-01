@@ -1,120 +1,168 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08913BAF1
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48B53FBB3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743513515; cv=none; b=o3uGooXItmr5IsziJUQoSRVpCO+iSKVVSqczBatqk40CAOo+y/1c+ISt+LD6ENbhsQ93YMLoh/RNFKsqpmOeo5SFQV58TJr8B7SePUXiYtQvLV9TBluWDMncv7V0kzIc5Pvs6F6blIrBfmZXJ/dREBfctNhrOUYorKZWSOLVWMs=
+	t=1743513602; cv=none; b=cBfQySdVXOJzlyZkgqIeBu9linyunCzC0pkjlhvdRAsrfpbADuRKOYBiRG+0iSjEtSREh2pljQAuq1/RiAwxzrFgWEyI+zHg673DyKjd7AS5ZRBhIj8z4o49OvEm3x44lNOBNmi0ls3k8ZfSK+RtavcHmGp8nG1pg5v3tXC3xvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743513515; c=relaxed/simple;
-	bh=kTfiAdRpBr7pOp34IPVjliGIooasg71O6bVNGmB6Zog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dCMwfzZhLtN26CGji1NY7xzpaMJBiIOwymNCyEnBTaH3RpxaH/csWuHD4j6Qt9G1xGQuC/rm5NSBWAHep8OK8EIm8lMuwtrPvEDdIpsVeKnDHKqCkZyYIvPlHJvT7newlz1KXpOa1gkoiwCCo3/IOUxVMCmJ4YB5TIIOGLoBBCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=U5kjERip; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743513602; c=relaxed/simple;
+	bh=9wSJvejkq5NxPrQKr0Jhsiek8qkHChwl57pzJsxs7qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ab1iV8TmiG/Em0jgt8oY8geaVWLm49rDxPFZcP0j+0l9pj/49E8KlkbMyW5jRoG8yRNj8zJwhEI+UFuwCiTlE0DvMOkXvy51nydWSVlDVS15oKImfuQaX520S6EdbG47KmtUutuREYmQDio9G3Rq1f/BfbFs0MQVsLj2LbqRhQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIaDl7Mv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="U5kjERip"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d589ed2b47so15189495ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743513511; x=1744118311; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AHAHZnRaWT2kEHEFw/h+fXhuvxH77Ryny+INUOk6P78=;
-        b=U5kjERip5owSoLsuQ38NL+fFd95z7p6so/d66m/fjMnqCUZg1aCv1JDbRux6MhuOm6
-         bHA7Fa/OZD2j88BSz8Ucg3aTkzcZR6PLoc1EsJQ7YzGXi4f/5x5DrqWghM3CpQGf+QN2
-         ZqmTSY7GmmEXcfGwKw8XMtA5feQ61szca/xmOP4AXkEqOeisJk7z0ItQZeksyLRaHXFj
-         +ftdDQbL8k1QhhREWT2jp9I/ggpXIJuTXFH2PtHy4p6ASpM4LOvJYjclQmJT7H4q2GJ/
-         15JGB3L7uf2wvJ2IZr/RszFL246S/vknu9bUc1j6LOgDJ7qTosWKUXjevAWltP8/4drA
-         +zIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743513511; x=1744118311;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AHAHZnRaWT2kEHEFw/h+fXhuvxH77Ryny+INUOk6P78=;
-        b=ULxcUi72Mm/EKhgsmiknSb0bfj1xJp2FNMIUWDe17ByTzsvRyyxRUKOG7/GLKjvWpI
-         ZQZNNKzQGasQsG95OED4sgOgruwx7Mns1MaWSleUMt2IM10ttjetIbqxOj+aL1hYW2ZT
-         hZMm6La0+ekJmDrT8QYxdTb6OrkukE0/XxOrNpDQka9D+gJKItH414Vg3BSeAs0COC6W
-         QxuSNTaVd3qyfwy1KsDQQYxG4pE9oEAas8AVi36VgjNPJi1BnnF80FkFRecTLb+XdEbl
-         Lddr55SA6N5EfsR9KZg4ZGSSDlq5E072aWWA7DocpN4sLvEMAXN+Lf8TXng0VI2rBnM3
-         4jcw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6cP+EPD9f9C8ljIwUVpvABZT63x7LjXQoH7zdR3bGyxLiuiCzfoC0s5XVUwp4qBlsnyOar6gUH2WejRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWtTiwHm87ajwnBFm5Xc+y21XMvIVj+3aC05U1iTAsYbpq96Dn
-	A+jihLYfvw4KLc0PxvmMJorbk/hMu8xkCpqftsfUazBLnbpn3wORHFo772ZB2x8=
-X-Gm-Gg: ASbGncvshaipFIDEsXKwXcHJZsU53Fhr/CvMpfTUQ32vbNCq9n4FZs14bLUNG17A0dX
-	XrG9I9UKwkcC1H6imneR7u83id9UZgZ7jRbaSLcTxCWzvuTSfbTGaAQ4FWE6tofTCbMV5WLmgF6
-	3LCjoCeMcB6YrTWDE9nfUdFg2NWfnG9YkcBrYMnDP+wRM+SdgK8FPqu1v3aTGDPS2gEpMlPkTfD
-	U5cvEQS2oCjCldYjOmOi10fsecEy4XysPILIoYX7/ZmV485V0OtkMavp5iID+CqLT+sHdnwONZ/
-	eU5nEvpzjlpgX/SBOBgPnZAL/CsZYtQlbtOjiREjHA==
-X-Google-Smtp-Source: AGHT+IFVnPkYjUDSgEcAEBlaOmmh5aK7tQ1ZzesCShYnYzsQMsgfc7WnH26Fxa32XvQ7Qw4imigY9Q==
-X-Received: by 2002:a05:6e02:17ce:b0:3d1:78f1:8a9e with SMTP id e9e14a558f8ab-3d5e0a0d2c2mr126004175ab.20.1743513511570;
-        Tue, 01 Apr 2025 06:18:31 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4648cc61csm2379600173.141.2025.04.01.06.18.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 06:18:30 -0700 (PDT)
-Message-ID: <500a6b67-9ce0-4a74-9ae9-59ee0d4990d4@kernel.dk>
-Date: Tue, 1 Apr 2025 07:18:29 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIaDl7Mv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE0CC4CEE4;
+	Tue,  1 Apr 2025 13:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743513602;
+	bh=9wSJvejkq5NxPrQKr0Jhsiek8qkHChwl57pzJsxs7qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YIaDl7MvazjElWMG6+MRQRAKFy4pTiPH2Y5kKB+bwOeQGRBx28iNTxNhm+kBGiDtp
+	 4YKO8ZQVxGwwSlju1t7NgbfrcAPwjIo8gvofNVbWgUvO0GBU0+rwWFjhkT3apkAmJ4
+	 uY6pQqwyoDvqNlDYRZ6RCPga2q3TC6ojEw3OP+LuTxjk5AxZLRDTvJDoDvb6gOWS6h
+	 jWngKU0OhKMznLLv+XUMAgOMR4RZ/zSX670RxahSYlQ+eSNB6tA5K2+nNlGWzX4fN9
+	 HG0WNS17ib8DRY6FK3ZVY7oTA0kM7Eb5cnhK7WDEDKBVJRdkqT7xn73igeNcfTzWSk
+	 KgnRbPM3oyH6A==
+Date: Tue, 1 Apr 2025 16:19:54 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 2/4] memblock: update initialization of reserved pages
+Message-ID: <Z-vn-sMtNfwyJ9VW@kernel.org>
+References: <20210511100550.28178-1-rppt@kernel.org>
+ <20210511100550.28178-3-rppt@kernel.org>
+ <9f33c0b4517eaf5f36c515b92bdcb6170a4a576a.camel@infradead.org>
+ <Z-qrtJ6cs-kXpepR@kernel.org>
+ <b47d5f5602573bd082be3729ceddb3d1dc374ef1.camel@infradead.org>
+ <Z-vPBu5vAvFhYDzP@kernel.org>
+ <1787b97c267b53127c60a61419d99751f8a66b1a.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: ps3disk: Use str_read_write() helper
-To: shao.mingyin@zte.com.cn, geoff@infradead.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, naveen@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn, xu.xin16@zte.com.cn,
- ye.xingchen@zte.com.cn, feng.wei8@zte.com.cn
-References: <20250401192139605xby4g5ak51tei46zArAT8@zte.com.cn>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250401192139605xby4g5ak51tei46zArAT8@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1787b97c267b53127c60a61419d99751f8a66b1a.camel@infradead.org>
 
-On 4/1/25 5:21 AM, shao.mingyin@zte.com.cn wrote:
-> From: Feng Wei <feng.wei8@zte.com.cn>
+On Tue, Apr 01, 2025 at 12:50:33PM +0100, David Woodhouse wrote:
+> On Tue, 2025-04-01 at 14:33 +0300, Mike Rapoport wrote:
+> > On Mon, Mar 31, 2025 at 04:13:56PM +0100, David Woodhouse wrote:
+> > > On Mon, 2025-03-31 at 17:50 +0300, Mike Rapoport wrote:
+> > > > On Mon, Mar 31, 2025 at 01:50:33PM +0100, David Woodhouse wrote:
+> > > > > On Tue, 2021-05-11 at 13:05 +0300, Mike Rapoport wrote:
+> > > > > 
+> > > > > On platforms with large NOMAP regions (e.g. which are actually reserved
+> > > > > for guest memory to keep it out of the Linux address map and allow for
+> > > > > kexec-based live update of the hypervisor), this pointless loop ends up
+> > > > > taking a significant amount of time which is visible as guest steal
+> > > > > time during the live update.
+> > > > > 
+> > > > > Can reserve_bootmem_region() skip the loop *completely* if no PFN in
+> > > > > the range from start to end is valid? Or tweak the loop itself to have
+> > > > > an 'else' case which skips to the next valid PFN? Something like
+> > > > > 
+> > > > >  for(...) {
+> > > > >     if (pfn_valid(start_pfn)) {
+> > > > >        ...
+> > > > >     } else {
+> > > > >        start_pfn = next_valid_pfn(start_pfn);
+> > > > >     }
+> > > > >  }
+> > > > 
+> > > > My understanding is that you have large reserved NOMAP ranges that don't
+> > > > appear as memory at all, so no memory map for them is created and so
+> > > > pfn_valid() is false for pfns in those ranges.
+> > > > 
+> > > > If this is the case one way indeed would be to make
+> > > > reserve_bootmem_region() skip ranges with no valid pfns.
+> > > > 
+> > > > Another way could be to memblock_reserved_mark_noinit() such ranges and
+> > > > then reserve_bootmem_region() won't even get called, but that would require
+> > > > firmware to pass that information somehow.
+> > > 
+> > > I was thinking along these lines (not even build tested)...
+> > > 
+> > > I don't much like the (unsigned long)-1 part. I might make the helper
+> > > 'static inline bool first_valid_pfn (unsigned long *pfn)' and return
+> > > success or failure. But that's an implementation detail.
+> > > 
+> > > index 6d1fb6162ac1..edd27ba3e908 100644
+> > > --- a/include/asm-generic/memory_model.h
+> > > +++ b/include/asm-generic/memory_model.h
+> > > @@ -29,8 +29,43 @@ static inline int pfn_valid(unsigned long pfn)
+> > >         return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
+> > >  }
+> > >  #define pfn_valid pfn_valid
+> > > +
+> > > +static inline unsigned long first_valid_pfn(unsigned long pfn)
+> > > +{
+> > > +       /* avoid <linux/mm.h> include hell */
+> > > +       extern unsigned long max_mapnr;
+> > > +       unsigned long pfn_offset = ARCH_PFN_OFFSET;
+> > > +
+> > > +       if (pfn < pfn_offset)
+> > > +               return pfn_offset;
+> > > +
+> > > +       if ((pfn - pfn_offset) < max_mapnr)
+> > > +               return pfn;
+> > > +
+> > > +       return (unsigned long)(-1);
+> > > +}
+> > 
+> > This seems about right for FLATMEM. For SPARSEMEM it would be something
+> > along these lines (I kept dubious -1):
 > 
-> Remove hard-coded strings by using the str_read_write() helper.
-> 
-> Signed-off-by: Feng Wei <feng.wei8@zte.com.cn>
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-> ---
->  drivers/block/ps3disk.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
-> index dc9e4a14b885..b7fe90b6fdef 100644
-> --- a/drivers/block/ps3disk.c
-> +++ b/drivers/block/ps3disk.c
-> @@ -9,6 +9,7 @@
->  #include <linux/ata.h>
->  #include <linux/blk-mq.h>
->  #include <linux/slab.h>
-> +#include <linux/string_choices.h>
->  #include <linux/module.h>
-> 
->  #include <asm/lv1call.h>
-> @@ -233,7 +234,7 @@ static irqreturn_t ps3disk_interrupt(int irq, void *data)
->  		op = "flush";
->  	} else {
->  		read = !rq_data_dir(req);
-> -		op = read ? "read" : "write";
-> +		op = str_read_write(read);
->  	}
->  	if (status) {
->  		dev_dbg(&dev->sbd.core, "%s:%u: %s failed 0x%llx\n", __func__,
+> Thanks. Is that right even with CONFIG_SPARSEMEM_VMEMMAP? It seems that
+> it's possible for pfn_valid() to be false for a given *page*, but there
+> may still be valid pages in the remainder of the same section in that
+> case? 
 
-If you're doing this, why not kill off the useless 'read' variable as
-well?
+Right, it might after memory hot-remove. At boot the entire section either
+valid or not.
+ 
+> I think it should only skip to the next section if the current section
+> doesn't exist at all, not just when pfn_section_valid() return false?
+
+Yeah, when pfn_section_valid() returns false it should itereate pfns until
+the end of the section and check if they are valid. 
+ 
+> I also wasn't sure how to cope with the rcu_read_lock_sched() that
+> happens in pfn_valid(). What's that protecting against? Does it mean
+> that by the time pfn_valid() returns true, that might not be the
+> correct answer any more?
+ 
+That's protecting against kfree_rcu() in section_deactivate() so even if
+the answer is still correct, later access to apparently valid struct page
+may blow up :/ 
+
+> > static inline unsigned long first_valid_pfn(unsigned long pfn)
+> > {
+> > 	unsigned long nr = pfn_to_section_nr(pfn);
+> > 
+> > 	do {
+> > 		if (pfn_valid(pfn))
+> > 			return pfn;
+> > 		pfn = section_nr_to_pfn(nr++);
+> > 	} while (nr < NR_MEM_SECTIONS);
+> > 
+> > 	return (unsigned long)-1;
+> > }
 
 -- 
-Jens Axboe
+Sincerely yours,
+Mike.
