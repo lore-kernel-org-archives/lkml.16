@@ -1,157 +1,273 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0BC203709
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA08F1E47A9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511623; cv=none; b=QBmJOQdJtSHK+OPefdtrSdpK9YYCqSeFhQgn7AOqz+3cd/6z7UJE1EuoNdOI7frVimlnXDIbIKp8zSuphBES8gn0rMuWTVEGqASgFiedzWo0m8xeGFkA5Ib6dc2X4Co/y22p7RgOjOvlzkHeQwGDLZJ9Kux1pW3WGjW30khNUVI=
+	t=1743511630; cv=none; b=OVJ5E2kuE7qTjPlOi+RuRwwNbmk6rJNVXs6fGeVm+xKR7cEp7bN7dswKT1LGs8ASeybnBxWXxIin8E0n+uEM6cviyWe5RiVv69p736bRbL8iYoR9mkYD5+D8YNTNUXNosklYwHq/5PZfuRlvZ/Yeb0NoeltLCEJAaH9mrJ/RCsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511623; c=relaxed/simple;
-	bh=GnrucwK3wBDJOuGf993QhhGPNa9SjUynbuL3Y9sy9PU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ev3cAVZPbZPZyvRk0yX0/hlvu+GXrX3ctslUXY9Km6ZtcyNmiNuTNdMVq/Ri5IUqs6rPGqZrMnaRyWQIp7+LbYzlDyek4zlNqx+WswSr3+fOSfiEMCb+um/0mm11R2D5oDwXEyHcMiYF4CfOFY5Guuw5wmYIxlGc019CItYPy6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DVqHWIUW; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DVqHWIUW"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43690d4605dso37782395e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 05:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743511620; x=1744116420; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ru/kCs6fPOtEnmEL1xXoiZTrgpc2bJaLexsQ8fcTImU=;
-        b=DVqHWIUWpie5gEHBtHKIqUDzasR+bZ0tE5zP2fEA6s0gk3xRR9h7sGO5f0pZL76iWE
-         u0Of6kwnrmo0LthNMZNljJxNGysgmjJ37VAGUFtIIihIwzcfQVBikwD79W70oIljOkNu
-         BNHWIgWlH756qkV6Bv8LmT86DMKny1A7DbbCIdgjTKTDbQIcuQ6K6FaQliPO8oZQ67uE
-         XOTI6cmkWX2BzPL0qAh6tKAmxthEO58CwnRYPqX3+mMMfik8smdc1yNXhRLNWhj3BMxs
-         bEy2u0oUSkgQ41MQI3u5gqqfxy6t9fvhKEDQPKdQZQcuFrappX0jnSrimabIIrg7PrZD
-         S8kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743511620; x=1744116420;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ru/kCs6fPOtEnmEL1xXoiZTrgpc2bJaLexsQ8fcTImU=;
-        b=U1gqYG034PjzbOvUaBBR2MoKk2rZQnwX/CpYQxDgVlG6FPi35YFWQlw+eSdy5+Kg3/
-         goEFx3YcezR9W1UcQY+APNBfkzskq5AOdMPqM9AXF4TPzeBMBlgK/yX44DYhB6gFuYgg
-         aJv2GyH6hvenZaa0pYoj1kEErXt0sBN42vIvWcywbzR8FxlyTVst9DxzcjubWTMZDYWd
-         OvnT7G2iTBvZoXZCVFw31B35MDAIxTiTpYfVHwtJJGJDhreZWvzrVDCtru8D08+fytcK
-         CEV+jI86eI3hZ3yBEh4LhEoFyLMJS7mdt6FHoJm+SKLkeaqy+yyyriGgkaetzqVuyGpE
-         FzEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjt3GCUKO1aTiKg4R+Pvm/NjBlOxBk+IbDKbWJ2fNsDEvSvYk4m9zu0NC342uVNKEZ2liy/CHnFQfu75U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ5bVl299hh2WvjyJBt+c8CR02qW23hHWTtDq0Ug2Nlxzdhojs
-	Oy8h9MKXPTu7dxD198i8Z5XXSN5QA7h0XdyM9QlBkcCOFD8hGklIsRhSRYxEKhCJxKE7v4kG4PO
-	+
-X-Gm-Gg: ASbGncspC3aOaJHSiwqVDxd0GCv0PBfe2U4ul4JUV0WGNw1Wmp6xML78ezPWhyKeuxM
-	vTBEamB03BBZgI0LVKgbZ9Q7Kb9TISI8VU2uBr9/b2IWfuwfWomfdQK+goyx93uZPZLr0Q/0XKP
-	0u1n8ndSEbmg8toHIEEnd0wrodskNb11399WTxKH8cJ3OWAIW4pdm6vzmNNhZahGLU8d/GTHKio
-	W2YG6WgBswACLkaKSpT683jd93xy2EaeHgNn3/Vg/0I4CESjtMQycAR/hj3ivuxRSI+rdMJUrm3
-	P+ck6ebR6o4wZuVtZkRou4jsXGKhZwWyR+uO
-X-Google-Smtp-Source: AGHT+IHItyHH2EZ4mRoUhQ9o3NHL0wZrgwkzTBEFAtYB1xr5BdYYW0bABHCjSUvE7hwZnh5gnfHZ8g==
-X-Received: by 2002:a05:600c:3d9b:b0:43d:10c:2f60 with SMTP id 5b1f17b1804b1-43db62b763dmr116400685e9.24.1743511619813;
-        Tue, 01 Apr 2025 05:46:59 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a1d1:bbb:e2a6:2a9c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fbc1889sm154711095e9.16.2025.04.01.05.46.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 05:46:59 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 01 Apr 2025 14:46:45 +0200
-Subject: [PATCH v2 4/4] gpio: TODO: track the removal of regulator-related
- workarounds
+	s=arc-20240116; t=1743511630; c=relaxed/simple;
+	bh=dryMZnB6g2dRgy/Y+FJB0nWKQS12ye+lj4Pjro8/8nw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=a7+JKxwBJwKidySsggnsBTnq6dPCtTjs+LQY+t/PA2U3qAGqUxyJCR0ABdJN2sUDBjuL8e0q/buJO3o99x4wqb6yKeTHh947jdgIw5tbOcRyKeJbxx5LQcqyYwd0hSvo0I5gDKL4I492PlWFrhEku9JGCTtENjAaTdxy6dMuLnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZRnh43bXqz1dyxY;
+	Tue,  1 Apr 2025 20:42:12 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 42946180042;
+	Tue,  1 Apr 2025 20:47:00 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Apr 2025 20:46:59 +0800
+Message-ID: <8ce18336-0bd8-4c6f-8c34-4496c76351ac@huawei.com>
+Date: Tue, 1 Apr 2025 20:46:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-gpio-todo-remove-nonexclusive-v2-4-7c1380797b0d@linaro.org>
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
-In-Reply-To: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown <broonie@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2684;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=zc1zKN3/KwCiY/o3NNRg2Y1Q2MbeVO4dJU8b/Lwp/As=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn6+A/6+i4htRXdHudS4uj3buYx3Z220bI+AxQo
- xOYk8MMoxGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ+vgPwAKCRARpy6gFHHX
- cijsD/wJ7YiUVP0UYIZ8BUaAUNToJYtnpFiE0Pqy/HNjTu1WLJe+lXN891Vm80+KmsDxzq7zTYA
- vemMk401D7rmc7DcBQotzV2NVGEyp5RMiiQH7sLPFtICJaiLzQgOs4I7FPGuEy4hVmoxplm6Td/
- 47rEpNdnIHBlV1LIF58v9iCTxXcuBxC837cyQglzUNQc+ZZVu9CjmS3axBO2UlaIFUe2iOsTTwk
- q+pOoQvNSqq2o68z2Mx9UdHBsIXXEYJziJcLhK3ocDTbcfglJmwd75muvbQ6aWUpeMzp+gE6tTP
- JBvJD1HyUCmaWpYoYdpnyZSFrhJ10ICG5gBxKVPdEjozOymJ65zXD0cTDWKerTs3gy7FqQF1Ey+
- Gg28WcmVvMhE7Pwbt4ZMERl5vkfs7kOcT4SPeW2EDLk6Oi4Yg3MlF4lXX8YyMVlLsrc77KBI2Qy
- +j203DMerbur9A4o+KVf1FuiiJVFxIVikEtvgs553R0h5pcgCqgn4apCCxpf2Ky0rTiM78TpzKP
- ecbB3ntZ1ICjgQZytaW53GN+Eh7BsM8p6v7lvHu7lRRcb3FUsX6E658AvdgKA1PXvZLlCEtLvRZ
- BuUchLgz7YVK1BfVE+7GaAGMwVFnOjwR2EakSX40zTjg6fVv0WZTwChurOXRap+7i5YUxWhgktz
- BvcLoVlMI76pmig==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
+To: Barry Song <21cnbao@gmail.com>
+CC: yangyicong <yangyicong@huawei.com>, "hch@lst.de" <hch@lst.de>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"fanghao (A)" <fanghao11@huawei.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+References: <20250212022718.1995504-1-xiaqinxin@huawei.com>
+ <20250212022718.1995504-3-xiaqinxin@huawei.com>
+ <CAGsJ_4yDBT4rJyG4-Ow4T3xLq8VujBjG+-uxjnWUm_vW1nzT_A@mail.gmail.com>
+ <43618c9167654c68945ec5e7d9bf69d5@huawei.com>
+ <CAGsJ_4zNTYsMkeBav7z=AKdm5CjB=Y73P1QBzq+9FS--z9t9Cw@mail.gmail.com>
+ <66470ea1-668a-418a-bcf6-c8702be799ce@huawei.com>
+ <CAGsJ_4wavUq2y1TXAqKE3_paSDnTRdTyJ_j6LmHcjymm4Y-3mA@mail.gmail.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <CAGsJ_4wavUq2y1TXAqKE3_paSDnTRdTyJ_j6LmHcjymm4Y-3mA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The GPIOD_FLAGS_BIT_NONEXCLUSIVE flag and devm_gpiod_unhinge() function
-should be replaced with a better solution. The pwrseq subsystem is a good
-candidate. GPIOs themselves should remain a unique resource. Add a task
-for tracking the removal of these deprecated symbols.
+在 2025/3/6 17:28, Barry Song 写道:
+> On Wed, Mar 5, 2025 at 2:49 AM Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>
+>> 在 2025/2/22 14:36, Barry Song 写道:
+>>> On Fri, Feb 21, 2025 at 4:16 PM xiaqinxin <xiaqinxin@huawei.com> wrote:
+>>>>
+>>>> -----邮件原件-----
+>>>> 发件人: Barry Song <21cnbao@gmail.com>
+>>>> 发送时间: 2025年2月18日 4:59
+>>>> 收件人: xiaqinxin <xiaqinxin@huawei.com>
+>>>> 抄送: chenxiang66@hisilicon.com; yangyicong <yangyicong@huawei.com>; hch@lst.de; iommu@lists.linux.dev; Jonathan Cameron <jonathan.cameron@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; fanghao (A) <fanghao11@huawei.com>; linux-kernel@vger.kernel.org
+>>>> 主题: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
+>>>>
+>>>> On Wed, Feb 12, 2025 at 3:27 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>>>> Support for dma scatter-gather mapping and is intended for testing
+>>>>> mapping performance. It achieves by introducing the dma_sg_map_param
+>>>>> structure and related functions, which enable the implementation of
+>>>>> scatter-gather mapping preparation, mapping, and unmapping operations.
+>>>>> Additionally, the dma_map_benchmark_ops array is updated to include
+>>>>> operations for scatter-gather mapping. This commit aims to provide a
+>>>>> wider range of mapping performance test  to cater to different scenarios.
+>>>> This benchmark is mainly designed to debug contention issues, such as IOMMU TLB flushes or IOMMU driver bottlenecks. I don't fully understand how SG or single will impact the evaluation of the IOMMU driver, making it unclear if the added complexity is justified.
+>>>>
+>>>> Can you add some explanation on why single mode is not sufficient for profiling and improving IOMMU drivers?
+>>>>
+>>>> Hello Barry ! 😊
+>>>> Currently, the HiSilicon accelerator service uses the dma_map_sg interface. We want to evaluate the performance of the entire DMA map process. (including not only the iommu, but also the map framework). In addition, for scatterlist, __iommu_map is executed for each nent. This increases the complexity and time overhead of mapping. The effect of this fragmentation is not obvious in dma_map_single, which only handles a single contiguous block of memory.
+>>>>
+>>> Thanks!
+>>> Please update your editor to ensure it doesn't respond with such long sentences
+>>> without line breaks in the future :-)
+>> Hello Barry !
+>>
+>> Thank you for your advice, I will I'll pay attention. Leon
+>>
+>>> Can you provide concrete examples or data showing how the newly added mode
+>>> improves profiling of the entire DMA map process? For instance, what limitations
+>>> exist without this mode? What performance issues cannot be identified without
+>>> it?
+>> You can see this patch
+>> :https://lore.kernel.org/all/cover.1738765879.git.leonro@nvidia.com/
+>>
+>> Leon provides new interface for scatterlist scenarios to improve
+>> performance and gives some
+>>
+>> application instance in rdma and vfio. Users can use dma_map_sg
+>> benchmark to measure
+>>
+>> the performance improvement of the optimized interface compared with the
+>> previous one.
+> I’m not quite sure how this patchset helps compare the new interfaces—
+> dma_iova_try_alloc(), dma_iova_link(), dma_iova_destroy()—with
+> dma_map_sg(), dma_unmap_sg(), etc. Does this mean you also plan
+> to include these new interfaces in the benchmark?
+>
+> However, I agree that this patchset could be useful for evaluating cases
+> where we are optimizing dma_map_sg itself for A/B side testing. Do we
+> have such a case?
+Hello Barry !
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/TODO | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+I'm sorry, I haven't responded for so long, something urgent took up my 
+time,
+and we've had some discussion about the requirement scenario.
+CCA precision computing calls dma_map_sg and reuses the swiotlb process.
+Our team and HUAWEI CLOUD are trying to optimize this process, such as 
+this patch:
+https://lwn.net/ml/linux-kernel/cover.1690871004.git.petr.tesarik.ext@huawei.com/, 
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index b5f0a7a2e1bf..4b70cbaa1caa 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -186,3 +186,37 @@ their hardware offsets within the chip.
- 
- Encourage users to switch to using them and eventually remove the existing
- global export/unexport attribues.
-+
-+-------------------------------------------------------------------------------
-+
-+Remove GPIOD_FLAGS_BIT_NONEXCLUSIVE
-+
-+GPIOs in the linux kernel are meant to be an exclusive resource. This means
-+that the GPIO descriptors (the software representation of the hardware concept)
-+are not reference counted and - in general - only one user at a time can
-+request a GPIO line and control its settings. The consumer API is designed
-+around full control of the line's state as evidenced by the fact that, for
-+instance, gpiod_set_value() does indeed drive the line as requested, instead
-+of bumping an enable counter of some sort.
-+
-+A problematic use-case for GPIOs is when two consumers want to use the same
-+descriptor independently. An example of such a user is the regulator subsystem
-+which may instantiate several struct regulator_dev instances containing
-+a struct device but using the same enable GPIO line.
-+
-+A workaround was introduced in the form of the GPIOD_FLAGS_BIT_NONEXCLUSIVE
-+flag but its implementation is problematic: it does not provide any
-+synchronization of usage nor did it introduce any enable count meaning the
-+non-exclusive users of the same descriptor will in fact "fight" for the
-+control over it. This flag should be removed and replaced with a better
-+solution, possibly based on the new power sequencing subsystem.
-+
-+-------------------------------------------------------------------------------
-+
-+Remove devm_gpiod_unhinge()
-+
-+devm_gpiod_unhinge() is provided as a way to transfer the ownership of managed
-+enable GPIOs to the regulator core. Rather than doing that however, we should
-+make it possible for the regulator subsystem to deal with GPIO resources the
-+lifetime of which it doesn't control as logically, a GPIO obtained by a caller
-+should also be freed by it.
 
--- 
-2.45.2
+dma_map_sg benchmark provides a test method to evaluate performance results.
 
+Thank you !
+>> Thanks!
+>>
+>>>>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>>>>> ---
+>>>>>    include/linux/map_benchmark.h |   1 +
+>>>>>    kernel/dma/map_benchmark.c    | 102 ++++++++++++++++++++++++++++++++++
+>>>>>    2 files changed, 103 insertions(+)
+>>>>>
+>>>>> diff --git a/include/linux/map_benchmark.h
+>>>>> b/include/linux/map_benchmark.h index 054db02a03a7..a9c1a104ba4f
+>>>>> 100644
+>>>>> --- a/include/linux/map_benchmark.h
+>>>>> +++ b/include/linux/map_benchmark.h
+>>>>> @@ -17,6 +17,7 @@
+>>>>>
+>>>>>    enum {
+>>>>>           DMA_MAP_SINGLE_MODE,
+>>>>> +       DMA_MAP_SG_MODE,
+>>>>>           DMA_MAP_MODE_MAX
+>>>>>    };
+>>>>>
+>>>>> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+>>>>> index d8ec0ce058d8..b5828eeb3db7 100644
+>>>>> --- a/kernel/dma/map_benchmark.c
+>>>>> +++ b/kernel/dma/map_benchmark.c
+>>>>> @@ -17,6 +17,7 @@
+>>>>>    #include <linux/module.h>
+>>>>>    #include <linux/pci.h>
+>>>>>    #include <linux/platform_device.h>
+>>>>> +#include <linux/scatterlist.h>
+>>>>>    #include <linux/slab.h>
+>>>>>    #include <linux/timekeeping.h>
+>>>>>
+>>>>> @@ -111,8 +112,109 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
+>>>>>           .do_unmap = dma_single_map_benchmark_do_unmap,
+>>>>>    };
+>>>>>
+>>>>> +struct dma_sg_map_param {
+>>>>> +       struct sg_table sgt;
+>>>>> +       struct device *dev;
+>>>>> +       void **buf;
+>>>>> +       u32 npages;
+>>>>> +       u32 dma_dir;
+>>>>> +};
+>>>>> +
+>>>>> +static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data
+>>>>> +*map) {
+>>>>> +       struct scatterlist *sg;
+>>>>> +       int i = 0;
+>>>>> +
+>>>>> +       struct dma_sg_map_param *mparam __free(kfree) = kzalloc(sizeof(*mparam), GFP_KERNEL);
+>>>>> +       if (!mparam)
+>>>>> +               return NULL;
+>>>>> +
+>>>>> +       mparam->npages = map->bparam.granule;
+>>>>> +       mparam->dma_dir = map->bparam.dma_dir;
+>>>>> +       mparam->dev = map->dev;
+>>>>> +       mparam->buf = kmalloc_array(mparam->npages, sizeof(*mparam->buf),
+>>>>> +                                   GFP_KERNEL);
+>>>>> +       if (!mparam->buf)
+>>>>> +               goto err1;
+>>>>> +
+>>>>> +       if (sg_alloc_table(&mparam->sgt, mparam->npages, GFP_KERNEL))
+>>>>> +               goto err2;
+>>>>> +
+>>>>> +       for_each_sgtable_sg(&mparam->sgt, sg, i) {
+>>>>> +               mparam->buf[i] = (void *)__get_free_page(GFP_KERNEL);
+>>>>> +               if (!mparam->buf[i])
+>>>>> +                       goto err3;
+>>>>> +
+>>>>> +               if (mparam->dma_dir != DMA_FROM_DEVICE)
+>>>>> +                       memset(mparam->buf[i], 0x66, PAGE_SIZE);
+>>>>> +
+>>>>> +               sg_set_buf(sg, mparam->buf[i], PAGE_SIZE);
+>>>>> +       }
+>>>>> +
+>>>>> +       return_ptr(mparam);
+>>>>> +
+>>>>> +err3:
+>>>>> +       while (i-- > 0)
+>>>>> +               free_page((unsigned long)mparam->buf[i]);
+>>>>> +
+>>>>> +       pr_err("dma_map_sg failed get free page on %s\n", dev_name(mparam->dev));
+>>>>> +       sg_free_table(&mparam->sgt);
+>>>>> +err2:
+>>>>> +       pr_err("dma_map_sg failed alloc sg table on %s\n", dev_name(mparam->dev));
+>>>>> +       kfree(mparam->buf);
+>>>>> +err1:
+>>>>> +       pr_err("dma_map_sg failed alloc mparam buf on %s\n", dev_name(mparam->dev));
+>>>>> +       return NULL;
+>>>>> +}
+>>>>> +
+>>>>> +static void dma_sg_map_benchmark_unprepare(void *arg) {
+>>>>> +       struct dma_sg_map_param *mparam = arg;
+>>>>> +       int i;
+>>>>> +
+>>>>> +       for (i = 0; i < mparam->npages; i++)
+>>>>> +               free_page((unsigned long)mparam->buf[i]);
+>>>>> +
+>>>>> +       sg_free_table(&mparam->sgt);
+>>>>> +
+>>>>> +       kfree(mparam->buf);
+>>>>> +       kfree(mparam);
+>>>>> +}
+>>>>> +
+>>>>> +static int dma_sg_map_benchmark_do_map(void *arg) {
+>>>>> +       struct dma_sg_map_param *mparam = arg;
+>>>>> +
+>>>>> +       int sg_mapped = dma_map_sg(mparam->dev, mparam->sgt.sgl,
+>>>>> +                                  mparam->npages, mparam->dma_dir);
+>>>>> +       if (!sg_mapped) {
+>>>>> +               pr_err("dma_map_sg failed on %s\n", dev_name(mparam->dev));
+>>>>> +               return -ENOMEM;
+>>>>> +       }
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int dma_sg_map_benchmark_do_unmap(void *arg) {
+>>>>> +       struct dma_sg_map_param *mparam = arg;
+>>>>> +
+>>>>> +       dma_unmap_sg(mparam->dev, mparam->sgt.sgl, mparam->npages,
+>>>>> +                    mparam->dma_dir);
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static struct map_benchmark_ops dma_sg_map_benchmark_ops = {
+>>>>> +       .prepare = dma_sg_map_benchmark_prepare,
+>>>>> +       .unprepare = dma_sg_map_benchmark_unprepare,
+>>>>> +       .do_map = dma_sg_map_benchmark_do_map,
+>>>>> +       .do_unmap = dma_sg_map_benchmark_do_unmap, };
+>>>>> +
+>>>>>    static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
+>>>>>           [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
+>>>>> +       [DMA_MAP_SG_MODE] = &dma_sg_map_benchmark_ops,
+>>>>>    };
+>>>>>
+>>>>>    static int map_benchmark_thread(void *data)
+>>>>> --
+>>>>> 2.33.0
+>>>>>
+> Thanks
+> Barry
