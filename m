@@ -1,90 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9951EF378;
-	Tue,  1 Apr 2025 22:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BA01E51EE;
+	Tue,  1 Apr 2025 22:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743547149; cv=none; b=MhAk70dtxrc585QDXtAl17+5IVy48JXuXVmTnzZ+4RGlgzckZeKtIQApfw+qiMqs1BRn8ltxPoT7GjzKxihD7m9ecwd50Y9qn6pdMM7RgQz4Y3EN5uodnYqpqplNSA4Eacujiu6B40TAKlfRF1JDGLFup9C+Nsn6wrZlfXri0SQ=
+	t=1743547390; cv=none; b=bP+zZXxDowHyc0Tax87wMZtV/zsws7Qdimuc4e5/YghZOUaldastl+wDg5DWL7snUv6SbYI5nk5C0TkCVtkIhMlduJOKo8pV4vxXquqaBnn/vpReFaJs2c/ZCDjUoMfr6i+MeLfDtWpwTW44VgWXyViI/xALDSSZGmJEU4/7Q0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743547149; c=relaxed/simple;
-	bh=NqRzgb6JFsUuvJzlcJNDZ1xbbYmmmTtYpnNszF7zWOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MQzbqEs6/jbGEj7o5IgWCCZLYRhnmK6rerzbp77a/PjZmCR9oOyTQeo3rUOKUD35UZ2+1VmzI1CphEXlKR7qDGBz2ROftu/4M91RNY5KRCYd/2bmu1PNgCjGUTBc6KwnZ80M8qexLEOPtirsUaHtqjox5DrsrZvPiqbgclbDcbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC94C4CEE4;
-	Tue,  1 Apr 2025 22:39:07 +0000 (UTC)
-Date: Tue, 1 Apr 2025 18:40:08 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Linus
- Torvalds <torvalds@linux-foundation.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
- <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
- <rppt@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v4 2/4] tracing: Have reserve_mem use phys_to_virt() and
- separate from memmap buffer
-Message-ID: <20250401184008.77ca9599@gandalf.local.home>
-In-Reply-To: <20250401181640.09bb0333@gandalf.local.home>
-References: <20250401215115.602501043@goodmis.org>
-	<20250401215333.427506494@goodmis.org>
-	<20250401181640.09bb0333@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743547390; c=relaxed/simple;
+	bh=OXgiqBm85z4tWCR8EwZh57yh1Zl0z2cB7ncr9Tk25Ck=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VVGW9Nt+7Gz6BhHRddIoH7OkUOcv8rcfscHTF3HaONkEylk1xpN1q1T+Sh4EMBNICTHAYGQRn067+RRkhzbDMKUrypK7tByUa/ZZcVfPDaZXu3vakpdfh/ae9cXlwrgke6vFfHjTcniZs7ItHupXtJztEFHAtozBfvNwCqaSJlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WAGbrPll; arc=none smtp.client-ip=192.19.166.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WAGbrPll"
+Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 4AFEAC000928;
+	Tue,  1 Apr 2025 15:43:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 4AFEAC000928
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1743547382;
+	bh=OXgiqBm85z4tWCR8EwZh57yh1Zl0z2cB7ncr9Tk25Ck=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WAGbrPll6tu8Nrubq8NZTYHf6nlQe24BbQgsn3+SE01sXIHLq4UgXsQ4wNCSrJzEC
+	 C8r/95ORDBo6+P5wIg+0TZtjEaoA8fwLT+iJ3ZnlLT2+mGHILQ+IMYu4qDASy9kZpl
+	 Sv3XafIvtkJB61xlQrpaEqmMUOVQUPoWLXQzGG/E=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id 1FEB44002F44;
+	Tue,  1 Apr 2025 18:43:01 -0400 (EDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Mark Brown <broonie@kernel.org>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH] spi: bcm2835: Do not call gpiod_put() on invalid descriptor
+Date: Tue,  1 Apr 2025 15:42:38 -0700
+Message-Id: <20250401224238.2854256-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Apr 2025 18:16:40 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+If we are unable to lookup the chip-select GPIO, the error path will
+call bcm2835_spi_cleanup() which unconditionally calls gpiod_put() on
+the cs->gpio variable which we just determined was invalid.
 
+Fixes: 21f252cd29f0 ("spi: bcm2835: reduce the abuse of the GPIO API")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ drivers/spi/spi-bcm2835.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Note, your patch to free the persistent ring buffer wasn't fully
-> functional, as it only did the "vunmap()". That doesn't return the buffer
-> back to the buddy allocator. What you saw was just the freeing of all the
-> other descriptors that make up a trace instance.
-> 
-> Before this patch:
-> 
->   ~# free
->                  total        used        free      shared  buff/cache   available
->   Mem:         8185908      297404     7825896         916      162288     7888504
->   Swap:        7812092           0     7812092
->   ~# rmdir /sys/kernel/tracing/instances/boot_mapped
->   ~# free
->                  total        used        free      shared  buff/cache   available
->   Mem:         8206384      297956     7845904         916      162260     7908428
->   Swap:        7812092           0     7812092
-> 
-> Amount freed: 7845904 - 7825896 = 20008 (20M)
-> 
-> After this patch:
-> 
->   ~# free
->                  total        used        free      shared  buff/cache   available
->   Mem:         8185912      301808     7820696         920      162860     7884104
->   Swap:        7812092           0     7812092
->   ~# rmdir /sys/kernel/tracing/instances/boot_mapped
->   ~# free
->                  total        used        free      shared  buff/cache   available
->   Mem:         8226868      295968     7867644         920      162836     7930900
->   Swap:        7812092           0     7812092
-> 
-> Amount freed: 7867644 - 7820696 = 46948 (46M)!
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index e1b9b1235787..a5d621b94d5e 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -1162,7 +1162,8 @@ static void bcm2835_spi_cleanup(struct spi_device *spi)
+ 				 sizeof(u32),
+ 				 DMA_TO_DEVICE);
+ 
+-	gpiod_put(bs->cs_gpio);
++	if (!IS_ERR(bs->cs_gpio))
++		gpiod_put(bs->cs_gpio);
+ 	spi_set_csgpiod(spi, 0, NULL);
+ 
+ 	kfree(target);
+-- 
+2.34.1
 
-Bah! My patch is buggy. Yeah, your code released the memory properly, as you had:
-
-	reserve_mem_release_by_name()
-
-which does do free_reserve_area() on the memory mapping.
-
-Which means this patch is buggy and freed the same memory twice.
-
-OK, time for v5 to fix that :-p
-
--- Steve
