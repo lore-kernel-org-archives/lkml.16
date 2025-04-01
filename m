@@ -1,61 +1,102 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838697FBA2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF9E7FBA2;
+	Tue,  1 Apr 2025 04:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743480647; cv=none; b=Nqa4xK4GAGfCEt5ThpMEZ2DBvYXpJehZz8k+wlbaUduXlNWTVPVQrzF2akQKyKTqqb36TXvqZlgtkFGNSIpVIWhZKWRqX8Yt869dm5JDYXj/WHnW8kVyrQQrL2eDmcWbQOX/BEwdeey/hd6gy1pTJ8PshayL6sRVG2/sGqDwB2M=
+	t=1743480737; cv=none; b=MmJFV9AK6FKC7LKXFHjkJnrvqhzYgdSo1E/8aBlNdOlVL1ftWsPrAe5YQ6Li2mACm85Irfr94Rd8mpzrF3KDqy3zBTFWYxaorcNxL7cIdBe7q0EY1WAR6Iwr9B3J/1E9ZalyHunvUZNoJnHAZSzUMax5+4gj+R7YNV1c2DZe7tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743480647; c=relaxed/simple;
-	bh=SO3hCWG2oym2HwQ4uUlEyUAJ9bCi5GKIg4knTInEcqQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=VK2J3IzbqX5TG5etipTm9zua/TQms1Fki5civNYbkgYSvM6OFP05a2h4vgszDyUlBYQTKlTy4zpn96UDPStlnQ8sJg6W4g+IspqVhzDC16iqKPepwYufPJ1dAYiyciBRFy5onM+Benn8eQPP0p1l0LS7ToziCow6pUL/0Nx5u7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b3a2f2d4so97937435ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:10:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743480641; x=1744085441;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yTg2Awk/3PXKxXZrA4GyyhvYfu8HXhKZmX8tWwbhhTo=;
-        b=echkJVjzPubL/zb6lqNM01DnSfpFPyeVQ6ftx/N9ltJPZ6aRBrXg/vrtXAuIw0n1+J
-         DwvkhC1W4xHUiCIlrdeajAhN7KrtM50bMAjbz8igy4jNhq0wPhJIiPxEbNGhZKGLDWCv
-         1H9dn/qoemlUoKF0mPaW15OIszZj+nJxzK9O/Q6JehkA9mr4dedwS9QiNZBfdbXqz4lJ
-         nZ6anSMvrVTRd2anUufLmzsA1cbdqK6G/845BZmypMIdn41e2bkBH1BT2KDDCOp0bQ5f
-         OqILDHxXr3IV2WSd31PUgsNXEdgzKgqZjBcgxOPMYB4NLcFmxj08LmMwZdq1TwtCqoky
-         iYCg==
-X-Gm-Message-State: AOJu0Yzqyc17TzyfwkgbLPy5vzWq9OVxuEqwSQLrEjmGaTAA/fYWums5
-	8OypJBFj+Q17ChZYa81m+Pn6H+gumy5vEssdp1o39uXcSRY5B1TL7cMaR3Gls6JxOO9Ki3pDUuJ
-	/WnABsDL8kzaYH72v/WSX294Fg5K4hQmjVM6SPDzoK/tQtgM0KR6M3pk=
-X-Google-Smtp-Source: AGHT+IGY/3/lCxepxkouxkOTsG2oGlaiiztQAJH7x32Yv5ytAqKDKSAlcwAxVORum1/qA57g5GksrsNoGM+hGVgBanVxl9xIioUx
+	s=arc-20240116; t=1743480737; c=relaxed/simple;
+	bh=rTx8MvmTBpW5t6mgl50Rs3iMX+EIlOymsf7bK+Q719A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oHCJlR8bVzDJXXZQ3tdZkzd2bXJZrH4ABYtuROF7K135FAZmCfy6wyszrantEs6MNefwZb4e89uE5Va0XfLzH//ZHy78l9xx36jLdlfEsnNQRl/f0ba8Xi1mBvztxLpNv0G/x8HRQCayvl1oJVUvym60tBCNXFPMoapmyvlaJIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACn3gaRZ+tnerKTBA--.2373S2;
+	Tue, 01 Apr 2025 12:12:07 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: mchehab@kernel.org
+Cc: yujiaoliang@vivo.com,
+	hverkuil@xs4all.nl,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] media: dvb: Add error checking for bcm3510_writeB()
+Date: Tue,  1 Apr 2025 12:11:41 +0800
+Message-ID: <20250401041141.2016-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:248f:b0:3d0:239a:c46a with SMTP id
- e9e14a558f8ab-3d6ca5d5dbcmr20965995ab.9.1743480641673; Mon, 31 Mar 2025
- 21:10:41 -0700 (PDT)
-Date: Mon, 31 Mar 2025 21:10:41 -0700
-In-Reply-To: <67eaa162.050a0220.3c3d88.0044.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eb6741.050a0220.297a31.0007.GAE@google.com>
-Subject: Re: [syzbot] 
-From: syzbot <syzbot+cebfe3f22eeaff4ddd7c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACn3gaRZ+tnerKTBA--.2373S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJryfCw45Xw17tFyktrW3trb_yoW8Cr1xpr
+	sFy3yrZa4jya1xGFnxtw18KFyrtw1rtayrKF93CF1xZr1rWay3XrnFqa13ta45ArWfJa13
+	Zw47JFWxCFyqyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwSA2fqg1RtQAACsv
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+In  bcm3510_bert_reset(), the function performed multiple writes
+without checking the return value of bcm3510_writeB(). This could
+result in silent failures if the writes failed, leaving the BER
+counter in an undefined state.
 
-***
+Add error checking for each bcm3510_writeB call and propagate any
+errors immediately. This ensures proper error handling and prevents
+silent failures during BER counter initialization.
 
-Subject: 
-Author: kent.overstreet@linux.dev
+Fixes: 55f51efdb696 ("[PATCH] dvb: flexcop: add BCM3510 ATSC frontend support for Air2PC card")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/dvb-frontends/bcm3510.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-#syz fix bcachefs: Eliminate padding in move_bucket_key
+diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
+index d935fb10e620..fc5853fc9595 100644
+--- a/drivers/media/dvb-frontends/bcm3510.c
++++ b/drivers/media/dvb-frontends/bcm3510.c
+@@ -270,10 +270,18 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
+ 	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
+ 		return ret;
+ 
+-	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
+-	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
+-	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
+-	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
++	b.BERCTL_fa.RESYNC = 0;
++	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
++		return ret;
++	b.BERCTL_fa.RESYNC = 1;
++	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
++		return ret;
++	b.BERCTL_fa.RESYNC = 0;
++	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
++		return ret;
++	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
++	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
++		return ret;
+ 
+ 	/* clear residual bit counter TODO  */
+ 	return 0;
+-- 
+2.42.0.windows.2
+
