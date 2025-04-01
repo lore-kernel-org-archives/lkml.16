@@ -1,116 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682751E5B6F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 21:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C751C174A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 21:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743541214; cv=none; b=Qqn6kmnov3TjuZ0ORiImHJgqB1ajotyg/6M3CAPPR5YA7bEzaefus+GuZWNaBfNB0ySt7DS9FLT6MsEeiqpSeLhBkrHxiDg2T1UYm7kuRwZgTm0xwNxFeaplfvVZIYYpJrnokvrZEtyzzr2siuqCOPHqy6qgG/4UdKxjfTxR7zU=
+	t=1743541326; cv=none; b=M4WxrosXQNctZSJTpy68XSQWAtU3dyZNqlU3xYOruQ7nYGzUanrUM6KfD1HF+q0s98lVxmupC86MKFs3gKL388WeINIpmFz9ICWOaLMIltHenLDG6n3jrjKeBxJqVNq7z4CHMrC+Qa/CfAhnHbyCxRxidOGglWQkjsZx4SbIFrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743541214; c=relaxed/simple;
-	bh=+XDeYiw/hW44q3jSy7fSTo+J4CILWaW2ndZoO7THvaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C7bqU4onprUEmVpMmmb15+xtzx63h8DNOVjTXryCjzYDdDM0va4056Qr/Et+r0R7xK7c9k+ALac+jqUWQ7ZVAO4WJBr91seq3tMAaxLgTFf9RjRE2mbgviudq46Bzmwxq49yRGuHFTLVIh7WLe5UAIcmSKsnpnjCugFL+aap740=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpLNy51u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743541326; c=relaxed/simple;
+	bh=QpMJiwUoBFdoSP7DPzpzrR/BgmlNDb/On0b7vW+Ks+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KhaoVGlMDS+b/XHjQjGG0zKes7Pe3HcQeqEY8hFuqihlHwbiKaZh3t58AeR4/efLMilHTZprgW9RM/EjMtw/Edd9OpTPqxGVCY6rykENDtzq0qsjwVWEDoYwM/bASeNJQfG0RwvrZ3FTw2kUERsGeGq2UUi/MrtP8HK4Pu6yLs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJgcwbt4; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpLNy51u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0EFC4CEE9;
-	Tue,  1 Apr 2025 21:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743541213;
-	bh=+XDeYiw/hW44q3jSy7fSTo+J4CILWaW2ndZoO7THvaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SpLNy51u15Y/IRsWubP6KHAQ9UbeRUpjQ3ZWj0q6Lc/5hSt/alD2Cp8cpUcd0vhWn
-	 fxHUi1fyxJV9D5+ayc71hOZkj0RhMnPxXL1ZgjYNS8EbFmgnf80OJklE4JXkqen6Hn
-	 77c4l8S/V3hn2SLszEiQYn0JwLRo9R9vvRPb3Jqi7CaDkTs9I5A3voLj3IqjwV2B/B
-	 uhqAle2pPmT5fMA+kUgBS6mnAnutQ1TzVl5qUeHHLBdMIXQDcDUwljsR+2gV7aSD5w
-	 O4mV/SV5onmcW70M5fYveKmCYf9TcCQb+tRnR/XuXhT8ltOKGiUMLvSUHHoUIVYPYx
-	 wvl/sdYJv3Kvw==
-Date: Tue, 1 Apr 2025 23:00:09 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86: predict __access_ok() returning true
-Message-ID: <Z-xT2Td5_8XbSO1t@gmail.com>
-References: <20250401203029.1132135-1-mjguzik@gmail.com>
- <Z-xOFuT9Sl6VuFYi@gmail.com>
- <Z-xQAyPxQGvlg_hd@gmail.com>
- <CAGudoHESK=sPyYLjqubjfAy-Un18EML8HX45EgfL+UhiqU8bHA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJgcwbt4"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so42244275e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 14:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743541323; x=1744146123; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bjmWrNFJq5FsQ91RyEXZTPg7iV8Tf7Wr4X3A+p/WTNI=;
+        b=TJgcwbt4EzGMxQVT6tCP5tDCsamoeNxv0Z0aD4Rg4tPMAlTr2TV1Gyrci4HVbKf3AN
+         feUJoKyyU6ExDtGv2E9rkOXfLHUOn57HkOOuCDkpL5B4tI37sudr5eR28f9AX9J/9Ckj
+         dRNBDHiasz/jyvwgqEsH5E3fwPXvqZJyebBxnftPMg68pFMEcUeoK/um0vw86BM6AI8b
+         1bN0bESYmIHJLFBn7wYBhJnCDbD2qXQeqB+gS0gAn8E1Hi4KuV3/DvFaCAxSpRC8YM+p
+         fAFChxKodnuz8Oj4DPM9odBzFKzJ5DDD5O6daly0TyzRsWftT68UlBvvCiR1GeBhE18m
+         FlCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743541323; x=1744146123;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bjmWrNFJq5FsQ91RyEXZTPg7iV8Tf7Wr4X3A+p/WTNI=;
+        b=RFseaHhN0/aoI9dywmeJyUruaWSJ4hMJdC22UbnDocbtFmlUXpjvEH3NU6vEadcSiI
+         VN5UQvdevtRDO2rap3VtSY9+6b1Cpxwpg7nNQV8fOZ9n3zPhV6nDgt142vSR9UOvvAb2
+         0lKqYXpKFolOm5X29ZLah9orDZpQiqWWSUnOnB5cbsUWw1puTemuVpSfwYGPIRE/0KGi
+         f3b5TZTiZMtFmMn5YZSzLH3Ft7OwoNZzXuiwGPRvcXvRfArvdkzCGN91OQ5/NVwNE3tY
+         +QWu559akw/ltSACKty7UBW0G99eYPYWuVaBFx2rB0jMCaHcp6zOGkE9kvyhpaix96Gi
+         h2fg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdPdVrS/Jhm8RNdqGv50o/mxQARG5vJWJ2DUx9Ugqol3bKP4jn9Nmc2ChorQaglui1pwyBSnRrCl/9aFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgbHEEAfHW5ICXSMnVMf8FSvbbu34qsu/wtws1lssGP4clFGKQ
+	DDlHeFZN2dhuqhcVdKyAJavCuU47gRSnX6aJ39G4hYAZAgI1HJ50aOpFlg==
+X-Gm-Gg: ASbGncsnTQhWcb7L78avqT+XNw2EhhaB4XHuVOSzRGqxvm5qYgWmZj2T344SGjus6o9
+	MpSZoaYm79vXjCcFkFyxPXtTbcDjb7Mg859zPYbXIRFGc0Rf8n1iODXyIdsnOTFq6cD8wgf9h7K
+	nqfV6tZXxnjhROW5TrbyzTkPfyt235xMkWTGGOASyL9thbM0SXKaN9LlTFdukWRt/GhcFNPqN/2
+	An7jb0BibuwHTLxO7VBEhG1MZ1YfBvX0JZjH8s6QZ1BgQJorAR5rvVgqarudMuFREdV1eQJ0fTn
+	42+FGUn1k9h/avZOPeMgCWmaam9KLzmfHApcD8wqGeLefW545dN/lOWYCoHnoe0tY2UN9FgoPQl
+	X/9s+Uqs=
+X-Google-Smtp-Source: AGHT+IH9YPMWiON4QM+xaQnB5yqCP10tZKboZ8LNviXyPWzJfgh/M6Q58FlmTI0dL5JuYBp5qZxPFg==
+X-Received: by 2002:a05:6000:4023:b0:39c:119f:27c4 with SMTP id ffacd0b85a97d-39c29767c83mr14733f8f.30.1743541323342;
+        Tue, 01 Apr 2025 14:02:03 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c1845e66esm9181665f8f.18.2025.04.01.14.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 14:02:02 -0700 (PDT)
+Date: Tue, 1 Apr 2025 22:02:01 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Xu Lu <luxu.kernel@bytedance.com>, Jessica Clarke <jrtc27@jrtc27.com>,
+ tjeznach@rivosinc.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, alex@ghiti.fr, lihangjing@bytedance.com,
+ xieyongji@bytedance.com, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [External] Re: [PATCH] iommu: riscv: Split 8-byte accesses on
+ 32 bit I/O bus platform
+Message-ID: <20250401220201.1fa3ec76@pumpkin>
+In-Reply-To: <20250401154412.GI186258@ziepe.ca>
+References: <20250325144252.27403-1-luxu.kernel@bytedance.com>
+	<9F043708-3BB6-46CF-BEC3-2636E9A388B7@jrtc27.com>
+	<CAPYmKFtAWNz7nCDDD7rjGeV2fRBgy5Kt6KR60pEyXAM=bb7r4g@mail.gmail.com>
+	<20250401154412.GI186258@ziepe.ca>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHESK=sPyYLjqubjfAy-Un18EML8HX45EgfL+UhiqU8bHA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 1 Apr 2025 12:44:12 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-* Mateusz Guzik <mjguzik@gmail.com> wrote:
-
-> On Tue, Apr 1, 2025 at 10:43 PM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > > It's also the right place to have the hint: that user addresses are
-> > > valid is the common case we optimize for.
-> > >
-> > > Thanks,
-> > >
-> > >       Ingo
-> > >
-> > >  arch/x86/include/asm/uaccess_64.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-> > > index c52f0133425b..4c13883371aa 100644
-> > > --- a/arch/x86/include/asm/uaccess_64.h
-> > > +++ b/arch/x86/include/asm/uaccess_64.h
-> > > @@ -54,7 +54,7 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm,
-> > >  #endif
-> > >
-> > >  #define valid_user_address(x) \
-> > > -     ((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
-> > > +     likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX))
-> >
-> > Should we go this way, this is the safe macro variant:
-> >
-> >    #define valid_user_address(x) \
-> >         (likely((__force unsigned long)(x) <= runtime_const_ptr(USER_PTR_MAX)))
-> >
+> On Wed, Mar 26, 2025 at 11:26:07AM +0800, Xu Lu wrote:
+> > Hi Jessica,
+> >   
+> > > Is such a platform conformant to the specification?  
+> > 
+> > We have talked about this before [1]. I think the IOMMU spec does not
+> > mandate the implementation of 8-byte access functionality. The related
+> > sentences are listed below:
+> > 
+> > "The 8-byte IOMMU registers are defined in such a way that software
+> > can perform two individual 4-byte accesses, or hardware can perform
+> > two independent 4-byte transactions resulting from an 8-byte access,
+> > to the high and low halves of the register, in that order, as long as
+> > the register semantics, with regard to side-effects, are respected
+> > between the two software accesses, or two hardware transactions,
+> > respectively."  
 > 
-> Note the are 2 tests and the other one does not get covered by *this* likely:
-> valid_user_address(sum) && sum >= (__force unsigned long)ptr;
+> I think the commit message should explain an anyalsis that the code is
+> safe against the mentioned side effects due to ordering.
 > 
-> as in sum >= ptr is left be.
+> And a comment should explain this:
 > 
-> However, I confirmed that with your patch the issue also goes away so
-> I guess it is fine.
+> +#define riscv_iommu_writeq(iommu, addr, val) \
+> +       ((addr == RISCV_IOMMU_REG_IOHPMCYCLES) ? \
+> +        lo_hi_writeq_relaxed((val), (iommu)->reg + (addr)) : \
+> +        hi_lo_writeq_relaxed((val), (iommu)->reg + (addr)))
 > 
-> I think it would be the safest to likely within valid_user_address()
-> like in your patch, and likely on the entire expression like in mine.
+> As the naive reading of the above spec paragraph doesn't seem like
+> there are exceptions or why one register has to be the opposite order.
 > 
-> That said, there will be no hard feelz if you just commit your patch
-> and drop mine.
+> Also missing () around addr
 
-Feel free to turn it into a Co-developed-by patch:
+It is also double-evaluating (addr).
 
-  From: Mateusz Guzik <mjguzik@gmail.com>
-  ...
+I hope there is a lock, interleaved accesses from multiple cpu
+may not work.
 
-  Co-developed-by: Ingo Molnar <mingo@kernel.org>
-  Signed-off-by: Ingo Molnar <mingo@kernel.org>
-  Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+	David
 
-Because all I did was to transform your fix into something a bit more 
-maintainable. I didn't even test it.
+> 
+> Jason
+> 
 
-Thanks,
-
-	Ingo
