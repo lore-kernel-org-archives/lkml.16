@@ -1,95 +1,141 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFB070830;
-	Tue,  1 Apr 2025 01:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F2B2AF04
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743471619; cv=none; b=OvqN0I8djIyMGsNcSUc31nYu8Y6vsO9Q6I6Zr4aepw3IqXKHpLt+NB5IzNhaTYyuklv4wgEUnSFAklQVkTSZdaATtgPV7DdIs2oe2X5bECfLIF3PE/ngnZIxCab1MIhHqWXV1ia5k/Kd1hyjEOWSh5YUnCBcl/vnn2IdBRcgG2w=
+	t=1743471620; cv=none; b=NtpUfgBo2RWrE5b+dvoxyhCIH88wHEliKWADXbRzcIvMn8aKAtqWYcTHM2qiQR71+kRpyh5XzscMu7mhOZqR1W5fHx2p6CzjuUFFBIZVem+g6RfQKd/yPpoJYDlGSZZCehsB0sPSg7vI6qoGpMNK15tzdCyCNV1k55+xYRiHDfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743471619; c=relaxed/simple;
-	bh=U4gNIwCOm/SqsSvywqeoGSyu+0kNBYn/3W7M7AGnnIQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjuWiJmyFtHXzP/hdBme8XyOgmuhJkdoHsWJmhaJFG/NcZiS+RApxS2SUsrAKsZz26M/c30UBwyOyuI/G0JvB6JqVc8HQsWDIamHbbi49IWq9A1WKQvkIMNQ5i9Z8k5vI9Pn1ISTBIv0DNqktvNNeOc9UdBrXs4/OuE5KXghfpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Co5ZYNoE; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743471620; c=relaxed/simple;
+	bh=Ln079lz0yzjobmwJiN0OVPo+66Jkvv2FG4dAT0dZWOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aIzFbmlo3WfScnOQKs7WjC3jGGm+H+FR3ysHhkhBwREJgBP5dD7Y/rzSHmEb6beaj1bfM1YQ5Lk2xunLWywhKYciQId4ZSU5h25dWY539Rj2P153Wd7oyxQk8iBraFzDiKSxg4Fo7nkA7fzJxUyWt01UvM4Q1iIF9L3X1gH37Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r3y1bId/; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Co5ZYNoE"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3995ff6b066so2782928f8f.3;
-        Mon, 31 Mar 2025 18:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743471615; x=1744076415; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=7yvVaeLNnzl4CaH0kZ/bBt05ELoD8WPueO+YtgvCv9g=;
-        b=Co5ZYNoESGEEupEfODzBmvBIv6E4TCue3Ejsyv0EsTJvX1XKXJE2OLj87kRZjJxm5G
-         /gm0TGq1zYeZP/4e740dq/BDt7LhKIqMlFbNmaep4NwUyAvTUa90DAau9E7kTGT6KEec
-         /LapVy6V8kvuVggbbz0NgymVyQbEajhOpMcHx8yU4ZVDEqVRUdVRRjiEpH2hm1RexVLW
-         s+Fnap2XG2G1V7zNs5TVuNPqdhZiyKxgBvzdvg0HkbU+r/uqOFofeYI0yzrMcKATCAql
-         3VFuCxiUZ7hOGoVZeVQpN+vG7qrHFQWK0ZdCGzG5QYMdah9KPYoKQ4hQdih0M+VAh+Ra
-         EppQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743471615; x=1744076415;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7yvVaeLNnzl4CaH0kZ/bBt05ELoD8WPueO+YtgvCv9g=;
-        b=weRpixG8NxvTSdY/bd1DhBeXEUuwtMMoXZgUM78mBN83cEY1tgIDRy2k4s5JVVBZOR
-         0ZX4L2pFJqET09peVgw/ivsLOODWLwLdEG2x3VVJziCELTUyuZhuXdFENvRTGvDUcxfb
-         9uJSDL/rc5mbwlHMYhnraQLz5AUqgMO/LwusoiZ+qIuQPjLWaLHyR6/KOnc81hCjJK2Y
-         g25hPBflVYJVlo0rUuciPfw8+m8CCwwJ2a25DSgCgRCBG504Ri8rUT9S/sBZUwHNzAKU
-         W7gbCgWl6UDcyGfgScSDgAR7pkeJBYlD1aW9Bqn/skEUbtqI6w+P1hTQmEtnfA4QOCzh
-         fA2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUyBLME3caPHiAHMR2A56+5vOLlykMcSMk9Cp1sDGzJbc8kVmhvMCnNeXtHHe51i6j+/RiPCG6K7nd9fUhw@vger.kernel.org, AJvYcCW9S1eS/CPCVtTbEwGMAUFpVhyWhUFjILjCf+dhdCZqnFxEHcL4GIowd5XvzhDQTNhc5YR0XkBHznRXyQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFF5VR3njJnv5FTrodVg3THNz4z/FUm1/qg9KVzioqwgDSTNaY
-	amJgklEP2xMd28G9ftxXO8DDPk6ugweYIi2mxScb/PzDscDmVxhB
-X-Gm-Gg: ASbGnctAAMJUepdb3nQAzyO2R6Dm9KiBYPoBEL3cfi35OG6e19gMUuOXj9STVLFcAsw
-	VXPGMRHDH3hAxCRSWLGyyazmsNnauNUFbej30kDoVTP7bv351Nltf9JX1Po3NdgTiI51TNk8l5Y
-	ffxyfOuAd+vr0jjhoKSKwh6M4L2r72nmT/pM1qw5vyOU1J9dr/PmPyAPxIKi/XgITb/ptRuR5aY
-	AgwdWZMNc7GYlhtTBQiCr2fQ8BMoX6ktcbBtlEev7B8XxavzsJIX/+pj9HzjFdpDhDxgAHgIFm8
-	aMfJqAWKmiNikQA5+zMXNF6dmKpAFwdf42j7SfhtSRHa9aLOahdncpKDVsiZlVxrrY6CKJJru/A
-	S
-X-Google-Smtp-Source: AGHT+IETpkoeDHGWHjvibfEQoZfm1mFJCBzs0UJc3sbI5za/Db8R1xcGPQcEpCpAZVcim3KgcrM1GA==
-X-Received: by 2002:a05:6000:1a8e:b0:391:3915:cfea with SMTP id ffacd0b85a97d-39c121139b7mr9382454f8f.38.1743471615191;
-        Mon, 31 Mar 2025 18:40:15 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm12554125f8f.7.2025.03.31.18.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 18:40:14 -0700 (PDT)
-Message-ID: <67eb43fe.df0a0220.385bb.dece@mx.google.com>
-X-Google-Original-Message-ID: <Z-tD-VOLwR7Vd2Yx@Ansuel-XPS.>
-Date: Tue, 1 Apr 2025 03:40:09 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-	Douglas Anderson <dianders@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Riyan Dhiman <riyandhiman14@gmail.com>,
-	Konstantin Khlebnikov <koct9i@gmail.com>,
-	Li Lingfeng <lilingfeng3@huawei.com>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] block: partitions: of: assign Device Tree node to
- partition
-References: <8cfbf225bcda906df0c89dd18ba07ecfa17123c2.1741107851.git.daniel@makrotopia.org>
- <c0b234511303c2efbbff336ed4d5bb993b54f16b.1741107851.git.daniel@makrotopia.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r3y1bId/"
+Message-ID: <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743471604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o9ohi78hJmC8ZbZkUbSfn1oReFwEpPo/O49EMuN7f7U=;
+	b=r3y1bId/Oq6Q+U02X4bb5gIfLFeBuu1LrKdBUBdSdiBo+rCUJxcBW9Hd8HR+h5jtqkUk9z
+	EnY4fkQO6lEOGRJPOg29JTy318DZJcwTB2tWwZw/V8NPPWUNuWoUVQm6qsm4yfUV+XNElf
+	vcKHzZ5Dzk3wJCWMbONGk9oi96TsNdc=
+Date: Tue, 1 Apr 2025 09:39:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0b234511303c2efbbff336ed4d5bb993b54f16b.1741107851.git.daniel@makrotopia.org>
+Subject: Re: [PATCH v2 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
+ model description
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
+ <20250331064116.32540-2-zhangtianyang@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250331064116.32540-2-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Mar 04, 2025 at 05:06:17PM +0000, Daniel Golle wrote:
-> Assign partition of_node so other drivers are able to identify a
-> partition by its Device Tree node.
-> 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 
-Reviewed-by: Christian Marangi <ansuelsmth@gmail.com>
+在 3/31/25 2:41 PM, Tianyang Zhang 写道:
+> Introduce the redirect interrupt controllers.When the redirect interrupt
+> controller is enabled, the routing target of MSI interrupts is no longer a
+> specific CPU and vector number, but a specific redirect entry. The actual
+> CPU and vector number used are described by the redirect entry.
+>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
+>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
+>   2 files changed, 75 insertions(+)
+>
+> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+> index a7ecce11e445..84fafb86ec17 100644
+> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then go to CPUINTC directly::
+>                | Devices |
+>                +---------+
+>   
 
--- 
-	Ansuel
+> +Advanced Extended IRQ model (with redirection)
+> +===============
+
+Did you do the build test?
+
+
+> +
+> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, PCH-MSI interrupts go
+> +to REDIRECT for remapping it to AVEC, and then go to CPUINTC directly, while all
+> +other devices interrupts go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then
+> +go to CPUINTC directly::
+> +
+> + +-----+     +-----------------------+     +-------+
+> + | IPI | --> |        CPUINTC        | <-- | Timer |
+> + +-----+     +-----------------------+     +-------+
+> +              ^          ^          ^
+> +              |          |          |
+> +       +---------+ +----------+ +---------+     +-------+
+> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
+> +       +---------+ +----------+ +---------+     +-------+
+> +            ^            ^
+> +            |            |
+> +            |      +----------+
+> +            |      | REDIRECT |
+> +            |      +----------+
+> +            |            ^
+> +            |            |
+> +       +---------+  +---------+
+> +       | PCH-PIC |  | PCH-MSI |
+> +       +---------+  +---------+
+> +         ^     ^           ^
+> +         |     |           |
+> + +---------+ +---------+ +---------+
+> + | Devices | | PCH-LPC | | Devices |
+> + +---------+ +---------+ +---------+
+> +                  ^
+> +                  |
+> +             +---------+
+> +             | Devices |
+> +             +---------+
+> +
+>   ACPI-related definitions
+>   ========================
+>   
+> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> index d4ff80de47b6..5d82cba07482 100644
+> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> @@ -174,6 +174,43 @@ CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断发送到AVECINTC，
+>                | Devices |
+>                +---------+
+>   
+
+> +高级扩展IRQ模型 (带重定向)
+> +===============
+
+ditto
+
+
+Thanks,
+
+Yanteng
+
