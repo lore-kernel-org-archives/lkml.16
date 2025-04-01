@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FEE1EF39F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0431F09B0;
 	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499059; cv=none; b=RoI1oikGwBTWBYkDVXLIkMu4LMKqPgzwc6W9kvgQNnJ1yusRLW+zvxjeCYVgyhJ4tH9FuIkatnNPnsebpXSt6r9vSaRWAc+YeAatZ4VC4ecgp6SreCEssiVo1LjuhOPN+WKzh+TAFvKb/Lkz3nOvLohubIfe1zSk6UnTa4Ht870=
+	t=1743499060; cv=none; b=iQS3Ps+fVt7aPOeBx3VA0lN/TSXUTg/uMKAnee+eFSEGcs9inpxlt8LgLhSk7mGjHOqlEoQd0+d45qRIxGiTGnlvGu0GrQJwSKVDDH/VXfPuvOiILjzxhVJ2LHWdd9RMgm1wL68BQitdluWrUYlCQUty9F73OERmfUOTdavOEPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499059; c=relaxed/simple;
-	bh=EBSOtpSc/6vHsHkDO7brKbWCI1HIqRXrpQE1DO7mtEE=;
+	s=arc-20240116; t=1743499060; c=relaxed/simple;
+	bh=elZpMT735BgvegF/fOQ+afq8zZiTNqUA6AcHm1nx/aw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mksvpEeZMbdZSLEfygBAAf4mcJ4iN6yjnw6BdLFJrx7bq3AACDir8owEr1Ro2BISu1zI+RfQVeYZCpwx4PuDK85AE44aUY25M2tQ1khwsm1vfQmjiBtzQqgS+ri8uO7dHDl0O0z6ytBsVf/ycC1U2dDjuNSYLSOuYaNXOBhtYbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCNt5RoS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Gp8WfhrUUSPZ6PevO66PSbaev2PTl0WLP5DWJKYCp6Fht+q2pzoB0kigYtGYKKo7u001aZTLvygIKcvyN0dfUY4XPT1mex2RePdBm1yNCjdl7mzwOPSibW7XjDKMaC8mSd2Nm7uvH4cIqBNgwpsSLgdjA8/bt0w+rsNT1wAlFmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMMrPP9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCNt5RoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09A3C4AF0D;
-	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMMrPP9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B46C4CEE8;
+	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743499059;
-	bh=EBSOtpSc/6vHsHkDO7brKbWCI1HIqRXrpQE1DO7mtEE=;
+	bh=elZpMT735BgvegF/fOQ+afq8zZiTNqUA6AcHm1nx/aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NCNt5RoSTJFyXb50Y+wWLdtLLGtoFM5psy/axV/vIaWT0zRb4FJQk9P+hF2MQwKmc
-	 TpSHKLXG8V79z+Ff6Q1smd83zmnY3eQT4InTyuehGZhf3D6pXlMz2knHsf2H9MJfUD
-	 0c+xbNJgmXBPMgUFDRJ/vzINg36l9Jj2ZdPy1xFrnQYmHoiu9d51dAqDyE2HYidgLy
-	 frIAE1BkhmsrIiAW+lCOm3nginx6WilYI3MWKxN7tTSlqV89quKYYGMmwyqHdyfTlq
-	 EKD2+Pao/XVHEyWXYPVB42qnuqIe0i1Ns58fRyON12n3QVXY7/V3muM2rOwJImCBpN
-	 W9e3koBZA9tpA==
+	b=jMMrPP9hH5moieOFL+hvq1/1XIIvNozWveXRk3ua1y40KiOz+dmYigYu6mDocQGwS
+	 Z2Yuq4GVNK4MPbg7T4pOgI1rp6ZPvchXITLnLPBkpV0TYQ5TDIwwwUmYvG2izUETep
+	 1AOKNBio8oSmr6+pWNi4MqNGF4taeBj0q2KU2t+QeCB+0pgwAGDDpXnPxeJuhTdrrG
+	 6S5wo8wbJEUmYfkBxVOH9hQwZyOnABZisRaE+jZTY7YlkZMLNCZPmEurHc8Yw/JS5s
+	 8TkHuSYeYW5iUZw6GO1rnuAh4tRl0+VYQhFupfNQEMTo2ON7ArN7NphFmP33RJz3P0
+	 06FNis21CbSoQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tzXkW-001GqU-Sc;
-	Tue, 01 Apr 2025 10:17:36 +0100
+	id 1tzXkX-001GqU-KU;
+	Tue, 01 Apr 2025 10:17:37 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
@@ -49,9 +49,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: [PATCH v3 09/13] PCI: apple: Move port PHY registers to their own reg items
-Date: Tue,  1 Apr 2025 10:17:09 +0100
-Message-Id: <20250401091713.2765724-10-maz@kernel.org>
+Subject: [PATCH v3 12/13] PCI: apple: Abstract register offsets via a SoC-specific structure
+Date: Tue,  1 Apr 2025 10:17:12 +0100
+Message-Id: <20250401091713.2765724-13-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
 References: <20250401091713.2765724-1-maz@kernel.org>
@@ -69,136 +69,247 @@ X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to 
 
 From: Hector Martin <marcan@marcan.st>
 
-T602x PCIe cores move these registers around. Instead of hardcoding in
-another offset, let's move them into their own reg entries. This matches
-what Apple does on macOS device trees too.
+Newer versions of the Apple PCIe block have a bunch of small, but
+annoying differences.
 
-Maintains backwards compatibility with old DTs by using the old offsets.
-
-Note that we open code devm_platform_ioremap_resource_byname() to avoid
-error messages on older platforms with missing resources in the pcie
-node. ("pcie-apple 590000000.pcie: invalid resource (null)" on probe)
+In order to embrace this diversity of implementations, move the
+currently hardcoded offsets into a hw_info structure. Future SoCs
+will provide their own structure describing the applicable offsets.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Tested-by: Janne Grunau <j@jannau.net>
-Co-developed-by: Janne Grunau <j@jannau.net>
-Signed-off-by: Janne Grunau <j@jannau.net>
 Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+[maz: split from original patch to only address T8103]
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 55 +++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 18 deletions(-)
+ drivers/pci/controller/pcie-apple.c | 89 +++++++++++++++++++++++------
+ 1 file changed, 72 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 23d9f62bd2ad4..94c49611b74df 100644
+index 505adf64bd66d..847cba753d28d 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -39,14 +39,18 @@
- #define   CORE_RC_STAT_READY		BIT(0)
- #define CORE_FABRIC_STAT		0x04000
- #define   CORE_FABRIC_STAT_MASK		0x001F001F
--#define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
--#define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
--#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
--#define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
--#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
--#define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
--#define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
--#define   CORE_LANE_CTL_CFGACC		BIT(15)
-+
-+#define CORE_PHY_DEFAULT_BASE(port)	(0x84000 + 0x4000 * (port))
-+
-+#define PHY_LANE_CFG			0x00000
-+#define   PHY_LANE_CFG_REFCLK0REQ	BIT(0)
-+#define   PHY_LANE_CFG_REFCLK1REQ	BIT(1)
-+#define   PHY_LANE_CFG_REFCLK0ACK	BIT(2)
-+#define   PHY_LANE_CFG_REFCLK1ACK	BIT(3)
-+#define   PHY_LANE_CFG_REFCLKEN		(BIT(9) | BIT(10))
-+#define   PHY_LANE_CFG_REFCLKCGEN	(BIT(30) | BIT(31))
-+#define PHY_LANE_CTL			0x00004
-+#define   PHY_LANE_CTL_CFGACC		BIT(15)
+@@ -18,6 +18,7 @@
+  * Author: Marc Zyngier <maz@kernel.org>
+  */
  
- #define PORT_LTSSMCTL			0x00080
- #define   PORT_LTSSMCTL_START		BIT(0)
-@@ -146,6 +150,7 @@ struct apple_pcie_port {
- 	struct apple_pcie	*pcie;
- 	struct device_node	*np;
- 	void __iomem		*base;
-+	void __iomem		*phy;
++#include <linux/bitfield.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/iopoll.h>
+@@ -29,6 +30,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/pci-ecam.h>
+ 
++/* T8103 (original M1) and related SoCs */
+ #define CORE_RC_PHYIF_CTL		0x00024
+ #define   CORE_RC_PHYIF_CTL_RUN		BIT(0)
+ #define CORE_RC_PHYIF_STAT		0x00028
+@@ -104,7 +106,7 @@
+ #define   PORT_REFCLK_CGDIS		BIT(8)
+ #define PORT_PERST			0x00814
+ #define   PORT_PERST_OFF		BIT(0)
+-#define PORT_RID2SID(i16)		(0x00828 + 4 * (i16))
++#define PORT_RID2SID			0x00828
+ #define   PORT_RID2SID_VALID		BIT(31)
+ #define   PORT_RID2SID_SID_SHIFT	16
+ #define   PORT_RID2SID_BUS_SHIFT	8
+@@ -122,7 +124,8 @@
+ #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
+ #define PORT_PREFMEM_ENABLE		0x00994
+ 
+-#define MAX_RID2SID			64
++#define PORT_MSIMAP_ENABLE	BIT(31)
++#define PORT_MSIMAP_TARGET	GENMASK(7, 0)
+ 
+ /*
+  * The doorbell address is set to 0xfffff000, which by convention
+@@ -133,10 +136,33 @@
+  */
+ #define DOORBELL_ADDR		CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR
+ 
++struct hw_info {
++	u32 phy_lane_ctl;
++	u32 port_msiaddr;
++	u32 port_msiaddr_hi;
++	u32 port_refclk;
++	u32 port_perst;
++	u32 port_rid2sid;
++	u32 port_msimap;
++	u32 max_rid2sid;
++};
++
++static const struct hw_info t8103_hw = {
++	.phy_lane_ctl		= PHY_LANE_CTL,
++	.port_msiaddr		= PORT_MSIADDR,
++	.port_msiaddr_hi	= 0,
++	.port_refclk		= PORT_REFCLK,
++	.port_perst		= PORT_PERST,
++	.port_rid2sid		= PORT_RID2SID,
++	.port_msimap		= 0,
++	.max_rid2sid		= 64,
++};
++
+ struct apple_pcie {
+ 	struct mutex		lock;
+ 	struct device		*dev;
+ 	void __iomem            *base;
++	const struct hw_info	*hw;
  	struct irq_domain	*domain;
- 	struct list_head	entry;
- 	unsigned long		*sid_map;
-@@ -476,26 +481,26 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+ 	unsigned long		*bitmap;
+ 	struct list_head	ports;
+@@ -380,7 +406,9 @@ static void apple_port_irq_handler(struct irq_desc *desc)
+ static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
+ {
+ 	struct fwnode_handle *fwnode = &port->np->fwnode;
++	struct apple_pcie *pcie = port->pcie;
+ 	unsigned int irq;
++	u32 val = 0;
+ 
+ 	/* FIXME: consider moving each interrupt under each port */
+ 	irq = irq_of_parse_and_map(to_of_node(dev_fwnode(port->pcie->dev)),
+@@ -402,13 +430,23 @@ static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
+ 
+ 	/* Configure MSI base address */
+ 	BUILD_BUG_ON(upper_32_bits(DOORBELL_ADDR));
+-	writel_relaxed(lower_32_bits(DOORBELL_ADDR), port->base + PORT_MSIADDR);
++	writel_relaxed(lower_32_bits(DOORBELL_ADDR),
++		       port->base + pcie->hw->port_msiaddr);
++	if (pcie->hw->port_msiaddr_hi)
++		writel_relaxed(0, port->base + pcie->hw->port_msiaddr_hi);
+ 
+ 	/* Enable MSIs, shared between all ports */
+-	writel_relaxed(0, port->base + PORT_MSIBASE);
+-	writel_relaxed((ilog2(port->pcie->nvecs) << PORT_MSICFG_L2MSINUM_SHIFT) |
+-		       PORT_MSICFG_EN, port->base + PORT_MSICFG);
++	if (pcie->hw->port_msimap) {
++		for (int i = 0; i < pcie->nvecs; i++)
++			writel_relaxed(FIELD_PREP(PORT_MSIMAP_TARGET, i) |
++				       PORT_MSIMAP_ENABLE,
++				       port->base + pcie->hw->port_msimap + 4 * i);
++	} else {
++		writel_relaxed(0, port->base + PORT_MSIBASE);
++		val = ilog2(pcie->nvecs) << PORT_MSICFG_L2MSINUM_SHIFT;
++	}
+ 
++	writel_relaxed(val | PORT_MSICFG_EN, port->base + PORT_MSICFG);
+ 	return 0;
+ }
+ 
+@@ -475,7 +513,9 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+ 	u32 stat;
+ 	int res;
+ 
+-	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
++	if (pcie->hw->phy_lane_ctl)
++		rmw_set(PHY_LANE_CTL_CFGACC, port->phy + pcie->hw->phy_lane_ctl);
++
+ 	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
+ 
+ 	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
+@@ -492,20 +532,28 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
  	if (res < 0)
  		return res;
  
--	rmw_set(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
--	rmw_set(CORE_LANE_CFG_REFCLK0REQ, pcie->base + CORE_LANE_CFG(port->idx));
-+	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
-+	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
+-	rmw_clear(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
++	if (pcie->hw->phy_lane_ctl)
++		rmw_clear(PHY_LANE_CTL_CFGACC, port->phy + pcie->hw->phy_lane_ctl);
  
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
--					 stat, stat & CORE_LANE_CFG_REFCLK0ACK,
-+	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-+					 stat, stat & PHY_LANE_CFG_REFCLK0ACK,
- 					 100, 50000);
- 	if (res < 0)
- 		return res;
- 
--	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
--					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
-+	rmw_set(PHY_LANE_CFG_REFCLK1REQ, port->phy + PHY_LANE_CFG);
-+	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-+					 stat, stat & PHY_LANE_CFG_REFCLK1ACK,
- 					 100, 50000);
- 
- 	if (res < 0)
- 		return res;
- 
--	rmw_clear(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
-+	rmw_clear(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
- 
--	rmw_set(CORE_LANE_CFG_REFCLKEN, pcie->base + CORE_LANE_CFG(port->idx));
-+	rmw_set(PHY_LANE_CFG_REFCLKEN, port->phy + PHY_LANE_CFG);
- 	rmw_set(PORT_REFCLK_EN, port->base + PORT_REFCLK);
+ 	rmw_set(PHY_LANE_CFG_REFCLKEN, port->phy + PHY_LANE_CFG);
+-	rmw_set(PORT_REFCLK_EN, port->base + PORT_REFCLK);
++
++	if (pcie->hw->port_refclk)
++		rmw_set(PORT_REFCLK_EN, port->base + pcie->hw->port_refclk);
  
  	return 0;
-@@ -515,6 +520,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 	struct platform_device *platform = to_platform_device(pcie->dev);
- 	struct apple_pcie_port *port;
- 	struct gpio_desc *reset;
-+	struct resource *res;
-+	char name[16];
- 	u32 stat, idx;
- 	int ret, i;
+ }
  
-@@ -542,10 +549,22 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 
- 	raw_spin_lock_init(&port->lock);
- 
--	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
-+	snprintf(name, sizeof(name), "port%d", port->idx);
-+	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-+	if (!res)
-+		res = platform_get_resource(platform, IORESOURCE_MEM, port->idx + 2);
++static void __iomem *port_rid2sid_addr(struct apple_pcie_port *port, int idx)
++{
++	return port->base + port->pcie->hw->port_rid2sid + 4 * idx;
++}
 +
-+	port->base = devm_ioremap_resource(&platform->dev, res);
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
+ static u32 apple_pcie_rid2sid_write(struct apple_pcie_port *port,
+ 				    int idx, u32 val)
+ {
+-	writel_relaxed(val, port->base + PORT_RID2SID(idx));
++	writel_relaxed(val, port_rid2sid_addr(port, idx));
+ 	/* Read back to ensure completion of the write */
+-	return readl_relaxed(port->base + PORT_RID2SID(idx));
++	return readl_relaxed(port_rid2sid_addr(port, idx));
+ }
  
-+	snprintf(name, sizeof(name), "phy%d", port->idx);
-+	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-+	if (res)
-+		port->phy = devm_ioremap_resource(&platform->dev, res);
+ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+@@ -528,7 +576,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	if (!port)
+ 		return -ENOMEM;
+ 
+-	port->sid_map = devm_bitmap_zalloc(pcie->dev, MAX_RID2SID, GFP_KERNEL);
++	port->sid_map = devm_bitmap_zalloc(pcie->dev, pcie->hw->max_rid2sid, GFP_KERNEL);
+ 	if (!port->sid_map)
+ 		return -ENOMEM;
+ 
+@@ -572,7 +620,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	usleep_range(100, 200);
+ 
+ 	/* Deassert PERST# */
+-	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
++	rmw_set(PORT_PERST_OFF, port->base + pcie->hw->port_perst);
+ 	gpiod_set_value_cansleep(reset, 0);
+ 
+ 	/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
+@@ -585,7 +633,11 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 		return ret;
+ 	}
+ 
+-	rmw_clear(PORT_REFCLK_CGDIS, port->base + PORT_REFCLK);
++	if (pcie->hw->port_refclk)
++		rmw_clear(PORT_REFCLK_CGDIS, port->base + pcie->hw->port_refclk);
 +	else
-+		port->phy = pcie->base + CORE_PHY_DEFAULT_BASE(port->idx);
++		rmw_set(PHY_LANE_CFG_REFCLKCGEN, port->phy + PHY_LANE_CFG);
 +
- 	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
+ 	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
  
- 	/* Assert PERST# before setting up the clock */
+ 	ret = apple_pcie_port_setup_irq(port);
+@@ -593,7 +645,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 		return ret;
+ 
+ 	/* Reset all RID/SID mappings, and check for RAZ/WI registers */
+-	for (i = 0; i < MAX_RID2SID; i++) {
++	for (i = 0; i < pcie->hw->max_rid2sid; i++) {
+ 		if (apple_pcie_rid2sid_write(port, i, 0xbad1d) != 0xbad1d)
+ 			break;
+ 		apple_pcie_rid2sid_write(port, i, 0);
+@@ -741,7 +793,7 @@ static void apple_pcie_disable_device(struct pci_host_bridge *bridge, struct pci
+ 	for_each_set_bit(idx, port->sid_map, port->sid_map_sz) {
+ 		u32 val;
+ 
+-		val = readl_relaxed(port->base + PORT_RID2SID(idx));
++		val = readl_relaxed(port_rid2sid_addr(port, idx));
+ 		if ((val & 0xffff) == rid) {
+ 			apple_pcie_rid2sid_write(port, idx, 0);
+ 			bitmap_release_region(port->sid_map, idx, 0);
+@@ -794,6 +846,9 @@ static int apple_pcie_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	pcie->dev = dev;
++	pcie->hw = of_device_get_match_data(dev);
++	if (!pcie->hw)
++		return -ENODEV;
+ 	pcie->base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(pcie->base))
+ 		return PTR_ERR(pcie->base);
+@@ -810,7 +865,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id apple_pcie_of_match[] = {
+-	{ .compatible = "apple,pcie" },
++	{ .compatible = "apple,pcie",		.data = &t8103_hw },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, apple_pcie_of_match);
 -- 
 2.39.2
 
