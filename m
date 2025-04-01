@@ -1,114 +1,119 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CA61E1C29
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 06:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075C21E22FC;
+	Tue,  1 Apr 2025 06:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489264; cv=none; b=QT+g4+FWh17y/Y3pHnIyGDlEAC5gMPya+CDlN8cPt3yuXKqNKydJn9bf/Snf2rpQJ0zNVjNpeWqD+hSLZtaiZ6/VMHLfWMFg/TX7I/FpEZHYWuYM91YQKr1G6buPnqBKP5wqhnLfQObuALuuuO/0wExrpwOuXoH+jBTnwbGKDTg=
+	t=1743489274; cv=none; b=YelBmxNiiHsomyfMyyyPkg5ZFH5ZZ742TGLwlLoyeEgyagHXG7jc2v46zOh963TQzHP5Dyx5XhQPwyKb23wN1DxOVnvUkPxUC0VKv1zVrFKT0OMW05f5ER+RxrkhW1kEcRW7sx4RRdSL2Z86pV4xtC+pYJWXmw/xICs11fZYbKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489264; c=relaxed/simple;
-	bh=okptFoCpZUVkqit49dtIutR468BxciG1BqCQRMkznrU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=grRhWgs/j6d2889GQd5SMX249kJ29ly0ZiHLU/E89dYdDaYIOdqqchE9b5lX4imjBxwpkjqXVne7Yg2LbrEwwI/5DGhBPZL9QQMLuCLh1U2kkwzl2C/Lbwmd4QgesYLxpwCA36HujYqSk3CJntFHh1z7EoJuk8AHq2z9r96mnYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMMJhe2m; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743489274; c=relaxed/simple;
+	bh=pMLha2aqVEv0PrrCgtbKTveYBj1RIdteN402dFa1DoQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CO/MtIp/oggyePDHAc7lyZRmMeqFulLA801mZihrdCBCg8i3K53J1rmd4gpOrhSR8MDAZfea6vpActhUn3eYY04AJUXSZ0dA9GzWxd4hnqKSq4e7KkT+eplSnQ9/9v+HXaiEdjZO6a2CaoYapzxp/8hcHfBq35NkyDsvjwLytsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=juB1EP4W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TI7ZdQVI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMMJhe2m"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso114468665ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 23:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743489262; x=1744094062; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VFeN50Tct7m9TPsMIMcX8t/ayiqPwYq+pDcIP7/ikWY=;
-        b=cMMJhe2mWP7dJvOkoLHakc1GBU88BRfVOOs8LUyYELWeE/Buzt75VjlVdxpDmUkTPR
-         MQ+tPigMWg4JGMBrfvvXnAT/PgRN/12uJg+m5DlIRQpLmPueS5wXH+GkH8OMKtJviCs6
-         tyYlI1TLeTFMbKq8D1vIVV9+eNhj1RNJNMjilVlEGAUTWyEOJ9dEyZxZwwfuUvYaafQN
-         p+F80AQA4EzkPbzEUZSgydIftXoV2iV9KvRzbzhY6GJA9OiqdDbmId8d1L/g7clCgIgK
-         4C3lRLuxmAeHgFKojW4BKnBaXX8aSc1uOmPEdpSKg+jFITe5N7i4sH2kmm/Qe6FjPItY
-         QgPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743489262; x=1744094062;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VFeN50Tct7m9TPsMIMcX8t/ayiqPwYq+pDcIP7/ikWY=;
-        b=f6pG+ET387e9BFgX/eIaht3m/pHEfPIvDgrXjQi7ZsGbY18PyiA0VqMM66pxvNRpUN
-         +he/qz4Y+3UM/8gcpUvrUhKlvEximN97qJnBTU8a4sxMAB7TOKYKPrmf8NIX7l7nIGa1
-         erfT6iWMl0hCY1wVUMAVXvqLhLmAbQj1/OQTA10LQ3wiWoJirZju3psltbqacNP/WcSe
-         jjbqmrGWZKNsdaOdXlFMpVtfkVuoPnC8z6qa7iPkWdE3RYWiopsWLhtuB0MFY+g8/liG
-         xqcPCvTnL8MVFomk0bvmY1aXzO+bdhJK4G8bT+DhhnpQIkHBYSx943TTOZoWb4xhmGM9
-         H9Kg==
-X-Gm-Message-State: AOJu0Yz9+t4WpIjDfJWxWxTndE4I8Ff90uy+7rca4nJZtmbT+cXNcQyD
-	aZD+XyL7nSYPmfFV6hUtZi/ccJy/5t6KJ1t4ymHDF0tLoWEck/FbSeAce9Cv
-X-Gm-Gg: ASbGncu8kBLCtt1lDCkN7lWbXQwIAE3nhJ8nf7efqNAQgUJVA0GK8quK0KQssG1nEcf
-	ZOVB0S0nT9G3+esvRCBMI2cH01NJ3WZQYvb6aPxacDI982cEbH0n4C/lSz5uUoR3uWecEPmarCi
-	oFrU33XCXV0+cNN60N2v9mbXIFV7dqkXhWWxA+fHLoRnPvGN8bAjENUTnwmWQori+Nm14y5Q7tb
-	E9/+anThD+AULjHb4GCpkHBae+qPISBk3ocm3VnDilD3vpujDRZ/hdEeL6JAXTaV5TA/8+AQWAV
-	syptpF2jrUi8fOnHocbpcOlZGAK1yZTBQiFqm9QpvNxK6qY1gOl3RZw=
-X-Google-Smtp-Source: AGHT+IEoQzp2h4CGT78zFhacjN0ZepZnshpdoJ5ahAWiyhTV/wanOTdKOOHVq2/eHxMD0YYhpAmJeQ==
-X-Received: by 2002:a05:6a20:7fa7:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-1feb5d3a07amr23490613637.21.1743489261961;
-        Mon, 31 Mar 2025 23:34:21 -0700 (PDT)
-Received: from cs20-buildserver.lan ([2403:c300:5c0c:4075:2e0:4cff:fe68:863])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b6a1719sm7396609a12.32.2025.03.31.23.34.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 23:34:21 -0700 (PDT)
-From: Stanley Chu <stanley.chuys@gmail.com>
-X-Google-Original-From: Stanley Chu <yschu@nuvoton.com>
-To: frank.li@nxp.com,
-	miquel.raynal@bootlin.com,
-	alexandre.belloni@bootlin.com,
-	linux-i3c@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	tomer.maimon@nuvoton.com,
-	kwliu@nuvoton.com,
-	yschu@nuvoton.com
-Subject: [PATCH v1] i3c: master: svc: Update actual read length
-Date: Tue,  1 Apr 2025 14:34:06 +0800
-Message-Id: <20250401063406.3728534-1-yschu@nuvoton.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="juB1EP4W";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TI7ZdQVI"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743489264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PWo0S2UEXmtpRdfnjz/FxEkKD7n+cWWQrfjGy/XF5pQ=;
+	b=juB1EP4WbCGJ4Oe0+o/qCtG0HElam58g87ezgrMTTXMcSlL+gt7Lnmzy1NZ4IB4X/RYCtW
+	uV1gAlGUK5FaAZkRotfvTSUwDzBvUCeow4ghB+QtTmK47qLtiKvEdxdjT7cGuCkyrZ0pU9
+	0sE9fxZNjkvWF99+Xywy0YPsBmFu0+nIH9dUFN24grkqL7x8nwg80D/Ob6szcIzPXYO8Iu
+	0OUVqTrk4iu4tyYk+JAzyVdxxbRpZXaSBHbm3uyJj1teoQ3Q1mGhLctUEYJZoYHMN+prSf
+	RwhWjjDYvE6m17LvGiQuifgZHcU7S6817viBTDYl5eoR4lLIpGFATPErmh9FMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743489264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PWo0S2UEXmtpRdfnjz/FxEkKD7n+cWWQrfjGy/XF5pQ=;
+	b=TI7ZdQVIuy/d3kShw8DBNAkdH4XgTtuRcHfRcuuUI4/pEs4gOtf29CYf/QTJkb6twnwlkw
+	8bnZrO2886Q7oZDQ==
+To: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies
+ in _COARSE clockids
+In-Reply-To: <Z-qsg6iDGlcIJulJ@localhost>
+References: <20250320200306.1712599-1-jstultz@google.com>
+ <Z-KURRE_Gr72Xv_n@localhost> <874izezv3c.ffs@tglx>
+ <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
+Date: Tue, 01 Apr 2025 08:34:23 +0200
+Message-ID: <87o6xgwftc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Stanley Chu <yschu@nuvoton.com>
+On Mon, Mar 31 2025 at 16:53, Miroslav Lichvar wrote:
+> On Thu, Mar 27, 2025 at 04:42:49PM +0100, Miroslav Lichvar wrote:
+>> Maybe I could simply patch the kernel to force a small clock
+>> multiplier to increase the rate at which the error accumulates.
+>
+> I tried that and it indeed makes the issue clearly visible. The COARSE
+> fix makes the clock less stable. It's barely visible with the normal
+> multiplier, at least for the clocksource I tested, but a reduced
+> multiplier forces a larger NTP error and raises it above the precision
+> and instability of the system and reference clocks.
+>
+> The test was done on a machine with a TSC clocksource (3GHz CPU with
+> disabled frequency scaling - normal multplier is 5592407) and tried a
+> multiplier reduced by 4, 16, 64 with this COARSE-fixing patch not
+> applied and applied. Each test ran for 1 minute and produced an
+> average value of skew - stability of the clock frequency as reported
+> by chronyd in the tracking log when synchronizing to a free-running
+> PTP clock at 64, 16, and 4 updates per second. It's in parts per
+> million (resolution in the chrony log is limited to 0.001 ppm).
+>
+> Mult reduction	Updates/sec	Skew before	Skew after
+> 1		4		0.000		0.000
+> 1		16		0.001		0.002
+> 1		64		0.002		0.006
+> 4		4		0.001		0.001
+> 4		16		0.003		0.005
+> 4		64		0.005		0.015
+> 16		4		0.004		0.009
+> 16		16		0.011		0.069
+> 16		64		0.020		0.117
+> 64		4		0.013		0.012
+> 64		16		0.030		0.107
+> 64		64		0.058		0.879
 
-Some drivers, such as mctp-i3c.c, reuse the i3c_priv_xfer.len as
-the actual read len. Therefore, the controller driver should also
-update the i3c_priv_xfer.len after the read transfer is completed.
+Hrm.
 
-Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+Can you try the delta patch below?
+
+Thanks,
+
+        tglx
 ---
- drivers/i3c/master/svc-i3c-master.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ kernel/time/timekeeping.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index 85e16de208d3..dd520f5d4c9f 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -1470,9 +1470,16 @@ static void svc_i3c_master_start_xfer_locked(struct svc_i3c_master *master)
- 					  cmd->len, &cmd->actual_len,
- 					  cmd->continued);
- 		/* cmd->xfer is NULL if I2C or CCC transfer */
--		if (cmd->xfer)
-+		if (cmd->xfer) {
- 			cmd->xfer->actual_len = cmd->actual_len;
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -2234,8 +2234,8 @@ static bool timekeeping_advance(enum tim
+ 				   tk->tkr_mono.cycle_last, tk->tkr_mono.mask,
+ 				   tk->tkr_mono.clock->max_raw_delta);
  
-+			/*
-+			 * Some i3c drivers reuse i3c_priv_xfer.len as
-+			 * the actual read length.
-+			 */
-+			cmd->xfer->len = cmd->actual_len;
-+		}
-+
- 		if (ret)
- 			break;
- 	}
--- 
-2.34.1
-
+-	/* Check if there's really nothing to do */
+-	if (offset < real_tk->cycle_interval && mode == TK_ADV_TICK)
++	/* Check if there's really something to do */
++	if (offset < real_tk->cycle_interval)
+ 		return false;
+ 
+ 	offset = timekeeping_accumulate(tk, offset, mode, &clock_set);
