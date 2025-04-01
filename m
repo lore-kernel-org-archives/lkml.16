@@ -1,69 +1,82 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B891F099C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 10:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129331E0E0B;
+	Tue,  1 Apr 2025 10:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503344; cv=none; b=QYescxOszjDq9wYyYG//YAzWlGLLyomxww3tYxG2Ml/ChOCHiz21SQ03PQ6Prclcrr0nh05ryMa9Wid8eCVSElUdq5CNOynw0D2II9PvdsTMsKoeOy1KAaa0C8N4c91RACsZvg9c0anrgres0FHk/vBPmEF8tL/J6mloGBnKqUU=
+	t=1743503365; cv=none; b=FG/yiDCbIO4IvI2YUJd3t6XSDgGSsQoOJozYXJGdgF7uU+YkAinSzZRnXzb+ZsSw2jpSCHJ6388BktcJ7RnsORGQbWf9v/xNnnG2SZFU/sm5o3LSPPDkSYwoL0OZ9stWrl7o4pkarfFtYP3kmvCPcc6oZC5Ii3WdSkKpU3d0UGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503344; c=relaxed/simple;
-	bh=R43ZC79x9qD65zhQOXtWAhvowTF98sIl42V83qh8Fh0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=pyIw50IUF66uNT61CSaaplZRCDiRNPPC/HF/AwQdTrg4nr89xGXIRTQFYaDSJ8Ym+7Z9mZ/IO/NxfCFsKD8UVcq1YDSQYfWlrU9mE34FjMzO2buv+cHu+qyOxz20DG9BKm9v8grekfOB/RewvjL5tzRxncQYqqA6GpwTW9zFk+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b5e46a526so556532939f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 03:29:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743503342; x=1744108142;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PuwKkrOFCT0uBhp8h+eKASz2M6aumhJyh+ZHO47yfHc=;
-        b=Q+NtbxzyI1q8JeRZoezI39DI03fyBnIcK9AyGrpoAYH0mGIk0Su3G+NDBbj+ph/Wyx
-         O5BCzXrnIl0zQL0GtL9t+9BAcBCAo8H3ybJA14b5ayP4eDuLBRC3afcQ0e9OCyYlnx9E
-         cP0bf3rEA2mIck8w7gKU8dutyWXxktfYmHADDXU6L6BfZvZs0rz8gRd62knJr5rZuXMm
-         g7ToHvG7K8a5bAWrNF3zrCOsc5vA/9y8zq8Dx5bRVEEmdn51IskQvNwRriQN4uPyKYgX
-         u+VDJw/cd1mgLROc5D7dztEDkZHTCMY0Sbyl215LodbBQfUACilUxzjnwLr3a/iZ5hFe
-         XqUg==
-X-Gm-Message-State: AOJu0YzyqqagSgphdp6qOmOZ6qe+kRu4lk/kCtmXYkrTZUy932yaxjuq
-	/R+XIEOZfjUXOyB32Qs5lD2W8gtI0EcAla30JBTVMMUdhH8iFXD4rCnwomTHjbt/5pcLD5wqWVI
-	IHRP7VgjDpe37yyu2wtWLwj6Kum3jSQZwI0t3jB7zjFQ+YrKfap3BJro=
-X-Google-Smtp-Source: AGHT+IF2MqTvMwHpN90+h4uzaIxuCQWTXAkWmyjDGcEYoyiZbKL5HdUt540rHtGTY9Ce9/6Rl2u/y+iQ+uLlf+PyDYtG2LVWhyFB
+	s=arc-20240116; t=1743503365; c=relaxed/simple;
+	bh=Ti23H5IR6RvMf5Q2Ipi0RguLenESiqiPAhYyfxiegDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJGRWns7mUAIy1/bLmXMrsx9xNzMHulLmYb0tK1PDRQVMn4GrjvdoI8mQ/WP1wp5FxX/1VdwT3/6hzx1h88lzcySoGg9A651vBm5aNPIefO6BMkW6hSnYMOO35MOd6mg3UDPZ4mNUe+tx1LbNZ9u7LnHnya8dbMWRD0oAw71uzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkzmIt//; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkzmIt//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E725C4CEE4;
+	Tue,  1 Apr 2025 10:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743503364;
+	bh=Ti23H5IR6RvMf5Q2Ipi0RguLenESiqiPAhYyfxiegDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MkzmIt//69XtaVE8p+KEuoDtkLzB+IGJJ5Uj7g82bSvgoyiUnlD+KHvSIhb2LR/DG
+	 llwY1oc1pgVm8OTc/SH4pAIs+Ems2Qqdvg3pMUlbmTcULZbM8vg7QWCSVvbgsVSY1C
+	 8NdgQcKYhShHNu447epbO7tKtyo3awM6DVP6CCLkqg0qLgLe5e4IzIjLzRy5NP48L7
+	 +IDUFK+nKoAo+Rp/br5KY4Vniu5iwTteyPv3oxklXnPDHU5Dbgq9KyyOs5tWq8kYy6
+	 eVH6IuGREvRTt3aR7IGSIhjHGiTEfySGRT79353+BFMIgpAUXln5QRAUMJzADwGmxM
+	 /vQ7bnE2SfikA==
+Date: Tue, 1 Apr 2025 12:29:19 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	"open list:PCI ENDPOINT SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] misc: pci_endpoint_test: Set .driver_data for
+ PCI_DEVICE_ID_IMX8
+Message-ID: <Z-u__47R9vprIbCS@ryzen>
+References: <20250331182910.2198877-1-Frank.Li@nxp.com>
+ <Z-u6cZs6qncIWF98@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4401:20b0:3cf:c9b9:3eb with SMTP id
- e9e14a558f8ab-3d5e07e22e5mr82703395ab.0.1743503342289; Tue, 01 Apr 2025
- 03:29:02 -0700 (PDT)
-Date: Tue, 01 Apr 2025 03:29:02 -0700
-In-Reply-To: <Z-u9Z09A2Gu_A26l@qasdev.system>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ebbfee.050a0220.297a31.000b.GAE@google.com>
-Subject: Re: [syzbot] [input?] [usb?] UBSAN: shift-out-of-bounds in __kfifo_alloc
-From: syzbot <syzbot+d5204cbbdd921f1f7cad@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, qasdev00@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-u6cZs6qncIWF98@ryzen>
 
-Hello,
+On Tue, Apr 01, 2025 at 12:05:37PM +0200, Niklas Cassel wrote:
+>
+> But... I suggest that we just remove the pci_endpoint_test_alloc_irq_vectors()
+> call from pci_endpoint_test_probe().
 
-syzbot tried to test the proposed patch but the build/boot failed:
+...
 
-drivers/hid/wacom_sys.c:2367:9: error: expected ';' before 'if'
+Solution 1.
 
 
-Tested on:
+> 
+> Or, if we want to keep allocating some kind of IRQ vector in probe(),
+> just to rule out totally broken platforms, I guess we could also do:
 
-commit:         08733088 Merge tag 'rust-fixes-6.15-merge' of git://gi..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a15c3c5deef99cef
-dashboard link: https://syzkaller.appspot.com/bug?extid=d5204cbbdd921f1f7cad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13d4b998580000
+...
 
+Solution 2.
+
+
+
+Considering that this is a test driver, I actually think Solution 1 is better.
+That way, even if the platform has issues with IRQs, the user can do still do
+all the tests/ioctls() that do not require working IRQs, e.g. PCITEST_BAR and
+PCITEST_BARS.
+
+
+Kind regards,
+Niklas
