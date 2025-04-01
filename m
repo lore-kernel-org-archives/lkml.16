@@ -1,152 +1,259 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5F642052;
-	Tue,  1 Apr 2025 05:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE2742052
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 05:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743486877; cv=none; b=jqraQH8ZgKJKBr9zzy58IBiG9GLVukZBmmGPUxl0ZCqCbQLD9XeUVL46xVtMVe0cOzbF0P87v5U191qYJ0t+wd2lXQip6uZXMdC5UPCYBF+GieA8wxysWvaSNdpvuabI2hdAMg3wMyZHwTEjcRPOnGnwC1RyxkW/MoG8uxIpnh8=
+	t=1743487039; cv=none; b=gNlFGVr/hZ14qzRZTdr0N3uxl4HLHXXM0/hFz3QnGSFcZGndd8ohcfLOdj6c/dfM0K6imTzXrs4SsYF5yoOIcFlx6EldGIm1CLdDp6YvBl2bhsYQQlF0QKpUZUn/CIi+qpLyJI2sqZoTi1XLCCRM31PqzWcjsgWDNNvqC9h8/xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743486877; c=relaxed/simple;
-	bh=muRCcD6CdqjTJbWO6ypcG2B5pstkv7hwz4Gjs5E8a64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZTXWvadwcBfMAVeIum3PT/KA9ho8/2f8Rc1rBry+jNZZYH5/ejX429sujiVV6JDy9PqvSjx8cQJJY71+ZIafMjV/gkwGpkMbZKCId+XSvN8xqAH4o+VDIRbCURG2G3Anude0/dRCxR9J/bpUufE66VuWdVij4cP2NP5yWed7eNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=mCuaWYHp; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743487039; c=relaxed/simple;
+	bh=laSVaLHor5K86cMAdejOUs0Hw+LqvLg1f6d4a2mtazA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nja3cuIKU83olm0OFcXOY1hsQRzdWH3plutmi7HyvntkNrDn6Ejmbgb2eCig6cKWb1fdHyV1SXEkp2aADYbUUBCfHzPE7faY1XGVLQVcJpRcrqIkULCFPEHQ88Zch1CiR4XRkR0zDrQawzvpDS7MGhz4YPNEl8HGf98WneQk1VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=TZ7Y9k9S; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mCuaWYHp"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5315rnna3585174
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 31 Mar 2025 22:53:50 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5315rnna3585174
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743486833;
-	bh=IsfDg+Xsar+P1dKxOMDHesRyrvTgpQ4ZnItmblKhbNo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mCuaWYHpnRlQenAgliGLWATiV5WBBr6xjToONzu4sHItD9CcH/Hn50bDSEPtXNZHr
-	 EmqrAKW9JffJBkWQby7YDNbuh5dAusXyZylpGe//cf2TIpo8U9KQTebtElsvd5V6YU
-	 HF8RdPMDVbhf6+t7dYSnb9ysczMAV1Fx5VJE/67I9mU0mkx81L5F9z8nRvdhiz9hLN
-	 sCK8LNjY5ocO9OXH0mW1yJE2ZnmLSV7SipWK2RChNsbc23C/QGRt/kc29IMVpQqyvo
-	 nZSU48inZXaexf0KV8NOAQgpc90SasTMpL5bfOFSYTA0+0PAcMy4DOrsLjm31CtW80
-	 qxOV8xFK/xmlw==
-Message-ID: <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
-Date: Mon, 31 Mar 2025 22:53:49 -0700
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="TZ7Y9k9S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1743487029;
+	bh=gZ2K2yRuX3n2XC0+3N29SwonLnVP9QZfOmPOM4hsvSc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TZ7Y9k9S2HNQ7CSRuLTQ0hjRngisXb0wYsW9lSIr5HyUiiJ4WpVP+g3qv9WQ5TrjA
+	 8+f+C7xZzmkgCg6BKqfiVQP3dquFL5h27wUefmCDqgZLHdd5aSPQvCgk+f1zblbCTf
+	 wNt4uVRl5dTBijl88oeEJhEiBge8VyC2Bm+mTtKs=
+Received: from stargazer.. (unknown [IPv6:240e:454:4110:bc5d:d62b:3688:1f37:16aa])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 80E32659C8;
+	Tue,  1 Apr 2025 01:57:03 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: James Morse <james.morse@arm.com>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Mingcong Bai <jeffbai@aosc.io>
+Subject: [PATCH] arm64: Add overrride for MPAM
+Date: Tue,  1 Apr 2025 13:56:50 +0800
+Message-ID: <20250401055650.22542-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
- native_wrmsrl()
-To: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-        seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
- <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/31/2025 1:32 PM, H. Peter Anvin wrote:
-> On March 31, 2025 3:17:30 AM PDT, Ingo Molnar <mingo@kernel.org> wrote:
->>
->> * Xin Li (Intel) <xin@zytor.com> wrote:
->>
->>> -	__wrmsr      (MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3, val >> 32);
->>> +	native_wrmsrl(MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3);
->>
->> This is an improvement.
->>
->>> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
->>> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)plr->closid << 32 | rmid_p);
->>
->>> -	__wrmsr      (MSR_IA32_PQR_ASSOC, rmid_p, closid_p);
->>> +	native_wrmsrl(MSR_IA32_PQR_ASSOC, (u64)closid_p << 32 | rmid_p);
->>
->> This is not an improvement.
->>
->> Please provide a native_wrmsrl() API variant where natural [rmid_p, closid_p]
->> high/lo parameters can be used, without the shift-uglification...
->>
->> Thanks,
->>
->> 	Ingo
-> 
-> Directing this question primarily to Ingo, who is more than anyone else the namespace consistency guardian:
-> 
-> On the subject of msr function naming ... *msrl() has always been misleading. The -l suffix usually means 32 bits; sometimes it means the C type "long" (which in the kernel is used instead of size_t/uintptr_t, which might end up being "fun" when 128-bit architectures appear some time this century), but for a fixed 64-but type we normally use -q.
-> 
-> Should we rename the *msrl() functions to *msrq() as part of this overhaul?
-> 
+As the message of the commit 09e6b306f3ba ("arm64: cpufeature: discover
+CPU support for MPAM") already states, if a buggy firmware fails to
+either enable MPAM or emulate the trap as if it were disabled, the
+kernel will just fail to boot.  While upgrading the firmware should be
+the best solution, we have some hardware of which the vender have made
+no response 2 months after we requested a firmware update.  Allow
+overriding it so our devices don't become some e-waste.
 
-Per "struct msr" defined in arch/x86/include/asm/shared/msr.h:
+Cc: James Morse <james.morse@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc: Mingcong Bai <jeffbai@aosc.io>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ .../admin-guide/kernel-parameters.txt         |  3 +++
+ arch/arm64/include/asm/cpufeature.h           | 12 ++++++++++
+ arch/arm64/include/asm/el2_setup.h            | 14 -----------
+ arch/arm64/kernel/cpufeature.c                | 23 +++++++++++++++++--
+ arch/arm64/kernel/cpuinfo.c                   |  2 +-
+ arch/arm64/kernel/pi/idreg-override.c         |  2 ++
+ arch/arm64/kernel/setup.c                     |  2 ++
+ arch/arm64/kernel/smp.c                       |  2 ++
+ 8 files changed, 43 insertions(+), 17 deletions(-)
 
-struct msr {
-         union {
-                 struct {
-                         u32 l;
-                         u32 h;
-                 };
-                 u64 q;
-         };
-};
-
-Probably *msrq() is what we want?
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 3435a062a208..4f2caa706268 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -458,6 +458,9 @@
+ 	arm64.nomops	[ARM64] Unconditionally disable Memory Copy and Memory
+ 			Set instructions support
+ 
++	arm64.nompam	[ARM64] Unconditionally disable Memory Partitioning And
++			Monitoring support
++
+ 	arm64.nomte	[ARM64] Unconditionally disable Memory Tagging Extension
+ 			support
+ 
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index c4326f1cb917..1dfc03a6e65c 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -1048,6 +1048,18 @@ static inline bool cpu_has_lpa2(void)
+ #endif
+ }
+ 
++static inline bool cpu_has_mpam(void)
++{
++	u64 pfr0 = read_sysreg_s(SYS_ID_AA64PFR0_EL1);
++
++	pfr0 &= ~id_aa64pfr0_override.mask;
++	pfr0 |= id_aa64pfr0_override.val;
++	return cpuid_feature_extract_unsigned_field(pfr0,
++						    ID_AA64PFR0_EL1_MPAM_SHIFT);
++}
++
++void cpu_init_el2_mpam(void);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif
+diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+index ebceaae3c749..8db261d42ad8 100644
+--- a/arch/arm64/include/asm/el2_setup.h
++++ b/arch/arm64/include/asm/el2_setup.h
+@@ -294,19 +294,6 @@
+ .Lskip_gcs_\@:
+ .endm
+ 
+-.macro __init_el2_mpam
+-	/* Memory Partitioning And Monitoring: disable EL2 traps */
+-	mrs	x1, id_aa64pfr0_el1
+-	ubfx	x0, x1, #ID_AA64PFR0_EL1_MPAM_SHIFT, #4
+-	cbz	x0, .Lskip_mpam_\@		// skip if no MPAM
+-	msr_s	SYS_MPAM2_EL2, xzr		// use the default partition
+-						// and disable lower traps
+-	mrs_s	x0, SYS_MPAMIDR_EL1
+-	tbz	x0, #MPAMIDR_EL1_HAS_HCR_SHIFT, .Lskip_mpam_\@	// skip if no MPAMHCR reg
+-	msr_s	SYS_MPAMHCR_EL2, xzr		// clear TRAP_MPAMIDR_EL1 -> EL2
+-.Lskip_mpam_\@:
+-.endm
+-
+ /**
+  * Initialize EL2 registers to sane values. This should be called early on all
+  * cores that were booted in EL2. Note that everything gets initialised as
+@@ -324,7 +311,6 @@
+ 	__init_el2_stage2
+ 	__init_el2_gicv3
+ 	__init_el2_hstr
+-	__init_el2_mpam
+ 	__init_el2_nvhe_idregs
+ 	__init_el2_cptr
+ 	__init_el2_fgt
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9c4d6d552b25..64579fecf4c9 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -88,6 +88,7 @@
+ #include <asm/mte.h>
+ #include <asm/hypervisor.h>
+ #include <asm/processor.h>
++#include <asm/ptrace.h>
+ #include <asm/smp.h>
+ #include <asm/sysreg.h>
+ #include <asm/traps.h>
+@@ -1191,7 +1192,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+ 		cpacr_restore(cpacr);
+ 	}
+ 
+-	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0))
++	if (id_aa64pfr0_mpam(read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1)))
+ 		init_cpu_ftr_reg(SYS_MPAMIDR_EL1, info->reg_mpamidr);
+ 
+ 	if (id_aa64pfr1_mte(info->reg_id_aa64pfr1))
+@@ -1443,7 +1444,7 @@ void update_cpu_features(int cpu,
+ 		cpacr_restore(cpacr);
+ 	}
+ 
+-	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0)) {
++	if (id_aa64pfr0_mpam(read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1))) {
+ 		taint |= check_update_ftr_reg(SYS_MPAMIDR_EL1, cpu,
+ 					info->reg_mpamidr, boot->reg_mpamidr);
+ 	}
+@@ -3992,3 +3993,21 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
+ 		return sprintf(buf, "Vulnerable\n");
+ 	}
+ }
++
++/* This is not done by the early el2 setup because we want to allow
++ * id_aa64pfr0.mpam=0 to disable MPAM initialization for buggy firmware
++ * which failed enable MPAM or emulate the trap as if it were disabled.
++ */
++void cpu_init_el2_mpam(void)
++{
++	u64 idr;
++
++	if (read_sysreg(CurrentEL) != CurrentEL_EL2 || !cpu_has_mpam())
++		return;
++
++	write_sysreg_s(0, SYS_MPAM2_EL2);
++
++	idr = read_sysreg_s(SYS_MPAMIDR_EL1);
++	if (idr & MPAMIDR_EL1_HAS_HCR)
++		write_sysreg_s(0, SYS_MPAMHCR_EL2);
++}
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 285d7d538342..51f346044672 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -494,7 +494,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 	if (id_aa64pfr0_32bit_el0(info->reg_id_aa64pfr0))
+ 		__cpuinfo_store_cpu_32bit(&info->aarch32);
+ 
+-	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0))
++	if (cpu_has_mpam())
+ 		info->reg_mpamidr = read_cpuid(MPAMIDR_EL1);
+ 
+ 	if (IS_ENABLED(CONFIG_ARM64_SME) &&
+diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
+index c6b185b885f7..836e5a9b98d0 100644
+--- a/arch/arm64/kernel/pi/idreg-override.c
++++ b/arch/arm64/kernel/pi/idreg-override.c
+@@ -127,6 +127,7 @@ static const struct ftr_set_desc pfr0 __prel64_initconst = {
+ 	.fields		= {
+ 	        FIELD("sve", ID_AA64PFR0_EL1_SVE_SHIFT, pfr0_sve_filter),
+ 		FIELD("el0", ID_AA64PFR0_EL1_EL0_SHIFT, NULL),
++		FIELD("mpam", ID_AA64PFR0_EL1_MPAM_SHIFT, NULL),
+ 		{}
+ 	},
+ };
+@@ -246,6 +247,7 @@ static const struct {
+ 	{ "rodata=off",			"arm64_sw.rodataoff=1" },
+ 	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
+ 	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
++	{ "arm64.nompam",		"id_aa64pfr0.mpam=0" },
+ };
+ 
+ static int __init parse_hexdigit(const char *p, u64 *v)
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 85104587f849..9ab6db5968d9 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -313,6 +313,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 	 */
+ 	local_daif_restore(DAIF_PROCCTX_NOIRQ);
+ 
++	cpu_init_el2_mpam();
++
+ 	/*
+ 	 * TTBR0 is only used for the identity mapping at this stage. Make it
+ 	 * point to zero page to avoid speculatively fetching new entries.
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 3b3f6b56e733..75009284aafa 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -214,6 +214,8 @@ asmlinkage notrace void secondary_start_kernel(void)
+ 	mmgrab(mm);
+ 	current->active_mm = mm;
+ 
++	cpu_init_el2_mpam();
++
+ 	/*
+ 	 * TTBR0 is only used for the identity mapping at this stage. Make it
+ 	 * point to zero page to avoid speculatively fetching new entries.
+-- 
+2.48.1
 
 
