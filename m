@@ -1,124 +1,75 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD33420371D;
-	Tue,  1 Apr 2025 14:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0892D204C24
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517530; cv=none; b=VGaNBRBeetgn+JNHZ9LpcFvCM+uc3EqN6tBSeAgDSlYzie6EkoL+znKS6XfGQTKJ13/V9AQKrZISWivsy8k2Otb8ETofFP09JOnIEP6YjIEPDEeqAi48sxh4a/PuzKiNEVavBuKxptFQLGEPNBPOIJo3RAdI5WhsQiQdWTiTUaE=
+	t=1743517536; cv=none; b=ABmXj5kA0h9yhbFWcvGtLl6fQCNEYijEGz9mP8xDtcO/78phjjaXIMDcU0QQpKyy3K4coQrayYIVpowCNANrQ0Nn1kATF0I7cWT91E/Ss/BdwBFRFRSPvPIZB1men9c5Sw29ndzefANIupiwVEzSJGzbeW036P1jH+hRepbR3EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517530; c=relaxed/simple;
-	bh=Arp819bxRknwDeD70osYn6dTlFAlcGvt8KrCRnff2s0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lb6A+Je7mc5XcT1vqqDlPI/1mOw29lIlNrveQ4lPftJMEhYPBfDH+dTQKQOWE6X6fS5ajMZ7hwKJmT+XGCWzWTRCU+UYuUa5ra6o5uC+Hr7dceWuSpxzeFRwsKnGbcJc7LMMoaLKodd1i0QhOoGA44bKp8EUq7JY2WdSqrCN+r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJoXH+i9; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743517536; c=relaxed/simple;
+	bh=1/AAu4ml4MViQ+FpwPBEj6HozYXlOVT2sbaEwqNFQ8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWmbK00fn03vfGIKyO1jL438Cs5Z2wmElmcgTv1h7Zq8wQWbhmi70EblhCT+rhlJzpYgzYadZbHaJDn/dwtOAQ/bZTipSFsSvlkYbfrZnm0OuenCkVyW9x6ZgR6uBp2C+RStcy3cXOmSnIWJPCXWoTXfnna5cHJt9kcHkBcwMRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bSgojhG+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJoXH+i9"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2243803b776so37555005ad.0;
-        Tue, 01 Apr 2025 07:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743517528; x=1744122328; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1phRyZ5KcBrEb/h+2IGgPuNtDNLntogG8i/AIBPIi5g=;
-        b=KJoXH+i99tWwcgYnL7RUus3LYouTAOAMfpm2g61WyVKwP3/AW6c/OFRHa5/cJ66xMk
-         QiKgc1gMAFVVmiJrA84pZnGf08o88otqZQlUCx9QAF4qDiKp559Z4NfsPqQ/0C7h/gdm
-         e5rCNocgTjhjTNUR3Gf2nkMELtqssmSpNvXTzHxO1/7fCdhb1qE8cunOaet+OFCwrJaV
-         NzMjGkK0hWPT3wUcf8o7pxffxw4/smiOFf7I8QKk1TiONqpEFzJHhP6rQ47avCW1uBEX
-         e3SObHC0oq3jNt5M7nvggISNRxtYhk4p0oB6GmsRPTLgYko2QxpPjke/ATJVgjYk7pRe
-         MD9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517528; x=1744122328;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1phRyZ5KcBrEb/h+2IGgPuNtDNLntogG8i/AIBPIi5g=;
-        b=MTCCtzvp0wWZYr4gs2PgYGrXKz9VEF0QadlwlJVaH3qcRKkTBrnlwhUci0xGSfxfsV
-         Z301i0zWtsoGxO6/PCHRBp0nZux5KwPeNwLd8ihqvuqRJtL/JBYxkgrIAe9V+0xbfDbH
-         fL9/DpUERlqk/lV19b+ebLAotckvObqZekZeVQkxpIX3Nlx3dHos9oKFS10bLUHkEVf0
-         YTO+Rrmx18I5bQ+8avz4PdYnoaObdmc+y0jCQ4wHQuaI5JEP8h8D4vA4YvyrON0X2KiU
-         B6r6Jp/t0sY/4OFPnoQpsWLzoZMSdU84R+GGPdhge3ukznzn4xZzJeNPBoyteStt5cen
-         iNeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHk7iEnXY05QmBzM8K027dUHhMugNN6F7fzT2oE4mTbYoa9UUeYlBAWdZpsayfcX4ydWH40T7QcaxQadg=@vger.kernel.org, AJvYcCUXJWVK6ViodiZJKsS8Rs8zzUnPZdYu5D40MkXPVgYE3N4kN4dShETG87YCupKpgb+D7lxpKdXv9e58AYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycASRPyasIWU6PqUT4/ulAcpTNgdKlDOgp5nR42rxCLyJJyuV7
-	vMFnQTv5WRtO2YQSZFXy3pDGSHnPn2/8swLqSKGrU93qNIaQWbfp
-X-Gm-Gg: ASbGncscADYpkE6+AGpQyw/XtAcl1pSz4Ph7joBsgR/yOZrcLArPSU8LND+Hfih4K5i
-	xxhadYCZmXKY3N2juKPSPtB8pnqvwOYcU2nb8Y/9Fslr+YIZBKlKehUAIR5rHKcy7xT6B/zkqon
-	ziwXY+1NkP0sWO3KMCvDIX6o/ocIGYxC8lD9Me2zxwTiiNgYWboRAUwkB8swkipaYmgB9JMbLSA
-	fr+bewzxDRDTDN7RRph2NvDcjzIOai5jnfhuxtye3SScaw6SwmoTD68VGOcnIdllEGPhAcYlR1M
-	skvKUVPxJa/nU3CI5zrcFh7+vCdT9KQ9UPAOnCkQVtKUEI5/YozgdQsROCSO15gcBeCGIOs=
-X-Google-Smtp-Source: AGHT+IFV9dBzNcxDUHEuxWuZhPi/1saRFkCoRQug1IzAs4LF+0tMPIs9Zk7YIgX5WGynxkjRbFRZFw==
-X-Received: by 2002:a17:902:c408:b0:224:1609:a747 with SMTP id d9443c01a7336-2292f97ba73mr186070825ad.31.1743517527938;
-        Tue, 01 Apr 2025 07:25:27 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee22a2sm88704425ad.81.2025.04.01.07.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:25:27 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: shengjiu.wang@gmail.com,
-	xiubo.lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de
-Cc: kernel@pengutronix.de,
-	linux-sound@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] ASoC: imx-card: Add NULL check in imx_card_probe()
-Date: Tue,  1 Apr 2025 22:25:10 +0800
-Message-Id: <20250401142510.29900-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bSgojhG+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743517532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pdWXSeKX0PhjDWr9770PlQZO6x2YyeElurh57OPstnA=;
+	b=bSgojhG+KeJvYRCIQ7kkCSF1bDIzDaG0iucx39LC3oLv9wKKQZjO58pBuEgxlABGJk2jl1
+	wnM1nsAG2fvnOwU6zryBRUWj0QFWd6hDQO7zcqyYSn8vrhHhS/scPaQ8Ta23l/sPUA75s2
+	8IcWVJ+yFmm0aDTIfRErCOciGe+/9r8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-R3U1Q6zGOcmXxmy9eBN0PA-1; Tue,
+ 01 Apr 2025 10:25:28 -0400
+X-MC-Unique: R3U1Q6zGOcmXxmy9eBN0PA-1
+X-Mimecast-MFC-AGG-ID: R3U1Q6zGOcmXxmy9eBN0PA_1743517527
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 59079195608B;
+	Tue,  1 Apr 2025 14:25:27 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.45.224.107])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5E9A1955BEF;
+	Tue,  1 Apr 2025 14:25:26 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id 6A25018000A4; Tue, 01 Apr 2025 16:25:24 +0200 (CEST)
+Date: Tue, 1 Apr 2025 16:25:24 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: David Airlie <airlied@redhat.com>, 
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, dri-devel@lists.freedesktop.org, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH v1] MAINTAINERS: Add Dmitry Osipenko as drm/virtio
+ co-maintainer
+Message-ID: <l2ndn2jo2swv4unuc5r7fm3of6w3teyytpqfpgcvkdwnp3fubc@ect2rh2ikmhn>
+References: <20250401130151.2238772-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401130151.2238772-1-dmitry.osipenko@collabora.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-devm_kasprintf() returns NULL when memory allocation fails. Currently,
-imx_card_probe() does not check for this case, which results in a NULL
-pointer dereference.
+On Tue, Apr 01, 2025 at 04:01:51PM +0300, Dmitry Osipenko wrote:
+> I was helping to co-maintain VirtIO-GPU driver in drm-misc with
+> permission from Gerd Hoffmann for past 2 years and would like to
+> receive new patches directly into my inbox. Add myself as co-maintainer.
+> 
+> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 
-Add NULL check after devm_kasprintf() to prevent this issue.
-
-Fixes: aa736700f42f ("ASoC: imx-card: Add imx-card machine driver")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- sound/soc/fsl/imx-card.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/sound/soc/fsl/imx-card.c b/sound/soc/fsl/imx-card.c
-index 905294682996..3686d468506b 100644
---- a/sound/soc/fsl/imx-card.c
-+++ b/sound/soc/fsl/imx-card.c
-@@ -772,6 +772,8 @@ static int imx_card_probe(struct platform_device *pdev)
- 				data->dapm_routes[i].sink =
- 					devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d %s",
- 						       i + 1, "Playback");
-+				if (!data->dapm_routes[i].sink)
-+					return -ENOMEM;
- 				data->dapm_routes[i].source = "CPU-Playback";
- 			}
- 		}
-@@ -789,6 +791,8 @@ static int imx_card_probe(struct platform_device *pdev)
- 				data->dapm_routes[i].source =
- 					devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d %s",
- 						       i + 1, "Capture");
-+				if (!data->dapm_routes[i].source)
-+					return -ENOMEM;
- 				data->dapm_routes[i].sink = "CPU-Capture";
- 			}
- 		}
--- 
-2.34.1
+Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
 
