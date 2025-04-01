@@ -1,115 +1,280 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D462040BD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC1C204F93
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517082; cv=none; b=QqLca64A+kvRZ7bA2cL4lUPYPkwiprkUWj93p6pRMMdy6r0z5c1jVzJZNdv1whPkWC8Wvxh1aKQ5wfzOgAwuQwz+fz7QfZRWxoTRBXFP7aIpm3+vVfDz+2RZgXFmWpxb62QdfBHBZCEa2yBfBRPGjpXiPLUSTYXXv96e5W1ltu0=
+	t=1743517086; cv=none; b=t/cu3wz7SoKJSfHhUMcGO+a7x/aeWqfHAbGV9FtKnCNtO5k1blEsdX8Q6XZ/1Ub7J11VHyMIj0v7luM6XoK0ZdhDrCvKOYd/EbUpi7ISszGf8SiH9i5P4B92g1SXMAzJrMfrzoyP30VLW3DV5bx7mmwEdc8mw9jxyrR0wG6a0W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517082; c=relaxed/simple;
-	bh=qBYjcouQW6HReKbjdwqHeD5kVbmPx9ci9r+cFmpKKBM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R273GZYlJRFlo/xEio6qiKBMWTuLQ5g7SKLs46Aas0Z3cYPG6hRIkdDCt0EE3Ztd4eqr72vJe/yTlqwRaV7PsK31zp+HryvRRP+3NrfQGt5KHHlbBJcn2JaCB+29fC91c0W/peFFXIbImvcThRaChFpK4pHjflYv68gsng7FJaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K6GZ63aE; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743517086; c=relaxed/simple;
+	bh=Y7jsjWBuwe702oaNOkC97s4Or584AGrSbN/Xz5jZVD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JGKe8IscJCQ3cb2WvMdDbZ3K5SBPzWhgqGnYI98ATKM+gecyJ+yTELI2Y/Ez6u93zKnfwC2LKYN43HRBheYbVzDVC1wFOpJ80D9L0nrZhXamkpNxIaoUEEWu2YtfYlmTANoWxN0zzocGorWqEaNRld7siAlKGv2en7CJaCX51sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=C5WyKFjS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=v6R1h9rj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rexuW2xe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ox2DFSQo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K6GZ63aE"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54954fa61c9so3943401e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:18:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743517079; x=1744121879; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=11E24h0kkMUDJZI1H/PMbxoLXdKMo2wCD3aU6/q3qUU=;
-        b=K6GZ63aEYvuM2hcvSiuAQ2AlPgLWrzTA1dP4XCIAitms7cD3EHXQr2kkJ9ezN4EhRR
-         eyozYE7R//1LokcqcNSg+XzJXsK+BXMMVBttFKulx74sAwYqxsiNKRIOXOazxKVqCKq9
-         gfJqiRouGkGCxVG1heMqmKvleo85Qt9xa4uGE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517079; x=1744121879;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=11E24h0kkMUDJZI1H/PMbxoLXdKMo2wCD3aU6/q3qUU=;
-        b=JU06d7U2dYAdfiO4EgYAK6MvpYYFBESoPypMm+UPBZMiP5eIuV0ZEdrLD9Arp4pIvS
-         F6kOcvrCcblSsEjsYyVKE2cQeMYdc9mTwMxSTpfTvGd4yAbk0Q9iYL+TKT2hiFFleA7f
-         tM+OpChJbkM1WjEv3LVjlL1002KqV50qZ4bA1i0mnD5jc3WNscFRFwCx8kgMnMxx9RhM
-         FXuAnS8kw8NkfJnWw8+DkT7/CcYgb5ybzTKn7OGLwgfZHtObe1N4WH09XO80QhbhKSnL
-         Ttewn4ldBRm/GToYwKFNsCzsHI/Doxb0XcCVA4Qy68xoz9OQBLd+VDDjwj/t4+1X7P5r
-         ImCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2L+lOfCVZlVWI3N1C42xPrgeYCIpGxvD/hTscBT48s+7WJXSizS8Bky8KqIqj8CeDmyFjSNMUzncnpzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2vZvDVPNl0QDYoCcvlR47oibo+8YEQnhtuP2ipqhemWMF9Ze+
-	YtbkEUgSJVxz8ApEl5zIpSWD4bVuviEEJ4dB1yOF1o0KeU3badEoodHkUvLBig==
-X-Gm-Gg: ASbGncsvhB7k4fR4Jbrnx1xUZDwEz/IyQuAYhmyROWfM+SFM8k6OCpfLMjH7YDPNqLk
-	ByCUBJ+t8nnkcPa4PyPMv93Wp6Y/Oa8eMRk2Ccj7iUwiSgyuPrUFLa1ybnbpxQDSerqPSvBOgH4
-	XgRqq5TXns3vNt/HGaXqW0B8pvFptzMiYsxvxkFJ960e8N3a+itC9B6SQy43wQy0img90GbqCrU
-	K9tqFHlBHT07OZsx3gLgPUc3/SRQUZlkia/ffIfHAlM2vSFxOyqU2gMbN6t6otvqq6Y+G97VB66
-	u7LipC1ESZNpH4IQqsjxFt3fgy/oeJJDtx6/NqlOh40izFJ+xqMmWfUAEOdGsKgVt5tNU4a0iaZ
-	If5cYeH3szbj9ENnVPcRuuz3b
-X-Google-Smtp-Source: AGHT+IHN6U3rH8+fca2aINvuxvaQMLkM1cf4WYnPgGffYBfOrlVLilx3ccY/7R2tGC7KC/dIyogKJA==
-X-Received: by 2002:a05:6512:108d:b0:545:2b68:936e with SMTP id 2adb3069b0e04-54b10eca297mr3363397e87.25.1743517078964;
-        Tue, 01 Apr 2025 07:17:58 -0700 (PDT)
-Received: from ribalda.c.googlers.com (216.148.88.34.bc.googleusercontent.com. [34.88.148.216])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c19a3sm1377789e87.80.2025.04.01.07.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:17:58 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 01 Apr 2025 14:17:55 +0000
-Subject: [PATCH v2 2/2] media: cec: extron-da-hd-4k-plus: Fix
- Wformat-truncation
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="C5WyKFjS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="v6R1h9rj";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rexuW2xe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ox2DFSQo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D73E01F38E;
+	Tue,  1 Apr 2025 14:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743517083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nywPJHY2aHhWmHc5HhX/rKXrnwGvUOpqsHuTYIcbA00=;
+	b=C5WyKFjSDfbaNutXxOR/HxhlJmLNxMLgxyHZFw1NRBkk5fU88H0Lq0jepsNJ96whYsq6iW
+	NhcIi1qUnHSChVxYyIodAXKrE+7wcwmQGmv0UIAd01UAW5mscRrTsmSHgbB59Zr6g/Xc0R
+	G3p35QxwcctvNSJON2FsEgsgBbrp64w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743517083;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nywPJHY2aHhWmHc5HhX/rKXrnwGvUOpqsHuTYIcbA00=;
+	b=v6R1h9rj4oS8/e2fhSL9kNuk1eXhhrSb0BPcPtPch1mZdXRbgJKayr9JGeJd2n22X9s3mg
+	NJosxdkShOW/AsAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743517082; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nywPJHY2aHhWmHc5HhX/rKXrnwGvUOpqsHuTYIcbA00=;
+	b=rexuW2xecf84ysFcxOqbSoc6+fKYd/mGtit4u1qmSZ/TNPX6FwI7vlOzPSI4sxHkpapP2C
+	t8IYfkM2a+ni2XPqK4NVUZTMcIAx0DSY5vo7exDtteLJpldiNyWAScgpkOaaUis6YqiAgz
+	AkpLe8G8NHCXeLtWH3l41BRAt2pX0qA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743517082;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nywPJHY2aHhWmHc5HhX/rKXrnwGvUOpqsHuTYIcbA00=;
+	b=ox2DFSQoWModJPYitU5WGDaL97dFUOlKEzgMme2fD7QKyi+WRl8uO7b/0YpixmZ1AlsZDN
+	V9m81qIaY0sF3eBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B664113A43;
+	Tue,  1 Apr 2025 14:18:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 72kxLJr162ceYgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 01 Apr 2025 14:18:02 +0000
+Message-ID: <84d7adee-fa83-4a8b-8476-820212dc929e@suse.cz>
+Date: Tue, 1 Apr 2025 16:18:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+Content-Language: en-US
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@kernel.org, akpm@linux-foundation.org, peterz@infradead.org,
+ bigeasy@linutronix.de, rostedt@goodmis.org, shakeel.butt@linux.dev,
+ mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250401005134.14433-1-alexei.starovoitov@gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250401005134.14433-1-alexei.starovoitov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-v614-v2-2-53024c4fcdc7@chromium.org>
-References: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
-In-Reply-To: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Andy Shevchenko <andy@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-staging@lists.linux.dev, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com,linux-foundation.org];
+	TAGGED_RCPT(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+On 4/1/25 02:51, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
+> 
+> Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
+> Remove localtry_*() helpers, since localtry_lock() name might
+> be misinterpreted as "try lock".
+> 
+> Introduce local_trylock_irqsave() helper that only works
 
-Fix gcc8 warning:
+Introduce local_trylock[_irqsave]() helpers that only work
 
-drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c:1014:44: warning: 'DCEC' directive output may be truncated writing 4 bytes into a region of size between 0 and 53 [-Wformat-truncation=]
+?
 
-Resizing the 'buf' and 'cmd' arrays fixed the warning.
+> with newly introduced local_trylock_t type.
+> Note that attempt to use local_trylock_irqsave() with local_lock_t
+> will cause compilation failure.
+> 
+> Usage and behavior in !PREEMPT_RT:
+> 
+> local_lock_t lock;                     // sizeof(lock) == 0
 
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+local_lock(&lock, ...);			// preempt disable
+
+> local_lock_irqsave(&lock, ...);        // irq save
+> if (local_trylock_irqsave(&lock, ...)) // compilation error
+> 
+> local_trylock_t lock;                  // sizeof(lock) == 4
+
+ditto
+
+> local_lock_irqsave(&lock, ...);        // irq save and acquired = 1
+> if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save
+> 
+> The existing local_lock_*() macros can be used either with
+> local_lock_t or local_trylock_t.
+> With local_trylock_t they set acquired = 1 while local_unlock_*() clears it.
+> 
+> In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts
+> to protect critical section, but it doesn't prevent NMI, so the fully
+> reentrant code cannot use local_lock_irqsave(local_lock_t *) for
+> exclusive access.
+> 
+> The local_lock_irqsave(local_trylock_t *) helper disables interrupts
+> and sets acquired=1, so local_trylock_irqsave(local_trylock_t *) from
+> NMI attempting to acquire the same lock will return false.
+> 
+> In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+> Map local_trylock_irqsave() to preemptible spin_trylock().
+> When in hard IRQ or NMI return false right away, since
+> spin_trylock() is not safe due to explicit locking in the underneath
+> rt_spin_trylock() implementation. Removing this explicit locking and
+> attempting only "trylock" is undesired due to PI implications.
+
+And something like:
+
+The local_trylock() without _irqsave can be used to avoid the cost of
+disabling/enabling interrupts by only disabling preemption, so
+local_trylock() in an interrupt attempting to acquire the same
+lock will return false.
+
+> Note there is no need to use local_inc for acquired variable,
+> since it's a percpu variable with strict nesting scopes.
+> 
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+Is there a chance this refactoring will make it to -rc1? It would make
+basing the further usage of the lock in mm and slab trees much easier.
+
+But squash in the following fixups please:
+----8<----
+From bc9098ebb58a2958010428c9294547934852ffa2 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Tue, 1 Apr 2025 15:25:21 +0200
+Subject: [PATCH] fixup! locking/local_lock, mm: Replace localtry_ helpers with
+ local_trylock_t type
+
 ---
- drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/local_lock.h          |  5 ++---
+ include/linux/local_lock_internal.h | 21 +++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c b/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-index cfbfc4c1b2e67fec9434aa6852ab465ad8c11225..41d019b01ec09d1d3e72c89155042888b7948463 100644
---- a/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-+++ b/drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c
-@@ -1002,8 +1002,8 @@ static int extron_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
- 				    u32 signal_free_time, struct cec_msg *msg)
- {
- 	struct extron_port *port = cec_get_drvdata(adap);
--	char buf[CEC_MAX_MSG_SIZE * 3 + 1];
--	char cmd[CEC_MAX_MSG_SIZE * 3 + 13];
-+	char buf[(CEC_MAX_MSG_SIZE - 1) * 3 + 1];
-+	char cmd[sizeof(buf) + 14];
- 	unsigned int i;
+diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+index 9262109cca51..7ac9385cd475 100644
+--- a/include/linux/local_lock.h
++++ b/include/linux/local_lock.h
+@@ -52,15 +52,14 @@
+ 	__local_unlock_irqrestore(lock, flags)
  
- 	if (port->disconnected)
-
+ /**
+- * local_trylock_irqsave - Try to acquire a per CPU local lock
++ * local_trylock - Try to acquire a per CPU local lock
+  * @lock:	The lock variable
+- * @flags:	Storage for interrupt flags
+  *
+  * The function can be used in any context such as NMI or HARDIRQ. Due to
+  * locking constrains it will _always_ fail to acquire the lock in NMI or
+  * HARDIRQ context on PREEMPT_RT.
+  */
+-#define local_trylock(lock, flags)	__local_trylock(lock, flags)
++#define local_trylock(lock)		__local_trylock(lock)
+ 
+ /**
+  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
+diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
+index cc79854206df..5634383c8e9e 100644
+--- a/include/linux/local_lock_internal.h
++++ b/include/linux/local_lock_internal.h
+@@ -23,7 +23,7 @@ typedef struct {
+ #endif
+ 	/*
+ 	 * Same layout as local_lock_t with 'acquired' field at the end.
+-	 * (local_trylock_t *) will be casted to (local_lock_t *).
++	 * (local_trylock_t *) will be cast to (local_lock_t *).
+ 	 */
+ 	int acquired;
+ } local_trylock_t;
+@@ -80,7 +80,7 @@ do {								\
+ 	lockdep_init_map_type(&(lock)->dep_map, #lock, &__key,  \
+ 			      0, LD_WAIT_CONFIG, LD_WAIT_INV,	\
+ 			      LD_LOCK_PERCPU);			\
+-	local_lock_debug_init(lock);				\
++	local_lock_debug_init((local_lock_t *)lock);		\
+ } while (0)
+ 
+ #define __spinlock_nested_bh_init(lock)				\
+@@ -128,6 +128,23 @@ do {								\
+ 		__local_lock_acquire(lock);			\
+ 	} while (0)
+ 
++#define __local_trylock(lock)					\
++	({							\
++		local_trylock_t *tl;				\
++								\
++		preempt_disable();				\
++		tl = this_cpu_ptr(lock);			\
++		if (READ_ONCE(tl->acquired) == 1) {		\
++			preempt_enable();			\
++			tl = NULL;				\
++		} else {					\
++			WRITE_ONCE(tl->acquired, 1);		\
++			local_trylock_acquire(			\
++				(local_lock_t *)tl);		\
++		}						\
++		!!tl;						\
++	})
++
+ #define __local_trylock_irqsave(lock, flags)			\
+ 	({							\
+ 		local_trylock_t *tl;				\
 -- 
-2.49.0.472.ge94155a9ec-goog
+2.49.0
+
 
