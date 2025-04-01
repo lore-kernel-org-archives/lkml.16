@@ -1,61 +1,102 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE72286349
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E66F54AEE0;
+	Tue,  1 Apr 2025 04:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743480317; cv=none; b=W9ScIPrPoYxZu+7BYpG13HyOq1P2tGM7507N7DRneO+SOEvFO48xh1eyBA87pG935A2aGgkK+JOYiOOts0yuIq7sw6bdp9ybaKLHJl5iw0Bd7049o+c4L08CJ6asBLr41jd4Xsy2YkGWiFimWWcraOuHH99zoqHG2cE2Us9ueTI=
+	t=1743480371; cv=none; b=PP03lJU6Tdt/5b/JVLrpHfvy6Snh6HvkxlAidSYUoL6ffGmfYeggCGHzNvVIqfhrkOWhRKhaFE3KLplyyCcd44ozT2aV1mPBdzEd2iHfGRhBlsdWA25iYMc1RzUjSWhgLsaalp4wZJ0ghmV462mf/uUvGQZltJvZX9KbxPcWpho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743480317; c=relaxed/simple;
-	bh=FZvyO+CH+waPGu0bUdSrHBMNWzHkAiiI7Y/QcwEqSk4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mTbPukLljFfzMsCxzAD86CB9D32ImX2XV98AMglJjuL9oKfokXbDuRTkigrFel8e0QDB8roju22YvtGqVRgr9yiCOrvtHgnaZh4calBdZ3fLZvmQT8qI1AXv3FwCoeXcwT0ahPWy4CQn/Uyg0EGVypwj3JcoII6gkn8HUCwhcjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d585d76b79so45093755ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 21:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743480314; x=1744085114;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzG2Y/TurTR7M2S+S/zPulC1BtJ09P274Dqqe0OY7h8=;
-        b=Xo1Lm0pxsMDdLwF3KqLrjYscYmxLM5d5Z0ER8bSRc8UCsHUN9/zmNInMGn9HewQy2D
-         cslE758d3bdtPn96ks4OWMiJGGHwmcu8yngrax3W3L9wDjGeoH/3Cd0BiBY0zW8hHbQl
-         yBcpSlmxP5yw3S4UzwrL1nej5hSzuxiyzAYjn60yWJVDsUZNQkXtqbgsJxLDl7NiO49J
-         zOyuZbp4yg2Gm3M+Qbp6fpCttykVp2bnODvA+9h9RH5RoEFQ/w9vPW9mMDfBDFWENNE3
-         x0Dy2XoiLglhoN1Mkv7owFWQQtbiOid/KAleNAFqU/iJUTyLjB52tEt/0NvgGC/cw90Q
-         5tQw==
-X-Gm-Message-State: AOJu0YwSiwwvdyn2QI5YoH5AuG9vTaiHqP4o4QyOXAFK8+ghGF74YAK3
-	npNRucc4saFgZT2h2eQQaFiRR0lsobkEcPMbzBiXe3JhvXMvr67IWrK91AvvDldGXWUdYeu/tYU
-	xsijZ7YEcuYIfNfb8hhNdftkFJADW4uzhbXXx4Prp4wU/8ZZ11yTxxtk=
-X-Google-Smtp-Source: AGHT+IHB55wmYPhAmRULNj0M+pZH68jfR7n/drAb5Ly8bCecyqY0aoioEqql0dKo9vyWqm8EIcMSFZzy4Ts7VXwzsBjF3DpXOvHf
+	s=arc-20240116; t=1743480371; c=relaxed/simple;
+	bh=AOFkwiMxE25CkrPfbOCrU6wMEe3EHjZDX79rsju8ecA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=so0x4+T5JH7knf7vmYreOF7kz9vbCkUD/AcGmLEwHjsEvfPsep6kN//QzJe+My+nxBHMz7ZxEYpkZGYLJmScq2I+hutu2SsYkvb0QQQ4EwzOvx9Cj4wV8pYnsz80ZKxxEkNsRed17m3kET2lnZbHVOSHB30FGJS2N7GrIJfSiE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Na0zForS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Na0zForS"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 6D3C6210B176; Mon, 31 Mar 2025 21:06:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D3C6210B176
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743480369;
+	bh=RlgM5HIy5B8eV6GCaYb9TDY0d3e1TibeLyeK88C+tl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Na0zForStOuvVEUECCGmU/TkrjsbeSt5LuZf+cRbFHXd/CwmzPfrs1GkE49x9Ertn
+	 aTXCHhoEVhBI+nXSUCSDlEu1uWlylV0UBaxA82JnFzxKg2rcC2BQRQ356KAFou4XzB
+	 mGWOBmltNXH9EHO3MkkvyRN0sHXPA/Z5tLfUIgYs=
+Date: Mon, 31 Mar 2025 21:06:09 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Message-ID: <20250401040609.GA11465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1743401688-1573-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <BL4PR21MB462765E191592754911DB67BBFAD2@BL4PR21MB4627.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:260a:b0:3d5:d743:8089 with SMTP id
- e9e14a558f8ab-3d5e091344amr117665055ab.7.1743480314095; Mon, 31 Mar 2025
- 21:05:14 -0700 (PDT)
-Date: Mon, 31 Mar 2025 21:05:14 -0700
-In-Reply-To: <672b7604.050a0220.350062.0255.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eb65fa.050a0220.3a8a08.0008.GAE@google.com>
-Subject: Re: [syzbot] 
-From: syzbot <syzbot+07d7911319bd613ba885@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL4PR21MB462765E191592754911DB67BBFAD2@BL4PR21MB4627.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Mon, Mar 31, 2025 at 11:20:09PM +0000, Dexuan Cui wrote:
+> > From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Sent: Sunday, March 30, 2025 11:15 PM
+> > [...]
+> > +static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
+> > +{
+> > +	struct tm tm;
+> > +	time_t t;
+> > +
+> > +	time(&t);
+> > +	gmtime_r(&t, &tm);
+> > +	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
+> > +}
+> 
+> Now the function is unnecessary since v2 uses syslog(), which already prefixes every
+> message with a timestamp.
 
-***
-
-Subject: 
-Author: kent.overstreet@linux.dev
-
-#syz fix bcachefs: Disable asm memcpys when kmsan enabled
+Hi Dexuan,
+I have deliberately kept this timestamp in the raw message so that
+if/whenever they are redirected to other file, irrespective of the
+configuration of the syslog we have valid timestamp for debugging
+> 
+> > +static void kvp_dump_initial_pools(int pool)
+> > +{
+> > +	char tm_str[50];
+> > +	int i;
+> > +
+> > +	convert_tm_to_string(tm_str, sizeof(tm_str));
+> This is unnecessary now.
+> 
+> > +	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d
+> > ===\n",
+> > +	       pool);
+> > +
+> > +	for (i = 0; i < kvp_file_info[pool].num_records; i++)
+> > +		syslog(LOG_DEBUG, "[%s]: pool: %d, %d/%d key=%s
+> > val=%s\n",
+> > +		       tm_str, pool, i, kvp_file_info[pool].num_records,
+> 
+> Can you change the 'i' to 'i+1'? This makes the messages a little more natural to
+> users who are not programmers :-)
+sure, but I am just worried that might cause confusion when someone
+tried to co-relate it with the actual kv_pool_{i} contents that start
+with 0.
+> 
+> >  static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+> 
+> Can you add a log message for KVP_OP_DELETE as well?
+sure, I can add this.
+> 
+> Thanks,
+> Dexuan
