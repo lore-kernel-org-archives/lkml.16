@@ -1,83 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001345A4D5;
-	Tue,  1 Apr 2025 10:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C311B1EF0BA;
+	Tue,  1 Apr 2025 10:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503700; cv=none; b=CAd/ddkt8wgLEOTpJLKE9W0HuyYdGgsHZx8SzkiJMpnws2b5v/lacQX+yMSOq6eDDePa5ZoGWSWoM7KElVJqTXBGAKUdXTXPmk7BNofy9j4/u6pV0KuEImOWmiu9ZJOn0xn3z78A+mWvmcLesFMCkYEJEgVYunmjgxmAGMiCaCk=
+	t=1743503717; cv=none; b=mojoQg2+im6d59jKFOb3SWTJ2XkuMpXphCIA+jBB4zJNfhyN9hTI7X92KDYO4FdMKU7/ScEqBKFTi9pXxAurZklBeZ6CV3ZG3rUbsK83NfjVGeVfV2cfG88SLU6fjsHuTIcDzUJLUjqoE41PV85sHVuubiT/hK81QJiKxU4Ob6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503700; c=relaxed/simple;
-	bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nrIGFcBwKC1Kj0EfMPS9I9UlJEert7GCPUNeO2hI7JqdQ5x7rXX2zARP1wAAfEkVbZ1zykXaANo/2wc8Fa8qilEQ0Kfm8jxKohAWP4vK5GPM8nXUiyCxsVR9+uY5aAM4cAWdXrrIfdTwFyw1/wGkRivFUPQJtqAABQjJDDgItGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGgqhV7D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743503717; c=relaxed/simple;
+	bh=i1uX15IyzqsZWb/TvH5+a4SBwYFcxwU6+oaSdvqPc3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AyQ6pb3QssjlkR2zGiMqNu4cSCtMPuEalDCVY+0s/Hp1cx6dKQuXUPxd6WtAPRMXRiawqmqK9ZvaIVNVp1arcTxl928JkM1fVlRPs2iNr0ZXrlDWMjt1awUjhe6ZyiTwuz8eSAH9RSz3SjdHEAvQzCA6J4NMe7gfelyUtNqGxTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eUQNSxy1; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGgqhV7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE41FC4CEE4;
-	Tue,  1 Apr 2025 10:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743503699;
-	bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XGgqhV7DgvBSEKNwHpPPEH8rFaM8d0i9CNUsLtAeyTZvqy5GOfJYe998LxX8Cfrkk
-	 TACrruFZkSy+eTp7q544QWS49Hk8vFIwJv8sqg4TMTuMSAvvENGKn0DUpr8xnO5UnN
-	 ZBefYBqHFykpvrg/Y1sdc7pH+pmN+QHOlarKSEDcMM+dPB01XSXzBTotREPqeZrGBP
-	 MctZY+2BrhA84l769HIo/sAkQNYNL7KOeeuaZzzTERxmRQj9KbM2DeegII/sE8WBQp
-	 mI543IkzgJrMtmgmukK154o4kzdgbPlOz9OpVZHM8LYxLmiM9shx1bW1rWhdv0qVru
-	 BfvdgLhuq7+wA==
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/2] speed up /proc/filesystems
-Date: Tue,  1 Apr 2025 12:34:51 +0200
-Message-ID: <20250401-zugute-wahrnehmen-d95d2334d0fc@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250329192821.822253-1-mjguzik@gmail.com>
-References: <20250329192821.822253-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eUQNSxy1"
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id A927E5897DA;
+	Tue,  1 Apr 2025 10:02:41 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A0E09432C5;
+	Tue,  1 Apr 2025 10:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743501753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JqZFr1OBThFFO2Gb87Cot8+VhO0EETzE4mrpW6VN7x0=;
+	b=eUQNSxy1kMTi0sbivzgeK2ZVMxQD4TA3nnkh9fbyQRFRWof0NH13XKiAHJkP6BVseNy6XZ
+	gnOsLYZkftbsBd1PjuRVIUMuEDH1JdmsL2xFux9Jo19x2R6im3a8ElFBVBa/XbpjFgPtup
+	qvDw5MdTmNYFBx6+W8vW9xmKeZ6Wt7Wl7Fl/AGqwjxbbZw2BJF5X970qwfXaI36wyNch0h
+	waaraiUoxxengtjVzrsE3JoLrB0QeL+xu3cOUHo1ZoAPYdT8RUEgkdBtCSFV8vA6E5BLe3
+	Hjixi+ZvvX2PfFQOCISzEXXU5aa5nPMqX/ocmhiDj3NfHO1XUqaVz54O4JBh2g==
+Date: Tue, 1 Apr 2025 12:02:33 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Maud Spierings <maudspierings@gocontroll.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: pcf85063: replace dev_err+return with return
+ dev_err_probe
+Message-ID: <174350173761.1869522.4017225429652916450.b4-ty@bootlin.com>
+References: <20250304-rtc_dev_err_probe-v1-1-9dcc042ad17e@gocontroll.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1379; i=brauner@kernel.org; h=from:subject:message-id; bh=TD7XfWz5YDF4LfBDwutCvNXE2Wz+eKV/25wZX0rusfQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/PuibtrLNP/GwxaYCxbleH3Lv9fquF+oUYb4VGuDsx HLnW7RyRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEQOMDEyzD3OeGZf10FduQ+f FlekFs8V1NH98L9j6lMXhpOmrk3+WQx/xY+wFnb6zbJ2ehXewDm/V91myeXnEQ6alT2blArSRKP 4AQ==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304-rtc_dev_err_probe-v1-1-9dcc042ad17e@gocontroll.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefpdhrtghpthhtohepmhgruhgushhpihgvrhhinhhgshesghhotghonhhtrhholhhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrr
+ dhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Sat, 29 Mar 2025 20:28:19 +0100, Mateusz Guzik wrote:
-> I accidentally found out it is used a lot *and* is incredibly slow.
+On Tue, 04 Mar 2025 09:14:52 +0100, Maud Spierings wrote:
+> Replace the dev_err plus return combo with return dev_err_probe() this
+> actually communicates the error type when it occurs and helps debugging
+> hardware issues.
 > 
-> Part of it is procfs protecting the file from going away on each op,
-> other part is content generatin being dog slow.
 > 
-> Turns out procfs did not provide an interface to mark files as
-> permanent. I added easiest hack I could think of to remedy the problem,
-> I am not going to argue how to do it.
-> 
-> [...]
 
-Applied to the vfs-6.16.procfs branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.procfs branch should appear in linux-next soon.
+Applied, thanks!
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+[1/1] rtc: pcf85063: replace dev_err+return with return dev_err_probe
+      https://git.kernel.org/abelloni/c/119e90a3a64d
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Best regards,
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.procfs
-
-[1/2] proc: add a helper for marking files as permanent by external consumers
-      https://git.kernel.org/vfs/vfs/c/6040503a448b
-[2/2] fs: cache the string generated by reading /proc/filesystems
-      https://git.kernel.org/vfs/vfs/c/9750cdeb327d
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
