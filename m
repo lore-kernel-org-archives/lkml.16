@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B5C223336
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D98B224240
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523944; cv=none; b=N+29Ikokn9uHS2f08/beDxd77zyHveMG9C8a6rEI+okMlmkQ8VehWVBFX+zeQuX0e76dW9WYlnIW/4UE8L0rEEM+ikFMW6WyADlZ4i1oVmtjcaXMK+m0sECBo2T0BJRXTK9pD9gGhIl+xXU6PHXLJKfVaDQnJKwkPB9T3i+kF2Y=
+	t=1743523949; cv=none; b=AtjJVBgaMuiFjp4LvP9SbsVD28Ls000NrktMxgYxY8U2Amas3JCXeIlFqkYdiyvkHMd5ampTB1CmaNM/OhJ5HhOtRTdLpopuLm34y+wGb6I9bm51YKoWJw/NqczS7seKp5o2qCAjy6cQqLOaojs/2VmvcjIuvuP1iB3USFUigVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523944; c=relaxed/simple;
-	bh=pn8er/Ns1V0RvexqIaqaUyOMfeX7VOy6D1cEZq4AgVs=;
+	s=arc-20240116; t=1743523949; c=relaxed/simple;
+	bh=7h29/HU5sdApjkYIeGF2/5ZLb/HC0XBAWZ+vi6Cv12I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZdbdMiNOGAv8QYhY9ENHOR6sMSDQdXpKzX2sIGdl9JHLEBdYNAiAdA6F3cg5gu9cm4w+1Msqkxn9Y3D1agzeeEQPfVwbE4yh2f2GqXRecixbuhVd7Que+ukFDzh32x1Jn1FgYgxLDXi+RWDCzLfPWFVql9x7gelRtwYN/S0QM8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RCWXG1rt; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=sTY8q0SNDWckkYqqDafREyFra/4n+mA6IR3TrDVrweb6c7igg2tsbyAnntL00LkcSUgtFn2+FBlfPl3xOnMTS7lh0Efnw4EZ04QI0yxk67SHY3+iKexAg6WXUvfRzb+Sz2wl/XqlQi+EuxxOIM8GW7gQE+BxgNb/E1eB9eJ5lK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bEoFSHjk; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RCWXG1rt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEoFSHjk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743523942;
+	s=mimecast20190719; t=1743523946;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=STKQiGVrBKxKXPgyW50q0lNwcXD/6o7OaldUCF+7vOE=;
-	b=RCWXG1rtgHMePJw7uS/ExMTF3nZWX6k1rdfCyEsPzfNI0gtrbb/bUAokDBexcKBrzVxoZQ
-	I21aQ5tk7/0JCQrdvtmrpP8PhwCKGcit5CQ02jXRFh1/Ezd0rrihv1UZqFJgrbitXIvrW8
-	T/j1TvJvU/mBmRZ/iGY87933L8KGR78=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Za9UhBdtRl20IVd/exE7AzVdA7LtofpEuC+6DQ+7Q1I=;
+	b=bEoFSHjkUKo+Y8QWRGVzO4tCShDz4UVZXB9vk6E0bisSB4i3TtYElCMgUcOXzJ9b+OZQSV
+	f41n89zrSkx/64Ltoj7Kieyo2zi2CV6ntN3EnkvEYarXJE4ou/r6vT/1X1Udd3cvEEMc/t
+	XrY1YhlFXBZR3z3oLg/lydXSgGhhpB0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-2V_gTDd9OZK-zObAwPVxDg-1; Tue, 01 Apr 2025 12:12:19 -0400
-X-MC-Unique: 2V_gTDd9OZK-zObAwPVxDg-1
-X-Mimecast-MFC-AGG-ID: 2V_gTDd9OZK-zObAwPVxDg_1743523939
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39131851046so2760175f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:12:19 -0700 (PDT)
+ us-mta-103-h9dia9GOOZWt1kJyWt3xsA-1; Tue, 01 Apr 2025 12:12:25 -0400
+X-MC-Unique: h9dia9GOOZWt1kJyWt3xsA-1
+X-Mimecast-MFC-AGG-ID: h9dia9GOOZWt1kJyWt3xsA_1743523945
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so30161155e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:12:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523938; x=1744128738;
+        d=1e100.net; s=20230601; t=1743523943; x=1744128743;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=STKQiGVrBKxKXPgyW50q0lNwcXD/6o7OaldUCF+7vOE=;
-        b=DSdYr2fLujEuxmzIS7+x3V/4GJ1JKDTaJqYX7wzkhVPdu1dCYGHEiJiuaBb53e52AK
-         szktkj1x4GO6mPEegldDINytpQgxvNxUgSMF5F9VEGO9+SEQyNI9xwK3xy2xJ5LABA6d
-         79aAD1/nIZNyzVDEgaCozbGzWeFND2l+LtMAwibvyDKlXZ2EYleWG1Lm/sQ6RcqmNQWm
-         FNXpylS2S8NjUOa08AF4S6Ha+soJfWXb3urk5IcKsZpWQ5LDYn/SoCc7+taoQTF+uIoq
-         tBCaluw7uGUoCDFhmexVvDTZc0QaAwWrAZL4vMHijS4TRm3ID2jhBzQyaZ5bdIlm8AT+
-         Utrw==
-X-Gm-Message-State: AOJu0YwuLiUF689R2cat2Vvz4K92kurlJyT/f7UZOjiYT07oi/sjitSs
-	CuTvDhCe3C7DN+bdaww6BjdvUgo+lS8WUf8E+2H8catA//3w0FZDCz1f00+QYuWpTy9QzJ21VC5
-	qCYX4zfM2Mqsyy8Q/o6A8Er/nG/QikYI2K4dgP1cvGBEVPj5DTmif5bqlcPwScPsWFnzr2K61hw
-	ee2RUVC8MHjuh2BcsFZ3C7GZAsym5kvV61OWzsIwyC5bnNmA==
-X-Gm-Gg: ASbGnctmHEIp88vlB3OfYKO0e7jcee4VExAXG8qWiHxpzF6TqX8O5P0keLu1SvYb8Nn
-	3nl9cEoLgWwaaNkyfKhmboRdEoeHxi0E/iiVv9dMGvQveQFiPonpYv/pepSM5PFVI+RNFA88gtm
-	BBQt4Xwaf9cO+uUhc52G7G26bwjkcskTtPav9ixSZY0SzcALbJvQ3ttudIk4wplo1QS7+AANJzU
-	xIbr2n9HovLt0FKdg5IrEYeB/PPO5sGZTkb1e97tnO9b3UEs2aPWkskD27BTG6bSLsmME7eFcip
-	f0nCGinuedFFDfO4X+Q7pQ==
-X-Received: by 2002:a05:6000:40e1:b0:391:2ab1:d4c2 with SMTP id ffacd0b85a97d-39c12115daamr10848582f8f.37.1743523937566;
-        Tue, 01 Apr 2025 09:12:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFixcIUQZovBxbTUqE5qYkRuf8yLn9S/Hc/iFsk0oOlWsNioebYuSesp4eyH3gSeVV6bFB72A==
-X-Received: by 2002:a05:6000:40e1:b0:391:2ab1:d4c2 with SMTP id ffacd0b85a97d-39c12115daamr10848526f8f.37.1743523937028;
-        Tue, 01 Apr 2025 09:12:17 -0700 (PDT)
+        bh=Za9UhBdtRl20IVd/exE7AzVdA7LtofpEuC+6DQ+7Q1I=;
+        b=JO5cXAHX6ulZtWUWY8gYlUFnQciryExhXxwIgnFJy/bD94AYE1GKQPN/AhvbwOR9Y6
+         c/0gTY0PGhBaCLc39frtaalm/Ml190nhlB1vl9IVDQ/a4cSCyMKF92LTe/Gt279RMAaS
+         Xe8Ne6vZ33vsbUBAH9hgFG4yHRX860b4dgNQ1Vy8A4nPfST7ShrLbLGo3fXaBOHN9HO5
+         Cvg9ucUMJP6qPcocKyf+mrioPk4n3wuB8TfDtTVyxiqkiO8bHCL+50ltktwddudAPdUQ
+         3uVaCQgxFhaCVgyckldvMy3bMwGct1bJlBz9fU3FwfwhRWoBwKgthC/RxP77cvSzpkmz
+         UOpw==
+X-Gm-Message-State: AOJu0YxG1WDlBHKEWw6qLWs9X9RXCY914qzsSs9+rQyNnBDUYFUVlhSw
+	DkqS5LIDRxoVgtJ9Ze6n7fzRuISxb1mymlAQzn5r7sRLnalfxCWc8QU3oC7WEmXEDyfVcWMihom
+	fYTsXULIM0guNCM88jtn71+vd82LplKW3B+vTnI/JQlp74GlhAaNzw1ILWCdNlBAqwgIVny88zA
+	JF3OONBoMJAJvE1Mmx9x6sfxIJjkJ258VvKaium5/QfJBSsg==
+X-Gm-Gg: ASbGncvbqZ/cKm8aaJh11+htH0+ZovVvt3DuI29ywN/swt+rlpdJBFYzAMQXCcJ5ov2
+	mi+6Nd5StbedK7BOYpP6+YiDv5V3hOUGDXFgCQcBdyAEsN93A5bs5tHZe1eLI1Ns+ZrzGFFSHfh
+	WqmrLvizZuqKqA6ErB7HNgeOMmEh1hexutXYTycNMbyhIYr+X3Hrou0kZjb28Cqwn9Y+ALAJRHH
+	j68gBmWQf53PM2ElHMY06oAigF0sbRV8wUUxdCgZLJWMlvp+f6IgfLhhPY2IbAZTvxdYqRB2UCp
+	DXcF6o7Hg7cvUhnaHfEnsg==
+X-Received: by 2002:a05:600c:198e:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-43eb05bd475mr6791875e9.12.1743523943510;
+        Tue, 01 Apr 2025 09:12:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgj2ZbCQGfmVhz6lrnJ+5wyjIJ9OaWTHSb2mNQbdBcNI3fX/rNQGWp16Y3i8t/HcaXbmtslA==
+X-Received: by 2002:a05:600c:198e:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-43eb05bd475mr6791375e9.12.1743523943004;
+        Tue, 01 Apr 2025 09:12:23 -0700 (PDT)
 Received: from [192.168.10.48] ([176.206.111.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fcceaaasm160266655e9.18.2025.04.01.09.12.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588dbsm14265870f8f.2.2025.04.01.09.12.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:12:15 -0700 (PDT)
+        Tue, 01 Apr 2025 09:12:20 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: roy.hopkins@suse.com,
 	nsaenz@amazon.com,
 	anelkz@amazon.de,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH 25/29] KVM: x86: handle interrupt priorities for planes
-Date: Tue,  1 Apr 2025 18:11:02 +0200
-Message-ID: <20250401161106.790710-26-pbonzini@redhat.com>
+Subject: [PATCH 27/29] selftests: kvm: introduce basic test for VM planes
+Date: Tue,  1 Apr 2025 18:11:04 +0200
+Message-ID: <20250401161106.790710-28-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 References: <20250401161106.790710-1-pbonzini@redhat.com>
@@ -90,190 +90,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Force a userspace exit if an interrupt is delivered to a higher-priority
-plane, where priority is represented by vcpu->run->req_exit_planes.
-The set of planes with pending IRR are manipulated atomically and stored
-in the plane-0 vCPU, since it is handy to reach from the target vCPU.
-
-TODO: haven't put much thought into IPI virtualization.
+Check a few error cases and ensure that a vCPU can have a second plane
+added to it.  For now, all interactions happen through the bare
+__vm_ioctl() interface or even directly through the ioctl() system
+call.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  7 +++++
- arch/x86/kvm/lapic.c            | 36 +++++++++++++++++++++++--
- arch/x86/kvm/x86.c              | 48 +++++++++++++++++++++++++++++++++
- include/linux/kvm_host.h        |  2 ++
- 4 files changed, 91 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/Makefile.kvm |   1 +
+ tools/testing/selftests/kvm/plane_test.c | 108 +++++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/plane_test.c
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9ac39f128a53..0344e8bed319 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -125,6 +125,7 @@
- #define KVM_REQ_HV_TLB_FLUSH \
- 	KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
- #define KVM_REQ_UPDATE_PROTECTED_GUEST_STATE	KVM_ARCH_REQ(34)
-+#define KVM_REQ_PLANE_INTERRUPT		KVM_ARCH_REQ(35)
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index f62b0a5aba35..b1d0b410cc03 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -57,6 +57,7 @@ TEST_GEN_PROGS_COMMON += guest_print_test
+ TEST_GEN_PROGS_COMMON += kvm_binary_stats_test
+ TEST_GEN_PROGS_COMMON += kvm_create_max_vcpus
+ TEST_GEN_PROGS_COMMON += kvm_page_table_test
++TEST_GEN_PROGS_COMMON += plane_test
+ TEST_GEN_PROGS_COMMON += set_memory_region_test
  
- #define CR0_RESERVED_BITS                                               \
- 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-@@ -864,6 +865,12 @@ struct kvm_vcpu_arch {
- 	u64 xcr0;
- 	u64 guest_supported_xcr0;
- 
-+	/*
-+	 * Only valid in plane0.  The bitmask of planes that received
-+	 * an interrupt, to be checked against req_exit_planes.
-+	 */
-+	atomic_t irr_pending_planes;
+ # Compiled test targets
+diff --git a/tools/testing/selftests/kvm/plane_test.c b/tools/testing/selftests/kvm/plane_test.c
+new file mode 100644
+index 000000000000..43c8de13490a
+--- /dev/null
++++ b/tools/testing/selftests/kvm/plane_test.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Red Hat, Inc.
++ *
++ * Test for architecture-neutral VM plane functionality
++ */
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
 +
- 	struct kvm_pio_request pio;
- 	void *pio_data;
- 	void *sev_pio_data;
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 16a0e2387f2c..21dbc539cbe7 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1311,6 +1311,39 @@ bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
- 	return ret;
- }
- 
-+static void kvm_lapic_deliver_interrupt(struct kvm_vcpu *vcpu, struct kvm_lapic *apic,
-+					int delivery_mode, int trig_mode, int vector)
++#include "test_util.h"
++
++#include "kvm_util.h"
++#include "asm/kvm.h"
++#include "linux/kvm.h"
++
++void test_create_plane_errors(int max_planes)
 +{
-+	struct kvm_vcpu *plane0_vcpu = vcpu->plane0;
-+	struct kvm_plane *running_plane;
-+	u16 req_exit_planes;
++	struct kvm_vm *vm;
++	struct kvm_vcpu *vcpu;
++	int planefd, plane_vcpufd;
 +
-+	kvm_x86_call(deliver_interrupt)(apic, delivery_mode, trig_mode, vector);
++	vm = vm_create_barebones();
++	vcpu = __vm_vcpu_add(vm, 0);
 +
-+	/*
-+	 * test_and_set_bit implies a memory barrier, so IRR is written before
-+	 * reading irr_pending_planes below...
-+	 */
-+	if (!test_and_set_bit(vcpu->plane, &plane0_vcpu->arch.irr_pending_planes)) {
-+		/*
-+		 * ... and also running_plane and req_exit_planes are read after writing
-+		 * irr_pending_planes.  Both barriers pair with kvm_arch_vcpu_ioctl_run().
-+		 */
-+		smp_mb__after_atomic();
++	planefd = __vm_ioctl(vm, KVM_CREATE_PLANE, (void *)(unsigned long)0);
++	TEST_ASSERT(planefd == -1 && errno == EEXIST,
++		    "Creating existing plane, expecting EEXIST. ret: %d, errno: %d",
++		    planefd, errno);
 +
-+		running_plane = READ_ONCE(plane0_vcpu->running_plane);
-+		if (!running_plane)
-+			return;
++	planefd = __vm_ioctl(vm, KVM_CREATE_PLANE, (void *)(unsigned long)max_planes);
++	TEST_ASSERT(planefd == -1 && errno == EINVAL,
++		    "Creating plane %d, expecting EINVAL. ret: %d, errno: %d",
++		    max_planes, planefd, errno);
 +
-+		req_exit_planes = READ_ONCE(plane0_vcpu->req_exit_planes);
-+		if (!(req_exit_planes & BIT(vcpu->plane)))
-+			return;
++	plane_vcpufd = __vm_ioctl(vm, KVM_CREATE_VCPU_PLANE, (void *)(unsigned long)vcpu->fd);
++	TEST_ASSERT(plane_vcpufd == -1 && errno == ENOTTY,
++		    "Creating vCPU for plane 0, expecting ENOTTY. ret: %d, errno: %d",
++		    plane_vcpufd, errno);
 +
-+		kvm_make_request(KVM_REQ_PLANE_INTERRUPT,
-+				 kvm_get_plane_vcpu(running_plane, vcpu->vcpu_id));
-+	}
++	kvm_vm_free(vm);
++	ksft_test_result_pass("error conditions\n");
 +}
 +
- /*
-  * Add a pending IRQ into lapic.
-  * Return 1 if successfully added and 0 if discarded.
-@@ -1352,8 +1385,7 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
- 						       apic->regs + APIC_TMR);
- 		}
- 
--		kvm_x86_call(deliver_interrupt)(apic, delivery_mode,
--						trig_mode, vector);
-+		kvm_lapic_deliver_interrupt(vcpu, apic, delivery_mode, trig_mode, vector);
- 		break;
- 
- 	case APIC_DM_REMRD:
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index be4d7b97367b..4546d1049f43 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10960,6 +10960,19 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 				goto out;
- 			}
- 		}
-+		if (kvm_check_request(KVM_REQ_PLANE_INTERRUPT, vcpu)) {
-+			u16 irr_pending_planes = atomic_read(&vcpu->plane0->arch.irr_pending_planes);
-+			u16 target = irr_pending_planes & vcpu->plane0->req_exit_planes;
-+			if (target) {
-+				vcpu->run->exit_reason = KVM_EXIT_PLANE_EVENT;
-+				vcpu->run->plane_event.cause = KVM_PLANE_EVENT_INTERRUPT;
-+				vcpu->run->plane_event.flags = 0;
-+				vcpu->run->plane_event.pending_event_planes = irr_pending_planes;
-+				vcpu->run->plane_event.target = target;
-+				r = 0;
-+				goto out;
-+			}
-+		}
- 	}
- 
- 	if (kvm_check_request(KVM_REQ_EVENT, vcpu) || req_int_win ||
-@@ -11689,8 +11702,11 @@ static int kvm_vcpu_ioctl_run_plane(struct kvm_vcpu *vcpu)
- 
- int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_vcpu *plane0_vcpu = vcpu;
- 	int plane_id = READ_ONCE(vcpu->run->plane);
- 	struct kvm_plane *plane = vcpu->kvm->planes[plane_id];
-+	u16 req_exit_planes = READ_ONCE(vcpu->run->req_exit_planes) & ~BIT(plane_id);
-+	u16 irr_pending_planes;
- 	int r;
- 
- 	if (plane_id) {
-@@ -11698,8 +11714,40 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		mutex_lock_nested(&vcpu->mutex, 1);
- 	}
- 
-+	if (plane0_vcpu->has_planes) {
-+		plane0_vcpu->req_exit_planes = req_exit_planes;
-+		plane0_vcpu->running_plane = plane;
++void test_create_plane(void)
++{
++	struct kvm_vm *vm;
++	struct kvm_vcpu *vcpu;
++	int r, planefd, plane_vcpufd;
 +
-+		/*
-+		 * Check for cross-plane interrupts that happened while outside KVM_RUN;
-+		 * write running_plane and req_exit_planes before reading irr_pending_planes.
-+		 * If an interrupt hasn't set irr_pending_planes yet, it will trigger
-+		 * KVM_REQ_PLANE_INTERRUPT itself in kvm_lapic_deliver_interrupt().
-+		 */
-+		smp_mb__before_atomic();
++	vm = vm_create_barebones();
++	vcpu = __vm_vcpu_add(vm, 0);
 +
-+		irr_pending_planes = atomic_fetch_and(~BIT(plane_id), &plane0_vcpu->arch.irr_pending_planes);
-+		if (req_exit_planes & irr_pending_planes)
-+			kvm_make_request(KVM_REQ_PLANE_INTERRUPT, vcpu);
-+	}
++	planefd = __vm_ioctl(vm, KVM_CREATE_PLANE, (void *)(unsigned long)1);
++	TEST_ASSERT(planefd >= 0, "Creating new plane, got error: %d",
++		    errno);
 +
- 	r = kvm_vcpu_ioctl_run_plane(vcpu);
- 
-+	if (plane0_vcpu->has_planes) {
-+		smp_store_release(&plane0_vcpu->running_plane, NULL);
++	r = ioctl(planefd, KVM_CHECK_EXTENSION, KVM_CAP_PLANES);
++	TEST_ASSERT(r == 0,
++		    "Checking KVM_CHECK_EXTENSION(KVM_CAP_PLANES). ret: %d", r);
 +
-+		/*
-+		 * Clear irr_pending_planes before reading IRR; pairs with
-+		 * kvm_lapic_deliver_interrupt().  If this side doesn't see IRR set,
-+		 * the other side will certainly see the cleared bit irr_pending_planes
-+		 * and set it, and vice versa.
-+		 */
-+		clear_bit(plane_id, &plane0_vcpu->arch.irr_pending_planes);
-+		smp_mb__after_atomic();
-+		if (kvm_lapic_find_highest_irr(vcpu))
-+			atomic_or(BIT(plane_id), &plane0_vcpu->arch.irr_pending_planes);
-+	}
++	r = ioctl(planefd, KVM_CHECK_EXTENSION, KVM_CAP_CHECK_EXTENSION_VM);
++	TEST_ASSERT(r == 1,
++		    "Checking KVM_CHECK_EXTENSION(KVM_CAP_CHECK_EXTENSION_VM). ret: %d", r);
 +
- 	if (plane_id)
- 		mutex_unlock(&vcpu->mutex);
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 0b764951f461..442aed2b9cc6 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -346,6 +346,8 @@ struct kvm_vcpu {
- 	/* Only valid on plane 0 */
- 	bool has_planes;
- 	bool wants_to_run;
-+	u16 req_exit_planes;
-+	struct kvm_plane *running_plane;
- 
- 	/* Shared for all planes */
- 	struct kvm_run *run;
++	r = __vm_ioctl(vm, KVM_CREATE_PLANE, (void *)(unsigned long)1);
++	TEST_ASSERT(r == -1 && errno == EEXIST,
++		    "Creating existing plane, expecting EEXIST. ret: %d, errno: %d",
++		    r, errno);
++
++	plane_vcpufd = ioctl(planefd, KVM_CREATE_VCPU_PLANE, (void *)(unsigned long)vcpu->fd);
++	TEST_ASSERT(plane_vcpufd >= 0, "Creating vCPU for plane 1, got error: %d", errno);
++
++	r = ioctl(planefd, KVM_CREATE_VCPU_PLANE, (void *)(unsigned long)vcpu->fd);
++	TEST_ASSERT(r == -1 && errno == EEXIST,
++		    "Creating vCPU again for plane 1. ret: %d, errno: %d",
++		    r, errno);
++
++	r = ioctl(planefd, KVM_RUN, (void *)(unsigned long)0);
++	TEST_ASSERT(r == -1 && errno == ENOTTY,
++		    "Running plane vCPU again for plane 1. ret: %d, errno: %d",
++		    r, errno);
++
++	close(plane_vcpufd);
++	close(planefd);
++
++	kvm_vm_free(vm);
++	ksft_test_result_pass("basic planefd and plane_vcpufd operation\n");
++}
++
++int main(int argc, char *argv[])
++{
++	int cap_planes = kvm_check_cap(KVM_CAP_PLANES);
++	TEST_REQUIRE(cap_planes);
++
++	ksft_print_header();
++	ksft_set_plan(2);
++
++	pr_info("# KVM_CAP_PLANES: %d\n", cap_planes);
++
++	test_create_plane_errors(cap_planes);
++
++	if (cap_planes > 1)
++		test_create_plane();
++
++	ksft_finished();
++}
 -- 
 2.49.0
 
