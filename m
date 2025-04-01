@@ -1,172 +1,160 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA231EBA1E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59EE1E885A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499962; cv=none; b=L9R0ynlsPnPC33X46SoCTFAuFzY9HPr2gg4j9J1r7C/XYOCW879mJhmoMUeGfWmxr3P4DSAQEP2fBgELg7HedzdKavwdluH50gz0tLDCOLKuCpkm06muh1C+lq18pYeNyRJwzpDmAra5vUZ7O0YKzp6eHfY6wUW2BgS5fufwC5A=
+	t=1743499977; cv=none; b=YlpG6qyZWQ2DdQAXgMzTHuo7LurbUhRDBsVphaMcjQ7as8c3R0Hv8m6iJj6nvXvjlf4otsYrEDhvW+GsW4SrnWX9JbteiZjLKnHHkb1fbHtLCzFhJy6OYD7AIf79J/U9qZfAR7kRo82+7fbxeIYaBnSnlbRZjQGMLMXu0HQ5Emc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499962; c=relaxed/simple;
-	bh=N1MnFFisJ8cMoy9BLzrQr7gNzud5JLemazDWM0tzY0g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=SfIgP7GX5VN7+ZwI2V95yLB9zViwqpezWcD6qbOik1nM9t9yiHABUtLLk8HSwpp+eXTHOj6jnSinpA3dwP1t1/ihXnhonKGIr16fPfkFAqEQm9ot0K6JlC4ABJroYElIWJODdNfi/fk5bV4ozC95WaZuYecc+aZRl/UOzY2ItjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Q+/vI1Sw; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1743499977; c=relaxed/simple;
+	bh=N5t4yjja/8jUnHgzzCz6rkqZsDgJK8T6UC+vLgFnHMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XgesWMTuJmmEhrIONqUNxOLMfMQ4RArZhsRhSB4auYQVTgoOhqlAf+A3i3Q2Gi+h4ge87RV99f5KjXUwO0z0sW4mkorsfPJk8ckqmBnH+g+7RBPoMSvQWqHBi+vAavNieVTKgvQV6xR4qzNvFMC0lLg2EYmZ4zbDGVLrZSdpE54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VA+JZzTW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnW83aDc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VA+JZzTW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnW83aDc; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Q+/vI1Sw"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so701674266b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1743499957; x=1744104757; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZBzvWcIsDBo3G9LnKcTDplA9cLCR7b0coAB89MP6E0=;
-        b=Q+/vI1SwRfZWQwoY93Fy51LnPDjMgpLxg7Fx5/i/+OcCPOLJTd2S5rRZCcHmWAudRv
-         q0UckMmJLRxFRPC7WUHc2fnEWhQCg3HO/sWTSFkXHnpyO/aabcc/w2tAfdirEaSMBAWQ
-         STYR0fzRQpRyPgsI9SoZnWGFlatiNT7VyM1/DWCh9G4GnIOpJ3m6zWPHPES15A51UjEF
-         +D/bxbOosb60o6frKyXoJOVS8mmJZZlKJcvKZOuIuS5pNffzCYzD35xPr26c/esIEKzK
-         vJrBkHtJ4yCrpPZ7r1MP852RJOOoEpbScRfHMTGCVPvQQE4serwScgJ21sog3UWp0i6S
-         V7Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743499957; x=1744104757;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OZBzvWcIsDBo3G9LnKcTDplA9cLCR7b0coAB89MP6E0=;
-        b=nyhKssDMlHDUps8OBjx7Nard0WxoueSU/j/wLLof12X9QwgrZQhlP2VUXqDAWhdyD4
-         LQ3KvmDYr244pu/n5UZxKWXOEDNTPKAltFNbG3aYYvkOcHj+qe/TsmxgE8o/RH5d367Q
-         x2LqOXL2r9Ehzt9QgvCXDEZDHiuW/2W6VwVJ+WBgwC427OrVXf0CG4QKqOcK97QrC4xR
-         RUHNAf/bvzqZDaEiLO5UMkzwTxi0rAIplszdtiSwDO8gokOzjIj8MSRakm8GGcrO8ncu
-         6k6xG4DVhamWG6R1Fze++lqzV19MnCcILFyUffhQ2WjWS26ibFM8RNhVSJhUiuneCqP0
-         H0WA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHO740kRSyHq34RU7iLWJf79JiusMRWXcBuDll6PE1jptmUkmQmpNcr4ShACCVza2UwIXDZ/gAev/UXiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4wHjRXWxc0uOa6QNJczYm9QdQAxA7auuFAwkY9NyRYQJhjucV
-	XNjGBVhSicEbn0RnMDV/qm6tlUOKV8o3pquSaROmIFt6egARrMIHhxYzvsqtuq4=
-X-Gm-Gg: ASbGncu9SBphImCqR6oqdRjYTqdG1Bs2pw7TVejnJUbnZxdn2out7GH42f+42/69qrv
-	g1TqTnzbc5qH+/38cnwmzCF4fRiZhyFiUZ5U4yL1btHtHJfmLmAyppwJicj/MW0Bm8HWHgkW4fO
-	M8OZddPvJzsfTt0saJOMpiKqtkom5JFXUL5SSa73aii0oBHgos7S/W0uHuWU2X3J1p9cUAS5DZd
-	S9CdEis2jf1Y1+T5Sg8jdLYTXbmRy9bMRCco8Sp5h+OfT5l0kfIpDA0/d2za16xQTO3zKdZ/upy
-	EhlFs8AsLneGqVvRfY5QT4SUwYcQArLzq3OO38sCFiAmaA==
-X-Google-Smtp-Source: AGHT+IFiDVwfIgbHWBVxHJV1fUXGWM172/jD8Iw3qWJRy89QsLVtEytv5j6FHvB1CN3xyra++dE96w==
-X-Received: by 2002:a17:907:7214:b0:ac6:d9cb:58c0 with SMTP id a640c23a62f3a-ac738b82b65mr902203166b.50.1743499957495;
-        Tue, 01 Apr 2025 02:32:37 -0700 (PDT)
-Received: from localhost ([41.66.98.107])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac78bdd54a7sm47785366b.22.2025.04.01.02.32.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 02:32:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VA+JZzTW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnW83aDc";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VA+JZzTW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnW83aDc"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C8AA41F38E;
+	Tue,  1 Apr 2025 09:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743499973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
+	b=VA+JZzTWgT+ebk1SNeJQUmWq9U/tMWf9fHx5vVwAZoocBL+ob+o24VYo8AXZNStdX7H2gX
+	age3tOJ3I+Wr71F0EjWQGDapq8+x5Xi/o1P4h4d2yYVNQlt8HYeJzVg+kTSyXx8FGUy2H+
+	Wscicp71qfAoTSV0LqzvgTobo3ig3Q4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743499973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
+	b=RnW83aDcemWvbgLZTi6g64os6WOCV4BXDzk9VwiMvyi97tCdRPw01VJK4ElEsKjN5hYW1T
+	+OYpYHEw64opYyCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743499973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
+	b=VA+JZzTWgT+ebk1SNeJQUmWq9U/tMWf9fHx5vVwAZoocBL+ob+o24VYo8AXZNStdX7H2gX
+	age3tOJ3I+Wr71F0EjWQGDapq8+x5Xi/o1P4h4d2yYVNQlt8HYeJzVg+kTSyXx8FGUy2H+
+	Wscicp71qfAoTSV0LqzvgTobo3ig3Q4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743499973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
+	b=RnW83aDcemWvbgLZTi6g64os6WOCV4BXDzk9VwiMvyi97tCdRPw01VJK4ElEsKjN5hYW1T
+	+OYpYHEw64opYyCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BA8E1138A5;
+	Tue,  1 Apr 2025 09:32:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2viGLcWy62daAgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 09:32:53 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 780EFA07E6; Tue,  1 Apr 2025 11:32:49 +0200 (CEST)
+Date: Tue, 1 Apr 2025 11:32:49 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, rafael@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
+	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH 0/6] power: wire-up filesystem freeze/thaw with
+ suspend/resume
+Message-ID: <s6rnz3ysjlu3rp6m56vua3vnlj53hbgxbbe3nj7v2ib5fg4l2i@py4pkvsgk2lr>
+References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
+ <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Apr 2025 11:32:34 +0200
-Message-Id: <D8V75HO8O4CO.33RMUJLKQ7UG5@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Dmitry Baryshkov" <lumag@kernel.org>
-Cc: "Bjorn Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <cros-qcom-dts-watchers@chromium.org>,
- <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Konrad Dybcio"
- <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/3] Fairphone 5 DisplayPort over USB-C support
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com>
- <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
-In-Reply-To: <y7dfv4mmtzkv2umvverkn6qvjt3tg7cz4jj4zsb4t6vu4heh4d@64zpkjihjc23>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-Hi Dmitry,
+On Tue 01-04-25 02:32:45, Christian Brauner wrote:
+> The whole shebang can also be found at:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.freeze
+> 
+> I know nothing about power or hibernation. I've tested it as best as I
+> could. Works for me (TM).
+> 
+> I need to catch some actual sleep now...
+> 
+> ---
+> 
+> Now all the pieces are in place to actually allow the power subsystem to
+> freeze/thaw filesystems during suspend/resume. Filesystems are only
+> frozen and thawed if the power subsystem does actually own the freeze.
+> 
+> Othwerwise it risks thawing filesystems it didn't own. This could be
+> done differently be e.g., keeping the filesystems that were actually
+> frozen on a list and then unfreezing them from that list. This is
+> disgustingly unclean though and reeks of an ugly hack.
+> 
+> If the filesystem is already frozen by the time we've frozen all
+> userspace processes we don't care to freeze it again. That's userspace's
+> job once the process resumes. We only actually freeze filesystems if we
+> absolutely have to and we ignore other failures to freeze.
 
-On Wed Mar 12, 2025 at 8:06 PM CET, Dmitry Baryshkov wrote:
-> On Wed, Mar 12, 2025 at 01:05:07PM +0100, Luca Weiss wrote:
->> This series adds all the necessary bits to enable DisplayPort-out over
->> USB-C on Fairphone 5.
->>=20
->> There's currently a dt validation error with this, not quite sure how to
->> resolve this:
->>=20
->>   arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: typec-mux@42: port=
-:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpec=
-ted)
->>           from schema $id: http://devicetree.org/schemas/usb/fcs,fsa4480=
-.yaml#
->
-> This comes from usb-switch.yaml, it requires that 'port' adheres to the
-> /schemas/graph.yaml#/properties/port (which forbids extra properties).
-> The usb-switch.yaml needs to be fixed to use port-base for that node.
+Hum, I don't follow here. I supposed we'll use FREEZE_MAY_NEST |
+FREEZE_HOLDER_KERNEL for freezing from power subsystem. As far as I
+remember we have specifically designed nesting of freeze counters so that
+this way power subsystem can be sure freezing succeeds even if the
+filesystem is already frozen (by userspace or the kernel) and similarly
+power subsystem cannot thaw a filesystem frozen by somebody else. It will
+just drop its freeze refcount... What am I missing?
 
-Thanks, do you think the attached patch would be suitable? It does fix
-the warning for me, but not sure if it's too lax or doing the wrong
-thing.
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-switch.yaml b/Docume=
-ntation/devicetree/bindings/usb/usb-switch.yaml
-index da76118e73a5..9598c1748d35 100644
---- a/Documentation/devicetree/bindings/usb/usb-switch.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb-switch.yaml
-@@ -26,11 +26,15 @@ properties:
-     type: boolean
-=20
-   port:
--    $ref: /schemas/graph.yaml#/properties/port
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-     description:
-       A port node to link the device to a TypeC controller for the purpose=
- of
-       handling altmode muxing and orientation switching.
-=20
-+    patternProperties:
-+      "^endpoint(@[0-9a-f]+)?$":
-+        $ref: /schemas/graph.yaml#/$defs/endpoint-base
-+
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-     properties:
-
-
-Regards
-Luca
-
->
->>=20
->> See also this mail plus replies:
->> * https://lore.kernel.org/linux-arm-msm/D0H3VE6RLM2I.MK2NT1P9N02O@fairph=
-one.com/
->>=20
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->> Changes in v2:
->> - Move adding "*-switch;" properties already in earlier patches
->> - Move wiring up SS USB & DP to SoC instead of being done in device
->> - Pick up tags
->> - Link to v1: https://lore.kernel.org/r/20250226-fp5-pmic-glink-dp-v1-0-=
-e6661d38652c@fairphone.com
->>=20
->> ---
->> Luca Weiss (3):
->>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add PTN36502 redriver
->>       arm64: dts: qcom: qcm6490-fairphone-fp5: Add OCP96011 audio switch
->>       arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up DisplayPort over =
-USB-C
->>=20
->>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 103 ++++++++++++++=
-+++++--
->>  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   9 +-
->>  2 files changed, 104 insertions(+), 8 deletions(-)
->> ---
->> base-commit: dcb11dc4740372cd4cce0b763a4a8ec4e9f347a6
->> change-id: 20231208-fp5-pmic-glink-dp-216b76084bee
->>=20
->> Best regards,
->> --=20
->> Luca Weiss <luca.weiss@fairphone.com>
->>=20
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
