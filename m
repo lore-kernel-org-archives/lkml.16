@@ -1,139 +1,391 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C93613635E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67333EEDE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 01:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743472227; cv=none; b=JV+QxMnzzOJ54PVYX0PwkKk8Ogf7eAFnty2SgZtt8nZOi1/bfBrusK7gtFqgIRqw9mER7fOMlQJHaR/vxMt7vsC5DrQ5ogZI5dqceGvQGmpsdtbMH/XZGf35tr7McskxLfXP/jhWnBuuKIhqCJnzhygU6+GcbUqe0an07mzhW3o=
+	t=1743472326; cv=none; b=h+BuRPD9deHOVWOMPQKDV04Yt5YEdlouss4NNG/y31gwKjFhDElIx2UYhFqgSTjbBc1qgqftNg8cNyA19iEs0K4rm3Tmd9wp2ig0yg0z42cIrDg8LXzrm8EzKEdBnM+GAqRj3GLTQBghE3/h7rtZRFipacIsUqH2FCqCQ2LmB5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743472227; c=relaxed/simple;
-	bh=+ouH6MfI+4ZLNik7fBSUo+bubc71z47WVA/0RfhbfrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tLhVHTUC3pR6I0qDh8S9FQbu6kCc50xMXCJhH6jF/wwyQpRDY6Hfh5NYB9YF9nXjIm7JYoogvWy+QOGWDhaAuYvxByru7qafhC6qfHJVPDVP4P3g1HCHWp1jkz9GbXktRmixRle7YqT2QIgftGYh0Qt64oVCKw4FEJzmRfLa61I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NK82w01b; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NK82w01b"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22409077c06so136979585ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 18:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743472225; x=1744077025; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8DR6/7Rb3+f7hTr23XIdL/GaAPLwuiXpD3LtU+Twlhs=;
-        b=NK82w01bQlSmIvti8nfjuD/yhQoh+AZVTLbbGKVvdxYToei7eHb/KkZshcdj/dcu6Q
-         e3IYY8RcagB9x/+TwOrowhYXf9qfeoDQK0ZT3J3FgHWVULvxIfJk/c2IHRGPk29+ocIU
-         8ozyyk6wtyCdA700I5sU3SapifGpze1Vxv/GsGQxmP4ni6ne6/chkvk69lIlZKR7bDqy
-         kgwCh9dD5r25AiqAergyRW3fYiRtjlCwKFEWqiQVBC/Vgqc6mk0snvrLbRhJsMjls6Gd
-         T40jbSLiTas8n0Wv0h4PSQpQTg+mfxS3LgJPXqDB0EGRaS28icFhkT7sRz3pUqmM4vJQ
-         qVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743472225; x=1744077025;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8DR6/7Rb3+f7hTr23XIdL/GaAPLwuiXpD3LtU+Twlhs=;
-        b=tiZUNFnus6CLdQfQ6Z53NxuK2BT5NkBjIvAAdtGgAuHtGnsLHyX8QEy1AVYqiaPbl8
-         i6FtOsI7NSKmHpZzAoVQPh7BCBQV5wTmzvC5r1LQe4WVFoMmyQhUNHnfUxWCDvQSBQci
-         th9uYkaw8O95jvZK8ncJ5E0Kc8y8LNGyXGosZrkcnd4XrmAnZh79HcCNhE7u7AGSfmvq
-         kvW7N2f1NdSC1UYBXOYHB8PtBIcq0MNbXAWFxi95cI7zKBB0irmrQ0htBzFWpdbC4zsw
-         FN9Hrw2a5v2G/haLIcWkOIsNTKMtsprNCOV7zbBni5TImg1bdhMK5lMezUrUu0EUIvi9
-         RtMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxwh+cwQl/1FlvJQp4pjgJkr1XXgmfIsKYrbZX1E1h5bootvvEByNz6UDFAhlmma16saao5Cu1hbnu328=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRNuDgXp8jPcCd23dfIgvb6krgl7YMnKoud7u96gwBoqKpEM2c
-	HsGY+5GB8e+U/rMI2pkSycgbXdzdI4DA/GskvT0nzL5L5HXsOt8wVaIuB0KZ
-X-Gm-Gg: ASbGncsJoySAZqc4cMOvAvhuA3FUG5Zi0KwCSg1R4I1DBPNR1DE9wE2H580mb7vLQWC
-	RbNckhuJAXzpG5rR+OIQEVLSQMTIqGSZEGxDTw/q+JHeaXfN7uPyrD04jKKFrh8+qu5h5lWqUVB
-	BLkvW9hL++Y1RHvtVaAQFXtVXsGMrRpKa69lP4U+BLz6pHKd0AqV9/Qkp2n+KAbibg1XNhRhFXF
-	XmbHqCQZnG1DLhF0THbxlSbmSUe8Pf4+dpWqeOhI+jDE42nupaArdHtSrX2Aqev+GaBuau2BpEX
-	ykiiAUnu9OJbNmxS5KzX3lddqz5c/jeq+thu8FlmGwNDmmiHsA4eLepznI6AS+Bo29PwtdPJJBb
-	s
-X-Google-Smtp-Source: AGHT+IHtI0piyfctYHl/2LDM631SG2KQBeqHfKgiXx+fJ+ld+X2QEuuYWayk5WgzDYrz5IBcvUxxzg==
-X-Received: by 2002:a17:902:e950:b0:224:2717:7993 with SMTP id d9443c01a7336-2292fa0e25emr168033925ad.45.1743472224684;
-        Mon, 31 Mar 2025 18:50:24 -0700 (PDT)
-Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971063dedsm7944649b3a.96.2025.03.31.18.50.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 18:50:24 -0700 (PDT)
-Date: Mon, 31 Mar 2025 18:50:21 -0700
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: Huan Yang <link@vivo.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Brendan Jackman <jackmanb@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/1] Introduce vmap_file()
-Message-ID: <Z-tGXf5mfTclxZgl@fedora>
-References: <20250328211349.845857-1-vishal.moola@gmail.com>
- <02ba63ed-ef1c-426d-b469-09878c5f03d7@vivo.com>
+	s=arc-20240116; t=1743472326; c=relaxed/simple;
+	bh=Rtu+lzSxHYIzfxZhpxrptVIdvqDz+gsIioSXkRVtGgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CW0tScuAblVO2hnYdHpLyE/REiOXaS5mq+yfLv+m8mseTyXVgokImr7FtA60Me/Yb3qWWdw9s/8HOAVZOgWr0WP7icTX1wKztMkWUT4JVhDg3sN+EqtcLn3d5Sur+h7wbw+5zNaSYcSHoUiT/ikHexsD/voxz+xJ3HqVceBJF70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-03fff7000000aab6-28-67eb46bd9342
+From: "yohan.joung" <yohan.joung@sk.com>
+To: linux-f2fs-devel@lists.sourceforge.net
+Cc: chao@kernel.org,
+	jaegeuk@kernel.org,
+	jyh429@gmail.com,
+	linux-kernel@vger.kernel.org,
+	pilhyun.kim@sk.com,
+	yohan.joung@sk.com
+Subject: [External Mail] Re: [f2fs-dev] [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the current section from being selected as a victim during garbage collection
+Date: Tue,  1 Apr 2025 10:51:52 +0900
+Message-ID: <20250401015156.2623-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <b51283c6-ec5b-48ba-a1a1-b16911a5c5c8@kernel.org>
+References: <b51283c6-ec5b-48ba-a1a1-b16911a5c5c8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <02ba63ed-ef1c-426d-b469-09878c5f03d7@vivo.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC9ZZnoe5et9fpBms3KFicnnqWyeLJ+lnM
+	Fl+uXmO3uLTI3eLyrjlsDqweO2fdZffYtKqTzWP3gs9MHp83yQWwRHHZpKTmZJalFunbJXBl
+	tN+YyFbwPqni7bsHzA2Mk/27GDk5JARMJGZ9XMsKYz87/pgdxGYT0JD409vLDGKLCGhJTGz4
+	y9jFyMXBLNDJKLH+4GdWEEdYYDOjxN/XE8GqWARUJT6uesoIYvMKmEnsXXSYCWKqpsSOL+fB
+	bE4BO4ln9++C2UICthL3Jn9lgqgXlDg58wlLFyMH0AZ1ifXzhEDCzALyEs1bZzOD7JIQWMAm
+	cfpsD9RMSYmDK26wTGAUmIWkfRZC+ywk7QsYmVcximTmleUmZuYY6xVnZ1TmZVboJefnbmIE
+	hvCy2j+ROxi/XQg+xCjAwajEw7uh9FW6EGtiWXFl7iFGCQ5mJRHeiK8v04V4UxIrq1KL8uOL
+	SnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1ILYLJMnFwSjUwyvfsrfM68jTv06aX0erTnvzN
+	7z2iELlZUV/oWNXaDyn/l1vP+/Dwm0WTv+RGsfPR7AknNJXDcy6W/thSsNc84Ic2v/XHbyF6
+	y437LsutU4vk354w7/9tj/hQ601XrzSsUl4t5Oln8zZf7qLCubL7AcEsRUo2qxb8jZb/d+Lo
+	ca61Emdeq9/UVmIpzkg01GIuKk4EAB3hplxdAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMLMWRmVeSWpSXmKPExsXCNUNlju5et9fpBi9/ilmcnnqWyeLJ+lnM
+	Fl+uXmO3uLTI3eLyrjlsFhPmXmWyeL/1HqMDu8fOWXfZPTat6mTz2L3gM5PHt9seHp83yQWw
+	RnHZpKTmZJalFunbJXBltN+YyFbwPqni7bsHzA2Mk/27GDk5JARMJJ4df8wOYrMJaEj86e1l
+	BrFFBLQkJjb8Zexi5OJgFuhklFh/8DMriCMssJlR4u/riWBVLAKqEh9XPWUEsXkFzCT2LjrM
+	BDFVU2LHl/NgNqeAncSz+3fBbCEBW4l7k78yQdQLSpyc+YSli5EDaIO6xPp5QiBhZgF5ieat
+	s5knMPLOQlI1C6FqFpKqBYzMqxhFMvPKchMzc8z0irMzKvMyK/SS83M3MQKDclntn0k7GL9d
+	dj/EKMDBqMTDu6H0VboQa2JZcWXuIUYJDmYlEd6Iry/ThXhTEiurUovy44tKc1KLDzFKc7Ao
+	ifN6hacmCAmkJ5akZqemFqQWwWSZODilGhhDTt2c/0WzqOjuQS//pHkT4gW2GNoZB7L1hH82
+	2P0p9/XlkAdzBX616gb8ElyW/ubi1pVL98clp7V5Xj0zs57p+CQxvurbOZ/bo8UWKImuPZdw
+	qerTefvQNNFth/sWLGFmPKsutGTBjF9OXQ27Ul3XNZ6z7/y2vUdpdrrEJ47N+9X6Geqfz5mj
+	xFKckWioxVxUnAgAxsNS+0YCAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, Mar 31, 2025 at 10:05:53AM +0800, Huan Yang wrote:
-> HI Vishal,
-> 
-> 在 2025/3/29 05:13, Vishal Moola (Oracle) 写道:
-> > Currently, users have to call vmap() or vmap_pfn() to map pages to
-> > kernel virtual space. vmap_pfn() is for special pages (i.e. pfns
-> > without struct page). vmap() handles normal pages.
-> > 
-> > With large folios, we may want to map ranges that only span
-> > part of a folio (i.e. mapping half of a 2Mb folio).
-> > vmap_file() will allow us to do so.
-> 
-> You mention vmap_file can support range folio vmap, but when I look code, I can't figure out
-> 
-> how to use, maybe I missed something? :)
+>From: Chao Yu <chao@kernel.org>
+>Sent: Monday, March 31, 2025 8:36 PM
+>To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; linux-f2fs-
+>devel@lists.sourceforge.net
+>Cc: chao@kernel.org; jaegeuk@kernel.org; jyh429@gmail.com; linux-
+>kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE <pilhyun.kim@sk.com>
+>Subject: [External Mail] Re: [External Mail] Re: [f2fs-dev] [External Mail]
+>Re: [External Mail] Re: [PATCH] f2fs: prevent the current section from
+>being selected as a victim during garbage collection
+>
+>On 3/31/25 13:13, yohan.joung wrote:
+>>> On 2025/3/28 15:25, yohan.joung wrote:
+>>>>> On 2025/3/28 11:40, yohan.joung wrote:
+>>>>>>> From: Chao Yu <chao@kernel.org>
+>>>>>>> Sent: Thursday, March 27, 2025 10:48 PM
+>>>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
+>>>>>>> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
+>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
+>>>>>>> linux- kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
+>>>>>>> <pilhyun.kim@sk.com>
+>>>>>>> Subject: [External Mail] Re: [External Mail] Re: [External Mail] Re:
+>>>>>>> [PATCH] f2fs: prevent the current section from being selected as
+>>>>>>> a victim during garbage collection
+>>>>>>>
+>>>>>>> On 2025/3/27 16:00, yohan.joung@sk.com wrote:
+>>>>>>>>> From: Chao Yu <chao@kernel.org>
+>>>>>>>>> Sent: Thursday, March 27, 2025 4:30 PM
+>>>>>>>>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan
+>>>>>>>>> Joung <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
+>>>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
+>>>>>>>>> linux- kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE
+>>>>>>>>> <pilhyun.kim@sk.com>
+>>>>>>>>> Subject: [External Mail] Re: [External Mail] Re: [PATCH] f2fs:
+>>>>>>>>> prevent the current section from being selected as a victim
+>>>>>>>>> during garbage collection
+>>>>>>>>>
+>>>>>>>>> On 3/27/25 14:43, yohan.joung@sk.com wrote:
+>>>>>>>>>>> From: Chao Yu <chao@kernel.org>
+>>>>>>>>>>> Sent: Thursday, March 27, 2025 3:02 PM
+>>>>>>>>>>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org;
+>>>>>>>>>>> daeho43@gmail.com
+>>>>>>>>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net;
+>>>>>>>>>>> linux- kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE
+>>>>>>>>>>> <yohan.joung@sk.com>
+>>>>>>>>>>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the
+>>>>>>>>>>> current section from being selected as a victim during
+>>>>>>>>>>> garbage collection
+>>>>>>>>>>>
+>>>>>>>>>>> On 3/26/25 22:14, Yohan Joung wrote:
+>>>>>>>>>>>> When selecting a victim using next_victim_seg in a large
+>>>>>>>>>>>> section, the selected section might already have been
+>>>>>>>>>>>> cleared and designated as the new current section, making it
+>>>>>>>>>>>> actively in
+>>>>> use.
+>>>>>>>>>>>> This behavior causes inconsistency between the SIT and SSA.
+>>>>>>>>>>>
+>>>>>>>>>>> Hi, does this fix your issue?
+>>>>>>>>>>
+>>>>>>>>>> This is an issue that arises when dividing a large section
+>>>>>>>>>> into segments for garbage collection.
+>>>>>>>>>> caused by the background GC (garbage collection) thread in
+>>>>>>>>>> large section
+>>>>>>>>>> f2fs_gc(victim_section) ->
+>>>>>>>>>> f2fs_clear_prefree_segments(victim_section)->
+>>>>>>>>>> cursec(victim_section) -> f2fs_gc(victim_section by
+>>>>>>>>>> next_victim_seg)
+>>>>>>>>>
+>>>>>>>>> I didn't get it, why f2fs_get_victim() will return section
+>>>>>>>>> which is used by curseg? It should be avoided by checking w/
+>>> sec_usage_check().
+>>>>>>>>>
+>>>>>>>>> Or we missed to check gcing section which next_victim_seg
+>>>>>>>>> points to during get_new_segment()?
+>>>>>>>>>
+>>>>>>>>> Can this happen?
+>>>>>>>>>
+>>>>>>>>> e.g.
+>>>>>>>>> - bggc selects sec #0
+>>>>>>>>> - next_victim_seg: seg #0
+>>>>>>>>> - migrate seg #0 and stop
+>>>>>>>>> - next_victim_seg: seg #1
+>>>>>>>>> - checkpoint, set sec #0 free if sec #0 has no valid blocks
+>>>>>>>>> - allocate seg #0 in sec #0 for curseg
+>>>>>>>>> - curseg moves to seg #1 after allocation
+>>>>>>>>> - bggc tries to migrate seg #1
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>> That's correct
+>>>>>>>> In f2fs_get_victim, we use next_victim_seg to directly jump to
+>>>>>>>> got_result, thereby bypassing sec_usage_check What do you think
+>>>>>>>> about this change?
+>>>>>>>>
+>>>>>>>> @@ -850,15 +850,20 @@ int f2fs_get_victim(struct f2fs_sb_info
+>>>>>>>> *sbi,
+>>>>>>> unsigned int *result,
+>>>>>>>>                            p.min_segno = sbi->next_victim_seg[BG_GC];
+>>>>>>>>                            *result = p.min_segno;
+>>>>>>>>                            sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+>>>>>>>> -                       goto got_result;
+>>>>>>>>                    }
+>>>>>>>>                    if (gc_type == FG_GC &&
+>>>>>>>>                                    sbi->next_victim_seg[FG_GC]
+>>>>>>>> != NULL_SEGNO)
+>>> {
+>>>>>>>>                            p.min_segno = sbi->next_victim_seg[FG_GC];
+>>>>>>>>                            *result = p.min_segno;
+>>>>>>>>                            sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+>>>>>>>> -                       goto got_result;
+>>>>>>>>                    }
+>>>>>>>> +
+>>>>>>>> +               secno = GET_SEC_FROM_SEG(sbi, segno);
+>>>>>>>> +
+>>>>>>>> +               if (sec_usage_check(sbi, secno))
+>>>>>>>> +                       goto next;
+>>>>>>>> +
+>>>>>>>> +               goto got_result;
+>>>>>>>>            }
+>>>>>>>
+>>>>>>> But still allocator can assign this segment after
+>>>>>>> sec_usage_check() in race condition, right?
+>>>>>> Since the BG GC using next_victim  takes place after the SIT
+>>>>>> update in do_checkpoint, it seems unlikely that a race condition
+>>>>>> with
+>>>>> sec_usage_check will occur.
+>>>>>
+>>>>> I mean this:
+>>>>>
+>>>>> - gc_thread
+>>>>>    - f2fs_gc
+>>>>>     - f2fs_get_victim
+>>>>>      - sec_usage_check --- segno #1 is not used in any cursegs
+>>>>> 					- f2fs_allocate_data_block
+>>>>> 					 - new_curseg
+>>>>> 					  - get_new_segment find segno #1
+>>>>>
+>>>>>     - do_garbage_collect
+>>>>>
+>>>>> Thanks,
+>>>>
+>>>> 						  do_checkpoint sec0 free
+>>>> 						  If sec0 is not freed, then
+>>> segno1 within sec0 cannot be
+>>>> allocated
+>>>> - gc_thread
+>>>>    - f2fs_gc
+>>>>     - f2fs_get_victim
+>>>>      - sec_usage_check  --- segno #1 is not used in any cursegs (but
+>>>> sec0
+>>> is already used)
+>>>> 							- f2fs_allocate_data_block
+>>>> 							- new_curseg
+>>>> 							- get_new_segment find
+>>> segno #1
+>>>>
+>>>>     - do_garbage_collect
+>>>>
+>>>> I appreciate your patch, it is under testing.
+>>>> but I'm wondering if there's a risk of a race condition in this
+>>>> situation
+>>>
+>>> Oh, yes, I may missed that get_new_segment can return a free segment
+>>> in partial used section.
+>>>
+>>> So what do you think of this?
+>>> - check CURSEG() in do_garbage_collect() and get_victim()
+>>> - reset next_victim_seg[] in get_new_segment() and
+>>> __set_test_and_free() during checkpoint.
+>>>
+>>> Thanks,
+>>
+>> How about using victim_secmap?
+>> gc_thread
+>> 				mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+>> 				__set_test_and_free
+>> 				check cur section next_victim clear
+>> 				mutex_unlock(&dirty_i->seglist_lock);
+>>
+>> mutex_lock(&dirty->seglist_lock);
+>> f2fs_get_victim
+>> mutex_unlock(&dirty_i->seglist_lock);
+>>
+>> static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+>>                 if (next >= start_segno + usable_segs) {
+>>                         if (test_and_clear_bit(secno, free_i->free_secmap))
+>>                                 free_i->free_sections++;
+>> +
+>> +                       if (test_and_clear_bit(secno, dirty_i->victim_secmap))
+>> +                               sbi->next_victim_seg[BG_GC] =
+>> + NULL_SEGNO;
+>
+>Can this happen?
+>
+>segs_per_sec=2
+>
+>- seg#0 and seg#1 are all dirty
+>- all valid blocks are removed in seg#1
+>- checkpoint -> seg#1 becomes free
+>- gc select this sec and next_victim_seg=seg#0
+>- migrate seg#0, next_victim_seg=seg#1
+>- allocator assigns seg#1 to curseg
+>- gc tries to migrate seg#1
+>
+>Thanks,
+The detailed scenario
+segs_per_sec=2
+- seg#0 and seg#1 are all dirty
+- all valid blocks are removed in seg#1
+- gc select this sec and next_victim_seg=seg#0
+- migrate seg#0, next_victim_seg=seg#1
+- checkpoint -> sec(seg#0, seg#1)  becomes free
+- allocator assigns sec(seg#0, seg#1) to curseg
+- gc tries to migrate seg#1
+>
+>>                 }
+>>         }
+>>>
+>>>>
+>>>>
+>>>>>
+>>>>>>>
+>>>>>>> IMO, we can clear next_victim_seg[] once section is free in
+>>>>>>> __set_test_and_free()? something like this:
+>>>>>> I will test it according to your suggestion.
+>>>>>> If there are no issues, can I submit it again with the patch?
+>>>>>> Thanks
+>>>>>>>
+>>>>>>> ---
+>>>>>>>     fs/f2fs/segment.h | 13 ++++++++++---
+>>>>>>>     1 file changed, 10 insertions(+), 3 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h index
+>>>>>>> 0465dc00b349..826e37999085 100644
+>>>>>>> --- a/fs/f2fs/segment.h
+>>>>>>> +++ b/fs/f2fs/segment.h
+>>>>>>> @@ -473,9 +473,16 @@ static inline void
+>>>>>>> __set_test_and_free(struct f2fs_sb_info *sbi,
+>>>>>>>     			goto skip_free;
+>>>>>>>     		next = find_next_bit(free_i->free_segmap,
+>>>>>>>     				start_segno + SEGS_PER_SEC(sbi),
+>>> start_segno);
+>>>>>>> -		if (next >= start_segno + usable_segs) {
+>>>>>>> -			if (test_and_clear_bit(secno, free_i-
+>>free_secmap))
+>>>>>>> -				free_i->free_sections++;
+>>>>>>> +		if ((next >= start_segno + usable_segs) &&
+>>>>>>> +			test_and_clear_bit(secno, free_i->free_secmap))
+>{
+>>>>>>> +			free_i->free_sections++;
+>>>>>>> +
+>>>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC])
+>==
+>>>>>>> +									secno)
+>>>>>>> +				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+>>>>>>> +			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC])
+>==
+>>>>>>> +									secno)
+>>>>>>> +				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+>>>>>>>     		}
+>>>>>>>     	}
+>>>>>>>     skip_free:
+>>>>>>> --
+>>>>>>> 2.40.1
+>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Because the call stack is different, I think that in order to
+>>>>>>>>>> handle everything at once, we need to address it within
+>>>>>>>>>> do_garbage_collect, or otherwise include it on both sides.
+>>>>>>>>>> What do you think?
+>>>>>>>>>>
+>>>>>>>>>> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment
+>>>>>>>>>> (70961) type [0, 1] in SSA and SIT [30146.346151][ T1300] Call
+>>> trace:
+>>>>>>>>>> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c
+>>>>>>>>>> [30146.346157][ T1300]  show_stack+0x18/0x28 [30146.346158][
+>>>>>>>>>> T1300] dump_stack_lvl+0x50/0x6c [30146.346161][ T1300]
+>>>>>>>>>> dump_stack+0x18/0x28 [30146.346162][ T1300]
+>>>>>>>>>> f2fs_stop_checkpoint+0x1c/0x3c [30146.346165][ T1300]
+>>>>>>>>>> do_garbage_collect+0x41c/0x271c [30146.346167][ T1300]
+>>>>>>>>>> f2fs_gc+0x27c/0x828 [30146.346168][ T1300]
+>>>>>>>>>> gc_thread_func+0x290/0x88c [30146.346169][ T1300]
+>>>>>>>>>> kthread+0x11c/0x164 [30146.346172][ T1300]
+>>>>>>>>>> ret_from_fork+0x10/0x20
+>>>>>>>>>>
+>>>>>>>>>> struct curseg_info : 0xffffff803f95e800 {
+>>>>>>>>>> 	segno        : 0x11531 : 70961
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> struct f2fs_sb_info : 0xffffff8811d12000 {
+>>>>>>>>>> 	next_victim_seg[0] : 0x11531 : 70961 }
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.32919
+>>>>>>>>>>> 47
+>>>>>>>>>>> -2
+>>>>>>>>>>> -
+>>>>>>>>>>> chao@kernel.org
+>>>>>>>>>>>
+>>>>>>>>>>> Thanks,
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>>     fs/f2fs/gc.c | 4 ++++
+>>>>>>>>>>>>     1 file changed, 4 insertions(+)
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
+>>>>>>>>>>>> 2b8f9239bede..4b5d18e395eb 100644
+>>>>>>>>>>>> --- a/fs/f2fs/gc.c
+>>>>>>>>>>>> +++ b/fs/f2fs/gc.c
+>>>>>>>>>>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi,
+>>>>>>>>>>>> struct
+>>>>>>>>>>> f2fs_gc_control *gc_control)
+>>>>>>>>>>>>     		goto stop;
+>>>>>>>>>>>>     	}
+>>>>>>>>>>>>
+>>>>>>>>>>>> +	if (__is_large_section(sbi) &&
+>>>>>>>>>>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
+>>>>>>>>>>>> +		goto stop;
+>>>>>>>>>>>> +
+>>>>>>>>>>>>     	seg_freed = do_garbage_collect(sbi, segno, &gc_list,
+>gc_type,
+>>>>>>>>>>>>     				gc_control->should_migrate_blocks,
+>>>>>>>>>>>>     				gc_control->one_time);
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
 
-I took a look at the udma-buf code. Rather than iterating through the
-folios using pfns, you can calculate the corresponding file offsets 
-(maybe you already have them?) to map the desired folios.
 
-> And this API still aim to file vmap, Maybe not suitable for the problem I mentioned in:
-> 
-> https://lore.kernel.org/lkml/20250312061513.1126496-1-link@vivo.com/
-
-I'm not sure which problem you're referring to, could you be more
-specific?
-
-> Thanks,
-> Huan Yang
-> 
-> > Create a function, vmap_file(), to map a specified range of a given
-> > file to kernel virtual space. vmap_file() is an in-kernel equivalent
-> > to mmap(), and can be useful for filesystems.
-> > 
-> > ---
-> > v2:
-> >    - Reword cover letter to provide a clearer overview of the current
-> >    vmalloc APIs, and usefulness of vmap_file()
-> >    - EXPORT_SYMBOL_GPL() instead of EXPORT_SYMBOL()
-> >    - Provide support to partially map file folios
-> >    - Demote this to RFC while we look for users
-> > --
-> > I don't have a user for this function right now, but it will be
-> > useful as users start converting to using large folios. I'm just
-> > putting it out here for anyone that may find a use for it.
-> > 
-> > This seems like the sensible way to implement it, but I'm open
-> > to tweaking the functions semantics.
-> > 
-> > I've Cc-ed a couple people that mentioned they might be interested
-> > in using it.
-> > 
-> > Vishal Moola (Oracle) (1):
-> >    mm/vmalloc: Introduce vmap_file()
-> > 
-> >   include/linux/vmalloc.h |   2 +
-> >   mm/vmalloc.c            | 113 ++++++++++++++++++++++++++++++++++++++++
-> >   2 files changed, 115 insertions(+)
-> > 
