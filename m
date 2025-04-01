@@ -1,86 +1,65 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD2B7FBA2;
-	Tue,  1 Apr 2025 04:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133468F54
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 04:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743480896; cv=none; b=A9Ug6aXtLbym6Piz+gO0LkPbeJk+uiujzQX6vToDjM/qogQsEFaWX7gIUkOjJYejMgz5OTPgLjLg235cpS2WPsfoEQq3YOG9Ms0puuZYpm050LDbCSKf1IvRlDpL/32v8xB0Gs17RW3zerg1eUoKYyFZ0CgIQT57tsiD8LFXZHY=
+	t=1743480920; cv=none; b=PhP/p9RFSdc6WtLYn/tMhytkhYEtcG7bzqC30hJR8vjixpU1bnLwYcr/jZWC9qfilr10Ml3rcRiqZCnjBpjXv3z9kRmjQq5ukb0r0+MjemjJmrF+fWB5T2aux3/0I0fsKJJ5637suYwXK/1iSOgYpKHPtNOCj/p+8y6PqLE/TFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743480896; c=relaxed/simple;
-	bh=FL7Hqi61NBS44sV+XpIlnlyKNycSohb7eU45vc1dK3w=;
+	s=arc-20240116; t=1743480920; c=relaxed/simple;
+	bh=ryprVHEW7JlOMD+oIbpsO0JTuYoLsYq6Q/WJTuVVj/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GLJ+k0RI3lZPssvrE4J25bADcdAQX1yo41UwzAJji1Yn15B9e8h5cMwL8zJJvS5POzRglShgHvpP38ezEucdZY4MtDweTbFPtxZd7tvj6rVrgM5OR7YEBgr5w7J06JBEAfUrZnyBWwNYdVk5+iklqihHFxcP8cNOv7zhLacmUVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JaK6xeIq; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFT4wOZ7IqRgPfqYrvGo/TvjoToWTtf+VtbA0Z1D4SyScbE0gsDZkWOOgNFZZKvnxkY9O11xTlBMYmPKA0Pxijth+mByjyfFpMOFYMQENK4a8u9n/g4lW9XJTiY3ZcAs+SdQkc3of6lAVrLL9WiqWOAHJRzNANrBxIgTtYrnobI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A62Arblv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JaK6xeIq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+2RqO8vlf6EF5PqjrROYwLheViYaWVwm+Q/3XlSbR0w=; b=JaK6xeIqAWV5lQDIMKJhlAa/Eb
-	qcGvG4FUu8T3C7E7DnbgDZ5gHfn0Mso/tTz+S/7PjwHiu/B+E6iWiLGTMJOHJVJ8i8t8xUv0kVNwO
-	TNTEQ9SUdhbx/yWxagPpLkZtsUp06Wv6LJhlJFQgl5oxQf5lpkZHW03j4SqxFvwq7iXjWE/zdUCn8
-	fcirNKWRnBwr+l7Bawc1WxgkW77TByt0VZQ7zOuv6FdYY5JA3tNiH+y79uKOsNwRcXe3lE2tdYBSS
-	/0yfjoDyjMBwHdCOQUdk2NlY2c2Wt+k64zAtYgau54YeT1UBGOpsm8FbzdLy9Mxg50olghJOrHeE5
-	eS9vOFWg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tzT1Q-00Bk54-08;
-	Tue, 01 Apr 2025 12:14:45 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Apr 2025 12:14:44 +0800
-Date: Tue, 1 Apr 2025 12:14:44 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Chaining is dead
-Message-ID: <Z-toNJtPYsOmRcFM@gondor.apana.org.au>
-References: <Z-NdGvErMGS5OT7X@gondor.apana.org.au>
- <Z-NjarWmWSmQ97K0@gondor.apana.org.au>
- <20250326033404.GD1661@sol.localdomain>
- <Z-N55Yjve6wTnPqm@gondor.apana.org.au>
- <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
- <20250331165630.GA3893920@google.com>
- <Z-tTEjCzpgDr9a-3@gondor.apana.org.au>
- <20250401033303.GA56851@sol.localdomain>
- <Z-tjluCx71ti6Ngq@gondor.apana.org.au>
- <20250401040852.GC56851@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A62Arblv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64E84C4CEE8;
+	Tue,  1 Apr 2025 04:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743480918;
+	bh=ryprVHEW7JlOMD+oIbpsO0JTuYoLsYq6Q/WJTuVVj/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A62ArblvPnxIr5mVDvIx52jdFE42Ea9ZLhMqO1zf1T/EQVr01thQbZsK16L0tHypN
+	 TZq1yxRhZVjxIpAQwvUb+U/BTcgo4AyP7j9QsPZNPN/efe9Z+7owsS7b3Aryycv16E
+	 2CsDNZdU1YMk53jd4AAcGw2m+YFHvK0bWOL7/lneXJW3w/7Fr0dMaYS2GPbPPZfox8
+	 hfEYsbq7aqweQp01RV3upSBUfBA2e2GiMnP+BOXB7xl6wFaRc2+GWyIMlgAbGxbIs7
+	 MPK4ull4jdVYVH273zmjIbqmPrHc8cbI63IVAuZkc9kJgxPyrlb7l4vmObDY5OgjSz
+	 fQsV7G9DAGxlg==
+Date: Mon, 31 Mar 2025 21:15:15 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: philip.li@intel.com, a.p.zijlstra@chello.nl, akpm@linux-foundation.org, 
+	bp@alien8.de, linux-kernel@vger.kernel.org, lkp@intel.com, mingo@kernel.org, 
+	tglx@linutronix.de, torvalds@linux-foundation.org
+Subject: Re: [GIT PULL] objtool fixes and updates
+Message-ID: <ublufyjv3ekvabhbsswswuhg25v7yalrucvtprozva46s7mli3@jhnsdb5wkqky>
+References: <Z+s1ceHFa0L1GMrn@rli9-mobl>
+ <703f98e1-5638-5feb-2b66-7cf7bb21a896@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250401040852.GC56851@sol.localdomain>
+In-Reply-To: <703f98e1-5638-5feb-2b66-7cf7bb21a896@loongson.cn>
 
-On Mon, Mar 31, 2025 at 09:08:52PM -0700, Eric Biggers wrote:
->
-> Interesting seeing this argument coming from you when the whole Crypto API is
-> built around forcing software crypto to use interfaces designed for hardware.
+On Tue, Apr 01, 2025 at 10:05:41AM +0800, Tiezhu Yang wrote:
+> (2) I did not meet the following objtool warnings before this merge
+> window:
+> 
+> arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack
+> state mismatch: reg1[22]=-1+0 reg2[22]=-2-160
+> arch/loongarch/kernel/traps.o: warning: objtool: show_stack+0xe0: stack
+> state mismatch: reg1[23]=-1+0 reg2[23]=-2-152
+> 
+> and I did not notice the robot report due to there are many unread mails
+> in my inbox, I will try to reproduce it and take a deeper look at the
+> problem, maybe it is related with some special configs.
 
-Perhaps you should take your rose-coloured glasses off? :)
+I actually already have a patch for it, will post soon.
 
-> aes_expandkey() if we switch to that) for every I/O request.  The blk-crypto
-> interface could be reworked to support pre-expansion of the key, but that would
-> differ from what actual inline encryption hardware needs.  So this is just
-> another case where the needs of hardware vs. software diverge...
-
-If we're going to converge on one interface, then it better put
-the needs of software crypto first and foremost.  Now that doesn't
-mean throwing out support for hardware altogether, but hardware
-does need to take a backseat every now and then.
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Josh
