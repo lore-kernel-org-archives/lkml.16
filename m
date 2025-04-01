@@ -1,48 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0671E32CD;
-	Tue,  1 Apr 2025 06:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8032AF14;
+	Tue,  1 Apr 2025 06:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489060; cv=none; b=Ash6pxjZnW4+PStpjNHn5tfKsOs36Kj0VVTAguzGEsBVOhxMf9411uboMwzxwX9V41kyonZvSM9AjqR2QE2kbtB6bzCMnxQoE7hnjPI1TJzwf+YXagPQyNX28JR0EYjtNBEaskrhjM39RykCCkc1kYyksbZ5m0T9+PoEFmS+8PY=
+	t=1743489127; cv=none; b=e0YORsyCRKfKqFJTA3Qp90ymZGc5V+3ldc5uqvGdmnb5GPhxJGg4kQlEwOomS5S6ZXxmsqc1QezGeOCvXm/tpjnr6URX51/ifyUGtuwQOoLOFfX2BAvGwwvTbvTg+dPPiwKOB0CXXYCP/szfujB/oqi0hlNli9N8URsYa+UgIDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489060; c=relaxed/simple;
-	bh=EaL7TpVTLpzelsU94OiKKyc9G5mBg4iTJqajfjnrsDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fIPUw+K1DhLyQKfZrbFJ6O9+4DSm2P8h+3QbBmLobpkBmmw4EHKSfj/0N3fGt3Jhm2DSKN3fDiaYZP0xs12NroUgGXmbn2qrujKkOVTUTeYlQmoOejHABKZ5fPtHHaHsSw4oIoU3Ou3JYx4vOaW91dSw6x19emTQhae6Qf7q7Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLE6i+1w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743489127; c=relaxed/simple;
+	bh=BDxF424ruMiZKsGkmqb60vQyLRBj+6kdl6qq3sR8Hgg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pf8jJhL+SsJKi/kIVpoX/5IGo4kwHmNPi0DUYIOMtnGsnqlenBRpYMi3PSMbmI+04Bnxfq3h/+SSrCHKipCGXyFKQrTDVyRZTg1MsQUt45HZR0cX5oB5NyRkRvGeOADsym3sjqX2Qb7X52uqd4oEprWuYiNNRqwWpVvL0/dNRmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yf+KqDdv; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLE6i+1w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40AC5C4CEE8;
-	Tue,  1 Apr 2025 06:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743489059;
-	bh=EaL7TpVTLpzelsU94OiKKyc9G5mBg4iTJqajfjnrsDw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gLE6i+1wShnALgchhNQ7D3aixJkFilh+4XGOfJHS1dbR+z01Lhqhg925egRdCiwoH
-	 2oLXgLHZ0uABIkih+38OOYlFjLJ+18K+4xhf511dN317MFn0ssRoiLCKXu8eA26i4X
-	 bivRv3F6WR1jUEmDbuoG6Ddu1bdf1dFRNe0JYmftt/q1UeUpTHhZKV2TilAgBBxI6O
-	 6s5n4hesCvA5Y03+Tph1RAbpvrDproS5aIo9TzBdZ+eIz4Tq1ZBCTT5IWlkh2svv+L
-	 6XDSbLJ4wovzaQ2Fb5GofBtSmuzByRUVECcC/xKyus/XJqQvaLyFG5vpj5IaurNAe1
-	 UKMO80FHO8NMA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>,
-	linux-mm@kvack.org
-Subject: [PATCH] perf lock contention: Symbolize zone->lock using BTF
-Date: Mon, 31 Mar 2025 23:30:55 -0700
-Message-ID: <20250401063055.7431-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yf+KqDdv"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2295d78b45cso9301955ad.0;
+        Mon, 31 Mar 2025 23:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743489125; x=1744093925; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wGw7xyNBu03x37lDi5ltAIq1oMX8Xxz184y1gqG3/+Y=;
+        b=Yf+KqDdvtGhtPzCirnM55MIAmI87SdsdIxlzi7KW2G2zfuAV1GDijdNkP6g3soew8S
+         QMAraQxclgHXObHdIlHVe4nCHoB7r2L7t0zESK8Mck0VQe2R9UfJTPIwprZ7SBeEq6RN
+         5QH7SfThzwWJdtyBsV3bn8tB+n6pvEjJuHsTxeAWbnGHpFOk6g2rCIZlosdmIvQ5sLgg
+         KJGeol8SNpKOKNSOign52hCaXoxrpzV6bb7PRShJ+C11aVlDwA5o9X9Q0rUqmUQjslAK
+         7856xYOfcxMlEJDZY17DlHP/Sp1OB3poTzDIziOX8cyGupilaaVXsTS+l0q80kCTnhe2
+         NPpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743489125; x=1744093925;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wGw7xyNBu03x37lDi5ltAIq1oMX8Xxz184y1gqG3/+Y=;
+        b=Iog9ANoCBphbVo8frTP4OhY1oWInarymuHouS+SVjPrXLVn7WuX3ASahxaAya2d/Jf
+         bmyTfaqLj22GHpsx5g2f/RxM1pVd1KjrODgvWXqZt5RAabmsVH3ngJZWqXg1xUrkouPQ
+         /1yGQEMy9PG85k7eCG6hzaK91hF3QO8o0irLYrRJhg4ZO0hf1uWOGyX1t7R2pvGWed93
+         vzS3t6f2exruqmTPC4LpDaGxYHdMSJ9lq6Nqh1c15kgHm4cyb4z5wgURhImNVzj8xioc
+         UYAj9gOKF1Y+JTwQyNZkLrlsNYJzkIB0lO1NhX/nIs0OwGdaufkabAgEpAqth9xKWroJ
+         HUBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXva2+EPPjP1WT2QgpXF7cqadlmrY/Psa0gOOZtyCBChIJ6y+slNJ7titxZM+31I4TfCe1bh1ialtY1R/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDQWPYilpjKLHQnU43Ybv4oZaeMTZmNGX2Wa4QT7BymbTeh/Ym
+	BK1/tsyvC5beG4o7w6VYNnQ6SrDdAgyXEDg3JsRaiskPptoaX7Q8pTi6HD8WUapllg==
+X-Gm-Gg: ASbGncs0ZQmJxrQGuMc5wCOuHP4/NXGnobgEIiE6lnfNuvlnG8BJJwuK8JxY+Md7wRq
+	4fRPflOHsJaDQVwkgRwBLv2nAnAr8KSF0n0eamBa+RedcikY75VqZ/BkX43p/3dOuSdRYsiLuue
+	kr2YKsRrPovtN7u5TkowBNYCUb/qGh5eOoDAbovSxhpBUhy31wTzFEJGjh04oBZRkmvgY1jpkSc
+	Xlqm4MS9lxPs5MYNWJ+xm7EGutavKGoeLviEMo7Tbw5rL+VAfzq8S4UpPlZNahHIu3XQBsqjmLl
+	VlbjelhQuWWlt0qoD8zrJeOhjsBBrI6g0iNzLc2RXCJcRgVGIbr0C5NqyAdS5Cspss+bJGU=
+X-Google-Smtp-Source: AGHT+IGJZEoqdwoeD23IjdthzmCGqvPXU4bgqGnajntJb6l7Akmfn++TOcm98QTRwEuaNF9iCAzftA==
+X-Received: by 2002:a17:903:40cb:b0:220:be86:a421 with SMTP id d9443c01a7336-2292f9e521bmr216475685ad.38.1743489125268;
+        Mon, 31 Mar 2025 23:32:05 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cec2fsm80478415ad.117.2025.03.31.23.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 23:32:04 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v2] HID: uclogic: Add NULL check in uclogic_input_configured
+Date: Tue,  1 Apr 2025 14:31:57 +0800
+Message-Id: <20250401063157.19655-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,330 +73,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The struct zone is embedded in struct pglist_data which can be allocated
-for each NUMA node early in the boot process.  As it's not a slab object
-nor a global lock, this was not symbolized.
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+uclogic_input_configured() does not check for this case, which results in a
+NULL pointer dereference.
 
-Since the zone->lock is often contended, it'd be nice if we can
-symbolize it.  On NUMA systems, node_data array will have pointers for
-struct pglist_data.  By following the pointer, it can calculate the
-address of each zone and its lock using BTF.  On UMA, it can just use
-contig_page_data and its zones.
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-The following example shows the zone lock contention at the end.
-
-  $ sudo ./perf lock con -abl -E 5 -- ./perf bench sched messaging
-  # Running 'sched/messaging' benchmark:
-  # 20 sender and receiver processes per group
-  # 10 groups == 400 processes run
-
-       Total time: 0.038 [sec]
-   contended   total wait     max wait     avg wait            address   symbol
-
-        5167     18.17 ms     10.27 us      3.52 us   ffff953340052d00   &kmem_cache_node (spinlock)
-          38     11.75 ms    465.49 us    309.13 us   ffff95334060c480   &sock_inode_cache (spinlock)
-        3916     10.13 ms     10.43 us      2.59 us   ffff953342aecb40   &kmem_cache_node (spinlock)
-        2963     10.02 ms     13.75 us      3.38 us   ffff9533d2344098   &kmalloc-rnd-08-2k (spinlock)
-         216      5.05 ms     99.49 us     23.39 us   ffff9542bf7d65d0   zone_lock (spinlock)
-
-Cc: linux-mm@kvack.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: dd613a4e45f8 ("HID: uclogic: Correct devm device reference for hidinput input_dev name")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
- tools/perf/util/bpf_lock_contention.c         | 88 +++++++++++++++++--
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 64 ++++++++++++++
- tools/perf/util/bpf_skel/lock_data.h          |  1 +
- tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  9 ++
- tools/perf/util/lock-contention.h             |  1 +
- 5 files changed, 157 insertions(+), 6 deletions(-)
+V1 -> V2: 
+Simplify the handing of the condition "suffix" with if/else suggested by
+Markus. 
+The current implementation (directly returning -ENOMEM) is reasonable because:
+1. pen_input is just a cached pointer - no resources are allocated
+2. evbit modification is a software-only configuration (hardware-independent)
+3. No critical state needs rollback on memory allocation failure
 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 5af8f6d1bc952613..98395667220e58ee 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -12,6 +12,7 @@
- #include "util/lock-contention.h"
- #include <linux/zalloc.h>
- #include <linux/string.h>
-+#include <api/fs/fs.h>
- #include <bpf/bpf.h>
- #include <bpf/btf.h>
- #include <inttypes.h>
-@@ -35,28 +36,26 @@ static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unused)
- 
- static void check_slab_cache_iter(struct lock_contention *con)
- {
--	struct btf *btf = btf__load_vmlinux_btf();
- 	s32 ret;
- 
- 	hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ctx=*/NULL);
- 
--	if (btf == NULL) {
-+	con->btf = btf__load_vmlinux_btf();
-+	if (con->btf == NULL) {
- 		pr_debug("BTF loading failed: %s\n", strerror(errno));
- 		return;
- 	}
- 
--	ret = btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
-+	ret = btf__find_by_name_kind(con->btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
- 	if (ret < 0) {
- 		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
- 		pr_debug("slab cache iterator is not available: %d\n", ret);
--		goto out;
-+		return;
- 	}
- 
- 	has_slab_iter = true;
- 
- 	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
--out:
--	btf__free(btf);
- }
- 
- static void run_slab_cache_iter(void)
-@@ -109,6 +108,75 @@ static void exit_slab_cache_iter(void)
- 	hashmap__clear(&slab_hash);
- }
- 
-+static void init_numa_data(struct lock_contention *con)
-+{
-+	struct symbol *sym;
-+	struct map *kmap;
-+	char *buf = NULL, *p;
-+	size_t len;
-+	long last = -1;
-+	int ret;
-+
-+	/*
-+	 * 'struct zone' is embedded in 'struct pglist_data' as an array.
-+	 * As we may not have full information of the struct zone in the
-+	 * (fake) vmlinux.h, let's get the actual size from BTF.
-+	 */
-+	ret = btf__find_by_name_kind(con->btf, "zone", BTF_KIND_STRUCT);
-+	if (ret < 0) {
-+		pr_debug("cannot get type of struct zone: %d\n", ret);
-+		return;
-+	}
-+
-+	ret = btf__resolve_size(con->btf, ret);
-+	if (ret < 0) {
-+		pr_debug("cannot get size of struct zone: %d\n", ret);
-+		return;
-+	}
-+	skel->rodata->sizeof_zone = ret;
-+
-+	/* UMA system doesn't have 'node_data[]' - just use contig_page_data. */
-+	sym = machine__find_kernel_symbol_by_name(con->machine,
-+						  "contig_page_data",
-+						  &kmap);
-+	if (sym) {
-+		skel->rodata->contig_page_data_addr = map__unmap_ip(kmap, sym->start);
-+		map__put(kmap);
-+		return;
-+	}
-+
-+	/*
-+	 * The 'node_data' is an array of pointers to struct pglist_data.
-+	 * It needs to follow the pointer for each node in BPF to get the
-+	 * address of struct pglist_data and its zones.
-+	 */
-+	sym = machine__find_kernel_symbol_by_name(con->machine,
-+						  "node_data",
-+						  &kmap);
-+	if (sym == NULL)
-+		return;
-+
-+	skel->rodata->node_data_addr = map__unmap_ip(kmap, sym->start);
-+	map__put(kmap);
-+
-+	/* get the number of online nodes using the last node number + 1 */
-+	ret = sysfs__read_str("devices/system/node/online", &buf, &len);
-+	if (ret < 0) {
-+		pr_debug("failed to read online node: %d\n", ret);
-+		return;
-+	}
-+
-+	p = buf;
-+	while (p && *p) {
-+		last = strtol(p, &p, 0);
-+
-+		if (p && (*p == ',' || *p == '-' || *p == '\n'))
-+			p++;
-+	}
-+	skel->rodata->nr_nodes = last + 1;
-+	free(buf);
-+}
-+
- int lock_contention_prepare(struct lock_contention *con)
- {
- 	int i, fd;
-@@ -218,6 +286,8 @@ int lock_contention_prepare(struct lock_contention *con)
- 
- 	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
- 
-+	init_numa_data(con);
-+
- 	if (lock_contention_bpf__load(skel) < 0) {
- 		pr_err("Failed to load lock-contention BPF skeleton\n");
- 		return -1;
-@@ -505,6 +575,11 @@ static const char *lock_contention_get_name(struct lock_contention *con,
- 				return "rq_lock";
+ drivers/hid/hid-uclogic-core.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
+index d8008933c052..83625ec6a55a 100644
+--- a/drivers/hid/hid-uclogic-core.c
++++ b/drivers/hid/hid-uclogic-core.c
+@@ -118,35 +118,29 @@ static int uclogic_input_configured(struct hid_device *hdev,
  		}
- 
-+		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr_or_cgroup, &flags)) {
-+			if (flags == LOCK_CLASS_ZONE_LOCK)
-+				return "zone_lock";
-+		}
-+
- 		/* look slab_hash for dynamic locks in a slab object */
- 		if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
- 			snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
-@@ -743,6 +818,7 @@ int lock_contention_finish(struct lock_contention *con)
  	}
  
- 	exit_slab_cache_iter();
-+	btf__free(con->btf);
+-	if (!suffix) {
++	if (!suffix && hi->report->maxfield > 0) {
+ 		field = hi->report->field[0];
  
- 	return 0;
- }
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 69be7a4234e076e8..6f12c7d978a2e015 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -11,6 +11,9 @@
- /* for collect_lock_syms().  4096 was rejected by the verifier */
- #define MAX_CPUS  1024
+-		switch (field->application) {
+-		case HID_GD_KEYBOARD:
++		if (field->application == HID_GD_KEYBOARD)
+ 			suffix = "Keyboard";
+-			break;
+-		case HID_GD_MOUSE:
++		else if (field->application == HID_GD_MOUSE)
+ 			suffix = "Mouse";
+-			break;
+-		case HID_GD_KEYPAD:
++		else if (field->application == HID_GD_KEYPAD)
+ 			suffix = "Pad";
+-			break;
+-		case HID_DG_PEN:
+-		case HID_DG_DIGITIZER:
++		else if (field->application == HID_DG_PEN || field->application == HID_DG_DIGITIZER)
+ 			suffix = "Pen";
+-			break;
+-		case HID_CP_CONSUMER_CONTROL:
++		else if (field->application == HID_CP_CONSUMER_CONTROL)
+ 			suffix = "Consumer Control";
+-			break;
+-		case HID_GD_SYSTEM_CONTROL:
++		else if (field->application == HID_GD_SYSTEM_CONTROL)
+ 			suffix = "System Control";
+-			break;
+-		}
+ 	}
  
-+/* for collect_zone_lock().  It should be more than the actual zones. */
-+#define MAX_ZONES  10
-+
- /* lock contention flags from include/trace/events/lock.h */
- #define LCB_F_SPIN	(1U << 0)
- #define LCB_F_READ	(1U << 1)
-@@ -801,6 +804,11 @@ int contention_end(u64 *ctx)
- 
- extern struct rq runqueues __ksym;
- 
-+const volatile __u64 contig_page_data_addr;
-+const volatile __u64 node_data_addr;
-+const volatile int nr_nodes;
-+const volatile int sizeof_zone;
-+
- struct rq___old {
- 	raw_spinlock_t lock;
- } __attribute__((preserve_access_index));
-@@ -809,6 +817,59 @@ struct rq___new {
- 	raw_spinlock_t __lock;
- } __attribute__((preserve_access_index));
- 
-+static void collect_zone_lock(void)
-+{
-+	__u64 nr_zones, zone_off;
-+	__u64 lock_addr, lock_off;
-+	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
-+
-+	zone_off = offsetof(struct pglist_data, node_zones);
-+	lock_off = offsetof(struct zone, lock);
-+
-+	if (contig_page_data_addr) {
-+		struct pglist_data *contig_page_data;
-+
-+		contig_page_data = (void *)(long)contig_page_data_addr;
-+		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
-+
-+		for (int i = 0; i < MAX_ZONES; i++) {
-+			__u64 zone_addr;
-+
-+			if (i >= nr_zones)
-+				break;
-+
-+			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
-+			lock_addr = zone_addr + lock_off;
-+
-+			bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
-+		}
-+	} else if (nr_nodes > 0) {
-+		struct pglist_data **node_data = (void *)(long)node_data_addr;
-+
-+		for (int i = 0; i < nr_nodes; i++) {
-+			struct pglist_data *pgdat = NULL;
-+			int err;
-+
-+			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
-+			if (err < 0 || pgdat == NULL)
-+				break;
-+
-+			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
-+			for (int k = 0; k < MAX_ZONES; k++) {
-+				__u64 zone_addr;
-+
-+				if (k >= nr_zones)
-+					break;
-+
-+				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
-+				lock_addr = zone_addr + lock_off;
-+
-+				bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
-+			}
-+		}
+-	if (suffix)
++	if (suffix) {
+ 		hi->input->name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
+ 						 "%s %s", hdev->name, suffix);
++		if (!hi->input->name)
++			return -ENOMEM;
 +	}
-+}
-+
- SEC("raw_tp/bpf_test_finish")
- int BPF_PROG(collect_lock_syms)
- {
-@@ -830,6 +891,9 @@ int BPF_PROG(collect_lock_syms)
- 		lock_flag = LOCK_CLASS_RQLOCK;
- 		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
- 	}
-+
-+	collect_zone_lock();
-+
+ 
  	return 0;
  }
- 
-diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index 15f5743bd409f2f9..28c5e5aced7fcc91 100644
---- a/tools/perf/util/bpf_skel/lock_data.h
-+++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -67,6 +67,7 @@ enum lock_aggr_mode {
- enum lock_class_sym {
- 	LOCK_CLASS_NONE,
- 	LOCK_CLASS_RQLOCK,
-+	LOCK_CLASS_ZONE_LOCK,
- };
- 
- struct slab_cache_data {
-diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-index 7b81d3173917fdb5..a59ce912be18cd0f 100644
---- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-+++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-@@ -203,4 +203,13 @@ struct bpf_iter__kmem_cache {
- 	struct kmem_cache *s;
- } __attribute__((preserve_access_index));
- 
-+struct zone {
-+	spinlock_t lock;
-+} __attribute__((preserve_access_index));
-+
-+struct pglist_data {
-+	struct zone node_zones[6]; /* value for all possible config */
-+	int nr_zones;
-+} __attribute__((preserve_access_index));
-+
- #endif // __VMLINUX_H
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index b5d916aa49df6424..d331ce8e3caad4cb 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -142,6 +142,7 @@ struct lock_contention {
- 	struct lock_filter *filters;
- 	struct lock_contention_fails fails;
- 	struct rb_root cgroups;
-+	void *btf;
- 	unsigned long map_nr_entries;
- 	int max_stack;
- 	int stack_skip;
 -- 
-2.49.0
+2.34.1
 
