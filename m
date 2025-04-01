@@ -1,100 +1,209 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34EE1EF080
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4935F204C0B;
+	Tue,  1 Apr 2025 14:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517791; cv=none; b=lQAONkUZon4nkzaamwjI+88FnczCxAdkfs6Xc+KYl2XRUV7ikuzs9txgXhjRD6jGGGwM88HGLV8Sa/EIzWKiMkxg1NGT3XkxLUxICQun3a3YeTm/mxopomoijJoOmuPWdvh7QnpQ8BvZHlqGQ4M19EsFHVtU8WIGM9ygJCu2cbE=
+	t=1743517804; cv=none; b=MznTs9XW9WFjlc+QclqyWDkT7rAXOwXHGG22iWdnXNo++3S+v5SlzgFNP3HzxLX51HtQbUuMX9KhJ0MqgCBp8ZUaXBQRmiHzDp5ibhmxdsN25vAk8Q7Mymt/7K0Flcna0tZwPKN1B3mZx8eBDINeIMHxSryiouve+pmDWTnJl5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517791; c=relaxed/simple;
-	bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U64679HS++K1BPgMk2yht0qiJyTeeFB3+zMYgfGfwj7AU2NXurg8yktFSpPoPbDftibpo1czVqKqaToA1tzjnXYaXNA5NMwnhVqBz6QjJLUddNOVEKZBIoWoUoPU9zQHbRHsZ83mq1pWkTpDbXNZLFfCv+iYtcxVcDUP747v+6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=mGTjgFrW; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1743517804; c=relaxed/simple;
+	bh=5aT0Vi1k+xqWtEzhocv4+cEoo/Fhlmc15jH+tEVAXik=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=t265azP+ofStxMPz6QBjvxLI6y8gD5gXJ2s6Ry/gC8yF1KBR2mu56h8LcMRB4NfrB1dLrEM3NnBK9iLs48SPkjz0hdEs5J1/JrKo5/GeQuClimBetLTssTubsL5Iy4wmMUYJGse4X1tFCQvAMm18LfhfnAetbOZ+uPnwjaMMNt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DbvgWOY2; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="mGTjgFrW"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3996af42857so4453954f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:29:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbvgWOY2"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2279915e06eso114874645ad.1;
+        Tue, 01 Apr 2025 07:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1743517788; x=1744122588; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
-        b=mGTjgFrWukuCgEL1V89KWiCBAZVaAwkfyWfauRCvEJmnXY5lHfl+spBQxEiMyKK6fe
-         dkfqaWxw3weMe4lRZ0SyTzMNg2+nY4+ZD1YhiMH3lMXF9lFZ+WjvgJAWQbZKLK0wKZv1
-         EfzkhPpIHr93ggh6ADw0H6f0usvjyhd6tNThiu8VdrJWJVYOzrwCRYW0PmYONL/okXlV
-         otpSUU1h3Vz9Uffo0qLBoD85WV9FiQO8sAfyjCLv/X9mybzyJQShC0jtjElLthqPtO3r
-         L6bMncHQR5tCaQ5daeBc6i2fsB9T5lRyjfGfxnhRr9gu2yEjTe3TaqXzUrDWXvYcVhuo
-         sijQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517788; x=1744122588;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743517802; x=1744122602; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4+DXyGZpy3baMIIEpJypfdpYsotPYKsxA3mI/UuDijo=;
-        b=ZWMLTugqOZelhki1NOMfkmz6Z8oHwfk1v5Z4VxNVxr0O8DFVd+yudmue3sna8/hjGV
-         OzBz64Xl96jl1oIrTNd+QmVHDef7obncz3KyRzyEACyJD94TrVCQ1VHJOPcGNaZPW9Ya
-         d1uyItBmqV7nO42Xgu92qE9h3zcPQIlGOznzdSUN5HAMnUojeAiu1yvVyLAxQCotwVmZ
-         1myurg5rHIzHeEj0S+8+4SSCLSr4+cznCBjo9TyfnDnzMqjk4refSxCyETrwNbHM//XJ
-         ciSqLCCMj8ElWGUOUQJjh/iEKaOgFxEvhrO8vbKAbHzisHcSd5H220+eqFLBKipIjYJ8
-         /BAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VS7T8w/EttmWl2ih/DZRJT7KhmKdYNlymL+/Dga8p4Lp0351EdQK+ISdN4Ldi9dw5C4e250hkfkmIXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweUO34zUu+hZebopEaeSQ+ChJ1vg2W61cytX5yvBWSVqFwra7S
-	j7W1cRXhRggqYoje3qlJSxZJ8uWvygHo4fjGu4TiJrPLr/B5iub8oZM/To107cc=
-X-Gm-Gg: ASbGncvf9mCCCzm1nJiZr/i2quDI1JSW3NPAI/z5Q4CivYrA8MDNTNofZsBMLuvpwh6
-	ZivEaEpqyhWVz3IANowxLbH+8qLxgeNDAhFpLmC3ORGyixlS3VFKWhBBoIPgHay7sVymorwAiOG
-	zHq++3nHHABovgJ1JXbyamBc+o+AdTPgiad/fUzjvsqwnzOp3Fv2lmGM2FGaysfc0VCqfRbXqh6
-	bwYMzL245i2KglG2MAg431Wr3yjqquHs7uyhV3RHlvNaJZSteGgdKPAdq5ZES0lkRROrsKyhW87
-	4i6wIZVVxauwFzNL4CykYVLSsMkjO6PbFXJCqUk4ZbkSmkaYIgBFEQ9NIBqYRH90P+ZLd4V9tbS
-	8G8FCXZd0niPKoUYWDMfBx+LTchY=
-X-Google-Smtp-Source: AGHT+IHNx4vQ9HZX3k4j4jTP+pXfpW+zl8Y4RdgON0AYVMnFWqF1w5VQnDHa4fobYb4eHhHiNIy/Pg==
-X-Received: by 2002:a05:6000:18a2:b0:38d:ba8e:7327 with SMTP id ffacd0b85a97d-39c27ee84f2mr205051f8f.8.1743517788210;
-        Tue, 01 Apr 2025 07:29:48 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm14254936f8f.43.2025.04.01.07.29.46
+        bh=rVsBRCp8zVFqM6Ir5qAGimm+EcciqA65qMc7SI4hE8I=;
+        b=DbvgWOY2fJrCqnA43KiCs9Uf0L2G+gOeUZCMHk2RFlLy1Lp2oL36vnrTr6AU/2GC9J
+         +XfR1MQbqo2vnvSuL6V6qFb6ZCDqdJnadCS7AStO1QLzEcqGqOU+cA3Vl9MvdZVNUkNY
+         I4L50oecNizSQOvcakGTRSLuxkDIOSZvH4nDDEU+3bnQbSsa84EEinR43496VxU2vFmo
+         C5PLj3KOmzLCQMTaYhmOsKiazaekPaUB41WGO7gNXg3+JMKhvSA6PSEJU6LjinagvX4I
+         eFGjyWWXySawBrnYp0U4o8fUGY9ScpthgBP64HtRjo9mB10UVRzXKJLpq4AvF0WT6Ila
+         Bi9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743517802; x=1744122602;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVsBRCp8zVFqM6Ir5qAGimm+EcciqA65qMc7SI4hE8I=;
+        b=HMn5D+VqEqBlYMiTEeMQH/67SPRdFCHpaCNvkfJQSG+qBZ80eV9wAjqUSxYQuk+2oJ
+         js+2NQCaYV2QIhl1stAtr2vsMGu7pvqkgQU61VsFlXccuOz6RcJKWrWrcQAbcyBf0OjX
+         WShibP9s8Y130b3W/jyexjZcUKI0hYzLiKExRxg/TDB5GDk8NkPP+M58A9n6IudDJs5w
+         4dhHmAuHzozNJOyB6dyhutYg85CjkffuELqwCSlWweKSFsHJwTCoHIfYTzm+WWz+rfz1
+         VFw01ueeakPmrwUjFU25edBb85VOKZA8tWLYSkd6RRIdb/uWn44Cmg82yhq6kobmou44
+         rSSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFi+LJ054DYg0BZYBW0KZ5NQLOPVgYah1owqWpSWknz4hdX4HVA1nh8NvevtUNKhent0W23yQLcRBZog==@vger.kernel.org, AJvYcCWw1U5p1w+Mn4HzMgxycKb0pn3jWVuwZgVM+yGIcRz1UPy/IHzkvSdP0gU4ejVlTUfFSsmikMTwT1oy6Dj/@vger.kernel.org, AJvYcCXz30iCTuCvFlGnRZaS6c0ik/VeDdbKsx7VeITPRpEF8LzDVuONiasCP8TbAyhYMzmKWfCsSuGyxkGS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1lS9lWr2X9LSNy/TTLdDwYspep3hWapHqVMd7F5sxkm9q+mxR
+	NfxLKvXpf7UVf/D5ZSz6CagjmRFU70zNHQvudo9/YtzyFmRpEZbx
+X-Gm-Gg: ASbGnctclMmOTm/7SzyRdVmidAxnLZy9iqsrYjxHIGhJNjal90/9PmAA/dzwFkA6OJH
+	5FDC/baAwf+wrEfAABO03dUk0G56PmxYxlZjGYd2ioo6RlX4vBkmJ5ia5FcVMxYBS3diIdrEy90
+	NRrNtEImFoZSo5DG0FCu1fEua1PKVrefxwh+RwM+6bSW91ZUNbVJs61YkdVqzcP8Tn/kdXA192i
+	vsp2rf/1oU7ctroJ15Uwf7knxsJj8wyPltE8eZD71VA4EYbBFfPlUxqfWGPjihQwCRYLfr98tKg
+	6bW9PA7Uv1tnb0UQt1QIE22dw21t4Jr+yjOKCMWbGhqEwNoUdfHN7BIRPclqKNSFnO1l
+X-Google-Smtp-Source: AGHT+IG+94AfeekEAG6y/22oBIgghPbGZmP0jjSCOSTaY1D8CCsKfb/87Ko5NqqbHw5HJ40H0Ay/cw==
+X-Received: by 2002:a17:902:ef4d:b0:224:2200:5940 with SMTP id d9443c01a7336-2292f9d4e35mr245160495ad.38.1743517801786;
+        Tue, 01 Apr 2025 07:30:01 -0700 (PDT)
+Received: from localhost.localdomain ([123.16.133.44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee210csm89356995ad.70.2025.04.01.07.29.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:29:47 -0700 (PDT)
-Date: Tue, 1 Apr 2025 15:29:45 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Haoyu Li <lihaoyu499@gmail.com>
-Cc: danielt@kernel.org, chenyuan0y@gmail.com, deller@gmx.de,
-	dri-devel@lists.freedesktop.org, jani.nikula@linux.intel.com,
-	jingoohan1@gmail.com, lee@kernel.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org,
-	stable@vger.kernel.org, zichenxie0106@gmail.com
-Subject: Re: [PATCH] drivers: video: backlight: Fix NULL Pointer Dereference
- in backlight_device_register()
-Message-ID: <Z-v4WansLWJtv9CV@aspen.lan>
-References: <Z65fFRKgqk-33HXI@aspen.lan>
- <20250219122950.7416-1-lihaoyu499@gmail.com>
+        Tue, 01 Apr 2025 07:30:01 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: krzk+dt@kernel.org
+Cc: pavel@kernel.org,
+	lee@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: leds: Add LP5812 LED driver
+Date: Tue,  1 Apr 2025 21:29:35 +0700
+Message-Id: <20250401142935.50906-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <8d9f077b-e656-438c-a9bd-76915d135e24@kernel.org>
+References: <8d9f077b-e656-438c-a9bd-76915d135e24@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219122950.7416-1-lihaoyu499@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Haoyu
+On Mon, 31 Mar 2025, Krzysztof Kozlowski wrote:
 
-On Wed, Feb 19, 2025 at 08:29:50PM +0800, Haoyu Li wrote:
-> As per Jani and Daniel's feedback, I have updated the patch so that
-> the `wled->name` null check now occurs in the `wled_configure`
-> function, right after the `devm_kasprintf` callsite. This should
-> resolve the issue.
+>Please do not explain me how DT works, we all know. You do not have
+>child node. If you disagree - point me to the line in schema having it.
 
-I'm afraid this patch got swamped in my mailbox and I missed it.
+Thank you for your feedback.
+I now understand that my schema does not define child nodes, so #address-cells and #size-cells should not be included.
+I will update the schema accordingly as shown below.
 
-Worse, we've just been discussing and reviewing a patch for the same
-issue from another developer:
-https://lore.kernel.org/all/20250401091647.22784-1-bsdhenrymartin@gmail.com/
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/leds/ti,lp5812.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
 
-So, I just wanted to acknowlege the mistake. Sorry.
+title: TI/National Semiconductor LP5812 LED Driver
+
+maintainers:
+  - Nam Tran <trannamatk@gmail.com>
+
+description: |
+  The LP5812 is an I2C LED Driver that can support LED matrix 4x3.
+  For more product information please see the link below:
+  https://www.ti.com/product/LP5812#tech-docs
+
+properties:
+  compatible:
+    const: ti,lp5812
+
+  reg:
+    maxItems: 1
+    description:
+      I2C slave address
+      lp5812/12- 0x1b
+
+patternProperties:
+  "^led@[0-9a-b]$":
+    type: object
+    $ref: common.yaml#
+    unevaluatedProperties: false
+
+    properties:
+      reg:
+        minimum: 0
+        maximum: 0xb
+
+      chan-name:
+        $ref: /schemas/types.yaml#/definitions/string
+        description: LED channel name
+
+    required:
+      - reg
+
+required:
+  - compatible
+  - reg
+
+additionalProperties: false
+
+examples:
+  - |
+    #include <dt-bindings/leds/common.h>
+
+    i2c {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        led-controller@1b {
+            compatible = "ti,lp5812";
+            reg = <0x1b>;
+
+            led@0 {
+                    reg = <0x0>;
+                    chan-name = "a0";
+            };
+            led@1 {
+                    reg = <0x1>;
+                    chan-name = "a1";
+            };
+            led@2 {
+                    reg = <0x2>;
+                    chan-name = "a2";
+            };
+            led@3 {
+                    reg = <0x3>;
+                    chan-name = "b0";
+            };
+            led@4 {
+                    reg = <0x4>;
+                    chan-name = "b1";
+            };
+            led@5 {
+                    reg = <0x5>;
+                    chan-name = "b2";
+            };
+            led@6 {
+                    reg = <0x6>;
+                    chan-name = "c0";
+            };
+            led@7 {
+                    reg = <0x7>;
+                    chan-name = "c1";
+            };
+            led@8 {
+                    reg = <0x8>;
+                    chan-name = "c2";
+            };
+            led@9 {
+                    reg = <0x9>;
+                    chan-name = "d0";
+            };
+            led@a {
+                    reg = <0xa>;
+                    chan-name = "d1";
+            };
+            led@b {
+                    reg = <0xb>;
+                    chan-name = "d2";
+            };
+        };
+    };
+
+...
 
 
-Daniel.
+Best regards,
+Nam Tran
