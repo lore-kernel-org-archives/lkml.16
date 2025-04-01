@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7841C214A80;
-	Tue,  1 Apr 2025 18:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D83121420A;
+	Tue,  1 Apr 2025 18:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530848; cv=none; b=kyMCH5NHNJcw1y4dlHjF5ugMDpH3zyfN7q0Y6AmeMJlN3HFGQYvN/3xYP7mCt1L1fxc0WCbQmYsFZ9BEry+0OxtHq7TDS2l1JlRpS6nfjCSJ254uWpkRhnfFskcBv89g5xelnja4HejwJT5Ucjb9qJSunUM150U7hHZeb+RLs+8=
+	t=1743530849; cv=none; b=bJd7HnI/AOd3LKwTFSx4mDzuM/grywqiPjAp6Abp1bTF7jEC8L/dKnslqjNXgOtfm2kRg3IWsZcDLeXwKGwun2g3mzlCme6/f0uHFMGU/liodZWfB2LFwsmnHLDrBivhbo2EIBC9U8baeZ79QBFRn8vsv1BShQ4JIMpbcrrEmsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530848; c=relaxed/simple;
-	bh=WoWNgbhocFj0XY59o1jJzdiID78Qo61SucnnvK3zS2E=;
+	s=arc-20240116; t=1743530849; c=relaxed/simple;
+	bh=Boy1T4jiR3LJNhAva+eYE616avm04Cyr6Hz6QoAZyNI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sy+IqK7IsFwIlgbnOPqoHW8rXvopF2VRIjwNQHz/ywwC52CRyQzTECmOli6zn4Jt5dRfYj0hNvbrctEuwKmiARWxamU0UJxRn5lq13ruTqQxedJo+l1UHVpoKWzik43l79vt7pT/nV4hstoKh5Jsui8OTAso4RApiNCIhKFLkk8=
+	 MIME-Version; b=hiVEXeADRWTzKK2l/7UxxJyuazF+6vnYtO7ovRMmDbS9eJteTZepYv4kuqbMgeT9N9VNZGc/K3pI5gHZegTKwQiOp9nO8g/Gj15cnu6WLSIihvMDHgUG4kq72QtYVP0EtMnho6jxlRYMZs95Vf/1ibXf4qXjq6qsUinRTQxeNsA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 886BA12FC;
-	Tue,  1 Apr 2025 11:07:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8A7014BF;
+	Tue,  1 Apr 2025 11:07:27 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B92E93F59E;
-	Tue,  1 Apr 2025 11:07:24 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EE5E33F59E;
+	Tue,  1 Apr 2025 11:07:22 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Mike Leach <mike.leach@linaro.org>,
@@ -29,9 +29,9 @@ To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v4 5/7] coresight: tmc: Re-enable sink after buffer update
-Date: Tue,  1 Apr 2025 19:07:06 +0100
-Message-Id: <20250401180708.385396-6-leo.yan@arm.com>
+Subject: [PATCH v4 4/7] coresight: perf: Support AUX trace pause and resume
+Date: Tue,  1 Apr 2025 19:07:05 +0100
+Message-Id: <20250401180708.385396-5-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250401180708.385396-1-leo.yan@arm.com>
 References: <20250401180708.385396-1-leo.yan@arm.com>
@@ -43,85 +43,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The buffer update callbacks disable the sink before syncing data but
-misses to re-enable it afterward.  This is fine in the general flow,
-because the sink will be re-enabled the next time the PMU event is
-activated.
+This commit supports AUX trace pause and resume in a perf session for
+Arm CoreSight.
 
-However, during AUX pause and resume, if the sink is disabled in the
-buffer update callback, there is no chance to re-enable it when AUX
-resumes.
+First, we need to decide which flag can indicate the CoreSight PMU event
+has started.  The 'event->hw.state' cannot be used for this purpose
+because its initial value and the value after hardware trace enabling
+are both 0.
 
-To address this, the callbacks now check the event state
-'event->hw.state'.  If the event is an active state (0), the sink is
-re-enabled.
+On the other hand, the context value 'ctxt->event_data' stores the ETM
+private info.  This pointer is valid only when the PMU event has been
+enabled. It is safe to permit AUX trace pause and resume operations only
+when it is not a NULL pointer.
 
-For the TMC ETR driver, buffer updates are not fully protected by
-the driver's spinlock.  In this case, the sink is not re-enabled if its
-reference counter is 0, in order to avoid race conditions where the sink
-may have been completely disabled.
+To achieve fine-grained control of the pause and resume, only the tracer
+is disabled and enabled.  This avoids the unnecessary complexity and
+latency caused by manipulating the entire link path.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c |  9 +++++++++
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 45 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d858740001c2..7584cc03d8e6 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -482,6 +482,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 	unsigned long offset, to_read = 0, flags;
- 	struct cs_buffers *buf = sink_config;
- 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-+	struct perf_event *event = handle->event;
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index f4cccd68e625..2dcf1809cb7f 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -365,6 +365,18 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 			continue;
+ 		}
  
- 	if (!buf)
- 		return 0;
-@@ -586,6 +587,14 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 	 * is expected by the perf ring buffer.
- 	 */
- 	CS_LOCK(drvdata->base);
++		/*
++		 * If AUX pause feature is enabled but the ETM driver does not
++		 * support the operations, clear this CPU from the mask and
++		 * continue to next one.
++		 */
++		if (event->attr.aux_start_paused &&
++		    (!source_ops(csdev)->pause_perf || !source_ops(csdev)->resume_perf)) {
++			dev_err_once(&csdev->dev, "AUX pause is not supported.\n");
++			cpumask_clear_cpu(cpu, mask);
++			continue;
++		}
 +
-+	/*
-+	 * If the event is active, it is triggered during an AUX pause.
-+	 * Re-enable the sink so that it is ready when AUX resume is invoked.
-+	 */
-+	if (!event->hw.state)
-+		__tmc_etb_enable_hw(drvdata);
+ 		/*
+ 		 * No sink provided - look for a default sink for all the ETMs,
+ 		 * where this event can be scheduled.
+@@ -450,6 +462,15 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 	goto out;
+ }
+ 
++static int etm_event_resume(struct coresight_device *csdev,
++			     struct etm_ctxt *ctxt)
++{
++	if (!ctxt->event_data)
++		return 0;
 +
- out:
- 	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 76a8cb29b68a..8923fbc6e1a0 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1636,6 +1636,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 	struct etr_perf_buffer *etr_perf = config;
- 	struct etr_buf *etr_buf = etr_perf->etr_buf;
-+	struct perf_event *event = handle->event;
- 
- 	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
- 
-@@ -1705,6 +1706,15 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 	 */
- 	smp_wmb();
- 
-+	/*
-+	 * If the event is active, it is triggered during an AUX pause.
-+	 * Re-enable the sink so that it is ready when AUX resume is invoked.
-+	 */
-+	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
-+	if (csdev->refcnt && !event->hw.state)
-+		__tmc_etr_enable_hw(drvdata);
-+	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	return coresight_resume_source(csdev);
++}
 +
- out:
+ static void etm_event_start(struct perf_event *event, int flags)
+ {
+ 	int cpu = smp_processor_id();
+@@ -463,6 +484,14 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	if (!csdev)
+ 		goto fail;
+ 
++	if (flags & PERF_EF_RESUME) {
++		if (etm_event_resume(csdev, ctxt) < 0) {
++			dev_err(&csdev->dev, "Failed to resume ETM event.\n");
++			goto fail;
++		}
++		return;
++	}
++
+ 	/* Have we messed up our tracking ? */
+ 	if (WARN_ON(ctxt->event_data))
+ 		goto fail;
+@@ -545,6 +574,16 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	return;
+ }
+ 
++static void etm_event_pause(struct coresight_device *csdev,
++			    struct etm_ctxt *ctxt)
++{
++	if (!ctxt->event_data)
++		return;
++
++	/* Stop tracer */
++	coresight_pause_source(csdev);
++}
++
+ static void etm_event_stop(struct perf_event *event, int mode)
+ {
+ 	int cpu = smp_processor_id();
+@@ -555,6 +594,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct etm_event_data *event_data;
+ 	struct coresight_path *path;
+ 
++	if (mode & PERF_EF_PAUSE)
++		return etm_event_pause(csdev, ctxt);
++
  	/*
- 	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
+ 	 * If we still have access to the event_data via handle,
+ 	 * confirm that we haven't messed up the tracking.
+@@ -899,7 +941,8 @@ int __init etm_perf_init(void)
+ 	int ret;
+ 
+ 	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
+-					   PERF_PMU_CAP_ITRACE);
++					   PERF_PMU_CAP_ITRACE |
++					   PERF_PMU_CAP_AUX_PAUSE);
+ 
+ 	etm_pmu.attr_groups		= etm_pmu_attr_groups;
+ 	etm_pmu.task_ctx_nr		= perf_sw_context;
 -- 
 2.34.1
 
