@@ -1,93 +1,149 @@
-Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF331EB5CA;
-	Tue,  1 Apr 2025 09:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723A51EB184;
+	Tue,  1 Apr 2025 09:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498372; cv=none; b=Yu/2AkY7zofgOQ2CVkNlShOdUIv3IXGzyUat+bLlLTHfV+UcOl52LdtODRDCkJnuuHq1XMl96aTbGYuswg4gWUiEkYvOOAW+hYd7fuQ7sZYJz4T8rPZQOmChFlrdQnrkMV7j/NTBH1f+hyj4lIXeQVq0MVguzqSgnJbocrd4J94=
+	t=1743498403; cv=none; b=IvC3EnsRgFprDabgUgP2MdgxLTNqBzs29/ARFvERYZgm6a9FU5THxEP0bTB5pk66Kj6IIaLZ6qDa79LO7VAvHEWDQXZoXFBb9sOJlMwVQIgu/Ffgsk14jlCSrm/TNXo/s6wJOAwenADSekhKXc8C4RJz/Kv02FWfj65rt7eWHX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498372; c=relaxed/simple;
-	bh=vJXQ6fKZCQBmrvpC2hox6sd8/K5nDDiVBhyWXScvot0=;
-	h=From:To:CC:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=tVyuidMQSAgqxRlrdkRv+Mc7/LXp4xFpMPFV1N5mwXxY4ZwWvU4Ackr6x3hvbFFfQK+yM6og8ihbg0qbpKFT4Z9+dz/QJ55k/6kCC4uqhH9oiCQoZP4iNhaQucAWYyJzFd4dfQtztnxCWZIQ68bCr2fi6SY2vqxlmtjdUByZqGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=MiJIQkjs; arc=none smtp.client-ip=185.132.180.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1743498403; c=relaxed/simple;
+	bh=bBVMwoBL8LR8zOwYGi5TeDtaPBOUxSmU0D75RDFB+V4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MJImIZjaZM83/yyTizPZUuGClO3CUVP4YOO2BYbs6OV2S4tMl+Hxbj2m6mzUM3xa/1HH5KwpJ9h7RcxsqivwwJRqHaceLK4Q3rkjkEKO9AP7564ITdHWFRAx4cMpqWKV+fFq2s1I+dt7CYEz38OWeonnx1YwmJUCzNavI5Owq5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NVwlp5Q2; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="MiJIQkjs"
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5316j2iT027691;
-	Tue, 1 Apr 2025 09:42:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=R
-	8TCmtRbqOlDrGi1Q5AjHaOUy2iI6+a6JqFKx2HI1T0=; b=MiJIQkjsAZPWoW+4z
-	fF9W2XYmhZpzmPi/kofq1YxITdtR/0VxfY7nIqYbraiDKbqvBkVLp/hbKuMvgl/H
-	TFWcoYLAdG6cY5KucHKq09lpKiaw28OufDYF5wDzr2LDADHcZ+c6Jo0XB0IAhqcq
-	wuFaeFx0rogHIAHbvYq9hgWkaV6cVhyRxAwHyhDYrWiZYtnnlLRdh+SyU2VGfpJ0
-	4N+YS6Y8DAUhB68EhsyrTkbUWiCZPXx/Zf6FmshQHwGanwD3l7FVhwYuEqtVNmIg
-	zqiCx8b0L8f5NH1YJhohoiAKZ84T7uA1WRyDNo5sizqvDUDRwpJs8X9d9kS7VKyl
-	L8/sg==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45p9u0t0cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 01 Apr 2025 09:42:13 +0100 (BST)
-Received: from
- 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
- (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 1 Apr 2025 09:42:12 +0100
-From: Matt Coster <matt.coster@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Boris Brezillon
-	<boris.brezillon@collabora.com>,
-        Brendan King <Brendan.King@imgtec.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, Brendan King <brendan.king@imgtec.com>
-In-Reply-To: <20250318-ddkopsrc-1337-use-after-free-in-pvr_queue_prepare_job-v1-1-80fb30d044a6@imgtec.com>
-References: <20250318-ddkopsrc-1337-use-after-free-in-pvr_queue_prepare_job-v1-1-80fb30d044a6@imgtec.com>
-Subject: Re: [PATCH] drm/imagination: take paired job reference
-Message-ID: <174349693233.75513.9819587084207763142.b4-ty@imgtec.com>
-Date: Tue, 1 Apr 2025 09:42:12 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVwlp5Q2"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so74929875ad.0;
+        Tue, 01 Apr 2025 02:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743498401; x=1744103201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lZeibnPf6F/j2ao9xre27sq9y+syyRAsUdBCPrAKj20=;
+        b=NVwlp5Q22qhtVgAgEZAfoGpcYNEeReK0Xk/CTEORkV67rS1r61/Xh8pUrh3yDPPvNp
+         JeTRLLe9lM7sBLzSPW+llZ1DJtLnAN9OvSFFXEd2q6HtKrOwLlBAsEV0ss90fmgfhCfG
+         Q6Tp2H+mSFoiY1/h83lWLGM7RMdRwlJH+JtxglruSqCaqMG2DZF9/40CHhOKtAMtw4SA
+         PjmimfdPj27V3iODODFcG4X28/lZEwuyt1m6W8QvQ/rXMe//v7kDuhIzhm0/uVMWjivg
+         ou5R5cNFnJwy5FoBCbj/r5ft36hpNcLvHkHnwvpE789jhnS6gA4NTXJPs0nZ2rrFg7e6
+         4waA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743498401; x=1744103201;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lZeibnPf6F/j2ao9xre27sq9y+syyRAsUdBCPrAKj20=;
+        b=AKmP61SnhwckoP5Z3C43NhTCH9GSZRABNaVqBOqrc/SkV1UVFA0tAr1l0s4ZHya0X2
+         4W56qOCpQ+WkFelSPf0/CCPShk6nAslqWdWptcyZxPhhtLCFeWk5Shhcir58bCJNbcRL
+         j7rrYSY8Qyjg5CpUiR7t+81MNJn6CDZ386WJdusZeaky6Vuk9iDET7Tnmz2tkpnEv5Y3
+         53n5q6L4vMHlCDQe42BiK/a+DnvmF46gsCT39rCzDGAQQ+fx9LXuP8w2fDG7TDolGlM9
+         er6RU13GRwoVbpgHmMcr8/YuGK2hBSBWagD7nFvIJ0OBNSkYvmPCAZBgO/9Ow0ou9V29
+         J9Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUmMf3OKYc/MI+Cy5Fne6/MXUJ5mhy8qkaFwQYfSBPXEcyS6SYXB0y48qS4ZiF19QBrjixU50xQCiNM4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxluH4BftDIcy10yZ+mgmZoFA8Bf//BJqKlTaW75ymjFovN/VqE
+	sC0G14fp5zmG1UnQV/2poKqiRNrzg8zp/+y7Q4sjC4QeVarmRq40hewq+KEI8is=
+X-Gm-Gg: ASbGncvpHlYy/E5E3Ljd0jkygWubxdvavRVNgHHRi4UzQEMpfCEkNq4vRxzZR7LSIh1
+	2QF49h3PBHu7SCTFilzGrUW9Q3YMs4TYc0RLw1HA8paOW61rhfwsYS/uqny4YP29rgEh8ujHcN5
+	NPkcEhCNsyt1Gd/X2zV9rzKJeZZFXutaD7RJUnC8g7vE68npyq/yrvbo+b6j0sDanpGuPtADs/2
+	ure/0kBRMEvtwFbi2H9Bdy7iHKwIrLAtcgSewOd66xxqjs8FOiJ71azhWZHJLDe13AYGx6GJ4xQ
+	oEAt1etN6UO2redPitwsd1Wj99SSUur0MU6CuTWjhuTPtcsG1f3SkdMztnauNIoamh36x4zKDyQ
+	=
+X-Google-Smtp-Source: AGHT+IG0bnk3kuG045+To5X7Apkw1uxbIVmYAPpm8jfEhLoa/xUxQ6HYwKkOQY476h55fgBRW3mzWg==
+X-Received: by 2002:a17:902:f545:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-2292ec073d0mr205536655ad.2.1743498401286;
+        Tue, 01 Apr 2025 02:06:41 -0700 (PDT)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1f7cc2sm82791875ad.258.2025.04.01.02.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 02:06:40 -0700 (PDT)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv2 net] bonding: use permanent address for MAC swapping if device address is same
+Date: Tue,  1 Apr 2025 09:06:31 +0000
+Message-ID: <20250401090631.8103-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: rXrcd4LUK4OaPkzD9an5f0DhBOyUSUr5
-X-Authority-Analysis: v=2.4 cv=c/CrQQ9l c=1 sm=1 tr=0 ts=67eba6e5 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=r_1tXGB3AAAA:8 a=dJcJSLYtkHp847Acm8sA:9 a=QEXdDO2ut3YA:10
- a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: rXrcd4LUK4OaPkzD9an5f0DhBOyUSUr5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Similar with a951bc1e6ba5 ("bonding: correct the MAC address for "follow"
+fail_over_mac policy"). The fail_over_mac follow mode requires the formerly
+active slave to swap MAC addresses with the newly active slave during
+failover. However, the slave's MAC address can be same under certain
+conditions:
 
-On Tue, 18 Mar 2025 14:53:13 +0000, Brendan King wrote:
-> For paired jobs, have the fragment job take a reference on the
-> geometry job, so that the geometry job cannot be freed until
-> the fragment job has finished with it.
-> 
-> The geometry job structure is accessed when the fragment job is being
-> prepared by the GPU scheduler. Taking the reference prevents the
-> geometry job being freed until the fragment job no longer requires it.
-> 
-> [...]
+1) ip link set eth0 master bond0
+   bond0 adopts eth0's MAC address (MAC0).
 
-Applied, thanks!
+1) ip link set eth1 master bond0
+   eth1 is added as a backup with its own MAC (MAC1).
 
-[1/1] drm/imagination: take paired job reference
-      commit: 4ba2abe154ef68f9612eee9d6fbfe53a1736b064
+3) ip link set eth0 nomaster
+   eth0 is released and restores its MAC (MAC0).
+   eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
 
-Best regards,
+4) ip link set eth0 master bond0
+   eth0 is re-added to bond0, but both eth0 and eth1 now have MAC0,
+   breaking the follow policy.
+
+To resolve this issue, we need to swap the new active slave’s permanent
+MAC address with the old one. The new active slave then uses the old
+dev_addr, ensuring that it matches the bond address. After the fix:
+
+5) ip link set bond0 type bond active_slave eth0
+   dev_addr is the same, swap old active eth1's MAC (MAC0) with eth0.
+   Swap new active eth0's permanent MAC (MAC0) to eth1.
+   MAC addresses remain unchanged.
+
+6) ip link set bond0 type bond active_slave eth1
+   dev_addr is the same, swap the old active eth0's MAC (MAC0) with eth1.
+   Swap new active eth1's permanent MAC (MAC1) to eth0.
+   The MAC addresses are now correctly differentiated.
+
+Fixes: 3915c1e8634a ("bonding: Add "follow" option to fail_over_mac")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+---
+v2: use memcmp directly instead of adding a redundant helper (Jakub Kicinski)
+---
+ drivers/net/bonding/bond_main.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index e45bba240cbc..1e343d8fafa0 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1107,8 +1107,13 @@ static void bond_do_fail_over_mac(struct bonding *bond,
+ 			old_active = bond_get_old_active(bond, new_active);
+ 
+ 		if (old_active) {
+-			bond_hw_addr_copy(tmp_mac, new_active->dev->dev_addr,
+-					  new_active->dev->addr_len);
++			if (memcmp(old_active->dev->dev_addr, new_active->dev->dev_addr,
++				   new_active->dev->addr_len) == 0)
++				bond_hw_addr_copy(tmp_mac, new_active->perm_hwaddr,
++						  new_active->dev->addr_len);
++			else
++				bond_hw_addr_copy(tmp_mac, new_active->dev->dev_addr,
++						  new_active->dev->addr_len);
+ 			bond_hw_addr_copy(ss.__data,
+ 					  old_active->dev->dev_addr,
+ 					  old_active->dev->addr_len);
 -- 
-Matt Coster <matt.coster@imgtec.com>
+2.46.0
 
