@@ -1,97 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46E4204597
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90ED62080C7;
+	Tue,  1 Apr 2025 15:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743520499; cv=none; b=VUzx4gQphEH5tjZOz4qs0Pyhu30yMN7FUusF5JLtYd6qdu1+GIhLt2U+f5q1T5zRD1Oc4MqOBgJW/oQc0UpCbAriYoBJiJ5XCzPHY2EneOaEYlDOOGCuLcZs0Hb91nt/txawT8BY4Mo+RrnHVn3GJpobr64NQEBPfwEXq8Ag4ds=
+	t=1743520512; cv=none; b=kwwYMPgdUeKEacWKE7Q/6HtcO5neFtCgUUEAU1qEg6lE3NGs6Kb0mpKqmOQXDFTxxXSCJPSJQIgGSnoSe34FUdutpEasXQEqqJwTbFKS1r0ueA24Nvxajxipar8/hg7xCbENlYs3NH9bZ1JtdGEC2c7qLy+RN3MQMvf2SDQsBg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743520499; c=relaxed/simple;
-	bh=3vOGzyOMUi7Kk8j91wUMi2xfu2rBG44Pcyvg5olju1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTmVLDrbcj8ApxUGOlpmAUnBxzjHsRMMkSv+hFl8u8VudFkPwoqba/QASEJhwVZptiEfsWwaXvYfpfEIWxY/0YDC8MuCsowSwa5LM2kPak14pD5OODFF4/nvsM14wyquBLp+a1HeCkKactsYxnCTwo5XFxLYG0tU8YOCQLbexr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EF80fyL5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EF80fyL5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB00CC4CEE4;
-	Tue,  1 Apr 2025 15:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743520498;
-	bh=3vOGzyOMUi7Kk8j91wUMi2xfu2rBG44Pcyvg5olju1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EF80fyL5ZzjtJ0r2Tv4ohwp8/FD071ieG9zwDDVik2v20fXObEII+9imyHPMOHYUu
-	 EWxz7mVh9nZX4u4LxSx4YHcvsE7Qme9fRg0uLmyvhIsSWjxG7P1/NxeFRlKBNxjMiq
-	 G3ikBPixl3grdorzxlruohiyrfBCbOy0LSSd5JAsdw7p79YZew/BEtuMBfiRmiTd8T
-	 SacfGNEig+1QPLoJ8DY9c3U5RcbLolD9JItdRnnkg73a7Ntue+48O/7D3JbLrvBFRP
-	 AhaD4d0Ta+zjAcjXe4fIr4SPy20xKp1NRX7bjoZCNsx5UpCb4PJXfeTVFEoEYRJM88
-	 5zD1BMUUSgjUg==
-Date: Tue, 1 Apr 2025 17:14:55 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	dri-devel@lists.freedesktop.org, daniels@collabora.com, helen.fornazier@gmail.com, 
-	airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com, 
-	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
-	lumag@kernel.org, quic_abhinavk@quicinc.com, maarten.lankhorst@linux.intel.com, 
-	tzimmermann@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
-Message-ID: <20250401-devious-victorious-bullfinch-bab3a6@houat>
-References: <20250327160117.945165-1-vignesh.raman@collabora.com>
- <20250327160117.945165-3-vignesh.raman@collabora.com>
- <v4dhuuuvfk63bakncz43z3ndjdze5ac7nrv6qvtpdnonfpetsx@5hh3vzcj336x>
- <482f82a0-3f60-47bc-965b-bbf282414d6c@collabora.com>
+	s=arc-20240116; t=1743520512; c=relaxed/simple;
+	bh=rwl5oV58wmFMXgEw4y5Os/5OTv1cLl8IW2Vh6yov/Z8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6FWWQ+/CBxym+x1kDgDOSKctQuSlzQaBSBzDqg85RKmwPO2rPfoUWeXB8nCZg1t67rYo01VzU1X+DBuS+OCEF6xK5MX6dDcElkZj7SgKBGXmNQ4qo7wQ5Yh4O8Yqr+iEwRwnGa1Zg2CnNY1JFJyhM2qY+z42CIBijcC2jG6oJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46F3014BF;
+	Tue,  1 Apr 2025 08:15:13 -0700 (PDT)
+Received: from [10.57.40.234] (unknown [10.57.40.234])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 624673F694;
+	Tue,  1 Apr 2025 08:15:08 -0700 (PDT)
+Message-ID: <743b3472-e1a4-4fdc-ac2d-6e74c51022c4@arm.com>
+Date: Tue, 1 Apr 2025 16:15:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h2xvljlagbq7p25w"
-Content-Disposition: inline
-In-Reply-To: <482f82a0-3f60-47bc-965b-bbf282414d6c@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
+ fast I/O devices
+To: "King, Colin" <colin.king@intel.com>, Bart Van Assche
+ <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <33882f284ac6e6d1ec766ca4bb2f3b88@intel.com>
+ <f18607ca-30dc-43de-be77-fec69968aeec@arm.com>
+ <SJ2PR11MB7670F63C7052C88637D305DF8DDF2@SJ2PR11MB7670.namprd11.prod.outlook.com>
+ <1ae51ccc-66cc-4551-b649-2f5883e2f5a2@acm.org>
+ <SJ2PR11MB7670B2AEFF7C0DABE6856F258DA62@SJ2PR11MB7670.namprd11.prod.outlook.com>
+ <ad852ef9-5207-4b70-8834-2db6aa5e1a51@arm.com>
+ <SJ2PR11MB7670E05E066CCC16AFEA16A18DAC2@SJ2PR11MB7670.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <SJ2PR11MB7670E05E066CCC16AFEA16A18DAC2@SJ2PR11MB7670.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/1/25 16:03, King, Colin wrote:
+> Hi,
+> 
+> Reply at end..
+> 
+>> -----Original Message-----
+>> From: Christian Loehle <christian.loehle@arm.com>
+>> Sent: 26 March 2025 16:27
+>> To: King, Colin <colin.king@intel.com>; Bart Van Assche
+>> <bvanassche@acm.org>; Jens Axboe <axboe@kernel.dk>; Rafael J. Wysocki
+>> <rafael@kernel.org>; Daniel Lezcano <daniel.lezcano@linaro.org>; linux-
+>> block@vger.kernel.org; linux-pm@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
+>> fast I/O devices
+>>
+>> On 3/26/25 15:04, King, Colin wrote:
+>>> Hi,
+>>>
+>>>> -----Original Message-----
+>>>> From: Bart Van Assche <bvanassche@acm.org>
+>>>> Sent: 23 March 2025 12:36
+>>>> To: King, Colin <colin.king@intel.com>; Christian Loehle
+>>>> <christian.loehle@arm.com>; Jens Axboe <axboe@kernel.dk>; Rafael J.
+>>>> Wysocki <rafael@kernel.org>; Daniel Lezcano
+>>>> <daniel.lezcano@linaro.org>; linux-block@vger.kernel.org;
+>>>> linux-pm@vger.kernel.org
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion
+>>>> prevention for fast I/O devices
+>>>>
+>>>> On 3/17/25 3:03 AM, King, Colin wrote:
+>>>>> This code is optional, one can enable it or disable it via the
+>>>>> config option. Also, even when it is built-in one can disable it by
+>>>>> writing 0 to the
+>>>> sysfs file
+>>>>>    /sys/devices/system/cpu/cpuidle/psd_cpu_lat_timeout_ms
+>>>>
+>>>> I'm not sure we need even more configuration knobs in sysfs.
+>>>
+>>> It's useful for enabling / disabling the functionality, as well as some form of
+>> tuning for slower I/O devices, so I think it is justifiable.
+>>>
+>>>> How are users
+>>>> expected to find this configuration option? How should they decide
+>>>> whether to enable or to disable it?
+>>>
+>>> I can send a V2 with some documentation if that's required.
+>>>
+>>>>
+>>>> Please take a look at this proposal and let me know whether this
+>>>> would solve the issue that you are looking into: "[LSF/MM/BPF Topic]
+>> Energy- Efficient I/O"
+>>>> (https://lore.kernel.org/linux-block/ad1018b6-7c0b-4d70-
+>>>> b845-c869287d3cf3@acm.org/). The only disadvantage of this approach
+>>>> compared to the cpuidle patch is that it requires RPM (runtime power
+>>>> management) to be enabled. Maybe I should look into modifying the
+>>>> approach such that it does not rely on RPM.
+>>>
+>>> I've had a look, the scope of my patch is a bit wider.  If my patch
+>>> gets accepted I'm going to also look at putting the psd call into
+>>> other devices (such as network devices) to also stop deep states while
+>>> these devices are busy.  Since the code is very lightweight I was hoping this
+>> was going to be relatively easy and simple to use in various devices in the
+>> future.
+>>
+>> IMO this needs to be a lot more fine-grained then, both in terms of which
+>> devices or even IO is affected (Surely some IO is fine with at least *some*
+>> latency) but also how aggressive we are in blocking.
+>> Just looking at some common latency/residency of idle states out there I don't
+>> think it's reasonable to force polling for a 3-10ms (rounding up with the jiffie)
+>> period.
+> 
+> The current solution by a customer is that they are resorting to disabling C6/C6P and hence
+> all the CPUs are essentially in a non-low power state all the time.  The opt-in solution 
+> provided in the patch provides nearly the same performance and will re-enable deeper
+> C-states once the I/O is completed.
+> 
+> As I mentioned earlier, the jiffies are used because it's low-touch and very fast with negligible
+> impact on the I/O paths. Using finer grained timing is far more an expensive operation and
+> is a huge overhead on very fast I/O devices.
+> 
+> Also, this is a user config and tune-able choice. Users can opt-in to using this if they want
+> to pay for the extra CPU overhead for a bit more I/O performance. If they don't want it, they
+> don't need to enable it.
+> 
+>> Playing devil's advocate if the system is under some thermal/power pressure
+>> we might actually reduce throughput by burning so much power on this.
+>> This seems like the stuff that is easily convincing because it improves
+>> throughput and then taking care of power afterwards is really hard. :/
+>>
+> 
+> The current solution is when the user is trying to get maximum bandwidth and disabling C6/C6P 
+> so they are already keeping the system busy. This solution at least will save power when I/O is idling.
+> 
 
---h2xvljlagbq7p25w
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
-MIME-Version: 1.0
+No. They can set the pm qos latency constraint when they care about 'maximum bandwidth'
+and remove the constraint when they don't.
+If they just disable the idle states at boot and never enable them at least they have no
+grounds to complain to kernel people about, they should know what they're doing is detrimental
+to power.
 
-On Tue, Apr 01, 2025 at 07:26:44AM +0530, Vignesh Raman wrote:
-> Hi Dmitry,
->=20
-> On 30/03/25 22:36, Dmitry Baryshkov wrote:
-> > On Thu, Mar 27, 2025 at 09:31:11PM +0530, Vignesh Raman wrote:
-> > > Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
-> > > exit with a non-zero error code while configuring them as warning in
-> > > the GitLab CI pipeline.
-> >=20
-> > Can it really succeed or is it going to be an always-failing job? The
-> > dt_binding_check generally succeed, dtbs_check generates tons of
-> > warnings. We are trying to make progress there, but it's still very far
-> > from being achevable.
->=20
-> Even though it fails, it will be shown as a warning in the pipeline.
-> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1390797
-
-I think what Dmitry was pointing out is that a warning that is always
-warning is going to be completely ignored, and thus doesn't add any
-value.
-
-Maxime
-
---h2xvljlagbq7p25w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+wC7wAKCRDj7w1vZxhR
-xZaJAQDcUCyYhsn60wx3cqYfs7lND2nKJA2b07y8i0BkG+CpPQEAtW9h8SMmHOcx
-S1l9KZDtrKavcAqqRwZ3AwIlS2mXWAk=
-=JJzv
------END PGP SIGNATURE-----
-
---h2xvljlagbq7p25w--
+Furthermore we might be better off disabling C6/C6P than staying in a polling state (whenever we've
+completed an IO in the last ~5 to 20ms, depending on the HZ setting).
+Again, the wastefulness of a polling state can hardly be overestimated, especially given
+that it doesn't seem to be necessary at all here?
