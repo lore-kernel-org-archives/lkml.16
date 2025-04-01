@@ -1,133 +1,110 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81E51EBA14;
-	Tue,  1 Apr 2025 12:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A7A1F0E56
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511008; cv=none; b=dUDhRKqlGiuZi6pXToNe2VGX5wlNVRlJnfrX1dUIc98LIsXt2WxKK2Z4eAWHqHVun7bZUoKPj8/BYkkAs+bthq1H7nhgCWLvOtV3vDpJeSwO4Pf4rez6Nvg/ueOKiepRVvSyiiYmnBCmxY9s8A8UDti4Xx2E9d2OtYJgRYDQUUs=
+	t=1743511089; cv=none; b=e7ECiD4AySpHbbxxxxLgnvq9D7Pw91QiDzB/9GeFkpAEmq9UVwx+SK/IjIppl8LHnNu230o20gWLHnrI+uXGxVY6+SyCEozI8png2GcfizMyb4BgtwXnnao62VbyLrH8V9XQMfRRYV7Cs7ZvTfXKPwXxdO7s4yxwytZ/pz9S3FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511008; c=relaxed/simple;
-	bh=SMxVGS/Buv4fRdofBLBNHAFpGHxFUKN37Cye8ij6Jnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ri+vEomjsSisB8idnAjD4kr0v+rh3UTUdqe1EzCoGT5VfTSyyn8fy9QCiIS7m68M2GwCyOp9YAvehfO7fNEdTIivnfSYNfz9nWiPFa3fSPRLPYuYwtJqtyZB9P5+trlJSnU+hDhocb6zUm+qhJXqkOUOZmvGnpmpe8syoFdfN7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xw6SEcvZ; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743511089; c=relaxed/simple;
+	bh=45sC2gcuHThVf7Lu+ibrQa9rcY+HgmdLqpO4yCcHX4w=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CrTjIbFb4IaL8DBzw/0Hrg6QtpbJtbnE9mTYUeXdiOOls9xVWjBVwtoq4Hci6x3u7lydQWZIvpK119u/E0+Ny6Z9sogAWA6IorxF5gOoLLfoTHdLQ1PN4fS4fu/02pJXlRa/57nQwWJXaFcLWXeAQyprfG57tXlAUeolmi8iWCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=m5NzIIG/; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xw6SEcvZ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227aaa82fafso104573815ad.2;
-        Tue, 01 Apr 2025 05:36:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="m5NzIIG/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743511006; x=1744115806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8kOWsBcQybX4AdwxCjxqVL+WbP73O/Z+BulTPIY+zAE=;
-        b=Xw6SEcvZUZtMY4WKi1n+uIxRC7BhJje6tmXBOczzTAB0GokAVrEPadjP8+j7JcCH/P
-         fh/FZr2d7XApaEgue6RnqYik6wDj0ggVsq1TDk71FtmGh/0K2INqBgs2fbnOk9D1hrZm
-         Ha7OzvxpC6NTFuwnNJRSUSyDGrF/WqRKMPNYxusoHCtds2nDoTMJ8X8gDq09hHf7j6m8
-         kwI/pDqlsGXNZjBF/42Jrj/2fJ2s1vY2TarjOFZYL7yECZXVxZm9QJnrvDQg184APaX3
-         3x8SmarjnzUK+eWP+ixszeTzXVWDjcmt/w9HGPrrowd3Xj/BYVVr0RkPl60tqNuzmaD2
-         623Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743511006; x=1744115806;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8kOWsBcQybX4AdwxCjxqVL+WbP73O/Z+BulTPIY+zAE=;
-        b=kyk5e1JFLJyfbcdi1RIW3k8zV9vJV1vDAuL3jBxf9Bqdcay/NHphkT42tjLQ2gdAcQ
-         XigIXseWChAIflZgKQJsaPESPh1BG3q1IEl6igS56sspJyHuS2nVaR1jH66wvTqxjxMz
-         46vIFZvTxR6W5nI7Wu1kbsHwqkeMgshB4vOpJrKBSoBcNmiUB7ObjwBTFYAXewOg7KKB
-         HK8PsT2jHHpUV4qvbHgt97Qkum6E7GEZEFoMSH9OoN91CKFenibhdhue9LxL/HGxDk3T
-         /Vx52pMIzgVj+bGq8Lks2dLOqM1aNql1fdS7uGEMzKM5RBrhpA4yDogGhXkvvIpa/wWI
-         myHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2R/caAgjtVNv4WPw6/HaiSrfVUXYFiUKXPDyfSxXx22XouZztwTz0DKvhzGpbD5Gmgqyl4/FiGTfxEBc=@vger.kernel.org, AJvYcCVFoWwBiv2VlN7b9S+d1L11EHzdcQohHN4MsCaNjC+GaX65rl/KZNOhrdBevvCuCqNcls/GZidkzmtN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCmx7bHaIbMTOvUDQf7t4h+FTzdzwvpaiU21+RxcQ8m1PRf2yr
-	H+XRK0iuuICx95ucq1xrcH//u08WZcSQQdGOfz863FSgya6gm6SC
-X-Gm-Gg: ASbGnctWd9YHQ45TAnXUhDCbBgYcJdaQIz2KVS+siEMhBKzvEvOjAEJgWoLe5T1Zamk
-	Man42v3WYHe3DOVkPZH9/+eax66v2VB0cteVZ+axSs1Ia4bJf6qiwvJTKsv5OYYoflXRA24Ks0q
-	TFSDsHzpzL6KKl9xQPAkthXlvcVQ3fy0tlQbl4L0CrRC2+sqhYe//pzjuhLajysD1C/yu5vxg59
-	By8+q5KTwyqRb7O7EQEa62CFikmzFYGXkiMtaRcTfytG+ZrJdwRNFYrJ2QRuEhJRm/CIF+YytBK
-	Osip5WDZy+XPxHLZTLetCryaNpjDfWfx53I/T6EcYQPKOTlkjI0aXdtiwCcL80PWVj7ZeExGOB+
-	1saY=
-X-Google-Smtp-Source: AGHT+IGQHPJ1r32yqZ9I9wKeIBrXrtyGaI0sDXqxyakU0oi8eKsOICRD+72kOB+Mw2dnXiElAgQiMQ==
-X-Received: by 2002:a17:90b:5686:b0:2fe:a742:51b0 with SMTP id 98e67ed59e1d1-3053216e481mr17772883a91.31.1743511006184;
-        Tue, 01 Apr 2025 05:36:46 -0700 (PDT)
-Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.231])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039e1139fasm12699199a91.25.2025.04.01.05.36.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 05:36:45 -0700 (PDT)
-From: Ying Lu <luying526@gmail.com>
-To: oneukum@suse.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ying Lu <luying1@xiaomi.com>
-Subject: [PATCH v2 1/1] usbnet:fix NPE during rx_complete
-Date: Tue,  1 Apr 2025 20:36:32 +0800
-Message-ID: <0ed61e6aaa99a692a09f074c9f0057e47a2d22ec.1743510609.git.luying1@xiaomi.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1743510609.git.luying1@xiaomi.com>
-References: <cover.1743510609.git.luying1@xiaomi.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743511088; x=1775047088;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=992z0ct1nxTDIKPASmURv6lsKbYXxMWUzH4MZUc64H8=;
+  b=m5NzIIG/eTn8o+WuO3JP1Xs/YDsPmT9HYxE2GHKxZN9kDgFVBt8xZ+/o
+   6bm5vGSiTY2mhfhGRPxGKJE8YHZ37d5J8VuETJKYzRchJoK1HP5yZG/sp
+   8IEt/mrOW+Uwe/SSuw3l4B2buiGeDg2WyqVIakWth6NU31RLlYLM4k9WQ
+   A=;
+X-IronPort-AV: E=Sophos;i="6.14,293,1736812800"; 
+   d="scan'208";a="731802818"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 12:38:04 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:27630]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.201:2525] with esmtp (Farcaster)
+ id 458f0c32-c36c-4765-b972-66f827eb722d; Tue, 1 Apr 2025 12:38:02 +0000 (UTC)
+X-Farcaster-Flow-ID: 458f0c32-c36c-4765-b972-66f827eb722d
+Received: from EX19D003EUB001.ant.amazon.com (10.252.51.97) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 1 Apr 2025 12:38:02 +0000
+Received: from u5934974a1cdd59.ant.amazon.com (10.1.212.23) by
+ EX19D003EUB001.ant.amazon.com (10.252.51.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 1 Apr 2025 12:37:58 +0000
+From: Fernand Sieber <sieberf@amazon.com>
+To: <sieberf@amazon.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>,
+	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
+Subject: [PATCH] sched/fair: Only increment deadline once on yield
+Date: Tue, 1 Apr 2025 14:36:20 +0200
+Message-ID: <20250401123622.584018-1-sieberf@amazon.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D031UWA001.ant.amazon.com (10.13.139.88) To
+ EX19D003EUB001.ant.amazon.com (10.252.51.97)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-From: Ying Lu <luying1@xiaomi.com>
+If a task yields, the scheduler may decide to pick it again. The task in
+turn may decide to yield immediately or shortly after, leading to a tight
+loop of yields.
 
-Missing usbnet_going_away Check in Critical Path.
-The usb_submit_urb function lacks a usbnet_going_away
-validation, whereas __usbnet_queue_skb includes this check.
+If there's another runnable task as this point, the deadline will be
+increased by the slice at each loop. This can cause the deadline to runaway
+pretty quickly, and subsequent elevated run delays later on as the task
+doesn't get picked again. The reason the scheduler can pick the same task
+again and again despite its deadline increasing is because it may be the
+only eligible task at that point.
 
-This inconsistency creates a race condition where:
-A URB request may succeed, but the corresponding SKB data
-fails to be queued.
+Fix this by updating the deadline only to one slice ahead.
 
-Subsequent processes:
-(e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
-attempt to access skb->next, triggering a NULL pointer
-dereference (Kernel Panic).
+Note, we might want to consider iterating on the implementation of yield as
+follow up:
+* the yielding task could be forfeiting its remaining slice by
+  incrementing its vruntime correspondingly
+* in case of yield_to the yielding task could be donating its remaining
+  slice to the target task
 
-Signed-off-by: Ying Lu <luying1@xiaomi.com>
+Signed-off-by: Fernand Sieber <sieberf@amazon.com>
 ---
- drivers/net/usb/usbnet.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 44179f4e807f..5161bb5d824b 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -519,7 +519,8 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 	    netif_device_present (dev->net) &&
- 	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
- 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
--	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
-+	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags) &&
-+	    !usbnet_going_away(dev)) {
- 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
- 		case -EPIPE:
- 			usbnet_defer_kevent (dev, EVENT_RX_HALT);
-@@ -540,8 +541,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 			tasklet_schedule (&dev->bh);
- 			break;
- 		case 0:
--			if (!usbnet_going_away(dev))
--				__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-+			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
- 		}
- 	} else {
- 		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
--- 
-2.49.0
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e580..c1eff68d8ffc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9024,7 +9024,7 @@ static void yield_task_fair(struct rq *rq)
+ 	 */
+ 	rq_clock_skip_update(rq);
+
+-	se->deadline += calc_delta_fair(se->slice, se);
++	se->deadline = se->vruntime + calc_delta_fair(se->slice, se);
+ }
+
+ static bool yield_to_task_fair(struct rq *rq, struct task_struct *p)
+--
+2.47.1
+
+
+
+
+Amazon Development Centre (South Africa) (Proprietary) Limited
+29 Gogosoa Street, Observatory, Cape Town, Western Cape, 7925, South Africa
+Registration Number: 2004 / 034463 / 07
 
