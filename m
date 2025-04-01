@@ -1,114 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A32020B7EA;
-	Tue,  1 Apr 2025 15:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD5720AF88
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743522225; cv=none; b=ZXRYP+TPIWz8V7tkPqUiovAKFpa5PtvndQKAQAn5QVID5mcwR27FtDih9Tl/x5BkuLwnt7p3bhTJDTDB8sJ/zoCkL1jYuF0M6uSUKjFKvsSPnUWtF0r8vDpxILLHHoeKyrXodeZmEHLBCm1L1XKTRkljtCbSj1vBRGSZR4EMPwM=
+	t=1743522256; cv=none; b=QaIWkLoKq6H01RrZf57sNBTEmlzuFSlREhgrHkgrLLwgvPAr7Q5IxfQUEchpYr3Iq5Y9YpBMGbrLc3/qBoL+gdtFzgvGRG4tTu1rRAu1uGyHxzBJKqJJY1ICVoAPMigSs9bL1MyLiSv/axGR8dOKtmsI2+4CNy+S0nAcRp0JXrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743522225; c=relaxed/simple;
-	bh=4w8JxMYmUN/hofnf3aIKzSE6bEfKElyRfzgCxkelj2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VoWAd1HqKvsRa1+g4V8Gqax42q3uk9DVOkm6pJc2kUfsDpwlHW6j17qTYBUrKHWqUoOaa6Fa3ioI5fMdB0Ppu/WPZXr9rIfmO/imB7K8rRDFpKuTqymEmOmzibY4lScydU/esaQ9AXJBmIR/RiGrfQgAHjKWrk2eErPEvpaG4kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ipp1WJCc; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743522256; c=relaxed/simple;
+	bh=a6xhRfFpTxAAJ5SlpRIOnpKIhMU+TA2ntom8u7AyK9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fl9CUQpFic5PRJjCTMCfB/v8v2euPXYa3wgpTiO1AfIW53YC4civvndTTlsTEqWzPBrrHOCU5SdZiAZi+NCH+8SdDdYT5tygaG2qHGyU2J5C1U/oIsmkGY0rgzZF6dVB9WuECvo/VFcIWTQy84KUAZZhQ/9t5XPP/8cIAnArTlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=JU9kTvWO; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ipp1WJCc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743522224; x=1775058224;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4w8JxMYmUN/hofnf3aIKzSE6bEfKElyRfzgCxkelj2w=;
-  b=Ipp1WJCcEki10skoySjT49JNo0eWfpi44dHDNNGA3U5eJZZPHGsaecKG
-   riyBQ53zoQwE1hejF7rITNeuYjDAwqzc8K84kJbcakUOS0ijU2omya+Du
-   BLli3gbVaV9CvlCdT6D/z3tPHCL1XZ7NVG50Gge6jPMPksGg590wHykpx
-   RL2q6ifmLXEk83K5TNiRPYI2t89Cnylca1fknQ17rkF93ehUztI3MareH
-   62t4oWrETBQf36QB5JM/yEhFxLprvMTtqih8aNJ1hoVyxrXKpnkRBcPIc
-   tdg67cn/UvlhaVzd0cHFh/2F40MYB8Jk6HocGsKYoKtJWWUnQfA35sgDW
-   Q==;
-X-CSE-ConnectionGUID: DVfxGcIfT9y2sSQct/cT1Q==
-X-CSE-MsgGUID: yb/08h3gTD2ozlJbE78LQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="48644221"
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="48644221"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:43:43 -0700
-X-CSE-ConnectionGUID: 3Q2/5j2VTr+UEkUhevD6BQ==
-X-CSE-MsgGUID: Tvp0ztAqTsGAV1dBxMVc2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="130550716"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:43:42 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 498CF20B5736;
-	Tue,  1 Apr 2025 08:43:40 -0700 (PDT)
-Message-ID: <dbf181f0-076f-43e8-aa09-88a8a13ae307@linux.intel.com>
-Date: Tue, 1 Apr 2025 11:43:39 -0400
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JU9kTvWO"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5e2fe5f17so556873085a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1743522253; x=1744127053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TtdWsRwfUOBxgsIg+kVSTkMJUa8tV9VXtloNeO/dNoo=;
+        b=JU9kTvWO0YmqDfugbXFXY+faYyjUEszhzl+QncpB6yjvpCh0+D9etEI4yWecLy1QBt
+         9tqBtjjrU3tEg6O2pj8hO9x4AoRNCNXGeRRvO3OONGHVu0G9EOfob9YLgVhHZA0d10oM
+         anrAWWNLbhNJyan7Tk7/TvCCjbffxMZH2vVqC5rZ55mNbXFQwfcUiBI5SfBMYyxJLBDd
+         Sg7zkjGBYC0jgBND7yBY6iC92vHlqP9eYnfSeipuINhWzXVQds0ugDfahJQDoM5Ltg6h
+         MkcwdHGESKbRewQzNcYB7p1YPvhZjORbuYJd+TLyzG2OleO+4OV/ALjvVEIIi5WbmaRu
+         I32w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743522253; x=1744127053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TtdWsRwfUOBxgsIg+kVSTkMJUa8tV9VXtloNeO/dNoo=;
+        b=kUTYuiXWlDKObU2l5+0C/TBcq803O9JhgynCBe/MIwHczxrSYGD6v7JRfTnhJw9LyO
+         +N3w0ldX1/sgZ6elb5d9WpxTkdPU5sh8nAYkpLBBkMwgnB/egHYyDu2EAHhkqbeElI8a
+         c8TyWMLdSZP4lAsy17c+sNL/S8TzqjzPzs9LcD9zbEU4Vy7YJL0KiaB2NCFI1/N0wDwC
+         2gsu2mbzNDKqYJOAYbbc00q0Pv/KjKtt3eHR9ZjXFrVsQ4lBhDTDkSYYjton/4rSgbsn
+         iUNzC5CU4yB8mOTwictPb0P9gs+wprYeXeE3pUFmo6n6UNhj7KYRiTtg/rTFRbGFqep7
+         Gyfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPslNKUYhbvWNRSFLDFVgioGznDrfnyWbhPcCW2tI1l3uloX8L2UgAVoU0G/BN3iJ3jR9y4XHpbtZ/5pI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKP2ct4FJ9Ly2Zt/TonqHh7oV+08bPpiEJBZkV7vXUPJpsyKmf
+	1dqx5cIbT6hy79pgEDRFVAqUd96FxRn3/fqRcZKM3x82oUFnL6NMc9/fvOSXeRzjfbk0pu9o1xB
+	A
+X-Gm-Gg: ASbGncs66dc0zUSZ3YTCpmu072mhy3NFhXyTo2B/V4J3+32mKS/VlaZcfOOQ5HTeJa9
+	sxPvf3lMs4LyR171U1nXjFQZsHNrpqScLH2bBYZKeGH+v6DaobH8g5wgLvd1tTTkfBLJDJDsUF4
+	ito0pw7wjJT2qtRZtacypPzp1702U0VdhJJUSZX6KKU+vLpuCZ9JkJ0PtyM6a4AWUXWsj2eAOU7
+	RzHdwWGMmmmEsf81YGJTk/tlSyxaFzt4ewv+Jjvspvbvu2qucEyoTXjEGzUS0A1/GboenNJSJwL
+	amGKGjmObDRiLAsrDmOORwOjhBL/xgTG2jogg+jFT4qQqynagn6LBkWiAuR9GflLruDmEYAqBuK
+	TQc8f2XrARL7vZbyEOXEscBk=
+X-Google-Smtp-Source: AGHT+IFNoRzI7w1svFEnu6uSg1a7Al/lfHMRAFbRiHbN38KY+jMtZlEEZoz8sPSAU2QwNot8xAw/Fw==
+X-Received: by 2002:a05:620a:1a91:b0:7c5:9ac2:2a7a with SMTP id af79cd13be357-7c69089246emr1907329985a.47.1743522253345;
+        Tue, 01 Apr 2025 08:44:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec97974ffsm62920086d6.99.2025.04.01.08.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 08:44:12 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tzdme-00000001MBc-1Y2l;
+	Tue, 01 Apr 2025 12:44:12 -0300
+Date: Tue, 1 Apr 2025 12:44:12 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Xu Lu <luxu.kernel@bytedance.com>
+Cc: Jessica Clarke <jrtc27@jrtc27.com>, tjeznach@rivosinc.com,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	alex@ghiti.fr, lihangjing@bytedance.com, xieyongji@bytedance.com,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [External] Re: [PATCH] iommu: riscv: Split 8-byte accesses on 32
+ bit I/O bus platform
+Message-ID: <20250401154412.GI186258@ziepe.ca>
+References: <20250325144252.27403-1-luxu.kernel@bytedance.com>
+ <9F043708-3BB6-46CF-BEC3-2636E9A388B7@jrtc27.com>
+ <CAPYmKFtAWNz7nCDDD7rjGeV2fRBgy5Kt6KR60pEyXAM=bb7r4g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/uncore: Add error handling for
- uncore_msr_box_ctl()
-To: Wentao Liang <vulab@iscas.ac.cn>, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250401141741.2705-1-vulab@iscas.ac.cn>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250401141741.2705-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPYmKFtAWNz7nCDDD7rjGeV2fRBgy5Kt6KR60pEyXAM=bb7r4g@mail.gmail.com>
 
-
-
-On 2025-04-01 10:17 a.m., Wentao Liang wrote:
-> In mtl_uncore_msr_init_box(), the return value of uncore_msr_box_ctl()
-> needs to be checked before being used as the parameter of wrmsrl().
-> A proper implementation can be found in ivbep_uncore_msr_init_box().
+On Wed, Mar 26, 2025 at 11:26:07AM +0800, Xu Lu wrote:
+> Hi Jessica,
 > 
-> Add error handling for uncore_msr_box_ctl() to ensure the MSR write
-> operation is only performed when a valid MSR address is returned.
+> > Is such a platform conformant to the specification?
 > 
-> Fixes: c828441f21dd ("perf/x86/intel/uncore: Add Meteor Lake support")
-> Cc: stable@vger.kernel.org # v6.3+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan> ---
->  arch/x86/events/intel/uncore_snb.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> We have talked about this before [1]. I think the IOMMU spec does not
+> mandate the implementation of 8-byte access functionality. The related
+> sentences are listed below:
 > 
-> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-> index 3934e1e4e3b1..84070388f495 100644
-> --- a/arch/x86/events/intel/uncore_snb.c
-> +++ b/arch/x86/events/intel/uncore_snb.c
-> @@ -691,7 +691,10 @@ static struct intel_uncore_type mtl_uncore_hac_cbox = {
->  
->  static void mtl_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
-> -	wrmsrl(uncore_msr_box_ctl(box), SNB_UNC_GLOBAL_CTL_EN);
-> +	unsigned int msr = uncore_msr_box_ctl(box);
-> +
-> +	if (msr)
-> +		wrmsrl(msr, SNB_UNC_GLOBAL_CTL_EN);
->  }
->  
->  static struct intel_uncore_ops mtl_uncore_msr_ops = {
+> "The 8-byte IOMMU registers are defined in such a way that software
+> can perform two individual 4-byte accesses, or hardware can perform
+> two independent 4-byte transactions resulting from an 8-byte access,
+> to the high and low halves of the register, in that order, as long as
+> the register semantics, with regard to side-effects, are respected
+> between the two software accesses, or two hardware transactions,
+> respectively."
 
+I think the commit message should explain an anyalsis that the code is
+safe against the mentioned side effects due to ordering.
+
+And a comment should explain this:
+
++#define riscv_iommu_writeq(iommu, addr, val) \
++       ((addr == RISCV_IOMMU_REG_IOHPMCYCLES) ? \
++        lo_hi_writeq_relaxed((val), (iommu)->reg + (addr)) : \
++        hi_lo_writeq_relaxed((val), (iommu)->reg + (addr)))
+
+As the naive reading of the above spec paragraph doesn't seem like
+there are exceptions or why one register has to be the opposite order.
+
+Also missing () around addr
+
+Jason
