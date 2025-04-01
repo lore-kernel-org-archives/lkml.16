@@ -1,74 +1,166 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255081DB92A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B5D1DB92A;
+	Tue,  1 Apr 2025 12:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512153; cv=none; b=R33PdLDTi7NGgkYd+Fq+9L0NFwLEWZaLIfU+9KvqqWO9gw7YoioiW2Lo5NY/nJsOHw0FCj5GvtNHPnlBD9AgxVSGcyWv9V2/wm9ObM4FOs2RLKfk2AKVbmZQP5X9NHuLjbng7BRBdgv1V0hpK2YfMwdpnBxlC/4gbpjGYz50H4M=
+	t=1743512195; cv=none; b=RCOkAaufXbJejyGySjTnJcdGi1DvDKSKm4pbiI/vt9If8MxzwT/3rs21s3FZy7osCUUxlTCkUDQMAKlUCYWKSXvCCnPOXUSjWLYYklq5eEAqbPVPTCdD4By3WnaDkKzy/nx2zDgI1rkqmhyHy2bdbjNXaEB0T8gkBRNbRCA8Nys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512153; c=relaxed/simple;
-	bh=uqyToMqi0crBXol5MsKWo/VFUHfdKEBnUBxBzM5yeYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmyb5c8n2LNFTbpmfLDCmEEKAh4pPCgkMcH4bHZq3ePKltV4RkCO4zLhLHQKdRtcJ7bzSRHlVKU3K/P/qro4ST46cHmpv5elqEIyTL3wTc5IJYHqUGsx12cpibVddPlyOJHhj9iHjSzBgcd6hiND3ryzsAbjbgOJeuYT0H7lAVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B52AD150C;
-	Tue,  1 Apr 2025 05:55:54 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 409373F694;
-	Tue,  1 Apr 2025 05:55:48 -0700 (PDT)
-Date: Tue, 1 Apr 2025 13:55:45 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Quentin Perret <qperret@google.com>
-Cc: Sebastian Ene <sebastianene@google.com>, catalin.marinas@arm.com,
-	joey.gouly@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	Sudeep Holla <sudeep.holla@arm.com>, snehalreddy@google.com,
-	suzuki.poulose@arm.com, vdonnefort@google.com, will@kernel.org,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, Andrei Homescu <ahomescu@google.com>
-Subject: Re: [PATCH v4 3/3] KVM: arm64: Release the ownership of the hyp rx
- buffer to Trustzone
-Message-ID: <20250401-innocent-outrageous-deer-0946c5@sudeepholla>
-References: <20250326113901.3308804-1-sebastianene@google.com>
- <20250326113901.3308804-4-sebastianene@google.com>
- <Z-Qv4b0vgVql2yOb@google.com>
- <Z-UcW32Hk6f_cuxc@google.com>
- <Z-aKgXVjp4nNJcLd@google.com>
- <Z-avzxyyOiaIk3-C@google.com>
- <Z-vVZt6RTNX90uEw@google.com>
+	s=arc-20240116; t=1743512195; c=relaxed/simple;
+	bh=rQ48vlkFN0XufVs3SokIZaBepH7ggvd+Qm0OnwbfbUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QkNhCvj/aNZPs23/D99Du3uL2F1Xhdn+WK4xyeaNdDzKv17Njh2dF1rjlZjrv55r+eJPYGT1YKMnqoyKHGKrhzHXlyzVZyAqO9Ho+SS0LE6cfGDzNg6S4gTgkC5fZ3bY6as40jMfjTP758fVdTeCz+jiMclNUvvrGODj9E5ohRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+lesDyf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+lesDyf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB97C4CEE5;
+	Tue,  1 Apr 2025 12:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743512194;
+	bh=rQ48vlkFN0XufVs3SokIZaBepH7ggvd+Qm0OnwbfbUk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L+lesDyfO2BPqpLsGxy1+fsHUoXiSM4+phDx6oaUDVTSSV9IV/GqsPmuREl2bNSoo
+	 1xelS54Yh0U7bdATOx6z64ofyjn7LMnfDP5h1MiuGbmiiT2XT1wm6E/3SA28rSIQzH
+	 HBYeqKo34x6H8I8xO9JH64xtmcGiYoLMGsykWKS4B2Byc4DTzzoSoQwWKTLeZ9Szx6
+	 NioJkLujk66DpW0LkFRXP/e2L9h/6TMNOiqn/mKUMgIW34Vg2vNcUg7AF7PcMf06ay
+	 +mMmuKdjmBCoHD8atGdhFmSsgntyFno6PzWTDPZTP7mgkNOfabMAGl9tliSaII0kHZ
+	 NKNwTKLWi6isw==
+Message-ID: <e193aefe-d7fb-4650-b227-7db483adde04@kernel.org>
+Date: Tue, 1 Apr 2025 14:56:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-vVZt6RTNX90uEw@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/6] dt-bindings: arm: qcom: Add Asus Zenbook A14
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Dmitry Baryshkov <lumag@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan+linaro@kernel.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20250331215720.19692-1-alex.vinarskis@gmail.com>
+ <20250331215720.19692-5-alex.vinarskis@gmail.com>
+ <fb1fc0aa-4921-4ee3-9b8a-6167ef6558eb@linaro.org>
+ <CAMcHhXoxLx9SiUcntp1vmmK7BF0SO_uo3DCBx_3Ldd3tx+rBXg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAMcHhXoxLx9SiUcntp1vmmK7BF0SO_uo3DCBx_3Ldd3tx+rBXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 12:00:38PM +0000, Quentin Perret wrote:
-> On Friday 28 Mar 2025 at 14:18:55 (+0000), Sebastian Ene wrote:
-> > 
-> > If we apply what I suggested earlier we won't have an issue with the
-> > semantic for this call but it would make the code a mess. I don't think
-> > for this particular call keeping semantics really makes a difference.
+On 01/04/2025 12:16, Aleksandrs Vinarskis wrote:
+> On Tue, 1 Apr 2025 at 07:38, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 31/03/2025 23:53, Aleksandrs Vinarskis wrote:
+>>> Document the X1E-78-100 and X1P-42-100/X1-26-100 variants.
+>>>
+>>> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+>>> index 08c329b1e919..1b7e2ed56baa 100644
+>>> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+>>> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+>>> @@ -1133,6 +1133,7 @@ properties:
+>>>        - items:
+>>>            - enum:
+>>>                - asus,vivobook-s15
+>>> +              - asus,x1e80100-zenbook-a14
+>>
+>> asus,zenbook-a14-x1e80100
+>>
+>> asus did not make a component of x1e80100 soc.
 > 
-> Right, if we implemented the release call properly in pKVM I'd be happy
-> with this patch, but I just don't think we should only do one half. We
-> either do it properly in pKVM or leave it with to the host -- the latter
-> feels simpler to me, but no strong opinions.
+> I see, I misunderstood the meaning of qcom,x1e80100-crd, clear now.
+> In that case, perhaps follow pattern of other devices, describe by
+
+Qualcomm dev boards follow such pattern, even though actual name is for
+example mtp8750.
+
+> model differences (eg. -oled) instead of soc? eg:
 > 
+> `asus,zenbook-a14-ux3407ra` (for x1e variant)
+> `asus,zenbook-a14-ux3407qa` (for x1/x1p variants)
 
-FYI:
+I am fine with both, just wanted the actual generic/common product name
+first.
 
-As part of the earlier discussion with respect to clarification on this
-from the FF-A spec, I found even the driver was not handling this correctly.
-I have posted the fix since and plan to get it merged as fix for v6.15
+> 
+> Thanks for the review,
+> Alex
+> 
+>>
+>>>                - dell,xps13-9345
+>>>                - hp,omnibook-x14
+>>>                - lenovo,yoga-slim7x
+>>> @@ -1144,6 +1145,7 @@ properties:
+>>>
+>>>        - items:
+>>>            - enum:
+>>> +              - asus,x1p42100-zenbook-a14
+>>
+>> Same here.
+>>
+>>
+>> Best regards,
+>> Krzysztof
 
--- 
-Regards,
-Sudeep
 
-[1] https://lore.kernel.org/r/20250321115700.3525197-1-sudeep.holla@arm.com
+Best regards,
+Krzysztof
