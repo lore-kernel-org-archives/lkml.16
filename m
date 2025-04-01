@@ -1,160 +1,155 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59EE1E885A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4178F2AEFE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:33:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499977; cv=none; b=YlpG6qyZWQ2DdQAXgMzTHuo7LurbUhRDBsVphaMcjQ7as8c3R0Hv8m6iJj6nvXvjlf4otsYrEDhvW+GsW4SrnWX9JbteiZjLKnHHkb1fbHtLCzFhJy6OYD7AIf79J/U9qZfAR7kRo82+7fbxeIYaBnSnlbRZjQGMLMXu0HQ5Emc=
+	t=1743500013; cv=none; b=DzQAoUsH8k2hj1Xk4CTAVGUi6S7auwscmUE7QVwstd4A+KGYRXE4pvRmifVLafwfheH3y/5INx9v5kkAAMimP2Jet1ZBdzZh7JOAhZoF6zym+f8MRYbpjJY/qHZeQdgD3+pTX9o07kqsKWa0EiHonJrLbWlX0OwNhnKhwpoN9uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499977; c=relaxed/simple;
-	bh=N5t4yjja/8jUnHgzzCz6rkqZsDgJK8T6UC+vLgFnHMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XgesWMTuJmmEhrIONqUNxOLMfMQ4RArZhsRhSB4auYQVTgoOhqlAf+A3i3Q2Gi+h4ge87RV99f5KjXUwO0z0sW4mkorsfPJk8ckqmBnH+g+7RBPoMSvQWqHBi+vAavNieVTKgvQV6xR4qzNvFMC0lLg2EYmZ4zbDGVLrZSdpE54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VA+JZzTW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnW83aDc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VA+JZzTW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnW83aDc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743500013; c=relaxed/simple;
+	bh=p4F5CsaPDW6m75LgqmAHzVHZQ2h+hAv2sU8hNBF6Yok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uggf0cB42cyEh4XDR/DFUsDmI2ymd45euXQGSfShDe7ZHeKLzxCXyPaWYGfhkLH7x3iUj0Zdtp7h5bv4B0KuEKI030DiSJYU7YobEa73dJ4ApWOeUrDKF4YYJBDSVLUh3oZRuK5evSGQNccWhqPN01DgJnXFcQGS1ja0wI/tf5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LuUoUuPw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sjIv6WoF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LuUoUuPw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sjIv6WoF; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VA+JZzTW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnW83aDc";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VA+JZzTW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnW83aDc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LuUoUuPw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sjIv6WoF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LuUoUuPw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sjIv6WoF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C8AA41F38E;
-	Tue,  1 Apr 2025 09:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743499973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4985D1F38D;
+	Tue,  1 Apr 2025 09:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743500010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
-	b=VA+JZzTWgT+ebk1SNeJQUmWq9U/tMWf9fHx5vVwAZoocBL+ob+o24VYo8AXZNStdX7H2gX
-	age3tOJ3I+Wr71F0EjWQGDapq8+x5Xi/o1P4h4d2yYVNQlt8HYeJzVg+kTSyXx8FGUy2H+
-	Wscicp71qfAoTSV0LqzvgTobo3ig3Q4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743499973;
+	bh=4+SH6eeBTQzZ1CPgNpdP327MoBfPOV6H/Xkzknm4Hao=;
+	b=LuUoUuPwPyYrwVPb168YD3sfPm3Q/bKFRvlv6/j1qIBCUgdnX8F6T0F1v+0KtzncCyQDh1
+	3W5zx2+e7bVOzSiu7E7STLXiH6hSo+KQ9ldaq7UTSOJKg2QYbA5dUZov/oZaGpfVz8+dDu
+	yczg7w0vdE1Rj/9i/oPL20QE2Oxvhoo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743500010;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
-	b=RnW83aDcemWvbgLZTi6g64os6WOCV4BXDzk9VwiMvyi97tCdRPw01VJK4ElEsKjN5hYW1T
-	+OYpYHEw64opYyCg==
+	bh=4+SH6eeBTQzZ1CPgNpdP327MoBfPOV6H/Xkzknm4Hao=;
+	b=sjIv6WoFSDKivm28GP9RtZ2tKLgJI+IDTADUdWRo4yHYTOtiDTGcgtQiFruaUFgg5Nr9qP
+	u/BxC7b+EeTMv9Bw==
 Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743499973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LuUoUuPw;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sjIv6WoF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743500010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
-	b=VA+JZzTWgT+ebk1SNeJQUmWq9U/tMWf9fHx5vVwAZoocBL+ob+o24VYo8AXZNStdX7H2gX
-	age3tOJ3I+Wr71F0EjWQGDapq8+x5Xi/o1P4h4d2yYVNQlt8HYeJzVg+kTSyXx8FGUy2H+
-	Wscicp71qfAoTSV0LqzvgTobo3ig3Q4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743499973;
+	bh=4+SH6eeBTQzZ1CPgNpdP327MoBfPOV6H/Xkzknm4Hao=;
+	b=LuUoUuPwPyYrwVPb168YD3sfPm3Q/bKFRvlv6/j1qIBCUgdnX8F6T0F1v+0KtzncCyQDh1
+	3W5zx2+e7bVOzSiu7E7STLXiH6hSo+KQ9ldaq7UTSOJKg2QYbA5dUZov/oZaGpfVz8+dDu
+	yczg7w0vdE1Rj/9i/oPL20QE2Oxvhoo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743500010;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UOsoADBWW0dlWBJVZr0kPDbyqmr+yFOyiGnaXhozHDk=;
-	b=RnW83aDcemWvbgLZTi6g64os6WOCV4BXDzk9VwiMvyi97tCdRPw01VJK4ElEsKjN5hYW1T
-	+OYpYHEw64opYyCg==
+	bh=4+SH6eeBTQzZ1CPgNpdP327MoBfPOV6H/Xkzknm4Hao=;
+	b=sjIv6WoFSDKivm28GP9RtZ2tKLgJI+IDTADUdWRo4yHYTOtiDTGcgtQiFruaUFgg5Nr9qP
+	u/BxC7b+EeTMv9Bw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BA8E1138A5;
-	Tue,  1 Apr 2025 09:32:53 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F04B138A5;
+	Tue,  1 Apr 2025 09:33:30 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2viGLcWy62daAgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Apr 2025 09:32:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 780EFA07E6; Tue,  1 Apr 2025 11:32:49 +0200 (CEST)
-Date: Tue, 1 Apr 2025 11:32:49 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, rafael@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH 0/6] power: wire-up filesystem freeze/thaw with
- suspend/resume
-Message-ID: <s6rnz3ysjlu3rp6m56vua3vnlj53hbgxbbe3nj7v2ib5fg4l2i@py4pkvsgk2lr>
-References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
- <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+	id gDnUCuqy62eGAgAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 01 Apr 2025 09:33:30 +0000
+Message-ID: <a301c37c-fcc1-4c1f-9317-eb70cae59cdc@suse.de>
+Date: Tue, 1 Apr 2025 11:33:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/3] nvmet: add command quiesce time
+To: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+ John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com,
+ Mohamed Khalfella <mkhalfella@purestorage.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-1-95a747b4c33b@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250324-tp4129-v1-1-95a747b4c33b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4985D1F38D
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ARC_NA(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
 	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -2.30
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue 01-04-25 02:32:45, Christian Brauner wrote:
-> The whole shebang can also be found at:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.freeze
+On 3/24/25 13:07, Daniel Wagner wrote:
+> TP4129 introduces Command Quiesce Time (CQT) for coordinating the
+> shutdown sequence when for example KATO expires.
 > 
-> I know nothing about power or hibernation. I've tested it as best as I
-> could. Works for me (TM).
+> Add support to nvmet but only report CQT is available but the controller
+> doesn't need any additional time when shutting down. In this case the
+> spec says nvmet should report a value of 1.
 > 
-> I need to catch some actual sleep now...
-> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
 > ---
+>   drivers/nvme/target/admin-cmd.c | 6 ++++++
+>   drivers/nvme/target/nvmet.h     | 1 +
+>   include/linux/nvme.h            | 4 +++-
+>   3 files changed, 10 insertions(+), 1 deletion(-)
 > 
-> Now all the pieces are in place to actually allow the power subsystem to
-> freeze/thaw filesystems during suspend/resume. Filesystems are only
-> frozen and thawed if the power subsystem does actually own the freeze.
-> 
-> Othwerwise it risks thawing filesystems it didn't own. This could be
-> done differently be e.g., keeping the filesystems that were actually
-> frozen on a list and then unfreezing them from that list. This is
-> disgustingly unclean though and reeks of an ugly hack.
-> 
-> If the filesystem is already frozen by the time we've frozen all
-> userspace processes we don't care to freeze it again. That's userspace's
-> job once the process resumes. We only actually freeze filesystems if we
-> absolutely have to and we ignore other failures to freeze.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Hum, I don't follow here. I supposed we'll use FREEZE_MAY_NEST |
-FREEZE_HOLDER_KERNEL for freezing from power subsystem. As far as I
-remember we have specifically designed nesting of freeze counters so that
-this way power subsystem can be sure freezing succeeds even if the
-filesystem is already frozen (by userspace or the kernel) and similarly
-power subsystem cannot thaw a filesystem frozen by somebody else. It will
-just drop its freeze refcount... What am I missing?
+Cheers,
 
-								Honza
+Hannes
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
