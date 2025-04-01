@@ -1,224 +1,123 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B59E40855
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212BC3595D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743467751; cv=none; b=BDA2T6liRL4497k+jnUlPLHNwRCkJJVoHq/qQiaXHha6Z2hDwCH27WKkXvHKv4RZeiwLK07g4UX7rJZBm7CmIpC9sNzgmjSFSlNeMMxOxbh929a6xZFbW/KupKj8RkxZtOgZVQ5jFfv2sT0S6BMK9v9jwl0ZS2JF1qeyxOMBOBQ=
+	t=1743467910; cv=none; b=LlB5CubW5BwWRZxgXtq03bGEUTM0VuqaugC4+nwSDApCnfmKLItOt0xWfjGn4PPcquOKLx2aBE7MsU8AfRPq2aWO2gr2I6Jlb1qpIolTdlyHeRsXotzlk0oEkGWXfIj1dhkeZ7WLm32sDgEBexD+7NghFA+gTxm5oDH3QTDPArI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743467751; c=relaxed/simple;
-	bh=MIGf7slnAi1v2hx6yi5VUnYND5E+xotDpCXkjmisr0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f0ortGJLY9Vp30GzOZtAL0G/XgleHGqRk1+6wXYMo5H483e7DI8VULTkdDEXLmAk2REMaqCtflDAo5qbqIn5ELYGCDpKtDsmvZkOd81SssEfPZrAUS+8PNwTiDlkZwa2pSgLCyHP/KjcYOhCzDTcxECMwZAUY76QojErSSVt4+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a+J93/0q; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743467910; c=relaxed/simple;
+	bh=EI1mPvdCbyYHIwBWxdtH54j+BVCkqp7WsbZyJafCRLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hdUB/FtA2B+WwAFMfQUk2dCf0IKGLMNFFM+ez8aBkBH9bggK5ZB9M/YHkSkJrioqXMqP+41s3HE/wAfv6HQHDan4rgilzGNSz8ed3xYCmeokIoKQa05ZkYvslPycPFjYGCCSIOAQbrjrr7UClyMd0QK8Pwu65M3sBr88nD9w03A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EzVH6IZ2; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a+J93/0q"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFCvo9000548
-	for <linux-kernel@vger.kernel.org>; Tue, 1 Apr 2025 00:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=xVZG5XFmHuEOv/oou7fYzA05
-	cG9iGzRAigpfxBHQiuA=; b=a+J93/0qSoeRKO+yA9bJBTkfRclycEtd2Lx3NAQ/
-	jPSjh+io7iw5THr0ul2LU3ISPF/kcRNaD3XsqXA3oV2/P43GbqpiR4objUqWtdVA
-	9/e2jD4AoWssBvLZEL4p60q8I0Y0pBpW1ib3enau8RpIz/IhcK1Bv6zvEfvLKnMk
-	kCfF44xwpB14rgJDPNfVphkmUcwMb2MFimMqKObvS/VHGt6quBKGQeVWy1IJIlXs
-	evXTLuSOhLrRRf6VRzKXhjkThMn6t6EjLRZ52j/6RDiHHqQ/mgxsd4jeXZ8SIjlJ
-	fAJa0h6R9lxYAIs490VFTK/GTb44zxPT3+wvQQbNQstt8w==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qe8dn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 00:35:48 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c0b0cf53f3so771236885a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:35:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EzVH6IZ2"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab78e6edb99so719520066b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743467906; x=1744072706; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jmYjDTtlr4FUxPBxvb78kyKW+ePiRCaB/F3Y0k4Lqp4=;
+        b=EzVH6IZ2LFseLQ1GenFe6kL5zJB1MMxJGCq5PZ8swGYBihGo+wpLuFB/XOTAiXyeqC
+         zJWjGdffcoC1qoIkTzxj90+slwWnC4o/aBijPfR4dyNXGYAerpiPXUBv1/0sYu0cp6kK
+         22ACkMHnBCt26ERKWoDdWDAO8ZxakQHwaS6HE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743467748; x=1744072548;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xVZG5XFmHuEOv/oou7fYzA05cG9iGzRAigpfxBHQiuA=;
-        b=qiasbhg+koYrdEuzzuKZXnFcK7IoiLRRxh4NWMrJjA/qbL8WE8MDeS566elGH/wLRG
-         3UKdQ6liqyjzoFfThnpKmOdyH10DYehMR6tQsKa+GRbOV6OGn+7MD4I7EQmekzEvxiwN
-         TVv38arL4KmzsUcKlGhkQQv0YTwVVr2uIx3nWGyfrWlubLwdbRcThdW5Tb1yZ0rbLLSz
-         nw1dMFDrRWWDm+6PtUmOqML3m4UlDtQWZhwLTwd3FaxABkwG8ZQwxUi8DiPCu0zStj1i
-         KiGuGQ3qFRDkXxIFFGVerv/7edzW09yP5rfgO3vAfjAvqmrhsaGZIPTGYL+KDcYe1iY7
-         gaBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVgre04j17ONpz1S1MU0TMJbpXDQm3rR1iuucYqVcfkl73AXMQbBdYCnLA3AXTqVatY31vJ8srN/OUzqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy21keY1hqeN2bVpxybLKmYwvuu/dAZGO3JL+w8Z1Jzg1wWV2uE
-	ANEqmvI7ey8sAsmQAlcpYjIvDTYiKwALBn8vXFrYoWiU1/yc6N4omWLvzzqU+5t8jcrKN7Frd++
-	4j3xjdF+zmHP+d2eVf08q8jq+mi+Tc8OP+4slx+20PLMxgd0Q1deIOklpJJ9drrA=
-X-Gm-Gg: ASbGncvP3OW/lNJc3L4EEbIBIA1MTEvE44d7ssPfugg8PDsXpiof0l3QMBr4QVH8rPK
-	y4inqUb8Q5vGKNjG2wO2bT26bUxZf0CtD8WkvlGnGwojbEEJ0QG0cV6HL2dIHI5AiK9N7H+tdzL
-	NI1+NoFX24YMO1hRrCi/jqfu9EI2MyMsVYh/26fyTwiNYVhCFgW/o0ZuHU55BTY2HCsuOmlYYkP
-	aAxtbZJj7Vg4Yr9o5MrhFttMw7rgoYTivrhAa6jY1jJFx8Yohjvy/8z06Mm8TjwyODozEQCWnSl
-	lalifV5CyWKxkp+ypTXQ8YQSLvjF2sNTuYD37KQukmVJ/rgMV33WN57PFhg20PoQsW52hfjncvG
-	LkGk=
-X-Received: by 2002:a05:620a:199c:b0:7c5:e38a:66c2 with SMTP id af79cd13be357-7c690894ff8mr1717398985a.58.1743467747814;
-        Mon, 31 Mar 2025 17:35:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEA1opS2Ob3NuZOH0FyIY6wfqVH21/dPNFhnu8zvlNMPksgVPFTQVVPl0FPx1SOzRn48BMMjg==
-X-Received: by 2002:a05:620a:199c:b0:7c5:e38a:66c2 with SMTP id af79cd13be357-7c690894ff8mr1717396385a.58.1743467747473;
-        Mon, 31 Mar 2025 17:35:47 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0959f429sm1232125e87.212.2025.03.31.17.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 17:35:45 -0700 (PDT)
-Date: Tue, 1 Apr 2025 03:35:42 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        laurentiu.tudor1@dell.com, abel.vesa@linaro.org, johan@kernel.org
-Subject: Re: [PATCH v2 1/2] drm/msm/dp: Fix support of LTTPR handling
-Message-ID: <qcmyxcfhtecyddx42aaw6or436qj3ghsq6uckyoux4wulcn7oq@hwyg3dddbpb3>
-References: <20250311234109.136510-1-alex.vinarskis@gmail.com>
- <20250311234109.136510-2-alex.vinarskis@gmail.com>
+        d=1e100.net; s=20230601; t=1743467906; x=1744072706;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jmYjDTtlr4FUxPBxvb78kyKW+ePiRCaB/F3Y0k4Lqp4=;
+        b=nX8X/OnmG8p7eZBaseGGqZOHxI4hNjVvAJMf+BBUhMcW8jZCLXJrB/W5fIwHGOLkBv
+         jrT0lEP2Bd0L09S1l4DG0YcjqR7Xh+2C8JyG9CvdoCGZX8HdPTX6fWIdYDYCPfyk6JkE
+         59pQX8xxnaNVLxXZ63v9DE1oi8IFqZwA+uS3CJU/vsvm8/SyVb6VY9lJxkxv9eyk4Jy4
+         4Q0Wm3s1DnduerIb+CYp4YcXGt0Bac/ywhAVK5whs7kprgtJXZ3irUEbV2wlu4MlUorC
+         69YNzZup9VebFcEOJcpqGFnzre5jiwtpIQBZxXpcDcF/k4ZLmSSdggws3Yx+0CVIgNkP
+         VaNQ==
+X-Gm-Message-State: AOJu0YwCWHsb0ap3SRyMlbLfMD1NnapwfdL/6ehG8d35FE1whi/DwN5s
+	KUSW/zK698umAW/5L904hUQzn3G2Z1Ra/rzMrtSV77DEWzK7rZD1p+RXZ34b9+Op4cjXCptnZb4
+	tOgQ=
+X-Gm-Gg: ASbGnctIUTOmtRqZRh5rhBMLXslMAXrXW/B7KD3L4z8ayR7zQeHxMgg7jJaNg0yNJL9
+	XyGdv8QNp3ejKYRxoJ8+1XobSsUVNfSVdNOAWfY5+zerfCpa4q4Pqp+h2vJvFqixwa7vZXNDuA1
+	GEFNDtD9gJws0zXfUi+jh8ybV4ak35V4br0jEnMDoiEk95Pf9UJLUPqy6HJDPesDmrWqt0oO2IB
+	gEHP0BlPf9OhIYY9UnFSxdsKbP63QtoyYphVBS2U7lQzy8L6oSI4nvGWSSmXViszrxbUN191Xh8
+	kIr9Cfn9eRxBmjxDD6nbugmgQIHH9IRxJaOfJ37yDjguHGljFuCMd/8Rnp/wqDvHLzac02d0fHf
+	SHJvC2Q/4NsiVDcO/qU4=
+X-Google-Smtp-Source: AGHT+IGOBiMqbW7/jq+8ao9PyJePkk+4KEiaG09S4ScTUvKLwV04pUWdqRRhQmk1hZAqwySURErGpg==
+X-Received: by 2002:a17:907:7292:b0:ac7:31d5:20de with SMTP id a640c23a62f3a-ac738c11723mr794515666b.50.1743467906073;
+        Mon, 31 Mar 2025 17:38:26 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196e954csm698167666b.171.2025.03.31.17.38.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 17:38:24 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac25d2b2354so804913566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:38:23 -0700 (PDT)
+X-Received: by 2002:a17:907:9491:b0:ac3:84d5:a911 with SMTP id
+ a640c23a62f3a-ac738a3fb45mr1010426866b.28.1743467902999; Mon, 31 Mar 2025
+ 17:38:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311234109.136510-2-alex.vinarskis@gmail.com>
-X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67eb34e4 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=eggZMxrzFqzPhGHCAmkA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: htwJLBbirqdVIgffZ0y5HaCzAr4YPgGn
-X-Proofpoint-GUID: htwJLBbirqdVIgffZ0y5HaCzAr4YPgGn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_11,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504010002
+References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+ <20250331133906.48e115f5@gandalf.local.home> <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+ <20250331165801.715aba48@gandalf.local.home> <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+ <20250331194251.02a4c238@gandalf.local.home> <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
+ <20250331203014.5108200c@gandalf.local.home>
+In-Reply-To: <20250331203014.5108200c@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 17:38:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+X-Gm-Features: AQ5f1JqkcRUTrAOWfRx6dOFz_CgrRYBalx1pwXYdM-tsf3km_onhfKZdgX2Gx8Y
+Message-ID: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
+ the vmap of physical memory
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
+	Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 12, 2025 at 12:38:03AM +0100, Aleksandrs Vinarskis wrote:
-> Take into account LTTPR capabilities when selecting maximum allowed
-> link rate, number of data lines. Initialize LTTPR before
-> msm_dp_panel_read_sink_caps, as
-> a) Link params computation need to take into account LTTPR's caps
-> b) It appears DPTX shall (re)read DPRX caps after LTTPR detection
+On Mon, 31 Mar 2025 at 17:29, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > Of course, I would expect the same to be true of the page/folio cases,
+> > so I don't think using flush_cache_range() should be any worse, but I
+> > *could* imagine that it's bad in a different way ;)
+>
+> At least we can say we covered those other archs, and if a bug is reported,
+> then all that would need to be fixed is the flush_cache_range()
+> implementation ;-)
 
-... as required by DP 2.1, Section 3.6.7.6.1
+Well, there's also the whole "is it I$ or D$" question.
 
-Split this into two patches.
+I think flush_cache_range() is basically expected to do both, and you
+don't care about the I$ side (and I$ coherency issues are a *lot* more
+common than D$ coherency issues are - while D$ coherency is happily
+the common situation, the I$ not being coherent is actually the
+default, and x86 - and s390? - is unusual in this area).
 
-> 
-> Return lttpr_count to prepare for per-segment link training.
+So maybe powerpc people will be unhappy about flush_cache_range()
+because it does the "look out for I$" thing too.
 
-And this one is the third one.
+There's a flush_dcache_range() thing too, but I don't see a single use
+of that function in generic code, so I suspect that one is currently
+purely for architecture-specific drivers and doesn't work in egneral.
 
-> 
-> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
->  drivers/gpu/drm/msm/dp/dp_display.c | 29 +++++++++++++++++++---------
->  drivers/gpu/drm/msm/dp/dp_panel.c   | 30 ++++++++++++++++++++---------
->  drivers/gpu/drm/msm/dp/dp_panel.h   |  2 ++
->  3 files changed, 43 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> index bbc47d86ae9e..d0c2dc7e6648 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -108,6 +108,8 @@ struct msm_dp_display_private {
->  	struct msm_dp_event event_list[DP_EVENT_Q_MAX];
->  	spinlock_t event_lock;
->  
-> +	u8 lttpr_common_caps[DP_LTTPR_COMMON_CAP_SIZE];
+So *this* is the kind of "bad in a different way" I could imagine:
+things that probably should be cleaned up and be available to generic
+code, but very few people have cared, and so they are used in ad-hoc
+places and haven't been sufficiently generalized and cleaned up.
 
-It would feel more natural to have lttpr_common_caps inside msm_dp_panel
-rather than here.
-
-> +
->  	bool wide_bus_supported;
->  
->  	struct msm_dp_audio *audio;
-> @@ -367,17 +369,21 @@ static int msm_dp_display_send_hpd_notification(struct msm_dp_display_private *d
->  	return 0;
->  }
->  
-> -static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp)
-> +static int msm_dp_display_lttpr_init(struct msm_dp_display_private *dp, u8 *dpcd)
-
-Hmm, why? Return code is still unused in this patch. If it is a
-preparation for the next one, it should be split into a separate patch.
-
->  {
-> -	u8 lttpr_caps[DP_LTTPR_COMMON_CAP_SIZE];
-> -	int rc;
-> +	int rc, lttpr_count;
->  
-> -	if (drm_dp_read_lttpr_common_caps(dp->aux, dp->panel->dpcd, lttpr_caps))
-> -		return;
-> +	if (drm_dp_read_lttpr_common_caps(dp->aux, dpcd, dp->lttpr_common_caps))
-> +		return 0;
->  
-> -	rc = drm_dp_lttpr_init(dp->aux, drm_dp_lttpr_count(lttpr_caps));
-> -	if (rc)
-> +	lttpr_count = drm_dp_lttpr_count(dp->lttpr_common_caps);
-> +	rc = drm_dp_lttpr_init(dp->aux, lttpr_count);
-> +	if (rc) {
->  		DRM_ERROR("failed to set LTTPRs transparency mode, rc=%d\n", rc);
-> +		return 0;
-> +	}
-> +
-> +	return lttpr_count;
->  }
->  
->  static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
-
-[...]
-
-> @@ -64,16 +67,24 @@ static int msm_dp_panel_read_dpcd(struct msm_dp_panel *msm_dp_panel)
->  	major = (link_info->revision >> 4) & 0x0f;
->  	minor = link_info->revision & 0x0f;
->  
-> -	link_info->rate = drm_dp_max_link_rate(dpcd);
-> -	link_info->num_lanes = drm_dp_max_lane_count(dpcd);
-> +	max_source_lanes = msm_dp_panel->max_dp_lanes;
-> +	max_source_rate = msm_dp_panel->max_dp_link_rate;
->  
-> -	/* Limit data lanes from data-lanes of endpoint property of dtsi */
-> -	if (link_info->num_lanes > msm_dp_panel->max_dp_lanes)
-> -		link_info->num_lanes = msm_dp_panel->max_dp_lanes;
-> +	max_sink_lanes = drm_dp_max_lane_count(dpcd);
-> +	max_sink_rate = drm_dp_max_link_rate(dpcd);
-> +
-> +	max_lttpr_lanes = drm_dp_lttpr_max_lane_count(lttpr_common_caps);
-> +	max_lttpr_rate = drm_dp_lttpr_max_link_rate(lttpr_common_caps);
->  
-> +	if (max_lttpr_lanes)
-> +		max_sink_lanes = min(max_sink_lanes, max_lttpr_lanes);
-> +	if (max_lttpr_rate)
-> +		max_sink_rate = min(max_sink_rate, max_lttpr_rate);
-> +
-> +	/* Limit data lanes from data-lanes of endpoint property of dtsi */
-> +	link_info->num_lanes = min(max_sink_lanes, max_source_lanes);
->  	/* Limit link rate from link-frequencies of endpoint property of dtsi */
-> -	if (link_info->rate > msm_dp_panel->max_dp_link_rate)
-> -		link_info->rate = msm_dp_panel->max_dp_link_rate;
-> +	link_info->rate = min(max_sink_rate, max_source_rate);
-
-
-Please keep existing code and extend it to handle max_lttpr_lanes /
-max_lttpr_rate instead of rewriting it unnecessarily.
-
->  
->  	drm_dbg_dp(panel->drm_dev, "version: %d.%d\n", major, minor);
->  	drm_dbg_dp(panel->drm_dev, "link_rate=%d\n", link_info->rate);
-
--- 
-With best wishes
-Dmitry
+           Linus
