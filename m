@@ -1,84 +1,110 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E02D1E5B7E;
-	Tue,  1 Apr 2025 11:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1751F91CD;
+	Tue,  1 Apr 2025 11:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743507244; cv=none; b=p0JN192nWLA9lEYu+3oOvSOJdp+IssqNyrI3DRfHvWecjb4fjxwToMigtfy0C0cB2JlFSLP2v+gD/N0uWh2lX/9OC7P/T/a+i8H74/2WQBGsChWFi7MKBboP+fEpYjepsE47K26j4wgPYponb9QBA7YMOkGdywLMNMeNOHWc3ik=
+	t=1743507310; cv=none; b=bqhVGUbbK3qM51n38nezg6wf9P/BOLpvVhvAAB8A/TsZLJHV6lFyEF8Tr11DLRtQRnivML0DauA3gO38hrWYlyccLq8wGG6ytBpZU9J3jrP5LtUIKhU+X+kP8nHCRyksfKm/FxZF+kyiPsAjsi0hzT/SpqRCOVGK6oR5O0kg6f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743507244; c=relaxed/simple;
-	bh=Da1+bF/BSq4mWTcmY++wwkgUTq18EEuB4ADZWh3lFZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoaEXeBYWxBOx7+OSA5az84PU8WfW/KVCZDSG6JVbVCG+T1VFJInGsyQxxUUDzHZUvTI99EKEs1An76uSrEb0gUNt9Lu8PWmGIQAfqQVtNoZFt4zKKdpSr2muT0QibZRD2pE9OuqOhvZGofLEhS/bKHpZtj/7EZ7OW9CBgi/FRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=M/W7C9ys; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1743507310; c=relaxed/simple;
+	bh=ns65+oXL5DE7rKysJM1mY8iITuMcqvITWk3VuegazFY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pvktk9bm3Aorg8R0MljCp1pZSlu3jrfHvoOApBh0A4wjJQRTOPNIOdhqd8wAd5os4ymKyCKyH54WnxddlLHLyakSqdOUeC5pO5GFQfVD1EbjoC+xDm+vCYfAbvYy6NlKgLkER18nVa9LC6wEQiZ429pb94JEQ/Psj8CWcymucCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HefyF9xF; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="M/W7C9ys"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=RdxSA8as+JgtfsTvVEJNndvDyr/LwUMDt+9OFDkr84U=; b=M/W7C9ys/a5HAFMQ9DCsXXR2fO
-	xSiApmaTnEilUbLLuEZRhFCmbiYS3RQrCBSlOl+ArCyMSr0OzGpBxhFPV/Wef326dG2bMsqJmuA8K
-	gXtjReYpVYQPJJ4nWV/MNIGfWUqJiXHgxf9iz8cLPRfwH8C3knpzaMkJgckiEBJrbY2nkmKwhCdI5
-	Sa315E4H5XgckYlbtK0XYFn4enWbmxel6Kmj1a/T/vmKfqyMEcwFLSW/oo71Q2RfSWyAt7Z5SqSs6
-	k6qxKvSNCH9uzt0usjPLEwBHq1mKvNECUjYGOuUshZ0abAOR/cMyyPliF6ThJbZNejh0IqxXE/R5u
-	jSLqtEUA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tzZsL-00Bonz-2h;
-	Tue, 01 Apr 2025 19:33:50 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Apr 2025 19:33:49 +0800
-Date: Tue, 1 Apr 2025 19:33:49 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Antoine Tenart <atenart@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, upstream@airoha.com,
-	Richard van Schagen <vschagen@icloud.com>
-Subject: Re: [PATCH v11 3/3] crypto: Add Inside Secure SafeXcel EIP-93 crypto
- engine support
-Message-ID: <Z-vPHYjLd2BiOZDc@gondor.apana.org.au>
-References: <20250114123935.18346-1-ansuelsmth@gmail.com>
- <20250114123935.18346-4-ansuelsmth@gmail.com>
- <Z-vFkUmd6vgciU6V@gondor.apana.org.au>
- <CA+_ehUy0qHfQseVv4D4BbZa+wHKTCvY9dVNfUtcDF3x7XHss0Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HefyF9xF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743507308; x=1775043308;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ns65+oXL5DE7rKysJM1mY8iITuMcqvITWk3VuegazFY=;
+  b=HefyF9xF07uE+Y9PhsgA/cEg1AH0GiT5Nr7RCYcM2VB6/PyDgTQ5WueN
+   FRhoOFF56Ll0NXroCejHUdv/ZfIm1shTTc5WX+VvTUaYkLXGdZkKESLP/
+   1mnzp2pRoGnq64XKm160qX9eCT1peAUV6BcKyAc8gNoTdb7DPFo8vj80r
+   LTP9/i4xpOmc8WSV6VBCMgaSXbe9rucX9A6vftXccJV71ZMgj6KmPb34P
+   ZD8XH14u8NDin74ti9iwRW/8Mg6aZ+eXCIXTAf7i6AMEiBpG4/dctdEj3
+   NlG441KZqvIZUr4pz0k2CQYmx/5FLmYg6U9ZReiR/lSDo8YwPaGdNJ8GQ
+   w==;
+X-CSE-ConnectionGUID: tn7HdwJzQWil95uyschdDQ==
+X-CSE-MsgGUID: srLIaPvHT7e0BhjTjvjUhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="32422379"
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="32422379"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 04:35:07 -0700
+X-CSE-ConnectionGUID: 1eLpTKYjShmsUQIxTZ/8Ag==
+X-CSE-MsgGUID: PMJMqGeORjajm07VotKYfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="131087891"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.126])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 04:35:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 1 Apr 2025 14:35:01 +0300 (EEST)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: ISST: Correct command storage data
+ length
+In-Reply-To: <20250328224749.2691272-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <4049a875-fb64-c84d-c092-daa11fcc9a6c@linux.intel.com>
+References: <20250328224749.2691272-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+_ehUy0qHfQseVv4D4BbZa+wHKTCvY9dVNfUtcDF3x7XHss0Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Apr 01, 2025 at 01:13:21PM +0200, Christian Marangi (Ansuel) wrote:
->
-> If you are ok I can send a patch to drop this (and maybe leave the
-> comment just to document this strange finding)
+On Fri, 28 Mar 2025, Srinivas Pandruvada wrote:
+
+> After resume/online turbo limit ratio (TRL) is restored partially if
+> the admin explicitly changed TRL from user space.
 > 
-> What do you think?
+> A hash table is used to store SST mail box and MSR settings when modified
+> to restore those settings after resume or online. This uses a struct
+> isst_cmd field "data" to store these settings. This is a 64 bit field.
+> But isst_store_new_cmd() is only assigning as u32. This results in
+> truncation of 32 bits.
+> 
+> Change the argument to u64 from u32.
+> 
+> Fixes: f607874f35cb ("platform/x86: ISST: Restore state on resume")
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: stable@vger.kernel.org
 
-Thanks for checking.  There is no need to send a patch for this
-since I can just remove it when changing the export/import format.
+Thanks, I've applied this to the review-ilpo-fixes branch.
 
-Cheers,
+While reviewing this, I noticed full_cmd is currently typed as int but I 
+think it should be u32 to match the type in the struct.
+
+The construction of full_cmd also open codes FIELD_PREP() and doesn't use 
+named defines for the fields. And ->cmd is also decomposed in 
+isst_mbox_resume_command() which should use FIELD_GET() and the same 
+defines.
+
+> ---
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index dbcd3087aaa4..31239a93dd71 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -84,7 +84,7 @@ static DECLARE_HASHTABLE(isst_hash, 8);
+>  static DEFINE_MUTEX(isst_hash_lock);
+>  
+>  static int isst_store_new_cmd(int cmd, u32 cpu, int mbox_cmd_type, u32 param,
+> -			      u32 data)
+> +			      u64 data)
+>  {
+>  	struct isst_cmd *sst_cmd;
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+ i.
+
