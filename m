@@ -1,154 +1,163 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F161A1EA7FC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA8B1EEA3B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 09:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500426; cv=none; b=DtkmUuLHJ/9H823vRtndlTErOubyahSdGjRZbgMTfPmSlpPK77GGOLVAew803Va3WdyMGNx77iayndVlhvEWzHr5SUtAV8629tLLdo/dftP0npbH9wwbI4qnd/+wpUwkJGeZmvb2YkyDBg+vjqcClqsNUolBq27ENtqzkYcQqDk=
+	t=1743500459; cv=none; b=OIEsKyC5+G6HAkM4acbwgKcPQiSf9YoxeGLKRk73/fdlSSFZombE2bJo0clLR3Va6lct0sn3NekKlYCZbVoYTeZmnwiCrdI2vPfqH7ch5QJEBasYUIhHPwPyovJ1f4LqA61QbGNXCGgMWWAod002bvqiUCgepEIcFUDDu1eFftA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500426; c=relaxed/simple;
-	bh=bMvAYJXBmlVd+nxrsL+KEButwoB/DnD4Wb9PLyyDajw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZVAtdhuENwPbvrJQly9lBB+YnssvwcSkJOrf7Qk3B7Dn85Z/LO43kaNcnmfwN3voWkjXwmpnm9+QwO6FrV09ZYCK5nZE4hKmsuNPab2p1YrTBeXlxHR3l/EMz+OSDFcdCR1JurKT7N1KaAQJbbrnJqnx6pH1NLngOacvOLl3oEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so48405585ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 02:40:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743500424; x=1744105224;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T99KLhRaT/zg5krqq6egVQGPY8M5vnskt1JQriQgYiU=;
-        b=T8N5i4xaFQcQMdaI2M6xl3c9RWbtfGkmeMyteBCYh2QLq0ejU53k3dzjj546LNWE95
-         X3hiJ29X29a7PRp2X0hxNJLc0Qtq15kVv9MQfgjcJagsZ+KWcMOVA/EnPFpxvHGY+7LM
-         rCmtfrqzxaxfnQu0l+whLZYQFL/01EeE8Bmu9gKD4jw92O0x6Ltn2ea0CozUs+ou1z+Z
-         pae1hNIjp7QHaFvdI2ynzcp+KJdRQf2HER9VAS6z0VUqcsM/D6OaXvKK6aTsJU8udvbw
-         NIIpI4XaQBSF1uzUOD4euEelPCfK7lVv0YQi2N4cv/76zHHKsJmol7AJtFssV8GzlsOF
-         xgBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUr+VRiaPBKAkppEULET8kPeXfHEyhXDmafp2zZihrbbyEAq3liSx9RG3p+KGl4EO4QBPbL7QTOje9qyYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEBwleLtW6sRNIayFq+gAlANg38/KgvhY8HCg5fX6uJ0qVOplZ
-	ys1zFfG8OYorwqXTEWkX7zLA3nxXPUSd2XGrEsH5HGxnRrlepE1W+HX6+AsFVsc39iI/qv3qAQv
-	wi04lNlI6KsLzjqscop1161++TVGgygYvym9smoCbZCdlZAgYe/hd8F4=
-X-Google-Smtp-Source: AGHT+IE2OVwt/Fi/HdMaxn9+dAXwdx2XZ6OX3zUiWvhr4o2huMhlCYQJ24LyTxTZ4x9N79CdkPXEiu2RZmWoBAwlYHvfeIggBhfN
+	s=arc-20240116; t=1743500459; c=relaxed/simple;
+	bh=gJlB4AeSDCKsRK8ivWcHTRoN7YcHomioN5Bj+ipSUpI=;
+	h=Date:Message-Id:From:To:Cc:In-Reply-To:Subject:References; b=tBMNHDgvHn1383hmHHb7P6/SMCcbUYiXrCF5FnWUFT6o1JRwQg3UscdYPfhIbJdVBaGVFwADksitiiWeOan7e9p/U8dOsPBU5tpzZ/EgukzaO1zWeHmmLZPZo53HSVPsXjEpAqwFTE5/FpqbTyV0kYpW7Jczen23jZtn96+IPhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=FqAE2REk; arc=none smtp.client-ip=195.121.94.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="FqAE2REk"
+X-KPN-MessageId: 645a4459-0edd-11f0-b8e6-005056999439
+Received: from smtp.kpnmail.nl (unknown [10.31.155.8])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id 645a4459-0edd-11f0-b8e6-005056999439;
+	Tue, 01 Apr 2025 11:40:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=subject:to:from:message-id:date;
+	bh=ey7yoOjV/lc5KcZj4q45sCx1nDoy4AmcmcNqfQe/iX8=;
+	b=FqAE2REkFgpO5l2/SNwlAFSrFOx/nu6RzHt2R1+ZsCDtBV69NLrvIrhuJGvE4fTGoK1ZmzxSNirSG
+	 ZwHLUY0PHF1CINuzACJAO/SfbfazgI03XZ+WhebvUE+J8i2x+VGt66VoqcEVIgDgnAgtFNOFzKujzs
+	 e3XICGWRWyabId09ZjxjE4SXaAKy/UrjoWYCmlGVs8xpAYan/LZSKBXRTbt/aSHuCqD6BmyFx4Yn4N
+	 J13gtkyWN7M3vcaqKuYGngCJFovRXrHFS8bvLvcN7tgXgQivboaPq3m4gxtTZaT2Zkx6DSE90Ljgd8
+	 rJkmMa+qi1t1I374U1YP5Y5vrb1gUxQ==
+X-KPN-MID: 33|Q3Biel+nTqoBd3E8Ejl4/blQ1eotWFPRsXPh84eyXyVG8o/qGN/zkB/xVlQuHaH
+ VetITMcREbJ3DnFIWK3u0glWOq0lwEsC5oKzxzT1vxGk=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|W0d/KH2Hq4f/I/JXtohD/yi6JDISu5nftVLzXJnFRULuKq3Rc3Vn2VnYtkRYUy+
+ oTF6eiBDYAmLq8KY2ELmrXA==
+Received: from bloch.sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
+	by smtp.xs4all.nl (Halon) with ESMTPSA
+	id 617e7e6a-0edd-11f0-97bf-00505699d6e5;
+	Tue, 01 Apr 2025 11:40:44 +0200 (CEST)
+Date: Tue, 01 Apr 2025 11:40:43 +0200
+Message-Id: <87cydwxlr8.fsf@bloch.sibelius.xs4all.nl>
+From: Mark Kettenis <mark.kettenis@xs4all.nl>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net,
+	marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org
+In-Reply-To: <20250401091713.2765724-3-maz@kernel.org> (message from Marc
+	Zyngier on Tue, 1 Apr 2025 10:17:02 +0100)
+Subject: Re: [PATCH v3 02/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
+References: <20250401091713.2765724-1-maz@kernel.org> <20250401091713.2765724-3-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a92:6812:0:b0:3d1:84ad:165e with SMTP id
- e9e14a558f8ab-3d5d6cfd612mr117415665ab.7.1743500424049; Tue, 01 Apr 2025
- 02:40:24 -0700 (PDT)
-Date: Tue, 01 Apr 2025 02:40:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ebb488.050a0220.297a31.000a.GAE@google.com>
-Subject: [syzbot] [fs?] [mm?] KCSAN: data-race in mem_cgroup_track_foreign_dirty_slowpath
- / mem_cgroup_track_foreign_dirty_slowpath (7)
-From: syzbot <syzbot+6f43371b62882ee50909@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Tue,  1 Apr 2025 10:17:02 +0100
+> 
+> From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> 
+> t6020 adds some register ranges compared to t8103, so requires
+> a new compatible as well as the new PHY registers.
+> 
+> Thanks to Mark and Rob for their helpful suggestions in updating
+> the binding.
 
-syzbot found the following issue on:
+Ah, that's how you do it!  Thanks Rob.
 
-HEAD commit:    1e7857b28020 x86: don't re-generate cpufeaturemasks.h so e..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12bb8268580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bdb65086dcaf0454
-dashboard link: https://syzkaller.appspot.com/bug?extid=6f43371b62882ee50909
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+This matches the binding already in use for U-Boot and OpenBSD, so:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Reviewed-by: Mark Kettenis <mark.kettenis@xs4all.nl>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/08333bdf2b6c/disk-1e7857b2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c798f117761a/vmlinux-1e7857b2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a2171375da2b/bzImage-1e7857b2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6f43371b62882ee50909@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in mem_cgroup_track_foreign_dirty_slowpath / mem_cgroup_track_foreign_dirty_slowpath
-
-write to 0xffff8881184b45d8 of 8 bytes by task 15048 on cpu 0:
- mem_cgroup_track_foreign_dirty_slowpath+0x3bf/0x450 mm/memcontrol.c:-1
- mem_cgroup_track_foreign_dirty include/linux/memcontrol.h:1586 [inline]
- folio_account_dirtied mm/page-writeback.c:2756 [inline]
- __folio_mark_dirty+0x3f5/0x4e0 mm/page-writeback.c:2797
- mark_buffer_dirty+0x134/0x230 fs/buffer.c:1196
- __block_commit_write fs/buffer.c:2189 [inline]
- block_page_mkwrite+0x29b/0x3f0 fs/buffer.c:2621
- ext4_page_mkwrite+0x75c/0xba0 fs/ext4/inode.c:6225
- do_page_mkwrite mm/memory.c:3253 [inline]
- wp_page_shared mm/memory.c:3654 [inline]
- do_wp_page+0xcaf/0x2380 mm/memory.c:3804
- handle_pte_fault mm/memory.c:5906 [inline]
- __handle_mm_fault mm/memory.c:6033 [inline]
- handle_mm_fault+0xc78/0x2b30 mm/memory.c:6202
- do_user_addr_fault arch/x86/mm/fault.c:1337 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x3b9/0x650 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
-read to 0xffff8881184b45d8 of 8 bytes by task 15063 on cpu 1:
- mem_cgroup_track_foreign_dirty_slowpath+0xdb/0x450 mm/memcontrol.c:3291
- mem_cgroup_track_foreign_dirty include/linux/memcontrol.h:1586 [inline]
- folio_account_dirtied mm/page-writeback.c:2756 [inline]
- __folio_mark_dirty+0x3f5/0x4e0 mm/page-writeback.c:2797
- mark_buffer_dirty+0x134/0x230 fs/buffer.c:1196
- __block_commit_write fs/buffer.c:2189 [inline]
- block_write_end+0x123/0x210 fs/buffer.c:2265
- ext4_da_do_write_end fs/ext4/inode.c:3015 [inline]
- ext4_da_write_end+0x20a/0x810 fs/ext4/inode.c:3090
- generic_perform_write+0x31e/0x4b0 mm/filemap.c:4135
- ext4_buffered_write_iter+0x1ed/0x3c0 fs/ext4/file.c:299
- ext4_file_write_iter+0x3b2/0xf80 include/linux/fs.h:-1
- iter_file_splice_write+0x5f2/0x980 fs/splice.c:738
- do_splice_from fs/splice.c:935 [inline]
- direct_splice_actor+0x160/0x2c0 fs/splice.c:1158
- splice_direct_to_actor+0x305/0x680 fs/splice.c:1102
- do_splice_direct_actor fs/splice.c:1201 [inline]
- do_splice_direct+0xd9/0x150 fs/splice.c:1227
- do_sendfile+0x40a/0x690 fs/read_write.c:1368
- __do_sys_sendfile64 fs/read_write.c:1429 [inline]
- __se_sys_sendfile64 fs/read_write.c:1415 [inline]
- __x64_sys_sendfile64+0x113/0x160 fs/read_write.c:1415
- x64_sys_call+0xfc3/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:41
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00000000ffffebe1 -> 0x00000000ffffef33
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 UID: 0 PID: 15063 Comm: syz.2.3982 Not tainted 6.14.0-syzkaller-11144-g1e7857b28020 #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> Suggested-by: Mark Kettenis <mark.kettenis@xs4all.nl>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Tested-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> [maz: added PHY registers, constraints]
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  .../devicetree/bindings/pci/apple,pcie.yaml   | 33 +++++++++++++++----
+>  1 file changed, 26 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> index c8775f9cb0713..c0852be04f6de 100644
+> --- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> @@ -17,6 +17,10 @@ description: |
+>    implements its root ports.  But the ATU found on most DesignWare
+>    PCIe host bridges is absent.
+>  
+> +  On systems derived from T602x, the PHY registers are in a region
+> +  separate from the port registers. In that case, there is one PHY
+> +  register range per port register range.
+> +
+>    All root ports share a single ECAM space, but separate GPIOs are
+>    used to take the PCI devices on those ports out of reset.  Therefore
+>    the standard "reset-gpios" and "max-link-speed" properties appear on
+> @@ -30,16 +34,18 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - apple,t8103-pcie
+> -          - apple,t8112-pcie
+> -          - apple,t6000-pcie
+> -      - const: apple,pcie
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - apple,t8103-pcie
+> +              - apple,t8112-pcie
+> +              - apple,t6000-pcie
+> +          - const: apple,pcie
+> +      - const: apple,t6020-pcie
+>  
+>    reg:
+>      minItems: 3
+> -    maxItems: 6
+> +    maxItems: 10
+>  
+>    reg-names:
+>      minItems: 3
+> @@ -50,6 +56,10 @@ properties:
+>        - const: port1
+>        - const: port2
+>        - const: port3
+> +      - const: phy0
+> +      - const: phy1
+> +      - const: phy2
+> +      - const: phy3
+>  
+>    ranges:
+>      minItems: 2
+> @@ -98,6 +108,15 @@ allOf:
+>            maxItems: 5
+>          interrupts:
+>            maxItems: 3
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: apple,t6020-pcie
+> +    then:
+> +      properties:
+> +        reg-names:
+> +          minItems: 10
+>  
+>  examples:
+>    - |
+> -- 
+> 2.39.2
+> 
+> 
+> 
