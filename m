@@ -1,125 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4803234;
-	Tue,  1 Apr 2025 21:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C029B1E9B22;
+	Tue,  1 Apr 2025 21:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743541431; cv=none; b=SsS2v88X/D4nxcNtaW26sKvJ1fDn2R9Q6yOgnlGFvhNXoqrzZmxUL/biso8I9dyuVtDvXDHEhRSGEEOtE7Spi46Edc6IqwNKHkhDGu+KumCxVt1gv4jDra6mzttPKmyegha/q2pah60Gc68RkPHaAfJ36dieCI7pNwK9dFE0O90=
+	t=1743541452; cv=none; b=FGc8CvXKfksxusrJNNGtpzUcyphP6rlM/mYp/QiFuQgJDIjNinhSV0YSXi/RQrZ+D7ZZFzpGJ3pXSsQf3iQ94Bqwuhw4q8bVpfeMcwDmRrGuIDZkCozqxVRMid1MqioD5/niaH0ByfJXXUlIuYY2S50avMtwMWUO6ygBkpMUHU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743541431; c=relaxed/simple;
-	bh=RHG5mnA4Pa5+KcHBkPJkMWJyRYQ6/9Uh4ZMdzI7Rs7s=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Lu3JWerUT9ASehn6qXBYjdQINv6Av8n5UeM5gyZa6CP9/d1edSio3v0xT34JXNFuYdz1y5Ak7sDrG5rP7UPop7JuITYKm3oE/16zDy2WH+wvSvq2ehYFjDXv59tmHuqGnjEAuTBXM7tFtdlspLgtBUCjPRMRXOV7C0gKTyLZpx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DcPJs6he; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zK+DAdKg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743541452; c=relaxed/simple;
+	bh=JF9Ae4QGiMMNa2DHcHPi3JuU+7gAXtggiKzVEZAVomo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EfYPPKkJfWvDaRvpxDrnvd+xCk+BXb3VDF4fuVCSYFzHiBxj/fYL/Q+UEY9TpPlTBUFT8iDo3h2r306xMVwddZagMFjaIO3d/4uPJ6uo9Pk9v6MROntBlEuHBunSqkk/9CMfLD+Hcfy7L9uLmhgLkPGk6n1MUEs1HnOI/SJO0Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iOdiRJSk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DcPJs6he";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zK+DAdKg"
-Date: Tue, 01 Apr 2025 21:03:45 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743541426;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FOOtHtZokLDTphOetkEBkEV1ez5v2HtE8u/QzNWrwmY=;
-	b=DcPJs6helbJ/oNtwDX3qUU7wHhgfhwnlNMHw9kLAtwV6eeJfHLFHHMhQfCTMrxgX/e+n2y
-	hTl91mhtlvY46nDZAvtAdCjXrhLfuw6mbtsQQbBeujH6OH3BpmWx4DW1aCbCxJ/lnzWZIb
-	xzM/dL2dIExU2xlzJKMltGx5MnetQTigQwZXmI5OhUoOCcu6SziPXJwy4cizOEfWIBOgUu
-	oX6882DkqJAGLDSshyz7LEHcko4PqaG2VGXpwMRvjPWZFKX3VIoz26EgvA68oIi1i2TtoC
-	nIjPlcU6qnUEIgFfDpnMllvNqb19FotM7NSMy6+/MXNhT31EnIAKgVD1YIvPPQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743541426;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FOOtHtZokLDTphOetkEBkEV1ez5v2HtE8u/QzNWrwmY=;
-	b=zK+DAdKgrGUKzm6fEvFjC9XzniRoRGZCEAF5Z9F/8OsrSM1p6v1xMXAB2gDl4DP38McqZ3
-	ApAV0BEm+Cyn+jCg==
-From: "tip-bot2 for Mateusz Guzik" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] x86/mm: Stop prefetching current->mm->mmap_lock on page faults
-Cc: Mateusz Guzik <mjguzik@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250401143520.1113572-1-mjguzik@gmail.com>
-References: <20250401143520.1113572-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iOdiRJSk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6CDC4CEE4;
+	Tue,  1 Apr 2025 21:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743541452;
+	bh=JF9Ae4QGiMMNa2DHcHPi3JuU+7gAXtggiKzVEZAVomo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iOdiRJSkXCia5suaUg2PvHNrqcyPmtM6b7hpCQp6Towl8YTAtsullje8Vk7dnFVuA
+	 oSL8dgf7FIlS21kIs+m8PSkq6b8PF6bjdCwv5kRi7T2k4iD8opyyWzrJ/ep57MDqKx
+	 dhNnCqNcaai7v+dTGUAKz6HpNTITYs6LdRFM8sSvlF23lMxbXjaIq2HxmE0SAaqajb
+	 AezmDMeUPAvIGJl+JBAzFMDy4T6L42rPzCd01ZCIF/djufNFAf2cGSz5bWM3aLxuqn
+	 UI/CmRCj9p4KkEivPTQ2dKUChGqA5unr9uTaaycM+6UwF5ciGzrroXcDAdJt1tQ2FF
+	 /97pNK1raQJlw==
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso5551604276.3;
+        Tue, 01 Apr 2025 14:04:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqNaEKnnkAkm/Cl5aH0mto9nXSTjhxSuCsS/rmjsWnOAPCD80BezbxHN5zAa4wsTzXnw1HU2ElTThWOhY=@vger.kernel.org, AJvYcCUxt+MXjwZnJn+gFid6eiJwXBpVApciUPqWPnpjSFZvb981vvAHgAWlg5wwCa1jKgAEI026twE3joC1fQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRyi7tirXEPGIbv1i1HLZawDTntZthPE/ZM5MApUpPu5hJhZe4
+	rex+6zfh/C3naNIQNX5KwkT064hgCxLefpf/tiSAdfxgQqgQph/Pvusv4jPzOnjYuf/7LfaBKGF
+	wGAQwunfhLohpOy8CKNiRUSO7A9k=
+X-Google-Smtp-Source: AGHT+IHSBPPxUBhWOzu4Nd87QMvwOQIaWIMiEd23Z6wQ177CV+d/d2HSMj10PYMxSsvBq1VKMKUwav95p4z51NJ8Hb8=
+X-Received: by 2002:a05:6902:1084:b0:e5d:c6e8:2e32 with SMTP id
+ 3f1490d57ef6-e6b83933edfmr18586104276.24.1743541451490; Tue, 01 Apr 2025
+ 14:04:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174354142522.14745.424930535016495945.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250331082507.36ffa10b@canb.auug.org.au>
+In-Reply-To: <20250331082507.36ffa10b@canb.auug.org.au>
+From: Fan Wu <wufan@kernel.org>
+Date: Tue, 1 Apr 2025 14:04:00 -0700
+X-Gmail-Original-Message-ID: <CAKtyLkEiE85Nn1Jyy0m5NdyFvgimr+uNnSxJREO7pody61dkdg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqKWXVefsA1QoswNnUARdBbeJNepSfeaUBYmyBHkxnjYeA8ChWRtGWfr9Q
+Message-ID: <CAKtyLkEiE85Nn1Jyy0m5NdyFvgimr+uNnSxJREO7pody61dkdg@mail.gmail.com>
+Subject: Re: linux-next: duplicate patch in the ipe tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Fan Wu <wufan@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/mm branch of tip:
+On Sun, Mar 30, 2025 at 2:25=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> The following commit is also in Linus Torvalds' tree as a different commi=
+t
+> (but the same patch):
+>
+>   42d4d6207180 ("ipe: policy_fs: fix kernel-doc warnings")
+>
+> This is commit
+>
+>   6df401a2ee4a ("ipe: policy_fs: fix kernel-doc warnings")
+>
+> in Linus' tree.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Commit-ID:     1701771d3069fbee154ca48e882e227fdcfbb583
-Gitweb:        https://git.kernel.org/tip/1701771d3069fbee154ca48e882e227fdcfbb583
-Author:        Mateusz Guzik <mjguzik@gmail.com>
-AuthorDate:    Tue, 01 Apr 2025 16:35:20 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:48:56 +02:00
+Hi Stephen,
 
-x86/mm: Stop prefetching current->mm->mmap_lock on page faults
+I just removed the upstreamed commit, it should be fixed now.
 
-The prefetchw() dates back decades and the fundamental notion of doing
-something like this on a lock is shady.
-
-Moreover, for a few years now in the fast path faults are handled with RCU
-+ per-vma locking, hopefully not even looking at the lock to begin with.
-
-As such just remove it.
-
-I did not see a point benchmarking this. Given that it is not expected
-to be looked at by default justifies not doing the prefetch.
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250401143520.1113572-1-mjguzik@gmail.com
----
- arch/x86/mm/fault.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 296d294..697432f 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -13,7 +13,6 @@
- #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/
- #include <linux/perf_event.h>		/* perf_sw_event		*/
- #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
--#include <linux/prefetch.h>		/* prefetchw			*/
- #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
- #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
- #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
-@@ -1496,8 +1495,6 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
- 
- 	address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
- 
--	prefetchw(&current->mm->mmap_lock);
--
- 	/*
- 	 * KVM uses #PF vector to deliver 'page not present' events to guests
- 	 * (asynchronous page fault mechanism). The event happens when a
+-Fan
