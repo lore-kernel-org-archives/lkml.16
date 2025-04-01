@@ -1,140 +1,202 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962F1E378C;
-	Tue,  1 Apr 2025 09:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C981E378C;
+	Tue,  1 Apr 2025 09:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498228; cv=none; b=DnYp6StGvd9kAybuxsiwjbeQMc0Vq6IGvss7DoebHvHilMjSpeoYVQquXhoQ3U2JLD+8XCHv+UR3f9/4rDgpCzYNpx8BPWRdjcZ8ZmeJEm6lTrcwofA+wQU3AHAMYE9msS7gPvu71D/9pkHYgiNpQAD89OnRgLa53AMC+xLU8pM=
+	t=1743498305; cv=none; b=C1gwEpSQPgeLB7wdwHAQU1ZrfrAmm5uBEJlfa10rFtSqgU4JTlPAU9u5GLFxADDLy1L3dVuQ3a1MEmrjGbvz85hm6iDbVZQt9gxAJGf9U7hgJ9BS4VSpI+8Kbr1cZYKjxz3dLVv+wCO6R6ggAZMV1jWZHXtWIwgca71I11YVuQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498228; c=relaxed/simple;
-	bh=h3dSMXaTeJKtGlT/Nws1deNztR+SGogPFABHrZhLMQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BIgPFMZxa4XxdWLojxX2fxQpUmNdrCsmpFoF3SaG7UASYDUuWh7cEn+UafWOgJqRCxezA8VGSDW0ummMQdlehyQHTyqcHQ4SYHZKuGjOmsZxJDQP5BgpGJ+XZ18eLO0mLNoyxyFIeANLnRQk7AO7mpTyCsZrUYw+OCUw/LSmArE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=oHyCcoX4; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1743498305; c=relaxed/simple;
+	bh=ozmt19GvbEEBobaOV8eXtfFF+gY55KKZwRmKk1gIpUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jydrkSfgqagDxU43hgb8+wk2PD4MUDUSEmO/VeqgA+/WkofMY3OHo8p5ZLVhdWBwxnmHzVznr7niQtowDbEGEhIM6yqZJ+ytaz3xoZ2NV6COrjmpAQs7g+yL09w42d2gXBdd+3aoj4t2eG3kpb2aaSQTW0RbefPv+TMSJ8OlYLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IlQp4/q8; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="oHyCcoX4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1743498191; x=1744102991; i=deller@gmx.de;
-	bh=h3dSMXaTeJKtGlT/Nws1deNztR+SGogPFABHrZhLMQI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=oHyCcoX4zCKYkmtbKaz0TnX7AXNIIDqUZLtQZQJDsXAuestVxmjmYBLbM5vTKOj6
-	 Z+5sj8GrbOY0z9DcdZ9xC/1tjqPaHJCpnjdHY/+YXId7DfRV0ROt2WkJBZshHAM69
-	 fn1nIvpZX2I+GLjNUKzmlibSuJdmhuipXUQxq9Wl9t9leb/WfnjKfW6LdSdpl/9qq
-	 EgvckOAaRXOiFP0ASo8ijomTOM+yeTa5yyfkQUGOjY0X+xVSAWpvFmlW8Tm/F+XR3
-	 cz6syqFsLHfxs0hRQCXsal5ROBlAn2+i5x8CWNejiuIR/AOJEm998/heeyovimiB9
-	 vNU5Hz5mdx4q84VTSA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.121]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M3DNt-1ty9wY0z0P-003m1W; Tue, 01
- Apr 2025 11:03:11 +0200
-Message-ID: <e04f012b-cf10-4a84-8fbe-ece1a06f0f66@gmx.de>
-Date: Tue, 1 Apr 2025 11:03:08 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IlQp4/q8"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D80BC20486;
+	Tue,  1 Apr 2025 09:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743498295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d9pmeIEW/9O7W8wmb+t+48ls33PS37BbHr+WoLvC2sc=;
+	b=IlQp4/q8FMW2heV5Lrg35Gw7Qinca5/2aXgPmemfGuYOt5c//gVcTjPS+Yh4ZToHmWekY+
+	qUge8KnuBtzIcMESBfwwl6parBYZQCalvJq1HfvB4dkjKHnvY3epgo5m8vG8HCyy2PmG/J
+	7bnzgkd6puFzLtEgv//qkZHMPzYBAZiJNXKPWUHhFjWpA6+S6dCcNlN1nbWKHY/6pwosIE
+	oGW0sZhB5KJZjGqp/CcPGZHP77FLf/BOiRP+/VQ4K5UT99pqsjsQKSj0kLyclOCiS+EaH8
+	jY7BoX9tiSFLLWwMayTIjuH8D7qdwgvzbGyNpq1YvvKdtAlwvE0m871/Wk8lTQ==
+Date: Tue, 1 Apr 2025 11:04:54 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: nmydeen@mvista.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cminyard@mvista.com
+Subject: Re: [PATCH] rtc-m41t62: kickstart ocillator upon failure
+Message-ID: <20250401090454fb0ccf16@mail.local>
+References: <20250116062641.366679-1-nmydeen@mvista.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] fbdev: atyfb: Fix buffer overflow
-To: Denis Arefev <arefev@swemel.ru>, ville.syrjala@linux.intel.com
-Cc: dri-devel@lists.freedesktop.org, jani.nikula@intel.com,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org, tzimmermann@suse.de
-References: <Z-rzIfUMmOq1UZY1@intel.com>
- <20250401084010.5886-1-arefev@swemel.ru>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20250401084010.5886-1-arefev@swemel.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:HAcr17Y00TZU2Y2AXipi5xInURiSR0TZBvLx9HMjSh3qtMm4J1q
- DJIS8BU8xSRxXAmpFEaAOmtYzmUaTphKfRazS3KhRhbKe0G0e5Ezar7PPeP12iJ5HqycuJy
- T6t2pxetTHwtpROHPdK5zvf2IJvOYbcPKy3COw6MI6gVXFmuZAhU7YZABjfCGSXhGOn9NbJ
- s/j/xwre+dLwSnwfL28rA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/JuH8Ii531o=;2DZGGIhAsDr1zahERlYNpGzwnnp
- sJMbqG/komepMdlWi0kvFmGCtOEmNiqO8wzqZ13EAUTA/WHYFfO62vCz4BMzWF1F5zU7A0wh6
- iva/+LlW4LALby1Zq7TF134F22DVTRH1FhuE37pFck90K6Gw8ACJr2JGyP5CPq4JRBPV2ePTx
- 4oK6mkjtTQh77woRpJpovFNV/zl40T2MuQlauF8w003IIy4f9orGy3BAK+ve/cOWI35PFrFQC
- xqDBBwZD0tNwnk03LO6kzMZgEGi4tOCM8J3kD9zjHLHXvMUSbe2jlhNm+tOvuCCQ13PHfVRF1
- AI0zF8nlc2siRPArTaJtHlnZcZgsYeOrIZsn+ehIjuBvap6+SlAGx9k6UbKQ+kwBO0mlE1nr8
- xuVL+GzeJ3c0CdgUyCGnpmhBnJwwU6wHPYlKcuZ9TOZste7oh+jQLmzWJ4Ig1BG0OMnI6Ub4B
- LQ3gnhb1zhWsYg/i5svjeci/zGPEvGxXerxdeuZ1oyHYOXp9ZgOVDrdQc4UiPHEQMsDGdgSu3
- sKmtgj6UnNeJroJkVKCm7Kn4i0SZ85AkJdm6ka4m5NIO17EQjGRq5475E6FcHhCojOQtB4D/H
- VgFLm3FDhSM/zdegbo/FuDV7uFHfLHpSN38GDXypONycRVvlbb6LBj6xUMEwfQlq2SEYD4IJe
- iRTtSsVJtzNpIsc6QyyEyUEepqCJP8kDKxAvEa8cgYzoPTmi2/iy77rdJCx34WV6MRLO7Cz7P
- 1jwRKYfP/FN1qBNTM07/X7z0QbEfJiajMN7WChZ1bdphQ0YoYi7vUqjdTdj99hxJlnGLTvUDe
- sPWKTv5cSMbHQrFZ+E0bskYcVUGbpupLscmIzyvQMvnVVGW5L706YpwEFkpvPUpw+SdkaO8Jh
- qCm5xuonM2jht66302AJem2miDmY3YZU/NWi1Lghmvwuhj76S21gldArxnPxV25UFlTRxIQMJ
- TiwNwbU1Bdv+xQc6IWKT3Gvn1nJkyTUEa4XgYhZZJIUXieNkjREGEvNk2xZMy6GAtbB3ECHza
- MrEUproM6GwgkqEicY+5gVO90S/gbmByKWBMhJZUSBlwKSSeGPPz6sZoC/KHrdtmFpuukqtmW
- tvUAz2Y7okN14IiVd3dCBbXGuDb5gJuc6+BMGloWicHE6X0dJAKsUSCJzHeW60CFXrzAjVHn3
- tzJxUn7HS6Cd/fmXWv2QyPH24+WrZhccNC//IDnx7VzmKqjrUyRyd/eGpSxnxyYqpWp0Qu/8x
- arKaDSRg1tMt4csiHpbJi00ri3etSR6nZJ2+JTBVZHz87/2x0aB6q86MUkRX2yQUDGWjtCI2P
- eblpZjBZYxdISjf8asF2HB63ozWvpzMdoDKrMUHtTTzz4fU0h5Pxav7dMfg2HfzSFnX7/uTPe
- DEtW7ecDr2tTG+izmZlE8AKOGDnLDGVOdLbxz6+DO8dQDNxtcz+eQh2l1Y0KtTB/f22+6k8aZ
- MDgOH27YrdvTsgx/ysoXe7zlFZYa5O8lkJBnck92Vvv67T6Jo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116062641.366679-1-nmydeen@mvista.com>
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefleehkeehvedvfedvudeigffhfffftdfhffdtlefhjeehvedtvedttefffedvffenucffohhmrghinhepshhtrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopehnmhihuggvvghnsehmvhhishhtrgdrtghomhdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvg
+ hgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghmihhnhigrrhgusehmvhhishhtrgdrtghomh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On 4/1/25 10:40, Denis Arefev wrote:
-> One small question.
-> This chip (3D RAGE LT (Mach64 LG)) is very old it is 25 or
-> maybe 30 years old, why is it not removed from the core?
+Hello,
 
-It's old, but still runs in some configurations and people
-still (although probably not on daily bases) use it.
-Also don't forget about the various old non-x86 hardware machines
-which often used ATI cards too, and those machines are still
-supported by Linux as well.
+On 16/01/2025 11:56:41+0530, nmydeen@mvista.com wrote:
+> From: "A. Niyas Ahamed Mydeen" <nmydeen@mvista.com>
+> 
+> The ocillator on the m41t62 (and other chips of this type) needs
+> a kickstart upon a failure; the RTC read routine will notice the
+> oscillator failure and fail reads.  This is added in the RTC write
+> routine; this allows the system to know that the time in the RTC
+> is accurate.  This is following the procedure described in section
+> 3.11 of  "https://www.st.com/resource/en/datasheet/m41t62.pdf"
+> 
+> Signed-off-by: A. Niyas Ahamed Mydeen <nmydeen@mvista.com>
+> Reviewed-by: Corey Minyard <cminyard@mvista.com>
+> ---
+>  drivers/rtc/rtc-m41t80.c | 70 ++++++++++++++++++++++++++++------------
+>  1 file changed, 49 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-m41t80.c b/drivers/rtc/rtc-m41t80.c
+> index 1f58ae8b151e..77c21c91bae3 100644
+> --- a/drivers/rtc/rtc-m41t80.c
+> +++ b/drivers/rtc/rtc-m41t80.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/mutex.h>
+>  #include <linux/string.h>
+> +#include <linux/delay.h>
+>  #ifdef CONFIG_RTC_DRV_M41T80_WDT
+>  #include <linux/fs.h>
+>  #include <linux/ioctl.h>
+> @@ -204,7 +205,7 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>  		return flags;
+>  
+>  	if (flags & M41T80_FLAGS_OF) {
+> -		dev_err(&client->dev, "Oscillator failure, data is invalid.\n");
+> +		dev_err(&client->dev, "Oscillator failure, time may not be accurate, write time to RTC to fix it.\n");
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -227,21 +228,60 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>  	return 0;
+>  }
+>  
+> -static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> +static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *in_tm)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct m41t80_data *clientdata = i2c_get_clientdata(client);
+> +	struct rtc_time tm = *in_tm;
+>  	unsigned char buf[8];
+>  	int err, flags;
+> +	time64_t time = 0;
+>  
+> +	flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
+> +	if (flags < 0)
+> +		return flags;
+> +	if (flags & M41T80_FLAGS_OF) {
+> +		/* OF cannot be immediately reset: oscillator has to be restarted. */
+> +		dev_warn(&client->dev, "OF bit is still set, kickstarting clock.\n");
+> +		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC, M41T80_SEC_ST);
+> +		if (err < 0) {
+> +			dev_err(&client->dev, "Can't set ST bit\n");
 
-Helge
+This is super verbose, please use dev_dbg or drop the dev_errs. The only
+user action after a failure would be to restart the operation anyway.
+
+> +			return err;
+> +		}
+> +		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC,
+> +						    flags & ~M41T80_SEC_ST);
+> +		if (err < 0) {
+> +			dev_err(&client->dev, "Can't clear ST bit\n");
+> +			return err;
+> +		}
+> +		/* oscillator must run for 4sec before we attempt to reset OF bit */
+> +		msleep(4000);
+> +		/* Clear the OF bit of Flags Register */
+> +		err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS,
+> +					flags & ~M41T80_FLAGS_OF);
+
+checkpatch --strict complains about some style issues, please fix those.
+
+> +		if (err < 0) {
+> +			dev_err(&client->dev, "Unable to write flags register\n");
+> +			return err;
+> +		}
+> +		flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
+> +		if (flags < 0)
+> +			return flags;
+> +		else if (flags & M41T80_FLAGS_OF) {
+> +			dev_err(&client->dev, "Can't clear the OF bit check battery\n");
+> +			return err;
+> +		}
+> +		/* add 4sec of oscillator stablize time otherwise we are behind 4sec */
+> +		time = rtc_tm_to_time64(&tm);
+> +		rtc_time64_to_tm(time+4, &tm);
+> +	}
+
+The main issue is that now, you have cleared OF so if any read/write to
+the RTC fails, you would return from the function without having set the
+time. So when OF is set, you should first add the 4s, then set the time,
+then kickstart the RTC.
+
+>  	buf[M41T80_REG_SSEC] = 0;
+> -	buf[M41T80_REG_SEC] = bin2bcd(tm->tm_sec);
+> -	buf[M41T80_REG_MIN] = bin2bcd(tm->tm_min);
+> -	buf[M41T80_REG_HOUR] = bin2bcd(tm->tm_hour);
+> -	buf[M41T80_REG_DAY] = bin2bcd(tm->tm_mday);
+> -	buf[M41T80_REG_MON] = bin2bcd(tm->tm_mon + 1);
+> -	buf[M41T80_REG_YEAR] = bin2bcd(tm->tm_year - 100);
+> -	buf[M41T80_REG_WDAY] = tm->tm_wday;
+> +	buf[M41T80_REG_SEC] = bin2bcd(tm.tm_sec);
+> +	buf[M41T80_REG_MIN] = bin2bcd(tm.tm_min);
+> +	buf[M41T80_REG_HOUR] = bin2bcd(tm.tm_hour);
+> +	buf[M41T80_REG_DAY] = bin2bcd(tm.tm_mday);
+> +	buf[M41T80_REG_MON] = bin2bcd(tm.tm_mon + 1);
+> +	buf[M41T80_REG_YEAR] = bin2bcd(tm.tm_year - 100);
+> +	buf[M41T80_REG_WDAY] = tm.tm_wday;
+>  
+>  	/* If the square wave output is controlled in the weekday register */
+>  	if (clientdata->features & M41T80_FEATURE_SQ_ALT) {
+> @@ -261,18 +301,6 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *tm)
+>  		return err;
+>  	}
+>  
+> -	/* Clear the OF bit of Flags Register */
+> -	flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
+> -	if (flags < 0)
+> -		return flags;
+> -
+> -	err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS,
+> -					flags & ~M41T80_FLAGS_OF);
+> -	if (err < 0) {
+> -		dev_err(&client->dev, "Unable to write flags register\n");
+> -		return err;
+> -	}
+> -
+>  	return err;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
