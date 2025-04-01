@@ -1,63 +1,63 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005EA20127A;
-	Tue,  1 Apr 2025 11:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A75F202C2D;
+	Tue,  1 Apr 2025 11:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743508011; cv=none; b=e/cUm+pnMCCPzJZlH1/R96EpnxhhhQiVF9IamWZwkJZ37dHxWJjSt3crMxPXbghREQrhVrnoCsQ+om/Se11Zijl95ckwZo3lT0bbbSlJ1HrJstH6j8aaYddbgjRGTdYFrDf7CM9EQIbWZIrcvSgZtJzlatjs3JHUQwqk33Gcgfk=
+	t=1743508013; cv=none; b=M7J9r03qBEqRZRlAF1k+yyJrVsqjisgrXd+wyjlN03yrbbs7tnllgFz7i3N/2dfYr3ptYAjtZiREFrQV33O9JuwpW6QQ6ochnDrc8HDFTE7JebQ9FVyek4F+37nx+KK89gp5/ajCPd8sIIEbzvGYiD+1YQpgCfgtX709d8SRNPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743508011; c=relaxed/simple;
-	bh=EZMVh2db0ZmarXKOQ7m4yP7KorQoZr0yhTBe80XRdC8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NSr9ZESGJMIMK3D3q6sJhVINEYDzyvFaz3V6RaRfmh8Va/AWMm7vHbXrCizH9jj8tJPif5kEd0IikN/Zn9FRkYa6oY23g2CiOXM7IhM0SslJfkX9p7VYbTY5ZRsser6MAWpArLqURf3bY0MpH+R6D1CC0OjSvm42p3m9N0Ga858=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/W/bYeo; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1743508013; c=relaxed/simple;
+	bh=IujCQ9IoIZbeIWphTzYwK68VeGSRhaVRbzlwAfd7wwU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HRxxo5rgxjI1Xh/Vzfzh86hXlvNsVfeGuCejXZLvKxsg8BXnCSLZIJvlnxC6fWunYSPt53l3pU+d6GdbsyT19yLD33LmOoyi7sstIpVC1mOmdTfiAGHG1+e8nGgfAU9Kce9k/2oscADDNbUUr6OYgFMO94E5FnCmljtxgzXjzcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQat3XwS; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/W/bYeo"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so55821085e9.2;
-        Tue, 01 Apr 2025 04:46:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQat3XwS"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso52570015e9.1;
+        Tue, 01 Apr 2025 04:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743508007; x=1744112807; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743508010; x=1744112810; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z+OVgZAbcP9S/JBP9Hsy4ANWhG6zZP/1wY/sh/4+PQM=;
-        b=D/W/bYeof+dyyzqs8zr3yo7KchAqTvnBlx/YJGNM/NUwD6jvHc6aXAH8xBoOEa/Y2a
-         rH924u30b0OfLAERNd9KMAMB7mJf14S3+srr9/xA/0Pia5Txok67qPBp3u92kL0KqDW+
-         /wbqOAWZeCkjuLKWTD2QtRef7ksj0iOV1mfxL4v6wJs/tEbYfkhRhwGaa3NzUW4v+pOC
-         QoFSXDPQBY+FOEKxag7ro7PQ5tn3xlFcxeCwZ4pLxl3GfRFAxhNycKNYPG4WZpEomVhS
-         xhUHO3HerZspjcNLiviwrSZjHUwqnbqz63EZo6uV1DFd94w3iSgf3w4pGU3Jlqx/p1dE
-         YNQg==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C3/3eFl4jlQ6T50tlJqQU5aclw0PVg9d0gCXOGIE1ww=;
+        b=DQat3XwSKF9IU3DZ5U4xrs08rLZlo6VLv33T+WTE51vQJ+/ldNOKdr0InOnnJxgAjx
+         QUsr5DoY3gzzzzTRn0/j1bgSPLvWhNe+aEhrqoKeRgwTXnXFUUMW8gU0yI3Dc9Bu3tIr
+         Kxa0oy8K32So3H9Oa6Sl7UGztHQVpkPeXjigYlX2rFQID4j80UIyxKnJMy0nRfwBSchZ
+         oWPfFlLgJmWkkv3O+CdiGwsrrXjFT/d8lGr3VTt0xYhwPYGqyp/93367dy7Mh4hSunQN
+         Ga3T/7z7nsQShUV791ui6s84IHsdrVnwjfAkbwNv5TXaw7mgNlQ9Jw5C0X49g1ntgk+8
+         2emA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743508007; x=1744112807;
+        d=1e100.net; s=20230601; t=1743508010; x=1744112810;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z+OVgZAbcP9S/JBP9Hsy4ANWhG6zZP/1wY/sh/4+PQM=;
-        b=GvpzBwyXrzxyHQaaeVgX3FVA7JbRuM2ZvmwgowE1JcpLdeZnG6wT9qtMHnj5okaTPR
-         lCvBCrfqCopua9mc41/J7pfIM9Pwi7RjBQEo42PQ2FEJgjHmtCQrlafWGTH6k4XHwf7D
-         2uoWkfdDzxXlUmNUDON+GZZGx44Vp87j2HL2oa2V/NKDJR/Hd2RW+q9ai9d/bSHnmQh8
-         HrgaCXDKxa4+bGHAwqIBgS8tN03sdjvauSFTR+5pbZM7bBAkrU7ilMe08K5r4WrKkE9l
-         /s2ddJ3wRKni9sudi8jdip6FwNfXEC87nflmUCB3yAakwFoTN5nrKUyRBPElMco7Lxf9
-         pa5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPb652c2eiNrE4GC6on8lHZUSEvxNn7fPgkGXpzGmOjtSuQgh9m15WbIhGSUIsVua34b0qnXG7@vger.kernel.org, AJvYcCX4KtKLImbSEJEc+RatMBThmUpSBMUjX2jMNRIp8+ubAulooUYMeSHs3lnjUYnnPvougI9b7cSPHEMV@vger.kernel.org, AJvYcCXkmudvpQKZAuRPJAgviGl4rOTyTs9XTxQt7N7OYEGtIH3pq6ZdmXCCN2/t0yXDQguNUpAI4gmjZo2QoYdp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCaQdlPnEOr5IM+YXd6ub4VwCOtY7fdYXuaeC7rD7HDHj0M7os
-	KKGejdAGfGncc/V+swkCnTUlVz193B1wWIPfjVVA2hJqCbU9+SGCFR06Vg==
-X-Gm-Gg: ASbGnctXIW+Kd7mlR5n/6bstrZTP14MheXfnui2E/D22PtKjC6Xx1EigK6xCbkVnl8/
-	bGwQtWgdKdJLVN5QuKrqw+pyDii/zwy+a5ecatV14mnwVJmAdtaR3e+DM0SwTkR/3FHTlSFf76h
-	8RCoQbEgzStLpE+T/YYdi430hjL7AabvLuc7RMocw1VE3J8HtZza6UQEgF7FfgCBWDgPAkxKXpw
-	kTsX4QyuvySQbWuIUOzibWAszKB9mn/TmBOieujivlLDazU/Mu7RwHg63cxyrOG54Pc0s+n1aFA
-	EppdT2pRUHf2btJVgkOIZ8kiJlUqR0FCEKHOZ32cfrmAORn0qWB44DZVmdcUlnC9k1WOgYqbRiG
-	sl6QEah4aoI+QNw==
-X-Google-Smtp-Source: AGHT+IE4ry0mWog1VRT61Q62f4bhtw7L1usAf8HAbHOKaSLOKsUBr9WzxZ37rCik1qQf/ZTkxjlN/A==
-X-Received: by 2002:a05:600c:468c:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-43db622a42emr126481265e9.12.1743508006951;
-        Tue, 01 Apr 2025 04:46:46 -0700 (PDT)
+        bh=C3/3eFl4jlQ6T50tlJqQU5aclw0PVg9d0gCXOGIE1ww=;
+        b=W11ArUwy2A46zvOfwdc9w4DDHTAr2bjBg0mEL8jjoRVXBuZk9cFTswN0J1hCJQ5i5P
+         H2fjwRxCceBfC/jlnTouJ4mvsao+oFf6IvpoYJ2EOaXQYWGlr2QpaPCUikdu8vxrHJwV
+         POhK6v6S1+WuLW5B/spbt524xpbCa+aOx8ILi8L9MqqYeb/mSdH5jHktgrbfFZJ0hpVZ
+         YQn5RPHl30kOhb7cwenaysZV7u9AcRBs7wW7HRZFaEj+c3gaLHvsxxtOmSC5s+GhcKgq
+         FXmleKvUGSrPp5D0ak8+9EhEfhA7fZ5nMr6qlS6YQ59XGI4hGf442O7Oqi64/fFiJaZQ
+         lv7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Hr543lPtgnp6TuNzPdoyq+Dx2YLXAVat1JEiG16LW5NrJ09kJ+duoaT5fBxLIKCn6Hfnv2zPwkGa@vger.kernel.org, AJvYcCVAha87yFv2mhNb9it72bTWBnAOHS9285cmHxZL5TMVA8v6pKsAkFHMe/ZcIhbLgsenSPU7wtPX@vger.kernel.org, AJvYcCXf8OUSR1U28rFe6zxUk4o0XFVb6XA2kLUKJUgmTxKsX46mGxadSeUEqgEAv/3A0FEJnp5ihA0SSeyYMlvT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEM+J1h0YoRe+SVgpqrfLDDbS2uJj8LZiEzQ4YiwToYSswbzcC
+	jjuhN8tk+y7YUkXZ0Uvgbt8SSc6GltJWL7taf5ny2uDajg8M6Xn0
+X-Gm-Gg: ASbGncsLHpbZQnC/I04XI/ZGy8UcnknQBuuhp6ssGApt6wxFdW1b9bJteOggWkVKBYL
+	rD+5DQmpxP36tXAdXo3AKgK2mw8UmNhHWIKqR6muZfQRwikCdiWDNayfs2cGefJCyxQY/zT0ewd
+	85A6Kd4EkiQTBiLTpSwv4MtlJ6ZRKYYX0v6y05eV8qzEyE9iCm+WKu8i8u3mZGL/igX7OSnd6ES
+	WWaMlE6qt8mqH1GtPszAEB+m3yfknI6nilOHsY8ERN/qebiT12Gg4OeACnWOC5tWewOCcx48OcZ
+	xOnpZbmtUhz78i2a7X509OKOud6tUyRj/+hBOKU7WvZwyRhygJTqoHdkuZUcGvmeDmQcaeERwep
+	eXAO+a4WQcdqFZA==
+X-Google-Smtp-Source: AGHT+IGzStcsNM0lTrd6CNJ5/kLN7VXIH17cdBr6F9hmiGQss8AKVLI/EC1v3Gg1nJaG/xji9hBaPw==
+X-Received: by 2002:a05:600c:4e48:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-43eaa03e0c4mr19310025e9.6.1743508009646;
+        Tue, 01 Apr 2025 04:46:49 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ead679894sm8148175e9.40.2025.04.01.04.46.45
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ead679894sm8148175e9.40.2025.04.01.04.46.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 04:46:46 -0700 (PDT)
+        Tue, 01 Apr 2025 04:46:49 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -80,10 +80,9 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [net-next RFC PATCH v5 1/6] net: phy: pass PHY driver to .match_phy_device OP
-Date: Tue,  1 Apr 2025 13:46:02 +0200
-Message-ID: <20250401114611.4063-2-ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH v5 3/6] net: phy: nxp-c45-tja11xx: simplify .match_phy_device OP
+Date: Tue,  1 Apr 2025 13:46:04 +0200
+Message-ID: <20250401114611.4063-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250401114611.4063-1-ansuelsmth@gmail.com>
 References: <20250401114611.4063-1-ansuelsmth@gmail.com>
@@ -95,322 +94,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pass PHY driver pointer to .match_phy_device OP in addition to phydev.
-Having access to the PHY driver struct might be useful to check the
-PHY ID of the driver is being matched for in case the PHY ID scanned in
-the phydev is not consistent.
+Simplify .match_phy_device OP by using a generic function and using the
+new phy_id PHY driver info instead of hardcoding the matching PHY ID
+with new variant for macsec and no_macsec PHYs.
 
-A scenario for this is a PHY that change PHY ID after a firmware is
-loaded, in such case, the PHY ID stored in PHY device struct is not
-valid anymore and PHY will manually scan the ID in the match_phy_device
-function.
+Also make use of PHY_ID_MATCH_MODEL macro and drop PHY_ID_MASK define to
+introduce phy_id and phy_id_mask again in phy_driver struct.
 
-Having the PHY driver info is also useful for those PHY driver that
-implement multiple simple .match_phy_device OP to match specific MMD PHY
-ID. With this extra info if the parsing logic is the same, the matching
-function can be generalized by using the phy_id in the PHY driver
-instead of hardcoding.
-
-Suggested-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/net/phy/bcm87xx.c              |  6 ++++--
- drivers/net/phy/icplus.c               |  6 ++++--
- drivers/net/phy/marvell10g.c           | 12 ++++++++----
- drivers/net/phy/micrel.c               |  6 ++++--
- drivers/net/phy/nxp-c45-tja11xx.c      | 12 ++++++++----
- drivers/net/phy/nxp-tja11xx.c          |  6 ++++--
- drivers/net/phy/phy_device.c           |  2 +-
- drivers/net/phy/realtek/realtek_main.c | 27 +++++++++++++++++---------
- drivers/net/phy/teranetics.c           |  3 ++-
- include/linux/phy.h                    |  3 ++-
- 10 files changed, 55 insertions(+), 28 deletions(-)
+ drivers/net/phy/nxp-c45-tja11xx.c | 45 ++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/phy/bcm87xx.c b/drivers/net/phy/bcm87xx.c
-index e81404bf8994..1e1e2259fc2b 100644
---- a/drivers/net/phy/bcm87xx.c
-+++ b/drivers/net/phy/bcm87xx.c
-@@ -185,12 +185,14 @@ static irqreturn_t bcm87xx_handle_interrupt(struct phy_device *phydev)
- 	return IRQ_HANDLED;
- }
- 
--static int bcm8706_match_phy_device(struct phy_device *phydev)
-+static int bcm8706_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8706;
- }
- 
--static int bcm8727_match_phy_device(struct phy_device *phydev)
-+static int bcm8727_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8727;
- }
-diff --git a/drivers/net/phy/icplus.c b/drivers/net/phy/icplus.c
-index bbcc7d2b54cd..c0c4f19cfb6a 100644
---- a/drivers/net/phy/icplus.c
-+++ b/drivers/net/phy/icplus.c
-@@ -520,12 +520,14 @@ static int ip101a_g_match_phy_device(struct phy_device *phydev, bool ip101a)
- 	return ip101a == !ret;
- }
- 
--static int ip101a_match_phy_device(struct phy_device *phydev)
-+static int ip101a_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return ip101a_g_match_phy_device(phydev, true);
- }
- 
--static int ip101g_match_phy_device(struct phy_device *phydev)
-+static int ip101g_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return ip101a_g_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index 5354c8895163..13e81dff42c1 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -1264,7 +1264,8 @@ static int mv3310_get_number_of_ports(struct phy_device *phydev)
- 	return ret + 1;
- }
- 
--static int mv3310_match_phy_device(struct phy_device *phydev)
-+static int mv3310_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	if ((phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] &
- 	     MARVELL_PHY_ID_MASK) != MARVELL_PHY_ID_88X3310)
-@@ -1273,7 +1274,8 @@ static int mv3310_match_phy_device(struct phy_device *phydev)
- 	return mv3310_get_number_of_ports(phydev) == 1;
- }
- 
--static int mv3340_match_phy_device(struct phy_device *phydev)
-+static int mv3340_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	if ((phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] &
- 	     MARVELL_PHY_ID_MASK) != MARVELL_PHY_ID_88X3310)
-@@ -1297,12 +1299,14 @@ static int mv211x_match_phy_device(struct phy_device *phydev, bool has_5g)
- 	return !!(val & MDIO_PCS_SPEED_5G) == has_5g;
- }
- 
--static int mv2110_match_phy_device(struct phy_device *phydev)
-+static int mv2110_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return mv211x_match_phy_device(phydev, true);
- }
- 
--static int mv2111_match_phy_device(struct phy_device *phydev)
-+static int mv2111_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return mv211x_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 24882d30f685..d7f11f16fbd1 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -768,7 +768,8 @@ static int ksz8051_ksz8795_match_phy_device(struct phy_device *phydev,
- 		return !ret;
- }
- 
--static int ksz8051_match_phy_device(struct phy_device *phydev)
-+static int ksz8051_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return ksz8051_ksz8795_match_phy_device(phydev, true);
- }
-@@ -888,7 +889,8 @@ static int ksz8061_config_init(struct phy_device *phydev)
- 	return kszphy_config_init(phydev);
- }
- 
--static int ksz8795_match_phy_device(struct phy_device *phydev)
-+static int ksz8795_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return ksz8051_ksz8795_match_phy_device(phydev, false);
- }
 diff --git a/drivers/net/phy/nxp-c45-tja11xx.c b/drivers/net/phy/nxp-c45-tja11xx.c
-index 250a018d5546..bc2b7cc0cebe 100644
+index bc2b7cc0cebe..8880547c4bfa 100644
 --- a/drivers/net/phy/nxp-c45-tja11xx.c
 +++ b/drivers/net/phy/nxp-c45-tja11xx.c
-@@ -1971,25 +1971,29 @@ static int nxp_c45_macsec_ability(struct phy_device *phydev)
+@@ -19,7 +19,6 @@
+ 
+ #include "nxp-c45-tja11xx.h"
+ 
+-#define PHY_ID_MASK			GENMASK(31, 4)
+ /* Same id: TJA1103, TJA1104 */
+ #define PHY_ID_TJA_1103			0x001BB010
+ /* Same id: TJA1120, TJA1121 */
+@@ -1971,32 +1970,24 @@ static int nxp_c45_macsec_ability(struct phy_device *phydev)
  	return macsec_ability;
  }
  
--static int tja1103_match_phy_device(struct phy_device *phydev)
-+static int tja1103_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
+-static int tja1103_match_phy_device(struct phy_device *phydev,
+-				    const struct phy_driver *phydrv)
++static int tja11xx_no_macsec_match_phy_device(struct phy_device *phydev,
++					      const struct phy_driver *phydrv)
  {
- 	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
- 	       !nxp_c45_macsec_ability(phydev);
+-	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
+-	       !nxp_c45_macsec_ability(phydev);
+-}
++	if (!phy_id_compare(phydev->phy_id, phydrv->phy_id,
++			    phydrv->phy_id_mask))
++		return 0;
+ 
+-static int tja1104_match_phy_device(struct phy_device *phydev,
+-				    const struct phy_driver *phydrv)
+-{
+-	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
+-	       nxp_c45_macsec_ability(phydev);
++	return !nxp_c45_macsec_ability(phydev);
  }
  
--static int tja1104_match_phy_device(struct phy_device *phydev)
-+static int tja1104_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
+-static int tja1120_match_phy_device(struct phy_device *phydev,
+-				    const struct phy_driver *phydrv)
++static int tja11xx_macsec_match_phy_device(struct phy_device *phydev,
++					   const struct phy_driver *phydrv)
  {
- 	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
- 	       nxp_c45_macsec_ability(phydev);
+-	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1120, PHY_ID_MASK) &&
+-	       !nxp_c45_macsec_ability(phydev);
+-}
++	if (!phy_id_compare(phydev->phy_id, phydrv->phy_id,
++			    phydrv->phy_id_mask))
++		return 0;
+ 
+-static int tja1121_match_phy_device(struct phy_device *phydev,
+-				    const struct phy_driver *phydrv)
+-{
+-	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1120, PHY_ID_MASK) &&
+-	       nxp_c45_macsec_ability(phydev);
++	return nxp_c45_macsec_ability(phydev);
  }
  
--static int tja1120_match_phy_device(struct phy_device *phydev)
-+static int tja1120_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1120, PHY_ID_MASK) &&
- 	       !nxp_c45_macsec_ability(phydev);
- }
+ static const struct nxp_c45_regmap tja1120_regmap = {
+@@ -2069,6 +2060,7 @@ static const struct nxp_c45_phy_data tja1120_phy_data = {
  
--static int tja1121_match_phy_device(struct phy_device *phydev)
-+static int tja1121_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1120, PHY_ID_MASK) &&
- 	       nxp_c45_macsec_ability(phydev);
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index 07e94a2478ac..3c38a8ddae2f 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -651,12 +651,14 @@ static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
- 	return !ret;
- }
+ static struct phy_driver nxp_c45_driver[] = {
+ 	{
++		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1103),
+ 		.name			= "NXP C45 TJA1103",
+ 		.get_features		= nxp_c45_get_features,
+ 		.driver_data		= &tja1103_phy_data,
+@@ -2090,9 +2082,10 @@ static struct phy_driver nxp_c45_driver[] = {
+ 		.get_sqi		= nxp_c45_get_sqi,
+ 		.get_sqi_max		= nxp_c45_get_sqi_max,
+ 		.remove			= nxp_c45_remove,
+-		.match_phy_device	= tja1103_match_phy_device,
++		.match_phy_device	= tja11xx_no_macsec_match_phy_device,
+ 	},
+ 	{
++		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1103),
+ 		.name			= "NXP C45 TJA1104",
+ 		.get_features		= nxp_c45_get_features,
+ 		.driver_data		= &tja1103_phy_data,
+@@ -2114,9 +2107,10 @@ static struct phy_driver nxp_c45_driver[] = {
+ 		.get_sqi		= nxp_c45_get_sqi,
+ 		.get_sqi_max		= nxp_c45_get_sqi_max,
+ 		.remove			= nxp_c45_remove,
+-		.match_phy_device	= tja1104_match_phy_device,
++		.match_phy_device	= tja11xx_macsec_match_phy_device,
+ 	},
+ 	{
++		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1120),
+ 		.name			= "NXP C45 TJA1120",
+ 		.get_features		= nxp_c45_get_features,
+ 		.driver_data		= &tja1120_phy_data,
+@@ -2139,9 +2133,10 @@ static struct phy_driver nxp_c45_driver[] = {
+ 		.get_sqi		= nxp_c45_get_sqi,
+ 		.get_sqi_max		= nxp_c45_get_sqi_max,
+ 		.remove			= nxp_c45_remove,
+-		.match_phy_device	= tja1120_match_phy_device,
++		.match_phy_device	= tja11xx_no_macsec_match_phy_device,
+ 	},
+ 	{
++		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1120),
+ 		.name			= "NXP C45 TJA1121",
+ 		.get_features		= nxp_c45_get_features,
+ 		.driver_data		= &tja1120_phy_data,
+@@ -2164,7 +2159,7 @@ static struct phy_driver nxp_c45_driver[] = {
+ 		.get_sqi		= nxp_c45_get_sqi,
+ 		.get_sqi_max		= nxp_c45_get_sqi_max,
+ 		.remove			= nxp_c45_remove,
+-		.match_phy_device	= tja1121_match_phy_device,
++		.match_phy_device	= tja11xx_macsec_match_phy_device,
+ 	},
+ };
  
--static int tja1102_p0_match_phy_device(struct phy_device *phydev)
-+static int tja1102_p0_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return tja1102_match_phy_device(phydev, true);
- }
- 
--static int tja1102_p1_match_phy_device(struct phy_device *phydev)
-+static int tja1102_p1_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return tja1102_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 675fbd225378..2d6ceacb2986 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -514,7 +514,7 @@ static int phy_bus_match(struct device *dev, const struct device_driver *drv)
- 		return 0;
- 
- 	if (phydrv->match_phy_device)
--		return phydrv->match_phy_device(phydev);
-+		return phydrv->match_phy_device(phydev, phydrv);
- 
- 	if (phydev->is_c45) {
- 		for (i = 1; i < num_ids; i++) {
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index 893c82479671..b4dc0d6fe4ca 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -1117,13 +1117,15 @@ static bool rtlgen_supports_mmd(struct phy_device *phydev)
- 	return val > 0;
- }
- 
--static int rtlgen_match_phy_device(struct phy_device *phydev)
-+static int rtlgen_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
- 	       !rtlgen_supports_2_5gbps(phydev);
- }
- 
--static int rtl8226_match_phy_device(struct phy_device *phydev)
-+static int rtl8226_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
- 	       rtlgen_supports_2_5gbps(phydev) &&
-@@ -1139,32 +1141,38 @@ static int rtlgen_is_c45_match(struct phy_device *phydev, unsigned int id,
- 		return !is_c45 && (id == phydev->phy_id);
- }
- 
--static int rtl8221b_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_match_phy_device(struct phy_device *phydev,
-+				     const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_8221B && rtlgen_supports_mmd(phydev);
- }
- 
--static int rtl8221b_vb_cg_c22_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vb_cg_c22_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VB_CG, false);
- }
- 
--static int rtl8221b_vb_cg_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vb_cg_c45_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VB_CG, true);
- }
- 
--static int rtl8221b_vn_cg_c22_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vn_cg_c22_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VN_CG, false);
- }
- 
--static int rtl8221b_vn_cg_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vn_cg_c45_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VN_CG, true);
- }
- 
--static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev)
-+static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev,
-+						const struct phy_driver *phydrv)
- {
- 	if (phydev->is_c45)
- 		return false;
-@@ -1182,7 +1190,8 @@ static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev)
- 	return rtlgen_supports_2_5gbps(phydev) && !rtlgen_supports_mmd(phydev);
- }
- 
--static int rtl8251b_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8251b_c45_match_phy_device(struct phy_device *phydev,
-+					 const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8251B, true);
- }
-diff --git a/drivers/net/phy/teranetics.c b/drivers/net/phy/teranetics.c
-index 752d4bf7bb99..46c5ff7d7b56 100644
---- a/drivers/net/phy/teranetics.c
-+++ b/drivers/net/phy/teranetics.c
-@@ -67,7 +67,8 @@ static int teranetics_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
--static int teranetics_match_phy_device(struct phy_device *phydev)
-+static int teranetics_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[3] == PHY_ID_TN2020;
- }
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index a2bfae80c449..7042ceaadcc6 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -990,7 +990,8 @@ struct phy_driver {
- 	 * driver for the given phydev.	 If NULL, matching is based on
- 	 * phy_id and phy_id_mask.
- 	 */
--	int (*match_phy_device)(struct phy_device *phydev);
-+	int (*match_phy_device)(struct phy_device *phydev,
-+				const struct phy_driver *phydrv);
- 
- 	/**
- 	 * @set_wol: Some devices (e.g. qnap TS-119P II) require PHY
 -- 
 2.48.1
 
