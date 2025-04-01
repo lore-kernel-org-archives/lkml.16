@@ -1,186 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CA22110;
-	Tue,  1 Apr 2025 00:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E202E3398
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743466245; cv=none; b=ExJEHMItawRITlOq96WC/la0JZVtVg9XzBM5cQWVixNyYrNGtA4cmEh4i1+pNtAiTzA9hR5ylsQ+ksBTFIjxkzDdczDd3hq6KpPfgh+OWADLCOQE76M2VFlaECTsVHiUtcilZtMupEawsH9phMFAC12k3zXjK5Lhvw3hmI11/2Y=
+	t=1743466329; cv=none; b=kF5VCshSbm2kaWUVBxhyo3U0oDNmkey48ZuukYQvYCAEtucmSSem5MG2fC0QAfxIyT4sbkXIQ2SmeWM3YZnW6jkvUBIQ541hSgcBpkNitApVV8xLNmHxd2kEnhhnSxxaN+LnYMiLQQ8c3j22b+1EgVdgxWSCsa51OvjHBHbLrZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743466245; c=relaxed/simple;
-	bh=n2nI7bVWJSUo4e+nmn6e/SSDeji7IgYEJ7GR16ykhk8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IlwYM3THs6FkuWwBkmEjTk7ymA+wnZny9+UgAcSuY66rQxOBB4PBDwB81GVPddYI0jJFrMGwr/dYiuJWh4QGd+fW5dDLipvXHGFW5U1JQ1FOtXP0WrFUGJSWOyaPxekRUvqsophfcylmZQ++U1qQC9Pc9e5NM3+otrTe3UtWBrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIxcpsMC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743466329; c=relaxed/simple;
+	bh=4OBqz7wDraSoW0l6yq+0GpIDBxLW46dFRm5AL8c+8kg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lfVXIeDaacZlmu3bZ39l8/X5xow5eV31OQDaNnaHT3ZjAvCg3Xk06tbt7/R224OcbDITC4ypqlQa7/2dMZTzVoqVhV7JV2OYq4olIyvrQ+4oZHBHo8VZ2+SDvF8c9j233UGFVt5P6RaEI7bvBZrTvrf7LEt74FJTFz9dfTYZGAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=c3UGq60D; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIxcpsMC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC1FC4CEE5;
-	Tue,  1 Apr 2025 00:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743466244;
-	bh=n2nI7bVWJSUo4e+nmn6e/SSDeji7IgYEJ7GR16ykhk8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QIxcpsMCfApfZ71OdtQN07KtNezz9EBufYw4dbTP8t29o9Hyp9ihsjHNY1QmgrVBi
-	 U78giJ98YnPZRdR92TXorM0f0xEl1ILxGe34grV6z8X4rQXVdNcwZBqvbaxVnEt9MK
-	 yIUgmnYf6JO6LR4v+ueZozCyq7IfoE2reGSNAvkVZoZSwiGssB1EKShDclp9fuyZ0d
-	 qfwH65ANHZKqibdpr32qY0IjYI8LwvpI6DvdJ5KesUccrqKh46nKjB7czeYwWtdEtF
-	 mdj4D8n5RAKUYDAljxlMmOKKFlnPby5ZhhG+k6M4IH7PR8uw5dmU6uTbV0bmZkcOsE
-	 wzwaJBo6nhkkg==
-From: Jakub Kicinski <kuba@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pabeni@redhat.com
-Subject: [GIT PULL] Networking for v6.15-rc0
-Date: Mon, 31 Mar 2025 17:10:43 -0700
-Message-ID: <20250401001043.787834-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="c3UGq60D"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso9704982a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743466326; x=1744071126; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JePFNkfbv8aLxrEPQhMGBSSVCyqR/ZwFXTbEBhcrHt4=;
+        b=c3UGq60D+GvWqS4mdEzeDGDYzIpCTK4C4mXqsVTd44NWM7d7WZlbBjOHw+wZ+G2jHu
+         ZgbXDIUQYtmGZY2swluO1FzEyXSxPuYX+6P6fQGGMlSsBlfLIyTNmy74sX6E+zvxSWj5
+         ejWrm6tIynDuAuea2OwA8Q2H234bhSb+gYy8g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743466326; x=1744071126;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JePFNkfbv8aLxrEPQhMGBSSVCyqR/ZwFXTbEBhcrHt4=;
+        b=pQ/VdBQ97jmIKpZ2nZg2Gyflqios5H2lGj7J8za3YFqANySgisW1+JMGOo+zuSQytv
+         jcBqm3+LXmb9/QG1X/9nxFBV59WHnAzzZ9fFJ5uFxPOMjBkxPXPAYvmtFHP9+JObQC77
+         qtDBiabHHFgSau+zw2EquJS6eUy5YxgagB48bSAWNPcfWwyF8PGl125AvNtf7SZI2W/+
+         b/92VJSzpwRy/GKuUxdL62qhHCBItGzJ28OukG+XxhnGb2vv+8RnqJF09PZQzcpuxR5S
+         WnOMWWvvYSdyoQrSvDJ/4p6G/4cy+N7oYZy+O8VbERhrI0CcYTnTrkxI0RgvP7PDz+fG
+         mPeA==
+X-Gm-Message-State: AOJu0YwzaRcyutiAC6i/Fgp8KwPyxUcqElSkEuXCnbpyVXPS6xib9uF3
+	RA0PYGrbEqYCKgBdMD+M22d9jBZqk6LdOf8Fp3Rp7lvOYLF7n+sNdYrMvJY9ByX1o5gddv9f/Vb
+	9gB4=
+X-Gm-Gg: ASbGncubuPcICU2Zl5uo1KLt6jAoAXJfRCx8RY5aWwXxA6co8Yb0Q2nA8Q0YzmSOsp/
+	Nox81V4ju4Ir69/SnQsb9uUTHDqH419P7+TkO+LdBm/x97lYelOt8FvbnFRdPcUhRXMJeC3K4C9
+	GChYiyEMCDVh/FbUbLwFaj+2tww4fk1xsBYteECeAJcrDHSedYITTKH2OLYPrcZ/V6itopccH3I
+	vBZlN/WrVZDzoR/8936mFlLMZ1SZNL32V75yHQYanKyUIRf6h5zfXwr3ulkQDk++JS1hn9HA6C0
+	TZJ7zo64GU/o5IBAXbsQGvUDtuJ4oUiqaNHdgeWXYbEEwRBIFySLOzdNyPk+97iWEp8u5gz9iVu
+	1CBVMp+cU7dCbVCZ5C20=
+X-Google-Smtp-Source: AGHT+IHleLj1aF8S03OiwlPs6QBoajM5kjphoH3BswGAbRxBLlfV0yslIsXr1UIDrIRC+DQF+XrKuw==
+X-Received: by 2002:a05:6402:2547:b0:5ed:2762:727a with SMTP id 4fb4d7f45d1cf-5edfcd4b01amr8082902a12.11.1743466325868;
+        Mon, 31 Mar 2025 17:12:05 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc18030afsm6504731a12.81.2025.03.31.17.12.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 17:12:04 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abbb12bea54so1021084966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:12:02 -0700 (PDT)
+X-Received: by 2002:a17:907:2cc7:b0:ac3:b50c:c95b with SMTP id
+ a640c23a62f3a-ac738c6f05amr961651866b.56.1743466322604; Mon, 31 Mar 2025
+ 17:12:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+ <20250331133906.48e115f5@gandalf.local.home> <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+ <20250331165801.715aba48@gandalf.local.home> <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+ <20250331194251.02a4c238@gandalf.local.home>
+In-Reply-To: <20250331194251.02a4c238@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 17:11:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
+X-Gm-Features: AQ5f1JqK7DmBOcFeFBdcHQa56oLi7rko5ae58L-hQhqZ-SgnT-hvWfyBuLaYeuE
+Message-ID: <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
+ the vmap of physical memory
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
+	Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus!
+On Mon, 31 Mar 2025 at 16:41, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Hmm, so if we need to map this memory to user space memory, then I can't
+> use the method from this patch series, if I have to avoid struct page.
+>
+> Should I then be using vm_iomap_memory() passing in the physical address?
 
-The following changes since commit 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95:
+I actually think that would be the best option in general - it works
+*regardless* of the source of the pages (ie it works for pages that
+don't have 'struct page' backing, but it works for regular RAM too).
 
-  Merge tag 'net-next-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next (2025-03-26 21:48:21 -0700)
+So it avoids any question of how the page was allocated, and it also
+avoids the page reference counting overhead.
 
-are available in the Git repository at:
+I thought you did that already for the user mappings - don't use you
+remap_pfn_range()?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.15-rc0
+That's basically the equivalent of vmap_page_range() - you're mapping
+a whole range based on physical addresses, not mapping individual
+pages.
 
-for you to fetch changes up to f278b6d5bb465c7fd66f3d103812947e55b376ed:
+But I didn't go look, this is from dim and possibly confused memories
+from past patches.
 
-  Revert "tcp: avoid atomic operations on sk->sk_rmem_alloc" (2025-03-31 16:53:54 -0700)
+> As for architectures that do not have user/kernel data cache coherency, how
+> does one flush the page when there's an update on the kernel side so that
+> the user side doesn't see stale data?
 
-----------------------------------------------------------------
-Rather tiny PR, mostly so that we can get into our trees your fix
-to the x86 Makefile.
+So if you don't treat this as some kind of 'page' or 'folio' thing,
+then the proper function is actually flush_cache_range().
 
-Current release - regressions:
+I actually suspect that if you treat things just as an arbitrary range
+of memory, it might simplify things in general.
 
- - Revert "tcp: avoid atomic operations on sk->sk_rmem_alloc",
-   error queue accounting was missed
+For example, the whole flush_cache_page() thing obviously just flushes
+one page. So then you have to artificially iterate over pages rather
+than just use the natural range.
 
-Current release - new code bugs:
+HOWEVER.
 
- - 5 fixes for the netdevice instance locking work
+At this point I have to also admit that you will likely find various
+holes in various architecture implementations.
 
-Previous releases - regressions:
+Why?
 
- - usbnet: restore usb%d name exception for local mac addresses
+Because sane architectures don't care (there's basically no testing of
+any of this on x86, because x86 is typically always cache coherent
+outside of some GPU oddities that are handled by the DRM layer
+explicitly, so all of these functions are just no-ops on x86).
 
-Previous releases - always broken:
+And so almost none of this gets any testing in practice. A missed
+cache flush doesn't matter on x86 or arm64, and very seldom elsewhere
+too.
 
- - rtnetlink: allocate vfinfo size for VF GUIDs when supported,
-   avoid spurious GET_LINK failures
+We do have "flush_cache_range()" calls in the generic MM code, and so
+it *should* all work, but honestly, I'd expect there to be bugs in
+this area.
 
- - eth: mana: Switch to page pool for jumbo frames
+Of course, I would expect the same to be true of the page/folio cases,
+so I don't think using flush_cache_range() should be any worse, but I
+*could* imagine that it's bad in a different way ;)
 
- - phy: broadcom: Correct BCM5221 PHY model detection
-
-Misc:
-
- - selftests: drv-net: replace helpers for referring to other files
-
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-
-----------------------------------------------------------------
-Cong Liu (1):
-      selftests: mptcp: fix incorrect fd checks in main_loop
-
-Dominique Martinet (1):
-      net: usb: usbnet: restore usb%d name exception for local mac addresses
-
-Eric Dumazet (2):
-      net: lapbether: use netdev_lockdep_set_classes() helper
-      Revert "tcp: avoid atomic operations on sk->sk_rmem_alloc"
-
-Gang Yan (1):
-      mptcp: fix NULL pointer in can_accept_new_subflow
-
-Geetha sowjanya (2):
-      octeontx2-af: Fix mbox INTR handler when num VFs > 64
-      octeontx2-af: Free NIX_AF_INT_VEC_GEN irq
-
-Geliang Tang (1):
-      selftests: mptcp: close fd_in before returning in main_loop
-
-Haiyang Zhang (1):
-      net: mana: Switch to page pool for jumbo frames
-
-Jakub Kicinski (6):
-      selftests: drv-net: replace the rpath helper with Path objects
-      selftests: net: use the dummy bpf from net/lib
-      selftests: net: use Path helpers in ping
-      Merge branch 'selftests-drv-net-replace-the-rpath-helper-with-path-objects'
-      Merge branch 'mptcp-misc-fixes-for-6-15-rc0'
-      eth: gve: add missing netdev locks on reset and shutdown paths
-
-Jim Liu (1):
-      net: phy: broadcom: Correct BCM5221 PHY model detection
-
-Lama Kayal (1):
-      net/mlx5e: SHAMPO, Make reserved size independent of page size
-
-Lubomir Rintel (1):
-      rndis_host: Flag RNDIS modems as WWAN devices
-
-Mark Zhang (1):
-      rtnetlink: Allocate vfinfo size for VF GUIDs when supported
-
-Matthieu Baerts (NGI0) (1):
-      selftests: mptcp: ignore mptcp_diag binary
-
-Maxime Chevallier (1):
-      MAINTAINERS: Add dedicated entries for phy_link_topology
-
-Stanislav Fomichev (2):
-      net: move replay logic to tc_modify_qdisc
-      bnxt_en: bring back rtnl lock in bnxt_shutdown
-
-Taehee Yoo (1):
-      net: fix use-after-free in the netdev_nl_sock_priv_destroy()
-
- MAINTAINERS                                        |  7 +++
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  2 +
- drivers/net/ethernet/google/gve/gve_main.c         |  4 ++
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c    |  2 +-
- .../ethernet/marvell/octeontx2/af/rvu_devlink.c    |  2 +-
- .../net/ethernet/mellanox/mlx5/core/en/params.c    |  8 ++-
- drivers/net/ethernet/microsoft/mana/mana_en.c      | 46 +++-----------
- drivers/net/phy/broadcom.c                         |  6 +-
- drivers/net/usb/rndis_host.c                       | 16 ++++-
- drivers/net/usb/usbnet.c                           | 21 +++++--
- drivers/net/wan/lapbether.c                        |  2 +
- include/net/tcp.h                                  | 15 -----
- net/core/netdev-genl.c                             |  6 +-
- net/core/rtnetlink.c                               |  3 +
- net/ipv4/tcp.c                                     | 18 +-----
- net/ipv4/tcp_fastopen.c                            |  2 +-
- net/ipv4/tcp_input.c                               |  6 +-
- net/mptcp/subflow.c                                | 15 ++---
- net/sched/sch_api.c                                | 73 ++++++++--------------
- tools/testing/selftests/drivers/net/hds.py         |  2 +-
- tools/testing/selftests/drivers/net/hw/csum.py     |  2 +-
- tools/testing/selftests/drivers/net/hw/irq.py      |  2 +-
- .../selftests/drivers/net/hw/xdp_dummy.bpf.c       | 13 ----
- tools/testing/selftests/drivers/net/lib/py/env.py  | 21 +++----
- tools/testing/selftests/drivers/net/ping.py        | 15 ++---
- tools/testing/selftests/drivers/net/queues.py      |  4 +-
- tools/testing/selftests/net/mptcp/.gitignore       |  1 +
- tools/testing/selftests/net/mptcp/mptcp_connect.c  | 11 ++--
- tools/testing/selftests/net/udpgro_bench.sh        |  2 +-
- tools/testing/selftests/net/udpgro_frglist.sh      |  2 +-
- tools/testing/selftests/net/udpgro_fwd.sh          |  2 +-
- tools/testing/selftests/net/veth.sh                |  2 +-
- tools/testing/selftests/net/xdp_dummy.bpf.c        | 13 ----
- 33 files changed, 141 insertions(+), 205 deletions(-)
- delete mode 100644 tools/testing/selftests/drivers/net/hw/xdp_dummy.bpf.c
- delete mode 100644 tools/testing/selftests/net/xdp_dummy.bpf.c
+              Linus
