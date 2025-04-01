@@ -1,99 +1,130 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040BB205ADC;
-	Tue,  1 Apr 2025 15:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77707204879
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743519921; cv=none; b=teZA5Yns7eFybD/plR1D7Yotuw+TqdGdAAFm3y1Wc51q/xHRfEkr1fFL+ivvPE7vllE+YTzRy7L9nD54Ah98GC9mytzczCb7RAKnXXVUhejbpEVH88NW6lnfkKpXB1dOji2gh/vVjQNX26GNBzKglQYtXYq3AzwiUeVdRvFJ+m8=
+	t=1743520034; cv=none; b=UIyzy+msKDJLkVXMFFaOzdD0BTgScWtxAKA1rlkB6C4Ld0rJodlnprLj6EeXxDZJx29x6WAt/F9kAQaxq/qkXGJhWzhecmoWO4BO+j2O8957gAMsAmwn9tsDjPTVfOBmeQt7AR+o03yi5MAjVCgAW8SIaugw+PRWzLComqegWhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743519921; c=relaxed/simple;
-	bh=rzrpNc9TFQoSZZ0niGpxua8m7OyYjVALmZMPEBzfiAg=;
+	s=arc-20240116; t=1743520034; c=relaxed/simple;
+	bh=dRuO63E+69TadZDhBnj56rdcnGKLJdb/8PuPtgys64c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iLdo311wb2MjAlgV6Irw7c9ToaK8PELcH54nNILfZIg3QV/biGBGLNyZdzb2qbe8DQaiOHMNCuQQ3U5KkRrVWpLejk4MKalAVKCwxZg3GSboN0ypZF+bsnCMjZpF+q9wpOZuXfcziBWKuv3J9nj8V6J7xhdghZ0fqPlgrMat6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWWOrOw7; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=GuhmBAkxPHCxENfeg/FU4E8Cta+IxhRqwHkZcnLkNpQN9zN6lWXfLowip62sTZqLtgqByPKKfx1NFVk9r8aQDtPNq6x+MwXM8PejzL6l3//QcjSdw29CJcnalvmDHQ29HPPklu+waF0Ea1IhzDCYWy8P0qysmiSSG8nf2J/qY3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OzvVPyQh; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWWOrOw7"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso41485115e9.1;
-        Tue, 01 Apr 2025 08:05:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OzvVPyQh"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54b166fa41bso2959296e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:07:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743519918; x=1744124718; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1743520030; x=1744124830; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rzrpNc9TFQoSZZ0niGpxua8m7OyYjVALmZMPEBzfiAg=;
-        b=gWWOrOw7Qkt+Wb9dSEsRkCh/1CZAm62FTaWgCI5G1A2ccVCPANI5QNMZb+TLEDcUbu
-         09W7zkaKyzoiC+9o8ls0U0HhotzI8kttDl5ZKHDzPCQGKFZnG076WRwkSa7BRUvAmJSl
-         bAPHSE4HwS8KX78iFr3ltsaX3t7LIbXaZvg8Nt/E3gOESPzX/2FOkrqgY5HypZydwjoa
-         M5RwWdyZ6bPbKe3uXC/Ii7N6LU88ItQykLByOOajOjdBHXknRsnh4QYoRcBFsSULYr7Q
-         dcZkCJQDZph78y1lYyu4Aqd8oq9ZZ9o6LtE7NI8TkhaZ7QUB0eUNUxd693iK4cUVLCXH
-         ZHPQ==
+        bh=dRuO63E+69TadZDhBnj56rdcnGKLJdb/8PuPtgys64c=;
+        b=OzvVPyQhAM0YwURywgRodYW3HPaDDiqWrb/s2b7C8A/Bqo+9dyMaQuW6mUxFV2t03m
+         Td56BrQU3G3LQsgUVPdc5an9aEd6QNVhNFdbbfMLOI073XsTLyxzO3IyvHazWJkAW4i3
+         jNAGK+0ZufJPuALS7voCIEHnnV2BWw50oIanA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743519918; x=1744124718;
+        d=1e100.net; s=20230601; t=1743520030; x=1744124830;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rzrpNc9TFQoSZZ0niGpxua8m7OyYjVALmZMPEBzfiAg=;
-        b=kniHZGyaPk71UQiLlzSw2blLCXb3RKvAvxnlgPNoNvNYYS301iR4FcjvT4SwGTNF48
-         ojo16LgQiRPxYQy0T6rninxNzUHxYAePxqJtnJpIJfh1ojr+Mbo5Z3BIpLdr+d7FsVic
-         g5UdxjTpE3vAuyAoxaalyMuhyOqmdyDm3lwMx+F4JdbCAGCehCycbCj9EvIptpXr7GKU
-         9q045uhfUOqp+4L/LuwyJ8c5J+tVpWNXMXVyQquZ6MwCfzDSt1K48QWSe9pFuiGeb4LM
-         wKy2dgFmEw6RTrNaaOYMw1eyg/kfZxHEtFLWZV11DKN0VVfJIsqxUQ9NV0C6OkG99ETi
-         +jlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOkOeQu+KeFsmU0LcMWotmHNOr3CCgczPJGh+tj+duMdN2e9iWfWGEitr1eHi18k9NZ4A174uATj7+ei4c@vger.kernel.org, AJvYcCVnisxby/FiXmgc6SAhbr8r279W7RMiAyjfPxftYW+yaKUWWFItz2rvIgsLILcwJOpMf4o=@vger.kernel.org, AJvYcCW1BL+IkNlgepJyfWnELj5BfCWPEHuQ1/DOImguNvQxNSSe2D7+6vWd6MYAIR/xmybYrUUyw8wU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLwYh3mfE5zXUOmIxUjdXgVwVkVkXB0qRpjW1YIPadWp9z+aCE
-	QOEePDilATysLgDCIiwQB6V762eHPiXnIhORPH3hj5WtDe0T+acZytqq4lqv8DYt1OcXVnNJUOR
-	yCr3KYdDzNquwg4efnJpX9Blw4R4=
-X-Gm-Gg: ASbGnctk6GUDHIXWUsJSsvu+aEtwmtDNN1XW2yDGbfuVRNhesUfYBTymZbVfQIxYWnv
-	jIAa9BIlFMTQ/N1TRCRWM/jkhpiegfSpoFQ1BRtRC6LflWe8WDljkjgaQu5PbR9KkxGOtFKNhkU
-	gE59jl/7S0+6PZX6JQCSC5JTYs4IZChk9qUgYbLeI4JhhDI+P29ecS
-X-Google-Smtp-Source: AGHT+IHZQtwFAvK2hEK3yaLRLVk7xQKQq7OYedZ7AVxaKdxQr56jQ+LIq0hmcvz8D6ogCFiYYaPot5hdNFHc3HTAwRs=
-X-Received: by 2002:a05:600c:458b:b0:43c:fabf:9146 with SMTP id
- 5b1f17b1804b1-43db6248241mr135498295e9.17.1743519916412; Tue, 01 Apr 2025
- 08:05:16 -0700 (PDT)
+        bh=dRuO63E+69TadZDhBnj56rdcnGKLJdb/8PuPtgys64c=;
+        b=gnzaOdimPxMDlAw0lN9Um/zW5hThWFJ2Wbj1cnbu9vahglmiCb9EhWKlFzf5Ce+02S
+         PI5Nz8nPi+EeLsNFyQ1QUVZL2gsBRV7wHabHjE4BWGGrXMwiGi4D7i0neaE80aW75cgM
+         J1OrtmPchNxhq+J7BqJKY7eJ4+vSjWZke5GX6U+WwVMgzmWzO9A/Xwa4L3TE/wBJkS97
+         8pDLP0EhEhJiZeUkeBi0GFNkTk0Dm0ZIIoDOcLEOgBsVOkxhm5RCPo8S7RdVzPM5/9ck
+         aNfsD7w6SB72VeljDzM3FHSiVB9+tUL4xBsVvIK+fsyTtcIKhET8H/OjAvmOYnUqDIcX
+         S6nw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/krIchqR+eIQ3z6J0DmN2bDArBicHo6ShAs/KGAmDroUqMcb8HN11vhLyVQR1LiLhoYcETO2F5WCLpeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBX3Sm1ubIHfgO2AdwvO/dgDRf5DgNOnS2ZqgJyGKFwEaWo0Xj
+	fdwBz7QkQY/K2v8Gj7QEl69+6k4B0yQsATZzHxOg3XY+MqjsfUD/Gp4Bu4GTtjmdrcd7cHK3Qi/
+	mkw==
+X-Gm-Gg: ASbGncuSuOj2As7UkyjXqo12V/e6NJh6vIop3kSx8mWKGGOkEYVZ/gzSx4bhPlYLY4Q
+	wIllPeYniCeK3UUR5CijoDZ+sj38um3P3O0HykGmPqK1Gk0opfduWesJ8Ztzz5RMvzSAGE4XGKo
+	eeH3krsU5vIgr/Vs5a3hgArwAZejZh5MCUJ/P2wYF93+Kiqm0bVotK1tNKMZR0pDCkMn735TBAi
+	C553BvqyYxZcvj3sMochNwqGINBe/1vlG1j+CaTx3rtWf9blrkhn1OdH3SI4XFcMM7GSYX3aYba
+	5msPgQSIcO6TQduR3bzM9y5vuzHYtmmc5Le4GeWMuBmt3FkDdOyO3czHLNZV9mSK7o9U9H+X2Zt
+	yVeiswUzU
+X-Google-Smtp-Source: AGHT+IGhdOI9Bvz0KuagaMvrJcf+tjPJroTaNnNUj3aaSlDTCFqRh0Cy7R8nxYvrOpVkbo7E3XlAOA==
+X-Received: by 2002:a05:6512:2391:b0:549:4f0e:8e28 with SMTP id 2adb3069b0e04-54b10dc8b11mr3662723e87.15.1743520029717;
+        Tue, 01 Apr 2025 08:07:09 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b09591c15sm1381133e87.184.2025.04.01.08.07.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 08:07:09 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54c090fc7adso1312448e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 08:07:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVv7ZaxfZuzsFgMpV9jzDhNKDvH1acSSAAomql+BSOicowzTZUBuB9xc07O757toNv8O7qWQg01TDja3CE=@vger.kernel.org
+X-Received: by 2002:a05:6512:224f:b0:549:74a7:12de with SMTP id
+ 2adb3069b0e04-54b1113f382mr3140375e87.48.1743520027562; Tue, 01 Apr 2025
+ 08:07:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331142814.1887506-1-sdf@fomichev.me> <d2914c9f-5fc6-4719-bf6b-bc48991cd563@redhat.com>
-In-Reply-To: <d2914c9f-5fc6-4719-bf6b-bc48991cd563@redhat.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 1 Apr 2025 08:05:05 -0700
-X-Gm-Features: AQ5f1JoaNp4frNZ66sJ-r3eX-oDEbtMT1TlTYmYwNQwwHoQyApuM5RKvG1xty38
-Message-ID: <CAADnVQJJFPD2X1enPCa-0D7RG6SraRFTdMj1bsKkzFuz6Nighw@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, bpf <bpf@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
+References: <20250331061838.167781-1-tejasvipin76@gmail.com>
+ <CAD=FV=UbUqNf4WoWzqMe5bDQmxiT+bRG_cn0n1dBrkFRijx0Cw@mail.gmail.com>
+ <jlqxx47vzlp6rmwpi3tskig4qu4bgyqd7vletxbzzn7xdpep72@42tzrjkg65lh>
+ <CAD=FV=XeHeed5KhHPVVQoF1YPS1-ysmyPu-AAyHRjBLrfqa_aA@mail.gmail.com>
+ <y5l6gr7gdrz6syc3kxortl4p52bpygs2cqzkgayhnbsvrjcbcw@hxhel54zw372> <mz4axwltt6zhm2hykenerz2k6hp5qb4tqa3seui2vnztsldpoo@hejaeukdu2tg>
+In-Reply-To: <mz4axwltt6zhm2hykenerz2k6hp5qb4tqa3seui2vnztsldpoo@hejaeukdu2tg>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 1 Apr 2025 08:06:55 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XwczaG+FTBv_VxoR=GxNsXemCehkMc_V2=DDoXAepZoA@mail.gmail.com>
+X-Gm-Features: AQ5f1JocZ9bptb3nCF0tRv42SZ1SGHwRnbocP0Js32Tf11L8NlMkhlfRqmEasTM
+Message-ID: <CAD=FV=XwczaG+FTBv_VxoR=GxNsXemCehkMc_V2=DDoXAepZoA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/panel: boe-bf060y8m-aj0: transition to mipi_dsi
+ wrapped functions
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, quic_jesszhan@quicinc.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	asrivats@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 3:33=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
-e:
->
-> On 3/31/25 4:28 PM, Stanislav Fomichev wrote:
-> > Syzkaller points out that create_link path doesn't grab ops lock,
-> > add it.
-> >
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
-> > Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@g=
-oogle.com/
-> > Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
->
-> LGTM, but are there any special reasons to get this via the bpf tree? It
-> looks like 'net' material to me?!?
+Hi,
 
-Pls take it through net.
+On Mon, Mar 31, 2025 at 6:52=E2=80=AFPM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> > > ...although I think you said that the DRM framework ignores errors
+> > > from prepare() and still calls unprepare(). I guess this is in
+> > > panel_bridge_atomic_pre_enable() where drm_panel_prepare()'s error
+> > > code is ignored?
+> >
+>
+> Hmm... Most of the drivers ignore the results of the drm_panel_prepare()
+> / _unprepare() / _enable() / _disable(), but then the framework handles
+> error values of the callbacks and skips calling the corresponding
+> en/dis callback if the previous call has failed. Which means I was
+> incorrect here.
+
+Oh, right. LOL, that was even me adding that code in commit
+d2aacaf07395 ("drm/panel: Check for already prepared/enabled in
+drm_panel"). It wasn't my intention there to work around the fact that
+the panel_bridge ignores the error, but it's a happy accident. I guess
+that means that the warning:
+
+dev_warn(panel->dev, "Skipping unprepare of already unprepared panel\n");
+
+...would also happen any time a panel prepare returned an error code
+that was ignored by the bridge. That seems OK-ish to me even if the
+comment above the warning doesn't list that as one of the reasons the
+warning might be printed. I didn't test this myself, but assuming I
+got it right does anyone want to submit a patch to add this reason to
+the comment? ...or, maybe even better, we could fix the panel bridge
+code to not call the panel unprepare if the prepare failed...
+
+tl;dr for Tejas in this patch is that I still think he should spin his
+patch to fix it so the regulators get disabled in the error case.
+
+-Doug
