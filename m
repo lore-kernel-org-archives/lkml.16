@@ -1,154 +1,143 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255331EC01F;
-	Tue,  1 Apr 2025 12:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933F0202F9C;
+	Tue,  1 Apr 2025 12:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743511901; cv=none; b=ILhCjHwedd8uGL9SCvxpcQrFs9Uiq8h76mnSD7wtrvpi6vqUHDGTmrOIS4l4BO9s+ZmLyJia4tj5VVUYEocO2ueSiNbIKoXcgZZMc6asSMfJC0VYbzMzXt0BmcGEq4L3kKAqAnsSEeZH4zBuzw6vJFuEf27flk43yaZ0i2Di1dE=
+	t=1743511926; cv=none; b=NC+4lbAoUOepxaWuduDfcDVUR1jY3Be6QblEMLpjYr7g/7BLgOwlCbpTxOo130f1IqBeDSgx6cbOyzFutCm6aqT0lk+Gc+Gv24JEnj4f4bKIC1Wp2AY9vg05MJRu7s6wdOrZC46KKQt4GLbi7bMNuluBR2wxHf/FVEGsd23CBRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743511901; c=relaxed/simple;
-	bh=DHOcwlcVKS72DNSBiJSZOaaJO9qOgf7Tm10Ulnaq2tQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SXLift/KJEws28Hta4ZYWs+NwDUJae/KOVe3g7Fd43lyutz9qFUPwgS91e5yuOSVhqlbXh+5+b2W4UpXerAhPKvqUE3ocBSTn3vmF6NuAXcxu/y09xxVjhzQkQlVbly0e/RydMsB8YErUG7ENjEWKQM1N8LqvDuJw+PaDeSYv4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=Lb3BdI4S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BqVwJ0zg; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1743511926; c=relaxed/simple;
+	bh=9tHol7Arxf+PVEVyPLcwCk7fZkOSE8ni++N+d/Old+0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z1Fn8OPyGZs9QqhYrUW3+PjY2AJoLci4i4R2zhqofXcKRqfSXIeIrIqCTZ0E5pqXdvARV3uXSeq148SXFkkQqogaDXVxasVeOtBVdU9XnpjZ3chXjIiL4wl1JLxNFiHVCWaSB57SeJgluHyopTvUIEYsxa4bnDc+MWYEsLoDvxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=J+zaaqgK; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="Lb3BdI4S";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BqVwJ0zg"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D329C25400A0;
-	Tue,  1 Apr 2025 08:51:36 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 01 Apr 2025 08:51:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1743511896; x=
-	1743598296; bh=FcH0/cGkd+r0b1nlk9gurxdGutVFNxoiOGhv00cAXHQ=; b=L
-	b3BdI4SRwv2AfKncl4vSeSJJhQBAbVTd++5aa64rOmzByrDSPOwxN/nOfd/VDRY8
-	71dMzi2KEApzx0DCiA6BM1SPwercvapYwOh22CFz7CkGLJH5yZktTL7aVuKrmijM
-	vZssfrtEPPpjtqy6vUHLCc9dRL2E3g0oJrTwAZ8k3yRE61XHHgi5kFQWj4J1NfTw
-	mUbM+0/nM5D3zSTX/H75Gm34G1sEP0s3jvHz7YwcvB19KrcDEvJyA6sSUWEWMo3l
-	YiwPNKsIOlmj8J5PBW62qMl1qCg1eQJJX8qu4fusZ+jiN62Yu7WlGBS7u9aFqq/J
-	s7svqKY6lsWC/vPq+L50Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743511896; x=1743598296; bh=FcH0/cGkd+r0b1nlk9gurxdGutVFNxoiOGh
-	v00cAXHQ=; b=BqVwJ0zgLMIlONK2a7B6kxRtNBBvvakMbp/BConZ2VglO3CXmjc
-	V9fsx26eeXcv+iiL3TgxqDQkJ0hYN2ZVneZHH/DoVmOlsbtNaCtMUCYAcAgYBQEZ
-	yOJTdT0bB9fIYa+U1hohAZn/ct2Dup+WgScJpr1JAZPRVIDgD9LD+2FJQMsloq5Z
-	2mDhVo60tFx8xk/MVT5ETv8mglAkP/DiFdiUh7+6VVDvOMNokmt+4zGKjx8GNR7v
-	GI50jPcm7oORzQ7nl6exrs4vRKqGYqDFZ9VxqiMr78/FjHyNkvqHbz4XQlt0+KXv
-	9/IAkFW4q0yUQZOXrGboIoauAo3sId5ld/g==
-X-ME-Sender: <xms:WOHrZ_VPOCBDgcyMaD0d3uwaw6VhCpmxljjYIXo3pds2WwqAcg_Y6A>
-    <xme:WOHrZ3lFosNSBlRUCpIvz2y_24WBz6jGyA7BsTsmy93QqKqqvMHcsewH5RXAR8mfC
-    RWinBY0o0wvwaK3sLA>
-X-ME-Received: <xmr:WOHrZ7aibgcHhMQcL1FcVCWfiSJbw8ThFRyQjrvbRF5F-vjVcn0L4rHL0-QN>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
-    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
-    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
-    sggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
-    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
-    gtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehp
-    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
-    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
-    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
-X-ME-Proxy: <xmx:WOHrZ6U39qiz0OZGl73pb7TllO2LZupUkps0rFYbFMah_rBbE7C3cg>
-    <xmx:WOHrZ5mzM8WzzRLrXTniJk7p2v1sxgg4Vs3UcT3jwGihOCd3HWxrOA>
-    <xmx:WOHrZ3eKUSpK2WgbDpwQCjT7i65rjS8chqD_2dlGFtOBHRd3v6nqHA>
-    <xmx:WOHrZzFwcJGhmwEbbzpXC0MAJ1jYIyayiH-PYYLmcA_ldnyheCHTIw>
-    <xmx:WOHrZ7lTHlM8MXI8xYx1oGcR87drK-ZxWg_lcEenlF0PNWcUCQmOjOxF>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Apr 2025 08:51:35 -0400 (EDT)
-Date: Tue, 1 Apr 2025 14:51:33 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v24 16/23] ovpn: implement keepalive mechanism
-Message-ID: <Z-vhVdMThx7NQgW0@krikkit>
-References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
- <20250318-b4-ovpn-v24-16-3ec4ab5c4a77@openvpn.net>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="J+zaaqgK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1743511923;
+	bh=9tHol7Arxf+PVEVyPLcwCk7fZkOSE8ni++N+d/Old+0=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=J+zaaqgKmKuP3MElmaIHhiuW/qbExQW5vWvb5TDaSo2Zp79KZhVjrDJfHN6GvjCSf
+	 rB0WDRCepCuErZDXWWMfZVL0j6gyBiIv5J1GlyCRdWEuTWFf2KgmbWhsaCATtMUi2V
+	 99TgLA3Yp99zqYbgUBDQbA4iOeyMj2/bMhSSE96I=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 019181C0347;
+	Tue, 01 Apr 2025 08:52:02 -0400 (EDT)
+Message-ID: <1d913e99368039b77945d1be89e6626b4238f665.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative
+ to down_read
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, mcgrof@kernel.org, hch@infradead.org, 
+ david@fromorbit.com, rafael@kernel.org, djwong@kernel.org,
+ pavel@kernel.org,  peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+ boqun.feng@gmail.com
+Date: Tue, 01 Apr 2025 08:52:02 -0400
+In-Reply-To: <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+	 <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
+	 <77774eb380e343976de3de681204e2c7f3ab1926.camel@HansenPartnership.com>
+	 <20250401-anwalt-dazugeben-18d8c3efd1fd@brauner>
+	 <f6bdfa23b9f54055f8a539ce396f1134b0921417.camel@HansenPartnership.com>
+	 <3bfnds6nsvxy5jfbcoy62uva6kebhacjuavqxvelbfs6ut6rqf@m4pzsudbqg6l>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250318-b4-ovpn-v24-16-3ec4ab5c4a77@openvpn.net>
 
-2025-03-18, 02:40:51 +0100, Antonio Quartulli wrote:
-> @@ -124,6 +154,13 @@ void ovpn_decrypt_post(void *data, int ret)
->  			goto drop;
->  		}
->  
-> +		if (ovpn_is_keepalive(skb)) {
-> +			net_dbg_ratelimited("%s: ping received from peer %u\n",
-> +					    netdev_name(peer->ovpn->dev),
-> +					    peer->id);
-> +			goto drop_nocount;
-> +		}
-> +
->  		net_info_ratelimited("%s: unsupported protocol received from peer %u\n",
->  				     netdev_name(peer->ovpn->dev), peer->id);
->  		goto drop;
-> @@ -149,6 +186,7 @@ void ovpn_decrypt_post(void *data, int ret)
->  drop:
->  	if (unlikely(skb))
->  		dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
-> +drop_nocount:
->  	if (likely(peer))
->  		ovpn_peer_put(peer);
->  	if (likely(ks))
->  	kfree_skb(skb);
->  }
+On Tue, 2025-04-01 at 13:20 +0200, Jan Kara wrote:
+> On Mon 31-03-25 21:13:20, James Bottomley wrote:
+> > On Tue, 2025-04-01 at 01:32 +0200, Christian Brauner wrote:
+[...]
+> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > index b379a46b5576..528e73f192ac 100644
+> > > --- a/include/linux/fs.h
+> > > +++ b/include/linux/fs.h
+> > > @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct
+> > > super_block *sb, int level)
+> > > =C2=A0static inline void __sb_start_write(struct super_block *sb, int
+> > > level)
+> > > =C2=A0{
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 percpu_down_read_freezable=
+(sb->s_writers.rw_sem + level -
+> > > 1,
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 level =3D=3D SB_F=
+REEZE_WRITE);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (level =3D=3D SB_=
+FREEZE_WRITE ||
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 level =3D=
+=3D
+> > > SB_FREEZE_PAGEFAULT));
+> > > =C2=A0}
+> >=20
+> > Yes, I was about to tell Jan that the condition here simply needs
+> > to be true.=C2=A0 All our rwsem levels need to be freezable to avoid a
+> > hibernation failure.
+>=20
+> So there is one snag with this. SB_FREEZE_PAGEFAULT level is acquired
+> under mmap_sem, SB_FREEZE_INTERNAL level is possibly acquired under
+> some other filesystem locks.
 
-Again a small thing: in the case of a keepalive message, it would also
-be nice to use consume_skb instead of kfree_skb. Quoting from the doc
-for consume_skb:
+Just for SB_FREEZE_INTERNAL, I think there's no case of
+sb_start_intwrite() that can ever hold in D wait because by the time we
+acquire the semaphore for write, the internal freeze_fs should have
+been called and the filesystem should have quiesced itself.  On the
+other hand, if that theory itself is true, there's no real need for
+sb_start_intwrite() at all because it can never conflict.
 
- *	Functions identically to kfree_skb, but kfree_skb assumes that the frame
- *	is being dropped after a failure and notes that
+>  So if you freeze the filesystem, a task can block on frozen
+> filesystem with e.g. mmap_sem held and if some other task then blocks
+> on grabbing that mmap_sem, hibernation fails because we'll be unable
+> to hibernate the task waiting for mmap_sem. So if you'd like to
+> completely avoid these hibernation failures, you'd have to make a
+> slew of filesystem related locks use freezable sleeping. I don't
+> think that's feasible.
 
+I wouldn't see that because I'm on x86_64 and that takes the vma_lock
+in page faults not the mmap_lock.  The granularity of all these locks
+is process level, so it's hard to see what they'd be racing with ...
+even if I conjecture two threads trying to write to something, they'd
+have to have some internal co-ordination which would likely prevent the
+second one from writing if the first got stuck on the page fault.=20
 
+> I was hoping that failures due to SB_FREEZE_PAGEFAULT level not being
+> freezable would be rare enough but you've proven they are quite
+> frequent. We can try making SB_FREEZE_PAGEFAULT level (or even
+> SB_FREEZE_INTERNAL) freezable and see whether that works good
+> enough...
 
-Something like this maybe (not compiled):
+I'll try to construct a more severe test than systemd-journald ... it
+looks to be single threaded in its operation.
 
-	/* skb is passed to upper layer - don't free it */
-	skb = NULL;
-drop:
-	if (unlikely(skb))
-		dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
-	kfree_skb(skb);
-	skb = NULL;
-drop_nocount:
-	if (likely(peer))
-		ovpn_peer_put(peer);
-	if (likely(ks))
-		ovpn_crypto_key_slot_put(ks);
-	consume_skb(skb);
+Regards,
 
+James
 
-
--- 
-Sabrina
