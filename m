@@ -1,62 +1,63 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562841DF25C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060A2203716
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 14:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517081; cv=none; b=EZp4tyLCx6fewgugcpiIYbthUhxauw/75rmOgi3wzYmQabslJ313Vj+aZg/Vq5RuwmcBU+TOujREVKOTzUnFJJrU3A+PtUv/S2YNpMPntPPAs0P+kg4q2mvP/vXYHbydQwlraIYFv5jOuCVKoUtXLZmHKpSY0pMnBacSbnu75hM=
+	t=1743517081; cv=none; b=JMNpZB7o1xo+OnNj/nils77bHHCnSThiYEUIPlapY67qKqKQOT1AM0uXVa7H5ri/+6e8vQPorXN7kxV2jNJqE76UNE7eN96kA9AeiqUNt7YXaSyQEnpuLGVGz0wUxYIqZEK4yqBJ66hm61Ilky7Tv/k828YtZ3jOK29Gd7QQNsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743517081; c=relaxed/simple;
-	bh=FJlsgq2QzOzhVpe+zVW0YCghAx8UZtTofJGeg+Vorl4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mkPU7Y3hOQeRgMDlS5b3jKEwLBrklTRhGqlVvqb5LP+tCusbTazTeStxwz9dW1mSbzzjwetVUhU+vqvIL4dRk4DoIHtFdHoKATXWGDNKx1K3fu25XQCHLZ5nBPPXHe5fgnshf+nGenD+QwlHbUBGl+a+54XTQ4FvBrHigoLCvCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gPKUVHb5; arc=none smtp.client-ip=209.85.167.53
+	bh=JPDmnKUMglz+XsRlG2V69K0PwK6vqRugnwv8vO6nGUE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g0sl1lEiTm3BOHkovPhqF1ylH/UFCT6knqOwRl7dlYSCRqGk7CuNFCamVr4KPkF85Ccz30VCUqiAE3HAd6HV14UkKR5qOFrFvstq9LNCtI1TeQe9WS0jYE5fKX4jzVn8D8/DgXo+4iWcrWOJLGWzrQ3S1By12iVcOf+NgCA67gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GsDBJWo4; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gPKUVHb5"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-548409cd2a8so6045574e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:17:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GsDBJWo4"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6868984e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 07:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743517077; x=1744121877; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fMBJRbWhFak+sAV1ZffRRNyDINUZZx4eH4dy87DFJ8c=;
-        b=gPKUVHb5VtTjwaz/PikMCdUN3+CqkjB4bOK0etWQhE5MUcB+Cv2mTyf5bh1N5sNkYu
-         DoPBT4arcgbUDg3F/WNHeVV7bxRkeHmH4KemE2aLp3DvV5Qd8jncoDZ9kMriqoJjHWXU
-         DzFJPiNqhzsNCtVUHZeQxctcZEZWnvYVQVIug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743517077; x=1744121877;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=chromium.org; s=google; t=1743517078; x=1744121878; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fMBJRbWhFak+sAV1ZffRRNyDINUZZx4eH4dy87DFJ8c=;
-        b=VyM9wR+VcTIL0oUdEMEdcxDoD2cCtwswj2S8gA8sMdbIhc9+SZTWVxz334fesxR9H0
-         eyY5FsZe3jJ5Lq0b9ftxI/bSc51xWR2P5u+8w9DvqGAaPZEQwmqzmUrFsqdTgWnqQFal
-         GjoC6asS+OP1CJlAPy6xdAeAs8mf7IpfVQQM6SWLAHuhUvGIum9IlzeDbalxcWWkLYN5
-         LF0EG4d/DqLKdsde0FPrVw+v3UIUh65+P6YIQ74JW8hOMcTDhOYuTsYhxI/UObKdIigk
-         Wrpe2ZEMly85eQ1rpQMNjYeAoFvO8hbk8zNPPHJWeH4ogEHt+5l9QBUvdZMT1XLGfWRL
-         1luA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJu0j5bBwk/1KT6yc+o7Bu5djFwCY32RxvVomAunasLNKqgbCnguy9GD5YS0GN1tdA1isTBEDVGrnug00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsVgREJoklqGZBM+Eic5WWcoEfjtXtVW1HXtqjZgDHpu3jVwxy
-	uBdOONExHySe2qKZ9nkcL5XsaLvHuhd/Y+jGj/H7Ken9XAQ5a3X3J4t7AwAddA==
-X-Gm-Gg: ASbGncsfRfQZ0IC+RAV9VbJxbgygwgW5PzJqByL7lrjCnt4xulSG3AsEtVsY9izReMi
-	6U623A2rrwAKJ4hAJUKbG0q7mR24fr7PtIWQyVFI04zLM19eXm7mQPKHMwLUQAaUHaYobJlGDKB
-	h/WDdxNQMAAf2VjGH8pb4ExN6KIanu65DRyr0IZSv6UeTbBp6l0wVQ75EiGz8oUX4j7ovEvmMGm
-	j0ftyMPhvT/5i9/L41Rric2t0OtYYjbXmoUGZw9lz96aZG96BXFpBsQ3z2jMmwdJ7mrVXqVlLPJ
-	J9IHCK7Wjzxz7gOAFWUx6Krx952v/gRNUufTPZd0H2qc64pyAHBX0FqBZzWyK0AZvrUDhgiaBas
-	WsVkOpldIAGnJXV7bwAc3eCrr
-X-Google-Smtp-Source: AGHT+IFJq5w2B0dugOC2Oo+nxGo04pCzcOgC1humRSBZ8othsPmNpBduKudyA9YdVBqoa7doalBKFA==
-X-Received: by 2002:a05:6512:3d16:b0:544:ca1:da41 with SMTP id 2adb3069b0e04-54b11128170mr4067328e87.44.1743517077405;
-        Tue, 01 Apr 2025 07:17:57 -0700 (PDT)
+        bh=It3zznYp54Cp1R2/qjZYQRWQWBFmdplnsGjJ5JvUQS8=;
+        b=GsDBJWo4jl5luPbc6WnSbtNJmpdZggAoecUqPlXA8psNkJTktPgq8FuhCmacOuTyBC
+         3yRpwYc+41o0MgjRfbYVt794JTIj9St1T1Fk0h+xVMYHtzw4xI1sklWqvBxnyPq+uZng
+         aDagdRSc+xUs/gqBW9zj7q1Vd2EFmvVnBB1is=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743517078; x=1744121878;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=It3zznYp54Cp1R2/qjZYQRWQWBFmdplnsGjJ5JvUQS8=;
+        b=wItXR5mviimuRU+50guypVUUuhkW9K5wCXoSEml0FvZTMvZbp74S8JD9N6dKcRBfg4
+         asotZD3SE5VUzx3GP3Bm/IdQSm2ORnuG2MWM28oIdSGCsi5Wt6TEHQHWE5XMapn9t1XU
+         k7cwNAEkc6euvNwenaW1wh05ROS3HAMAVmxsw/u/qjLIky+zy7D0gBtf0pYcMJUej4Rd
+         jZqGT5TF72GUtV9rHSmFF/c+yAGlgyiP20PoED23o0gUYlREcpJP2fr0AqjJnkRqaFyB
+         HHdEbh3uFGn14GX0yL1UPWgey2uW7w8gZJpYh59fKo3itM9muKvsBqHFF0RPANhxU0Td
+         iHxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLE1gzxGusEgDcNxkasW0UBX4jdX1VRRk5+cC9bjgDMY2qiKrc4aRl6aTLNMNGK5kfSkrZuxWXQUjjD5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYr4Xi6QhQRh5/Z6gwOd+3IM/P3/ADOIDAl/zR2n2fiJL69HpF
+	d9a0NBQX69zCJrtPo+OsoNOIJQ6mQazhF5UjqGh2IoauvNzaU2zqNqhKSjAlaA==
+X-Gm-Gg: ASbGncs+yBEjhoQNxTixrTi30o9FdeefogSDyyLDOeUCviRNMnOXGaWlCJVZ29MPJsO
+	0dQ4zsUynmp6h85gptz4L14lUhlf38a/X8SbaF80XrwVgK+9VCupxbjp4lcDaDqnT+xa4I9LWhJ
+	l2RReNWJjOMdOZKTU5hdV/l/iSYQtuoBOXyKhUAEYRCANwQ/FfuWrmEGr46vsPa5MLoPgfFubFh
+	s7nCivJ6p2VLrLTTQCnsdn7byXHrCDWH01fD56CUyzIYcsT/SuQ0LLqcSwQmdd2coZUs/ERj6yx
+	iH2eiHFz/1A4y7/ZwTTG5b/yUxzyIwadYbUiFhuTA8q99IGnWeyzBUcurmnqWskjkHDgDf+XfZI
+	dkq6UEWflt6nnvaEI9/9MHNb9
+X-Google-Smtp-Source: AGHT+IFdyRka7MweflyBv5DeiJjMiC9PFaRXPwmxIKfE2/7XtM+eY+SzHCu4lHsET0WaqtAqx0xBlg==
+X-Received: by 2002:a05:6512:3090:b0:545:2ab1:3de with SMTP id 2adb3069b0e04-54b10dc7b75mr3430994e87.13.1743517078196;
+        Tue, 01 Apr 2025 07:17:58 -0700 (PDT)
 Received: from ribalda.c.googlers.com (216.148.88.34.bc.googleusercontent.com. [34.88.148.216])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c19a3sm1377789e87.80.2025.04.01.07.17.56
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c19a3sm1377789e87.80.2025.04.01.07.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 07:17:56 -0700 (PDT)
+        Tue, 01 Apr 2025 07:17:57 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Subject: [PATCH v2 0/2] media: Fix gcc8 warnings
-Date: Tue, 01 Apr 2025 14:17:53 +0000
-Message-Id: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
+Date: Tue, 01 Apr 2025 14:17:54 +0000
+Subject: [PATCH v2 1/2] media: atomisp: Fix Wformat-truncation warning
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,10 +66,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJH162cC/13MSw6CMBSF4a2QO7amDwqtI/dhGGCp9A6g5FYbD
- enerQwd/icn3w7JE/oEl2YH8hkTxrWGPDXgwrjOnuFUGySXmislWO5Ey0xr9KSUkVZpqNeN/AP
- fB3MbagdMz0ifQ83it/4BWTDO7N11djS96iW/ukBxwddyjjTDUEr5ApzoCtybAAAA
-X-Change-ID: 20250331-v614-8485d3382935
+Message-Id: <20250401-v614-v2-1-53024c4fcdc7@chromium.org>
+References: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
+In-Reply-To: <20250401-v614-v2-0-53024c4fcdc7@chromium.org>
 To: Hans Verkuil <hverkuil@xs4all.nl>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, 
  Hans de Goede <hdegoede@redhat.com>, 
@@ -79,34 +79,31 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-staging@lists.linux.dev, Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.14.2
 
-Kernel 6.14 has increased its minimum gcc requirements. After bumping
-the "ancient" test in media-ci 2 new warnings have been found. Let's try
-to fix them.
+Gcc8 is convinced that we do not have enough space in dot_id_input_bin.
+Extend the variable 17 bytes which is just used for debugging.
+
+drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c:1336:9: warning: '(pipe' directive output may be truncated writing 5 bytes into a region of size between 1 and 74 [-Wformat-truncation=]
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
-Changes in v2:
-- Incorporate Hans changes.
-- Add comment (Thanks Andy).
-- EDITME: describe what is new in this series revision.
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v1: https://lore.kernel.org/r/20250331-v614-v1-0-9bc69a873720@chromium.org
-
----
-Hans Verkuil (1):
-      media: cec: extron-da-hd-4k-plus: Fix Wformat-truncation
-
-Ricardo Ribalda (1):
-      media: atomisp: Fix Wformat-truncation warning
-
- drivers/media/cec/usb/extron-da-hd-4k-plus/extron-da-hd-4k-plus.c  | 4 ++--
  drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
----
-base-commit: 4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209
-change-id: 20250331-v614-8485d3382935
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
+index 9818771a35e550c0ce98da826caff5f834867e7c..84220359c9576b0021ea7ac7ba13548bd77e49fd 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
++++ b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
+@@ -121,7 +121,8 @@ static const char *const pipe_id_to_str[] = {
+ 	/* [IA_CSS_PIPE_ID_YUVPP]     =*/ "yuvpp",
+ };
+ 
+-static char dot_id_input_bin[SH_CSS_MAX_BINARY_NAME + 10];
++/* 27 is combined length of _stage%d(pipe%d)\0. */
++static char dot_id_input_bin[SH_CSS_MAX_BINARY_NAME + 27];
+ static char ring_buffer[200];
+ 
+ void ia_css_debug_dtrace(unsigned int level, const char *fmt, ...)
+
 -- 
-Ricardo Ribalda <ribalda@chromium.org>
+2.49.0.472.ge94155a9ec-goog
 
