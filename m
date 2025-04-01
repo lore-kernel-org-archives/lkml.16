@@ -1,210 +1,246 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A451EF396
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 22:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.144
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743547939; cv=fail; b=ArOInXds5u73QWFIhx1916eAcGtlc5HVyvUJJv6vJISlZhWpg3f1LyN52BluRrHU7a3L/jySWkOiOPgPRYnjYtwAn/EGr76uA57v6AaR2n1xTJ4kV/8V9cXzv6mipOxODGgLB3ZA8UfyGPfUx3t5Ld4hjs+Bs2BwhA9c/P86kvE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743547939; c=relaxed/simple;
-	bh=c6IaoaB//udSbzdLSmjoR/uskXiHID/7Szo0Duxsi+4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rSOdYRhu46tKg4t3BNReja340UOCPLIRrG8Nsp5FKxyvd0FlluPNQ1NhsD94onhVTTHKwpoUonkqNPomVRrOs0JR7e2fuGu481uW1yLwdLAHE6QAfPt6idr5QEBGvp7fMj8gEi3fnHKqilWyJvRjlIqgHgZUcJGvFa2jHTIuKaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=IM48V7mO; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=q+A4CBNx; arc=fail smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFAB1EDA2F;
+	Tue,  1 Apr 2025 22:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743548052; cv=none; b=h69U5ren+WkV+UWF+Gsowe5ocug2SrCHCgID0Hxko/la72wjdAydrAmRSNuKlBbxowbg+XFRBsl8337m9MtmtxaYiFcA6ppWLcdbv+StWX9aIeQfLcV5GMripeNYyg4ovw0oabU9ZNm4N+x+pOYmQyUkEtWLB8Ch9Ybi3tPnE4w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743548052; c=relaxed/simple;
+	bh=6HoAuf2vzPHVJ2QZmJsjedZxev9+dXlJ30t8kC/q4so=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KwWcqvgOLvk7K8ZMCBfsBACE6+egiOkrjx8RHfNGdxQ2C16lBZ6HqqamIcYzYnZrZNZCWI1z9nUZJZ2fc3+jxq/U1KJN+UDq4Jmk/GdyNb9OZq9dzIOnoZgR39w5s3uHN5RJJBwAkSTrB6aaWCzU8nPAsPuWSEPNw7Mhld+Hz5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=IW6fwwEP; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IM48V7mO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="q+A4CBNx"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1743547937; x=1775083937;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=c6IaoaB//udSbzdLSmjoR/uskXiHID/7Szo0Duxsi+4=;
-  b=IM48V7mOmnV7aQ+sRrZkPPLeB3VApdh51TWLcjXVA2z8we8dE/vyb+Fz
-   ZGTnFgZKpw8/WOQ0088tHgJFpyM1mQTPBXxXPhJ3a8lYEpf9Wwp4/ISWJ
-   T78kZTWClh99ijrdsLposYm6Z7LtWQzKr9d42oHsRzxTHye4txAljDmB9
-   uPFEiQOC1z2a0/KgFe0J4KLcXL3g8Hl0mKe63n3s8bNSPkE319Lr/fqxB
-   +4UaIezWCIf8GcZiiYnVCfXs2Jq6x+G8g+ehKrwsHCuABuEKVp9EJ9uBk
-   94e81iRZwA+ZW5m5CdkvR+1ccq0PBwFOk5AsFrE9tolZdFcmJrtf8lKyh
-   w==;
-X-CSE-ConnectionGUID: +vcg6hzNS9aHrLknfnPFyA==
-X-CSE-MsgGUID: UohW3IEPTzKIVJlzA3c8nw==
-X-IronPort-AV: E=Sophos;i="6.14,294,1736784000"; 
-   d="scan'208";a="67235740"
-Received: from mail-westusazlp17013079.outbound.protection.outlook.com (HELO SJ2PR03CU002.outbound.protection.outlook.com) ([40.93.1.79])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2025 06:52:16 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AeR8hkKxt1Ja/3smoYfBEDhs4+G1cSR4V9tmd6bRvQY6YgBFWCkddFOYAAtmavAehI75eTenIXkcETHa2uOV5DGjuSSNBsw5OO1+lr+PDzIdu1Zkq/0H7wDnCAOBJ1ZmESXS3XcMurvnbjpEAMpRwaj35GyCDdpB45kwDGd1k7TPtVJ2YzxUykCpBX/Ov8vXM2BuO/4LJO0BDhkHTClzn9u8tOCUAZs/TEz/d0FcuyKsas5srJIl8DyhvVA03hIOBP787HYH9tmfy2OKQXYscqErJnIZ4hZGZgoACTJHJqP5RODLdFQVNdiFti6MmQUSJBgQyDXFirSKc95hTsoDaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iI7sdOvqzMHAfneYQOUBoUjRGPWMRuAyZQ1PmovLgz8=;
- b=oVDzcT3C94DRAD6Q78GICAZYE0N3owzM+eM1ZGTd8Pei+rFcIYhs/TZeuWUgiUhrDWAXdfraWWM751g1qM6LnDyANK7qTIKFD10/mXMJitshnvzgVEwNMO8CDmjtGBa6KYVFDX55E7N9ekAzKEekvOmXs3Y+p1w5akFCaYZ/fcJflCRCl/VG9ZMt6nLco3znpdn4Xq/yq3GOYIcnQmmXVHDZfwvl3bS9Ot2gj5HhVNvTwibi4P46FV6dCcVOZeu8QovXE+M+tplCLbz/kMesw332aQMMNO7FoLnrWfDDnzezHsLQxMZdESG2RoPVb5veej/r4TS86/sj7UcSFj2Fgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iI7sdOvqzMHAfneYQOUBoUjRGPWMRuAyZQ1PmovLgz8=;
- b=q+A4CBNxUfbWit+bZOgK1PJJW0WPk58xOSKKgNqQBNoZJSamGb2ay3DMnMsWw+0XldiQ8VLIccYGH7Lvzh7vorEjEsDB0bwDQXqfQwqJO9Ekyprc3oJB+aUP0KI+dTovGpbciEDA2dRcxSMi/jKobEJzjPxbMan1fN8vYXM1ESQ=
-Received: from MN2PR04MB6862.namprd04.prod.outlook.com (2603:10b6:208:1ed::18)
- by SJ0PR04MB8470.namprd04.prod.outlook.com (2603:10b6:a03:4d7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
- 2025 22:52:14 +0000
-Received: from MN2PR04MB6862.namprd04.prod.outlook.com
- ([fe80::67d7:8033:78e7:9eb8]) by MN2PR04MB6862.namprd04.prod.outlook.com
- ([fe80::67d7:8033:78e7:9eb8%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 22:52:14 +0000
-From: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
-To: Niklas Cassel <cassel@kernel.org>
-CC: "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
-	<axboe@kernel.dk>, hch <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Damien Le Moal
-	<dlemoal@kernel.org>
-Subject: Re: [PATCH v1 1/1] nvme: add admin controller support. prohibit ioq
- creation for admin & disco ctrlrs
-Thread-Topic: [PATCH v1 1/1] nvme: add admin controller support. prohibit ioq
- creation for admin & disco ctrlrs
-Thread-Index: AQHboCmElT3ixkj0uEiWsWJv1g7nM7OM286AgAJ/nZ+AABS5Zg==
-Date: Tue, 1 Apr 2025 22:52:14 +0000
-Message-ID:
- <MN2PR04MB68629F5634238CCB432DD9FDBCAC2@MN2PR04MB6862.namprd04.prod.outlook.com>
-References: <20250328213640.798910-1-kamaljit.singh1@wdc.com>
- <20250328213640.798910-2-kamaljit.singh1@wdc.com> <Z-pDY0aNYLgtiCUc@ryzen>
- <BY5PR04MB68491AD9C47CD7AB9B552098BCAC2@BY5PR04MB6849.namprd04.prod.outlook.com>
-In-Reply-To:
- <BY5PR04MB68491AD9C47CD7AB9B552098BCAC2@BY5PR04MB6849.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR04MB6862:EE_|SJ0PR04MB8470:EE_
-x-ms-office365-filtering-correlation-id: eaa4da1c-50e1-46bc-07bd-08dd716fd8b0
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?h3YZ1Co58DwYbiH2k2ANMEMJxilHRW5mHkXBfJUsSkl0r3r0H/YGNWrga/?=
- =?iso-8859-1?Q?GCNTVl9zS+y7KKZJLj+jZWFfdIl6+Av3PTfeKpoyFvpaYgUtMwkfnUjWrB?=
- =?iso-8859-1?Q?u+8fZgAO8JYrztjHy4ORyGZ9oi7W+nOYuGn2trSlNjxQv2sMvPRVETO7Pm?=
- =?iso-8859-1?Q?gTENDPxBKTsS/aFTsFj7FqYelrVGkfOQJc3ZvAuECJMNB6hj9qhfIAEC2Y?=
- =?iso-8859-1?Q?8xNkCBid054JUABUT+xm/9hn6eaxoGZQC5iOw26vMuOa5IgNM0qdC9Sl9W?=
- =?iso-8859-1?Q?7yepKZMpL5uTEmnVeNfQgOYGNXw2/kcqgjmGq1ZT74HhpDwRH81kG+U5+o?=
- =?iso-8859-1?Q?2b5EelOr6IJchl2WD68upUfe106Y/ZzIBYOSGoBYG7WhQih7AjnfP7gR0x?=
- =?iso-8859-1?Q?1563Yir2V59c3qqqzGjymZSyet4ZZD0qkmwT1Dttw994CcY/TehFgOCQsZ?=
- =?iso-8859-1?Q?8mKcOAPhf+G9JkIJIIrvCNPXt/ae5exD8G75wKgV1qxJnvMUeDdjB9P09W?=
- =?iso-8859-1?Q?dNwE+FteuI243Wdz8E/qz3d6cmX1o6vX0bBZqHN51jxBDFuMJttNNljsEZ?=
- =?iso-8859-1?Q?IlmwZQq+5tbhfglXuvmbwpkf8J2PleIGCHKf767XNwWQbD6wzAq8RNrXsN?=
- =?iso-8859-1?Q?VvX1NIZcRp+Ndi/tTkAwyBqrAnq6+CaarQkTznsDwTovRC05B1OK8Wu9OR?=
- =?iso-8859-1?Q?GmyRlUW/pExMQ7jQph3tLX+Gcd/dOWkdbLvnUpAj2fDHqPyVo3vQcBt7wp?=
- =?iso-8859-1?Q?edCZ4vQWhvmYuFD0SMi1Zh2pasrpCH+1gRZQfFistnpN6xbh3ZYIOwAfy7?=
- =?iso-8859-1?Q?7isCnxk9zFV1dhNRvSfJAoWf0qqyrK/FyVWUGvUP2inUVoEVTjShBvNtFo?=
- =?iso-8859-1?Q?4eqLmEMLmZxdasvHj4LMSePJtz0DQUhGYsB0iHkeB/Oedv6/hyWvtEXgfn?=
- =?iso-8859-1?Q?2V3b8i/9Lo9Id2ea81HDrYL1bXMtIfVo5GAL6L2l4Q4oGrt6pTcGghH80M?=
- =?iso-8859-1?Q?Wu1p/HBPto0WQDNE5jLvgwIA1/M9JgFrbVE8MvzP7ELVMLgCftnYW2wn6c?=
- =?iso-8859-1?Q?/mhlRinDaLYgkSDf+DmR0Trf8ORh/QEaagD0i8YiU7kLcgSmbyT78w1aZU?=
- =?iso-8859-1?Q?q7YkNL1b9OvjzFuylOu2vHVIAvbj7rqJ4RF9JQL3A8jWXXLIBeL7jc0+tY?=
- =?iso-8859-1?Q?+JFgxVjTgMP7IGuZkxPUfmZR7ohLUr0Gcup9hum+WNfgpUt2w1yMk9ybUY?=
- =?iso-8859-1?Q?EHu/oHY6jZRzRFVgbXqUX5fKgqdBnNYdpmDI9s9ndUqrnaFQSekPIK5ObA?=
- =?iso-8859-1?Q?o0cZCChu8koPE5cAKxVOSz4xEJoHJxmIyTFtyEEUQQHk4tsKm4zz5bLwm5?=
- =?iso-8859-1?Q?q9OBIDUoS7YWPxw+dQ/4zZ1DAewtrmXk1EGMOI+zcONA8EGaS6W6ipwCEA?=
- =?iso-8859-1?Q?ZGtNEuZh6tg4IGAJSR8ajuC+IJE6rKiDRk7noyVVozSWF1DUsTIWTkIuxe?=
- =?iso-8859-1?Q?VmeVvKrRuLPWxol82i3Cq4?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6862.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?g2w0VOs/JfehQvZRMxZAWbTAspEKbVz+cyT3JJBbIX8t7BXc8QDp1gdy7Z?=
- =?iso-8859-1?Q?WRSsjh5OikQTpIP4oVHagnKJovT6cYqJaVMlU0oq4EYk+rPW0F1wbBo1sF?=
- =?iso-8859-1?Q?fUXZxaEiM9OtkwKNv/KJaXHC1NrZ1OjOS34qyMPnD0sba0ZfavrFPmnY6a?=
- =?iso-8859-1?Q?Qt22ZJVwfobfbieAJcjcLRuqEN8ZXGWNN5yJlDCazFDeBAJk7snGWLHyZ/?=
- =?iso-8859-1?Q?Ue/AP8Fw7o91Rs9UJ9EpkSXHkN4ckyOzUtLMewIFk3n+oUlxzryDCAVHrL?=
- =?iso-8859-1?Q?hcsGk6E059+f0m2aCR3ftGJ1bQcbK0qdsofLRONwfOOaHSnC4f9hT9n04V?=
- =?iso-8859-1?Q?GwWM3Sm0yxP6CgxjUsFkGONijUO/ua2IN6SdcMUA+AlfQ09Rz0eEox4xzG?=
- =?iso-8859-1?Q?Cqmu4lZXnrpQtenuG8raPBTNx47rmju65IJvEsyU/DkXOqq9XregaWJRRq?=
- =?iso-8859-1?Q?dtoLQz4SHEx5hgQX1WwSBWWmWdwBiXEKn9yY8LzgBSUm3mq25+NMBb96xa?=
- =?iso-8859-1?Q?kVBbGUYD6fJSXGFXatuxOM54wqq1TfyyPe34GgJpM0jZ3HwCTZPFOdpVZo?=
- =?iso-8859-1?Q?hhj637iyDC6uZNUy35Xbjj3VYTqZC3Vv116U5WsZrkzafP4ggtEQHt5btq?=
- =?iso-8859-1?Q?lBqwuiTh69GmiSdiu4uXVzYfjNS86NuhYtu7lEolyMHQCAYi1sOTZCdJfu?=
- =?iso-8859-1?Q?S9S3f02gYpF8NpC7ozybYRKO7EUdLQB8lx2QRTQix4i/BJ+HW4yZYO/T0i?=
- =?iso-8859-1?Q?8aUPLb2A98IyNQsz9S4VQ6Y6+N2FhVy7zPwJPhKnHOHE5qXCfy6r1y8gpx?=
- =?iso-8859-1?Q?lpk+T5c+DDTLAjT+XAKi28V+7BTGEtFBlqU9r6bQ0sz2h1xM1/VEFCYp2C?=
- =?iso-8859-1?Q?xuQMABbWOeq9KRCJXVjqWjj2pfAtBclV7CrbvWfSPupom9nelJnQ/gGxKo?=
- =?iso-8859-1?Q?i3ZWSENlXzKoOZIJGy8QnH/l//v9OHfOba6Lb1u/q0xcGBas2cC3eloAPU?=
- =?iso-8859-1?Q?GW3HlYI1N1BPlMz37hR8W2NBlosLW9E4AKgJPz+HvjqcaWTTNiVkI+AzsC?=
- =?iso-8859-1?Q?rxOsrEWa7liOLU+uB6mkFOrciCRsmp37cs2beIlRmF4CR6K/gL2knOl8ZV?=
- =?iso-8859-1?Q?IhSY4pba89OvH6FqiiaS0ds0/ukvowq5U2zoYOXu8IXVnd2et4bfQV4cAl?=
- =?iso-8859-1?Q?dwKJCN3RQFXjx8qoC4kGk1dj6Zsy1PTlSHuFcGnyWIPM7kZ1/4R2vtBHox?=
- =?iso-8859-1?Q?6xLmyhbqT6+FSrlmtXvWaRfzCamrH+0aiLtejZvKZnXtqSJo11580kFj0B?=
- =?iso-8859-1?Q?4fPKEgHCHZta9qZ1nZky8wzqXl1LR/mqSJO8OmvvaQzKKyLxthcU1D5WbU?=
- =?iso-8859-1?Q?2InUWPByP5EPGKCi0JwDJd9ZGJsfpekrNiJziZOW1cXRyIzu8ypHZLyBvY?=
- =?iso-8859-1?Q?REyZUv0hxATjMVj1Jx4KohmZ0dSsMP+zt1SXHgqU4eFIS/Oi8yHbzwDq7d?=
- =?iso-8859-1?Q?79yRk92KXiQnZoPePz6scwLbeIEWRmpWljs/6PCKo33i7vf/DkJuV8SBqe?=
- =?iso-8859-1?Q?x9323Ud2el98i/IJ2Ua4IAzioT/SyDXZZ2/gNF1JHGEAodTqEC+NjoRVGF?=
- =?iso-8859-1?Q?fickurk7jqsk1jHwU+6OLF77oaDo5dvUZC?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="IW6fwwEP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=jhU/1epdO5g4YL4nxOBTdkpLkxHYpKmTVfMEhpcPmlc=; b=IW6fwwEPPkmdsZxj7g+aJ77oDC
+	TZyj9OYgjt/oW3rcg6zc2IwcQY7PucVHacoqhFZSuioxiwP0c+TVmlQwkKwmEDuQfYKrelB30pne8
+	noM/hAERvxydKZC6534MSnuc9o3Qr33dybs8XteUuD/5wua8UuX/LUwmsHPGxvWSAPSECmUwLh/M7
+	vEf4pcSnxVomrCHam4VbiuJsYzt56PnKWhLrhZrL7VHPzXxBK6lYt9saEluaMHu+ay5Rabd3yy7ry
+	ccPOD9QwS43fl7ikIpva5xA8dkMNjLlBWf3z8NTITGnd2Fc0GzaMPITJ/3v1wThNnxrBKxJZccqSE
+	bZxWPAxIwTxeRauuNwKMt9VV5mMfgz3j385xbS1RGLMjKeCLMjE6J2zM3RM6k//TEot8Fk2z8SpNm
+	NLW2Z3pf1R/KCx/hLlgYyBRUIURmY1UxocoUq7NkcjzxtAspKukJcih61F5qrPB+CiT2By/MFJJjV
+	mAvBS4EBxvZDwzm75pXT80bF;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1tzkUb-007jIP-01;
+	Tue, 01 Apr 2025 22:54:01 +0000
+Message-ID: <4b7ac4e9-6856-4e54-a2ba-15465e9622ac@samba.org>
+Date: Wed, 2 Apr 2025 00:53:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rF8V1ARjhMG9V7ryCFkppnXEG3DhTwPiJUYwuMCSWVlh2u84eGXaFoun/tKd/Nn+fFZuHm4DqRCO4AMqlpxM5dM0rZOrAW3pL765G7stEX/8Rn8YYL7RUHOminKowXc6x4KzMmjLKLDxhAHN298JZUr41II+DmJ5i7+6SthBSyGveRksU+AjJshikb8diEJriXVRfhUxk62laDLBDa1PkAivIPBLR8dCGxLEJRHbot2mrP7sqLZnnQllT2emnh/zIfffU4fsvx/lrCPlJxsKeQeDqTfMGRWGS2flBBwBeY7dY4gMxElgrHZwntrchhPMhgcStKr4FPGR7+KXKwli++bUEPQ7EcPWiEXurj1XHWbVnu//Hs71wRAVQdbzF9RhmwkMwKP+G+nxsaUWgs5OsqOyIbnmoBofqgNIF/Nx1jCyzTc5qCgTiv9RaRwnva89WnzahDsubjtXJBxhzUr9o2dhf6ctmRdytS23aye8d6lCcEyO7Vf3JQ5hznYHyMrYPCPrfQ5e08NMrJgntQjbPI1CHmq7HDoHbVoMr0ba3YmTY4L6QP998z23irLf5jRwMDT0f8EbDxVBDyWCaiGzAHFDLLmkY/zE5cfuRHULbIJ15MB052UQe+xNczWZqwJx
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6862.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaa4da1c-50e1-46bc-07bd-08dd716fd8b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2025 22:52:14.6620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aP2mPKl+6pndnbeELNdnYvMbwYqzLOEuBeaC2/vbJA9Dqz0YnlFzyPKl0HTPU54ai//Hzlf2hkbNSeKJSrPVvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR04MB8470
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
+ to proto[_ops].getsockopt()
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Breno Leitao <leitao@debian.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Jens Axboe
+ <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>,
+ Jakub Kicinski <kuba@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Karsten Keil <isdn@linux-pingi.de>, Ayush Sawal <ayush.sawal@chelsio.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, David Ahern <dsahern@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
+ Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Robin van der Gracht <robin@protonic.nl>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Alexandra Winter <wintera@linux.ibm.com>,
+ Thorsten Winkler <twinkler@linux.ibm.com>,
+ James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
+ Matt Johnston <matt@codeconstruct.com.au>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Remi Denis-Courmont <courmisch@gmail.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+ Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+References: <cover.1743449872.git.metze@samba.org>
+ <Z-sDc-0qyfPZz9lv@mini-arch> <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
+ <407c1a05-24a7-430b-958c-0ca78c467c07@samba.org>
+ <ed2038b1-0331-43d6-ac15-fd7e004ab27e@samba.org> <Z+wH1oYOr1dlKeyN@gmail.com>
+ <Z-wKI1rQGSgrsjbl@mini-arch> <0f0f9cfd-77be-4988-8043-0d1bd0d157e7@samba.org>
+ <Z-xi7TH83upf-E3q@mini-arch>
+Content-Language: en-US, de-DE
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <Z-xi7TH83upf-E3q@mini-arch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Niklas,=0A=
-=0A=
-On 2025/03/31 00:25, Niklas Cassel wrote:=0A=
-=0A=
->Like Damien said,=0A=
->=0A=
->> Added capability to connect to an administrative controller by=0A=
->> preventing ioq creation for admin-controllers.=0A=
->=0A=
->patch 2/4,=0A=
->I think I deserve:=0A=
->Suggested-by: Niklas Cassel <cassel@kernel.org>=0A=
->=0A=
->on this patch.=0A=
-You sure do. I wasn't aware of this designation. I'll add it. Thanks for=0A=
-all your help.=0A=
-=0A=
-=0A=
->> * Renamed nvme_discovery_ctrl() to nvmf_discovery_ctrl() as discovery is=
-=0A=
->>   more relevant to fabrics=0A=
->=0A=
->patch 1/4, you need to move the function, but can keep the name.=0A=
-Like I replied to Damien, I wasn't able to easily move these to host/nvme.h=
-=0A=
-so they're in core.c.=0A=
-=0A=
-I'll separate into patches as you suggested.=0A=
-=0A=
-Thanks,=0A=
-Kamaljit=0A=
+Am 02.04.25 um 00:04 schrieb Stanislav Fomichev:
+> On 04/01, Stefan Metzmacher wrote:
+>> Am 01.04.25 um 17:45 schrieb Stanislav Fomichev:
+>>> On 04/01, Breno Leitao wrote:
+>>>> On Tue, Apr 01, 2025 at 03:48:58PM +0200, Stefan Metzmacher wrote:
+>>>>> Am 01.04.25 um 15:37 schrieb Stefan Metzmacher:
+>>>>>> Am 01.04.25 um 10:19 schrieb Stefan Metzmacher:
+>>>>>>> Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:
+>>>>>>>> On 03/31, Stefan Metzmacher wrote:
+>>>>>>>>> The motivation for this is to remove the SOL_SOCKET limitation
+>>>>>>>>> from io_uring_cmd_getsockopt().
+>>>>>>>>>
+>>>>>>>>> The reason for this limitation is that io_uring_cmd_getsockopt()
+>>>>>>>>> passes a kernel pointer as optlen to do_sock_getsockopt()
+>>>>>>>>> and can't reach the ops->getsockopt() path.
+>>>>>>>>>
+>>>>>>>>> The first idea would be to change the optval and optlen arguments
+>>>>>>>>> to the protocol specific hooks also to sockptr_t, as that
+>>>>>>>>> is already used for setsockopt() and also by do_sock_getsockopt()
+>>>>>>>>> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+>>>>>>>>>
+>>>>>>>>> But as Linus don't like 'sockptr_t' I used a different approach.
+>>>>>>>>>
+>>>>>>>>> @Linus, would that optlen_t approach fit better for you?
+>>>>>>>>
+>>>>>>>> [..]
+>>>>>>>>
+>>>>>>>>> Instead of passing the optlen as user or kernel pointer,
+>>>>>>>>> we only ever pass a kernel pointer and do the
+>>>>>>>>> translation from/to userspace in do_sock_getsockopt().
+>>>>>>>>
+>>>>>>>> At this point why not just fully embrace iov_iter? You have the size
+>>>>>>>> now + the user (or kernel) pointer. Might as well do
+>>>>>>>> s/sockptr_t/iov_iter/ conversion?
+>>>>>>>
+>>>>>>> I think that would only be possible if we introduce
+>>>>>>> proto[_ops].getsockopt_iter() and then convert the implementations
+>>>>>>> step by step. Doing it all in one go has a lot of potential to break
+>>>>>>> the uapi. I could try to convert things like socket, ip and tcp myself, but
+>>>>>>> the rest needs to be converted by the maintainer of the specific protocol,
+>>>>>>> as it needs to be tested. As there are crazy things happening in the existing
+>>>>>>> implementations, e.g. some getsockopt() implementations use optval as in and out
+>>>>>>> buffer.
+>>>>>>>
+>>>>>>> I first tried to convert both optval and optlen of getsockopt to sockptr_t,
+>>>>>>> and that showed that touching the optval part starts to get complex very soon,
+>>>>>>> see https://git.samba.org/?p=metze/linux/wip.git;a=commitdiff;h=141912166473bf8843ec6ace76dc9c6945adafd1
+>>>>>>> (note it didn't converted everything, I gave up after hitting
+>>>>>>> sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addrs.
+>>>>>>> sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_getsockopt_associnfo and maybe
+>>>>>>> more are the ones also doing both copy_from_user and copy_to_user on optval)
+>>>>>>>
+>>>>>>> I come also across one implementation that returned -ERANGE because *optlen was
+>>>>>>> too short and put the required length into *optlen, which means the returned
+>>>>>>> *optlen is larger than the optval buffer given from userspace.
+>>>>>>>
+>>>>>>> Because of all these strange things I tried to do a minimal change
+>>>>>>> in order to get rid of the io_uring limitation and only converted
+>>>>>>> optlen and leave optval as is.
+>>>>>>>
+>>>>>>> In order to have a patchset that has a low risk to cause regressions.
+>>>>>>>
+>>>>>>> But as alternative introducing a prototype like this:
+>>>>>>>
+>>>>>>>            int (*getsockopt_iter)(struct socket *sock, int level, int optname,
+>>>>>>>                                   struct iov_iter *optval_iter);
+>>>>>>>
+>>>>>>> That returns a non-negative value which can be placed into *optlen
+>>>>>>> or negative value as error and *optlen will not be changed on error.
+>>>>>>> optval_iter will get direction ITER_DEST, so it can only be written to.
+>>>>>>>
+>>>>>>> Implementations could then opt in for the new interface and
+>>>>>>> allow do_sock_getsockopt() work also for the io_uring case,
+>>>>>>> while all others would still get -EOPNOTSUPP.
+>>>>>>>
+>>>>>>> So what should be the way to go?
+>>>>>>
+>>>>>> Ok, I've added the infrastructure for getsockopt_iter, see below,
+>>>>>> but the first part I wanted to convert was
+>>>>>> tcp_ao_copy_mkts_to_user() and that also reads from userspace before
+>>>>>> writing.
+>>>>>>
+>>>>>> So we could go with the optlen_t approach, or we need
+>>>>>> logic for ITER_BOTH or pass two iov_iters one with ITER_SRC and one
+>>>>>> with ITER_DEST...
+>>>>>>
+>>>>>> So who wants to decide?
+>>>>>
+>>>>> I just noticed that it's even possible in same cases
+>>>>> to pass in a short buffer to optval, but have a longer value in optlen,
+>>>>> hci_sock_getsockopt() with SOL_BLUETOOTH completely ignores optlen.
+>>>>>
+>>>>> This makes it really hard to believe that trying to use iov_iter for this
+>>>>> is a good idea :-(
+>>>>
+>>>> That was my finding as well a while ago, when I was planning to get the
+>>>> __user pointers converted to iov_iter. There are some weird ways of
+>>>> using optlen and optval, which makes them non-trivial to covert to
+>>>> iov_iter.
+>>>
+>>> Can we ignore all non-ip/tcp/udp cases for now? This should cover +90%
+>>> of useful socket opts. See if there are any obvious problems with them
+>>> and if not, try converting. The rest we can cover separately when/if
+>>> needed.
+>>
+>> That's what I tried, but it fails with
+>> tcp_getsockopt ->
+>>     do_tcp_getsockopt ->
+>>       tcp_ao_get_mkts ->
+>>          tcp_ao_copy_mkts_to_user ->
+>>             copy_struct_from_sockptr
+>>       tcp_ao_get_sock_info ->
+>>          copy_struct_from_sockptr
+>>
+>> That's not possible with a ITER_DEST iov_iter.
+>>
+>> metze
+> 
+> Can we create two iterators over the same memory? One for ITER_SOURCE and
+> another for ITER_DEST. And then make getsockopt_iter accept optval_in and
+> optval_out. We can also use optval_out position (iov_offset) as optlen output
+> value. Don't see why it won't work, but I agree that's gonna be a messy
+> conversion so let's see if someone else has better suggestions.
+
+Yes, that might work, but it would be good to get some feedback
+if this would be the way to go:
+
+           int (*getsockopt_iter)(struct socket *sock,
+				 int level, int optname,
+				 struct iov_iter *optval_in,
+				 struct iov_iter *optval_out);
+
+And *optlen = optval_out->iov_offset;
+
+Any objection or better ideas? Linus would that be what you had in mind?
+
+Thanks!
+metze
