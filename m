@@ -1,121 +1,82 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965262045BC;
-	Tue,  1 Apr 2025 13:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A708D20371A;
+	Tue,  1 Apr 2025 13:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743515280; cv=none; b=F9yCAR1pXKGficXuy9SJGpD4qba9h38Wn2/wpy7r/VQqhKl5gP2I6DPqzWWxQkf/7ucf6sSxIG3VxovmYn+wJRAZrVZvYOS4zzSrJkMRGyKb1pIy8ufVPT9f3TkthZZFcipzoehDw31BGiq56308/ktwaYAolUPOdXqh4OLr1zA=
+	t=1743515289; cv=none; b=Jqzk1SxpW6vvXFTwwWSXOrF72pvdbMPsPUc7g5ABm1QDRDObUy5TPFylweqD+tDWJi3+s1Gos1AKYSxb+zjgyf/NLp2Esfzbp+jumENhHxiwjBlK+vVpsNyCYnkw4e+UrLLNT5Z6pTafY8kvPPp4neiqXpKRigxy6CBzFuW8F+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743515280; c=relaxed/simple;
-	bh=orIhHZK2mBXOHJ9P6CPj8DtCz0DKuFngNgPnyToyf84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y6XZieIvANOGXQwrzCH2OnL9A346qizSyCP9OBtQTpRCFk8Fu6n/xdSULuhb7eZ8LpUIv83hpMZCZjLoqa4kIGLEjqajJTpNBGt+A6TjnS52O80qU1fGKt977RtP3fcgPTxzwFxYhaUtEMG/VAStviUPAw/x6CigRCdnZw0pTP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso9021410a12.2;
-        Tue, 01 Apr 2025 06:47:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743515277; x=1744120077;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X+rx1qskGEkuP5w6Tn0BhreVF2R/OVnokSpbvWp5rvw=;
-        b=pmJsMc+cSOOx1739QvgfUOpAifNREyMsF4uRcDtuKdwKrZQG5UvSMQyCtv84uphwsj
-         0kkDDZd8eVqwOPqmUk2CBZAbHSKr+DEPvIsuOE3GYuzBDlYwqtywB3Ouiqf1iw2RrBF5
-         x8C3g7eRb3T4ri9LmDNyZK45dTImEo+Un4HR7oZklT1WL37IP5e5ILSbVF74hg+JhAoN
-         36zPAAxDI5rNM85hJkHMBwgfDKXGS5ZqNFR6ZIMuEwmNATKKXTxFvXOiPEZSbgZ1tDxT
-         XFpuuLSqcl20zdwfTEVtJjXxWQ1+eGftYdh9ZrXBcx9PdvfhVRS/cbCuvvF5FngA0lfW
-         ljGg==
-X-Forwarded-Encrypted: i=1; AJvYcCURB4f4zSnasFcXYCzK+jnO1kJYPgYb4YvxxCmYMkdrIRE+9XSdR6JvA5yanoukohp47d5+B2ubr/kFX1k=@vger.kernel.org, AJvYcCXs/f3A0HDJvCBkteV8tB5OX/unr++Y1Cy2ntNn5WvcBwxfZJMnBFalnQOEHxTewmwqi/s+5lVM0XPh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXahS+YAQ83XMd4CasxR6HcaojE00YOAsh+cyNP4TisonnH13Z
-	gZ1Injl3xobw35Nfn7muT43X5GSTtFW21Rbkn9jYafBclWtnvneq
-X-Gm-Gg: ASbGncvTt8pLCGZL1GhUDRv0krpAbX0+v5P6SjyBRi8hzSAJVgyzm3NAZcSyXmy1tJq
-	JIWjBFj1aACQS7BKIrvsUujGEC4rj7fP3VU3tD4is6gIdDi5TY45F1ZryQdSZgTyBJNPJI2gleD
-	lEckIcC0zPyv2tpOvLezM2BxiLexI4Qmz6TbPCecGamrwkTz/j8m2Qak9HZUDRBdmi4VjMKxU6e
-	/hFsXtB+VJGGY0X40+Fj3MUtcIvaBD0GX5OUjHsnfi+WpS6XYGhVSX1a/+39FHn8QiIZNWQQas6
-	bwc2vJFaPYGQUy0f04VxKqJQqJbzCAKi13Q=
-X-Google-Smtp-Source: AGHT+IF1ZqchpsJl91cjnqOW0TqInkBNKXIBilhyIt5S+CcHOTDLL1ou0xV+jViKplohtQaHQNdGSg==
-X-Received: by 2002:a05:6402:348e:b0:5ec:25d2:8631 with SMTP id 4fb4d7f45d1cf-5edfce7682amr11659933a12.12.1743515276724;
-        Tue, 01 Apr 2025 06:47:56 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:7::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17b30cdsm7015449a12.64.2025.04.01.06.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 06:47:56 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 01 Apr 2025 06:47:50 -0700
-Subject: [PATCH v2 2/2] spi: tegra210-quad: add rate limiting and simplify
- timeout error message
+	s=arc-20240116; t=1743515289; c=relaxed/simple;
+	bh=XP6Hcbmk/zkfwvAVnWwB1djHn3B4hIRqVoZ7XYY1hY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=twdWj3O4fBuWmIzr2WuhSKzl9GaeUvtUEi8mSukMcEhKhQFt1ROA4vncXjpuCbobqkbJL5J12iL1Tbk1m4FzytVC1eOfk1L1tRgFSXZ/Uw3NuMKtGtbpPPYFZ53tL0e/CQP0H6vQBGlY1Httq/BMjqBeyie4yBr+XbQ2Py8m7r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2jIBIrIQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2jIBIrIQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F9C7C4CEE5;
+	Tue,  1 Apr 2025 13:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743515289;
+	bh=XP6Hcbmk/zkfwvAVnWwB1djHn3B4hIRqVoZ7XYY1hY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2jIBIrIQPo+ylLfP0xAye/ISgG+cmtKHuz8L2rhbhTf4npQJaVfFSlDYKgChQbOO7
+	 vrA+9zJECqdg68p8yYHzC72dBA4Ktf655jr+nhww5kZeKPvtC7VNQ6vZeYmyMrEayc
+	 5AknbyI/u7xzZEAl+Fzq9GexejT4ye5wRQl416j0=
+Date: Tue, 1 Apr 2025 14:46:38 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ying Lu <luying526@gmail.com>
+Cc: oneukum@suse.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, luying1 <luying1@xiaomi.com>
+Subject: Re: [PATCH v1 1/1] usbnet:fix NPE during rx_complete
+Message-ID: <2025040121-compactor-lumpiness-e615@gregkh>
+References: <cover.1743497376.git.luying1@xiaomi.com>
+ <e3646459ea67f10135ab821f90f66d8b6e74456c.1743497376.git.luying1@xiaomi.com>
+ <2025040110-unknowing-siding-c7d2@gregkh>
+ <CAGo_G-f_8w9E388GOunNJ329W8UqOQ0y2amx_gMvbbstw4=H2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-tegra-v2-2-126c293ec047@debian.org>
-References: <20250401-tegra-v2-0-126c293ec047@debian.org>
-In-Reply-To: <20250401-tegra-v2-0-126c293ec047@debian.org>
-To: Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Sowjanya Komatineni <skomatineni@nvidia.com>, 
- Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, rmikey@meta.com, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1318; i=leitao@debian.org;
- h=from:subject:message-id; bh=orIhHZK2mBXOHJ9P6CPj8DtCz0DKuFngNgPnyToyf84=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn6+6IKYuj1Klp3ayQG0I42YY+kWGh8x3sA5+Lx
- 6v4mh/jxHOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ+vuiAAKCRA1o5Of/Hh3
- bZFqEACDPf/gXpU56XhDJIj+HxwyNSXfqDbAYZhODhE8kgP6KjkOZWwTufYJMY7ncMpWLstBcfp
- TSvB2l9gtkkpJlq0p36i1dcMZXpM/WjpNGcEtZ1mbhjQ+NSbbf0Fu68jMpYvGfFJz1vnawGgKbV
- kRSW0SGsZMfdN96xdf2loH+jfGaKkOhTM/yMtWe1cMu5rsf5xkMrnIQEUgw/FYlU5g/YRtxGKDM
- +x0kPH0FRw4FPfRHjLZFTTWJJU/amfvtrguEiWrbhQ+iFTvRZ15FSwbfMvtSfDlz1gtjtrUTQ4i
- 3CAhkkjqHx7OBeuTchajs8Q6CFBzXO8pySTP02ONDG7s+ID18zP4Ne64NiNqKQRv43EzEvA+Aze
- yMXDPIlTKci6lJ3Ch3dNMsXAr/nTCmnAeXwB3VCkEmiuAKMXDoCO24inKOYg91aOAgQqviyJZbC
- luL5JO3p6Xzl4mBGsrFTneKnfDX1Dc5UT1GMexWfIve/nec/A/BNdYPLP83fuoO+yHeaNGZz80W
- Po4+jXp7giue21jQBHCEZyB+HOmk9KJiq1FpHFjKu+g+sKtefLlOQe8fnmZrQYudcCtahRl0EQc
- l1lHwDHVdwExl4VjOhJxtxMhoPwmqWzqsQUOZHk1isi4gwTIXX5QdASAGQZai7jcLVnjiL+ySAG
- Lr8Q8v8i0PDOaLQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGo_G-f_8w9E388GOunNJ329W8UqOQ0y2amx_gMvbbstw4=H2A@mail.gmail.com>
 
-On malfunctioning hardware, timeout error messages can appear thousands
-of times, creating unnecessary system pressure and log bloat. This patch
-makes two improvements:
+On Tue, Apr 01, 2025 at 08:48:01PM +0800, Ying Lu wrote:
+> On Tue, Apr 1, 2025 at 6:31 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Apr 01, 2025 at 06:18:01PM +0800, Ying Lu wrote:
+> > > From: luying1 <luying1@xiaomi.com>
+> > >
+> > > Missing usbnet_going_away Check in Critical Path.
+> > > The usb_submit_urb function lacks a usbnet_going_away
+> > > validation, whereas __usbnet_queue_skb includes this check.
+> > >
+> > > This inconsistency creates a race condition where:
+> > > A URB request may succeed, but the corresponding SKB data
+> > > fails to be queued.
+> > >
+> > > Subsequent processes:
+> > > (e.g., rx_complete → defer_bh → __skb_unlink(skb, list))
+> > > attempt to access skb->next, triggering a NULL pointer
+> > > dereference (Kernel Panic).
+> > >
+> > > Signed-off-by: luying1 <luying1@xiaomi.com>
+> >
+> > Please use your name, not an email alias.
+> >
+> OK, I have updated. please check the Patch v2
+> 
+> > Also, what commit id does this fix?  Should it be applied to stable
+> > kernels?
+> The commit  id is 04e906839a053f092ef53f4fb2d610983412b904
+> (usbnet: fix cyclical race on disconnect with work queue)
+> Should it be applied to stable kernels?  -- Yes
 
-1. Replace dev_err() with dev_err_ratelimited() to prevent log flooding
-   when hardware errors persist
-2. Remove the redundant timeout value parameter from the error message,
-   as 'ret' is always zero in this error path
-
-These changes reduce logging overhead while maintaining necessary error
-reporting for debugging purposes.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/spi/spi-tegra210-quad.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-tegra210-quad.c b/drivers/spi/spi-tegra210-quad.c
-index 2d320fbb8875f..64e1b2f8a0001 100644
---- a/drivers/spi/spi-tegra210-quad.c
-+++ b/drivers/spi/spi-tegra210-quad.c
-@@ -1118,8 +1118,8 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
- 					QSPI_DMA_TIMEOUT);
- 
- 			if (WARN_ON_ONCE(ret == 0)) {
--				dev_err(tqspi->dev, "QSPI Transfer failed with timeout: %d\n",
--					ret);
-+				dev_err_ratelimited(tqspi->dev,
-+						    "QSPI Transfer failed with timeout\n");
- 				if (tqspi->is_curr_dma_xfer &&
- 				    (tqspi->cur_direction & DATA_DIR_TX))
- 					dmaengine_terminate_all
-
--- 
-2.47.1
-
+Please mark the commit with that information, you seem to have not done
+so for the v2 version :(
