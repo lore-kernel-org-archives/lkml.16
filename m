@@ -1,120 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69E8205E23;
-	Tue,  1 Apr 2025 15:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F28205E30
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 15:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743519883; cv=none; b=nZe5OyoXsbjnHl8vSQ30ZGZWiAdENJGimeZOHhoaTbPYMAjeFiQ+n8xSGXaSy4Sr3lmX5sId6QzKcr3GFDtJMXTJInI7mprr4DNMhqVigt4HVagOhQc/npPd0val7ToeIQuKaGvKChpjF9LlZ+t/Da5k51AacPCKlvFTLgGf4TI=
+	t=1743519885; cv=none; b=C6RZdzmVTKkx9y53+8Tabltbkz92RqVp5rw2v0xaST9UNPHNhceugacUPsUJe58A7kM1f+32w161eq6kJwSFOVHATZzGLKQSaaifCu1DvpPPx/VVB21HWxzlCAFWEyyyv9sL70EdNNsVlvff8SHxskkl/VMY/2pdJ6E1cPHHovI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743519883; c=relaxed/simple;
-	bh=tYBkQYn28fMJpqKqiWHP4r5QxmH5CbUG0fikdc5QbI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rfq5hWkBg+B486d4cI//DrLSExFwUgU+yhE+aXtjnrloMplsO4snK/rXbj3OJR5C1jnnMfZRin2JJy7QfxiA10o9E85oY+FFFPCA/jPTVeoWPAZfpJY6m+Ob3X/iyB92Q6coFhN8CBclMDEYV9NahixDEan8cH0AeI33qkyEdZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcmsIu9+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743519885; c=relaxed/simple;
+	bh=GVB7GIAIxpBB0w6eDuoeIMnelryz2yK+od497ZvHt3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7ht96lssorz8f9ppDpvCvKi+u90i60A2pN3BxjwEEK5uz5YKEkP/u/NgODJXuIcesUBiCy6zTKWAWjFF2hjb0+9ZnophaGiLIp66KsCtBXeGEjSoS7I03o3nKdi74aBVxL9gEKysa2xHt1J4387Ya6Ed+cd+KJBqjoL8qOAIDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DNwglZO+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VeLsseZK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DNwglZO+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VeLsseZK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcmsIu9+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF1C5C4CEE5;
-	Tue,  1 Apr 2025 15:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743519882;
-	bh=tYBkQYn28fMJpqKqiWHP4r5QxmH5CbUG0fikdc5QbI8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GcmsIu9+5YTQoV5gb401fXrHTApHg3bWcamxbyHvSixSzkO9DaH9Iw1Jmprb4Fidp
-	 uDUhwmW4Tc/B7dISFX1smmr0tggqQfLTZa3If+lqbMLI07Q3Y8V/5K+4Ba+FcRoW0b
-	 AVXboW7i9khxz06LcAFSi3bNspb2Y9BM4ybn4q/9JS+O/vlAyviXFpdAOuoHo+3CrE
-	 OJowizjg3XtV2cd0Ky3iBL2OPg8aecE12NsQhS83SK3c7AamJQyfmXsul/I1w4Gtya
-	 ux/G+h6cv2oO8Mi0GtUyJHYWbV4Ot78Orp9UI/u/CFauR8aWIU+WMsrFi3QdUaOSPV
-	 7e7v84kaJQAiQ==
-Message-ID: <c39e5f6a-8e5b-496f-a284-74f7bc758ddd@kernel.org>
-Date: Tue, 1 Apr 2025 17:04:36 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DNwglZO+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VeLsseZK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DNwglZO+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VeLsseZK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 651C02116F;
+	Tue,  1 Apr 2025 15:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743519880; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ad77S2Ye3mt6xDedl13LrbuI9sECQTLdCRjgBoHZqUk=;
+	b=DNwglZO+aYxGO0i0tJFzvQwYaDDJMnqbUsf3Lp9YSc0tVzQ/5K89WFE9NgqPZGTGePdEvX
+	s1FNcArfWJ8WLGUGZWcoF4U7RESOdPwj62Cx0CuqjeYACJWExxTahg6VQjakPKFsiQ0R0B
+	nGIVTSvOfNfw5ApuBFnsAKz0WXt1MQw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743519880;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ad77S2Ye3mt6xDedl13LrbuI9sECQTLdCRjgBoHZqUk=;
+	b=VeLsseZKMbFPiiAzIhymR7RbwpTPrZqHOuLsHM7G/lQ6KEQYk7GbwJAm3lU0hMOyVzg1F7
+	im9t0a7IzW6sXjDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=DNwglZO+;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VeLsseZK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743519880; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ad77S2Ye3mt6xDedl13LrbuI9sECQTLdCRjgBoHZqUk=;
+	b=DNwglZO+aYxGO0i0tJFzvQwYaDDJMnqbUsf3Lp9YSc0tVzQ/5K89WFE9NgqPZGTGePdEvX
+	s1FNcArfWJ8WLGUGZWcoF4U7RESOdPwj62Cx0CuqjeYACJWExxTahg6VQjakPKFsiQ0R0B
+	nGIVTSvOfNfw5ApuBFnsAKz0WXt1MQw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743519880;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ad77S2Ye3mt6xDedl13LrbuI9sECQTLdCRjgBoHZqUk=;
+	b=VeLsseZKMbFPiiAzIhymR7RbwpTPrZqHOuLsHM7G/lQ6KEQYk7GbwJAm3lU0hMOyVzg1F7
+	im9t0a7IzW6sXjDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E41F13691;
+	Tue,  1 Apr 2025 15:04:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id bcyzAIgA7GdXcgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 01 Apr 2025 15:04:40 +0000
+Date: Tue, 1 Apr 2025 17:04:38 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, muchun.song@linux.dev
+Subject: Re: [PATCH] mm/compaction: Use folio in hugetlb pathway
+Message-ID: <Z-wAhtKxWBL-LTGJ@localhost.localdomain>
+References: <20250401021025.637333-1-vishal.moola@gmail.com>
+ <20250401021025.637333-2-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: leds: Add LP5812 LED driver
-To: Nam Tran <trannamatk@gmail.com>, krzk+dt@kernel.org
-Cc: pavel@kernel.org, lee@kernel.org, robh@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <8d9f077b-e656-438c-a9bd-76915d135e24@kernel.org>
- <20250401142935.50906-1-trannamatk@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250401142935.50906-1-trannamatk@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401021025.637333-2-vishal.moola@gmail.com>
+X-Rspamd-Queue-Id: 651C02116F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,localhost.localdomain:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On 01/04/2025 16:29, Nam Tran wrote:
-> On Mon, 31 Mar 2025, Krzysztof Kozlowski wrote:
+On Mon, Mar 31, 2025 at 07:10:25PM -0700, Vishal Moola (Oracle) wrote:
+> Use a folio in the hugetlb pathway during the compaction migrate-able
+> pageblock scan.
 > 
->> Please do not explain me how DT works, we all know. You do not have
->> child node. If you disagree - point me to the line in schema having it.
+> This removes a call to compound_head().
 > 
-> Thank you for your feedback.
-> I now understand that my schema does not define child nodes, so #address-cells and #size-cells should not be included.
-> I will update the schema accordingly as shown below.
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
 
-This has... What are we talking here about? I commented only about that
-patch.
-
-You claimed:
->Nam: I included the #address-cells and #size-cells properties to
-resolve a warning encountered when running:
-
-which was obviously not true. You could not have such errors, because
-you did not have children. You disagreed with me so you got response
-like that.
-
-If you decide to add children, then you will need address and size
-cells, but that's a different patch.
-
-Best regards,
-Krzysztof
+-- 
+Oscar Salvador
+SUSE Labs
