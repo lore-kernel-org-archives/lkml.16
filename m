@@ -1,198 +1,255 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485A4204C19
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B33194C96;
+	Tue,  1 Apr 2025 16:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743526238; cv=none; b=XGdUxpBxE9SuFQ96BMAsvyoESSCBQh16+3r1rjpseFV8WOJUvh/aRnDL+SsmYkPWcscj1hufQNMF/hy9Rd5yxhJ8jXXtXX/P0WY/4cP90pOgEElxq2DEA6iuD7JQVFcn1DcA62oZzP0cK/ygpCPzyQQYEK40C0tEkC2xYD62GB4=
+	t=1743526397; cv=none; b=lHa5MDUWc7kn4KzGDpwPKYfgpPLynP25+h1ZYE2uBJG6xNNNKVfi4KuIRTT1fOUU+tgf0mtPGJ903pvcx+UZxPWut5Er6//mGPnI7MYR90KKkwXOiTt+0IsGH/TD8L/D63qHkGIi3GVF+pXemB4bJOvhSfjQGgPRZwHzFu/hg9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743526238; c=relaxed/simple;
-	bh=qUk1PicXzRoPMh0+3kY+HECr2cFI/+cjTJrezXFM1+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=grIouMuxY41VD7ee8IBxo2wWysJBzi+XvZlwMIbTjtWW3HiuRYYsqCh+7kJUAlthWz3mbTmNv9nJ7QCGEH1m/1wMmx9rhw6aXF9I1Mf16QMgG/8kYd6xhdQPgLtEtK5ARh4i0qDmD9xEPpR7QwWofrABp27W3evfnjHN3fVb/1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K3Px5ldr; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743526397; c=relaxed/simple;
+	bh=wry4Ntdt9WLx3hUbeFpnRHWZCyGnvXM8LuWSpa9I9AA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NRXeviP6Z0Nk14JK6stWf4HFCZg4RyjsDdsqKUlHb6j65ckT2+nx3VLED+S4yCjnw6HMaxEh4T3yOMAKSHvjyB5n7v3Is9ydvEuvUXJQI6nJEMQRMzqk78pgvxA7bQ6cR8RBJS9DjJuWIcHvrGbpdOpSs0S6AcSR3krCoS4oCSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbCcIStI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K3Px5ldr"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224341bbc1dso98968635ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:50:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbCcIStI"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso42482915e9.1;
+        Tue, 01 Apr 2025 09:53:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743526236; x=1744131036; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2rzQkn+3Vspwxp8Ah2PANQpg8+55TnFG5qd193VBWCM=;
-        b=K3Px5ldr2tqCtmLMEyUBmaJhKS1ZCtwKue6Bilu+rQDpOi0FNC66/45c0XdYA0PVGE
-         fieEQ4rB9cFilf2+2IoL61XmkhPKbRskthSzG8NAxpzBAafMmAqLtK6l0KA2f92Wxdv/
-         RkwvS+8GSq9lEDQZcARlgzs2hVO8PZSJ7sk0+OHDs6BG4f8Gxeeaf7v3qoYl9o3Qkd+D
-         oTD/rS4mUwg4X32RQV8j+qIRq0TSVGYkw7oagUgiiykzMOvgqKs2fUlowHotfmL+nzaD
-         kvIrfi5FmaIIMrUStUa3ONwxrQ1AjO27Yo9Uh8X4AlczUKq4Ujip2bN4jpfbLZl45VI8
-         y58A==
+        d=gmail.com; s=20230601; t=1743526394; x=1744131194; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tEhBookynFiDE+Bfy7pUPsUm353VzzV7ED0Kjv5pN+4=;
+        b=XbCcIStI6YEsykvHwup2HW3rJhWgYRV4ia4XsHDUFlhvol0Uun+feykCFJ+PHEoV+4
+         Uxu1KbiM31BckQVYHtQgf7v3w96aKBvXhCZ3pb7yqQMnwMV6SJroEzjRJyEQ+kpOZke/
+         e0l55avXe2vPLEiwepzfEcntniDeelrr88TaiFkKT2yogZ5BCRf0XY/sRTVcEw2fInLL
+         7PoldWXHwBy7tPtD17h9PFvgnqqL+rpEmgGjToY5Od/YOJlP9KO1UruFZK6DRsEzB6TJ
+         U0qp7rYdw+thZeBa0icAna5FS9x09kWG54j3It36EFgvH3iYoXlkkVndTirXG1dI/G2l
+         QO5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743526236; x=1744131036;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2rzQkn+3Vspwxp8Ah2PANQpg8+55TnFG5qd193VBWCM=;
-        b=VQwh1OmLp349U8SxU89ltZc3Z7JXGDs2EyZUjSUOhmHUxR9CGSSltNA96DhJ4K37Hk
-         cxAIMIEe02m4SgSFlh6y8tGvCm5Msk5C8NvVn89YUF3CnE1NVz2n5vxWQgKuUF4KUZMw
-         Jumf8TIwit0OhAgJ3hD2DMzQTcfTKLe0D21NE+o3yUAOdbtjL8QInjA6Gl0KJlpBvZM7
-         +XBqB9WyxE2CfXm9WiCffSGTj0hLWnNCaW06dhYLoWy2CWvdDSdUDer7AZP4ZSnBsq3s
-         nS88YnfpWpx9a+NVSJPpYL7qRGJWeDnqd0ye670v+ejs6eDqNKzCF5KK4wKMCL6PPUAv
-         +P6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUr6YzKgQC4rmap0AA2kX2JnCJb4uwXu/sUWV10fTRxf67OA1VrnpZx6Il0WKLXPOEaMcfjtsWOZ2BWN0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywG2Mr6wnJx0i02XzGWrYQNgPZWXUlqRrSm58a+C/d4pKjSBFP
-	4HXO4GIASVo6obBeIejlVJnLmlaMD2TfTPgb+XuCwklehpcyFCg1JCRMIMdf8Q==
-X-Gm-Gg: ASbGncuxHC6qUIM/jIpf8OIjtkQ/mINBUyc3O5X75Ba4oju3H2QJCMO+it4Bal1I8t8
-	nkZN04DZWtnVkbRDs0TccLmBfUBIS6OUOSAGtNqP6PfAaHuPvIXeb6nBkUF4yOIxM9rj7tFlxow
-	jAAIc2czh6h+wSyE9BTrho0SE3Jo4nFVi7up6dZKvQD34KeLe5W9X9OsmKuNGWV+b00QRN1Y4U5
-	uSWye5+O8SwdteHG9Ta817KjmKe5ywkHIOKsZWTiphDyGbStZ21JYus2jS6JnQJVsZz2ghO31l7
-	kbAiXedWEz39Lzukwv9j2XhrB1YDrTR+SC5bcZIfUJFutogUco6aNWxQ0G7yB/kX//XntkpxXIZ
-	PWpZrDS/aOdZUKN4=
-X-Google-Smtp-Source: AGHT+IHM3XGbPCmTj9kap2GPt7VppdYLhbKxPnzq9elvCQi+To2CYT1dVqErhbVf2M9uMVGsgotWZg==
-X-Received: by 2002:a17:903:178b:b0:223:47d9:1964 with SMTP id d9443c01a7336-2292f9e6322mr233271015ad.34.1743526236330;
-        Tue, 01 Apr 2025 09:50:36 -0700 (PDT)
-Received: from google.com (198.103.247.35.bc.googleusercontent.com. [35.247.103.198])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106ad9bsm9161077b3a.117.2025.04.01.09.50.35
+        d=1e100.net; s=20230601; t=1743526394; x=1744131194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tEhBookynFiDE+Bfy7pUPsUm353VzzV7ED0Kjv5pN+4=;
+        b=smlxBp0lupK/U+mWDGZYGiyYPIci7AafpEb0mHv8JBwL+1w3vUREdyl/7jNnvnejp9
+         aZA2cpvaoeX2z0hm1h14w7TuoGCiHUoH8PzwU0UIoqUTp4NFiS2M+6UzydhAkt2P3AJl
+         7jeB2M6a18JjGJFO5VI5osj1ZFxzuvKAxy5eZKDQo2Dv41obnQsW/utlW/V4SrP9aLQ7
+         J84DTSPggAUkEBTnazyYXK+XJg5xpNAN8zzihXVSsfC+qo/A4Tjo9LE1+wH/lB64v5uR
+         ewh2gQ6MT7hz4s7l5mGROmZBTS3Y7apxbdlSZpNVQXAMZXXe9yl97MXrqhim/1x2FHIo
+         +S8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqgv40qDCPiwyB/sFZlPGSaRqWqFvInqKD9Gyly/sLIbXVcRBSxONr/Wr7i5Y4rI8p4kFhp9GUNAYGnqTM@vger.kernel.org, AJvYcCXdqmxjqxfhrc6P/1w53EX9vhgE+np8r4dQV27RSAg2jS91wdPg7Bg4nKkAIHid22KPvLF7Wv9oxi8XKWBJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBiK1LVxaNyk4G5/onoD7lx+3PAeB5AJ8Utu1mF6dqq5fEWSYG
+	uLeB04RsCFtCu375VZXFaS1ma4WLjhUnmx0lYCUnqX38YdjvBMVl
+X-Gm-Gg: ASbGncvb+4VdVkTXSAgiTDNGyr9U0zR8pExtD1njR58BD0PKXoTo6h4YLLwrcjSYM/S
+	aG/oPZLmoF4r6dEWFvYvHrhGfwmPRA+Ms37cnH93HXcsBCzuyCml+lQqcn39YJvtHmcQKZk2Pvx
+	dAqja7Bs5dJi4MwZTc97/aS87SmRku3/HKtYOM1U8PaKzzwImMDkIm1EXlhxbX9AQmlhe1pelTp
+	lw18hkoEwd137kit7PPjCRVGGhslVa0eVu8fQ5vYeOVH+RUe6t7HvD0aNtmRgI5XC0K27N3JA5I
+	OSJRK7IDj4jvpyXXW/gIVDIou33i3PkUh0BLdqG0e7OnAqtFniFsa1GRSHrp
+X-Google-Smtp-Source: AGHT+IHl75hJhgNyJ1RJt/fywnYA/sERerAFghDEKA2XWLWfZ7WFTJyP3gzmLlwTGFJlr9+iHdVoDg==
+X-Received: by 2002:a05:600c:468c:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-43db6222f89mr134005025e9.8.1743526394062;
+        Tue, 01 Apr 2025 09:53:14 -0700 (PDT)
+Received: from f.. (cst-prg-92-82.cust.vodafone.cz. [46.135.92.82])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c1845e66esm8638141f8f.18.2025.04.01.09.53.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:50:35 -0700 (PDT)
-Date: Tue, 1 Apr 2025 09:50:31 -0700
-From: William McVicker <willmcvicker@google.com>
-To: John Stultz <jstultz@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	Donghoon Yu <hoony.yu@samsung.com>,
-	Youngmin Nam <youngmin.nam@samsung.com>
-Subject: Re: [PATCH v1 2/6] clocksource/drivers/exynos_mct: Don't register as
- a sched_clock on arm64
-Message-ID: <Z-wZV3RCXKPzpZGl@google.com>
-References: <20250331230034.806124-1-willmcvicker@google.com>
- <20250331230034.806124-3-willmcvicker@google.com>
- <CANDhNCrxTTkeq3ewos=07jD67s3t6rXOv=u=_qV6d+JEVoXeUA@mail.gmail.com>
+        Tue, 01 Apr 2025 09:53:13 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v2] fs: make generic_fillattr() tail-callable and utilize it in ext2/ext4
+Date: Tue,  1 Apr 2025 18:52:52 +0200
+Message-ID: <20250401165252.1124215-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANDhNCrxTTkeq3ewos=07jD67s3t6rXOv=u=_qV6d+JEVoXeUA@mail.gmail.com>
 
-On 03/31/2025, John Stultz wrote:
-> On Mon, Mar 31, 2025 at 4:00 PM 'Will McVicker' via kernel-team
-> <kernel-team@android.com> wrote:
-> >
-> > When using the Exynos MCT as a sched_clock, accessing the timer value
-> > via the MCT register is extremely slow. To improve performance on Arm64
-> > SoCs, use the Arm architected timer instead for timekeeping.
-> 
-> This probably needs some further expansion to explain why we don't
-> want to use it for sched_clock but continue to register the MCT as a
-> clocksource (ie: why not disable MCT entirely?).
+Unfortunately the other filesystems I checked make adjustments after
+their own call to generic_fillattr() and consequently can't benefit.
 
-Using the MCT as a sched_clock was originally added for Exynos4 SoCs to improve
-the gettimeofday() syscalls on ChromeOS. For ARM32 this is the best they can do
-without the Arm architected timer. ChromeOS perf data can be found in [1,2]
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
 
-[1] https://lore.kernel.org/linux-samsung-soc/CAJFHJrrgWGc4XGQB0ysLufAg3Wouz-aYXu97Sy2Kp=HzK+akVQ@mail.gmail.com/
-[2] https://lore.kernel.org/linux-samsung-soc/CAASgrz2Nr69tpfC8ka9gbs2OvjLEGsvgAj4vBCFxhsamuFum7w@mail.gmail.com/
+v2:
+- also patch vfs_getattr_nosec
 
-I think it's valid to still register the MCT as a clocksource to make it
-available in case someone decides they want to use it, but by default it
-doesn't make sense to use it as the default clocksource on Exynos-based ARM64
-systems with arch_timer support. However, we can't disable the Exynos MCT
-entirely on ARM64 because we need it as the wakeup source for the arch_timer to
-support waking up from the "c2" idle state, which is discussed in [3].
+There are weird slowdowns on fstat, this submission is a byproduct of
+trying to straighten out the fast path.
 
-[3] https://lore.kernel.org/linux-arm-kernel/20210608154341.10794-1-will@kernel.org/
+Not benchmarked, but I did confirm the compiler jmps out to the routine
+instead of emitting a call which is the right thing to do here.
 
-> 
-> > Note, ARM32 SoCs don't have an architectured timer and therefore
-> > will continue to use the MCT timer. Detailed discussion on this topic
-> > can be found at [1].
-> >
-> > [1] https://lore.kernel.org/all/1400188079-21832-1-git-send-email-chirantan@chromium.org/
-> 
-> That's a pretty deep thread (more so with the duplicate messages, as
-> you used the "all" instead of a specific list). It might be good to
-> have a bit more of a summary here in the commit message, so folks
-> don't have to dig too deeply themselves.
+that said I'm not going to argue, but I like to see this out of the way.
 
-Ah, sorry about the bad link. The above points should be a good summary of that
-conversation with regards to this patch.
+there are nasty things which need to be addressed separately
 
-> 
-> > Signed-off-by: Donghoon Yu <hoony.yu@samsung.com>
-> > Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
-> > [Original commit from https://android.googlesource.com/kernel/gs/+/630817f7080e92c5e0216095ff52f6eb8dd00727
-> > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > ---
-> >  drivers/clocksource/exynos_mct.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-> > index da09f467a6bb..05c50f2f7a7e 100644
-> > --- a/drivers/clocksource/exynos_mct.c
-> > +++ b/drivers/clocksource/exynos_mct.c
-> > @@ -219,12 +219,12 @@ static struct clocksource mct_frc = {
-> >         .resume         = exynos4_frc_resume,
-> >  };
-> >
-> > +#if defined(CONFIG_ARM)
-> 
-> I'd probably suggest adding a comment here explaining why this is kept
-> on ARM and not on AARCH64 as well.
+ fs/ext2/inode.c    | 3 +--
+ fs/ext4/inode.c    | 3 +--
+ fs/stat.c          | 6 +++++-
+ include/linux/fs.h | 2 +-
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-Sure, I can add my comments above here in v2.
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index 30f8201c155f..cf1f89922207 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -1629,8 +1629,7 @@ int ext2_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 			STATX_ATTR_IMMUTABLE |
+ 			STATX_ATTR_NODUMP);
+ 
+-	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+-	return 0;
++	return generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+ }
+ 
+ int ext2_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 1dc09ed5d403..3edd6e60dd9b 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5687,8 +5687,7 @@ int ext4_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 				  STATX_ATTR_NODUMP |
+ 				  STATX_ATTR_VERITY);
+ 
+-	generic_fillattr(idmap, request_mask, inode, stat);
+-	return 0;
++	return generic_fillattr(idmap, request_mask, inode, stat);
+ }
+ 
+ int ext4_file_getattr(struct mnt_idmap *idmap,
+diff --git a/fs/stat.c b/fs/stat.c
+index f13308bfdc98..581a95376e70 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -78,8 +78,11 @@ EXPORT_SYMBOL(fill_mg_cmtime);
+  * take care to map the inode according to @idmap before filling in the
+  * uid and gid filds. On non-idmapped mounts or if permission checking is to be
+  * performed on the raw inode simply pass @nop_mnt_idmap.
++ *
++ * The routine always succeeds. We make it return a value so that consumers can
++ * tail-call it.
+  */
+-void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
++int generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ 		      struct inode *inode, struct kstat *stat)
+ {
+ 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
+@@ -110,6 +113,7 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ 		stat->change_cookie = inode_query_iversion(inode);
+ 	}
+ 
++	return 0;
+ }
+ EXPORT_SYMBOL(generic_fillattr);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..754893d8d2a8 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3471,7 +3471,7 @@ extern int page_symlink(struct inode *inode, const char *symname, int len);
+ extern const struct inode_operations page_symlink_inode_operations;
+ extern void kfree_link(void *);
+ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode);
+-void generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
++int generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
+ void generic_fill_statx_attr(struct inode *inode, struct kstat *stat);
+ void generic_fill_statx_atomic_writes(struct kstat *stat,
+ 				      unsigned int unit_min,
+-- 
+2.43.0
 
-> 
-> >  static u64 notrace exynos4_read_sched_clock(void)
-> >  {
-> >         return exynos4_read_count_32();
-> >  }
-> >
-> > -#if defined(CONFIG_ARM)
-> >  static struct delay_timer exynos4_delay_timer;
-> >
-> >  static cycles_t exynos4_read_current_timer(void)
-> > @@ -250,12 +250,13 @@ static int __init exynos4_clocksource_init(bool frc_shared)
-> >         exynos4_delay_timer.read_current_timer = &exynos4_read_current_timer;
-> >         exynos4_delay_timer.freq = clk_rate;
-> >         register_current_timer_delay(&exynos4_delay_timer);
-> > +
-> > +       sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
-> >  #endif
-> >
-> >         if (clocksource_register_hz(&mct_frc, clk_rate))
-> >                 panic("%s: can't register clocksource\n", mct_frc.name);
-> >
-> > -       sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
-> >
-> >         return 0;
-> 
-> Otherwise, this looks ok to me.
-> 
-> thanks
-> -john
+ fs/ext2/inode.c    | 3 +--
+ fs/ext4/inode.c    | 3 +--
+ fs/stat.c          | 9 ++++++---
+ include/linux/fs.h | 2 +-
+ 4 files changed, 9 insertions(+), 8 deletions(-)
 
-Thanks for taking the time to review!
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index 30f8201c155f..cf1f89922207 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -1629,8 +1629,7 @@ int ext2_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 			STATX_ATTR_IMMUTABLE |
+ 			STATX_ATTR_NODUMP);
+ 
+-	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+-	return 0;
++	return generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+ }
+ 
+ int ext2_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 1dc09ed5d403..3edd6e60dd9b 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5687,8 +5687,7 @@ int ext4_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 				  STATX_ATTR_NODUMP |
+ 				  STATX_ATTR_VERITY);
+ 
+-	generic_fillattr(idmap, request_mask, inode, stat);
+-	return 0;
++	return generic_fillattr(idmap, request_mask, inode, stat);
+ }
+ 
+ int ext4_file_getattr(struct mnt_idmap *idmap,
+diff --git a/fs/stat.c b/fs/stat.c
+index f13308bfdc98..7d390bcd74ab 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -78,8 +78,11 @@ EXPORT_SYMBOL(fill_mg_cmtime);
+  * take care to map the inode according to @idmap before filling in the
+  * uid and gid filds. On non-idmapped mounts or if permission checking is to be
+  * performed on the raw inode simply pass @nop_mnt_idmap.
++ *
++ * The routine always succeeds. We make it return a value so that consumers can
++ * tail-call it.
+  */
+-void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
++int generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ 		      struct inode *inode, struct kstat *stat)
+ {
+ 	vfsuid_t vfsuid = i_uid_into_vfsuid(idmap, inode);
+@@ -110,6 +113,7 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+ 		stat->change_cookie = inode_query_iversion(inode);
+ 	}
+ 
++	return 0;
+ }
+ EXPORT_SYMBOL(generic_fillattr);
+ 
+@@ -209,8 +213,7 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+ 					    request_mask,
+ 					    query_flags);
+ 
+-	generic_fillattr(idmap, request_mask, inode, stat);
+-	return 0;
++	return generic_fillattr(idmap, request_mask, inode, stat);
+ }
+ EXPORT_SYMBOL(vfs_getattr_nosec);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..754893d8d2a8 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3471,7 +3471,7 @@ extern int page_symlink(struct inode *inode, const char *symname, int len);
+ extern const struct inode_operations page_symlink_inode_operations;
+ extern void kfree_link(void *);
+ void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode);
+-void generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
++int generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
+ void generic_fill_statx_attr(struct inode *inode, struct kstat *stat);
+ void generic_fill_statx_atomic_writes(struct kstat *stat,
+ 				      unsigned int unit_min,
+-- 
+2.43.0
 
-Regards,
-Will
