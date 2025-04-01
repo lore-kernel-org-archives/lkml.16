@@ -1,79 +1,144 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB171E6DC5;
-	Tue,  1 Apr 2025 06:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820BC3BBC9;
+	Tue,  1 Apr 2025 06:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490625; cv=none; b=Xn18crUQjyzl5EUH6NyExUcfSZB14nUbLEV5LM6VwLDkUDUbvjS1AQMQPjo9NQIRCfSiUD81taAGcI5voXly2nSlskQrCgkdxWYIBrJuXRvjQyNYjaEk+S57lMuM3IEJDDcyLEjcxNbpATo+G4JFcs6d9U+FJdb/MjX/UuKAVj0=
+	t=1743490673; cv=none; b=vBd1DWTc4Dd54P/1J7Ui3Q6rr1/6vWG/BNCmAirOAYXJk3x0jbAdQD6eY2RMq0mgwA/fjnVj9hLP6vTxOwznWdjpdytf4V1uUUVjkyJ6UQ2aVwPSFL5QyWLEnvBP39hyk9+zVBPD1x1BGFNtH9BUvngHHcUOQcUyuWn5zCCo3wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490625; c=relaxed/simple;
-	bh=wJe3WZS/uGSGahYihWwJtsVLST3azpD13G7BDSRIehk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VUHcKiNMNgdyvAsGfKkmXH0FIeYennmOlzgLECpwAWVsPDFHror8yWHcx+6A9Q1bvR2U9VpJEWj1as0/gvfe9yTpVcM/Tvf2grOtdxvfaoUfKTdZp6PsgVywQal4kfsRXg1lZLbh3QC0xRVpwQdC22e+ng1AGal6euZrdN0Eu6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=SPrcqjaO; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1743490673; c=relaxed/simple;
+	bh=IGCSEc7Ts4W/Xzxedq5JGQXSYv7wzW4BM7kIZ4pyBGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FH8Lg/CfOG71e8rKpC/GcfXcmvcGv5EP2h98mCQBCVnfMGgDFTYqyxEWmR3OuZJjd/oppkmZdq3N4ILQJ4GogWURcKo464rir/rcSRBLYdK6XQHGGHuU6zHu0Rn0Y8GoEqNmd28JzZNXWHeofeB01YXShoSY+g+cXCI/rreYQrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cGUWTLuq; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="SPrcqjaO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=nXNaZTUxaRwvpA9JfeBgD5Q5H5ioeByhSjBTYXbn5aw=;
-	t=1743490624; x=1744700224; b=SPrcqjaOM6A2uDc+ILRwaMQuyEbJGNNGUs+uP8xO4IdOLNI
-	cTElXv1jc7VkP+BQEK5VqZRKmBQTisN80KNPE15HpV6B9NbzliY8HPUC+jCLm6pIUuV3vPm2msniR
-	BiYxyowP4/JeWe8neYKT3L6s8uT4sS5SeIDlp4tNq/ftHENShT/YR1cIg6Qt72cF+z5mqfhoNHDpI
-	c/78/lKbS9SMkKkHYkbLv25816aiWCCaDCigyxvQxYNzfYpmuZEYpVL1vHp+OQ0zK/obBMzmJnKcR
-	Vt3OCNpSPx86YQeJttcWs4DeKuZWYxaWGN3rAcsjgvCrccATPKuoKrNe/veACIuQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tzVYD-0000000C6vB-3O8q;
-	Tue, 01 Apr 2025 08:56:46 +0200
-Message-ID: <5a5147038b771980b87761a75be38e1d9d43d1fa.camel@sipsolutions.net>
-Subject: Re: [PATCH] wifi: iwlwifi: mld: Fix build with CONFIG_PM disabled
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Miri
- Korenblit <miriam.rachel.korenblit@intel.com>, Arnd Bergmann <arnd@arndb.de>
-Date: Tue, 01 Apr 2025 08:56:40 +0200
-In-Reply-To: <20250401032153.2896424-1-linux@roeck-us.net>
-References: <20250401032153.2896424-1-linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGUWTLuq"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f7019422so46909766d6.1;
+        Mon, 31 Mar 2025 23:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743490670; x=1744095470; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ssnm22tzkENh8oJAuNiuanJgxcOth+qg0jpPFpBJdzU=;
+        b=cGUWTLuqjA+4F99F7Hf4STbEs6beosoTp1GBEKtW95IGyc6bkiZylCshJNKN3ymPLH
+         W+IE4SXa2R7RogEluuEpu3yegbgZvwlvrL0XIwoM1YRggqnlSItP6/bC5TbuSNHGKvfH
+         ruIrFYeSWxEJgQ8LUsrm6RpF3UuM6ybsMwhNq6BO59sijy2o/jWQaOV2R6+WYlqALtxn
+         GtHFopYVjo3IS/uIIygXNw6pgp9GYoYVC1Pgl7Dd6Q/E+bSz5v4C6FujBUiiid7EB9JR
+         e8crPJgKpolZGsN8S9ncQQ9xD7OQZ9QHHu+IjF0MyoQ0MVJ9Ss1NdsiqOo+4mcPulnq/
+         EgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743490670; x=1744095470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ssnm22tzkENh8oJAuNiuanJgxcOth+qg0jpPFpBJdzU=;
+        b=Wqe2dAlcT5IhE3qvYbCVoYaAs2oB9LUWF63Q0i91N06dS9dIWno9Kbsi26HQ1N5sMW
+         JYfOws4SNhjjJ0RA/AeoHDjAoNBkY20xpBTUruY5wubBZgzUJNFwQyLTLCK8mhRqLTN6
+         HFi1soz6DgJ9MYS3pk5u/oG9wJtFHE8+Le4TfR5CLStGoqOx/wUr8NrtC3ymuhP/7KF1
+         Q3f6n5jbQ5JBxL9y+eaDFY7upEnZVQav8K2mLLngOfJNwmICEvdXKxWRPDb+kjPIxRwK
+         iWWQ3XS2hsFkiYiTV+WYGO1Y5Z2tpRgHLofNTykfomEt0CnZdaFnyMvyIziwQuUiabDh
+         vMEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwAyo8lYc1/8er+I0L2dZNmBBTtH+FwOwW5GNToyXrPW2coZ6D71TM5SDrA6iM7yikf0yAhFwTV+blO2Q+@vger.kernel.org, AJvYcCWTWpbL/4wi+s2HEHYKG3gW8QYIo2AcJNLaN/JNafEwpDSewCyK8Yzb/V7di4bDwWNVwCQURB34@vger.kernel.org, AJvYcCXl8naALy2TqsErRhtR/7puTyH788/eihP0hpALrGxwTwV1eVAsvAdWXJZLfiijPLaml+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoAEn1HiOSWHPk9Z5S2f57zj0AIWWjK0NFStvDL9uOebeYkS01
+	iF6Dv0XfF/ezFDiRSps4lAFkCycCe8R2hCvnu6h1FTsM46SFqx/jLhCyD3QNyaMrQNqNUS/tYnt
+	Qj+rkNhWJICPmP3cw96UAgY1E1cc=
+X-Gm-Gg: ASbGncvC07b9zVDnPBPbi65VAVxTQ/pr2GefrvP9Fypik6soE7V8zaBMfAh765nVUAN
+	YnVt9EjPGI7bAyiUlv2vgacqHCkLX1oWHujzySys+Bd/lEI7D/hTBzjW+nBxM/gq2mVrz1Y8uN8
+	QWKDuNBZB6v8om/RNU5WWlGbBF/oRtNZoxovvpzMI=
+X-Google-Smtp-Source: AGHT+IEdDAVr7gVEbl/GU6WDm3sxWkA6MwHWEQcbw2gEjH2spd6Tnyrk+S3j01CtNdHmm8Kio51U0o84zUlZceK8Um4=
+X-Received: by 2002:ad4:5c69:0:b0:6e8:9dc9:1c03 with SMTP id
+ 6a1803df08f44-6eed61d4938mr215266606d6.21.1743490670336; Mon, 31 Mar 2025
+ 23:57:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <20250329061548.1357925-1-wangliang74@huawei.com>
+ <Z-qzLyGKskaqgFh5@mini-arch> <Z-sRF0G43HpGiGwH@mini-arch> <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
+In-Reply-To: <0d1b689c-c0ef-460a-9969-ff5aebbb8fac@huawei.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Tue, 1 Apr 2025 08:57:39 +0200
+X-Gm-Features: AQ5f1JoOBJ9GaGcDlhTEvX2DMHnIg27Jf5d7FVBWwMgFdH6LVMOQBiZvlY1hMAs
+Message-ID: <CAJ8uoz1JxhXFkzW8n_Dud8SR-4zE7gim5vS_UZHELiA7d0k+wQ@mail.gmail.com>
+Subject: Re: [PATCH net] xsk: correct tx_ring_empty_descs count statistics
+To: Wang Liang <wangliang74@huawei.com>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>, bjorn@kernel.org, magnus.karlsson@intel.com, 
+	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org, 
+	john.fastabend@gmail.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com, 
+	netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-03-31 at 20:21 -0700, Guenter Roeck wrote:
-> If CONFIG_PM is disabled, the CONFIG_PM symbol is not defined.
-> This results in
->=20
-> drivers/net/wireless/intel/iwlwifi/mld/iface.h:169:5: error:
-> 	"CONFIG_PM_SLEEP" is not defined, evaluates to 0
->=20
-> because the conditional uses #if instead of #ifdef. Using #ifdef
-> fixes the problem.
->=20
-> Fixes: d1e879ec600f9 ("wifi: iwlwifi: add iwlmld sub-driver")
-> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Maybe this has already been addressed. If so, sorry, I did not find it.
-> I did not see thos fixed in Arnd's patch addressing the other PM_SLEEP
-> related issues in the driver.
->=20
+On Tue, 1 Apr 2025 at 04:36, Wang Liang <wangliang74@huawei.com> wrote:
+>
+>
+> =E5=9C=A8 2025/4/1 6:03, Stanislav Fomichev =E5=86=99=E9=81=93:
+> > On 03/31, Stanislav Fomichev wrote:
+> >> On 03/29, Wang Liang wrote:
+> >>> The tx_ring_empty_descs count may be incorrect, when set the XDP_TX_R=
+ING
+> >>> option but do not reserve tx ring. Because xsk_poll() try to wakeup t=
+he
+> >>> driver by calling xsk_generic_xmit() for non-zero-copy mode. So the
+> >>> tx_ring_empty_descs count increases once the xsk_poll()is called:
+> >>>
+> >>>    xsk_poll
+> >>>      xsk_generic_xmit
+> >>>        __xsk_generic_xmit
+> >>>          xskq_cons_peek_desc
+> >>>            xskq_cons_read_desc
+> >>>              q->queue_empty_descs++;
 
-Hadn't, except internally I'd fixed it a while ago, and now Miri sent my
-patch (same as yours) 20 minutes later ;-)
+Sorry, but I do not understand how to reproduce this error. So you
+first issue a setsockopt with the XDP_TX_RING option and then you do
+not "reserve tx ring". What does that last "not reserve tx ring" mean?
+No mmap() of that ring, or something else? I guess you have bound the
+socket with a bind()? Some pseudo code on how to reproduce this would
+be helpful. Just want to understand so I can help. Thank you.
 
-Thanks, I'll start getting things into the wireless tree soon.
-
-johannes
+> >>>
+> >>> To avoid this count error, add check for tx descs before send msg in =
+poll.
+> >>>
+> >>> Fixes: df551058f7a3 ("xsk: Fix crash in poll when device does not sup=
+port ndo_xsk_wakeup")
+> >>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+> >> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> > Hmm, wait, I stumbled upon xskq_has_descs again and it looks only at
+> > cached prod/cons. How is it supposed to work when the actual tx
+> > descriptor is posted? Is there anything besides xskq_cons_peek_desc fro=
+m
+> > __xsk_generic_xmit that refreshes cached_prod?
+>
+>
+> Yes, you are right!
+>
+> How about using xskq_cons_nb_entries() to check free descriptors?
+>
+> Like this:
+>
+>
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index e5d104ce7b82..babb7928d335 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -993,7 +993,7 @@ static __poll_t xsk_poll(struct file *file, struct
+> socket *sock,
+>          if (pool->cached_need_wakeup) {
+>                  if (xs->zc)
+>                          xsk_wakeup(xs, pool->cached_need_wakeup);
+> -               else if (xs->tx)
+> +               else if (xs->tx && xskq_cons_nb_entries(xs->tx, 1))
+>                          /* Poll needs to drive Tx also in copy mode */
+>                          xsk_generic_xmit(sk);
+>          }
+>
+>
