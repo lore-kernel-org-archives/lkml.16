@@ -1,213 +1,207 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11023127.outbound.protection.outlook.com [40.107.162.127])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9E11DF258;
-	Tue,  1 Apr 2025 21:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.127
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743544530; cv=fail; b=ImCUAgtNqMMu6+YCDqRuhVboPfdi5NeIaD1JMldtBZSWajRqWadTHDnkHTFg/kMGTwMeD3bViXHANTnX17x0K3gwd7qsh7FyuDKG0HM3Cze7DgXH2cnGtv/G4gwRWu2ngWGaE4S/P0uEDx2l2vqR3f1ueG7gVfxOZ3gtDTXA0ZA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743544530; c=relaxed/simple;
-	bh=0D74nxs8k5zJdqw8PAxqjrZSmrkIF9WueMHxWHcE23I=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Is3C5n5cCVGUPgCwlgGq7SdHsHNl4r1glLuYLh+BOHKr9UIJHIIDZ8Ni1OdR7zXNy3c68B3FOpVPqA8eNldGY8lKGIOt/tK/jKSksOStfrIvvh83JzACld3AMX7QbgR4JZP5Wap05J9Jt64SdPLp28ui8vhuZCpW1YVUfyj1v0c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b=yQXQUDmO; arc=fail smtp.client-ip=40.107.162.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=genexis.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858711DF258;
+	Tue,  1 Apr 2025 21:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743544559; cv=none; b=utN6W38V40Rl+iHXK/TdYnTxLUJW0E7Thy533tijPEW71hfRJkFkQfPXDfBS+gjaUInqGHi2w+YESBWdC321HLpo3POcsTpKIUStUwwK7hlmbQq2TPAJBj/K05YHrbliCXhAx/e/g3A3AgMXL57JDJbVCyETUxp8V1l/xddEKl8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743544559; c=relaxed/simple;
+	bh=/awk8q2VzVHMPUKfx/9Iif66Moo4kkMLhitLsXMH/d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HnNd5eSrgKyp1IDIx6OHqLv7JdTSGqLkcD2k/iA0CFXUmzhZzystZkgyvObj8ryCcOFT80rEUfTuv9QphQ4XufqoOgAdgeuemq9rh4btJf28v5+bH+r+U9+GoN6TfsYXOFcH4FDBJI8WFsD5N5CtksivXwguURX7S3rarW+c5fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBMYtr5U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b="yQXQUDmO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bCETVRyykK1Gqm7Yjr0WCaZ35no/61ivJVrxtuMcdyob5XgDFCMcnq1hsRzd/vKe9zJtXtGnqFGvE5lbH8FQciNTgJuso7iz+9SiXiipfG7FKvPVovIwGXKmyZl2e+CrCYRhg2WjgHoaFPiUt2JEeDnLHjJBRKjWW0OSXEzF6W4FfjWzeJ1jVJq2xNYD47nAnYM710ci/MFiZn6faA9xH2LIsbu7hX+xTOgH0Qab6q6Jaq+/gl/qOVKJRK0KOHTJU9tj4/eq5+gJ6Mn+gQH8JwUqYuq2Fy93WhdG3CCfNISd7AEU+XypuykFR3R1DGa/lnDoGu2PqvawcsZbG5lDSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QLyk3UzaLGvBhsHU8wI4wALNc+oNV8Vwedg8RKLIl2E=;
- b=oQNVLCHIe0ZPB7P3n6CW3DwlNQngHLwE4dQenDjYmt33gbP34gyiFPW9hEEm6nYGYDinItwHLDfRjvrKERzALVuxataCe8bOoKesJ9Dbdz0UK20TUAz72/IPYXGZRD5/DHXNHgbwWHgHbWo9CGHv7UvsZDLEHIS70S6Tu/OexRE1A0LfPcvNePa2ExqMznMP7ZDoaWCYE957aorhmTbLF/omiD5lSyABCOHcqMs5j5eD2U8UqyBdNh4NU2Iodhq+aw31W9Xoi5TYIHB7iIHdLcwyXIFU3OnhC17dcAj3Hq+HnZjJ32/SkJjVXv/iceC7Qpk5iWHXHKfjxwCys6mnkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=genexis.eu; dmarc=pass action=none header.from=iopsys.eu;
- dkim=pass header.d=iopsys.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iopsys.eu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QLyk3UzaLGvBhsHU8wI4wALNc+oNV8Vwedg8RKLIl2E=;
- b=yQXQUDmOKA3ypiYrWK3+OVkQOiqUW7XaNSvw0LGHryhPGX6c38rGp8detmDworzBge3FqLUILi9TdzgkgRGcU29IbnbzZj+DorUeqUKAirqSj2FS7PDi4ukylSjib47EGi57vSxaycwWEykRy9lKhCGiMjefC6ac+kcNqyfLI6MVex+sZFxkDsEgu6t7+JIauqceIonBwc65K4BRwFhNkzJxfrcIaB1SRYXNfSemhswb6v3pfB5CStZ6IPCi/SmyjuLiNMTDoRmp8g/eBb2Z2VVpUQ3ORP8aS/x/6h2+mZy1z7ZO1FwNwgqwXaiwxKwGVOB52chl/emLhdi4hsBVCA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=iopsys.eu;
-Received: from GV2PR08MB8121.eurprd08.prod.outlook.com (2603:10a6:150:7d::22)
- by AS8PR08MB9979.eurprd08.prod.outlook.com (2603:10a6:20b:633::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Tue, 1 Apr
- 2025 21:55:22 +0000
-Received: from GV2PR08MB8121.eurprd08.prod.outlook.com
- ([fe80::4cd3:da80:2532:daa0]) by GV2PR08MB8121.eurprd08.prod.outlook.com
- ([fe80::4cd3:da80:2532:daa0%4]) with mapi id 15.20.8534.052; Tue, 1 Apr 2025
- 21:55:22 +0000
-From: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBMYtr5U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB007C4CEE4;
+	Tue,  1 Apr 2025 21:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743544559;
+	bh=/awk8q2VzVHMPUKfx/9Iif66Moo4kkMLhitLsXMH/d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DBMYtr5U579nX4MhY2RhPddY/KOzTWxbjRZlNC1nQhGlovGuO55rjlQ5ykBTqLuT5
+	 JfmkkwIPBalaGo0hEdOfj2jiZ0q5k57dzmUVoxtEDC8wbOv7cQ87CLNDH5wJ7yHL7X
+	 f7Fn8ncayHWS2Hu8/8WCuM1YFyT4u+iSVuxWHYTkqJstK72rTquZ0RxWvC2VRMNtPr
+	 RCEQuPWLCaafnVxSoFAq0DFZ7dcJpyI7AYYkMEyDVpzDe8HKfr6oc/+IURT35n9VLX
+	 AYLZtq2imwU3vIt7E+ep0HlkraIpAhsUciXcmfyHM5/OjC9VZCM83sWwtmMGI5FsSc
+	 tDxpd6ZI9s2CA==
+Date: Tue, 1 Apr 2025 22:55:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>,
-	Frank Wunderlich <frank-w@public-files.de>
-Subject: [RESEND PATCH v2] arm64: dts: mediatek: mt7986-bpi-r3: Change fan PWM value for mid speed
-Date: Wed,  2 Apr 2025 00:55:14 +0300
-Message-ID: <20250401215514.1944552-1-mikhail.kshevetskiy@iopsys.eu>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <trinity-2fa9ed21-07af-4fbf-a20e-32684dabdd82-1743507920209@trinity-msg-rest-gmx-gmx-live-5779db864f-xlr59>
-References: <trinity-2fa9ed21-07af-4fbf-a20e-32684dabdd82-1743507920209@trinity-msg-rest-gmx-gmx-live-5779db864f-xlr59>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR3P281CA0058.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:4b::19) To GV2PR08MB8121.eurprd08.prod.outlook.com
- (2603:10a6:150:7d::22)
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Message-ID: <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
+ <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
+ <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR08MB8121:EE_|AS8PR08MB9979:EE_
-X-MS-Office365-Filtering-Correlation-Id: daa27a51-1e9f-44ad-5b56-08dd7167e6a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rMIQYwoWi3axQWGQXGpOlA8T0cT76H8wSUnJ9cTr7q5jpRwWcm0XoixzyVPM?=
- =?us-ascii?Q?M69Bcv8YAmWIRunoXt/bhrrd3JI92/Iqxni5KGThr1hL9XkQVS9Nb0skTdaj?=
- =?us-ascii?Q?myT0CQ6QN7qjH3BqfPBF9T/S+MvdiiFWF8DQ43E1UaG+KipiKENNDWZlqCDN?=
- =?us-ascii?Q?Y5Otp0BUW4g2JSLCkE7Y/hBOdW18lDviQTaFSYAEZeINYcEHfKXPAsBmOagD?=
- =?us-ascii?Q?MGOND7gQNBU5eOpDV7KUJwDlFWlOSymjyfUZHpgSbUcdxjDoqb4MNxBAflnm?=
- =?us-ascii?Q?JzZo26qYMe8cKaoUfol8Zutasx+J4ugGw6y/rc0jtUMIezyP+aqgtrSXKbfc?=
- =?us-ascii?Q?shIkMi3ERbVIad1iwzmZSAKPoCRgUWy+VIOpkaVv9EJfmTlBHmKimR4LSQny?=
- =?us-ascii?Q?GJmvQim1JtMQeYdWQ8ArUrTZCf02IbId1RI8ZR2qbPIXXNfxf5Ri4bSUjYrd?=
- =?us-ascii?Q?ym0DH8uE/UAtE0dSNSHaYhEna4wDJYpnzEhnJRDPNo5FF/+bwNJPaZOX4Ypx?=
- =?us-ascii?Q?7INL0TjQsLirD71z8BpfHevpTRXvAE+7jKqT9Wm5+hrIRK1WIV/ZyhlFopMz?=
- =?us-ascii?Q?++3pXUged+OaWDY2HuzT1eOOYC8PSltPz3AzrkXSqt0rpAu4ZW4L/rHoVzQp?=
- =?us-ascii?Q?wRn+qGeCKECxLSURwM2fpg9pVFsr3Yx7wBhP0pmd/wRIToLkEiTCtR51bN3v?=
- =?us-ascii?Q?Fmn9Zc+2UjJDhdxba2eqcyHZgy11MgMyeYeYXIkbC+HrlSZPKCikvJrx7Wlf?=
- =?us-ascii?Q?WK92CBT5Li+IYweA3I8rJklXF0NBfx3WSocr6VY1jim1Wk2IfZz1IdpFHKHn?=
- =?us-ascii?Q?txdJ/SDsEct7jX3AEyxTwTVDjeNojDdxrctajriAOpzQqIXaRmTcNwvXSNFQ?=
- =?us-ascii?Q?sHyOG/xGOmHscufbA5G6WS+5AXt+vS5vJJQAKD0LgEeUtx2DbvR2lFuK63Hn?=
- =?us-ascii?Q?/xI7tB6hhc5cqZUeKCWIXbE63lYuxzjRC190Ta62PRchYpAqk1XRS7yoLA8d?=
- =?us-ascii?Q?8gIodZzzEj/87Q9Iu617/MhFRJNWtx3edrVKitWevXeWI9J10vzewDSZRUoZ?=
- =?us-ascii?Q?R+/5jdaiEU04W8/0GanMA7sFy1AqmzMkt1WAFwPtUq1kvm3aCfeVMkG4+NEh?=
- =?us-ascii?Q?480T3VN5xeZzzqYdtxBFUA3vqfJulGN2TkRdFmioHclaQIchZkjV6LI+gux6?=
- =?us-ascii?Q?g2JmaVTJxo63aQtL5KNa1ryR9O4KTwwB0SCz7gwCWF3vhGq7NGY+P9cRQ+hx?=
- =?us-ascii?Q?L/iOBC4uCbqeryJB/dz8LsT8uTJDgObHQ+2cWNYt57JdhSUNLoP+mgU+cp3o?=
- =?us-ascii?Q?VHF3go0+d5G0MGWlL4UWavAFXLNxVIhAFTdt39j58QQmGdOhUY1fPy6yftaq?=
- =?us-ascii?Q?vSDbTzIKN3PASS0Uc4CjrICSw6uqSwsbMLOCBWbM/twLUFpzz0zig7bv96zj?=
- =?us-ascii?Q?+amVIOh369dyo7b9Y0UEPIUUzyP+JMhHDUwqLpxfoWWdWsNj9k4euQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR08MB8121.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SnBFLbpm/GUkvj9ZQ0HHxfwVn+VasA9CRRfgFZJbP+NrzKeThKNLrv+vJ9eU?=
- =?us-ascii?Q?jOrlGOskLNpnpnqbjPD8P5YmPxfJG15J/B8qgbsNi4HrqwEYIg25BpT6MyxP?=
- =?us-ascii?Q?OZHi1O63lw4vvFF4/GEORKKKj7dEXDYioC3NdlX3zXE9510PJ/EoyCrLJ47l?=
- =?us-ascii?Q?ccAd5AUSDZqJQ1oAuQtN58q2MDbPJcbvovFdQFtdNcpMBIfkSw/e5PyPsv9c?=
- =?us-ascii?Q?lkk/nRj7xE13hnnvXFKd/Qbrp3oSdh4qBFFHcbvhA2XircYwlxN75btN4y0K?=
- =?us-ascii?Q?W6LcSwEJCF5iZ6a7wPnN1WdpC0OVGPPcmehCJV11zZGhE5CorSsaaT/HAKJy?=
- =?us-ascii?Q?lmjKtEWnjRX8qoBTnL9hsq8ox8QtSN8WROLUvzbK3ZoFqeoa5dbuQSH44+o0?=
- =?us-ascii?Q?t/vobEI8b8ESlaRcxr8qFB9ZYyBScTp18FBu5ikIbZHW5F+b6h1OFFAIHInT?=
- =?us-ascii?Q?IJsnaLAm4jrxYNkPRJwxs4xSyh2ZdFpMTrb1L2YUmdql07jPKvmz3qYxqFXx?=
- =?us-ascii?Q?Xa6pMWclceJRGAWaimQpEQxbPdBcliMYKRjOyiWV/qimKPoHeBTKwtGGaCgX?=
- =?us-ascii?Q?qb9tdgTB7L0jrokecB0Txx7zxOpXUL/58NaZR6jSPMVBFr7eDWTZKgfVrf/9?=
- =?us-ascii?Q?ZGoxgIl53Q/LstkKhxU+YwdvVqf9B2wZkh97vTpXjx7fvpfI80SIVanJpLFv?=
- =?us-ascii?Q?AkdqPD/+8zE46rG0WAj6tDkvIswVCJbTdDIjeOd40Le1B51RohRjEufODKTT?=
- =?us-ascii?Q?g8vR0Ih5/5zKA6nonlb3zspS95GhU5LwAZr5m1PQYWxSSEWv4HdjxEcLiSEK?=
- =?us-ascii?Q?irI51DubMnNRllO6Ya5Xx7UFUPDN8WOr/6bCuPxEtNGvCYrl0x/tJ4TjZKVI?=
- =?us-ascii?Q?b/TRqTiOTeqmQYrY5y1bOqIlnN0FQFJhfmeJVEKIdE6Ho8gzPUtXT2tfOK0p?=
- =?us-ascii?Q?f0DB/mc4L5A9adRaDOxAUrKODKHMbv5VGYO8uSddbMngdGNGK+bA/bq+6yLj?=
- =?us-ascii?Q?SrofCq8i5UWN3gJZypb/rZh/gueYbv3/ZM+IOmlzJFe+Sb+RhIqahwKwnv2b?=
- =?us-ascii?Q?gBVg1xRVOM8hZK954qvf3KXcDfSq6uqGnNrLDkacFtrNH4SoX9nFyk6fhUxf?=
- =?us-ascii?Q?xqcUwuclA63jswR+bGtRKVkDzxq1Bh2g+vcqqlannx9cjqTln+YtzQDVhVUS?=
- =?us-ascii?Q?4lzPB3SaWACxQPnXIkqZiroQsGXgWEJKbcIjFDrim/87qLYCvlD1ua8xpqjE?=
- =?us-ascii?Q?pORwWGLum5/YhZqdJPliJmdzDr01y+zZlTg5PAi2K8O7+9z5yfijSf9kyRNA?=
- =?us-ascii?Q?yrXiyXmHFtmsnvH9J9zlnBI9UyqjRt7jKheuQ9VOdEvTvXJJOmNV54+a3QiH?=
- =?us-ascii?Q?3V1WKFeCDK1cU4A2yfocMJ1QSC+B3yHGLDi+EVOfhGu9ssd5nsqw8WM2ae4G?=
- =?us-ascii?Q?C2it5cbLpjZbsPD2G5gEtE+vwPDPcZHx48Lpkmeqflx/CzFzqAz0zhGhV7nQ?=
- =?us-ascii?Q?ghdY+4fTB0DdZ7opbJonOfj5J3kDFRgATkWD2LEFZDxsHUZYol8TgCciAYdq?=
- =?us-ascii?Q?1hTli5Zo+5x1p+b/OP7alo1Ay67nKvR3miIu8f5662JUAQSRBzhQpem/pfoz?=
- =?us-ascii?Q?4fHpUdghnMJPMdM2UHAr494=3D?=
-X-OriginatorOrg: iopsys.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: daa27a51-1e9f-44ad-5b56-08dd7167e6a1
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR08MB8121.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 21:55:22.3996
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8d891be1-7bce-4216-9a99-bee9de02ba58
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SZXCQBUc9XmNMicOpBcy4XFnG8xjl18nFJ78Q72ZCaHqMmsupjXePHBTQ1VOvbsdZhHkBRREudlRzBQAGV+8Xs4JIP9utckvI1Hn2XaQQB8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9979
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zFQ5n9y7oHfzGRRF"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+X-Cookie: 15% gratuity added for parties over 8.
 
-Popular cheap PWM fans for this machine, like the ones coming in
-heatsink+fan combos will not work properly at the currently defined
-medium speed. Trying different pwm setting using a command
 
-  echo $value > /sys/devices/platform/pwm-fan/hwmon/hwmon1/pwm1
+--zFQ5n9y7oHfzGRRF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I found:
+On Tue, Apr 01, 2025 at 08:57:56PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Apr 1, 2025 at 6:00=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> > On Tue, Apr 01, 2025 at 04:42:40PM +0200, Bartosz Golaszewski wrote:
 
-  pwm1 value     fan rotation speed   cpu temperature     notes
-  -----------------------------------------------------------------
-    0            maximal              31.5 Celsius        too noisy
-   40            optimal              35.2 Celsius        no noise hearable
-   95            minimal
-   above 95      does not rotate      55.5 Celsius
-  -----------------------------------------------------------------
+> > > You have two users and one goes gpiod_set_value(desc, 0), the other:
+> > > gpiod_set_value(desc, 1). Who is right? Depending on the timing the
+> > > resulting value may be either.
 
-Thus only cpu-active-high and cpu-active-low modes are usable.
-I think this is wrong.
+> > That's why we need to figure out if there's sharing - the usage here is
+> > that we have some number of regulators all of which share the same GPIO
+> > and we want to know that this is the case, provide our own reference
+> > counting and use that to decide when to both update the GPIO and do the
+> > additional stuff like delays that are required.  When the API was number
+> > based we could look up the GPIO numbers for each regulator, compare them
+> > with other GPIOs we've already got to identify sharing and then request
+> > only once.
 
-This patch fixes cpu-active-medium settings for bpi-r3 board.
+> That's not a good design though either, is it? For one: it relies on
+> an implementation detail for which there's no API contract, namely the
 
-I know, the patch is not ideal as it can break pwm fan for some users.
-Likely this is the only official mt7986-bpi-r3 heatsink+fan solution
-available on the market.
+There is an API contract as far as I'm concerned, this was discussed
+when Russell was converting things over to use descriptors since we need
+something to maintain functionality.  I agree that this is an interface
+that is more convenient than elegant but it's what was on offer, I think
+the enthusiasm for converting to gpiod was such people were OK with it
+since it does actually do the right thing.
 
-This patch may not be enough. Users may wants to tweak their thermal_zone0
-trip points, thus tuning fan rotation speed depending on cpu temperature.
-That can be done on the base of the following example:
+> idea that the address of the struct gpiod_descr handed out by the call
+> to gpiod_get() is the same for the same hardware offset on the same
+> chip. It does work like that at the moment but it's a fragile
+> assumption. The way pwrseq is implemented for instance, the
+> "descriptor" obtained from the call to pwrseq_get() is instantiated
+> per-user, meaning that each user of the same sequence has their own,
+> unique descriptor. I don't see why such an approach could not be used
+> in GPIOLIB one day. IOW: nobody ever said that there's a single struct
+> gpiod_desc per GPIO line.
 
-  === example =========
-  # cpu temperature below 25 Celsius degrees, no rotation
-  echo 25000 > /sys/class/thermal/thermal_zone0/trip_point_4_temp
-  # cpu temperature in [25..32] Celsius degrees, normal rotation speed
-  echo 32000 > /sys/class/thermal/thermal_zone0/trip_point_3_temp
-  # cpu temperature above 50 Celsius degrees, max rotation speed
-  echo 50000 > /sys/class/thermal/thermal_zone0/trip_point_2_temp
-  =====================
+If gpiolib were to change this API we'd need some other way of getting
+the same functionality, I'd be totally fine with that happening.  For
+regulators we don't really want the pwrseq behaviour, we want to know
+that there's a single underlying GPIO that we're updating.
 
-Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
+> > That's exactly what the regulator code was doing, as far as the GPIO API
+> > saw there was only ever one user at once.  Since we can't look up
+> > numbers any more what we now do is use non-exclusive requests and check
+> > to see if we already have the GPIO descriptor, if we do then we group
+> > together like we were doing based on the GPIO numbers.  The multiple
+> > gets are just there because that's how the gpiod API tells us if we've
+> > got two references to the same underlying GPIO, only one thing ever
+> > actually configures the GPIO.
 
----
-Changes from v1 to v2:
- * improve patch description
----
- arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> That's not an unusual situation. For reset-gpios we now have the
+> implicit wrapper in the form of the reset-gpio.c driver. Unfortunately
+> we cannot just make it the fallback for all kinds of shared GPIOs so I
+> suggested a bit more generalized approach with pwrseq. In any case:
+> having this logic in the regulator core is not only wonky but also
+> makes it impossible to unduplicate similar use-cases in audio and
+> networking where shared GPIOs have nothing to do with regulators.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-index ed79ad1ae871..b0cc0cbdff0f 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-@@ -42,7 +42,7 @@ fan: pwm-fan {
- 		compatible = "pwm-fan";
- 		#cooling-cells = <2>;
- 		/* cooling level (0, 1, 2) - pwm inverted */
--		cooling-levels = <255 96 0>;
-+		cooling-levels = <255 40 0>;
- 		pwms = <&pwm 0 10000>;
- 		status = "okay";
- 	};
--- 
-2.47.2
+Impossible seems pretty strong here?  Part of the thing here is that the
+higher level users want to understand that there is GPIO sharing going
+on and do something about it, the working out that the thing is shared
+isn't really the interesting bit it's rather the part where we do
+something about that.  It's not that you can't share some code but it
+feels more like a library than an opaque abstraction.
 
+> > The sound use cases are roughly the same one - there's a bunch of audio
+> > designs where we've got shared reset lines, they're not actually doing
+> > the reference counting since the use cases mean that practically
+> > speaking all the users will make the same change at the same time (or at
+> > least never have actively conflicting needs) so practically it all ends
+> > up working fine.  IIRC the long term plan was to move over to the reset
+> > API to clean this up rather than redoing the reference counting, if
+> > we're doing this properly we do want to get the thing the regulator API
+> > has where we know and can control when an actual transition happens.
+
+> If they actually exist as "reset-gpios" in DT then they could probably
+> use the reset-gpio.c driver. I will take a look.
+
+Yes, that was the idea - there was some issue I can't remember that
+meant it needed a bit of work on the reset API the last time someone
+looked at it.  The properties might have different names reflecting the
+pins or something but that seems like a readily solvable problem.
+
+Though now I think again some of them might be closer to the regulator
+enables rather than resets so those ones would not fit there and would
+more want to librify what regulator is doing...  Something like that
+would definitely not feel right being described as a power sequence.
+
+> > > 3. Use pwrseq where drivers really need non-exclusive GPIOs.
+
+> > > The power sequencing subsystem seems like a good candidate to fix the
+> > > issue. I imagine a faux_bus pwrseq driver that would plug into the
+> > > right places and provide pwrseq handles which the affected drivers
+> > > could either call directly via the pwrseq_get(), pwrseq_power_on/off()
+> > > interfaces, or we could have this pwrseq provider register as a GPIO
+> > > chip through which the gpiod_ calls from these consumers would go and
+> > > the sharing mediated by pwrseq.
+
+> > This seems complicated, and I'm not sure that obscuring the concrete
+> > thing we're dealing with isn't going to store up surprises for
+> > ourselves.
+
+> IMO It would be equally as obscured if you used a shared GPIO wrapped
+> in a reset driver.
+
+Yeah, it's a bit indirected but it's at least clear that it's just the
+reset and not also any other aspect of the power management so you don't
+have to worry about timing requirements around enabling supplies or
+whatever.
+
+> > It's also not clear to me that pwrseq doesn't just have the same problem
+> > with trying to figure out if two GPIO properties are actually pointing
+> > to the same underlying GPIO that everything else does?  It seems like
+> > the base issue you've got here is that we can't figure out if we've got
+> > two things referencing the same GPIO without fully requesting it.
+
+> Whether that's feasible (I think it is but I'll have a definite answer
+> once I spend more time on this) is one question. Another is: do you
+> have anything against removing this flag given it's replaced with a
+> better solution? If not, then I'd still like to apply this series and
+> we can discuss the actual solution once I send out the code. I hope
+> this will at least start happening this release cycle.
+
+I'm in no way attached to this specific solution, from my point of view
+the important thing is that given two devices using GPIOs we have some
+reasonably convenient way of telling if they're using the same underlying=
+=20
+GPIO and can coordinate between the devices appropriately.
+
+--zFQ5n9y7oHfzGRRF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfsYOoACgkQJNaLcl1U
+h9DvVAgAgrtmuzz6y9yhOh6n73oARM50aP0pffMcbGXM7V9C+f0QLL/h8nX7nN5M
+t605uPAIsGalR/qPDCOttruX03WDaD4qfBqezw9/VbgCy0itTGTibsGk3DaPp+N+
+6o+yK9H/4lT8nS7HGrb0sdM5Wv4QTX4NByazDggTf3F5I4aaDxoroEXw+ipbSvT0
++8jQlH1FGuHUsKBD8twJA9tWlQJZJwQnl6hFS7QozEj6HrL1zOwM+MzKqL6sotoz
+p/yVxF2eZ8BvKSPQyN07W0M85WQY/20rE1gExJFBAPU9A/Pq5TiuCGl8kJ4+4CoF
+F5EE+Z2Oeo4/3fgXWbpSlGb2PVd7Sw==
+=0vo/
+-----END PGP SIGNATURE-----
+
+--zFQ5n9y7oHfzGRRF--
