@@ -1,195 +1,134 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D357EACE;
-	Tue,  1 Apr 2025 02:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D00EACE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 02:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743473293; cv=none; b=M5CVG5yz/fG6KZ3hH4Ckchqc7OEeVedjOPoE1T7IpenGyGSA9G8IQF9Cs6Q7ETjOAOYVv2nrjESqTF2hM+py+Sw3eD2TVKf+Tx/99YFglobzwTsjoIc84e55eQEsMUOlbfMLBRz7PggIv7xskhAWLxmUii4p3DI3VojPXyKQnUw=
+	t=1743473472; cv=none; b=DM4n+09bf824PS3c5rzWCUpFz2HvnJQS+sQx0F3Y1/CG2v9CoBIR1XrgSU/b3UqQr8a3T7cweXUCA7isEPVtVCydNZ+mW+8YgjNqVDzMVObKMY0um9Xel23OAD2xVnW9kTV8di4L8QFRCOpDFJJM+vIf9Agctu8ASjuL2hgin/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743473293; c=relaxed/simple;
-	bh=lCssQdZbCquHUtvBNwAYmoP4TXmIpPQYUK8Wv0tAJiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RZ1I0y7mxJi19hi+66c8He1cyDIudNaWkxKL1EGopjc2NjhiXg6DrV5kyvk9XKZelktqz0GimtCEh+kbqWqdhtnGWzoHRzi0LW/kiOGF06nVxiN6B1DB6jR4Zgy/XxoA5m/WzhcT0Jip5RyY559JPLXJwasF4U+Pl7BbJko3nws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMF71JTL; arc=none smtp.client-ip=209.85.219.47
+	s=arc-20240116; t=1743473472; c=relaxed/simple;
+	bh=LPFRASbnYusxIp+HlezuMC4nyuX+afixxKYwypBXibw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I4olRBPXwBRDVIPMlc6/O9LlunYcCRSjl/AI2863WAHOB56fH4uclxRQFbZCaqcH0jNeO0521z7Vi8eX9vySi4OU4jzEJXSEK4vyxcBsYOjZEg6LhJYAWsn+p5n89yqt4ZsZ45MlE3y6lwhvbR6TWJa3kVTBuCL1VQ87PmGL/M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=apJuIAjn; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMF71JTL"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6df83fd01cbso24762056d6.2;
-        Mon, 31 Mar 2025 19:08:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apJuIAjn"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff6a98c638so10176383a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:11:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743473291; x=1744078091; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
-        b=jMF71JTLjftCdg1qAKo173fCZUSB1GCB9KmL8YbtkYL4oQdy7sFZbCe37qWoelNw44
-         AYWMsnpW4BdjcXiC70OvE/xS4ttYdaxWDt4OdRtLRNFUUDsJVCBCo0hG52N5V4413DYu
-         Yh1ZjIh9uTHI9m6LGOi2fiRiWR3cfXfHHSKOwVGhJmyS+OY1X2vM8HI7O5Zp+SdxEGAu
-         s4cMwX95a/FLN5FlorquBubevT4Jl8RJMMv3xcIC/75lWY+xS/l7vlLr5IQO3bIxGok3
-         8Hsiuwawu9TLNUQ071UJ0KMYlrrPjHCpJYbvWWIzF6nQssaVVUVx1dIEKibG1J8ySxbq
-         BtiA==
+        d=gmail.com; s=20230601; t=1743473470; x=1744078270; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOPlZ2IqgG3J5fbHUI0LVdUbG8WW7Z0L1XqmSy1WgQ4=;
+        b=apJuIAjnUDwIcH/BBBvaYQwSny679CeQnCt3V+qbnrt5+D3ijwQP1pwsUl56ON4/Jl
+         ecM3ZxL9rsFb4oGD237yOWXCrGHtDT5sr7Ni/kFt3h4bIE012687lt/YhNC5Li8BR26V
+         mL362/xfcG1wvBrGDNklmsRs/wCW2ZN4MvWqJK3K3RUeiDqWs3mtDlUk02Gn+b73lLB2
+         R71p9JW7bABe5I+oqBXvKVIvmJYd78OsRMXRcwP2jSZH9NrnEJxZTWJ2z6M4kRbPtqTS
+         afYno6Z8mpt5vjaiMf3TLconUmHncRYOATAlLGRNt3CFZ6yv99HC7UVdaF6dCNkOy9Bf
+         2Tdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743473291; x=1744078091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
-        b=AqMAYvHJiggNzO/VFWd+H6pzRK5Z/tfWljFoIvRLyUxGm1UTDHGCYb/4b82q7H6vu9
-         AJotx5/A9yVu0bDRASsRVfSZvQnBNLJoKVC5e7eecbOpuyB6l76zGhagSZZZHC1Vk2+G
-         hWN5cAzzD2UiFa2NhABWxZUKb/+V2kf/FQgyv2EJXqGQQoL1pFkYMa5DJX16NZpt3v3z
-         yPOi8EkqDL2T1r69QeFDDbP/LV+CtEKbGofpq7e4YpOHC4vHryqGtzDr/bjBWGkvDS4G
-         iTeAQwd2zEJslAL125VEmuLSXenHuHQs/pMD5Yq58sdD80oJwwAvCnT7phFIj81aAgK4
-         nbbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdpLuS0k2Q73boVKJO4DwIQqCHi06Wcse3oVQMt89pFYPCytwjhjM9DEauvTTYFnAIQMk=@vger.kernel.org, AJvYcCWSVlnEt2S8nhF5q7PKPRaZ4Ucq7POdaeizLi2SUJtaKBlFwuRXoJIs7u5rLHIgoGALV4AypWTr9wYCPiIwYQ==@vger.kernel.org, AJvYcCWiEsEBy0fZd1waMQOPsd/1KmNALiOA7me8D9bcqJd3HFwBYJUBjB9OGjO+g+mbaKzCCYZRoN4PiEmvDJF5KIhsbw==@vger.kernel.org, AJvYcCXXgCQLxt2IJwUzVBp1EqgFGZgDrkVllHx3qj0+XJLc/DVCZ4Ya4ADTFl0aG7LfnA91/Jb0cryv2rgJbxT0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/6yPRF9fJCJqMmmm86IlLXsc+CHFjXwrs4fGO6/UKaGikqKcK
-	FXADhDiYY9MdMX6EyQWoK7u6h9lcrdvM9Yl97wDc/p0KjY4ySFD9EYv/uHL+hKbn8PO27LiR825
-	9RdO6jRmOZzHkRuIkrfTzcRTOsHM=
-X-Gm-Gg: ASbGncudYgBUrr88ebnw38owqbfYa4opTUO2KGLpt46UzQ/qlYkc25INaK4RSS+mJTK
-	rxUAgSfVtiP2nATAjPGaDWYfX5aI95176unMagKSygHcwEFsdUCwjCW2cFBpz22Q4Z/9qdFcGrJ
-	e6nkN4UftE7baAwmMOjvluAoLsIM0=
-X-Google-Smtp-Source: AGHT+IEwVwo9jlkAbUXTU14Qfh3LA01iPKDDWMjUrm4tnGQHU4i3QsPK8QEDaJfFZ5Z8PEovYhXsWbFiclds5IHQi9M=
-X-Received: by 2002:ad4:4ea8:0:b0:6e8:9a55:824f with SMTP id
- 6a1803df08f44-6eed5f60fddmr145906786d6.6.1743473290823; Mon, 31 Mar 2025
- 19:08:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743473470; x=1744078270;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOPlZ2IqgG3J5fbHUI0LVdUbG8WW7Z0L1XqmSy1WgQ4=;
+        b=eCwFKpxlbWZRqwt4kCwRIDJol+Tz8FDDrogU8XxVMcN4HbcI6h68nenJBvK+1Bnl8Z
+         I1sVqOZLIYKGJkulfvpr2fFoSHNhB+gYh/vej2nZ/hmQn8gvChVFAKtrh4Xks0Q5QM4z
+         TKt6T7T9VPJ3I1fgCNmwrRJlsHI5+ZEtC+H1Hvjx7tFQdsklSKiPDKeVQX7nMrx9dlzZ
+         MjR+2lR0fN0ddZa2n88uKfexyXOKSA7+QO/xJVPr64V05L4okH9CWZWGKWwTsKfRggiB
+         SRn29ij9C1oXFOUBTl3H1EHBep3J/20oOqJCbG2HlV5pyjlF40E3kYsMV/u4WWAZUVRJ
+         w7Hg==
+X-Gm-Message-State: AOJu0YwAVxK5jB9btJPOfC/NvTfmBFReJgKQjTt7UYTJEMeE4O8/JfrD
+	F2unlHvcmiv+ChZNFt9yiGwGij5Dfn+Xfz4wlrKqF9XWInCMmt1pqyIIMbkf
+X-Gm-Gg: ASbGncsjrGoKh6h1BPz+geHgVTV1diRnzzL/99tSImmIjTebbBCP3hlQzC11jUiZRaS
+	elCt5LTEUmKaS6zra0jr3umP8Xn1oCRBI6tiirTI20k1To5CSBPbUHpJCw4YqlcFayQbg82dUA/
+	3rKYTHqjZKDTSlRJAf7tdxr/2aWI0b6Y4xhEP+kOMi3oKmyFVTDNv9LSYpH3tWA9B5QVhT6qG44
+	2qad9+Ro5KzVp8plZl0ha0U4+aAcUCPI9tPkg31Oui+kC0W7Kt48cqp6AwVpdq9IsyJbcj+3ajl
+	Ox74E8FCFHTxb2Ilj6FOLJTw/MQ0QDxev6On9Mp3BZJecFfLMVj7uVAjNmQ59mPRIXiEr3EI4gj
+	zer0=
+X-Google-Smtp-Source: AGHT+IG4QRQF0niFAjvGK1I2zj7C/puZbed3eaweHgTfDfneLiZqbuZlRtu2w3kkRDe9KfHhjPrYSg==
+X-Received: by 2002:a17:90b:2650:b0:301:1c11:aa83 with SMTP id 98e67ed59e1d1-305321640acmr18888329a91.28.1743473470275;
+        Mon, 31 Mar 2025 19:11:10 -0700 (PDT)
+Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-30516d3ce04sm8074118a91.9.2025.03.31.19.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 19:11:09 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	muchun.song@linux.dev,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH] mm/compaction: Fix bug in hugetlb handling pathway
+Date: Mon, 31 Mar 2025 19:10:24 -0700
+Message-ID: <20250401021025.637333-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331121820.455916-1-bhupesh@igalia.com> <20250331121820.455916-2-bhupesh@igalia.com>
-In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 1 Apr 2025 10:07:34 +0800
-X-Gm-Features: AQ5f1Jogo27TUblm0QChMfxpov615glFLI-myzoObvnllqhLHnsXspUqCVEi74w
-Message-ID: <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-To: Bhupesh <bhupesh@igalia.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrote:
->
-> Provide a parallel implementation for get_task_comm() called
-> get_task_full_name() which allows the dynamically allocated
-> and filled-in task's full name to be passed to interested
-> users such as 'gdb'.
->
-> Currently while running 'gdb', the 'task->comm' value of a long
-> task name is truncated due to the limitation of TASK_COMM_LEN.
->
-> For example using gdb to debug a simple app currently which generate
-> threads with long task names:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
->
->   NameThatIsTooLo
->
-> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
-> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
-> that all the legacy / existing ABI, continue to work as before using
-> '/proc/$pid/task/$tid/comm'.
->
-> This patch only adds a parallel, dynamically-allocated
-> 'task->full_name' which can be used by interested users
-> via '/proc/$pid/task/$tid/full_name'.
->
-> After this change, gdb is able to show full name of the task:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
->
->   NameThatIsTooLongForComm[4662]
->
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> ---
->  fs/exec.c             | 21 ++++++++++++++++++---
->  include/linux/sched.h |  9 +++++++++
->  2 files changed, 27 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/exec.c b/fs/exec.c
-> index f45859ad13ac..4219d77a519c 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
->  {
->         struct task_struct *me =3D current;
->         int retval;
-> +       va_list args;
-> +       char *name;
-> +       const char *fmt;
->
->         /* Once we are committed compute the creds */
->         retval =3D bprm_creds_from_file(bprm);
-> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
->                  * detecting a concurrent rename and just want a terminat=
-ed name.
->                  */
->                 rcu_read_lock();
-> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_path.=
-dentry->d_name.name),
-> -                               true);
-> +               fmt =3D smp_load_acquire(&bprm->file->f_path.dentry->d_na=
-me.name);
-> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
-> +               if (!name)
-> +                       return -ENOMEM;
-> +
-> +               me->full_name =3D name;
-> +               __set_task_comm(me, fmt, true);
->                 rcu_read_unlock();
->         } else {
-> -               __set_task_comm(me, kbasename(bprm->filename), true);
-> +               fmt =3D kbasename(bprm->filename);
-> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
-> +               if (!name)
-> +                       return -ENOMEM;
-> +
-> +               me->full_name =3D name;
-> +               __set_task_comm(me, fmt, true);
->         }
->
->         /* An exec changes our domain. We are no longer part of the threa=
-d
-> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
->         return 0;
->
->  out_unlock:
-> +       kfree(me->full_name);
->         up_write(&me->signal->exec_update_lock);
->         if (!bprm->cred)
->                 mutex_unlock(&me->signal->cred_guard_mutex);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 56ddeb37b5cd..053b52606652 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1166,6 +1166,9 @@ struct task_struct {
->          */
->         char                            comm[TASK_COMM_LEN];
->
-> +       /* To store the full name if task comm is truncated. */
-> +       char                            *full_name;
-> +
+The compaction code doesn't take references on pages until we're certain
+we should attempt to handle it.
 
-Adding another field to store the task name isn=E2=80=99t ideal. What about
-combining them into a single field, as Linus suggested [0]?
+In the hugetlb case, isolate_or_dissolve_huge_page() may return -EBUSY
+without taking a reference to the folio associated with our pfn. If our
+folio's refcount drops to 0, compound_nr() becomes unpredictable, making
+low_pfn and nr_scanned unreliable.
+The user-visible effect is minimal - this should rarely happen (if ever).
 
-[0]. https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+CogFd4=
-aXrThr2gsiS4g@mail.gmail.com/
+Fix this by storing the folio statistics earlier on the stack (just like
+the THP and Buddy cases).
 
---=20
-Regards
-Yafang
+Also revert commit 66fe1cf7f581 ("mm: compaction: use helper compound_nr
+in isolate_migratepages_block")
+to make backporting easier.
+
+Fixes: 369fa227c219 ("mm: make alloc_contig_range handle free hugetlb pages")
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+---
+ mm/compaction.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 139f00c0308a..ca71fd3c3181 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -981,13 +981,13 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 		}
+ 
+ 		if (PageHuge(page)) {
++			const unsigned int order = compound_order(page);
+ 			/*
+ 			 * skip hugetlbfs if we are not compacting for pages
+ 			 * bigger than its order. THPs and other compound pages
+ 			 * are handled below.
+ 			 */
+ 			if (!cc->alloc_contig) {
+-				const unsigned int order = compound_order(page);
+ 
+ 				if (order <= MAX_PAGE_ORDER) {
+ 					low_pfn += (1UL << order) - 1;
+@@ -1011,8 +1011,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 				 /* Do not report -EBUSY down the chain */
+ 				if (ret == -EBUSY)
+ 					ret = 0;
+-				low_pfn += compound_nr(page) - 1;
+-				nr_scanned += compound_nr(page) - 1;
++				low_pfn += (1UL << order) - 1;
++				nr_scanned += (1UL << order) - 1;
+ 				goto isolate_fail;
+ 			}
+ 
+-- 
+2.48.1
+
