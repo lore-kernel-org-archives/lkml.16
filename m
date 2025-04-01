@@ -1,204 +1,163 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E334E1386B4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 02:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10B9C13B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 03:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743476365; cv=none; b=Fi/ZvedvWXls4jDqTGLEliprHsIwZ7oiRZ6TW5KtCxMeVhn8usMUjSxDBOCYx+ye9lwp3sv6ZsYz0qQySSx3qdxUc5PeKZrTqFhyNHJnlOZEaG/WmUyfnPDQce+my/Kenr7pqzAZkqMf0tO5SzbH0AdPECywFWfIi5iEsmMd10U=
+	t=1743476621; cv=none; b=kTbfE6HHd+yTINSElAfR5up0i83jK8w2z8lRDPQ6I99iH0jy0Kw022qCiPneehMqKLjxGhd3TnphpHPzQ8vfDgy2ZczsZeoa6QPuw3wRbZ6ZvfqplijAZyA7a0yddSWHZtOgAAC2dGVVAZuwW9O1tc5sMkroowcBG40c6+sdwyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743476365; c=relaxed/simple;
-	bh=LsvChKKRv3/j7nieYUgWEKHZIli7k8KU7pIgT2JEA8w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uiqvaCgPTvFlRlXW/VhaTtcDUTdeq6Q2wARTjqm43wb3nfC3IAo9YXcShHJD0C+iI5JQhgF9OWqUQVsEHu4VN7vJzSYZmKYxubjU1OgJWd781BbXhyCNWq9ErGa/arR5Hfo50Nld3zDlueDmTFSmwAo+j2sXgh22wYoGB2XBiVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d43541a706so48048875ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:59:23 -0700 (PDT)
+	s=arc-20240116; t=1743476621; c=relaxed/simple;
+	bh=r6FKJG2M+mUCoEGL99LjKOla4PjjienLCWA1NscCvWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mliVYwiX7o+uvf3gBoGv37rnwns2GUp/DnuAbAUX5wkz7cosVRy67+8vlsFVtPCpnjwKTphXmZlkJu/NipFHGma6QNoxnFpEpoXa09sT0AK9B9YNgORoK4DGnZZCeIYmecY+NmDjOkdV83NoSCqJnEF70Xw+Egs7IEvWLkQd4+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZVcpSKTh; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZVcpSKTh"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2264c9d0295so96945ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743476619; x=1744081419; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BjUDQYLmLdJCHkWtR5Ib967c0f12WTa/m9uAIMxzWgg=;
+        b=ZVcpSKTh7YcGrTfkqXjkS8hZGjHuJ8orpMlaIefnNrxEdZhoY12iLXO9VIL02l5Nme
+         Y8F0heJ6OkvQDAdTx6lwQqw3LdCkuxknRUm9fDMibA7FmWUE8UvII5Bw6toE2MlDTZze
+         HzU44MzYTFSe/qRZ9qC3u7lYMHOh4o+fOsIYHJ2QA9MRqCAeVdJbMljqPyodFjVgJWrL
+         SgYBrcJaPKZSZHnF99TsCjGu0hsIml5znbxmuwea3+LZuAdsgLBPGDJ5aVy4GOhje4Kp
+         zjiyIz4bDJ7q8tA27iZsMC63TJyxoMIFto6MOCvlQjl0R1z1k0dTo0r9SVr1XTEbOWhh
+         34Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743476363; x=1744081163;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=83nVH0DnaY45rtxvjoLL6GmIF2+Ux0lBPVi7Ia6BVHk=;
-        b=I/6khgcukNCA9QZ2gI0e67Je4y0yzD3c2QsGNBprl7Zw7NntTSraVNh5SB5ewKemBU
-         y+/cf/xjTSwUp4corZ+JJUVokIMzH474GV8vHYjJRz4ZP5kMYvoHnKKS8H3B64Uu1ocw
-         WYf+7zh6yKH1+1dK1QD4+steGxaUYy/ylC7Q/r75GMx4nuor4Cuc6VYHJz6W8TdnL35L
-         LHV4uA4i4z5j4KDkUke+NIbB9YCqx/ytkgGZ/NPJ+8teiASQ/IKBwjUHjqwLWsGiSaCj
-         e1ylPuj8hq+HTdY2oH4FU6lLMlwoizCuny1CXDpbT+y7t4vhSDLyU3CPwlvdNZ/lE6qV
-         g3cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaLvsVY0K61PrdRuXOlhARv+V5Qu3UCpWUhynhMCfntDipm+qySD729pF7OHujCbufLZ7oa7xn39hlBbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypwYNEw0eG57LC1Y6+JMoAlogf8AZnrKfjb/zxv8P+5T9UVRNt
-	3XPmX8x4ZgwgsKkUhSZLCh8kUko+dr3lnXzMCRnpgQLTY6bLIm0+qpPX8qS+wn2d4T2Du+qkUEP
-	wQlnz9BNCQK7L14kfATy1SEiCPV0/2S83K/viJVvTf68vljTpzuj/2Sw=
-X-Google-Smtp-Source: AGHT+IGBTRRzLWLg+ljnBrz+Y2opAIxt0lyBIXlMYHrpNfkLPXZ2R+oDKwBifM5JHJU5+JfH8lnsX9v+yteBnflnSYfhoHG6GEFj
+        d=1e100.net; s=20230601; t=1743476619; x=1744081419;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BjUDQYLmLdJCHkWtR5Ib967c0f12WTa/m9uAIMxzWgg=;
+        b=Uz8TgMjIAC2mi2809icyisl9aVjuN5anueRgP98njhOZttTSmodCBuwjglZmSBJOfp
+         8QxllV6l7L+CeitaKiZEF3Glyn3BdtoWrg8rxKl4hl59j1rqDv7eAeZcD9AuS9zVRx6y
+         EZoMhEPdvn2+SV5mrsl0NC7dIv9WjqKMuELWD39dw40pUEOfAISQ4ndGaiZskvCYL6Y5
+         vOW3TXMc1OFhAMSUvBH9GUkNfcLb1jbm92QErJsARwa9Lk1y+sv/ct7BCucDnG8dn+QN
+         r7LCLikJytuVKiL5hBfNKt28CfNpXCVayYlZEW9dM/KcKocUxx2VmtkVQxsoKPSVt1Kq
+         rxRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAXOAHz0T9Nm8Y7NyLE2zpbvRY5/7nhoscOY8VeLSLV8X6LgXnF2KwBZj5puT00Mp/M4eO9ClWjjoXWdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycnWD5iSos6/1OeDh9y+vrmsvUIrxMgfOxAMI7EshpEDDtp2O9
+	Phv/LHaxP5IoTMtwElp8Xsyl8kFUl+V9qY5AsL2VQKTW6lGmn5x85P+9WYHutA==
+X-Gm-Gg: ASbGnct7cBz1Oi6T0qXEsAU9JfiLs4Wt4Ep969wYWnc52JDRt7MEE73NpOZdI1T7qEE
+	vV1MX2Lc+HOOvXjpMTuD0x8F0/JKnUG1E+abA0TK3MyjOphiG+plx9KqBm44ecG8V1GM6+Ufl14
+	cHbs+cqDy+0CafzeW1rgZD7CJmFI60JlobHSZ2CvMdbvkos/nq8amjgLcUrzHKtWaVr80w3tush
+	pnlzt9wKmNEehTr9SMGF9uGmRB4GULa19I4SNCAWSEihoCJsB0jdtz6vicVJbZpXQRtuOIE5eL6
+	wspklyr9fP017osITHhtW0JV/H5N2fnR7Ui9PAWjtS4tcTvVsIdMFPFLCe9Qs5bBhQb2v4jHVt1
+	wSqdS
+X-Google-Smtp-Source: AGHT+IE/MuK86WseXBdrNNikU3DFYrWcjoRpEbwx6nOX84qWfVtsVGInFBF1tTl/HgZkyg8t66laNQ==
+X-Received: by 2002:a17:902:ecc5:b0:215:42a3:e844 with SMTP id d9443c01a7336-2295d0f168cmr953055ad.17.1743476618866;
+        Mon, 31 Mar 2025 20:03:38 -0700 (PDT)
+Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305175cae63sm8135392a91.44.2025.03.31.20.03.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 20:03:38 -0700 (PDT)
+Date: Tue, 1 Apr 2025 03:03:34 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Frode Isaksen <fisaksen@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Frode Isaksen <frode@meta.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] binder: do not crash on bad transaction in
+ binder_thread_release()
+Message-ID: <Z-tXhrdTtV5t_P5p@google.com>
+References: <20250331152515.113421-1-fisaksen@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca09:0:b0:3d3:f19c:77c7 with SMTP id
- e9e14a558f8ab-3d5e09c8d9fmr99345695ab.16.1743476363067; Mon, 31 Mar 2025
- 19:59:23 -0700 (PDT)
-Date: Mon, 31 Mar 2025 19:59:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eb568b.050a0220.e5efe.0001.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in bch2_opt_check_may_set
-From: syzbot <syzbot+64fe47118b53a051c3d7@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331152515.113421-1-fisaksen@baylibre.com>
 
-Hello,
+On Mon, Mar 31, 2025 at 05:24:14PM +0200, Frode Isaksen wrote:
+> From: Frode Isaksen <frode@meta.com>
+> 
+> Instead of calling BUG(), set the binder_thread to NULL,
+Yeap, not crashing the kernel is a good idea.
 
-syzbot found the following issue on:
+> as is done in other parts of the code.
+> Log if it is a bad transaction (other than in or out).
+> The BUG in binder_thread_release() was preceded by
+> these warning logs:
+> binder: 1198:1217 got reply transaction with bad transaction stack,
+>  transaction 49693 has target 1198:0
 
-HEAD commit:    4fa118e5b79f Merge tag 'trace-tools-v6.15' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=101d3804580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dd14976ddc05593f
-dashboard link: https://syzkaller.appspot.com/bug?extid=64fe47118b53a051c3d7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+So tid 1217 is sending a reply to an incoming sync transaction. However,
+its transaction_stack shows that t->to_thread is NULL. I have no idea
+how can this be possible. When the transaction was picked up by 1217,
+its info was recorded in its transaction_stack as such:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+	if (cmd != BR_REPLY && !(t->flags & TF_ONE_WAY)) {
+		binder_inner_proc_lock(thread->proc);
+		t->to_parent = thread->transaction_stack;
+		t->to_thread = thread;            <----- HERE
+		thread->transaction_stack = t;
+		binder_inner_proc_unlock(thread->proc);
+	}
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-4fa118e5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/75d19710545a/vmlinux-4fa118e5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8e9456ff5bb7/bzImage-4fa118e5.xz
+I don't understand how 't->to_thread' later becomes NULL, maybe memory
+corruption?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+64fe47118b53a051c3d7@syzkaller.appspotmail.com
+> binder: 1198:1217 transaction failed 29201/-71, size 4-0 line 3065
+> ...
+> binder: release 954:1333 transaction 49693 out, still active
+> ...
+> binder: release 1198:1217 transaction 49693 out, still active
+> kernel BUG at drivers/android/binder.c:5070!
+> 
+> Signed-off-by: Frode Isaksen <frode@meta.com>
+> ---
+> This bug was discovered, tested and fixed (no more crashes seen) on Meta Quest 3 device.
 
-  u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: is_subvol 1 deleted 0 parent          0 children          0          0 subvol 1 tree 0, fixing
-snapshot points to missing/incorrect tree:
-  u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: is_subvol 1 deleted 0 parent          0 children          0          0 subvol 1 tree 0, fixing
- done
-bcachefs (loop0): check_subvols... done
-bcachefs (loop0): check_subvol_children... done
-bcachefs (loop0): delete_dead_snapshots... done
-bcachefs (loop0): check_inodes... done
-bcachefs (loop0): check_extents... done
-bcachefs (loop0): check_indirect_extents... done
-bcachefs (loop0): check_dirents... done
-bcachefs (loop0): check_xattrs... done
-bcachefs (loop0): check_root... done
-bcachefs (loop0): check_unreachable_inodes... done
-bcachefs (loop0): check_subvolume_structure... done
-bcachefs (loop0): check_directory_structure... done
-bcachefs (loop0): check_nlinks... done
-bcachefs (loop0): resume_logged_ops... done
-bcachefs (loop0): delete_dead_inodes... done
-bcachefs (loop0): set_fs_needs_rebalance... done
-bcachefs (loop0): Fixed errors, running fsck a second time to verify fs is clean
-bcachefs (loop0): check_alloc_info... done
-bcachefs (loop0): check_lrus... done
-bcachefs (loop0): check_btree_backpointers... done
-bcachefs (loop0): check_backpointers_to_extents... done
-bcachefs (loop0): check_extents_to_backpointers...
-bcachefs (loop0): scanning for missing backpointers in 1/128 buckets
- done
-bcachefs (loop0): check_alloc_to_lru_refs... done
-bcachefs (loop0): bucket_gens_init... done
-bcachefs (loop0): check_snapshot_trees... done
-bcachefs (loop0): check_snapshots... done
-bcachefs (loop0): check_subvols... done
-bcachefs (loop0): check_subvol_children... done
-bcachefs (loop0): delete_dead_snapshots... done
-bcachefs (loop0): check_inodes... done
-bcachefs (loop0): check_extents... done
-bcachefs (loop0): check_indirect_extents... done
-bcachefs (loop0): check_dirents... done
-bcachefs (loop0): check_xattrs... done
-bcachefs (loop0): check_root... done
-bcachefs (loop0): check_unreachable_inodes... done
-bcachefs (loop0): check_subvolume_structure... done
-bcachefs (loop0): check_directory_structure... done
-bcachefs (loop0): check_nlinks... done
-bcachefs (loop0): resume_logged_ops... done
-bcachefs (loop0): delete_dead_inodes... done
-bcachefs (loop0): set_fs_needs_rebalance... done
-bcachefs (loop0): done starting filesystem
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5325 at fs/bcachefs/opts.c:485 bch2_opt_check_may_set+0x189/0x1c0 fs/bcachefs/opts.c:485
-Modules linked in:
-CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.14.0-syzkaller-07318-g4fa118e5b79f #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bch2_opt_check_may_set+0x189/0x1c0 fs/bcachefs/opts.c:485
-Code: e8 fc a1 3f fd eb 0c e8 f5 a1 3f fd eb 05 e8 ee a1 3f fd 31 c0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 d8 a1 3f fd 90 <0f> 0b 90 e9 f3 fe ff ff 48 c7 c1 30 04 5e 90 80 e1 07 80 c1 03 38
-RSP: 0018:ffffc9000d505e88 EFLAGS: 00010283
-RAX: ffffffff8483e478 RBX: 0000000000000000 RCX: 0000000000100000
-RDX: ffffc9000ea2a000 RSI: 0000000000007706 RDI: 0000000000007707
-RBP: 0000000000000041 R08: ffffffff8483e360 R09: 1ffffffff20bbaae
-R10: dffffc0000000000 R11: fffffbfff20bbaaf R12: ffff888053380000
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007efcdf4256c0(0000) GS:ffff88808c5f1000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001240 CR3: 000000004348a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_xattr_bcachefs_set+0x3a7/0xb10 fs/bcachefs/xattr.c:526
- __vfs_setxattr+0x468/0x4a0 fs/xattr.c:200
- __vfs_setxattr_noperm+0x12e/0x660 fs/xattr.c:234
- vfs_setxattr+0x223/0x430 fs/xattr.c:321
- ovl_do_setxattr fs/overlayfs/overlayfs.h:315 [inline]
- ovl_copy_xattr+0x861/0xb60 fs/overlayfs/copy_up.c:156
- ovl_copy_up_metadata+0x269/0xef0 fs/overlayfs/copy_up.c:668
- ovl_copy_up_tmpfile fs/overlayfs/copy_up.c:893 [inline]
- ovl_do_copy_up fs/overlayfs/copy_up.c:999 [inline]
- ovl_copy_up_one fs/overlayfs/copy_up.c:1202 [inline]
- ovl_copy_up_flags+0x20b2/0x47f0 fs/overlayfs/copy_up.c:1257
- ovl_open+0x14f/0x320 fs/overlayfs/file.c:211
- do_dentry_open+0xdec/0x1960 fs/open.c:956
- vfs_open+0x3b/0x370 fs/open.c:1086
- dentry_open+0x61/0xa0 fs/open.c:1109
- ima_calc_file_hash+0x16a/0x1af0 security/integrity/ima/ima_crypto.c:553
- ima_collect_measurement+0x52b/0xb20 security/integrity/ima/ima_api.c:293
- process_measurement+0x1353/0x1fb0 security/integrity/ima/ima_main.c:375
- ima_file_check+0xdb/0x130 security/integrity/ima/ima_main.c:603
- security_file_post_open+0xb9/0x280 security/security.c:3130
- do_open fs/namei.c:3847 [inline]
- path_openat+0x2cf7/0x35d0 fs/namei.c:4004
- do_filp_open+0x284/0x4e0 fs/namei.c:4031
- do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x249/0x2a0 fs/open.c:1455
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7efcde58d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007efcdf425038 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00007efcde7a5fa0 RCX: 00007efcde58d169
-RDX: 0000000000000083 RSI: 0000200000000000 RDI: ffffffffffffff9c
-RBP: 00007efcde60e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007efcde7a5fa0 R15: 00007fffc7b7c218
- </TASK>
+Do you have a way to reproduce this? It sounds like there is something
+else going wrong before and we probably want to fix that.
 
+> 
+>  drivers/android/binder.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 76052006bd87..c21d7806e42b 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -5302,7 +5302,8 @@ static int binder_thread_release(struct binder_proc *proc,
+>  			     "release %d:%d transaction %d %s, still active\n",
+>  			      proc->pid, thread->pid,
+>  			     t->debug_id,
+> -			     (t->to_thread == thread) ? "in" : "out");
+> +			     (t->to_thread == thread) ? "in" :
+> +			     (t->from == thread) ? "out" : "bad");
+>  
+>  		if (t->to_thread == thread) {
+>  			thread->proc->outstanding_txns--;
+> @@ -5317,7 +5318,7 @@ static int binder_thread_release(struct binder_proc *proc,
+>  			t->from = NULL;
+>  			t = t->from_parent;
+>  		} else
+> -			BUG();
+> +			t = NULL;
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Dropping BUG() is nice but this could use en error message.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>  		spin_unlock(&last_t->lock);
+>  		if (t)
+>  			spin_lock(&t->lock);
+> -- 
+> 2.49.0
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regards,
+--
+Carlos Llamas
