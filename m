@@ -1,69 +1,121 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F62E2CCC5;
-	Tue,  1 Apr 2025 11:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061322CCC5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 11:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743507100; cv=none; b=BY2CIEg0Mqduz5KsnGguMMw7ui2dtxP2/miLVYftnVOetuuokxQEEFSQU2op8gk5LTeHardfKd070W3WTACGWvITw33p4pLGROYWAVCT/FqvrjQ6OuaPno4ttpMV1dSiIIlajYRTIP5eItZDilx8BdQAZY27EgRsMMvYbdAhUPA=
+	t=1743507125; cv=none; b=og/R2wEKso+XI9jAoimGeMyBej6rCJ7y7oT6UA1YDLlN2ao2hHOn1hhOpEzn5n7b61GKpNDi2grLhXvG5DQwnf0oifNRVMFVo9o1JAjaNSJYeSkR70fxL04brfWw17/apya7gKlxEIolkcHt8XxgnTBHxMiUeYwkMRvUjdalejc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743507100; c=relaxed/simple;
-	bh=yej5F9L8XcGYyFdwKI0upvafsPA0pPHb5yAKbRUZUr4=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RF1twMOXtuiswstv7ZiXx+dLeDxup5O6XGc/i/xsiZ9rFma/dyyFnI9Lyb6aJL6NidTeM6MwDRx+Wn2tGS9JeOSreaf4G5tArckMVq24OfqzcJnLemm5EtwdoI6oE/YqR8zIahhhYl2kXCZu7DwJ6na31NmBVN80zKUV2z7L28g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZRm6c2Mymz5B1Jb;
-	Tue,  1 Apr 2025 19:31:36 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl2.zte.com.cn with SMTP id 531BVV0t089841;
-	Tue, 1 Apr 2025 19:31:31 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 1 Apr 2025 19:31:34 +0800 (CST)
-Date: Tue, 1 Apr 2025 19:31:34 +0800 (CST)
-X-Zmail-TransId: 2afb67ebce96ffffffffe45-8edc6
-X-Mailer: Zmail v1.0
-Message-ID: <20250401193134281Nbc40spYmxjVmftwF0KTZ@zte.com.cn>
+	s=arc-20240116; t=1743507125; c=relaxed/simple;
+	bh=dd9Yohu3bLNU37Fu3gNES3v22ka1maPyEMnLvHbr4zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmweAtuOD7NW8R3ksl3HjyQcSgvWbEyrq84nzJV38gQffbFi01M3tFhVtc5lD+yiO15du1G4NauOFcW5EjJr4RURGU9GHWt/vMjPg848usWF51sry4WWSAMzO4UCOQ8rvEblCkWOv0RaGivir97fGVsJWbk4csr23iDfrpOM9IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4etQI/t; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4etQI/t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06B4C4CEE8;
+	Tue,  1 Apr 2025 11:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743507124;
+	bh=dd9Yohu3bLNU37Fu3gNES3v22ka1maPyEMnLvHbr4zg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e4etQI/tYSfJdm1cd/wl6DwcqmQ1wWT/BkAVndZjGP06t4ZdEYkZbip1szA7Umb8k
+	 s3e6oam2bRgv0e7TklvsqagXmlRhrLiPZ8tf4xnBw6pii6i6nee1jDQOJGfz4TFuDH
+	 QJhixoQp0KuBgqY7W7jvdAwU7Q1IzirtHsBl1oE+6X7HXCMzkXv21B7d+ChcWVttrc
+	 MZ+7cBtPvUczHlWlPp5+TZxZqvEIZ2fUKbMNkHn3ZuSDGfkkDVrbLffdSoIWOTtqAK
+	 8/R2v5saEwCPwTcy3DWRsqhNjB8+HbRzqmYK0Rj+y8/LLizLx/DHlg9o3lOlPp+u4h
+	 WoFytShDtOG1A==
+Date: Tue, 1 Apr 2025 14:31:59 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christian Loehle <Christian.Loehle@arm.com>
+Cc: "pr-tracker-bot@kernel.org" <pr-tracker-bot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Hongyan Xia <Hongyan.Xia2@arm.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <Mark.Rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Haiyue Wang <haiyuewa@163.com>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: Re: [GIT PULL] ftrace: Updates for 6.15
+Message-ID: <20250401113159.GA83216@unreal>
+References: <20250325193935.66020aa3@gandalf.local.home>
+ <174312059712.2290382.15769886213616422661.pr-tracker-bot@kernel.org>
+ <DB9PR08MB75820599801BAD118D123D7D93AD2@DB9PR08MB7582.eurprd08.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <miquel.raynal@bootlin.com>, <jckuo@nvidia.com>
-Cc: <vkoul@kernel.org>, <kishon@kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <shao.mingyin@zte.com.cn>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <xie.ludan@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIDAvMl0gVXNlIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZV9ieW5hbWUgaW4gcGh5?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 531BVV0t089841
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EBCE98.002/4ZRm6c2Mymz5B1Jb
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB9PR08MB75820599801BAD118D123D7D93AD2@DB9PR08MB7582.eurprd08.prod.outlook.com>
 
-From: Xie Ludan <xie.ludan@zte.com.cn>
+On Mon, Mar 31, 2025 at 04:57:53PM +0000, Christian Loehle wrote:
+> 
+> 
+> ________________________________________
+> From: pr-tracker-bot@kernel.org <pr-tracker-bot@kernel.org>
+> Sent: 28 March 2025 00:09
+> To: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>; LKML <linux-kernel@vger.kernel.org>; Masami Hiramatsu <mhiramat@kernel.org>; Mark Rutland <Mark.Rutland@arm.com>; Mathieu Desnoyers <mathieu.desnoyers@efficios.com>; Andrew Morton <akpm@linux-foundation.org>; Haiyue Wang <haiyuewa@163.com>; Jiapeng Chong <jiapeng.chong@linux.alibaba.com>; Sasha Levin <sashal@kernel.org>; Sven Schnelle <svens@linux.ibm.com>; Tengda Wu <wutengda@huaweicloud.com>
+> Subject: Re: [GIT PULL] ftrace: Updates for 6.15
+>  
+>  
+> >The pull request you sent on Tue, 25 Mar 2025 19:39:35 -0400:
+> >
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git ftrace-v6.15
+> >
+> >has been merged into torvalds/linux.git:
+> >https://git.kernel.org/torvalds/c/31eb415bf6f06c90fdd9b635caf3a6c5110a38b6
+> >
+> >Thank you!
+> >
+> >--
+> >Deet-doot-dot, I am a bot.
+> >https://korg.docs.kernel.org/prtracker.html
+> 
+> Hi Steven,
+> I'm pretty sure this causes the build to fail on linus' tree and next:
+> 4e82c87058f4 (HEAD -> master, origin/master, origin/HEAD) Merge tag 'rust-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux
+> 
+> aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected!
+> aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected!
+> aarch64-linux-gnu-ld: kernel/trace/trace_output.o: in function `print_function_args':
+> /home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:712: undefined reference to `btf_find_func_proto'
+> aarch64-linux-gnu-ld: /home/chrloe01/development/linux-mainline/kernel/trace/trace_output.c:716: undefined reference to `btf_get_func_param'
+> make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+> make[1]: *** [/data_nvme1n1/chrloe01/development/linux-mainline/Makefile:1234: vmlinux] Error 2
+> make: *** [Makefile:251: __sub-make] Error 2
 
-Introduce devm_platform_ioremap_resource_byname() to simplify resource
-retrieval and mapping.This new function consolidates
-platform_get_resource_byname() and devm_ioremap_resource() into
-a single call, improving code readability and reducing API call overhead.
+We see same issue in our CI systems.
 
-Xie Ludan (2):
-  phy: marvell: a3700-comphy: Use devm_platform_ioremap_resource_byname
-  phy: tegra: xusb: Use devm_platform_ioremap_resource_byname
+13:29:09  + make -s -j64 ARCH=x86
+13:32:31  ld: kernel/trace/trace_output.o: in function `print_function_args':
+13:32:31  /home/jenkins/agent/workspace/kernel_build/linux/kernel/trace/trace_output.c:713:(.text+0x20f1): undefined reference to `btf_find_func_proto'
+13:32:31  ld: /home/jenkins/agent/workspace/kernel_build/linux/kernel/trace/trace_output.c:717:(.text+0x210d): undefined reference to `btf_get_func_param'
+13:32:31  make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+13:32:31  make[1]: *** [/home/jenkins/agent/workspace/kernel_build/linux/Makefile:1234: vmlinux] Error 2
+13:32:31  make: *** [Makefile:251: __sub-make] Error 2
 
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 16 +++++-----------
- drivers/phy/tegra/xusb-tegra186.c            |  4 +---
- 2 files changed, 6 insertions(+), 14 deletions(-)
+Thanks
 
--- 
-2.25.1
+> 
+> Sound familiar?
+> grep BTF .config
+> CONFIG_DEBUG_INFO_BTF=y
+> CONFIG_PAHOLE_HAS_SPLIT_BTF=y
+> CONFIG_DEBUG_INFO_BTF_MODULES=y
+> # CONFIG_MODULE_ALLOW_BTF_MISMATCH is not set
+> 
+> Enabling CONFIG_PROBE_EVENTS_BTF_ARGS passes the build.
+> 
+> 
