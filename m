@@ -1,43 +1,49 @@
-Received: from sender2-op-o17.zoho.eu (sender2-op-o17.zoho.eu [136.143.171.17])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019EC1EA84;
-	Tue,  1 Apr 2025 08:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.171.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497669; cv=pass; b=XSJTnxQkvPD6krKKCH3v5fOgUEhE+sUlMNSxP1Wb6TEvDCFeakGoNBrJ5uBvY4HN+xoFxm3w9AWQGEhAn/9LdvatS/2Yi6rI2bii2OXD1XATMofq1FK6sAM4S717hFr1SyuQL3pbDQ1JFG0ls1t0miK6VpWIt/oMQR3RgFC7LJk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497669; c=relaxed/simple;
-	bh=aKUuJwu0U8bq5ODLU/EBl2gp/37apqgHHw2MWv7l9eI=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765A01EB5D0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743497787; cv=none; b=XAAK/YRylZhAwRuYb9hxDmWBZSBMITjWzZxBoDW1i7cVwMiG6lloyRyvmYL1KbkYNcRJBgasHTiCalmsUHCDJnmQmpA9lx90T2LxPw0odX29RF/YPn2/KnogKq/b6sl+eemZny+X9jZzPsfbiAtBlkWe706D57nMUHbzQNYp1VU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743497787; c=relaxed/simple;
+	bh=PDkVvdlLF/GC2GcTYuGbQHeMThpPSiPWKw7OZS2C3c0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BMR7izH76lZt7Y2/8f8F4TCSJRcxIKds7flQyzR7pV+xUwXJymA8BZGpoV9swomTjlsUclwfVrueHoLVoinH4/T6EchtZh2kF+k6AJCm+jHxrj+OO7Y+7dBYKv3RE9v7f1H6WCL+7WqTXjlySxs9UXulv6zoUoRiySv9ArOCThA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs; spf=pass smtp.mailfrom=chir.rs; dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b=UdyHWwB1; arc=pass smtp.client-ip=136.143.171.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chir.rs
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chir.rs
+	 In-Reply-To:Content-Type; b=Lfnlqu9Aj80C8bAFdwhblnE6BcKt9I+xmjBcowl86EnHN4kXlmWWv83kWegrPpZ8N4X8iCS4abonkMzv1peEM4HAoqnXTYW+N/WvVHRJCaO5FLjIhiaTAkowLYnpCHCj9rFrOT6TouD9DprMpoGL7wYuNCBrtUIlJBGiE+yQdMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=y9rne3SN; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chir.rs header.i=lotte@chir.rs header.b="UdyHWwB1"
-ARC-Seal: i=1; a=rsa-sha256; t=1743497646; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=GkWngAyi+uzuViOiCY6JCGHZUgbWETG/+kT53OAui4q2sT3kKd3Zquz6l17QyJ26vfD28cIUdcfhSJSaikZWOpi/S9ZivrQZmFIMgyx83PTzxfUMwzPHvE4Hf27UXQpEScRCX5pT1r9bKanCXC4c92lLGhzNUjnv1koeXN2p6kA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1743497646; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IKWd7/S8ecvupAPGxLPLAgyuVQEO8m2WiEs8ZQCSIDE=; 
-	b=hlU22wub2xiYbovhm07uqMVlsCNEyAoUUPqtQQIot5PjhY3bAwnFMJA0x6JTSLLxGoulyAHbGYTihj7xxJ2bd20r3PTM8AJrEdVK/lh+xLllJoKnwwNTk+6L+FHzzdOx+rTLohy+v8ZgDn3EGeKyZFM2j42/DpVRZfCsaQvI8NQ=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=chir.rs;
-	spf=pass  smtp.mailfrom=lotte@chir.rs;
-	dmarc=pass header.from=<lotte@chir.rs>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743497646;
-	s=zmail; d=chir.rs; i=lotte@chir.rs;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=IKWd7/S8ecvupAPGxLPLAgyuVQEO8m2WiEs8ZQCSIDE=;
-	b=UdyHWwB1/Sh3ODklYLF2YexzS6g3Vw+lkmkg5iR5lMQq4ou/hgMfChTIWoLlvMCu
-	W4REsTLWyOeI41rMYSm/EtUvTg7mDhjUqcI9SI4rhslVEm5FHKXRXP9InJntsKwc4aQ
-	dnooQFpJABkCcF3QSpNiisNjhtnKXeZ/h3JQC+aY=
-Received: by mx.zoho.eu with SMTPS id 1743497642823882.9940100806688;
-	Tue, 1 Apr 2025 10:54:02 +0200 (CEST)
-Message-ID: <5c9f59c3-2868-47c2-b2af-b515a8ec9349@chir.rs>
-Date: Tue, 1 Apr 2025 09:54:02 +0100
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="y9rne3SN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743497772; bh=rM5cbxZYgFPy7zIZPnNCFByNLwR2155xOFzFBb62i7g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=y9rne3SNzZcdKsmdrGVDSBLGBqGjSYjgxguHIq0Mg2+sA/5cEXpe+pBW7EsS99cCC
+	 Z/Kjzj0MifZLLu6irnNDLCT+YHvXTlURhIvVe7dEq1X0HzCbo1lIc9LkfDL+Gr+5qn
+	 MupLLDwJnQPpCib8l3muGNiJ8ZugB5y55lWOXHkM=
+Received: from [10.42.13.21] ([116.128.244.169])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id E099F4ED; Tue, 01 Apr 2025 16:56:09 +0800
+X-QQ-mid: xmsmtpt1743497769tmn5m2fdy
+Message-ID: <tencent_092C538875C434A7CA16B453FBF7B3E46705@qq.com>
+X-QQ-XMAILINFO: MuOYcNghSeILxxBIWXDhMG+Q/3nbxQ5MGreLl9oL85VP9Fia4G7SPGKrgIs/xc
+	 Cpp070drCv1oOJdrGyI5EgCBBsO/sbC8GhS1h2D8Fe/tqLJu3rENnsYso1jAhJKabdLPmyKxm4fL
+	 MemKNXVxe+vVTi/XgOp7bbgwc55jbL9ksSGvEuEDrQnISvOlvhZriam5JjEy53kWTlpjVO/+WZEc
+	 /Vb0QQTo1BwBq2W3zmmE7HKGEinevhafm/XVDBm7jzEta9zBNZ/EBePEKdY/xBRQpLUAe0LvZwO9
+	 RNASQelWsNkH0apgySJbxZo7GsQeStji/kyJZVRBThLMaav/NOvpw/DxOEoMyxYt0UmuNMVpxfb6
+	 7EOQxIjKff+uZD+WpsZIlUtP6qpjAZBm542lWVdojB9Q7EFUf69lYexrC31RbndOQlBLJzk+jxGg
+	 vGZPP/GUndlhnqdrvRDn5uMwYnxuXu2jAg87qe+kq+CLF+x99BJn7MjvZr0kHOI6jDLkYJnR+sEz
+	 PxMt7iXkJ/tfZoeKwGu84xWqjngiT4IE41IdNLGQ+gDtFm8uc9SOg5y3j9H9wFa0TcYmkTP8tN7X
+	 Ww/cEPbNmgxDRXIAh7SQ9CCAJfzba/w8yFTiawucdM9KVqV4ZlJEnlskcJWB10i2245F6i0hogDR
+	 gZxU0XjWgUcctC5h3SDQ6FQ/7z3FfR4vI2wZY1rG6CpY5s48IURaT9mm8jBivnJI5zyBAs2juxk+
+	 m/iVpwGAG0jmQVxwXCPQJFbJzYzQmb8NV+E2XExm6xq4YWfE/IbYph/yTpkcU+hpJIVGX9PNlhVp
+	 nQxTqiFDRJeTGeqcl4+gSWixE+Srk+qRb19dNOhIgABV5kgYAK0j/x4bs39z77nfESVJYBi2wWkX
+	 alInMk5yTf4SKM4C7cH2q0qkrXYCpKM7plQG2zLprGbtbOEkbpZDWqFZlRDRT2OSqYDqso1UFBCQ
+	 QXanp9Sju6Nq7ShXmaCA==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-OQ-MSGID: <16d6c02a-815a-4ffe-b281-937f3aea3c9f@qq.com>
+Date: Tue, 1 Apr 2025 16:56:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,44 +51,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: display: Add Clockwork CWD686 panel
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, max@maxfierke.com
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250401081852.283532-1-lotte@chir.rs>
- <20250401081852.283532-3-lotte@chir.rs>
- <abfea9d8-9992-44e6-975e-a18b01753aa5@linaro.org>
+Subject: Re: [PATCH v2 2/3] nvme: add sysfs interface for APST table updates
+To: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ "kbusch@kernel.org" <kbusch@kernel.org>, "axboe@kernel.dk"
+ <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
+ "sagi@grimberg.me" <sagi@grimberg.me>
+Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>
+References: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
+ <tencent_29C768845246A8732C6D233A857EC74B6809@qq.com>
+ <d89c3460-cacf-4df1-bc31-3b710671d699@nvidia.com>
 Content-Language: en-US
-From: =?UTF-8?B?Q2hhcmxvdHRlIPCfpp0gRGVsZcWEa2Vj?= <lotte@chir.rs>
-In-Reply-To: <abfea9d8-9992-44e6-975e-a18b01753aa5@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+From: Yaxiong Tian <iambestgod@qq.com>
+In-Reply-To: <d89c3460-cacf-4df1-bc31-3b710671d699@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 4/1/25 09:34, Krzysztof Kozlowski wrote:
-> On 01/04/2025 10:18, Charlotte �leńkec wrote:
->> From: Max Fierke <max@maxfierke.com>
+
+
+On 2025/4/1 10:55, Chaitanya Kulkarni wrote:
+> On 3/27/25 18:40, Yaxiong Tian wrote:
+>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 >>
->> The CWD686 is a 6.86" IPS LCD panel used as the primary
->> display in the ClockworkPi DevTerm portable (all cores)
+>> Currently, the APST (Autonomous Power State Transition) table can only be
+>> updated during module initialization via module parameters or indirectly
+>> by setting QoS latency requirements. This patch adds a direct sysfs
+>> interface to allow dynamic updates to the APST table at runtime.
 >>
->> Co-authored-by: Charlotte Deleńkec <lotte@chir.rs>
->> Signed-off-by: Charlotte Deleńkec <lotte@chir.rs>
->> Signed-off-by: Max Fierke <max@maxfierke.com>
+>> The new sysfs entry is created at:
+>> /sys/class/nvme/<controller>/apst_update
+>>
+>> This provides more flexibility in power management tuning without
+>> requiring module reload or QoS latency changes.
+>>
+>> Example usage:
+>> update nvme module parameters.
+>> echo 1  > /sys/class/nvme/nvme0/apst_update
+>>
+>> Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
 > 
-> That's not a correct chain. If you co-authored, how can you sign off
-> before max did?
-
-I missed that requirement in the patch submission guidelines.
-
+> by any chance can you please provide a use-case in which scenario
+> you need to dynamically updating APST ?
+Yes,In desktop systems, users can choose between power-saving mode and 
+performance mode. These two modes involve different trade-offs between 
+NVMe performance and power efficiency, thus requiring dynamic updates to 
+APST. I will update the commit message.
 > 
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >> ---
+>>    drivers/nvme/host/core.c  |  9 +++++++--
+>>    drivers/nvme/host/nvme.h  |  2 ++
+>>    drivers/nvme/host/sysfs.c | 23 +++++++++++++++++++++++
+>>    3 files changed, 32 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> index fb0404fee551..9dea1046b8b4 100644
+>> --- a/drivers/nvme/host/core.c
+>> +++ b/drivers/nvme/host/core.c
+>> @@ -2654,7 +2654,7 @@ static bool nvme_apst_get_transition_time(u64 total_latency,
+>>     *
+>>     * Users can set ps_max_latency_us to zero to turn off APST.
+>>     */
+>> -static int nvme_configure_apst(struct nvme_ctrl *ctrl)
+>> +int nvme_configure_apst(struct nvme_ctrl *ctrl)
+>>    {
+>>    	struct nvme_feat_auto_pst *table;
+>>    	unsigned apste = 0;
+>> @@ -2778,8 +2778,11 @@ static void nvme_set_latency_tolerance(struct device *dev, s32 val)
+>>    
+>>    	if (ctrl->ps_max_latency_us != latency) {
+>>    		ctrl->ps_max_latency_us = latency;
+>> -		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE)
+>> +		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
+>> +			mutex_lock(&ctrl->apst_lock);
+>>    			nvme_configure_apst(ctrl);
+>> +			mutex_unlock(&ctrl->apst_lock);
+>> +		}
+>>    	}
+>>    }
+>>    
+>> @@ -4852,6 +4855,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+>>    	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
+>>    	ctrl->ka_last_check_time = jiffies;
+>>    
+>> +	mutex_init(&ctrl->apst_lock);
+>> +
+>>    	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
+>>    			PAGE_SIZE);
+>>    	ctrl->discard_page = alloc_page(GFP_KERNEL);
+>> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+>> index 51e078642127..7f8e10f5bf7a 100644
+>> --- a/drivers/nvme/host/nvme.h
+>> +++ b/drivers/nvme/host/nvme.h
+>> @@ -385,6 +385,7 @@ struct nvme_ctrl {
+>>    	key_serial_t tls_pskid;
+>>    
+>>    	/* Power saving configuration */
+>> +	struct mutex apst_lock;
+>>    	u64 ps_max_latency_us;
+>>    	bool apst_enabled;
+>>    
+>> @@ -828,6 +829,7 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl);
+>>    void nvme_wait_freeze(struct nvme_ctrl *ctrl);
+>>    int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
+>>    void nvme_start_freeze(struct nvme_ctrl *ctrl);
+>> +int nvme_configure_apst(struct nvme_ctrl *ctrl);
+>>    
+>>    static inline enum req_op nvme_req_op(struct nvme_command *cmd)
+>>    {
+>> diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+>> index 6d31226f7a4f..5003cb294d65 100644
+>> --- a/drivers/nvme/host/sysfs.c
+>> +++ b/drivers/nvme/host/sysfs.c
+>> @@ -684,6 +684,28 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
+>>    	nvme_ctrl_dhchap_ctrl_secret_show, nvme_ctrl_dhchap_ctrl_secret_store);
+>>    #endif
+>>    
+>> +static ssize_t apst_update_store(struct device *dev,
+>> +					      struct device_attribute *attr,
+>> +					      const char *buf, size_t size)
+>> +{
+>> +	int err;
+>> +	bool bool_data = false;
+>> +	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
 > 
-> Best regards,
-> Krzysztof
+> reverse tree ?
+> 
+> +	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
+> +	bool bool_data = false;
+> +	int err;
+> 
+>> +	err = kstrtobool(buf, &bool_data);
+> 
+> add new line above after all the declarations ?
+> 
+> -ck
+> 
+> 
+Thanks, I'll update this in the V3 patch.
 
-Kind regards,
-Charlotte
