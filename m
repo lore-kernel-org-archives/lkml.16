@@ -1,118 +1,114 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0403D1C5F27
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E2E20B7E1;
+	Tue,  1 Apr 2025 16:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743525531; cv=none; b=M1ts/iRAM7TyEjY62UePSQkOuqy7/011SLdtDskutMXgCcHWu2Ft8SZzl2KV/TN0QVAXWLre/abfFQ05YAZv1jEKq0f/0+9QuHR+3CaNREcHykI9+GRXqmXdLxFiAR97AMDR/xOr6PRAr3EZyBQnd7QPVGGQcCmuirhCcsTyudc=
+	t=1743525551; cv=none; b=cAq8o6o4yrRWVeUg3mo0vBVCL2E3bxpC1nIXZucum7IL1ODOg4S97E9K4VWoyjJ0FoiCxtzHAoN25ZWTExANeOy+zDnOdEVQ8maYwZ14gMNT9zO11LGzbRPh3acOsjH/7ocWWWssDnPsO8pzm688riIzC17zYSNAw7NsGf6NIjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743525531; c=relaxed/simple;
-	bh=L/QUB900bn4/5qxSQgXevW35Ho7xDBeu2EqGEEQtfrg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=j013t2RF2HDBG8/oA9PMWax5EPZHyrnJGceDPURUXskCOhblRLYfkdr7JlX3fWgeYG6VfNIUnVXNEwPu+1R5cHs12qWrhyjURh4tJZid8kmmsOkn9/oGjC3wwozNpBDjUn22Z3s9fvsHwu9czgrQGv2hWZIQRgGo2ZNhKbb7ozg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MACl2xXx; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743525551; c=relaxed/simple;
+	bh=1+HPiGJkMYpy6pkR8X3utQL9ZJoe9RZZqaoc8k5B2kE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V+IvThasitlz/D7KKObm84MHFQ79KR20aEmdnPHJwApF6VwZQs8TPeznNB6WrCCFxUgSkQkRMUAz0CDINPoTutv6ft8OPQippd0rDeis3CiPaOkghrXc6D4/c9YCKCOVik7VH55/Hlncu/+6Gmcf92+FbRpXXf2PSNEMV9FXK5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqK9tW2l; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MACl2xXx"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c6ed7ec0a5so2141232fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqK9tW2l"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227c7e57da2so87249355ad.0;
+        Tue, 01 Apr 2025 09:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743525527; x=1744130327; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+        d=gmail.com; s=20230601; t=1743525550; x=1744130350; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Vn5wscEL3RLQT1/gL56P3oGMeI2WM/NBihFUEPIxOCo=;
-        b=MACl2xXxoVtGErHozFr5CJb9eqqbVUZ/dvBEwvg8G3c69v05Q/fPITlDwnJPfpfV8+
-         rfMB4z52zAXCGJC+jh8z1WZK0MHalEw/Dcr8uHEm/DBBELQTD20WvB8hAz51Zj4UeFw4
-         eAaTuhDmsx+MdayDPaN46ux1pZIwyFIIdLQ2kukOAb4MPAXQtp/hrQwlEWTxraC1Sm+i
-         Y4vBU+Q/B3kGfxTvMFk0nB/YJ62fzf/TKePlrQIxNpvuY88BiMPIU0OLS/1QSZaxgFKJ
-         WV/If6czgmUyJqFBlsC6IZNVrdYqUNXEqX3pZKJABCSEbR2xMpQi0djgjupBwCuCRtuw
-         YHNg==
+        bh=fXxG8/KJLq5lQeA9/oOuwtl3Ja9SvkQ3rvJPvyidBdk=;
+        b=bqK9tW2lTAa51Kq8/qdCnctS8/Vu+yFBojtutV6ApEhINk2HKyLG0vkUPpCQ5wWpSz
+         rYWfHh/+FNacXejJLC4T/Nnt0D63ziOnE6KiViCc4zQD+PPWmdK2KROI/dkj7ZoChuAZ
+         JS3ve7t3HyjwN+10jXPj+8DHnckE5uQZHJ3EyemvYLHlHoCX6N3+K4I6m0isx4UcZiDE
+         PmosCozMXQjoP+MVIkSr50Awu6ctj9gABa0BhwCtFhmCxwMq3lcbgXJj/DsP9RXKCm8z
+         +mUbuCG8P8cLJBmUuzqjFsN59h7wLh5UjYUNEIWRfOmmZDpbUtQMJeVPY1P9joeF6+Ee
+         ZMwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743525527; x=1744130327;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1743525550; x=1744130350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vn5wscEL3RLQT1/gL56P3oGMeI2WM/NBihFUEPIxOCo=;
-        b=QyH6cyhDKACYm9rQ3VmnOt6SQNb4JLf/53fSESyVf3VwwefTSkB59BttS3ij+V78zk
-         xlh1DhtPzwFu8Mkh0joFPa+sf1CWPU/XSYbDYd/Iz6SnAiRaOb7r6mwySzVuiAd29Lqt
-         nwDY+afNyK/e7go/kvo2YJs7R4/fF8UzGa7xwKksttjurWEpT7vnFCJAYC2tSTVUIiWw
-         XBEUpZU9PDiuV6L64Zz//EZOM/9+/VyQZbyPO393sIETtezLwdXthK/IAWz40AqyVihy
-         eJA5EwTR5uvVr5Q286ngNaUWFsyeoOc72UdB+/U2XIlTMn7IqoRApcH6m2MCBTk0/P00
-         Gfzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiw0ncTruPXHK7jlUtLKNEvPTYgaU63+EQSrYVSHSBAPlwgPpz36hQQpTthIp+CXL1UnBubCY/9UH4L40=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrfJmdWsrwgIjaSJNSWhxcELvuC5DoN+peZjmoieNXx67cmn4k
-	OwwQHlG/mww7FeXgUYhqWT+Nv6mEyUxHJWkfLg8OWcq6Njru1NT0fqSTSF0mX+c=
-X-Gm-Gg: ASbGncs8hTx60QmbCf0006dMgtI/Z+HCFvGphBkiHWFDKErA4DubSot84u4WXVRTczE
-	uwwsUp3bKxbY1Wab1G6bGxlC78onGDPJvA83BiXzFfsEU15pMX9Rz8uFgIxrfj931hBmAeBfmkt
-	U5WAawrWkCmK9mu5P2VV/6V9N4EaGet6rZO02HtZEiFGx/OK3v01WEqr5pzgD52yosiB4TCbaFZ
-	Olq4ei/QgRtquseLoHkZ5DHPNqygrroAHBx9HONnb61nu+3FmwNLOh2IXMxryjW1miFlLdQ3mYN
-	6Zf8TNZGTTXG/HXmSZsOh/Z21pz0F1FwURJYz/E/TPX/iiwW/ShAWYV6r5ZC/gjxaWt2dL1b7hp
-	XIQZ2sw==
-X-Google-Smtp-Source: AGHT+IHU9FmD92LPJ3uip+4pws/5mX50Amq6nNJFvx9VLdxVBV3Kz6b76Gzjd/YUI+o3AWOY0Nu22Q==
-X-Received: by 2002:a05:6871:69c6:b0:297:2719:deb6 with SMTP id 586e51a60fabf-2cbcf477394mr7400077fac.1.1743525527071;
-        Tue, 01 Apr 2025 09:38:47 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c86a856e16sm2378333fac.37.2025.04.01.09.38.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 09:38:46 -0700 (PDT)
-Message-ID: <6b9cce5c-6d4b-4be8-ba11-74b3471e358d@baylibre.com>
-Date: Tue, 1 Apr 2025 11:38:44 -0500
+        bh=fXxG8/KJLq5lQeA9/oOuwtl3Ja9SvkQ3rvJPvyidBdk=;
+        b=bj9QwE4pc+IhfLgfjx3YCUiIuWKK8E9jXif7HPMPGDguRNjJYkknsKbttV8zGg+Fc8
+         JWAUXM1JOnwOFufpXuQns1lE2UvPVGGve/p/tUqifDHYahdsKA7cQ/oVP0NuOJD8hFk5
+         mhs0wk0vYs07CA52eejet5hR/oFoG3GmeSv/BgSU0EpXm9MtkpE2JoPb83oVurVPp8Vm
+         yP++mg7Q1K7E5sOiGIxeolF+/YGzs/x7IZ7wzgRVl/hHSfEN0U8oV+V5CLBX/W0q6Rk6
+         CXBlkb0shQpmbZBJ585CrtRSsL7vBz19LJHvhvf53+nRxwPt6mpGwNYTc6X8kRwe8WCK
+         qubg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/bMQVNzlBZfrrTjqyT8xJmqm6Ka4bNpTZy++lRrdGjSfSdohf7HCkayUscxLk2Jdp2V8=@vger.kernel.org, AJvYcCVrgQbI19iHlh6KiGd3WGhRR25opbUoLria7SWMfPlMBtKsF9DTB6NvJEzje1/XC1msrdBDjYIcIUu8pnvI@vger.kernel.org, AJvYcCWkky9fASzIZu/2nen66G+4KlMfJgpCmGk+2sOyBTMen/+L+FCmdXtCM+NuJ1tdjhd/BeAO+dHh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9seV/LUXHbTzLkonQojp2duG1IGmqS2A8VJAXkUs8aJZuZv2i
+	FrJSwHBBZg/W2YWBm1uIWlKdkP6py+ZJJQ2vl0M8BsxHCm03LnZGwNbTRlRG9w==
+X-Gm-Gg: ASbGncvoLofLhN5ynb+loJUNTD0LK68nBG3qA8QyUxQGmiHf3DzBHzSJ2SHKc3smSCq
+	NLLOR+i1i5XKCUdajaU7z8/ztu2cCdg/NoYMY4wJjVOzChTsUNAWOVABLKtyJESFOnUrWRhl7Qf
+	1SOGLDKb3x8EOAWjxz6ZIvrFncwe0YWlKetc3c91v0PijLaK6RCF+YkHLk7DTB3YITEgKsUSVGv
+	gTWlzJtrzn9xfmS0mCRDrRhcZPGGzvzDxKYgNZKKPIQ/PcA48OLklZRxpp290Hd0nxPiaEol103
+	fwIjy9pWS/VCF+Z6sEfSaJjyF2HST60NgGCeEglWDaR0
+X-Google-Smtp-Source: AGHT+IFjFplP/VCj1K4hdj1XXuXFukTUKN/Y7r7TPX+q/ahHctFj6US+a3x6n/bezkuEQqYB8kG+jg==
+X-Received: by 2002:a17:902:d507:b0:216:794f:6d7d with SMTP id d9443c01a7336-2292fa058c5mr244283035ad.48.1743525549716;
+        Tue, 01 Apr 2025 09:39:09 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eec73b6sm90853395ad.43.2025.04.01.09.39.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 09:39:09 -0700 (PDT)
+Date: Tue, 1 Apr 2025 09:39:08 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Stanislav Fomichev <sdf@fomichev.me>,
+	bpf <bpf@vger.kernel.org>,
+	Network Development <netdev@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
+Subject: Re: [PATCH bpf] bpf: add missing ops lock around dev_xdp_attach_link
+Message-ID: <Z-wWrMfsUtfrnMiU@mini-arch>
+References: <20250331142814.1887506-1-sdf@fomichev.me>
+ <d2914c9f-5fc6-4719-bf6b-bc48991cd563@redhat.com>
+ <CAADnVQJJFPD2X1enPCa-0D7RG6SraRFTdMj1bsKkzFuz6Nighw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/17] iio: adc: ad7768-1: convert driver to use regmap
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
- brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
- marcelo.schmitt1@gmail.com, jonath4nns@gmail.com
-References: <cover.1741268122.git.Jonathan.Santos@analog.com>
- <b0c7976d4bc817b7056ef40e3ce870b42e8a2d80.1741268122.git.Jonathan.Santos@analog.com>
- <c72e422c-1ad0-4314-8171-1c3830f63fa5@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <c72e422c-1ad0-4314-8171-1c3830f63fa5@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJJFPD2X1enPCa-0D7RG6SraRFTdMj1bsKkzFuz6Nighw@mail.gmail.com>
 
-On 4/1/25 11:31 AM, David Lechner wrote:
-> On 3/6/25 3:02 PM, Jonathan Santos wrote:
->> Convert the AD7768-1 driver to use the regmap API for register
->> access. This change simplifies and standardizes register interactions,
->> reducing code duplication and improving maintainability.
->>
->> Create two regmap configurations, one for 8-bit register values and
->> other for 24-bit register values.
->>
->> Since we are using regmap now, define the remaining registers from 0x32
->> to 0x34.
->>
->> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
->> ---
+On 04/01, Alexei Starovoitov wrote:
+> On Tue, Apr 1, 2025 at 3:33 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> >
+> > On 3/31/25 4:28 PM, Stanislav Fomichev wrote:
+> > > Syzkaller points out that create_link path doesn't grab ops lock,
+> > > add it.
+> > >
+> > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
+> > > Closes: https://lore.kernel.org/bpf/67e6b3e8.050a0220.2f068f.0079.GAE@google.com/
+> > > Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
+> > > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> >
+> > LGTM, but are there any special reasons to get this via the bpf tree? It
+> > looks like 'net' material to me?!?
 > 
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> 
->> +static const struct regmap_range ad7768_regmap_rd_ranges[] = {
->> +	regmap_reg_range(AD7768_REG_CHIP_TYPE, AD7768_REG_DIG_DIAG_ENABLE),
-> 
-> Technically, there are a few holes in here where registers are not defined
-> so we could split this up in to a few ranges to only include registers that
-> actually contain a useful value.
-> 
->> +	regmap_reg_range(AD7768_REG_MASTER_STATUS, AD7768_REG_COEFF_CONTROL),
->> +	regmap_reg_range(AD7768_REG_ACCESS_KEY, AD7768_REG_ACCESS_KEY),
->> +};
->>  
+> Pls take it through net.
 
-Also just realized we can drop the AD7768_RD_FLAG_MSK and AD7768_WR_FLAG_MSK
-macro definitions in this patch.
+SG! LMK if I should repost to make it happen. (it's always hard for me,
+with xdp, to figure out the proper tree)
