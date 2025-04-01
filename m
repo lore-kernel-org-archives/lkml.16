@@ -1,169 +1,107 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67B1EB1BC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357AC1EB9E5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 08:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743497826; cv=none; b=Bkq+SwiUHfDvI7jXwsNEbZ9s7cxUlgXfzSKLv58upO4nW0e0rB3T+9DHwiy0RbSircydN8uw7JZDbr4t9/DFRqsYlNeO72AH7+guP2hzh4QQf6YkEfQbDJ0N6GtwjpglNgjmpVlDQk5OAkGYiXB+A10Ji2WJSMaMR6gDJ5eE2Kw=
+	t=1743497847; cv=none; b=n/lonOgXdMlP6xKesqaC72mOWZKY2A+hDKSrar6z8LQXfU/OZiTDPV+Lm9vD6Zv5yCGzqqvsyoRPBfBbD9t0A3j1NijRlXet0BCMyaFYASU6CzAzULawsw5e4tDMCepLWn474cRrAgc2K0KqJ/i2tYVx1KHstHe0NUeNn4zs58o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743497826; c=relaxed/simple;
-	bh=dUCkBFacp8UJ8QjqcofhauhM4wz+Tj2ggrizreMINHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PQsqE6tCuM1Wy5B+SKMyVBGD9+5CCgeAW8yA1XUr2oJD3cglLyayIS52x1JohBvDwahUPcHmQ5JINkqtD8jJBfaVKRFWclmUCMgdKN6oViVRlK83S5RkKhMa0J8M4zYT0EtMaawOKMhKPYc9M3LwH9ffKNB14+yHYCMhWnanw0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Efwc8y+1; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743497847; c=relaxed/simple;
+	bh=1ZDHa8xMFuforAyzyMY8vZ8H4SGmm+I4WcNl1Yw9OR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lvj7RUYgy3S98WCUoTGeT1leaKN1HTHmRSzdlVsEbjeQR2F8A4r2ygAzO5zWUSz9SY+HdFYfQUyFDwPYY3UUfOaUXhTbjKdDRcX6OfjHVDW5RCUOzdg+1oGJRTBjJAiJtGcCN6agVXNr9AEIEgXYOIAhzj6EV79dzmM3Qd+xRJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWu1LFC3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Efwc8y+1"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-300fefb8e06so8612600a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 01:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743497824; x=1744102624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxufKce8+6rFq47Dsd+IWCpPIS7gkHkiCqEgue9+foQ=;
-        b=Efwc8y+1JMdzusfuG7ekaJYY6uWeA+ybvbsj3CN9/KwoZWOQS4wKjlyo8Lx5SJYMe5
-         vonfHMM2xmSuBn9VYcz9pFYS2N9Hzeg7vlCpWOiTMg2ktUk5tLkrOja7Y6z4Bq+1kgrH
-         EbExn24ntbJE1vr7DGKR6tVvH3833VIhXtPqk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743497824; x=1744102624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qxufKce8+6rFq47Dsd+IWCpPIS7gkHkiCqEgue9+foQ=;
-        b=oYKoMiRpQ0RGQrag2BfkjiDC5BuOhH4BxmTQ9PvcKSc2L0G+YtQuytarLxdCti3OQX
-         wmV42AOmOdxqZ0YpN0dVT4LbaqA3W9FJEoH7iH/N9DhU7F9hXZdehuSqoK8TYrXfge/Z
-         INS7LQr7afnjdMjmo+q3c+xc/DHXYtRKNwCRYaDcjuZe06G7zlvHkJFzGns6C2kClOtL
-         C1Jso8ZcfHii+NY3m9mmketznq/r0JG8kb6t6omPn/r9JqZUy7JCetxd3OeuX+qZvBTG
-         /tGFAWOX9xBkvRAdqucq3vI9YJfHJ1vNRwK7xMhADTt0rPEgqBmxZOlON5gGDt3UZiRS
-         GqPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUP9Es87NdRRm6D8cwHmQaxOlNNinRjBJPzRt2nRbDg05QhPzzROibBtT9X6eucM4ybVht3or4e8Svwd5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO/eSUZH7rIUbPQ/rKPenEe5Q9xj6vsxrr6t6dhLEOErmkV1e2
-	04wwHF0/noTjhenONJwpki9LeK3TuhXhmMxGr4MAy5ET+pfYVq7ZlsZITE6tuw==
-X-Gm-Gg: ASbGncuxN+vA2fdOV6IFAlOruCasK016xOm5qexWuP/1EgYbHQim97RYRgzQVJjngvY
-	oLpgZhK/r9y8Iiqz5HXKF+UbzSS6uZlbVDNF7JEdNsc8KY2JeeF8L2eGeFqgVhf8SO3nPsze9SE
-	7xrwv00nQ9jKW7BA1JuWYQ2yZ9vywl+58mc1ITuOGdjTC975OF9jINqaY028sy1lJij48PumyD2
-	Qb1nQpWU3KuD10Ohbrta+8VhKOQMO4fc3pbkyuZQAOWBBCLJwZLZif5AQUV4GDWW6t8SLjiWdOV
-	MKKG2G8p3zbw7nt7YhOCeqBFTFOpTOEFsXGmwjLDxBK/lvpQ6bXpZJdtrEYHGXh0q5Dsmp83FQ=
-	=
-X-Google-Smtp-Source: AGHT+IEGnyXdQQaEtEc12iqZVx24nt1bNnc7msMFARFnIYDLX4DR4C5RKsaUHtsIKRjop94QRdf+PA==
-X-Received: by 2002:a17:90b:5690:b0:2fe:9e6c:add9 with SMTP id 98e67ed59e1d1-305608ab182mr4183384a91.18.1743497824504;
-        Tue, 01 Apr 2025 01:57:04 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:ad70:9e5d:51fd:567e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305166caa77sm8756803a91.0.2025.04.01.01.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 01:57:04 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-sound@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	treapking@chromium.org,
-	yuanhsinte@chromium.org
-Subject: [PATCH] ASoC: mediatek: re-enable buffer pre-allocation on some platforms
-Date: Tue,  1 Apr 2025 16:56:57 +0800
-Message-ID: <20250401085659.1222008-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWu1LFC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CCDC4CEE4;
+	Tue,  1 Apr 2025 08:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743497846;
+	bh=1ZDHa8xMFuforAyzyMY8vZ8H4SGmm+I4WcNl1Yw9OR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OWu1LFC3W7SVp3zgadYSZ0GGsbD2LoAtqmVnyAOv+EkDs3qaTgQYdxuVD/o2GcBt4
+	 hgvOqhCTHKNgSkZ469mF4jebn5CkhCHCwdvw/Qkn4MGZp+xP096Vt2d0ox8ChCVnPM
+	 HvrZlFU6xWNxvzpMbrE8kUsX7TQh4S5rjVaRJX7m9M42rGx1LJ7crkL7N/EWOPUR6k
+	 HGk79DtVjrbRvNDuy14MeC8sVhSBURcWa1uH/B8q2OwC+dZKgkF0QkBYZ4hnoSYFr6
+	 hiaG4aT0PwNGFWkSErAvy0uELePHyS4yBAAnkltfc9gv4S2sBY/v/k7iUhuQN3qBiN
+	 q8oX2tpXAnztg==
+Date: Tue, 1 Apr 2025 10:57:21 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Bert Karwatzki <spasswolf@web.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH] arch/x86: memory_hotplug, do not bump up max_pfn for
+ device private pages
+Message-ID: <Z-uqcSYvRD6ZPPQs@gmail.com>
+References: <20250401000752.249348-1-balbirs@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401000752.249348-1-balbirs@nvidia.com>
 
-In commit 32c9c06adb5b ("ASoC: mediatek: disable buffer pre-allocation")
-buffer pre-allocation was disabled to accommodate newer platforms that
-have a limited reserved memory region for the audio frontend.
 
-Turns out disabling pre-allocation across the board impacts platforms
-that don't have this reserved memory region. Buffer allocation failures
-have been observed on MT8173 and MT8183 based Chromebooks under low
-memory conditions, which results in no audio playback for the user.
+* Balbir Singh <balbirs@nvidia.com> wrote:
 
-Reinstate the original policy of pre-allocating audio buffers at probe
-time on MT8173, MT8183, and MT8186 platforms. These platforms do not
-have reserved memory for the audio frontend.
+>  arch/x86/mm/init_64.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index dce60767124f..cc60b57473a4 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -970,9 +970,18 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+>  	ret = __add_pages(nid, start_pfn, nr_pages, params);
+>  	WARN_ON_ONCE(ret);
+>  
+> -	/* update max_pfn, max_low_pfn and high_memory */
+> -	update_end_of_memory_vars(start_pfn << PAGE_SHIFT,
+> -				  nr_pages << PAGE_SHIFT);
+> +	/*
+> +	 * add_pages() is called by memremap_pages() for adding device private
+> +	 * pages. Do not bump up max_pfn in the device private path. max_pfn
+> +	 * changes affect dma_addressing_limited. dma_addressing_limited
+> +	 * returning true when max_pfn is the device's addressable memory,
+> +	 * can force device drivers to use bounce buffers and impact their
+> +	 * performance
+> +	 */
+> +	if (!params->pgmap)
+> +		/* update max_pfn, max_low_pfn and high_memory */
+> +		update_end_of_memory_vars(start_pfn << PAGE_SHIFT,
+> +					  nr_pages << PAGE_SHIFT);
 
-Fixes: 32c9c06adb5b ("ASoC: mediatek: disable buffer pre-allocation")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- sound/soc/mediatek/common/mtk-afe-platform-driver.c | 4 +++-
- sound/soc/mediatek/common/mtk-base-afe.h            | 1 +
- sound/soc/mediatek/mt8173/mt8173-afe-pcm.c          | 1 +
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c          | 1 +
- sound/soc/mediatek/mt8186/mt8186-afe-pcm.c          | 1 +
- 5 files changed, 7 insertions(+), 1 deletion(-)
+So given that device private pages are not supposed to be mapped 
+directly, not including these PFNs in max_pfn absolutely sounds like 
+the correct fix to me.
 
-diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.c b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
-index 6b6330583941..70fd05d5ff48 100644
---- a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
-+++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
-@@ -120,7 +120,9 @@ int mtk_afe_pcm_new(struct snd_soc_component *component,
- 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
- 
- 	size = afe->mtk_afe_hardware->buffer_bytes_max;
--	snd_pcm_set_managed_buffer_all(pcm, SNDRV_DMA_TYPE_DEV, afe->dev, 0, size);
-+	snd_pcm_set_managed_buffer_all(pcm, SNDRV_DMA_TYPE_DEV, afe->dev,
-+				       afe->preallocate_buffers ? size : 0,
-+				       size);
- 
- 	return 0;
- }
-diff --git a/sound/soc/mediatek/common/mtk-base-afe.h b/sound/soc/mediatek/common/mtk-base-afe.h
-index f51578b6c50a..a406f2e3e7a8 100644
---- a/sound/soc/mediatek/common/mtk-base-afe.h
-+++ b/sound/soc/mediatek/common/mtk-base-afe.h
-@@ -117,6 +117,7 @@ struct mtk_base_afe {
- 	struct mtk_base_afe_irq *irqs;
- 	int irqs_size;
- 	int memif_32bit_supported;
-+	bool preallocate_buffers;
- 
- 	struct list_head sub_dais;
- 	struct snd_soc_dai_driver *dai_drivers;
-diff --git a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-index 04ed0cfec174..37b20ec80829 100644
---- a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-@@ -1114,6 +1114,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->mtk_afe_hardware = &mt8173_afe_hardware;
- 	afe->memif_fs = mt8173_memif_fs;
- 	afe->irq_fs = mt8173_irq_fs;
-+	afe->preallocate_buffers = true;
- 
- 	platform_set_drvdata(pdev, afe);
- 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index d083b4bf0f95..0ef07fb2898d 100644
---- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -1214,6 +1214,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->mtk_afe_hardware = &mt8183_afe_hardware;
- 	afe->memif_fs = mt8183_memif_fs;
- 	afe->irq_fs = mt8183_irq_fs;
-+	afe->preallocate_buffers = true;
- 
- 	afe->runtime_resume = mt8183_afe_runtime_resume;
- 	afe->runtime_suspend = mt8183_afe_runtime_suspend;
-diff --git a/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c b/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
-index db7c93401bee..c588a68d672d 100644
---- a/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
-@@ -2935,6 +2935,7 @@ static int mt8186_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->irq_fs = mt8186_irq_fs;
- 	afe->get_dai_fs = mt8186_get_dai_fs;
- 	afe->get_memif_pbuf_size = mt8186_get_memif_pbuf_size;
-+	afe->preallocate_buffers = true;
- 
- 	afe->runtime_resume = mt8186_afe_runtime_resume;
- 	afe->runtime_suspend = mt8186_afe_runtime_suspend;
--- 
-2.49.0.472.ge94155a9ec-goog
+But wouldn't the abnormally high max_pfn also cause us to create a too 
+large direct mapping to cover it, or does something save us there? Such 
+an overly large mapping would increase kernel page table size rather 
+substantially on non-gbpages systems, AFAICS.
 
+Say we create a 16TB mapping on a 16GB system - 1024x larger: to map 16 
+TB with largepages requires 8,388,608 largepage mappings (!), which 
+with 8-byte page table entries takes up ~64MB of unswappable RAM. (!!)
+
+Is my math off, or am I misunderstanding something here?
+
+Anyway, I've applied your fix to tip:x86/urgent with a few edits to the 
+comments and the changelog, but I've also expanded the Cc: list of the 
+commit liberally, in hope of getting more reviews for this fix. :-)
+
+Thanks,
+
+	Ingo
