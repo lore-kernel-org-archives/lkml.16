@@ -1,100 +1,122 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B599EACE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 13:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6C520127D;
+	Tue,  1 Apr 2025 13:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743512723; cv=none; b=VfZ/RKticOkSJdUlwa3ucGmETH6L9v0kjagcp8UdR08O52xsq9HSzzgurOHlMKVCWtKzXSiP5E/7DjyGd/6DXmfPa9DuNtMci8tYw1wmglUVtrRSGiwdPNOlspNAyzvdyR9dzHb4FsFJPbCQNvo3UGRg9n6n00Uuh2K0aTDZ9s8=
+	t=1743512733; cv=none; b=sm1NxuFlrpQzFGYz8wTvvbRhanXwZZ0dJR5nkf8v5NcdeWDDhRA239jz7UjAbix7edB7psr9CKDIzasaG/gicd5ehUA2JX9o52GACnV1HMKj5OcNhQiYqVs7P5V+ec10V3o7juCp1W64BEtKggAJ2lJSiJdY1dUwfj0EUBdY3Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743512723; c=relaxed/simple;
-	bh=ZylEpy5ghunQJw2QAROsarSDI2GQsIljU6rIH62rq9Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i9l2l5CqF1crQliuw6MpjKBrVlli++O+a8FVimB4AolgQXyrCZ8jz7ogb0Ap3Qe9ViAjuvUBYfdTDPhYD60cKMFS4gBG62sOWJE+PvtxeeQV+WJqZO2iMdu+HakVdApyYIPMTbAQqKeB7h4RjOKnCYUJ90XaNqKtZFqwjt+4G1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qpzu0Tan; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743512733; c=relaxed/simple;
+	bh=68g1dwxubK/qOagQYfmF+/7yRupBhMvJ/WhIYkafHTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWIesTXhWkkCpvgNr6lUtp2nGpPL0N+a03hLR8Vk9lRmA1DaoWFPXy30TgHjJ08sUHp59ecdCoXkfRGtfwKS/xDl6eAwyDMui2k7Ko+L5zLjZrKJUxzYLO/CsgHNKbSHAGVOqRTvunTLaZhJFsZpVeARN8UoTz7vN1wCtLeq1Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=b+nHgLwZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F6p8nPEH; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qpzu0Tan"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so831182366b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 06:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743512720; x=1744117520; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZylEpy5ghunQJw2QAROsarSDI2GQsIljU6rIH62rq9Q=;
-        b=Qpzu0Tang9zvuLeksmgBItnLraZoZV1JKOFI0+nuKOArPF8qAvQZMvqv5yv9BYulms
-         OagKZyp/nX9/th6diM2/Np+9am7kgbE5U7nmGJKcVcciQnAvL9nxzv3QPpEy+7gXWyNL
-         Y9aoCdmWeYXW905x65R5QS/mF+RlagBP1pE8PidIO25q2NMLEc86uVkO49BEtMqePmqB
-         uMY4f8/SNgfPRV1kicSIFPJZ9+KUxnq4BnEcegRjkJa8squY66f7WwwPF5eXAgCDePQO
-         /dK1C+nUL6SbP2EhYDOUE3aKwqKzQ8jAVG2c5zYO+REesuSx9gigUEQ9jty8/cPUph/+
-         sGZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743512720; x=1744117520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZylEpy5ghunQJw2QAROsarSDI2GQsIljU6rIH62rq9Q=;
-        b=kgsHb6+TAbN5V4RKV0bRslwW5atWHeKWwznru1WCu0yYlZy4PaJxm/cErEzCc0RSe2
-         oZ4Ld9p/p8bgLoVOCCTuFKIuar3YYxxUHM7dgJlgjbTt9aV5sOVKmGHU7NHxPjHRDWQ0
-         lA6V2EG9eWQtPB0oGJgEZZW1V/JsxTLSyeTChkcs4PMC1+iEnMRvZen3HNoclFzTOp8I
-         zYEz2hyVBfU8EQxebjFqIMWdRduZSJdYMDgYGm5IV/7Yn6t8HelFLM4cQvZRHeahw1Mv
-         rmquYSHvSWIBDz4vKPcEHdHscWpcwvY49aiqBX6yOZTXLCtpUUs1cJyQX0Hyy3gM9i3M
-         Jncw==
-X-Gm-Message-State: AOJu0Ywu52GXy5B+NQ9CAISzjGWQQ8HHHq91lAknEq2o41A1yoVprPFE
-	PJA5tYETpQUn8onCduT8bUp3ukVmd+YDXIuj+NVyhrFlgV2mRL3J1KYNlVEkK5N2VuV1TUtt2ZY
-	HfQAPURA6RcYLPf/3pAIkC83OiB0=
-X-Gm-Gg: ASbGncuk73BEb12VHoUIgojcX8GiFu2hkI+SuPE5pDqW3hbaK6OfmGuRo2UDYQBCypi
-	etsZ8hUfcjsCeq8ckVGSyBoK7UC4DXtLKB3TkP6txDJTDmeDIKoX7WLuklXDR67pcUIY22nM5f4
-	K+qQbtTE3Q+5NpSz0EhH++l3gP
-X-Google-Smtp-Source: AGHT+IHTWNN2DaaGZlYl7AJLr6sx3xpMsxWG2twxDimnzl7ct6CjD/8gdlFI+zCpDRp24pN3pPA3UaquhJhKEgX/c74=
-X-Received: by 2002:a17:907:9307:b0:ac6:d9fa:46c8 with SMTP id
- a640c23a62f3a-ac738be3abcmr1288367566b.39.1743512720083; Tue, 01 Apr 2025
- 06:05:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="b+nHgLwZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F6p8nPEH"
+Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
+	by mailfout.stl.internal (Postfix) with ESMTP id E803811401B2;
+	Tue,  1 Apr 2025 09:05:29 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-13.internal (MEProxy); Tue, 01 Apr 2025 09:05:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1743512729; x=
+	1743599129; bh=7dX1gNT+/GJ5Ayv5rUNeFUzBzq39S0of/HzEkJa1y/g=; b=b
+	+nHgLwZ6xWFlhNWUsHfjvlTv60SHG/XB1HA/l1REtXULj23c19fQfmUBMSqqwwP5
+	Ye9o8WdxvirZdvtVF96RJZt3rXnFilT4pwFr3IGMipn7qmohD7siKLkUAzEgaflA
+	LdHW0+ZbAZB+XrAC6Gb+iLRjLNAEnCJAE2OOWtMEeFjheSZk7fYbWYKRZHL5Xk+C
+	EKJXAtSgMYNIGuqiywRfO/Xy15MItymOC2PN9Uv7lInl/t1w/y/9Un/ig+kKBPPF
+	F8QCVyVk/5f10QVJQXeQjtA85drV3DCAHlQneFZr02va1D7MJ3JhfOHItKwt+AYB
+	EZEpwLkzgdjb6EbPkFFHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743512729; x=1743599129; bh=7dX1gNT+/GJ5Ayv5rUNeFUzBzq39S0of/Hz
+	EkJa1y/g=; b=F6p8nPEHR5UXbZ40y7SPpxMiS2jUW5unEFtP3wrwKy2WNCWdFH9
+	o+EjG1jjWsGP9cH3Pe4ELRpSLa8t/DPK3X8f+UmaGxSvtHHqNgEPn6bPJ/1zUyVT
+	1EOFMrRMVKmBWqQJFHrZYe15sSfk7WNk9kaqBfa7D6+QwNUFf0EUEc4TLjx/B8u4
+	em+aUv4aaciqbLxTOirPovTAXEG1a8x6SFW+9nkNFnvnB272AMPpxl76R/pifvjd
+	rwuQiNfS/qNEhPRLTlFFwuefgwD6GlH2SBGBzxVf8cWEWXNEqGjxtU0+gu2WndPX
+	9oYlpGRbaq/Cp8Uiv+Si0SUsp3LLp+kEfMQ==
+X-ME-Sender: <xms:meTrZ0VdFfDtmGdHbQ3kCC9QOvAWp8k6HK1Ku_iUKfV_J9jM2hAzEw>
+    <xme:meTrZ4nQdoRh2fdUTskeBPsv0kQubBAANvw7n-8Qceq1evdd6u7sbZHEcmeU3QU1F
+    o5cp8gIvoELLGvJADg>
+X-ME-Received: <xmr:meTrZ4Y4nilMhRYVyjDNFQIC6SEDcL5Xq1lJecgHd4wJJf8ugqfc5zdW7x_R>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukedvkeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
+    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehp
+    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
+    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
+X-ME-Proxy: <xmx:meTrZzXhkXPrl5iRUPISqDTst60Zo5F4z2ll2ZjHG1mKL5sZm1yupQ>
+    <xmx:meTrZ-lFkhS6wNkpGWyfHTMy8gmlvQBxauToBVV2CUrldJ0ohl9xmw>
+    <xmx:meTrZ4e2yS6VcRZAjicLAYOIeS47ZytIWhcXVg4OvYhHjpMpRnNjdA>
+    <xmx:meTrZwGT8e6Na3qC6Ruq7-2zH9wUvgfU57pI7pe-feixhWoCQd_EmQ>
+    <xmx:meTrZ6mW5ufr7w-ukq-jpGEbP-qTXLaA0HEbVLaiXsHiXUaw0n_udppE>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 1 Apr 2025 09:05:28 -0400 (EDT)
+Date: Tue, 1 Apr 2025 15:05:27 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+	willemdebruijn.kernel@gmail.com
+Subject: Re: [PATCH net-next v24 06/23] ovpn: introduce the ovpn_socket object
+Message-ID: <Z-vkl4NqfrkoJn-l@krikkit>
+References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
+ <20250318-b4-ovpn-v24-6-3ec4ab5c4a77@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319195436.1864415-1-mjguzik@gmail.com> <20250319201100.GH26879@redhat.com>
-In-Reply-To: <20250319201100.GH26879@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 1 Apr 2025 15:05:08 +0200
-X-Gm-Features: AQ5f1JoO8v_ZDD2ob1-t_UJMNWAIhZ4-R8G_MbLHsrT6Vj9hu2EkQxy0TjwZiN4
-Message-ID: <CAGudoHGzG6stVcsJRHFBhrikBFDFP+6=wRzpDoY5qFqEydksow@mail.gmail.com>
-Subject: Re: [PATCH v3] exit: combine work under lock in synchronize_group_exit()
- and coredump_task_exit()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250318-b4-ovpn-v24-6-3ec4ab5c4a77@openvpn.net>
 
-I think this fell through the cracks. Can you pick it up? Should I
-prod someone else?
+2025-03-18, 02:40:41 +0100, Antonio Quartulli wrote:
+> +void ovpn_socket_release(struct ovpn_peer *peer)
+> +{
+> +	struct ovpn_socket *sock;
+> +
+> +	might_sleep();
+> +
+> +	/* release may be invoked after socket was detached */
+> +	rcu_read_lock();
+> +	sock = rcu_dereference_protected(peer->sock, true);
+> +	if (!sock) {
+> +		rcu_read_unlock();
+> +		return;
+> +	}
+> +	rcu_assign_pointer(peer->sock, NULL);
 
-thanks
+minor nit: that could be rcu_replace_pointer instead of rcu_deref + rcu_assign_pointer
 
-On Wed, Mar 19, 2025 at 9:11=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 03/19, Mateusz Guzik wrote:
-> >
-> > This reduces single-threaded overhead as it avoids one lock+irq trip on
-> > exit.
-> >
-> > It also improves scalability of spawning and killing threads within one
-> > process (just shy of 5% when doing it on 24 cores on my test jig).
-> >
-> > Both routines are moved below kcov and kmsan exit, which should be
-> > harmless.
-> >
-> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
->
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
->
+(and I don't think the rcu_read_lock does much here)
 
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+-- 
+Sabrina
