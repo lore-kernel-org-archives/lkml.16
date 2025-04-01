@@ -1,297 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2040.outbound.protection.outlook.com [40.107.220.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7816920E003;
-	Tue,  1 Apr 2025 17:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743527241; cv=none; b=TmMy4FM2YlEtnQjiOP6rqgWSfECQBf5w3n/ZqYYLHRdGS3wjnkzXsrR7Wx5VpJ3bQo4sPbjy9Ahb3svmz0DkcP8ENUQTossMa3oRPiALPCF9Y6fZ9ywj5II91oKvNIZ0d+cr05ud1byG564DBiPl/1SvtRYiW3NtQs1lP4Zpu94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743527241; c=relaxed/simple;
-	bh=O/tiOQMe+BpDxEwKm1eC1nNVvOd2fMn+JfqqgztrtlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6LyyhUj1/tRjUprXqecJ/ElwAGFpvji32thb7NEVDF6NFAmGE2hTC1sjHAdoh9P4kSTejK46iSlMN85IzzDKThso4HG3Uub4Pj/Rylybyk2vpY7nzdgvtQHgLh0J4nDIVwgrjRFM1KGCd6HpecvxWU8j0UAPI97d3KB7p0FNeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7/smuaX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7432A2147EE;
+	Tue,  1 Apr 2025 17:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743527245; cv=fail; b=gTS8VNWl2Qglyd6bjkJIuugCQ/lCc1LuWUeW/6kW0hmm7hio7w/cQL/5SNJc1PgV9/LcmzuZsneVG3K4p9uNeYZhZwtY8JqhTuQYpAmF1LSK4LV4soETYJYAxUBa8f6mx93U8AazySyKBuuPZFSxTu1whhbn7od47cO+DWjYwX0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743527245; c=relaxed/simple;
+	bh=/URvSgrMTPsSmPBnQsLkr4YD2U4RZ67UXoiSrQ+zpdc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BodO25vbBFoI5RZRD+b13JcyJMQefxb9BR2O1yfD0PLUO7UdeX6X67btUKFgqiWLELdi7l/W1AIAXqepzhuvdPclUQHFnLMbmG1peFJLwxhEtznWLKawupGb9j/vLHU7at/i+3UQGDfQ5BOJA4aqdNOQK4PDwk1pUMnQT/dnxJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TNJ8KR1O; arc=fail smtp.client-ip=40.107.220.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7/smuaX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D326C4CEE4;
-	Tue,  1 Apr 2025 17:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743527240;
-	bh=O/tiOQMe+BpDxEwKm1eC1nNVvOd2fMn+JfqqgztrtlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7/smuaXIRSPRyOnsvPLUEKbjDMp4hsP34jnTYsJgvtrHqKntGSe9iAo0+gFGC3Kx
-	 5vCMrSK6HGo2QRtyDfGRAsGxZ+2aZ14rPDV3EG6YzoljVz76c0BuDbGeoLZ3NufZFD
-	 tBO08/MZaP50qOsrGROuqnujj06CEcHylGdsU010ekh0OsMPjP2tN3+PRx++CM8m0E
-	 rqKuqzgmAldX/Wvq1tKpYmi3wq56IPDfmnTrH/MuCA0xfvV8aq7IZYV61/IjhqwoDO
-	 ZHsEKxAVt+EEgRqkfIWk4w8ZgpEYYvRp+U4LKlI1/Ly7sdaPDMed+kThHEHsBl+9vT
-	 gvTDZZzNHXa9g==
-Date: Tue, 1 Apr 2025 20:07:15 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: pr-tracker-bot@kernel.org, Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] vfs mount
-Message-ID: <20250401170715.GA112019@unreal>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
- <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TNJ8KR1O"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QPjxwUbBGA01+dErYj1d6HjXzWaqHuiP7zLhi+ivTbfxHhxC6HafPqTGzvPKChgU7RF6rDNp7DgApQAAjKRUJvOFotYIZr25z7hoS5O+3paqkPHTFBbDtQLdWJEQQEoR0GHgY0YHT1GKdv7hP8/gyWNyjwSBOqVxDmC123fUJkiV0/81/DXo2yRPK/8fAEQk10FSq+XualkuWT3Iy20uNAbTtWBDC1EYB7JxFWQgdvlCHwbWtRr2S1ZLXG4ZqJsMYw4bygdDMRH0Z8C/iqtqUq2Hjp6ime5w6trlCiycp9uBYKeiqKbn652S/GkSXZIF0F8CppIsE39B0GMuEcRvUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rvoZ4C6d0b5cU1J66WWEyErgcmD5UXdfYaevkdKFCYk=;
+ b=JoWal6jaJlVaKDG/LR9n+noukZ9+MGLyPLNm/8CXTiJOSGMZPfJvTpjfIn8abUsrq8TGYQ1K2vD723CEWWwjVzEvNex1h1y8oG3oiUDXMs4whNNlT47noOZB/tfMSuZxfju9olqHidoZIK2c8ZeS54sNb1TZPR+CoJ5G41whuRCMmoAKjp2elsv74uRDq7IIkHacseSCtbrIAB6oP0fAJyn1PIZrUM+wbKE1119WGUszEl91gatJKl1IcCoBrh56kKOG163vivGCebK8r8KOggWl6yDJEgJmiwz1UONcXmWePz+cUW80r6gJDlRM3L4Itddc8hOs2tIHC472zxNSiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rvoZ4C6d0b5cU1J66WWEyErgcmD5UXdfYaevkdKFCYk=;
+ b=TNJ8KR1OBbFY5GSMOVa95IRSO9Wu+YQTIkoVFCpR7emq3ODlvXhdD9xQ+DBRXWMUurCduZzAD3WJlxpshaHeUOsd6y7MTf7bI47JEBDEfLkryt1C2bD3HPBNqI6li5r+OuaPHHDUObgNPWVXY4S1zQUKBMFXT2e30QKe2drc1clVpxZ6eWh1OtTUObdyBNMbh0syAsxnmqMgCqzynfZ4tuuPvHEfT13hPknXJS6V0Asy3VaICpmwgrqeAolmkC5Vt4Y3HNnoDV5FgrVXAWg75dPBbfCO4jxultyfYrqym92N8XJYtR7QRWedOTtN6ty4pP8aBZbtBysQbzeHiRZX3w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB8056.namprd12.prod.outlook.com (2603:10b6:510:269::21)
+ by MN2PR12MB4320.namprd12.prod.outlook.com (2603:10b6:208:15f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
+ 2025 17:07:21 +0000
+Received: from PH7PR12MB8056.namprd12.prod.outlook.com
+ ([fe80::5682:7bec:7be0:cbd6]) by PH7PR12MB8056.namprd12.prod.outlook.com
+ ([fe80::5682:7bec:7be0:cbd6%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 17:07:20 +0000
+Message-ID: <aeb6ed3a-0b03-403f-a77f-aa1938b576b9@nvidia.com>
+Date: Tue, 1 Apr 2025 13:07:12 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+ Guangbo Cui <2407018371@qq.com>, Miguel Ojeda <ojeda@kernel.org>,
+ a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com,
+ benno.lossin@proton.me, bjorn3_gh@protonmail.mco, boqun.feng@gmail.com,
+ boris.brezillon@collabora.com, gary@garyguo.net, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, rafael@kernel.org, robh@kernel.org,
+ rust-for-linux@vger.kernel.org, tmgross@umich.edu,
+ John Hubbard <jhubbard@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>
+References: <20250130220529.665896-3-daniel.almeida@collabora.com>
+ <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
+ <67AB9311-3EDC-44A8-9C7C-ABF2ED6B632C@collabora.com>
+ <20250401155735.GA804471@joelnvbox> <Z-wX7_gjNH--Opv-@pollux>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <Z-wX7_gjNH--Opv-@pollux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR15CA0055.namprd15.prod.outlook.com
+ (2603:10b6:208:237::24) To PH7PR12MB8056.namprd12.prod.outlook.com
+ (2603:10b6:510:269::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB8056:EE_|MN2PR12MB4320:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4c0bef64-ac5b-4b32-ad94-08dd713fa9f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Sk9jeksxVGZldUxCTnpXVDFYVk1rblIySEhrb2NBWEIxcnBKNDdpNlBzbisz?=
+ =?utf-8?B?TVBLSmZEd2pxZGkySmZHKzdpdUZQa0NoZ29taGF6akdkUzFYRi9zSHVTbkFX?=
+ =?utf-8?B?RHRaNFlyM2U5eDJaYjdDTWdjVUxEanErd24rM1Y2VmZnWVFEL2xTUko4UEpI?=
+ =?utf-8?B?TXdGTnp6TUxGUjhDRkpRbTEvb25hRUtnS2ZZOHB1WG9UOEpRQXRyN29aSDRB?=
+ =?utf-8?B?eHF6S2ZMMlZ3ckRwUUVwaHFyYVZXUExhVGg3SzAxTFB4Q2R0MVg1akgvaDcx?=
+ =?utf-8?B?R1JCcC94NzFER3hSWTlBVkFSd2FYOWdVYzNQdHprQlA5SHdFMm9kS3lBRHhh?=
+ =?utf-8?B?SEhDQ3k3MUFmcm01RmNiaFBYd0dwVkdDbFlLb1I2cXZnQWh0MW1qeFpUWnpi?=
+ =?utf-8?B?Z0ZENjFDU0JsQTh1TnVyYVhPN21tSEhHNzRhTUkyM2M4dld3Z2V1WW9VMk1J?=
+ =?utf-8?B?c2g1WWJtVkc4UzlzenJvWlNXZ1MxZnllUENMc1h6U1M2QXpEamx4L2NQb1Nw?=
+ =?utf-8?B?Y0VMSjBWZWptQmQ3dzFaNWdWZnkwQnNmWHpyQW1CcHcvMW5rbFFNK3pkMW8w?=
+ =?utf-8?B?L2tDQUYwWkNGZ0lRYU9RTCtTY1BFOHdyTUsvRndRMGUwTFRvQlFObnNPQndu?=
+ =?utf-8?B?WVdESWtZTi9Ub1V2K25ZclRWMUZ2aUxBL0dmamV3YXFNcFhVVDNGcFEwSGNY?=
+ =?utf-8?B?OUx2WnBDRjhMOFVjREdHa3BpZ1h5OEtPNVJKNzJLaWdQUWRBczRlaVdWOWI3?=
+ =?utf-8?B?ZG5tNHp1bHlxUDNVRjk3cmIzZmk0Um0rT05iZWVVcklkU3BqcndsM3VsVDdD?=
+ =?utf-8?B?Rkd3UU9lZyt0MmVsRmtDSm9mQlc5UFczWHFhaXZJM0owMTVPczFNWG9Tcy80?=
+ =?utf-8?B?cGdkQ1ZPVHJxdFBaTWNlVnNHcjFDcUNSY1dmbHJTRTYvZzRNKzk1VzljMWxH?=
+ =?utf-8?B?WHdUNjhndHpzRExwR1hmak4rWnMwSUIrOGtmVGlLWWg4aERZYmxIcm9pbStG?=
+ =?utf-8?B?MVNiTXhvcXluOU9rNFhrMXMxQW9uL1dac0hNQncwM2VVVllMQnFFaDIvTXVy?=
+ =?utf-8?B?aHF5enJxbVlxWkZURnVMRExWdGFjZThRZmRHdEhtMFFBUHVsVW9ETFh5SHFJ?=
+ =?utf-8?B?REtVNk1oVlJiSlVoWGtmZWVSbm13RGhscDdqMjdzaW1ZMEw5VGMvNHNDYUhK?=
+ =?utf-8?B?RnhUOGoxREZWcFZQQ3I5bTBYYWxjU1BpUFB5QUZaOEZQbGs3eHpYcW5zZFZF?=
+ =?utf-8?B?d1RXL0VPM3Q0eDU1a1dVMVVYZUMrWW5vNnA3ajR3VkVwL3BZTGtvTWpRV3FO?=
+ =?utf-8?B?Mm1tVmVBWk9wTjVQdjNpNWVCUWFtNHFMQkZaNmxJNkNhZzNoaFdSTnVWMDhl?=
+ =?utf-8?B?UlBsU0VJby9nb3VKb0tKeDJCbUFYMzA4NmQ5cGNsNUx0bDgyN1FOWW02Smo2?=
+ =?utf-8?B?bFp4M3Q1aDhIR25rL2dnYnBoeEJkL3p0NzlMaFE5aFAyMG0vZ2NJa0txbUdQ?=
+ =?utf-8?B?UWdwa1lPbzhZNkd4T0phUlU3RnVLckh3L2p6RS9iODB5ay9ObkRzR3h0THV1?=
+ =?utf-8?B?MDZtbGdoOHFndm1DS2hBYkFrZHJJU0Q5T3NDbmJTdlB5SUcweE5XNktoL3Ir?=
+ =?utf-8?B?L2NZc24xYTltUTdDZnF6M0JiSWt2bDBydUF0R0ptRENWZzBMTEVQRXBKbFZN?=
+ =?utf-8?B?aENtQitrRkovUmE5WTdod3NkNGlOVkF3MzR6by91ZHdlaW8rZmxCVlhvTmk1?=
+ =?utf-8?B?bHVyMEp4Mld5M3c4aVhvYWkxMHhRMWtzeDd3Q2w3OVRNcjdnTDBHR2xyVFd2?=
+ =?utf-8?B?RE9wOTVWVnBUVUI0b28wQytWSFBOd1o2U2toaUxoZTh5b2Jnb1pESWhWOHox?=
+ =?utf-8?Q?JDdCZGFJIr2li?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB8056.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TytibXpRTjFBQWxhaFMrVndXamVJemFKWDJFQWpUZXM2cFdVZTE4ejk1QVdQ?=
+ =?utf-8?B?aC9nbStuM0E2aGVvNGdKNEEwaXY5OGI1ZWw2MkMxWFBOTk5DblZoK3JPVVlR?=
+ =?utf-8?B?MWlZUjUvR0E2d1BKeUloa3lCalFZV0FYcjczZ3R3cVZNckZaSTI5ZU9mZVEy?=
+ =?utf-8?B?dTdlemZ3YklPcTJOWGs2ZjBqNGkzSW9Eenh3SUpIUjN5dEQ5UUVMMWY3anpm?=
+ =?utf-8?B?aGVzeE1hSFlBT3NpYkU2bXNZaDY0NGs2T25CRzFRSVpmWVhiR2RpSFg5SFpD?=
+ =?utf-8?B?ZGpsNGJkNlhhdEdMdWpGdkVLQTdHVEdTa1RQNjRIamxFSWhnWmNldWJNLzFF?=
+ =?utf-8?B?bWxtdFRhbHRKZHpxRGFBSmdXZk42b0hyWVpscSs5TzZOQ1NQNmc4YXlibEtV?=
+ =?utf-8?B?ZUxERzNMRnk0T3laS1R6cC8zWGtDUGdGdlJkaEd2R2hWMGtXcDZuejdzeDlQ?=
+ =?utf-8?B?NFk4aDVMNjBUbzhCNW1pSzJWb25XOXh0b2UwUWZ3MDNSVFFRclZLWmN1cTBW?=
+ =?utf-8?B?TzIvNEN0UnpkdDE3UFR5eDYyUFJraER0U2xYOFRLYjlEeElmS3ZpK2dUYjFW?=
+ =?utf-8?B?YVVxYlh6OUJ4TVZzNURId2ZRTlBPcVB2aGJDZ0xsUnFoU3djR1dWK0dTUFZR?=
+ =?utf-8?B?bHd5TDZ1c1k3YXJtbktobnA5MzJhMXlJNjU5YW5VZzdKRXhJSDlRa1IrOGY2?=
+ =?utf-8?B?UWNVT1hKNDJ6QXpRMmJiaXFlaXZOU0lUTmNpdDFtcjFxMEl2NUkxRmhiaU9Q?=
+ =?utf-8?B?K3I4RTM2Z3pUWGxmZ2drMU9lWmcxNTBUNzlaaWZnZWowa3R6YnpET1dVeGo1?=
+ =?utf-8?B?Q1FOaFdZbnE0cmdSMWhsZHpGUmU4MkMzZHM3VDlTQW9DS1lJTTNTYVAyUlBN?=
+ =?utf-8?B?TTVGTHlQaWdSU25hU0JxQTJzVUtvN014UkU3aVRIVndmcnVrYXhmdzd2Wkx5?=
+ =?utf-8?B?OWJPSGdHaDN5YzF4SHhWbm16M1k0NjIwR2w2a2pMOERVSUc4MXN4M2NpUGlZ?=
+ =?utf-8?B?UGx6YmdEbWpsQm96WGRLRit4YnNVSW1DMjZxY2c4VE53bHhOTnIrYjlNVlFP?=
+ =?utf-8?B?OENqNGFVaEpQMkZzSHpsa3RHdWRwLzgzZ1hQaW9tZ0NuU2g5MjdiNnpzK28w?=
+ =?utf-8?B?QWRhcEZxSGlGWWhaRjN4cjBMZ3NhRkhVcmxsWXNDcVByS01pMzBMQlo5UUh6?=
+ =?utf-8?B?eGxLdG4zOVR3TzhqT1ZJM3UrY0NDYlp1cDNmNGVBR3ZpWGYyeVRZNlVnZzNs?=
+ =?utf-8?B?VjFuZWdlV2JZKzlpVk5iZGRLeWFPY3BrRVlFdzNra2pMRU9HRW5MQUZtS29H?=
+ =?utf-8?B?ZjJLejA0eURHZFdzWDZDMDJCQldqVWNaQmRXSUVsR3BVcEpXTzBBQzNuVHdx?=
+ =?utf-8?B?NW56L21NeDl3RTZlMzJWZXlLci9rZE1tbDY5cThLT0d4RzJBVUtwZkl6QlJp?=
+ =?utf-8?B?SXRlMjhLL3pFalNEYWxQbDc2TDBoRk5IQ1FObEs3QmNYT1NxSklUeXJQdHJa?=
+ =?utf-8?B?Z3p1ajAwWWI1VjdxRmVlc3dpdUhWTGpsUmdGd0xBeFJ1R1VyVElPYkRnSkZO?=
+ =?utf-8?B?cFFBM1Z3ZDl0MkRScC9pUXRGQ1B6TEtveTNNQmwyaGlQVXNqQmJTb0F3b0Zl?=
+ =?utf-8?B?Q0RyOGR6UXdWZ3ZyUC9BdUpIQVZ3SENhQWh5WFMzSU81VDZ6NFc3T1dta1U4?=
+ =?utf-8?B?WnZUMGdSVDdQR2ZsTE1wR2RNZ1VTRGxiMDhGMjQ0QjJDaXNtOXZBMW5oU1JC?=
+ =?utf-8?B?dCsvR2xJUHhHR2F4WHhOWUlXN2ZSZEltb2owa3dlSFFzRndianhoQUNCUXdS?=
+ =?utf-8?B?bEhXa1U0T29tZUNmTnM4eGgrWFhEY3BPbllzYlVzUUNwQ25JMHg0ZTg1OUlE?=
+ =?utf-8?B?YWptZ21tMURHMW1rZE4wRCtqNVphcWQ5NDBHdVZ5WDZhR0hNMGJOcUdWa2xG?=
+ =?utf-8?B?bDVWWUYzSUxnNEViTlBOa21mSkVTbWVJNzF1SGo4Wm4vRmdjZzQxM0paWFdW?=
+ =?utf-8?B?dXZ0MFJoaDlhc3pJQlF0TzFoQUptb1VsVEZIRjVMTjdrVkxUNk5XMHlaM1Ez?=
+ =?utf-8?B?ZUlYNVFXclE3Q3FCSjFLNFlaWkh6MmI4OFZ3MHB1Y2M2SG9CZzZsZllZbkRD?=
+ =?utf-8?Q?ESaZ7Ffz9iemNfq5kGAGiWudp?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c0bef64-ac5b-4b32-ad94-08dd713fa9f1
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB8056.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 17:07:20.6891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jq5O9p/GEcag+pWA+S0kWjUhoC65olRUqZpUh+XvqEHJ1O71hTLcm17jXMYIqpF0p4pPGEOLO/V6EJDrb1v7Wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4320
 
-On Mon, Mar 24, 2025 at 09:00:59PM +0000, pr-tracker-bot@kernel.org wrote:
-> The pull request you sent on Sat, 22 Mar 2025 11:13:18 +0100:
+
+
+On 4/1/2025 12:44 PM, Danilo Krummrich wrote:
+> On Tue, Apr 01, 2025 at 11:57:35AM -0400, Joel Fernandes wrote:
+>> On Thu, Feb 06, 2025 at 12:57:30PM -0300, Daniel Almeida wrote:
+>>> Btw, Miguel & others,
+>>>
+>>> IMHO, I think we should write a comment about this somewhere in the docs.
+>>>
+>>> When I first came across this issue myself, it took me a while to understand that
+>>> the build_error was actually triggering.
+>>>
+>>> That’s because the result is:
+>>>
+>>> ```
+>>> ERROR: modpost: "rust_build_error" [rust_platform_uio_driver.ko] undefined!
+>>> ```
+>>>
+>>> When a symbol is undefined, someone would be within their rights to assume that
+>>> something is broken in some KConfig somewhere, like this person did. It specifically
+>>> doesn’t tell them that the problem is their own code triggering a build_error because
+>>> they are misusing an API.
+>>>
+>>> I know that we can’t really provide a message through build_error itself, hence my
+>>> suggestion about the docs.
+>>>
+>>> I can send a patch if you agree, it will prevent this confusion from coming up in the
+>>> future.
+>>
+>> Interesting, I just ran into this. I am writing function as follows that
+>> reads bar0 in the nova driver, however not having the "if current_len + i"
+>> causes the same issue:
+>>
+>> ERROR: modpost: "rust_build_error" [nova_core.ko] undefined!
+>>
+>> which did not help much about what the issue really is. I had to figure it
+>> out through tedious trial and error. Also what is the reason for this, the
+>> compiler is doing some checks in with_bar? Looking at with_bar
+>> implementation, I could not see any. Also enabling
+>> CONFIG_RUST_BUILD_ASSERT_ALLOW did not show more menaingful messages. Thanks
+>> for taking a look:
+>>
+>>     pub(crate) fn read_more(&mut self, bytes: u32) -> Result {
+>>         with_bar!(self.bar0, |bar0| {
+>>             // Get current length
+>>             let current_len = self.data.len();
+>>
+>>             // Read ROM data bytes push directly to vector
+>>             for i in 0..bytes as usize {
+>>
+>> 		// This check fixes:
+>> 		// ERROR: modpost: "rust_build_error" [nova_core.ko] undefined!
+>>                 if current_len + i >= 10000000 {
+>>                     return Err(EINVAL);
+>>                 }
+>>
+>>                 // Read a byte from the VBIOS ROM and push it to the data vector
+>>                 let rom_addr = ROM_OFFSET + current_len + i;
+>>                 let byte = bar0.readb(rom_addr);
 > 
-> > git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc1.mount
+> The problem here is that the compiler can't figure out the offset (rom_addr) on
+> compile time, thus it fails to compile.
 > 
-> has been merged into torvalds/linux.git:
-> https://git.kernel.org/torvalds/c/fd101da676362aaa051b4f5d8a941bd308603041
+> The non-try variants of I/O accessors are only supposed to work if the compiler
+> can figure out the offset on compile time, such that it can be checked against
+> the expected bar size (not the actual bar size). The expected bar size is what
+> the driver puts in as a const generic when calling
+> pci::Device::iomap_region_sized(). This is what makes the non-try variants
+> infallible.
+> 
+> If the offset is not known at compile time, bar0.try_readb() can be used
+> instead, which performs a runtime check against the actual bar size instead.
+> 
+> Your above check seems to be enough to let the compiler figure out that
+> ROM_OFFSET + current_len + i can never be out of bounds for bar0.
 
-I didn't bisect, but this PR looks like the most relevant candidate.
-The latest Linus's master generates the following slab-use-after-free:
+Thanks a lot for the quick reply. I tried the try_readb() variant and it works
+now. I think instead of me doing a runtime check to satisfy the compiler, it may
+be better for me rely on the try accessor's runtime checking so I will stick to
+that.
 
- [ 1845.404658] ==================================================================
- [ 1845.405460] BUG: KASAN: slab-use-after-free in clone_private_mount+0x309/0x390
- [ 1845.406205] Read of size 8 at addr ffff8881507b5ab0 by task dockerd/8697
- [ 1845.406847]
- [ 1845.407081] CPU: 5 UID: 0 PID: 8697 Comm: dockerd Not tainted 6.14.0master_fbece6d #1 NONE
- [ 1845.407086] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
- [ 1845.407097] Call Trace:
- [ 1845.407102]  <TASK>
- [ 1845.407104]  dump_stack_lvl+0x69/0xa0
- [ 1845.407114]  print_report+0x156/0x523
- [ 1845.407120]  ? __virt_addr_valid+0x1de/0x3c0
- [ 1845.407124]  ? clone_private_mount+0x309/0x390
- [ 1845.407128]  kasan_report+0xc1/0xf0
- [ 1845.407134]  ? clone_private_mount+0x309/0x390
- [ 1845.407138]  clone_private_mount+0x309/0x390
- [ 1845.407144]  ovl_fill_super+0x2965/0x59e0 [overlay]
- [ 1845.407165]  ? ovl_workdir_create+0x900/0x900 [overlay]
- [ 1845.407177]  ? wait_for_completion_io_timeout+0x20/0x20
- [ 1845.407182]  ? lockdep_init_map_type+0x58/0x220
- [ 1845.407186]  ? lockdep_init_map_type+0x58/0x220
- [ 1845.407189]  ? shrinker_register+0x177/0x200
- [ 1845.407194]  ? sget_fc+0x449/0xb30
- [ 1845.407199]  ? ovl_workdir_create+0x900/0x900 [overlay]
- [ 1845.407211]  ? get_tree_nodev+0xa5/0x130
- [ 1845.407214]  get_tree_nodev+0xa5/0x130
- [ 1845.407218]  ? cap_capable+0xd0/0x320
- [ 1845.407223]  vfs_get_tree+0x83/0x2e0
- [ 1845.407227]  ? ns_capable+0x55/0xb0
- [ 1845.407232]  path_mount+0x891/0x1aa0
- [ 1845.407237]  ? finish_automount+0x860/0x860
- [ 1845.407240]  ? kmem_cache_free+0x14c/0x4f0
- [ 1845.407245]  ? user_path_at+0x3d/0x50
- [ 1845.407250]  __x64_sys_mount+0x2d4/0x3a0
- [ 1845.407254]  ? path_mount+0x1aa0/0x1aa0
- [ 1845.407259]  do_syscall_64+0x6d/0x140
- [ 1845.407263]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.407267] RIP: 0033:0x55e3487f1fea
- [ 1845.407274] Code: e8 1b 96 fa ff 48 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 4c 8b 54 24 28 4c 8b 44 24 30 4c 8b 4c 24 38 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 40 ff ff ff ff 48 c7 44 24 48
- [ 1845.407278] RSP: 002b:000000c000b563b8 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
- [ 1845.407282] RAX: ffffffffffffffda RBX: 000000c00006c000 RCX: 000055e3487f1fea
- [ 1845.407285] RDX: 000000c0012cf7d8 RSI: 000000c0012616c0 RDI: 000000c0012cf7d0
- [ 1845.407287] RBP: 000000c000b56458 R08: 000000c0004fa600 R09: 0000000000000000
- [ 1845.407289] R10: 0000000000000000 R11: 0000000000000212 R12: 000000c0012cf7d0
- [ 1845.407291] R13: 0000000000000000 R14: 000000c00098b6c0 R15: ffffffffffffffff
- [ 1845.407296]  </TASK>
- [ 1845.407297]
- [ 1845.431635] Allocated by task 17044:
- [ 1845.432033]  kasan_save_stack+0x1e/0x40
- [ 1845.432463]  kasan_save_track+0x10/0x30
- [ 1845.432882]  __kasan_slab_alloc+0x62/0x70
- [ 1845.433308]  kmem_cache_alloc_noprof+0x1a0/0x4a0
- [ 1845.433781]  alloc_vfsmnt+0x23/0x6c0
- [ 1845.434195]  vfs_create_mount+0x82/0x4a0
- [ 1845.434623]  path_mount+0x939/0x1aa0
- [ 1845.435018]  __x64_sys_mount+0x2d4/0x3a0
- [ 1845.435440]  do_syscall_64+0x6d/0x140
- [ 1845.435842]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.436355]
- [ 1845.436601] Freed by task 0:
- [ 1845.436945]  kasan_save_stack+0x1e/0x40
- [ 1845.437354]  kasan_save_track+0x10/0x30
- [ 1845.437770]  kasan_save_free_info+0x37/0x60
- [ 1845.438217]  __kasan_slab_free+0x33/0x40
- [ 1845.438646]  kmem_cache_free+0x14c/0x4f0
- [ 1845.439068]  rcu_core+0x605/0x1d50
- [ 1845.439451]  handle_softirqs+0x192/0x810
- [ 1845.439880]  irq_exit_rcu+0x106/0x190
- [ 1845.440280]  sysvec_apic_timer_interrupt+0x7c/0xb0
- [ 1845.440785]  asm_sysvec_apic_timer_interrupt+0x16/0x20
- [ 1845.441300]
- [ 1845.441544] Last potentially related work creation:
- [ 1845.442048]  kasan_save_stack+0x1e/0x40
- [ 1845.442465]  kasan_record_aux_stack+0x97/0xa0
- [ 1845.442921]  __call_rcu_common.constprop.0+0x6d/0xb40
- [ 1845.443437]  task_work_run+0x111/0x1f0
- [ 1845.443851]  syscall_exit_to_user_mode+0x1df/0x1f0
- [ 1845.444337]  do_syscall_64+0x79/0x140
- [ 1845.444758]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.445272]
- [ 1845.445505] Second to last potentially related work creation:
- [ 1845.446078]  kasan_save_stack+0x1e/0x40
- [ 1845.446494]  kasan_record_aux_stack+0x97/0xa0
- [ 1845.446947]  task_work_add+0x178/0x250
- [ 1845.447356]  mntput_no_expire+0x4fc/0x9f0
- [ 1845.447789]  path_umount+0x4ed/0x10d0
- [ 1845.448190]  __x64_sys_umount+0xfb/0x120
- [ 1845.448617]  do_syscall_64+0x6d/0x140
- [ 1845.449016]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.449529]
- [ 1845.449766] The buggy address belongs to the object at ffff8881507b5a40
- [ 1845.449766]  which belongs to the cache mnt_cache of size 368
- [ 1845.450898] The buggy address is located 112 bytes inside of
- [ 1845.450898]  freed 368-byte region [ffff8881507b5a40, ffff8881507b5bb0)
- [ 1845.452009]
- [ 1845.452250] The buggy address belongs to the physical page:
- [ 1845.452808] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1507b4
- [ 1845.453595] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
- [ 1845.454363] anon flags: 0x200000000000040(head|node=0|zone=2)
- [ 1845.454936] page_type: f5(slab)
- [ 1845.455300] raw: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
- [ 1845.456077] raw: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
- [ 1845.456857] head: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
- [ 1845.457616] head: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
- [ 1845.458399] head: 0200000000000002 ffffea000541ed01 ffffffffffffffff 0000000000000000
- [ 1845.459169] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
- [ 1845.459945] page dumped because: kasan: bad access detected
- [ 1845.460506]
- [ 1845.460745] Memory state around the buggy address:
- [ 1845.461228]  ffff8881507b5980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
- [ 1845.461963]  ffff8881507b5a00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
- [ 1845.462759] >ffff8881507b5a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- [ 1845.463480]                                      ^
- [ 1845.463968]  ffff8881507b5b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- [ 1845.464704]  ffff8881507b5b80: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
- [ 1845.465430] ==================================================================
- [ 1845.466181] Disabling lock debugging due to kernel taint
- [ 1845.466717] ==================================================================
- [ 1845.467443] BUG: KASAN: slab-use-after-free in clone_private_mount+0x313/0x390
- [ 1845.468192] Read of size 8 at addr ffff8881507b5a58 by task dockerd/8697
- [ 1845.468837]
- [ 1845.469072] CPU: 5 UID: 0 PID: 8697 Comm: dockerd Tainted: G    B               6.14.0master_fbece6d #1 NONE
- [ 1845.469078] Tainted: [B]=BAD_PAGE
- [ 1845.469079] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
- [ 1845.469082] Call Trace:
- [ 1845.469084]  <TASK>
- [ 1845.469086]  dump_stack_lvl+0x69/0xa0
- [ 1845.469093]  print_report+0x156/0x523
- [ 1845.469098]  ? __virt_addr_valid+0x1de/0x3c0
- [ 1845.469103]  ? clone_private_mount+0x313/0x390
- [ 1845.469107]  kasan_report+0xc1/0xf0
- [ 1845.469112]  ? clone_private_mount+0x313/0x390
- [ 1845.469116]  clone_private_mount+0x313/0x390
- [ 1845.469121]  ovl_fill_super+0x2965/0x59e0 [overlay]
- [ 1845.469140]  ? ovl_workdir_create+0x900/0x900 [overlay]
- [ 1845.469152]  ? wait_for_completion_io_timeout+0x20/0x20
- [ 1845.469157]  ? lockdep_init_map_type+0x58/0x220
- [ 1845.469161]  ? lockdep_init_map_type+0x58/0x220
- [ 1845.469164]  ? shrinker_register+0x177/0x200
- [ 1845.469169]  ? sget_fc+0x449/0xb30
- [ 1845.469174]  ? ovl_workdir_create+0x900/0x900 [overlay]
- [ 1845.469185]  ? get_tree_nodev+0xa5/0x130
- [ 1845.469189]  get_tree_nodev+0xa5/0x130
- [ 1845.469192]  ? cap_capable+0xd0/0x320
- [ 1845.469198]  vfs_get_tree+0x83/0x2e0
- [ 1845.469202]  ? ns_capable+0x55/0xb0
- [ 1845.469206]  path_mount+0x891/0x1aa0
- [ 1845.469210]  ? finish_automount+0x860/0x860
- [ 1845.469217]  ? kmem_cache_free+0x14c/0x4f0
- [ 1845.469221]  ? user_path_at+0x3d/0x50
- [ 1845.469227]  __x64_sys_mount+0x2d4/0x3a0
- [ 1845.469231]  ? path_mount+0x1aa0/0x1aa0
- [ 1845.469235]  do_syscall_64+0x6d/0x140
- [ 1845.469239]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.469242] RIP: 0033:0x55e3487f1fea
- [ 1845.469246] Code: e8 1b 96 fa ff 48 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 4c 8b 54 24 28 4c 8b 44 24 30 4c 8b 4c 24 38 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 40 ff ff ff ff 48 c7 44 24 48
- [ 1845.469249] RSP: 002b:000000c000b563b8 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
- [ 1845.469253] RAX: ffffffffffffffda RBX: 000000c00006c000 RCX: 000055e3487f1fea
- [ 1845.469256] RDX: 000000c0012cf7d8 RSI: 000000c0012616c0 RDI: 000000c0012cf7d0
- [ 1845.469260] RBP: 000000c000b56458 R08: 000000c0004fa600 R09: 0000000000000000
- [ 1845.469261] R10: 0000000000000000 R11: 0000000000000212 R12: 000000c0012cf7d0
- [ 1845.469263] R13: 0000000000000000 R14: 000000c00098b6c0 R15: ffffffffffffffff
- [ 1845.469268]  </TASK>
- [ 1845.469269]
- [ 1845.494368] Allocated by task 17044:
- [ 1845.494768]  kasan_save_stack+0x1e/0x40
- [ 1845.495185]  kasan_save_track+0x10/0x30
- [ 1845.495594]  __kasan_slab_alloc+0x62/0x70
- [ 1845.496024]  kmem_cache_alloc_noprof+0x1a0/0x4a0
- [ 1845.496518]  alloc_vfsmnt+0x23/0x6c0
- [ 1845.496911]  vfs_create_mount+0x82/0x4a0
- [ 1845.497333]  path_mount+0x939/0x1aa0
- [ 1845.497728]  __x64_sys_mount+0x2d4/0x3a0
- [ 1845.498167]  do_syscall_64+0x6d/0x140
- [ 1845.498563]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.499064]
- [ 1845.499295] Freed by task 0:
- [ 1845.499636]  kasan_save_stack+0x1e/0x40
- [ 1845.500052]  kasan_save_track+0x10/0x30
- [ 1845.500494]  kasan_save_free_info+0x37/0x60
- [ 1845.500934]  __kasan_slab_free+0x33/0x40
- [ 1845.501355]  kmem_cache_free+0x14c/0x4f0
- [ 1845.501774]  rcu_core+0x605/0x1d50
- [ 1845.502162]  handle_softirqs+0x192/0x810
- [ 1845.502587]  irq_exit_rcu+0x106/0x190
- [ 1845.502995]  sysvec_apic_timer_interrupt+0x7c/0xb0
- [ 1845.503487]  asm_sysvec_apic_timer_interrupt+0x16/0x20
- [ 1845.504002]
- [ 1845.504236] Last potentially related work creation:
- [ 1845.504748]  kasan_save_stack+0x1e/0x40
- [ 1845.505164]  kasan_record_aux_stack+0x97/0xa0
- [ 1845.505621]  __call_rcu_common.constprop.0+0x6d/0xb40
- [ 1845.506136]  task_work_run+0x111/0x1f0
- [ 1845.506545]  syscall_exit_to_user_mode+0x1df/0x1f0
- [ 1845.507038]  do_syscall_64+0x79/0x140
- [ 1845.507439]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.507949]
- [ 1845.508187] Second to last potentially related work creation:
- [ 1845.508760]  kasan_save_stack+0x1e/0x40
- [ 1845.509175]  kasan_record_aux_stack+0x97/0xa0
- [ 1845.509630]  task_work_add+0x178/0x250
- [ 1845.510040]  mntput_no_expire+0x4fc/0x9f0
- [ 1845.510468]  path_umount+0x4ed/0x10d0
- [ 1845.510870]  __x64_sys_umount+0xfb/0x120
- [ 1845.511298]  do_syscall_64+0x6d/0x140
- [ 1845.511700]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- [ 1845.512210]
- [ 1845.512442] The buggy address belongs to the object at ffff8881507b5a40
- [ 1845.512442]  which belongs to the cache mnt_cache of size 368
- [ 1845.513553] The buggy address is located 24 bytes inside of
- [ 1845.513553]  freed 368-byte region [ffff8881507b5a40, ffff8881507b5bb0)
- [ 1845.514650]
- [ 1845.514883] The buggy address belongs to the physical page:
- [ 1845.515436] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1507b4
- [ 1845.516221] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
- [ 1845.516986] anon flags: 0x200000000000040(head|node=0|zone=2)
- [ 1845.517549] page_type: f5(slab)
- [ 1845.517912] raw: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
- [ 1845.518684] raw: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
- [ 1845.519445] head: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
- [ 1845.520220] head: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
- [ 1845.521006] head: 0200000000000002 ffffea000541ed01 ffffffffffffffff 0000000000000000
- [ 1845.521812] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
- [ 1845.522581] page dumped because: kasan: bad access detected
- [ 1845.523131]
- [ 1845.523362] Memory state around the buggy address:
- [ 1845.523851]  ffff8881507b5900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- [ 1845.524588]  ffff8881507b5980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
- [ 1845.525321] >ffff8881507b5a00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
- [ 1845.526059]                                                     ^
- [ 1845.526651]  ffff8881507b5a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- [ 1845.527378]  ffff8881507b5b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- [ 1845.528095] ==================================================================
+Thanks again!
+
+ - Joel
+
+
 
 > 
-> Thank you!
-> 
-> -- 
-> Deet-doot-dot, I am a bot.
-> https://korg.docs.kernel.org/prtracker.html
+>>                 self.data.push(byte, GFP_KERNEL)?;
+>>             }
+>>
+>>             Ok(())
+>>         })?
+>>     }
+>>
+>> thanks,
+>>
+>>  - Joel
+>>
+
