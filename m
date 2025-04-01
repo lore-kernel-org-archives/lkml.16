@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549320D4F2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADB121018D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 16:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743523893; cv=none; b=LAsRuzi8rdThr6KSs55XG3kXiO7g2Fe8GJmlYHhCy/gQMwCcXbYPyIQumM/AlTgAfpOgfZWUVh+RLRW5M/J88EkKFpyTxKvXKJOXYS5RK1+BskkFr1NGPdsZPYgSeHTMFimTvQ4ohrDuhH1Q+FgSIH5ToHUn8t4I0fW3EbFnYmo=
+	t=1743523891; cv=none; b=GQLxAsUILDFYkPT1y2kk/sMm6TzuslKIYWYVmJPoEpY3p3t0wJT/9wrYxjVDKsL5947fFzWthYyBiGK2aSw5XGSNvjnbd8HNJ9CKz87+yQHzLSIE2KyjYjCPaGair/7xuU7cyMYW2433oT9FHADotf2TFxTGZtWMSnKVDlavX1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743523893; c=relaxed/simple;
-	bh=ZfkfOM480M1YBqKpC2/kM72sR6VmePA1K6dauSV8B3s=;
+	s=arc-20240116; t=1743523891; c=relaxed/simple;
+	bh=wgQBBmc1qbxZtdWIBwi2SbIZVYBQeBi9r18IbBZZndo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dC9z8ohrKR2hm3FwVCiHlD2bXNAixvsRNdPzyHBDjNE0CV5J6pCC9gMOfEqDhCYz8BwCABN7wCeDg7AkI9wQHITVL/xlBn4//fLlEB6mVggFflUIYJuqp3fdYR10JPg9RA0Z0RacHNnpFAJIf5s4XDHroRXIvfGJ0mlTVc0SgO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T7QbLDvG; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ABgzlxDnc/pO4f+3D4I6GHrK9SenARUagv3MMSV8A8TV4zdkjwtBW0k07sMxwFwPArmSgd71QwK+58YnOI3+ljVOuCKs+2nCy3UNoYTQGOviO7UePnEQhnIw3XXP9Pk/GQybIjTKvy5vNWsAvtOXUJ8yqKRUSjAAWX6J5qcAsQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AJ6Noud/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7QbLDvG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AJ6Noud/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743523890;
+	s=mimecast20190719; t=1743523888;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KsKBW7BEHbNNA2EQflKemABN/u2ulObIcmH48WXDJ8s=;
-	b=T7QbLDvGMwg8nESFawk9kYozEVXVPArJoRXUQfXRNPfb0X7R2I6gDB5qUnOBS+u1HUziPp
-	rHKiNZ5BnvMppSh86Ht5A6+XVyr1KsOLQSFb/i/0Xr2qcwJrsFvKcW4j2kt9jWHNgAPKiJ
-	ew98ApazTF3fin8qehlWIzvhh1jHeWQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=2sGhYUJTD12TKfaq4UZWtS0jUt1FVjaz51Eq07OqDF4=;
+	b=AJ6Noud/YEWKh8K/T4eXK+jz7ktfjh8b/3mIvK1oo17WqINdMTaxmMl+3spOum/Xwu/jq+
+	/ADpqcZODyc71cIcCgTIYIsxjfKiQUZngK5rbcfY820gy5X7m+5uEIFFZot5eI0Yr68B7w
+	uEkkP5CIruic5FMr5usd2W9Vx0OKZfw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-6-jmiAbRM3MyuUNgN_LlSP9g-1; Tue, 01 Apr 2025 12:11:29 -0400
-X-MC-Unique: jmiAbRM3MyuUNgN_LlSP9g-1
-X-Mimecast-MFC-AGG-ID: jmiAbRM3MyuUNgN_LlSP9g_1743523888
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so40935915e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:29 -0700 (PDT)
+ us-mta-614-xWGQXLkcPVaysWSBduE75w-1; Tue, 01 Apr 2025 12:11:27 -0400
+X-MC-Unique: xWGQXLkcPVaysWSBduE75w-1
+X-Mimecast-MFC-AGG-ID: xWGQXLkcPVaysWSBduE75w_1743523886
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so32471395e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 09:11:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743523887; x=1744128687;
+        d=1e100.net; s=20230601; t=1743523885; x=1744128685;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KsKBW7BEHbNNA2EQflKemABN/u2ulObIcmH48WXDJ8s=;
-        b=tnpGB4fINEJadzVZQ9rytUWO14CqT0jqGomcbscpy/+381XG2vCFIBaRx6GA8CXwRp
-         a18XiKk2OkLJyjVp+A6ibPRDEYDRA6TYgBdnUyIT9GEY4svhigzWoSyenvXIcjzakR3x
-         OxfJKfVKYKBjLcXMWHNWLO58LlWnnIo/3dw52tZiZUpQ8K5l8BJNRjF6ZTai2AC8m4xS
-         y6XQmAz4o1ysSWHLnwx83HyzX0Cd8Z7fC4nz3j7qAKZV4l0T4Z+tWKCrfEFfZCoW5V9o
-         KuxoRaz2HIOBMv7U3LjMvC7QOcIXep9q1hM2L+xvQbTWlhE6bG0+D9ULnXbEI8wH18+D
-         fxlg==
-X-Gm-Message-State: AOJu0YzUneLDkgyzqkqEFPnlEPHspnXc6Oysd540/QdLPYRCW1duj/x4
-	91qq6R6KSH1GxAA0foKYMCIRaLwnHtYeXz+XpyokyRkVvcFVLnvOaUj+aPqC7+ZMNFSe2zQNF0v
-	rIR8C6e2eHSHGtrm8brlh/qW/iTij85JevVGAnTst5+6aKwE6GNYSaV4SDRElNhbaJY4377Vce4
-	dUzefyAgW5a7us5e7KXxWt0yY0UewBeeB2v0C06nFSxYuBpQ==
-X-Gm-Gg: ASbGncvt+AwEmLQqqn4+PmcsiDIhf1q5ilk7AB3t17whRZoG/GtPYSg/ORYWgzdKm3G
-	8PgrMLw4LrDDjhp7By+yijkhFwS5ZfCxF9vlckg9jwZKUfnWbXemm+62TOHoboE6I66vWArJw/Y
-	cvngnnMuQm6EhaIuKDov+k9v6TmqRzq7V276eL6jwbAbxXEy/P/hSV1c2Uq6hCieoJwiQatA3cG
-	90DOrQruSa3klEWYtz5Hf/3XawKL7ROA4SZmlbTjkWZsHnkH4pElVBNNpg8yOdB9b4NGM6qzVyy
-	TCObO3khsmG3LOEwKQLPwg==
-X-Received: by 2002:a05:6000:2410:b0:39c:142a:35f9 with SMTP id ffacd0b85a97d-39c142a35famr11329201f8f.10.1743523887505;
-        Tue, 01 Apr 2025 09:11:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUBBONFMxXubuB0rFZnmFR8I8IBPlykXIOGysFwqjq21RAjnf88FJ3fTcF64SWlqgmRjwgcw==
-X-Received: by 2002:a05:6000:2410:b0:39c:142a:35f9 with SMTP id ffacd0b85a97d-39c142a35famr11329136f8f.10.1743523887070;
-        Tue, 01 Apr 2025 09:11:27 -0700 (PDT)
+        bh=2sGhYUJTD12TKfaq4UZWtS0jUt1FVjaz51Eq07OqDF4=;
+        b=VNQm0oSREHLowdVPAR8w/9FT5AgYwLNiXVOh52lSDwB1haKtm7s4RpIdI+rdNS3AXk
+         SF2vkPO4sJehIicPvqgJ/cjTxEhz5QIVYwvL+4eM89Bs32JDkBugJR32HxJTtgMXehMh
+         AWK+wEmqg/DH4MKjyOmBZBlkTPRTDGSkTUxdXVMRFREj723kZ6XNmaxMtYJIpcOqS0rb
+         B8odK86BMF6N/6qefpXtX0PmNGISc47fYVk7jV0fvNBJkdPCHDcpv9MPjvE0xajUhvmH
+         +faGpHCHuLqc+1tQWlY5K2EiOa7zDjya/6Qn9e5MsJsbZIVwSqzdZhQS1x/kNUC8W9oW
+         n0Jg==
+X-Gm-Message-State: AOJu0Yz0BiGugLemJU5nO8iLOLWOgQoaPdkiFCMsgiu5YNOMWfEg1CNy
+	Dk8yOQxYGB6vfQPk6tb5CCFZf3CaAb2lv1LO2i8r86RHb9f1mJMZYA48ihbly6u62Q2/dXQhkVO
+	J5pjp7J2LR6ADwwrq7W4eXNK2N9KTwpQ1Xcj0OrC6JLLk7K0CV3iDeYcHsVCnUOHHkwCahdDbxS
+	+VjDrB5fIZ41zCpghVFLAHaRXo9vUwHAeY5YLPFP/dzuhmiA==
+X-Gm-Gg: ASbGncubiyaVNBGyn6AZOvmJd+1LGCamoY6VqpAiNuZpsy73eYLEkvR5aUwH03xmtAb
+	sYHPDGloWUXhmWxz3Zi82MOZbounmvJPSIyOW9tqk7EDikANSkJTHnJYwJDFjOyY0Khh9g9GIsT
+	56hSg17Xjx3KdT7nkeiNVWWnx3UlILi8MhvV1RBjdJ5rdFbBX/a2Q6Yu+1X9gaOAYZDi9eRM/JZ
+	lBz6W+vZ0p7QnjJvDRZxOzMOLXVAPkORDmkaY8hCmPmGUBkB59VpjFgl/fY1hRrYXzYgJsk3IzM
+	G4NJ8ZNq9XsgQ/oc6fJ+sg==
+X-Received: by 2002:a05:600c:1d14:b0:43c:fe15:41e1 with SMTP id 5b1f17b1804b1-43ea7c4e878mr34970995e9.4.1743523884914;
+        Tue, 01 Apr 2025 09:11:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEw0KCQptOpUzsEJC9h+J15baLRxkJXWFt4YysKwcuqvA/vSlOPdWF/S+38oX+DaBh6C3XLCA==
+X-Received: by 2002:a05:600c:1d14:b0:43c:fe15:41e1 with SMTP id 5b1f17b1804b1-43ea7c4e878mr34970365e9.4.1743523884345;
+        Tue, 01 Apr 2025 09:11:24 -0700 (PDT)
 Received: from [192.168.10.48] ([176.206.111.201])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b66a9d2sm14476457f8f.43.2025.04.01.09.11.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea97895e1sm19840855e9.1.2025.04.01.09.11.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 09:11:25 -0700 (PDT)
+        Tue, 01 Apr 2025 09:11:23 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: roy.hopkins@suse.com,
 	nsaenz@amazon.com,
 	anelkz@amazon.de,
 	James.Bottomley@HansenPartnership.com
-Subject: [PATCH 07/29] KVM: do not use online_vcpus to test vCPU validity
-Date: Tue,  1 Apr 2025 18:10:44 +0200
-Message-ID: <20250401161106.790710-8-pbonzini@redhat.com>
+Subject: [PATCH 06/29] KVM: move mem_attr_array to kvm_plane
+Date: Tue,  1 Apr 2025 18:10:43 +0200
+Message-ID: <20250401161106.790710-7-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250401161106.790710-1-pbonzini@redhat.com>
 References: <20250401161106.790710-1-pbonzini@redhat.com>
@@ -90,128 +90,455 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Different planes can initialize their vCPUs separately, therefore there is
-no single online_vcpus value that can be used to test that a vCPU has
-indeed been fully initialized.
+Another aspect of the VM that is now different for separate planes is
+memory attributes, in order to support RWX permissions in the future.
+The existing vm-level ioctls apply to plane 0 and the underlying
+functionality operates on struct kvm_plane, which now hosts the
+mem_attr_array xarray.
 
-Use the shiny new plane field instead, initializing it to an invalid value
-(-1) while the vCPU is visible in the xarray but may still disappear if
-the creation fails.
+As a result, the pre/post architecture-specific callbacks also take
+a plane.
+
+Private/shared is a global attribute and only applies to plane 0.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/i8254.c     |  3 ++-
- include/linux/kvm_host.h | 23 ++++++-----------------
- virt/kvm/kvm_main.c      | 20 +++++++++++++-------
- 3 files changed, 21 insertions(+), 25 deletions(-)
+ arch/x86/kvm/mmu/mmu.c   | 23 ++++++-----
+ include/linux/kvm_host.h | 24 +++++++-----
+ virt/kvm/guest_memfd.c   |  3 +-
+ virt/kvm/kvm_main.c      | 85 +++++++++++++++++++++++++---------------
+ 4 files changed, 84 insertions(+), 51 deletions(-)
 
-diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
-index d7ab8780ab9e..e3a3e7b90c26 100644
---- a/arch/x86/kvm/i8254.c
-+++ b/arch/x86/kvm/i8254.c
-@@ -260,9 +260,10 @@ static void pit_do_work(struct kthread_work *work)
- 	 * VCPUs and only when LVT0 is in NMI mode.  The interrupt can
- 	 * also be simultaneously delivered through PIC and IOAPIC.
- 	 */
--	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0)
-+	if (atomic_read(&kvm->arch.vapics_in_nmi_mode) > 0) {
- 		kvm_for_each_vcpu(i, vcpu, kvm)
- 			kvm_apic_nmi_wd_deliver(vcpu);
-+	}
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index a284dce227a0..04e4b041e248 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -7670,9 +7670,11 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
  }
  
- static enum hrtimer_restart pit_timer_fn(struct hrtimer *data)
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
++bool kvm_arch_pre_set_memory_attributes(struct kvm_plane *plane,
+ 					struct kvm_gfn_range *range)
+ {
++	struct kvm *kvm = plane->kvm;
++
+ 	/*
+ 	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
+ 	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
+@@ -7714,26 +7716,27 @@ static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
+ 	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
+ }
+ 
+-static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
++static bool hugepage_has_attrs(struct kvm_plane *plane, struct kvm_memory_slot *slot,
+ 			       gfn_t gfn, int level, unsigned long attrs)
+ {
+ 	const unsigned long start = gfn;
+ 	const unsigned long end = start + KVM_PAGES_PER_HPAGE(level);
+ 
+ 	if (level == PG_LEVEL_2M)
+-		return kvm_range_has_memory_attributes(kvm, start, end, ~0, attrs);
++		return kvm_range_has_memory_attributes(plane, start, end, ~0, attrs);
+ 
+ 	for (gfn = start; gfn < end; gfn += KVM_PAGES_PER_HPAGE(level - 1)) {
+ 		if (hugepage_test_mixed(slot, gfn, level - 1) ||
+-		    attrs != kvm_get_memory_attributes(kvm, gfn))
++		    attrs != kvm_get_plane_memory_attributes(plane, gfn))
+ 			return false;
+ 	}
+ 	return true;
+ }
+ 
+-bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
++bool kvm_arch_post_set_memory_attributes(struct kvm_plane *plane,
+ 					 struct kvm_gfn_range *range)
+ {
++	struct kvm *kvm = plane->kvm;
+ 	unsigned long attrs = range->arg.attributes;
+ 	struct kvm_memory_slot *slot = range->slot;
+ 	int level;
+@@ -7767,7 +7770,7 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+ 			 */
+ 			if (gfn >= slot->base_gfn &&
+ 			    gfn + nr_pages <= slot->base_gfn + slot->npages) {
+-				if (hugepage_has_attrs(kvm, slot, gfn, level, attrs))
++				if (hugepage_has_attrs(plane, slot, gfn, level, attrs))
+ 					hugepage_clear_mixed(slot, gfn, level);
+ 				else
+ 					hugepage_set_mixed(slot, gfn, level);
+@@ -7789,7 +7792,7 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+ 		 */
+ 		if (gfn < range->end &&
+ 		    (gfn + nr_pages) <= (slot->base_gfn + slot->npages)) {
+-			if (hugepage_has_attrs(kvm, slot, gfn, level, attrs))
++			if (hugepage_has_attrs(plane, slot, gfn, level, attrs))
+ 				hugepage_clear_mixed(slot, gfn, level);
+ 			else
+ 				hugepage_set_mixed(slot, gfn, level);
+@@ -7801,11 +7804,13 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+ void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
+ 					    struct kvm_memory_slot *slot)
+ {
++	struct kvm_plane *plane0;
+ 	int level;
+ 
+ 	if (!kvm_arch_has_private_mem(kvm))
+ 		return;
+ 
++	plane0 = kvm->planes[0];
+ 	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
+ 		/*
+ 		 * Don't bother tracking mixed attributes for pages that can't
+@@ -7825,9 +7830,9 @@ void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
+ 		 * be manually checked as the attributes may already be mixed.
+ 		 */
+ 		for (gfn = start; gfn < end; gfn += nr_pages) {
+-			unsigned long attrs = kvm_get_memory_attributes(kvm, gfn);
++			unsigned long attrs = kvm_get_plane_memory_attributes(plane0, gfn);
+ 
+-			if (hugepage_has_attrs(kvm, slot, gfn, level, attrs))
++			if (hugepage_has_attrs(plane0, slot, gfn, level, attrs))
+ 				hugepage_clear_mixed(slot, gfn, level);
+ 			else
+ 				hugepage_set_mixed(slot, gfn, level);
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 4d408d1d5ccc..0db27814294f 100644
+index 98bae5dc3515..4d408d1d5ccc 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -992,27 +992,16 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+@@ -763,6 +763,10 @@ struct kvm_memslots {
  
- static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
- {
--	int num_vcpus = atomic_read(&kvm->online_vcpus);
--
--	/*
--	 * Explicitly verify the target vCPU is online, as the anti-speculation
--	 * logic only limits the CPU's ability to speculate, e.g. given a "bad"
--	 * index, clamping the index to 0 would return vCPU0, not NULL.
--	 */
--	if (i >= num_vcpus)
-+	struct kvm_vcpu *vcpu = xa_load(&kvm->vcpu_array, i);
-+	if (vcpu && unlikely(vcpu->plane == -1))
- 		return NULL;
+ struct kvm_plane {
+ 	struct kvm *kvm;
++#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
++	/* Protected by slots_locks (for writes) and RCU (for reads) */
++	struct xarray mem_attr_array;
++#endif
+ 	int plane;
  
--	i = array_index_nospec(i, num_vcpus);
--
--	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
--	smp_rmb();
--	return xa_load(&kvm->vcpu_array, i);
-+	return vcpu;
+ 	struct kvm_arch_plane arch;
+@@ -875,10 +879,6 @@ struct kvm {
+ 
+ #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
+ 	struct notifier_block pm_notifier;
+-#endif
+-#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-	/* Protected by slots_locks (for writes) and RCU (for reads) */
+-	struct xarray mem_attr_array;
+ #endif
+ 	char stats_id[KVM_STATS_NAME_SIZE];
+ };
+@@ -2511,20 +2511,26 @@ static inline void kvm_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
  }
  
--#define kvm_for_each_vcpu(idx, vcpup, kvm)				\
--	if (atomic_read(&kvm->online_vcpus))				\
--		xa_for_each_range(&kvm->vcpu_array, idx, vcpup, 0,	\
--				  (atomic_read(&kvm->online_vcpus) - 1))
-+#define kvm_for_each_vcpu(idx, vcpup, kvm)			\
-+	xa_for_each(&kvm->vcpu_array, idx, vcpup)		\
-+		if ((vcpup)->plane == -1) ; else		\
- 
- static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-static inline unsigned long kvm_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
++static inline unsigned long kvm_get_plane_memory_attributes(struct kvm_plane *plane, gfn_t gfn)
  {
+-	return xa_to_value(xa_load(&kvm->mem_attr_array, gfn));
++	return xa_to_value(xa_load(&plane->mem_attr_array, gfn));
+ }
+ 
+-bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
++static inline unsigned long kvm_get_memory_attributes(struct kvm *kvm, gfn_t gfn)
++{
++	return kvm_get_plane_memory_attributes(kvm->planes[0], gfn);
++}
++
++bool kvm_range_has_memory_attributes(struct kvm_plane *plane, gfn_t start, gfn_t end,
+ 				     unsigned long mask, unsigned long attrs);
+-bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
++bool kvm_arch_pre_set_memory_attributes(struct kvm_plane *plane,
+ 					struct kvm_gfn_range *range);
+-bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
++bool kvm_arch_post_set_memory_attributes(struct kvm_plane *plane,
+ 					 struct kvm_gfn_range *range);
+ 
+ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+ {
++	/* Private/shared is always in plane 0 */
+ 	return IS_ENABLED(CONFIG_KVM_PRIVATE_MEM) &&
+ 	       kvm_get_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+ }
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index b2aa6bf24d3a..f07102bcaf24 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -642,6 +642,7 @@ EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
+ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long npages,
+ 		       kvm_gmem_populate_cb post_populate, void *opaque)
+ {
++	struct kvm_plane *plane0 = kvm->planes[0];
+ 	struct file *file;
+ 	struct kvm_memory_slot *slot;
+ 	void __user *p;
+@@ -694,7 +695,7 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long
+ 			(npages - i) < (1 << max_order));
+ 
+ 		ret = -EINVAL;
+-		while (!kvm_range_has_memory_attributes(kvm, gfn, gfn + (1 << max_order),
++		while (!kvm_range_has_memory_attributes(plane0, gfn, gfn + (1 << max_order),
+ 							KVM_MEMORY_ATTRIBUTE_PRIVATE,
+ 							KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
+ 			if (!max_order)
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e343905e46d8..eba02cb7cc57 100644
+index 5b44a7f9e52e..e343905e46d8 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -4186,6 +4186,11 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
- 		goto unlock_vcpu_destroy;
+@@ -500,6 +500,7 @@ static inline struct kvm *mmu_notifier_to_kvm(struct mmu_notifier *mn)
+ }
+ 
+ typedef bool (*gfn_handler_t)(struct kvm *kvm, struct kvm_gfn_range *range);
++typedef bool (*plane_gfn_handler_t)(struct kvm_plane *plane, struct kvm_gfn_range *range);
+ 
+ typedef void (*on_lock_fn_t)(struct kvm *kvm);
+ 
+@@ -511,7 +512,11 @@ struct kvm_mmu_notifier_range {
+ 	u64 start;
+ 	u64 end;
+ 	union kvm_mmu_notifier_arg arg;
+-	gfn_handler_t handler;
++	/* The only difference is the type of the first parameter.  */
++	union {
++		gfn_handler_t handler;
++		plane_gfn_handler_t handler_plane;
++	};
+ 	on_lock_fn_t on_lock;
+ 	bool flush_on_ret;
+ 	bool may_block;
+@@ -1105,6 +1110,9 @@ static struct kvm_plane *kvm_create_vm_plane(struct kvm *kvm, unsigned plane_id)
+ 	plane->kvm = kvm;
+ 	plane->plane = plane_id;
+ 
++#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
++	xa_init(&plane->mem_attr_array);
++#endif
+ 	kvm_arch_init_plane(plane);
+ 	return plane;
+ }
+@@ -1130,9 +1138,6 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
+ 	spin_lock_init(&kvm->mn_invalidate_lock);
+ 	rcuwait_init(&kvm->mn_memslots_update_rcuwait);
+ 	xa_init(&kvm->vcpu_array);
+-#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-	xa_init(&kvm->mem_attr_array);
+-#endif
+ 
+ 	INIT_LIST_HEAD(&kvm->gpc_list);
+ 	spin_lock_init(&kvm->gpc_lock);
+@@ -1280,6 +1285,10 @@ static void kvm_destroy_devices(struct kvm *kvm)
+ static void kvm_destroy_plane(struct kvm_plane *plane)
+ {
+ 	kvm_arch_free_plane(plane);
++
++#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
++	xa_destroy(&plane->mem_attr_array);
++#endif
+ }
+ 
+ static void kvm_destroy_vm(struct kvm *kvm)
+@@ -1335,9 +1344,6 @@ static void kvm_destroy_vm(struct kvm *kvm)
+ 	}
+ 	cleanup_srcu_struct(&kvm->irq_srcu);
+ 	cleanup_srcu_struct(&kvm->srcu);
+-#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-	xa_destroy(&kvm->mem_attr_array);
+-#endif
+ 	for (i = 0; i < ARRAY_SIZE(kvm->planes); i++) {
+ 		struct kvm_plane *plane = kvm->planes[i];
+ 		if (plane)
+@@ -2385,9 +2391,9 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+ #endif /* CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT */
+ 
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+-static u64 kvm_supported_mem_attributes(struct kvm *kvm)
++static u64 kvm_supported_mem_attributes(struct kvm_plane *plane)
+ {
+-	if (!kvm || kvm_arch_has_private_mem(kvm))
++	if (!plane || (!plane->plane && kvm_arch_has_private_mem(plane->kvm)))
+ 		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+ 
+ 	return 0;
+@@ -2397,19 +2403,20 @@ static u64 kvm_supported_mem_attributes(struct kvm *kvm)
+  * Returns true if _all_ gfns in the range [@start, @end) have attributes
+  * such that the bits in @mask match @attrs.
+  */
+-bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
++bool kvm_range_has_memory_attributes(struct kvm_plane *plane,
++				     gfn_t start, gfn_t end,
+ 				     unsigned long mask, unsigned long attrs)
+ {
+-	XA_STATE(xas, &kvm->mem_attr_array, start);
++	XA_STATE(xas, &plane->mem_attr_array, start);
+ 	unsigned long index;
+ 	void *entry;
+ 
+-	mask &= kvm_supported_mem_attributes(kvm);
++	mask &= kvm_supported_mem_attributes(plane);
+ 	if (attrs & ~mask)
+ 		return false;
+ 
+ 	if (end == start + 1)
+-		return (kvm_get_memory_attributes(kvm, start) & mask) == attrs;
++		return (kvm_get_plane_memory_attributes(plane, start) & mask) == attrs;
+ 
+ 	guard(rcu)();
+ 	if (!attrs)
+@@ -2428,8 +2435,8 @@ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 	return true;
+ }
+ 
+-static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
+-						 struct kvm_mmu_notifier_range *range)
++static __always_inline void __kvm_handle_gfn_range(struct kvm *kvm, void *arg1,
++						   struct kvm_mmu_notifier_range *range)
+ {
+ 	struct kvm_gfn_range gfn_range;
+ 	struct kvm_memory_slot *slot;
+@@ -2469,7 +2476,7 @@ static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
+ 					range->on_lock(kvm);
+ 			}
+ 
+-			ret |= range->handler(kvm, &gfn_range);
++			ret |= range->handler(arg1, &gfn_range);
+ 		}
  	}
  
-+	/*
-+	 * Store an invalid plane number until fully initialized.  xa_insert() has
-+	 * release semantics, which ensures the write is visible to kvm_get_vcpu().
-+	 */
-+	vcpu->plane = -1;
- 	vcpu->vcpu_idx = atomic_read(&kvm->online_vcpus);
- 	r = xa_insert(&kvm->vcpu_array, vcpu->vcpu_idx, vcpu, GFP_KERNEL_ACCOUNT);
- 	WARN_ON_ONCE(r == -EBUSY);
-@@ -4195,7 +4200,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
- 	/*
- 	 * Now it's all set up, let userspace reach it.  Grab the vCPU's mutex
- 	 * so that userspace can't invoke vCPU ioctl()s until the vCPU is fully
--	 * visible (per online_vcpus), e.g. so that KVM doesn't get tricked
-+	 * visible (valid vcpu->plane), e.g. so that KVM doesn't get tricked
- 	 * into a NULL-pointer dereference because KVM thinks the _current_
- 	 * vCPU doesn't exist.  As a bonus, taking vcpu->mutex ensures lockdep
- 	 * knows it's taken *inside* kvm->lock.
-@@ -4206,12 +4211,13 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
- 	if (r < 0)
- 		goto kvm_put_xa_erase;
+@@ -2480,7 +2487,19 @@ static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
+ 		KVM_MMU_UNLOCK(kvm);
+ }
  
--	/*
--	 * Pairs with smp_rmb() in kvm_get_vcpu.  Store the vcpu
--	 * pointer before kvm->online_vcpu's incremented value.
--	 */
--	smp_wmb();
- 	atomic_inc(&kvm->online_vcpus);
+-static bool kvm_pre_set_memory_attributes(struct kvm *kvm,
++static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
++						 struct kvm_mmu_notifier_range *range)
++{
++	__kvm_handle_gfn_range(kvm, kvm, range);
++}
 +
-+	/*
-+	 * Pairs with xa_load() in kvm_get_vcpu, ensuring that online_vcpus
-+	 * is updated before vcpu->plane.
-+	 */
-+	smp_store_release(&vcpu->plane, 0);
- 	mutex_unlock(&vcpu->mutex);
- 
- 	mutex_unlock(&kvm->lock);
-@@ -4355,7 +4361,7 @@ static int kvm_wait_for_vcpu_online(struct kvm_vcpu *vcpu)
- 	 * In practice, this happy path will always be taken, as a well-behaved
- 	 * VMM will never invoke a vCPU ioctl() before KVM_CREATE_VCPU returns.
++static __always_inline void kvm_plane_handle_gfn_range(struct kvm_plane *plane,
++						       struct kvm_mmu_notifier_range *range)
++{
++	__kvm_handle_gfn_range(plane->kvm, plane, range);
++}
++
++static bool kvm_pre_set_memory_attributes(struct kvm_plane *plane,
+ 					  struct kvm_gfn_range *range)
+ {
+ 	/*
+@@ -2494,20 +2513,21 @@ static bool kvm_pre_set_memory_attributes(struct kvm *kvm,
+ 	 * but it's not obvious that allowing new mappings while the attributes
+ 	 * are in flux is desirable or worth the complexity.
  	 */
--	if (likely(vcpu->vcpu_idx < atomic_read(&kvm->online_vcpus)))
-+	if (likely(vcpu->plane != -1))
- 		return 0;
+-	kvm_mmu_invalidate_range_add(kvm, range->start, range->end);
++	kvm_mmu_invalidate_range_add(plane->kvm, range->start, range->end);
+ 
+-	return kvm_arch_pre_set_memory_attributes(kvm, range);
++	return kvm_arch_pre_set_memory_attributes(plane, range);
+ }
+ 
+ /* Set @attributes for the gfn range [@start, @end). */
+-static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
++static int kvm_vm_set_mem_attributes(struct kvm_plane *plane, gfn_t start, gfn_t end,
+ 				     unsigned long attributes)
+ {
++	struct kvm *kvm = plane->kvm;
+ 	struct kvm_mmu_notifier_range pre_set_range = {
+ 		.start = start,
+ 		.end = end,
+ 		.arg.attributes = attributes,
+-		.handler = kvm_pre_set_memory_attributes,
++		.handler_plane = kvm_pre_set_memory_attributes,
+ 		.on_lock = kvm_mmu_invalidate_begin,
+ 		.flush_on_ret = true,
+ 		.may_block = true,
+@@ -2516,7 +2536,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 		.start = start,
+ 		.end = end,
+ 		.arg.attributes = attributes,
+-		.handler = kvm_arch_post_set_memory_attributes,
++		.handler_plane = kvm_arch_post_set_memory_attributes,
+ 		.on_lock = kvm_mmu_invalidate_end,
+ 		.may_block = true,
+ 	};
+@@ -2529,7 +2549,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 	mutex_lock(&kvm->slots_lock);
+ 
+ 	/* Nothing to do if the entire range as the desired attributes. */
+-	if (kvm_range_has_memory_attributes(kvm, start, end, ~0, attributes))
++	if (kvm_range_has_memory_attributes(plane, start, end, ~0, attributes))
+ 		goto out_unlock;
  
  	/*
+@@ -2537,27 +2557,28 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 	 * partway through setting the new attributes.
+ 	 */
+ 	for (i = start; i < end; i++) {
+-		r = xa_reserve(&kvm->mem_attr_array, i, GFP_KERNEL_ACCOUNT);
++		r = xa_reserve(&plane->mem_attr_array, i, GFP_KERNEL_ACCOUNT);
+ 		if (r)
+ 			goto out_unlock;
+ 	}
+ 
+-	kvm_handle_gfn_range(kvm, &pre_set_range);
++	kvm_plane_handle_gfn_range(plane, &pre_set_range);
+ 
+ 	for (i = start; i < end; i++) {
+-		r = xa_err(xa_store(&kvm->mem_attr_array, i, entry,
++		r = xa_err(xa_store(&plane->mem_attr_array, i, entry,
+ 				    GFP_KERNEL_ACCOUNT));
+ 		KVM_BUG_ON(r, kvm);
+ 	}
+ 
+-	kvm_handle_gfn_range(kvm, &post_set_range);
++	kvm_plane_handle_gfn_range(plane, &post_set_range);
+ 
+ out_unlock:
+ 	mutex_unlock(&kvm->slots_lock);
+ 
+ 	return r;
+ }
+-static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
++
++static int kvm_vm_ioctl_set_mem_attributes(struct kvm_plane *plane,
+ 					   struct kvm_memory_attributes *attrs)
+ {
+ 	gfn_t start, end;
+@@ -2565,7 +2586,7 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+ 	/* flags is currently not used. */
+ 	if (attrs->flags)
+ 		return -EINVAL;
+-	if (attrs->attributes & ~kvm_supported_mem_attributes(kvm))
++	if (attrs->attributes & ~kvm_supported_mem_attributes(plane))
+ 		return -EINVAL;
+ 	if (attrs->size == 0 || attrs->address + attrs->size < attrs->address)
+ 		return -EINVAL;
+@@ -2582,7 +2603,7 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
+ 	 */
+ 	BUILD_BUG_ON(sizeof(attrs->attributes) != sizeof(unsigned long));
+ 
+-	return kvm_vm_set_mem_attributes(kvm, start, end, attrs->attributes);
++	return kvm_vm_set_mem_attributes(plane, start, end, attrs->attributes);
+ }
+ #endif /* CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES */
+ 
+@@ -4867,7 +4888,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+ 		return 1;
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+ 	case KVM_CAP_MEMORY_ATTRIBUTES:
+-		return kvm_supported_mem_attributes(kvm);
++		return kvm_supported_mem_attributes(kvm ? kvm->planes[0] : NULL);
+ #endif
+ #ifdef CONFIG_KVM_PRIVATE_MEM
+ 	case KVM_CAP_GUEST_MEMFD:
+@@ -5274,7 +5295,7 @@ static long kvm_vm_ioctl(struct file *filp,
+ 		if (copy_from_user(&attrs, argp, sizeof(attrs)))
+ 			goto out;
+ 
+-		r = kvm_vm_ioctl_set_mem_attributes(kvm, &attrs);
++		r = kvm_vm_ioctl_set_mem_attributes(kvm->planes[0], &attrs);
+ 		break;
+ 	}
+ #endif /* CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES */
 -- 
 2.49.0
 
