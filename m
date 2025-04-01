@@ -1,164 +1,319 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C54204855;
-	Tue,  1 Apr 2025 15:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743522037; cv=fail; b=pooTW47pAFgJrt7cowhMU1CTWyqbwgMkfJapYTI5op+IEYcKfdiLu2FPMfSqegh+Lh8OVDOxDQO2XqIy8e7HnJZx7RQG+uMS9xSru7mTkDjex0lBmBlFRUXA+ZTYjlsqR6cQBRWo+a9g5MlILkhs0ifv+v4jLQGM9uTZT68IiE8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743522037; c=relaxed/simple;
-	bh=nHMbNOWTNFI6rYFYY7GULbgf60V3guYTutoQM/c5j8s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RCvzPtn57Qftje0E5fEPyvx/1/+fad07j/ucM9YH2I3XqmDDkmtA2CgKLVJ76JfvGNQEJQWfsUTAqhHnKgGhIlJ64zreltW9vpojNZEeE1tFlb1F5HS5KpWJdEjLJc3j4wilFvJ30ZRBJABY5hBfUDvMDjF9mjOUNl+2MZhADa0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EAJ934th; arc=fail smtp.client-ip=40.107.92.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D94220AF8A;
+	Tue,  1 Apr 2025 15:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743522040; cv=none; b=HOG6eTlZBfwQ+ck7nzdt5JZvTMByWJ6gW7A5I2bBE+IQYYu1oFjiMKDLKaxKwnV1OmWldHtaxHq4ewxxq/XoevsMDhVuz+rUui+NQBngxEfpOUULlxSUwgOX0XHfnCxpCiCinyMBtWirg8GxhHqyKPN6EKPTAzspy1C0hVLTDBI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743522040; c=relaxed/simple;
+	bh=sp/P5T1HZzmv7BQuHp7DILPX4WdNiO86fMsRRjL8jSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PIVIWfwAb6/IzoXV63JV7JseXpa8Gncf2/reM4N8YVBCGQnxGUzfCI5IA2MR7tuaOJ3v3ZNaLShsTPNHN1vacmqSyW4oe6jzsIg3oS8OZZHvaBj+6fubMxW6Xhi8fZIhsNXPn9e21EbiqjwozyZsPfO4UrDLNLK2oYTPu1Dr/eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CGnXBuu9; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EAJ934th"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QjOg9AetcYUZWnw9/N2E7HQ4dhAwFgJJ85j5/FVPOH3bJf6zFaFZUENkJmj6MEFcg9wUipa+VhKK7Peg+WDWUJVCrz6DhqgHDEnNkiSJqOXf8J58MixW+E5QaWW5scNl/jZmC3XOPih8/0QHSXco4rr/H1Ly75gnrU1tLiuy6fIbClNHJZLQWE0Nqy4vmqLHgRHKwAODdyu6jZX57ipnJSu6eltm/Brg+saoqviQzskoyotxIn2hvf5jmHic217hHeOVB9m8c8EyNPQ4iuXaZe1Kc5XRD4b3IUv2ADPmt8PGlYC/H1ldvpw8ylosrjzZ/MA7bZF6ZPLF39p92LDdCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0z1e4bKkjbmgZ2+b73Zlr9txkiHuSWu2ExAR75lcFMc=;
- b=rKfdwnodPcH4YSexVX5WiS2PIaayFX0/IaDz9iD3vAlUVOEqs0Ppb9fIO4CO4enmFFdMJjperfS1WkTKiE+hD51mzpVSkO8hgBi1gV/lq5LhV5PBTR7usf3hAmAy3YO8HT29/CUK9qXsaj+OgUevD35I4guyuJAoUKKJGhN5hqSTAlJtLxYa0zXwqd/C+GWcdvlqQslBgkNF6qlqhpYN0RJ6OD0pJgOPlejEqgMNKQAKRIj6k9CgQCcqYcT6oqF2tpb27vNPiVNndFOXgZBW916NRBqhX6y+NCLOit0FhslQPUqG9s8qXyY53gVjURojbzazW+lpPD5YH5t/D6T7jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0z1e4bKkjbmgZ2+b73Zlr9txkiHuSWu2ExAR75lcFMc=;
- b=EAJ934thJb5WiygG804JHyxP9Enk/tuBV3fmYHOM6QNilsUhtGzTBa63RvhXCjYZpI3dK0RICtZ1c8NidhGXnKI7tP0W5BO7u9v5V0dYy0ECqYlg+KZA7kCOT2TjBEc+J3yHffMEEJJ090vJr47rurWkHJ5Zm549O52wE0GEAiROBJCeOcoDsfUGiVKp9BrHCX9th9zB5OsULSbuJTlyNXQpTygd1DhDCgQV8PdPz3oG4t88KH5Gyx9VD8t5aJt1U8SrsAplflOVqg6Bxv9QJOBmyxmW4O5YXIt2dI4TAGHPX/+h5twQ3VfFUopoe3haNfZu0DBStg7jrqM89U+yqg==
-Received: from MW4PR04CA0380.namprd04.prod.outlook.com (2603:10b6:303:81::25)
- by CY5PR12MB6600.namprd12.prod.outlook.com (2603:10b6:930:40::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Tue, 1 Apr
- 2025 15:40:29 +0000
-Received: from MWH0EPF000989EB.namprd02.prod.outlook.com
- (2603:10b6:303:81:cafe::6a) by MW4PR04CA0380.outlook.office365.com
- (2603:10b6:303:81::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.54 via Frontend Transport; Tue,
- 1 Apr 2025 15:40:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MWH0EPF000989EB.mail.protection.outlook.com (10.167.241.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8606.22 via Frontend Transport; Tue, 1 Apr 2025 15:40:28 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 1 Apr 2025
- 08:40:07 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 1 Apr
- 2025 08:40:07 -0700
-Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Tue, 1 Apr 2025 08:40:06 -0700
-From: Willie Thai <wthai@nvidia.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<joel@jms.id.au>, <andrew@codeconstruct.com.au>, <kees@kernel.org>,
-	<tony.luck@intel.com>, <gpiccoli@igalia.com>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<openbmc@lists.ozlabs.org>
-CC: <wthai@nvidia.com>, <leohu@nvidia.com>, <tingkaic@nvidia.com>,
-	<dkodihalli@nvidia.com>, Mars Yang <maryang@nvidia.com>, Krzysztof Kozlowski
-	<krzk@kernel.org>
-Subject: [PATCH v5 1/2] dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC
-Date: Tue, 1 Apr 2025 15:39:54 +0000
-Message-ID: <20250401153955.314860-2-wthai@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250401153955.314860-1-wthai@nvidia.com>
-References: <20250401153955.314860-1-wthai@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CGnXBuu9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A190D43225;
+	Tue,  1 Apr 2025 15:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743522035;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gecQ9RQtI/BcwX9PC8Ldbr2+MugSUGg3KZUpdtkeQ64=;
+	b=CGnXBuu9p/2PkGyHjI4nwuazryKF3wvXNP4AjAQDYGcpp9YaGXidsNhM4Bji+MYifrKOk7
+	oH6Y1Pqf95COq1jDKU7IfHh3gcMXoiEYCmTrAXT9GrVzqykITCNf5W8NcaFo/spXEWB1Z4
+	qsG93SiMLsNhiHcdD4/eWoVKHa/IDSAEUYvIPBtBTeg7cWDMsds2SLRrNVJjATdkpyYTof
+	xsDT4FCItDYZDqGmJR8MxW4EXbDj6YRU/5zfIBwUDQahdpBcGCXTCCA9JXGY/DTFPCOKSQ
+	f3/ggT2Pd5c23T4B3XtOe19U9OhJaTHTy+qbjINf7FooxhtWUwROgoUUjDIDCw==
+Date: Tue, 1 Apr 2025 17:40:32 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Alexander H Duyck <alexander.duyck@gmail.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v5 09/13] net: phylink: Use phy_caps_lookup for
+ fixed-link configuration
+Message-ID: <20250401174032.2af3ebb8@fedora.home>
+In-Reply-To: <3517cb7b3b10c29a6bf407f2e35fdebaf7a271e3.camel@gmail.com>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	<20250307173611.129125-10-maxime.chevallier@bootlin.com>
+	<8d3a9c9bb76b1c6bc27d2bd01f4831b2cac83f7f.camel@gmail.com>
+	<20250328090621.2d0b3665@fedora-2.home>
+	<CAKgT0Ue_JzmJAPKBhe6XaMkDCy+YNNg5_5VvzOR6CCbqcaQg3Q@mail.gmail.com>
+	<20250331091449.155e14a4@fedora-2.home>
+	<3517cb7b3b10c29a6bf407f2e35fdebaf7a271e3.camel@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989EB:EE_|CY5PR12MB6600:EE_
-X-MS-Office365-Filtering-Correlation-Id: e251f71e-41e8-44dc-da84-08dd713387b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8Ac1nzmI3DS8eL292+sIhQW5nKooGZT4iUHxL5ssI+LMhRBuKcmTEu6nBvpi?=
- =?us-ascii?Q?dJI3pWy78tb1qc2gmGL59BTZRmqarTC9X0tHPFBE8Hdjg4PPBOjQrGU/rza2?=
- =?us-ascii?Q?emQsWAUnLujywxAG9T+08qkvi1vJpuir4N8++3YdQf7ldaKyCjxz9UCIDAJ7?=
- =?us-ascii?Q?uTzAaEXU5G4WvtFeB3H+rkZmGYVjFcT2/AuSO2uxCAOwfbP9ouvXzr2SBZUd?=
- =?us-ascii?Q?zBSetrg2RW3yjRrkaz3xafPOQ8YHCaMv3B89cGfKA+boltDxWUihmgs2gX0/?=
- =?us-ascii?Q?L8txw+6Lg/tOxi/1f61Z58ThkPhPUV6PuZq3WSuM31U25nh4VGTgSADaFzSC?=
- =?us-ascii?Q?n7fvZjRJXHnBos1DJEkK07lMHRomSaYnzy9ZEZ5XngaHLrb+Oumf+aCaK8s0?=
- =?us-ascii?Q?yGETb35zkLjBr41ost9eRBozyLYFLAgsxY+zGfgCA3z6Fph/htZe2FzzVZv4?=
- =?us-ascii?Q?5UK7lzMjtcD2948IB/GBFTCp3p3tXMNbmeUIoHt0dhWWNkaMIz/eLjSmdbiF?=
- =?us-ascii?Q?UX2SpyxxVsvFKlmSomEb077GubSrFlmzPhGXr3QCkDr5BC1KsSs/n459/i6K?=
- =?us-ascii?Q?tTLNMNZcp6ZoqiIoBMSZQvc8KLIu+qJFWc/KRdmLW0FIgnqcdA92LWkr/9ym?=
- =?us-ascii?Q?SgtOhDh1DXlKvXeBQ0/3Pm41BZLzDSlFB2k0ksxBMs4112Frk6CjzKhXi4wY?=
- =?us-ascii?Q?4MCkZ0+xaHpWA9bo2h28wXzKEAgYcUinQMfSIrYeDoTIh/OeudsFS3d12/Pc?=
- =?us-ascii?Q?+beZF3IwIGE66lcVUvCw1Hg+r3Vx7ThA5SSRa4Ro5P0TdhEWcbB7MYnfjmkx?=
- =?us-ascii?Q?VYgVlb2W8q3R25e2yhvm2h9efspcwLB+RNNsKGuF+gj5kHXO5t8enliQiiip?=
- =?us-ascii?Q?FxC2b1NcwPpILa34+hiUThWrBbkDRasmpxL+8ureUUUveUxeYm5wLBGFgMXs?=
- =?us-ascii?Q?E5foRh3uf4miCuAsMOY6gj6R8sTYPeyJaOeDVoaKeWZVdu8EnKYiTFZKwHw5?=
- =?us-ascii?Q?IdnYow1VS0NnLxiCF9eEWQdc20Q+GwBAhoaZPetw1J2WMZ2vkqdru5gK/mcN?=
- =?us-ascii?Q?dxmF+sgxepKGZ9WPf+pDFjMAt6ehXsSXKNnKuL1un7gYo9QGyAvAVQxP1vk3?=
- =?us-ascii?Q?J/pq3zeLyVxhM90CYNFy7JaWHJWmmCeHHR0ZHRlfoNePqUT/a0pW/65POTd6?=
- =?us-ascii?Q?wGHynVmBasnC3nud+ekTCZjMsx+YOibED6DvToZoK/pqu+ePoWTXaBEjTg85?=
- =?us-ascii?Q?Rf8eyfITfjpubR0qBFPLcChcMUBvUSaNTrLM1lv+I9+tWlaMFUN2ZCdbB6t1?=
- =?us-ascii?Q?++al/ub+cH78M1Z7owueb1CJaRgjINoeLLr8X6uCjKOAwqNlant7ULJddVwI?=
- =?us-ascii?Q?g4h6vPh0kia3ovq7AbDKEr/UtrKC/n9o62nwUWD2ClSdLaMCZ82t2FkJ3h/R?=
- =?us-ascii?Q?Lv96I3yv6Fla6TGQL6SOcmYGgyc3GVFgZtrEGotSi/yyD7N9qYvY4cbHwYwd?=
- =?us-ascii?Q?2zWiCwmrCQikgRaYhUIEmxefK1zbLUN6rawj?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 15:40:28.9134
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e251f71e-41e8-44dc-da84-08dd713387b9
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989EB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6600
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeefudejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeehgeeijeekteffhfelheetffeghfffhfeufeeifeffjeeftefhveduteduueeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegrlhgvgigrnhguvghrrdguuhihtghksehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtp
+ hhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Add Nvidia's  GB200NVL BMC board compatible.
+On Tue, 01 Apr 2025 08:28:29 -0700
+Alexander H Duyck <alexander.duyck@gmail.com> wrote:
 
-Co-developed-by: Mars Yang <maryang@nvidia.com>
-Signed-off-by: Mars Yang <maryang@nvidia.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Willie Thai <wthai@nvidia.com>
----
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> On Mon, 2025-03-31 at 09:14 +0200, Maxime Chevallier wrote:
+> > On Fri, 28 Mar 2025 14:03:54 -0700
+> > Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> >  =20
+> > > On Fri, Mar 28, 2025 at 1:06=E2=80=AFAM Maxime Chevallier
+> > > <maxime.chevallier@bootlin.com> wrote: =20
+> > > >=20
+> > > > On Thu, 27 Mar 2025 18:16:00 -0700
+> > > > Alexander H Duyck <alexander.duyck@gmail.com> wrote:
+> > > >   =20
+> > > > > On Fri, 2025-03-07 at 18:36 +0100, Maxime Chevallier wrote:   =20
+> > > > > > When phylink creates a fixed-link configuration, it finds a mat=
+ching
+> > > > > > linkmode to set as the advertised, lp_advertising and supported=
+ modes
+> > > > > > based on the speed and duplex of the fixed link.
+> > > > > >=20
+> > > > > > Use the newly introduced phy_caps_lookup to get these modes ins=
+tead of
+> > > > > > phy_lookup_settings(). This has the side effect that the matched
+> > > > > > settings and configured linkmodes may now contain several linkm=
+odes (the
+> > > > > > intersection of supported linkmodes from the phylink settings a=
+nd the
+> > > > > > linkmodes that match speed/duplex) instead of the one from
+> > > > > > phy_lookup_settings().
+> > > > > >=20
+> > > > > > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > > > > > ---
+> > > > > >  drivers/net/phy/phylink.c | 44 +++++++++++++++++++++++++++----=
+--------
+> > > > > >  1 file changed, 31 insertions(+), 13 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylin=
+k.c
+> > > > > > index cf9f019382ad..8e2b7d647a92 100644
+> > > > > > --- a/drivers/net/phy/phylink.c
+> > > > > > +++ b/drivers/net/phy/phylink.c
+> > > > > > @@ -802,12 +802,26 @@ static int phylink_validate(struct phylin=
+k *pl, unsigned long *supported,
+> > > > > >     return phylink_validate_mac_and_pcs(pl, supported, state);
+> > > > > >  }
+> > > > > >=20
+> > > > > > +static void phylink_fill_fixedlink_supported(unsigned long *su=
+pported)
+> > > > > > +{
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, suppor=
+ted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT, suppor=
+ted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, suppo=
+rted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT, suppo=
+rted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, supp=
+orted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, supp=
+orted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT, supp=
+orted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT, supp=
+orted);
+> > > > > > +   linkmode_set_bit(ETHTOOL_LINK_MODE_10000baseT_Full_BIT, sup=
+ported);
+> > > > > > +}
+> > > > > > +   =20
+> > > > >=20
+> > > > > Any chance we can go with a different route here than just locking
+> > > > > fixed mode to being only for BaseT configurations?
+> > > > >=20
+> > > > > I am currently working on getting the fbnic driver up and running=
+ and I
+> > > > > am using fixed-link mode as a crutch until I can finish up enabli=
+ng
+> > > > > QSFP module support for phylink and this just knocked out the sup=
+ported
+> > > > > link modes as I was using 25CR, 50CR, 50CR2, and 100CR2.
+> > > > >=20
+> > > > > Seems like this should really be something handled by some sort of
+> > > > > validation function rather than just forcing all devices using fi=
+xed
+> > > > > link to assume that they are BaseT. I know in our direct attached
+> > > > > copper case we aren't running autoneg so that plan was to use fix=
+ed
+> > > > > link until we can add more flexibility by getting QSFP support go=
+ing.   =20
+> > > >=20
+> > > > These baseT mode were for compatibility with the previous way to de=
+al
+> > > > with fixed links, but we can extend what's being report above 10G w=
+ith
+> > > > other modes. Indeed the above code unnecessarily restricts the
+> > > > linkmodes. Can you tell me if the following patch works for you ?
+> > > >=20
+> > > > Maxime
+> > > >=20
+> > > > -----------
+> > > >=20
+> > > > From 595888afb23f209f2b1002d0b0406380195d53c1 Mon Sep 17 00:00:00 2=
+001
+> > > > From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > > > Date: Fri, 28 Mar 2025 08:53:00 +0100
+> > > > Subject: [PATCH] net: phylink: Allow fixed-link registration above =
+10G
+> > > >=20
+> > > > The blamed commit introduced a helper to keep the linkmodes reporte=
+d by
+> > > > fixed links identical to what they were before phy_caps. This means
+> > > > filtering linkmodes only to report BaseT modes.
+> > > >=20
+> > > > Doing so, it also filtered out any linkmode above 10G. Reinstate the
+> > > > reporting of linkmodes above 10G, where we report any linkmodes that
+> > > > exist at these speeds.
+> > > >=20
+> > > > Reported-by: Alexander H Duyck <alexander.duyck@gmail.com>
+> > > > Closes: https://lore.kernel.org/netdev/8d3a9c9bb76b1c6bc27d2bd01f48=
+31b2cac83f7f.camel@gmail.com/
+> > > > Fixes: de7d3f87be3c ("net: phylink: Use phy_caps_lookup for fixed-l=
+ink configuration")
+> > > > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > > > ---
+> > > >  drivers/net/phy/phylink.c | 17 +++++++++++++----
+> > > >  1 file changed, 13 insertions(+), 4 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > > > index 69ca765485db..de90fed9c207 100644
+> > > > --- a/drivers/net/phy/phylink.c
+> > > > +++ b/drivers/net/phy/phylink.c
+> > > > @@ -715,16 +715,25 @@ static int phylink_parse_fixedlink(struct phy=
+link *pl,
+> > > >                 phylink_warn(pl, "fixed link specifies half duplex =
+for %dMbps link?\n",
+> > > >                              pl->link_config.speed);
+> > > >=20
+> > > > -       linkmode_zero(pl->supported);
+> > > > -       phylink_fill_fixedlink_supported(pl->supported);
+> > > > +       linkmode_fill(pl->supported);
+> > > >=20
+> > > >         linkmode_copy(pl->link_config.advertising, pl->supported);
+> > > >         phylink_validate(pl, pl->supported, &pl->link_config);
+> > > >=20
+> > > > +       phylink_fill_fixedlink_supported(match);
+> > > > +   =20
+> > >=20
+> > > I worry that this might put you back into the same problem again with
+> > > the older drivers. In addition it is filling in modes that shouldn't
+> > > be present after the validation. =20
+> >=20
+> > Note that I'm not directly filling pl->supported here.
+> >=20
+> > [...]
+> >=20
+> >  	c =3D phy_caps_lookup(pl->link_config.speed, pl->link_config.duplex,
+> >  			    pl->supported, true);
+> > -	if (c)
+> > -		linkmode_and(match, pl->supported, c->linkmodes);
+> > +	if (c) {
+> > +		/* Compatbility with the legacy behaviour : Report one single
+> > +		 * BaseT mode for fixed-link speeds under or at 10G, or all
+> > +		 * linkmodes at the speed/duplex for speeds over 10G
+> > +		 */
+> > +		if (linkmode_intersects(match, c->linkmodes))
+> > +			linkmode_and(match, match, c->linkmodes);
+> > +		else
+> > +			linkmode_copy(match, c->linkmodes);
+> > +	}
+> >=20
+> > [...]
+> >=20
+> > 	if (c) {
+> > 		linkmode_or(pl->supported, pl->supported, match);
+> > 		linkmode_or(pl->link_config.lp_advertising,
+> > 			    pl->link_config.lp_advertising, match);
+> > 	}
+> >=20
+> > For speeds above 10G, you will get all the modes for the requested
+> > speed, so it should solve the issue in the next steps of your code
+> > where you need matching linkmodes for your settings ? Did you give it a
+> > try ?
+> >=20
+> > You may end up with too many linkmodes, but for fixed-link we don't
+> > really expect these modes to precisely represent any real linkmodes =20
+>=20
+> Here is more the quick-n-dirty approach that I think does what you were
+> trying to do without breaking stuff:
+>=20
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 16a1f31f0091..380e51c5bdaa 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -713,17 +713,24 @@ static int phylink_parse_fixedlink(struct phylink *=
+pl,
+>                 phylink_warn(pl, "fixed link specifies half duplex for %d=
+Mbps link?\n",
+>                              pl->link_config.speed);
+> =20
+> -       linkmode_zero(pl->supported);
+> -       phylink_fill_fixedlink_supported(pl->supported);
+> -
+> +       linkmode_fill(pl->supported);
+>         linkmode_copy(pl->link_config.advertising, pl->supported);
+>         phylink_validate(pl, pl->supported, &pl->link_config);
+> =20
+>         c =3D phy_caps_lookup(pl->link_config.speed, pl->link_config.dupl=
+ex,
+>                             pl->supported, true);
+> -       if (c)
+> +       if (c) {
+>                 linkmode_and(match, pl->supported, c->linkmodes);
+> =20
+> +               /* Compatbility with the legacy behaviour:
+> +                * Report one single BaseT mode.
+> +                */
+> +               phylink_fill_fixedlink_supported(mask);
+> +               if (linkmode_intersects(match, mask))
+> +                       linkmode_and(match, match, mask);
+> +               linkmode_zero(mask);
+> +       }
+> +
+>         linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mask);
+>         linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, mask);
+>         linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, mask);
+>=20
+> Basically we still need the value to be screened by the pl->supported.
+> The one change is that we have to run the extra screening on the
+> intersect instead of skipping the screening, or doing it before we even
+> start providing bits.
+>=20
+> With this approach we will even allow people to use non twisted pair
+> setups regardless of speed as long as they don't provide any twisted
+> pair modes in the standard set.
+>=20
+> I will try to get this tested today and if it works out I will submit
+> it for net. I just need to test this and an SFP ksettings_set issue I
+> found when we aren't using autoneg.
 
-diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-index 01333ac111fb..a3736f134130 100644
---- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-+++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-@@ -98,6 +98,7 @@ properties:
-               - inventec,starscream-bmc
-               - inventec,transformer-bmc
-               - jabil,rbp-bmc
-+              - nvidia,gb200nvl-bmc
-               - qcom,dc-scm-v1-bmc
-               - quanta,s6q-bmc
-               - ufispace,ncplite-bmc
--- 
-2.25.1
+That looks correct and indeed better than my patch, thanks for that :)
 
+Feel free to send it indeed, I'll give it a try on the setups I have
+here as well
+
+Maxime
