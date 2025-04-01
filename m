@@ -1,72 +1,63 @@
-Received: from mail-pj1-f97.google.com (mail-pj1-f97.google.com [209.85.216.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2082.outbound.protection.outlook.com [40.107.212.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE2A215160
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 20:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.97
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743540560; cv=none; b=gXBSSYqrNPFwD9eH/jVDb0CRp/K6YHKoi0Wz/PMoh3yYpUm2tYr3zebrCshYI44NsTSu0lFq7+upfPX+OxPeNYBF+tTq34LveAfgXTS7m2nq8PNc8ASU6EUj4qS+o0VW2pHpX9UpgGrKH2M4DF+OECpBrPVkmCDmAh9kP2vQ1UA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743540560; c=relaxed/simple;
-	bh=d8GQDf9aNn3XCHYo/doXpPecRNU7F0oZKd4mY5qwFlg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GACXPXI0IrO27or39gb5RSPhKG7t7B4h+qCh6/7XLhnlgVYuaosUshuxfBtE8cEZOnD7kepgd7mSNqjwpz6dPLdtjF/amvLAXPaBTUyLFTY1SuAzvEi5DrVPJc7YN/wn5OoP4TsLZK+BUYQSggS1hiDY4ETrpDBJgMEX9vWfmhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Hi0rfQ4N; arc=none smtp.client-ip=209.85.216.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746B32135D0;
+	Tue,  1 Apr 2025 20:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743540570; cv=fail; b=mfTw9Bkf44rgY9MhhjEXxm7oJ4kzyIiuGtlz+vvtFrvKxZHbDRzJ2UkJWAgWcocZc033pQI9aewkjqkthYSgCECOywM5juI3F499JeWVrREk7cFnapARPKbfdF5ueshrGn3CfYtM6Swfe6CWdfjyI7Tud8ekiR/FH78pzE1adYQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743540570; c=relaxed/simple;
+	bh=e7rE6x4juQdjGa6N4NU2b0eSzvq4TSqRnInVxon7Thw=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=BAH//5rsaDtnOgWYPNJlPVF0CEYCj0hYKfHBpmOfWjOXOs6E33jDl0SdptDqTJrIhOihoFj+OUoVC+SH5iLmgEAAPyNzF0vjewC8V+HDjhyJ2XADkWZ/ZNu5irpPvLqM3Qw00fRJ9LiQwPR9pSSiVqIkom3xSTMBKn9PhYrlIEk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Butpq/X0; arc=fail smtp.client-ip=40.107.212.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Hi0rfQ4N"
-Received: by mail-pj1-f97.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so13010649a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Apr 2025 13:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1743540557; x=1744145357; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CszSfhaBSgL0ceu8EPCDZblcpCoeT9mB1rw339afGoA=;
-        b=Hi0rfQ4NpLhAQMZyLruAKoM5D7iOc88WxnhDiZ2lB3oCSvBj1A3xOxORz70D6n6dfV
-         olUOkbF63/5Wjr5vvW3BG07sh+HcXS0ZG88St+DI2UvKv9jMlrgaThCF5E97HWAW2zVC
-         teIQA9jKrmPQs8ynkjC9aFV78FeaMiPmjI6Xwr/xIIiD7W8sICuey0csyzckvsKVXv8L
-         XvtS/b26MTDgMMMlULgO/SPGEmX7QNVjfXGW66D/fUZXYwIkOaQQNP9MiTVn34QPjykx
-         QizgrZ5+Y7ImoasJdGS5bmQl4fw9sHLFOWrZtPxpu+YXypziDis8PJb3mR8b02jGbXYv
-         NJmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743540557; x=1744145357;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CszSfhaBSgL0ceu8EPCDZblcpCoeT9mB1rw339afGoA=;
-        b=cGvQ/QPRCzYNbl3bg7YMXrQs4KFsGvHdpcLbhGXSUI1PxGVvqPx7v/DsJpdTCBLPCN
-         y3+4ZbkZCNDY+nDDFPLY855ADPc69IK+OGqERVX2goEh1l4VaWSmUHPAafhM0x2StEvE
-         7cYfDqO+SO0GNgT1IMzilAWRQDO+y2Q4W7D4UmJ3hDY8p4QQd4zk5oKZvxiOJo2VcbAl
-         3oyvqtHd1EuSg1ncDw2YAvqrn3hLuJwJIsVMrJPPmIf0+TcJElmc1iPb2hLIz6hPNJBV
-         5gT2h2/w+xZpHui2KCN4A4qUoPi5o1tp788SCmKFFTqYM15IQ0bjz5553zKQ45etX0jF
-         ePfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyMbnQ3ZnSRYo2lTtfyRVR/6HuGz0t6sK6ujkaIt9AUEqQp0zRAe5M5DJZ7jICUD+WMKV995pUjlVo5VU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3wNKkRigGD05DMHbDX5uMXl4OGhfBpH9s3Q3pJrI4DZp6y4xc
-	kPqz6IfsGvodLexsudQJhB3qjguQmIbC+iIcGCsL+GfQwSjSoswOZXYXSfXhj0aY2D7Z6OPywp3
-	oRT51Mj7fBPSDcxqonBtCxElMrUKybPU+E4XM92hSCVIIaRX5
-X-Gm-Gg: ASbGnctOeQhonwjUhuv2oO+4EmRGZgwvB5eAuX22eVDS+UPu3PvZ2AlrggRnPUTIzt0
-	WetSQp1HG9l4vP1NXS7Z3slFYZfdH6r0mZFyI3h55Lygi1rMkbz8f9lTEO7mipWFk945E+90qv1
-	OIOClwiY0CO4k00YkJDUQDSCvM540f0iHSlb10c/tT+qXWpScbSdG0a149kfdEcNjL2gTa3qxE4
-	otTQZRCQ3UdKUYXTkk7UwfA2N6K1ExZ2V/VjDPEdN4no4buoOeVAdIHBKSy2xvn4cSL1PRLW3YT
-	ccU26F7TYe+xuXZywzxmxv6tumFHGMwAjHI=
-X-Google-Smtp-Source: AGHT+IFiTOrrefXmiLyHfCuPwBgnL0O06M+OBFhNttC3/hRF0LLMybJ75J009EG+gSxDw4ZMGHDUitYCjo9x
-X-Received: by 2002:a17:90b:5410:b0:2ff:6ac2:c5a5 with SMTP id 98e67ed59e1d1-3056ef0e8f6mr143301a91.26.1743540556965;
-        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-305175cae25sm860359a91.14.2025.04.01.13.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 13:49:16 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 17F8334024A;
-	Tue,  1 Apr 2025 14:49:16 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 08CE2E402D8; Tue,  1 Apr 2025 14:49:16 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Tue, 01 Apr 2025 14:49:08 -0600
-Subject: [PATCH 1/2] selftests: ublk: kublk: use ioctl-encoded opcodes
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Butpq/X0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z/GnB2GbLo4bSgS8hSpPbK/Q99Bc/h8Iec3j7h45x/fDpBjd7/fgv20Hq1Dzhz4VjwV/jX+a5MTlMqF2f/ncC9aUnFwgp9Q7arOj9eBh6Fwmj9WE2RspoyRI0mPu3RDCMYTX9bC7Ay+Lpjv7utT1jMfB7wFMMUAtlfK4ltLy4rjv3zjx84HXJvDZrtZey5MZFnfa3NTqYweq/49fL5wdpG3d5c+L5H9THorFBBLyhlD9JVPxKLr3VK11dMOz5vEU4GC8skrfhMLotR77dbz5mdANrG7s/9D+K3Jo1RRBkE2mZqle1NKpSCWo9W/dt3IkCz3jbRNlfPx0PXImgyGXgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=24gNanj18222vAq3qRKy3YvicYj4gigYdKifreRcxco=;
+ b=wzVOzKqI5g1GRdrI7ZSr5l6dGWTNR7/CRI4LBkvYPJqNeKMfKATTo2mboowFQelbff6hptMDuC4l4+J7fw3hizMkrcwH2/yixVwrG/OKgtQ4g8oY5b+M3qmYY1Xhw99R383w/yKIFgEz1e8/gnxdyvlzND5cYwZkhm0yaoRq12DA5dWRu8BkrVe9Cb3K2VAYuim11JKx1v998nBoA7VB4wXigok9fPf8M5rVz6y7PKU8jtiHN3UTtrZNWJEFQqGaJL968uYOYIlQ1zw1VAXkrdZQzmSBy8laD7OxPOUvoS8T7XgsEhp/vTF6VbSKnZvqr1G5bW6j7nfUJIT28Xay9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=24gNanj18222vAq3qRKy3YvicYj4gigYdKifreRcxco=;
+ b=Butpq/X09d3Z5KwbBpbODEgzqbH9+f0oFdLFZ5TmnbEjq7FWck+ytJOPCYV8BXva27k7/HYmWvNNm2hQuGGGHnugUzoUmY/H4UIEakz6L4rzgKUnv9N+Wm4/u3RmF8K4xpKOWkLLKgXDI4Pf2h8FpGjzSH9hTisbhh+9AAHCWXg=
+Received: from SN7P222CA0024.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:124::20)
+ by CH3PR12MB8712.namprd12.prod.outlook.com (2603:10b6:610:171::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Tue, 1 Apr
+ 2025 20:49:25 +0000
+Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
+ (2603:10b6:806:124:cafe::a2) by SN7P222CA0024.outlook.office365.com
+ (2603:10b6:806:124::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.39 via Frontend Transport; Tue,
+ 1 Apr 2025 20:49:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Tue, 1 Apr 2025 20:49:24 +0000
+Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 1 Apr
+ 2025 15:49:21 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: [PATCH 0/2] MI300A ATL and FMPM fixes
+Date: Tue, 1 Apr 2025 20:48:59 +0000
+Message-ID: <20250401-fix-fmpm-extra-records-v1-0-840bcf7a8ac5@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,51 +66,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-ublk_selftests-v1-1-98129c9bc8bb@purestorage.com>
-References: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
-In-Reply-To: <20250401-ublk_selftests-v1-0-98129c9bc8bb@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+X-B4-Tracking: v=1; b=H4sIADtR7GcC/x3MywrCQAyF4VcpWRscexHrq4iLdJKxs+hMSUQKp
+ e9udPnDOd8OJprF4N7soPLJlmvxuJwaiDOVl2Bmb2hDO4Qu3DDlDdOyLijbWwlVYlU2ZOl77sb
+ hyiODn1cVX/7hx9N7IhOclEqcf5ySnYUpYqqKxSk4ji8AzFr+jAAAAA==
+X-Change-ID: 20250308-fix-fmpm-extra-records-de44d3956d9d
+To: Yazen Ghannam <Yazen.Ghannam@amd.com>, Borislav Petkov <bp@alien8.de>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, Muralidhara M K
+	<muralidhara.mk@amd.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Yazen
+ Ghannam" <yazen.ghannam@amd.com>
+X-Mailer: b4 0.15-dev-419e3
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|CH3PR12MB8712:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d4ba885-6b81-4dde-0c3d-08dd715eafc9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MEprQVJUejA0OER6RGQ4WFVtSE5zalBuaU5wMDg1aXlkY3NJUklLSTVGSk1S?=
+ =?utf-8?B?UFB0enJ6REJnUkl5QkxIUUxiTFZ2ZGlHRjdFVTgzbEdlN0FLMW8wbkpwM1dL?=
+ =?utf-8?B?U1c0dzNBc2JEN3l3K3l4SUprYUJOZFBzUVJsako4ZUlYclN2WnFyVFBwb1ZK?=
+ =?utf-8?B?ODNSQ1pGRmdBR3BYRCtZMXZ0ZU1HcTRRb0xTWTg0blRQOStzZzBBaDlyak9q?=
+ =?utf-8?B?Z2I4dkJFWnNSZWkyOXllN2dsVk9HRUhCcXFESitCeURQUmRaZWppMnVNQnB5?=
+ =?utf-8?B?U21MaElKYXZjVXNpaE9hSjhraExMRUt6OEs1U2Y3U1UxSWJET0tkV2FQM05t?=
+ =?utf-8?B?dTREV294Y0U3TlU4WU9aWkVRYUVJdlRiN0tmRDBMamxWdDNocHVpcE1nVXc4?=
+ =?utf-8?B?NC9aWFFEckU3ZFVEUVg4Qk8wQ0JORHAxeVpaRnBkMHNoOE1RNlZsQXhhdE5Q?=
+ =?utf-8?B?M0ovUE8yU1RCTUc1YTltNW1aOTVzVndYVHlVTXhMbWVVemlEVlFTN2Q2TTZC?=
+ =?utf-8?B?WGptWmVLKzI0THl5SkZnR05ZTDYwYjZ5cXovM25KN1NEeE52cGxOOThTMldm?=
+ =?utf-8?B?cjhhM2NCaWdhR3FEL28yRzJQSW9LR3E3NkJvWFZ4YW1lOFlCZ1hmQUhPYVhi?=
+ =?utf-8?B?R1g3Z0Y3M2oraFJFOGEzUlF6aWRSVCtRUHpzazZzR1dQSG85dFI2U3ZIMk1k?=
+ =?utf-8?B?V1RZWHNwNkYzaG9laFdnRXFLT2ZhZXB6REhtRUMyVUcvaUducDFFNDBFOFVO?=
+ =?utf-8?B?T2Q5dVRqYVBsaHpRK3ovK0NlTGd3bitIVG1JdzhGdUg5L1FWano5RlprVHd3?=
+ =?utf-8?B?TUx1bE9EZDRZaGFGL0FJMkc2L010aVdUYUZLYTdoQUM2aVdGc3U4V3VZL2hZ?=
+ =?utf-8?B?bFJlWWRUdlJYZDdKQ0ZUSHpsaEorZ3VpNjFUaGJIeUdkOWRxR3pCVXZvRDRL?=
+ =?utf-8?B?TjZhWVR3YnlJMWpSYXlMSGhBakFVMiswaktrazlrMFMyME9sVHJKbXlYb0g3?=
+ =?utf-8?B?eHpIWlZ6dkJreVJzY2JzMkQvN01mZzZlMVR3WHlWblU5QndkRFMzRHduZy9h?=
+ =?utf-8?B?NmxFd0hPc25XTE8zMklmRzhqZVZWNG50UXJWUXJ0VDNvN1ArSnNmWlp6T2ha?=
+ =?utf-8?B?VlEvcExoTjBpQ0pacEtRQ2FyUTVKWUdsRkVndjI2V1g1L2xoTlk4T2xTbjZB?=
+ =?utf-8?B?azFCOTNEaWs2U1FRZm5FWHQ3ZC8xTmlXckJHTkd3TStuaStwQS8vckp2Z0Yx?=
+ =?utf-8?B?aWM2N0RnTnBUN3J0S0lOVTh1RkdrbHZ2SUhISWt1YzNJbDA3WUlCYUYxei9j?=
+ =?utf-8?B?Qmp4KzdmV1hOSm1mWGN2Z0ZUL3JoaGtDR0R0NlVtZngrYnphOFZUbHZXY0RI?=
+ =?utf-8?B?M0hVTFB5TDdOeEY1VjZFWVlPMlBqeXRLVnU4V0hCTnFNR1NVd3lxZUN2RmxD?=
+ =?utf-8?B?NjJTM3VmLzVRSWJ5eVBhb1FhK2JzR2RXaGEzVzlTVlAyRGJOcmlRWXQrODRm?=
+ =?utf-8?B?K1NicDA1bS9qMnd6NkVCcmNVWmVEMy9DdkFrWE9GQ2dkbXpPYjd1aTJPTGR4?=
+ =?utf-8?B?VVkwTVU3T253T2xlWFF0RG96Ty9VdGxEbkQ3VFlUaGlSSXVoMkZ4OEFRWEhT?=
+ =?utf-8?B?dXRWMGdSNld2V054aThUd2tCQStEWWphdUpDVldpNUd1RG9Hd0V3S3hUbUdD?=
+ =?utf-8?B?eS9CT3VqbXBxUmdBYStueFdOMHBPUEYrQllISUhSOHY4dHBTNUxta21tTEtG?=
+ =?utf-8?B?eU1PbG5rRlVRZkpqY0FaSG9DRGE1WkUrSlFibVY1Yk1qMmQ5NzRGNHc2L0V6?=
+ =?utf-8?B?U3JTOGtlWngwVGlrbjRhY1QycXUzWkd5b1VxTjVpb0sybXFPR1pnOWFXOWdp?=
+ =?utf-8?B?K3hQdUdieFBzRE13d2M0b2RoeVpOaCtPVEU3QmY5Q2FKNUl3R3B4djlzQjNX?=
+ =?utf-8?B?ZnZNOEc4aHdxVE40OW5TeTk3YXR0Zy90SlpoRDJvb0J1Qnk3bGNYdUY2NVlY?=
+ =?utf-8?B?Yk1FQlZwSVBYRm9mZnJPWlRiMUlKZFVYQW1ZZEN5MTFCZ1BpTllVMnc2VS95?=
+ =?utf-8?Q?I/BkHu?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 20:49:24.5750
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d4ba885-6b81-4dde-0c3d-08dd715eafc9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8712
 
-There are a couple of places in the kublk selftests ublk server which
-use the legacy ublk opcodes. These operations fail (with -EOPNOTSUPP) on
-a kernel compiled without CONFIG_BLKDEV_UBLK_LEGACY_OPCODES set. We
-could easily require it to be set as a prerequisite for these selftests,
-but since new applications should not be using the legacy opcodes, use
-the ioctl-encoded opcodes everywhere in kublk.
+Hi all,
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- tools/testing/selftests/ublk/kublk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This set addresses two issues in the current MI300A solution.
 
-diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index 83756f97c26eecc984da55b8717e99b89470b904..d39f166c9dc31721381184fb27d68347ecab81b6 100644
---- a/tools/testing/selftests/ublk/kublk.c
-+++ b/tools/testing/selftests/ublk/kublk.c
-@@ -99,7 +99,7 @@ static int __ublk_ctrl_cmd(struct ublk_dev *dev,
- static int ublk_ctrl_stop_dev(struct ublk_dev *dev)
- {
- 	struct ublk_ctrl_cmd_data data = {
--		.cmd_op	= UBLK_CMD_STOP_DEV,
-+		.cmd_op	= UBLK_U_CMD_STOP_DEV,
- 	};
+Patch 1:
+The row retirement flow is updated to iterate over an additional bit.
+Without this, only half of the affected addresses are calculated.
+
+Patch 2:
+The record keeping flow is updated to match only on unique address bits
+of interest. Without this, multiple records can be created for the same
+event. For example, for row retirement, there will be a record that
+includes column bit 0, another record for column bit 1, etc., even
+though these are part of the same row retirement event.
+
+Thanks,
+Yazen
  
- 	return __ublk_ctrl_cmd(dev, &data);
-@@ -169,7 +169,7 @@ static int ublk_ctrl_get_params(struct ublk_dev *dev,
- 		struct ublk_params *params)
- {
- 	struct ublk_ctrl_cmd_data data = {
--		.cmd_op	= UBLK_CMD_GET_PARAMS,
-+		.cmd_op	= UBLK_U_CMD_GET_PARAMS,
- 		.flags	= CTRL_CMD_HAS_BUF,
- 		.addr = (__u64)params,
- 		.len = sizeof(*params),
 
--- 
-2.34.1
+---
+Yazen Ghannam (2):
+      RAS/AMD/ATL: Include row[13] bit in row retirement
+      RAS/AMD/{ATL,FMPM}: Get masked address
+
+ drivers/ras/amd/atl/umc.c | 33 ++++++++++++++++++++++++++++++++-
+ drivers/ras/amd/fmpm.c    |  2 +-
+ include/linux/ras.h       |  2 ++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
+---
+base-commit: ff719e243db5de2ca595bf4e2ab6ad530a08f378
+change-id: 20250308-fix-fmpm-extra-records-de44d3956d9d
 
