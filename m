@@ -1,138 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA41202961;
-	Tue,  1 Apr 2025 12:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD32202961
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Apr 2025 12:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743509314; cv=none; b=My219LKvzSxlN6oPJmv5Xok8hcaI71lSgBvrK0SzPSmR/qdwLCinVgVQXUbQPR94Fj65j849gC802Qq1UtFGI9ANdgkXlzLGyPJeG2LoLsNWSWCYXQtQBxXxRagPKY/QZM8uaNuHwRf5cNnbFKsen5nGVZHzHWCdLmOe+D3h8SU=
+	t=1743509346; cv=none; b=RuiJkjRlQ6qgOElqn0qk5/koLYxq1d4rZc+fMpBLZSMue1WoDgTr+Ttz/cdSFarpVSNegJbTBFvgJEiOBpW4y8JyzOPsXRljO6YzwWuPG2xxsZP5cDzlDvVwJmQPyZdl9dd1vDUUw3qB56rrjhpg68mGNhIJ6GmmDaAJdsz3cKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743509314; c=relaxed/simple;
-	bh=zcdbLSKxqwAC91pmORRiZQDeYHoqRz2r4XU1RKPiQCU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XvEjGFyJBE66wPIzbbKrbeD+kE1zA6qD9kX5AWNdI+ivdsr32dKOVwlUSK1R3T9sS80v9J9Vn22L9prw2fsGH7Z5QBSBuJJLgdqYtmIfJCJKY6ed5wdCxU10ojeIB3bkGL9/JXBshqPxmo+Du82Xm3qUTAKlY8hD0l+aJYSdt9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kj9wvZ4c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lO5tqnet; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743509346; c=relaxed/simple;
+	bh=ymWxHJh8c39lUSfpJKhiztgKbex2vJHoHlvT/jj0qw8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oEXhWbXJpdv6ONW7Y9ZU7Nyx4amvNRrn6yeSMMhm/V0mpJ1sm/qURnOTDnHfIGyMu//s0aZRV+Axfy0l1fVrHC3Gt9vhCCVF8s9OdYOJy0mh2obO2CZzELv0gpxTR1LQAwxRgsE+AWMrcTVY3SY27lZ5q+fQv43pXjWZG8+rlzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8Xl44Rd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kj9wvZ4c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lO5tqnet"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743509309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5TwBHgWSiVPHJ8DK8kHjiBrFuEFpcmevr8jPemaQHCQ=;
-	b=Kj9wvZ4cYIbFLrZUIcUQjVI15e6PcNV+c6WA+ZExl3Obqp2khG9z849aoXCmzrah9vYwg1
-	b5ssJv1utmLzliTLqOoUP2CVQJDT4sn1LI6EZyYKzeuQBgE1k81oAIPRaPX0PWTXNDVUJe
-	O1+xe5TR4jP/nHdenVrXyW4g08SKrfdpwdQDgVI0M4maR3cDo0FeebvTdZ602GIjCnQEYW
-	Yq/yz9VFezAo0/d8fPBAY2HsY1O9wMdMfI8WEYQrrzSfzfvDJlxQ2xXyVRa+msPHFX2Rbq
-	wjLnELwZRczarV2yh4bh7gyfy8hT6HkOeYJTaQy8MjD7hTqyws963no/VzbxhA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743509309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5TwBHgWSiVPHJ8DK8kHjiBrFuEFpcmevr8jPemaQHCQ=;
-	b=lO5tqnetVw0Pa1Bj0rcsPDTBHe0Zi5vY7rXmbTLHUBtyUK8WTwh6uC/y5CWhzSq8i30FGP
-	HgEWThdIFWmdx6AA==
-To: Nam Cao <namcao@linutronix.de>, Christian Brauner <brauner@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 2/3] selftests: coredump: Use waitpid() instead of
- busy-wait
-In-Reply-To: <133d0dc62cebb6fde2764af384b0166d98755a3c.1743438749.git.namcao@linutronix.de>
-References: <cover.1743438749.git.namcao@linutronix.de>
- <133d0dc62cebb6fde2764af384b0166d98755a3c.1743438749.git.namcao@linutronix.de>
-Date: Tue, 01 Apr 2025 14:14:28 +0206
-Message-ID: <84y0wkkrsz.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8Xl44Rd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ABC9C4CEE4;
+	Tue,  1 Apr 2025 12:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743509345;
+	bh=ymWxHJh8c39lUSfpJKhiztgKbex2vJHoHlvT/jj0qw8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c8Xl44RdgcqzUYzufvsO+bwS9V8stcy/6+rGYQOF6yHaGEav3H/Xtu3wGshLiRTE5
+	 MnSNn/I5d6+jSWUz+jjyMEVCh0VlcCz8yGoolR6YcsqAHXJhumxidmXZWM4kWWaokZ
+	 oGblYRCEzVEufXJDPWR3a+dI/utNj/xC3fblwY4MAPkwNLx8MxKtVPXPHlBigmbdqX
+	 Dl+9ECoE8BkK5WJHJeZkdzOPcPKPNGfl5pimMqHQowo2v2q6fLWO+k+0IkEsEaMwrB
+	 1wCChtF/BBfJYSsqEhIK0X1LS8bSlC2Hn50wR0B54zSPoJrDRFRBp0teRoajsfCpMF
+	 v3slwexRKFk0A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tzaQR-001Jxh-F1;
+	Tue, 01 Apr 2025 13:09:03 +0100
+Date: Tue, 01 Apr 2025 13:09:04 +0100
+Message-ID: <87plhwytgf.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	James Morse
+	 <james.morse@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Mingcong Bai
+ <jeffbai@aosc.io>
+Subject: Re: [PATCH] arm64: Add overrride for MPAM
+In-Reply-To: <46ed31b37b4b92720b26be66f3e6366a714024cf.camel@xry111.site>
+References: <20250401055650.22542-1-xry111@xry111.site>
+	<409f6d27-3efe-4c45-8319-d360ded80f16@arm.com>
+	<46ed31b37b4b92720b26be66f3e6366a714024cf.camel@xry111.site>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: xry111@xry111.site, anshuman.khandual@arm.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, jeffbai@aosc.io
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 2025-03-31, Nam Cao <namcao@linutronix.de> wrote:
-> The test waits for coredump to finish by busy-waiting for the
-> stackdump_values file to be created. The maximum wait time is 10 seconds.
->
-> This doesn't work for slow machine (qemu-system-riscv64), because coredump
-> takes longer.
->
-> Switch to use waitpid().
+On Tue, 01 Apr 2025 12:47:03 +0100,
+Xi Ruoyao <xry111@xry111.site> wrote:
+>=20
+> On Tue, 2025-04-01 at 14:04 +0530, Anshuman Khandual wrote:
+> > On 4/1/25 11:26, Xi Ruoyao wrote:
+> > > As the message of the commit 09e6b306f3ba ("arm64: cpufeature: discov=
+er
+> > > CPU support for MPAM") already states, if a buggy firmware fails to
+> > > either enable MPAM or emulate the trap as if it were disabled, the
+> > > kernel will just fail to boot.=C2=A0 While upgrading the firmware sho=
+uld be
+> > > the best solution, we have some hardware of which the vender have made
+> > > no response 2 months after we requested a firmware update.=C2=A0 Allow
+> > > overriding it so our devices don't become some e-waste.
+> >
+> > There could be similar problems, where firmware might not enable arch
+> > features as required. Just wondering if there is a platform policy in
+> > place for enabling id-reg overrides for working around such scenarios
+> > to prevent a kernel crash etc ?
+>=20
+> In https://lore.kernel.org/all/87jzcfsuep.wl-maz@kernel.org/:
+>=20
+>    > For such cases, when MPAM is incorrectly advertised, can we have ker=
+nel
+>    > command line parameter like mpam=3D0 to override it's detection?
+>   =20
+>    We could, but only when we can confirm what the problem is.
+>=20
+> And there was prior arts like:
+>=20
+> commit 892f7237b3ffb090f1b1f1e55fe7c50664405aed
+> Author: Marc Zyngier <maz@kernel.org>
+> Date:   Wed Jul 20 11:52:19 2022 +0100
+>=20
+>     arm64: Delay initialisation of cpuinfo_arm64::reg_{zcr,smcr}
+>    =20
+>     Even if we are now able to tell the kernel to avoid exposing SVE/SME
+>     from the command line, we still have a couple of places where we
+>     unconditionally access the ZCR_EL1 (resp. SMCR_EL1) registers.
+>    =20
+>     On systems with broken firmwares, this results in a crash even if
+>     arm64.nosve (resp. arm64.nosme) was passed on the command-line.
+>    =20
+>     To avoid this, only update cpuinfo_arm64::reg_{zcr,smcr} once
+>     we have computed the sanitised version for the corresponding
+>     feature registers (ID_AA64PFR0 for SVE, and ID_AA64PFR1 for
+>     SME). This results in some minor refactoring.
 
-Note that you are now assuming that returning from waitpid() means that:
+That particular patch has caused quite a few issues, see d3c7c48d004f.
+So don't use it as a reference.
 
-1. the coredumping has completed
+Now, while I think an option is probably acceptable in the face of an
+unresponsive vendor, I don't think the way you implement it is the
+correct approach.
 
-and
+It should be possible to handle the override in the assembly code,
+like we do for other bits and pieces, and deal with MPAMIDR_EL1 later
+down the line, once the sanitised ID registers are known to be valid.
 
-2. the STACKDUMP_FILE with all its contents are visible to the parent
-process
+Overall, we don't have a great story with feature-specific ID
+registers that can undef when the feature isn't present (such as
+MPAMIDR_EL1, SMIDR_EL1, PMSIDR_EL1), and we should adopt a common
+behaviour for those.
 
-> With this, the stack_values file doesn't need to be atomically written by
-> coredump anymore, therefore simplify the stackdump script.
->
-> Fixes: 15858da53542 ("selftests: coredump: Add stackdump test")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
->  tools/testing/selftests/coredump/stackdump        |  6 +-----
->  tools/testing/selftests/coredump/stackdump_test.c | 13 ++++++-------
->  2 files changed, 7 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/testing/selftests/coredump/stackdump b/tools/testing/selftests/coredump/stackdump
-> index 96714ce42d12..ad487fd5ff15 100755
-> --- a/tools/testing/selftests/coredump/stackdump
-> +++ b/tools/testing/selftests/coredump/stackdump
-> @@ -4,11 +4,7 @@
->  CRASH_PROGRAM_ID=$1
->  STACKDUMP_FILE=$2
->  
-> -TMP=$(mktemp)
-> -
->  for t in /proc/$CRASH_PROGRAM_ID/task/*; do
->  	tid=$(basename $t)
-> -	cat /proc/$tid/stat | awk '{print $29}' >> $TMP
-> +	cat /proc/$tid/stat | awk '{print $29}' >> $STACKDUMP_FILE
->  done
-> -
-> -mv $TMP $STACKDUMP_FILE
+Thanks,
 
-I would leave this as it was. Then the availability of STACKDUMP_FILE
-means the full contents are available.
+	M.
 
-> diff --git a/tools/testing/selftests/coredump/stackdump_test.c b/tools/testing/selftests/coredump/stackdump_test.c
-> index 1dc54e128586..733feaa0f895 100644
-> --- a/tools/testing/selftests/coredump/stackdump_test.c
-> +++ b/tools/testing/selftests/coredump/stackdump_test.c
-> @@ -96,7 +96,7 @@ TEST_F(coredump, stackdump)
->  	char *test_dir, *line;
->  	size_t line_length;
->  	char buf[PATH_MAX];
-> -	int ret, i;
-> +	int ret, i, status;
->  	FILE *file;
->  	pid_t pid;
->  
-> @@ -131,12 +131,11 @@ TEST_F(coredump, stackdump)
->  	/*
->  	 * Step 3: Wait for the stackdump script to write the stack pointers to the stackdump file
->  	 */
-> -	for (i = 0; i < 10; ++i) {
-> -		file = fopen(STACKDUMP_FILE, "r");
-> -		if (file)
-> -			break;
-> -		sleep(1);
-> -	}
-> +	waitpid(pid, &status, 0);
-> +	ASSERT_TRUE(WIFSIGNALED(status));
-> +	ASSERT_TRUE(WCOREDUMP(status));
-
-Why not just put these 3 lines above the for-loop? So you would wait for
-the process to end, then go into the 20-second timeout loop waiting for
-STACKDUMP_FILE to show up.
-
-John Ogness
+--=20
+Jazz isn't dead. It just smells funny.
